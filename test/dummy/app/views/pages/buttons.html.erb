@@ -31,6 +31,70 @@
 ) %&gt;</code></pre>
   </section>
 
+  <!-- Links with Target -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Links with Target</h2>
+    <div class="flex gap-3 mb-4">
+      <%= render FlatPack::Button::Component.new(
+        label: "Open in New Tab",
+        url: "https://github.com",
+        scheme: :primary,
+        target: "_blank"
+      ) %>
+      <%= render FlatPack::Button::Component.new(
+        label: "Open in Same Tab",
+        url: demo_tables_path,
+        scheme: :secondary,
+        target: "_self"
+      ) %>
+      <%= render FlatPack::Button::Component.new(
+        label: "Default (no target)",
+        url: root_path,
+        scheme: :ghost
+      ) %>
+    </div>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Button::Component.new(
+  label: "Open in New Tab",
+  url: "https://github.com",
+  scheme: :primary,
+  target: "_blank"  # Automatically adds rel="noopener noreferrer"
+) %&gt;</code></pre>
+  </section>
+
+  <!-- Buttons with ID and Custom Classes -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Buttons with ID and Custom Classes</h2>
+    <div class="flex gap-3 mb-4">
+      <%= render FlatPack::Button::Component.new(
+        label: "Button with ID",
+        scheme: :primary,
+        id: "my-special-button"
+      ) %>
+      <%= render FlatPack::Button::Component.new(
+        label: "Link with ID",
+        url: root_path,
+        scheme: :secondary,
+        id: "my-special-link"
+      ) %>
+      <%= render FlatPack::Button::Component.new(
+        label: "Custom Classes",
+        scheme: :ghost,
+        class: "text-lg font-bold"
+      ) %>
+    </div>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Button::Component.new(
+  label: "Button with ID",
+  scheme: :primary,
+  id: "my-special-button"
+) %&gt;
+
+&lt;%= render FlatPack::Button::Component.new(
+  label: "Custom Classes",
+  scheme: :ghost,
+  class: "text-lg font-bold"  # Additional classes are merged
+) %&gt;</code></pre>
+  </section>
+
   <!-- Full Width Buttons -->
   <section class="mb-12">
     <h2 class="text-2xl font-semibold mb-4">Full Width Button</h2>

@@ -14,6 +14,7 @@ module FlatPack
         scheme: :primary,
         url: nil,
         method: nil,
+        target: nil,
         **system_arguments
       )
         super(**system_arguments)
@@ -21,6 +22,7 @@ module FlatPack
         @scheme = scheme.to_sym
         @url = url
         @method = method
+        @target = target
 
         validate_scheme!
       end
@@ -46,10 +48,14 @@ module FlatPack
       end
 
       def link_attributes
-        merge_attributes(
+        attrs = {
           class: button_classes,
-          method: @method
-        ).compact
+          method: @method,
+          target: @target
+        }
+        # Add rel="noopener noreferrer" for security when opening in new tab
+        attrs[:rel] = "noopener noreferrer" if @target == "_blank"
+        merge_attributes(**attrs).compact
       end
 
       def button_attributes
