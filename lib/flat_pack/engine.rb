@@ -11,9 +11,6 @@ module FlatPack
     # Configure autoload paths for components
     config.autoload_paths << root.join("app/components")
     
-    # Ensure view_component can find our components
-    config.view_component.view_component_path = root.join("app/components")
-
     # Configure Propshaft to serve our assets
     initializer "flat_pack.assets" do |app|
       if app.config.respond_to?(:assets)
@@ -29,10 +26,10 @@ module FlatPack
       end
     end
 
-    # Add view component previews path for development
-    initializer "flat_pack.view_component_previews" do |app|
-      if Rails.env.development? || Rails.env.test?
-        app.config.view_component.preview_paths << root.join("test/components/previews")
+    # Add view component preview paths for development
+    initializer "flat_pack.view_component" do |app|
+      if (Rails.env.development? || Rails.env.test?) && app.config.respond_to?(:view_component)
+        app.config.view_component.preview_paths << root.join("test/components/previews").to_s
       end
     end
 

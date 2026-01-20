@@ -14,11 +14,13 @@ module FlatPack
       end
 
       def render_cell(row)
-        tag.td class: cell_classes do
+        tag.td(class: cell_classes) do
           if @block
-            @block.call(row)
+            # Block should return content that can be rendered
+            result = @block.call(row)
+            result.respond_to?(:html_safe) ? result : result.to_s
           elsif @attribute
-            row.public_send(@attribute)
+            row.public_send(@attribute).to_s
           else
             ""
           end

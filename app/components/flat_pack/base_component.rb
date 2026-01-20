@@ -2,7 +2,6 @@
 
 module FlatPack
   class BaseComponent < ViewComponent::Base
-    include TailwindMerge::Rails::ViewHelper
 
     # System arguments pattern for consistent API across components
     # Handles: class, data, aria, id, and other HTML attributes
@@ -15,7 +14,8 @@ module FlatPack
     # Extract and merge classes using tailwind_merge
     def classes(*additional_classes)
       base_classes = @system_arguments.delete(:class) || ""
-      tailwind_merge(base_classes, *additional_classes.compact)
+      merger = TailwindMerge::Merger.new
+      merger.merge([base_classes, *additional_classes].compact.join(" "))
     end
 
     # Extract data attributes

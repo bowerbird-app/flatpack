@@ -10,14 +10,16 @@ module FlatPack
         @method = method
         @scheme = scheme
         @system_arguments = system_arguments
-        @block = block
+        @content_block = block
       end
 
       def render_action(row)
-        if @block
-          @block.call(row)
+        if @content_block
+          # Call the block with the row and return the result
+          @content_block.call(row)
         else
-          render FlatPack::Button::Component.new(
+          # Return a Button component instance that can be rendered by the parent
+          FlatPack::Button::Component.new(
             label: action_label(row),
             url: action_url(row),
             method: @method,
