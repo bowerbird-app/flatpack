@@ -6,7 +6,7 @@ This guide walks you through installing FlatPack in your Rails 8 application.
 
 - Rails 8.0+
 - Ruby 3.2+
-- Tailwind CSS 4 (CSS-first)
+- Tailwind CSS 3.x via tailwindcss-rails gem
 - Propshaft (asset pipeline)
 - Importmaps (JavaScript)
 
@@ -34,27 +34,68 @@ This generator will:
 - Add `@import "flat_pack/variables.css";` to your `application.css`
 - Display instructions for Tailwind CSS 4 configuration
 
-### 3. Configure Tailwind CSS 4
+### 3. Install tailwindcss-rails Gem
 
-Add FlatPack components to your Tailwind CSS 4 source scanning.
+Add to your Gemfile:
 
-In `app/assets/stylesheets/application.css`, add:
-
-```css
-@import "tailwindcss";
-@import "flat_pack/variables.css";
-
-/* Add FlatPack components to Tailwind's content sources */
-/* @source "../../../.bundle/ruby/*/gems/flat_pack-*/app/components" */
+```ruby
+gem 'tailwindcss-rails', '~> 3.0'
 ```
 
-**Note:** The exact path may vary depending on your Bundler configuration. Check your bundle path with:
+Then install:
 
 ```bash
-bundle info flat_pack
+bundle install
 ```
 
-### 4. Configure Importmap (Optional, for Stimulus)
+### 4. Configure Tailwind CSS
+
+Update `app/assets/stylesheets/application.css`:
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* FlatPack CSS Variables */
+:root {
+  --color-primary: oklch(0.52 0.26 250);
+  --color-primary-hover: oklch(0.42 0.24 250);
+  --color-primary-text: oklch(1.0 0 0);
+  --color-background: oklch(1.0 0 0);
+  --color-foreground: oklch(0.20 0.01 250);
+  /* Add other variables as needed */
+}
+```
+
+Create `config/tailwind.config.js`:
+
+```javascript
+module.exports = {
+  content: [
+    './app/views/**/*.{erb,haml,html,slim}',
+    './app/components/**/*.{rb,erb}',
+    './app/helpers/**/*.rb',
+    './app/javascript/**/*.js',
+    // Include FlatPack components
+    './vendor/bundle/ruby/*/gems/flat_pack-*/app/components/**/*.{rb,erb}',
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: []
+}
+```
+
+### 5. Build Tailwind CSS
+
+Build the CSS:
+
+```bash
+bundle exec tailwindcss -i app/assets/stylesheets/application.css -o app/assets/builds/application.css --watch
+```
+
+### 6. Configure Importmap (Optional, for Stimulus)
 
 If you want to use FlatPack's Stimulus controllers (like the table controller), ensure your importmap includes Stimulus:
 
@@ -66,7 +107,7 @@ pin "@hotwired/stimulus-loading", to: "stimulus-loading.js"
 # FlatPack controllers are automatically pinned by the engine
 ```
 
-### 5. Restart Your Server
+### 7. Restart Your Server
 
 ```bash
 bin/rails server

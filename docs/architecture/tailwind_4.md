@@ -96,37 +96,72 @@ The `[var(--color-primary)]` syntax allows Tailwind to use CSS variables as valu
 
 ## Host Application Configuration
 
-### 1. Install Tailwind CSS 4
+### 1. Install tailwindcss-rails Gem
 
-```bash
-bundle add tailwindcss-rails
-bin/rails tailwindcss:install
+```ruby
+# Gemfile
+gem 'tailwindcss-rails', '~> 3.0'
 ```
 
-### 2. Import FlatPack Variables
+Then run:
+
+```bash
+bundle install
+```
+
+### 2. Set Up Application CSS
+
+Create or update `app/assets/stylesheets/application.css`:
 
 ```css
 /* app/assets/stylesheets/application.css */
-@import "tailwindcss";
-@import "flat_pack/variables.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import FlatPack CSS Variables */
+:root {
+  /* Copy CSS variables from FlatPack's variables.css */
+  /* Or include them inline as shown in the example below */
+  --color-primary: oklch(0.52 0.26 250);
+  /* ... other variables */
+}
 ```
 
-### 3. Add FlatPack to Content Sources
+### 3. Configure Tailwind Content Scanning
 
-```css
-/* @source "app/views/**/*.{erb,haml}" */
-/* @source "app/components/**/*.{rb,erb}" */
-/* @source "../../../.bundle/ruby/*/gems/flat_pack-*/app/components/**/*.{rb,erb}" */
+Create `config/tailwind.config.js`:
+
+```javascript
+module.exports = {
+  content: [
+    './app/views/**/*.{erb,haml,html,slim}',
+    './app/components/**/*.{rb,erb,haml,html,slim}',
+    './app/helpers/**/*.rb',
+    './app/javascript/**/*.js',
+    // Scan FlatPack components
+    './vendor/bundle/ruby/*/gems/flat_pack-*/app/components/**/*.{rb,erb}',
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: []
+}
 ```
 
-The last line tells Tailwind to scan FlatPack's components.
+### 4. Build CSS
 
-### 4. Run Tailwind
+Build Tailwind CSS:
 
 ```bash
-bin/dev
-# or
-bin/rails tailwindcss:watch
+bundle exec tailwindcss -i app/assets/stylesheets/application.css -o app/assets/builds/application.css --watch
+```
+
+Or use a Procfile.dev for development:
+
+```yaml
+web: bin/rails server -p 3000
+css: bundle exec tailwindcss -i app/assets/stylesheets/application.css -o app/assets/builds/application.css --watch
 ```
 
 ## OKLCH Color Space

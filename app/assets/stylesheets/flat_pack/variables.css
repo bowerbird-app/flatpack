@@ -1,6 +1,6 @@
-/* FlatPack CSS Variables - Tailwind CSS 4 Theme Configuration */
+/* FlatPack CSS Variables - Compatible with Tailwind CSS 3 */
 
-@theme {
+:root {
   /* Color System - Brand Colors */
   --color-brand-50: oklch(0.98 0.01 250);
   --color-brand-100: oklch(0.95 0.02 250);
@@ -68,7 +68,7 @@
 
 /* Dark Mode - System Preference Only */
 @media (prefers-color-scheme: dark) {
-  @theme {
+  :root {
     /* Semantic Colors - Dark Mode */
     --color-primary: var(--color-brand-500);
     --color-primary-hover: var(--color-brand-400);
@@ -98,4 +98,5 @@
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5);
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5);
   }
+}
 }
