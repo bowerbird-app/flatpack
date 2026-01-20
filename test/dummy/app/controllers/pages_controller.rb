@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "ostruct"
+
 class PagesController < ApplicationController
   def demo
     @users = [
