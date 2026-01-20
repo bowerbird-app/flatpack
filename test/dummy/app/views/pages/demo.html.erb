@@ -1,0 +1,59 @@
+<div class="max-w-4xl mx-auto">
+  <h1 class="text-4xl font-bold mb-4">FlatPack Component Library</h1>
+  <p class="text-lg text-[var(--color-muted-foreground)] mb-8">
+    A modern Rails 8 UI component library built with ViewComponent, Tailwind CSS 4, and Hotwire.
+  </p>
+
+  <div class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Quick Example</h2>
+    
+    <div class="bg-[var(--color-muted)] rounded-lg p-6 mb-4">
+      <h3 class="text-lg font-medium mb-3">Buttons</h3>
+      <div class="flex gap-3">
+        <%= render FlatPack::Button::Component.new(label: "Primary", scheme: :primary) %>
+        <%= render FlatPack::Button::Component.new(label: "Secondary", scheme: :secondary) %>
+        <%= render FlatPack::Button::Component.new(label: "Ghost", scheme: :ghost) %>
+      </div>
+    </div>
+
+    <div class="bg-[var(--color-muted)] rounded-lg p-6">
+      <h3 class="text-lg font-medium mb-3">Table</h3>
+      <%= render FlatPack::Table::Component.new(rows: @users) do |table| %>
+        <% table.with_column(label: "Name", attribute: :name) %>
+        <% table.with_column(label: "Email", attribute: :email) %>
+        <% table.with_column(label: "Status") do |user| %>
+          <span class="px-2 py-1 text-xs rounded <%= user.status == 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' %>">
+            <%= user.status %>
+          </span>
+        <% end %>
+        <% table.with_action(label: "View", url: "#", scheme: :ghost) %>
+        <% table.with_action(label: "Edit", url: "#", scheme: :ghost) %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Features</h2>
+    <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
+      <li>Built with ViewComponent for type-safe, testable components</li>
+      <li>Styled with Tailwind CSS 4 using CSS variables</li>
+      <li>System-driven dark mode support</li>
+      <li>Accessible and keyboard-friendly</li>
+      <li>Zero-config installation</li>
+      <li>Propshaft + Importmaps (no Node.js required)</li>
+    </ul>
+  </div>
+
+  <div class="flex gap-4">
+    <%= render FlatPack::Button::Component.new(
+      label: "View Button Demos",
+      url: demo_buttons_path,
+      scheme: :primary
+    ) %>
+    <%= render FlatPack::Button::Component.new(
+      label: "View Table Demos",
+      url: demo_tables_path,
+      scheme: :secondary
+    ) %>
+  </div>
+</div>

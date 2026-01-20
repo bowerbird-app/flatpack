@@ -1,0 +1,353 @@
+# Table Component
+
+The Table component renders data in a tabular format with columns and actions.
+
+## Basic Usage
+
+```erb
+<%= render FlatPack::Table::Component.new(rows: @users) do |table| %>
+  <% table.with_column(label: "Name", attribute: :name) %>
+  <% table.with_column(label: "Email", attribute: :email) %>
+<% end %>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `rows` | Array | `[]` | Data to display in table |
+| `stimulus` | Boolean | `false` | Enable Stimulus controller for interactivity |
+| `**system_arguments` | Hash | `{}` | HTML attributes |
+
+## Columns
+
+Define columns using `with_column`:
+
+### Attribute-based Column
+
+```erb
+<% table.with_column(label: "Name", attribute: :name) %>
+```
+
+This calls `row.name` for each row.
+
+### Block-based Column
+
+```erb
+<% table.with_column(label: "Full Name") do |user| %>
+  <%= "#{user.first_name} #{user.last_name}" %>
+<% end %>
+```
+
+Use blocks for custom formatting.
+
+## Actions
+
+Define actions using `with_action`:
+
+### Simple Action
+
+```erb
+<% table.with_action(
+  label: "Edit",
+  url: ->(user) { edit_user_path(user) }
+) %>
+```
+
+### Action with Scheme
+
+```erb
+<% table.with_action(
+  label: "Delete",
+  url: ->(user) { user_path(user) },
+  method: :delete,
+  scheme: :secondary,
+  data: { turbo_confirm: "Are you sure?" }
+) %>
+```
+
+### Custom Action Block
+
+```erb
+<% table.with_action do |user| %>
+  <%= link_to "Custom", user_path(user), class: "custom-link" %>
+<% end %>
+```
+
+## Complete Example
+
+```erb
+<%= render FlatPack::Table::Component.new(rows: @users) do |table| %>
+  <%# Attribute column %>
+  <% table.with_column(label: "ID", attribute: :id) %>
+  
+  <%# Block column with formatting %>
+  <% table.with_column(label: "Name") do |user| %>
+    <strong><%= user.name %></strong>
+  <% end %>
+  
+  <%# Block column with conditional %>
+  <% table.with_column(label: "Status") do |user| %>
+    <span class="<%= user.active? ? 'text-green-600' : 'text-gray-400' %>">
+      <%= user.active? ? 'Active' : 'Inactive' %>
+    </span>
+  <% end %>
+  
+  <%# Date formatting %>
+  <% table.with_column(label: "Created") do |user| %>
+    <%= user.created_at.strftime("%b %d, %Y") %>
+  <% end %>
+  
+  <%# Edit action %>
+  <% table.with_action(
+    label: "Edit",
+    url: ->(user) { edit_user_path(user) },
+    scheme: :ghost
+  ) %>
+  
+  <%# Delete action with confirmation %>
+  <% table.with_action(
+    label: "Delete",
+    url: ->(user) { user_path(user) },
+    method: :delete,
+    scheme: :ghost,
+    data: { turbo_confirm: "Delete #{user.name}?" }
+  ) %>
+<% end %>
+```
+
+## Empty State
+
+When `rows` is empty, displays "No data available":
+
+```erb
+<%= render FlatPack::Table::Component.new(rows: []) do |table| %>
+  <% table.with_column(label: "Name", attribute: :name) %>
+<% end %>
+```
+
+## With Stimulus Controller
+
+Enable the Stimulus controller for advanced interactions:
+
+```erb
+<%= render FlatPack::Table::Component.new(rows: @users, stimulus: true) do |table| %>
+  <% table.with_column(label: "Name", attribute: :name) %>
+<% end %>
+```
+
+The Stimulus controller (`flat-pack--table`) provides:
+- Row selection
+- Bulk actions
+- Hover effects
+
+## System Arguments
+
+### Custom Classes
+
+```erb
+<%= render FlatPack::Table::Component.new(
+  rows: @users,
+  class: "mt-8"
+) do |table| %>
+  <%# ... columns ... %>
+<% end %>
+```
+
+### Data Attributes
+
+```erb
+<%= render FlatPack::Table::Component.new(
+  rows: @users,
+  data: { controller: "sortable" }
+) do |table| %>
+  <%# ... columns ... %>
+<% end %>
+```
+
+## Advanced Examples
+
+### Sortable Columns
+
+```erb
+<% table.with_column(label: "Name") do |user| %>
+  <%= link_to user.name, users_path(sort: :name, direction: :asc) %>
+<% end %>
+```
+
+### With Avatar
+
+```erb
+<% table.with_column(label: "User") do |user| %>
+  <div class="flex items-center gap-2">
+    <%= image_tag user.avatar_url, class: "w-8 h-8 rounded-full" %>
+    <%= user.name %>
+  </div>
+<% end %>
+```
+
+### With Badge
+
+```erb
+<% table.with_column(label: "Role") do |user| %>
+  <span class="px-2 py-1 text-xs rounded bg-blue-100 text-blue-800">
+    <%= user.role %>
+  </span>
+<% end %>
+```
+
+### Conditional Actions
+
+```erb
+<% table.with_action do |user| %>
+  <% if policy(user).edit? %>
+    <%= render FlatPack::Button::Component.new(
+      label: "Edit",
+      url: edit_user_path(user),
+      scheme: :ghost
+    ) %>
+  <% end %>
+<% end %>
+```
+
+### Multiple Action Buttons
+
+```erb
+<% table.with_action(label: "View", url: ->(user) { user_path(user) }, scheme: :ghost) %>
+<% table.with_action(label: "Edit", url: ->(user) { edit_user_path(user) }, scheme: :ghost) %>
+<% table.with_action(label: "Delete", url: ->(user) { user_path(user) }, method: :delete, scheme: :ghost) %>
+```
+
+## Styling
+
+### CSS Variables
+
+Customize table appearance:
+
+```css
+@theme {
+  --color-border: oklch(0.85 0.02 250);
+  --color-muted: oklch(0.96 0.01 250);
+  --color-muted-foreground: oklch(0.45 0.01 250);
+}
+```
+
+### Custom Styles
+
+Add classes to the container:
+
+```erb
+<%= render FlatPack::Table::Component.new(
+  rows: @users,
+  class: "shadow-lg"
+) do |table| %>
+  <%# ... %>
+<% end %>
+```
+
+## Responsive Design
+
+Tables are wrapped in a scrollable container:
+
+```html
+<div class="overflow-x-auto">
+  <table>...</table>
+</div>
+```
+
+For mobile, consider hiding columns:
+
+```erb
+<% table.with_column(label: "Email", attribute: :email, class: "hidden md:table-cell") %>
+```
+
+## Accessibility
+
+The Table component follows accessibility best practices:
+
+- Uses semantic HTML (`<table>`, `<thead>`, `<tbody>`, `<th>`, `<td>`)
+- Headers use `<th>` with `scope="col"`
+- Proper ARIA attributes for interactive elements
+- Keyboard navigation for actions
+
+## Testing
+
+```ruby
+require "test_helper"
+
+class CustomTableTest < ViewComponent::TestCase
+  def test_renders_table_with_data
+    users = [OpenStruct.new(name: "Alice", email: "alice@example.com")]
+    
+    render_inline FlatPack::Table::Component.new(rows: users) do |table|
+      table.with_column(label: "Name", attribute: :name)
+      table.with_column(label: "Email", attribute: :email)
+    end
+    
+    assert_selector "th", text: "Name"
+    assert_selector "td", text: "Alice"
+  end
+end
+```
+
+## Performance Considerations
+
+For large datasets:
+1. Use pagination (Kaminari, Pagy)
+2. Consider virtual scrolling
+3. Lazy load data with Turbo Frames
+
+```erb
+<%# With Pagy %>
+<%= render FlatPack::Table::Component.new(rows: @users) do |table| %>
+  <%# ... columns ... %>
+<% end %>
+
+<%== pagy_nav(@pagy) %>
+```
+
+## API Reference
+
+### Table Component
+
+```ruby
+FlatPack::Table::Component.new(
+  rows: Array,                # Optional, default: []
+  stimulus: Boolean,          # Optional, default: false
+  **system_arguments          # Optional
+)
+```
+
+### Column Component
+
+```ruby
+table.with_column(
+  label: String,              # Required
+  attribute: Symbol,          # Optional
+  &block                      # Optional
+)
+```
+
+### Action Component
+
+```ruby
+table.with_action(
+  label: String,              # Optional
+  url: String | Proc,         # Optional
+  method: Symbol,             # Optional
+  scheme: Symbol,             # Optional, default: :ghost
+  **system_arguments,         # Optional
+  &block                      # Optional
+)
+```
+
+## Related Components
+
+- [Button Component](button.md) - Used for actions
+- [Icon Component](../shared/icon.md) - For action icons
+
+## Next Steps
+
+- [Button Component](button.md)
+- [Theming Guide](../theming.md)
+- [Stimulus Controllers](../architecture/assets.md#stimulus-controllers)

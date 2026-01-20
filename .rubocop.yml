@@ -1,0 +1,36 @@
+require:
+  - standard
+
+inherit_gem:
+  standard: config/base.yml
+
+AllCops:
+  TargetRubyVersion: 3.2
+  NewCops: enable
+  Exclude:
+    - 'test/dummy/db/schema.rb'
+    - 'test/dummy/db/migrate/**/*'
+    - 'test/dummy/bin/**/*'
+    - 'test/dummy/config/environments/**/*'
+    - 'test/dummy/config/puma.rb'
+    - 'test/dummy/config.ru'
+    - 'node_modules/**/*'
+    - 'vendor/**/*'
+    - 'bin/**/*'
+
+# Engine-specific adjustments
+Layout/LineLength:
+  Max: 120
+
+Metrics/BlockLength:
+  Exclude:
+    - 'test/**/*'
+    - 'config/routes.rb'
+    - '*.gemspec'
+
+Style/Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: true
+  EnforcedStyle: always
