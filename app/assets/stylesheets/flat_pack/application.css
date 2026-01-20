@@ -1,0 +1,8 @@
+/* FlatPack Application Stylesheet */
+@import "flat_pack/variables.css";
+
+/* Base layer for component styles */
+@layer components {
+  /* FlatPack components use Tailwind utilities and CSS variables */
+  /* All styling is done via Tailwind classes in component templates */
+}

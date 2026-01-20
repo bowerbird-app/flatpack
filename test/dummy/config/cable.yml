@@ -1,0 +1,12 @@
+# frozen_string_literal: true
+
+test:
+  adapter: test
+
+development:
+  adapter: async
+
+production:
+  adapter: redis
+  url: <%= ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" } %>
+  channel_prefix: flat_pack_production

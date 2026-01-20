@@ -1,0 +1,17 @@
+@import "tailwindcss";
+@import "flat_pack/variables.css";
+
+/* FlatPack component source for Tailwind CSS 4 */
+/* @source "../../../app/components" */
+
+@layer base {
+  body {
+    @apply bg-[var(--color-background)] text-[var(--color-foreground)];
+  }
+}
+
+@layer components {
+  .container {
+    @apply mx-auto px-4 max-w-7xl;
+  }
+}

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>FlatPack Demo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <nav class="bg-[var(--color-muted)] border-b border-[var(--color-border)]">
+      <div class="container py-4">
+        <div class="flex items-center justify-between">
+          <h1 class="text-2xl font-bold text-[var(--color-foreground)]">FlatPack UI</h1>
+          <div class="flex gap-4">
+            <%= link_to "Demo", demo_path, class: "text-[var(--color-foreground)] hover:text-[var(--color-primary)]" %>
+            <%= link_to "Buttons", demo_buttons_path, class: "text-[var(--color-foreground)] hover:text-[var(--color-primary)]" %>
+            <%= link_to "Tables", demo_tables_path, class: "text-[var(--color-foreground)] hover:text-[var(--color-primary)]" %>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container py-8">
+      <%= yield %>
+    </main>
+
+    <footer class="border-t border-[var(--color-border)] mt-16">
+      <div class="container py-8 text-center text-[var(--color-muted-foreground)]">
+        <p>FlatPack <%= FlatPack::VERSION %> - A Rails 8 UI Component Library</p>
+      </div>
+    </footer>
+  </body>
+</html>

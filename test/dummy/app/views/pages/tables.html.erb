@@ -1,0 +1,75 @@
+<div class="max-w-6xl mx-auto">
+  <h1 class="text-4xl font-bold mb-4">Table Component</h1>
+  <p class="text-lg text-[var(--color-muted-foreground)] mb-8">
+    Data tables with columns, actions, and formatting.
+  </p>
+
+  <!-- Basic Table -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Basic Table</h2>
+    <%= render FlatPack::Table::Component.new(rows: @users.first(5)) do |table| %>
+      <% table.with_column(label: "ID", attribute: :id) %>
+      <% table.with_column(label: "Name", attribute: :name) %>
+      <% table.with_column(label: "Email", attribute: :email) %>
+    <% end %>
+  </section>
+
+  <!-- Table with Formatted Columns -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Table with Formatted Columns</h2>
+    <%= render FlatPack::Table::Component.new(rows: @users.first(5)) do |table| %>
+      <% table.with_column(label: "Name") do |user| %>
+        <strong class="text-[var(--color-primary)]"><%= user.name %></strong>
+      <% end %>
+      <% table.with_column(label: "Status") do |user| %>
+        <span class="px-2 py-1 text-xs rounded <%= user.status == 'active' ? 'bg-green-100 text-green-800' : user.status == 'inactive' ? 'bg-gray-100 text-gray-800' : 'bg-yellow-100 text-yellow-800' %>">
+          <%= user.status.capitalize %>
+        </span>
+      <% end %>
+      <% table.with_column(label: "Created") do |user| %>
+        <%= user.created_at.strftime("%b %d, %Y") %>
+      <% end %>
+    <% end %>
+  </section>
+
+  <!-- Table with Actions -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Table with Actions</h2>
+    <%= render FlatPack::Table::Component.new(rows: @users.first(5)) do |table| %>
+      <% table.with_column(label: "Name", attribute: :name) %>
+      <% table.with_column(label: "Email", attribute: :email) %>
+      <% table.with_action(label: "View", url: "#", scheme: :ghost) %>
+      <% table.with_action(label: "Edit", url: "#", scheme: :ghost) %>
+      <% table.with_action(label: "Delete", url: "#", method: :delete, scheme: :ghost,
+          data: { turbo_confirm: "Are you sure?" }) %>
+    <% end %>
+  </section>
+
+  <!-- Empty Table -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Empty Table</h2>
+    <%= render FlatPack::Table::Component.new(rows: []) do |table| %>
+      <% table.with_column(label: "Name", attribute: :name) %>
+      <% table.with_column(label: "Email", attribute: :email) %>
+    <% end %>
+  </section>
+
+  <!-- Large Table -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Large Table (All <%= @users.count %> Users)</h2>
+    <%= render FlatPack::Table::Component.new(rows: @users) do |table| %>
+      <% table.with_column(label: "ID", attribute: :id) %>
+      <% table.with_column(label: "Name", attribute: :name) %>
+      <% table.with_column(label: "Email", attribute: :email) %>
+      <% table.with_column(label: "Status") do |user| %>
+        <span class="px-2 py-1 text-xs rounded <%= user.status == 'active' ? 'bg-green-100 text-green-800' : user.status == 'inactive' ? 'bg-gray-100 text-gray-800' : 'bg-yellow-100 text-yellow-800' %>">
+          <%= user.status.capitalize %>
+        </span>
+      <% end %>
+      <% table.with_column(label: "Created") do |user| %>
+        <%= user.created_at.strftime("%b %d, %Y") %>
+      <% end %>
+      <% table.with_action(label: "Edit", url: "#", scheme: :ghost) %>
+    <% end %>
+  </section>
+</div>
