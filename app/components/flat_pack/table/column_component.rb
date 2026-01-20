@@ -3,28 +3,30 @@
 module FlatPack
   module Table
     class ColumnComponent < ViewComponent::Base
-      def initialize(label:, attribute: nil, &block)
+      def initialize(label:, attribute: nil, formatter: nil, &block)
         @label = label
         @attribute = attribute
-        @block = block
+        # Support both formatter: proc and block syntax (though block won't work with ViewComponent)
+        @formatter = formatter || block
       end
 
       def render_header
-        tag.th @label, class: header_classes
+        tag.th(@label, class: header_classes)
       end
 
       def render_cell(row)
-        tag.td(class: cell_classes) do
-          if @block
-            # Block should return content that can be rendered
-            result = @block.call(row)
-            result.respond_to?(:html_safe) ? result : result.to_s
-          elsif @attribute
-            row.public_send(@attribute).to_s
-          else
-            ""
-          end
+        # Get the content first
+        content = if @formatter
+          # Call the formatter proc/lambda
+          @formatter.call(row)
+        elsif @attribute
+          row.public_send(@attribute).to_s
+        else
+          ""
         end
+        
+        # Build td tag manually
+        "<td class=\"#{cell_classes}\">#{ERB::Util.html_escape(content)}</td>".html_safe
       end
 
       private

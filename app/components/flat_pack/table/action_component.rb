@@ -3,20 +3,20 @@
 module FlatPack
   module Table
     class ActionComponent < ViewComponent::Base
-      def initialize(label: nil, icon: nil, url: nil, method: nil, scheme: :ghost, **system_arguments, &block)
+      def initialize(label: nil, icon: nil, url: nil, method: nil, scheme: :ghost, formatter: nil, **system_arguments, &block)
         @label = label
         @icon = icon
         @url = url
         @method = method
         @scheme = scheme
+        @formatter = formatter || block
         @system_arguments = system_arguments
-        @content_block = block
       end
 
       def render_action(row)
-        if @content_block
-          # Call the block with the row and return the result
-          @content_block.call(row)
+        if @formatter
+          # Call the formatter proc/lambda
+          @formatter.call(row)
         else
           # Return a Button component instance that can be rendered by the parent
           FlatPack::Button::Component.new(

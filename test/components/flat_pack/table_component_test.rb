@@ -35,7 +35,7 @@ module FlatPack
 
       def test_renders_table_with_block_columns
         render_inline(Component.new(rows: @users)) do |component|
-          component.with_column(label: "Name") { |user| user.name.upcase }
+          component.with_column(label: "Name", formatter: ->(user) { user.name.upcase })
         end
         
         assert_selector "td", text: "ALICE"
@@ -64,9 +64,7 @@ module FlatPack
       def test_renders_custom_action_block
         render_inline(Component.new(rows: @users)) do |component|
           component.with_column(label: "Name", attribute: :name)
-          component.with_action do |user|
-            tag.span("Custom #{user.name}", class: "custom-action")
-          end
+          component.with_action(formatter: ->(user) { "<span class=\"custom-action\">Custom #{user.name}</span>".html_safe })
         end
         
         assert_selector "span.custom-action", text: "Custom Alice"

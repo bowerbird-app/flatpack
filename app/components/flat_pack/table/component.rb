@@ -71,11 +71,7 @@ module FlatPack
       def render_row(row)
         tag.tr class: "hover:bg-[var(--color-muted)] transition-colors duration-[var(--transition-fast)]" do
           safe_join([
-            columns.map { |column| 
-              # Store the row for the column to access
-              column.instance_variable_set(:@current_row, row)
-              column.render_cell(row)
-            },
+            columns.map { |column| column.render_cell(row) },
             (render_actions_cell(row) if actions.any?)
           ].flatten.compact)
         end
