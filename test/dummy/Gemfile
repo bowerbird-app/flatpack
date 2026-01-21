@@ -10,6 +10,7 @@ gem "rails", "~> 8.0"
 gem "puma", ">= 5.0"
 gem "propshaft", "~> 1.0"
 gem "sqlite3", ">= 2.1"
+gem "pg", "~> 1.5"
 
 # Asset pipeline and frontend
 gem "tailwindcss-rails", "~> 3.0"

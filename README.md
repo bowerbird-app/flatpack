@@ -91,6 +91,25 @@ cd flat_pack
 bundle install
 ```
 
+### Using GitHub Codespaces / Devcontainer
+
+This repository includes a devcontainer configuration for use with GitHub Codespaces or VS Code Dev Containers:
+
+- **PostgreSQL 16** - Database service
+- **Redis 7** - Cache/background jobs
+- **Ruby 3.2.3** - Runtime environment
+- **Pre-configured VS Code extensions** - Ruby LSP, Debug, Tailwind CSS
+
+To use:
+
+1. **GitHub Codespaces**: Click "Code" → "Create codespace on main"
+2. **VS Code**: Open in VS Code, click "Reopen in Container" when prompted
+
+The devcontainer automatically:
+- Installs all dependencies
+- Sets up the database
+- Builds Tailwind CSS assets
+
 ### Running Tests
 
 ```bash
