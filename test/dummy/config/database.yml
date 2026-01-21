@@ -5,18 +5,40 @@
 #   gem "sqlite3"
 #
 default: &default
+  <% if ENV['DB_HOST'].present? %>
+  adapter: postgresql
+  encoding: unicode
+  host: <%= ENV.fetch("DB_HOST", "localhost") %>
+  port: <%= ENV.fetch("DB_PORT", 5432) %>
+  username: <%= ENV.fetch("DB_USER", "postgres") %>
+  password: <%= ENV.fetch("DB_PASSWORD", "postgres") %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  <% else %>
   adapter: sqlite3
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
+  <% end %>
 
 development:
   <<: *default
+  <% if ENV['DB_HOST'].present? %>
+  database: <%= ENV.fetch("DB_NAME", "app_development") %>
+  <% else %>
   database: storage/development.sqlite3
+  <% end %>
 
 test:
   <<: *default
+  <% if ENV['DB_HOST'].present? %>
+  database: app_test
+  <% else %>
   database: storage/test.sqlite3
+  <% end %>
 
 production:
   <<: *default
+  <% if ENV['DB_HOST'].present? %>
+  database: app_production
+  <% else %>
   database: storage/production.sqlite3
+  <% end %>
