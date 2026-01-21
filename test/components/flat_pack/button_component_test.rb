@@ -67,6 +67,59 @@ module FlatPack
         assert_selector "button", text: "Default"
       end
 
+      def test_default_size_is_md
+        component = Component.new(label: "Default")
+        render_inline(component)
+
+        assert_selector "button", text: "Default"
+        # The rendered HTML should contain the md size classes
+        assert_includes page.native.to_html, "px-4"
+        assert_includes page.native.to_html, "py-2"
+        assert_includes page.native.to_html, "text-sm"
+      end
+
+      def test_renders_button_with_small_size
+        render_inline(Component.new(label: "Small", size: :sm))
+
+        assert_selector "button", text: "Small"
+        assert_includes page.native.to_html, "px-3"
+        assert_includes page.native.to_html, "py-1.5"
+        assert_includes page.native.to_html, "text-xs"
+      end
+
+      def test_renders_button_with_medium_size
+        render_inline(Component.new(label: "Medium", size: :md))
+
+        assert_selector "button", text: "Medium"
+        assert_includes page.native.to_html, "px-4"
+        assert_includes page.native.to_html, "py-2"
+        assert_includes page.native.to_html, "text-sm"
+      end
+
+      def test_renders_button_with_large_size
+        render_inline(Component.new(label: "Large", size: :lg))
+
+        assert_selector "button", text: "Large"
+        assert_includes page.native.to_html, "px-6"
+        assert_includes page.native.to_html, "py-3"
+        assert_includes page.native.to_html, "text-base"
+      end
+
+      def test_renders_link_with_size
+        render_inline(Component.new(label: "Link", url: "/path", size: :lg))
+
+        assert_selector "a[href='/path']", text: "Link"
+        assert_includes page.native.to_html, "px-6"
+        assert_includes page.native.to_html, "py-3"
+        assert_includes page.native.to_html, "text-base"
+      end
+
+      def test_raises_error_for_invalid_size
+        assert_raises(ArgumentError) do
+          Component.new(label: "Invalid", size: :xl)
+        end
+      end
+
       def test_renders_link_with_target_blank
         render_inline(Component.new(label: "External", url: "https://example.com", target: "_blank"))
 

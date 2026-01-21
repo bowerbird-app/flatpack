@@ -9,9 +9,16 @@ module FlatPack
         ghost: "bg-[var(--color-ghost)] hover:bg-[var(--color-ghost-hover)] text-[var(--color-ghost-text)]"
       }.freeze
 
+      SIZES = {
+        sm: "px-3 py-1.5 text-xs",
+        md: "px-4 py-2 text-sm",
+        lg: "px-6 py-3 text-base"
+      }.freeze
+
       def initialize(
         label:,
         scheme: :primary,
+        size: :md,
         url: nil,
         method: nil,
         target: nil,
@@ -20,11 +27,13 @@ module FlatPack
         super(**system_arguments)
         @label = label
         @scheme = scheme.to_sym
+        @size = size.to_sym
         @url = url
         @method = method
         @target = target
 
         validate_scheme!
+        validate_size!
       end
 
       def call
@@ -68,12 +77,12 @@ module FlatPack
       def button_classes
         classes(
           "inline-flex items-center justify-center",
-          "px-4 py-2",
           "rounded-[var(--radius-md)]",
-          "font-medium text-sm",
+          "font-medium",
           "transition-colors duration-[var(--transition-base)]",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:ring-offset-2",
           "disabled:pointer-events-none disabled:opacity-50",
+          size_classes,
           scheme_classes
         )
       end
@@ -82,9 +91,18 @@ module FlatPack
         SCHEMES.fetch(@scheme)
       end
 
+      def size_classes
+        SIZES.fetch(@size)
+      end
+
       def validate_scheme!
         return if SCHEMES.key?(@scheme)
         raise ArgumentError, "Invalid scheme: #{@scheme}. Must be one of: #{SCHEMES.keys.join(", ")}"
+      end
+
+      def validate_size!
+        return if SIZES.key?(@size)
+        raise ArgumentError, "Invalid size: #{@size}. Must be one of: #{SIZES.keys.join(", ")}"
       end
     end
   end

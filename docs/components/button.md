@@ -14,6 +14,7 @@ The Button component renders a button or link with consistent styling and behavi
 |------|------|---------|-------------|
 | `label` | String | **required** | Button text |
 | `scheme` | Symbol | `:primary` | Visual style (`:primary`, `:secondary`, `:ghost`) |
+| `size` | Symbol | `:md` | Button size (`:sm`, `:md`, `:lg`) |
 | `url` | String | `nil` | If provided, renders as link instead of button |
 | `method` | Symbol | `nil` | HTTP method for link (`:get`, `:post`, `:delete`, etc.) |
 | `**system_arguments` | Hash | `{}` | HTML attributes (`class`, `data`, `aria`, `id`, etc.) |
@@ -47,6 +48,56 @@ Tertiary actions, minimal styling.
 <%= render FlatPack::Button::Component.new(
   label: "Learn More",
   scheme: :ghost
+) %>
+```
+
+## Sizes
+
+Buttons come in three sizes: small (`:sm`), medium (`:md`, default), and large (`:lg`).
+
+### Small
+Compact size for tight spaces or secondary actions.
+
+```erb
+<%= render FlatPack::Button::Component.new(
+  label: "Small Button",
+  size: :sm
+) %>
+```
+
+### Medium (Default)
+Standard button size for most use cases.
+
+```erb
+<%= render FlatPack::Button::Component.new(
+  label: "Medium Button",
+  size: :md
+) %>
+```
+
+### Large
+Prominent size for primary call-to-action buttons.
+
+```erb
+<%= render FlatPack::Button::Component.new(
+  label: "Large Button",
+  size: :lg
+) %>
+```
+
+### Combining Sizes with Schemes
+
+```erb
+<%= render FlatPack::Button::Component.new(
+  label: "Small Primary",
+  scheme: :primary,
+  size: :sm
+) %>
+
+<%= render FlatPack::Button::Component.new(
+  label: "Large Secondary",
+  scheme: :secondary,
+  size: :lg
 ) %>
 ```
 
@@ -249,7 +300,8 @@ end
 ```ruby
 FlatPack::Button::Component.new(
   label: String,              # Required
-  scheme: Symbol,             # Optional, default: :primary
+  scheme: Symbol,             # Optional, default: :primary (:primary, :secondary, :ghost)
+  size: Symbol,               # Optional, default: :md (:sm, :md, :lg)
   url: String,                # Optional, default: nil
   method: Symbol,             # Optional, default: nil
   **system_arguments          # Optional
