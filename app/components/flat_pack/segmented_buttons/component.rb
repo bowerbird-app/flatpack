@@ -14,7 +14,7 @@ module FlatPack
 
       def call
         content_tag(:div, **group_attributes) do
-          buttons.map(&:call).join.html_safe
+          safe_join(buttons.map(&:call))
         end
       end
 

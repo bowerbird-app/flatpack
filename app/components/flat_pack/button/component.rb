@@ -17,6 +17,12 @@ module FlatPack
         lg: "px-6 py-3 text-base"
       }.freeze
 
+      ICON_ONLY_SIZES = {
+        sm: "p-1.5",
+        md: "p-2",
+        lg: "p-3"
+      }.freeze
+
       def initialize(
         label: nil,
         scheme: :primary,
@@ -78,16 +84,17 @@ module FlatPack
           content << content_tag(:span, @label) if @label
         end
 
-        safe_join(content, " ")
+        safe_join(content)
       end
 
       def render_icon
-        render FlatPack::Shared::IconComponent.new(name: @icon, size: icon_size)
+        render FlatPack::Shared::IconComponent.new(name: @icon, size: @size)
       end
 
       def spinner_html
         # Simple CSS spinner using inline SVG
-        content_tag(:svg, class: "animate-spin #{icon_size_classes}", xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24") do
+        size_classes = FlatPack::Shared::IconComponent::SIZES.fetch(@size)
+        content_tag(:svg, class: "animate-spin #{size_classes}", xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24") do
           content_tag(:circle, nil, class: "opacity-25", cx: "12", cy: "12", r: "10", stroke: "currentColor", "stroke-width": "4") +
             content_tag(:path, nil, class: "opacity-75", fill: "currentColor", d: "M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z")
         end
@@ -101,12 +108,8 @@ module FlatPack
         end
       end
 
-      def icon_size_classes
-        case @size
-        when :sm then "w-4 h-4"
-        when :md then "w-5 h-5"
-        when :lg then "w-6 h-6"
-        end
+      def conditional_size_classes
+        @icon_only ? nil : size_classes
       end
 
       def link_attributes
@@ -137,7 +140,7 @@ module FlatPack
           "transition-colors duration-[var(--transition-base)]",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:ring-offset-2",
           "disabled:pointer-events-none disabled:opacity-50",
-          size_classes,
+          conditional_size_classes,
           scheme_classes,
           icon_only_classes
         )
@@ -146,11 +149,7 @@ module FlatPack
       def icon_only_classes
         return unless @icon_only
 
-        case @size
-        when :sm then "p-1.5"
-        when :md then "p-2"
-        when :lg then "p-3"
-        end
+        ICON_ONLY_SIZES.fetch(@size)
       end
 
       def scheme_classes
@@ -172,8 +171,15 @@ module FlatPack
       end
 
       def validate_content!
-        return if @label || @icon || @icon_only
-        raise ArgumentError, "Button must have a label, icon, or be icon_only"
+        # Valid scenarios:
+        # 1. Has label (with or without icon)
+        # 2. Has icon
+        has_label = @label.present?
+        has_icon = @icon.present?
+        is_valid = has_label || has_icon
+        return if is_valid
+
+        raise ArgumentError, "Button must have either a label or an icon"
       end
     end
   end
