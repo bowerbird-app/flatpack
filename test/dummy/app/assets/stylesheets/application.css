@@ -2,7 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-/* FlatPack CSS Variables */
+/* FlatPack CSS Variables - Compatible with Tailwind CSS 3 */
+
 :root {
   /* Color System - Brand Colors */
   --color-brand-50: oklch(0.98 0.01 250);

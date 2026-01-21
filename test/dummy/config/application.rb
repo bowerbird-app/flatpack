@@ -24,5 +24,8 @@ module Dummy
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    # Add FlatPack asset paths for Propshaft
+    config.assets.paths << FlatPack::Engine.root.join("app/assets/stylesheets")
   end
 end

@@ -975,7 +975,7 @@ body {
   transition-duration: var(--transition-fast);
 }
 
-/* FlatPack CSS Variables */
+/* FlatPack CSS Variables - Compatible with Tailwind CSS 3 */
 
 :root {
   /* Color System - Brand Colors */
