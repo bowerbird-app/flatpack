@@ -26,12 +26,12 @@ module FlatPack
         attrs = merge_attributes(
           class: "overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border)]"
         )
-        
+
         if @stimulus
           attrs[:data] ||= {}
           attrs[:data][:controller] = "flat-pack--table"
         end
-        
+
         attrs
       end
 
@@ -80,7 +80,7 @@ module FlatPack
       def render_actions_cell(row)
         tag.td class: body_cell_classes do
           tag.div class: "flex items-center gap-2" do
-            safe_join(actions.map { |action| 
+            safe_join(actions.map { |action|
               result = action.render_action(row)
               # If it's a component, render it; otherwise return it directly
               result.is_a?(ViewComponent::Base) ? render(result) : result

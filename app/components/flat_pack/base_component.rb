@@ -2,7 +2,6 @@
 
 module FlatPack
   class BaseComponent < ViewComponent::Base
-
     # System arguments pattern for consistent API across components
     # Handles: class, data, aria, id, and other HTML attributes
     def initialize(**system_arguments)

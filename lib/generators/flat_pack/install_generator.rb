@@ -11,12 +11,14 @@ module FlatPack
 
       def add_stylesheet_import
         app_css_path = Rails.root.join("app/assets/stylesheets/application.css")
-        
+
         if File.exist?(app_css_path)
           css_content = File.read(app_css_path)
           import_statement = '@import "flat_pack/variables.css";'
-          
-          unless css_content.include?(import_statement)
+
+          if css_content.include?(import_statement)
+            say "⊙ FlatPack stylesheet import already exists in application.css", :yellow
+          else
             # Add import at the top, after any @layer directives
             if css_content.include?("@import")
               # Add after existing imports
@@ -25,10 +27,8 @@ module FlatPack
               # Add at the very top
               prepend_to_file app_css_path, "#{import_statement}\n\n"
             end
-            
+
             say "✓ Added FlatPack stylesheet import to application.css", :green
-          else
-            say "⊙ FlatPack stylesheet import already exists in application.css", :yellow
           end
         else
           say "✗ Could not find app/assets/stylesheets/application.css", :red

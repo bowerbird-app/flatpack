@@ -8,7 +8,7 @@ module FlatPack
       end
 
       def initialize(**system_arguments)
-        super(**system_arguments)
+        super
       end
 
       def call
