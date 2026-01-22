@@ -13,11 +13,6 @@ module.exports = {
     `${engineRoot}/app/components/**/*.{erb,haml,html,slim,rb}`,
     `${engineRoot}/app/assets/stylesheets/**/*.css`,
   ],
-  safelist: [
-    'p-1.5',
-    'p-2',
-    'p-3',
-  ],
   theme: {
     extend: {
       fontFamily: {
