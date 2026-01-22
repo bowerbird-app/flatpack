@@ -10,7 +10,7 @@ module FlatPack
 
     # Configure autoload paths for components
     config.autoload_paths << root.join("app/components")
-    
+
     # Configure Propshaft to serve our assets
     initializer "flat_pack.assets" do |app|
       if app.config.respond_to?(:assets)

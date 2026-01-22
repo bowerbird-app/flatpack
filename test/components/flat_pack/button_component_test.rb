@@ -151,6 +151,53 @@ module FlatPack
 
         assert_selector "a#my-link[href='/path']", text: "Link ID"
       end
+
+      def test_renders_success_scheme
+        render_inline(Component.new(label: "Success", scheme: :success))
+
+        assert_selector "button", text: "Success"
+      end
+
+      def test_renders_warning_scheme
+        render_inline(Component.new(label: "Warning", scheme: :warning))
+
+        assert_selector "button", text: "Warning"
+      end
+
+      def test_renders_icon_only_button
+        render_inline(Component.new(icon: "search", icon_only: true))
+
+        assert_selector "button"
+        refute_selector "button span"
+      end
+
+      def test_renders_button_with_icon_and_label
+        render_inline(Component.new(label: "Search", icon: "search"))
+
+        assert_selector "button", text: "Search"
+      end
+
+      def test_renders_loading_button
+        render_inline(Component.new(label: "Save", loading: true))
+
+        assert_selector "button[disabled]"
+        assert_selector "button svg.animate-spin"
+        assert_selector "button", text: "Loading"
+      end
+
+      def test_renders_loading_icon_only_button
+        render_inline(Component.new(icon: "search", icon_only: true, loading: true))
+
+        assert_selector "button[disabled]"
+        assert_selector "button svg.animate-spin"
+        refute_selector "button", text: "Loading"
+      end
+
+      def test_raises_error_for_button_without_content
+        assert_raises(ArgumentError) do
+          Component.new
+        end
+      end
     end
   end
 end

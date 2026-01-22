@@ -15,7 +15,7 @@ module FlatPack
 
       def test_renders_empty_table
         render_inline(Component.new(rows: []))
-        
+
         assert_selector "table"
         assert_text "No data available"
       end
@@ -25,7 +25,7 @@ module FlatPack
           component.with_column(label: "Name", attribute: :name)
           component.with_column(label: "Email", attribute: :email)
         end
-        
+
         assert_selector "table"
         assert_selector "th", text: "Name"
         assert_selector "th", text: "Email"
@@ -37,7 +37,7 @@ module FlatPack
         render_inline(Component.new(rows: @users)) do |component|
           component.with_column(label: "Name", formatter: ->(user) { user.name.upcase })
         end
-        
+
         assert_selector "td", text: "ALICE"
         assert_selector "td", text: "BOB"
       end
@@ -47,7 +47,7 @@ module FlatPack
           component.with_column(label: "Name", attribute: :name)
           component.with_action(label: "Edit", url: ->(user) { "/users/#{user.id}/edit" })
         end
-        
+
         assert_selector "th", text: "Actions"
         assert_selector "a[href='/users/1/edit']", text: "Edit"
         assert_selector "a[href='/users/2/edit']", text: "Edit"
@@ -57,7 +57,7 @@ module FlatPack
         render_inline(Component.new(rows: @users, stimulus: true)) do |component|
           component.with_column(label: "Name", attribute: :name)
         end
-        
+
         assert_selector "div[data-controller='flat-pack--table']"
       end
 
@@ -66,13 +66,13 @@ module FlatPack
           component.with_column(label: "Name", attribute: :name)
           component.with_action(formatter: ->(user) { "<span class=\"custom-action\">Custom #{user.name}</span>".html_safe })
         end
-        
+
         assert_selector "span.custom-action", text: "Custom Alice"
       end
 
       def test_merges_custom_classes
         render_inline(Component.new(rows: @users, class: "custom-table"))
-        
+
         assert_selector "div.custom-table"
       end
 
@@ -82,7 +82,7 @@ module FlatPack
           component.with_column(label: "Email")
           component.with_action(label: "Edit")
         end
-        
+
         assert_selector "td[colspan='3']", text: "No data available"
       end
     end

@@ -6,7 +6,9 @@ module FlatPack
       SCHEMES = {
         primary: "bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-[var(--color-primary-text)] shadow-[var(--shadow-sm)]",
         secondary: "bg-[var(--color-secondary)] hover:bg-[var(--color-secondary-hover)] text-[var(--color-secondary-text)] border border-[var(--color-border)]",
-        ghost: "bg-[var(--color-ghost)] hover:bg-[var(--color-ghost-hover)] text-[var(--color-ghost-text)]"
+        ghost: "bg-[var(--color-ghost)] hover:bg-[var(--color-ghost-hover)] text-[var(--color-ghost-text)]",
+        success: "bg-[var(--color-success)] hover:bg-[var(--color-success-hover)] text-[var(--color-success-text)] shadow-[var(--shadow-sm)]",
+        warning: "bg-[var(--color-warning)] hover:bg-[var(--color-warning-hover)] text-[var(--color-warning-text)] shadow-[var(--shadow-sm)]"
       }.freeze
 
       SIZES = {
@@ -15,13 +17,22 @@ module FlatPack
         lg: "px-6 py-3 text-base"
       }.freeze
 
+      ICON_ONLY_SIZES = {
+        sm: "p-1.5",
+        md: "p-2",
+        lg: "p-3"
+      }.freeze
+
       def initialize(
-        label:,
+        label: nil,
         scheme: :primary,
         size: :md,
         url: nil,
         method: nil,
         target: nil,
+        icon: nil,
+        icon_only: false,
+        loading: false,
         **system_arguments
       )
         super(**system_arguments)
@@ -31,9 +42,13 @@ module FlatPack
         @url = url
         @method = method
         @target = target
+        @icon = icon
+        @icon_only = icon_only
+        @loading = loading
 
         validate_scheme!
         validate_size!
+        validate_content!
       end
 
       def call
@@ -48,12 +63,53 @@ module FlatPack
 
       def render_link
         link_to @url, **link_attributes do
-          @label
+          button_content
         end
       end
 
       def render_button
-        button_tag @label, **button_attributes
+        button_tag(**button_attributes) do
+          button_content
+        end
+      end
+
+      def button_content
+        content = []
+
+        if @loading
+          content << spinner_html
+          content << content_tag(:span, "Loading") unless @icon_only
+        else
+          content << render_icon if @icon
+          content << content_tag(:span, @label) if @label
+        end
+
+        safe_join(content)
+      end
+
+      def render_icon
+        render FlatPack::Shared::IconComponent.new(name: @icon, size: @size)
+      end
+
+      def spinner_html
+        # Simple CSS spinner using inline SVG
+        size_classes = FlatPack::Shared::IconComponent::SIZES.fetch(@size)
+        content_tag(:svg, class: "animate-spin #{size_classes}", xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24") do
+          content_tag(:circle, nil, class: "opacity-25", cx: "12", cy: "12", r: "10", stroke: "currentColor", "stroke-width": "4") +
+            content_tag(:path, nil, class: "opacity-75", fill: "currentColor", d: "M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z")
+        end
+      end
+
+      def icon_size
+        case @size
+        when :sm then :sm
+        when :md then :md
+        when :lg then :lg
+        end
+      end
+
+      def conditional_size_classes
+        @icon_only ? nil : size_classes
       end
 
       def link_attributes
@@ -68,23 +124,32 @@ module FlatPack
       end
 
       def button_attributes
-        merge_attributes(
+        attrs = {
           type: "button",
           class: button_classes
-        )
+        }
+        attrs[:disabled] = true if @loading
+        merge_attributes(**attrs)
       end
 
       def button_classes
         classes(
-          "inline-flex items-center justify-center",
+          "inline-flex items-center justify-center gap-2",
           "rounded-[var(--radius-md)]",
           "font-medium",
           "transition-colors duration-[var(--transition-base)]",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:ring-offset-2",
           "disabled:pointer-events-none disabled:opacity-50",
-          size_classes,
-          scheme_classes
+          conditional_size_classes,
+          scheme_classes,
+          icon_only_classes
         )
+      end
+
+      def icon_only_classes
+        return unless @icon_only
+
+        ICON_ONLY_SIZES.fetch(@size)
       end
 
       def scheme_classes
@@ -103,6 +168,18 @@ module FlatPack
       def validate_size!
         return if SIZES.key?(@size)
         raise ArgumentError, "Invalid size: #{@size}. Must be one of: #{SIZES.keys.join(", ")}"
+      end
+
+      def validate_content!
+        # Valid scenarios:
+        # 1. Has label (with or without icon)
+        # 2. Has icon
+        has_label = @label.present?
+        has_icon = @icon.present?
+        is_valid = has_label || has_icon
+        return if is_valid
+
+        raise ArgumentError, "Button must have either a label or an icon"
       end
     end
   end

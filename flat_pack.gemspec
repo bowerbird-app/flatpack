@@ -1,14 +1,16 @@
+# frozen_string_literal: true
+
 require_relative "lib/flat_pack/version"
 
 Gem::Specification.new do |spec|
-  spec.name        = "flat_pack"
-  spec.version     = FlatPack::VERSION
-  spec.authors     = ["FlatPack Team"]
-  spec.email       = ["team@flatpack.dev"]
-  spec.homepage    = "https://github.com/flatpack/flat_pack"
-  spec.summary     = "A modern Rails 8 UI component library"
+  spec.name = "flat_pack"
+  spec.version = FlatPack::VERSION
+  spec.authors = ["FlatPack Team"]
+  spec.email = ["team@flatpack.dev"]
+  spec.homepage = "https://github.com/flatpack/flat_pack"
+  spec.summary = "A modern Rails 8 UI component library"
   spec.description = "FlatPack is a production-grade Rails 8 Engine providing a comprehensive UI component library built with ViewComponent, Tailwind CSS 4, and modern Rails conventions."
-  spec.license     = "MIT"
+  spec.license = "MIT"
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = spec.homepage

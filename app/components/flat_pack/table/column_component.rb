@@ -24,7 +24,7 @@ module FlatPack
         else
           ""
         end
-        
+
         # Build td tag manually
         "<td class=\"#{cell_classes}\">#{ERB::Util.html_escape(content)}</td>".html_safe
       end
