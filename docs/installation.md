@@ -1,63 +1,141 @@
-# Installation Guide
+# FlatPack Gem Installation Guide
 
-This guide walks you through installing FlatPack in your Rails 8 application.
+This document provides the exact terminal commands and configuration steps needed to install and initialize the FlatPack Ruby gem from the GitHub repository `bowerbird-app/flatpack` in this project.
+
+## Overview
+
+FlatPack is a modern Rails 8 UI Component Library built with ViewComponent, Tailwind CSS, and Hotwire. It provides type-safe, testable components with dark mode support and accessibility features.
+
+**Current Version:** 0.1.1 (Updated January 23, 2026)
 
 ## Prerequisites
 
 - Rails 8.0+
 - Ruby 3.2+
-- Tailwind CSS 3.x via tailwindcss-rails gem
-- Propshaft (asset pipeline)
-- Importmaps (JavaScript)
+- Tailwind CSS via tailwindcss-rails gem (version 3.x or 4.x) - ✓ Already installed in this project
+- Propshaft (asset pipeline) - ✓ Already installed in this project  
+- Importmaps (JavaScript) - ✓ Already installed in this project
+
+**Note:** FlatPack works with both Tailwind CSS 3 and 4. This project uses Tailwind CSS 4 via the tailwindcss-rails gem.
 
 ## Installation Steps
 
-### 1. Add to Gemfile
+### 1. Add FlatPack to Gemfile
+
+The gem has already been added to the Gemfile:
 
 ```ruby
-gem 'flat_pack'
+gem "flat_pack", github: "bowerbird-app/flatpack"
 ```
 
-Then run:
+### 2. Install Dependencies
+
+Run bundle install to install the gem:
 
 ```bash
 bundle install
 ```
 
-### 2. Run the Install Generator
+**Note:** Since the gem is hosted on GitHub, bundle install will use your configured git credentials to access the repository. The flatpack repository is public, so no special authentication is required.
+
+### 3. Run the FlatPack Install Generator
+
+FlatPack provides a custom Rails generator that automates the installation:
 
 ```bash
 rails generate flat_pack:install
 ```
 
-This generator will:
-- Add `@import "flat_pack/variables.css";` to your `application.css`
-- Display instructions for Tailwind CSS 4 configuration
+**What the generator does:**
+- Adds `@import "flat_pack/variables.css";` to your `app/assets/stylesheets/application.css`
+- Displays instructions for Tailwind CSS 4 configuration
+- Shows next steps for using components
 
-### 3. Install tailwindcss-rails Gem
+### 4. Configure Tailwind CSS 4 to Scan FlatPack Components
 
-Add to your Gemfile:
+**For Tailwind CSS 4 (via tailwindcss-rails):**
 
-```ruby
-gem 'tailwindcss-rails', '~> 3.0'
-```
+Configure `app/assets/tailwind/application.css` with the `@source` directive and FlatPack theme variables.
 
-Then install:
+**First, find your gem path:**
 
 ```bash
-bundle install
+bundle show flat_pack
 ```
 
-### 4. Configure Tailwind CSS
+This will output the full path, e.g., `/usr/local/bundle/ruby/3.3.0/bundler/gems/flatpack-26b6f5d354a7`
 
-Update `app/assets/stylesheets/application.css`:
+**Then configure your `app/assets/tailwind/application.css`:**
 
 ```css
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-/* FlatPack CSS Variables */
+/* Tailwind CSS - Scan FlatPack components for classes */
+@source "../../../../../../usr/local/bundle/ruby/3.3.0/bundler/gems/flatpack-YOURHASH/app/components";
+
+/* Extend Tailwind theme with FlatPack color system */
+@theme {
+  --color-fp-primary: oklch(0.42 0.18 165);
+  --color-fp-primary-hover: oklch(0.38 0.18 165);
+  --color-fp-primary-text: oklch(1.0 0 0);
+  --color-fp-secondary: oklch(0.96 0 0);
+  --color-fp-secondary-hover: oklch(0.93 0 0);
+  --color-fp-secondary-text: oklch(0.29 0.01 250);
+  --color-fp-ghost: transparent;
+  --color-fp-ghost-hover: oklch(0.96 0 0);
+  --color-fp-ghost-text: oklch(0.40 0.01 250);
+  --color-fp-border: oklch(0.85 0 0);
+  --shadow-fp-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --radius-md: 0.375rem;
+  --transition-base: 150ms;
+  --color-ring: oklch(0.42 0.18 165);
+  
+  /* Define theme colors for Tailwind utility classes */
+  --color-primary: var(--color-fp-primary);
+  --color-primary-hover: var(--color-fp-primary-hover);
+  --color-primary-text: var(--color-fp-primary-text);
+  --color-secondary: var(--color-fp-secondary);
+  --color-secondary-hover: var(--color-fp-secondary-hover);
+  --color-secondary-text: var(--color-fp-secondary-text);
+  --color-ghost: var(--color-fp-ghost);
+  --color-ghost-hover: var(--color-fp-ghost-hover);
+  --color-ghost-text: var(--color-fp-ghost-text);
+  --color-border: var(--color-fp-border);
+}
+
+/* Map FlatPack CSS variables to :root for component compatibility */
+:root {
+  --color-primary: var(--color-fp-primary);
+  --color-primary-hover: var(--color-fp-primary-hover);
+  --color-primary-text: var(--color-fp-primary-text);
+  --color-secondary: var(--color-fp-secondary);
+  --color-secondary-hover: var(--color-fp-secondary-hover);
+  --color-secondary-text: var(--color-fp-secondary-text);
+  --color-ghost: var(--color-fp-ghost);
+  --color-ghost-hover: var(--color-fp-ghost-hover);
+  --color-ghost-text: var(--color-fp-ghost-text);
+  --color-border: var(--color-fp-border);
+  --shadow-sm: var(--shadow-fp-sm);
+  --radius-md: var(--radius-md);
+  --transition-base: var(--transition-base);
+  --color-ring: var(--color-ring);
+}
+```
+
+**Important Notes:**
+- Replace `YOURHASH` with the actual git hash from `bundle show flat_pack`
+- The `@source` path must be relative to the `application.css` file
+- The path depth may vary: count `../` segments from `app/assets/tailwind/` to root, then to the bundle path
+- All CSS variables used by FlatPack components must be defined in the `@theme` block
+- After updating, rebuild Tailwind: `bin/rails tailwindcss:build`
+
+**✅ This has been completed** - The configuration has been added to `app/assets/tailwind/application.css`.
+
+### 5. Add FlatPack CSS Variables (Optional Customization)
+
+If you want to customize the theme, add CSS variables to `app/assets/stylesheets/application.css`:
+
+```css
 :root {
   --color-primary: oklch(0.52 0.26 250);
   --color-primary-hover: oklch(0.42 0.24 250);
@@ -68,7 +146,9 @@ Update `app/assets/stylesheets/application.css`:
 }
 ```
 
-Create `config/tailwind.config.js`:
+### 6. Configure Tailwind CSS Content Paths (If Needed)
+
+If a `config/tailwind.config.js` file exists, ensure it includes the FlatPack components path:
 
 ```javascript
 module.exports = {
@@ -87,27 +167,9 @@ module.exports = {
 }
 ```
 
-### 5. Build Tailwind CSS
+### 7. Restart Your Rails Server
 
-Build the CSS:
-
-```bash
-bundle exec tailwindcss -i app/assets/stylesheets/application.css -o app/assets/builds/application.css --watch
-```
-
-### 6. Configure Importmap (Optional, for Stimulus)
-
-If you want to use FlatPack's Stimulus controllers (like the table controller), ensure your importmap includes Stimulus:
-
-```ruby
-# config/importmap.rb
-pin "@hotwired/stimulus", to: "stimulus.min.js"
-pin "@hotwired/stimulus-loading", to: "stimulus-loading.js"
-
-# FlatPack controllers are automatically pinned by the engine
-```
-
-### 7. Restart Your Server
+After installation, restart the Rails server:
 
 ```bash
 bin/rails server
@@ -115,154 +177,171 @@ bin/rails server
 
 ## Verification
 
-Test the installation by rendering a button:
+Test the installation by adding a FlatPack button component to a view:
 
 ```erb
-<%# app/views/pages/home.html.erb %>
-<%= render FlatPack::Button::Component.new(label: "Test Button", scheme: :primary) %>
+<%# Example: app/views/pages/home.html.erb %>
+<%= render FlatPack::Button::Component.new(
+  label: "Test Button",
+  scheme: :primary
+) %>
 ```
 
 Visit the page in your browser. You should see a styled button.
 
-## Manual Installation (Without Generator)
+## Available Components
 
-If you prefer manual installation:
+FlatPack currently provides:
 
-### 1. Add stylesheet import
+- **Button** - Buttons and links with multiple schemes (`:primary`, `:secondary`, `:ghost`)
+- **Table** - Data tables with columns and actions
+- **Icon** - Shared icon component
 
-In `app/assets/stylesheets/application.css`:
+## Quick Start Examples
 
-```css
-@import "flat_pack/variables.css";
+### Button Component
+
+```erb
+<%= render FlatPack::Button::Component.new(
+  label: "Click me",
+  scheme: :primary
+) %>
 ```
 
-### 2. Configure Tailwind CSS 4
+### Table Component
 
-Add the `@source` comment as shown in Step 3 above.
-
-### 3. Configure assets (if needed)
-
-Propshaft should automatically detect FlatPack assets. If not, add to `config/initializers/assets.rb`:
-
-```ruby
-# This is usually not necessary
-Rails.application.config.assets.paths << FlatPack::Engine.root.join("app/assets/stylesheets")
+```erb
+<%= render FlatPack::Table::Component.new(rows: @users) do |table| %>
+  <% table.with_column(label: "Name", attribute: :name) %>
+  <% table.with_column(label: "Email", attribute: :email) %>
+  <% table.with_action(label: "Edit", url: ->(user) { edit_user_path(user) }) %>
+<% end %>
 ```
+
+## Custom Installation Scripts
+
+The FlatPack gem includes a custom Rails generator (`flat_pack:install`) which is the recommended installation method. There are no additional shell scripts or manual installation scripts required.
+
+## Required Initializers
+
+FlatPack does not require any custom initializers. The gem is designed for zero-config installation and works out of the box with the tailwindcss-rails gem.
 
 ## Troubleshooting
 
-### Styles not applying
+### Styles Not Applying
 
-1. **Check Tailwind CSS 4 is installed:**
+1. Check that Tailwind CSS is installed:
    ```bash
    bundle info tailwindcss-rails
    ```
 
-2. **Verify the @source path:**
-   Check that the path in your `application.css` matches your gem location:
+2. Find your FlatPack gem path and verify the `@source` path in your `app/assets/tailwind/application.css` is correct:
+   ```bash
+   bundle show flat_pack
+   ```
+   
+   The output will show the full path. Use this to update the `@source` directive with the correct git hash.
+
+3. Ensure all required CSS variables are defined in the `@theme` block:
+   - Color variables: `--color-fp-primary`, `--color-fp-secondary`, `--color-fp-ghost`, etc.
+   - Supporting variables: `--radius-md`, `--transition-base`, `--color-ring`, `--color-border`
+   - These must be in `@theme` to work with arbitrary values like `bg-[var(--color-secondary)]`
+
+4. Rebuild Tailwind CSS:
+   ```bash
+   bin/rails tailwindcss:build
+   ```
+
+5. Restart the Rails server
+
+### Components Not Found
+
+1. Verify the gem is installed:
    ```bash
    bundle info flat_pack
    ```
 
-3. **Restart the server:**
-   Tailwind CSS 4 needs to detect the new source path.
-
-### Components not found
-
-1. **Verify the gem is installed:**
-   ```bash
-   bundle info flat_pack
-   ```
-
-2. **Check autoloading:**
+2. Check autoloading:
    ```bash
    bin/rails zeitwerk:check
    ```
 
-3. **Restart the server:**
-   Rails needs to detect the new engine.
+3. Restart the Rails server
 
-### JavaScript not working
+### JavaScript Not Working
 
-1. **Verify Stimulus is installed:**
+1. Verify Stimulus is installed (should already be installed):
    ```bash
    bundle info stimulus-rails
    ```
 
-2. **Check importmap configuration:**
+2. Check importmap configuration:
    ```bash
    bin/rails importmap:audit
    ```
 
-## Next Steps
+## Documentation
 
-- [Quick Start Guide](README.md#quick-start)
-- [Theming Guide](theming.md)
-- [Component Documentation](components/)
+For more information, see the FlatPack documentation:
 
-## Upgrading
+- [Full Documentation](https://github.com/bowerbird-app/flatpack/tree/main/docs/)
+- [Theming Guide](https://github.com/bowerbird-app/flatpack/blob/main/docs/theming.md)
+- [Dark Mode Guide](https://github.com/bowerbird-app/flatpack/blob/main/docs/dark_mode.md)
+- [Component Documentation](https://github.com/bowerbird-app/flatpack/tree/main/docs/components/)
 
-To upgrade FlatPack to the latest version:
+## Summary
 
-### 1. Update the Gem
+The installation process for FlatPack is straightforward:
 
-```ruby
-# Gemfile
-gem 'flat_pack', '~> 0.1.1'  # or latest version
-```
+1. ✅ Add gem to Gemfile (completed)
+2. ✅ Run `bundle install` (completed - updated to v0.1.1)
+3. ✅ Run `rails generate flat_pack:install` (completed)
+4. ✅ Add Tailwind CSS `@source` comment to application.css (completed)
+5. Restart Rails server when ready
+6. Start using FlatPack components in your views
 
-Then run:
+No custom installation scripts or required initializers are needed beyond the standard Rails generator.
 
-```bash
-bundle update flat_pack
-```
+## Recent Updates
 
-### 2. Check the Changelog
+### Tailwind CSS 4 Integration Fix (January 23, 2026)
 
-Review [CHANGELOG.md](../CHANGELOG.md) for breaking changes and new features in each version.
+**What Changed:**
+- Updated `@source` directive path to match actual FlatPack gem location
+- Added missing CSS variables to `@theme` block: `--radius-md`, `--transition-base`, `--color-ring`
+- Added all variables to `:root` for full component compatibility
 
-### 3. Rebuild Tailwind CSS
+**Why This Was Needed:**
+- FlatPack button components use arbitrary value classes like `bg-[var(--color-secondary)]`
+- Tailwind CSS 4 requires CSS variables to be defined in the `@theme` block to work with arbitrary values
+- The `@source` directive must point to the exact gem path (including git hash) for Tailwind to scan component files
 
-After upgrading, rebuild your Tailwind CSS to include any new classes:
+**How to Apply:**
+1. Run `bundle show flat_pack` to get the correct gem path
+2. Update the `@source` path in `app/assets/tailwind/application.css`
+3. Ensure all CSS variables from the example above are in your `@theme` block
+4. Run `bin/rails tailwindcss:build` to regenerate the CSS
+5. Refresh your browser
 
-```bash
-bundle exec tailwindcss -i app/assets/stylesheets/application.css -o app/assets/builds/application.css
-```
+### Version 0.1.1 (January 23, 2026)
 
-### 4. Restart Your Server
-
-```bash
-bin/rails server
-```
-
-### Version-Specific Upgrade Notes
-
-#### Upgrading to 0.1.1 from 0.1.0
-
-This is a patch release that fixes Tailwind CSS 4 class scanning for components. No breaking changes.
+This update includes important fixes for Tailwind CSS 4 class detection:
 
 **What's Fixed:**
-- All Tailwind classes in Button and Icon components are now properly detected and generated
-- Safelist comments added to Ruby constants to ensure CSS generation
+- Added safelist comments to Button and Icon components
+- All Tailwind classes stored in Ruby constants (SCHEMES, SIZES, ICON_ONLY_SIZES) are now properly detected by Tailwind CSS 4's `@source` directive
+- Button component: Added safelist comments for 18 scheme classes, 9 size classes, and 3 icon-only size classes
+- Icon component: Added safelist comments for 8 size classes
 
-**Action Required:**
-- None - just update the gem and rebuild CSS
-- If you've created custom components with Tailwind class constants, see the [Component Development Guidelines](architecture/tailwind_4.md#component-development-guidelines) to add safelist comments
+**Impact:**
+- Ensures all FlatPack component styles are properly generated by Tailwind CSS 4
+- No breaking changes - this is a patch release
+- No action required beyond updating the gem
 
-For detailed changes, see [CHANGELOG.md](../CHANGELOG.md).
-
-## Local Development
-
-To use a local version of FlatPack during development:
-
-```ruby
-# Gemfile
-gem 'flat_pack', path: '/path/to/local/flat_pack'
-```
-
-Then:
-
+**How to Update:**
 ```bash
-bundle install
-bin/rails flat_pack:install:migrations
+bundle update flat_pack
+rails generate flat_pack:install  # Re-run if needed
 ```
+
+For full changelog, see: [FlatPack CHANGELOG](https://github.com/bowerbird-app/flatpack/blob/main/CHANGELOG.md)
