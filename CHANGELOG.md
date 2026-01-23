@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2] - 2026-01-23
+
+### Added
+- Automated Tailwind CSS 4 configuration in install generator
+- Install generator now automatically detects Tailwind CSS 4 files and injects complete configuration
+- Automatic calculation of relative paths from app's Tailwind file to gem's components directory
+- Configuration template (`tailwind_config.css.tt`) with `@source` directive, `@theme` block, and `:root` mappings
+- All FlatPack design tokens (colors, shadows, radius, transitions) automatically added to `@theme` block
+- Fallback to manual instructions if automatic detection fails
+
+### Changed
+- Updated `docs/installation.md` to highlight automated Tailwind CSS 4 configuration
+- Updated `README.md` to include automated setup in features list
+- Manual configuration moved to fallback section in documentation
+
+### Fixed
+- Eliminates manual path finding and calculation errors during installation
+- Ensures consistent Tailwind CSS 4 configuration across all installations
+
 ## [0.1.1] - 2026-01-23
 
 ### Fixed
@@ -41,5 +60,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dark mode support via system preference (prefers-color-scheme)
 - CSS variables for theming customization
 
+[0.1.2]: https://github.com/flatpack/flat_pack/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/flatpack/flat_pack/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/flatpack/flat_pack/releases/tag/v0.1.0
