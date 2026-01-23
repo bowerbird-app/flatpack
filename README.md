@@ -9,6 +9,7 @@ A modern Rails 8 UI Component Library built with ViewComponent, Tailwind CSS, an
 - 🌙 **Dark Mode** - System preference-driven (no toggle required)
 - ♿ **Accessible** - WCAG AA compliant, keyboard-friendly
 - 🚀 **Zero Config** - Works out of the box with tailwindcss-rails gem
+- ✨ **Automated Setup** - Install generator automatically configures Tailwind CSS 4
 - 📦 **No Node.js** - Uses Propshaft + Importmaps
 - 🔧 **Customizable** - Theme via CSS variables
 - 🧩 **Composable** - Build complex UIs from simple components
@@ -29,9 +30,13 @@ bundle install
 rails generate flat_pack:install
 ```
 
-See the [Installation Guide](docs/installation.md) for detailed setup instructions.
+**What the generator does:**
+- ✨ Automatically detects your Tailwind CSS 4 configuration file
+- ✨ Calculates the correct relative path to FlatPack components
+- ✨ Injects `@source` directive, `@theme` block, and CSS variable mappings
+- ✨ No manual path finding or configuration copying required!
 
-See [Installation Guide](docs/installation.md) for detailed instructions.
+See the [Installation Guide](docs/installation.md) for detailed setup instructions.
 
 ## Quick Start
 
@@ -77,7 +82,7 @@ More components coming soon!
 
 - Rails 8.0+
 - Ruby 3.2+
-- Tailwind CSS 3.x (via tailwindcss-rails gem)
+- Tailwind CSS 3.x or 4.x (via tailwindcss-rails gem)
 - Propshaft (asset pipeline)
 - Importmaps (JavaScript)
 
