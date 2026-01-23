@@ -94,6 +94,68 @@ SCHEMES = {
 
 The `[var(--color-primary)]` syntax allows Tailwind to use CSS variables as values.
 
+### Safelist Comments for Ruby Constants
+
+**Important:** Tailwind CSS 4's `@source` directive scans for string literals but cannot detect classes stored in Ruby constants. To ensure all classes are generated, add safelist comments immediately above any constant containing Tailwind classes.
+
+#### Required Format
+
+```ruby
+# Tailwind CSS scanning requires these classes to be present as string literals.
+# DO NOT REMOVE - These duplicates ensure CSS generation:
+# "class1" "class2" "class3" ...
+CONSTANT_NAME = {
+  key: "class1 class2 class3",
+  # ...
+}.freeze
+```
+
+#### Guidelines for Safelist Comments
+
+1. **Extract all unique classes** - Include every class from all values in the constant
+2. **Format as individual quoted strings** - Each class should be `"class-name"`, not `"class1 class2"`
+3. **Include complete modifiers** - Keep modifiers intact: `"hover:bg-blue-500"` not `"hover:"` and `"bg-blue-500"`
+4. **Preserve arbitrary values** - Include brackets: `"bg-[var(--color-primary)]"`
+5. **Place immediately above constant** - No blank line between comment and constant
+6. **Use consistent warning** - Always include "DO NOT REMOVE" to prevent accidental deletion
+
+#### Example: Button Component
+
+```ruby
+# app/components/flat_pack/button/component.rb
+module FlatPack
+  module Button
+    class Component < FlatPack::BaseComponent
+      # Tailwind CSS scanning requires these classes to be present as string literals.
+      # DO NOT REMOVE - These duplicates ensure CSS generation:
+      # "bg-[var(--color-primary)]" "hover:bg-[var(--color-primary-hover)]" "text-[var(--color-primary-text)]" "shadow-[var(--shadow-sm)]" "bg-[var(--color-secondary)]" "hover:bg-[var(--color-secondary-hover)]" "text-[var(--color-secondary-text)]" "border" "border-[var(--color-border)]"
+      SCHEMES = {
+        primary: "bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-[var(--color-primary-text)] shadow-[var(--shadow-sm)]",
+        secondary: "bg-[var(--color-secondary)] hover:bg-[var(--color-secondary-hover)] text-[var(--color-secondary-text)] border border-[var(--color-border)]"
+      }.freeze
+      
+      # Tailwind CSS scanning requires these classes to be present as string literals.
+      # DO NOT REMOVE - These duplicates ensure CSS generation:
+      # "px-3" "py-1.5" "text-xs" "px-4" "py-2" "text-sm" "px-6" "py-3" "text-base"
+      SIZES = {
+        sm: "px-3 py-1.5 text-xs",
+        md: "px-4 py-2 text-sm",
+        lg: "px-6 py-3 text-base"
+      }.freeze
+    end
+  end
+end
+```
+
+#### When to Add Safelist Comments
+
+Add safelist comments for any constant containing Tailwind classes:
+- `SCHEMES`, `SIZES`, `VARIANTS` - Common component styling constants
+- `ICON_SIZES`, `SPACINGS`, `COLORS` - Any hash/array with class strings
+- Method return values that build class strings dynamically
+
+**Note:** Inline classes in methods don't need safelist comments—only constants stored as Ruby class variables or constants.
+
 ## Host Application Configuration
 
 ### 1. Install tailwindcss-rails Gem
@@ -326,16 +388,28 @@ FlatPack's CSS is minimal:
 
 ### Classes Not Generated
 
-1. **Check @source paths:**
+1. **Check safelist comments:**
+   If classes from Ruby constants aren't appearing, verify safelist comments are present:
+   ```ruby
+   # Tailwind CSS scanning requires these classes to be present as string literals.
+   # DO NOT REMOVE - These duplicates ensure CSS generation:
+   # "px-3" "py-1.5" "text-xs"
+   SIZES = {
+     sm: "px-3 py-1.5 text-xs"
+   }.freeze
+   ```
+   See [Safelist Comments for Ruby Constants](#safelist-comments-for-ruby-constants) for details.
+
+2. **Check @source paths:**
    ```bash
    bundle info flat_pack
    # Verify path matches @source comment
    ```
 
-2. **Restart Tailwind:**
+3. **Restart Tailwind:**
    Tailwind needs to detect new sources.
 
-3. **Check for typos:**
+4. **Check for typos:**
    ```ruby
    "bg-[var(--color-primary)]"  # Correct
    "bg-[var(--color-primary]"   # Wrong - missing ]
@@ -348,6 +422,37 @@ FlatPack's CSS is minimal:
 3. **Test in dark mode** - Always verify both modes
 4. **Use OKLCH** - Better than RGB/HSL
 5. **Keep specificity low** - Let Tailwind classes win
+6. **Add safelist comments to constants** - Always include safelist comments above Ruby constants containing Tailwind classes to ensure CSS generation
+
+## Component Development Guidelines
+
+When creating new FlatPack components:
+
+1. **Store reusable classes in constants:**
+   ```ruby
+   SIZES = {
+     sm: "px-3 py-1.5 text-xs",
+     md: "px-4 py-2 text-sm"
+   }.freeze
+   ```
+
+2. **Always add safelist comments above constants:**
+   ```ruby
+   # Tailwind CSS scanning requires these classes to be present as string literals.
+   # DO NOT REMOVE - These duplicates ensure CSS generation:
+   # "px-3" "py-1.5" "text-xs" "px-4" "py-2" "text-sm"
+   SIZES = { ... }.freeze
+   ```
+
+3. **Extract all unique classes** - Don't miss any classes, including modifiers and arbitrary values
+
+4. **Test CSS generation** - After creating a component, verify all classes appear in the compiled CSS
+
+5. **Follow naming conventions:**
+   - `SCHEMES` for color/styling variations
+   - `SIZES` for size variations
+   - `VARIANTS` for behavioral variations
+   - Constants should be frozen (`.freeze`)
 
 ## Migration from Tailwind v3
 
