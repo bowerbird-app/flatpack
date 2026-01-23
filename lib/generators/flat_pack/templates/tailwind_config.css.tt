@@ -1,4 +1,3 @@
-
 /* Tailwind CSS - Scan FlatPack components for classes */
 @source "<%= source_path %>";
 

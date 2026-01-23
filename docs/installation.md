@@ -340,10 +340,6 @@ The installation process for FlatPack is now fully automated:
 - ✨ Automatic mapping of CSS variables to `:root` for component compatibility
 
 No manual path finding, no manual copying of CSS variables, no manual configuration - just run the generator and you're ready to go!
-5. Restart Rails server when ready
-6. Start using FlatPack components in your views
-
-No custom installation scripts or required initializers are needed beyond the standard Rails generator.
 
 ## Recent Updates
 

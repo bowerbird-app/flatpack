@@ -66,7 +66,7 @@ module FlatPack
         content = File.read(tailwind_file)
         
         # Check if already configured
-        if content.include?("@source") && content.include?("flat_pack") || content.include?("flatpack")
+        if (content.include?("@source") && content.include?("flat_pack")) || content.include?("flatpack")
           say "\n⊙ Tailwind CSS 4 already configured for FlatPack", :yellow
           return
         end
