@@ -202,7 +202,54 @@ Rails.application.config.assets.paths << FlatPack::Engine.root.join("app/assets/
 
 ## Upgrading
 
-See [CHANGELOG.md](../CHANGELOG.md) for upgrade guides between versions.
+To upgrade FlatPack to the latest version:
+
+### 1. Update the Gem
+
+```ruby
+# Gemfile
+gem 'flat_pack', '~> 0.1.1'  # or latest version
+```
+
+Then run:
+
+```bash
+bundle update flat_pack
+```
+
+### 2. Check the Changelog
+
+Review [CHANGELOG.md](../CHANGELOG.md) for breaking changes and new features in each version.
+
+### 3. Rebuild Tailwind CSS
+
+After upgrading, rebuild your Tailwind CSS to include any new classes:
+
+```bash
+bundle exec tailwindcss -i app/assets/stylesheets/application.css -o app/assets/builds/application.css
+```
+
+### 4. Restart Your Server
+
+```bash
+bin/rails server
+```
+
+### Version-Specific Upgrade Notes
+
+#### Upgrading to 0.1.1 from 0.1.0
+
+This is a patch release that fixes Tailwind CSS 4 class scanning for components. No breaking changes.
+
+**What's Fixed:**
+- All Tailwind classes in Button and Icon components are now properly detected and generated
+- Safelist comments added to Ruby constants to ensure CSS generation
+
+**Action Required:**
+- None - just update the gem and rebuild CSS
+- If you've created custom components with Tailwind class constants, see the [Component Development Guidelines](architecture/tailwind_4.md#component-development-guidelines) to add safelist comments
+
+For detailed changes, see [CHANGELOG.md](../CHANGELOG.md).
 
 ## Local Development
 

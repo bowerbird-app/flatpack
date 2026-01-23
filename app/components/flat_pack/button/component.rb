@@ -3,6 +3,9 @@
 module FlatPack
   module Button
     class Component < FlatPack::BaseComponent
+      # Tailwind CSS scanning requires these classes to be present as string literals.
+      # DO NOT REMOVE - These duplicates ensure CSS generation:
+      # "bg-[var(--color-primary)]" "hover:bg-[var(--color-primary-hover)]" "text-[var(--color-primary-text)]" "shadow-[var(--shadow-sm)]" "bg-[var(--color-secondary)]" "hover:bg-[var(--color-secondary-hover)]" "text-[var(--color-secondary-text)]" "border" "border-[var(--color-border)]" "bg-[var(--color-ghost)]" "hover:bg-[var(--color-ghost-hover)]" "text-[var(--color-ghost-text)]" "bg-[var(--color-success)]" "hover:bg-[var(--color-success-hover)]" "text-[var(--color-success-text)]" "bg-[var(--color-warning)]" "hover:bg-[var(--color-warning-hover)]" "text-[var(--color-warning-text)]"
       SCHEMES = {
         primary: "bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-[var(--color-primary-text)] shadow-[var(--shadow-sm)]",
         secondary: "bg-[var(--color-secondary)] hover:bg-[var(--color-secondary-hover)] text-[var(--color-secondary-text)] border border-[var(--color-border)]",
@@ -11,12 +14,18 @@ module FlatPack
         warning: "bg-[var(--color-warning)] hover:bg-[var(--color-warning-hover)] text-[var(--color-warning-text)] shadow-[var(--shadow-sm)]"
       }.freeze
 
+      # Tailwind CSS scanning requires these classes to be present as string literals.
+      # DO NOT REMOVE - These duplicates ensure CSS generation:
+      # "px-3" "py-1.5" "text-xs" "px-4" "py-2" "text-sm" "px-6" "py-3" "text-base"
       SIZES = {
         sm: "px-3 py-1.5 text-xs",
         md: "px-4 py-2 text-sm",
         lg: "px-6 py-3 text-base"
       }.freeze
 
+      # Tailwind CSS scanning requires these classes to be present as string literals.
+      # DO NOT REMOVE - These duplicates ensure CSS generation:
+      # "p-1.5" "p-2" "p-3"
       ICON_ONLY_SIZES = {
         sm: "p-1.5",
         md: "p-2",

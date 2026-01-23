@@ -3,6 +3,9 @@
 module FlatPack
   module Shared
     class IconComponent < FlatPack::BaseComponent
+      # Tailwind CSS scanning requires these classes to be present as string literals.
+      # DO NOT REMOVE - These duplicates ensure CSS generation:
+      # "w-4" "h-4" "w-5" "h-5" "w-6" "h-6" "w-8" "h-8"
       SIZES = {
         sm: "w-4 h-4",
         md: "w-5 h-5",
