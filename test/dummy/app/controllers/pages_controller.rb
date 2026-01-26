@@ -25,4 +25,7 @@ class PagesController < ApplicationController
       )
     end
   end
+
+  def inputs
+  end
 end
