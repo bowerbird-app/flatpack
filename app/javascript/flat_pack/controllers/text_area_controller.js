@@ -5,7 +5,6 @@ export default class extends Controller {
   static targets = ["textarea"]
 
   connect() {
-    console.log("FlatPack TextArea controller connected")
     // Auto-expand on initial load if there's content
     this.autoExpand()
   }

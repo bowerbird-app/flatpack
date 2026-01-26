@@ -5,7 +5,6 @@ export default class extends Controller {
   static targets = ["input", "clearButton"]
 
   connect() {
-    console.log("FlatPack SearchInput controller connected")
     this.toggleClearButton()
   }
 
