@@ -22,7 +22,7 @@ module FlatPack
       # @param url [String] The URL to validate
       # @return [String, nil] The URL if valid, nil if invalid
       def sanitize_url(url)
-        return nil if url.blank?
+        return nil if url.nil? || url.to_s.strip.empty?
 
         # Convert to string in case we receive a symbol or other type
         url_string = url.to_s.strip
@@ -58,7 +58,7 @@ module FlatPack
       # @param attributes [Hash] Hash of HTML attributes
       # @return [Hash] Sanitized hash of attributes
       def sanitize_attributes(attributes)
-        return {} if attributes.blank?
+        return {} if attributes.nil? || attributes.empty?
 
         attributes.reject do |key, _value|
           attribute_name = key.to_s.downcase

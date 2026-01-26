@@ -145,6 +145,17 @@ FlatPack follows these principles:
 3. **Composition over inheritance** - Build complex UIs from simple parts
 4. **Zero-config installation** - Works immediately
 5. **UI-only responsibility** - No business logic
+6. **Security-first design** - Built-in XSS protection and sanitization
+
+## Security
+
+FlatPack is built with security as a core principle. Learn more in our [Security Policy](SECURITY.md).
+
+**Key Security Features:**
+- 🔒 **XSS Prevention** - Automatic attribute sanitization and URL validation
+- 🛡️ **Injection Protection** - Blocks dangerous protocols (javascript:, data:, vbscript:)
+- 🔐 **CSP Compatible** - No eval() or unsafe-inline required
+- 📦 **Supply Chain Security** - Minimal dependencies, automated security scanning
 
 ## Versioning
 

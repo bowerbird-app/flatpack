@@ -18,6 +18,10 @@ FlatPack is a production-grade Rails Engine that provides a comprehensive set of
 - [Dark Mode](dark_mode.md)
 - [CSS Variables](#css-variables)
 
+### Security
+- [Security Guide](security.md)
+- [Security Policy](../SECURITY.md)
+
 ### Components
 - [Button Component](components/button.md)
 - [Table Component](components/table.md)
@@ -65,6 +69,7 @@ end
 3. **Composition over inheritance** - Build complex UIs from simple components
 4. **Zero-config installation** - Works out of the box
 5. **UI-only responsibility** - No business logic, no ActiveRecord assumptions
+6. **Security-first design** - Built-in XSS protection and attribute sanitization
 
 ## CSS Variables
 
