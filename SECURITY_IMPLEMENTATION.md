@@ -193,9 +193,8 @@ Successfully implemented a comprehensive security layer for FlatPack, addressing
 
 ## Known Limitations
 
-1. **Placeholder Email**: `security@flatpack.dev` needs to be updated to actual contact
-2. **Bundle Install Required**: Security gems need `bundle install` to be fully functional
-3. **CodeQL Timeout**: Large repo caused timeout, but manual review completed
+1. **Bundle Install Required**: Security gems need `bundle install` to be fully functional
+2. **CodeQL Timeout**: Large repo caused timeout, but manual review completed
 
 ## Compatibility
 
@@ -208,11 +207,7 @@ Successfully implemented a comprehensive security layer for FlatPack, addressing
 
 ## Next Steps for Deployment
 
-1. **Update Security Email**:
-   - Replace `security@flatpack.dev` in SECURITY.md and docs/security.md
-   - Options: team email, dedicated security email, or GitHub Security Advisories
-
-2. **Run Bundle Install**:
+1. **Run Bundle Install**:
    ```bash
    bundle install
    ```

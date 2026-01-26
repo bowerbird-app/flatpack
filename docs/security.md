@@ -319,8 +319,6 @@ config.action_dispatch.default_headers.merge!(
 
 If you discover a security vulnerability, please **DO NOT** open a public GitHub issue.
 
-**Email us directly:** security@flatpack.dev
-
 See our [Security Policy](../SECURITY.md) for full details on responsible disclosure.
 
 ## Security Testing
@@ -379,9 +377,3 @@ end
 - [Rails Security Guide](https://guides.rubyonrails.org/security.html)
 - [Content Security Policy Reference](https://content-security-policy.com/)
 - [FlatPack Security Policy](../SECURITY.md)
-
-## Questions?
-
-For security-related questions, email: **security@flatpack.dev**
-
-For general questions, use [GitHub Discussions](https://github.com/flatpack/flat_pack/discussions).

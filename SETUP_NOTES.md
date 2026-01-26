@@ -1,19 +1,5 @@
 # Setup Notes
 
-## Security Contact Email
-
-The security documentation references `security@flatpack.dev` as the security contact email. This is currently a placeholder and should be updated to the actual security contact email before release.
-
-**Files to update:**
-- `SECURITY.md` (2 occurrences)
-- `docs/security.md` (2 occurrences)
-
-**Suggested alternatives:**
-1. Use the team email from gemspec: `team@flatpack.dev`
-2. Create a dedicated security email: `security@flatpack.dev`
-3. Use GitHub Security Advisories: Link to `https://github.com/flatpack/flat_pack/security/advisories/new`
-4. Use a personal email of the maintainer
-
 ## Development Dependencies
 
 The following security gems were added to the gemspec:

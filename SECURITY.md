@@ -65,43 +65,6 @@ When passing rich content to components, always use the sidecar pattern with blo
 <%= render FlatPack::CardComponent.new(body: "<script>alert('xss')</script>".html_safe) %>
 ```
 
-## Reporting a Vulnerability
-
-We appreciate responsible disclosure of security vulnerabilities. If you discover a security issue, please follow these steps:
-
-### 1. **DO NOT** open a public GitHub issue
-
-Public disclosure of security vulnerabilities can put all users at risk. Please keep the details private until we've had a chance to address the issue.
-
-### 2. Email us directly
-
-Send a detailed report to: **security@flatpack.dev**
-
-Include the following information:
-- Description of the vulnerability
-- Steps to reproduce the issue
-- Potential impact
-- Suggested fix (if you have one)
-- Your name/handle for credit (if you'd like to be credited)
-
-### 3. Response timeline
-
-- **Initial Response**: Within 48 hours, we'll acknowledge receipt of your report
-- **Assessment**: Within 7 days, we'll provide an initial assessment and plan
-- **Resolution**: We aim to release a fix within 30 days for critical issues
-- **Disclosure**: We'll coordinate with you on public disclosure timing
-
-### 4. What to expect
-
-Once you've reported a vulnerability:
-
-1. **Confirmation**: We'll confirm we received your report
-2. **Investigation**: We'll investigate and may ask for additional details
-3. **Fix Development**: We'll develop and test a fix
-4. **Security Advisory**: We'll publish a security advisory (with credit to you, if desired)
-5. **Release**: We'll release a patched version
-6. **Public Disclosure**: We'll coordinate the disclosure timeline with you
-
 ## Security Best Practices for Users
 
 When using FlatPack components in your application:
@@ -199,9 +162,3 @@ All security updates are clearly marked in the [CHANGELOG.md](CHANGELOG.md) with
 We'd like to thank the following individuals for responsibly disclosing security vulnerabilities:
 
 *No reports yet - but we appreciate your vigilance!*
-
-## Questions?
-
-If you have questions about security in FlatPack, please email **security@flatpack.dev**.
-
-For general questions and discussions, use [GitHub Discussions](https://github.com/flatpack/flat_pack/discussions).
