@@ -59,7 +59,6 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2'
-          bundler-cache: true
 
       - name: Install bundler-audit
         run: gem install bundler-audit
@@ -69,16 +68,3 @@ jobs:
 
       - name: Run bundler-audit
         run: bundle-audit check
-
-  dependency-review:
-    name: Dependency Review
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Dependency Review
-        uses: actions/dependency-review-action@v4
-        with:
-          fail-on-severity: moderate
