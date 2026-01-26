@@ -75,6 +75,21 @@ module FlatPack
       assert_nil AttributeSanitizer.sanitize_url(url)
     end
 
+    test "sanitize_url blocks HTML entity encoded colons" do
+      url = "javascript&colon;alert('xss')"
+      assert_nil AttributeSanitizer.sanitize_url(url)
+    end
+
+    test "sanitize_url blocks numeric HTML entities" do
+      url = "javascript&#58;alert('xss')"
+      assert_nil AttributeSanitizer.sanitize_url(url)
+    end
+
+    test "sanitize_url blocks hex HTML entities" do
+      url = "javascript&#x3a;alert('xss')"
+      assert_nil AttributeSanitizer.sanitize_url(url)
+    end
+
     test "sanitize_url allows URLs without protocol" do
       url = "example.com/path"
       assert_equal url, AttributeSanitizer.sanitize_url(url)

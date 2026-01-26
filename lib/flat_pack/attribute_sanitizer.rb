@@ -27,6 +27,11 @@ module FlatPack
         # Convert to string in case we receive a symbol or other type
         url_string = url.to_s.strip
 
+        # Block URLs with HTML entity encoding that could be used to hide dangerous protocols
+        # e.g., "javascript&colon;alert()" or "java&#115;cript:"
+        return nil if url_string.match?(/&(?:colon|#x0*3a|#0*58);/i)
+        return nil if url_string.match?(/&#\d+;/)  # Block any numeric entities
+
         # Block javascript: protocol entirely
         return nil if url_string.match?(/^\s*javascript:/i)
 
@@ -41,14 +46,22 @@ module FlatPack
         # and fragment identifiers (starting with #)
         return url_string if url_string.start_with?("/", ".", "#")
 
-        # Check against whitelist of protocols
-        protocol = url_string.split(":").first&.downcase
-        return url_string if protocol && ALLOWED_PROTOCOLS.include?(protocol)
+        # Extract protocol more robustly using regex to handle edge cases
+        # Match protocol at the start of the string, followed by : (with optional //)
+        # mailto: and tel: don't use //, but http: and https: do
+        protocol_match = url_string.match(/\A([a-z][a-z0-9+.-]*):/i)
+        if protocol_match
+          protocol = protocol_match[1].downcase
+          return url_string if ALLOWED_PROTOCOLS.include?(protocol)
+          # Protocol found but not in whitelist
+          return nil
+        end
 
         # If no protocol is specified, treat as relative URL
+        # But reject if it contains : (could be malformed protocol)
         return url_string unless url_string.include?(":")
 
-        # Otherwise, reject the URL
+        # Contains : but no valid protocol pattern - reject
         nil
       end
 
