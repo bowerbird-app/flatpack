@@ -5,7 +5,7 @@ module FlatPack
     # System arguments pattern for consistent API across components
     # Handles: class, data, aria, id, and other HTML attributes
     def initialize(**system_arguments)
-      @system_arguments = system_arguments
+      @system_arguments = sanitize_args(system_arguments)
     end
 
     private
@@ -39,6 +39,12 @@ module FlatPack
         data: data_attributes.merge(additional_attrs.delete(:data) || {}),
         aria: aria_attributes.merge(additional_attrs.delete(:aria) || {})
       }.merge(html_attributes).merge(additional_attrs).compact
+    end
+
+    # Sanitize system arguments to prevent XSS attacks
+    # Filters out dangerous HTML attributes like onclick, onmouseover, etc.
+    def sanitize_args(args)
+      FlatPack::AttributeSanitizer.sanitize_attributes(args)
     end
   end
 end

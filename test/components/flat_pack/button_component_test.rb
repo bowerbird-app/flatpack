@@ -198,6 +198,42 @@ module FlatPack
           Component.new
         end
       end
+
+      def test_sanitizes_javascript_url
+        error = assert_raises(ArgumentError) do
+          Component.new(label: "Click", url: "javascript:alert('xss')")
+        end
+        assert_match(/Unsafe URL detected/, error.message)
+      end
+
+      def test_sanitizes_data_url
+        error = assert_raises(ArgumentError) do
+          Component.new(label: "Click", url: "data:text/html,<script>alert('xss')</script>")
+        end
+        assert_match(/Unsafe URL detected/, error.message)
+      end
+
+      def test_sanitizes_vbscript_url
+        error = assert_raises(ArgumentError) do
+          Component.new(label: "Click", url: "vbscript:msgbox('xss')")
+        end
+        assert_match(/Unsafe URL detected/, error.message)
+      end
+
+      def test_allows_safe_urls
+        render_inline(Component.new(label: "Click", url: "https://example.com"))
+        assert_selector "a[href='https://example.com']", text: "Click"
+      end
+
+      def test_allows_relative_urls
+        render_inline(Component.new(label: "Click", url: "/path/to/page"))
+        assert_selector "a[href='/path/to/page']", text: "Click"
+      end
+
+      def test_filters_dangerous_onclick_attribute
+        render_inline(Component.new(label: "Click", onclick: "alert('xss')"))
+        refute_selector "button[onclick]"
+      end
     end
   end
 end
