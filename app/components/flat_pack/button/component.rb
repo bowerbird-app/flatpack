@@ -202,7 +202,8 @@ module FlatPack
         # Check if the original URL was provided but sanitization failed
         return if @url.present?
 
-        raise ArgumentError, "Unsafe URL detected: #{original_url}. Only http, https, mailto, tel protocols and relative URLs are allowed."
+        # Use a generic error message to avoid leaking sensitive information in logs
+        raise ArgumentError, "Unsafe URL detected. Only http, https, mailto, tel protocols and relative URLs are allowed."
       end
     end
   end

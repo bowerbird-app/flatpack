@@ -28,9 +28,8 @@ module FlatPack
         url_string = url.to_s.strip
 
         # Block URLs with HTML entity encoding that could be used to hide dangerous protocols
-        # e.g., "javascript&colon;alert()" or "java&#115;cript:"
-        return nil if url_string.match?(/&(?:colon|#x0*3a|#0*58);/i)
-        return nil if url_string.match?(/&#\d+;/)  # Block any numeric entities
+        # Specifically target colon entities: &colon;, &#58; (decimal), &#x3a; (hex)
+        return nil if url_string.match?(/&(?:colon|#(?:0*58|x0*3a));/i)
 
         # Block javascript: protocol entirely
         return nil if url_string.match?(/^\s*javascript:/i)
