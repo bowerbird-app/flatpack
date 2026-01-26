@@ -31,4 +31,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "sqlite3", "~> 2.0"
   spec.add_development_dependency "standard", "~> 1.35"
   spec.add_development_dependency "propshaft", "~> 1.0"
+  spec.add_development_dependency "brakeman", "~> 6.0"
+  spec.add_development_dependency "bundler-audit", "~> 0.9"
 end

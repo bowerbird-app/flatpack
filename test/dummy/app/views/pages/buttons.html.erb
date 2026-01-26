@@ -88,6 +88,63 @@
 ) %&gt;</code></pre>
   </section>
 
+  <!-- Link Component -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Link Component</h2>
+    <p class="text-[var(--color-muted-foreground)] mb-4">
+      For text links without button styling, use the Link component. It includes built-in URL validation and security features.
+    </p>
+    <div class="flex gap-4 mb-4">
+      <%= render FlatPack::Link::Component.new(href: demo_tables_path) do %>
+        Go to Tables
+      <% end %>
+      <%= render FlatPack::Link::Component.new(href: "https://github.com", target: "_blank") do %>
+        GitHub (opens in new tab)
+      <% end %>
+      <%= render FlatPack::Link::Component.new(href: "mailto:hello@example.com") do %>
+        Email us
+      <% end %>
+      <%= render FlatPack::Link::Component.new(href: "tel:+1234567890") do %>
+        Call us
+      <% end %>
+    </div>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Link::Component.new(href: demo_tables_path) do %&gt;
+  Go to Tables
+&lt;% end %&gt;
+
+&lt;%= render FlatPack::Link::Component.new(href: "https://github.com", target: "_blank") do %&gt;
+  GitHub (opens in new tab)  # Automatically adds rel="noopener noreferrer"
+&lt;% end %&gt;
+
+&lt;%= render FlatPack::Link::Component.new(href: "mailto:hello@example.com") do %&gt;
+  Email us
+&lt;% end %&gt;</code></pre>
+  </section>
+
+  <!-- Link Component with Custom Classes -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Link Component with Custom Styling</h2>
+    <div class="space-y-3 mb-4">
+      <%= render FlatPack::Link::Component.new(href: "#", class: "text-blue-600 hover:text-blue-800 font-semibold") do %>
+        Custom styled link
+      <% end %>
+      <br>
+      <%= render FlatPack::Link::Component.new(href: "#", class: "text-green-600 underline") do %>
+        Underlined green link
+      <% end %>
+      <br>
+      <%= render FlatPack::Link::Component.new(href: "#", class: "text-[var(--color-primary)] hover:underline") do %>
+        Theme colored link
+      <% end %>
+    </div>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Link::Component.new(
+  href: "#",
+  class: "text-blue-600 hover:text-blue-800 font-semibold"
+) do %&gt;
+  Custom styled link
+&lt;% end %&gt;</code></pre>
+  </section>
+
   <!-- Buttons with ID and Custom Classes -->
   <section class="mb-12">
     <h2 class="text-2xl font-semibold mb-4">Buttons with ID and Custom Classes</h2>

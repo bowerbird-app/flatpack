@@ -48,12 +48,19 @@ module FlatPack
         @label = label
         @scheme = scheme.to_sym
         @size = size.to_sym
-        @url = url
         @method = method
         @target = target
         @icon = icon
         @icon_only = icon_only
         @loading = loading
+
+        # Sanitize URL for security and validate
+        if url
+          @url = FlatPack::AttributeSanitizer.sanitize_url(url)
+          validate_url!(url)
+        else
+          @url = nil
+        end
 
         validate_scheme!
         validate_size!
@@ -189,6 +196,14 @@ module FlatPack
         return if is_valid
 
         raise ArgumentError, "Button must have either a label or an icon"
+      end
+
+      def validate_url!(original_url)
+        # Check if the original URL was provided but sanitization failed
+        return if @url.present?
+
+        # Use a generic error message to avoid leaking sensitive information in logs
+        raise ArgumentError, "Unsafe URL detected. Only http, https, mailto, tel protocols and relative URLs are allowed."
       end
     end
   end

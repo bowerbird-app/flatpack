@@ -1,0 +1,70 @@
+name: Security Audit
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Run weekly on Mondays at 00:00 UTC
+    - cron: '0 0 * * 1'
+
+jobs:
+  brakeman:
+    name: Brakeman Security Scanner
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+
+      - name: Install Brakeman
+        run: gem install brakeman
+
+      - name: Run Brakeman
+        run: brakeman --no-pager --format json --output brakeman-report.json || true
+
+      - name: Upload Brakeman report
+        uses: actions/upload-artifact@v4
+        with:
+          name: brakeman-report
+          path: brakeman-report.json
+
+      - name: Check Brakeman results
+        run: |
+          if [ -f brakeman-report.json ]; then
+            # Check if there are any warnings
+            WARNINGS=$(cat brakeman-report.json | jq '.warnings | length')
+            if [ "$WARNINGS" -gt 0 ]; then
+              echo "Brakeman found $WARNINGS warning(s)"
+              brakeman --no-pager
+              exit 1
+            else
+              echo "No security warnings found by Brakeman"
+            fi
+          fi
+
+  bundler-audit:
+    name: Bundler Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+
+      - name: Install bundler-audit
+        run: gem install bundler-audit
+
+      - name: Update bundler-audit database
+        run: bundle-audit update
+
+      - name: Run bundler-audit
+        run: bundle-audit check
