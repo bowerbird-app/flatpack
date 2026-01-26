@@ -61,6 +61,56 @@ Schemes: `:primary`, `:secondary`, `:ghost`
 <% end %>
 ```
 
+### Input Components
+
+```erb
+# Text Input
+<%= render FlatPack::TextInput::Component.new(
+  name: "username",
+  label: "Username",
+  placeholder: "Enter your username"
+) %>
+
+# Password Input with toggle
+<%= render FlatPack::PasswordInput::Component.new(
+  name: "password",
+  label: "Password",
+  required: true
+) %>
+
+# Email Input
+<%= render FlatPack::EmailInput::Component.new(
+  name: "email",
+  label: "Email Address",
+  placeholder: "you@example.com"
+) %>
+
+# Phone Input
+<%= render FlatPack::PhoneInput::Component.new(
+  name: "phone",
+  label: "Phone Number"
+) %>
+
+# Search Input with clear button
+<%= render FlatPack::SearchInput::Component.new(
+  name: "q",
+  placeholder: "Search..."
+) %>
+
+# Text Area with auto-expand
+<%= render FlatPack::TextArea::Component.new(
+  name: "description",
+  label: "Description",
+  rows: 3
+) %>
+
+# URL Input with validation
+<%= render FlatPack::UrlInput::Component.new(
+  name: "website",
+  label: "Website URL"
+) %>
+```
+
 ## Documentation
 
 - 📚 [Full Documentation](docs/)
@@ -72,8 +122,20 @@ Schemes: `:primary`, `:secondary`, `:ghost`
 
 ## Components
 
+### Interactive Components
 - **Button** - Buttons and links with multiple schemes
 - **Table** - Data tables with columns and actions
+
+### Form Components
+- **TextInput** - Single-line text field
+- **PasswordInput** - Masked input with show/hide toggle
+- **EmailInput** - Email field with mobile keyboard support
+- **PhoneInput** - Phone field with numeric keypad
+- **SearchInput** - Search field with clear button
+- **TextArea** - Multi-line auto-expanding text area
+- **UrlInput** - URL field with validation
+
+### Utility Components
 - **Icon** - Shared icon component
 
 More components coming soon!
