@@ -35,6 +35,10 @@
   --color-warning-hover: oklch(52% .245 27.325);
   --color-warning-text: oklch(1.0 0 0);
   
+  --color-destructive: oklch(62.8% .257 29.234);
+  --color-destructive-hover: oklch(57% .257 29.234);
+  --color-destructive-text: oklch(1.0 0 0);
+  
   --color-background: oklch(1.0 0 0);
   --color-foreground: oklch(0.20 0.01 250);
   
@@ -97,6 +101,10 @@
     --color-warning: oklch(62% .245 27.325);
     --color-warning-hover: oklch(67% .245 27.325);
     --color-warning-text: oklch(0.15 0.01 250);
+    
+    --color-destructive: oklch(67.8% .257 29.234);
+    --color-destructive-hover: oklch(72% .257 29.234);
+    --color-destructive-text: oklch(0.15 0.01 250);
     
     --color-background: oklch(0.15 0.01 250);
     --color-foreground: oklch(0.95 0.01 250);

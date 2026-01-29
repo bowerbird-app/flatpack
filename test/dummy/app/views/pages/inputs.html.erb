@@ -1,0 +1,225 @@
+<% content_for :title, "Input Components - FlatPack" %>
+
+<div class="max-w-4xl mx-auto p-8">
+  <h1 class="text-4xl font-bold mb-2 text-[var(--color-foreground)]">Input Components</h1>
+  <p class="text-[var(--color-muted-foreground)] mb-8">Text-based input components with Stimulus integration</p>
+
+  <!-- Text Input -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Text Input</h2>
+    <p class="text-sm text-[var(--color-muted-foreground)] mb-4">Standard single-line text field</p>
+    
+    <div class="space-y-4">
+      <%= render FlatPack::TextInput::Component.new(
+        name: "username",
+        label: "Username",
+        placeholder: "Enter your username",
+        required: true
+      ) %>
+
+      <%= render FlatPack::TextInput::Component.new(
+        name: "username_error",
+        label: "Username (with error)",
+        value: "john",
+        error: "Username must be at least 5 characters"
+      ) %>
+
+      <%= render FlatPack::TextInput::Component.new(
+        name: "username_disabled",
+        label: "Username (disabled)",
+        value: "johndoe",
+        disabled: true
+      ) %>
+    </div>
+  </section>
+
+  <!-- Password Input -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Password Input</h2>
+    <p class="text-sm text-[var(--color-muted-foreground)] mb-4">Masked input with show/hide toggle</p>
+    
+    <div class="space-y-4">
+      <%= render FlatPack::PasswordInput::Component.new(
+        name: "password",
+        label: "Password",
+        placeholder: "Enter your password",
+        required: true
+      ) %>
+
+      <%= render FlatPack::PasswordInput::Component.new(
+        name: "password_error",
+        label: "Password (with error)",
+        error: "Password must contain at least one number"
+      ) %>
+    </div>
+  </section>
+
+  <!-- Email Input -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Email Input</h2>
+    <p class="text-sm text-[var(--color-muted-foreground)] mb-4">Email field with mobile @ keyboard support</p>
+    
+    <div class="space-y-4">
+      <%= render FlatPack::EmailInput::Component.new(
+        name: "email",
+        label: "Email Address",
+        placeholder: "you@example.com",
+        required: true
+      ) %>
+
+      <%= render FlatPack::EmailInput::Component.new(
+        name: "email_error",
+        label: "Email (with error)",
+        value: "invalid-email",
+        error: "Please enter a valid email address"
+      ) %>
+    </div>
+  </section>
+
+  <!-- Phone Input -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Phone Input</h2>
+    <p class="text-sm text-[var(--color-muted-foreground)] mb-4">Phone field with numeric keypad on mobile</p>
+    
+    <div class="space-y-4">
+      <%= render FlatPack::PhoneInput::Component.new(
+        name: "phone",
+        label: "Phone Number",
+        placeholder: "+1 (555) 123-4567"
+      ) %>
+
+      <%= render FlatPack::PhoneInput::Component.new(
+        name: "phone_error",
+        label: "Phone (with error)",
+        value: "123",
+        error: "Phone number must be at least 10 digits"
+      ) %>
+    </div>
+  </section>
+
+  <!-- Search Input -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Search Input</h2>
+    <p class="text-sm text-[var(--color-muted-foreground)] mb-4">Search field with clear button (appears when typing)</p>
+    
+    <div class="space-y-4">
+      <%= render FlatPack::SearchInput::Component.new(
+        name: "search",
+        label: "Search",
+        placeholder: "Search for anything..."
+      ) %>
+
+      <%= render FlatPack::SearchInput::Component.new(
+        name: "search_with_value",
+        label: "Search (with value)",
+        value: "sample query"
+      ) %>
+    </div>
+  </section>
+
+  <!-- URL Input -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">URL Input</h2>
+    <p class="text-sm text-[var(--color-muted-foreground)] mb-4">URL field with validation and .com keyboard on mobile</p>
+    
+    <div class="space-y-4">
+      <%= render FlatPack::UrlInput::Component.new(
+        name: "website",
+        label: "Website URL",
+        placeholder: "https://example.com"
+      ) %>
+
+      <%= render FlatPack::UrlInput::Component.new(
+        name: "website_error",
+        label: "Website (with error)",
+        value: "not-a-url",
+        error: "Please enter a valid URL"
+      ) %>
+    </div>
+  </section>
+
+  <!-- Text Area -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Text Area</h2>
+    <p class="text-sm text-[var(--color-muted-foreground)] mb-4">Multi-line input that auto-expands (try typing multiple lines)</p>
+    
+    <div class="space-y-4">
+      <%= render FlatPack::TextArea::Component.new(
+        name: "description",
+        label: "Description",
+        placeholder: "Enter a detailed description...",
+        rows: 3
+      ) %>
+
+      <%= render FlatPack::TextArea::Component.new(
+        name: "description_with_value",
+        label: "Description (with value)",
+        value: "This is a sample description.\nIt has multiple lines.\nTry adding more!",
+        rows: 3
+      ) %>
+
+      <%= render FlatPack::TextArea::Component.new(
+        name: "description_error",
+        label: "Description (with error)",
+        error: "Description must be at least 50 characters",
+        rows: 3
+      ) %>
+    </div>
+  </section>
+
+  <!-- Combined Form Example -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Complete Form Example</h2>
+    <p class="text-sm text-[var(--color-muted-foreground)] mb-4">All input components in a single form</p>
+    
+    <form class="space-y-4 p-6 border border-[var(--color-border)] rounded-[var(--radius-lg)] bg-[var(--color-muted)]">
+      <%= render FlatPack::TextInput::Component.new(
+        name: "full_name",
+        label: "Full Name",
+        placeholder: "John Doe",
+        required: true
+      ) %>
+
+      <%= render FlatPack::EmailInput::Component.new(
+        name: "contact_email",
+        label: "Email",
+        placeholder: "john@example.com",
+        required: true
+      ) %>
+
+      <%= render FlatPack::PhoneInput::Component.new(
+        name: "contact_phone",
+        label: "Phone Number",
+        placeholder: "+1 (555) 123-4567"
+      ) %>
+
+      <%= render FlatPack::PasswordInput::Component.new(
+        name: "account_password",
+        label: "Password",
+        placeholder: "Enter a secure password",
+        required: true
+      ) %>
+
+      <%= render FlatPack::UrlInput::Component.new(
+        name: "portfolio",
+        label: "Portfolio URL",
+        placeholder: "https://yourportfolio.com"
+      ) %>
+
+      <%= render FlatPack::TextArea::Component.new(
+        name: "bio",
+        label: "Biography",
+        placeholder: "Tell us about yourself...",
+        rows: 4
+      ) %>
+
+      <div class="pt-4">
+        <%= render FlatPack::Button::Component.new(
+          label: "Submit Form",
+          scheme: :primary,
+          size: :md
+        ) %>
+      </div>
+    </form>
+  </section>
+</div>
