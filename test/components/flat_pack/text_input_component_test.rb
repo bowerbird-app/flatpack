@@ -62,7 +62,7 @@ module FlatPack
 
         # Check that destructive border color is applied
         html = page.native.to_html
-        assert_includes html, "border-[var(--color-destructive)]"
+        assert_includes html, "border-[var(--color-warning)]"
       end
 
       def test_renders_with_custom_class
@@ -72,13 +72,13 @@ module FlatPack
       end
 
       def test_renders_with_data_attributes
-        render_inline(Component.new(name: "username", data: { controller: "custom" }))
+        render_inline(Component.new(name: "username", data: {controller: "custom"}))
 
         assert_selector "input[data-controller='custom']"
       end
 
       def test_renders_with_aria_attributes
-        render_inline(Component.new(name: "username", aria: { label: "Custom username" }))
+        render_inline(Component.new(name: "username", aria: {label: "Custom username"}))
 
         assert_selector "input[aria-label='Custom username']"
       end

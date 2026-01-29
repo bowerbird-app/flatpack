@@ -105,7 +105,7 @@ module FlatPack
         render_inline(Component.new(name: "description", error: "Invalid"))
 
         html = page.native.to_html
-        assert_includes html, "border-[var(--color-destructive)]"
+        assert_includes html, "border-[var(--color-warning)]"
       end
 
       def test_renders_with_custom_class
@@ -115,7 +115,7 @@ module FlatPack
       end
 
       def test_renders_with_data_attributes
-        render_inline(Component.new(name: "description", data: { maxlength: "500" }))
+        render_inline(Component.new(name: "description", data: {maxlength: "500"}))
 
         assert_selector "textarea[data-maxlength='500']"
       end

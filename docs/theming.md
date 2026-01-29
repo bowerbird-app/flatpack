@@ -50,6 +50,18 @@ A complete scale of brand colors from lightest to darkest.
 --color-ghost-hover
 --color-ghost-text
 
+--color-success
+--color-success-hover
+--color-success-text
+
+--color-warning
+--color-warning-hover
+--color-warning-text
+
+--color-destructive
+--color-destructive-hover
+--color-destructive-text
+
 --color-background
 --color-foreground
 
@@ -92,6 +104,29 @@ A complete scale of brand colors from lightest to darkest.
 --transition-base: 200ms
 --transition-slow: 300ms
 ```
+
+## Component Variable Usage
+
+### Buttons
+- Colors: `--color-primary-*`, `--color-secondary-*`, `--color-ghost-*`, `--color-success-*`, `--color-warning-*`
+- Radius: `--radius-md`
+- Shadow: `--shadow-sm`
+- Transition: `--transition-base`
+
+### Input Components (Text, Email, Password, Phone, Search, URL, TextArea)
+- Colors: `--color-foreground`, `--color-background`, `--color-muted-foreground`, `--color-border`, `--color-ring`, `--color-warning`
+- Radius: `--radius-md`
+- Transition: `--transition-base`
+
+### Table
+- Colors: `--color-border`, `--color-muted`
+- Radius: `--radius-lg`
+- Transition: `--transition-fast`
+
+### Button Group & Segmented Buttons
+- Inherits from button variables
+- Shadow: `--shadow-sm`
+- Radius: `--radius-md`
 
 ## Complete Theme Example
 

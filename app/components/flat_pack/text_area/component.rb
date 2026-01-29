@@ -3,6 +3,10 @@
 module FlatPack
   module TextArea
     class Component < FlatPack::BaseComponent
+      # Tailwind CSS scanning requires these classes to be present as string literals.
+      # DO NOT REMOVE - These duplicates ensure CSS generation:
+      # "text-[var(--color-warning)]" "border-[var(--color-warning)]"
+
       def initialize(
         name:,
         value: nil,
@@ -67,59 +71,59 @@ module FlatPack
           rows: @rows,
           class: textarea_classes,
           data: {
-            controller: 'flat-pack--text-area',
-            flat_pack__text_area_target: 'textarea',
-            action: 'input->flat-pack--text-area#autoExpand'
+            controller: "flat-pack--text-area",
+            flat_pack__text_area_target: "textarea",
+            action: "input->flat-pack--text-area#autoExpand"
           }
         }
 
-        attrs[:aria] = { invalid: 'true', describedby: error_id } if @error
+        attrs[:aria] = {invalid: "true", describedby: error_id} if @error
 
         merge_attributes(**attrs.compact)
       end
 
       def wrapper_classes
-        'flat-pack-input-wrapper'
+        "flat-pack-input-wrapper"
       end
 
       def label_classes
         classes(
-          'block text-sm font-medium text-[var(--color-foreground)] mb-1.5'
+          "block text-sm font-medium text-[var(--color-foreground)] mb-1.5"
         )
       end
 
       def textarea_classes
         base_classes = [
-          'flat-pack-input',
-          'w-full',
-          'rounded-[var(--radius-md)]',
-          'border',
-          'bg-[var(--color-background)]',
-          'text-[var(--color-foreground)]',
-          'px-3 py-2',
-          'text-sm',
-          'transition-colors duration-[var(--transition-base)]',
-          'placeholder:text-[var(--color-muted-foreground)]',
-          'focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)] focus:border-transparent',
-          'disabled:opacity-50 disabled:cursor-not-allowed',
-          'resize-none'
+          "flat-pack-input",
+          "w-full",
+          "rounded-[var(--radius-md)]",
+          "border",
+          "bg-[var(--color-background)]",
+          "text-[var(--color-foreground)]",
+          "px-3 py-2",
+          "text-sm",
+          "transition-colors duration-[var(--transition-base)]",
+          "placeholder:text-[var(--color-muted-foreground)]",
+          "focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)] focus:border-transparent",
+          "disabled:opacity-50 disabled:cursor-not-allowed",
+          "resize-none"
         ]
 
         base_classes << if @error
-                          'border-[var(--color-destructive)]'
-                        else
-                          'border-[var(--color-border)]'
-                        end
+          "border-[var(--color-warning)]"
+        else
+          "border-[var(--color-border)]"
+        end
 
         classes(*base_classes, @custom_class)
       end
 
       def error_classes
-        'mt-1.5 text-sm text-[var(--color-destructive)]'
+        "mt-1 text-sm text-[var(--color-warning)]"
       end
 
       def textarea_id
-        @textarea_id ||= @system_arguments[:id] || "#{@name.to_s.gsub(/[^a-zA-Z0-9_-]/, '_')}_#{SecureRandom.hex(4)}"
+        @textarea_id ||= @system_arguments[:id] || "#{@name.to_s.gsub(/[^a-zA-Z0-9_-]/, "_")}_#{SecureRandom.hex(4)}"
       end
 
       def error_id
@@ -127,11 +131,11 @@ module FlatPack
       end
 
       def validate_name!
-        raise ArgumentError, 'name is required' if @name.nil? || @name.to_s.strip.empty?
+        raise ArgumentError, "name is required" if @name.nil? || @name.to_s.strip.empty?
       end
 
       def validate_rows!
-        raise ArgumentError, 'rows must be a positive integer' if @rows.to_i <= 0
+        raise ArgumentError, "rows must be a positive integer" if @rows.to_i <= 0
       end
     end
   end

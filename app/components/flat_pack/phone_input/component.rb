@@ -3,6 +3,10 @@
 module FlatPack
   module PhoneInput
     class Component < FlatPack::BaseComponent
+      # Tailwind CSS scanning requires these classes to be present as string literals.
+      # DO NOT REMOVE - These duplicates ensure CSS generation:
+      # "text-[var(--color-warning)]" "border-[var(--color-warning)]"
+
       def initialize(
         name:,
         value: nil,
@@ -56,7 +60,7 @@ module FlatPack
 
       def input_attributes
         attrs = {
-          type: 'tel',
+          type: "tel",
           name: @name,
           id: input_id,
           value: @value,
@@ -66,52 +70,52 @@ module FlatPack
           class: input_classes
         }
 
-        attrs[:aria] = { invalid: 'true', describedby: error_id } if @error
+        attrs[:aria] = {invalid: "true", describedby: error_id} if @error
 
         merge_attributes(**attrs.compact)
       end
 
       def wrapper_classes
-        'flat-pack-input-wrapper'
+        "flat-pack-input-wrapper"
       end
 
       def label_classes
         classes(
-          'block text-sm font-medium text-[var(--color-foreground)] mb-1.5'
+          "block text-sm font-medium text-[var(--color-foreground)] mb-1.5"
         )
       end
 
       def input_classes
         base_classes = [
-          'flat-pack-input',
-          'w-full',
-          'rounded-[var(--radius-md)]',
-          'border',
-          'bg-[var(--color-background)]',
-          'text-[var(--color-foreground)]',
-          'px-3 py-2',
-          'text-sm',
-          'transition-colors duration-[var(--transition-base)]',
-          'placeholder:text-[var(--color-muted-foreground)]',
-          'focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)] focus:border-transparent',
-          'disabled:opacity-50 disabled:cursor-not-allowed'
+          "flat-pack-input",
+          "w-full",
+          "rounded-[var(--radius-md)]",
+          "border",
+          "bg-[var(--color-background)]",
+          "text-[var(--color-foreground)]",
+          "px-3 py-2",
+          "text-sm",
+          "transition-colors duration-[var(--transition-base)]",
+          "placeholder:text-[var(--color-muted-foreground)]",
+          "focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)] focus:border-transparent",
+          "disabled:opacity-50 disabled:cursor-not-allowed"
         ]
 
         base_classes << if @error
-                          'border-[var(--color-destructive)]'
-                        else
-                          'border-[var(--color-border)]'
-                        end
+          "border-[var(--color-warning)]"
+        else
+          "border-[var(--color-border)]"
+        end
 
         classes(*base_classes, @custom_class)
       end
 
       def error_classes
-        'mt-1.5 text-sm text-[var(--color-destructive)]'
+        "mt-1 text-sm text-[var(--color-warning)]"
       end
 
       def input_id
-        @input_id ||= @system_arguments[:id] || "#{@name.to_s.gsub(/[^a-zA-Z0-9_-]/, '_')}_#{SecureRandom.hex(4)}"
+        @input_id ||= @system_arguments[:id] || "#{@name.to_s.gsub(/[^a-zA-Z0-9_-]/, "_")}_#{SecureRandom.hex(4)}"
       end
 
       def error_id
@@ -119,7 +123,7 @@ module FlatPack
       end
 
       def validate_name!
-        raise ArgumentError, 'name is required' if @name.nil? || @name.to_s.strip.empty?
+        raise ArgumentError, "name is required" if @name.nil? || @name.to_s.strip.empty?
       end
     end
   end

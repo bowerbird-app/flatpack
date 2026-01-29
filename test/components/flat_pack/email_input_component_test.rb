@@ -61,7 +61,7 @@ module FlatPack
         render_inline(Component.new(name: "email", error: "Invalid"))
 
         html = page.native.to_html
-        assert_includes html, "border-[var(--color-destructive)]"
+        assert_includes html, "border-[var(--color-warning)]"
       end
 
       def test_renders_with_custom_class
@@ -71,13 +71,13 @@ module FlatPack
       end
 
       def test_renders_with_data_attributes
-        render_inline(Component.new(name: "email", data: { validate: "email" }))
+        render_inline(Component.new(name: "email", data: {validate: "email"}))
 
         assert_selector "input[data-validate='email']"
       end
 
       def test_renders_with_aria_attributes
-        render_inline(Component.new(name: "email", aria: { label: "User email address" }))
+        render_inline(Component.new(name: "email", aria: {label: "User email address"}))
 
         assert_selector "input[aria-label='User email address']"
       end

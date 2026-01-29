@@ -61,7 +61,7 @@ module FlatPack
         render_inline(Component.new(name: "website", error: "Invalid"))
 
         html = page.native.to_html
-        assert_includes html, "border-[var(--color-destructive)]"
+        assert_includes html, "border-[var(--color-warning)]"
       end
 
       def test_sanitizes_javascript_url
@@ -123,13 +123,13 @@ module FlatPack
       end
 
       def test_renders_with_data_attributes
-        render_inline(Component.new(name: "website", data: { validate: "url" }))
+        render_inline(Component.new(name: "website", data: {validate: "url"}))
 
         assert_selector "input[data-validate='url']"
       end
 
       def test_renders_with_aria_attributes
-        render_inline(Component.new(name: "website", aria: { label: "Company website" }))
+        render_inline(Component.new(name: "website", aria: {label: "Company website"}))
 
         assert_selector "input[aria-label='Company website']"
       end

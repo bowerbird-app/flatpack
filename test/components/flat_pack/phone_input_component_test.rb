@@ -61,7 +61,7 @@ module FlatPack
         render_inline(Component.new(name: "phone", error: "Invalid"))
 
         html = page.native.to_html
-        assert_includes html, "border-[var(--color-destructive)]"
+        assert_includes html, "border-[var(--color-warning)]"
       end
 
       def test_renders_with_custom_class
@@ -71,13 +71,13 @@ module FlatPack
       end
 
       def test_renders_with_data_attributes
-        render_inline(Component.new(name: "phone", data: { format: "international" }))
+        render_inline(Component.new(name: "phone", data: {format: "international"}))
 
         assert_selector "input[data-format='international']"
       end
 
       def test_renders_with_aria_attributes
-        render_inline(Component.new(name: "phone", aria: { label: "Contact phone" }))
+        render_inline(Component.new(name: "phone", aria: {label: "Contact phone"}))
 
         assert_selector "input[aria-label='Contact phone']"
       end
