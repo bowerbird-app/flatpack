@@ -17,6 +17,10 @@ The Table component renders data in a tabular format with columns and actions.
 |------|------|---------|-------------|
 | `rows` | Array | `[]` | Data to display in table |
 | `stimulus` | Boolean | `false` | Enable Stimulus controller for interactivity |
+| `turbo_frame` | String | `nil` | Wrap table in a Turbo Frame with this ID |
+| `sort` | String | `nil` | Current sort column |
+| `direction` | String | `nil` | Current sort direction ('asc' or 'desc') |
+| `base_url` | String | `nil` | Base URL for sort links |
 | `**system_arguments` | Hash | `{}` | HTML attributes |
 
 ## Columns
@@ -40,6 +44,16 @@ This calls `row.name` for each row.
 ```
 
 Use blocks for custom formatting.
+
+### Column Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `label` | String | Required | Column header text |
+| `attribute` | Symbol | `nil` | Attribute to call on each row |
+| `formatter` | Proc | `nil` | Custom formatter lambda/proc |
+| `sortable` | Boolean | `false` | Enable sorting for this column |
+| `sort_key` | Symbol | `attribute` | Key to use in sort URL (defaults to attribute) |
 
 ## Actions
 
@@ -167,12 +181,87 @@ The Stimulus controller (`flat-pack--table`) provides:
 
 ## Advanced Examples
 
-### Sortable Columns
+### Sortable Tables
+
+The table component supports client-side sorting using Turbo Frames for seamless updates:
 
 ```erb
-<% table.with_column(label: "Name") do |user| %>
-  <%= link_to user.name, users_path(sort: :name, direction: :asc) %>
+<%# Controller action %>
+def index
+  @users = User.all
+  @sorted_users = sort_users(@users, params[:sort], params[:direction])
+end
+
+private
+
+def sort_users(users, sort_column, direction)
+  return users unless sort_column.present?
+  
+  # Validate sort column
+  valid_columns = %w[name email created_at status]
+  return users unless valid_columns.include?(sort_column)
+  
+  # Sort users
+  direction = direction == "desc" ? "desc" : "asc"
+  sorted = users.sort_by { |user| user.public_send(sort_column) }
+  direction == "desc" ? sorted.reverse : sorted
+end
+```
+
+```erb
+<%# View %>
+<%= render FlatPack::Table::Component.new(
+  rows: @sorted_users,
+  turbo_frame: "sortable_table",
+  sort: params[:sort],
+  direction: params[:direction],
+  base_url: request.path
+) do |table| %>
+  <% table.with_column(label: "Name", attribute: :name, sortable: true) %>
+  <% table.with_column(label: "Email", attribute: :email, sortable: true) %>
+  <% table.with_column(label: "Status", attribute: :status, sortable: true) %>
+  <% table.with_column(label: "Created", attribute: :created_at, sortable: true) %>
 <% end %>
+```
+
+**Features:**
+- Click column headers to sort
+- Visual indicators (↑/↓) show current sort state
+- Toggle between ascending/descending on repeated clicks
+- Uses Turbo Frames for no-reload updates
+- Works with URL parameters for shareable links
+
+### Sortable Column with Custom Formatter
+
+You can combine sorting with custom formatters:
+
+```erb
+<% table.with_column(
+  label: "Status",
+  attribute: :status,
+  sortable: true,
+  formatter: ->(user) {
+    badge_class = case user.status
+    when 'active' then 'bg-green-100 text-green-800'
+    when 'inactive' then 'bg-gray-100 text-gray-800'
+    else 'bg-yellow-100 text-yellow-800'
+    end
+    "<span class=\"px-2 py-1 text-xs rounded #{badge_class}\">#{user.status.capitalize}</span>".html_safe
+  }
+) %>
+```
+
+### Sortable Column with Custom Sort Key
+
+Use a different key for sorting than the attribute:
+
+```erb
+<% table.with_column(
+  label: "Name",
+  attribute: :full_name,
+  sortable: true,
+  sort_key: :last_name
+) %>
 ```
 
 ### With Avatar
@@ -314,6 +403,10 @@ For large datasets:
 FlatPack::Table::Component.new(
   rows: Array,                # Optional, default: []
   stimulus: Boolean,          # Optional, default: false
+  turbo_frame: String,        # Optional, default: nil
+  sort: String,               # Optional, default: nil
+  direction: String,          # Optional, default: nil (either 'asc' or 'desc')
+  base_url: String,           # Optional, default: nil
   **system_arguments          # Optional
 )
 ```
@@ -324,6 +417,9 @@ FlatPack::Table::Component.new(
 table.with_column(
   label: String,              # Required
   attribute: Symbol,          # Optional
+  formatter: Proc,            # Optional
+  sortable: Boolean,          # Optional, default: false
+  sort_key: Symbol,           # Optional, defaults to attribute
   &block                      # Optional
 )
 ```

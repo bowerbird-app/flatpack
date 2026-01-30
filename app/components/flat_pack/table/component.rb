@@ -6,17 +6,28 @@ module FlatPack
       renders_many :columns, ColumnComponent
       renders_many :actions, ActionComponent
 
-      def initialize(rows: [], stimulus: false, **system_arguments)
+      def initialize(rows: [], stimulus: false, turbo_frame: nil, sort: nil, direction: nil, base_url: nil, **system_arguments)
         super(**system_arguments)
         @rows = rows
         @stimulus = stimulus
+        @turbo_frame = turbo_frame
+        @sort = sort
+        @direction = direction
+        @base_url = base_url
       end
 
       def call
-        tag.div(**container_attributes) do
+        content = tag.div(**container_attributes) do
           tag.table(**table_attributes) do
             safe_join([render_header, render_body])
           end
+        end
+
+        # Wrap in turbo frame if specified
+        if @turbo_frame
+          turbo_frame_tag(@turbo_frame) { content }
+        else
+          content
         end
       end
 
@@ -51,7 +62,13 @@ module FlatPack
         tag.thead class: "bg-[var(--color-muted)]" do
           tag.tr do
             safe_join([
-              columns.map { |column| column.render_header },
+              columns.map { |column| 
+                column.render_header(
+                  current_sort: @sort, 
+                  current_direction: @direction,
+                  base_url: @base_url
+                ) 
+              },
               (tag.th("Actions", class: header_cell_classes) if actions.any?)
             ].flatten.compact)
           end

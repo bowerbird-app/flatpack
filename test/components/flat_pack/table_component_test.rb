@@ -85,6 +85,172 @@ module FlatPack
 
         assert_selector "td[colspan='3']", text: "No data available"
       end
+
+      def test_renders_sortable_column_headers
+        render_inline(Component.new(
+          rows: @users,
+          sort: "name",
+          direction: "asc",
+          base_url: "/users"
+        )) do |component|
+          component.with_column(label: "Name", attribute: :name, sortable: true)
+          component.with_column(label: "Email", attribute: :email, sortable: true)
+        end
+
+        assert_selector "th a[href*='sort=name']"
+        assert_selector "th a[href*='sort=email']"
+      end
+
+      def test_sortable_headers_toggle_direction
+        render_inline(Component.new(
+          rows: @users,
+          sort: "name",
+          direction: "asc",
+          base_url: "/users"
+        )) do |component|
+          component.with_column(label: "Name", attribute: :name, sortable: true)
+        end
+
+        # When currently sorted ascending, link should be for descending
+        assert_selector "th a[href*='direction=desc']"
+      end
+
+      def test_sortable_headers_show_indicator_for_current_sort
+        render_inline(Component.new(
+          rows: @users,
+          sort: "name",
+          direction: "asc",
+          base_url: "/users"
+        )) do |component|
+          component.with_column(label: "Name", attribute: :name, sortable: true)
+          component.with_column(label: "Email", attribute: :email, sortable: true)
+        end
+
+        # Should show ascending arrow for name column
+        assert_selector "th a", text: /Name.*↑/
+        # Should not show arrow for email column
+        assert_no_selector "th a", text: /Email.*[↑↓]/
+      end
+
+      def test_sortable_headers_show_descending_indicator
+        render_inline(Component.new(
+          rows: @users,
+          sort: "name",
+          direction: "desc",
+          base_url: "/users"
+        )) do |component|
+          component.with_column(label: "Name", attribute: :name, sortable: true)
+        end
+
+        # Should show descending arrow for name column
+        assert_selector "th a", text: /Name.*↓/
+      end
+
+      def test_non_sortable_columns_remain_static
+        render_inline(Component.new(
+          rows: @users,
+          sort: "name",
+          direction: "asc",
+          base_url: "/users"
+        )) do |component|
+          component.with_column(label: "Name", attribute: :name, sortable: true)
+          component.with_column(label: "Email", attribute: :email, sortable: false)
+        end
+
+        assert_selector "th a", text: "Name"
+        assert_selector "th", text: "Email"
+        assert_no_selector "th a", text: "Email"
+      end
+
+      def test_sortable_links_include_turbo_frame_data
+        render_inline(Component.new(
+          rows: @users,
+          turbo_frame: "sortable_table",
+          sort: "name",
+          direction: "asc",
+          base_url: "/users"
+        )) do |component|
+          component.with_column(label: "Name", attribute: :name, sortable: true)
+        end
+
+        assert_selector "th a[data-turbo-frame='sortable_table']"
+      end
+
+      def test_wraps_table_in_turbo_frame_when_specified
+        render_inline(Component.new(
+          rows: @users,
+          turbo_frame: "sortable_table"
+        )) do |component|
+          component.with_column(label: "Name", attribute: :name)
+        end
+
+        assert_selector "turbo-frame#sortable_table table"
+      end
+
+      def test_does_not_wrap_in_turbo_frame_when_not_specified
+        render_inline(Component.new(rows: @users)) do |component|
+          component.with_column(label: "Name", attribute: :name)
+        end
+
+        assert_no_selector "turbo-frame"
+        assert_selector "table"
+      end
+
+      def test_sortable_column_uses_sort_key_when_provided
+        render_inline(Component.new(
+          rows: @users,
+          sort: "custom_sort",
+          direction: "asc",
+          base_url: "/users"
+        )) do |component|
+          component.with_column(
+            label: "Name",
+            attribute: :name,
+            sortable: true,
+            sort_key: :custom_sort
+          )
+        end
+
+        assert_selector "th a[href*='sort=custom_sort']"
+        # Should show indicator since sort matches sort_key
+        assert_selector "th a", text: /Name.*↑/
+      end
+
+      def test_sortable_column_falls_back_to_attribute_for_sort_key
+        render_inline(Component.new(
+          rows: @users,
+          sort: "name",
+          direction: "asc",
+          base_url: "/users"
+        )) do |component|
+          component.with_column(
+            label: "Name",
+            attribute: :name,
+            sortable: true
+          )
+        end
+
+        assert_selector "th a[href*='sort=name']"
+      end
+
+      def test_sortable_column_with_formatter_still_sorts
+        render_inline(Component.new(
+          rows: @users,
+          sort: "name",
+          direction: "asc",
+          base_url: "/users"
+        )) do |component|
+          component.with_column(
+            label: "Name",
+            attribute: :name,
+            sortable: true,
+            formatter: ->(user) { user.name.upcase }
+          )
+        end
+
+        assert_selector "th a[href*='sort=name']"
+        assert_selector "td", text: "ALICE"
+      end
     end
   end
 end

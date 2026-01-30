@@ -115,4 +115,46 @@
   &lt;% table.with_action(label: "Edit", url: "#", scheme: :ghost) %&gt;
 &lt;% end %&gt;</code></pre>
   </section>
+
+  <!-- Sortable Table -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Sortable Table</h2>
+    <p class="text-[var(--color-muted-foreground)] mb-4">
+      Click column headers to sort. Uses Turbo Frames for seamless updates without full page reload.
+    </p>
+    <%= render FlatPack::Table::Component.new(
+      rows: @sorted_users,
+      turbo_frame: "sortable_table",
+      sort: params[:sort],
+      direction: params[:direction],
+      base_url: request.path
+    ) do |table| %>
+      <% table.with_column(label: "ID", attribute: :id, sortable: true) %>
+      <% table.with_column(label: "Name", attribute: :name, sortable: true) %>
+      <% table.with_column(label: "Email", attribute: :email, sortable: true) %>
+      <% table.with_column(label: "Status", attribute: :status, sortable: true, formatter: ->(user) {
+        badge_class = case user.status
+        when 'active' then 'bg-green-100 text-green-800'
+        when 'inactive' then 'bg-gray-100 text-gray-800'
+        else 'bg-yellow-100 text-yellow-800'
+        end
+        "<span class=\"px-2 py-1 text-xs rounded #{badge_class}\">#{user.status.capitalize}</span>".html_safe
+      }) %>
+      <% table.with_column(label: "Created", attribute: :created_at, sortable: true, formatter: ->(user) { user.created_at.strftime("%b %d, %Y") }) %>
+      <% table.with_action(label: "Edit", url: "#", scheme: :ghost) %>
+    <% end %>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Table::Component.new(
+  rows: @sorted_users,
+  turbo_frame: "sortable_table",
+  sort: params[:sort],
+  direction: params[:direction],
+  base_url: request.path
+) do |table| %&gt;
+  &lt;% table.with_column(label: "ID", attribute: :id, sortable: true) %&gt;
+  &lt;% table.with_column(label: "Name", attribute: :name, sortable: true) %&gt;
+  &lt;% table.with_column(label: "Email", attribute: :email, sortable: true) %&gt;
+  &lt;% table.with_column(label: "Status", attribute: :status, sortable: true) %&gt;
+  &lt;% table.with_column(label: "Created", attribute: :created_at, sortable: true) %&gt;
+&lt;% end %&gt;</code></pre>
+  </section>
 </div>
