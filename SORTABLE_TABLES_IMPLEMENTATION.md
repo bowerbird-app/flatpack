@@ -127,10 +127,9 @@ class UsersController < ApplicationController
     valid_columns = %w[name email created_at status]
     return users unless valid_columns.include?(sort_column)
     
-    # Validate and apply sorting
-    direction = direction == "desc" ? "desc" : "asc"
-    sorted = users.sort_by { |user| user.public_send(sort_column) }
-    direction == "desc" ? sorted.reverse : sorted
+    # Validate and apply sorting using hash syntax (safe from SQL injection)
+    direction = direction == "desc" ? :desc : :asc
+    users.order(sort_column => direction)
   end
 end
 ```
@@ -271,8 +270,12 @@ direction = direction == "desc" ? "desc" : "asc"
 # Bad - SQL injection risk
 users.order("#{params[:sort]} #{params[:direction]}")
 
-# Good - validated and safe
+# Better - validated but still using string interpolation
 users.order("#{validated_column} #{validated_direction}")
+
+# Best - validated with hash syntax (no interpolation)
+direction = validated_direction == "desc" ? :desc : :asc
+users.order(validated_column => direction)
 ```
 
 ## Performance Considerations

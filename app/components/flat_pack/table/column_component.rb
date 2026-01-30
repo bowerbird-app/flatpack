@@ -15,12 +15,12 @@ module FlatPack
         @sort_key = sort_key || attribute
       end
 
-      def render_header(current_sort: nil, current_direction: nil, base_url: nil)
+      def render_header(current_sort: nil, current_direction: nil, base_url: nil, turbo_frame: nil)
         return tag.th(@label, class: header_classes) unless @sortable
 
         tag.th(class: sortable_header_classes) do
           if base_url
-            sort_link(current_sort, current_direction, base_url)
+            sort_link(current_sort, current_direction, base_url, turbo_frame)
           else
             @label
           end
@@ -38,17 +38,21 @@ module FlatPack
           ""
         end
 
-        # Build td tag manually
-        "<td class=\"#{cell_classes}\">#{ERB::Util.html_escape(content)}</td>".html_safe
+        # Build td tag - only escape if content isn't already html_safe
+        escaped_content = content.html_safe? ? content : ERB::Util.html_escape(content)
+        "<td class=\"#{cell_classes}\">#{escaped_content}</td>".html_safe
       end
 
       private
 
-      def sort_link(current_sort, current_direction, base_url)
+      def sort_link(current_sort, current_direction, base_url, turbo_frame)
         new_direction = calculate_new_direction(current_sort, current_direction)
         sort_url = build_sort_url(base_url, new_direction)
 
-        tag.a(href: sort_url, data: { turbo_frame: "sortable_table" }, class: "group inline-flex items-center gap-1 hover:text-[var(--color-foreground)] transition-colors") do
+        # Use provided turbo_frame or default to "sortable_table"
+        frame_id = turbo_frame || "sortable_table"
+
+        tag.a(href: sort_url, data: { turbo_frame: frame_id }, class: "group inline-flex items-center gap-1 hover:text-[var(--color-foreground)] transition-colors") do
           safe_join([
             @label,
             sort_indicator(current_sort, current_direction)

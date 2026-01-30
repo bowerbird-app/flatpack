@@ -66,7 +66,8 @@ module FlatPack
                 column.render_header(
                   current_sort: @sort, 
                   current_direction: @direction,
-                  base_url: @base_url
+                  base_url: @base_url,
+                  turbo_frame: @turbo_frame
                 ) 
               },
               (tag.th("Actions", class: header_cell_classes) if actions.any?)

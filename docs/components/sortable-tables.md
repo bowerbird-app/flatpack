@@ -35,9 +35,9 @@ class UsersController < ApplicationController
     # Validate direction
     direction = direction == "desc" ? "desc" : "asc"
     
-    # Sort users (adjust for ActiveRecord or Array)
-    sorted = users.sort_by { |user| user.public_send(sort_column) }
-    direction == "desc" ? sorted.reverse : sorted
+    # For ActiveRecord: Use safe ordering (no SQL injection risk)
+    # The sort_column is validated, direction is hardcoded based on validation
+    users.order(sort_column => direction.to_sym)
   end
 end
 ```
@@ -134,8 +134,9 @@ def sort_users(users, sort_column, direction)
   # Validate direction
   direction = direction == "desc" ? "desc" : "asc"
   
-  # Use ActiveRecord ordering
-  users.order("#{sort_column} #{direction}")
+  # Use ActiveRecord ordering with hash syntax (safe from SQL injection)
+  # The sort_column is validated, direction is hardcoded based on validation
+  users.order(sort_column => direction.to_sym)
 end
 ```
 
@@ -149,9 +150,11 @@ def sort_users(users, sort_column, direction)
   
   case sort_column
   when "name", "email", "created_at"
-    users.order("#{sort_column} #{direction}")
+    # Use hash syntax for safe ordering
+    users.order(sort_column => direction.to_sym)
   when "company_name"
-    users.joins(:company).order("companies.name #{direction}")
+    # For joins, use Arel or hash syntax
+    users.joins(:company).order("companies.name" => direction.to_sym)
   else
     users
   end
@@ -177,13 +180,16 @@ class ProductsController < ApplicationController
     valid_columns = %w[name price stock created_at category_name]
     return products unless valid_columns.include?(sort_column)
     
-    direction = direction == "desc" ? "DESC" : "ASC"
+    # Normalize direction to symbol
+    direction = direction == "desc" ? :desc : :asc
     
     case sort_column
     when "category_name"
-      products.joins(:category).order("categories.name #{direction}")
+      # For joins, use hash syntax with table prefix
+      products.joins(:category).order("categories.name" => direction)
     else
-      products.order("products.#{sort_column} #{direction}")
+      # For direct columns, use hash syntax with table prefix
+      products.order("products.#{sort_column}" => direction)
     end
   end
 end
@@ -493,16 +499,22 @@ end
 
 **Problem**: Unsafe sorting with user input
 
-**Solution**: Always whitelist columns:
+**Solution**: Always whitelist columns and use hash syntax:
 
 ```ruby
 # Bad - SQL injection risk
 users.order("#{params[:sort]} #{params[:direction]}")
 
-# Good - whitelisted columns
+# Better - whitelisted columns but still using string interpolation
 valid_columns = %w[name email created_at]
 return users unless valid_columns.include?(params[:sort])
 users.order("#{params[:sort]} #{params[:direction]}")
+
+# Best - whitelisted columns with hash syntax (no interpolation)
+valid_columns = %w[name email created_at]
+return users unless valid_columns.include?(params[:sort])
+direction = params[:direction] == "desc" ? :desc : :asc
+users.order(params[:sort] => direction)
 ```
 
 ## Performance Considerations

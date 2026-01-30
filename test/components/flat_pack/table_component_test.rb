@@ -176,6 +176,21 @@ module FlatPack
         assert_selector "th a[data-turbo-frame='sortable_table']"
       end
 
+      def test_sortable_links_use_custom_turbo_frame_id
+        render_inline(Component.new(
+          rows: @users,
+          turbo_frame: "custom_users_table",
+          sort: "name",
+          direction: "asc",
+          base_url: "/users"
+        )) do |component|
+          component.with_column(label: "Name", attribute: :name, sortable: true)
+        end
+
+        assert_selector "th a[data-turbo-frame='custom_users_table']"
+        assert_no_selector "th a[data-turbo-frame='sortable_table']"
+      end
+
       def test_wraps_table_in_turbo_frame_when_specified
         render_inline(Component.new(
           rows: @users,
