@@ -12,6 +12,11 @@
       <% table.with_column(label: "Name", attribute: :name) %>
       <% table.with_column(label: "Email", attribute: :email) %>
     <% end %>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Table::Component.new(rows: @users) do |table| %&gt;
+  &lt;% table.with_column(label: "ID", attribute: :id) %&gt;
+  &lt;% table.with_column(label: "Name", attribute: :name) %&gt;
+  &lt;% table.with_column(label: "Email", attribute: :email) %&gt;
+&lt;% end %&gt;</code></pre>
   </section>
 
   <!-- Table with Formatted Columns -->
@@ -30,6 +35,19 @@
         <%= user.created_at.strftime("%b %d, %Y") %>
       <% end %>
     <% end %>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Table::Component.new(rows: @users) do |table| %&gt;
+  &lt;% table.with_column(label: "Name") do |user| %&gt;
+    &lt;strong class="text-[var(--color-primary)]"&gt;&lt;%= user.name %&gt;&lt;/strong&gt;
+  &lt;% end %&gt;
+  &lt;% table.with_column(label: "Status") do |user| %&gt;
+    &lt;span class="px-2 py-1 text-xs rounded"&gt;
+      &lt;%= user.status.capitalize %&gt;
+    &lt;/span&gt;
+  &lt;% end %&gt;
+  &lt;% table.with_column(label: "Created") do |user| %&gt;
+    &lt;%= user.created_at.strftime("%b %d, %Y") %&gt;
+  &lt;% end %&gt;
+&lt;% end %&gt;</code></pre>
   </section>
 
   <!-- Table with Actions -->
@@ -43,6 +61,14 @@
       <% table.with_action(label: "Delete", url: "#", method: :delete, scheme: :ghost,
           data: { turbo_confirm: "Are you sure?" }) %>
     <% end %>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Table::Component.new(rows: @users) do |table| %&gt;
+  &lt;% table.with_column(label: "Name", attribute: :name) %&gt;
+  &lt;% table.with_column(label: "Email", attribute: :email) %&gt;
+  &lt;% table.with_action(label: "View", url: "#", scheme: :ghost) %&gt;
+  &lt;% table.with_action(label: "Edit", url: "#", scheme: :ghost) %&gt;
+  &lt;% table.with_action(label: "Delete", url: "#", method: :delete, scheme: :ghost,
+      data: { turbo_confirm: "Are you sure?" }) %&gt;
+&lt;% end %&gt;</code></pre>
   </section>
 
   <!-- Empty Table -->
@@ -52,6 +78,10 @@
       <% table.with_column(label: "Name", attribute: :name) %>
       <% table.with_column(label: "Email", attribute: :email) %>
     <% end %>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Table::Component.new(rows: []) do |table| %&gt;
+  &lt;% table.with_column(label: "Name", attribute: :name) %&gt;
+  &lt;% table.with_column(label: "Email", attribute: :email) %&gt;
+&lt;% end %&gt;</code></pre>
   </section>
 
   <!-- Large Table -->
@@ -71,5 +101,19 @@
       <% end %>
       <% table.with_action(label: "Edit", url: "#", scheme: :ghost) %>
     <% end %>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Table::Component.new(rows: @users) do |table| %&gt;
+  &lt;% table.with_column(label: "ID", attribute: :id) %&gt;
+  &lt;% table.with_column(label: "Name", attribute: :name) %&gt;
+  &lt;% table.with_column(label: "Email", attribute: :email) %&gt;
+  &lt;% table.with_column(label: "Status") do |user| %&gt;
+    &lt;span class="px-2 py-1 text-xs rounded"&gt;
+      &lt;%= user.status.capitalize %&gt;
+    &lt;/span&gt;
+  &lt;% end %&gt;
+  &lt;% table.with_column(label: "Created") do |user| %&gt;
+    &lt;%= user.created_at.strftime("%b %d, %Y") %&gt;
+  &lt;% end %&gt;
+  &lt;% table.with_action(label: "Edit", url: "#", scheme: :ghost) %&gt;
+&lt;% end %&gt;</code></pre>
   </section>
 </div>

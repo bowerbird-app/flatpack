@@ -31,6 +31,19 @@
         disabled: true
       ) %>
     </div>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::TextInput::Component.new(
+  name: "username",
+  label: "Username",
+  placeholder: "Enter your username",
+  required: true
+) %&gt;
+
+&lt;%= render FlatPack::TextInput::Component.new(
+  name: "username_error",
+  label: "Username (with error)",
+  value: "john",
+  error: "Username must be at least 5 characters"
+) %&gt;</code></pre>
   </section>
 
   <!-- Password Input -->
@@ -52,6 +65,18 @@
         error: "Password must contain at least one number"
       ) %>
     </div>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::PasswordInput::Component.new(
+  name: "password",
+  label: "Password",
+  placeholder: "Enter your password",
+  required: true
+) %&gt;
+
+&lt;%= render FlatPack::PasswordInput::Component.new(
+  name: "password_error",
+  label: "Password (with error)",
+  error: "Password must contain at least one number"
+) %&gt;</code></pre>
   </section>
 
   <!-- Email Input -->
@@ -74,6 +99,19 @@
         error: "Please enter a valid email address"
       ) %>
     </div>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::EmailInput::Component.new(
+  name: "email",
+  label: "Email Address",
+  placeholder: "you@example.com",
+  required: true
+) %&gt;
+
+&lt;%= render FlatPack::EmailInput::Component.new(
+  name: "email_error",
+  label: "Email (with error)",
+  value: "invalid-email",
+  error: "Please enter a valid email address"
+) %&gt;</code></pre>
   </section>
 
   <!-- Phone Input -->
@@ -95,6 +133,18 @@
         error: "Phone number must be at least 10 digits"
       ) %>
     </div>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::PhoneInput::Component.new(
+  name: "phone",
+  label: "Phone Number",
+  placeholder: "+1 (555) 123-4567"
+) %&gt;
+
+&lt;%= render FlatPack::PhoneInput::Component.new(
+  name: "phone_error",
+  label: "Phone (with error)",
+  value: "123",
+  error: "Phone number must be at least 10 digits"
+) %&gt;</code></pre>
   </section>
 
   <!-- Search Input -->
@@ -115,6 +165,17 @@
         value: "sample query"
       ) %>
     </div>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::SearchInput::Component.new(
+  name: "search",
+  label: "Search",
+  placeholder: "Search for anything..."
+) %&gt;
+
+&lt;%= render FlatPack::SearchInput::Component.new(
+  name: "search_with_value",
+  label: "Search (with value)",
+  value: "sample query"
+) %&gt;</code></pre>
   </section>
 
   <!-- URL Input -->
@@ -136,6 +197,18 @@
         error: "Please enter a valid URL"
       ) %>
     </div>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::UrlInput::Component.new(
+  name: "website",
+  label: "Website URL",
+  placeholder: "https://example.com"
+) %&gt;
+
+&lt;%= render FlatPack::UrlInput::Component.new(
+  name: "website_error",
+  label: "Website (with error)",
+  value: "not-a-url",
+  error: "Please enter a valid URL"
+) %&gt;</code></pre>
   </section>
 
   <!-- Text Area -->
@@ -165,6 +238,19 @@
         rows: 3
       ) %>
     </div>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::TextArea::Component.new(
+  name: "description",
+  label: "Description",
+  placeholder: "Enter a detailed description...",
+  rows: 3
+) %&gt;
+
+&lt;%= render FlatPack::TextArea::Component.new(
+  name: "description_error",
+  label: "Description (with error)",
+  error: "Description must be at least 50 characters",
+  rows: 3
+) %&gt;</code></pre>
   </section>
 
   <!-- Combined Form Example -->
@@ -221,5 +307,40 @@
         ) %>
       </div>
     </form>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;form class="space-y-4"&gt;
+  &lt;%= render FlatPack::TextInput::Component.new(
+    name: "full_name",
+    label: "Full Name",
+    placeholder: "John Doe",
+    required: true
+  ) %&gt;
+
+  &lt;%= render FlatPack::EmailInput::Component.new(
+    name: "contact_email",
+    label: "Email",
+    placeholder: "john@example.com",
+    required: true
+  ) %&gt;
+
+  &lt;%= render FlatPack::PasswordInput::Component.new(
+    name: "account_password",
+    label: "Password",
+    placeholder: "Enter a secure password",
+    required: true
+  ) %&gt;
+
+  &lt;%= render FlatPack::TextArea::Component.new(
+    name: "bio",
+    label: "Biography",
+    placeholder: "Tell us about yourself...",
+    rows: 4
+  ) %&gt;
+
+  &lt;%= render FlatPack::Button::Component.new(
+    label: "Submit Form",
+    scheme: :primary,
+    size: :md
+  ) %&gt;
+&lt;/form&gt;</code></pre>
   </section>
 </div>
