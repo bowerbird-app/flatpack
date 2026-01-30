@@ -322,11 +322,23 @@
     required: true
   ) %&gt;
 
+  &lt;%= render FlatPack::PhoneInput::Component.new(
+    name: "contact_phone",
+    label: "Phone Number",
+    placeholder: "+1 (555) 123-4567"
+  ) %&gt;
+
   &lt;%= render FlatPack::PasswordInput::Component.new(
     name: "account_password",
     label: "Password",
     placeholder: "Enter a secure password",
     required: true
+  ) %&gt;
+
+  &lt;%= render FlatPack::UrlInput::Component.new(
+    name: "portfolio",
+    label: "Portfolio URL",
+    placeholder: "https://yourportfolio.com"
   ) %&gt;
 
   &lt;%= render FlatPack::TextArea::Component.new(
