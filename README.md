@@ -44,8 +44,8 @@ See the [Installation Guide](docs/installation.md) for detailed setup instructio
 
 ```erb
 <%= render FlatPack::Button::Component.new(
-  label: "Click me",
-  scheme: :primary
+  text: "Click me",
+  style: :primary
 ) %>
 ```
 

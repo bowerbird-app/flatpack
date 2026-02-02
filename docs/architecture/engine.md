@@ -168,7 +168,7 @@ Uses ViewComponent's `renders_many` for flexible composition.
 ```ruby
 class ComponentTest < ViewComponent::TestCase
   def test_renders_button
-    render_inline FlatPack::Button::Component.new(label: "Test")
+    render_inline FlatPack::Button::Component.new(text: "Test")
     assert_selector "button", text: "Test"
   end
 end

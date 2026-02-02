@@ -22,7 +22,7 @@ All components automatically sanitize HTML attributes to prevent XSS attacks. Th
 ```ruby
 # Dangerous attributes are automatically filtered
 <%= render FlatPack::Button::Component.new(
-  label: "Click me",
+  text: "Click me",
   onclick: "alert('xss')"  # This will be filtered out
 ) %>
 ```
@@ -37,13 +37,13 @@ All URLs (for buttons, links) are validated against a whitelist of safe protocol
 
 ```ruby
 # Safe URLs - these work
-<%= render FlatPack::Button::Component.new(label: "Visit", url: "https://example.com") %>
-<%= render FlatPack::Button::Component.new(label: "Email", url: "mailto:test@example.com") %>
-<%= render FlatPack::Button::Component.new(label: "Call", url: "tel:+1234567890") %>
-<%= render FlatPack::Button::Component.new(label: "Page", url: "/relative/path") %>
+<%= render FlatPack::Button::Component.new(text: "Visit", url: "https://example.com") %>
+<%= render FlatPack::Button::Component.new(text: "Email", url: "mailto:test@example.com") %>
+<%= render FlatPack::Button::Component.new(text: "Call", url: "tel:+1234567890") %>
+<%= render FlatPack::Button::Component.new(text: "Page", url: "/relative/path") %>
 
 # Unsafe URLs - these are blocked
-<%= render FlatPack::Button::Component.new(label: "XSS", url: "javascript:alert('xss')") %>
+<%= render FlatPack::Button::Component.new(text: "XSS", url: "javascript:alert('xss')") %>
 # => ArgumentError: Unsafe URL detected
 ```
 
