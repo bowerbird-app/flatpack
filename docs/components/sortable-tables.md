@@ -1,14 +1,6 @@
 # Sortable Tables
 
-The FlatPack Table component supports sortable columns using Rails 8 and Turbo for seamless, no-reload sorting.
-
-## Overview
-
-Sortable tables allow users to click column headers to sort data in ascending or descending order. The implementation uses:
-- **Turbo Frames** for seamless updates without full page reload
-- **URL parameters** for shareable and bookmarkable sort states
-- **Visual indicators** (↑/↓ arrows) to show current sort state
-- **Toggle behavior** - clicking the same column switches between asc/desc
+The Table component supports sortable columns using Turbo Frames for seamless, no-reload sorting.
 
 ## Basic Usage
 
@@ -35,8 +27,7 @@ class UsersController < ApplicationController
     # Validate direction
     direction = direction == "desc" ? "desc" : "asc"
     
-    # For ActiveRecord: Use safe ordering (no SQL injection risk)
-    # The sort_column is validated, direction is hardcoded based on validation
+    # For ActiveRecord: Use safe ordering
     users.order(sort_column => direction.to_sym)
   end
 end
@@ -60,16 +51,23 @@ Render the table with sortable columns:
 <% end %>
 ```
 
-## Required Parameters
+## Props
 
-For sortable tables to work, you must provide:
+Required parameters for sortable tables:
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `turbo_frame` | String | ID for the Turbo Frame (e.g., "sortable_table") |
-| `sort` | String | Current sort column from `params[:sort]` |
-| `direction` | String | Current sort direction from `params[:direction]` |
-| `base_url` | String | Base URL for links, typically `request.path` |
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `turbo_frame` | String | **required** | ID for the Turbo Frame (e.g., "sortable_table") |
+| `sort` | String | **required** | Current sort column from `params[:sort]` |
+| `direction` | String | **required** | Current sort direction from `params[:direction]` |
+| `base_url` | String | **required** | Base URL for links, typically `request.path` |
+
+Column parameters for sorting:
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `sortable` | Boolean | `false` | Enable sorting for this column |
+| `sort_key` | Symbol | `attribute` | Key to use in sort URL (defaults to attribute) |
 
 ## Column Configuration
 
@@ -119,53 +117,12 @@ Combine sorting with custom formatting:
 ) %>
 ```
 
-## ActiveRecord Integration
+## Examples
 
-For ActiveRecord models, use the database for sorting:
-
-```ruby
-def sort_users(users, sort_column, direction)
-  return users unless sort_column.present?
-  
-  # Whitelist sortable columns
-  valid_columns = %w[name email created_at status]
-  return users unless valid_columns.include?(sort_column)
-  
-  # Validate direction
-  direction = direction == "desc" ? "desc" : "asc"
-  
-  # Use ActiveRecord ordering with hash syntax (safe from SQL injection)
-  # The sort_column is validated, direction is hardcoded based on validation
-  users.order(sort_column => direction.to_sym)
-end
-```
-
-### With Associations
-
-Sort by associated table columns:
+### Complete Sortable Table
 
 ```ruby
-def sort_users(users, sort_column, direction)
-  direction = direction == "desc" ? "desc" : "asc"
-  
-  case sort_column
-  when "name", "email", "created_at"
-    # Use hash syntax for safe ordering
-    users.order(sort_column => direction.to_sym)
-  when "company_name"
-    # For joins, use Arel or hash syntax
-    users.joins(:company).order("companies.name" => direction.to_sym)
-  else
-    users
-  end
-end
-```
-
-## Complete Example
-
-### Controller
-
-```ruby
+# Controller
 class ProductsController < ApplicationController
   def index
     @products = Product.includes(:category)
@@ -180,24 +137,20 @@ class ProductsController < ApplicationController
     valid_columns = %w[name price stock created_at category_name]
     return products unless valid_columns.include?(sort_column)
     
-    # Normalize direction to symbol
     direction = direction == "desc" ? :desc : :asc
     
     case sort_column
     when "category_name"
-      # For joins, use hash syntax with table prefix
       products.joins(:category).order("categories.name" => direction)
     else
-      # For direct columns, use hash syntax with table prefix
       products.order("products.#{sort_column}" => direction)
     end
   end
 end
 ```
 
-### View
-
 ```erb
+<%# View %>
 <h1>Products</h1>
 
 <%= render FlatPack::Table::Component.new(
@@ -250,6 +203,63 @@ end
 <% end %>
 ```
 
+### With Associations
+
+Sort by associated table columns:
+
+```ruby
+def sort_users(users, sort_column, direction)
+  direction = direction == "desc" ? "desc" : "asc"
+  
+  case sort_column
+  when "name", "email", "created_at"
+    users.order(sort_column => direction.to_sym)
+  when "company_name"
+    users.joins(:company).order("companies.name" => direction.to_sym)
+  else
+    users
+  end
+end
+```
+
+### With Default Sort
+
+Provide a sensible default sort order:
+
+```ruby
+def index
+  sort_column = params[:sort] || "created_at"
+  direction = params[:direction] || "desc"
+  
+  @users = sort_users(User.all, sort_column, direction)
+end
+```
+
+### With Pagination
+
+Combine with pagination libraries like Pagy or Kaminari:
+
+```ruby
+def index
+  users = sort_users(User.all, params[:sort], params[:direction])
+  @pagy, @users = pagy(users, items: 20)
+end
+```
+
+```erb
+<%= render FlatPack::Table::Component.new(
+  rows: @users,
+  turbo_frame: "users_table",
+  sort: params[:sort],
+  direction: params[:direction],
+  base_url: users_path
+) do |table| %>
+  <!-- columns -->
+<% end %>
+
+<%== pagy_nav(@pagy) %>
+```
+
 ## How It Works
 
 1. **Initial Load**: Table renders with default sort (or no sort)
@@ -276,7 +286,22 @@ These URLs are:
 - **Bookmarkable**: Browser bookmarks preserve the sort state
 - **SEO-friendly**: Search engines can index different sort orders
 
-## Turbo Frame Details
+## Visual Indicators
+
+Sortable columns show visual feedback:
+
+- **Non-sorted columns**: Normal appearance, hoverable
+- **Sorted ascending**: Column name + ↑ arrow (with 0.25rem left margin)
+- **Sorted descending**: Column name + ↓ arrow (with 0.25rem left margin)
+
+The arrow indicator styling:
+- Uses the primary color from your theme: `text-[var(--color-primary)]`
+- Has bold font weight for visibility: `font-bold`
+- Includes left margin for spacing: `ms-1` (0.25rem)
+
+## Styling
+
+### Turbo Frame Structure
 
 The `turbo_frame` parameter wraps the entire table in a Turbo Frame:
 
@@ -297,105 +322,40 @@ When a sort link is clicked:
 4. Replaces the current frame content
 5. Updates browser history
 
-## Visual Indicators
+### Custom Arrow Indicators
 
-Sortable columns show visual feedback:
-
-- **Non-sorted columns**: Normal appearance, hoverable
-- **Sorted ascending**: Column name + ↑ arrow (with 0.25rem left margin)
-- **Sorted descending**: Column name + ↓ arrow (with 0.25rem left margin)
-
-The arrow indicator styling:
-- Uses the primary color from your theme: `text-[var(--color-primary)]`
-- Has bold font weight for visibility: `font-bold`
-- Includes left margin for spacing: `ms-1` (0.25rem)
+The arrow indicators use Unicode characters and can be customized via CSS:
 
 ```css
 /* Arrow indicator classes */
 .ms-1 .text-[var(--color-primary)] .font-bold
 ```
 
-## Best Practices
+## Accessibility
 
-### 1. Always Validate Sort Parameters
+The sortable table implementation is accessible:
 
-Never trust user input. Always validate sort columns:
+- **Keyboard Navigation**: Links are keyboard accessible
+- **Screen Readers**: Header text announces sort state
+- **Visual Indicators**: Color and icons show current sort
+- **Focus States**: Hover/focus states on clickable headers
 
-```ruby
-def sort_users(users, sort_column, direction)
-  # Whitelist valid columns
-  valid_columns = %w[name email created_at]
-  return users unless valid_columns.include?(sort_column)
-  
-  # ... rest of sorting logic
-end
-```
+### Keyboard Support
 
-### 2. Use Database Sorting for Large Datasets
+- `Tab` - Navigate to next sortable header
+- `Shift+Tab` - Navigate to previous sortable header
+- `Enter` / `Space` - Activate sort on focused header
 
-For ActiveRecord, sort at the database level:
+### Enhanced ARIA Support
 
-```ruby
-# Good: Database sorting
-users.order("name ASC")
-
-# Bad: Ruby sorting (loads all records into memory)
-users.to_a.sort_by(&:name)
-```
-
-### 3. Provide Sensible Defaults
-
-Consider a default sort order:
+Consider adding ARIA attributes for enhanced accessibility:
 
 ```ruby
-def index
-  sort_column = params[:sort] || "created_at"
-  direction = params[:direction] || "desc"
-  
-  @users = sort_users(User.all, sort_column, direction)
-end
-```
-
-### 4. Consider Pagination
-
-Combine with pagination libraries like Pagy or Kaminari:
-
-```ruby
-def index
-  users = sort_users(User.all, params[:sort], params[:direction])
-  @pagy, @users = pagy(users, items: 20)
-end
-```
-
-```erb
-<%= render FlatPack::Table::Component.new(
-  rows: @users,
-  turbo_frame: "users_table",
-  sort: params[:sort],
-  direction: params[:direction],
-  base_url: users_path
-) do |table| %>
-  <!-- columns -->
-<% end %>
-
-<%== pagy_nav(@pagy) %>
-```
-
-### 5. Handle Nil Values
-
-Sort methods should handle nil values gracefully:
-
-```ruby
-def sort_users(users, sort_column, direction)
-  # ... validation ...
-  
-  sorted = users.sort_by do |user|
-    value = user.public_send(sort_column)
-    # Put nils at the end
-    value.nil? ? "" : value
-  end
-  
-  direction == "desc" ? sorted.reverse : sorted
+# In your custom component
+aria_label = if current_sort.to_s == @sort_key.to_s
+  "#{@label}, sorted #{current_direction}ending, click to sort #{opposite_direction}"
+else
+  "#{@label}, not sorted, click to sort ascending"
 end
 ```
 
@@ -469,6 +429,77 @@ class UsersIndexTest < ActionDispatch::IntegrationTest
 end
 ```
 
+## Best Practices
+
+### 1. Always Validate Sort Parameters
+
+Never trust user input. Always validate sort columns:
+
+```ruby
+def sort_users(users, sort_column, direction)
+  # Whitelist valid columns
+  valid_columns = %w[name email created_at]
+  return users unless valid_columns.include?(sort_column)
+  
+  # ... rest of sorting logic
+end
+```
+
+### 2. Use Database Sorting for Large Datasets
+
+For ActiveRecord, sort at the database level:
+
+```ruby
+# Good: Database sorting
+users.order("name ASC")
+
+# Bad: Ruby sorting (loads all records into memory)
+users.to_a.sort_by(&:name)
+```
+
+### 3. Add Database Indexes
+
+Add indexes for sortable columns:
+
+```ruby
+class AddIndexesToUsers < ActiveRecord::Migration[8.0]
+  def change
+    add_index :users, :name
+    add_index :users, :email
+    add_index :users, :created_at
+  end
+end
+```
+
+### 4. Use Eager Loading
+
+Use `includes` for associations to avoid N+1 queries:
+
+```ruby
+def index
+  @products = Product.includes(:category)
+  @sorted_products = sort_products(@products, params[:sort], params[:direction])
+end
+```
+
+### 5. Handle Nil Values
+
+Sort methods should handle nil values gracefully:
+
+```ruby
+def sort_users(users, sort_column, direction)
+  # ... validation ...
+  
+  sorted = users.sort_by do |user|
+    value = user.public_send(sort_column)
+    # Put nils at the end
+    value.nil? ? "" : value
+  end
+  
+  direction == "desc" ? sorted.reverse : sorted
+end
+```
+
 ## Troubleshooting
 
 ### Sort Not Working
@@ -525,7 +556,7 @@ users.order(params[:sort] => direction)
 
 ### Database Indexes
 
-Add indexes for sortable columns:
+Add indexes for sortable columns to improve query performance:
 
 ```ruby
 class AddIndexesToUsers < ActiveRecord::Migration[8.0]
@@ -562,46 +593,43 @@ def index
 end
 ```
 
-## Accessibility
+## API Reference
 
-The sortable table implementation is accessible:
-
-- **Keyboard Navigation**: Links are keyboard accessible
-- **Screen Readers**: Header text announces sort state
-- **Visual Indicators**: Color and icons show current sort
-- **Focus States**: Hover/focus states on clickable headers
-
-Consider adding ARIA attributes for enhanced accessibility:
+### Sortable Table Configuration
 
 ```ruby
-def sort_link(current_sort, current_direction, base_url)
-  # ... build URL ...
-  
-  aria_label = if current_sort.to_s == @sort_key.to_s
-    "#{@label}, sorted #{current_direction}ending, click to sort #{opposite_direction}"
-  else
-    "#{@label}, not sorted, click to sort ascending"
-  end
-  
-  tag.a(
-    href: sort_url,
-    data: { turbo_frame: "sortable_table" },
-    aria: { label: aria_label },
-    class: "..."
-  ) do
-    # ... link content ...
-  end
-end
+FlatPack::Table::Component.new(
+  rows: Array,                # Required
+  turbo_frame: String,        # Required for sorting
+  sort: String,               # Required for sorting
+  direction: String,          # Required for sorting
+  base_url: String,           # Required for sorting
+  **system_arguments          # Optional
+)
 ```
 
-## Related Documentation
+### Sortable Column Configuration
+
+```ruby
+table.with_column(
+  label: String,              # Required
+  attribute: Symbol,          # Optional
+  sortable: Boolean,          # Optional, default: false
+  sort_key: Symbol,           # Optional, defaults to attribute
+  formatter: Proc,            # Optional
+  &block                      # Optional
+)
+```
+
+## Related Components
 
 - [Table Component](table.md) - Main table documentation
-- [Turbo Frames](https://turbo.hotwired.dev/handbook/frames) - Turbo Frame documentation
-- [Rails URL Helpers](https://guides.rubyonrails.org/routing.html) - URL generation
+- [Button Component](button.md) - Used for actions
+- [Sortable Table Examples](sortable-tables-examples.md) - Visual examples
 
 ## Next Steps
 
-- Combine with [pagination](table.md#performance-considerations)
-- Add [filters](../advanced/filters.md) to complement sorting
-- Implement [multi-column sorting](../advanced/multi-column-sort.md)
+- [Table Component](table.md)
+- [Sortable Table Examples](sortable-tables-examples.md)
+- [Turbo Frames](https://turbo.hotwired.dev/handbook/frames)
+- [Theming Guide](../theming.md)
