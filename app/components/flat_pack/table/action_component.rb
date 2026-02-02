@@ -3,12 +3,12 @@
 module FlatPack
   module Table
     class ActionComponent < ViewComponent::Base
-      def initialize(label: nil, icon: nil, url: nil, method: nil, scheme: :ghost, formatter: nil, **system_arguments, &block)
-        @label = label
+      def initialize(text: nil, icon: nil, url: nil, method: nil, style: :ghost, formatter: nil, **system_arguments, &block)
+        @text = text
         @icon = icon
         @url = url
         @method = method
-        @scheme = scheme
+        @style = style
         @formatter = formatter || block
         @system_arguments = system_arguments
       end
@@ -20,10 +20,10 @@ module FlatPack
         else
           # Return a Button component instance that can be rendered by the parent
           FlatPack::Button::Component.new(
-            label: action_label(row),
+            text: action_text(row),
             url: action_url(row),
             method: @method,
-            scheme: @scheme,
+            style: @style,
             **@system_arguments
           )
         end
@@ -31,11 +31,11 @@ module FlatPack
 
       private
 
-      def action_label(row)
-        if @label.respond_to?(:call)
-          @label.call(row)
+      def action_text(row)
+        if @text.respond_to?(:call)
+          @text.call(row)
         else
-          @label
+          @text
         end
       end
 

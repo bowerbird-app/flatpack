@@ -7,9 +7,9 @@ module FlatPack
     class ComponentTest < ViewComponent::TestCase
       def test_renders_segmented_buttons
         render_inline(Component.new) do |group|
-          group.with_button(label: "Day", selected: true)
-          group.with_button(label: "Week")
-          group.with_button(label: "Month")
+          group.with_button(text: "Day", selected: true)
+          group.with_button(text: "Week")
+          group.with_button(text: "Month")
         end
 
         assert_selector "div.inline-flex"
@@ -18,8 +18,8 @@ module FlatPack
 
       def test_selected_button_uses_primary_scheme
         render_inline(Component.new) do |group|
-          group.with_button(label: "Selected", selected: true)
-          group.with_button(label: "Not Selected")
+          group.with_button(text: "Selected", selected: true)
+          group.with_button(text: "Not Selected")
         end
 
         # The selected button should have primary styling

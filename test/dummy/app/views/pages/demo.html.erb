@@ -10,9 +10,9 @@
     <div class="bg-[var(--color-muted)] rounded-lg p-6 mb-4">
       <h3 class="text-lg font-medium mb-3">Buttons</h3>
       <div class="flex gap-3">
-        <%= render FlatPack::Button::Component.new(label: "Primary", scheme: :primary) %>
-        <%= render FlatPack::Button::Component.new(label: "Secondary", scheme: :secondary) %>
-        <%= render FlatPack::Button::Component.new(label: "Ghost", scheme: :ghost) %>
+        <%= render FlatPack::Button::Component.new(text: "Primary", style: :primary) %>
+        <%= render FlatPack::Button::Component.new(text: "Secondary", style: :secondary) %>
+        <%= render FlatPack::Button::Component.new(text: "Ghost", style: :ghost) %>
       </div>
     </div>
 
@@ -26,8 +26,8 @@
             <%= user.status %>
           </span>
         <% end %>
-        <% table.with_action(label: "View", url: "#", scheme: :ghost) %>
-        <% table.with_action(label: "Edit", url: "#", scheme: :ghost) %>
+        <% table.with_action(text: "View", url: "#", style: :ghost) %>
+        <% table.with_action(text: "Edit", url: "#", style: :ghost) %>
       <% end %>
     </div>
   </div>
@@ -46,19 +46,19 @@
 
   <div class="flex gap-4">
     <%= render FlatPack::Button::Component.new(
-      label: "View Button Demos",
+      text: "View Button Demos",
       url: demo_buttons_path,
-      scheme: :primary
+      style: :primary
     ) %>
     <%= render FlatPack::Button::Component.new(
-      label: "View Table Demos",
+      text: "View Table Demos",
       url: demo_tables_path,
-      scheme: :secondary
+      style: :secondary
     ) %>
     <%= render FlatPack::Button::Component.new(
-      label: "View Input Demos",
+      text: "View Input Demos",
       url: demo_inputs_path,
-      scheme: :secondary
+      style: :secondary
     ) %>
   </div>
 </div>

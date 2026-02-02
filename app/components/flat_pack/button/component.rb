@@ -33,8 +33,8 @@ module FlatPack
       }.freeze
 
       def initialize(
-        label: nil,
-        scheme: :primary,
+        text: nil,
+        style: :primary,
         size: :md,
         url: nil,
         method: nil,
@@ -45,8 +45,8 @@ module FlatPack
         **system_arguments
       )
         super(**system_arguments)
-        @label = label
-        @scheme = scheme.to_sym
+        @text = text
+        @style = style.to_sym
         @size = size.to_sym
         @method = method
         @target = target
@@ -62,7 +62,7 @@ module FlatPack
           @url = nil
         end
 
-        validate_scheme!
+        validate_style!
         validate_size!
         validate_content!
       end
@@ -97,7 +97,7 @@ module FlatPack
           content << content_tag(:span, "Loading") unless @icon_only
         else
           content << render_icon if @icon
-          content << content_tag(:span, @label) if @label
+          content << content_tag(:span, @text) if @text
         end
 
         safe_join(content)
@@ -157,7 +157,7 @@ module FlatPack
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:ring-offset-2",
           "disabled:pointer-events-none disabled:opacity-50",
           conditional_size_classes,
-          scheme_classes,
+          style_classes,
           icon_only_classes
         )
       end
@@ -168,17 +168,17 @@ module FlatPack
         ICON_ONLY_SIZES.fetch(@size)
       end
 
-      def scheme_classes
-        SCHEMES.fetch(@scheme)
+      def style_classes
+        SCHEMES.fetch(@style)
       end
 
       def size_classes
         SIZES.fetch(@size)
       end
 
-      def validate_scheme!
-        return if SCHEMES.key?(@scheme)
-        raise ArgumentError, "Invalid scheme: #{@scheme}. Must be one of: #{SCHEMES.keys.join(", ")}"
+      def validate_style!
+        return if SCHEMES.key?(@style)
+        raise ArgumentError, "Invalid style: #{@style}. Must be one of: #{SCHEMES.keys.join(", ")}"
       end
 
       def validate_size!
@@ -188,14 +188,14 @@ module FlatPack
 
       def validate_content!
         # Valid scenarios:
-        # 1. Has label (with or without icon)
+        # 1. Has text (with or without icon)
         # 2. Has icon
-        has_label = @label.present?
+        has_text = @text.present?
         has_icon = @icon.present?
-        is_valid = has_label || has_icon
+        is_valid = has_text || has_icon
         return if is_valid
 
-        raise ArgumentError, "Button must have either a label or an icon"
+        raise ArgumentError, "Button must have either a text prop or an icon prop"
       end
 
       def validate_url!(original_url)

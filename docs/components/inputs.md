@@ -440,8 +440,8 @@ Override in your application CSS:
     ) %>
 
     <%= render FlatPack::Button::Component.new(
-      label: "Send Message",
-      scheme: :primary
+      text: "Send Message",
+      style: :primary
     ) %>
   <% end %>
 </div>

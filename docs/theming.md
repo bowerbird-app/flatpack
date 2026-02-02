@@ -233,7 +233,7 @@ Some components can be customized via the `class` system argument:
 
 ```erb
 <%= render FlatPack::Button::Component.new(
-  label: "Custom",
+  text: "Custom",
   class: "!bg-gradient-to-r from-purple-500 to-pink-500"
 ) %>
 ```

@@ -193,8 +193,8 @@ Test the installation by adding a FlatPack button component to a view:
 ```erb
 <%# Example: app/views/pages/home.html.erb %>
 <%= render FlatPack::Button::Component.new(
-  label: "Test Button",
-  scheme: :primary
+  text: "Test Button",
+  style: :primary
 ) %>
 ```
 

@@ -7,8 +7,8 @@ module FlatPack
     class ComponentTest < ViewComponent::TestCase
       def test_renders_button_group
         render_inline(Component.new) do |group|
-          group.with_button(FlatPack::Button::Component.new(label: "Left", scheme: :secondary))
-          group.with_button(FlatPack::Button::Component.new(label: "Right", scheme: :secondary))
+          group.with_button(FlatPack::Button::Component.new(text: "Left", style: :secondary))
+          group.with_button(FlatPack::Button::Component.new(text: "Right", style: :secondary))
         end
 
         assert_selector "div.inline-flex"
@@ -17,7 +17,7 @@ module FlatPack
 
       def test_applies_group_classes
         render_inline(Component.new) do |group|
-          group.with_button(FlatPack::Button::Component.new(label: "Button", scheme: :secondary))
+          group.with_button(FlatPack::Button::Component.new(text: "Button", style: :secondary))
         end
 
         assert_selector "div.inline-flex"
