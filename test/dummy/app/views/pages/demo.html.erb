@@ -19,9 +19,9 @@
     <div class="bg-[var(--color-muted)] rounded-lg p-6">
       <h3 class="text-lg font-medium mb-3">Table</h3>
       <%= render FlatPack::Table::Component.new(rows: @users) do |table| %>
-        <% table.with_column(text: "Name", attribute: :name) %>
-        <% table.with_column(text: "Email", attribute: :email) %>
-        <% table.with_column(text: "Status") do |user| %>
+        <% table.with_column(label: "Name", attribute: :name) %>
+        <% table.with_column(label: "Email", attribute: :email) %>
+        <% table.with_column(label: "Status") do |user| %>
           <span class="px-2 py-1 text-xs rounded <%= user.status == 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' %>">
             <%= user.status %>
           </span>
