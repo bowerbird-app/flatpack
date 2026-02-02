@@ -1,8 +1,16 @@
-# Sortable Table Visual Examples
+# Sortable Table Examples
 
-This document provides visual examples of the sortable table functionality.
+Visual and interactive examples of the sortable table functionality.
 
-## Example 1: Initial State (No Sort)
+## Basic Usage
+
+This document provides practical examples and visual representations of sortable tables in action.
+
+## Examples
+
+### Example 1: Initial State (No Sort)
+
+When a table first loads without sorting:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -16,7 +24,9 @@ This document provides visual examples of the sortable table functionality.
 Note: All column headers are clickable (shown with ▼)
 ```
 
-## Example 2: Sorted by Name (Ascending)
+### Example 2: Sorted by Name (Ascending)
+
+After clicking the "Name" column header:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -31,7 +41,9 @@ Note: Name column shows ↑ indicating ascending sort
 URL: /tables?sort=name&direction=asc
 ```
 
-## Example 3: Sorted by Name (Descending)
+### Example 3: Sorted by Name (Descending)
+
+After clicking the "Name" column header again:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -46,7 +58,9 @@ Note: Name column shows ↓ indicating descending sort
 URL: /tables?sort=name&direction=desc
 ```
 
-## Example 4: Sorted by Status with Formatted Column
+### Example 4: Sorted by Status with Formatted Column
+
+Sorting still works with custom formatters:
 
 ```
 ┌──────────────────────────────────────────────────────────────────────┐
@@ -71,6 +85,7 @@ URL: /tables?sort=status&direction=asc
 ## HTML Structure
 
 ### Sortable Header (Non-sorted)
+
 ```html
 <th class="px-4 py-3 text-left text-xs font-medium text-[var(--color-muted-foreground)] uppercase tracking-wider cursor-pointer select-none">
   <a href="/tables?sort=name&direction=asc" 
@@ -82,6 +97,7 @@ URL: /tables?sort=status&direction=asc
 ```
 
 ### Sortable Header (Sorted Ascending)
+
 ```html
 <th class="px-4 py-3 text-left text-xs font-medium text-[var(--color-muted-foreground)] uppercase tracking-wider cursor-pointer select-none">
   <a href="/tables?sort=name&direction=desc" 
@@ -94,6 +110,7 @@ URL: /tables?sort=status&direction=asc
 ```
 
 ### Sortable Header (Sorted Descending)
+
 ```html
 <th class="px-4 py-3 text-left text-xs font-medium text-[var(--color-muted-foreground)] uppercase tracking-wider cursor-pointer select-none">
   <a href="/tables?sort=name&direction=asc" 
@@ -106,6 +123,7 @@ URL: /tables?sort=status&direction=asc
 ```
 
 ### Full Turbo Frame Structure
+
 ```html
 <turbo-frame id="sortable_table">
   <div class="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border)]">
@@ -176,6 +194,7 @@ URL: /tables?sort=status&direction=asc
 ## Responsive Behavior
 
 ### Desktop View (1024px+)
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │ ID ▼  Name ▼   Email ▼        Status ▼   Created ▼  Actions│
@@ -187,6 +206,7 @@ All columns visible, full width
 ```
 
 ### Tablet View (768px-1023px)
+
 ```
 ┌───────────────────────────────────────────────────┐
 │← Name ▼   Email ▼      Status ▼   Created ▼  →  │
@@ -198,6 +218,7 @@ Horizontal scroll enabled, some columns may be hidden
 ```
 
 ### Mobile View (< 768px)
+
 ```
 ┌─────────────────────────────┐
 │← Name ▼   Status ▼   →     │
@@ -243,6 +264,132 @@ User can scroll to see more →
                   (continues...)
 ```
 
+## Styling
+
+### Visual Indicators
+
+Sortable columns show visual feedback:
+
+- **Non-sorted columns**: Normal appearance, hoverable
+- **Sorted ascending**: Column name + ↑ arrow
+- **Sorted descending**: Column name + ↓ arrow
+
+The arrow indicator uses:
+- Primary color: `text-[var(--color-primary)]`
+- Bold font weight: `font-bold`
+- Left margin: `ms-1` (0.25rem)
+
+### CSS Variables
+
+Customize the appearance:
+
+```css
+@theme {
+  /* Sortable header colors */
+  --color-muted-foreground: oklch(0.45 0.01 250);
+  --color-foreground: oklch(0.25 0.02 250);
+  --color-primary: oklch(0.55 0.25 270);
+}
+```
+
+## Accessibility
+
+### Keyboard Navigation
+
+```
+┌─────────────────────────────────────────────────┐
+│ Name ↑ (Keyboard focusable, screen reader      │
+│         announces "Name, sorted ascending,      │
+│         click to sort descending")              │
+├─────────────────────────────────────────────────┤
+│ Proper contrast ratio for text and indicators  │
+│ Focus rings visible on keyboard navigation     │
+│ Arrow indicators use semantic Unicode chars    │
+│ Links have hover/focus states                  │
+└─────────────────────────────────────────────────┘
+
+Keyboard Navigation:
+- Tab: Move between sortable headers
+- Enter/Space: Activate sort
+- Shift+Tab: Move backwards
+```
+
+### ARIA Attributes
+
+The implementation supports accessible markup:
+
+- Links are keyboard accessible
+- Header text announces sort state
+- Visual indicators show current sort
+- Focus states on clickable headers
+
+## Performance Notes
+
+### Rendering Performance
+
+- Turbo Frame updates only the table, not entire page
+- No JavaScript execution for DOM manipulation
+- Browser handles HTML replacement natively
+
+### Network Performance
+
+- Only table HTML is transferred
+- Gzip compression reduces payload
+- HTTP/2 multiplexing for parallel requests
+
+### Database Performance
+
+- Sorting happens at database level (when using ActiveRecord)
+- Indexes on sortable columns improve query speed
+- Pagination reduces memory usage
+
+Example Query:
+
+```sql
+-- Without sorting
+SELECT * FROM users;
+
+-- With sorting (indexed column)
+SELECT * FROM users ORDER BY name ASC;
+-- Uses index on (name) - fast
+
+-- With sorting (non-indexed column)
+SELECT * FROM users ORDER BY nickname ASC;
+-- Full table scan - slow for large tables
+```
+
+## Error States
+
+### No Data
+
+```
+┌─────────────────────────────────────────┐
+│ Name ↑   Email ▼   Status ▼   Actions  │
+├─────────────────────────────────────────┤
+│          No data available              │
+└─────────────────────────────────────────┘
+```
+
+### Invalid Sort Column (Ignored)
+
+```
+URL: /tables?sort=invalid_column&direction=asc
+↓
+Controller validates and ignores invalid column
+↓
+Returns default (unsorted) data
+```
+
+### Invalid Direction (Defaults to ASC)
+
+```
+URL: /tables?sort=name&direction=invalid
+↓
+Controller validates direction
+↓
+Returns data sorted by name ASC
+```
+
 ## Browser Support
 
 The sortable tables feature works in all modern browsers:
@@ -265,95 +412,43 @@ The sortable tables feature works in all modern browsers:
 - Without CSS Variables: Uses fallback colors
 - Without modern CSS: Basic table layout maintained
 
-## Accessibility Features
+## API Reference
 
-```
-┌─────────────────────────────────────────────────┐
-│ Name ↑ (Keyboard focusable, screen reader      │
-│         announces "Name, sorted ascending,      │
-│         click to sort descending")              │
-├─────────────────────────────────────────────────┤
-│ Proper contrast ratio for text and indicators  │
-│ Focus rings visible on keyboard navigation     │
-│ Arrow indicators use semantic Unicode chars    │
-│ Links have hover/focus states                  │
-└─────────────────────────────────────────────────┘
+### Sortable Table Props
 
-Keyboard Navigation:
-- Tab: Move between sortable headers
-- Enter/Space: Activate sort
-- Shift+Tab: Move backwards
+```ruby
+FlatPack::Table::Component.new(
+  rows: Array,                # Required
+  turbo_frame: String,        # Required for sorting
+  sort: String,               # Required for sorting
+  direction: String,          # Required for sorting
+  base_url: String,           # Required for sorting
+  **system_arguments          # Optional
+)
 ```
 
-## Performance Notes
+### Sortable Column Props
 
-### Rendering Performance
-- Turbo Frame updates only the table, not entire page
-- No JavaScript execution for DOM manipulation
-- Browser handles HTML replacement natively
-
-### Network Performance
-- Only table HTML is transferred
-- Gzip compression reduces payload
-- HTTP/2 multiplexing for parallel requests
-
-### Database Performance
-- Sorting happens at database level (when using ActiveRecord)
-- Indexes on sortable columns improve query speed
-- Pagination reduces memory usage
-
-Example Query:
-```sql
--- Without sorting
-SELECT * FROM users;
-
--- With sorting (indexed column)
-SELECT * FROM users ORDER BY name ASC;
--- Uses index on (name) - fast
-
--- With sorting (non-indexed column)
-SELECT * FROM users ORDER BY nickname ASC;
--- Full table scan - slow for large tables
+```ruby
+table.with_column(
+  label: String,              # Required
+  attribute: Symbol,          # Optional
+  sortable: Boolean,          # Optional, default: false
+  sort_key: Symbol,           # Optional, defaults to attribute
+  formatter: Proc,            # Optional
+  &block                      # Optional
+)
 ```
 
-## Error States
+## Related Components
 
-### No Data
-```
-┌─────────────────────────────────────────┐
-│ Name ↑   Email ▼   Status ▼   Actions  │
-├─────────────────────────────────────────┤
-│          No data available              │
-└─────────────────────────────────────────┘
-```
+- [Table Component](table.md) - Main table documentation
+- [Sortable Tables](sortable-tables.md) - Detailed implementation guide
+- [Button Component](button.md) - Used for actions
 
-### Invalid Sort Column (Ignored)
-```
-URL: /tables?sort=invalid_column&direction=asc
-↓
-Controller validates and ignores invalid column
-↓
-Returns default (unsorted) data
-```
+## Next Steps
 
-### Invalid Direction (Defaults to ASC)
-```
-URL: /tables?sort=name&direction=invalid
-↓
-Controller validates direction
-↓
-Returns data sorted by name ASC
-```
-
-## Conclusion
-
-The sortable tables implementation provides:
-- ✅ Intuitive user experience
-- ✅ Seamless Turbo Frame updates
-- ✅ URL-based state management
-- ✅ Accessible markup
-- ✅ Responsive design
-- ✅ Performance optimizations
-- ✅ Error handling
-
-The visual indicators and interaction patterns follow standard web conventions, making the feature immediately familiar to users.
+- [Table Component](table.md)
+- [Sortable Tables](sortable-tables.md)
+- [Turbo Frames](https://turbo.hotwired.dev/handbook/frames)
+- [Theming Guide](../theming.md)

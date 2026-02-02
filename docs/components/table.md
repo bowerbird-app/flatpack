@@ -21,7 +21,7 @@ The Table component renders data in a tabular format with columns and actions.
 | `sort` | String | `nil` | Current sort column |
 | `direction` | String | `nil` | Current sort direction ('asc' or 'desc') |
 | `base_url` | String | `nil` | Base URL for sort links |
-| `**system_arguments` | Hash | `{}` | HTML attributes |
+| `**system_arguments` | Hash | `{}` | HTML attributes (`class`, `data`, `aria`, `id`, etc.) |
 
 ## Columns
 
@@ -49,7 +49,7 @@ Use blocks for custom formatting.
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `label` | String | Required | Column header text |
+| `label` | String | **required** | Column header text |
 | `attribute` | Symbol | `nil` | Attribute to call on each row |
 | `formatter` | Proc | `nil` | Custom formatter lambda/proc |
 | `sortable` | Boolean | `false` | Enable sorting for this column |
@@ -88,7 +88,9 @@ Define actions using `with_action`:
 <% end %>
 ```
 
-## Complete Example
+## Examples
+
+### Complete Table with Actions
 
 ```erb
 <%= render FlatPack::Table::Component.new(rows: @users) do |table| %>
@@ -130,86 +132,11 @@ Define actions using `with_action`:
 <% end %>
 ```
 
-## Empty State
-
-When `rows` is empty, displays "No data available":
-
-```erb
-<%= render FlatPack::Table::Component.new(rows: []) do |table| %>
-  <% table.with_column(label: "Name", attribute: :name) %>
-<% end %>
-```
-
-## With Stimulus Controller
-
-Enable the Stimulus controller for advanced interactions:
-
-```erb
-<%= render FlatPack::Table::Component.new(rows: @users, stimulus: true) do |table| %>
-  <% table.with_column(label: "Name", attribute: :name) %>
-<% end %>
-```
-
-The Stimulus controller (`flat-pack--table`) provides:
-- Row selection
-- Bulk actions
-- Hover effects
-
-## System Arguments
-
-### Custom Classes
-
-```erb
-<%= render FlatPack::Table::Component.new(
-  rows: @users,
-  class: "mt-8"
-) do |table| %>
-  <%# ... columns ... %>
-<% end %>
-```
-
-### Data Attributes
-
-```erb
-<%= render FlatPack::Table::Component.new(
-  rows: @users,
-  data: { controller: "sortable" }
-) do |table| %>
-  <%# ... columns ... %>
-<% end %>
-```
-
-## Advanced Examples
-
 ### Sortable Tables
 
-The table component supports client-side sorting using Turbo Frames for seamless updates:
+The table component supports sorting using Turbo Frames for seamless updates:
 
 ```erb
-<%# Controller action %>
-def index
-  @users = User.all
-  @sorted_users = sort_users(@users, params[:sort], params[:direction])
-end
-
-private
-
-def sort_users(users, sort_column, direction)
-  return users unless sort_column.present?
-  
-  # Validate sort column
-  valid_columns = %w[name email created_at status]
-  return users unless valid_columns.include?(sort_column)
-  
-  # Sort users
-  direction = direction == "desc" ? "desc" : "asc"
-  sorted = users.sort_by { |user| user.public_send(sort_column) }
-  direction == "desc" ? sorted.reverse : sorted
-end
-```
-
-```erb
-<%# View %>
 <%= render FlatPack::Table::Component.new(
   rows: @sorted_users,
   turbo_frame: "sortable_table",
@@ -230,6 +157,8 @@ end
 - Toggle between ascending/descending on repeated clicks
 - Uses Turbo Frames for no-reload updates
 - Works with URL parameters for shareable links
+
+See [Sortable Tables](sortable-tables.md) for complete implementation details.
 
 ### Sortable Column with Custom Formatter
 
@@ -285,6 +214,31 @@ Use a different key for sorting than the attribute:
 <% end %>
 ```
 
+### Empty State
+
+When `rows` is empty, displays "No data available":
+
+```erb
+<%= render FlatPack::Table::Component.new(rows: []) do |table| %>
+  <% table.with_column(label: "Name", attribute: :name) %>
+<% end %>
+```
+
+### With Stimulus Controller
+
+Enable the Stimulus controller for advanced interactions:
+
+```erb
+<%= render FlatPack::Table::Component.new(rows: @users, stimulus: true) do |table| %>
+  <% table.with_column(label: "Name", attribute: :name) %>
+<% end %>
+```
+
+The Stimulus controller (`flat-pack--table`) provides:
+- Row selection
+- Bulk actions
+- Hover effects
+
 ### Conditional Actions
 
 ```erb
@@ -305,6 +259,45 @@ Use a different key for sorting than the attribute:
 <% table.with_action(label: "View", url: ->(user) { user_path(user) }, scheme: :ghost) %>
 <% table.with_action(label: "Edit", url: ->(user) { edit_user_path(user) }, scheme: :ghost) %>
 <% table.with_action(label: "Delete", url: ->(user) { user_path(user) }, method: :delete, scheme: :ghost) %>
+```
+
+### With Pagination
+
+Combine with pagination libraries like Pagy or Kaminari:
+
+```erb
+<%# With Pagy %>
+<%= render FlatPack::Table::Component.new(rows: @users) do |table| %>
+  <%# ... columns ... %>
+<% end %>
+
+<%== pagy_nav(@pagy) %>
+```
+
+## System Arguments
+
+### Custom Classes
+
+```erb
+<%= render FlatPack::Table::Component.new(
+  rows: @users,
+  class: "mt-8"
+) do |table| %>
+  <%# ... columns ... %>
+<% end %>
+```
+
+Classes are merged using `tailwind_merge`, so Tailwind utilities override correctly.
+
+### Data Attributes
+
+```erb
+<%= render FlatPack::Table::Component.new(
+  rows: @users,
+  data: { controller: "sortable" }
+) do |table| %>
+  <%# ... columns ... %>
+<% end %>
 ```
 
 ## Styling
@@ -334,7 +327,7 @@ Add classes to the container:
 <% end %>
 ```
 
-## Responsive Design
+### Responsive Design
 
 Tables are wrapped in a scrollable container:
 
@@ -359,6 +352,12 @@ The Table component follows accessibility best practices:
 - Proper ARIA attributes for interactive elements
 - Keyboard navigation for actions
 
+### Keyboard Support
+
+- `Tab` - Focus next interactive element
+- `Shift+Tab` - Focus previous interactive element
+- `Enter` / `Space` - Activate focused link or button
+
 ## Testing
 
 ```ruby
@@ -379,22 +378,6 @@ class CustomTableTest < ViewComponent::TestCase
 end
 ```
 
-## Performance Considerations
-
-For large datasets:
-1. Use pagination (Kaminari, Pagy)
-2. Consider virtual scrolling
-3. Lazy load data with Turbo Frames
-
-```erb
-<%# With Pagy %>
-<%= render FlatPack::Table::Component.new(rows: @users) do |table| %>
-  <%# ... columns ... %>
-<% end %>
-
-<%== pagy_nav(@pagy) %>
-```
-
 ## API Reference
 
 ### Table Component
@@ -410,6 +393,14 @@ FlatPack::Table::Component.new(
   **system_arguments          # Optional
 )
 ```
+
+### System Arguments
+
+- `class`: String - Additional CSS classes
+- `data`: Hash - Data attributes
+- `aria`: Hash - ARIA attributes
+- `id`: String - Element ID
+- Any other valid HTML attribute
 
 ### Column Component
 
@@ -440,10 +431,12 @@ table.with_action(
 ## Related Components
 
 - [Button Component](button.md) - Used for actions
+- [Sortable Tables](sortable-tables.md) - Detailed sorting implementation
 - [Icon Component](../shared/icon.md) - For action icons
 
 ## Next Steps
 
+- [Sortable Tables](sortable-tables.md)
 - [Button Component](button.md)
 - [Theming Guide](../theming.md)
 - [Stimulus Controllers](../architecture/assets.md#stimulus-controllers)
