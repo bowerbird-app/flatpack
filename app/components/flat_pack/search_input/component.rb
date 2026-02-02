@@ -49,7 +49,7 @@ module FlatPack
       end
 
       def render_input_wrapper
-        content_tag(:div, class: "relative") do
+        content_tag(:div, class: "relative", data: {controller: "flat-pack--search-input"}) do
           safe_join([
             render_input,
             render_clear_button
@@ -110,7 +110,6 @@ module FlatPack
           required: @required,
           class: input_classes,
           data: {
-            controller: "flat-pack--search-input",
             flat_pack__search_input_target: "input",
             action: "input->flat-pack--search-input#toggleClearButton"
           }
