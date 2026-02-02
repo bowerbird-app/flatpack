@@ -52,7 +52,7 @@ module FlatPack
         # Use provided turbo_frame or default to "sortable_table"
         frame_id = turbo_frame || "sortable_table"
 
-        tag.a(href: sort_url, data: { turbo_frame: frame_id }, class: "group inline-flex items-center gap-1 hover:text-[var(--color-foreground)] transition-colors") do
+        tag.a(href: sort_url, data: {turbo_frame: frame_id}, class: "group inline-flex items-center gap-1 hover:text-[var(--color-foreground)] transition-colors") do
           safe_join([
             @label,
             sort_indicator(current_sort, current_direction)
@@ -62,7 +62,7 @@ module FlatPack
 
       def calculate_new_direction(current_sort, current_direction)
         if current_sort.to_s == @sort_key.to_s
-          current_direction == "asc" ? "desc" : "asc"
+          (current_direction == "asc") ? "desc" : "asc"
         else
           "asc"
         end
@@ -80,8 +80,8 @@ module FlatPack
       def sort_indicator(current_sort, current_direction)
         return "" unless current_sort.to_s == @sort_key.to_s
 
-        arrow = current_direction == "asc" ? "↑" : "↓"
-        tag.span(arrow, class: "text-[var(--color-primary)] font-bold")
+        arrow = (current_direction == "asc") ? "↑" : "↓"
+        tag.span(arrow, class: "ms-1 text-[var(--color-primary)] font-bold")
       end
 
       def header_classes
