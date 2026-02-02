@@ -2,7 +2,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["input", "fileList", "preview"]
+  static targets = ["input", "fileList", "preview", "validationError"]
   static values = {
     maxSize: Number,
     preview: { type: Boolean, default: true },
@@ -61,6 +61,9 @@ export default class extends Controller {
   }
 
   processFiles(files) {
+    // Clear any previous validation errors
+    this.clearError()
+    
     // Validate files
     const validFiles = files.filter(file => this.validateFile(file))
 
@@ -216,7 +219,23 @@ export default class extends Controller {
   }
 
   showError(message) {
-    // In a real implementation, you might want to display this in a toast or modal
-    console.error(message)
+    if (this.hasValidationErrorTarget) {
+      this.validationErrorTarget.textContent = message
+      this.validationErrorTarget.classList.remove("hidden")
+      
+      // Auto-hide error after 5 seconds
+      setTimeout(() => {
+        this.validationErrorTarget.classList.add("hidden")
+      }, 5000)
+    } else {
+      console.error(message)
+    }
+  }
+
+  clearError() {
+    if (this.hasValidationErrorTarget) {
+      this.validationErrorTarget.classList.add("hidden")
+      this.validationErrorTarget.textContent = ""
+    }
   }
 }

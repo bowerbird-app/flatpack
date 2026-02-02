@@ -74,6 +74,7 @@ module FlatPack
           safe_join([
             render_upload_icon,
             render_dropzone_text,
+            render_validation_error,
             render_file_list,
             render_preview_area
           ].compact)
@@ -118,6 +119,13 @@ module FlatPack
         content_tag(:div, "", {
           data: {flat_pack__file_input_target: "preview"},
           class: "mt-4 grid grid-cols-3 gap-4 hidden"
+        })
+      end
+
+      def render_validation_error
+        content_tag(:div, "", {
+          data: {flat_pack__file_input_target: "validationError"},
+          class: "mt-2 text-sm text-[var(--color-warning)] hidden"
         })
       end
 
@@ -263,7 +271,7 @@ module FlatPack
         return if @accept.nil?
 
         # Block dangerous file types
-        dangerous_extensions = %w[.exe .bat .cmd .sh .scr .com .pif .vbs .js .jar]
+        dangerous_extensions = %w[.exe .bat .cmd .sh .scr .com .pif .vbs .js .jar .msi .app .deb .rpm .apk .ps1 .psm1 .hta]
         accept_lower = @accept.downcase
 
         dangerous_extensions.each do |ext|
