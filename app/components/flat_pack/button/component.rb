@@ -195,7 +195,7 @@ module FlatPack
         is_valid = has_text || has_icon
         return if is_valid
 
-        raise ArgumentError, "Button must have either a text or an icon"
+        raise ArgumentError, "Button must have either a text prop or an icon prop"
       end
 
       def validate_url!(original_url)
