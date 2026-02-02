@@ -174,8 +174,8 @@ Benefits:
 - SEO-friendly
 
 ### Visual Indicators
-- **Ascending**: Column name + ↑ (Unicode U+2191)
-- **Descending**: Column name + ↓ (Unicode U+2193)
+- **Ascending**: Column name + ↑ (Unicode U+2191) with 0.25rem left margin
+- **Descending**: Column name + ↓ (Unicode U+2193) with 0.25rem left margin
 - **Not sorted**: Column name only
 - **Hover state**: Transition effect on hover
 
@@ -187,8 +187,8 @@ Benefits:
 # Sortable header
 "#{header_classes} cursor-pointer select-none"
 
-# Sort indicator
-"text-[var(--color-primary)] font-bold"
+# Sort indicator (with margin for spacing)
+"ms-1 text-[var(--color-primary)] font-bold"
 
 # Sort link
 "group inline-flex items-center gap-1 hover:text-[var(--color-foreground)] transition-colors"

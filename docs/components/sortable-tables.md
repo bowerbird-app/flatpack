@@ -302,13 +302,17 @@ When a sort link is clicked:
 Sortable columns show visual feedback:
 
 - **Non-sorted columns**: Normal appearance, hoverable
-- **Sorted ascending**: Column name + ↑ arrow
-- **Sorted descending**: Column name + ↓ arrow
+- **Sorted ascending**: Column name + ↑ arrow (with 0.25rem left margin)
+- **Sorted descending**: Column name + ↓ arrow (with 0.25rem left margin)
 
-The arrow uses the primary color from your theme:
+The arrow indicator styling:
+- Uses the primary color from your theme: `text-[var(--color-primary)]`
+- Has bold font weight for visibility: `font-bold`
+- Includes left margin for spacing: `ms-1` (0.25rem)
 
 ```css
-.text-[var(--color-primary)]
+/* Arrow indicator classes */
+.ms-1 .text-[var(--color-primary)] .font-bold
 ```
 
 ## Best Practices
