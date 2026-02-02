@@ -601,6 +601,22 @@ body {
   padding-right: 1rem;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.static {
+  position: static;
+}
+
 .absolute {
   position: absolute;
 }
@@ -615,6 +631,11 @@ body {
 
 .top-1\/2 {
   top: 50%;
+}
+
+.mx-4 {
+  margin-left: 1rem;
+  margin-right: 1rem;
 }
 
 .mx-auto {
@@ -658,6 +679,10 @@ body {
   margin-top: 4rem;
 }
 
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
 .mt-4 {
   margin-top: 1rem;
 }
@@ -686,8 +711,21 @@ body {
   display: table;
 }
 
+.grid {
+  display: grid;
+}
+
 .hidden {
   display: none;
+}
+
+.size-12 {
+  width: 3rem;
+  height: 3rem;
+}
+
+.h-24 {
+  height: 6rem;
 }
 
 .h-4 {
@@ -726,12 +764,24 @@ body {
   width: 100%;
 }
 
+.min-w-0 {
+  min-width: 0px;
+}
+
 .max-w-4xl {
   max-width: 56rem;
 }
 
 .max-w-6xl {
   max-width: 72rem;
+}
+
+.flex-1 {
+  flex: 1 1 0%;
+}
+
+.flex-shrink-0 {
+  flex-shrink: 0;
 }
 
 .border-collapse {
@@ -775,6 +825,10 @@ body {
   list-style-type: disc;
 }
 
+.grid-cols-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .items-center {
   align-items: center;
 }
@@ -801,6 +855,12 @@ body {
 
 .gap-4 {
   gap: 1rem;
+}
+
+.space-x-3 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(0.75rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.75rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
 .space-y-2 > :not([hidden]) ~ :not([hidden]) {
@@ -835,6 +895,12 @@ body {
   overflow-x: auto;
 }
 
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .rounded {
   border-radius: 0.25rem;
 }
@@ -851,6 +917,10 @@ body {
   border-radius: 0.5rem;
 }
 
+.rounded-md {
+  border-radius: 0.375rem;
+}
+
 .border {
   border-width: 1px;
 }
@@ -863,8 +933,16 @@ body {
   border-top-width: 1px;
 }
 
+.border-dashed {
+  border-style: dashed;
+}
+
 .border-\[var\(--color-border\)\] {
   border-color: var(--color-border);
+}
+
+.border-\[var\(--color-primary\)\] {
+  border-color: var(--color-primary);
 }
 
 .border-\[var\(--color-warning\)\] {
@@ -909,9 +987,18 @@ body {
   background-color: rgb(220 252 231 / var(--tw-bg-opacity, 1));
 }
 
+.bg-transparent {
+  background-color: transparent;
+}
+
 .bg-yellow-100 {
   --tw-bg-opacity: 1;
   background-color: rgb(254 249 195 / var(--tw-bg-opacity, 1));
+}
+
+.object-cover {
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 
 .p-1\.5 {
@@ -968,6 +1055,11 @@ body {
   padding-bottom: 0.375rem;
 }
 
+.py-10 {
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+}
+
 .py-2 {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
@@ -986,6 +1078,10 @@ body {
 .py-8 {
   padding-top: 2rem;
   padding-bottom: 2rem;
+}
+
+.pl-1 {
+  padding-left: 0.25rem;
 }
 
 .pr-10 {
@@ -1029,9 +1125,19 @@ body {
   line-height: 1.25rem;
 }
 
+.text-sm\/6 {
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+}
+
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
+}
+
+.text-xs\/5 {
+  font-size: 0.75rem;
+  line-height: 1.25rem;
 }
 
 .font-bold {
@@ -1134,6 +1240,10 @@ body {
 .shadow-\[var\(--shadow-sm\)\] {
   --tw-shadow-color: var(--shadow-sm);
   --tw-shadow: var(--tw-shadow-colored);
+}
+
+.filter {
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
 .transition-colors {
@@ -1254,6 +1364,22 @@ body {
   color: var(--color-muted-foreground);
 }
 
+.focus-within\:outline-2:focus-within {
+  outline-width: 2px;
+}
+
+.focus-within\:outline-offset-2:focus-within {
+  outline-offset: 2px;
+}
+
+.focus-within\:outline-\[var\(--color-primary\)\]:focus-within {
+  outline-color: var(--color-primary);
+}
+
+.hover\:border-\[var\(--color-primary\)\]:hover {
+  border-color: var(--color-primary);
+}
+
 .hover\:bg-\[var\(--color-ghost-hover\)\]:hover {
   background-color: var(--color-ghost-hover);
 }
@@ -1284,6 +1410,10 @@ body {
 
 .hover\:text-\[var\(--color-primary\)\]:hover {
   color: var(--color-primary);
+}
+
+.hover\:text-\[var\(--color-warning\)\]:hover {
+  color: var(--color-warning);
 }
 
 .hover\:text-blue-800:hover {

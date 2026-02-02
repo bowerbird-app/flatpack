@@ -83,25 +83,27 @@ module FlatPack
 
       def render_upload_icon
         content_tag(:svg, **icon_attributes) do
-          tag.path(d: "M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12", **icon_path_attributes)
+          tag.path(d: "M1.5 6a2.25 2.25 0 0 1 2.25-2.25h16.5A2.25 2.25 0 0 1 22.5 6v12a2.25 2.25 0 0 1-2.25 2.25H3.75A2.25 2.25 0 0 1 1.5 18V6ZM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0 0 21 18v-1.94l-2.69-2.689a1.5 1.5 0 0 0-2.12 0l-.88.879.97.97a.75.75 0 1 1-1.06 1.06l-5.16-5.159a1.5 1.5 0 0 0-2.12 0L3 16.061Zm10.125-7.81a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Z", clip_rule: "evenodd", fill_rule: "evenodd")
         end
       end
 
       def render_dropzone_text
         content_tag(:div, class: dropzone_text_classes) do
           elements = [
-            content_tag(:p, class: "text-sm text-[var(--color-foreground)]") do
+            content_tag(:div, class: "flex justify-center text-sm/6 text-[var(--color-muted-foreground)]") do
               safe_join([
-                content_tag(:span, "Click to upload", class: "font-medium text-[var(--color-primary)] cursor-pointer", data: {action: "click->flat-pack--file-input#clickInput"}),
-                " or drag and drop"
+                content_tag(:label, for: input_id, class: "relative cursor-pointer rounded-md bg-transparent font-semibold text-[var(--color-primary)] focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-[var(--color-primary)] hover:text-[var(--color-primary)]/80") do
+                  content_tag(:span, "Upload a file")
+                end,
+                content_tag(:p, " or drag and drop", class: "pl-1")
               ])
             end
           ]
-          
+
           if file_constraints_text
-            elements << content_tag(:p, file_constraints_text, class: "text-xs text-[var(--color-muted-foreground)]")
+            elements << content_tag(:p, file_constraints_text, class: "text-xs/5 text-[var(--color-muted-foreground)]")
           end
-          
+
           safe_join(elements)
         end
       end
@@ -144,7 +146,7 @@ module FlatPack
           required: @required,
           accept: @accept,
           multiple: @multiple,
-          class: "hidden",
+          class: "sr-only",
           data: {
             flat_pack__file_input_target: "input",
             action: "change->flat-pack--file-input#handleFiles"
@@ -171,19 +173,10 @@ module FlatPack
 
       def icon_attributes
         {
-          class: "mx-auto h-12 w-12 text-[var(--color-muted-foreground)]",
-          stroke: "currentColor",
-          fill: "none",
-          viewBox: "0 0 48 48",
+          class: "mx-auto size-12 text-[var(--color-muted-foreground)]/30",
+          fill: "currentColor",
+          viewBox: "0 0 24 24",
           "aria-hidden": "true"
-        }
-      end
-
-      def icon_path_attributes
-        {
-          stroke_linecap: "round",
-          stroke_linejoin: "round",
-          stroke_width: "2"
         }
       end
 
@@ -200,11 +193,13 @@ module FlatPack
       def dropzone_classes
         base_classes = [
           "flat-pack-file-input",
+          "mt-2",
+          "flex justify-center",
           "w-full",
-          "rounded-[var(--radius-md)]",
-          "border-2 border-dashed",
+          "rounded-lg",
+          "border border-dashed",
           "bg-[var(--color-background)]",
-          "px-6 py-8",
+          "px-6 py-10",
           "transition-colors duration-[var(--transition-base)]",
           "hover:border-[var(--color-primary)]",
           "disabled:opacity-50 disabled:cursor-not-allowed"
