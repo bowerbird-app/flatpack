@@ -8,53 +8,53 @@
   <section class="mb-12">
     <h2 class="text-2xl font-semibold mb-4">Basic Buttons</h2>
     <div class="flex gap-3 mb-4">
-      <%= render FlatPack::Button::Component.new(label: "Primary", scheme: :primary) %>
-      <%= render FlatPack::Button::Component.new(label: "Secondary", scheme: :secondary) %>
-      <%= render FlatPack::Button::Component.new(label: "Ghost", scheme: :ghost) %>
-      <%= render FlatPack::Button::Component.new(label: "Success", scheme: :success) %>
-      <%= render FlatPack::Button::Component.new(label: "Warning", scheme: :warning) %>
+      <%= render FlatPack::Button::Component.new(text: "Primary", style: :primary) %>
+      <%= render FlatPack::Button::Component.new(text: "Secondary", style: :secondary) %>
+      <%= render FlatPack::Button::Component.new(text: "Ghost", style: :ghost) %>
+      <%= render FlatPack::Button::Component.new(text: "Success", style: :success) %>
+      <%= render FlatPack::Button::Component.new(text: "Warning", style: :warning) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Button::Component.new(label: "Primary", scheme: :primary) %&gt;
-&lt;%= render FlatPack::Button::Component.new(label: "Secondary", scheme: :secondary) %&gt;
-&lt;%= render FlatPack::Button::Component.new(label: "Ghost", scheme: :ghost) %&gt;
-&lt;%= render FlatPack::Button::Component.new(label: "Success", scheme: :success) %&gt;
-&lt;%= render FlatPack::Button::Component.new(label: "Warning", scheme: :warning) %&gt;</code></pre>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Button::Component.new(text: "Primary", style: :primary) %&gt;
+&lt;%= render FlatPack::Button::Component.new(text: "Secondary", style: :secondary) %&gt;
+&lt;%= render FlatPack::Button::Component.new(text: "Ghost", style: :ghost) %&gt;
+&lt;%= render FlatPack::Button::Component.new(text: "Success", style: :success) %&gt;
+&lt;%= render FlatPack::Button::Component.new(text: "Warning", style: :warning) %&gt;</code></pre>
   </section>
 
   <!-- Button Sizes -->
   <section class="mb-12">
     <h2 class="text-2xl font-semibold mb-4">Button Sizes</h2>
     <div class="flex items-center gap-3 mb-4">
-      <%= render FlatPack::Button::Component.new(label: "Small", scheme: :primary, size: :sm) %>
-      <%= render FlatPack::Button::Component.new(label: "Medium (default)", scheme: :primary, size: :md) %>
-      <%= render FlatPack::Button::Component.new(label: "Large", scheme: :primary, size: :lg) %>
+      <%= render FlatPack::Button::Component.new(text: "Small", style: :primary, size: :sm) %>
+      <%= render FlatPack::Button::Component.new(text: "Medium (default)", style: :primary, size: :md) %>
+      <%= render FlatPack::Button::Component.new(text: "Large", style: :primary, size: :lg) %>
     </div>
     <div class="flex items-center gap-3 mb-4">
-      <%= render FlatPack::Button::Component.new(label: "Small", scheme: :secondary, size: :sm) %>
-      <%= render FlatPack::Button::Component.new(label: "Medium", scheme: :secondary, size: :md) %>
-      <%= render FlatPack::Button::Component.new(label: "Large", scheme: :secondary, size: :lg) %>
+      <%= render FlatPack::Button::Component.new(text: "Small", style: :secondary, size: :sm) %>
+      <%= render FlatPack::Button::Component.new(text: "Medium", style: :secondary, size: :md) %>
+      <%= render FlatPack::Button::Component.new(text: "Large", style: :secondary, size: :lg) %>
     </div>
     <div class="flex items-center gap-3 mb-4">
-      <%= render FlatPack::Button::Component.new(label: "Small", scheme: :ghost, size: :sm) %>
-      <%= render FlatPack::Button::Component.new(label: "Medium", scheme: :ghost, size: :md) %>
-      <%= render FlatPack::Button::Component.new(label: "Large", scheme: :ghost, size: :lg) %>
+      <%= render FlatPack::Button::Component.new(text: "Small", style: :ghost, size: :sm) %>
+      <%= render FlatPack::Button::Component.new(text: "Medium", style: :ghost, size: :md) %>
+      <%= render FlatPack::Button::Component.new(text: "Large", style: :ghost, size: :lg) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Button::Component.new(label: "Small", scheme: :primary, size: :sm) %&gt;
-&lt;%= render FlatPack::Button::Component.new(label: "Medium", scheme: :primary, size: :md) %&gt;
-&lt;%= render FlatPack::Button::Component.new(label: "Large", scheme: :primary, size: :lg) %&gt;</code></pre>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Button::Component.new(text: "Small", style: :primary, size: :sm) %&gt;
+&lt;%= render FlatPack::Button::Component.new(text: "Medium", style: :primary, size: :md) %&gt;
+&lt;%= render FlatPack::Button::Component.new(text: "Large", style: :primary, size: :lg) %&gt;</code></pre>
   </section>
 
   <!-- Buttons as Links -->
   <section class="mb-12">
     <h2 class="text-2xl font-semibold mb-4">Buttons as Links</h2>
     <div class="flex gap-3 mb-4">
-      <%= render FlatPack::Button::Component.new(label: "Go Home", url: root_path, scheme: :primary) %>
-      <%= render FlatPack::Button::Component.new(label: "View Tables", url: demo_tables_path, scheme: :secondary) %>
+      <%= render FlatPack::Button::Component.new(text: "Go Home", url: root_path, style: :primary) %>
+      <%= render FlatPack::Button::Component.new(text: "View Tables", url: demo_tables_path, style: :secondary) %>
     </div>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Button::Component.new(
-  label: "Go Home",
+  text: "Go Home",
   url: root_path,
-  scheme: :primary
+  style: :primary
 ) %&gt;</code></pre>
   </section>
 
@@ -63,27 +63,27 @@
     <h2 class="text-2xl font-semibold mb-4">Links with Target</h2>
     <div class="flex gap-3 mb-4">
       <%= render FlatPack::Button::Component.new(
-        label: "Open in New Tab",
+        text: "Open in New Tab",
         url: "https://github.com",
-        scheme: :primary,
+        style: :primary,
         target: "_blank"
       ) %>
       <%= render FlatPack::Button::Component.new(
-        label: "Open in Same Tab",
+        text: "Open in Same Tab",
         url: demo_tables_path,
-        scheme: :secondary,
+        style: :secondary,
         target: "_self"
       ) %>
       <%= render FlatPack::Button::Component.new(
-        label: "Default (no target)",
+        text: "Default (no target)",
         url: root_path,
-        scheme: :ghost
+        style: :ghost
       ) %>
     </div>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Button::Component.new(
-  label: "Open in New Tab",
+  text: "Open in New Tab",
   url: "https://github.com",
-  scheme: :primary,
+  style: :primary,
   target: "_blank"  # Automatically adds rel="noopener noreferrer"
 ) %&gt;</code></pre>
   </section>
@@ -150,31 +150,31 @@
     <h2 class="text-2xl font-semibold mb-4">Buttons with ID and Custom Classes</h2>
     <div class="flex gap-3 mb-4">
       <%= render FlatPack::Button::Component.new(
-        label: "Button with ID",
-        scheme: :primary,
+        text: "Button with ID",
+        style: :primary,
         id: "my-special-button"
       ) %>
       <%= render FlatPack::Button::Component.new(
-        label: "Link with ID",
+        text: "Link with ID",
         url: root_path,
-        scheme: :secondary,
+        style: :secondary,
         id: "my-special-link"
       ) %>
       <%= render FlatPack::Button::Component.new(
-        label: "Custom Classes",
-        scheme: :ghost,
+        text: "Custom Classes",
+        style: :ghost,
         class: "text-lg font-bold"
       ) %>
     </div>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Button::Component.new(
-  label: "Button with ID",
-  scheme: :primary,
+  text: "Button with ID",
+  style: :primary,
   id: "my-special-button"
 ) %&gt;
 
 &lt;%= render FlatPack::Button::Component.new(
-  label: "Custom Classes",
-  scheme: :ghost,
+  text: "Custom Classes",
+  style: :ghost,
   class: "text-lg font-bold"  # Additional classes are merged
 ) %&gt;</code></pre>
   </section>
@@ -184,14 +184,14 @@
     <h2 class="text-2xl font-semibold mb-4">Full Width Button</h2>
     <div class="mb-4">
       <%= render FlatPack::Button::Component.new(
-        label: "Full Width Button",
-        scheme: :primary,
+        text: "Full Width Button",
+        style: :primary,
         class: "w-full"
       ) %>
     </div>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Button::Component.new(
-  label: "Full Width Button",
-  scheme: :primary,
+  text: "Full Width Button",
+  style: :primary,
   class: "w-full"
 ) %&gt;</code></pre>
   </section>
@@ -201,19 +201,19 @@
     <h2 class="text-2xl font-semibold mb-4">Disabled Buttons</h2>
     <div class="flex gap-3 mb-4">
       <%= render FlatPack::Button::Component.new(
-        label: "Disabled Primary",
-        scheme: :primary,
+        text: "Disabled Primary",
+        style: :primary,
         disabled: true
       ) %>
       <%= render FlatPack::Button::Component.new(
-        label: "Disabled Secondary",
-        scheme: :secondary,
+        text: "Disabled Secondary",
+        style: :secondary,
         disabled: true
       ) %>
     </div>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Button::Component.new(
-  label: "Disabled",
-  scheme: :primary,
+  text: "Disabled",
+  style: :primary,
   disabled: true
 ) %&gt;</code></pre>
   </section>
@@ -222,20 +222,20 @@
   <section class="mb-12">
     <h2 class="text-2xl font-semibold mb-4">Icon Only Buttons</h2>
     <div class="flex items-center gap-3 mb-4">
-      <%= render FlatPack::Button::Component.new(icon: "search", icon_only: true, scheme: :primary, size: :sm) %>
-      <%= render FlatPack::Button::Component.new(icon: "search", icon_only: true, scheme: :primary, size: :md) %>
-      <%= render FlatPack::Button::Component.new(icon: "search", icon_only: true, scheme: :primary, size: :lg) %>
+      <%= render FlatPack::Button::Component.new(icon: "search", icon_only: true, style: :primary, size: :sm) %>
+      <%= render FlatPack::Button::Component.new(icon: "search", icon_only: true, style: :primary, size: :md) %>
+      <%= render FlatPack::Button::Component.new(icon: "search", icon_only: true, style: :primary, size: :lg) %>
     </div>
     <div class="flex items-center gap-3 mb-4">
-      <%= render FlatPack::Button::Component.new(icon: "settings", icon_only: true, scheme: :secondary) %>
-      <%= render FlatPack::Button::Component.new(icon: "trash", icon_only: true, scheme: :ghost) %>
-      <%= render FlatPack::Button::Component.new(icon: "check", icon_only: true, scheme: :success) %>
-      <%= render FlatPack::Button::Component.new(icon: "alert", icon_only: true, scheme: :warning) %>
+      <%= render FlatPack::Button::Component.new(icon: "settings", icon_only: true, style: :secondary) %>
+      <%= render FlatPack::Button::Component.new(icon: "trash", icon_only: true, style: :ghost) %>
+      <%= render FlatPack::Button::Component.new(icon: "check", icon_only: true, style: :success) %>
+      <%= render FlatPack::Button::Component.new(icon: "alert", icon_only: true, style: :warning) %>
     </div>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Button::Component.new(
   icon: "search",
   icon_only: true,
-  scheme: :primary
+  style: :primary
 ) %&gt;</code></pre>
   </section>
 
@@ -243,14 +243,14 @@
   <section class="mb-12">
     <h2 class="text-2xl font-semibold mb-4">Loading Buttons</h2>
     <div class="flex gap-3 mb-4">
-      <%= render FlatPack::Button::Component.new(label: "Saving", loading: true, scheme: :primary) %>
-      <%= render FlatPack::Button::Component.new(label: "Processing", loading: true, scheme: :secondary) %>
-      <%= render FlatPack::Button::Component.new(icon: "upload", icon_only: true, loading: true, scheme: :success) %>
+      <%= render FlatPack::Button::Component.new(text: "Saving", loading: true, style: :primary) %>
+      <%= render FlatPack::Button::Component.new(text: "Processing", loading: true, style: :secondary) %>
+      <%= render FlatPack::Button::Component.new(icon: "upload", icon_only: true, loading: true, style: :success) %>
     </div>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Button::Component.new(
-  label: "Saving",
+  text: "Saving",
   loading: true,
-  scheme: :primary
+  style: :primary
 ) %&gt;
 
 &lt;%# Icon-only loading button %&gt;
@@ -258,7 +258,7 @@
   icon: "upload",
   icon_only: true,
   loading: true,
-  scheme: :success
+  style: :success
 ) %&gt;</code></pre>
   </section>
 
@@ -267,22 +267,22 @@
     <h2 class="text-2xl font-semibold mb-4">Button Groups (Wrapped Together)</h2>
     <div class="mb-4">
       <%= render FlatPack::ButtonGroup::Component.new do |group| %>
-        <% group.with_button(FlatPack::Button::Component.new(label: "Left", scheme: :secondary)) %>
-        <% group.with_button(FlatPack::Button::Component.new(label: "Middle", scheme: :secondary)) %>
-        <% group.with_button(FlatPack::Button::Component.new(label: "Right", scheme: :secondary)) %>
+        <% group.with_button(FlatPack::Button::Component.new(text: "Left", style: :secondary)) %>
+        <% group.with_button(FlatPack::Button::Component.new(text: "Middle", style: :secondary)) %>
+        <% group.with_button(FlatPack::Button::Component.new(text: "Right", style: :secondary)) %>
       <% end %>
     </div>
     <div class="mb-4">
       <%= render FlatPack::ButtonGroup::Component.new do |group| %>
-        <% group.with_button(FlatPack::Button::Component.new(icon: "align-left", icon_only: true, scheme: :secondary)) %>
-        <% group.with_button(FlatPack::Button::Component.new(icon: "align-center", icon_only: true, scheme: :secondary)) %>
-        <% group.with_button(FlatPack::Button::Component.new(icon: "align-right", icon_only: true, scheme: :secondary)) %>
+        <% group.with_button(FlatPack::Button::Component.new(icon: "align-left", icon_only: true, style: :secondary)) %>
+        <% group.with_button(FlatPack::Button::Component.new(icon: "align-center", icon_only: true, style: :secondary)) %>
+        <% group.with_button(FlatPack::Button::Component.new(icon: "align-right", icon_only: true, style: :secondary)) %>
       <% end %>
     </div>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::ButtonGroup::Component.new do |group| %&gt;
-  &lt;% group.with_button(FlatPack::Button::Component.new(label: "Left", scheme: :secondary)) %&gt;
-  &lt;% group.with_button(FlatPack::Button::Component.new(label: "Middle", scheme: :secondary)) %&gt;
-  &lt;% group.with_button(FlatPack::Button::Component.new(label: "Right", scheme: :secondary)) %&gt;
+  &lt;% group.with_button(FlatPack::Button::Component.new(text: "Left", style: :secondary)) %&gt;
+  &lt;% group.with_button(FlatPack::Button::Component.new(text: "Middle", style: :secondary)) %&gt;
+  &lt;% group.with_button(FlatPack::Button::Component.new(text: "Right", style: :secondary)) %&gt;
 &lt;% end %&gt;</code></pre>
   </section>
 
@@ -291,24 +291,24 @@
     <h2 class="text-2xl font-semibold mb-4">Segmented Buttons (Selected State)</h2>
     <div class="mb-4">
       <%= render FlatPack::SegmentedButtons::Component.new do |group| %>
-        <% group.with_button(label: "Day", selected: true) %>
-        <% group.with_button(label: "Week") %>
-        <% group.with_button(label: "Month") %>
-        <% group.with_button(label: "Year") %>
+        <% group.with_button(text: "Day", selected: true) %>
+        <% group.with_button(text: "Week") %>
+        <% group.with_button(text: "Month") %>
+        <% group.with_button(text: "Year") %>
       <% end %>
     </div>
     <div class="mb-4">
       <%= render FlatPack::SegmentedButtons::Component.new do |group| %>
-        <% group.with_button(label: "List") %>
-        <% group.with_button(label: "Grid", selected: true) %>
-        <% group.with_button(label: "Table") %>
+        <% group.with_button(text: "List") %>
+        <% group.with_button(text: "Grid", selected: true) %>
+        <% group.with_button(text: "Table") %>
       <% end %>
     </div>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::SegmentedButtons::Component.new do |group| %&gt;
-  &lt;% group.with_button(label: "Day", selected: true) %&gt;
-  &lt;% group.with_button(label: "Week") %&gt;
-  &lt;% group.with_button(label: "Month") %&gt;
-  &lt;% group.with_button(label: "Year") %&gt;
+  &lt;% group.with_button(text: "Day", selected: true) %&gt;
+  &lt;% group.with_button(text: "Week") %&gt;
+  &lt;% group.with_button(text: "Month") %&gt;
+  &lt;% group.with_button(text: "Year") %&gt;
 &lt;% end %&gt;</code></pre>
   </section>
 
@@ -316,13 +316,13 @@
   <section class="mb-12">
     <h2 class="text-2xl font-semibold mb-4">Regular Button Spacing (Not Grouped)</h2>
     <div class="flex gap-2 mb-4">
-      <%= render FlatPack::Button::Component.new(label: "Save", scheme: :primary) %>
-      <%= render FlatPack::Button::Component.new(label: "Cancel", scheme: :secondary) %>
-      <%= render FlatPack::Button::Component.new(label: "Delete", scheme: :ghost) %>
+      <%= render FlatPack::Button::Component.new(text: "Save", style: :primary) %>
+      <%= render FlatPack::Button::Component.new(text: "Cancel", style: :secondary) %>
+      <%= render FlatPack::Button::Component.new(text: "Delete", style: :ghost) %>
     </div>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;div class="flex gap-2"&gt;
-  &lt;%= render FlatPack::Button::Component.new(label: "Save", scheme: :primary) %&gt;
-  &lt;%= render FlatPack::Button::Component.new(label: "Cancel", scheme: :secondary) %&gt;
+  &lt;%= render FlatPack::Button::Component.new(text: "Save", style: :primary) %&gt;
+  &lt;%= render FlatPack::Button::Component.new(text: "Cancel", style: :secondary) %&gt;
 &lt;/div&gt;</code></pre>
   </section>
 </div>

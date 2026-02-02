@@ -5,15 +5,15 @@ The Button component renders a button or link with consistent styling and behavi
 ## Basic Usage
 
 ```erb
-<%= render FlatPack::Button::Component.new(label: "Click me") %>
+<%= render FlatPack::Button::Component.new(text: "Click me") %>
 ```
 
 ## Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `label` | String | **required** | Button text |
-| `scheme` | Symbol | `:primary` | Visual style (`:primary`, `:secondary`, `:ghost`) |
+| `text` | String | **required** | Button text |
+| `style` | Symbol | `:primary` | Visual style (`:primary`, `:secondary`, `:ghost`) |
 | `size` | Symbol | `:md` | Button size (`:sm`, `:md`, `:lg`) |
 | `url` | String | `nil` | If provided, renders as link instead of button |
 | `method` | Symbol | `nil` | HTTP method for link (`:get`, `:post`, `:delete`, etc.) |
@@ -26,8 +26,8 @@ Primary actions, most important button on the page.
 
 ```erb
 <%= render FlatPack::Button::Component.new(
-  label: "Save",
-  scheme: :primary
+  text: "Save",
+  style: :primary
 ) %>
 ```
 
@@ -36,8 +36,8 @@ Secondary actions, less prominent.
 
 ```erb
 <%= render FlatPack::Button::Component.new(
-  label: "Cancel",
-  scheme: :secondary
+  text: "Cancel",
+  style: :secondary
 ) %>
 ```
 
@@ -46,8 +46,8 @@ Tertiary actions, minimal styling.
 
 ```erb
 <%= render FlatPack::Button::Component.new(
-  label: "Learn More",
-  scheme: :ghost
+  text: "Learn More",
+  style: :ghost
 ) %>
 ```
 
@@ -60,7 +60,7 @@ Compact size for tight spaces or secondary actions.
 
 ```erb
 <%= render FlatPack::Button::Component.new(
-  label: "Small Button",
+  text: "Small Button",
   size: :sm
 ) %>
 ```
@@ -70,7 +70,7 @@ Standard button size for most use cases.
 
 ```erb
 <%= render FlatPack::Button::Component.new(
-  label: "Medium Button",
+  text: "Medium Button",
   size: :md
 ) %>
 ```
@@ -80,7 +80,7 @@ Prominent size for primary call-to-action buttons.
 
 ```erb
 <%= render FlatPack::Button::Component.new(
-  label: "Large Button",
+  text: "Large Button",
   size: :lg
 ) %>
 ```
@@ -89,14 +89,14 @@ Prominent size for primary call-to-action buttons.
 
 ```erb
 <%= render FlatPack::Button::Component.new(
-  label: "Small Primary",
-  scheme: :primary,
+  text: "Small Primary",
+  style: :primary,
   size: :sm
 ) %>
 
 <%= render FlatPack::Button::Component.new(
-  label: "Large Secondary",
-  scheme: :secondary,
+  text: "Large Secondary",
+  style: :secondary,
   size: :lg
 ) %>
 ```
@@ -107,9 +107,9 @@ When `url` is provided, button renders as a link (`<a>` tag):
 
 ```erb
 <%= render FlatPack::Button::Component.new(
-  label: "View Profile",
+  text: "View Profile",
   url: user_path(@user),
-  scheme: :primary
+  style: :primary
 ) %>
 ```
 
@@ -117,10 +117,10 @@ When `url` is provided, button renders as a link (`<a>` tag):
 
 ```erb
 <%= render FlatPack::Button::Component.new(
-  label: "Delete",
+  text: "Delete",
   url: user_path(@user),
   method: :delete,
-  scheme: :secondary,
+  style: :secondary,
   data: { turbo_confirm: "Are you sure?" }
 ) %>
 ```
@@ -131,7 +131,7 @@ When `url` is provided, button renders as a link (`<a>` tag):
 
 ```erb
 <%= render FlatPack::Button::Component.new(
-  label: "Custom",
+  text: "Custom",
   class: "mt-4 w-full"
 ) %>
 ```
@@ -142,7 +142,7 @@ Classes are merged using `tailwind_merge`, so Tailwind utilities override correc
 
 ```erb
 <%= render FlatPack::Button::Component.new(
-  label: "Track Click",
+  text: "Track Click",
   data: {
     controller: "analytics",
     action: "click->analytics#track"
@@ -154,7 +154,7 @@ Classes are merged using `tailwind_merge`, so Tailwind utilities override correc
 
 ```erb
 <%= render FlatPack::Button::Component.new(
-  label: "Close",
+  text: "Close",
   aria: {
     label: "Close dialog",
     controls: "my-dialog"
@@ -166,7 +166,7 @@ Classes are merged using `tailwind_merge`, so Tailwind utilities override correc
 
 ```erb
 <%= render FlatPack::Button::Component.new(
-  label: "Submit",
+  text: "Submit",
   id: "submit-btn",
   disabled: true
 ) %>
@@ -181,8 +181,8 @@ Classes are merged using `tailwind_merge`, so Tailwind utilities override correc
   <%# ... form fields ... %>
   
   <%= render FlatPack::Button::Component.new(
-    label: "Create User",
-    scheme: :primary,
+    text: "Create User",
+    style: :primary,
     type: "submit"
   ) %>
 <% end %>
@@ -192,8 +192,8 @@ Classes are merged using `tailwind_merge`, so Tailwind utilities override correc
 
 ```erb
 <div class="flex gap-2">
-  <%= render FlatPack::Button::Component.new(label: "Save", scheme: :primary) %>
-  <%= render FlatPack::Button::Component.new(label: "Cancel", scheme: :secondary) %>
+  <%= render FlatPack::Button::Component.new(text: "Save", style: :primary) %>
+  <%= render FlatPack::Button::Component.new(text: "Cancel", style: :secondary) %>
 </div>
 ```
 
@@ -201,7 +201,7 @@ Classes are merged using `tailwind_merge`, so Tailwind utilities override correc
 
 ```erb
 <%= render FlatPack::Button::Component.new(
-  label: "Continue",
+  text: "Continue",
   class: "w-full"
 ) %>
 ```
@@ -210,8 +210,8 @@ Classes are merged using `tailwind_merge`, so Tailwind utilities override correc
 
 ```erb
 <%= render FlatPack::Button::Component.new(
-  label: "Delete",
-  scheme: :ghost,
+  text: "Delete",
+  style: :ghost,
   data: { controller: "icon", icon_name: "trash" }
 ) %>
 ```
@@ -220,7 +220,7 @@ Classes are merged using `tailwind_merge`, so Tailwind utilities override correc
 
 ```erb
 <%= render FlatPack::Button::Component.new(
-  label: "Loading...",
+  text: "Loading...",
   disabled: true,
   data: { controller: "loading" }
 ) %>
@@ -288,7 +288,7 @@ require "test_helper"
 
 class CustomButtonTest < ViewComponent::TestCase
   def test_renders_primary_button
-    render_inline FlatPack::Button::Component.new(label: "Test")
+    render_inline FlatPack::Button::Component.new(text: "Test")
     
     assert_selector "button", text: "Test"
   end
@@ -299,8 +299,8 @@ end
 
 ```ruby
 FlatPack::Button::Component.new(
-  label: String,              # Required
-  scheme: Symbol,             # Optional, default: :primary (:primary, :secondary, :ghost)
+  text: String,               # Required
+  style: Symbol,              # Optional, default: :primary (:primary, :secondary, :ghost)
   size: Symbol,               # Optional, default: :md (:sm, :md, :lg)
   url: String,                # Optional, default: nil
   method: Symbol,             # Optional, default: nil

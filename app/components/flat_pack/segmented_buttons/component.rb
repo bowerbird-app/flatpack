@@ -3,9 +3,9 @@
 module FlatPack
   module SegmentedButtons
     class Component < FlatPack::BaseComponent
-      renders_many :buttons, ->(label:, selected: false, **args) do
-        scheme = selected ? :primary : :secondary
-        FlatPack::Button::Component.new(label: label, scheme: scheme, **args)
+      renders_many :buttons, ->(text:, selected: false, **args) do
+        style = selected ? :primary : :secondary
+        FlatPack::Button::Component.new(text: text, style: style, **args)
       end
 
       def initialize(**system_arguments)
