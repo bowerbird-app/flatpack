@@ -7,15 +7,27 @@
   <!-- Basic Table -->
   <section class="mb-12">
     <h2 class="text-2xl font-semibold mb-4">Basic Table</h2>
-    <%= render FlatPack::Table::Component.new(rows: @users.first(5)) do |table| %>
-      <% table.with_column(label: "ID", attribute: :id) %>
-      <% table.with_column(label: "Name", attribute: :name) %>
-      <% table.with_column(label: "Email", attribute: :email) %>
+    <%= render FlatPack::Table::Component.new(
+      rows: @users.first(5),
+      turbo_frame: "basic_table",
+      sort: params[:sort],
+      direction: params[:direction],
+      base_url: request.path
+    ) do |table| %>
+      <% table.with_column(label: "ID", attribute: :id, sortable: true) %>
+      <% table.with_column(label: "Name", attribute: :name, sortable: true) %>
+      <% table.with_column(label: "Email", attribute: :email, sortable: true) %>
     <% end %>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Table::Component.new(rows: @users) do |table| %&gt;
-  &lt;% table.with_column(label: "ID", attribute: :id) %&gt;
-  &lt;% table.with_column(label: "Name", attribute: :name) %&gt;
-  &lt;% table.with_column(label: "Email", attribute: :email) %&gt;
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Table::Component.new(
+  rows: @users.first(5),
+  turbo_frame: "basic_table",
+  sort: params[:sort],
+  direction: params[:direction],
+  base_url: request.path
+) do |table| %&gt;
+  &lt;% table.with_column(label: "ID", attribute: :id, sortable: true) %&gt;
+  &lt;% table.with_column(label: "Name", attribute: :name, sortable: true) %&gt;
+  &lt;% table.with_column(label: "Email", attribute: :email, sortable: true) %&gt;
 &lt;% end %&gt;</code></pre>
   </section>
 

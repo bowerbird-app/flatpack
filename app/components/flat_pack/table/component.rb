@@ -25,7 +25,7 @@ module FlatPack
 
         # Wrap in turbo frame if specified
         if @turbo_frame
-          turbo_frame_tag(@turbo_frame) { content }
+          tag.turbo_frame(id: @turbo_frame) { content }
         else
           content
         end

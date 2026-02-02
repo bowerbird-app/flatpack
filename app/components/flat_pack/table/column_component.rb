@@ -73,7 +73,7 @@ module FlatPack
         params = Rack::Utils.parse_nested_query(uri.query || "")
         params["sort"] = @sort_key.to_s
         params["direction"] = direction
-        uri.query = params.to_query
+        uri.query = URI.encode_www_form(params)
         uri.to_s
       end
 
