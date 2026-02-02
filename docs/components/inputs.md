@@ -2,11 +2,34 @@
 
 FlatPack provides a comprehensive set of text-based input components with built-in accessibility, security, and mobile optimization.
 
-![Input Components Demo](https://github.com/user-attachments/assets/bcbd298a-0b9e-4d3f-8066-7c37135641d1)
+## Basic Usage
 
-## Components Overview
+```erb
+<%= render FlatPack::TextInput::Component.new(
+  name: "username",
+  label: "Username",
+  placeholder: "Enter your username"
+) %>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | String | **required** | Form field name |
+| `value` | String | `nil` | Initial value |
+| `placeholder` | String | `nil` | Placeholder text |
+| `label` | String | `nil` | Accessible label text |
+| `error` | String | `nil` | Error message to display |
+| `disabled` | Boolean | `false` | Disabled state |
+| `required` | Boolean | `false` | Required field |
+| `rows` | Integer | `3` | Initial rows (TextArea only) |
+| `**system_arguments` | Hash | `{}` | HTML attributes (`class`, `data`, `aria`, `id`, etc.) |
+
+## Component Types
 
 ### TextInput
+
 Standard single-line text field for general text input.
 
 ```erb
@@ -18,15 +41,8 @@ Standard single-line text field for general text input.
 ) %>
 ```
 
-**Features:**
-- Clean, minimal design
-- Full accessibility support (ARIA, labels)
-- Error state styling
-- Disabled state support
-
----
-
 ### PasswordInput
+
 Masked input field with an integrated show/hide toggle button.
 
 ```erb
@@ -38,17 +54,10 @@ Masked input field with an integrated show/hide toggle button.
 ) %>
 ```
 
-**Features:**
-- Eye icon toggle for password visibility
-- Stimulus controller for toggle behavior
-- Secure password masking
-- Accessible toggle button with ARIA labels
-
-**Stimulus Controller:** `flat-pack--password-input`
-
----
+Features eye icon toggle for password visibility with Stimulus controller (`flat-pack--password-input`).
 
 ### EmailInput
+
 Email input field that triggers the `@` keyboard on mobile devices.
 
 ```erb
@@ -60,14 +69,8 @@ Email input field that triggers the `@` keyboard on mobile devices.
 ) %>
 ```
 
-**Features:**
-- HTML5 email validation
-- Mobile @ keyboard trigger
-- Standard email input behavior
-
----
-
 ### PhoneInput
+
 Phone number input that triggers the numeric keypad on mobile devices.
 
 ```erb
@@ -78,14 +81,8 @@ Phone number input that triggers the numeric keypad on mobile devices.
 ) %>
 ```
 
-**Features:**
-- HTML5 tel input type
-- Mobile numeric keypad trigger
-- International phone number support
-
----
-
 ### SearchInput
+
 Search input field with an automatic clear (X) button.
 
 ```erb
@@ -96,17 +93,10 @@ Search input field with an automatic clear (X) button.
 ) %>
 ```
 
-**Features:**
-- Clear button appears when input has value
-- Stimulus controller for clear functionality
-- HTML5 search input type
-- Mobile-optimized search keyboard
-
-**Stimulus Controller:** `flat-pack--search-input`
-
----
+Clear button appears when input has value. Uses Stimulus controller (`flat-pack--search-input`).
 
 ### TextArea
+
 Multi-line text input that automatically expands to fit content.
 
 ```erb
@@ -118,17 +108,10 @@ Multi-line text input that automatically expands to fit content.
 ) %>
 ```
 
-**Features:**
-- Auto-expanding based on content
-- Stimulus controller for height adjustment
-- Configurable initial rows
-- Vertical resize handle
-
-**Stimulus Controller:** `flat-pack--text-area`
-
----
+Auto-expanding based on content with Stimulus controller (`flat-pack--text-area`).
 
 ### UrlInput
+
 URL input field with XSS protection and mobile `.com` keyboard.
 
 ```erb
@@ -139,37 +122,57 @@ URL input field with XSS protection and mobile `.com` keyboard.
 ) %>
 ```
 
-**Features:**
-- HTML5 URL validation
-- XSS protection (blocks javascript:, data:, vbscript: protocols)
-- Mobile .com keyboard trigger
-- Secure URL sanitization
+Blocks dangerous protocols (javascript:, data:, vbscript:) for security.
 
----
+## System Arguments
 
-## Common Parameters
+### Custom Classes
 
-All input components accept these parameters:
+```erb
+<%= render FlatPack::TextInput::Component.new(
+  name: "search",
+  class: "w-full max-w-md"
+) %>
+```
 
-### Required
-- `name` - (String) Form field name
+Classes are merged using `tailwind_merge`, so Tailwind utilities override correctly.
 
-### Optional
-- `value` - (String) Initial value
-- `placeholder` - (String) Placeholder text
-- `label` - (String) Accessible label text
-- `error` - (String) Error message to display
-- `disabled` - (Boolean) Disabled state (default: false)
-- `required` - (Boolean) Required field (default: false)
-- `**system_arguments` - Any additional HTML attributes (class, id, data, aria, etc.)
+### Data Attributes
 
-### Component-Specific
-- **TextArea**
-  - `rows` - (Integer) Initial number of rows (default: 3)
+```erb
+<%= render FlatPack::TextInput::Component.new(
+  name: "search",
+  data: {
+    controller: "search",
+    action: "input->search#query"
+  }
+) %>
+```
 
----
+### ARIA Attributes
 
-## Usage Examples
+```erb
+<%= render FlatPack::SearchInput::Component.new(
+  name: "q",
+  aria: {
+    label: "Search the site",
+    describedby: "search-help"
+  }
+) %>
+```
+
+### Other Attributes
+
+```erb
+<%= render FlatPack::TextInput::Component.new(
+  name: "username",
+  id: "user-name",
+  disabled: true,
+  required: true
+) %>
+```
+
+## Examples
 
 ### Basic Form
 
@@ -210,18 +213,6 @@ All input components accept these parameters:
 ) %>
 ```
 
-### Custom Classes and Attributes
-
-```erb
-<%= render FlatPack::TextInput::Component.new(
-  name: "search",
-  placeholder: "Search...",
-  class: "custom-class",
-  data: { controller: "search" },
-  aria: { label: "Search the site" }
-) %>
-```
-
 ### Disabled State
 
 ```erb
@@ -232,182 +223,6 @@ All input components accept these parameters:
   disabled: true
 ) %>
 ```
-
----
-
-## Styling
-
-All input components share the base `flat-pack-input` CSS class with these features:
-
-- **Consistent borders and focus states**
-- **CSS variable-based theming**
-- **Dark mode support**
-- **Smooth transitions**
-- **Error state styling**
-
-### CSS Variables Used
-
-```css
---color-background
---color-foreground
---color-border
---color-ring
---color-destructive (for errors)
---color-muted-foreground (for placeholders)
---radius-md
---transition-base
-```
-
----
-
-## Accessibility
-
-All input components include:
-
-- ✅ **Proper label associations** (for/id)
-- ✅ **ARIA attributes** for error states
-- ✅ **aria-invalid** on inputs with errors
-- ✅ **aria-describedby** linking to error messages
-- ✅ **Keyboard navigation** support
-- ✅ **Screen reader** friendly
-- ✅ **Focus indicators** with high contrast
-- ✅ **Disabled state** properly communicated
-
----
-
-## Security
-
-### XSS Prevention
-- All HTML attributes are sanitized using `AttributeSanitizer`
-- Dangerous event handlers (onclick, etc.) are filtered out
-- UrlInput blocks dangerous protocols (javascript:, data:, vbscript:)
-
-### URL Validation (UrlInput)
-```ruby
-# Allowed protocols
-http:// https:// mailto: tel:
-
-# Relative URLs
-/path/to/page
-./relative/path
-
-# Blocked protocols
-javascript:alert('xss')  # ❌ Blocked
-data:text/html,...        # ❌ Blocked
-vbscript:msgbox('xss')   # ❌ Blocked
-```
-
----
-
-## Stimulus Controllers
-
-### Password Input Controller
-**Purpose:** Toggle password visibility
-
-```javascript
-// Targets: input, toggle, eyeIcon, eyeOffIcon
-// Actions: toggle (on button click)
-```
-
-### Search Input Controller
-**Purpose:** Clear search input
-
-```javascript
-// Targets: input, clearButton
-// Actions: clear (on button click), toggleClearButton (on input)
-```
-
-### Text Area Controller
-**Purpose:** Auto-expand textarea
-
-```javascript
-// Targets: textarea
-// Actions: resize (on input, connect)
-```
-
----
-
-## Testing
-
-All components include comprehensive test coverage:
-
-```ruby
-# Example test
-def test_renders_with_error
-  render_inline(FlatPack::TextInput::Component.new(
-    name: "username",
-    label: "Username",
-    error: "is required"
-  ))
-
-  assert_selector "input[aria-invalid='true']"
-  assert_selector "p", text: "is required"
-end
-```
-
-Run tests:
-```bash
-bundle exec rake test
-```
-
----
-
-## Browser Support
-
-- ✅ Chrome/Edge (latest)
-- ✅ Firefox (latest)
-- ✅ Safari (latest)
-- ✅ Mobile Safari (iOS 12+)
-- ✅ Chrome Mobile (latest)
-
----
-
-## Mobile Optimization
-
-All input components are optimized for mobile devices:
-
-- **EmailInput** - Triggers @ key on keyboard
-- **PhoneInput** - Triggers numeric keypad
-- **UrlInput** - Triggers .com key on keyboard
-- **SearchInput** - Triggers search keyboard with "Search" button
-- **Touch-friendly** - All interactive elements have adequate tap targets (44x44px minimum)
-
----
-
-## Customization
-
-### Custom Classes
-
-```erb
-<%= render FlatPack::TextInput::Component.new(
-  name: "custom",
-  class: "w-1/2 max-w-md"
-) %>
-```
-
-### Custom CSS Variables
-
-Override in your application CSS:
-
-```css
-:root {
-  --color-ring: oklch(0.62 0.25 330); /* Custom focus ring */
-  --color-destructive: oklch(65% .25 30); /* Custom error color */
-}
-```
-
----
-
-## Performance
-
-- **Zero JavaScript** for simple inputs (TextInput, EmailInput, PhoneInput, UrlInput)
-- **Minimal JavaScript** for interactive inputs (PasswordInput, SearchInput, TextArea)
-- **Lazy-loaded Stimulus controllers** via importmaps
-- **No external dependencies**
-
----
-
-## Examples
 
 ### Contact Form
 
@@ -495,42 +310,119 @@ Override in your application CSS:
 <% end %>
 ```
 
----
+## Styling
 
-## Troubleshooting
+### CSS Variables
 
-### Input not focusing properly
-Ensure you have proper label-input associations. The component automatically generates unique IDs.
-
-### Stimulus controller not working
-Verify that the controller is registered in your importmap:
-
-```ruby
-# config/importmap.rb
-pin_all_from "app/javascript/flat_pack/controllers", under: "controllers/flat_pack"
-```
-
-### Error messages not showing
-Ensure you're passing the `error` parameter with a non-empty string.
-
-### Dark mode issues
-Check that your app's stylesheet imports FlatPack variables:
+Customize input colors by overriding CSS variables:
 
 ```css
-@import "flat_pack/variables.css";
+@theme {
+  /* Input colors */
+  --color-background: oklch(1.0 0 0);
+  --color-foreground: oklch(0.15 0.01 250);
+  --color-border: oklch(0.85 0.01 250);
+  --color-ring: oklch(0.55 0.25 270);
+  
+  /* Error state */
+  --color-destructive: oklch(0.55 0.22 25);
+  
+  /* Placeholders */
+  --color-muted-foreground: oklch(0.45 0.01 250);
+  
+  /* Border radius */
+  --radius-md: 0.375rem;
+}
 ```
 
----
+### Security Features
 
-## Contributing
+All input components include XSS prevention:
 
-Found a bug or have a suggestion? Please open an issue on GitHub!
+- HTML attributes are sanitized using `AttributeSanitizer`
+- Dangerous event handlers (onclick, etc.) are filtered out
+- UrlInput blocks dangerous protocols (javascript:, data:, vbscript:)
 
----
+## Accessibility
 
-## Related Documentation
+The Input components follow accessibility best practices:
 
-- [Button Component](button.md)
-- [Table Component](table.md)
+- Uses semantic HTML (`<input>`, `<textarea>`)
+- Proper label associations (for/id)
+- Includes ARIA attributes for error states
+- aria-invalid on inputs with errors
+- aria-describedby linking to error messages
+- Supports keyboard navigation
+- Focus indicators with high contrast
+- Disabled state properly communicated
+
+### Keyboard Support
+
+- `Tab` - Focus next input
+- `Shift+Tab` - Focus previous input
+- Standard text input behavior
+
+## Testing
+
+```ruby
+# test/components/input_test.rb
+require "test_helper"
+
+class InputTest < ViewComponent::TestCase
+  def test_renders_with_error
+    render_inline FlatPack::TextInput::Component.new(
+      name: "username",
+      label: "Username",
+      error: "is required"
+    )
+    
+    assert_selector "input[aria-invalid='true']"
+    assert_selector "p", text: "is required"
+  end
+end
+```
+
+## API Reference
+
+```ruby
+# TextInput, EmailInput, PhoneInput, SearchInput, UrlInput
+FlatPack::<ComponentType>::Component.new(
+  name: String,               # Required
+  value: String,              # Optional, default: nil
+  placeholder: String,        # Optional, default: nil
+  label: String,              # Optional, default: nil
+  error: String,              # Optional, default: nil
+  disabled: Boolean,          # Optional, default: false
+  required: Boolean,          # Optional, default: false
+  **system_arguments          # Optional
+)
+
+# PasswordInput (same as above)
+FlatPack::PasswordInput::Component.new(...)
+
+# TextArea (adds rows parameter)
+FlatPack::TextArea::Component.new(
+  name: String,               # Required
+  rows: Integer,              # Optional, default: 3
+  # ... same parameters as above
+)
+```
+
+### System Arguments
+
+- `class`: String - Additional CSS classes
+- `data`: Hash - Data attributes
+- `aria`: Hash - ARIA attributes
+- `id`: String - Element ID
+- Any other valid HTML attribute
+
+## Related Components
+
+- [Button Component](button.md) - For form submit buttons
+- [Table Component](table.md) - Inputs in table rows
+
+## Next Steps
+
 - [Theming Guide](../theming.md)
+- [Dark Mode](../dark_mode.md)
 - [Security Policy](../../SECURITY.md)
