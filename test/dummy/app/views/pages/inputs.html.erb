@@ -253,6 +253,151 @@
 ) %&gt;</code></pre>
   </section>
 
+  <!-- Number Input -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Number Input</h2>
+    <p class="text-sm text-[var(--color-muted-foreground)] mb-4">Numeric field with min/max/step validation</p>
+    
+    <div class="space-y-4">
+      <%= render FlatPack::NumberInput::Component.new(
+        name: "quantity",
+        label: "Quantity",
+        placeholder: "Enter quantity",
+        min: 0,
+        max: 100,
+        step: 1,
+        required: true
+      ) %>
+
+      <%= render FlatPack::NumberInput::Component.new(
+        name: "price",
+        label: "Price (USD)",
+        placeholder: "0.00",
+        min: 0.01,
+        step: 0.01,
+        value: 19.99
+      ) %>
+
+      <%= render FlatPack::NumberInput::Component.new(
+        name: "quantity_error",
+        label: "Quantity (with error)",
+        value: 150,
+        error: "Quantity must not exceed 100",
+        max: 100
+      ) %>
+    </div>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::NumberInput::Component.new(
+  name: "quantity",
+  label: "Quantity",
+  placeholder: "Enter quantity",
+  min: 0,
+  max: 100,
+  step: 1,
+  required: true
+) %&gt;
+
+&lt;%= render FlatPack::NumberInput::Component.new(
+  name: "price",
+  label: "Price (USD)",
+  placeholder: "0.00",
+  min: 0.01,
+  step: 0.01,
+  value: 19.99
+) %&gt;</code></pre>
+  </section>
+
+  <!-- Date Input -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Date Input</h2>
+    <p class="text-sm text-[var(--color-muted-foreground)] mb-4">Date picker with min/max constraints</p>
+    
+    <div class="space-y-4">
+      <%= render FlatPack::DateInput::Component.new(
+        name: "birth_date",
+        label: "Birth Date",
+        placeholder: "Select date",
+        max: Date.today.to_s,
+        required: true
+      ) %>
+
+      <%= render FlatPack::DateInput::Component.new(
+        name: "event_date",
+        label: "Event Date",
+        min: Date.today.to_s,
+        max: (Date.today + 90).to_s,
+        value: (Date.today + 7).to_s
+      ) %>
+
+      <%= render FlatPack::DateInput::Component.new(
+        name: "date_error",
+        label: "Date (with error)",
+        error: "Date must be in the future"
+      ) %>
+    </div>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::DateInput::Component.new(
+  name: "birth_date",
+  label: "Birth Date",
+  placeholder: "Select date",
+  max: Date.today.to_s,
+  required: true
+) %&gt;
+
+&lt;%= render FlatPack::DateInput::Component.new(
+  name: "event_date",
+  label: "Event Date",
+  min: Date.today.to_s,
+  max: (Date.today + 90).to_s,
+  value: (Date.today + 7).to_s
+) %&gt;</code></pre>
+  </section>
+
+  <!-- File Input -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">File Input</h2>
+    <p class="text-sm text-[var(--color-muted-foreground)] mb-4">File upload with drag-and-drop and previews</p>
+    
+    <div class="space-y-4">
+      <%= render FlatPack::FileInput::Component.new(
+        name: "avatar",
+        label: "Profile Picture",
+        accept: "image/png,image/jpeg,image/gif",
+        max_size: 2_097_152, # 2MB
+        preview: true
+      ) %>
+
+      <%= render FlatPack::FileInput::Component.new(
+        name: "documents",
+        label: "Upload Documents",
+        accept: ".pdf,.doc,.docx",
+        multiple: true,
+        max_size: 5_242_880, # 5MB
+        preview: false
+      ) %>
+
+      <%= render FlatPack::FileInput::Component.new(
+        name: "file_error",
+        label: "File (with error)",
+        error: "File size must not exceed 5MB"
+      ) %>
+    </div>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::FileInput::Component.new(
+  name: "avatar",
+  label: "Profile Picture",
+  accept: "image/png,image/jpeg,image/gif",
+  max_size: 2_097_152, # 2MB
+  preview: true
+) %&gt;
+
+&lt;%= render FlatPack::FileInput::Component.new(
+  name: "documents",
+  label: "Upload Documents",
+  accept: ".pdf,.doc,.docx",
+  multiple: true,
+  max_size: 5_242_880, # 5MB
+  preview: false
+) %&gt;</code></pre>
+  </section>
+
   <!-- Combined Form Example -->
   <section class="mb-12">
     <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Complete Form Example</h2>
@@ -279,6 +424,21 @@
         placeholder: "+1 (555) 123-4567"
       ) %>
 
+      <%= render FlatPack::DateInput::Component.new(
+        name: "birth_date",
+        label: "Birth Date",
+        max: Date.today.to_s
+      ) %>
+
+      <%= render FlatPack::NumberInput::Component.new(
+        name: "age",
+        label: "Age",
+        min: 18,
+        max: 120,
+        step: 1,
+        placeholder: "Enter your age"
+      ) %>
+
       <%= render FlatPack::PasswordInput::Component.new(
         name: "account_password",
         label: "Password",
@@ -290,6 +450,14 @@
         name: "portfolio",
         label: "Portfolio URL",
         placeholder: "https://yourportfolio.com"
+      ) %>
+
+      <%= render FlatPack::FileInput::Component.new(
+        name: "profile_picture",
+        label: "Profile Picture",
+        accept: "image/png,image/jpeg",
+        max_size: 2_097_152,
+        preview: true
       ) %>
 
       <%= render FlatPack::TextArea::Component.new(
@@ -322,36 +490,35 @@
     required: true
   ) %&gt;
 
-  &lt;%= render FlatPack::PhoneInput::Component.new(
-    name: "contact_phone",
-    label: "Phone Number",
-    placeholder: "+1 (555) 123-4567"
+  &lt;%= render FlatPack::DateInput::Component.new(
+    name: "birth_date",
+    label: "Birth Date",
+    max: Date.today.to_s
   ) %&gt;
 
-  &lt;%= render FlatPack::PasswordInput::Component.new(
-    name: "account_password",
-    label: "Password",
-    placeholder: "Enter a secure password",
-    required: true
+  &lt;%= render FlatPack::NumberInput::Component.new(
+    name: "age",
+    label: "Age",
+    min: 18,
+    max: 120
   ) %&gt;
 
-  &lt;%= render FlatPack::UrlInput::Component.new(
-    name: "portfolio",
-    label: "Portfolio URL",
-    placeholder: "https://yourportfolio.com"
+  &lt;%= render FlatPack::FileInput::Component.new(
+    name: "profile_picture",
+    label: "Profile Picture",
+    accept: "image/png,image/jpeg",
+    max_size: 2_097_152
   ) %&gt;
 
   &lt;%= render FlatPack::TextArea::Component.new(
     name: "bio",
     label: "Biography",
-    placeholder: "Tell us about yourself...",
     rows: 4
   ) %&gt;
 
   &lt;%= render FlatPack::Button::Component.new(
     text: "Submit Form",
-    style: :primary,
-    size: :md
+    style: :primary
   ) %&gt;
 &lt;/form&gt;</code></pre>
   </section>
