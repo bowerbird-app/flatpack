@@ -5,13 +5,12 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-[var(--color-muted)]" "text-[var(--color-foreground)]" "bg-[var(--color-primary)]" "text-[var(--color-primary-text)]" "bg-[var(--color-success)]" "text-[var(--color-success-text)]" "bg-[var(--color-warning)]" "text-[var(--color-warning-text)]" "bg-[var(--color-destructive)]" "text-[var(--color-destructive-text)]" "bg-blue-500" "text-white"
+      # "bg-[var(--color-muted)]" "text-[var(--color-foreground)]" "bg-[var(--color-primary)]" "text-[var(--color-primary-text)]" "bg-[var(--color-success)]" "text-[var(--color-success-text)]" "bg-[var(--color-warning)]" "text-[var(--color-warning-text)]" "bg-blue-500" "text-white"
       VARIANTS = {
         default: "bg-[var(--color-muted)] text-[var(--color-foreground)]",
         primary: "bg-[var(--color-primary)] text-[var(--color-primary-text)]",
         success: "bg-[var(--color-success)] text-[var(--color-success-text)]",
         warning: "bg-[var(--color-warning)] text-[var(--color-warning-text)]",
-        danger: "bg-[var(--color-destructive)] text-[var(--color-destructive-text)]",
         info: "bg-blue-500 text-white"
       }.freeze
 
@@ -77,9 +76,7 @@ module FlatPack
       end
 
       def badge_attributes
-        merge_attributes(**{
-          class: badge_classes
-        })
+        merge_attributes(class: badge_classes)
       end
 
       def badge_classes

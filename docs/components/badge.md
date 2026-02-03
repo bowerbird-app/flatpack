@@ -13,7 +13,7 @@ The Badge component renders small status indicators, counts, labels, and tags fo
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `text` | String | **required** | Badge text content |
-| `variant` | Symbol | `:default` | Visual variant (`:default`, `:primary`, `:success`, `:warning`, `:danger`, `:info`) |
+| `variant` | Symbol | `:default` | Visual variant (`:default`, `:primary`, `:success`, `:warning`, `:info`) |
 | `size` | Symbol | `:md` | Badge size (`:sm`, `:md`, `:lg`) |
 | `dot` | Boolean | `false` | Show indicator dot |
 | `removable` | Boolean | `false` | Show remove/close button |
@@ -55,16 +55,6 @@ Caution, pending status.
 <%= render FlatPack::Badge::Component.new(
   text: "Pending",
   variant: :warning
-) %>
-```
-
-### Danger
-Errors, critical status.
-
-```erb
-<%= render FlatPack::Badge::Component.new(
-  text: "Error",
-  variant: :danger
 ) %>
 ```
 
@@ -142,7 +132,6 @@ Show a close button for removable tags.
 
 ### Notification Counts
 ```erb
-<%= render FlatPack::Badge::Component.new(text: "5", variant: :danger) %>
 <%= render FlatPack::Badge::Component.new(text: "12 new", variant: :primary) %>
 ```
 
@@ -155,8 +144,8 @@ Show a close button for removable tags.
 
 ### User Roles
 ```erb
-<%= render FlatPack::Badge::Component.new(text: "Admin", variant: :danger) %>
-<%= render FlatPack::Badge::Component.new(text: "Editor", variant: :primary) %>
+<%= render FlatPack::Badge::Component.new(text: "Admin", variant: :primary) %>
+<%= render FlatPack::Badge::Component.new(text: "Editor", variant: :default) %>
 <%= render FlatPack::Badge::Component.new(text: "Viewer", variant: :default) %>
 ```
 

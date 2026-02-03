@@ -39,13 +39,6 @@ module FlatPack
         assert_includes page.native.to_html, "bg-[var(--color-warning)]"
       end
 
-      def test_renders_danger_variant
-        render_inline(Component.new(text: "Danger", variant: :danger))
-
-        assert_selector "span", text: "Danger"
-        assert_includes page.native.to_html, "bg-[var(--color-destructive)]"
-      end
-
       def test_renders_info_variant
         render_inline(Component.new(text: "Info", variant: :info))
 
