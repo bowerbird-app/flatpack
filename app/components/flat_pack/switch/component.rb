@@ -38,14 +38,22 @@ module FlatPack
       def call
         content_tag(:div, class: wrapper_classes) do
           safe_join([
-            render_switch_container,
-            render_label,
+            render_switch_and_label,
             render_error
           ].compact)
         end
       end
 
       private
+
+      def render_switch_and_label
+        content_tag(:div, class: "flex items-center") do
+          safe_join([
+            render_switch_container,
+            render_label
+          ].compact)
+        end
+      end
 
       def render_switch_container
         content_tag(:label, class: "relative inline-flex items-center cursor-pointer #{@disabled ? 'opacity-50 cursor-not-allowed' : ''}") do
@@ -78,7 +86,7 @@ module FlatPack
       def render_error
         return unless @error
 
-        content_tag(:span, @error, class: "mt-1 text-sm text-[var(--color-destructive)]")
+        content_tag(:span, @error, class: "mt-1 text-sm text-[var(--color-warning)]")
       end
 
       def input_attributes
