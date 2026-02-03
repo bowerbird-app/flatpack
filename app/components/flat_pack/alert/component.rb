@@ -133,7 +133,7 @@ module FlatPack
         content_tag(:button,
           type: "button",
           class: "ml-auto flex-shrink-0 inline-flex items-center justify-center rounded-md p-1.5 hover:bg-black/5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-ring)]",
-          data: { action: "alert#dismiss" },
+          data: {action: "alert#dismiss"},
           "aria-label": "Dismiss") do
           # X icon
           content_tag(:svg, xmlns: "http://www.w3.org/2000/svg", class: "h-4 w-4", viewBox: "0 0 20 20", fill: "currentColor") do
@@ -147,7 +147,7 @@ module FlatPack
           class: alert_classes,
           role: "alert"
         }
-        attrs[:data] = { controller: "alert", alert_target: "alert" } if @dismissible
+        attrs[:data] = {controller: "alert", alert_target: "alert"} if @dismissible
         merge_attributes(**attrs)
       end
 
