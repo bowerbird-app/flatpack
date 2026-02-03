@@ -53,4 +53,10 @@ class PagesController < ApplicationController
 
   def inputs
   end
+
+  def badges
+  end
+
+  def alerts
+  end
 end

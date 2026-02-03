@@ -44,7 +44,7 @@
     </ul>
   </div>
 
-  <div class="flex gap-4">
+  <div class="flex flex-wrap gap-4">
     <%= render FlatPack::Button::Component.new(
       text: "View Button Demos",
       url: demo_buttons_path,
@@ -58,6 +58,16 @@
     <%= render FlatPack::Button::Component.new(
       text: "View Input Demos",
       url: demo_inputs_path,
+      style: :secondary
+    ) %>
+    <%= render FlatPack::Button::Component.new(
+      text: "View Badge Demos",
+      url: demo_badges_path,
+      style: :secondary
+    ) %>
+    <%= render FlatPack::Button::Component.new(
+      text: "View Alert Demos",
+      url: demo_alerts_path,
       style: :secondary
     ) %>
   </div>
