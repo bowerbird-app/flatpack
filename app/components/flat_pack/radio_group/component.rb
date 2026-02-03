@@ -62,7 +62,7 @@ module FlatPack
         option_disabled = option[:disabled] || @disabled
         checked = @value.to_s == option_value.to_s
 
-        content_tag(:div, class: "flex items-start") do
+        content_tag(:div, class: "flex items-center") do
           safe_join([
             tag.input(**radio_attributes(option_value, checked, option_disabled)),
             label_tag(radio_id(option_value), option_label, class: radio_label_classes(option_disabled))
