@@ -587,6 +587,157 @@
 ) %&gt;</code></pre>
   </section>
 
+  <!-- Switch Component -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Switch Component</h2>
+    <p class="mb-4">Modern toggle switches for boolean on/off states.</p>
+
+    <div class="space-y-6 mb-4">
+      <div>
+        <h3 class="text-lg font-medium mb-3">Basic Switches</h3>
+        <div class="space-y-3">
+          <%= render FlatPack::Switch::Component.new(
+            name: "switch_1",
+            label: "Enable feature"
+          ) %>
+          <%= render FlatPack::Switch::Component.new(
+            name: "switch_2",
+            label: "Auto-save",
+            checked: true
+          ) %>
+          <%= render FlatPack::Switch::Component.new(
+            name: "switch_3",
+            label: "Disabled switch",
+            disabled: true
+          ) %>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-medium mb-3">Switch Sizes</h3>
+        <div class="space-y-3">
+          <%= render FlatPack::Switch::Component.new(
+            name: "switch_sm",
+            label: "Small switch",
+            size: :sm
+          ) %>
+          <%= render FlatPack::Switch::Component.new(
+            name: "switch_md",
+            label: "Medium switch (default)",
+            size: :md
+          ) %>
+          <%= render FlatPack::Switch::Component.new(
+            name: "switch_lg",
+            label: "Large switch",
+            size: :lg
+          ) %>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-medium mb-3">Switch States</h3>
+        <div class="space-y-3">
+          <%= render FlatPack::Switch::Component.new(
+            name: "switch_off",
+            label: "Unchecked (OFF)"
+          ) %>
+          <%= render FlatPack::Switch::Component.new(
+            name: "switch_on",
+            label: "Checked (ON)",
+            checked: true
+          ) %>
+          <%= render FlatPack::Switch::Component.new(
+            name: "switch_disabled",
+            label: "Disabled (OFF)",
+            disabled: true
+          ) %>
+          <%= render FlatPack::Switch::Component.new(
+            name: "switch_disabled_on",
+            label: "Disabled (ON)",
+            checked: true,
+            disabled: true
+          ) %>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-medium mb-3">Switch with Error</h3>
+        <%= render FlatPack::Switch::Component.new(
+          name: "switch_error",
+          label: "Terms and conditions",
+          error: "You must accept the terms and conditions",
+          required: true
+        ) %>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-medium mb-3">Settings Panel Example</h3>
+        <div class="border border-[var(--color-border)] rounded-[var(--radius-md)] p-4 space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h4 class="font-medium">Email Notifications</h4>
+              <p class="text-sm text-[var(--color-muted-foreground)]">Receive email updates</p>
+            </div>
+            <%= render FlatPack::Switch::Component.new(
+              name: "email_notifications",
+              checked: true
+            ) %>
+          </div>
+          
+          <div class="flex items-center justify-between">
+            <div>
+              <h4 class="font-medium">SMS Notifications</h4>
+              <p class="text-sm text-[var(--color-muted-foreground)]">Receive text messages</p>
+            </div>
+            <%= render FlatPack::Switch::Component.new(
+              name: "sms_notifications"
+            ) %>
+          </div>
+          
+          <div class="flex items-center justify-between">
+            <div>
+              <h4 class="font-medium">Dark Mode</h4>
+              <p class="text-sm text-[var(--color-muted-foreground)]">Use dark theme</p>
+            </div>
+            <%= render FlatPack::Switch::Component.new(
+              name: "dark_mode",
+              checked: true
+            ) %>
+          </div>
+          
+          <div class="flex items-center justify-between">
+            <div>
+              <h4 class="font-medium">Public Profile</h4>
+              <p class="text-sm text-[var(--color-muted-foreground)]">Make profile visible to others</p>
+            </div>
+            <%= render FlatPack::Switch::Component.new(
+              name: "public_profile"
+            ) %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Switch::Component.new(
+  name: "notifications",
+  label: "Enable notifications",
+  checked: true
+) %&gt;
+
+&lt;%= render FlatPack::Switch::Component.new(
+  name: "dark_mode",
+  label: "Dark mode",
+  size: :lg
+) %&gt;
+
+&lt;%= render FlatPack::Switch::Component.new(
+  name: "terms",
+  label: "I agree to the terms",
+  required: true,
+  error: "You must accept the terms"
+) %&gt;</code></pre>
+  </section>
+
   <!-- Combined Form Example -->
   <section class="mb-12">
     <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Complete Form Example</h2>
@@ -755,3 +906,4 @@
 &lt;/form&gt;</code></pre>
   </section>
 </div>
+

@@ -42,7 +42,7 @@ module FlatPack
       private
 
       def render_checkbox_wrapper
-        content_tag(:div, class: "flex items-start") do
+        content_tag(:div, class: "flex items-center") do
           safe_join([
             render_input,
             render_label

@@ -1,0 +1,298 @@
+<div class="max-w-4xl mx-auto">
+  <h1 class="text-4xl font-bold mb-4">Alert Component</h1>
+  <p class="text-lg text-[var(--color-muted-foreground)] mb-8">
+    Prominent notifications and messages for user feedback (success, errors, warnings, info).
+  </p>
+
+  <!-- Basic Variants -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Basic Variants</h2>
+    <div class="space-y-4 mb-4">
+      <%= render FlatPack::Alert::Component.new(
+        title: "Information",
+        description: "This is an informational message.",
+        variant: :info
+      ) %>
+      <%= render FlatPack::Alert::Component.new(
+        title: "Success!",
+        description: "Your changes have been saved successfully.",
+        variant: :success
+      ) %>
+      <%= render FlatPack::Alert::Component.new(
+        title: "Warning",
+        description: "This action cannot be undone.",
+        variant: :warning
+      ) %>
+      <%= render FlatPack::Alert::Component.new(
+        title: "Error",
+        description: "Failed to save changes. Please try again.",
+        variant: :danger
+      ) %>
+    </div>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Alert::Component.new(
+  title: "Information",
+  description: "This is an informational message.",
+  variant: :info
+) %&gt;
+
+&lt;%= render FlatPack::Alert::Component.new(
+  title: "Success!",
+  description: "Your changes have been saved successfully.",
+  variant: :success
+) %&gt;</code></pre>
+  </section>
+
+  <!-- Title Only -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Title Only</h2>
+    <div class="space-y-4 mb-4">
+      <%= render FlatPack::Alert::Component.new(
+        title: "Quick information message",
+        variant: :info
+      ) %>
+      <%= render FlatPack::Alert::Component.new(
+        title: "Successfully completed!",
+        variant: :success
+      ) %>
+    </div>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Alert::Component.new(
+  title: "Quick information message",
+  variant: :info
+) %&gt;</code></pre>
+  </section>
+
+  <!-- Description Only -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Description Only</h2>
+    <div class="space-y-4 mb-4">
+      <%= render FlatPack::Alert::Component.new(
+        description: "Your session will expire in 5 minutes.",
+        variant: :warning
+      ) %>
+      <%= render FlatPack::Alert::Component.new(
+        description: "All systems are operational.",
+        variant: :success
+      ) %>
+    </div>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Alert::Component.new(
+  description: "Your session will expire in 5 minutes.",
+  variant: :warning
+) %&gt;</code></pre>
+  </section>
+
+  <!-- Without Icon -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Without Icon</h2>
+    <div class="space-y-4 mb-4">
+      <%= render FlatPack::Alert::Component.new(
+        title: "No Icon",
+        description: "This alert doesn't show an icon.",
+        variant: :info,
+        icon: false
+      ) %>
+      <%= render FlatPack::Alert::Component.new(
+        title: "Text Only",
+        description: "Clean text-only presentation.",
+        variant: :success,
+        icon: false
+      ) %>
+    </div>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Alert::Component.new(
+  title: "No Icon",
+  description: "This alert doesn't show an icon.",
+  variant: :info,
+  icon: false
+) %&gt;</code></pre>
+  </section>
+
+  <!-- Dismissible Alerts -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Dismissible Alerts</h2>
+    <div class="space-y-4 mb-4">
+      <%= render FlatPack::Alert::Component.new(
+        title: "Notice",
+        description: "Click the X button to dismiss this message.",
+        variant: :info,
+        dismissible: true
+      ) %>
+      <%= render FlatPack::Alert::Component.new(
+        title: "Announcement",
+        description: "New features are now available! Dismiss when read.",
+        variant: :info,
+        dismissible: true
+      ) %>
+      <%= render FlatPack::Alert::Component.new(
+        title: "Temporary Warning",
+        description: "This warning can be dismissed once acknowledged.",
+        variant: :warning,
+        dismissible: true
+      ) %>
+    </div>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Alert::Component.new(
+  title: "Notice",
+  description: "Click the X button to dismiss this message.",
+  variant: :info,
+  dismissible: true
+) %&gt;</code></pre>
+  </section>
+
+  <!-- Rich Content with Slots -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Rich Content with Slots</h2>
+    <div class="space-y-4 mb-4">
+      <%= render FlatPack::Alert::Component.new(variant: :success) do %>
+        <div class="flex flex-col items-start justify-between gap-3">
+          <div>
+            <strong>Success!</strong> You've completed the tutorial.
+          </div>
+          <%= render FlatPack::Button::Component.new(text: "Continue →", size: :sm, style: :secondary) %>
+        </div>
+      <% end %>
+      
+      <%= render FlatPack::Alert::Component.new(variant: :warning) do %>
+        <div class="flex flex-col items-start justify-between gap-3">
+          <div>
+            <strong>Confirm Action</strong>
+            <p class="text-sm">This will permanently delete your data.</p>
+          </div>
+          <div class="flex gap-2">
+            <%= render FlatPack::Button::Component.new(text: "Delete", size: :sm, style: :warning) %>
+            <%= render FlatPack::Button::Component.new(text: "Cancel", size: :sm, style: :ghost) %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Alert::Component.new(variant: :success) do %&gt;
+  &lt;div class="flex flex-col items-start justify-between gap-3"&gt;
+    &lt;div&gt;
+      &lt;strong&gt;Success!&lt;/strong&gt; You've completed the tutorial.
+    &lt;/div&gt;
+    &lt;%= render FlatPack::Button::Component.new(text: "Continue →", size: :sm, style: :secondary) %&gt;
+  &lt;/div&gt;
+&lt;% end %&gt;</code></pre>
+  </section>
+
+  <!-- Use Cases -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Common Use Cases</h2>
+    
+    <div class="mb-6">
+      <h3 class="text-lg font-medium mb-3">Form Success Message</h3>
+      <%= render FlatPack::Alert::Component.new(
+        title: "Form submitted",
+        description: "Thank you! We'll process your request shortly.",
+        variant: :success,
+        dismissible: true
+      ) %>
+    </div>
+
+    <div class="mb-6">
+      <h3 class="text-lg font-medium mb-3">Validation Error</h3>
+      <%= render FlatPack::Alert::Component.new(
+        title: "Please check the form",
+        description: "There are errors that need to be corrected before submission.",
+        variant: :danger
+      ) %>
+    </div>
+
+    <div class="mb-6">
+      <h3 class="text-lg font-medium mb-3">Warning Prompt</h3>
+      <%= render FlatPack::Alert::Component.new(
+        title: "Before you proceed",
+        description: "This will permanently delete all your data. This action cannot be undone.",
+        variant: :warning
+      ) %>
+    </div>
+
+    <div class="mb-6">
+      <h3 class="text-lg font-medium mb-3">Informational Banner</h3>
+      <%= render FlatPack::Alert::Component.new(
+        title: "System Maintenance",
+        description: "Scheduled maintenance is planned for tonight from 11 PM to 1 AM EST.",
+        variant: :info,
+        dismissible: true
+      ) %>
+    </div>
+
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Alert::Component.new(
+  title: "Form submitted",
+  description: "Thank you! We'll process your request shortly.",
+  variant: :success,
+  dismissible: true
+) %&gt;</code></pre>
+  </section>
+
+  <!-- Flash Messages Example -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Flash Messages Pattern</h2>
+    <div class="space-y-4 mb-4">
+      <div class="p-4 bg-[var(--color-muted)] rounded">
+        <p class="text-sm text-[var(--color-muted-foreground)] mb-4">Example implementation for Rails flash messages:</p>
+        <pre class="text-sm"><code>&lt;% if flash[:notice] %&gt;
+  &lt;%= render FlatPack::Alert::Component.new(
+    description: flash[:notice],
+    variant: :success,
+    dismissible: true
+  ) %&gt;
+&lt;% end %&gt;
+
+&lt;% if flash[:alert] %&gt;
+  &lt;%= render FlatPack::Alert::Component.new(
+    description: flash[:alert],
+    variant: :danger,
+    dismissible: true
+  ) %&gt;
+&lt;% end %&gt;</code></pre>
+      </div>
+      
+      <%= render FlatPack::Alert::Component.new(
+        description: "This is a simulated flash success message.",
+        variant: :success,
+        dismissible: true
+      ) %>
+      
+      <%= render FlatPack::Alert::Component.new(
+        description: "This is a simulated flash error message.",
+        variant: :danger,
+        dismissible: true
+      ) %>
+    </div>
+  </section>
+
+  <!-- Interactive Demo -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Interactive Demo</h2>
+    <p class="mb-4 text-[var(--color-muted-foreground)]">Click the dismiss button (X) on the alerts below to see the fade-out animation:</p>
+    <div class="space-y-4 mb-4" id="dismissible-demo">
+      <%= render FlatPack::Alert::Component.new(
+        title: "Click to Dismiss",
+        description: "This alert will fade out and be removed from the page.",
+        variant: :info,
+        dismissible: true
+      ) %>
+      <%= render FlatPack::Alert::Component.new(
+        title: "Try Me Too",
+        description: "Watch the smooth animation as this alert disappears.",
+        variant: :success,
+        dismissible: true
+      ) %>
+    </div>
+    <button class="px-4 py-2 bg-[var(--color-primary)] text-[var(--color-primary-text)] rounded-[var(--radius-md)]" 
+            onclick="window.location.reload()">
+      Reset Demo
+    </button>
+  </section>
+
+  <!-- Documentation Link -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Documentation</h2>
+    <p class="mb-4">For complete documentation including Stimulus controller details, see <a href="https://github.com/bowerbird-app/flatpack/blob/main/docs/components/alert.md" class="text-[var(--color-primary)] underline">Alert Component Documentation</a>.</p>
+  </section>
+</div>
+
+<script>
+  // Listen for alert dismissed events
+  document.addEventListener('alert:dismissed', (event) => {
+    console.log('Alert dismissed:', event.detail.element);
+  });
+</script>

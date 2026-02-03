@@ -1360,6 +1360,142 @@ FlatPack::Select::Component.new(
 - [Button Component](button.md) - For form submit buttons
 - [Table Component](table.md) - Inputs in table rows
 
+## Switch Component
+
+The Switch component is a modern toggle switch for boolean on/off states, providing an alternative to checkboxes for settings and preferences.
+
+### Basic Usage
+
+```erb
+<%= render FlatPack::Switch::Component.new(
+  name: "notifications",
+  label: "Enable notifications"
+) %>
+```
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | String | **required** | Form field name |
+| `checked` | Boolean | `false` | Initial state |
+| `label` | String | `nil` | Label text |
+| `error` | String | `nil` | Error message |
+| `disabled` | Boolean | `false` | Disabled state |
+| `required` | Boolean | `false` | Required field |
+| `size` | Symbol | `:md` | Switch size (`:sm`, `:md`, `:lg`) |
+| `**system_arguments` | Hash | `{}` | HTML attributes (`class`, `data`, `aria`, `id`, etc.) |
+
+### Visual States
+
+**OFF State:** Circle on left, gray background  
+**ON State:** Circle on right, primary color background
+
+The switch includes:
+- Smooth sliding animation
+- Clear on/off visual states
+- Haptic feel with visual feedback on click
+- Label appearing to the right
+
+### Sizes
+
+```erb
+# Small
+<%= render FlatPack::Switch::Component.new(
+  name: "setting",
+  label: "Small switch",
+  size: :sm
+) %>
+
+# Medium (default)
+<%= render FlatPack::Switch::Component.new(
+  name: "setting",
+  label: "Medium switch",
+  size: :md
+) %>
+
+# Large
+<%= render FlatPack::Switch::Component.new(
+  name: "setting",
+  label: "Large switch",
+  size: :lg
+) %>
+```
+
+### States
+
+```erb
+# Checked
+<%= render FlatPack::Switch::Component.new(
+  name: "notifications",
+  label: "Notifications",
+  checked: true
+) %>
+
+# Disabled
+<%= render FlatPack::Switch::Component.new(
+  name: "notifications",
+  label: "Notifications (disabled)",
+  disabled: true
+) %>
+
+# With error
+<%= render FlatPack::Switch::Component.new(
+  name: "notifications",
+  label: "Notifications",
+  error: "This field is required"
+) %>
+```
+
+### Behavior
+
+- Uses hidden checkbox + styled switch UI
+- Click anywhere on switch to toggle
+- Keyboard accessible (Space/Enter to toggle)
+- Smooth animation on state change
+- Focus ring on keyboard focus
+
+### Accessibility
+
+- `role="switch"` on the control
+- `aria-checked` attribute reflects state
+- Proper label associations
+- Full keyboard navigation support
+- Visual and ARIA state communication
+
+### Use Cases
+
+**Settings and Preferences:**
+```erb
+<%= render FlatPack::Switch::Component.new(
+  name: "email_notifications",
+  label: "Email notifications",
+  checked: true
+) %>
+<%= render FlatPack::Switch::Component.new(
+  name: "sms_notifications",
+  label: "SMS notifications"
+) %>
+```
+
+**Feature Toggles:**
+```erb
+<%= render FlatPack::Switch::Component.new(
+  name: "dark_mode",
+  label: "Dark mode",
+  checked: user.dark_mode_enabled?
+) %>
+```
+
+**Privacy Controls:**
+```erb
+<%= render FlatPack::Switch::Component.new(
+  name: "public_profile",
+  label: "Make profile public",
+  checked: false
+) %>
+```
+
 ## Next Steps
 
 - [Theming Guide](../theming.md)

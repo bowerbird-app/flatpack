@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   get "demo/buttons", to: "pages#buttons"
   get "demo/tables", to: "pages#tables"
   get "demo/inputs", to: "pages#inputs"
+  get "demo/badges", to: "pages#badges"
+  get "demo/alerts", to: "pages#alerts"
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
