@@ -153,7 +153,7 @@ module FlatPack
 
       def alert_classes
         classes(
-          "relative flex items-start gap-3",
+          "relative flex items-center gap-3",
           "rounded-[var(--radius-md)]",
           "border-l-4 p-4",
           variant_config[:border],

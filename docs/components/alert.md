@@ -102,12 +102,33 @@ When `dismissible: true`, the alert:
 
 ## Rich Content with Slots
 
-Use the content block for rich HTML content:
+Use the content block for rich HTML content with buttons and links:
 
 ```erb
 <%= render FlatPack::Alert::Component.new(variant: :success) do %>
-  <strong>Success!</strong> You've completed the tutorial.
-  <%= link_to "Continue to next step →", next_step_path, class: "underline" %>
+  <div class="flex items-center justify-between gap-3">
+    <div>
+      <strong>Success!</strong> You've completed the tutorial.
+    </div>
+    <%= render FlatPack::Button::Component.new(text: "Continue →", size: :sm, style: :secondary) %>
+  </div>
+<% end %>
+```
+
+### With Multiple Actions
+
+```erb
+<%= render FlatPack::Alert::Component.new(variant: :warning) do %>
+  <div class="flex items-center justify-between gap-3">
+    <div>
+      <strong>Confirm Action</strong>
+      <p class="text-sm">This will permanently delete your data.</p>
+    </div>
+    <div class="flex gap-2">
+      <%= render FlatPack::Button::Component.new(text: "Delete", size: :sm, style: :warning) %>
+      <%= render FlatPack::Button::Component.new(text: "Cancel", size: :sm, style: :ghost) %>
+    </div>
+  </div>
 <% end %>
 ```
 

@@ -141,24 +141,34 @@
     <h2 class="text-2xl font-semibold mb-4">Rich Content with Slots</h2>
     <div class="space-y-4 mb-4">
       <%= render FlatPack::Alert::Component.new(variant: :success) do %>
-        <strong>Success!</strong> You've completed the tutorial.
-        <a href="#" class="underline ml-2">Continue to next step →</a>
+        <div class="flex flex-col items-start justify-between gap-3">
+          <div>
+            <strong>Success!</strong> You've completed the tutorial.
+          </div>
+          <%= render FlatPack::Button::Component.new(text: "Continue →", size: :sm, style: :secondary) %>
+        </div>
       <% end %>
       
-      <%= render FlatPack::Alert::Component.new(variant: :info) do %>
-        <div>
-          <strong>New Feature Available</strong>
-          <p class="mt-1 text-sm">Check out our new dashboard design with improved performance.</p>
-          <div class="mt-2 flex gap-2">
-            <button class="px-3 py-1 bg-blue-600 text-white rounded text-sm">Learn More</button>
-            <button class="px-3 py-1 bg-transparent border border-blue-600 text-blue-900 rounded text-sm">Dismiss</button>
+      <%= render FlatPack::Alert::Component.new(variant: :warning) do %>
+        <div class="flex flex-col items-start justify-between gap-3">
+          <div>
+            <strong>Confirm Action</strong>
+            <p class="text-sm">This will permanently delete your data.</p>
+          </div>
+          <div class="flex gap-2">
+            <%= render FlatPack::Button::Component.new(text: "Delete", size: :sm, style: :warning) %>
+            <%= render FlatPack::Button::Component.new(text: "Cancel", size: :sm, style: :ghost) %>
           </div>
         </div>
       <% end %>
     </div>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Alert::Component.new(variant: :success) do %&gt;
-  &lt;strong&gt;Success!&lt;/strong&gt; You've completed the tutorial.
-  &lt;a href="#" class="underline ml-2"&gt;Continue to next step →&lt;/a&gt;
+  &lt;div class="flex flex-col items-start justify-between gap-3"&gt;
+    &lt;div&gt;
+      &lt;strong&gt;Success!&lt;/strong&gt; You've completed the tutorial.
+    &lt;/div&gt;
+    &lt;%= render FlatPack::Button::Component.new(text: "Continue →", size: :sm, style: :secondary) %&gt;
+  &lt;/div&gt;
 &lt;% end %&gt;</code></pre>
   </section>
 
