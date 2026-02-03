@@ -20,6 +20,7 @@ module FlatPack
         @custom_class = system_arguments[:class]
         super(**system_arguments)
         @name = name
+        @raw_options = options
         @options = normalize_options(options)
         @value = value
         @label = label
@@ -169,9 +170,9 @@ module FlatPack
       end
 
       def validate_options!
-        raise ArgumentError, "options is required" if @options.nil?
-        raise ArgumentError, "options must be an array" unless @options.is_a?(Array)
-        raise ArgumentError, "options cannot be empty" if @options.empty?
+        raise ArgumentError, "options is required" if @raw_options.nil?
+        raise ArgumentError, "options must be an array" unless @raw_options.is_a?(Array)
+        raise ArgumentError, "options cannot be empty" if @raw_options.empty?
       end
     end
   end
