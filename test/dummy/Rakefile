@@ -3,5 +3,5 @@
 # Load the Rails application.
 require_relative "config/application"
 
-# Initialize the Rails application.
-Rails.application.initialize!
+# Don't initialize here - it's done by the test helper
+# Rails.application.load_tasks

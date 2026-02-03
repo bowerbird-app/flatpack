@@ -143,12 +143,11 @@ module FlatPack
           insert_position = content.index($1) + $1.length
 
           # Insert the configuration
-          new_content = content[0...insert_position] + "\n" + config_content + "\n" + content[insert_position..-1]
+          new_content = content[0...insert_position] + "\n" + config_content + "\n" + content[insert_position..]
 
           File.write(tailwind_file, new_content)
 
           say "\n✓ Configured Tailwind CSS 4 for FlatPack", :green
-          say "  - Added @source directive: #{relative_path}", :green
           say "  - Added @theme block with FlatPack design tokens", :green
           say "  - Added :root mappings for component compatibility", :green
           say "\n  File updated: #{tailwind_file.relative_path_from(Rails.root)}", :cyan
@@ -159,7 +158,6 @@ module FlatPack
       end
 
       def get_gem_path
-        # Try using Bundler to get the gem path
         begin
           gem_spec = Gem::Specification.find_by_name("flat_pack")
           return Pathname.new(gem_spec.gem_dir).join("app/components")
