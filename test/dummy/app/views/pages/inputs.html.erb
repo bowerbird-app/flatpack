@@ -398,6 +398,195 @@
 ) %&gt;</code></pre>
   </section>
 
+
+  <!-- Checkbox -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Checkbox</h2>
+    <p class="text-sm text-[var(--color-muted-foreground)] mb-4">Single checkbox component with label</p>
+    
+    <div class="space-y-4">
+      <%= render FlatPack::Checkbox::Component.new(
+        name: "terms",
+        label: "I agree to the terms and conditions",
+        required: true
+      ) %>
+
+      <%= render FlatPack::Checkbox::Component.new(
+        name: "newsletter",
+        label: "Subscribe to newsletter",
+        checked: true
+      ) %>
+
+      <%= render FlatPack::Checkbox::Component.new(
+        name: "terms_error",
+        label: "I agree to the terms",
+        error: "You must agree to continue"
+      ) %>
+
+      <%= render FlatPack::Checkbox::Component.new(
+        name: "disabled_checkbox",
+        label: "This checkbox is disabled",
+        disabled: true
+      ) %>
+    </div>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Checkbox::Component.new(
+  name: "terms",
+  label: "I agree to the terms and conditions",
+  required: true
+) %&gt;
+
+&lt;%= render FlatPack::Checkbox::Component.new(
+  name: "newsletter",
+  label: "Subscribe to newsletter",
+  checked: true
+) %&gt;</code></pre>
+  </section>
+
+  <!-- Radio Group -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Radio Group</h2>
+    <p class="text-sm text-[var(--color-muted-foreground)] mb-4">Radio button group for single selection</p>
+    
+    <div class="space-y-6">
+      <%= render FlatPack::RadioGroup::Component.new(
+        name: "size",
+        options: ["Small", "Medium", "Large"],
+        label: "Choose a size",
+        value: "Medium"
+      ) %>
+
+      <%= render FlatPack::RadioGroup::Component.new(
+        name: "color",
+        options: [["Red", "red"], ["Blue", "blue"], ["Green", "green"]],
+        label: "Choose a color",
+        required: true
+      ) %>
+
+      <%= render FlatPack::RadioGroup::Component.new(
+        name: "plan",
+        options: [
+          {label: "Free Plan", value: "free", disabled: false},
+          {label: "Pro Plan", value: "pro", disabled: false},
+          {label: "Enterprise (Coming Soon)", value: "enterprise", disabled: true}
+        ],
+        label: "Select a plan",
+        value: "pro"
+      ) %>
+
+      <%= render FlatPack::RadioGroup::Component.new(
+        name: "payment_error",
+        options: ["Credit Card", "PayPal", "Bank Transfer"],
+        label: "Payment Method",
+        error: "Please select a payment method"
+      ) %>
+    </div>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::RadioGroup::Component.new(
+  name: "size",
+  options: ["Small", "Medium", "Large"],
+  label: "Choose a size",
+  value: "Medium"
+) %&gt;
+
+&lt;%= render FlatPack::RadioGroup::Component.new(
+  name: "color",
+  options: [["Red", "red"], ["Blue", "blue"], ["Green", "green"]],
+  label: "Choose a color"
+) %&gt;</code></pre>
+  </section>
+
+  <!-- Select (Dropdown) -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Select (Dropdown)</h2>
+    <p class="text-sm text-[var(--color-muted-foreground)] mb-4">Dropdown select with optional search functionality</p>
+    
+    <div class="space-y-6">
+      <div>
+        <h3 class="text-lg font-medium mb-2 text-[var(--color-foreground)]">Native Select</h3>
+        <%= render FlatPack::Select::Component.new(
+          name: "country",
+          options: ["United States", "Canada", "United Kingdom", "Australia"],
+          label: "Country",
+          placeholder: "Select a country",
+          required: true
+        ) %>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-medium mb-2 text-[var(--color-foreground)]">Select with Value/Label Pairs</h3>
+        <%= render FlatPack::Select::Component.new(
+          name: "state",
+          options: [["California", "CA"], ["New York", "NY"], ["Texas", "TX"], ["Florida", "FL"]],
+          label: "State",
+          value: "CA"
+        ) %>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-medium mb-2 text-[var(--color-foreground)]">Searchable Select</h3>
+        <%= render FlatPack::Select::Component.new(
+          name: "city",
+          options: [
+            "New York", "Los Angeles", "Chicago", "Houston", "Phoenix",
+            "Philadelphia", "San Antonio", "San Diego", "Dallas", "San Jose",
+            "Austin", "Jacksonville", "Fort Worth", "Columbus", "Indianapolis"
+          ],
+          label: "City",
+          placeholder: "Search cities...",
+          searchable: true,
+          required: true
+        ) %>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-medium mb-2 text-[var(--color-foreground)]">Select with Disabled Options</h3>
+        <%= render FlatPack::Select::Component.new(
+          name: "plan",
+          options: [
+            {label: "Free Plan", value: "free", disabled: false},
+            {label: "Pro Plan", value: "pro", disabled: false},
+            {label: "Enterprise (Coming Soon)", value: "enterprise", disabled: true}
+          ],
+          label: "Select a plan",
+          value: "pro"
+        ) %>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-medium mb-2 text-[var(--color-foreground)]">Select with Error</h3>
+        <%= render FlatPack::Select::Component.new(
+          name: "category",
+          options: ["Electronics", "Clothing", "Books", "Food"],
+          label: "Category",
+          error: "Please select a category"
+        ) %>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-medium mb-2 text-[var(--color-foreground)]">Disabled Select</h3>
+        <%= render FlatPack::Select::Component.new(
+          name: "disabled_select",
+          options: ["Option 1", "Option 2"],
+          label: "Disabled Select",
+          value: "Option 1",
+          disabled: true
+        ) %>
+      </div>
+    </div>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Select::Component.new(
+  name: "country",
+  options: ["United States", "Canada", "United Kingdom"],
+  label: "Country",
+  placeholder: "Select a country"
+) %&gt;
+
+&lt;%= render FlatPack::Select::Component.new(
+  name: "city",
+  options: ["New York", "Los Angeles", "Chicago"],
+  label: "City",
+  searchable: true
+) %&gt;</code></pre>
+  </section>
+
   <!-- Combined Form Example -->
   <section class="mb-12">
     <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Complete Form Example</h2>
@@ -460,6 +649,32 @@
         preview: true
       ) %>
 
+      <%= render FlatPack::Select::Component.new(
+        name: "country",
+        options: [["United States", "us"], ["Canada", "ca"], ["United Kingdom", "uk"], ["Australia", "au"]],
+        label: "Country",
+        placeholder: "Select your country",
+        required: true
+      ) %>
+
+      <%= render FlatPack::RadioGroup::Component.new(
+        name: "notification_preference",
+        options: ["Email", "SMS", "Push Notifications"],
+        label: "Notification Preference",
+        value: "Email"
+      ) %>
+
+      <%= render FlatPack::Checkbox::Component.new(
+        name: "agree_terms",
+        label: "I agree to the terms and conditions",
+        required: true
+      ) %>
+
+      <%= render FlatPack::Checkbox::Component.new(
+        name: "subscribe_newsletter",
+        label: "Subscribe to our newsletter"
+      ) %>
+
       <%= render FlatPack::TextArea::Component.new(
         name: "bio",
         label: "Biography",
@@ -508,6 +723,23 @@
     label: "Profile Picture",
     accept: "image/png,image/jpeg",
     max_size: 2_097_152
+  ) %&gt;
+
+  &lt;%= render FlatPack::Select::Component.new(
+    name: "country",
+    options: [["United States", "us"], ["Canada", "ca"]],
+    label: "Country"
+  ) %&gt;
+
+  &lt;%= render FlatPack::RadioGroup::Component.new(
+    name: "notification_preference",
+    options: ["Email", "SMS"],
+    label: "Notification Preference"
+  ) %&gt;
+
+  &lt;%= render FlatPack::Checkbox::Component.new(
+    name: "agree_terms",
+    label: "I agree to the terms"
   ) %&gt;
 
   &lt;%= render FlatPack::TextArea::Component.new(
