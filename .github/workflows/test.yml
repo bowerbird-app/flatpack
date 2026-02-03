@@ -47,12 +47,6 @@ jobs:
         working-directory: test/dummy
         run: bundle install
 
-      - name: Setup dummy app database
-        working-directory: test/dummy
-        run: |
-          bundle exec rails db:create
-          bundle exec rails db:migrate
-
       - name: Build Tailwind CSS
         working-directory: test/dummy
         run: bundle exec rails tailwindcss:build
