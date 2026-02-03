@@ -51,10 +51,6 @@ jobs:
         working-directory: test/dummy
         run: bundle exec tailwindcss -c config/tailwind.config.js -i app/assets/stylesheets/application.css -o app/assets/builds/application.css
 
-      - name: Precompile assets
-        working-directory: test/dummy
-        run: bundle exec rails assets:precompile
-
       - name: Verify dummy app can boot
         working-directory: test/dummy
         run: |
