@@ -17,7 +17,7 @@ The Alert component displays prominent notifications and messages for user feedb
 |------|------|---------|-------------|
 | `title` | String | `nil` | Alert title |
 | `description` | String | `nil` | Alert message |
-| `variant` | Symbol | `:info` | Visual variant (`:info`, `:success`, `:warning`, `:danger`) |
+| `variant` | Symbol | `:info` | Visual variant (`:info`, `:success`, `:warning`) |
 | `dismissible` | Boolean | `false` | Show close button |
 | `icon` | Boolean | `true` | Show variant icon |
 | `**system_arguments` | Hash | `{}` | HTML attributes (`class`, `data`, `aria`, `id`, etc.) |
@@ -54,17 +54,6 @@ Warnings and cautions.
   title: "Warning",
   description: "This action cannot be undone.",
   variant: :warning
-) %>
-```
-
-### Danger
-Errors and critical issues.
-
-```erb
-<%= render FlatPack::Alert::Component.new(
-  title: "Error",
-  description: "Failed to save changes. Please try again.",
-  variant: :danger
 ) %>
 ```
 
@@ -187,7 +176,7 @@ document.addEventListener('alert:dismissed', (event) => {
 <%= render FlatPack::Alert::Component.new(
   title: "Validation Error",
   description: "Please check the form for errors.",
-  variant: :danger
+  variant: :warning
 ) %>
 ```
 
@@ -223,7 +212,7 @@ document.addEventListener('alert:dismissed', (event) => {
 <% if flash[:alert] %>
   <%= render FlatPack::Alert::Component.new(
     description: flash[:alert],
-    variant: :danger,
+    variant: :warning,
     dismissible: true
   ) %>
 <% end %>
