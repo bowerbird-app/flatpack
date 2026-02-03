@@ -51,7 +51,8 @@ module FlatPack
         content_tag(:label, class: "relative inline-flex items-center cursor-pointer #{@disabled ? 'opacity-50 cursor-not-allowed' : ''}") do
           safe_join([
             render_input,
-            render_track
+            render_track,
+            render_thumb
           ])
         end
       end
@@ -61,9 +62,11 @@ module FlatPack
       end
 
       def render_track
-        content_tag(:div, class: track_classes, role: "switch", "aria-checked": @checked.to_s) do
-          content_tag(:div, nil, class: thumb_classes)
-        end
+        content_tag(:div, nil, class: track_classes, role: "switch", "aria-checked": @checked.to_s)
+      end
+      
+      def render_thumb
+        content_tag(:div, nil, class: thumb_classes)
       end
 
       def render_label
@@ -93,7 +96,6 @@ module FlatPack
       def track_classes
         classes(
           "pointer-events-none",
-          "relative inline-flex items-center",
           "rounded-full transition-colors duration-200",
           SIZES.fetch(@size),
           "peer-checked:bg-[var(--color-primary)]",
@@ -112,9 +114,11 @@ module FlatPack
         size_config = size_map.fetch(@size)
 
         classes(
-          "absolute left-0.5 top-1/2 -translate-y-1/2",
-          "rounded-full bg-white",
+          "pointer-events-none",
+          "absolute left-0.5 top-0",
+          "rounded-full bg-white shadow-sm",
           "transition-transform duration-200",
+          "translate-y-0.5",
           size_config[:width],
           size_config[:height],
           size_config[:translate]
