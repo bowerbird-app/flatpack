@@ -63,7 +63,7 @@ module FlatPack
       private
 
       def render_content_area
-        content_tag(:div, class: "flex gap-3") do
+        content_tag(:div, class: "flex items-center gap-3") do
           safe_join([
             render_icon,
             render_text_content
@@ -124,7 +124,7 @@ module FlatPack
       def render_description
         return unless @description
 
-        content_tag(:p, @description, class: "mt-1 text-sm")
+        content_tag(:p, @description, class: "text-sm")
       end
 
       def render_dismiss_button
