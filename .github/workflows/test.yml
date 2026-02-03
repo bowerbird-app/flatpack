@@ -49,7 +49,7 @@ jobs:
 
       - name: Build Tailwind CSS
         working-directory: test/dummy
-        run: bundle exec rails tailwindcss:build
+        run: bundle exec tailwindcss -c config/tailwind.config.js -i app/assets/stylesheets/application.css -o app/assets/builds/application.css
 
       - name: Precompile assets
         working-directory: test/dummy
