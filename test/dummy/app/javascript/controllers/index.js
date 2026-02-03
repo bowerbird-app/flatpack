@@ -4,6 +4,5 @@ import { application } from "controllers/application"
 import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading"
 eagerLoadControllersFrom("controllers", application)
 
-// Lazy load FlatPack controllers
-import { lazyLoadControllersFrom } from "@hotwired/stimulus-loading"
-lazyLoadControllersFrom("controllers/flat_pack", application)
+// Eager load FlatPack controllers
+eagerLoadControllersFrom("controllers/flat_pack", application)

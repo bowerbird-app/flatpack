@@ -49,6 +49,8 @@ rails generate flat_pack:install
 **What the generator does:**
 - Adds `@import "flat_pack/variables.css";` to your `app/assets/stylesheets/application.css`
 - **Automatically configures Tailwind CSS 4** by detecting your Tailwind CSS file and injecting the necessary configuration
+- **Configures importmap** to load FlatPack Stimulus controllers
+- **Configures Stimulus** to eager load FlatPack controllers
 - Shows next steps for using components
 
 ### 4. Configure Tailwind CSS 4 to Scan FlatPack Components
@@ -148,14 +150,53 @@ If you want to customize the theme, add CSS variables to `app/assets/stylesheets
 
 ```css
 :root {
-  --color-primary: oklch(0.52 0.26 250);
-  --color-primary-hover: oklch(0.42 0.24 250);
-  --color-primary-text: oklch(1.0 0 0);
+  --color-primary: var(--color-fp-primary);
+  --color-primary-hover: var(--color-fp-primary-hover);
+  --color-primary-text: var(--color-fp-primary-text);
   --color-background: oklch(1.0 0 0);
   --color-foreground: oklch(0.20 0.01 250);
   /* Add other variables as needed */
 }
 ```
+
+### 5. JavaScript Controllers Configuration (Automatic)
+
+**✨ Automated Configuration**
+
+The install generator automatically configures JavaScript imports for FlatPack's Stimulus controllers:
+
+**In `config/importmap.rb`:**
+```ruby
+# Pin FlatPack controllers
+pin_all_from FlatPack::Engine.root.join("app/javascript/flat_pack/controllers"), 
+             under: "controllers/flat_pack", 
+             to: "flat_pack/controllers"
+```
+
+**In `app/javascript/controllers/index.js`:**
+```javascript
+// Eager load FlatPack controllers
+eagerLoadControllersFrom("controllers/flat_pack", application)
+```
+
+**Why eager loading?** FlatPack controllers are eagerly loaded (not lazy loaded) to ensure they're available immediately on page load, including hard refreshes. This prevents timing issues where controllers might not be registered when components are rendered.
+
+**Manual Configuration (if needed):**
+
+If you need to manually configure the JavaScript controllers:
+
+1. Add to `config/importmap.rb`:
+   ```ruby
+   pin_all_from FlatPack::Engine.root.join("app/javascript/flat_pack/controllers"), 
+                under: "controllers/flat_pack", 
+                to: "flat_pack/controllers"
+   ```
+
+2. Add to `app/javascript/controllers/index.js`:
+   ```javascript
+   import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading"
+   eagerLoadControllersFrom("controllers/flat_pack", application)
+   ```
 
 ### 6. Configure Tailwind CSS Content Paths (If Needed)
 
@@ -184,6 +225,12 @@ After installation, restart the Rails server:
 
 ```bash
 bin/rails server
+```
+
+Or if using Foreman:
+
+```bash
+bin/dev
 ```
 
 ## Verification
@@ -302,14 +349,48 @@ If the install generator didn't automatically configure Tailwind CSS 4:
 
 ### JavaScript Not Working
 
-1. Verify Stimulus is installed (should already be installed):
+If FlatPack Stimulus controllers are not working (e.g., password toggle, file upload preview, auto-expanding textareas):
+
+1. **Check browser console** for controller loading errors
+
+2. **Verify importmap configuration:**
+   ```bash
+   bin/rails runner "puts Rails.application.importmap.packages.keys.grep(/flat_pack/)"
+   ```
+   Should show: `controllers/flat_pack/text_area_controller`, `controllers/flat_pack/password_input_controller`, etc.
+
+3. **Check controllers/index.js:**
+   ```bash
+   grep -n "flat_pack" app/javascript/controllers/index.js
+   ```
+   Should show: `eagerLoadControllersFrom("controllers/flat_pack", application)`
+
+4. **Verify Stimulus is installed:**
    ```bash
    bundle info stimulus-rails
    ```
 
-2. Check importmap configuration:
+5. **Hard refresh the page** (Cmd+R or Ctrl+R) to reload JavaScript
+
+**Common issue:** If controllers work on Turbo navigation but not on hard refresh, make sure you're using `eagerLoadControllersFrom` (not `lazyLoadControllersFrom`) for FlatPack controllers.
+
+### Importmap "skipped missing path" Errors
+
+If you see errors like `Importmap skipped missing path: controllers/flat_pack/text_area_controller.js`:
+
+1. **Check the `to:` parameter** in your importmap configuration:
+   ```ruby
+   # config/importmap.rb
+   pin_all_from FlatPack::Engine.root.join("app/javascript/flat_pack/controllers"), 
+                under: "controllers/flat_pack", 
+                to: "flat_pack/controllers"  # This is required!
+   ```
+
+2. **Restart the Rails server** after changing importmap configuration
+
+3. **Verify asset paths:**
    ```bash
-   bin/rails importmap:audit
+   bin/rails runner "puts Rails.application.config.assets.paths.grep(/flat_pack/)"
    ```
 
 ## Documentation

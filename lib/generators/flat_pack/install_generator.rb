@@ -37,6 +37,58 @@ module FlatPack
         end
       end
 
+      def configure_importmap
+        importmap_path = Rails.root.join("config/importmap.rb")
+
+        if File.exist?(importmap_path)
+          content = File.read(importmap_path)
+
+          # Check if already configured
+          if content.include?("controllers/flat_pack") && content.include?("flat_pack/controllers")
+            say "\n⊙ Importmap already configured for FlatPack controllers", :yellow
+            return
+          end
+
+          # Add the pin configuration
+          pin_config = "\n# Pin FlatPack controllers\npin_all_from FlatPack::Engine.root.join(\"app/javascript/flat_pack/controllers\"), under: \"controllers/flat_pack\", to: \"flat_pack/controllers\"\n"
+
+          File.write(importmap_path, content + pin_config)
+
+          say "\n✓ Configured importmap for FlatPack controllers", :green
+          say "  - Added pin_all_from for controllers/flat_pack", :green
+        else
+          say "\n⊙ Importmap configuration file not found", :yellow
+          say "  If using importmaps, manually add to config/importmap.rb:", :yellow
+          say "  pin_all_from FlatPack::Engine.root.join(\"app/javascript/flat_pack/controllers\"), under: \"controllers/flat_pack\", to: \"flat_pack/controllers\"", :cyan
+        end
+      end
+
+      def configure_stimulus_controllers
+        controllers_index_path = Rails.root.join("app/javascript/controllers/index.js")
+
+        if File.exist?(controllers_index_path)
+          content = File.read(controllers_index_path)
+
+          # Check if already configured
+          if content.include?("controllers/flat_pack")
+            say "\n⊙ Stimulus already configured for FlatPack controllers", :yellow
+            return
+          end
+
+          # Add eager loading for FlatPack controllers
+          flat_pack_config = "\n// Eager load FlatPack controllers\neagerLoadControllersFrom(\"controllers/flat_pack\", application)\n"
+
+          File.write(controllers_index_path, content + flat_pack_config)
+
+          say "\n✓ Configured Stimulus for FlatPack controllers", :green
+          say "  - Added eagerLoadControllersFrom for controllers/flat_pack", :green
+        else
+          say "\n⊙ Stimulus controllers index not found", :yellow
+          say "  If using Stimulus, manually add to app/javascript/controllers/index.js:", :yellow
+          say "  eagerLoadControllersFrom(\"controllers/flat_pack\", application)", :cyan
+        end
+      end
+
       def configure_tailwind_css_4
         # Check for common Tailwind CSS 4 file locations
         tailwind_paths = [
@@ -64,7 +116,7 @@ module FlatPack
 
       def configure_tailwind_file(tailwind_file)
         content = File.read(tailwind_file)
-        
+
         # Check if already configured
         if (content.include?("@source") && content.include?("flat_pack")) || content.include?("flatpack")
           say "\n⊙ Tailwind CSS 4 already configured for FlatPack", :yellow
@@ -81,7 +133,7 @@ module FlatPack
 
         # Calculate relative path from Tailwind file to gem components
         relative_path = calculate_relative_path(tailwind_file, gem_path)
-        
+
         # Read the template and inject the source path
         template_content = File.read(File.expand_path("templates/tailwind_config.css.tt", __dir__))
         config_content = template_content.gsub("<%= source_path %>", relative_path)
@@ -89,12 +141,12 @@ module FlatPack
         # Find the position to insert (after @import "tailwindcss")
         if content =~ /(@import\s+["']tailwindcss["'];?\s*\n)/
           insert_position = content.index($1) + $1.length
-          
+
           # Insert the configuration
           new_content = content[0...insert_position] + "\n" + config_content + "\n" + content[insert_position..-1]
-          
+
           File.write(tailwind_file, new_content)
-          
+
           say "\n✓ Configured Tailwind CSS 4 for FlatPack", :green
           say "  - Added @source directive: #{relative_path}", :green
           say "  - Added @theme block with FlatPack design tokens", :green
@@ -116,10 +168,10 @@ module FlatPack
           begin
             require "bundler"
             bundle_path = Bundler.bundle_path
-            
+
             # Look for the gem in bundler's path
             flat_pack_dirs = Dir.glob(bundle_path.join("**/flat_pack-*").to_s)
-            
+
             if flat_pack_dirs.any?
               # Get the first match (should only be one)
               gem_dir = Pathname.new(flat_pack_dirs.first)
@@ -129,17 +181,17 @@ module FlatPack
             say "  Debug: Error finding gem path: #{e.message}", :red if ENV["DEBUG"]
           end
         end
-        
+
         nil
       end
 
       def calculate_relative_path(from_file, to_path)
         # Get the directory containing the from_file
         from_dir = from_file.dirname
-        
+
         # Calculate the relative path
         relative = to_path.relative_path_from(from_dir)
-        
+
         relative.to_s
       end
 
@@ -172,7 +224,9 @@ module FlatPack
         say "\n1. Restart your Rails server"
         say "2. Rebuild Tailwind CSS (if needed):"
         say "   bin/rails tailwindcss:build"
-        say "\n3. Test FlatPack components in your views:"
+        say "\n3. Verify JavaScript controllers are working:"
+        say "   Check browser console for any controller loading errors"
+        say "\n4. Test FlatPack components in your views:"
         say "   <%= render FlatPack::Button::Component.new("
         say "     label: 'Click me',"
         say "     scheme: :primary"
