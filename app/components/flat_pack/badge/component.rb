@@ -44,7 +44,8 @@ module FlatPack
       end
 
       def call
-        content_tag(:span, **badge_attributes) do
+        wrapper_tag = @removable ? :span : :span
+        content_tag(wrapper_tag, **badge_attributes) do
           safe_join([
             render_dot,
             content_tag(:span, @text),
@@ -67,7 +68,8 @@ module FlatPack
         content_tag(:button,
           type: "button",
           class: "ml-1 inline-flex items-center justify-center rounded-full hover:bg-black/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-ring)]",
-          "aria-label": "Remove") do
+          "aria-label": "Remove",
+          data: {action: "click->flat-pack--badge#remove"}) do
           # X icon (close)
           content_tag(:svg, xmlns: "http://www.w3.org/2000/svg", class: "h-3 w-3", viewBox: "0 0 20 20", fill: "currentColor") do
             content_tag(:path, nil, "fill-rule": "evenodd", d: "M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z", "clip-rule": "evenodd")
@@ -76,7 +78,14 @@ module FlatPack
       end
 
       def badge_attributes
-        merge_attributes(class: badge_classes)
+        attrs = {class: badge_classes}
+        if @removable
+          attrs[:data] = {
+            controller: "flat-pack--badge",
+            flat_pack__badge_target: "badge"
+          }
+        end
+        merge_attributes(**attrs)
       end
 
       def badge_classes
