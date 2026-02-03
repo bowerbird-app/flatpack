@@ -19,6 +19,9 @@ export default class extends Controller {
   }
 
   toggleClearButton() {
+    // Use optional target accessor to avoid errors if clearButton doesn't exist
+    if (!this.hasClearButtonTarget) return
+    
     const hasValue = this.inputTarget.value.length > 0
     
     if (hasValue) {

@@ -1,0 +1,2 @@
+// Eager load FlatPack controllers
+eagerLoadControllersFrom("controllers/flat_pack", application)

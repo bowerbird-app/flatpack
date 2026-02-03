@@ -12,6 +12,7 @@ module.exports = {
     './app/components/**/*.{erb,haml,html,slim,rb}',
     `${engineRoot}/app/components/**/*.{erb,haml,html,slim,rb}`,
     `${engineRoot}/app/assets/stylesheets/**/*.css`,
+    `${engineRoot}/app/javascript/**/*.js`,
   ],
   theme: {
     extend: {

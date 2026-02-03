@@ -17,13 +17,20 @@ FlatPack provides a comprehensive set of text-based input components with built-
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `name` | String | **required** | Form field name |
-| `value` | String | `nil` | Initial value |
+| `value` | String/Number/Date | `nil` | Initial value |
 | `placeholder` | String | `nil` | Placeholder text |
 | `label` | String | `nil` | Accessible label text |
 | `error` | String | `nil` | Error message to display |
 | `disabled` | Boolean | `false` | Disabled state |
 | `required` | Boolean | `false` | Required field |
 | `rows` | Integer | `3` | Initial rows (TextArea only) |
+| `min` | Number/String/Date | `nil` | Minimum value (NumberInput, DateInput) |
+| `max` | Number/String/Date | `nil` | Maximum value (NumberInput, DateInput) |
+| `step` | Number | `1` | Step increment (NumberInput only) |
+| `accept` | String | `nil` | Allowed file types (FileInput only) |
+| `multiple` | Boolean | `false` | Allow multiple files (FileInput only) |
+| `max_size` | Integer | `nil` | Max file size in bytes (FileInput only) |
+| `preview` | Boolean | `true` | Show image previews (FileInput only) |
 | `**system_arguments` | Hash | `{}` | HTML attributes (`class`, `data`, `aria`, `id`, etc.) |
 
 ## Component Types
@@ -123,6 +130,102 @@ URL input field with XSS protection and mobile `.com` keyboard.
 ```
 
 Blocks dangerous protocols (javascript:, data:, vbscript:) for security.
+
+### NumberInput
+
+Numeric input field with min/max/step validation.
+
+```erb
+<%= render FlatPack::NumberInput::Component.new(
+  name: "quantity",
+  label: "Quantity",
+  placeholder: "Enter quantity",
+  min: 0,
+  max: 100,
+  step: 1,
+  required: true
+) %>
+```
+
+**Features:**
+- HTML5 number input with native validation
+- Mobile numeric keyboard
+- Step controls (increment/decrement)
+- Min/max value constraints
+- Decimal support with step parameter
+
+**Additional Props:**
+- `min`: Integer/Float - Minimum allowed value
+- `max`: Integer/Float - Maximum allowed value
+- `step`: Integer/Float - Step increment (default: 1)
+
+### DateInput
+
+Date input field with calendar picker and date formatting.
+
+```erb
+<%= render FlatPack::DateInput::Component.new(
+  name: "birth_date",
+  label: "Birth Date",
+  placeholder: "Select date",
+  min: "1900-01-01",
+  max: Date.today.to_s,
+  required: true
+) %>
+```
+
+**Features:**
+- Native date picker on modern browsers
+- Mobile-optimized date selection
+- Automatic date formatting (YYYY-MM-DD)
+- Accepts Date, Time, DateTime objects
+- Min/max date constraints
+
+**Additional Props:**
+- `min`: String/Date - Minimum allowed date
+- `max`: String/Date - Maximum allowed date
+- Automatically converts Date objects to YYYY-MM-DD format
+
+### FileInput
+
+File upload input with drag-and-drop, previews, and validation.
+
+```erb
+<%= render FlatPack::FileInput::Component.new(
+  name: "document",
+  label: "Upload Document",
+  accept: "image/png,image/jpeg,application/pdf",
+  multiple: true,
+  max_size: 5_242_880, # 5MB in bytes
+  preview: true,
+  required: true
+) %>
+```
+
+**Features:**
+- Drag-and-drop file upload
+- Image preview for uploaded images
+- File type validation (accept attribute)
+- Client-side file size validation
+- Multiple file support
+- Visual file list with remove buttons
+- Blocks dangerous file types (.exe, .bat, .sh, .js, etc.)
+- Stimulus controller for interactivity
+
+**Additional Props:**
+- `accept`: String - Comma-separated MIME types or extensions (e.g., "image/*", ".pdf,.doc")
+- `multiple`: Boolean - Allow multiple file selection (default: false)
+- `max_size`: Integer - Maximum file size in bytes (default: nil)
+- `preview`: Boolean - Show image previews (default: true)
+
+**Security Features:**
+- Blocks dangerous executable file types
+- Client-side size validation
+- Secure file type checking
+- No SVG preview (XSS risk)
+
+**Stimulus Controller:**
+Uses `flat-pack--file-input` controller for drag-and-drop, preview, and validation.
 
 ## System Arguments
 
@@ -298,6 +401,13 @@ Classes are merged using `tailwind_merge`, so Tailwind utilities override correc
     label: "Website",
     value: @user.website
   ) %>
+  
+  <%= render FlatPack::DateInput::Component.new(
+    name: "user[birth_date]",
+    label: "Birth Date",
+    value: @user.birth_date,
+    max: Date.today
+  ) %>
 
   <%= render FlatPack::TextArea::Component.new(
     name: "user[bio]",
@@ -307,6 +417,125 @@ Classes are merged using `tailwind_merge`, so Tailwind utilities override correc
   ) %>
 
   <%= f.submit "Update Profile" %>
+<% end %>
+```
+
+### Product Form with Numbers and Files
+
+```erb
+<%= form_with model: @product do |f| %>
+  <%= render FlatPack::TextInput::Component.new(
+    name: "product[name]",
+    label: "Product Name",
+    value: @product.name,
+    required: true
+  ) %>
+
+  <%= render FlatPack::NumberInput::Component.new(
+    name: "product[price]",
+    label: "Price (USD)",
+    value: @product.price,
+    min: 0.01,
+    step: 0.01,
+    placeholder: "0.00",
+    required: true
+  ) %>
+
+  <%= render FlatPack::NumberInput::Component.new(
+    name: "product[quantity]",
+    label: "Stock Quantity",
+    value: @product.quantity,
+    min: 0,
+    step: 1,
+    required: true
+  ) %>
+
+  <%= render FlatPack::DateInput::Component.new(
+    name: "product[available_from]",
+    label: "Available From",
+    value: @product.available_from,
+    min: Date.today
+  ) %>
+
+  <%= render FlatPack::FileInput::Component.new(
+    name: "product[images][]",
+    label: "Product Images",
+    accept: "image/png,image/jpeg,image/webp",
+    multiple: true,
+    max_size: 2_097_152, # 2MB
+    preview: true,
+    required: true
+  ) %>
+
+  <%= render FlatPack::TextArea::Component.new(
+    name: "product[description]",
+    label: "Description",
+    value: @product.description,
+    rows: 5
+  ) %>
+
+  <%= f.submit "Save Product" %>
+<% end %>
+```
+
+### Event Registration Form
+
+```erb
+<%= form_with url: event_registrations_path do |f| %>
+  <%= render FlatPack::TextInput::Component.new(
+    name: "registration[full_name]",
+    label: "Full Name",
+    required: true
+  ) %>
+
+  <%= render FlatPack::EmailInput::Component.new(
+    name: "registration[email]",
+    label: "Email Address",
+    required: true
+  ) %>
+
+  <%= render FlatPack::PhoneInput::Component.new(
+    name: "registration[phone]",
+    label: "Phone Number",
+    required: true
+  ) %>
+
+  <%= render FlatPack::NumberInput::Component.new(
+    name: "registration[attendees]",
+    label: "Number of Attendees",
+    min: 1,
+    max: 10,
+    step: 1,
+    value: 1,
+    required: true
+  ) %>
+
+  <%= render FlatPack::DateInput::Component.new(
+    name: "registration[preferred_date]",
+    label: "Preferred Date",
+    min: Date.today,
+    max: Date.today + 90.days,
+    required: true
+  ) %>
+
+  <%= render FlatPack::FileInput::Component.new(
+    name: "registration[resume]",
+    label: "Upload Resume (Optional)",
+    accept: ".pdf,.doc,.docx",
+    max_size: 5_242_880 # 5MB
+  ) %>
+
+  <%= render FlatPack::TextArea::Component.new(
+    name: "registration[notes]",
+    label: "Special Requirements",
+    placeholder: "Dietary restrictions, accessibility needs, etc.",
+    rows: 3
+  ) %>
+
+  <%= render FlatPack::Button::Component.new(
+    text: "Register",
+    style: :primary
+  ) %>
 <% end %>
 ```
 
@@ -405,6 +634,49 @@ FlatPack::TextArea::Component.new(
   name: String,               # Required
   rows: Integer,              # Optional, default: 3
   # ... same parameters as above
+)
+
+# NumberInput (adds min, max, step parameters)
+FlatPack::NumberInput::Component.new(
+  name: String,               # Required
+  value: Number,              # Optional, default: nil
+  min: Number,                # Optional, default: nil
+  max: Number,                # Optional, default: nil
+  step: Number,               # Optional, default: 1
+  placeholder: String,        # Optional, default: nil
+  label: String,              # Optional, default: nil
+  error: String,              # Optional, default: nil
+  disabled: Boolean,          # Optional, default: false
+  required: Boolean,          # Optional, default: false
+  **system_arguments          # Optional
+)
+
+# DateInput (adds min, max parameters, value accepts Date/Time)
+FlatPack::DateInput::Component.new(
+  name: String,               # Required
+  value: String/Date/Time,    # Optional, default: nil (auto-converts to YYYY-MM-DD)
+  min: String/Date,           # Optional, default: nil
+  max: String/Date,           # Optional, default: nil
+  placeholder: String,        # Optional, default: nil
+  label: String,              # Optional, default: nil
+  error: String,              # Optional, default: nil
+  disabled: Boolean,          # Optional, default: false
+  required: Boolean,          # Optional, default: false
+  **system_arguments          # Optional
+)
+
+# FileInput (adds accept, multiple, max_size, preview parameters)
+FlatPack::FileInput::Component.new(
+  name: String,               # Required
+  accept: String,             # Optional, default: nil (e.g., "image/*", ".pdf,.doc")
+  multiple: Boolean,          # Optional, default: false
+  max_size: Integer,          # Optional, default: nil (bytes)
+  preview: Boolean,           # Optional, default: true
+  label: String,              # Optional, default: nil
+  error: String,              # Optional, default: nil
+  disabled: Boolean,          # Optional, default: false
+  required: Boolean,          # Optional, default: false
+  **system_arguments          # Optional
 )
 ```
 

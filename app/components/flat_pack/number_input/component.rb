@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module FlatPack
-  module SearchInput
+  module NumberInput
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
@@ -15,6 +15,9 @@ module FlatPack
         required: false,
         label: nil,
         error: nil,
+        min: nil,
+        max: nil,
+        step: 1,
         **system_arguments
       )
         @custom_class = system_arguments[:class]
@@ -26,15 +29,19 @@ module FlatPack
         @required = required
         @label = label
         @error = error
+        @min = min
+        @max = max
+        @step = step
 
         validate_name!
+        validate_step!
       end
 
       def call
         content_tag(:div, class: wrapper_classes) do
           safe_join([
             render_label,
-            render_input_wrapper,
+            render_input,
             render_error
           ].compact)
         end
@@ -48,49 +55,8 @@ module FlatPack
         label_tag(input_id, @label, class: label_classes)
       end
 
-      def render_input_wrapper
-        content_tag(:div, class: "relative", data: {controller: "flat-pack--search-input"}) do
-          safe_join([
-            render_input,
-            render_clear_button
-          ])
-        end
-      end
-
       def render_input
         tag.input(**input_attributes)
-      end
-
-      def render_clear_button
-        content_tag(:button,
-          type: "button",
-          class: clear_button_classes,
-          data: {
-            action: "flat-pack--search-input#clear",
-            flat_pack__search_input_target: "clearButton"
-          },
-          aria: {label: "Clear search"}) do
-          render_x_icon
-        end
-      end
-
-      def render_x_icon
-        content_tag(:svg,
-          xmlns: "http://www.w3.org/2000/svg",
-          width: "16",
-          height: "16",
-          viewBox: "0 0 24 24",
-          fill: "none",
-          stroke: "currentColor",
-          "stroke-width": "2",
-          "stroke-linecap": "round",
-          "stroke-linejoin": "round",
-          class: "lucide lucide-x") do
-          safe_join([
-            tag.path(d: "M18 6 6 18"),
-            tag.path(d: "m6 6 12 12")
-          ])
-        end
       end
 
       def render_error
@@ -101,18 +67,17 @@ module FlatPack
 
       def input_attributes
         attrs = {
-          type: "search",
+          type: "number",
           name: @name,
           id: input_id,
           value: @value,
           placeholder: @placeholder,
           disabled: @disabled,
           required: @required,
-          class: input_classes,
-          data: {
-            flat_pack__search_input_target: "input",
-            action: "input->flat-pack--search-input#toggleClearButton"
-          }
+          min: @min,
+          max: @max,
+          step: @step,
+          class: input_classes
         }
 
         attrs[:aria] = {invalid: "true", describedby: error_id} if @error
@@ -139,7 +104,6 @@ module FlatPack
           "bg-[var(--color-background)]",
           "text-[var(--color-foreground)]",
           "px-3 py-2",
-          "pr-10",
           "text-sm",
           "transition-colors duration-[var(--transition-base)]",
           "placeholder:text-[var(--color-muted-foreground)]",
@@ -156,10 +120,6 @@ module FlatPack
         classes(*base_classes, @custom_class)
       end
 
-      def clear_button_classes
-        "absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] transition-colors hidden"
-      end
-
       def error_classes
         "mt-1 text-sm text-[var(--color-warning)]"
       end
@@ -174,6 +134,15 @@ module FlatPack
 
       def validate_name!
         raise ArgumentError, "name is required" if @name.nil? || @name.to_s.strip.empty?
+      end
+
+      def validate_step!
+        return if @step.nil?
+
+        step_value = @step.to_f
+        if step_value <= 0
+          raise ArgumentError, "step must be a positive number"
+        end
       end
     end
   end
