@@ -141,7 +141,7 @@ flat_pack/
 ### 3. Table Component (`app/components/flat_pack/table/`)
 **Features:**
 - Data table with columns and actions
-- Block-based or attribute-based columns
+- Lambda-based columns with html parameter
 - Optional Stimulus controller for interactivity
 - Empty state handling
 - Responsive overflow scrolling
@@ -149,7 +149,7 @@ flat_pack/
 **Usage:**
 ```erb
 <%= render FlatPack::Table::Component.new(data: @users) do |table| %>
-  <% table.with_column(title: "Name", attribute: :name) %>
+  <% table.column(title: "Name", html: ->(user) { user.name }) %>
   <% table.with_action(text: "Edit", url: ->(user) { edit_user_path(user) }) %>
 <% end %>
 ```

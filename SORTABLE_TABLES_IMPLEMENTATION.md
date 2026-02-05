@@ -27,7 +27,7 @@ This document summarizes the implementation of sortable table functionality for 
 
 **Key Methods:**
 ```ruby
-def initialize(title:, attribute: nil, html: nil, sortable: false, sort_key: nil, &block)
+def initialize(title:, html:, sortable: false, sort_key: nil, &block)
 def render_header(current_sort: nil, current_direction: nil, base_url: nil)
 def sort_link(current_sort, current_direction, base_url)
 def calculate_new_direction(current_sort, current_direction)
@@ -143,10 +143,10 @@ end
   direction: params[:direction],
   base_url: request.path
 ) do |table| %>
-  <% table.with_column(title: "Name", attribute: :name, sortable: true) %>
-  <% table.with_column(title: "Email", attribute: :email, sortable: true) %>
-  <% table.with_column(title: "Status", attribute: :status, sortable: true) %>
-  <% table.with_column(title: "Created", attribute: :created_at, sortable: true) %>
+  <% table.column(title: "Name", html: ->(row) { row.name }, sortable: true, sort_key: :name) %>
+  <% table.column(title: "Email", html: ->(row) { row.email }, sortable: true, sort_key: :email) %>
+  <% table.column(title: "Status", html: ->(row) { row.status }, sortable: true, sort_key: :status) %>
+  <% table.column(title: "Created", html: ->(row) { row.created_at }, sortable: true, sort_key: :created_at) %>
 <% end %>
 ```
 
@@ -210,7 +210,7 @@ The implementation is fully backward compatible:
 **Existing tables continue to work:**
 ```erb
 <%= render FlatPack::Table::Component.new(data: @users) do |table| %>
-  <% table.with_column(title: "Name", attribute: :name) %>
+  <% table.column(title: "Name", html: ->(row) { row.name }) %>
 <% end %>
 ```
 
@@ -328,12 +328,11 @@ FlatPack::Table::Component.new(
 ### Column Component
 
 ```ruby
-table.with_column(
+table.column(
   title: String,         # Required - header text
-  attribute: Symbol,     # Optional - attribute to display
-  html: Proc,       # Optional - custom formatter
+  html: Proc,            # Required - custom formatter
   sortable: Boolean,     # Optional - enable sorting (default: false)
-  sort_key: Symbol,      # Optional - key for URL (default: attribute)
+  sort_key: Symbol,      # Required when sortable: true - key for URL params
   &block                 # Optional - custom block
 )
 ```

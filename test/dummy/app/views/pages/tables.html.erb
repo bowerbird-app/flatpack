@@ -14,9 +14,9 @@
       direction: params[:direction],
       base_url: request.path
     ) do |table| %>
-      <% table.with_column(title: "ID", attribute: :id, sortable: true) %>
-      <% table.with_column(title: "Name", attribute: :name, sortable: true) %>
-      <% table.with_column(title: "Email", attribute: :email, sortable: true) %>
+      <% table.column(title: "ID", html: ->(user) { user.id.to_s }, sortable: true, sort_key: :id) %>
+      <% table.column(title: "Name", html: ->(user) { user.name }, sortable: true, sort_key: :name) %>
+      <% table.column(title: "Email", html: ->(user) { user.email }, sortable: true, sort_key: :email) %>
     <% end %>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Table::Component.new(
   data: @users.first(5),
@@ -25,9 +25,9 @@
   direction: params[:direction],
   base_url: request.path
 ) do |table| %&gt;
-  &lt;% table.with_column(title: "ID", attribute: :id, sortable: true) %&gt;
-  &lt;% table.with_column(title: "Name", attribute: :name, sortable: true) %&gt;
-  &lt;% table.with_column(title: "Email", attribute: :email, sortable: true) %&gt;
+  &lt;% table.column(title: "ID", html: -&gt;(user) { user.id.to_s }, sortable: true, sort_key: :id) %&gt;
+  &lt;% table.column(title: "Name", html: -&gt;(user) { user.name }, sortable: true, sort_key: :name) %&gt;
+  &lt;% table.column(title: "Email", html: -&gt;(user) { user.email }, sortable: true, sort_key: :email) %&gt;
 &lt;% end %&gt;</code></pre>
   </section>
 
@@ -35,8 +35,8 @@
   <section class="mb-12">
     <h2 class="text-2xl font-semibold mb-4">Table with Formatted Columns</h2>
     <%= render FlatPack::Table::Component.new(data: @users.first(5)) do |table| %>
-      <% table.with_column(title: "Name", html: ->(user) { "<strong class=\"text-[var(--color-primary)]\">#{user.name}</strong>".html_safe }) %>
-      <% table.with_column(title: "Status", html: ->(user) {
+      <% table.column(title: "Name", html: ->(user) { "<strong class=\"text-[var(--color-primary)]\">#{user.name}</strong>".html_safe }) %>
+      <% table.column(title: "Status", html: ->(user) {
         badge_class = case user.status
         when 'active' then 'bg-green-100 text-green-800'
         when 'inactive' then 'bg-gray-100 text-gray-800'
@@ -44,11 +44,11 @@
         end
         "<span class=\"px-2 py-1 text-xs rounded #{badge_class}\">#{user.status.capitalize}</span>".html_safe
       }) %>
-      <% table.with_column(title: "Created", html: ->(user) { user.created_at.strftime("%b %d, %Y") }) %>
+      <% table.column(title: "Created", html: ->(user) { user.created_at.strftime("%b %d, %Y") }) %>
     <% end %>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Table::Component.new(data: @users) do |table| %&gt;
-  &lt;% table.with_column(title: "Name", html: -&gt;(user) { "&lt;strong class=\"text-[var(--color-primary)]\"&gt;#{user.name}&lt;/strong&gt;".html_safe }) %&gt;
-  &lt;% table.with_column(title: "Status", html: -&gt;(user) {
+  &lt;% table.column(title: "Name", html: -&gt;(user) { "&lt;strong class=\"text-[var(--color-primary)]\"&gt;#{user.name}&lt;/strong&gt;".html_safe }) %&gt;
+  &lt;% table.column(title: "Status", html: -&gt;(user) {
     badge_class = case user.status
     when 'active' then 'bg-green-100 text-green-800'
     when 'inactive' then 'bg-gray-100 text-gray-800'
@@ -56,7 +56,7 @@
     end
     "&lt;span class=\"px-2 py-1 text-xs rounded #{badge_class}\"&gt;#{user.status.capitalize}&lt;/span&gt;".html_safe
   }) %&gt;
-  &lt;% table.with_column(title: "Created", html: -&gt;(user) { user.created_at.strftime("%b %d, %Y") }) %&gt;
+  &lt;% table.column(title: "Created", html: -&gt;(user) { user.created_at.strftime("%b %d, %Y") }) %&gt;
 &lt;% end %&gt;</code></pre>
   </section>
 
@@ -64,16 +64,16 @@
   <section class="mb-12">
     <h2 class="text-2xl font-semibold mb-4">Table with Actions</h2>
     <%= render FlatPack::Table::Component.new(data: @users.first(5)) do |table| %>
-      <% table.with_column(title: "Name", attribute: :name) %>
-      <% table.with_column(title: "Email", attribute: :email) %>
+      <% table.column(title: "Name", html: ->(user) { user.name }) %>
+      <% table.column(title: "Email", html: ->(user) { user.email }) %>
       <% table.with_action(text: "View", url: "#", style: :ghost) %>
       <% table.with_action(text: "Edit", url: "#", style: :ghost) %>
       <% table.with_action(text: "Delete", url: "#", method: :delete, style: :ghost,
           data: { turbo_confirm: "Are you sure?" }) %>
     <% end %>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Table::Component.new(data: @users) do |table| %&gt;
-  &lt;% table.with_column(title: "Name", attribute: :name) %&gt;
-  &lt;% table.with_column(title: "Email", attribute: :email) %&gt;
+  &lt;% table.column(title: "Name", html: -&gt;(user) { user.name }) %&gt;
+  &lt;% table.column(title: "Email", html: -&gt;(user) { user.email }) %&gt;
   &lt;% table.with_action(text: "View", url: "#", style: :ghost) %&gt;
   &lt;% table.with_action(text: "Edit", url: "#", style: :ghost) %&gt;
   &lt;% table.with_action(text: "Delete", url: "#", method: :delete, style: :ghost,
@@ -85,12 +85,12 @@
   <section class="mb-12">
     <h2 class="text-2xl font-semibold mb-4">Empty Table</h2>
     <%= render FlatPack::Table::Component.new(data: []) do |table| %>
-      <% table.with_column(title: "Name", attribute: :name) %>
-      <% table.with_column(title: "Email", attribute: :email) %>
+      <% table.column(title: "Name", html: ->(user) { user.name }) %>
+      <% table.column(title: "Email", html: ->(user) { user.email }) %>
     <% end %>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Table::Component.new(data: []) do |table| %&gt;
-  &lt;% table.with_column(title: "Name", attribute: :name) %&gt;
-  &lt;% table.with_column(title: "Email", attribute: :email) %&gt;
+  &lt;% table.column(title: "Name", html: -&gt;(user) { user.name }) %&gt;
+  &lt;% table.column(title: "Email", html: -&gt;(user) { user.email }) %&gt;
 &lt;% end %&gt;</code></pre>
   </section>
 
@@ -98,10 +98,10 @@
   <section class="mb-12">
     <h2 class="text-2xl font-semibold mb-4">Large Table (All <%= @users.count %> Users)</h2>
     <%= render FlatPack::Table::Component.new(data: @users) do |table| %>
-      <% table.with_column(title: "ID", attribute: :id) %>
-      <% table.with_column(title: "Name", attribute: :name) %>
-      <% table.with_column(title: "Email", attribute: :email) %>
-      <% table.with_column(title: "Status", html: ->(user) {
+      <% table.column(title: "ID", html: ->(user) { user.id.to_s }) %>
+      <% table.column(title: "Name", html: ->(user) { user.name }) %>
+      <% table.column(title: "Email", html: ->(user) { user.email }) %>
+      <% table.column(title: "Status", html: ->(user) {
         badge_class = case user.status
         when 'active' then 'bg-green-100 text-green-800'
         when 'inactive' then 'bg-gray-100 text-gray-800'
@@ -109,21 +109,22 @@
         end
         "<span class=\"px-2 py-1 text-xs rounded #{badge_class}\">#{user.status.capitalize}</span>".html_safe
       }) %>
-      <% table.with_column(title: "Created", html: ->(user) { user.created_at.strftime("%b %d, %Y") }) %>
+      <% table.column(title: "Created", html: ->(user) { user.created_at.strftime("%b %d, %Y") }) %>
       <% table.with_action(text: "Edit", url: "#", style: :ghost) %>
     <% end %>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Table::Component.new(data: @users) do |table| %&gt;
-  &lt;% table.with_column(title: "ID", attribute: :id) %&gt;
-  &lt;% table.with_column(title: "Name", attribute: :name) %&gt;
-  &lt;% table.with_column(title: "Email", attribute: :email) %&gt;
-  &lt;% table.with_column(title: "Status") do |user| %&gt;
-    &lt;span class="px-2 py-1 text-xs rounded"&gt;
-      &lt;%= user.status.capitalize %&gt;
-    &lt;/span&gt;
-  &lt;% end %&gt;
-  &lt;% table.with_column(title: "Created") do |user| %&gt;
-    &lt;%= user.created_at.strftime("%b %d, %Y") %&gt;
-  &lt;% end %&gt;
+  &lt;% table.column(title: "ID", html: -&gt;(user) { user.id.to_s }) %&gt;
+  &lt;% table.column(title: "Name", html: -&gt;(user) { user.name }) %&gt;
+  &lt;% table.column(title: "Email", html: -&gt;(user) { user.email }) %&gt;
+  &lt;% table.column(title: "Status", html: -&gt;(user) {
+    badge_class = case user.status
+    when 'active' then 'bg-green-100 text-green-800'
+    when 'inactive' then 'bg-gray-100 text-gray-800'
+    else 'bg-yellow-100 text-yellow-800'
+    end
+    "&lt;span class=\"px-2 py-1 text-xs rounded #{badge_class}\"&gt;#{user.status.capitalize}&lt;/span&gt;".html_safe
+  }) %&gt;
+  &lt;% table.column(title: "Created", html: -&gt;(user) { user.created_at.strftime("%b %d, %Y") }) %&gt;
   &lt;% table.with_action(text: "Edit", url: "#", style: :ghost) %&gt;
 &lt;% end %&gt;</code></pre>
   </section>
@@ -141,10 +142,10 @@
       direction: params[:direction],
       base_url: request.path
     ) do |table| %>
-      <% table.with_column(title: "ID", attribute: :id, sortable: true) %>
-      <% table.with_column(title: "Name", attribute: :name, sortable: true) %>
-      <% table.with_column(title: "Email", attribute: :email, sortable: true) %>
-      <% table.with_column(title: "Status", attribute: :status, sortable: true, html: ->(user) {
+      <% table.column(title: "ID", html: ->(user) { user.id.to_s }, sortable: true, sort_key: :id) %>
+      <% table.column(title: "Name", html: ->(user) { user.name }, sortable: true, sort_key: :name) %>
+      <% table.column(title: "Email", html: ->(user) { user.email }, sortable: true, sort_key: :email) %>
+      <% table.column(title: "Status", sortable: true, sort_key: :status, html: ->(user) {
         badge_class = case user.status
         when 'active' then 'bg-green-100 text-green-800'
         when 'inactive' then 'bg-gray-100 text-gray-800'
@@ -152,7 +153,7 @@
         end
         "<span class=\"px-2 py-1 text-xs rounded #{badge_class}\">#{user.status.capitalize}</span>".html_safe
       }) %>
-      <% table.with_column(title: "Created", attribute: :created_at, sortable: true, html: ->(user) { user.created_at.strftime("%b %d, %Y") }) %>
+      <% table.column(title: "Created", sortable: true, sort_key: :created_at, html: ->(user) { user.created_at.strftime("%b %d, %Y") }) %>
       <% table.with_action(text: "Edit", url: "#", style: :ghost) %>
     <% end %>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Table::Component.new(
@@ -162,11 +163,11 @@
   direction: params[:direction],
   base_url: request.path
 ) do |table| %&gt;
-  &lt;% table.with_column(title: "ID", attribute: :id, sortable: true) %&gt;
-  &lt;% table.with_column(title: "Name", attribute: :name, sortable: true) %&gt;
-  &lt;% table.with_column(title: "Email", attribute: :email, sortable: true) %&gt;
-  &lt;% table.with_column(title: "Status", attribute: :status, sortable: true) %&gt;
-  &lt;% table.with_column(title: "Created", attribute: :created_at, sortable: true) %&gt;
+  &lt;% table.column(title: "ID", html: -&gt;(user) { user.id.to_s }, sortable: true, sort_key: :id) %&gt;
+  &lt;% table.column(title: "Name", html: -&gt;(user) { user.name }, sortable: true, sort_key: :name) %&gt;
+  &lt;% table.column(title: "Email", html: -&gt;(user) { user.email }, sortable: true, sort_key: :email) %&gt;
+  &lt;% table.column(title: "Status", html: -&gt;(user) { ... }, sortable: true, sort_key: :status) %&gt;
+  &lt;% table.column(title: "Created", html: -&gt;(user) { ... }, sortable: true, sort_key: :created_at) %&gt;
 &lt;% end %&gt;</code></pre>
   </section>
 </div>

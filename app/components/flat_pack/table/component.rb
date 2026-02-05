@@ -6,6 +6,9 @@ module FlatPack
       renders_many :columns, ColumnComponent
       renders_many :actions, ActionComponent
 
+      # Provide column as the main method, with_column for backwards compatibility
+      alias_method :column, :with_column
+
       def initialize(data: [], stimulus: false, turbo_frame: nil, sort: nil, direction: nil, base_url: nil, **system_arguments)
         super(**system_arguments)
         @data = data

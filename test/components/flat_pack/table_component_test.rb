@@ -22,8 +22,8 @@ module FlatPack
 
       def test_renders_table_with_columns
         render_inline(Component.new(data: @users)) do |component|
-          component.with_column(title: "Name", attribute: :name)
-          component.with_column(title: "Email", attribute: :email)
+          component.column(title: "Name", html: ->(user) { user.name })
+          component.column(title: "Email", html: ->(user) { user.email })
         end
 
         assert_selector "table"
@@ -35,7 +35,7 @@ module FlatPack
 
       def test_renders_table_with_block_columns
         render_inline(Component.new(data: @users)) do |component|
-          component.with_column(title: "Name", html: ->(user) { user.name.upcase })
+          component.column(title: "Name", html: ->(user) { user.name.upcase })
         end
 
         assert_selector "td", text: "ALICE"
@@ -44,7 +44,7 @@ module FlatPack
 
       def test_renders_table_with_actions
         render_inline(Component.new(data: @users)) do |component|
-          component.with_column(title: "Name", attribute: :name)
+          component.column(title: "Name", html: ->(user) { user.name })
           component.with_action(text: "Edit", url: ->(user) { "/users/#{user.id}/edit" })
         end
 
@@ -55,7 +55,7 @@ module FlatPack
 
       def test_renders_table_with_stimulus_controller
         render_inline(Component.new(data: @users, stimulus: true)) do |component|
-          component.with_column(title: "Name", attribute: :name)
+          component.column(title: "Name", html: ->(user) { user.name })
         end
 
         assert_selector "div[data-controller='flat-pack--table']"
@@ -63,7 +63,7 @@ module FlatPack
 
       def test_renders_custom_action_block
         render_inline(Component.new(data: @users)) do |component|
-          component.with_column(title: "Name", attribute: :name)
+          component.column(title: "Name", html: ->(user) { user.name })
           component.with_action(html: ->(user) { "<span class=\"custom-action\">Custom #{user.name}</span>".html_safe })
         end
 
@@ -78,8 +78,8 @@ module FlatPack
 
       def test_empty_state_spans_all_columns
         render_inline(Component.new(data: [])) do |component|
-          component.with_column(title: "Name")
-          component.with_column(title: "Email")
+          component.column(title: "Name", html: ->(user) { user.name })
+          component.column(title: "Email", html: ->(user) { user.email })
           component.with_action(label: "Edit")
         end
 
@@ -93,8 +93,8 @@ module FlatPack
           direction: "asc",
           base_url: "/users"
         )) do |component|
-          component.with_column(title: "Name", attribute: :name, sortable: true)
-          component.with_column(title: "Email", attribute: :email, sortable: true)
+          component.column(title: "Name", html: ->(user) { user.name }, sortable: true, sort_key: :name)
+          component.column(title: "Email", html: ->(user) { user.email }, sortable: true, sort_key: :email)
         end
 
         assert_selector "th a[href*='sort=name']"
@@ -108,7 +108,7 @@ module FlatPack
           direction: "asc",
           base_url: "/users"
         )) do |component|
-          component.with_column(title: "Name", attribute: :name, sortable: true)
+          component.column(title: "Name", html: ->(user) { user.name }, sortable: true, sort_key: :name)
         end
 
         # When currently sorted ascending, link should be for descending
@@ -122,8 +122,8 @@ module FlatPack
           direction: "asc",
           base_url: "/users"
         )) do |component|
-          component.with_column(title: "Name", attribute: :name, sortable: true)
-          component.with_column(title: "Email", attribute: :email, sortable: true)
+          component.column(title: "Name", html: ->(user) { user.name }, sortable: true, sort_key: :name)
+          component.column(title: "Email", html: ->(user) { user.email }, sortable: true, sort_key: :email)
         end
 
         # Should show ascending arrow for name column
@@ -139,7 +139,7 @@ module FlatPack
           direction: "desc",
           base_url: "/users"
         )) do |component|
-          component.with_column(title: "Name", attribute: :name, sortable: true)
+          component.column(title: "Name", html: ->(user) { user.name }, sortable: true, sort_key: :name)
         end
 
         # Should show descending arrow for name column
@@ -153,8 +153,8 @@ module FlatPack
           direction: "asc",
           base_url: "/users"
         )) do |component|
-          component.with_column(title: "Name", attribute: :name, sortable: true)
-          component.with_column(title: "Email", attribute: :email, sortable: false)
+          component.column(title: "Name", html: ->(user) { user.name }, sortable: true, sort_key: :name)
+          component.column(title: "Email", html: ->(user) { user.email }, sortable: false)
         end
 
         assert_selector "th a", text: "Name"
@@ -170,7 +170,7 @@ module FlatPack
           direction: "asc",
           base_url: "/users"
         )) do |component|
-          component.with_column(title: "Name", attribute: :name, sortable: true)
+          component.column(title: "Name", html: ->(user) { user.name }, sortable: true, sort_key: :name)
         end
 
         assert_selector "th a[data-turbo-frame='sortable_table']"
@@ -184,7 +184,7 @@ module FlatPack
           direction: "asc",
           base_url: "/users"
         )) do |component|
-          component.with_column(title: "Name", attribute: :name, sortable: true)
+          component.column(title: "Name", html: ->(user) { user.name }, sortable: true, sort_key: :name)
         end
 
         assert_selector "th a[data-turbo-frame='custom_users_table']"
@@ -196,7 +196,7 @@ module FlatPack
           data: @users,
           turbo_frame: "sortable_table"
         )) do |component|
-          component.with_column(title: "Name", attribute: :name)
+          component.column(title: "Name", html: ->(user) { user.name })
         end
 
         assert_selector "turbo-frame#sortable_table table"
@@ -204,7 +204,7 @@ module FlatPack
 
       def test_does_not_wrap_in_turbo_frame_when_not_specified
         render_inline(Component.new(data: @users)) do |component|
-          component.with_column(title: "Name", attribute: :name)
+          component.column(title: "Name", html: ->(user) { user.name })
         end
 
         assert_no_selector "turbo-frame"
@@ -218,9 +218,9 @@ module FlatPack
           direction: "asc",
           base_url: "/users"
         )) do |component|
-          component.with_column(
+          component.column(
             title: "Name",
-            attribute: :name,
+            html: ->(user) { user.name },
             sortable: true,
             sort_key: :custom_sort
           )
@@ -238,10 +238,11 @@ module FlatPack
           direction: "asc",
           base_url: "/users"
         )) do |component|
-          component.with_column(
+          component.column(
             title: "Name",
-            attribute: :name,
-            sortable: true
+            html: ->(user) { user.name },
+            sortable: true,
+            sort_key: :name
           )
         end
 
@@ -255,10 +256,10 @@ module FlatPack
           direction: "asc",
           base_url: "/users"
         )) do |component|
-          component.with_column(
+          component.column(
             title: "Name",
-            attribute: :name,
             sortable: true,
+            sort_key: :name,
             html: ->(user) { user.name.upcase }
           )
         end

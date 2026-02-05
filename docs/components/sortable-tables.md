@@ -45,9 +45,9 @@ Render the table with sortable columns:
   direction: params[:direction],
   base_url: request.path
 ) do |table| %>
-  <% table.with_column(title: "Name", attribute: :name, sortable: true) %>
-  <% table.with_column(title: "Email", attribute: :email, sortable: true) %>
-  <% table.with_column(title: "Created", attribute: :created_at, sortable: true) %>
+  <% table.column(title: "Name", html: ->(row) { row.name }, sortable: true, sort_key: :name) %>
+  <% table.column(title: "Email", html: ->(row) { row.email }, sortable: true, sort_key: :email) %>
+  <% table.column(title: "Created", html: ->(row) { row.created_at }, sortable: true, sort_key: :created_at) %>
 <% end %>
 ```
 
@@ -67,30 +67,31 @@ Column parameters for sorting:
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `sortable` | Boolean | `false` | Enable sorting for this column |
-| `sort_key` | Symbol | `attribute` | Key to use in sort URL (defaults to attribute) |
+| `sort_key` | Symbol | **required when sortable** | Key to use in sort URL parameters |
 
 ## Column Configuration
 
 ### Making Columns Sortable
 
-Add `sortable: true` to any column:
+Add `sortable: true` and `sort_key` to any column:
 
 ```erb
-<% table.with_column(
+<% table.column(
   title: "Name",
-  attribute: :name,
-  sortable: true
+  html: ->(row) { row.name },
+  sortable: true,
+  sort_key: :name
 ) %>
 ```
 
 ### Custom Sort Key
 
-Use a different sort key than the display attribute:
+Use a different sort key than what is displayed:
 
 ```erb
-<% table.with_column(
+<% table.column(
   title: "Full Name",
-  attribute: :full_name,
+  html: ->(row) { row.full_name },
   sortable: true,
   sort_key: :last_name  # Sort by last name instead
 ) %>
@@ -101,10 +102,8 @@ Use a different sort key than the display attribute:
 Combine sorting with custom formatting:
 
 ```erb
-<% table.with_column(
+<% table.column(
   title: "Status",
-  attribute: :status,
-  sortable: true,
   html: ->(user) {
     badge_class = case user.status
     when 'active' then 'bg-green-100 text-green-800'
@@ -113,7 +112,9 @@ Combine sorting with custom formatting:
     "<span class=\"px-2 py-1 text-xs rounded #{badge_class}\">
       #{user.status.capitalize}
     </span>".html_safe
-  }
+  },
+  sortable: true,
+  sort_key: :status
 ) %>
 ```
 
@@ -161,38 +162,39 @@ end
   base_url: products_path
 ) do |table| %>
   
-  <% table.with_column(
+  <% table.column(
     title: "Name",
-    attribute: :name,
-    sortable: true
+    html: ->(product) { product.name },
+    sortable: true,
+    sort_key: :name
   ) %>
   
-  <% table.with_column(
+  <% table.column(
     title: "Price",
-    attribute: :price,
+    html: ->(product) { number_to_currency(product.price) },
     sortable: true,
-    html: ->(product) { number_to_currency(product.price) }
+    sort_key: :price
   ) %>
   
-  <% table.with_column(
+  <% table.column(
     title: "Stock",
-    attribute: :stock,
-    sortable: true
+    html: ->(product) { product.stock },
+    sortable: true,
+    sort_key: :stock
   ) %>
   
-  <% table.with_column(
+  <% table.column(
     title: "Category",
-    attribute: :category_name,
+    html: ->(product) { product.category.name },
     sortable: true,
-    sort_key: :category_name,
-    html: ->(product) { product.category.name }
+    sort_key: :category_name
   ) %>
   
-  <% table.with_column(
+  <% table.column(
     title: "Created",
-    attribute: :created_at,
+    html: ->(product) { product.created_at.strftime("%b %d, %Y") },
     sortable: true,
-    html: ->(product) { product.created_at.strftime("%b %d, %Y") }
+    sort_key: :created_at
   ) %>
   
   <% table.with_action(
@@ -254,7 +256,8 @@ end
   direction: params[:direction],
   base_url: users_path
 ) do |table| %>
-  <!-- columns -->
+  <% table.column(title: "Name", html: ->(row) { row.name }, sortable: true, sort_key: :name) %>
+  <% table.column(title: "Email", html: ->(row) { row.email }, sortable: true, sort_key: :email) %>
 <% end %>
 
 <%== pagy_nav(@pagy) %>
@@ -374,7 +377,7 @@ class TableComponentTest < ViewComponent::TestCase
       direction: "asc",
       base_url: "/users"
     ) do |table|
-      table.with_column(title: "Name", attribute: :name, sortable: true)
+      table.column(title: "Name", html: ->(row) { row.name }, sortable: true, sort_key: :name)
     end
     
     assert_selector "th a[href*='sort=name']"
@@ -390,7 +393,7 @@ class TableComponentTest < ViewComponent::TestCase
       direction: "asc",
       base_url: "/users"
     ) do |table|
-      table.with_column(title: "Name", attribute: :name, sortable: true)
+      table.column(title: "Name", html: ->(row) { row.name }, sortable: true, sort_key: :name)
     end
     
     # When currently asc, link should be for desc
@@ -518,7 +521,7 @@ end
 
 **Solutions**:
 - Verify `sort` and `direction` are passed to component
-- Check that values match column's `sort_key` or `attribute`
+- Check that values match column's `sort_key`
 - Inspect browser to ensure Unicode arrows are rendering
 
 ### Full Page Reload
@@ -611,12 +614,11 @@ FlatPack::Table::Component.new(
 ### Sortable Column Configuration
 
 ```ruby
-table.with_column(
+table.column(
   title: String,              # Required
-  attribute: Symbol,          # Optional
+  html: Proc,                 # Required - lambda that receives row and returns content
   sortable: Boolean,          # Optional, default: false
-  sort_key: Symbol,           # Optional, defaults to attribute
-  html: Proc,            # Optional
+  sort_key: Symbol,           # Required when sortable is true
   &block                      # Optional
 )
 ```
