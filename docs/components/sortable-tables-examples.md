@@ -430,12 +430,11 @@ FlatPack::Table::Component.new(
 ### Sortable Column Props
 
 ```ruby
-table.with_column(
+table.column(
   title: String,              # Required
-  attribute: Symbol,          # Optional
   sortable: Boolean,          # Optional, default: false
-  sort_key: Symbol,           # Optional, defaults to attribute
-  html: Proc,            # Optional
+  sort_key: Symbol,           # Required when sortable: true
+  html: Proc,                 # Optional
   &block                      # Optional
 )
 ```

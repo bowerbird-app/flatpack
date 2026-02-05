@@ -154,7 +154,7 @@ Allows overriding without `!important`.
 
 ```erb
 <%= render FlatPack::Table::Component.new(data: @users) do |table| %>
-  <% table.with_column(title: "Name", attribute: :name) %>
+  <% table.column(title: "Name", html: ->(row) { row.name }) %>
   <% table.with_action(text: "Edit", url: ...) %>
 <% end %>
 ```

@@ -55,8 +55,8 @@ Schemes: `:primary`, `:secondary`, `:ghost`
 
 ```erb
 <%= render FlatPack::Table::Component.new(data: @users) do |table| %>
-  <% table.with_column(title: "Name", attribute: :name) %>
-  <% table.with_column(title: "Email", attribute: :email) %>
+  <% table.column(title: "Name", html: ->(user) { user.name }) %>
+  <% table.column(title: "Email", html: ->(user) { user.email }) %>
   <% table.with_action(text: "Edit", url: ->(user) { edit_user_path(user) }) %>
 <% end %>
 ```
