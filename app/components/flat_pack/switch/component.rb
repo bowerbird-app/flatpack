@@ -56,7 +56,7 @@ module FlatPack
       end
 
       def render_switch_container
-        content_tag(:label, class: "relative inline-flex items-center cursor-pointer #{@disabled ? 'opacity-50 cursor-not-allowed' : ''}") do
+        content_tag(:label, class: "relative inline-flex items-center cursor-pointer #{"opacity-50 cursor-not-allowed" if @disabled}") do
           safe_join([
             render_input,
             render_track,
@@ -72,7 +72,7 @@ module FlatPack
       def render_track
         content_tag(:div, nil, class: track_classes, role: "switch", "aria-checked": @checked.to_s)
       end
-      
+
       def render_thumb
         content_tag(:div, nil, class: thumb_classes)
       end
@@ -90,15 +90,13 @@ module FlatPack
       end
 
       def input_attributes
-        merge_attributes(**{
-          type: "checkbox",
+        merge_attributes(type: "checkbox",
           name: @name,
           value: "1",
           checked: @checked,
           disabled: @disabled,
           required: @required,
-          class: "sr-only peer"
-        })
+          class: "sr-only peer")
       end
 
       def track_classes
@@ -114,9 +112,9 @@ module FlatPack
 
       def thumb_classes
         size_map = {
-          sm: { width: "w-4", height: "h-4", translate: "peer-checked:translate-x-4" },
-          md: { width: "w-5", height: "h-5", translate: "peer-checked:translate-x-5" },
-          lg: { width: "w-6", height: "h-6", translate: "peer-checked:translate-x-5" }
+          sm: {width: "w-4", height: "h-4", translate: "peer-checked:translate-x-4"},
+          md: {width: "w-5", height: "h-5", translate: "peer-checked:translate-x-5"},
+          lg: {width: "w-6", height: "h-6", translate: "peer-checked:translate-x-5"}
         }
 
         size_config = size_map.fetch(@size)

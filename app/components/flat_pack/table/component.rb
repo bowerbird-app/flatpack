@@ -62,13 +62,13 @@ module FlatPack
         tag.thead class: "bg-[var(--color-muted)]" do
           tag.tr do
             safe_join([
-              columns.map { |column| 
+              columns.map { |column|
                 column.render_header(
-                  current_sort: @sort, 
+                  current_sort: @sort,
                   current_direction: @direction,
                   base_url: @base_url,
                   turbo_frame: @turbo_frame
-                ) 
+                )
               },
               (tag.th("Actions", class: header_cell_classes) if actions.any?)
             ].flatten.compact)

@@ -39,7 +39,7 @@ class PagesController < ApplicationController
     return users unless valid_columns.include?(sort_column)
 
     # Validate direction
-    direction = direction == "desc" ? "desc" : "asc"
+    direction = (direction == "desc") ? "desc" : "asc"
 
     # Sort users
     sorted = users.sort_by do |user|
@@ -48,7 +48,7 @@ class PagesController < ApplicationController
       value.nil? ? "" : value
     end
 
-    direction == "desc" ? sorted.reverse : sorted
+    (direction == "desc") ? sorted.reverse : sorted
   end
 
   def inputs
