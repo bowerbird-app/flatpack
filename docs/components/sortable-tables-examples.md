@@ -432,9 +432,9 @@ FlatPack::Table::Component.new(
 ```ruby
 table.column(
   title: String,              # Required
+  html: Proc,                 # Required
   sortable: Boolean,          # Optional, default: false
-  sort_key: Symbol,           # Required when sortable: true
-  html: Proc,                 # Optional
+  sort_key: Symbol,           # Required when sortable is true
   &block                      # Optional
 )
 ```

@@ -50,9 +50,9 @@ Use the `html` parameter with a lambda for simple attribute display.
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `title` | String | **required** | Column header text |
-| `html` | Proc | `nil` | Custom html lambda/proc |
+| `html` | Proc | **required** | Custom html lambda/proc |
 | `sortable` | Boolean | `false` | Enable sorting for this column |
-| `sort_key` | Symbol | `nil` | Key to use in sort URL (required when sortable is true) |
+| `sort_key` | Symbol | **(required when sortable)** | Key to use in sort URL |
 
 ## Actions
 
@@ -406,9 +406,9 @@ FlatPack::Table::Component.new(
 ```ruby
 table.column(
   title: String,              # Required
-  html: Proc,                 # Optional
+  html: Proc,                 # Required
   sortable: Boolean,          # Optional, default: false
-  sort_key: Symbol,           # Optional, required when sortable is true
+  sort_key: Symbol,           # Required when sortable is true
   &block                      # Optional
 )
 ```
