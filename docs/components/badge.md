@@ -13,7 +13,7 @@ The Badge component renders small status indicators, counts, labels, and tags fo
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `text` | String | **required** | Badge text content |
-| `variant` | Symbol | `:default` | Visual variant (`:default`, `:primary`, `:success`, `:warning`, `:info`) |
+| `style` | Symbol | `:default` | Visual style (`:default`, `:primary`, `:success`, `:warning`, `:info`) |
 | `size` | Symbol | `:md` | Badge size (`:sm`, `:md`, `:lg`) |
 | `dot` | Boolean | `false` | Show indicator dot |
 | `removable` | Boolean | `false` | Show remove/close button |
@@ -34,7 +34,7 @@ Brand color, primary actions or features.
 ```erb
 <%= render FlatPack::Badge::Component.new(
   text: "New",
-  variant: :primary
+  style: :primary
 ) %>
 ```
 
@@ -44,7 +44,7 @@ Positive status, completed actions.
 ```erb
 <%= render FlatPack::Badge::Component.new(
   text: "Active",
-  variant: :success
+  style: :success
 ) %>
 ```
 
@@ -54,7 +54,7 @@ Caution, pending status.
 ```erb
 <%= render FlatPack::Badge::Component.new(
   text: "Pending",
-  variant: :warning
+  style: :warning
 ) %>
 ```
 
@@ -64,7 +64,7 @@ Informational badges.
 ```erb
 <%= render FlatPack::Badge::Component.new(
   text: "Beta",
-  variant: :info
+  style: :info
 ) %>
 ```
 
@@ -106,7 +106,7 @@ Show a status dot alongside the text.
 ```erb
 <%= render FlatPack::Badge::Component.new(
   text: "Online",
-  variant: :success,
+  style: :success,
   dot: true
 ) %>
 ```
@@ -125,14 +125,14 @@ Show a close button for removable tags.
 
 ### Status Indicators
 ```erb
-<%= render FlatPack::Badge::Component.new(text: "Active", variant: :success) %>
-<%= render FlatPack::Badge::Component.new(text: "Pending", variant: :warning) %>
-<%= render FlatPack::Badge::Component.new(text: "Completed", variant: :primary) %>
+<%= render FlatPack::Badge::Component.new(text: "Active", style: :success) %>
+<%= render FlatPack::Badge::Component.new(text: "Pending", style: :warning) %>
+<%= render FlatPack::Badge::Component.new(text: "Completed", style: :primary) %>
 ```
 
 ### Notification Counts
 ```erb
-<%= render FlatPack::Badge::Component.new(text: "12 new", variant: :primary) %>
+<%= render FlatPack::Badge::Component.new(text: "12 new", style: :primary) %>
 ```
 
 ### Category Tags
@@ -144,16 +144,16 @@ Show a close button for removable tags.
 
 ### User Roles
 ```erb
-<%= render FlatPack::Badge::Component.new(text: "Admin", variant: :primary) %>
-<%= render FlatPack::Badge::Component.new(text: "Editor", variant: :default) %>
-<%= render FlatPack::Badge::Component.new(text: "Viewer", variant: :default) %>
+<%= render FlatPack::Badge::Component.new(text: "Admin", style: :primary) %>
+<%= render FlatPack::Badge::Component.new(text: "Editor", style: :default) %>
+<%= render FlatPack::Badge::Component.new(text: "Viewer", style: :default) %>
 ```
 
 ### Feature Flags
 ```erb
-<%= render FlatPack::Badge::Component.new(text: "Beta", variant: :info) %>
-<%= render FlatPack::Badge::Component.new(text: "New", variant: :primary) %>
-<%= render FlatPack::Badge::Component.new(text: "Experimental", variant: :warning) %>
+<%= render FlatPack::Badge::Component.new(text: "Beta", style: :info) %>
+<%= render FlatPack::Badge::Component.new(text: "New", style: :primary) %>
+<%= render FlatPack::Badge::Component.new(text: "Experimental", style: :warning) %>
 ```
 
 ## System Arguments
@@ -181,6 +181,6 @@ All standard HTML attributes are supported via `**system_arguments`:
 
 ```ruby
 # test/components/flat_pack/badge_component_test.rb
-render_inline(FlatPack::Badge::Component.new(text: "Test", variant: :success))
+render_inline(FlatPack::Badge::Component.new(text: "Test", style: :success))
 assert_selector "span", text: "Test"
 ```

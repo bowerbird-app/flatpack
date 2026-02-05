@@ -25,7 +25,7 @@ module FlatPack
 
       def initialize(
         text:,
-        variant: :default,
+        style: :default,
         size: :md,
         dot: false,
         removable: false,
@@ -33,13 +33,13 @@ module FlatPack
       )
         super(**system_arguments)
         @text = text
-        @variant = variant.to_sym
+        @style = style.to_sym
         @size = size.to_sym
         @dot = dot
         @removable = removable
 
         validate_text!
-        validate_variant!
+        validate_style!
         validate_size!
       end
 
@@ -92,7 +92,7 @@ module FlatPack
           "inline-flex items-center gap-1",
           "rounded-full font-medium",
           "transition-colors duration-[var(--transition-base)]",
-          VARIANTS.fetch(@variant),
+          VARIANTS.fetch(@style),
           SIZES.fetch(@size)
         )
       end
@@ -106,9 +106,9 @@ module FlatPack
         raise ArgumentError, "text is required"
       end
 
-      def validate_variant!
-        return if VARIANTS.key?(@variant)
-        raise ArgumentError, "Invalid variant: #{@variant}. Must be one of: #{VARIANTS.keys.join(", ")}"
+      def validate_style!
+        return if VARIANTS.key?(@style)
+        raise ArgumentError, "Invalid style: #{@style}. Must be one of: #{VARIANTS.keys.join(", ")}"
       end
 
       def validate_size!

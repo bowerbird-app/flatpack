@@ -27,39 +27,39 @@ module FlatPack
         assert_selector "p", text: "Your changes have been saved."
       end
 
-      def test_renders_info_variant
-        render_inline(Component.new(title: "Info", variant: :info))
+      def test_renders_info_style
+        render_inline(Component.new(title: "Info", style: :info))
 
         assert_selector "div[role='alert']"
         assert_includes page.native.to_html, "border-blue-500"
         assert_includes page.native.to_html, "bg-blue-50"
       end
 
-      def test_renders_success_variant
-        render_inline(Component.new(title: "Success", variant: :success))
+      def test_renders_success_style
+        render_inline(Component.new(title: "Success", style: :success))
 
         assert_selector "div[role='alert']"
         assert_includes page.native.to_html, "border-green-500"
         assert_includes page.native.to_html, "bg-green-50"
       end
 
-      def test_renders_warning_variant
-        render_inline(Component.new(title: "Warning", variant: :warning))
+      def test_renders_warning_style
+        render_inline(Component.new(title: "Warning", style: :warning))
 
         assert_selector "div[role='alert']"
         assert_includes page.native.to_html, "border-orange-500"
         assert_includes page.native.to_html, "bg-orange-50"
       end
 
-      def test_renders_danger_variant
-        render_inline(Component.new(title: "Danger", variant: :danger))
+      def test_renders_danger_style
+        render_inline(Component.new(title: "Danger", style: :danger))
 
         assert_selector "div[role='alert']"
         assert_includes page.native.to_html, "border-red-500"
         assert_includes page.native.to_html, "bg-red-50"
       end
 
-      def test_default_variant_is_info
+      def test_default_style_is_info
         render_inline(Component.new(title: "Default"))
 
         assert_includes page.native.to_html, "border-blue-500"
@@ -78,25 +78,25 @@ module FlatPack
       end
 
       def test_renders_info_icon
-        render_inline(Component.new(title: "Info", variant: :info))
+        render_inline(Component.new(title: "Info", style: :info))
 
         assert_selector "svg"
       end
 
       def test_renders_success_icon
-        render_inline(Component.new(title: "Success", variant: :success))
+        render_inline(Component.new(title: "Success", style: :success))
 
         assert_selector "svg"
       end
 
       def test_renders_warning_icon
-        render_inline(Component.new(title: "Warning", variant: :warning))
+        render_inline(Component.new(title: "Warning", style: :warning))
 
         assert_selector "svg"
       end
 
       def test_renders_danger_icon
-        render_inline(Component.new(title: "Danger", variant: :danger))
+        render_inline(Component.new(title: "Danger", style: :danger))
 
         assert_selector "svg"
       end
@@ -128,7 +128,7 @@ module FlatPack
       end
 
       def test_renders_with_slot_content
-        render_inline(Component.new(variant: :success)) do
+        render_inline(Component.new(style: :success)) do
           "<strong>Success!</strong> You've completed the tutorial.".html_safe
         end
 
@@ -147,9 +147,9 @@ module FlatPack
         refute_selector "p", text: "Description"
       end
 
-      def test_raises_error_for_invalid_variant
+      def test_raises_error_for_invalid_style
         assert_raises(ArgumentError) do
-          Component.new(title: "Invalid", variant: :invalid)
+          Component.new(title: "Invalid", style: :invalid)
         end
       end
 

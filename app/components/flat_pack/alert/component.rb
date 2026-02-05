@@ -36,7 +36,7 @@ module FlatPack
       def initialize(
         title: nil,
         description: nil,
-        variant: :info,
+        style: :info,
         dismissible: false,
         icon: true,
         **system_arguments
@@ -44,11 +44,11 @@ module FlatPack
         super(**system_arguments)
         @title = title
         @description = description
-        @variant = variant.to_sym
+        @style = style.to_sym
         @dismissible = dismissible
         @show_icon = icon
 
-        validate_variant!
+        validate_style!
       end
 
       def call
@@ -75,7 +75,7 @@ module FlatPack
         return unless @show_icon
 
         # Simple icon representation using SVG
-        icon_name = variant_config[:icon]
+        icon_name = style_config[:icon]
         content_tag(:div, class: "flex-shrink-0") do
           render_icon_svg(icon_name)
         end
@@ -156,19 +156,19 @@ module FlatPack
           "relative flex items-center gap-3",
           "rounded-[var(--radius-md)]",
           "border-l-4 p-4",
-          variant_config[:border],
-          variant_config[:bg],
-          variant_config[:text]
+          style_config[:border],
+          style_config[:bg],
+          style_config[:text]
         )
       end
 
-      def variant_config
-        VARIANTS.fetch(@variant)
+      def style_config
+        VARIANTS.fetch(@style)
       end
 
-      def validate_variant!
-        return if VARIANTS.key?(@variant)
-        raise ArgumentError, "Invalid variant: #{@variant}. Must be one of: #{VARIANTS.keys.join(", ")}"
+      def validate_style!
+        return if VARIANTS.key?(@style)
+        raise ArgumentError, "Invalid style: #{@style}. Must be one of: #{VARIANTS.keys.join(", ")}"
       end
     end
   end
