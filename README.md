@@ -51,6 +51,26 @@ See the [Installation Guide](docs/installation.md) for detailed setup instructio
 
 Schemes: `:primary`, `:secondary`, `:ghost`
 
+### Card Component
+
+```erb
+<%= render FlatPack::Card::Component.new(style: :elevated) do |card| %>
+  <% card.with_header do %>
+    <h3>Card Title</h3>
+  <% end %>
+  
+  <% card.with_body do %>
+    <p>Card content goes here.</p>
+  <% end %>
+  
+  <% card.with_footer do %>
+    <%= render FlatPack::Button::Component.new(text: "Action", style: :primary) %>
+  <% end %>
+<% end %>
+```
+
+Styles: `:default`, `:elevated`, `:outlined`, `:flat`, `:interactive`
+
 ### Table Component
 
 ```erb
@@ -121,6 +141,9 @@ Schemes: `:primary`, `:secondary`, `:ghost`
 - 🏗️ [Architecture](docs/architecture/)
 
 ## Components
+
+### Layout Components
+- **Card** - Flexible content containers with header, body, footer, and media slots
 
 ### Interactive Components
 - **Button** - Buttons and links with multiple schemes
