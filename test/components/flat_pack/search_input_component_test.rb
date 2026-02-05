@@ -39,15 +39,14 @@ module FlatPack
       def test_clear_button_initially_hidden
         render_inline(Component.new(name: "query"))
 
-        html = page.native.to_html
         # Clear button should have hidden class initially
-        assert_match(/Clear search.*?hidden/m, html)
+        assert_selector "button[aria-label='Clear search'].hidden"
       end
 
       def test_has_stimulus_controller
         render_inline(Component.new(name: "query"))
 
-        assert_selector "input[data-controller='flat-pack--search-input']"
+        assert_selector "div[data-controller='flat-pack--search-input']"
         assert_selector "input[data-flat-pack--search-input-target='input']"
       end
 

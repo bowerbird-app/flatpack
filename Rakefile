@@ -6,9 +6,19 @@ require "bundler/gem_tasks"
 APP_RAKEFILE = File.expand_path("test/dummy/Rakefile", __dir__)
 load "rails/tasks/engine.rake"
 
-load "rails/tasks/statistics.rake"
-
 require "rake/testtask"
+
+# Fix for Rails engine db:test:prepare task
+namespace :app do
+  namespace :db do
+    namespace :test do
+      task :prepare do
+        # Delegate to the dummy app's db:test:prepare task
+        Rake::Task["db:test:prepare"].invoke
+      end
+    end
+  end
+end
 
 Rake::TestTask.new(:test) do |t|
   t.libs << "test"

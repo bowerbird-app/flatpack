@@ -44,13 +44,12 @@ module FlatPack
       end
 
       def call
-        wrapper_tag = @removable ? :span : :span
-        content_tag(wrapper_tag, **badge_attributes) do
+        content_tag(:span, **badge_attributes) do
           safe_join([
             render_dot,
-            content_tag(:span, @text),
+            @text,
             render_remove_button
-          ].compact)
+          ])
         end
       end
 

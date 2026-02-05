@@ -143,7 +143,7 @@ module FlatPack
           insert_position = content.index($1) + $1.length
 
           # Insert the configuration
-          new_content = content[0...insert_position] + "\n" + config_content + "\n" + content[insert_position..-1]
+          new_content = content[0...insert_position] + "\n" + config_content + "\n" + content[insert_position..]
 
           File.write(tailwind_file, new_content)
 

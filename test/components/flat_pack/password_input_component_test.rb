@@ -39,7 +39,7 @@ module FlatPack
       def test_has_stimulus_controller
         render_inline(Component.new(name: "password"))
 
-        assert_selector "input[data-controller='flat-pack--password-input']"
+        assert_selector "div[data-controller='flat-pack--password-input']"
         assert_selector "input[data-flat-pack--password-input-target='input']"
       end
 

@@ -3,5 +3,5 @@
 # Load the Rails application.
 require_relative "config/application"
 
-# Initialize the Rails application.
-Rails.application.initialize!
+# Initialize the Rails application (only if not already initialized)
+Rails.application.load_tasks unless Rails.application.initialized?

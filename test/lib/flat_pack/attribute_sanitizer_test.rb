@@ -121,7 +121,7 @@ module FlatPack
       ]
 
       dangerous_attrs.each do |attr|
-        attrs = {id: "test", attr.to_sym => "malicious"}
+        attrs = {:id => "test", attr.to_sym => "malicious"}
         sanitized = AttributeSanitizer.sanitize_attributes(attrs)
         assert_equal({id: "test"}, sanitized, "Failed to remove #{attr}")
       end

@@ -72,7 +72,7 @@ module FlatPack
       end
 
       def render_custom_select
-        content_tag(:div, 
+        content_tag(:div,
           class: "relative",
           data: {
             controller: "flat-pack--select",
@@ -175,7 +175,7 @@ module FlatPack
       end
 
       def render_option(option)
-        content_tag(:option, 
+        content_tag(:option,
           option[:label],
           value: option[:value],
           selected: @value.to_s == option[:value].to_s,
@@ -297,12 +297,12 @@ module FlatPack
           "transition-colors duration-[var(--transition-base)]"
         ]
 
-        if disabled
-          base << "opacity-50 cursor-not-allowed text-[var(--color-muted-foreground)]"
+        base << if disabled
+          "opacity-50 cursor-not-allowed text-[var(--color-muted-foreground)]"
         elsif selected
-          base << "bg-[var(--color-primary)] text-white cursor-pointer"
+          "bg-[var(--color-primary)] text-white cursor-pointer"
         else
-          base << "hover:bg-[var(--color-muted)] cursor-pointer text-[var(--color-foreground)]"
+          "hover:bg-[var(--color-muted)] cursor-pointer text-[var(--color-foreground)]"
         end
 
         base.join(" ")
