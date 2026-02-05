@@ -25,6 +25,9 @@ jobs:
           bundler-cache: true
           cache-version: 1
 
+      - name: Rebuild native extensions
+        run: bundle pristine
+
       - name: Run tests
         run: bundle exec rails test
 
@@ -42,6 +45,9 @@ jobs:
           ruby-version: '3.2'
           bundler-cache: true
           cache-version: 1
+
+      - name: Rebuild native extensions
+        run: bundle pristine
 
       - name: Install dummy app dependencies
         working-directory: test/dummy
