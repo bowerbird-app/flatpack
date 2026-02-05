@@ -5,7 +5,7 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       renders_many :columns, ColumnComponent
       renders_many :actions, ActionComponent
-      
+
       # Provide column as the main method, with_column for backwards compatibility
       alias_method :column, :with_column
 
