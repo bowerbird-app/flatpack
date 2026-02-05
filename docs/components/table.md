@@ -6,8 +6,8 @@ The Table component renders data in a tabular format with columns and actions.
 
 ```erb
 <%= render FlatPack::Table::Component.new(data: @users) do |table| %>
-  <% table.with_column(title: "Name", attribute: :name) %>
-  <% table.with_column(title: "Email", attribute: :email) %>
+  <% table.column(title: "Name", html: ->(row) { row.name }) %>
+  <% table.column(title: "Email", html: ->(row) { row.email }) %>
 <% end %>
 ```
 
@@ -25,35 +25,34 @@ The Table component renders data in a tabular format with columns and actions.
 
 ## Columns
 
-Define columns using `with_column`:
-
-### Attribute-based Column
-
-```erb
-<% table.with_column(title: "Name", attribute: :name) %>
-```
-
-This calls `row.name` for each row.
+Define columns using `column`:
 
 ### Block-based Column
 
 ```erb
-<% table.with_column(title: "Full Name") do |user| %>
+<% table.column(title: "Full Name") do |user| %>
   <%= "#{user.first_name} #{user.last_name}" %>
 <% end %>
 ```
 
 Use blocks for custom formatting.
 
+### Lambda-based Column
+
+```erb
+<% table.column(title: "Name", html: ->(user) { user.name }) %>
+```
+
+Use the `html` parameter with a lambda for simple attribute display.
+
 ### Column Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `title` | String | **required** | Column header text |
-| `attribute` | Symbol | `nil` | Attribute to call on each row |
 | `html` | Proc | `nil` | Custom html lambda/proc |
 | `sortable` | Boolean | `false` | Enable sorting for this column |
-| `sort_key` | Symbol | `attribute` | Key to use in sort URL (defaults to attribute) |
+| `sort_key` | Symbol | `nil` | Key to use in sort URL (required when sortable is true) |
 
 ## Actions
 
@@ -94,23 +93,23 @@ Define actions using `with_action`:
 
 ```erb
 <%= render FlatPack::Table::Component.new(data: @users) do |table| %>
-  <%# Attribute column %>
-  <% table.with_column(title: "ID", attribute: :id) %>
+  <%# Lambda column %>
+  <% table.column(title: "ID", html: ->(row) { row.id.to_s }) %>
   
   <%# Block column with formatting %>
-  <% table.with_column(title: "Name") do |user| %>
+  <% table.column(title: "Name") do |user| %>
     <strong><%= user.name %></strong>
   <% end %>
   
   <%# Block column with conditional %>
-  <% table.with_column(title: "Status") do |user| %>
+  <% table.column(title: "Status") do |user| %>
     <span class="<%= user.active? ? 'text-green-600' : 'text-gray-400' %>">
       <%= user.active? ? 'Active' : 'Inactive' %>
     </span>
   <% end %>
   
   <%# Date formatting %>
-  <% table.with_column(title: "Created") do |user| %>
+  <% table.column(title: "Created") do |user| %>
     <%= user.created_at.strftime("%b %d, %Y") %>
   <% end %>
   
@@ -144,10 +143,10 @@ The table component supports sorting using Turbo Frames for seamless updates:
   direction: params[:direction],
   base_url: request.path
 ) do |table| %>
-  <% table.with_column(title: "Name", attribute: :name, sortable: true) %>
-  <% table.with_column(title: "Email", attribute: :email, sortable: true) %>
-  <% table.with_column(title: "Status", attribute: :status, sortable: true) %>
-  <% table.with_column(title: "Created", attribute: :created_at, sortable: true) %>
+  <% table.column(title: "Name", html: ->(row) { row.name }, sortable: true, sort_key: :name) %>
+  <% table.column(title: "Email", html: ->(row) { row.email }, sortable: true, sort_key: :email) %>
+  <% table.column(title: "Status", html: ->(row) { row.status }, sortable: true, sort_key: :status) %>
+  <% table.column(title: "Created", html: ->(row) { row.created_at.to_s }, sortable: true, sort_key: :created_at) %>
 <% end %>
 ```
 
@@ -165,10 +164,10 @@ See [Sortable Tables](sortable-tables.md) for complete implementation details.
 You can combine sorting with custom formatters:
 
 ```erb
-<% table.with_column(
+<% table.column(
   title: "Status",
-  attribute: :status,
   sortable: true,
+  sort_key: :status,
   html: ->(user) {
     badge_class = case user.status
     when 'active' then 'bg-green-100 text-green-800'
@@ -182,12 +181,12 @@ You can combine sorting with custom formatters:
 
 ### Sortable Column with Custom Sort Key
 
-Use a different key for sorting than the attribute:
+Use a different key for sorting than the displayed value:
 
 ```erb
-<% table.with_column(
+<% table.column(
   title: "Name",
-  attribute: :full_name,
+  html: ->(row) { row.full_name },
   sortable: true,
   sort_key: :last_name
 ) %>
@@ -196,7 +195,7 @@ Use a different key for sorting than the attribute:
 ### With Avatar
 
 ```erb
-<% table.with_column(title: "User") do |user| %>
+<% table.column(title: "User") do |user| %>
   <div class="flex items-center gap-2">
     <%= image_tag user.avatar_url, class: "w-8 h-8 rounded-full" %>
     <%= user.name %>
@@ -207,7 +206,7 @@ Use a different key for sorting than the attribute:
 ### With Badge
 
 ```erb
-<% table.with_column(title: "Role") do |user| %>
+<% table.column(title: "Role") do |user| %>
   <span class="px-2 py-1 text-xs rounded bg-blue-100 text-blue-800">
     <%= user.role %>
   </span>
@@ -220,7 +219,7 @@ When `data` is empty, displays "No data available":
 
 ```erb
 <%= render FlatPack::Table::Component.new(data: []) do |table| %>
-  <% table.with_column(title: "Name", attribute: :name) %>
+  <% table.column(title: "Name", html: ->(row) { row.name }) %>
 <% end %>
 ```
 
@@ -230,7 +229,7 @@ Enable the Stimulus controller for advanced interactions:
 
 ```erb
 <%= render FlatPack::Table::Component.new(data: @users, stimulus: true) do |table| %>
-  <% table.with_column(title: "Name", attribute: :name) %>
+  <% table.column(title: "Name", html: ->(row) { row.name }) %>
 <% end %>
 ```
 
@@ -340,7 +339,7 @@ Tables are wrapped in a scrollable container:
 For mobile, consider hiding columns:
 
 ```erb
-<% table.with_column(title: "Email", attribute: :email, class: "hidden md:table-cell") %>
+<% table.column(title: "Email", html: ->(row) { row.email }, class: "hidden md:table-cell") %>
 ```
 
 ## Accessibility
@@ -368,8 +367,8 @@ class CustomTableTest < ViewComponent::TestCase
     users = [OpenStruct.new(name: "Alice", email: "alice@example.com")]
     
     render_inline FlatPack::Table::Component.new(data: users) do |table|
-      table.with_column(title: "Name", attribute: :name)
-      table.with_column(title: "Email", attribute: :email)
+      table.column(title: "Name", html: ->(row) { row.name })
+      table.column(title: "Email", html: ->(row) { row.email })
     end
     
     assert_selector "th", text: "Name"
@@ -405,12 +404,11 @@ FlatPack::Table::Component.new(
 ### Column Component
 
 ```ruby
-table.with_column(
+table.column(
   title: String,              # Required
-  attribute: Symbol,          # Optional
-  html: Proc,            # Optional
+  html: Proc,                 # Optional
   sortable: Boolean,          # Optional, default: false
-  sort_key: Symbol,           # Optional, defaults to attribute
+  sort_key: Symbol,           # Optional, required when sortable is true
   &block                      # Optional
 )
 ```
