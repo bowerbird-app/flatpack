@@ -27,7 +27,7 @@ This document summarizes the implementation of sortable table functionality for 
 
 **Key Methods:**
 ```ruby
-def initialize(title:, html: nil, sortable: false, sort_key: nil, &block)
+def initialize(title:, html:, sortable: false, sort_key: nil, &block)
 def render_header(current_sort: nil, current_direction: nil, base_url: nil)
 def sort_link(current_sort, current_direction, base_url)
 def calculate_new_direction(current_sort, current_direction)
@@ -330,7 +330,7 @@ FlatPack::Table::Component.new(
 ```ruby
 table.column(
   title: String,         # Required - header text
-  html: Proc,            # Optional - custom formatter
+  html: Proc,            # Required - custom formatter
   sortable: Boolean,     # Optional - enable sorting (default: false)
   sort_key: Symbol,      # Required when sortable: true - key for URL params
   &block                 # Optional - custom block
