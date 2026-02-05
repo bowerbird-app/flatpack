@@ -45,7 +45,7 @@ module FlatPack
       def test_renders_table_with_actions
         render_inline(Component.new(rows: @users)) do |component|
           component.with_column(label: "Name", attribute: :name)
-          component.with_action(label: "Edit", url: ->(user) { "/users/#{user.id}/edit" })
+          component.with_action(text: "Edit", url: ->(user) { "/users/#{user.id}/edit" })
         end
 
         assert_selector "th", text: "Actions"

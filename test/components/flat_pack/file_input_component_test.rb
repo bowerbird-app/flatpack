@@ -116,14 +116,14 @@ module FlatPack
         render_inline(Component.new(name: "document"))
 
         assert_selector "div[data-controller='flat-pack--file-input']"
-        assert_text "Click to upload"
+        assert_text "Upload a file"
         assert_text "or drag and drop"
       end
 
       def test_renders_hidden_file_input
         render_inline(Component.new(name: "document"))
 
-        assert_selector "input[type='file'].hidden"
+        assert_selector "input[type='file'].sr-only"
       end
 
       def test_renders_stimulus_controller
@@ -253,17 +253,17 @@ module FlatPack
       def test_renders_upload_icon
         render_inline(Component.new(name: "document"))
 
-        assert_selector "svg[viewBox='0 0 48 48']"
+        assert_selector "svg[viewbox='0 0 24 24']"
       end
 
       def test_renders_drag_and_drop_actions
         render_inline(Component.new(name: "document"))
 
         html = page.native.to_html
-        assert_includes html, "dragover->flat-pack--file-input#dragOver"
-        assert_includes html, "dragenter->flat-pack--file-input#dragEnter"
-        assert_includes html, "dragleave->flat-pack--file-input#dragLeave"
-        assert_includes html, "drop->flat-pack--file-input#drop"
+        assert_includes html, "dragover-&gt;flat-pack--file-input#dragOver"
+        assert_includes html, "dragenter-&gt;flat-pack--file-input#dragEnter"
+        assert_includes html, "dragleave-&gt;flat-pack--file-input#dragLeave"
+        assert_includes html, "drop-&gt;flat-pack--file-input#drop"
       end
 
       def test_renders_with_all_parameters
