@@ -143,10 +143,10 @@ end
   direction: params[:direction],
   base_url: request.path
 ) do |table| %>
-  <% table.column(title: "Name", html: ->(row) { row.name }, sortable: true) %>
-  <% table.column(title: "Email", html: ->(row) { row.email }, sortable: true) %>
-  <% table.column(title: "Status", html: ->(row) { row.status }, sortable: true) %>
-  <% table.column(title: "Created", html: ->(row) { row.created_at }, sortable: true) %>
+  <% table.column(title: "Name", html: ->(row) { row.name }, sortable: true, sort_key: :name) %>
+  <% table.column(title: "Email", html: ->(row) { row.email }, sortable: true, sort_key: :email) %>
+  <% table.column(title: "Status", html: ->(row) { row.status }, sortable: true, sort_key: :status) %>
+  <% table.column(title: "Created", html: ->(row) { row.created_at }, sortable: true, sort_key: :created_at) %>
 <% end %>
 ```
 
@@ -332,7 +332,7 @@ table.column(
   title: String,         # Required - header text
   html: Proc,            # Optional - custom formatter
   sortable: Boolean,     # Optional - enable sorting (default: false)
-  sort_key: Symbol,      # Optional - key for URL (default: attribute)
+  sort_key: Symbol,      # Required when sortable: true - key for URL params
   &block                 # Optional - custom block
 )
 ```
