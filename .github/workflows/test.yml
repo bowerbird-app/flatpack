@@ -1,0 +1,76 @@
+name: Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Rails Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+          cache-version: 1
+
+      - name: Run tests
+        run: bundle exec rake test
+
+  dummy-app:
+    name: Dummy App Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+          cache-version: 1
+
+      - name: Install dummy app dependencies
+        working-directory: test/dummy
+        run: bundle install
+
+      - name: Build Tailwind CSS
+        working-directory: test/dummy
+        run: bundle exec tailwindcss -c config/tailwind.config.js -i app/assets/stylesheets/application.css -o app/assets/builds/application.css
+
+      - name: Verify dummy app can boot
+        working-directory: test/dummy
+        run: |
+          bundle exec rails runner "puts 'Rails app loaded successfully'"
+          echo "Dummy app verified successfully"
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+          cache-version: 1
+
+      - name: Run RuboCop
+        run: bundle exec rubocop
