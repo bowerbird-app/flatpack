@@ -149,6 +149,10 @@ Styles: `:default`, `:elevated`, `:outlined`, `:flat`, `:interactive`
 - **Button** - Buttons and links with multiple schemes
 - **Table** - Data tables with columns and actions
 
+### Feedback Components
+- **Alert** - Prominent notifications and messages (success, errors, warnings, info)
+- **Badge** - Status indicators, counts, labels, and tags
+
 ### Form Components
 - **TextInput** - Single-line text field
 - **PasswordInput** - Masked input with show/hide toggle
@@ -157,9 +161,18 @@ Styles: `:default`, `:elevated`, `:outlined`, `:flat`, `:interactive`
 - **SearchInput** - Search field with clear button
 - **TextArea** - Multi-line auto-expanding text area
 - **UrlInput** - URL field with validation
+- **Checkbox** - Single checkbox or checkbox groups
+- **RadioGroup** - Radio button groups
+- **Select** - Dropdown select menus
+- **Switch** - Toggle switch for boolean states
+- **DateInput** - Date picker input
+- **NumberInput** - Numeric input field
+- **FileInput** - File upload input
 
 ### Utility Components
-- **Icon** - Shared icon component
+- **Link** - Styled links with consistent appearance
+- **ButtonGroup** - Grouped button layouts
+- **SegmentedButtons** - Segmented control buttons
 
 More components coming soon!
 

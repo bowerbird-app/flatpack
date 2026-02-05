@@ -23,8 +23,13 @@ FlatPack is a production-grade Rails Engine that provides a comprehensive set of
 - [Security Policy](../SECURITY.md)
 
 ### Components
+- [Alert Component](components/alert.md)
+- [Badge Component](components/badge.md)
 - [Button Component](components/button.md)
+- [Card Component](components/card.md)
+- [Input Components](components/inputs.md)
 - [Table Component](components/table.md)
+- [Sortable Tables](components/sortable-tables.md)
 
 ### Architecture
 - [Engine Architecture](architecture/engine.md)
@@ -39,9 +44,20 @@ After installation, use FlatPack components in your views:
 <%# Button Component %>
 <%= render FlatPack::Button::Component.new(
   text: "Click me",
-  scheme: :primary,
+  style: :primary,
   url: some_path
 ) %>
+
+<%# Card Component %>
+<%= render FlatPack::Card::Component.new(style: :elevated) do |card| %>
+  <% card.with_header do %>
+    <h3>Card Title</h3>
+  <% end %>
+  
+  <% card.with_body do %>
+    <p>Card content goes here.</p>
+  <% end %>
+<% end %>
 
 <%# Table Component %>
 <%= render FlatPack::Table::Component.new(data: @users) do |table| %>
