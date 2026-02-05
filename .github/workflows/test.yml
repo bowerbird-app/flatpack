@@ -26,7 +26,7 @@ jobs:
           cache-version: 1
 
       - name: Run tests
-        run: bundle exec rake test
+        run: bundle exec rails test
 
   dummy-app:
     name: Dummy App Tests
