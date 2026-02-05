@@ -9,16 +9,16 @@
     <h2 class="text-2xl font-semibold mb-4">Basic Variants</h2>
     <div class="flex flex-wrap gap-3 mb-4">
       <%= render FlatPack::Badge::Component.new(text: "Default") %>
-      <%= render FlatPack::Badge::Component.new(text: "Primary", variant: :primary) %>
-      <%= render FlatPack::Badge::Component.new(text: "Success", variant: :success) %>
-      <%= render FlatPack::Badge::Component.new(text: "Warning", variant: :warning) %>
-      <%= render FlatPack::Badge::Component.new(text: "Info", variant: :info) %>
+      <%= render FlatPack::Badge::Component.new(text: "Primary", style: :primary) %>
+      <%= render FlatPack::Badge::Component.new(text: "Success", style: :success) %>
+      <%= render FlatPack::Badge::Component.new(text: "Warning", style: :warning) %>
+      <%= render FlatPack::Badge::Component.new(text: "Info", style: :info) %>
     </div>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Badge::Component.new(text: "Default") %&gt;
-&lt;%= render FlatPack::Badge::Component.new(text: "Primary", variant: :primary) %&gt;
-&lt;%= render FlatPack::Badge::Component.new(text: "Success", variant: :success) %&gt;
-&lt;%= render FlatPack::Badge::Component.new(text: "Warning", variant: :warning) %&gt;
-&lt;%= render FlatPack::Badge::Component.new(text: "Info", variant: :info) %&gt;</code></pre>
+&lt;%= render FlatPack::Badge::Component.new(text: "Primary", style: :primary) %&gt;
+&lt;%= render FlatPack::Badge::Component.new(text: "Success", style: :success) %&gt;
+&lt;%= render FlatPack::Badge::Component.new(text: "Warning", style: :warning) %&gt;
+&lt;%= render FlatPack::Badge::Component.new(text: "Info", style: :info) %&gt;</code></pre>
   </section>
 
   <!-- Badge Sizes -->
@@ -30,9 +30,9 @@
       <%= render FlatPack::Badge::Component.new(text: "Large", size: :lg) %>
     </div>
     <div class="flex items-center gap-3 mb-4">
-      <%= render FlatPack::Badge::Component.new(text: "Small", variant: :primary, size: :sm) %>
-      <%= render FlatPack::Badge::Component.new(text: "Medium", variant: :primary, size: :md) %>
-      <%= render FlatPack::Badge::Component.new(text: "Large", variant: :primary, size: :lg) %>
+      <%= render FlatPack::Badge::Component.new(text: "Small", style: :primary, size: :sm) %>
+      <%= render FlatPack::Badge::Component.new(text: "Medium", style: :primary, size: :md) %>
+      <%= render FlatPack::Badge::Component.new(text: "Large", style: :primary, size: :lg) %>
     </div>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Badge::Component.new(text: "Small", size: :sm) %&gt;
 &lt;%= render FlatPack::Badge::Component.new(text: "Medium", size: :md) %&gt;
@@ -43,15 +43,15 @@
   <section class="mb-12">
     <h2 class="text-2xl font-semibold mb-4">Badges with Indicator Dots</h2>
     <div class="flex flex-wrap gap-3 mb-4">
-      <%= render FlatPack::Badge::Component.new(text: "Online", variant: :success, dot: true) %>
-      <%= render FlatPack::Badge::Component.new(text: "Away", variant: :warning, dot: true) %>
-      <%= render FlatPack::Badge::Component.new(text: "Offline", variant: :default, dot: true) %>
-      <%= render FlatPack::Badge::Component.new(text: "Busy", variant: :warning, dot: true) %>
+      <%= render FlatPack::Badge::Component.new(text: "Online", style: :success, dot: true) %>
+      <%= render FlatPack::Badge::Component.new(text: "Away", style: :warning, dot: true) %>
+      <%= render FlatPack::Badge::Component.new(text: "Offline", style: :default, dot: true) %>
+      <%= render FlatPack::Badge::Component.new(text: "Busy", style: :warning, dot: true) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Badge::Component.new(text: "Online", variant: :success, dot: true) %&gt;
-&lt;%= render FlatPack::Badge::Component.new(text: "Away", variant: :warning, dot: true) %&gt;
-&lt;%= render FlatPack::Badge::Component.new(text: "Offline", variant: :default, dot: true) %&gt;
-&lt;%= render FlatPack::Badge::Component.new(text: "Busy", variant: :warning, dot: true) %&gt;</code></pre>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Badge::Component.new(text: "Online", style: :success, dot: true) %&gt;
+&lt;%= render FlatPack::Badge::Component.new(text: "Away", style: :warning, dot: true) %&gt;
+&lt;%= render FlatPack::Badge::Component.new(text: "Offline", style: :default, dot: true) %&gt;
+&lt;%= render FlatPack::Badge::Component.new(text: "Busy", style: :warning, dot: true) %&gt;</code></pre>
   </section>
 
   <!-- Removable Badges -->
@@ -73,59 +73,59 @@
   <section class="mb-12">
     <h2 class="text-2xl font-semibold mb-4">Status Indicators</h2>
     <div class="flex flex-wrap gap-3 mb-4">
-      <%= render FlatPack::Badge::Component.new(text: "Active", variant: :success) %>
-      <%= render FlatPack::Badge::Component.new(text: "Pending", variant: :warning) %>
-      <%= render FlatPack::Badge::Component.new(text: "Completed", variant: :primary) %>
-      <%= render FlatPack::Badge::Component.new(text: "Cancelled", variant: :default) %>
-      <%= render FlatPack::Badge::Component.new(text: "Draft", variant: :default) %>
+      <%= render FlatPack::Badge::Component.new(text: "Active", style: :success) %>
+      <%= render FlatPack::Badge::Component.new(text: "Pending", style: :warning) %>
+      <%= render FlatPack::Badge::Component.new(text: "Completed", style: :primary) %>
+      <%= render FlatPack::Badge::Component.new(text: "Cancelled", style: :default) %>
+      <%= render FlatPack::Badge::Component.new(text: "Draft", style: :default) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Badge::Component.new(text: "Active", variant: :success) %&gt;
-&lt;%= render FlatPack::Badge::Component.new(text: "Pending", variant: :warning) %&gt;
-&lt;%= render FlatPack::Badge::Component.new(text: "Completed", variant: :primary) %&gt;</code></pre>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Badge::Component.new(text: "Active", style: :success) %&gt;
+&lt;%= render FlatPack::Badge::Component.new(text: "Pending", style: :warning) %&gt;
+&lt;%= render FlatPack::Badge::Component.new(text: "Completed", style: :primary) %&gt;</code></pre>
   </section>
 
   <!-- Notification Counts -->
   <section class="mb-12">
     <h2 class="text-2xl font-semibold mb-4">Notification Counts</h2>
     <div class="flex flex-wrap gap-3 mb-4">
-      <%= render FlatPack::Badge::Component.new(text: "5", variant: :primary, size: :sm) %>
-      <%= render FlatPack::Badge::Component.new(text: "12 new", variant: :primary) %>
-      <%= render FlatPack::Badge::Component.new(text: "99+", variant: :primary) %>
-      <%= render FlatPack::Badge::Component.new(text: "3 unread", variant: :info, size: :sm) %>
+      <%= render FlatPack::Badge::Component.new(text: "5", style: :primary, size: :sm) %>
+      <%= render FlatPack::Badge::Component.new(text: "12 new", style: :primary) %>
+      <%= render FlatPack::Badge::Component.new(text: "99+", style: :primary) %>
+      <%= render FlatPack::Badge::Component.new(text: "3 unread", style: :info, size: :sm) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Badge::Component.new(text: "5", variant: :primary, size: :sm) %&gt;
-&lt;%= render FlatPack::Badge::Component.new(text: "12 new", variant: :primary) %&gt;
-&lt;%= render FlatPack::Badge::Component.new(text: "99+", variant: :primary) %&gt;</code></pre>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Badge::Component.new(text: "5", style: :primary, size: :sm) %&gt;
+&lt;%= render FlatPack::Badge::Component.new(text: "12 new", style: :primary) %&gt;
+&lt;%= render FlatPack::Badge::Component.new(text: "99+", style: :primary) %&gt;</code></pre>
   </section>
 
   <!-- User Roles -->
   <section class="mb-12">
     <h2 class="text-2xl font-semibold mb-4">User Roles</h2>
     <div class="flex flex-wrap gap-3 mb-4">
-      <%= render FlatPack::Badge::Component.new(text: "Admin", variant: :primary) %>
-      <%= render FlatPack::Badge::Component.new(text: "Editor", variant: :default) %>
-      <%= render FlatPack::Badge::Component.new(text: "Viewer", variant: :default) %>
-      <%= render FlatPack::Badge::Component.new(text: "Moderator", variant: :warning) %>
-      <%= render FlatPack::Badge::Component.new(text: "Guest", variant: :default) %>
+      <%= render FlatPack::Badge::Component.new(text: "Admin", style: :primary) %>
+      <%= render FlatPack::Badge::Component.new(text: "Editor", style: :default) %>
+      <%= render FlatPack::Badge::Component.new(text: "Viewer", style: :default) %>
+      <%= render FlatPack::Badge::Component.new(text: "Moderator", style: :warning) %>
+      <%= render FlatPack::Badge::Component.new(text: "Guest", style: :default) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Badge::Component.new(text: "Admin", variant: :primary) %&gt;
-&lt;%= render FlatPack::Badge::Component.new(text: "Editor", variant: :default) %&gt;
-&lt;%= render FlatPack::Badge::Component.new(text: "Viewer", variant: :default) %&gt;</code></pre>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Badge::Component.new(text: "Admin", style: :primary) %&gt;
+&lt;%= render FlatPack::Badge::Component.new(text: "Editor", style: :default) %&gt;
+&lt;%= render FlatPack::Badge::Component.new(text: "Viewer", style: :default) %&gt;</code></pre>
   </section>
 
   <!-- Feature Flags -->
   <section class="mb-12">
     <h2 class="text-2xl font-semibold mb-4">Feature Flags</h2>
     <div class="flex flex-wrap gap-3 mb-4">
-      <%= render FlatPack::Badge::Component.new(text: "Beta", variant: :info) %>
-      <%= render FlatPack::Badge::Component.new(text: "New", variant: :primary) %>
-      <%= render FlatPack::Badge::Component.new(text: "Experimental", variant: :warning) %>
-      <%= render FlatPack::Badge::Component.new(text: "Deprecated", variant: :warning) %>
-      <%= render FlatPack::Badge::Component.new(text: "Preview", variant: :info, size: :sm) %>
+      <%= render FlatPack::Badge::Component.new(text: "Beta", style: :info) %>
+      <%= render FlatPack::Badge::Component.new(text: "New", style: :primary) %>
+      <%= render FlatPack::Badge::Component.new(text: "Experimental", style: :warning) %>
+      <%= render FlatPack::Badge::Component.new(text: "Deprecated", style: :warning) %>
+      <%= render FlatPack::Badge::Component.new(text: "Preview", style: :info, size: :sm) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Badge::Component.new(text: "Beta", variant: :info) %&gt;
-&lt;%= render FlatPack::Badge::Component.new(text: "New", variant: :primary) %&gt;
-&lt;%= render FlatPack::Badge::Component.new(text: "Experimental", variant: :warning) %&gt;</code></pre>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Badge::Component.new(text: "Beta", style: :info) %&gt;
+&lt;%= render FlatPack::Badge::Component.new(text: "New", style: :primary) %&gt;
+&lt;%= render FlatPack::Badge::Component.new(text: "Experimental", style: :warning) %&gt;</code></pre>
   </section>
 
   <!-- Combined Examples -->
@@ -137,11 +137,11 @@
       <div class="border border-[var(--color-border)] rounded-[var(--radius-md)] p-4">
         <div class="flex items-center justify-between mb-2">
           <h4 class="font-semibold">John Doe</h4>
-          <%= render FlatPack::Badge::Component.new(text: "Admin", variant: :primary, size: :sm) %>
+          <%= render FlatPack::Badge::Component.new(text: "Admin", style: :primary, size: :sm) %>
         </div>
         <div class="flex gap-2">
-          <%= render FlatPack::Badge::Component.new(text: "Online", variant: :success, dot: true, size: :sm) %>
-          <%= render FlatPack::Badge::Component.new(text: "Pro", variant: :primary, size: :sm) %>
+          <%= render FlatPack::Badge::Component.new(text: "Online", style: :success, dot: true, size: :sm) %>
+          <%= render FlatPack::Badge::Component.new(text: "Pro", style: :primary, size: :sm) %>
         </div>
       </div>
     </div>
@@ -152,8 +152,8 @@
         <div class="flex items-center justify-between">
           <span>Update documentation</span>
           <div class="flex gap-2">
-            <%= render FlatPack::Badge::Component.new(text: "High Priority", variant: :warning, size: :sm) %>
-            <%= render FlatPack::Badge::Component.new(text: "In Progress", variant: :warning, size: :sm) %>
+            <%= render FlatPack::Badge::Component.new(text: "High Priority", style: :warning, size: :sm) %>
+            <%= render FlatPack::Badge::Component.new(text: "In Progress", style: :warning, size: :sm) %>
           </div>
         </div>
       </div>
@@ -175,7 +175,7 @@
 
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;div class="flex items-center justify-between"&gt;
   &lt;h4&gt;John Doe&lt;/h4&gt;
-  &lt;%= render FlatPack::Badge::Component.new(text: "Admin", variant: :primary, size: :sm) %&gt;
+  &lt;%= render FlatPack::Badge::Component.new(text: "Admin", style: :primary, size: :sm) %&gt;
 &lt;/div&gt;</code></pre>
   </section>
 

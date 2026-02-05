@@ -11,36 +11,36 @@ module FlatPack
         assert_selector "span", text: "New"
       end
 
-      def test_renders_default_variant
+      def test_renders_default_style
         render_inline(Component.new(text: "Default"))
 
         assert_selector "span", text: "Default"
         assert_includes page.native.to_html, "bg-[var(--color-muted)]"
       end
 
-      def test_renders_primary_variant
-        render_inline(Component.new(text: "Primary", variant: :primary))
+      def test_renders_primary_style
+        render_inline(Component.new(text: "Primary", style: :primary))
 
         assert_selector "span", text: "Primary"
         assert_includes page.native.to_html, "bg-[var(--color-primary)]"
       end
 
-      def test_renders_success_variant
-        render_inline(Component.new(text: "Success", variant: :success))
+      def test_renders_success_style
+        render_inline(Component.new(text: "Success", style: :success))
 
         assert_selector "span", text: "Success"
         assert_includes page.native.to_html, "bg-[var(--color-success)]"
       end
 
-      def test_renders_warning_variant
-        render_inline(Component.new(text: "Warning", variant: :warning))
+      def test_renders_warning_style
+        render_inline(Component.new(text: "Warning", style: :warning))
 
         assert_selector "span", text: "Warning"
         assert_includes page.native.to_html, "bg-[var(--color-warning)]"
       end
 
-      def test_renders_info_variant
-        render_inline(Component.new(text: "Info", variant: :info))
+      def test_renders_info_style
+        render_inline(Component.new(text: "Info", style: :info))
 
         assert_selector "span", text: "Info"
         assert_includes page.native.to_html, "bg-blue-500"
@@ -103,9 +103,9 @@ module FlatPack
         refute_selector "button[aria-label='Remove']"
       end
 
-      def test_raises_error_for_invalid_variant
+      def test_raises_error_for_invalid_style
         assert_raises(ArgumentError) do
-          Component.new(text: "Invalid", variant: :invalid)
+          Component.new(text: "Invalid", style: :invalid)
         end
       end
 

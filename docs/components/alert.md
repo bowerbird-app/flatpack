@@ -17,9 +17,9 @@ The Alert component displays prominent notifications and messages for user feedb
 |------|------|---------|-------------|
 | `title` | String | `nil` | Alert title |
 | `description` | String | `nil` | Alert message |
-| `variant` | Symbol | `:info` | Visual variant (`:info`, `:success`, `:warning`) |
+| `style` | Symbol | `:info` | Visual style (`:info`, `:success`, `:warning`) |
 | `dismissible` | Boolean | `false` | Show close button |
-| `icon` | Boolean | `true` | Show variant icon |
+| `icon` | Boolean | `true` | Show style icon |
 | `**system_arguments` | Hash | `{}` | HTML attributes (`class`, `data`, `aria`, `id`, etc.) |
 
 ## Variants
@@ -31,7 +31,7 @@ General information and updates.
 <%= render FlatPack::Alert::Component.new(
   title: "Information",
   description: "Your profile has been updated.",
-  variant: :info
+  style: :info
 ) %>
 ```
 
@@ -42,7 +42,7 @@ Successful operations and confirmations.
 <%= render FlatPack::Alert::Component.new(
   title: "Success!",
   description: "Your changes have been saved.",
-  variant: :success
+  style: :success
 ) %>
 ```
 
@@ -53,13 +53,13 @@ Warnings and cautions.
 <%= render FlatPack::Alert::Component.new(
   title: "Warning",
   description: "This action cannot be undone.",
-  variant: :warning
+  style: :warning
 ) %>
 ```
 
 ## Icon Display
 
-By default, alerts show an icon based on the variant. You can disable this:
+By default, alerts show an icon based on the style. You can disable this:
 
 ```erb
 <%= render FlatPack::Alert::Component.new(
@@ -77,7 +77,7 @@ Add a close button to allow users to dismiss the alert:
 <%= render FlatPack::Alert::Component.new(
   title: "Notice",
   description: "Click X to dismiss this message.",
-  variant: :info,
+  style: :info,
   dismissible: true
 ) %>
 ```
@@ -94,7 +94,7 @@ When `dismissible: true`, the alert:
 Use the content block for rich HTML content with buttons and links:
 
 ```erb
-<%= render FlatPack::Alert::Component.new(variant: :success) do %>
+<%= render FlatPack::Alert::Component.new(style: :success) do %>
   <div class="flex items-center justify-between gap-3">
     <div>
       <strong>Success!</strong> You've completed the tutorial.
@@ -107,7 +107,7 @@ Use the content block for rich HTML content with buttons and links:
 ### With Multiple Actions
 
 ```erb
-<%= render FlatPack::Alert::Component.new(variant: :warning) do %>
+<%= render FlatPack::Alert::Component.new(style: :warning) do %>
   <div class="flex items-center justify-between gap-3">
     <div>
       <strong>Confirm Action</strong>
@@ -166,7 +166,7 @@ document.addEventListener('alert:dismissed', (event) => {
 <%= render FlatPack::Alert::Component.new(
   title: "Form submitted",
   description: "We'll process your request shortly.",
-  variant: :success,
+  style: :success,
   dismissible: true
 ) %>
 ```
@@ -176,7 +176,7 @@ document.addEventListener('alert:dismissed', (event) => {
 <%= render FlatPack::Alert::Component.new(
   title: "Validation Error",
   description: "Please check the form for errors.",
-  variant: :warning
+  style: :warning
 ) %>
 ```
 
@@ -185,7 +185,7 @@ document.addEventListener('alert:dismissed', (event) => {
 <%= render FlatPack::Alert::Component.new(
   title: "Before you proceed",
   description: "This will permanently delete your data.",
-  variant: :warning
+  style: :warning
 ) %>
 ```
 
@@ -194,7 +194,7 @@ document.addEventListener('alert:dismissed', (event) => {
 <%= render FlatPack::Alert::Component.new(
   title: "New Feature",
   description: "Check out our updated dashboard design!",
-  variant: :info,
+  style: :info,
   dismissible: true
 ) %>
 ```
@@ -204,7 +204,7 @@ document.addEventListener('alert:dismissed', (event) => {
 <% if flash[:notice] %>
   <%= render FlatPack::Alert::Component.new(
     description: flash[:notice],
-    variant: :success,
+    style: :success,
     dismissible: true
   ) %>
 <% end %>
@@ -212,7 +212,7 @@ document.addEventListener('alert:dismissed', (event) => {
 <% if flash[:alert] %>
   <%= render FlatPack::Alert::Component.new(
     description: flash[:alert],
-    variant: :warning,
+    style: :warning,
     dismissible: true
   ) %>
 <% end %>
@@ -257,7 +257,7 @@ Alerts use:
 # test/components/flat_pack/alert_component_test.rb
 render_inline(FlatPack::Alert::Component.new(
   title: "Test",
-  variant: :success,
+  style: :success,
   dismissible: true
 ))
 

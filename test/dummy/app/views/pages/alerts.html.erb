@@ -11,34 +11,34 @@
       <%= render FlatPack::Alert::Component.new(
         title: "Information",
         description: "This is an informational message.",
-        variant: :info
+        style: :info
       ) %>
       <%= render FlatPack::Alert::Component.new(
         title: "Success!",
         description: "Your changes have been saved successfully.",
-        variant: :success
+        style: :success
       ) %>
       <%= render FlatPack::Alert::Component.new(
         title: "Warning",
         description: "This action cannot be undone.",
-        variant: :warning
+        style: :warning
       ) %>
       <%= render FlatPack::Alert::Component.new(
         title: "Error",
         description: "Failed to save changes. Please try again.",
-        variant: :danger
+        style: :danger
       ) %>
     </div>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Alert::Component.new(
   title: "Information",
   description: "This is an informational message.",
-  variant: :info
+  style: :info
 ) %&gt;
 
 &lt;%= render FlatPack::Alert::Component.new(
   title: "Success!",
   description: "Your changes have been saved successfully.",
-  variant: :success
+  style: :success
 ) %&gt;</code></pre>
   </section>
 
@@ -48,16 +48,16 @@
     <div class="space-y-4 mb-4">
       <%= render FlatPack::Alert::Component.new(
         title: "Quick information message",
-        variant: :info
+        style: :info
       ) %>
       <%= render FlatPack::Alert::Component.new(
         title: "Successfully completed!",
-        variant: :success
+        style: :success
       ) %>
     </div>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Alert::Component.new(
   title: "Quick information message",
-  variant: :info
+  style: :info
 ) %&gt;</code></pre>
   </section>
 
@@ -67,16 +67,16 @@
     <div class="space-y-4 mb-4">
       <%= render FlatPack::Alert::Component.new(
         description: "Your session will expire in 5 minutes.",
-        variant: :warning
+        style: :warning
       ) %>
       <%= render FlatPack::Alert::Component.new(
         description: "All systems are operational.",
-        variant: :success
+        style: :success
       ) %>
     </div>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Alert::Component.new(
   description: "Your session will expire in 5 minutes.",
-  variant: :warning
+  style: :warning
 ) %&gt;</code></pre>
   </section>
 
@@ -87,20 +87,20 @@
       <%= render FlatPack::Alert::Component.new(
         title: "No Icon",
         description: "This alert doesn't show an icon.",
-        variant: :info,
+        style: :info,
         icon: false
       ) %>
       <%= render FlatPack::Alert::Component.new(
         title: "Text Only",
         description: "Clean text-only presentation.",
-        variant: :success,
+        style: :success,
         icon: false
       ) %>
     </div>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Alert::Component.new(
   title: "No Icon",
   description: "This alert doesn't show an icon.",
-  variant: :info,
+  style: :info,
   icon: false
 ) %&gt;</code></pre>
   </section>
@@ -112,26 +112,26 @@
       <%= render FlatPack::Alert::Component.new(
         title: "Notice",
         description: "Click the X button to dismiss this message.",
-        variant: :info,
+        style: :info,
         dismissible: true
       ) %>
       <%= render FlatPack::Alert::Component.new(
         title: "Announcement",
         description: "New features are now available! Dismiss when read.",
-        variant: :info,
+        style: :info,
         dismissible: true
       ) %>
       <%= render FlatPack::Alert::Component.new(
         title: "Temporary Warning",
         description: "This warning can be dismissed once acknowledged.",
-        variant: :warning,
+        style: :warning,
         dismissible: true
       ) %>
     </div>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Alert::Component.new(
   title: "Notice",
   description: "Click the X button to dismiss this message.",
-  variant: :info,
+  style: :info,
   dismissible: true
 ) %&gt;</code></pre>
   </section>
@@ -140,7 +140,7 @@
   <section class="mb-12">
     <h2 class="text-2xl font-semibold mb-4">Rich Content with Slots</h2>
     <div class="space-y-4 mb-4">
-      <%= render FlatPack::Alert::Component.new(variant: :success) do %>
+      <%= render FlatPack::Alert::Component.new(style: :success) do %>
         <div class="flex flex-col items-start justify-between gap-3">
           <div>
             <strong>Success!</strong> You've completed the tutorial.
@@ -149,7 +149,7 @@
         </div>
       <% end %>
       
-      <%= render FlatPack::Alert::Component.new(variant: :warning) do %>
+      <%= render FlatPack::Alert::Component.new(style: :warning) do %>
         <div class="flex flex-col items-start justify-between gap-3">
           <div>
             <strong>Confirm Action</strong>
@@ -162,7 +162,7 @@
         </div>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Alert::Component.new(variant: :success) do %&gt;
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Alert::Component.new(style: :success) do %&gt;
   &lt;div class="flex flex-col items-start justify-between gap-3"&gt;
     &lt;div&gt;
       &lt;strong&gt;Success!&lt;/strong&gt; You've completed the tutorial.
@@ -181,7 +181,7 @@
       <%= render FlatPack::Alert::Component.new(
         title: "Form submitted",
         description: "Thank you! We'll process your request shortly.",
-        variant: :success,
+        style: :success,
         dismissible: true
       ) %>
     </div>
@@ -191,7 +191,7 @@
       <%= render FlatPack::Alert::Component.new(
         title: "Please check the form",
         description: "There are errors that need to be corrected before submission.",
-        variant: :danger
+        style: :danger
       ) %>
     </div>
 
@@ -200,7 +200,7 @@
       <%= render FlatPack::Alert::Component.new(
         title: "Before you proceed",
         description: "This will permanently delete all your data. This action cannot be undone.",
-        variant: :warning
+        style: :warning
       ) %>
     </div>
 
@@ -209,7 +209,7 @@
       <%= render FlatPack::Alert::Component.new(
         title: "System Maintenance",
         description: "Scheduled maintenance is planned for tonight from 11 PM to 1 AM EST.",
-        variant: :info,
+        style: :info,
         dismissible: true
       ) %>
     </div>
@@ -217,7 +217,7 @@
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Alert::Component.new(
   title: "Form submitted",
   description: "Thank you! We'll process your request shortly.",
-  variant: :success,
+  style: :success,
   dismissible: true
 ) %&gt;</code></pre>
   </section>
@@ -231,7 +231,7 @@
         <pre class="text-sm"><code>&lt;% if flash[:notice] %&gt;
   &lt;%= render FlatPack::Alert::Component.new(
     description: flash[:notice],
-    variant: :success,
+    style: :success,
     dismissible: true
   ) %&gt;
 &lt;% end %&gt;
@@ -239,7 +239,7 @@
 &lt;% if flash[:alert] %&gt;
   &lt;%= render FlatPack::Alert::Component.new(
     description: flash[:alert],
-    variant: :danger,
+    style: :danger,
     dismissible: true
   ) %&gt;
 &lt;% end %&gt;</code></pre>
@@ -247,13 +247,13 @@
       
       <%= render FlatPack::Alert::Component.new(
         description: "This is a simulated flash success message.",
-        variant: :success,
+        style: :success,
         dismissible: true
       ) %>
       
       <%= render FlatPack::Alert::Component.new(
         description: "This is a simulated flash error message.",
-        variant: :danger,
+        style: :danger,
         dismissible: true
       ) %>
     </div>
@@ -267,13 +267,13 @@
       <%= render FlatPack::Alert::Component.new(
         title: "Click to Dismiss",
         description: "This alert will fade out and be removed from the page.",
-        variant: :info,
+        style: :info,
         dismissible: true
       ) %>
       <%= render FlatPack::Alert::Component.new(
         title: "Try Me Too",
         description: "Watch the smooth animation as this alert disappears.",
-        variant: :success,
+        style: :success,
         dismissible: true
       ) %>
     </div>
