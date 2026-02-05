@@ -63,7 +63,7 @@ Define actions using `with_action`:
 
 ```erb
 <% table.with_action(
-  title: "Edit",
+  text: "Edit",
   url: ->(user) { edit_user_path(user) }
 ) %>
 ```
@@ -72,7 +72,7 @@ Define actions using `with_action`:
 
 ```erb
 <% table.with_action(
-  title: "Delete",
+  text: "Delete",
   url: ->(user) { user_path(user) },
   method: :delete,
   scheme: :secondary,
@@ -116,14 +116,14 @@ Define actions using `with_action`:
   
   <%# Edit action %>
   <% table.with_action(
-    title: "Edit",
+    text: "Edit",
     url: ->(user) { edit_user_path(user) },
     scheme: :ghost
   ) %>
   
   <%# Delete action with confirmation %>
   <% table.with_action(
-    title: "Delete",
+    text: "Delete",
     url: ->(user) { user_path(user) },
     method: :delete,
     scheme: :ghost,
@@ -245,7 +245,7 @@ The Stimulus controller (`flat-pack--table`) provides:
 <% table.with_action do |user| %>
   <% if policy(user).edit? %>
     <%= render FlatPack::Button::Component.new(
-      title: "Edit",
+      text: "Edit",
       url: edit_user_path(user),
       scheme: :ghost
     ) %>
@@ -256,9 +256,9 @@ The Stimulus controller (`flat-pack--table`) provides:
 ### Multiple Action Buttons
 
 ```erb
-<% table.with_action(title: "View", url: ->(user) { user_path(user) }, scheme: :ghost) %>
-<% table.with_action(title: "Edit", url: ->(user) { edit_user_path(user) }, scheme: :ghost) %>
-<% table.with_action(title: "Delete", url: ->(user) { user_path(user) }, method: :delete, scheme: :ghost) %>
+<% table.with_action(text: "View", url: ->(user) { user_path(user) }, scheme: :ghost) %>
+<% table.with_action(text: "Edit", url: ->(user) { edit_user_path(user) }, scheme: :ghost) %>
+<% table.with_action(text: "Delete", url: ->(user) { user_path(user) }, method: :delete, scheme: :ghost) %>
 ```
 
 ### With Pagination
@@ -419,7 +419,7 @@ table.with_column(
 
 ```ruby
 table.with_action(
-  title: String,              # Optional
+  text: String,              # Optional
   url: String | Proc,         # Optional
   method: Symbol,             # Optional
   scheme: Symbol,             # Optional, default: :ghost

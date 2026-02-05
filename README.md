@@ -57,7 +57,7 @@ Schemes: `:primary`, `:secondary`, `:ghost`
 <%= render FlatPack::Table::Component.new(data: @users) do |table| %>
   <% table.with_column(title: "Name", attribute: :name) %>
   <% table.with_column(title: "Email", attribute: :email) %>
-  <% table.with_action(title: "Edit", url: ->(user) { edit_user_path(user) }) %>
+  <% table.with_action(text: "Edit", url: ->(user) { edit_user_path(user) }) %>
 <% end %>
 ```
 
@@ -67,28 +67,28 @@ Schemes: `:primary`, `:secondary`, `:ghost`
 # Text Input
 <%= render FlatPack::TextInput::Component.new(
   name: "username",
-  title: "Username",
+  label: "Username",
   placeholder: "Enter your username"
 ) %>
 
 # Password Input with toggle
 <%= render FlatPack::PasswordInput::Component.new(
   name: "password",
-  title: "Password",
+  label: "Password",
   required: true
 ) %>
 
 # Email Input
 <%= render FlatPack::EmailInput::Component.new(
   name: "email",
-  title: "Email Address",
+  label: "Email Address",
   placeholder: "you@example.com"
 ) %>
 
 # Phone Input
 <%= render FlatPack::PhoneInput::Component.new(
   name: "phone",
-  title: "Phone Number"
+  label: "Phone Number"
 ) %>
 
 # Search Input with clear button
@@ -100,14 +100,14 @@ Schemes: `:primary`, `:secondary`, `:ghost`
 # Text Area with auto-expand
 <%= render FlatPack::TextArea::Component.new(
   name: "description",
-  title: "Description",
-  data: 3
+  label: "Description",
+  rows: 3
 ) %>
 
 # URL Input with validation
 <%= render FlatPack::UrlInput::Component.new(
   name: "website",
-  title: "Website URL"
+  label: "Website URL"
 ) %>
 ```
 

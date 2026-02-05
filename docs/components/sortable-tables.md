@@ -196,7 +196,7 @@ end
   ) %>
   
   <% table.with_action(
-    title: "Edit",
+    text: "Edit",
     url: ->(product) { edit_product_path(product) },
     scheme: :ghost
   ) %>

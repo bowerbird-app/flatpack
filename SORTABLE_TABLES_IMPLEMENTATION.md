@@ -27,7 +27,7 @@ This document summarizes the implementation of sortable table functionality for 
 
 **Key Methods:**
 ```ruby
-def initialize(label:, attribute: nil, html: nil, sortable: false, sort_key: nil, &block)
+def initialize(title:, attribute: nil, html: nil, sortable: false, sort_key: nil, &block)
 def render_header(current_sort: nil, current_direction: nil, base_url: nil)
 def sort_link(current_sort, current_direction, base_url)
 def calculate_new_direction(current_sort, current_direction)

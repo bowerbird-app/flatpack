@@ -130,10 +130,10 @@ Consistent interface for HTML attributes:
 
 ```ruby
 FlatPack::Button::Component.new(
-  title: "Click me",
+  text: "Click me",
   class: "mt-4",
   data: { action: "click" },
-  aria: { title: "Custom" }
+  aria: { label: "Custom" }
 )
 ```
 
@@ -155,7 +155,7 @@ Allows overriding without `!important`.
 ```erb
 <%= render FlatPack::Table::Component.new(data: @users) do |table| %>
   <% table.with_column(title: "Name", attribute: :name) %>
-  <% table.with_action(title: "Edit", url: ...) %>
+  <% table.with_action(text: "Edit", url: ...) %>
 <% end %>
 ```
 
