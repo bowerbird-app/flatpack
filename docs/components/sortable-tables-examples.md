@@ -418,7 +418,7 @@ The sortable tables feature works in all modern browsers:
 
 ```ruby
 FlatPack::Table::Component.new(
-  rows: Array,                # Required
+  data: Array,                # Required
   turbo_frame: String,        # Required for sorting
   sort: String,               # Required for sorting
   direction: String,          # Required for sorting
@@ -431,11 +431,11 @@ FlatPack::Table::Component.new(
 
 ```ruby
 table.with_column(
-  label: String,              # Required
+  title: String,              # Required
   attribute: Symbol,          # Optional
   sortable: Boolean,          # Optional, default: false
   sort_key: Symbol,           # Optional, defaults to attribute
-  formatter: Proc,            # Optional
+  html: Proc,            # Optional
   &block                      # Optional
 )
 ```

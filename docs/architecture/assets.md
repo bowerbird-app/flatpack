@@ -219,7 +219,7 @@ lazyLoadControllersFrom("controllers/flat_pack", application)
 Controllers are namespaced:
 
 ```erb
-<%= render FlatPack::Table::Component.new(rows: @users, stimulus: true) do |table| %>
+<%= render FlatPack::Table::Component.new(data: @users, stimulus: true) do |table| %>
   <%# Adds data-controller="flat-pack--table" %>
 <% end %>
 ```

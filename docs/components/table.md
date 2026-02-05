@@ -5,9 +5,9 @@ The Table component renders data in a tabular format with columns and actions.
 ## Basic Usage
 
 ```erb
-<%= render FlatPack::Table::Component.new(rows: @users) do |table| %>
-  <% table.with_column(label: "Name", attribute: :name) %>
-  <% table.with_column(label: "Email", attribute: :email) %>
+<%= render FlatPack::Table::Component.new(data: @users) do |table| %>
+  <% table.with_column(title: "Name", attribute: :name) %>
+  <% table.with_column(title: "Email", attribute: :email) %>
 <% end %>
 ```
 
@@ -15,7 +15,7 @@ The Table component renders data in a tabular format with columns and actions.
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `rows` | Array | `[]` | Data to display in table |
+| `data` | Array | `[]` | Data to display in table |
 | `stimulus` | Boolean | `false` | Enable Stimulus controller for interactivity |
 | `turbo_frame` | String | `nil` | Wrap table in a Turbo Frame with this ID |
 | `sort` | String | `nil` | Current sort column |
@@ -30,7 +30,7 @@ Define columns using `with_column`:
 ### Attribute-based Column
 
 ```erb
-<% table.with_column(label: "Name", attribute: :name) %>
+<% table.with_column(title: "Name", attribute: :name) %>
 ```
 
 This calls `row.name` for each row.
@@ -38,7 +38,7 @@ This calls `row.name` for each row.
 ### Block-based Column
 
 ```erb
-<% table.with_column(label: "Full Name") do |user| %>
+<% table.with_column(title: "Full Name") do |user| %>
   <%= "#{user.first_name} #{user.last_name}" %>
 <% end %>
 ```
@@ -49,9 +49,9 @@ Use blocks for custom formatting.
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `label` | String | **required** | Column header text |
+| `title` | String | **required** | Column header text |
 | `attribute` | Symbol | `nil` | Attribute to call on each row |
-| `formatter` | Proc | `nil` | Custom formatter lambda/proc |
+| `html` | Proc | `nil` | Custom html lambda/proc |
 | `sortable` | Boolean | `false` | Enable sorting for this column |
 | `sort_key` | Symbol | `attribute` | Key to use in sort URL (defaults to attribute) |
 
@@ -63,7 +63,7 @@ Define actions using `with_action`:
 
 ```erb
 <% table.with_action(
-  label: "Edit",
+  text: "Edit",
   url: ->(user) { edit_user_path(user) }
 ) %>
 ```
@@ -72,7 +72,7 @@ Define actions using `with_action`:
 
 ```erb
 <% table.with_action(
-  label: "Delete",
+  text: "Delete",
   url: ->(user) { user_path(user) },
   method: :delete,
   scheme: :secondary,
@@ -93,37 +93,37 @@ Define actions using `with_action`:
 ### Complete Table with Actions
 
 ```erb
-<%= render FlatPack::Table::Component.new(rows: @users) do |table| %>
+<%= render FlatPack::Table::Component.new(data: @users) do |table| %>
   <%# Attribute column %>
-  <% table.with_column(label: "ID", attribute: :id) %>
+  <% table.with_column(title: "ID", attribute: :id) %>
   
   <%# Block column with formatting %>
-  <% table.with_column(label: "Name") do |user| %>
+  <% table.with_column(title: "Name") do |user| %>
     <strong><%= user.name %></strong>
   <% end %>
   
   <%# Block column with conditional %>
-  <% table.with_column(label: "Status") do |user| %>
+  <% table.with_column(title: "Status") do |user| %>
     <span class="<%= user.active? ? 'text-green-600' : 'text-gray-400' %>">
       <%= user.active? ? 'Active' : 'Inactive' %>
     </span>
   <% end %>
   
   <%# Date formatting %>
-  <% table.with_column(label: "Created") do |user| %>
+  <% table.with_column(title: "Created") do |user| %>
     <%= user.created_at.strftime("%b %d, %Y") %>
   <% end %>
   
   <%# Edit action %>
   <% table.with_action(
-    label: "Edit",
+    text: "Edit",
     url: ->(user) { edit_user_path(user) },
     scheme: :ghost
   ) %>
   
   <%# Delete action with confirmation %>
   <% table.with_action(
-    label: "Delete",
+    text: "Delete",
     url: ->(user) { user_path(user) },
     method: :delete,
     scheme: :ghost,
@@ -138,16 +138,16 @@ The table component supports sorting using Turbo Frames for seamless updates:
 
 ```erb
 <%= render FlatPack::Table::Component.new(
-  rows: @sorted_users,
+  data: @sorted_users,
   turbo_frame: "sortable_table",
   sort: params[:sort],
   direction: params[:direction],
   base_url: request.path
 ) do |table| %>
-  <% table.with_column(label: "Name", attribute: :name, sortable: true) %>
-  <% table.with_column(label: "Email", attribute: :email, sortable: true) %>
-  <% table.with_column(label: "Status", attribute: :status, sortable: true) %>
-  <% table.with_column(label: "Created", attribute: :created_at, sortable: true) %>
+  <% table.with_column(title: "Name", attribute: :name, sortable: true) %>
+  <% table.with_column(title: "Email", attribute: :email, sortable: true) %>
+  <% table.with_column(title: "Status", attribute: :status, sortable: true) %>
+  <% table.with_column(title: "Created", attribute: :created_at, sortable: true) %>
 <% end %>
 ```
 
@@ -166,10 +166,10 @@ You can combine sorting with custom formatters:
 
 ```erb
 <% table.with_column(
-  label: "Status",
+  title: "Status",
   attribute: :status,
   sortable: true,
-  formatter: ->(user) {
+  html: ->(user) {
     badge_class = case user.status
     when 'active' then 'bg-green-100 text-green-800'
     when 'inactive' then 'bg-gray-100 text-gray-800'
@@ -186,7 +186,7 @@ Use a different key for sorting than the attribute:
 
 ```erb
 <% table.with_column(
-  label: "Name",
+  title: "Name",
   attribute: :full_name,
   sortable: true,
   sort_key: :last_name
@@ -196,7 +196,7 @@ Use a different key for sorting than the attribute:
 ### With Avatar
 
 ```erb
-<% table.with_column(label: "User") do |user| %>
+<% table.with_column(title: "User") do |user| %>
   <div class="flex items-center gap-2">
     <%= image_tag user.avatar_url, class: "w-8 h-8 rounded-full" %>
     <%= user.name %>
@@ -207,7 +207,7 @@ Use a different key for sorting than the attribute:
 ### With Badge
 
 ```erb
-<% table.with_column(label: "Role") do |user| %>
+<% table.with_column(title: "Role") do |user| %>
   <span class="px-2 py-1 text-xs rounded bg-blue-100 text-blue-800">
     <%= user.role %>
   </span>
@@ -216,11 +216,11 @@ Use a different key for sorting than the attribute:
 
 ### Empty State
 
-When `rows` is empty, displays "No data available":
+When `data` is empty, displays "No data available":
 
 ```erb
-<%= render FlatPack::Table::Component.new(rows: []) do |table| %>
-  <% table.with_column(label: "Name", attribute: :name) %>
+<%= render FlatPack::Table::Component.new(data: []) do |table| %>
+  <% table.with_column(title: "Name", attribute: :name) %>
 <% end %>
 ```
 
@@ -229,8 +229,8 @@ When `rows` is empty, displays "No data available":
 Enable the Stimulus controller for advanced interactions:
 
 ```erb
-<%= render FlatPack::Table::Component.new(rows: @users, stimulus: true) do |table| %>
-  <% table.with_column(label: "Name", attribute: :name) %>
+<%= render FlatPack::Table::Component.new(data: @users, stimulus: true) do |table| %>
+  <% table.with_column(title: "Name", attribute: :name) %>
 <% end %>
 ```
 
@@ -245,7 +245,7 @@ The Stimulus controller (`flat-pack--table`) provides:
 <% table.with_action do |user| %>
   <% if policy(user).edit? %>
     <%= render FlatPack::Button::Component.new(
-      label: "Edit",
+      text: "Edit",
       url: edit_user_path(user),
       scheme: :ghost
     ) %>
@@ -256,9 +256,9 @@ The Stimulus controller (`flat-pack--table`) provides:
 ### Multiple Action Buttons
 
 ```erb
-<% table.with_action(label: "View", url: ->(user) { user_path(user) }, scheme: :ghost) %>
-<% table.with_action(label: "Edit", url: ->(user) { edit_user_path(user) }, scheme: :ghost) %>
-<% table.with_action(label: "Delete", url: ->(user) { user_path(user) }, method: :delete, scheme: :ghost) %>
+<% table.with_action(text: "View", url: ->(user) { user_path(user) }, scheme: :ghost) %>
+<% table.with_action(text: "Edit", url: ->(user) { edit_user_path(user) }, scheme: :ghost) %>
+<% table.with_action(text: "Delete", url: ->(user) { user_path(user) }, method: :delete, scheme: :ghost) %>
 ```
 
 ### With Pagination
@@ -267,7 +267,7 @@ Combine with pagination libraries like Pagy or Kaminari:
 
 ```erb
 <%# With Pagy %>
-<%= render FlatPack::Table::Component.new(rows: @users) do |table| %>
+<%= render FlatPack::Table::Component.new(data: @users) do |table| %>
   <%# ... columns ... %>
 <% end %>
 
@@ -280,7 +280,7 @@ Combine with pagination libraries like Pagy or Kaminari:
 
 ```erb
 <%= render FlatPack::Table::Component.new(
-  rows: @users,
+  data: @users,
   class: "mt-8"
 ) do |table| %>
   <%# ... columns ... %>
@@ -293,7 +293,7 @@ Classes are merged using `tailwind_merge`, so Tailwind utilities override correc
 
 ```erb
 <%= render FlatPack::Table::Component.new(
-  rows: @users,
+  data: @users,
   data: { controller: "sortable" }
 ) do |table| %>
   <%# ... columns ... %>
@@ -320,7 +320,7 @@ Add classes to the container:
 
 ```erb
 <%= render FlatPack::Table::Component.new(
-  rows: @users,
+  data: @users,
   class: "shadow-lg"
 ) do |table| %>
   <%# ... %>
@@ -340,7 +340,7 @@ Tables are wrapped in a scrollable container:
 For mobile, consider hiding columns:
 
 ```erb
-<% table.with_column(label: "Email", attribute: :email, class: "hidden md:table-cell") %>
+<% table.with_column(title: "Email", attribute: :email, class: "hidden md:table-cell") %>
 ```
 
 ## Accessibility
@@ -367,9 +367,9 @@ class CustomTableTest < ViewComponent::TestCase
   def test_renders_table_with_data
     users = [OpenStruct.new(name: "Alice", email: "alice@example.com")]
     
-    render_inline FlatPack::Table::Component.new(rows: users) do |table|
-      table.with_column(label: "Name", attribute: :name)
-      table.with_column(label: "Email", attribute: :email)
+    render_inline FlatPack::Table::Component.new(data: users) do |table|
+      table.with_column(title: "Name", attribute: :name)
+      table.with_column(title: "Email", attribute: :email)
     end
     
     assert_selector "th", text: "Name"
@@ -384,7 +384,7 @@ end
 
 ```ruby
 FlatPack::Table::Component.new(
-  rows: Array,                # Optional, default: []
+  data: Array,                # Optional, default: []
   stimulus: Boolean,          # Optional, default: false
   turbo_frame: String,        # Optional, default: nil
   sort: String,               # Optional, default: nil
@@ -406,9 +406,9 @@ FlatPack::Table::Component.new(
 
 ```ruby
 table.with_column(
-  label: String,              # Required
+  title: String,              # Required
   attribute: Symbol,          # Optional
-  formatter: Proc,            # Optional
+  html: Proc,            # Optional
   sortable: Boolean,          # Optional, default: false
   sort_key: Symbol,           # Optional, defaults to attribute
   &block                      # Optional
@@ -419,7 +419,7 @@ table.with_column(
 
 ```ruby
 table.with_action(
-  label: String,              # Optional
+  text: String,              # Optional
   url: String | Proc,         # Optional
   method: Symbol,             # Optional
   scheme: Symbol,             # Optional, default: :ghost

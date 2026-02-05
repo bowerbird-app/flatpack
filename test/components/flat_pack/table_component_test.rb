@@ -14,16 +14,16 @@ module FlatPack
       end
 
       def test_renders_empty_table
-        render_inline(Component.new(rows: []))
+        render_inline(Component.new(data: []))
 
         assert_selector "table"
         assert_text "No data available"
       end
 
       def test_renders_table_with_columns
-        render_inline(Component.new(rows: @users)) do |component|
-          component.with_column(label: "Name", attribute: :name)
-          component.with_column(label: "Email", attribute: :email)
+        render_inline(Component.new(data: @users)) do |component|
+          component.with_column(title: "Name", attribute: :name)
+          component.with_column(title: "Email", attribute: :email)
         end
 
         assert_selector "table"
@@ -34,8 +34,8 @@ module FlatPack
       end
 
       def test_renders_table_with_block_columns
-        render_inline(Component.new(rows: @users)) do |component|
-          component.with_column(label: "Name", formatter: ->(user) { user.name.upcase })
+        render_inline(Component.new(data: @users)) do |component|
+          component.with_column(title: "Name", html: ->(user) { user.name.upcase })
         end
 
         assert_selector "td", text: "ALICE"
@@ -43,8 +43,8 @@ module FlatPack
       end
 
       def test_renders_table_with_actions
-        render_inline(Component.new(rows: @users)) do |component|
-          component.with_column(label: "Name", attribute: :name)
+        render_inline(Component.new(data: @users)) do |component|
+          component.with_column(title: "Name", attribute: :name)
           component.with_action(text: "Edit", url: ->(user) { "/users/#{user.id}/edit" })
         end
 
@@ -54,32 +54,32 @@ module FlatPack
       end
 
       def test_renders_table_with_stimulus_controller
-        render_inline(Component.new(rows: @users, stimulus: true)) do |component|
-          component.with_column(label: "Name", attribute: :name)
+        render_inline(Component.new(data: @users, stimulus: true)) do |component|
+          component.with_column(title: "Name", attribute: :name)
         end
 
         assert_selector "div[data-controller='flat-pack--table']"
       end
 
       def test_renders_custom_action_block
-        render_inline(Component.new(rows: @users)) do |component|
-          component.with_column(label: "Name", attribute: :name)
-          component.with_action(formatter: ->(user) { "<span class=\"custom-action\">Custom #{user.name}</span>".html_safe })
+        render_inline(Component.new(data: @users)) do |component|
+          component.with_column(title: "Name", attribute: :name)
+          component.with_action(html: ->(user) { "<span class=\"custom-action\">Custom #{user.name}</span>".html_safe })
         end
 
         assert_selector "span.custom-action", text: "Custom Alice"
       end
 
       def test_merges_custom_classes
-        render_inline(Component.new(rows: @users, class: "custom-table"))
+        render_inline(Component.new(data: @users, class: "custom-table"))
 
         assert_selector "div.custom-table"
       end
 
       def test_empty_state_spans_all_columns
-        render_inline(Component.new(rows: [])) do |component|
-          component.with_column(label: "Name")
-          component.with_column(label: "Email")
+        render_inline(Component.new(data: [])) do |component|
+          component.with_column(title: "Name")
+          component.with_column(title: "Email")
           component.with_action(label: "Edit")
         end
 
@@ -88,13 +88,13 @@ module FlatPack
 
       def test_renders_sortable_column_headers
         render_inline(Component.new(
-          rows: @users,
+          data: @users,
           sort: "name",
           direction: "asc",
           base_url: "/users"
         )) do |component|
-          component.with_column(label: "Name", attribute: :name, sortable: true)
-          component.with_column(label: "Email", attribute: :email, sortable: true)
+          component.with_column(title: "Name", attribute: :name, sortable: true)
+          component.with_column(title: "Email", attribute: :email, sortable: true)
         end
 
         assert_selector "th a[href*='sort=name']"
@@ -103,12 +103,12 @@ module FlatPack
 
       def test_sortable_headers_toggle_direction
         render_inline(Component.new(
-          rows: @users,
+          data: @users,
           sort: "name",
           direction: "asc",
           base_url: "/users"
         )) do |component|
-          component.with_column(label: "Name", attribute: :name, sortable: true)
+          component.with_column(title: "Name", attribute: :name, sortable: true)
         end
 
         # When currently sorted ascending, link should be for descending
@@ -117,13 +117,13 @@ module FlatPack
 
       def test_sortable_headers_show_indicator_for_current_sort
         render_inline(Component.new(
-          rows: @users,
+          data: @users,
           sort: "name",
           direction: "asc",
           base_url: "/users"
         )) do |component|
-          component.with_column(label: "Name", attribute: :name, sortable: true)
-          component.with_column(label: "Email", attribute: :email, sortable: true)
+          component.with_column(title: "Name", attribute: :name, sortable: true)
+          component.with_column(title: "Email", attribute: :email, sortable: true)
         end
 
         # Should show ascending arrow for name column
@@ -134,12 +134,12 @@ module FlatPack
 
       def test_sortable_headers_show_descending_indicator
         render_inline(Component.new(
-          rows: @users,
+          data: @users,
           sort: "name",
           direction: "desc",
           base_url: "/users"
         )) do |component|
-          component.with_column(label: "Name", attribute: :name, sortable: true)
+          component.with_column(title: "Name", attribute: :name, sortable: true)
         end
 
         # Should show descending arrow for name column
@@ -148,13 +148,13 @@ module FlatPack
 
       def test_non_sortable_columns_remain_static
         render_inline(Component.new(
-          rows: @users,
+          data: @users,
           sort: "name",
           direction: "asc",
           base_url: "/users"
         )) do |component|
-          component.with_column(label: "Name", attribute: :name, sortable: true)
-          component.with_column(label: "Email", attribute: :email, sortable: false)
+          component.with_column(title: "Name", attribute: :name, sortable: true)
+          component.with_column(title: "Email", attribute: :email, sortable: false)
         end
 
         assert_selector "th a", text: "Name"
@@ -164,13 +164,13 @@ module FlatPack
 
       def test_sortable_links_include_turbo_frame_data
         render_inline(Component.new(
-          rows: @users,
+          data: @users,
           turbo_frame: "sortable_table",
           sort: "name",
           direction: "asc",
           base_url: "/users"
         )) do |component|
-          component.with_column(label: "Name", attribute: :name, sortable: true)
+          component.with_column(title: "Name", attribute: :name, sortable: true)
         end
 
         assert_selector "th a[data-turbo-frame='sortable_table']"
@@ -178,13 +178,13 @@ module FlatPack
 
       def test_sortable_links_use_custom_turbo_frame_id
         render_inline(Component.new(
-          rows: @users,
+          data: @users,
           turbo_frame: "custom_users_table",
           sort: "name",
           direction: "asc",
           base_url: "/users"
         )) do |component|
-          component.with_column(label: "Name", attribute: :name, sortable: true)
+          component.with_column(title: "Name", attribute: :name, sortable: true)
         end
 
         assert_selector "th a[data-turbo-frame='custom_users_table']"
@@ -193,18 +193,18 @@ module FlatPack
 
       def test_wraps_table_in_turbo_frame_when_specified
         render_inline(Component.new(
-          rows: @users,
+          data: @users,
           turbo_frame: "sortable_table"
         )) do |component|
-          component.with_column(label: "Name", attribute: :name)
+          component.with_column(title: "Name", attribute: :name)
         end
 
         assert_selector "turbo-frame#sortable_table table"
       end
 
       def test_does_not_wrap_in_turbo_frame_when_not_specified
-        render_inline(Component.new(rows: @users)) do |component|
-          component.with_column(label: "Name", attribute: :name)
+        render_inline(Component.new(data: @users)) do |component|
+          component.with_column(title: "Name", attribute: :name)
         end
 
         assert_no_selector "turbo-frame"
@@ -213,13 +213,13 @@ module FlatPack
 
       def test_sortable_column_uses_sort_key_when_provided
         render_inline(Component.new(
-          rows: @users,
+          data: @users,
           sort: "custom_sort",
           direction: "asc",
           base_url: "/users"
         )) do |component|
           component.with_column(
-            label: "Name",
+            title: "Name",
             attribute: :name,
             sortable: true,
             sort_key: :custom_sort
@@ -233,13 +233,13 @@ module FlatPack
 
       def test_sortable_column_falls_back_to_attribute_for_sort_key
         render_inline(Component.new(
-          rows: @users,
+          data: @users,
           sort: "name",
           direction: "asc",
           base_url: "/users"
         )) do |component|
           component.with_column(
-            label: "Name",
+            title: "Name",
             attribute: :name,
             sortable: true
           )
@@ -250,16 +250,16 @@ module FlatPack
 
       def test_sortable_column_with_formatter_still_sorts
         render_inline(Component.new(
-          rows: @users,
+          data: @users,
           sort: "name",
           direction: "asc",
           base_url: "/users"
         )) do |component|
           component.with_column(
-            label: "Name",
+            title: "Name",
             attribute: :name,
             sortable: true,
-            formatter: ->(user) { user.name.upcase }
+            html: ->(user) { user.name.upcase }
           )
         end
 

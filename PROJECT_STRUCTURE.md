@@ -132,7 +132,7 @@ flat_pack/
 **Usage:**
 ```erb
 <%= render FlatPack::Button::Component.new(
-  label: "Click me",
+  text: "Click me",
   scheme: :primary,
   url: some_path
 ) %>
@@ -148,9 +148,9 @@ flat_pack/
 
 **Usage:**
 ```erb
-<%= render FlatPack::Table::Component.new(rows: @users) do |table| %>
-  <% table.with_column(label: "Name", attribute: :name) %>
-  <% table.with_action(label: "Edit", url: ->(user) { edit_user_path(user) }) %>
+<%= render FlatPack::Table::Component.new(data: @users) do |table| %>
+  <% table.with_column(title: "Name", attribute: :name) %>
+  <% table.with_action(text: "Edit", url: ->(user) { edit_user_path(user) }) %>
 <% end %>
 ```
 
