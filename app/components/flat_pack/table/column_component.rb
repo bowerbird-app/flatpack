@@ -5,33 +5,33 @@ module FlatPack
     class ColumnComponent < ViewComponent::Base
       attr_reader :sortable, :sort_key
 
-      def initialize(label:, attribute: nil, formatter: nil, sortable: false, sort_key: nil, &block)
-        @label = label
+      def initialize(title:, attribute: nil, html: nil, sortable: false, sort_key: nil, &block)
+        @title = title
         @attribute = attribute
-        # Support both formatter: proc and block syntax (though block won't work with ViewComponent)
-        @formatter = formatter || block
+        # Support both html: proc and block syntax (though block won't work with ViewComponent)
+        @html = html || block
         @sortable = sortable
         # Use sort_key if provided, otherwise fall back to attribute
         @sort_key = sort_key || attribute
       end
 
       def render_header(current_sort: nil, current_direction: nil, base_url: nil, turbo_frame: nil)
-        return tag.th(@label, class: header_classes) unless @sortable
+        return tag.th(@title, class: header_classes) unless @sortable
 
         tag.th(class: sortable_header_classes) do
           if base_url
             sort_link(current_sort, current_direction, base_url, turbo_frame)
           else
-            @label
+            @title
           end
         end
       end
 
       def render_cell(row)
         # Get the content first
-        content = if @formatter
-          # Call the formatter proc/lambda
-          @formatter.call(row)
+        content = if @html
+          # Call the html proc/lambda
+          @html.call(row)
         elsif @attribute
           row.public_send(@attribute).to_s
         else
@@ -54,7 +54,7 @@ module FlatPack
 
         tag.a(href: sort_url, data: {turbo_frame: frame_id}, class: "group inline-flex items-center gap-1 hover:text-[var(--color-foreground)] transition-colors") do
           safe_join([
-            @label,
+            @title,
             sort_indicator(current_sort, current_direction)
           ])
         end

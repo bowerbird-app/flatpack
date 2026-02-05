@@ -27,7 +27,7 @@ This document summarizes the implementation of sortable table functionality for 
 
 **Key Methods:**
 ```ruby
-def initialize(label:, attribute: nil, formatter: nil, sortable: false, sort_key: nil, &block)
+def initialize(label:, attribute: nil, html: nil, sortable: false, sort_key: nil, &block)
 def render_header(current_sort: nil, current_direction: nil, base_url: nil)
 def sort_link(current_sort, current_direction, base_url)
 def calculate_new_direction(current_sort, current_direction)
@@ -47,7 +47,7 @@ def sort_indicator(current_sort, current_direction)
 **Updated Signature:**
 ```ruby
 def initialize(
-  rows: [],
+  data: [],
   stimulus: false,
   turbo_frame: nil,
   sort: nil,
@@ -137,16 +137,16 @@ end
 **View:**
 ```erb
 <%= render FlatPack::Table::Component.new(
-  rows: @sorted_users,
+  data: @sorted_users,
   turbo_frame: "users_table",
   sort: params[:sort],
   direction: params[:direction],
   base_url: request.path
 ) do |table| %>
-  <% table.with_column(label: "Name", attribute: :name, sortable: true) %>
-  <% table.with_column(label: "Email", attribute: :email, sortable: true) %>
-  <% table.with_column(label: "Status", attribute: :status, sortable: true) %>
-  <% table.with_column(label: "Created", attribute: :created_at, sortable: true) %>
+  <% table.with_column(title: "Name", attribute: :name, sortable: true) %>
+  <% table.with_column(title: "Email", attribute: :email, sortable: true) %>
+  <% table.with_column(title: "Status", attribute: :status, sortable: true) %>
+  <% table.with_column(title: "Created", attribute: :created_at, sortable: true) %>
 <% end %>
 ```
 
@@ -209,8 +209,8 @@ The implementation is fully backward compatible:
 
 **Existing tables continue to work:**
 ```erb
-<%= render FlatPack::Table::Component.new(rows: @users) do |table| %>
-  <% table.with_column(label: "Name", attribute: :name) %>
+<%= render FlatPack::Table::Component.new(data: @users) do |table| %>
+  <% table.with_column(title: "Name", attribute: :name) %>
 <% end %>
 ```
 
@@ -315,7 +315,7 @@ Potential improvements (not implemented):
 
 ```ruby
 FlatPack::Table::Component.new(
-  rows: Array,           # Required - data to display
+  data: Array,           # Required - data to display
   turbo_frame: String,   # Optional - Turbo Frame ID
   sort: String,          # Optional - current sort column
   direction: String,     # Optional - 'asc' or 'desc'
@@ -329,9 +329,9 @@ FlatPack::Table::Component.new(
 
 ```ruby
 table.with_column(
-  label: String,         # Required - header text
+  title: String,         # Required - header text
   attribute: Symbol,     # Optional - attribute to display
-  formatter: Proc,       # Optional - custom formatter
+  html: Proc,       # Optional - custom formatter
   sortable: Boolean,     # Optional - enable sorting (default: false)
   sort_key: Symbol,      # Optional - key for URL (default: attribute)
   &block                 # Optional - custom block

@@ -39,15 +39,15 @@ Render the table with sortable columns:
 
 ```erb
 <%= render FlatPack::Table::Component.new(
-  rows: @sorted_users,
+  data: @sorted_users,
   turbo_frame: "sortable_table",
   sort: params[:sort],
   direction: params[:direction],
   base_url: request.path
 ) do |table| %>
-  <% table.with_column(label: "Name", attribute: :name, sortable: true) %>
-  <% table.with_column(label: "Email", attribute: :email, sortable: true) %>
-  <% table.with_column(label: "Created", attribute: :created_at, sortable: true) %>
+  <% table.with_column(title: "Name", attribute: :name, sortable: true) %>
+  <% table.with_column(title: "Email", attribute: :email, sortable: true) %>
+  <% table.with_column(title: "Created", attribute: :created_at, sortable: true) %>
 <% end %>
 ```
 
@@ -77,7 +77,7 @@ Add `sortable: true` to any column:
 
 ```erb
 <% table.with_column(
-  label: "Name",
+  title: "Name",
   attribute: :name,
   sortable: true
 ) %>
@@ -89,7 +89,7 @@ Use a different sort key than the display attribute:
 
 ```erb
 <% table.with_column(
-  label: "Full Name",
+  title: "Full Name",
   attribute: :full_name,
   sortable: true,
   sort_key: :last_name  # Sort by last name instead
@@ -102,10 +102,10 @@ Combine sorting with custom formatting:
 
 ```erb
 <% table.with_column(
-  label: "Status",
+  title: "Status",
   attribute: :status,
   sortable: true,
-  formatter: ->(user) {
+  html: ->(user) {
     badge_class = case user.status
     when 'active' then 'bg-green-100 text-green-800'
     when 'inactive' then 'bg-gray-100 text-gray-800'
@@ -154,7 +154,7 @@ end
 <h1>Products</h1>
 
 <%= render FlatPack::Table::Component.new(
-  rows: @sorted_products,
+  data: @sorted_products,
   turbo_frame: "products_table",
   sort: params[:sort],
   direction: params[:direction],
@@ -162,41 +162,41 @@ end
 ) do |table| %>
   
   <% table.with_column(
-    label: "Name",
+    title: "Name",
     attribute: :name,
     sortable: true
   ) %>
   
   <% table.with_column(
-    label: "Price",
+    title: "Price",
     attribute: :price,
     sortable: true,
-    formatter: ->(product) { number_to_currency(product.price) }
+    html: ->(product) { number_to_currency(product.price) }
   ) %>
   
   <% table.with_column(
-    label: "Stock",
+    title: "Stock",
     attribute: :stock,
     sortable: true
   ) %>
   
   <% table.with_column(
-    label: "Category",
+    title: "Category",
     attribute: :category_name,
     sortable: true,
     sort_key: :category_name,
-    formatter: ->(product) { product.category.name }
+    html: ->(product) { product.category.name }
   ) %>
   
   <% table.with_column(
-    label: "Created",
+    title: "Created",
     attribute: :created_at,
     sortable: true,
-    formatter: ->(product) { product.created_at.strftime("%b %d, %Y") }
+    html: ->(product) { product.created_at.strftime("%b %d, %Y") }
   ) %>
   
   <% table.with_action(
-    label: "Edit",
+    title: "Edit",
     url: ->(product) { edit_product_path(product) },
     scheme: :ghost
   ) %>
@@ -248,7 +248,7 @@ end
 
 ```erb
 <%= render FlatPack::Table::Component.new(
-  rows: @users,
+  data: @users,
   turbo_frame: "users_table",
   sort: params[:sort],
   direction: params[:direction],
@@ -369,12 +369,12 @@ class TableComponentTest < ViewComponent::TestCase
     users = [OpenStruct.new(name: "Alice", email: "alice@example.com")]
     
     render_inline FlatPack::Table::Component.new(
-      rows: users,
+      data: users,
       sort: "name",
       direction: "asc",
       base_url: "/users"
     ) do |table|
-      table.with_column(label: "Name", attribute: :name, sortable: true)
+      table.with_column(title: "Name", attribute: :name, sortable: true)
     end
     
     assert_selector "th a[href*='sort=name']"
@@ -385,12 +385,12 @@ class TableComponentTest < ViewComponent::TestCase
     users = [OpenStruct.new(name: "Alice")]
     
     render_inline FlatPack::Table::Component.new(
-      rows: users,
+      data: users,
       sort: "name",
       direction: "asc",
       base_url: "/users"
     ) do |table|
-      table.with_column(label: "Name", attribute: :name, sortable: true)
+      table.with_column(title: "Name", attribute: :name, sortable: true)
     end
     
     # When currently asc, link should be for desc
@@ -599,7 +599,7 @@ end
 
 ```ruby
 FlatPack::Table::Component.new(
-  rows: Array,                # Required
+  data: Array,                # Required
   turbo_frame: String,        # Required for sorting
   sort: String,               # Required for sorting
   direction: String,          # Required for sorting
@@ -612,11 +612,11 @@ FlatPack::Table::Component.new(
 
 ```ruby
 table.with_column(
-  label: String,              # Required
+  title: String,              # Required
   attribute: Symbol,          # Optional
   sortable: Boolean,          # Optional, default: false
   sort_key: Symbol,           # Optional, defaults to attribute
-  formatter: Proc,            # Optional
+  html: Proc,            # Optional
   &block                      # Optional
 )
 ```

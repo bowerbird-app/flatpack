@@ -54,10 +54,10 @@ Schemes: `:primary`, `:secondary`, `:ghost`
 ### Table Component
 
 ```erb
-<%= render FlatPack::Table::Component.new(rows: @users) do |table| %>
-  <% table.with_column(label: "Name", attribute: :name) %>
-  <% table.with_column(label: "Email", attribute: :email) %>
-  <% table.with_action(label: "Edit", url: ->(user) { edit_user_path(user) }) %>
+<%= render FlatPack::Table::Component.new(data: @users) do |table| %>
+  <% table.with_column(title: "Name", attribute: :name) %>
+  <% table.with_column(title: "Email", attribute: :email) %>
+  <% table.with_action(title: "Edit", url: ->(user) { edit_user_path(user) }) %>
 <% end %>
 ```
 
@@ -67,28 +67,28 @@ Schemes: `:primary`, `:secondary`, `:ghost`
 # Text Input
 <%= render FlatPack::TextInput::Component.new(
   name: "username",
-  label: "Username",
+  title: "Username",
   placeholder: "Enter your username"
 ) %>
 
 # Password Input with toggle
 <%= render FlatPack::PasswordInput::Component.new(
   name: "password",
-  label: "Password",
+  title: "Password",
   required: true
 ) %>
 
 # Email Input
 <%= render FlatPack::EmailInput::Component.new(
   name: "email",
-  label: "Email Address",
+  title: "Email Address",
   placeholder: "you@example.com"
 ) %>
 
 # Phone Input
 <%= render FlatPack::PhoneInput::Component.new(
   name: "phone",
-  label: "Phone Number"
+  title: "Phone Number"
 ) %>
 
 # Search Input with clear button
@@ -100,14 +100,14 @@ Schemes: `:primary`, `:secondary`, `:ghost`
 # Text Area with auto-expand
 <%= render FlatPack::TextArea::Component.new(
   name: "description",
-  label: "Description",
-  rows: 3
+  title: "Description",
+  data: 3
 ) %>
 
 # URL Input with validation
 <%= render FlatPack::UrlInput::Component.new(
   name: "website",
-  label: "Website URL"
+  title: "Website URL"
 ) %>
 ```
 

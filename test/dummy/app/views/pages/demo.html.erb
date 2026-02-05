@@ -18,10 +18,10 @@
 
     <div class="bg-[var(--color-muted)] rounded-lg p-6">
       <h3 class="text-lg font-medium mb-3">Table</h3>
-      <%= render FlatPack::Table::Component.new(rows: @users) do |table| %>
-        <% table.with_column(label: "Name", attribute: :name) %>
-        <% table.with_column(label: "Email", attribute: :email) %>
-        <% table.with_column(label: "Status") do |user| %>
+      <%= render FlatPack::Table::Component.new(data: @users) do |table| %>
+        <% table.with_column(title: "Name", attribute: :name) %>
+        <% table.with_column(title: "Email", attribute: :email) %>
+        <% table.with_column(title: "Status") do |user| %>
           <span class="px-2 py-1 text-xs rounded <%= user.status == 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' %>">
             <%= user.status %>
           </span>

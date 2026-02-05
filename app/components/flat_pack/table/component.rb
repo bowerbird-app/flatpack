@@ -6,9 +6,9 @@ module FlatPack
       renders_many :columns, ColumnComponent
       renders_many :actions, ActionComponent
 
-      def initialize(rows: [], stimulus: false, turbo_frame: nil, sort: nil, direction: nil, base_url: nil, **system_arguments)
+      def initialize(data: [], stimulus: false, turbo_frame: nil, sort: nil, direction: nil, base_url: nil, **system_arguments)
         super(**system_arguments)
-        @rows = rows
+        @data = data
         @stimulus = stimulus
         @turbo_frame = turbo_frame
         @sort = sort
@@ -78,8 +78,8 @@ module FlatPack
 
       def render_body
         tag.tbody class: "divide-y divide-[var(--color-border)]" do
-          if @rows.any?
-            safe_join(@rows.map { |row| render_row(row) })
+          if @data.any?
+            safe_join(@data.map { |row| render_row(row) })
           else
             render_empty_state
           end
