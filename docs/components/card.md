@@ -1,10 +1,6 @@
 # Card Component
 
-A flexible, composable card component for displaying content in a structured container. The Card component supports multiple visual styles, slot-based composition, and clickable variants.
-
-## Installation
-
-The Card component is part of FlatPack. See the [main README](../../README.md) for installation instructions.
+The Card component renders a flexible container for displaying content with support for slots, styles, and clickable variants.
 
 ## Basic Usage
 
@@ -62,6 +58,7 @@ The Card component is part of FlatPack. See the [main README](../../README.md) f
 | `padding` | Symbol | `:md` | Padding size. Options: `:none`, `:sm`, `:md`, `:lg` |
 | `clickable` | Boolean | `false` | Makes the entire card clickable when combined with `href` |
 | `href` | String | `nil` | URL to navigate to when card is clicked (requires `clickable: true`) |
+| `**system_arguments` | Hash | `{}` | HTML attributes (`class`, `data`, `aria`, `id`, etc.) |
 
 ### Slot Components
 
@@ -87,7 +84,7 @@ No additional props. Accepts standard HTML attributes.
 |------|------|---------|-------------|
 | `aspect_ratio` | String | `nil` | Aspect ratio for media content. Options: `"16/9"`, `"4/3"`, `"1/1"`, or any custom ratio like `"21/9"` |
 
-## Card Styles
+## Styles
 
 ### Default
 
@@ -139,9 +136,9 @@ Card with hover effects, ideal for clickable cards.
 <% end %>
 ```
 
-## Padding Options
+## Padding
 
-Control the internal spacing of the card:
+Cards come in four padding sizes to control internal spacing:
 
 ```erb
 <!-- No padding -->
@@ -187,7 +184,63 @@ Make entire cards clickable by combining `clickable: true` with an `href`:
 <% end %>
 ```
 
-## Common Patterns
+## System Arguments
+
+### Custom Classes
+
+```erb
+<%= render FlatPack::Card::Component.new(
+  class: "mb-4 max-w-sm"
+) do %>
+  <p>Card content</p>
+<% end %>
+```
+
+Classes are merged using `tailwind_merge`, so Tailwind utilities override correctly.
+
+### Data Attributes
+
+```erb
+<%= render FlatPack::Card::Component.new(
+  data: {
+    controller: "product",
+    product_id: @product.id
+  }
+) do %>
+  <p>Card content</p>
+<% end %>
+```
+
+### ARIA Attributes
+
+```erb
+<%= render FlatPack::Card::Component.new(
+  clickable: true,
+  href: post_path(@post),
+  aria: { label: "Read article: #{@post.title}" }
+) do |card| %>
+  <% card.with_header do %>
+    <h3><%= @post.title %></h3>
+  <% end %>
+  
+  <% card.with_body do %>
+    <p><%= @post.excerpt %></p>
+  <% end %>
+<% end %>
+```
+
+### Other Attributes
+
+```erb
+<%= render FlatPack::Card::Component.new(
+  id: "featured-product",
+  role: "article"
+) do %>
+  <p>Card content</p>
+<% end %>
+```
+
+## Examples
 
 ### Product Card
 
@@ -362,65 +415,60 @@ The Card component follows accessibility best practices:
 - Proper color contrast ratios for text and borders
 - Support for ARIA attributes via system arguments
 
-### Clickable Cards
+### Keyboard Support for Clickable Cards
 
-When using clickable cards, ensure the content provides sufficient context:
+Clickable cards support standard keyboard navigation:
 
-```erb
-<%= render FlatPack::Card::Component.new(
-  clickable: true,
-  href: post_path(@post),
-  aria: { label: "Read article: #{@post.title}" }
-) do |card| %>
-  <% card.with_header do %>
-    <h3><%= @post.title %></h3>
-  <% end %>
-  
-  <% card.with_body do %>
-    <p><%= @post.excerpt %></p>
-  <% end %>
-<% end %>
-```
-
-## System Arguments
-
-All Card components accept system arguments for HTML attributes:
-
-```erb
-<%= render FlatPack::Card::Component.new(
-  id: "featured-product",
-  class: "mb-4 max-w-sm",
-  data: { controller: "product", product_id: @product.id },
-  aria: { label: "Featured product" }
-) do %>
-  <!-- Card content -->
-<% end %>
-```
-
-## Security
-
-The Card component includes built-in XSS protection:
-
-- URL sanitization for `href` attribute (only allows http, https, mailto, tel, and relative URLs)
-- Dangerous HTML attributes (onclick, onerror, etc.) are automatically filtered
-- All user content should still be properly escaped in your views
-
-## Browser Support
-
-The Card component works in all modern browsers and gracefully degrades in older browsers:
-
-- Chrome, Edge (latest)
-- Firefox (latest)
-- Safari (latest)
-- Mobile browsers (iOS Safari, Chrome Mobile)
-
-## Dark Mode
-
-The Card component automatically supports dark mode through CSS variables. No additional configuration needed.
+- `Enter` - Navigate to card link
+- `Tab` - Focus next card
+- `Shift+Tab` - Focus previous card
 
 ## Testing
 
-See the [test file](../../test/components/flat_pack/card_component_test.rb) for comprehensive test examples.
+```ruby
+# test/components/custom_card_test.rb
+require "test_helper"
+
+class CustomCardTest < ViewComponent::TestCase
+  def test_renders_card_with_content
+    render_inline FlatPack::Card::Component.new do
+      "Test content"
+    end
+    
+    assert_selector "div[class*='card']", text: "Test content"
+  end
+end
+```
+
+## API Reference
+
+```ruby
+FlatPack::Card::Component.new(
+  style: Symbol,              # Optional, default: :default (:default, :elevated, :outlined, :flat, :interactive)
+  padding: Symbol,            # Optional, default: :md (:none, :sm, :md, :lg)
+  clickable: Boolean,         # Optional, default: false
+  href: String,               # Optional, default: nil
+  **system_arguments          # Optional
+)
+```
+
+### Slot Components
+
+```ruby
+card.with_header(divider: Boolean)         # Optional, default divider: true
+card.with_body                              # No additional props
+card.with_footer(divider: Boolean)          # Optional, default divider: true
+card.with_media(aspect_ratio: String)       # Optional aspect ratio
+```
+
+### System Arguments
+
+- `class`: String - Additional CSS classes
+- `data`: Hash - Data attributes
+- `aria`: Hash - ARIA attributes
+- `id`: String - Element ID
+- `role`: String - ARIA role
+- Any other valid HTML attribute
 
 ## Related Components
 
@@ -428,6 +476,8 @@ See the [test file](../../test/components/flat_pack/card_component_test.rb) for 
 - [Badge](./badge.md) - For card labels and status indicators
 - [Link](./link.md) - For clickable card elements
 
-## Examples
+## Next Steps
 
-For live examples, see the [Card demo page](../../test/dummy/app/views/pages/cards.html.erb) in the dummy application.
+- [Theming Guide](../theming.md)
+- [Dark Mode](../dark_mode.md)
+- [Table Component](table.md)
