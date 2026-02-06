@@ -71,6 +71,18 @@ Schemes: `:primary`, `:secondary`, `:ghost`
 
 Styles: `:default`, `:elevated`, `:outlined`, `:flat`, `:interactive`
 
+### Breadcrumb Component
+
+```erb
+<%= render FlatPack::Breadcrumb::Component.new do |breadcrumb| %>
+  <% breadcrumb.with_item(text: "Home", href: "/") %>
+  <% breadcrumb.with_item(text: "Products", href: "/products") %>
+  <% breadcrumb.with_item(text: "Laptops") %>
+<% end %>
+```
+
+Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
+
 ### Table Component
 
 ```erb
@@ -168,6 +180,9 @@ Styles: `:default`, `:elevated`, `:outlined`, `:flat`, `:interactive`
 - **DateInput** - Date picker input
 - **NumberInput** - Numeric input field
 - **FileInput** - File upload input
+
+### Navigation Components
+- **Breadcrumb** - Navigation trail showing current location in site hierarchy
 
 ### Utility Components
 - **Link** - Styled links with consistent appearance
