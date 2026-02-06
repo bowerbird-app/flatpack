@@ -3,7 +3,9 @@
 module FlatPack
   module Table
     class Component < FlatPack::BaseComponent
-      renders_many :columns, ColumnComponent
+      renders_many :columns, ->(title:, html: nil, sortable: false, sort_key: nil, &block) do
+        ColumnComponent.new(title: title, html: html, sortable: sortable, sort_key: sort_key, &block)
+      end
       renders_many :actions, ActionComponent
 
       # Provide column as the main method, with_column for backwards compatibility

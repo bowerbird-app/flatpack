@@ -5,9 +5,9 @@ module FlatPack
     class ColumnComponent < ViewComponent::Base
       attr_reader :sortable, :sort_key
 
-      def initialize(title:, html:, sortable: false, sort_key: nil, &block)
+      def initialize(title:, html: nil, sortable: false, sort_key: nil, &block)
         @title = title
-        # Support both html: proc and block syntax (though block won't work with ViewComponent)
+        # Support both html: proc and block syntax
         @html = html || block
         @sortable = sortable
         @sort_key = sort_key

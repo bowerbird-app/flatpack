@@ -33,9 +33,20 @@ module FlatPack
         assert_selector "td", text: "alice@example.com"
       end
 
-      def test_renders_table_with_block_columns
+      def test_renders_table_with_lambda_columns
         render_inline(Component.new(data: @users)) do |component|
           component.column(title: "Name", html: ->(user) { user.name.upcase })
+        end
+
+        assert_selector "td", text: "ALICE"
+        assert_selector "td", text: "BOB"
+      end
+
+      def test_renders_table_with_block_columns
+        render_inline(Component.new(data: @users)) do |component|
+          component.column(title: "Name") do |user|
+            user.name.upcase
+          end
         end
 
         assert_selector "td", text: "ALICE"
