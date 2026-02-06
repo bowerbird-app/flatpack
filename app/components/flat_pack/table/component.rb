@@ -26,10 +26,9 @@ module FlatPack
         if block && html.nil?
           html = block
         end
-        
+
         # Use the renders_many generated method, passing html as the proc
         _renders_many_with_column(title: title, html: html, sortable: sortable, sort_key: sort_key)
-        
         self
       end
 
