@@ -5,7 +5,6 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       renders_one :top_nav, FlatPack::Navbar::TopNavComponent
       renders_one :left_nav, FlatPack::Navbar::LeftNavComponent
-      renders_one :content
 
       def initialize(**system_arguments)
         super(**system_arguments)
