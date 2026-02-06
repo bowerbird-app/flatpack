@@ -10,6 +10,5 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 0) do
-  # This is a minimal schema file for a database-less application
+ActiveRecord::Schema[8.1].define(version: 0) do
 end

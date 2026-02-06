@@ -59,4 +59,7 @@ class PagesController < ApplicationController
 
   def alerts
   end
+
+  def navbar
+  end
 end
