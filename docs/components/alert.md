@@ -17,7 +17,7 @@ The Alert component displays prominent notifications and messages for user feedb
 |------|------|---------|-------------|
 | `title` | String | `nil` | Alert title |
 | `description` | String | `nil` | Alert message |
-| `style` | Symbol | `:info` | Visual style (`:info`, `:success`, `:warning`) |
+| `style` | Symbol | `:info` | Visual style (`:info`, `:success`, `:warning`, `:danger`) |
 | `dismissible` | Boolean | `false` | Show close button |
 | `icon` | Boolean | `true` | Show style icon |
 | `**system_arguments` | Hash | `{}` | HTML attributes (`class`, `data`, `aria`, `id`, etc.) |
@@ -54,6 +54,17 @@ Warnings and cautions.
   title: "Warning",
   description: "This action cannot be undone.",
   style: :warning
+) %>
+```
+
+### Danger
+Errors and critical issues.
+
+```erb
+<%= render FlatPack::Alert::Component.new(
+  title: "Error",
+  description: "Something went wrong. Please try again.",
+  style: :danger
 ) %>
 ```
 

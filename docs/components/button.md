@@ -12,11 +12,15 @@ The Button component renders a button or link with consistent styling and behavi
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `text` | String | **required** | Button text |
-| `style` | Symbol | `:primary` | Visual style (`:primary`, `:secondary`, `:ghost`) |
+| `text` | String | `nil` | Button text (required unless `icon` is provided) |
+| `style` | Symbol | `:primary` | Visual style (`:primary`, `:secondary`, `:ghost`, `:success`, `:warning`) |
 | `size` | Symbol | `:md` | Button size (`:sm`, `:md`, `:lg`) |
 | `url` | String | `nil` | If provided, renders as link instead of button |
 | `method` | Symbol | `nil` | HTTP method for link (`:get`, `:post`, `:delete`, etc.) |
+| `target` | String | `nil` | Link target (e.g., `"_blank"` for new tab) |
+| `icon` | String | `nil` | Icon name to display (requires icon component) |
+| `icon_only` | Boolean | `false` | Display icon without text |
+| `loading` | Boolean | `false` | Show loading spinner and disable button |
 | `**system_arguments` | Hash | `{}` | HTML attributes (`class`, `data`, `aria`, `id`, etc.) |
 
 ## Schemes
@@ -48,6 +52,26 @@ Tertiary actions, minimal styling.
 <%= render FlatPack::Button::Component.new(
   text: "Learn More",
   style: :ghost
+) %>
+```
+
+### Success
+Positive or completion actions.
+
+```erb
+<%= render FlatPack::Button::Component.new(
+  text: "Approve",
+  style: :success
+) %>
+```
+
+### Warning
+Destructive or cautionary actions.
+
+```erb
+<%= render FlatPack::Button::Component.new(
+  text: "Delete",
+  style: :warning
 ) %>
 ```
 
@@ -124,6 +148,65 @@ When `url` is provided, button renders as a link (`<a>` tag):
   data: { turbo_confirm: "Are you sure?" }
 ) %>
 ```
+
+### Open in New Tab
+
+Use the `target` prop to open links in a new tab. Security attributes (`rel="noopener noreferrer"`) are automatically added.
+
+```erb
+<%= render FlatPack::Button::Component.new(
+  text: "View External Site",
+  url: "https://example.com",
+  target: "_blank",
+  style: :primary
+) %>
+```
+
+## Icons
+
+### Button with Icon
+
+Display an icon alongside text using the `icon` prop:
+
+```erb
+<%= render FlatPack::Button::Component.new(
+  text: "Download",
+  icon: "download",
+  style: :primary
+) %>
+```
+
+### Icon-Only Button
+
+Create icon-only buttons for compact interfaces:
+
+```erb
+<%= render FlatPack::Button::Component.new(
+  icon: "settings",
+  icon_only: true,
+  style: :ghost,
+  aria: { label: "Settings" }
+) %>
+```
+
+**Note:** Always provide an `aria-label` for icon-only buttons for accessibility.
+
+## Loading State
+
+Show a loading spinner and disable interaction with the `loading` prop:
+
+```erb
+<%= render FlatPack::Button::Component.new(
+  text: "Save",
+  loading: true,
+  style: :primary
+) %>
+```
+
+When `loading: true`:
+- Button is automatically disabled
+- Shows an animated spinner
+- Text changes to "Loading" (or hidden if `icon_only: true`)
 
 ## System Arguments
 
@@ -299,11 +382,15 @@ end
 
 ```ruby
 FlatPack::Button::Component.new(
-  text: String,               # Required
-  style: Symbol,              # Optional, default: :primary (:primary, :secondary, :ghost)
+  text: String,               # Optional (required unless icon is provided)
+  style: Symbol,              # Optional, default: :primary (:primary, :secondary, :ghost, :success, :warning)
   size: Symbol,               # Optional, default: :md (:sm, :md, :lg)
   url: String,                # Optional, default: nil
   method: Symbol,             # Optional, default: nil
+  target: String,             # Optional, default: nil
+  icon: String,               # Optional, default: nil
+  icon_only: Boolean,         # Optional, default: false
+  loading: Boolean,           # Optional, default: false
   **system_arguments          # Optional
 )
 ```
