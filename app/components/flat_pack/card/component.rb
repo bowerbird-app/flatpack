@@ -3,20 +3,62 @@
 module FlatPack
   module Card
     class Component < FlatPack::BaseComponent
-      renders_one :header, HeaderComponent
-      renders_one :body, BodyComponent
-      renders_one :footer, FooterComponent
-      renders_one :media, MediaComponent
+      renders_one :header_slot, HeaderComponent
+      renders_one :body_slot, BodyComponent
+      renders_one :footer_slot, FooterComponent
+      renders_one :media_slot, MediaComponent
+
+      # Custom setter methods that provide the cleaner syntax
+      def header(**args, &block)
+        return header_slot unless block
+
+        with_header_slot(**args, &block)
+      end
+
+      def body(**args, &block)
+        return body_slot unless block
+
+        with_body_slot(**args, &block)
+      end
+
+      def footer(**args, &block)
+        return footer_slot unless block
+
+        with_footer_slot(**args, &block)
+      end
+
+      def media(**args, &block)
+        return media_slot unless block
+
+        with_media_slot(**args, &block)
+      end
+
+      # Custom predicate methods
+      def header?
+        header_slot?
+      end
+
+      def body?
+        body_slot?
+      end
+
+      def footer?
+        footer_slot?
+      end
+
+      def media?
+        media_slot?
+      end
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-[var(--color-background)]" "border" "border-[var(--color-border)]" "shadow-md" "dark:shadow-xl" "border-2" "bg-[var(--color-muted)]" "hover:shadow-md" "dark:hover:shadow-xl" "hover:border-[var(--color-primary)]" "transition-all" "cursor-pointer"
+      # "bg-[var(--color-background)]" "border" "border-[var(--color-border)]" "shadow-md" "dark:shadow-lg" "border-2" "bg-[var(--color-muted)]" "hover:shadow-md" "dark:hover:shadow-lg" "hover:border-[var(--color-primary)]" "transition-all" "cursor-pointer"
       STYLES = {
         default: "bg-[var(--color-background)] border border-[var(--color-border)]",
-        elevated: "bg-[var(--color-background)] shadow-md dark:shadow-xl",
+        elevated: "bg-[var(--color-background)] shadow-md dark:shadow-lg",
         outlined: "bg-[var(--color-background)] border-2 border-[var(--color-border)]",
         flat: "bg-[var(--color-muted)]",
-        interactive: "bg-[var(--color-background)] border border-[var(--color-border)] hover:shadow-md dark:hover:shadow-xl hover:border-[var(--color-primary)] transition-all cursor-pointer"
+        interactive: "bg-[var(--color-background)] border border-[var(--color-border)] hover:shadow-md dark:hover:shadow-lg hover:border-[var(--color-primary)] transition-all cursor-pointer"
       }.freeze
 
       # Tailwind CSS scanning requires these classes to be present as string literals.

@@ -962,7 +962,7 @@ super(**sanitize_args(args))
 ### Safe HTML Slots
 ```ruby
 <%= render FlatPack::CardComponent.new do |card| %>
-  <% card.with_body do %>
+  <% card.body do %>
     <p>Safe HTML via Rails escaping</p>
   <% end %>
 <% end %>

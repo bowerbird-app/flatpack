@@ -2038,15 +2038,15 @@ body {
     color: rgb(254 202 202 / var(--tw-text-opacity, 1));
   }
 
-  .dark\:shadow-xl {
-    --tw-shadow: 0 8px 25px 5px rgb(140 140 140 / 10%), 0 8px 10px -6px rgb(0 0 0 / 10%);
-    --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);
+  .dark\:shadow-lg {
+    --tw-shadow: var(--shadow-lg);
+    --tw-shadow-colored: var(--shadow-lg);
     box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
   }
 
-  .dark\:hover\:shadow-xl:hover {
-    --tw-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-    --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);
+  .dark\:hover\:shadow-lg:hover {
+    --tw-shadow: var(--shadow-lg);
+    --tw-shadow-colored: var(--shadow-lg);
     box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
   }
 }

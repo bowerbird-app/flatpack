@@ -55,15 +55,15 @@ Schemes: `:primary`, `:secondary`, `:ghost`
 
 ```erb
 <%= render FlatPack::Card::Component.new(style: :elevated) do |card| %>
-  <% card.with_header do %>
+  <% card.header do %>
     <h3>Card Title</h3>
   <% end %>
   
-  <% card.with_body do %>
+  <% card.body do %>
     <p>Card content goes here.</p>
   <% end %>
   
-  <% card.with_footer do %>
+  <% card.footer do %>
     <%= render FlatPack::Button::Component.new(text: "Action", style: :primary) %>
   <% end %>
 <% end %>

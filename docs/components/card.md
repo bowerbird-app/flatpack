@@ -16,11 +16,11 @@ The Card component renders a flexible container for displaying content with supp
 
 ```erb
 <%= render FlatPack::Card::Component.new do |card| %>
-  <% card.with_header do %>
+  <% card.header do %>
     <h3>Card Title</h3>
   <% end %>
   
-  <% card.with_body do %>
+  <% card.body do %>
     <p>Card content goes here.</p>
   <% end %>
 <% end %>
@@ -30,19 +30,19 @@ The Card component renders a flexible container for displaying content with supp
 
 ```erb
 <%= render FlatPack::Card::Component.new do |card| %>
-  <% card.with_media do %>
+  <% card.media do %>
     <%= image_tag "product.jpg", class: "w-full h-48 object-cover" %>
   <% end %>
   
-  <% card.with_header do %>
+  <% card.header do %>
     <h3 class="text-lg font-semibold">Product Name</h3>
   <% end %>
   
-  <% card.with_body do %>
+  <% card.body do %>
     <p class="text-sm text-gray-600">Product description goes here.</p>
   <% end %>
   
-  <% card.with_footer do %>
+  <% card.footer do %>
     <%= render FlatPack::Button::Component.new(text: "Add to Cart", style: :primary) %>
   <% end %>
 <% end %>
@@ -174,11 +174,11 @@ Make entire cards clickable by combining `clickable: true` with an `href`:
   clickable: true,
   href: post_path(@post)
 ) do |card| %>
-  <% card.with_header do %>
+  <% card.header do %>
     <h3><%= @post.title %></h3>
   <% end %>
   
-  <% card.with_body do %>
+  <% card.body do %>
     <p><%= @post.excerpt %></p>
   <% end %>
 <% end %>
@@ -219,11 +219,11 @@ Classes are merged using `tailwind_merge`, so Tailwind utilities override correc
   href: post_path(@post),
   aria: { label: "Read article: #{@post.title}" }
 ) do |card| %>
-  <% card.with_header do %>
+  <% card.header do %>
     <h3><%= @post.title %></h3>
   <% end %>
   
-  <% card.with_body do %>
+  <% card.body do %>
     <p><%= @post.excerpt %></p>
   <% end %>
 <% end %>
@@ -246,17 +246,17 @@ Classes are merged using `tailwind_merge`, so Tailwind utilities override correc
 
 ```erb
 <%= render FlatPack::Card::Component.new(style: :elevated) do |card| %>
-  <% card.with_media(aspect_ratio: "4/3") do %>
+  <% card.media(aspect_ratio: "4/3") do %>
     <%= image_tag @product.image_url, class: "w-full h-full object-cover" %>
   <% end %>
   
-  <% card.with_body do %>
+  <% card.body do %>
     <h3 class="text-lg font-semibold mb-2"><%= @product.name %></h3>
     <p class="text-sm text-gray-600 mb-4"><%= @product.description %></p>
     <p class="text-2xl font-bold text-green-600">$<%= @product.price %></p>
   <% end %>
   
-  <% card.with_footer do %>
+  <% card.footer do %>
     <%= render FlatPack::Button::Component.new(
       text: "Add to Cart",
       style: :primary,
@@ -270,7 +270,7 @@ Classes are merged using `tailwind_merge`, so Tailwind utilities override correc
 
 ```erb
 <%= render FlatPack::Card::Component.new(style: :elevated, padding: :lg) do |card| %>
-  <% card.with_body do %>
+  <% card.body do %>
     <div class="text-center">
       <div class="text-4xl font-bold text-blue-600 mb-2">
         <%= number_with_delimiter(@stats.total_users) %>
@@ -290,7 +290,7 @@ Classes are merged using `tailwind_merge`, so Tailwind utilities override correc
 
 ```erb
 <%= render FlatPack::Card::Component.new(style: :elevated) do |card| %>
-  <% card.with_body do %>
+  <% card.body do %>
     <div class="flex items-center space-x-4">
       <%= image_tag @user.avatar_url, class: "w-16 h-16 rounded-full" %>
       <div>
@@ -300,7 +300,7 @@ Classes are merged using `tailwind_merge`, so Tailwind utilities override correc
     </div>
   <% end %>
   
-  <% card.with_footer(divider: true) do %>
+  <% card.footer(divider: true) do %>
     <div class="flex justify-around text-center">
       <div>
         <div class="text-xl font-bold"><%= @user.followers_count %></div>
@@ -319,7 +319,7 @@ Classes are merged using `tailwind_merge`, so Tailwind utilities override correc
 
 ```erb
 <%= render FlatPack::Card::Component.new(style: :outlined) do |card| %>
-  <% card.with_header do %>
+  <% card.header do %>
     <div class="text-center">
       <h3 class="text-xl font-bold">Pro Plan</h3>
       <div class="text-3xl font-bold mt-2">
@@ -328,7 +328,7 @@ Classes are merged using `tailwind_merge`, so Tailwind utilities override correc
     </div>
   <% end %>
   
-  <% card.with_body do %>
+  <% card.body do %>
     <ul class="space-y-3">
       <li class="flex items-center">
         <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -351,7 +351,7 @@ Classes are merged using `tailwind_merge`, so Tailwind utilities override correc
     </ul>
   <% end %>
   
-  <% card.with_footer do %>
+  <% card.footer do %>
     <%= render FlatPack::Button::Component.new(
       text: "Get Started",
       style: :primary,
@@ -369,7 +369,7 @@ Classes are merged using `tailwind_merge`, so Tailwind utilities override correc
   padding: :sm,
   class: "hover:bg-gray-100 transition-colors"
 ) do |card| %>
-  <% card.with_body do %>
+  <% card.body do %>
     <div class="flex items-center justify-between">
       <div class="flex items-center space-x-3">
         <%= image_tag @notification.avatar, class: "w-10 h-10 rounded-full" %>
@@ -388,7 +388,7 @@ Classes are merged using `tailwind_merge`, so Tailwind utilities override correc
 
 ```erb
 <%= render FlatPack::Card::Component.new(style: :elevated, padding: :lg) do |card| %>
-  <% card.with_body do %>
+  <% card.body do %>
     <div class="mb-4">
       <svg class="w-8 h-8 text-gray-400 mb-4" fill="currentColor" viewBox="0 0 24 24">
         <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
@@ -455,10 +455,10 @@ FlatPack::Card::Component.new(
 ### Slot Components
 
 ```ruby
-card.with_header(divider: Boolean)         # Optional, default divider: true
-card.with_body                              # No additional props
-card.with_footer(divider: Boolean)          # Optional, default divider: true
-card.with_media(aspect_ratio: String)       # Optional aspect ratio
+card.header(divider: Boolean)         # Optional, default divider: true
+card.body                              # No additional props
+card.footer(divider: Boolean)          # Optional, default divider: true
+card.media(aspect_ratio: String)       # Optional aspect ratio
 ```
 
 ### System Arguments

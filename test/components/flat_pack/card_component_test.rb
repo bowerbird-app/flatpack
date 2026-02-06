@@ -27,7 +27,7 @@ module FlatPack
 
       def test_renders_with_style_elevated
         render_inline(Component.new(style: :elevated))
-        assert_includes page.native.to_html, "shadow-[var(--shadow-md)]"
+        assert_includes page.native.to_html, "shadow-md"
       end
 
       def test_renders_with_style_outlined
@@ -42,7 +42,7 @@ module FlatPack
 
       def test_renders_with_style_interactive
         render_inline(Component.new(style: :interactive))
-        assert_includes page.native.to_html, "hover:shadow-[var(--shadow-md)]"
+        assert_includes page.native.to_html, "hover:shadow-md"
         assert_includes page.native.to_html, "hover:border-[var(--color-primary)]"
         assert_includes page.native.to_html, "cursor-pointer"
       end
@@ -119,7 +119,7 @@ module FlatPack
       # Slot Tests
       def test_renders_with_header_slot
         render_inline(Component.new) do |component|
-          component.with_header do
+          component.header do
             "<h3>Card Title</h3>".html_safe
           end
         end
@@ -128,7 +128,7 @@ module FlatPack
 
       def test_renders_with_body_slot
         render_inline(Component.new) do |component|
-          component.with_body do
+          component.body do
             "<p>Card body content</p>".html_safe
           end
         end
@@ -137,7 +137,7 @@ module FlatPack
 
       def test_renders_with_footer_slot
         render_inline(Component.new) do |component|
-          component.with_footer do
+          component.footer do
             "<button>Action</button>".html_safe
           end
         end
@@ -146,7 +146,7 @@ module FlatPack
 
       def test_renders_with_media_slot
         render_inline(Component.new) do |component|
-          component.with_media do
+          component.media do
             "<img src='test.jpg' alt='Test'>".html_safe
           end
         end
@@ -155,10 +155,10 @@ module FlatPack
 
       def test_renders_with_all_slots
         render_inline(Component.new) do |component|
-          component.with_media { "<img src='test.jpg'>".html_safe }
-          component.with_header { "<h3>Title</h3>".html_safe }
-          component.with_body { "<p>Content</p>".html_safe }
-          component.with_footer { "<button>Action</button>".html_safe }
+          component.media { "<img src='test.jpg'>".html_safe }
+          component.header { "<h3>Title</h3>".html_safe }
+          component.body { "<p>Content</p>".html_safe }
+          component.footer { "<button>Action</button>".html_safe }
         end
         assert_selector "img"
         assert_selector "h3", text: "Title"
@@ -279,12 +279,12 @@ module FlatPack
       end
 
       def test_accepts_data_attributes
-        render_inline(Component.new(data: { controller: "card" }))
+        render_inline(Component.new(data: {controller: "card"}))
         assert_selector "div[data-controller='card']"
       end
 
       def test_accepts_aria_attributes
-        render_inline(Component.new(aria: { label: "Card label" }))
+        render_inline(Component.new(aria: {label: "Card label"}))
         assert_selector "div[aria-label='Card label']"
       end
 
@@ -298,7 +298,7 @@ module FlatPack
         render_inline(Component.new(style: :interactive))
         html = page.native.to_html
         assert_includes html, "cursor-pointer"
-        assert_includes html, "hover:shadow-[var(--shadow-md)]"
+        assert_includes html, "hover:shadow-md"
         assert_includes html, "transition-all"
       end
 
@@ -321,7 +321,7 @@ module FlatPack
 
       def test_slots_override_padding_when_used
         render_inline(Component.new(padding: :lg)) do |component|
-          component.with_body { "Content" }
+          component.body { "Content" }
         end
         # Body has its own padding (px-6 py-4), main card padding applies to container
         assert_includes page.native.to_html, "p-8"
@@ -335,7 +335,7 @@ module FlatPack
 
       def test_content_not_rendered_when_slots_used
         render_inline(Component.new) do |component|
-          component.with_body { "Body content" }
+          component.body { "Body content" }
           "This should not appear"
         end
         assert_text "Body content"

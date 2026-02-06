@@ -50,11 +50,11 @@ After installation, use FlatPack components in your views:
 
 <%# Card Component %>
 <%= render FlatPack::Card::Component.new(style: :elevated) do |card| %>
-  <% card.with_header do %>
+  <% card.header do %>
     <h3>Card Title</h3>
   <% end %>
   
-  <% card.with_body do %>
+  <% card.body do %>
     <p>Card content goes here.</p>
   <% end %>
 <% end %>
