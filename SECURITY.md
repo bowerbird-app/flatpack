@@ -56,7 +56,7 @@ When passing rich content to components, always use the sidecar pattern with blo
 ```ruby
 # SAFE - Rails handles the buffer safely
 <%= render FlatPack::CardComponent.new do |card| %>
-  <% card.with_body do %>
+  <% card.body do %>
     <p>This is <strong>Safe</strong> HTML handled by Rails.</p>
   <% end %>
 <% end %>

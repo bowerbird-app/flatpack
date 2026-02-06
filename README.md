@@ -51,6 +51,26 @@ See the [Installation Guide](docs/installation.md) for detailed setup instructio
 
 Schemes: `:primary`, `:secondary`, `:ghost`
 
+### Card Component
+
+```erb
+<%= render FlatPack::Card::Component.new(style: :elevated) do |card| %>
+  <% card.header do %>
+    <h3>Card Title</h3>
+  <% end %>
+  
+  <% card.body do %>
+    <p>Card content goes here.</p>
+  <% end %>
+  
+  <% card.footer do %>
+    <%= render FlatPack::Button::Component.new(text: "Action", style: :primary) %>
+  <% end %>
+<% end %>
+```
+
+Styles: `:default`, `:elevated`, `:outlined`, `:flat`, `:interactive`
+
 ### Table Component
 
 ```erb
@@ -122,9 +142,16 @@ Schemes: `:primary`, `:secondary`, `:ghost`
 
 ## Components
 
+### Layout Components
+- **Card** - Flexible content containers with header, body, footer, and media slots
+
 ### Interactive Components
 - **Button** - Buttons and links with multiple schemes
 - **Table** - Data tables with columns and actions
+
+### Feedback Components
+- **Alert** - Prominent notifications and messages (success, errors, warnings, info)
+- **Badge** - Status indicators, counts, labels, and tags
 
 ### Form Components
 - **TextInput** - Single-line text field
@@ -134,9 +161,18 @@ Schemes: `:primary`, `:secondary`, `:ghost`
 - **SearchInput** - Search field with clear button
 - **TextArea** - Multi-line auto-expanding text area
 - **UrlInput** - URL field with validation
+- **Checkbox** - Single checkbox or checkbox groups
+- **RadioGroup** - Radio button groups
+- **Select** - Dropdown select menus
+- **Switch** - Toggle switch for boolean states
+- **DateInput** - Date picker input
+- **NumberInput** - Numeric input field
+- **FileInput** - File upload input
 
 ### Utility Components
-- **Icon** - Shared icon component
+- **Link** - Styled links with consistent appearance
+- **ButtonGroup** - Grouped button layouts
+- **SegmentedButtons** - Segmented control buttons
 
 More components coming soon!
 

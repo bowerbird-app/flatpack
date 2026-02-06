@@ -77,14 +77,14 @@ When passing rich HTML content to components, use the sidecar pattern with block
 
 ```ruby
 # SAFE - Rails handles the buffer safely
-<%= render FlatPack::CardComponent.new do |card| %>
-  <% card.with_body do %>
+<%= render FlatPack::Card::Component.new do |card| %>
+  <% card.body do %>
     <p>This is <strong>Safe</strong> HTML handled by Rails.</p>
   <% end %>
 <% end %>
 
 # UNSAFE - Never do this
-<%= render FlatPack::CardComponent.new(
+<%= render FlatPack::Card::Component.new(
   body: "<p>User input: #{params[:content]}</p>".html_safe
 ) %>
 ```
