@@ -18,10 +18,10 @@ Home > Products > Electronics > Laptops > MacBook Pro
 
 ```erb
 <%= render FlatPack::Breadcrumb::Component.new do |breadcrumb| %>
-  <% breadcrumb.with_item(text: "Home", href: root_path) %>
-  <% breadcrumb.with_item(text: "Products", href: products_path) %>
-  <% breadcrumb.with_item(text: "Electronics", href: electronics_path) %>
-  <% breadcrumb.with_item(text: "Laptops") %> <!-- Current page, no link -->
+  <% breadcrumb.item(text: "Home", href: root_path) %>
+  <% breadcrumb.item(text: "Products", href: products_path) %>
+  <% breadcrumb.item(text: "Electronics", href: electronics_path) %>
+  <% breadcrumb.item(text: "Laptops") %> <!-- Current page, no link -->
 <% end %>
 ```
 
@@ -69,29 +69,29 @@ For simple cases, you can pass an array of items:
 ```erb
 <!-- Chevron (default) -->
 <%= render FlatPack::Breadcrumb::Component.new(separator: :chevron) do |breadcrumb| %>
-  <% breadcrumb.with_item(text: "Home", href: "/") %>
-  <% breadcrumb.with_item(text: "Products") %>
+  <% breadcrumb.item(text: "Home", href: "/") %>
+  <% breadcrumb.item(text: "Products") %>
 <% end %>
 <!-- Result: Home › Products -->
 
 <!-- Slash -->
 <%= render FlatPack::Breadcrumb::Component.new(separator: :slash) do |breadcrumb| %>
-  <% breadcrumb.with_item(text: "Home", href: "/") %>
-  <% breadcrumb.with_item(text: "Products") %>
+  <% breadcrumb.item(text: "Home", href: "/") %>
+  <% breadcrumb.item(text: "Products") %>
 <% end %>
 <!-- Result: Home / Products -->
 
 <!-- Arrow -->
 <%= render FlatPack::Breadcrumb::Component.new(separator: :arrow) do |breadcrumb| %>
-  <% breadcrumb.with_item(text: "Home", href: "/") %>
-  <% breadcrumb.with_item(text: "Products") %>
+  <% breadcrumb.item(text: "Home", href: "/") %>
+  <% breadcrumb.item(text: "Products") %>
 <% end %>
 <!-- Result: Home → Products -->
 
 <!-- Dot -->
 <%= render FlatPack::Breadcrumb::Component.new(separator: :dot) do |breadcrumb| %>
-  <% breadcrumb.with_item(text: "Home", href: "/") %>
-  <% breadcrumb.with_item(text: "Products") %>
+  <% breadcrumb.item(text: "Home", href: "/") %>
+  <% breadcrumb.item(text: "Products") %>
 <% end %>
 <!-- Result: Home • Products -->
 ```
@@ -103,8 +103,8 @@ For simple cases, you can pass an array of items:
   separator: :custom,
   separator_icon: "chevron-right"
 ) do |breadcrumb| %>
-  <% breadcrumb.with_item(text: "Dashboard", href: dashboard_path) %>
-  <% breadcrumb.with_item(text: "Reports") %>
+  <% breadcrumb.item(text: "Dashboard", href: dashboard_path) %>
+  <% breadcrumb.item(text: "Reports") %>
 <% end %>
 ```
 
@@ -114,8 +114,8 @@ For simple cases, you can pass an array of items:
 
 ```erb
 <%= render FlatPack::Breadcrumb::Component.new(show_home: true) do |breadcrumb| %>
-  <% breadcrumb.with_item(text: "Settings", href: settings_path) %>
-  <% breadcrumb.with_item(text: "Profile") %>
+  <% breadcrumb.item(text: "Settings", href: settings_path) %>
+  <% breadcrumb.item(text: "Profile") %>
 <% end %>
 <!-- Result: 🏠 Home › Settings › Profile -->
 ```
@@ -129,7 +129,7 @@ For simple cases, you can pass an array of items:
   home_text: "Dashboard",
   home_icon: "house"
 ) do |breadcrumb| %>
-  <% breadcrumb.with_item(text: "Reports") %>
+  <% breadcrumb.item(text: "Reports") %>
 <% end %>
 ```
 
@@ -139,11 +139,11 @@ When you have many breadcrumb items, you can collapse middle items to save space
 
 ```erb
 <%= render FlatPack::Breadcrumb::Component.new(max_items: 3) do |breadcrumb| %>
-  <% breadcrumb.with_item(text: "Home", href: "/") %>
-  <% breadcrumb.with_item(text: "Level 1", href: "/l1") %>
-  <% breadcrumb.with_item(text: "Level 2", href: "/l2") %>
-  <% breadcrumb.with_item(text: "Level 3", href: "/l3") %>
-  <% breadcrumb.with_item(text: "Current") %>
+  <% breadcrumb.item(text: "Home", href: "/") %>
+  <% breadcrumb.item(text: "Level 1", href: "/l1") %>
+  <% breadcrumb.item(text: "Level 2", href: "/l2") %>
+  <% breadcrumb.item(text: "Level 3", href: "/l3") %>
+  <% breadcrumb.item(text: "Current") %>
 <% end %>
 <!-- Result: Home › ... › Level 3 › Current -->
 ```
@@ -157,9 +157,9 @@ The component keeps:
 
 ```erb
 <%= render FlatPack::Breadcrumb::Component.new do |breadcrumb| %>
-  <% breadcrumb.with_item(text: "Home", href: "/", icon: "home") %>
-  <% breadcrumb.with_item(text: "Settings", href: "/settings", icon: "cog") %>
-  <% breadcrumb.with_item(text: "Profile", icon: "user") %>
+  <% breadcrumb.item(text: "Home", href: "/", icon: "home") %>
+  <% breadcrumb.item(text: "Settings", href: "/settings", icon: "cog") %>
+  <% breadcrumb.item(text: "Profile", icon: "user") %>
 <% end %>
 ```
 
@@ -179,7 +179,7 @@ The Breadcrumb component is fully accessible:
 
 ```erb
 <%= render FlatPack::Breadcrumb::Component.new(class: "mb-4 custom-breadcrumb") do |breadcrumb| %>
-  <% breadcrumb.with_item(text: "Home", href: "/") %>
+  <% breadcrumb.item(text: "Home", href: "/") %>
 <% end %>
 ```
 
@@ -190,7 +190,7 @@ The Breadcrumb component is fully accessible:
   data: { testid: "main-breadcrumb" },
   id: "breadcrumb-nav"
 ) do |breadcrumb| %>
-  <% breadcrumb.with_item(text: "Home", href: "/") %>
+  <% breadcrumb.item(text: "Home", href: "/") %>
 <% end %>
 ```
 
@@ -208,7 +208,7 @@ module BreadcrumbHelper
     
     render FlatPack::Breadcrumb::Component.new(show_home: true) do |breadcrumb|
       crumbs.each do |crumb|
-        breadcrumb.with_item(text: crumb[:text], href: crumb[:href])
+        breadcrumb.item(text: crumb[:text], href: crumb[:href])
       end
     end
   end
@@ -243,7 +243,7 @@ def breadcrumb_component
   
   render FlatPack::Breadcrumb::Component.new do |breadcrumb|
     crumbs.each do |crumb|
-      breadcrumb.with_item(
+      breadcrumb.item(
         text: crumb.name,
         href: crumb.url
       )
@@ -260,7 +260,7 @@ def render_gretel_breadcrumbs
   
   render FlatPack::Breadcrumb::Component.new(separator: :slash) do |breadcrumb|
     crumbs.each do |crumb|
-      breadcrumb.with_item(
+      breadcrumb.item(
         text: crumb.text,
         href: crumb.url
       )
@@ -275,9 +275,9 @@ end
 
 ```erb
 <%= render FlatPack::Breadcrumb::Component.new(show_home: true) do |breadcrumb| %>
-  <% breadcrumb.with_item(text: "Products", href: products_path) %>
-  <% breadcrumb.with_item(text: @category.name, href: category_path(@category)) %>
-  <% breadcrumb.with_item(text: @product.name) %>
+  <% breadcrumb.item(text: "Products", href: products_path) %>
+  <% breadcrumb.item(text: @category.name, href: category_path(@category)) %>
+  <% breadcrumb.item(text: @product.name) %>
 <% end %>
 ```
 
@@ -285,9 +285,9 @@ end
 
 ```erb
 <%= render FlatPack::Breadcrumb::Component.new(separator: :slash) do |breadcrumb| %>
-  <% breadcrumb.with_item(text: "Blog", href: blog_path) %>
-  <% breadcrumb.with_item(text: @post.category.name, href: blog_category_path(@post.category)) %>
-  <% breadcrumb.with_item(text: @post.title) %>
+  <% breadcrumb.item(text: "Blog", href: blog_path) %>
+  <% breadcrumb.item(text: @post.category.name, href: blog_category_path(@post.category)) %>
+  <% breadcrumb.item(text: @post.title) %>
 <% end %>
 ```
 
@@ -300,8 +300,8 @@ end
   home_text: "Dashboard",
   home_icon: "dashboard"
 ) do |breadcrumb| %>
-  <% breadcrumb.with_item(text: "Users", href: admin_users_path) %>
-  <% breadcrumb.with_item(text: @user.name) %>
+  <% breadcrumb.item(text: "Users", href: admin_users_path) %>
+  <% breadcrumb.item(text: @user.name) %>
 <% end %>
 ```
 
@@ -314,10 +314,10 @@ end
     show_home: true,
     class: "mb-6"
   ) do |breadcrumb| %>
-    <% breadcrumb.with_item(text: "Products", href: products_path, icon: "package") %>
-    <% breadcrumb.with_item(text: "Electronics", href: electronics_path, icon: "laptop") %>
-    <% breadcrumb.with_item(text: "Laptops", href: laptops_path) %>
-    <% breadcrumb.with_item(text: @product.name) %>
+    <% breadcrumb.item(text: "Products", href: products_path, icon: "package") %>
+    <% breadcrumb.item(text: "Electronics", href: electronics_path, icon: "laptop") %>
+    <% breadcrumb.item(text: "Laptops", href: laptops_path) %>
+    <% breadcrumb.item(text: @product.name) %>
   <% end %>
   
   <div class="content">

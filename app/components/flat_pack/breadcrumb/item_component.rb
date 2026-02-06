@@ -33,9 +33,8 @@ module FlatPack
 
       def render_current_item
         content_tag(:span,
-          class: "text-[var(--color-foreground)] font-medium",
-          aria: { current: "page" }
-        ) do
+          class: "flex items-center text-[var(--color-foreground)] font-medium",
+          aria: {current: "page"}) do
           item_content
         end
       end
@@ -43,9 +42,8 @@ module FlatPack
       def render_link_item
         link_to(@href,
           {
-            class: "text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] transition-colors"
-          }.merge(@system_arguments)
-        ) do
+            class: "flex items-center text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] transition-colors"
+          }.merge(@system_arguments)) do
           item_content
         end
       end

@@ -9,17 +9,17 @@
     <h2 class="text-2xl font-semibold mb-4">Basic Breadcrumbs</h2>
     <div class="mb-4">
       <%= render FlatPack::Breadcrumb::Component.new do |breadcrumb| %>
-        <% breadcrumb.with_item(text: "Home", href: "/") %>
-        <% breadcrumb.with_item(text: "Products", href: "/products") %>
-        <% breadcrumb.with_item(text: "Electronics", href: "/electronics") %>
-        <% breadcrumb.with_item(text: "Laptops") %>
+        <% breadcrumb.item(text: "Home", href: "/") %>
+        <% breadcrumb.item(text: "Products", href: "/products") %>
+        <% breadcrumb.item(text: "Electronics", href: "/electronics") %>
+        <% breadcrumb.item(text: "Laptops") %>
       <% end %>
     </div>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Breadcrumb::Component.new do |breadcrumb| %&gt;
-  &lt;% breadcrumb.with_item(text: "Home", href: "/") %&gt;
-  &lt;% breadcrumb.with_item(text: "Products", href: "/products") %&gt;
-  &lt;% breadcrumb.with_item(text: "Electronics", href: "/electronics") %&gt;
-  &lt;% breadcrumb.with_item(text: "Laptops") %&gt;
+  &lt;% breadcrumb.item(text: "Home", href: "/") %&gt;
+  &lt;% breadcrumb.item(text: "Products", href: "/products") %&gt;
+  &lt;% breadcrumb.item(text: "Electronics", href: "/electronics") %&gt;
+  &lt;% breadcrumb.item(text: "Laptops") %&gt;
 &lt;% end %&gt;</code></pre>
   </section>
 
@@ -31,36 +31,36 @@
       <div>
         <p class="text-sm text-[var(--color-muted-foreground)] mb-2">Chevron (default)</p>
         <%= render FlatPack::Breadcrumb::Component.new(separator: :chevron) do |breadcrumb| %>
-          <% breadcrumb.with_item(text: "Home", href: "/") %>
-          <% breadcrumb.with_item(text: "Products", href: "/products") %>
-          <% breadcrumb.with_item(text: "Item") %>
+          <% breadcrumb.item(text: "Home", href: "/") %>
+          <% breadcrumb.item(text: "Products", href: "/products") %>
+          <% breadcrumb.item(text: "Item") %>
         <% end %>
       </div>
 
       <div>
         <p class="text-sm text-[var(--color-muted-foreground)] mb-2">Slash</p>
         <%= render FlatPack::Breadcrumb::Component.new(separator: :slash) do |breadcrumb| %>
-          <% breadcrumb.with_item(text: "Home", href: "/") %>
-          <% breadcrumb.with_item(text: "Products", href: "/products") %>
-          <% breadcrumb.with_item(text: "Item") %>
+          <% breadcrumb.item(text: "Home", href: "/") %>
+          <% breadcrumb.item(text: "Products", href: "/products") %>
+          <% breadcrumb.item(text: "Item") %>
         <% end %>
       </div>
 
       <div>
         <p class="text-sm text-[var(--color-muted-foreground)] mb-2">Arrow</p>
         <%= render FlatPack::Breadcrumb::Component.new(separator: :arrow) do |breadcrumb| %>
-          <% breadcrumb.with_item(text: "Home", href: "/") %>
-          <% breadcrumb.with_item(text: "Products", href: "/products") %>
-          <% breadcrumb.with_item(text: "Item") %>
+          <% breadcrumb.item(text: "Home", href: "/") %>
+          <% breadcrumb.item(text: "Products", href: "/products") %>
+          <% breadcrumb.item(text: "Item") %>
         <% end %>
       </div>
 
       <div>
         <p class="text-sm text-[var(--color-muted-foreground)] mb-2">Dot</p>
         <%= render FlatPack::Breadcrumb::Component.new(separator: :dot) do |breadcrumb| %>
-          <% breadcrumb.with_item(text: "Home", href: "/") %>
-          <% breadcrumb.with_item(text: "Products", href: "/products") %>
-          <% breadcrumb.with_item(text: "Item") %>
+          <% breadcrumb.item(text: "Home", href: "/") %>
+          <% breadcrumb.item(text: "Products", href: "/products") %>
+          <% breadcrumb.item(text: "Item") %>
         <% end %>
       </div>
     </div>
@@ -76,18 +76,18 @@
     <h2 class="text-2xl font-semibold mb-4">Custom Icon Separator</h2>
     <div class="mb-4">
       <%= render FlatPack::Breadcrumb::Component.new(separator: :custom, separator_icon: "chevron-right") do |breadcrumb| %>
-        <% breadcrumb.with_item(text: "Dashboard", href: "/dashboard") %>
-        <% breadcrumb.with_item(text: "Settings", href: "/settings") %>
-        <% breadcrumb.with_item(text: "Profile") %>
+        <% breadcrumb.item(text: "Dashboard", href: "/dashboard") %>
+        <% breadcrumb.item(text: "Settings", href: "/settings") %>
+        <% breadcrumb.item(text: "Profile") %>
       <% end %>
     </div>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Breadcrumb::Component.new(
   separator: :custom,
   separator_icon: "chevron-right"
 ) do |breadcrumb| %&gt;
-  &lt;% breadcrumb.with_item(text: "Dashboard", href: "/dashboard") %&gt;
-  &lt;% breadcrumb.with_item(text: "Settings", href: "/settings") %&gt;
-  &lt;% breadcrumb.with_item(text: "Profile") %&gt;
+  &lt;% breadcrumb.item(text: "Dashboard", href: "/dashboard") %&gt;
+  &lt;% breadcrumb.item(text: "Settings", href: "/settings") %&gt;
+  &lt;% breadcrumb.item(text: "Profile") %&gt;
 &lt;% end %&gt;</code></pre>
   </section>
 
@@ -96,13 +96,13 @@
     <h2 class="text-2xl font-semibold mb-4">With Home Item</h2>
     <div class="mb-4">
       <%= render FlatPack::Breadcrumb::Component.new(show_home: true) do |breadcrumb| %>
-        <% breadcrumb.with_item(text: "Settings", href: "/settings") %>
-        <% breadcrumb.with_item(text: "Profile") %>
+        <% breadcrumb.item(text: "Settings", href: "/settings") %>
+        <% breadcrumb.item(text: "Profile") %>
       <% end %>
     </div>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Breadcrumb::Component.new(show_home: true) do |breadcrumb| %&gt;
-  &lt;% breadcrumb.with_item(text: "Settings", href: "/settings") %&gt;
-  &lt;% breadcrumb.with_item(text: "Profile") %&gt;
+  &lt;% breadcrumb.item(text: "Settings", href: "/settings") %&gt;
+  &lt;% breadcrumb.item(text: "Profile") %&gt;
 &lt;% end %&gt;</code></pre>
   </section>
 
@@ -116,8 +116,8 @@
         home_text: "Dashboard",
         home_icon: "dashboard"
       ) do |breadcrumb| %>
-        <% breadcrumb.with_item(text: "Reports", href: "/reports") %>
-        <% breadcrumb.with_item(text: "Monthly") %>
+        <% breadcrumb.item(text: "Reports", href: "/reports") %>
+        <% breadcrumb.item(text: "Monthly") %>
       <% end %>
     </div>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Breadcrumb::Component.new(
@@ -126,8 +126,8 @@
   home_text: "Dashboard",
   home_icon: "dashboard"
 ) do |breadcrumb| %&gt;
-  &lt;% breadcrumb.with_item(text: "Reports", href: "/reports") %&gt;
-  &lt;% breadcrumb.with_item(text: "Monthly") %&gt;
+  &lt;% breadcrumb.item(text: "Reports", href: "/reports") %&gt;
+  &lt;% breadcrumb.item(text: "Monthly") %&gt;
 &lt;% end %&gt;</code></pre>
   </section>
 
@@ -159,17 +159,17 @@
     <h2 class="text-2xl font-semibold mb-4">Breadcrumbs with Icons</h2>
     <div class="mb-4">
       <%= render FlatPack::Breadcrumb::Component.new do |breadcrumb| %>
-        <% breadcrumb.with_item(text: "Home", href: "/", icon: "home") %>
-        <% breadcrumb.with_item(text: "Products", href: "/products", icon: "box") %>
-        <% breadcrumb.with_item(text: "Electronics", href: "/electronics", icon: "monitor") %>
-        <% breadcrumb.with_item(text: "Laptops", icon: "laptop") %>
+        <% breadcrumb.item(text: "Home", href: "/", icon: "home") %>
+        <% breadcrumb.item(text: "Products", href: "/products", icon: "box") %>
+        <% breadcrumb.item(text: "Electronics", href: "/electronics", icon: "monitor") %>
+        <% breadcrumb.item(text: "Laptops", icon: "laptop") %>
       <% end %>
     </div>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Breadcrumb::Component.new do |breadcrumb| %&gt;
-  &lt;% breadcrumb.with_item(text: "Home", href: "/", icon: "home") %&gt;
-  &lt;% breadcrumb.with_item(text: "Products", href: "/products", icon: "box") %&gt;
-  &lt;% breadcrumb.with_item(text: "Electronics", href: "/electronics", icon: "monitor") %&gt;
-  &lt;% breadcrumb.with_item(text: "Laptops", icon: "laptop") %&gt;
+  &lt;% breadcrumb.item(text: "Home", href: "/", icon: "home") %&gt;
+  &lt;% breadcrumb.item(text: "Products", href: "/products", icon: "box") %&gt;
+  &lt;% breadcrumb.item(text: "Electronics", href: "/electronics", icon: "monitor") %&gt;
+  &lt;% breadcrumb.item(text: "Laptops", icon: "laptop") %&gt;
 &lt;% end %&gt;</code></pre>
   </section>
 
@@ -180,31 +180,31 @@
       <div>
         <p class="text-sm text-[var(--color-muted-foreground)] mb-2">max_items: 3</p>
         <%= render FlatPack::Breadcrumb::Component.new(max_items: 3) do |breadcrumb| %>
-          <% breadcrumb.with_item(text: "Home", href: "/") %>
-          <% breadcrumb.with_item(text: "Level 1", href: "/l1") %>
-          <% breadcrumb.with_item(text: "Level 2", href: "/l2") %>
-          <% breadcrumb.with_item(text: "Level 3", href: "/l3") %>
-          <% breadcrumb.with_item(text: "Current") %>
+          <% breadcrumb.item(text: "Home", href: "/") %>
+          <% breadcrumb.item(text: "Level 1", href: "/l1") %>
+          <% breadcrumb.item(text: "Level 2", href: "/l2") %>
+          <% breadcrumb.item(text: "Level 3", href: "/l3") %>
+          <% breadcrumb.item(text: "Current") %>
         <% end %>
       </div>
 
       <div>
         <p class="text-sm text-[var(--color-muted-foreground)] mb-2">max_items: 2</p>
         <%= render FlatPack::Breadcrumb::Component.new(max_items: 2) do |breadcrumb| %>
-          <% breadcrumb.with_item(text: "Home", href: "/") %>
-          <% breadcrumb.with_item(text: "A", href: "/a") %>
-          <% breadcrumb.with_item(text: "B", href: "/b") %>
-          <% breadcrumb.with_item(text: "C", href: "/c") %>
-          <% breadcrumb.with_item(text: "Current") %>
+          <% breadcrumb.item(text: "Home", href: "/") %>
+          <% breadcrumb.item(text: "A", href: "/a") %>
+          <% breadcrumb.item(text: "B", href: "/b") %>
+          <% breadcrumb.item(text: "C", href: "/c") %>
+          <% breadcrumb.item(text: "Current") %>
         <% end %>
       </div>
     </div>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Breadcrumb::Component.new(max_items: 3) do |breadcrumb| %&gt;
-  &lt;% breadcrumb.with_item(text: "Home", href: "/") %&gt;
-  &lt;% breadcrumb.with_item(text: "Level 1", href: "/l1") %&gt;
-  &lt;% breadcrumb.with_item(text: "Level 2", href: "/l2") %&gt;
-  &lt;% breadcrumb.with_item(text: "Level 3", href: "/l3") %&gt;
-  &lt;% breadcrumb.with_item(text: "Current") %&gt;
+  &lt;% breadcrumb.item(text: "Home", href: "/") %&gt;
+  &lt;% breadcrumb.item(text: "Level 1", href: "/l1") %&gt;
+  &lt;% breadcrumb.item(text: "Level 2", href: "/l2") %&gt;
+  &lt;% breadcrumb.item(text: "Level 3", href: "/l3") %&gt;
+  &lt;% breadcrumb.item(text: "Current") %&gt;
 &lt;% end %&gt;
 &lt;!-- Shows: Home › ... › Level 3 › Current --&gt;</code></pre>
   </section>
@@ -217,18 +217,18 @@
         class: "p-4 bg-blue-50 rounded-lg",
         separator: :slash
       ) do |breadcrumb| %>
-        <% breadcrumb.with_item(text: "Home", href: "/") %>
-        <% breadcrumb.with_item(text: "Products", href: "/products") %>
-        <% breadcrumb.with_item(text: "Item") %>
+        <% breadcrumb.item(text: "Home", href: "/") %>
+        <% breadcrumb.item(text: "Products", href: "/products") %>
+        <% breadcrumb.item(text: "Item") %>
       <% end %>
     </div>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Breadcrumb::Component.new(
   class: "p-4 bg-blue-50 rounded-lg",
   separator: :slash
 ) do |breadcrumb| %&gt;
-  &lt;% breadcrumb.with_item(text: "Home", href: "/") %&gt;
-  &lt;% breadcrumb.with_item(text: "Products", href: "/products") %&gt;
-  &lt;% breadcrumb.with_item(text: "Item") %&gt;
+  &lt;% breadcrumb.item(text: "Home", href: "/") %&gt;
+  &lt;% breadcrumb.item(text: "Products", href: "/products") %&gt;
+  &lt;% breadcrumb.item(text: "Item") %&gt;
 &lt;% end %&gt;</code></pre>
   </section>
 
@@ -241,10 +241,10 @@
         separator: :chevron,
         class: "mb-4"
       ) do |breadcrumb| %>
-        <% breadcrumb.with_item(text: "Products", href: "/products", icon: "shopping-bag") %>
-        <% breadcrumb.with_item(text: "Electronics", href: "/electronics") %>
-        <% breadcrumb.with_item(text: "Laptops", href: "/laptops") %>
-        <% breadcrumb.with_item(text: "MacBook Pro 16\"") %>
+        <% breadcrumb.item(text: "Products", href: "/products", icon: "shopping-bag") %>
+        <% breadcrumb.item(text: "Electronics", href: "/electronics") %>
+        <% breadcrumb.item(text: "Laptops", href: "/laptops") %>
+        <% breadcrumb.item(text: "MacBook Pro 16\"") %>
       <% end %>
       
       <h3 class="text-2xl font-bold mb-2">MacBook Pro 16"</h3>
@@ -257,43 +257,26 @@
   separator: :chevron,
   class: "mb-4"
 ) do |breadcrumb| %&gt;
-  &lt;% breadcrumb.with_item(text: "Products", href: "/products", icon: "shopping-bag") %&gt;
-  &lt;% breadcrumb.with_item(text: "Electronics", href: "/electronics") %&gt;
-  &lt;% breadcrumb.with_item(text: "Laptops", href: "/laptops") %&gt;
-  &lt;% breadcrumb.with_item(text: "MacBook Pro 16\"") %&gt;
+  &lt;% breadcrumb.item(text: "Products", href: "/products", icon: "shopping-bag") %&gt;
+  &lt;% breadcrumb.item(text: "Electronics", href: "/electronics") %&gt;
+  &lt;% breadcrumb.item(text: "Laptops", href: "/laptops") %&gt;
+  &lt;% breadcrumb.item(text: "MacBook Pro 16\"") %&gt;
 &lt;% end %&gt;</code></pre>
   </section>
 
   <!-- Accessibility -->
   <section class="mb-12">
     <h2 class="text-2xl font-semibold mb-4">Accessibility Features</h2>
-    <div class="bg-green-50 dark:bg-green-900/20 p-6 rounded-lg">
-      <h3 class="font-semibold mb-3">✅ WCAG AA Compliant</h3>
-      <ul class="space-y-2 text-sm">
-        <li>✓ Semantic HTML with <code>&lt;nav&gt;</code>, <code>&lt;ol&gt;</code>, and <code>&lt;li&gt;</code></li>
-        <li>✓ <code>aria-label="Breadcrumb"</code> on navigation element</li>
-        <li>✓ <code>aria-current="page"</code> on current page item</li>
-        <li>✓ <code>aria-hidden="true"</code> on decorative separators</li>
-        <li>✓ Full keyboard navigation support</li>
-        <li>✓ Clear visual distinction between links and current page</li>
-        <li>✓ Proper color contrast ratios</li>
+    <div class="mb-4">
+      <ul class="space-y-2 text-[var(--color-muted-foreground)]">
+        <li>• Semantic HTML with <code class="text-sm">&lt;nav&gt;</code>, <code class="text-sm">&lt;ol&gt;</code>, and <code class="text-sm">&lt;li&gt;</code></li>
+        <li>• <code class="text-sm">aria-label="Breadcrumb"</code> on navigation element</li>
+        <li>• <code class="text-sm">aria-current="page"</code> on current page item</li>
+        <li>• <code class="text-sm">aria-hidden="true"</code> on decorative separators</li>
+        <li>• Full keyboard navigation support</li>
+        <li>• Clear visual distinction between links and current page</li>
+        <li>• Proper color contrast ratios (WCAG AA compliant)</li>
       </ul>
-    </div>
-  </section>
-
-  <!-- Documentation Link -->
-  <section class="mb-12">
-    <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg">
-      <h3 class="font-semibold mb-2">📚 Full Documentation</h3>
-      <p class="text-sm text-[var(--color-muted-foreground)] mb-4">
-        See the complete documentation for integration patterns, helper methods, and advanced usage.
-      </p>
-      <%= render FlatPack::Button::Component.new(
-        text: "View Documentation",
-        href: "https://github.com/bowerbird-app/flatpack/blob/main/docs/components/breadcrumb.md",
-        style: :primary,
-        size: :sm
-      ) %>
     </div>
   </section>
 </div>

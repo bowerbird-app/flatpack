@@ -662,6 +662,11 @@ body {
   z-index: 10;
 }
 
+.mx-2 {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
 .mx-4 {
   margin-left: 1rem;
   margin-right: 1rem;
@@ -2002,8 +2007,16 @@ body {
 }
 
 @media (prefers-color-scheme: dark) {
+  .dark\:bg-blue-900\/20 {
+    background-color: rgb(30 58 138 / 0.2);
+  }
+
   .dark\:bg-blue-950\/20 {
     background-color: rgb(23 37 84 / 0.2);
+  }
+
+  .dark\:bg-green-900\/20 {
+    background-color: rgb(20 83 45 / 0.2);
   }
 
   .dark\:bg-green-950\/20 {

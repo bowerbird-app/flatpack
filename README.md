@@ -75,9 +75,9 @@ Styles: `:default`, `:elevated`, `:outlined`, `:flat`, `:interactive`
 
 ```erb
 <%= render FlatPack::Breadcrumb::Component.new do |breadcrumb| %>
-  <% breadcrumb.with_item(text: "Home", href: "/") %>
-  <% breadcrumb.with_item(text: "Products", href: "/products") %>
-  <% breadcrumb.with_item(text: "Laptops") %>
+  <% breadcrumb.item(text: "Home", href: "/") %>
+  <% breadcrumb.item(text: "Products", href: "/products") %>
+  <% breadcrumb.item(text: "Laptops") %>
 <% end %>
 ```
 

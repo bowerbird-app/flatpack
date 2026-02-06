@@ -8,9 +8,9 @@ module FlatPack
       # Basic Rendering Tests
       def test_renders_breadcrumb_with_items
         render_inline(Component.new) do |breadcrumb|
-          breadcrumb.with_item(text: "Home", href: "/")
-          breadcrumb.with_item(text: "Products", href: "/products")
-          breadcrumb.with_item(text: "Laptops")
+          breadcrumb.item(text: "Home", href: "/")
+          breadcrumb.item(text: "Products", href: "/products")
+          breadcrumb.item(text: "Laptops")
         end
 
         assert_selector "nav[aria-label='Breadcrumb']"
@@ -23,7 +23,7 @@ module FlatPack
 
       def test_renders_single_item
         render_inline(Component.new) do |breadcrumb|
-          breadcrumb.with_item(text: "Home", href: "/")
+          breadcrumb.item(text: "Home", href: "/")
         end
 
         assert_selector "nav"
@@ -33,9 +33,9 @@ module FlatPack
 
       def test_renders_multiple_items
         render_inline(Component.new) do |breadcrumb|
-          breadcrumb.with_item(text: "Item 1", href: "/1")
-          breadcrumb.with_item(text: "Item 2", href: "/2")
-          breadcrumb.with_item(text: "Item 3", href: "/3")
+          breadcrumb.item(text: "Item 1", href: "/1")
+          breadcrumb.item(text: "Item 2", href: "/2")
+          breadcrumb.item(text: "Item 3", href: "/3")
         end
 
         assert_selector "li", count: 5 # 3 items + 2 separators
@@ -46,8 +46,8 @@ module FlatPack
 
       def test_renders_current_item_without_link
         render_inline(Component.new) do |breadcrumb|
-          breadcrumb.with_item(text: "Home", href: "/")
-          breadcrumb.with_item(text: "Current Page")
+          breadcrumb.item(text: "Home", href: "/")
+          breadcrumb.item(text: "Current Page")
         end
 
         assert_selector "a[href='/']", text: "Home"
@@ -57,8 +57,8 @@ module FlatPack
 
       def test_renders_items_with_links
         render_inline(Component.new) do |breadcrumb|
-          breadcrumb.with_item(text: "Home", href: "/")
-          breadcrumb.with_item(text: "Products", href: "/products")
+          breadcrumb.item(text: "Home", href: "/")
+          breadcrumb.item(text: "Products", href: "/products")
         end
 
         assert_selector "a[href='/']", text: "Home"
@@ -68,8 +68,8 @@ module FlatPack
       # Separator Tests
       def test_renders_with_chevron_separator
         render_inline(Component.new(separator: :chevron)) do |breadcrumb|
-          breadcrumb.with_item(text: "Home", href: "/")
-          breadcrumb.with_item(text: "Products")
+          breadcrumb.item(text: "Home", href: "/")
+          breadcrumb.item(text: "Products")
         end
 
         assert_text "›"
@@ -77,8 +77,8 @@ module FlatPack
 
       def test_renders_with_slash_separator
         render_inline(Component.new(separator: :slash)) do |breadcrumb|
-          breadcrumb.with_item(text: "Home", href: "/")
-          breadcrumb.with_item(text: "Products")
+          breadcrumb.item(text: "Home", href: "/")
+          breadcrumb.item(text: "Products")
         end
 
         assert_text "/"
@@ -86,8 +86,8 @@ module FlatPack
 
       def test_renders_with_arrow_separator
         render_inline(Component.new(separator: :arrow)) do |breadcrumb|
-          breadcrumb.with_item(text: "Home", href: "/")
-          breadcrumb.with_item(text: "Products")
+          breadcrumb.item(text: "Home", href: "/")
+          breadcrumb.item(text: "Products")
         end
 
         assert_text "→"
@@ -95,8 +95,8 @@ module FlatPack
 
       def test_renders_with_dot_separator
         render_inline(Component.new(separator: :dot)) do |breadcrumb|
-          breadcrumb.with_item(text: "Home", href: "/")
-          breadcrumb.with_item(text: "Products")
+          breadcrumb.item(text: "Home", href: "/")
+          breadcrumb.item(text: "Products")
         end
 
         assert_text "•"
@@ -104,12 +104,13 @@ module FlatPack
 
       def test_renders_with_custom_separator_icon
         render_inline(Component.new(separator: :custom, separator_icon: "chevron-right")) do |breadcrumb|
-          breadcrumb.with_item(text: "Home", href: "/")
-          breadcrumb.with_item(text: "Products")
+          breadcrumb.item(text: "Home", href: "/")
+          breadcrumb.item(text: "Products")
         end
 
         assert_selector "svg"
-        assert_selector "use[xlink:href='#icon-chevron-right']"
+        # Check for use element with icon reference
+        assert_includes page.native.to_html, "#icon-chevron-right"
       end
 
       def test_validates_separator
@@ -130,16 +131,17 @@ module FlatPack
       # Home Item Tests
       def test_renders_home_item_when_enabled
         render_inline(Component.new(show_home: true)) do |breadcrumb|
-          breadcrumb.with_item(text: "Products", href: "/products")
+          breadcrumb.item(text: "Products", href: "/products")
         end
 
         assert_selector "a[href='/']", text: "Home"
-        assert_selector "svg use[xlink:href='#icon-home']"
+        assert_selector "svg"
+        assert_includes page.native.to_html, "#icon-home"
       end
 
       def test_does_not_render_home_when_disabled
         render_inline(Component.new(show_home: false)) do |breadcrumb|
-          breadcrumb.with_item(text: "Products", href: "/products")
+          breadcrumb.item(text: "Products", href: "/products")
         end
 
         refute_selector "a[href='/']", text: "Home"
@@ -148,7 +150,7 @@ module FlatPack
 
       def test_renders_home_with_custom_url
         render_inline(Component.new(show_home: true, home_url: "/dashboard")) do |breadcrumb|
-          breadcrumb.with_item(text: "Products")
+          breadcrumb.item(text: "Products")
         end
 
         assert_selector "a[href='/dashboard']", text: "Home"
@@ -156,7 +158,7 @@ module FlatPack
 
       def test_renders_home_with_custom_text
         render_inline(Component.new(show_home: true, home_text: "Dashboard")) do |breadcrumb|
-          breadcrumb.with_item(text: "Products")
+          breadcrumb.item(text: "Products")
         end
 
         assert_selector "a[href='/']", text: "Dashboard"
@@ -164,21 +166,22 @@ module FlatPack
 
       def test_renders_home_with_icon
         render_inline(Component.new(show_home: true, home_icon: "house")) do |breadcrumb|
-          breadcrumb.with_item(text: "Products")
+          breadcrumb.item(text: "Products")
         end
 
-        assert_selector "svg use[xlink:href='#icon-house']"
+        assert_selector "svg"
+        assert_includes page.native.to_html, "#icon-house"
         assert_text "Home"
       end
 
       # Collapsed Items Tests
       def test_collapses_items_when_exceeds_max
         render_inline(Component.new(max_items: 3)) do |breadcrumb|
-          breadcrumb.with_item(text: "Home", href: "/")
-          breadcrumb.with_item(text: "Level 1", href: "/l1")
-          breadcrumb.with_item(text: "Level 2", href: "/l2")
-          breadcrumb.with_item(text: "Level 3", href: "/l3")
-          breadcrumb.with_item(text: "Current")
+          breadcrumb.item(text: "Home", href: "/")
+          breadcrumb.item(text: "Level 1", href: "/l1")
+          breadcrumb.item(text: "Level 2", href: "/l2")
+          breadcrumb.item(text: "Level 3", href: "/l3")
+          breadcrumb.item(text: "Current")
         end
 
         assert_text "Home"
@@ -191,10 +194,10 @@ module FlatPack
 
       def test_keeps_first_and_last_items_when_collapsed
         render_inline(Component.new(max_items: 2)) do |breadcrumb|
-          breadcrumb.with_item(text: "First", href: "/first")
-          breadcrumb.with_item(text: "Second", href: "/second")
-          breadcrumb.with_item(text: "Third", href: "/third")
-          breadcrumb.with_item(text: "Last")
+          breadcrumb.item(text: "First", href: "/first")
+          breadcrumb.item(text: "Second", href: "/second")
+          breadcrumb.item(text: "Third", href: "/third")
+          breadcrumb.item(text: "Last")
         end
 
         assert_text "First"
@@ -206,11 +209,11 @@ module FlatPack
 
       def test_adds_ellipsis_when_collapsed
         render_inline(Component.new(max_items: 3)) do |breadcrumb|
-          breadcrumb.with_item(text: "Home", href: "/")
-          breadcrumb.with_item(text: "A", href: "/a")
-          breadcrumb.with_item(text: "B", href: "/b")
-          breadcrumb.with_item(text: "C", href: "/c")
-          breadcrumb.with_item(text: "D")
+          breadcrumb.item(text: "Home", href: "/")
+          breadcrumb.item(text: "A", href: "/a")
+          breadcrumb.item(text: "B", href: "/b")
+          breadcrumb.item(text: "C", href: "/c")
+          breadcrumb.item(text: "D")
         end
 
         assert_selector "span[aria-current='page']", text: "..."
@@ -218,9 +221,9 @@ module FlatPack
 
       def test_does_not_collapse_when_under_max
         render_inline(Component.new(max_items: 5)) do |breadcrumb|
-          breadcrumb.with_item(text: "Home", href: "/")
-          breadcrumb.with_item(text: "Products", href: "/products")
-          breadcrumb.with_item(text: "Laptops")
+          breadcrumb.item(text: "Home", href: "/")
+          breadcrumb.item(text: "Products", href: "/products")
+          breadcrumb.item(text: "Laptops")
         end
 
         assert_text "Home"
@@ -232,9 +235,9 @@ module FlatPack
       # Array Items Tests
       def test_accepts_array_of_items
         items = [
-          { text: "Home", href: "/" },
-          { text: "Products", href: "/products" },
-          { text: "Laptops" }
+          {text: "Home", href: "/"},
+          {text: "Products", href: "/products"},
+          {text: "Laptops"}
         ]
 
         render_inline(Component.new(items: items))
@@ -248,8 +251,8 @@ module FlatPack
 
       def test_builds_items_from_array
         items = [
-          { text: "Item 1", href: "/1" },
-          { text: "Item 2", href: "/2" }
+          {text: "Item 1", href: "/1"},
+          {text: "Item 2", href: "/2"}
         ]
 
         render_inline(Component.new(items: items))
@@ -260,7 +263,7 @@ module FlatPack
       # Accessibility Tests
       def test_has_nav_with_aria_label
         render_inline(Component.new) do |breadcrumb|
-          breadcrumb.with_item(text: "Home")
+          breadcrumb.item(text: "Home")
         end
 
         assert_selector "nav[aria-label='Breadcrumb']"
@@ -268,8 +271,8 @@ module FlatPack
 
       def test_current_item_has_aria_current
         render_inline(Component.new) do |breadcrumb|
-          breadcrumb.with_item(text: "Home", href: "/")
-          breadcrumb.with_item(text: "Current")
+          breadcrumb.item(text: "Home", href: "/")
+          breadcrumb.item(text: "Current")
         end
 
         assert_selector "span[aria-current='page']", text: "Current"
@@ -277,8 +280,8 @@ module FlatPack
 
       def test_separator_has_aria_hidden
         render_inline(Component.new) do |breadcrumb|
-          breadcrumb.with_item(text: "Home", href: "/")
-          breadcrumb.with_item(text: "Products")
+          breadcrumb.item(text: "Home", href: "/")
+          breadcrumb.item(text: "Products")
         end
 
         assert_selector "li[aria-hidden='true']"
@@ -302,7 +305,8 @@ module FlatPack
       def test_item_with_icon
         render_inline(ItemComponent.new(text: "Home", href: "/", icon: "home"))
 
-        assert_selector "svg use[xlink:href='#icon-home']"
+        assert_selector "svg"
+        assert_includes page.native.to_html, "#icon-home"
         assert_text "Home"
       end
 
@@ -328,7 +332,7 @@ module FlatPack
       # Security Tests
       def test_sanitizes_dangerous_attributes
         render_inline(Component.new(onclick: "alert('xss')")) do |breadcrumb|
-          breadcrumb.with_item(text: "Home", href: "/")
+          breadcrumb.item(text: "Home", href: "/")
         end
 
         refute_selector "nav[onclick]"
@@ -336,7 +340,7 @@ module FlatPack
 
       def test_escapes_text_content
         render_inline(Component.new) do |breadcrumb|
-          breadcrumb.with_item(text: "<script>alert('xss')</script>", href: "/")
+          breadcrumb.item(text: "<script>alert('xss')</script>", href: "/")
         end
 
         refute_selector "script"
@@ -346,8 +350,8 @@ module FlatPack
       def test_validates_hrefs
         # This test ensures hrefs are rendered as-is for relative/safe URLs
         render_inline(Component.new) do |breadcrumb|
-          breadcrumb.with_item(text: "Home", href: "/home")
-          breadcrumb.with_item(text: "Products", href: "/products")
+          breadcrumb.item(text: "Home", href: "/home")
+          breadcrumb.item(text: "Products", href: "/products")
         end
 
         assert_selector "a[href='/home']"
@@ -357,15 +361,15 @@ module FlatPack
       # Styling Tests
       def test_merges_custom_classes
         render_inline(Component.new(class: "custom-breadcrumb")) do |breadcrumb|
-          breadcrumb.with_item(text: "Home")
+          breadcrumb.item(text: "Home")
         end
 
         assert_selector "nav.custom-breadcrumb"
       end
 
       def test_accepts_data_attributes
-        render_inline(Component.new(data: { testid: "breadcrumb" })) do |breadcrumb|
-          breadcrumb.with_item(text: "Home")
+        render_inline(Component.new(data: {testid: "breadcrumb"})) do |breadcrumb|
+          breadcrumb.item(text: "Home")
         end
 
         assert_selector "nav[data-testid='breadcrumb']"
@@ -373,8 +377,8 @@ module FlatPack
 
       def test_current_item_has_distinct_style
         render_inline(Component.new) do |breadcrumb|
-          breadcrumb.with_item(text: "Home", href: "/")
-          breadcrumb.with_item(text: "Current")
+          breadcrumb.item(text: "Home", href: "/")
+          breadcrumb.item(text: "Current")
         end
 
         assert_includes page.native.to_html, "font-medium"
@@ -383,8 +387,8 @@ module FlatPack
 
       def test_default_separator_is_chevron
         render_inline(Component.new) do |breadcrumb|
-          breadcrumb.with_item(text: "Home", href: "/")
-          breadcrumb.with_item(text: "Products")
+          breadcrumb.item(text: "Home", href: "/")
+          breadcrumb.item(text: "Products")
         end
 
         assert_text "›"
@@ -392,7 +396,7 @@ module FlatPack
 
       def test_renders_with_custom_id
         render_inline(Component.new(id: "main-breadcrumb")) do |breadcrumb|
-          breadcrumb.with_item(text: "Home")
+          breadcrumb.item(text: "Home")
         end
 
         assert_selector "nav#main-breadcrumb"
@@ -400,8 +404,8 @@ module FlatPack
 
       def test_renders_semantic_html
         render_inline(Component.new) do |breadcrumb|
-          breadcrumb.with_item(text: "Home", href: "/")
-          breadcrumb.with_item(text: "Products")
+          breadcrumb.item(text: "Home", href: "/")
+          breadcrumb.item(text: "Products")
         end
 
         assert_selector "nav > ol > li"

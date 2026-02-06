@@ -5,6 +5,11 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       renders_many :items, ItemComponent
 
+      # Alias for shorter syntax
+      def item(**kwargs, &block)
+        with_item(**kwargs, &block)
+      end
+
       SEPARATORS = {
         chevron: "›",
         slash: "/",
@@ -37,10 +42,8 @@ module FlatPack
         validate_separator!
 
         # Support array of items for convenience
-        if items
-          items.each do |item|
-            with_item(**item)
-          end
+        items&.each do |item|
+          item(**item)
         end
       end
 
@@ -75,7 +78,7 @@ module FlatPack
 
         # Add home item if requested
         if @show_home
-          items_list << with_item(
+          items_list << item(
             text: @home_text,
             href: @home_url,
             icon: @home_icon
@@ -112,8 +115,7 @@ module FlatPack
       def render_separator
         content_tag(:li,
           class: "inline-flex items-center mx-2 text-[var(--color-muted-foreground)]",
-          aria: { hidden: "true" }
-        ) do
+          aria: {hidden: "true"}) do
           if @separator == :custom && @separator_icon
             render(FlatPack::Shared::IconComponent.new(
               name: @separator_icon,
@@ -128,7 +130,7 @@ module FlatPack
       def nav_attributes
         attrs = {
           class: wrapper_classes,
-          aria: { label: "Breadcrumb" }
+          aria: {label: "Breadcrumb"}
         }
         merge_attributes(**attrs)
       end
