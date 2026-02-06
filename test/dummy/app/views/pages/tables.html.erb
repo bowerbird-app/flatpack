@@ -60,39 +60,6 @@
 &lt;% end %&gt;</code></pre>
   </section>
 
-  <!-- Table with Block Syntax -->
-  <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Table with Block Syntax</h2>
-    <%= render FlatPack::Table::Component.new(data: @users.first(5)) do |table| %>
-      <% table.column(title: "Name") do |user| %>
-        <strong class="text-[var(--color-primary)]"><%= user.name %></strong>
-      <% end %>
-      <% table.column(title: "Status") do |user| %>
-        <% badge_class = case user.status
-           when 'active' then 'bg-green-100 text-green-800'
-           when 'inactive' then 'bg-gray-100 text-gray-800'
-           else 'bg-yellow-100 text-yellow-800'
-           end %>
-        <span class="px-2 py-1 text-xs rounded <%= badge_class %>">
-          <%= user.status.capitalize %>
-        </span>
-      <% end %>
-      <% table.column(title: "Created") do |user| %>
-        <%= user.created_at.strftime("%b %d, %Y") %>
-      <% end %>
-    <% end %>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Table::Component.new(data: @users) do |table| %&gt;
-  &lt;% table.column(title: "Name") do |user| %&gt;
-    &lt;strong class="text-[var(--color-primary)]"&gt;&lt;%= user.name %&gt;&lt;/strong&gt;
-  &lt;% end %&gt;
-  &lt;% table.column(title: "Status") do |user| %&gt;
-    &lt;span class="px-2 py-1 text-xs rounded ..."&gt;&lt;%= user.status.capitalize %&gt;&lt;/span&gt;
-  &lt;% end %&gt;
-  &lt;% table.column(title: "Created") do |user| %&gt;
-    &lt;%= user.created_at.strftime("%b %d, %Y") %&gt;
-  &lt;% end %&gt;
-&lt;% end %&gt;</code></pre>
-  </section>
 
   <!-- Table with Actions -->
   <section class="mb-12">
