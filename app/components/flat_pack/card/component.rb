@@ -10,13 +10,13 @@ module FlatPack
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-[var(--color-background)]" "border" "border-[var(--color-border)]" "shadow-md" "border-2" "bg-[var(--color-muted)]" "hover:shadow-md" "hover:border-[var(--color-primary)]" "transition-all" "cursor-pointer"
+      # "bg-[var(--color-background)]" "border" "border-[var(--color-border)]" "shadow-md" "dark:shadow-xl" "border-2" "bg-[var(--color-muted)]" "hover:shadow-md" "dark:hover:shadow-xl" "hover:border-[var(--color-primary)]" "transition-all" "cursor-pointer"
       STYLES = {
         default: "bg-[var(--color-background)] border border-[var(--color-border)]",
-        elevated: "bg-[var(--color-background)] shadow-md",
+        elevated: "bg-[var(--color-background)] shadow-md dark:shadow-xl",
         outlined: "bg-[var(--color-background)] border-2 border-[var(--color-border)]",
         flat: "bg-[var(--color-muted)]",
-        interactive: "bg-[var(--color-background)] border border-[var(--color-border)] hover:shadow-md hover:border-[var(--color-primary)] transition-all cursor-pointer"
+        interactive: "bg-[var(--color-background)] border border-[var(--color-border)] hover:shadow-md dark:hover:shadow-xl hover:border-[var(--color-primary)] transition-all cursor-pointer"
       }.freeze
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
