@@ -5,10 +5,10 @@ module FlatPack
     class ColumnComponent < ViewComponent::Base
       attr_reader :sortable, :sort_key
 
-      def initialize(title:, html:, sortable: false, sort_key: nil, &block)
+      def initialize(title:, html: nil, sortable: false, sort_key: nil)
         @title = title
-        # Support both html: proc and block syntax (though block won't work with ViewComponent)
-        @html = html || block
+        # Support both html: proc (includes block-converted-to-proc)
+        @html = html
         @sortable = sortable
         @sort_key = sort_key
       end
@@ -26,11 +26,15 @@ module FlatPack
       end
 
       def render_cell(row)
-        # Get the content first
-        content = @html ? @html.call(row) : ""
+        # Get the content from html proc
+        cell_content = if @html
+          @html.call(row)
+        else
+          ""
+        end
 
         # Build td tag - only escape if content isn't already html_safe
-        escaped_content = content.html_safe? ? content : ERB::Util.html_escape(content)
+        escaped_content = cell_content.html_safe? ? cell_content : ERB::Util.html_escape(cell_content)
         "<td class=\"#{cell_classes}\">#{escaped_content}</td>".html_safe
       end
 
