@@ -2,15 +2,7 @@
 
 A navigation component that shows the user's current location in the site hierarchy and allows them to navigate back to parent pages.
 
-## Overview
-
 The Breadcrumb component follows Flatpack's patterns with `renders_many :items` for flexible composition. It provides multiple separator styles, support for icons, item collapsing, and full accessibility compliance.
-
-## Visual Example
-
-```
-Home > Products > Electronics > Laptops > MacBook Pro
-```
 
 ## Basic Usage
 
@@ -39,12 +31,12 @@ For simple cases, you can pass an array of items:
 ) %>
 ```
 
-## Configuration Options
+## Props
 
-### Main Component Parameters
+### Main Component Props
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
 | `separator` | Symbol | `:chevron` | Separator style (`:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`) |
 | `separator_icon` | String | `nil` | Custom icon name when `separator: :custom` |
 | `show_home` | Boolean | `false` | Auto-prepend home icon/link |
@@ -53,11 +45,12 @@ For simple cases, you can pass an array of items:
 | `home_icon` | String | `"home"` | Home icon name |
 | `max_items` | Integer | `nil` | Maximum items before collapsing |
 | `items` | Array | `nil` | Array of item hashes for convenience |
+| `**system_arguments` | Hash | `{}` | HTML attributes (`class`, `data`, `aria`, `id`, etc.) |
 
-### Item Component Parameters
+### Item Component Props
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
 | `text` | String | (required) | Link text |
 | `href` | String | `nil` | URL (nil = current page, no link) |
 | `icon` | String | `nil` | Icon name (optional) |
@@ -155,11 +148,48 @@ The component keeps:
 
 ## Icons in Items
 
+Add icons to breadcrumb items for better visual context:
+
 ```erb
 <%= render FlatPack::Breadcrumb::Component.new do |breadcrumb| %>
   <% breadcrumb.item(text: "Home", href: "/", icon: "home") %>
   <% breadcrumb.item(text: "Settings", href: "/settings", icon: "cog") %>
   <% breadcrumb.item(text: "Profile", icon: "user") %>
+<% end %>
+```
+
+**Icon Reference:** Icons use [Heroicons](https://heroicons.com) by default. Use the icon name without prefixes (e.g., `"home"`, `"cog"`, `"user"`). For custom separator icons, any Heroicon name can be used with the `separator_icon` prop.
+
+## System Arguments
+
+### Custom Classes
+
+```erb
+<%= render FlatPack::Breadcrumb::Component.new(class: "mb-4 custom-breadcrumb") do |breadcrumb| %>
+  <% breadcrumb.item(text: "Home", href: "/") %>
+<% end %>
+```
+
+Classes are merged using `tailwind_merge`, so Tailwind utilities override correctly.
+
+### Data Attributes
+
+```erb
+<%= render FlatPack::Breadcrumb::Component.new(
+  data: { testid: "main-breadcrumb" },
+  id: "breadcrumb-nav"
+) do |breadcrumb| %>
+  <% breadcrumb.item(text: "Home", href: "/") %>
+<% end %>
+```
+
+### ARIA Attributes
+
+```erb
+<%= render FlatPack::Breadcrumb::Component.new(
+  aria: { label: "Navigation path" }
+) do |breadcrumb| %>
+  <% breadcrumb.item(text: "Home", href: "/") %>
 <% end %>
 ```
 
@@ -173,28 +203,13 @@ The Breadcrumb component is fully accessible:
 - ✅ **Hidden separators**: `aria-hidden="true"` on separator elements
 - ✅ **Keyboard navigation**: All links are keyboard accessible
 
-## Styling
+### Keyboard Support
 
-### Custom Classes
+- `Tab` - Focus next link
+- `Shift+Tab` - Focus previous link
+- `Enter` - Activate link
 
-```erb
-<%= render FlatPack::Breadcrumb::Component.new(class: "mb-4 custom-breadcrumb") do |breadcrumb| %>
-  <% breadcrumb.item(text: "Home", href: "/") %>
-<% end %>
-```
-
-### Data Attributes
-
-```erb
-<%= render FlatPack::Breadcrumb::Component.new(
-  data: { testid: "main-breadcrumb" },
-  id: "breadcrumb-nav"
-) do |breadcrumb| %>
-  <% breadcrumb.item(text: "Home", href: "/") %>
-<% end %>
-```
-
-## Integration Patterns
+## Examples
 
 ### Rails Helper Integration
 
@@ -235,42 +250,6 @@ end
 <%= breadcrumb_from_controller %>
 ```
 
-### With breadcrumbs_on_rails Gem
-
-```ruby
-def breadcrumb_component
-  crumbs = breadcrumbs_trail
-  
-  render FlatPack::Breadcrumb::Component.new do |breadcrumb|
-    crumbs.each do |crumb|
-      breadcrumb.item(
-        text: crumb.name,
-        href: crumb.url
-      )
-    end
-  end
-end
-```
-
-### With gretel Gem
-
-```ruby
-def render_gretel_breadcrumbs
-  crumbs = breadcrumb_links
-  
-  render FlatPack::Breadcrumb::Component.new(separator: :slash) do |breadcrumb|
-    crumbs.each do |crumb|
-      breadcrumb.item(
-        text: crumb.text,
-        href: crumb.url
-      )
-    end
-  end
-end
-```
-
-## Common Patterns
-
 ### E-commerce Category Breadcrumb
 
 ```erb
@@ -305,7 +284,7 @@ end
 <% end %>
 ```
 
-## Complete Example
+### Full Width Container
 
 ```erb
 <div class="container mx-auto px-4 py-6">
@@ -326,7 +305,9 @@ end
 </div>
 ```
 
-## CSS Variables
+## Styling
+
+### CSS Variables
 
 The component uses the following CSS variables from the Flatpack theme:
 
@@ -334,15 +315,85 @@ The component uses the following CSS variables from the Flatpack theme:
 - `--color-muted-foreground` - Link and separator color
 - `--color-background` - Background color (inherited)
 
-## Browser Support
+Customize breadcrumb colors by overriding CSS variables:
 
-Works in all modern browsers that support:
-- CSS Flexbox
-- CSS Custom Properties (CSS Variables)
-- SVG (for icons)
+```css
+@theme {
+  --color-foreground: oklch(0.2 0.02 250);
+  --color-muted-foreground: oklch(0.5 0.02 250);
+}
+```
 
-## See Also
+## Testing
 
-- [Button Component](button.md)
-- [Link Component](link.md)
-- [Card Component](card.md)
+```ruby
+# test/components/breadcrumb_component_test.rb
+require "test_helper"
+
+class BreadcrumbComponentTest < ViewComponent::TestCase
+  def test_renders_breadcrumb_with_items
+    render_inline FlatPack::Breadcrumb::Component.new do |breadcrumb|
+      breadcrumb.item(text: "Home", href: "/")
+      breadcrumb.item(text: "Products")
+    end
+    
+    assert_selector "nav[aria-label='Breadcrumb']"
+    assert_selector "a", text: "Home"
+    assert_selector "span[aria-current='page']", text: "Products"
+  end
+  
+  def test_renders_with_array_items
+    render_inline FlatPack::Breadcrumb::Component.new(
+      items: [
+        { text: "Home", href: "/" },
+        { text: "Products" }
+      ]
+    )
+    
+    assert_selector "nav"
+    assert_selector "a", text: "Home"
+  end
+end
+```
+
+## API Reference
+
+```ruby
+FlatPack::Breadcrumb::Component.new(
+  separator: Symbol,          # Optional, default: :chevron (:chevron, :slash, :arrow, :dot, :custom)
+  separator_icon: String,     # Optional, default: nil
+  show_home: Boolean,         # Optional, default: false
+  home_url: String,           # Optional, default: "/"
+  home_text: String,          # Optional, default: "Home"
+  home_icon: String,          # Optional, default: "home"
+  max_items: Integer,         # Optional, default: nil
+  items: Array,               # Optional, default: nil
+  **system_arguments          # Optional
+) do |breadcrumb|
+  breadcrumb.item(
+    text: String,             # Required
+    href: String,             # Optional, default: nil
+    icon: String              # Optional, default: nil
+  )
+end
+```
+
+### System Arguments
+
+- `class`: String - Additional CSS classes
+- `data`: Hash - Data attributes
+- `aria`: Hash - ARIA attributes
+- `id`: String - Element ID
+- Any other valid HTML attribute
+
+## Related Components
+
+- [Link Component](link.md) - Breadcrumb items use Link component for navigation
+- [Button Component](button.md) - For action buttons in layouts with breadcrumbs
+- [Card Component](card.md) - Cards often appear below breadcrumbs in page layouts
+
+## Next Steps
+
+- [Theming Guide](../theming.md)
+- [Dark Mode](../dark_mode.md)
+- [Installation Guide](../installation.md)
