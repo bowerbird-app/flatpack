@@ -67,14 +67,14 @@ Define actions using `with_action`:
 ) %>
 ```
 
-### Action with Scheme
+### Action with Style
 
 ```erb
 <% table.with_action(
   text: "Delete",
   url: ->(user) { user_path(user) },
   method: :delete,
-  scheme: :secondary,
+  style: :secondary,
   data: { turbo_confirm: "Are you sure?" }
 ) %>
 ```
@@ -117,7 +117,7 @@ Define actions using `with_action`:
   <% table.with_action(
     text: "Edit",
     url: ->(user) { edit_user_path(user) },
-    scheme: :ghost
+    style: :ghost
   ) %>
   
   <%# Delete action with confirmation %>
@@ -125,7 +125,7 @@ Define actions using `with_action`:
     text: "Delete",
     url: ->(user) { user_path(user) },
     method: :delete,
-    scheme: :ghost,
+    style: :ghost,
     data: { turbo_confirm: "Delete #{user.name}?" }
   ) %>
 <% end %>
@@ -246,7 +246,7 @@ The Stimulus controller (`flat-pack--table`) provides:
     <%= render FlatPack::Button::Component.new(
       text: "Edit",
       url: edit_user_path(user),
-      scheme: :ghost
+      style: :ghost
     ) %>
   <% end %>
 <% end %>
@@ -255,9 +255,9 @@ The Stimulus controller (`flat-pack--table`) provides:
 ### Multiple Action Buttons
 
 ```erb
-<% table.with_action(text: "View", url: ->(user) { user_path(user) }, scheme: :ghost) %>
-<% table.with_action(text: "Edit", url: ->(user) { edit_user_path(user) }, scheme: :ghost) %>
-<% table.with_action(text: "Delete", url: ->(user) { user_path(user) }, method: :delete, scheme: :ghost) %>
+<% table.with_action(text: "View", url: ->(user) { user_path(user) }, style: :ghost) %>
+<% table.with_action(text: "Edit", url: ->(user) { edit_user_path(user) }, style: :ghost) %>
+<% table.with_action(text: "Delete", url: ->(user) { user_path(user) }, method: :delete, style: :ghost) %>
 ```
 
 ### With Pagination
@@ -420,7 +420,7 @@ table.with_action(
   text: String,              # Optional
   url: String | Proc,         # Optional
   method: Symbol,             # Optional
-  scheme: Symbol,             # Optional, default: :ghost
+  style: Symbol,              # Optional, default: :ghost
   **system_arguments,         # Optional
   &block                      # Optional
 )
