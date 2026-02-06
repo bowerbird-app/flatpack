@@ -1,0 +1,129 @@
+<%= render FlatPack::Navbar::Component.new do |navbar| %>
+  <% navbar.with_top_nav do |top_nav| %>
+    <% top_nav.with_logo do %>
+      <div class="flex items-center gap-2">
+        <svg class="w-8 h-8 text-[var(--color-primary)]" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/>
+        </svg>
+        <span class="text-xl font-semibold text-[var(--color-foreground)]">FlatPack</span>
+      </div>
+    <% end %>
+  <% end %>
+
+  <% navbar.with_left_nav do |left_nav| %>
+    <% left_nav.with_section(title: "Main") do |section| %>
+      <% section.with_item(text: "Dashboard", url: "/demo", icon: "home", active: false) %>
+      <% section.with_item(text: "Analytics", url: "#", icon: "chart", active: false) %>
+      <% section.with_item(text: "Projects", url: "#", icon: "folder", active: false) %>
+    <% end %>
+
+    <% left_nav.with_section(title: "Components") do |section| %>
+      <% section.with_item(text: "Buttons", url: "/demo/buttons", icon: "button", active: false) %>
+      <% section.with_item(text: "Tables", url: "/demo/tables", icon: "table", active: false) %>
+      <% section.with_item(text: "Inputs", url: "/demo/inputs", icon: "input", active: false) %>
+      <% section.with_item(text: "Badges", url: "/demo/badges", icon: "badge", active: false) %>
+      <% section.with_item(text: "Alerts", url: "/demo/alerts", icon: "alert", active: false) %>
+      <% section.with_item(text: "Cards", url: "/demo/cards", icon: "card", active: false) %>
+      <% section.with_item(text: "Breadcrumbs", url: "/demo/breadcrumbs", icon: "breadcrumb", active: false) %>
+      <% section.with_item(text: "Navbar", url: "/demo/navbar", icon: "navbar", active: true) %>
+    <% end %>
+
+    <% left_nav.with_section(title: "Settings") do |section| %>
+      <% section.with_item(text: "Profile", url: "#", icon: "user", active: false) %>
+      <% section.with_item(text: "Preferences", url: "#", icon: "settings", active: false) %>
+    <% end %>
+  <% end %>
+
+  <% navbar.with_content do %>
+    <div class="max-w-4xl mx-auto p-8">
+      <h1 class="text-4xl font-bold mb-4 text-[var(--color-foreground)]">Navbar Component</h1>
+      <p class="text-lg text-[var(--color-muted-foreground)] mb-8">
+        A ChatGPT-style navigation with dark mode support, collapsible sidebar, and mobile-friendly design.
+      </p>
+
+      <div class="space-y-8">
+        <div class="bg-[var(--color-muted)] rounded-lg p-6">
+          <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Features</h2>
+          <ul class="space-y-2 text-[var(--color-foreground)]">
+            <li>✅ <strong>Dark Mode Toggle</strong> - Manual override with system preference detection</li>
+            <li>✅ <strong>Collapsible Sidebar</strong> - Desktop: 256px ↔ 64px with localStorage persistence</li>
+            <li>✅ <strong>Mobile-Friendly</strong> - Slides from right as overlay with darkened backdrop</li>
+            <li>✅ <strong>Transparent Top Nav</strong> - Backdrop blur effect for modern aesthetics</li>
+            <li>✅ <strong>Smooth Transitions</strong> - All interactions are animated smoothly</li>
+            <li>✅ <strong>Icon Support</strong> - Nav items can have icons</li>
+            <li>✅ <strong>Section Grouping</strong> - Organize nav items into sections</li>
+          </ul>
+        </div>
+
+        <div class="bg-[var(--color-muted)] rounded-lg p-6">
+          <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Desktop Behavior</h2>
+          <ul class="space-y-2 text-[var(--color-foreground)]">
+            <li>• Left nav is always visible</li>
+            <li>• Click the collapse button at the bottom to toggle width (256px ↔ 64px)</li>
+            <li>• State persists across page reloads using localStorage</li>
+            <li>• Content area adjusts accordingly</li>
+          </ul>
+        </div>
+
+        <div class="bg-[var(--color-muted)] rounded-lg p-6">
+          <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Mobile Behavior</h2>
+          <ul class="space-y-2 text-[var(--color-foreground)]">
+            <li>• Left nav is completely hidden (no space taken)</li>
+            <li>• Hamburger menu in top nav</li>
+            <li>• Tapping hamburger slides nav from right as overlay</li>
+            <li>• Darkened overlay behind nav</li>
+            <li>• Tapping overlay or navigating closes the menu</li>
+            <li>• Content stays in place (no shift/distortion)</li>
+          </ul>
+        </div>
+
+        <div class="bg-[var(--color-muted)] rounded-lg p-6">
+          <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Dark Mode</h2>
+          <ul class="space-y-2 text-[var(--color-foreground)]">
+            <li>• System preference detection (automatic)</li>
+            <li>• Manual toggle override (click the sun/moon icon in top nav)</li>
+            <li>• Smooth transitions between themes</li>
+            <li>• Persistent preference (localStorage)</li>
+            <li>• Icon changes (sun ↔ moon)</li>
+          </ul>
+        </div>
+
+        <div class="bg-[var(--color-muted)] rounded-lg p-6">
+          <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Usage Example</h2>
+          <pre class="bg-[var(--color-background)] text-[var(--color-foreground)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Navbar::Component.new do |navbar| %&gt;
+  &lt;% navbar.with_top_nav do |top_nav| %&gt;
+    &lt;% top_nav.with_logo do %&gt;
+      &lt;!-- Your logo here --&gt;
+    &lt;% end %&gt;
+  &lt;% end %&gt;
+
+  &lt;% navbar.with_left_nav do |left_nav| %&gt;
+    &lt;% left_nav.with_section(title: "Main") do |section| %&gt;
+      &lt;% section.with_item(text: "Dashboard", url: "/", icon: "home") %&gt;
+      &lt;% section.with_item(text: "Analytics", url: "/analytics", icon: "chart") %&gt;
+    &lt;% end %&gt;
+  &lt;% end %&gt;
+
+  &lt;% navbar.with_content do %&gt;
+    &lt;!-- Your main content here --&gt;
+  &lt;% end %&gt;
+&lt;% end %&gt;</code></pre>
+        </div>
+
+        <div class="flex gap-3">
+          <%= render FlatPack::Button::Component.new(
+            text: "Back to Demo",
+            url: demo_path,
+            style: :secondary
+          ) %>
+          <%= render FlatPack::Button::Component.new(
+            text: "View Source",
+            url: "https://github.com/bowerbird-app/flatpack",
+            style: :ghost,
+            target: "_blank"
+          ) %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>
