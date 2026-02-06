@@ -98,11 +98,17 @@
   <!-- Large Table -->
   <section class="mb-12">
     <h2 class="text-2xl font-semibold mb-4">Large Table (All <%= @users.count %> Users)</h2>
-    <%= render FlatPack::Table::Component.new(data: @users) do |table| %>
-      <% table.column(title: "ID", html: ->(user) { user.id.to_s }) %>
-      <% table.column(title: "Name", html: ->(user) { user.name }) %>
-      <% table.column(title: "Email", html: ->(user) { user.email }) %>
-      <% table.column(title: "Status", html: ->(user) {
+    <%= render FlatPack::Table::Component.new(
+      data: @sorted_users,
+      turbo_frame: "large_table",
+      sort: params[:sort],
+      direction: params[:direction],
+      base_url: request.path
+    ) do |table| %>
+      <% table.column(title: "ID", html: ->(user) { user.id.to_s }, sortable: true, sort_key: :id) %>
+      <% table.column(title: "Name", html: ->(user) { user.name }, sortable: true, sort_key: :name) %>
+      <% table.column(title: "Email", html: ->(user) { user.email }, sortable: true, sort_key: :email) %>
+      <% table.column(title: "Status", sortable: true, sort_key: :status, html: ->(user) {
         badge_class = case user.status
         when 'active' then 'bg-green-100 text-green-800'
         when 'inactive' then 'bg-gray-100 text-gray-800'
@@ -110,22 +116,21 @@
         end
         "<span class=\"px-2 py-1 text-xs rounded #{badge_class}\">#{user.status.capitalize}</span>".html_safe
       }) %>
-      <% table.column(title: "Created", html: ->(user) { user.created_at.strftime("%b %d, %Y") }) %>
+      <% table.column(title: "Created", sortable: true, sort_key: :created_at, html: ->(user) { user.created_at.strftime("%b %d, %Y") }) %>
       <% table.with_action(text: "Edit", url: "#", style: :ghost) %>
     <% end %>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Table::Component.new(data: @users) do |table| %&gt;
-  &lt;% table.column(title: "ID", html: -&gt;(user) { user.id.to_s }) %&gt;
-  &lt;% table.column(title: "Name", html: -&gt;(user) { user.name }) %&gt;
-  &lt;% table.column(title: "Email", html: -&gt;(user) { user.email }) %&gt;
-  &lt;% table.column(title: "Status", html: -&gt;(user) {
-    badge_class = case user.status
-    when 'active' then 'bg-green-100 text-green-800'
-    when 'inactive' then 'bg-gray-100 text-gray-800'
-    else 'bg-yellow-100 text-yellow-800'
-    end
-    "&lt;span class=\"px-2 py-1 text-xs rounded #{badge_class}\"&gt;#{user.status.capitalize}&lt;/span&gt;".html_safe
-  }) %&gt;
-  &lt;% table.column(title: "Created", html: -&gt;(user) { user.created_at.strftime("%b %d, %Y") }) %&gt;
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Table::Component.new(
+  data: @sorted_users,
+  turbo_frame: "large_table",
+  sort: params[:sort],
+  direction: params[:direction],
+  base_url: request.path
+) do |table| %&gt;
+  &lt;% table.column(title: "ID", html: -&gt;(user) { user.id.to_s }, sortable: true, sort_key: :id) %&gt;
+  &lt;% table.column(title: "Name", html: -&gt;(user) { user.name }, sortable: true, sort_key: :name) %&gt;
+  &lt;% table.column(title: "Email", html: -&gt;(user) { user.email }, sortable: true, sort_key: :email) %&gt;
+  &lt;% table.column(title: "Status", html: -&gt;(user) { ... }, sortable: true, sort_key: :status) %&gt;
+  &lt;% table.column(title: "Created", html: -&gt;(user) { ... }, sortable: true, sort_key: :created_at) %&gt;
   &lt;% table.with_action(text: "Edit", url: "#", style: :ghost) %&gt;
 &lt;% end %&gt;</code></pre>
   </section>
