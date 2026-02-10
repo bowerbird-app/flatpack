@@ -101,9 +101,8 @@ module FlatPack
       end
 
       def validate_url!
-        return if @href.present?
-
-        raise ArgumentError, "Unsafe URL detected. Only http, https, mailto, tel protocols and relative URLs are allowed."
+        # Raise error if sanitization removed the URL (meaning it was unsafe)
+        raise ArgumentError, "Unsafe URL detected. Only http, https, mailto, tel protocols and relative URLs are allowed." if @href.blank?
       end
     end
   end

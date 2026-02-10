@@ -128,7 +128,7 @@ export default class extends Controller {
   // Focus management methods
   getFocusableItems() {
     return Array.from(
-      this.menuTarget.querySelectorAll('[role="menuitem"]:not([disabled]):not([tabindex="-1"])')
+      this.menuTarget.querySelectorAll('[role="menuitem"]:not([tabindex="-1"])')
     )
   }
 

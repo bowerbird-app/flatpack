@@ -3,10 +3,6 @@
 module FlatPack
   module Button
     class DropdownDividerComponent < FlatPack::BaseComponent
-      def initialize(**system_arguments)
-        super(**system_arguments)
-      end
-
       def call
         content_tag(:div, nil, **divider_attributes)
       end
