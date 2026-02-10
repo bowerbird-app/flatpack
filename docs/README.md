@@ -26,6 +26,7 @@ FlatPack is a production-grade Rails Engine that provides a comprehensive set of
 - [Alert Component](components/alert.md)
 - [Badge Component](components/badge.md)
 - [Button Component](components/button.md)
+- [Button Dropdown Component](components/button-dropdown.md)
 - [Card Component](components/card.md)
 - [Input Components](components/inputs.md)
 - [Table Component](components/table.md)

@@ -77,6 +77,7 @@ module FlatPack
           "w-full",
           "px-2 py-1.5",
           "text-sm",
+          "text-left",
           "rounded-[var(--radius-sm)]",
           "transition-colors duration-[var(--transition-base)]",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]"

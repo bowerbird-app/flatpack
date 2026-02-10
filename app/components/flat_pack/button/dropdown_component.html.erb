@@ -4,7 +4,7 @@
   </button>
 
   <div <%= tag.attributes(menu_attributes) %> style="max-height: <%= @max_height %>">
-    <% content_items.each do |item| %>
+    <% menu.each do |item| %>
       <%= item %>
     <% end %>
   </div>

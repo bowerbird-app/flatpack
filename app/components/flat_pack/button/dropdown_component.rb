@@ -3,8 +3,7 @@
 module FlatPack
   module Button
     class DropdownComponent < FlatPack::BaseComponent
-      # Use a single renders_many with a lambda to handle both items and dividers
-      renders_many :content_items, types: {
+      renders_many :menu, types: {
         item: DropdownItemComponent,
         divider: DropdownDividerComponent
       }
@@ -100,7 +99,7 @@ module FlatPack
       def chevron_icon
         content_tag(:svg,
           class: "h-4 w-4 transition-transform duration-200",
-          data: { button_dropdown_target: "chevron" },
+          data: {button_dropdown_target: "chevron"},
           xmlns: "http://www.w3.org/2000/svg",
           viewBox: "0 0 24 24",
           fill: "none",
