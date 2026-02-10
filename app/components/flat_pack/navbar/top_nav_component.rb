@@ -66,12 +66,12 @@ module FlatPack
           "transition-all",
           "duration-300"
         ]
-        
+
         classes << "bg-[var(--color-background)]/80" if @transparent
         classes << "bg-[var(--color-background)]" unless @transparent
         classes << "backdrop-blur-sm" if @blur
         classes << "border-b border-[var(--color-border)]" if @border_bottom
-        
+
         classes.join(" ")
       end
 
