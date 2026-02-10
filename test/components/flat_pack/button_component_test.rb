@@ -271,6 +271,68 @@ module FlatPack
 
         assert_selector "a.cursor-pointer"
       end
+
+      def test_submit_button_with_different_styles
+        render_inline(Component.new(text: "Submit Primary", type: "submit", style: :primary))
+        assert_selector "button[type='submit']", text: "Submit Primary"
+
+        render_inline(Component.new(text: "Submit Success", type: "submit", style: :success))
+        assert_selector "button[type='submit']", text: "Submit Success"
+
+        render_inline(Component.new(text: "Submit Warning", type: "submit", style: :warning))
+        assert_selector "button[type='submit']", text: "Submit Warning"
+      end
+
+      def test_submit_button_with_different_sizes
+        render_inline(Component.new(text: "Submit Small", type: "submit", size: :sm))
+        assert_selector "button[type='submit']", text: "Submit Small"
+        assert_includes page.native.to_html, "px-3"
+        assert_includes page.native.to_html, "py-1.5"
+        assert_includes page.native.to_html, "text-xs"
+
+        render_inline(Component.new(text: "Submit Large", type: "submit", size: :lg))
+        assert_selector "button[type='submit']", text: "Submit Large"
+        assert_includes page.native.to_html, "px-6"
+        assert_includes page.native.to_html, "py-3"
+        assert_includes page.native.to_html, "text-base"
+      end
+
+      def test_submit_button_with_icon
+        render_inline(Component.new(text: "Submit", type: "submit", icon: "check"))
+        assert_selector "button[type='submit']", text: "Submit"
+      end
+
+      def test_submit_button_with_loading_state
+        render_inline(Component.new(text: "Submitting", type: "submit", loading: true))
+        assert_selector "button[type='submit'][disabled]"
+        assert_selector "button svg.animate-spin"
+        assert_selector "button", text: "Loading"
+      end
+
+      def test_submit_button_with_name_and_value
+        render_inline(Component.new(text: "Publish", type: "submit", name: "action", value: "publish"))
+        assert_selector "button[type='submit'][name='action'][value='publish']", text: "Publish"
+      end
+
+      def test_submit_button_with_custom_classes
+        render_inline(Component.new(text: "Submit", type: "submit", class: "w-full"))
+        assert_selector "button[type='submit'].w-full", text: "Submit"
+      end
+
+      def test_submit_button_disabled
+        render_inline(Component.new(text: "Submit", type: "submit", disabled: true))
+        assert_selector "button[type='submit'][disabled]", text: "Submit"
+      end
+
+      def test_submit_button_with_data_attributes
+        render_inline(Component.new(text: "Submit", type: "submit", data: { confirm: "Are you sure?" }))
+        assert_selector "button[type='submit'][data-confirm='Are you sure?']", text: "Submit"
+      end
+
+      def test_submit_button_with_aria_label
+        render_inline(Component.new(text: "Submit", type: "submit", aria: { label: "Submit form" }))
+        assert_selector "button[type='submit'][aria-label='Submit form']", text: "Submit"
+      end
     end
   end
 end
