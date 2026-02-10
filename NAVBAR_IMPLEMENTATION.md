@@ -295,23 +295,23 @@ app/assets/stylesheets/flat_pack/variables.css  # Updated
 ```erb
 <%= render FlatPack::Navbar::Component.new(dark_mode: :auto) do |navbar| %>
   <%# Top Navigation %>
-  <% navbar.with_top_nav(
+  <% navbar.top_nav(
     transparent: true,
     blur: true,
     logo_text: "ChatGPT"
   ) do |top| %>
-    <% top.with_action do %>
+    <% top.action do %>
       <%= render FlatPack::Button::Component.new(text: "Upgrade", style: :primary) %>
     <% end %>
   <% end %>
   
   <%# Left Sidebar %>
-  <% navbar.with_left_nav(collapsible: true) do |left| %>
-    <% left.with_item(text: "New chat", icon: "plus", href: new_chat_path) %>
+  <% navbar.left_nav(collapsible: true) do |left| %>
+    <% left.item(text: "New chat", icon: "plus", href: new_chat_path) %>
     
-    <% left.with_section(title: "Recent", collapsible: true) do |section| %>
+    <% left.section(title: "Recent", collapsible: true) do |section| %>
       <% @chats.each do |chat| %>
-        <% section.with_item(
+        <% section.item(
           text: chat.title,
           href: chat_path(chat),
           active: current_page?(chat_path(chat))

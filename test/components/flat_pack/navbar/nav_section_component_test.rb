@@ -47,14 +47,14 @@ module FlatPack
       # Collapsed state tests
       def test_items_hidden_when_collapsed
         render_inline(NavSectionComponent.new(title: "Section", collapsible: true, collapsed: true)) do |section|
-          section.with_item(text: "Item 1", href: "/path1")
+          section.item(text: "Item 1", href: "/path1")
         end
         assert_selector "div.hidden"
       end
 
       def test_items_visible_when_not_collapsed
         render_inline(NavSectionComponent.new(title: "Section", collapsible: true, collapsed: false)) do |section|
-          section.with_item(text: "Item 1", href: "/path1")
+          section.item(text: "Item 1", href: "/path1")
         end
         refute_selector "div.space-y-1.hidden"
         assert_selector "a[href='/path1']"
@@ -73,8 +73,8 @@ module FlatPack
       # Items tests
       def test_renders_with_items
         render_inline(NavSectionComponent.new(title: "Section")) do |section|
-          section.with_item(text: "Item 1", href: "/path1")
-          section.with_item(text: "Item 2", href: "/path2")
+          section.item(text: "Item 1", href: "/path1")
+          section.item(text: "Item 2", href: "/path2")
         end
         assert_selector "a[href='/path1']", text: "Item 1"
         assert_selector "a[href='/path2']", text: "Item 2"
@@ -96,7 +96,7 @@ module FlatPack
 
       def test_items_container_spacing
         render_inline(NavSectionComponent.new) do |section|
-          section.with_item(text: "Item", href: "/")
+          section.item(text: "Item", href: "/")
         end
         assert_selector "div.space-y-1"
       end

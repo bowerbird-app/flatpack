@@ -3,7 +3,21 @@
 module FlatPack
   module Navbar
     class NavSectionComponent < FlatPack::BaseComponent
-      renders_many :items, NavItemComponent
+      renders_many :items_slot, NavItemComponent
+
+      # Custom setter methods that provide cleaner syntax
+      def item(**args, &block)
+        with_items_slot(**args, &block)
+      end
+
+      def items
+        items_slot
+      end
+
+      # Custom predicate method
+      def items?
+        items_slot?
+      end
 
       def initialize(
         title: nil,

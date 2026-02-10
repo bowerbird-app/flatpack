@@ -37,12 +37,12 @@ FlatPack::Navbar::Component
 ```erb
 <%= render FlatPack::Navbar::Component.new(dark_mode: :auto) do |navbar| %>
   <%# Top Navigation %>
-  <% navbar.with_top_nav(
+  <% navbar.top_nav(
     transparent: true,
     blur: true,
     logo_text: "ChatGPT"
   ) do |top| %>
-    <% top.with_action do %>
+    <% top.action do %>
       <%= render FlatPack::Button::Component.new(
         text: "Upgrade",
         style: :primary,
@@ -52,16 +52,16 @@ FlatPack::Navbar::Component
   <% end %>
   
   <%# Left Sidebar %>
-  <% navbar.with_left_nav(collapsible: true) do |left| %>
-    <% left.with_item(
+  <% navbar.left_nav(collapsible: true) do |left| %>
+    <% left.item(
       text: "New chat",
       icon: "plus",
       href: new_chat_path
     ) %>
     
-    <% left.with_section(title: "Recent", collapsible: true) do |section| %>
+    <% left.section(title: "Recent", collapsible: true) do |section| %>
       <% @chats.each do |chat| %>
-        <% section.with_item(
+        <% section.item(
           text: chat.title,
           href: chat_path(chat),
           active: current_page?(chat_path(chat))
@@ -123,19 +123,19 @@ FlatPack::Navbar::Component
 #### With Logo and Actions
 
 ```erb
-<% navbar.with_top_nav(
+<% navbar.top_nav(
   logo_text: "My App",
   logo_url: root_path,
   transparent: true,
   blur: true
 ) do |top| %>
   <%# Center Content %>
-  <% top.with_center_content do %>
+  <% top.center_content do %>
     <div class="text-lg font-semibold">Dashboard</div>
   <% end %>
   
   <%# Right Actions %>
-  <% top.with_action do %>
+  <% top.action do %>
     <%= render FlatPack::Button::Component.new(
       text: "Notifications",
       icon: "bell",
@@ -143,7 +143,7 @@ FlatPack::Navbar::Component
     ) %>
   <% end %>
   
-  <% top.with_action do %>
+  <% top.action do %>
     <%= render FlatPack::Button::Component.new(
       text: "Profile",
       icon: "user",
@@ -156,7 +156,7 @@ FlatPack::Navbar::Component
 #### Solid Background Without Blur
 
 ```erb
-<% navbar.with_top_nav(
+<% navbar.top_nav(
   transparent: false,
   blur: false,
   border_bottom: true
@@ -200,14 +200,14 @@ On desktop (`≥ 768px`):
 ```erb
 <% navbar.with_left_nav do |left| %>
   <%# Direct Items %>
-  <% left.with_item(
+  <% left.item(
     text: "Dashboard",
     icon: "home",
     href: dashboard_path,
     active: current_page?(dashboard_path)
   ) %>
   
-  <% left.with_item(
+  <% left.item(
     text: "Messages",
     icon: "mail",
     href: messages_path,
@@ -216,13 +216,13 @@ On desktop (`≥ 768px`):
   ) %>
   
   <%# Collapsible Section %>
-  <% left.with_section(
+  <% left.section(
     title: "Projects",
     collapsible: true,
     collapsed: false
   ) do |section| %>
     <% @projects.each do |project| %>
-      <% section.with_item(
+      <% section.item(
         text: project.name,
         icon: "folder",
         href: project_path(project)
@@ -231,13 +231,13 @@ On desktop (`≥ 768px`):
   <% end %>
   
   <%# Another Section %>
-  <% left.with_section(title: "Settings") do |section| %>
-    <% section.with_item(text: "Profile", icon: "user", href: profile_path) %>
-    <% section.with_item(text: "Security", icon: "shield", href: security_path) %>
+  <% left.section(title: "Settings") do |section| %>
+    <% section.item(text: "Profile", icon: "user", href: profile_path) %>
+    <% section.item(text: "Security", icon: "shield", href: security_path) %>
   <% end %>
   
   <%# Footer Content %>
-  <% left.with_footer do %>
+  <% left.footer do %>
     <div class="p-4 border-t border-[var(--color-border)]">
       <div class="flex items-center gap-3">
         <div class="w-8 h-8 rounded-full bg-[var(--color-primary)]"></div>
@@ -273,7 +273,7 @@ Individual navigation links or buttons with icons, badges, and active states.
 #### Link with Icon
 
 ```erb
-<% left.with_item(
+<% left.item(
   text: "Home",
   icon: "home",
   href: root_path
@@ -283,7 +283,7 @@ Individual navigation links or buttons with icons, badges, and active states.
 #### Active State
 
 ```erb
-<% left.with_item(
+<% left.item(
   text: "Dashboard",
   icon: "layout-dashboard",
   href: dashboard_path,
@@ -294,7 +294,7 @@ Individual navigation links or buttons with icons, badges, and active states.
 #### With Badge
 
 ```erb
-<% left.with_item(
+<% left.item(
   text: "Notifications",
   icon: "bell",
   href: notifications_path,
@@ -306,7 +306,7 @@ Individual navigation links or buttons with icons, badges, and active states.
 #### Button (No href)
 
 ```erb
-<% left.with_item(
+<% left.item(
   text: "Logout",
   icon: "log-out"
 ) %>
@@ -329,22 +329,22 @@ Group related navigation items with optional collapsible behavior.
 #### Static Section
 
 ```erb
-<% left.with_section(title: "Main") do |section| %>
-  <% section.with_item(text: "Home", icon: "home", href: "/") %>
-  <% section.with_item(text: "About", icon: "info", href: "/about") %>
+<% left.section(title: "Main") do |section| %>
+  <% section.item(text: "Home", icon: "home", href: "/") %>
+  <% section.item(text: "About", icon: "info", href: "/about") %>
 <% end %>
 ```
 
 #### Collapsible Section
 
 ```erb
-<% left.with_section(
+<% left.section(
   title: "Projects",
   collapsible: true,
   collapsed: false
 ) do |section| %>
   <% @projects.each do |project| %>
-    <% section.with_item(
+    <% section.item(
       text: project.name,
       icon: "folder",
       href: project_path(project)
@@ -506,15 +506,15 @@ The Navbar Component automatically persists state to `localStorage`:
 
 ```erb
 <% navbar.with_left_nav do |left| %>
-  <% left.with_section(title: "Administration", collapsible: true) do |admin| %>
-    <% admin.with_item(text: "Users", icon: "users", href: admin_users_path) %>
-    <% admin.with_item(text: "Roles", icon: "shield", href: admin_roles_path) %>
-    <% admin.with_item(text: "Settings", icon: "settings", href: admin_settings_path) %>
+  <% left.section(title: "Administration", collapsible: true) do |admin| %>
+    <% admin.item(text: "Users", icon: "users", href: admin_users_path) %>
+    <% admin.item(text: "Roles", icon: "shield", href: admin_roles_path) %>
+    <% admin.item(text: "Settings", icon: "settings", href: admin_settings_path) %>
   <% end %>
   
-  <% left.with_section(title: "Content", collapsible: true) do |content| %>
-    <% content.with_item(text: "Pages", icon: "file", href: pages_path) %>
-    <% content.with_item(text: "Media", icon: "image", href: media_path) %>
+  <% left.section(title: "Content", collapsible: true) do |content| %>
+    <% content.item(text: "Pages", icon: "file", href: pages_path) %>
+    <% content.item(text: "Media", icon: "image", href: media_path) %>
   <% end %>
 <% end %>
 ```
@@ -522,7 +522,7 @@ The Navbar Component automatically persists state to `localStorage`:
 ### Custom Footer with User Profile
 
 ```erb
-<% left.with_footer do %>
+<% left.footer do %>
   <div class="p-4 border-t border-[var(--color-border)]">
     <%= link_to profile_path, class: "flex items-center gap-3 p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors" do %>
       <%= image_tag current_user.avatar_url, class: "w-8 h-8 rounded-full" %>
@@ -538,21 +538,21 @@ The Navbar Component automatically persists state to `localStorage`:
 ### Badge Variants
 
 ```erb
-<% left.with_item(
+<% left.item(
   text: "Errors",
   icon: "alert-triangle",
   badge: "3",
   badge_style: :danger
 ) %>
 
-<% left.with_item(
+<% left.item(
   text: "Warnings",
   icon: "alert-circle",
   badge: "12",
   badge_style: :warning
 ) %>
 
-<% left.with_item(
+<% left.item(
   text: "Success",
   icon: "check-circle",
   badge: "5",

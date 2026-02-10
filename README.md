@@ -87,15 +87,15 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
 
 ```erb
 <%= render FlatPack::Navbar::Component.new(dark_mode: :auto) do |navbar| %>
-  <% navbar.with_top_nav(logo_text: "My App") do |top| %>
-    <% top.with_action do %>
+  <% navbar.top_nav(logo_text: "My App") do |top| %>
+    <% top.action do %>
       <%= render FlatPack::Button::Component.new(text: "Login", style: :ghost) %>
     <% end %>
   <% end %>
   
   <% navbar.with_left_nav do |left| %>
-    <% left.with_item(text: "Dashboard", icon: "home", href: "/", active: true) %>
-    <% left.with_item(text: "Messages", icon: "mail", href: "/messages", badge: "5") %>
+    <% left.item(text: "Dashboard", icon: "home", href: "/", active: true) %>
+    <% left.item(text: "Messages", icon: "mail", href: "/messages", badge: "5") %>
   <% end %>
   
   <div class="p-6">

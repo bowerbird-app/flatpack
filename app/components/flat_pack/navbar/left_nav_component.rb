@@ -3,9 +3,45 @@
 module FlatPack
   module Navbar
     class LeftNavComponent < FlatPack::BaseComponent
-      renders_many :items, NavItemComponent
-      renders_many :sections, NavSectionComponent
-      renders_one :footer
+      renders_many :items_slot, NavItemComponent
+      renders_many :sections_slot, NavSectionComponent
+      renders_one :footer_slot
+
+      # Custom setter methods that provide cleaner syntax
+      def item(**args, &block)
+        with_items_slot(**args, &block)
+      end
+
+      def items
+        items_slot
+      end
+
+      def section(**args, &block)
+        with_sections_slot(**args, &block)
+      end
+
+      def sections
+        sections_slot
+      end
+
+      def footer(&block)
+        return footer_slot unless block
+
+        with_footer_slot(&block)
+      end
+
+      # Custom predicate methods
+      def items?
+        items_slot?
+      end
+
+      def sections?
+        sections_slot?
+      end
+
+      def footer?
+        footer_slot?
+      end
 
       def initialize(
         collapsible: true,

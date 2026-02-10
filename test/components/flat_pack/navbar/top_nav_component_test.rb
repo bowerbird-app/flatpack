@@ -88,7 +88,7 @@ module FlatPack
       # Theme toggle tests
       def test_shows_theme_toggle
         render_inline(TopNavComponent.new(show_theme_toggle: true)) do |top|
-          top.with_theme_toggle
+          top.theme_toggle
         end
         assert_selector "button[data-action='click->theme#toggle']"
       end
@@ -96,8 +96,8 @@ module FlatPack
       # Actions tests
       def test_renders_actions
         render_inline(TopNavComponent.new) do |top|
-          top.with_action { "Action 1" }
-          top.with_action { "Action 2" }
+          top.action { "Action 1" }
+          top.action { "Action 2" }
         end
         assert_text "Action 1"
         assert_text "Action 2"
@@ -106,7 +106,7 @@ module FlatPack
       # Center content tests
       def test_renders_center_content
         render_inline(TopNavComponent.new) do |top|
-          top.with_center_content { "Center" }
+          top.center_content { "Center" }
         end
         assert_text "Center"
       end

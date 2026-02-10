@@ -72,8 +72,8 @@ module FlatPack
 
       def test_renders_with_items
         render_inline(LeftNavComponent.new) do |left|
-          left.with_item(text: "Item 1", href: "/path1")
-          left.with_item(text: "Item 2", href: "/path2")
+          left.item(text: "Item 1", href: "/path1")
+          left.item(text: "Item 2", href: "/path2")
         end
         assert_selector "a[href='/path1']", text: "Item 1"
         assert_selector "a[href='/path2']", text: "Item 2"
@@ -81,7 +81,7 @@ module FlatPack
 
       def test_renders_with_sections
         render_inline(LeftNavComponent.new) do |left|
-          left.with_section(title: "Section 1")
+          left.section(title: "Section 1")
         end
         assert_text "Section 1"
       end
@@ -96,7 +96,7 @@ module FlatPack
       # Footer tests
       def test_renders_footer
         render_inline(LeftNavComponent.new) do |left|
-          left.with_footer { "Footer content" }
+          left.footer { "Footer content" }
         end
         assert_text "Footer content"
       end

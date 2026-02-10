@@ -3,8 +3,30 @@
 module FlatPack
   module Navbar
     class Component < FlatPack::BaseComponent
-      renders_one :top_nav, TopNavComponent
-      renders_one :left_nav, LeftNavComponent
+      renders_one :top_nav_slot, TopNavComponent
+      renders_one :left_nav_slot, LeftNavComponent
+
+      # Custom setter methods that provide cleaner syntax
+      def top_nav(**args, &block)
+        return top_nav_slot unless block
+
+        with_top_nav_slot(**args, &block)
+      end
+
+      def left_nav(**args, &block)
+        return left_nav_slot unless block
+
+        with_left_nav_slot(**args, &block)
+      end
+
+      # Custom predicate methods
+      def top_nav?
+        top_nav_slot?
+      end
+
+      def left_nav?
+        left_nav_slot?
+      end
 
       def initialize(
         left_nav_collapsed: false,

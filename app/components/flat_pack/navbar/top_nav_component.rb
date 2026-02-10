@@ -3,9 +3,39 @@
 module FlatPack
   module Navbar
     class TopNavComponent < FlatPack::BaseComponent
-      renders_many :actions
-      renders_one :theme_toggle, ThemeToggleComponent
-      renders_one :center_content
+      renders_many :actions_slot
+      renders_one :theme_toggle_slot, ThemeToggleComponent
+      renders_one :center_content_slot
+
+      # Custom setter methods that provide cleaner syntax
+      def action(&block)
+        with_actions_slot(&block)
+      end
+
+      def actions
+        actions_slot
+      end
+
+      def theme_toggle(**args, &block)
+        return theme_toggle_slot unless block
+
+        with_theme_toggle_slot(**args, &block)
+      end
+
+      def center_content(&block)
+        return center_content_slot unless block
+
+        with_center_content_slot(&block)
+      end
+
+      # Custom predicate methods
+      def theme_toggle?
+        theme_toggle_slot?
+      end
+
+      def center_content?
+        center_content_slot?
+      end
 
       def initialize(
         transparent: true,

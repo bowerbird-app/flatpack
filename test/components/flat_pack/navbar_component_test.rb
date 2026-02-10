@@ -76,7 +76,7 @@ module FlatPack
       # Slot tests
       def test_renders_with_top_nav
         render_inline(Component.new) do |navbar|
-          navbar.with_top_nav(logo_text: "Test App")
+          navbar.top_nav(logo_text: "Test App")
         end
         assert_selector "nav"
         assert_text "Test App"
@@ -84,15 +84,15 @@ module FlatPack
 
       def test_renders_with_left_nav
         render_inline(Component.new) do |navbar|
-          navbar.with_left_nav
+          navbar.left_nav
         end
         assert_selector "aside"
       end
 
       def test_renders_with_both_navs
         render_inline(Component.new) do |navbar|
-          navbar.with_top_nav(logo_text: "App")
-          navbar.with_left_nav
+          navbar.top_nav(logo_text: "App")
+          navbar.left_nav
         end
         assert_selector "nav"
         assert_selector "aside"
