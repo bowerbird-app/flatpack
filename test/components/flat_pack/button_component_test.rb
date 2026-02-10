@@ -325,12 +325,12 @@ module FlatPack
       end
 
       def test_submit_button_with_data_attributes
-        render_inline(Component.new(text: "Submit", type: "submit", data: { confirm: "Are you sure?" }))
+        render_inline(Component.new(text: "Submit", type: "submit", data: {confirm: "Are you sure?"}))
         assert_selector "button[type='submit'][data-confirm='Are you sure?']", text: "Submit"
       end
 
       def test_submit_button_with_aria_label
-        render_inline(Component.new(text: "Submit", type: "submit", aria: { label: "Submit form" }))
+        render_inline(Component.new(text: "Submit", type: "submit", aria: {label: "Submit form"}))
         assert_selector "button[type='submit'][aria-label='Submit form']", text: "Submit"
       end
     end
