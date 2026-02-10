@@ -93,7 +93,7 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
     <% end %>
   <% end %>
   
-  <% navbar.with_left_nav do |left| %>
+  <% navbar.left_nav do |left| %>
     <% left.item(text: "Dashboard", icon: "home", href: "/", active: true) %>
     <% left.item(text: "Messages", icon: "mail", href: "/messages", badge: "5") %>
   <% end %>

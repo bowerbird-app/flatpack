@@ -198,7 +198,7 @@ On desktop (`≥ 768px`):
 #### With Sections and Items
 
 ```erb
-<% navbar.with_left_nav do |left| %>
+<% navbar.left_nav do |left| %>
   <%# Direct Items %>
   <% left.item(
     text: "Dashboard",
@@ -369,13 +369,13 @@ Button to switch between auto/light/dark modes.
 #### Default (Icon Only)
 
 ```erb
-<% top.with_theme_toggle %>
+<% top.theme_toggle %>
 ```
 
 #### With Label
 
 ```erb
-<% top.with_theme_toggle(size: :lg, show_label: true) %>
+<% top.theme_toggle(size: :lg, show_label: true) %>
 ```
 
 ## Dark Mode
@@ -505,7 +505,7 @@ The Navbar Component automatically persists state to `localStorage`:
 ### Multi-Level Navigation
 
 ```erb
-<% navbar.with_left_nav do |left| %>
+<% navbar.left_nav do |left| %>
   <% left.section(title: "Administration", collapsible: true) do |admin| %>
     <% admin.item(text: "Users", icon: "users", href: admin_users_path) %>
     <% admin.item(text: "Roles", icon: "shield", href: admin_roles_path) %>
