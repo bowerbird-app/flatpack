@@ -3,8 +3,17 @@
 module FlatPack
   module Navbar
     class Component < FlatPack::BaseComponent
-      renders_one :top_nav, TopNavComponent
-      renders_one :left_nav, LeftNavComponent
+      renders_one :top_nav_slot, TopNavComponent
+      renders_one :left_nav_slot, LeftNavComponent
+
+      # Aliases for cleaner syntax (optional - both `with_*` and non-prefixed work)
+      def top_nav(**kwargs, &block)
+        with_top_nav_slot(**kwargs, &block)
+      end
+
+      def left_nav(**kwargs, &block)
+        with_left_nav_slot(**kwargs, &block)
+      end
 
       def initialize(
         left_nav_collapsed: false,
@@ -71,8 +80,8 @@ module FlatPack
 
       def main_styles
         styles = []
-        styles << "margin-top: #{@top_nav_height}" if top_nav?
-        if left_nav?
+        styles << "margin-top: #{@top_nav_height}" if top_nav_slot?
+        if left_nav_slot?
           styles << "margin-left: var(--navbar-left-nav-width, #{@left_nav_width})"
         end
         styles.join("; ")

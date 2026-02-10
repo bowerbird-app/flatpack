@@ -4,12 +4,14 @@ module FlatPack
   module Navbar
     class TopNavComponent < ViewComponent::Base
       renders_many :actions
-      renders_one :theme_toggle, ThemeToggleComponent
+      renders_one :theme_toggle_slot, ThemeToggleComponent
 
       # Alias for shorter syntax (optional - both work)
       def action(**kwargs, &block)
         with_action(**kwargs, &block)
       end
+
+      # For renders_one, we don't need an alias since `with_theme_toggle` works
 
       def initialize(
         transparent: true,

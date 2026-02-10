@@ -1,10 +1,10 @@
 <div <%= tag.attributes(container_attributes) %>>
-  <% if top_nav? %>
-    <%= top_nav %>
+  <% if top_nav_slot? %>
+    <%= top_nav_slot %>
   <% end %>
 
-  <% if left_nav? %>
-    <%= left_nav %>
+  <% if left_nav_slot? %>
+    <%= left_nav_slot %>
   <% end %>
 
   <main <%= tag.attributes(main_attributes) %>>

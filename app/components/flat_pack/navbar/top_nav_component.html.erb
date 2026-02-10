@@ -30,10 +30,10 @@
       <% end %>
     <% end %>
 
-    <% if @show_theme_toggle && !theme_toggle? %>
+    <% if @show_theme_toggle && !theme_toggle_slot? %>
       <%= render FlatPack::Navbar::ThemeToggleComponent.new %>
-    <% elsif theme_toggle? %>
-      <%= theme_toggle %>
+    <% elsif theme_toggle_slot? %>
+      <%= theme_toggle_slot %>
     <% end %>
   </div>
 </nav>
