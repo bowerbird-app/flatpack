@@ -42,6 +42,7 @@ module FlatPack
         icon: nil,
         icon_only: false,
         loading: false,
+        type: "button",
         **system_arguments
       )
         super(**system_arguments)
@@ -53,6 +54,7 @@ module FlatPack
         @icon = icon
         @icon_only = icon_only
         @loading = loading
+        @type = type
 
         # Sanitize URL for security and validate
         if url
@@ -141,7 +143,7 @@ module FlatPack
 
       def button_attributes
         attrs = {
-          type: "button",
+          type: @type,
           class: button_classes
         }
         attrs[:disabled] = true if @loading
