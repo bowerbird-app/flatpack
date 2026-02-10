@@ -104,9 +104,9 @@ module FlatPack
           "pointer-events-none",
           "rounded-full transition-colors duration-200",
           SIZES.fetch(@size),
+          "bg-[var(--color-muted)]",
           "peer-checked:bg-[var(--color-primary)]",
-          "peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--color-ring)] peer-focus-visible:ring-offset-2",
-          @checked ? "bg-[var(--color-primary)]" : "bg-[var(--color-muted)]"
+          "peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--color-ring)] peer-focus-visible:ring-offset-2"
         )
       end
 
