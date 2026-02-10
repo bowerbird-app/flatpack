@@ -234,6 +234,31 @@ module FlatPack
         render_inline(Component.new(text: "Click", onclick: "alert('xss')"))
         refute_selector "button[onclick]"
       end
+
+      def test_default_type_is_button
+        render_inline(Component.new(text: "Click me"))
+
+        assert_selector "button[type='button']", text: "Click me"
+      end
+
+      def test_renders_submit_type_button
+        render_inline(Component.new(text: "Submit", type: "submit"))
+
+        assert_selector "button[type='submit']", text: "Submit"
+      end
+
+      def test_renders_reset_type_button
+        render_inline(Component.new(text: "Reset", type: "reset"))
+
+        assert_selector "button[type='reset']", text: "Reset"
+      end
+
+      def test_link_does_not_have_type_attribute
+        render_inline(Component.new(text: "Link", url: "/path", type: "submit"))
+
+        assert_selector "a[href='/path']", text: "Link"
+        refute_selector "a[type]"
+      end
     end
   end
 end
