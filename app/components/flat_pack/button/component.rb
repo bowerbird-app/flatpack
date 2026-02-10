@@ -155,6 +155,7 @@ module FlatPack
           "inline-flex items-center justify-center gap-2",
           "rounded-[var(--radius-md)]",
           "font-medium",
+          "cursor-pointer",
           "transition-colors duration-[var(--transition-base)]",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:ring-offset-2",
           "disabled:pointer-events-none disabled:opacity-50",
