@@ -3,63 +3,11 @@
 module FlatPack
   module Button
     class DropdownComponent < FlatPack::BaseComponent
-      renders_many :items, DropdownItemComponent
-      renders_many :dividers, DropdownDividerComponent
-
-      # Module to track order of items and dividers
-      module OrderTracking
-        def with_item(**kwargs, &block)
-          item = super
-          @content_order ||= []
-          @content_order << {type: :item, component: item}
-          item
-        end
-
-        def with_divider(**kwargs)
-          divider = super
-          @content_order ||= []
-          @content_order << {type: :divider, component: divider}
-          divider
-        end
-      end
-
-      prepend OrderTracking
-
-      # Track the order items and dividers are added
-      attr_accessor :content_order
-
-      def initialize(
-        text:,
-        style: :primary,
-        size: :md,
-        icon: nil,
-        disabled: false,
-        position: :bottom_right,
-        max_height: "384px",
-        **system_arguments
-      )
-        super(**system_arguments)
-        @text = text
-        @style = style.to_sym
-        @size = size.to_sym
-        @icon = icon
-        @disabled = disabled
-        @position = position.to_sym
-        @max_height = max_height
-        @content_order = []
-
-        validate_position!
-      end
-
-      # Return items and dividers in order
-      def ordered_content
-        @content_order ||= []
-        @content_order.map do |entry|
-          slot = entry[:component]
-          # ViewComponent::Slot wraps the actual component in __vc_component_instance
-          slot.respond_to?(:__vc_component_instance) ? slot.__vc_component_instance : slot
-        end
-      end
+      # Use a single renders_many with a lambda to handle both items and dividers
+      renders_many :content_items, types: {
+        item: DropdownItemComponent,
+        divider: DropdownDividerComponent
+      }
 
       POSITIONS = {
         bottom_right: "top-full right-0 mt-2",
