@@ -274,7 +274,7 @@ module FlatPack
       end
 
       def test_accepts_data_attributes
-        render_inline(DropdownComponent.new(text: "Actions", data: { test: "value" }))
+        render_inline(DropdownComponent.new(text: "Actions", data: {test: "value"}))
 
         assert_selector "div[data-test='value']"
       end
