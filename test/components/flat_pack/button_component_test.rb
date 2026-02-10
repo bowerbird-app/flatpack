@@ -263,13 +263,13 @@ module FlatPack
       def test_renders_button_with_cursor_pointer_class
         render_inline(Component.new(text: "Click me"))
 
-        assert_includes page.native.to_html, "cursor-pointer"
+        assert_selector "button.cursor-pointer"
       end
 
       def test_renders_link_with_cursor_pointer_class
         render_inline(Component.new(text: "Link", url: "/path"))
 
-        assert_includes page.native.to_html, "cursor-pointer"
+        assert_selector "a.cursor-pointer"
       end
     end
   end
