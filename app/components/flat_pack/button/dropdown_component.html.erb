@@ -1,0 +1,11 @@
+<div <%= tag.attributes(wrapper_attributes) %>>
+  <button <%= tag.attributes(button_attributes) %><%= " disabled" if @disabled %>>
+    <%= button_content %>
+  </button>
+
+  <div <%= tag.attributes(menu_attributes) %> style="max-height: <%= @max_height %>">
+    <% ordered_content.each do |component| %>
+      <%= render(component) %>
+    <% end %>
+  </div>
+</div>
