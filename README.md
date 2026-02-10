@@ -83,6 +83,29 @@ Styles: `:default`, `:elevated`, `:outlined`, `:flat`, `:interactive`
 
 Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
 
+### Navbar Component
+
+```erb
+<%= render FlatPack::Navbar::Component.new(dark_mode: :auto) do |navbar| %>
+  <% navbar.with_top_nav(logo_text: "My App") do |top| %>
+    <% top.with_action do %>
+      <%= render FlatPack::Button::Component.new(text: "Login", style: :ghost) %>
+    <% end %>
+  <% end %>
+  
+  <% navbar.with_left_nav do |left| %>
+    <% left.with_item(text: "Dashboard", icon: "home", href: "/", active: true) %>
+    <% left.with_item(text: "Messages", icon: "mail", href: "/messages", badge: "5") %>
+  <% end %>
+  
+  <div class="p-6">
+    <%= yield %>
+  </div>
+<% end %>
+```
+
+Dark modes: `:auto`, `:light`, `:dark`
+
 ### Table Component
 
 ```erb
@@ -182,6 +205,7 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
 - **FileInput** - File upload input
 
 ### Navigation Components
+- **Navbar** - ChatGPT-style navigation with collapsible sidebar, top bar, and dark mode support
 - **Breadcrumb** - Navigation trail showing current location in site hierarchy
 
 ### Utility Components
