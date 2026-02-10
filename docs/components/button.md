@@ -21,7 +21,8 @@ The Button component renders a button or link with consistent styling and behavi
 | `icon` | String | `nil` | Icon name to display (requires icon component) |
 | `icon_only` | Boolean | `false` | Display icon without text |
 | `loading` | Boolean | `false` | Show loading spinner and disable button |
-| `**system_arguments` | Hash | `{}` | HTML attributes (`class`, `data`, `aria`, `id`, etc.) |
+| `type` | String | `"button"` | Button type (`"button"`, `"submit"`, `"reset"`) |
+| `**system_arguments` | Hash | `{}` | HTML attributes (`class`, `data`, `aria`, `id`, `name`, `value`, `disabled`, etc.) |
 
 ## Schemes
 
@@ -257,18 +258,240 @@ Classes are merged using `tailwind_merge`, so Tailwind utilities override correc
 
 ## Examples
 
-### Form Submit Button
+### Form Submit Buttons
+
+Submit buttons are used within forms to trigger form submission. The button component supports all button types and integrates seamlessly with Rails forms.
+
+#### Button Types
+
+The `type` prop controls button behavior within forms:
+
+- `"button"` (default) - Does nothing by itself, useful for JavaScript interactions
+- `"submit"` - Submits the containing form
+- `"reset"` - Resets form inputs to initial values
 
 ```erb
 <%= form_with model: @user do |f| %>
-  <%# ... form fields ... %>
+  <%= render FlatPack::TextInput::Component.new(
+    label: "Name",
+    name: "user[name]"
+  ) %>
   
+  <!-- Submit button -->
   <%= render FlatPack::Button::Component.new(
-    text: "Create User",
-    style: :primary,
-    type: "submit"
+    text: "Submit",
+    type: "submit",
+    style: :primary
+  ) %>
+  
+  <!-- Regular button (doesn't submit) -->
+  <%= render FlatPack::Button::Component.new(
+    text: "Cancel",
+    type: "button",
+    style: :secondary
+  ) %>
+  
+  <!-- Reset button -->
+  <%= render FlatPack::Button::Component.new(
+    text: "Reset",
+    type: "reset",
+    style: :ghost
   ) %>
 <% end %>
+```
+
+#### Different HTTP Methods
+
+Submit buttons work with all HTTP methods (POST, PATCH, PUT, DELETE):
+
+```erb
+<!-- POST (Create) -->
+<%= form_with url: users_path, method: :post do |f| %>
+  <%= render FlatPack::Button::Component.new(
+    text: "Create User",
+    type: "submit",
+    style: :primary
+  ) %>
+<% end %>
+
+<!-- PATCH (Update) -->
+<%= form_with model: @user, method: :patch do |f| %>
+  <%= render FlatPack::Button::Component.new(
+    text: "Update User",
+    type: "submit",
+    style: :success
+  ) %>
+<% end %>
+
+<!-- DELETE (Destroy) -->
+<%= form_with url: user_path(@user), method: :delete do |f| %>
+  <%= render FlatPack::Button::Component.new(
+    text: "Delete Account",
+    type: "submit",
+    style: :warning,
+    data: { turbo_confirm: "Are you sure?" }
+  ) %>
+<% end %>
+```
+
+#### Multiple Submit Buttons
+
+Forms can have multiple submit buttons with different actions using `name` and `value` attributes:
+
+```erb
+<%= form_with model: @post do |f| %>
+  <%= render FlatPack::TextInput::Component.new(
+    label: "Content",
+    name: "post[content]"
+  ) %>
+  
+  <%= render FlatPack::Button::Component.new(
+    text: "Save as Draft",
+    type: "submit",
+    style: :secondary,
+    name: "action",
+    value: "draft"
+  ) %>
+  
+  <%= render FlatPack::Button::Component.new(
+    text: "Publish",
+    type: "submit",
+    style: :primary,
+    name: "action",
+    value: "publish"
+  ) %>
+<% end %>
+```
+
+In your controller, check which button was clicked:
+
+```ruby
+def create
+  if params[:action] == "publish"
+    @post.publish!
+  elsif params[:action] == "draft"
+    @post.save_as_draft!
+  end
+end
+```
+
+#### Submit Button Variations
+
+Submit buttons support all styles, sizes, and features:
+
+```erb
+<%= form_with model: @user do |f| %>
+  <!-- Different styles -->
+  <%= render FlatPack::Button::Component.new(
+    text: "Submit Primary",
+    type: "submit",
+    style: :primary
+  ) %>
+  
+  <%= render FlatPack::Button::Component.new(
+    text: "Submit Success",
+    type: "submit",
+    style: :success
+  ) %>
+  
+  <!-- Different sizes -->
+  <%= render FlatPack::Button::Component.new(
+    text: "Small Submit",
+    type: "submit",
+    size: :sm
+  ) %>
+  
+  <%= render FlatPack::Button::Component.new(
+    text: "Large Submit",
+    type: "submit",
+    size: :lg
+  ) %>
+  
+  <!-- With icon -->
+  <%= render FlatPack::Button::Component.new(
+    text: "Save",
+    icon: "check",
+    type: "submit",
+    style: :success
+  ) %>
+  
+  <!-- Full width -->
+  <%= render FlatPack::Button::Component.new(
+    text: "Continue",
+    type: "submit",
+    style: :primary,
+    class: "w-full"
+  ) %>
+<% end %>
+```
+
+#### Loading State During Submission
+
+Show a loading state while the form is being processed:
+
+```erb
+<%= form_with model: @user, 
+              data: { controller: "form-submit" } do |f| %>
+  
+  <%= render FlatPack::Button::Component.new(
+    text: "Submitting",
+    type: "submit",
+    style: :primary,
+    loading: true,
+    data: { 
+      form_submit_target: "submitButton",
+      action: "form-submit#disableOnSubmit" 
+    }
+  ) %>
+<% end %>
+```
+
+When `loading: true`, the submit button:
+- Displays an animated spinner
+- Is automatically disabled
+- Shows "Loading" text (or hides text if `icon_only: true`)
+
+#### Disabled Submit Button
+
+Prevent form submission with the `disabled` attribute:
+
+```erb
+<%= render FlatPack::Button::Component.new(
+  text: "Submit",
+  type: "submit",
+  disabled: true
+) %>
+```
+
+#### Submit Button with Data Attributes
+
+Add data attributes for Turbo, Stimulus, or other JavaScript interactions:
+
+```erb
+<%= render FlatPack::Button::Component.new(
+  text: "Submit",
+  type: "submit",
+  data: { 
+    turbo_confirm: "Are you sure?",
+    controller: "form-validator",
+    action: "click->form-validator#validate"
+  }
+) %>
+```
+
+#### Accessible Submit Buttons
+
+Always provide clear context for screen readers:
+
+```erb
+<%= render FlatPack::Button::Component.new(
+  text: "Submit",
+  type: "submit",
+  aria: { 
+    label: "Submit user registration form",
+    describedby: "form-help-text"
+  }
+) %>
 ```
 
 ### Button Group
@@ -391,6 +614,7 @@ FlatPack::Button::Component.new(
   icon: String,               # Optional, default: nil
   icon_only: Boolean,         # Optional, default: false
   loading: Boolean,           # Optional, default: false
+  type: String,               # Optional, default: "button" ("button", "submit", "reset")
   **system_arguments          # Optional
 )
 ```
@@ -401,6 +625,8 @@ FlatPack::Button::Component.new(
 - `data`: Hash - Data attributes
 - `aria`: Hash - ARIA attributes
 - `id`: String - Element ID
+- `name`: String - Button name (for multiple submit buttons)
+- `value`: String - Button value (for multiple submit buttons)
 - `disabled`: Boolean - Disabled state
 - Any other valid HTML attribute
 
@@ -410,6 +636,10 @@ FlatPack::Button::Component.new(
 - [Card Component](card.md) - Cards often use buttons for actions
 - [Icon Component](../shared/icon.md) - For button icons
 - [Table Actions](table.md#actions) - Buttons in table rows
+
+## Live Examples
+
+See the [Forms Demo page](/demo/forms) in the dummy app for comprehensive examples of submit buttons with different HTTP methods, styles, sizes, and configurations.
 
 ## Next Steps
 

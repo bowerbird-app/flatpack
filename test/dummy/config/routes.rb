@@ -7,12 +7,19 @@ Rails.application.routes.draw do
   # Demo pages
   get "demo", to: "pages#demo"
   get "demo/buttons", to: "pages#buttons"
+  get "demo/forms", to: "pages#forms"
   get "demo/tables", to: "pages#tables"
   get "demo/inputs", to: "pages#inputs"
   get "demo/badges", to: "pages#badges"
   get "demo/alerts", to: "pages#alerts"
   get "demo/cards", to: "pages#cards"
   get "demo/breadcrumbs", to: "pages#breadcrumbs"
+
+  # Form submission endpoints for demonstration
+  post "demo/forms/create", to: "pages#forms_create"
+  patch "demo/forms/update", to: "pages#forms_update"
+  put "demo/forms/update", to: "pages#forms_update"
+  delete "demo/forms/destroy", to: "pages#forms_destroy"
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.

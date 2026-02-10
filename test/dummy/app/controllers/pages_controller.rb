@@ -59,4 +59,26 @@ class PagesController < ApplicationController
 
   def alerts
   end
+
+  def forms
+    # Display forms page
+  end
+
+  def forms_create
+    # Handle POST form submission
+    flash[:notice] = "Form submitted successfully with POST method"
+    redirect_to demo_forms_path
+  end
+
+  def forms_update
+    # Handle PATCH/PUT form submission
+    flash[:notice] = "Form submitted successfully with #{request.method} method"
+    redirect_to demo_forms_path
+  end
+
+  def forms_destroy
+    # Handle DELETE form submission
+    flash[:notice] = "Form submitted successfully with DELETE method"
+    redirect_to demo_forms_path
+  end
 end

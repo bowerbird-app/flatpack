@@ -1,0 +1,439 @@
+<div class="max-w-4xl mx-auto">
+  <h1 class="text-4xl font-bold mb-4">Form Examples with Submit Buttons</h1>
+  <p class="text-lg text-[var(--color-muted-foreground)] mb-8">
+    Examples of forms using submit buttons with different HTTP methods (POST, PATCH, PUT, DELETE).
+  </p>
+
+  <!-- Flash Messages -->
+  <% if flash[:notice] %>
+    <div class="mb-6">
+      <%= render FlatPack::Alert::Component.new(
+        title: "Success",
+        description: flash[:notice],
+        variant: :success,
+        dismissible: true
+      ) %>
+    </div>
+  <% end %>
+
+  <!-- Basic Form with POST (Create) -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Form with POST Method (Create)</h2>
+    <p class="text-[var(--color-muted-foreground)] mb-4">
+      Standard form submission using POST method for creating new resources.
+    </p>
+    
+    <%= form_with url: demo_forms_create_path, method: :post, local: true, class: "space-y-4 p-6 border border-[var(--color-border)] rounded-lg bg-[var(--color-card)]" do |f| %>
+      <div>
+        <%= render FlatPack::TextInput::Component.new(
+          label: "Name",
+          name: "user[name]",
+          placeholder: "Enter your name",
+          required: true
+        ) %>
+      </div>
+      
+      <div>
+        <%= render FlatPack::EmailInput::Component.new(
+          label: "Email",
+          name: "user[email]",
+          placeholder: "your.email@example.com",
+          required: true
+        ) %>
+      </div>
+
+      <div class="flex gap-2">
+        <%= render FlatPack::Button::Component.new(
+          text: "Create User",
+          type: "submit",
+          style: :primary
+        ) %>
+        <%= render FlatPack::Button::Component.new(
+          text: "Cancel",
+          type: "button",
+          style: :secondary
+        ) %>
+      </div>
+    <% end %>
+
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= form_with url: demo_forms_create_path, method: :post do |f| %&gt;
+  &lt;%= render FlatPack::Button::Component.new(
+    text: "Create User",
+    type: "submit",
+    style: :primary
+  ) %&gt;
+&lt;% end %&gt;</code></pre>
+  </section>
+
+  <!-- Form with PATCH (Update) -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Form with PATCH Method (Update)</h2>
+    <p class="text-[var(--color-muted-foreground)] mb-4">
+      Update form using PATCH method for modifying existing resources.
+    </p>
+    
+    <%= form_with url: demo_forms_update_path, method: :patch, local: true, class: "space-y-4 p-6 border border-[var(--color-border)] rounded-lg bg-[var(--color-card)]" do |f| %>
+      <div>
+        <%= render FlatPack::TextInput::Component.new(
+          label: "Name",
+          name: "user[name]",
+          value: "John Doe",
+          placeholder: "Enter your name",
+          required: true
+        ) %>
+      </div>
+      
+      <div>
+        <%= render FlatPack::EmailInput::Component.new(
+          label: "Email",
+          name: "user[email]",
+          value: "john.doe@example.com",
+          placeholder: "your.email@example.com",
+          required: true
+        ) %>
+      </div>
+
+      <div>
+        <%= render FlatPack::Select::Component.new(
+          label: "Status",
+          name: "user[status]",
+          options: [
+            { label: "Active", value: "active" },
+            { label: "Inactive", value: "inactive" },
+            { label: "Pending", value: "pending" }
+          ],
+          selected: "active"
+        ) %>
+      </div>
+
+      <div class="flex gap-2">
+        <%= render FlatPack::Button::Component.new(
+          text: "Update User",
+          type: "submit",
+          style: :success
+        ) %>
+        <%= render FlatPack::Button::Component.new(
+          text: "Reset",
+          type: "reset",
+          style: :ghost
+        ) %>
+      </div>
+    <% end %>
+
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= form_with url: demo_forms_update_path, method: :patch do |f| %&gt;
+  &lt;%= render FlatPack::Button::Component.new(
+    text: "Update User",
+    type: "submit",
+    style: :success
+  ) %&gt;
+&lt;% end %&gt;</code></pre>
+  </section>
+
+  <!-- Form with PUT (Update Alternative) -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Form with PUT Method (Update Alternative)</h2>
+    <p class="text-[var(--color-muted-foreground)] mb-4">
+      Update form using PUT method as an alternative to PATCH.
+    </p>
+    
+    <%= form_with url: demo_forms_update_path, method: :put, local: true, class: "space-y-4 p-6 border border-[var(--color-border)] rounded-lg bg-[var(--color-card)]" do |f| %>
+      <div>
+        <%= render FlatPack::TextInput::Component.new(
+          label: "Username",
+          name: "user[username]",
+          value: "johndoe",
+          placeholder: "Enter username",
+          required: true
+        ) %>
+      </div>
+      
+      <div>
+        <%= render FlatPack::PasswordInput::Component.new(
+          label: "Password",
+          name: "user[password]",
+          placeholder: "Enter new password"
+        ) %>
+      </div>
+
+      <div class="flex gap-2">
+        <%= render FlatPack::Button::Component.new(
+          text: "Save Changes",
+          type: "submit",
+          style: :primary
+        ) %>
+      </div>
+    <% end %>
+
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= form_with url: demo_forms_update_path, method: :put do |f| %&gt;
+  &lt;%= render FlatPack::Button::Component.new(
+    text: "Save Changes",
+    type: "submit",
+    style: :primary
+  ) %&gt;
+&lt;% end %&gt;</code></pre>
+  </section>
+
+  <!-- Form with DELETE -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Form with DELETE Method</h2>
+    <p class="text-[var(--color-muted-foreground)] mb-4">
+      Deletion form using DELETE method. Typically used with confirmation dialogs.
+    </p>
+    
+    <%= form_with url: demo_forms_destroy_path, method: :delete, local: true, class: "space-y-4 p-6 border border-[var(--color-border)] rounded-lg bg-[var(--color-card)]" do |f| %>
+      <div class="p-4 bg-[var(--color-warning)]/10 border border-[var(--color-warning)] rounded">
+        <p class="text-sm font-medium mb-2">⚠️ Warning</p>
+        <p class="text-sm text-[var(--color-muted-foreground)]">
+          This action will delete the user account. This action cannot be undone.
+        </p>
+      </div>
+
+      <div>
+        <%= render FlatPack::Checkbox::Component.new(
+          label: "I understand this action is permanent",
+          name: "confirm_deletion",
+          required: true
+        ) %>
+      </div>
+
+      <div class="flex gap-2">
+        <%= render FlatPack::Button::Component.new(
+          text: "Delete Account",
+          type: "submit",
+          style: :warning
+        ) %>
+        <%= render FlatPack::Button::Component.new(
+          text: "Cancel",
+          type: "button",
+          style: :secondary
+        ) %>
+      </div>
+    <% end %>
+
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= form_with url: demo_forms_destroy_path, method: :delete do |f| %&gt;
+  &lt;%= render FlatPack::Button::Component.new(
+    text: "Delete Account",
+    type: "submit",
+    style: :warning
+  ) %&gt;
+&lt;% end %&gt;</code></pre>
+  </section>
+
+  <!-- Submit Button Variations -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Submit Button Variations</h2>
+    <p class="text-[var(--color-muted-foreground)] mb-4">
+      Different styles and sizes of submit buttons within forms.
+    </p>
+    
+    <%= form_with url: demo_forms_create_path, method: :post, local: true, class: "space-y-6 p-6 border border-[var(--color-border)] rounded-lg bg-[var(--color-card)]" do |f| %>
+      <div>
+        <h3 class="font-semibold mb-3">Different Styles</h3>
+        <div class="flex flex-wrap gap-2">
+          <%= render FlatPack::Button::Component.new(
+            text: "Primary Submit",
+            type: "submit",
+            style: :primary
+          ) %>
+          <%= render FlatPack::Button::Component.new(
+            text: "Secondary Submit",
+            type: "submit",
+            style: :secondary
+          ) %>
+          <%= render FlatPack::Button::Component.new(
+            text: "Success Submit",
+            type: "submit",
+            style: :success
+          ) %>
+          <%= render FlatPack::Button::Component.new(
+            text: "Warning Submit",
+            type: "submit",
+            style: :warning
+          ) %>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="font-semibold mb-3">Different Sizes</h3>
+        <div class="flex flex-wrap items-center gap-2">
+          <%= render FlatPack::Button::Component.new(
+            text: "Small Submit",
+            type: "submit",
+            style: :primary,
+            size: :sm
+          ) %>
+          <%= render FlatPack::Button::Component.new(
+            text: "Medium Submit",
+            type: "submit",
+            style: :primary,
+            size: :md
+          ) %>
+          <%= render FlatPack::Button::Component.new(
+            text: "Large Submit",
+            type: "submit",
+            style: :primary,
+            size: :lg
+          ) %>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="font-semibold mb-3">With Icons</h3>
+        <div class="flex flex-wrap gap-2">
+          <%= render FlatPack::Button::Component.new(
+            text: "Save",
+            icon: "check",
+            type: "submit",
+            style: :success
+          ) %>
+          <%= render FlatPack::Button::Component.new(
+            text: "Upload",
+            icon: "upload",
+            type: "submit",
+            style: :primary
+          ) %>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="font-semibold mb-3">Loading State</h3>
+        <p class="text-sm text-[var(--color-muted-foreground)] mb-2">
+          This is a visual demonstration of the loading state. In actual use, set loading: true during form submission.
+        </p>
+        <div class="flex flex-wrap gap-2">
+          <%= render FlatPack::Button::Component.new(
+            text: "Submitting",
+            type: "submit",
+            style: :primary,
+            loading: true
+          ) %>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="font-semibold mb-3">Full Width</h3>
+        <%= render FlatPack::Button::Component.new(
+          text: "Full Width Submit",
+          type: "submit",
+          style: :primary,
+          class: "w-full"
+        ) %>
+      </div>
+    <% end %>
+
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Button::Component.new(
+  text: "Submit",
+  type: "submit",
+  style: :primary,
+  size: :md,
+  icon: "check",
+  loading: false
+) %&gt;</code></pre>
+  </section>
+
+  <!-- Multiple Submit Buttons -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Multiple Submit Buttons</h2>
+    <p class="text-[var(--color-muted-foreground)] mb-4">
+      Forms can have multiple submit buttons with different actions.
+    </p>
+    
+    <%= form_with url: demo_forms_create_path, method: :post, local: true, class: "space-y-4 p-6 border border-[var(--color-border)] rounded-lg bg-[var(--color-card)]" do |f| %>
+      <div>
+        <%= render FlatPack::TextInput::Component.new(
+          label: "Content",
+          name: "post[content]",
+          placeholder: "Write something...",
+          required: true
+        ) %>
+      </div>
+
+      <div class="flex gap-2">
+        <%= render FlatPack::Button::Component.new(
+          text: "Save as Draft",
+          type: "submit",
+          style: :secondary,
+          name: "action",
+          value: "draft"
+        ) %>
+        <%= render FlatPack::Button::Component.new(
+          text: "Publish",
+          type: "submit",
+          style: :primary,
+          name: "action",
+          value: "publish"
+        ) %>
+      </div>
+    <% end %>
+
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Button::Component.new(
+  text: "Save as Draft",
+  type: "submit",
+  name: "action",
+  value: "draft"
+) %&gt;
+&lt;%= render FlatPack::Button::Component.new(
+  text: "Publish",
+  type: "submit",
+  name: "action",
+  value: "publish"
+) %&gt;</code></pre>
+  </section>
+
+  <!-- Button Types Comparison -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Button Types Comparison</h2>
+    <p class="text-[var(--color-muted-foreground)] mb-4">
+      Understanding the difference between button types: submit, button, and reset.
+    </p>
+    
+    <%= form_with url: demo_forms_create_path, method: :post, local: true, class: "space-y-4 p-6 border border-[var(--color-border)] rounded-lg bg-[var(--color-card)]" do |f| %>
+      <div>
+        <%= render FlatPack::TextInput::Component.new(
+          label: "Example Input",
+          name: "example",
+          value: "Test value",
+          placeholder: "Type something..."
+        ) %>
+      </div>
+
+      <div class="space-y-3">
+        <div>
+          <%= render FlatPack::Button::Component.new(
+            text: "Submit (type='submit')",
+            type: "submit",
+            style: :primary
+          ) %>
+          <span class="ml-2 text-sm text-[var(--color-muted-foreground)]">Submits the form</span>
+        </div>
+        
+        <div>
+          <%= render FlatPack::Button::Component.new(
+            text: "Button (type='button')",
+            type: "button",
+            style: :secondary
+          ) %>
+          <span class="ml-2 text-sm text-[var(--color-muted-foreground)]">Does nothing by default</span>
+        </div>
+        
+        <div>
+          <%= render FlatPack::Button::Component.new(
+            text: "Reset (type='reset')",
+            type: "reset",
+            style: :ghost
+          ) %>
+          <span class="ml-2 text-sm text-[var(--color-muted-foreground)]">Resets form to initial values</span>
+        </div>
+      </div>
+    <% end %>
+
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;!-- Default type is 'button' --&gt;
+&lt;%= render FlatPack::Button::Component.new(text: "Click me") %&gt;
+
+&lt;!-- Explicitly set type to 'submit' for form submission --&gt;
+&lt;%= render FlatPack::Button::Component.new(text: "Submit", type: "submit") %&gt;
+
+&lt;!-- Reset form to initial values --&gt;
+&lt;%= render FlatPack::Button::Component.new(text: "Reset", type: "reset") %&gt;</code></pre>
+  </section>
+</div>
