@@ -78,9 +78,53 @@
   --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Dark Mode - Manual Classes */
+.dark {
+  /* Semantic Colors - Dark Mode */
+  --color-primary: var(--color-brand-500);
+  --color-primary-hover: var(--color-brand-400);
+  --color-primary-text: oklch(0.15 0.01 250);
+  
+  --color-secondary: oklch(0.20 0.02 250);
+  --color-secondary-hover: oklch(0.25 0.03 250);
+  --color-secondary-text: oklch(0.90 0.01 250);
+  
+  --color-ghost: transparent;
+  --color-ghost-hover: oklch(0.22 0.02 250);
+  --color-ghost-text: oklch(0.85 0.01 250);
+  
+  --color-success: oklch(67% .194 149.214);
+  --color-success-hover: oklch(72% .194 149.214);
+  --color-success-text: oklch(0.15 0.01 250);
+  
+  --color-warning: oklch(62% .245 27.325);
+  --color-warning-hover: oklch(67% .245 27.325);
+  --color-warning-text: oklch(0.15 0.01 250);
+  
+  --color-destructive: oklch(67.8% .257 29.234);
+  --color-destructive-hover: oklch(72% .257 29.234);
+  --color-destructive-text: oklch(0.15 0.01 250);
+  
+  --color-background: oklch(0.15 0.01 250);
+  --color-foreground: oklch(0.95 0.01 250);
+  
+  --color-muted: oklch(0.22 0.02 250);
+  --color-muted-foreground: oklch(0.65 0.01 250);
+  
+  --color-border: oklch(0.30 0.02 250);
+  --color-border-hover: oklch(0.40 0.03 250);
+  
+  --color-ring: var(--color-brand-500);
+  
+  /* Shadows (adjusted for dark mode) */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5);
+}
+
 /* Dark Mode - System Preference Only */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not(.light) {
     /* Semantic Colors - Dark Mode */
     --color-primary: var(--color-brand-500);
     --color-primary-hover: var(--color-brand-400);

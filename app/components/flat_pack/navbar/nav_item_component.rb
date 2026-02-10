@@ -5,12 +5,12 @@ module FlatPack
     class NavItemComponent < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-[var(--color-primary)]" "text-[var(--color-primary-text)]" "bg-[var(--color-success)]" "text-[var(--color-success-text)]" "bg-[var(--color-warning)]" "text-[var(--color-warning-text)]" "bg-[var(--color-danger)]" "text-[var(--color-danger-text)]"
+      # "bg-[var(--color-primary)]" "text-[var(--color-primary-text)]" "bg-[var(--color-success)]" "text-[var(--color-success-text)]" "bg-[var(--color-warning)]" "text-[var(--color-warning-text)]" "bg-[var(--color-destructive)]" "text-[var(--color-destructive-text)]"
       BADGE_STYLES = {
         primary: "bg-[var(--color-primary)] text-[var(--color-primary-text)]",
         success: "bg-[var(--color-success)] text-[var(--color-success-text)]",
         warning: "bg-[var(--color-warning)] text-[var(--color-warning-text)]",
-        danger: "bg-[var(--color-danger)] text-[var(--color-danger-text)]"
+        danger: "bg-[var(--color-destructive)] text-[var(--color-destructive-text)]"
       }.freeze
 
       def initialize(

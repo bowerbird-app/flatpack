@@ -95,7 +95,7 @@ module FlatPack
 
       def test_badge_danger_style
         render_inline(NavItemComponent.new(text: "Item", badge: "1", badge_style: :danger))
-        assert_selector ".bg-\\[var\\(--color-danger\\)\\]"
+        assert_selector ".bg-\\[var\\(--color-destructive\\)\\]"
       end
 
       def test_validates_badge_style
