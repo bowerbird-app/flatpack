@@ -134,6 +134,28 @@ module FlatPack
 
         refute_selector "input[onclick]"
       end
+
+      def test_checked_switch_uses_dynamic_color_classes
+        render_inline(Component.new(name: "notifications", checked: true))
+
+        html = page.native.to_html
+
+        # Should have the base muted color class
+        assert_includes html, "bg-[var(--color-muted)]"
+        # Should have the peer-checked dynamic class
+        assert_includes html, "peer-checked:bg-[var(--color-primary)]"
+      end
+
+      def test_unchecked_switch_uses_dynamic_color_classes
+        render_inline(Component.new(name: "notifications", checked: false))
+
+        html = page.native.to_html
+
+        # Should have the base muted color class
+        assert_includes html, "bg-[var(--color-muted)]"
+        # Should have the peer-checked dynamic class for when it gets checked
+        assert_includes html, "peer-checked:bg-[var(--color-primary)]"
+      end
     end
   end
 end
