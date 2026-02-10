@@ -22,7 +22,10 @@ end
 
 Rake::TestTask.new(:test) do |t|
   t.libs << "test"
-  t.pattern = "test/**/*_test.rb"
+  t.pattern = [
+    "test/components/flat_pack/*_test.rb",
+    "test/lib/flat_pack/*_test.rb"
+  ]
   t.verbose = false
 end
 

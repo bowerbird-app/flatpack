@@ -259,6 +259,18 @@ module FlatPack
         assert_selector "a[href='/path']", text: "Link"
         refute_selector "a[type]"
       end
+
+      def test_renders_button_with_cursor_pointer_class
+        render_inline(Component.new(text: "Click me"))
+
+        assert_selector "button.cursor-pointer"
+      end
+
+      def test_renders_link_with_cursor_pointer_class
+        render_inline(Component.new(text: "Link", url: "/path"))
+
+        assert_selector "a.cursor-pointer"
+      end
     end
   end
 end
