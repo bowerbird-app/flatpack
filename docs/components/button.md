@@ -406,6 +406,7 @@ FlatPack::Button::Component.new(
 
 ## Related Components
 
+- [Button Dropdown Component](button-dropdown.md) - Dropdown menus triggered by buttons
 - [Card Component](card.md) - Cards often use buttons for actions
 - [Icon Component](../shared/icon.md) - For button icons
 - [Table Actions](table.md#actions) - Buttons in table rows
