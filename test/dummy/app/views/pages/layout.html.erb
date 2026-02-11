@@ -72,10 +72,10 @@
       
       <div class="grid gap-6 md:grid-cols-2 mb-8">
         <%= render FlatPack::Card::Component.new do |card| %>
-          <% card.with_header do %>
+          <% card.header do %>
             <h3 class="text-lg font-semibold">Desktop Features</h3>
           <% end %>
-          <% card.with_body do %>
+          <% card.body do %>
             <ul class="space-y-2 text-sm">
               <li class="flex items-start gap-2">
                 <span class="text-green-500 mt-1">✓</span>
@@ -106,10 +106,10 @@
         <% end %>
         
         <%= render FlatPack::Card::Component.new do |card| %>
-          <% card.with_header do %>
+          <% card.header do %>
             <h3 class="text-lg font-semibold">Mobile Features</h3>
           <% end %>
-          <% card.with_body do %>
+          <% card.body do %>
             <ul class="space-y-2 text-sm">
               <li class="flex items-start gap-2">
                 <span class="text-blue-500 mt-1">✓</span>
@@ -142,10 +142,10 @@
       
       <div class="mb-8">
         <%= render FlatPack::Card::Component.new do |card| %>
-          <% card.with_header do %>
+          <% card.header do %>
             <h3 class="text-lg font-semibold">Try It Out</h3>
           <% end %>
-          <% card.with_body do %>
+          <% card.body do %>
             <div class="space-y-4">
               <div>
                 <h4 class="font-medium mb-2">Desktop:</h4>
@@ -174,10 +174,10 @@
       
       <div class="mb-8">
         <%= render FlatPack::Card::Component.new do |card| %>
-          <% card.with_header do %>
+          <% card.header do %>
             <h3 class="text-lg font-semibold">Component Features</h3>
           <% end %>
-          <% card.with_body do %>
+          <% card.body do %>
             <div class="grid gap-4 md:grid-cols-2">
               <div>
                 <h4 class="font-medium mb-2">Sidebar Items</h4>

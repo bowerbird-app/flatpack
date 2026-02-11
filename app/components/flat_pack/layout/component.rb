@@ -16,12 +16,17 @@ module FlatPack
       }
 
       def initialize(**system_arguments)
-        super(**system_arguments)
+        super
       end
 
       def call
         content_tag(:div, **wrapper_attributes) do
-          safe_join([sidebar, top_nav, content_tag(:main, content, class: main_classes)].compact)
+          safe_join([
+            sidebar,
+            content_tag(:div, class: "flex flex-col flex-1") do
+              safe_join([top_nav, content_tag(:main, content, class: main_classes)].compact)
+            end
+          ].compact)
         end
       end
 
