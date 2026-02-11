@@ -21,7 +21,7 @@ module FlatPack
 
       def call
         content_tag(:div, **wrapper_attributes) do
-          safe_join([sidebar, top_nav, content_tag(:main, content, class: main_classes)])
+          safe_join([sidebar, top_nav, content_tag(:main, content, class: main_classes)].compact)
         end
       end
 
