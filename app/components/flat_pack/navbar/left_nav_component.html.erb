@@ -16,9 +16,9 @@
   <% if @show_toggle && @collapsible %>
     <button
       class="p-4 border-t border-[var(--color-border)] hover:bg-[var(--color-muted)] transition-colors flex items-center justify-center"
-      data-action="click->navbar#toggleLeftNav"
+      data-action="click->flat-pack--navbar#toggleLeftNav"
       aria-label="Toggle sidebar">
-      <svg class="w-5 h-5 transition-transform duration-300" data-navbar-target="collapseIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <svg class="w-5 h-5 transition-transform duration-300" data-flat-pack--navbar-target="collapseIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
         <polyline points="15 18 9 12 15 6"></polyline>
       </svg>
     </button>

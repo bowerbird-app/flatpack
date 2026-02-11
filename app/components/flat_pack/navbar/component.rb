@@ -57,11 +57,11 @@ module FlatPack
 
       def navbar_data_attributes
         {
-          controller: "navbar",
-          navbar_left_nav_width_value: @left_nav_width,
-          navbar_left_nav_collapsed_width_value: @left_nav_collapsed_width,
-          navbar_top_nav_height_value: @top_nav_height,
-          navbar_collapsed_value: @left_nav_collapsed
+          controller: "flat-pack--navbar",
+          flat_pack__navbar_left_nav_width_value: @left_nav_width,
+          flat_pack__navbar_left_nav_collapsed_width_value: @left_nav_collapsed_width,
+          flat_pack__navbar_top_nav_height_value: @top_nav_height,
+          flat_pack__navbar_collapsed_value: @left_nav_collapsed
         }
       end
 

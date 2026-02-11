@@ -34,7 +34,7 @@ module FlatPack
       def aside_attributes
         attrs = {
           class: aside_classes,
-          data: {navbar_target: "leftNav"}
+          data: {flat_pack__navbar_target: "leftNav"}
         }
         attrs[:style] = aside_styles if @top_nav_height
         attrs.merge(@system_arguments)

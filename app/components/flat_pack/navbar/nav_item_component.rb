@@ -44,7 +44,8 @@ module FlatPack
 
       def item_attributes
         {
-          class: item_classes
+          class: item_classes,
+          data: {flat_pack__navbar_target: "navItem"}
         }.merge(@system_arguments)
       end
 
@@ -76,17 +77,21 @@ module FlatPack
       def render_item_content
         safe_join([
           (render_icon if @icon),
-          content_tag(:span, @text, class: "flex-1 truncate", data: {navbar_target: "itemText"}),
+          content_tag(:span, @text, class: "flex-1 truncate transition-all duration-300", data: {flat_pack__navbar_target: "itemText"}),
           (render_badge if @badge)
         ].compact)
       end
 
       def render_icon
-        render FlatPack::Shared::IconComponent.new(name: @icon, size: :sm)
+        content_tag(:span, class: "flex-shrink-0") do
+          render FlatPack::Shared::IconComponent.new(name: @icon, size: :sm)
+        end
       end
 
       def render_badge
-        render FlatPack::Badge::Component.new(text: @badge, style: @badge_style, size: :sm)
+        content_tag(:span, class: "transition-all duration-300", data: {flat_pack__navbar_target: "badge"}) do
+          render FlatPack::Badge::Component.new(text: @badge, style: @badge_style, size: :sm)
+        end
       end
 
       def validate_href!(original_href)
