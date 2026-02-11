@@ -38,13 +38,13 @@
         <% end %>
 
         <% navbar.left_nav(collapsible: true, show_toggle: true) do |left_nav| %>
-          <% left_nav.item(text: "Dashboard", href: "#", icon: "icon-dashboard", active: true) %>
-          <% left_nav.item(text: "Projects", href: "#", icon: "icon-box", badge: "12") %>
-          <% left_nav.item(text: "Settings", href: "#", icon: "icon-settings") %>
+          <% left_nav.item(text: "Dashboard", href: "#", icon: "dashboard", active: true) %>
+          <% left_nav.item(text: "Projects", href: "#", icon: "box", badge: "12") %>
+          <% left_nav.item(text: "Settings", href: "#", icon: "settings") %>
           
           <% left_nav.section(title: "Resources") do |section| %>
-            <% section.item(text: "Documentation", href: "#", icon: "icon-monitor") %>
-            <% section.item(text: "Components", href: "#", icon: "icon-laptop") %>
+            <% section.item(text: "Documentation", href: "#", icon: "monitor") %>
+            <% section.item(text: "Components", href: "#", icon: "laptop") %>
           <% end %>
         <% end %>
 
@@ -89,8 +89,8 @@
   &lt;%% end %%&gt;
 
   &lt;%% navbar.left_nav(collapsible: true) do |left_nav| %%&gt;
-    &lt;%% left_nav.item(text: "Dashboard", href: "#", icon: "icon-dashboard", active: true) %%&gt;
-    &lt;%% left_nav.item(text: "Projects", href: "#", icon: "icon-box", badge: "12") %%&gt;
+    &lt;%% left_nav.item(text: "Dashboard", href: "#", icon: "dashboard", active: true) %%&gt;
+    &lt;%% left_nav.item(text: "Projects", href: "#", icon: "box", badge: "12") %%&gt;
     
     &lt;%% left_nav.section(title: "Resources") do |section| %%&gt;
       &lt;%% section.item(text: "Documentation", href: "#") %%&gt;
@@ -165,7 +165,7 @@
         <%= render FlatPack::Table::Component.new(data: [
           {option: "text", type: "String", default: "required", description: "Item label text"},
           {option: "href", type: "String", default: "nil", description: "Link URL (optional)"},
-          {option: "icon", type: "String", default: "nil", description: "SVG icon ID"},
+          {option: "icon", type: "String", default: "nil", description: "Icon name without 'icon-' prefix (e.g., 'dashboard')"},
           {option: "active", type: "Boolean", default: "false", description: "Mark item as active/current"},
           {option: "badge", type: "String", default: "nil", description: "Badge text to display"},
           {option: "badge_style", type: "Symbol", default: ":primary", description: "Badge style"}
@@ -208,7 +208,7 @@
     <div class="mt-4">
       <%= render FlatPack::Alert::Component.new(
         title: "Icons",
-        message: "The navbar uses SVG sprite icons. Make sure to include your icon definitions in the page. See the application layout for examples of icon definitions.",
+        message: "The navbar uses SVG sprite icons. Icon names should NOT include the 'icon-' prefix (e.g., use 'dashboard' instead of 'icon-dashboard'). Make sure to include your icon sprite definitions in the page. See the application layout for examples.",
         style: :warning
       ) %>
     </div>
