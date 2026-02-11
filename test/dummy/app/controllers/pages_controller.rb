@@ -81,4 +81,7 @@ class PagesController < ApplicationController
     flash[:notice] = "Form submitted successfully with DELETE method"
     redirect_to demo_forms_path
   end
+
+  def layout
+  end
 end
