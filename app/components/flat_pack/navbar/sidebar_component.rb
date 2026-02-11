@@ -3,14 +3,38 @@
 module FlatPack
   module Navbar
     class SidebarComponent < FlatPack::BaseComponent
-      renders_many :items, SidebarItemComponent
-      renders_many :sections, SidebarSectionComponent
+      renders_many :items, lambda { |*args, **kwargs|
+        # ViewComponent passes keyword arguments as positional pairs when using certain patterns
+        # Convert alternating [key, value, key, value] to hash if needed
+        params = {}
+        args.each_slice(2) { |k, v| params[k] = v }
+        params.merge!(kwargs)
+        SidebarItemComponent.new(**params)
+      }
 
-      def initialize(collapsed: false, expanded_width: "256px", collapsed_width: "64px", **system_arguments)
-        super(**system_arguments)
-        @collapsed = collapsed
-        @expanded_width = expanded_width
-        @collapsed_width = collapsed_width
+      renders_many :sections, lambda { |*args, **kwargs|
+        # Same conversion for sections
+        params = {}
+        args.each_slice(2) { |k, v| params[k] = v }
+        params.merge!(kwargs)
+        SidebarSectionComponent.new(**params)
+      }
+
+      def initialize(**kwargs)
+        @collapsed = kwargs[:collapsed] || false
+        @expanded_width = kwargs[:expanded_width] || "256px"
+        @collapsed_width = kwargs[:collapsed_width] || "64px"
+
+        super(**kwargs.except(:collapsed, :expanded_width, :collapsed_width))
+      end
+
+      # Define cleaner API methods
+      def item(...)
+        with_item(...)
+      end
+
+      def section(...)
+        with_section(...)
       end
 
       def call

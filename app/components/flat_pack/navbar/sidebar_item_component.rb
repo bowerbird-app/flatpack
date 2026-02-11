@@ -15,13 +15,14 @@ module FlatPack
       }.freeze
 
       def initialize(text:, href: nil, icon: nil, active: false, badge: nil, badge_style: :primary, **system_arguments)
-        super(**system_arguments)
         @text = text
         @href = href
         @icon = icon
         @active = active
         @badge = badge
         @badge_style = badge_style.to_sym
+
+        super(**system_arguments)
 
         validate_text!
         validate_badge_style! if @badge

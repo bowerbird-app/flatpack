@@ -3,28 +3,37 @@
 module FlatPack
   module Navbar
     class Component < FlatPack::BaseComponent
-      renders_one :sidebar, lambda { |collapsed: false, expanded_width: "256px", collapsed_width: "64px"|
-        SidebarComponent.new(
-          collapsed: collapsed,
-          expanded_width: expanded_width,
-          collapsed_width: collapsed_width
-        )
+      renders_one :sidebar_slot, lambda { |*args|
+        kwargs = {}
+        args.each_slice(2) { |k, v| kwargs[k] = v }
+        SidebarComponent.new(**kwargs)
       }
 
-      renders_one :top_nav, lambda { |height: "64px"|
-        TopNavComponent.new(height: height)
+      renders_one :top_nav_slot, lambda { |*args|
+        kwargs = {}
+        args.each_slice(2) { |k, v| kwargs[k] = v }
+        TopNavComponent.new(**kwargs)
       }
 
       def initialize(**system_arguments)
         super
       end
 
+      # Define cleaner API methods
+      def sidebar(...)
+        with_sidebar_slot(...)
+      end
+
+      def top_nav(...)
+        with_top_nav_slot(...)
+      end
+
       def call
         content_tag(:div, **wrapper_attributes) do
           safe_join([
-            sidebar,
+            sidebar_slot,
             content_tag(:div, class: "flex flex-col flex-1") do
-              safe_join([top_nav, content_tag(:main, content, class: main_classes)].compact)
+              safe_join([top_nav_slot, content_tag(:main, content, class: main_classes)].compact)
             end
           ].compact)
         end

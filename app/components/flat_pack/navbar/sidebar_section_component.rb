@@ -3,13 +3,25 @@
 module FlatPack
   module Navbar
     class SidebarSectionComponent < FlatPack::BaseComponent
-      renders_many :items, SidebarItemComponent
+      renders_many :items, lambda { |*args, **kwargs|
+        params = {}
+        args.each_slice(2) { |k, v| params[k] = v }
+        params.merge!(kwargs)
+        SidebarItemComponent.new(**params)
+      }
 
-      def initialize(title: nil, collapsible: false, collapsed: false, **system_arguments)
-        super(**system_arguments)
+      def initialize(title: nil, collapsible: false, collapsed: false, **system_arguments, &block)
         @title = title
         @collapsible = collapsible
         @collapsed = collapsed
+        @block = block
+
+        super(**system_arguments)
+      end
+
+      # Define cleaner API method
+      def item(...)
+        with_item(...)
       end
 
       def call

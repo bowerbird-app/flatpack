@@ -1,44 +1,44 @@
 <%= render FlatPack::Navbar::Component.new(class: "h-screen") do |navbar| %>
-  <% navbar.with_sidebar do |sidebar| %>
-    <% sidebar.with_item(
+  <% navbar.sidebar do |sidebar| %>
+    <% sidebar.item(
       text: "Dashboard",
       icon: "home",
       href: demo_path,
       active: true
     ) %>
-    <% sidebar.with_item(
+    <% sidebar.item(
       text: "Messages",
       icon: "mail",
       href: "#messages",
       badge: "5",
       badge_style: :danger
     ) %>
-    <% sidebar.with_item(
+    <% sidebar.item(
       text: "Projects",
       icon: "folder",
       href: "#projects"
     ) %>
     
-    <% sidebar.with_section(title: "Components", collapsible: true) do |section| %>
-      <% section.with_item(text: "Buttons", icon: "square", href: demo_buttons_path) %>
-      <% section.with_item(text: "Forms", icon: "edit-3", href: demo_forms_path) %>
-      <% section.with_item(text: "Tables", icon: "table", href: demo_tables_path) %>
-      <% section.with_item(text: "Inputs", icon: "type", href: demo_inputs_path) %>
+    <% sidebar.section(title: "Components", collapsible: true) do |section| %>
+      <% section.item(text: "Buttons", icon: "square", href: demo_buttons_path) %>
+      <% section.item(text: "Forms", icon: "edit-3", href: demo_forms_path) %>
+      <% section.item(text: "Tables", icon: "table", href: demo_tables_path) %>
+      <% section.item(text: "Inputs", icon: "type", href: demo_inputs_path) %>
     <% end %>
     
-    <% sidebar.with_section(title: "Settings", collapsible: true, collapsed: true) do |section| %>
-      <% section.with_item(text: "Profile", icon: "user", href: "#profile") %>
-      <% section.with_item(text: "Security", icon: "lock", href: "#security") %>
-      <% section.with_item(text: "Preferences", icon: "settings", href: "#preferences") %>
+    <% sidebar.section(title: "Settings", collapsible: true, collapsed: true) do |section| %>
+      <% section.item(text: "Profile", icon: "user", href: "#profile") %>
+      <% section.item(text: "Security", icon: "lock", href: "#security") %>
+      <% section.item(text: "Preferences", icon: "settings", href: "#preferences") %>
     <% end %>
   <% end %>
   
-  <% navbar.with_top_nav do |nav| %>
-    <% nav.with_left do %>
+  <% navbar.top_nav do |nav| %>
+    <% nav.left_section do %>
       <span class="text-xl font-bold">FlatPack</span>
     <% end %>
     
-    <% nav.with_center do %>
+    <% nav.center_section do %>
       <input 
         type="search" 
         placeholder="Search..."
@@ -46,7 +46,7 @@
       />
     <% end %>
     
-    <% nav.with_right do %>
+    <% nav.right_section do %>
       <%= render FlatPack::Button::Component.new(
         text: "New",
         icon: "plus",
