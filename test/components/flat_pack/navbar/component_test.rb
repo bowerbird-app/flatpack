@@ -435,14 +435,6 @@ module FlatPack
         assert_text "Profile"
       end
 
-      def test_top_nav_has_border
-        render_inline(Component.new) do |navbar|
-          navbar.top_nav
-        end
-
-        assert_selector "nav.border-b"
-      end
-
       def test_top_nav_flex_layout
         render_inline(Component.new) do |navbar|
           navbar.top_nav

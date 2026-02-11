@@ -47,14 +47,16 @@
     <% end %>
     
     <% nav.right_section do %>
-      <%= render FlatPack::Button::Component.new(
-        text: "New",
-        icon: "plus",
-        style: :primary,
-        size: :sm
-      ) %>
-      <div class="w-8 h-8 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-[var(--color-primary-text)] font-semibold">
-        U
+      <div class="flex items-center gap-3">
+        <%= render FlatPack::Button::Component.new(
+          text: "New",
+          icon: "plus",
+          style: :primary,
+          size: :sm
+        ) %>
+        <div class="w-8 h-8 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-[var(--color-primary-text)] font-semibold">
+          U
+        </div>
       </div>
     <% end %>
   <% end %>

@@ -1,21 +1,6 @@
 # Navbar Component
 
-A modern sidebar-first layout system with collapsible navigation and flexible top bar for Rails applications.
-
-## Overview
-
-The Navbar Component provides a complete page layout solution with:
-- **Collapsible sidebar** navigation with desktop/mobile responsive behavior
-- **Flexible top navigation** bar with three customizable sections (left, center, right)
-- **Persistent state** using localStorage
-- **Smooth animations** and transitions
-- **Badge notifications** for unread counts and alerts
-- **Section grouping** with optional collapse functionality
-- **Full accessibility** compliance with semantic HTML and ARIA labels
-
-## Demo
-
-Visit `/demo/navbar` in the dummy app to see live examples and interact with all features.
+The Navbar component provides a complete page layout system with a collapsible sidebar and flexible top navigation bar.
 
 ## Basic Usage
 
@@ -23,11 +8,12 @@ Visit `/demo/navbar` in the dummy app to see live examples and interact with all
 <%= render FlatPack::Navbar::Component.new do |navbar| %>
   <% navbar.sidebar do |sidebar| %>
     <% sidebar.item(text: "Dashboard", icon: "home", href: "/") %>
+    <% sidebar.item(text: "Settings", icon: "settings", href: "/settings") %>
   <% end %>
   
   <% navbar.top_nav do |nav| %>
     <% nav.left_section do %>
-      <span class="text-xl font-bold">MyApp</span>
+      <span class="text-xl font-bold">My App</span>
     <% end %>
   <% end %>
   
@@ -35,130 +21,46 @@ Visit `/demo/navbar` in the dummy app to see live examples and interact with all
 <% end %>
 ```
 
-## Components
-
-The Navbar system consists of five interconnected components that work together to create a complete layout solution:
-
-1. **Navbar::Component** - Main wrapper that coordinates everything
-2. **SidebarComponent** - Collapsible navigation sidebar
-3. **SidebarItemComponent** - Individual navigation items
-4. **SidebarSectionComponent** - Grouped navigation items
-5. **TopNavComponent** - Horizontal top bar with three sections
+## Props
 
 ### Navbar::Component
 
-Main wrapper component that provides full-page layout structure.
-
-#### Props
+Main wrapper that provides full-page layout structure.
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `**system_arguments` | Hash | `{}` | HTML attributes (`class`, `data`, `aria`, `id`, etc.) |
 
-#### Usage
+### Sidebar::Component
 
-```erb
-<%= render FlatPack::Navbar::Component.new do |navbar| %>
-  <% navbar.sidebar do |sidebar| %>
-    <!-- Sidebar content -->
-  <% end %>
-  
-  <% navbar.top_nav do |nav| %>
-    <!-- Top navigation content -->
-  <% end %>
-  
-  <!-- Main page content -->
-  <%= yield %>
-<% end %>
-```
-
-### SidebarComponent
-
-Full-height navigation sidebar with collapsible behavior and bottom toggle button.
-
-#### Props
+Collapsible navigation sidebar with responsive behavior.
 
 | Prop | Type | Default | Description |
+
 |------|------|---------|-------------|
 | `collapsed` | Boolean | `false` | Initial collapsed state (desktop only) |
 | `expanded_width` | String | `"256px"` | Full width with text visible |
 | `collapsed_width` | String | `"64px"` | Icon-only width |
 | `**system_arguments` | Hash | `{}` | HTML attributes |
 
-#### Usage
+### SidebarItem::Component
 
-```erb
-<% navbar.sidebar(collapsed: false, expanded_width: "256px", collapsed_width: "64px") do |sidebar| %>
-  <% sidebar.item(text: "Dashboard", icon: "home", href: "/") %>
-  <% sidebar.section(title: "Projects") do |section| %>
-    <% section.item(text: "Active", href: "/projects") %>
-  <% end %>
-<% end %>
-```
-
-### SidebarItemComponent
-
-Individual navigation items with icons, text, and optional badge notifications.
-
-#### Props
+Individual navigation items with icons, badges, and active states.
 
 | Prop | Type | Default | Description |
+
 |------|------|---------|-------------|
 | `text` | String | (required) | Display text for the navigation item |
 | `href` | String | `nil` | Link URL (renders as button if omitted) |
 | `icon` | String | `nil` | Lucide icon name (e.g., "home", "mail") |
 | `active` | Boolean | `false` | Highlight as current page |
 | `badge` | String/Integer | `nil` | Notification count or text |
-| `badge_style` | Symbol | `:primary` | Badge color (`:primary`, `:secondary`, `:success`, `:warning`, `:danger`) |
+| `badge_style` | Symbol | `:primary` | Badge color style |
 | `**system_arguments` | Hash | `{}` | HTML attributes |
 
-#### Badge Styles
-
-```erb
-<!-- Primary badge (default) -->
-<% sidebar.item(text: "Messages", icon: "mail", badge: "5", badge_style: :primary) %>
-
-<!-- Success badge -->
-<% sidebar.item(text: "Completed", icon: "check", badge: "12", badge_style: :success) %>
-
-<!-- Warning badge -->
-<% sidebar.item(text: "Pending", icon: "clock", badge: "3", badge_style: :warning) %>
-
-<!-- Danger badge -->
-<% sidebar.item(text: "Alerts", icon: "alert-circle", badge: "!", badge_style: :danger) %>
-
-<!-- Secondary badge -->
-<% sidebar.item(text: "Archive", icon: "archive", badge: "99+", badge_style: :secondary) %>
-```
-
-#### Active State
-
-```erb
-<% sidebar.item(
-  text: "Dashboard",
-  icon: "home",
-  href: dashboard_path,
-  active: current_page?(dashboard_path)
-) %>
-```
-
-#### As Button
-
-Omit the `href` prop to render as a button instead of a link:
-
-```erb
-<% sidebar.item(
-  text: "Sign Out",
-  icon: "log-out",
-  data: { turbo_method: :delete }
-) %>
-```
-
-### SidebarSectionComponent
+### SidebarSection::Component
 
 Groups related navigation items with optional collapse functionality.
-
-#### Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
@@ -167,101 +69,481 @@ Groups related navigation items with optional collapse functionality.
 | `collapsed` | Boolean | `false` | Initial collapsed state |
 | `**system_arguments` | Hash | `{}` | HTML attributes |
 
-#### Usage
+### TopNav::Component
 
-```erb
-<!-- Basic section -->
-<% sidebar.section(title: "Main") do |section| %>
-  <% section.item(text: "Dashboard", icon: "home", href: "/") %>
-  <% section.item(text: "Settings", icon: "settings", href: "/settings") %>
-<% end %>
-
-<!-- Collapsible section -->
-<% sidebar.section(title: "Projects", collapsible: true, collapsed: false) do |section| %>
-  <% @projects.each do |project| %>
-    <% section.item(text: project.name, icon: "folder", href: project_path(project)) %>
-  <% end %>
-<% end %>
-```
-
-### TopNavComponent
-
-Horizontal navigation bar with three customizable sections and built-in hamburger menu for mobile.
-
-#### Props
+Horizontal navigation bar with three customizable sections.
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `height` | String | `"64px"` | Navigation bar height |
 | `**system_arguments` | Hash | `{}` | HTML attributes |
 
-#### Sections
+## Sidebar
 
-The top navigation provides three slots for custom content:
-
-- **Left** - Typically for logo/branding (hamburger menu automatically added on mobile)
-- **Center** - For search bars or page titles
-- **Right** - For user menu, notifications, or action buttons
-
-#### Usage
+### Basic Sidebar
 
 ```erb
-<% navbar.top_nav(height: "64px") do |nav| %>
+<% navbar.sidebar do |sidebar| %>
+  <% sidebar.item(text: "Dashboard", href: "/") %>
+  <% sidebar.item(text: "Projects", href: "/projects") %>
+  <% sidebar.item(text: "Settings", href: "/settings") %>
+<% end %>
+```
+
+### With Icons
+
+```erb
+<% navbar.sidebar do |sidebar| %>
+  <% sidebar.item(text: "Dashboard", icon: "home", href: "/") %>
+  <% sidebar.item(text: "Messages", icon: "mail", href: "/messages") %>
+  <% sidebar.item(text: "Projects", icon: "folder", href: "/projects") %>
+<% end %>
+```
+
+### With Active State
+
+```erb
+<% navbar.sidebar do |sidebar| %>
+  <% sidebar.item(
+    text: "Dashboard",
+    icon: "home",
+    href: dashboard_path,
+    active: current_page?(dashboard_path)
+  ) %>
+<% end %>
+```
+
+### As Button (No href)
+
+Items without `href` render as buttons, useful for JavaScript interactions or form submissions:
+
+```erb
+<% sidebar.item(
+  text: "Sign Out",
+  icon: "log-out",
+  data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }
+) %>
+```
+
+### Custom Dimensions
+
+```erb
+<% navbar.sidebar(
+  expanded_width: "280px",
+  collapsed_width: "72px"
+) do |sidebar| %>
+  <% sidebar.item(text: "Dashboard", icon: "home", href: "/") %>
+<% end %>
+```
+
+## Badge Notifications
+
+Add visual indicators to sidebar items for counts, alerts, or status.
+
+### Badge Styles
+
+The `badge_style` prop accepts five color variants:
+
+#### Primary (Default)
+
+```erb
+<% sidebar.item(
+  text: "Messages",
+  icon: "mail",
+  badge: "5",
+  badge_style: :primary
+) %>
+```
+
+#### Secondary
+
+```erb
+<% sidebar.item(
+  text: "Archive",
+  icon: "archive",
+  badge: "99+",
+  badge_style: :secondary
+) %>
+```
+
+#### Success
+
+```erb
+<% sidebar.item(
+  text: "Completed",
+  icon: "check",
+  badge: "12",
+  badge_style: :success
+) %>
+```
+
+#### Warning
+
+```erb
+<% sidebar.item(
+  text: "Pending",
+  icon: "clock",
+  badge: "3",
+  badge_style: :warning
+) %>
+```
+
+#### Danger
+
+```erb
+<% sidebar.item(
+  text: "Alerts",
+  icon: "alert-circle",
+  badge: "!",
+  badge_style: :danger
+) %>
+```
+
+### Badge with Active State
+
+Badges work seamlessly with active states:
+
+```erb
+<% sidebar.item(
+  text: "Notifications",
+  icon: "bell",
+  href: notifications_path,
+  active: current_page?(notifications_path),
+  badge: "12",
+  badge_style: :danger
+) %>
+```
+
+## Sections
+
+Group related navigation items with collapsible sections.
+
+### Basic Section
+
+```erb
+<% sidebar.section(title: "Main") do |section| %>
+  <% section.item(text: "Dashboard", icon: "home", href: "/") %>
+  <% section.item(text: "Settings", icon: "settings", href: "/settings") %>
+<% end %>
+```
+
+### Collapsible Section
+
+```erb
+<% sidebar.section(title: "Projects", collapsible: true) do |section| %>
+  <% @projects.each do |project| %>
+    <% section.item(text: project.name, href: project_path(project)) %>
+  <% end %>
+<% end %>
+```
+
+### Initially Collapsed
+
+```erb
+<% sidebar.section(title: "Admin", collapsible: true, collapsed: true) do |section| %>
+  <% section.item(text: "Users", icon: "users", href: "/admin/users") %>
+  <% section.item(text: "Settings", icon: "settings", href: "/admin/settings") %>
+<% end %>
+```
+
+### Multiple Sections
+
+```erb
+<% navbar.sidebar do |sidebar| %>
+  <% sidebar.section(title: "Main") do |section| %>
+    <% section.item(text: "Dashboard", icon: "home", href: "/") %>
+    <% section.item(text: "Projects", icon: "folder", href: "/projects") %>
+  <% end %>
+  
+  <% sidebar.section(title: "Settings", collapsible: true, collapsed: true) do |section| %>
+    <% section.item(text: "Profile", icon: "user", href: "/profile") %>
+    <% section.item(text: "Security", icon: "lock", href: "/security") %>
+  <% end %>
+<% end %>
+```
+
+## Top Navigation
+
+The top navigation bar provides three customizable sections with an automatic hamburger menu on mobile.
+
+### Three Sections
+
+```erb
+<% navbar.top_nav do |nav| %>
   <% nav.left_section do %>
     <span class="text-xl font-bold">MyApp</span>
   <% end %>
   
   <% nav.center_section do %>
-    <%= search_field_tag :q, nil, placeholder: "Search...", class: "px-4 py-2 rounded-md border" %>
+    <input type="search" placeholder="Search..." class="px-4 py-2 rounded" />
   <% end %>
   
   <% nav.right_section do %>
-    <%= render FlatPack::Button::Component.new(text: "Profile", style: :ghost) %>
+    <%= render FlatPack::Button::Component.new(text: "Sign Out", style: :ghost) %>
+  <% end %>
+<% end %>
+```
+
+### Left Section Only
+
+```erb
+<% navbar.top_nav do |nav| %>
+  <% nav.left_section do %>
+    <div class="flex items-center gap-4">
+      <%= image_tag "logo.png", class: "h-8" %>
+      <span class="text-xl font-bold">MyApp</span>
+    </div>
+  <% end %>
+<% end %>
+```
+
+### With User Menu
+
+```erb
+<% navbar.top_nav do |nav| %>
+  <% nav.left_section do %>
+    <span class="text-xl font-bold">MyApp</span>
+  <% end %>
+  
+  <% nav.right_section do %>
+    <div class="flex items-center gap-3">
+      <%= render FlatPack::Button::Component.new(
+        text: "New",
+        icon: "plus",
+        style: :primary,
+        size: :sm
+      ) %>
+      <div class="w-8 h-8 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-[var(--color-primary-text)]">
+        <%= current_user.initials %>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+```
+
+### Custom Height
+
+```erb
+<% navbar.top_nav(height: "80px") do |nav| %>
+  <% nav.left_section do %>
+    <span class="text-2xl font-bold">MyApp</span>
   <% end %>
 <% end %>
 ```
 
 ## Responsive Behavior
 
+The navbar automatically adapts to desktop and mobile viewports.
+
 ### Desktop (≥ 768px)
 
-The sidebar operates in two states on desktop:
-
-#### Expanded State (Default)
-- Width: 256px (configurable via `expanded_width`)
-- Shows icons and text for all items
+**Expanded State (Default)**
+- Width: 256px (configurable)
+- Shows icons and text
 - Displays badges and section titles
-- Toggle button shows chevron (►) + "Minimize" text
-- State persists in localStorage
+- Toggle button with chevron and "Minimize" text
 
-#### Collapsed State
-- Width: 64px (configurable via `collapsed_width`)
-- Shows only icons (centered)
+**Collapsed State**
+- Width: 64px (configurable)
+- Shows only centered icons
 - Hides text, badges, and section titles
-- Toggle button shows chevron (◄) only (centered)
-- Smooth 300ms transition animation
+- Toggle button with chevron only
 - State persists in localStorage
 
 ### Mobile (< 768px)
 
-The sidebar operates as a slide-out overlay on mobile:
+**Default State**
+- Sidebar hidden
+- Hamburger menu (☰) in top nav
+- Content uses full width
 
-#### Default State
-- Sidebar is hidden (`display: none`)
-- Hamburger menu (☰) automatically appears in top nav
-- Content uses full viewport width
+**Open State**
+- Sidebar slides in as overlay
+- Darkened backdrop
+- Tap outside or toggle to close
+- No layout shift
 
-#### Open State
-- Sidebar slides in from left as fixed overlay
-- Full sidebar width (256px)
-- Darkened backdrop overlay (50% opacity)
-- Toggle button visible at bottom
-- Tap outside or toggle button to close
-- No content reflow or layout shift
+## System Arguments
+
+## System Arguments
+
+All navbar components accept system arguments for customization.
+
+### Custom Classes
+
+```erb
+<%= render FlatPack::Navbar::Component.new(class: "custom-layout") do |navbar| %>
+  <!-- Content -->
+<% end %>
+```
+
+### Data Attributes
+
+```erb
+<% sidebar.item(
+  text: "Dashboard",
+  href: "/",
+  data: {
+    controller: "analytics",
+    action: "click->analytics#track"
+  }
+) %>
+```
+
+### ARIA Attributes
+
+```erb
+<% sidebar.item(
+  text: "Settings",
+  href: "/settings",
+  aria: {
+    label: "Application settings",
+    describedby: "settings-help"
+  }
+) %>
+```
+
+### Other Attributes
+
+```erb
+<% sidebar.item(
+  text: "Dashboard",
+  href: "/",
+  id: "main-dashboard",
+  disabled: false
+) %>
+```
 
 ## Examples
 
-### Basic Setup
+### Application Layout
+
+```erb
+<!-- app/views/layouts/application.html.erb -->
+<!DOCTYPE html>
+<html class="h-full">
+  <head>
+    <title>MyApp</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+  <body class="h-full">
+    <%= render FlatPack::Navbar::Component.new(class: "h-screen") do |navbar| %>
+      <%= render "shared/sidebar", navbar: navbar %>
+      <%= render "shared/top_nav", navbar: navbar %>
+      <%= yield %>
+    <% end %>
+  </body>
+</html>
+```
+
+```erb
+<!-- app/views/shared/_sidebar.html.erb -->
+<% navbar.sidebar do |sidebar| %>
+  <% sidebar.section(title: "Main") do |section| %>
+    <% section.item(
+      text: "Dashboard",
+      icon: "home",
+      href: root_path,
+      active: current_page?(root_path)
+    ) %>
+    <% section.item(
+      text: "Projects",
+      icon: "folder",
+      href: projects_path,
+      active: current_page?(projects_path)
+    ) %>
+  <% end %>
+  
+  <% sidebar.section(title: "Admin", collapsible: true) do |section| %>
+    <% section.item(
+      text: "Users",
+      icon: "users",
+      href: admin_users_path
+    ) %>
+    <% section.item(
+      text: "Settings",
+      icon: "settings",
+      href: admin_settings_path
+    ) %>
+  <% end %>
+<% end %>
+```
+
+```erb
+<!-- app/views/shared/_top_nav.html.erb -->
+<% navbar.top_nav do |nav| %>
+  <% nav.left_section do %>
+    <%= link_to root_path, class: "text-xl font-bold" do %>
+      MyApp
+    <% end %>
+  <% end %>
+  
+  <% nav.right_section do %>
+    <div class="flex items-center gap-3">
+      <%= render FlatPack::Button::Component.new(
+        text: "New",
+        icon: "plus",
+        style: :primary,
+        size: :sm
+      ) %>
+      <%= link_to current_user_path, class: "w-8 h-8 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-[var(--color-primary-text)]" do %>
+        <%= current_user.initials %>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>
+```
+
+### With Notifications
+
+```erb
+<% navbar.sidebar do |sidebar| %>
+  <% sidebar.item(
+    text: "Dashboard",
+    icon: "home",
+    href: root_path,
+    active: current_page?(root_path)
+  ) %>
+  
+  <% sidebar.item(
+    text: "Messages",
+    icon: "mail",
+    href: messages_path,
+    badge: @unread_count,
+    badge_style: :danger
+  ) %>
+  
+  <% sidebar.item(
+    text: "Notifications",
+    icon: "bell",
+    href: notifications_path,
+    badge: "!",
+    badge_style: :warning
+  ) %>
+<% end %>
+```
+
+### Dynamic Sections
+
+```erb
+<% navbar.sidebar do |sidebar| %>
+  <% sidebar.section(title: "Projects", collapsible: true) do |section| %>
+    <% @user_projects.each do |project| %>
+      <% section.item(
+        text: project.name,
+        icon: "folder",
+        href: project_path(project),
+        active: current_page?(project_path(project))
+      ) %>
+    <% end %>
+  <% end %>
+<% end %>
+```
+
+### Full Example
 
 ```erb
 <%= render FlatPack::Navbar::Component.new do |navbar| %>
