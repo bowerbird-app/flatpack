@@ -15,7 +15,7 @@ class PagesController < ApplicationController
   end
 
   def tables
-    @users = 20.times.map do |i|
+    @users = Array.new(20) do |i|
       OpenStruct.new(
         id: i + 1,
         name: "User #{i + 1}",
@@ -80,5 +80,8 @@ class PagesController < ApplicationController
     # Handle DELETE form submission
     flash[:notice] = "Form submitted successfully with DELETE method"
     redirect_to demo_forms_path
+  end
+
+  def navbar
   end
 end

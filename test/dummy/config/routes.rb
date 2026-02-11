@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   get "demo/alerts", to: "pages#alerts"
   get "demo/cards", to: "pages#cards"
   get "demo/breadcrumbs", to: "pages#breadcrumbs"
+  get "demo/navbar", to: "pages#navbar"
 
   # Form submission endpoints for demonstration
   post "demo/forms/create", to: "pages#forms_create"

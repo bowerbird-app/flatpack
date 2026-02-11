@@ -1,0 +1,256 @@
+<%= render FlatPack::Navbar::Component.new(class: "h-screen") do |navbar| %>
+  <% navbar.sidebar do |sidebar| %>
+    <% sidebar.item(
+      text: "Dashboard",
+      icon: "home",
+      href: demo_path,
+      active: true
+    ) %>
+    <% sidebar.item(
+      text: "Messages",
+      icon: "mail",
+      href: "#messages",
+      badge: "5",
+      badge_style: :danger
+    ) %>
+    <% sidebar.item(
+      text: "Projects",
+      icon: "folder",
+      href: "#projects"
+    ) %>
+    
+    <% sidebar.section(title: "Components", collapsible: true) do |section| %>
+      <% section.item(text: "Buttons", icon: "square", href: demo_buttons_path) %>
+      <% section.item(text: "Forms", icon: "edit-3", href: demo_forms_path) %>
+      <% section.item(text: "Tables", icon: "table", href: demo_tables_path) %>
+      <% section.item(text: "Inputs", icon: "type", href: demo_inputs_path) %>
+    <% end %>
+    
+    <% sidebar.section(title: "Settings", collapsible: true, collapsed: true) do |section| %>
+      <% section.item(text: "Profile", icon: "user", href: "#profile") %>
+      <% section.item(text: "Security", icon: "lock", href: "#security") %>
+      <% section.item(text: "Preferences", icon: "settings", href: "#preferences") %>
+    <% end %>
+  <% end %>
+  
+  <% navbar.top_nav do |nav| %>
+    <% nav.left_section do %>
+      <span class="text-xl font-bold">FlatPack</span>
+    <% end %>
+    
+    <% nav.center_section do %>
+      <input 
+        type="search" 
+        placeholder="Search..."
+        class="px-4 py-2 rounded-md border border-[var(--color-border)] bg-[var(--color-background)] focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)] w-96"
+      />
+    <% end %>
+    
+    <% nav.right_section do %>
+      <div class="flex items-center gap-3">
+        <%= render FlatPack::Button::Component.new(
+          text: "New",
+          icon: "plus",
+          style: :primary,
+          size: :sm
+        ) %>
+        <div class="w-8 h-8 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-[var(--color-primary-text)] font-semibold">
+          U
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+  
+  <div class="p-8">
+    <div class="max-w-6xl mx-auto">
+      <h1 class="text-4xl font-bold mb-6">Navbar Component Demo</h1>
+      
+      <div class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Overview</h2>
+        <p class="text-[var(--color-muted-foreground)] mb-4">
+          This page demonstrates the FlatPack Navbar Component with a collapsible sidebar and flexible top navigation.
+        </p>
+      </div>
+      
+      <div class="grid gap-6 md:grid-cols-2 mb-8">
+        <%= render FlatPack::Card::Component.new do |card| %>
+          <% card.header do %>
+            <h3 class="text-lg font-semibold">Desktop Features</h3>
+          <% end %>
+          <% card.body do %>
+            <ul class="space-y-2 text-sm">
+              <li class="flex items-start gap-2">
+                <span class="text-green-500 mt-1">✓</span>
+                <span>Sidebar always visible in document flow</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-green-500 mt-1">✓</span>
+                <span>Default expanded (256px) with icon + text</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-green-500 mt-1">✓</span>
+                <span>Collapsible to 64px (icon only)</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-green-500 mt-1">✓</span>
+                <span>Bottom toggle with chevron rotation</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-green-500 mt-1">✓</span>
+                <span>State persists in localStorage</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-green-500 mt-1">✓</span>
+                <span>Smooth 300ms transitions</span>
+              </li>
+            </ul>
+          <% end %>
+        <% end %>
+        
+        <%= render FlatPack::Card::Component.new do |card| %>
+          <% card.header do %>
+            <h3 class="text-lg font-semibold">Mobile Features</h3>
+          <% end %>
+          <% card.body do %>
+            <ul class="space-y-2 text-sm">
+              <li class="flex items-start gap-2">
+                <span class="text-blue-500 mt-1">✓</span>
+                <span>Sidebar hidden by default</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-blue-500 mt-1">✓</span>
+                <span>Hamburger menu in top nav</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-blue-500 mt-1">✓</span>
+                <span>Slides from left as overlay</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-blue-500 mt-1">✓</span>
+                <span>Darkened backdrop (50% opacity)</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-blue-500 mt-1">✓</span>
+                <span>Tap outside or toggle to close</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-blue-500 mt-1">✓</span>
+                <span>No content shift</span>
+              </li>
+            </ul>
+          <% end %>
+        <% end %>
+      </div>
+      
+      <div class="mb-8">
+        <%= render FlatPack::Card::Component.new do |card| %>
+          <% card.header do %>
+            <h3 class="text-lg font-semibold">Try It Out</h3>
+          <% end %>
+          <% card.body do %>
+            <div class="space-y-4">
+              <div>
+                <h4 class="font-medium mb-2">Desktop:</h4>
+                <p class="text-sm text-[var(--color-muted-foreground)]">
+                  Click the "Minimize" button at the bottom of the sidebar to collapse/expand it.
+                  Notice how the chevron rotates and the content adjusts smoothly.
+                </p>
+              </div>
+              <div>
+                <h4 class="font-medium mb-2">Mobile (resize your browser to &lt;768px):</h4>
+                <p class="text-sm text-[var(--color-muted-foreground)]">
+                  Click the hamburger menu (☰) in the top left to open the sidebar.
+                  It will slide in from the left with a darkened overlay. Click outside or the toggle button to close.
+                </p>
+              </div>
+              <div>
+                <h4 class="font-medium mb-2">Collapsible Sections:</h4>
+                <p class="text-sm text-[var(--color-muted-foreground)]">
+                  The "Settings" section in the sidebar is collapsed by default. Click on it to expand/collapse.
+                </p>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+      
+      <div class="mb-8">
+        <%= render FlatPack::Card::Component.new do |card| %>
+          <% card.header do %>
+            <h3 class="text-lg font-semibold">Component Features</h3>
+          <% end %>
+          <% card.body do %>
+            <div class="grid gap-4 md:grid-cols-2">
+              <div>
+                <h4 class="font-medium mb-2">Sidebar Items</h4>
+                <ul class="text-sm space-y-1 text-[var(--color-muted-foreground)]">
+                  <li>• Icon + text labels</li>
+                  <li>• Optional badges (with counts)</li>
+                  <li>• Active state highlighting</li>
+                  <li>• Render as links or buttons</li>
+                  <li>• Hover effects</li>
+                </ul>
+              </div>
+              <div>
+                <h4 class="font-medium mb-2">Sidebar Sections</h4>
+                <ul class="text-sm space-y-1 text-[var(--color-muted-foreground)]">
+                  <li>• Optional titles</li>
+                  <li>• Collapsible with chevron</li>
+                  <li>• Group related items</li>
+                  <li>• Uppercase styling</li>
+                  <li>• Smooth animations</li>
+                </ul>
+              </div>
+              <div>
+                <h4 class="font-medium mb-2">Top Navigation</h4>
+                <ul class="text-sm space-y-1 text-[var(--color-muted-foreground)]">
+                  <li>• Three sections (left/center/right)</li>
+                  <li>• Transparent background</li>
+                  <li>• Auto hamburger on mobile</li>
+                  <li>• Fully customizable content</li>
+                  <li>• Flexbox layout</li>
+                </ul>
+              </div>
+              <div>
+                <h4 class="font-medium mb-2">Accessibility</h4>
+                <ul class="text-sm space-y-1 text-[var(--color-muted-foreground)]">
+                  <li>• Semantic HTML (aside, nav)</li>
+                  <li>• ARIA labels</li>
+                  <li>• Keyboard navigation</li>
+                  <li>• Focus indicators</li>
+                  <li>• Screen reader friendly</li>
+                </ul>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+      
+      <div class="mb-8">
+        <%= render FlatPack::Alert::Component.new(
+          title: "Implementation Note",
+          style: :info
+        ) do %>
+          This navbar component is implemented using ViewComponent and Stimulus controllers.
+          The sidebar state persists across page reloads using localStorage, and the component
+          automatically adjusts its behavior based on viewport size (768px breakpoint).
+        <% end %>
+      </div>
+      
+      <div class="flex gap-3">
+        <%= render FlatPack::Button::Component.new(
+          text: "View All Components",
+          url: demo_path,
+          style: :primary
+        ) %>
+        <%= render FlatPack::Button::Component.new(
+          text: "GitHub Repository",
+          url: "https://github.com/bowerbird-app/flatpack",
+          target: "_blank",
+          style: :secondary,
+          icon: "github"
+        ) %>
+      </div>
+    </div>
+  </div>
+<% end %>

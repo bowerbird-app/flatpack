@@ -44,9 +44,14 @@
 
   <div class="flex flex-wrap gap-4">
     <%= render FlatPack::Button::Component.new(
+      text: "View Navbar Demo",
+      url: demo_navbar_path,
+      style: :primary
+    ) %>
+    <%= render FlatPack::Button::Component.new(
       text: "View Button Demos",
       url: demo_buttons_path,
-      style: :primary
+      style: :secondary
     ) %>
     <%= render FlatPack::Button::Component.new(
       text: "View Form Demos",
