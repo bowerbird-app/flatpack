@@ -1,0 +1,224 @@
+<div class="max-w-6xl mx-auto">
+  <h1 class="text-4xl font-bold mb-4">Navbar Component</h1>
+  <p class="text-lg text-[var(--color-muted-foreground)] mb-8">
+    A flexible navigation component with top and left navigation bars, collapsible sidebar, and theme toggle.
+  </p>
+
+  <!-- Example 1: Basic Example with Live Demo -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Live Demo</h2>
+    <p class="text-[var(--color-muted-foreground)] mb-4">
+      Click the menu buttons to interact with the navbar. This demo is contained and scaled for preview purposes.
+    </p>
+    
+    <div class="relative flex border border-[var(--color-border)] rounded-lg overflow-hidden bg-[var(--color-background)]" style="height: 600px; transform: translateZ(0);">
+      <%= render FlatPack::Navbar::Component.new(
+        left_nav_collapsed: false,
+        left_nav_width: "256px",
+        left_nav_collapsed_width: "64px",
+        top_nav_height: "64px",
+        contained: true
+      ) do |navbar| %>
+        <% navbar.top_nav(
+          transparent: true,
+          blur: true,
+          border_bottom: true,
+          logo_text: "FlatPack",
+          logo_href: demo_path,
+          show_menu_toggle: true,
+          show_theme_toggle: true
+        ) do |top_nav| %>
+          <% top_nav.with_action do %>
+            <%= render FlatPack::Button::Component.new(text: "Sign In", style: :ghost, size: :sm) %>
+          <% end %>
+          <% top_nav.with_action do %>
+            <%= render FlatPack::Button::Component.new(text: "Sign Up", style: :primary, size: :sm) %>
+          <% end %>
+          <% top_nav.with_theme_toggle %>
+        <% end %>
+
+        <% navbar.left_nav(collapsible: true, show_toggle: true) do |left_nav| %>
+          <% left_nav.item(text: "Dashboard", href: "#", icon: "icon-dashboard", active: true) %>
+          <% left_nav.item(text: "Projects", href: "#", icon: "icon-box", badge: "12") %>
+          <% left_nav.item(text: "Settings", href: "#", icon: "icon-settings") %>
+          
+          <% left_nav.section(title: "Resources") do |section| %>
+            <% section.item(text: "Documentation", href: "#", icon: "icon-monitor") %>
+            <% section.item(text: "Components", href: "#", icon: "icon-laptop") %>
+          <% end %>
+        <% end %>
+
+        <!-- Main Content Area -->
+        <div class="p-8">
+          <h3 class="text-2xl font-bold mb-4">Welcome to FlatPack</h3>
+          <p class="text-[var(--color-muted-foreground)] mb-4">
+            This is the main content area. The navbar automatically adjusts the layout to accommodate both the top and left navigation bars.
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <%= render FlatPack::Card::Component.new(title: "Quick Start", description: "Get started with FlatPack components") %>
+            <%= render FlatPack::Card::Component.new(title: "Documentation", description: "Comprehensive guides and API references") %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </section>
+
+  <!-- Example 2: Code Example -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Usage</h2>
+    <div class="bg-[var(--color-muted)] rounded-lg p-6">
+      <pre class="text-sm overflow-x-auto"><code>&lt;%%= render FlatPack::Navbar::Component.new(
+  left_nav_collapsed: false,
+  left_nav_width: "256px",
+  left_nav_collapsed_width: "64px",
+  top_nav_height: "64px"
+) do |navbar| %%&gt;
+  &lt;%% navbar.top_nav(
+    transparent: true,
+    blur: true,
+    border_bottom: true,
+    logo_text: "FlatPack",
+    logo_href: "/",
+    show_menu_toggle: true,
+    show_theme_toggle: true
+  ) do |top_nav| %%&gt;
+    &lt;%% top_nav.with_action do %%&gt;
+      &lt;%%= render FlatPack::Button::Component.new(text: "Sign In", style: :ghost) %%&gt;
+    &lt;%% end %%&gt;
+    &lt;%% top_nav.with_theme_toggle %%&gt;
+  &lt;%% end %%&gt;
+
+  &lt;%% navbar.left_nav(collapsible: true) do |left_nav| %%&gt;
+    &lt;%% left_nav.item(text: "Dashboard", href: "#", icon: "icon-dashboard", active: true) %%&gt;
+    &lt;%% left_nav.item(text: "Projects", href: "#", icon: "icon-box", badge: "12") %%&gt;
+    
+    &lt;%% left_nav.section(title: "Resources") do |section| %%&gt;
+      &lt;%% section.item(text: "Documentation", href: "#") %%&gt;
+      &lt;%% section.item(text: "Components", href: "#") %%&gt;
+    &lt;%% end %%&gt;
+  &lt;%% end %%&gt;
+
+  &lt;!-- Your main content here --&gt;
+  &lt;div class="p-8"&gt;
+    &lt;h1&gt;Welcome&lt;/h1&gt;
+  &lt;/div&gt;
+&lt;%% end %%&gt;</code></pre>
+    </div>
+  </section>
+
+  <!-- Options -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Options</h2>
+    
+    <div class="space-y-6">
+      <div>
+        <h3 class="text-xl font-semibold mb-3">Navbar Component</h3>
+        <%= render FlatPack::Table::Component.new(data: [
+          {option: "left_nav_collapsed", type: "Boolean", default: "false", description: "Start with left navigation collapsed"},
+          {option: "left_nav_width", type: "String", default: '"256px"', description: "Width of the expanded left navigation"},
+          {option: "left_nav_collapsed_width", type: "String", default: '"64px"', description: "Width of the collapsed left navigation"},
+          {option: "top_nav_height", type: "String", default: '"64px"', description: "Height of the top navigation bar"},
+          {option: "dark_mode", type: "Symbol", default: ":auto", description: "Dark mode setting (:auto, :light, :dark)"},
+          {option: "contained", type: "Boolean", default: "false", description: "Use absolute positioning for contained layouts (e.g., demos)"}
+        ]) do |table| %>
+          <% table.column(title: "Option", html: ->(row) { content_tag(:code, row[:option], class: "text-sm") }) %>
+          <% table.column(title: "Type", html: ->(row) { content_tag(:code, row[:type], class: "text-sm") }) %>
+          <% table.column(title: "Default", html: ->(row) { content_tag(:code, row[:default], class: "text-sm") }) %>
+          <% table.column(title: "Description", html: ->(row) { row[:description] }) %>
+        <% end %>
+      </div>
+
+      <div>
+        <h3 class="text-xl font-semibold mb-3">Top Nav Options</h3>
+        <%= render FlatPack::Table::Component.new(data: [
+          {option: "transparent", type: "Boolean", default: "true", description: "Semi-transparent background"},
+          {option: "blur", type: "Boolean", default: "true", description: "Apply backdrop blur effect"},
+          {option: "border_bottom", type: "Boolean", default: "true", description: "Show bottom border"},
+          {option: "logo_url", type: "String", default: "nil", description: "URL to logo image"},
+          {option: "logo_text", type: "String", default: "nil", description: "Text logo instead of image"},
+          {option: "logo_href", type: "String", default: '"/"', description: "Link for the logo"},
+          {option: "show_menu_toggle", type: "Boolean", default: "true", description: "Show left nav toggle button"},
+          {option: "show_theme_toggle", type: "Boolean", default: "true", description: "Show theme toggle button"}
+        ]) do |table| %>
+          <% table.column(title: "Option", html: ->(row) { content_tag(:code, row[:option], class: "text-sm") }) %>
+          <% table.column(title: "Type", html: ->(row) { content_tag(:code, row[:type], class: "text-sm") }) %>
+          <% table.column(title: "Default", html: ->(row) { content_tag(:code, row[:default], class: "text-sm") }) %>
+          <% table.column(title: "Description", html: ->(row) { row[:description] }) %>
+        <% end %>
+      </div>
+
+      <div>
+        <h3 class="text-xl font-semibold mb-3">Left Nav Options</h3>
+        <%= render FlatPack::Table::Component.new(data: [
+          {option: "collapsible", type: "Boolean", default: "true", description: "Allow collapsing the sidebar"},
+          {option: "show_toggle", type: "Boolean", default: "true", description: "Show collapse toggle button"}
+        ]) do |table| %>
+          <% table.column(title: "Option", html: ->(row) { content_tag(:code, row[:option], class: "text-sm") }) %>
+          <% table.column(title: "Type", html: ->(row) { content_tag(:code, row[:type], class: "text-sm") }) %>
+          <% table.column(title: "Default", html: ->(row) { content_tag(:code, row[:default], class: "text-sm") }) %>
+          <% table.column(title: "Description", html: ->(row) { row[:description] }) %>
+        <% end %>
+      </div>
+
+      <div>
+        <h3 class="text-xl font-semibold mb-3">Nav Item Options</h3>
+        <%= render FlatPack::Table::Component.new(data: [
+          {option: "text", type: "String", default: "required", description: "Item label text"},
+          {option: "href", type: "String", default: "nil", description: "Link URL (optional)"},
+          {option: "icon", type: "String", default: "nil", description: "SVG icon ID"},
+          {option: "active", type: "Boolean", default: "false", description: "Mark item as active/current"},
+          {option: "badge", type: "String", default: "nil", description: "Badge text to display"},
+          {option: "badge_style", type: "Symbol", default: ":primary", description: "Badge style"}
+        ]) do |table| %>
+          <% table.column(title: "Option", html: ->(row) { content_tag(:code, row[:option], class: "text-sm") }) %>
+          <% table.column(title: "Type", html: ->(row) { content_tag(:code, row[:type], class: "text-sm") }) %>
+          <% table.column(title: "Default", html: ->(row) { content_tag(:code, row[:default], class: "text-sm") }) %>
+          <% table.column(title: "Description", html: ->(row) { row[:description] }) %>
+        <% end %>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Features</h2>
+    <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
+      <li>Collapsible left navigation sidebar</li>
+      <li>Responsive top navigation bar</li>
+      <li>Built-in theme toggle (light/dark/auto modes)</li>
+      <li>Custom logo support (text or image)</li>
+      <li>Navigation sections with titles</li>
+      <li>Badge support on navigation items</li>
+      <li>SVG icon support</li>
+      <li>Active state highlighting</li>
+      <li>Smooth transitions and animations</li>
+      <li>Fully customizable widths and heights</li>
+    </ul>
+  </section>
+
+  <!-- Notes -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Notes</h2>
+    <%= render FlatPack::Alert::Component.new(
+      title: "Full Page Layout",
+      message: "The Navbar component is designed for full-page layouts using fixed positioning. For contained layouts (like demos or embedded views), use the contained: true option to enable absolute positioning instead.",
+      style: :info
+    ) %>
+    
+    <div class="mt-4">
+      <%= render FlatPack::Alert::Component.new(
+        title: "Icons",
+        message: "The navbar uses SVG sprite icons. Make sure to include your icon definitions in the page. See the application layout for examples of icon definitions.",
+        style: :warning
+      ) %>
+    </div>
+
+    <div class="mt-4">
+      <%= render FlatPack::Alert::Component.new(
+        title: "Non-Prefixed Slot API",
+        message: "The Navbar component supports both prefixed (with_*) and non-prefixed slot methods. You can use either navbar.top_nav or navbar.with_top_nav_slot - both work the same way!",
+        style: :success
+      ) %>
+    </div>
+  </section>
+</div>

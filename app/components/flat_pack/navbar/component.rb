@@ -8,11 +8,11 @@ module FlatPack
 
       # Aliases for cleaner syntax (optional - both `with_*` and non-prefixed work)
       def top_nav(**kwargs, &block)
-        with_top_nav_slot(**kwargs, &block)
+        with_top_nav_slot(**kwargs.merge(contained: @contained, height: @top_nav_height), &block)
       end
 
       def left_nav(**kwargs, &block)
-        with_left_nav_slot(**kwargs, &block)
+        with_left_nav_slot(**kwargs.merge(contained: @contained), &block)
       end
 
       def initialize(
@@ -21,6 +21,7 @@ module FlatPack
         left_nav_collapsed_width: "64px",
         top_nav_height: "64px",
         dark_mode: :auto,
+        contained: false,
         **system_arguments
       )
         super(**system_arguments)
@@ -29,6 +30,7 @@ module FlatPack
         @left_nav_collapsed_width = left_nav_collapsed_width
         @top_nav_height = top_nav_height
         @dark_mode = dark_mode
+        @contained = contained
         validate_dark_mode!
       end
 
@@ -45,8 +47,7 @@ module FlatPack
         classes(
           "flatpack-navbar",
           "relative",
-          "h-full",
-          "min-h-screen",
+          @contained ? "h-full" : "h-full min-h-screen",
           "bg-[var(--color-background)]",
           "text-[var(--color-foreground)]"
         )

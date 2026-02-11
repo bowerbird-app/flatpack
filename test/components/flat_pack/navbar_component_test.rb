@@ -227,6 +227,36 @@ module FlatPack
         assert_selector "aside.flatpack-navbar-left"
       end
 
+      def test_navbar_contained_mode_uses_absolute_positioning
+        render_inline(Component.new(contained: true)) do |navbar|
+          navbar.top_nav(logo_text: "App")
+          navbar.left_nav do |left|
+            left.item(text: "Home", href: "/")
+          end
+        end
+
+        # Check that container doesn't have min-h-screen in contained mode
+        assert_selector "div.flatpack-navbar"
+        # Check that top nav uses absolute positioning
+        html = page.native.to_html
+        assert_includes html, "absolute"
+        refute_includes html, "min-h-screen"
+      end
+
+      def test_navbar_default_mode_uses_fixed_positioning
+        render_inline(Component.new) do |navbar|
+          navbar.top_nav(logo_text: "App")
+          navbar.left_nav do |left|
+            left.item(text: "Home", href: "/")
+          end
+        end
+
+        # Check that it uses fixed positioning by default
+        html = page.native.to_html
+        assert_includes html, "fixed"
+        assert_includes html, "min-h-screen"
+      end
+
       def test_main_content_renders
         render_inline(Component.new) do |navbar|
           navbar.top_nav(logo_text: "App")

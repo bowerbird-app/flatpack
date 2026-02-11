@@ -4,14 +4,12 @@ module FlatPack
   module Navbar
     class TopNavComponent < ViewComponent::Base
       renders_many :actions
-      renders_one :theme_toggle_slot, ThemeToggleComponent
+      renders_one :theme_toggle, ThemeToggleComponent
 
       # Alias for shorter syntax (optional - both work)
       def action(**kwargs, &block)
         with_action(**kwargs, &block)
       end
-
-      # For renders_one, we don't need an alias since `with_theme_toggle` works
 
       def initialize(
         transparent: true,
@@ -22,6 +20,8 @@ module FlatPack
         logo_href: "/",
         show_menu_toggle: true,
         show_theme_toggle: true,
+        contained: false,
+        height: "64px",
         **system_arguments
       )
         @transparent = transparent
@@ -31,6 +31,8 @@ module FlatPack
         @logo_text = logo_text
         @show_menu_toggle = show_menu_toggle
         @show_theme_toggle = show_theme_toggle
+        @contained = contained
+        @height = height
         @system_arguments = system_arguments
 
         # Sanitize URL for security and validate
@@ -47,6 +49,7 @@ module FlatPack
       def nav_attributes
         {
           class: nav_classes,
+          style: "height: #{@height}",
           data: {navbar_target: "topNav"}
         }.merge(@system_arguments)
       end
@@ -54,7 +57,7 @@ module FlatPack
       def nav_classes
         classes = [
           "flatpack-navbar-top",
-          "fixed",
+          @contained ? "absolute" : "fixed",
           "top-0",
           "left-0",
           "right-0",

@@ -18,10 +18,12 @@ module FlatPack
       def initialize(
         collapsible: true,
         show_toggle: true,
+        contained: false,
         **system_arguments
       )
         @collapsible = collapsible
         @show_toggle = show_toggle
+        @contained = contained
         @system_arguments = system_arguments
       end
 
@@ -37,7 +39,7 @@ module FlatPack
       def aside_classes
         classes(
           "flatpack-navbar-left",
-          "fixed",
+          @contained ? "absolute" : "fixed",
           "top-0",
           "left-0",
           "bottom-0",
