@@ -10,8 +10,15 @@ export default class extends Controller {
   }
 
   connect() {
+    this.transitionEndHandler = this.handleTransitionEnd.bind(this)
     this.updateLeftNavWidth()
     this.updateTextVisibility()
+  }
+
+  disconnect() {
+    if (this.hasLeftNavTarget) {
+      this.leftNavTarget.removeEventListener("transitionend", this.transitionEndHandler)
+    }
   }
 
   toggleLeftNav() {
@@ -24,6 +31,13 @@ export default class extends Controller {
     this.updateTextVisibility()
   }
 
+  handleTransitionEnd(event) {
+    // Only apply aspect-ratio after the width transition completes
+    if (event.propertyName === "width" && this.collapsedValue) {
+      this.applyAspectRatio()
+    }
+  }
+
   updateLeftNavWidth() {
     if (!this.hasLeftNavTarget) return
 
@@ -32,6 +46,12 @@ export default class extends Controller {
     
     // Update CSS variable for main content margin
     this.element.style.setProperty("--navbar-left-nav-width", width)
+    
+    // Listen for transition end to apply aspect-ratio after collapse animation
+    if (this.collapsedValue) {
+      this.leftNavTarget.removeEventListener("transitionend", this.transitionEndHandler)
+      this.leftNavTarget.addEventListener("transitionend", this.transitionEndHandler, { once: true })
+    }
   }
 
   rotateCollapseIcon() {
@@ -45,13 +65,13 @@ export default class extends Controller {
   }
 
   updateTextVisibility() {
-    // Center nav items when collapsed and make them square
+    // Center nav items when collapsed - aspect-ratio will be set after transition
     this.navItemTargets.forEach(item => {
       if (this.collapsedValue) {
         item.classList.add("justify-center")
         item.style.gap = "0"
-        item.style.aspectRatio = "1"
         item.style.width = "auto"
+        // Don't set aspect-ratio here - will be set after transition completes
       } else {
         item.classList.remove("justify-center")
         item.style.gap = ""
@@ -97,6 +117,13 @@ export default class extends Controller {
         badge.style.width = "auto"
         badge.style.overflow = "visible"
       }
+    })
+  }
+
+  applyAspectRatio() {
+    // Apply aspect-ratio only after the collapse transition completes
+    this.navItemTargets.forEach(item => {
+      item.style.aspectRatio = "1"
     })
   }
 }

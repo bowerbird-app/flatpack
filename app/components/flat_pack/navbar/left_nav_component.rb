@@ -34,8 +34,8 @@ module FlatPack
           safe_join([
             content_tag(:nav, class: "flex-1 overflow-y-auto p-4 space-y-1") do
               safe_join([
-                (items.map { |item| item }.compact if items?),
-                (sections.map { |section| section }.compact if sections?)
+                (items.filter_map { |item| item } if items?),
+                (sections.filter_map { |section| section } if sections?)
               ].flatten.compact)
             end,
             (render_toggle_button if @show_toggle && @collapsible)
