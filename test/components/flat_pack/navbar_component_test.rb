@@ -317,6 +317,35 @@ module FlatPack
         assert_selector "a[href='https://example.com']"
       end
 
+      # Left Nav Positioning Tests
+      def test_left_nav_positions_below_top_nav
+        render_inline(Component.new(top_nav_height: "72px")) do |navbar|
+          navbar.top_nav(logo_text: "App")
+          navbar.left_nav do |left|
+            left.item(text: "Home", href: "/")
+          end
+        end
+
+        html = page.native.to_html
+        assert_includes html, "aside"
+        # Check that the left nav has the top position style applied
+        assert_includes html, "top: 72px"
+      end
+
+      def test_left_nav_without_top_nav_starts_at_top
+        render_inline(Component.new) do |navbar|
+          navbar.left_nav do |left|
+            left.item(text: "Home", href: "/")
+          end
+        end
+
+        html = page.native.to_html
+        # Without top nav, should have top-0 class
+        assert_includes html, "top-0"
+        # Should not have inline style with top position
+        refute_includes html, "style=\"top:"
+      end
+
       # Nav Section Component Tests
       def test_nav_section_renders_with_title
         render_inline(NavSectionComponent.new(title: "Section Title")) do |section|

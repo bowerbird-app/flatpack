@@ -19,28 +19,32 @@ module FlatPack
         collapsible: true,
         show_toggle: true,
         contained: false,
+        top_nav_height: nil,
         **system_arguments
       )
         @collapsible = collapsible
         @show_toggle = show_toggle
         @contained = contained
+        @top_nav_height = top_nav_height
         @system_arguments = system_arguments
       end
 
       private
 
       def aside_attributes
-        {
+        attrs = {
           class: aside_classes,
           data: {navbar_target: "leftNav"}
-        }.merge(@system_arguments)
+        }
+        attrs[:style] = aside_styles if @top_nav_height
+        attrs.merge(@system_arguments)
       end
 
       def aside_classes
         classes(
           "flatpack-navbar-left",
           @contained ? "absolute" : "fixed",
-          "top-0",
+          @top_nav_height ? nil : "top-0",
           "left-0",
           "bottom-0",
           "z-30",
@@ -54,6 +58,10 @@ module FlatPack
           "ease-in-out",
           "overflow-hidden"
         )
+      end
+
+      def aside_styles
+        "top: #{@top_nav_height}"
       end
 
       def classes(*class_list)

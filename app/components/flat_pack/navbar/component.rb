@@ -12,7 +12,9 @@ module FlatPack
       end
 
       def left_nav(**kwargs, &block)
-        with_left_nav_slot(**kwargs.merge(contained: @contained), &block)
+        # Only pass top_nav_height if top_nav_slot is actually rendered
+        height = top_nav_slot? ? @top_nav_height : nil
+        with_left_nav_slot(**kwargs.merge(contained: @contained, top_nav_height: height), &block)
       end
 
       def initialize(
