@@ -32,9 +32,9 @@ export default class extends Controller {
   }
 
   handleTransitionEnd(event) {
-    // Only apply aspect-ratio after the width transition completes
+    // Handle width transition completion
     if (event.propertyName === "width" && this.collapsedValue) {
-      this.applyAspectRatio()
+      // Transition complete
     }
   }
 
@@ -47,7 +47,7 @@ export default class extends Controller {
     // Update CSS variable for main content margin
     this.element.style.setProperty("--navbar-left-nav-width", width)
     
-    // Listen for transition end to apply aspect-ratio after collapse animation
+    // Listen for transition end
     if (this.collapsedValue) {
       this.leftNavTarget.removeEventListener("transitionend", this.transitionEndHandler)
       this.leftNavTarget.addEventListener("transitionend", this.transitionEndHandler, { once: true })
@@ -65,17 +65,15 @@ export default class extends Controller {
   }
 
   updateTextVisibility() {
-    // Center nav items when collapsed - aspect-ratio will be set after transition
+    // Center nav items when collapsed
     this.navItemTargets.forEach(item => {
       if (this.collapsedValue) {
         item.classList.add("justify-center")
         item.style.gap = "0"
         item.style.width = "auto"
-        // Don't set aspect-ratio here - will be set after transition completes
       } else {
         item.classList.remove("justify-center")
         item.style.gap = ""
-        item.style.aspectRatio = ""
         item.style.width = ""
       }
     })
@@ -117,13 +115,6 @@ export default class extends Controller {
         badge.style.width = "auto"
         badge.style.overflow = "visible"
       }
-    })
-  }
-
-  applyAspectRatio() {
-    // Apply aspect-ratio only after the collapse transition completes
-    this.navItemTargets.forEach(item => {
-      item.style.aspectRatio = "1"
     })
   }
 }
