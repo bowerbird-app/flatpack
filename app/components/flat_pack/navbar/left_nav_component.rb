@@ -29,6 +29,20 @@ module FlatPack
         @system_arguments = system_arguments
       end
 
+      def call
+        content_tag(:aside, **aside_attributes) do
+          safe_join([
+            content_tag(:nav, class: "flex-1 overflow-y-auto p-4 space-y-1") do
+              safe_join([
+                (items.map { |item| item }.compact if items?),
+                (sections.map { |section| section }.compact if sections?)
+              ].flatten.compact)
+            end,
+            (render_toggle_button if @show_toggle && @collapsible)
+          ].compact)
+        end
+      end
+
       private
 
       def aside_attributes
@@ -62,6 +76,25 @@ module FlatPack
 
       def aside_styles
         "top: #{@top_nav_height}"
+      end
+
+      def render_toggle_button
+        content_tag(:button,
+          class: "p-4 border-t border-[var(--color-border)] hover:bg-[var(--color-muted)] transition-colors flex items-center justify-center",
+          data: {action: "click->flat-pack--navbar#toggleLeftNav"},
+          aria: {label: "Toggle sidebar"}) do
+          tag.svg(
+            class: "w-5 h-5 transition-transform duration-300",
+            data: {flat_pack__navbar_target: "collapseIcon"},
+            xmlns: "http://www.w3.org/2000/svg",
+            fill: "none",
+            viewBox: "0 0 24 24",
+            stroke: "currentColor",
+            "stroke-width": "2"
+          ) do
+            tag.polyline(points: "15 18 9 12 15 6")
+          end
+        end
       end
 
       def classes(*class_list)

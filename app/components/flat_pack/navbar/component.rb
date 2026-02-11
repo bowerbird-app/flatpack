@@ -36,6 +36,16 @@ module FlatPack
         validate_dark_mode!
       end
 
+      def call
+        content_tag(:div, **container_attributes) do
+          safe_join([
+            (top_nav_slot if top_nav_slot?),
+            (left_nav_slot if left_nav_slot?),
+            content_tag(:main, content, **main_attributes)
+          ].compact)
+        end
+      end
+
       private
 
       def container_attributes
