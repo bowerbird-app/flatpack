@@ -842,7 +842,7 @@ The Navbar component follows accessibility best practices.
 
 ## Testing
 
-The Navbar component suite includes 55 comprehensive tests covering all functionality.
+The Navbar component suite includes 54 comprehensive tests covering all functionality.
 
 ### Test Coverage
 
