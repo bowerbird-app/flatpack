@@ -20,7 +20,7 @@ module FlatPack
       def initialize(
         left_nav_collapsed: false,
         left_nav_width: "256px",
-        left_nav_collapsed_width: "64px",
+        left_nav_collapsed_width: "74px",
         top_nav_height: "64px",
         dark_mode: :auto,
         contained: false,

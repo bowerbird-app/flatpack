@@ -15,7 +15,7 @@
       <%= render FlatPack::Navbar::Component.new(
         left_nav_collapsed: false,
         left_nav_width: "256px",
-        left_nav_collapsed_width: "64px",
+        left_nav_collapsed_width: "74px",
         top_nav_height: "64px",
         contained: true
       ) do |navbar| %>
@@ -70,7 +70,7 @@
       <pre class="text-sm overflow-x-auto"><code>&lt;%%= render FlatPack::Navbar::Component.new(
   left_nav_collapsed: false,
   left_nav_width: "256px",
-  left_nav_collapsed_width: "64px",
+  left_nav_collapsed_width: "74px",
   top_nav_height: "64px"
 ) do |navbar| %%&gt;
   &lt;%% navbar.top_nav(
@@ -116,7 +116,7 @@
         <%= render FlatPack::Table::Component.new(data: [
           {option: "left_nav_collapsed", type: "Boolean", default: "false", description: "Start with left navigation collapsed"},
           {option: "left_nav_width", type: "String", default: '"256px"', description: "Width of the expanded left navigation"},
-          {option: "left_nav_collapsed_width", type: "String", default: '"64px"', description: "Width of the collapsed left navigation"},
+          {option: "left_nav_collapsed_width", type: "String", default: '"74px"', description: "Width of the collapsed left navigation"},
           {option: "top_nav_height", type: "String", default: '"64px"', description: "Height of the top navigation bar"},
           {option: "dark_mode", type: "Symbol", default: ":auto", description: "Dark mode setting (:auto, :light, :dark)"},
           {option: "contained", type: "Boolean", default: "false", description: "Use absolute positioning for contained layouts (e.g., demos)"}
