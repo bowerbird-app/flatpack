@@ -3,23 +3,23 @@
 require "test_helper"
 
 module FlatPack
-  module Layout
+  module Navbar
     class ComponentTest < ViewComponent::TestCase
-      # Layout Component Tests
+      # Navbar Component Tests
       def test_renders_wrapper_with_controller
-        render_inline(Component.new) do |layout|
+        render_inline(Component.new) do |navbar|
           "Content"
         end
 
-        assert_selector "div[data-controller='flat-pack--layout']"
+        assert_selector "div[data-controller='flat-pack--navbar']"
       end
 
       def test_applies_correct_data_attributes
         render_inline(Component.new)
 
-        assert_selector "div[data-flat-pack--layout-expanded-width-value='256px']"
-        assert_selector "div[data-flat-pack--layout-collapsed-width-value='64px']"
-        assert_selector "div[data-flat-pack--layout-collapsed-value='false']"
+        assert_selector "div[data-flat-pack--navbar-expanded-width-value='256px']"
+        assert_selector "div[data-flat-pack--navbar-collapsed-width-value='64px']"
+        assert_selector "div[data-flat-pack--navbar-collapsed-value='false']"
       end
 
       def test_renders_with_flex_layout
@@ -29,7 +29,7 @@ module FlatPack
       end
 
       def test_renders_main_content_area
-        render_inline(Component.new) do |layout|
+        render_inline(Component.new) do |navbar|
           "Main content"
         end
 
@@ -44,8 +44,8 @@ module FlatPack
 
       # Sidebar Tests
       def test_sidebar_hidden_on_mobile_by_default
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar do
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar do
             "Sidebar content"
           end
         end
@@ -54,8 +54,8 @@ module FlatPack
       end
 
       def test_sidebar_visible_on_desktop
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar do
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar do
             "Sidebar content"
           end
         end
@@ -64,8 +64,8 @@ module FlatPack
       end
 
       def test_sidebar_full_height_positioning
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar do
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar do
             "Sidebar content"
           end
         end
@@ -74,8 +74,8 @@ module FlatPack
       end
 
       def test_sidebar_contains_navigation_element
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar do
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar do
             "Sidebar content"
           end
         end
@@ -84,18 +84,18 @@ module FlatPack
       end
 
       def test_sidebar_has_target
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar do
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar do
             "Sidebar content"
           end
         end
 
-        assert_selector "aside[data-flat-pack--layout-target='sidebar']"
+        assert_selector "aside[data-flat-pack--navbar-target='sidebar']"
       end
 
       def test_sidebar_has_border_and_background
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar do
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar do
             "Sidebar content"
           end
         end
@@ -104,8 +104,8 @@ module FlatPack
       end
 
       def test_sidebar_has_transition
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar do
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar do
             "Sidebar content"
           end
         end
@@ -114,8 +114,8 @@ module FlatPack
       end
 
       def test_sidebar_slides_from_left
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar do
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar do
             "Sidebar content"
           end
         end
@@ -125,38 +125,38 @@ module FlatPack
 
       # Bottom Toggle Button Tests
       def test_toggle_button_renders_with_correct_targets
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar do
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar do
             "Sidebar content"
           end
         end
 
-        assert_selector "button[data-flat-pack--layout-target='toggleButton']"
+        assert_selector "button[data-flat-pack--navbar-target='toggleButton']"
       end
 
       def test_toggle_button_has_chevron_icon_with_target
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar do
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar do
             "Sidebar content"
           end
         end
 
-        assert_selector "svg[data-flat-pack--layout-target='toggleIcon']"
+        assert_selector "svg[data-flat-pack--navbar-target='toggleIcon']"
       end
 
       def test_toggle_button_has_minimize_text_with_target
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar do
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar do
             "Sidebar content"
           end
         end
 
-        assert_selector "span[data-flat-pack--layout-target='toggleText']", text: "Minimize"
+        assert_selector "span[data-flat-pack--navbar-target='toggleText']", text: "Minimize"
       end
 
       def test_toggle_button_in_border_container_with_mt_auto
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar do
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar do
             "Sidebar content"
           end
         end
@@ -165,18 +165,18 @@ module FlatPack
       end
 
       def test_toggle_button_has_unified_click_action
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar do
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar do
             "Sidebar content"
           end
         end
 
-        assert_selector "button[data-action='click->flat-pack--layout#toggle']"
+        assert_selector "button[data-action='click->flat-pack--navbar#toggle']"
       end
 
       def test_toggle_button_has_gap_classes
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar do
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar do
             "Sidebar content"
           end
         end
@@ -186,8 +186,8 @@ module FlatPack
 
       # Sidebar Item Tests
       def test_sidebar_item_renders_with_text
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar do |sidebar|
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar do |sidebar|
             sidebar.with_item(text: "Dashboard")
           end
         end
@@ -196,38 +196,38 @@ module FlatPack
       end
 
       def test_sidebar_item_with_icon_and_target
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar do |sidebar|
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar do |sidebar|
             sidebar.with_item(text: "Dashboard", icon: "home")
           end
         end
 
-        assert_selector "span[data-flat-pack--layout-target='itemIcon']"
+        assert_selector "span[data-flat-pack--navbar-target='itemIcon']"
       end
 
       def test_sidebar_item_text_has_target
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar do |sidebar|
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar do |sidebar|
             sidebar.with_item(text: "Dashboard")
           end
         end
 
-        assert_selector "span[data-flat-pack--layout-target='itemText']", text: "Dashboard"
+        assert_selector "span[data-flat-pack--navbar-target='itemText']", text: "Dashboard"
       end
 
       def test_sidebar_item_with_badge_and_target
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar do |sidebar|
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar do |sidebar|
             sidebar.with_item(text: "Messages", badge: "5")
           end
         end
 
-        assert_selector "span[data-flat-pack--layout-target='itemBadge']", text: "5"
+        assert_selector "span[data-flat-pack--navbar-target='itemBadge']", text: "5"
       end
 
       def test_sidebar_item_active_state_styling
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar do |sidebar|
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar do |sidebar|
             sidebar.with_item(text: "Dashboard", active: true)
           end
         end
@@ -238,8 +238,8 @@ module FlatPack
       end
 
       def test_sidebar_item_hover_state_styling
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar do |sidebar|
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar do |sidebar|
             sidebar.with_item(text: "Dashboard")
           end
         end
@@ -249,8 +249,8 @@ module FlatPack
       end
 
       def test_sidebar_item_renders_as_link_with_href
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar do |sidebar|
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar do |sidebar|
             sidebar.with_item(text: "Dashboard", href: "/dashboard")
           end
         end
@@ -259,8 +259,8 @@ module FlatPack
       end
 
       def test_sidebar_item_renders_as_button_without_href
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar do |sidebar|
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar do |sidebar|
             sidebar.with_item(text: "Dashboard")
           end
         end
@@ -275,8 +275,8 @@ module FlatPack
       end
 
       def test_sidebar_item_badge_styles
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar do |sidebar|
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar do |sidebar|
             sidebar.with_item(text: "Notifications", badge: "3", badge_style: :danger)
           end
         end
@@ -287,8 +287,8 @@ module FlatPack
 
       # Sidebar Section Tests
       def test_sidebar_section_renders_with_title
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar do |sidebar|
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar do |sidebar|
             sidebar.with_section(title: "Main Navigation")
           end
         end
@@ -297,18 +297,18 @@ module FlatPack
       end
 
       def test_sidebar_section_title_has_target
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar do |sidebar|
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar do |sidebar|
             sidebar.with_section(title: "Main")
           end
         end
 
-        assert_selector "[data-flat-pack--layout-target='sectionTitle']"
+        assert_selector "[data-flat-pack--navbar-target='sectionTitle']"
       end
 
       def test_sidebar_section_collapsible_behavior
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar do |sidebar|
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar do |sidebar|
             sidebar.with_section(title: "Projects", collapsible: true) do |section|
               section.with_item(text: "Project 1")
             end
@@ -319,8 +319,8 @@ module FlatPack
       end
 
       def test_sidebar_section_chevron_rotation
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar do |sidebar|
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar do |sidebar|
             sidebar.with_section(title: "Projects", collapsible: true, collapsed: true)
           end
         end
@@ -330,8 +330,8 @@ module FlatPack
       end
 
       def test_sidebar_section_items_hidden_when_collapsed
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar do |sidebar|
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar do |sidebar|
             sidebar.with_section(title: "Projects", collapsible: true, collapsed: true) do |section|
               section.with_item(text: "Project 1")
             end
@@ -342,8 +342,8 @@ module FlatPack
       end
 
       def test_sidebar_section_contains_items
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar do |sidebar|
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar do |sidebar|
             sidebar.with_section(title: "Main") do |section|
               section.with_item(text: "Dashboard")
               section.with_item(text: "Projects")
@@ -356,8 +356,8 @@ module FlatPack
 
       # Top Nav Tests
       def test_top_nav_renders_nav_element
-        render_inline(Component.new) do |layout|
-          layout.with_top_nav do
+        render_inline(Component.new) do |navbar|
+          navbar.with_top_nav do
             "Nav content"
           end
         end
@@ -366,8 +366,8 @@ module FlatPack
       end
 
       def test_top_nav_hamburger_on_mobile_only
-        render_inline(Component.new) do |layout|
-          layout.with_top_nav do
+        render_inline(Component.new) do |navbar|
+          navbar.with_top_nav do
             "Nav content"
           end
         end
@@ -376,18 +376,18 @@ module FlatPack
       end
 
       def test_top_nav_hamburger_has_toggle_action
-        render_inline(Component.new) do |layout|
-          layout.with_top_nav do
+        render_inline(Component.new) do |navbar|
+          navbar.with_top_nav do
             "Nav content"
           end
         end
 
-        assert_selector "button[data-action='click->flat-pack--layout#toggle']"
+        assert_selector "button[data-action='click->flat-pack--navbar#toggle']"
       end
 
       def test_top_nav_left_section_content
-        render_inline(Component.new) do |layout|
-          layout.with_top_nav do |nav|
+        render_inline(Component.new) do |navbar|
+          navbar.with_top_nav do |nav|
             nav.with_left do
               "Logo"
             end
@@ -398,8 +398,8 @@ module FlatPack
       end
 
       def test_top_nav_center_section_content
-        render_inline(Component.new) do |layout|
-          layout.with_top_nav do |nav|
+        render_inline(Component.new) do |navbar|
+          navbar.with_top_nav do |nav|
             nav.with_center do
               "Search"
             end
@@ -410,8 +410,8 @@ module FlatPack
       end
 
       def test_top_nav_right_section_content
-        render_inline(Component.new) do |layout|
-          layout.with_top_nav do |nav|
+        render_inline(Component.new) do |navbar|
+          navbar.with_top_nav do |nav|
             nav.with_right do
               "Profile"
             end
@@ -422,8 +422,8 @@ module FlatPack
       end
 
       def test_top_nav_all_three_sections_together
-        render_inline(Component.new) do |layout|
-          layout.with_top_nav do |nav|
+        render_inline(Component.new) do |navbar|
+          navbar.with_top_nav do |nav|
             nav.with_left { "Logo" }
             nav.with_center { "Search" }
             nav.with_right { "Profile" }
@@ -436,16 +436,16 @@ module FlatPack
       end
 
       def test_top_nav_has_border
-        render_inline(Component.new) do |layout|
-          layout.with_top_nav
+        render_inline(Component.new) do |navbar|
+          navbar.with_top_nav
         end
 
         assert_selector "nav.border-b"
       end
 
       def test_top_nav_flex_layout
-        render_inline(Component.new) do |layout|
-          layout.with_top_nav
+        render_inline(Component.new) do |navbar|
+          navbar.with_top_nav
         end
 
         assert_selector "nav.flex.items-center"
@@ -455,42 +455,42 @@ module FlatPack
       def test_has_layout_controller
         render_inline(Component.new)
 
-        assert_selector "[data-controller='flat-pack--layout']"
+        assert_selector "[data-controller='flat-pack--navbar']"
       end
 
       def test_has_sidebar_target
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar
         end
 
-        assert_selector "[data-flat-pack--layout-target='sidebar']"
+        assert_selector "[data-flat-pack--navbar-target='sidebar']"
       end
 
       def test_has_all_toggle_targets
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar
         end
 
-        assert_selector "[data-flat-pack--layout-target='toggleButton']"
-        assert_selector "[data-flat-pack--layout-target='toggleIcon']"
-        assert_selector "[data-flat-pack--layout-target='toggleText']"
+        assert_selector "[data-flat-pack--navbar-target='toggleButton']"
+        assert_selector "[data-flat-pack--navbar-target='toggleIcon']"
+        assert_selector "[data-flat-pack--navbar-target='toggleText']"
       end
 
       def test_has_item_targets
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar do |sidebar|
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar do |sidebar|
             sidebar.with_item(text: "Dashboard", icon: "home", badge: "5")
           end
         end
 
-        assert_selector "[data-flat-pack--layout-target='itemText']"
-        assert_selector "[data-flat-pack--layout-target='itemIcon']"
-        assert_selector "[data-flat-pack--layout-target='itemBadge']"
+        assert_selector "[data-flat-pack--navbar-target='itemText']"
+        assert_selector "[data-flat-pack--navbar-target='itemIcon']"
+        assert_selector "[data-flat-pack--navbar-target='itemBadge']"
       end
 
       def test_sidebar_has_sidebar_controller
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar
         end
 
         assert_selector "aside[data-controller='flat-pack--sidebar']"
@@ -498,40 +498,40 @@ module FlatPack
 
       # Accessibility Tests
       def test_semantic_aside_element
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar
         end
 
         assert_selector "aside"
       end
 
       def test_semantic_nav_element_in_sidebar
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar
         end
 
         assert_selector "aside nav"
       end
 
       def test_semantic_nav_element_in_top_nav
-        render_inline(Component.new) do |layout|
-          layout.with_top_nav
+        render_inline(Component.new) do |navbar|
+          navbar.with_top_nav
         end
 
         assert_selector "nav"
       end
 
       def test_button_type_attributes
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar
         end
 
         assert_selector "button[type='button']"
       end
 
       def test_hamburger_aria_label
-        render_inline(Component.new) do |layout|
-          layout.with_top_nav
+        render_inline(Component.new) do |navbar|
+          navbar.with_top_nav
         end
 
         assert_selector "button[aria-label='Toggle navigation']"
@@ -539,8 +539,8 @@ module FlatPack
 
       # Complete Integration Test
       def test_complete_layout_with_all_components
-        render_inline(Component.new) do |layout|
-          layout.with_sidebar do |sidebar|
+        render_inline(Component.new) do |navbar|
+          navbar.with_sidebar do |sidebar|
             sidebar.with_item(text: "Dashboard", icon: "home", href: "/", active: true)
             sidebar.with_item(text: "Messages", icon: "mail", href: "/messages", badge: "5")
             sidebar.with_section(title: "Projects", collapsible: true) do |section|
@@ -548,7 +548,7 @@ module FlatPack
             end
           end
 
-          layout.with_top_nav do |nav|
+          navbar.with_top_nav do |nav|
             nav.with_left { "Logo" }
             nav.with_center { "Search" }
             nav.with_right { "Profile" }
@@ -558,8 +558,8 @@ module FlatPack
         end
 
         # Verify all parts are present
-        assert_selector "[data-controller='flat-pack--layout']"
-        assert_selector "aside[data-flat-pack--layout-target='sidebar']"
+        assert_selector "[data-controller='flat-pack--navbar']"
+        assert_selector "aside[data-flat-pack--navbar-target='sidebar']"
         assert_selector "nav"
         assert_selector "main", text: "Main content area"
         assert_text "Dashboard"

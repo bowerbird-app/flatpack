@@ -228,11 +228,11 @@ export default class extends Controller {
   }
 
   saveState() {
-    localStorage.setItem("flatpack-sidebar-collapsed", this.collapsedValue)
+    localStorage.setItem("flatpack-navbar-collapsed", this.collapsedValue)
   }
 
   loadState() {
-    const saved = localStorage.getItem("flatpack-sidebar-collapsed")
+    const saved = localStorage.getItem("flatpack-navbar-collapsed")
     if (saved !== null) {
       this.collapsedValue = saved === "true"
     }

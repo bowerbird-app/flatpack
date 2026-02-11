@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module FlatPack
-  module Layout
+  module Navbar
     class SidebarItemComponent < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
@@ -44,7 +44,7 @@ module FlatPack
       def item_content
         safe_join([
           render_icon,
-          content_tag(:span, @text, class: "flex-1 text-left", data: {flat_pack__layout_target: "itemText"}),
+          content_tag(:span, @text, class: "flex-1 text-left", data: {flat_pack__navbar_target: "itemText"}),
           render_badge
         ].compact)
       end
@@ -52,7 +52,7 @@ module FlatPack
       def render_icon
         return unless @icon
 
-        content_tag(:span, class: "flex items-center justify-center", data: {flat_pack__layout_target: "itemIcon"}) do
+        content_tag(:span, class: "flex items-center justify-center", data: {flat_pack__navbar_target: "itemIcon"}) do
           render FlatPack::Shared::IconComponent.new(name: @icon, size: :md)
         end
       end
@@ -60,7 +60,7 @@ module FlatPack
       def render_badge
         return unless @badge
 
-        content_tag(:span, @badge, class: badge_classes, data: {flat_pack__layout_target: "itemBadge"})
+        content_tag(:span, @badge, class: badge_classes, data: {flat_pack__navbar_target: "itemBadge"})
       end
 
       def link_attributes

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module FlatPack
-  module Layout
+  module Navbar
     class Component < FlatPack::BaseComponent
       renders_one :sidebar, lambda { |collapsed: false, expanded_width: "256px", collapsed_width: "64px"|
         SidebarComponent.new(
@@ -36,10 +36,10 @@ module FlatPack
         merge_attributes(
           class: wrapper_classes,
           data: {
-            controller: "flat-pack--layout",
-            flat_pack__layout_expanded_width_value: "256px",
-            flat_pack__layout_collapsed_width_value: "64px",
-            flat_pack__layout_collapsed_value: false
+            controller: "flat-pack--navbar",
+            flat_pack__navbar_expanded_width_value: "256px",
+            flat_pack__navbar_collapsed_width_value: "64px",
+            flat_pack__navbar_collapsed_value: false
           }
         )
       end

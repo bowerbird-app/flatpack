@@ -1,10 +1,10 @@
-# Layout Component
+# Navbar Component
 
-A modern sidebar-first layout system with collapsible navigation and flexible top bar for Rails applications.
+A modern sidebar-first navbar system with collapsible navigation and flexible top bar for Rails applications.
 
 ## Overview
 
-The Layout Component provides a complete page layout solution with:
+The Navbar Component provides a complete page navbar solution with:
 - **Collapsible sidebar** navigation with desktop/mobile responsive behavior
 - **Flexible top navigation** bar with three customizable sections
 - **Persistent state** using localStorage
@@ -13,21 +13,21 @@ The Layout Component provides a complete page layout solution with:
 
 ## Demo
 
-Visit `/demo/layout` in the dummy app to see the component in action.
+Visit `/demo/navbar` in the dummy app to see the component in action.
 
 ## Components
 
-### 1. Layout::Component
+### 1. Navbar::Component
 
 Main wrapper component that coordinates sidebar and top navigation.
 
 ```erb
-<%= render FlatPack::Layout::Component.new do |layout| %>
-  <% layout.with_sidebar do |sidebar| %>
+<%= render FlatPack::Navbar::Component.new do |navbar| %>
+  <% navbar.with_sidebar do |sidebar| %>
     <!-- Sidebar items -->
   <% end %>
   
-  <% layout.with_top_nav do |nav| %>
+  <% navbar.with_top_nav do |nav| %>
     <!-- Top nav content -->
   <% end %>
   
@@ -45,7 +45,7 @@ Main wrapper component that coordinates sidebar and top navigation.
 Full-height navigation sidebar with bottom toggle button.
 
 ```erb
-<% layout.with_sidebar do |sidebar| %>
+<% navbar.with_sidebar do |sidebar| %>
   <% sidebar.with_item(text: "Dashboard", icon: "home", href: "/") %>
   <% sidebar.with_section(title: "Projects") do |section| %>
     <% section.with_item(text: "Active", href: "/projects") %>
@@ -106,7 +106,7 @@ Groups related navigation items with optional collapse functionality.
 Horizontal navigation bar with three customizable sections.
 
 ```erb
-<% layout.with_top_nav do |nav| %>
+<% navbar.with_top_nav do |nav| %>
   <% nav.with_left do %>
     <span class="text-xl font-bold">MyApp</span>
   <% end %>
@@ -168,17 +168,17 @@ Horizontal navigation bar with three customizable sections.
 
 ## Usage Examples
 
-### Basic Layout
+### Basic Navbar
 
 ```erb
-<%= render FlatPack::Layout::Component.new do |layout| %>
-  <% layout.with_sidebar do |sidebar| %>
+<%= render FlatPack::Navbar::Component.new do |navbar| %>
+  <% navbar.with_sidebar do |sidebar| %>
     <% sidebar.with_item(text: "Dashboard", icon: "home", href: "/", active: true) %>
     <% sidebar.with_item(text: "Projects", icon: "folder", href: "/projects") %>
     <% sidebar.with_item(text: "Settings", icon: "settings", href: "/settings") %>
   <% end %>
   
-  <% layout.with_top_nav do |nav| %>
+  <% navbar.with_top_nav do |nav| %>
     <% nav.with_left do %>
       <span class="text-lg font-bold">MyApp</span>
     <% end %>
@@ -195,7 +195,7 @@ Horizontal navigation bar with three customizable sections.
 ### With Badges and Sections
 
 ```erb
-<% layout.with_sidebar do |sidebar| %>
+<% navbar.with_sidebar do |sidebar| %>
   <% sidebar.with_section(title: "Main") do |section| %>
     <% section.with_item(
       text: "Dashboard",
@@ -225,7 +225,7 @@ Horizontal navigation bar with three customizable sections.
 <% end %>
 ```
 
-### Application Layout
+### Application Navbar
 
 ```erb
 <!-- app/views/layouts/application.html.erb -->
@@ -239,9 +239,9 @@ Horizontal navigation bar with three customizable sections.
   </head>
 
   <body class="h-full bg-[var(--color-background)]">
-    <%= render FlatPack::Layout::Component.new do |layout| %>
-      <%= render "shared/sidebar", layout: layout %>
-      <%= render "shared/top_nav", layout: layout %>
+    <%= render FlatPack::Navbar::Component.new do |navbar| %>
+      <%= render "shared/sidebar", navbar: navbar %>
+      <%= render "shared/top_nav", navbar: navbar %>
       
       <main class="flex-1 overflow-auto">
         <div class="container mx-auto p-6">
@@ -255,7 +255,7 @@ Horizontal navigation bar with three customizable sections.
 
 ## JavaScript Controllers
 
-### layout_controller.js
+### navbar_controller.js
 
 Manages sidebar toggle, desktop/mobile behavior, and state persistence.
 
@@ -326,7 +326,7 @@ All styling is responsive and adapts to:
 ## Testing
 
 The component includes 55 comprehensive tests covering:
-- Layout rendering and structure
+- Navbar rendering and structure
 - Sidebar desktop/mobile behavior
 - Toggle button functionality
 - Item rendering with icons, badges, active states
@@ -338,7 +338,7 @@ The component includes 55 comprehensive tests covering:
 
 Run tests:
 ```bash
-bundle exec rails test test/components/flat_pack/layout/component_test.rb
+bundle exec rails test test/components/flat_pack/navbar/component_test.rb
 ```
 
 ## Browser Support
@@ -360,7 +360,7 @@ bundle exec rails test test/components/flat_pack/layout/component_test.rb
 ### Custom Widths
 
 ```erb
-<% layout.with_sidebar(
+<% navbar.with_sidebar(
   expanded_width: "320px",
   collapsed_width: "80px"
 ) do |sidebar| %>
@@ -371,7 +371,7 @@ bundle exec rails test test/components/flat_pack/layout/component_test.rb
 ### Custom Top Nav Height
 
 ```erb
-<% layout.with_top_nav(height: "72px") do |nav| %>
+<% navbar.with_top_nav(height: "72px") do |nav| %>
   <!-- Content -->
 <% end %>
 ```

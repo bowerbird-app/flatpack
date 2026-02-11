@@ -1,5 +1,5 @@
-<%= render FlatPack::Layout::Component.new(class: "h-screen") do |layout| %>
-  <% layout.with_sidebar do |sidebar| %>
+<%= render FlatPack::Navbar::Component.new(class: "h-screen") do |navbar| %>
+  <% navbar.with_sidebar do |sidebar| %>
     <% sidebar.with_item(
       text: "Dashboard",
       icon: "home",
@@ -33,7 +33,7 @@
     <% end %>
   <% end %>
   
-  <% layout.with_top_nav do |nav| %>
+  <% navbar.with_top_nav do |nav| %>
     <% nav.with_left do %>
       <span class="text-xl font-bold">FlatPack</span>
     <% end %>
@@ -61,12 +61,12 @@
   
   <div class="p-8">
     <div class="max-w-6xl mx-auto">
-      <h1 class="text-4xl font-bold mb-6">Layout Component Demo</h1>
+      <h1 class="text-4xl font-bold mb-6">Navbar Component Demo</h1>
       
       <div class="mb-8">
         <h2 class="text-2xl font-semibold mb-4">Overview</h2>
         <p class="text-[var(--color-muted-foreground)] mb-4">
-          This page demonstrates the FlatPack Layout Component with a collapsible sidebar and flexible top navigation.
+          This page demonstrates the FlatPack Navbar Component with a collapsible sidebar and flexible top navigation.
         </p>
       </div>
       
@@ -229,7 +229,7 @@
           title: "Implementation Note",
           style: :info
         ) do %>
-          This layout component is implemented using ViewComponent and Stimulus controllers.
+          This navbar component is implemented using ViewComponent and Stimulus controllers.
           The sidebar state persists across page reloads using localStorage, and the component
           automatically adjusts its behavior based on viewport size (768px breakpoint).
         <% end %>

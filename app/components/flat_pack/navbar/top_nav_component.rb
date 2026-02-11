@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module FlatPack
-  module Layout
+  module Navbar
     class TopNavComponent < FlatPack::BaseComponent
       renders_one :left
       renders_one :center
@@ -55,7 +55,7 @@ module FlatPack
         {
           type: "button",
           class: "md:hidden p-2 rounded-md hover:bg-[var(--color-muted)] transition-colors",
-          data: {action: "click->flat-pack--layout#toggle"},
+          data: {action: "click->flat-pack--navbar#toggle"},
           aria: {label: "Toggle navigation"}
         }
       end

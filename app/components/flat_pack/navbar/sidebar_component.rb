@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module FlatPack
-  module Layout
+  module Navbar
     class SidebarComponent < FlatPack::BaseComponent
       renders_many :items, SidebarItemComponent
       renders_many :sections, SidebarSectionComponent
@@ -31,7 +31,7 @@ module FlatPack
           class: sidebar_classes,
           data: {
             controller: "flat-pack--sidebar",
-            flat_pack__layout_target: "sidebar"
+            flat_pack__navbar_target: "sidebar"
           },
           style: "width: #{@expanded_width};"
         )
@@ -61,7 +61,7 @@ module FlatPack
           content_tag(:button, **toggle_button_attributes) do
             safe_join([
               chevron_icon,
-              content_tag(:span, "Minimize", data: {flat_pack__layout_target: "toggleText"})
+              content_tag(:span, "Minimize", data: {flat_pack__navbar_target: "toggleText"})
             ])
           end
         end
@@ -72,8 +72,8 @@ module FlatPack
           type: "button",
           class: "flex items-center gap-2 w-full px-3 py-2 rounded-md hover:bg-[var(--color-muted)] transition-colors",
           data: {
-            action: "click->flat-pack--layout#toggle",
-            flat_pack__layout_target: "toggleButton"
+            action: "click->flat-pack--navbar#toggle",
+            flat_pack__navbar_target: "toggleButton"
           }
         }
       end
@@ -96,7 +96,7 @@ module FlatPack
           "stroke-linecap": "round",
           "stroke-linejoin": "round",
           class: "transition-transform duration-200",
-          data: {flat_pack__layout_target: "toggleIcon"}
+          data: {flat_pack__navbar_target: "toggleIcon"}
         }
       end
     end

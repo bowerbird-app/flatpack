@@ -183,6 +183,7 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
 
 ### Navigation Components
 - **Breadcrumb** - Navigation trail showing current location in site hierarchy
+- **Navbar** - Sidebar-first navigation system with collapsible sidebar and responsive top bar
 
 ### Utility Components
 - **Link** - Styled links with consistent appearance

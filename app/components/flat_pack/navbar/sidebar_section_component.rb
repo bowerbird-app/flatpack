@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module FlatPack
-  module Layout
+  module Navbar
     class SidebarSectionComponent < FlatPack::BaseComponent
       renders_many :items, SidebarItemComponent
 
@@ -36,7 +36,7 @@ module FlatPack
             ])
           end
         else
-          content_tag(:h3, @title, class: title_classes, data: {flat_pack__layout_target: "sectionTitle"})
+          content_tag(:h3, @title, class: title_classes, data: {flat_pack__navbar_target: "sectionTitle"})
         end
       end
 
@@ -46,7 +46,7 @@ module FlatPack
           class: "flex items-center gap-2 w-full px-3 py-2 mb-2 text-xs font-semibold uppercase tracking-wider text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] transition-colors",
           data: {
             action: "click->flat-pack--sidebar#toggleSection",
-            flat_pack__layout_target: "sectionTitle"
+            flat_pack__navbar_target: "sectionTitle"
           }
         }
       end
