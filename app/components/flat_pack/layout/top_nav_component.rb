@@ -33,7 +33,7 @@ module FlatPack
 
       def nav_classes
         classes(
-          "flex items-center gap-4",
+          "flex items-center justify-between gap-4",
           "px-6",
           "border-b border-[var(--color-border)]"
         )

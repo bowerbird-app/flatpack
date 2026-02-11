@@ -13,7 +13,7 @@ module FlatPack
       end
 
       def call
-        content_tag(:div, class: "mb-6") do
+        content_tag(:div, class: "mt-2") do
           safe_join([
             render_title,
             content_tag(:ul, class: items_list_classes) do
@@ -57,7 +57,7 @@ module FlatPack
 
       def chevron_icon
         content_tag(:svg, **chevron_attributes) do
-          content_tag(:path, nil, d: "m9 18 6-6-6-6")
+          content_tag(:path, nil, d: "m6 9 6 6 6-6")
         end
       end
 
@@ -86,7 +86,7 @@ module FlatPack
       def items_list_classes
         classes(
           "space-y-1",
-          @collapsible && @collapsed ? "hidden" : ""
+          (@collapsible && @collapsed) ? "hidden" : ""
         )
       end
     end
