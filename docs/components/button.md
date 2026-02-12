@@ -536,7 +536,7 @@ Always provide clear context for screen readers:
 
 ### CSS Variables
 
-Customize button colors by overriding CSS variables:
+Customize button colors and shadows by overriding CSS variables:
 
 ```css
 @theme {
@@ -554,8 +554,14 @@ Customize button colors by overriding CSS variables:
   --color-ghost: transparent;
   --color-ghost-hover: oklch(0.96 0.01 250);
   --color-ghost-text: oklch(0.35 0.02 250);
+  
+  /* Button shadows */
+  --button-shadow: 0 0 15px 0px rgba(0, 0, 0, 0.15);
+  --button-shadow-active: 0 0 8px 4px rgba(0, 0, 0, 0.15);
 }
 ```
+
+**Note:** Button components (rendered as `<button>` elements) include box-shadows by default. The `--button-shadow` is applied to the default state, while `--button-shadow-active` is applied on hover, focus, and active states. Link buttons (rendered as `<a>` elements when `url` is provided) and disabled buttons do not have box-shadows.
 
 ### Custom Scheme
 
