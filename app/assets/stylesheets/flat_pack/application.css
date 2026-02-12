@@ -5,4 +5,25 @@
 @layer components {
   /* FlatPack components use Tailwind utilities and CSS variables */
   /* All styling is done via Tailwind classes in component templates */
+  
+  /* Button shadow utilities using CSS variables */
+  .shadow-button {
+    box-shadow: var(--button-shadow);
+  }
+  
+  .shadow-button:hover {
+    box-shadow: var(--button-shadow-active);
+  }
+  
+  .shadow-button:focus {
+    box-shadow: var(--button-shadow-active);
+  }
+  
+  .shadow-button:active {
+    box-shadow: var(--button-shadow-active);
+  }
+  
+  .shadow-button:disabled {
+    box-shadow: none;
+  }
 }
