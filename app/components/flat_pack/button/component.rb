@@ -183,7 +183,7 @@ module FlatPack
       def shadow_classes
         # Don't add shadow to link buttons
         return nil if @url
-        
+
         "shadow-[var(--button-shadow)] hover:shadow-[var(--button-shadow-active)] focus:shadow-[var(--button-shadow-active)] active:shadow-[var(--button-shadow-active)] disabled:shadow-none"
       end
 

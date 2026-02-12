@@ -336,21 +336,21 @@ module FlatPack
 
       def test_button_includes_box_shadow
         render_inline(Component.new(text: "Button"))
-        
+
         assert_includes page.native.to_html, "shadow-[var(--button-shadow)]"
         assert_includes page.native.to_html, "hover:shadow-[var(--button-shadow-active)]"
       end
 
       def test_link_button_does_not_include_box_shadow
         render_inline(Component.new(text: "Link", url: "/path"))
-        
+
         refute_includes page.native.to_html, "shadow-[var(--button-shadow)]"
         refute_includes page.native.to_html, "hover:shadow-[var(--button-shadow-active)]"
       end
 
       def test_disabled_button_includes_shadow_none
         render_inline(Component.new(text: "Disabled", disabled: true))
-        
+
         assert_includes page.native.to_html, "disabled:shadow-none"
       end
     end
