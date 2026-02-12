@@ -601,6 +601,28 @@ body {
   padding-right: 1rem;
 }
 
+/* Button shadow utilities using CSS variables */
+
+.shadow-button {
+  box-shadow: var(--button-shadow);
+}
+
+.shadow-button:hover {
+  box-shadow: var(--button-shadow-active);
+}
+
+.shadow-button:focus {
+  box-shadow: var(--button-shadow-active);
+}
+
+.shadow-button:active {
+  box-shadow: var(--button-shadow-active);
+}
+
+.shadow-button:disabled {
+  box-shadow: none;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -1932,6 +1954,9 @@ body {
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  /* Button Shadows */
+  --button-shadow: 0 0 15px 0px rgba(0, 0, 0, 0.15);
+  --button-shadow-active: 0 0 8px 4px rgba(0, 0, 0, 0.15);
   /* Transitions */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -1969,6 +1994,9 @@ body {
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5);
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5);
+    /* Button Shadows */
+    --button-shadow: 0 0 15px 0px rgba(142, 142, 142, 0.15);
+    --button-shadow-active: 0 0 8px 4px rgba(142, 142, 142, 0.15);
   }
 }
 
