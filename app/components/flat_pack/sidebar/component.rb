@@ -70,9 +70,7 @@ module FlatPack
       def render_items_container
         return unless items?
 
-        content_tag(:div, class: items_container_classes) do
-          items
-        end
+        content_tag(:div, items.to_s, class: items_container_classes)
       end
 
       def sidebar_attributes
@@ -89,7 +87,8 @@ module FlatPack
           "bg-[var(--color-background)]",
           "border-r",
           "border-[var(--color-border)]",
-          "transition-all",
+          "transition-none",
+          "md:transition-all",
           "duration-300",
           "w-64"
         )

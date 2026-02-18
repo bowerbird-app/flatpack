@@ -54,9 +54,7 @@ module FlatPack
         def render_panel
           return unless items?
 
-          content_tag(:div, **panel_attributes) do
-            items
-          end
+          content_tag(:div, items.to_s, **panel_attributes)
         end
 
         def render_icon

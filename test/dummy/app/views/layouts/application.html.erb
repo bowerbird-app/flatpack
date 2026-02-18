@@ -226,33 +226,145 @@
       </symbol>
     </svg>
     
-    <nav class="bg-[var(--color-muted)] border-b border-[var(--color-border)]">
-      <div class="container py-4">
-        <div class="flex items-center justify-between">
-          <h1 class="text-2xl font-bold text-[var(--color-foreground)]">FlatPack UI</h1>
-          <div class="flex gap-4">
-            <%= render FlatPack::Link::Component.new(href: demo_path, class: "text-[var(--color-foreground)] hover:text-[var(--color-primary)]") do %>
-              Demo
+    <% sidebar_side = params[:side].in?(%w[left right]) ? params[:side].to_sym : :left %>
+    <%= render FlatPack::SidebarLayout::Component.new(
+      side: sidebar_side,
+      storage_key: "flatpack-dummy-shell"
+    ) do |layout| %>
+      <% layout.sidebar do %>
+        <%= render FlatPack::Sidebar::Component.new do |sidebar| %>
+          <% sidebar.header do %>
+            <div class="px-4 py-4 flex items-center gap-3">
+              <div class="w-8 h-8 bg-[var(--color-primary)] rounded-lg flex items-center justify-center text-white font-bold">
+                FP
+              </div>
+              <div data-flat-pack--sidebar-layout-target="headerLabel">
+                <div class="font-semibold text-sm">FlatPack</div>
+                <div class="text-xs text-[var(--color-text-muted)]">Dummy App</div>
+              </div>
+            </div>
+          <% end %>
+
+          <% sidebar.items do %>
+            <nav class="py-4 space-y-1" aria-label="Main navigation">
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Overview",
+                href: demo_path,
+                icon: :home,
+                active: current_page?(demo_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Buttons",
+                href: demo_buttons_path,
+                icon: :square,
+                active: current_page?(demo_buttons_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Forms",
+                href: demo_forms_path,
+                icon: :edit_3,
+                active: current_page?(demo_forms_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Inputs",
+                href: demo_inputs_path,
+                icon: :type,
+                active: current_page?(demo_inputs_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Tables",
+                href: demo_tables_path,
+                icon: :table,
+                active: current_page?(demo_tables_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Cards",
+                href: demo_cards_path,
+                icon: :box,
+                active: current_page?(demo_cards_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Alerts",
+                href: demo_alerts_path,
+                icon: :alert,
+                active: current_page?(demo_alerts_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Badges",
+                href: demo_badges_path,
+                icon: :dashboard,
+                active: current_page?(demo_badges_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Breadcrumbs",
+                href: demo_breadcrumbs_path,
+                icon: :chevron_right,
+                active: current_page?(demo_breadcrumbs_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Navbar (Legacy)",
+                href: demo_navbar_path,
+                icon: :monitor,
+                active: current_page?(demo_navbar_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Sidebar Layout",
+                href: demo_sidebar_layout_path,
+                icon: :laptop,
+                active: current_page?(demo_sidebar_layout_path)
+              ) %>
+            </nav>
+          <% end %>
+
+          <% sidebar.footer do %>
+            <div class="p-3 border-t border-[var(--color-border)]">
+              <%= render FlatPack::Sidebar::CollapseToggle::Component.new(collapsed: false) %>
+            </div>
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <% layout.top_nav do %>
+        <%= render FlatPack::TopNav::Component.new do |nav| %>
+          <% nav.left do %>
+            <button
+              type="button"
+              class="md:hidden p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors"
+              data-flat-pack--sidebar-layout-target="mobileToggle"
+              data-action="click->flat-pack--sidebar-layout#toggleMobile"
+              aria-label="Toggle sidebar"
+            >
+              <%= render FlatPack::Shared::IconComponent.new(name: :menu, size: :md) %>
+            </button>
+          <% end %>
+
+          <% nav.right do %>
+            <%= link_to(
+              "Sidebar: #{sidebar_side == :right ? 'Right' : 'Left'}",
+              url_for(request.query_parameters.merge(side: sidebar_side == :right ? 'left' : 'right')),
+              class: "text-sm px-3 py-1.5 rounded-lg bg-[var(--color-primary)] text-white hover:opacity-90 transition-opacity"
+            ) %>
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <% layout.main do %>
+        <main class="flex-1 overflow-y-auto p-8">
+          <div class="max-w-6xl mx-auto">
+            <% if notice.present? %>
+              <div class="mb-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-muted)] px-4 py-3 text-sm">
+                <%= notice %>
+              </div>
             <% end %>
-            <%= render FlatPack::Link::Component.new(href: demo_buttons_path, class: "text-[var(--color-foreground)] hover:text-[var(--color-primary)]") do %>
-              Buttons
-            <% end %>
-            <%= render FlatPack::Link::Component.new(href: demo_tables_path, class: "text-[var(--color-foreground)] hover:text-[var(--color-primary)]") do %>
-              Tables
-            <% end %>
+
+            <%= yield %>
+
+            <footer class="border-t border-[var(--color-border)] mt-12 pt-6 text-sm text-[var(--color-text-muted)]">
+              FlatPack <%= FlatPack::VERSION %> - Dummy app powered by Sidebar + Top Nav layout
+            </footer>
           </div>
-        </div>
-      </div>
-    </nav>
-
-    <main class="container py-8">
-      <%= yield %>
-    </main>
-
-    <footer class="border-t border-[var(--color-border)] mt-16">
-      <div class="container py-8 text-center text-[var(--color-muted-foreground)]">
-        <p>FlatPack <%= FlatPack::VERSION %> - A Rails 8 UI Component Library</p>
-      </div>
-    </footer>
+        </main>
+      <% end %>
+    <% end %>
   </body>
 </html>

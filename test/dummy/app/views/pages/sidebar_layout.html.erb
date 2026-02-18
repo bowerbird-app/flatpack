@@ -1,222 +1,78 @@
-<%= render FlatPack::SidebarLayout::Component.new(
-  side: params[:side]&.to_sym || :left,
-  storage_key: "flatpack-sidebar-demo"
-) do |layout| %>
-  <% layout.sidebar do %>
-    <%= render FlatPack::Sidebar::Component.new do |sidebar| %>
-      <% sidebar.header do %>
-        <div class="flex items-center gap-3">
-          <div class="w-8 h-8 bg-[var(--color-primary)] rounded-lg flex items-center justify-center text-white font-bold">
-            FP
-          </div>
-          <div>
-            <div class="font-semibold text-sm">FlatPack</div>
-            <div class="text-xs text-[var(--color-text-muted)]">Workspace</div>
-          </div>
-        </div>
+<div class="max-w-4xl mx-auto space-y-8">
+  <div>
+    <h2 class="text-2xl font-bold mb-4">Sidebar Layout Now Powers the Full Dummy App</h2>
+    <p class="text-[var(--color-text-muted)] mb-4">
+      The sidebar + top nav shell is now the default layout for all demo pages.
+      Use the sidebar to navigate and the top-right toggle to switch between left/right sidebar placement.
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <%= render FlatPack::Card::Component.new(style: :elevated) do |card| %>
+      <% card.header do %>
+        <h3 class="font-semibold">Desktop Behavior</h3>
       <% end %>
-
-      <% sidebar.items do %>
-        <nav class="py-4 space-y-1">
-          <%= render FlatPack::Sidebar::Item::Component.new(
-            label: "Dashboard",
-            href: demo_path,
-            icon: :home,
-            active: false
-          ) %>
-
-          <%= render FlatPack::Sidebar::Item::Component.new(
-            label: "Messages",
-            href: "#messages",
-            icon: :mail,
-            badge: "5"
-          ) %>
-
-          <%= render FlatPack::Sidebar::Item::Component.new(
-            label: "Projects",
-            href: "#projects",
-            icon: :folder
-          ) %>
-
-          <%= render FlatPack::Sidebar::Item::Component.new(
-            label: "Calendar",
-            href: "#calendar",
-            icon: :calendar
-          ) %>
-
-          <%= render FlatPack::Sidebar::Item::Component.new(
-            label: "Documents",
-            href: "#documents",
-            icon: :file
-          ) %>
-
-          <%= render FlatPack::Sidebar::Item::Component.new(
-            label: "Team",
-            href: "#team",
-            icon: :users
-          ) %>
-
-          <%= render FlatPack::Sidebar::Divider::Component.new %>
-
-          <%= render FlatPack::Sidebar::Group::Component.new(
-            label: "More",
-            icon: :dots,
-            default_open: false
-          ) do |group| %>
-            <% group.items do %>
-              <%= render FlatPack::Sidebar::Item::Component.new(
-                label: "Settings",
-                href: "#settings",
-                icon: :cog
-              ) %>
-
-              <%= render FlatPack::Sidebar::Item::Component.new(
-                label: "Help & Support",
-                href: "#help",
-                icon: :question
-              ) %>
-
-              <%= render FlatPack::Sidebar::Item::Component.new(
-                label: "Keyboard Shortcuts",
-                href: "#shortcuts",
-                icon: :keyboard
-              ) %>
-            <% end %>
-          <% end %>
-        </nav>
-      <% end %>
-
-      <% sidebar.footer do %>
-        <div class="p-4 border-t border-[var(--color-border)]">
-          <%= render FlatPack::Sidebar::CollapseToggle::Component.new(collapsed: false) %>
-        </div>
+      <% card.body do %>
+        <ul class="space-y-2 text-sm">
+          <li>✓ Collapsible sidebar with smooth transitions</li>
+          <li>✓ Persistent collapse state via localStorage</li>
+          <li>✓ Optional left/right placement (query param)</li>
+          <li>✓ Shared navigation across every demo page</li>
+        </ul>
       <% end %>
     <% end %>
-  <% end %>
 
-  <% layout.top_nav do %>
-    <%= render FlatPack::TopNav::Component.new do |nav| %>
-      <% nav.left do %>
-        <button
-          type="button"
-          class="md:hidden p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors"
-          data-flat-pack--sidebar-layout-target="mobileToggle"
-          data-action="click->flat-pack--sidebar-layout#toggleMobile"
-          aria-label="Toggle sidebar"
-        >
-          <%= render FlatPack::Shared::IconComponent.new(name: :menu, size: :md) %>
-        </button>
-
-        <h1 class="text-xl font-semibold">Sidebar Layout Demo</h1>
+    <%= render FlatPack::Card::Component.new(style: :elevated) do |card| %>
+      <% card.header do %>
+        <h3 class="font-semibold">Mobile Behavior</h3>
       <% end %>
-
-      <% nav.center do %>
-        <%= render FlatPack::TopNav::Search::Component.new(
-          placeholder: "Search..."
-        ) %>
-      <% end %>
-
-      <% nav.right do %>
-        <div class="flex items-center gap-2">
-          <%= link_to(
-            "Switch to #{params[:side] == 'right' ? 'Left' : 'Right'}",
-            demo_sidebar_layout_path(side: params[:side] == 'right' ? 'left' : 'right'),
-            class: "text-sm px-3 py-1.5 rounded-lg bg-[var(--color-primary)] text-white hover:opacity-90 transition-opacity"
-          ) %>
-          
-          <button class="p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors">
-            <%= render FlatPack::Shared::IconComponent.new(name: :bell, size: :md) %>
-          </button>
-          
-          <button class="p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors">
-            <%= render FlatPack::Shared::IconComponent.new(name: :user, size: :md) %>
-          </button>
-        </div>
+      <% card.body do %>
+        <ul class="space-y-2 text-sm">
+          <li>✓ Off-canvas drawer with backdrop</li>
+          <li>✓ Hamburger toggle in top nav</li>
+          <li>✓ Escape/backdrop close support</li>
+          <li>✓ Main content remains in one shared shell</li>
+        </ul>
       <% end %>
     <% end %>
-  <% end %>
+  </div>
 
-  <% layout.main do %>
-    <div class="flex-1 overflow-y-auto p-8">
-      <div class="max-w-4xl mx-auto space-y-8">
-        <div>
-          <h2 class="text-2xl font-bold mb-4">Welcome to FlatPack Sidebar Layout</h2>
-          <p class="text-[var(--color-text-muted)] mb-4">
-            This demo showcases the new sidebar layout system with support for both left and right sidebars,
-            desktop collapse functionality, and mobile drawer behavior.
+  <div>
+    <%= render FlatPack::Card::Component.new(style: :outlined) do |card| %>
+      <% card.header do %>
+        <h3 class="font-semibold">Current Shell Configuration</h3>
+      <% end %>
+      <% card.body do %>
+        <dl class="space-y-2 text-sm">
+          <div class="flex justify-between">
+            <dt class="font-medium">Sidebar Position:</dt>
+            <dd class="text-[var(--color-text-muted)]"><%= params[:side] || "left" %></dd>
+          </div>
+          <div class="flex justify-between">
+            <dt class="font-medium">Storage Key:</dt>
+            <dd class="text-[var(--color-text-muted)]">flatpack-dummy-shell</dd>
+          </div>
+          <div class="flex justify-between">
+            <dt class="font-medium">Scope:</dt>
+            <dd class="text-[var(--color-text-muted)]">All dummy demo pages</dd>
+          </div>
+        </dl>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="grid grid-cols-1 gap-4">
+    <% 4.times do |i| %>
+      <%= render FlatPack::Card::Component.new(style: :default) do |card| %>
+        <% card.header do %>
+          <h3 class="font-semibold">Example Content <%= i + 1 %></h3>
+        <% end %>
+        <% card.body do %>
+          <p class="text-sm text-[var(--color-text-muted)]">
+            This content is rendered inside the shared main slot of the global sidebar layout.
           </p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <%= render FlatPack::Card::Component.new(style: :elevated) do |card| %>
-            <% card.header do %>
-              <h3 class="font-semibold">Desktop Features</h3>
-            <% end %>
-            <% card.body do %>
-              <ul class="space-y-2 text-sm">
-                <li>✓ Collapsible sidebar with smooth animations</li>
-                <li>✓ LocalStorage persistence for collapsed state</li>
-                <li>✓ Left or right sidebar placement</li>
-                <li>✓ Accordion groups for organizing items</li>
-              </ul>
-            <% end %>
-          <% end %>
-
-          <%= render FlatPack::Card::Component.new(style: :elevated) do |card| %>
-            <% card.header do %>
-              <h3 class="font-semibold">Mobile Features</h3>
-            <% end %>
-            <% card.body do %>
-              <ul class="space-y-2 text-sm">
-                <li>✓ Off-canvas drawer with backdrop</li>
-                <li>✓ Slide from correct side</li>
-                <li>✓ Escape key to close</li>
-                <li>✓ Focus management</li>
-              </ul>
-            <% end %>
-          <% end %>
-        </div>
-
-        <div>
-          <%= render FlatPack::Card::Component.new(style: :outlined) do |card| %>
-            <% card.header do %>
-              <h3 class="font-semibold">Current Configuration</h3>
-            <% end %>
-            <% card.body do %>
-              <dl class="space-y-2 text-sm">
-                <div class="flex justify-between">
-                  <dt class="font-medium">Sidebar Position:</dt>
-                  <dd class="text-[var(--color-text-muted)]"><%= params[:side] || 'left' %></dd>
-                </div>
-                <div class="flex justify-between">
-                  <dt class="font-medium">Storage Key:</dt>
-                  <dd class="text-[var(--color-text-muted)]">flatpack-sidebar-demo</dd>
-                </div>
-                <div class="flex justify-between">
-                  <dt class="font-medium">Default State:</dt>
-                  <dd class="text-[var(--color-text-muted)]">Open</dd>
-                </div>
-              </dl>
-            <% end %>
-          <% end %>
-        </div>
-
-        <div class="grid grid-cols-1 gap-4">
-          <% 6.times do |i| %>
-            <%= render FlatPack::Card::Component.new(style: :default) do |card| %>
-              <% card.header do %>
-                <h3 class="font-semibold">Card <%= i + 1 %></h3>
-              <% end %>
-              <% card.body do %>
-                <p class="text-sm text-[var(--color-text-muted)]">
-                  This is sample content to demonstrate scrolling behavior in the main content area.
-                  The sidebar footer stays pinned while this content scrolls.
-                </p>
-              <% end %>
-            <% end %>
-          <% end %>
-        </div>
-      </div>
-    </div>
-  <% end %>
-<% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

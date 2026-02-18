@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["sidebar", "backdrop", "desktopToggle", "mobileToggle"]
+  static targets = ["sidebar", "backdrop", "desktopToggle", "mobileToggle", "headerLabel"]
   static values = {
     side: String,
     defaultOpen: Boolean,
@@ -22,7 +22,10 @@ export default class extends Controller {
 
     // Apply initial desktop state
     if (!this.isMobile) {
+      this.sidebarTarget.style.pointerEvents = ""
       this.applyDesktopState()
+    } else {
+      this.sidebarTarget.style.pointerEvents = "none"
     }
 
     // Listen for window resize
@@ -44,6 +47,7 @@ export default class extends Controller {
         this.closeMobile()
       } else {
         // Switched to desktop - apply saved state
+        this.sidebarTarget.style.pointerEvents = ""
         this.applyDesktopState()
       }
     }
@@ -73,18 +77,28 @@ export default class extends Controller {
     // Store the element that triggered the open for focus return
     this.previouslyFocusedElement = document.activeElement
 
-    // Show sidebar
-    this.sidebarTarget.classList.remove("hidden")
+    // Enable interaction while open
+    this.sidebarTarget.style.pointerEvents = "auto"
 
-    // Force reflow for animation
-    this.sidebarTarget.offsetHeight
-
-    // Slide in from correct side
+    // Ensure starting off-screen state is rendered before animating in
     if (this.sideValue === "right") {
-      this.sidebarTarget.classList.remove("translate-x-full")
+      this.sidebarTarget.classList.add("translate-x-full")
     } else {
-      this.sidebarTarget.classList.remove("-translate-x-full")
+      this.sidebarTarget.classList.add("-translate-x-full")
     }
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (!this.mobileOpen || !this.isMobile) return
+
+        // Slide in from correct side
+        if (this.sideValue === "right") {
+          this.sidebarTarget.classList.remove("translate-x-full")
+        } else {
+          this.sidebarTarget.classList.remove("-translate-x-full")
+        }
+      })
+    })
 
     // Show backdrop
     if (this.hasBackdropTarget) {
@@ -97,10 +111,11 @@ export default class extends Controller {
     // Prevent body scroll
     document.body.style.overflow = "hidden"
 
-    // Focus first focusable element in sidebar
-    setTimeout(() => {
-      this.focusFirstElement()
-    }, 100)
+    // Focus sidebar container without scrolling to avoid layout jump
+    if (!this.sidebarTarget.hasAttribute("tabindex")) {
+      this.sidebarTarget.setAttribute("tabindex", "-1")
+    }
+    this.sidebarTarget.focus({ preventScroll: true })
 
     // Listen for Escape key
     this.handleEscape = this.handleEscape.bind(this)
@@ -108,6 +123,9 @@ export default class extends Controller {
   }
 
   closeMobile() {
+      // Disable interaction while closed
+      this.sidebarTarget.style.pointerEvents = "none"
+
     // Slide out to correct side
     if (this.sideValue === "right") {
       this.sidebarTarget.classList.add("translate-x-full")
@@ -122,13 +140,6 @@ export default class extends Controller {
       this.backdropTarget.classList.add("opacity-0")
       this.backdropTarget.setAttribute("aria-hidden", "true")
     }
-
-    // Wait for animation then hide
-    setTimeout(() => {
-      if (!this.mobileOpen && this.isMobile) {
-        this.sidebarTarget.classList.add("hidden")
-      }
-    }, 300)
 
     // Restore body scroll
     document.body.style.overflow = ""
@@ -151,23 +162,17 @@ export default class extends Controller {
     }
   }
 
-  focusFirstElement() {
-    const focusableSelectors = 'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
-    const focusableElements = this.sidebarTarget.querySelectorAll(focusableSelectors)
-    
-    if (focusableElements.length > 0) {
-      focusableElements[0].focus()
-    }
-  }
-
   applyDesktopState() {
     if (this.isMobile) return
 
     // Update sidebar width
+    const sidebarContent = this.sidebarTarget.querySelector("aside")
     if (this.collapsed) {
       this.sidebarTarget.style.width = "4rem" // w-16
+      if (sidebarContent) sidebarContent.style.width = "4rem"
     } else {
       this.sidebarTarget.style.width = "16rem" // w-64
+      if (sidebarContent) sidebarContent.style.width = "16rem"
     }
 
     // Update desktop toggle if exists
@@ -186,8 +191,8 @@ export default class extends Controller {
     }
 
     // Update labels visibility
-    // Find all labels in sidebar items (not just those with sr-only)
-    const labels = this.sidebarTarget.querySelectorAll('[class*="flex-1"]')
+    // Only toggle text label spans (avoid containers like .flex-1 overflow-y-auto)
+    const labels = this.sidebarTarget.querySelectorAll("a > span.flex-1, button > span.flex-1")
     labels.forEach(label => {
       if (this.collapsed) {
         if (!label.classList.contains("sr-only")) {
@@ -197,6 +202,17 @@ export default class extends Controller {
         label.classList.remove("sr-only")
       }
     })
+
+    // Update optional sidebar header labels (e.g. app name/subtitle in header slot)
+    if (this.hasHeaderLabelTarget) {
+      this.headerLabelTargets.forEach(label => {
+        if (this.collapsed) {
+          label.classList.add("sr-only")
+        } else {
+          label.classList.remove("sr-only")
+        }
+      })
+    }
   }
 
   saveDesktopState() {

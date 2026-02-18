@@ -79,9 +79,7 @@ module FlatPack
       def render_sidebar_column
         return unless sidebar?
 
-        content_tag(:div, class: sidebar_column_classes, data: sidebar_column_data) do
-          sidebar
-        end
+        content_tag(:div, sidebar.to_s, class: sidebar_column_classes, data: sidebar_column_data)
       end
 
       def render_main_column
@@ -124,27 +122,31 @@ module FlatPack
 
       def grid_columns_classes
         if @side == :right
-          "grid-cols-[1fr,auto]"
+          "grid-cols-[1fr_auto]"
         else
-          "grid-cols-[auto,1fr]"
+          "grid-cols-[auto_1fr]"
         end
       end
 
       def sidebar_column_classes
         classes(
           "h-full",
-          "transition-all",
+          "transition-transform",
           "duration-300",
           "ease-in-out",
+          "transform-gpu",
+          "will-change-transform",
           # Desktop styles
-          "hidden md:block",
+          "block",
           # Mobile drawer styles
           "md:relative",
           "fixed",
           "inset-y-0",
+          "w-64",
+          "md:w-auto",
           "z-50",
-          (@side == :left ? "left-0" : "right-0"),
-          (@side == :left ? "-translate-x-full" : "translate-x-full"),
+          ((@side == :left) ? "left-0" : "right-0"),
+          ((@side == :left) ? "-translate-x-full" : "translate-x-full"),
           "md:translate-x-0"
         )
       end

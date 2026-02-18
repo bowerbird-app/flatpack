@@ -23,7 +23,7 @@ module FlatPack
 
       def call
         tag.svg(**svg_attributes) do
-          tag.use "xlink:href": "#icon-#{@name}"
+          tag.use "xlink:href": "#icon-#{icon_id_name}"
         end
       end
 
@@ -54,6 +54,10 @@ module FlatPack
       def validate_size!
         return if SIZES.key?(@size)
         raise ArgumentError, "Invalid size: #{@size}. Must be one of: #{SIZES.keys.join(", ")}"
+      end
+
+      def icon_id_name
+        @name.to_s.tr("_", "-")
       end
     end
   end

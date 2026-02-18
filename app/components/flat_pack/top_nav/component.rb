@@ -52,9 +52,7 @@ module FlatPack
       private
 
       def render_section(slot_content, alignment)
-        content_tag(:div, class: section_classes(alignment)) do
-          slot_content
-        end
+        content_tag(:div, slot_content.to_s, class: section_classes(alignment))
       end
 
       def header_attributes
@@ -70,7 +68,6 @@ module FlatPack
           "z-10",
           "bg-[var(--color-background)]/80",
           "backdrop-blur-lg",
-          "border-b",
           "border-[var(--color-border)]",
           "px-4",
           "py-3"
