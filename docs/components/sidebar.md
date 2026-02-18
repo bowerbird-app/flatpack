@@ -97,9 +97,19 @@ For SidebarLayout-based apps, the desktop collapse toggle is commonly placed in 
 
 ```erb
 <% sidebar.footer do %>
-  <div class="p-4 border-t border-[var(--color-border)]">
-    <div class="text-sm text-[var(--color-text-muted)]">Signed in as you@example.com</div>
-  </div>
+  <%= render FlatPack::Sidebar::Footer::Component.new(class: "text-sm text-[var(--color-text-muted)]") do %>
+    Signed in as you@example.com
+  <% end %>
+<% end %>
+```
+
+### Sidebar::Footer
+
+Reusable wrapper for footer content and default footer spacing/border.
+
+```erb
+<%= render FlatPack::Sidebar::Footer::Component.new(class: "text-sm text-[var(--color-text-muted)]") do %>
+  Signed in as you@example.com
 <% end %>
 ```
 
@@ -180,9 +190,9 @@ This ensures the header and footer stay visible while items scroll.
   <% end %>
 
   <% sidebar.footer do %>
-    <div class="p-4 border-t border-[var(--color-border)]">
+    <%= render FlatPack::Sidebar::Footer::Component.new do %>
       <%= link_to "View profile", profile_path, class: "text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)]" %>
-    </div>
+    <% end %>
   <% end %>
 <% end %>
 ```
@@ -213,6 +223,7 @@ This ensures the header and footer stay visible while items scroll.
 - **Sidebar::Badge** - Notification badge for items
 - **Sidebar::Divider** - Horizontal divider line
 - **Sidebar::CollapseToggle** - Toggle button for collapsing sidebar
+- **Sidebar::Footer** - Footer wrapper with border and spacing
 - **Sidebar::Group** - Collapsible group of items
 
 See [Sidebar::Group documentation](./sidebar_group.md) for accordion groups.

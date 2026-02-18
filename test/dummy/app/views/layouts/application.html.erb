@@ -10,7 +10,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
+  <body class="m-0 overflow-hidden">
     <!-- SVG Icon Sprite -->
     <svg style="display: none;" xmlns="http://www.w3.org/2000/svg">
       <symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -304,7 +304,7 @@
                 active: current_page?(demo_navbar_path)
               ) %>
               <%= render FlatPack::Sidebar::Item::Component.new(
-                label: "Sidebar Layout",
+                label: "Sidebar",
                 href: demo_sidebar_layout_path,
                 icon: :laptop,
                 active: current_page?(demo_sidebar_layout_path)
@@ -340,7 +340,7 @@
       <% end %>
 
       <% layout.main do %>
-        <main class="flex-1 overflow-y-auto p-8">
+        <main class="flex-1 min-h-0 overflow-y-auto overscroll-contain p-8">
           <div class="max-w-6xl mx-auto">
             <% if notice.present? %>
               <div class="mb-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-muted)] px-4 py-3 text-sm">

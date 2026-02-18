@@ -34,6 +34,21 @@ module FlatPack
           assert_no_selector "[data-flat-pack--sidebar-layout-target='collapsedToggle']"
           assert_no_selector "[data-flat-pack--sidebar-layout-target='desktopToggle']"
         end
+
+        def test_hides_brand_badge_when_brand_abbr_is_blank
+          render_inline(Component.new(brand_abbr: nil, title: "Menu", subtitle: nil, collapsible: false))
+
+          assert_text "Menu"
+          assert_no_text "FP"
+          assert_no_selector "[data-flat-pack--sidebar-layout-target='headerBrand'] > .w-8.h-8"
+        end
+
+        def test_hides_subtitle_when_blank
+          render_inline(Component.new(subtitle: nil))
+
+          assert_no_text "Workspace"
+          assert_selector "[data-flat-pack--sidebar-layout-target='headerLabel'] > div", count: 1
+        end
       end
     end
   end

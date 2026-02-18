@@ -158,6 +158,7 @@ module FlatPack
           "flex",
           "flex-col",
           "h-full",
+          "min-h-0",
           "min-w-0",
           "overflow-hidden"
         )

@@ -43,14 +43,14 @@ module FlatPack
         def render_brand
           content_tag(:div, class: "flex items-center gap-3", data: brand_data_attributes) do
             safe_join([
-              content_tag(:div, @brand_abbr, class: brand_badge_classes),
+              (@brand_abbr.present? ? content_tag(:div, @brand_abbr, class: brand_badge_classes) : nil),
               content_tag(:div, class: "", data: header_label_data_attributes) do
                 safe_join([
                   content_tag(:div, @title, class: "font-semibold text-sm"),
-                  content_tag(:div, @subtitle, class: "text-xs text-[var(--color-text-muted)]")
-                ])
+                  (@subtitle.present? ? content_tag(:div, @subtitle, class: "text-xs text-[var(--color-text-muted)]") : nil)
+                ].compact)
               end
-            ])
+            ].compact)
           end
         end
 

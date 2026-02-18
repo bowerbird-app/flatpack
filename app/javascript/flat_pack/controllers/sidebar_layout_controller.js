@@ -237,15 +237,14 @@ export default class extends Controller {
   }
 
   setDesktopExpandedContentVisible(visible) {
-    if (this.hasHeaderBrandTarget) {
-      this.headerBrandTargets.forEach(brand => {
-        if (visible) {
-          brand.classList.remove("hidden")
-        } else {
-          brand.classList.add("hidden")
-        }
-      })
-    }
+    const headerBrands = this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-layout-target="headerBrand"]')
+    headerBrands.forEach(brand => {
+      if (visible) {
+        brand.classList.remove("hidden")
+      } else {
+        brand.classList.add("hidden")
+      }
+    })
 
     // Only toggle text label spans (avoid containers like .flex-1 overflow-y-auto)
     const labels = this.sidebarTarget.querySelectorAll("a > span.flex-1, button > span.flex-1")
@@ -257,15 +256,14 @@ export default class extends Controller {
       }
     })
 
-    if (this.hasHeaderLabelTarget) {
-      this.headerLabelTargets.forEach(label => {
-        if (visible) {
-          label.classList.remove("sr-only")
-        } else {
-          label.classList.add("sr-only")
-        }
-      })
-    }
+    const headerLabels = this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-layout-target="headerLabel"]')
+    headerLabels.forEach(label => {
+      if (visible) {
+        label.classList.remove("sr-only")
+      } else {
+        label.classList.add("sr-only")
+      }
+    })
   }
 
   clearDesktopRevealTimeout() {

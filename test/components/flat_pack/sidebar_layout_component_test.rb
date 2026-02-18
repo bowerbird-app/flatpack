@@ -12,12 +12,12 @@ module FlatPack
 
       def test_renders_with_left_sidebar_default
         render_inline(Component.new)
-        assert_selector "div.grid-cols-\\[auto\\,1fr\\]"
+        assert_includes page.native.to_html, "grid-cols-[auto_1fr]"
       end
 
       def test_renders_with_right_sidebar
         render_inline(Component.new(side: :right))
-        assert_selector "div.grid-cols-\\[1fr\\,auto\\]"
+        assert_includes page.native.to_html, "grid-cols-[1fr_auto]"
         assert_selector "div[data-flat-pack--sidebar-layout-side-value='right']"
       end
 
@@ -120,6 +120,12 @@ module FlatPack
         end
 
         assert_includes page.native.to_html, "md:z-auto"
+      end
+
+      def test_main_column_allows_inner_scroll_with_min_height_reset
+        render_inline(Component.new)
+
+        assert_includes page.native.to_html, "min-h-0"
       end
 
       def test_merges_custom_classes
