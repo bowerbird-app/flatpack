@@ -82,6 +82,34 @@ Contains the main page content. If not provided, block content is used.
 
 ## Examples
 
+### Desktop Header Collapse Toggle (Top-Right)
+
+Use an icon-only button in the sidebar header, right-aligned with the app name. In collapsed mode, the brand area is hidden and replaced by a hamburger button that re-expands the sidebar.
+
+```erb
+<%= render FlatPack::SidebarLayout::Component.new do |layout| %>
+  <% layout.sidebar do %>
+    <%= render FlatPack::Sidebar::Component.new do |sidebar| %>
+      <% sidebar.header do %>
+        <%= render FlatPack::Sidebar::Header::Component.new(
+          brand_abbr: "FP",
+          title: "FlatPack",
+          subtitle: "Workspace"
+        ) %>
+      <% end %>
+
+      <% sidebar.items do %>
+        <%# navigation items %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% layout.main do %>
+    <%# Page content %>
+  <% end %>
+<% end %>
+```
+
 ### Left Sidebar (Default)
 
 ```erb
@@ -211,7 +239,10 @@ The component uses the `flat-pack--sidebar-layout` Stimulus controller for behav
 
 - `sidebar` - The sidebar element
 - `backdrop` - The backdrop overlay (mobile only)
-- `desktopToggle` - Desktop collapse toggle button
+- `desktopToggle` - Desktop collapse toggle button (commonly placed in the sidebar header)
+- `collapsedToggle` - Desktop hamburger button shown only when collapsed to reopen sidebar
+- `headerBrand` - Optional header brand wrapper (e.g. logo + app/site name) hidden in collapsed mode
+- `headerLabel` - Optional header label container(s) that hide in collapsed mode
 - `mobileToggle` - Mobile hamburger toggle button
 
 ### Values

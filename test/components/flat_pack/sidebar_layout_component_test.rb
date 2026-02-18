@@ -91,7 +91,7 @@ module FlatPack
           layout.sidebar { "Sidebar" }
           layout.main { "Main" }
         end
-        
+
         # Check that the HTML contains main before sidebar
         html = page.native.to_html
         main_index = html.index("Main")
@@ -104,6 +104,22 @@ module FlatPack
           layout.sidebar { "Sidebar" }
         end
         assert_selector "div[data-flat-pack--sidebar-layout-target='sidebar']"
+      end
+
+      def test_sidebar_column_has_desktop_transition
+        render_inline(Component.new) do |layout|
+          layout.sidebar { "Sidebar" }
+        end
+
+        assert_includes page.native.to_html, "md:transition-all"
+      end
+
+      def test_sidebar_column_uses_mobile_only_high_z_index
+        render_inline(Component.new) do |layout|
+          layout.sidebar { "Sidebar" }
+        end
+
+        assert_includes page.native.to_html, "md:z-auto"
       end
 
       def test_merges_custom_classes

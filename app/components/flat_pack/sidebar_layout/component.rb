@@ -132,6 +132,7 @@ module FlatPack
         classes(
           "h-full",
           "transition-transform",
+          "md:transition-all",
           "duration-300",
           "ease-in-out",
           "transform-gpu",
@@ -145,6 +146,7 @@ module FlatPack
           "w-64",
           "md:w-auto",
           "z-50",
+          "md:z-auto",
           ((@side == :left) ? "left-0" : "right-0"),
           ((@side == :left) ? "-translate-x-full" : "translate-x-full"),
           "md:translate-x-0"

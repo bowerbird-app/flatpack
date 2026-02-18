@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["sidebar", "backdrop", "desktopToggle", "mobileToggle", "headerLabel"]
+  static targets = ["sidebar", "backdrop", "desktopToggle", "collapsedToggle", "mobileToggle", "headerLabel", "headerBrand"]
   static values = {
     side: String,
     defaultOpen: Boolean,
@@ -9,9 +9,12 @@ export default class extends Controller {
   }
 
   connect() {
+    this.desktopRevealTimeout = null
     this.collapsed = false
     this.mobileOpen = false
     this.isMobile = window.innerWidth < 768
+    this.transitionDuration = "300ms"
+    this.transitionEasing = "cubic-bezier(0.4, 0, 0.2, 1)"
 
     // Load saved desktop state from localStorage
     if (!this.isMobile && this.hasStorageKeyValue) {
@@ -23,8 +26,10 @@ export default class extends Controller {
     // Apply initial desktop state
     if (!this.isMobile) {
       this.sidebarTarget.style.pointerEvents = ""
+      this.applySidebarPresentationMode()
       this.applyDesktopState()
     } else {
+      this.applySidebarPresentationMode()
       this.sidebarTarget.style.pointerEvents = "none"
     }
 
@@ -34,6 +39,7 @@ export default class extends Controller {
   }
 
   disconnect() {
+    this.clearDesktopRevealTimeout()
     window.removeEventListener("resize", this.handleResize)
   }
 
@@ -44,9 +50,11 @@ export default class extends Controller {
     if (wasMobile !== this.isMobile) {
       if (this.isMobile) {
         // Switched to mobile - close sidebar
+        this.applySidebarPresentationMode()
         this.closeMobile()
       } else {
         // Switched to desktop - apply saved state
+        this.applySidebarPresentationMode()
         this.sidebarTarget.style.pointerEvents = ""
         this.applyDesktopState()
       }
@@ -56,8 +64,9 @@ export default class extends Controller {
   toggleDesktop() {
     if (this.isMobile) return
 
+    const opening = this.collapsed
     this.collapsed = !this.collapsed
-    this.applyDesktopState()
+    this.applyDesktopState({ delayContentReveal: opening })
     this.saveDesktopState()
   }
 
@@ -162,7 +171,7 @@ export default class extends Controller {
     }
   }
 
-  applyDesktopState() {
+  applyDesktopState({ delayContentReveal = false } = {}) {
     if (this.isMobile) return
 
     // Update sidebar width
@@ -178,6 +187,11 @@ export default class extends Controller {
     // Update desktop toggle if exists
     if (this.hasDesktopToggleTarget) {
       this.desktopToggleTarget.setAttribute("aria-expanded", !this.collapsed)
+      if (this.collapsed) {
+        this.desktopToggleTarget.classList.add("hidden")
+      } else {
+        this.desktopToggleTarget.classList.remove("hidden")
+      }
       
       // Update chevron rotation
       const chevron = this.desktopToggleTarget.querySelector('[data-flat-pack--sidebar-layout-target="chevron"]')
@@ -190,28 +204,102 @@ export default class extends Controller {
       }
     }
 
-    // Update labels visibility
+    // Update collapsed-state toggle visibility
+    if (this.hasCollapsedToggleTarget) {
+      this.collapsedToggleTarget.setAttribute("aria-expanded", this.collapsed ? "false" : "true")
+      if (this.collapsed) {
+        this.collapsedToggleTarget.classList.remove("hidden")
+        this.collapsedToggleTarget.classList.add("flex")
+      } else {
+        this.collapsedToggleTarget.classList.add("hidden")
+        this.collapsedToggleTarget.classList.remove("flex")
+      }
+    }
+
+    this.clearDesktopRevealTimeout()
+
+    if (this.collapsed) {
+      this.setDesktopExpandedContentVisible(false)
+      return
+    }
+
+    if (delayContentReveal) {
+      this.setDesktopExpandedContentVisible(false)
+      this.desktopRevealTimeout = setTimeout(() => {
+        if (!this.isMobile && !this.collapsed) {
+          this.setDesktopExpandedContentVisible(true)
+        }
+      }, 300)
+      return
+    }
+
+    this.setDesktopExpandedContentVisible(true)
+  }
+
+  setDesktopExpandedContentVisible(visible) {
+    if (this.hasHeaderBrandTarget) {
+      this.headerBrandTargets.forEach(brand => {
+        if (visible) {
+          brand.classList.remove("hidden")
+        } else {
+          brand.classList.add("hidden")
+        }
+      })
+    }
+
     // Only toggle text label spans (avoid containers like .flex-1 overflow-y-auto)
     const labels = this.sidebarTarget.querySelectorAll("a > span.flex-1, button > span.flex-1")
     labels.forEach(label => {
-      if (this.collapsed) {
-        if (!label.classList.contains("sr-only")) {
-          label.classList.add("sr-only")
-        }
-      } else {
+      if (visible) {
         label.classList.remove("sr-only")
+      } else if (!label.classList.contains("sr-only")) {
+        label.classList.add("sr-only")
       }
     })
 
-    // Update optional sidebar header labels (e.g. app name/subtitle in header slot)
     if (this.hasHeaderLabelTarget) {
       this.headerLabelTargets.forEach(label => {
-        if (this.collapsed) {
-          label.classList.add("sr-only")
-        } else {
+        if (visible) {
           label.classList.remove("sr-only")
+        } else {
+          label.classList.add("sr-only")
         }
       })
+    }
+  }
+
+  clearDesktopRevealTimeout() {
+    if (this.desktopRevealTimeout) {
+      clearTimeout(this.desktopRevealTimeout)
+      this.desktopRevealTimeout = null
+    }
+  }
+
+  applySidebarPresentationMode() {
+    const sidebarContent = this.sidebarTarget.querySelector("aside")
+
+    this.sidebarTarget.style.transitionDuration = this.transitionDuration
+    this.sidebarTarget.style.transitionTimingFunction = this.transitionEasing
+
+    if (this.isMobile) {
+      this.sidebarTarget.style.zIndex = "50"
+      this.sidebarTarget.style.transitionProperty = "transform"
+
+      if (sidebarContent) {
+        sidebarContent.style.transitionProperty = ""
+        sidebarContent.style.transitionDuration = ""
+        sidebarContent.style.transitionTimingFunction = ""
+      }
+      return
+    }
+
+    this.sidebarTarget.style.zIndex = "auto"
+    this.sidebarTarget.style.transitionProperty = "width, transform"
+
+    if (sidebarContent) {
+      sidebarContent.style.transitionProperty = "width"
+      sidebarContent.style.transitionDuration = this.transitionDuration
+      sidebarContent.style.transitionTimingFunction = this.transitionEasing
     }
   }
 

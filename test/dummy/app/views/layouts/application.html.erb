@@ -234,15 +234,11 @@
       <% layout.sidebar do %>
         <%= render FlatPack::Sidebar::Component.new do |sidebar| %>
           <% sidebar.header do %>
-            <div class="px-4 py-4 flex items-center gap-3">
-              <div class="w-8 h-8 bg-[var(--color-primary)] rounded-lg flex items-center justify-center text-white font-bold">
-                FP
-              </div>
-              <div data-flat-pack--sidebar-layout-target="headerLabel">
-                <div class="font-semibold text-sm">FlatPack</div>
-                <div class="text-xs text-[var(--color-text-muted)]">Dummy App</div>
-              </div>
-            </div>
+            <%= render FlatPack::Sidebar::Header::Component.new(
+              brand_abbr: "FP",
+              title: "FlatPack",
+              subtitle: "Dummy App"
+            ) %>
           <% end %>
 
           <% sidebar.items do %>
@@ -316,11 +312,6 @@
             </nav>
           <% end %>
 
-          <% sidebar.footer do %>
-            <div class="p-3 border-t border-[var(--color-border)]">
-              <%= render FlatPack::Sidebar::CollapseToggle::Component.new(collapsed: false) %>
-            </div>
-          <% end %>
         <% end %>
       <% end %>
 
@@ -359,9 +350,6 @@
 
             <%= yield %>
 
-            <footer class="border-t border-[var(--color-border)] mt-12 pt-6 text-sm text-[var(--color-text-muted)]">
-              FlatPack <%= FlatPack::VERSION %> - Dummy app powered by Sidebar + Top Nav layout
-            </footer>
           </div>
         </main>
       <% end %>

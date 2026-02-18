@@ -24,9 +24,7 @@ The Sidebar component provides a container for sidebar content with header, scro
     ) %>
   <% end %>
 
-  <% sidebar.footer do %>
-    <%= render FlatPack::Sidebar::CollapseToggle::Component.new %>
-  <% end %>
+  <%# Footer is optional (profile/actions/etc.) %>
 <% end %>
 ```
 
@@ -44,12 +42,35 @@ The Sidebar component provides a container for sidebar content with header, scro
 
 Top area of the sidebar. Use for logo, workspace switcher, or title.
 
+By default, `Sidebar::Header::Component` provides a brand block and desktop collapse controls that integrate with `SidebarLayout` (expanded chevron + collapsed hamburger swap).
+
+Header component props:
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `brand_abbr` | String | `"FP"` | Brand badge text shown in header |
+| `title` | String | `"FlatPack"` | Primary header title |
+| `subtitle` | String | `"Workspace"` | Secondary header subtitle |
+| `collapsible` | Boolean | `true` | Shows desktop collapse/expand controls |
+
 ```erb
 <% sidebar.header do %>
   <div class="flex items-center gap-2">
     <img src="/logo.png" class="w-8 h-8" />
     <span class="font-semibold">My App</span>
   </div>
+<% end %>
+```
+
+Or use the built-in header UI with no block:
+
+```erb
+<% sidebar.header do %>
+  <%= render FlatPack::Sidebar::Header::Component.new(
+    brand_abbr: "AC",
+    title: "Acme",
+    subtitle: "Workspace"
+  ) %>
 <% end %>
 ```
 
@@ -70,14 +91,14 @@ Scrollable middle section. Contains navigation items and groups.
 
 ### footer
 
-Bottom area of the sidebar, pinned in place. Use for collapse toggle or user profile.
+Bottom area of the sidebar, pinned in place. Use for user profile or secondary actions.
+
+For SidebarLayout-based apps, the desktop collapse toggle is commonly placed in the sidebar header (top-right), inline with the app/site name.
 
 ```erb
 <% sidebar.footer do %>
   <div class="p-4 border-t border-[var(--color-border)]">
-    <%= render FlatPack::Sidebar::CollapseToggle::Component.new(
-      collapsed: false
-    ) %>
+    <div class="text-sm text-[var(--color-text-muted)]">Signed in as you@example.com</div>
   </div>
 <% end %>
 ```
@@ -160,9 +181,7 @@ This ensures the header and footer stay visible while items scroll.
 
   <% sidebar.footer do %>
     <div class="p-4 border-t border-[var(--color-border)]">
-      <%= render FlatPack::Sidebar::CollapseToggle::Component.new(
-        collapsed: false
-      ) %>
+      <%= link_to "View profile", profile_path, class: "text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)]" %>
     </div>
   <% end %>
 <% end %>
