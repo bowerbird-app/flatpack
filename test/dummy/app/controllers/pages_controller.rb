@@ -84,4 +84,7 @@ class PagesController < ApplicationController
 
   def navbar
   end
+
+  def sidebar_layout
+  end
 end
