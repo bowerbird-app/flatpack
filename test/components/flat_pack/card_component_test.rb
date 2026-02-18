@@ -28,6 +28,7 @@ module FlatPack
       def test_renders_with_style_elevated
         render_inline(Component.new(style: :elevated))
         assert_includes page.native.to_html, "shadow-md"
+        assert_includes page.native.to_html, "border border-[var(--color-border)]"
       end
 
       def test_renders_with_style_outlined
@@ -42,9 +43,27 @@ module FlatPack
 
       def test_renders_with_style_interactive
         render_inline(Component.new(style: :interactive))
-        assert_includes page.native.to_html, "hover:shadow-md"
-        assert_includes page.native.to_html, "hover:border-[var(--color-primary)]"
-        assert_includes page.native.to_html, "cursor-pointer"
+        assert_includes page.native.to_html, "fp-card-hover-strong"
+      end
+
+      def test_renders_with_style_list
+        render_inline(Component.new(style: :list))
+        assert_includes page.native.to_html, "fp-card-hover-subtle"
+      end
+
+      def test_renders_with_hover_subtle
+        render_inline(Component.new(style: :outlined, hover: :subtle))
+        assert_includes page.native.to_html, "fp-card-hover-subtle"
+      end
+
+      def test_renders_with_hover_strong
+        render_inline(Component.new(style: :outlined, hover: :strong))
+        assert_includes page.native.to_html, "fp-card-hover-strong"
+      end
+
+      def test_hover_none_overrides_style_default
+        render_inline(Component.new(style: :interactive, hover: :none))
+        refute_includes page.native.to_html, "fp-card-hover-strong"
       end
 
       def test_validates_style
@@ -52,6 +71,13 @@ module FlatPack
           render_inline(Component.new(style: :invalid))
         end
         assert_includes error.message, "Invalid style"
+      end
+
+      def test_validates_hover
+        error = assert_raises(ArgumentError) do
+          render_inline(Component.new(hover: :invalid))
+        end
+        assert_includes error.message, "Invalid hover"
       end
 
       # Padding Tests
@@ -272,6 +298,86 @@ module FlatPack
         refute_includes page.native.to_html, "aspect-"
       end
 
+      def test_media_with_padding_none
+        render_inline(MediaComponent.new(padding: :none)) { "Media" }
+        refute_includes page.native.to_html, "px-6 pt-6"
+      end
+
+      def test_media_with_padding_md
+        render_inline(MediaComponent.new(padding: :md)) { "Media" }
+        assert_includes page.native.to_html, "px-6 pt-6"
+      end
+
+      def test_media_validates_padding
+        error = assert_raises(ArgumentError) do
+          render_inline(MediaComponent.new(padding: :invalid)) { "Media" }
+        end
+
+        assert_includes error.message, "Invalid padding"
+      end
+
+      # Stat Component Tests
+      def test_stat_component_renders
+        render_inline(StatComponent.new(
+          value: "2,543",
+          label: "Total Users",
+          trend: "12%",
+          trend_direction: :up
+        ))
+
+        assert_text "2,543"
+        assert_text "Total Users"
+        assert_text "↑ 12%"
+      end
+
+      def test_stat_component_uses_up_trend_style
+        render_inline(StatComponent.new(
+          value: "100",
+          label: "Metric",
+          trend: "8%",
+          trend_direction: :up
+        ))
+
+        assert_includes page.native.to_html, "text-green-600"
+      end
+
+      def test_stat_component_uses_down_trend_style
+        render_inline(StatComponent.new(
+          value: "100",
+          label: "Metric",
+          trend: "1.2%",
+          trend_direction: :down
+        ))
+
+        assert_includes page.native.to_html, "text-red-600"
+        assert_text "↓ 1.2%"
+      end
+
+      def test_stat_component_accepts_custom_value_class
+        render_inline(StatComponent.new(
+          value: "99",
+          label: "Custom",
+          trend: "4%",
+          trend_direction: :up,
+          value_class: "text-blue-600"
+        ))
+
+        assert_includes page.native.to_html, "text-blue-600"
+      end
+
+      def test_stat_component_validates_trend_direction
+        error = assert_raises(ArgumentError) do
+          render_inline(StatComponent.new(
+            value: "99",
+            label: "Custom",
+            trend: "4%",
+            trend_direction: :sideways
+          ))
+        end
+
+        assert_includes error.message, "Invalid trend_direction"
+      end
+
       # System Arguments Tests
       def test_merges_custom_classes
         render_inline(Component.new(class: "custom-class"))
@@ -297,16 +403,14 @@ module FlatPack
       def test_interactive_card_has_correct_classes
         render_inline(Component.new(style: :interactive))
         html = page.native.to_html
-        assert_includes html, "cursor-pointer"
-        assert_includes html, "hover:shadow-md"
-        assert_includes html, "transition-all"
+        assert_includes html, "fp-card-hover-strong"
       end
 
       def test_clickable_interactive_card_applies_to_link
         render_inline(Component.new(style: :interactive, clickable: true, href: "/test"))
         assert_selector "a[href='/test']"
         html = page.native.to_html
-        assert_includes html, "cursor-pointer"
+        assert_includes html, "fp-card-hover-strong"
       end
 
       def test_card_has_rounded_corners
@@ -319,13 +423,30 @@ module FlatPack
         assert_includes page.native.to_html, "overflow-hidden"
       end
 
-      def test_slots_override_padding_when_used
+      def test_slot_based_cards_do_not_apply_container_padding
         render_inline(Component.new(padding: :lg)) do |component|
           component.body { "Content" }
         end
-        # Body has its own padding (px-6 py-4), main card padding applies to container
-        assert_includes page.native.to_html, "p-8"
+
+        refute_includes page.native.to_html, "p-8"
         assert_includes page.native.to_html, "px-6 py-4"
+      end
+
+      def test_media_slot_inherits_card_padding_by_default
+        render_inline(Component.new(padding: :lg)) do |component|
+          component.media(aspect_ratio: "16/9") { "Media" }
+        end
+
+        assert_includes page.native.to_html, "px-8 pt-8"
+      end
+
+      def test_media_slot_padding_overrides_card_padding
+        render_inline(Component.new(padding: :lg)) do |component|
+          component.media(aspect_ratio: "16/9", padding: :none) { "Media" }
+        end
+
+        refute_includes page.native.to_html, "px-8 pt-8"
+        refute_includes page.native.to_html, "px-6 pt-6"
       end
 
       def test_content_appears_when_no_slots_used
@@ -343,7 +464,7 @@ module FlatPack
       end
 
       def test_multiple_style_variants_apply_correctly
-        [:default, :elevated, :outlined, :flat, :interactive].each do |style|
+        [:default, :elevated, :outlined, :flat, :interactive, :list].each do |style|
           render_inline(Component.new(style: style))
           # Each style should render without errors
           assert_selector "div"

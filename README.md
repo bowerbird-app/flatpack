@@ -189,6 +189,7 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
 - **Link** - Styled links with consistent appearance
 - **ButtonGroup** - Grouped button layouts
 - **SegmentedButtons** - Segmented control buttons
+- **Search** - Reusable search field for nav and filtering UIs
 
 More components coming soon!
 

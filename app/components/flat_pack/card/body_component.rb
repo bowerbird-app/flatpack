@@ -8,7 +8,7 @@ module FlatPack
       end
 
       def call
-        content_tag(:div, content, class: "px-6 py-4", **@system_arguments)
+        content_tag(:div, content, class: "px-6 py-4 flex-1", **@system_arguments)
       end
     end
   end

@@ -8,6 +8,10 @@ module.exports = {
     './app/views/**/*.{erb,haml,html,slim}',
     './app/components/**/*.{erb,haml,html,slim,rb}',
   ],
+  safelist: [
+    'hover:bg-[var(--color-muted)]',
+    'hover:border-[var(--color-primary)]',
+  ],
   theme: {
     extend: {
       fontFamily: {

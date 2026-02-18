@@ -48,13 +48,31 @@ The Card component renders a flexible container for displaying content with supp
 <% end %>
 ```
 
+### Media Slot (Edge-to-Edge Top Media)
+
+Use `card.media(..., padding: :none)` when you want top media to extend flush to the card edges.
+
+```erb
+<%= render FlatPack::Card::Component.new(style: :default) do |card| %>
+  <% card.media(aspect_ratio: "16/9", padding: :none) do %>
+    <%= image_tag "product-hero.jpg", class: "w-full h-full object-cover", alt: "Product hero image" %>
+  <% end %>
+
+  <% card.body do %>
+    <h3 class="text-lg font-semibold mb-2">Edge-to-Edge Media Card</h3>
+    <p class="text-sm text-gray-600">The media fills the top area without container side or top spacing.</p>
+  <% end %>
+<% end %>
+```
+
 ## Props
 
 ### Main Component
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `style` | Symbol | `:default` | Visual style of the card. Options: `:default`, `:elevated`, `:outlined`, `:flat`, `:interactive` |
+| `style` | Symbol | `:default` | Visual style of the card. Options: `:default`, `:elevated`, `:outlined`, `:flat`, `:interactive`, `:list` |
+| `hover` | Symbol | `nil` | Standardized hover behavior. Options: `:none`, `:subtle`, `:strong` (or `nil` to use style defaults) |
 | `padding` | Symbol | `:md` | Padding size. Options: `:none`, `:sm`, `:md`, `:lg` |
 | `clickable` | Boolean | `false` | Makes the entire card clickable when combined with `href` |
 | `href` | String | `nil` | URL to navigate to when card is clicked (requires `clickable: true`) |
@@ -83,6 +101,7 @@ No additional props. Accepts standard HTML attributes.
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `aspect_ratio` | String | `nil` | Aspect ratio for media content. Options: `"16/9"`, `"4/3"`, `"1/1"`, or any custom ratio like `"21/9"` |
+| `padding` | Symbol | `:md` | Media inset spacing. Options: `:none`, `:sm`, `:md`, `:lg` |
 
 ## Styles
 
@@ -136,6 +155,38 @@ Card with hover effects, ideal for clickable cards.
 <% end %>
 ```
 
+### List
+
+Card style for horizontal/list rows with a subtle hover background.
+
+```erb
+<%= render FlatPack::Card::Component.new(style: :list, padding: :sm) do %>
+  <p>List row card with standardized hover treatment</p>
+<% end %>
+```
+
+## Hover Effects
+
+Hover behavior is standardized with the `hover` prop and can be applied to any card style.
+
+```erb
+<!-- Subtle hover background (great for pricing/list-like cards) -->
+<%= render FlatPack::Card::Component.new(style: :outlined, hover: :subtle) do %>
+  <p>Outlined card with subtle hover</p>
+<% end %>
+
+<!-- Strong interactive hover (shadow + border emphasis) -->
+<%= render FlatPack::Card::Component.new(style: :outlined, hover: :strong) do %>
+  <p>Outlined card with strong hover</p>
+<% end %>
+```
+
+Style defaults:
+
+- `:interactive` defaults to `hover: :strong`
+- `:list` defaults to `hover: :subtle`
+- All other styles default to `hover: :none`
+
 ## Padding
 
 Cards come in four padding sizes to control internal spacing:
@@ -162,7 +213,7 @@ Cards come in four padding sizes to control internal spacing:
 <% end %>
 ```
 
-**Note:** When using slots (header, body, footer), each slot has its own padding (`px-6 py-4`). The main card's padding applies to the overall container.
+**Note:** For slot-based cards, `header`, `body`, and `footer` manage their own spacing (`px-6 py-4`). Use `card.media(..., padding: ...)` to control media inset spacing.
 
 ## Clickable Cards
 
@@ -183,6 +234,8 @@ Make entire cards clickable by combining `clickable: true` with an `href`:
   <% end %>
 <% end %>
 ```
+
+For cards with internal action controls (icon buttons, menus, secondary links), prefer a non-clickable card with `hover: :subtle` and make each action explicitly clickable via `url`/`href`. Avoid wrapping those controls inside a single full-card link.
 
 ## System Arguments
 
@@ -271,17 +324,13 @@ Classes are merged using `tailwind_merge`, so Tailwind utilities override correc
 ```erb
 <%= render FlatPack::Card::Component.new(style: :elevated, padding: :lg) do |card| %>
   <% card.body do %>
-    <div class="text-center">
-      <div class="text-4xl font-bold text-blue-600 mb-2">
-        <%= number_with_delimiter(@stats.total_users) %>
-      </div>
-      <div class="text-sm text-gray-600 uppercase tracking-wide">
-        Total Users
-      </div>
-      <div class="mt-2 text-sm text-green-600">
-        ↑ 12% from last month
-      </div>
-    </div>
+    <%= render FlatPack::Card::StatComponent.new(
+      value: number_with_delimiter(@stats.total_users),
+      label: "Total Users",
+      trend: "12%",
+      trend_direction: :up,
+      value_class: "text-blue-600"
+    ) %>
   <% end %>
 <% end %>
 ```
@@ -318,7 +367,7 @@ Classes are merged using `tailwind_merge`, so Tailwind utilities override correc
 ### Pricing Card
 
 ```erb
-<%= render FlatPack::Card::Component.new(style: :outlined) do |card| %>
+<%= render FlatPack::Card::Component.new(style: :outlined, hover: :subtle) do |card| %>
   <% card.header do %>
     <div class="text-center">
       <h3 class="text-xl font-bold">Pro Plan</h3>
@@ -365,9 +414,8 @@ Classes are merged using `tailwind_merge`, so Tailwind utilities override correc
 
 ```erb
 <%= render FlatPack::Card::Component.new(
-  style: :flat,
-  padding: :sm,
-  class: "hover:bg-gray-100 transition-colors"
+  style: :list,
+  padding: :sm
 ) do |card| %>
   <% card.body do %>
     <div class="flex items-center justify-between">
@@ -444,7 +492,8 @@ end
 
 ```ruby
 FlatPack::Card::Component.new(
-  style: Symbol,              # Optional, default: :default (:default, :elevated, :outlined, :flat, :interactive)
+  style: Symbol,              # Optional, default: :default (:default, :elevated, :outlined, :flat, :interactive, :list)
+  hover: Symbol,              # Optional, default: nil (:none, :subtle, :strong, or nil for style default)
   padding: Symbol,            # Optional, default: :md (:none, :sm, :md, :lg)
   clickable: Boolean,         # Optional, default: false
   href: String,               # Optional, default: nil
@@ -458,7 +507,20 @@ FlatPack::Card::Component.new(
 card.header(divider: Boolean)         # Optional, default divider: true
 card.body                              # No additional props
 card.footer(divider: Boolean)          # Optional, default divider: true
-card.media(aspect_ratio: String)       # Optional aspect ratio
+card.media(aspect_ratio: String, padding: Symbol) # Optional aspect ratio and media padding (:none, :sm, :md, :lg)
+```
+
+### Card Subcomponents
+
+```ruby
+FlatPack::Card::StatComponent.new(
+  value: String,              # Required - main stat value (e.g. "2,543", "$45.2K")
+  label: String,              # Required - subtitle text under the value
+  trend: String,              # Required - change value text (e.g. "12%")
+  trend_direction: Symbol,    # Required - :up or :down
+  value_class: String,        # Optional - custom Tailwind class for the value color
+  **system_arguments          # Optional
+)
 ```
 
 ### System Arguments

@@ -1,0 +1,234 @@
+  <h1 class="text-4xl font-bold mb-4">Sidebar Components</h1>
+  <p class="text-lg text-[var(--color-muted-foreground)] mb-8">
+    Sidebar options with live examples and copyable code snippets.
+  </p>
+
+  <% sidebar_side = params[:side].in?(%w[left right]) ? params[:side] : 'left' %>
+  <div class="mb-8">
+    <%= link_to(
+      "Sidebar: #{sidebar_side == 'right' ? 'Right' : 'Left'}",
+      demo_sidebar_layout_path(request.query_parameters.merge(side: sidebar_side == 'right' ? 'left' : 'right')),
+      class: "inline-flex text-sm px-3 py-1.5 rounded-lg bg-[var(--color-primary)] text-white hover:opacity-90 transition-opacity"
+    ) %>
+  </div>
+
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Right Sidebar Layout</h2>
+    <p class="text-sm text-[var(--color-muted-foreground)] mb-4">
+      Use <code>side: :right</code> on the layout component to place the sidebar on the right.
+    </p>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::SidebarLayout::Component.new(side: :right) do |layout| %&gt;
+  &lt;% layout.sidebar do %&gt;
+    &lt;%= render FlatPack::Sidebar::Component.new(side: :right) do |sidebar| %&gt;
+      &lt;%# Sidebar content %&gt;
+    &lt;% end %&gt;
+  &lt;% end %&gt;
+
+  &lt;% layout.main do %&gt;
+    &lt;%# Main content %&gt;
+  &lt;% end %&gt;
+&lt;% end %&gt;</code></pre>
+  </section>
+
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Basic Sidebar</h2>
+    <div class="rounded-lg overflow-hidden h-[420px] mb-4">
+      <%= render FlatPack::Sidebar::Component.new(class: "border border-[var(--color-border)] rounded-lg") do |sidebar| %>
+        <% sidebar.header do %>
+          <%= render FlatPack::Sidebar::Header::Component.new(
+            brand_abbr: "FP",
+            title: "FlatPack",
+            subtitle: "Workspace",
+            collapsible: false
+          ) %>
+        <% end %>
+
+        <% sidebar.items do %>
+          <nav class="py-4 space-y-1">
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Overview", href: demo_path, icon: :home, active: true) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Buttons", href: demo_buttons_path, icon: :square) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Forms", href: demo_forms_path, icon: :edit_3) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Tables", href: demo_tables_path, icon: :table) %>
+          </nav>
+        <% end %>
+
+        <% sidebar.footer do %>
+          <%= render FlatPack::Sidebar::Footer::Component.new(class: "text-sm text-[var(--color-text-muted)]") do %>
+            Signed in as demo@flatpack.app
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Sidebar::Component.new do |sidebar| %&gt;
+  &lt;% sidebar.header do %&gt;
+    &lt;%= render FlatPack::Sidebar::Header::Component.new(
+      brand_abbr: "FP",
+      title: "FlatPack",
+      subtitle: "Workspace",
+      collapsible: false
+    ) %&gt;
+  &lt;% end %&gt;
+
+  &lt;% sidebar.items do %&gt;
+    &lt;%= render FlatPack::Sidebar::Item::Component.new(label: "Overview", href: demo_path, icon: :home, active: true) %&gt;
+    &lt;%= render FlatPack::Sidebar::Item::Component.new(label: "Buttons", href: demo_buttons_path, icon: :square) %&gt;
+    &lt;%= render FlatPack::Sidebar::Item::Component.new(label: "Forms", href: demo_forms_path, icon: :edit_3) %&gt;
+    &lt;%= render FlatPack::Sidebar::Item::Component.new(label: "Tables", href: demo_tables_path, icon: :table) %&gt;
+  &lt;% end %&gt;
+
+  &lt;% sidebar.footer do %&gt;
+    &lt;%= render FlatPack::Sidebar::Footer::Component.new(class: "text-sm text-[var(--color-text-muted)]") do %&gt;
+      Signed in as demo@flatpack.app
+    &lt;% end %&gt;
+  &lt;% end %&gt;
+&lt;% end %&gt;</code></pre>
+  </section>
+
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Sidebar with Badges</h2>
+    <div class="rounded-lg overflow-hidden h-[420px] mb-4">
+      <%= render FlatPack::Sidebar::Component.new(class: "border border-[var(--color-border)] rounded-lg") do |sidebar| %>
+        <% sidebar.header do %>
+          <%= render FlatPack::Sidebar::Header::Component.new(
+            brand_abbr: "AC",
+            title: "Acme",
+            subtitle: "Team Space",
+            collapsible: false
+          ) %>
+        <% end %>
+
+        <% sidebar.items do %>
+          <nav class="py-4 space-y-1">
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Inbox", href: "#", icon: :dashboard, badge: "12", active: true) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Alerts", href: "#", icon: :alert, badge: "3") %>
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Reports", href: "#", icon: :table) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Monitoring", href: "#", icon: :monitor) %>
+          </nav>
+        <% end %>
+      <% end %>
+    </div>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Sidebar::Component.new do |sidebar| %&gt;
+  &lt;% sidebar.items do %&gt;
+    &lt;%= render FlatPack::Sidebar::Item::Component.new(label: "Inbox", href: "#", icon: :dashboard, badge: "12", active: true) %&gt;
+    &lt;%= render FlatPack::Sidebar::Item::Component.new(label: "Alerts", href: "#", icon: :alert, badge: "3") %&gt;
+    &lt;%= render FlatPack::Sidebar::Item::Component.new(label: "Reports", href: "#", icon: :table) %&gt;
+  &lt;% end %&gt;
+&lt;% end %&gt;</code></pre>
+  </section>
+
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Secondary Menu Sidebar</h2>
+    <p class="text-sm text-[var(--color-muted-foreground)] mb-4">
+      Use this for page-level secondary navigation without branding or collapse behavior.
+    </p>
+    <div class="rounded-lg overflow-hidden h-[420px] mb-4">
+      <%= render FlatPack::Sidebar::Component.new(class: "border border-[var(--color-border)] rounded-lg") do |sidebar| %>
+        <% sidebar.header do %>
+          <%= render FlatPack::Sidebar::Header::Component.new(
+            brand_abbr: nil,
+            title: "Menu",
+            subtitle: nil,
+            collapsible: false
+          ) %>
+        <% end %>
+
+        <% sidebar.items do %>
+          <nav class="py-4 space-y-1">
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Overview", href: "#", icon: :home, active: true) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Billing", href: "#", icon: :dashboard) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Users", href: "#", icon: :user) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "API Keys", href: "#", icon: :key) %>
+          </nav>
+        <% end %>
+      <% end %>
+    </div>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Sidebar::Component.new do |sidebar| %&gt;
+  &lt;% sidebar.header do %&gt;
+    &lt;%= render FlatPack::Sidebar::Header::Component.new(
+      brand_abbr: nil,
+      title: "Menu",
+      subtitle: nil,
+      collapsible: false
+    ) %&gt;
+  &lt;% end %&gt;
+
+  &lt;% sidebar.items do %&gt;
+    &lt;%= render FlatPack::Sidebar::Item::Component.new(label: "Overview", href: "#", icon: :home, active: true) %&gt;
+    &lt;%= render FlatPack::Sidebar::Item::Component.new(label: "Billing", href: "#", icon: :dashboard) %&gt;
+    &lt;%= render FlatPack::Sidebar::Item::Component.new(label: "Users", href: "#", icon: :user) %&gt;
+    &lt;%= render FlatPack::Sidebar::Item::Component.new(label: "API Keys", href: "#", icon: :key) %&gt;
+  &lt;% end %&gt;
+&lt;% end %&gt;</code></pre>
+  </section>
+
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Sidebar with Grouped Navigation</h2>
+    <div class="rounded-lg overflow-hidden h-[460px] mb-4">
+      <%= render FlatPack::Sidebar::Component.new(class: "border border-[var(--color-border)] rounded-lg") do |sidebar| %>
+        <% sidebar.header do %>
+          <%= render FlatPack::Sidebar::Header::Component.new(
+            brand_abbr: "FP",
+            title: "Docs",
+            subtitle: "Navigation",
+            collapsible: false
+          ) %>
+        <% end %>
+
+        <% sidebar.items do %>
+          <nav class="py-4 space-y-1">
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Overview", href: "#", icon: :home, active: true) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Getting Started", href: "#", icon: :box) %>
+            <%= render FlatPack::Sidebar::Divider::Component.new %>
+
+            <%= render FlatPack::Sidebar::Group::Component.new(label: "Components", icon: :dashboard, default_open: true) do |group| %>
+              <% group.items do %>
+                <%= render FlatPack::Sidebar::Item::Component.new(label: "Buttons", href: "#", icon: :square) %>
+                <%= render FlatPack::Sidebar::Item::Component.new(label: "Inputs", href: "#", icon: :type) %>
+                <%= render FlatPack::Sidebar::Item::Component.new(label: "Tables", href: "#", icon: :table) %>
+              <% end %>
+            <% end %>
+          </nav>
+        <% end %>
+      <% end %>
+    </div>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Sidebar::Group::Component.new(
+  label: "Components",
+  icon: :dashboard,
+  default_open: true
+) do |group| %&gt;
+  &lt;% group.items do %&gt;
+    &lt;%= render FlatPack::Sidebar::Item::Component.new(label: "Buttons", href: "#", icon: :square) %&gt;
+    &lt;%= render FlatPack::Sidebar::Item::Component.new(label: "Inputs", href: "#", icon: :type) %&gt;
+    &lt;%= render FlatPack::Sidebar::Item::Component.new(label: "Tables", href: "#", icon: :table) %&gt;
+  &lt;% end %&gt;
+&lt;% end %&gt;</code></pre>
+  </section>
+
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Collapsed Sidebar (Icon-Only)</h2>
+    <div class="rounded-lg overflow-hidden h-[360px] w-16 mb-4">
+      <%= render FlatPack::Sidebar::Component.new(style: "width: 4rem", class: "border border-[var(--color-border)] rounded-lg") do |sidebar| %>
+        <% sidebar.header do %>
+          <div class="p-4 flex justify-center">
+            <div class="w-8 h-8 bg-[var(--color-primary)] rounded-lg flex items-center justify-center text-white font-bold">FP</div>
+          </div>
+        <% end %>
+
+        <% sidebar.items do %>
+          <nav class="py-2 space-y-1">
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Overview", href: "#", icon: :home, collapsed: true, active: true) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Tables", href: "#", icon: :table, collapsed: true) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Alerts", href: "#", icon: :alert, collapsed: true) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Settings", href: "#", icon: :dashboard, collapsed: true) %>
+          </nav>
+        <% end %>
+      <% end %>
+    </div>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Sidebar::Item::Component.new(
+  label: "Overview",
+  href: "#",
+  icon: :home,
+  collapsed: true,
+  active: true
+) %&gt;</code></pre>
+  </section>

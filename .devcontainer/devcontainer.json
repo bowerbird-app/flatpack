@@ -29,8 +29,8 @@
   },
   "remoteUser": "root",
   "features": {},
-  "postCreateCommand": "git lfs install && cd test/dummy && bundle install && bundle exec rails db:prepare && bundle exec rails tailwindcss:build",
-  "env": {
+  "postCreateCommand": "git lfs install && bundle install && cd test/dummy && bundle install && bundle exec rails db:prepare && bundle exec rails tailwindcss:build",
+  "containerEnv": {
     "CODESPACES": "true"
   }
 }
