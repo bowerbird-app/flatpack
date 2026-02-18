@@ -18,7 +18,7 @@ The TopNav component provides a sticky header bar with left, center, and right s
   <% end %>
 
   <% nav.center do %>
-    <%= render FlatPack::TopNav::Search::Component.new(
+    <%= render FlatPack::Search::Component.new(
       placeholder: "Search..."
     ) %>
   <% end %>
@@ -70,7 +70,7 @@ Center section of the navigation bar. Typically contains:
 
 ```erb
 <% nav.center do %>
-  <%= render FlatPack::TopNav::Search::Component.new(
+  <%= render FlatPack::Search::Component.new(
     placeholder: "Search..."
   ) %>
 <% end %>
@@ -98,6 +98,52 @@ Right section of the navigation bar. Typically contains:
 <% end %>
 ```
 
+## Slot Alignment (Justification)
+
+TopNav uses a single horizontal flex row with three slot wrappers:
+
+- **left**: `flex items-center gap-2` (content stays on the left)
+- **center**: `flex-1 flex items-center justify-center` (takes remaining space and centers content)
+- **right**: `flex items-center gap-2` (content sits on the right edge when center is present)
+
+### How the layout behaves
+
+- If you render **left + center + right**, center stays visually centered and right appears at the far right.
+- If you render **left + right** (no center), right appears directly after left with a small gap.
+- If you need right content pinned to the edge without center, add your own spacer in `left` (for example `mr-auto`) or place the main title in `center`.
+
+### Example: Balanced (left + center + right)
+
+```erb
+<%= render FlatPack::TopNav::Component.new do |nav| %>
+  <% nav.left do %>
+    <h1 class="text-lg font-semibold">Dashboard</h1>
+  <% end %>
+
+  <% nav.center do %>
+    <%= render FlatPack::Search::Component.new(placeholder: "Search...") %>
+  <% end %>
+
+  <% nav.right do %>
+    <button class="p-2 rounded-lg hover:bg-[var(--color-muted)]">Alerts</button>
+  <% end %>
+<% end %>
+```
+
+### Example: Left + Right only (no center)
+
+```erb
+<%= render FlatPack::TopNav::Component.new do |nav| %>
+  <% nav.left do %>
+    <h1 class="text-lg font-semibold">Settings</h1>
+  <% end %>
+
+  <% nav.right do %>
+    <button class="p-2 rounded-lg hover:bg-[var(--color-muted)]">Save</button>
+  <% end %>
+<% end %>
+```
+
 ## Examples
 
 ### Full TopNav
@@ -119,7 +165,7 @@ Right section of the navigation bar. Typically contains:
   <% end %>
 
   <% nav.center do %>
-    <%= render FlatPack::TopNav::Search::Component.new(
+    <%= render FlatPack::Search::Component.new(
       placeholder: "Search projects, files, or people..."
     ) %>
   <% end %>
@@ -197,9 +243,9 @@ A subtle border on the bottom separates the TopNav from content below.
 
 ## Subcomponents
 
-### TopNav::Search
+### Search
 
-A search input component styled for the TopNav. See usage above and in the basic example.
+A reusable search input component that can be used in TopNav, sidebars, and page content areas.
 
 Props:
 - `placeholder` - Placeholder text (default: "Search...")
@@ -232,4 +278,4 @@ The TopNav is typically used within a `FlatPack::SidebarLayout::Component`:
 
 - [SidebarLayout](./sidebar_layout.md) - Layout wrapper
 - [Sidebar](./sidebar.md) - Sidebar component
-- [TopNav::Search](./top_nav.md#topnavsearch) - Search input
+- [Search](./search.md) - Reusable search input

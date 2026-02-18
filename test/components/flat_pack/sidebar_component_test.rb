@@ -76,6 +76,19 @@ module FlatPack
         assert_includes page.native.to_html, "border-r"
       end
 
+      def test_uses_left_border_for_right_sidebar
+        render_inline(Component.new(side: :right))
+        assert_includes page.native.to_html, "border-l"
+      end
+
+      def test_validates_side_parameter
+        error = assert_raises(ArgumentError) do
+          render_inline(Component.new(side: :invalid))
+        end
+
+        assert_includes error.message, "Invalid side"
+      end
+
       def test_merges_custom_classes
         render_inline(Component.new(class: "custom-sidebar"))
         assert_includes page.native.to_html, "custom-sidebar"

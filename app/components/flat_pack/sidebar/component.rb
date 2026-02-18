@@ -10,11 +10,15 @@ module FlatPack
       def initialize(
         collapsed: false,
         collapsible: true,
+        side: :left,
         **system_arguments
       )
         super(**system_arguments)
         @collapsed = collapsed
         @collapsible = collapsible
+        @side = side.to_sym
+
+        validate_side!
       end
 
       def header(**args, &block)
@@ -85,13 +89,22 @@ module FlatPack
           "flex-col",
           "h-full",
           "bg-[var(--color-background)]",
-          "border-r",
+          side_border_class,
           "border-[var(--color-border)]",
           "transition-none",
           "md:transition-all",
           "duration-300",
           "w-64"
         )
+      end
+
+      def side_border_class
+        (@side == :right) ? "border-l" : "border-r"
+      end
+
+      def validate_side!
+        return if [:left, :right].include?(@side)
+        raise ArgumentError, "Invalid side: #{@side}. Must be :left or :right"
       end
 
       def items_container_classes

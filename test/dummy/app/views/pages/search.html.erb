@@ -1,0 +1,47 @@
+<h1 class="text-4xl font-bold mb-4">Search Component</h1>
+<p class="text-lg text-[var(--color-muted-foreground)] mb-8">
+  Reusable search input for top navs, headers, and page-level filtering.
+</p>
+
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Default</h2>
+  <p class="text-sm text-[var(--color-muted-foreground)] mb-4">
+    Use the standalone Search component anywhere, including outside TopNav.
+  </p>
+
+  <div class="rounded-lg border border-[var(--color-border)] p-6 bg-[var(--color-background)] mb-4">
+    <%= render FlatPack::Search::Component.new(
+      search_url: demo_search_results_path,
+      placeholder: "Search projects, files, or people..."
+    ) %>
+  </div>
+
+  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Search::Component.new(
+  search_url: demo_search_results_path,
+  placeholder: "Search projects, files, or people..."
+) %&gt;</code></pre>
+</section>
+
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Custom Name and Value</h2>
+
+  <div class="rounded-lg border border-[var(--color-border)] p-6 bg-[var(--color-background)] mb-4">
+    <%= render FlatPack::Search::Component.new(
+      name: "query",
+      value: "flatpack",
+      search_url: demo_search_results_path,
+      placeholder: "Search components...",
+      no_results_text: "No matching components",
+      class: "max-w-lg"
+    ) %>
+  </div>
+
+  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Search::Component.new(
+  name: "query",
+  value: "flatpack",
+  search_url: demo_search_results_path,
+  placeholder: "Search components...",
+  no_results_text: "No matching components",
+  class: "max-w-lg"
+) %&gt;</code></pre>
+</section>
