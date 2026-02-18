@@ -61,26 +61,21 @@ export default class extends Controller {
   }
 
   processFiles(files) {
-    console.log("processFiles called with:", files)
     // Clear any previous validation errors
     this.clearError()
     
     // Validate files
     const validFiles = files.filter(file => this.validateFile(file))
-    console.log("Valid files:", validFiles)
 
     if (validFiles.length === 0) {
-      console.log("No valid files")
       return
     }
 
     // Show file list
-    console.log("Calling displayFileList")
     this.displayFileList(validFiles)
 
     // Show preview if enabled and files are images
     if (this.previewValue) {
-      console.log("Calling displayPreview")
       this.displayPreview(validFiles)
     }
   }
@@ -96,14 +91,12 @@ export default class extends Controller {
   }
 
   displayFileList(files) {
-    console.log("displayFileList called, hasFileListTarget:", this.hasFileListTarget)
     if (!this.hasFileListTarget) return
 
     this.fileListTarget.innerHTML = ""
     this.fileListTarget.classList.remove("hidden")
 
     files.forEach((file, index) => {
-      console.log("Creating file item for:", file.name)
       const fileItem = this.createFileItem(file, index)
       this.fileListTarget.appendChild(fileItem)
     })

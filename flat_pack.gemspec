@@ -26,6 +26,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "rails", "~> 8.0"
   spec.add_dependency "view_component", "~> 3.0"
   spec.add_dependency "tailwind_merge", "~> 0.13"
+  spec.add_dependency "pagy", "~> 9.0"
 
   # Development dependencies
   spec.add_development_dependency "sqlite3", "~> 2.0"

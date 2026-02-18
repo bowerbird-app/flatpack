@@ -33,7 +33,10 @@ module FlatPack
           ""
         end
 
-        # Build td tag - only escape if content isn't already html_safe
+        # SECURITY: Cell content from the html proc is marked html_safe only if it's
+        # already marked as safe (e.g., from Rails helpers like link_to). Otherwise,
+        # content is HTML-escaped to prevent XSS. This ensures user-provided data
+        # is always escaped while allowing safe HTML from Rails helpers.
         escaped_content = cell_content.html_safe? ? cell_content : ERB::Util.html_escape(cell_content)
         "<td class=\"#{cell_classes}\">#{escaped_content}</td>".html_safe
       end
