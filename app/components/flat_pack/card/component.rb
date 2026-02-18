@@ -30,7 +30,7 @@ module FlatPack
       def media(**args, &block)
         return media_slot unless block
 
-        with_media_slot(**args, &block)
+        with_media_slot(**default_media_arguments.merge(args), &block)
       end
 
       # Custom predicate methods
@@ -52,13 +52,29 @@ module FlatPack
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-[var(--color-background)]" "border" "border-[var(--color-border)]" "shadow-md" "dark:shadow-lg" "border-2" "bg-[var(--color-muted)]" "hover:shadow-md" "dark:hover:shadow-lg" "hover:border-[var(--color-primary)]" "transition-all" "cursor-pointer"
+      # "bg-[var(--color-background)]" "border" "border-[var(--color-border)]" "shadow-md" "dark:shadow-lg" "border-2" "bg-[var(--color-muted)]"
       STYLES = {
         default: "bg-[var(--color-background)] border border-[var(--color-border)]",
-        elevated: "bg-[var(--color-background)] shadow-md dark:shadow-lg",
+        elevated: "bg-[var(--color-background)] border border-[var(--color-border)] shadow-md dark:shadow-lg",
         outlined: "bg-[var(--color-background)] border-2 border-[var(--color-border)]",
         flat: "bg-[var(--color-muted)]",
-        interactive: "bg-[var(--color-background)] border border-[var(--color-border)] hover:shadow-md dark:hover:shadow-lg hover:border-[var(--color-primary)] transition-all cursor-pointer"
+        interactive: "bg-[var(--color-background)] border border-[var(--color-border)]",
+        list: "bg-[var(--color-background)] border border-[var(--color-border)]"
+      }.freeze
+
+      HOVERS = {
+        none: "",
+        subtle: "fp-card-hover-subtle",
+        strong: "fp-card-hover-strong"
+      }.freeze
+
+      STYLE_DEFAULT_HOVERS = {
+        default: :none,
+        elevated: :none,
+        outlined: :none,
+        flat: :none,
+        interactive: :strong,
+        list: :subtle
       }.freeze
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
@@ -73,6 +89,7 @@ module FlatPack
 
       def initialize(
         style: :default,
+        hover: nil,
         clickable: false,
         href: nil,
         padding: :md,
@@ -80,6 +97,7 @@ module FlatPack
       )
         super(**system_arguments)
         @style = style.to_sym
+        @hover = hover&.to_sym
         @clickable = clickable
         @padding = padding.to_sym
 
@@ -92,6 +110,7 @@ module FlatPack
         end
 
         validate_style!
+        validate_hover!
         validate_padding!
       end
 
@@ -129,9 +148,27 @@ module FlatPack
         classes(
           "rounded-[var(--radius-lg)]",
           "overflow-hidden",
+          "h-full",
+          "flex",
+          "flex-col",
           style_classes,
-          padding_classes
+          hover_classes,
+          container_padding_classes
         )
+      end
+
+      def container_padding_classes
+        return nil if slot_based_content?
+
+        padding_classes
+      end
+
+      def slot_based_content?
+        media? || header? || body? || footer?
+      end
+
+      def default_media_arguments
+        {padding: @padding}
       end
 
       def style_classes
@@ -142,6 +179,14 @@ module FlatPack
         PADDINGS.fetch(@padding)
       end
 
+      def hover_classes
+        HOVERS.fetch(resolved_hover)
+      end
+
+      def resolved_hover
+        @hover || STYLE_DEFAULT_HOVERS.fetch(@style)
+      end
+
       def validate_style!
         return if STYLES.key?(@style)
         raise ArgumentError, "Invalid style: #{@style}. Must be one of: #{STYLES.keys.join(", ")}"
@@ -150,6 +195,11 @@ module FlatPack
       def validate_padding!
         return if PADDINGS.key?(@padding)
         raise ArgumentError, "Invalid padding: #{@padding}. Must be one of: #{PADDINGS.keys.join(", ")}"
+      end
+
+      def validate_hover!
+        return if @hover.nil? || HOVERS.key?(@hover)
+        raise ArgumentError, "Invalid hover: #{@hover}. Must be one of: #{HOVERS.keys.join(", ")}"
       end
 
       def validate_href!(original_href)

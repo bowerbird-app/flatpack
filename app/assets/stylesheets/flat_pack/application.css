@@ -26,4 +26,29 @@
   .shadow-button:disabled {
     box-shadow: none;
   }
+
+  .fp-card-hover-subtle {
+    transition: background-color var(--transition-fast);
+    cursor: pointer;
+  }
+
+  .fp-card-hover-subtle:hover {
+    background-color: var(--color-muted);
+  }
+
+  .fp-card-hover-strong {
+    transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
+    cursor: pointer;
+  }
+
+  .fp-card-hover-strong:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-primary);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .fp-card-hover-strong:hover {
+      box-shadow: var(--shadow-lg);
+    }
+  }
 }

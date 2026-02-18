@@ -55,7 +55,7 @@ module FlatPack
           render_inline(component) do |group|
             group.items { "Items" }
           end
-          
+
           # Panel should have ID matching aria-controls
           button = page.find("button")
           panel_id = button["aria-controls"]

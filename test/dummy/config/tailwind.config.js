@@ -14,6 +14,10 @@ module.exports = {
     `${engineRoot}/app/assets/stylesheets/**/*.css`,
     `${engineRoot}/app/javascript/**/*.js`,
   ],
+  safelist: [
+    'hover:bg-[var(--color-muted)]',
+    'hover:border-[var(--color-primary)]',
+  ],
   theme: {
     extend: {
       fontFamily: {

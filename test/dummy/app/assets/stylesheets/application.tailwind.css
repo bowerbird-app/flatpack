@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* FlatPack CSS Variables - Compatible with Tailwind CSS 3 */
+@import "flat_pack/variables";
+
+/* Import FlatPack component styles */
+@import "flat_pack/application";
