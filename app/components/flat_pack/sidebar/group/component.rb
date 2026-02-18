@@ -151,7 +151,7 @@ module FlatPack
           classes(
             "flex-1",
             "text-left",
-            (@collapsed ? "sr-only" : "")
+            ("sr-only" if @collapsed)
           )
         end
 
@@ -160,7 +160,7 @@ module FlatPack
             "flex-shrink-0",
             "transition-transform",
             "duration-200",
-            (@collapsed ? "hidden" : "")
+            ("hidden" if @collapsed)
           )
         end
 

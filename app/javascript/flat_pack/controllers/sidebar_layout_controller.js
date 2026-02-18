@@ -186,10 +186,13 @@ export default class extends Controller {
     }
 
     // Update labels visibility
-    const labels = this.sidebarTarget.querySelectorAll(".sr-only")
+    // Find all labels in sidebar items (not just those with sr-only)
+    const labels = this.sidebarTarget.querySelectorAll('[class*="flex-1"]')
     labels.forEach(label => {
       if (this.collapsed) {
-        label.classList.add("sr-only")
+        if (!label.classList.contains("sr-only")) {
+          label.classList.add("sr-only")
+        }
       } else {
         label.classList.remove("sr-only")
       }
