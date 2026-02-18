@@ -18,6 +18,18 @@ Rails.application.routes.draw do
   get "demo/search", to: "pages#search"
   get "demo/search_results", to: "pages#search_results"
   get "demo/sidebar_layout", to: "pages#sidebar_layout"
+  
+  # New component demos
+  get "demo/modals", to: "pages#modals"
+  get "demo/popovers", to: "pages#popovers"
+  get "demo/tooltips", to: "pages#tooltips"
+  get "demo/tabs", to: "pages#tabs"
+  get "demo/toasts", to: "pages#toasts"
+  get "demo/page_header", to: "pages#page_header"
+  get "demo/empty_state", to: "pages#empty_state"
+  get "demo/grid", to: "pages#grid"
+  get "demo/pagination", to: "pages#pagination"
+  get "demo/charts", to: "pages#charts"
 
   # Form submission endpoints for demonstration
   post "demo/forms/create", to: "pages#forms_create"

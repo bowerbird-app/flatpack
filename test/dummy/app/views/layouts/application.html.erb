@@ -249,12 +249,50 @@
                 icon: :home,
                 active: current_page?(demo_path)
               ) %>
+              
+              <%= render FlatPack::Sidebar::Divider::Component.new %>
+              
+              <!-- Interactive Components -->
               <%= render FlatPack::Sidebar::Item::Component.new(
                 label: "Buttons",
                 href: demo_buttons_path,
                 icon: :square,
                 active: current_page?(demo_buttons_path)
               ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Modals",
+                href: demo_modals_path,
+                icon: :box,
+                active: current_page?(demo_modals_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Popovers",
+                href: demo_popovers_path,
+                icon: :question,
+                active: current_page?(demo_popovers_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Tooltips",
+                href: demo_tooltips_path,
+                icon: :question,
+                active: current_page?(demo_tooltips_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Tabs",
+                href: demo_tabs_path,
+                icon: :folder,
+                active: current_page?(demo_tabs_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Toasts",
+                href: demo_toasts_path,
+                icon: :bell,
+                active: current_page?(demo_toasts_path)
+              ) %>
+              
+              <%= render FlatPack::Sidebar::Divider::Component.new %>
+              
+              <!-- Form Components -->
               <%= render FlatPack::Sidebar::Item::Component.new(
                 label: "Forms",
                 href: demo_forms_path,
@@ -267,6 +305,10 @@
                 icon: :type,
                 active: current_page?(demo_inputs_path)
               ) %>
+              
+              <%= render FlatPack::Sidebar::Divider::Component.new %>
+              
+              <!-- Data Display -->
               <%= render FlatPack::Sidebar::Item::Component.new(
                 label: "Tables",
                 href: demo_tables_path,
@@ -274,11 +316,49 @@
                 active: current_page?(demo_tables_path)
               ) %>
               <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Pagination",
+                href: demo_pagination_path,
+                icon: :chevron_right,
+                active: current_page?(demo_pagination_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Charts",
+                href: demo_charts_path,
+                icon: :dashboard,
+                active: current_page?(demo_charts_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Grid",
+                href: demo_grid_path,
+                icon: :dashboard,
+                active: current_page?(demo_grid_path)
+              ) %>
+              
+              <%= render FlatPack::Sidebar::Divider::Component.new %>
+              
+              <!-- Layout Components -->
+              <%= render FlatPack::Sidebar::Item::Component.new(
                 label: "Cards",
                 href: demo_cards_path,
                 icon: :box,
                 active: current_page?(demo_cards_path)
               ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Page Header",
+                href: demo_page_header_path,
+                icon: :align_left,
+                active: current_page?(demo_page_header_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Empty State",
+                href: demo_empty_state_path,
+                icon: :folder,
+                active: current_page?(demo_empty_state_path)
+              ) %>
+              
+              <%= render FlatPack::Sidebar::Divider::Component.new %>
+              
+              <!-- Feedback Components -->
               <%= render FlatPack::Sidebar::Item::Component.new(
                 label: "Alerts",
                 href: demo_alerts_path,
@@ -291,6 +371,10 @@
                 icon: :dashboard,
                 active: current_page?(demo_badges_path)
               ) %>
+              
+              <%= render FlatPack::Sidebar::Divider::Component.new %>
+              
+              <!-- Navigation Components -->
               <%= render FlatPack::Sidebar::Item::Component.new(
                 label: "Breadcrumbs",
                 href: demo_breadcrumbs_path,

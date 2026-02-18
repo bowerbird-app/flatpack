@@ -90,6 +90,70 @@ class PagesController < ApplicationController
   def breadcrumbs
   end
 
+  def modals
+  end
+
+  def popovers
+  end
+
+  def tooltips
+  end
+
+  def tabs
+  end
+
+  def toasts
+  end
+
+  def page_header
+  end
+
+  def empty_state
+  end
+
+  def grid
+    @products = Array.new(12) do |i|
+      OpenStruct.new(
+        id: i + 1,
+        name: "Product #{i + 1}",
+        price: rand(10..100),
+        description: "Description for product #{i + 1}"
+      )
+    end
+  end
+
+  def pagination
+    require "pagy"
+    @pagy, @records = pagy_array(Array.new(100) { |i| 
+      OpenStruct.new(id: i + 1, name: "Item #{i + 1}") 
+    }, items: 10)
+  rescue NameError
+    # Pagy not initialized, create mock
+    @pagy = OpenStruct.new(
+      page: 1,
+      pages: 10,
+      count: 100,
+      items: 10,
+      from: 1,
+      to: 10,
+      prev: nil,
+      next: 2,
+      series: ["1", 2, 3, 4, 5, :gap, 10]
+    )
+    @records = Array.new(10) { |i| OpenStruct.new(id: i + 1, name: "Item #{i + 1}") }
+  end
+
+  def charts
+    @sales_data = [
+      {name: "Jan", value: 30},
+      {name: "Feb", value: 40},
+      {name: "Mar", value: 45},
+      {name: "Apr", value: 50},
+      {name: "May", value: 49},
+      {name: "Jun", value: 60}
+    ]
+  end
+
   private
 
   def sort_users(users, sort_column, direction)
@@ -121,7 +185,17 @@ class PagesController < ApplicationController
       {title: "Breadcrumbs", description: "Hierarchical navigation trails", url: demo_breadcrumbs_path},
       {title: "Top Nav", description: "Header layout with left, center, and right slots", url: demo_navbar_path},
       {title: "Search", description: "Reusable search component with live results", url: demo_search_path},
-      {title: "Sidebar", description: "Sidebar and layout examples", url: demo_sidebar_layout_path}
+      {title: "Sidebar", description: "Sidebar and layout examples", url: demo_sidebar_layout_path},
+      {title: "Modals", description: "Dialog overlays with focus trap", url: demo_modals_path},
+      {title: "Popovers", description: "Click-triggered floating content", url: demo_popovers_path},
+      {title: "Tooltips", description: "Hover/focus tooltips", url: demo_tooltips_path},
+      {title: "Tabs", description: "Tabbed content with keyboard navigation", url: demo_tabs_path},
+      {title: "Toasts", description: "Auto-dismissing notifications", url: demo_toasts_path},
+      {title: "Page Header", description: "Page title with actions and breadcrumbs", url: demo_page_header_path},
+      {title: "Empty State", description: "User-friendly empty states", url: demo_empty_state_path},
+      {title: "Grid", description: "Responsive grid layouts", url: demo_grid_path},
+      {title: "Pagination", description: "Page navigation with Pagy", url: demo_pagination_path},
+      {title: "Charts", description: "Data visualization with ApexCharts", url: demo_charts_path}
     ]
   end
 end

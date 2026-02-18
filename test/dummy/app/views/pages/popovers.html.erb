@@ -1,0 +1,169 @@
+<h1 class="text-4xl font-bold mb-4">Popover Component</h1>
+<parameter name="text-lg text-[var(--color-muted-foreground)] mb-8">
+  Click-triggered floating content with smart positioning.
+</p>
+
+<!-- Basic Popover -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Basic Popover</h2>
+  <div class="mb-4">
+    <%= render FlatPack::Popover::Component.new(placement: :bottom) do |popover| %>
+      <%= render FlatPack::Button::Component.new(text: "Click me", style: :secondary) %>
+      <% popover.content do %>
+        <div class="p-4 w-64">
+          <h3 class="font-semibold mb-2">Popover Title</h3>
+          <p class="text-sm text-[var(--color-muted-foreground)]">
+            This is a popover with some content. Click outside or press ESC to close.
+          </p>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+  
+  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Popover::Component.new(placement: :bottom) do |popover| %&gt;
+  &lt;%= render FlatPack::Button::Component.new(text: "Click me") %&gt;
+  &lt;% popover.content do %&gt;
+    &lt;div class="p-4"&gt;
+      &lt;h3&gt;Title&lt;/h3&gt;
+      &lt;p&gt;Content...&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;% end %&gt;
+&lt;% end %&gt;</code></pre>
+</section>
+
+<!-- Popover Placements -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Popover Placements</h2>
+  <div class="flex justify-center items-center gap-8 p-12 bg-[var(--color-muted)] rounded-lg mb-4">
+    <%= render FlatPack::Popover::Component.new(placement: :top) do |popover| %>
+      <%= render FlatPack::Button::Component.new(text: "Top", style: :secondary) %>
+      <% popover.content do %>
+        <div class="p-3">
+          <p class="text-sm">Top popover</p>
+        </div>
+      <% end %>
+    <% end %>
+    
+    <%= render FlatPack::Popover::Component.new(placement: :right) do |popover| %>
+      <%= render FlatPack::Button::Component.new(text: "Right", style: :secondary) %>
+      <% popover.content do %>
+        <div class="p-3">
+          <p class="text-sm">Right popover</p>
+        </div>
+      <% end %>
+    <% end %>
+    
+    <%= render FlatPack::Popover::Component.new(placement: :bottom) do |popover| %>
+      <%= render FlatPack::Button::Component.new(text: "Bottom", style: :secondary) %>
+      <% popover.content do %>
+        <div class="p-3">
+          <p class="text-sm">Bottom popover</p>
+        </div>
+      <% end %>
+    <% end %>
+    
+    <%= render FlatPack::Popover::Component.new(placement: :left) do |popover| %>
+      <%= render FlatPack::Button::Component.new(text: "Left", style: :secondary) %>
+      <% popover.content do %>
+        <div class="p-3">
+          <p class="text-sm">Left popover</p>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<!-- Rich Content Popover -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Rich Content Popover</h2>
+  <div class="mb-4">
+    <%= render FlatPack::Popover::Component.new(placement: :bottom) do |popover| %>
+      <%= render FlatPack::Button::Component.new(text: "User Info", style: :primary) %>
+      <% popover.content do %>
+        <div class="p-4 w-72">
+          <div class="flex items-start gap-3 mb-3">
+            <div class="w-12 h-12 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-white font-semibold">
+              JD
+            </div>
+            <div>
+              <h3 class="font-semibold">John Doe</h3>
+              <p class="text-sm text-[var(--color-muted-foreground)]">john@example.com</p>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <%= render FlatPack::Button::Component.new(text: "View Profile", style: :secondary, class: "w-full") %>
+            <%= render FlatPack::Button::Component.new(text: "Send Message", style: :ghost, class: "w-full") %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<!-- Popover with Form -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Popover with Form</h2>
+  <div class="mb-4">
+    <%= render FlatPack::Popover::Component.new(placement: :bottom) do |popover| %>
+      <%= render FlatPack::Button::Component.new(text: "Add Comment", style: :secondary) %>
+      <% popover.content do %>
+        <div class="p-4 w-80">
+          <h3 class="font-semibold mb-3">Quick Comment</h3>
+          <form class="space-y-3">
+            <%= render FlatPack::TextArea::Component.new(
+              name: "comment",
+              placeholder: "Enter your comment...",
+              rows: 3
+            ) %>
+            <div class="flex gap-2">
+              <%= render FlatPack::Button::Component.new(text: "Cancel", style: :ghost, size: :sm) %>
+              <%= render FlatPack::Button::Component.new(text: "Submit", style: :primary, size: :sm) %>
+            </div>
+          </form>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<!-- Popover with List -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Popover with List</h2>
+  <div class="mb-4">
+    <%= render FlatPack::Popover::Component.new(placement: :bottom) do |popover| %>
+      <%= render FlatPack::Button::Component.new(text: "More Actions", style: :secondary) %>
+      <% popover.content do %>
+        <div class="py-2 w-48">
+          <a href="#" class="block px-4 py-2 text-sm hover:bg-[var(--color-muted)] transition-colors">
+            Edit
+          </a>
+          <a href="#" class="block px-4 py-2 text-sm hover:bg-[var(--color-muted)] transition-colors">
+            Duplicate
+          </a>
+          <a href="#" class="block px-4 py-2 text-sm hover:bg-[var(--color-muted)] transition-colors">
+            Archive
+          </a>
+          <div class="border-t border-[var(--color-border)] my-2"></div>
+          <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-[var(--color-muted)] transition-colors">
+            Delete
+          </a>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Features</h2>
+  <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
+    <li><strong>Click to Open:</strong> Opens on click, not hover</li>
+    <li><strong>Smart Positioning:</strong> Automatically adjusts for viewport boundaries</li>
+    <li><strong>Click Outside:</strong> Closes when clicking outside the popover</li>
+    <li><strong>ESC to Close:</strong> Press ESC key to dismiss</li>
+    <li><strong>Rich Content:</strong> Support for any HTML content</li>
+    <li><strong>No Dependencies:</strong> Pure Stimulus implementation</li>
+    <li><strong>Accessible:</strong> Proper ARIA attributes</li>
+    <li><strong>Smooth Animations:</strong> Fade in/out transitions</li>
+  </ul>
+</section>

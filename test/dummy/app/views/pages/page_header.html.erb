@@ -1,0 +1,128 @@
+<h1 class="text-4xl font-bold mb-4">Page Header Component</h1>
+<p class="text-lg text-[var(--color-muted-foreground)] mb-8">
+  Consistent page headers with title, subtitle, actions, and breadcrumb slots.
+</p>
+
+<!-- Basic Page Header -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Basic Page Header</h2>
+  <%= render FlatPack::PageHeader::Component.new(
+    title: "Dashboard",
+    subtitle: "Overview of your workspace"
+  ) %>
+  
+  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::PageHeader::Component.new(
+  title: "Dashboard",
+  subtitle: "Overview of your workspace"
+) %&gt;</code></pre>
+</section>
+
+<!-- Page Header with Actions -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Page Header with Actions</h2>
+  <%= render FlatPack::PageHeader::Component.new(
+    title: "Projects",
+    subtitle: "Manage your projects and workflows"
+  ) do |header| %>
+    <% header.actions do %>
+      <%= render FlatPack::Button::Component.new(text: "Export", style: :secondary) %>
+      <%= render FlatPack::Button::Component.new(text: "New Project", style: :primary) %>
+    <% end %>
+  <% end %>
+  
+  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::PageHeader::Component.new(
+  title: "Projects",
+  subtitle: "Manage your projects"
+) do |header| %&gt;
+  &lt;% header.actions do %&gt;
+    &lt;%= render FlatPack::Button::Component.new(text: "New Project", style: :primary) %&gt;
+  &lt;% end %&gt;
+&lt;% end %&gt;</code></pre>
+</section>
+
+<!-- Page Header with Breadcrumbs -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Page Header with Breadcrumbs</h2>
+  <%= render FlatPack::PageHeader::Component.new(
+    title: "Edit User",
+    subtitle: "Update user information and permissions"
+  ) do |header| %>
+    <% header.breadcrumb do %>
+      <%= render FlatPack::Breadcrumb::Component.new do |breadcrumb| %>
+        <% breadcrumb.item(text: "Home", href: demo_path) %>
+        <% breadcrumb.item(text: "Users", href: "#") %>
+        <% breadcrumb.item(text: "John Doe") %>
+      <% end %>
+    <% end %>
+    <% header.actions do %>
+      <%= render FlatPack::Button::Component.new(text: "Cancel", style: :secondary) %>
+      <%= render FlatPack::Button::Component.new(text: "Save Changes", style: :primary) %>
+    <% end %>
+  <% end %>
+  
+  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::PageHeader::Component.new(title: "Edit User") do |header| %&gt;
+  &lt;% header.breadcrumb do %&gt;
+    &lt;%= render FlatPack::Breadcrumb::Component.new do |breadcrumb| %&gt;
+      &lt;% breadcrumb.item(text: "Home", href: "/") %&gt;
+      &lt;% breadcrumb.item(text: "Users", href: "/users") %&gt;
+      &lt;% breadcrumb.item(text: "John Doe") %&gt;
+    &lt;% end %&gt;
+  &lt;% end %&gt;
+  &lt;% header.actions do %&gt;
+    &lt;%= render FlatPack::Button::Component.new(text: "Save", style: :primary) %&gt;
+  &lt;% end %&gt;
+&lt;% end %&gt;</code></pre>
+</section>
+
+<!-- Page Header with Meta Info -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Page Header with Meta Info</h2>
+  <%= render FlatPack::PageHeader::Component.new(
+    title: "Annual Report 2024",
+    subtitle: "Financial overview and performance metrics"
+  ) do |header| %>
+    <% header.meta do %>
+      <div class="flex gap-4 text-sm text-[var(--color-muted-foreground)]">
+        <div class="flex items-center gap-1">
+          <%= render FlatPack::Shared::IconComponent.new(name: :calendar, size: :sm) %>
+          <span>Last updated: Jan 15, 2024</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <%= render FlatPack::Shared::IconComponent.new(name: :user, size: :sm) %>
+          <span>Created by: Admin</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <%= render FlatPack::Badge::Component.new(text: "Published", variant: :success) %>
+        </div>
+      </div>
+    <% end %>
+    <% header.actions do %>
+      <%= render FlatPack::Button::Component.new(text: "Download PDF", style: :secondary) %>
+      <%= render FlatPack::Button::Component.new(text: "Share", style: :primary) %>
+    <% end %>
+  <% end %>
+</section>
+
+<!-- Compact Page Header -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Compact Page Header</h2>
+  <%= render FlatPack::PageHeader::Component.new(title: "Settings") do |header| %>
+    <% header.actions do %>
+      <%= render FlatPack::Button::Component.new(text: "Reset", style: :ghost, size: :sm) %>
+      <%= render FlatPack::Button::Component.new(text: "Save", style: :primary, size: :sm) %>
+    <% end %>
+  <% end %>
+</section>
+
+<!-- Features -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Features</h2>
+  <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
+    <li><strong>Flexible Slots:</strong> Title, subtitle, breadcrumb, meta, and actions</li>
+    <li><strong>Responsive Layout:</strong> Adapts to mobile and desktop viewports</li>
+    <li><strong>Consistent Spacing:</strong> Standardized margins and padding</li>
+    <li><strong>Action Grouping:</strong> Multiple buttons in actions slot</li>
+    <li><strong>Breadcrumb Integration:</strong> Works with Breadcrumb component</li>
+    <li><strong>Meta Information:</strong> Display dates, status, or other metadata</li>
+  </ul>
+</section>
