@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   patch "demo/tables/reorder", to: "pages#tables_reorder"
   get "demo/inputs", to: "pages#inputs"
   get "demo/badges", to: "pages#badges"
+  get "demo/chips", to: "pages#chips"
   get "demo/alerts", to: "pages#alerts"
   get "demo/cards", to: "pages#cards"
   get "demo/breadcrumbs", to: "pages#breadcrumbs"

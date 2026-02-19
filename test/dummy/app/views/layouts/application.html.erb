@@ -389,6 +389,12 @@
                 icon: :dashboard,
                 active: current_page?(demo_badges_path)
               ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Chips",
+                href: demo_chips_path,
+                icon: :dashboard,
+                active: current_page?(demo_chips_path)
+              ) %>
               
               <%= render FlatPack::Sidebar::Divider::Component.new %>
               

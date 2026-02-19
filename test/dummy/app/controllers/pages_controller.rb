@@ -68,6 +68,9 @@ class PagesController < ApplicationController
   def badges
   end
 
+  def chips
+  end
+
   def alerts
   end
 
