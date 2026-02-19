@@ -199,6 +199,15 @@ class PagesController < ApplicationController
   def comments
   end
 
+  def chat
+  end
+
+  def chat_basic
+  end
+
+  def chat_states
+  end
+
   private
 
   def build_component_index

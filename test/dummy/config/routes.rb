@@ -35,6 +35,9 @@ Rails.application.routes.draw do
   get "demo/code_blocks", to: "pages#code_blocks"
   get "demo/avatars", to: "pages#avatars"
   get "demo/comments", to: "pages#comments"
+  get "demo/chat", to: "pages#chat"
+  get "demo/chat/basic", to: "pages#chat_basic"
+  get "demo/chat/states", to: "pages#chat_states"
 
   # Form submission endpoints for demonstration
   post "demo/forms/create", to: "pages#forms_create"

@@ -30,6 +30,7 @@ FlatPack is a production-grade Rails Engine that provides a comprehensive set of
 - [Button Component](components/button.md)
 - [Button Dropdown Component](components/button-dropdown.md)
 - [Card Component](components/card.md)
+- [Chat Components](components/chat.md)
 - [Chip Component](components/chips.md)
 - [Comments Thread Component](components/comments-thread.md)
 - [Comments Item Component](components/comments-item.md)

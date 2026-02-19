@@ -351,6 +351,12 @@
                 icon: :users,
                 active: current_page?(demo_comments_path)
               ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Chat",
+                href: demo_chat_path,
+                icon: :message_circle,
+                active: current_page?(demo_chat_path) || current_page?(demo_chat_basic_path) || current_page?(demo_chat_states_path)
+              ) %>
               
               <%= render FlatPack::Sidebar::Divider::Component.new %>
               
