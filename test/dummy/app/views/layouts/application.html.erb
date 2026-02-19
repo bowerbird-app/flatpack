@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="h-full overflow-hidden overscroll-none">
   <head>
     <title>FlatPack Demo</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -10,7 +10,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="m-0 overflow-hidden">
+  <body class="m-0 h-full overflow-hidden overscroll-none">
     <!-- SVG Icon Sprite -->
     <svg style="display: none;" xmlns="http://www.w3.org/2000/svg">
       <symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -402,6 +402,12 @@
             </nav>
           <% end %>
 
+          <% sidebar.footer do %>
+            <%= render FlatPack::Sidebar::Footer::Component.new(class: "text-sm text-[var(--color-text-muted)]") do %>
+              FlatPack Demo Components
+            <% end %>
+          <% end %>
+
         <% end %>
       <% end %>
 
@@ -423,8 +429,8 @@
       <% end %>
 
       <% layout.main do %>
-        <main class="flex-1 min-h-0 overflow-y-auto overscroll-contain p-8">
-          <div class="max-w-4xl mx-auto">
+        <main class="p-8">
+          <div class="max-w-4xl mx-auto pb-24">
             <% if notice.present? %>
               <div class="mb-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-muted)] px-4 py-3 text-sm">
                 <%= notice %>
