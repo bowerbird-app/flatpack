@@ -339,6 +339,18 @@
                 icon: :type,
                 active: current_page?(demo_code_blocks_path)
               ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Avatars",
+                href: demo_avatars_path,
+                icon: :user,
+                active: current_page?(demo_avatars_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Comments",
+                href: demo_comments_path,
+                icon: :users,
+                active: current_page?(demo_comments_path)
+              ) %>
               
               <%= render FlatPack::Sidebar::Divider::Component.new %>
               
