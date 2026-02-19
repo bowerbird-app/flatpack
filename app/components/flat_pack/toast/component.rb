@@ -12,22 +12,22 @@ module FlatPack
       TYPES = {
         info: {
           border: "border-[var(--color-info)]",
-          bg: "bg-[var(--color-info)]/10",
+          bg: "bg-[var(--color-background)]",
           text: "text-[var(--color-info)]"
         },
         success: {
           border: "border-[var(--color-success)]",
-          bg: "bg-[var(--color-success)]/10",
+          bg: "bg-[var(--color-background)]",
           text: "text-[var(--color-success)]"
         },
         warning: {
           border: "border-[var(--color-warning)]",
-          bg: "bg-[var(--color-warning)]/10",
+          bg: "bg-[var(--color-background)]",
           text: "text-[var(--color-warning)]"
         },
         error: {
           border: "border-[var(--color-error)]",
-          bg: "bg-[var(--color-error)]/10",
+          bg: "bg-[var(--color-background)]",
           text: "text-[var(--color-error)]"
         }
       }.freeze
@@ -85,6 +85,7 @@ module FlatPack
           "rounded-[var(--radius-md)]",
           "border",
           "shadow-lg",
+          "z-[60]",
           "min-w-[300px]",
           "max-w-md",
           type_styles[:border],
@@ -163,8 +164,7 @@ module FlatPack
           type: "button",
           class: "flex-shrink-0 text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors rounded-[var(--radius-sm)] p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]",
           aria: {label: "Dismiss"},
-          data: {action: "flat-pack--toast#dismiss"}
-        ) do
+          data: {action: "flat-pack--toast#dismiss"}) do
           content_tag(:svg, class: "w-4 h-4", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor") do
             tag.path(
               "stroke-linecap": "round",

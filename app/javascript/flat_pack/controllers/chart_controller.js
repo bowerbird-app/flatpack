@@ -35,14 +35,15 @@ export default class extends Controller {
   }
 
   renderChart(ApexCharts) {
+    const chartOptions = this.optionsValue.chart || {}
     const options = {
+      ...this.optionsValue,
       series: this.seriesValue,
       chart: {
+        ...chartOptions,
         type: this.typeValue,
-        height: this.heightValue,
-        ...this.optionsValue.chart
-      },
-      ...this.optionsValue
+        height: this.heightValue
+      }
     }
 
     // Create and render chart

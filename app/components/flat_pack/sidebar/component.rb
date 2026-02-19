@@ -88,6 +88,8 @@ module FlatPack
           "flex",
           "flex-col",
           "h-full",
+          "min-h-0",
+          "overflow-hidden",
           "bg-[var(--color-background)]",
           side_border_class,
           "border-[var(--color-border)]",
@@ -108,7 +110,7 @@ module FlatPack
       end
 
       def items_container_classes
-        "flex-1 overflow-y-auto"
+        "flex-1 min-h-0 overflow-y-auto overscroll-y-contain"
       end
     end
   end

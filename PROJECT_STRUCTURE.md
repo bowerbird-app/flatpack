@@ -34,7 +34,6 @@ flat_pack/
 │   │   │   ├── component.rb      # Table component logic
 │   │   │   ├── component.html.erb # Table template
 │   │   │   ├── column_component.rb # Column sub-component
-│   │   │   └── action_component.rb # Action sub-component
 │   │   └── shared/
 │   │       └── icon_component.rb  # Shared icon component
 │   └── javascript/flat_pack/
@@ -140,7 +139,7 @@ flat_pack/
 
 ### 3. Table Component (`app/components/flat_pack/table/`)
 **Features:**
-- Data table with columns and actions
+- Data table with configurable columns
 - Lambda-based columns with html parameter
 - Optional Stimulus controller for interactivity
 - Empty state handling
@@ -150,7 +149,6 @@ flat_pack/
 ```erb
 <%= render FlatPack::Table::Component.new(data: @users) do |table| %>
   <% table.column(title: "Name", html: ->(user) { user.name }) %>
-  <% table.with_action(text: "Edit", url: ->(user) { edit_user_path(user) }) %>
 <% end %>
 ```
 

@@ -10,9 +10,17 @@ export default class extends Controller {
 
   connect() {
     this.previousActiveElement = null
+    this.handleDocumentTriggerClick = this.handleDocumentTriggerClick.bind(this)
+    document.addEventListener("click", this.handleDocumentTriggerClick)
+
+    if (this.element.classList.contains("hidden")) {
+      this.restoreBodyScroll()
+    }
   }
 
   disconnect() {
+    document.removeEventListener("click", this.handleDocumentTriggerClick)
+
     // Restore scroll if modal was open when disconnected
     if (this.element.classList.contains("flex")) {
       this.restoreBodyScroll()
@@ -22,8 +30,12 @@ export default class extends Controller {
 
   // Open modal
   open() {
+    if (!this.element.classList.contains("hidden")) return
+
     // Store the currently focused element
-    this.previousActiveElement = document.activeElement
+    if (!this.previousActiveElement) {
+      this.previousActiveElement = document.activeElement
+    }
 
     // Prevent body scroll
     this.preventBodyScroll()
@@ -53,8 +65,13 @@ export default class extends Controller {
 
   // Close modal
   close() {
+    if (this.element.classList.contains("hidden")) return
+
     // Fade out animations
     this.element.style.opacity = "0"
+
+    // Restore body scroll immediately so page scrolling is never left locked
+    this.restoreBodyScroll()
     
     if (this.hasDialogTarget) {
       this.dialogTarget.style.opacity = "0"
@@ -66,10 +83,7 @@ export default class extends Controller {
       this.element.classList.remove("flex")
       this.element.classList.add("hidden")
       this.element.setAttribute("aria-hidden", "true")
-      
-      // Restore body scroll
-      this.restoreBodyScroll()
-      
+
       // Restore focus to previous element
       this.restoreFocus()
     }, 300) // Match CSS transition duration
@@ -82,6 +96,17 @@ export default class extends Controller {
     } else {
       this.close()
     }
+  }
+
+  handleDocumentTriggerClick(event) {
+    const trigger = event.target.closest("[data-modal-id]")
+    if (!trigger) return
+
+    const modalId = trigger.dataset.modalId
+    if (!modalId || modalId !== this.element.id) return
+
+    this.previousActiveElement = trigger
+    this.open()
   }
 
   // Handle backdrop click
@@ -98,25 +123,44 @@ export default class extends Controller {
   preventBodyScroll() {
     this.originalOverflow = document.body.style.overflow
     this.originalPaddingRight = document.body.style.paddingRight
+    const lockCount = Number(document.body.dataset.flatPackModalLockCount || "0")
     
-    // Get scrollbar width
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
-    
-    // Add padding to prevent layout shift
-    if (scrollbarWidth > 0) {
-      document.body.style.paddingRight = `${scrollbarWidth}px`
+    if (lockCount === 0) {
+      // Get scrollbar width
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
+
+      // Add padding to prevent layout shift
+      if (scrollbarWidth > 0) {
+        document.body.style.paddingRight = `${scrollbarWidth}px`
+      }
+
+      document.body.style.overflow = "hidden"
     }
-    
-    document.body.style.overflow = "hidden"
+
+    document.body.dataset.flatPackModalLockCount = String(lockCount + 1)
   }
 
   // Restore body scroll
   restoreBodyScroll() {
+    const lockCount = Number(document.body.dataset.flatPackModalLockCount || "0")
+
+    if (lockCount > 1) {
+      document.body.dataset.flatPackModalLockCount = String(lockCount - 1)
+      return
+    }
+
+    delete document.body.dataset.flatPackModalLockCount
+
     if (this.originalOverflow !== undefined) {
       document.body.style.overflow = this.originalOverflow
+    } else {
+      document.body.style.removeProperty("overflow")
     }
+
     if (this.originalPaddingRight !== undefined) {
       document.body.style.paddingRight = this.originalPaddingRight
+    } else {
+      document.body.style.removeProperty("padding-right")
     }
   }
 

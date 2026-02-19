@@ -51,16 +51,16 @@ module FlatPack
 
       def render_with_card
         render FlatPack::Card::Component.new(padding: :none) do |card|
-          card.with_header do
+          card.header do
             render_card_header
           end
-          
-          card.with_body do
+
+          card.body do
             render_chart_container
           end
-          
+
           if footer?
-            card.with_footer do
+            card.footer do
               footer
             end
           end
@@ -136,7 +136,7 @@ module FlatPack
       end
 
       def default_options
-        {
+        base_options = {
           chart: {
             fontFamily: "inherit",
             toolbar: {
@@ -146,12 +146,29 @@ module FlatPack
           theme: {
             mode: "light"
           },
+          dataLabels: {
+            enabled: false
+          },
+          legend: {
+            labels: {
+              colors: "var(--color-text)"
+            }
+          },
+          tooltip: {
+            theme: "light"
+          }
+        }
+
+        return base_options.merge(non_axis_chart_defaults) if non_axis_chart?
+
+        base_options.merge(axis_chart_defaults)
+      end
+
+      def axis_chart_defaults
+        {
           stroke: {
             curve: "smooth",
             width: 2
-          },
-          dataLabels: {
-            enabled: false
           },
           grid: {
             borderColor: "var(--color-border)",
@@ -176,16 +193,20 @@ module FlatPack
                 colors: "var(--color-text-muted)"
               }
             }
-          },
-          legend: {
-            labels: {
-              colors: "var(--color-text)"
-            }
-          },
-          tooltip: {
-            theme: "light"
           }
         }
+      end
+
+      def non_axis_chart_defaults
+        {
+          stroke: {
+            width: 1
+          }
+        }
+      end
+
+      def non_axis_chart?
+        @type == :donut || @type == :pie
       end
 
       def validate_series!

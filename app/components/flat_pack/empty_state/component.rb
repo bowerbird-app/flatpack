@@ -26,13 +26,13 @@ module FlatPack
       def initialize(
         title:,
         description: nil,
-        icon: :inbox,
+        icon: nil,
         **system_arguments
       )
         super(**system_arguments)
         @title = title
         @description = description
-        @icon = icon.to_sym
+        @icon = normalize_icon(icon)
 
         validate_title!
         validate_icon!
@@ -71,8 +71,19 @@ module FlatPack
 
       def render_graphic
         return graphic if graphic?
+        return nil if @icon.nil?
 
-        content_tag(:div, ICONS.fetch(@icon), class: "mb-4")
+        content_tag(:div, graphic_content, class: "mb-4")
+      end
+
+      def graphic_content
+        return ICONS.fetch(@icon) if ICONS.key?(@icon)
+
+        render FlatPack::Shared::IconComponent.new(
+          name: @icon,
+          size: :xl,
+          class: "text-[var(--color-text-muted)]"
+        )
       end
 
       def render_title
@@ -97,8 +108,16 @@ module FlatPack
       end
 
       def validate_icon!
-        return if ICONS.key?(@icon)
-        raise ArgumentError, "Invalid icon: #{@icon}. Must be one of: #{ICONS.keys.join(", ")}"
+        return if @icon.nil?
+        return if @icon.is_a?(Symbol)
+        raise ArgumentError, "Invalid icon: #{@icon.inspect}. Must be a symbol or string."
+      end
+
+      def normalize_icon(icon)
+        return nil if icon == false
+        return icon.to_sym if icon.respond_to?(:to_sym)
+
+        icon
       end
     end
   end

@@ -40,6 +40,7 @@ module FlatPack
           class: container_classes,
           data: {
             controller: "flat-pack--tooltip",
+            action: "mouseenter->flat-pack--tooltip#show mouseleave->flat-pack--tooltip#hide focusin->flat-pack--tooltip#show focusout->flat-pack--tooltip#hide",
             "flat-pack--tooltip-placement-value": @placement
           }
         )
@@ -69,26 +70,36 @@ module FlatPack
         {
           role: "tooltip",
           class: tooltip_classes,
+          style: tooltip_fallback_styles,
           data: {
             "flat-pack--tooltip-target": "tooltip"
           }
         }
       end
 
+      def tooltip_fallback_styles
+        "background-color: var(--color-foreground); color: var(--color-background); border-color: var(--color-border);"
+      end
+
       def tooltip_classes
         classes(
-          "absolute",
+          "fixed",
           "z-50",
           "hidden",
-          "px-2",
-          "py-1",
-          "text-xs",
+          "px-3",
+          "py-2",
+          "text-sm",
+          "leading-snug",
           "font-medium",
-          "text-[var(--color-primary-text)]",
-          "bg-[var(--color-text)]",
+          "text-[var(--color-background)]",
+          "bg-[var(--color-foreground)]",
+          "border",
+          "border-[var(--color-border)]",
           "rounded-[var(--radius-sm)]",
           "shadow-lg",
-          "whitespace-nowrap",
+          "max-w-xs",
+          "whitespace-normal",
+          "break-words",
           "pointer-events-none",
           "opacity-0",
           "transition-opacity",

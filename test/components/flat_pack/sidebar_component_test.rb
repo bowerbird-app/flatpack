@@ -62,7 +62,14 @@ module FlatPack
         render_inline(Component.new) do |sidebar|
           sidebar.items { "Items" }
         end
-        assert_selector "div.flex-1.overflow-y-auto"
+        assert_selector "div.flex-1.min-h-0.overflow-y-auto.overscroll-y-contain"
+      end
+
+      def test_sidebar_prevents_overflow_outside_items_area
+        render_inline(Component.new)
+
+        assert_includes page.native.to_html, "min-h-0"
+        assert_includes page.native.to_html, "overflow-hidden"
       end
 
       def test_has_correct_layout_classes

@@ -51,7 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Importmaps for JavaScript dependencies
 - Base component with tailwind_merge integration
 - Button component with multiple schemes (primary, secondary, ghost)
-- Table component with columns and actions
+- Table component with configurable columns
 - Icon component for shared icons
 - Stimulus controller for table interactions
 - Comprehensive documentation in docs/ directory

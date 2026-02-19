@@ -17,6 +17,7 @@ module FlatPack
 
           assert_selector "div.shrink-0.p-4.border-t"
           assert_includes page.native.to_html, "border-[var(--color-border)]"
+          assert_selector "div[data-flat-pack--sidebar-layout-target='footer']"
         end
 
         def test_merges_custom_classes

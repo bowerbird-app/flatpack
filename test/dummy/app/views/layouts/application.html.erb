@@ -333,6 +333,12 @@
                 icon: :dashboard,
                 active: current_page?(demo_grid_path)
               ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Code Blocks",
+                href: demo_code_blocks_path,
+                icon: :type,
+                active: current_page?(demo_code_blocks_path)
+              ) %>
               
               <%= render FlatPack::Sidebar::Divider::Component.new %>
               
@@ -423,6 +429,19 @@
             >
               <%= render FlatPack::Shared::IconComponent.new(name: :menu, size: :md) %>
             </button>
+            <span class="text-sm font-medium text-[var(--color-text-muted)]">FlatPack Demo</span>
+          <% end %>
+
+          <% nav.center do %><% end %>
+
+          <% nav.right do %>
+            <%= render FlatPack::Button::Component.new(
+              icon: "bell",
+              icon_only: true,
+              style: :ghost,
+              size: :sm,
+              aria: { label: "Notifications" }
+            ) %>
           <% end %>
 
         <% end %>

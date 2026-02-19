@@ -105,6 +105,30 @@
 &lt;% end %&gt;</code></pre>
   </section>
 
+  <!-- With Back Item -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">With Back Item</h2>
+    <p class="text-sm text-[var(--color-muted-foreground)] mb-3">
+      The back link is prepended as the first breadcrumb item and resolves to the previous page when available.
+    </p>
+    <div class="mb-4">
+      <%= render FlatPack::Breadcrumb::Component.new(
+        show_back: true,
+        back_fallback_url: "/demo"
+      ) do |breadcrumb| %>
+        <% breadcrumb.item(text: "Settings", href: "/settings") %>
+        <% breadcrumb.item(text: "Profile") %>
+      <% end %>
+    </div>
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Breadcrumb::Component.new(
+  show_back: true,
+  back_fallback_url: "/demo"
+) do |breadcrumb| %&gt;
+  &lt;% breadcrumb.item(text: "Settings", href: "/settings") %&gt;
+  &lt;% breadcrumb.item(text: "Profile") %&gt;
+&lt;% end %&gt;</code></pre>
+  </section>
+
   <!-- Custom Home Configuration -->
   <section class="mb-12">
     <h2 class="text-2xl font-semibold mb-4">Custom Home Configuration</h2>

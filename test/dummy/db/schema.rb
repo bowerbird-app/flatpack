@@ -10,5 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 0) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_19_000000) do
+  create_table "demo_table_rows", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "list_key", null: false
+    t.integer "lock_version", default: 0, null: false
+    t.string "name", null: false
+    t.integer "position", null: false
+    t.string "priority", null: false
+    t.string "status", null: false
+    t.datetime "updated_at", null: false
+    t.index ["list_key", "position"], name: "index_demo_table_rows_on_list_key_and_position", unique: true
+  end
 end

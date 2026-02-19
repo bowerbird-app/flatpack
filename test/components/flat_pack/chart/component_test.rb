@@ -201,6 +201,29 @@ module FlatPack
         assert_includes html, '"show":false'
       end
 
+      def test_donut_defaults_do_not_include_axis_options
+        series = [44, 55, 41]
+        render_inline(Component.new(series: series, type: :donut))
+
+        html = page.native.to_html
+        assert_includes html, '"stroke":{"width":1}'
+        refute_includes html, '"xaxis"'
+        refute_includes html, '"yaxis"'
+        refute_includes html, '"grid"'
+        refute_includes html, '"curve":"smooth"'
+      end
+
+      def test_line_defaults_include_axis_options
+        series = [{name: "Sales", data: [10, 20, 30]}]
+        render_inline(Component.new(series: series, type: :line))
+
+        html = page.native.to_html
+        assert_includes html, '"xaxis"'
+        assert_includes html, '"yaxis"'
+        assert_includes html, '"grid"'
+        assert_includes html, '"curve":"smooth"'
+      end
+
       def test_renders_chart_with_all_options
         series = [{name: "Sales", data: [10, 20, 30]}]
         render_inline(Component.new(

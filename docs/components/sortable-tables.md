@@ -196,12 +196,6 @@ end
     sortable: true,
     sort_key: :created_at
   ) %>
-  
-  <% table.with_action(
-    text: "Edit",
-    url: ->(product) { edit_product_path(product) },
-    scheme: :ghost
-  ) %>
 <% end %>
 ```
 
@@ -272,6 +266,39 @@ end
 5. **Controller**: Sorts data based on params
 6. **Partial Update**: Only the table content is replaced
 7. **Visual Feedback**: Arrow indicator shows current sort state
+
+## Persisting Row Order (Drag-and-Drop)
+
+For draggable rows, use a generic reorder contract so UI does not depend on a single ordering implementation.
+
+Example payload:
+
+```json
+{
+  "reorder": {
+    "resource": "demo_table_rows",
+    "strategy": "dense_integer",
+    "scope": { "list_key": "tables-demo" },
+    "version": "1739990000.12",
+    "items": [
+      { "id": 7, "position": 1 },
+      { "id": 4, "position": 2 },
+      { "id": 9, "position": 3 }
+    ]
+  }
+}
+```
+
+Contract guidance:
+- `resource`: Logical list identifier (not tied to one model class name convention).
+- `strategy`: Ordering adapter key (e.g., `dense_integer`, future `sparse_integer`, `lexorank`).
+- `scope`: Optional grouping keys for scoped ordering.
+- `version`: Optimistic concurrency token from the last successful read.
+- `items`: Full ordered list of IDs with 1-based positions.
+
+Response guidance:
+- Return normalized `items` and a refreshed `version` on success.
+- Return `409 Conflict` with latest `version` when stale, so clients can refresh and retry.
 
 ## URL Parameters
 
@@ -626,7 +653,7 @@ table.column(
 ## Related Components
 
 - [Table Component](table.md) - Main table documentation
-- [Button Component](button.md) - Used for actions
+- [Button Component](button.md) - For custom button content in table columns
 - [Sortable Table Examples](sortable-tables-examples.md) - Visual examples
 
 ## Next Steps

@@ -2,6 +2,7 @@ PATH
   remote: ../..
   specs:
     flat_pack (0.1.2)
+      pagy (~> 9.0)
       rails (~> 8.0)
       tailwind_merge (~> 0.13)
       view_component (~> 3.0)
@@ -164,6 +165,7 @@ GEM
       racc (~> 1.4)
     nokogiri (1.19.0-x86_64-linux-musl)
       racc (~> 1.4)
+    pagy (9.4.0)
     pp (0.6.3)
       prettyprint
     prettyprint (0.2.0)

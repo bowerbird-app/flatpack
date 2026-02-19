@@ -1,5 +1,5 @@
 <h1 class="text-4xl font-bold mb-4">Popover Component</h1>
-<parameter name="text-lg text-[var(--color-muted-foreground)] mb-8">
+<p class="text-lg text-[var(--color-muted-foreground)] mb-8">
   Click-triggered floating content with smart positioning.
 </p>
 
@@ -7,9 +7,9 @@
 <section class="mb-12">
   <h2 class="text-2xl font-semibold mb-4">Basic Popover</h2>
   <div class="mb-4">
-    <%= render FlatPack::Popover::Component.new(placement: :bottom) do |popover| %>
-      <%= render FlatPack::Button::Component.new(text: "Click me", style: :secondary) %>
-      <% popover.content do %>
+    <%= render FlatPack::Button::Component.new(id: "popover-trigger-basic", text: "Click me", style: :secondary) %>
+    <%= render FlatPack::Popover::Component.new(trigger_id: "popover-trigger-basic", placement: :bottom) do |popover| %>
+      <% popover.with_popover_content do %>
         <div class="p-4 w-64">
           <h3 class="font-semibold mb-2">Popover Title</h3>
           <p class="text-sm text-[var(--color-muted-foreground)]">
@@ -20,9 +20,9 @@
     <% end %>
   </div>
   
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Popover::Component.new(placement: :bottom) do |popover| %&gt;
-  &lt;%= render FlatPack::Button::Component.new(text: "Click me") %&gt;
-  &lt;% popover.content do %&gt;
+  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Button::Component.new(id: "popover-trigger", text: "Click me") %&gt;
+&lt;%= render FlatPack::Popover::Component.new(trigger_id: "popover-trigger", placement: :bottom) do |popover| %&gt;
+  &lt;% popover.with_popover_content do %&gt;
     &lt;div class="p-4"&gt;
       &lt;h3&gt;Title&lt;/h3&gt;
       &lt;p&gt;Content...&lt;/p&gt;
@@ -34,39 +34,43 @@
 <!-- Popover Placements -->
 <section class="mb-12">
   <h2 class="text-2xl font-semibold mb-4">Popover Placements</h2>
-  <div class="flex justify-center items-center gap-8 p-12 bg-[var(--color-muted)] rounded-lg mb-4">
-    <%= render FlatPack::Popover::Component.new(placement: :top) do |popover| %>
-      <%= render FlatPack::Button::Component.new(text: "Top", style: :secondary) %>
-      <% popover.content do %>
-        <div class="p-3">
-          <p class="text-sm">Top popover</p>
+  <div class="flex justify-center items-center flex-wrap gap-4 mb-4">
+    <%= render FlatPack::Button::Component.new(id: "popover-trigger-left", text: "Left", style: :secondary) %>
+    <%= render FlatPack::Popover::Component.new(trigger_id: "popover-trigger-left", placement: :left) do |popover| %>
+      <% popover.with_popover_content do %>
+        <div class="p-3 w-52 text-[var(--color-foreground)]">
+          <p class="text-sm font-semibold">Left Popover</p>
+          <p class="text-xs text-[var(--color-muted-foreground)] mt-1">Works well when space is constrained on the right.</p>
         </div>
       <% end %>
     <% end %>
-    
-    <%= render FlatPack::Popover::Component.new(placement: :right) do |popover| %>
-      <%= render FlatPack::Button::Component.new(text: "Right", style: :secondary) %>
-      <% popover.content do %>
-        <div class="p-3">
-          <p class="text-sm">Right popover</p>
+
+    <%= render FlatPack::Button::Component.new(id: "popover-trigger-top", text: "Top", style: :secondary) %>
+    <%= render FlatPack::Popover::Component.new(trigger_id: "popover-trigger-top", placement: :top) do |popover| %>
+      <% popover.with_popover_content do %>
+        <div class="p-3 w-52 text-[var(--color-foreground)]">
+          <p class="text-sm font-semibold">Top Popover</p>
+          <p class="text-xs text-[var(--color-muted-foreground)] mt-1">Appears above the trigger with short helper text.</p>
         </div>
       <% end %>
     <% end %>
-    
-    <%= render FlatPack::Popover::Component.new(placement: :bottom) do |popover| %>
-      <%= render FlatPack::Button::Component.new(text: "Bottom", style: :secondary) %>
-      <% popover.content do %>
-        <div class="p-3">
-          <p class="text-sm">Bottom popover</p>
+
+    <%= render FlatPack::Button::Component.new(id: "popover-trigger-bottom", text: "Bottom", style: :secondary) %>
+    <%= render FlatPack::Popover::Component.new(trigger_id: "popover-trigger-bottom", placement: :bottom) do |popover| %>
+      <% popover.with_popover_content do %>
+        <div class="p-3 w-52 text-[var(--color-foreground)]">
+          <p class="text-sm font-semibold">Bottom Popover</p>
+          <p class="text-xs text-[var(--color-muted-foreground)] mt-1">A common pattern for menus and quick actions.</p>
         </div>
       <% end %>
     <% end %>
-    
-    <%= render FlatPack::Popover::Component.new(placement: :left) do |popover| %>
-      <%= render FlatPack::Button::Component.new(text: "Left", style: :secondary) %>
-      <% popover.content do %>
-        <div class="p-3">
-          <p class="text-sm">Left popover</p>
+
+    <%= render FlatPack::Button::Component.new(id: "popover-trigger-right", text: "Right", style: :secondary) %>
+    <%= render FlatPack::Popover::Component.new(trigger_id: "popover-trigger-right", placement: :right) do |popover| %>
+      <% popover.with_popover_content do %>
+        <div class="p-3 w-52 text-[var(--color-foreground)]">
+          <p class="text-sm font-semibold">Right Popover</p>
+          <p class="text-xs text-[var(--color-muted-foreground)] mt-1">Useful for inline details beside controls.</p>
         </div>
       <% end %>
     <% end %>
@@ -77,9 +81,9 @@
 <section class="mb-12">
   <h2 class="text-2xl font-semibold mb-4">Rich Content Popover</h2>
   <div class="mb-4">
-    <%= render FlatPack::Popover::Component.new(placement: :bottom) do |popover| %>
-      <%= render FlatPack::Button::Component.new(text: "User Info", style: :primary) %>
-      <% popover.content do %>
+    <%= render FlatPack::Button::Component.new(id: "popover-trigger-user-info", text: "User Info", style: :primary) %>
+    <%= render FlatPack::Popover::Component.new(trigger_id: "popover-trigger-user-info", placement: :bottom) do |popover| %>
+      <% popover.with_popover_content do %>
         <div class="p-4 w-72">
           <div class="flex items-start gap-3 mb-3">
             <div class="w-12 h-12 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-white font-semibold">
@@ -104,9 +108,9 @@
 <section class="mb-12">
   <h2 class="text-2xl font-semibold mb-4">Popover with Form</h2>
   <div class="mb-4">
-    <%= render FlatPack::Popover::Component.new(placement: :bottom) do |popover| %>
-      <%= render FlatPack::Button::Component.new(text: "Add Comment", style: :secondary) %>
-      <% popover.content do %>
+    <%= render FlatPack::Button::Component.new(id: "popover-trigger-add-comment", text: "Add Comment", style: :secondary) %>
+    <%= render FlatPack::Popover::Component.new(trigger_id: "popover-trigger-add-comment", placement: :bottom) do |popover| %>
+      <% popover.with_popover_content do %>
         <div class="p-4 w-80">
           <h3 class="font-semibold mb-3">Quick Comment</h3>
           <form class="space-y-3">
@@ -130,9 +134,9 @@
 <section class="mb-12">
   <h2 class="text-2xl font-semibold mb-4">Popover with List</h2>
   <div class="mb-4">
-    <%= render FlatPack::Popover::Component.new(placement: :bottom) do |popover| %>
-      <%= render FlatPack::Button::Component.new(text: "More Actions", style: :secondary) %>
-      <% popover.content do %>
+    <%= render FlatPack::Button::Component.new(id: "popover-trigger-more-actions", text: "More Actions", style: :secondary) %>
+    <%= render FlatPack::Popover::Component.new(trigger_id: "popover-trigger-more-actions", placement: :bottom) do |popover| %>
+      <% popover.with_popover_content do %>
         <div class="py-2 w-48">
           <a href="#" class="block px-4 py-2 text-sm hover:bg-[var(--color-muted)] transition-colors">
             Edit

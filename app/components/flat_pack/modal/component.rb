@@ -89,16 +89,14 @@ module FlatPack
         content_tag(:div,
           nil,
           class: "absolute inset-0",
-          data: {action: "click->flat-pack--modal#clickBackdrop"}
-        )
+          data: {action: "click->flat-pack--modal#clickBackdrop"})
       end
 
       def render_dialog
         content_tag(:div, class: dialog_wrapper_classes) do
           content_tag(:div, **dialog_attributes) do
             safe_join([
-              render_close_button,
-              render_header_content,
+              render_header_section,
               render_body_content,
               render_footer_content
             ].compact)
@@ -107,7 +105,7 @@ module FlatPack
       end
 
       def dialog_wrapper_classes
-        "relative flex min-h-screen items-center justify-center p-4"
+        "relative flex w-full min-h-screen items-start sm:items-center justify-center p-4 sm:p-6"
       end
 
       def dialog_attributes
@@ -127,8 +125,15 @@ module FlatPack
       def dialog_classes
         classes(
           "relative",
+          "flex",
+          "flex-col",
+          "min-h-0",
+          "max-h-[calc(100vh-2rem)]",
           "w-full",
+          "overflow-hidden",
           size_classes,
+          "p-4",
+          "sm:p-6",
           "bg-[var(--color-background)]",
           "rounded-[var(--radius-lg)]",
           "shadow-lg",
@@ -151,14 +156,28 @@ module FlatPack
           type: "button",
           class: close_button_classes,
           aria: {label: "Close"},
-          data: {action: "flat-pack--modal#close"}
-        ) do
+          data: {action: "flat-pack--modal#close"}) do
           close_icon
         end
       end
 
       def close_button_classes
-        "absolute top-4 right-4 text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors rounded-[var(--radius-sm)] p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]"
+        "shrink-0 text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors rounded-[var(--radius-sm)] p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]"
+      end
+
+      def render_header_section
+        if @title || header?
+          content_tag(:div, class: "shrink-0 flex items-start justify-between gap-3 pb-4") do
+            safe_join([
+              render_header_content,
+              render_close_button
+            ].compact)
+          end
+        else
+          content_tag(:div, class: "shrink-0 flex justify-end pb-2") do
+            render_close_button
+          end
+        end
       end
 
       def close_icon
@@ -206,15 +225,15 @@ module FlatPack
       end
 
       def header_classes
-        "px-6 pt-6 pb-4"
+        "min-w-0 flex-1"
       end
 
       def body_classes
-        "px-6 py-4 text-sm text-[var(--color-text)]"
+        "min-h-0 flex-1 overflow-y-auto py-4 text-sm text-[var(--color-text)]"
       end
 
       def footer_classes
-        "px-6 pb-6 pt-4 flex justify-end gap-3 border-t border-[var(--color-border)]"
+        "shrink-0 pt-4 flex justify-end gap-3"
       end
 
       def header_id

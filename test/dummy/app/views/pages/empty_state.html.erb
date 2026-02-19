@@ -1,6 +1,6 @@
 <h1 class="text-4xl font-bold mb-4">Empty State Component</h1>
 <p class="text-lg text-[var(--color-muted-foreground)] mb-8">
-  User-friendly empty states with built-in icons and custom graphics.
+  User-friendly empty states with optional icons and custom graphics.
 </p>
 
 <!-- Basic Empty State -->
@@ -15,7 +15,7 @@
   
   <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::EmptyState::Component.new(
   title: "No messages",
-  description: "You don't have any messages yet."
+    description: "You don't have any messages yet."
 ) %&gt;</code></pre>
 </section>
 
@@ -46,8 +46,8 @@
 
 <!-- Empty State with Icons -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Built-in Icons</h2>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <h2 class="text-2xl font-semibold mb-4">Icons</h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     <div class="border border-[var(--color-border)] rounded-lg p-8">
       <%= render FlatPack::EmptyState::Component.new(
         title: "Inbox empty",
@@ -63,6 +63,14 @@
         icon: :search
       ) %>
     </div>
+
+    <div class="border border-[var(--color-border)] rounded-lg p-8">
+      <%= render FlatPack::EmptyState::Component.new(
+        title: "No files uploaded",
+        description: "Upload files to get started.",
+        icon: :upload
+      ) %>
+    </div>
   </div>
   
   <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::EmptyState::Component.new(
@@ -75,6 +83,12 @@
   title: "No results",
   description: "Try adjusting your search.",
   icon: :search
+) %&gt;
+
+&lt;%= render FlatPack::EmptyState::Component.new(
+  title: "No files uploaded",
+  description: "Upload files to get started.",
+  icon: :upload
 ) %&gt;</code></pre>
 </section>
 
@@ -135,6 +149,7 @@
   <h2 class="text-2xl font-semibold mb-4">Features</h2>
   <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
     <li><strong>Built-in Icons:</strong> Inbox and search icons included</li>
+    <li><strong>Optional Icon:</strong> Pass <code>icon: :inbox</code>, <code>icon: :search</code>, or any icon name when needed</li>
     <li><strong>Custom Graphics:</strong> Slot for custom illustrations or icons</li>
     <li><strong>Action Buttons:</strong> Add primary and secondary CTAs</li>
     <li><strong>Centered Layout:</strong> Visually balanced and centered</li>

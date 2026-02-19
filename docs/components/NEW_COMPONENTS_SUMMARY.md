@@ -25,7 +25,7 @@ Mobile-first responsive CSS grid layout with configurable columns, gaps, and ali
 **Stimulus:** No  
 **Tests:** 9 tests, all passing
 
-User-friendly empty states with icons, actions, and custom graphics.
+User-friendly empty states with optional icons, overridable icon names, actions, and custom graphics.
 
 **Usage:**
 ```erb
@@ -99,7 +99,7 @@ Accessible modal dialogs with focus trap, backdrop/ESC close, and animations.
 <% end %>
 
 <!-- Trigger button -->
-<%= render FlatPack::Button::Component.new(text: "Open Modal", data: {action: "flat-pack--modal#open"}) %>
+<%= render FlatPack::Button::Component.new(text: "Open Modal", data: {action: "click->flat-pack--modal#open", "modal-id": "confirm-modal"}) %>
 ```
 
 ### 6. ✅ Tooltip Component

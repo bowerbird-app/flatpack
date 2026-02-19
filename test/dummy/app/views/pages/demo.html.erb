@@ -1,90 +1,27 @@
-  <h1 class="text-4xl font-bold mb-4">FlatPack Component Library</h1>
-  <p class="text-lg text-[var(--color-muted-foreground)] mb-8">
-    A modern Rails 8 UI component library built with ViewComponent, Tailwind CSS 4, and Hotwire.
-  </p>
+<h1 class="text-4xl font-bold mb-4">FlatPack Component API Index</h1>
+<p class="text-lg text-[var(--color-muted-foreground)] mb-8">
+  Complete list of all available components, including shared components, with their variables, public methods, and descriptions.
+</p>
 
-  <div class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Quick Example</h2>
-    
-    <div class="bg-[var(--color-muted)] rounded-lg p-6 mb-4">
-      <h3 class="text-lg font-medium mb-3">Buttons</h3>
-      <div class="flex gap-3">
-        <%= render FlatPack::Button::Component.new(text: "Primary", style: :primary) %>
-        <%= render FlatPack::Button::Component.new(text: "Secondary", style: :secondary) %>
-        <%= render FlatPack::Button::Component.new(text: "Ghost", style: :ghost) %>
-      </div>
-    </div>
-
-    <div class="bg-[var(--color-muted)] rounded-lg p-6">
-      <h3 class="text-lg font-medium mb-3">Table</h3>
-      <%= render FlatPack::Table::Component.new(data: @users) do |table| %>
-        <% table.column(title: "Name", html: ->(user) { user.name }) %>
-        <% table.column(title: "Email", html: ->(user) { user.email }) %>
-        <% table.column(title: "Status", html: ->(user) { 
-          raw("<span class=\"px-2 py-1 text-xs rounded #{user.status == 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}\">#{user.status}</span>")
-        }) %>
-        <% table.with_action(text: "View", url: "#", style: :ghost) %>
-        <% table.with_action(text: "Edit", url: "#", style: :ghost) %>
+<div class="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border)]">
+  <table class="w-full border-collapse bg-[var(--color-background)] text-sm">
+    <thead class="bg-[var(--color-muted)]">
+      <tr>
+        <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-[var(--color-muted-foreground)]">Component</th>
+        <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-[var(--color-muted-foreground)]">Description</th>
+        <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-[var(--color-muted-foreground)]">Variables</th>
+        <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-[var(--color-muted-foreground)]">Methods</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-[var(--color-border)]">
+      <% @component_index.each do |component| %>
+        <tr class="align-top">
+          <td class="px-4 py-3 font-medium text-[var(--color-foreground)]"><%= component[:name] %></td>
+          <td class="px-4 py-3 text-[var(--color-foreground)]"><%= component[:description] %></td>
+          <td class="px-4 py-3 text-[var(--color-foreground)]"><%= component[:variables].join(", ") %></td>
+          <td class="px-4 py-3 text-[var(--color-foreground)]"><%= component[:methods].join(", ") %></td>
+        </tr>
       <% end %>
-    </div>
-  </div>
-
-  <div class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Features</h2>
-    <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
-      <li>Built with ViewComponent for type-safe, testable components</li>
-      <li>Styled with Tailwind CSS 4 using CSS variables</li>
-      <li>System-driven dark mode support</li>
-      <li>Accessible and keyboard-friendly</li>
-      <li>Zero-config installation</li>
-      <li>Propshaft + Importmaps (no Node.js required)</li>
-    </ul>
-  </div>
-
-  <div class="flex flex-wrap gap-4">
-    <%= render FlatPack::Button::Component.new(
-      text: "View Navbar Demo",
-      url: demo_navbar_path,
-      style: :primary
-    ) %>
-    <%= render FlatPack::Button::Component.new(
-      text: "View Button Demos",
-      url: demo_buttons_path,
-      style: :secondary
-    ) %>
-    <%= render FlatPack::Button::Component.new(
-      text: "View Form Demos",
-      url: demo_forms_path,
-      style: :secondary
-    ) %>
-    <%= render FlatPack::Button::Component.new(
-      text: "View Table Demos",
-      url: demo_tables_path,
-      style: :secondary
-    ) %>
-    <%= render FlatPack::Button::Component.new(
-      text: "View Input Demos",
-      url: demo_inputs_path,
-      style: :secondary
-    ) %>
-    <%= render FlatPack::Button::Component.new(
-      text: "View Badge Demos",
-      url: demo_badges_path,
-      style: :secondary
-    ) %>
-    <%= render FlatPack::Button::Component.new(
-      text: "View Alert Demos",
-      url: demo_alerts_path,
-      style: :secondary
-    ) %>
-    <%= render FlatPack::Button::Component.new(
-      text: "View Card Demos",
-      url: demo_cards_path,
-      style: :secondary
-    ) %>
-    <%= render FlatPack::Button::Component.new(
-      text: "View Breadcrumb Demos",
-      url: demo_breadcrumbs_path,
-      style: :secondary
-    ) %>
-  </div>
+    </tbody>
+  </table>
+</div>

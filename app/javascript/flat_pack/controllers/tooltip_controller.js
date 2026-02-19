@@ -57,53 +57,69 @@ export default class extends Controller {
     const placement = this.placementValue
 
     // Reset positioning
+    tooltip.style.position = "fixed"
     tooltip.style.top = ""
     tooltip.style.left = ""
     tooltip.style.right = ""
     tooltip.style.bottom = ""
+    tooltip.style.marginTop = ""
+    tooltip.style.marginRight = ""
+    tooltip.style.marginBottom = ""
+    tooltip.style.marginLeft = ""
     tooltip.style.transform = ""
 
     // Get dimensions
     const triggerRect = trigger.getBoundingClientRect()
     const tooltipRect = tooltip.getBoundingClientRect()
     const spacing = 8 // Gap between trigger and tooltip
+    const viewportPadding = 8
+    let top
+    let left
 
     switch (placement) {
       case "top":
-        tooltip.style.bottom = "100%"
-        tooltip.style.left = "50%"
-        tooltip.style.transform = "translateX(-50%)"
-        tooltip.style.marginBottom = `${spacing}px`
+        if (triggerRect.top - tooltipRect.height - spacing >= viewportPadding) {
+          top = triggerRect.top - tooltipRect.height - spacing
+        } else {
+          top = triggerRect.bottom + spacing
+        }
+        left = triggerRect.left + (triggerRect.width / 2) - (tooltipRect.width / 2)
         break
 
       case "bottom":
-        tooltip.style.top = "100%"
-        tooltip.style.left = "50%"
-        tooltip.style.transform = "translateX(-50%)"
-        tooltip.style.marginTop = `${spacing}px`
+        if (triggerRect.bottom + spacing + tooltipRect.height <= window.innerHeight - viewportPadding) {
+          top = triggerRect.bottom + spacing
+        } else {
+          top = triggerRect.top - tooltipRect.height - spacing
+        }
+        left = triggerRect.left + (triggerRect.width / 2) - (tooltipRect.width / 2)
         break
 
       case "left":
-        tooltip.style.right = "100%"
-        tooltip.style.top = "50%"
-        tooltip.style.transform = "translateY(-50%)"
-        tooltip.style.marginRight = `${spacing}px`
+        top = triggerRect.top + (triggerRect.height / 2) - (tooltipRect.height / 2)
+        left = triggerRect.left - tooltipRect.width - spacing
         break
 
       case "right":
-        tooltip.style.left = "100%"
-        tooltip.style.top = "50%"
-        tooltip.style.transform = "translateY(-50%)"
-        tooltip.style.marginLeft = `${spacing}px`
+        top = triggerRect.top + (triggerRect.height / 2) - (tooltipRect.height / 2)
+        left = triggerRect.right + spacing
+        break
+
+      default:
+        top = triggerRect.top - tooltipRect.height - spacing
+        left = triggerRect.left + (triggerRect.width / 2) - (tooltipRect.width / 2)
         break
     }
 
+    tooltip.style.top = `${top}px`
+    tooltip.style.left = `${left}px`
+
     // Clamp to viewport
-    this.clampToViewport()
+    this.clampToViewport(placement, triggerRect, spacing)
   }
 
   // Ensure tooltip stays within viewport
-  clampToViewport() {
+  clampToViewport(placement, triggerRect, spacing) {
     if (!this.hasTooltipTarget) return
 
     const tooltip = this.tooltipTarget
@@ -112,22 +128,48 @@ export default class extends Controller {
     const viewportHeight = window.innerHeight
     const padding = 8
 
+    let adjustLeft = 0
+    let adjustTop = 0
+
     // Check horizontal bounds
     if (rect.left < padding) {
-      const offset = padding - rect.left
-      tooltip.style.left = `${parseFloat(tooltip.style.left || 0) + offset}px`
+      adjustLeft = padding - rect.left
     } else if (rect.right > viewportWidth - padding) {
-      const offset = rect.right - (viewportWidth - padding)
-      tooltip.style.left = `${parseFloat(tooltip.style.left || 0) - offset}px`
+      adjustLeft = (viewportWidth - padding) - rect.right
     }
 
     // Check vertical bounds
     if (rect.top < padding) {
-      const offset = padding - rect.top
-      tooltip.style.top = `${parseFloat(tooltip.style.top || 0) + offset}px`
+      adjustTop = padding - rect.top
     } else if (rect.bottom > viewportHeight - padding) {
-      const offset = rect.bottom - (viewportHeight - padding)
-      tooltip.style.top = `${parseFloat(tooltip.style.top || 0) - offset}px`
+      adjustTop = (viewportHeight - padding) - rect.bottom
+    }
+
+    if (adjustLeft !== 0) {
+      const currentLeft = parseFloat(tooltip.style.left)
+      tooltip.style.left = `${currentLeft + adjustLeft}px`
+    }
+
+    if (adjustTop !== 0) {
+      const currentTop = parseFloat(tooltip.style.top)
+      tooltip.style.top = `${currentTop + adjustTop}px`
+    }
+
+    const rectAfterClamp = tooltip.getBoundingClientRect()
+    const currentLeft = parseFloat(tooltip.style.left)
+
+    if (placement === "right") {
+      const minLeft = triggerRect.right + spacing
+      if (currentLeft < minLeft) {
+        tooltip.style.left = `${minLeft}px`
+      }
+    }
+
+    if (placement === "left") {
+      const maxLeft = triggerRect.left - rectAfterClamp.width - spacing
+      if (currentLeft > maxLeft) {
+        tooltip.style.left = `${maxLeft}px`
+      }
     }
   }
 

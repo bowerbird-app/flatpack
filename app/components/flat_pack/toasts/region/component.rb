@@ -5,7 +5,7 @@ module FlatPack
     module Region
       class Component < FlatPack::BaseComponent
         def initialize(**system_arguments)
-          super(**system_arguments)
+          super
         end
 
         def call
@@ -17,16 +17,15 @@ module FlatPack
         def container_attributes
           merge_attributes(
             aria: {live: "polite", atomic: "false"},
-            class: container_classes
+            class: container_classes,
+            style: "top: calc(var(--spacing-xl) * 2); right: var(--spacing-md);"
           )
         end
 
         def container_classes
           classes(
             "fixed",
-            "top-4",
-            "right-4",
-            "z-50",
+            "z-[60]",
             "flex",
             "flex-col",
             "gap-3",

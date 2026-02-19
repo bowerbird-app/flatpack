@@ -40,6 +40,17 @@ module FlatPack
         assert_selector "div[data-controller='flat-pack--tooltip']"
       end
 
+      def test_tooltip_binds_show_and_hide_actions
+        render_inline(Component.new(text: "Tip")) do
+          "Trigger"
+        end
+
+        assert_selector "div[data-action*='mouseenter->flat-pack--tooltip#show']"
+        assert_selector "div[data-action*='mouseleave->flat-pack--tooltip#hide']"
+        assert_selector "div[data-action*='focusin->flat-pack--tooltip#show']"
+        assert_selector "div[data-action*='focusout->flat-pack--tooltip#hide']"
+      end
+
       def test_tooltip_placement_top
         render_inline(Component.new(text: "Tip", placement: :top)) do
           "Trigger"

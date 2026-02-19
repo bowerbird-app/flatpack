@@ -7,11 +7,11 @@
 <section class="mb-12">
   <h2 class="text-2xl font-semibold mb-4">Basic Tooltips</h2>
   <div class="flex gap-4 mb-4">
-    <%= render FlatPack::Tooltip::Component.new(text: "This is a tooltip", placement: :top) do %>
+    <%= render FlatPack::Tooltip::Component.new(text: "This button triggers a tooltip with additional context.", placement: :top) do %>
       <%= render FlatPack::Button::Component.new(text: "Hover me", style: :secondary) %>
     <% end %>
     
-    <%= render FlatPack::Tooltip::Component.new(text: "Helpful information here", placement: :top) do %>
+    <%= render FlatPack::Tooltip::Component.new(text: "Helpful information appears here when you hover or focus this icon.", placement: :top) do %>
       <span class="inline-flex items-center gap-1 text-[var(--color-primary)] cursor-help">
         Info
         <%= render FlatPack::Shared::IconComponent.new(name: :question, size: :sm) %>
@@ -30,28 +30,22 @@
   <p class="text-[var(--color-muted-foreground)] mb-4">
     Tooltips automatically position themselves and adjust for viewport boundaries.
   </p>
-  <div class="flex justify-center items-center gap-8 p-12 bg-[var(--color-muted)] rounded-lg mb-4">
-    <div class="flex flex-col gap-8">
-      <%= render FlatPack::Tooltip::Component.new(text: "Top tooltip", placement: :top) do %>
-        <%= render FlatPack::Button::Component.new(text: "Top", style: :secondary) %>
-      <% end %>
-    </div>
-    
-    <div class="flex gap-8">
-      <%= render FlatPack::Tooltip::Component.new(text: "Left tooltip", placement: :left) do %>
-        <%= render FlatPack::Button::Component.new(text: "Left", style: :secondary) %>
-      <% end %>
-      
-      <%= render FlatPack::Tooltip::Component.new(text: "Right tooltip", placement: :right) do %>
-        <%= render FlatPack::Button::Component.new(text: "Right", style: :secondary) %>
-      <% end %>
-    </div>
-    
-    <div class="flex flex-col gap-8">
-      <%= render FlatPack::Tooltip::Component.new(text: "Bottom tooltip", placement: :bottom) do %>
-        <%= render FlatPack::Button::Component.new(text: "Bottom", style: :secondary) %>
-      <% end %>
-    </div>
+  <div class="flex justify-center items-center flex-wrap gap-4 mb-4">
+    <%= render FlatPack::Tooltip::Component.new(text: "Left placement: tooltip appears to the left of the trigger.", placement: :left) do %>
+      <%= render FlatPack::Button::Component.new(text: "Left", style: :secondary) %>
+    <% end %>
+
+    <%= render FlatPack::Tooltip::Component.new(text: "Top placement: tooltip appears above the trigger.", placement: :top) do %>
+      <%= render FlatPack::Button::Component.new(text: "Top", style: :secondary) %>
+    <% end %>
+
+    <%= render FlatPack::Tooltip::Component.new(text: "Bottom placement: tooltip appears below the trigger.", placement: :bottom) do %>
+      <%= render FlatPack::Button::Component.new(text: "Bottom", style: :secondary) %>
+    <% end %>
+
+    <%= render FlatPack::Tooltip::Component.new(text: "Right placement: tooltip appears to the right of the trigger.", placement: :right) do %>
+      <%= render FlatPack::Button::Component.new(text: "Right", style: :secondary) %>
+    <% end %>
   </div>
   
   <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Tooltip::Component.new(text: "...", placement: :top) ... %&gt;
@@ -66,7 +60,7 @@
   <div class="mb-4">
     <%= render FlatPack::Tooltip::Component.new(placement: :top) do |tooltip| %>
       <%= render FlatPack::Button::Component.new(text: "Hover for details", style: :primary) %>
-      <% tooltip.content do %>
+      <% tooltip.with_tooltip_content do %>
         <div class="space-y-1">
           <strong class="block">Rich Tooltip</strong>
           <p class="text-sm">Tooltips can contain formatted content with multiple lines.</p>
@@ -77,7 +71,7 @@
   
   <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Tooltip::Component.new(placement: :top) do |tooltip| %&gt;
   &lt;%= render FlatPack::Button::Component.new(text: "Hover me") %&gt;
-  &lt;% tooltip.content do %&gt;
+  &lt;% tooltip.with_tooltip_content do %&gt;
     &lt;div&gt;Rich HTML content here&lt;/div&gt;
   &lt;% end %&gt;
 &lt;% end %&gt;</code></pre>
@@ -93,7 +87,7 @@
   <div class="space-y-4">
     <div class="flex items-center gap-2">
       <span>Username</span>
-      <%= render FlatPack::Tooltip::Component.new(text: "Your username must be unique and cannot be changed later", placement: :right) do %>
+      <%= render FlatPack::Tooltip::Component.new(text: "Your username must be unique, use 3-20 characters, and cannot be changed later.", placement: :right) do %>
         <span class="inline-flex text-[var(--color-muted-foreground)] cursor-help">
           <%= render FlatPack::Shared::IconComponent.new(name: :question, size: :sm) %>
         </span>
@@ -102,7 +96,7 @@
     
     <div class="flex items-center gap-2">
       <span>Password Strength</span>
-      <%= render FlatPack::Tooltip::Component.new(text: "Use at least 8 characters with a mix of letters, numbers, and symbols", placement: :right) do %>
+      <%= render FlatPack::Tooltip::Component.new(text: "Use at least 8 characters with uppercase, lowercase, numbers, and symbols for stronger security.", placement: :right) do %>
         <span class="inline-flex text-[var(--color-muted-foreground)] cursor-help">
           <%= render FlatPack::Shared::IconComponent.new(name: :lock, size: :sm) %>
         </span>
@@ -111,7 +105,7 @@
     
     <p class="text-[var(--color-foreground)]">
       This is a paragraph with an inline
-      <%= render FlatPack::Tooltip::Component.new(text: "This is additional context", placement: :top) do %>
+      <%= render FlatPack::Tooltip::Component.new(text: "This inline tooltip provides additional context without interrupting the reading flow.", placement: :top) do %>
         <span class="text-[var(--color-primary)] underline decoration-dotted cursor-help">tooltip</span>
       <% end %>
       that provides more information.

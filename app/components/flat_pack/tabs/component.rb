@@ -13,15 +13,21 @@ module FlatPack
         @panels = []
       end
 
-      def tab(label:, id:, **tab_args)
+      def tab(label:, id:, **tab_args, &block)
         @tabs << {label: label, id: id, args: tab_args}
+
+        if block
+          @panels << {id: id, content: view_context.capture(&block)}
+        end
       end
 
       def panel(id:, &block)
-        @panels << {id: id, content: capture(&block)}
+        @panels << {id: id, content: view_context.capture(&block)}
       end
 
       def call
+        content
+
         content_tag(:div, **container_attributes) do
           safe_join([
             render_tab_list,
@@ -45,8 +51,7 @@ module FlatPack
         content_tag(:div,
           role: "tablist",
           aria: {label: "Tabs"},
-          class: tab_list_classes
-        ) do
+          class: tab_list_classes) do
           safe_join(@tabs.map.with_index { |tab, index| render_tab(tab, index) })
         end
       end
@@ -68,8 +73,7 @@ module FlatPack
             "flat-pack--tabs-target": "tab",
             action: "flat-pack--tabs#selectTab"
           },
-          tabindex: is_default ? 0 : -1
-        )
+          tabindex: is_default ? 0 : -1)
       end
 
       def render_panels
@@ -91,8 +95,7 @@ module FlatPack
           aria: {labelledby: tab_id(panel[:id])},
           class: panel_classes,
           data: {"flat-pack--tabs-target": "panel"},
-          hidden: !is_default
-        )
+          hidden: !is_default)
       end
 
       def tab_list_classes
@@ -101,7 +104,7 @@ module FlatPack
 
       def tab_classes(is_active)
         base = "px-4 py-2 text-sm font-medium rounded-t-[var(--radius-md)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:ring-offset-2"
-        
+
         if is_active
           "#{base} bg-[var(--color-background)] text-[var(--color-primary)] border-b-2 border-[var(--color-primary)] -mb-px"
         else

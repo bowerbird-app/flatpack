@@ -86,7 +86,9 @@ module FlatPack
         content_tag(:div, class: main_column_classes) do
           safe_join([
             (top_nav if top_nav?),
-            (main? ? main : content)
+            content_tag(:div, class: main_content_classes) do
+              main? ? main.to_s : content
+            end
           ].compact)
         end
       end
@@ -131,6 +133,9 @@ module FlatPack
       def sidebar_column_classes
         classes(
           "h-full",
+          "md:h-screen",
+          "md:self-start",
+          "min-h-0",
           "transition-transform",
           "md:transition-all",
           "duration-300",
@@ -157,11 +162,14 @@ module FlatPack
         classes(
           "flex",
           "flex-col",
-          "h-full",
-          "min-h-0",
           "min-w-0",
+          "min-h-0",
           "overflow-hidden"
         )
+      end
+
+      def main_content_classes
+        "flex-1 min-h-0 overflow-y-auto overscroll-y-contain"
       end
 
       def sidebar_column_data

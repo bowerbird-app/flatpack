@@ -3,10 +3,19 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["row", "handle"]
+  static values = {
+    reorderUrl: String,
+    resource: String,
+    strategy: String,
+    scope: Object,
+    version: String
+  }
 
   connect() {
     this.draggedRow = null
     this.dragOverRow = null
+    this.pendingSave = false
+    this.lastStableOrder = this.currentOrder()
     this.setupDraggableRows()
   }
 
@@ -99,6 +108,7 @@ export default class extends Controller {
       
       // Emit reorder event
       this.emitReorderEvent()
+      this.saveOrder()
     }
     
     return false
@@ -136,16 +146,99 @@ export default class extends Controller {
 
   emitReorderEvent() {
     // Collect row IDs in new order
-    const orderedIds = this.rowTargets.map(row => {
-      return row.dataset.id || row.id
-    }).filter(Boolean)
-    
+    const orderedIds = this.currentOrder()
+
+    if (orderedIds.length === 0) return
+
+    this.lastStableOrder = orderedIds
+
+    const orderedItems = orderedIds.map((id, index) => ({
+      id: Number(id),
+      position: index + 1
+    }))
+
     // Dispatch custom event with ordered IDs
     const event = new CustomEvent("table:reordered", {
-      detail: { orderedIds: orderedIds },
+      detail: { orderedIds: orderedIds, items: orderedItems },
       bubbles: true
     })
     
     this.element.dispatchEvent(event)
+  }
+
+  currentOrder() {
+    return this.rowTargets.map(row => {
+      return row.dataset.id || row.id
+    }).filter(Boolean)
+  }
+
+  async saveOrder() {
+    if (!this.hasReorderUrlValue || this.pendingSave) return
+
+    this.pendingSave = true
+
+    try {
+      const order = this.currentOrder()
+      const items = order.map((id, index) => ({
+        id: Number(id),
+        position: index + 1
+      }))
+
+      const response = await fetch(this.reorderUrlValue, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": this.csrfToken,
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          reorder: {
+            resource: this.resourceValue || "demo_table_rows",
+            strategy: this.strategyValue || "dense_integer",
+            scope: this.scopeValue || {},
+            version: this.versionValue || "0",
+            items: items
+          }
+        })
+      })
+
+      const payload = await response.json()
+
+      if (!response.ok || !payload.ok) {
+        this.restoreOrder(this.lastStableOrder)
+        this.dispatch("error", { detail: payload })
+        return
+      }
+
+      this.versionValue = payload.version
+      this.lastStableOrder = this.currentOrder()
+      this.dispatch("saved", { detail: payload })
+    } catch (_error) {
+      this.restoreOrder(this.lastStableOrder)
+      this.dispatch("error", { detail: { error: "Unable to save row order" } })
+    } finally {
+      this.pendingSave = false
+    }
+  }
+
+  restoreOrder(orderedIds) {
+    if (!orderedIds || orderedIds.length === 0) return
+
+    const tbody = this.rowTargets[0]?.parentNode
+    if (!tbody) return
+
+    const rowMap = this.rowTargets.reduce((memo, row) => {
+      memo[row.dataset.id || row.id] = row
+      return memo
+    }, {})
+
+    orderedIds.forEach((id) => {
+      const row = rowMap[id]
+      if (row) tbody.appendChild(row)
+    })
+  }
+
+  get csrfToken() {
+    return document.querySelector("meta[name='csrf-token']")?.content || ""
   }
 }

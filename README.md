@@ -89,7 +89,6 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
 <%= render FlatPack::Table::Component.new(data: @users) do |table| %>
   <% table.column(title: "Name", html: ->(user) { user.name }) %>
   <% table.column(title: "Email", html: ->(user) { user.email }) %>
-  <% table.with_action(text: "Edit", url: ->(user) { edit_user_path(user) }) %>
 <% end %>
 ```
 
@@ -159,7 +158,7 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
 
 ### Interactive Components
 - **Button** - Buttons and links with multiple schemes
-- **Table** - Data tables with columns and actions
+- **Table** - Data tables with configurable columns
 
 ### Feedback Components
 - **Alert** - Prominent notifications and messages (success, errors, warnings, info)

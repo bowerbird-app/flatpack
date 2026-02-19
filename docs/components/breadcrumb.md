@@ -39,6 +39,10 @@ For simple cases, you can pass an array of items:
 |------|------|---------|-------------|
 | `separator` | Symbol | `:chevron` | Separator style (`:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`) |
 | `separator_icon` | String | `nil` | Custom icon name when `separator: :custom` |
+| `show_back` | Boolean | `false` | Auto-prepend a back link as the first breadcrumb item |
+| `back_text` | String | `"Back"` | Back link text |
+| `back_icon` | String | `"chevron-left"` | Back link icon |
+| `back_fallback_url` | String | `"/"` | URL used when no previous page is available |
 | `show_home` | Boolean | `false` | Auto-prepend home icon/link |
 | `home_url` | String | `"/"` | Home link URL |
 | `home_text` | String | `"Home"` | Home link text |
@@ -102,6 +106,32 @@ For simple cases, you can pass an array of items:
 ```
 
 ## Home Item
+
+## Back Item
+
+### Auto-prepend Back Item
+
+```erb
+<%= render FlatPack::Breadcrumb::Component.new(show_back: true) do |breadcrumb| %>
+  <% breadcrumb.item(text: "Settings", href: settings_path) %>
+  <% breadcrumb.item(text: "Profile") %>
+<% end %>
+```
+
+When enabled, the back item is always the first link and uses the previous page URL (referer). If no previous page is available, it falls back to `back_fallback_url`.
+
+### Custom Back Configuration
+
+```erb
+<%= render FlatPack::Breadcrumb::Component.new(
+  show_back: true,
+  back_text: "Go Back",
+  back_icon: "arrow-uturn-left",
+  back_fallback_url: "/dashboard"
+) do |breadcrumb| %>
+  <% breadcrumb.item(text: "Reports") %>
+<% end %>
+```
 
 ### Auto-prepend Home Item
 

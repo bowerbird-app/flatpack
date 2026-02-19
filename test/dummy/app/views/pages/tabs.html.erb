@@ -7,72 +7,103 @@
 <section class="mb-12">
   <h2 class="text-2xl font-semibold mb-4">Basic Tabs</h2>
   <%= render FlatPack::Tabs::Component.new do |tabs| %>
-    <% tabs.tab(id: "overview", label: "Overview", active: true) do %>
+    <% tabs.tab(id: "overview", label: "Overview") %>
+    <% tabs.tab(id: "details", label: "Details") %>
+    <% tabs.tab(id: "settings", label: "Settings") %>
+
+    <% tabs.panel(id: "overview") do %>
       <div class="p-6 bg-[var(--color-muted)] rounded-b-lg">
         <h3 class="text-lg font-semibold mb-2">Overview Tab</h3>
         <p class="text-[var(--color-foreground)]">
-          This is the overview content. Tabs provide a way to organize content into separate views where only one view can be visible at a time.
+          This is the overview content. Tabs organize content into separate views where only one panel is visible at a time.
         </p>
       </div>
     <% end %>
-    <% tabs.tab(id: "details", label: "Details") do %>
+    <% tabs.panel(id: "details") do %>
       <div class="p-6 bg-[var(--color-muted)] rounded-b-lg">
         <h3 class="text-lg font-semibold mb-2">Details Tab</h3>
         <p class="text-[var(--color-foreground)]">
-          Here you can provide more detailed information. Use arrow keys to navigate between tabs for keyboard accessibility.
+          Here you can provide detailed information. Use arrow keys to move between tabs.
         </p>
       </div>
     <% end %>
-    <% tabs.tab(id: "settings", label: "Settings") do %>
+    <% tabs.panel(id: "settings") do %>
       <div class="p-6 bg-[var(--color-muted)] rounded-b-lg">
         <h3 class="text-lg font-semibold mb-2">Settings Tab</h3>
         <p class="text-[var(--color-foreground)]">
-          Configuration and settings can go here. Press Home/End to jump to first/last tab.
+          Configuration content can go here. Press Home/End to jump to first/last tab.
         </p>
       </div>
     <% end %>
   <% end %>
   
   <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Tabs::Component.new do |tabs| %&gt;
-  &lt;% tabs.tab(id: "overview", label: "Overview", active: true) do %&gt;
+  &lt;% tabs.tab(id: "overview", label: "Overview") %&gt;
+  &lt;% tabs.tab(id: "details", label: "Details") %&gt;
+
+  &lt;% tabs.panel(id: "overview") do %&gt;
     &lt;p&gt;Overview content...&lt;/p&gt;
   &lt;% end %&gt;
-  &lt;% tabs.tab(id: "details", label: "Details") do %&gt;
+  &lt;% tabs.panel(id: "details") do %&gt;
     &lt;p&gt;Details content...&lt;/p&gt;
   &lt;% end %&gt;
 &lt;% end %&gt;</code></pre>
 </section>
 
-<!-- Tabs with Icons -->
+<!-- Tabs with Default Tab -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Tabs with Icons</h2>
-  <%= render FlatPack::Tabs::Component.new do |tabs| %>
-    <% tabs.tab(id: "dashboard", label: "Dashboard", icon: :dashboard) do %>
+  <h2 class="text-2xl font-semibold mb-4">Tabs with a Non-First Default</h2>
+  <%= render FlatPack::Tabs::Component.new(default_tab: 1) do |tabs| %>
+    <% tabs.tab(id: "monthly", label: "Monthly") %>
+    <% tabs.tab(id: "quarterly", label: "Quarterly") %>
+    <% tabs.tab(id: "yearly", label: "Yearly") %>
+
+    <% tabs.panel(id: "monthly") do %>
       <div class="p-6 bg-[var(--color-muted)] rounded-b-lg">
-        <h3 class="text-lg font-semibold mb-2">Dashboard</h3>
-        <p>Dashboard view with analytics and overview.</p>
+        <h3 class="text-lg font-semibold mb-2">Monthly Report</h3>
+        <p class="text-[var(--color-foreground)]">The monthly summary focuses on short-term performance and trends.</p>
       </div>
     <% end %>
-    <% tabs.tab(id: "users", label: "Users", icon: :users) do %>
+    <% tabs.panel(id: "quarterly") do %>
       <div class="p-6 bg-[var(--color-muted)] rounded-b-lg">
-        <h3 class="text-lg font-semibold mb-2">Users</h3>
-        <p>Manage users and permissions.</p>
+        <h3 class="text-lg font-semibold mb-2">Quarterly Report</h3>
+        <p class="text-[var(--color-foreground)]">This tab is selected by default via <code>default_tab: 1</code>.</p>
       </div>
     <% end %>
-    <% tabs.tab(id: "settings-icon", label: "Settings", icon: :settings) do %>
+    <% tabs.panel(id: "yearly") do %>
       <div class="p-6 bg-[var(--color-muted)] rounded-b-lg">
-        <h3 class="text-lg font-semibold mb-2">Settings</h3>
-        <p>Configure application settings.</p>
+        <h3 class="text-lg font-semibold mb-2">Yearly Report</h3>
+        <p class="text-[var(--color-foreground)]">Yearly data provides long-range visibility across all periods.</p>
       </div>
     <% end %>
   <% end %>
+
+  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Tabs::Component.new(default_tab: 1) do |tabs| %&gt;
+  &lt;% tabs.tab(id: "monthly", label: "Monthly") %&gt;
+  &lt;% tabs.tab(id: "quarterly", label: "Quarterly") %&gt;
+  &lt;% tabs.tab(id: "yearly", label: "Yearly") %&gt;
+
+  &lt;% tabs.panel(id: "monthly") do %&gt;
+    &lt;p&gt;Monthly content...&lt;/p&gt;
+  &lt;% end %&gt;
+  &lt;% tabs.panel(id: "quarterly") do %&gt;
+    &lt;p&gt;Quarterly content...&lt;/p&gt;
+  &lt;% end %&gt;
+  &lt;% tabs.panel(id: "yearly") do %&gt;
+    &lt;p&gt;Yearly content...&lt;/p&gt;
+  &lt;% end %&gt;
+&lt;% end %&gt;</code></pre>
 </section>
 
 <!-- Tabs with Complex Content -->
 <section class="mb-12">
   <h2 class="text-2xl font-semibold mb-4">Tabs with Complex Content</h2>
   <%= render FlatPack::Tabs::Component.new do |tabs| %>
-    <% tabs.tab(id: "profile", label: "Profile") do %>
+    <% tabs.tab(id: "profile", label: "Profile") %>
+    <% tabs.tab(id: "notifications", label: "Notifications") %>
+    <% tabs.tab(id: "security", label: "Security") %>
+
+    <% tabs.panel(id: "profile") do %>
       <div class="p-6 bg-[var(--color-muted)] rounded-b-lg space-y-4">
         <h3 class="text-lg font-semibold">User Profile</h3>
         <%= render FlatPack::TextInput::Component.new(
@@ -87,7 +118,7 @@
         ) %>
       </div>
     <% end %>
-    <% tabs.tab(id: "notifications", label: "Notifications") do %>
+    <% tabs.panel(id: "notifications") do %>
       <div class="p-6 bg-[var(--color-muted)] rounded-b-lg space-y-3">
         <h3 class="text-lg font-semibold mb-4">Notification Settings</h3>
         <%= render FlatPack::Switch::Component.new(
@@ -101,7 +132,7 @@
         ) %>
       </div>
     <% end %>
-    <% tabs.tab(id: "security", label: "Security") do %>
+    <% tabs.panel(id: "security") do %>
       <div class="p-6 bg-[var(--color-muted)] rounded-b-lg">
         <h3 class="text-lg font-semibold mb-4">Security Settings</h3>
         <div class="space-y-4">
@@ -117,6 +148,18 @@
       </div>
     <% end %>
   <% end %>
+
+  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Tabs::Component.new do |tabs| %&gt;
+  &lt;% tabs.tab(id: "profile", label: "Profile") %&gt;
+  &lt;% tabs.tab(id: "notifications", label: "Notifications") %&gt;
+
+  &lt;% tabs.panel(id: "profile") do %&gt;
+    &lt;%= render FlatPack::TextInput::Component.new(name: "name", label: "Full Name") %&gt;
+  &lt;% end %&gt;
+  &lt;% tabs.panel(id: "notifications") do %&gt;
+    &lt;%= render FlatPack::Switch::Component.new(name: "email_notifications", label: "Email Notifications") %&gt;
+  &lt;% end %&gt;
+&lt;% end %&gt;</code></pre>
 </section>
 
 <!-- Keyboard Navigation -->

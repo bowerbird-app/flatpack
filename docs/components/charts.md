@@ -8,7 +8,7 @@ The Chart component requires ApexCharts to be loaded. FlatPack automatically con
 
 ```ruby
 # config/importmap.rb (already configured)
-pin "apexcharts", to: "https://cdn.jsdelivr.net/npm/apexcharts@3.45.1/dist/apexcharts.min.js"
+pin "apexcharts", to: "https://cdn.jsdelivr.net/npm/apexcharts@3.45.1/dist/apexcharts.esm.js"
 ```
 
 No additional setup is required. The chart controller dynamically imports ApexCharts when needed.

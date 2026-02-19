@@ -49,31 +49,53 @@ module FlatPack
           "flex",
           "items-center",
           "justify-center",
-          "py-3"
+          "py-4"
         )
       end
 
       def pagination_wrapper_classes
-        "inline-flex items-center gap-1 rounded-[var(--radius-md)] bg-[var(--color-background)] border border-[var(--color-border)] p-1"
+        "inline-flex items-center gap-1.5 rounded-[var(--radius-md)] bg-[var(--color-background)] border border-[var(--color-border)] p-1.5"
       end
 
       def render_prev_button
         disabled = @pagy.prev.nil?
-        
-        link_to_unless disabled, page_url(@pagy.prev), 
-          class: page_button_classes(disabled: disabled),
-          aria: {label: "Previous page", disabled: disabled ? "true" : nil}.compact do
-          previous_icon
+
+        if disabled
+          content_tag(
+            :span,
+            previous_icon,
+            class: page_button_classes(disabled: true),
+            aria: {label: "Previous page", disabled: "true"}
+          )
+        else
+          link_to(
+            page_url(@pagy.prev),
+            class: page_button_classes,
+            aria: {label: "Previous page"}
+          ) do
+            previous_icon
+          end
         end
       end
 
       def render_next_button
         disabled = @pagy.next.nil?
-        
-        link_to_unless disabled, page_url(@pagy.next),
-          class: page_button_classes(disabled: disabled),
-          aria: {label: "Next page", disabled: disabled ? "true" : nil}.compact do
-          next_icon
+
+        if disabled
+          content_tag(
+            :span,
+            next_icon,
+            class: page_button_classes(disabled: true),
+            aria: {label: "Next page", disabled: "true"}
+          )
+        else
+          link_to(
+            page_url(@pagy.next),
+            class: page_button_classes,
+            aria: {label: "Next page"}
+          ) do
+            next_icon
+          end
         end
       end
 
@@ -96,21 +118,31 @@ module FlatPack
 
       def render_page_number(page)
         is_current = page == @pagy.page
-        
-        link_to_unless is_current, page_url(page),
-          class: page_button_classes(active: is_current),
-          aria: {label: "Page #{page}", current: is_current ? "page" : nil}.compact do
-          page.to_s
+
+        if is_current
+          content_tag(
+            :span,
+            page.to_s,
+            class: page_button_classes(active: true),
+            aria: {label: "Page #{page}", current: "page"}
+          )
+        else
+          link_to(
+            page.to_s,
+            page_url(page),
+            class: page_button_classes,
+            aria: {label: "Page #{page}"}
+          )
         end
       end
 
       def render_gap
-        content_tag(:span, "…", class: "px-3 text-[var(--color-text-muted)]")
+        content_tag(:span, "…", class: "#{gap_padding_classes} text-[var(--color-text-muted)]")
       end
 
       def page_button_classes(active: false, disabled: false)
-        base = "inline-flex items-center justify-center min-w-[2.25rem] h-9 px-3 text-sm font-medium rounded-[var(--radius-sm)] transition-colors"
-        
+        base = "inline-flex items-center justify-center #{button_size_classes} text-sm font-medium rounded-[var(--radius-sm)] transition-colors"
+
         if disabled
           "#{base} text-[var(--color-text-muted)] cursor-not-allowed opacity-50"
         elsif active
@@ -118,6 +150,18 @@ module FlatPack
         else
           "#{base} text-[var(--color-text)] hover:bg-[var(--color-muted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]"
         end
+      end
+
+      def button_size_classes
+        if @size == :compact
+          "min-w-[2.5rem] h-10 px-3.5"
+        else
+          "min-w-[2.75rem] h-10 px-4"
+        end
+      end
+
+      def gap_padding_classes
+        (@size == :compact) ? "px-3" : "px-4"
       end
 
       def series
@@ -135,8 +179,8 @@ module FlatPack
         return "#" unless page
 
         # Try to use pagy_url_for if available (from Pagy helpers)
-        if defined?(pagy_url_for)
-          pagy_url_for(@pagy, page)
+        if helpers.respond_to?(:pagy_url_for)
+          helpers.pagy_url_for(@pagy, page)
         else
           # Fallback: just add page param
           "?page=#{page}"

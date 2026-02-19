@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["sidebar", "backdrop", "desktopToggle", "collapsedToggle", "mobileToggle", "headerLabel", "headerBrand"]
+  static targets = ["sidebar", "backdrop", "desktopToggle", "collapsedToggle", "mobileToggle", "headerLabel", "headerBrand", "footer"]
   static values = {
     side: String,
     defaultOpen: Boolean,
@@ -262,6 +262,15 @@ export default class extends Controller {
         label.classList.remove("sr-only")
       } else {
         label.classList.add("sr-only")
+      }
+    })
+
+    const footers = this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-layout-target="footer"]')
+    footers.forEach(footer => {
+      if (visible) {
+        footer.classList.remove("hidden")
+      } else {
+        footer.classList.add("hidden")
       }
     })
   }

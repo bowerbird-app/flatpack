@@ -27,11 +27,20 @@ module FlatPack
 
       def call
         content_tag(:div, **popover_attributes) do
-          popover_content
+          render_popover_content
         end
       end
 
       private
+
+      def render_popover_content
+        return nil unless popover_content?
+
+        # SECURITY: Slot content is marked html_safe because it's expected to contain
+        # Rails-generated HTML from other components. Never pass unsanitized user input
+        # directly to this slot.
+        popover_content.to_s.html_safe
+      end
 
       def popover_attributes
         merge_attributes(

@@ -1,6 +1,6 @@
   <h1 class="text-4xl font-bold mb-4">Table Component</h1>
   <p class="text-lg text-[var(--color-muted-foreground)] mb-8">
-    Data tables with columns, actions, and formatting.
+    Data tables with columns, sorting, and formatting.
   </p>
 
   <!-- Basic Table -->
@@ -60,24 +60,34 @@
   </section>
 
 
-  <!-- Table with Actions -->
+  <!-- Table with Action Column -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Table with Actions</h2>
+    <h2 class="text-2xl font-semibold mb-4">Table with Action Column</h2>
     <%= render FlatPack::Table::Component.new(data: @users.first(5)) do |table| %>
       <% table.column(title: "Name", html: ->(user) { user.name }) %>
       <% table.column(title: "Email", html: ->(user) { user.email }) %>
-      <% table.with_action(text: "View", url: "#", style: :ghost) %>
-      <% table.with_action(text: "Edit", url: "#", style: :ghost) %>
-      <% table.with_action(text: "Delete", url: "#", method: :delete, style: :ghost,
-          data: { turbo_confirm: "Are you sure?" }) %>
+      <% table.column(title: "Actions", html: ->(_user) {
+        content_tag(:div, class: "flex items-center gap-2") do
+          safe_join([
+            render(FlatPack::Button::Component.new(text: "View", url: "#", style: :ghost)),
+            render(FlatPack::Button::Component.new(text: "Edit", url: "#", style: :ghost)),
+            render(FlatPack::Button::Component.new(text: "Delete", url: "#", method: :delete, style: :ghost, data: { turbo_confirm: "Are you sure?" }))
+          ])
+        end
+      }) %>
     <% end %>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Table::Component.new(data: @users) do |table| %&gt;
   &lt;% table.column(title: "Name", html: -&gt;(user) { user.name }) %&gt;
   &lt;% table.column(title: "Email", html: -&gt;(user) { user.email }) %&gt;
-  &lt;% table.with_action(text: "View", url: "#", style: :ghost) %&gt;
-  &lt;% table.with_action(text: "Edit", url: "#", style: :ghost) %&gt;
-  &lt;% table.with_action(text: "Delete", url: "#", method: :delete, style: :ghost,
-      data: { turbo_confirm: "Are you sure?" }) %&gt;
+  &lt;% table.column(title: "Actions", html: -&gt;(_user) {
+    content_tag(:div, class: "flex items-center gap-2") do
+      safe_join([
+        render(FlatPack::Button::Component.new(text: "View", url: "#", style: :ghost)),
+        render(FlatPack::Button::Component.new(text: "Edit", url: "#", style: :ghost)),
+        render(FlatPack::Button::Component.new(text: "Delete", url: "#", method: :delete, style: :ghost, data: { turbo_confirm: "Are you sure?" }))
+      ])
+    end
+  }) %&gt;
 &lt;% end %&gt;</code></pre>
   </section>
 
@@ -116,7 +126,6 @@
         "<span class=\"px-2 py-1 text-xs rounded #{badge_class}\">#{user.status.capitalize}</span>".html_safe
       }) %>
       <% table.column(title: "Created", sortable: true, sort_key: :created_at, html: ->(user) { user.created_at.strftime("%b %d, %Y") }) %>
-      <% table.with_action(text: "Edit", url: "#", style: :ghost) %>
     <% end %>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Table::Component.new(
   data: @sorted_users,
@@ -130,7 +139,6 @@
   &lt;% table.column(title: "Email", html: -&gt;(user) { user.email }, sortable: true, sort_key: :email) %&gt;
   &lt;% table.column(title: "Status", html: -&gt;(user) { ... }, sortable: true, sort_key: :status) %&gt;
   &lt;% table.column(title: "Created", html: -&gt;(user) { ... }, sortable: true, sort_key: :created_at) %&gt;
-  &lt;% table.with_action(text: "Edit", url: "#", style: :ghost) %&gt;
 &lt;% end %&gt;</code></pre>
   </section>
 
@@ -143,8 +151,8 @@
     <%= render FlatPack::Table::Component.new(
       data: @sorted_users,
       turbo_frame: "sortable_table",
-      sort: params[:sort],
-      direction: params[:direction],
+      sort: params[:sort].presence || "id",
+      direction: params[:direction].presence || "asc",
       base_url: request.path
     ) do |table| %>
       <% table.column(title: "ID", html: ->(user) { user.id.to_s }, sortable: true, sort_key: :id) %>
@@ -159,7 +167,6 @@
         "<span class=\"px-2 py-1 text-xs rounded #{badge_class}\">#{user.status.capitalize}</span>".html_safe
       }) %>
       <% table.column(title: "Created", sortable: true, sort_key: :created_at, html: ->(user) { user.created_at.strftime("%b %d, %Y") }) %>
-      <% table.with_action(text: "Edit", url: "#", style: :ghost) %>
     <% end %>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Table::Component.new(
   data: @sorted_users,
@@ -174,4 +181,53 @@
   &lt;% table.column(title: "Status", html: -&gt;(user) { ... }, sortable: true, sort_key: :status) %&gt;
   &lt;% table.column(title: "Created", html: -&gt;(user) { ... }, sortable: true, sort_key: :created_at) %&gt;
 &lt;% end %&gt;</code></pre>
+  </section>
+
+  <!-- Draggable Rows Table -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Draggable Rows Table</h2>
+    <p class="text-[var(--color-muted-foreground)] mb-4">
+      Drag rows by the handle to reorder. The order is persisted with a generic reorder contract.
+    </p>
+
+    <%= render FlatPack::Table::Component.new(
+      data: @demo_table_rows,
+      draggable_rows: true,
+      reorder: {
+        url: demo_tables_reorder_path,
+        version: @demo_table_version,
+        scope: { list_key: DemoTableRow::DEFAULT_LIST_KEY }
+      }
+    ) do |table| %>
+      <% table.column(title: "Reorder", html: ->(_row) { "<span aria-hidden=\"true\" class=\"inline-flex text-[var(--color-muted-foreground)] cursor-grab\">⋮⋮</span>".html_safe }) %>
+      <% table.column(title: "Task", html: ->(row) { row.name }) %>
+      <% table.column(title: "Status", html: ->(row) { row.status.capitalize }) %>
+      <% table.column(title: "Priority", html: ->(row) { row.priority.capitalize }) %>
+    <% end %>
+
+    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%# 1) Table component setup for draggable rows %&gt;
+&lt;%= render FlatPack::Table::Component.new(
+  data: @rows,
+  draggable_rows: true,
+  reorder: {
+    url: demo_tables_reorder_path,
+    version: @demo_table_version,
+    scope: { list_key: "tables-demo" }
+  }
+) do |table| %&gt;
+  &lt;% table.column(title: "Reorder", html: -&gt;(_row) { "⋮⋮" }) %&gt;
+  &lt;% table.column(title: "Task", html: -&gt;(row) { row.name }) %&gt;
+  &lt;% table.column(title: "Status", html: -&gt;(row) { row.status }) %&gt;
+&lt;% end %&gt;
+
+&lt;%# 2) Payload sent automatically on drop %&gt;
+{
+  reorder: {
+    resource: "demo_table_rows",
+    strategy: "dense_integer",
+    scope: { list_key: "tables-demo" },
+    version: "1739990000.12",
+    items: [{ id: 1, position: 1 }, { id: 2, position: 2 }]
+  }
+}</code></pre>
   </section>
