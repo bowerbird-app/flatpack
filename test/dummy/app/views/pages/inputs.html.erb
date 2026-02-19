@@ -213,7 +213,7 @@
   <!-- Text Area -->
   <section class="mb-12">
     <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Text Area</h2>
-    <p class="text-sm text-[var(--color-muted-foreground)] mb-4">Multi-line input that auto-expands (try typing multiple lines)</p>
+    <p class="text-sm text-[var(--color-muted-foreground)] mb-4">Multi-line input that auto-expands and supports optional live character counting with min/max thresholds</p>
     
     <div class="space-y-4">
       <%= render FlatPack::TextArea::Component.new(
@@ -236,6 +236,17 @@
         error: "Description must be at least 50 characters",
         rows: 3
       ) %>
+
+      <%= render FlatPack::TextArea::Component.new(
+        name: "project_summary",
+        id: "project_summary",
+        label: "Project Summary (with character count)",
+        placeholder: "Write a short summary...",
+        rows: 3,
+        character_count: true,
+        min_characters: 30,
+        max_characters: 140
+      ) %>
     </div>
     <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::TextArea::Component.new(
   name: "description",
@@ -248,6 +259,16 @@
   name: "description_error",
   label: "Description (with error)",
   error: "Description must be at least 50 characters",
+  rows: 3
+) %&gt;
+
+&lt;%= render FlatPack::TextArea::Component.new(
+  name: "project_summary",
+  id: "project_summary",
+  label: "Project Summary (with character count)",
+  character_count: true,
+  min_characters: 30,
+  max_characters: 140,
   rows: 3
 ) %&gt;</code></pre>
   </section>

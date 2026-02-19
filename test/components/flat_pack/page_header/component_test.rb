@@ -9,6 +9,7 @@ module FlatPack
         render_inline(Component.new(title: "Dashboard"))
 
         assert_selector "h1", text: "Dashboard"
+        assert_selector "h1.text-4xl", text: "Dashboard"
       end
 
       def test_renders_page_header_with_subtitle
@@ -19,53 +20,7 @@ module FlatPack
 
         assert_selector "h1", text: "Dashboard"
         assert_selector "p", text: "Welcome back"
-      end
-
-      def test_renders_breadcrumb_slot
-        render_inline(Component.new(title: "Dashboard")) do |component|
-          component.with_breadcrumb do
-            "Home > Dashboard"
-          end
-        end
-
-        assert_text "Home > Dashboard"
-      end
-
-      def test_renders_actions_slot
-        render_inline(Component.new(title: "Dashboard")) do |component|
-          component.with_actions do
-            "Action buttons"
-          end
-        end
-
-        assert_text "Action buttons"
-      end
-
-      def test_renders_meta_slot
-        render_inline(Component.new(title: "Dashboard")) do |component|
-          component.with_meta do
-            "Meta information"
-          end
-        end
-
-        assert_text "Meta information"
-      end
-
-      def test_renders_all_slots_together
-        render_inline(Component.new(
-          title: "Dashboard",
-          subtitle: "Overview"
-        )) do |component|
-          component.with_breadcrumb { "Breadcrumb" }
-          component.with_actions { "Actions" }
-          component.with_meta { "Meta" }
-        end
-
-        assert_selector "h1", text: "Dashboard"
-        assert_selector "p", text: "Overview"
-        assert_text "Breadcrumb"
-        assert_text "Actions"
-        assert_text "Meta"
+        assert_selector "p.text-lg", text: "Welcome back"
       end
 
       def test_has_border_bottom

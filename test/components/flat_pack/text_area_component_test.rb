@@ -64,14 +64,63 @@ module FlatPack
       def test_has_stimulus_controller
         render_inline(Component.new(name: "description"))
 
-        assert_selector "textarea[data-controller='flat-pack--text-area']"
+        assert_selector "div[data-controller='flat-pack--text-area']"
         assert_selector "textarea[data-flat-pack--text-area-target='textarea']"
       end
 
       def test_has_auto_expand_action
         render_inline(Component.new(name: "description"))
 
-        assert_selector "textarea[data-action='input->flat-pack--text-area#autoExpand']"
+        assert_selector "textarea[data-action='input->flat-pack--text-area#autoExpand input->flat-pack--text-area#updateCharacterCount']"
+      end
+
+      def test_renders_character_count_when_enabled
+        render_inline(Component.new(name: "description", character_count: true, value: "Hello"))
+
+        assert_selector "p[id$='_character_count']", text: "5 characters"
+      end
+
+      def test_renders_character_count_with_max
+        render_inline(Component.new(name: "description", character_count: true, max_characters: 120, value: "Hello"))
+
+        assert_selector "p[id$='_character_count']", text: "5/120 characters"
+      end
+
+      def test_renders_character_count_data_attributes
+        render_inline(Component.new(
+          name: "description",
+          character_count: true,
+          min_characters: 10,
+          max_characters: 200
+        ))
+
+        assert_selector "div[data-flat-pack--text-area-character-count-enabled-value='true']"
+        assert_selector "div[data-flat-pack--text-area-min-characters-value='10']"
+        assert_selector "div[data-flat-pack--text-area-max-characters-value='200']"
+      end
+
+      def test_does_not_render_character_count_when_disabled
+        render_inline(Component.new(name: "description", character_count: false))
+
+        refute_selector "p[id$='_character_count']"
+      end
+
+      def test_raises_error_with_negative_min_characters
+        assert_raises(ArgumentError) do
+          Component.new(name: "description", character_count: true, min_characters: -1)
+        end
+      end
+
+      def test_raises_error_with_negative_max_characters
+        assert_raises(ArgumentError) do
+          Component.new(name: "description", character_count: true, max_characters: -1)
+        end
+      end
+
+      def test_raises_error_when_min_is_greater_than_max
+        assert_raises(ArgumentError) do
+          Component.new(name: "description", character_count: true, min_characters: 120, max_characters: 100)
+        end
       end
 
       def test_has_resize_none_class

@@ -372,7 +372,7 @@ class PagesController < ApplicationController
       {title: "Tooltips", description: "Hover/focus tooltips", url: demo_tooltips_path},
       {title: "Tabs", description: "Tabbed content with keyboard navigation", url: demo_tabs_path},
       {title: "Toasts", description: "Auto-dismissing notifications", url: demo_toasts_path},
-      {title: "Page Header", description: "Page title with actions and breadcrumbs", url: demo_page_header_path},
+      {title: "Page Header", description: "Page title with optional subtitle", url: demo_page_header_path},
       {title: "Empty State", description: "User-friendly empty states", url: demo_empty_state_path},
       {title: "Grid", description: "Responsive grid layouts", url: demo_grid_path},
       {title: "Pagination", description: "Page navigation with Pagy", url: demo_pagination_path},

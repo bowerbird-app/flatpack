@@ -43,20 +43,16 @@ User-friendly empty states with optional icons, overridable icon names, actions,
 ### 3. ✅ PageHeader Component
 **Location:** `app/components/flat_pack/page_header/component.rb`  
 **Stimulus:** No  
-**Tests:** 8 tests, all passing
+**Tests:** 5 tests, all passing
 
-Consistent page headers with title, subtitle, breadcrumbs, meta, and actions.
+Consistent page headers with a required title and optional subtitle.
 
 **Usage:**
 ```erb
 <%= render FlatPack::PageHeader::Component.new(
   title: "Dashboard",
   subtitle: "Welcome back"
-) do |component| %>
-  <% component.with_actions do %>
-    <%= render FlatPack::Button::Component.new(text: "New Item", style: :primary) %>
-  <% end %>
-<% end %>
+) %>
 ```
 
 ### 4. ✅ Pagination Component (with Pagy)

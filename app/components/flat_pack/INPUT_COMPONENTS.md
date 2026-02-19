@@ -94,6 +94,9 @@ Multi-line textarea with auto-expand.
   placeholder: "Enter a description...",
   value: @post.description,
   rows: 3,
+  character_count: true,
+  min_characters: 30,
+  max_characters: 140,
   required: true
 ) %>
 ```
@@ -101,6 +104,8 @@ Multi-line textarea with auto-expand.
 Features:
 - Auto-expands to fit content
 - Configurable initial rows
+- Optional live character count
+- Optional min/max thresholds with warning color when out of range
 - No manual resize (resize: none)
 
 ### 7. UrlInput
@@ -140,6 +145,9 @@ All input components accept these parameters:
 
 ### Component-Specific
 - `rows:` (Integer, TextArea only) - Initial number of rows (default: 3)
+- `character_count:` (Boolean, TextArea only) - Show live character count (default: false)
+- `min_characters:` (Integer, TextArea only) - Min threshold for warning color (default: nil)
+- `max_characters:` (Integer, TextArea only) - Max threshold and counter denominator (default: nil)
 
 ## Features
 

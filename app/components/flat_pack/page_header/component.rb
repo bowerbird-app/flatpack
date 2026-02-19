@@ -3,10 +3,6 @@
 module FlatPack
   module PageHeader
     class Component < FlatPack::BaseComponent
-      renders_one :actions
-      renders_one :meta
-      renders_one :breadcrumb
-
       def initialize(
         title:,
         subtitle: nil,
@@ -20,12 +16,7 @@ module FlatPack
       end
 
       def call
-        content_tag(:div, **container_attributes) do
-          safe_join([
-            render_breadcrumb,
-            render_header_content
-          ].compact)
-        end
+        content_tag(:div, **container_attributes) { render_header_content }
       end
 
       private
@@ -45,18 +36,9 @@ module FlatPack
         )
       end
 
-      def render_breadcrumb
-        return nil unless breadcrumb?
-
-        content_tag(:div, breadcrumb, class: "mb-4")
-      end
-
       def render_header_content
-        content_tag(:div, class: "flex items-start justify-between gap-4") do
-          safe_join([
-            render_title_section,
-            render_actions_section
-          ].compact)
+        content_tag(:div, class: "flex items-start gap-4") do
+          render_title_section
         end
       end
 
@@ -64,32 +46,19 @@ module FlatPack
         content_tag(:div, class: "flex-1 min-w-0") do
           safe_join([
             render_title,
-            render_subtitle,
-            render_meta
+            render_subtitle
           ].compact)
         end
       end
 
       def render_title
-        content_tag(:h1, @title, class: "text-2xl font-bold text-[var(--color-text)] leading-tight")
+        content_tag(:h1, @title, class: "text-4xl font-bold text-[var(--color-text)] leading-tight")
       end
 
       def render_subtitle
         return nil unless @subtitle
 
-        content_tag(:p, @subtitle, class: "mt-2 text-sm text-[var(--color-text-muted)]")
-      end
-
-      def render_meta
-        return nil unless meta?
-
-        content_tag(:div, meta, class: "mt-3")
-      end
-
-      def render_actions_section
-        return nil unless actions?
-
-        content_tag(:div, actions, class: "flex gap-3 flex-shrink-0")
+        content_tag(:p, @subtitle, class: "mt-2 text-lg text-[var(--color-text-muted)]")
       end
 
       def validate_title!
