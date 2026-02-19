@@ -32,6 +32,8 @@ Rails.application.routes.draw do
   get "demo/pagination", to: "pages#pagination"
   get "demo/charts", to: "pages#charts"
   get "demo/code_blocks", to: "pages#code_blocks"
+  get "demo/avatars", to: "pages#avatars"
+  get "demo/comments", to: "pages#comments"
 
   # Form submission endpoints for demonstration
   post "demo/forms/create", to: "pages#forms_create"

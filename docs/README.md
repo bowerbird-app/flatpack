@@ -24,10 +24,16 @@ FlatPack is a production-grade Rails Engine that provides a comprehensive set of
 
 ### Components
 - [Alert Component](components/alert.md)
+- [Avatar Component](components/avatar.md)
+- [Avatar Group Component](components/avatar-group.md)
 - [Badge Component](components/badge.md)
 - [Button Component](components/button.md)
 - [Button Dropdown Component](components/button-dropdown.md)
 - [Card Component](components/card.md)
+- [Comments Thread Component](components/comments-thread.md)
+- [Comments Item Component](components/comments-item.md)
+- [Comments Composer Component](components/comments-composer.md)
+- [Comments Replies Component](components/comments-replies.md)
 - [Input Components](components/inputs.md)
 - [Table Component](components/table.md)
 - [Sortable Tables](components/sortable-tables.md)

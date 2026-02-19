@@ -190,6 +190,12 @@ class PagesController < ApplicationController
   def code_blocks
   end
 
+  def avatars
+  end
+
+  def comments
+  end
+
   private
 
   def build_component_index
