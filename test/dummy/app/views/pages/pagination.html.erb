@@ -1,0 +1,137 @@
+<h1 class="text-4xl font-bold mb-4">Pagination Component</h1>
+<p class="text-lg text-[var(--color-muted-foreground)] mb-8">
+  Page navigation using the Pagy gem with accessible controls.
+</p>
+
+<!-- Basic Pagination -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Basic Pagination</h2>
+  <p class="text-[var(--color-muted-foreground)] mb-4">
+    Showing <%= @records.size %> of <%= @pagy.count %> total items (Page <%= @pagy.page %> of <%= @pagy.pages %>)
+  </p>
+  
+  <div class="border border-[var(--color-border)] rounded-lg overflow-hidden mb-4">
+    <table class="w-full">
+      <thead class="bg-[var(--color-muted)]">
+        <tr>
+          <th class="px-4 py-2 text-left text-sm font-semibold">#</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold">Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @records.each do |record| %>
+          <tr class="border-t border-[var(--color-border)]">
+            <td class="px-4 py-2 text-sm"><%= record.id %></td>
+            <td class="px-4 py-2 text-sm"><%= record.name %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  
+  <%= render FlatPack::Pagination::Component.new(pagy: @pagy) %>
+  
+  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;!-- In your controller --&gt;
+def index
+  @pagy, @records = pagy(YourModel.all, items: 10)
+end
+
+&lt;!-- In your view --&gt;
+&lt;%= render FlatPack::Pagination::Component.new(pagy: @pagy) %&gt;</code></pre>
+</section>
+
+<!-- Compact Pagination -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Compact Pagination</h2>
+  <p class="text-[var(--color-muted-foreground)] mb-4">
+    Use compact size for tighter layouts or mobile views.
+  </p>
+  <%= render FlatPack::Pagination::Component.new(pagy: @pagy, size: :compact) %>
+  
+  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Pagination::Component.new(
+  pagy: @pagy,
+  size: :compact
+) %&gt;</code></pre>
+</section>
+
+<!-- Pagination in Card -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Pagination in Card</h2>
+  <%= render FlatPack::Card::Component.new(style: :outlined) do |card| %>
+    <% card.header do %>
+      <h3 class="text-lg font-semibold">User List</h3>
+    <% end %>
+    <% card.body do %>
+      <div class="space-y-2">
+        <% @records.first(5).each do |record| %>
+          <div class="flex items-center justify-between p-3 bg-[var(--color-muted)] rounded-lg">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-white font-semibold">
+                <%= record.id %>
+              </div>
+              <span class="font-medium"><%= record.name %></span>
+            </div>
+            <%= render FlatPack::Button::Component.new(text: "View", style: :ghost, size: :sm) %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+    <% card.footer do %>
+      <%= render FlatPack::Pagination::Component.new(pagy: @pagy, size: :compact) %>
+    <% end %>
+  <% end %>
+</section>
+
+<!-- Setup Instructions -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Setup Instructions</h2>
+  
+  <h3 class="text-lg font-semibold mb-3">1. Install Pagy Gem</h3>
+  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mb-4"><code># Add to Gemfile
+gem 'pagy', '~> 9.0'
+
+# Run bundle install
+bundle install</code></pre>
+  
+  <h3 class="text-lg font-semibold mb-3">2. Include Pagy Backend</h3>
+  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mb-4"><code># In app/controllers/application_controller.rb
+class ApplicationController < ActionController::Base
+  include Pagy::Backend
+end</code></pre>
+  
+  <h3 class="text-lg font-semibold mb-3">3. Use in Controllers</h3>
+  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mb-4"><code>def index
+  @pagy, @users = pagy(User.all, items: 20)
+end</code></pre>
+  
+  <h3 class="text-lg font-semibold mb-3">4. Render in Views</h3>
+  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Pagination::Component.new(pagy: @pagy) %&gt;</code></pre>
+</section>
+
+<!-- Features -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Features</h2>
+  <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
+    <li><strong>Pagy Integration:</strong> Uses the fast and lightweight Pagy gem</li>
+    <li><strong>Accessible:</strong> Proper ARIA attributes and keyboard navigation</li>
+    <li><strong>Turbo Friendly:</strong> Works seamlessly with Turbo Frames</li>
+    <li><strong>Compact Mode:</strong> Optional compact size for tighter layouts</li>
+    <li><strong>Smart Series:</strong> Intelligently shows relevant page numbers</li>
+    <li><strong>Previous/Next:</strong> Always shows navigation arrows</li>
+    <li><strong>Current Page:</strong> Visual indication of active page</li>
+  </ul>
+</section>
+
+<!-- Pagy Configuration -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Pagy Configuration</h2>
+  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code># config/initializers/pagy.rb
+require 'pagy/extras/overflow'
+Pagy::DEFAULT[:items] = 20
+Pagy::DEFAULT[:overflow] = :last_page
+
+# Optional extras
+# require 'pagy/extras/bootstrap'
+# require 'pagy/extras/array'
+# require 'pagy/extras/countless'</code></pre>
+</section>

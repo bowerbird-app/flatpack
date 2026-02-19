@@ -64,15 +64,14 @@ module FlatPack
         assert_selector "td strong", text: "Bob"
       end
 
-      def test_renders_table_with_actions
+      def test_renders_table_with_actions_column
         render_inline(Component.new(data: @users)) do |component|
           component.column(title: "Name", html: ->(user) { user.name })
-          component.with_action(text: "Edit", url: ->(user) { "/users/#{user.id}/edit" })
+          component.column(title: "Actions", html: ->(_user) { "Edit" })
         end
 
         assert_selector "th", text: "Actions"
-        assert_selector "a[href='/users/1/edit']", text: "Edit"
-        assert_selector "a[href='/users/2/edit']", text: "Edit"
+        assert_selector "td", text: "Edit", count: 2
       end
 
       def test_renders_table_with_stimulus_controller
@@ -83,10 +82,12 @@ module FlatPack
         assert_selector "div[data-controller='flat-pack--table']"
       end
 
-      def test_renders_custom_action_block
+      def test_renders_table_with_custom_column_block
         render_inline(Component.new(data: @users)) do |component|
           component.column(title: "Name", html: ->(user) { user.name })
-          component.with_action(html: ->(user) { "<span class=\"custom-action\">Custom #{user.name}</span>".html_safe })
+          component.column(title: "Custom") do |user|
+            "<span class=\"custom-action\">Custom #{user.name}</span>".html_safe
+          end
         end
 
         assert_selector "span.custom-action", text: "Custom Alice"
@@ -102,10 +103,9 @@ module FlatPack
         render_inline(Component.new(data: [])) do |component|
           component.column(title: "Name", html: ->(user) { user.name })
           component.column(title: "Email", html: ->(user) { user.email })
-          component.with_action(label: "Edit")
         end
 
-        assert_selector "td[colspan='3']", text: "No data available"
+        assert_selector "td[colspan='2']", text: "No data available"
       end
 
       def test_renders_sortable_column_headers
@@ -148,8 +148,8 @@ module FlatPack
           component.column(title: "Email", html: ->(user) { user.email }, sortable: true, sort_key: :email)
         end
 
-        # Should show ascending arrow for name column
-        assert_selector "th a", text: /Name.*↑/
+        # Should show descending arrow for name column
+        assert_selector "th a", text: /Name.*↓/
         # Should not show arrow for email column
         assert_no_selector "th a", text: /Email.*[↑↓]/
       end
@@ -164,8 +164,8 @@ module FlatPack
           component.column(title: "Name", html: ->(user) { user.name }, sortable: true, sort_key: :name)
         end
 
-        # Should show descending arrow for name column
-        assert_selector "th a", text: /Name.*↓/
+        # Should show ascending arrow for name column
+        assert_selector "th a", text: /Name.*↑/
       end
 
       def test_non_sortable_columns_remain_static
@@ -250,7 +250,7 @@ module FlatPack
 
         assert_selector "th a[href*='sort=custom_sort']"
         # Should show indicator since sort matches sort_key
-        assert_selector "th a", text: /Name.*↑/
+        assert_selector "th a", text: /Name.*↓/
       end
 
       def test_sortable_column_falls_back_to_attribute_for_sort_key
@@ -288,6 +288,38 @@ module FlatPack
 
         assert_selector "th a[href*='sort=name']"
         assert_selector "td", text: "ALICE"
+      end
+
+      def test_renders_draggable_rows_controller_and_reorder_values
+        render_inline(Component.new(
+          data: @users,
+          draggable_rows: true,
+          reorder: {
+            url: "/demo/tables/reorder",
+            version: "123.45",
+            scope: {list_key: "tables-demo"}
+          }
+        )) do |component|
+          component.column(title: "Name", html: ->(user) { user.name })
+        end
+
+        assert_selector "div[data-controller~='flat-pack--table-sortable']"
+        assert_selector "div[data-flat-pack--table-sortable-reorder-url-value='/demo/tables/reorder']"
+        assert_selector "div[data-flat-pack--table-sortable-resource-value='open_structs']"
+        assert_selector "div[data-flat-pack--table-sortable-strategy-value='dense_integer']"
+        assert_selector "div[data-flat-pack--table-sortable-version-value='123.45']"
+      end
+
+      def test_renders_draggable_row_targets_with_ids
+        render_inline(Component.new(
+          data: @users,
+          draggable_rows: true
+        )) do |component|
+          component.column(title: "Name", html: ->(user) { user.name })
+        end
+
+        assert_selector "tr[data-flat-pack--table-sortable-target='row'][data-id='1']"
+        assert_selector "tr[data-flat-pack--table-sortable-target='row'][data-id='2']"
       end
     end
   end

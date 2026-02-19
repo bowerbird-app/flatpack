@@ -1,0 +1,170 @@
+<div data-controller="flat-pack--toasts-region">
+  <h1 class="text-4xl font-bold mb-4">Toast Component</h1>
+  <p class="text-lg text-[var(--color-muted-foreground)] mb-8">
+    Auto-dismissing notification messages with aria-live support.
+  </p>
+
+  <!-- Toast Container -->
+  <%= render FlatPack::Toasts::Region::Component.new(data: { "flat-pack--toasts-region-target": "container" }) %>
+
+<!-- Basic Toasts -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Basic Toasts</h2>
+  <p class="text-[var(--color-muted-foreground)] mb-4">
+    Click the buttons below to trigger toast notifications.
+  </p>
+  <div class="flex flex-wrap gap-3 mb-4">
+    <%= render FlatPack::Button::Component.new(
+      text: "Info Toast",
+      style: :secondary,
+      data: { action: "click->flat-pack--toasts-region#addToast", type: "info", message: "This is an informational message" }
+    ) %>
+    <%= render FlatPack::Button::Component.new(
+      text: "Success Toast",
+      style: :success,
+      data: { action: "click->flat-pack--toasts-region#addToast", type: "success", message: "Operation completed successfully!" }
+    ) %>
+    <%= render FlatPack::Button::Component.new(
+      text: "Warning Toast",
+      style: :warning,
+      data: { action: "click->flat-pack--toasts-region#addToast", type: "warning", message: "Please review your changes" }
+    ) %>
+    <%= render FlatPack::Button::Component.new(
+      text: "Error Toast",
+      style: :ghost,
+      data: { action: "click->flat-pack--toasts-region#addToast", type: "error", message: "An error occurred. Please try again." }
+    ) %>
+  </div>
+  
+  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;!-- Toast Container (place once in layout) --&gt;
+&lt;%= render FlatPack::Toasts::Region::Component.new %&gt;
+
+&lt;!-- Trigger via JavaScript --&gt;
+document.dispatchEvent(new CustomEvent('toast:add', {
+  detail: {
+    type: 'success',
+    message: 'Task completed!',
+    timeout: 5000
+  }
+}));</code></pre>
+</section>
+
+<!-- Toast with Different Timeouts -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Custom Timeouts</h2>
+  <div class="flex flex-wrap gap-3 mb-4">
+    <%= render FlatPack::Button::Component.new(
+      text: "Quick (2s)",
+      style: :secondary,
+      data: { action: "click->flat-pack--toasts-region#addToast", type: "info", message: "Quick toast (2 seconds)", timeout: 2000 }
+    ) %>
+    <%= render FlatPack::Button::Component.new(
+      text: "Normal (5s)",
+      style: :secondary,
+      data: { action: "click->flat-pack--toasts-region#addToast", type: "info", message: "Normal toast (5 seconds)", timeout: 5000 }
+    ) %>
+    <%= render FlatPack::Button::Component.new(
+      text: "Long (10s)",
+      style: :secondary,
+      data: { action: "click->flat-pack--toasts-region#addToast", type: "info", message: "Long toast (10 seconds)", timeout: 10000 }
+    ) %>
+  </div>
+</section>
+
+<!-- Multiple Toasts -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Multiple Toasts</h2>
+  <p class="text-[var(--color-muted-foreground)] mb-4">
+    Toasts stack automatically. Try clicking multiple times.
+  </p>
+  <%= render FlatPack::Button::Component.new(
+    text: "Show 3 Toasts",
+    style: :primary,
+    id: "show-multiple-toasts"
+  ) %>
+  
+  <script>
+    document.getElementById('show-multiple-toasts')?.addEventListener('click', () => {
+      setTimeout(() => {
+        document.dispatchEvent(new CustomEvent('toast:add', {
+          detail: { type: 'info', message: 'First toast notification' }
+        }));
+      }, 100);
+      
+      setTimeout(() => {
+        document.dispatchEvent(new CustomEvent('toast:add', {
+          detail: { type: 'success', message: 'Second toast notification' }
+        }));
+      }, 300);
+      
+      setTimeout(() => {
+        document.dispatchEvent(new CustomEvent('toast:add', {
+          detail: { type: 'warning', message: 'Third toast notification' }
+        }));
+      }, 500);
+    });
+  </script>
+</section>
+
+<!-- Toast Types -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Toast Types</h2>
+  <div class="space-y-3 p-6 bg-[var(--color-muted)] rounded-lg">
+    <div class="flex items-start gap-3">
+      <div class="w-12 text-center">
+        <%= render FlatPack::Badge::Component.new(text: "Info", variant: :default) %>
+      </div>
+      <p class="flex-1 text-sm">General information or status updates</p>
+    </div>
+    <div class="flex items-start gap-3">
+      <div class="w-12 text-center">
+        <%= render FlatPack::Badge::Component.new(text: "Success", variant: :success) %>
+      </div>
+      <p class="flex-1 text-sm">Successful operations or confirmations</p>
+    </div>
+    <div class="flex items-start gap-3">
+      <div class="w-12 text-center">
+        <%= render FlatPack::Badge::Component.new(text: "Warning", variant: :warning) %>
+      </div>
+      <p class="flex-1 text-sm">Warnings or actions requiring attention</p>
+    </div>
+    <div class="flex items-start gap-3">
+      <div class="w-12 text-center">
+        <%= render FlatPack::Badge::Component.new(text: "Error", variant: :error) %>
+      </div>
+      <p class="flex-1 text-sm">Errors or failed operations</p>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Features</h2>
+  <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
+    <li><strong>Auto-Dismiss:</strong> Automatically disappear after a configurable timeout</li>
+    <li><strong>Manual Dismiss:</strong> Click the close button to dismiss immediately</li>
+    <li><strong>ARIA Live Regions:</strong> Screen readers announce new toasts</li>
+    <li><strong>Stacking:</strong> Multiple toasts stack vertically</li>
+    <li><strong>Animations:</strong> Smooth slide and fade animations</li>
+    <li><strong>Reduced Motion:</strong> Respects prefers-reduced-motion</li>
+    <li><strong>Turbo Stream Friendly:</strong> Can be triggered via Turbo Streams</li>
+    <li><strong>Event-Driven:</strong> Trigger via custom JavaScript events</li>
+  </ul>
+</section>
+
+<!-- Turbo Stream Example -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Turbo Stream Integration</h2>
+  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;!-- In your controller action --&gt;
+respond_to do |format|
+  format.turbo_stream do
+    render turbo_stream: turbo_stream.append(
+      "toasts-region",
+      partial: "flat_pack/toast/component",
+      locals: { type: :success, message: "Saved!" }
+    )
+  end
+end</code></pre>
+</section>
+
+</div>

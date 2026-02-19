@@ -252,7 +252,7 @@ Visit the page in your browser. You should see a styled button.
 FlatPack currently provides:
 
 - **Button** - Buttons and links with multiple schemes (`:primary`, `:secondary`, `:ghost`)
-- **Table** - Data tables with columns and actions
+- **Table** - Data tables with configurable columns
 - **Icon** - Shared icon component
 
 ## Quick Start Examples
@@ -272,7 +272,6 @@ FlatPack currently provides:
 <%= render FlatPack::Table::Component.new(data: @users) do |table| %>
   <% table.column(title: "Name", html: ->(row) { row.name }) %>
   <% table.column(title: "Email", html: ->(row) { row.email }) %>
-  <% table.with_action(text: "Edit", url: ->(user) { edit_user_path(user) }) %>
 <% end %>
 ```
 

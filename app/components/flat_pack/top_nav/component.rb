@@ -57,8 +57,14 @@ module FlatPack
 
       def header_attributes
         merge_attributes(
-          class: header_classes
+          class: header_classes,
+          style: header_style
         )
+      end
+
+      def header_style
+        existing_style = @system_arguments[:style]
+        [existing_style, "height: 72px"].compact.join("; ")
       end
 
       def header_classes
@@ -70,22 +76,22 @@ module FlatPack
           "backdrop-blur-lg",
           "border-[var(--color-border)]",
           "px-4",
-          "py-3"
+          "py-0"
         )
       end
 
       def container_classes
-        "flex items-center gap-4"
+        "h-full flex items-center gap-4"
       end
 
       def section_classes(alignment)
         case alignment
         when "left"
-          "flex items-center gap-2"
+          "h-full flex items-center gap-2"
         when "center"
-          "flex-1 flex items-center justify-center"
+          "h-full flex-1 flex items-center justify-center"
         when "right"
-          "flex items-center gap-2"
+          "h-full flex items-center gap-2"
         end
       end
     end

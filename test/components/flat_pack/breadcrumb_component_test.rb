@@ -174,6 +174,44 @@ module FlatPack
         assert_text "Home"
       end
 
+      def test_renders_back_item_when_enabled
+        render_inline(Component.new(show_back: true, back_fallback_url: "/previous")) do |breadcrumb|
+          breadcrumb.item(text: "Current")
+        end
+
+        assert_selector "a[href='/previous']", text: "Back"
+        assert_selector "nav ol li:first-child a[href='/previous']", text: "Back"
+        assert_includes page.native.to_html, "#icon-chevron-left"
+      end
+
+      def test_renders_back_before_home_when_both_enabled
+        render_inline(Component.new(show_back: true, show_home: true, back_fallback_url: "/previous")) do |breadcrumb|
+          breadcrumb.item(text: "Settings")
+        end
+
+        html = page.native.to_html
+        assert_operator html.index("Back"), :<, html.index("Home")
+      end
+
+      def test_hides_separator_to_the_right_of_back_item
+        render_inline(Component.new(show_back: true, show_home: true, back_fallback_url: "/previous")) do |breadcrumb|
+          breadcrumb.item(text: "Current")
+        end
+
+        assert_selector "a[href='/previous']", text: "Back"
+        assert_selector "a[href='/']", text: "Home"
+        assert_no_selector "nav[aria-label='Breadcrumb'] li:first-child + li[aria-hidden='true']"
+        assert_selector "nav[aria-label='Breadcrumb'] li[aria-hidden='true']"
+      end
+
+      def test_renders_back_with_custom_text
+        render_inline(Component.new(show_back: true, back_text: "Go Back", back_fallback_url: "/prev")) do |breadcrumb|
+          breadcrumb.item(text: "Current")
+        end
+
+        assert_selector "a[href='/prev']", text: "Go Back"
+      end
+
       # Collapsed Items Tests
       def test_collapses_items_when_exceeds_max
         render_inline(Component.new(max_items: 3)) do |breadcrumb|

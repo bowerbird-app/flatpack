@@ -1,0 +1,254 @@
+<h1 class="text-4xl font-bold mb-4">Modal Component</h1>
+<p class="text-lg text-[var(--color-muted-foreground)] mb-8">
+  Accessible dialog overlays with focus trap, backdrop dismiss, and ESC key support.
+</p>
+
+<!-- Basic Modal -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Basic Modal</h2>
+  <div class="mb-4">
+    <%= render FlatPack::Button::Component.new(
+      text: "Open Modal",
+      style: :primary,
+      data: { action: "click->flat-pack--modal#open", "modal-id": "basic-modal" }
+    ) %>
+  </div>
+  
+  <%= render FlatPack::Modal::Component.new(id: "basic-modal", size: :md) do |modal| %>
+    <% modal.with_header do %>
+      <h2 class="text-xl font-semibold">Modal Title</h2>
+    <% end %>
+    <% modal.with_body do %>
+      <p class="text-[var(--color-foreground)]">
+        This is a basic modal dialog. Click the backdrop, press ESC, or click the close button to dismiss.
+      </p>
+      <p class="mt-4 text-[var(--color-muted-foreground)]">
+        The modal traps focus and prevents interaction with the rest of the page while open.
+      </p>
+    <% end %>
+    <% modal.with_footer do %>
+      <%= render FlatPack::Button::Component.new(
+        text: "Cancel",
+        style: :secondary,
+        data: { action: "click->flat-pack--modal#close" }
+      ) %>
+      <%= render FlatPack::Button::Component.new(
+        text: "Confirm",
+        style: :primary,
+        data: { action: "click->flat-pack--modal#close" }
+      ) %>
+    <% end %>
+  <% end %>
+  
+  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Modal::Component.new(id: "basic-modal", size: :md) do |modal| %&gt;
+  &lt;% modal.with_header do %&gt;
+    &lt;h2&gt;Modal Title&lt;/h2&gt;
+  &lt;% end %&gt;
+  &lt;% modal.with_body do %&gt;
+    &lt;p&gt;Modal content goes here...&lt;/p&gt;
+  &lt;% end %&gt;
+  &lt;% modal.with_footer do %&gt;
+    &lt;%= render FlatPack::Button::Component.new(
+      text: "Close",
+      data: { action: "click->flat-pack--modal#close" }
+    ) %&gt;
+  &lt;% end %&gt;
+&lt;% end %&gt;</code></pre>
+</section>
+
+<!-- Modal Sizes -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Modal Sizes</h2>
+  <div class="flex gap-3 mb-4">
+    <%= render FlatPack::Button::Component.new(
+      text: "Small Modal",
+      style: :secondary,
+      data: { action: "click->flat-pack--modal#open", "flat-pack--modal-target": "trigger", "modal-id": "small-modal" }
+    ) %>
+    <%= render FlatPack::Button::Component.new(
+      text: "Medium Modal",
+      style: :secondary,
+      data: { action: "click->flat-pack--modal#open", "flat-pack--modal-target": "trigger", "modal-id": "medium-modal" }
+    ) %>
+    <%= render FlatPack::Button::Component.new(
+      text: "Large Modal",
+      style: :secondary,
+      data: { action: "click->flat-pack--modal#open", "flat-pack--modal-target": "trigger", "modal-id": "large-modal" }
+    ) %>
+  </div>
+  
+  <%= render FlatPack::Modal::Component.new(id: "small-modal", size: :sm) do |modal| %>
+    <% modal.with_header do %>
+      <h2 class="text-xl font-semibold">Small Modal</h2>
+    <% end %>
+    <% modal.with_body do %>
+      <p>This is a small modal with limited width.</p>
+    <% end %>
+    <% modal.with_footer do %>
+      <%= render FlatPack::Button::Component.new(text: "Close", style: :secondary, data: { action: "click->flat-pack--modal#close" }) %>
+    <% end %>
+  <% end %>
+  
+  <%= render FlatPack::Modal::Component.new(id: "medium-modal", size: :md) do |modal| %>
+    <% modal.with_header do %>
+      <h2 class="text-xl font-semibold">Medium Modal (Default)</h2>
+    <% end %>
+    <% modal.with_body do %>
+      <p>This is a medium-sized modal, which is the default size.</p>
+    <% end %>
+    <% modal.with_footer do %>
+      <%= render FlatPack::Button::Component.new(text: "Close", style: :secondary, data: { action: "click->flat-pack--modal#close" }) %>
+    <% end %>
+  <% end %>
+  
+  <%= render FlatPack::Modal::Component.new(id: "large-modal", size: :lg) do |modal| %>
+    <% modal.with_header do %>
+      <h2 class="text-xl font-semibold">Large Modal</h2>
+    <% end %>
+    <% modal.with_body do %>
+      <p>This is a large modal with more width for complex content.</p>
+    <% end %>
+    <% modal.with_footer do %>
+      <%= render FlatPack::Button::Component.new(text: "Close", style: :secondary, data: { action: "click->flat-pack--modal#close" }) %>
+    <% end %>
+  <% end %>
+  
+  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Modal::Component.new(id: "my-modal", size: :sm) ... %&gt;
+&lt;%= render FlatPack::Modal::Component.new(id: "my-modal", size: :md) ... %&gt;
+&lt;%= render FlatPack::Modal::Component.new(id: "my-modal", size: :lg) ... %&gt;</code></pre>
+</section>
+
+<!-- Modal with Form -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Modal with Form</h2>
+  <p class="text-[var(--color-muted-foreground)] mb-4">
+    A practical example of placing a form inside a modal for focused data entry.
+  </p>
+  <div class="mb-4">
+    <%= render FlatPack::Button::Component.new(
+      text: "Open Form Modal",
+      style: :primary,
+      data: { action: "click->flat-pack--modal#open", "modal-id": "form-modal" }
+    ) %>
+  </div>
+
+  <%= render FlatPack::Modal::Component.new(id: "form-modal", size: :md) do |modal| %>
+    <% modal.with_header do %>
+      <h2 class="text-xl font-semibold">Contact Sales</h2>
+    <% end %>
+    <% modal.with_body do %>
+      <form class="space-y-4">
+        <%= render FlatPack::TextInput::Component.new(
+          name: "contact[name]",
+          label: "Name",
+          placeholder: "Jane Doe",
+          required: true
+        ) %>
+
+        <%= render FlatPack::EmailInput::Component.new(
+          name: "contact[email]",
+          label: "Work Email",
+          placeholder: "jane@company.com",
+          required: true
+        ) %>
+
+        <%= render FlatPack::TextArea::Component.new(
+          name: "contact[message]",
+          label: "Message",
+          placeholder: "Tell us what you'd like to build...",
+          rows: 3,
+          required: true
+        ) %>
+
+        <div class="flex justify-end gap-2 pt-2">
+          <%= render FlatPack::Button::Component.new(
+            text: "Cancel",
+            style: :secondary,
+            data: { action: "click->flat-pack--modal#close" }
+          ) %>
+          <%= render FlatPack::Button::Component.new(
+            text: "Submit",
+            style: :primary,
+            data: { action: "click->flat-pack--modal#close" }
+          ) %>
+        </div>
+    <% end %>
+  <% end %>
+
+  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Modal::Component.new(id: "form-modal", size: :md) do |modal| %&gt;
+  &lt;% modal.with_header do %&gt;
+    &lt;h2&gt;Contact Sales&lt;/h2&gt;
+  &lt;% end %&gt;
+  &lt;% modal.with_body do %&gt;
+    &lt;form class="space-y-4"&gt;
+      &lt;%= render FlatPack::TextInput::Component.new(...) %&gt;
+      &lt;%= render FlatPack::EmailInput::Component.new(...) %&gt;
+      &lt;%= render FlatPack::TextArea::Component.new(...) %&gt;
+      &lt;div class="flex justify-end gap-2 pt-2"&gt;
+        &lt;%= render FlatPack::Button::Component.new(text: "Cancel", style: :secondary, data: { action: "click-&gt;flat-pack--modal#close" }) %&gt;
+        &lt;%= render FlatPack::Button::Component.new(text: "Submit", style: :primary, data: { action: "click-&gt;flat-pack--modal#close" }) %&gt;
+      &lt;/div&gt;
+    &lt;/form&gt;
+  &lt;% end %&gt;
+&lt;% end %&gt;</code></pre>
+</section>
+
+<!-- Long Content Modal -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Long Content Modal</h2>
+  <p class="text-[var(--color-muted-foreground)] mb-4">
+    This example includes a large amount of text to test modal body scrolling and overall behavior with long-form content.
+  </p>
+  <div class="mb-4">
+    <%= render FlatPack::Button::Component.new(
+      text: "Open Long Content Modal",
+      style: :secondary,
+      data: { action: "click->flat-pack--modal#open", "flat-pack--modal-target": "trigger", "modal-id": "long-content-modal" }
+    ) %>
+  </div>
+
+  <%= render FlatPack::Modal::Component.new(id: "long-content-modal", size: :lg) do |modal| %>
+    <% modal.with_header do %>
+      <h2 class="text-xl font-semibold">Long Content Test</h2>
+    <% end %>
+    <% modal.with_body do %>
+      <div class="space-y-4 text-[var(--color-foreground)]">
+        <p>
+          This modal intentionally contains a lot of text so you can validate scrolling behavior, focus handling,
+          and layout stability with larger content sets.
+        </p>
+        <% 20.times do |i| %>
+          <p>
+            <strong>Section <%= i + 1 %>:</strong>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus at augue vitae lacus consequat feugiat.
+            Curabitur suscipit, est in dapibus rhoncus, nisi lectus congue turpis, at interdum turpis dui eget nibh.
+            Integer facilisis velit ac tellus feugiat, non aliquet elit convallis. Aenean tempor sem ut neque luctus,
+            vitae pulvinar ipsum sodales.
+          </p>
+        <% end %>
+      </div>
+    <% end %>
+    <% modal.with_footer do %>
+      <%= render FlatPack::Button::Component.new(
+        text: "Close",
+        style: :secondary,
+        data: { action: "click->flat-pack--modal#close" }
+      ) %>
+    <% end %>
+  <% end %>
+</section>
+
+<!-- Features -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Features</h2>
+  <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
+    <li><strong>Focus Trap:</strong> Keeps keyboard focus within the modal while open</li>
+    <li><strong>Focus Restoration:</strong> Returns focus to the trigger element on close</li>
+    <li><strong>ESC to Close:</strong> Press ESC key to dismiss the modal</li>
+    <li><strong>Backdrop Click:</strong> Click outside the modal to close (configurable)</li>
+    <li><strong>Scroll Prevention:</strong> Prevents page scrolling while modal is open</li>
+    <li><strong>Accessibility:</strong> Full ARIA support with role="dialog" and aria-modal="true"</li>
+    <li><strong>Animations:</strong> Smooth fade and scale transitions (respects prefers-reduced-motion)</li>
+    <li><strong>Turbo Compatible:</strong> Works seamlessly with Turbo navigation</li>
+  </ul>
+</section>

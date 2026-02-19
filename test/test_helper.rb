@@ -22,6 +22,9 @@ end
 require "capybara/rails"
 Capybara.default_driver = :selenium_chrome_headless if defined?(Capybara)
 
+# Load test support files
+Dir[File.expand_path("support/**/*.rb", __dir__)].each { |f| require f }
+
 class ActiveSupport::TestCase
   # Run tests in parallel with specified workers
   parallelize(workers: :number_of_processors)

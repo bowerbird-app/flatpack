@@ -1,0 +1,51 @@
+<h1 class="text-4xl font-bold mb-4">Page Header Component</h1>
+<p class="text-lg text-[var(--color-muted-foreground)] mb-8">
+  Consistent page headers with a clear title and optional subtitle.
+</p>
+
+<!-- Basic Page Header -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Basic Page Header</h2>
+  <%= render FlatPack::PageHeader::Component.new(
+    title: "Dashboard",
+    subtitle: "Overview of your workspace"
+  ) %>
+  
+  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::PageHeader::Component.new(
+  title: "Dashboard",
+  subtitle: "Overview of your workspace"
+) %&gt;</code></pre>
+</section>
+
+<!-- Title Only Page Header -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Title Only Page Header</h2>
+  <%= render FlatPack::PageHeader::Component.new(title: "Settings") %>
+  
+  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::PageHeader::Component.new(title: "Settings") %&gt;</code></pre>
+</section>
+
+<!-- Page Header with Longer Subtitle -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Page Header with Longer Subtitle</h2>
+  <%= render FlatPack::PageHeader::Component.new(
+    title: "Team Activity",
+    subtitle: "Track recent changes, deployments, and collaboration updates across your projects from a single place"
+  ) %>
+  
+  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::PageHeader::Component.new(
+  title: "Team Activity",
+  subtitle: "Track recent changes, deployments, and collaboration updates"
+) %&gt;</code></pre>
+</section>
+
+<!-- Features -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Features</h2>
+  <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
+    <li><strong>Simple API:</strong> Required title with optional subtitle</li>
+    <li><strong>Consistent Spacing:</strong> Standardized margins and padding</li>
+    <li><strong>Responsive Typography:</strong> Clear hierarchy for page-level headings</li>
+    <li><strong>Fast Adoption:</strong> Minimal setup for consistent page intros</li>
+  </ul>
+</section>

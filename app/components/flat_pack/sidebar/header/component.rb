@@ -7,7 +7,7 @@ module FlatPack
         def initialize(
           brand_abbr: "FP",
           title: "FlatPack",
-          subtitle: "Workspace",
+          subtitle: nil,
           collapsible: true,
           **system_arguments
         )
@@ -44,11 +44,8 @@ module FlatPack
           content_tag(:div, class: "flex items-center gap-3", data: brand_data_attributes) do
             safe_join([
               (@brand_abbr.present? ? content_tag(:div, @brand_abbr, class: brand_badge_classes) : nil),
-              content_tag(:div, class: "", data: header_label_data_attributes) do
-                safe_join([
-                  content_tag(:div, @title, class: "font-semibold text-sm"),
-                  (@subtitle.present? ? content_tag(:div, @subtitle, class: "text-xs text-[var(--color-text-muted)]") : nil)
-                ].compact)
+              content_tag(:div, class: "flex items-center h-8", data: header_label_data_attributes) do
+                content_tag(:div, @title, class: "font-semibold text-sm")
               end
             ].compact)
           end

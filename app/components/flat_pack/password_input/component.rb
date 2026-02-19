@@ -163,7 +163,7 @@ module FlatPack
           "border",
           "bg-[var(--color-background)]",
           "text-[var(--color-foreground)]",
-          "px-3 py-2",
+          "px-3 py-3",
           "pr-10",
           "text-sm",
           "transition-colors duration-[var(--transition-base)]",

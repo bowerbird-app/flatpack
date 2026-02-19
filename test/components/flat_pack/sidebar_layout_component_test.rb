@@ -122,10 +122,38 @@ module FlatPack
         assert_includes page.native.to_html, "md:z-auto"
       end
 
-      def test_main_column_allows_inner_scroll_with_min_height_reset
+      def test_sidebar_column_constrains_height_for_internal_scroll
+        render_inline(Component.new) do |layout|
+          layout.sidebar { "Sidebar" }
+        end
+
+        assert_includes page.native.to_html, "md:h-screen"
+        assert_includes page.native.to_html, "md:self-start"
+        assert_includes page.native.to_html, "min-h-0"
+      end
+
+      def test_main_column_uses_flexible_content_flow
         render_inline(Component.new)
 
+        assert_includes page.native.to_html, "min-w-0"
         assert_includes page.native.to_html, "min-h-0"
+        assert_includes page.native.to_html, "overflow-hidden"
+      end
+
+      def test_container_is_locked_to_viewport_height
+        render_inline(Component.new)
+
+        assert_includes page.native.to_html, "h-screen"
+        assert_includes page.native.to_html, "overflow-hidden"
+      end
+
+      def test_main_content_scrolls_independently
+        render_inline(Component.new) do |layout|
+          layout.top_nav { "TopNav" }
+          layout.main { "Main" }
+        end
+
+        assert_selector "div.flex-1.min-h-0.overflow-y-auto", text: "Main"
       end
 
       def test_merges_custom_classes

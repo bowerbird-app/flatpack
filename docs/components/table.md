@@ -1,6 +1,6 @@
 # Table Component
 
-The Table component renders data in a tabular format with columns and actions.
+The Table component renders data in a tabular format with configurable columns.
 
 ## Basic Usage
 
@@ -54,42 +54,9 @@ Use the `html` parameter with a lambda for simple attribute display.
 | `sortable` | Boolean | `false` | Enable sorting for this column |
 | `sort_key` | Symbol | **(required when sortable)** | Key to use in sort URL |
 
-## Actions
-
-Define actions using `with_action`:
-
-### Simple Action
-
-```erb
-<% table.with_action(
-  text: "Edit",
-  url: ->(user) { edit_user_path(user) }
-) %>
-```
-
-### Action with Style
-
-```erb
-<% table.with_action(
-  text: "Delete",
-  url: ->(user) { user_path(user) },
-  method: :delete,
-  style: :secondary,
-  data: { turbo_confirm: "Are you sure?" }
-) %>
-```
-
-### Custom Action Block
-
-```erb
-<% table.with_action do |user| %>
-  <%= link_to "Custom", user_path(user), class: "custom-link" %>
-<% end %>
-```
-
 ## Examples
 
-### Complete Table with Actions
+### Complete Table
 
 ```erb
 <%= render FlatPack::Table::Component.new(data: @users) do |table| %>
@@ -113,21 +80,13 @@ Define actions using `with_action`:
     <%= user.created_at.strftime("%b %d, %Y") %>
   <% end %>
   
-  <%# Edit action %>
-  <% table.with_action(
-    text: "Edit",
-    url: ->(user) { edit_user_path(user) },
-    style: :ghost
-  ) %>
-  
-  <%# Delete action with confirmation %>
-  <% table.with_action(
-    text: "Delete",
-    url: ->(user) { user_path(user) },
-    method: :delete,
-    style: :ghost,
-    data: { turbo_confirm: "Delete #{user.name}?" }
-  ) %>
+  <%# Action column with custom controls %>
+  <% table.column(title: "Actions") do |user| %>
+    <div class="flex items-center gap-2">
+      <%= render FlatPack::Button::Component.new(text: "Edit", url: edit_user_path(user), style: :ghost) %>
+      <%= render FlatPack::Button::Component.new(text: "Delete", url: user_path(user), method: :delete, style: :ghost, data: { turbo_confirm: "Delete #{user.name}?" }) %>
+    </div>
+  <% end %>
 <% end %>
 ```
 
@@ -235,29 +194,29 @@ Enable the Stimulus controller for advanced interactions:
 
 The Stimulus controller (`flat-pack--table`) provides:
 - Row selection
-- Bulk actions
+- Row interactions
 - Hover effects
 
-### Conditional Actions
+### Conditional Action Column
 
 ```erb
-<% table.with_action do |user| %>
+<% table.column(title: "Actions") do |user| %>
   <% if policy(user).edit? %>
-    <%= render FlatPack::Button::Component.new(
-      text: "Edit",
-      url: edit_user_path(user),
-      style: :ghost
-    ) %>
+    <%= render FlatPack::Button::Component.new(text: "Edit", url: edit_user_path(user), style: :ghost) %>
   <% end %>
 <% end %>
 ```
 
-### Multiple Action Buttons
+### Multiple Buttons in One Column
 
 ```erb
-<% table.with_action(text: "View", url: ->(user) { user_path(user) }, style: :ghost) %>
-<% table.with_action(text: "Edit", url: ->(user) { edit_user_path(user) }, style: :ghost) %>
-<% table.with_action(text: "Delete", url: ->(user) { user_path(user) }, method: :delete, style: :ghost) %>
+<% table.column(title: "Actions") do |user| %>
+  <div class="flex items-center gap-2">
+    <%= render FlatPack::Button::Component.new(text: "View", url: user_path(user), style: :ghost) %>
+    <%= render FlatPack::Button::Component.new(text: "Edit", url: edit_user_path(user), style: :ghost) %>
+    <%= render FlatPack::Button::Component.new(text: "Delete", url: user_path(user), method: :delete, style: :ghost) %>
+  </div>
+<% end %>
 ```
 
 ### With Pagination
@@ -349,7 +308,7 @@ The Table component follows accessibility best practices:
 - Uses semantic HTML (`<table>`, `<thead>`, `<tbody>`, `<th>`, `<td>`)
 - Headers use `<th>` with `scope="col"`
 - Proper ARIA attributes for interactive elements
-- Keyboard navigation for actions
+- Keyboard navigation for interactive controls in cells
 
 ### Keyboard Support
 
@@ -413,22 +372,9 @@ table.column(
 )
 ```
 
-### Action Component
-
-```ruby
-table.with_action(
-  text: String,              # Optional
-  url: String | Proc,         # Optional
-  method: Symbol,             # Optional
-  style: Symbol,              # Optional, default: :ghost
-  **system_arguments,         # Optional
-  &block                      # Optional
-)
-```
-
 ## Related Components
 
-- [Button Component](button.md) - Used for actions
+- [Button Component](button.md) - For custom controls in table cells
 - [Sortable Tables](sortable-tables.md) - Detailed sorting implementation
 - [Icon Component](../shared/icon.md) - For action icons
 

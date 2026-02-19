@@ -1,0 +1,164 @@
+<h1 class="text-4xl font-bold mb-4">Grid Component</h1>
+<p class="text-lg text-[var(--color-muted-foreground)] mb-8">
+  Mobile-first responsive grid with flexible column configurations.
+</p>
+
+<!-- Basic Grid -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Auto-Responsive Grid</h2>
+  <p class="text-[var(--color-muted-foreground)] mb-4">
+    Default grid automatically adapts: 1 column on mobile, 2 on tablet, 3 on desktop.
+  </p>
+  <%= render FlatPack::Grid::Component.new do %>
+    <% 6.times do |i| %>
+      <%= render FlatPack::Card::Component.new(style: :outlined) do |card| %>
+        <% card.body do %>
+          <h3 class="font-semibold mb-2">Item <%= i + 1 %></h3>
+          <p class="text-sm text-[var(--color-muted-foreground)]">
+            Card content <%= i + 1 %>
+          </p>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+  
+  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Grid::Component.new do %&gt;
+  &lt;% 6.times do |i| %&gt;
+    &lt;%= render FlatPack::Card::Component.new do |card| %&gt;
+      &lt;% card.body do %&gt;
+        Card content &lt;%= i %&gt;
+      &lt;% end %&gt;
+    &lt;% end %&gt;
+  &lt;% end %&gt;
+&lt;% end %&gt;</code></pre>
+</section>
+
+<!-- Grid with Specific Columns -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">2-Column Grid</h2>
+  <%= render FlatPack::Grid::Component.new(cols: 2) do %>
+    <% 4.times do |i| %>
+      <%= render FlatPack::Card::Component.new(style: :elevated) do |card| %>
+        <% card.body do %>
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-lg bg-[var(--color-primary)] flex items-center justify-center text-white font-bold">
+              <%= i + 1 %>
+            </div>
+            <div>
+              <h3 class="font-semibold">Feature <%= i + 1 %></h3>
+              <p class="text-sm text-[var(--color-muted-foreground)]">Description</p>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+  
+  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Grid::Component.new(cols: 2) do %&gt;
+  &lt;!-- Content --&gt;
+&lt;% end %&gt;</code></pre>
+</section>
+
+<!-- Grid with Different Gaps -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Grid Gap Sizes</h2>
+  
+  <h3 class="text-lg font-semibold mb-3">Small Gap</h3>
+  <%= render FlatPack::Grid::Component.new(cols: 4, gap: :sm) do %>
+    <% 4.times do |i| %>
+      <div class="bg-[var(--color-muted)] p-4 rounded-lg text-center">
+        <%= i + 1 %>
+      </div>
+    <% end %>
+  <% end %>
+  
+  <h3 class="text-lg font-semibold mb-3 mt-6">Medium Gap (Default)</h3>
+  <%= render FlatPack::Grid::Component.new(cols: 4, gap: :md) do %>
+    <% 4.times do |i| %>
+      <div class="bg-[var(--color-muted)] p-4 rounded-lg text-center">
+        <%= i + 1 %>
+      </div>
+    <% end %>
+  <% end %>
+  
+  <h3 class="text-lg font-semibold mb-3 mt-6">Large Gap</h3>
+  <%= render FlatPack::Grid::Component.new(cols: 4, gap: :lg) do %>
+    <% 4.times do |i| %>
+      <div class="bg-[var(--color-muted)] p-4 rounded-lg text-center">
+        <%= i + 1 %>
+      </div>
+    <% end %>
+  <% end %>
+  
+  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Grid::Component.new(cols: 4, gap: :sm) do %&gt; ... &lt;% end %&gt;
+&lt;%= render FlatPack::Grid::Component.new(cols: 4, gap: :md) do %&gt; ... &lt;% end %&gt;
+&lt;%= render FlatPack::Grid::Component.new(cols: 4, gap: :lg) do %&gt; ... &lt;% end %&gt;</code></pre>
+</section>
+
+<!-- Product Grid Example -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Product Grid Example</h2>
+  <%= render FlatPack::Grid::Component.new(cols: 3) do %>
+    <% @products.first(6).each do |product| %>
+      <%= render FlatPack::Card::Component.new(style: :outlined, hover: :subtle) do |card| %>
+        <% card.media do %>
+          <div class="h-48 bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center">
+            <%= render FlatPack::Shared::IconComponent.new(name: :box, size: :lg, class: "text-blue-600") %>
+          </div>
+        <% end %>
+        <% card.body do %>
+          <h3 class="font-semibold mb-1"><%= product.name %></h3>
+          <p class="text-sm text-[var(--color-muted-foreground)] mb-2">
+            <%= product.description %>
+          </p>
+          <div class="flex items-center justify-between">
+            <span class="text-lg font-bold text-[var(--color-primary)]">
+              $<%= product.price %>
+            </span>
+            <%= render FlatPack::Button::Component.new(text: "Add to Cart", style: :secondary, size: :sm) %>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+</section>
+
+<!-- Grid Column Options -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Column Options</h2>
+  <div class="bg-[var(--color-muted)] p-6 rounded-lg space-y-4">
+    <div class="grid grid-cols-2 gap-4 text-sm">
+      <div>
+        <strong>cols: 1</strong> - Single column
+      </div>
+      <div>
+        <strong>cols: 2</strong> - Two columns
+      </div>
+      <div>
+        <strong>cols: 3</strong> - Three columns (default)
+      </div>
+      <div>
+        <strong>cols: 4</strong> - Four columns
+      </div>
+      <div>
+        <strong>cols: 6</strong> - Six columns
+      </div>
+      <div>
+        <strong>cols: 12</strong> - Twelve columns
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Features</h2>
+  <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
+    <li><strong>Mobile-First:</strong> Starts with 1 column, scales up responsively</li>
+    <li><strong>Flexible Columns:</strong> Support for 1, 2, 3, 4, 6, or 12 columns</li>
+    <li><strong>Consistent Gaps:</strong> Small, medium, and large gap options</li>
+    <li><strong>Auto-Stretch:</strong> Items stretch to fill height by default</li>
+    <li><strong>CSS Grid:</strong> Modern CSS grid implementation</li>
+    <li><strong>Composable:</strong> Works great with Card and other components</li>
+  </ul>
+</section>

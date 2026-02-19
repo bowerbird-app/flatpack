@@ -64,7 +64,6 @@ After installation, use FlatPack components in your views:
 <%= render FlatPack::Table::Component.new(data: @users) do |table| %>
   <% table.column(title: "Name", html: ->(row) { row.name }) %>
   <% table.column(title: "Email", html: ->(row) { row.email }) %>
-  <% table.with_action(text: "Edit", url: ->(user) { edit_user_path(user) }) %>
 <% end %>
 ```
 

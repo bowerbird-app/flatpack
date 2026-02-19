@@ -1,0 +1,190 @@
+<h1 class="text-4xl font-bold mb-4">Tabs Component</h1>
+<p class="text-lg text-[var(--color-muted-foreground)] mb-8">
+  Tabbed content with full keyboard navigation and ARIA support.
+</p>
+
+<!-- Basic Tabs -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Basic Tabs</h2>
+  <%= render FlatPack::Tabs::Component.new do |tabs| %>
+    <% tabs.tab(id: "overview", label: "Overview") %>
+    <% tabs.tab(id: "details", label: "Details") %>
+    <% tabs.tab(id: "settings", label: "Settings") %>
+
+    <% tabs.panel(id: "overview") do %>
+      <div class="p-6 bg-[var(--color-muted)] rounded-b-lg">
+        <h3 class="text-lg font-semibold mb-2">Overview Tab</h3>
+        <p class="text-[var(--color-foreground)]">
+          This is the overview content. Tabs organize content into separate views where only one panel is visible at a time.
+        </p>
+      </div>
+    <% end %>
+    <% tabs.panel(id: "details") do %>
+      <div class="p-6 bg-[var(--color-muted)] rounded-b-lg">
+        <h3 class="text-lg font-semibold mb-2">Details Tab</h3>
+        <p class="text-[var(--color-foreground)]">
+          Here you can provide detailed information. Use arrow keys to move between tabs.
+        </p>
+      </div>
+    <% end %>
+    <% tabs.panel(id: "settings") do %>
+      <div class="p-6 bg-[var(--color-muted)] rounded-b-lg">
+        <h3 class="text-lg font-semibold mb-2">Settings Tab</h3>
+        <p class="text-[var(--color-foreground)]">
+          Configuration content can go here. Press Home/End to jump to first/last tab.
+        </p>
+      </div>
+    <% end %>
+  <% end %>
+  
+  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Tabs::Component.new do |tabs| %&gt;
+  &lt;% tabs.tab(id: "overview", label: "Overview") %&gt;
+  &lt;% tabs.tab(id: "details", label: "Details") %&gt;
+
+  &lt;% tabs.panel(id: "overview") do %&gt;
+    &lt;p&gt;Overview content...&lt;/p&gt;
+  &lt;% end %&gt;
+  &lt;% tabs.panel(id: "details") do %&gt;
+    &lt;p&gt;Details content...&lt;/p&gt;
+  &lt;% end %&gt;
+&lt;% end %&gt;</code></pre>
+</section>
+
+<!-- Tabs with Default Tab -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Tabs with a Non-First Default</h2>
+  <%= render FlatPack::Tabs::Component.new(default_tab: 1) do |tabs| %>
+    <% tabs.tab(id: "monthly", label: "Monthly") %>
+    <% tabs.tab(id: "quarterly", label: "Quarterly") %>
+    <% tabs.tab(id: "yearly", label: "Yearly") %>
+
+    <% tabs.panel(id: "monthly") do %>
+      <div class="p-6 bg-[var(--color-muted)] rounded-b-lg">
+        <h3 class="text-lg font-semibold mb-2">Monthly Report</h3>
+        <p class="text-[var(--color-foreground)]">The monthly summary focuses on short-term performance and trends.</p>
+      </div>
+    <% end %>
+    <% tabs.panel(id: "quarterly") do %>
+      <div class="p-6 bg-[var(--color-muted)] rounded-b-lg">
+        <h3 class="text-lg font-semibold mb-2">Quarterly Report</h3>
+        <p class="text-[var(--color-foreground)]">This tab is selected by default via <code>default_tab: 1</code>.</p>
+      </div>
+    <% end %>
+    <% tabs.panel(id: "yearly") do %>
+      <div class="p-6 bg-[var(--color-muted)] rounded-b-lg">
+        <h3 class="text-lg font-semibold mb-2">Yearly Report</h3>
+        <p class="text-[var(--color-foreground)]">Yearly data provides long-range visibility across all periods.</p>
+      </div>
+    <% end %>
+  <% end %>
+
+  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Tabs::Component.new(default_tab: 1) do |tabs| %&gt;
+  &lt;% tabs.tab(id: "monthly", label: "Monthly") %&gt;
+  &lt;% tabs.tab(id: "quarterly", label: "Quarterly") %&gt;
+  &lt;% tabs.tab(id: "yearly", label: "Yearly") %&gt;
+
+  &lt;% tabs.panel(id: "monthly") do %&gt;
+    &lt;p&gt;Monthly content...&lt;/p&gt;
+  &lt;% end %&gt;
+  &lt;% tabs.panel(id: "quarterly") do %&gt;
+    &lt;p&gt;Quarterly content...&lt;/p&gt;
+  &lt;% end %&gt;
+  &lt;% tabs.panel(id: "yearly") do %&gt;
+    &lt;p&gt;Yearly content...&lt;/p&gt;
+  &lt;% end %&gt;
+&lt;% end %&gt;</code></pre>
+</section>
+
+<!-- Tabs with Complex Content -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Tabs with Complex Content</h2>
+  <%= render FlatPack::Tabs::Component.new do |tabs| %>
+    <% tabs.tab(id: "profile", label: "Profile") %>
+    <% tabs.tab(id: "notifications", label: "Notifications") %>
+    <% tabs.tab(id: "security", label: "Security") %>
+
+    <% tabs.panel(id: "profile") do %>
+      <div class="p-6 bg-[var(--color-muted)] rounded-b-lg space-y-4">
+        <h3 class="text-lg font-semibold">User Profile</h3>
+        <%= render FlatPack::TextInput::Component.new(
+          name: "name",
+          label: "Full Name",
+          value: "John Doe"
+        ) %>
+        <%= render FlatPack::EmailInput::Component.new(
+          name: "email",
+          label: "Email",
+          value: "john@example.com"
+        ) %>
+      </div>
+    <% end %>
+    <% tabs.panel(id: "notifications") do %>
+      <div class="p-6 bg-[var(--color-muted)] rounded-b-lg space-y-3">
+        <h3 class="text-lg font-semibold mb-4">Notification Settings</h3>
+        <%= render FlatPack::Switch::Component.new(
+          name: "email_notifications",
+          label: "Email Notifications",
+          checked: true
+        ) %>
+        <%= render FlatPack::Switch::Component.new(
+          name: "push_notifications",
+          label: "Push Notifications"
+        ) %>
+      </div>
+    <% end %>
+    <% tabs.panel(id: "security") do %>
+      <div class="p-6 bg-[var(--color-muted)] rounded-b-lg">
+        <h3 class="text-lg font-semibold mb-4">Security Settings</h3>
+        <div class="space-y-4">
+          <%= render FlatPack::PasswordInput::Component.new(
+            name: "current_password",
+            label: "Current Password"
+          ) %>
+          <%= render FlatPack::PasswordInput::Component.new(
+            name: "new_password",
+            label: "New Password"
+          ) %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+
+  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Tabs::Component.new do |tabs| %&gt;
+  &lt;% tabs.tab(id: "profile", label: "Profile") %&gt;
+  &lt;% tabs.tab(id: "notifications", label: "Notifications") %&gt;
+
+  &lt;% tabs.panel(id: "profile") do %&gt;
+    &lt;%= render FlatPack::TextInput::Component.new(name: "name", label: "Full Name") %&gt;
+  &lt;% end %&gt;
+  &lt;% tabs.panel(id: "notifications") do %&gt;
+    &lt;%= render FlatPack::Switch::Component.new(name: "email_notifications", label: "Email Notifications") %&gt;
+  &lt;% end %&gt;
+&lt;% end %&gt;</code></pre>
+</section>
+
+<!-- Keyboard Navigation -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Keyboard Navigation</h2>
+  <div class="bg-[var(--color-muted)] p-6 rounded-lg">
+    <h3 class="font-semibold mb-3">Keyboard Shortcuts:</h3>
+    <ul class="space-y-2 text-[var(--color-foreground)]">
+      <li><kbd class="px-2 py-1 bg-[var(--color-background)] border border-[var(--color-border)] rounded text-sm">←</kbd> / <kbd class="px-2 py-1 bg-[var(--color-background)] border border-[var(--color-border)] rounded text-sm">→</kbd> - Navigate between tabs</li>
+      <li><kbd class="px-2 py-1 bg-[var(--color-background)] border border-[var(--color-border)] rounded text-sm">Home</kbd> - Jump to first tab</li>
+      <li><kbd class="px-2 py-1 bg-[var(--color-background)] border border-[var(--color-border)] rounded text-sm">End</kbd> - Jump to last tab</li>
+      <li><kbd class="px-2 py-1 bg-[var(--color-background)] border border-[var(--color-border)] rounded text-sm">Enter</kbd> / <kbd class="px-2 py-1 bg-[var(--color-background)] border border-[var(--color-border)] rounded text-sm">Space</kbd> - Activate focused tab</li>
+    </ul>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Features</h2>
+  <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
+    <li><strong>Full Keyboard Navigation:</strong> Arrow keys, Home/End, Enter/Space</li>
+    <li><strong>ARIA Compliant:</strong> Proper tablist/tab/tabpanel roles and attributes</li>
+    <li><strong>Optional URL Hash Sync:</strong> Link tabs to URL hash for bookmarking</li>
+    <li><strong>Active State Management:</strong> Visual indicators for active tab</li>
+    <li><strong>Screen Reader Friendly:</strong> Announces tab changes</li>
+    <li><strong>Turbo Compatible:</strong> Works with Turbo navigation</li>
+  </ul>
+</section>

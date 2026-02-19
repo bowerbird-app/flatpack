@@ -21,6 +21,10 @@ module FlatPack
       def initialize(
         separator: :chevron,
         separator_icon: nil,
+        show_back: false,
+        back_text: "Back",
+        back_icon: "chevron-left",
+        back_fallback_url: "/",
         show_home: false,
         home_url: "/",
         home_text: "Home",
@@ -33,6 +37,10 @@ module FlatPack
         super(**system_arguments)
         @separator = separator.to_sym
         @separator_icon = separator_icon
+        @show_back = show_back
+        @back_text = back_text
+        @back_icon = back_icon
+        @back_fallback_url = back_fallback_url
         @show_home = show_home
         @home_url = home_url
         @home_text = home_text
@@ -65,7 +73,7 @@ module FlatPack
           elements = [render_item(item, index)]
 
           # Add separator unless it's the last item
-          unless index == collapsed_items.size - 1
+          unless index == collapsed_items.size - 1 || skip_separator_after_index?(index)
             elements << render_separator
           end
 
@@ -73,8 +81,21 @@ module FlatPack
         end
       end
 
+      def skip_separator_after_index?(index)
+        @show_back && index.zero?
+      end
+
       def build_items_list
         items_list = []
+
+        # Add back item if requested
+        if @show_back
+          items_list << item(
+            text: @back_text,
+            href: back_href,
+            icon: @back_icon
+          )
+        end
 
         # Add home item if requested
         if @show_home
@@ -86,6 +107,10 @@ module FlatPack
         end
 
         items_list + items
+      end
+
+      def back_href
+        request&.referer || @back_fallback_url
       end
 
       def maybe_collapse_items(items_list)

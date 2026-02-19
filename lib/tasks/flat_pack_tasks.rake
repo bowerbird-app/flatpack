@@ -14,7 +14,7 @@ namespace :flat_pack do
     puts "Ruby: #{RUBY_VERSION}"
     puts "\nComponents:"
     puts "  - Button (primary, secondary, ghost schemes)"
-    puts "  - Table (with columns and actions)"
+    puts "  - Table (with configurable columns)"
     puts "  - Icon (shared icon component)"
     puts "\nDocumentation: docs/"
   end

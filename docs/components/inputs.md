@@ -43,6 +43,9 @@ FlatPack provides a comprehensive set of form input components with built-in acc
 | `disabled` | Boolean | `false` | Disabled state |
 | `required` | Boolean | `false` | Required field |
 | `rows` | Integer | `3` | Initial rows (TextArea only) |
+| `character_count` | Boolean | `false` | Show live character count (TextArea only) |
+| `min_characters` | Integer | `nil` | Minimum character threshold for warning color (TextArea only) |
+| `max_characters` | Integer | `nil` | Maximum character threshold and counter format (TextArea only) |
 | `min` | Number/String/Date | `nil` | Minimum value (NumberInput, DateInput) |
 | `max` | Number/String/Date | `nil` | Maximum value (NumberInput, DateInput) |
 | `step` | Number | `1` | Step increment (NumberInput only) |
@@ -133,11 +136,19 @@ Multi-line text input that automatically expands to fit content.
   name: "description",
   label: "Description",
   placeholder: "Enter a detailed description...",
-  rows: 3
+  rows: 3,
+  character_count: true,
+  min_characters: 30,
+  max_characters: 140
 ) %>
 ```
 
 Auto-expanding based on content with Stimulus controller (`flat-pack--text-area`).
+
+When `character_count` is enabled, the component renders a live character counter below the textarea.
+- Counter is muted by default
+- Counter switches to warning color when below `min_characters` or above `max_characters`
+- Counter format is `current/max characters` when `max_characters` is provided
 
 ### UrlInput
 
@@ -1258,10 +1269,13 @@ FlatPack::<ComponentType>::Component.new(
 # PasswordInput (same as above)
 FlatPack::PasswordInput::Component.new(...)
 
-# TextArea (adds rows parameter)
+# TextArea (adds rows and character count parameters)
 FlatPack::TextArea::Component.new(
   name: String,               # Required
   rows: Integer,              # Optional, default: 3
+  character_count: Boolean,   # Optional, default: false
+  min_characters: Integer,    # Optional, default: nil
+  max_characters: Integer,    # Optional, default: nil
   # ... same parameters as above
 )
 

@@ -1,0 +1,69 @@
+<h1 class="text-4xl font-bold mb-4">Code Block Component</h1>
+<p class="text-lg text-[var(--color-muted-foreground)] mb-8">
+  Reusable code snippets for demos and documentation pages.
+</p>
+
+<%
+  erb_output_open = "<" + "%="
+  erb_tag_close = "%" + ">"
+%>
+
+<!-- Basic Usage -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Basic Usage</h2>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Button::Component.new(
+        text: "Primary",
+        style: :primary
+      ) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<!-- With Title -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">With Title</h2>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "Ruby",
+    code: <<~CODE
+      @users = User.order(created_at: :desc).limit(10)
+    CODE
+  ) %>
+</section>
+
+<!-- With Language -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">With Language Class</h2>
+  <p class="text-[var(--color-muted-foreground)] mb-4">
+    Adds a language class to the <code>&lt;code&gt;</code> element (for optional syntax highlighters).
+  </p>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "JavaScript",
+    language: "javascript",
+    code: <<~CODE
+      document.addEventListener("turbo:load", () => {
+        console.log("FlatPack demo ready")
+      })
+    CODE
+  ) %>
+</section>
+
+<!-- Real Demo Pattern -->
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Real Demo Pattern</h2>
+  <p class="text-[var(--color-muted-foreground)] mb-4">
+    Use this component where demos currently render raw <code>&lt;pre&gt;&lt;code&gt;</code> blocks.
+  </p>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Badge::Component.new(text: "New", style: :primary) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
