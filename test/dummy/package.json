@@ -1,0 +1,18 @@
+{
+  "name": "dummy",
+  "version": "1.0.0",
+  "description": "This is a Rails 8 application that demonstrates the FlatPack component library.",
+  "main": "popover-scroll-follow.spec.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2"
+  }
+}

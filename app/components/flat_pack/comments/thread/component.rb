@@ -58,7 +58,8 @@ module FlatPack
 
         def thread_classes
           classes(
-            "space-y-6"
+            "space-y-6",
+            VARIANTS.fetch(@variant)
           )
         end
 
@@ -108,20 +109,12 @@ module FlatPack
         def render_composer_section
           return if @locked
           return unless composer?
-          
-          content_tag(:div, class: "pt-2") do
-            composer
-          end
+
+          content_tag(:div, composer, class: "pt-2")
         end
 
         def render_comments_section
-          if comments?
-            content_tag(:div, class: VARIANTS.fetch(@variant)) do
-              safe_join(comments)
-            end
-          else
-            render_empty_state
-          end
+          comments? ? safe_join(comments) : render_empty_state
         end
 
         def render_empty_state

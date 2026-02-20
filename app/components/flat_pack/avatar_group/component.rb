@@ -9,6 +9,12 @@ module FlatPack
         lg: "-0.75rem"
       }.freeze
 
+      OVERLAP_CLASSES = {
+        sm: "-space-x-1",
+        md: "-space-x-2",
+        lg: "-space-x-3"
+      }.freeze
+
       def initialize(
         items:,
         max: 5,
@@ -40,12 +46,13 @@ module FlatPack
 
       def group_attributes
         merge_attributes(
-          class: group_classes
+          class: group_classes,
+          style: "--fp-avatar-overlap: #{overlap_margin}"
         )
       end
 
       def group_classes
-        classes("flex items-center")
+        classes("flex items-center", OVERLAP_CLASSES.fetch(@overlap))
       end
 
       def render_avatars

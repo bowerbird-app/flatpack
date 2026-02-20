@@ -79,25 +79,19 @@ module FlatPack
 
         def render_toolbar_section
           return unless toolbar?
-          
-          content_tag(:div, class: "px-3 pb-2 border-t border-[var(--color-border)]") do
-            toolbar
-          end
+
+          content_tag(:div, toolbar, class: "px-3 pb-2 border-t border-[var(--color-border)]")
         end
 
         def render_attachments_section
           return unless attachments?
-          
-          content_tag(:div, class: "px-3 pb-2") do
-            attachments
-          end
+
+          content_tag(:div, attachments, class: "px-3 pb-2")
         end
 
         def render_actions_section
           if actions?
-            content_tag(:div, class: action_section_classes) do
-              actions
-            end
+            content_tag(:div, actions, class: action_section_classes)
           else
             render_default_actions
           end

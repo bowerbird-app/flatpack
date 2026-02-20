@@ -169,19 +169,15 @@ module FlatPack
 
         def render_footer_section
           return unless footer?
-          
-          content_tag(:div, class: "pt-2 border-t border-[var(--color-border)]") do
-            footer
-          end
+
+          content_tag(:div, footer, class: "pt-2 border-t border-[var(--color-border)]")
         end
 
         def render_actions_section
           return unless actions?
           return if @state == :deleted
-          
-          content_tag(:div, class: "flex items-center gap-3 pt-2") do
-            actions
-          end
+
+          content_tag(:div, actions, class: "flex items-center gap-3 pt-2")
         end
 
         def validate_author!
