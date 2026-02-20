@@ -73,12 +73,20 @@ module FlatPack
           required: @required,
           min: @min,
           max: @max,
-          class: input_classes
+          class: input_classes,
+          data: merged_data_attributes
         }
 
         attrs[:aria] = {invalid: "true", describedby: error_id} if @error
 
         merge_attributes(**attrs.compact)
+      end
+
+      def merged_data_attributes
+        existing_controller = data_attributes[:controller]
+        controllers = [existing_controller, "flat-pack--date-input"].compact.join(" ")
+
+        data_attributes.merge(controller: controllers)
       end
 
       def wrapper_classes

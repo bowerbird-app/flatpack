@@ -1,27 +1,11 @@
-<h1 class="text-4xl font-bold mb-4">FlatPack Component API Index</h1>
-<p class="text-lg text-[var(--color-muted-foreground)] mb-8">
-  Complete list of all available components, including shared components, with their variables, public methods, and descriptions.
-</p>
+<%= render FlatPack::PageTitle::Component.new(
+  title: "FlatPack Component API Index",
+  subtitle: "Complete list of all available components, including shared components, with their variables, public methods, and descriptions (#{@component_index.size} total)."
+) %>
 
-<div class="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border)]">
-  <table class="w-full border-collapse bg-[var(--color-background)] text-sm">
-    <thead class="bg-[var(--color-muted)]">
-      <tr>
-        <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-[var(--color-muted-foreground)]">Component</th>
-        <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-[var(--color-muted-foreground)]">Description</th>
-        <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-[var(--color-muted-foreground)]">Variables</th>
-        <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-[var(--color-muted-foreground)]">Methods</th>
-      </tr>
-    </thead>
-    <tbody class="divide-y divide-[var(--color-border)]">
-      <% @component_index.each do |component| %>
-        <tr class="align-top">
-          <td class="px-4 py-3 font-medium text-[var(--color-foreground)]"><%= component[:name] %></td>
-          <td class="px-4 py-3 text-[var(--color-foreground)]"><%= component[:description] %></td>
-          <td class="px-4 py-3 text-[var(--color-foreground)]"><%= component[:variables].join(", ") %></td>
-          <td class="px-4 py-3 text-[var(--color-foreground)]"><%= component[:methods].join(", ") %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-</div>
+<%= render FlatPack::Table::Component.new(data: @component_index) do |table| %>
+  <% table.column(title: "Component") { |component| component[:name] } %>
+  <% table.column(title: "Description") { |component| component[:description] } %>
+  <% table.column(title: "Variables") { |component| component[:variables].join(", ") } %>
+  <% table.column(title: "Methods") { |component| component[:methods].join(", ") } %>
+<% end %>

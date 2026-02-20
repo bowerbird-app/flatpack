@@ -1,0 +1,254 @@
+<div class="container mx-auto max-w-4xl p-4">
+  <%= render FlatPack::PageTitle::Component.new(title: "Chat Component - Message States Demo") %>
+  <%= render "pages/component_method_variables_table", component: :chat_message %>
+  
+  <div class="bg-white dark:bg-zinc-900 rounded-lg shadow-lg border border-[var(--color-border)]" style="height: 600px">
+    <%= render(FlatPack::Chat::Panel::Component.new) do |panel| %>
+      <% panel.with_header do %>
+        <div class="p-4">
+          <h2 class="text-lg font-semibold text-[var(--color-foreground)]">Message States</h2>
+          <p class="text-sm text-[var(--color-muted-foreground)]">Demonstrating different message states</p>
+        </div>
+      <% end %>
+
+      <% panel.with_messages do %>
+        <div class="flex-1 overflow-y-auto p-4" style="height: 400px">
+          <%= render(FlatPack::Chat::DateDivider::Component.new(label: "Today")) %>
+
+          <div class="space-y-6">
+            <div>
+              <h3 class="text-sm font-semibold text-[var(--color-muted-foreground)] mb-3">✓ Sent (Default State)</h3>
+              <%= render(FlatPack::Chat::MessageGroup::Component.new(
+                direction: :outgoing,
+                show_avatar: false
+              )) do |group| %>
+                <% group.with_message do %>
+                  <%= render(FlatPack::Chat::Message::Component.new(
+                    direction: :outgoing,
+                    state: :sent,
+                    timestamp: Time.parse("10:00 AM")
+                  )) do |msg| %>
+                    This message was sent successfully
+                    <% msg.with_meta do %>
+                      <%= render(FlatPack::Chat::MessageMeta::Component.new(
+                        timestamp: Time.parse("10:00 AM"),
+                        state: :sent
+                      )) %>
+                    <% end %>
+                  <% end %>
+                <% end %>
+              <% end %>
+            </div>
+
+            <div>
+              <h3 class="text-sm font-semibold text-[var(--color-muted-foreground)] mb-3">📤 Sending State</h3>
+              <%= render(FlatPack::Chat::MessageGroup::Component.new(
+                direction: :outgoing,
+                show_avatar: false
+              )) do |group| %>
+                <% group.with_message do %>
+                  <%= render(FlatPack::Chat::Message::Component.new(
+                    direction: :outgoing,
+                    state: :sending,
+                    timestamp: Time.parse("10:05 AM")
+                  )) do |msg| %>
+                    This message is currently being sent...
+                    <% msg.with_meta do %>
+                      <%= render(FlatPack::Chat::MessageMeta::Component.new(
+                        timestamp: Time.parse("10:05 AM"),
+                        state: :sending
+                      )) %>
+                    <% end %>
+                  <% end %>
+                <% end %>
+              <% end %>
+              <p class="text-xs text-[var(--color-muted-foreground)] mt-2 ml-4">
+                Note: Message has reduced opacity (60%) and shows "Sending..." indicator
+              </p>
+            </div>
+
+            <div>
+              <h3 class="text-sm font-semibold text-[var(--color-muted-foreground)] mb-3">❌ Failed State</h3>
+              <%= render(FlatPack::Chat::MessageGroup::Component.new(
+                direction: :outgoing,
+                show_avatar: false
+              )) do |group| %>
+                <% group.with_message do %>
+                  <%= render(FlatPack::Chat::Message::Component.new(
+                    direction: :outgoing,
+                    state: :failed,
+                    timestamp: Time.parse("10:10 AM")
+                  )) do |msg| %>
+                    This message failed to send due to network error
+                    <% msg.with_meta do %>
+                      <%= render(FlatPack::Chat::MessageMeta::Component.new(
+                        timestamp: Time.parse("10:10 AM"),
+                        state: :failed
+                      )) %>
+                    <% end %>
+                  <% end %>
+                <% end %>
+              <% end %>
+              <p class="text-xs text-[var(--color-muted-foreground)] mt-2 ml-4">
+                Note: Message has red border and shows alert icon with "Failed" text
+              </p>
+            </div>
+
+            <div>
+              <h3 class="text-sm font-semibold text-[var(--color-muted-foreground)] mb-3">✓✓ Read State</h3>
+              <%= render(FlatPack::Chat::MessageGroup::Component.new(
+                direction: :outgoing,
+                show_avatar: false
+              )) do |group| %>
+                <% group.with_message do %>
+                  <%= render(FlatPack::Chat::Message::Component.new(
+                    direction: :outgoing,
+                    state: :read,
+                    timestamp: Time.parse("10:15 AM")
+                  )) do |msg| %>
+                    This message was read by the recipient
+                    <% msg.with_meta do %>
+                      <%= render(FlatPack::Chat::MessageMeta::Component.new(
+                        timestamp: Time.parse("10:15 AM"),
+                        state: :read
+                      )) %>
+                    <% end %>
+                  <% end %>
+                <% end %>
+              <% end %>
+              <p class="text-xs text-[var(--color-muted-foreground)] mt-2 ml-4">
+                Note: Shows double check mark in primary color indicating message was read
+              </p>
+            </div>
+
+            <div>
+              <h3 class="text-sm font-semibold text-[var(--color-muted-foreground)] mb-3">✏️ Edited Message</h3>
+              <%= render(FlatPack::Chat::MessageGroup::Component.new(
+                direction: :outgoing,
+                show_avatar: false
+              )) do |group| %>
+                <% group.with_message do %>
+                  <%= render(FlatPack::Chat::Message::Component.new(
+                    direction: :outgoing,
+                    state: :read,
+                    edited: true,
+                    timestamp: Time.parse("10:20 AM")
+                  )) do |msg| %>
+                    This message was edited after sending (typo fixed)
+                    <% msg.with_meta do %>
+                      <%= render(FlatPack::Chat::MessageMeta::Component.new(
+                        timestamp: Time.parse("10:20 AM"),
+                        state: :read,
+                        edited: true
+                      )) %>
+                    <% end %>
+                  <% end %>
+                <% end %>
+              <% end %>
+              <p class="text-xs text-[var(--color-muted-foreground)] mt-2 ml-4">
+                Note: Shows "(edited)" indicator in the metadata
+              </p>
+            </div>
+
+            <div>
+              <h3 class="text-sm font-semibold text-[var(--color-muted-foreground)] mb-3">ℹ️ System Message</h3>
+              <%= render(FlatPack::Chat::Message::Component.new(
+                variant: :system
+              )) do %>
+                Alice joined the conversation
+              <% end %>
+              <%= render(FlatPack::Chat::Message::Component.new(
+                variant: :system
+              )) do %>
+                Bob was added to the group
+              <% end %>
+              <%= render(FlatPack::Chat::Message::Component.new(
+                variant: :system
+              )) do %>
+                Charlie changed the group name to "Project Team"
+              <% end %>
+              <p class="text-xs text-[var(--color-muted-foreground)] mt-2 ml-4">
+                Note: System messages are centered, italic, and use muted foreground color
+              </p>
+            </div>
+
+            <div>
+              <h3 class="text-sm font-semibold text-[var(--color-muted-foreground)] mb-3">🔄 Combined States</h3>
+              <%= render(FlatPack::Chat::MessageGroup::Component.new(
+                direction: :outgoing,
+                show_avatar: false
+              )) do |group| %>
+                <% group.with_message do %>
+                  <%= render(FlatPack::Chat::Message::Component.new(
+                    direction: :outgoing,
+                    state: :read,
+                    timestamp: Time.parse("10:25 AM")
+                  )) do |msg| %>
+                    First message - read
+                    <% msg.with_meta do %>
+                      <%= render(FlatPack::Chat::MessageMeta::Component.new(
+                        timestamp: Time.parse("10:25 AM"),
+                        state: :read
+                      )) %>
+                    <% end %>
+                  <% end %>
+                <% end %>
+
+                <% group.with_message do %>
+                  <%= render(FlatPack::Chat::Message::Component.new(
+                    direction: :outgoing,
+                    state: :sending,
+                    timestamp: Time.parse("10:26 AM")
+                  )) do |msg| %>
+                    Second message - sending
+                    <% msg.with_meta do %>
+                      <%= render(FlatPack::Chat::MessageMeta::Component.new(
+                        timestamp: Time.parse("10:26 AM"),
+                        state: :sending
+                      )) %>
+                    <% end %>
+                  <% end %>
+                <% end %>
+
+                <% group.with_message do %>
+                  <%= render(FlatPack::Chat::Message::Component.new(
+                    direction: :outgoing,
+                    state: :failed,
+                    timestamp: Time.parse("10:26 AM")
+                  )) do |msg| %>
+                    Third message - failed
+                    <% msg.with_meta do %>
+                      <%= render(FlatPack::Chat::MessageMeta::Component.new(
+                        timestamp: Time.parse("10:26 AM"),
+                        state: :failed
+                      )) %>
+                    <% end %>
+                  <% end %>
+                <% end %>
+              <% end %>
+              <p class="text-xs text-[var(--color-muted-foreground)] mt-2 ml-4">
+                Note: Multiple messages in different states within the same group
+              </p>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <% panel.with_composer do %>
+        <%= render(FlatPack::Chat::Composer::Component.new) %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="mt-4 text-sm text-[var(--color-muted-foreground)]">
+    <p><strong>Message States Demonstrated:</strong></p>
+    <ul class="list-disc list-inside space-y-1 mt-2">
+      <li><strong>sent:</strong> Default state - message delivered successfully</li>
+      <li><strong>sending:</strong> Message in progress - shows reduced opacity and "Sending..." indicator</li>
+      <li><strong>failed:</strong> Message delivery failed - shows red border and alert icon</li>
+      <li><strong>read:</strong> Message read by recipient - shows double check mark</li>
+      <li><strong>edited:</strong> Message was modified - shows "(edited)" label</li>
+      <li><strong>system:</strong> System notification - centered, italic, muted style</li>
+    </ul>
+  </div>
+</div>

@@ -16,7 +16,7 @@ This document summarizes the implementation of sortable table functionality for 
 
 ### 2. Component Updates
 
-#### ColumnComponent (`app/components/flat_pack/table/column_component.rb`)
+#### Column::Component (`app/components/flat_pack/table/column/component.rb`)
 **New Features:**
 - `sortable` parameter - enables sorting for a column (default: `false`)
 - `sort_key` parameter - custom key for URL params (defaults to `attribute`)
@@ -96,7 +96,7 @@ Created/Updated:
 
 ### Modified Files
 1. `app/components/flat_pack/table/component.rb`
-2. `app/components/flat_pack/table/column_component.rb`
+2. `app/components/flat_pack/table/column/component.rb`
 3. `test/components/flat_pack/table_component_test.rb`
 4. `test/dummy/app/controllers/pages_controller.rb`
 5. `test/dummy/app/views/pages/tables.html.erb`

@@ -1,11 +1,12 @@
-<h1 class="text-4xl font-bold mb-4">Modal Component</h1>
-<p class="text-lg text-[var(--color-muted-foreground)] mb-8">
-  Accessible dialog overlays with focus trap, backdrop dismiss, and ESC key support.
-</p>
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Modal Component",
+  subtitle: "Accessible dialog overlays with focus trap, backdrop dismiss, and ESC key support."
+) %>
 
 <!-- Basic Modal -->
+<%= render "pages/component_method_variables_table", component: :modal %>
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Basic Modal</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Basic Modal", anchor_link: true, subtitle: "Examples for Basic Modal.") %>
   <div class="mb-4">
     <%= render FlatPack::Button::Component.new(
       text: "Open Modal",
@@ -40,25 +41,29 @@
     <% end %>
   <% end %>
   
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Modal::Component.new(id: "basic-modal", size: :md) do |modal| %&gt;
-  &lt;% modal.with_header do %&gt;
-    &lt;h2&gt;Modal Title&lt;/h2&gt;
-  &lt;% end %&gt;
-  &lt;% modal.with_body do %&gt;
-    &lt;p&gt;Modal content goes here...&lt;/p&gt;
-  &lt;% end %&gt;
-  &lt;% modal.with_footer do %&gt;
-    &lt;%= render FlatPack::Button::Component.new(
-      text: "Close",
-      data: { action: "click->flat-pack--modal#close" }
-    ) %&gt;
-  &lt;% end %&gt;
-&lt;% end %&gt;</code></pre>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Modal::Component.new(id: "basic-modal", size: :md) do |modal| %&gt;
+        &lt;% modal.with_header do %&gt;
+          <h2>Modal Title</h2>
+        &lt;% end %&gt;
+        &lt;% modal.with_body do %&gt;
+          <p>Modal content goes here...</p>
+        &lt;% end %&gt;
+        &lt;% modal.with_footer do %&gt;
+          &lt;%= render FlatPack::Button::Component.new(
+            text: "Close",
+            data: { action: "click->flat-pack--modal#close" }
+          ) %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
 </section>
 
 <!-- Modal Sizes -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Modal Sizes</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Modal Sizes", anchor_link: true, subtitle: "Examples for Modal Sizes.") %>
   <div class="flex gap-3 mb-4">
     <%= render FlatPack::Button::Component.new(
       text: "Small Modal",
@@ -113,14 +118,18 @@
     <% end %>
   <% end %>
   
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Modal::Component.new(id: "my-modal", size: :sm) ... %&gt;
-&lt;%= render FlatPack::Modal::Component.new(id: "my-modal", size: :md) ... %&gt;
-&lt;%= render FlatPack::Modal::Component.new(id: "my-modal", size: :lg) ... %&gt;</code></pre>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Modal::Component.new(id: "my-modal", size: :sm) ... %&gt;
+      &lt;%= render FlatPack::Modal::Component.new(id: "my-modal", size: :md) ... %&gt;
+      &lt;%= render FlatPack::Modal::Component.new(id: "my-modal", size: :lg) ... %&gt;
+    CODE
+  ) %>
 </section>
 
 <!-- Modal with Form -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Modal with Form</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Modal with Form", anchor_link: true, subtitle: "Examples for Modal with Form.") %>
   <p class="text-[var(--color-muted-foreground)] mb-4">
     A practical example of placing a form inside a modal for focused data entry.
   </p>
@@ -175,27 +184,31 @@
     <% end %>
   <% end %>
 
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Modal::Component.new(id: "form-modal", size: :md) do |modal| %&gt;
-  &lt;% modal.with_header do %&gt;
-    &lt;h2&gt;Contact Sales&lt;/h2&gt;
-  &lt;% end %&gt;
-  &lt;% modal.with_body do %&gt;
-    &lt;form class="space-y-4"&gt;
-      &lt;%= render FlatPack::TextInput::Component.new(...) %&gt;
-      &lt;%= render FlatPack::EmailInput::Component.new(...) %&gt;
-      &lt;%= render FlatPack::TextArea::Component.new(...) %&gt;
-      &lt;div class="flex justify-end gap-2 pt-2"&gt;
-        &lt;%= render FlatPack::Button::Component.new(text: "Cancel", style: :secondary, data: { action: "click-&gt;flat-pack--modal#close" }) %&gt;
-        &lt;%= render FlatPack::Button::Component.new(text: "Submit", style: :primary, data: { action: "click-&gt;flat-pack--modal#close" }) %&gt;
-      &lt;/div&gt;
-    &lt;/form&gt;
-  &lt;% end %&gt;
-&lt;% end %&gt;</code></pre>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Modal::Component.new(id: "form-modal", size: :md) do |modal| %&gt;
+        &lt;% modal.with_header do %&gt;
+          <h2>Contact Sales</h2>
+        &lt;% end %&gt;
+        &lt;% modal.with_body do %&gt;
+          <form class="space-y-4">
+            &lt;%= render FlatPack::TextInput::Component.new(...) %&gt;
+            &lt;%= render FlatPack::EmailInput::Component.new(...) %&gt;
+            &lt;%= render FlatPack::TextArea::Component.new(...) %&gt;
+            <div class="flex justify-end gap-2 pt-2">
+              &lt;%= render FlatPack::Button::Component.new(text: "Cancel", style: :secondary, data: { action: "click->flat-pack--modal#close" }) %&gt;
+              &lt;%= render FlatPack::Button::Component.new(text: "Submit", style: :primary, data: { action: "click->flat-pack--modal#close" }) %&gt;
+            </div>
+          </form>
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
 </section>
 
 <!-- Long Content Modal -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Long Content Modal</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Long Content Modal", anchor_link: true, subtitle: "Examples for Long Content Modal.") %>
   <p class="text-[var(--color-muted-foreground)] mb-4">
     This example includes a large amount of text to test modal body scrolling and overall behavior with long-form content.
   </p>
@@ -240,7 +253,7 @@
 
 <!-- Features -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Features</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Examples for Features.") %>
   <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
     <li><strong>Focus Trap:</strong> Keeps keyboard focus within the modal while open</li>
     <li><strong>Focus Restoration:</strong> Returns focus to the trigger element on close</li>

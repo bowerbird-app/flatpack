@@ -8,7 +8,8 @@ module FlatPack
       # "border-[var(--color-info)]" "bg-[var(--color-info)]/10" "text-[var(--color-info)]"
       # "border-[var(--color-success)]" "bg-[var(--color-success)]/10" "text-[var(--color-success)]"
       # "border-[var(--color-warning)]" "bg-[var(--color-warning)]/10" "text-[var(--color-warning)]"
-      # "border-[var(--color-error)]" "bg-[var(--color-error)]/10" "text-[var(--color-error)]"
+      # "border-[var(--color-error)]" "bg-[var(--color-error)]/10" "bg-[var(--color-destructive)]" "text-[var(--color-error)]"
+      # "bg-[var(--color-destructive-text)]/20" "hover:bg-[var(--color-destructive-text)]/30" "text-[var(--color-destructive-text)]"
       TYPES = {
         info: {
           border: "border-[var(--color-info)]",
@@ -27,7 +28,7 @@ module FlatPack
         },
         error: {
           border: "border-[var(--color-error)]",
-          bg: "bg-[var(--color-background)]",
+          bg: "bg-[var(--color-destructive)]",
           text: "text-[var(--color-error)]"
         }
       }.freeze
@@ -162,7 +163,7 @@ module FlatPack
 
         content_tag(:button,
           type: "button",
-          class: "flex-shrink-0 text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors rounded-[var(--radius-sm)] p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]",
+          class: dismiss_button_classes,
           aria: {label: "Dismiss"},
           data: {action: "flat-pack--toast#dismiss"}) do
           content_tag(:svg, class: "w-4 h-4", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor") do
@@ -173,6 +174,27 @@ module FlatPack
               d: "M6 18L18 6M6 6l12 12"
             )
           end
+        end
+      end
+
+      def dismiss_button_classes
+        classes(
+          "flex-shrink-0",
+          "transition-colors",
+          "rounded-[var(--radius-sm)]",
+          "p-1",
+          "focus-visible:outline-none",
+          "focus-visible:ring-2",
+          "focus-visible:ring-[var(--color-ring)]",
+          dismiss_button_type_classes
+        )
+      end
+
+      def dismiss_button_type_classes
+        if @type == :error
+          "bg-[var(--color-destructive-text)]/20 hover:bg-[var(--color-destructive-text)]/30 text-[var(--color-destructive-text)]"
+        else
+          "text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
         end
       end
 

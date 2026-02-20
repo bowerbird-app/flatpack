@@ -1,0 +1,285 @@
+<div class="max-w-6xl mx-auto p-8 space-y-12">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Avatars",
+    subtitle: "Display user avatars with images, initials, status indicators, and grouping."
+  ) %>
+
+  <%= render "pages/component_method_variables_table", component: :avatar %>
+
+  <!-- Sizes -->
+  <section class="space-y-4">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Sizes", anchor_link: true, subtitle: "Examples for Sizes.") %>
+    <div class="text-sm text-[var(--color-muted-foreground)]">
+      xs, sm, md (default), lg, xl
+    </div>
+    <div class="flex items-end gap-4">
+      <%= render FlatPack::Avatar::Component.new(name: "John Doe", size: :xs) %>
+      <%= render FlatPack::Avatar::Component.new(name: "John Doe", size: :sm) %>
+      <%= render FlatPack::Avatar::Component.new(name: "John Doe", size: :md) %>
+      <%= render FlatPack::Avatar::Component.new(name: "John Doe", size: :lg) %>
+      <%= render FlatPack::Avatar::Component.new(name: "John Doe", size: :xl) %>
+    </div>
+  </section>
+
+  <!-- Shapes -->
+  <section class="space-y-4">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Shapes", anchor_link: true, subtitle: "Examples for Shapes.") %>
+    <div class="text-sm text-[var(--color-muted-foreground)]">
+      circle (default), rounded, square
+    </div>
+    <div class="flex items-center gap-4">
+      <%= render FlatPack::Avatar::Component.new(name: "Circle", shape: :circle, size: :lg) %>
+      <%= render FlatPack::Avatar::Component.new(name: "Rounded", shape: :rounded, size: :lg) %>
+      <%= render FlatPack::Avatar::Component.new(name: "Square", shape: :square, size: :lg) %>
+    </div>
+  </section>
+
+  <!-- Status Indicators -->
+  <section class="space-y-4">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Status Indicators", anchor_link: true, subtitle: "Examples for Status Indicators.") %>
+    <div class="text-sm text-[var(--color-muted-foreground)]">
+      online (green), busy (red), away (amber), offline (gray)
+    </div>
+    <div class="flex items-center gap-4">
+      <%= render FlatPack::Avatar::Component.new(name: "Online User", status: :online, size: :lg) %>
+      <%= render FlatPack::Avatar::Component.new(name: "Busy User", status: :busy, size: :lg) %>
+      <%= render FlatPack::Avatar::Component.new(name: "Away User", status: :away, size: :lg) %>
+      <%= render FlatPack::Avatar::Component.new(name: "Offline User", status: :offline, size: :lg) %>
+    </div>
+  </section>
+
+  <!-- With Images -->
+  <section class="space-y-4">
+    <%= render FlatPack::SectionTitle::Component.new(title: "With Images", anchor_link: true, subtitle: "Examples for With Images.") %>
+    <div class="text-sm text-[var(--color-muted-foreground)]">
+      Image avatars with optional status and shape variants
+    </div>
+    <div class="flex items-center gap-4">
+      <%= render FlatPack::Avatar::Component.new(
+        src: "https://i.pravatar.cc/150?img=1",
+        alt: "User 1",
+        size: :lg
+      ) %>
+      <%= render FlatPack::Avatar::Component.new(
+        src: "https://i.pravatar.cc/150?img=2",
+        alt: "User 2",
+        size: :lg,
+        status: :online
+      ) %>
+      <%= render FlatPack::Avatar::Component.new(
+        src: "https://i.pravatar.cc/150?img=3",
+        alt: "User 3",
+        size: :lg,
+        shape: :rounded
+      ) %>
+    </div>
+  </section>
+
+  <!-- Clickable Avatars -->
+  <section class="space-y-4">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Clickable Avatars", anchor_link: true, subtitle: "Examples for Clickable Avatars.") %>
+    <div class="text-sm text-[var(--color-muted-foreground)]">
+      Hover to see the link effect
+    </div>
+    <div class="flex items-center gap-4">
+      <%= render FlatPack::Avatar::Component.new(
+        name: "John Doe",
+        href: "#",
+        size: :lg
+      ) %>
+      <%= render FlatPack::Avatar::Component.new(
+        src: "https://i.pravatar.cc/150?img=4",
+        alt: "Jane Smith",
+        href: "#",
+        size: :lg,
+        status: :online
+      ) %>
+    </div>
+  </section>
+
+  <!-- Fallback Types -->
+  <section class="space-y-4">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Fallback Types", anchor_link: true, subtitle: "Examples for Fallback Types.") %>
+    <div class="text-sm text-[var(--color-muted-foreground)]">
+      Priority: Image → Initials → Generic Icon
+    </div>
+    <div class="flex items-center gap-4">
+      <%= render FlatPack::Avatar::Component.new(
+        src: "https://i.pravatar.cc/150?img=5",
+        name: "Image",
+        size: :lg
+      ) %>
+      <%= render FlatPack::Avatar::Component.new(
+        name: "John Doe",
+        size: :lg
+      ) %>
+      <%= render FlatPack::Avatar::Component.new(
+        initials: "AB",
+        size: :lg
+      ) %>
+      <%= render FlatPack::Avatar::Component.new(
+        size: :lg
+      ) %>
+    </div>
+  </section>
+
+  <!-- Avatar Groups -->
+  <section class="space-y-6 pt-8 border-t border-[var(--color-border)]">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Avatar Groups", anchor_link: true, subtitle: "Examples for Avatar Groups.") %>
+    <div class="text-sm text-[var(--color-muted-foreground)]">
+      Overlapping avatar collections with overflow, sizing, and interaction examples
+    </div>
+    
+    <!-- Basic Group -->
+    <div class="space-y-2">
+      <%= render FlatPack::SectionTitle::Component.new(title: "Basic Group", anchor_link: true, subtitle: "Examples for Basic Group.") %>
+      <div class="text-sm text-[var(--color-muted-foreground)]">
+        Default stacked group of avatars
+      </div>
+      <%= render FlatPack::AvatarGroup::Component.new(
+        items: [
+          {name: "Alice Johnson", src: "https://i.pravatar.cc/150?img=10"},
+          {name: "Bob Smith", src: "https://i.pravatar.cc/150?img=11"},
+          {name: "Charlie Brown", src: "https://i.pravatar.cc/150?img=12"},
+          {name: "Diana Prince"}
+        ]
+      ) %>
+    </div>
+
+    <!-- With Overflow -->
+    <div class="space-y-2">
+      <%= render FlatPack::SectionTitle::Component.new(title: "With Overflow (max: 3)", anchor_link: true, subtitle: "Examples for With Overflow (max: 3).") %>
+      <div class="text-sm text-[var(--color-muted-foreground)]">
+        Shows a +N overflow avatar when items exceed the maximum
+      </div>
+      <%= render FlatPack::AvatarGroup::Component.new(
+        items: [
+          {name: "User 1", src: "https://i.pravatar.cc/150?img=20"},
+          {name: "User 2", src: "https://i.pravatar.cc/150?img=21"},
+          {name: "User 3", src: "https://i.pravatar.cc/150?img=22"},
+          {name: "User 4", src: "https://i.pravatar.cc/150?img=23"},
+          {name: "User 5", src: "https://i.pravatar.cc/150?img=24"},
+          {name: "User 6"},
+          {name: "User 7"},
+          {name: "User 8"}
+        ],
+        max: 3
+      ) %>
+    </div>
+
+    <!-- Different Sizes -->
+    <div class="space-y-2">
+      <%= render FlatPack::SectionTitle::Component.new(title: "Different Sizes", anchor_link: true, subtitle: "Examples for Different Sizes.") %>
+      <div class="text-sm text-[var(--color-muted-foreground)]">
+        xs, sm, md group size examples
+      </div>
+      <div class="space-y-4">
+        <%= render FlatPack::AvatarGroup::Component.new(
+          items: [
+            {name: "User A"},
+            {name: "User B"},
+            {name: "User C"}
+          ],
+          size: :xs
+        ) %>
+        <%= render FlatPack::AvatarGroup::Component.new(
+          items: [
+            {name: "User A"},
+            {name: "User B"},
+            {name: "User C"}
+          ],
+          size: :sm
+        ) %>
+        <%= render FlatPack::AvatarGroup::Component.new(
+          items: [
+            {name: "User A"},
+            {name: "User B"},
+            {name: "User C"}
+          ],
+          size: :md
+        ) %>
+      </div>
+    </div>
+
+    <!-- Different Overlaps -->
+    <div class="space-y-2">
+      <%= render FlatPack::SectionTitle::Component.new(title: "Different Overlaps", anchor_link: true, subtitle: "Examples for Different Overlaps.") %>
+      <div class="text-sm text-[var(--color-muted-foreground)]">
+        Compare small, medium (default), and large overlap spacing
+      </div>
+      <div class="space-y-4">
+        <div>
+          <div class="text-sm text-[var(--color-muted-foreground)] mb-2">Small overlap</div>
+          <%= render FlatPack::AvatarGroup::Component.new(
+            items: [
+              {name: "User 1", src: "https://i.pravatar.cc/150?img=30"},
+              {name: "User 2", src: "https://i.pravatar.cc/150?img=31"},
+              {name: "User 3", src: "https://i.pravatar.cc/150?img=32"}
+            ],
+            overlap: :sm,
+            size: :md
+          ) %>
+        </div>
+        <div>
+          <div class="text-sm text-[var(--color-muted-foreground)] mb-2">Medium overlap (default)</div>
+          <%= render FlatPack::AvatarGroup::Component.new(
+            items: [
+              {name: "User 1", src: "https://i.pravatar.cc/150?img=30"},
+              {name: "User 2", src: "https://i.pravatar.cc/150?img=31"},
+              {name: "User 3", src: "https://i.pravatar.cc/150?img=32"}
+            ],
+            overlap: :md,
+            size: :md
+          ) %>
+        </div>
+        <div>
+          <div class="text-sm text-[var(--color-muted-foreground)] mb-2">Large overlap</div>
+          <%= render FlatPack::AvatarGroup::Component.new(
+            items: [
+              {name: "User 1", src: "https://i.pravatar.cc/150?img=30"},
+              {name: "User 2", src: "https://i.pravatar.cc/150?img=31"},
+              {name: "User 3", src: "https://i.pravatar.cc/150?img=32"}
+            ],
+            overlap: :lg,
+            size: :md
+          ) %>
+        </div>
+      </div>
+    </div>
+
+    <!-- With Status Indicators -->
+    <div class="space-y-2">
+      <%= render FlatPack::SectionTitle::Component.new(title: "With Status Indicators", anchor_link: true, subtitle: "Examples for With Status Indicators.") %>
+      <div class="text-sm text-[var(--color-muted-foreground)]">
+        Group avatars with online, busy, away, and offline states
+      </div>
+      <%= render FlatPack::AvatarGroup::Component.new(
+        items: [
+          {name: "Online User", status: :online, src: "https://i.pravatar.cc/150?img=40"},
+          {name: "Busy User", status: :busy, src: "https://i.pravatar.cc/150?img=41"},
+          {name: "Away User", status: :away, src: "https://i.pravatar.cc/150?img=42"},
+          {name: "Offline User", status: :offline, src: "https://i.pravatar.cc/150?img=43"}
+        ],
+        size: :md
+      ) %>
+    </div>
+
+    <!-- Clickable Group -->
+    <div class="space-y-2">
+      <%= render FlatPack::SectionTitle::Component.new(title: "Clickable Avatars", anchor_link: true, anchor_id: "clickable-avatar-group", subtitle: "Examples for Clickable Avatars.") %>
+      <div class="text-sm text-[var(--color-muted-foreground)]">
+        Hover to see the link effect on avatars and overflow
+      </div>
+      <%= render FlatPack::AvatarGroup::Component.new(
+        items: [
+          {name: "User 1", href: "#user1", src: "https://i.pravatar.cc/150?img=50"},
+          {name: "User 2", href: "#user2", src: "https://i.pravatar.cc/150?img=51"},
+          {name: "User 3", href: "#user3"}
+        ],
+        overflow_href: "#all-users",
+        max: 3,
+        size: :md
+      ) %>
+    </div>
+  </section>
+</div>

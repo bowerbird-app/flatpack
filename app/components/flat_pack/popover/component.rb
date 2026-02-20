@@ -66,11 +66,7 @@ module FlatPack
           "border-[var(--color-border)]",
           "rounded-[var(--radius-md)]",
           "shadow-lg",
-          "p-4",
-          "opacity-0",
-          "scale-95",
-          "transition-all",
-          "duration-200"
+          "p-4"
         )
       end
 

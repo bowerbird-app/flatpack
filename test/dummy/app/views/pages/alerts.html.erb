@@ -1,11 +1,13 @@
-  <h1 class="text-4xl font-bold mb-4">Alert Component</h1>
-  <p class="text-lg text-[var(--color-muted-foreground)] mb-8">
-    Prominent notifications and messages for user feedback (success, errors, warnings, info).
-  </p>
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Alert Component",
+    subtitle: "Prominent notifications and messages for user feedback (success, errors, warnings, info)."
+  ) %>
+
+  <%= render "pages/component_method_variables_table", component: :alert %>
 
   <!-- Basic Variants -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Basic Variants</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Basic Variants", anchor_link: true, subtitle: "Examples for Basic Variants.") %>
     <div class="space-y-4 mb-4">
       <%= render FlatPack::Alert::Component.new(
         title: "Information",
@@ -28,22 +30,26 @@
         style: :danger
       ) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Alert::Component.new(
-  title: "Information",
-  description: "This is an informational message.",
-  style: :info
-) %&gt;
-
-&lt;%= render FlatPack::Alert::Component.new(
-  title: "Success!",
-  description: "Your changes have been saved successfully.",
-  style: :success
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Alert::Component.new(
+          title: "Information",
+          description: "This is an informational message.",
+          style: :info
+        ) %&gt;
+        
+        &lt;%= render FlatPack::Alert::Component.new(
+          title: "Success!",
+          description: "Your changes have been saved successfully.",
+          style: :success
+        ) %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Title Only -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Title Only</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Title Only", anchor_link: true, subtitle: "Examples for Title Only.") %>
     <div class="space-y-4 mb-4">
       <%= render FlatPack::Alert::Component.new(
         title: "Quick information message",
@@ -54,15 +60,19 @@
         style: :success
       ) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Alert::Component.new(
-  title: "Quick information message",
-  style: :info
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Alert::Component.new(
+          title: "Quick information message",
+          style: :info
+        ) %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Description Only -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Description Only</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Description Only", anchor_link: true, subtitle: "Examples for Description Only.") %>
     <div class="space-y-4 mb-4">
       <%= render FlatPack::Alert::Component.new(
         description: "Your session will expire in 5 minutes.",
@@ -73,15 +83,19 @@
         style: :success
       ) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Alert::Component.new(
-  description: "Your session will expire in 5 minutes.",
-  style: :warning
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Alert::Component.new(
+          description: "Your session will expire in 5 minutes.",
+          style: :warning
+        ) %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Without Icon -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Without Icon</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Without Icon", anchor_link: true, subtitle: "Examples for Without Icon.") %>
     <div class="space-y-4 mb-4">
       <%= render FlatPack::Alert::Component.new(
         title: "No Icon",
@@ -96,17 +110,21 @@
         icon: false
       ) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Alert::Component.new(
-  title: "No Icon",
-  description: "This alert doesn't show an icon.",
-  style: :info,
-  icon: false
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Alert::Component.new(
+          title: "No Icon",
+          description: "This alert doesn't show an icon.",
+          style: :info,
+          icon: false
+        ) %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Dismissible Alerts -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Dismissible Alerts</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Dismissible Alerts", anchor_link: true, subtitle: "Examples for Dismissible Alerts.") %>
     <div class="space-y-4 mb-4">
       <%= render FlatPack::Alert::Component.new(
         title: "Notice",
@@ -127,17 +145,21 @@
         dismissible: true
       ) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Alert::Component.new(
-  title: "Notice",
-  description: "Click the X button to dismiss this message.",
-  style: :info,
-  dismissible: true
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Alert::Component.new(
+          title: "Notice",
+          description: "Click the X button to dismiss this message.",
+          style: :info,
+          dismissible: true
+        ) %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Rich Content with Slots -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Rich Content with Slots</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Rich Content with Slots", anchor_link: true, subtitle: "Examples for Rich Content with Slots.") %>
     <div class="space-y-4 mb-4">
       <%= render FlatPack::Alert::Component.new(style: :success) do %>
         <div class="flex flex-col items-start justify-between gap-3">
@@ -161,20 +183,23 @@
         </div>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Alert::Component.new(style: :success) do %&gt;
-  &lt;div class="flex flex-col items-start justify-between gap-3"&gt;
-    &lt;div&gt;
-      &lt;strong&gt;Success!&lt;/strong&gt; You've completed the tutorial.
-    &lt;/div&gt;
-    &lt;%= render FlatPack::Button::Component.new(text: "Continue →", size: :sm, style: :secondary) %&gt;
-  &lt;/div&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Alert::Component.new(style: :success) do %&gt;
+          <div class="flex flex-col items-start justify-between gap-3">
+            <div>
+              <strong>Success!</strong> You've completed the tutorial.
+            </div>
+            &lt;%= render FlatPack::Button::Component.new(text: "Continue →", size: :sm, style: :secondary) %&gt;
+          </div>
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Use Cases -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Common Use Cases</h2>
-    
+    <%= render FlatPack::SectionTitle::Component.new(title: "Common Use Cases", anchor_link: true, subtitle: "Examples for Common Use Cases.") %>
     <div class="mb-6">
       <h3 class="text-lg font-medium mb-3">Form Success Message</h3>
       <%= render FlatPack::Alert::Component.new(
@@ -213,35 +238,44 @@
       ) %>
     </div>
 
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Alert::Component.new(
-  title: "Form submitted",
-  description: "Thank you! We'll process your request shortly.",
-  style: :success,
-  dismissible: true
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Alert::Component.new(
+          title: "Form submitted",
+          description: "Thank you! We'll process your request shortly.",
+          style: :success,
+          dismissible: true
+        ) %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Flash Messages Example -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Flash Messages Pattern</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Flash Messages Pattern", anchor_link: true, subtitle: "Examples for Flash Messages Pattern.") %>
     <div class="space-y-4 mb-4">
       <div class="p-4 bg-[var(--color-muted)] rounded">
         <p class="text-sm text-[var(--color-muted-foreground)] mb-4">Example implementation for Rails flash messages:</p>
-        <pre class="text-sm"><code>&lt;% if flash[:notice] %&gt;
-  &lt;%= render FlatPack::Alert::Component.new(
-    description: flash[:notice],
-    style: :success,
-    dismissible: true
-  ) %&gt;
-&lt;% end %&gt;
-
-&lt;% if flash[:alert] %&gt;
-  &lt;%= render FlatPack::Alert::Component.new(
-    description: flash[:alert],
-    style: :danger,
-    dismissible: true
-  ) %&gt;
-&lt;% end %&gt;</code></pre>
+        <%= render FlatPack::CodeBlock::Component.new(
+          code: CGI.unescapeHTML(<<~'CODE'),
+            &lt;% if flash[:notice] %&gt;
+              &lt;%= render FlatPack::Alert::Component.new(
+                description: flash[:notice],
+                style: :success,
+                dismissible: true
+              ) %&gt;
+            &lt;% end %&gt;
+            
+            &lt;% if flash[:alert] %&gt;
+              &lt;%= render FlatPack::Alert::Component.new(
+                description: flash[:alert],
+                style: :danger,
+                dismissible: true
+              ) %&gt;
+            &lt;% end %&gt;
+          CODE
+          class: "text-sm"
+        ) %>
       </div>
       
       <%= render FlatPack::Alert::Component.new(
@@ -260,7 +294,7 @@
 
   <!-- Interactive Demo -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Interactive Demo</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Interactive Demo", anchor_link: true, subtitle: "Examples for Interactive Demo.") %>
     <p class="mb-4 text-[var(--color-muted-foreground)]">Click the dismiss button (X) on the alerts below to see the fade-out animation:</p>
     <div class="space-y-4 mb-4" id="dismissible-demo">
       <%= render FlatPack::Alert::Component.new(
@@ -284,7 +318,7 @@
 
   <!-- Documentation Link -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Documentation</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Documentation", anchor_link: true, subtitle: "Examples for Documentation.") %>
     <p class="mb-4">For complete documentation including Stimulus controller details, see <a href="https://github.com/bowerbird-app/flatpack/blob/main/docs/components/alert.md" class="text-[var(--color-primary)] underline">Alert Component Documentation</a>.</p>
   </section>
 

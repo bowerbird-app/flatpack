@@ -31,38 +31,39 @@ module FlatPack
         render_inline(Component.new(title: "Info", style: :info))
 
         assert_selector "div[role='alert']"
-        assert_includes page.native.to_html, "border-blue-500"
-        assert_includes page.native.to_html, "bg-blue-50"
+        assert_includes page.native.to_html, "border-black/20"
+        assert_includes page.native.to_html, "bg-white"
+        assert_includes page.native.to_html, "text-black"
       end
 
       def test_renders_success_style
         render_inline(Component.new(title: "Success", style: :success))
 
         assert_selector "div[role='alert']"
-        assert_includes page.native.to_html, "border-green-500"
-        assert_includes page.native.to_html, "bg-green-50"
+        assert_includes page.native.to_html, "bg-[var(--color-success)]"
+        assert_includes page.native.to_html, "text-[var(--color-success-text)]"
       end
 
       def test_renders_warning_style
         render_inline(Component.new(title: "Warning", style: :warning))
 
         assert_selector "div[role='alert']"
-        assert_includes page.native.to_html, "border-orange-500"
-        assert_includes page.native.to_html, "bg-orange-50"
+        assert_includes page.native.to_html, "bg-[var(--color-warning)]"
+        assert_includes page.native.to_html, "text-[var(--color-warning-text)]"
       end
 
       def test_renders_danger_style
         render_inline(Component.new(title: "Danger", style: :danger))
 
         assert_selector "div[role='alert']"
-        assert_includes page.native.to_html, "border-red-500"
-        assert_includes page.native.to_html, "bg-red-50"
+        assert_includes page.native.to_html, "bg-[var(--color-destructive)]"
+        assert_includes page.native.to_html, "text-[var(--color-destructive-text)]"
       end
 
       def test_default_style_is_info
         render_inline(Component.new(title: "Default"))
 
-        assert_includes page.native.to_html, "border-blue-500"
+        assert_includes page.native.to_html, "bg-white"
       end
 
       def test_renders_with_icon_by_default

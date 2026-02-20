@@ -3,7 +3,7 @@
 module FlatPack
   module Breadcrumb
     class Component < FlatPack::BaseComponent
-      renders_many :items, ItemComponent
+      renders_many :items, FlatPack::Breadcrumb::Item::Component
 
       # Alias for shorter syntax
       def item(**kwargs, &block)
@@ -125,7 +125,7 @@ module FlatPack
       end
 
       def build_ellipsis_item
-        ItemComponent.new(
+        FlatPack::Breadcrumb::Item::Component.new(
           text: "...",
           href: nil
         )

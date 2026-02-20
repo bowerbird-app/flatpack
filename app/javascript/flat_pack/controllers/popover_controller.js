@@ -1,4 +1,3 @@
-// FlatPack Popover Stimulus Controller
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
@@ -8,41 +7,41 @@ export default class extends Controller {
   }
 
   connect() {
-    this.boundClose = this.close.bind(this)
-    this.boundHandleEscape = this.handleEscape.bind(this)
+    this.spacing = 12
+    this.viewportPadding = 8
     this.isOpen = false
 
-    // Find and setup trigger
+    this.handleTriggerClick = this.handleTriggerClick.bind(this)
+    this.handleDocumentClick = this.handleDocumentClick.bind(this)
+    this.handleEscape = this.handleEscape.bind(this)
+    this.handleReposition = this.handleReposition.bind(this)
+
     this.setupTrigger()
   }
 
   disconnect() {
     this.removeTriggerListener()
-    this.removeDocumentListeners()
+    this.removeListeners()
   }
 
   setupTrigger() {
     if (!this.triggerIdValue) return
 
     this.trigger = document.getElementById(this.triggerIdValue)
-    
-    if (this.trigger) {
-      this.triggerListener = this.toggle.bind(this)
-      this.trigger.addEventListener("click", this.triggerListener)
-      
-      // Add ARIA attributes
-      this.trigger.setAttribute("aria-haspopup", "true")
-      this.trigger.setAttribute("aria-expanded", "false")
-    }
+    if (!this.trigger) return
+
+    this.trigger.addEventListener("click", this.handleTriggerClick)
+    this.trigger.setAttribute("aria-haspopup", "dialog")
+    this.trigger.setAttribute("aria-expanded", "false")
+    this.preparePopoverA11y()
   }
 
   removeTriggerListener() {
-    if (this.trigger && this.triggerListener) {
-      this.trigger.removeEventListener("click", this.triggerListener)
-    }
+    if (!this.trigger) return
+    this.trigger.removeEventListener("click", this.handleTriggerClick)
   }
 
-  toggle(event) {
+  handleTriggerClick(event) {
     event.preventDefault()
     event.stopPropagation()
 
@@ -54,69 +53,60 @@ export default class extends Controller {
   }
 
   open() {
-    this.isOpen = true
+    if (!this.trigger) return
 
-    // Show popover
+    this.isOpen = true
     this.element.classList.remove("hidden")
     this.element.setAttribute("aria-hidden", "false")
-
-    // Position relative to trigger
     this.position()
-
-    // Trigger animation
-    requestAnimationFrame(() => {
-      this.element.style.opacity = "1"
-      this.element.style.transform = "scale(1)"
-    })
-
-    // Update trigger ARIA
-    if (this.trigger) {
-      this.trigger.setAttribute("aria-expanded", "true")
-    }
-
-    // Add document listeners for closing
-    setTimeout(() => {
-      document.addEventListener("click", this.boundClose)
-      document.addEventListener("keydown", this.boundHandleEscape)
-    }, 0)
+    this.trigger.setAttribute("aria-expanded", "true")
+    this.addListeners()
   }
 
   close() {
     this.isOpen = false
-
-    // Animate out
-    this.element.style.opacity = "0"
-    this.element.style.transform = "scale(0.95)"
-
-    // Hide after animation
-    setTimeout(() => {
-      this.element.classList.add("hidden")
-      this.element.setAttribute("aria-hidden", "true")
-    }, 200)
-
-    // Update trigger ARIA
-    if (this.trigger) {
-      this.trigger.setAttribute("aria-expanded", "false")
-    }
-
-    // Remove document listeners
-    this.removeDocumentListeners()
+    this.removeListeners()
+    this.element.classList.add("hidden")
+    this.element.setAttribute("aria-hidden", "true")
+    this.trigger?.setAttribute("aria-expanded", "false")
   }
 
-  handleEscape(event) {
-    if (event.key === "Escape") {
+  handleDocumentClick(event) {
+    if (!this.isOpen) return
+
+    const clickedTrigger = this.trigger && this.trigger.contains(event.target)
+    const clickedPopover = this.element.contains(event.target)
+
+    if (!clickedTrigger && !clickedPopover) {
       this.close()
     }
   }
 
-  removeDocumentListeners() {
-    document.removeEventListener("click", this.boundClose)
-    document.removeEventListener("keydown", this.boundHandleEscape)
+  handleEscape(event) {
+    if (event.key !== "Escape" || !this.isOpen) return
+
+    event.preventDefault()
+    this.close()
+    this.trigger?.focus()
   }
 
-  // Don't close when clicking inside popover
-  preventClose(event) {
-    event.stopPropagation()
+  handleReposition() {
+    if (!this.isOpen) return
+    this.position()
+  }
+
+  addListeners() {
+    document.addEventListener("click", this.handleDocumentClick, true)
+    document.addEventListener("keydown", this.handleEscape, true)
+    window.addEventListener("resize", this.handleReposition)
+    window.addEventListener("scroll", this.handleReposition, true)
+  }
+
+  removeListeners() {
+    document.removeEventListener("click", this.handleDocumentClick, true)
+    document.removeEventListener("keydown", this.handleEscape, true)
+    window.removeEventListener("resize", this.handleReposition)
+    window.removeEventListener("scroll", this.handleReposition, true)
   }
 
   position() {
@@ -124,83 +114,76 @@ export default class extends Controller {
 
     const triggerRect = this.trigger.getBoundingClientRect()
     const popoverRect = this.element.getBoundingClientRect()
-    const spacing = 8
 
-    // Reset positioning
-    this.element.style.top = ""
-    this.element.style.left = ""
-    this.element.style.right = ""
-    this.element.style.bottom = ""
+    const placement = this.resolvePlacement(this.placementValue, triggerRect, popoverRect)
+    const { top, left } = this.computePosition(placement, triggerRect, popoverRect)
 
-    let top, left
+    const clampedTop = Math.min(
+      Math.max(top, this.viewportPadding),
+      window.innerHeight - popoverRect.height - this.viewportPadding
+    )
 
-    switch (this.placementValue) {
-      case "top":
-        top = triggerRect.top - popoverRect.height - spacing
-        left = triggerRect.left + (triggerRect.width / 2) - (popoverRect.width / 2)
-        break
+    const clampedLeft = Math.min(
+      Math.max(left, this.viewportPadding),
+      window.innerWidth - popoverRect.width - this.viewportPadding
+    )
 
-      case "bottom":
-        top = triggerRect.bottom + spacing
-        left = triggerRect.left + (triggerRect.width / 2) - (popoverRect.width / 2)
-        break
-
-      case "left":
-        top = triggerRect.top + (triggerRect.height / 2) - (popoverRect.height / 2)
-        left = triggerRect.left - popoverRect.width - spacing
-        break
-
-      case "right":
-        top = triggerRect.top + (triggerRect.height / 2) - (popoverRect.height / 2)
-        left = triggerRect.right + spacing
-        break
-
-      default:
-        top = triggerRect.bottom + spacing
-        left = triggerRect.left
-    }
-
-    // Apply position
     this.element.style.position = "fixed"
-    this.element.style.top = `${top}px`
-    this.element.style.left = `${left}px`
-
-    // Clamp to viewport
-    this.clampToViewport()
+    this.element.style.top = `${clampedTop}px`
+    this.element.style.left = `${clampedLeft}px`
   }
 
-  clampToViewport() {
-    const rect = this.element.getBoundingClientRect()
-    const viewportWidth = window.innerWidth
-    const viewportHeight = window.innerHeight
-    const padding = 8
+  resolvePlacement(placement, triggerRect, popoverRect) {
+    const fitsTop = triggerRect.top - popoverRect.height - this.spacing >= this.viewportPadding
+    const fitsBottom = triggerRect.bottom + this.spacing + popoverRect.height <= window.innerHeight - this.viewportPadding
+    const fitsLeft = triggerRect.left - popoverRect.width - this.spacing >= this.viewportPadding
+    const fitsRight = triggerRect.right + this.spacing + popoverRect.width <= window.innerWidth - this.viewportPadding
 
-    let adjustLeft = 0
-    let adjustTop = 0
+    switch (placement) {
+      case "top":
+        return fitsTop ? "top" : "bottom"
+      case "bottom":
+        return fitsBottom ? "bottom" : "top"
+      case "left":
+        return fitsLeft ? "left" : "right"
+      case "right":
+        return fitsRight ? "right" : "left"
+      default:
+        return fitsBottom ? "bottom" : "top"
+    }
+  }
 
-    // Check horizontal bounds
-    if (rect.left < padding) {
-      adjustLeft = padding - rect.left
-    } else if (rect.right > viewportWidth - padding) {
-      adjustLeft = (viewportWidth - padding) - rect.right
+  computePosition(placement, triggerRect, popoverRect) {
+    switch (placement) {
+      case "top":
+        return {
+          top: triggerRect.top - popoverRect.height - this.spacing,
+          left: triggerRect.left + (triggerRect.width / 2) - (popoverRect.width / 2)
+        }
+      case "bottom":
+        return {
+          top: triggerRect.bottom + this.spacing,
+          left: triggerRect.left + (triggerRect.width / 2) - (popoverRect.width / 2)
+        }
+      case "left":
+        return {
+          top: triggerRect.top + (triggerRect.height / 2) - (popoverRect.height / 2),
+          left: triggerRect.left - popoverRect.width - this.spacing
+        }
+      case "right":
+      default:
+        return {
+          top: triggerRect.top + (triggerRect.height / 2) - (popoverRect.height / 2),
+          left: triggerRect.right + this.spacing
+        }
+    }
+  }
+
+  preparePopoverA11y() {
+    if (!this.element.id) {
+      this.element.id = `flat-pack-popover-${Math.random().toString(36).slice(2, 10)}`
     }
 
-    // Check vertical bounds
-    if (rect.top < padding) {
-      adjustTop = padding - rect.top
-    } else if (rect.bottom > viewportHeight - padding) {
-      adjustTop = (viewportHeight - padding) - rect.bottom
-    }
-
-    // Apply adjustments
-    if (adjustLeft !== 0) {
-      const currentLeft = parseFloat(this.element.style.left)
-      this.element.style.left = `${currentLeft + adjustLeft}px`
-    }
-
-    if (adjustTop !== 0) {
-      const currentTop = parseFloat(this.element.style.top)
-      this.element.style.top = `${currentTop + adjustTop}px`
-    }
+    this.trigger?.setAttribute("aria-controls", this.element.id)
   }
 }

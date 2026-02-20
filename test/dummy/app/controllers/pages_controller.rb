@@ -68,6 +68,9 @@ class PagesController < ApplicationController
   def badges
   end
 
+  def chips
+  end
+
   def alerts
   end
 
@@ -190,6 +193,21 @@ class PagesController < ApplicationController
   def code_blocks
   end
 
+  def avatars
+  end
+
+  def comments
+  end
+
+  def chat
+  end
+
+  def chat_basic
+  end
+
+  def chat_states
+  end
+
   private
 
   def build_component_index
@@ -211,13 +229,12 @@ class PagesController < ApplicationController
     component_path = relative_file_path.delete_suffix(".rb")
     class_name = component_class_name(component_path)
     component_class = class_name.safe_constantize
-    return unless component_class
 
     {
       name: class_name.delete_prefix("FlatPack::"),
       description: component_description(component_path),
-      variables: initializer_variables(component_class),
-      methods: public_component_methods(component_class)
+      variables: component_class ? initializer_variables(component_class) : ["(unavailable)"],
+      methods: component_class ? public_component_methods(component_class) : ["(unavailable)"]
     }
   end
 
@@ -372,7 +389,7 @@ class PagesController < ApplicationController
       {title: "Tooltips", description: "Hover/focus tooltips", url: demo_tooltips_path},
       {title: "Tabs", description: "Tabbed content with keyboard navigation", url: demo_tabs_path},
       {title: "Toasts", description: "Auto-dismissing notifications", url: demo_toasts_path},
-      {title: "Page Header", description: "Page title with optional subtitle", url: demo_page_header_path},
+      {title: "Page Title", description: "Page title with optional subtitle", url: demo_page_header_path},
       {title: "Empty State", description: "User-friendly empty states", url: demo_empty_state_path},
       {title: "Grid", description: "Responsive grid layouts", url: demo_grid_path},
       {title: "Pagination", description: "Page navigation with Pagy", url: demo_pagination_path},

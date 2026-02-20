@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   patch "demo/tables/reorder", to: "pages#tables_reorder"
   get "demo/inputs", to: "pages#inputs"
   get "demo/badges", to: "pages#badges"
+  get "demo/chips", to: "pages#chips"
   get "demo/alerts", to: "pages#alerts"
   get "demo/cards", to: "pages#cards"
   get "demo/breadcrumbs", to: "pages#breadcrumbs"
@@ -32,6 +33,11 @@ Rails.application.routes.draw do
   get "demo/pagination", to: "pages#pagination"
   get "demo/charts", to: "pages#charts"
   get "demo/code_blocks", to: "pages#code_blocks"
+  get "demo/avatars", to: "pages#avatars"
+  get "demo/comments", to: "pages#comments"
+  get "demo/chat", to: "pages#chat"
+  get "demo/chat/basic", to: "pages#chat_basic"
+  get "demo/chat/states", to: "pages#chat_states"
 
   # Form submission endpoints for demonstration
   post "demo/forms/create", to: "pages#forms_create"

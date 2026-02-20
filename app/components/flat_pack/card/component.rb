@@ -3,10 +3,10 @@
 module FlatPack
   module Card
     class Component < FlatPack::BaseComponent
-      renders_one :header_slot, HeaderComponent
-      renders_one :body_slot, BodyComponent
-      renders_one :footer_slot, FooterComponent
-      renders_one :media_slot, MediaComponent
+      renders_one :header_slot, FlatPack::Card::Header::Component
+      renders_one :body_slot, FlatPack::Card::Body::Component
+      renders_one :footer_slot, FlatPack::Card::Footer::Component
+      renders_one :media_slot, FlatPack::Card::Media::Component
 
       # Custom setter methods that provide the cleaner syntax
       def header(**args, &block)

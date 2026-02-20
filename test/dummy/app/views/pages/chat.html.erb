@@ -1,0 +1,131 @@
+<div class="p-8 max-w-6xl mx-auto">
+  <div class="mb-8">
+    <%= render FlatPack::PageHeader::Component.new(
+      title: "Chat Components",
+      subtitle: "Complete messaging UI component system for building chat interfaces"
+    ) %>
+  </div>
+
+  <%= render "pages/component_method_variables_table", component: :chat_panel %>
+
+  <div class="prose prose-sm max-w-none mb-8">
+    <p class="text-[var(--color-muted-foreground)]">
+      The Chat component system provides everything you need to build modern messaging interfaces.
+      It includes message bubbles, typing indicators, file attachments, and a composer with auto-growing textarea.
+    </p>
+  </div>
+
+  <div class="space-y-8">
+    <!-- Quick Links -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <%= render FlatPack::Card::Component.new(
+        clickable: true,
+        href: demo_chat_basic_path,
+        hover: :strong
+      ) do |card| %>
+        <% card.body do %>
+          <h3 class="text-lg font-semibold text-[var(--color-foreground)] mb-2">Basic Chat Demo</h3>
+          <p class="text-sm text-[var(--color-muted-foreground)]">
+            See message bubbles, groups, attachments, and the composer in action.
+          </p>
+        <% end %>
+      <% end %>
+
+      <%= render FlatPack::Card::Component.new(
+        clickable: true,
+        href: demo_chat_states_path,
+        hover: :strong
+      ) do |card| %>
+        <% card.body do %>
+          <h3 class="text-lg font-semibold text-[var(--color-foreground)] mb-2">Message States Demo</h3>
+          <p class="text-sm text-[var(--color-muted-foreground)]">
+            Explore different message states: sending, failed, read, and edited indicators.
+          </p>
+        <% end %>
+      <% end %>
+    </div>
+
+    <!-- Components List -->
+    <%= render FlatPack::Card::Component.new do |card| %>
+      <% card.header do %>
+        <h3 class="text-lg font-semibold text-[var(--color-foreground)]">Available Components</h3>
+      <% end %>
+      <% card.body do %>
+        <div class="space-y-3">
+          <div class="flex items-start gap-3">
+            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-[var(--color-primary)] text-[var(--color-primary-text)] flex items-center justify-center text-sm font-semibold">
+              1
+            </div>
+            <div>
+              <h4 class="font-semibold text-[var(--color-foreground)]">Layout Components</h4>
+              <p class="text-sm text-[var(--color-muted-foreground)]">
+                <code class="text-xs bg-[var(--color-muted)] px-1 py-0.5 rounded">Chat::Layout</code> and 
+                <code class="text-xs bg-[var(--color-muted)] px-1 py-0.5 rounded">Chat::Panel</code> 
+                - Container components for chat interfaces
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-[var(--color-primary)] text-[var(--color-primary-text)] flex items-center justify-center text-sm font-semibold">
+              2
+            </div>
+            <div>
+              <h4 class="font-semibold text-[var(--color-foreground)]">Message Components</h4>
+              <p class="text-sm text-[var(--color-muted-foreground)]">
+                <code class="text-xs bg-[var(--color-muted)] px-1 py-0.5 rounded">Chat::Message</code>,
+                <code class="text-xs bg-[var(--color-muted)] px-1 py-0.5 rounded">Chat::MessageMeta</code>,
+                <code class="text-xs bg-[var(--color-muted)] px-1 py-0.5 rounded">Chat::MessageGroup</code>
+                - Core message display components
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-[var(--color-primary)] text-[var(--color-primary-text)] flex items-center justify-center text-sm font-semibold">
+              3
+            </div>
+            <div>
+              <h4 class="font-semibold text-[var(--color-foreground)]">Composer Components</h4>
+              <p class="text-sm text-[var(--color-muted-foreground)]">
+                <code class="text-xs bg-[var(--color-muted)] px-1 py-0.5 rounded">Chat::Composer</code>,
+                <code class="text-xs bg-[var(--color-muted)] px-1 py-0.5 rounded">Chat::Textarea</code>,
+                <code class="text-xs bg-[var(--color-muted)] px-1 py-0.5 rounded">Chat::SendButton</code>
+                - Message input area with auto-grow and submit on Enter
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-[var(--color-primary)] text-[var(--color-primary-text)] flex items-center justify-center text-sm font-semibold">
+              4
+            </div>
+            <div>
+              <h4 class="font-semibold text-[var(--color-foreground)]">Utility Components</h4>
+              <p class="text-sm text-[var(--color-muted-foreground)]">
+                <code class="text-xs bg-[var(--color-muted)] px-1 py-0.5 rounded">Chat::TypingIndicator</code>,
+                <code class="text-xs bg-[var(--color-muted)] px-1 py-0.5 rounded">Chat::Attachment</code>,
+                <code class="text-xs bg-[var(--color-muted)] px-1 py-0.5 rounded">Chat::DateDivider</code>
+                - Supporting components for rich chat experiences
+              </p>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+
+    <!-- Documentation Link -->
+    <div class="flex items-center justify-center p-6 bg-[var(--color-muted)] rounded-lg">
+      <div class="text-center">
+        <p class="text-sm text-[var(--color-muted-foreground)] mb-2">
+          For detailed usage examples and API documentation:
+        </p>
+        <%= render FlatPack::Button::Component.new(
+          text: "View Documentation",
+          style: :primary,
+          url: "https://github.com/yourusername/flatpack/blob/main/docs/components/chat.md"
+        ) %>
+      </div>
+    </div>
+  </div>
+</div>

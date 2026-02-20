@@ -59,7 +59,7 @@ export default class extends Controller {
   buildContainer() {
     const container = document.createElement("div")
     container.className = "fixed z-[60] flex flex-col gap-3 pointer-events-none"
-    container.style.top = "calc(var(--spacing-xl) * 2)"
+    container.style.top = "calc(72px + var(--spacing-md))"
     container.style.right = "var(--spacing-md)"
     container.setAttribute("aria-live", "polite")
     container.setAttribute("aria-atomic", "false")
@@ -120,7 +120,7 @@ export default class extends Controller {
 
     const dismissButton = document.createElement("button")
     dismissButton.type = "button"
-    dismissButton.className = "flex-shrink-0 text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors rounded-[var(--radius-sm)] p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]"
+    dismissButton.className = this.dismissButtonClasses(normalizedType)
     dismissButton.setAttribute("aria-label", "Dismiss")
     dismissButton.setAttribute("data-action", "flat-pack--toast#dismiss")
     dismissButton.innerHTML = '<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>'
@@ -153,12 +153,22 @@ export default class extends Controller {
       },
       error: {
         border: "border-[var(--color-error)]",
-        bg: "bg-[var(--color-background)]",
+        bg: "bg-[var(--color-destructive)]",
         text: "text-[var(--color-error)]"
       }
     }
 
     return classes[type]
+  }
+
+  dismissButtonClasses(type) {
+    const base = "flex-shrink-0 transition-colors rounded-[var(--radius-sm)] p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]"
+
+    if (type === "error") {
+      return `${base} bg-[var(--color-destructive-text)]/20 hover:bg-[var(--color-destructive-text)]/30 text-[var(--color-destructive-text)]`
+    }
+
+    return `${base} text-[var(--color-text-muted)] hover:text-[var(--color-text)]`
   }
 
   iconSvg(type) {

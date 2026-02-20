@@ -1,11 +1,13 @@
-<h1 class="text-4xl font-bold mb-4">Empty State Component</h1>
-<p class="text-lg text-[var(--color-muted-foreground)] mb-8">
-  User-friendly empty states with optional icons and custom graphics.
-</p>
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Empty State Component",
+  subtitle: "User-friendly empty states with optional icons and custom graphics."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :empty_state %>
 
 <!-- Basic Empty State -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Basic Empty State</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Basic Empty State", anchor_link: true, subtitle: "Examples for Basic Empty State.") %>
   <div class="border border-[var(--color-border)] rounded-lg p-8">
     <%= render FlatPack::EmptyState::Component.new(
       title: "No messages",
@@ -13,15 +15,20 @@
     ) %>
   </div>
   
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::EmptyState::Component.new(
-  title: "No messages",
-    description: "You don't have any messages yet."
-) %&gt;</code></pre>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::EmptyState::Component.new(
+        title: "No messages",
+          description: "You don't have any messages yet."
+      ) %&gt;
+    CODE
+    class: "mt-4"
+  ) %>
 </section>
 
 <!-- Empty State with Actions -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Empty State with Actions</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Empty State with Actions", anchor_link: true, subtitle: "Examples for Empty State with Actions.") %>
   <div class="border border-[var(--color-border)] rounded-lg p-8">
     <%= render FlatPack::EmptyState::Component.new(
       title: "No projects found",
@@ -34,19 +41,24 @@
     <% end %>
   </div>
   
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::EmptyState::Component.new(
-  title: "No projects found",
-  description: "Get started by creating your first project."
-) do |empty| %&gt;
-  &lt;% empty.actions do %&gt;
-    &lt;%= render FlatPack::Button::Component.new(text: "Create Project", style: :primary) %&gt;
-  &lt;% end %&gt;
-&lt;% end %&gt;</code></pre>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::EmptyState::Component.new(
+        title: "No projects found",
+        description: "Get started by creating your first project."
+      ) do |empty| %&gt;
+        &lt;% empty.actions do %&gt;
+          &lt;%= render FlatPack::Button::Component.new(text: "Create Project", style: :primary) %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    class: "mt-4"
+  ) %>
 </section>
 
 <!-- Empty State with Icons -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Icons</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Icons", anchor_link: true, subtitle: "Examples for Icons.") %>
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     <div class="border border-[var(--color-border)] rounded-lg p-8">
       <%= render FlatPack::EmptyState::Component.new(
@@ -73,42 +85,52 @@
     </div>
   </div>
   
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::EmptyState::Component.new(
-  title: "Inbox empty",
-  description: "All caught up!",
-  icon: :inbox
-) %&gt;
-
-&lt;%= render FlatPack::EmptyState::Component.new(
-  title: "No results",
-  description: "Try adjusting your search.",
-  icon: :search
-) %&gt;
-
-&lt;%= render FlatPack::EmptyState::Component.new(
-  title: "No files uploaded",
-  description: "Upload files to get started.",
-  icon: :upload
-) %&gt;</code></pre>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::EmptyState::Component.new(
+        title: "Inbox empty",
+        description: "All caught up!",
+        icon: :inbox
+      ) %&gt;
+      
+      &lt;%= render FlatPack::EmptyState::Component.new(
+        title: "No results",
+        description: "Try adjusting your search.",
+        icon: :search
+      ) %&gt;
+      
+      &lt;%= render FlatPack::EmptyState::Component.new(
+        title: "No files uploaded",
+        description: "Upload files to get started.",
+        icon: :upload
+      ) %&gt;
+    CODE
+    class: "mt-4"
+  ) %>
 </section>
 
 <!-- Empty State in Tables -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Empty State in Table</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Empty State in Table", anchor_link: true, subtitle: "Examples for Empty State in Table.") %>
   <%= render FlatPack::Table::Component.new(data: []) do |table| %>
     <% table.column(title: "Name", html: ->(row) { row.name }) %>
     <% table.column(title: "Email", html: ->(row) { row.email }) %>
     <% table.column(title: "Status", html: ->(row) { row.status }) %>
   <% end %>
   
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Table::Component.new(data: []) do |table| %&gt;
-  &lt;!-- Table automatically shows empty state when data is empty --&gt;
-&lt;% end %&gt;</code></pre>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Table::Component.new(data: []) do |table| %&gt;
+        <!-- Table automatically shows empty state when data is empty -->
+      &lt;% end %&gt;
+    CODE
+    class: "mt-4"
+  ) %>
 </section>
 
 <!-- Empty State in Cards -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Empty State in Card</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Empty State in Card", anchor_link: true, subtitle: "Examples for Empty State in Card.") %>
   <%= render FlatPack::Card::Component.new(style: :outlined) do |card| %>
     <% card.header do %>
       <h3 class="text-lg font-semibold">Recent Activity</h3>
@@ -125,7 +147,7 @@
 
 <!-- Empty State with Custom Graphic -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Empty State with Custom Graphic</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Empty State with Custom Graphic", anchor_link: true, subtitle: "Examples for Empty State with Custom Graphic.") %>
   <div class="border border-[var(--color-border)] rounded-lg p-8">
     <%= render FlatPack::EmptyState::Component.new(
       title: "No data available",
@@ -146,7 +168,7 @@
 
 <!-- Features -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Features</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Examples for Features.") %>
   <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
     <li><strong>Built-in Icons:</strong> Inbox and search icons included</li>
     <li><strong>Optional Icon:</strong> Pass <code>icon: :inbox</code>, <code>icon: :search</code>, or any icon name when needed</li>

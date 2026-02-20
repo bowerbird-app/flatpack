@@ -5,7 +5,7 @@ The Button Dropdown component provides an accessible dropdown menu triggered by 
 ## Basic Usage
 
 ```erb
-<%= render FlatPack::Button::DropdownComponent.new(text: "Actions") do |dropdown| %>
+<%= render FlatPack::Button::Dropdown::Component.new(text: "Actions") do |dropdown| %>
   <% dropdown.with_menu_item(text: "Edit", href: "#") %>
   <% dropdown.with_menu_item(text: "Delete", href: "#") %>
 <% end %>
@@ -31,7 +31,7 @@ The Button Dropdown component provides an accessible dropdown menu triggered by 
 Use `with_menu_item` to add menu items:
 
 ```erb
-<%= render FlatPack::Button::DropdownComponent.new(text: "Actions") do |dropdown| %>
+<%= render FlatPack::Button::Dropdown::Component.new(text: "Actions") do |dropdown| %>
   <% dropdown.with_menu_item(text: "Edit", href: "/edit") %>
   <% dropdown.with_menu_item(text: "Delete", href: "/delete") %>
 <% end %>
@@ -53,7 +53,7 @@ Use `with_menu_item` to add menu items:
 Use `with_menu_divider` to add visual separators:
 
 ```erb
-<%= render FlatPack::Button::DropdownComponent.new(text: "File") do |dropdown| %>
+<%= render FlatPack::Button::Dropdown::Component.new(text: "File") do |dropdown| %>
   <% dropdown.with_menu_item(text: "New", href: "#") %>
   <% dropdown.with_menu_item(text: "Open", href: "#") %>
   <% dropdown.with_menu_divider %>
@@ -68,7 +68,7 @@ Dropdown buttons support all standard button styles:
 ### Primary (Default)
 
 ```erb
-<%= render FlatPack::Button::DropdownComponent.new(text: "Actions", style: :primary) do |dropdown| %>
+<%= render FlatPack::Button::Dropdown::Component.new(text: "Actions", style: :primary) do |dropdown| %>
   <% dropdown.with_menu_item(text: "Save", href: "#") %>
 <% end %>
 ```
@@ -76,7 +76,7 @@ Dropdown buttons support all standard button styles:
 ### Secondary
 
 ```erb
-<%= render FlatPack::Button::DropdownComponent.new(text: "Options", style: :secondary) do |dropdown| %>
+<%= render FlatPack::Button::Dropdown::Component.new(text: "Options", style: :secondary) do |dropdown| %>
   <% dropdown.with_menu_item(text: "Settings", href: "#") %>
 <% end %>
 ```
@@ -84,7 +84,7 @@ Dropdown buttons support all standard button styles:
 ### Ghost
 
 ```erb
-<%= render FlatPack::Button::DropdownComponent.new(text: "More", style: :ghost) do |dropdown| %>
+<%= render FlatPack::Button::Dropdown::Component.new(text: "More", style: :ghost) do |dropdown| %>
   <% dropdown.with_menu_item(text: "Help", href: "#") %>
 <% end %>
 ```
@@ -92,7 +92,7 @@ Dropdown buttons support all standard button styles:
 ### Success
 
 ```erb
-<%= render FlatPack::Button::DropdownComponent.new(text: "Create", style: :success) do |dropdown| %>
+<%= render FlatPack::Button::Dropdown::Component.new(text: "Create", style: :success) do |dropdown| %>
   <% dropdown.with_menu_item(text: "New Project", href: "#") %>
 <% end %>
 ```
@@ -100,7 +100,7 @@ Dropdown buttons support all standard button styles:
 ### Warning
 
 ```erb
-<%= render FlatPack::Button::DropdownComponent.new(text: "Danger", style: :warning) do |dropdown| %>
+<%= render FlatPack::Button::Dropdown::Component.new(text: "Danger", style: :warning) do |dropdown| %>
   <% dropdown.with_menu_item(text: "Delete All", href: "#") %>
 <% end %>
 ```
@@ -112,7 +112,7 @@ Dropdowns come in three sizes:
 ### Small
 
 ```erb
-<%= render FlatPack::Button::DropdownComponent.new(text: "Small", size: :sm) do |dropdown| %>
+<%= render FlatPack::Button::Dropdown::Component.new(text: "Small", size: :sm) do |dropdown| %>
   <% dropdown.with_menu_item(text: "Option", href: "#") %>
 <% end %>
 ```
@@ -120,7 +120,7 @@ Dropdowns come in three sizes:
 ### Medium (Default)
 
 ```erb
-<%= render FlatPack::Button::DropdownComponent.new(text: "Medium", size: :md) do |dropdown| %>
+<%= render FlatPack::Button::Dropdown::Component.new(text: "Medium", size: :md) do |dropdown| %>
   <% dropdown.with_menu_item(text: "Option", href: "#") %>
 <% end %>
 ```
@@ -128,7 +128,7 @@ Dropdowns come in three sizes:
 ### Large
 
 ```erb
-<%= render FlatPack::Button::DropdownComponent.new(text: "Large", size: :lg) do |dropdown| %>
+<%= render FlatPack::Button::Dropdown::Component.new(text: "Large", size: :lg) do |dropdown| %>
   <% dropdown.with_menu_item(text: "Option", href: "#") %>
 <% end %>
 ```
@@ -140,7 +140,7 @@ Control where the dropdown menu appears relative to the trigger button:
 ### Bottom Right (Default)
 
 ```erb
-<%= render FlatPack::Button::DropdownComponent.new(text: "Menu", position: :bottom_right) do |dropdown| %>
+<%= render FlatPack::Button::Dropdown::Component.new(text: "Menu", position: :bottom_right) do |dropdown| %>
   <% dropdown.with_menu_item(text: "Option 1", href: "#") %>
 <% end %>
 ```
@@ -148,7 +148,7 @@ Control where the dropdown menu appears relative to the trigger button:
 ### Bottom Left
 
 ```erb
-<%= render FlatPack::Button::DropdownComponent.new(text: "Menu", position: :bottom_left) do |dropdown| %>
+<%= render FlatPack::Button::Dropdown::Component.new(text: "Menu", position: :bottom_left) do |dropdown| %>
   <% dropdown.with_menu_item(text: "Option 1", href: "#") %>
 <% end %>
 ```
@@ -158,7 +158,7 @@ Control where the dropdown menu appears relative to the trigger button:
 Opens upward, useful when the dropdown is near the bottom of the viewport:
 
 ```erb
-<%= render FlatPack::Button::DropdownComponent.new(text: "Menu", position: :top_right) do |dropdown| %>
+<%= render FlatPack::Button::Dropdown::Component.new(text: "Menu", position: :top_right) do |dropdown| %>
   <% dropdown.with_menu_item(text: "Option 1", href: "#") %>
 <% end %>
 ```
@@ -166,7 +166,7 @@ Opens upward, useful when the dropdown is near the bottom of the viewport:
 ### Top Left
 
 ```erb
-<%= render FlatPack::Button::DropdownComponent.new(text: "Menu", position: :top_left) do |dropdown| %>
+<%= render FlatPack::Button::Dropdown::Component.new(text: "Menu", position: :top_left) do |dropdown| %>
   <% dropdown.with_menu_item(text: "Option 1", href: "#") %>
 <% end %>
 ```
@@ -176,7 +176,7 @@ Opens upward, useful when the dropdown is near the bottom of the viewport:
 Add icons to menu items for better visual clarity:
 
 ```erb
-<%= render FlatPack::Button::DropdownComponent.new(text: "Actions") do |dropdown| %>
+<%= render FlatPack::Button::Dropdown::Component.new(text: "Actions") do |dropdown| %>
   <% dropdown.with_menu_item(text: "Edit", icon: "edit", href: "#") %>
   <% dropdown.with_menu_item(text: "Copy", icon: "copy", href: "#") %>
   <% dropdown.with_menu_item(text: "Delete", icon: "trash", href: "#") %>
@@ -188,7 +188,7 @@ Add icons to menu items for better visual clarity:
 Display notification counts or status indicators:
 
 ```erb
-<%= render FlatPack::Button::DropdownComponent.new(text: "Notifications") do |dropdown| %>
+<%= render FlatPack::Button::Dropdown::Component.new(text: "Notifications") do |dropdown| %>
   <% dropdown.with_menu_item(text: "Messages", icon: "mail", badge: "12", href: "#") %>
   <% dropdown.with_menu_item(text: "Alerts", icon: "bell", badge: "3", href: "#") %>
 <% end %>
@@ -199,7 +199,7 @@ Display notification counts or status indicators:
 Mark certain items as unavailable:
 
 ```erb
-<%= render FlatPack::Button::DropdownComponent.new(text: "File") do |dropdown| %>
+<%= render FlatPack::Button::Dropdown::Component.new(text: "File") do |dropdown| %>
   <% dropdown.with_menu_item(text: "New", href: "#") %>
   <% dropdown.with_menu_item(text: "Save", disabled: true) %>
   <% dropdown.with_menu_item(text: "Save As", disabled: true) %>
@@ -211,7 +211,7 @@ Mark certain items as unavailable:
 Highlight dangerous actions with destructive styling:
 
 ```erb
-<%= render FlatPack::Button::DropdownComponent.new(text: "Manage") do |dropdown| %>
+<%= render FlatPack::Button::Dropdown::Component.new(text: "Manage") do |dropdown| %>
   <% dropdown.with_menu_item(text: "Edit", href: "#") %>
   <% dropdown.with_menu_item(text: "Archive", href: "#") %>
   <% dropdown.with_menu_divider %>
@@ -224,7 +224,7 @@ Highlight dangerous actions with destructive styling:
 Add an icon to the dropdown trigger button:
 
 ```erb
-<%= render FlatPack::Button::DropdownComponent.new(text: "Settings", icon: "settings") do |dropdown| %>
+<%= render FlatPack::Button::Dropdown::Component.new(text: "Settings", icon: "settings") do |dropdown| %>
   <% dropdown.with_menu_item(text: "Profile", href: "#") %>
   <% dropdown.with_menu_item(text: "Preferences", href: "#") %>
 <% end %>
@@ -235,7 +235,7 @@ Add an icon to the dropdown trigger button:
 Disable the entire dropdown:
 
 ```erb
-<%= render FlatPack::Button::DropdownComponent.new(text: "Actions", disabled: true) do |dropdown| %>
+<%= render FlatPack::Button::Dropdown::Component.new(text: "Actions", disabled: true) do |dropdown| %>
   <% dropdown.with_menu_item(text: "Edit", href: "#") %>
   <% dropdown.with_menu_item(text: "Delete", href: "#") %>
 <% end %>
@@ -246,7 +246,7 @@ Disable the entire dropdown:
 Control the maximum height of the dropdown menu (useful for long lists):
 
 ```erb
-<%= render FlatPack::Button::DropdownComponent.new(text: "Long List", max_height: "200px") do |dropdown| %>
+<%= render FlatPack::Button::Dropdown::Component.new(text: "Long List", max_height: "200px") do |dropdown| %>
   <% 20.times do |i| %>
     <% dropdown.with_menu_item(text: "Item #{i + 1}", href: "#") %>
   <% end %>
@@ -258,7 +258,7 @@ Control the maximum height of the dropdown menu (useful for long lists):
 A comprehensive example combining multiple features:
 
 ```erb
-<%= render FlatPack::Button::DropdownComponent.new(
+<%= render FlatPack::Button::Dropdown::Component.new(
   text: "Account",
   icon: "user",
   style: :secondary,
@@ -320,7 +320,7 @@ require "test_helper"
 
 class DropdownTest < ViewComponent::TestCase
   def test_renders_dropdown
-    render_inline FlatPack::Button::DropdownComponent.new(text: "Actions") do |dropdown|
+    render_inline FlatPack::Button::Dropdown::Component.new(text: "Actions") do |dropdown|
       dropdown.with_menu_item(text: "Edit", href: "/edit")
       dropdown.with_menu_divider
       dropdown.with_menu_item(text: "Delete", href: "/delete")
@@ -347,7 +347,7 @@ The dropdown uses a Stimulus controller (`button-dropdown`) that handles:
 ## API Reference
 
 ```ruby
-FlatPack::Button::DropdownComponent.new(
+FlatPack::Button::Dropdown::Component.new(
   text: String,               # Required
   style: Symbol,              # Optional, default: :primary
   size: Symbol,               # Optional, default: :md

@@ -1,11 +1,13 @@
-  <h1 class="text-4xl font-bold mb-4">Breadcrumb Component</h1>
-  <p class="text-lg text-[var(--color-muted-foreground)] mb-8">
-    Navigation components that show the user's current location in the site hierarchy.
-  </p>
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Breadcrumb Component",
+    subtitle: "Navigation components that show the user's current location in the site hierarchy."
+  ) %>
+
+  <%= render "pages/component_method_variables_table", component: :breadcrumb %>
 
   <!-- Basic Breadcrumbs -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Basic Breadcrumbs</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Basic Breadcrumbs", anchor_link: true, subtitle: "Examples for Basic Breadcrumbs.") %>
     <div class="mb-4">
       <%= render FlatPack::Breadcrumb::Component.new do |breadcrumb| %>
         <% breadcrumb.item(text: "Home", href: "/") %>
@@ -14,18 +16,21 @@
         <% breadcrumb.item(text: "Laptops") %>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Breadcrumb::Component.new do |breadcrumb| %&gt;
-  &lt;% breadcrumb.item(text: "Home", href: "/") %&gt;
-  &lt;% breadcrumb.item(text: "Products", href: "/products") %&gt;
-  &lt;% breadcrumb.item(text: "Electronics", href: "/electronics") %&gt;
-  &lt;% breadcrumb.item(text: "Laptops") %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Breadcrumb::Component.new do |breadcrumb| %&gt;
+          &lt;% breadcrumb.item(text: "Home", href: "/") %&gt;
+          &lt;% breadcrumb.item(text: "Products", href: "/products") %&gt;
+          &lt;% breadcrumb.item(text: "Electronics", href: "/electronics") %&gt;
+          &lt;% breadcrumb.item(text: "Laptops") %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Different Separators -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Separator Styles</h2>
-    
+    <%= render FlatPack::SectionTitle::Component.new(title: "Separator Styles", anchor_link: true, subtitle: "Examples for Separator Styles.") %>
     <div class="space-y-4 mb-4">
       <div>
         <p class="text-sm text-[var(--color-muted-foreground)] mb-2">Chevron (default)</p>
@@ -64,15 +69,19 @@
       </div>
     </div>
 
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Breadcrumb::Component.new(separator: :chevron) do ... %&gt;
-&lt;%= render FlatPack::Breadcrumb::Component.new(separator: :slash) do ... %&gt;
-&lt;%= render FlatPack::Breadcrumb::Component.new(separator: :arrow) do ... %&gt;
-&lt;%= render FlatPack::Breadcrumb::Component.new(separator: :dot) do ... %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Breadcrumb::Component.new(separator: :chevron) do ... %&gt;
+        &lt;%= render FlatPack::Breadcrumb::Component.new(separator: :slash) do ... %&gt;
+        &lt;%= render FlatPack::Breadcrumb::Component.new(separator: :arrow) do ... %&gt;
+        &lt;%= render FlatPack::Breadcrumb::Component.new(separator: :dot) do ... %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Custom Icon Separator -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Custom Icon Separator</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Custom Icon Separator", anchor_link: true, subtitle: "Examples for Custom Icon Separator.") %>
     <div class="mb-4">
       <%= render FlatPack::Breadcrumb::Component.new(separator: :custom, separator_icon: "chevron-right") do |breadcrumb| %>
         <% breadcrumb.item(text: "Dashboard", href: "/dashboard") %>
@@ -80,34 +89,42 @@
         <% breadcrumb.item(text: "Profile") %>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Breadcrumb::Component.new(
-  separator: :custom,
-  separator_icon: "chevron-right"
-) do |breadcrumb| %&gt;
-  &lt;% breadcrumb.item(text: "Dashboard", href: "/dashboard") %&gt;
-  &lt;% breadcrumb.item(text: "Settings", href: "/settings") %&gt;
-  &lt;% breadcrumb.item(text: "Profile") %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Breadcrumb::Component.new(
+          separator: :custom,
+          separator_icon: "chevron-right"
+        ) do |breadcrumb| %&gt;
+          &lt;% breadcrumb.item(text: "Dashboard", href: "/dashboard") %&gt;
+          &lt;% breadcrumb.item(text: "Settings", href: "/settings") %&gt;
+          &lt;% breadcrumb.item(text: "Profile") %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- With Home Item -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">With Home Item</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "With Home Item", anchor_link: true, subtitle: "Examples for With Home Item.") %>
     <div class="mb-4">
       <%= render FlatPack::Breadcrumb::Component.new(show_home: true) do |breadcrumb| %>
         <% breadcrumb.item(text: "Settings", href: "/settings") %>
         <% breadcrumb.item(text: "Profile") %>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Breadcrumb::Component.new(show_home: true) do |breadcrumb| %&gt;
-  &lt;% breadcrumb.item(text: "Settings", href: "/settings") %&gt;
-  &lt;% breadcrumb.item(text: "Profile") %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Breadcrumb::Component.new(show_home: true) do |breadcrumb| %&gt;
+          &lt;% breadcrumb.item(text: "Settings", href: "/settings") %&gt;
+          &lt;% breadcrumb.item(text: "Profile") %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- With Back Item -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">With Back Item</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "With Back Item", anchor_link: true, subtitle: "Examples for With Back Item.") %>
     <p class="text-sm text-[var(--color-muted-foreground)] mb-3">
       The back link is prepended as the first breadcrumb item and resolves to the previous page when available.
     </p>
@@ -120,18 +137,22 @@
         <% breadcrumb.item(text: "Profile") %>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Breadcrumb::Component.new(
-  show_back: true,
-  back_fallback_url: "/demo"
-) do |breadcrumb| %&gt;
-  &lt;% breadcrumb.item(text: "Settings", href: "/settings") %&gt;
-  &lt;% breadcrumb.item(text: "Profile") %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Breadcrumb::Component.new(
+          show_back: true,
+          back_fallback_url: "/demo"
+        ) do |breadcrumb| %&gt;
+          &lt;% breadcrumb.item(text: "Settings", href: "/settings") %&gt;
+          &lt;% breadcrumb.item(text: "Profile") %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Custom Home Configuration -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Custom Home Configuration</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Custom Home Configuration", anchor_link: true, subtitle: "Examples for Custom Home Configuration.") %>
     <div class="mb-4">
       <%= render FlatPack::Breadcrumb::Component.new(
         show_home: true,
@@ -143,20 +164,24 @@
         <% breadcrumb.item(text: "Monthly") %>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Breadcrumb::Component.new(
-  show_home: true,
-  home_url: "/dashboard",
-  home_text: "Dashboard",
-  home_icon: "dashboard"
-) do |breadcrumb| %&gt;
-  &lt;% breadcrumb.item(text: "Reports", href: "/reports") %&gt;
-  &lt;% breadcrumb.item(text: "Monthly") %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Breadcrumb::Component.new(
+          show_home: true,
+          home_url: "/dashboard",
+          home_text: "Dashboard",
+          home_icon: "dashboard"
+        ) do |breadcrumb| %&gt;
+          &lt;% breadcrumb.item(text: "Reports", href: "/reports") %&gt;
+          &lt;% breadcrumb.item(text: "Monthly") %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Array of Items -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Array of Items (Convenience Method)</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Array of Items (Convenience Method)", anchor_link: true, subtitle: "Examples for Array of Items (Convenience Method).") %>
     <div class="mb-4">
       <%= render FlatPack::Breadcrumb::Component.new(
         items: [
@@ -167,19 +192,23 @@
         ]
       ) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Breadcrumb::Component.new(
-  items: [
-    { text: "Home", href: "/" },
-    { text: "Blog", href: "/blog" },
-    { text: "Technology", href: "/blog/technology" },
-    { text: "Article Title" }
-  ]
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Breadcrumb::Component.new(
+          items: [
+            { text: "Home", href: "/" },
+            { text: "Blog", href: "/blog" },
+            { text: "Technology", href: "/blog/technology" },
+            { text: "Article Title" }
+          ]
+        ) %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- With Icons -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Breadcrumbs with Icons</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Breadcrumbs with Icons", anchor_link: true, subtitle: "Examples for Breadcrumbs with Icons.") %>
     <div class="mb-4">
       <%= render FlatPack::Breadcrumb::Component.new do |breadcrumb| %>
         <% breadcrumb.item(text: "Home", href: "/", icon: "home") %>
@@ -188,17 +217,21 @@
         <% breadcrumb.item(text: "Laptops", icon: "laptop") %>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Breadcrumb::Component.new do |breadcrumb| %&gt;
-  &lt;% breadcrumb.item(text: "Home", href: "/", icon: "home") %&gt;
-  &lt;% breadcrumb.item(text: "Products", href: "/products", icon: "box") %&gt;
-  &lt;% breadcrumb.item(text: "Electronics", href: "/electronics", icon: "monitor") %&gt;
-  &lt;% breadcrumb.item(text: "Laptops", icon: "laptop") %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Breadcrumb::Component.new do |breadcrumb| %&gt;
+          &lt;% breadcrumb.item(text: "Home", href: "/", icon: "home") %&gt;
+          &lt;% breadcrumb.item(text: "Products", href: "/products", icon: "box") %&gt;
+          &lt;% breadcrumb.item(text: "Electronics", href: "/electronics", icon: "monitor") %&gt;
+          &lt;% breadcrumb.item(text: "Laptops", icon: "laptop") %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Collapsed Items -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Collapsed Items (max_items)</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Collapsed Items (max_items)", anchor_link: true, subtitle: "Examples for Collapsed Items (max_items).") %>
     <div class="space-y-4 mb-4">
       <div>
         <p class="text-sm text-[var(--color-muted-foreground)] mb-2">max_items: 3</p>
@@ -222,19 +255,23 @@
         <% end %>
       </div>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Breadcrumb::Component.new(max_items: 3) do |breadcrumb| %&gt;
-  &lt;% breadcrumb.item(text: "Home", href: "/") %&gt;
-  &lt;% breadcrumb.item(text: "Level 1", href: "/l1") %&gt;
-  &lt;% breadcrumb.item(text: "Level 2", href: "/l2") %&gt;
-  &lt;% breadcrumb.item(text: "Level 3", href: "/l3") %&gt;
-  &lt;% breadcrumb.item(text: "Current") %&gt;
-&lt;% end %&gt;
-&lt;!-- Shows: Home › ... › Level 3 › Current --&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Breadcrumb::Component.new(max_items: 3) do |breadcrumb| %&gt;
+          &lt;% breadcrumb.item(text: "Home", href: "/") %&gt;
+          &lt;% breadcrumb.item(text: "Level 1", href: "/l1") %&gt;
+          &lt;% breadcrumb.item(text: "Level 2", href: "/l2") %&gt;
+          &lt;% breadcrumb.item(text: "Level 3", href: "/l3") %&gt;
+          &lt;% breadcrumb.item(text: "Current") %&gt;
+        &lt;% end %&gt;
+        <!-- Shows: Home › ... › Level 3 › Current -->
+      CODE
+    ) %>
   </section>
 
   <!-- Custom Styling -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Custom Styling</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Custom Styling", anchor_link: true, subtitle: "Examples for Custom Styling.") %>
     <div class="mb-4">
       <%= render FlatPack::Breadcrumb::Component.new(
         class: "p-4 bg-blue-50 rounded-lg",
@@ -245,19 +282,23 @@
         <% breadcrumb.item(text: "Item") %>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Breadcrumb::Component.new(
-  class: "p-4 bg-blue-50 rounded-lg",
-  separator: :slash
-) do |breadcrumb| %&gt;
-  &lt;% breadcrumb.item(text: "Home", href: "/") %&gt;
-  &lt;% breadcrumb.item(text: "Products", href: "/products") %&gt;
-  &lt;% breadcrumb.item(text: "Item") %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Breadcrumb::Component.new(
+          class: "p-4 bg-blue-50 rounded-lg",
+          separator: :slash
+        ) do |breadcrumb| %&gt;
+          &lt;% breadcrumb.item(text: "Home", href: "/") %&gt;
+          &lt;% breadcrumb.item(text: "Products", href: "/products") %&gt;
+          &lt;% breadcrumb.item(text: "Item") %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- E-commerce Example -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Real-world Example: E-commerce</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Real-world Example: E-commerce", anchor_link: true, subtitle: "Examples for Real-world Example: E-commerce.") %>
     <div class="mb-4 p-6 border border-[var(--color-border)] rounded-lg">
       <%= render FlatPack::Breadcrumb::Component.new(
         show_home: true,
@@ -275,21 +316,25 @@
         Premium laptop with M3 Max chip, 36GB RAM, 1TB SSD
       </p>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Breadcrumb::Component.new(
-  show_home: true,
-  separator: :chevron,
-  class: "mb-4"
-) do |breadcrumb| %&gt;
-  &lt;% breadcrumb.item(text: "Products", href: "/products", icon: "shopping-bag") %&gt;
-  &lt;% breadcrumb.item(text: "Electronics", href: "/electronics") %&gt;
-  &lt;% breadcrumb.item(text: "Laptops", href: "/laptops") %&gt;
-  &lt;% breadcrumb.item(text: "MacBook Pro 16\"") %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Breadcrumb::Component.new(
+          show_home: true,
+          separator: :chevron,
+          class: "mb-4"
+        ) do |breadcrumb| %&gt;
+          &lt;% breadcrumb.item(text: "Products", href: "/products", icon: "shopping-bag") %&gt;
+          &lt;% breadcrumb.item(text: "Electronics", href: "/electronics") %&gt;
+          &lt;% breadcrumb.item(text: "Laptops", href: "/laptops") %&gt;
+          &lt;% breadcrumb.item(text: "MacBook Pro 16\"") %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Accessibility -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Accessibility Features</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Accessibility Features", anchor_link: true, subtitle: "Examples for Accessibility Features.") %>
     <div class="mb-4">
       <ul class="space-y-2 text-[var(--color-muted-foreground)]">
         <li>• Semantic HTML with <code class="text-sm">&lt;nav&gt;</code>, <code class="text-sm">&lt;ol&gt;</code>, and <code class="text-sm">&lt;li&gt;</code></li>

@@ -876,7 +876,7 @@ bundle exec rails test test/components/flat_pack/navbar/top_nav_component_test.r
 
 ```ruby
 def test_renders_sidebar_item_with_badge
-  render_inline FlatPack::Navbar::SidebarItemComponent.new(
+  render_inline FlatPack::Navbar::SidebarItem::Component.new(
     text: "Messages",
     icon: "mail",
     href: "/messages",
@@ -904,10 +904,10 @@ navbar.sidebar(collapsed:, expanded_width:, collapsed_width:)
 navbar.top_nav(height:)
 ```
 
-### FlatPack::Navbar::SidebarComponent
+### FlatPack::Navbar::Sidebar::Component
 
 ```ruby
-sidebar = SidebarComponent.new(
+sidebar = FlatPack::Navbar::Sidebar::Component.new(
   collapsed: Boolean,         # Optional, default: false
   expanded_width: String,     # Optional, default: "256px"
   collapsed_width: String,    # Optional, default: "64px"
@@ -915,14 +915,14 @@ sidebar = SidebarComponent.new(
 )
 
 # Renders many:
-sidebar.item(...)        # SidebarItemComponent
-sidebar.section(...)     # SidebarSectionComponent
+sidebar.item(...)        # SidebarItem::Component
+sidebar.section(...)     # SidebarSection::Component
 ```
 
-### FlatPack::Navbar::SidebarItemComponent
+### FlatPack::Navbar::SidebarItem::Component
 
 ```ruby
-SidebarItemComponent.new(
+FlatPack::Navbar::SidebarItem::Component.new(
   text: String,              # Required
   href: String,              # Optional, default: nil (renders as button if omitted)
   icon: String,              # Optional, default: nil (Lucide icon name)
@@ -936,10 +936,10 @@ SidebarItemComponent.new(
 # :primary, :secondary, :success, :warning, :danger
 ```
 
-### FlatPack::Navbar::SidebarSectionComponent
+### FlatPack::Navbar::SidebarSection::Component
 
 ```ruby
-section = SidebarSectionComponent.new(
+section = FlatPack::Navbar::SidebarSection::Component.new(
   title: String,             # Optional, default: nil
   collapsible: Boolean,      # Optional, default: false
   collapsed: Boolean,        # Optional, default: false
@@ -947,13 +947,13 @@ section = SidebarSectionComponent.new(
 )
 
 # Renders many:
-section.item(...)       # SidebarItemComponent
+section.item(...)       # SidebarItem::Component
 ```
 
-### FlatPack::Navbar::TopNavComponent
+### FlatPack::Navbar::TopNav::Component
 
 ```ruby
-top_nav = TopNavComponent.new(
+top_nav = FlatPack::Navbar::TopNav::Component.new(
   height: String,            # Optional, default: "64px"
   **system_arguments        # Optional
 )

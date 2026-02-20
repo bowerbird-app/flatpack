@@ -1,11 +1,12 @@
-<h1 class="text-4xl font-bold mb-4">Popover Component</h1>
-<p class="text-lg text-[var(--color-muted-foreground)] mb-8">
-  Click-triggered floating content with smart positioning.
-</p>
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Popover Component",
+  subtitle: "Click-triggered floating content with smart positioning."
+) %>
 
 <!-- Basic Popover -->
+<%= render "pages/component_method_variables_table", component: :popover %>
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Basic Popover</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Basic Popover", anchor_link: true, subtitle: "Examples for Basic Popover.") %>
   <div class="mb-4">
     <%= render FlatPack::Button::Component.new(id: "popover-trigger-basic", text: "Click me", style: :secondary) %>
     <%= render FlatPack::Popover::Component.new(trigger_id: "popover-trigger-basic", placement: :bottom) do |popover| %>
@@ -20,20 +21,21 @@
     <% end %>
   </div>
   
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Button::Component.new(id: "popover-trigger", text: "Click me") %&gt;
-&lt;%= render FlatPack::Popover::Component.new(trigger_id: "popover-trigger", placement: :bottom) do |popover| %&gt;
-  &lt;% popover.with_popover_content do %&gt;
-    &lt;div class="p-4"&gt;
-      &lt;h3&gt;Title&lt;/h3&gt;
-      &lt;p&gt;Content...&lt;/p&gt;
-    &lt;/div&gt;
-  &lt;% end %&gt;
-&lt;% end %&gt;</code></pre>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: <<~CODE
+      render FlatPack::Button::Component.new(id: "popover-trigger", text: "Click me")
+      render FlatPack::Popover::Component.new(trigger_id: "popover-trigger", placement: :bottom) do |popover|
+        popover.with_popover_content do
+          "<div class='p-4'><h3>Title</h3><p>Content...</p></div>"
+        end
+      end
+    CODE
+  ) %>
 </section>
 
 <!-- Popover Placements -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Popover Placements</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Popover Placements", anchor_link: true, subtitle: "Examples for Popover Placements.") %>
   <div class="flex justify-center items-center flex-wrap gap-4 mb-4">
     <%= render FlatPack::Button::Component.new(id: "popover-trigger-left", text: "Left", style: :secondary) %>
     <%= render FlatPack::Popover::Component.new(trigger_id: "popover-trigger-left", placement: :left) do |popover| %>
@@ -79,7 +81,7 @@
 
 <!-- Rich Content Popover -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Rich Content Popover</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Rich Content Popover", anchor_link: true, subtitle: "Examples for Rich Content Popover.") %>
   <div class="mb-4">
     <%= render FlatPack::Button::Component.new(id: "popover-trigger-user-info", text: "User Info", style: :primary) %>
     <%= render FlatPack::Popover::Component.new(trigger_id: "popover-trigger-user-info", placement: :bottom) do |popover| %>
@@ -106,7 +108,7 @@
 
 <!-- Popover with Form -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Popover with Form</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Popover with Form", anchor_link: true, subtitle: "Examples for Popover with Form.") %>
   <div class="mb-4">
     <%= render FlatPack::Button::Component.new(id: "popover-trigger-add-comment", text: "Add Comment", style: :secondary) %>
     <%= render FlatPack::Popover::Component.new(trigger_id: "popover-trigger-add-comment", placement: :bottom) do |popover| %>
@@ -132,7 +134,7 @@
 
 <!-- Popover with List -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Popover with List</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Popover with List", anchor_link: true, subtitle: "Examples for Popover with List.") %>
   <div class="mb-4">
     <%= render FlatPack::Button::Component.new(id: "popover-trigger-more-actions", text: "More Actions", style: :secondary) %>
     <%= render FlatPack::Popover::Component.new(trigger_id: "popover-trigger-more-actions", placement: :bottom) do |popover| %>
@@ -159,7 +161,7 @@
 
 <!-- Features -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Features</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Examples for Features.") %>
   <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
     <li><strong>Click to Open:</strong> Opens on click, not hover</li>
     <li><strong>Smart Positioning:</strong> Automatically adjusts for viewport boundaries</li>

@@ -1,0 +1,558 @@
+<div class="max-w-4xl mx-auto p-8 space-y-12">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Comments",
+    subtitle: "A complete commenting system with threads, items, composer, and replies."
+  ) %>
+
+  <%= render "pages/component_method_variables_table", component: :comments_thread %>
+
+  <%
+    erb_open = "<" + "%"
+    erb_output_open = "<" + "%="
+    erb_tag_close = "%" + ">"
+  %>
+
+  <!-- Basic Thread -->
+  <section class="space-y-4">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Basic Comment Thread", anchor_link: true, subtitle: "Examples for Basic Comment Thread.") %>
+    <%= render FlatPack::Comments::Thread::Component.new(
+      count: 3,
+      title: "Discussion"
+    ) do |thread| %>
+      <% thread.with_comment do %>
+        <%= render FlatPack::Comments::Item::Component.new(
+          author_name: "Alice Johnson",
+          author_meta: "Software Engineer",
+          timestamp: "2 hours ago",
+          body: "This is a really great feature! I've been waiting for something like this.",
+          avatar: {name: "Alice Johnson", src: "https://i.pravatar.cc/150?img=1"}
+        ) do |item| %>
+          <% item.with_actions do %>
+            <%= link_to "Reply", "#", class: "text-sm font-medium text-[var(--color-primary)] hover:underline" %>
+            <%= link_to "Like", "#", class: "text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)]" %>
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <% thread.with_comment do %>
+        <%= render FlatPack::Comments::Item::Component.new(
+          author_name: "Bob Smith",
+          timestamp: "1 hour ago",
+          body: "I agree! This will save us a lot of time.",
+          edited: true,
+          avatar: {name: "Bob Smith", src: "https://i.pravatar.cc/150?img=2"}
+        ) do |item| %>
+          <% item.with_actions do %>
+            <%= link_to "Reply", "#", class: "text-sm font-medium text-[var(--color-primary)] hover:underline" %>
+            <%= link_to "Like", "#", class: "text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)]" %>
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <% thread.with_comment do %>
+        <%= render FlatPack::Comments::Item::Component.new(
+          author_name: "Charlie Brown",
+          timestamp: "30 minutes ago",
+          body: "Can we get documentation for this?",
+          avatar: {name: "Charlie Brown"}
+        ) do |item| %>
+          <% item.with_actions do %>
+            <%= link_to "Reply", "#", class: "text-sm font-medium text-[var(--color-primary)] hover:underline" %>
+            <%= link_to "Like", "#", class: "text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)]" %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      code: <<~CODE
+        #{erb_output_open} render FlatPack::Comments::Thread::Component.new(
+          count: 3,
+          title: "Discussion"
+        ) do |thread| #{erb_tag_close}
+          #{erb_open} thread.with_comment do #{erb_tag_close}
+            #{erb_output_open} render FlatPack::Comments::Item::Component.new(
+              author_name: "Alice Johnson",
+              author_meta: "Software Engineer",
+              timestamp: "2 hours ago",
+              body: "This is a really great feature! I've been waiting for something like this.",
+              avatar: {name: "Alice Johnson", src: "https://i.pravatar.cc/150?img=1"}
+            ) #{erb_tag_close}
+          #{erb_open} end #{erb_tag_close}
+        #{erb_open} end #{erb_tag_close}
+      CODE
+    ) %>
+  </section>
+
+  <!-- With Composer -->
+  <section class="space-y-4">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Thread with Composer", anchor_link: true, subtitle: "Examples for Thread with Composer.") %>
+    <%= render FlatPack::Comments::Thread::Component.new(
+      count: 1,
+      title: "Feedback"
+    ) do |thread| %>
+      <% thread.with_composer do %>
+        <%= render FlatPack::Comments::Composer::Component.new(
+          placeholder: "Share your feedback...",
+          submit_label: "Post"
+        ) %>
+      <% end %>
+
+      <% thread.with_comment do %>
+        <%= render FlatPack::Comments::Item::Component.new(
+          author_name: "Diana Prince",
+          timestamp: "Just now",
+          body: "Looking forward to trying this out!",
+          avatar: {name: "Diana Prince", src: "https://i.pravatar.cc/150?img=3"}
+        ) %>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      code: <<~CODE
+        #{erb_output_open} render FlatPack::Comments::Thread::Component.new(
+          count: 1,
+          title: "Feedback"
+        ) do |thread| #{erb_tag_close}
+          #{erb_open} thread.with_composer do #{erb_tag_close}
+            #{erb_output_open} render FlatPack::Comments::Composer::Component.new(
+              placeholder: "Share your feedback...",
+              submit_label: "Post"
+            ) #{erb_tag_close}
+          #{erb_open} end #{erb_tag_close}
+        #{erb_open} end #{erb_tag_close}
+      CODE
+    ) %>
+  </section>
+
+  <!-- Empty State -->
+  <section class="space-y-4">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Empty Thread", anchor_link: true, subtitle: "Examples for Empty Thread.") %>
+    <%= render FlatPack::Comments::Thread::Component.new(
+      title: "Comments",
+      empty_title: "No comments yet",
+      empty_body: "Be the first to share your thoughts."
+    ) do |thread| %>
+      <% thread.with_composer do %>
+        <%= render FlatPack::Comments::Composer::Component.new %>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      code: <<~CODE
+        #{erb_output_open} render FlatPack::Comments::Thread::Component.new(
+          title: "Comments",
+          empty_title: "No comments yet",
+          empty_body: "Be the first to share your thoughts."
+        ) do |thread| #{erb_tag_close}
+          #{erb_open} thread.with_composer do #{erb_tag_close}
+            #{erb_output_open} render FlatPack::Comments::Composer::Component.new #{erb_tag_close}
+          #{erb_open} end #{erb_tag_close}
+        #{erb_open} end #{erb_tag_close}
+      CODE
+    ) %>
+  </section>
+
+  <!-- Locked Thread -->
+  <section class="space-y-4">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Locked Thread", anchor_link: true, subtitle: "Examples for Locked Thread.") %>
+    <%= render FlatPack::Comments::Thread::Component.new(
+      count: 2,
+      title: "Archived Discussion",
+      locked: true
+    ) do |thread| %>
+      <% thread.with_composer do %>
+        <%= render FlatPack::Comments::Composer::Component.new %>
+      <% end %>
+
+      <% thread.with_comment do %>
+        <%= render FlatPack::Comments::Item::Component.new(
+          author_name: "Eve Adams",
+          timestamp: "2 days ago",
+          body: "This discussion has been archived.",
+          avatar: {name: "Eve Adams"}
+        ) %>
+      <% end %>
+
+      <% thread.with_comment do %>
+        <%= render FlatPack::Comments::Item::Component.new(
+          author_name: "Frank Miller",
+          timestamp: "2 days ago",
+          body: "Thanks for the update.",
+          avatar: {name: "Frank Miller"}
+        ) %>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      code: <<~CODE
+        #{erb_output_open} render FlatPack::Comments::Thread::Component.new(
+          count: 2,
+          title: "Archived Discussion",
+          locked: true
+        ) do |thread| #{erb_tag_close}
+          #{erb_open} thread.with_composer do #{erb_tag_close}
+            #{erb_output_open} render FlatPack::Comments::Composer::Component.new #{erb_tag_close}
+          #{erb_open} end #{erb_tag_close}
+        #{erb_open} end #{erb_tag_close}
+      CODE
+    ) %>
+  </section>
+
+  <!-- System Comments -->
+  <section class="space-y-4">
+    <%= render FlatPack::SectionTitle::Component.new(title: "System Notifications", anchor_link: true, subtitle: "Examples for System Notifications.") %>
+    <%= render FlatPack::Comments::Thread::Component.new(
+      count: 3,
+      title: "Activity"
+    ) do |thread| %>
+      <% thread.with_comment do %>
+        <%= render FlatPack::Comments::Item::Component.new(
+          author_name: "GitHub",
+          timestamp: "1 day ago",
+          body: "merged commit abc123 into main",
+          state: :system,
+          avatar: {initials: "GH"}
+        ) %>
+      <% end %>
+
+      <% thread.with_comment do %>
+        <%= render FlatPack::Comments::Item::Component.new(
+          author_name: "Grace Hopper",
+          timestamp: "1 day ago",
+          body: "Fixed the bug mentioned in #42",
+          avatar: {name: "Grace Hopper", src: "https://i.pravatar.cc/150?img=4"}
+        ) %>
+      <% end %>
+
+      <% thread.with_comment do %>
+        <%= render FlatPack::Comments::Item::Component.new(
+          author_name: "System",
+          timestamp: "12 hours ago",
+          body: "This issue was automatically closed due to inactivity.",
+          state: :system,
+          avatar: {initials: "SY"}
+        ) %>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      code: <<~CODE
+        #{erb_output_open} render FlatPack::Comments::Thread::Component.new(
+          count: 3,
+          title: "Activity"
+        ) do |thread| #{erb_tag_close}
+          #{erb_open} thread.with_comment do #{erb_tag_close}
+            #{erb_output_open} render FlatPack::Comments::Item::Component.new(
+              author_name: "GitHub",
+              timestamp: "1 day ago",
+              body: "merged commit abc123 into main",
+              state: :system,
+              avatar: {initials: "GH"}
+            ) #{erb_tag_close}
+          #{erb_open} end #{erb_tag_close}
+        #{erb_open} end #{erb_tag_close}
+      CODE
+    ) %>
+  </section>
+
+  <!-- Deleted Comment -->
+  <section class="space-y-4">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Deleted Comment", anchor_link: true, subtitle: "Examples for Deleted Comment.") %>
+    <%= render FlatPack::Comments::Thread::Component.new(count: 1) do |thread| %>
+      <% thread.with_comment do %>
+        <%= render FlatPack::Comments::Item::Component.new(
+          author_name: "Deleted User",
+          timestamp: "3 hours ago",
+          state: :deleted,
+          avatar: {name: "Deleted User"}
+        ) %>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      code: <<~CODE
+        #{erb_output_open} render FlatPack::Comments::Thread::Component.new(count: 1) do |thread| #{erb_tag_close}
+          #{erb_open} thread.with_comment do #{erb_tag_close}
+            #{erb_output_open} render FlatPack::Comments::Item::Component.new(
+              author_name: "Deleted User",
+              timestamp: "3 hours ago",
+              state: :deleted,
+              avatar: {name: "Deleted User"}
+            ) #{erb_tag_close}
+          #{erb_open} end #{erb_tag_close}
+        #{erb_open} end #{erb_tag_close}
+      CODE
+    ) %>
+  </section>
+
+  <!-- Threaded Replies -->
+  <section class="space-y-4">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Threaded Conversation", anchor_link: true, subtitle: "Examples for Threaded Conversation.") %>
+    <%= render FlatPack::Comments::Thread::Component.new(
+      count: 4,
+      title: "Discussion"
+    ) do |thread| %>
+      <% thread.with_comment do %>
+        <%= render FlatPack::Comments::Item::Component.new(
+          author_name: "Helen Park",
+          timestamp: "4 hours ago",
+          body: "What do you all think about this approach?",
+          avatar: {name: "Helen Park", src: "https://i.pravatar.cc/150?img=5"}
+        ) do |item| %>
+          <% item.with_actions do %>
+            <%= link_to "Reply", "#", class: "text-sm font-medium text-[var(--color-primary)]" %>
+          <% end %>
+
+          <% item.with_replies do %>
+            <%= render FlatPack::Comments::Replies::Component.new do |replies| %>
+              <% replies.with_comment do %>
+                <%= render FlatPack::Comments::Item::Component.new(
+                  author_name: "Ian Wright",
+                  timestamp: "3 hours ago",
+                  body: "I think it's a solid approach! The performance improvements are significant.",
+                  avatar: {name: "Ian Wright", src: "https://i.pravatar.cc/150?img=6"}
+                ) do |reply_item| %>
+                  <% reply_item.with_actions do %>
+                    <%= link_to "Reply", "#", class: "text-sm font-medium text-[var(--color-primary)]" %>
+                  <% end %>
+                <% end %>
+              <% end %>
+
+              <% replies.with_comment do %>
+                <%= render FlatPack::Comments::Item::Component.new(
+                  author_name: "Julia Roberts",
+                  timestamp: "2 hours ago",
+                  body: "Agreed! I've tested this locally and it works great.",
+                  avatar: {name: "Julia Roberts"}
+                ) %>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <% thread.with_comment do %>
+        <%= render FlatPack::Comments::Item::Component.new(
+          author_name: "Kevin James",
+          timestamp: "1 hour ago",
+          body: "Should we add unit tests for this?",
+          avatar: {name: "Kevin James", src: "https://i.pravatar.cc/150?img=7"}
+        ) %>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      code: <<~CODE
+        #{erb_output_open} render FlatPack::Comments::Thread::Component.new(
+          count: 4,
+          title: "Discussion"
+        ) do |thread| #{erb_tag_close}
+          #{erb_open} thread.with_comment do #{erb_tag_close}
+            #{erb_output_open} render FlatPack::Comments::Item::Component.new(
+              author_name: "Helen Park",
+              body: "What do you all think about this approach?"
+            ) do |item| #{erb_tag_close}
+              #{erb_open} item.with_replies do #{erb_tag_close}
+                #{erb_output_open} render FlatPack::Comments::Replies::Component.new do |replies| #{erb_tag_close}
+                  #{erb_open} replies.with_comment do #{erb_tag_close}
+                    #{erb_output_open} render FlatPack::Comments::Item::Component.new(
+                      author_name: "Ian Wright",
+                      body: "I think it's a solid approach!"
+                    ) #{erb_tag_close}
+                  #{erb_open} end #{erb_tag_close}
+                #{erb_open} end #{erb_tag_close}
+              #{erb_open} end #{erb_tag_close}
+            #{erb_open} end #{erb_tag_close}
+          #{erb_open} end #{erb_tag_close}
+        #{erb_open} end #{erb_tag_close}
+      CODE
+    ) %>
+  </section>
+
+  <!-- Composer Variants -->
+  <section class="space-y-4">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Composer Variants", anchor_link: true, subtitle: "Examples for Composer Variants.") %>
+    <div class="space-y-2">
+      <h3 class="text-lg font-medium">Default Composer</h3>
+      <%= render FlatPack::Comments::Composer::Component.new %>
+    </div>
+
+    <div class="space-y-2">
+      <h3 class="text-lg font-medium">With Cancel Button</h3>
+      <%= render FlatPack::Comments::Composer::Component.new(
+        show_cancel: true
+      ) %>
+    </div>
+
+    <div class="space-y-2">
+      <h3 class="text-lg font-medium">Compact Mode</h3>
+      <%= render FlatPack::Comments::Composer::Component.new(
+        compact: true,
+        rows: 2,
+        placeholder: "Quick reply..."
+      ) %>
+    </div>
+
+    <div class="space-y-2">
+      <h3 class="text-lg font-medium">Disabled State</h3>
+      <%= render FlatPack::Comments::Composer::Component.new(
+        disabled: true,
+        placeholder: "Comments are disabled"
+      ) %>
+    </div>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      code: <<~CODE
+        #{erb_output_open} render FlatPack::Comments::Composer::Component.new #{erb_tag_close}
+
+        #{erb_output_open} render FlatPack::Comments::Composer::Component.new(
+          show_cancel: true
+        ) #{erb_tag_close}
+
+        #{erb_output_open} render FlatPack::Comments::Composer::Component.new(
+          compact: true,
+          rows: 2,
+          placeholder: "Quick reply..."
+        ) #{erb_tag_close}
+
+        #{erb_output_open} render FlatPack::Comments::Composer::Component.new(
+          disabled: true,
+          placeholder: "Comments are disabled"
+        ) #{erb_tag_close}
+      CODE
+    ) %>
+  </section>
+
+  <!-- Complex Example -->
+  <section class="space-y-4">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Complex Example", anchor_link: true, subtitle: "Examples for Complex Example.") %>
+    <%= render FlatPack::Comments::Thread::Component.new(
+      count: 5,
+      title: "Pull Request Discussion"
+    ) do |thread| %>
+      <% thread.with_composer do %>
+        <%= render FlatPack::Comments::Composer::Component.new(
+          placeholder: "Leave a comment...",
+          submit_label: "Comment"
+        ) %>
+      <% end %>
+
+      <% thread.with_comment do %>
+        <%= render FlatPack::Comments::Item::Component.new(
+          author_name: "Laura Palmer",
+          author_meta: "Senior Developer",
+          timestamp: "5 hours ago",
+          timestamp_iso: "2024-01-15T10:00:00Z",
+          body_html: "<p>This looks good! Just a few minor suggestions:</p><ul><li>Add error handling</li><li>Update the docs</li></ul>",
+          avatar: {name: "Laura Palmer", src: "https://i.pravatar.cc/150?img=8"}
+        ) do |item| %>
+          <% item.with_actions do %>
+            <%= link_to "Reply", "#", class: "text-sm font-medium text-[var(--color-primary)]" %>
+            <%= link_to "👍 3", "#", class: "text-sm text-[var(--color-muted-foreground)]" %>
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <% thread.with_comment do %>
+        <%= render FlatPack::Comments::Item::Component.new(
+          author_name: "Mike Johnson",
+          timestamp: "4 hours ago",
+          body: "Working on those changes now!",
+          edited: true,
+          avatar: {name: "Mike Johnson"}
+        ) do |item| %>
+          <% item.with_replies do %>
+            <%= render FlatPack::Comments::Replies::Component.new do |replies| %>
+              <% replies.with_comment do %>
+                <%= render FlatPack::Comments::Item::Component.new(
+                  author_name: "Laura Palmer",
+                  timestamp: "3 hours ago",
+                  body: "Great, thanks!",
+                  avatar: {name: "Laura Palmer", src: "https://i.pravatar.cc/150?img=8"}
+                ) %>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <% thread.with_comment do %>
+        <%= render FlatPack::Comments::Item::Component.new(
+          author_name: "GitHub Actions",
+          timestamp: "2 hours ago",
+          body: "All checks have passed ✓",
+          state: :system,
+          avatar: {initials: "GA"}
+        ) %>
+      <% end %>
+
+      <% thread.with_comment do %>
+        <%= render FlatPack::Comments::Item::Component.new(
+          author_name: "Nina Williams",
+          timestamp: "1 hour ago",
+          body: "LGTM! Ready to merge.",
+          avatar: {name: "Nina Williams", src: "https://i.pravatar.cc/150?img=9"}
+        ) do |item| %>
+          <% item.with_actions do %>
+            <%= link_to "Reply", "#", class: "text-sm font-medium text-[var(--color-primary)]" %>
+            <%= link_to "👍 5", "#", class: "text-sm text-[var(--color-muted-foreground)]" %>
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <% thread.with_footer do %>
+        <div class="text-center">
+          <%= link_to "Load more comments", "#", class: "text-sm font-medium text-[var(--color-primary)] hover:underline" %>
+        </div>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      code: <<~CODE
+        #{erb_output_open} render FlatPack::Comments::Thread::Component.new(
+          count: 5,
+          title: "Pull Request Discussion"
+        ) do |thread| #{erb_tag_close}
+          #{erb_open} thread.with_composer do #{erb_tag_close}
+            #{erb_output_open} render FlatPack::Comments::Composer::Component.new(
+              placeholder: "Leave a comment...",
+              submit_label: "Comment"
+            ) #{erb_tag_close}
+          #{erb_open} end #{erb_tag_close}
+
+          #{erb_open} thread.with_comment do #{erb_tag_close}
+            #{erb_output_open} render FlatPack::Comments::Item::Component.new(
+              author_name: "GitHub Actions",
+              body: "All checks have passed ✓",
+              state: :system,
+              avatar: {initials: "GA"}
+            ) #{erb_tag_close}
+          #{erb_open} end #{erb_tag_close}
+
+          #{erb_open} thread.with_footer do #{erb_tag_close}
+            #{erb_output_open} link_to "Load more comments", "#" #{erb_tag_close}
+          #{erb_open} end #{erb_tag_close}
+        #{erb_open} end #{erb_tag_close}
+      CODE
+    ) %>
+  </section>
+</div>

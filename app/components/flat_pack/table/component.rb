@@ -3,7 +3,7 @@
 module FlatPack
   module Table
     class Component < FlatPack::BaseComponent
-      renders_many :columns, ColumnComponent
+      renders_many :columns, FlatPack::Table::Column::Component
 
       def initialize(
         data: [],
@@ -108,7 +108,7 @@ module FlatPack
       def render_header
         return unless columns.any?
 
-        tag.thead class: "bg-[var(--color-muted)]" do
+        tag.thead class: "bg-[var(--color-background)] border-b border-[var(--color-border)]" do
           tag.tr do
             safe_join(columns.map { |column|
               column.render_header(

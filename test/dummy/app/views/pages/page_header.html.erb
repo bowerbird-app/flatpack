@@ -1,47 +1,122 @@
-<h1 class="text-4xl font-bold mb-4">Page Header Component</h1>
-<p class="text-lg text-[var(--color-muted-foreground)] mb-8">
-  Consistent page headers with a clear title and optional subtitle.
-</p>
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Page Title",
+  subtitle: "Consistent page titles with a clear title and optional subtitle."
+) %>
+<%= render "pages/component_method_variables_table", component: :page_title %>
+
+<%
+  erb_output_open = "<" + "%="
+  erb_tag_close = "%" + ">"
+%>
 
 <!-- Basic Page Header -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Basic Page Header</h2>
-  <%= render FlatPack::PageHeader::Component.new(
+  <%= render FlatPack::SectionTitle::Component.new(title: "Basic Page Header", anchor_link: true, subtitle: "Examples for Basic Page Header.") %>
+  <%= render FlatPack::PageTitle::Component.new(
     title: "Dashboard",
     subtitle: "Overview of your workspace"
   ) %>
-  
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::PageHeader::Component.new(
-  title: "Dashboard",
-  subtitle: "Overview of your workspace"
-) %&gt;</code></pre>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::PageTitle::Component.new(
+        title: "Dashboard",
+        subtitle: "Overview of your workspace"
+      ) #{erb_tag_close}
+    CODE
+  ) %>
 </section>
 
 <!-- Title Only Page Header -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Title Only Page Header</h2>
-  <%= render FlatPack::PageHeader::Component.new(title: "Settings") %>
-  
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::PageHeader::Component.new(title: "Settings") %&gt;</code></pre>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Title Only Page Header", anchor_link: true, subtitle: "Examples for Title Only Page Header.") %>
+  <%= render FlatPack::PageTitle::Component.new(title: "Settings") %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::PageTitle::Component.new(title: "Settings") #{erb_tag_close}
+    CODE
+  ) %>
 </section>
 
 <!-- Page Header with Longer Subtitle -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Page Header with Longer Subtitle</h2>
-  <%= render FlatPack::PageHeader::Component.new(
+  <%= render FlatPack::SectionTitle::Component.new(title: "Page Header with Longer Subtitle", anchor_link: true, subtitle: "Examples for Page Header with Longer Subtitle.") %>
+  <%= render FlatPack::PageTitle::Component.new(
     title: "Team Activity",
     subtitle: "Track recent changes, deployments, and collaboration updates across your projects from a single place"
   ) %>
-  
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::PageHeader::Component.new(
-  title: "Team Activity",
-  subtitle: "Track recent changes, deployments, and collaboration updates"
-) %&gt;</code></pre>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::PageTitle::Component.new(
+        title: "Team Activity",
+        subtitle: "Track recent changes, deployments, and collaboration updates"
+      ) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<!-- Section Title Component -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Section title",
+    subtitle: "Use this for section-level headings under the page title"
+  ) %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::SectionTitle::Component.new(
+        title: "Section title",
+        subtitle: "Use this for section-level headings under the page title"
+      ) #{erb_tag_close}
+    CODE
+  ) %>
+
+  <div class="mt-6">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Section title only", subtitle: "Examples for Section title only.") %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::SectionTitle::Component.new(title: "Section title only") #{erb_tag_close}
+    CODE
+  ) %>
+
+  <div class="mt-6">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Section title with anchor",
+      subtitle: "Hover the title to reveal the link icon and copy a shareable URL",
+      anchor_link: true
+    ) %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::SectionTitle::Component.new(
+        title: "Section title with anchor",
+        subtitle: "Hover the title to reveal the link icon and copy a shareable URL",
+        anchor_link: true
+      ) #{erb_tag_close}
+    CODE
+  ) %>
 </section>
 
 <!-- Features -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Features</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Examples for Features.") %>
   <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
     <li><strong>Simple API:</strong> Required title with optional subtitle</li>
     <li><strong>Consistent Spacing:</strong> Standardized margins and padding</li>

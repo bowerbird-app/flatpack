@@ -88,7 +88,14 @@ module FlatPack
       def test_renders_with_data_attributes
         render_inline(Component.new(name: "birth_date", data: {controller: "custom"}))
 
-        assert_selector "input[data-controller='custom']"
+        assert_selector "input[data-controller~='custom']"
+        assert_selector "input[data-controller~='flat-pack--date-input']"
+      end
+
+      def test_renders_with_default_date_input_controller
+        render_inline(Component.new(name: "birth_date"))
+
+        assert_selector "input[data-controller~='flat-pack--date-input']"
       end
 
       def test_renders_with_aria_attributes

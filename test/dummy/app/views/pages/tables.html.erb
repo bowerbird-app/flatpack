@@ -1,38 +1,38 @@
-  <h1 class="text-4xl font-bold mb-4">Table Component</h1>
-  <p class="text-lg text-[var(--color-muted-foreground)] mb-8">
-    Data tables with columns, sorting, and formatting.
-  </p>
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Table Component",
+    subtitle: "Data tables with columns, sorting, and formatting."
+  ) %>
 
   <!-- Basic Table -->
+  <%= render "pages/component_method_variables_table", component: :table %>
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Basic Table</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Basic Table", anchor_link: true, subtitle: "Examples for Basic Table.") %>
     <%= render FlatPack::Table::Component.new(
       data: @users.first(5),
-      turbo_frame: "basic_table",
-      sort: params[:sort],
-      direction: params[:direction],
-      base_url: request.path
+      turbo_frame: "basic_table"
     ) do |table| %>
-      <% table.column(title: "ID", html: ->(user) { user.id.to_s }, sortable: true, sort_key: :id) %>
-      <% table.column(title: "Name", html: ->(user) { user.name }, sortable: true, sort_key: :name) %>
-      <% table.column(title: "Email", html: ->(user) { user.email }, sortable: true, sort_key: :email) %>
+      <% table.column(title: "ID", html: ->(user) { user.id.to_s }) %>
+      <% table.column(title: "Name", html: ->(user) { user.name }) %>
+      <% table.column(title: "Email", html: ->(user) { user.email }) %>
     <% end %>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Table::Component.new(
-  data: @users.first(5),
-  turbo_frame: "basic_table",
-  sort: params[:sort],
-  direction: params[:direction],
-  base_url: request.path
-) do |table| %&gt;
-  &lt;% table.column(title: "ID", html: -&gt;(user) { user.id.to_s }, sortable: true, sort_key: :id) %&gt;
-  &lt;% table.column(title: "Name", html: -&gt;(user) { user.name }, sortable: true, sort_key: :name) %&gt;
-  &lt;% table.column(title: "Email", html: -&gt;(user) { user.email }, sortable: true, sort_key: :email) %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;%= render FlatPack::Table::Component.new(
+          data: @users.first(5),
+          turbo_frame: "basic_table"
+        ) do |table| %&gt;
+          &lt;% table.column(title: "ID", html: ->(user) { user.id.to_s }) %&gt;
+          &lt;% table.column(title: "Name", html: ->(user) { user.name }) %&gt;
+          &lt;% table.column(title: "Email", html: ->(user) { user.email }) %&gt;
+        &lt;% end %&gt;
+      CODE
+      class: "mt-4"
+    ) %>
   </section>
 
   <!-- Table with Formatted Columns -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Table with Formatted Columns (Lambda)</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Table with Formatted Columns (Lambda)", anchor_link: true, subtitle: "Examples for Table with Formatted Columns (Lambda).") %>
     <%= render FlatPack::Table::Component.new(data: @users.first(5)) do |table| %>
       <% table.column(title: "Name", html: ->(user) { "<strong class=\"text-[var(--color-primary)]\">#{user.name}</strong>".html_safe }) %>
       <% table.column(title: "Status", html: ->(user) {
@@ -45,24 +45,29 @@
       }) %>
       <% table.column(title: "Created", html: ->(user) { user.created_at.strftime("%b %d, %Y") }) %>
     <% end %>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Table::Component.new(data: @users) do |table| %&gt;
-  &lt;% table.column(title: "Name", html: -&gt;(user) { "&lt;strong class=\"text-[var(--color-primary)]\"&gt;#{user.name}&lt;/strong&gt;".html_safe }) %&gt;
-  &lt;% table.column(title: "Status", html: -&gt;(user) {
-    badge_class = case user.status
-    when 'active' then 'bg-green-100 text-green-800'
-    when 'inactive' then 'bg-gray-100 text-gray-800'
-    else 'bg-yellow-100 text-yellow-800'
-    end
-    "&lt;span class=\"px-2 py-1 text-xs rounded #{badge_class}\"&gt;#{user.status.capitalize}&lt;/span&gt;".html_safe
-  }) %&gt;
-  &lt;% table.column(title: "Created", html: -&gt;(user) { user.created_at.strftime("%b %d, %Y") }) %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;%= render FlatPack::Table::Component.new(data: @users) do |table| %&gt;
+          &lt;% table.column(title: "Name", html: ->(user) { "<strong class=\"text-[var(--color-primary)]\">#{user.name}</strong>".html_safe }) %&gt;
+          &lt;% table.column(title: "Status", html: ->(user) {
+            badge_class = case user.status
+            when 'active' then 'bg-green-100 text-green-800'
+            when 'inactive' then 'bg-gray-100 text-gray-800'
+            else 'bg-yellow-100 text-yellow-800'
+            end
+            "<span class=\"px-2 py-1 text-xs rounded #{badge_class}\">#{user.status.capitalize}</span>".html_safe
+          }) %&gt;
+          &lt;% table.column(title: "Created", html: ->(user) { user.created_at.strftime("%b %d, %Y") }) %&gt;
+        &lt;% end %&gt;
+      CODE
+      class: "mt-4"
+    ) %>
   </section>
 
 
   <!-- Table with Action Column -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Table with Action Column</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Table with Action Column", anchor_link: true, subtitle: "Examples for Table with Action Column.") %>
     <%= render FlatPack::Table::Component.new(data: @users.first(5)) do |table| %>
       <% table.column(title: "Name", html: ->(user) { user.name }) %>
       <% table.column(title: "Email", html: ->(user) { user.email }) %>
@@ -76,37 +81,47 @@
         end
       }) %>
     <% end %>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Table::Component.new(data: @users) do |table| %&gt;
-  &lt;% table.column(title: "Name", html: -&gt;(user) { user.name }) %&gt;
-  &lt;% table.column(title: "Email", html: -&gt;(user) { user.email }) %&gt;
-  &lt;% table.column(title: "Actions", html: -&gt;(_user) {
-    content_tag(:div, class: "flex items-center gap-2") do
-      safe_join([
-        render(FlatPack::Button::Component.new(text: "View", url: "#", style: :ghost)),
-        render(FlatPack::Button::Component.new(text: "Edit", url: "#", style: :ghost)),
-        render(FlatPack::Button::Component.new(text: "Delete", url: "#", method: :delete, style: :ghost, data: { turbo_confirm: "Are you sure?" }))
-      ])
-    end
-  }) %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;%= render FlatPack::Table::Component.new(data: @users) do |table| %&gt;
+          &lt;% table.column(title: "Name", html: ->(user) { user.name }) %&gt;
+          &lt;% table.column(title: "Email", html: ->(user) { user.email }) %&gt;
+          &lt;% table.column(title: "Actions", html: ->(_user) {
+            content_tag(:div, class: "flex items-center gap-2") do
+              safe_join([
+                render(FlatPack::Button::Component.new(text: "View", url: "#", style: :ghost)),
+                render(FlatPack::Button::Component.new(text: "Edit", url: "#", style: :ghost)),
+                render(FlatPack::Button::Component.new(text: "Delete", url: "#", method: :delete, style: :ghost, data: { turbo_confirm: "Are you sure?" }))
+              ])
+            end
+          }) %&gt;
+        &lt;% end %&gt;
+      CODE
+      class: "mt-4"
+    ) %>
   </section>
 
   <!-- Empty Table -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Empty Table</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Empty Table", anchor_link: true, subtitle: "Examples for Empty Table.") %>
     <%= render FlatPack::Table::Component.new(data: []) do |table| %>
       <% table.column(title: "Name", html: ->(user) { user.name }) %>
       <% table.column(title: "Email", html: ->(user) { user.email }) %>
     <% end %>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Table::Component.new(data: []) do |table| %&gt;
-  &lt;% table.column(title: "Name", html: -&gt;(user) { user.name }) %&gt;
-  &lt;% table.column(title: "Email", html: -&gt;(user) { user.email }) %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;%= render FlatPack::Table::Component.new(data: []) do |table| %&gt;
+          &lt;% table.column(title: "Name", html: ->(user) { user.name }) %&gt;
+          &lt;% table.column(title: "Email", html: ->(user) { user.email }) %&gt;
+        &lt;% end %&gt;
+      CODE
+      class: "mt-4"
+    ) %>
   </section>
 
   <!-- Large Table -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Large Table (All <%= @users.count %> Users)</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Large Table (All #{@users.count} Users)", anchor_link: true, subtitle: "Examples for this section.") %>
     <%= render FlatPack::Table::Component.new(
       data: @sorted_users,
       turbo_frame: "large_table",
@@ -127,24 +142,29 @@
       }) %>
       <% table.column(title: "Created", sortable: true, sort_key: :created_at, html: ->(user) { user.created_at.strftime("%b %d, %Y") }) %>
     <% end %>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Table::Component.new(
-  data: @sorted_users,
-  turbo_frame: "large_table",
-  sort: params[:sort],
-  direction: params[:direction],
-  base_url: request.path
-) do |table| %&gt;
-  &lt;% table.column(title: "ID", html: -&gt;(user) { user.id.to_s }, sortable: true, sort_key: :id) %&gt;
-  &lt;% table.column(title: "Name", html: -&gt;(user) { user.name }, sortable: true, sort_key: :name) %&gt;
-  &lt;% table.column(title: "Email", html: -&gt;(user) { user.email }, sortable: true, sort_key: :email) %&gt;
-  &lt;% table.column(title: "Status", html: -&gt;(user) { ... }, sortable: true, sort_key: :status) %&gt;
-  &lt;% table.column(title: "Created", html: -&gt;(user) { ... }, sortable: true, sort_key: :created_at) %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;%= render FlatPack::Table::Component.new(
+          data: @sorted_users,
+          turbo_frame: "large_table",
+          sort: params[:sort],
+          direction: params[:direction],
+          base_url: request.path
+        ) do |table| %&gt;
+          &lt;% table.column(title: "ID", html: ->(user) { user.id.to_s }, sortable: true, sort_key: :id) %&gt;
+          &lt;% table.column(title: "Name", html: ->(user) { user.name }, sortable: true, sort_key: :name) %&gt;
+          &lt;% table.column(title: "Email", html: ->(user) { user.email }, sortable: true, sort_key: :email) %&gt;
+          &lt;% table.column(title: "Status", html: ->(user) { ... }, sortable: true, sort_key: :status) %&gt;
+          &lt;% table.column(title: "Created", html: ->(user) { ... }, sortable: true, sort_key: :created_at) %&gt;
+        &lt;% end %&gt;
+      CODE
+      class: "mt-4"
+    ) %>
   </section>
 
   <!-- Sortable Table -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Sortable Table</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Sortable Table", anchor_link: true, subtitle: "Examples for Sortable Table.") %>
     <p class="text-[var(--color-muted-foreground)] mb-4">
       Click column headers to sort. Uses Turbo Frames for seamless updates without full page reload.
     </p>
@@ -168,24 +188,29 @@
       }) %>
       <% table.column(title: "Created", sortable: true, sort_key: :created_at, html: ->(user) { user.created_at.strftime("%b %d, %Y") }) %>
     <% end %>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Table::Component.new(
-  data: @sorted_users,
-  turbo_frame: "sortable_table",
-  sort: params[:sort],
-  direction: params[:direction],
-  base_url: request.path
-) do |table| %&gt;
-  &lt;% table.column(title: "ID", html: -&gt;(user) { user.id.to_s }, sortable: true, sort_key: :id) %&gt;
-  &lt;% table.column(title: "Name", html: -&gt;(user) { user.name }, sortable: true, sort_key: :name) %&gt;
-  &lt;% table.column(title: "Email", html: -&gt;(user) { user.email }, sortable: true, sort_key: :email) %&gt;
-  &lt;% table.column(title: "Status", html: -&gt;(user) { ... }, sortable: true, sort_key: :status) %&gt;
-  &lt;% table.column(title: "Created", html: -&gt;(user) { ... }, sortable: true, sort_key: :created_at) %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;%= render FlatPack::Table::Component.new(
+          data: @sorted_users,
+          turbo_frame: "sortable_table",
+          sort: params[:sort],
+          direction: params[:direction],
+          base_url: request.path
+        ) do |table| %&gt;
+          &lt;% table.column(title: "ID", html: ->(user) { user.id.to_s }, sortable: true, sort_key: :id) %&gt;
+          &lt;% table.column(title: "Name", html: ->(user) { user.name }, sortable: true, sort_key: :name) %&gt;
+          &lt;% table.column(title: "Email", html: ->(user) { user.email }, sortable: true, sort_key: :email) %&gt;
+          &lt;% table.column(title: "Status", html: ->(user) { ... }, sortable: true, sort_key: :status) %&gt;
+          &lt;% table.column(title: "Created", html: ->(user) { ... }, sortable: true, sort_key: :created_at) %&gt;
+        &lt;% end %&gt;
+      CODE
+      class: "mt-4"
+    ) %>
   </section>
 
   <!-- Draggable Rows Table -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Draggable Rows Table</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Draggable Rows Table", anchor_link: true, subtitle: "Examples for Draggable Rows Table.") %>
     <p class="text-[var(--color-muted-foreground)] mb-4">
       Drag rows by the handle to reorder. The order is persisted with a generic reorder contract.
     </p>
@@ -205,29 +230,34 @@
       <% table.column(title: "Priority", html: ->(row) { row.priority.capitalize }) %>
     <% end %>
 
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%# 1) Table component setup for draggable rows %&gt;
-&lt;%= render FlatPack::Table::Component.new(
-  data: @rows,
-  draggable_rows: true,
-  reorder: {
-    url: demo_tables_reorder_path,
-    version: @demo_table_version,
-    scope: { list_key: "tables-demo" }
-  }
-) do |table| %&gt;
-  &lt;% table.column(title: "Reorder", html: -&gt;(_row) { "⋮⋮" }) %&gt;
-  &lt;% table.column(title: "Task", html: -&gt;(row) { row.name }) %&gt;
-  &lt;% table.column(title: "Status", html: -&gt;(row) { row.status }) %&gt;
-&lt;% end %&gt;
-
-&lt;%# 2) Payload sent automatically on drop %&gt;
-{
-  reorder: {
-    resource: "demo_table_rows",
-    strategy: "dense_integer",
-    scope: { list_key: "tables-demo" },
-    version: "1739990000.12",
-    items: [{ id: 1, position: 1 }, { id: 2, position: 2 }]
-  }
-}</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;%# 1) Table component setup for draggable rows %&gt;
+        &lt;%= render FlatPack::Table::Component.new(
+          data: @rows,
+          draggable_rows: true,
+          reorder: {
+            url: demo_tables_reorder_path,
+            version: @demo_table_version,
+            scope: { list_key: "tables-demo" }
+          }
+        ) do |table| %&gt;
+          &lt;% table.column(title: "Reorder", html: ->(_row) { "⋮⋮" }) %&gt;
+          &lt;% table.column(title: "Task", html: ->(row) { row.name }) %&gt;
+          &lt;% table.column(title: "Status", html: ->(row) { row.status }) %&gt;
+        &lt;% end %&gt;
+        
+        &lt;%# 2) Payload sent automatically on drop %&gt;
+        {
+          reorder: {
+            resource: "demo_table_rows",
+            strategy: "dense_integer",
+            scope: { list_key: "tables-demo" },
+            version: "1739990000.12",
+            items: [{ id: 1, position: 1 }, { id: 2, position: 2 }]
+          }
+        }
+      CODE
+      class: "mt-4"
+    ) %>
   </section>

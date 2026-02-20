@@ -31,8 +31,8 @@
   --color-success-hover: oklch(57% .194 149.214);
   --color-success-text: oklch(1.0 0 0);
   
-  --color-warning: oklch(57.7% .245 27.325);
-  --color-warning-hover: oklch(52% .245 27.325);
+  --color-warning: oklch(70.5% 0.213 47.604);
+  --color-warning-hover: oklch(64.6% 0.222 41.116);
   --color-warning-text: oklch(1.0 0 0);
   
   --color-destructive: oklch(62.8% .257 29.234);
@@ -102,8 +102,8 @@
     --color-success-hover: oklch(72% .194 149.214);
     --color-success-text: oklch(0.15 0.01 250);
     
-    --color-warning: oklch(62% .245 27.325);
-    --color-warning-hover: oklch(67% .245 27.325);
+    --color-warning: oklch(75% 0.183 55.934);
+    --color-warning-hover: oklch(70.5% 0.213 47.604);
     --color-warning-text: oklch(0.15 0.01 250);
     
     --color-destructive: oklch(67.8% .257 29.234);

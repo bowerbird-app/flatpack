@@ -1,11 +1,13 @@
-  <h1 class="text-4xl font-bold mb-4">Button Component</h1>
-  <p class="text-lg text-[var(--color-muted-foreground)] mb-8">
-    Buttons with different schemes and configurations.
-  </p>
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Button Component",
+    subtitle: "Buttons with different schemes and configurations."
+  ) %>
+
+  <%= render "pages/component_method_variables_table", component: :button %>
 
   <!-- Basic Buttons -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Basic Buttons</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Basic Buttons", anchor_link: true, subtitle: "Examples for Basic Buttons.") %>
     <div class="flex gap-3 mb-4">
       <%= render FlatPack::Button::Component.new(text: "Primary", style: :primary) %>
       <%= render FlatPack::Button::Component.new(text: "Secondary", style: :secondary) %>
@@ -13,16 +15,50 @@
       <%= render FlatPack::Button::Component.new(text: "Success", style: :success) %>
       <%= render FlatPack::Button::Component.new(text: "Warning", style: :warning) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Button::Component.new(text: "Primary", style: :primary) %&gt;
-&lt;%= render FlatPack::Button::Component.new(text: "Secondary", style: :secondary) %&gt;
-&lt;%= render FlatPack::Button::Component.new(text: "Ghost", style: :ghost) %&gt;
-&lt;%= render FlatPack::Button::Component.new(text: "Success", style: :success) %&gt;
-&lt;%= render FlatPack::Button::Component.new(text: "Warning", style: :warning) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      snippets: [
+        {
+          label: "Primary",
+          language: "erb",
+          code: CGI.unescapeHTML(<<~'CODE')
+            &lt;%= render FlatPack::Button::Component.new(text: "Primary", style: :primary) %&gt;
+          CODE
+        },
+        {
+          label: "Secondary",
+          language: "erb",
+          code: CGI.unescapeHTML(<<~'CODE')
+            &lt;%= render FlatPack::Button::Component.new(text: "Secondary", style: :secondary) %&gt;
+          CODE
+        },
+        {
+          label: "Ghost",
+          language: "erb",
+          code: CGI.unescapeHTML(<<~'CODE')
+            &lt;%= render FlatPack::Button::Component.new(text: "Ghost", style: :ghost) %&gt;
+          CODE
+        },
+        {
+          label: "Success",
+          language: "erb",
+          code: CGI.unescapeHTML(<<~'CODE')
+            &lt;%= render FlatPack::Button::Component.new(text: "Success", style: :success) %&gt;
+          CODE
+        },
+        {
+          label: "Warning",
+          language: "erb",
+          code: CGI.unescapeHTML(<<~'CODE')
+            &lt;%= render FlatPack::Button::Component.new(text: "Warning", style: :warning) %&gt;
+          CODE
+        }
+      ]
+    ) %>
   </section>
 
   <!-- Button Sizes -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Button Sizes</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Button Sizes", anchor_link: true, subtitle: "Examples for Button Sizes.") %>
     <div class="flex items-center gap-3 mb-4">
       <%= render FlatPack::Button::Component.new(text: "Small", style: :primary, size: :sm) %>
       <%= render FlatPack::Button::Component.new(text: "Medium (default)", style: :primary, size: :md) %>
@@ -38,28 +74,36 @@
       <%= render FlatPack::Button::Component.new(text: "Medium", style: :ghost, size: :md) %>
       <%= render FlatPack::Button::Component.new(text: "Large", style: :ghost, size: :lg) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Button::Component.new(text: "Small", style: :primary, size: :sm) %&gt;
-&lt;%= render FlatPack::Button::Component.new(text: "Medium", style: :primary, size: :md) %&gt;
-&lt;%= render FlatPack::Button::Component.new(text: "Large", style: :primary, size: :lg) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Button::Component.new(text: "Small", style: :primary, size: :sm) %&gt;
+        &lt;%= render FlatPack::Button::Component.new(text: "Medium", style: :primary, size: :md) %&gt;
+        &lt;%= render FlatPack::Button::Component.new(text: "Large", style: :primary, size: :lg) %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Buttons as Links -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Buttons as Links</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Buttons as Links", anchor_link: true, subtitle: "Examples for Buttons as Links.") %>
     <div class="flex gap-3 mb-4">
       <%= render FlatPack::Button::Component.new(text: "Go Home", url: root_path, style: :primary) %>
       <%= render FlatPack::Button::Component.new(text: "View Tables", url: demo_tables_path, style: :secondary) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Button::Component.new(
-  text: "Go Home",
-  url: root_path,
-  style: :primary
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Button::Component.new(
+          text: "Go Home",
+          url: root_path,
+          style: :primary
+        ) %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Links with Target -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Links with Target</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Links with Target", anchor_link: true, subtitle: "Examples for Links with Target.") %>
     <div class="flex gap-3 mb-4">
       <%= render FlatPack::Button::Component.new(
         text: "Open in New Tab",
@@ -79,17 +123,21 @@
         style: :ghost
       ) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Button::Component.new(
-  text: "Open in New Tab",
-  url: "https://github.com",
-  style: :primary,
-  target: "_blank"  # Automatically adds rel="noopener noreferrer"
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Button::Component.new(
+          text: "Open in New Tab",
+          url: "https://github.com",
+          style: :primary,
+          target: "_blank"  # Automatically adds rel="noopener noreferrer"
+        ) %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Link Component -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Link Component</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Link Component", anchor_link: true, subtitle: "Examples for Link Component.") %>
     <p class="text-[var(--color-muted-foreground)] mb-4">
       For text links without button styling, use the Link component. It includes built-in URL validation and security features.
     </p>
@@ -107,22 +155,26 @@
         Call us
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Link::Component.new(href: demo_tables_path) do %&gt;
-  Go to Tables
-&lt;% end %&gt;
-
-&lt;%= render FlatPack::Link::Component.new(href: "https://github.com", target: "_blank") do %&gt;
-  GitHub (opens in new tab)  # Automatically adds rel="noopener noreferrer"
-&lt;% end %&gt;
-
-&lt;%= render FlatPack::Link::Component.new(href: "mailto:hello@example.com") do %&gt;
-  Email us
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Link::Component.new(href: demo_tables_path) do %&gt;
+          Go to Tables
+        &lt;% end %&gt;
+        
+        &lt;%= render FlatPack::Link::Component.new(href: "https://github.com", target: "_blank") do %&gt;
+          GitHub (opens in new tab)  # Automatically adds rel="noopener noreferrer"
+        &lt;% end %&gt;
+        
+        &lt;%= render FlatPack::Link::Component.new(href: "mailto:hello@example.com") do %&gt;
+          Email us
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Link Component with Custom Classes -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Link Component with Custom Styling</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Link Component with Custom Styling", anchor_link: true, subtitle: "Examples for Link Component with Custom Styling.") %>
     <div class="space-y-3 mb-4">
       <%= render FlatPack::Link::Component.new(href: "#", class: "text-blue-600 hover:text-blue-800 font-semibold") do %>
         Custom styled link
@@ -136,17 +188,21 @@
         Theme colored link
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Link::Component.new(
-  href: "#",
-  class: "text-blue-600 hover:text-blue-800 font-semibold"
-) do %&gt;
-  Custom styled link
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Link::Component.new(
+          href: "#",
+          class: "text-blue-600 hover:text-blue-800 font-semibold"
+        ) do %&gt;
+          Custom styled link
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Buttons with ID and Custom Classes -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Buttons with ID and Custom Classes</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Buttons with ID and Custom Classes", anchor_link: true, subtitle: "Examples for Buttons with ID and Custom Classes.") %>
     <div class="flex gap-3 mb-4">
       <%= render FlatPack::Button::Component.new(
         text: "Button with ID",
@@ -165,22 +221,26 @@
         class: "text-lg font-bold"
       ) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Button::Component.new(
-  text: "Button with ID",
-  style: :primary,
-  id: "my-special-button"
-) %&gt;
-
-&lt;%= render FlatPack::Button::Component.new(
-  text: "Custom Classes",
-  style: :ghost,
-  class: "text-lg font-bold"  # Additional classes are merged
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Button::Component.new(
+          text: "Button with ID",
+          style: :primary,
+          id: "my-special-button"
+        ) %&gt;
+        
+        &lt;%= render FlatPack::Button::Component.new(
+          text: "Custom Classes",
+          style: :ghost,
+          class: "text-lg font-bold"  # Additional classes are merged
+        ) %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Full Width Buttons -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Full Width Button</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Full Width Button", anchor_link: true, subtitle: "Examples for Full Width Button.") %>
     <div class="mb-4">
       <%= render FlatPack::Button::Component.new(
         text: "Full Width Button",
@@ -188,16 +248,20 @@
         class: "w-full"
       ) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Button::Component.new(
-  text: "Full Width Button",
-  style: :primary,
-  class: "w-full"
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Button::Component.new(
+          text: "Full Width Button",
+          style: :primary,
+          class: "w-full"
+        ) %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Disabled Buttons -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Disabled Buttons</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Disabled Buttons", anchor_link: true, subtitle: "Examples for Disabled Buttons.") %>
     <div class="flex gap-3 mb-4">
       <%= render FlatPack::Button::Component.new(
         text: "Disabled Primary",
@@ -210,16 +274,20 @@
         disabled: true
       ) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Button::Component.new(
-  text: "Disabled",
-  style: :primary,
-  disabled: true
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Button::Component.new(
+          text: "Disabled",
+          style: :primary,
+          disabled: true
+        ) %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Icon Only Buttons -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Icon Only Buttons</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Icon Only Buttons", anchor_link: true, subtitle: "Examples for Icon Only Buttons.") %>
     <div class="flex items-center gap-3 mb-4">
       <%= render FlatPack::Button::Component.new(icon: "search", icon_only: true, style: :primary, size: :sm) %>
       <%= render FlatPack::Button::Component.new(icon: "search", icon_only: true, style: :primary, size: :md) %>
@@ -231,39 +299,47 @@
       <%= render FlatPack::Button::Component.new(icon: "check", icon_only: true, style: :success) %>
       <%= render FlatPack::Button::Component.new(icon: "alert", icon_only: true, style: :warning) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Button::Component.new(
-  icon: "search",
-  icon_only: true,
-  style: :primary
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Button::Component.new(
+          icon: "search",
+          icon_only: true,
+          style: :primary
+        ) %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Loading Buttons -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Loading Buttons</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Loading Buttons", anchor_link: true, subtitle: "Examples for Loading Buttons.") %>
     <div class="flex gap-3 mb-4">
       <%= render FlatPack::Button::Component.new(text: "Saving", loading: true, style: :primary) %>
       <%= render FlatPack::Button::Component.new(text: "Processing", loading: true, style: :secondary) %>
       <%= render FlatPack::Button::Component.new(icon: "upload", icon_only: true, loading: true, style: :success) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Button::Component.new(
-  text: "Saving",
-  loading: true,
-  style: :primary
-) %&gt;
-
-&lt;%# Icon-only loading button %&gt;
-&lt;%= render FlatPack::Button::Component.new(
-  icon: "upload",
-  icon_only: true,
-  loading: true,
-  style: :success
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Button::Component.new(
+          text: "Saving",
+          loading: true,
+          style: :primary
+        ) %&gt;
+        
+        &lt;%# Icon-only loading button %&gt;
+        &lt;%= render FlatPack::Button::Component.new(
+          icon: "upload",
+          icon_only: true,
+          loading: true,
+          style: :success
+        ) %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Button Groups (Wrapped) -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Button Groups (Wrapped Together)</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Button Groups (Wrapped Together)", anchor_link: true, subtitle: "Examples for Button Groups (Wrapped Together).") %>
     <div class="mb-4">
       <%= render FlatPack::ButtonGroup::Component.new do |group| %>
         <% group.with_button(FlatPack::Button::Component.new(text: "Left", style: :secondary)) %>
@@ -278,16 +354,20 @@
         <% group.with_button(FlatPack::Button::Component.new(icon: "align-right", icon_only: true, style: :secondary)) %>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::ButtonGroup::Component.new do |group| %&gt;
-  &lt;% group.with_button(FlatPack::Button::Component.new(text: "Left", style: :secondary)) %&gt;
-  &lt;% group.with_button(FlatPack::Button::Component.new(text: "Middle", style: :secondary)) %&gt;
-  &lt;% group.with_button(FlatPack::Button::Component.new(text: "Right", style: :secondary)) %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::ButtonGroup::Component.new do |group| %&gt;
+          &lt;% group.with_button(FlatPack::Button::Component.new(text: "Left", style: :secondary)) %&gt;
+          &lt;% group.with_button(FlatPack::Button::Component.new(text: "Middle", style: :secondary)) %&gt;
+          &lt;% group.with_button(FlatPack::Button::Component.new(text: "Right", style: :secondary)) %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Segmented Buttons -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Segmented Buttons (Selected State)</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Segmented Buttons (Selected State)", anchor_link: true, subtitle: "Examples for Segmented Buttons (Selected State).") %>
     <div class="mb-4">
       <%= render FlatPack::SegmentedButtons::Component.new do |group| %>
         <% group.with_button(text: "Day", selected: true) %>
@@ -303,36 +383,44 @@
         <% group.with_button(text: "Table") %>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::SegmentedButtons::Component.new do |group| %&gt;
-  &lt;% group.with_button(text: "Day", selected: true) %&gt;
-  &lt;% group.with_button(text: "Week") %&gt;
-  &lt;% group.with_button(text: "Month") %&gt;
-  &lt;% group.with_button(text: "Year") %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::SegmentedButtons::Component.new do |group| %&gt;
+          &lt;% group.with_button(text: "Day", selected: true) %&gt;
+          &lt;% group.with_button(text: "Week") %&gt;
+          &lt;% group.with_button(text: "Month") %&gt;
+          &lt;% group.with_button(text: "Year") %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Regular Button Spacing (Not Grouped) -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Regular Button Spacing (Not Grouped)</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Regular Button Spacing (Not Grouped)", anchor_link: true, subtitle: "Examples for Regular Button Spacing (Not Grouped).") %>
     <div class="flex gap-2 mb-4">
       <%= render FlatPack::Button::Component.new(text: "Save", style: :primary) %>
       <%= render FlatPack::Button::Component.new(text: "Cancel", style: :secondary) %>
       <%= render FlatPack::Button::Component.new(text: "Delete", style: :ghost) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;div class="flex gap-2"&gt;
-  &lt;%= render FlatPack::Button::Component.new(text: "Save", style: :primary) %&gt;
-  &lt;%= render FlatPack::Button::Component.new(text: "Cancel", style: :secondary) %&gt;
-&lt;/div&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        <div class="flex gap-2">
+          &lt;%= render FlatPack::Button::Component.new(text: "Save", style: :primary) %&gt;
+          &lt;%= render FlatPack::Button::Component.new(text: "Cancel", style: :secondary) %&gt;
+        </div>
+      CODE
+    ) %>
   </section>
 
   <!-- Button Dropdowns - Basic -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Button Dropdowns</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Button Dropdowns", anchor_link: true, subtitle: "Examples for Button Dropdowns.") %>
     <p class="text-[var(--color-muted-foreground)] mb-4">
       Dropdown menus with full keyboard navigation, accessibility support, and multiple styling options.
     </p>
     <div class="flex gap-3 mb-4">
-      <%= render FlatPack::Button::DropdownComponent.new(text: "Actions", style: :primary) do |dropdown| %>
+      <%= render FlatPack::Button::Dropdown::Component.new(text: "Actions", style: :primary) do |dropdown| %>
         <% dropdown.with_menu_item(text: "Search", icon: "search", href: "#") %>
         <% dropdown.with_menu_item(text: "Dashboard", icon: "dashboard", href: "#") %>
         <% dropdown.with_menu_divider %>
@@ -340,65 +428,73 @@
         <% dropdown.with_menu_item(text: "Delete", icon: "trash", destructive: true, href: "#") %>
       <% end %>
 
-      <%= render FlatPack::Button::DropdownComponent.new(text: "Options", style: :secondary) do |dropdown| %>
+      <%= render FlatPack::Button::Dropdown::Component.new(text: "Options", style: :secondary) do |dropdown| %>
         <% dropdown.with_menu_item(text: "Home", icon: "home", href: "#") %>
         <% dropdown.with_menu_item(text: "Monitor", icon: "monitor", href: "#") %>
         <% dropdown.with_menu_divider %>
         <% dropdown.with_menu_item(text: "Settings", icon: "settings", href: "#") %>
       <% end %>
 
-      <%= render FlatPack::Button::DropdownComponent.new(text: "More", style: :ghost) do |dropdown| %>
+      <%= render FlatPack::Button::Dropdown::Component.new(text: "More", style: :ghost) do |dropdown| %>
         <% dropdown.with_menu_item(text: "Upload", icon: "upload", href: "#") %>
         <% dropdown.with_menu_item(text: "Check", icon: "check", href: "#") %>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Button::DropdownComponent.new(text: "Actions", style: :primary) do |dropdown| %&gt;
-  &lt;% dropdown.with_menu_item(text: "Search", icon: "search", href: "#") %&gt;
-  &lt;% dropdown.with_menu_item(text: "Dashboard", icon: "dashboard", href: "#") %&gt;
-  &lt;% dropdown.with_menu_divider %&gt;
-  &lt;% dropdown.with_menu_item(text: "Delete", icon: "trash", destructive: true, href: "#") %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Button::Dropdown::Component.new(text: "Actions", style: :primary) do |dropdown| %&gt;
+          &lt;% dropdown.with_menu_item(text: "Search", icon: "search", href: "#") %&gt;
+          &lt;% dropdown.with_menu_item(text: "Dashboard", icon: "dashboard", href: "#") %&gt;
+          &lt;% dropdown.with_menu_divider %&gt;
+          &lt;% dropdown.with_menu_item(text: "Delete", icon: "trash", destructive: true, href: "#") %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Button Dropdowns - Sizes -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Dropdown Sizes</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Dropdown Sizes", anchor_link: true, subtitle: "Examples for Dropdown Sizes.") %>
     <div class="flex items-center gap-3 mb-4">
-      <%= render FlatPack::Button::DropdownComponent.new(text: "Small", style: :primary, size: :sm) do |dropdown| %>
+      <%= render FlatPack::Button::Dropdown::Component.new(text: "Small", style: :primary, size: :sm) do |dropdown| %>
         <% dropdown.with_menu_item(text: "Option 1", href: "#") %>
         <% dropdown.with_menu_item(text: "Option 2", href: "#") %>
       <% end %>
 
-      <%= render FlatPack::Button::DropdownComponent.new(text: "Medium", style: :primary, size: :md) do |dropdown| %>
+      <%= render FlatPack::Button::Dropdown::Component.new(text: "Medium", style: :primary, size: :md) do |dropdown| %>
         <% dropdown.with_menu_item(text: "Option 1", href: "#") %>
         <% dropdown.with_menu_item(text: "Option 2", href: "#") %>
       <% end %>
 
-      <%= render FlatPack::Button::DropdownComponent.new(text: "Large", style: :primary, size: :lg) do |dropdown| %>
+      <%= render FlatPack::Button::Dropdown::Component.new(text: "Large", style: :primary, size: :lg) do |dropdown| %>
         <% dropdown.with_menu_item(text: "Option 1", href: "#") %>
         <% dropdown.with_menu_item(text: "Option 2", href: "#") %>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Button::DropdownComponent.new(text: "Small", style: :primary, size: :sm) do |dropdown| %&gt;
-  &lt;% dropdown.with_menu_item(text: "Option 1", href: "#") %&gt;
-  &lt;% dropdown.with_menu_item(text: "Option 2", href: "#") %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Button::Dropdown::Component.new(text: "Small", style: :primary, size: :sm) do |dropdown| %&gt;
+          &lt;% dropdown.with_menu_item(text: "Option 1", href: "#") %&gt;
+          &lt;% dropdown.with_menu_item(text: "Option 2", href: "#") %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Button Dropdowns - Positions -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Dropdown Positions</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Dropdown Positions", anchor_link: true, subtitle: "Examples for Dropdown Positions.") %>
     <p class="text-[var(--color-muted-foreground)] mb-4">
       Bottom positions (default):
     </p>
     <div class="flex gap-3 mb-8">
-      <%= render FlatPack::Button::DropdownComponent.new(text: "Bottom Right", position: :bottom_right) do |dropdown| %>
+      <%= render FlatPack::Button::Dropdown::Component.new(text: "Bottom Right", position: :bottom_right) do |dropdown| %>
         <% dropdown.with_menu_item(text: "Option 1", href: "#") %>
         <% dropdown.with_menu_item(text: "Option 2", href: "#") %>
         <% dropdown.with_menu_item(text: "Option 3", href: "#") %>
       <% end %>
 
-      <%= render FlatPack::Button::DropdownComponent.new(text: "Bottom Left", position: :bottom_left) do |dropdown| %>
+      <%= render FlatPack::Button::Dropdown::Component.new(text: "Bottom Left", position: :bottom_left) do |dropdown| %>
         <% dropdown.with_menu_item(text: "Option 1", href: "#") %>
         <% dropdown.with_menu_item(text: "Option 2", href: "#") %>
         <% dropdown.with_menu_item(text: "Option 3", href: "#") %>
@@ -409,28 +505,32 @@
       Top positions (opens upward):
     </p>
     <div class="flex gap-3 mb-4 pt-32">
-      <%= render FlatPack::Button::DropdownComponent.new(text: "Top Right", position: :top_right) do |dropdown| %>
+      <%= render FlatPack::Button::Dropdown::Component.new(text: "Top Right", position: :top_right) do |dropdown| %>
         <% dropdown.with_menu_item(text: "Option 1", href: "#") %>
         <% dropdown.with_menu_item(text: "Option 2", href: "#") %>
         <% dropdown.with_menu_item(text: "Option 3", href: "#") %>
       <% end %>
 
-      <%= render FlatPack::Button::DropdownComponent.new(text: "Top Left", position: :top_left) do |dropdown| %>
+      <%= render FlatPack::Button::Dropdown::Component.new(text: "Top Left", position: :top_left) do |dropdown| %>
         <% dropdown.with_menu_item(text: "Option 1", href: "#") %>
         <% dropdown.with_menu_item(text: "Option 2", href: "#") %>
         <% dropdown.with_menu_item(text: "Option 3", href: "#") %>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Button::DropdownComponent.new(text: "Bottom Right", position: :bottom_right) do |dropdown| %&gt;
-  &lt;% dropdown.with_menu_item(text: "Option 1", href: "#") %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Button::Dropdown::Component.new(text: "Bottom Right", position: :bottom_right) do |dropdown| %&gt;
+          &lt;% dropdown.with_menu_item(text: "Option 1", href: "#") %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Button Dropdowns - With Icons and Badges -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Dropdowns with Icons and Badges</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Dropdowns with Icons and Badges", anchor_link: true, subtitle: "Examples for Dropdowns with Icons and Badges.") %>
     <div class="flex gap-3 mb-4">
-      <%= render FlatPack::Button::DropdownComponent.new(text: "Notifications", style: :primary, icon: "dashboard") do |dropdown| %>
+      <%= render FlatPack::Button::Dropdown::Component.new(text: "Notifications", style: :primary, icon: "dashboard") do |dropdown| %>
         <% dropdown.with_menu_item(text: "Messages", icon: "box", badge: "12", href: "#") %>
         <% dropdown.with_menu_item(text: "Alerts", icon: "alert", badge: "3", href: "#") %>
         <% dropdown.with_menu_item(text: "Updates", icon: "check", href: "#") %>
@@ -438,19 +538,23 @@
         <% dropdown.with_menu_item(text: "View all", href: "#") %>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Button::DropdownComponent.new(text: "Notifications", style: :primary, icon: "dashboard") do |dropdown| %&gt;
-  &lt;% dropdown.with_menu_item(text: "Messages", icon: "box", badge: "12", href: "#") %&gt;
-  &lt;% dropdown.with_menu_item(text: "Alerts", icon: "alert", badge: "3", href: "#") %&gt;
-  &lt;% dropdown.with_menu_divider %&gt;
-  &lt;% dropdown.with_menu_item(text: "View all", href: "#") %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Button::Dropdown::Component.new(text: "Notifications", style: :primary, icon: "dashboard") do |dropdown| %&gt;
+          &lt;% dropdown.with_menu_item(text: "Messages", icon: "box", badge: "12", href: "#") %&gt;
+          &lt;% dropdown.with_menu_item(text: "Alerts", icon: "alert", badge: "3", href: "#") %&gt;
+          &lt;% dropdown.with_menu_divider %&gt;
+          &lt;% dropdown.with_menu_item(text: "View all", href: "#") %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Button Dropdowns - Disabled Items -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Dropdowns with Disabled Items</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Dropdowns with Disabled Items", anchor_link: true, subtitle: "Examples for Dropdowns with Disabled Items.") %>
     <div class="flex gap-3 mb-4">
-      <%= render FlatPack::Button::DropdownComponent.new(text: "File", style: :secondary) do |dropdown| %>
+      <%= render FlatPack::Button::Dropdown::Component.new(text: "File", style: :secondary) do |dropdown| %>
         <% dropdown.with_menu_item(text: "Home", icon: "home", href: "#") %>
         <% dropdown.with_menu_item(text: "Dashboard", icon: "dashboard", href: "#") %>
         <% dropdown.with_menu_item(text: "Settings", icon: "settings", disabled: true) %>
@@ -459,22 +563,30 @@
         <% dropdown.with_menu_item(text: "Search", icon: "search", href: "#") %>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Button::DropdownComponent.new(text: "File", style: :secondary) do |dropdown| %&gt;
-  &lt;% dropdown.with_menu_item(text: "Home", icon: "home", href: "#") %&gt;
-  &lt;% dropdown.with_menu_item(text: "Settings", icon: "settings", disabled: true) %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Button::Dropdown::Component.new(text: "File", style: :secondary) do |dropdown| %&gt;
+          &lt;% dropdown.with_menu_item(text: "Home", icon: "home", href: "#") %&gt;
+          &lt;% dropdown.with_menu_item(text: "Settings", icon: "settings", disabled: true) %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Button Dropdowns - Disabled Dropdown -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Disabled Dropdown</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Disabled Dropdown", anchor_link: true, subtitle: "Examples for Disabled Dropdown.") %>
     <div class="flex gap-3 mb-4">
-      <%= render FlatPack::Button::DropdownComponent.new(text: "Disabled", style: :primary, disabled: true) do |dropdown| %>
+      <%= render FlatPack::Button::Dropdown::Component.new(text: "Disabled", style: :primary, disabled: true) do |dropdown| %>
         <% dropdown.with_menu_item(text: "Option 1", href: "#") %>
         <% dropdown.with_menu_item(text: "Option 2", href: "#") %>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Button::DropdownComponent.new(text: "Disabled", style: :primary, disabled: true) do |dropdown| %&gt;
-  &lt;% dropdown.with_menu_item(text: "Option 1", href: "#") %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Button::Dropdown::Component.new(text: "Disabled", style: :primary, disabled: true) do |dropdown| %&gt;
+          &lt;% dropdown.with_menu_item(text: "Option 1", href: "#") %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>

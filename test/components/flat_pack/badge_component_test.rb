@@ -66,8 +66,8 @@ module FlatPack
         render_inline(Component.new(text: "Large", size: :lg))
 
         assert_selector "span", text: "Large"
-        assert_includes page.native.to_html, "text-sm"
-        assert_includes page.native.to_html, "px-3.5"
+        assert_includes page.native.to_html, "text-base"
+        assert_includes page.native.to_html, "px-4"
       end
 
       def test_default_size_is_medium

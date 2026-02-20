@@ -324,7 +324,7 @@ Classes are merged using `tailwind_merge`, so Tailwind utilities override correc
 ```erb
 <%= render FlatPack::Card::Component.new(style: :elevated, padding: :lg) do |card| %>
   <% card.body do %>
-    <%= render FlatPack::Card::StatComponent.new(
+    <%= render FlatPack::Card::Stat::Component.new(
       value: number_with_delimiter(@stats.total_users),
       label: "Total Users",
       trend: "12%",
@@ -513,7 +513,7 @@ card.media(aspect_ratio: String, padding: Symbol) # Optional aspect ratio and me
 ### Card Subcomponents
 
 ```ruby
-FlatPack::Card::StatComponent.new(
+FlatPack::Card::Stat::Component.new(
   value: String,              # Required - main stat value (e.g. "2,543", "$45.2K")
   label: String,              # Required - subtitle text under the value
   trend: String,              # Required - change value text (e.g. "12%")
