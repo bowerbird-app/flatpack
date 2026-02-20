@@ -25,6 +25,14 @@ module FlatPack
         assert_selector "a[href='?page=1'][aria-label='Previous page'] svg"
         assert_selector "a[href='?page=3'][aria-label='Next page'] svg"
       end
+
+      def test_renders_infinite_mode
+        pagy = MockPagy.new(page: 1, pages: 2, prev: nil, next_page: 2, series: [1, 2])
+
+        render_inline(Component.new(pagy: pagy, mode: :infinite))
+
+        assert_selector "a[href='?page=2']", text: "Load more"
+      end
     end
   end
 end

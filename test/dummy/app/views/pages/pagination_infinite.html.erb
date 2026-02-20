@@ -1,0 +1,113 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Infinite Scroll Pagination",
+  subtitle: "Automatic content loading with intersection observer and graceful no-JS fallback."
+) %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Infinite Scroll Demo",
+    anchor_link: true,
+    subtitle: "Scroll down to see automatic loading in action"
+  ) %>
+  
+  <div class="space-y-4" data-pagination-content>
+    <% 10.times do |i| %>
+      <%= render FlatPack::Card::Component.new do |card| %>
+        <% card.header do %>
+          <div class="flex items-start gap-4">
+            <%= render FlatPack::Avatar::Component.new(
+              name: "User #{i + 1}",
+              size: :md
+            ) %>
+            <div class="flex-1">
+              <h3 class="font-semibold">Article #{i + 1}</h3>
+              <p class="text-sm text-[var(--color-text-muted)]">Published <%= rand(1..7) %> days ago</p>
+            </div>
+          </div>
+        <% end %>
+        
+        <% card.body do %>
+          <p>This is a sample article demonstrating infinite scroll pagination. In a real application, this content would be loaded from your database and displayed dynamically as the user scrolls.</p>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%# In a real implementation, this would check if there are more pages %>
+  <%= render FlatPack::Pagination::Component.new(
+    mode: :infinite,
+    infinite_url: "#",
+    has_more: false
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "How It Works",
+    anchor_link: true
+  ) %>
+  
+  <div class="prose max-w-none">
+    <h3>Client-Side (JavaScript Enabled)</h3>
+    <ul>
+      <li>Uses Intersection Observer API to detect when the "Load more" button enters the viewport</li>
+      <li>Automatically fetches the next page via AJAX</li>
+      <li>Appends new content to the page seamlessly</li>
+      <li>Shows loading spinner during fetch</li>
+    </ul>
+
+    <h3>Graceful Degradation (No JavaScript)</h3>
+    <ul>
+      <li>The component renders as a regular link</li>
+      <li>Clicking navigates to the next page normally</li>
+      <li>Maintains full functionality without JavaScript</li>
+    </ul>
+
+    <h3>Controller Example</h3>
+    <%= render FlatPack::CodeBlock::Component.new(
+      language: "ruby",
+      code: <<~RUBY
+        def index
+          @pagy, @articles = pagy(Article.all, items: 10)
+          
+          respond_to do |format|
+            format.html # Full page render
+            format.js   # Partial render for infinite scroll
+          end
+        end
+      RUBY
+    ) %>
+
+    <h3>View Example</h3>
+    <%= render FlatPack::CodeBlock::Component.new(
+      language: "erb",
+      code: <<~ERB
+        <div data-pagination-content>
+          <% @articles.each do |article| %>
+            <!-- article markup -->
+          <% end %>
+        </div>
+
+        <%= render FlatPack::Pagination::Component.new(
+          pagy: @pagy,
+          mode: :infinite,
+          infinite_url: articles_path(page: @pagy.next),
+          has_more: @pagy.next.present?
+        ) if @pagy.next %>
+      ERB
+    ) %>
+  </div>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Manual Load More Button",
+    anchor_link: true,
+    subtitle: "Use when you want users to explicitly trigger loading"
+  ) %>
+  
+  <div class="p-6 bg-[var(--color-muted)] rounded-lg">
+    <p class="mb-4">To disable automatic loading on scroll, simply don't set up the Intersection Observer, or add a data attribute to control behavior.</p>
+    <p class="text-sm text-[var(--color-text-muted)]">This is useful for feeds where you want users to consciously choose to load more content rather than having it happen automatically.</p>
+  </div>
+</section>

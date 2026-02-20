@@ -1,0 +1,197 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Range Input Component",
+  subtitle: "Accessible slider controls with live value display and custom ranges."
+) %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Basic Range Inputs", anchor_link: true) %>
+  
+  <div class="space-y-6 p-6 bg-[var(--color-background)] border border-[var(--color-border)] rounded-lg">
+    <div>
+      <%= render FlatPack::RangeInput::Component.new(
+        name: "basic",
+        value: 50
+      ) %>
+    </div>
+
+    <div>
+      <%= render FlatPack::RangeInput::Component.new(
+        name: "volume",
+        label: "Volume",
+        value: 75
+      ) %>
+    </div>
+
+    <div>
+      <%= render FlatPack::RangeInput::Component.new(
+        name: "brightness",
+        label: "Brightness",
+        value: 80,
+        show_value: true
+      ) %>
+    </div>
+  </div>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Custom Ranges", anchor_link: true) %>
+  
+  <div class="space-y-6 p-6 bg-[var(--color-background)] border border-[var(--color-border)] rounded-lg">
+    <div>
+      <%= render FlatPack::RangeInput::Component.new(
+        name: "price",
+        label: "Price Range ($)",
+        min: 0,
+        max: 1000,
+        step: 50,
+        value: 500
+      ) %>
+    </div>
+
+    <div>
+      <%= render FlatPack::RangeInput::Component.new(
+        name: "temperature",
+        label: "Temperature (°C)",
+        min: -20,
+        max: 40,
+        step: 5,
+        value: 20
+      ) %>
+    </div>
+
+    <div>
+      <%= render FlatPack::RangeInput::Component.new(
+        name: "opacity",
+        label: "Opacity",
+        min: 0,
+        max: 1,
+        step: 0.1,
+        value: 1
+      ) %>
+    </div>
+  </div>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "States", anchor_link: true) %>
+  
+  <div class="space-y-6 p-6 bg-[var(--color-background)] border border-[var(--color-border)] rounded-lg">
+    <div>
+      <p class="text-sm text-[var(--color-text-muted)] mb-2">Normal State</p>
+      <%= render FlatPack::RangeInput::Component.new(
+        name: "normal",
+        label: "Normal",
+        value: 60
+      ) %>
+    </div>
+
+    <div>
+      <p class="text-sm text-[var(--color-text-muted)] mb-2">Disabled State</p>
+      <%= render FlatPack::RangeInput::Component.new(
+        name: "disabled",
+        label: "Disabled",
+        value: 60,
+        disabled: true
+      ) %>
+    </div>
+
+    <div>
+      <p class="text-sm text-[var(--color-text-muted)] mb-2">Without Value Display</p>
+      <%= render FlatPack::RangeInput::Component.new(
+        name: "no_value",
+        label: "Hidden Value",
+        value: 60,
+        show_value: false
+      ) %>
+    </div>
+  </div>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Interactive Demo", anchor_link: true) %>
+  
+  <div class="p-6 bg-gradient-to-br from-blue-50 to-purple-50 border border-[var(--color-border)] rounded-lg">
+    <div class="space-y-6">
+      <div>
+        <%= render FlatPack::RangeInput::Component.new(
+          name: "demo_hue",
+          label: "Hue",
+          min: 0,
+          max: 360,
+          value: 200
+        ) %>
+      </div>
+
+      <div>
+        <%= render FlatPack::RangeInput::Component.new(
+          name: "demo_saturation",
+          label: "Saturation (%)",
+          min: 0,
+          max: 100,
+          value: 70
+        ) %>
+      </div>
+
+      <div>
+        <%= render FlatPack::RangeInput::Component.new(
+          name: "demo_lightness",
+          label: "Lightness (%)",
+          min: 0,
+          max: 100,
+          value: 50
+        ) %>
+      </div>
+
+      <div class="mt-6 p-8 rounded-lg border-2 border-[var(--color-border)]" style="background-color: hsl(200, 70%, 50%);">
+        <p class="text-center text-white font-medium">Color Preview</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Use Cases", anchor_link: true) %>
+  
+  <div class="space-y-4">
+    <%= render FlatPack::Card::Component.new do |card| %>
+      <% card.body do %>
+        <h3 class="font-semibold mb-2">Volume & Audio Controls</h3>
+        <p class="text-sm text-[var(--color-text-muted)] mb-4">Perfect for media players, volume mixers, and audio settings.</p>
+        <%= render FlatPack::RangeInput::Component.new(
+          name: "audio_volume",
+          label: "Master Volume",
+          value: 75
+        ) %>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::Card::Component.new do |card| %>
+      <% card.body do %>
+        <h3 class="font-semibold mb-2">Price Filters</h3>
+        <p class="text-sm text-[var(--color-text-muted)] mb-4">Allow users to filter products by price range.</p>
+        <%= render FlatPack::RangeInput::Component.new(
+          name: "max_price",
+          label: "Maximum Price",
+          min: 0,
+          max: 500,
+          step: 25,
+          value: 250
+        ) %>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::Card::Component.new do |card| %>
+      <% card.body do %>
+        <h3 class="font-semibold mb-2">Image Editor Controls</h3>
+        <p class="text-sm text-[var(--color-text-muted)] mb-4">Adjust image properties like brightness, contrast, and saturation.</p>
+        <%= render FlatPack::RangeInput::Component.new(
+          name: "contrast",
+          label: "Contrast",
+          min: -100,
+          max: 100,
+          value: 0
+        ) %>
+      <% end %>
+    <% end %>
+  </div>
+</section>

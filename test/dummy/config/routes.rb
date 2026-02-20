@@ -39,6 +39,15 @@ Rails.application.routes.draw do
   get "demo/chat/basic", to: "pages#chat_basic"
   get "demo/chat/states", to: "pages#chat_states"
 
+  # New components
+  get "demo/progress", to: "pages#progress"
+  get "demo/collapse", to: "pages#collapse"
+  get "demo/pagination_infinite", to: "pages#pagination_infinite"
+  get "demo/range_input", to: "pages#range_input"
+  get "demo/skeletons", to: "pages#skeletons"
+  get "demo/list", to: "pages#list"
+  get "demo/timeline", to: "pages#timeline"
+
   # Form submission endpoints for demonstration
   post "demo/forms/create", to: "pages#forms_create"
   patch "demo/forms/update", to: "pages#forms_update"

@@ -1,0 +1,179 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Skeleton Loaders",
+  subtitle: "Loading placeholders that match the shape of expected content."
+) %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Skeleton Variants", anchor_link: true) %>
+  
+  <div class="space-y-6 p-6 bg-[var(--color-background)] border border-[var(--color-border)] rounded-lg">
+    <div>
+      <p class="text-sm text-[var(--color-text-muted)] mb-2">Text</p>
+      <%= render FlatPack::Skeleton::Component.new(variant: :text) %>
+    </div>
+
+    <div>
+      <p class="text-sm text-[var(--color-text-muted)] mb-2">Title</p>
+      <%= render FlatPack::Skeleton::Component.new(variant: :title) %>
+    </div>
+
+    <div>
+      <p class="text-sm text-[var(--color-text-muted)] mb-2">Avatar</p>
+      <%= render FlatPack::Skeleton::Component.new(variant: :avatar) %>
+    </div>
+
+    <div>
+      <p class="text-sm text-[var(--color-text-muted)] mb-2">Button</p>
+      <%= render FlatPack::Skeleton::Component.new(variant: :button) %>
+    </div>
+
+    <div>
+      <p class="text-sm text-[var(--color-text-muted)] mb-2">Rectangle</p>
+      <%= render FlatPack::Skeleton::Component.new(variant: :rectangle) %>
+    </div>
+  </div>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Custom Dimensions", anchor_link: true) %>
+  
+  <div class="space-y-6 p-6 bg-[var(--color-background)] border border-[var(--color-border)] rounded-lg">
+    <div>
+      <p class="text-sm text-[var(--color-text-muted)] mb-2">Custom Width</p>
+      <%= render FlatPack::Skeleton::Component.new(width: "300px") %>
+    </div>
+
+    <div>
+      <p class="text-sm text-[var(--color-text-muted)] mb-2">Custom Height</p>
+      <%= render FlatPack::Skeleton::Component.new(height: "100px") %>
+    </div>
+
+    <div>
+      <p class="text-sm text-[var(--color-text-muted)] mb-2">Custom Width and Height</p>
+      <%= render FlatPack::Skeleton::Component.new(width: "250px", height: "150px") %>
+    </div>
+  </div>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Loading Card", anchor_link: true) %>
+  
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Loading State -->
+    <%= render FlatPack::Card::Component.new do |card| %>
+      <% card.body do %>
+        <div class="flex items-start gap-4 mb-4">
+          <%= render FlatPack::Skeleton::Component.new(variant: :avatar) %>
+          <div class="flex-1 space-y-2">
+            <%= render FlatPack::Skeleton::Component.new(variant: :title) %>
+            <%= render FlatPack::Skeleton::Component.new(variant: :text, width: "60%") %>
+          </div>
+        </div>
+        <div class="space-y-2">
+          <%= render FlatPack::Skeleton::Component.new(variant: :text) %>
+          <%= render FlatPack::Skeleton::Component.new(variant: :text) %>
+          <%= render FlatPack::Skeleton::Component.new(variant: :text, width: "80%") %>
+        </div>
+        <div class="mt-4 flex gap-2">
+          <%= render FlatPack::Skeleton::Component.new(variant: :button) %>
+          <%= render FlatPack::Skeleton::Component.new(variant: :button) %>
+        </div>
+      <% end %>
+    <% end %>
+
+    <!-- Loaded State -->
+    <%= render FlatPack::Card::Component.new do |card| %>
+      <% card.body do %>
+        <div class="flex items-start gap-4 mb-4">
+          <%= render FlatPack::Avatar::Component.new(name: "Jane Smith", size: :lg) %>
+          <div class="flex-1">
+            <h3 class="font-semibold text-lg">Jane Smith</h3>
+            <p class="text-sm text-[var(--color-text-muted)]">Product Designer</p>
+          </div>
+        </div>
+        <p class="text-[var(--color-foreground)] mb-4">
+          Passionate about creating intuitive user experiences and beautiful interfaces. Always learning and exploring new design patterns.
+        </p>
+        <div class="flex gap-2">
+          <%= render FlatPack::Button::Component.new(text: "Follow", variant: :primary) %>
+          <%= render FlatPack::Button::Component.new(text: "Message", variant: :outline) %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Loading List", anchor_link: true) %>
+  
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Loading State -->
+    <div class="space-y-4">
+      <h3 class="font-semibold mb-4">Loading...</h3>
+      <% 3.times do %>
+        <div class="flex items-center gap-3 p-4 border border-[var(--color-border)] rounded-lg">
+          <%= render FlatPack::Skeleton::Component.new(variant: :avatar) %>
+          <div class="flex-1 space-y-2">
+            <%= render FlatPack::Skeleton::Component.new(variant: :text) %>
+            <%= render FlatPack::Skeleton::Component.new(variant: :text, width: "70%") %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Loaded State -->
+    <div class="space-y-4">
+      <h3 class="font-semibold mb-4">Team Members</h3>
+      <% ["Alice Johnson", "Bob Williams", "Carol Davis"].each do |name| %>
+        <div class="flex items-center gap-3 p-4 border border-[var(--color-border)] rounded-lg">
+          <%= render FlatPack::Avatar::Component.new(name: name, size: :md) %>
+          <div class="flex-1">
+            <p class="font-medium"><%= name %></p>
+            <p class="text-sm text-[var(--color-text-muted)]">Software Engineer</p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Loading Table", anchor_link: true) %>
+  
+  <div class="overflow-x-auto border border-[var(--color-border)] rounded-lg">
+    <table class="w-full">
+      <thead class="bg-[var(--color-muted)]">
+        <tr>
+          <th class="px-4 py-3 text-left text-sm font-semibold">Name</th>
+          <th class="px-4 py-3 text-left text-sm font-semibold">Email</th>
+          <th class="px-4 py-3 text-left text-sm font-semibold">Role</th>
+          <th class="px-4 py-3 text-left text-sm font-semibold">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% 5.times do %>
+          <tr class="border-t border-[var(--color-border)]">
+            <td class="px-4 py-3"><%= render FlatPack::Skeleton::Component.new(variant: :text, width: "120px") %></td>
+            <td class="px-4 py-3"><%= render FlatPack::Skeleton::Component.new(variant: :text, width: "150px") %></td>
+            <td class="px-4 py-3"><%= render FlatPack::Skeleton::Component.new(variant: :text, width: "80px") %></td>
+            <td class="px-4 py-3"><%= render FlatPack::Skeleton::Component.new(variant: :button) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Use Cases", anchor_link: true) %>
+  
+  <div class="prose max-w-none">
+    <ul>
+      <li><strong>Data Fetching:</strong> Show skeletons while loading API data</li>
+      <li><strong>Image Loading:</strong> Use rectangle skeleton for image placeholders</li>
+      <li><strong>Async Components:</strong> Display skeletons for lazy-loaded components</li>
+      <li><strong>Perceived Performance:</strong> Improve UX by showing structure immediately</li>
+      <li><strong>Layout Stability:</strong> Prevent content shift when data loads</li>
+    </ul>
+  </div>
+</section>

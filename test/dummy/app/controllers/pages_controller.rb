@@ -208,6 +208,27 @@ class PagesController < ApplicationController
   def chat_states
   end
 
+  def progress
+  end
+
+  def collapse
+  end
+
+  def pagination_infinite
+  end
+
+  def range_input
+  end
+
+  def skeletons
+  end
+
+  def list
+  end
+
+  def timeline
+  end
+
   private
 
   def build_component_index

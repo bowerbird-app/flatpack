@@ -298,6 +298,12 @@
                 icon: :bell,
                 active: current_page?(demo_toasts_path)
               ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Collapse",
+                href: demo_collapse_path,
+                icon: :chevron_down,
+                active: current_page?(demo_collapse_path)
+              ) %>
               
               <%= render FlatPack::Sidebar::Divider::Component.new %>
               
@@ -314,6 +320,12 @@
                 icon: :type,
                 active: current_page?(demo_inputs_path)
               ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Range Input",
+                href: demo_range_input_path,
+                icon: :settings,
+                active: current_page?(demo_range_input_path)
+              ) %>
               
               <%= render FlatPack::Sidebar::Divider::Component.new %>
               
@@ -329,6 +341,12 @@
                 href: demo_pagination_path,
                 icon: :chevron_right,
                 active: current_page?(demo_pagination_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Infinite Scroll",
+                href: demo_pagination_infinite_path,
+                icon: :chevron_down,
+                active: current_page?(demo_pagination_infinite_path)
               ) %>
               <%= render FlatPack::Sidebar::Item::Component.new(
                 label: "Charts",
@@ -365,6 +383,30 @@
                 href: demo_chat_path,
                 icon: :message_circle,
                 active: current_page?(demo_chat_path) || current_page?(demo_chat_basic_path) || current_page?(demo_chat_states_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Progress",
+                href: demo_progress_path,
+                icon: :dashboard,
+                active: current_page?(demo_progress_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Skeletons",
+                href: demo_skeletons_path,
+                icon: :square,
+                active: current_page?(demo_skeletons_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "List",
+                href: demo_list_path,
+                icon: :align_left,
+                active: current_page?(demo_list_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Timeline",
+                href: demo_timeline_path,
+                icon: :calendar,
+                active: current_page?(demo_timeline_path)
               ) %>
               
               <%= render FlatPack::Sidebar::Divider::Component.new %>
