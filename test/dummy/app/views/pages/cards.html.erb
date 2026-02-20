@@ -396,7 +396,7 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
       <%= render FlatPack::Card::Component.new(style: :default, padding: :lg) do |card| %>
         <% card.body do %>
-          <%= render FlatPack::Card::StatComponent.new(
+          <%= render FlatPack::Card::Stat::Component.new(
             value: "2,543",
             label: "Total Users",
             trend: "12%",
@@ -408,7 +408,7 @@
 
       <%= render FlatPack::Card::Component.new(style: :default, padding: :lg) do |card| %>
         <% card.body do %>
-          <%= render FlatPack::Card::StatComponent.new(
+          <%= render FlatPack::Card::Stat::Component.new(
             value: "1,234",
             label: "Active Sessions",
             trend: "8%",
@@ -420,7 +420,7 @@
 
       <%= render FlatPack::Card::Component.new(style: :default, padding: :lg) do |card| %>
         <% card.body do %>
-          <%= render FlatPack::Card::StatComponent.new(
+          <%= render FlatPack::Card::Stat::Component.new(
             value: "$45.2K",
             label: "Revenue",
             trend: "23%",
@@ -432,7 +432,7 @@
 
       <%= render FlatPack::Card::Component.new(style: :default, padding: :lg) do |card| %>
         <% card.body do %>
-          <%= render FlatPack::Card::StatComponent.new(
+          <%= render FlatPack::Card::Stat::Component.new(
             value: "98.5%",
             label: "Uptime",
             trend: "0.5%",
@@ -446,7 +446,7 @@
       code: CGI.unescapeHTML(<<~'CODE')
         &lt;%= render FlatPack::Card::Component.new(style: :default, padding: :lg) do |card| %&gt;
           &lt;% card.body do %&gt;
-            &lt;%= render FlatPack::Card::StatComponent.new(
+            &lt;%= render FlatPack::Card::Stat::Component.new(
               value: "2,543",
               label: "Total Users",
               trend: "12%",

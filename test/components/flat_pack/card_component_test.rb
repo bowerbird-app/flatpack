@@ -199,118 +199,118 @@ module FlatPack
 
       # Header Component Tests
       def test_header_component_renders
-        render_inline(HeaderComponent.new) { "Header content" }
+        render_inline(Header::Component.new) { "Header content" }
         assert_selector "div", text: "Header content"
       end
 
       def test_header_with_divider
-        render_inline(HeaderComponent.new(divider: true)) { "Header" }
+        render_inline(Header::Component.new(divider: true)) { "Header" }
         assert_includes page.native.to_html, "border-b"
         assert_includes page.native.to_html, "border-[var(--color-border)]"
       end
 
       def test_header_without_divider
-        render_inline(HeaderComponent.new(divider: false)) { "Header" }
+        render_inline(Header::Component.new(divider: false)) { "Header" }
         refute_includes page.native.to_html, "border-b"
       end
 
       def test_header_default_divider_is_true
-        render_inline(HeaderComponent.new) { "Header" }
+        render_inline(Header::Component.new) { "Header" }
         assert_includes page.native.to_html, "border-b"
       end
 
       def test_header_has_padding_classes
-        render_inline(HeaderComponent.new) { "Header" }
+        render_inline(Header::Component.new) { "Header" }
         assert_includes page.native.to_html, "px-6 py-4"
       end
 
       # Body Component Tests
       def test_body_component_renders
-        render_inline(BodyComponent.new) { "Body content" }
+        render_inline(Body::Component.new) { "Body content" }
         assert_selector "div", text: "Body content"
       end
 
       def test_body_has_padding_classes
-        render_inline(BodyComponent.new) { "Body" }
+        render_inline(Body::Component.new) { "Body" }
         assert_includes page.native.to_html, "px-6 py-4"
       end
 
       # Footer Component Tests
       def test_footer_component_renders
-        render_inline(FooterComponent.new) { "Footer content" }
+        render_inline(Footer::Component.new) { "Footer content" }
         assert_selector "div", text: "Footer content"
       end
 
       def test_footer_with_divider
-        render_inline(FooterComponent.new(divider: true)) { "Footer" }
+        render_inline(Footer::Component.new(divider: true)) { "Footer" }
         assert_includes page.native.to_html, "border-t"
         assert_includes page.native.to_html, "border-[var(--color-border)]"
       end
 
       def test_footer_without_divider
-        render_inline(FooterComponent.new(divider: false)) { "Footer" }
+        render_inline(Footer::Component.new(divider: false)) { "Footer" }
         refute_includes page.native.to_html, "border-t"
       end
 
       def test_footer_default_divider_is_true
-        render_inline(FooterComponent.new) { "Footer" }
+        render_inline(Footer::Component.new) { "Footer" }
         assert_includes page.native.to_html, "border-t"
       end
 
       def test_footer_has_padding_classes
-        render_inline(FooterComponent.new) { "Footer" }
+        render_inline(Footer::Component.new) { "Footer" }
         assert_includes page.native.to_html, "px-6 py-4"
       end
 
       # Media Component Tests
       def test_media_component_renders
-        render_inline(MediaComponent.new) { "<img src='test.jpg'>".html_safe }
+        render_inline(Media::Component.new) { "<img src='test.jpg'>".html_safe }
         assert_selector "img"
       end
 
       def test_media_has_overflow_hidden
-        render_inline(MediaComponent.new) { "Media" }
+        render_inline(Media::Component.new) { "Media" }
         assert_includes page.native.to_html, "overflow-hidden"
       end
 
       def test_media_with_aspect_ratio_16_9
-        render_inline(MediaComponent.new(aspect_ratio: "16/9")) { "Media" }
+        render_inline(Media::Component.new(aspect_ratio: "16/9")) { "Media" }
         assert_includes page.native.to_html, "aspect-[16/9]"
       end
 
       def test_media_with_aspect_ratio_4_3
-        render_inline(MediaComponent.new(aspect_ratio: "4/3")) { "Media" }
+        render_inline(Media::Component.new(aspect_ratio: "4/3")) { "Media" }
         assert_includes page.native.to_html, "aspect-[4/3]"
       end
 
       def test_media_with_aspect_ratio_1_1
-        render_inline(MediaComponent.new(aspect_ratio: "1/1")) { "Media" }
+        render_inline(Media::Component.new(aspect_ratio: "1/1")) { "Media" }
         assert_includes page.native.to_html, "aspect-square"
       end
 
       def test_media_with_custom_aspect_ratio
-        render_inline(MediaComponent.new(aspect_ratio: "21/9")) { "Media" }
+        render_inline(Media::Component.new(aspect_ratio: "21/9")) { "Media" }
         assert_includes page.native.to_html, "aspect-[21/9]"
       end
 
       def test_media_without_aspect_ratio
-        render_inline(MediaComponent.new) { "Media" }
+        render_inline(Media::Component.new) { "Media" }
         refute_includes page.native.to_html, "aspect-"
       end
 
       def test_media_with_padding_none
-        render_inline(MediaComponent.new(padding: :none)) { "Media" }
+        render_inline(Media::Component.new(padding: :none)) { "Media" }
         refute_includes page.native.to_html, "px-6 pt-6"
       end
 
       def test_media_with_padding_md
-        render_inline(MediaComponent.new(padding: :md)) { "Media" }
+        render_inline(Media::Component.new(padding: :md)) { "Media" }
         assert_includes page.native.to_html, "px-6 pt-6"
       end
 
       def test_media_validates_padding
         error = assert_raises(ArgumentError) do
-          render_inline(MediaComponent.new(padding: :invalid)) { "Media" }
+          render_inline(Media::Component.new(padding: :invalid)) { "Media" }
         end
 
         assert_includes error.message, "Invalid padding"
@@ -318,7 +318,7 @@ module FlatPack
 
       # Stat Component Tests
       def test_stat_component_renders
-        render_inline(StatComponent.new(
+        render_inline(Stat::Component.new(
           value: "2,543",
           label: "Total Users",
           trend: "12%",
@@ -331,7 +331,7 @@ module FlatPack
       end
 
       def test_stat_component_uses_up_trend_style
-        render_inline(StatComponent.new(
+        render_inline(Stat::Component.new(
           value: "100",
           label: "Metric",
           trend: "8%",
@@ -342,7 +342,7 @@ module FlatPack
       end
 
       def test_stat_component_uses_down_trend_style
-        render_inline(StatComponent.new(
+        render_inline(Stat::Component.new(
           value: "100",
           label: "Metric",
           trend: "1.2%",
@@ -354,7 +354,7 @@ module FlatPack
       end
 
       def test_stat_component_accepts_custom_value_class
-        render_inline(StatComponent.new(
+        render_inline(Stat::Component.new(
           value: "99",
           label: "Custom",
           trend: "4%",
@@ -367,7 +367,7 @@ module FlatPack
 
       def test_stat_component_validates_trend_direction
         error = assert_raises(ArgumentError) do
-          render_inline(StatComponent.new(
+          render_inline(Stat::Component.new(
             value: "99",
             label: "Custom",
             trend: "4%",

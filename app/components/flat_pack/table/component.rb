@@ -3,7 +3,7 @@
 module FlatPack
   module Table
     class Component < FlatPack::BaseComponent
-      renders_many :columns, ColumnComponent
+      renders_many :columns, FlatPack::Table::Column::Component
 
       def initialize(
         data: [],

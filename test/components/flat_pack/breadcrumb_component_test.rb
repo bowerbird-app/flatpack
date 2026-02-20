@@ -327,21 +327,21 @@ module FlatPack
 
       # Item Component Tests
       def test_item_renders_link_when_href_provided
-        render_inline(ItemComponent.new(text: "Home", href: "/"))
+        render_inline(Item::Component.new(text: "Home", href: "/"))
 
         assert_selector "a[href='/']", text: "Home"
         refute_selector "span[aria-current='page']"
       end
 
       def test_item_renders_span_when_no_href
-        render_inline(ItemComponent.new(text: "Current"))
+        render_inline(Item::Component.new(text: "Current"))
 
         assert_selector "span[aria-current='page']", text: "Current"
         refute_selector "a"
       end
 
       def test_item_with_icon
-        render_inline(ItemComponent.new(text: "Home", href: "/", icon: "home"))
+        render_inline(Item::Component.new(text: "Home", href: "/", icon: "home"))
 
         assert_selector "svg"
         assert_includes page.native.to_html, "#icon-home"
@@ -350,18 +350,18 @@ module FlatPack
 
       def test_item_validates_text_required
         assert_raises(ArgumentError, match: /text is required/) do
-          ItemComponent.new(text: nil)
+          Item::Component.new(text: nil)
         end
       end
 
       def test_item_validates_empty_text
         assert_raises(ArgumentError, match: /text is required/) do
-          ItemComponent.new(text: "   ")
+          Item::Component.new(text: "   ")
         end
       end
 
       def test_item_has_hover_styles
-        render_inline(ItemComponent.new(text: "Home", href: "/"))
+        render_inline(Item::Component.new(text: "Home", href: "/"))
 
         assert_includes page.native.to_html, "hover:text-[var(--color-foreground)]"
         assert_includes page.native.to_html, "transition-colors"

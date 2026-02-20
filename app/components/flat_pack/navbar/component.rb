@@ -6,13 +6,13 @@ module FlatPack
       renders_one :sidebar_slot, lambda { |*args|
         kwargs = {}
         args.each_slice(2) { |k, v| kwargs[k] = v }
-        SidebarComponent.new(**kwargs)
+        FlatPack::Navbar::Sidebar::Component.new(**kwargs)
       }
 
       renders_one :top_nav_slot, lambda { |*args|
         kwargs = {}
         args.each_slice(2) { |k, v| kwargs[k] = v }
-        TopNavComponent.new(**kwargs)
+        FlatPack::Navbar::TopNav::Component.new(**kwargs)
       }
 
       def initialize(**system_arguments)

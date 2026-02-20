@@ -420,7 +420,7 @@
       Dropdown menus with full keyboard navigation, accessibility support, and multiple styling options.
     </p>
     <div class="flex gap-3 mb-4">
-      <%= render FlatPack::Button::DropdownComponent.new(text: "Actions", style: :primary) do |dropdown| %>
+      <%= render FlatPack::Button::Dropdown::Component.new(text: "Actions", style: :primary) do |dropdown| %>
         <% dropdown.with_menu_item(text: "Search", icon: "search", href: "#") %>
         <% dropdown.with_menu_item(text: "Dashboard", icon: "dashboard", href: "#") %>
         <% dropdown.with_menu_divider %>
@@ -428,21 +428,21 @@
         <% dropdown.with_menu_item(text: "Delete", icon: "trash", destructive: true, href: "#") %>
       <% end %>
 
-      <%= render FlatPack::Button::DropdownComponent.new(text: "Options", style: :secondary) do |dropdown| %>
+      <%= render FlatPack::Button::Dropdown::Component.new(text: "Options", style: :secondary) do |dropdown| %>
         <% dropdown.with_menu_item(text: "Home", icon: "home", href: "#") %>
         <% dropdown.with_menu_item(text: "Monitor", icon: "monitor", href: "#") %>
         <% dropdown.with_menu_divider %>
         <% dropdown.with_menu_item(text: "Settings", icon: "settings", href: "#") %>
       <% end %>
 
-      <%= render FlatPack::Button::DropdownComponent.new(text: "More", style: :ghost) do |dropdown| %>
+      <%= render FlatPack::Button::Dropdown::Component.new(text: "More", style: :ghost) do |dropdown| %>
         <% dropdown.with_menu_item(text: "Upload", icon: "upload", href: "#") %>
         <% dropdown.with_menu_item(text: "Check", icon: "check", href: "#") %>
       <% end %>
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE')
-        &lt;%= render FlatPack::Button::DropdownComponent.new(text: "Actions", style: :primary) do |dropdown| %&gt;
+        &lt;%= render FlatPack::Button::Dropdown::Component.new(text: "Actions", style: :primary) do |dropdown| %&gt;
           &lt;% dropdown.with_menu_item(text: "Search", icon: "search", href: "#") %&gt;
           &lt;% dropdown.with_menu_item(text: "Dashboard", icon: "dashboard", href: "#") %&gt;
           &lt;% dropdown.with_menu_divider %&gt;
@@ -456,24 +456,24 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Dropdown Sizes", anchor_link: true, subtitle: "Examples for Dropdown Sizes.") %>
     <div class="flex items-center gap-3 mb-4">
-      <%= render FlatPack::Button::DropdownComponent.new(text: "Small", style: :primary, size: :sm) do |dropdown| %>
+      <%= render FlatPack::Button::Dropdown::Component.new(text: "Small", style: :primary, size: :sm) do |dropdown| %>
         <% dropdown.with_menu_item(text: "Option 1", href: "#") %>
         <% dropdown.with_menu_item(text: "Option 2", href: "#") %>
       <% end %>
 
-      <%= render FlatPack::Button::DropdownComponent.new(text: "Medium", style: :primary, size: :md) do |dropdown| %>
+      <%= render FlatPack::Button::Dropdown::Component.new(text: "Medium", style: :primary, size: :md) do |dropdown| %>
         <% dropdown.with_menu_item(text: "Option 1", href: "#") %>
         <% dropdown.with_menu_item(text: "Option 2", href: "#") %>
       <% end %>
 
-      <%= render FlatPack::Button::DropdownComponent.new(text: "Large", style: :primary, size: :lg) do |dropdown| %>
+      <%= render FlatPack::Button::Dropdown::Component.new(text: "Large", style: :primary, size: :lg) do |dropdown| %>
         <% dropdown.with_menu_item(text: "Option 1", href: "#") %>
         <% dropdown.with_menu_item(text: "Option 2", href: "#") %>
       <% end %>
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE')
-        &lt;%= render FlatPack::Button::DropdownComponent.new(text: "Small", style: :primary, size: :sm) do |dropdown| %&gt;
+        &lt;%= render FlatPack::Button::Dropdown::Component.new(text: "Small", style: :primary, size: :sm) do |dropdown| %&gt;
           &lt;% dropdown.with_menu_item(text: "Option 1", href: "#") %&gt;
           &lt;% dropdown.with_menu_item(text: "Option 2", href: "#") %&gt;
         &lt;% end %&gt;
@@ -488,13 +488,13 @@
       Bottom positions (default):
     </p>
     <div class="flex gap-3 mb-8">
-      <%= render FlatPack::Button::DropdownComponent.new(text: "Bottom Right", position: :bottom_right) do |dropdown| %>
+      <%= render FlatPack::Button::Dropdown::Component.new(text: "Bottom Right", position: :bottom_right) do |dropdown| %>
         <% dropdown.with_menu_item(text: "Option 1", href: "#") %>
         <% dropdown.with_menu_item(text: "Option 2", href: "#") %>
         <% dropdown.with_menu_item(text: "Option 3", href: "#") %>
       <% end %>
 
-      <%= render FlatPack::Button::DropdownComponent.new(text: "Bottom Left", position: :bottom_left) do |dropdown| %>
+      <%= render FlatPack::Button::Dropdown::Component.new(text: "Bottom Left", position: :bottom_left) do |dropdown| %>
         <% dropdown.with_menu_item(text: "Option 1", href: "#") %>
         <% dropdown.with_menu_item(text: "Option 2", href: "#") %>
         <% dropdown.with_menu_item(text: "Option 3", href: "#") %>
@@ -505,13 +505,13 @@
       Top positions (opens upward):
     </p>
     <div class="flex gap-3 mb-4 pt-32">
-      <%= render FlatPack::Button::DropdownComponent.new(text: "Top Right", position: :top_right) do |dropdown| %>
+      <%= render FlatPack::Button::Dropdown::Component.new(text: "Top Right", position: :top_right) do |dropdown| %>
         <% dropdown.with_menu_item(text: "Option 1", href: "#") %>
         <% dropdown.with_menu_item(text: "Option 2", href: "#") %>
         <% dropdown.with_menu_item(text: "Option 3", href: "#") %>
       <% end %>
 
-      <%= render FlatPack::Button::DropdownComponent.new(text: "Top Left", position: :top_left) do |dropdown| %>
+      <%= render FlatPack::Button::Dropdown::Component.new(text: "Top Left", position: :top_left) do |dropdown| %>
         <% dropdown.with_menu_item(text: "Option 1", href: "#") %>
         <% dropdown.with_menu_item(text: "Option 2", href: "#") %>
         <% dropdown.with_menu_item(text: "Option 3", href: "#") %>
@@ -519,7 +519,7 @@
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE')
-        &lt;%= render FlatPack::Button::DropdownComponent.new(text: "Bottom Right", position: :bottom_right) do |dropdown| %&gt;
+        &lt;%= render FlatPack::Button::Dropdown::Component.new(text: "Bottom Right", position: :bottom_right) do |dropdown| %&gt;
           &lt;% dropdown.with_menu_item(text: "Option 1", href: "#") %&gt;
         &lt;% end %&gt;
       CODE
@@ -530,7 +530,7 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Dropdowns with Icons and Badges", anchor_link: true, subtitle: "Examples for Dropdowns with Icons and Badges.") %>
     <div class="flex gap-3 mb-4">
-      <%= render FlatPack::Button::DropdownComponent.new(text: "Notifications", style: :primary, icon: "dashboard") do |dropdown| %>
+      <%= render FlatPack::Button::Dropdown::Component.new(text: "Notifications", style: :primary, icon: "dashboard") do |dropdown| %>
         <% dropdown.with_menu_item(text: "Messages", icon: "box", badge: "12", href: "#") %>
         <% dropdown.with_menu_item(text: "Alerts", icon: "alert", badge: "3", href: "#") %>
         <% dropdown.with_menu_item(text: "Updates", icon: "check", href: "#") %>
@@ -540,7 +540,7 @@
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE')
-        &lt;%= render FlatPack::Button::DropdownComponent.new(text: "Notifications", style: :primary, icon: "dashboard") do |dropdown| %&gt;
+        &lt;%= render FlatPack::Button::Dropdown::Component.new(text: "Notifications", style: :primary, icon: "dashboard") do |dropdown| %&gt;
           &lt;% dropdown.with_menu_item(text: "Messages", icon: "box", badge: "12", href: "#") %&gt;
           &lt;% dropdown.with_menu_item(text: "Alerts", icon: "alert", badge: "3", href: "#") %&gt;
           &lt;% dropdown.with_menu_divider %&gt;
@@ -554,7 +554,7 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Dropdowns with Disabled Items", anchor_link: true, subtitle: "Examples for Dropdowns with Disabled Items.") %>
     <div class="flex gap-3 mb-4">
-      <%= render FlatPack::Button::DropdownComponent.new(text: "File", style: :secondary) do |dropdown| %>
+      <%= render FlatPack::Button::Dropdown::Component.new(text: "File", style: :secondary) do |dropdown| %>
         <% dropdown.with_menu_item(text: "Home", icon: "home", href: "#") %>
         <% dropdown.with_menu_item(text: "Dashboard", icon: "dashboard", href: "#") %>
         <% dropdown.with_menu_item(text: "Settings", icon: "settings", disabled: true) %>
@@ -565,7 +565,7 @@
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE')
-        &lt;%= render FlatPack::Button::DropdownComponent.new(text: "File", style: :secondary) do |dropdown| %&gt;
+        &lt;%= render FlatPack::Button::Dropdown::Component.new(text: "File", style: :secondary) do |dropdown| %&gt;
           &lt;% dropdown.with_menu_item(text: "Home", icon: "home", href: "#") %&gt;
           &lt;% dropdown.with_menu_item(text: "Settings", icon: "settings", disabled: true) %&gt;
         &lt;% end %&gt;
@@ -577,14 +577,14 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Disabled Dropdown", anchor_link: true, subtitle: "Examples for Disabled Dropdown.") %>
     <div class="flex gap-3 mb-4">
-      <%= render FlatPack::Button::DropdownComponent.new(text: "Disabled", style: :primary, disabled: true) do |dropdown| %>
+      <%= render FlatPack::Button::Dropdown::Component.new(text: "Disabled", style: :primary, disabled: true) do |dropdown| %>
         <% dropdown.with_menu_item(text: "Option 1", href: "#") %>
         <% dropdown.with_menu_item(text: "Option 2", href: "#") %>
       <% end %>
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE')
-        &lt;%= render FlatPack::Button::DropdownComponent.new(text: "Disabled", style: :primary, disabled: true) do |dropdown| %&gt;
+        &lt;%= render FlatPack::Button::Dropdown::Component.new(text: "Disabled", style: :primary, disabled: true) do |dropdown| %&gt;
           &lt;% dropdown.with_menu_item(text: "Option 1", href: "#") %&gt;
         &lt;% end %&gt;
       CODE

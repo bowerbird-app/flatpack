@@ -216,7 +216,7 @@ All code is namespaced under `FlatPack`:
 ```ruby
 FlatPack::Button::Component
 FlatPack::Table::Component
-FlatPack::Table::ColumnComponent
+FlatPack::Table::Column::Component
 FlatPack::Shared::IconComponent
 ```
 

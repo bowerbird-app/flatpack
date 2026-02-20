@@ -33,7 +33,8 @@ flat_pack/
 │   │   ├── table/
 │   │   │   ├── component.rb      # Table component logic
 │   │   │   ├── component.html.erb # Table template
-│   │   │   ├── column_component.rb # Column sub-component
+│   │   │   ├── column/
+│   │   │   │   └── component.rb # Column sub-component
 │   │   └── shared/
 │   │       └── icon_component.rb  # Shared icon component
 │   └── javascript/flat_pack/

@@ -270,7 +270,7 @@ module FlatPack
 
       def test_sidebar_item_validates_required_text
         assert_raises(ArgumentError) do
-          SidebarItemComponent.new(text: nil)
+          SidebarItem::Component.new(text: nil)
         end
       end
 
