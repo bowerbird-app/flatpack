@@ -87,6 +87,14 @@ module FlatPack
           assert_text "Meta info"
         end
 
+        def test_uses_pre_line_whitespace_for_message_body
+          render_inline(Component.new(direction: :incoming)) do
+            "Line 1\nLine 2"
+          end
+
+          assert_selector "div.break-words.whitespace-pre-line", text: "Line 1"
+        end
+
         def test_validates_direction
           assert_raises ArgumentError do
             Component.new(direction: :invalid)

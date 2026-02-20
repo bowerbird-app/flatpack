@@ -1,11 +1,12 @@
-<h1 class="text-4xl font-bold mb-4">Pagination Component</h1>
-<p class="text-lg text-[var(--color-muted-foreground)] mb-8">
-  Page navigation using the Pagy gem with accessible controls.
-</p>
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Pagination Component",
+  subtitle: "Page navigation using the Pagy gem with accessible controls."
+) %>
 
 <!-- Basic Pagination -->
+<%= render "pages/component_method_variables_table", component: :pagination %>
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Basic Pagination</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Basic Pagination", anchor_link: true, subtitle: "Examples for Basic Pagination.") %>
   <p class="text-[var(--color-muted-foreground)] mb-4">
     Showing <%= @records.size %> of <%= @pagy.count %> total items (Page <%= @pagy.page %> of <%= @pagy.pages %>)
   </p>
@@ -31,32 +32,42 @@
   
   <%= render FlatPack::Pagination::Component.new(pagy: @pagy) %>
   
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;!-- In your controller --&gt;
-def index
-  @pagy, @records = pagy(YourModel.all, items: 10)
-end
-
-&lt;!-- In your view --&gt;
-&lt;%= render FlatPack::Pagination::Component.new(pagy: @pagy) %&gt;</code></pre>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      <!-- In your controller -->
+      def index
+        @pagy, @records = pagy(YourModel.all, items: 10)
+      end
+      
+      <!-- In your view -->
+      &lt;%= render FlatPack::Pagination::Component.new(pagy: @pagy) %&gt;
+    CODE
+    class: "mt-4"
+  ) %>
 </section>
 
 <!-- Compact Pagination -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Compact Pagination</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Compact Pagination", anchor_link: true, subtitle: "Examples for Compact Pagination.") %>
   <p class="text-[var(--color-muted-foreground)] mb-4">
     Use compact size for tighter layouts or mobile views.
   </p>
   <%= render FlatPack::Pagination::Component.new(pagy: @pagy, size: :compact) %>
   
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Pagination::Component.new(
-  pagy: @pagy,
-  size: :compact
-) %&gt;</code></pre>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Pagination::Component.new(
+        pagy: @pagy,
+        size: :compact
+      ) %&gt;
+    CODE
+    class: "mt-4"
+  ) %>
 </section>
 
 <!-- Pagination in Card -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Pagination in Card</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Pagination in Card", anchor_link: true, subtitle: "Examples for Pagination in Card.") %>
   <%= render FlatPack::Card::Component.new(style: :outlined) do |card| %>
     <% card.header do %>
       <h3 class="text-lg font-semibold">User List</h3>
@@ -84,33 +95,51 @@ end
 
 <!-- Setup Instructions -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Setup Instructions</h2>
-  
+  <%= render FlatPack::SectionTitle::Component.new(title: "Setup Instructions", anchor_link: true, subtitle: "Examples for Setup Instructions.") %>
   <h3 class="text-lg font-semibold mb-3">1. Install Pagy Gem</h3>
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mb-4"><code># Add to Gemfile
-gem 'pagy', '~> 9.0'
-
-# Run bundle install
-bundle install</code></pre>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      # Add to Gemfile
+      gem 'pagy', '~> 9.0'
+      
+      # Run bundle install
+      bundle install
+    CODE
+    class: "mb-4"
+  ) %>
   
   <h3 class="text-lg font-semibold mb-3">2. Include Pagy Backend</h3>
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mb-4"><code># In app/controllers/application_controller.rb
-class ApplicationController < ActionController::Base
-  include Pagy::Backend
-end</code></pre>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      # In app/controllers/application_controller.rb
+      class ApplicationController < ActionController::Base
+        include Pagy::Backend
+      end
+    CODE
+    class: "mb-4"
+  ) %>
   
   <h3 class="text-lg font-semibold mb-3">3. Use in Controllers</h3>
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mb-4"><code>def index
-  @pagy, @users = pagy(User.all, items: 20)
-end</code></pre>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      def index
+        @pagy, @users = pagy(User.all, items: 20)
+      end
+    CODE
+    class: "mb-4"
+  ) %>
   
   <h3 class="text-lg font-semibold mb-3">4. Render in Views</h3>
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Pagination::Component.new(pagy: @pagy) %&gt;</code></pre>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Pagination::Component.new(pagy: @pagy) %&gt;
+    CODE
+  ) %>
 </section>
 
 <!-- Features -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Features</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Examples for Features.") %>
   <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
     <li><strong>Pagy Integration:</strong> Uses the fast and lightweight Pagy gem</li>
     <li><strong>Accessible:</strong> Proper ARIA attributes and keyboard navigation</li>
@@ -124,14 +153,18 @@ end</code></pre>
 
 <!-- Pagy Configuration -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Pagy Configuration</h2>
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code># config/initializers/pagy.rb
-require 'pagy/extras/overflow'
-Pagy::DEFAULT[:items] = 20
-Pagy::DEFAULT[:overflow] = :last_page
-
-# Optional extras
-# require 'pagy/extras/bootstrap'
-# require 'pagy/extras/array'
-# require 'pagy/extras/countless'</code></pre>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Pagy Configuration", anchor_link: true, subtitle: "Examples for Pagy Configuration.") %>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      # config/initializers/pagy.rb
+      require 'pagy/extras/overflow'
+      Pagy::DEFAULT[:items] = 20
+      Pagy::DEFAULT[:overflow] = :last_page
+      
+      # Optional extras
+      # require 'pagy/extras/bootstrap'
+      # require 'pagy/extras/array'
+      # require 'pagy/extras/countless'
+    CODE
+  ) %>
 </section>

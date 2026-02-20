@@ -1,7 +1,9 @@
-<h1 class="text-4xl font-bold mb-4">Chart Component</h1>
-<p class="text-lg text-[var(--color-muted-foreground)] mb-8">
-  Data visualization using ApexCharts with Card wrapping by default.
-</p>
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Chart Component",
+  subtitle: "Data visualization using ApexCharts with Card wrapping by default."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :chart %>
 
 <%
   erb_open = "<" + "%"
@@ -11,7 +13,7 @@
 
 <!-- Basic Line Chart -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Line Chart</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Line Chart", anchor_link: true, subtitle: "Examples for Line Chart.") %>
   <%= render FlatPack::Chart::Component.new(
     type: :line,
     series: [{
@@ -41,7 +43,7 @@
 
 <!-- Bar Chart -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Bar Chart</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Bar Chart", anchor_link: true, subtitle: "Examples for Bar Chart.") %>
   <%= render FlatPack::Chart::Component.new(
     type: :bar,
     series: [{
@@ -73,7 +75,7 @@
 
 <!-- Area Chart -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Area Chart</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Area Chart", anchor_link: true, subtitle: "Examples for Area Chart.") %>
   <%= render FlatPack::Chart::Component.new(
     type: :area,
     series: [
@@ -103,7 +105,7 @@
 
 <!-- Donut Chart -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Donut Chart</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Donut Chart", anchor_link: true, subtitle: "Examples for Donut Chart.") %>
   <%= render FlatPack::Chart::Component.new(
     type: :donut,
     series: [44, 55, 41, 17, 15],
@@ -133,7 +135,7 @@
 
 <!-- Chart with Actions -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Chart with Actions</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Chart with Actions", anchor_link: true, subtitle: "Examples for Chart with Actions.") %>
   <%= render FlatPack::Chart::Component.new(
     type: :line,
     series: [{name: "Users", data: [10, 25, 42, 68, 95, 130, 178, 220]}],
@@ -169,7 +171,7 @@
 
 <!-- Chart without Card -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Chart without Card Wrapper</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Chart without Card Wrapper", anchor_link: true, subtitle: "Examples for Chart without Card Wrapper.") %>
   <p class="text-[var(--color-muted-foreground)] mb-4">
     Set <code>card: false</code> to render the chart without a card wrapper.
   </p>
@@ -196,7 +198,7 @@
 
 <!-- Multiple Charts in Grid -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Multiple Charts in Grid</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Multiple Charts in Grid", anchor_link: true, subtitle: "Examples for Multiple Charts in Grid.") %>
   <%= render FlatPack::Grid::Component.new(cols: 2) do %>
     <%= render FlatPack::Chart::Component.new(
       type: :line,
@@ -238,7 +240,7 @@
 
 <!-- Chart with Footer -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Chart with Footer</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Chart with Footer", anchor_link: true, subtitle: "Examples for Chart with Footer.") %>
   <%= render FlatPack::Chart::Component.new(
     type: :area,
     series: [{name: "Revenue", data: [10, 20, 15, 30, 25, 40, 35, 50]}],
@@ -294,51 +296,63 @@
 
 <!-- Setup Instructions -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Setup Instructions</h2>
-  
+  <%= render FlatPack::SectionTitle::Component.new(title: "Setup Instructions", anchor_link: true, subtitle: "Examples for Setup Instructions.") %>
   <h3 class="text-lg font-semibold mb-3">ApexCharts is Already Configured</h3>
   <p class="text-[var(--color-muted-foreground)] mb-4">
     FlatPack includes ApexCharts via CDN in the importmap. No additional setup required!
   </p>
   
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mb-4"><code># config/importmap.rb (already configured)
-pin "apexcharts", to: "https://cdn.jsdelivr.net/npm/apexcharts@3.45.1/dist/apexcharts.esm.js"</code></pre>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      # config/importmap.rb (already configured)
+      pin "apexcharts", to: "https://cdn.jsdelivr.net/npm/apexcharts@3.45.1/dist/apexcharts.esm.js"
+    CODE
+    class: "mb-4"
+  ) %>
   
   <h3 class="text-lg font-semibold mb-3">For Self-Hosting (Production)</h3>
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code># Download and place in vendor/javascript
-# Then update importmap.rb
-pin "apexcharts", to: "apexcharts.min.js"</code></pre>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      # Download and place in vendor/javascript
+      # Then update importmap.rb
+      pin "apexcharts", to: "apexcharts.min.js"
+    CODE
+  ) %>
 </section>
 
 <!-- Custom Options -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Custom ApexCharts Options</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Custom ApexCharts Options", anchor_link: true, subtitle: "Examples for Custom ApexCharts Options.") %>
   <p class="text-[var(--color-muted-foreground)] mb-4">
     Pass custom ApexCharts options for full control.
   </p>
   
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Chart::Component.new(
-  type: :line,
-  series: [{name: "Sales", data: [30, 40, 45]}],
-  options: {
-    chart: {
-      toolbar: { show: true }
-    },
-    colors: ['#FF5733'],
-    stroke: {
-      width: 3,
-      curve: 'smooth'
-    },
-    xaxis: {
-      categories: ['Jan', 'Feb', 'Mar']
-    }
-  }
-) %&gt;</code></pre>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Chart::Component.new(
+        type: :line,
+        series: [{name: "Sales", data: [30, 40, 45]}],
+        options: {
+          chart: {
+            toolbar: { show: true }
+          },
+          colors: ['#FF5733'],
+          stroke: {
+            width: 3,
+            curve: 'smooth'
+          },
+          xaxis: {
+            categories: ['Jan', 'Feb', 'Mar']
+          }
+        }
+      ) %&gt;
+    CODE
+  ) %>
 </section>
 
 <!-- Features -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Features</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Examples for Features.") %>
   <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
     <li><strong>ApexCharts Integration:</strong> Professional data visualization library</li>
     <li><strong>Lazy Loading:</strong> Charts load only when needed (via dynamic import)</li>
@@ -353,7 +367,7 @@ pin "apexcharts", to: "apexcharts.min.js"</code></pre>
 
 <!-- Chart Types Reference -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Available Chart Types</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Available Chart Types", anchor_link: true, subtitle: "Examples for Available Chart Types.") %>
   <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
     <%= render FlatPack::Badge::Component.new(text: ":line", variant: :default) %>
     <%= render FlatPack::Badge::Component.new(text: ":bar", variant: :default) %>

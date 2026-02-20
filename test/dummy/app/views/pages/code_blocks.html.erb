@@ -1,7 +1,9 @@
-<h1 class="text-4xl font-bold mb-4">Code Block Component</h1>
-<p class="text-lg text-[var(--color-muted-foreground)] mb-8">
-  Reusable code snippets for demos and documentation pages.
-</p>
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Code Block Component",
+  subtitle: "Reusable code snippets for demos and documentation pages."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :code_block %>
 
 <%
   erb_output_open = "<" + "%="
@@ -10,10 +12,9 @@
 
 <!-- Basic Usage -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Basic Usage</h2>
-
+  <%= render FlatPack::SectionTitle::Component.new(title: "Basic Usage", anchor_link: true, subtitle: "Examples for Basic Usage.") %>
   <%= render FlatPack::CodeBlock::Component.new(
-    code: <<~CODE
+    code: CGI.unescapeHTML(<<~'CODE')
       #{erb_output_open} render FlatPack::Button::Component.new(
         text: "Primary",
         style: :primary
@@ -24,8 +25,7 @@
 
 <!-- With Title -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">With Title</h2>
-
+  <%= render FlatPack::SectionTitle::Component.new(title: "With Title", anchor_link: true, subtitle: "Examples for With Title.") %>
   <%= render FlatPack::CodeBlock::Component.new(
     title: "Ruby",
     code: <<~CODE
@@ -36,7 +36,7 @@
 
 <!-- With Language -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">With Language Class</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "With Language Class", anchor_link: true, subtitle: "Examples for With Language Class.") %>
   <p class="text-[var(--color-muted-foreground)] mb-4">
     Adds a language class to the <code>&lt;code&gt;</code> element (for optional syntax highlighters).
   </p>
@@ -54,7 +54,7 @@
 
 <!-- Real Demo Pattern -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Real Demo Pattern</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Real Demo Pattern", anchor_link: true, subtitle: "Examples for Real Demo Pattern.") %>
   <p class="text-[var(--color-muted-foreground)] mb-4">
     Use this component where demos currently render raw <code>&lt;pre&gt;&lt;code&gt;</code> blocks.
   </p>
@@ -65,5 +65,47 @@
     code: <<~CODE
       #{erb_output_open} render FlatPack::Badge::Component.new(text: "New", style: :primary) #{erb_tag_close}
     CODE
+  ) %>
+</section>
+
+<!-- Multiple Snippets -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Multiple Snippets", anchor_link: true, subtitle: "Examples for Multiple Snippets.") %>
+  <p class="text-[var(--color-muted-foreground)] mb-4">
+    Pass an array of snippets to render tab buttons inside the code block.
+  </p>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "Button Variants",
+    snippets: [
+      {
+        label: "Primary",
+        language: "erb",
+        code: <<~CODE
+          #{erb_output_open} render FlatPack::Button::Component.new(text: "Primary", style: :primary) #{erb_tag_close}
+        CODE
+      },
+      {
+        label: "Secondary",
+        language: "erb",
+        code: <<~CODE
+          #{erb_output_open} render FlatPack::Button::Component.new(text: "Secondary", style: :secondary) #{erb_tag_close}
+        CODE
+      },
+      {
+        label: "Ghost",
+        language: "erb",
+        code: <<~CODE
+          #{erb_output_open} render FlatPack::Button::Component.new(text: "Ghost", style: :ghost) #{erb_tag_close}
+        CODE
+      },
+      {
+        label: "Loading",
+        language: "erb",
+        code: <<~CODE
+          #{erb_output_open} render FlatPack::Button::Component.new(text: "Loading", style: :primary, loading: true) #{erb_tag_close}
+        CODE
+      }
+    ]
   ) %>
 </section>

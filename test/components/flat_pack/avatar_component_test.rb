@@ -93,6 +93,13 @@ module FlatPack
         render_inline(Component.new(name: "Test"))
 
         assert_includes page.native.to_html, "rounded-full"
+        assert_includes page.native.to_html, "aspect-square"
+      end
+
+      def test_applies_size_fallback_style_for_lg
+        render_inline(Component.new(name: "Test", size: :lg))
+
+        assert_selector "span[style*='width: 3rem'][style*='height: 3rem']"
       end
 
       def test_raises_error_for_invalid_size

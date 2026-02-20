@@ -79,8 +79,12 @@ module FlatPack
       end
 
       def wrapper_attributes
+        existing_style = html_attributes[:style]
+        combined_style = [existing_style, size_fallback_style].compact.join("; ")
+
         merge_attributes(
-          class: wrapper_classes
+          class: wrapper_classes,
+          style: combined_style.presence
         )
       end
 
@@ -88,7 +92,7 @@ module FlatPack
         classes(
           "relative inline-flex items-center justify-center shrink-0",
           "bg-[var(--color-muted)] text-[var(--color-foreground)]",
-          "font-medium select-none overflow-hidden",
+          "font-medium select-none overflow-hidden aspect-square",
           SIZES.fetch(@size),
           SHAPES.fetch(@shape),
           @href ? "hover:opacity-80 transition-opacity duration-[var(--transition-base)]" : nil
@@ -102,6 +106,16 @@ module FlatPack
           render_initials
         else
           render_generic_icon
+        end
+      end
+
+      def size_fallback_style
+        case @size
+        when :xs then "width: 1.5rem; height: 1.5rem"
+        when :sm then "width: 2rem; height: 2rem"
+        when :md then "width: 2.5rem; height: 2.5rem"
+        when :lg then "width: 3rem; height: 3rem"
+        when :xl then "width: 4rem; height: 4rem"
         end
       end
 

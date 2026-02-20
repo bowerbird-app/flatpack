@@ -1,7 +1,9 @@
-  <h1 class="text-4xl font-bold mb-4">Form Examples with Submit Buttons</h1>
-  <p class="text-lg text-[var(--color-muted-foreground)] mb-8">
-    Examples of forms using submit buttons with different HTTP methods (POST, PATCH, PUT, DELETE).
-  </p>
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Form Examples with Submit Buttons",
+    subtitle: "Examples of forms using submit buttons with different HTTP methods (POST, PATCH, PUT, DELETE)."
+  ) %>
+
+  <%= render "pages/component_method_variables_table", component: :form_input %>
 
   <!-- Flash Messages -->
   <% if flash[:notice] %>
@@ -17,7 +19,7 @@
 
   <!-- Basic Form with POST (Create) -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Form with POST Method (Create)</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Form with POST Method (Create)", anchor_link: true, subtitle: "Examples for Form with POST Method (Create).") %>
     <p class="text-[var(--color-muted-foreground)] mb-4">
       Standard form submission using POST method for creating new resources.
     </p>
@@ -55,18 +57,23 @@
       </div>
     <% end %>
 
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= form_with url: demo_forms_create_path, method: :post do |f| %&gt;
-  &lt;%= render FlatPack::Button::Component.new(
-    text: "Create User",
-    type: "submit",
-    style: :primary
-  ) %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;%= form_with url: demo_forms_create_path, method: :post do |f| %&gt;
+          &lt;%= render FlatPack::Button::Component.new(
+            text: "Create User",
+            type: "submit",
+            style: :primary
+          ) %&gt;
+        &lt;% end %&gt;
+      CODE
+      class: "mt-4"
+    ) %>
   </section>
 
   <!-- Form with PATCH (Update) -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Form with PATCH Method (Update)</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Form with PATCH Method (Update)", anchor_link: true, subtitle: "Examples for Form with PATCH Method (Update).") %>
     <p class="text-[var(--color-muted-foreground)] mb-4">
       Update form using PATCH method for modifying existing resources.
     </p>
@@ -119,18 +126,23 @@
       </div>
     <% end %>
 
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= form_with url: demo_forms_update_path, method: :patch do |f| %&gt;
-  &lt;%= render FlatPack::Button::Component.new(
-    text: "Update User",
-    type: "submit",
-    style: :success
-  ) %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;%= form_with url: demo_forms_update_path, method: :patch do |f| %&gt;
+          &lt;%= render FlatPack::Button::Component.new(
+            text: "Update User",
+            type: "submit",
+            style: :success
+          ) %&gt;
+        &lt;% end %&gt;
+      CODE
+      class: "mt-4"
+    ) %>
   </section>
 
   <!-- Form with PUT (Update Alternative) -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Form with PUT Method (Update Alternative)</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Form with PUT Method (Update Alternative)", anchor_link: true, subtitle: "Examples for Form with PUT Method (Update Alternative).") %>
     <p class="text-[var(--color-muted-foreground)] mb-4">
       Update form using PUT method as an alternative to PATCH.
     </p>
@@ -163,18 +175,23 @@
       </div>
     <% end %>
 
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= form_with url: demo_forms_update_path, method: :put do |f| %&gt;
-  &lt;%= render FlatPack::Button::Component.new(
-    text: "Save Changes",
-    type: "submit",
-    style: :primary
-  ) %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;%= form_with url: demo_forms_update_path, method: :put do |f| %&gt;
+          &lt;%= render FlatPack::Button::Component.new(
+            text: "Save Changes",
+            type: "submit",
+            style: :primary
+          ) %&gt;
+        &lt;% end %&gt;
+      CODE
+      class: "mt-4"
+    ) %>
   </section>
 
   <!-- Form with DELETE -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Form with DELETE Method</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Form with DELETE Method", anchor_link: true, subtitle: "Examples for Form with DELETE Method.") %>
     <p class="text-[var(--color-muted-foreground)] mb-4">
       Deletion form using DELETE method. Typically used with confirmation dialogs.
     </p>
@@ -209,18 +226,23 @@
       </div>
     <% end %>
 
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= form_with url: demo_forms_destroy_path, method: :delete do |f| %&gt;
-  &lt;%= render FlatPack::Button::Component.new(
-    text: "Delete Account",
-    type: "submit",
-    style: :warning
-  ) %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;%= form_with url: demo_forms_destroy_path, method: :delete do |f| %&gt;
+          &lt;%= render FlatPack::Button::Component.new(
+            text: "Delete Account",
+            type: "submit",
+            style: :warning
+          ) %&gt;
+        &lt;% end %&gt;
+      CODE
+      class: "mt-4"
+    ) %>
   </section>
 
   <!-- Submit Button Variations -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Submit Button Variations</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Submit Button Variations", anchor_link: true, subtitle: "Examples for Submit Button Variations.") %>
     <p class="text-[var(--color-muted-foreground)] mb-4">
       Different styles and sizes of submit buttons within forms.
     </p>
@@ -320,19 +342,24 @@
       </div>
     <% end %>
 
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Button::Component.new(
-  text: "Submit",
-  type: "submit",
-  style: :primary,
-  size: :md,
-  icon: "check",
-  loading: false
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;%= render FlatPack::Button::Component.new(
+          text: "Submit",
+          type: "submit",
+          style: :primary,
+          size: :md,
+          icon: "check",
+          loading: false
+        ) %&gt;
+      CODE
+      class: "mt-4"
+    ) %>
   </section>
 
   <!-- Multiple Submit Buttons -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Multiple Submit Buttons</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Multiple Submit Buttons", anchor_link: true, subtitle: "Examples for Multiple Submit Buttons.") %>
     <p class="text-[var(--color-muted-foreground)] mb-4">
       Forms can have multiple submit buttons with different actions.
     </p>
@@ -365,23 +392,28 @@
       </div>
     <% end %>
 
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Button::Component.new(
-  text: "Save as Draft",
-  type: "submit",
-  name: "action",
-  value: "draft"
-) %&gt;
-&lt;%= render FlatPack::Button::Component.new(
-  text: "Publish",
-  type: "submit",
-  name: "action",
-  value: "publish"
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;%= render FlatPack::Button::Component.new(
+          text: "Save as Draft",
+          type: "submit",
+          name: "action",
+          value: "draft"
+        ) %&gt;
+        &lt;%= render FlatPack::Button::Component.new(
+          text: "Publish",
+          type: "submit",
+          name: "action",
+          value: "publish"
+        ) %&gt;
+      CODE
+      class: "mt-4"
+    ) %>
   </section>
 
   <!-- Button Types Comparison -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Button Types Comparison</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Button Types Comparison", anchor_link: true, subtitle: "Examples for Button Types Comparison.") %>
     <p class="text-[var(--color-muted-foreground)] mb-4">
       Understanding the difference between button types: submit, button, and reset.
     </p>
@@ -426,12 +458,17 @@
       </div>
     <% end %>
 
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;!-- Default type is 'button' --&gt;
-&lt;%= render FlatPack::Button::Component.new(text: "Click me") %&gt;
-
-&lt;!-- Explicitly set type to 'submit' for form submission --&gt;
-&lt;%= render FlatPack::Button::Component.new(text: "Submit", type: "submit") %&gt;
-
-&lt;!-- Reset form to initial values --&gt;
-&lt;%= render FlatPack::Button::Component.new(text: "Reset", type: "reset") %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE'),
+        <!-- Default type is 'button' -->
+        &lt;%= render FlatPack::Button::Component.new(text: "Click me") %&gt;
+        
+        <!-- Explicitly set type to 'submit' for form submission -->
+        &lt;%= render FlatPack::Button::Component.new(text: "Submit", type: "submit") %&gt;
+        
+        <!-- Reset form to initial values -->
+        &lt;%= render FlatPack::Button::Component.new(text: "Reset", type: "reset") %&gt;
+      CODE
+      class: "mt-4"
+    ) %>
   </section>

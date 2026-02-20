@@ -1,0 +1,178 @@
+<%
+  table_title = local_assigns[:title] || "Component Method & Variables"
+  table_anchor = local_assigns[:anchor] || table_title.to_s.parameterize
+  rows_by_key = {
+    alert: [
+      { method_or_variable: "Component Method", description: "Render an alert banner with optional title/body and dismiss action.", accepts: "render FlatPack::Alert::Component.new(...)" },
+      { method_or_variable: "style", description: "Visual alert variant.", accepts: ":info, :success, :warning, :danger" },
+      { method_or_variable: "dismissible", description: "Shows dismiss button + alert controller behavior.", accepts: "true, false" },
+      { method_or_variable: "icon", description: "Toggles leading icon.", accepts: "true, false" }
+    ],
+    avatar: [
+      { method_or_variable: "Component Method", description: "Render a single avatar or linked avatar.", accepts: "render FlatPack::Avatar::Component.new(...)" },
+      { method_or_variable: "src, alt, name, initials, href", description: "Image source, fallback text, and optional link target.", accepts: "String or nil values" },
+      { method_or_variable: "size", description: "Avatar size preset.", accepts: ":xs, :sm, :md, :lg, :xl" },
+      { method_or_variable: "shape, status", description: "Shape and optional presence indicator.", accepts: ":circle|:rounded|:square, :online|:offline|:busy|:away" }
+    ],
+    badge: [
+      { method_or_variable: "Component Method", description: "Render compact badge labels with optional dot/remove affordances.", accepts: "render FlatPack::Badge::Component.new(...)" },
+      { method_or_variable: "text", description: "Badge label content.", accepts: "String (required)" },
+      { method_or_variable: "style", description: "Badge visual variant.", accepts: ":default, :primary, :success, :warning, :info" },
+      { method_or_variable: "size", description: "Badge sizing preset.", accepts: ":sm, :md, :lg" }
+    ],
+    breadcrumb: [
+      { method_or_variable: "Component Method", description: "Render breadcrumb navigation with optional home/back and item collapsing.", accepts: "render FlatPack::Breadcrumb::Component.new(...)" },
+      { method_or_variable: "items", description: "Convenience array for breadcrumb entries.", accepts: "Array of item hashes" },
+      { method_or_variable: "separator", description: "Separator style between items.", accepts: ":chevron, :slash, :arrow, :dot, :custom" },
+      { method_or_variable: "show_back, show_home", description: "Prepend helper links.", accepts: "true, false" }
+    ],
+    button: [
+      { method_or_variable: "Component Method", description: "Render button or link-styled button with optional icon/loading states.", accepts: "render FlatPack::Button::Component.new(...)" },
+      { method_or_variable: "text, icon", description: "Primary label and optional icon.", accepts: "String, Symbol/String" },
+      { method_or_variable: "style", description: "Button visual style.", accepts: ":primary, :secondary, :ghost, :success, :warning, :error" },
+      { method_or_variable: "size", description: "Button size preset.", accepts: ":sm, :md, :lg" }
+    ],
+    chart: [
+      { method_or_variable: "Component Method", description: "Render chart with series data and optional card wrapper/title.", accepts: "render FlatPack::Chart::Component.new(...)" },
+      { method_or_variable: "series", description: "Chart data series payload.", accepts: "Array (required)" },
+      { method_or_variable: "type", description: "Chart type.", accepts: ":line, :bar, :area, :donut, :pie, :radar" },
+      { method_or_variable: "options, height", description: "Apex config overrides and chart height.", accepts: "Hash, Integer" }
+    ],
+    chat_panel: [
+      { method_or_variable: "Component Method", description: "Compose chat UI with panel/header/messages/composer slots.", accepts: "render FlatPack::Chat::Panel::Component.new do |panel| ... end" },
+      { method_or_variable: "with_header, with_messages, with_composer", description: "Primary panel slots used to compose the full chat surface.", accepts: "slot blocks" },
+      { method_or_variable: "direction, show_avatar, show_name, sender_name", description: "Message-group arguments on FlatPack::Chat::MessageGroup::Component.", accepts: ":incoming|:outgoing, booleans, String/nil" },
+      { method_or_variable: "direction, variant, state, timestamp, edited", description: "Message arguments on FlatPack::Chat::Message::Component.", accepts: ":incoming|:outgoing, :default|:system, :sent|:sending|:failed|:read, Time/String/nil, true/false" }
+    ],
+    chat_message: [
+      { method_or_variable: "Component Method", description: "Render message-state focused chat bubbles and metadata.", accepts: "render FlatPack::Chat::Message::Component.new(...)" },
+      { method_or_variable: "state", description: "Delivery/read state badge logic.", accepts: ":sent, :sending, :failed, :read" },
+      { method_or_variable: "variant", description: "Message visual variant.", accepts: ":default, :system" },
+      { method_or_variable: "edited, timestamp", description: "Edited indicator + time metadata.", accepts: "true/false, Time/String" }
+    ],
+    chip: [
+      { method_or_variable: "Component Method", description: "Render compact chips for tags/filters/actions.", accepts: "render FlatPack::Chip::Component.new(...)" },
+      { method_or_variable: "text", description: "Chip label.", accepts: "String" },
+      { method_or_variable: "style, size", description: "Visual + size presets.", accepts: ":default|:primary|:success|:warning|:danger|:info, :sm|:md|:lg" },
+      { method_or_variable: "type, selected, removable", description: "Interaction model and toggles.", accepts: ":static|:button|:link, booleans" }
+    ],
+    code_block: [
+      { method_or_variable: "Component Method", description: "Render formatted code snippets for docs/demos.", accepts: "render FlatPack::CodeBlock::Component.new(...)" },
+      { method_or_variable: "code", description: "Source string to display.", accepts: "String (required)" },
+      { method_or_variable: "snippets", description: "Multiple labeled snippets rendered as tabs when more than one snippet is provided.", accepts: "Array of hashes: [{ label:, code:, language: }]" },
+      { method_or_variable: "language", description: "Language hint class for syntax highlighters.", accepts: "String or nil" },
+      { method_or_variable: "title", description: "Optional block title/header.", accepts: "String or nil" },
+      { method_or_variable: "separated", description: "Adds default top spacing above the snippet container.", accepts: "true (default), false" }
+    ],
+    comments_thread: [
+      { method_or_variable: "Component Method", description: "Render thread container with item/composer/replies composition.", accepts: "render FlatPack::Comments::Thread::Component.new(...) do |thread| ... end" },
+      { method_or_variable: "count, title, variant, empty_title, empty_body, locked", description: "Thread-level arguments on FlatPack::Comments::Thread::Component.", accepts: "Integer, String, :default|:compact, String, String, true/false" },
+      { method_or_variable: "author_name, author_meta, body, body_html, timestamp, edited, state, avatar", description: "Comment item arguments on FlatPack::Comments::Item::Component.", accepts: "String, String/nil, String/nil, HTML/nil, Time/String/nil, true/false, :default|:system|:deleted, Hash" },
+      { method_or_variable: "placeholder, submit_label, cancel_label, show_cancel, disabled, compact, form, name, value, rows", description: "Composer arguments on FlatPack::Comments::Composer::Component.", accepts: "String/booleans/form id/numeric as applicable" }
+    ],
+    empty_state: [
+      { method_or_variable: "Component Method", description: "Render empty-state messaging with optional icon and actions slot.", accepts: "render FlatPack::EmptyState::Component.new(...)" },
+      { method_or_variable: "title", description: "Primary empty-state message.", accepts: "String (required)" },
+      { method_or_variable: "description", description: "Supporting helper text.", accepts: "String or nil" },
+      { method_or_variable: "icon", description: "Leading icon name.", accepts: "Symbol/String or nil" }
+    ],
+    form_input: [
+      { method_or_variable: "Component Method", description: "Use FlatPack input/button components inside Rails form builders.", accepts: "form_with ... render FlatPack::*Input::Component.new(...)" },
+      { method_or_variable: "name, label, value, placeholder, required, disabled, error", description: "Shared arguments across FlatPack input components.", accepts: "String, String/nil, value/nil, String/nil, booleans" },
+      { method_or_variable: "min, max, step, rows, options, accept, multiple, searchable", description: "Input-specific arguments depending on input component type.", accepts: "Numeric/String/Array/booleans as applicable" },
+      { method_or_variable: "text, style, size, loading, type, url, method, target, icon, icon_only", description: "FlatPack::Button::Component arguments commonly used in forms.", accepts: "button-compatible values" }
+    ],
+    grid: [
+      { method_or_variable: "Component Method", description: "Render responsive grid wrappers for card/content collections.", accepts: "render FlatPack::Grid::Component.new(...) do ... end" },
+      { method_or_variable: "cols", description: "Column behavior and explicit column counts.", accepts: ":auto, Integer" },
+      { method_or_variable: "gap", description: "Inter-item spacing scale.", accepts: ":none, :xs, :sm, :md, :lg, :xl" },
+      { method_or_variable: "align", description: "Item alignment in the grid.", accepts: ":start, :center, :end, :stretch" }
+    ],
+    text_input: [
+      { method_or_variable: "Component Method", description: "Render input controls (text/email/phone/select/etc.) with consistent API.", accepts: "render FlatPack::*Input::Component.new(...)" },
+      { method_or_variable: "name, label, value, placeholder, required, disabled, error", description: "Core arguments shared by the input components.", accepts: "String/value + boolean flags" },
+      { method_or_variable: "min, max, step, rows, options, accept, multiple, searchable", description: "Type-specific extras available on number/date/text_area/select/file inputs.", accepts: "Numeric/String/Array/booleans as applicable" },
+      { method_or_variable: "class, id, data, aria", description: "System arguments forwarded through FlatPack::BaseComponent.", accepts: "standard HTML/system attributes" }
+    ],
+    modal: [
+      { method_or_variable: "Component Method", description: "Render dialog overlays with header/body/footer slots.", accepts: "render FlatPack::Modal::Component.new(...) do |modal| ... end" },
+      { method_or_variable: "id", description: "Unique modal id used by trigger actions.", accepts: "String (required)" },
+      { method_or_variable: "size", description: "Dialog width preset.", accepts: ":sm, :md, :lg, :xl, :\"2xl\"" },
+      { method_or_variable: "close_on_backdrop, close_on_escape", description: "Dismiss interaction controls.", accepts: "true, false" }
+    ],
+    top_nav: [
+      { method_or_variable: "Component Method", description: "Compose top navigation using left/center/right slots.", accepts: "render FlatPack::TopNav::Component.new(...) do |nav| ... end" },
+      { method_or_variable: "left, center, right", description: "Convenience methods for named content areas.", accepts: "slot blocks" },
+      { method_or_variable: "with_left_slot, with_center_slot, with_right_slot", description: "Explicit slot API generated by ViewComponent.", accepts: "slot blocks" },
+      { method_or_variable: "class, style, data, id, aria", description: "Container customization through base args.", accepts: "standard HTML/system attributes" }
+    ],
+    page_title: [
+      { method_or_variable: "Component Method", description: "Render page heading with optional subtitle.", accepts: "render FlatPack::PageTitle::Component.new(...)" },
+      { method_or_variable: "title", description: "Main heading text.", accepts: "String (required)" },
+      { method_or_variable: "subtitle", description: "Supporting descriptive text.", accepts: "String or nil" },
+      { method_or_variable: "class, data, id, aria", description: "Wrapper attributes from FlatPack::BaseComponent.", accepts: "standard HTML/system attributes" }
+    ],
+    pagination: [
+      { method_or_variable: "Component Method", description: "Render Pagy-powered pagination controls.", accepts: "render FlatPack::Pagination::Component.new(...)" },
+      { method_or_variable: "pagy", description: "Pagy object to paginate.", accepts: "Pagy instance (required)" },
+      { method_or_variable: "size", description: "Pagination density style.", accepts: ":compact, :normal" },
+      { method_or_variable: "class, data, id, aria", description: "Wrapper-level customization.", accepts: "standard HTML/system attributes" }
+    ],
+    popover: [
+      { method_or_variable: "Component Method", description: "Render trigger-linked floating popover content.", accepts: "render FlatPack::Popover::Component.new(...) do |popover| ... end" },
+      { method_or_variable: "trigger_id", description: "DOM id of trigger element.", accepts: "String (required)" },
+      { method_or_variable: "placement", description: "Preferred popover placement.", accepts: ":top, :right, :bottom, :left" },
+      { method_or_variable: "with_popover_content", description: "Slot for popover body content.", accepts: "block/slot" }
+    ],
+    search: [
+      { method_or_variable: "Component Method", description: "Render debounced search field with optional live endpoint.", accepts: "render FlatPack::Search::Component.new(...)" },
+      { method_or_variable: "search_url", description: "Endpoint used for async search requests.", accepts: "Relative/allowed URL or nil" },
+      { method_or_variable: "name, value, placeholder", description: "Input identity and default UI text.", accepts: "String values" },
+      { method_or_variable: "min_characters, debounce, no_results_text", description: "Query triggering behavior + empty-result message.", accepts: "Integer, Integer(ms), String" }
+    ],
+    sidebar_layout: [
+      { method_or_variable: "Component Method", description: "Compose app shell with sidebar, top nav, and main slots.", accepts: "render FlatPack::SidebarLayout::Component.new(...) do |layout| ... end" },
+      { method_or_variable: "side", description: "Sidebar side.", accepts: ":left, :right" },
+      { method_or_variable: "default_open", description: "Initial sidebar state.", accepts: "true, false" },
+      { method_or_variable: "storage_key", description: "Optional persisted state key.", accepts: "String or nil" }
+    ],
+    table: [
+      { method_or_variable: "Component Method", description: "Render data tables with declarative columns and optional sorting/reorder.", accepts: "render FlatPack::Table::Component.new(...) do |table| ... end" },
+      { method_or_variable: "data", description: "Row collection for rendering.", accepts: "Array/Enumerable" },
+      { method_or_variable: "column", description: "Define each column’s title/content/sort behavior.", accepts: "title:, html:, sortable:, sort_key:" },
+      { method_or_variable: "sort, direction", description: "Active sorting context.", accepts: "String/symbol, :asc|:desc" }
+    ],
+    tabs: [
+      { method_or_variable: "Component Method", description: "Render accessible tabs with tab + panel declarations.", accepts: "render FlatPack::Tabs::Component.new(...) do |tabs| ... end" },
+      { method_or_variable: "default_tab", description: "Default selected tab index.", accepts: "Integer" },
+      { method_or_variable: "tab", description: "Declare tab trigger metadata.", accepts: "label:, id:, **tab_args" },
+      { method_or_variable: "panel", description: "Declare panel content.", accepts: "id:, block" }
+    ],
+    toast: [
+      { method_or_variable: "Component Method", description: "Render transient toast notifications and region controller wiring.", accepts: "render FlatPack::Toast::Component.new(...)" },
+      { method_or_variable: "message", description: "Toast body text.", accepts: "String (required)" },
+      { method_or_variable: "type", description: "Toast variant.", accepts: ":info, :success, :warning, :error" },
+      { method_or_variable: "timeout, dismissible", description: "Auto-dismiss timing and close affordance.", accepts: "Integer(ms), true/false" }
+    ],
+    tooltip: [
+      { method_or_variable: "Component Method", description: "Wrap any trigger element with hover/focus tooltip content.", accepts: "render FlatPack::Tooltip::Component.new(...) do ... end" },
+      { method_or_variable: "text", description: "Tooltip body text.", accepts: "String" },
+      { method_or_variable: "placement", description: "Preferred tooltip direction.", accepts: ":top, :right, :bottom, :left" },
+      { method_or_variable: "with_tooltip_content, class, data, id, aria", description: "Optional slot content and wrapper customization.", accepts: "slot block + standard HTML/system attributes" }
+    ]
+  }
+
+  rows = rows_by_key.fetch(component.to_sym)
+  method_row = rows.find { |row| row[:method_or_variable] == "Component Method" }
+  method_subtitle = method_row&.fetch(:accepts, nil)
+  rows = rows.reject { |row| row[:method_or_variable] == "Component Method" }
+%>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: table_title, subtitle: method_subtitle, anchor_link: true, anchor_id: table_anchor) %>
+  <%= render FlatPack::Table::Component.new(data: rows) do |table| %>
+    <% table.column(title: "Variable", html: ->(row) { row[:method_or_variable] }) %>
+    <% table.column(title: "Accepts", html: ->(row) { row[:accepts] }) %>
+    <% table.column(title: "Description", html: ->(row) { row[:description] }) %>
+  <% end %>
+</section>

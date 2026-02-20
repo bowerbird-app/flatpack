@@ -1,10 +1,11 @@
-<h1 class="text-4xl font-bold mb-4">Top Nav Components</h1>
-<p class="text-lg text-[var(--color-muted-foreground)] mb-8">
-  Top nav slot behavior with live examples and copyable code snippets.
-</p>
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Top Nav Components",
+  subtitle: "Top nav slot behavior with live examples and copyable code snippets."
+) %>
+<%= render "pages/component_method_variables_table", component: :top_nav %>
 
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Left Slot</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Left Slot", anchor_link: true, subtitle: "Examples for Left Slot.") %>
   <p class="text-sm text-[var(--color-muted-foreground)] mb-4">
     Use the left slot for navigation controls like a mobile menu toggle, back button, and page title.
   </p>
@@ -28,28 +29,32 @@
       <% end %>
     <% end %>
   </div>
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::TopNav::Component.new do |nav| %&gt;
-  &lt;% nav.left do %&gt;
-    &lt;button type=&quot;button&quot; class=&quot;p-2 rounded-lg hover:bg-[var(--color-muted)]&quot; aria-label=&quot;Toggle sidebar&quot;&gt;
-      &lt;%= render FlatPack::Shared::IconComponent.new(name: :menu, size: :md) %&gt;
-    &lt;/button&gt;
-    &lt;h3 class=&quot;text-base font-semibold&quot;&gt;Dashboard&lt;/h3&gt;
-  &lt;% end %&gt;
-
-  &lt;% nav.center do %&gt;
-    &lt;div class=&quot;text-sm text-[var(--color-text-muted)]&quot;&gt;Page context&lt;/div&gt;
-  &lt;% end %&gt;
-
-  &lt;% nav.right do %&gt;
-    &lt;button type=&quot;button&quot; class=&quot;p-2 rounded-lg hover:bg-[var(--color-muted)]&quot; aria-label=&quot;Notifications&quot;&gt;
-      &lt;%= render FlatPack::Shared::IconComponent.new(name: :bell, size: :md) %&gt;
-    &lt;/button&gt;
-  &lt;% end %&gt;
-&lt;% end %&gt;</code></pre>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::TopNav::Component.new do |nav| %&gt;
+        &lt;% nav.left do %&gt;
+          <button type="button" class="p-2 rounded-lg hover:bg-[var(--color-muted)]" aria-label="Toggle sidebar">
+            &lt;%= render FlatPack::Shared::IconComponent.new(name: :menu, size: :md) %&gt;
+          </button>
+          <h3 class="text-base font-semibold">Dashboard</h3>
+        &lt;% end %&gt;
+      
+        &lt;% nav.center do %&gt;
+          <div class="text-sm text-[var(--color-text-muted)]">Page context</div>
+        &lt;% end %&gt;
+      
+        &lt;% nav.right do %&gt;
+          <button type="button" class="p-2 rounded-lg hover:bg-[var(--color-muted)]" aria-label="Notifications">
+            &lt;%= render FlatPack::Shared::IconComponent.new(name: :bell, size: :md) %&gt;
+          </button>
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
 </section>
 
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Center Slot</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Center Slot", anchor_link: true, subtitle: "Examples for Center Slot.") %>
   <p class="text-sm text-[var(--color-muted-foreground)] mb-4">
     Use the center slot for search, tabs, or any content that should stay visually centered.
   </p>
@@ -70,25 +75,29 @@
       <% end %>
     <% end %>
   </div>
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::TopNav::Component.new do |nav| %&gt;
-  &lt;% nav.left do %&gt;
-    &lt;h3 class=&quot;text-base font-semibold&quot;&gt;Projects&lt;/h3&gt;
-  &lt;% end %&gt;
-
-  &lt;% nav.center do %&gt;
-    &lt;%= render FlatPack::Search::Component.new(
-      placeholder: &quot;Search projects, files, or people...&quot;
-    ) %&gt;
-  &lt;% end %&gt;
-
-  &lt;% nav.right do %&gt;
-    &lt;%= render FlatPack::Button::Component.new(text: &quot;New&quot;, size: :sm, style: :primary) %&gt;
-  &lt;% end %&gt;
-&lt;% end %&gt;</code></pre>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::TopNav::Component.new do |nav| %&gt;
+        &lt;% nav.left do %&gt;
+          <h3 class="text-base font-semibold">Projects</h3>
+        &lt;% end %&gt;
+      
+        &lt;% nav.center do %&gt;
+          &lt;%= render FlatPack::Search::Component.new(
+            placeholder: "Search projects, files, or people..."
+          ) %&gt;
+        &lt;% end %&gt;
+      
+        &lt;% nav.right do %&gt;
+          &lt;%= render FlatPack::Button::Component.new(text: "New", size: :sm, style: :primary) %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
 </section>
 
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Right Slot</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Right Slot", anchor_link: true, subtitle: "Examples for Right Slot.") %>
   <p class="text-sm text-[var(--color-muted-foreground)] mb-4">
     Use the right slot for user actions like notifications, settings, profile, and quick-create actions.
   </p>
@@ -115,37 +124,45 @@
       <% end %>
     <% end %>
   </div>
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::TopNav::Component.new do |nav| %&gt;
-  &lt;% nav.left do %&gt;
-    &lt;h3 class=&quot;text-base font-semibold&quot;&gt;Workspace&lt;/h3&gt;
-  &lt;% end %&gt;
-
-  &lt;% nav.center do %&gt;
-    &lt;div class=&quot;text-sm text-[var(--color-text-muted)]&quot;&gt;Overview&lt;/div&gt;
-  &lt;% end %&gt;
-
-  &lt;% nav.right do %&gt;
-    &lt;div class=&quot;flex items-center gap-2&quot;&gt;
-      &lt;button type=&quot;button&quot; class=&quot;p-2 rounded-lg hover:bg-[var(--color-muted)]&quot; aria-label=&quot;Help&quot;&gt;
-        &lt;%= render FlatPack::Shared::IconComponent.new(name: :question, size: :md) %&gt;
-      &lt;/button&gt;
-      &lt;button type=&quot;button&quot; class=&quot;p-2 rounded-lg hover:bg-[var(--color-muted)]&quot; aria-label=&quot;Settings&quot;&gt;
-        &lt;%= render FlatPack::Shared::IconComponent.new(name: :cog, size: :md) %&gt;
-      &lt;/button&gt;
-      &lt;div class=&quot;w-8 h-8 rounded-full bg-[var(--color-muted)] text-sm font-semibold flex items-center justify-center&quot;&gt;AB&lt;/div&gt;
-    &lt;/div&gt;
-  &lt;% end %&gt;
-&lt;% end %&gt;</code></pre>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::TopNav::Component.new do |nav| %&gt;
+        &lt;% nav.left do %&gt;
+          <h3 class="text-base font-semibold">Workspace</h3>
+        &lt;% end %&gt;
+      
+        &lt;% nav.center do %&gt;
+          <div class="text-sm text-[var(--color-text-muted)]">Overview</div>
+        &lt;% end %&gt;
+      
+        &lt;% nav.right do %&gt;
+          <div class="flex items-center gap-2">
+            <button type="button" class="p-2 rounded-lg hover:bg-[var(--color-muted)]" aria-label="Help">
+              &lt;%= render FlatPack::Shared::IconComponent.new(name: :question, size: :md) %&gt;
+            </button>
+            <button type="button" class="p-2 rounded-lg hover:bg-[var(--color-muted)]" aria-label="Settings">
+              &lt;%= render FlatPack::Shared::IconComponent.new(name: :cog, size: :md) %&gt;
+            </button>
+            <div class="w-8 h-8 rounded-full bg-[var(--color-muted)] text-sm font-semibold flex items-center justify-center">AB</div>
+          </div>
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
 </section>
 
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Alignment Rules</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Alignment Rules", anchor_link: true, subtitle: "Examples for Alignment Rules.") %>
   <p class="text-sm text-[var(--color-muted-foreground)] mb-4">
     <code>left</code> is start-aligned, <code>center</code> is flexed and centered, and <code>right</code> sits at the far edge when center is present.
   </p>
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::TopNav::Component.new do |nav| %&gt;
-  &lt;% nav.left do %&gt;Left&lt;% end %&gt;
-  &lt;% nav.center do %&gt;Centered&lt;% end %&gt;
-  &lt;% nav.right do %&gt;Right&lt;% end %&gt;
-&lt;% end %&gt;</code></pre>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::TopNav::Component.new do |nav| %&gt;
+        &lt;% nav.left do %&gt;Left&lt;% end %&gt;
+        &lt;% nav.center do %&gt;Centered&lt;% end %&gt;
+        &lt;% nav.right do %&gt;Right&lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
 </section>

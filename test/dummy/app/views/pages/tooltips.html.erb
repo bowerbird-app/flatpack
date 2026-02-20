@@ -1,11 +1,12 @@
-<h1 class="text-4xl font-bold mb-4">Tooltip Component</h1>
-<p class="text-lg text-[var(--color-muted-foreground)] mb-8">
-  Hover or focus tooltips with smart positioning and accessibility support.
-</p>
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Tooltip Component",
+  subtitle: "Hover or focus tooltips with smart positioning and accessibility support."
+) %>
 
 <!-- Basic Tooltips -->
+<%= render "pages/component_method_variables_table", component: :tooltip %>
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Basic Tooltips</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Basic Tooltips", anchor_link: true, subtitle: "Examples for Basic Tooltips.") %>
   <div class="flex gap-4 mb-4">
     <%= render FlatPack::Tooltip::Component.new(text: "This button triggers a tooltip with additional context.", placement: :top) do %>
       <%= render FlatPack::Button::Component.new(text: "Hover me", style: :secondary) %>
@@ -19,14 +20,18 @@
     <% end %>
   </div>
   
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Tooltip::Component.new(text: "Tooltip text", placement: :top) do %&gt;
-  &lt;%= render FlatPack::Button::Component.new(text: "Hover me") %&gt;
-&lt;% end %&gt;</code></pre>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Tooltip::Component.new(text: "Tooltip text", placement: :top) do %&gt;
+        &lt;%= render FlatPack::Button::Component.new(text: "Hover me") %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
 </section>
 
 <!-- Tooltip Placements -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Tooltip Placements</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Tooltip Placements", anchor_link: true, subtitle: "Examples for Tooltip Placements.") %>
   <p class="text-[var(--color-muted-foreground)] mb-4">
     Tooltips automatically position themselves and adjust for viewport boundaries.
   </p>
@@ -48,15 +53,19 @@
     <% end %>
   </div>
   
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Tooltip::Component.new(text: "...", placement: :top) ... %&gt;
-&lt;%= render FlatPack::Tooltip::Component.new(text: "...", placement: :bottom) ... %&gt;
-&lt;%= render FlatPack::Tooltip::Component.new(text: "...", placement: :left) ... %&gt;
-&lt;%= render FlatPack::Tooltip::Component.new(text: "...", placement: :right) ... %&gt;</code></pre>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Tooltip::Component.new(text: "...", placement: :top) ... %&gt;
+      &lt;%= render FlatPack::Tooltip::Component.new(text: "...", placement: :bottom) ... %&gt;
+      &lt;%= render FlatPack::Tooltip::Component.new(text: "...", placement: :left) ... %&gt;
+      &lt;%= render FlatPack::Tooltip::Component.new(text: "...", placement: :right) ... %&gt;
+    CODE
+  ) %>
 </section>
 
 <!-- Rich Content Tooltip -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Rich Content Tooltip</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Rich Content Tooltip", anchor_link: true, subtitle: "Examples for Rich Content Tooltip.") %>
   <div class="mb-4">
     <%= render FlatPack::Tooltip::Component.new(placement: :top) do |tooltip| %>
       <%= render FlatPack::Button::Component.new(text: "Hover for details", style: :primary) %>
@@ -69,17 +78,21 @@
     <% end %>
   </div>
   
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Tooltip::Component.new(placement: :top) do |tooltip| %&gt;
-  &lt;%= render FlatPack::Button::Component.new(text: "Hover me") %&gt;
-  &lt;% tooltip.with_tooltip_content do %&gt;
-    &lt;div&gt;Rich HTML content here&lt;/div&gt;
-  &lt;% end %&gt;
-&lt;% end %&gt;</code></pre>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Tooltip::Component.new(placement: :top) do |tooltip| %&gt;
+        &lt;%= render FlatPack::Button::Component.new(text: "Hover me") %&gt;
+        &lt;% tooltip.with_tooltip_content do %&gt;
+          <div>Rich HTML content here</div>
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
 </section>
 
 <!-- Tooltips in Context -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Tooltips in Context</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Tooltips in Context", anchor_link: true, subtitle: "Examples for Tooltips in Context.") %>
   <p class="text-[var(--color-muted-foreground)] mb-4">
     Tooltips work great with icons, links, and inline elements.
   </p>
@@ -115,7 +128,7 @@
 
 <!-- Features -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Features</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Examples for Features.") %>
   <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
     <li><strong>Hover & Focus:</strong> Shows on mouse hover and keyboard focus</li>
     <li><strong>Smart Positioning:</strong> Automatically positions and adjusts for viewport boundaries</li>

@@ -11,6 +11,21 @@ module.exports = {
   safelist: [
     'hover:bg-[var(--color-muted)]',
     'hover:border-[var(--color-primary)]',
+    '-space-x-1',
+    '-space-x-2',
+    '-space-x-3',
+    'bg-white',
+    'text-black',
+    'border',
+    'border-black/20',
+    'bg-green-700',
+    'dark:bg-green-600',
+    'bg-red-500',
+    'dark:bg-red-400',
+    'bg-red-700',
+    'dark:bg-red-600',
+    'text-white',
+    'dark:text-white',
   ],
   theme: {
     extend: {

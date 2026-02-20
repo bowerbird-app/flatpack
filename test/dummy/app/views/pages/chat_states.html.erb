@@ -1,5 +1,6 @@
 <div class="container mx-auto max-w-4xl p-4">
-  <h1 class="text-2xl font-bold mb-6">Chat Component - Message States Demo</h1>
+  <%= render FlatPack::PageTitle::Component.new(title: "Chat Component - Message States Demo") %>
+  <%= render "pages/component_method_variables_table", component: :chat_message %>
   
   <div class="bg-white dark:bg-zinc-900 rounded-lg shadow-lg border border-[var(--color-border)]" style="height: 600px">
     <%= render(FlatPack::Chat::Panel::Component.new) do |panel| %>

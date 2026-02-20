@@ -1,7 +1,7 @@
-<h1 class="text-4xl font-bold mb-4">FlatPack Component API Index</h1>
-<p class="text-lg text-[var(--color-muted-foreground)] mb-8">
-  Complete list of all available components, including shared components, with their variables, public methods, and descriptions.
-</p>
+<%= render FlatPack::PageTitle::Component.new(
+  title: "FlatPack Component API Index",
+  subtitle: "Complete list of all available components, including shared components, with their variables, public methods, and descriptions (#{@component_index.size} total)."
+) %>
 
 <div class="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border)]">
   <table class="w-full border-collapse bg-[var(--color-background)] text-sm">

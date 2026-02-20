@@ -1,11 +1,53 @@
-  <h1 class="text-4xl font-bold mb-4">Card Component</h1>
-  <p class="text-lg text-[var(--color-muted-foreground)] mb-8">
-    Flexible, composable cards for displaying content in structured containers.
-  </p>
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Card Component",
+    subtitle: "Flexible, composable cards for displaying content in structured containers."
+  ) %>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Component Method & Variables",
+      anchor_link: true,
+      subtitle: "render FlatPack::Card::Component.new(...) do |card| ... end"
+    ) %>
+
+    <%= render FlatPack::Table::Component.new(
+      data: [
+        {
+          method_or_variable: "style",
+          description: "Visual card style preset.",
+          accepts: ":default, :elevated, :outlined, :flat, :interactive, :list"
+        },
+        {
+          method_or_variable: "hover",
+          description: "Optional hover behavior override.",
+          accepts: "nil, :none, :subtle, :strong"
+        },
+        {
+          method_or_variable: "clickable",
+          description: "Renders card as a link when true and href is provided.",
+          accepts: "true, false"
+        },
+        {
+          method_or_variable: "href",
+          description: "Destination URL for clickable cards.",
+          accepts: "Relative URL or allowed protocols (http, https, mailto, tel)"
+        },
+        {
+          method_or_variable: "padding",
+          description: "Default content padding, and default media padding when used.",
+          accepts: ":none, :sm, :md, :lg"
+        }
+      ]
+    ) do |table| %>
+      <% table.column(title: "Variable", html: ->(row) { row[:method_or_variable] }) %>
+      <% table.column(title: "Accepts", html: ->(row) { row[:accepts] }) %>
+      <% table.column(title: "Description", html: ->(row) { row[:description] }) %>
+    <% end %>
+  </section>
 
   <!-- Combined Default Grid Card -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Combined Default Card (Grid Default)</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Combined Default Card (Grid Default)", anchor_link: true, subtitle: "Examples for Combined Default Card (Grid Default).") %>
     <p class="text-sm text-[var(--color-muted-foreground)] mb-4">
       Recommended default for grid layouts: edge-to-edge top media, subtle hover interaction, and icon actions at the bottom.
     </p>
@@ -30,30 +72,34 @@
         <% end %>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Card::Component.new(style: :default, hover: :subtle, class: "shadow-md dark:shadow-lg") do |card| %&gt;
-  &lt;% card.media(aspect_ratio: "16/9", padding: :none) do %&gt;
-    &lt;%= image_tag "https://picsum.photos/800/450?random=21", class: "w-full h-full object-cover", alt: "Grid default card media" %&gt;
-  &lt;% end %&gt;
-  &lt;% card.body do %&gt;
-    &lt;h3 class="text-lg font-semibold mb-2"&gt;Grid Card Title&lt;/h3&gt;
-    &lt;p class="text-sm text-[var(--color-muted-foreground)]"&gt;Edge-to-edge hero media with a compact content block for grid views.&lt;/p&gt;
-  &lt;% end %&gt;
-  &lt;% card.footer(divider: false) do %&gt;
-    &lt;div class="flex items-center justify-between"&gt;
-      &lt;div class="text-xs text-[var(--color-muted-foreground)]"&gt;Updated 2h ago&lt;/div&gt;
-      &lt;div class="flex gap-2"&gt;
-        &lt;%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, style: :ghost, size: :sm, url: "#grid-card-notifications") %&gt;
-        &lt;%= render FlatPack::Button::Component.new(icon: "calendar", icon_only: true, style: :ghost, size: :sm, url: "#grid-card-schedule") %&gt;
-        &lt;%= render FlatPack::Button::Component.new(icon: "dots", icon_only: true, style: :ghost, size: :sm, url: "#grid-card-menu") %&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-  &lt;% end %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Card::Component.new(style: :default, hover: :subtle, class: "shadow-md dark:shadow-lg") do |card| %&gt;
+          &lt;% card.media(aspect_ratio: "16/9", padding: :none) do %&gt;
+            &lt;%= image_tag "https://picsum.photos/800/450?random=21", class: "w-full h-full object-cover", alt: "Grid default card media" %&gt;
+          &lt;% end %&gt;
+          &lt;% card.body do %&gt;
+            <h3 class="text-lg font-semibold mb-2">Grid Card Title</h3>
+            <p class="text-sm text-[var(--color-muted-foreground)]">Edge-to-edge hero media with a compact content block for grid views.</p>
+          &lt;% end %&gt;
+          &lt;% card.footer(divider: false) do %&gt;
+            <div class="flex items-center justify-between">
+              <div class="text-xs text-[var(--color-muted-foreground)]">Updated 2h ago</div>
+              <div class="flex gap-2">
+                &lt;%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, style: :ghost, size: :sm, url: "#grid-card-notifications") %&gt;
+                &lt;%= render FlatPack::Button::Component.new(icon: "calendar", icon_only: true, style: :ghost, size: :sm, url: "#grid-card-schedule") %&gt;
+                &lt;%= render FlatPack::Button::Component.new(icon: "dots", icon_only: true, style: :ghost, size: :sm, url: "#grid-card-menu") %&gt;
+              </div>
+            </div>
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Card Styles -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Card Styles</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Card Styles", anchor_link: true, subtitle: "Examples for Card Styles.") %>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
       <%= render FlatPack::Card::Component.new(style: :default, hover: :subtle) do |card| %>
         <% card.header do %>
@@ -100,19 +146,23 @@
         <% end %>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Card::Component.new(style: :default) do |card| %&gt;
-  &lt;% card.header do %&gt;
-    &lt;h3 class="text-lg font-semibold"&gt;Default Card&lt;/h3&gt;
-  &lt;% end %&gt;
-  &lt;% card.body do %&gt;
-    &lt;p class="text-sm"&gt;Standard card with background and border.&lt;/p&gt;
-  &lt;% end %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Card::Component.new(style: :default) do |card| %&gt;
+          &lt;% card.header do %&gt;
+            <h3 class="text-lg font-semibold">Default Card</h3>
+          &lt;% end %&gt;
+          &lt;% card.body do %&gt;
+            <p class="text-sm">Standard card with background and border.</p>
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Padding Options -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Padding Options</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Padding Options", anchor_link: true, subtitle: "Examples for Padding Options.") %>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
       <%= render FlatPack::Card::Component.new(padding: :none) do %>
         <div class="text-sm">No padding</div>
@@ -130,14 +180,18 @@
         <div class="text-sm">Large padding (p-8)</div>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Card::Component.new(padding: :none) do %&gt;
-  &lt;div class="text-sm"&gt;No padding&lt;/div&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Card::Component.new(padding: :none) do %&gt;
+          <div class="text-sm">No padding</div>
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Card with All Slots -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Card with All Slots</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Card with All Slots", anchor_link: true, subtitle: "Examples for Card with All Slots.") %>
     <div class="max-w-sm mb-4">
       <%= render FlatPack::Card::Component.new(style: :default, hover: :subtle) do |card| %>
         <% card.media(aspect_ratio: "16/9") do %>
@@ -160,31 +214,35 @@
         <% end %>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Card::Component.new(style: :default) do |card| %&gt;
-  &lt;% card.media(aspect_ratio: "16/9") do %&gt;
-    &lt;div class="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-2xl font-bold"&gt;
-      Media Slot
-    &lt;/div&gt;
-  &lt;% end %&gt;
-  &lt;% card.header do %&gt;
-    &lt;h3 class="text-lg font-semibold"&gt;Card Title&lt;/h3&gt;
-    &lt;p class="text-sm text-[var(--color-muted-foreground)]"&gt;Subtitle or metadata&lt;/p&gt;
-  &lt;% end %&gt;
-  &lt;% card.body do %&gt;
-    &lt;p class="text-sm"&gt;This card demonstrates all available slots: media, header, body, and footer.&lt;/p&gt;
-  &lt;% end %&gt;
-  &lt;% card.footer do %&gt;
-    &lt;div class="flex gap-2"&gt;
-      &lt;%= render FlatPack::Button::Component.new(text: "Action", style: :primary, size: :sm) %&gt;
-      &lt;%= render FlatPack::Button::Component.new(text: "Cancel", style: :ghost, size: :sm) %&gt;
-    &lt;/div&gt;
-  &lt;% end %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Card::Component.new(style: :default) do |card| %&gt;
+          &lt;% card.media(aspect_ratio: "16/9") do %&gt;
+            <div class="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-2xl font-bold">
+              Media Slot
+            </div>
+          &lt;% end %&gt;
+          &lt;% card.header do %&gt;
+            <h3 class="text-lg font-semibold">Card Title</h3>
+            <p class="text-sm text-[var(--color-muted-foreground)]">Subtitle or metadata</p>
+          &lt;% end %&gt;
+          &lt;% card.body do %&gt;
+            <p class="text-sm">This card demonstrates all available slots: media, header, body, and footer.</p>
+          &lt;% end %&gt;
+          &lt;% card.footer do %&gt;
+            <div class="flex gap-2">
+              &lt;%= render FlatPack::Button::Component.new(text: "Action", style: :primary, size: :sm) %&gt;
+              &lt;%= render FlatPack::Button::Component.new(text: "Cancel", style: :ghost, size: :sm) %&gt;
+            </div>
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Clickable Cards -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Clickable Cards</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Clickable Cards", anchor_link: true, subtitle: "Examples for Clickable Cards.") %>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
       <%= render FlatPack::Card::Component.new(
         style: :default,
@@ -225,23 +283,27 @@
         <% end %>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Card::Component.new(
-  style: :default,
-  clickable: true,
-  href: "#card-1"
-) do |card| %&gt;
-  &lt;% card.header do %&gt;
-    &lt;h3 class="text-lg font-semibold"&gt;Clickable Card 1&lt;/h3&gt;
-  &lt;% end %&gt;
-  &lt;% card.body do %&gt;
-    &lt;p class="text-sm"&gt;Click anywhere on this card to navigate.&lt;/p&gt;
-  &lt;% end %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Card::Component.new(
+          style: :default,
+          clickable: true,
+          href: "#card-1"
+        ) do |card| %&gt;
+          &lt;% card.header do %&gt;
+            <h3 class="text-lg font-semibold">Clickable Card 1</h3>
+          &lt;% end %&gt;
+          &lt;% card.body do %&gt;
+            <p class="text-sm">Click anywhere on this card to navigate.</p>
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Product Card Example -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Product Card Example</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Product Card Example", anchor_link: true, subtitle: "Examples for Product Card Example.") %>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
       <%= render FlatPack::Card::Component.new(style: :default) do |card| %>
         <% card.media(aspect_ratio: "4/3") do %>
@@ -303,30 +365,34 @@
         <% end %>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Card::Component.new(style: :default) do |card| %&gt;
-  &lt;% card.media(aspect_ratio: "4/3") do %&gt;
-    &lt;div class="w-full h-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center text-white text-xl font-bold"&gt;
-      Product
-    &lt;/div&gt;
-  &lt;% end %&gt;
-  &lt;% card.body do %&gt;
-    &lt;h3 class="text-lg font-semibold mb-2"&gt;Premium Widget&lt;/h3&gt;
-    &lt;p class="text-sm text-[var(--color-muted-foreground)] mb-4"&gt;High-quality widget with advanced features and premium support.&lt;/p&gt;
-    &lt;div class="text-2xl font-bold text-green-600"&gt;$99.99&lt;/div&gt;
-  &lt;% end %&gt;
-  &lt;% card.footer do %&gt;
-    &lt;%= render FlatPack::Button::Component.new(
-      text: "Add to Cart",
-      style: :primary,
-      class: "w-full"
-    ) %&gt;
-  &lt;% end %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Card::Component.new(style: :default) do |card| %&gt;
+          &lt;% card.media(aspect_ratio: "4/3") do %&gt;
+            <div class="w-full h-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center text-white text-xl font-bold">
+              Product
+            </div>
+          &lt;% end %&gt;
+          &lt;% card.body do %&gt;
+            <h3 class="text-lg font-semibold mb-2">Premium Widget</h3>
+            <p class="text-sm text-[var(--color-muted-foreground)] mb-4">High-quality widget with advanced features and premium support.</p>
+            <div class="text-2xl font-bold text-green-600">$99.99</div>
+          &lt;% end %&gt;
+          &lt;% card.footer do %&gt;
+            &lt;%= render FlatPack::Button::Component.new(
+              text: "Add to Cart",
+              style: :primary,
+              class: "w-full"
+            ) %&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Stat Cards -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Stat Cards</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Stat Cards", anchor_link: true, subtitle: "Examples for Stat Cards.") %>
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
       <%= render FlatPack::Card::Component.new(style: :default, padding: :lg) do |card| %>
         <% card.body do %>
@@ -376,22 +442,26 @@
         <% end %>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Card::Component.new(style: :default, padding: :lg) do |card| %&gt;
-  &lt;% card.body do %&gt;
-    &lt;%= render FlatPack::Card::StatComponent.new(
-      value: "2,543",
-      label: "Total Users",
-      trend: "12%",
-      trend_direction: :up,
-      value_class: "text-blue-600"
-    ) %&gt;
-  &lt;% end %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Card::Component.new(style: :default, padding: :lg) do |card| %&gt;
+          &lt;% card.body do %&gt;
+            &lt;%= render FlatPack::Card::StatComponent.new(
+              value: "2,543",
+              label: "Total Users",
+              trend: "12%",
+              trend_direction: :up,
+              value_class: "text-blue-600"
+            ) %&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Profile Card -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Profile Card Example</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Profile Card Example", anchor_link: true, subtitle: "Examples for Profile Card Example.") %>
     <div class="max-w-sm mb-4">
       <%= render FlatPack::Card::Component.new(style: :default) do |card| %>
         <% card.body do %>
@@ -426,43 +496,47 @@
         <% end %>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Card::Component.new(style: :default) do |card| %&gt;
-  &lt;% card.body do %&gt;
-    &lt;div class="flex items-center space-x-4 mb-4"&gt;
-      &lt;div class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-2xl font-bold"&gt;
-        JD
-      &lt;/div&gt;
-      &lt;div&gt;
-        &lt;h3 class="text-lg font-semibold"&gt;John Doe&lt;/h3&gt;
-        &lt;p class="text-sm text-[var(--color-muted-foreground)]"&gt;Senior Developer&lt;/p&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-    &lt;p class="text-sm text-[var(--color-muted-foreground)]"&gt;
-      Passionate about building great user experiences and scalable applications.
-    &lt;/p&gt;
-  &lt;% end %&gt;
-  &lt;% card.footer(divider: true) do %&gt;
-    &lt;div class="flex justify-around text-center"&gt;
-      &lt;div&gt;
-        &lt;div class="text-xl font-bold"&gt;1,234&lt;/div&gt;
-        &lt;div class="text-xs text-[var(--color-muted-foreground)]"&gt;Followers&lt;/div&gt;
-      &lt;/div&gt;
-      &lt;div&gt;
-        &lt;div class="text-xl font-bold"&gt;567&lt;/div&gt;
-        &lt;div class="text-xs text-[var(--color-muted-foreground)]"&gt;Following&lt;/div&gt;
-      &lt;/div&gt;
-      &lt;div&gt;
-        &lt;div class="text-xl font-bold"&gt;89&lt;/div&gt;
-        &lt;div class="text-xs text-[var(--color-muted-foreground)]"&gt;Posts&lt;/div&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-  &lt;% end %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Card::Component.new(style: :default) do |card| %&gt;
+          &lt;% card.body do %&gt;
+            <div class="flex items-center space-x-4 mb-4">
+              <div class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-2xl font-bold">
+                JD
+              </div>
+              <div>
+                <h3 class="text-lg font-semibold">John Doe</h3>
+                <p class="text-sm text-[var(--color-muted-foreground)]">Senior Developer</p>
+              </div>
+            </div>
+            <p class="text-sm text-[var(--color-muted-foreground)]">
+              Passionate about building great user experiences and scalable applications.
+            </p>
+          &lt;% end %&gt;
+          &lt;% card.footer(divider: true) do %&gt;
+            <div class="flex justify-around text-center">
+              <div>
+                <div class="text-xl font-bold">1,234</div>
+                <div class="text-xs text-[var(--color-muted-foreground)]">Followers</div>
+              </div>
+              <div>
+                <div class="text-xl font-bold">567</div>
+                <div class="text-xs text-[var(--color-muted-foreground)]">Following</div>
+              </div>
+              <div>
+                <div class="text-xl font-bold">89</div>
+                <div class="text-xs text-[var(--color-muted-foreground)]">Posts</div>
+              </div>
+            </div>
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Pricing Cards -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Pricing Cards</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Pricing Cards", anchor_link: true, subtitle: "Examples for Pricing Cards.") %>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
       <%= render FlatPack::Card::Component.new(style: :default) do |card| %>
         <% card.header do %>
@@ -552,39 +626,43 @@
         <% end %>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Card::Component.new(style: :default, hover: :subtle) do |card| %&gt;
-  &lt;% card.header do %&gt;
-    &lt;div class="text-center"&gt;
-      &lt;h3 class="text-xl font-bold mb-2"&gt;Basic&lt;/h3&gt;
-      &lt;div class="text-3xl font-bold"&gt;$9&lt;span class="text-sm text-[var(--color-muted-foreground)]"&gt;/mo&lt;/span&gt;&lt;/div&gt;
-    &lt;/div&gt;
-  &lt;% end %&gt;
-  &lt;% card.body do %&gt;
-    &lt;ul class="space-y-2 text-sm"&gt;
-      &lt;li class="flex items-center"&gt;
-        &lt;span class="mr-2"&gt;✓&lt;/span&gt; 10 projects
-      &lt;/li&gt;
-      &lt;li class="flex items-center"&gt;
-        &lt;span class="mr-2"&gt;✓&lt;/span&gt; Basic support
-      &lt;/li&gt;
-      &lt;li class="flex items-center"&gt;
-        &lt;span class="mr-2"&gt;✓&lt;/span&gt; 1GB storage
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;% end %&gt;
-  &lt;% card.footer do %&gt;
-    &lt;%= render FlatPack::Button::Component.new(
-      text: "Get Started",
-      style: :secondary,
-      class: "w-full"
-    ) %&gt;
-  &lt;% end %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Card::Component.new(style: :default, hover: :subtle) do |card| %&gt;
+          &lt;% card.header do %&gt;
+            <div class="text-center">
+              <h3 class="text-xl font-bold mb-2">Basic</h3>
+              <div class="text-3xl font-bold">$9<span class="text-sm text-[var(--color-muted-foreground)]">/mo</span></div>
+            </div>
+          &lt;% end %&gt;
+          &lt;% card.body do %&gt;
+            <ul class="space-y-2 text-sm">
+              <li class="flex items-center">
+                <span class="mr-2">✓</span> 10 projects
+              </li>
+              <li class="flex items-center">
+                <span class="mr-2">✓</span> Basic support
+              </li>
+              <li class="flex items-center">
+                <span class="mr-2">✓</span> 1GB storage
+              </li>
+            </ul>
+          &lt;% end %&gt;
+          &lt;% card.footer do %&gt;
+            &lt;%= render FlatPack::Button::Component.new(
+              text: "Get Started",
+              style: :secondary,
+              class: "w-full"
+            ) %&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- List Cards -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">List Cards (Horizontal)</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "List Cards (Horizontal)", anchor_link: true, subtitle: "Examples for List Cards (Horizontal).") %>
     <div class="space-y-2 mb-4">
       <%= render FlatPack::Card::Component.new(
         style: :list,
@@ -646,27 +724,31 @@
         <% end %>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Card::Component.new(style: :list, padding: :sm) do |card| %&gt;
-  &lt;% card.body do %&gt;
-    &lt;div class="flex items-center justify-between"&gt;
-      &lt;div class="flex items-center space-x-3"&gt;
-        &lt;div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold"&gt;
-          A
-        &lt;/div&gt;
-        &lt;div&gt;
-          &lt;p class="font-medium"&gt;Alice sent you a message&lt;/p&gt;
-          &lt;p class="text-sm text-[var(--color-muted-foreground)]"&gt;2 minutes ago&lt;/p&gt;
-        &lt;/div&gt;
-      &lt;/div&gt;
-      &lt;span class="text-xs text-[var(--color-muted-foreground)]"&gt;10:30 AM&lt;/span&gt;
-    &lt;/div&gt;
-  &lt;% end %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Card::Component.new(style: :list, padding: :sm) do |card| %&gt;
+          &lt;% card.body do %&gt;
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
+                  A
+                </div>
+                <div>
+                  <p class="font-medium">Alice sent you a message</p>
+                  <p class="text-sm text-[var(--color-muted-foreground)]">2 minutes ago</p>
+                </div>
+              </div>
+              <span class="text-xs text-[var(--color-muted-foreground)]">10:30 AM</span>
+            </div>
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Slot Options -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Slot Options</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Slot Options", anchor_link: true, subtitle: "Examples for Slot Options.") %>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
       <%= render FlatPack::Card::Component.new do |card| %>
         <% card.header(divider: true) do %>
@@ -704,19 +786,23 @@
         <% end %>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Card::Component.new do |card| %&gt;
-  &lt;% card.header(divider: true) do %&gt;
-    &lt;h3 class="text-lg font-semibold"&gt;Header with Divider&lt;/h3&gt;
-  &lt;% end %&gt;
-  &lt;% card.body do %&gt;
-    &lt;p class="text-sm"&gt;The header has a bottom border by default.&lt;/p&gt;
-  &lt;% end %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Card::Component.new do |card| %&gt;
+          &lt;% card.header(divider: true) do %&gt;
+            <h3 class="text-lg font-semibold">Header with Divider</h3>
+          &lt;% end %&gt;
+          &lt;% card.body do %&gt;
+            <p class="text-sm">The header has a bottom border by default.</p>
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Media Slot -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Media Slot</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Media Slot", anchor_link: true, subtitle: "Examples for Media Slot.") %>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
       <%= render FlatPack::Card::Component.new(style: :default) do |card| %>
         <% card.media(aspect_ratio: "16/9") do %>
@@ -738,22 +824,26 @@
         <% end %>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Card::Component.new(style: :default) do |card| %&gt;
-  &lt;% card.media(aspect_ratio: "16/9", padding: :none) do %&gt;
-    &lt;%= image_tag "https://picsum.photos/800/450?random=12", class: "w-full h-full object-cover", alt: "Edge to edge media" %&gt;
-  &lt;% end %&gt;
-  &lt;% card.body do %&gt;
-    &lt;h3 class="text-lg font-semibold mb-2"&gt;Edge-to-Edge Top Media&lt;/h3&gt;
-    &lt;p class="text-sm text-[var(--color-muted-foreground)]"&gt;
-      Using &lt;code&gt;card.media(..., padding: :none)&lt;/code&gt; removes top and side media spacing so the image touches the card edges.
-    &lt;/p&gt;
-  &lt;% end %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Card::Component.new(style: :default) do |card| %&gt;
+          &lt;% card.media(aspect_ratio: "16/9", padding: :none) do %&gt;
+            &lt;%= image_tag "https://picsum.photos/800/450?random=12", class: "w-full h-full object-cover", alt: "Edge to edge media" %&gt;
+          &lt;% end %&gt;
+          &lt;% card.body do %&gt;
+            <h3 class="text-lg font-semibold mb-2">Edge-to-Edge Top Media</h3>
+            <p class="text-sm text-[var(--color-muted-foreground)]">
+              Using <code>card.media(..., padding: :none)</code> removes top and side media spacing so the image touches the card edges.
+            </p>
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Media Aspect Ratios -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Media Aspect Ratios</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Media Aspect Ratios", anchor_link: true, subtitle: "Examples for Media Aspect Ratios.") %>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
       <%= render FlatPack::Card::Component.new(style: :default) do |card| %>
         <% card.media(aspect_ratio: "16/9") do %>
@@ -788,14 +878,18 @@
         <% end %>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Card::Component.new(style: :default) do |card| %&gt;
-  &lt;% card.media(aspect_ratio: "16/9") do %&gt;
-    &lt;div class="w-full h-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold"&gt;
-      16:9 Aspect Ratio
-    &lt;/div&gt;
-  &lt;% end %&gt;
-  &lt;% card.body do %&gt;
-    &lt;p class="text-sm"&gt;Wide format, great for videos and banners.&lt;/p&gt;
-  &lt;% end %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Card::Component.new(style: :default) do |card| %&gt;
+          &lt;% card.media(aspect_ratio: "16/9") do %&gt;
+            <div class="w-full h-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold">
+              16:9 Aspect Ratio
+            </div>
+          &lt;% end %&gt;
+          &lt;% card.body do %&gt;
+            <p class="text-sm">Wide format, great for videos and banners.</p>
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>

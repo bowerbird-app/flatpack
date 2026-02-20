@@ -1,11 +1,15 @@
 <% content_for :title, "Input Components - FlatPack" %>
 
-<h1 class="text-4xl font-bold mb-2 text-[var(--color-foreground)]">Input Components</h1>
-<p class="text-[var(--color-muted-foreground)] mb-8">Text-based input components with Stimulus integration</p>
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Input Components",
+  subtitle: "Text-based input components with Stimulus integration"
+) %>
+
+<%= render "pages/component_method_variables_table", component: :text_input %>
 
   <!-- Text Input -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Text Input</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Text Input", anchor_link: true, subtitle: "Examples for Text Input.") %>
     <p class="text-sm text-[var(--color-muted-foreground)] mb-4">Standard single-line text field</p>
     
     <div class="space-y-4">
@@ -30,24 +34,29 @@
         disabled: true
       ) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::TextInput::Component.new(
-  name: "username",
-  label: "Username",
-  placeholder: "Enter your username",
-  required: true
-) %&gt;
-
-&lt;%= render FlatPack::TextInput::Component.new(
-  name: "username_error",
-  label: "Username (with error)",
-  value: "john",
-  error: "Username must be at least 5 characters"
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;%= render FlatPack::TextInput::Component.new(
+          name: "username",
+          label: "Username",
+          placeholder: "Enter your username",
+          required: true
+        ) %&gt;
+        
+        &lt;%= render FlatPack::TextInput::Component.new(
+          name: "username_error",
+          label: "Username (with error)",
+          value: "john",
+          error: "Username must be at least 5 characters"
+        ) %&gt;
+      CODE
+      class: "mt-4"
+    ) %>
   </section>
 
   <!-- Password Input -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Password Input</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Password Input", anchor_link: true, subtitle: "Examples for Password Input.") %>
     <p class="text-sm text-[var(--color-muted-foreground)] mb-4">Masked input with show/hide toggle</p>
     
     <div class="space-y-4">
@@ -64,23 +73,28 @@
         error: "Password must contain at least one number"
       ) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::PasswordInput::Component.new(
-  name: "password",
-  label: "Password",
-  placeholder: "Enter your password",
-  required: true
-) %&gt;
-
-&lt;%= render FlatPack::PasswordInput::Component.new(
-  name: "password_error",
-  label: "Password (with error)",
-  error: "Password must contain at least one number"
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;%= render FlatPack::PasswordInput::Component.new(
+          name: "password",
+          label: "Password",
+          placeholder: "Enter your password",
+          required: true
+        ) %&gt;
+        
+        &lt;%= render FlatPack::PasswordInput::Component.new(
+          name: "password_error",
+          label: "Password (with error)",
+          error: "Password must contain at least one number"
+        ) %&gt;
+      CODE
+      class: "mt-4"
+    ) %>
   </section>
 
   <!-- Email Input -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Email Input</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Email Input", anchor_link: true, subtitle: "Examples for Email Input.") %>
     <p class="text-sm text-[var(--color-muted-foreground)] mb-4">Email field with mobile @ keyboard support</p>
     
     <div class="space-y-4">
@@ -98,24 +112,29 @@
         error: "Please enter a valid email address"
       ) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::EmailInput::Component.new(
-  name: "email",
-  label: "Email Address",
-  placeholder: "you@example.com",
-  required: true
-) %&gt;
-
-&lt;%= render FlatPack::EmailInput::Component.new(
-  name: "email_error",
-  label: "Email (with error)",
-  value: "invalid-email",
-  error: "Please enter a valid email address"
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;%= render FlatPack::EmailInput::Component.new(
+          name: "email",
+          label: "Email Address",
+          placeholder: "you@example.com",
+          required: true
+        ) %&gt;
+        
+        &lt;%= render FlatPack::EmailInput::Component.new(
+          name: "email_error",
+          label: "Email (with error)",
+          value: "invalid-email",
+          error: "Please enter a valid email address"
+        ) %&gt;
+      CODE
+      class: "mt-4"
+    ) %>
   </section>
 
   <!-- Phone Input -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Phone Input</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Phone Input", anchor_link: true, subtitle: "Examples for Phone Input.") %>
     <p class="text-sm text-[var(--color-muted-foreground)] mb-4">Phone field with numeric keypad on mobile</p>
     
     <div class="space-y-4">
@@ -132,23 +151,28 @@
         error: "Phone number must be at least 10 digits"
       ) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::PhoneInput::Component.new(
-  name: "phone",
-  label: "Phone Number",
-  placeholder: "+1 (555) 123-4567"
-) %&gt;
-
-&lt;%= render FlatPack::PhoneInput::Component.new(
-  name: "phone_error",
-  label: "Phone (with error)",
-  value: "123",
-  error: "Phone number must be at least 10 digits"
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;%= render FlatPack::PhoneInput::Component.new(
+          name: "phone",
+          label: "Phone Number",
+          placeholder: "+1 (555) 123-4567"
+        ) %&gt;
+        
+        &lt;%= render FlatPack::PhoneInput::Component.new(
+          name: "phone_error",
+          label: "Phone (with error)",
+          value: "123",
+          error: "Phone number must be at least 10 digits"
+        ) %&gt;
+      CODE
+      class: "mt-4"
+    ) %>
   </section>
 
   <!-- Search Input -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Search Input</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Search Input", anchor_link: true, subtitle: "Examples for Search Input.") %>
     <p class="text-sm text-[var(--color-muted-foreground)] mb-4">Search field with clear button (appears when typing)</p>
     
     <div class="space-y-4">
@@ -164,22 +188,27 @@
         value: "sample query"
       ) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::SearchInput::Component.new(
-  name: "search",
-  label: "Search",
-  placeholder: "Search for anything..."
-) %&gt;
-
-&lt;%= render FlatPack::SearchInput::Component.new(
-  name: "search_with_value",
-  label: "Search (with value)",
-  value: "sample query"
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;%= render FlatPack::SearchInput::Component.new(
+          name: "search",
+          label: "Search",
+          placeholder: "Search for anything..."
+        ) %&gt;
+        
+        &lt;%= render FlatPack::SearchInput::Component.new(
+          name: "search_with_value",
+          label: "Search (with value)",
+          value: "sample query"
+        ) %&gt;
+      CODE
+      class: "mt-4"
+    ) %>
   </section>
 
   <!-- URL Input -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">URL Input</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "URL Input", anchor_link: true, subtitle: "Examples for URL Input.") %>
     <p class="text-sm text-[var(--color-muted-foreground)] mb-4">URL field with validation and .com keyboard on mobile</p>
     
     <div class="space-y-4">
@@ -196,23 +225,28 @@
         error: "Please enter a valid URL"
       ) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::UrlInput::Component.new(
-  name: "website",
-  label: "Website URL",
-  placeholder: "https://example.com"
-) %&gt;
-
-&lt;%= render FlatPack::UrlInput::Component.new(
-  name: "website_error",
-  label: "Website (with error)",
-  value: "not-a-url",
-  error: "Please enter a valid URL"
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;%= render FlatPack::UrlInput::Component.new(
+          name: "website",
+          label: "Website URL",
+          placeholder: "https://example.com"
+        ) %&gt;
+        
+        &lt;%= render FlatPack::UrlInput::Component.new(
+          name: "website_error",
+          label: "Website (with error)",
+          value: "not-a-url",
+          error: "Please enter a valid URL"
+        ) %&gt;
+      CODE
+      class: "mt-4"
+    ) %>
   </section>
 
   <!-- Text Area -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Text Area</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Text Area", anchor_link: true, subtitle: "Examples for Text Area.") %>
     <p class="text-sm text-[var(--color-muted-foreground)] mb-4">Multi-line input that auto-expands and supports optional live character counting with min/max thresholds</p>
     
     <div class="space-y-4">
@@ -248,34 +282,39 @@
         max_characters: 140
       ) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::TextArea::Component.new(
-  name: "description",
-  label: "Description",
-  placeholder: "Enter a detailed description...",
-  rows: 3
-) %&gt;
-
-&lt;%= render FlatPack::TextArea::Component.new(
-  name: "description_error",
-  label: "Description (with error)",
-  error: "Description must be at least 50 characters",
-  rows: 3
-) %&gt;
-
-&lt;%= render FlatPack::TextArea::Component.new(
-  name: "project_summary",
-  id: "project_summary",
-  label: "Project Summary (with character count)",
-  character_count: true,
-  min_characters: 30,
-  max_characters: 140,
-  rows: 3
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;%= render FlatPack::TextArea::Component.new(
+          name: "description",
+          label: "Description",
+          placeholder: "Enter a detailed description...",
+          rows: 3
+        ) %&gt;
+        
+        &lt;%= render FlatPack::TextArea::Component.new(
+          name: "description_error",
+          label: "Description (with error)",
+          error: "Description must be at least 50 characters",
+          rows: 3
+        ) %&gt;
+        
+        &lt;%= render FlatPack::TextArea::Component.new(
+          name: "project_summary",
+          id: "project_summary",
+          label: "Project Summary (with character count)",
+          character_count: true,
+          min_characters: 30,
+          max_characters: 140,
+          rows: 3
+        ) %&gt;
+      CODE
+      class: "mt-4"
+    ) %>
   </section>
 
   <!-- Number Input -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Number Input</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Number Input", anchor_link: true, subtitle: "Examples for Number Input.") %>
     <p class="text-sm text-[var(--color-muted-foreground)] mb-4">Numeric field with min/max/step validation</p>
     
     <div class="space-y-4">
@@ -306,29 +345,34 @@
         max: 100
       ) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::NumberInput::Component.new(
-  name: "quantity",
-  label: "Quantity",
-  placeholder: "Enter quantity",
-  min: 0,
-  max: 100,
-  step: 1,
-  required: true
-) %&gt;
-
-&lt;%= render FlatPack::NumberInput::Component.new(
-  name: "price",
-  label: "Price (USD)",
-  placeholder: "0.00",
-  min: 0.01,
-  step: 0.01,
-  value: 19.99
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;%= render FlatPack::NumberInput::Component.new(
+          name: "quantity",
+          label: "Quantity",
+          placeholder: "Enter quantity",
+          min: 0,
+          max: 100,
+          step: 1,
+          required: true
+        ) %&gt;
+        
+        &lt;%= render FlatPack::NumberInput::Component.new(
+          name: "price",
+          label: "Price (USD)",
+          placeholder: "0.00",
+          min: 0.01,
+          step: 0.01,
+          value: 19.99
+        ) %&gt;
+      CODE
+      class: "mt-4"
+    ) %>
   </section>
 
   <!-- Date Input -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Date Input</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Date Input", anchor_link: true, subtitle: "Examples for Date Input.") %>
     <p class="text-sm text-[var(--color-muted-foreground)] mb-4">Date picker with min/max constraints</p>
     
     <div class="space-y-4">
@@ -354,26 +398,31 @@
         error: "Date must be in the future"
       ) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::DateInput::Component.new(
-  name: "birth_date",
-  label: "Birth Date",
-  placeholder: "Select date",
-  max: Date.today.to_s,
-  required: true
-) %&gt;
-
-&lt;%= render FlatPack::DateInput::Component.new(
-  name: "event_date",
-  label: "Event Date",
-  min: Date.today.to_s,
-  max: (Date.today + 90).to_s,
-  value: (Date.today + 7).to_s
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;%= render FlatPack::DateInput::Component.new(
+          name: "birth_date",
+          label: "Birth Date",
+          placeholder: "Select date",
+          max: Date.today.to_s,
+          required: true
+        ) %&gt;
+        
+        &lt;%= render FlatPack::DateInput::Component.new(
+          name: "event_date",
+          label: "Event Date",
+          min: Date.today.to_s,
+          max: (Date.today + 90).to_s,
+          value: (Date.today + 7).to_s
+        ) %&gt;
+      CODE
+      class: "mt-4"
+    ) %>
   </section>
 
   <!-- File Input -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">File Input</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "File Input", anchor_link: true, subtitle: "Examples for File Input.") %>
     <p class="text-sm text-[var(--color-muted-foreground)] mb-4">File upload with drag-and-drop and previews</p>
     
     <div class="space-y-4">
@@ -400,28 +449,33 @@
         error: "File size must not exceed 5MB"
       ) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::FileInput::Component.new(
-  name: "avatar",
-  label: "Profile Picture",
-  accept: "image/png,image/jpeg,image/gif",
-  max_size: 2_097_152, # 2MB
-  preview: true
-) %&gt;
-
-&lt;%= render FlatPack::FileInput::Component.new(
-  name: "documents",
-  label: "Upload Documents",
-  accept: ".pdf,.doc,.docx",
-  multiple: true,
-  max_size: 5_242_880, # 5MB
-  preview: false
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;%= render FlatPack::FileInput::Component.new(
+          name: "avatar",
+          label: "Profile Picture",
+          accept: "image/png,image/jpeg,image/gif",
+          max_size: 2_097_152, # 2MB
+          preview: true
+        ) %&gt;
+        
+        &lt;%= render FlatPack::FileInput::Component.new(
+          name: "documents",
+          label: "Upload Documents",
+          accept: ".pdf,.doc,.docx",
+          multiple: true,
+          max_size: 5_242_880, # 5MB
+          preview: false
+        ) %&gt;
+      CODE
+      class: "mt-4"
+    ) %>
   </section>
 
 
   <!-- Checkbox -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Checkbox</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Checkbox", anchor_link: true, subtitle: "Examples for Checkbox.") %>
     <p class="text-sm text-[var(--color-muted-foreground)] mb-4">Single checkbox component with label</p>
     
     <div class="space-y-4">
@@ -449,22 +503,27 @@
         disabled: true
       ) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Checkbox::Component.new(
-  name: "terms",
-  label: "I agree to the terms and conditions",
-  required: true
-) %&gt;
-
-&lt;%= render FlatPack::Checkbox::Component.new(
-  name: "newsletter",
-  label: "Subscribe to newsletter",
-  checked: true
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;%= render FlatPack::Checkbox::Component.new(
+          name: "terms",
+          label: "I agree to the terms and conditions",
+          required: true
+        ) %&gt;
+        
+        &lt;%= render FlatPack::Checkbox::Component.new(
+          name: "newsletter",
+          label: "Subscribe to newsletter",
+          checked: true
+        ) %&gt;
+      CODE
+      class: "mt-4"
+    ) %>
   </section>
 
   <!-- Radio Group -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Radio Group</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Radio Group", anchor_link: true, subtitle: "Examples for Radio Group.") %>
     <p class="text-sm text-[var(--color-muted-foreground)] mb-4">Radio button group for single selection</p>
     
     <div class="space-y-6">
@@ -500,23 +559,28 @@
         error: "Please select a payment method"
       ) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::RadioGroup::Component.new(
-  name: "size",
-  options: ["Small", "Medium", "Large"],
-  label: "Choose a size",
-  value: "Medium"
-) %&gt;
-
-&lt;%= render FlatPack::RadioGroup::Component.new(
-  name: "color",
-  options: [["Red", "red"], ["Blue", "blue"], ["Green", "green"]],
-  label: "Choose a color"
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;%= render FlatPack::RadioGroup::Component.new(
+          name: "size",
+          options: ["Small", "Medium", "Large"],
+          label: "Choose a size",
+          value: "Medium"
+        ) %&gt;
+        
+        &lt;%= render FlatPack::RadioGroup::Component.new(
+          name: "color",
+          options: [["Red", "red"], ["Blue", "blue"], ["Green", "green"]],
+          label: "Choose a color"
+        ) %&gt;
+      CODE
+      class: "mt-4"
+    ) %>
   </section>
 
   <!-- Select (Dropdown) -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Select (Dropdown)</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Select (Dropdown)", anchor_link: true, subtitle: "Examples for Select (Dropdown).") %>
     <p class="text-sm text-[var(--color-muted-foreground)] mb-4">Dropdown select with optional search functionality</p>
     
     <div class="space-y-6">
@@ -592,24 +656,29 @@
         ) %>
       </div>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Select::Component.new(
-  name: "country",
-  options: ["United States", "Canada", "United Kingdom"],
-  label: "Country",
-  placeholder: "Select a country"
-) %&gt;
-
-&lt;%= render FlatPack::Select::Component.new(
-  name: "city",
-  options: ["New York", "Los Angeles", "Chicago"],
-  label: "City",
-  searchable: true
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;%= render FlatPack::Select::Component.new(
+          name: "country",
+          options: ["United States", "Canada", "United Kingdom"],
+          label: "Country",
+          placeholder: "Select a country"
+        ) %&gt;
+        
+        &lt;%= render FlatPack::Select::Component.new(
+          name: "city",
+          options: ["New York", "Los Angeles", "Chicago"],
+          label: "City",
+          searchable: true
+        ) %&gt;
+      CODE
+      class: "mt-4"
+    ) %>
   </section>
 
   <!-- Switch Component -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Switch Component</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Switch Component", anchor_link: true, subtitle: "Examples for Switch Component.") %>
     <p class="mb-4">Modern toggle switches for boolean on/off states.</p>
 
     <div class="space-y-6 mb-4">
@@ -738,29 +807,33 @@
       </div>
     </div>
 
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Switch::Component.new(
-  name: "notifications",
-  label: "Enable notifications",
-  checked: true
-) %&gt;
-
-&lt;%= render FlatPack::Switch::Component.new(
-  name: "dark_mode",
-  label: "Dark mode",
-  size: :lg
-) %&gt;
-
-&lt;%= render FlatPack::Switch::Component.new(
-  name: "terms",
-  label: "I agree to the terms",
-  required: true,
-  error: "You must accept the terms"
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Switch::Component.new(
+          name: "notifications",
+          label: "Enable notifications",
+          checked: true
+        ) %&gt;
+        
+        &lt;%= render FlatPack::Switch::Component.new(
+          name: "dark_mode",
+          label: "Dark mode",
+          size: :lg
+        ) %&gt;
+        
+        &lt;%= render FlatPack::Switch::Component.new(
+          name: "terms",
+          label: "I agree to the terms",
+          required: true,
+          error: "You must accept the terms"
+        ) %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Combined Form Example -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4 text-[var(--color-foreground)]">Complete Form Example</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Complete Form Example", anchor_link: true, subtitle: "Examples for Complete Form Example.") %>
     <p class="text-sm text-[var(--color-muted-foreground)] mb-4">All input components in a single form</p>
     
     <form class="space-y-4 p-6 border border-[var(--color-border)] rounded-[var(--radius-lg)] bg-[var(--color-muted)]">
@@ -861,68 +934,73 @@
         ) %>
       </div>
     </form>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;form class="space-y-4"&gt;
-  &lt;%= render FlatPack::TextInput::Component.new(
-    name: "full_name",
-    label: "Full Name",
-    placeholder: "John Doe",
-    required: true
-  ) %&gt;
-
-  &lt;%= render FlatPack::EmailInput::Component.new(
-    name: "contact_email",
-    label: "Email",
-    placeholder: "john@example.com",
-    required: true
-  ) %&gt;
-
-  &lt;%= render FlatPack::DateInput::Component.new(
-    name: "birth_date",
-    label: "Birth Date",
-    max: Date.today.to_s
-  ) %&gt;
-
-  &lt;%= render FlatPack::NumberInput::Component.new(
-    name: "age",
-    label: "Age",
-    min: 18,
-    max: 120
-  ) %&gt;
-
-  &lt;%= render FlatPack::FileInput::Component.new(
-    name: "profile_picture",
-    label: "Profile Picture",
-    accept: "image/png,image/jpeg",
-    max_size: 2_097_152
-  ) %&gt;
-
-  &lt;%= render FlatPack::Select::Component.new(
-    name: "country",
-    options: [["United States", "us"], ["Canada", "ca"]],
-    label: "Country"
-  ) %&gt;
-
-  &lt;%= render FlatPack::RadioGroup::Component.new(
-    name: "notification_preference",
-    options: ["Email", "SMS"],
-    label: "Notification Preference"
-  ) %&gt;
-
-  &lt;%= render FlatPack::Checkbox::Component.new(
-    name: "agree_terms",
-    label: "I agree to the terms"
-  ) %&gt;
-
-  &lt;%= render FlatPack::TextArea::Component.new(
-    name: "bio",
-    label: "Biography",
-    rows: 4
-  ) %&gt;
-
-  &lt;%= render FlatPack::Button::Component.new(
-    text: "Submit Form",
-    style: :primary
-  ) %&gt;
-&lt;/form&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE'),
+        <form class="space-y-4">
+          &lt;%= render FlatPack::TextInput::Component.new(
+            name: "full_name",
+            label: "Full Name",
+            placeholder: "John Doe",
+            required: true
+          ) %&gt;
+        
+          &lt;%= render FlatPack::EmailInput::Component.new(
+            name: "contact_email",
+            label: "Email",
+            placeholder: "john@example.com",
+            required: true
+          ) %&gt;
+        
+          &lt;%= render FlatPack::DateInput::Component.new(
+            name: "birth_date",
+            label: "Birth Date",
+            max: Date.today.to_s
+          ) %&gt;
+        
+          &lt;%= render FlatPack::NumberInput::Component.new(
+            name: "age",
+            label: "Age",
+            min: 18,
+            max: 120
+          ) %&gt;
+        
+          &lt;%= render FlatPack::FileInput::Component.new(
+            name: "profile_picture",
+            label: "Profile Picture",
+            accept: "image/png,image/jpeg",
+            max_size: 2_097_152
+          ) %&gt;
+        
+          &lt;%= render FlatPack::Select::Component.new(
+            name: "country",
+            options: [["United States", "us"], ["Canada", "ca"]],
+            label: "Country"
+          ) %&gt;
+        
+          &lt;%= render FlatPack::RadioGroup::Component.new(
+            name: "notification_preference",
+            options: ["Email", "SMS"],
+            label: "Notification Preference"
+          ) %&gt;
+        
+          &lt;%= render FlatPack::Checkbox::Component.new(
+            name: "agree_terms",
+            label: "I agree to the terms"
+          ) %&gt;
+        
+          &lt;%= render FlatPack::TextArea::Component.new(
+            name: "bio",
+            label: "Biography",
+            rows: 4
+          ) %&gt;
+        
+          &lt;%= render FlatPack::Button::Component.new(
+            text: "Submit Form",
+            style: :primary
+          ) %&gt;
+        </form>
+      CODE
+      class: "mt-4"
+    ) %>
   </section>
 

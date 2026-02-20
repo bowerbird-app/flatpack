@@ -164,6 +164,12 @@ module FlatPack
         assert_selector "button", text: "Warning"
       end
 
+      def test_renders_error_scheme
+        render_inline(Component.new(text: "Error", style: :error))
+
+        assert_selector "button", text: "Error"
+      end
+
       def test_renders_icon_only_button
         render_inline(Component.new(icon: "search", icon_only: true))
 

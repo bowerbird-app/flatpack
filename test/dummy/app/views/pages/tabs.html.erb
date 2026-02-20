@@ -1,11 +1,12 @@
-<h1 class="text-4xl font-bold mb-4">Tabs Component</h1>
-<p class="text-lg text-[var(--color-muted-foreground)] mb-8">
-  Tabbed content with full keyboard navigation and ARIA support.
-</p>
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Tabs Component",
+  subtitle: "Tabbed content with full keyboard navigation and ARIA support."
+) %>
 
 <!-- Basic Tabs -->
+<%= render "pages/component_method_variables_table", component: :tabs %>
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Basic Tabs</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Basic Tabs", anchor_link: true, subtitle: "Examples for Basic Tabs.") %>
   <%= render FlatPack::Tabs::Component.new do |tabs| %>
     <% tabs.tab(id: "overview", label: "Overview") %>
     <% tabs.tab(id: "details", label: "Details") %>
@@ -37,22 +38,27 @@
     <% end %>
   <% end %>
   
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Tabs::Component.new do |tabs| %&gt;
-  &lt;% tabs.tab(id: "overview", label: "Overview") %&gt;
-  &lt;% tabs.tab(id: "details", label: "Details") %&gt;
-
-  &lt;% tabs.panel(id: "overview") do %&gt;
-    &lt;p&gt;Overview content...&lt;/p&gt;
-  &lt;% end %&gt;
-  &lt;% tabs.panel(id: "details") do %&gt;
-    &lt;p&gt;Details content...&lt;/p&gt;
-  &lt;% end %&gt;
-&lt;% end %&gt;</code></pre>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Tabs::Component.new do |tabs| %&gt;
+        &lt;% tabs.tab(id: "overview", label: "Overview") %&gt;
+        &lt;% tabs.tab(id: "details", label: "Details") %&gt;
+      
+        &lt;% tabs.panel(id: "overview") do %&gt;
+          <p>Overview content...</p>
+        &lt;% end %&gt;
+        &lt;% tabs.panel(id: "details") do %&gt;
+          <p>Details content...</p>
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    class: "mt-4"
+  ) %>
 </section>
 
 <!-- Tabs with Default Tab -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Tabs with a Non-First Default</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Tabs with a Non-First Default", anchor_link: true, subtitle: "Examples for Tabs with a Non-First Default.") %>
   <%= render FlatPack::Tabs::Component.new(default_tab: 1) do |tabs| %>
     <% tabs.tab(id: "monthly", label: "Monthly") %>
     <% tabs.tab(id: "quarterly", label: "Quarterly") %>
@@ -78,26 +84,31 @@
     <% end %>
   <% end %>
 
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Tabs::Component.new(default_tab: 1) do |tabs| %&gt;
-  &lt;% tabs.tab(id: "monthly", label: "Monthly") %&gt;
-  &lt;% tabs.tab(id: "quarterly", label: "Quarterly") %&gt;
-  &lt;% tabs.tab(id: "yearly", label: "Yearly") %&gt;
-
-  &lt;% tabs.panel(id: "monthly") do %&gt;
-    &lt;p&gt;Monthly content...&lt;/p&gt;
-  &lt;% end %&gt;
-  &lt;% tabs.panel(id: "quarterly") do %&gt;
-    &lt;p&gt;Quarterly content...&lt;/p&gt;
-  &lt;% end %&gt;
-  &lt;% tabs.panel(id: "yearly") do %&gt;
-    &lt;p&gt;Yearly content...&lt;/p&gt;
-  &lt;% end %&gt;
-&lt;% end %&gt;</code></pre>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Tabs::Component.new(default_tab: 1) do |tabs| %&gt;
+        &lt;% tabs.tab(id: "monthly", label: "Monthly") %&gt;
+        &lt;% tabs.tab(id: "quarterly", label: "Quarterly") %&gt;
+        &lt;% tabs.tab(id: "yearly", label: "Yearly") %&gt;
+      
+        &lt;% tabs.panel(id: "monthly") do %&gt;
+          <p>Monthly content...</p>
+        &lt;% end %&gt;
+        &lt;% tabs.panel(id: "quarterly") do %&gt;
+          <p>Quarterly content...</p>
+        &lt;% end %&gt;
+        &lt;% tabs.panel(id: "yearly") do %&gt;
+          <p>Yearly content...</p>
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    class: "mt-4"
+  ) %>
 </section>
 
 <!-- Tabs with Complex Content -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Tabs with Complex Content</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Tabs with Complex Content", anchor_link: true, subtitle: "Examples for Tabs with Complex Content.") %>
   <%= render FlatPack::Tabs::Component.new do |tabs| %>
     <% tabs.tab(id: "profile", label: "Profile") %>
     <% tabs.tab(id: "notifications", label: "Notifications") %>
@@ -149,22 +160,27 @@
     <% end %>
   <% end %>
 
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto mt-4"><code>&lt;%= render FlatPack::Tabs::Component.new do |tabs| %&gt;
-  &lt;% tabs.tab(id: "profile", label: "Profile") %&gt;
-  &lt;% tabs.tab(id: "notifications", label: "Notifications") %&gt;
-
-  &lt;% tabs.panel(id: "profile") do %&gt;
-    &lt;%= render FlatPack::TextInput::Component.new(name: "name", label: "Full Name") %&gt;
-  &lt;% end %&gt;
-  &lt;% tabs.panel(id: "notifications") do %&gt;
-    &lt;%= render FlatPack::Switch::Component.new(name: "email_notifications", label: "Email Notifications") %&gt;
-  &lt;% end %&gt;
-&lt;% end %&gt;</code></pre>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Tabs::Component.new do |tabs| %&gt;
+        &lt;% tabs.tab(id: "profile", label: "Profile") %&gt;
+        &lt;% tabs.tab(id: "notifications", label: "Notifications") %&gt;
+      
+        &lt;% tabs.panel(id: "profile") do %&gt;
+          &lt;%= render FlatPack::TextInput::Component.new(name: "name", label: "Full Name") %&gt;
+        &lt;% end %&gt;
+        &lt;% tabs.panel(id: "notifications") do %&gt;
+          &lt;%= render FlatPack::Switch::Component.new(name: "email_notifications", label: "Email Notifications") %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    class: "mt-4"
+  ) %>
 </section>
 
 <!-- Keyboard Navigation -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Keyboard Navigation</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Keyboard Navigation", anchor_link: true, subtitle: "Examples for Keyboard Navigation.") %>
   <div class="bg-[var(--color-muted)] p-6 rounded-lg">
     <h3 class="font-semibold mb-3">Keyboard Shortcuts:</h3>
     <ul class="space-y-2 text-[var(--color-foreground)]">
@@ -178,7 +194,7 @@
 
 <!-- Features -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Features</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Examples for Features.") %>
   <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
     <li><strong>Full Keyboard Navigation:</strong> Arrow keys, Home/End, Enter/Space</li>
     <li><strong>ARIA Compliant:</strong> Proper tablist/tab/tabpanel roles and attributes</li>

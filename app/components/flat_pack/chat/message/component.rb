@@ -77,7 +77,7 @@ module FlatPack
             safe_join([
               content_tag(:div, class: bubble_classes) do
                 safe_join([
-                  content_tag(:div, class: "break-words whitespace-pre-wrap") do
+                  content_tag(:div, class: "break-words whitespace-pre-line") do
                     content
                   end,
                   render_attachments,

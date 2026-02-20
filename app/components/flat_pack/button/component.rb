@@ -5,13 +5,14 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-[var(--color-primary)]" "hover:bg-[var(--color-primary-hover)]" "text-[var(--color-primary-text)]" "shadow-[var(--shadow-sm)]" "bg-[var(--color-secondary)]" "hover:bg-[var(--color-secondary-hover)]" "text-[var(--color-secondary-text)]" "border" "border-[var(--color-border)]" "bg-[var(--color-ghost)]" "hover:bg-[var(--color-ghost-hover)]" "text-[var(--color-ghost-text)]" "bg-[var(--color-success)]" "hover:bg-[var(--color-success-hover)]" "text-[var(--color-success-text)]" "bg-[var(--color-warning)]" "hover:bg-[var(--color-warning-hover)]" "text-[var(--color-warning-text)]" "shadow-[var(--button-shadow)]" "hover:shadow-[var(--button-shadow-active)]" "disabled:shadow-none"
+      # "bg-[var(--color-primary)]" "hover:bg-[var(--color-primary-hover)]" "text-[var(--color-primary-text)]" "shadow-[var(--shadow-sm)]" "bg-[var(--color-secondary)]" "hover:bg-[var(--color-secondary-hover)]" "text-[var(--color-secondary-text)]" "border" "border-[var(--color-border)]" "bg-[var(--color-ghost)]" "hover:bg-[var(--color-ghost-hover)]" "text-[var(--color-ghost-text)]" "bg-[var(--color-success)]" "hover:bg-[var(--color-success-hover)]" "text-[var(--color-success-text)]" "bg-[var(--color-warning)]" "hover:bg-[var(--color-warning-hover)]" "text-[var(--color-warning-text)]" "bg-[var(--color-destructive)]" "hover:bg-[var(--color-destructive-hover)]" "text-[var(--color-destructive-text)]" "shadow-[var(--button-shadow)]" "hover:shadow-[var(--button-shadow-active)]" "disabled:shadow-none"
       SCHEMES = {
         primary: "bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-[var(--color-primary-text)] shadow-[var(--shadow-sm)]",
         secondary: "bg-[var(--color-secondary)] hover:bg-[var(--color-secondary-hover)] text-[var(--color-secondary-text)] border border-[var(--color-border)]",
         ghost: "bg-[var(--color-ghost)] hover:bg-[var(--color-ghost-hover)] text-[var(--color-ghost-text)]",
         success: "bg-[var(--color-success)] hover:bg-[var(--color-success-hover)] text-[var(--color-success-text)] shadow-[var(--shadow-sm)]",
-        warning: "bg-[var(--color-warning)] hover:bg-[var(--color-warning-hover)] text-[var(--color-warning-text)] shadow-[var(--shadow-sm)]"
+        warning: "bg-[var(--color-warning)] hover:bg-[var(--color-warning-hover)] text-[var(--color-warning-text)] shadow-[var(--shadow-sm)]",
+        error: "bg-[var(--color-destructive)] hover:bg-[var(--color-destructive-hover)] text-[var(--color-destructive-text)] shadow-[var(--shadow-sm)]"
       }.freeze
 
       # Tailwind CSS scanning requires these classes to be present as string literals.

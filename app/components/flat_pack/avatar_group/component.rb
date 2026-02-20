@@ -3,13 +3,10 @@
 module FlatPack
   module AvatarGroup
     class Component < FlatPack::BaseComponent
-      # Tailwind CSS scanning requires these classes to be present as string literals.
-      # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "-space-x-1" "-space-x-2" "-space-x-3"
       OVERLAPS = {
-        sm: "-space-x-1",
-        md: "-space-x-2",
-        lg: "-space-x-3"
+        sm: "-0.25rem",
+        md: "-0.5rem",
+        lg: "-0.75rem"
       }.freeze
 
       def initialize(
@@ -48,10 +45,7 @@ module FlatPack
       end
 
       def group_classes
-        classes(
-          "flex items-center",
-          OVERLAPS.fetch(@overlap)
-        )
+        classes("flex items-center")
       end
 
       def render_avatars
@@ -71,10 +65,12 @@ module FlatPack
 
       def render_avatar(item, index)
         avatar_attrs = item.is_a?(Hash) ? item.symbolize_keys : {}
+        styles = ["z-index: #{@items.length - index}"]
+        styles << "margin-left: #{overlap_margin}" if index.positive?
         
         content_tag(:div,
           class: "relative hover:z-10 focus-within:z-10 transition-transform hover:scale-110",
-          style: avatar_attrs[:href] ? nil : "z-index: #{@items.length - index}") do
+          style: styles.join("; ")) do
           FlatPack::Avatar::Component.new(
             src: avatar_attrs[:src],
             alt: avatar_attrs[:alt],
@@ -90,44 +86,30 @@ module FlatPack
       end
 
       def render_overflow
-        overflow_text = "+#{overflow_count}"
-        
-        wrapper_content = content_tag(:span,
-          **overflow_wrapper_attributes) do
-          content_tag(:span, overflow_text, class: "font-semibold")
+        content_tag(:div,
+          class: "relative hover:z-10 transition-transform hover:scale-110",
+          style: overflow_styles) do
+          FlatPack::Avatar::Component.new(
+            initials: "+#{overflow_count}",
+            size: @size,
+            shape: :circle,
+            href: @overflow_href,
+            class: "ring-2 ring-white dark:ring-zinc-900"
+          ).render_in(view_context)
         end
-
-        if @overflow_href
-          content_tag(:div,
-            class: "relative hover:z-10 transition-transform hover:scale-110") do
-            content_tag(:a, href: @overflow_href) do
-              wrapper_content
-            end
-          end
-        else
-          content_tag(:div, class: "relative") do
-            wrapper_content
-          end
-        end
-      end
-
-      def overflow_wrapper_attributes
-        size_classes = FlatPack::Avatar::Component::SIZES.fetch(@size)
-        
-        {
-          class: classes(
-            "inline-flex items-center justify-center shrink-0",
-            "bg-[var(--color-muted)] text-[var(--color-foreground)]",
-            "rounded-full ring-2 ring-white dark:ring-zinc-900",
-            "select-none",
-            size_classes,
-            @overflow_href ? "hover:opacity-80 transition-opacity duration-[var(--transition-base)]" : nil
-          )
-        }
       end
 
       def overflow_count
         @items.length - @max
+      end
+
+      def overlap_margin
+        OVERLAPS.fetch(@overlap)
+      end
+
+      def overflow_styles
+        return nil if @max.zero?
+        "margin-left: #{overlap_margin}"
       end
 
       def validate_items!

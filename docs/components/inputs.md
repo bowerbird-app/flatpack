@@ -213,6 +213,7 @@ Date input field with calendar picker and date formatting.
 - Automatic date formatting (YYYY-MM-DD)
 - Accepts Date, Time, DateTime objects
 - Min/max date constraints
+- Opens the native picker on click/focus via Stimulus controller (`flat-pack--date-input`)
 
 **Additional Props:**
 - `min`: String/Date - Minimum allowed date

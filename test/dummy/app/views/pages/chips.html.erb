@@ -1,12 +1,14 @@
 <div class="max-w-6xl mx-auto p-6">
-  <h1 class="text-4xl font-bold mb-4">Chip Component</h1>
-  <p class="text-lg text-[var(--color-muted-foreground)] mb-8">
-    Compact elements that represent input, attributes, or actions. Use chips for tags, filters, selections, and more.
-  </p>
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Chip Component",
+    subtitle: "Compact elements that represent input, attributes, or actions. Use chips for tags, filters, selections, and more."
+  ) %>
+
+  <%= render "pages/component_method_variables_table", component: :chip %>
 
   <!-- Basic Chips -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Basic Chips</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Basic Chips", anchor_link: true, subtitle: "Examples for Basic Chips.") %>
     <div class="flex flex-wrap gap-3 mb-4">
       <%= render FlatPack::Chip::Component.new(text: "Default") %>
       <%= render FlatPack::Chip::Component.new(text: "Primary", style: :primary) %>
@@ -15,17 +17,21 @@
       <%= render FlatPack::Chip::Component.new(text: "Danger", style: :danger) %>
       <%= render FlatPack::Chip::Component.new(text: "Info", style: :info) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Chip::Component.new(text: "Default") %&gt;
-&lt;%= render FlatPack::Chip::Component.new(text: "Primary", style: :primary) %&gt;
-&lt;%= render FlatPack::Chip::Component.new(text: "Success", style: :success) %&gt;
-&lt;%= render FlatPack::Chip::Component.new(text: "Warning", style: :warning) %&gt;
-&lt;%= render FlatPack::Chip::Component.new(text: "Danger", style: :danger) %&gt;
-&lt;%= render FlatPack::Chip::Component.new(text: "Info", style: :info) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Chip::Component.new(text: "Default") %&gt;
+        &lt;%= render FlatPack::Chip::Component.new(text: "Primary", style: :primary) %&gt;
+        &lt;%= render FlatPack::Chip::Component.new(text: "Success", style: :success) %&gt;
+        &lt;%= render FlatPack::Chip::Component.new(text: "Warning", style: :warning) %&gt;
+        &lt;%= render FlatPack::Chip::Component.new(text: "Danger", style: :danger) %&gt;
+        &lt;%= render FlatPack::Chip::Component.new(text: "Info", style: :info) %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Chip Sizes -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Chip Sizes</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Chip Sizes", anchor_link: true, subtitle: "Examples for Chip Sizes.") %>
     <div class="flex items-center gap-3 mb-4">
       <%= render FlatPack::Chip::Component.new(text: "Small", size: :sm) %>
       <%= render FlatPack::Chip::Component.new(text: "Medium (default)", size: :md) %>
@@ -36,14 +42,18 @@
       <%= render FlatPack::Chip::Component.new(text: "Medium", style: :primary, size: :md) %>
       <%= render FlatPack::Chip::Component.new(text: "Large", style: :primary, size: :lg) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Chip::Component.new(text: "Small", size: :sm) %&gt;
-&lt;%= render FlatPack::Chip::Component.new(text: "Medium", size: :md) %&gt;
-&lt;%= render FlatPack::Chip::Component.new(text: "Large", size: :lg) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Chip::Component.new(text: "Small", size: :sm) %&gt;
+        &lt;%= render FlatPack::Chip::Component.new(text: "Medium", size: :md) %&gt;
+        &lt;%= render FlatPack::Chip::Component.new(text: "Large", size: :lg) %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Chips with Leading Icons -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Chips with Leading Icons</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Chips with Leading Icons", anchor_link: true, subtitle: "Examples for Chips with Leading Icons.") %>
     <div class="flex flex-wrap gap-3 mb-4">
       <%= render FlatPack::Chip::Component.new(text: "Ruby", style: :danger) do |c| %>
         <% c.with_leading do %>
@@ -71,7 +81,7 @@
 
   <!-- Removable Chips -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Removable Chips</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Removable Chips", anchor_link: true, subtitle: "Examples for Removable Chips.") %>
     <p class="text-sm text-[var(--color-muted-foreground)] mb-4">
       Click the × button to remove chips. Check the console for events.
     </p>
@@ -82,12 +92,16 @@
       <%= render FlatPack::Chip::Component.new(text: "React", style: :info, removable: true, value: "react") %>
       <%= render FlatPack::Chip::Component.new(text: "TypeScript", style: :info, removable: true, value: "typescript") %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Chip::Component.new(
-  text: "Ruby",
-  style: :danger,
-  removable: true,
-  value: "ruby"
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Chip::Component.new(
+          text: "Ruby",
+          style: :danger,
+          removable: true,
+          value: "ruby"
+        ) %&gt;
+      CODE
+    ) %>
     <script>
       document.addEventListener('chip:removed', (event) => {
         console.log('Chip removed:', event.detail.value)
@@ -97,7 +111,7 @@
 
   <!-- Selectable Filter Chips -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Selectable Filter Chips</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Selectable Filter Chips", anchor_link: true, subtitle: "Examples for Selectable Filter Chips.") %>
     <p class="text-sm text-[var(--color-muted-foreground)] mb-4">
       Click to toggle selection. Check the console for events.
     </p>
@@ -131,13 +145,17 @@
         data: { action: "click->flat-pack--chip#toggle" }
       ) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Chip::Component.new(
-  text: "All",
-  type: :button,
-  selected: true,
-  value: "all",
-  data: { action: "click->flat-pack--chip#toggle" }
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Chip::Component.new(
+          text: "All",
+          type: :button,
+          selected: true,
+          value: "all",
+          data: { action: "click->flat-pack--chip#toggle" }
+        ) %&gt;
+      CODE
+    ) %>
     <script>
       document.addEventListener('chip:toggled', (event) => {
         console.log('Chip toggled:', event.detail.value, 'Selected:', event.detail.selected)
@@ -147,19 +165,23 @@
 
   <!-- Disabled Chips -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Disabled Chips</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Disabled Chips", anchor_link: true, subtitle: "Examples for Disabled Chips.") %>
     <div class="flex flex-wrap gap-3 mb-4">
       <%= render FlatPack::Chip::Component.new(text: "Disabled", disabled: true) %>
       <%= render FlatPack::Chip::Component.new(text: "Disabled Primary", style: :primary, disabled: true) %>
       <%= render FlatPack::Chip::Component.new(text: "Disabled Button", type: :button, disabled: true) %>
       <%= render FlatPack::Chip::Component.new(text: "Disabled Link", type: :link, href: "#", disabled: true) %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Chip::Component.new(text: "Disabled", disabled: true) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Chip::Component.new(text: "Disabled", disabled: true) %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Link Chips -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Link Chips</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Link Chips", anchor_link: true, subtitle: "Examples for Link Chips.") %>
     <div class="flex flex-wrap gap-3 mb-4">
       <%= render FlatPack::Chip::Component.new(
         text: "View All",
@@ -180,17 +202,21 @@
         <% end %>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Chip::Component.new(
-  text: "View All",
-  type: :link,
-  href: "/demo",
-  style: :primary
-) %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Chip::Component.new(
+          text: "View All",
+          type: :link,
+          href: "/demo",
+          style: :primary
+        ) %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- ChipGroup Examples -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">ChipGroup - Wrapping Chips</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "ChipGroup - Wrapping Chips", anchor_link: true, subtitle: "Examples for ChipGroup - Wrapping Chips.") %>
     <p class="text-sm text-[var(--color-muted-foreground)] mb-4">
       ChipGroup provides consistent spacing and wrapping for collections of chips.
     </p>
@@ -205,16 +231,20 @@
       <%= render FlatPack::Chip::Component.new(text: "Go", style: :info) %>
       <%= render FlatPack::Chip::Component.new(text: "Rust", style: :danger) %>
     <% end %>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::ChipGroup::Component.new do %&gt;
-  &lt;%= render FlatPack::Chip::Component.new(text: "Ruby", style: :danger) %&gt;
-  &lt;%= render FlatPack::Chip::Component.new(text: "Rails", style: :danger) %&gt;
-  &lt;%= render FlatPack::Chip::Component.new(text: "JavaScript", style: :warning) %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::ChipGroup::Component.new do %&gt;
+          &lt;%= render FlatPack::Chip::Component.new(text: "Ruby", style: :danger) %&gt;
+          &lt;%= render FlatPack::Chip::Component.new(text: "Rails", style: :danger) %&gt;
+          &lt;%= render FlatPack::Chip::Component.new(text: "JavaScript", style: :warning) %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- ChipGroup No Wrap -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">ChipGroup - No Wrapping</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "ChipGroup - No Wrapping", anchor_link: true, subtitle: "Examples for ChipGroup - No Wrapping.") %>
     <div class="overflow-x-auto mb-4">
       <%= render FlatPack::ChipGroup::Component.new(wrap: false) do %>
         <%= render FlatPack::Chip::Component.new(text: "Ruby", style: :danger) %>
@@ -224,14 +254,18 @@
         <%= render FlatPack::Chip::Component.new(text: "TypeScript", style: :info) %>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::ChipGroup::Component.new(wrap: false) do %&gt;
-  &lt;%= render FlatPack::Chip::Component.new(text: "Ruby", style: :danger) %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::ChipGroup::Component.new(wrap: false) do %&gt;
+          &lt;%= render FlatPack::Chip::Component.new(text: "Ruby", style: :danger) %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Chips with Avatars -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Chips with Avatars</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Chips with Avatars", anchor_link: true, subtitle: "Examples for Chips with Avatars.") %>
     <div class="flex flex-wrap gap-3 mb-4">
       <%= render FlatPack::Chip::Component.new(text: "Nathan Garcia") do |c| %>
         <% c.with_leading do %>
@@ -258,19 +292,23 @@
         <% end %>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Chip::Component.new(text: "Nathan Garcia") do |c| %&gt;
-  &lt;% c.with_leading do %&gt;
-    &lt;%= render FlatPack::Avatar::Component.new(
-      initials: "NG",
-      size: :xs
-    ) %&gt;
-  &lt;% end %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Chip::Component.new(text: "Nathan Garcia") do |c| %&gt;
+          &lt;% c.with_leading do %&gt;
+            &lt;%= render FlatPack::Avatar::Component.new(
+              initials: "NG",
+              size: :xs
+            ) %&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Chips with AvatarGroup -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Chips with Avatar Groups</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Chips with Avatar Groups", anchor_link: true, subtitle: "Examples for Chips with Avatar Groups.") %>
     <div class="flex flex-wrap gap-3 mb-4">
       <%= render FlatPack::Chip::Component.new(text: "Design Team", style: :primary) do |c| %>
         <% c.with_leading do %>
@@ -302,24 +340,28 @@
         <% end %>
       <% end %>
     </div>
-    <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;%= render FlatPack::Chip::Component.new(text: "Design Team", style: :primary) do |c| %&gt;
-  &lt;% c.with_leading do %&gt;
-    &lt;%= render FlatPack::AvatarGroup::Component.new(
-      items: [
-        { initials: "NG", size: :xs },
-        { initials: "JD", size: :xs },
-        { initials: "AB", size: :xs }
-      ],
-      size: :xs,
-      max: 3
-    ) %&gt;
-  &lt;% end %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Chip::Component.new(text: "Design Team", style: :primary) do |c| %&gt;
+          &lt;% c.with_leading do %&gt;
+            &lt;%= render FlatPack::AvatarGroup::Component.new(
+              items: [
+                { initials: "NG", size: :xs },
+                { initials: "JD", size: :xs },
+                { initials: "AB", size: :xs }
+              ],
+              size: :xs,
+              max: 3
+            ) %&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
   </section>
 
   <!-- Complex Example -->
   <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">Complete Example - Tag Input</h2>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Complete Example - Tag Input", anchor_link: true, subtitle: "Examples for Complete Example - Tag Input.") %>
     <p class="text-sm text-[var(--color-muted-foreground)] mb-4">
       A practical example showing a tag input interface with removable chips.
     </p>

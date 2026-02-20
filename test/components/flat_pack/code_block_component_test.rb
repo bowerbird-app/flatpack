@@ -12,6 +12,72 @@ module FlatPack
         assert_selector "code", text: "puts 'Hello, world!'"
       end
 
+      def test_applies_default_top_spacing
+        render_inline(Component.new(code: "puts 1"))
+
+        assert_selector "div.mt-4"
+      end
+
+      def test_can_disable_top_spacing
+        render_inline(Component.new(code: "puts 1", separated: false))
+
+        refute_selector "div.mt-4"
+      end
+
+      def test_renders_single_snippet_without_tablist
+        render_inline(Component.new(
+          snippets: [{label: "Ruby", language: "ruby", code: "puts 'Hello, world!'"}]
+        ))
+
+        assert_selector "pre"
+        assert_selector "code.language-ruby", text: "puts 'Hello, world!'"
+        refute_selector "[role='tablist']"
+      end
+
+      def test_renders_tabbed_code_block_for_multiple_snippets
+        render_inline(Component.new(
+          snippets: [
+            {label: "Primary", language: "erb", code: "<%= render FlatPack::Button::Component.new(text: \"Primary\") %>"},
+            {label: "Secondary", language: "erb", code: "<%= render FlatPack::Button::Component.new(text: \"Secondary\") %>"}
+          ]
+        ))
+
+        assert_selector "[role='tablist'][aria-label='Code snippets']"
+        assert_selector "button[role='tab']", count: 2
+        assert_selector "button[role='tab'][aria-selected='true']", text: "Primary"
+        assert_selector "button[role='tab'][aria-selected='false']", text: "Secondary"
+        assert_selector "[role='tabpanel']", count: 2, visible: :all
+        assert_selector "[role='tabpanel'][hidden]", count: 1, visible: :all
+      end
+
+      def test_falls_back_to_snippet_when_labels_missing
+        render_inline(Component.new(
+          snippets: [
+            {language: "ruby", code: "puts 1"},
+            {code: "puts 2"}
+          ]
+        ))
+
+        assert_selector "button[role='tab']", text: "RUBY"
+        assert_selector "button[role='tab']", text: "Snippet"
+      end
+
+      def test_uses_snippets_when_both_code_and_snippets_are_provided
+        render_inline(Component.new(
+          code: "puts 'fallback'",
+          snippets: [{label: "From snippets", code: "puts 'snippets'"}]
+        ))
+
+        assert_selector "code", text: "puts 'snippets'"
+        refute_selector "code", text: "puts 'fallback'"
+      end
+
+      def test_raises_when_code_and_snippets_missing
+        assert_raises(ArgumentError) do
+          render_inline(Component.new)
+        end
+      end
+
       def test_renders_title_when_present
         render_inline(Component.new(code: "puts 'Hello'", title: "Ruby"))
 

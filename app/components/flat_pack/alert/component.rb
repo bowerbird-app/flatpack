@@ -5,30 +5,30 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "border-blue-500" "bg-blue-50" "text-blue-900" "dark:bg-blue-950/20" "border-green-500" "bg-green-50" "text-green-900" "dark:bg-green-950/20" "border-orange-500" "bg-orange-50" "text-orange-900" "dark:bg-orange-950/20" "border-red-500" "bg-red-50" "text-red-900" "dark:bg-red-950/20"
+      # "bg-white" "text-black" "border" "border-black/20" "bg-[var(--color-success)]" "text-[var(--color-success-text)]" "bg-[var(--color-warning)]" "text-[var(--color-warning-text)]" "bg-[var(--color-destructive)]" "text-[var(--color-destructive-text)]"
       VARIANTS = {
         info: {
-          border: "border-blue-500",
-          bg: "bg-blue-50 dark:bg-blue-950/20",
-          text: "text-blue-900 dark:text-blue-200",
+          border: "border border-black/20",
+          bg: "bg-white",
+          text: "text-black",
           icon: "info"
         },
         success: {
-          border: "border-green-500",
-          bg: "bg-green-50 dark:bg-green-950/20",
-          text: "text-green-900 dark:text-green-200",
+          border: nil,
+          bg: "bg-[var(--color-success)]",
+          text: "text-[var(--color-success-text)]",
           icon: "check-circle"
         },
         warning: {
-          border: "border-orange-500",
-          bg: "bg-orange-50 dark:bg-orange-950/20",
-          text: "text-orange-900 dark:text-orange-200",
+          border: nil,
+          bg: "bg-[var(--color-warning)]",
+          text: "text-[var(--color-warning-text)]",
           icon: "alert-triangle"
         },
         danger: {
-          border: "border-red-500",
-          bg: "bg-red-50 dark:bg-red-950/20",
-          text: "text-red-900 dark:text-red-200",
+          border: nil,
+          bg: "bg-[var(--color-destructive)]",
+          text: "text-[var(--color-destructive-text)]",
           icon: "alert-circle"
         }
       }.freeze
@@ -155,7 +155,7 @@ module FlatPack
         classes(
           "relative flex items-center gap-3",
           "rounded-[var(--radius-md)]",
-          "border-l-4 p-4",
+          "p-4",
           style_config[:border],
           style_config[:bg],
           style_config[:text]

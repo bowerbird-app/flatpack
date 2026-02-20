@@ -1,15 +1,16 @@
 <div data-controller="flat-pack--toasts-region">
-  <h1 class="text-4xl font-bold mb-4">Toast Component</h1>
-  <p class="text-lg text-[var(--color-muted-foreground)] mb-8">
-    Auto-dismissing notification messages with aria-live support.
-  </p>
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Toast Component",
+    subtitle: "Auto-dismissing notification messages with aria-live support."
+  ) %>
 
   <!-- Toast Container -->
+  <%= render "pages/component_method_variables_table", component: :toast %>
   <%= render FlatPack::Toasts::Region::Component.new(data: { "flat-pack--toasts-region-target": "container" }) %>
 
 <!-- Basic Toasts -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Basic Toasts</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Basic Toasts", anchor_link: true, subtitle: "Examples for Basic Toasts.") %>
   <p class="text-[var(--color-muted-foreground)] mb-4">
     Click the buttons below to trigger toast notifications.
   </p>
@@ -31,27 +32,31 @@
     ) %>
     <%= render FlatPack::Button::Component.new(
       text: "Error Toast",
-      style: :ghost,
+      style: :error,
       data: { action: "click->flat-pack--toasts-region#addToast", type: "error", message: "An error occurred. Please try again." }
     ) %>
   </div>
   
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;!-- Toast Container (place once in layout) --&gt;
-&lt;%= render FlatPack::Toasts::Region::Component.new %&gt;
-
-&lt;!-- Trigger via JavaScript --&gt;
-document.dispatchEvent(new CustomEvent('toast:add', {
-  detail: {
-    type: 'success',
-    message: 'Task completed!',
-    timeout: 5000
-  }
-}));</code></pre>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      <!-- Toast Container (place once in layout) -->
+      &lt;%= render FlatPack::Toasts::Region::Component.new %&gt;
+      
+      <!-- Trigger via JavaScript -->
+      document.dispatchEvent(new CustomEvent('toast:add', {
+        detail: {
+          type: 'success',
+          message: 'Task completed!',
+          timeout: 5000
+        }
+      }));
+    CODE
+  ) %>
 </section>
 
 <!-- Toast with Different Timeouts -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Custom Timeouts</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Custom Timeouts", anchor_link: true, subtitle: "Examples for Custom Timeouts.") %>
   <div class="flex flex-wrap gap-3 mb-4">
     <%= render FlatPack::Button::Component.new(
       text: "Quick (2s)",
@@ -69,11 +74,26 @@ document.dispatchEvent(new CustomEvent('toast:add', {
       data: { action: "click->flat-pack--toasts-region#addToast", type: "info", message: "Long toast (10 seconds)", timeout: 10000 }
     ) %>
   </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Button::Component.new(
+        text: "Quick (2s)",
+        style: :secondary,
+        data: {
+          action: "click->flat-pack--toasts-region#addToast",
+          type: "info",
+          message: "Quick toast!",
+          timeout: 2000
+        }
+      ) %&gt;
+    CODE
+  ) %>
 </section>
 
 <!-- Multiple Toasts -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Multiple Toasts</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Multiple Toasts", anchor_link: true, subtitle: "Examples for Multiple Toasts.") %>
   <p class="text-[var(--color-muted-foreground)] mb-4">
     Toasts stack automatically. Try clicking multiple times.
   </p>
@@ -104,42 +124,31 @@ document.dispatchEvent(new CustomEvent('toast:add', {
       }, 500);
     });
   </script>
-</section>
 
-<!-- Toast Types -->
-<section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Toast Types</h2>
-  <div class="space-y-3 p-6 bg-[var(--color-muted)] rounded-lg">
-    <div class="flex items-start gap-3">
-      <div class="w-12 text-center">
-        <%= render FlatPack::Badge::Component.new(text: "Info", variant: :default) %>
-      </div>
-      <p class="flex-1 text-sm">General information or status updates</p>
-    </div>
-    <div class="flex items-start gap-3">
-      <div class="w-12 text-center">
-        <%= render FlatPack::Badge::Component.new(text: "Success", variant: :success) %>
-      </div>
-      <p class="flex-1 text-sm">Successful operations or confirmations</p>
-    </div>
-    <div class="flex items-start gap-3">
-      <div class="w-12 text-center">
-        <%= render FlatPack::Badge::Component.new(text: "Warning", variant: :warning) %>
-      </div>
-      <p class="flex-1 text-sm">Warnings or actions requiring attention</p>
-    </div>
-    <div class="flex items-start gap-3">
-      <div class="w-12 text-center">
-        <%= render FlatPack::Badge::Component.new(text: "Error", variant: :error) %>
-      </div>
-      <p class="flex-1 text-sm">Errors or failed operations</p>
-    </div>
-  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      document.dispatchEvent(new CustomEvent('toast:add', {
+        detail: { type: 'info', message: 'First toast notification' }
+      }));
+
+      setTimeout(() => {
+        document.dispatchEvent(new CustomEvent('toast:add', {
+          detail: { type: 'success', message: 'Second toast notification' }
+        }));
+      }, 300);
+
+      setTimeout(() => {
+        document.dispatchEvent(new CustomEvent('toast:add', {
+          detail: { type: 'warning', message: 'Third toast notification' }
+        }));
+      }, 500);
+    CODE
+  ) %>
 </section>
 
 <!-- Features -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Features</h2>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Examples for Features.") %>
   <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
     <li><strong>Auto-Dismiss:</strong> Automatically disappear after a configurable timeout</li>
     <li><strong>Manual Dismiss:</strong> Click the close button to dismiss immediately</li>
@@ -154,17 +163,21 @@ document.dispatchEvent(new CustomEvent('toast:add', {
 
 <!-- Turbo Stream Example -->
 <section class="mb-12">
-  <h2 class="text-2xl font-semibold mb-4">Turbo Stream Integration</h2>
-  <pre class="bg-[var(--color-muted)] p-4 rounded overflow-x-auto"><code>&lt;!-- In your controller action --&gt;
-respond_to do |format|
-  format.turbo_stream do
-    render turbo_stream: turbo_stream.append(
-      "toasts-region",
-      partial: "flat_pack/toast/component",
-      locals: { type: :success, message: "Saved!" }
-    )
-  end
-end</code></pre>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Turbo Stream Integration", anchor_link: true, subtitle: "Examples for Turbo Stream Integration.") %>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      <!-- In your controller action -->
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.append(
+            "toasts-region",
+            partial: "flat_pack/toast/component",
+            locals: { type: :success, message: "Saved!" }
+          )
+        end
+      end
+    CODE
+  ) %>
 </section>
 
 </div>
