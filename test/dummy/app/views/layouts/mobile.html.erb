@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html class="h-full">
+  <head>
+    <title>FlatPack Mobile Demo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="m-0 min-h-screen bg-[var(--color-background)] text-[var(--color-text)]" data-controller="dark-mode">
+    <%= render "layouts/icon_sprite" %>
+
+    <main class="w-full px-4 py-6 pb-28">
+      <div class="mx-auto w-full max-w-md">
+        <%= yield %>
+      </div>
+    </main>
+
+    <%= render FlatPack::BottomNav::Component.new do |nav| %>
+      <% nav.item(label: "Home", href: mobile_path, icon: :home, active: current_page?(mobile_path)) %>
+      <% nav.item(label: "Bottom", href: mobile_bottom_nav_path, icon: :menu, active: current_page?(mobile_bottom_nav_path)) %>
+      <% nav.item(label: "Search", href: demo_search_path, icon: :search) %>
+      <% nav.item(label: "Profile", href: demo_avatars_path, icon: :user) %>
+    <% end %>
+  </body>
+</html>

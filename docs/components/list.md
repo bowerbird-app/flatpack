@@ -6,9 +6,15 @@ The List component renders semantic lists with optional ordered/unordered stylin
 
 ```erb
 <%= render FlatPack::List::Component.new do %>
-  <%= render FlatPack::List::Item.new { "First item" } %>
-  <%= render FlatPack::List::Item.new { "Second item" } %>
-  <%= render FlatPack::List::Item.new { "Third item" } %>
+  <%= render FlatPack::List::Item.new do %>
+    First item
+  <% end %>
+  <%= render FlatPack::List::Item.new do %>
+    Second item
+  <% end %>
+  <%= render FlatPack::List::Item.new do %>
+    Third item
+  <% end %>
 <% end %>
 ```
 
@@ -31,18 +37,30 @@ The List component renders semantic lists with optional ordered/unordered stylin
 ### Unordered List (Default)
 ```erb
 <%= render FlatPack::List::Component.new do %>
-  <%= render FlatPack::List::Item.new { "Task one" } %>
-  <%= render FlatPack::List::Item.new { "Task two" } %>
-  <%= render FlatPack::List::Item.new { "Task three" } %>
+  <%= render FlatPack::List::Item.new do %>
+    Task one
+  <% end %>
+  <%= render FlatPack::List::Item.new do %>
+    Task two
+  <% end %>
+  <%= render FlatPack::List::Item.new do %>
+    Task three
+  <% end %>
 <% end %>
 ```
 
 ### Ordered List
 ```erb
 <%= render FlatPack::List::Component.new(ordered: true) do %>
-  <%= render FlatPack::List::Item.new { "First step" } %>
-  <%= render FlatPack::List::Item.new { "Second step" } %>
-  <%= render FlatPack::List::Item.new { "Third step" } %>
+  <%= render FlatPack::List::Item.new do %>
+    First step
+  <% end %>
+  <%= render FlatPack::List::Item.new do %>
+    Second step
+  <% end %>
+  <%= render FlatPack::List::Item.new do %>
+    Third step
+  <% end %>
 <% end %>
 ```
 

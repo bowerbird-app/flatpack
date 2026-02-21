@@ -54,6 +54,10 @@ Rails.application.routes.draw do
   put "demo/forms/update", to: "pages#forms_update"
   delete "demo/forms/destroy", to: "pages#forms_destroy"
 
+  # Mobile demos
+  get "mobile", to: "mobile#index"
+  get "mobile/bottom_nav", to: "mobile#bottom_nav"
+
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", :as => :rails_health_check

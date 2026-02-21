@@ -21,7 +21,7 @@ module FlatPack
         # SECURITY: Content is marked html_safe because it's expected to contain
         # Rails-generated HTML from list items captured via block. Never pass
         # unsanitized user input directly to content.
-        content_tag(tag_name, content.html_safe, **list_attributes)
+        content_tag(tag_name, content.to_s.html_safe, **list_attributes)
       end
 
       private
@@ -35,7 +35,7 @@ module FlatPack
 
       def list_classes
         classes(
-          (@spacing == :dense) ? "space-y-1" : "space-y-2",
+          (@spacing == :dense) ? "space-y-1" : "space-y-3",
           ("divide-y divide-[var(--color-border)]" if @divider)
         )
       end

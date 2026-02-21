@@ -91,6 +91,18 @@ module FlatPack
         assert_selector "code.language-javascript", text: "const x = 1"
       end
 
+      def test_applies_wrapping_classes_to_pre
+        render_inline(Component.new(code: "a_very_long_line_without_spaces"))
+
+        assert_selector "pre.whitespace-pre-wrap.break-words"
+      end
+
+      def test_preserves_newlines_in_code_content
+        render_inline(Component.new(code: "line 1\nline 2"))
+
+        assert_includes page.native.to_html, "line 1\nline 2"
+      end
+
       def test_escapes_html_in_code_content
         render_inline(Component.new(code: "<script>alert('xss')</script>"))
 

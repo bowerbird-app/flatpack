@@ -1,0 +1,46 @@
+<div class="border border-[var(--color-border)] rounded-lg overflow-hidden mb-4">
+  <table class="w-full">
+    <thead class="bg-[var(--color-muted)]">
+      <tr>
+        <th class="px-4 py-2 text-left text-sm font-semibold">#</th>
+        <th class="px-4 py-2 text-left text-sm font-semibold">Name</th>
+        <th class="px-4 py-2 text-left text-sm font-semibold">Email</th>
+        <th class="px-4 py-2 text-left text-sm font-semibold">Status</th>
+        <th class="px-4 py-2 text-left text-sm font-semibold">Category</th>
+        <th class="px-4 py-2 text-left text-sm font-semibold">Views</th>
+        <th class="px-4 py-2 text-left text-sm font-semibold">Published</th>
+      </tr>
+    </thead>
+    <tbody data-pagination-content>
+      <% records.each do |record| %>
+        <tr class="border-t border-[var(--color-border)]">
+          <td class="px-4 py-2 text-sm"><%= record.id %></td>
+          <td class="px-4 py-2 text-sm"><%= record.name %></td>
+          <td class="px-4 py-2 text-sm"><%= record.email %></td>
+          <td class="px-4 py-2 text-sm"><%= record.status.to_s.capitalize %></td>
+          <td class="px-4 py-2 text-sm"><%= record.category.to_s.titleize %></td>
+          <td class="px-4 py-2 text-sm"><%= number_with_delimiter(record.views_count) %></td>
+          <td class="px-4 py-2 text-sm"><%= record.published_at&.strftime("%b %d, %Y") %></td>
+        </tr>
+      <% end %>
+
+      <% unless has_more %>
+        <tr class="border-t border-[var(--color-border)]">
+          <td colspan="7" class="py-12 text-center">
+            <%= render FlatPack::Badge::Component.new(
+              text: "End",
+              style: :default,
+              size: :lg
+            ) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<%= render FlatPack::Pagination::Component.new(
+  mode: :infinite,
+  infinite_url: infinite_url,
+  has_more: has_more
+) %>

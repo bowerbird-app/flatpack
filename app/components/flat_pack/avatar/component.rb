@@ -90,9 +90,9 @@ module FlatPack
 
       def wrapper_classes
         classes(
-          "relative inline-flex items-center justify-center shrink-0",
+          "relative inline-flex items-center justify-center shrink-0 overflow-hidden",
           "bg-[var(--color-muted)] text-[var(--color-foreground)]",
-          "font-medium select-none overflow-hidden aspect-square",
+          "font-medium select-none aspect-square",
           SIZES.fetch(@size),
           SHAPES.fetch(@shape),
           @href ? "hover:opacity-80 transition-opacity duration-[var(--transition-base)]" : nil
@@ -126,12 +126,18 @@ module FlatPack
           alt: @alt,
           loading: "lazy",
           decoding: "async",
-          class: "h-full w-full object-cover"
+          class: classes(
+            "h-full w-full object-cover",
+            SHAPES.fetch(@shape)
+          )
         )
       end
 
       def render_initials
-        content_tag(:span, computed_initials, class: "uppercase font-semibold")
+        content_tag(:span,
+          computed_initials,
+          class: "inline-flex h-full w-full items-center justify-center uppercase font-semibold leading-none"
+        )
       end
 
       def render_generic_icon
@@ -167,7 +173,7 @@ module FlatPack
         end
 
         classes(
-          "absolute bottom-0 right-0 block rounded-full",
+          "absolute top-0 right-0 block rounded-full translate-x-1/4 -translate-y-1/4",
           "ring-2 ring-white dark:ring-zinc-900",
           size_class,
           STATUS_COLORS.fetch(@status)

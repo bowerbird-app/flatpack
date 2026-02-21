@@ -1,44 +1,56 @@
 <%= render FlatPack::PageTitle::Component.new(
   title: "Infinite Scroll Pagination",
-  subtitle: "Automatic content loading with intersection observer and graceful no-JS fallback."
+  subtitle: "Infinite loading with JavaScript auto-fetch and graceful fallback."
 ) %>
+
+<%= render "pages/component_method_variables_table", component: :pagination %>
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(
-    title: "Infinite Scroll Demo",
+    title: "Infinite Scroll Table",
     anchor_link: true,
-    subtitle: "Scroll down to see automatic loading in action"
+    subtitle: "Loads additional database rows into the same table without full page reload"
   ) %>
-  
-  <div class="space-y-4" data-pagination-content>
-    <% 10.times do |i| %>
-      <%= render FlatPack::Card::Component.new do |card| %>
-        <% card.header do %>
-          <div class="flex items-start gap-4">
-            <%= render FlatPack::Avatar::Component.new(
-              name: "User #{i + 1}",
-              size: :md
-            ) %>
-            <div class="flex-1">
-              <h3 class="font-semibold">Article #{i + 1}</h3>
-              <p class="text-sm text-[var(--color-text-muted)]">Published <%= rand(1..7) %> days ago</p>
-            </div>
-          </div>
-        <% end %>
-        
-        <% card.body do %>
-          <p>This is a sample article demonstrating infinite scroll pagination. In a real application, this content would be loaded from your database and displayed dynamically as the user scrolls.</p>
-        <% end %>
-      <% end %>
-    <% end %>
-  </div>
 
-  <%# In a real implementation, this would check if there are more pages %>
-  <%= render FlatPack::Pagination::Component.new(
-    mode: :infinite,
-    infinite_url: "#",
-    has_more: false
+  <%= render "pages/pagination_infinite_results",
+    records: @records,
+    pagy: @pagy,
+    has_more: @has_more,
+    infinite_url: @infinite_url %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    language: "erb",
+    code: CGI.unescapeHTML(<<~'ERB'),
+      &lt;tbody data-pagination-content&gt;
+        &lt;% @records.each do |record| %&gt;
+          &lt;tr&gt;...&lt;/tr&gt;
+        &lt;% end %&gt;
+      &lt;/tbody&gt;
+
+      &lt;%= render FlatPack::Pagination::Component.new(
+        mode: :infinite,
+        infinite_url: demo_pagination_infinite_path(page: @pagy.next),
+        has_more: @pagy.next.present?
+      ) %&gt;
+    ERB
+    class: "mt-4"
   ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Infinite Scroll Grid Cards",
+    anchor_link: true,
+    subtitle: "Loads additional cards into a responsive grid using the same infinite pagination flow"
+  ) %>
+
+  <% cards_infinite_url = @has_more ? demo_pagination_infinite_path(page: @pagy.next, view: :cards) : "#" %>
+
+  <%= render "pages/pagination_infinite_cards_results",
+    records: @records,
+    pagy: @pagy,
+    has_more: @has_more,
+    infinite_url: cards_infinite_url %>
 </section>
 
 <section class="mb-12">
@@ -67,12 +79,14 @@
     <%= render FlatPack::CodeBlock::Component.new(
       language: "ruby",
       code: <<~RUBY
-        def index
-          @pagy, @articles = pagy(Article.all, items: 10)
-          
-          respond_to do |format|
-            format.html # Full page render
-            format.js   # Partial render for infinite scroll
+        def pagination_infinite
+          @pagy, @records = pagy(DummyDatum.recent, items: 10)
+          @has_more = @pagy.next.present?
+          @infinite_url = @has_more ? demo_pagination_infinite_path(page: @pagy.next) : "#"
+
+          if request.xhr?
+            render partial: "pages/pagination_infinite_results",
+              locals: { records: @records, pagy: @pagy, has_more: @has_more, infinite_url: @infinite_url }
           end
         end
       RUBY
@@ -82,18 +96,19 @@
     <%= render FlatPack::CodeBlock::Component.new(
       language: "erb",
       code: <<~ERB
-        <div data-pagination-content>
-          <% @articles.each do |article| %>
-            <!-- article markup -->
-          <% end %>
-        </div>
+        <table>
+          <tbody data-pagination-content>
+            <#{'%'} @records.each do |record| %#{'>'}
+              <!-- row markup -->
+            <#{'%'} end %#{'>'}
+          </tbody>
+        </table>
 
-        <%= render FlatPack::Pagination::Component.new(
-          pagy: @pagy,
+        <#{'%'}= render FlatPack::Pagination::Component.new(
           mode: :infinite,
-          infinite_url: articles_path(page: @pagy.next),
+          infinite_url: demo_pagination_infinite_path(page: @pagy.next),
           has_more: @pagy.next.present?
-        ) if @pagy.next %>
+        ) if @pagy.next %#{'>'}
       ERB
     ) %>
   </div>

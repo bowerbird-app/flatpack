@@ -87,7 +87,7 @@ module FlatPack
       def test_includes_update_action
         render_inline(Component.new(name: "volume"))
 
-        assert_selector "[data-action='input->flat-pack--range-input#update']"
+        assert_selector "[data-action='input->flat-pack--range-input#update change->flat-pack--range-input#update']"
       end
 
       def test_includes_aria_label

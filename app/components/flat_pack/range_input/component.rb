@@ -94,7 +94,7 @@ module FlatPack
           class: input_classes,
           data: {
             "flat-pack--range-input-target": "input",
-            action: "input->flat-pack--range-input#update"
+            action: "input->flat-pack--range-input#update change->flat-pack--range-input#update"
           },
           aria: {
             label: @label || "Range input",

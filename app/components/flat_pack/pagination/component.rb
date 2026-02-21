@@ -19,6 +19,7 @@ module FlatPack
         infinite_url: nil,
         has_more: true,
         loading_text: "Loading more...",
+        loading_variant: :table,
         **system_arguments
       )
         super(**system_arguments)
@@ -28,6 +29,7 @@ module FlatPack
         @infinite_url = infinite_url
         @has_more = has_more
         @loading_text = loading_text
+        @loading_variant = loading_variant.to_sym
 
         validate_mode!
         validate_pagy!
@@ -36,11 +38,14 @@ module FlatPack
 
       def call
         if @mode == :infinite
+          has_more = @pagy ? (@has_more && @pagy.next.present?) : @has_more
+
           return render FlatPack::PaginationInfinite::Component.new(
             url: @infinite_url || page_url(@pagy&.next),
             page: @pagy&.next || ((@pagy&.page || 1) + 1),
-            has_more: @has_more && @pagy&.next.present?,
+            has_more: has_more,
             loading_text: @loading_text,
+            loading_variant: @loading_variant,
             **@system_arguments
           )
         end

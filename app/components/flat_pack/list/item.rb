@@ -23,7 +23,7 @@ module FlatPack
             # SECURITY: Content is marked html_safe because it's expected to contain
             # Rails-generated HTML from components captured via block. Never pass
             # unsanitized user input directly to content.
-            content_tag(:span, content.html_safe, class: "flex-1"),
+            content_tag(:span, content.to_s.html_safe, class: "flex-1"),
             render_trailing
           ].compact)
         end

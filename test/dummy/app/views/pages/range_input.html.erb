@@ -110,11 +110,16 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Interactive Demo", anchor_link: true) %>
   
-  <div class="p-6 bg-gradient-to-br from-blue-50 to-purple-50 border border-[var(--color-border)] rounded-lg">
+  <div
+    class="p-6 bg-gradient-to-br from-blue-50 to-purple-50 border border-[var(--color-border)] rounded-lg"
+    data-controller="flat-pack--range-input-demo"
+    data-action="range-input:change->flat-pack--range-input-demo#updatePreview"
+  >
     <div class="space-y-6">
       <div>
         <%= render FlatPack::RangeInput::Component.new(
           name: "demo_hue",
+          id: "demo_hue",
           label: "Hue",
           min: 0,
           max: 360,
@@ -125,6 +130,7 @@
       <div>
         <%= render FlatPack::RangeInput::Component.new(
           name: "demo_saturation",
+          id: "demo_saturation",
           label: "Saturation (%)",
           min: 0,
           max: 100,
@@ -135,6 +141,7 @@
       <div>
         <%= render FlatPack::RangeInput::Component.new(
           name: "demo_lightness",
+          id: "demo_lightness",
           label: "Lightness (%)",
           min: 0,
           max: 100,
@@ -142,8 +149,13 @@
         ) %>
       </div>
 
-      <div class="mt-6 p-8 rounded-lg border-2 border-[var(--color-border)]" style="background-color: hsl(200, 70%, 50%);">
+      <div
+        class="mt-6 p-8 rounded-lg border-2 border-[var(--color-border)]"
+        style="background-color: hsl(200, 70%, 50%);"
+        data-flat-pack--range-input-demo-target="preview"
+      >
         <p class="text-center text-white font-medium">Color Preview</p>
+        <p class="mt-2 text-center text-white/90 text-sm font-mono" data-flat-pack--range-input-demo-target="value">hsl(200, 70%, 50%)</p>
       </div>
     </div>
   </div>

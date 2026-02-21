@@ -7,30 +7,42 @@
 <%= render "pages/component_method_variables_table", component: :pagination %>
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Basic Pagination", anchor_link: true, subtitle: "Examples for Basic Pagination.") %>
-  <p class="text-[var(--color-muted-foreground)] mb-4">
-    Showing <%= @records.size %> of <%= @pagy.count %> total items (Page <%= @pagy.page %> of <%= @pagy.pages %>)
-  </p>
-  
-  <div class="border border-[var(--color-border)] rounded-lg overflow-hidden mb-4">
-    <table class="w-full">
-      <thead class="bg-[var(--color-muted)]">
-        <tr>
-          <th class="px-4 py-2 text-left text-sm font-semibold">#</th>
-          <th class="px-4 py-2 text-left text-sm font-semibold">Name</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @records.each do |record| %>
-          <tr class="border-t border-[var(--color-border)]">
-            <td class="px-4 py-2 text-sm"><%= record.id %></td>
-            <td class="px-4 py-2 text-sm"><%= record.name %></td>
+  <%= turbo_frame_tag "pagination_table" do %>
+    <p class="text-[var(--color-muted-foreground)] mb-4">
+      Showing <%= @records.size %> of <%= @pagy.count %> total items (Page <%= @pagy.page %> of <%= @pagy.pages %>)
+    </p>
+
+    <div class="border border-[var(--color-border)] rounded-lg overflow-hidden mb-4">
+      <table class="w-full">
+        <thead class="bg-[var(--color-muted)]">
+          <tr>
+            <th class="px-4 py-2 text-left text-sm font-semibold">#</th>
+            <th class="px-4 py-2 text-left text-sm font-semibold">Name</th>
+            <th class="px-4 py-2 text-left text-sm font-semibold">Email</th>
+            <th class="px-4 py-2 text-left text-sm font-semibold">Status</th>
+            <th class="px-4 py-2 text-left text-sm font-semibold">Category</th>
+            <th class="px-4 py-2 text-left text-sm font-semibold">Views</th>
+            <th class="px-4 py-2 text-left text-sm font-semibold">Published</th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
-  
-  <%= render FlatPack::Pagination::Component.new(pagy: @pagy) %>
+        </thead>
+        <tbody>
+          <% @records.each do |record| %>
+            <tr class="border-t border-[var(--color-border)]">
+              <td class="px-4 py-2 text-sm"><%= record.id %></td>
+              <td class="px-4 py-2 text-sm"><%= record.name %></td>
+              <td class="px-4 py-2 text-sm"><%= record.email %></td>
+              <td class="px-4 py-2 text-sm"><%= record.status.to_s.capitalize %></td>
+              <td class="px-4 py-2 text-sm"><%= record.category.to_s.titleize %></td>
+              <td class="px-4 py-2 text-sm"><%= number_with_delimiter(record.views_count) %></td>
+              <td class="px-4 py-2 text-sm"><%= record.published_at&.strftime("%b %d, %Y") %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <%= render FlatPack::Pagination::Component.new(pagy: @pagy) %>
+  <% end %>
   
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE'),
@@ -68,27 +80,32 @@
 <!-- Pagination in Card -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Pagination in Card", anchor_link: true, subtitle: "Examples for Pagination in Card.") %>
-  <%= render FlatPack::Card::Component.new(style: :outlined) do |card| %>
-    <% card.header do %>
-      <h3 class="text-lg font-semibold">User List</h3>
-    <% end %>
-    <% card.body do %>
-      <div class="space-y-2">
-        <% @records.first(5).each do |record| %>
-          <div class="flex items-center justify-between p-3 bg-[var(--color-muted)] rounded-lg">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-white font-semibold">
-                <%= record.id %>
+  <%= turbo_frame_tag "pagination_in_card" do %>
+    <%= render FlatPack::Card::Component.new(style: :outlined) do |card| %>
+      <% card.header do %>
+        <h3 class="text-lg font-semibold">Recent Demo Records</h3>
+      <% end %>
+      <% card.body do %>
+        <div class="space-y-2">
+          <% @records.first(5).each do |record| %>
+            <div class="flex items-center justify-between p-3 bg-[var(--color-muted)] rounded-lg">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-white font-semibold">
+                  <%= record.name.first(1).upcase %>
+                </div>
+                <div>
+                  <span class="font-medium"><%= record.name %></span>
+                  <p class="text-xs text-[var(--color-muted-foreground)]"><%= record.category.to_s.titleize %> - <%= number_with_delimiter(record.views_count) %> views</p>
+                </div>
               </div>
-              <span class="font-medium"><%= record.name %></span>
+              <%= render FlatPack::Button::Component.new(text: "View", style: :ghost, size: :sm) %>
             </div>
-            <%= render FlatPack::Button::Component.new(text: "View", style: :ghost, size: :sm) %>
-          </div>
-        <% end %>
-      </div>
-    <% end %>
-    <% card.footer do %>
-      <%= render FlatPack::Pagination::Component.new(pagy: @pagy, size: :compact) %>
+          <% end %>
+        </div>
+      <% end %>
+      <% card.footer do %>
+        <%= render FlatPack::Pagination::Component.new(pagy: @pagy, size: :compact) %>
+      <% end %>
     <% end %>
   <% end %>
 </section>

@@ -1,0 +1,20 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Mobile Demo",
+  subtitle: "FlatPack mobile-only examples"
+) %>
+
+<div class="mt-6 space-y-4">
+  <%= render FlatPack::Card::Component.new do %>
+    <p class="text-sm text-[var(--color-text-muted)]">
+      Open the bottom navigation demo to preview the component inside the mobile layout shell.
+    </p>
+
+    <div class="mt-4">
+      <%= render FlatPack::Button::Component.new(
+        text: "Open Bottom Nav Demo",
+        href: mobile_bottom_nav_path,
+        style: :primary
+      ) %>
+    </div>
+  <% end %>
+</div>

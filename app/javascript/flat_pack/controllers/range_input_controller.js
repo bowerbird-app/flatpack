@@ -10,6 +10,10 @@ export default class extends Controller {
 
   update() {
     const value = this.inputTarget.value
+
+    // Keep the HTML attribute in sync with the live property value.
+    // This ensures devtools/form markup reflects the current slider position.
+    this.inputTarget.setAttribute("value", value)
     
     if (this.hasValueDisplayTarget) {
       this.valueDisplayTarget.textContent = value

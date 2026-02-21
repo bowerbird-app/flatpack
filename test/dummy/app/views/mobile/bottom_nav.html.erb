@@ -1,0 +1,19 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Bottom Navigation",
+  subtitle: "Mobile-first navigation for key destinations"
+) %>
+
+<div class="mt-6 space-y-4 pb-24">
+  <%= render FlatPack::Card::Component.new do %>
+    <h2 class="text-base font-semibold text-[var(--color-text)]">Demo Content</h2>
+    <p class="mt-2 text-sm text-[var(--color-text-muted)]">
+      This page uses the mobile layout and keeps the bottom nav fixed while content scrolls.
+    </p>
+  <% end %>
+
+  <%= render FlatPack::Card::Component.new do %>
+    <h3 class="text-sm font-semibold text-[var(--color-text)]">Current Section</h3>
+    <p class="mt-2 text-sm text-[var(--color-text-muted)]">Bottom navigation</p>
+  <% end %>
+</div>
+
