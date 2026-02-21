@@ -1,6 +1,7 @@
 # Ignore bundler config.
 /.bundle
 /vendor/bundle
+/test/vendor/bundle
 /test/dummy/.bundle
 /test/dummy/vendor/bundle
 
