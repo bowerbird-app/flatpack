@@ -40,9 +40,21 @@
     ],
     carousel: [
       { method_or_variable: "Component Method", description: "Render a media carousel with slide DSL blocks.", accepts: "render FlatPack::Carousel::Component.new(...) do |carousel| ... end" },
-      { method_or_variable: "autoplay, interval, loop, pause_on_hover", description: "Auto-advance behavior controls.", accepts: "Boolean, Integer >= 1000, Boolean, Boolean" },
-      { method_or_variable: "show_controls, show_indicators, show_counter, show_progress_bar, show_thumbnails", description: "Optional UI affordances.", accepts: "Boolean values" },
-      { method_or_variable: "transition, aspect_ratio, keyboard, swipe, start_slide", description: "Navigation and layout settings.", accepts: ":slide|:fade|:none, :auto|:square|:video|:wide, Boolean, Boolean, Integer >= 0" }
+      { method_or_variable: "autoplay", description: "Enable automatic slide progression.", accepts: "true, false" },
+      { method_or_variable: "interval", description: "Autoplay interval in milliseconds.", accepts: "Integer >= 1000" },
+      { method_or_variable: "loop", description: "Wrap from last slide to first (and reverse).", accepts: "true, false" },
+      { method_or_variable: "show_indicators", description: "Show clickable slide indicator dots.", accepts: "true, false" },
+      { method_or_variable: "show_controls", description: "Show previous/next navigation buttons.", accepts: "true, false" },
+      { method_or_variable: "show_counter", description: "Show current slide index text (for example, 2 / 5).", accepts: "true, false" },
+      { method_or_variable: "pause_on_hover", description: "Pause autoplay while the carousel is hovered.", accepts: "true, false" },
+      { method_or_variable: "transition", description: "Slide transition mode.", accepts: ":slide, :fade, :none" },
+      { method_or_variable: "aspect_ratio", description: "Viewport aspect ratio preset.", accepts: ":auto, :square, :video, :wide" },
+      { method_or_variable: "keyboard", description: "Enable keyboard navigation bindings.", accepts: "true, false" },
+      { method_or_variable: "swipe", description: "Enable touch/pointer swipe gestures.", accepts: "true, false" },
+      { method_or_variable: "start_slide", description: "Initial zero-based slide index.", accepts: "Integer >= 0" },
+      { method_or_variable: "show_thumbnails", description: "Render thumbnail strip when slides provide `thumbnail_url`.", accepts: "true, false" },
+      { method_or_variable: "show_progress_bar", description: "Show autoplay progress bar at the bottom edge.", accepts: "true, false" },
+      { method_or_variable: "**system_arguments", description: "Forward standard BaseComponent HTML/system attributes to the root container.", accepts: "Hash (for example: class, id, data, aria)" }
     ],
     chat_panel: [
       { method_or_variable: "Component Method", description: "Compose chat UI with panel/header/messages/composer slots.", accepts: "render FlatPack::Chat::Panel::Component.new do |panel| ... end" },

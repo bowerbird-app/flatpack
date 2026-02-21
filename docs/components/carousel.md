@@ -47,9 +47,61 @@ Built with Stimulus for interactivity and full keyboard/touch support.
 - Mixed media (images + video + HTML)
 - Autoplay with progress bar
 - Fade transition
+- With counter (counter text, indicators hidden)
 - With thumbnails
 - Custom aspect ratios
 - Minimal (no controls, no indicators)
+
+### With Counter
+
+```erb
+<%= render FlatPack::Carousel::Component.new(show_counter: true, show_indicators: false) do |carousel| %>
+  <% %w[First Second Third].each do |label| %>
+    <% carousel.slide(alt: "#{label} slide") do %>
+      <div class="h-48 flex items-center justify-center bg-gradient-to-r from-sky-500 to-indigo-500 text-white text-xl font-bold"><%= label %></div>
+    <% end %>
+  <% end %>
+<% end %>
+```
+
+### Custom Aspect Ratios
+
+```erb
+<div class="space-y-6">
+  <%= render FlatPack::Carousel::Component.new(aspect_ratio: :square) do |carousel| %>
+    <% carousel.slide(alt: "Square format sample image") do %>
+      <img
+        src="https://picsum.photos/seed/flatpack-aspect-square/1200/1200"
+        alt="Square format sample image"
+        class="h-full w-full object-cover"
+        loading="lazy"
+      >
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::Carousel::Component.new(aspect_ratio: :video) do |carousel| %>
+    <% carousel.slide(alt: "Video format sample image") do %>
+      <img
+        src="https://picsum.photos/seed/flatpack-aspect-video/1600/900"
+        alt="Video format sample image"
+        class="h-full w-full object-cover"
+        loading="lazy"
+      >
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::Carousel::Component.new(aspect_ratio: :wide) do |carousel| %>
+    <% carousel.slide(alt: "Wide format sample image") do %>
+      <img
+        src="https://picsum.photos/seed/flatpack-aspect-wide/2100/900"
+        alt="Wide format sample image"
+        class="h-full w-full object-cover"
+        loading="lazy"
+      >
+    <% end %>
+  <% end %>
+</div>
+```
 
 ## Keyboard Navigation
 

@@ -9,6 +9,9 @@ module.exports = {
     './app/components/**/*.{erb,haml,html,slim,rb}',
   ],
   safelist: [
+    'aspect-square',
+    'aspect-video',
+    'aspect-[21/9]',
     'hover:bg-[var(--color-muted)]',
     'hover:border-[var(--color-primary)]',
     '-space-x-1',

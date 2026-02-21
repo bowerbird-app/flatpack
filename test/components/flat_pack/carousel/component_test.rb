@@ -13,6 +13,12 @@ module FlatPack
         end
       end
 
+      def build_single_slide_carousel(component = Component.new)
+        render_inline(component) do |carousel|
+          carousel.slide(alt: "Slide one") { "Slide 1" }
+        end
+      end
+
       def test_renders_carousel_container
         build_carousel
 
@@ -49,6 +55,19 @@ module FlatPack
 
         refute_selector "button[aria-label='Previous slide']"
         refute_selector "button[aria-label='Next slide']"
+      end
+
+      def test_hides_controls_for_single_slide
+        build_single_slide_carousel
+
+        refute_selector "button[aria-label='Previous slide']"
+        refute_selector "button[aria-label='Next slide']"
+      end
+
+      def test_hides_indicators_for_single_slide
+        build_single_slide_carousel
+
+        refute_selector "button[data-flat-pack--carousel-target='indicator']"
       end
 
       def test_renders_counter_when_enabled
@@ -109,12 +128,21 @@ module FlatPack
         build_carousel(Component.new(aspect_ratio: :square))
 
         assert_selector "div.aspect-square[data-flat-pack--carousel-target='viewport']"
+        assert_selector "div[data-flat-pack--carousel-target='viewport'][style*='aspect-ratio: 1 / 1']"
       end
 
       def test_aspect_ratio_video
         build_carousel(Component.new(aspect_ratio: :video))
 
         assert_selector "div.aspect-video[data-flat-pack--carousel-target='viewport']"
+        assert_selector "div[data-flat-pack--carousel-target='viewport'][style*='aspect-ratio: 16 / 9']"
+      end
+
+      def test_aspect_ratio_wide
+        build_carousel(Component.new(aspect_ratio: :wide))
+
+        assert_selector "div.aspect-\\[21\\/9\\][data-flat-pack--carousel-target='viewport']"
+        assert_selector "div[data-flat-pack--carousel-target='viewport'][style*='aspect-ratio: 21 / 9']"
       end
 
       def test_renders_thumbnails_when_enabled

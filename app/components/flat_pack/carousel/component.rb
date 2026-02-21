@@ -62,8 +62,8 @@ module FlatPack
           safe_join([
             render_viewport,
             render_live_region,
-            (@show_controls ? render_controls : nil),
-            (@show_indicators ? render_indicators : nil),
+            (show_controls? ? render_controls : nil),
+            (show_indicators? ? render_indicators : nil),
             (@show_counter ? render_counter : nil),
             (@show_progress_bar ? render_progress_bar : nil),
             (@show_thumbnails ? render_thumbnails : nil)
@@ -111,6 +111,7 @@ module FlatPack
       def render_viewport
         content_tag(:div,
           class: classes("relative overflow-hidden", aspect_ratio_class),
+          style: aspect_ratio_style,
           data: {"flat-pack--carousel-target": "viewport"}) do
           content_tag(:div,
             class: track_classes,
@@ -157,18 +158,22 @@ module FlatPack
 
       def render_indicators
         content_tag(:div,
-          class: "absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2",
+          class: "absolute bottom-4 left-1/2 z-10 -translate-x-1/2 flex gap-2",
+          style: "left: 50%; transform: translateX(-50%);",
           role: "tablist",
           aria: {label: "Slide indicators"}) do
           safe_join(@slides.map.with_index do |_slide_data, index|
+            active = index == @start_slide
+
             content_tag(:button, "",
               type: "button",
               role: "tab",
               aria: {
-                selected: (index == @start_slide),
+                selected: active,
                 label: "Go to slide #{index + 1}"
               },
-              class: indicator_classes(index == @start_slide),
+              class: indicator_classes(active),
+              style: indicator_style(active),
               data: {
                 "flat-pack--carousel-target": "indicator",
                 action: "flat-pack--carousel#goToSlide",
@@ -219,7 +224,7 @@ module FlatPack
         return if thumbnails.empty?
 
         content_tag(:div,
-          class: "flex gap-2 mt-3 overflow-x-auto px-2 pb-2",
+          class: "flex justify-center gap-2 mt-3 overflow-x-auto rounded-[var(--radius-lg)] px-2 pb-2",
           data: {"flat-pack--carousel-target": "thumbnailStrip"}) do
           safe_join(thumbnails)
         end
@@ -236,28 +241,37 @@ module FlatPack
           data: {"flat-pack--carousel-target": "liveRegion"})
       end
 
+      def show_controls?
+        @show_controls && @slides.size > 1
+      end
+
+      def show_indicators?
+        @show_indicators && @slides.size > 1
+      end
+
       def track_classes
-        if @transition == :slide
-          "flex motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-in-out"
+        case @transition
+        when :slide
+          "flex h-full motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-in-out"
+        when :fade
+          "relative h-full"
         else
-          "relative"
+          "relative h-full"
         end
       end
 
       def slide_classes(index)
         if @transition == :slide
-          "w-full flex-shrink-0"
+          "w-full h-full flex-shrink-0"
         else
           visible = index == @start_slide
-          base = "w-full h-full"
-          state = if visible
-            (@transition == :fade) ? "opacity-100" : "block"
+          if @transition == :fade
+            state = visible ? "opacity-100" : "opacity-0"
+            layout = visible ? "relative" : "absolute inset-0"
+            "w-full h-full motion-safe:transition-opacity motion-safe:duration-500 #{layout} #{state}"
           else
-            (@transition == :fade) ? "opacity-0" : "hidden"
+            visible ? "w-full h-full block" : "w-full h-full hidden"
           end
-          fade_class = (@transition == :fade) ? "absolute inset-0 motion-safe:transition-opacity motion-safe:duration-500" : "absolute inset-0"
-
-          "#{base} #{fade_class} #{state}"
         end
       end
 
@@ -270,6 +284,15 @@ module FlatPack
         }[@aspect_ratio]
       end
 
+      def aspect_ratio_style
+        {
+          auto: nil,
+          square: "aspect-ratio: 1 / 1;",
+          video: "aspect-ratio: 16 / 9;",
+          wide: "aspect-ratio: 21 / 9;"
+        }[@aspect_ratio]
+      end
+
       def control_button_classes(position)
         "absolute #{position} z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm hover:bg-black/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:ring-offset-2"
       end
@@ -277,6 +300,14 @@ module FlatPack
       def indicator_classes(active)
         base = "h-3 w-3 rounded-full transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:ring-offset-2"
         active ? "#{base} scale-125 bg-[var(--color-primary)]" : "#{base} bg-white/50 hover:bg-white/80"
+      end
+
+      def indicator_style(active)
+        if active
+          "background-color: var(--color-primary); transform: scale(1.25);"
+        else
+          "background-color: rgba(255, 255, 255, 0.55);"
+        end
       end
 
       def thumbnail_classes(active)

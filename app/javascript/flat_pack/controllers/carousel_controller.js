@@ -106,6 +106,8 @@ export default class extends Controller {
       this.slideTargets.forEach((slide) => {
         slide.style.display = ""
         slide.style.opacity = ""
+        slide.style.pointerEvents = ""
+        slide.style.zIndex = ""
       })
     } else if (this.transitionValue === "fade") {
       this.trackTarget.style.transform = ""
@@ -113,6 +115,10 @@ export default class extends Controller {
         slide.style.display = ""
         slide.style.transition = reducedMotion ? "none" : "opacity 300ms ease"
         slide.style.opacity = i === index ? "1" : "0"
+        slide.style.position = i === index ? "relative" : "absolute"
+        slide.style.inset = i === index ? "auto" : "0"
+        slide.style.pointerEvents = i === index ? "auto" : "none"
+        slide.style.zIndex = i === index ? "1" : "0"
       })
     } else {
       this.trackTarget.style.transform = ""
@@ -120,6 +126,10 @@ export default class extends Controller {
         slide.style.transition = "none"
         slide.style.opacity = ""
         slide.style.display = i === index ? "block" : "none"
+        slide.style.position = ""
+        slide.style.inset = ""
+        slide.style.pointerEvents = ""
+        slide.style.zIndex = ""
       })
     }
 
@@ -270,6 +280,10 @@ export default class extends Controller {
       indicator.classList.toggle("bg-[var(--color-primary)]", active)
       indicator.classList.toggle("scale-125", active)
       indicator.classList.toggle("bg-white/50", !active)
+
+      // Fallback inline styles when Tailwind utility classes are missing from the built CSS.
+      indicator.style.backgroundColor = active ? "var(--color-primary)" : "rgba(255, 255, 255, 0.55)"
+      indicator.style.transform = active ? "scale(1.25)" : ""
     })
   }
 
