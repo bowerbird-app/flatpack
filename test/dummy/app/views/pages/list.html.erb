@@ -1,0 +1,340 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "List Components",
+  subtitle: "Semantic lists with consistent spacing and optional icons."
+) %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Basic Lists", anchor_link: true) %>
+  
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <h3 class="font-semibold mb-4">Unordered List</h3>
+      <div class="border border-[var(--color-border)] rounded-lg p-4">
+        <%= render FlatPack::List::Component.new do %>
+          <%= render FlatPack::List::Item.new do %>
+            First item
+          <% end %>
+          <%= render FlatPack::List::Item.new do %>
+            Second item
+          <% end %>
+          <%= render FlatPack::List::Item.new do %>
+            Third item
+          <% end %>
+          <%= render FlatPack::List::Item.new do %>
+            Fourth item
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <div>
+      <h3 class="font-semibold mb-4">Ordered List</h3>
+      <div class="border border-[var(--color-border)] rounded-lg p-4">
+        <%= render FlatPack::List::Component.new(ordered: true) do %>
+          <%= render FlatPack::List::Item.new do %>
+            First step
+          <% end %>
+          <%= render FlatPack::List::Item.new do %>
+            Second step
+          <% end %>
+          <%= render FlatPack::List::Item.new do %>
+            Third step
+          <% end %>
+          <%= render FlatPack::List::Item.new do %>
+            Fourth step
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    class: "mt-6",
+    snippets: [
+      {
+        label: "Unordered List",
+        language: "erb",
+        code: CGI.unescapeHTML(<<~'CODE')
+          &lt;%= render FlatPack::List::Component.new do %&gt;
+            &lt;%= render FlatPack::List::Item.new do %&gt;
+              First item
+            &lt;% end %&gt;
+            &lt;%= render FlatPack::List::Item.new do %&gt;
+              Second item
+            &lt;% end %&gt;
+            &lt;%= render FlatPack::List::Item.new do %&gt;
+              Third item
+            &lt;% end %&gt;
+            &lt;%= render FlatPack::List::Item.new do %&gt;
+              Fourth item
+            &lt;% end %&gt;
+          &lt;% end %&gt;
+        CODE
+      },
+      {
+        label: "Ordered List",
+        language: "erb",
+        code: CGI.unescapeHTML(<<~'CODE')
+          &lt;%= render FlatPack::List::Component.new(ordered: true) do %&gt;
+            &lt;%= render FlatPack::List::Item.new do %&gt;
+              First step
+            &lt;% end %&gt;
+            &lt;%= render FlatPack::List::Item.new do %&gt;
+              Second step
+            &lt;% end %&gt;
+            &lt;%= render FlatPack::List::Item.new do %&gt;
+              Third step
+            &lt;% end %&gt;
+            &lt;%= render FlatPack::List::Item.new do %&gt;
+              Fourth step
+            &lt;% end %&gt;
+          &lt;% end %&gt;
+        CODE
+      }
+    ],
+    title: "Basic Lists",
+    separated: false
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "With Icons", anchor_link: true) %>
+  
+  <div class="border border-[var(--color-border)] rounded-lg p-6">
+    <%= render FlatPack::List::Component.new do %>
+      <%= render FlatPack::List::Item.new(icon: :check) { "Task completed successfully" } %>
+      <%= render FlatPack::List::Item.new(icon: :alert) { "Requires attention" } %>
+      <%= render FlatPack::List::Item.new(icon: :user) { "Assigned to team member" } %>
+      <%= render FlatPack::List::Item.new(icon: :calendar) { "Scheduled for tomorrow" } %>
+    <% end %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    class: "mt-6",
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::List::Component.new do %&gt;
+        &lt;%= render FlatPack::List::Item.new(icon: :check) { "Task completed successfully" } %&gt;
+        &lt;%= render FlatPack::List::Item.new(icon: :alert) { "Requires attention" } %&gt;
+        &lt;%= render FlatPack::List::Item.new(icon: :user) { "Assigned to team member" } %&gt;
+        &lt;%= render FlatPack::List::Item.new(icon: :calendar) { "Scheduled for tomorrow" } %&gt;
+      &lt;% end %&gt;
+    CODE
+    title: "With Icons",
+    separated: false
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Feature List", anchor_link: true) %>
+  
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.header do %>
+      <h3 class="text-lg font-semibold">Pro Plan Features</h3>
+    <% end %>
+    <% card.body do %>
+      <%= render FlatPack::List::Component.new do %>
+        <%= render FlatPack::List::Item.new(icon: :check) do %>
+          <div>
+            <strong>Unlimited Projects</strong>
+            <p class="text-sm text-[var(--color-text-muted)]">Create and manage as many projects as you need</p>
+          </div>
+        <% end %>
+        <%= render FlatPack::List::Item.new(icon: :check) do %>
+          <div>
+            <strong>Team Collaboration</strong>
+            <p class="text-sm text-[var(--color-text-muted)]">Invite unlimited team members to collaborate</p>
+          </div>
+        <% end %>
+        <%= render FlatPack::List::Item.new(icon: :check) do %>
+          <div>
+            <strong>Advanced Analytics</strong>
+            <p class="text-sm text-[var(--color-text-muted)]">Detailed insights and reporting dashboards</p>
+          </div>
+        <% end %>
+        <%= render FlatPack::List::Item.new(icon: :check) do %>
+          <div>
+            <strong>Priority Support</strong>
+            <p class="text-sm text-[var(--color-text-muted)]">24/7 support via email, chat, and phone</p>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    class: "mt-6",
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Card::Component.new do |card| %&gt;
+        &lt;% card.header do %&gt;
+          &lt;h3 class="text-lg font-semibold"&gt;Pro Plan Features&lt;/h3&gt;
+        &lt;% end %&gt;
+        &lt;% card.body do %&gt;
+          &lt;%= render FlatPack::List::Component.new do %&gt;
+            &lt;%= render FlatPack::List::Item.new(icon: :check) do %&gt;
+              &lt;div&gt;
+                &lt;strong&gt;Unlimited Projects&lt;/strong&gt;
+                &lt;p class="text-sm text-[var(--color-text-muted)]"&gt;Create and manage as many projects as you need&lt;/p&gt;
+              &lt;/div&gt;
+            &lt;% end %&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    title: "Feature List",
+    separated: false
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Task List", anchor_link: true) %>
+  
+  <div class="border border-[var(--color-border)] rounded-lg p-6">
+    <h3 class="font-semibold mb-4">Today's Tasks</h3>
+    <%= render FlatPack::List::Component.new do %>
+      <%= render FlatPack::List::Item.new(icon: :check) do %>
+        <div class="flex items-center justify-between flex-1">
+          <span class="line-through text-[var(--color-text-muted)]">Review pull request #234</span>
+          <%= render FlatPack::Badge::Component.new(text: "Completed", style: :success, size: :sm) %>
+        </div>
+      <% end %>
+      <%= render FlatPack::List::Item.new(icon: :square) do %>
+        <div class="flex items-center justify-between flex-1">
+          <span>Update documentation</span>
+          <%= render FlatPack::Badge::Component.new(text: "In Progress", style: :warning, size: :sm) %>
+        </div>
+      <% end %>
+      <%= render FlatPack::List::Item.new(icon: :square) do %>
+        <div class="flex items-center justify-between flex-1">
+          <span>Fix bug in authentication flow</span>
+          <%= render FlatPack::Badge::Component.new(text: "High Priority", style: :warning, size: :sm) %>
+        </div>
+      <% end %>
+      <%= render FlatPack::List::Item.new(icon: :square) do %>
+        <div class="flex items-center justify-between flex-1">
+          <span>Prepare demo for stakeholders</span>
+          <%= render FlatPack::Badge::Component.new(text: "Todo", style: :default, size: :sm) %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    class: "mt-6",
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::List::Component.new do %&gt;
+        &lt;%= render FlatPack::List::Item.new(icon: :check) do %&gt;
+          &lt;div class="flex items-center justify-between flex-1"&gt;
+            &lt;span class="line-through text-[var(--color-text-muted)]"&gt;Review pull request #234&lt;/span&gt;
+            &lt;%= render FlatPack::Badge::Component.new(text: "Completed", style: :success, size: :sm) %&gt;
+          &lt;/div&gt;
+        &lt;% end %&gt;
+        &lt;%= render FlatPack::List::Item.new(icon: :square) do %&gt;
+          &lt;div class="flex items-center justify-between flex-1"&gt;
+            &lt;span&gt;Update documentation&lt;/span&gt;
+            &lt;%= render FlatPack::Badge::Component.new(text: "In Progress", style: :warning, size: :sm) %&gt;
+          &lt;/div&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    title: "Task List",
+    separated: false
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Settings List", anchor_link: true) %>
+  
+  <div class="border border-[var(--color-border)] rounded-lg divide-y divide-[var(--color-border)]">
+    <%= render FlatPack::List::Component.new do %>
+      <%= render FlatPack::List::Item.new(icon: :bell) do %>
+        <div class="flex items-center justify-between flex-1">
+          <div>
+            <p class="font-medium">Email Notifications</p>
+            <p class="text-sm text-[var(--color-text-muted)]">Receive updates via email</p>
+          </div>
+          <%= render FlatPack::Switch::Component.new(name: "email_notifications", checked: true) %>
+        </div>
+      <% end %>
+      <%= render FlatPack::List::Item.new(icon: :lock) do %>
+        <div class="flex items-center justify-between flex-1">
+          <div>
+            <p class="font-medium">Two-Factor Authentication</p>
+            <p class="text-sm text-[var(--color-text-muted)]">Add an extra layer of security</p>
+          </div>
+          <%= render FlatPack::Switch::Component.new(name: "2fa", checked: false) %>
+        </div>
+      <% end %>
+      <%= render FlatPack::List::Item.new(icon: :users) do %>
+        <div class="flex items-center justify-between flex-1">
+          <div>
+            <p class="font-medium">Profile Visibility</p>
+            <p class="text-sm text-[var(--color-text-muted)]">Make profile public</p>
+          </div>
+          <%= render FlatPack::Switch::Component.new(name: "public_profile", checked: true) %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    class: "mt-6",
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::List::Component.new do %&gt;
+        &lt;%= render FlatPack::List::Item.new(icon: :bell) do %&gt;
+          &lt;div class="flex items-center justify-between flex-1"&gt;
+            &lt;div&gt;
+              &lt;p class="font-medium"&gt;Email Notifications&lt;/p&gt;
+              &lt;p class="text-sm text-[var(--color-text-muted)]"&gt;Receive updates via email&lt;/p&gt;
+            &lt;/div&gt;
+            &lt;%= render FlatPack::Switch::Component.new(name: "email_notifications", checked: true) %&gt;
+          &lt;/div&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    title: "Settings List",
+    separated: false
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Navigation List", anchor_link: true) %>
+  
+  <div class="border border-[var(--color-border)] rounded-lg p-4">
+    <%= render FlatPack::List::Component.new do %>
+      <%= render FlatPack::List::Item.new(icon: :home) do %>
+        <%= link_to "Dashboard", "#", class: "text-[var(--color-primary)] hover:underline" %>
+      <% end %>
+      <%= render FlatPack::List::Item.new(icon: :users) do %>
+        <%= link_to "Team Members", "#", class: "text-[var(--color-primary)] hover:underline" %>
+      <% end %>
+      <%= render FlatPack::List::Item.new(icon: :folder) do %>
+        <%= link_to "Projects", "#", class: "text-[var(--color-primary)] hover:underline" %>
+      <% end %>
+      <%= render FlatPack::List::Item.new(icon: :settings) do %>
+        <%= link_to "Settings", "#", class: "text-[var(--color-primary)] hover:underline" %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    class: "mt-6",
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::List::Component.new do %&gt;
+        &lt;%= render FlatPack::List::Item.new(icon: :home) do %&gt;
+          &lt;%= link_to "Dashboard", "#", class: "text-[var(--color-primary)] hover:underline" %&gt;
+        &lt;% end %&gt;
+        &lt;%= render FlatPack::List::Item.new(icon: :users) do %&gt;
+          &lt;%= link_to "Team Members", "#", class: "text-[var(--color-primary)] hover:underline" %&gt;
+        &lt;% end %&gt;
+        &lt;%= render FlatPack::List::Item.new(icon: :folder) do %&gt;
+          &lt;%= link_to "Projects", "#", class: "text-[var(--color-primary)] hover:underline" %&gt;
+        &lt;% end %&gt;
+        &lt;%= render FlatPack::List::Item.new(icon: :settings) do %&gt;
+          &lt;%= link_to "Settings", "#", class: "text-[var(--color-primary)] hover:underline" %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    title: "Navigation List",
+    separated: false
+  ) %>
+</section>

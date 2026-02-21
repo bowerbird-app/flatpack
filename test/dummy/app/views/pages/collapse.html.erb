@@ -1,0 +1,84 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Collapse & Accordion Components",
+  subtitle: "Expandable content sections with smooth animations and accessible controls."
+) %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Collapse Component", anchor_link: true) %>
+  
+  <div class="space-y-4">
+    <%= render FlatPack::Collapse::Component.new(id: "collapse1", title: "What is FlatPack?") do %>
+      <p>FlatPack is a comprehensive ViewComponent library for Ruby on Rails that provides production-ready UI components with built-in accessibility, responsive design, and thoughtful defaults.</p>
+    <% end %>
+
+    <%= render FlatPack::Collapse::Component.new(id: "collapse2", title: "How do I get started?", open: true) do %>
+      <p>Add FlatPack to your Gemfile, run <code class="px-2 py-1 bg-gray-100 rounded">bundle install</code>, and start using components in your views. Each component follows Rails conventions and integrates seamlessly with your existing code.</p>
+    <% end %>
+
+    <%= render FlatPack::Collapse::Component.new(id: "collapse3", title: "Advanced Settings") do %>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium mb-1">API Endpoint</label>
+          <input type="text" class="w-full px-3 py-2 border rounded" value="https://api.example.com" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Timeout (seconds)</label>
+          <input type="number" class="w-full px-3 py-2 border rounded" value="30" />
+        </div>
+      </div>
+    <% end %>
+  </div>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Accordion Component", anchor_link: true, subtitle: "Single open at a time (default behavior)") %>
+  
+  <%= render FlatPack::Accordion::Component.new do |accordion| %>
+    <% accordion.item(id: "faq1", title: "What browsers are supported?") do %>
+      <p>FlatPack components work in all modern browsers including Chrome, Firefox, Safari, and Edge. We follow progressive enhancement principles, so components degrade gracefully in older browsers.</p>
+    <% end %>
+    
+    <% accordion.item(id: "faq2", title: "Is it accessible?") do %>
+      <p>Yes! All components follow WCAG 2.1 AA guidelines and include proper ARIA attributes, keyboard navigation, and screen reader support. Accessibility is a core feature, not an afterthought.</p>
+    <% end %>
+    
+    <% accordion.item(id: "faq3", title: "Can I customize the styling?") do %>
+      <p>Absolutely. All components accept custom CSS classes via the <code>class</code> parameter. You can override default styles with your own CSS or use Tailwind utility classes for quick customizations.</p>
+    <% end %>
+    
+    <% accordion.item(id: "faq4", title: "How do I report bugs?") do %>
+      <p>Please open an issue on our GitHub repository with a detailed description of the problem, including steps to reproduce, expected behavior, and your environment details.</p>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Allow Multiple Open", anchor_link: true) %>
+  
+  <%= render FlatPack::Accordion::Component.new(allow_multiple: true) do |accordion| %>
+    <% accordion.item(id: "feature1", title: "Authentication", open: true) do %>
+      <p>Built-in support for Devise, JWT tokens, and custom authentication strategies. Includes password strength indicators and secure session management.</p>
+    <% end %>
+    
+    <% accordion.item(id: "feature2", title: "Form Components", open: true) do %>
+      <p>Comprehensive form inputs with validation states, help text, and error messages. Includes text inputs, selects, checkboxes, radio buttons, file uploads, and more.</p>
+    <% end %>
+    
+    <% accordion.item(id: "feature3", title: "Data Display") do %>
+      <p>Tables with sorting, filtering, and pagination. Charts with ApexCharts integration. Cards, badges, avatars, and other display components.</p>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Keyboard Navigation", anchor_link: true) %>
+  
+  <div class="p-6 bg-blue-50 border border-blue-200 rounded-lg">
+    <p class="font-medium mb-2">Try these keyboard shortcuts:</p>
+    <ul class="space-y-1 text-sm">
+      <li><kbd class="px-2 py-1 bg-white border rounded">Tab</kbd> - Navigate between collapse/accordion items</li>
+      <li><kbd class="px-2 py-1 bg-white border rounded">Space</kbd> or <kbd class="px-2 py-1 bg-white border rounded">Enter</kbd> - Toggle open/closed</li>
+      <li><kbd class="px-2 py-1 bg-white border rounded">Escape</kbd> - Close focused item (if open)</li>
+    </ul>
+  </div>
+</section>

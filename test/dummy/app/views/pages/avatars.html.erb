@@ -1,4 +1,4 @@
-<div class="max-w-6xl mx-auto p-8 space-y-12">
+<div class="max-w-6xl mx-auto p-6">
   <%= render FlatPack::PageTitle::Component.new(
     title: "Avatars",
     subtitle: "Display user avatars with images, initials, status indicators, and grouping."
@@ -6,55 +6,159 @@
 
   <%= render "pages/component_method_variables_table", component: :avatar %>
 
-  <!-- Sizes -->
-  <section class="space-y-4">
-    <%= render FlatPack::SectionTitle::Component.new(title: "Sizes", anchor_link: true, subtitle: "Examples for Sizes.") %>
-    <div class="text-sm text-[var(--color-muted-foreground)]">
-      xs, sm, md (default), lg, xl
-    </div>
-    <div class="flex items-end gap-4">
+  <%
+    erb_output_open = "<" + "%="
+    erb_tag_close = "%" + ">"
+  %>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Sizes",
+      anchor_link: true,
+      subtitle: "Avatar sizes from xs through xl, with md as the default."
+    ) %>
+    <div class="flex items-end gap-4 mb-4">
       <%= render FlatPack::Avatar::Component.new(name: "John Doe", size: :xs) %>
       <%= render FlatPack::Avatar::Component.new(name: "John Doe", size: :sm) %>
       <%= render FlatPack::Avatar::Component.new(name: "John Doe", size: :md) %>
       <%= render FlatPack::Avatar::Component.new(name: "John Doe", size: :lg) %>
       <%= render FlatPack::Avatar::Component.new(name: "John Doe", size: :xl) %>
     </div>
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "Avatar Sizes (ERB)",
+      snippets: [
+        {
+          label: "XS",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::Avatar::Component.new(name: "John Doe", size: :xs) #{erb_tag_close}
+          CODE
+        },
+        {
+          label: "SM",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::Avatar::Component.new(name: "John Doe", size: :sm) #{erb_tag_close}
+          CODE
+        },
+        {
+          label: "MD",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::Avatar::Component.new(name: "John Doe", size: :md) #{erb_tag_close}
+          CODE
+        },
+        {
+          label: "LG",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::Avatar::Component.new(name: "John Doe", size: :lg) #{erb_tag_close}
+          CODE
+        },
+        {
+          label: "XL",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::Avatar::Component.new(name: "John Doe", size: :xl) #{erb_tag_close}
+          CODE
+        }
+      ]
+    ) %>
   </section>
 
-  <!-- Shapes -->
-  <section class="space-y-4">
-    <%= render FlatPack::SectionTitle::Component.new(title: "Shapes", anchor_link: true, subtitle: "Examples for Shapes.") %>
-    <div class="text-sm text-[var(--color-muted-foreground)]">
-      circle (default), rounded, square
-    </div>
-    <div class="flex items-center gap-4">
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Shapes",
+      anchor_link: true,
+      subtitle: "Shape variants include circle (default), rounded, and square."
+    ) %>
+    <div class="flex items-center gap-4 mb-4">
       <%= render FlatPack::Avatar::Component.new(name: "Circle", shape: :circle, size: :lg) %>
       <%= render FlatPack::Avatar::Component.new(name: "Rounded", shape: :rounded, size: :lg) %>
       <%= render FlatPack::Avatar::Component.new(name: "Square", shape: :square, size: :lg) %>
     </div>
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "Avatar Shapes (ERB)",
+      snippets: [
+        {
+          label: "Circle",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::Avatar::Component.new(name: "Circle", shape: :circle, size: :lg) #{erb_tag_close}
+          CODE
+        },
+        {
+          label: "Rounded",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::Avatar::Component.new(name: "Rounded", shape: :rounded, size: :lg) #{erb_tag_close}
+          CODE
+        },
+        {
+          label: "Square",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::Avatar::Component.new(name: "Square", shape: :square, size: :lg) #{erb_tag_close}
+          CODE
+        }
+      ]
+    ) %>
   </section>
 
-  <!-- Status Indicators -->
-  <section class="space-y-4">
-    <%= render FlatPack::SectionTitle::Component.new(title: "Status Indicators", anchor_link: true, subtitle: "Examples for Status Indicators.") %>
-    <div class="text-sm text-[var(--color-muted-foreground)]">
-      online (green), busy (red), away (amber), offline (gray)
-    </div>
-    <div class="flex items-center gap-4">
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Status Indicators",
+      anchor_link: true,
+      subtitle: "Status dots support online (green), busy (red), away (amber), and offline (gray)."
+    ) %>
+    <div class="flex items-center gap-4 mb-4">
       <%= render FlatPack::Avatar::Component.new(name: "Online User", status: :online, size: :lg) %>
       <%= render FlatPack::Avatar::Component.new(name: "Busy User", status: :busy, size: :lg) %>
       <%= render FlatPack::Avatar::Component.new(name: "Away User", status: :away, size: :lg) %>
       <%= render FlatPack::Avatar::Component.new(name: "Offline User", status: :offline, size: :lg) %>
     </div>
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "Avatar Statuses (ERB)",
+      snippets: [
+        {
+          label: "Online",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::Avatar::Component.new(name: "Online User", status: :online, size: :lg) #{erb_tag_close}
+          CODE
+        },
+        {
+          label: "Busy",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::Avatar::Component.new(name: "Busy User", status: :busy, size: :lg) #{erb_tag_close}
+          CODE
+        },
+        {
+          label: "Away",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::Avatar::Component.new(name: "Away User", status: :away, size: :lg) #{erb_tag_close}
+          CODE
+        },
+        {
+          label: "Offline",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::Avatar::Component.new(name: "Offline User", status: :offline, size: :lg) #{erb_tag_close}
+          CODE
+        }
+      ]
+    ) %>
   </section>
 
-  <!-- With Images -->
-  <section class="space-y-4">
-    <%= render FlatPack::SectionTitle::Component.new(title: "With Images", anchor_link: true, subtitle: "Examples for With Images.") %>
-    <div class="text-sm text-[var(--color-muted-foreground)]">
-      Image avatars with optional status and shape variants
-    </div>
-    <div class="flex items-center gap-4">
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "With Images",
+      anchor_link: true,
+      subtitle: "Image avatars can be combined with status indicators and shape variants."
+    ) %>
+    <div class="flex items-center gap-4 mb-4">
       <%= render FlatPack::Avatar::Component.new(
         src: "https://i.pravatar.cc/150?img=1",
         alt: "User 1",
@@ -73,15 +177,41 @@
         shape: :rounded
       ) %>
     </div>
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "Image Avatars (ERB)",
+      snippets: [
+        {
+          label: "Basic",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::Avatar::Component.new(src: "https://i.pravatar.cc/150?img=1", alt: "User 1", size: :lg) #{erb_tag_close}
+          CODE
+        },
+        {
+          label: "With Status",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::Avatar::Component.new(src: "https://i.pravatar.cc/150?img=2", alt: "User 2", size: :lg, status: :online) #{erb_tag_close}
+          CODE
+        },
+        {
+          label: "Rounded",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::Avatar::Component.new(src: "https://i.pravatar.cc/150?img=3", alt: "User 3", size: :lg, shape: :rounded) #{erb_tag_close}
+          CODE
+        }
+      ]
+    ) %>
   </section>
 
-  <!-- Clickable Avatars -->
-  <section class="space-y-4">
-    <%= render FlatPack::SectionTitle::Component.new(title: "Clickable Avatars", anchor_link: true, subtitle: "Examples for Clickable Avatars.") %>
-    <div class="text-sm text-[var(--color-muted-foreground)]">
-      Hover to see the link effect
-    </div>
-    <div class="flex items-center gap-4">
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Clickable Avatars",
+      anchor_link: true,
+      subtitle: "Set href to render avatars as links with hover and focus behavior."
+    ) %>
+    <div class="flex items-center gap-4 mb-4">
       <%= render FlatPack::Avatar::Component.new(
         name: "John Doe",
         href: "#",
@@ -95,15 +225,40 @@
         status: :online
       ) %>
     </div>
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "Clickable Avatars (ERB)",
+      snippets: [
+        {
+          label: "Initials Link",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::Avatar::Component.new(name: "John Doe", href: "#", size: :lg) #{erb_tag_close}
+          CODE
+        },
+        {
+          label: "Image Link",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::Avatar::Component.new(
+              src: "https://i.pravatar.cc/150?img=4",
+              alt: "Jane Smith",
+              href: "#",
+              size: :lg,
+              status: :online
+            ) #{erb_tag_close}
+          CODE
+        }
+      ]
+    ) %>
   </section>
 
-  <!-- Fallback Types -->
-  <section class="space-y-4">
-    <%= render FlatPack::SectionTitle::Component.new(title: "Fallback Types", anchor_link: true, subtitle: "Examples for Fallback Types.") %>
-    <div class="text-sm text-[var(--color-muted-foreground)]">
-      Priority: Image → Initials → Generic Icon
-    </div>
-    <div class="flex items-center gap-4">
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Fallback Types",
+      anchor_link: true,
+      subtitle: "Fallback priority is image, then initials, then generic icon."
+    ) %>
+    <div class="flex items-center gap-4 mb-4">
       <%= render FlatPack::Avatar::Component.new(
         src: "https://i.pravatar.cc/150?img=5",
         name: "Image",
@@ -121,21 +276,48 @@
         size: :lg
       ) %>
     </div>
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "Fallback Types (ERB)",
+      snippets: [
+        {
+          label: "Image",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::Avatar::Component.new(src: "https://i.pravatar.cc/150?img=5", name: "Image", size: :lg) #{erb_tag_close}
+          CODE
+        },
+        {
+          label: "Name Initials",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::Avatar::Component.new(name: "John Doe", size: :lg) #{erb_tag_close}
+          CODE
+        },
+        {
+          label: "Custom Initials",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::Avatar::Component.new(initials: "AB", size: :lg) #{erb_tag_close}
+          CODE
+        },
+        {
+          label: "Generic Icon",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::Avatar::Component.new(size: :lg) #{erb_tag_close}
+          CODE
+        }
+      ]
+    ) %>
   </section>
 
-  <!-- Avatar Groups -->
-  <section class="space-y-6 pt-8 border-t border-[var(--color-border)]">
-    <%= render FlatPack::SectionTitle::Component.new(title: "Avatar Groups", anchor_link: true, subtitle: "Examples for Avatar Groups.") %>
-    <div class="text-sm text-[var(--color-muted-foreground)]">
-      Overlapping avatar collections with overflow, sizing, and interaction examples
-    </div>
-    
-    <!-- Basic Group -->
-    <div class="space-y-2">
-      <%= render FlatPack::SectionTitle::Component.new(title: "Basic Group", anchor_link: true, subtitle: "Examples for Basic Group.") %>
-      <div class="text-sm text-[var(--color-muted-foreground)]">
-        Default stacked group of avatars
-      </div>
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Avatar Groups: Basic Group",
+      anchor_link: true,
+      subtitle: "A default stacked group using image and initials fallbacks."
+    ) %>
+    <div class="mb-4">
       <%= render FlatPack::AvatarGroup::Component.new(
         items: [
           {name: "Alice Johnson", src: "https://i.pravatar.cc/150?img=10"},
@@ -145,13 +327,29 @@
         ]
       ) %>
     </div>
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "Avatar Group Basics (ERB)",
+      code: <<~CODE,
+        #{erb_output_open} render FlatPack::AvatarGroup::Component.new(
+          items: [
+            { name: "Alice Johnson", src: "https://i.pravatar.cc/150?img=10" },
+            { name: "Bob Smith", src: "https://i.pravatar.cc/150?img=11" },
+            { name: "Charlie Brown", src: "https://i.pravatar.cc/150?img=12" },
+            { name: "Diana Prince" }
+          ]
+        ) #{erb_tag_close}
+      CODE
+      language: "erb"
+    ) %>
+  </section>
 
-    <!-- With Overflow -->
-    <div class="space-y-2">
-      <%= render FlatPack::SectionTitle::Component.new(title: "With Overflow (max: 3)", anchor_link: true, subtitle: "Examples for With Overflow (max: 3).") %>
-      <div class="text-sm text-[var(--color-muted-foreground)]">
-        Shows a +N overflow avatar when items exceed the maximum
-      </div>
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Avatar Groups: With Overflow",
+      anchor_link: true,
+      subtitle: "When item count exceeds max, a +N overflow avatar appears."
+    ) %>
+    <div class="mb-4">
       <%= render FlatPack::AvatarGroup::Component.new(
         items: [
           {name: "User 1", src: "https://i.pravatar.cc/150?img=20"},
@@ -166,93 +364,182 @@
         max: 3
       ) %>
     </div>
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "Avatar Group Overflow (ERB)",
+      snippets: [
+        {
+          label: "Max 3",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::AvatarGroup::Component.new(
+              items: [
+                { name: "User 1", src: "https://i.pravatar.cc/150?img=20" },
+                { name: "User 2", src: "https://i.pravatar.cc/150?img=21" },
+                { name: "User 3", src: "https://i.pravatar.cc/150?img=22" },
+                { name: "User 4", src: "https://i.pravatar.cc/150?img=23" }
+              ],
+              max: 3
+            ) #{erb_tag_close}
+          CODE
+        },
+        {
+          label: "With More Items",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::AvatarGroup::Component.new(items: users, max: 3) #{erb_tag_close}
+          CODE
+        }
+      ]
+    ) %>
+  </section>
 
-    <!-- Different Sizes -->
-    <div class="space-y-2">
-      <%= render FlatPack::SectionTitle::Component.new(title: "Different Sizes", anchor_link: true, subtitle: "Examples for Different Sizes.") %>
-      <div class="text-sm text-[var(--color-muted-foreground)]">
-        xs, sm, md group size examples
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Avatar Groups: Different Sizes",
+      anchor_link: true,
+      subtitle: "Use group size options xs, sm, and md for compact or standard layouts."
+    ) %>
+    <div class="space-y-4 mb-4">
+      <%= render FlatPack::AvatarGroup::Component.new(
+        items: [
+          {name: "User A"},
+          {name: "User B"},
+          {name: "User C"}
+        ],
+        size: :xs
+      ) %>
+      <%= render FlatPack::AvatarGroup::Component.new(
+        items: [
+          {name: "User A"},
+          {name: "User B"},
+          {name: "User C"}
+        ],
+        size: :sm
+      ) %>
+      <%= render FlatPack::AvatarGroup::Component.new(
+        items: [
+          {name: "User A"},
+          {name: "User B"},
+          {name: "User C"}
+        ],
+        size: :md
+      ) %>
+    </div>
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "Avatar Group Sizes (ERB)",
+      snippets: [
+        {
+          label: "XS",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::AvatarGroup::Component.new(items: [{name: "User A"}, {name: "User B"}, {name: "User C"}], size: :xs) #{erb_tag_close}
+          CODE
+        },
+        {
+          label: "SM",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::AvatarGroup::Component.new(items: [{name: "User A"}, {name: "User B"}, {name: "User C"}], size: :sm) #{erb_tag_close}
+          CODE
+        },
+        {
+          label: "MD",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::AvatarGroup::Component.new(items: [{name: "User A"}, {name: "User B"}, {name: "User C"}], size: :md) #{erb_tag_close}
+          CODE
+        }
+      ]
+    ) %>
+  </section>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Avatar Groups: Different Overlaps",
+      anchor_link: true,
+      subtitle: "Compare small, medium (default), and large overlap spacing."
+    ) %>
+    <div class="space-y-4 mb-4">
+      <div class="space-y-2">
+        <div class="text-sm font-medium">Small overlap</div>
+        <%= render FlatPack::AvatarGroup::Component.new(
+          items: [
+            {name: "User 1", src: "https://i.pravatar.cc/150?img=30"},
+            {name: "User 2", src: "https://i.pravatar.cc/150?img=31"},
+            {name: "User 3", src: "https://i.pravatar.cc/150?img=32"}
+          ],
+          overlap: :sm,
+          size: :md
+        ) %>
       </div>
-      <div class="space-y-4">
+      <div class="space-y-2">
+        <div class="text-sm font-medium">Medium overlap (default)</div>
         <%= render FlatPack::AvatarGroup::Component.new(
           items: [
-            {name: "User A"},
-            {name: "User B"},
-            {name: "User C"}
+            {name: "User 1", src: "https://i.pravatar.cc/150?img=30"},
+            {name: "User 2", src: "https://i.pravatar.cc/150?img=31"},
+            {name: "User 3", src: "https://i.pravatar.cc/150?img=32"}
           ],
-          size: :xs
+          overlap: :md,
+          size: :md
         ) %>
+      </div>
+      <div class="space-y-2">
+        <div class="text-sm font-medium">Large overlap</div>
         <%= render FlatPack::AvatarGroup::Component.new(
           items: [
-            {name: "User A"},
-            {name: "User B"},
-            {name: "User C"}
+            {name: "User 1", src: "https://i.pravatar.cc/150?img=30"},
+            {name: "User 2", src: "https://i.pravatar.cc/150?img=31"},
+            {name: "User 3", src: "https://i.pravatar.cc/150?img=32"}
           ],
-          size: :sm
-        ) %>
-        <%= render FlatPack::AvatarGroup::Component.new(
-          items: [
-            {name: "User A"},
-            {name: "User B"},
-            {name: "User C"}
-          ],
+          overlap: :lg,
           size: :md
         ) %>
       </div>
     </div>
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "Avatar Group Overlaps (ERB)",
+      snippets: [
+        {
+          label: "Small",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::AvatarGroup::Component.new(
+              items: [
+                { name: "User 1", src: "https://i.pravatar.cc/150?img=30" },
+                { name: "User 2", src: "https://i.pravatar.cc/150?img=31" },
+                { name: "User 3", src: "https://i.pravatar.cc/150?img=32" }
+              ],
+              overlap: :sm,
+              size: :md
+            ) #{erb_tag_close}
+          CODE
+        },
+        {
+          label: "Medium",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::AvatarGroup::Component.new(items: users, overlap: :md, size: :md) #{erb_tag_close}
+          CODE
+        },
+        {
+          label: "Large",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::AvatarGroup::Component.new(items: users, overlap: :lg, size: :md) #{erb_tag_close}
+          CODE
+        }
+      ]
+    ) %>
+  </section>
 
-    <!-- Different Overlaps -->
-    <div class="space-y-2">
-      <%= render FlatPack::SectionTitle::Component.new(title: "Different Overlaps", anchor_link: true, subtitle: "Examples for Different Overlaps.") %>
-      <div class="text-sm text-[var(--color-muted-foreground)]">
-        Compare small, medium (default), and large overlap spacing
-      </div>
-      <div class="space-y-4">
-        <div>
-          <div class="text-sm text-[var(--color-muted-foreground)] mb-2">Small overlap</div>
-          <%= render FlatPack::AvatarGroup::Component.new(
-            items: [
-              {name: "User 1", src: "https://i.pravatar.cc/150?img=30"},
-              {name: "User 2", src: "https://i.pravatar.cc/150?img=31"},
-              {name: "User 3", src: "https://i.pravatar.cc/150?img=32"}
-            ],
-            overlap: :sm,
-            size: :md
-          ) %>
-        </div>
-        <div>
-          <div class="text-sm text-[var(--color-muted-foreground)] mb-2">Medium overlap (default)</div>
-          <%= render FlatPack::AvatarGroup::Component.new(
-            items: [
-              {name: "User 1", src: "https://i.pravatar.cc/150?img=30"},
-              {name: "User 2", src: "https://i.pravatar.cc/150?img=31"},
-              {name: "User 3", src: "https://i.pravatar.cc/150?img=32"}
-            ],
-            overlap: :md,
-            size: :md
-          ) %>
-        </div>
-        <div>
-          <div class="text-sm text-[var(--color-muted-foreground)] mb-2">Large overlap</div>
-          <%= render FlatPack::AvatarGroup::Component.new(
-            items: [
-              {name: "User 1", src: "https://i.pravatar.cc/150?img=30"},
-              {name: "User 2", src: "https://i.pravatar.cc/150?img=31"},
-              {name: "User 3", src: "https://i.pravatar.cc/150?img=32"}
-            ],
-            overlap: :lg,
-            size: :md
-          ) %>
-        </div>
-      </div>
-    </div>
-
-    <!-- With Status Indicators -->
-    <div class="space-y-2">
-      <%= render FlatPack::SectionTitle::Component.new(title: "With Status Indicators", anchor_link: true, subtitle: "Examples for With Status Indicators.") %>
-      <div class="text-sm text-[var(--color-muted-foreground)]">
-        Group avatars with online, busy, away, and offline states
-      </div>
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Avatar Groups: With Status Indicators",
+      anchor_link: true,
+      subtitle: "Group avatars with mixed online, busy, away, and offline states."
+    ) %>
+    <div class="mb-4">
       <%= render FlatPack::AvatarGroup::Component.new(
         items: [
           {name: "Online User", status: :online, src: "https://i.pravatar.cc/150?img=40"},
@@ -263,13 +550,43 @@
         size: :md
       ) %>
     </div>
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "Status Avatar Groups (ERB)",
+      snippets: [
+        {
+          label: "Status Mix",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::AvatarGroup::Component.new(
+              items: [
+                { name: "Online User", status: :online, src: "https://i.pravatar.cc/150?img=40" },
+                { name: "Busy User", status: :busy, src: "https://i.pravatar.cc/150?img=41" },
+                { name: "Away User", status: :away, src: "https://i.pravatar.cc/150?img=42" },
+                { name: "Offline User", status: :offline, src: "https://i.pravatar.cc/150?img=43" }
+              ],
+              size: :md
+            ) #{erb_tag_close}
+          CODE
+        },
+        {
+          label: "Alternate Data",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::AvatarGroup::Component.new(items: team_members, size: :md) #{erb_tag_close}
+          CODE
+        }
+      ]
+    ) %>
+  </section>
 
-    <!-- Clickable Group -->
-    <div class="space-y-2">
-      <%= render FlatPack::SectionTitle::Component.new(title: "Clickable Avatars", anchor_link: true, anchor_id: "clickable-avatar-group", subtitle: "Examples for Clickable Avatars.") %>
-      <div class="text-sm text-[var(--color-muted-foreground)]">
-        Hover to see the link effect on avatars and overflow
-      </div>
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Avatar Groups: Clickable Avatars",
+      anchor_link: true,
+      anchor_id: "clickable-avatar-group",
+      subtitle: "Clickable avatars and overflow links support richer team navigation patterns."
+    ) %>
+    <div class="mb-4">
       <%= render FlatPack::AvatarGroup::Component.new(
         items: [
           {name: "User 1", href: "#user1", src: "https://i.pravatar.cc/150?img=50"},
@@ -281,5 +598,33 @@
         size: :md
       ) %>
     </div>
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "Clickable Avatar Groups (ERB)",
+      snippets: [
+        {
+          label: "Clickable Items",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::AvatarGroup::Component.new(
+              items: [
+                { name: "User 1", href: "#user1", src: "https://i.pravatar.cc/150?img=50" },
+                { name: "User 2", href: "#user2", src: "https://i.pravatar.cc/150?img=51" },
+                { name: "User 3", href: "#user3" }
+              ],
+              overflow_href: "#all-users",
+              max: 3,
+              size: :md
+            ) #{erb_tag_close}
+          CODE
+        },
+        {
+          label: "No Overflow Link",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::AvatarGroup::Component.new(items: members, max: 5, size: :md) #{erb_tag_close}
+          CODE
+        }
+      ]
+    ) %>
   </section>
 </div>

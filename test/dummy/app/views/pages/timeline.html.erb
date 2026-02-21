@@ -1,0 +1,217 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Timeline Components",
+  subtitle: "Display chronological events with visual markers and connecting lines."
+) %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Basic Timeline", anchor_link: true) %>
+  
+  <div class="border border-[var(--color-border)] rounded-lg p-6">
+    <%= render FlatPack::Timeline::Component.new do %>
+      <%= render FlatPack::Timeline::Item.new(
+        title: "Project Created",
+        timestamp: "Jan 15, 2024"
+      ) do %>
+        <p>The project repository was initialized and the initial commit was pushed to the main branch.</p>
+      <% end %>
+
+      <%= render FlatPack::Timeline::Item.new(
+        title: "First Feature Implemented",
+        timestamp: "Jan 18, 2024"
+      ) do %>
+        <p>Core authentication system implemented with secure password hashing and JWT tokens.</p>
+      <% end %>
+
+      <%= render FlatPack::Timeline::Item.new(
+        title: "Beta Testing Started",
+        timestamp: "Jan 25, 2024"
+      ) do %>
+        <p>First group of beta testers invited. Collecting feedback and tracking issues.</p>
+      <% end %>
+
+      <%= render FlatPack::Timeline::Item.new(
+        title: "Production Launch",
+        timestamp: "Feb 1, 2024",
+        last: true
+      ) do %>
+        <p>Successfully launched to production with all critical features complete and tested.</p>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Deployment Timeline", anchor_link: true) %>
+  
+  <div class="border border-[var(--color-border)] rounded-lg p-6">
+    <%= render FlatPack::Timeline::Component.new do %>
+      <%= render FlatPack::Timeline::Item.new(
+        title: "Build Started",
+        timestamp: "10:00 AM",
+        variant: :default
+      ) do %>
+        <p>Running tests and building Docker container...</p>
+      <% end %>
+
+      <%= render FlatPack::Timeline::Item.new(
+        title: "Tests Passed",
+        timestamp: "10:05 AM",
+        variant: :success
+      ) do %>
+        <p>All 247 tests passed successfully. Code coverage: 94%</p>
+        <div class="mt-2">
+          <%= render FlatPack::Badge::Component.new(text: "247 tests", style: :success, size: :sm) %>
+          <%= render FlatPack::Badge::Component.new(text: "94% coverage", style: :primary, size: :sm) %>
+        </div>
+      <% end %>
+
+      <%= render FlatPack::Timeline::Item.new(
+        title: "Security Scan Warning",
+        timestamp: "10:07 AM",
+        variant: :warning
+      ) do %>
+        <p>Dependency vulnerability detected in development dependencies (non-blocking).</p>
+        <%= render FlatPack::Badge::Component.new(text: "Low Severity", style: :warning, size: :sm, class: "mt-2") %>
+      <% end %>
+
+      <%= render FlatPack::Timeline::Item.new(
+        title: "Deployed to Staging",
+        timestamp: "10:10 AM",
+        variant: :success
+      ) do %>
+        <p>Application successfully deployed to staging environment.</p>
+        <p class="mt-1 text-sm"><a href="#" class="text-[var(--color-primary)] hover:underline">View staging: https://staging.example.com</a></p>
+      <% end %>
+
+      <%= render FlatPack::Timeline::Item.new(
+        title: "Production Deployment",
+        timestamp: "10:15 AM",
+        variant: :success,
+        last: true
+      ) do %>
+        <p>Production deployment completed. Monitoring for issues.</p>
+        <div class="mt-2 space-x-2">
+          <%= render FlatPack::Button::Component.new(text: "View Logs", variant: :outline, size: :sm) %>
+          <%= render FlatPack::Button::Component.new(text: "Monitor", variant: :outline, size: :sm) %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Order Tracking", anchor_link: true) %>
+  
+  <div class="border border-[var(--color-border)] rounded-lg p-6">
+    <%= render FlatPack::Timeline::Component.new do %>
+      <%= render FlatPack::Timeline::Item.new(
+        title: "Order Placed",
+        timestamp: "Feb 20, 10:30 AM",
+        variant: :success
+      ) do %>
+        <p>Your order #12345 has been confirmed and payment received.</p>
+        <p class="text-sm mt-1 text-[var(--color-text-muted)]">Total: $149.99</p>
+      <% end %>
+
+      <%= render FlatPack::Timeline::Item.new(
+        title: "Processing",
+        timestamp: "Feb 20, 2:15 PM",
+        variant: :success
+      ) do %>
+        <p>Order is being prepared for shipment at our warehouse.</p>
+      <% end %>
+
+      <%= render FlatPack::Timeline::Item.new(
+        title: "Shipped",
+        timestamp: "Feb 21, 9:00 AM",
+        variant: :success
+      ) do %>
+        <p>Package has been handed to carrier for delivery.</p>
+        <p class="text-sm mt-1 text-[var(--color-text-muted)]">Tracking: 1Z999AA10123456784</p>
+      <% end %>
+
+      <%= render FlatPack::Timeline::Item.new(
+        title: "Out for Delivery",
+        timestamp: "Feb 22, 8:30 AM",
+        variant: :warning
+      ) do %>
+        <p>Your package is on the delivery vehicle and will arrive today.</p>
+      <% end %>
+
+      <%= render FlatPack::Timeline::Item.new(
+        title: "Expected Delivery",
+        timestamp: "Feb 22, by 5:00 PM",
+        variant: :default,
+        last: true
+      ) do %>
+        <p>Package scheduled to arrive by end of day.</p>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Activity Feed", anchor_link: true) %>
+  
+  <div class="border border-[var(--color-border)] rounded-lg p-6">
+    <%= render FlatPack::Timeline::Component.new do %>
+      <%= render FlatPack::Timeline::Item.new(
+        title: "Pull Request Opened",
+        timestamp: "2 hours ago"
+      ) do %>
+        <p><strong>John Doe</strong> opened PR #123: "Add user authentication"</p>
+        <div class="mt-2 space-x-2">
+          <%= render FlatPack::Badge::Component.new(text: "+350", style: :success, size: :sm) %>
+          <%= render FlatPack::Badge::Component.new(text: "-120", style: :warning, size: :sm) %>
+        </div>
+      <% end %>
+
+      <%= render FlatPack::Timeline::Item.new(
+        title: "Code Review",
+        timestamp: "1 hour ago"
+      ) do %>
+        <p><strong>Jane Smith</strong> reviewed and requested changes on PR #123</p>
+      <% end %>
+
+      <%= render FlatPack::Timeline::Item.new(
+        title: "Changes Committed",
+        timestamp: "30 minutes ago"
+      ) do %>
+        <p><strong>John Doe</strong> pushed 3 new commits addressing review feedback</p>
+      <% end %>
+
+      <%= render FlatPack::Timeline::Item.new(
+        title: "Approved",
+        timestamp: "15 minutes ago",
+        variant: :success
+      ) do %>
+        <p><strong>Jane Smith</strong> approved the changes</p>
+      <% end %>
+
+      <%= render FlatPack::Timeline::Item.new(
+        title: "Merged",
+        timestamp: "5 minutes ago",
+        variant: :success,
+        last: true
+      ) do %>
+        <p><strong>John Doe</strong> merged PR #123 into main</p>
+        <p class="text-sm mt-1 text-[var(--color-text-muted)]">Automatically deployed to production</p>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Use Cases", anchor_link: true) %>
+  
+  <div class="prose max-w-none">
+    <ul>
+      <li><strong>Activity Feeds:</strong> Display user activities and interactions</li>
+      <li><strong>Order Tracking:</strong> Show shipment and delivery status</li>
+      <li><strong>Project Milestones:</strong> Track project progress over time</li>
+      <li><strong>Deployment History:</strong> Log deployments and releases</li>
+      <li><strong>Git History:</strong> Visualize commits and branches</li>
+      <li><strong>Audit Logs:</strong> Display system events chronologically</li>
+    </ul>
+  </div>
+</section>

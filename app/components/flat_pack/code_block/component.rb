@@ -5,12 +5,12 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-[var(--color-muted)]" "border" "border-[var(--color-border)]" "rounded-lg" "overflow-x-auto" "font-mono" "text-sm" "text-[var(--color-foreground)]" "text-[var(--color-muted-foreground)]"
-      # "flex" "gap-1" "px-2" "pt-2" "pb-1" "rounded-full" "text-[var(--color-muted-foreground)]" "text-[var(--color-border-hover)]" "bg-[var(--color-border)]"
+      # "bg-[var(--color-muted)]" "border" "border-[var(--color-border)]" "rounded-lg" "whitespace-pre-wrap" "break-words" "font-mono" "text-sm" "text-[var(--color-foreground)]" "text-[var(--color-muted-foreground)]"
+      # "flex" "gap-1" "px-4" "pt-4" "pb-2" "px-5" "pb-5" "p-4" "rounded-full" "text-[var(--color-muted-foreground)]" "text-[var(--color-border-hover)]" "bg-[var(--color-border)]"
       def initialize(code: nil, language: nil, title: nil, snippets: nil, separated: true, **system_arguments)
         super(**system_arguments)
         @snippets = normalize_snippets(code: code, language: language, snippets: snippets)
-        @title = title
+        @title = title.presence || default_title
         @separated = separated
         @default_tab = 0
         @component_id = "code-block-#{object_id}"
@@ -28,16 +28,16 @@ module FlatPack
       private
 
       def render_title
-        return unless @title.present?
-
         content_tag(:div, @title, class: "px-4 py-2 border-b border-[var(--color-border)] text-sm font-medium text-[var(--color-muted-foreground)]")
       end
 
       def render_code_block
         return render_tabbed_code_block if multiple_snippets?
 
-        content_tag(:pre, class: pre_classes) do
-          content_tag(:code, @snippets.first[:code], class: code_classes_for(@snippets.first[:language]))
+        content_tag(:div, class: single_panel_classes) do
+          content_tag(:pre, class: pre_classes) do
+            content_tag(:code, @snippets.first[:code], class: code_classes_for(@snippets.first[:language]))
+          end
         end
       end
 
@@ -88,6 +88,7 @@ module FlatPack
         content_tag(:div,
           id: panel_id(index),
           role: "tabpanel",
+          class: tab_panel_classes,
           aria: {labelledby: tab_id(index)},
           data: {"flat-pack--code-block-tabs-target": "panel"},
           hidden: !is_default) do
@@ -120,9 +121,7 @@ module FlatPack
       end
 
       def pre_classes
-        return "p-4 overflow-x-auto" if @title.present? || multiple_snippets?
-
-        "p-4 rounded-lg overflow-x-auto"
+        "whitespace-pre-wrap break-words"
       end
 
       def code_classes_for(language)
@@ -133,11 +132,21 @@ module FlatPack
       end
 
       def tab_list_wrapper_classes
-        "px-2 pt-2 pb-1"
+        "px-4 pt-4 pb-2"
       end
 
       def tab_list_classes
         "flex gap-1"
+      end
+
+      def tab_panel_classes
+        "p-4"
+      end
+
+      def single_panel_classes
+        return "p-4" if @title.present?
+
+        "p-4 rounded-lg"
       end
 
       def tab_classes(is_active)
@@ -191,6 +200,12 @@ module FlatPack
         return "Snippet" if language.blank?
 
         language.to_s.upcase
+      end
+
+      def default_title
+        return "Code Examples" if multiple_snippets?
+
+        "Code Example"
       end
     end
   end

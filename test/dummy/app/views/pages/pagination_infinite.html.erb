@@ -1,0 +1,128 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Infinite Scroll Pagination",
+  subtitle: "Infinite loading with JavaScript auto-fetch and graceful fallback."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :pagination %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Infinite Scroll Table",
+    anchor_link: true,
+    subtitle: "Loads additional database rows into the same table without full page reload"
+  ) %>
+
+  <%= render "pages/pagination_infinite_results",
+    records: @records,
+    pagy: @pagy,
+    has_more: @has_more,
+    infinite_url: @infinite_url %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    language: "erb",
+    code: CGI.unescapeHTML(<<~'ERB'),
+      &lt;tbody data-pagination-content&gt;
+        &lt;% @records.each do |record| %&gt;
+          &lt;tr&gt;...&lt;/tr&gt;
+        &lt;% end %&gt;
+      &lt;/tbody&gt;
+
+      &lt;%= render FlatPack::Pagination::Component.new(
+        mode: :infinite,
+        infinite_url: demo_pagination_infinite_path(page: @pagy.next),
+        has_more: @pagy.next.present?
+      ) %&gt;
+    ERB
+    class: "mt-4"
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Infinite Scroll Grid Cards",
+    anchor_link: true,
+    subtitle: "Loads additional cards into a responsive grid using the same infinite pagination flow"
+  ) %>
+
+  <% cards_infinite_url = @has_more ? demo_pagination_infinite_path(page: @pagy.next, view: :cards) : "#" %>
+
+  <%= render "pages/pagination_infinite_cards_results",
+    records: @records,
+    pagy: @pagy,
+    has_more: @has_more,
+    infinite_url: cards_infinite_url %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "How It Works",
+    anchor_link: true
+  ) %>
+  
+  <div class="prose max-w-none">
+    <h3>Client-Side (JavaScript Enabled)</h3>
+    <ul>
+      <li>Uses Intersection Observer API to detect when the "Load more" button enters the viewport</li>
+      <li>Automatically fetches the next page via AJAX</li>
+      <li>Appends new content to the page seamlessly</li>
+      <li>Shows loading spinner during fetch</li>
+    </ul>
+
+    <h3>Graceful Degradation (No JavaScript)</h3>
+    <ul>
+      <li>The component renders as a regular link</li>
+      <li>Clicking navigates to the next page normally</li>
+      <li>Maintains full functionality without JavaScript</li>
+    </ul>
+
+    <h3>Controller Example</h3>
+    <%= render FlatPack::CodeBlock::Component.new(
+      language: "ruby",
+      code: <<~RUBY
+        def pagination_infinite
+          @pagy, @records = pagy(DummyDatum.recent, items: 10)
+          @has_more = @pagy.next.present?
+          @infinite_url = @has_more ? demo_pagination_infinite_path(page: @pagy.next) : "#"
+
+          if request.xhr?
+            render partial: "pages/pagination_infinite_results",
+              locals: { records: @records, pagy: @pagy, has_more: @has_more, infinite_url: @infinite_url }
+          end
+        end
+      RUBY
+    ) %>
+
+    <h3>View Example</h3>
+    <%= render FlatPack::CodeBlock::Component.new(
+      language: "erb",
+      code: <<~ERB
+        <table>
+          <tbody data-pagination-content>
+            <#{'%'} @records.each do |record| %#{'>'}
+              <!-- row markup -->
+            <#{'%'} end %#{'>'}
+          </tbody>
+        </table>
+
+        <#{'%'}= render FlatPack::Pagination::Component.new(
+          mode: :infinite,
+          infinite_url: demo_pagination_infinite_path(page: @pagy.next),
+          has_more: @pagy.next.present?
+        ) if @pagy.next %#{'>'}
+      ERB
+    ) %>
+  </div>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Manual Load More Button",
+    anchor_link: true,
+    subtitle: "Use when you want users to explicitly trigger loading"
+  ) %>
+  
+  <div class="p-6 bg-[var(--color-muted)] rounded-lg">
+    <p class="mb-4">To disable automatic loading on scroll, simply don't set up the Intersection Observer, or add a data attribute to control behavior.</p>
+    <p class="text-sm text-[var(--color-text-muted)]">This is useful for feeds where you want users to consciously choose to load more content rather than having it happen automatically.</p>
+  </div>
+</section>

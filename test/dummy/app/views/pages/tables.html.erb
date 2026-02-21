@@ -14,6 +14,7 @@
       <% table.column(title: "ID", html: ->(user) { user.id.to_s }) %>
       <% table.column(title: "Name", html: ->(user) { user.name }) %>
       <% table.column(title: "Email", html: ->(user) { user.email }) %>
+      <% table.column(title: "Category", html: ->(user) { user.category.to_s.titleize }) %>
     <% end %>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE'),
@@ -24,6 +25,7 @@
           &lt;% table.column(title: "ID", html: ->(user) { user.id.to_s }) %&gt;
           &lt;% table.column(title: "Name", html: ->(user) { user.name }) %&gt;
           &lt;% table.column(title: "Email", html: ->(user) { user.email }) %&gt;
+          &lt;% table.column(title: "Category", html: ->(user) { user.category.to_s.titleize }) %&gt;
         &lt;% end %&gt;
       CODE
       class: "mt-4"
@@ -43,7 +45,7 @@
         end
         "<span class=\"px-2 py-1 text-xs rounded #{badge_class}\">#{user.status.capitalize}</span>".html_safe
       }) %>
-      <% table.column(title: "Created", html: ->(user) { user.created_at.strftime("%b %d, %Y") }) %>
+      <% table.column(title: "Published", html: ->(user) { user.published_at.strftime("%b %d, %Y") }) %>
     <% end %>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE'),
@@ -57,7 +59,7 @@
             end
             "<span class=\"px-2 py-1 text-xs rounded #{badge_class}\">#{user.status.capitalize}</span>".html_safe
           }) %&gt;
-          &lt;% table.column(title: "Created", html: ->(user) { user.created_at.strftime("%b %d, %Y") }) %&gt;
+          &lt;% table.column(title: "Published", html: ->(user) { user.published_at.strftime("%b %d, %Y") }) %&gt;
         &lt;% end %&gt;
       CODE
       class: "mt-4"
@@ -121,7 +123,7 @@
 
   <!-- Large Table -->
   <section class="mb-12">
-    <%= render FlatPack::SectionTitle::Component.new(title: "Large Table (All #{@users.count} Users)", anchor_link: true, subtitle: "Examples for this section.") %>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Large Table (All #{@users.count} Records)", anchor_link: true, subtitle: "Examples for this section.") %>
     <%= render FlatPack::Table::Component.new(
       data: @sorted_users,
       turbo_frame: "large_table",
@@ -132,6 +134,7 @@
       <% table.column(title: "ID", html: ->(user) { user.id.to_s }, sortable: true, sort_key: :id) %>
       <% table.column(title: "Name", html: ->(user) { user.name }, sortable: true, sort_key: :name) %>
       <% table.column(title: "Email", html: ->(user) { user.email }, sortable: true, sort_key: :email) %>
+      <% table.column(title: "Category", html: ->(user) { user.category.to_s.titleize }, sortable: true, sort_key: :category) %>
       <% table.column(title: "Status", sortable: true, sort_key: :status, html: ->(user) {
         badge_class = case user.status
         when 'active' then 'bg-green-100 text-green-800'
@@ -140,7 +143,8 @@
         end
         "<span class=\"px-2 py-1 text-xs rounded #{badge_class}\">#{user.status.capitalize}</span>".html_safe
       }) %>
-      <% table.column(title: "Created", sortable: true, sort_key: :created_at, html: ->(user) { user.created_at.strftime("%b %d, %Y") }) %>
+      <% table.column(title: "Views", sortable: true, sort_key: :views_count, html: ->(user) { number_with_delimiter(user.views_count) }) %>
+      <% table.column(title: "Published", sortable: true, sort_key: :published_at, html: ->(user) { user.published_at.strftime("%b %d, %Y") }) %>
     <% end %>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE'),
@@ -154,8 +158,10 @@
           &lt;% table.column(title: "ID", html: ->(user) { user.id.to_s }, sortable: true, sort_key: :id) %&gt;
           &lt;% table.column(title: "Name", html: ->(user) { user.name }, sortable: true, sort_key: :name) %&gt;
           &lt;% table.column(title: "Email", html: ->(user) { user.email }, sortable: true, sort_key: :email) %&gt;
+          &lt;% table.column(title: "Category", html: ->(user) { user.category.to_s.titleize }, sortable: true, sort_key: :category) %&gt;
           &lt;% table.column(title: "Status", html: ->(user) { ... }, sortable: true, sort_key: :status) %&gt;
-          &lt;% table.column(title: "Created", html: ->(user) { ... }, sortable: true, sort_key: :created_at) %&gt;
+          &lt;% table.column(title: "Views", html: ->(user) { ... }, sortable: true, sort_key: :views_count) %&gt;
+          &lt;% table.column(title: "Published", html: ->(user) { ... }, sortable: true, sort_key: :published_at) %&gt;
         &lt;% end %&gt;
       CODE
       class: "mt-4"
@@ -178,6 +184,7 @@
       <% table.column(title: "ID", html: ->(user) { user.id.to_s }, sortable: true, sort_key: :id) %>
       <% table.column(title: "Name", html: ->(user) { user.name }, sortable: true, sort_key: :name) %>
       <% table.column(title: "Email", html: ->(user) { user.email }, sortable: true, sort_key: :email) %>
+      <% table.column(title: "Category", html: ->(user) { user.category.to_s.titleize }, sortable: true, sort_key: :category) %>
       <% table.column(title: "Status", sortable: true, sort_key: :status, html: ->(user) {
         badge_class = case user.status
         when 'active' then 'bg-green-100 text-green-800'
@@ -186,7 +193,8 @@
         end
         "<span class=\"px-2 py-1 text-xs rounded #{badge_class}\">#{user.status.capitalize}</span>".html_safe
       }) %>
-      <% table.column(title: "Created", sortable: true, sort_key: :created_at, html: ->(user) { user.created_at.strftime("%b %d, %Y") }) %>
+      <% table.column(title: "Views", sortable: true, sort_key: :views_count, html: ->(user) { number_with_delimiter(user.views_count) }) %>
+      <% table.column(title: "Published", sortable: true, sort_key: :published_at, html: ->(user) { user.published_at.strftime("%b %d, %Y") }) %>
     <% end %>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE'),
@@ -200,8 +208,10 @@
           &lt;% table.column(title: "ID", html: ->(user) { user.id.to_s }, sortable: true, sort_key: :id) %&gt;
           &lt;% table.column(title: "Name", html: ->(user) { user.name }, sortable: true, sort_key: :name) %&gt;
           &lt;% table.column(title: "Email", html: ->(user) { user.email }, sortable: true, sort_key: :email) %&gt;
+          &lt;% table.column(title: "Category", html: ->(user) { user.category.to_s.titleize }, sortable: true, sort_key: :category) %&gt;
           &lt;% table.column(title: "Status", html: ->(user) { ... }, sortable: true, sort_key: :status) %&gt;
-          &lt;% table.column(title: "Created", html: ->(user) { ... }, sortable: true, sort_key: :created_at) %&gt;
+          &lt;% table.column(title: "Views", html: ->(user) { ... }, sortable: true, sort_key: :views_count) %&gt;
+          &lt;% table.column(title: "Published", html: ->(user) { ... }, sortable: true, sort_key: :published_at) %&gt;
         &lt;% end %&gt;
       CODE
       class: "mt-4"

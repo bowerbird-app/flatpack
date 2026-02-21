@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
 require "ostruct"
+require "pagy"
+require "pagy/extras/array"
 
 class PagesController < ApplicationController
+  include Pagy::Backend
+
   def demo
     @component_index = build_component_index
   end
@@ -19,7 +23,10 @@ class PagesController < ApplicationController
         name: "User #{i + 1}",
         email: "user#{i + 1}@example.com",
         status: %w[active inactive pending].sample,
-        created_at: rand(30).days.ago
+        created_at: rand(30).days.ago,
+        category: %w[Technology Business Marketing Design].sample,
+        views_count: rand(100..5_000),
+        published_at: rand(60).days.ago
       )
     end
 
@@ -159,10 +166,19 @@ class PagesController < ApplicationController
   end
 
   def pagination
-    require "pagy"
-    @pagy, @records = pagy_array(Array.new(100) { |i|
-      OpenStruct.new(id: i + 1, name: "Item #{i + 1}")
-    }, items: 10)
+    records = Array.new(100) do |i|
+      OpenStruct.new(
+        id: i + 1,
+        name: "User #{i + 1}",
+        email: "user#{i + 1}@example.com",
+        status: %w[active inactive pending].sample,
+        category: %w[Technology Business Marketing Design].sample,
+        views_count: rand(100..5_000),
+        published_at: rand(60).days.ago
+      )
+    end
+
+    @pagy, @records = pagy_array(records, items: 10)
   rescue NameError
     # Pagy not initialized, create mock
     @pagy = OpenStruct.new(
@@ -206,6 +222,43 @@ class PagesController < ApplicationController
   end
 
   def chat_states
+  end
+
+  def progress
+  end
+
+  def collapse
+  end
+
+  def pagination_infinite
+    @pagy, @records = pagy(DummyDatum.recent, items: 10)
+    @has_more = @pagy.next.present?
+    @infinite_url = @has_more ? demo_pagination_infinite_path(page: @pagy.next) : "#"
+
+    cards_infinite_url = @has_more ? demo_pagination_infinite_path(page: @pagy.next, view: :cards) : "#"
+
+    return unless request.xhr?
+
+    cards_view = params[:view].to_s == "cards"
+    render partial: cards_view ? "pages/pagination_infinite_cards_results" : "pages/pagination_infinite_results",
+      locals: {
+        records: @records,
+        pagy: @pagy,
+        has_more: @has_more,
+        infinite_url: cards_view ? cards_infinite_url : @infinite_url
+      }
+  end
+
+  def range_input
+  end
+
+  def skeletons
+  end
+
+  def list
+  end
+
+  def timeline
   end
 
   private

@@ -3,12 +3,58 @@
   subtitle: "Reusable code snippets for demos and documentation pages."
 ) %>
 
-<%= render "pages/component_method_variables_table", component: :code_block %>
-
 <%
   erb_output_open = "<" + "%="
   erb_tag_close = "%" + ">"
+
+  component_docs = [
+    {
+      collapse_id: "components-code-block",
+      title: "Code Block",
+      method_call: <<~CODE,
+        #{erb_output_open} render FlatPack::CodeBlock::Component.new(
+          title: "ERB",
+          language: "erb",
+            code: "#{erb_output_open} render FlatPack::Button::Component.new(text: \"Primary\", style: :primary) #{erb_tag_close}"
+        ) #{erb_tag_close}
+      CODE
+      variables: [
+        { variable: "code", accepts: "String (required unless snippets are provided)" },
+        { variable: "snippets", accepts: "Array of hashes: [{ label:, code:, language: }]" },
+        { variable: "language", accepts: "String or nil" },
+        { variable: "title", accepts: "String or nil" },
+        { variable: "separated", accepts: "true, false" }
+      ]
+    }
+  ]
 %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Components",
+    subtitle: "The component demoed on this page is listed below.",
+    anchor_link: true,
+    anchor_id: "component-method-variables"
+  ) %>
+
+  <div class="space-y-4">
+    <% component_docs.each do |component_doc| %>
+      <%= render FlatPack::Collapse::Component.new(id: component_doc[:collapse_id], title: component_doc[:title]) do %>
+        <%= render FlatPack::CodeBlock::Component.new(
+          title: "Method Call",
+          language: "erb",
+          code: CGI.unescapeHTML(component_doc[:method_call]),
+          class: "mb-4"
+        ) %>
+
+        <%= render FlatPack::Table::Component.new(data: component_doc[:variables]) do |table| %>
+          <% table.column(title: "Variable", html: ->(row) { row[:variable] }) %>
+          <% table.column(title: "Accepts", html: ->(row) { row[:accepts] }) %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+</section>
 
 <!-- Basic Usage -->
 <section class="mb-12">
@@ -72,7 +118,7 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Multiple Snippets", anchor_link: true, subtitle: "Examples for Multiple Snippets.") %>
   <p class="text-[var(--color-muted-foreground)] mb-4">
-    Pass an array of snippets to render tab buttons inside the code block.
+    Pass an array of snippets to render code pills inside the code block.
   </p>
 
   <%= render FlatPack::CodeBlock::Component.new(
@@ -81,30 +127,22 @@
       {
         label: "Primary",
         language: "erb",
-        code: <<~CODE
-          #{erb_output_open} render FlatPack::Button::Component.new(text: "Primary", style: :primary) #{erb_tag_close}
-        CODE
+        code: "#{erb_output_open} render FlatPack::Button::Component.new(text: \"Primary\", style: :primary) #{erb_tag_close}"
       },
       {
         label: "Secondary",
         language: "erb",
-        code: <<~CODE
-          #{erb_output_open} render FlatPack::Button::Component.new(text: "Secondary", style: :secondary) #{erb_tag_close}
-        CODE
+        code: "#{erb_output_open} render FlatPack::Button::Component.new(text: \"Secondary\", style: :secondary) #{erb_tag_close}"
       },
       {
         label: "Ghost",
         language: "erb",
-        code: <<~CODE
-          #{erb_output_open} render FlatPack::Button::Component.new(text: "Ghost", style: :ghost) #{erb_tag_close}
-        CODE
+        code: "#{erb_output_open} render FlatPack::Button::Component.new(text: \"Ghost\", style: :ghost) #{erb_tag_close}"
       },
       {
         label: "Loading",
         language: "erb",
-        code: <<~CODE
-          #{erb_output_open} render FlatPack::Button::Component.new(text: "Loading", style: :primary, loading: true) #{erb_tag_close}
-        CODE
+        code: "#{erb_output_open} render FlatPack::Button::Component.new(text: \"Loading\", style: :primary, loading: true) #{erb_tag_close}"
       }
     ]
   ) %>

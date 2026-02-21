@@ -1,0 +1,39 @@
+<%= render FlatPack::Grid::Component.new(data: { pagination_content: true }, class: "mb-4") do %>
+  <% records.each do |record| %>
+    <%= render FlatPack::Card::Component.new(style: :default, hover: :subtle, class: "h-full") do |card| %>
+      <% card.body do %>
+        <div class="flex items-start justify-between gap-3 mb-3">
+          <h3 class="font-semibold">Card <%= record.id %></h3>
+          <%= render FlatPack::Badge::Component.new(
+            text: record.status.to_s.capitalize,
+            style: :info,
+            size: :sm
+          ) %>
+        </div>
+        <p class="text-sm text-[var(--color-muted-foreground)] mb-3"><%= record.name %></p>
+        <div class="text-sm text-[var(--color-muted-foreground)] space-y-1">
+          <p><%= record.email %></p>
+          <p><%= record.category.to_s.titleize %> · <%= number_with_delimiter(record.views_count) %> views</p>
+          <p><%= record.published_at&.strftime("%b %d, %Y") %></p>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% unless has_more %>
+    <div class="flex justify-center py-6" style="grid-column: 1 / -1;">
+      <%= render FlatPack::Badge::Component.new(
+        text: "End",
+        style: :default,
+        size: :lg
+      ) %>
+    </div>
+  <% end %>
+<% end %>
+
+<%= render FlatPack::Pagination::Component.new(
+  mode: :infinite,
+  infinite_url: infinite_url,
+  has_more: has_more,
+  loading_variant: :cards
+) %>
