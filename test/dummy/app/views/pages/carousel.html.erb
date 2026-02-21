@@ -1,0 +1,161 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Carousel Component",
+  subtitle: "Media slider with support for images, video, and HTML slides."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :carousel %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Basic Image Carousel", anchor_link: true, subtitle: "Simple slides with color blocks.") %>
+  <%= render FlatPack::Carousel::Component.new do |carousel| %>
+    <% (1..5).each do |index| %>
+      <% carousel.slide(alt: "Slide #{index}") do %>
+        <div class="flex items-center justify-center h-48 text-white text-2xl font-bold" style="background: linear-gradient(90deg, #3b82f6 0%, #06b6d4 100%);">Slide <%= index %></div>
+      <% end %>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Mixed Media", anchor_link: true, subtitle: "Demonstrates an image slide and a YouTube video slide.") %>
+  <%= render FlatPack::Carousel::Component.new do |carousel| %>
+    <% carousel.slide(alt: "Mountain landscape image") do %>
+      <img
+        src="https://picsum.photos/seed/flatpack-mixed-media-image/1200/480"
+        alt="Scenic placeholder landscape"
+        class="h-48 w-full object-cover"
+        loading="lazy"
+      >
+    <% end %>
+    <% carousel.slide(alt: "YouTube video") do %>
+      <iframe
+        src="https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0"
+        title="YouTube video player"
+        class="h-48 w-full"
+        loading="lazy"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+      ></iframe>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Autoplay with Progress Bar", anchor_link: true, subtitle: "Auto-advance with timing indicator.") %>
+  <%= render FlatPack::Carousel::Component.new(autoplay: true, show_progress_bar: true, interval: 3000) do |carousel| %>
+    <% %w[One Two Three].each do |label| %>
+      <% carousel.slide(alt: "#{label} slide") do %>
+        <div class="h-48 flex items-center justify-center text-white text-2xl font-bold" style="background: linear-gradient(90deg, #f97316 0%, #f59e0b 100%);"><%= label %></div>
+      <% end %>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Fade Transition", anchor_link: true, subtitle: "Uses opacity transition between slides.") %>
+  <%= render FlatPack::Carousel::Component.new(transition: :fade) do |carousel| %>
+    <% %w[Alpha Beta Gamma].each do |label| %>
+      <% carousel.slide(alt: "#{label} slide") do %>
+        <div class="h-48 flex items-center justify-center text-white text-2xl font-bold" style="background: linear-gradient(90deg, #d946ef 0%, #ec4899 100%);"><%= label %></div>
+      <% end %>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "With Counter", anchor_link: true, anchor_id: "with-counter", subtitle: "Counter text without dot indicators.") %>
+  <%= render FlatPack::Carousel::Component.new(show_counter: true, show_indicators: false) do |carousel| %>
+    <% %w[First Second Third].each do |label| %>
+      <% carousel.slide(alt: "#{label} slide") do %>
+        <div class="h-48 flex items-center justify-center bg-gradient-to-r from-sky-500 to-indigo-500 text-white text-xl font-bold"><%= label %></div>
+      <% end %>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "With Thumbnails", anchor_link: true, subtitle: "Slides with thumbnail strip.") %>
+  <%= render FlatPack::Carousel::Component.new(show_thumbnails: true, show_indicators: false) do |carousel| %>
+    <% slides = [
+      { color: "#ff6b6b", thumbnail_url: "https://picsum.photos/seed/flatpack-thumb-1/64/48" },
+      { color: "#4ecdc4", thumbnail_url: "https://picsum.photos/seed/flatpack-thumb-2/64/48" },
+      { color: "#ffe66d", thumbnail_url: "https://picsum.photos/seed/flatpack-thumb-3/64/48" }
+    ] %>
+    <% slides.each_with_index do |slide, index| %>
+      <% carousel.slide(alt: "Thumbnail #{index + 1}", thumbnail_url: slide[:thumbnail_url]) do %>
+        <div class="h-48 flex items-center justify-center text-white text-xl font-bold" style="background-color: <%= slide[:color] %>">Thumb <%= index + 1 %></div>
+      <% end %>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Custom Aspect Ratios", anchor_link: true, subtitle: "Square, video, and wide options.") %>
+  <div class="space-y-6">
+    <%= render FlatPack::Carousel::Component.new(aspect_ratio: :square) do |carousel| %>
+      <% carousel.slide(alt: "Square format sample image") do %>
+        <img
+          src="https://picsum.photos/seed/flatpack-aspect-square/1200/1200"
+          alt="Square format sample image"
+          class="h-full w-full object-cover"
+          loading="lazy"
+        >
+      <% end %>
+    <% end %>
+    <%= render FlatPack::Carousel::Component.new(aspect_ratio: :video) do |carousel| %>
+      <% carousel.slide(alt: "Video format sample image") do %>
+        <img
+          src="https://picsum.photos/seed/flatpack-aspect-video/1600/900"
+          alt="Video format sample image"
+          class="h-full w-full object-cover"
+          loading="lazy"
+        >
+      <% end %>
+    <% end %>
+    <%= render FlatPack::Carousel::Component.new(aspect_ratio: :wide) do |carousel| %>
+      <% carousel.slide(alt: "Wide format sample image") do %>
+        <img
+          src="https://picsum.photos/seed/flatpack-aspect-wide/2100/900"
+          alt="Wide format sample image"
+          class="h-full w-full object-cover"
+          loading="lazy"
+        >
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Minimal / No Controls", anchor_link: true, anchor_id: "minimal-no-controls", subtitle: "Stripped-down carousel presentation.") %>
+  <%= render FlatPack::Carousel::Component.new(show_controls: false, show_indicators: false, autoplay: true, interval: 2500) do |carousel| %>
+    <% [
+      {label: "Minimal One", classes: "bg-gradient-to-r from-zinc-500 to-slate-600"},
+      {label: "Minimal Two", classes: "bg-gradient-to-r from-cyan-600 to-sky-500"},
+      {label: "Minimal Three", classes: "bg-gradient-to-r from-emerald-600 to-teal-500"}
+    ].each do |slide| %>
+      <% carousel.slide(alt: slide[:label]) do %>
+        <div class="h-48 flex items-center justify-center text-white font-semibold <%= slide[:classes] %>"><%= slide[:label] %></div>
+      <% end %>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Keyboard Navigation", anchor_link: true, subtitle: "Supported shortcuts.") %>
+  <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
+    <li><kbd>ArrowLeft</kbd> / <kbd>ArrowRight</kbd>: Previous/Next slide</li>
+    <li><kbd>Home</kbd>: First slide</li>
+    <li><kbd>End</kbd>: Last slide</li>
+  </ul>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Highlights.") %>
+  <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
+    <li>Image, video placeholder, and arbitrary HTML support</li>
+    <li>Autoplay, looping, and pause-on-hover behavior</li>
+    <li>Controls, indicators, counter, thumbnails, and progress bar</li>
+    <li>Keyboard, swipe, and live region accessibility support</li>
+  </ul>
+</section>

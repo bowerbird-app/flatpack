@@ -15,6 +15,9 @@ module.exports = {
     `${engineRoot}/app/javascript/**/*.js`,
   ],
   safelist: [
+    'aspect-square',
+    'aspect-video',
+    'aspect-[21/9]',
     'hover:bg-[var(--color-muted)]',
     'hover:border-[var(--color-primary)]',
     '-space-x-1',

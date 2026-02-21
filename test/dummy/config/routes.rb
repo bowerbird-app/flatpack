@@ -47,6 +47,7 @@ Rails.application.routes.draw do
   get "demo/skeletons", to: "pages#skeletons"
   get "demo/list", to: "pages#list"
   get "demo/timeline", to: "pages#timeline"
+  get "demo/carousel", to: "pages#carousel"
 
   # Form submission endpoints for demonstration
   post "demo/forms/create", to: "pages#forms_create"

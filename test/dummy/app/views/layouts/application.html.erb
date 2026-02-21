@@ -82,6 +82,12 @@
                 icon: :chevron_down,
                 active: current_page?(demo_collapse_path)
               ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Carousel",
+                href: demo_carousel_path,
+                icon: :image,
+                active: current_page?(demo_carousel_path)
+              ) %>
               
               <%= render FlatPack::Sidebar::Divider::Component.new %>
               
