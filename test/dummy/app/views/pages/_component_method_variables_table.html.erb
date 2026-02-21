@@ -38,6 +38,12 @@
       { method_or_variable: "type", description: "Chart type.", accepts: ":line, :bar, :area, :donut, :pie, :radar" },
       { method_or_variable: "options, height", description: "Apex config overrides and chart height.", accepts: "Hash, Integer" }
     ],
+    carousel: [
+      { method_or_variable: "Component Method", description: "Render a media carousel with slide DSL blocks.", accepts: "render FlatPack::Carousel::Component.new(...) do |carousel| ... end" },
+      { method_or_variable: "autoplay, interval, loop, pause_on_hover", description: "Auto-advance behavior controls.", accepts: "Boolean, Integer >= 1000, Boolean, Boolean" },
+      { method_or_variable: "show_controls, show_indicators, show_counter, show_progress_bar, show_thumbnails", description: "Optional UI affordances.", accepts: "Boolean values" },
+      { method_or_variable: "transition, aspect_ratio, keyboard, swipe, start_slide", description: "Navigation and layout settings.", accepts: ":slide|:fade|:none, :auto|:square|:video|:wide, Boolean, Boolean, Integer >= 0" }
+    ],
     chat_panel: [
       { method_or_variable: "Component Method", description: "Compose chat UI with panel/header/messages/composer slots.", accepts: "render FlatPack::Chat::Panel::Component.new do |panel| ... end" },
       { method_or_variable: "with_header, with_messages, with_composer", description: "Primary panel slots used to compose the full chat surface.", accepts: "slot blocks" },

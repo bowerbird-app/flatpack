@@ -261,6 +261,9 @@ class PagesController < ApplicationController
   def timeline
   end
 
+  def carousel
+  end
+
   private
 
   def build_component_index
@@ -447,7 +450,8 @@ class PagesController < ApplicationController
       {title: "Grid", description: "Responsive grid layouts", url: demo_grid_path},
       {title: "Pagination", description: "Page navigation with Pagy", url: demo_pagination_path},
       {title: "Charts", description: "Data visualization with ApexCharts", url: demo_charts_path},
-      {title: "Code Blocks", description: "Reusable snippets for demo pages", url: demo_code_blocks_path}
+      {title: "Code Blocks", description: "Reusable snippets for demo pages", url: demo_code_blocks_path},
+      {title: "Carousel", description: "Media slider with images, video, and HTML slides", url: demo_carousel_path}
     ]
   end
 end

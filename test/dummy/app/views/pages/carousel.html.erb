@@ -1,0 +1,121 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Carousel Component",
+  subtitle: "Media slider with support for images, video, and HTML slides."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :carousel %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Basic Image Carousel", anchor_link: true, subtitle: "Simple slides with color blocks.") %>
+  <%= render FlatPack::Carousel::Component.new do |carousel| %>
+    <% (1..5).each do |index| %>
+      <% carousel.slide(alt: "Slide #{index}") do %>
+        <div class="flex items-center justify-center h-64 bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-2xl font-bold">Slide <%= index %></div>
+      <% end %>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Mixed Media", anchor_link: true, subtitle: "Image-style blocks, custom HTML, and video placeholder.") %>
+  <%= render FlatPack::Carousel::Component.new do |carousel| %>
+    <% carousel.slide(alt: "Image style") do %>
+      <div class="h-64 flex items-center justify-center bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-2xl font-bold">Image Slide</div>
+    <% end %>
+    <% carousel.slide(alt: "HTML content") do %>
+      <div class="h-64 flex items-center justify-center bg-gradient-to-r from-purple-500 to-indigo-500 text-white text-2xl font-bold">Custom HTML Slide</div>
+    <% end %>
+    <% carousel.slide(alt: "Video placeholder") do %>
+      <div class="h-64 flex items-center justify-center bg-black text-white text-xl font-semibold">Video Placeholder</div>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Autoplay with Progress Bar", anchor_link: true, subtitle: "Auto-advance with timing indicator.") %>
+  <%= render FlatPack::Carousel::Component.new(autoplay: true, show_progress_bar: true, interval: 3000) do |carousel| %>
+    <% %w[One Two Three].each do |label| %>
+      <% carousel.slide(alt: "#{label} slide") do %>
+        <div class="h-56 flex items-center justify-center bg-gradient-to-r from-orange-500 to-amber-500 text-white text-2xl font-bold"><%= label %></div>
+      <% end %>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Fade Transition", anchor_link: true, subtitle: "Uses opacity transition between slides.") %>
+  <%= render FlatPack::Carousel::Component.new(transition: :fade) do |carousel| %>
+    <% %w[Alpha Beta Gamma].each do |label| %>
+      <% carousel.slide(alt: "#{label} slide") do %>
+        <div class="h-56 flex items-center justify-center bg-gradient-to-r from-fuchsia-500 to-pink-500 text-white text-2xl font-bold"><%= label %></div>
+      <% end %>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "With Counter", anchor_link: true, subtitle: "Counter text without dot indicators.") %>
+  <%= render FlatPack::Carousel::Component.new(show_counter: true, show_indicators: false) do |carousel| %>
+    <% %w[First Second Third].each do |label| %>
+      <% carousel.slide(alt: "#{label} slide") do %>
+        <div class="h-48 flex items-center justify-center bg-gradient-to-r from-sky-500 to-indigo-500 text-white text-xl font-bold"><%= label %></div>
+      <% end %>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "With Thumbnails", anchor_link: true, subtitle: "Slides with thumbnail strip.") %>
+  <%= render FlatPack::Carousel::Component.new(show_thumbnails: true) do |carousel| %>
+    <% thumbs = ["#ff6b6b", "#4ecdc4", "#ffe66d"] %>
+    <% thumbs.each_with_index do |color, index| %>
+      <% thumb = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='48'%3E%3Crect width='64' height='48' fill='#{CGI.escape(color)}'/%3E%3C/svg%3E" %>
+      <% carousel.slide(alt: "Thumbnail #{index + 1}", thumbnail_url: thumb) do %>
+        <div class="h-48 flex items-center justify-center text-white text-xl font-bold" style="background-color: <%= color %>">Thumb <%= index + 1 %></div>
+      <% end %>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Custom Aspect Ratios", anchor_link: true, subtitle: "Square, video, and wide options.") %>
+  <div class="space-y-6">
+    <%= render FlatPack::Carousel::Component.new(aspect_ratio: :square) do |carousel| %>
+      <% carousel.slide(alt: "Square") { content_tag(:div, "Square", class: "h-full flex items-center justify-center bg-[var(--color-muted)]") } %>
+    <% end %>
+    <%= render FlatPack::Carousel::Component.new(aspect_ratio: :video) do |carousel| %>
+      <% carousel.slide(alt: "Video") { content_tag(:div, "Video", class: "h-full flex items-center justify-center bg-[var(--color-muted)]") } %>
+    <% end %>
+    <%= render FlatPack::Carousel::Component.new(aspect_ratio: :wide) do |carousel| %>
+      <% carousel.slide(alt: "Wide") { content_tag(:div, "Wide", class: "h-full flex items-center justify-center bg-[var(--color-muted)]") } %>
+    <% end %>
+  </div>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Minimal / No Controls", anchor_link: true, subtitle: "Stripped-down carousel presentation.") %>
+  <%= render FlatPack::Carousel::Component.new(show_controls: false, show_indicators: false) do |carousel| %>
+    <% carousel.slide(alt: "Minimal") do %>
+      <div class="h-48 flex items-center justify-center bg-[var(--color-muted)] text-[var(--color-foreground)] font-semibold">Minimal Mode</div>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Keyboard Navigation", anchor_link: true, subtitle: "Supported shortcuts.") %>
+  <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
+    <li><kbd>ArrowLeft</kbd> / <kbd>ArrowRight</kbd>: Previous/Next slide</li>
+    <li><kbd>Home</kbd>: First slide</li>
+    <li><kbd>End</kbd>: Last slide</li>
+  </ul>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Highlights.") %>
+  <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
+    <li>Image, video placeholder, and arbitrary HTML support</li>
+    <li>Autoplay, looping, and pause-on-hover behavior</li>
+    <li>Controls, indicators, counter, thumbnails, and progress bar</li>
+    <li>Keyboard, swipe, and live region accessibility support</li>
+  </ul>
+</section>
