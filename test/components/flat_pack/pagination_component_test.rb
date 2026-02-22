@@ -33,6 +33,25 @@ module FlatPack
 
         assert_selector "a[href='?page=2']", text: "Load more"
       end
+
+      def test_appends_anchor_to_pagination_links
+        pagy = MockPagy.new(page: 2, pages: 5, prev: 1, next_page: 3, series: [1, 2, 3])
+
+        render_inline(Component.new(pagy: pagy, anchor: "basic-pagination"))
+
+        assert_selector "a[href='?page=1#basic-pagination']", text: "1"
+        assert_selector "a[href='?page=3#basic-pagination']", text: "3"
+      end
+
+      def test_targets_links_to_turbo_frame_when_provided
+        pagy = MockPagy.new(page: 2, pages: 5, prev: 1, next_page: 3, series: [1, 2, 3])
+
+        render_inline(Component.new(pagy: pagy, turbo_frame: "pagination_table"))
+
+        assert_selector "a[href='?page=1'][data-turbo-frame='pagination_table']"
+        assert_selector "a[href='?page=3'][data-turbo-frame='pagination_table']"
+        assert_no_selector "a[data-turbo-action='replace']"
+      end
     end
   end
 end

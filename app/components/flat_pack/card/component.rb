@@ -79,12 +79,12 @@ module FlatPack
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "p-4" "p-6" "p-8"
+      # "p-[var(--card-padding)]"
       PADDINGS = {
         none: "",
-        sm: "p-4",
-        md: "p-6",
-        lg: "p-8"
+        sm: "p-[var(--card-padding)]",
+        md: "p-[var(--card-padding)]",
+        lg: "p-[var(--card-padding)]"
       }.freeze
 
       def initialize(

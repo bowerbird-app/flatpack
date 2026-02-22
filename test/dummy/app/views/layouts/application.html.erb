@@ -6,11 +6,11 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="m-0 h-full overflow-hidden overscroll-none" data-controller="dark-mode">
+  <body class="m-0 h-full overflow-hidden overscroll-none bg-background text-foreground" data-controller="dark-mode">
     <%= render "layouts/icon_sprite" %>
 
     <% sidebar_side = params[:side].in?(%w[left right]) ? params[:side].to_sym : :left %>
@@ -39,7 +39,7 @@
               <%= render FlatPack::Sidebar::Item::Component.new(
                 label: "Themes",
                 href: themes_path,
-                icon: :palette,
+                icon: :cog,
                 active: current_page?(themes_path)
               ) %>
               
@@ -348,17 +348,33 @@
                   >
                     Ocean
                   </button>
+                  <button
+                    type="button"
+                    class="w-full px-4 py-2 text-left text-sm hover:bg-muted transition-colors"
+                    data-action="click->flat-pack--theme#switch click->flat-pack--button-dropdown#toggle"
+                    data-theme-value="rounded"
+                  >
+                    Rounded
+                  </button>
                 </div>
               </div>
 
-              <%= render FlatPack::Switch::Component.new(
-                name: "dark_mode",
-                label: "Dark mode",
+              <%= render FlatPack::Select::Component.new(
+                name: "theme",
+                options: [
+                  ["System", "system"],
+                  ["Light", "light"],
+                  ["Dark", "dark"],
+                  ["Ocean", "ocean"],
+                  ["Rounded", "rounded"]
+                ],
+                value: "system",
+                class: "min-w-36 !py-2",
                 data: {
-                  dark_mode_target: "toggle",
-                  action: "change->dark-mode#toggle"
+                  action: "change->flat-pack--theme#switch",
+                  flat_pack__theme_target: "select"
                 },
-                aria: { label: "Toggle dark mode" }
+                aria: { label: "Theme selector" }
               ) %>
 
             <%= render FlatPack::Button::Component.new(
@@ -375,7 +391,7 @@
       <% end %>
 
       <% layout.main do %>
-        <main class="p-8">
+        <main class="p-8 bg-background text-foreground">
           <div class="max-w-4xl mx-auto pb-24">
             <% if notice.present? %>
               <div class="mb-4 rounded-lg border border-border bg-muted px-4 py-3 text-sm">

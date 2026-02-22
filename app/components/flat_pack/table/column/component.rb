@@ -84,7 +84,7 @@ module FlatPack
         end
 
         def header_classes
-          "px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider"
+          "px-[var(--table-padding)] py-[var(--table-padding)] text-left text-xs font-medium text-muted-foreground uppercase tracking-wider"
         end
 
         def sortable_header_classes
@@ -92,7 +92,7 @@ module FlatPack
         end
 
         def cell_classes
-          "px-4 py-3 text-sm text-foreground"
+          "px-[var(--table-padding)] py-[var(--table-padding)] text-sm text-foreground"
         end
       end
     end

@@ -63,11 +63,16 @@ module FlatPack
       end
 
       def render_native_select
-        tag.select(**select_attributes) do
+        content_tag(:div, class: "relative") do
           safe_join([
-            render_placeholder_option,
-            *@options.map { |option| render_option(option) }
-          ].compact)
+            tag.select(**select_attributes) do
+              safe_join([
+                render_placeholder_option,
+                *@options.map { |option| render_option(option) }
+              ].compact)
+            end,
+            render_chevron_icon(include_target: false)
+          ])
         end
       end
 
@@ -182,7 +187,9 @@ module FlatPack
           disabled: option[:disabled])
       end
 
-      def render_chevron_icon
+      def render_chevron_icon(include_target: true)
+        icon_data = include_target ? {flat_pack__select_target: "chevron"} : nil
+
         content_tag(:span, class: "absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none") do
           content_tag(:svg,
             xmlns: "http://www.w3.org/2000/svg",
@@ -195,7 +202,7 @@ module FlatPack
             "stroke-linecap": "round",
             "stroke-linejoin": "round",
             class: "lucide lucide-chevron-down text-muted-foreground",
-            data: {flat_pack__select_target: "chevron"}) do
+            data: icon_data) do
             tag.path(d: "m6 9 6 6 6-6")
           end
         end
@@ -237,9 +244,10 @@ module FlatPack
           "w-full",
           "rounded-md",
           "border",
+          "appearance-none",
           "bg-background",
           "text-foreground",
-          "px-3 py-3",
+          "px-[var(--form-control-padding)] py-[var(--form-control-padding)]",
           "pr-10",
           "text-sm",
           "transition-colors duration-base",
@@ -264,7 +272,7 @@ module FlatPack
           "border",
           "bg-background",
           "text-foreground",
-          "px-3 py-3",
+          "px-[var(--form-control-padding)] py-[var(--form-control-padding)]",
           "pr-10",
           "text-sm text-left",
           "transition-colors duration-base",
@@ -286,12 +294,12 @@ module FlatPack
       end
 
       def search_input_classes
-        "w-full px-2 py-1.5 text-sm rounded-sm border border-border bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+        "w-full px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-sm border border-border bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
       end
 
       def custom_option_classes(selected, disabled)
         base = [
-          "px-3 py-2",
+          "px-[var(--form-control-padding)] py-[var(--form-control-padding)]",
           "text-sm",
           "rounded-sm",
           "transition-colors duration-base"

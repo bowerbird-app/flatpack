@@ -72,9 +72,10 @@ module FlatPack
           "sticky",
           "top-0",
           "z-10",
-          "bg-background/80",
+          "bg-top-nav-background",
           "backdrop-blur-lg",
-          "border-border",
+          "border-b",
+          "border-top-nav-border",
           "px-4",
           "py-0"
         )

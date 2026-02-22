@@ -4,204 +4,595 @@
     description: "Explore FlatPack's color palettes, semantic tokens, and theme switching capabilities."
   ) %>
 
-  <!-- Theme Colors Showcase -->
+  <!-- How Theming Works -->
   <div class="space-y-6">
-    <h2 class="text-2xl font-semibold text-foreground">Semantic Colors</h2>
-    <p class="text-sm text-muted-foreground">These colors adapt to the active theme and generate native Tailwind utilities.</p>
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "How Theming Works",
+      subtitle: "FlatPack uses Tailwind v4 @theme tokens and per-theme variable overrides.",
+      anchor_link: true
+    ) %>
 
-    <!-- Primary Colors -->
-    <div class="space-y-2">
-      <h3 class="text-lg font-medium text-foreground">Primary</h3>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="space-y-2">
-          <div class="h-24 rounded-md bg-primary flex items-center justify-center">
-            <span class="text-primary-text font-mono text-sm">bg-primary</span>
-          </div>
-          <p class="text-xs text-muted-foreground font-mono">text-primary-text</p>
-        </div>
-        <div class="space-y-2">
-          <div class="h-24 rounded-md bg-primary-hover flex items-center justify-center">
-            <span class="text-primary-text font-mono text-sm">bg-primary-hover</span>
-          </div>
-          <p class="text-xs text-muted-foreground">Hover state</p>
-        </div>
-      </div>
+    <div class="p-4 border border-border rounded-lg bg-background space-y-3">
+      <p class="text-sm text-muted-foreground">
+        Themes are defined with Tailwind v4 tokens (for example <code class="font-mono text-xs">--color-primary</code>,
+        <code class="font-mono text-xs">--radius-md</code>, and <code class="font-mono text-xs">--shadow-md</code>).
+        Tailwind then generates semantic utilities like <code class="font-mono text-xs">bg-primary</code>,
+        <code class="font-mono text-xs">text-foreground</code>, and <code class="font-mono text-xs">border-border</code>.
+      </p>
+      <p class="text-sm text-muted-foreground">
+        To add a new theme, define the same variable names under a new selector
+        (for example <code class="font-mono text-xs">[data-theme=\"forest\"]</code>) and provide different values.
+        Components keep the same class names, and only token values change.
+      </p>
     </div>
+  </div>
 
-    <!-- Secondary Colors -->
-    <div class="space-y-2">
-      <h3 class="text-lg font-medium text-foreground">Secondary</h3>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="space-y-2">
-          <div class="h-24 rounded-md bg-secondary border border-border flex items-center justify-center">
-            <span class="text-secondary-text font-mono text-sm">bg-secondary</span>
-          </div>
-          <p class="text-xs text-muted-foreground font-mono">text-secondary-text</p>
-        </div>
-        <div class="space-y-2">
-          <div class="h-24 rounded-md bg-secondary-hover border border-border flex items-center justify-center">
-            <span class="text-secondary-text font-mono text-sm">bg-secondary-hover</span>
-          </div>
-          <p class="text-xs text-muted-foreground">Hover state</p>
-        </div>
+  <!-- Theme Variable Reference -->
+  <div class="space-y-6">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Theme Variable Reference",
+      subtitle: "Complete list of Tailwind v4 @theme tokens you can customize per theme.",
+      anchor_link: true
+    ) %>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div class="p-4 border border-border rounded-lg bg-background space-y-2">
+        <h3 class="text-base font-medium text-foreground">Color Tokens</h3>
+        <ul class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-xs font-mono text-muted-foreground">
+          <li>--color-primary</li>
+          <li>--color-primary-hover</li>
+          <li>--color-primary-text</li>
+          <li>--color-secondary</li>
+          <li>--color-secondary-hover</li>
+          <li>--color-secondary-text</li>
+          <li>--color-ghost</li>
+          <li>--color-ghost-hover</li>
+          <li>--color-ghost-text</li>
+          <li>--color-success</li>
+          <li>--color-success-hover</li>
+          <li>--color-success-text</li>
+          <li>--color-warning</li>
+          <li>--color-warning-hover</li>
+          <li>--color-warning-text</li>
+          <li>--color-destructive</li>
+          <li>--color-destructive-hover</li>
+          <li>--color-destructive-text</li>
+          <li>--color-background</li>
+          <li>--color-foreground</li>
+          <li>--color-muted</li>
+          <li>--color-muted-foreground</li>
+          <li>--color-border</li>
+          <li>--color-border-hover</li>
+          <li>--color-modal-backdrop</li>
+          <li>--color-sidebar-background</li>
+          <li>--color-sidebar-border</li>
+          <li>--color-top-nav-background</li>
+          <li>--color-top-nav-border</li>
+          <li>--color-ring</li>
+        </ul>
       </div>
-    </div>
 
-    <!-- Status Colors -->
-    <div class="space-y-2">
-      <h3 class="text-lg font-medium text-foreground">Status</h3>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="space-y-2">
-          <div class="h-24 rounded-md bg-success flex items-center justify-center">
-            <span class="text-success-text font-mono text-sm">bg-success</span>
-          </div>
-          <p class="text-xs text-muted-foreground">Success / positive actions</p>
-        </div>
-        <div class="space-y-2">
-          <div class="h-24 rounded-md bg-warning flex items-center justify-center">
-            <span class="text-warning-text font-mono text-sm">bg-warning</span>
-          </div>
-          <p class="text-xs text-muted-foreground">Warning / caution</p>
-        </div>
-        <div class="space-y-2">
-          <div class="h-24 rounded-md bg-destructive flex items-center justify-center">
-            <span class="text-destructive-text font-mono text-sm">bg-destructive</span>
-          </div>
-          <p class="text-xs text-muted-foreground">Destructive / error</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Ghost/Muted Colors -->
-    <div class="space-y-2">
-      <h3 class="text-lg font-medium text-foreground">Neutral</h3>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="space-y-2">
-          <div class="h-24 rounded-md bg-background border border-border flex items-center justify-center">
-            <span class="text-foreground font-mono text-sm">bg-background</span>
-          </div>
-          <p class="text-xs text-muted-foreground font-mono">text-foreground</p>
-        </div>
-        <div class="space-y-2">
-          <div class="h-24 rounded-md bg-muted flex items-center justify-center">
-            <span class="text-muted-foreground font-mono text-sm">bg-muted</span>
-          </div>
-          <p class="text-xs text-muted-foreground font-mono">text-muted-foreground</p>
-        </div>
-        <div class="space-y-2">
-          <div class="h-24 rounded-md bg-ghost-hover border border-border flex items-center justify-center">
-            <span class="text-ghost-text font-mono text-sm">bg-ghost-hover</span>
-          </div>
-          <p class="text-xs text-muted-foreground">Subtle hover state</p>
-        </div>
+      <div class="p-4 border border-border rounded-lg bg-background space-y-2">
+        <h3 class="text-base font-medium text-foreground">Radius, Shadow, Backdrop, Spacing, and Duration Tokens</h3>
+        <ul class="space-y-1 text-xs font-mono text-muted-foreground">
+          <li>--radius-sm</li>
+          <li>--radius-md</li>
+          <li>--radius-lg</li>
+          <li>--radius-xl</li>
+          <li>--card-padding</li>
+          <li>--form-control-padding</li>
+          <li>--table-padding</li>
+          <li>--shadow-sm</li>
+          <li>--shadow-md</li>
+          <li>--shadow-lg</li>
+          <li>--shadow-button</li>
+          <li>--shadow-button-active</li>
+          <li>--blur-modal-backdrop</li>
+          <li>--duration-fast</li>
+          <li>--duration-base</li>
+          <li>--duration-slow</li>
+        </ul>
       </div>
     </div>
   </div>
 
-  <!-- Border Radius -->
-  <div class="space-y-6">
-    <h2 class="text-2xl font-semibold text-foreground">Border Radius</h2>
-    <p class="text-sm text-muted-foreground">Consistent rounded corners across all components.</p>
-    
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-      <div class="space-y-2">
-        <div class="h-24 rounded-sm bg-muted border border-border flex items-center justify-center">
-          <span class="text-foreground font-mono text-sm">rounded-sm</span>
-        </div>
-        <p class="text-xs text-muted-foreground">0.25rem</p>
-      </div>
-      <div class="space-y-2">
-        <div class="h-24 rounded-md bg-muted border border-border flex items-center justify-center">
-          <span class="text-foreground font-mono text-sm">rounded-md</span>
-        </div>
-        <p class="text-xs text-muted-foreground">0.375rem (default)</p>
-      </div>
-      <div class="space-y-2">
-        <div class="h-24 rounded-lg bg-muted border border-border flex items-center justify-center">
-          <span class="text-foreground font-mono text-sm">rounded-lg</span>
-        </div>
-        <p class="text-xs text-muted-foreground">0.5rem</p>
-      </div>
-      <div class="space-y-2">
-        <div class="h-24 rounded-xl bg-muted border border-border flex items-center justify-center">
-          <span class="text-foreground font-mono text-sm">rounded-xl</span>
-        </div>
-        <p class="text-xs text-muted-foreground">0.75rem</p>
+  <!-- Theme Demo Controls + Live Demos -->
+  <div class="space-y-6" data-controller="flat-pack--theme theme-demo">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Theme Demos",
+      subtitle: "Pick a theme tab to update all color demos and the variables code block below.",
+      anchor_link: true
+    ) %>
+
+    <div class="border-b border-border" role="tablist" aria-label="Theme demo tabs">
+      <div class="flex gap-1">
+        <button
+          type="button"
+          role="tab"
+          data-theme-demo-target="tab"
+          data-theme-value="system"
+          data-action="click->flat-pack--theme#switch click->theme-demo#select"
+          class="px-4 py-2 text-sm font-medium rounded-t-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        >
+          System
+        </button>
+        <button
+          type="button"
+          role="tab"
+          data-theme-demo-target="tab"
+          data-theme-value="light"
+          data-action="click->flat-pack--theme#switch click->theme-demo#select"
+          class="px-4 py-2 text-sm font-medium rounded-t-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        >
+          Light
+        </button>
+        <button
+          type="button"
+          role="tab"
+          data-theme-demo-target="tab"
+          data-theme-value="dark"
+          data-action="click->flat-pack--theme#switch click->theme-demo#select"
+          class="px-4 py-2 text-sm font-medium rounded-t-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        >
+          Dark
+        </button>
+        <button
+          type="button"
+          role="tab"
+          data-theme-demo-target="tab"
+          data-theme-value="ocean"
+          data-action="click->flat-pack--theme#switch click->theme-demo#select"
+          class="px-4 py-2 text-sm font-medium rounded-t-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        >
+          Ocean
+        </button>
+        <button
+          type="button"
+          role="tab"
+          data-theme-demo-target="tab"
+          data-theme-value="rounded"
+          data-action="click->flat-pack--theme#switch click->theme-demo#select"
+          class="px-4 py-2 text-sm font-medium rounded-t-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        >
+          Rounded
+        </button>
       </div>
     </div>
-  </div>
 
-  <!-- Shadows -->
-  <div class="space-y-6">
-    <h2 class="text-2xl font-semibold text-foreground">Shadows</h2>
-    <p class="text-sm text-muted-foreground">Elevation shadows that adapt to dark mode.</p>
-    
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <!-- Semantic Colors -->
+    <div class="space-y-6">
+      <%= render FlatPack::SectionTitle::Component.new(
+        title: "Semantic Colors",
+        subtitle: "These colors adapt to the active theme and generate native Tailwind utilities.",
+        anchor_link: true
+      ) %>
+
       <div class="space-y-2">
-        <div class="h-24 rounded-md bg-background border border-border shadow-sm flex items-center justify-center">
-          <span class="text-foreground font-mono text-sm">shadow-sm</span>
+        <h3 class="text-lg font-medium text-foreground">Primary</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="space-y-2">
+            <div class="h-24 rounded-md bg-primary flex items-center justify-center">
+              <span class="text-primary-text font-mono text-sm">bg-primary</span>
+            </div>
+            <p class="text-xs text-muted-foreground font-mono">text-primary-text</p>
+          </div>
+          <div class="space-y-2">
+            <div class="h-24 rounded-md bg-primary-hover flex items-center justify-center">
+              <span class="text-primary-text font-mono text-sm">bg-primary-hover</span>
+            </div>
+            <p class="text-xs text-muted-foreground">Hover state</p>
+          </div>
         </div>
-        <p class="text-xs text-muted-foreground">Subtle depth</p>
       </div>
+
       <div class="space-y-2">
-        <div class="h-24 rounded-md bg-background border border-border shadow-md flex items-center justify-center">
-          <span class="text-foreground font-mono text-sm">shadow-md</span>
+        <h3 class="text-lg font-medium text-foreground">Secondary</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="space-y-2">
+            <div class="h-24 rounded-md bg-secondary border border-border flex items-center justify-center">
+              <span class="text-secondary-text font-mono text-sm">bg-secondary</span>
+            </div>
+            <p class="text-xs text-muted-foreground font-mono">text-secondary-text</p>
+          </div>
+          <div class="space-y-2">
+            <div class="h-24 rounded-md bg-secondary-hover border border-border flex items-center justify-center">
+              <span class="text-secondary-text font-mono text-sm">bg-secondary-hover</span>
+            </div>
+            <p class="text-xs text-muted-foreground">Hover state</p>
+          </div>
         </div>
-        <p class="text-xs text-muted-foreground">Medium elevation</p>
       </div>
+
       <div class="space-y-2">
-        <div class="h-24 rounded-md bg-background border border-border shadow-lg flex items-center justify-center">
-          <span class="text-foreground font-mono text-sm">shadow-lg</span>
+        <h3 class="text-lg font-medium text-foreground">Status</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="space-y-2">
+            <div class="h-24 rounded-md bg-success flex items-center justify-center">
+              <span class="text-success-text font-mono text-sm">bg-success</span>
+            </div>
+            <p class="text-xs text-muted-foreground">Success / positive actions</p>
+          </div>
+          <div class="space-y-2">
+            <div class="h-24 rounded-md bg-warning flex items-center justify-center">
+              <span class="text-warning-text font-mono text-sm">bg-warning</span>
+            </div>
+            <p class="text-xs text-muted-foreground">Warning / caution</p>
+          </div>
+          <div class="space-y-2">
+            <div class="h-24 rounded-md bg-destructive flex items-center justify-center">
+              <span class="text-destructive-text font-mono text-sm">bg-destructive</span>
+            </div>
+            <p class="text-xs text-muted-foreground">Destructive / error</p>
+          </div>
         </div>
-        <p class="text-xs text-muted-foreground">High elevation</p>
       </div>
+
       <div class="space-y-2">
-        <div class="h-24 rounded-md bg-background border border-border shadow-button flex items-center justify-center">
-          <span class="text-foreground font-mono text-sm">shadow-button</span>
+        <h3 class="text-lg font-medium text-foreground">Neutral</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="space-y-2">
+            <div class="h-24 rounded-md bg-background border border-border flex items-center justify-center">
+              <span class="text-foreground font-mono text-sm">bg-background</span>
+            </div>
+            <p class="text-xs text-muted-foreground font-mono">text-foreground</p>
+          </div>
+          <div class="space-y-2">
+            <div class="h-24 rounded-md bg-muted flex items-center justify-center">
+              <span class="text-muted-foreground font-mono text-sm">bg-muted</span>
+            </div>
+            <p class="text-xs text-muted-foreground font-mono">text-muted-foreground</p>
+          </div>
+          <div class="space-y-2">
+            <div class="h-24 rounded-md bg-ghost-hover border border-border flex items-center justify-center">
+              <span class="text-ghost-text font-mono text-sm">bg-ghost-hover</span>
+            </div>
+            <p class="text-xs text-muted-foreground">Subtle hover state</p>
+          </div>
         </div>
-        <p class="text-xs text-muted-foreground">Button shadow</p>
-        </div>
+      </div>
     </div>
-  </div>
 
-  <!-- Implementation Example -->
-  <div class="space-y-6">
-    <h2 class="text-2xl font-semibold text-foreground">Implementation</h2>
-    <p class="text-sm text-muted-foreground">Use native Tailwind utilities powered by the @theme block.</p>
-    
-    <div class="p-6 bg-muted rounded-lg">
-      <pre class="text-sm text-foreground overflow-x-auto"><code>&lt;!-- Tailwind v4 native utilities --&gt;
-&lt;button class="bg-primary hover:bg-primary-hover text-primary-text rounded-md shadow-sm"&gt;
-  Primary Button
-&lt;/button&gt;
+    <!-- Border Radius -->
+    <div class="space-y-6">
+      <%= render FlatPack::SectionTitle::Component.new(
+        title: "Border Radius",
+        subtitle: "Consistent rounded corners across all components.",
+        anchor_link: true
+      ) %>
 
-&lt;div class="bg-background text-foreground border border-border rounded-lg p-4"&gt;
-  Card with semantic colors
-&lt;/div&gt;</code></pre>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="space-y-2">
+          <div class="h-24 rounded-sm bg-muted border border-border flex items-center justify-center">
+            <span class="text-foreground font-mono text-sm">rounded-sm</span>
+          </div>
+          <p class="text-xs text-muted-foreground">0.25rem</p>
+        </div>
+        <div class="space-y-2">
+          <div class="h-24 rounded-md bg-muted border border-border flex items-center justify-center">
+            <span class="text-foreground font-mono text-sm">rounded-md</span>
+          </div>
+          <p class="text-xs text-muted-foreground">0.375rem (default)</p>
+        </div>
+        <div class="space-y-2">
+          <div class="h-24 rounded-lg bg-muted border border-border flex items-center justify-center">
+            <span class="text-foreground font-mono text-sm">rounded-lg</span>
+          </div>
+          <p class="text-xs text-muted-foreground">0.5rem</p>
+        </div>
+        <div class="space-y-2">
+          <div class="h-24 rounded-xl bg-muted border border-border flex items-center justify-center">
+            <span class="text-foreground font-mono text-sm">rounded-xl</span>
+          </div>
+          <p class="text-xs text-muted-foreground">0.75rem</p>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <!-- Available Themes -->
-  <div class="space-y-6">
-    <h2 class="text-2xl font-semibold text-foreground">Available Themes</h2>
-    <p class="text-sm text-muted-foreground">Switch between different color palettes using the theme switcher in the top navigation.</p>
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      <div class="p-4 border border-border rounded-lg space-y-2">
-        <h3 class="font-medium text-foreground">System</h3>
-        <p class="text-xs text-muted-foreground">Follows your OS preference</p>
+    <!-- Shadows -->
+    <div class="space-y-6">
+      <%= render FlatPack::SectionTitle::Component.new(
+        title: "Shadows",
+        subtitle: "Elevation shadows that adapt to dark mode.",
+        anchor_link: true
+      ) %>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="space-y-2">
+          <div class="h-24 rounded-md bg-background border border-border shadow-sm flex items-center justify-center">
+            <span class="text-foreground font-mono text-sm">shadow-sm</span>
+          </div>
+          <p class="text-xs text-muted-foreground">Subtle depth</p>
+        </div>
+        <div class="space-y-2">
+          <div class="h-24 rounded-md bg-background border border-border shadow-md flex items-center justify-center">
+            <span class="text-foreground font-mono text-sm">shadow-md</span>
+          </div>
+          <p class="text-xs text-muted-foreground">Medium elevation</p>
+        </div>
+        <div class="space-y-2">
+          <div class="h-24 rounded-md bg-background border border-border shadow-lg flex items-center justify-center">
+            <span class="text-foreground font-mono text-sm">shadow-lg</span>
+          </div>
+          <p class="text-xs text-muted-foreground">High elevation</p>
+        </div>
+        <div class="space-y-2">
+          <div class="h-24 rounded-md bg-background border border-border shadow-button flex items-center justify-center">
+            <span class="text-foreground font-mono text-sm">shadow-button</span>
+          </div>
+          <p class="text-xs text-muted-foreground">Button shadow</p>
+        </div>
       </div>
-      <div class="p-4 border border-border rounded-lg space-y-2">
-        <h3 class="font-medium text-foreground">Light</h3>
-        <p class="text-xs text-muted-foreground">Bright, clean interface</p>
+    </div>
+
+    <!-- Variables Used By This Theme -->
+    <div class="space-y-6">
+      <%= render FlatPack::SectionTitle::Component.new(
+        title: "Variables used by this theme",
+        subtitle: "The code block below tracks the currently selected theme tab.",
+        anchor_link: true
+      ) %>
+
+      <div data-theme-demo-target="panel" data-theme="system" class="hidden">
+        <%= render FlatPack::CodeBlock::Component.new(
+          title: "System Theme Variables",
+          language: "css",
+          code: <<~CODE
+            /* System follows OS preference and resolves to light or dark values at runtime */
+            :root {
+              color-scheme: light dark;
+            }
+
+            @media (prefers-color-scheme: dark) {
+              :root {
+                /* Uses the same token set as [data-theme="dark"] */
+                --color-primary: oklch(0.62 0.22 250);
+                --color-primary-hover: oklch(0.72 0.15 250);
+                --color-background: oklch(0.15 0.01 250);
+                --color-foreground: oklch(0.95 0.01 250);
+                --color-border: oklch(0.30 0.02 250);
+                --color-modal-backdrop: rgb(0 0 0 / 0.65);
+                --color-sidebar-background: oklch(0.17 0.01 250);
+                --color-sidebar-border: oklch(0.30 0.02 250);
+                --color-top-nav-background: oklch(0.18 0.01 250);
+                --color-top-nav-border: transparent;
+                --card-padding: 1rem;
+                --form-control-padding: 0.75rem;
+                --table-padding: 0.75rem;
+                --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5);
+                --blur-modal-backdrop: 3px;
+              }
+            }
+          CODE
+        ) %>
       </div>
-      <div class="p-4 border border-border rounded-lg space-y-2">
-        <h3 class="font-medium text-foreground">Dark</h3>
-        <p class="text-xs text-muted-foreground">Reduced eye strain</p>
+
+      <div data-theme-demo-target="panel" data-theme="light" class="hidden">
+        <%= render FlatPack::CodeBlock::Component.new(
+          title: "Light Theme Variables",
+          language: "css",
+          code: <<~CODE
+            :root,
+            [data-theme="light"] {
+              --color-primary: oklch(0.52 0.26 250);
+              --color-primary-hover: oklch(0.42 0.24 250);
+              --color-primary-text: oklch(1.0 0 0);
+              --color-secondary: oklch(0.95 0.01 250);
+              --color-secondary-hover: oklch(0.90 0.02 250);
+              --color-secondary-text: oklch(0.25 0.02 250);
+              --color-ghost: transparent;
+              --color-ghost-hover: oklch(0.96 0.01 250);
+              --color-ghost-text: oklch(0.35 0.02 250);
+              --color-success: oklch(62.7% .194 149.214);
+              --color-success-hover: oklch(57% .194 149.214);
+              --color-success-text: oklch(1.0 0 0);
+              --color-warning: oklch(70.5% 0.213 47.604);
+              --color-warning-hover: oklch(64.6% 0.222 41.116);
+              --color-warning-text: oklch(1.0 0 0);
+              --color-destructive: oklch(62.8% .257 29.234);
+              --color-destructive-hover: oklch(57% .257 29.234);
+              --color-destructive-text: oklch(1.0 0 0);
+              --color-background: oklch(1.0 0 0);
+              --color-foreground: oklch(0.20 0.01 250);
+              --color-muted: oklch(0.96 0.01 250);
+              --color-muted-foreground: oklch(0.45 0.01 250);
+              --color-border: oklch(0.89 0.01 250);
+              --color-border-hover: oklch(0.82 0.02 250);
+              --color-modal-backdrop: rgb(0 0 0 / 0.5);
+              --color-sidebar-background: oklch(1.0 0 0);
+              --color-sidebar-border: oklch(0.89 0.01 250);
+              --color-top-nav-background: oklch(1.0 0 0);
+              --color-top-nav-border: transparent;
+              --color-ring: oklch(0.52 0.26 250);
+              --radius-sm: 0.25rem;
+              --radius-md: 0.375rem;
+              --radius-lg: 0.5rem;
+              --radius-xl: 0.75rem;
+              --card-padding: 1rem;
+              --form-control-padding: 0.75rem;
+              --table-padding: 0.75rem;
+              --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+              --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+              --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+              --shadow-button: 0 0 15px 0px rgba(0, 0, 0, 0.15);
+              --shadow-button-active: 0 0 8px 4px rgba(0, 0, 0, 0.15);
+              --blur-modal-backdrop: 4px;
+              --duration-fast: 150ms;
+              --duration-base: 200ms;
+              --duration-slow: 300ms;
+            }
+          CODE
+        ) %>
       </div>
-      <div class="p-4 border border-border rounded-lg space-y-2">
-        <h3 class="font-medium text-foreground">Ocean</h3>
-        <p class="text-xs text-muted-foreground">Blue-tinted palette</p>
+
+      <div data-theme-demo-target="panel" data-theme="dark" class="hidden">
+        <%= render FlatPack::CodeBlock::Component.new(
+          title: "Dark Theme Variables",
+          language: "css",
+          code: <<~CODE
+            [data-theme="dark"] {
+              --color-primary: oklch(0.62 0.22 250);
+              --color-primary-hover: oklch(0.72 0.15 250);
+              --color-primary-text: oklch(0.15 0.01 250);
+              --color-secondary: oklch(0.20 0.02 250);
+              --color-secondary-hover: oklch(0.25 0.03 250);
+              --color-secondary-text: oklch(0.90 0.01 250);
+              --color-ghost: transparent;
+              --color-ghost-hover: oklch(0.22 0.02 250);
+              --color-ghost-text: oklch(0.85 0.01 250);
+              --color-success: oklch(67% .194 149.214);
+              --color-success-hover: oklch(72% .194 149.214);
+              --color-success-text: oklch(0.15 0.01 250);
+              --color-warning: oklch(75% 0.183 55.934);
+              --color-warning-hover: oklch(70.5% 0.213 47.604);
+              --color-warning-text: oklch(0.15 0.01 250);
+              --color-destructive: oklch(67.8% .257 29.234);
+              --color-destructive-hover: oklch(72% .257 29.234);
+              --color-destructive-text: oklch(0.15 0.01 250);
+              --color-background: oklch(0.15 0.01 250);
+              --color-foreground: oklch(0.95 0.01 250);
+              --color-muted: oklch(0.22 0.02 250);
+              --color-muted-foreground: oklch(0.65 0.01 250);
+              --color-border: oklch(0.30 0.02 250);
+              --color-border-hover: oklch(0.40 0.03 250);
+              --color-modal-backdrop: rgb(0 0 0 / 0.65);
+              --color-sidebar-background: oklch(0.17 0.01 250);
+              --color-sidebar-border: oklch(0.30 0.02 250);
+              --color-top-nav-background: oklch(0.18 0.01 250);
+              --color-top-nav-border: transparent;
+              --color-ring: oklch(0.62 0.22 250);
+              --radius-sm: 0.25rem;
+              --radius-md: 0.375rem;
+              --radius-lg: 0.5rem;
+              --radius-xl: 0.75rem;
+              --card-padding: 1rem;
+              --form-control-padding: 0.75rem;
+              --table-padding: 0.75rem;
+              --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
+              --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5);
+              --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5);
+              --shadow-button: 0 0 15px 0px rgba(142, 142, 142, 0.15);
+              --shadow-button-active: 0 0 8px 4px rgba(142, 142, 142, 0.15);
+              --blur-modal-backdrop: 3px;
+              --duration-fast: 150ms;
+              --duration-base: 200ms;
+              --duration-slow: 300ms;
+            }
+          CODE
+        ) %>
+      </div>
+
+      <div data-theme-demo-target="panel" data-theme="ocean" class="hidden">
+        <%= render FlatPack::CodeBlock::Component.new(
+          title: "Ocean Theme Variables",
+          language: "css",
+          code: <<~CODE
+            [data-theme="ocean"] {
+              --color-primary: oklch(0.52 0.15 220);
+              --color-primary-hover: oklch(0.42 0.18 220);
+              --color-primary-text: oklch(1.0 0 0);
+              --color-secondary: oklch(0.92 0.02 220);
+              --color-secondary-hover: oklch(0.87 0.03 220);
+              --color-secondary-text: oklch(0.25 0.02 220);
+              --color-ghost: transparent;
+              --color-ghost-hover: oklch(0.94 0.02 220);
+              --color-ghost-text: oklch(0.35 0.02 220);
+              --color-success: oklch(62.7% .194 149.214);
+              --color-success-hover: oklch(57% .194 149.214);
+              --color-success-text: oklch(1.0 0 0);
+              --color-warning: oklch(70.5% 0.213 47.604);
+              --color-warning-hover: oklch(64.6% 0.222 41.116);
+              --color-warning-text: oklch(1.0 0 0);
+              --color-destructive: oklch(62.8% .257 29.234);
+              --color-destructive-hover: oklch(57% .257 29.234);
+              --color-destructive-text: oklch(1.0 0 0);
+              --color-background: oklch(0.98 0.01 220);
+              --color-foreground: oklch(0.20 0.02 220);
+              --color-muted: oklch(0.94 0.02 220);
+              --color-muted-foreground: oklch(0.45 0.02 220);
+              --color-border: oklch(0.87 0.02 220);
+              --color-border-hover: oklch(0.80 0.03 220);
+              --color-modal-backdrop: rgb(3 24 47 / 0.45);
+              --color-sidebar-background: oklch(0.96 0.02 220);
+              --color-sidebar-border: oklch(0.87 0.02 220);
+              --color-top-nav-background: oklch(0.97 0.01 220);
+              --color-top-nav-border: transparent;
+              --color-ring: oklch(0.52 0.15 220);
+              --radius-sm: 0.25rem;
+              --radius-md: 0.375rem;
+              --radius-lg: 0.5rem;
+              --radius-xl: 0.75rem;
+              --card-padding: 1rem;
+              --form-control-padding: 0.75rem;
+              --table-padding: 0.75rem;
+              --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+              --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+              --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+              --shadow-button: 0 0 15px 0px rgba(0, 0, 0, 0.15);
+              --shadow-button-active: 0 0 8px 4px rgba(0, 0, 0, 0.15);
+              --blur-modal-backdrop: 5px;
+              --duration-fast: 150ms;
+              --duration-base: 200ms;
+              --duration-slow: 300ms;
+            }
+          CODE
+        ) %>
+      </div>
+
+      <div data-theme-demo-target="panel" data-theme="rounded" class="hidden">
+        <%= render FlatPack::CodeBlock::Component.new(
+          title: "Rounded Theme Variables",
+          language: "css",
+          code: <<~CODE
+            [data-theme="rounded"] {
+              --color-primary: #333;
+              --color-primary-hover: #1f1f1f;
+              --color-primary-text: #fff;
+              --color-secondary: #f5f5f5;
+              --color-secondary-hover: #ebebeb;
+              --color-secondary-text: #333;
+              --color-ghost: transparent;
+              --color-ghost-hover: #f2f2f2;
+              --color-ghost-text: #333;
+              --color-success: oklch(0.72 0.17 152);
+              --color-success-hover: oklch(0.66 0.17 152);
+              --color-success-text: #fff;
+              --color-warning: oklch(0.80 0.15 83);
+              --color-warning-hover: oklch(0.75 0.16 78);
+              --color-warning-text: #1f1f1f;
+              --color-destructive: oklch(0.66 0.22 25);
+              --color-destructive-hover: oklch(0.61 0.22 25);
+              --color-destructive-text: #fff;
+              --color-background: #f8f9fa;
+              --color-foreground: #333;
+              --color-muted: #f7f7f7;
+              --color-muted-foreground: #666;
+              --color-border: #d1d5db;
+              --color-border-hover: #d1d5db;
+              --color-modal-backdrop: rgb(0 0 0 / 0.5);
+              --color-sidebar-background: oklch(1.0 0 0);
+              --color-sidebar-border: #d1d5db;
+              --color-top-nav-background: transparent;
+              --color-top-nav-border: transparent;
+              --color-ring: #333;
+              --card-padding: 1.125rem;
+              --form-control-padding: 0.875rem;
+              --table-padding: 0.875rem;
+              --radius-sm: 0.75rem;
+              --radius-md: 1rem;
+              --radius-lg: 1.5rem;
+              --radius-xl: 2rem;
+              --shadow-sm: 0 2px 6px -2px rgb(0 0 0 / 0.08);
+              --shadow-md: 0 8px 18px -6px rgb(0 0 0 / 0.14);
+              --shadow-lg: 0 18px 30px -10px rgb(0 0 0 / 0.18);
+              --shadow-button: 0 8px 18px -8px rgb(0 0 0 / 0.22);
+              --shadow-button-active: 0 4px 10px -6px rgb(0 0 0 / 0.28);
+              --blur-modal-backdrop: 4px;
+              --duration-fast: 150ms;
+              --duration-base: 200ms;
+              --duration-slow: 300ms;
+            }
+          CODE
+        ) %>
       </div>
     </div>
   </div>

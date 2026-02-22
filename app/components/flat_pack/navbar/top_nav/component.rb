@@ -48,6 +48,8 @@ module FlatPack
         def nav_classes
           classes(
             "flex items-center justify-between gap-4",
+            "bg-top-nav-background",
+            "border-b border-top-nav-border",
             "px-6"
           )
         end

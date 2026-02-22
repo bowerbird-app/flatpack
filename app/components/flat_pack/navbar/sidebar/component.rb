@@ -65,8 +65,8 @@ module FlatPack
             "inset-y-0 left-0",
             "z-40",
             "flex-col",
-            "bg-background",
-            "border-r border-border",
+            "bg-sidebar-background",
+            "border-r border-sidebar-border",
             "shadow-lg md:shadow-none",
             "-translate-x-full md:translate-x-0",
             "transition-transform duration-300"

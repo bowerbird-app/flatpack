@@ -138,7 +138,7 @@ module FlatPack
           "border",
           "bg-background",
           "text-foreground",
-          "px-3 py-3",
+          "px-[var(--form-control-padding)] py-[var(--form-control-padding)]",
           "pr-10",
           "text-sm",
           "transition-colors duration-base",

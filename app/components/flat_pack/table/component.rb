@@ -194,11 +194,11 @@ module FlatPack
       end
 
       def header_cell_classes
-        "px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider"
+        "px-[var(--table-padding)] py-[var(--table-padding)] text-left text-xs font-medium text-muted-foreground uppercase tracking-wider"
       end
 
       def body_cell_classes
-        "px-4 py-3 text-sm text-foreground"
+        "px-[var(--table-padding)] py-[var(--table-padding)] text-sm text-foreground"
       end
 
       def column_count

@@ -30,7 +30,7 @@ FileUtils.chdir APP_ROOT do
   system! "bin/rails db:reset" if ARGV.include?("--reset")
 
   puts "\n== Building Tailwind CSS =="
-  system! "bundle exec tailwindcss -i app/assets/stylesheets/application.css -o app/assets/builds/application.css"
+  system! "bundle exec tailwindcss -i app/assets/tailwind/application.css -o app/assets/builds/tailwind.css"
 
   puts "\n== Removing old logs and tempfiles =="
   system! "bin/rails log:clear tmp:clear"

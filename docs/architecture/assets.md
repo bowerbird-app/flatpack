@@ -82,7 +82,7 @@ pin_all_from File.expand_path("../app/javascript/flat_pack/controllers", __dir__
 
 ### CSS-First Approach
 
-Tailwind CSS 4 works differently from v3:
+Tailwind CSS 4 uses a CSS-first configuration model:
 
 1. **No `tailwind.config.js`** - Configuration via CSS
 2. **`@theme` directive** - Define variables in CSS

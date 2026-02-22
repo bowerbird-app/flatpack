@@ -41,7 +41,10 @@
       </table>
     </div>
 
-    <%= render FlatPack::Pagination::Component.new(pagy: @pagy) %>
+    <%= render FlatPack::Pagination::Component.new(
+      pagy: @pagy,
+      turbo_frame: "pagination_table"
+    ) %>
   <% end %>
   
   <%= render FlatPack::CodeBlock::Component.new(
@@ -104,7 +107,11 @@
         </div>
       <% end %>
       <% card.footer do %>
-        <%= render FlatPack::Pagination::Component.new(pagy: @pagy, size: :compact) %>
+        <%= render FlatPack::Pagination::Component.new(
+          pagy: @pagy,
+          size: :compact,
+          turbo_frame: "pagination_in_card"
+        ) %>
       <% end %>
     <% end %>
   <% end %>

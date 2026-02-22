@@ -16,6 +16,8 @@ module FlatPack
         pagy: nil,
         size: :normal,
         mode: :standard,
+        anchor: nil,
+        turbo_frame: nil,
         infinite_url: nil,
         has_more: true,
         loading_text: "Loading more...",
@@ -26,6 +28,8 @@ module FlatPack
         @pagy = pagy
         @size = size.to_sym
         @mode = mode.to_sym
+        @anchor = anchor.to_s.delete_prefix("#").presence
+        @turbo_frame = turbo_frame.to_s.presence
         @infinite_url = infinite_url
         @has_more = has_more
         @loading_text = loading_text
@@ -99,7 +103,8 @@ module FlatPack
           link_to(
             page_url(@pagy.prev),
             class: page_button_classes,
-            aria: {label: "Previous page"}
+            aria: {label: "Previous page"},
+            data: link_data_attributes
           ) do
             previous_icon
           end
@@ -120,7 +125,8 @@ module FlatPack
           link_to(
             page_url(@pagy.next),
             class: page_button_classes,
-            aria: {label: "Next page"}
+            aria: {label: "Next page"},
+            data: link_data_attributes
           ) do
             next_icon
           end
@@ -159,7 +165,8 @@ module FlatPack
             page.to_s,
             page_url(page),
             class: page_button_classes,
-            aria: {label: "Page #{page}"}
+            aria: {label: "Page #{page}"},
+            data: link_data_attributes
           )
         end
       end
@@ -206,13 +213,31 @@ module FlatPack
       def page_url(page)
         return "#" unless page
 
-        # Try to use pagy_url_for if available (from Pagy helpers)
-        if helpers.respond_to?(:pagy_url_for)
-          helpers.pagy_url_for(@pagy, page)
-        else
-          # Fallback: just add page param
-          "?page=#{page}"
-        end
+        url =
+          # Try to use pagy_url_for if available (from Pagy helpers)
+          if helpers.respond_to?(:pagy_url_for)
+            helpers.pagy_url_for(@pagy, page)
+          else
+            # Fallback: just add page param
+            "?page=#{page}"
+          end
+
+        append_anchor(url)
+      end
+
+      def append_anchor(url)
+        return url unless @anchor
+        return url if url.include?("#")
+
+        "#{url}##{@anchor}"
+      end
+
+      def link_data_attributes
+        return nil unless @turbo_frame
+
+        {
+          turbo_frame: @turbo_frame
+        }
       end
 
       def previous_icon

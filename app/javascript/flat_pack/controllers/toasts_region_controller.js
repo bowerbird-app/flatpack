@@ -30,13 +30,27 @@ export default class extends Controller {
   }
 
   addToast(event) {
-    const { type, message, timeout } = event.currentTarget.dataset
+    const trigger = this.resolveTriggerElement(event)
+    if (!trigger) return
+
+    const { type, message, timeout } = trigger.dataset
 
     this.appendToast({
       type: type || "info",
       message,
       timeout: this.parseTimeout(timeout)
     })
+  }
+
+  resolveTriggerElement(event) {
+    if (event.currentTarget?.dataset?.message) return event.currentTarget
+
+    // When the listener is delegated, currentTarget may be the controller root.
+    if (event.target instanceof Element) {
+      return event.target.closest('[data-action*="flat-pack--toasts-region#addToast"]')
+    }
+
+    return null
   }
 
   addToastFromEvent(event) {
@@ -59,8 +73,8 @@ export default class extends Controller {
   buildContainer() {
     const container = document.createElement("div")
     container.className = "fixed z-[60] flex flex-col gap-3 pointer-events-none"
-    container.style.top = "calc(72px + var(--spacing-md))"
-    container.style.right = "var(--spacing-md)"
+    container.style.top = "calc(72px + calc(var(--spacing) * 4))"
+    container.style.right = "calc(var(--spacing) * 4)"
     container.setAttribute("aria-live", "polite")
     container.setAttribute("aria-atomic", "false")
     document.body.appendChild(container)

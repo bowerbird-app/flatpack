@@ -19,7 +19,7 @@ module FlatPack
         private
 
         def header_classes
-          classes = ["px-6 py-4"]
+          classes = ["p-[var(--card-padding)]"]
           classes << "border-b border-border" if @divider
           classes.join(" ")
         end
