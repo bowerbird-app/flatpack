@@ -10,7 +10,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="m-0 h-full overflow-hidden overscroll-none">
+  <body class="m-0 h-full overflow-hidden overscroll-none" data-controller="dark-mode">
     <%= render "layouts/icon_sprite" %>
 
     <% sidebar_side = params[:side].in?(%w[left right]) ? params[:side].to_sym : :left %>
@@ -308,6 +308,7 @@
                   class="p-2 rounded-lg hover:bg-muted transition-colors"
                   aria-label="Theme switcher"
                   data-action="click->flat-pack--button-dropdown#toggle"
+                  data-flat-pack--button-dropdown-target="trigger"
                 >
                   <%= render FlatPack::Shared::IconComponent.new(name: :circle, size: :md) %>
                 </button>
@@ -349,6 +350,16 @@
                   </button>
                 </div>
               </div>
+
+              <%= render FlatPack::Switch::Component.new(
+                name: "dark_mode",
+                label: "Dark mode",
+                data: {
+                  dark_mode_target: "toggle",
+                  action: "change->dark-mode#toggle"
+                },
+                aria: { label: "Toggle dark mode" }
+              ) %>
 
             <%= render FlatPack::Button::Component.new(
               icon: "bell",
