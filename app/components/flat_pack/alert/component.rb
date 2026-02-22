@@ -5,29 +5,29 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-white" "text-black" "border" "border-black/20" "bg-success" "text-success-text" "bg-warning" "text-warning-text" "bg-destructive" "text-destructive-text"
+      # "bg-white" "text-black" "border" "border-info-border" "bg-success-bg" "border-success-border" "text-success-text" "bg-warning-bg" "border-warning-border" "text-warning-text" "bg-destructive-bg" "border-destructive-border" "text-destructive-text"
       VARIANTS = {
         info: {
-          border: "border border-black/20",
+          border: "border border-info-border",
           bg: "bg-white",
           text: "text-black",
           icon: "info"
         },
         success: {
-          border: nil,
-          bg: "bg-success",
+          border: "border border-success-border",
+          bg: "bg-success-bg",
           text: "text-success-text",
           icon: "check-circle"
         },
         warning: {
-          border: nil,
-          bg: "bg-warning",
+          border: "border border-warning-border",
+          bg: "bg-warning-bg",
           text: "text-warning-text",
           icon: "alert-triangle"
         },
         danger: {
-          border: nil,
-          bg: "bg-destructive",
+          border: "border border-destructive-border",
+          bg: "bg-destructive-bg",
           text: "text-destructive-text",
           icon: "alert-circle"
         }

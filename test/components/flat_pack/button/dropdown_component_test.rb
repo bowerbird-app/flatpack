@@ -16,7 +16,7 @@ module FlatPack
       def test_renders_dropdown_with_chevron_icon
         render_inline(Dropdown::Component.new(text: "Actions"))
 
-        assert_selector "button svg[data-button-dropdown-target='chevron']"
+        assert_selector "button svg[data-flat-pack--button-dropdown-target='chevron']"
       end
 
       def test_renders_menu_with_hidden_class
@@ -53,14 +53,14 @@ module FlatPack
         render_inline(Dropdown::Component.new(text: "Actions", style: :success))
 
         assert_selector "button"
-        assert_includes page.native.to_html, "bg-success"
+        assert_includes page.native.to_html, "bg-success-bg"
       end
 
       def test_renders_warning_style
         render_inline(Dropdown::Component.new(text: "Actions", style: :warning))
 
         assert_selector "button"
-        assert_includes page.native.to_html, "bg-warning"
+        assert_includes page.native.to_html, "bg-warning-bg"
       end
 
       # Size variants
@@ -232,25 +232,25 @@ module FlatPack
       def test_renders_stimulus_controller
         render_inline(Dropdown::Component.new(text: "Actions"))
 
-        assert_selector "div[data-controller='button-dropdown']"
+        assert_selector "div[data-controller='flat-pack--button-dropdown']"
       end
 
       def test_renders_stimulus_target_on_trigger
         render_inline(Dropdown::Component.new(text: "Actions"))
 
-        assert_selector "button[data-button-dropdown-target='trigger']"
+        assert_selector "button[data-flat-pack--button-dropdown-target='trigger']"
       end
 
       def test_renders_stimulus_target_on_menu
         render_inline(Dropdown::Component.new(text: "Actions"))
 
-        assert_selector "div[data-button-dropdown-target='menu']"
+        assert_selector "div[data-flat-pack--button-dropdown-target='menu']"
       end
 
       def test_renders_stimulus_action_on_trigger
         render_inline(Dropdown::Component.new(text: "Actions"))
 
-        assert_selector "button[data-action='click->button-dropdown#toggle']"
+        assert_selector "button[data-action='click->flat-pack--button-dropdown#toggle']"
       end
 
       # Max height

@@ -9,12 +9,12 @@ module FlatPack
         # "aspect-[16/9]" "aspect-[4/3]" "aspect-square"
         # Tailwind CSS scanning requires these classes to be present as string literals.
         # DO NOT REMOVE - These duplicates ensure CSS generation:
-        # "px-[var(--card-padding)] pt-[var(--card-padding)]"
+        # "px-[var(--card-padding-sm)]" "pt-[var(--card-padding-sm)]" "px-[var(--card-padding-md)]" "pt-[var(--card-padding-md)]" "px-[var(--card-padding-lg)]" "pt-[var(--card-padding-lg)]"
         PADDINGS = {
           none: "",
-          sm: "px-[var(--card-padding)] pt-[var(--card-padding)]",
-          md: "px-[var(--card-padding)] pt-[var(--card-padding)]",
-          lg: "px-[var(--card-padding)] pt-[var(--card-padding)]"
+          sm: "px-[var(--card-padding-sm)] pt-[var(--card-padding-sm)]",
+          md: "px-[var(--card-padding-md)] pt-[var(--card-padding-md)]",
+          lg: "px-[var(--card-padding-lg)] pt-[var(--card-padding-lg)]"
         }.freeze
 
         def initialize(aspect_ratio: nil, padding: :md, **system_arguments)

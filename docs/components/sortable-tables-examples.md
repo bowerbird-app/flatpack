@@ -87,10 +87,10 @@ URL: /tables?sort=status&direction=asc
 ### Sortable Header (Non-sorted)
 
 ```html
-<th class="px-4 py-3 text-left text-xs font-medium text-[var(--color-muted-foreground)] uppercase tracking-wider cursor-pointer select-none">
+<th class="px-4 py-3 text-left text-xs font-medium text-[var(--surface-muted-content-color)] uppercase tracking-wider cursor-pointer select-none">
   <a href="/tables?sort=name&direction=asc" 
      data-turbo-frame="sortable_table"
-     class="group inline-flex items-center gap-1 hover:text-[var(--color-foreground)] transition-colors">
+     class="group inline-flex items-center gap-1 hover:text-[var(--surface-content-color)] transition-colors">
     Name
   </a>
 </th>
@@ -99,10 +99,10 @@ URL: /tables?sort=status&direction=asc
 ### Sortable Header (Sorted Ascending)
 
 ```html
-<th class="px-4 py-3 text-left text-xs font-medium text-[var(--color-muted-foreground)] uppercase tracking-wider cursor-pointer select-none">
+<th class="px-4 py-3 text-left text-xs font-medium text-[var(--surface-muted-content-color)] uppercase tracking-wider cursor-pointer select-none">
   <a href="/tables?sort=name&direction=desc" 
      data-turbo-frame="sortable_table"
-     class="group inline-flex items-center gap-1 hover:text-[var(--color-foreground)] transition-colors">
+     class="group inline-flex items-center gap-1 hover:text-[var(--surface-content-color)] transition-colors">
     Name
     <span class="text-[var(--color-primary)] font-bold">↑</span>
   </a>
@@ -112,10 +112,10 @@ URL: /tables?sort=status&direction=asc
 ### Sortable Header (Sorted Descending)
 
 ```html
-<th class="px-4 py-3 text-left text-xs font-medium text-[var(--color-muted-foreground)] uppercase tracking-wider cursor-pointer select-none">
+<th class="px-4 py-3 text-left text-xs font-medium text-[var(--surface-muted-content-color)] uppercase tracking-wider cursor-pointer select-none">
   <a href="/tables?sort=name&direction=asc" 
      data-turbo-frame="sortable_table"
-     class="group inline-flex items-center gap-1 hover:text-[var(--color-foreground)] transition-colors">
+     class="group inline-flex items-center gap-1 hover:text-[var(--surface-content-color)] transition-colors">
     Name
     <span class="text-[var(--color-primary)] font-bold">↓</span>
   </a>
@@ -126,15 +126,15 @@ URL: /tables?sort=status&direction=asc
 
 ```html
 <turbo-frame id="sortable_table">
-  <div class="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border)]">
-    <table class="w-full border-collapse bg-[var(--color-background)]">
-      <thead class="bg-[var(--color-muted)]">
+  <div class="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--surface-border-color)]">
+    <table class="w-full border-collapse bg-[var(--surface-bg-color)]">
+      <thead class="bg-[var(--surface-muted-bg-color)]">
         <tr>
           <th><!-- Sortable column headers --></th>
         </tr>
       </thead>
-      <tbody class="divide-y divide-[var(--color-border)]">
-        <tr class="hover:bg-[var(--color-muted)] transition-colors">
+      <tbody class="divide-y divide-[var(--surface-border-color)]">
+        <tr class="hover:bg-[var(--surface-muted-bg-color)] transition-colors">
           <td><!-- Table data --></td>
         </tr>
       </tbody>

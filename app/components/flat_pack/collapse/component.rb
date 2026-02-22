@@ -70,7 +70,7 @@ module FlatPack
             controller: "flat-pack--collapse",
             "flat-pack--collapse-open-value": @open
           },
-          class: "border border-border rounded-md overflow-hidden"
+          class: "border border-[var(--surface-border-color)] rounded-md overflow-hidden"
         )
       end
 
@@ -90,13 +90,13 @@ module FlatPack
       end
 
       def trigger_classes
-        "w-full flex items-center justify-between p-4 text-left bg-background hover:bg-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        "w-full flex items-center justify-between p-4 text-left bg-[var(--surface-bg-color)] hover:bg-[var(--surface-muted-bg-color)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       end
 
       def content_attributes
         {
           id: content_id,
-          class: "overflow-hidden transition-all duration-300 ease-in-out bg-background",
+          class: "overflow-hidden transition-all duration-300 ease-in-out bg-[var(--surface-bg-color)]",
           data: {"flat-pack--collapse-target": "content"},
           hidden: !@open
         }

@@ -6,8 +6,8 @@ module FlatPack
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "text-warning" "border-warning"
-      # "border-border" "bg-background"
-      # "text-foreground" "text-muted-foreground"
+      # "border-[var(--surface-border-color)]" "bg-[var(--surface-bg-color)]"
+      # "text-[var(--surface-content-color)]" "text-[var(--surface-muted-content-color)]"
 
       def initialize(
         name:,
@@ -90,7 +90,7 @@ module FlatPack
       def render_dropzone_text
         content_tag(:div, class: dropzone_text_classes) do
           elements = [
-            content_tag(:div, class: "flex justify-center text-sm/6 text-muted-foreground") do
+            content_tag(:div, class: "flex justify-center text-sm/6 text-[var(--surface-muted-content-color)]") do
               safe_join([
                 content_tag(:label, for: input_id, class: "relative cursor-pointer rounded-md bg-transparent font-semibold text-primary focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-primary hover:text-primary/80") do
                   content_tag(:span, "Upload a file")
@@ -101,7 +101,7 @@ module FlatPack
           ]
 
           if file_constraints_text
-            elements << content_tag(:p, file_constraints_text, class: "text-xs/5 text-muted-foreground")
+            elements << content_tag(:p, file_constraints_text, class: "text-xs/5 text-[var(--surface-muted-content-color)]")
           end
 
           safe_join(elements)
@@ -173,7 +173,7 @@ module FlatPack
 
       def icon_attributes
         {
-          class: "mx-auto size-12 text-muted-foreground/30",
+          class: "mx-auto size-12 text-[var(--surface-muted-content-color)]/30",
           fill: "currentColor",
           viewBox: "0 0 24 24",
           "aria-hidden": "true"
@@ -186,7 +186,7 @@ module FlatPack
 
       def label_classes
         classes(
-          "block text-sm font-medium text-foreground mb-1.5"
+          "block text-sm font-medium text-[var(--surface-content-color)] mb-1.5"
         )
       end
 
@@ -198,7 +198,7 @@ module FlatPack
           "w-full",
           "rounded-lg",
           "border border-dashed",
-          "bg-background",
+          "bg-[var(--surface-bg-color)]",
           "px-6 py-10",
           "transition-colors duration-base",
           "hover:border-primary",
@@ -208,7 +208,7 @@ module FlatPack
         base_classes << if @error
           "border-warning"
         else
-          "border-border"
+          "border-[var(--surface-border-color)]"
         end
 
         classes(*base_classes, @custom_class)

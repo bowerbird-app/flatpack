@@ -15,7 +15,7 @@
 
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Right Sidebar Layout", anchor_link: true, subtitle: "Examples for Right Sidebar Layout.") %>
-    <p class="text-sm text-muted-foreground mb-4">
+    <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">
       Use <code>side: :right</code> on the layout component to place the sidebar on the right.
     </p>
     <%= render FlatPack::CodeBlock::Component.new(
@@ -38,7 +38,7 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Basic Sidebar", anchor_link: true, subtitle: "Examples for Basic Sidebar.") %>
     <div class="rounded-lg overflow-hidden h-[420px] mb-4">
-      <%= render FlatPack::Sidebar::Component.new(class: "border border-border rounded-lg") do |sidebar| %>
+      <%= render FlatPack::Sidebar::Component.new(class: "border border-[var(--surface-border-color)] rounded-lg") do |sidebar| %>
         <% sidebar.header do %>
           <%= render FlatPack::Sidebar::Header::Component.new(
             brand_abbr: "FP",
@@ -58,7 +58,7 @@
         <% end %>
 
         <% sidebar.footer do %>
-          <%= render FlatPack::Sidebar::Footer::Component.new(class: "text-sm text-muted-foreground") do %>
+          <%= render FlatPack::Sidebar::Footer::Component.new(class: "text-sm text-[var(--surface-muted-content-color)]") do %>
             Signed in as demo@flatpack.app
           <% end %>
         <% end %>
@@ -84,7 +84,7 @@
           &lt;% end %&gt;
         
           &lt;% sidebar.footer do %&gt;
-            &lt;%= render FlatPack::Sidebar::Footer::Component.new(class: "text-sm text-muted-foreground") do %&gt;
+            &lt;%= render FlatPack::Sidebar::Footer::Component.new(class: "text-sm text-[var(--surface-muted-content-color)]") do %&gt;
               Signed in as demo@flatpack.app
             &lt;% end %&gt;
           &lt;% end %&gt;
@@ -96,7 +96,7 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Sidebar with Badges", anchor_link: true, subtitle: "Examples for Sidebar with Badges.") %>
     <div class="rounded-lg overflow-hidden h-[420px] mb-4">
-      <%= render FlatPack::Sidebar::Component.new(class: "border border-border rounded-lg") do |sidebar| %>
+      <%= render FlatPack::Sidebar::Component.new(class: "border border-[var(--surface-border-color)] rounded-lg") do |sidebar| %>
         <% sidebar.header do %>
           <%= render FlatPack::Sidebar::Header::Component.new(
             brand_abbr: "AC",
@@ -131,11 +131,11 @@
 
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Secondary Menu Sidebar", anchor_link: true, subtitle: "Examples for Secondary Menu Sidebar.") %>
-    <p class="text-sm text-muted-foreground mb-4">
+    <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">
       Use this for page-level secondary navigation without branding or collapse behavior.
     </p>
     <div class="rounded-lg overflow-hidden h-[420px] mb-4">
-      <%= render FlatPack::Sidebar::Component.new(class: "border border-border rounded-lg") do |sidebar| %>
+      <%= render FlatPack::Sidebar::Component.new(class: "border border-[var(--surface-border-color)] rounded-lg") do |sidebar| %>
         <% sidebar.header do %>
           <%= render FlatPack::Sidebar::Header::Component.new(
             brand_abbr: nil,
@@ -181,7 +181,7 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Sidebar with Grouped Navigation", anchor_link: true, subtitle: "Examples for Sidebar with Grouped Navigation.") %>
     <div class="rounded-lg overflow-hidden h-[460px] mb-4">
-      <%= render FlatPack::Sidebar::Component.new(class: "border border-border rounded-lg") do |sidebar| %>
+      <%= render FlatPack::Sidebar::Component.new(class: "border border-[var(--surface-border-color)] rounded-lg") do |sidebar| %>
         <% sidebar.header do %>
           <%= render FlatPack::Sidebar::Header::Component.new(
             brand_abbr: "FP",
@@ -228,7 +228,7 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Collapsible Group Demo", anchor_link: true, subtitle: "Click the group header to expand and collapse nested navigation items.") %>
     <div class="rounded-lg overflow-hidden h-[460px] mb-4">
-      <%= render FlatPack::Sidebar::Component.new(class: "border border-border rounded-lg") do |sidebar| %>
+      <%= render FlatPack::Sidebar::Component.new(class: "border border-[var(--surface-border-color)] rounded-lg") do |sidebar| %>
         <% sidebar.header do %>
           <%= render FlatPack::Sidebar::Header::Component.new(
             brand_abbr: "FP",
@@ -275,7 +275,7 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Collapsed Sidebar (Icon-Only)", anchor_link: true, subtitle: "Examples for Collapsed Sidebar (Icon-Only).") %>
     <div class="rounded-lg overflow-hidden h-[360px] w-16 mb-4">
-      <%= render FlatPack::Sidebar::Component.new(style: "width: 4rem", class: "border border-border rounded-lg") do |sidebar| %>
+      <%= render FlatPack::Sidebar::Component.new(style: "width: 4rem", class: "border border-[var(--surface-border-color)] rounded-lg") do |sidebar| %>
         <% sidebar.header do %>
           <div class="p-4 flex justify-center">
             <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold">FP</div>

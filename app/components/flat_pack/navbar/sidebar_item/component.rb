@@ -5,11 +5,11 @@ module FlatPack
     module SidebarItem
       class Component < FlatPack::BaseComponent
         BADGE_STYLES = {
-          primary: "bg-primary text-primary-text",
-          secondary: "bg-secondary text-secondary-text",
-          success: "bg-success text-success-text",
-          warning: "bg-warning text-warning-text",
-          danger: "bg-destructive text-destructive-text"
+          primary: "border border-[var(--badge-primary-border-color)] bg-[var(--badge-primary-background-color)] text-[var(--badge-primary-text-color)]",
+          secondary: "border border-[var(--badge-secondary-border-color)] bg-[var(--badge-secondary-background-color)] text-[var(--badge-secondary-text-color)]",
+          success: "border border-[var(--badge-success-border-color)] bg-[var(--badge-success-background-color)] text-[var(--badge-success-text-color)]",
+          warning: "border border-[var(--badge-warning-border-color)] bg-[var(--badge-warning-background-color)] text-[var(--badge-warning-text-color)]",
+          danger: "border border-[var(--badge-danger-border-color)] bg-[var(--badge-danger-background-color)] text-[var(--badge-danger-text-color)]"
         }.freeze
 
         def initialize(text:, href: nil, icon: nil, active: false, badge: nil, badge_style: :primary, **system_arguments)
@@ -81,7 +81,7 @@ module FlatPack
             "w-full px-3 py-2 rounded-md",
             "text-sm font-medium",
             "transition-colors duration-200",
-            "hover:bg-muted",
+            "hover:bg-[var(--surface-muted-bg-color)]",
             active_classes
           )
         end

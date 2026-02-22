@@ -16,10 +16,41 @@
   --color-brand-900: oklch(0.24 0.15 250);
   --color-brand-950: oklch(0.16 0.10 250);
 
+  --badge-default-background-color: var(--surface-muted-bg-color);
+  --badge-default-text-color: var(--surface-content-color);
+  --badge-default-border-color: var(--surface-border-color);
+  --badge-primary-background-color: var(--color-primary);
+  --badge-primary-text-color: var(--color-primary-text);
+  --badge-primary-border-color: var(--color-primary);
+  --badge-secondary-background-color: var(--color-secondary);
+  --badge-secondary-text-color: var(--color-secondary-text);
+  --badge-secondary-border-color: var(--surface-border-color);
+  --badge-success-background-color: var(--color-success-bg);
+  --badge-success-text-color: var(--color-success-text);
+  --badge-success-border-color: var(--color-success-border);
+  --badge-warning-background-color: var(--color-warning-bg);
+  --badge-warning-text-color: var(--color-warning-text);
+  --badge-warning-border-color: var(--color-warning-border);
+  --badge-danger-background-color: var(--color-destructive-bg);
+  --badge-danger-text-color: var(--color-destructive-text);
+  --badge-danger-border-color: var(--color-destructive-border);
+  --badge-info-background-color: var(--surface-bg-color);
+  --badge-info-text-color: var(--surface-content-color);
+  --badge-info-border-color: var(--color-info-border);
   /* Semantic Colors - Light Mode (Default) */
   --color-primary: var(--color-brand-600);
   --color-primary-hover: var(--color-brand-700);
   --color-primary-text: oklch(1.0 0 0);
+
+  --color-default: var(--surface-bg-color);
+  --color-default-hover: var(--surface-muted-bg-color);
+  --color-default-text: var(--surface-content-color);
+  --color-default-border: var(--surface-border-color);
+
+  --gradient-1: linear-gradient(135deg, oklch(0.98 0.02 250) 0%, oklch(0.92 0.06 250) 100%);
+  --gradient-2: linear-gradient(135deg, oklch(0.97 0.02 220) 0%, oklch(0.90 0.08 200) 100%);
+  --gradient-3: linear-gradient(145deg, oklch(0.98 0.02 150) 0%, oklch(0.92 0.07 170) 100%);
+  --gradient-4: linear-gradient(145deg, oklch(0.98 0.02 40) 0%, oklch(0.93 0.08 70) 100%);
   
   --color-secondary: oklch(0.95 0.01 250);
   --color-secondary-hover: oklch(0.90 0.02 250);
@@ -29,26 +60,86 @@
   --color-ghost-hover: oklch(0.96 0.01 250);
   --color-ghost-text: oklch(0.35 0.02 250);
   
-  --color-success: oklch(62.7% .194 149.214);
-  --color-success-hover: oklch(57% .194 149.214);
+  --color-success-bg: oklch(62.7% .194 149.214);
+  --color-success-bg-hover: oklch(57% .194 149.214);
   --color-success-text: oklch(1.0 0 0);
+  --color-success-border: var(--color-success-bg);
   
-  --color-warning: oklch(70.5% 0.213 47.604);
-  --color-warning-hover: oklch(64.6% 0.222 41.116);
+  --color-warning-bg: oklch(70.5% 0.213 47.604);
+  --color-warning-bg-hover: oklch(64.6% 0.222 41.116);
   --color-warning-text: oklch(1.0 0 0);
+  --color-warning-border: var(--color-warning-bg);
 
-  --color-destructive: oklch(62.8% .257 29.234);
-  --color-destructive-hover: oklch(57% .257 29.234);
+  --color-destructive-bg: oklch(62.8% .257 29.234);
+  --color-destructive-bg-hover: oklch(57% .257 29.234);
   --color-destructive-text: oklch(1.0 0 0);
+  --color-destructive-border: var(--color-destructive-bg);
   
-  --color-background: oklch(1.0 0 0);
-  --color-foreground: oklch(0.20 0.01 250);
+  --surface-bg-color: oklch(1.0 0 0);
+  --surface-content-color: oklch(0.20 0.01 250);
   
-  --color-muted: oklch(0.96 0.01 250);
-  --color-muted-foreground: oklch(0.45 0.01 250);
+  --surface-muted-bg-color: oklch(0.96 0.01 250);
+  --surface-muted-content-color: oklch(0.45 0.01 250);
   
-  --color-border: oklch(0.89 0.01 250);
-  --color-border-hover: oklch(0.82 0.02 250);
+  --surface-border-color: oklch(0.89 0.01 250);
+  --surface-border-hover-color: oklch(0.82 0.02 250);
+  --chat-background-color: var(--surface-bg-color);
+  --chat-border-color: var(--surface-border-color);
+  --chat-header-background-color: var(--surface-bg-color);
+  --chat-header-border-color: var(--surface-border-color);
+  --chat-composer-background-color: var(--surface-bg-color);
+  --chat-composer-border-color: var(--surface-border-color);
+  --chat-input-background-color: var(--surface-bg-color);
+  --chat-input-border-color: var(--surface-border-color);
+  --chat-input-text-color: var(--surface-content-color);
+  --chat-input-placeholder-color: var(--surface-muted-content-color);
+  --chat-input-focus-ring-color: var(--color-ring);
+  --chat-message-incoming-background-color: var(--surface-muted-bg-color);
+  --chat-message-incoming-text-color: var(--surface-content-color);
+  --chat-message-outgoing-background-color: var(--color-primary);
+  --chat-message-outgoing-text-color: var(--color-primary-text);
+  --chat-message-system-text-color: var(--surface-muted-content-color);
+  --chat-message-meta-color: var(--surface-muted-content-color);
+  --chat-message-failed-color: var(--color-destructive-border);
+  --chat-read-receipt-color: var(--color-primary);
+  --chat-date-divider-line-color: var(--surface-border-color);
+  --chat-date-divider-text-color: var(--surface-muted-content-color);
+  --chat-attachment-border-color: var(--surface-border-color);
+  --chat-attachment-hover-background-color: var(--surface-muted-bg-color);
+  --chat-attachment-text-color: var(--surface-content-color);
+  --chat-attachment-meta-color: var(--surface-muted-content-color);
+  --chat-attachment-icon-color: var(--surface-muted-content-color);
+  --chat-jump-button-background-color: var(--surface-bg-color);
+  --chat-jump-button-border-color: var(--surface-border-color);
+  --chat-jump-button-text-color: var(--surface-content-color);
+  --chat-jump-button-hover-background-color: var(--surface-muted-bg-color);
+  --chat-typing-background-color: var(--surface-muted-bg-color);
+  --chat-typing-dot-color: var(--surface-muted-content-color);
+  --chat-avatar-placeholder-background-color: var(--surface-muted-bg-color);
+  --chat-avatar-placeholder-text-color: var(--surface-muted-content-color);
+  --chat-send-button-background-color: var(--color-primary);
+  --chat-send-button-hover-background-color: var(--color-primary-hover);
+  --chat-send-button-text-color: var(--color-primary-text);
+  --chat-send-button-focus-ring-color: var(--color-ring);
+  --code-block-background-color: var(--surface-muted-bg-color);
+  --code-block-border-color: var(--surface-border-color);
+  --code-block-title-color: var(--surface-muted-content-color);
+  --code-block-code-color: var(--surface-content-color);
+  --code-block-tab-color: var(--surface-muted-content-color);
+  --code-block-tab-hover-color: var(--surface-content-color);
+  --code-block-tab-active-background-color: var(--surface-border-color);
+  --code-block-tab-active-color: var(--surface-muted-content-color);
+  --card-background-color: var(--surface-bg-color);
+  --card-background-muted-color: var(--surface-muted-bg-color);
+  --card-border-color: var(--surface-border-color);
+  --card-padding-sm: 0.75rem;
+  --card-padding-md: 1rem;
+  --card-padding-lg: 1.25rem;
+  --card-hover-subtle-background-color: var(--surface-muted-bg-color);
+  --card-hover-strong-border-color: var(--color-primary);
+  --card-hover-strong-shadow: var(--shadow-md);
+  --card-hover-strong-shadow-dark: var(--shadow-lg);
+  --color-info-border: var(--surface-border-color);
   
   --color-ring: var(--color-brand-600);
   
@@ -91,6 +182,16 @@
     --color-primary: var(--color-brand-500);
     --color-primary-hover: var(--color-brand-400);
     --color-primary-text: oklch(0.15 0.01 250);
+
+    --color-default: var(--surface-bg-color);
+    --color-default-hover: var(--surface-muted-bg-color);
+    --color-default-text: var(--surface-content-color);
+    --color-default-border: var(--surface-border-color);
+
+    --gradient-1: linear-gradient(135deg, oklch(0.24 0.03 250) 0%, oklch(0.18 0.02 250) 100%);
+    --gradient-2: linear-gradient(135deg, oklch(0.26 0.03 220) 0%, oklch(0.19 0.03 210) 100%);
+    --gradient-3: linear-gradient(145deg, oklch(0.26 0.03 160) 0%, oklch(0.19 0.02 170) 100%);
+    --gradient-4: linear-gradient(145deg, oklch(0.28 0.04 70) 0%, oklch(0.20 0.03 55) 100%);
     
     --color-secondary: oklch(0.20 0.02 250);
     --color-secondary-hover: oklch(0.25 0.03 250);
@@ -100,26 +201,86 @@
     --color-ghost-hover: oklch(0.22 0.02 250);
     --color-ghost-text: oklch(0.85 0.01 250);
     
-    --color-success: oklch(67% .194 149.214);
-    --color-success-hover: oklch(72% .194 149.214);
+    --color-success-bg: oklch(67% .194 149.214);
+    --color-success-bg-hover: oklch(72% .194 149.214);
     --color-success-text: oklch(0.15 0.01 250);
+  --color-success-border: var(--color-success-bg);
     
-    --color-warning: oklch(75% 0.183 55.934);
-    --color-warning-hover: oklch(70.5% 0.213 47.604);
+    --color-warning-bg: oklch(75% 0.183 55.934);
+    --color-warning-bg-hover: oklch(70.5% 0.213 47.604);
     --color-warning-text: oklch(0.15 0.01 250);
+  --color-warning-border: var(--color-warning-bg);
 
-    --color-destructive: oklch(67.8% .257 29.234);
-    --color-destructive-hover: oklch(72% .257 29.234);
+    --color-destructive-bg: oklch(67.8% .257 29.234);
+    --color-destructive-bg-hover: oklch(72% .257 29.234);
     --color-destructive-text: oklch(0.15 0.01 250);
+  --color-destructive-border: var(--color-destructive-bg);
     
-    --color-background: oklch(0.15 0.01 250);
-    --color-foreground: oklch(0.95 0.01 250);
+    --surface-bg-color: oklch(0.15 0.01 250);
+    --surface-content-color: oklch(0.95 0.01 250);
     
-    --color-muted: oklch(0.22 0.02 250);
-    --color-muted-foreground: oklch(0.65 0.01 250);
+    --surface-muted-bg-color: oklch(0.22 0.02 250);
+    --surface-muted-content-color: oklch(0.65 0.01 250);
     
-    --color-border: oklch(0.30 0.02 250);
-    --color-border-hover: oklch(0.40 0.03 250);
+    --surface-border-color: oklch(0.30 0.02 250);
+    --surface-border-hover-color: oklch(0.40 0.03 250);
+  --chat-background-color: var(--surface-bg-color);
+  --chat-border-color: var(--surface-border-color);
+  --chat-header-background-color: var(--surface-bg-color);
+  --chat-header-border-color: var(--surface-border-color);
+  --chat-composer-background-color: var(--surface-bg-color);
+  --chat-composer-border-color: var(--surface-border-color);
+  --chat-input-background-color: var(--surface-bg-color);
+  --chat-input-border-color: var(--surface-border-color);
+  --chat-input-text-color: var(--surface-content-color);
+  --chat-input-placeholder-color: var(--surface-muted-content-color);
+  --chat-input-focus-ring-color: var(--color-ring);
+  --chat-message-incoming-background-color: var(--surface-muted-bg-color);
+  --chat-message-incoming-text-color: var(--surface-content-color);
+  --chat-message-outgoing-background-color: var(--color-primary);
+  --chat-message-outgoing-text-color: var(--color-primary-text);
+  --chat-message-system-text-color: var(--surface-muted-content-color);
+  --chat-message-meta-color: var(--surface-muted-content-color);
+  --chat-message-failed-color: var(--color-destructive-border);
+  --chat-read-receipt-color: var(--color-primary);
+  --chat-date-divider-line-color: var(--surface-border-color);
+  --chat-date-divider-text-color: var(--surface-muted-content-color);
+  --chat-attachment-border-color: var(--surface-border-color);
+  --chat-attachment-hover-background-color: var(--surface-muted-bg-color);
+  --chat-attachment-text-color: var(--surface-content-color);
+  --chat-attachment-meta-color: var(--surface-muted-content-color);
+  --chat-attachment-icon-color: var(--surface-muted-content-color);
+  --chat-jump-button-background-color: var(--surface-bg-color);
+  --chat-jump-button-border-color: var(--surface-border-color);
+  --chat-jump-button-text-color: var(--surface-content-color);
+  --chat-jump-button-hover-background-color: var(--surface-muted-bg-color);
+  --chat-typing-background-color: var(--surface-muted-bg-color);
+  --chat-typing-dot-color: var(--surface-muted-content-color);
+  --chat-avatar-placeholder-background-color: var(--surface-muted-bg-color);
+  --chat-avatar-placeholder-text-color: var(--surface-muted-content-color);
+  --chat-send-button-background-color: var(--color-primary);
+  --chat-send-button-hover-background-color: var(--color-primary-hover);
+  --chat-send-button-text-color: var(--color-primary-text);
+  --chat-send-button-focus-ring-color: var(--color-ring);
+  --code-block-background-color: var(--surface-muted-bg-color);
+  --code-block-border-color: var(--surface-border-color);
+  --code-block-title-color: var(--surface-muted-content-color);
+  --code-block-code-color: var(--surface-content-color);
+  --code-block-tab-color: var(--surface-muted-content-color);
+  --code-block-tab-hover-color: var(--surface-content-color);
+  --code-block-tab-active-background-color: var(--surface-border-color);
+  --code-block-tab-active-color: var(--surface-muted-content-color);
+  --card-background-color: var(--surface-bg-color);
+  --card-background-muted-color: var(--surface-muted-bg-color);
+  --card-border-color: var(--surface-border-color);
+  --card-padding-sm: 0.75rem;
+  --card-padding-md: 1rem;
+  --card-padding-lg: 1.25rem;
+  --card-hover-subtle-background-color: var(--surface-muted-bg-color);
+  --card-hover-strong-border-color: var(--color-primary);
+  --card-hover-strong-shadow: var(--shadow-md);
+  --card-hover-strong-shadow-dark: var(--shadow-lg);
+  --color-info-border: var(--surface-border-color);
     
     --color-ring: var(--color-brand-500);
     
@@ -141,6 +302,16 @@
   --color-primary-hover: var(--color-brand-400);
   --color-primary-text: oklch(0.15 0.01 250);
 
+  --color-default: var(--surface-bg-color);
+  --color-default-hover: var(--surface-muted-bg-color);
+  --color-default-text: var(--surface-content-color);
+  --color-default-border: var(--surface-border-color);
+
+  --gradient-1: linear-gradient(135deg, oklch(0.24 0.03 250) 0%, oklch(0.18 0.02 250) 100%);
+  --gradient-2: linear-gradient(135deg, oklch(0.26 0.03 220) 0%, oklch(0.19 0.03 210) 100%);
+  --gradient-3: linear-gradient(145deg, oklch(0.26 0.03 160) 0%, oklch(0.19 0.02 170) 100%);
+  --gradient-4: linear-gradient(145deg, oklch(0.28 0.04 70) 0%, oklch(0.20 0.03 55) 100%);
+
   --color-secondary: oklch(0.20 0.02 250);
   --color-secondary-hover: oklch(0.25 0.03 250);
   --color-secondary-text: oklch(0.90 0.01 250);
@@ -149,26 +320,86 @@
   --color-ghost-hover: oklch(0.22 0.02 250);
   --color-ghost-text: oklch(0.85 0.01 250);
 
-  --color-success: oklch(67% .194 149.214);
-  --color-success-hover: oklch(72% .194 149.214);
+  --color-success-bg: oklch(67% .194 149.214);
+  --color-success-bg-hover: oklch(72% .194 149.214);
   --color-success-text: oklch(0.15 0.01 250);
+  --color-success-border: var(--color-success-bg);
 
-  --color-warning: oklch(75% 0.183 55.934);
-  --color-warning-hover: oklch(70.5% 0.213 47.604);
+  --color-warning-bg: oklch(75% 0.183 55.934);
+  --color-warning-bg-hover: oklch(70.5% 0.213 47.604);
   --color-warning-text: oklch(0.15 0.01 250);
+  --color-warning-border: var(--color-warning-bg);
 
-  --color-destructive: oklch(67.8% .257 29.234);
-  --color-destructive-hover: oklch(72% .257 29.234);
+  --color-destructive-bg: oklch(67.8% .257 29.234);
+  --color-destructive-bg-hover: oklch(72% .257 29.234);
   --color-destructive-text: oklch(0.15 0.01 250);
+  --color-destructive-border: var(--color-destructive-bg);
 
-  --color-background: oklch(0.15 0.01 250);
-  --color-foreground: oklch(0.95 0.01 250);
+  --surface-bg-color: oklch(0.15 0.01 250);
+  --surface-content-color: oklch(0.95 0.01 250);
 
-  --color-muted: oklch(0.22 0.02 250);
-  --color-muted-foreground: oklch(0.65 0.01 250);
+  --surface-muted-bg-color: oklch(0.22 0.02 250);
+  --surface-muted-content-color: oklch(0.65 0.01 250);
 
-  --color-border: oklch(0.30 0.02 250);
-  --color-border-hover: oklch(0.40 0.03 250);
+  --surface-border-color: oklch(0.30 0.02 250);
+  --surface-border-hover-color: oklch(0.40 0.03 250);
+  --chat-background-color: var(--surface-bg-color);
+  --chat-border-color: var(--surface-border-color);
+  --chat-header-background-color: var(--surface-bg-color);
+  --chat-header-border-color: var(--surface-border-color);
+  --chat-composer-background-color: var(--surface-bg-color);
+  --chat-composer-border-color: var(--surface-border-color);
+  --chat-input-background-color: var(--surface-bg-color);
+  --chat-input-border-color: var(--surface-border-color);
+  --chat-input-text-color: var(--surface-content-color);
+  --chat-input-placeholder-color: var(--surface-muted-content-color);
+  --chat-input-focus-ring-color: var(--color-ring);
+  --chat-message-incoming-background-color: var(--surface-muted-bg-color);
+  --chat-message-incoming-text-color: var(--surface-content-color);
+  --chat-message-outgoing-background-color: var(--color-primary);
+  --chat-message-outgoing-text-color: var(--color-primary-text);
+  --chat-message-system-text-color: var(--surface-muted-content-color);
+  --chat-message-meta-color: var(--surface-muted-content-color);
+  --chat-message-failed-color: var(--color-destructive-border);
+  --chat-read-receipt-color: var(--color-primary);
+  --chat-date-divider-line-color: var(--surface-border-color);
+  --chat-date-divider-text-color: var(--surface-muted-content-color);
+  --chat-attachment-border-color: var(--surface-border-color);
+  --chat-attachment-hover-background-color: var(--surface-muted-bg-color);
+  --chat-attachment-text-color: var(--surface-content-color);
+  --chat-attachment-meta-color: var(--surface-muted-content-color);
+  --chat-attachment-icon-color: var(--surface-muted-content-color);
+  --chat-jump-button-background-color: var(--surface-bg-color);
+  --chat-jump-button-border-color: var(--surface-border-color);
+  --chat-jump-button-text-color: var(--surface-content-color);
+  --chat-jump-button-hover-background-color: var(--surface-muted-bg-color);
+  --chat-typing-background-color: var(--surface-muted-bg-color);
+  --chat-typing-dot-color: var(--surface-muted-content-color);
+  --chat-avatar-placeholder-background-color: var(--surface-muted-bg-color);
+  --chat-avatar-placeholder-text-color: var(--surface-muted-content-color);
+  --chat-send-button-background-color: var(--color-primary);
+  --chat-send-button-hover-background-color: var(--color-primary-hover);
+  --chat-send-button-text-color: var(--color-primary-text);
+  --chat-send-button-focus-ring-color: var(--color-ring);
+  --code-block-background-color: var(--surface-muted-bg-color);
+  --code-block-border-color: var(--surface-border-color);
+  --code-block-title-color: var(--surface-muted-content-color);
+  --code-block-code-color: var(--surface-content-color);
+  --code-block-tab-color: var(--surface-muted-content-color);
+  --code-block-tab-hover-color: var(--surface-content-color);
+  --code-block-tab-active-background-color: var(--surface-border-color);
+  --code-block-tab-active-color: var(--surface-muted-content-color);
+  --card-background-color: var(--surface-bg-color);
+  --card-background-muted-color: var(--surface-muted-bg-color);
+  --card-border-color: var(--surface-border-color);
+  --card-padding-sm: 0.75rem;
+  --card-padding-md: 1rem;
+  --card-padding-lg: 1.25rem;
+  --card-hover-subtle-background-color: var(--surface-muted-bg-color);
+  --card-hover-strong-border-color: var(--color-primary);
+  --card-hover-strong-shadow: var(--shadow-md);
+  --card-hover-strong-shadow-dark: var(--shadow-lg);
+  --color-info-border: var(--surface-border-color);
 
   --color-ring: var(--color-brand-500);
 
@@ -187,6 +418,16 @@
   --color-primary-hover: var(--color-brand-700);
   --color-primary-text: oklch(1.0 0 0);
 
+  --color-default: var(--surface-bg-color);
+  --color-default-hover: var(--surface-muted-bg-color);
+  --color-default-text: var(--surface-content-color);
+  --color-default-border: var(--surface-border-color);
+
+  --gradient-1: linear-gradient(135deg, oklch(0.98 0.02 250) 0%, oklch(0.92 0.06 250) 100%);
+  --gradient-2: linear-gradient(135deg, oklch(0.97 0.02 220) 0%, oklch(0.90 0.08 200) 100%);
+  --gradient-3: linear-gradient(145deg, oklch(0.98 0.02 150) 0%, oklch(0.92 0.07 170) 100%);
+  --gradient-4: linear-gradient(145deg, oklch(0.98 0.02 40) 0%, oklch(0.93 0.08 70) 100%);
+
   --color-secondary: oklch(0.95 0.01 250);
   --color-secondary-hover: oklch(0.90 0.02 250);
   --color-secondary-text: oklch(0.25 0.02 250);
@@ -195,26 +436,86 @@
   --color-ghost-hover: oklch(0.96 0.01 250);
   --color-ghost-text: oklch(0.35 0.02 250);
 
-  --color-success: oklch(62.7% .194 149.214);
-  --color-success-hover: oklch(57% .194 149.214);
+  --color-success-bg: oklch(62.7% .194 149.214);
+  --color-success-bg-hover: oklch(57% .194 149.214);
   --color-success-text: oklch(1.0 0 0);
+  --color-success-border: var(--color-success-bg);
 
-  --color-warning: oklch(70.5% 0.213 47.604);
-  --color-warning-hover: oklch(64.6% 0.222 41.116);
+  --color-warning-bg: oklch(70.5% 0.213 47.604);
+  --color-warning-bg-hover: oklch(64.6% 0.222 41.116);
   --color-warning-text: oklch(1.0 0 0);
+  --color-warning-border: var(--color-warning-bg);
 
-  --color-destructive: oklch(62.8% .257 29.234);
-  --color-destructive-hover: oklch(57% .257 29.234);
+  --color-destructive-bg: oklch(62.8% .257 29.234);
+  --color-destructive-bg-hover: oklch(57% .257 29.234);
   --color-destructive-text: oklch(1.0 0 0);
+  --color-destructive-border: var(--color-destructive-bg);
 
-  --color-background: oklch(1.0 0 0);
-  --color-foreground: oklch(0.20 0.01 250);
+  --surface-bg-color: oklch(1.0 0 0);
+  --surface-content-color: oklch(0.20 0.01 250);
 
-  --color-muted: oklch(0.96 0.01 250);
-  --color-muted-foreground: oklch(0.45 0.01 250);
+  --surface-muted-bg-color: oklch(0.96 0.01 250);
+  --surface-muted-content-color: oklch(0.45 0.01 250);
 
-  --color-border: oklch(0.89 0.01 250);
-  --color-border-hover: oklch(0.82 0.02 250);
+  --surface-border-color: oklch(0.89 0.01 250);
+  --surface-border-hover-color: oklch(0.82 0.02 250);
+  --chat-background-color: var(--surface-bg-color);
+  --chat-border-color: var(--surface-border-color);
+  --chat-header-background-color: var(--surface-bg-color);
+  --chat-header-border-color: var(--surface-border-color);
+  --chat-composer-background-color: var(--surface-bg-color);
+  --chat-composer-border-color: var(--surface-border-color);
+  --chat-input-background-color: var(--surface-bg-color);
+  --chat-input-border-color: var(--surface-border-color);
+  --chat-input-text-color: var(--surface-content-color);
+  --chat-input-placeholder-color: var(--surface-muted-content-color);
+  --chat-input-focus-ring-color: var(--color-ring);
+  --chat-message-incoming-background-color: var(--surface-muted-bg-color);
+  --chat-message-incoming-text-color: var(--surface-content-color);
+  --chat-message-outgoing-background-color: var(--color-primary);
+  --chat-message-outgoing-text-color: var(--color-primary-text);
+  --chat-message-system-text-color: var(--surface-muted-content-color);
+  --chat-message-meta-color: var(--surface-muted-content-color);
+  --chat-message-failed-color: var(--color-destructive-border);
+  --chat-read-receipt-color: var(--color-primary);
+  --chat-date-divider-line-color: var(--surface-border-color);
+  --chat-date-divider-text-color: var(--surface-muted-content-color);
+  --chat-attachment-border-color: var(--surface-border-color);
+  --chat-attachment-hover-background-color: var(--surface-muted-bg-color);
+  --chat-attachment-text-color: var(--surface-content-color);
+  --chat-attachment-meta-color: var(--surface-muted-content-color);
+  --chat-attachment-icon-color: var(--surface-muted-content-color);
+  --chat-jump-button-background-color: var(--surface-bg-color);
+  --chat-jump-button-border-color: var(--surface-border-color);
+  --chat-jump-button-text-color: var(--surface-content-color);
+  --chat-jump-button-hover-background-color: var(--surface-muted-bg-color);
+  --chat-typing-background-color: var(--surface-muted-bg-color);
+  --chat-typing-dot-color: var(--surface-muted-content-color);
+  --chat-avatar-placeholder-background-color: var(--surface-muted-bg-color);
+  --chat-avatar-placeholder-text-color: var(--surface-muted-content-color);
+  --chat-send-button-background-color: var(--color-primary);
+  --chat-send-button-hover-background-color: var(--color-primary-hover);
+  --chat-send-button-text-color: var(--color-primary-text);
+  --chat-send-button-focus-ring-color: var(--color-ring);
+  --code-block-background-color: var(--surface-muted-bg-color);
+  --code-block-border-color: var(--surface-border-color);
+  --code-block-title-color: var(--surface-muted-content-color);
+  --code-block-code-color: var(--surface-content-color);
+  --code-block-tab-color: var(--surface-muted-content-color);
+  --code-block-tab-hover-color: var(--surface-content-color);
+  --code-block-tab-active-background-color: var(--surface-border-color);
+  --code-block-tab-active-color: var(--surface-muted-content-color);
+  --card-background-color: var(--surface-bg-color);
+  --card-background-muted-color: var(--surface-muted-bg-color);
+  --card-border-color: var(--surface-border-color);
+  --card-padding-sm: 0.75rem;
+  --card-padding-md: 1rem;
+  --card-padding-lg: 1.25rem;
+  --card-hover-subtle-background-color: var(--surface-muted-bg-color);
+  --card-hover-strong-border-color: var(--color-primary);
+  --card-hover-strong-shadow: var(--shadow-md);
+  --card-hover-strong-shadow-dark: var(--shadow-lg);
+  --color-info-border: var(--surface-border-color);
 
   --color-ring: var(--color-brand-600);
 
@@ -228,7 +529,7 @@
 
 @layer base {
   body {
-    @apply bg-[var(--color-background)] text-[var(--color-foreground)];
+    @apply bg-[var(--surface-bg-color)] text-[var(--surface-content-color)];
   }
 }
 
@@ -265,7 +566,7 @@
   }
 
   .fp-card-hover-subtle:hover {
-    background-color: var(--color-muted);
+    background-color: var(--surface-muted-bg-color);
   }
 
   .fp-card-hover-strong {

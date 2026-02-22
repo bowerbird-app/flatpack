@@ -56,8 +56,8 @@ module FlatPack
 
         def render_default_avatar
           # Default avatar placeholder
-          content_tag(:div, class: "h-8 w-8 rounded-full bg-muted flex items-center justify-center") do
-            content_tag(:span, class: "text-xs font-medium text-muted-foreground") do
+          content_tag(:div, class: "h-8 w-8 rounded-full bg-[var(--chat-avatar-placeholder-background-color)] flex items-center justify-center") do
+            content_tag(:span, class: "text-xs font-medium text-[var(--chat-avatar-placeholder-text-color)]") do
               (@sender_name&.first || "?").upcase
             end
           end
@@ -108,7 +108,7 @@ module FlatPack
 
         def name_classes
           classes(
-            "text-sm font-medium text-foreground mb-1",
+            "text-sm font-medium text-[var(--chat-message-incoming-text-color)] mb-1",
             @direction == :outgoing ? "text-right" : "text-left"
           )
         end

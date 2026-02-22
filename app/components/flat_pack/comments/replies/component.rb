@@ -46,7 +46,7 @@ module FlatPack
 
           classes(
             indent_class,
-            "border-l-2 border-border pl-4 space-y-4"
+            "border-l-2 border-[var(--surface-border-color)] pl-4 space-y-4"
           )
         end
 

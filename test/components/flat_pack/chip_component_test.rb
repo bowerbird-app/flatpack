@@ -23,7 +23,7 @@ module FlatPack
         render_inline(Component.new(text: "Default"))
 
         assert_selector "span", text: "Default"
-        assert_includes page.native.to_html, "bg-muted"
+        assert_includes page.native.to_html, "bg-[var(--surface-muted-bg-color)]"
       end
 
       def test_renders_primary_style
@@ -37,28 +37,28 @@ module FlatPack
         render_inline(Component.new(text: "Success", style: :success))
 
         assert_selector "span", text: "Success"
-        assert_includes page.native.to_html, "bg-success"
+        assert_includes page.native.to_html, "bg-success-bg"
       end
 
       def test_renders_warning_style
         render_inline(Component.new(text: "Warning", style: :warning))
 
         assert_selector "span", text: "Warning"
-        assert_includes page.native.to_html, "bg-warning"
+        assert_includes page.native.to_html, "bg-warning-bg"
       end
 
       def test_renders_danger_style
         render_inline(Component.new(text: "Danger", style: :danger))
 
         assert_selector "span", text: "Danger"
-        assert_includes page.native.to_html, "bg-red-500"
+        assert_includes page.native.to_html, "bg-destructive-bg"
       end
 
       def test_renders_info_style
         render_inline(Component.new(text: "Info", style: :info))
 
         assert_selector "span", text: "Info"
-        assert_includes page.native.to_html, "bg-blue-500"
+        assert_includes page.native.to_html, "bg-secondary"
       end
 
       def test_renders_small_size
@@ -66,7 +66,7 @@ module FlatPack
 
         assert_selector "span", text: "Small"
         assert_includes page.native.to_html, "text-xs"
-        assert_includes page.native.to_html, "px-2"
+        assert_includes page.native.to_html, "px-[var(--chip-padding-x-sm)]"
       end
 
       def test_renders_medium_size
@@ -74,7 +74,7 @@ module FlatPack
 
         assert_selector "span", text: "Medium"
         assert_includes page.native.to_html, "text-sm"
-        assert_includes page.native.to_html, "px-3"
+        assert_includes page.native.to_html, "px-[var(--chip-padding-x-md)]"
       end
 
       def test_renders_large_size
@@ -82,7 +82,7 @@ module FlatPack
 
         assert_selector "span", text: "Large"
         assert_includes page.native.to_html, "text-base"
-        assert_includes page.native.to_html, "px-4"
+        assert_includes page.native.to_html, "px-[var(--chip-padding-x-lg)]"
       end
 
       def test_default_size_is_medium

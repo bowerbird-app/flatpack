@@ -80,7 +80,7 @@ module FlatPack
       def render_label
         return unless @label
 
-        content_tag(:span, @label, class: "ml-3 text-sm font-medium text-foreground")
+        content_tag(:span, @label, class: "ml-3 text-sm font-medium text-[var(--surface-content-color)]")
       end
 
       def render_error
@@ -106,7 +106,7 @@ module FlatPack
           SIZES.fetch(@size),
           "peer-checked:bg-primary",
           "peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2",
-          @checked ? "bg-primary" : "bg-muted"
+          @checked ? "bg-primary" : "bg-[var(--surface-muted-bg-color)]"
         )
       end
 

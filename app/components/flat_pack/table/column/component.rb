@@ -51,7 +51,7 @@ module FlatPack
           # Use provided turbo_frame or default to "sortable_table"
           frame_id = turbo_frame || "sortable_table"
 
-          tag.a(href: sort_url, data: {turbo_frame: frame_id}, class: "group inline-flex items-center gap-1 hover:text-foreground transition-colors") do
+          tag.a(href: sort_url, data: {turbo_frame: frame_id}, class: "group inline-flex items-center gap-1 hover:text-[var(--table-sort-link-hover-color)] transition-colors") do
             safe_join([
               @title,
               sort_indicator(current_sort, current_direction)
@@ -84,7 +84,7 @@ module FlatPack
         end
 
         def header_classes
-          "px-[var(--table-padding)] py-[var(--table-padding)] text-left text-xs font-medium text-muted-foreground uppercase tracking-wider"
+          "px-[var(--table-padding)] py-[var(--table-padding)] text-left text-xs font-medium text-[var(--table-header-text-color)] uppercase tracking-wider"
         end
 
         def sortable_header_classes
@@ -92,7 +92,7 @@ module FlatPack
         end
 
         def cell_classes
-          "px-[var(--table-padding)] py-[var(--table-padding)] text-sm text-foreground"
+          "px-[var(--table-padding)] py-[var(--table-padding)] text-sm text-[var(--table-cell-text-color)]"
         end
       end
     end

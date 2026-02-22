@@ -118,13 +118,13 @@ module FlatPack
           classes(
             "flex items-center gap-2",
             "px-4 py-2",
-            "bg-white dark:bg-zinc-800",
-            "border border-border",
+            "bg-[var(--chat-jump-button-background-color)]",
+            "border border-[var(--chat-jump-button-border-color)]",
             "rounded-full",
             "shadow-lg",
             "text-sm font-medium",
-            "text-foreground",
-            "hover:bg-muted",
+            "text-[var(--chat-jump-button-text-color)]",
+            "hover:bg-[var(--chat-jump-button-hover-background-color)]",
             "transition-colors duration-base",
             "cursor-pointer"
           )

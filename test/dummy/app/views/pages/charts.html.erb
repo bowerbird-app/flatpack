@@ -172,7 +172,7 @@
 <!-- Chart without Card -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Chart without Card Wrapper", anchor_link: true, subtitle: "Examples for Chart without Card Wrapper.") %>
-  <p class="text-muted-foreground mb-4">
+  <p class="text-[var(--surface-muted-content-color)] mb-4">
     Set <code>card: false</code> to render the chart without a card wrapper.
   </p>
   <%= render FlatPack::Chart::Component.new(
@@ -251,11 +251,11 @@
       <div class="flex items-center justify-between text-sm">
         <div class="flex items-center gap-4">
           <div>
-            <span class="text-muted-foreground">Total:</span>
+            <span class="text-[var(--surface-muted-content-color)]">Total:</span>
             <span class="font-semibold ml-1">$225K</span>
           </div>
           <div>
-            <span class="text-muted-foreground">Avg:</span>
+            <span class="text-[var(--surface-muted-content-color)]">Avg:</span>
             <span class="font-semibold ml-1">$28.1K</span>
           </div>
         </div>
@@ -278,11 +278,11 @@
           <div class="flex items-center justify-between text-sm">
             <div class="flex items-center gap-4">
               <div>
-                <span class="text-muted-foreground">Total:</span>
+                <span class="text-[var(--surface-muted-content-color)]">Total:</span>
                 <span class="font-semibold ml-1">$225K</span>
               </div>
               <div>
-                <span class="text-muted-foreground">Avg:</span>
+                <span class="text-[var(--surface-muted-content-color)]">Avg:</span>
                 <span class="font-semibold ml-1">$28.1K</span>
               </div>
             </div>
@@ -298,7 +298,7 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Setup Instructions", anchor_link: true, subtitle: "Examples for Setup Instructions.") %>
   <h3 class="text-lg font-semibold mb-3">ApexCharts is Already Configured</h3>
-  <p class="text-muted-foreground mb-4">
+  <p class="text-[var(--surface-muted-content-color)] mb-4">
     FlatPack includes ApexCharts via CDN in the importmap. No additional setup required!
   </p>
   
@@ -323,7 +323,7 @@
 <!-- Custom Options -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Custom ApexCharts Options", anchor_link: true, subtitle: "Examples for Custom ApexCharts Options.") %>
-  <p class="text-muted-foreground mb-4">
+  <p class="text-[var(--surface-muted-content-color)] mb-4">
     Pass custom ApexCharts options for full control.
   </p>
   
@@ -353,7 +353,7 @@
 <!-- Features -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Examples for Features.") %>
-  <ul class="list-disc list-inside space-y-2 text-foreground">
+  <ul class="list-disc list-inside space-y-2 text-[var(--surface-content-color)]">
     <li><strong>ApexCharts Integration:</strong> Professional data visualization library</li>
     <li><strong>Lazy Loading:</strong> Charts load only when needed (via dynamic import)</li>
     <li><strong>Card Wrapping:</strong> Automatic card wrapper with title, actions, footer</li>

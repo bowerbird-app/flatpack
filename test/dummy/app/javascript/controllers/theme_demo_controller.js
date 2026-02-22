@@ -37,15 +37,15 @@ export default class extends Controller {
       tab.setAttribute("aria-selected", isActive ? "true" : "false")
       tab.setAttribute("tabindex", isActive ? "0" : "-1")
 
-      tab.classList.toggle("bg-background", isActive)
+      tab.classList.toggle("bg-[var(--surface-bg-color)]", isActive)
       tab.classList.toggle("text-primary", isActive)
       tab.classList.toggle("border-b-2", isActive)
       tab.classList.toggle("border-primary", isActive)
       tab.classList.toggle("-mb-px", isActive)
 
-      tab.classList.toggle("text-muted-foreground", !isActive)
-      tab.classList.toggle("hover:text-foreground", !isActive)
-      tab.classList.toggle("hover:bg-muted", !isActive)
+      tab.classList.toggle("text-[var(--surface-muted-content-color)]", !isActive)
+      tab.classList.toggle("hover:text-[var(--surface-content-color)]", !isActive)
+      tab.classList.toggle("hover:bg-[var(--surface-muted-bg-color)]", !isActive)
     })
 
     this.panelTargets.forEach((panel) => {

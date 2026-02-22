@@ -12,7 +12,7 @@
   }
 
   .fp-card-hover-subtle:hover {
-    background-color: var(--color-muted);
+    background-color: var(--card-hover-subtle-background-color);
   }
 
   .fp-card-hover-strong {
@@ -21,13 +21,30 @@
   }
 
   .fp-card-hover-strong:hover {
-    box-shadow: var(--shadow-md);
-    border-color: var(--color-primary);
+    box-shadow: var(--card-hover-strong-shadow);
+    border-color: var(--card-hover-strong-border-color);
+  }
+
+  /* Decorative gradient helpers mapped to theme tokens */
+  .fp-gradient-1 {
+    background-image: var(--gradient-1);
+  }
+
+  .fp-gradient-2 {
+    background-image: var(--gradient-2);
+  }
+
+  .fp-gradient-3 {
+    background-image: var(--gradient-3);
+  }
+
+  .fp-gradient-4 {
+    background-image: var(--gradient-4);
   }
 
   @media (prefers-color-scheme: dark) {
     .fp-card-hover-strong:hover {
-      box-shadow: var(--shadow-lg);
+      box-shadow: var(--card-hover-strong-shadow-dark);
     }
   }
 

@@ -4,12 +4,13 @@ module FlatPack
   module Button
     class Component < FlatPack::BaseComponent
       SCHEMES = {
+        default: "bg-default hover:bg-default-hover text-default-text border border-default-border shadow-sm",
         primary: "bg-primary hover:bg-primary-hover text-primary-text shadow-sm",
-        secondary: "bg-secondary hover:bg-secondary-hover text-secondary-text border border-border",
+        secondary: "bg-secondary hover:bg-secondary-hover text-secondary-text border border-[var(--surface-border-color)]",
         ghost: "bg-ghost hover:bg-ghost-hover text-ghost-text",
-        success: "bg-success hover:bg-success-hover text-success-text shadow-sm",
-        warning: "bg-warning hover:bg-warning-hover text-warning-text shadow-sm",
-        error: "bg-destructive hover:bg-destructive-hover text-destructive-text shadow-sm"
+        success: "bg-success-bg hover:bg-success-bg-hover text-success-text shadow-sm",
+        warning: "bg-warning-bg hover:bg-warning-bg-hover text-warning-text shadow-sm",
+        error: "bg-destructive-bg hover:bg-destructive-bg-hover text-destructive-text shadow-sm"
       }.freeze
 
       SIZES = {
@@ -26,7 +27,7 @@ module FlatPack
 
       def initialize(
         text: nil,
-        style: :primary,
+        style: :default,
         size: :md,
         url: nil,
         method: nil,
@@ -153,8 +154,7 @@ module FlatPack
           "disabled:pointer-events-none disabled:opacity-50",
           conditional_size_classes,
           style_classes,
-          icon_only_classes,
-          shadow_classes
+          icon_only_classes
         )
       end
 
@@ -170,13 +170,6 @@ module FlatPack
 
       def size_classes
         SIZES.fetch(@size)
-      end
-
-      def shadow_classes
-        # Don't add shadow to link buttons
-        return nil if @url
-
-        "shadow-button hover:shadow-button-active disabled:shadow-none"
       end
 
       def validate_style!

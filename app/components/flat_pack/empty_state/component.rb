@@ -12,12 +12,12 @@ module FlatPack
       # should be rendered as-is, not escaped.
       ICONS = {
         inbox: <<~SVG.html_safe,
-          <svg class="w-12 h-12 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="w-12 h-12 text-[var(--surface-muted-content-color)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
           </svg>
         SVG
         search: <<~SVG.html_safe
-          <svg class="w-12 h-12 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="w-12 h-12 text-[var(--surface-muted-content-color)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
         SVG
@@ -82,18 +82,18 @@ module FlatPack
         render FlatPack::Shared::IconComponent.new(
           name: @icon,
           size: :xl,
-          class: "text-muted-foreground"
+          class: "text-[var(--surface-muted-content-color)]"
         )
       end
 
       def render_title
-        content_tag(:h3, @title, class: "text-lg font-semibold text-foreground mb-2")
+        content_tag(:h3, @title, class: "text-lg font-semibold text-[var(--surface-content-color)] mb-2")
       end
 
       def render_description
         return nil unless @description
 
-        content_tag(:p, @description, class: "text-sm text-muted-foreground max-w-md mb-6")
+        content_tag(:p, @description, class: "text-sm text-[var(--surface-muted-content-color)] max-w-md mb-6")
       end
 
       def render_actions

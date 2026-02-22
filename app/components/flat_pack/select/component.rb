@@ -138,7 +138,7 @@ module FlatPack
       def render_search_input
         return unless @searchable
 
-        content_tag(:div, class: "p-2 border-b border-border") do
+        content_tag(:div, class: "p-2 border-b border-[var(--surface-border-color)]") do
           tag.input(
             type: "text",
             class: search_input_classes,
@@ -201,7 +201,7 @@ module FlatPack
             "stroke-width": "2",
             "stroke-linecap": "round",
             "stroke-linejoin": "round",
-            class: "lucide lucide-chevron-down text-muted-foreground",
+            class: "lucide lucide-chevron-down text-[var(--surface-muted-content-color)]",
             data: icon_data) do
             tag.path(d: "m6 9 6 6 6-6")
           end
@@ -234,7 +234,7 @@ module FlatPack
 
       def label_classes
         classes(
-          "block text-sm font-medium text-foreground mb-1.5"
+          "block text-sm font-medium text-[var(--surface-content-color)] mb-1.5"
         )
       end
 
@@ -245,8 +245,8 @@ module FlatPack
           "rounded-md",
           "border",
           "appearance-none",
-          "bg-background",
-          "text-foreground",
+          "bg-[var(--surface-bg-color)]",
+          "text-[var(--surface-content-color)]",
           "px-[var(--form-control-padding)] py-[var(--form-control-padding)]",
           "pr-10",
           "text-sm",
@@ -258,7 +258,7 @@ module FlatPack
         base_classes << if @error
           "border-warning"
         else
-          "border-border"
+          "border-[var(--surface-border-color)]"
         end
 
         classes(*base_classes, @custom_class)
@@ -270,8 +270,8 @@ module FlatPack
           "relative w-full",
           "rounded-md",
           "border",
-          "bg-background",
-          "text-foreground",
+          "bg-[var(--surface-bg-color)]",
+          "text-[var(--surface-content-color)]",
           "px-[var(--form-control-padding)] py-[var(--form-control-padding)]",
           "pr-10",
           "text-sm text-left",
@@ -283,18 +283,18 @@ module FlatPack
         base_classes << if @error
           "border-warning"
         else
-          "border-border"
+          "border-[var(--surface-border-color)]"
         end
 
         classes(*base_classes, @custom_class)
       end
 
       def dropdown_classes
-        "absolute z-10 mt-1 w-full hidden rounded-md border border-border bg-background shadow-lg"
+        "absolute z-10 mt-1 w-full hidden rounded-md border border-[var(--surface-border-color)] bg-[var(--surface-bg-color)] shadow-lg"
       end
 
       def search_input_classes
-        "w-full px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-sm border border-border bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+        "w-full px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-sm border border-[var(--surface-border-color)] bg-[var(--surface-bg-color)] text-[var(--surface-content-color)] focus:outline-none focus:ring-1 focus:ring-ring"
       end
 
       def custom_option_classes(selected, disabled)
@@ -306,11 +306,11 @@ module FlatPack
         ]
 
         base << if disabled
-          "opacity-50 cursor-not-allowed text-muted-foreground"
+          "opacity-50 cursor-not-allowed text-[var(--surface-muted-content-color)]"
         elsif selected
           "bg-primary text-white cursor-pointer"
         else
-          "hover:bg-muted cursor-pointer text-foreground"
+          "hover:bg-[var(--surface-muted-bg-color)] cursor-pointer text-[var(--surface-content-color)]"
         end
 
         base.join(" ")

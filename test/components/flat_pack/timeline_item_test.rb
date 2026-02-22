@@ -50,19 +50,19 @@ module FlatPack
       def test_renders_success_variant
         render_inline(Item.new(title: "Event", variant: :success))
 
-        assert_includes page.native.to_html, "bg-success"
+        assert_includes page.native.to_html, "bg-success-bg"
       end
 
       def test_renders_warning_variant
         render_inline(Item.new(title: "Event", variant: :warning))
 
-        assert_includes page.native.to_html, "bg-warning"
+        assert_includes page.native.to_html, "bg-warning-bg"
       end
 
       def test_renders_danger_variant
         render_inline(Item.new(title: "Event", variant: :danger))
 
-        assert_includes page.native.to_html, "bg-destructive"
+        assert_includes page.native.to_html, "bg-destructive-bg"
       end
 
       def test_renders_icon_circle
@@ -75,7 +75,7 @@ module FlatPack
         render_inline(Item.new(title: "Event", last: false))
 
         assert_includes page.native.to_html, "w-0.5"
-        assert_includes page.native.to_html, "bg-border"
+        assert_includes page.native.to_html, "bg-[var(--surface-border-color)]"
       end
 
       def test_does_not_render_connecting_line_when_last

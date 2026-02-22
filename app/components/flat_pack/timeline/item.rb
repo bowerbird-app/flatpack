@@ -5,12 +5,12 @@ module FlatPack
     class Item < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-primary" "bg-success" "bg-warning" "bg-destructive"
+      # "bg-primary" "bg-success-bg" "bg-warning-bg" "bg-destructive-bg"
       VARIANTS = {
         default: "bg-primary",
-        success: "bg-success",
-        warning: "bg-warning",
-        danger: "bg-destructive"
+        success: "bg-success-bg",
+        warning: "bg-warning-bg",
+        danger: "bg-destructive-bg"
       }.freeze
 
       def initialize(
@@ -70,7 +70,7 @@ module FlatPack
       def render_line
         return if @last
 
-        content_tag(:div, nil, class: "w-0.5 h-full min-h-[2rem] bg-border")
+        content_tag(:div, nil, class: "w-0.5 h-full min-h-[2rem] bg-[var(--surface-border-color)]")
       end
 
       def render_content_area
@@ -85,7 +85,7 @@ module FlatPack
       def render_header
         content_tag(:div, class: "flex items-baseline justify-between mb-1") do
           safe_join([
-            content_tag(:h3, @title, class: "text-base font-semibold text-foreground"),
+            content_tag(:h3, @title, class: "text-base font-semibold text-[var(--surface-content-color)]"),
             render_timestamp
           ].compact)
         end
@@ -94,17 +94,17 @@ module FlatPack
       def render_timestamp
         return unless @timestamp
 
-        content_tag(:time, @timestamp, class: "text-sm text-muted-foreground")
+        content_tag(:time, @timestamp, class: "text-sm text-[var(--surface-muted-content-color)]")
       end
 
       def render_content
-        return content_tag(:div, @description, class: "text-sm text-foreground mt-2") if @description.present?
+        return content_tag(:div, @description, class: "text-sm text-[var(--surface-content-color)] mt-2") if @description.present?
         return unless content?
 
         # SECURITY: Content is marked html_safe because it's expected to contain
         # Rails-generated HTML from components captured via block. Never pass
         # unsanitized user input directly to content.
-        content_tag(:div, content.html_safe, class: "text-sm text-foreground mt-2")
+        content_tag(:div, content.html_safe, class: "text-sm text-[var(--surface-content-color)] mt-2")
       end
 
       def item_attributes

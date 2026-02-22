@@ -18,7 +18,7 @@ module FlatPack
 
         def initialize(
           text:,
-          style: :primary,
+          style: :default,
           size: :md,
           icon: nil,
           disabled: false,
@@ -53,8 +53,8 @@ module FlatPack
 
         def dropdown_data_attributes
           {
-            controller: "button-dropdown",
-            button_dropdown_max_height_value: @max_height
+            controller: "flat-pack--button-dropdown",
+            flat_pack__button_dropdown_max_height_value: @max_height
           }
         end
 
@@ -66,8 +66,8 @@ module FlatPack
               expanded: "false"
             },
             data: {
-              button_dropdown_target: "trigger",
-              action: "click->button-dropdown#toggle"
+              flat_pack__button_dropdown_target: "trigger",
+              action: "click->flat-pack--button-dropdown#toggle"
             }
           }
         end
@@ -100,7 +100,7 @@ module FlatPack
         def chevron_icon
           content_tag(:svg,
             class: "h-4 w-4 transition-transform duration-200",
-            data: {button_dropdown_target: "chevron"},
+            data: {flat_pack__button_dropdown_target: "chevron"},
             xmlns: "http://www.w3.org/2000/svg",
             viewBox: "0 0 24 24",
             fill: "none",
@@ -117,7 +117,7 @@ module FlatPack
             class: menu_classes,
             role: "menu",
             data: {
-              button_dropdown_target: "menu"
+              flat_pack__button_dropdown_target: "menu"
             }
           }
         end
@@ -128,8 +128,8 @@ module FlatPack
             "min-w-[12rem]",
             "overflow-auto",
             "rounded-md",
-            "border border-border",
-            "bg-background",
+            "border border-[var(--surface-border-color)]",
+            "bg-[var(--surface-bg-color)]",
             "p-1",
             "shadow-lg",
             "opacity-0 scale-95 hidden",

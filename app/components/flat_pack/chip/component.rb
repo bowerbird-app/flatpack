@@ -5,23 +5,23 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-muted" "text-foreground" "bg-primary" "text-primary-text" "bg-success" "text-success-text" "bg-warning" "text-warning-text" "bg-red-500" "text-white" "bg-blue-500"
+      # "bg-[var(--surface-muted-bg-color)]" "text-[var(--surface-content-color)]" "border-[var(--surface-border-color)]" "bg-primary" "text-primary-text" "border-primary" "bg-success-bg" "text-success-text" "border-success-border" "bg-warning-bg" "text-warning-text" "border-warning-border" "bg-destructive-bg" "text-destructive-text" "border-destructive-border" "bg-secondary" "text-secondary-text" "border-info-border"
       STYLES = {
-        default: "bg-muted text-foreground",
-        primary: "bg-primary text-primary-text",
-        success: "bg-success text-success-text",
-        warning: "bg-warning text-warning-text",
-        danger: "bg-red-500 text-white",
-        info: "bg-blue-500 text-white"
+        default: "bg-[var(--surface-muted-bg-color)] text-[var(--surface-content-color)] border-[var(--surface-border-color)]",
+        primary: "bg-primary text-primary-text border-primary",
+        success: "bg-success-bg text-success-text border-success-border",
+        warning: "bg-warning-bg text-warning-text border-warning-border",
+        danger: "bg-destructive-bg text-destructive-text border-destructive-border",
+        info: "bg-secondary text-secondary-text border-info-border"
       }.freeze
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "text-xs" "px-2" "py-0.5" "text-sm" "px-3" "py-1" "text-base" "px-4" "py-1.5"
+      # "text-xs" "px-[var(--chip-padding-x-sm)]" "py-[var(--chip-padding-y-sm)]" "text-sm" "px-[var(--chip-padding-x-md)]" "py-[var(--chip-padding-y-md)]" "text-base" "px-[var(--chip-padding-x-lg)]" "py-[var(--chip-padding-y-lg)]"
       SIZES = {
-        sm: "text-xs px-2 py-0.5",
-        md: "text-sm px-3 py-1",
-        lg: "text-base px-4 py-1.5"
+        sm: "text-xs px-[var(--chip-padding-x-sm)] py-[var(--chip-padding-y-sm)]",
+        md: "text-sm px-[var(--chip-padding-x-md)] py-[var(--chip-padding-y-md)]",
+        lg: "text-base px-[var(--chip-padding-x-lg)] py-[var(--chip-padding-y-lg)]"
       }.freeze
 
       TYPES = %i[static button link].freeze
@@ -94,7 +94,7 @@ module FlatPack
 
         content_tag(:button,
           type: "button",
-          class: "ml-1 inline-flex items-center justify-center rounded-full hover:bg-black/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring",
+          class: "ml-1 inline-flex items-center justify-center rounded-full hover:bg-[var(--chip-remove-hover-background-color)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring",
           "aria-label": "Remove",
           data: {action: "click->flat-pack--chip#remove"}) do
           # X icon (close)
@@ -134,8 +134,8 @@ module FlatPack
       def chip_classes
         classes(
           "inline-flex items-center gap-1.5",
-          "rounded-full font-medium",
-          "border border-transparent",
+          "rounded-[var(--chip-border-radius)] font-medium",
+          "border",
           "transition-colors duration-base",
           STYLES.fetch(@style),
           SIZES.fetch(@size),

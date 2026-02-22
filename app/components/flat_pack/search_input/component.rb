@@ -126,7 +126,7 @@ module FlatPack
 
       def label_classes
         classes(
-          "block text-sm font-medium text-foreground mb-1.5"
+          "block text-sm font-medium text-[var(--surface-content-color)] mb-1.5"
         )
       end
 
@@ -136,13 +136,13 @@ module FlatPack
           "w-full",
           "rounded-md",
           "border",
-          "bg-background",
-          "text-foreground",
+          "bg-[var(--surface-bg-color)]",
+          "text-[var(--surface-content-color)]",
           "px-[var(--form-control-padding)] py-[var(--form-control-padding)]",
           "pr-10",
           "text-sm",
           "transition-colors duration-base",
-          "placeholder:text-muted-foreground",
+          "placeholder:text-[var(--surface-muted-content-color)]",
           "focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent",
           "disabled:opacity-50 disabled:cursor-not-allowed"
         ]
@@ -150,14 +150,14 @@ module FlatPack
         base_classes << if @error
           "border-warning"
         else
-          "border-border"
+          "border-[var(--surface-border-color)]"
         end
 
         classes(*base_classes, @custom_class)
       end
 
       def clear_button_classes
-        "absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors hidden"
+        "absolute right-3 top-1/2 -translate-y-1/2 text-[var(--surface-muted-content-color)] hover:text-[var(--surface-content-color)] transition-colors hidden"
       end
 
       def error_classes

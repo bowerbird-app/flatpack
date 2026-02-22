@@ -9,7 +9,7 @@ module FlatPack
         end
 
         def call
-          content_tag(:div, content, class: "p-[var(--card-padding)] flex-1", **@system_arguments)
+          content_tag(:div, content, class: "p-[var(--card-padding-md)] flex-1", **@system_arguments)
         end
       end
     end

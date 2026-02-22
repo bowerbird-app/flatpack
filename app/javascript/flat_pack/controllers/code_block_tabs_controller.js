@@ -7,6 +7,16 @@ export default class extends Controller {
     default: { type: Number, default: 0 }
   }
 
+  static activeClasses = [
+    "bg-[var(--code-block-tab-active-background-color)]",
+    "text-[var(--code-block-tab-active-color)]"
+  ]
+
+  static inactiveClasses = [
+    "text-[var(--code-block-tab-color)]",
+    "hover:text-[var(--code-block-tab-hover-color)]"
+  ]
+
   connect() {
     this.selectTabByIndex(this.defaultValue)
   }
@@ -23,12 +33,14 @@ export default class extends Controller {
       const isSelected = i === index
       tab.setAttribute("aria-selected", isSelected)
       tab.setAttribute("tabindex", isSelected ? "0" : "-1")
-      tab.classList.remove("hover:bg-[var(--color-muted)]")
+
+      tab.classList.remove(...this.constructor.activeClasses)
+      tab.classList.remove(...this.constructor.inactiveClasses)
 
       if (isSelected) {
-        tab.classList.add("bg-[var(--color-border)]")
+        tab.classList.add(...this.constructor.activeClasses)
       } else {
-        tab.classList.remove("bg-[var(--color-border)]")
+        tab.classList.add(...this.constructor.inactiveClasses)
       }
     })
 

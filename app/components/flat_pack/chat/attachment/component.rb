@@ -6,7 +6,7 @@ module FlatPack
       class Component < FlatPack::BaseComponent
         # Tailwind CSS scanning requires these classes to be present as string literals.
         # DO NOT REMOVE - These duplicates ensure CSS generation:
-        # "border" "border-border" "rounded-lg" "p-3" "hover:bg-muted"
+        # "border" "border-[var(--chat-attachment-border-color)]" "rounded-lg" "p-3" "hover:bg-[var(--chat-attachment-hover-background-color)]"
         TYPES = {
           file: "file",
           image: "image"
@@ -67,8 +67,8 @@ module FlatPack
               render_file_icon,
               content_tag(:div, class: "flex-1 min-w-0") do
                 safe_join([
-                  content_tag(:div, @name, class: "text-sm font-medium text-foreground truncate"),
-                  (@meta ? content_tag(:div, @meta, class: "text-xs text-muted-foreground") : nil)
+                  content_tag(:div, @name, class: "text-sm font-medium text-[var(--chat-attachment-text-color)] truncate"),
+                  (@meta ? content_tag(:div, @meta, class: "text-xs text-[var(--chat-attachment-meta-color)]") : nil)
                 ].compact)
               end,
               render_download_icon
@@ -89,7 +89,7 @@ module FlatPack
               xmlns: "http://www.w3.org/2000/svg",
               viewBox: "0 0 20 20",
               fill: "currentColor",
-              class: "h-8 w-8 text-muted-foreground") do
+              class: "h-8 w-8 text-[var(--chat-attachment-icon-color)]") do
               content_tag(:path,
                 nil,
                 "fill-rule": "evenodd",
@@ -109,7 +109,7 @@ module FlatPack
               xmlns: "http://www.w3.org/2000/svg",
               viewBox: "0 0 20 20",
               fill: "currentColor",
-              class: "h-5 w-5 text-muted-foreground") do
+              class: "h-5 w-5 text-[var(--chat-attachment-icon-color)]") do
               safe_join([
                 content_tag(:path,
                   nil,
@@ -135,7 +135,7 @@ module FlatPack
           classes(
             "rounded-lg overflow-hidden",
             "max-w-sm w-full",
-            "border border-border",
+            "border border-[var(--chat-attachment-border-color)]",
             @href ? "cursor-pointer hover:opacity-80 transition-opacity" : nil
           )
         end
@@ -143,10 +143,10 @@ module FlatPack
         def file_container_classes
           classes(
             "flex items-center gap-3",
-            "border border-border",
+            "border border-[var(--chat-attachment-border-color)]",
             "rounded-lg",
             "p-3",
-            @href ? "hover:bg-muted transition-colors cursor-pointer" : nil
+            @href ? "hover:bg-[var(--chat-attachment-hover-background-color)] transition-colors cursor-pointer" : nil
           )
         end
 

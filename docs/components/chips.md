@@ -289,13 +289,19 @@ Emitted when a button chip is toggled. Event detail contains:
 
 ## Styling
 
-Chips use CSS variables for theming:
-- `--color-muted` / `--color-foreground` - Default style
-- `--color-primary` / `--color-primary-text` - Primary style
-- `--color-success` / `--color-success-text` - Success style
-- `--color-warning` / `--color-warning-text` - Warning style
+Chips use shared semantic color tokens and chip-specific layout tokens:
+- `--surface-muted-bg-color`, `--surface-content-color`, `--surface-border-color` (default chips)
+- `--color-primary`, `--color-primary-text` (primary chips)
+- `--color-success-bg`, `--color-success-text`, `--color-success-border` (success chips)
+- `--color-warning-bg`, `--color-warning-text`, `--color-warning-border` (warning chips)
+- `--color-destructive-bg`, `--color-destructive-text`, `--color-destructive-border` (danger chips)
+- `--color-secondary`, `--color-secondary-text`, `--color-info-border` (info chips)
+- `--chip-padding-x-sm|md|lg` and `--chip-padding-y-sm|md|lg` for chip spacing
+- `--chip-group-gap` for spacing between chips in `ChipGroup`
+- `--chip-remove-hover-background-color` for remove-button hover state
+- `--chip-border-radius` for chip shape
 - `--color-ring` - Focus ring color
-- `--transition-base` - Transition duration
+- `--duration-base` - Transition duration
 
 ## Best Practices
 

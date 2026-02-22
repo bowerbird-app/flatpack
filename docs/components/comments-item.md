@@ -49,8 +49,8 @@ Add reply, like, edit buttons:
 ) do |item| %>
   <% item.with_actions do %>
     <%= link_to "Reply", "#", class: "text-sm text-primary" %>
-    <%= link_to "Like", "#", class: "text-sm text-muted-foreground" %>
-    <%= link_to "Edit", "#", class: "text-sm text-muted-foreground" %>
+    <%= link_to "Like", "#", class: "text-sm text-[var(--surface-muted-content-color)]" %>
+    <%= link_to "Edit", "#", class: "text-sm text-[var(--surface-muted-content-color)]" %>
   <% end %>
 <% end %>
 ```
@@ -96,7 +96,7 @@ Add reactions or metadata:
   body: "Interesting point!"
 ) do |item| %>
   <% item.with_footer do %>
-    <div class="flex gap-3 text-xs text-muted-foreground">
+    <div class="flex gap-3 text-xs text-[var(--surface-muted-content-color)]">
       <span>👍 12</span>
       <span>❤️ 5</span>
     </div>

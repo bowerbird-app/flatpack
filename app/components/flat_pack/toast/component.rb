@@ -5,31 +5,31 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "border-info" "bg-info/10" "text-info"
-      # "border-success" "bg-success/10" "text-success"
-      # "border-warning" "bg-warning/10" "text-warning"
-      # "border-destructive" "bg-destructive/10" "bg-destructive" "text-destructive"
+      # "border-info-border" "text-[var(--surface-content-color)]"
+      # "border-success-border" "bg-success-bg/10" "text-success-border"
+      # "border-warning-border" "bg-warning-bg/10" "text-warning-border"
+      # "border-destructive-border" "bg-destructive-bg/10" "bg-destructive-bg" "text-destructive-border"
       # "bg-destructive-text/20" "hover:bg-destructive-text/30" "text-destructive-text"
       TYPES = {
         info: {
-          border: "border-info",
-          bg: "bg-background",
-          text: "text-info"
+          border: "border-info-border",
+          bg: "bg-[var(--surface-bg-color)]",
+          text: "text-[var(--surface-content-color)]"
         },
         success: {
-          border: "border-success",
-          bg: "bg-background",
-          text: "text-success"
+          border: "border-success-border",
+          bg: "bg-[var(--surface-bg-color)]",
+          text: "text-success-border"
         },
         warning: {
-          border: "border-warning",
-          bg: "bg-background",
-          text: "text-warning"
+          border: "border-warning-border",
+          bg: "bg-[var(--surface-bg-color)]",
+          text: "text-warning-border"
         },
         error: {
-          border: "border-destructive",
-          bg: "bg-destructive",
-          text: "text-destructive"
+          border: "border-destructive-border",
+          bg: "bg-destructive-bg",
+          text: "text-destructive-border"
         }
       }.freeze
 
@@ -155,7 +155,7 @@ module FlatPack
       end
 
       def render_message
-        content_tag(:p, @message, class: "flex-1 text-sm font-medium text-foreground")
+        content_tag(:p, @message, class: "flex-1 text-sm font-medium text-[var(--surface-content-color)]")
       end
 
       def render_dismiss_button
@@ -194,7 +194,7 @@ module FlatPack
         if @type == :error
           "bg-destructive-text/20 hover:bg-destructive-text/30 text-destructive-text"
         else
-          "text-muted-foreground hover:text-foreground"
+          "text-[var(--surface-muted-content-color)] hover:text-[var(--surface-content-color)]"
         end
       end
 

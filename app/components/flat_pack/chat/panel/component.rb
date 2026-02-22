@@ -55,8 +55,8 @@ module FlatPack
         def header_classes
           classes(
             "flex-shrink-0",
-            "border-b border-border",
-            "bg-background"
+            "border-b border-[var(--chat-header-border-color)]",
+            "bg-[var(--chat-header-background-color)]"
           )
         end
       end

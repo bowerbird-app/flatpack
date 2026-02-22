@@ -99,13 +99,13 @@ module FlatPack
 
       def label_classes
         classes(
-          "block text-sm font-medium text-foreground mb-2"
+          "block text-sm font-medium text-[var(--surface-content-color)] mb-2"
         )
       end
 
       def radio_label_classes(disabled)
         classes(
-          "ml-2 text-sm font-medium text-foreground",
+          "ml-2 text-sm font-medium text-[var(--surface-content-color)]",
           disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
         )
       end
@@ -116,7 +116,7 @@ module FlatPack
           "h-4 w-4",
           "rounded-full",
           "border",
-          "bg-background",
+          "bg-[var(--surface-bg-color)]",
           "text-primary",
           "transition-colors duration-base",
           "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
@@ -126,7 +126,7 @@ module FlatPack
         base_classes << if @error
           "border-warning"
         else
-          "border-border"
+          "border-[var(--surface-border-color)]"
         end
 
         classes(*base_classes, @custom_class)

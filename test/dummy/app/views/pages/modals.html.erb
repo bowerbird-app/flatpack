@@ -20,10 +20,10 @@
       <h2 class="text-xl font-semibold">Modal Title</h2>
     <% end %>
     <% modal.with_body do %>
-      <p class="text-foreground">
+      <p class="text-[var(--surface-content-color)]">
         This is a basic modal dialog. Click the backdrop, press ESC, or click the close button to dismiss.
       </p>
-      <p class="mt-4 text-muted-foreground">
+      <p class="mt-4 text-[var(--surface-muted-content-color)]">
         The modal traps focus and prevents interaction with the rest of the page while open.
       </p>
     <% end %>
@@ -130,7 +130,7 @@
 <!-- Modal with Form -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Modal with Form", anchor_link: true, subtitle: "Examples for Modal with Form.") %>
-  <p class="text-muted-foreground mb-4">
+  <p class="text-[var(--surface-muted-content-color)] mb-4">
     A practical example of placing a form inside a modal for focused data entry.
   </p>
   <div class="mb-4">
@@ -209,7 +209,7 @@
 <!-- Long Content Modal -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Long Content Modal", anchor_link: true, subtitle: "Examples for Long Content Modal.") %>
-  <p class="text-muted-foreground mb-4">
+  <p class="text-[var(--surface-muted-content-color)] mb-4">
     This example includes a large amount of text to test modal body scrolling and overall behavior with long-form content.
   </p>
   <div class="mb-4">
@@ -225,7 +225,7 @@
       <h2 class="text-xl font-semibold">Long Content Test</h2>
     <% end %>
     <% modal.with_body do %>
-      <div class="space-y-4 text-foreground">
+      <div class="space-y-4 text-[var(--surface-content-color)]">
         <p>
           This modal intentionally contains a lot of text so you can validate scrolling behavior, focus handling,
           and layout stability with larger content sets.
@@ -254,7 +254,7 @@
 <!-- Features -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Examples for Features.") %>
-  <ul class="list-disc list-inside space-y-2 text-foreground">
+  <ul class="list-disc list-inside space-y-2 text-[var(--surface-content-color)]">
     <li><strong>Focus Trap:</strong> Keeps keyboard focus within the modal while open</li>
     <li><strong>Focus Restoration:</strong> Returns focus to the trigger element on close</li>
     <li><strong>ESC to Close:</strong> Press ESC key to dismiss the modal</li>

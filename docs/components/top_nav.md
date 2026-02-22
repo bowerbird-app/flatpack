@@ -24,7 +24,7 @@ The TopNav component provides a sticky header bar with left, center, and right s
   <% end %>
 
   <% nav.right do %>
-    <button class="p-2 rounded-lg hover:bg-[var(--color-muted)]">
+    <button class="p-2 rounded-lg hover:bg-[var(--surface-muted-bg-color)]">
       <%= render FlatPack::Shared::IconComponent.new(name: :bell, size: :md) %>
     </button>
   <% end %>
@@ -50,7 +50,7 @@ Left section of the navigation bar. Typically contains:
 <% nav.left do %>
   <button
     type="button"
-    class="md:hidden p-2 rounded-lg hover:bg-[var(--color-muted)]"
+    class="md:hidden p-2 rounded-lg hover:bg-[var(--surface-muted-bg-color)]"
     data-flat-pack--sidebar-layout-target="mobileToggle"
     data-action="click->flat-pack--sidebar-layout#toggleMobile"
   >
@@ -87,11 +87,11 @@ Right section of the navigation bar. Typically contains:
 ```erb
 <% nav.right do %>
   <div class="flex items-center gap-2">
-    <button class="p-2 rounded-lg hover:bg-[var(--color-muted)]">
+    <button class="p-2 rounded-lg hover:bg-[var(--surface-muted-bg-color)]">
       <%= render FlatPack::Shared::IconComponent.new(name: :bell, size: :md) %>
     </button>
     
-    <button class="p-2 rounded-lg hover:bg-[var(--color-muted)]">
+    <button class="p-2 rounded-lg hover:bg-[var(--surface-muted-bg-color)]">
       <%= render FlatPack::Shared::IconComponent.new(name: :user, size: :md) %>
     </button>
   </div>
@@ -125,7 +125,7 @@ TopNav uses a single horizontal flex row with three slot wrappers:
   <% end %>
 
   <% nav.right do %>
-    <button class="p-2 rounded-lg hover:bg-[var(--color-muted)]">Alerts</button>
+    <button class="p-2 rounded-lg hover:bg-[var(--surface-muted-bg-color)]">Alerts</button>
   <% end %>
 <% end %>
 ```
@@ -139,7 +139,7 @@ TopNav uses a single horizontal flex row with three slot wrappers:
   <% end %>
 
   <% nav.right do %>
-    <button class="p-2 rounded-lg hover:bg-[var(--color-muted)]">Save</button>
+    <button class="p-2 rounded-lg hover:bg-[var(--surface-muted-bg-color)]">Save</button>
   <% end %>
 <% end %>
 ```
@@ -153,7 +153,7 @@ TopNav uses a single horizontal flex row with three slot wrappers:
   <% nav.left do %>
     <button
       type="button"
-      class="md:hidden p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors"
+      class="md:hidden p-2 rounded-lg hover:bg-[var(--surface-muted-bg-color)] transition-colors"
       data-flat-pack--sidebar-layout-target="mobileToggle"
       data-action="click->flat-pack--sidebar-layout#toggleMobile"
       aria-label="Toggle sidebar"
@@ -176,12 +176,12 @@ TopNav uses a single horizontal flex row with three slot wrappers:
         New Project
       <% end %>
       
-      <button class="p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors relative">
+      <button class="p-2 rounded-lg hover:bg-[var(--surface-muted-bg-color)] transition-colors relative">
         <%= render FlatPack::Shared::IconComponent.new(name: :bell, size: :md) %>
         <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
       </button>
       
-      <button class="p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors">
+      <button class="p-2 rounded-lg hover:bg-[var(--surface-muted-bg-color)] transition-colors">
         <%= render FlatPack::Shared::IconComponent.new(name: :user, size: :md) %>
       </button>
     </div>
@@ -198,10 +198,10 @@ TopNav uses a single horizontal flex row with three slot wrappers:
   <% end %>
 
   <% nav.center do %>
-    <nav class="flex gap-1 p-1 bg-[var(--color-muted)] rounded-lg">
-      <%= link_to "All", projects_path, class: "px-4 py-1.5 text-sm font-medium rounded-md #{'bg-[var(--color-background)] shadow-sm' if current_page?(projects_path)}" %>
-      <%= link_to "Active", active_projects_path, class: "px-4 py-1.5 text-sm font-medium rounded-md #{'bg-[var(--color-background)] shadow-sm' if current_page?(active_projects_path)}" %>
-      <%= link_to "Archived", archived_projects_path, class: "px-4 py-1.5 text-sm font-medium rounded-md #{'bg-[var(--color-background)] shadow-sm' if current_page?(archived_projects_path)}" %>
+    <nav class="flex gap-1 p-1 bg-[var(--surface-muted-bg-color)] rounded-lg">
+      <%= link_to "All", projects_path, class: "px-4 py-1.5 text-sm font-medium rounded-md #{'bg-[var(--surface-bg-color)] shadow-sm' if current_page?(projects_path)}" %>
+      <%= link_to "Active", active_projects_path, class: "px-4 py-1.5 text-sm font-medium rounded-md #{'bg-[var(--surface-bg-color)] shadow-sm' if current_page?(active_projects_path)}" %>
+      <%= link_to "Archived", archived_projects_path, class: "px-4 py-1.5 text-sm font-medium rounded-md #{'bg-[var(--surface-bg-color)] shadow-sm' if current_page?(archived_projects_path)}" %>
     </nav>
   <% end %>
 
@@ -229,7 +229,7 @@ The TopNav is positioned with `sticky top-0`, so it stays at the top of the main
 
 ### Backdrop Blur
 
-Uses `backdrop-blur-lg` with semi-transparent background (`bg-[var(--color-background)]/80`) for a modern, elevated appearance.
+Uses `backdrop-blur-lg` with semi-transparent background (`bg-[var(--surface-bg-color)]/80`) for a modern, elevated appearance.
 
 ### Border
 

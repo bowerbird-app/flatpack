@@ -21,14 +21,14 @@ module FlatPack
       # Style Tests
       def test_renders_with_style_default
         render_inline(Component.new(style: :default))
-        assert_includes page.native.to_html, "bg-background"
-        assert_includes page.native.to_html, "border border-border"
+        assert_includes page.native.to_html, "bg-[var(--card-background-color)]"
+        assert_includes page.native.to_html, "border border-[var(--card-border-color)]"
       end
 
       def test_renders_with_style_elevated
         render_inline(Component.new(style: :elevated))
         assert_includes page.native.to_html, "shadow-md"
-        assert_includes page.native.to_html, "border border-border"
+        assert_includes page.native.to_html, "border border-[var(--card-border-color)]"
       end
 
       def test_renders_with_style_outlined
@@ -38,7 +38,7 @@ module FlatPack
 
       def test_renders_with_style_flat
         render_inline(Component.new(style: :flat))
-        assert_includes page.native.to_html, "bg-muted"
+        assert_includes page.native.to_html, "bg-[var(--card-background-muted-color)]"
       end
 
       def test_renders_with_style_interactive
@@ -90,17 +90,17 @@ module FlatPack
 
       def test_renders_with_padding_sm
         render_inline(Component.new(padding: :sm))
-        assert_includes page.native.to_html, "p-4"
+        assert_includes page.native.to_html, "p-[var(--card-padding-sm)]"
       end
 
       def test_renders_with_padding_md
         render_inline(Component.new(padding: :md))
-        assert_includes page.native.to_html, "p-6"
+        assert_includes page.native.to_html, "p-[var(--card-padding-md)]"
       end
 
       def test_renders_with_padding_lg
         render_inline(Component.new(padding: :lg))
-        assert_includes page.native.to_html, "p-8"
+        assert_includes page.native.to_html, "p-[var(--card-padding-lg)]"
       end
 
       def test_validates_padding
@@ -206,7 +206,7 @@ module FlatPack
       def test_header_with_divider
         render_inline(Header::Component.new(divider: true)) { "Header" }
         assert_includes page.native.to_html, "border-b"
-        assert_includes page.native.to_html, "border-border"
+        assert_includes page.native.to_html, "border-[var(--card-border-color)]"
       end
 
       def test_header_without_divider
@@ -221,7 +221,7 @@ module FlatPack
 
       def test_header_has_padding_classes
         render_inline(Header::Component.new) { "Header" }
-        assert_includes page.native.to_html, "px-6 py-4"
+        assert_includes page.native.to_html, "p-[var(--card-padding-md)]"
       end
 
       # Body Component Tests
@@ -232,7 +232,7 @@ module FlatPack
 
       def test_body_has_padding_classes
         render_inline(Body::Component.new) { "Body" }
-        assert_includes page.native.to_html, "px-6 py-4"
+        assert_includes page.native.to_html, "p-[var(--card-padding-md)]"
       end
 
       # Footer Component Tests
@@ -244,7 +244,7 @@ module FlatPack
       def test_footer_with_divider
         render_inline(Footer::Component.new(divider: true)) { "Footer" }
         assert_includes page.native.to_html, "border-t"
-        assert_includes page.native.to_html, "border-border"
+        assert_includes page.native.to_html, "border-[var(--card-border-color)]"
       end
 
       def test_footer_without_divider
@@ -259,7 +259,7 @@ module FlatPack
 
       def test_footer_has_padding_classes
         render_inline(Footer::Component.new) { "Footer" }
-        assert_includes page.native.to_html, "px-6 py-4"
+        assert_includes page.native.to_html, "p-[var(--card-padding-md)]"
       end
 
       # Media Component Tests
@@ -300,12 +300,12 @@ module FlatPack
 
       def test_media_with_padding_none
         render_inline(Media::Component.new(padding: :none)) { "Media" }
-        refute_includes page.native.to_html, "px-6 pt-6"
+        refute_includes page.native.to_html, "px-[var(--card-padding-md)] pt-[var(--card-padding-md)]"
       end
 
       def test_media_with_padding_md
         render_inline(Media::Component.new(padding: :md)) { "Media" }
-        assert_includes page.native.to_html, "px-6 pt-6"
+        assert_includes page.native.to_html, "px-[var(--card-padding-md)] pt-[var(--card-padding-md)]"
       end
 
       def test_media_validates_padding
@@ -428,8 +428,8 @@ module FlatPack
           component.body { "Content" }
         end
 
-        refute_includes page.native.to_html, "p-8"
-        assert_includes page.native.to_html, "px-6 py-4"
+        refute_includes page.native.to_html, "p-[var(--card-padding-lg)]"
+        assert_includes page.native.to_html, "p-[var(--card-padding-md)]"
       end
 
       def test_media_slot_inherits_card_padding_by_default
@@ -437,7 +437,7 @@ module FlatPack
           component.media(aspect_ratio: "16/9") { "Media" }
         end
 
-        assert_includes page.native.to_html, "px-8 pt-8"
+        assert_includes page.native.to_html, "px-[var(--card-padding-lg)] pt-[var(--card-padding-lg)]"
       end
 
       def test_media_slot_padding_overrides_card_padding
@@ -445,8 +445,8 @@ module FlatPack
           component.media(aspect_ratio: "16/9", padding: :none) { "Media" }
         end
 
-        refute_includes page.native.to_html, "px-8 pt-8"
-        refute_includes page.native.to_html, "px-6 pt-6"
+        refute_includes page.native.to_html, "px-[var(--card-padding-lg)] pt-[var(--card-padding-lg)]"
+        refute_includes page.native.to_html, "px-[var(--card-padding-md)] pt-[var(--card-padding-md)]"
       end
 
       def test_content_appears_when_no_slots_used

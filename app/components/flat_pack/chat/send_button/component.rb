@@ -79,12 +79,12 @@ module FlatPack
             "flex items-center justify-center",
             "h-10 w-10",
             "rounded-lg",
-            "bg-primary",
-            "text-primary-text",
-            "hover:bg-primary-hover",
+            "bg-[var(--chat-send-button-background-color)]",
+            "text-[var(--chat-send-button-text-color)]",
+            "hover:bg-[var(--chat-send-button-hover-background-color)]",
             "disabled:opacity-50 disabled:cursor-not-allowed",
             "transition-colors duration-base",
-            "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+            "focus:outline-none focus:ring-2 focus:ring-[var(--chat-send-button-focus-ring-color)] focus:ring-offset-2",
             "shrink-0"
           )
         end

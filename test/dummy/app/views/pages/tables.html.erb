@@ -171,7 +171,7 @@
   <!-- Sortable Table -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Sortable Table", anchor_link: true, subtitle: "Examples for Sortable Table.") %>
-    <p class="text-muted-foreground mb-4">
+    <p class="text-[var(--surface-muted-content-color)] mb-4">
       Click column headers to sort. Uses Turbo Frames for seamless updates without full page reload.
     </p>
     <%= render FlatPack::Table::Component.new(
@@ -221,7 +221,7 @@
   <!-- Draggable Rows Table -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Draggable Rows Table", anchor_link: true, subtitle: "Examples for Draggable Rows Table.") %>
-    <p class="text-muted-foreground mb-4">
+    <p class="text-[var(--surface-muted-content-color)] mb-4">
       Drag rows by the handle to reorder. The order is persisted with a generic reorder contract.
     </p>
 
@@ -234,7 +234,7 @@
         scope: { list_key: DemoTableRow::DEFAULT_LIST_KEY }
       }
     ) do |table| %>
-      <% table.column(title: "Reorder", html: ->(_row) { "<span aria-hidden=\"true\" class=\"inline-flex text-muted-foreground cursor-grab\">⋮⋮</span>".html_safe }) %>
+      <% table.column(title: "Reorder", html: ->(_row) { "<span aria-hidden=\"true\" class=\"inline-flex text-[var(--surface-muted-content-color)] cursor-grab\">⋮⋮</span>".html_safe }) %>
       <% table.column(title: "Task", html: ->(row) { row.name }) %>
       <% table.column(title: "Status", html: ->(row) { row.status.capitalize }) %>
       <% table.column(title: "Priority", html: ->(row) { row.priority.capitalize }) %>

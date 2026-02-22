@@ -91,7 +91,7 @@ module FlatPack
       def wrapper_classes
         classes(
           "relative inline-flex items-center justify-center shrink-0 overflow-hidden",
-          "bg-muted text-foreground",
+          "bg-[var(--surface-muted-bg-color)] text-[var(--surface-content-color)]",
           "font-medium select-none aspect-square",
           SIZES.fetch(@size),
           SHAPES.fetch(@shape),

@@ -10,8 +10,8 @@
             size: :sm
           ) %>
         </div>
-        <p class="text-sm text-muted-foreground mb-3"><%= record.name %></p>
-        <div class="text-sm text-muted-foreground space-y-1">
+        <p class="text-sm text-[var(--surface-muted-content-color)] mb-3"><%= record.name %></p>
+        <div class="text-sm text-[var(--surface-muted-content-color)] space-y-1">
           <p><%= record.email %></p>
           <p><%= record.category.to_s.titleize %> · <%= number_with_delimiter(record.views_count) %> views</p>
           <p><%= record.published_at&.strftime("%b %d, %Y") %></p>

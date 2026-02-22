@@ -129,7 +129,7 @@ export default class extends Controller {
     iconWrap.innerHTML = this.iconSvg(normalizedType)
 
     const messageEl = document.createElement("p")
-    messageEl.className = "flex-1 text-sm font-medium text-[var(--color-text)]"
+    messageEl.className = "flex-1 text-sm font-medium text-[var(--surface-content-color)]"
     messageEl.textContent = message
 
     const dismissButton = document.createElement("button")
@@ -151,24 +151,24 @@ export default class extends Controller {
   typeClasses(type) {
     const classes = {
       info: {
-        border: "border-[var(--color-info)]",
-        bg: "bg-[var(--color-background)]",
-        text: "text-[var(--color-info)]"
+        border: "border-[var(--color-info-border)]",
+        bg: "bg-[var(--surface-bg-color)]",
+        text: "text-[var(--surface-content-color)]"
       },
       success: {
-        border: "border-[var(--color-success)]",
-        bg: "bg-[var(--color-background)]",
-        text: "text-[var(--color-success)]"
+        border: "border-[var(--color-success-border)]",
+        bg: "bg-[var(--surface-bg-color)]",
+        text: "text-[var(--color-success-border)]"
       },
       warning: {
-        border: "border-[var(--color-warning)]",
-        bg: "bg-[var(--color-background)]",
-        text: "text-[var(--color-warning)]"
+        border: "border-[var(--color-warning-border)]",
+        bg: "bg-[var(--surface-bg-color)]",
+        text: "text-[var(--color-warning-border)]"
       },
       error: {
-        border: "border-[var(--color-error)]",
-        bg: "bg-[var(--color-destructive)]",
-        text: "text-[var(--color-error)]"
+        border: "border-[var(--color-destructive-border)]",
+        bg: "bg-[var(--color-destructive-bg)]",
+        text: "text-[var(--color-destructive-border)]"
       }
     }
 
@@ -182,7 +182,7 @@ export default class extends Controller {
       return `${base} bg-[var(--color-destructive-text)]/20 hover:bg-[var(--color-destructive-text)]/30 text-[var(--color-destructive-text)]`
     }
 
-    return `${base} text-[var(--color-text-muted)] hover:text-[var(--color-text)]`
+    return `${base} text-[var(--surface-muted-content-color)] hover:text-[var(--surface-content-color)]`
   }
 
   iconSvg(type) {

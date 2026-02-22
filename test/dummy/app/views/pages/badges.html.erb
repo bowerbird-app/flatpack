@@ -166,7 +166,7 @@
     <%= render FlatPack::SectionTitle::Component.new(title: "Combined Examples", anchor_link: true, subtitle: "Examples for Combined Examples.") %>
     <div class="mb-6">
       <h3 class="text-lg font-medium mb-3">User Profile Card</h3>
-      <div class="border border-border rounded-md p-4">
+      <div class="border border-[var(--surface-border-color)] rounded-md p-4">
         <div class="flex items-center justify-between mb-2">
           <h4 class="font-semibold">John Doe</h4>
           <%= render FlatPack::Badge::Component.new(text: "Admin", style: :primary, size: :sm) %>
@@ -180,7 +180,7 @@
 
     <div class="mb-6">
       <h3 class="text-lg font-medium mb-3">Task List Item</h3>
-      <div class="border border-border rounded-md p-4">
+      <div class="border border-[var(--surface-border-color)] rounded-md p-4">
         <div class="flex items-center justify-between">
           <span>Update documentation</span>
           <div class="flex gap-2">
@@ -193,7 +193,7 @@
 
     <div class="mb-6">
       <h3 class="text-lg font-medium mb-3">Skills Tags</h3>
-      <div class="border border-border rounded-md p-4">
+      <div class="border border-[var(--surface-border-color)] rounded-md p-4">
         <div class="flex flex-wrap gap-2">
           <%= render FlatPack::Badge::Component.new(text: "Ruby", removable: true, size: :sm) %>
           <%= render FlatPack::Badge::Component.new(text: "Rails", removable: true, size: :sm) %>

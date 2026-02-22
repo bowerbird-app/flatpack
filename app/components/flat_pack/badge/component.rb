@@ -5,13 +5,13 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-muted" "text-foreground" "bg-primary" "text-primary-text" "bg-success" "text-success-text" "bg-warning" "text-warning-text" "bg-blue-500" "text-white"
+      # "border" "bg-[var(--badge-default-background-color)]" "text-[var(--badge-default-text-color)]" "border-[var(--badge-default-border-color)]" "bg-[var(--badge-primary-background-color)]" "text-[var(--badge-primary-text-color)]" "border-[var(--badge-primary-border-color)]" "bg-[var(--badge-success-background-color)]" "text-[var(--badge-success-text-color)]" "border-[var(--badge-success-border-color)]" "bg-[var(--badge-warning-background-color)]" "text-[var(--badge-warning-text-color)]" "border-[var(--badge-warning-border-color)]" "bg-[var(--badge-info-background-color)]" "text-[var(--badge-info-text-color)]" "border-[var(--badge-info-border-color)]"
       VARIANTS = {
-        default: "bg-muted text-foreground",
-        primary: "bg-primary text-primary-text",
-        success: "bg-success text-success-text",
-        warning: "bg-warning text-warning-text",
-        info: "bg-blue-500 text-white"
+        default: "border bg-[var(--badge-default-background-color)] text-[var(--badge-default-text-color)] border-[var(--badge-default-border-color)]",
+        primary: "border bg-[var(--badge-primary-background-color)] text-[var(--badge-primary-text-color)] border-[var(--badge-primary-border-color)]",
+        success: "border bg-[var(--badge-success-background-color)] text-[var(--badge-success-text-color)] border-[var(--badge-success-border-color)]",
+        warning: "border bg-[var(--badge-warning-background-color)] text-[var(--badge-warning-text-color)] border-[var(--badge-warning-border-color)]",
+        info: "border bg-[var(--badge-info-background-color)] text-[var(--badge-info-text-color)] border-[var(--badge-info-border-color)]"
       }.freeze
 
       # Tailwind CSS scanning requires these classes to be present as string literals.

@@ -94,13 +94,13 @@ export default class extends Controller {
     allOptions.forEach(option => {
       option.setAttribute("aria-selected", "false")
       option.classList.remove("bg-[var(--color-primary)]", "text-white")
-      option.classList.add("hover:bg-[var(--color-muted)]", "text-[var(--color-foreground)]")
+      option.classList.add("hover:bg-[var(--surface-muted-bg-color)]", "text-[var(--surface-content-color)]")
     })
     
     // Add selected state to clicked option
     selectedOption.setAttribute("aria-selected", "true")
     selectedOption.classList.add("bg-[var(--color-primary)]", "text-white")
-    selectedOption.classList.remove("hover:bg-[var(--color-muted)]", "text-[var(--color-foreground)]")
+    selectedOption.classList.remove("hover:bg-[var(--surface-muted-bg-color)]", "text-[var(--surface-content-color)]")
   }
 
   search(event) {

@@ -36,11 +36,11 @@ export default class extends Controller {
       
       // Update classes for active state
       if (isSelected) {
-        tab.classList.remove("text-[var(--color-text-muted)]", "hover:text-[var(--color-text)]", "hover:bg-[var(--color-muted)]")
-        tab.classList.add("bg-[var(--color-background)]", "text-[var(--color-primary)]", "border-b-2", "border-[var(--color-primary)]", "-mb-px")
+        tab.classList.remove("text-[var(--surface-muted-content-color)]", "hover:text-[var(--surface-content-color)]", "hover:bg-[var(--surface-muted-bg-color)]")
+        tab.classList.add("bg-[var(--surface-bg-color)]", "text-[var(--color-primary)]", "border-b-2", "border-[var(--color-primary)]", "-mb-px")
       } else {
-        tab.classList.add("text-[var(--color-text-muted)]", "hover:text-[var(--color-text)]", "hover:bg-[var(--color-muted)]")
-        tab.classList.remove("bg-[var(--color-background)]", "text-[var(--color-primary)]", "border-b-2", "border-[var(--color-primary)]", "-mb-px")
+        tab.classList.add("text-[var(--surface-muted-content-color)]", "hover:text-[var(--surface-content-color)]", "hover:bg-[var(--surface-muted-bg-color)]")
+        tab.classList.remove("bg-[var(--surface-bg-color)]", "text-[var(--color-primary)]", "border-b-2", "border-[var(--color-primary)]", "-mb-px")
       }
     })
 

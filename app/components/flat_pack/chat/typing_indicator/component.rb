@@ -67,7 +67,7 @@ module FlatPack
             "relative",
             "px-4 py-3",
             "rounded-2xl",
-            "bg-muted",
+            "bg-[var(--chat-typing-background-color)]",
             "shadow-sm"
           )
         end
@@ -76,7 +76,7 @@ module FlatPack
           classes(
             "h-2 w-2",
             "rounded-full",
-            "bg-muted-foreground",
+            "bg-[var(--chat-typing-dot-color)]",
             "animate-bounce"
           )
         end

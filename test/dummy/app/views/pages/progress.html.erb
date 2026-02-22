@@ -6,19 +6,19 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Basic Progress Bars", anchor_link: true) %>
   
-  <div class="space-y-6 p-6 bg-[var(--color-background)] border border-border rounded-lg">
+  <div class="space-y-6 p-6 bg-[var(--surface-bg-color)] border border-[var(--surface-border-color)] rounded-lg">
     <div>
-      <p class="text-sm text-muted-foreground mb-2">Default (50%)</p>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Default (50%)</p>
       <%= render FlatPack::Progress::Component.new(value: 50) %>
     </div>
 
     <div>
-      <p class="text-sm text-muted-foreground mb-2">With Label</p>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">With Label</p>
       <%= render FlatPack::Progress::Component.new(value: 75, label: "Upload Progress") %>
     </div>
 
     <div>
-      <p class="text-sm text-muted-foreground mb-2">Show Percentage</p>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Show Percentage</p>
       <%= render FlatPack::Progress::Component.new(value: 80, show_label: true) %>
     </div>
   </div>
@@ -27,24 +27,24 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Variants", anchor_link: true) %>
   
-  <div class="space-y-6 p-6 bg-[var(--color-background)] border border-border rounded-lg">
+  <div class="space-y-6 p-6 bg-[var(--surface-bg-color)] border border-[var(--surface-border-color)] rounded-lg">
     <div>
-      <p class="text-sm text-muted-foreground mb-2">Default</p>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Default</p>
       <%= render FlatPack::Progress::Component.new(value: 60, variant: :default) %>
     </div>
 
     <div>
-      <p class="text-sm text-muted-foreground mb-2">Success</p>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Success</p>
       <%= render FlatPack::Progress::Component.new(value: 100, variant: :success) %>
     </div>
 
     <div>
-      <p class="text-sm text-muted-foreground mb-2">Warning</p>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Warning</p>
       <%= render FlatPack::Progress::Component.new(value: 60, variant: :warning) %>
     </div>
 
     <div>
-      <p class="text-sm text-muted-foreground mb-2">Danger</p>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Danger</p>
       <%= render FlatPack::Progress::Component.new(value: 30, variant: :danger) %>
     </div>
   </div>
@@ -53,24 +53,24 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Sizes", anchor_link: true) %>
   
-  <div class="space-y-6 p-6 bg-[var(--color-background)] border border-border rounded-lg">
+  <div class="space-y-6 p-6 bg-[var(--surface-bg-color)] border border-[var(--surface-border-color)] rounded-lg">
     <div>
-      <p class="text-sm text-muted-foreground mb-2">Small</p>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Small</p>
       <%= render FlatPack::Progress::Component.new(value: 65, size: :sm) %>
     </div>
 
     <div>
-      <p class="text-sm text-muted-foreground mb-2">Medium</p>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Medium</p>
       <%= render FlatPack::Progress::Component.new(value: 65, size: :md) %>
     </div>
 
     <div>
-      <p class="text-sm text-muted-foreground mb-2">Large</p>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Large</p>
       <%= render FlatPack::Progress::Component.new(value: 65, size: :lg) %>
     </div>
 
     <div>
-      <p class="text-sm text-muted-foreground mb-2">Extra Large</p>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Extra Large</p>
       <%= render FlatPack::Progress::Component.new(value: 65, size: :xl) %>
     </div>
   </div>
@@ -79,7 +79,7 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Use Cases", anchor_link: true) %>
   
-  <div class="space-y-6 p-6 bg-[var(--color-background)] border border-border rounded-lg">
+  <div class="space-y-6 p-6 bg-[var(--surface-bg-color)] border border-[var(--surface-border-color)] rounded-lg">
     <div>
       <p class="text-sm font-medium mb-2">File Upload</p>
       <%= render FlatPack::Progress::Component.new(

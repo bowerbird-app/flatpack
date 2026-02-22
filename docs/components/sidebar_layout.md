@@ -170,7 +170,7 @@ Use an icon-only button in the sidebar header, right-aligned with the app name. 
       <% nav.left do %>
         <button
           type="button"
-          class="md:hidden p-2 rounded-lg hover:bg-[var(--color-muted)]"
+          class="md:hidden p-2 rounded-lg hover:bg-[var(--surface-muted-bg-color)]"
           data-flat-pack--sidebar-layout-target="mobileToggle"
           data-action="click->flat-pack--sidebar-layout#toggleMobile"
           aria-label="Toggle sidebar"

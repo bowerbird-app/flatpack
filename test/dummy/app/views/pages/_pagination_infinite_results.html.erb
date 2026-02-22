@@ -1,6 +1,6 @@
-<div class="border border-border rounded-lg overflow-hidden mb-4">
+<div class="border border-[var(--surface-border-color)] rounded-lg overflow-hidden mb-4">
   <table class="w-full">
-    <thead class="bg-muted">
+    <thead class="bg-[var(--surface-muted-bg-color)]">
       <tr>
         <th class="px-4 py-2 text-left text-sm font-semibold">#</th>
         <th class="px-4 py-2 text-left text-sm font-semibold">Name</th>
@@ -13,7 +13,7 @@
     </thead>
     <tbody data-pagination-content>
       <% records.each do |record| %>
-        <tr class="border-t border-border">
+        <tr class="border-t border-[var(--surface-border-color)]">
           <td class="px-4 py-2 text-sm"><%= record.id %></td>
           <td class="px-4 py-2 text-sm"><%= record.name %></td>
           <td class="px-4 py-2 text-sm"><%= record.email %></td>
@@ -25,7 +25,7 @@
       <% end %>
 
       <% unless has_more %>
-        <tr class="border-t border-border">
+        <tr class="border-t border-[var(--surface-border-color)]">
           <td colspan="7" class="py-12 text-center">
             <%= render FlatPack::Badge::Component.new(
               text: "End",

@@ -16,15 +16,16 @@ module FlatPack
           render_inline(Component.new) { "Footer" }
 
           assert_selector "div.shrink-0.p-4.border-t"
-          assert_includes page.native.to_html, "border-border"
+          assert_includes page.native.to_html, "border-[var(--sidebar-border-color)]"
+          assert_includes page.native.to_html, "text-[var(--sidebar-footer-text-color)]"
           assert_selector "div[data-flat-pack--sidebar-layout-target='footer']"
         end
 
         def test_merges_custom_classes
-          render_inline(Component.new(class: "text-sm text-muted-foreground")) { "Footer" }
+          render_inline(Component.new(class: "text-sm text-[var(--surface-muted-content-color)]")) { "Footer" }
 
           assert_includes page.native.to_html, "text-sm"
-          assert_includes page.native.to_html, "text-muted-foreground"
+          assert_includes page.native.to_html, "text-[var(--sidebar-footer-text-color)]"
         end
       end
     end

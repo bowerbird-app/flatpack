@@ -90,7 +90,7 @@ module FlatPack
       def label_classes
         # Ensure 'ml-2' is present as a string literal for Tailwind CSS
         classes(
-          "ml-2 text-sm font-medium text-foreground ml-2",
+          "ml-2 text-sm font-medium text-[var(--surface-content-color)] ml-2",
           @disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
         )
       end
@@ -101,7 +101,7 @@ module FlatPack
           "h-4 w-4",
           "rounded-sm",
           "border",
-          "bg-background",
+          "bg-[var(--surface-bg-color)]",
           "text-primary",
           "transition-colors duration-base",
           "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:rounded-sm",
@@ -111,7 +111,7 @@ module FlatPack
         base_classes << if @error
           "border-warning"
         else
-          "border-border"
+          "border-[var(--surface-border-color)]"
         end
 
         classes(*base_classes, @custom_class)

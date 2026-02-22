@@ -15,35 +15,35 @@ module FlatPack
         render_inline(Component.new(text: "Default"))
 
         assert_selector "span", text: "Default"
-        assert_includes page.native.to_html, "bg-muted"
+        assert_includes page.native.to_html, "bg-[var(--badge-default-background-color)]"
       end
 
       def test_renders_primary_style
         render_inline(Component.new(text: "Primary", style: :primary))
 
         assert_selector "span", text: "Primary"
-        assert_includes page.native.to_html, "bg-primary"
+        assert_includes page.native.to_html, "bg-[var(--badge-primary-background-color)]"
       end
 
       def test_renders_success_style
         render_inline(Component.new(text: "Success", style: :success))
 
         assert_selector "span", text: "Success"
-        assert_includes page.native.to_html, "bg-success"
+        assert_includes page.native.to_html, "bg-[var(--badge-success-background-color)]"
       end
 
       def test_renders_warning_style
         render_inline(Component.new(text: "Warning", style: :warning))
 
         assert_selector "span", text: "Warning"
-        assert_includes page.native.to_html, "bg-warning"
+        assert_includes page.native.to_html, "bg-[var(--badge-warning-background-color)]"
       end
 
       def test_renders_info_style
         render_inline(Component.new(text: "Info", style: :info))
 
         assert_selector "span", text: "Info"
-        assert_includes page.native.to_html, "bg-blue-500"
+        assert_includes page.native.to_html, "bg-[var(--badge-info-background-color)]"
       end
 
       def test_renders_small_size

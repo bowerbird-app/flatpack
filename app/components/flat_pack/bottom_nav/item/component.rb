@@ -8,7 +8,7 @@ module FlatPack
         # DO NOT REMOVE - These duplicates ensure CSS generation:
         # "flex" "flex-col" "items-center" "justify-center" "gap-1"
         # "py-2" "text-xs" "font-medium" "text-primary"
-        # "text-muted-foreground" "hover:text-foreground"
+        # "text-[var(--surface-muted-content-color)]" "hover:text-[var(--surface-content-color)]"
 
         def initialize(label:, href:, icon: nil, active: false, **system_arguments)
           super(**system_arguments)
@@ -73,7 +73,7 @@ module FlatPack
           if @active
             "text-primary"
           else
-            "text-muted-foreground hover:text-foreground"
+            "text-[var(--surface-muted-content-color)] hover:text-[var(--surface-content-color)]"
           end
         end
 

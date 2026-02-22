@@ -48,8 +48,7 @@ module FlatPack
         def nav_classes
           classes(
             "flex items-center justify-between gap-4",
-            "bg-top-nav-background",
-            "border-b border-top-nav-border",
+            "bg-[var(--top-nav-background-color)]",
             "px-6"
           )
         end
@@ -69,7 +68,7 @@ module FlatPack
         def hamburger_attributes
           {
             type: "button",
-            class: "md:hidden p-2 rounded-md hover:bg-muted transition-colors",
+            class: "md:hidden p-2 rounded-md text-[var(--top-nav-item-icon-color)] hover:bg-[var(--top-nav-item-hover-background-color)] hover:text-[var(--top-nav-item-hover-text-color)] transition-colors",
             data: {action: "click->flat-pack--navbar#toggle"},
             aria: {label: "Toggle navigation"}
           }

@@ -74,8 +74,8 @@ module FlatPack
 
         def composer_classes
           classes(
-            "border-t border-border",
-            "bg-background",
+            "border-t border-[var(--chat-composer-border-color)]",
+            "bg-[var(--chat-composer-background-color)]",
             "p-4"
           )
         end

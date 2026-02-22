@@ -59,9 +59,11 @@ module FlatPack
         assert_includes page.native.to_html, "backdrop-blur"
       end
 
-      def test_has_no_border_bottom
+      def test_has_no_border
         render_inline(Component.new)
-        assert_not_includes page.native.to_html, "border-b"
+        html = page.native.to_html
+        refute_includes html, "border-b"
+        refute_includes html, "top-nav-border-color"
       end
 
       def test_merges_custom_classes
