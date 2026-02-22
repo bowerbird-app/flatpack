@@ -31,7 +31,7 @@ module FlatPack
         render_inline(Component.new(title: "Info", style: :info))
 
         assert_selector "div[role='alert']"
-        assert_includes page.native.to_html, "border-black/20"
+        assert_includes page.native.to_html, "border-info-border"
         assert_includes page.native.to_html, "bg-white"
         assert_includes page.native.to_html, "text-black"
       end
@@ -40,24 +40,24 @@ module FlatPack
         render_inline(Component.new(title: "Success", style: :success))
 
         assert_selector "div[role='alert']"
-        assert_includes page.native.to_html, "bg-[var(--color-success)]"
-        assert_includes page.native.to_html, "text-[var(--color-success-text)]"
+        assert_includes page.native.to_html, "bg-success-bg"
+        assert_includes page.native.to_html, "text-success-text"
       end
 
       def test_renders_warning_style
         render_inline(Component.new(title: "Warning", style: :warning))
 
         assert_selector "div[role='alert']"
-        assert_includes page.native.to_html, "bg-[var(--color-warning)]"
-        assert_includes page.native.to_html, "text-[var(--color-warning-text)]"
+        assert_includes page.native.to_html, "bg-warning-bg"
+        assert_includes page.native.to_html, "text-warning-text"
       end
 
       def test_renders_danger_style
         render_inline(Component.new(title: "Danger", style: :danger))
 
         assert_selector "div[role='alert']"
-        assert_includes page.native.to_html, "bg-[var(--color-destructive)]"
-        assert_includes page.native.to_html, "text-[var(--color-destructive-text)]"
+        assert_includes page.native.to_html, "bg-destructive-bg"
+        assert_includes page.native.to_html, "text-destructive-text"
       end
 
       def test_default_style_is_info

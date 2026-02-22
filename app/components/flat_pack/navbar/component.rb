@@ -57,7 +57,7 @@ module FlatPack
         classes(
           "flex",
           "h-full",
-          "bg-[var(--color-background)]"
+          "bg-[var(--surface-bg-color)]"
         )
       end
 

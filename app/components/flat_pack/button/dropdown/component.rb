@@ -18,7 +18,7 @@ module FlatPack
 
         def initialize(
           text:,
-          style: :primary,
+          style: :default,
           size: :md,
           icon: nil,
           disabled: false,
@@ -53,8 +53,8 @@ module FlatPack
 
         def dropdown_data_attributes
           {
-            controller: "button-dropdown",
-            button_dropdown_max_height_value: @max_height
+            controller: "flat-pack--button-dropdown",
+            flat_pack__button_dropdown_max_height_value: @max_height
           }
         end
 
@@ -66,8 +66,8 @@ module FlatPack
               expanded: "false"
             },
             data: {
-              button_dropdown_target: "trigger",
-              action: "click->button-dropdown#toggle"
+              flat_pack__button_dropdown_target: "trigger",
+              action: "click->flat-pack--button-dropdown#toggle"
             }
           }
         end
@@ -76,11 +76,11 @@ module FlatPack
           # Use the same classes as Button component would use
           base_classes = [
             "inline-flex items-center justify-center gap-2",
-            "rounded-[var(--radius-md)]",
+            "rounded-md",
             "font-medium",
             "cursor-pointer",
-            "transition-colors duration-[var(--transition-base)]",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:ring-offset-2",
+            "transition-colors duration-base",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
             "disabled:pointer-events-none disabled:opacity-50"
           ]
 
@@ -100,7 +100,7 @@ module FlatPack
         def chevron_icon
           content_tag(:svg,
             class: "h-4 w-4 transition-transform duration-200",
-            data: {button_dropdown_target: "chevron"},
+            data: {flat_pack__button_dropdown_target: "chevron"},
             xmlns: "http://www.w3.org/2000/svg",
             viewBox: "0 0 24 24",
             fill: "none",
@@ -117,7 +117,7 @@ module FlatPack
             class: menu_classes,
             role: "menu",
             data: {
-              button_dropdown_target: "menu"
+              flat_pack__button_dropdown_target: "menu"
             }
           }
         end
@@ -127,11 +127,11 @@ module FlatPack
             "absolute z-50",
             "min-w-[12rem]",
             "overflow-auto",
-            "rounded-[var(--radius-md)]",
-            "border border-[var(--color-border)]",
-            "bg-[var(--color-background)]",
+            "rounded-md",
+            "border border-[var(--surface-border-color)]",
+            "bg-[var(--surface-bg-color)]",
             "p-1",
-            "shadow-[var(--shadow-lg)]",
+            "shadow-lg",
             "opacity-0 scale-95 hidden",
             "transition-all duration-200",
             POSITIONS.fetch(@position)

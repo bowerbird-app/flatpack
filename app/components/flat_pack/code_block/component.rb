@@ -5,8 +5,8 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-[var(--color-muted)]" "border" "border-[var(--color-border)]" "rounded-lg" "whitespace-pre-wrap" "break-words" "font-mono" "text-sm" "text-[var(--color-foreground)]" "text-[var(--color-muted-foreground)]"
-      # "flex" "gap-1" "px-4" "pt-4" "pb-2" "px-5" "pb-5" "p-4" "rounded-full" "text-[var(--color-muted-foreground)]" "text-[var(--color-border-hover)]" "bg-[var(--color-border)]"
+      # "bg-[var(--code-block-background-color)]" "border" "border-[var(--code-block-border-color)]" "rounded-lg" "whitespace-pre-wrap" "break-words" "font-mono" "text-sm" "text-[var(--code-block-code-color)]" "text-[var(--code-block-title-color)]"
+      # "flex" "gap-1" "px-4" "pt-4" "pb-2" "px-5" "pb-5" "p-4" "rounded-full" "text-[var(--code-block-tab-color)]" "hover:text-[var(--code-block-tab-hover-color)]" "bg-[var(--code-block-tab-active-background-color)]" "text-[var(--code-block-tab-active-color)]"
       def initialize(code: nil, language: nil, title: nil, snippets: nil, separated: true, **system_arguments)
         super(**system_arguments)
         @snippets = normalize_snippets(code: code, language: language, snippets: snippets)
@@ -28,7 +28,7 @@ module FlatPack
       private
 
       def render_title
-        content_tag(:div, @title, class: "px-4 py-2 border-b border-[var(--color-border)] text-sm font-medium text-[var(--color-muted-foreground)]")
+        content_tag(:div, @title, class: "px-4 py-2 border-b border-[var(--code-block-border-color)] text-sm font-medium text-[var(--code-block-title-color)]")
       end
 
       def render_code_block
@@ -114,8 +114,8 @@ module FlatPack
       def wrapper_classes
         classes(
           (@separated ? "mt-4" : nil),
-          "bg-[var(--color-muted)]",
-          "border border-[var(--color-border)]",
+          "bg-[var(--code-block-background-color)]",
+          "border border-[var(--code-block-border-color)]",
           "rounded-lg"
         )
       end
@@ -125,7 +125,7 @@ module FlatPack
       end
 
       def code_classes_for(language)
-        base_classes = "font-mono text-sm text-[var(--color-foreground)]"
+        base_classes = "font-mono text-sm text-[var(--code-block-code-color)]"
         return base_classes unless language.present?
 
         "#{base_classes} language-#{language}"
@@ -150,12 +150,12 @@ module FlatPack
       end
 
       def tab_classes(is_active)
-        base = "px-3 py-1.5 text-sm font-medium rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:ring-offset-2"
+        base = "px-3 py-1.5 text-sm font-medium rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
 
         if is_active
-          "#{base} bg-[var(--color-border)] text-[var(--color-muted-foreground)]"
+          "#{base} bg-[var(--code-block-tab-active-background-color)] text-[var(--code-block-tab-active-color)]"
         else
-          "#{base} text-[var(--color-border-hover)]"
+          "#{base} text-[var(--code-block-tab-color)] hover:text-[var(--code-block-tab-hover-color)]"
         end
       end
 

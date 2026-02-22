@@ -88,7 +88,7 @@ module FlatPack
         render_inline(Component.new(name: "color", options: ["Red"], error: "Invalid"))
 
         html = page.native.to_html
-        assert_includes html, "border-[var(--color-warning)]"
+        assert_includes html, "border-warning"
       end
 
       def test_renders_with_custom_class
@@ -101,6 +101,13 @@ module FlatPack
         render_inline(Component.new(name: "color", options: ["Red"]))
 
         assert_selector "select.flat-pack-select"
+      end
+
+      def test_native_select_uses_custom_chevron_with_reserved_space
+        render_inline(Component.new(name: "color", options: ["Red"]))
+
+        assert_selector "div.relative > select.flat-pack-select.appearance-none"
+        assert_selector "div.relative > span.absolute.inset-y-0.right-0.pr-3.pointer-events-none"
       end
 
       def test_has_wrapper_class

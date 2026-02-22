@@ -5,7 +5,7 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "text-[var(--color-warning)]" "border-[var(--color-warning)]"
+      # "text-warning" "border-warning"
 
       def initialize(
         name:,
@@ -63,11 +63,16 @@ module FlatPack
       end
 
       def render_native_select
-        tag.select(**select_attributes) do
+        content_tag(:div, class: "relative") do
           safe_join([
-            render_placeholder_option,
-            *@options.map { |option| render_option(option) }
-          ].compact)
+            tag.select(**select_attributes) do
+              safe_join([
+                render_placeholder_option,
+                *@options.map { |option| render_option(option) }
+              ].compact)
+            end,
+            render_chevron_icon(include_target: false)
+          ])
         end
       end
 
@@ -133,7 +138,7 @@ module FlatPack
       def render_search_input
         return unless @searchable
 
-        content_tag(:div, class: "p-2 border-b border-[var(--color-border)]") do
+        content_tag(:div, class: "p-2 border-b border-[var(--surface-border-color)]") do
           tag.input(
             type: "text",
             class: search_input_classes,
@@ -182,7 +187,9 @@ module FlatPack
           disabled: option[:disabled])
       end
 
-      def render_chevron_icon
+      def render_chevron_icon(include_target: true)
+        icon_data = include_target ? {flat_pack__select_target: "chevron"} : nil
+
         content_tag(:span, class: "absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none") do
           content_tag(:svg,
             xmlns: "http://www.w3.org/2000/svg",
@@ -194,8 +201,8 @@ module FlatPack
             "stroke-width": "2",
             "stroke-linecap": "round",
             "stroke-linejoin": "round",
-            class: "lucide lucide-chevron-down text-[var(--color-muted-foreground)]",
-            data: {flat_pack__select_target: "chevron"}) do
+            class: "lucide lucide-chevron-down text-[var(--surface-muted-content-color)]",
+            data: icon_data) do
             tag.path(d: "m6 9 6 6 6-6")
           end
         end
@@ -227,7 +234,7 @@ module FlatPack
 
       def label_classes
         classes(
-          "block text-sm font-medium text-[var(--color-foreground)] mb-1.5"
+          "block text-sm font-medium text-[var(--surface-content-color)] mb-1.5"
         )
       end
 
@@ -235,22 +242,23 @@ module FlatPack
         base_classes = [
           "flat-pack-select",
           "w-full",
-          "rounded-[var(--radius-md)]",
+          "rounded-md",
           "border",
-          "bg-[var(--color-background)]",
-          "text-[var(--color-foreground)]",
-          "px-3 py-3",
+          "appearance-none",
+          "bg-[var(--surface-bg-color)]",
+          "text-[var(--surface-content-color)]",
+          "px-[var(--form-control-padding)] py-[var(--form-control-padding)]",
           "pr-10",
           "text-sm",
-          "transition-colors duration-[var(--transition-base)]",
-          "focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)] focus:border-transparent",
+          "transition-colors duration-base",
+          "focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent",
           "disabled:opacity-50 disabled:cursor-not-allowed"
         ]
 
         base_classes << if @error
-          "border-[var(--color-warning)]"
+          "border-warning"
         else
-          "border-[var(--color-border)]"
+          "border-[var(--surface-border-color)]"
         end
 
         classes(*base_classes, @custom_class)
@@ -260,56 +268,56 @@ module FlatPack
         base_classes = [
           "flat-pack-select-trigger",
           "relative w-full",
-          "rounded-[var(--radius-md)]",
+          "rounded-md",
           "border",
-          "bg-[var(--color-background)]",
-          "text-[var(--color-foreground)]",
-          "px-3 py-3",
+          "bg-[var(--surface-bg-color)]",
+          "text-[var(--surface-content-color)]",
+          "px-[var(--form-control-padding)] py-[var(--form-control-padding)]",
           "pr-10",
           "text-sm text-left",
-          "transition-colors duration-[var(--transition-base)]",
-          "focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)] focus:border-transparent",
+          "transition-colors duration-base",
+          "focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent",
           "disabled:opacity-50 disabled:cursor-not-allowed"
         ]
 
         base_classes << if @error
-          "border-[var(--color-warning)]"
+          "border-warning"
         else
-          "border-[var(--color-border)]"
+          "border-[var(--surface-border-color)]"
         end
 
         classes(*base_classes, @custom_class)
       end
 
       def dropdown_classes
-        "absolute z-10 mt-1 w-full hidden rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-background)] shadow-lg"
+        "absolute z-10 mt-1 w-full hidden rounded-md border border-[var(--surface-border-color)] bg-[var(--surface-bg-color)] shadow-lg"
       end
 
       def search_input_classes
-        "w-full px-2 py-1.5 text-sm rounded-[var(--radius-sm)] border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-foreground)] focus:outline-none focus:ring-1 focus:ring-[var(--color-ring)]"
+        "w-full px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-sm border border-[var(--surface-border-color)] bg-[var(--surface-bg-color)] text-[var(--surface-content-color)] focus:outline-none focus:ring-1 focus:ring-ring"
       end
 
       def custom_option_classes(selected, disabled)
         base = [
-          "px-3 py-2",
+          "px-[var(--form-control-padding)] py-[var(--form-control-padding)]",
           "text-sm",
-          "rounded-[var(--radius-sm)]",
-          "transition-colors duration-[var(--transition-base)]"
+          "rounded-sm",
+          "transition-colors duration-base"
         ]
 
         base << if disabled
-          "opacity-50 cursor-not-allowed text-[var(--color-muted-foreground)]"
+          "opacity-50 cursor-not-allowed text-[var(--surface-muted-content-color)]"
         elsif selected
-          "bg-[var(--color-primary)] text-white cursor-pointer"
+          "bg-primary text-white cursor-pointer"
         else
-          "hover:bg-[var(--color-muted)] cursor-pointer text-[var(--color-foreground)]"
+          "hover:bg-[var(--surface-muted-bg-color)] cursor-pointer text-[var(--surface-content-color)]"
         end
 
         base.join(" ")
       end
 
       def error_classes
-        "mt-1 text-sm text-[var(--color-warning)]"
+        "mt-1 text-sm text-warning"
       end
 
       def select_id

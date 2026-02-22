@@ -128,10 +128,11 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-[var(--color-primary)]" "hover:bg-[var(--color-primary-hover)]" "text-[var(--color-primary-text)]" "shadow-[var(--shadow-sm)]" "bg-[var(--color-secondary)]" "hover:bg-[var(--color-secondary-hover)]" "text-[var(--color-secondary-text)]" "border" "border-[var(--color-border)]"
+      # "bg-[var(--color-default)]" "hover:bg-[var(--color-default-hover)]" "text-[var(--color-default-text)]" "border" "border-[var(--color-default-border)]" "bg-[var(--color-primary)]" "hover:bg-[var(--color-primary-hover)]" "text-[var(--color-primary-text)]" "shadow-[var(--shadow-sm)]" "bg-[var(--color-secondary)]" "hover:bg-[var(--color-secondary-hover)]" "text-[var(--color-secondary-text)]" "border-[var(--surface-border-color)]"
       SCHEMES = {
+        default: "bg-[var(--color-default)] hover:bg-[var(--color-default-hover)] text-[var(--color-default-text)] border border-[var(--color-default-border)]",
         primary: "bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-[var(--color-primary-text)] shadow-[var(--shadow-sm)]",
-        secondary: "bg-[var(--color-secondary)] hover:bg-[var(--color-secondary-hover)] text-[var(--color-secondary-text)] border border-[var(--color-border)]"
+        secondary: "bg-[var(--color-secondary)] hover:bg-[var(--color-secondary-hover)] text-[var(--color-secondary-text)] border border-[var(--surface-border-color)]"
       }.freeze
       
       # Tailwind CSS scanning requires these classes to be present as string literals.
@@ -162,7 +163,7 @@ Add safelist comments for any constant containing Tailwind classes:
 
 ```ruby
 # Gemfile
-gem 'tailwindcss-rails', '~> 3.0'
+gem 'tailwindcss-rails', '~> 4.0'
 ```
 
 Then run:
@@ -177,9 +178,10 @@ Create or update `app/assets/stylesheets/application.css`:
 
 ```css
 /* app/assets/stylesheets/application.css */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/* Scan FlatPack component classes */
+@source "../../../flat_pack/app/components";
 
 /* Import FlatPack CSS Variables */
 :root {
@@ -192,23 +194,13 @@ Create or update `app/assets/stylesheets/application.css`:
 
 ### 3. Configure Tailwind Content Scanning
 
-Create `config/tailwind.config.js`:
+Tailwind CSS 4 uses CSS-based scanning with `@source`. No `tailwind.config.js` is required for FlatPack.
 
-```javascript
-module.exports = {
-  content: [
-    './app/views/**/*.{erb,haml,html,slim}',
-    './app/components/**/*.{rb,erb,haml,html,slim}',
-    './app/helpers/**/*.rb',
-    './app/javascript/**/*.js',
-    // Scan FlatPack components
-    './vendor/bundle/ruby/*/gems/flat_pack-*/app/components/**/*.{rb,erb}',
-  ],
-  theme: {
-    extend: {},
-  },
-  plugins: []
-}
+Ensure your Tailwind entry CSS includes:
+
+```css
+@import "tailwindcss";
+@source "../../../flat_pack/app/components";
 ```
 
 ### 4. Build CSS
@@ -454,15 +446,15 @@ When creating new FlatPack components:
    - `VARIANTS` for behavioral variations
    - Constants should be frozen (`.freeze`)
 
-## Migration from Tailwind v3
+## Migration Checklist
 
-If migrating from v3:
+For projects upgrading to Tailwind CSS 4:
 
 1. **Remove `tailwind.config.js`** - Not needed
 2. **Convert config to `@theme`** - Move to CSS
 3. **Update content paths** - Use `@source` comments
 4. **Test dark mode** - May need adjustments
-5. **Update plugins** - Check v4 compatibility
+5. **Update plugins** - Confirm Tailwind 4 compatibility
 
 ## Resources
 

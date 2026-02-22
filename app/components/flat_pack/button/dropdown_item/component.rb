@@ -4,6 +4,16 @@ module FlatPack
   module Button
     module DropdownItem
       class Component < FlatPack::BaseComponent
+        BADGE_STYLES = {
+          default: "border border-[var(--badge-default-border-color)] bg-[var(--badge-default-background-color)] text-[var(--badge-default-text-color)]",
+          primary: "border border-[var(--badge-primary-border-color)] bg-[var(--badge-primary-background-color)] text-[var(--badge-primary-text-color)]",
+          secondary: "border border-[var(--badge-secondary-border-color)] bg-[var(--badge-secondary-background-color)] text-[var(--badge-secondary-text-color)]",
+          success: "border border-[var(--badge-success-border-color)] bg-[var(--badge-success-background-color)] text-[var(--badge-success-text-color)]",
+          warning: "border border-[var(--badge-warning-border-color)] bg-[var(--badge-warning-background-color)] text-[var(--badge-warning-text-color)]",
+          danger: "border border-[var(--badge-danger-border-color)] bg-[var(--badge-danger-background-color)] text-[var(--badge-danger-text-color)]",
+          info: "border border-[var(--badge-info-border-color)] bg-[var(--badge-info-background-color)] text-[var(--badge-info-text-color)]"
+        }.freeze
+
         def initialize(
           text:,
           icon: nil,
@@ -18,7 +28,7 @@ module FlatPack
           @text = text
           @icon = icon
           @badge = badge
-          @badge_style = badge_style
+          @badge_style = badge_style.to_sym
           @href = href
           @disabled = disabled
           @destructive = destructive
@@ -28,6 +38,8 @@ module FlatPack
             @href = FlatPack::AttributeSanitizer.sanitize_url(@href)
             validate_url!
           end
+
+          validate_badge_style! if @badge
         end
 
         def call
@@ -79,19 +91,19 @@ module FlatPack
             "px-2 py-1.5",
             "text-sm",
             "text-left",
-            "rounded-[var(--radius-sm)]",
-            "transition-colors duration-[var(--transition-base)]",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]"
+            "rounded-sm",
+            "transition-colors duration-base",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           ]
 
           if @disabled
             base_classes << "opacity-50 cursor-not-allowed"
           elsif @destructive
-            base_classes << "text-[var(--color-destructive)]"
-            base_classes << "hover:bg-[var(--color-destructive)]/10"
+            base_classes << "text-destructive"
+            base_classes << "hover:bg-destructive-bg/10"
           else
-            base_classes << "text-[var(--color-foreground)]"
-            base_classes << "hover:bg-[var(--color-muted)]"
+            base_classes << "text-[var(--surface-content-color)]"
+            base_classes << "hover:bg-[var(--surface-muted-bg-color)]"
             base_classes << "cursor-pointer"
           end
 
@@ -99,7 +111,16 @@ module FlatPack
         end
 
         def badge_classes
-          "inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1.5 text-xs font-medium rounded-full bg-[var(--color-primary)] text-[var(--color-primary-text)]"
+          classes(
+            "inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1.5 text-xs font-medium rounded-full",
+            BADGE_STYLES.fetch(@badge_style)
+          )
+        end
+
+        def validate_badge_style!
+          return if BADGE_STYLES.key?(@badge_style)
+
+          raise ArgumentError, "Invalid badge_style: #{@badge_style}. Must be one of: #{BADGE_STYLES.keys.join(", ")}"
         end
 
         def validate_url!

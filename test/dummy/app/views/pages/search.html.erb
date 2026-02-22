@@ -6,11 +6,11 @@
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Default", anchor_link: true, subtitle: "Examples for Default.") %>
-  <p class="text-sm text-[var(--color-muted-foreground)] mb-4">
+  <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">
     Use the standalone Search component anywhere, including outside TopNav.
   </p>
 
-  <div class="rounded-lg border border-[var(--color-border)] p-6 bg-[var(--color-background)] mb-4">
+  <div class="rounded-lg border border-[var(--surface-border-color)] p-6 bg-[var(--surface-bg-color)] mb-4">
     <%= render FlatPack::Search::Component.new(
       search_url: demo_search_results_path,
       placeholder: "Search projects, files, or people..."
@@ -29,7 +29,7 @@
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Custom Name and Value", anchor_link: true, subtitle: "Examples for Custom Name and Value.") %>
-  <div class="rounded-lg border border-[var(--color-border)] p-6 bg-[var(--color-background)] mb-4">
+  <div class="rounded-lg border border-[var(--surface-border-color)] p-6 bg-[var(--surface-bg-color)] mb-4">
     <%= render FlatPack::Search::Component.new(
       name: "query",
       value: "flatpack",

@@ -100,7 +100,7 @@ module FlatPack
           end
         end
 
-        assert_selector "aside.border-r.bg-\\[var\\(--color-background\\)\\]"
+        assert_selector "aside.border-r.bg-\\[var\\(--sidebar-background-color\\)\\]"
       end
 
       def test_sidebar_has_transition
@@ -233,8 +233,8 @@ module FlatPack
         end
 
         html = page.native.to_html
-        assert_includes html, "bg-[var(--color-primary)]"
-        assert_includes html, "text-[var(--color-primary-text)]"
+        assert_includes html, "bg-primary"
+        assert_includes html, "text-primary-text"
       end
 
       def test_sidebar_item_hover_state_styling
@@ -245,7 +245,7 @@ module FlatPack
         end
 
         html = page.native.to_html
-        assert_includes html, "hover:bg-[var(--color-muted)]"
+        assert_includes html, "hover:bg-[var(--surface-muted-bg-color)]"
       end
 
       def test_sidebar_item_renders_as_link_with_href
@@ -282,7 +282,7 @@ module FlatPack
         end
 
         html = page.native.to_html
-        assert_includes html, "bg-[var(--color-danger)]"
+        assert_includes html, "bg-[var(--badge-danger-background-color)]"
       end
 
       # Sidebar Section Tests

@@ -78,7 +78,7 @@ module FlatPack
 
       def container_attributes
         attrs = merge_attributes(
-          class: "overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border)]"
+          class: "overflow-x-auto rounded-lg border border-[var(--table-border-color)]"
         )
 
         attrs[:data] ||= {}
@@ -100,7 +100,7 @@ module FlatPack
           class: classes(
             "w-full",
             "border-collapse",
-            "bg-[var(--color-background)]"
+            "bg-[var(--table-background-color)]"
           )
         }
       end
@@ -108,7 +108,7 @@ module FlatPack
       def render_header
         return unless columns.any?
 
-        tag.thead class: "bg-[var(--color-background)] border-b border-[var(--color-border)]" do
+        tag.thead class: "bg-[var(--table-header-background-color)] border-b border-[var(--table-header-border-color)]" do
           tag.tr do
             safe_join(columns.map { |column|
               column.render_header(
@@ -123,7 +123,7 @@ module FlatPack
       end
 
       def render_body
-        tag.tbody class: "divide-y divide-[var(--color-border)]" do
+        tag.tbody class: "divide-y divide-[var(--table-row-divider-color)]" do
           if @data.any?
             safe_join(@data.map { |row| render_row(row) })
           else
@@ -140,7 +140,7 @@ module FlatPack
 
       def row_attributes(row)
         attrs = {
-          class: "hover:bg-[var(--color-muted)] transition-colors duration-[var(--transition-fast)]"
+          class: "hover:bg-[var(--table-row-hover-background-color)] transition-colors duration-fast"
         }
 
         return attrs unless @draggable_rows
@@ -187,18 +187,18 @@ module FlatPack
 
       def render_empty_state
         tag.tr do
-          tag.td colspan: column_count, class: "#{body_cell_classes} text-center text-[var(--color-muted-foreground)]" do
+          tag.td colspan: column_count, class: "#{body_cell_classes} text-center text-[var(--table-empty-state-text-color)]" do
             "No data available"
           end
         end
       end
 
       def header_cell_classes
-        "px-4 py-3 text-left text-xs font-medium text-[var(--color-muted-foreground)] uppercase tracking-wider"
+        "px-[var(--table-padding)] py-[var(--table-padding)] text-left text-xs font-medium text-[var(--table-header-text-color)] uppercase tracking-wider"
       end
 
       def body_cell_classes
-        "px-4 py-3 text-sm text-[var(--color-foreground)]"
+        "px-[var(--table-padding)] py-[var(--table-padding)] text-sm text-[var(--table-cell-text-color)]"
       end
 
       def column_count

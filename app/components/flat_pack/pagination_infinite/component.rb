@@ -52,19 +52,19 @@ module FlatPack
       end
 
       def render_table_loading_indicator
-        content_tag(:div, class: "overflow-x-auto border border-[var(--color-border)] rounded-lg") do
+        content_tag(:div, class: "overflow-x-auto border border-[var(--surface-border-color)] rounded-lg") do
           content_tag(:table, class: "w-full") do
             content_tag(:tbody) do
               safe_join(Array.new(5) do
-                content_tag(:tr, class: "border-t border-[var(--color-border)]") do
+                content_tag(:tr, class: "border-t border-[var(--surface-border-color)]") do
                   safe_join([
-                    content_tag(:td, render(FlatPack::Skeleton::Component.new(variant: :text, width: "70px")), class: "px-4 py-3"),
-                    content_tag(:td, render(FlatPack::Skeleton::Component.new(variant: :text, width: "140px")), class: "px-4 py-3"),
-                    content_tag(:td, render(FlatPack::Skeleton::Component.new(variant: :text, width: "170px")), class: "px-4 py-3"),
-                    content_tag(:td, render(FlatPack::Skeleton::Component.new(variant: :text, width: "80px")), class: "px-4 py-3"),
-                    content_tag(:td, render(FlatPack::Skeleton::Component.new(variant: :text, width: "100px")), class: "px-4 py-3"),
-                    content_tag(:td, render(FlatPack::Skeleton::Component.new(variant: :text, width: "90px")), class: "px-4 py-3"),
-                    content_tag(:td, render(FlatPack::Skeleton::Component.new(variant: :text, width: "120px")), class: "px-4 py-3")
+                    content_tag(:td, render(FlatPack::Skeleton::Component.new(variant: :text, width: "70px")), class: "px-[var(--table-padding)] py-[var(--table-padding)]"),
+                    content_tag(:td, render(FlatPack::Skeleton::Component.new(variant: :text, width: "140px")), class: "px-[var(--table-padding)] py-[var(--table-padding)]"),
+                    content_tag(:td, render(FlatPack::Skeleton::Component.new(variant: :text, width: "170px")), class: "px-[var(--table-padding)] py-[var(--table-padding)]"),
+                    content_tag(:td, render(FlatPack::Skeleton::Component.new(variant: :text, width: "80px")), class: "px-[var(--table-padding)] py-[var(--table-padding)]"),
+                    content_tag(:td, render(FlatPack::Skeleton::Component.new(variant: :text, width: "100px")), class: "px-[var(--table-padding)] py-[var(--table-padding)]"),
+                    content_tag(:td, render(FlatPack::Skeleton::Component.new(variant: :text, width: "90px")), class: "px-[var(--table-padding)] py-[var(--table-padding)]"),
+                    content_tag(:td, render(FlatPack::Skeleton::Component.new(variant: :text, width: "120px")), class: "px-[var(--table-padding)] py-[var(--table-padding)]")
                   ])
                 end
               end)
@@ -76,7 +76,7 @@ module FlatPack
       def render_cards_loading_indicator
         content_tag(:div, class: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4") do
           safe_join(Array.new(8) do
-            content_tag(:div, class: "border border-[var(--color-border)] rounded-lg p-4 space-y-3") do
+            content_tag(:div, class: "border border-[var(--surface-border-color)] rounded-lg p-[var(--card-padding-md)] space-y-3") do
               safe_join([
                 render(FlatPack::Skeleton::Component.new(variant: :rectangle, height: "120px")),
                 render(FlatPack::Skeleton::Component.new(variant: :title, width: "60%")),

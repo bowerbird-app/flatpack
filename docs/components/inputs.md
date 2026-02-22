@@ -1175,7 +1175,7 @@ Customize input colors by overriding CSS variables:
   --color-ring: oklch(0.55 0.25 270);
   
   /* Error state */
-  --color-destructive: oklch(0.55 0.22 25);
+  --color-destructive-bg: oklch(0.55 0.22 25);
   
   /* Placeholders */
   --color-muted-foreground: oklch(0.45 0.01 250);

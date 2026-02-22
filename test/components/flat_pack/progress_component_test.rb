@@ -21,25 +21,25 @@ module FlatPack
       def test_renders_default_variant
         render_inline(Component.new(value: 50))
 
-        assert_includes page.native.to_html, "bg-[var(--color-primary)]"
+        assert_includes page.native.to_html, "bg-primary"
       end
 
       def test_renders_success_variant
         render_inline(Component.new(value: 50, variant: :success))
 
-        assert_includes page.native.to_html, "bg-[var(--color-success)]"
+        assert_includes page.native.to_html, "bg-success-bg"
       end
 
       def test_renders_warning_variant
         render_inline(Component.new(value: 50, variant: :warning))
 
-        assert_includes page.native.to_html, "bg-[var(--color-warning)]"
+        assert_includes page.native.to_html, "bg-warning-bg"
       end
 
       def test_renders_danger_variant
         render_inline(Component.new(value: 50, variant: :danger))
 
-        assert_includes page.native.to_html, "bg-[var(--color-danger)]"
+        assert_includes page.native.to_html, "bg-destructive-bg"
       end
 
       def test_renders_small_size

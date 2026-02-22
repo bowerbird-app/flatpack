@@ -34,7 +34,7 @@ module FlatPack
       def render_icon
         return unless @icon && @leading.nil?
 
-        content_tag(:span, class: "flex-shrink-0 mr-2 text-[var(--color-text-muted)]") do
+        content_tag(:span, class: "flex-shrink-0 mr-2 text-[var(--surface-muted-content-color)]") do
           if @icon.is_a?(String) && @icon.start_with?("<svg")
             @icon.html_safe
           else
@@ -66,7 +66,7 @@ module FlatPack
         classes(
           "flex items-start",
           "py-2 px-3",
-          "text-[var(--color-foreground)]"
+          "text-[var(--surface-content-color)]"
         )
       end
     end

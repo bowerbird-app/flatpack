@@ -9,13 +9,13 @@ module FlatPack
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "max-w-sm" "max-w-md" "max-w-lg" "max-w-xl" "max-w-2xl"
+      # "max-w-sm" "max-w-xl" "max-w-2xl" "max-w-4xl" "max-w-6xl"
       SIZES = {
         sm: "max-w-sm",
-        md: "max-w-md",
-        lg: "max-w-lg",
-        xl: "max-w-xl",
-        "2xl": "max-w-2xl"
+        md: "max-w-xl",
+        lg: "max-w-2xl",
+        xl: "max-w-4xl",
+        "2xl": "max-w-6xl"
       }.freeze
 
       def initialize(
@@ -77,8 +77,8 @@ module FlatPack
           "z-50",
           "hidden",
           "overflow-y-auto",
-          "bg-black/50",
-          "backdrop-blur-sm",
+          "bg-[var(--modal-backdrop-color)]",
+          "backdrop-blur-[var(--blur-modal-backdrop)]",
           "transition-opacity",
           "duration-300"
         )
@@ -134,11 +134,11 @@ module FlatPack
           size_classes,
           "p-4",
           "sm:p-6",
-          "bg-[var(--color-background)]",
-          "rounded-[var(--radius-lg)]",
+          "bg-[var(--modal-surface-color)]",
+          "rounded-lg",
           "shadow-lg",
           "border",
-          "border-[var(--color-border)]",
+          "border-[var(--modal-border-color)]",
           "transform",
           "transition-all",
           "duration-300",
@@ -162,7 +162,7 @@ module FlatPack
       end
 
       def close_button_classes
-        "shrink-0 text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors rounded-[var(--radius-sm)] p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]"
+        "shrink-0 text-[var(--modal-close-icon-color)] hover:text-[var(--modal-close-icon-hover-color)] transition-colors rounded-sm p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       end
 
       def render_header_section
@@ -201,7 +201,7 @@ module FlatPack
             # directly to this slot.
             header.to_s.html_safe
           else
-            content_tag(:h2, @title, class: "text-lg font-semibold text-[var(--color-text)]")
+            content_tag(:h2, @title, class: "text-lg font-semibold text-[var(--modal-title-color)]")
           end
         end
       end
@@ -229,7 +229,7 @@ module FlatPack
       end
 
       def body_classes
-        "min-h-0 flex-1 overflow-y-auto py-4 text-sm text-[var(--color-text)]"
+        "min-h-0 flex-1 overflow-y-auto py-4 text-sm text-[var(--modal-body-color)]"
       end
 
       def footer_classes

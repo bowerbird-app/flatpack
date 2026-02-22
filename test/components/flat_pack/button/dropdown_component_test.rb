@@ -16,7 +16,7 @@ module FlatPack
       def test_renders_dropdown_with_chevron_icon
         render_inline(Dropdown::Component.new(text: "Actions"))
 
-        assert_selector "button svg[data-button-dropdown-target='chevron']"
+        assert_selector "button svg[data-flat-pack--button-dropdown-target='chevron']"
       end
 
       def test_renders_menu_with_hidden_class
@@ -32,35 +32,35 @@ module FlatPack
         render_inline(Dropdown::Component.new(text: "Actions", style: :primary))
 
         assert_selector "button"
-        assert_includes page.native.to_html, "bg-[var(--color-primary)]"
+        assert_includes page.native.to_html, "bg-primary"
       end
 
       def test_renders_secondary_style
         render_inline(Dropdown::Component.new(text: "Actions", style: :secondary))
 
         assert_selector "button"
-        assert_includes page.native.to_html, "bg-[var(--color-secondary)]"
+        assert_includes page.native.to_html, "bg-secondary"
       end
 
       def test_renders_ghost_style
         render_inline(Dropdown::Component.new(text: "Actions", style: :ghost))
 
         assert_selector "button"
-        assert_includes page.native.to_html, "bg-[var(--color-ghost)]"
+        assert_includes page.native.to_html, "bg-ghost"
       end
 
       def test_renders_success_style
         render_inline(Dropdown::Component.new(text: "Actions", style: :success))
 
         assert_selector "button"
-        assert_includes page.native.to_html, "bg-[var(--color-success)]"
+        assert_includes page.native.to_html, "bg-success-bg"
       end
 
       def test_renders_warning_style
         render_inline(Dropdown::Component.new(text: "Actions", style: :warning))
 
         assert_selector "button"
-        assert_includes page.native.to_html, "bg-[var(--color-warning)]"
+        assert_includes page.native.to_html, "bg-warning-bg"
       end
 
       # Size variants
@@ -190,7 +190,7 @@ module FlatPack
         end
 
         assert_selector "a[href='/delete']", text: "Delete"
-        assert_includes page.native.to_html, "text-[var(--color-destructive)]"
+        assert_includes page.native.to_html, "text-destructive"
       end
 
       # Accessibility attributes
@@ -232,25 +232,25 @@ module FlatPack
       def test_renders_stimulus_controller
         render_inline(Dropdown::Component.new(text: "Actions"))
 
-        assert_selector "div[data-controller='button-dropdown']"
+        assert_selector "div[data-controller='flat-pack--button-dropdown']"
       end
 
       def test_renders_stimulus_target_on_trigger
         render_inline(Dropdown::Component.new(text: "Actions"))
 
-        assert_selector "button[data-button-dropdown-target='trigger']"
+        assert_selector "button[data-flat-pack--button-dropdown-target='trigger']"
       end
 
       def test_renders_stimulus_target_on_menu
         render_inline(Dropdown::Component.new(text: "Actions"))
 
-        assert_selector "div[data-button-dropdown-target='menu']"
+        assert_selector "div[data-flat-pack--button-dropdown-target='menu']"
       end
 
       def test_renders_stimulus_action_on_trigger
         render_inline(Dropdown::Component.new(text: "Actions"))
 
-        assert_selector "button[data-action='click->button-dropdown#toggle']"
+        assert_selector "button[data-action='click->flat-pack--button-dropdown#toggle']"
       end
 
       # Max height

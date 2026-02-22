@@ -29,7 +29,7 @@ module FlatPack
         render_inline(Item.new(icon: :check)) { "Content" }
 
         assert_includes page.native.to_html, "flex-shrink-0"
-        assert_includes page.native.to_html, "text-[var(--color-text-muted)]"
+        assert_includes page.native.to_html, "text-[var(--surface-muted-content-color)]"
       end
 
       def test_content_wrapped_in_span

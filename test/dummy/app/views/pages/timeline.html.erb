@@ -6,7 +6,7 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Basic Timeline", anchor_link: true) %>
   
-  <div class="border border-[var(--color-border)] rounded-lg p-6">
+  <div class="border border-[var(--surface-border-color)] rounded-lg p-6">
     <%= render FlatPack::Timeline::Component.new do %>
       <%= render FlatPack::Timeline::Item.new(
         title: "Project Created",
@@ -43,7 +43,7 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Deployment Timeline", anchor_link: true) %>
   
-  <div class="border border-[var(--color-border)] rounded-lg p-6">
+  <div class="border border-[var(--surface-border-color)] rounded-lg p-6">
     <%= render FlatPack::Timeline::Component.new do %>
       <%= render FlatPack::Timeline::Item.new(
         title: "Build Started",
@@ -102,7 +102,7 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Order Tracking", anchor_link: true) %>
   
-  <div class="border border-[var(--color-border)] rounded-lg p-6">
+  <div class="border border-[var(--surface-border-color)] rounded-lg p-6">
     <%= render FlatPack::Timeline::Component.new do %>
       <%= render FlatPack::Timeline::Item.new(
         title: "Order Placed",
@@ -110,7 +110,7 @@
         variant: :success
       ) do %>
         <p>Your order #12345 has been confirmed and payment received.</p>
-        <p class="text-sm mt-1 text-[var(--color-text-muted)]">Total: $149.99</p>
+        <p class="text-sm mt-1 text-[var(--surface-muted-content-color)]">Total: $149.99</p>
       <% end %>
 
       <%= render FlatPack::Timeline::Item.new(
@@ -127,7 +127,7 @@
         variant: :success
       ) do %>
         <p>Package has been handed to carrier for delivery.</p>
-        <p class="text-sm mt-1 text-[var(--color-text-muted)]">Tracking: 1Z999AA10123456784</p>
+        <p class="text-sm mt-1 text-[var(--surface-muted-content-color)]">Tracking: 1Z999AA10123456784</p>
       <% end %>
 
       <%= render FlatPack::Timeline::Item.new(
@@ -153,7 +153,7 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Activity Feed", anchor_link: true) %>
   
-  <div class="border border-[var(--color-border)] rounded-lg p-6">
+  <div class="border border-[var(--surface-border-color)] rounded-lg p-6">
     <%= render FlatPack::Timeline::Component.new do %>
       <%= render FlatPack::Timeline::Item.new(
         title: "Pull Request Opened",
@@ -195,7 +195,7 @@
         last: true
       ) do %>
         <p><strong>John Doe</strong> merged PR #123 into main</p>
-        <p class="text-sm mt-1 text-[var(--color-text-muted)]">Automatically deployed to production</p>
+        <p class="text-sm mt-1 text-[var(--surface-muted-content-color)]">Automatically deployed to production</p>
       <% end %>
     <% end %>
   </div>

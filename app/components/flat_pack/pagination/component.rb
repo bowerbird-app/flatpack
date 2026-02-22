@@ -16,6 +16,8 @@ module FlatPack
         pagy: nil,
         size: :normal,
         mode: :standard,
+        anchor: nil,
+        turbo_frame: nil,
         infinite_url: nil,
         has_more: true,
         loading_text: "Loading more...",
@@ -26,6 +28,8 @@ module FlatPack
         @pagy = pagy
         @size = size.to_sym
         @mode = mode.to_sym
+        @anchor = anchor.to_s.delete_prefix("#").presence
+        @turbo_frame = turbo_frame.to_s.presence
         @infinite_url = infinite_url
         @has_more = has_more
         @loading_text = loading_text
@@ -82,7 +86,7 @@ module FlatPack
       end
 
       def pagination_wrapper_classes
-        "inline-flex items-center gap-1.5 rounded-[var(--radius-md)] bg-[var(--color-background)] border border-[var(--color-border)] p-1.5"
+        "inline-flex items-center gap-1.5 rounded-md bg-[var(--surface-bg-color)] border border-[var(--surface-border-color)] p-1.5"
       end
 
       def render_prev_button
@@ -99,7 +103,8 @@ module FlatPack
           link_to(
             page_url(@pagy.prev),
             class: page_button_classes,
-            aria: {label: "Previous page"}
+            aria: {label: "Previous page"},
+            data: link_data_attributes
           ) do
             previous_icon
           end
@@ -120,7 +125,8 @@ module FlatPack
           link_to(
             page_url(@pagy.next),
             class: page_button_classes,
-            aria: {label: "Next page"}
+            aria: {label: "Next page"},
+            data: link_data_attributes
           ) do
             next_icon
           end
@@ -159,24 +165,25 @@ module FlatPack
             page.to_s,
             page_url(page),
             class: page_button_classes,
-            aria: {label: "Page #{page}"}
+            aria: {label: "Page #{page}"},
+            data: link_data_attributes
           )
         end
       end
 
       def render_gap
-        content_tag(:span, "…", class: "#{gap_padding_classes} text-[var(--color-text-muted)]")
+        content_tag(:span, "…", class: "#{gap_padding_classes} text-[var(--surface-muted-content-color)]")
       end
 
       def page_button_classes(active: false, disabled: false)
-        base = "inline-flex items-center justify-center #{button_size_classes} text-sm font-medium rounded-[var(--radius-sm)] transition-colors"
+        base = "inline-flex items-center justify-center #{button_size_classes} text-sm font-medium rounded-sm transition-colors"
 
         if disabled
-          "#{base} text-[var(--color-text-muted)] cursor-not-allowed opacity-50"
+          "#{base} text-[var(--surface-muted-content-color)] cursor-not-allowed opacity-50"
         elsif active
-          "#{base} bg-[var(--color-primary)] text-[var(--color-primary-text)]"
+          "#{base} bg-primary text-primary-text"
         else
-          "#{base} text-[var(--color-text)] hover:bg-[var(--color-muted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]"
+          "#{base} text-[var(--surface-content-color)] hover:bg-[var(--surface-muted-bg-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         end
       end
 
@@ -206,13 +213,31 @@ module FlatPack
       def page_url(page)
         return "#" unless page
 
-        # Try to use pagy_url_for if available (from Pagy helpers)
-        if helpers.respond_to?(:pagy_url_for)
-          helpers.pagy_url_for(@pagy, page)
-        else
-          # Fallback: just add page param
-          "?page=#{page}"
-        end
+        url =
+          # Try to use pagy_url_for if available (from Pagy helpers)
+          if helpers.respond_to?(:pagy_url_for)
+            helpers.pagy_url_for(@pagy, page)
+          else
+            # Fallback: just add page param
+            "?page=#{page}"
+          end
+
+        append_anchor(url)
+      end
+
+      def append_anchor(url)
+        return url unless @anchor
+        return url if url.include?("#")
+
+        "#{url}##{@anchor}"
+      end
+
+      def link_data_attributes
+        return nil unless @turbo_frame
+
+        {
+          turbo_frame: @turbo_frame
+        }
       end
 
       def previous_icon

@@ -5,7 +5,7 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "text-[var(--color-warning)]"
+      # "text-warning"
 
       def initialize(
         name:,
@@ -99,13 +99,13 @@ module FlatPack
 
       def label_classes
         classes(
-          "block text-sm font-medium text-[var(--color-foreground)] mb-2"
+          "block text-sm font-medium text-[var(--surface-content-color)] mb-2"
         )
       end
 
       def radio_label_classes(disabled)
         classes(
-          "ml-2 text-sm font-medium text-[var(--color-foreground)]",
+          "ml-2 text-sm font-medium text-[var(--surface-content-color)]",
           disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
         )
       end
@@ -116,24 +116,24 @@ module FlatPack
           "h-4 w-4",
           "rounded-full",
           "border",
-          "bg-[var(--color-background)]",
-          "text-[var(--color-primary)]",
-          "transition-colors duration-[var(--transition-base)]",
-          "focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)] focus:ring-offset-2",
+          "bg-[var(--surface-bg-color)]",
+          "text-primary",
+          "transition-colors duration-base",
+          "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
           "disabled:opacity-50 disabled:cursor-not-allowed"
         ]
 
         base_classes << if @error
-          "border-[var(--color-warning)]"
+          "border-warning"
         else
-          "border-[var(--color-border)]"
+          "border-[var(--surface-border-color)]"
         end
 
         classes(*base_classes, @custom_class)
       end
 
       def error_classes
-        "mt-2 text-sm text-[var(--color-warning)]"
+        "mt-2 text-sm text-warning"
       end
 
       def radio_id(option_value)

@@ -62,7 +62,7 @@ module FlatPack
       end
 
       def render_title
-        content_tag(:h2, @title, class: "text-2xl font-semibold text-[var(--color-text)] leading-tight")
+        content_tag(:h2, @title, class: "text-2xl font-semibold text-[var(--surface-content-color)] leading-tight")
       end
 
       def render_anchor_link
@@ -71,7 +71,7 @@ module FlatPack
         render FlatPack::Tooltip::Component.new(text: "Copy link", placement: :top) do
           content_tag(:a,
             href: "##{anchor_id}",
-            class: "shrink-0 transition-opacity text-[var(--color-text-muted)] hover:text-[var(--color-text)]",
+            class: "shrink-0 transition-opacity text-[var(--surface-muted-content-color)] hover:text-[var(--surface-content-color)]",
             style: "opacity: 0",
             data: {
               flat_pack__section_title_anchor_target: "link",
@@ -88,7 +88,7 @@ module FlatPack
       def render_subtitle
         return nil unless @subtitle
 
-        content_tag(:p, @subtitle, class: "mt-1 text-base text-[var(--color-text-muted)]")
+        content_tag(:p, @subtitle, class: "mt-1 text-base text-[var(--surface-muted-content-color)]")
       end
 
       def anchor_id

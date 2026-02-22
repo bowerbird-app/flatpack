@@ -32,7 +32,7 @@
 <!-- Tooltip Placements -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Tooltip Placements", anchor_link: true, subtitle: "Examples for Tooltip Placements.") %>
-  <p class="text-[var(--color-muted-foreground)] mb-4">
+  <p class="text-[var(--surface-muted-content-color)] mb-4">
     Tooltips automatically position themselves and adjust for viewport boundaries.
   </p>
   <div class="flex justify-center items-center flex-wrap gap-4 mb-4">
@@ -93,7 +93,7 @@
 <!-- Tooltips in Context -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Tooltips in Context", anchor_link: true, subtitle: "Examples for Tooltips in Context.") %>
-  <p class="text-[var(--color-muted-foreground)] mb-4">
+  <p class="text-[var(--surface-muted-content-color)] mb-4">
     Tooltips work great with icons, links, and inline elements.
   </p>
   
@@ -101,7 +101,7 @@
     <div class="flex items-center gap-2">
       <span>Username</span>
       <%= render FlatPack::Tooltip::Component.new(text: "Your username must be unique, use 3-20 characters, and cannot be changed later.", placement: :right) do %>
-        <span class="inline-flex text-[var(--color-muted-foreground)] cursor-help">
+        <span class="inline-flex text-[var(--surface-muted-content-color)] cursor-help">
           <%= render FlatPack::Shared::IconComponent.new(name: :question, size: :sm) %>
         </span>
       <% end %>
@@ -110,13 +110,13 @@
     <div class="flex items-center gap-2">
       <span>Password Strength</span>
       <%= render FlatPack::Tooltip::Component.new(text: "Use at least 8 characters with uppercase, lowercase, numbers, and symbols for stronger security.", placement: :right) do %>
-        <span class="inline-flex text-[var(--color-muted-foreground)] cursor-help">
+        <span class="inline-flex text-[var(--surface-muted-content-color)] cursor-help">
           <%= render FlatPack::Shared::IconComponent.new(name: :lock, size: :sm) %>
         </span>
       <% end %>
     </div>
     
-    <p class="text-[var(--color-foreground)]">
+    <p class="text-[var(--surface-content-color)]">
       This is a paragraph with an inline
       <%= render FlatPack::Tooltip::Component.new(text: "This inline tooltip provides additional context without interrupting the reading flow.", placement: :top) do %>
         <span class="text-[var(--color-primary)] underline decoration-dotted cursor-help">tooltip</span>
@@ -129,7 +129,7 @@
 <!-- Features -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Examples for Features.") %>
-  <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
+  <ul class="list-disc list-inside space-y-2 text-[var(--surface-content-color)]">
     <li><strong>Hover & Focus:</strong> Shows on mouse hover and keyboard focus</li>
     <li><strong>Smart Positioning:</strong> Automatically positions and adjusts for viewport boundaries</li>
     <li><strong>Accessible:</strong> Uses role="tooltip" and aria-describedby</li>

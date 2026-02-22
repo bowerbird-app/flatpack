@@ -77,7 +77,7 @@ module FlatPack
       def label_attributes
         {
           for: @id,
-          class: "flex items-center justify-between mb-2 text-sm font-medium text-[var(--color-foreground)]"
+          class: "flex items-center justify-between mb-2 text-sm font-medium text-[var(--surface-content-color)]"
         }
       end
 
@@ -106,7 +106,7 @@ module FlatPack
       end
 
       def input_classes
-        "w-full h-2 bg-[var(--color-muted)] rounded-full appearance-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        "w-full h-2 bg-[var(--surface-muted-bg-color)] rounded-full appearance-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
       end
 
       def validate_name!

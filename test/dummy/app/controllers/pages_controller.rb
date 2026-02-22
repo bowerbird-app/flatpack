@@ -32,11 +32,20 @@ class PagesController < ApplicationController
 
     # Handle sorting for sortable table
     @sorted_users = sort_users(@users.dup, params[:sort], params[:direction])
-    @demo_table_rows = DemoTableRow.where(list_key: DemoTableRow::DEFAULT_LIST_KEY).ordered
-    @demo_table_version = demo_table_version
+    @demo_table_rows = demo_table_rows_table_exists? ? DemoTableRow.where(list_key: DemoTableRow::DEFAULT_LIST_KEY).ordered : []
+    @demo_table_version = demo_table_rows_table_exists? ? demo_table_version : "0"
   end
 
   def tables_reorder
+    unless demo_table_rows_table_exists?
+      render json: {
+        ok: false,
+        error: "demo_table_rows table is missing. Run `bin/rails db:migrate` in test/dummy.",
+        version: "0"
+      }, status: :service_unavailable
+      return
+    end
+
     payload = reorder_payload
     scope = payload[:scope].presence || {list_key: DemoTableRow::DEFAULT_LIST_KEY}
 
@@ -231,7 +240,7 @@ class PagesController < ApplicationController
   end
 
   def pagination_infinite
-    @pagy, @records = pagy(DummyDatum.recent, items: 10)
+    @pagy, @records = paginated_infinite_records
     @has_more = @pagy.next.present?
     @infinite_url = @has_more ? demo_pagination_infinite_path(page: @pagy.next) : "#"
 
@@ -274,6 +283,34 @@ class PagesController < ApplicationController
 
     files.filter_map do |file_path|
       build_component_entry(file_path, component_root)
+    end
+  end
+
+  def paginated_infinite_records
+    return pagy(DummyDatum.recent, items: 10) if dummy_data_available?
+
+    pagy_array(infinite_demo_records, items: 10)
+  rescue ActiveRecord::StatementInvalid
+    pagy_array(infinite_demo_records, items: 10)
+  end
+
+  def dummy_data_available?
+    DummyDatum.table_exists?
+  rescue ActiveRecord::NoDatabaseError, ActiveRecord::StatementInvalid
+    false
+  end
+
+  def infinite_demo_records
+    @infinite_demo_records ||= Array.new(75) do |i|
+      OpenStruct.new(
+        id: i + 1,
+        name: "Demo User #{i + 1}",
+        email: "demo.user#{i + 1}@example.com",
+        status: %w[active inactive pending archived].sample,
+        category: %w[engineering marketing sales product support].sample,
+        views_count: rand(120..9_900),
+        published_at: rand(90).days.ago
+      )
     end
   end
 
@@ -398,6 +435,7 @@ class PagesController < ApplicationController
   end
 
   def ensure_demo_table_rows!
+    return unless demo_table_rows_table_exists?
     return if DemoTableRow.where(list_key: DemoTableRow::DEFAULT_LIST_KEY).exists?
 
     rows = [
@@ -421,6 +459,10 @@ class PagesController < ApplicationController
 
   def demo_table_version(scope = {list_key: DemoTableRow::DEFAULT_LIST_KEY})
     DemoTableRow.where(scope).maximum(:updated_at)&.to_f&.to_s || "0"
+  end
+
+  def demo_table_rows_table_exists?
+    DemoTableRow.table_exists?
   end
 
   def searchable_items

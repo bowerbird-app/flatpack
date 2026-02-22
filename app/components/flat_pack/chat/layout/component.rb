@@ -57,15 +57,15 @@ module FlatPack
         def layout_classes
           classes(
             "h-full",
-            "bg-[var(--color-background)]",
+            "bg-[var(--chat-background-color)]",
             VARIANTS.fetch(@variant)
           )
         end
 
         def sidebar_classes
           classes(
-            "border-r border-[var(--color-border)]",
-            "bg-[var(--color-background)]",
+            "border-r border-[var(--chat-border-color)]",
+            "bg-[var(--chat-background-color)]",
             "overflow-y-auto"
           )
         end

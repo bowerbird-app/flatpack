@@ -104,18 +104,18 @@ export default class extends Controller {
 
   createFileItem(file, index) {
     const div = document.createElement("div")
-    div.className = "flex items-center justify-between p-3 bg-[var(--color-background)] border border-[var(--color-border)] rounded-[var(--radius-md)]"
+    div.className = "flex items-center justify-between p-3 bg-[var(--surface-bg-color)] border border-[var(--surface-border-color)] rounded-[var(--radius-md)]"
 
     const fileInfo = document.createElement("div")
     fileInfo.className = "flex items-center flex-1 min-w-0"
 
     const fileIcon = this.createFileIcon()
     const fileName = document.createElement("div")
-    fileName.className = "text-sm text-[var(--color-foreground)] truncate"
+    fileName.className = "text-sm text-[var(--surface-content-color)] truncate"
     fileName.textContent = file.name
 
     const fileSize = document.createElement("div")
-    fileSize.className = "text-xs text-[var(--color-muted-foreground)]"
+    fileSize.className = "text-xs text-[var(--surface-muted-content-color)]"
     fileSize.textContent = this.formatFileSize(file.size)
 
     fileInfo.appendChild(fileIcon)
@@ -135,7 +135,7 @@ export default class extends Controller {
 
   createFileIcon() {
     const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg")
-    icon.setAttribute("class", "h-8 w-8 text-[var(--color-muted-foreground)] flex-shrink-0")
+    icon.setAttribute("class", "h-8 w-8 text-[var(--surface-muted-content-color)] flex-shrink-0")
     icon.setAttribute("fill", "none")
     icon.setAttribute("viewBox", "0 0 24 24")
     icon.setAttribute("stroke", "currentColor")
@@ -153,7 +153,7 @@ export default class extends Controller {
   createRemoveButton(index) {
     const button = document.createElement("button")
     button.type = "button"
-    button.className = "text-[var(--color-muted-foreground)] hover:text-[var(--color-warning)] transition-colors"
+    button.className = "text-[var(--surface-muted-content-color)] hover:text-[var(--color-warning-border)] transition-colors"
     button.innerHTML = `
       <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -175,7 +175,7 @@ export default class extends Controller {
         reader.onload = (e) => {
           const img = document.createElement("img")
           img.src = e.target.result
-          img.className = "w-full h-24 object-cover rounded-[var(--radius-md)] border border-[var(--color-border)]"
+          img.className = "w-full h-24 object-cover rounded-[var(--radius-md)] border border-[var(--surface-border-color)]"
           this.previewTarget.appendChild(img)
         }
         reader.readAsDataURL(file)

@@ -79,8 +79,8 @@ module FlatPack
       def render_titles
         content_tag(:div) do
           safe_join([
-            (@title ? content_tag(:h3, @title, class: "text-lg font-semibold text-[var(--color-text)]") : nil),
-            (@subtitle ? content_tag(:p, @subtitle, class: "mt-1 text-sm text-[var(--color-text-muted)]") : nil)
+            (@title ? content_tag(:h3, @title, class: "text-lg font-semibold text-[var(--surface-content-color)]") : nil),
+            (@subtitle ? content_tag(:p, @subtitle, class: "mt-1 text-sm text-[var(--surface-muted-content-color)]") : nil)
           ].compact)
         end
       end
@@ -151,7 +151,7 @@ module FlatPack
           },
           legend: {
             labels: {
-              colors: "var(--color-text)"
+              colors: "var(--surface-content-color)"
             }
           },
           tooltip: {
@@ -171,26 +171,26 @@ module FlatPack
             width: 2
           },
           grid: {
-            borderColor: "var(--color-border)",
+            borderColor: "var(--surface-border-color)",
             strokeDashArray: 4
           },
           xaxis: {
             labels: {
               style: {
-                colors: "var(--color-text-muted)"
+                colors: "var(--surface-muted-content-color)"
               }
             },
             axisBorder: {
-              color: "var(--color-border)"
+              color: "var(--surface-border-color)"
             },
             axisTicks: {
-              color: "var(--color-border)"
+              color: "var(--surface-border-color)"
             }
           },
           yaxis: {
             labels: {
               style: {
-                colors: "var(--color-text-muted)"
+                colors: "var(--surface-muted-content-color)"
               }
             }
           }

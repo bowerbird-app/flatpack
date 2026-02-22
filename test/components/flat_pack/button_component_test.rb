@@ -60,11 +60,12 @@ module FlatPack
         assert_selector "button[aria-label='Custom label']"
       end
 
-      def test_default_scheme_is_primary
+      def test_default_scheme_is_default
         component = Component.new(text: "Default")
         render_inline(component)
 
         assert_selector "button", text: "Default"
+        assert_includes page.native.to_html, "bg-default"
       end
 
       def test_default_size_is_md
@@ -340,24 +341,16 @@ module FlatPack
         assert_selector "button[type='submit'][aria-label='Submit form']", text: "Submit"
       end
 
-      def test_button_includes_box_shadow
-        render_inline(Component.new(text: "Button"))
+      def test_primary_button_uses_scheme_shadow_token_class
+        render_inline(Component.new(text: "Primary", style: :primary))
 
-        assert_includes page.native.to_html, "shadow-[var(--button-shadow)]"
-        assert_includes page.native.to_html, "hover:shadow-[var(--button-shadow-active)]"
+        assert_includes page.native.to_html, "shadow-sm"
       end
 
-      def test_link_button_does_not_include_box_shadow
-        render_inline(Component.new(text: "Link", url: "/path"))
+      def test_secondary_button_does_not_include_scheme_shadow_class
+        render_inline(Component.new(text: "Secondary", style: :secondary))
 
-        refute_includes page.native.to_html, "shadow-[var(--button-shadow)]"
-        refute_includes page.native.to_html, "hover:shadow-[var(--button-shadow-active)]"
-      end
-
-      def test_disabled_button_includes_shadow_none
-        render_inline(Component.new(text: "Disabled", disabled: true))
-
-        assert_includes page.native.to_html, "disabled:shadow-none"
+        refute_includes page.native.to_html, "shadow-sm"
       end
     end
   end

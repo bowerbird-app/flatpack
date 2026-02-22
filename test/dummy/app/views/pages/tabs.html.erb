@@ -13,25 +13,25 @@
     <% tabs.tab(id: "settings", label: "Settings") %>
 
     <% tabs.panel(id: "overview") do %>
-      <div class="p-6 bg-[var(--color-muted)] rounded-b-lg">
+      <div class="p-6 bg-[var(--surface-muted-bg-color)] rounded-b-lg">
         <h3 class="text-lg font-semibold mb-2">Overview Tab</h3>
-        <p class="text-[var(--color-foreground)]">
+        <p class="text-[var(--surface-content-color)]">
           This is the overview content. Tabs organize content into separate views where only one panel is visible at a time.
         </p>
       </div>
     <% end %>
     <% tabs.panel(id: "details") do %>
-      <div class="p-6 bg-[var(--color-muted)] rounded-b-lg">
+      <div class="p-6 bg-[var(--surface-muted-bg-color)] rounded-b-lg">
         <h3 class="text-lg font-semibold mb-2">Details Tab</h3>
-        <p class="text-[var(--color-foreground)]">
+        <p class="text-[var(--surface-content-color)]">
           Here you can provide detailed information. Use arrow keys to move between tabs.
         </p>
       </div>
     <% end %>
     <% tabs.panel(id: "settings") do %>
-      <div class="p-6 bg-[var(--color-muted)] rounded-b-lg">
+      <div class="p-6 bg-[var(--surface-muted-bg-color)] rounded-b-lg">
         <h3 class="text-lg font-semibold mb-2">Settings Tab</h3>
-        <p class="text-[var(--color-foreground)]">
+        <p class="text-[var(--surface-content-color)]">
           Configuration content can go here. Press Home/End to jump to first/last tab.
         </p>
       </div>
@@ -65,21 +65,21 @@
     <% tabs.tab(id: "yearly", label: "Yearly") %>
 
     <% tabs.panel(id: "monthly") do %>
-      <div class="p-6 bg-[var(--color-muted)] rounded-b-lg">
+      <div class="p-6 bg-[var(--surface-muted-bg-color)] rounded-b-lg">
         <h3 class="text-lg font-semibold mb-2">Monthly Report</h3>
-        <p class="text-[var(--color-foreground)]">The monthly summary focuses on short-term performance and trends.</p>
+        <p class="text-[var(--surface-content-color)]">The monthly summary focuses on short-term performance and trends.</p>
       </div>
     <% end %>
     <% tabs.panel(id: "quarterly") do %>
-      <div class="p-6 bg-[var(--color-muted)] rounded-b-lg">
+      <div class="p-6 bg-[var(--surface-muted-bg-color)] rounded-b-lg">
         <h3 class="text-lg font-semibold mb-2">Quarterly Report</h3>
-        <p class="text-[var(--color-foreground)]">This tab is selected by default via <code>default_tab: 1</code>.</p>
+        <p class="text-[var(--surface-content-color)]">This tab is selected by default via <code>default_tab: 1</code>.</p>
       </div>
     <% end %>
     <% tabs.panel(id: "yearly") do %>
-      <div class="p-6 bg-[var(--color-muted)] rounded-b-lg">
+      <div class="p-6 bg-[var(--surface-muted-bg-color)] rounded-b-lg">
         <h3 class="text-lg font-semibold mb-2">Yearly Report</h3>
-        <p class="text-[var(--color-foreground)]">Yearly data provides long-range visibility across all periods.</p>
+        <p class="text-[var(--surface-content-color)]">Yearly data provides long-range visibility across all periods.</p>
       </div>
     <% end %>
   <% end %>
@@ -115,7 +115,7 @@
     <% tabs.tab(id: "security", label: "Security") %>
 
     <% tabs.panel(id: "profile") do %>
-      <div class="p-6 bg-[var(--color-muted)] rounded-b-lg space-y-4">
+      <div class="p-6 bg-[var(--surface-muted-bg-color)] rounded-b-lg space-y-4">
         <h3 class="text-lg font-semibold">User Profile</h3>
         <%= render FlatPack::TextInput::Component.new(
           name: "name",
@@ -130,7 +130,7 @@
       </div>
     <% end %>
     <% tabs.panel(id: "notifications") do %>
-      <div class="p-6 bg-[var(--color-muted)] rounded-b-lg space-y-3">
+      <div class="p-6 bg-[var(--surface-muted-bg-color)] rounded-b-lg space-y-3">
         <h3 class="text-lg font-semibold mb-4">Notification Settings</h3>
         <%= render FlatPack::Switch::Component.new(
           name: "email_notifications",
@@ -144,7 +144,7 @@
       </div>
     <% end %>
     <% tabs.panel(id: "security") do %>
-      <div class="p-6 bg-[var(--color-muted)] rounded-b-lg">
+      <div class="p-6 bg-[var(--surface-muted-bg-color)] rounded-b-lg">
         <h3 class="text-lg font-semibold mb-4">Security Settings</h3>
         <div class="space-y-4">
           <%= render FlatPack::PasswordInput::Component.new(
@@ -181,13 +181,13 @@
 <!-- Keyboard Navigation -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Keyboard Navigation", anchor_link: true, subtitle: "Examples for Keyboard Navigation.") %>
-  <div class="bg-[var(--color-muted)] p-6 rounded-lg">
+  <div class="bg-[var(--surface-muted-bg-color)] p-6 rounded-lg">
     <h3 class="font-semibold mb-3">Keyboard Shortcuts:</h3>
-    <ul class="space-y-2 text-[var(--color-foreground)]">
-      <li><kbd class="px-2 py-1 bg-[var(--color-background)] border border-[var(--color-border)] rounded text-sm">←</kbd> / <kbd class="px-2 py-1 bg-[var(--color-background)] border border-[var(--color-border)] rounded text-sm">→</kbd> - Navigate between tabs</li>
-      <li><kbd class="px-2 py-1 bg-[var(--color-background)] border border-[var(--color-border)] rounded text-sm">Home</kbd> - Jump to first tab</li>
-      <li><kbd class="px-2 py-1 bg-[var(--color-background)] border border-[var(--color-border)] rounded text-sm">End</kbd> - Jump to last tab</li>
-      <li><kbd class="px-2 py-1 bg-[var(--color-background)] border border-[var(--color-border)] rounded text-sm">Enter</kbd> / <kbd class="px-2 py-1 bg-[var(--color-background)] border border-[var(--color-border)] rounded text-sm">Space</kbd> - Activate focused tab</li>
+    <ul class="space-y-2 text-[var(--surface-content-color)]">
+      <li><kbd class="px-2 py-1 bg-[var(--surface-bg-color)] border border-[var(--surface-border-color)] rounded text-sm">←</kbd> / <kbd class="px-2 py-1 bg-[var(--surface-bg-color)] border border-[var(--surface-border-color)] rounded text-sm">→</kbd> - Navigate between tabs</li>
+      <li><kbd class="px-2 py-1 bg-[var(--surface-bg-color)] border border-[var(--surface-border-color)] rounded text-sm">Home</kbd> - Jump to first tab</li>
+      <li><kbd class="px-2 py-1 bg-[var(--surface-bg-color)] border border-[var(--surface-border-color)] rounded text-sm">End</kbd> - Jump to last tab</li>
+      <li><kbd class="px-2 py-1 bg-[var(--surface-bg-color)] border border-[var(--surface-border-color)] rounded text-sm">Enter</kbd> / <kbd class="px-2 py-1 bg-[var(--surface-bg-color)] border border-[var(--surface-border-color)] rounded text-sm">Space</kbd> - Activate focused tab</li>
     </ul>
   </div>
 </section>
@@ -195,7 +195,7 @@
 <!-- Features -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Examples for Features.") %>
-  <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
+  <ul class="list-disc list-inside space-y-2 text-[var(--surface-content-color)]">
     <li><strong>Full Keyboard Navigation:</strong> Arrow keys, Home/End, Enter/Space</li>
     <li><strong>ARIA Compliant:</strong> Proper tablist/tab/tabpanel roles and attributes</li>
     <li><strong>Optional URL Hash Sync:</strong> Link tabs to URL hash for bookmarking</li>

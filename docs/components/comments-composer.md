@@ -171,7 +171,7 @@ Pre-fill the composer (e.g., for editing):
   
   <% composer.with_actions do %>
     <div class="flex justify-between items-center w-full">
-      <div class="text-xs text-muted-foreground">
+      <div class="text-xs text-[var(--surface-muted-content-color)]">
         Markdown supported
       </div>
       <button type="submit" class="btn-primary">

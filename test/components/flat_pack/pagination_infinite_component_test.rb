@@ -87,7 +87,7 @@ module FlatPack
       def test_button_has_proper_styling
         render_inline(Component.new(url: "/items?page=2"))
 
-        assert_includes page.native.to_html, "bg-[var(--color-primary)]"
+        assert_includes page.native.to_html, "bg-primary"
       end
     end
   end

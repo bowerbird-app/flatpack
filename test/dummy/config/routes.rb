@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 
   # Demo pages
   get "demo", to: "pages#demo"
+  get "themes", to: "themes#index"
   get "demo/buttons", to: "pages#buttons"
   get "demo/forms", to: "pages#forms"
   get "demo/tables", to: "pages#tables"

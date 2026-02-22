@@ -616,7 +616,7 @@ Complete application layout example using the navbar in a Rails application:
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="h-full bg-[var(--color-background)]">
+  <body class="h-full bg-[var(--surface-bg-color)]">
     <%= render FlatPack::Navbar::Component.new do |navbar| %>
       <%= render "shared/sidebar", navbar: navbar %>
       <%= render "shared/top_nav", navbar: navbar %>
@@ -797,8 +797,8 @@ Customize colors by overriding theme variables:
   
   /* Badge colors */
   --color-secondary: oklch(0.85 0.02 250);
-  --color-success: oklch(0.65 0.17 145);
-  --color-warning: oklch(0.75 0.15 85);
+  --color-success-bg: oklch(0.65 0.17 145);
+  --color-warning-bg: oklch(0.75 0.15 85);
   --color-danger: oklch(0.60 0.22 25);
 }
 ```

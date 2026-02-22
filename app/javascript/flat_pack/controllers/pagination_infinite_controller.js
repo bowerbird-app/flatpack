@@ -187,12 +187,12 @@ export default class extends Controller {
     for (let i = 0; i < placeholdersToAdd; i += 1) {
       const placeholder = document.createElement("div")
       placeholder.dataset.paginationLoadingCard = "true"
-      placeholder.className = "border border-[var(--color-border)] rounded-lg p-4 space-y-3"
+      placeholder.className = "border border-[var(--surface-border-color)] rounded-lg p-4 space-y-3"
       placeholder.innerHTML = [
-        '<div class="animate-pulse bg-[var(--color-muted)] w-full rounded-lg h-[120px]" aria-busy="true" aria-label="Loading..." role="status"></div>',
-        '<div class="animate-pulse bg-[var(--color-muted)] h-8 rounded w-[60%]" aria-busy="true" aria-label="Loading..." role="status"></div>',
-        '<div class="animate-pulse bg-[var(--color-muted)] h-4 rounded w-[90%]" aria-busy="true" aria-label="Loading..." role="status"></div>',
-        '<div class="animate-pulse bg-[var(--color-muted)] h-4 rounded w-[75%]" aria-busy="true" aria-label="Loading..." role="status"></div>'
+        '<div class="animate-pulse bg-[var(--surface-muted-bg-color)] w-full rounded-lg h-[120px]" aria-busy="true" aria-label="Loading..." role="status"></div>',
+        '<div class="animate-pulse bg-[var(--surface-muted-bg-color)] h-8 rounded w-[60%]" aria-busy="true" aria-label="Loading..." role="status"></div>',
+        '<div class="animate-pulse bg-[var(--surface-muted-bg-color)] h-4 rounded w-[90%]" aria-busy="true" aria-label="Loading..." role="status"></div>',
+        '<div class="animate-pulse bg-[var(--surface-muted-bg-color)] h-4 rounded w-[75%]" aria-busy="true" aria-label="Loading..." role="status"></div>'
       ].join("")
 
       currentContent.appendChild(placeholder)

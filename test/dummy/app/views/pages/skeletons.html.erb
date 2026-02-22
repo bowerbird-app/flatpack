@@ -6,29 +6,29 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Skeleton Variants", anchor_link: true) %>
   
-  <div class="space-y-6 p-6 bg-[var(--color-background)] border border-[var(--color-border)] rounded-lg">
+  <div class="space-y-6 p-6 bg-[var(--surface-bg-color)] border border-[var(--surface-border-color)] rounded-lg">
     <div>
-      <p class="text-sm text-[var(--color-text-muted)] mb-2">Text</p>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Text</p>
       <%= render FlatPack::Skeleton::Component.new(variant: :text) %>
     </div>
 
     <div>
-      <p class="text-sm text-[var(--color-text-muted)] mb-2">Title</p>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Title</p>
       <%= render FlatPack::Skeleton::Component.new(variant: :title) %>
     </div>
 
     <div>
-      <p class="text-sm text-[var(--color-text-muted)] mb-2">Avatar</p>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Avatar</p>
       <%= render FlatPack::Skeleton::Component.new(variant: :avatar) %>
     </div>
 
     <div>
-      <p class="text-sm text-[var(--color-text-muted)] mb-2">Button</p>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Button</p>
       <%= render FlatPack::Skeleton::Component.new(variant: :button) %>
     </div>
 
     <div>
-      <p class="text-sm text-[var(--color-text-muted)] mb-2">Rectangle</p>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Rectangle</p>
       <%= render FlatPack::Skeleton::Component.new(variant: :rectangle) %>
     </div>
   </div>
@@ -37,19 +37,19 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Custom Dimensions", anchor_link: true) %>
   
-  <div class="space-y-6 p-6 bg-[var(--color-background)] border border-[var(--color-border)] rounded-lg">
+  <div class="space-y-6 p-6 bg-[var(--surface-bg-color)] border border-[var(--surface-border-color)] rounded-lg">
     <div>
-      <p class="text-sm text-[var(--color-text-muted)] mb-2">Custom Width</p>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Custom Width</p>
       <%= render FlatPack::Skeleton::Component.new(width: "300px") %>
     </div>
 
     <div>
-      <p class="text-sm text-[var(--color-text-muted)] mb-2">Custom Height</p>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Custom Height</p>
       <%= render FlatPack::Skeleton::Component.new(height: "100px") %>
     </div>
 
     <div>
-      <p class="text-sm text-[var(--color-text-muted)] mb-2">Custom Width and Height</p>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Custom Width and Height</p>
       <%= render FlatPack::Skeleton::Component.new(width: "250px", height: "150px") %>
     </div>
   </div>
@@ -88,10 +88,10 @@
           <%= render FlatPack::Avatar::Component.new(name: "Jane Smith", size: :lg) %>
           <div class="flex-1">
             <h3 class="font-semibold text-lg">Jane Smith</h3>
-            <p class="text-sm text-[var(--color-text-muted)]">Product Designer</p>
+            <p class="text-sm text-[var(--surface-muted-content-color)]">Product Designer</p>
           </div>
         </div>
-        <p class="text-[var(--color-foreground)] mb-4">
+        <p class="text-[var(--surface-content-color)] mb-4">
           Passionate about creating intuitive user experiences and beautiful interfaces. Always learning and exploring new design patterns.
         </p>
         <div class="flex gap-2">
@@ -111,7 +111,7 @@
     <div class="space-y-4">
       <h3 class="font-semibold mb-4">Loading...</h3>
       <% 3.times do %>
-        <div class="flex items-center gap-3 p-4 border border-[var(--color-border)] rounded-lg">
+        <div class="flex items-center gap-3 p-4 border border-[var(--surface-border-color)] rounded-lg">
           <%= render FlatPack::Skeleton::Component.new(variant: :avatar) %>
           <div class="flex-1 space-y-2">
             <%= render FlatPack::Skeleton::Component.new(variant: :text) %>
@@ -125,11 +125,11 @@
     <div class="space-y-4">
       <h3 class="font-semibold mb-4">Team Members</h3>
       <% ["Alice Johnson", "Bob Williams", "Carol Davis"].each do |name| %>
-        <div class="flex items-center gap-3 p-4 border border-[var(--color-border)] rounded-lg">
+        <div class="flex items-center gap-3 p-4 border border-[var(--surface-border-color)] rounded-lg">
           <%= render FlatPack::Avatar::Component.new(name: name, size: :md) %>
           <div class="flex-1">
             <p class="font-medium"><%= name %></p>
-            <p class="text-sm text-[var(--color-text-muted)]">Software Engineer</p>
+            <p class="text-sm text-[var(--surface-muted-content-color)]">Software Engineer</p>
           </div>
         </div>
       <% end %>
@@ -140,9 +140,9 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Loading Table", anchor_link: true) %>
   
-  <div class="overflow-x-auto border border-[var(--color-border)] rounded-lg">
+  <div class="overflow-x-auto border border-[var(--surface-border-color)] rounded-lg">
     <table class="w-full">
-      <thead class="bg-[var(--color-muted)]">
+      <thead class="bg-[var(--surface-muted-bg-color)]">
         <tr>
           <th class="px-4 py-3 text-left text-sm font-semibold">Name</th>
           <th class="px-4 py-3 text-left text-sm font-semibold">Email</th>
@@ -152,7 +152,7 @@
       </thead>
       <tbody>
         <% 5.times do %>
-          <tr class="border-t border-[var(--color-border)]">
+          <tr class="border-t border-[var(--surface-border-color)]">
             <td class="px-4 py-3"><%= render FlatPack::Skeleton::Component.new(variant: :text, width: "120px") %></td>
             <td class="px-4 py-3"><%= render FlatPack::Skeleton::Component.new(variant: :text, width: "150px") %></td>
             <td class="px-4 py-3"><%= render FlatPack::Skeleton::Component.new(variant: :text, width: "80px") %></td>

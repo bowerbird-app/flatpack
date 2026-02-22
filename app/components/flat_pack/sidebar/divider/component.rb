@@ -19,7 +19,7 @@ module FlatPack
         def divider_classes
           classes(
             "h-px",
-            "bg-[var(--color-border)]",
+            "bg-[var(--sidebar-divider-color)]",
             "mx-4",
             "my-2"
           )

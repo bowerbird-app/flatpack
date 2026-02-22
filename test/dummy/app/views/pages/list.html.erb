@@ -9,7 +9,7 @@
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <div>
       <h3 class="font-semibold mb-4">Unordered List</h3>
-      <div class="border border-[var(--color-border)] rounded-lg p-4">
+      <div class="border border-[var(--surface-border-color)] rounded-lg p-4">
         <%= render FlatPack::List::Component.new do %>
           <%= render FlatPack::List::Item.new do %>
             First item
@@ -29,7 +29,7 @@
 
     <div>
       <h3 class="font-semibold mb-4">Ordered List</h3>
-      <div class="border border-[var(--color-border)] rounded-lg p-4">
+      <div class="border border-[var(--surface-border-color)] rounded-lg p-4">
         <%= render FlatPack::List::Component.new(ordered: true) do %>
           <%= render FlatPack::List::Item.new do %>
             First step
@@ -100,7 +100,7 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "With Icons", anchor_link: true) %>
   
-  <div class="border border-[var(--color-border)] rounded-lg p-6">
+  <div class="border border-[var(--surface-border-color)] rounded-lg p-6">
     <%= render FlatPack::List::Component.new do %>
       <%= render FlatPack::List::Item.new(icon: :check) { "Task completed successfully" } %>
       <%= render FlatPack::List::Item.new(icon: :alert) { "Requires attention" } %>
@@ -136,25 +136,25 @@
         <%= render FlatPack::List::Item.new(icon: :check) do %>
           <div>
             <strong>Unlimited Projects</strong>
-            <p class="text-sm text-[var(--color-text-muted)]">Create and manage as many projects as you need</p>
+            <p class="text-sm text-[var(--surface-muted-content-color)]">Create and manage as many projects as you need</p>
           </div>
         <% end %>
         <%= render FlatPack::List::Item.new(icon: :check) do %>
           <div>
             <strong>Team Collaboration</strong>
-            <p class="text-sm text-[var(--color-text-muted)]">Invite unlimited team members to collaborate</p>
+            <p class="text-sm text-[var(--surface-muted-content-color)]">Invite unlimited team members to collaborate</p>
           </div>
         <% end %>
         <%= render FlatPack::List::Item.new(icon: :check) do %>
           <div>
             <strong>Advanced Analytics</strong>
-            <p class="text-sm text-[var(--color-text-muted)]">Detailed insights and reporting dashboards</p>
+            <p class="text-sm text-[var(--surface-muted-content-color)]">Detailed insights and reporting dashboards</p>
           </div>
         <% end %>
         <%= render FlatPack::List::Item.new(icon: :check) do %>
           <div>
             <strong>Priority Support</strong>
-            <p class="text-sm text-[var(--color-text-muted)]">24/7 support via email, chat, and phone</p>
+            <p class="text-sm text-[var(--surface-muted-content-color)]">24/7 support via email, chat, and phone</p>
           </div>
         <% end %>
       <% end %>
@@ -173,7 +173,7 @@
             &lt;%= render FlatPack::List::Item.new(icon: :check) do %&gt;
               &lt;div&gt;
                 &lt;strong&gt;Unlimited Projects&lt;/strong&gt;
-                &lt;p class="text-sm text-[var(--color-text-muted)]"&gt;Create and manage as many projects as you need&lt;/p&gt;
+                &lt;p class="text-sm text-[var(--surface-muted-content-color)]"&gt;Create and manage as many projects as you need&lt;/p&gt;
               &lt;/div&gt;
             &lt;% end %&gt;
           &lt;% end %&gt;
@@ -188,12 +188,12 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Task List", anchor_link: true) %>
   
-  <div class="border border-[var(--color-border)] rounded-lg p-6">
+  <div class="border border-[var(--surface-border-color)] rounded-lg p-6">
     <h3 class="font-semibold mb-4">Today's Tasks</h3>
     <%= render FlatPack::List::Component.new do %>
       <%= render FlatPack::List::Item.new(icon: :check) do %>
         <div class="flex items-center justify-between flex-1">
-          <span class="line-through text-[var(--color-text-muted)]">Review pull request #234</span>
+          <span class="line-through text-[var(--surface-muted-content-color)]">Review pull request #234</span>
           <%= render FlatPack::Badge::Component.new(text: "Completed", style: :success, size: :sm) %>
         </div>
       <% end %>
@@ -224,7 +224,7 @@
       &lt;%= render FlatPack::List::Component.new do %&gt;
         &lt;%= render FlatPack::List::Item.new(icon: :check) do %&gt;
           &lt;div class="flex items-center justify-between flex-1"&gt;
-            &lt;span class="line-through text-[var(--color-text-muted)]"&gt;Review pull request #234&lt;/span&gt;
+            &lt;span class="line-through text-[var(--surface-muted-content-color)]"&gt;Review pull request #234&lt;/span&gt;
             &lt;%= render FlatPack::Badge::Component.new(text: "Completed", style: :success, size: :sm) %&gt;
           &lt;/div&gt;
         &lt;% end %&gt;
@@ -244,13 +244,13 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Settings List", anchor_link: true) %>
   
-  <div class="border border-[var(--color-border)] rounded-lg divide-y divide-[var(--color-border)]">
+  <div class="border border-[var(--surface-border-color)] rounded-lg divide-y divide-[var(--surface-border-color)]">
     <%= render FlatPack::List::Component.new do %>
       <%= render FlatPack::List::Item.new(icon: :bell) do %>
         <div class="flex items-center justify-between flex-1">
           <div>
             <p class="font-medium">Email Notifications</p>
-            <p class="text-sm text-[var(--color-text-muted)]">Receive updates via email</p>
+            <p class="text-sm text-[var(--surface-muted-content-color)]">Receive updates via email</p>
           </div>
           <%= render FlatPack::Switch::Component.new(name: "email_notifications", checked: true) %>
         </div>
@@ -259,7 +259,7 @@
         <div class="flex items-center justify-between flex-1">
           <div>
             <p class="font-medium">Two-Factor Authentication</p>
-            <p class="text-sm text-[var(--color-text-muted)]">Add an extra layer of security</p>
+            <p class="text-sm text-[var(--surface-muted-content-color)]">Add an extra layer of security</p>
           </div>
           <%= render FlatPack::Switch::Component.new(name: "2fa", checked: false) %>
         </div>
@@ -268,7 +268,7 @@
         <div class="flex items-center justify-between flex-1">
           <div>
             <p class="font-medium">Profile Visibility</p>
-            <p class="text-sm text-[var(--color-text-muted)]">Make profile public</p>
+            <p class="text-sm text-[var(--surface-muted-content-color)]">Make profile public</p>
           </div>
           <%= render FlatPack::Switch::Component.new(name: "public_profile", checked: true) %>
         </div>
@@ -284,7 +284,7 @@
           &lt;div class="flex items-center justify-between flex-1"&gt;
             &lt;div&gt;
               &lt;p class="font-medium"&gt;Email Notifications&lt;/p&gt;
-              &lt;p class="text-sm text-[var(--color-text-muted)]"&gt;Receive updates via email&lt;/p&gt;
+              &lt;p class="text-sm text-[var(--surface-muted-content-color)]"&gt;Receive updates via email&lt;/p&gt;
             &lt;/div&gt;
             &lt;%= render FlatPack::Switch::Component.new(name: "email_notifications", checked: true) %&gt;
           &lt;/div&gt;
@@ -299,7 +299,7 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Navigation List", anchor_link: true) %>
   
-  <div class="border border-[var(--color-border)] rounded-lg p-4">
+  <div class="border border-[var(--surface-border-color)] rounded-lg p-4">
     <%= render FlatPack::List::Component.new do %>
       <%= render FlatPack::List::Item.new(icon: :home) do %>
         <%= link_to "Dashboard", "#", class: "text-[var(--color-primary)] hover:underline" %>

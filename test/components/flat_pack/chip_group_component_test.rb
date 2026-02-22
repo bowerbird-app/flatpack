@@ -36,7 +36,7 @@ module FlatPack
 
         assert_includes page.native.to_html, "flex"
         assert_includes page.native.to_html, "items-center"
-        assert_includes page.native.to_html, "gap-2"
+        assert_includes page.native.to_html, "gap-[var(--chip-group-gap)]"
       end
 
       def test_renders_content

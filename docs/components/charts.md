@@ -163,7 +163,7 @@ The Chart component automatically inherits your FlatPack theme colors through CS
 # Default theme configuration
 {
   theme: { mode: "light" },
-  grid: { borderColor: "var(--color-border)" },
+  grid: { borderColor: "var(--surface-border-color)" },
   xaxis: {
     labels: { style: { colors: "var(--color-text-muted)" } }
   }

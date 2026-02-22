@@ -9,7 +9,7 @@ module FlatPack
 
         # Tailwind CSS scanning requires these classes to be present as string literals.
         # DO NOT REMOVE - These duplicates ensure CSS generation:
-        # "justify-start" "justify-end" "justify-center" "bg-[var(--color-muted)]" "text-[var(--color-foreground)]" "bg-[var(--color-primary)]" "text-[var(--color-primary-text)]" "bg-transparent" "text-[var(--color-muted-foreground)]" "text-xs" "italic"
+        # "justify-start" "justify-end" "justify-center" "bg-[var(--chat-message-incoming-background-color)]" "text-[var(--chat-message-incoming-text-color)]" "bg-[var(--chat-message-outgoing-background-color)]" "text-[var(--chat-message-outgoing-text-color)]" "bg-transparent" "text-[var(--chat-message-system-text-color)]" "text-xs" "italic"
         DIRECTIONS = {
           incoming: "justify-start",
           outgoing: "justify-end"
@@ -17,12 +17,12 @@ module FlatPack
 
         VARIANTS = {
           default: "",
-          system: "bg-transparent text-[var(--color-muted-foreground)] text-xs italic"
+          system: "bg-transparent text-[var(--chat-message-system-text-color)] text-xs italic"
         }.freeze
 
         BUBBLE_DIRECTIONS = {
-          incoming: "bg-[var(--color-muted)] text-[var(--color-foreground)]",
-          outgoing: "bg-[var(--color-primary)] text-[var(--color-primary-text)]"
+          incoming: "bg-[var(--chat-message-incoming-background-color)] text-[var(--chat-message-incoming-text-color)]",
+          outgoing: "bg-[var(--chat-message-outgoing-background-color)] text-[var(--chat-message-outgoing-text-color)]"
         }.freeze
 
         STATES = {
@@ -78,7 +78,7 @@ module FlatPack
               content_tag(:div, class: bubble_classes) do
                 safe_join([
                   content_tag(:div, class: "break-words whitespace-pre-line") do
-                    content
+                    normalized_content
                   end,
                   render_attachments,
                   render_meta_section
@@ -86,6 +86,11 @@ module FlatPack
               end
             ])
           end
+        end
+
+        def normalized_content
+          # ERB block indentation can introduce a leading newline with whitespace-pre-line.
+          content.to_s.strip
         end
 
         def render_attachments
@@ -146,7 +151,7 @@ module FlatPack
           when :sending
             "opacity-60"
           when :failed
-            "opacity-50 border-2 border-red-500"
+            "opacity-50 border-2 border-[var(--chat-message-failed-color)]"
           else
             nil
           end

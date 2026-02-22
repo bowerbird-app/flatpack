@@ -5,8 +5,8 @@ module FlatPack
     module Badge
       class Component < FlatPack::BaseComponent
         VARIANTS = {
-          default: "bg-[var(--color-primary)] text-white",
-          muted: "bg-[var(--color-muted)] text-[var(--color-text-muted)]"
+          default: "border border-[var(--badge-primary-border-color)] bg-[var(--badge-primary-background-color)] text-[var(--badge-primary-text-color)]",
+          muted: "border border-[var(--badge-default-border-color)] bg-[var(--badge-default-background-color)] text-[var(--badge-default-text-color)]"
         }.freeze
 
         def initialize(

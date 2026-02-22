@@ -60,4 +60,29 @@ class PagesTablesReorderTest < ActionDispatch::IntegrationTest
     assert_equal false, payload["ok"]
     assert_match(/stale/i, payload["error"])
   end
+
+  test "returns service unavailable when demo table is missing" do
+    original = DemoTableRow.method(:table_exists?)
+    DemoTableRow.define_singleton_method(:table_exists?) { false }
+
+    begin
+      patch demo_tables_reorder_path, params: {
+        reorder: {
+          resource: "demo_table_rows",
+          strategy: "dense_integer",
+          scope: {list_key: @list_key},
+          version: "0",
+          items: []
+        }
+      }, as: :json
+    ensure
+      DemoTableRow.define_singleton_method(:table_exists?, original)
+    end
+
+    assert_response :service_unavailable
+
+    payload = JSON.parse(response.body)
+    assert_equal false, payload["ok"]
+    assert_match(/db:migrate/i, payload["error"])
+  end
 end

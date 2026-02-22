@@ -78,7 +78,7 @@ module FlatPack
       end
 
       def tooltip_fallback_styles
-        "background-color: var(--color-foreground); color: var(--color-background); border-color: var(--color-border);"
+        "background-color: var(--tooltip-background-color, var(--surface-content-color)); color: var(--tooltip-text-color, var(--surface-bg-color)); border-color: var(--tooltip-border-color, var(--surface-border-color));"
       end
 
       def tooltip_classes
@@ -86,18 +86,18 @@ module FlatPack
           "fixed",
           "z-50",
           "hidden",
-          "px-3",
-          "py-2",
-          "text-sm",
+          "px-[var(--tooltip-padding-x)]",
+          "py-[var(--tooltip-padding-y)]",
+          "text-[length:var(--tooltip-font-size)]",
           "leading-snug",
           "font-medium",
-          "text-[var(--color-background)]",
-          "bg-[var(--color-foreground)]",
+          "text-[var(--tooltip-text-color)]",
+          "bg-[var(--tooltip-background-color)]",
           "border",
-          "border-[var(--color-border)]",
-          "rounded-[var(--radius-sm)]",
-          "shadow-lg",
-          "max-w-xs",
+          "border-[var(--tooltip-border-color)]",
+          "rounded-[var(--tooltip-radius)]",
+          "shadow-[var(--tooltip-shadow)]",
+          "max-w-[var(--tooltip-max-width)]",
           "whitespace-normal",
           "break-words",
           "pointer-events-none",

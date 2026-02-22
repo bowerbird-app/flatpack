@@ -6,11 +6,11 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="m-0 min-h-screen bg-[var(--color-background)] text-[var(--color-text)]" data-controller="dark-mode">
+  <body class="m-0 min-h-screen bg-[var(--surface-bg-color)] text-[var(--surface-content-color)]" data-controller="dark-mode">
     <%= render "layouts/icon_sprite" %>
 
     <main class="w-full px-4 py-6 pb-28">

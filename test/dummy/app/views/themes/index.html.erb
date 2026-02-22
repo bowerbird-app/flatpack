@@ -1,0 +1,1775 @@
+<div class="space-y-8">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Themes",
+    description: "Explore FlatPack's color palettes, semantic tokens, and theme switching capabilities."
+  ) %>
+
+  <!-- How Theming Works -->
+  <div class="space-y-6">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "How Theming Works",
+      subtitle: "FlatPack uses Tailwind v4 @theme tokens and per-theme variable overrides.",
+      anchor_link: true
+    ) %>
+
+    <div class="p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-bg-color)] space-y-3">
+      <p class="text-sm text-[var(--surface-muted-content-color)]">
+        Themes are defined with Tailwind v4 tokens (for example <code class="font-mono text-xs">--color-primary</code>,
+        <code class="font-mono text-xs">--radius-md</code>, and <code class="font-mono text-xs">--shadow-md</code>).
+        Tailwind then generates semantic utilities like <code class="font-mono text-xs">bg-primary</code>,
+        <code class="font-mono text-xs">text-[var(--surface-content-color)]</code>, and <code class="font-mono text-xs">border-[var(--surface-border-color)]</code>.
+      </p>
+      <p class="text-sm text-[var(--surface-muted-content-color)]">
+        To add a new theme, define the same variable names under a new selector
+        (for example <code class="font-mono text-xs">[data-theme=\"forest\"]</code>) and provide different values.
+        Components keep the same class names, and only token values change.
+      </p>
+    </div>
+  </div>
+
+  <!-- Theme Variable Reference -->
+  <div class="space-y-6">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Theme Variable Reference",
+      subtitle: "Grouped Tailwind v4 @theme tokens with plain-language descriptions.",
+      anchor_link: true
+    ) %>
+
+    <div class="p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-bg-color)] space-y-3">
+      <p class="text-sm text-[var(--surface-muted-content-color)]">
+        Keep the same token names across every theme and only change values.
+        Suffixes: <code class="font-mono text-xs">-bg</code> is the base feedback surface,
+        <code class="font-mono text-xs">-bg-hover</code> is interactive hover state,
+        <code class="font-mono text-xs">-text</code> is text/icon color on that surface, and
+        <code class="font-mono text-xs">-border</code> controls feedback borders.
+      </p>
+      <p class="text-xs text-[var(--surface-muted-content-color)]">
+        Tip: these variables map to semantic utilities like <code class="font-mono">bg-primary</code>,
+        <code class="font-mono">text-[var(--surface-content-color)]</code>, and <code class="font-mono">border-[var(--surface-border-color)]</code>.
+      </p>
+    </div>
+
+    <div class="space-y-4">
+      <div class="p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-bg-color)] space-y-3">
+        <h3 class="text-base font-medium text-[var(--surface-content-color)]">Brand and Action Colors</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-[var(--surface-border-color)]">
+                <th class="py-2 pr-4 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">Variable</th>
+                <th class="py-2 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">What it controls</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--surface-border-color)] text-[var(--surface-muted-content-color)]">
+              <tr><td class="py-2 pr-4 font-mono text-xs">--color-default</td><td class="py-2">Default action/background surface (neutral button).</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--color-default-hover</td><td class="py-2">Hover state for default actions.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--color-default-text</td><td class="py-2">Text/icon color on default action surfaces.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--color-default-border</td><td class="py-2">Border color for default actions.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--color-primary</td><td class="py-2">Emphasized brand/action background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--color-primary-hover</td><td class="py-2">Hover state for primary actions.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--color-primary-text</td><td class="py-2">Text/icon color shown on primary surfaces.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--color-secondary</td><td class="py-2">Secondary action/background surface.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--color-secondary-hover</td><td class="py-2">Hover state for secondary surfaces.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--color-secondary-text</td><td class="py-2">Text/icon color on secondary surfaces.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--color-ghost</td><td class="py-2">Base ghost treatment (often transparent).</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--color-ghost-hover</td><td class="py-2">Hover surface for ghost controls and subtle rows.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--color-ghost-text</td><td class="py-2">Text/icon color for ghost treatment.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-bg-color)] space-y-3">
+        <h3 class="text-base font-medium text-[var(--surface-content-color)]">Feedback Colors</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-[var(--surface-border-color)]">
+                <th class="py-2 pr-4 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">Variable</th>
+                <th class="py-2 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">What it controls</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--surface-border-color)] text-[var(--surface-muted-content-color)]">
+              <tr><td class="py-2 pr-4 font-mono text-xs">--color-success-bg</td><td class="py-2">Success/positive state background surfaces.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--color-success-bg-hover</td><td class="py-2">Hover state for success background surfaces.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--color-success-text</td><td class="py-2">Text/icon on success surfaces.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--color-success-border</td><td class="py-2">Border color for success alerts and toasts.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--color-warning-bg</td><td class="py-2">Warning/caution background surfaces.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--color-warning-bg-hover</td><td class="py-2">Hover state for warning background surfaces.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--color-warning-text</td><td class="py-2">Text/icon on warning surfaces.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--color-warning-border</td><td class="py-2">Border color for warning alerts and toasts.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--color-destructive-bg</td><td class="py-2">Destructive/error background surfaces.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--color-destructive-bg-hover</td><td class="py-2">Hover state for destructive background surfaces.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--color-destructive-text</td><td class="py-2">Text/icon on destructive surfaces.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--color-destructive-border</td><td class="py-2">Border color for destructive/error alerts and toasts.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--color-info-border</td><td class="py-2">Border color for info alerts and toasts.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-bg-color)] space-y-3">
+        <h3 class="text-base font-medium text-[var(--surface-content-color)]">Surface colors</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-[var(--surface-border-color)]">
+                <th class="py-2 pr-4 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">Variable</th>
+                <th class="py-2 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">What it controls</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--surface-border-color)] text-[var(--surface-muted-content-color)]">
+              <tr><td class="py-2 pr-4 font-mono text-xs">--surface-bg-color</td><td class="py-2">Default component and surface background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--surface-page-bg-color</td><td class="py-2">App shell/page canvas background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--surface-content-color</td><td class="py-2">Primary body text/icon color on surfaces.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--surface-muted-bg-color</td><td class="py-2">Subtle low-emphasis surface backgrounds.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--surface-muted-content-color</td><td class="py-2">Text/icon color on muted surfaces.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--surface-border-color</td><td class="py-2">Default border and divider color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--surface-border-hover-color</td><td class="py-2">Emphasized border on hover/focus contexts.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-bg-color)] space-y-3">
+        <h3 class="text-base font-medium text-[var(--surface-content-color)]">Decorative Gradients</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-[var(--surface-border-color)]">
+                <th class="py-2 pr-4 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">Variable</th>
+                <th class="py-2 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">What it controls</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--surface-border-color)] text-[var(--surface-muted-content-color)]">
+              <tr><td class="py-2 pr-4 font-mono text-xs">--gradient-1</td><td class="py-2">Decorative gradient token 1 (hero/featured card backgrounds).</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--gradient-2</td><td class="py-2">Decorative gradient token 2 (alternate feature surfaces).</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--gradient-3</td><td class="py-2">Decorative gradient token 3 (supporting card accents).</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--gradient-4</td><td class="py-2">Decorative gradient token 4 (secondary accent surfaces).</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-bg-color)] space-y-3">
+        <h3 class="text-base font-medium text-[var(--surface-content-color)]">Badge Styling</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-[var(--surface-border-color)]">
+                <th class="py-2 pr-4 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">Variable</th>
+                <th class="py-2 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">What it controls</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--surface-border-color)] text-[var(--surface-muted-content-color)]">
+              <tr><td class="py-2 pr-4 font-mono text-xs">--badge-default-background-color</td><td class="py-2">Default badge background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--badge-default-text-color</td><td class="py-2">Default badge text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--badge-default-border-color</td><td class="py-2">Default badge border color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--badge-primary-background-color</td><td class="py-2">Primary badge background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--badge-primary-text-color</td><td class="py-2">Primary badge text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--badge-primary-border-color</td><td class="py-2">Primary badge border color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--badge-secondary-background-color</td><td class="py-2">Secondary badge background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--badge-secondary-text-color</td><td class="py-2">Secondary badge text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--badge-secondary-border-color</td><td class="py-2">Secondary badge border color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--badge-success-background-color</td><td class="py-2">Success badge background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--badge-success-text-color</td><td class="py-2">Success badge text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--badge-success-border-color</td><td class="py-2">Success badge border color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--badge-warning-background-color</td><td class="py-2">Warning badge background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--badge-warning-text-color</td><td class="py-2">Warning badge text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--badge-warning-border-color</td><td class="py-2">Warning badge border color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--badge-danger-background-color</td><td class="py-2">Danger badge background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--badge-danger-text-color</td><td class="py-2">Danger badge text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--badge-danger-border-color</td><td class="py-2">Danger badge border color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--badge-info-background-color</td><td class="py-2">Info badge background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--badge-info-text-color</td><td class="py-2">Info badge text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--badge-info-border-color</td><td class="py-2">Info badge border color.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-bg-color)] space-y-3">
+        <h3 class="text-base font-medium text-[var(--surface-content-color)]">Code Block Styling</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-[var(--surface-border-color)]">
+                <th class="py-2 pr-4 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">Variable</th>
+                <th class="py-2 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">What it controls</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--surface-border-color)] text-[var(--surface-muted-content-color)]">
+              <tr><td class="py-2 pr-4 font-mono text-xs">--code-block-background-color</td><td class="py-2">Code block wrapper background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--code-block-border-color</td><td class="py-2">Code block border and title divider color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--code-block-title-color</td><td class="py-2">Code block title text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--code-block-code-color</td><td class="py-2">Code text color inside <code class="font-mono">pre/code</code>.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--code-block-tab-color</td><td class="py-2">Inactive tab text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--code-block-tab-hover-color</td><td class="py-2">Inactive tab hover text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--code-block-tab-active-background-color</td><td class="py-2">Active tab background color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--code-block-tab-active-color</td><td class="py-2">Active tab text color.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-bg-color)] space-y-3">
+        <h3 class="text-base font-medium text-[var(--surface-content-color)]">Card Styling</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-[var(--surface-border-color)]">
+                <th class="py-2 pr-4 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">Variable</th>
+                <th class="py-2 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">What it controls</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--surface-border-color)] text-[var(--surface-muted-content-color)]">
+              <tr><td class="py-2 pr-4 font-mono text-xs">--card-background-color</td><td class="py-2">Default card background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--card-background-muted-color</td><td class="py-2">Muted/flat card background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--card-border-color</td><td class="py-2">Card border and section divider color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--card-hover-subtle-background-color</td><td class="py-2">Hover background for subtle interactive cards.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--card-hover-strong-border-color</td><td class="py-2">Hover border color for strong interactive cards.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--card-hover-strong-shadow</td><td class="py-2">Hover shadow for strong interactive cards.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--card-hover-strong-shadow-dark</td><td class="py-2">Dark mode hover shadow for strong interactive cards.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-bg-color)] space-y-3">
+        <h3 class="text-base font-medium text-[var(--surface-content-color)]">Chat Styling</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-[var(--surface-border-color)]">
+                <th class="py-2 pr-4 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">Variable</th>
+                <th class="py-2 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">What it controls</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--surface-border-color)] text-[var(--surface-muted-content-color)]">
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-background-color</td><td class="py-2">Chat layout and panel background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-border-color</td><td class="py-2">Chat layout split/sidebar border.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-header-background-color</td><td class="py-2">Chat panel header background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-header-border-color</td><td class="py-2">Chat panel header bottom border.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-composer-background-color</td><td class="py-2">Chat composer/footer background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-composer-border-color</td><td class="py-2">Chat composer top border.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-input-background-color</td><td class="py-2">Textarea/input background color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-input-border-color</td><td class="py-2">Textarea/input border color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-input-text-color</td><td class="py-2">Textarea/input text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-input-placeholder-color</td><td class="py-2">Textarea/input placeholder color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-input-focus-ring-color</td><td class="py-2">Textarea/input focus ring color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-message-incoming-background-color</td><td class="py-2">Incoming message bubble background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-message-incoming-text-color</td><td class="py-2">Incoming message bubble text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-message-outgoing-background-color</td><td class="py-2">Outgoing message bubble background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-message-outgoing-text-color</td><td class="py-2">Outgoing message bubble text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-message-system-text-color</td><td class="py-2">System message text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-message-meta-color</td><td class="py-2">Timestamp/edited/sending metadata color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-message-failed-color</td><td class="py-2">Failed-state message border and meta color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-read-receipt-color</td><td class="py-2">Read receipt/checkmark color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-date-divider-line-color</td><td class="py-2">Date divider line color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-date-divider-text-color</td><td class="py-2">Date divider label text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-attachment-border-color</td><td class="py-2">Attachment border color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-attachment-hover-background-color</td><td class="py-2">Attachment hover background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-attachment-text-color</td><td class="py-2">Attachment title text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-attachment-meta-color</td><td class="py-2">Attachment metadata text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-attachment-icon-color</td><td class="py-2">Attachment icon color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-jump-button-background-color</td><td class="py-2">Jump-to-latest button background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-jump-button-border-color</td><td class="py-2">Jump-to-latest button border color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-jump-button-text-color</td><td class="py-2">Jump-to-latest button text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-jump-button-hover-background-color</td><td class="py-2">Jump-to-latest button hover background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-typing-background-color</td><td class="py-2">Typing indicator bubble background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-typing-dot-color</td><td class="py-2">Typing indicator dots color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-avatar-placeholder-background-color</td><td class="py-2">Default avatar placeholder background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-avatar-placeholder-text-color</td><td class="py-2">Default avatar placeholder text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-send-button-background-color</td><td class="py-2">Send button background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-send-button-hover-background-color</td><td class="py-2">Send button hover background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-send-button-text-color</td><td class="py-2">Send button icon/text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chat-send-button-focus-ring-color</td><td class="py-2">Send button focus ring color.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-bg-color)] space-y-3">
+        <h3 class="text-base font-medium text-[var(--surface-content-color)]">Table Styling</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-[var(--surface-border-color)]">
+                <th class="py-2 pr-4 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">Variable</th>
+                <th class="py-2 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">What it controls</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--surface-border-color)] text-[var(--surface-muted-content-color)]">
+              <tr><td class="py-2 pr-4 font-mono text-xs">--table-padding</td><td class="py-2">Baseline table cell padding.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--table-background-color</td><td class="py-2">Table base background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--table-border-color</td><td class="py-2">Outer table container border.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--table-header-background-color</td><td class="py-2">Header row background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--table-header-border-color</td><td class="py-2">Header bottom divider/border.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--table-header-text-color</td><td class="py-2">Header label text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--table-row-divider-color</td><td class="py-2">Body row divider color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--table-row-hover-background-color</td><td class="py-2">Row hover background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--table-cell-text-color</td><td class="py-2">Body cell text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--table-cell-muted-text-color</td><td class="py-2">Muted table text color (auxiliary content).</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--table-empty-state-text-color</td><td class="py-2">Empty-state text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--table-sort-link-hover-color</td><td class="py-2">Sortable header link hover color.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-bg-color)] space-y-3">
+        <h3 class="text-base font-medium text-[var(--surface-content-color)]">Chip Styling</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-[var(--surface-border-color)]">
+                <th class="py-2 pr-4 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">Variable</th>
+                <th class="py-2 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">What it controls</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--surface-border-color)] text-[var(--surface-muted-content-color)]">
+              <tr><td class="py-2 pr-4 font-mono text-xs">(shared) --surface-muted-bg-color, --surface-content-color, --surface-border-color</td><td class="py-2">Default chip colors.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">(shared) --color-primary, --color-primary-text</td><td class="py-2">Primary chip colors.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">(shared) --color-success-bg, --color-success-text, --color-success-border</td><td class="py-2">Success chip colors.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">(shared) --color-warning-bg, --color-warning-text, --color-warning-border</td><td class="py-2">Warning chip colors.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">(shared) --color-destructive-bg, --color-destructive-text, --color-destructive-border</td><td class="py-2">Danger chip colors.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">(shared) --color-secondary, --color-secondary-text, --color-info-border</td><td class="py-2">Info chip colors.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chip-remove-hover-background-color</td><td class="py-2">Hover background behind chip remove icon.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chip-border-radius</td><td class="py-2">Chip container corner radius.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chip-group-gap</td><td class="py-2">Spacing between chips in chip groups.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chip-padding-x-sm</td><td class="py-2">Horizontal padding for small chips.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chip-padding-y-sm</td><td class="py-2">Vertical padding for small chips.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chip-padding-x-md</td><td class="py-2">Horizontal padding for medium chips.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chip-padding-y-md</td><td class="py-2">Vertical padding for medium chips.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chip-padding-x-lg</td><td class="py-2">Horizontal padding for large chips.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--chip-padding-y-lg</td><td class="py-2">Vertical padding for large chips.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-bg-color)] space-y-3">
+        <h3 class="text-base font-medium text-[var(--surface-content-color)]">Layout-Specific Surfaces</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-[var(--surface-border-color)]">
+                <th class="py-2 pr-4 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">Variable</th>
+                <th class="py-2 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">What it controls</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--surface-border-color)] text-[var(--surface-muted-content-color)]">
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-bg-color)] space-y-3">
+        <h3 class="text-base font-medium text-[var(--surface-content-color)]">Modal Styling</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-[var(--surface-border-color)]">
+                <th class="py-2 pr-4 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">Variable</th>
+                <th class="py-2 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">What it controls</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--surface-border-color)] text-[var(--surface-muted-content-color)]">
+              <tr><td class="py-2 pr-4 font-mono text-xs">--modal-backdrop-color</td><td class="py-2">Modal overlay tint color/opacity.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--modal-surface-color</td><td class="py-2">Modal dialog surface background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--modal-border-color</td><td class="py-2">Modal dialog border color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--modal-title-color</td><td class="py-2">Modal title text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--modal-body-color</td><td class="py-2">Modal body text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--modal-close-icon-color</td><td class="py-2">Default close icon color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--modal-close-icon-hover-color</td><td class="py-2">Close icon hover color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--blur-modal-backdrop</td><td class="py-2">Backdrop blur strength behind open modals.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-bg-color)] space-y-3">
+        <h3 class="text-base font-medium text-[var(--surface-content-color)]">Popover Styling</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-[var(--surface-border-color)]">
+                <th class="py-2 pr-4 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">Variable</th>
+                <th class="py-2 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">What it controls</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--surface-border-color)] text-[var(--surface-muted-content-color)]">
+              <tr><td class="py-2 pr-4 font-mono text-xs">--popover-background-color</td><td class="py-2">Popover panel background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--popover-border-color</td><td class="py-2">Popover panel border color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--popover-text-color</td><td class="py-2">Popover content text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--popover-shadow</td><td class="py-2">Popover elevation shadow.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--popover-padding</td><td class="py-2">Popover inner spacing.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--popover-radius</td><td class="py-2">Popover corner radius.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-bg-color)] space-y-3">
+        <h3 class="text-base font-medium text-[var(--surface-content-color)]">Tooltip Styling</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-[var(--surface-border-color)]">
+                <th class="py-2 pr-4 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">Variable</th>
+                <th class="py-2 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">What it controls</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--surface-border-color)] text-[var(--surface-muted-content-color)]">
+              <tr><td class="py-2 pr-4 font-mono text-xs">--tooltip-background-color</td><td class="py-2">Tooltip panel background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--tooltip-border-color</td><td class="py-2">Tooltip border color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--tooltip-text-color</td><td class="py-2">Tooltip text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--tooltip-shadow</td><td class="py-2">Tooltip elevation shadow.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--tooltip-padding-x</td><td class="py-2">Horizontal tooltip padding.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--tooltip-padding-y</td><td class="py-2">Vertical tooltip padding.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--tooltip-radius</td><td class="py-2">Tooltip corner radius.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--tooltip-font-size</td><td class="py-2">Tooltip text size.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--tooltip-max-width</td><td class="py-2">Maximum tooltip width.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-bg-color)] space-y-3">
+        <h3 class="text-base font-medium text-[var(--surface-content-color)]">Top Nav Styling</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-[var(--surface-border-color)]">
+                <th class="py-2 pr-4 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">Variable</th>
+                <th class="py-2 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">What it controls</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--surface-border-color)] text-[var(--surface-muted-content-color)]">
+              <tr><td class="py-2 pr-4 font-mono text-xs">--top-nav-background-color</td><td class="py-2">Top navigation bar background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--top-nav-border-color</td><td class="py-2">Top navigation border/divider color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--top-nav-item-text-color</td><td class="py-2">Default top nav item text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--top-nav-item-icon-color</td><td class="py-2">Default top nav icon color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--top-nav-item-hover-background-color</td><td class="py-2">Top nav item hover background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--top-nav-item-hover-text-color</td><td class="py-2">Top nav item hover text/icon color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--top-nav-item-active-background-color</td><td class="py-2">Active/current top nav item background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--top-nav-item-active-text-color</td><td class="py-2">Active/current top nav item text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--top-nav-item-active-icon-color</td><td class="py-2">Active/current top nav item icon color.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-bg-color)] space-y-3">
+        <h3 class="text-base font-medium text-[var(--surface-content-color)]">Sidebar Styling</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-[var(--surface-border-color)]">
+                <th class="py-2 pr-4 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">Variable</th>
+                <th class="py-2 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">What it controls</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--surface-border-color)] text-[var(--surface-muted-content-color)]">
+              <tr><td class="py-2 pr-4 font-mono text-xs">--sidebar-background-color</td><td class="py-2">Sidebar panel background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--sidebar-border-color</td><td class="py-2">Sidebar container and footer border color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--sidebar-divider-color</td><td class="py-2">Divider lines between sidebar sections.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--sidebar-item-text-color</td><td class="py-2">Default menu item text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--sidebar-item-icon-color</td><td class="py-2">Default menu item icon color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--sidebar-item-hover-background-color</td><td class="py-2">Menu item hover background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--sidebar-item-hover-text-color</td><td class="py-2">Menu item hover text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--sidebar-item-active-background-color</td><td class="py-2">Active/current menu item background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--sidebar-item-active-text-color</td><td class="py-2">Active/current menu item text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--sidebar-item-active-icon-color</td><td class="py-2">Active/current menu item icon color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--sidebar-footer-text-color</td><td class="py-2">Sidebar footer text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--sidebar-header-background-color</td><td class="py-2">Sidebar header background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--sidebar-header-border-color</td><td class="py-2">Sidebar header bottom border color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--sidebar-header-text-color</td><td class="py-2">Sidebar header title text color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--sidebar-header-icon-color</td><td class="py-2">Sidebar header toggle icon color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--sidebar-header-icon-hover-background-color</td><td class="py-2">Sidebar header toggle hover background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--sidebar-header-icon-hover-color</td><td class="py-2">Sidebar header toggle hover icon color.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--sidebar-header-badge-background-color</td><td class="py-2">Sidebar brand badge background.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--sidebar-header-badge-text-color</td><td class="py-2">Sidebar brand badge text color.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-bg-color)] space-y-3">
+        <h3 class="text-base font-medium text-[var(--surface-content-color)]">Interaction and Focus</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-[var(--surface-border-color)]">
+                <th class="py-2 pr-4 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">Variable</th>
+                <th class="py-2 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">What it controls</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--surface-border-color)] text-[var(--surface-muted-content-color)]">
+              <tr><td class="py-2 pr-4 font-mono text-xs">--color-ring</td><td class="py-2">Focus ring color for keyboard states.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-bg-color)] space-y-3">
+        <h3 class="text-base font-medium text-[var(--surface-content-color)]">Radii</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-[var(--surface-border-color)]">
+                <th class="py-2 pr-4 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">Variable</th>
+                <th class="py-2 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">What it controls</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--surface-border-color)] text-[var(--surface-muted-content-color)]">
+              <tr><td class="py-2 pr-4 font-mono text-xs">--radius-sm</td><td class="py-2">Small corner radius.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--radius-md</td><td class="py-2">Default component corner radius.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--radius-lg</td><td class="py-2">Large corner radius.</td></tr>
+              <tr><td class="py-2 pr-4 font-mono text-xs">--radius-xl</td><td class="py-2">Extra large corner radius.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-bg-color)] space-y-3">
+          <h3 class="text-base font-medium text-[var(--surface-content-color)]">Spacing Tokens</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="border-b border-[var(--surface-border-color)]">
+                  <th class="py-2 pr-4 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">Variable</th>
+                  <th class="py-2 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">What it controls</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-[var(--surface-border-color)] text-[var(--surface-muted-content-color)]">
+                <tr><td class="py-2 pr-4 font-mono text-xs">--card-padding-sm</td><td class="py-2">Compact padding for card sections.</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-xs">--card-padding-md</td><td class="py-2">Default padding for card sections.</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-xs">--card-padding-lg</td><td class="py-2">Spacious padding for card sections.</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-xs">--form-control-padding</td><td class="py-2">Baseline padding for form controls.</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-xs">--table-padding</td><td class="py-2">Baseline table cell padding.</td></tr>
+              </tbody>
+            </table>
+          </div>
+      </div>
+
+      <div class="p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-bg-color)] space-y-3">
+          <h3 class="text-base font-medium text-[var(--surface-content-color)]">Shadows</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="border-b border-[var(--surface-border-color)]">
+                  <th class="py-2 pr-4 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">Variable</th>
+                  <th class="py-2 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">What it controls</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-[var(--surface-border-color)] text-[var(--surface-muted-content-color)]">
+                <tr><td class="py-2 pr-4 font-mono text-xs">--shadow-sm</td><td class="py-2">Subtle elevation shadow.</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-xs">--shadow-md</td><td class="py-2">Medium elevation shadow.</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-xs">--shadow-lg</td><td class="py-2">High elevation shadow.</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-xs">--shadow-button</td><td class="py-2">Default button shadow.</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-xs">--shadow-button-active</td><td class="py-2">Pressed/active button shadow.</td></tr>
+              </tbody>
+            </table>
+          </div>
+      </div>
+
+      <div class="p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-bg-color)] space-y-3">
+          <h3 class="text-base font-medium text-[var(--surface-content-color)]">Motion</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="border-b border-[var(--surface-border-color)]">
+                  <th class="py-2 pr-4 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">Variable</th>
+                  <th class="py-2 text-left text-xs font-medium text-[var(--surface-muted-content-color)]">What it controls</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-[var(--surface-border-color)] text-[var(--surface-muted-content-color)]">
+                <tr><td class="py-2 pr-4 font-mono text-xs">--duration-fast</td><td class="py-2">Fast transition timing.</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-xs">--duration-base</td><td class="py-2">Default transition timing.</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-xs">--duration-slow</td><td class="py-2">Slow/emphasized transition timing.</td></tr>
+              </tbody>
+            </table>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Theme Demo Controls + Live Demos -->
+  <div class="space-y-6" data-controller="flat-pack--theme theme-demo">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Theme Demos",
+      subtitle: "Pick a theme tab to update all color demos and the variables code block below.",
+      anchor_link: true
+    ) %>
+
+    <div class="border-b border-[var(--surface-border-color)]" role="tablist" aria-label="Theme demo tabs">
+      <div class="flex gap-1">
+        <button
+          type="button"
+          role="tab"
+          data-theme-demo-target="tab"
+          data-theme-value="system"
+          data-action="click->flat-pack--theme#switch click->theme-demo#select"
+          class="px-4 py-2 text-sm font-medium rounded-t-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        >
+          System
+        </button>
+        <button
+          type="button"
+          role="tab"
+          data-theme-demo-target="tab"
+          data-theme-value="light"
+          data-action="click->flat-pack--theme#switch click->theme-demo#select"
+          class="px-4 py-2 text-sm font-medium rounded-t-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        >
+          Light
+        </button>
+        <button
+          type="button"
+          role="tab"
+          data-theme-demo-target="tab"
+          data-theme-value="dark"
+          data-action="click->flat-pack--theme#switch click->theme-demo#select"
+          class="px-4 py-2 text-sm font-medium rounded-t-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        >
+          Dark
+        </button>
+        <button
+          type="button"
+          role="tab"
+          data-theme-demo-target="tab"
+          data-theme-value="ocean"
+          data-action="click->flat-pack--theme#switch click->theme-demo#select"
+          class="px-4 py-2 text-sm font-medium rounded-t-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        >
+          Ocean
+        </button>
+        <button
+          type="button"
+          role="tab"
+          data-theme-demo-target="tab"
+          data-theme-value="rounded"
+          data-action="click->flat-pack--theme#switch click->theme-demo#select"
+          class="px-4 py-2 text-sm font-medium rounded-t-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        >
+          Rounded
+        </button>
+      </div>
+    </div>
+
+    <!-- Semantic Colors -->
+    <div class="space-y-6">
+      <%= render FlatPack::SectionTitle::Component.new(
+        title: "Semantic Colors",
+        subtitle: "These colors adapt to the active theme and generate native Tailwind utilities.",
+        anchor_link: true
+      ) %>
+
+      <div class="space-y-2">
+        <h3 class="text-lg font-medium text-[var(--surface-content-color)]">Default</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="space-y-2">
+            <div class="h-24 rounded-md bg-default border border-default-border flex items-center justify-center">
+              <span class="text-default-text font-mono text-sm">bg-default</span>
+            </div>
+            <p class="text-xs text-[var(--surface-muted-content-color)] font-mono">text-default-text</p>
+          </div>
+          <div class="space-y-2">
+            <div class="h-24 rounded-md bg-default-hover border border-default-border flex items-center justify-center">
+              <span class="text-default-text font-mono text-sm">bg-default-hover</span>
+            </div>
+            <p class="text-xs text-[var(--surface-muted-content-color)]">Hover state</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <h3 class="text-lg font-medium text-[var(--surface-content-color)]">Primary</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="space-y-2">
+            <div class="h-24 rounded-md bg-primary flex items-center justify-center">
+              <span class="text-primary-text font-mono text-sm">bg-primary</span>
+            </div>
+            <p class="text-xs text-[var(--surface-muted-content-color)] font-mono">text-primary-text</p>
+          </div>
+          <div class="space-y-2">
+            <div class="h-24 rounded-md bg-primary-hover flex items-center justify-center">
+              <span class="text-primary-text font-mono text-sm">bg-primary-hover</span>
+            </div>
+            <p class="text-xs text-[var(--surface-muted-content-color)]">Hover state</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <h3 class="text-lg font-medium text-[var(--surface-content-color)]">Secondary</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="space-y-2">
+            <div class="h-24 rounded-md bg-secondary border border-[var(--surface-border-color)] flex items-center justify-center">
+              <span class="text-secondary-text font-mono text-sm">bg-secondary</span>
+            </div>
+            <p class="text-xs text-[var(--surface-muted-content-color)] font-mono">text-secondary-text</p>
+          </div>
+          <div class="space-y-2">
+            <div class="h-24 rounded-md bg-secondary-hover border border-[var(--surface-border-color)] flex items-center justify-center">
+              <span class="text-secondary-text font-mono text-sm">bg-secondary-hover</span>
+            </div>
+            <p class="text-xs text-[var(--surface-muted-content-color)]">Hover state</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <h3 class="text-lg font-medium text-[var(--surface-content-color)]">Status</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="space-y-2">
+            <div class="h-24 rounded-md bg-success-bg flex items-center justify-center">
+              <span class="text-success-text font-mono text-sm">bg-success-bg</span>
+            </div>
+            <p class="text-xs text-[var(--surface-muted-content-color)]">Success / positive actions</p>
+          </div>
+          <div class="space-y-2">
+            <div class="h-24 rounded-md bg-warning-bg flex items-center justify-center">
+              <span class="text-warning-text font-mono text-sm">bg-warning-bg</span>
+            </div>
+            <p class="text-xs text-[var(--surface-muted-content-color)]">Warning / caution</p>
+          </div>
+          <div class="space-y-2">
+            <div class="h-24 rounded-md bg-destructive-bg flex items-center justify-center">
+              <span class="text-destructive-text font-mono text-sm">bg-destructive-bg</span>
+            </div>
+            <p class="text-xs text-[var(--surface-muted-content-color)]">Destructive / error</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <h3 class="text-lg font-medium text-[var(--surface-content-color)]">Neutral</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="space-y-2">
+            <div class="h-24 rounded-md bg-[var(--surface-bg-color)] border border-[var(--surface-border-color)] flex items-center justify-center">
+              <span class="text-[var(--surface-content-color)] font-mono text-sm">bg-[var(--surface-bg-color)]</span>
+            </div>
+            <p class="text-xs text-[var(--surface-muted-content-color)] font-mono">text-[var(--surface-content-color)]</p>
+          </div>
+          <div class="space-y-2">
+            <div class="h-24 rounded-md bg-[var(--surface-muted-bg-color)] flex items-center justify-center">
+              <span class="text-[var(--surface-muted-content-color)] font-mono text-sm">bg-[var(--surface-muted-bg-color)]</span>
+            </div>
+            <p class="text-xs text-[var(--surface-muted-content-color)] font-mono">text-[var(--surface-muted-content-color)]</p>
+          </div>
+          <div class="space-y-2">
+            <div class="h-24 rounded-md bg-ghost-hover border border-[var(--surface-border-color)] flex items-center justify-center">
+              <span class="text-ghost-text font-mono text-sm">bg-ghost-hover</span>
+            </div>
+            <p class="text-xs text-[var(--surface-muted-content-color)]">Subtle hover state</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Border Radius -->
+    <div class="space-y-6">
+      <%= render FlatPack::SectionTitle::Component.new(
+        title: "Badge Tokens",
+        subtitle: "Badge components now pull from dedicated badge variables across variants.",
+        anchor_link: true
+      ) %>
+
+      <div class="flex flex-wrap gap-3">
+        <%= render FlatPack::Badge::Component.new(text: "Default", style: :default) %>
+        <%= render FlatPack::Badge::Component.new(text: "Primary", style: :primary) %>
+        <%= render FlatPack::Badge::Component.new(text: "Success", style: :success) %>
+        <%= render FlatPack::Badge::Component.new(text: "Warning", style: :warning) %>
+        <%= render FlatPack::Badge::Component.new(text: "Info", style: :info) %>
+      </div>
+    </div>
+
+    <!-- Border Radius -->
+    <div class="space-y-6">
+      <%= render FlatPack::SectionTitle::Component.new(
+        title: "Decorative Gradients",
+        subtitle: "Four reusable gradient tokens intended for visual-interest surfaces (not feedback/action states).",
+        anchor_link: true
+      ) %>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="space-y-2">
+          <div class="h-28 rounded-lg border border-[var(--surface-border-color)] flex items-center justify-center fp-gradient-1">
+            <span class="text-xs font-mono text-[var(--surface-content-color)] bg-[var(--surface-bg-color)]/70 px-2 py-1 rounded">--gradient-1</span>
+          </div>
+          <p class="text-xs text-[var(--surface-muted-content-color)]">Primary decorative gradient</p>
+        </div>
+
+        <div class="space-y-2">
+          <div class="h-28 rounded-lg border border-[var(--surface-border-color)] flex items-center justify-center fp-gradient-2">
+            <span class="text-xs font-mono text-[var(--surface-content-color)] bg-[var(--surface-bg-color)]/70 px-2 py-1 rounded">--gradient-2</span>
+          </div>
+          <p class="text-xs text-[var(--surface-muted-content-color)]">Secondary decorative gradient</p>
+        </div>
+
+        <div class="space-y-2">
+          <div class="h-28 rounded-lg border border-[var(--surface-border-color)] flex items-center justify-center fp-gradient-3">
+            <span class="text-xs font-mono text-[var(--surface-content-color)] bg-[var(--surface-bg-color)]/70 px-2 py-1 rounded">--gradient-3</span>
+          </div>
+          <p class="text-xs text-[var(--surface-muted-content-color)]">Tertiary decorative gradient</p>
+        </div>
+
+        <div class="space-y-2">
+          <div class="h-28 rounded-lg border border-[var(--surface-border-color)] flex items-center justify-center fp-gradient-4">
+            <span class="text-xs font-mono text-[var(--surface-content-color)] bg-[var(--surface-bg-color)]/70 px-2 py-1 rounded">--gradient-4</span>
+          </div>
+          <p class="text-xs text-[var(--surface-muted-content-color)]">Quaternary decorative gradient</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Border Radius -->
+    <div class="space-y-6">
+      <%= render FlatPack::SectionTitle::Component.new(
+        title: "Border Radius",
+        subtitle: "Consistent rounded corners across all components.",
+        anchor_link: true
+      ) %>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="space-y-2">
+          <div class="h-24 rounded-sm bg-[var(--surface-muted-bg-color)] border border-[var(--surface-border-color)] flex items-center justify-center">
+            <span class="text-[var(--surface-content-color)] font-mono text-sm">rounded-sm</span>
+          </div>
+          <p class="text-xs text-[var(--surface-muted-content-color)]">0.25rem</p>
+        </div>
+        <div class="space-y-2">
+          <div class="h-24 rounded-md bg-[var(--surface-muted-bg-color)] border border-[var(--surface-border-color)] flex items-center justify-center">
+            <span class="text-[var(--surface-content-color)] font-mono text-sm">rounded-md</span>
+          </div>
+          <p class="text-xs text-[var(--surface-muted-content-color)]">0.375rem (default)</p>
+        </div>
+        <div class="space-y-2">
+          <div class="h-24 rounded-lg bg-[var(--surface-muted-bg-color)] border border-[var(--surface-border-color)] flex items-center justify-center">
+            <span class="text-[var(--surface-content-color)] font-mono text-sm">rounded-lg</span>
+          </div>
+          <p class="text-xs text-[var(--surface-muted-content-color)]">0.5rem</p>
+        </div>
+        <div class="space-y-2">
+          <div class="h-24 rounded-xl bg-[var(--surface-muted-bg-color)] border border-[var(--surface-border-color)] flex items-center justify-center">
+            <span class="text-[var(--surface-content-color)] font-mono text-sm">rounded-xl</span>
+          </div>
+          <p class="text-xs text-[var(--surface-muted-content-color)]">0.75rem</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shadows -->
+    <div class="space-y-6">
+      <%= render FlatPack::SectionTitle::Component.new(
+        title: "Shadows",
+        subtitle: "Elevation shadows that adapt to dark mode.",
+        anchor_link: true
+      ) %>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="space-y-2">
+          <div class="h-24 rounded-md bg-[var(--surface-bg-color)] border border-[var(--surface-border-color)] shadow-sm flex items-center justify-center">
+            <span class="text-[var(--surface-content-color)] font-mono text-sm">shadow-sm</span>
+          </div>
+          <p class="text-xs text-[var(--surface-muted-content-color)]">Subtle depth</p>
+        </div>
+        <div class="space-y-2">
+          <div class="h-24 rounded-md bg-[var(--surface-bg-color)] border border-[var(--surface-border-color)] shadow-md flex items-center justify-center">
+            <span class="text-[var(--surface-content-color)] font-mono text-sm">shadow-md</span>
+          </div>
+          <p class="text-xs text-[var(--surface-muted-content-color)]">Medium elevation</p>
+        </div>
+        <div class="space-y-2">
+          <div class="h-24 rounded-md bg-[var(--surface-bg-color)] border border-[var(--surface-border-color)] shadow-lg flex items-center justify-center">
+            <span class="text-[var(--surface-content-color)] font-mono text-sm">shadow-lg</span>
+          </div>
+          <p class="text-xs text-[var(--surface-muted-content-color)]">High elevation</p>
+        </div>
+        <div class="space-y-2">
+          <div class="h-24 rounded-md bg-[var(--surface-bg-color)] border border-[var(--surface-border-color)] shadow-button flex items-center justify-center">
+            <span class="text-[var(--surface-content-color)] font-mono text-sm">shadow-button</span>
+          </div>
+          <p class="text-xs text-[var(--surface-muted-content-color)]">Button shadow</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Variables Used By This Theme -->
+    <div class="space-y-6">
+      <%= render FlatPack::SectionTitle::Component.new(
+        title: "Variables used by this theme",
+        subtitle: "The code block below tracks the currently selected theme tab.",
+        anchor_link: true
+      ) %>
+
+      <div data-theme-demo-target="panel" data-theme="system" class="hidden">
+        <%= render FlatPack::CodeBlock::Component.new(
+          title: "System Theme Variables",
+          language: "css",
+          code: <<~CODE
+            /* System follows OS preference and resolves to light or dark values at runtime */
+            :root {
+              color-scheme: light dark;
+            }
+
+            @media (prefers-color-scheme: dark) {
+              :root {
+                /* Uses the same token set as [data-theme="dark"] */
+                --color-primary: oklch(0.62 0.22 250);
+                --color-primary-hover: oklch(0.72 0.15 250);
+                --surface-bg-color: oklch(0.15 0.01 250);
+                --surface-page-bg-color: oklch(0.15 0.01 250);
+                --surface-content-color: oklch(0.95 0.01 250);
+                --surface-border-color: oklch(0.30 0.02 250);
+                --modal-backdrop-color: rgb(0 0 0 / 0.65);
+                --modal-surface-color: var(--surface-bg-color);
+                --modal-border-color: var(--surface-border-color);
+                --modal-title-color: var(--surface-content-color);
+                --modal-body-color: var(--surface-content-color);
+                --modal-close-icon-color: var(--surface-muted-content-color);
+                --modal-close-icon-hover-color: var(--surface-content-color);
+              --popover-background-color: var(--surface-bg-color);
+              --popover-border-color: var(--surface-border-color);
+              --popover-text-color: var(--surface-content-color);
+              --popover-shadow: var(--shadow-lg);
+              --popover-padding: 1rem;
+              --popover-radius: var(--radius-md);
+              --tooltip-background-color: var(--surface-content-color);
+              --tooltip-border-color: var(--surface-border-color);
+              --tooltip-text-color: var(--surface-bg-color);
+              --tooltip-shadow: var(--shadow-lg);
+              --tooltip-padding-x: 0.75rem;
+              --tooltip-padding-y: 0.5rem;
+              --tooltip-radius: var(--radius-sm);
+              --tooltip-font-size: 0.875rem;
+              --tooltip-max-width: 20rem;
+                --sidebar-background-color: oklch(0.17 0.01 250);
+                --sidebar-border-color: oklch(0.30 0.02 250);
+                --sidebar-divider-color: oklch(0.30 0.02 250);
+                --sidebar-item-text-color: oklch(0.65 0.01 250);
+                --sidebar-item-icon-color: oklch(0.65 0.01 250);
+                --sidebar-item-hover-background-color: oklch(0.22 0.02 250);
+                --sidebar-item-hover-text-color: oklch(0.95 0.01 250);
+                --sidebar-item-active-background-color: oklch(0.62 0.22 250);
+                --sidebar-item-active-text-color: oklch(0.15 0.01 250);
+                --sidebar-item-active-icon-color: oklch(0.15 0.01 250);
+                --sidebar-footer-text-color: oklch(0.65 0.01 250);
+  --sidebar-header-background-color: var(--sidebar-background-color);
+  --sidebar-header-border-color: var(--sidebar-border-color);
+  --sidebar-header-text-color: var(--sidebar-item-text-color);
+  --sidebar-header-icon-color: var(--sidebar-item-icon-color);
+  --sidebar-header-icon-hover-background-color: var(--sidebar-item-hover-background-color);
+  --sidebar-header-icon-hover-color: var(--sidebar-item-hover-text-color);
+  --sidebar-header-badge-background-color: var(--badge-primary-background-color);
+  --sidebar-header-badge-text-color: var(--badge-primary-text-color);
+  --chat-background-color: var(--surface-bg-color);
+  --chat-border-color: var(--surface-border-color);
+  --chat-header-background-color: var(--surface-bg-color);
+  --chat-header-border-color: var(--surface-border-color);
+  --chat-composer-background-color: var(--surface-bg-color);
+  --chat-composer-border-color: var(--surface-border-color);
+  --chat-input-background-color: var(--surface-bg-color);
+  --chat-input-border-color: var(--surface-border-color);
+  --chat-input-text-color: var(--surface-content-color);
+  --chat-input-placeholder-color: var(--surface-muted-content-color);
+  --chat-input-focus-ring-color: var(--color-ring);
+  --chat-message-incoming-background-color: var(--surface-muted-bg-color);
+  --chat-message-incoming-text-color: var(--surface-content-color);
+  --chat-message-outgoing-background-color: var(--color-primary);
+  --chat-message-outgoing-text-color: var(--color-primary-text);
+  --chat-message-system-text-color: var(--surface-muted-content-color);
+  --chat-message-meta-color: var(--surface-muted-content-color);
+  --chat-message-failed-color: var(--color-destructive-border);
+  --chat-read-receipt-color: var(--color-primary);
+  --chat-date-divider-line-color: var(--surface-border-color);
+  --chat-date-divider-text-color: var(--surface-muted-content-color);
+  --chat-attachment-border-color: var(--surface-border-color);
+  --chat-attachment-hover-background-color: var(--surface-muted-bg-color);
+  --chat-attachment-text-color: var(--surface-content-color);
+  --chat-attachment-meta-color: var(--surface-muted-content-color);
+  --chat-attachment-icon-color: var(--surface-muted-content-color);
+  --chat-jump-button-background-color: var(--surface-bg-color);
+  --chat-jump-button-border-color: var(--surface-border-color);
+  --chat-jump-button-text-color: var(--surface-content-color);
+  --chat-jump-button-hover-background-color: var(--surface-muted-bg-color);
+  --chat-typing-background-color: var(--surface-muted-bg-color);
+  --chat-typing-dot-color: var(--surface-muted-content-color);
+  --chat-avatar-placeholder-background-color: var(--surface-muted-bg-color);
+  --chat-avatar-placeholder-text-color: var(--surface-muted-content-color);
+  --chat-send-button-background-color: var(--color-primary);
+  --chat-send-button-hover-background-color: var(--color-primary-hover);
+  --chat-send-button-text-color: var(--color-primary-text);
+  --chat-send-button-focus-ring-color: var(--color-ring);
+                --top-nav-background-color: oklch(0.18 0.01 250);
+                --top-nav-border-color: transparent;
+                --top-nav-item-text-color: oklch(0.65 0.01 250);
+                --top-nav-item-icon-color: oklch(0.65 0.01 250);
+                --top-nav-item-hover-background-color: oklch(0.22 0.02 250);
+                --top-nav-item-hover-text-color: oklch(0.95 0.01 250);
+                --top-nav-item-active-background-color: oklch(0.62 0.22 250);
+                --top-nav-item-active-text-color: oklch(0.15 0.01 250);
+                --top-nav-item-active-icon-color: oklch(0.15 0.01 250);
+                                --form-control-padding: 0.75rem;
+                --table-padding: 0.75rem;
+  --table-background-color: var(--surface-bg-color);
+  --table-border-color: var(--surface-border-color);
+  --table-header-background-color: var(--surface-bg-color);
+  --table-header-border-color: var(--surface-border-color);
+  --table-header-text-color: var(--surface-muted-content-color);
+  --table-row-divider-color: var(--surface-border-color);
+  --table-row-hover-background-color: var(--surface-muted-bg-color);
+  --table-cell-text-color: var(--surface-content-color);
+  --table-cell-muted-text-color: var(--surface-muted-content-color);
+  --table-empty-state-text-color: var(--surface-muted-content-color);
+  --table-sort-link-hover-color: var(--surface-content-color);
+  --chip-remove-hover-background-color: rgb(255 255 255 / 0.16);
+  --chip-border-radius: 9999px;
+  --chip-group-gap: 0.5rem;
+  --chip-padding-x-sm: 0.5rem;
+  --chip-padding-y-sm: 0.125rem;
+  --chip-padding-x-md: 0.75rem;
+  --chip-padding-y-md: 0.25rem;
+  --chip-padding-x-lg: 1rem;
+  --chip-padding-y-lg: 0.375rem;
+                --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5);
+                --blur-modal-backdrop: 3px;
+              }
+            }
+          CODE
+        ) %>
+      </div>
+
+      <div data-theme-demo-target="panel" data-theme="light" class="hidden">
+        <%= render FlatPack::CodeBlock::Component.new(
+          title: "Light Theme Variables",
+          language: "css",
+          code: <<~CODE
+            :root,
+            [data-theme="light"] {
+              --color-primary: oklch(0.52 0.26 250);
+              --color-primary-hover: oklch(0.42 0.24 250);
+              --color-primary-text: oklch(1.0 0 0);
+              --color-secondary: oklch(0.95 0.01 250);
+              --color-secondary-hover: oklch(0.90 0.02 250);
+              --color-secondary-text: oklch(0.25 0.02 250);
+              --color-ghost: transparent;
+              --color-ghost-hover: oklch(0.96 0.01 250);
+              --color-ghost-text: oklch(0.35 0.02 250);
+              --color-success-bg: oklch(62.7% .194 149.214);
+              --color-success-bg-hover: oklch(57% .194 149.214);
+              --color-success-text: oklch(1.0 0 0);
+              --color-success-border: var(--color-success-bg);
+              --color-warning-bg: oklch(70.5% 0.213 47.604);
+              --color-warning-bg-hover: oklch(64.6% 0.222 41.116);
+              --color-warning-text: oklch(1.0 0 0);
+              --color-warning-border: var(--color-warning-bg);
+              --color-destructive-bg: oklch(62.8% .257 29.234);
+              --color-destructive-bg-hover: oklch(57% .257 29.234);
+              --color-destructive-text: oklch(1.0 0 0);
+              --color-destructive-border: var(--color-destructive-bg);
+              --surface-bg-color: oklch(1.0 0 0);
+              --surface-page-bg-color: oklch(1.0 0 0);
+              --surface-content-color: oklch(0.20 0.01 250);
+              --surface-muted-bg-color: oklch(0.96 0.01 250);
+              --surface-muted-content-color: oklch(0.45 0.01 250);
+              --surface-border-color: oklch(0.89 0.01 250);
+              --surface-border-hover-color: oklch(0.82 0.02 250);
+  --code-block-background-color: var(--surface-muted-bg-color);
+  --code-block-border-color: var(--surface-border-color);
+  --code-block-title-color: var(--surface-muted-content-color);
+  --code-block-code-color: var(--surface-content-color);
+  --code-block-tab-color: var(--surface-muted-content-color);
+  --code-block-tab-hover-color: var(--surface-content-color);
+  --code-block-tab-active-background-color: var(--surface-border-color);
+  --code-block-tab-active-color: var(--surface-muted-content-color);
+  --card-background-color: var(--surface-bg-color);
+  --card-background-muted-color: var(--surface-muted-bg-color);
+  --card-border-color: var(--surface-border-color);
+  --card-padding-sm: 0.75rem;
+  --card-padding-md: 1rem;
+  --card-padding-lg: 1.25rem;
+  --card-hover-subtle-background-color: var(--surface-muted-bg-color);
+  --card-hover-strong-border-color: var(--color-primary);
+  --card-hover-strong-shadow: var(--shadow-md);
+  --card-hover-strong-shadow-dark: var(--shadow-lg);
+              --color-info-border: var(--surface-border-color);
+              --modal-backdrop-color: rgb(0 0 0 / 0.5);
+              --modal-surface-color: var(--surface-bg-color);
+              --modal-border-color: var(--surface-border-color);
+              --modal-title-color: var(--surface-content-color);
+              --modal-body-color: var(--surface-content-color);
+              --modal-close-icon-color: var(--surface-muted-content-color);
+              --modal-close-icon-hover-color: var(--surface-content-color);
+              --popover-background-color: var(--surface-bg-color);
+              --popover-border-color: var(--surface-border-color);
+              --popover-text-color: var(--surface-content-color);
+              --popover-shadow: var(--shadow-lg);
+              --popover-padding: 1rem;
+              --popover-radius: var(--radius-md);
+              --tooltip-background-color: var(--surface-content-color);
+              --tooltip-border-color: var(--surface-border-color);
+              --tooltip-text-color: var(--surface-bg-color);
+              --tooltip-shadow: var(--shadow-lg);
+              --tooltip-padding-x: 0.75rem;
+              --tooltip-padding-y: 0.5rem;
+              --tooltip-radius: var(--radius-sm);
+              --tooltip-font-size: 0.875rem;
+              --tooltip-max-width: 20rem;
+              --sidebar-background-color: oklch(1.0 0 0);
+              --sidebar-border-color: oklch(0.89 0.01 250);
+              --sidebar-divider-color: oklch(0.89 0.01 250);
+              --sidebar-item-text-color: oklch(0.45 0.01 250);
+              --sidebar-item-icon-color: oklch(0.45 0.01 250);
+              --sidebar-item-hover-background-color: oklch(0.96 0.01 250);
+              --sidebar-item-hover-text-color: oklch(0.20 0.01 250);
+              --sidebar-item-active-background-color: oklch(0.52 0.26 250);
+              --sidebar-item-active-text-color: oklch(1.0 0 0);
+              --sidebar-item-active-icon-color: oklch(1.0 0 0);
+              --sidebar-footer-text-color: oklch(0.45 0.01 250);
+  --sidebar-header-background-color: var(--sidebar-background-color);
+  --sidebar-header-border-color: var(--sidebar-border-color);
+  --sidebar-header-text-color: var(--sidebar-item-text-color);
+  --sidebar-header-icon-color: var(--sidebar-item-icon-color);
+  --sidebar-header-icon-hover-background-color: var(--sidebar-item-hover-background-color);
+  --sidebar-header-icon-hover-color: var(--sidebar-item-hover-text-color);
+  --sidebar-header-badge-background-color: var(--badge-primary-background-color);
+  --sidebar-header-badge-text-color: var(--badge-primary-text-color);
+  --chat-background-color: var(--surface-bg-color);
+  --chat-border-color: var(--surface-border-color);
+  --chat-header-background-color: var(--surface-bg-color);
+  --chat-header-border-color: var(--surface-border-color);
+  --chat-composer-background-color: var(--surface-bg-color);
+  --chat-composer-border-color: var(--surface-border-color);
+  --chat-input-background-color: var(--surface-bg-color);
+  --chat-input-border-color: var(--surface-border-color);
+  --chat-input-text-color: var(--surface-content-color);
+  --chat-input-placeholder-color: var(--surface-muted-content-color);
+  --chat-input-focus-ring-color: var(--color-ring);
+  --chat-message-incoming-background-color: var(--surface-muted-bg-color);
+  --chat-message-incoming-text-color: var(--surface-content-color);
+  --chat-message-outgoing-background-color: var(--color-primary);
+  --chat-message-outgoing-text-color: var(--color-primary-text);
+  --chat-message-system-text-color: var(--surface-muted-content-color);
+  --chat-message-meta-color: var(--surface-muted-content-color);
+  --chat-message-failed-color: var(--color-destructive-border);
+  --chat-read-receipt-color: var(--color-primary);
+  --chat-date-divider-line-color: var(--surface-border-color);
+  --chat-date-divider-text-color: var(--surface-muted-content-color);
+  --chat-attachment-border-color: var(--surface-border-color);
+  --chat-attachment-hover-background-color: var(--surface-muted-bg-color);
+  --chat-attachment-text-color: var(--surface-content-color);
+  --chat-attachment-meta-color: var(--surface-muted-content-color);
+  --chat-attachment-icon-color: var(--surface-muted-content-color);
+  --chat-jump-button-background-color: var(--surface-bg-color);
+  --chat-jump-button-border-color: var(--surface-border-color);
+  --chat-jump-button-text-color: var(--surface-content-color);
+  --chat-jump-button-hover-background-color: var(--surface-muted-bg-color);
+  --chat-typing-background-color: var(--surface-muted-bg-color);
+  --chat-typing-dot-color: var(--surface-muted-content-color);
+  --chat-avatar-placeholder-background-color: var(--surface-muted-bg-color);
+  --chat-avatar-placeholder-text-color: var(--surface-muted-content-color);
+  --chat-send-button-background-color: var(--color-primary);
+  --chat-send-button-hover-background-color: var(--color-primary-hover);
+  --chat-send-button-text-color: var(--color-primary-text);
+  --chat-send-button-focus-ring-color: var(--color-ring);
+              --top-nav-background-color: oklch(1.0 0 0);
+              --top-nav-border-color: transparent;
+              --top-nav-item-text-color: oklch(0.45 0.01 250);
+              --top-nav-item-icon-color: oklch(0.45 0.01 250);
+              --top-nav-item-hover-background-color: oklch(0.96 0.01 250);
+              --top-nav-item-hover-text-color: oklch(0.20 0.01 250);
+              --top-nav-item-active-background-color: oklch(0.52 0.26 250);
+              --top-nav-item-active-text-color: oklch(1.0 0 0);
+              --top-nav-item-active-icon-color: oklch(1.0 0 0);
+              --color-ring: oklch(0.52 0.26 250);
+              --radius-sm: 0.25rem;
+              --radius-md: 0.375rem;
+              --radius-lg: 0.5rem;
+              --radius-xl: 0.75rem;
+                            --form-control-padding: 0.75rem;
+              --table-padding: 0.75rem;
+  --table-background-color: var(--surface-bg-color);
+  --table-border-color: var(--surface-border-color);
+  --table-header-background-color: var(--surface-bg-color);
+  --table-header-border-color: var(--surface-border-color);
+  --table-header-text-color: var(--surface-muted-content-color);
+  --table-row-divider-color: var(--surface-border-color);
+  --table-row-hover-background-color: var(--surface-muted-bg-color);
+  --table-cell-text-color: var(--surface-content-color);
+  --table-cell-muted-text-color: var(--surface-muted-content-color);
+  --table-empty-state-text-color: var(--surface-muted-content-color);
+  --table-sort-link-hover-color: var(--surface-content-color);
+  --chip-remove-hover-background-color: rgb(0 0 0 / 0.1);
+  --chip-border-radius: 9999px;
+  --chip-group-gap: 0.5rem;
+  --chip-padding-x-sm: 0.5rem;
+  --chip-padding-y-sm: 0.125rem;
+  --chip-padding-x-md: 0.75rem;
+  --chip-padding-y-md: 0.25rem;
+  --chip-padding-x-lg: 1rem;
+  --chip-padding-y-lg: 0.375rem;
+              --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+              --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+              --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+              --shadow-button: 0 0 15px 0px rgba(0, 0, 0, 0.15);
+              --shadow-button-active: 0 0 8px 4px rgba(0, 0, 0, 0.15);
+              --blur-modal-backdrop: 4px;
+              --duration-fast: 150ms;
+              --duration-base: 200ms;
+              --duration-slow: 300ms;
+            }
+          CODE
+        ) %>
+      </div>
+
+      <div data-theme-demo-target="panel" data-theme="dark" class="hidden">
+        <%= render FlatPack::CodeBlock::Component.new(
+          title: "Dark Theme Variables",
+          language: "css",
+          code: <<~CODE
+            [data-theme="dark"] {
+              --color-primary: oklch(0.62 0.22 250);
+              --color-primary-hover: oklch(0.72 0.15 250);
+              --color-primary-text: oklch(0.15 0.01 250);
+              --color-secondary: oklch(0.20 0.02 250);
+              --color-secondary-hover: oklch(0.25 0.03 250);
+              --color-secondary-text: oklch(0.90 0.01 250);
+              --color-ghost: transparent;
+              --color-ghost-hover: oklch(0.22 0.02 250);
+              --color-ghost-text: oklch(0.85 0.01 250);
+              --color-success-bg: oklch(67% .194 149.214);
+              --color-success-bg-hover: oklch(72% .194 149.214);
+              --color-success-text: oklch(0.15 0.01 250);
+              --color-success-border: var(--color-success-bg);
+              --color-warning-bg: oklch(75% 0.183 55.934);
+              --color-warning-bg-hover: oklch(70.5% 0.213 47.604);
+              --color-warning-text: oklch(0.15 0.01 250);
+              --color-warning-border: var(--color-warning-bg);
+              --color-destructive-bg: oklch(67.8% .257 29.234);
+              --color-destructive-bg-hover: oklch(72% .257 29.234);
+              --color-destructive-text: oklch(0.15 0.01 250);
+              --color-destructive-border: var(--color-destructive-bg);
+              --surface-bg-color: oklch(0.15 0.01 250);
+              --surface-page-bg-color: oklch(0.15 0.01 250);
+              --surface-content-color: oklch(0.95 0.01 250);
+              --surface-muted-bg-color: oklch(0.22 0.02 250);
+              --surface-muted-content-color: oklch(0.65 0.01 250);
+              --surface-border-color: oklch(0.30 0.02 250);
+              --surface-border-hover-color: oklch(0.40 0.03 250);
+  --code-block-background-color: var(--surface-muted-bg-color);
+  --code-block-border-color: var(--surface-border-color);
+  --code-block-title-color: var(--surface-muted-content-color);
+  --code-block-code-color: var(--surface-content-color);
+  --code-block-tab-color: var(--surface-muted-content-color);
+  --code-block-tab-hover-color: var(--surface-content-color);
+  --code-block-tab-active-background-color: var(--surface-border-color);
+  --code-block-tab-active-color: var(--surface-muted-content-color);
+  --card-background-color: var(--surface-bg-color);
+  --card-background-muted-color: var(--surface-muted-bg-color);
+  --card-border-color: var(--surface-border-color);
+  --card-padding-sm: 0.75rem;
+  --card-padding-md: 1rem;
+  --card-padding-lg: 1.25rem;
+  --card-hover-subtle-background-color: var(--surface-muted-bg-color);
+  --card-hover-strong-border-color: var(--color-primary);
+  --card-hover-strong-shadow: var(--shadow-md);
+  --card-hover-strong-shadow-dark: var(--shadow-lg);
+              --color-info-border: var(--surface-border-color);
+              --modal-backdrop-color: rgb(0 0 0 / 0.65);
+              --modal-surface-color: var(--surface-bg-color);
+              --modal-border-color: var(--surface-border-color);
+              --modal-title-color: var(--surface-content-color);
+              --modal-body-color: var(--surface-content-color);
+              --modal-close-icon-color: var(--surface-muted-content-color);
+              --modal-close-icon-hover-color: var(--surface-content-color);
+              --popover-background-color: var(--surface-bg-color);
+              --popover-border-color: var(--surface-border-color);
+              --popover-text-color: var(--surface-content-color);
+              --popover-shadow: var(--shadow-lg);
+              --popover-padding: 1rem;
+              --popover-radius: var(--radius-md);
+              --tooltip-background-color: var(--surface-content-color);
+              --tooltip-border-color: var(--surface-border-color);
+              --tooltip-text-color: var(--surface-bg-color);
+              --tooltip-shadow: var(--shadow-lg);
+              --tooltip-padding-x: 0.75rem;
+              --tooltip-padding-y: 0.5rem;
+              --tooltip-radius: var(--radius-sm);
+              --tooltip-font-size: 0.875rem;
+              --tooltip-max-width: 20rem;
+              --sidebar-background-color: oklch(0.17 0.01 250);
+              --sidebar-border-color: oklch(0.30 0.02 250);
+              --sidebar-divider-color: oklch(0.30 0.02 250);
+              --sidebar-item-text-color: oklch(0.65 0.01 250);
+              --sidebar-item-icon-color: oklch(0.65 0.01 250);
+              --sidebar-item-hover-background-color: oklch(0.22 0.02 250);
+              --sidebar-item-hover-text-color: oklch(0.95 0.01 250);
+              --sidebar-item-active-background-color: oklch(0.62 0.22 250);
+              --sidebar-item-active-text-color: oklch(0.15 0.01 250);
+              --sidebar-item-active-icon-color: oklch(0.15 0.01 250);
+              --sidebar-footer-text-color: oklch(0.65 0.01 250);
+  --sidebar-header-background-color: var(--sidebar-background-color);
+  --sidebar-header-border-color: var(--sidebar-border-color);
+  --sidebar-header-text-color: var(--sidebar-item-text-color);
+  --sidebar-header-icon-color: var(--sidebar-item-icon-color);
+  --sidebar-header-icon-hover-background-color: var(--sidebar-item-hover-background-color);
+  --sidebar-header-icon-hover-color: var(--sidebar-item-hover-text-color);
+  --sidebar-header-badge-background-color: var(--badge-primary-background-color);
+  --sidebar-header-badge-text-color: var(--badge-primary-text-color);
+  --chat-background-color: var(--surface-bg-color);
+  --chat-border-color: var(--surface-border-color);
+  --chat-header-background-color: var(--surface-bg-color);
+  --chat-header-border-color: var(--surface-border-color);
+  --chat-composer-background-color: var(--surface-bg-color);
+  --chat-composer-border-color: var(--surface-border-color);
+  --chat-input-background-color: var(--surface-bg-color);
+  --chat-input-border-color: var(--surface-border-color);
+  --chat-input-text-color: var(--surface-content-color);
+  --chat-input-placeholder-color: var(--surface-muted-content-color);
+  --chat-input-focus-ring-color: var(--color-ring);
+  --chat-message-incoming-background-color: var(--surface-muted-bg-color);
+  --chat-message-incoming-text-color: var(--surface-content-color);
+  --chat-message-outgoing-background-color: var(--color-primary);
+  --chat-message-outgoing-text-color: var(--color-primary-text);
+  --chat-message-system-text-color: var(--surface-muted-content-color);
+  --chat-message-meta-color: var(--surface-muted-content-color);
+  --chat-message-failed-color: var(--color-destructive-border);
+  --chat-read-receipt-color: var(--color-primary);
+  --chat-date-divider-line-color: var(--surface-border-color);
+  --chat-date-divider-text-color: var(--surface-muted-content-color);
+  --chat-attachment-border-color: var(--surface-border-color);
+  --chat-attachment-hover-background-color: var(--surface-muted-bg-color);
+  --chat-attachment-text-color: var(--surface-content-color);
+  --chat-attachment-meta-color: var(--surface-muted-content-color);
+  --chat-attachment-icon-color: var(--surface-muted-content-color);
+  --chat-jump-button-background-color: var(--surface-bg-color);
+  --chat-jump-button-border-color: var(--surface-border-color);
+  --chat-jump-button-text-color: var(--surface-content-color);
+  --chat-jump-button-hover-background-color: var(--surface-muted-bg-color);
+  --chat-typing-background-color: var(--surface-muted-bg-color);
+  --chat-typing-dot-color: var(--surface-muted-content-color);
+  --chat-avatar-placeholder-background-color: var(--surface-muted-bg-color);
+  --chat-avatar-placeholder-text-color: var(--surface-muted-content-color);
+  --chat-send-button-background-color: var(--color-primary);
+  --chat-send-button-hover-background-color: var(--color-primary-hover);
+  --chat-send-button-text-color: var(--color-primary-text);
+  --chat-send-button-focus-ring-color: var(--color-ring);
+              --top-nav-background-color: oklch(0.18 0.01 250);
+              --top-nav-border-color: transparent;
+              --top-nav-item-text-color: oklch(0.65 0.01 250);
+              --top-nav-item-icon-color: oklch(0.65 0.01 250);
+              --top-nav-item-hover-background-color: oklch(0.22 0.02 250);
+              --top-nav-item-hover-text-color: oklch(0.95 0.01 250);
+              --top-nav-item-active-background-color: oklch(0.62 0.22 250);
+              --top-nav-item-active-text-color: oklch(0.15 0.01 250);
+              --top-nav-item-active-icon-color: oklch(0.15 0.01 250);
+              --color-ring: oklch(0.62 0.22 250);
+              --radius-sm: 0.25rem;
+              --radius-md: 0.375rem;
+              --radius-lg: 0.5rem;
+              --radius-xl: 0.75rem;
+                            --form-control-padding: 0.75rem;
+              --table-padding: 0.75rem;
+  --table-background-color: var(--surface-bg-color);
+  --table-border-color: var(--surface-border-color);
+  --table-header-background-color: var(--surface-bg-color);
+  --table-header-border-color: var(--surface-border-color);
+  --table-header-text-color: var(--surface-muted-content-color);
+  --table-row-divider-color: var(--surface-border-color);
+  --table-row-hover-background-color: var(--surface-muted-bg-color);
+  --table-cell-text-color: var(--surface-content-color);
+  --table-cell-muted-text-color: var(--surface-muted-content-color);
+  --table-empty-state-text-color: var(--surface-muted-content-color);
+  --table-sort-link-hover-color: var(--surface-content-color);
+  --chip-remove-hover-background-color: rgb(255 255 255 / 0.16);
+  --chip-border-radius: 9999px;
+  --chip-group-gap: 0.5rem;
+  --chip-padding-x-sm: 0.5rem;
+  --chip-padding-y-sm: 0.125rem;
+  --chip-padding-x-md: 0.75rem;
+  --chip-padding-y-md: 0.25rem;
+  --chip-padding-x-lg: 1rem;
+  --chip-padding-y-lg: 0.375rem;
+              --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
+              --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5);
+              --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5);
+              --shadow-button: 0 0 15px 0px rgba(142, 142, 142, 0.15);
+              --shadow-button-active: 0 0 8px 4px rgba(142, 142, 142, 0.15);
+              --blur-modal-backdrop: 3px;
+              --duration-fast: 150ms;
+              --duration-base: 200ms;
+              --duration-slow: 300ms;
+            }
+          CODE
+        ) %>
+      </div>
+
+      <div data-theme-demo-target="panel" data-theme="ocean" class="hidden">
+        <%= render FlatPack::CodeBlock::Component.new(
+          title: "Ocean Theme Variables",
+          language: "css",
+          code: <<~CODE
+            [data-theme="ocean"] {
+              --color-primary: oklch(0.52 0.15 220);
+              --color-primary-hover: oklch(0.42 0.18 220);
+              --color-primary-text: oklch(1.0 0 0);
+              --color-secondary: oklch(0.92 0.02 220);
+              --color-secondary-hover: oklch(0.87 0.03 220);
+              --color-secondary-text: oklch(0.25 0.02 220);
+              --color-ghost: transparent;
+              --color-ghost-hover: oklch(0.94 0.02 220);
+              --color-ghost-text: oklch(0.35 0.02 220);
+              --color-success-bg: oklch(62.7% .194 149.214);
+              --color-success-bg-hover: oklch(57% .194 149.214);
+              --color-success-text: oklch(1.0 0 0);
+              --color-success-border: var(--color-success-bg);
+              --color-warning-bg: oklch(70.5% 0.213 47.604);
+              --color-warning-bg-hover: oklch(64.6% 0.222 41.116);
+              --color-warning-text: oklch(1.0 0 0);
+              --color-warning-border: var(--color-warning-bg);
+              --color-destructive-bg: oklch(62.8% .257 29.234);
+              --color-destructive-bg-hover: oklch(57% .257 29.234);
+              --color-destructive-text: oklch(1.0 0 0);
+              --color-destructive-border: var(--color-destructive-bg);
+              --surface-bg-color: oklch(0.98 0.01 220);
+              --surface-page-bg-color: oklch(0.98 0.01 220);
+              --surface-content-color: oklch(0.20 0.02 220);
+              --surface-muted-bg-color: oklch(0.94 0.02 220);
+              --surface-muted-content-color: oklch(0.45 0.02 220);
+              --surface-border-color: oklch(0.87 0.02 220);
+              --surface-border-hover-color: oklch(0.80 0.03 220);
+  --code-block-background-color: var(--surface-muted-bg-color);
+  --code-block-border-color: var(--surface-border-color);
+  --code-block-title-color: var(--surface-muted-content-color);
+  --code-block-code-color: var(--surface-content-color);
+  --code-block-tab-color: var(--surface-muted-content-color);
+  --code-block-tab-hover-color: var(--surface-content-color);
+  --code-block-tab-active-background-color: var(--surface-border-color);
+  --code-block-tab-active-color: var(--surface-muted-content-color);
+  --card-background-color: var(--surface-bg-color);
+  --card-background-muted-color: var(--surface-muted-bg-color);
+  --card-border-color: var(--surface-border-color);
+  --card-padding-sm: 0.75rem;
+  --card-padding-md: 1rem;
+  --card-padding-lg: 1.25rem;
+  --card-hover-subtle-background-color: var(--surface-muted-bg-color);
+  --card-hover-strong-border-color: var(--color-primary);
+  --card-hover-strong-shadow: var(--shadow-md);
+  --card-hover-strong-shadow-dark: var(--shadow-lg);
+              --color-info-border: var(--surface-border-color);
+              --modal-backdrop-color: rgb(3 24 47 / 0.45);
+              --modal-surface-color: var(--surface-bg-color);
+              --modal-border-color: var(--surface-border-color);
+              --modal-title-color: var(--surface-content-color);
+              --modal-body-color: var(--surface-content-color);
+              --modal-close-icon-color: var(--surface-muted-content-color);
+              --modal-close-icon-hover-color: var(--surface-content-color);
+              --popover-background-color: var(--surface-bg-color);
+              --popover-border-color: var(--surface-border-color);
+              --popover-text-color: var(--surface-content-color);
+              --popover-shadow: var(--shadow-lg);
+              --popover-padding: 1rem;
+              --popover-radius: var(--radius-md);
+              --tooltip-background-color: var(--surface-content-color);
+              --tooltip-border-color: var(--surface-border-color);
+              --tooltip-text-color: var(--surface-bg-color);
+              --tooltip-shadow: var(--shadow-lg);
+              --tooltip-padding-x: 0.75rem;
+              --tooltip-padding-y: 0.5rem;
+              --tooltip-radius: var(--radius-sm);
+              --tooltip-font-size: 0.875rem;
+              --tooltip-max-width: 20rem;
+              --sidebar-background-color: oklch(0.96 0.02 220);
+              --sidebar-border-color: oklch(0.87 0.02 220);
+              --sidebar-divider-color: oklch(0.87 0.02 220);
+              --sidebar-item-text-color: oklch(0.45 0.02 220);
+              --sidebar-item-icon-color: oklch(0.45 0.02 220);
+              --sidebar-item-hover-background-color: oklch(0.94 0.02 220);
+              --sidebar-item-hover-text-color: oklch(0.20 0.02 220);
+              --sidebar-item-active-background-color: oklch(0.52 0.15 220);
+              --sidebar-item-active-text-color: oklch(1.0 0 0);
+              --sidebar-item-active-icon-color: oklch(1.0 0 0);
+              --sidebar-footer-text-color: oklch(0.45 0.02 220);
+  --sidebar-header-background-color: var(--sidebar-background-color);
+  --sidebar-header-border-color: var(--sidebar-border-color);
+  --sidebar-header-text-color: var(--sidebar-item-text-color);
+  --sidebar-header-icon-color: var(--sidebar-item-icon-color);
+  --sidebar-header-icon-hover-background-color: var(--sidebar-item-hover-background-color);
+  --sidebar-header-icon-hover-color: var(--sidebar-item-hover-text-color);
+  --sidebar-header-badge-background-color: var(--badge-primary-background-color);
+  --sidebar-header-badge-text-color: var(--badge-primary-text-color);
+  --chat-background-color: var(--surface-bg-color);
+  --chat-border-color: var(--surface-border-color);
+  --chat-header-background-color: var(--surface-bg-color);
+  --chat-header-border-color: var(--surface-border-color);
+  --chat-composer-background-color: var(--surface-bg-color);
+  --chat-composer-border-color: var(--surface-border-color);
+  --chat-input-background-color: var(--surface-bg-color);
+  --chat-input-border-color: var(--surface-border-color);
+  --chat-input-text-color: var(--surface-content-color);
+  --chat-input-placeholder-color: var(--surface-muted-content-color);
+  --chat-input-focus-ring-color: var(--color-ring);
+  --chat-message-incoming-background-color: var(--surface-muted-bg-color);
+  --chat-message-incoming-text-color: var(--surface-content-color);
+  --chat-message-outgoing-background-color: var(--color-primary);
+  --chat-message-outgoing-text-color: var(--color-primary-text);
+  --chat-message-system-text-color: var(--surface-muted-content-color);
+  --chat-message-meta-color: var(--surface-muted-content-color);
+  --chat-message-failed-color: var(--color-destructive-border);
+  --chat-read-receipt-color: var(--color-primary);
+  --chat-date-divider-line-color: var(--surface-border-color);
+  --chat-date-divider-text-color: var(--surface-muted-content-color);
+  --chat-attachment-border-color: var(--surface-border-color);
+  --chat-attachment-hover-background-color: var(--surface-muted-bg-color);
+  --chat-attachment-text-color: var(--surface-content-color);
+  --chat-attachment-meta-color: var(--surface-muted-content-color);
+  --chat-attachment-icon-color: var(--surface-muted-content-color);
+  --chat-jump-button-background-color: var(--surface-bg-color);
+  --chat-jump-button-border-color: var(--surface-border-color);
+  --chat-jump-button-text-color: var(--surface-content-color);
+  --chat-jump-button-hover-background-color: var(--surface-muted-bg-color);
+  --chat-typing-background-color: var(--surface-muted-bg-color);
+  --chat-typing-dot-color: var(--surface-muted-content-color);
+  --chat-avatar-placeholder-background-color: var(--surface-muted-bg-color);
+  --chat-avatar-placeholder-text-color: var(--surface-muted-content-color);
+  --chat-send-button-background-color: var(--color-primary);
+  --chat-send-button-hover-background-color: var(--color-primary-hover);
+  --chat-send-button-text-color: var(--color-primary-text);
+  --chat-send-button-focus-ring-color: var(--color-ring);
+              --top-nav-background-color: oklch(0.97 0.01 220);
+              --top-nav-border-color: transparent;
+              --top-nav-item-text-color: oklch(0.45 0.02 220);
+              --top-nav-item-icon-color: oklch(0.45 0.02 220);
+              --top-nav-item-hover-background-color: oklch(0.94 0.02 220);
+              --top-nav-item-hover-text-color: oklch(0.20 0.02 220);
+              --top-nav-item-active-background-color: oklch(0.52 0.15 220);
+              --top-nav-item-active-text-color: oklch(1.0 0 0);
+              --top-nav-item-active-icon-color: oklch(1.0 0 0);
+              --color-ring: oklch(0.52 0.15 220);
+              --radius-sm: 0.25rem;
+              --radius-md: 0.375rem;
+              --radius-lg: 0.5rem;
+              --radius-xl: 0.75rem;
+                            --form-control-padding: 0.75rem;
+              --table-padding: 0.75rem;
+  --table-background-color: var(--surface-bg-color);
+  --table-border-color: var(--surface-border-color);
+  --table-header-background-color: var(--surface-bg-color);
+  --table-header-border-color: var(--surface-border-color);
+  --table-header-text-color: var(--surface-muted-content-color);
+  --table-row-divider-color: var(--surface-border-color);
+  --table-row-hover-background-color: var(--surface-muted-bg-color);
+  --table-cell-text-color: var(--surface-content-color);
+  --table-cell-muted-text-color: var(--surface-muted-content-color);
+  --table-empty-state-text-color: var(--surface-muted-content-color);
+  --table-sort-link-hover-color: var(--surface-content-color);
+  --chip-remove-hover-background-color: rgb(0 0 0 / 0.1);
+  --chip-border-radius: 9999px;
+  --chip-group-gap: 0.5rem;
+  --chip-padding-x-sm: 0.5rem;
+  --chip-padding-y-sm: 0.125rem;
+  --chip-padding-x-md: 0.75rem;
+  --chip-padding-y-md: 0.25rem;
+  --chip-padding-x-lg: 1rem;
+  --chip-padding-y-lg: 0.375rem;
+              --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+              --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+              --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+              --shadow-button: 0 0 15px 0px rgba(0, 0, 0, 0.15);
+              --shadow-button-active: 0 0 8px 4px rgba(0, 0, 0, 0.15);
+              --blur-modal-backdrop: 5px;
+              --duration-fast: 150ms;
+              --duration-base: 200ms;
+              --duration-slow: 300ms;
+            }
+          CODE
+        ) %>
+      </div>
+
+      <div data-theme-demo-target="panel" data-theme="rounded" class="hidden">
+        <%= render FlatPack::CodeBlock::Component.new(
+          title: "Rounded Theme Variables",
+          language: "css",
+          code: <<~CODE
+            [data-theme="rounded"] {
+              --color-primary: #333;
+              --color-primary-hover: #1f1f1f;
+              --color-primary-text: #fff;
+              --color-secondary: #f5f5f5;
+              --color-secondary-hover: #ebebeb;
+              --color-secondary-text: #333;
+              --color-ghost: transparent;
+              --color-ghost-hover: #f2f2f2;
+              --color-ghost-text: #333;
+              --color-success-bg: oklch(0.72 0.17 152);
+              --color-success-bg-hover: oklch(0.66 0.17 152);
+              --color-success-text: #fff;
+              --color-success-border: var(--color-success-bg);
+              --color-warning-bg: oklch(0.80 0.15 83);
+              --color-warning-bg-hover: oklch(0.75 0.16 78);
+              --color-warning-text: #1f1f1f;
+              --color-warning-border: var(--color-warning-bg);
+              --color-destructive-bg: oklch(0.66 0.22 25);
+              --color-destructive-bg-hover: oklch(0.61 0.22 25);
+              --color-destructive-text: #fff;
+              --color-destructive-border: var(--color-destructive-bg);
+              --surface-bg-color: #f8f9fa;
+              --surface-page-bg-color: #f8f9fa;
+              --surface-content-color: #333;
+              --surface-muted-bg-color: #f7f7f7;
+              --surface-muted-content-color: #666;
+              --surface-border-color: #d1d5db;
+              --surface-border-hover-color: #d1d5db;
+  --code-block-background-color: var(--surface-muted-bg-color);
+  --code-block-border-color: var(--surface-border-color);
+  --code-block-title-color: var(--surface-muted-content-color);
+  --code-block-code-color: var(--surface-content-color);
+  --code-block-tab-color: var(--surface-muted-content-color);
+  --code-block-tab-hover-color: var(--surface-content-color);
+  --code-block-tab-active-background-color: var(--surface-border-color);
+  --code-block-tab-active-color: var(--surface-muted-content-color);
+  --card-background-color: var(--surface-bg-color);
+  --card-background-muted-color: var(--surface-muted-bg-color);
+  --card-border-color: var(--surface-border-color);
+  --card-padding-sm: 0.75rem;
+  --card-padding-md: 1rem;
+  --card-padding-lg: 1.25rem;
+  --card-hover-subtle-background-color: var(--surface-muted-bg-color);
+  --card-hover-strong-border-color: var(--color-primary);
+  --card-hover-strong-shadow: var(--shadow-md);
+  --card-hover-strong-shadow-dark: var(--shadow-lg);
+              --color-info-border: var(--surface-border-color);
+              --modal-backdrop-color: rgb(0 0 0 / 0.5);
+              --modal-surface-color: var(--surface-bg-color);
+              --modal-border-color: var(--surface-border-color);
+              --modal-title-color: var(--surface-content-color);
+              --modal-body-color: var(--surface-content-color);
+              --modal-close-icon-color: var(--surface-muted-content-color);
+              --modal-close-icon-hover-color: var(--surface-content-color);
+              --popover-background-color: var(--surface-bg-color);
+              --popover-border-color: var(--surface-border-color);
+              --popover-text-color: var(--surface-content-color);
+              --popover-shadow: var(--shadow-lg);
+              --popover-padding: 1rem;
+              --popover-radius: var(--radius-md);
+              --tooltip-background-color: var(--surface-content-color);
+              --tooltip-border-color: var(--surface-border-color);
+              --tooltip-text-color: var(--surface-bg-color);
+              --tooltip-shadow: var(--shadow-lg);
+              --tooltip-padding-x: 0.75rem;
+              --tooltip-padding-y: 0.5rem;
+              --tooltip-radius: var(--radius-sm);
+              --tooltip-font-size: 0.875rem;
+              --tooltip-max-width: 20rem;
+              --sidebar-background-color: oklch(1.0 0 0);
+              --sidebar-border-color: #d1d5db;
+              --sidebar-divider-color: #d1d5db;
+              --sidebar-item-text-color: #666;
+              --sidebar-item-icon-color: #666;
+              --sidebar-item-hover-background-color: #f7f7f7;
+              --sidebar-item-hover-text-color: #333;
+              --sidebar-item-active-background-color: #333;
+              --sidebar-item-active-text-color: #fff;
+              --sidebar-item-active-icon-color: #fff;
+              --sidebar-footer-text-color: #666;
+  --sidebar-header-background-color: var(--sidebar-background-color);
+  --sidebar-header-border-color: var(--sidebar-border-color);
+  --sidebar-header-text-color: var(--sidebar-item-text-color);
+  --sidebar-header-icon-color: var(--sidebar-item-icon-color);
+  --sidebar-header-icon-hover-background-color: var(--sidebar-item-hover-background-color);
+  --sidebar-header-icon-hover-color: var(--sidebar-item-hover-text-color);
+  --sidebar-header-badge-background-color: var(--badge-primary-background-color);
+  --sidebar-header-badge-text-color: var(--badge-primary-text-color);
+  --chat-background-color: var(--surface-bg-color);
+  --chat-border-color: var(--surface-border-color);
+  --chat-header-background-color: var(--surface-bg-color);
+  --chat-header-border-color: var(--surface-border-color);
+  --chat-composer-background-color: var(--surface-bg-color);
+  --chat-composer-border-color: var(--surface-border-color);
+  --chat-input-background-color: var(--surface-bg-color);
+  --chat-input-border-color: var(--surface-border-color);
+  --chat-input-text-color: var(--surface-content-color);
+  --chat-input-placeholder-color: var(--surface-muted-content-color);
+  --chat-input-focus-ring-color: var(--color-ring);
+  --chat-message-incoming-background-color: var(--surface-muted-bg-color);
+  --chat-message-incoming-text-color: var(--surface-content-color);
+  --chat-message-outgoing-background-color: var(--color-primary);
+  --chat-message-outgoing-text-color: var(--color-primary-text);
+  --chat-message-system-text-color: var(--surface-muted-content-color);
+  --chat-message-meta-color: var(--surface-muted-content-color);
+  --chat-message-failed-color: var(--color-destructive-border);
+  --chat-read-receipt-color: var(--color-primary);
+  --chat-date-divider-line-color: var(--surface-border-color);
+  --chat-date-divider-text-color: var(--surface-muted-content-color);
+  --chat-attachment-border-color: var(--surface-border-color);
+  --chat-attachment-hover-background-color: var(--surface-muted-bg-color);
+  --chat-attachment-text-color: var(--surface-content-color);
+  --chat-attachment-meta-color: var(--surface-muted-content-color);
+  --chat-attachment-icon-color: var(--surface-muted-content-color);
+  --chat-jump-button-background-color: var(--surface-bg-color);
+  --chat-jump-button-border-color: var(--surface-border-color);
+  --chat-jump-button-text-color: var(--surface-content-color);
+  --chat-jump-button-hover-background-color: var(--surface-muted-bg-color);
+  --chat-typing-background-color: var(--surface-muted-bg-color);
+  --chat-typing-dot-color: var(--surface-muted-content-color);
+  --chat-avatar-placeholder-background-color: var(--surface-muted-bg-color);
+  --chat-avatar-placeholder-text-color: var(--surface-muted-content-color);
+  --chat-send-button-background-color: var(--color-primary);
+  --chat-send-button-hover-background-color: var(--color-primary-hover);
+  --chat-send-button-text-color: var(--color-primary-text);
+  --chat-send-button-focus-ring-color: var(--color-ring);
+              --top-nav-background-color: transparent;
+              --top-nav-border-color: transparent;
+              --top-nav-item-text-color: #666;
+              --top-nav-item-icon-color: #666;
+              --top-nav-item-hover-background-color: #f7f7f7;
+              --top-nav-item-hover-text-color: #333;
+              --top-nav-item-active-background-color: #333;
+              --top-nav-item-active-text-color: #fff;
+              --top-nav-item-active-icon-color: #fff;
+              --color-ring: #333;
+                            --form-control-padding: 0.875rem;
+              --table-padding: 0.875rem;
+  --table-background-color: var(--surface-bg-color);
+  --table-border-color: var(--surface-border-color);
+  --table-header-background-color: var(--surface-bg-color);
+  --table-header-border-color: var(--surface-border-color);
+  --table-header-text-color: var(--surface-muted-content-color);
+  --table-row-divider-color: var(--surface-border-color);
+  --table-row-hover-background-color: var(--surface-muted-bg-color);
+  --table-cell-text-color: var(--surface-content-color);
+  --table-cell-muted-text-color: var(--surface-muted-content-color);
+  --table-empty-state-text-color: var(--surface-muted-content-color);
+  --table-sort-link-hover-color: var(--surface-content-color);
+  --chip-remove-hover-background-color: rgb(0 0 0 / 0.1);
+  --chip-border-radius: 9999px;
+  --chip-group-gap: 0.5rem;
+  --chip-padding-x-sm: 0.5rem;
+  --chip-padding-y-sm: 0.125rem;
+  --chip-padding-x-md: 0.75rem;
+  --chip-padding-y-md: 0.25rem;
+  --chip-padding-x-lg: 1rem;
+  --chip-padding-y-lg: 0.375rem;
+              --radius-sm: 0.75rem;
+              --radius-md: 1rem;
+              --radius-lg: 1.5rem;
+              --radius-xl: 2rem;
+              --shadow-sm: 0 2px 6px -2px rgb(0 0 0 / 0.08);
+              --shadow-md: 0 8px 18px -6px rgb(0 0 0 / 0.14);
+              --shadow-lg: 0 18px 30px -10px rgb(0 0 0 / 0.18);
+              --shadow-button: 0 8px 18px -8px rgb(0 0 0 / 0.22);
+              --shadow-button-active: 0 4px 10px -6px rgb(0 0 0 / 0.28);
+              --blur-modal-backdrop: 4px;
+              --duration-fast: 150ms;
+              --duration-base: 200ms;
+              --duration-slow: 300ms;
+            }
+          CODE
+        ) %>
+      </div>
+    </div>
+  </div>
+</div>

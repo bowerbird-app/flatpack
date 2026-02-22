@@ -34,7 +34,7 @@ module FlatPack
       private
 
       def render_item(item)
-        content_tag(:div, class: "border-b border-[var(--color-border)] last:border-b-0") do
+        content_tag(:div, class: "border-b border-[var(--surface-border-color)] last:border-b-0") do
           safe_join([
             render_item_trigger(item),
             render_item_content(item)
@@ -83,7 +83,7 @@ module FlatPack
             controller: "flat-pack--accordion",
             "flat-pack--accordion-allow-multiple-value": @allow_multiple
           },
-          class: "border border-[var(--color-border)] rounded-[var(--radius-md)] overflow-hidden bg-[var(--color-background)]"
+          class: "border border-[var(--surface-border-color)] rounded-md overflow-hidden bg-[var(--surface-bg-color)]"
         )
       end
 
@@ -103,7 +103,7 @@ module FlatPack
       end
 
       def trigger_classes
-        "w-full flex items-center justify-between p-4 text-left hover:bg-[var(--color-muted)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:ring-inset"
+        "w-full flex items-center justify-between p-4 text-left hover:bg-[var(--surface-muted-bg-color)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
       end
 
       def item_content_attributes(item)
