@@ -72,12 +72,12 @@ module FlatPack
         end
 
         def render_default_header
-          content_tag(:div, class: "flex items-center justify-between border-b border-[var(--color-border)] pb-4") do
+          content_tag(:div, class: "flex items-center justify-between border-b border-border pb-4") do
             safe_join([
               content_tag(:div, class: "flex items-center gap-2") do
                 safe_join([
-                  content_tag(:h3, @title, class: "text-lg font-semibold text-[var(--color-foreground)]"),
-                  content_tag(:span, @count.to_s, class: "text-sm text-[var(--color-muted-foreground)]")
+                  content_tag(:h3, @title, class: "text-lg font-semibold text-foreground"),
+                  content_tag(:span, @count.to_s, class: "text-sm text-muted-foreground")
                 ])
               end,
               @locked ? render_locked_indicator : nil
@@ -86,7 +86,7 @@ module FlatPack
         end
 
         def render_locked_indicator
-          content_tag(:div, class: "flex items-center gap-1.5 text-sm text-[var(--color-muted-foreground)]") do
+          content_tag(:div, class: "flex items-center gap-1.5 text-sm text-muted-foreground") do
             safe_join([
               # Lock icon
               content_tag(:svg,
@@ -120,8 +120,8 @@ module FlatPack
         def render_empty_state
           content_tag(:div, class: "py-12 text-center") do
             safe_join([
-              content_tag(:h4, @empty_title, class: "text-sm font-medium text-[var(--color-foreground)] mb-1"),
-              content_tag(:p, @empty_body, class: "text-sm text-[var(--color-muted-foreground)]")
+              content_tag(:h4, @empty_title, class: "text-sm font-medium text-foreground mb-1"),
+              content_tag(:p, @empty_body, class: "text-sm text-muted-foreground")
             ])
           end
         end

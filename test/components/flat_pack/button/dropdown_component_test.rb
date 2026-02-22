@@ -32,35 +32,35 @@ module FlatPack
         render_inline(Dropdown::Component.new(text: "Actions", style: :primary))
 
         assert_selector "button"
-        assert_includes page.native.to_html, "bg-[var(--color-primary)]"
+        assert_includes page.native.to_html, "bg-primary"
       end
 
       def test_renders_secondary_style
         render_inline(Dropdown::Component.new(text: "Actions", style: :secondary))
 
         assert_selector "button"
-        assert_includes page.native.to_html, "bg-[var(--color-secondary)]"
+        assert_includes page.native.to_html, "bg-secondary"
       end
 
       def test_renders_ghost_style
         render_inline(Dropdown::Component.new(text: "Actions", style: :ghost))
 
         assert_selector "button"
-        assert_includes page.native.to_html, "bg-[var(--color-ghost)]"
+        assert_includes page.native.to_html, "bg-ghost"
       end
 
       def test_renders_success_style
         render_inline(Dropdown::Component.new(text: "Actions", style: :success))
 
         assert_selector "button"
-        assert_includes page.native.to_html, "bg-[var(--color-success)]"
+        assert_includes page.native.to_html, "bg-success"
       end
 
       def test_renders_warning_style
         render_inline(Dropdown::Component.new(text: "Actions", style: :warning))
 
         assert_selector "button"
-        assert_includes page.native.to_html, "bg-[var(--color-warning)]"
+        assert_includes page.native.to_html, "bg-warning"
       end
 
       # Size variants
@@ -190,7 +190,7 @@ module FlatPack
         end
 
         assert_selector "a[href='/delete']", text: "Delete"
-        assert_includes page.native.to_html, "text-[var(--color-destructive)]"
+        assert_includes page.native.to_html, "text-destructive"
       end
 
       # Accessibility attributes

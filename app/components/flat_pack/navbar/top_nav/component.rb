@@ -67,7 +67,7 @@ module FlatPack
         def hamburger_attributes
           {
             type: "button",
-            class: "md:hidden p-2 rounded-md hover:bg-[var(--color-muted)] transition-colors",
+            class: "md:hidden p-2 rounded-md hover:bg-muted transition-colors",
             data: {action: "click->flat-pack--navbar#toggle"},
             aria: {label: "Toggle navigation"}
           }

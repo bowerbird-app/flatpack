@@ -5,12 +5,12 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-[var(--color-muted)]" "text-[var(--color-foreground)]" "bg-[var(--color-primary)]" "text-[var(--color-primary-text)]" "bg-[var(--color-success)]" "text-[var(--color-success-text)]" "bg-[var(--color-warning)]" "text-[var(--color-warning-text)]" "bg-red-500" "text-white" "bg-blue-500"
+      # "bg-muted" "text-foreground" "bg-primary" "text-primary-text" "bg-success" "text-success-text" "bg-warning" "text-warning-text" "bg-red-500" "text-white" "bg-blue-500"
       STYLES = {
-        default: "bg-[var(--color-muted)] text-[var(--color-foreground)]",
-        primary: "bg-[var(--color-primary)] text-[var(--color-primary-text)]",
-        success: "bg-[var(--color-success)] text-[var(--color-success-text)]",
-        warning: "bg-[var(--color-warning)] text-[var(--color-warning-text)]",
+        default: "bg-muted text-foreground",
+        primary: "bg-primary text-primary-text",
+        success: "bg-success text-success-text",
+        warning: "bg-warning text-warning-text",
         danger: "bg-red-500 text-white",
         info: "bg-blue-500 text-white"
       }.freeze
@@ -94,7 +94,7 @@ module FlatPack
 
         content_tag(:button,
           type: "button",
-          class: "ml-1 inline-flex items-center justify-center rounded-full hover:bg-black/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-ring)]",
+          class: "ml-1 inline-flex items-center justify-center rounded-full hover:bg-black/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring",
           "aria-label": "Remove",
           data: {action: "click->flat-pack--chip#remove"}) do
           # X icon (close)
@@ -136,7 +136,7 @@ module FlatPack
           "inline-flex items-center gap-1.5",
           "rounded-full font-medium",
           "border border-transparent",
-          "transition-colors duration-[var(--transition-base)]",
+          "transition-colors duration-base",
           STYLES.fetch(@style),
           SIZES.fetch(@size),
           disabled_classes,
@@ -152,12 +152,12 @@ module FlatPack
 
       def selected_classes
         return unless @selected && @type == :button
-        "ring-2 ring-[var(--color-ring)]"
+        "ring-2 ring-ring"
       end
 
       def focus_classes
         return unless @type == :button || @type == :link
-        "focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)] focus:ring-offset-2"
+        "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
       end
 
       def validate_style!

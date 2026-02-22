@@ -9,7 +9,7 @@ module FlatPack
 
         # Tailwind CSS scanning requires these classes to be present as string literals.
         # DO NOT REMOVE - These duplicates ensure CSS generation:
-        # "justify-start" "justify-end" "justify-center" "bg-[var(--color-muted)]" "text-[var(--color-foreground)]" "bg-[var(--color-primary)]" "text-[var(--color-primary-text)]" "bg-transparent" "text-[var(--color-muted-foreground)]" "text-xs" "italic"
+        # "justify-start" "justify-end" "justify-center" "bg-muted" "text-foreground" "bg-primary" "text-primary-text" "bg-transparent" "text-muted-foreground" "text-xs" "italic"
         DIRECTIONS = {
           incoming: "justify-start",
           outgoing: "justify-end"
@@ -17,12 +17,12 @@ module FlatPack
 
         VARIANTS = {
           default: "",
-          system: "bg-transparent text-[var(--color-muted-foreground)] text-xs italic"
+          system: "bg-transparent text-muted-foreground text-xs italic"
         }.freeze
 
         BUBBLE_DIRECTIONS = {
-          incoming: "bg-[var(--color-muted)] text-[var(--color-foreground)]",
-          outgoing: "bg-[var(--color-primary)] text-[var(--color-primary-text)]"
+          incoming: "bg-muted text-foreground",
+          outgoing: "bg-primary text-primary-text"
         }.freeze
 
         STATES = {

@@ -67,7 +67,7 @@ module FlatPack
         render_inline(Component.new(name: "agree", error: "Invalid"))
 
         html = page.native.to_html
-        assert_includes html, "border-[var(--color-warning)]"
+        assert_includes html, "border-warning"
       end
 
       def test_renders_with_custom_class

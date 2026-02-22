@@ -10,7 +10,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="m-0 h-full overflow-hidden overscroll-none" data-controller="dark-mode">
+  <body class="m-0 h-full overflow-hidden overscroll-none">
     <%= render "layouts/icon_sprite" %>
 
     <% sidebar_side = params[:side].in?(%w[left right]) ? params[:side].to_sym : :left %>
@@ -35,6 +35,12 @@
                 href: demo_path,
                 icon: :home,
                 active: current_page?(demo_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Themes",
+                href: themes_path,
+                icon: :palette,
+                active: current_page?(themes_path)
               ) %>
               
               <%= render FlatPack::Sidebar::Divider::Component.new %>
@@ -268,7 +274,7 @@
           <% end %>
 
           <% sidebar.footer do %>
-            <%= render FlatPack::Sidebar::Footer::Component.new(class: "text-sm text-[var(--color-text-muted)]") do %>
+            <%= render FlatPack::Sidebar::Footer::Component.new(class: "text-sm text-muted-foreground") do %>
               FlatPack Demo Components
             <% end %>
           <% end %>
@@ -281,29 +287,68 @@
           <% nav.left do %>
             <button
               type="button"
-              class="md:hidden p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors"
+              class="md:hidden p-2 rounded-lg hover:bg-muted transition-colors"
               data-flat-pack--sidebar-layout-target="mobileToggle"
               data-action="click->flat-pack--sidebar-layout#toggleMobile"
               aria-label="Toggle sidebar"
             >
               <%= render FlatPack::Shared::IconComponent.new(name: :menu, size: :md) %>
             </button>
-            <span class="text-sm font-medium text-[var(--color-text-muted)]">FlatPack Demo</span>
+            <span class="text-sm font-medium text-muted-foreground">FlatPack Demo</span>
           <% end %>
 
           <% nav.center do %><% end %>
 
           <% nav.right do %>
-            <div class="ml-auto flex items-center gap-3">
-              <%= render FlatPack::Switch::Component.new(
-                name: "dark_mode",
-                label: "Dark mode",
-                data: {
-                  dark_mode_target: "toggle",
-                  action: "change->dark-mode#toggle"
-                },
-                aria: { label: "Toggle dark mode" }
-              ) %>
+            <div class="ml-auto flex items-center gap-3" data-controller="flat-pack--theme">
+              <!-- Theme Switcher -->
+              <div class="relative group" data-controller="flat-pack--button-dropdown">
+                <button
+                  type="button"
+                  class="p-2 rounded-lg hover:bg-muted transition-colors"
+                  aria-label="Theme switcher"
+                  data-action="click->flat-pack--button-dropdown#toggle"
+                >
+                  <%= render FlatPack::Shared::IconComponent.new(name: :circle, size: :md) %>
+                </button>
+                <div 
+                  class="hidden absolute right-0 mt-2 w-48 bg-background border border-border rounded-lg shadow-lg py-1 z-50"
+                  data-flat-pack--button-dropdown-target="menu"
+                >
+                  <button
+                    type="button"
+                    class="w-full px-4 py-2 text-left text-sm hover:bg-muted transition-colors"
+                    data-action="click->flat-pack--theme#switch click->flat-pack--button-dropdown#toggle"
+                    data-theme-value="system"
+                  >
+                    System
+                  </button>
+                  <button
+                    type="button"
+                    class="w-full px-4 py-2 text-left text-sm hover:bg-muted transition-colors"
+                    data-action="click->flat-pack--theme#switch click->flat-pack--button-dropdown#toggle"
+                    data-theme-value="light"
+                  >
+                    Light
+                  </button>
+                  <button
+                    type="button"
+                    class="w-full px-4 py-2 text-left text-sm hover:bg-muted transition-colors"
+                    data-action="click->flat-pack--theme#switch click->flat-pack--button-dropdown#toggle"
+                    data-theme-value="dark"
+                  >
+                    Dark
+                  </button>
+                  <button
+                    type="button"
+                    class="w-full px-4 py-2 text-left text-sm hover:bg-muted transition-colors"
+                    data-action="click->flat-pack--theme#switch click->flat-pack--button-dropdown#toggle"
+                    data-theme-value="ocean"
+                  >
+                    Ocean
+                  </button>
+                </div>
+              </div>
 
             <%= render FlatPack::Button::Component.new(
               icon: "bell",
@@ -322,7 +367,7 @@
         <main class="p-8">
           <div class="max-w-4xl mx-auto pb-24">
             <% if notice.present? %>
-              <div class="mb-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-muted)] px-4 py-3 text-sm">
+              <div class="mb-4 rounded-lg border border-border bg-muted px-4 py-3 text-sm">
                 <%= notice %>
               </div>
             <% end %>

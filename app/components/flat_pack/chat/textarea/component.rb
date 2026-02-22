@@ -50,14 +50,14 @@ module FlatPack
           classes(
             "w-full",
             "px-4 py-2.5",
-            "border border-[var(--color-border)]",
+            "border border-border",
             "rounded-lg",
-            "bg-[var(--color-background)]",
-            "text-[var(--color-foreground)]",
-            "placeholder:text-[var(--color-muted-foreground)]",
+            "bg-background",
+            "text-foreground",
+            "placeholder:text-muted-foreground",
             "resize-none",
-            "focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)] focus:ring-offset-0",
-            "transition-colors duration-[var(--transition-base)]",
+            "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-0",
+            "transition-colors duration-base",
             "disabled:opacity-50 disabled:cursor-not-allowed",
             "max-h-32"
           )

@@ -5,7 +5,7 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "text-[var(--color-warning)]" "border-[var(--color-warning)]"
+      # "text-warning" "border-warning"
 
       def initialize(
         name:,
@@ -133,7 +133,7 @@ module FlatPack
       def render_search_input
         return unless @searchable
 
-        content_tag(:div, class: "p-2 border-b border-[var(--color-border)]") do
+        content_tag(:div, class: "p-2 border-b border-border") do
           tag.input(
             type: "text",
             class: search_input_classes,
@@ -194,7 +194,7 @@ module FlatPack
             "stroke-width": "2",
             "stroke-linecap": "round",
             "stroke-linejoin": "round",
-            class: "lucide lucide-chevron-down text-[var(--color-muted-foreground)]",
+            class: "lucide lucide-chevron-down text-muted-foreground",
             data: {flat_pack__select_target: "chevron"}) do
             tag.path(d: "m6 9 6 6 6-6")
           end
@@ -227,7 +227,7 @@ module FlatPack
 
       def label_classes
         classes(
-          "block text-sm font-medium text-[var(--color-foreground)] mb-1.5"
+          "block text-sm font-medium text-foreground mb-1.5"
         )
       end
 
@@ -235,22 +235,22 @@ module FlatPack
         base_classes = [
           "flat-pack-select",
           "w-full",
-          "rounded-[var(--radius-md)]",
+          "rounded-md",
           "border",
-          "bg-[var(--color-background)]",
-          "text-[var(--color-foreground)]",
+          "bg-background",
+          "text-foreground",
           "px-3 py-3",
           "pr-10",
           "text-sm",
-          "transition-colors duration-[var(--transition-base)]",
-          "focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)] focus:border-transparent",
+          "transition-colors duration-base",
+          "focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent",
           "disabled:opacity-50 disabled:cursor-not-allowed"
         ]
 
         base_classes << if @error
-          "border-[var(--color-warning)]"
+          "border-warning"
         else
-          "border-[var(--color-border)]"
+          "border-border"
         end
 
         classes(*base_classes, @custom_class)
@@ -260,56 +260,56 @@ module FlatPack
         base_classes = [
           "flat-pack-select-trigger",
           "relative w-full",
-          "rounded-[var(--radius-md)]",
+          "rounded-md",
           "border",
-          "bg-[var(--color-background)]",
-          "text-[var(--color-foreground)]",
+          "bg-background",
+          "text-foreground",
           "px-3 py-3",
           "pr-10",
           "text-sm text-left",
-          "transition-colors duration-[var(--transition-base)]",
-          "focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)] focus:border-transparent",
+          "transition-colors duration-base",
+          "focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent",
           "disabled:opacity-50 disabled:cursor-not-allowed"
         ]
 
         base_classes << if @error
-          "border-[var(--color-warning)]"
+          "border-warning"
         else
-          "border-[var(--color-border)]"
+          "border-border"
         end
 
         classes(*base_classes, @custom_class)
       end
 
       def dropdown_classes
-        "absolute z-10 mt-1 w-full hidden rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-background)] shadow-lg"
+        "absolute z-10 mt-1 w-full hidden rounded-md border border-border bg-background shadow-lg"
       end
 
       def search_input_classes
-        "w-full px-2 py-1.5 text-sm rounded-[var(--radius-sm)] border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-foreground)] focus:outline-none focus:ring-1 focus:ring-[var(--color-ring)]"
+        "w-full px-2 py-1.5 text-sm rounded-sm border border-border bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
       end
 
       def custom_option_classes(selected, disabled)
         base = [
           "px-3 py-2",
           "text-sm",
-          "rounded-[var(--radius-sm)]",
-          "transition-colors duration-[var(--transition-base)]"
+          "rounded-sm",
+          "transition-colors duration-base"
         ]
 
         base << if disabled
-          "opacity-50 cursor-not-allowed text-[var(--color-muted-foreground)]"
+          "opacity-50 cursor-not-allowed text-muted-foreground"
         elsif selected
-          "bg-[var(--color-primary)] text-white cursor-pointer"
+          "bg-primary text-white cursor-pointer"
         else
-          "hover:bg-[var(--color-muted)] cursor-pointer text-[var(--color-foreground)]"
+          "hover:bg-muted cursor-pointer text-foreground"
         end
 
         base.join(" ")
       end
 
       def error_classes
-        "mt-1 text-sm text-[var(--color-warning)]"
+        "mt-1 text-sm text-warning"
       end
 
       def select_id

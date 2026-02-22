@@ -254,8 +254,8 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Flash Messages Pattern", anchor_link: true, subtitle: "Examples for Flash Messages Pattern.") %>
     <div class="space-y-4 mb-4">
-      <div class="p-4 bg-[var(--color-muted)] rounded">
-        <p class="text-sm text-[var(--color-muted-foreground)] mb-4">Example implementation for Rails flash messages:</p>
+      <div class="p-4 bg-muted rounded">
+        <p class="text-sm text-muted-foreground mb-4">Example implementation for Rails flash messages:</p>
         <%= render FlatPack::CodeBlock::Component.new(
           code: CGI.unescapeHTML(<<~'CODE'),
             &lt;% if flash[:notice] %&gt;
@@ -295,7 +295,7 @@
   <!-- Interactive Demo -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Interactive Demo", anchor_link: true, subtitle: "Examples for Interactive Demo.") %>
-    <p class="mb-4 text-[var(--color-muted-foreground)]">Click the dismiss button (X) on the alerts below to see the fade-out animation:</p>
+    <p class="mb-4 text-muted-foreground">Click the dismiss button (X) on the alerts below to see the fade-out animation:</p>
     <div class="space-y-4 mb-4" id="dismissible-demo">
       <%= render FlatPack::Alert::Component.new(
         title: "Click to Dismiss",
@@ -310,7 +310,7 @@
         dismissible: true
       ) %>
     </div>
-    <button class="px-4 py-2 bg-[var(--color-primary)] text-[var(--color-primary-text)] rounded-[var(--radius-md)]" 
+    <button class="px-4 py-2 bg-primary text-primary-text rounded-md" 
             onclick="window.location.reload()">
       Reset Demo
     </button>

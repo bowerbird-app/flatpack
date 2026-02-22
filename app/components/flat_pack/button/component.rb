@@ -3,30 +3,21 @@
 module FlatPack
   module Button
     class Component < FlatPack::BaseComponent
-      # Tailwind CSS scanning requires these classes to be present as string literals.
-      # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-[var(--color-primary)]" "hover:bg-[var(--color-primary-hover)]" "text-[var(--color-primary-text)]" "shadow-[var(--shadow-sm)]" "bg-[var(--color-secondary)]" "hover:bg-[var(--color-secondary-hover)]" "text-[var(--color-secondary-text)]" "border" "border-[var(--color-border)]" "bg-[var(--color-ghost)]" "hover:bg-[var(--color-ghost-hover)]" "text-[var(--color-ghost-text)]" "bg-[var(--color-success)]" "hover:bg-[var(--color-success-hover)]" "text-[var(--color-success-text)]" "bg-[var(--color-warning)]" "hover:bg-[var(--color-warning-hover)]" "text-[var(--color-warning-text)]" "bg-[var(--color-destructive)]" "hover:bg-[var(--color-destructive-hover)]" "text-[var(--color-destructive-text)]" "shadow-[var(--button-shadow)]" "hover:shadow-[var(--button-shadow-active)]" "disabled:shadow-none"
       SCHEMES = {
-        primary: "bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-[var(--color-primary-text)] shadow-[var(--shadow-sm)]",
-        secondary: "bg-[var(--color-secondary)] hover:bg-[var(--color-secondary-hover)] text-[var(--color-secondary-text)] border border-[var(--color-border)]",
-        ghost: "bg-[var(--color-ghost)] hover:bg-[var(--color-ghost-hover)] text-[var(--color-ghost-text)]",
-        success: "bg-[var(--color-success)] hover:bg-[var(--color-success-hover)] text-[var(--color-success-text)] shadow-[var(--shadow-sm)]",
-        warning: "bg-[var(--color-warning)] hover:bg-[var(--color-warning-hover)] text-[var(--color-warning-text)] shadow-[var(--shadow-sm)]",
-        error: "bg-[var(--color-destructive)] hover:bg-[var(--color-destructive-hover)] text-[var(--color-destructive-text)] shadow-[var(--shadow-sm)]"
+        primary: "bg-primary hover:bg-primary-hover text-primary-text shadow-sm",
+        secondary: "bg-secondary hover:bg-secondary-hover text-secondary-text border border-border",
+        ghost: "bg-ghost hover:bg-ghost-hover text-ghost-text",
+        success: "bg-success hover:bg-success-hover text-success-text shadow-sm",
+        warning: "bg-warning hover:bg-warning-hover text-warning-text shadow-sm",
+        error: "bg-destructive hover:bg-destructive-hover text-destructive-text shadow-sm"
       }.freeze
 
-      # Tailwind CSS scanning requires these classes to be present as string literals.
-      # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "px-3" "py-1.5" "text-xs" "px-4" "py-2" "text-sm" "px-6" "py-3" "text-base"
       SIZES = {
         sm: "px-3 py-1.5 text-xs",
         md: "px-4 py-2 text-sm",
         lg: "px-6 py-3 text-base"
       }.freeze
 
-      # Tailwind CSS scanning requires these classes to be present as string literals.
-      # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "p-1.5" "p-2" "p-3"
       ICON_ONLY_SIZES = {
         sm: "p-1.5",
         md: "p-2",
@@ -154,11 +145,11 @@ module FlatPack
       def button_classes
         classes(
           "inline-flex items-center justify-center gap-2",
-          "rounded-[var(--radius-md)]",
+          "rounded-md",
           "font-medium",
           "cursor-pointer",
-          "transition-colors duration-[var(--transition-base)]",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:ring-offset-2",
+          "transition-colors duration-base",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
           "disabled:pointer-events-none disabled:opacity-50",
           conditional_size_classes,
           style_classes,
@@ -185,7 +176,7 @@ module FlatPack
         # Don't add shadow to link buttons
         return nil if @url
 
-        "shadow-[var(--button-shadow)] hover:shadow-[var(--button-shadow-active)] disabled:shadow-none"
+        "shadow-button hover:shadow-button-active disabled:shadow-none"
       end
 
       def validate_style!

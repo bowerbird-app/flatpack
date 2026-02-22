@@ -6,7 +6,7 @@ module FlatPack
       class Component < ViewComponent::Base
         # Tailwind CSS scanning requires these classes to be present as string literals.
         # DO NOT REMOVE - These duplicates ensure CSS generation:
-        # "border-b" "border-[var(--color-border)]"
+        # "border-b" "border-border"
         def initialize(divider: true, **system_arguments)
           @divider = divider
           @system_arguments = system_arguments
@@ -20,7 +20,7 @@ module FlatPack
 
         def header_classes
           classes = ["px-6 py-4"]
-          classes << "border-b border-[var(--color-border)]" if @divider
+          classes << "border-b border-border" if @divider
           classes.join(" ")
         end
       end

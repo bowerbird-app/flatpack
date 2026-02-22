@@ -1,0 +1,208 @@
+<div class="space-y-8">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Themes",
+    description: "Explore FlatPack's color palettes, semantic tokens, and theme switching capabilities."
+  ) %>
+
+  <!-- Theme Colors Showcase -->
+  <div class="space-y-6">
+    <h2 class="text-2xl font-semibold text-foreground">Semantic Colors</h2>
+    <p class="text-sm text-muted-foreground">These colors adapt to the active theme and generate native Tailwind utilities.</p>
+
+    <!-- Primary Colors -->
+    <div class="space-y-2">
+      <h3 class="text-lg font-medium text-foreground">Primary</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="space-y-2">
+          <div class="h-24 rounded-md bg-primary flex items-center justify-center">
+            <span class="text-primary-text font-mono text-sm">bg-primary</span>
+          </div>
+          <p class="text-xs text-muted-foreground font-mono">text-primary-text</p>
+        </div>
+        <div class="space-y-2">
+          <div class="h-24 rounded-md bg-primary-hover flex items-center justify-center">
+            <span class="text-primary-text font-mono text-sm">bg-primary-hover</span>
+          </div>
+          <p class="text-xs text-muted-foreground">Hover state</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Secondary Colors -->
+    <div class="space-y-2">
+      <h3 class="text-lg font-medium text-foreground">Secondary</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="space-y-2">
+          <div class="h-24 rounded-md bg-secondary border border-border flex items-center justify-center">
+            <span class="text-secondary-text font-mono text-sm">bg-secondary</span>
+          </div>
+          <p class="text-xs text-muted-foreground font-mono">text-secondary-text</p>
+        </div>
+        <div class="space-y-2">
+          <div class="h-24 rounded-md bg-secondary-hover border border-border flex items-center justify-center">
+            <span class="text-secondary-text font-mono text-sm">bg-secondary-hover</span>
+          </div>
+          <p class="text-xs text-muted-foreground">Hover state</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Colors -->
+    <div class="space-y-2">
+      <h3 class="text-lg font-medium text-foreground">Status</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="space-y-2">
+          <div class="h-24 rounded-md bg-success flex items-center justify-center">
+            <span class="text-success-text font-mono text-sm">bg-success</span>
+          </div>
+          <p class="text-xs text-muted-foreground">Success / positive actions</p>
+        </div>
+        <div class="space-y-2">
+          <div class="h-24 rounded-md bg-warning flex items-center justify-center">
+            <span class="text-warning-text font-mono text-sm">bg-warning</span>
+          </div>
+          <p class="text-xs text-muted-foreground">Warning / caution</p>
+        </div>
+        <div class="space-y-2">
+          <div class="h-24 rounded-md bg-destructive flex items-center justify-center">
+            <span class="text-destructive-text font-mono text-sm">bg-destructive</span>
+          </div>
+          <p class="text-xs text-muted-foreground">Destructive / error</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ghost/Muted Colors -->
+    <div class="space-y-2">
+      <h3 class="text-lg font-medium text-foreground">Neutral</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="space-y-2">
+          <div class="h-24 rounded-md bg-background border border-border flex items-center justify-center">
+            <span class="text-foreground font-mono text-sm">bg-background</span>
+          </div>
+          <p class="text-xs text-muted-foreground font-mono">text-foreground</p>
+        </div>
+        <div class="space-y-2">
+          <div class="h-24 rounded-md bg-muted flex items-center justify-center">
+            <span class="text-muted-foreground font-mono text-sm">bg-muted</span>
+          </div>
+          <p class="text-xs text-muted-foreground font-mono">text-muted-foreground</p>
+        </div>
+        <div class="space-y-2">
+          <div class="h-24 rounded-md bg-ghost-hover border border-border flex items-center justify-center">
+            <span class="text-ghost-text font-mono text-sm">bg-ghost-hover</span>
+          </div>
+          <p class="text-xs text-muted-foreground">Subtle hover state</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Border Radius -->
+  <div class="space-y-6">
+    <h2 class="text-2xl font-semibold text-foreground">Border Radius</h2>
+    <p class="text-sm text-muted-foreground">Consistent rounded corners across all components.</p>
+    
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div class="space-y-2">
+        <div class="h-24 rounded-sm bg-muted border border-border flex items-center justify-center">
+          <span class="text-foreground font-mono text-sm">rounded-sm</span>
+        </div>
+        <p class="text-xs text-muted-foreground">0.25rem</p>
+      </div>
+      <div class="space-y-2">
+        <div class="h-24 rounded-md bg-muted border border-border flex items-center justify-center">
+          <span class="text-foreground font-mono text-sm">rounded-md</span>
+        </div>
+        <p class="text-xs text-muted-foreground">0.375rem (default)</p>
+      </div>
+      <div class="space-y-2">
+        <div class="h-24 rounded-lg bg-muted border border-border flex items-center justify-center">
+          <span class="text-foreground font-mono text-sm">rounded-lg</span>
+        </div>
+        <p class="text-xs text-muted-foreground">0.5rem</p>
+      </div>
+      <div class="space-y-2">
+        <div class="h-24 rounded-xl bg-muted border border-border flex items-center justify-center">
+          <span class="text-foreground font-mono text-sm">rounded-xl</span>
+        </div>
+        <p class="text-xs text-muted-foreground">0.75rem</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shadows -->
+  <div class="space-y-6">
+    <h2 class="text-2xl font-semibold text-foreground">Shadows</h2>
+    <p class="text-sm text-muted-foreground">Elevation shadows that adapt to dark mode.</p>
+    
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div class="space-y-2">
+        <div class="h-24 rounded-md bg-background border border-border shadow-sm flex items-center justify-center">
+          <span class="text-foreground font-mono text-sm">shadow-sm</span>
+        </div>
+        <p class="text-xs text-muted-foreground">Subtle depth</p>
+      </div>
+      <div class="space-y-2">
+        <div class="h-24 rounded-md bg-background border border-border shadow-md flex items-center justify-center">
+          <span class="text-foreground font-mono text-sm">shadow-md</span>
+        </div>
+        <p class="text-xs text-muted-foreground">Medium elevation</p>
+      </div>
+      <div class="space-y-2">
+        <div class="h-24 rounded-md bg-background border border-border shadow-lg flex items-center justify-center">
+          <span class="text-foreground font-mono text-sm">shadow-lg</span>
+        </div>
+        <p class="text-xs text-muted-foreground">High elevation</p>
+      </div>
+      <div class="space-y-2">
+        <div class="h-24 rounded-md bg-background border border-border shadow-button flex items-center justify-center">
+          <span class="text-foreground font-mono text-sm">shadow-button</span>
+        </div>
+        <p class="text-xs text-muted-foreground">Button shadow</p>
+        </div>
+    </div>
+  </div>
+
+  <!-- Implementation Example -->
+  <div class="space-y-6">
+    <h2 class="text-2xl font-semibold text-foreground">Implementation</h2>
+    <p class="text-sm text-muted-foreground">Use native Tailwind utilities powered by the @theme block.</p>
+    
+    <div class="p-6 bg-muted rounded-lg">
+      <pre class="text-sm text-foreground overflow-x-auto"><code>&lt;!-- Tailwind v4 native utilities --&gt;
+&lt;button class="bg-primary hover:bg-primary-hover text-primary-text rounded-md shadow-sm"&gt;
+  Primary Button
+&lt;/button&gt;
+
+&lt;div class="bg-background text-foreground border border-border rounded-lg p-4"&gt;
+  Card with semantic colors
+&lt;/div&gt;</code></pre>
+    </div>
+  </div>
+
+  <!-- Available Themes -->
+  <div class="space-y-6">
+    <h2 class="text-2xl font-semibold text-foreground">Available Themes</h2>
+    <p class="text-sm text-muted-foreground">Switch between different color palettes using the theme switcher in the top navigation.</p>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="p-4 border border-border rounded-lg space-y-2">
+        <h3 class="font-medium text-foreground">System</h3>
+        <p class="text-xs text-muted-foreground">Follows your OS preference</p>
+      </div>
+      <div class="p-4 border border-border rounded-lg space-y-2">
+        <h3 class="font-medium text-foreground">Light</h3>
+        <p class="text-xs text-muted-foreground">Bright, clean interface</p>
+      </div>
+      <div class="p-4 border border-border rounded-lg space-y-2">
+        <h3 class="font-medium text-foreground">Dark</h3>
+        <p class="text-xs text-muted-foreground">Reduced eye strain</p>
+      </div>
+      <div class="p-4 border border-border rounded-lg space-y-2">
+        <h3 class="font-medium text-foreground">Ocean</h3>
+        <p class="text-xs text-muted-foreground">Blue-tinted palette</p>
+      </div>
+    </div>
+  </div>
+</div>

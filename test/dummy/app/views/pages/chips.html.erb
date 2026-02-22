@@ -82,7 +82,7 @@
   <!-- Removable Chips -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Removable Chips", anchor_link: true, subtitle: "Examples for Removable Chips.") %>
-    <p class="text-sm text-[var(--color-muted-foreground)] mb-4">
+    <p class="text-sm text-muted-foreground mb-4">
       Click the × button to remove chips. Check the console for events.
     </p>
     <div class="flex flex-wrap gap-3 mb-4" id="removable-chips-container">
@@ -112,7 +112,7 @@
   <!-- Selectable Filter Chips -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Selectable Filter Chips", anchor_link: true, subtitle: "Examples for Selectable Filter Chips.") %>
-    <p class="text-sm text-[var(--color-muted-foreground)] mb-4">
+    <p class="text-sm text-muted-foreground mb-4">
       Click to toggle selection. Check the console for events.
     </p>
     <div class="flex flex-wrap gap-3 mb-4">
@@ -217,7 +217,7 @@
   <!-- ChipGroup Examples -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "ChipGroup - Wrapping Chips", anchor_link: true, subtitle: "Examples for ChipGroup - Wrapping Chips.") %>
-    <p class="text-sm text-[var(--color-muted-foreground)] mb-4">
+    <p class="text-sm text-muted-foreground mb-4">
       ChipGroup provides consistent spacing and wrapping for collections of chips.
     </p>
     <%= render FlatPack::ChipGroup::Component.new(class: "mb-4") do %>
@@ -362,10 +362,10 @@
   <!-- Complex Example -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Complete Example - Tag Input", anchor_link: true, subtitle: "Examples for Complete Example - Tag Input.") %>
-    <p class="text-sm text-[var(--color-muted-foreground)] mb-4">
+    <p class="text-sm text-muted-foreground mb-4">
       A practical example showing a tag input interface with removable chips.
     </p>
-    <div class="border border-[var(--color-border)] rounded-lg p-4">
+    <div class="border border-border rounded-lg p-4">
       <label class="block text-sm font-medium mb-2">Project Tags</label>
       <%= render FlatPack::ChipGroup::Component.new(class: "mb-3") do %>
         <%= render FlatPack::Chip::Component.new(text: "Frontend", style: :info, removable: true, value: "frontend") %>
@@ -376,7 +376,7 @@
       <input
         type="text"
         placeholder="Add a tag..."
-        class="w-full px-3 py-2 border border-[var(--color-border)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)]"
+        class="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
       />
     </div>
   </section>

@@ -21,14 +21,14 @@ module FlatPack
       # Style Tests
       def test_renders_with_style_default
         render_inline(Component.new(style: :default))
-        assert_includes page.native.to_html, "bg-[var(--color-background)]"
-        assert_includes page.native.to_html, "border border-[var(--color-border)]"
+        assert_includes page.native.to_html, "bg-background"
+        assert_includes page.native.to_html, "border border-border"
       end
 
       def test_renders_with_style_elevated
         render_inline(Component.new(style: :elevated))
         assert_includes page.native.to_html, "shadow-md"
-        assert_includes page.native.to_html, "border border-[var(--color-border)]"
+        assert_includes page.native.to_html, "border border-border"
       end
 
       def test_renders_with_style_outlined
@@ -38,7 +38,7 @@ module FlatPack
 
       def test_renders_with_style_flat
         render_inline(Component.new(style: :flat))
-        assert_includes page.native.to_html, "bg-[var(--color-muted)]"
+        assert_includes page.native.to_html, "bg-muted"
       end
 
       def test_renders_with_style_interactive
@@ -206,7 +206,7 @@ module FlatPack
       def test_header_with_divider
         render_inline(Header::Component.new(divider: true)) { "Header" }
         assert_includes page.native.to_html, "border-b"
-        assert_includes page.native.to_html, "border-[var(--color-border)]"
+        assert_includes page.native.to_html, "border-border"
       end
 
       def test_header_without_divider
@@ -244,7 +244,7 @@ module FlatPack
       def test_footer_with_divider
         render_inline(Footer::Component.new(divider: true)) { "Footer" }
         assert_includes page.native.to_html, "border-t"
-        assert_includes page.native.to_html, "border-[var(--color-border)]"
+        assert_includes page.native.to_html, "border-border"
       end
 
       def test_footer_without_divider
@@ -415,7 +415,7 @@ module FlatPack
 
       def test_card_has_rounded_corners
         render_inline(Component.new)
-        assert_includes page.native.to_html, "rounded-[var(--radius-lg)]"
+        assert_includes page.native.to_html, "rounded-lg"
       end
 
       def test_card_has_overflow_hidden

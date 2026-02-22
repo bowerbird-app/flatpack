@@ -83,7 +83,7 @@ module FlatPack
           "absolute",
           "left-3",
           "pointer-events-none",
-          "text-[var(--color-text-muted)]"
+          "text-muted-foreground"
         )
       end
 
@@ -118,15 +118,15 @@ module FlatPack
           "pr-4",
           "py-2",
           "text-sm",
-          "bg-[var(--color-muted)]",
+          "bg-muted",
           "border",
           "border-transparent",
           "rounded-lg",
           "focus:outline-none",
           "focus:ring-2",
-          "focus:ring-[var(--color-primary)]",
+          "focus:ring-primary",
           "focus:border-transparent",
-          "placeholder:text-[var(--color-text-muted)]"
+          "placeholder:text-muted-foreground"
         )
       end
 
@@ -134,8 +134,8 @@ module FlatPack
         content_tag(:div, **dropdown_attributes) do
           safe_join([
             content_tag(:ul, "", class: "max-h-72 overflow-y-auto", data: {flat_pack__search_target: "results"}, role: "listbox"),
-            content_tag(:div, @no_results_text, class: "hidden px-3 py-3 text-sm text-[var(--color-text-muted)]", data: {flat_pack__search_target: "noResults"}),
-            content_tag(:div, "Searching...", class: "hidden px-3 py-3 text-sm text-[var(--color-text-muted)]", data: {flat_pack__search_target: "loading"})
+            content_tag(:div, @no_results_text, class: "hidden px-3 py-3 text-sm text-muted-foreground", data: {flat_pack__search_target: "noResults"}),
+            content_tag(:div, "Searching...", class: "hidden px-3 py-3 text-sm text-muted-foreground", data: {flat_pack__search_target: "loading"})
           ])
         end
       end
@@ -152,8 +152,8 @@ module FlatPack
             "z-20",
             "rounded-lg",
             "border",
-            "border-[var(--color-border)]",
-            "bg-[var(--color-background)]",
+            "border-border",
+            "bg-background",
             "shadow-sm"
           ),
           data: {

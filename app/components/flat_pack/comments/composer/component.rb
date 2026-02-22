@@ -55,9 +55,9 @@ module FlatPack
 
         def composer_classes
           classes(
-            "rounded-lg border border-[var(--color-border)] bg-[var(--color-background)]",
-            "focus-within:ring-2 focus-within:ring-[var(--color-ring)] focus-within:border-[var(--color-ring)]",
-            "transition-all duration-[var(--transition-base)]",
+            "rounded-lg border border-border bg-background",
+            "focus-within:ring-2 focus-within:ring-ring focus-within:border-ring",
+            "transition-all duration-base",
             @disabled ? "opacity-60 pointer-events-none" : nil
           )
         end
@@ -69,7 +69,7 @@ module FlatPack
               rows: @rows,
               placeholder: @placeholder,
               disabled: @disabled,
-              class: "w-full resize-none bg-transparent text-sm text-[var(--color-foreground)] placeholder:text-[var(--color-muted-foreground)] focus:outline-none"
+              class: "w-full resize-none bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
             }
             textarea_attrs[:form] = @form if @form
 
@@ -80,7 +80,7 @@ module FlatPack
         def render_toolbar_section
           return unless toolbar?
 
-          content_tag(:div, toolbar, class: "px-3 pb-2 border-t border-[var(--color-border)]")
+          content_tag(:div, toolbar, class: "px-3 pb-2 border-t border-border")
         end
 
         def render_attachments_section
@@ -110,7 +110,7 @@ module FlatPack
 
         def action_section_classes
           classes(
-            "border-t border-[var(--color-border)] bg-[var(--color-muted)]/30",
+            "border-t border-border bg-muted/30",
             @compact ? "px-2 py-1.5" : "px-3 py-2"
           )
         end
@@ -119,7 +119,7 @@ module FlatPack
           content_tag(:button,
             type: "button",
             disabled: @disabled,
-            class: "px-3 py-1.5 text-sm font-medium text-[var(--color-foreground)] hover:bg-[var(--color-muted)] rounded-md transition-colors duration-[var(--transition-base)]") do
+            class: "px-3 py-1.5 text-sm font-medium text-foreground hover:bg-muted rounded-md transition-colors duration-base") do
             @cancel_label
           end
         end
@@ -128,7 +128,7 @@ module FlatPack
           content_tag(:button,
             type: "submit",
             disabled: @disabled,
-            class: "px-3 py-1.5 text-sm font-medium text-white bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 rounded-md transition-colors duration-[var(--transition-base)] disabled:opacity-50") do
+            class: "px-3 py-1.5 text-sm font-medium text-white bg-primary hover:bg-primary/90 rounded-md transition-colors duration-base disabled:opacity-50") do
             @submit_label
           end
         end

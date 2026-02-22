@@ -79,19 +79,19 @@ module FlatPack
             "px-2 py-1.5",
             "text-sm",
             "text-left",
-            "rounded-[var(--radius-sm)]",
-            "transition-colors duration-[var(--transition-base)]",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]"
+            "rounded-sm",
+            "transition-colors duration-base",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           ]
 
           if @disabled
             base_classes << "opacity-50 cursor-not-allowed"
           elsif @destructive
-            base_classes << "text-[var(--color-destructive)]"
-            base_classes << "hover:bg-[var(--color-destructive)]/10"
+            base_classes << "text-destructive"
+            base_classes << "hover:bg-destructive/10"
           else
-            base_classes << "text-[var(--color-foreground)]"
-            base_classes << "hover:bg-[var(--color-muted)]"
+            base_classes << "text-foreground"
+            base_classes << "hover:bg-muted"
             base_classes << "cursor-pointer"
           end
 
@@ -99,7 +99,7 @@ module FlatPack
         end
 
         def badge_classes
-          "inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1.5 text-xs font-medium rounded-full bg-[var(--color-primary)] text-[var(--color-primary-text)]"
+          "inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1.5 text-xs font-medium rounded-full bg-primary text-primary-text"
         end
 
         def validate_url!

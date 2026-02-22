@@ -5,11 +5,11 @@ module FlatPack
     module SidebarItem
       class Component < FlatPack::BaseComponent
         BADGE_STYLES = {
-          primary: "bg-[var(--color-primary)] text-[var(--color-primary-text)]",
-          secondary: "bg-[var(--color-secondary)] text-[var(--color-secondary-text)]",
-          success: "bg-[var(--color-success)] text-[var(--color-success-text)]",
-          warning: "bg-[var(--color-warning)] text-[var(--color-warning-text)]",
-          danger: "bg-[var(--color-danger)] text-[var(--color-danger-text)]"
+          primary: "bg-primary text-primary-text",
+          secondary: "bg-secondary text-secondary-text",
+          success: "bg-success text-success-text",
+          warning: "bg-warning text-warning-text",
+          danger: "bg-destructive text-destructive-text"
         }.freeze
 
         def initialize(text:, href: nil, icon: nil, active: false, badge: nil, badge_style: :primary, **system_arguments)
@@ -81,7 +81,7 @@ module FlatPack
             "w-full px-3 py-2 rounded-md",
             "text-sm font-medium",
             "transition-colors duration-200",
-            "hover:bg-[var(--color-muted)]",
+            "hover:bg-muted",
             active_classes
           )
         end
@@ -89,7 +89,7 @@ module FlatPack
         def active_classes
           return unless @active
 
-          "bg-[var(--color-primary)] text-[var(--color-primary-text)] hover:bg-[var(--color-primary)]"
+          "bg-primary text-primary-text hover:bg-primary"
         end
 
         def badge_classes

@@ -2,12 +2,12 @@
   <%= render FlatPack::PageTitle::Component.new(title: "Chat Component - Message States Demo") %>
   <%= render "pages/component_method_variables_table", component: :chat_message %>
   
-  <div class="bg-white dark:bg-zinc-900 rounded-lg shadow-lg border border-[var(--color-border)]" style="height: 600px">
+  <div class="bg-white dark:bg-zinc-900 rounded-lg shadow-lg border border-border" style="height: 600px">
     <%= render(FlatPack::Chat::Panel::Component.new) do |panel| %>
       <% panel.with_header do %>
         <div class="p-4">
-          <h2 class="text-lg font-semibold text-[var(--color-foreground)]">Message States</h2>
-          <p class="text-sm text-[var(--color-muted-foreground)]">Demonstrating different message states</p>
+          <h2 class="text-lg font-semibold text-foreground">Message States</h2>
+          <p class="text-sm text-muted-foreground">Demonstrating different message states</p>
         </div>
       <% end %>
 
@@ -17,7 +17,7 @@
 
           <div class="space-y-6">
             <div>
-              <h3 class="text-sm font-semibold text-[var(--color-muted-foreground)] mb-3">✓ Sent (Default State)</h3>
+              <h3 class="text-sm font-semibold text-muted-foreground mb-3">✓ Sent (Default State)</h3>
               <%= render(FlatPack::Chat::MessageGroup::Component.new(
                 direction: :outgoing,
                 show_avatar: false
@@ -41,7 +41,7 @@
             </div>
 
             <div>
-              <h3 class="text-sm font-semibold text-[var(--color-muted-foreground)] mb-3">📤 Sending State</h3>
+              <h3 class="text-sm font-semibold text-muted-foreground mb-3">📤 Sending State</h3>
               <%= render(FlatPack::Chat::MessageGroup::Component.new(
                 direction: :outgoing,
                 show_avatar: false
@@ -62,13 +62,13 @@
                   <% end %>
                 <% end %>
               <% end %>
-              <p class="text-xs text-[var(--color-muted-foreground)] mt-2 ml-4">
+              <p class="text-xs text-muted-foreground mt-2 ml-4">
                 Note: Message has reduced opacity (60%) and shows "Sending..." indicator
               </p>
             </div>
 
             <div>
-              <h3 class="text-sm font-semibold text-[var(--color-muted-foreground)] mb-3">❌ Failed State</h3>
+              <h3 class="text-sm font-semibold text-muted-foreground mb-3">❌ Failed State</h3>
               <%= render(FlatPack::Chat::MessageGroup::Component.new(
                 direction: :outgoing,
                 show_avatar: false
@@ -89,13 +89,13 @@
                   <% end %>
                 <% end %>
               <% end %>
-              <p class="text-xs text-[var(--color-muted-foreground)] mt-2 ml-4">
+              <p class="text-xs text-muted-foreground mt-2 ml-4">
                 Note: Message has red border and shows alert icon with "Failed" text
               </p>
             </div>
 
             <div>
-              <h3 class="text-sm font-semibold text-[var(--color-muted-foreground)] mb-3">✓✓ Read State</h3>
+              <h3 class="text-sm font-semibold text-muted-foreground mb-3">✓✓ Read State</h3>
               <%= render(FlatPack::Chat::MessageGroup::Component.new(
                 direction: :outgoing,
                 show_avatar: false
@@ -116,13 +116,13 @@
                   <% end %>
                 <% end %>
               <% end %>
-              <p class="text-xs text-[var(--color-muted-foreground)] mt-2 ml-4">
+              <p class="text-xs text-muted-foreground mt-2 ml-4">
                 Note: Shows double check mark in primary color indicating message was read
               </p>
             </div>
 
             <div>
-              <h3 class="text-sm font-semibold text-[var(--color-muted-foreground)] mb-3">✏️ Edited Message</h3>
+              <h3 class="text-sm font-semibold text-muted-foreground mb-3">✏️ Edited Message</h3>
               <%= render(FlatPack::Chat::MessageGroup::Component.new(
                 direction: :outgoing,
                 show_avatar: false
@@ -145,13 +145,13 @@
                   <% end %>
                 <% end %>
               <% end %>
-              <p class="text-xs text-[var(--color-muted-foreground)] mt-2 ml-4">
+              <p class="text-xs text-muted-foreground mt-2 ml-4">
                 Note: Shows "(edited)" indicator in the metadata
               </p>
             </div>
 
             <div>
-              <h3 class="text-sm font-semibold text-[var(--color-muted-foreground)] mb-3">ℹ️ System Message</h3>
+              <h3 class="text-sm font-semibold text-muted-foreground mb-3">ℹ️ System Message</h3>
               <%= render(FlatPack::Chat::Message::Component.new(
                 variant: :system
               )) do %>
@@ -167,13 +167,13 @@
               )) do %>
                 Charlie changed the group name to "Project Team"
               <% end %>
-              <p class="text-xs text-[var(--color-muted-foreground)] mt-2 ml-4">
+              <p class="text-xs text-muted-foreground mt-2 ml-4">
                 Note: System messages are centered, italic, and use muted foreground color
               </p>
             </div>
 
             <div>
-              <h3 class="text-sm font-semibold text-[var(--color-muted-foreground)] mb-3">🔄 Combined States</h3>
+              <h3 class="text-sm font-semibold text-muted-foreground mb-3">🔄 Combined States</h3>
               <%= render(FlatPack::Chat::MessageGroup::Component.new(
                 direction: :outgoing,
                 show_avatar: false
@@ -226,7 +226,7 @@
                   <% end %>
                 <% end %>
               <% end %>
-              <p class="text-xs text-[var(--color-muted-foreground)] mt-2 ml-4">
+              <p class="text-xs text-muted-foreground mt-2 ml-4">
                 Note: Multiple messages in different states within the same group
               </p>
             </div>
@@ -240,7 +240,7 @@
     <% end %>
   </div>
 
-  <div class="mt-4 text-sm text-[var(--color-muted-foreground)]">
+  <div class="mt-4 text-sm text-muted-foreground">
     <p><strong>Message States Demonstrated:</strong></p>
     <ul class="list-disc list-inside space-y-1 mt-2">
       <li><strong>sent:</strong> Default state - message delivered successfully</li>

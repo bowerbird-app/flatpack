@@ -65,8 +65,8 @@ module FlatPack
             "inset-y-0 left-0",
             "z-40",
             "flex-col",
-            "bg-[var(--color-background)]",
-            "border-r border-[var(--color-border)]",
+            "bg-background",
+            "border-r border-border",
             "shadow-lg md:shadow-none",
             "-translate-x-full md:translate-x-0",
             "transition-transform duration-300"
@@ -78,7 +78,7 @@ module FlatPack
         end
 
         def toggle_button
-          content_tag(:div, class: "p-4 border-t border-[var(--color-border)] mt-auto") do
+          content_tag(:div, class: "p-4 border-t border-border mt-auto") do
             content_tag(:button, **toggle_button_attributes) do
               safe_join([
                 chevron_icon,
@@ -91,7 +91,7 @@ module FlatPack
         def toggle_button_attributes
           {
             type: "button",
-            class: "flex items-center gap-2 w-full px-3 py-2 rounded-md hover:bg-[var(--color-muted)] transition-colors",
+            class: "flex items-center gap-2 w-full px-3 py-2 rounded-md hover:bg-muted transition-colors",
             data: {
               action: "click->flat-pack--navbar#toggle",
               flat_pack__navbar_target: "toggleButton"

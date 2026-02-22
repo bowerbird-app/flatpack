@@ -82,7 +82,7 @@ module FlatPack
       end
 
       def pagination_wrapper_classes
-        "inline-flex items-center gap-1.5 rounded-[var(--radius-md)] bg-[var(--color-background)] border border-[var(--color-border)] p-1.5"
+        "inline-flex items-center gap-1.5 rounded-md bg-background border border-border p-1.5"
       end
 
       def render_prev_button
@@ -165,18 +165,18 @@ module FlatPack
       end
 
       def render_gap
-        content_tag(:span, "…", class: "#{gap_padding_classes} text-[var(--color-text-muted)]")
+        content_tag(:span, "…", class: "#{gap_padding_classes} text-muted-foreground")
       end
 
       def page_button_classes(active: false, disabled: false)
-        base = "inline-flex items-center justify-center #{button_size_classes} text-sm font-medium rounded-[var(--radius-sm)] transition-colors"
+        base = "inline-flex items-center justify-center #{button_size_classes} text-sm font-medium rounded-sm transition-colors"
 
         if disabled
-          "#{base} text-[var(--color-text-muted)] cursor-not-allowed opacity-50"
+          "#{base} text-muted-foreground cursor-not-allowed opacity-50"
         elsif active
-          "#{base} bg-[var(--color-primary)] text-[var(--color-primary-text)]"
+          "#{base} bg-primary text-primary-text"
         else
-          "#{base} text-[var(--color-text)] hover:bg-[var(--color-muted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]"
+          "#{base} text-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         end
       end
 

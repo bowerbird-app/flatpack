@@ -79,8 +79,8 @@ module FlatPack
       def render_titles
         content_tag(:div) do
           safe_join([
-            (@title ? content_tag(:h3, @title, class: "text-lg font-semibold text-[var(--color-text)]") : nil),
-            (@subtitle ? content_tag(:p, @subtitle, class: "mt-1 text-sm text-[var(--color-text-muted)]") : nil)
+            (@title ? content_tag(:h3, @title, class: "text-lg font-semibold text-foreground") : nil),
+            (@subtitle ? content_tag(:p, @subtitle, class: "mt-1 text-sm text-muted-foreground") : nil)
           ].compact)
         end
       end

@@ -62,7 +62,7 @@ module FlatPack
         render_inline(Component.new(pagy: pagy))
 
         assert_selector "[aria-label='Page 3'][aria-current='page']"
-        assert_includes page.native.to_html, "bg-[var(--color-primary)]"
+        assert_includes page.native.to_html, "bg-primary"
       end
 
       def test_returns_nil_when_single_page_and_not_compact
@@ -135,7 +135,7 @@ module FlatPack
 
         html = page.native.to_html
         assert_includes html, "min-w-[2.25rem]"
-        assert_includes html, "rounded-[var(--radius-sm)]"
+        assert_includes html, "rounded-sm"
       end
 
       def test_disabled_buttons_have_correct_styles

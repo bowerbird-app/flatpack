@@ -76,11 +76,11 @@ module FlatPack
           # Use the same classes as Button component would use
           base_classes = [
             "inline-flex items-center justify-center gap-2",
-            "rounded-[var(--radius-md)]",
+            "rounded-md",
             "font-medium",
             "cursor-pointer",
-            "transition-colors duration-[var(--transition-base)]",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:ring-offset-2",
+            "transition-colors duration-base",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
             "disabled:pointer-events-none disabled:opacity-50"
           ]
 
@@ -127,11 +127,11 @@ module FlatPack
             "absolute z-50",
             "min-w-[12rem]",
             "overflow-auto",
-            "rounded-[var(--radius-md)]",
-            "border border-[var(--color-border)]",
-            "bg-[var(--color-background)]",
+            "rounded-md",
+            "border border-border",
+            "bg-background",
             "p-1",
-            "shadow-[var(--shadow-lg)]",
+            "shadow-lg",
             "opacity-0 scale-95 hidden",
             "transition-all duration-200",
             POSITIONS.fetch(@position)

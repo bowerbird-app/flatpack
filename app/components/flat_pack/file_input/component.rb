@@ -5,9 +5,9 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "text-[var(--color-warning)]" "border-[var(--color-warning)]"
-      # "border-[var(--color-border)]" "bg-[var(--color-background)]"
-      # "text-[var(--color-foreground)]" "text-[var(--color-muted-foreground)]"
+      # "text-warning" "border-warning"
+      # "border-border" "bg-background"
+      # "text-foreground" "text-muted-foreground"
 
       def initialize(
         name:,
@@ -90,9 +90,9 @@ module FlatPack
       def render_dropzone_text
         content_tag(:div, class: dropzone_text_classes) do
           elements = [
-            content_tag(:div, class: "flex justify-center text-sm/6 text-[var(--color-muted-foreground)]") do
+            content_tag(:div, class: "flex justify-center text-sm/6 text-muted-foreground") do
               safe_join([
-                content_tag(:label, for: input_id, class: "relative cursor-pointer rounded-md bg-transparent font-semibold text-[var(--color-primary)] focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-[var(--color-primary)] hover:text-[var(--color-primary)]/80") do
+                content_tag(:label, for: input_id, class: "relative cursor-pointer rounded-md bg-transparent font-semibold text-primary focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-primary hover:text-primary/80") do
                   content_tag(:span, "Upload a file")
                 end,
                 content_tag(:p, " or drag and drop", class: "pl-1")
@@ -101,7 +101,7 @@ module FlatPack
           ]
 
           if file_constraints_text
-            elements << content_tag(:p, file_constraints_text, class: "text-xs/5 text-[var(--color-muted-foreground)]")
+            elements << content_tag(:p, file_constraints_text, class: "text-xs/5 text-muted-foreground")
           end
 
           safe_join(elements)
@@ -127,7 +127,7 @@ module FlatPack
       def render_validation_error
         content_tag(:div, "", {
           data: {flat_pack__file_input_target: "validationError"},
-          class: "mt-2 text-sm text-[var(--color-warning)] hidden"
+          class: "mt-2 text-sm text-warning hidden"
         })
       end
 
@@ -173,7 +173,7 @@ module FlatPack
 
       def icon_attributes
         {
-          class: "mx-auto size-12 text-[var(--color-muted-foreground)]/30",
+          class: "mx-auto size-12 text-muted-foreground/30",
           fill: "currentColor",
           viewBox: "0 0 24 24",
           "aria-hidden": "true"
@@ -186,7 +186,7 @@ module FlatPack
 
       def label_classes
         classes(
-          "block text-sm font-medium text-[var(--color-foreground)] mb-1.5"
+          "block text-sm font-medium text-foreground mb-1.5"
         )
       end
 
@@ -198,17 +198,17 @@ module FlatPack
           "w-full",
           "rounded-lg",
           "border border-dashed",
-          "bg-[var(--color-background)]",
+          "bg-background",
           "px-6 py-10",
-          "transition-colors duration-[var(--transition-base)]",
-          "hover:border-[var(--color-primary)]",
+          "transition-colors duration-base",
+          "hover:border-primary",
           "disabled:opacity-50 disabled:cursor-not-allowed"
         ]
 
         base_classes << if @error
-          "border-[var(--color-warning)]"
+          "border-warning"
         else
-          "border-[var(--color-border)]"
+          "border-border"
         end
 
         classes(*base_classes, @custom_class)
@@ -219,7 +219,7 @@ module FlatPack
       end
 
       def error_classes
-        "mt-1 text-sm text-[var(--color-warning)]"
+        "mt-1 text-sm text-warning"
       end
 
       def input_id

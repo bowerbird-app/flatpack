@@ -363,7 +363,7 @@ module FlatPack
       def test_item_has_hover_styles
         render_inline(Item::Component.new(text: "Home", href: "/"))
 
-        assert_includes page.native.to_html, "hover:text-[var(--color-foreground)]"
+        assert_includes page.native.to_html, "hover:text-foreground"
         assert_includes page.native.to_html, "transition-colors"
       end
 
@@ -420,7 +420,7 @@ module FlatPack
         end
 
         assert_includes page.native.to_html, "font-medium"
-        assert_includes page.native.to_html, "text-[var(--color-foreground)]"
+        assert_includes page.native.to_html, "text-foreground"
       end
 
       def test_default_separator_is_chevron

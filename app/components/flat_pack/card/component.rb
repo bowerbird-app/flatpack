@@ -52,14 +52,14 @@ module FlatPack
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-[var(--color-background)]" "border" "border-[var(--color-border)]" "shadow-md" "dark:shadow-lg" "border-2" "bg-[var(--color-muted)]"
+      # "bg-background" "border" "border-border" "shadow-md" "dark:shadow-lg" "border-2" "bg-muted"
       STYLES = {
-        default: "bg-[var(--color-background)] border border-[var(--color-border)]",
-        elevated: "bg-[var(--color-background)] border border-[var(--color-border)] shadow-md dark:shadow-lg",
-        outlined: "bg-[var(--color-background)] border-2 border-[var(--color-border)]",
-        flat: "bg-[var(--color-muted)]",
-        interactive: "bg-[var(--color-background)] border border-[var(--color-border)]",
-        list: "bg-[var(--color-background)] border border-[var(--color-border)]"
+        default: "bg-background border border-border",
+        elevated: "bg-background border border-border shadow-md dark:shadow-lg",
+        outlined: "bg-background border-2 border-border",
+        flat: "bg-muted",
+        interactive: "bg-background border border-border",
+        list: "bg-background border border-border"
       }.freeze
 
       HOVERS = {
@@ -146,7 +146,7 @@ module FlatPack
 
       def card_classes
         classes(
-          "rounded-[var(--radius-lg)]",
+          "rounded-lg",
           "overflow-hidden",
           "h-full",
           "flex",

@@ -22,7 +22,7 @@ module FlatPack
             "shrink-0",
             "p-4",
             "border-t",
-            "border-[var(--color-border)]"
+            "border-border"
           )
         end
 

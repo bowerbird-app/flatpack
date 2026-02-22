@@ -61,10 +61,10 @@ module FlatPack
           "absolute",
           "z-40",
           "hidden",
-          "bg-[var(--color-background)]",
+          "bg-background",
           "border",
-          "border-[var(--color-border)]",
-          "rounded-[var(--radius-md)]",
+          "border-border",
+          "rounded-md",
           "shadow-lg",
           "p-4"
         )

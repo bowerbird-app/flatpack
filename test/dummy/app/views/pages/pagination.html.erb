@@ -8,13 +8,13 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Basic Pagination", anchor_link: true, subtitle: "Examples for Basic Pagination.") %>
   <%= turbo_frame_tag "pagination_table" do %>
-    <p class="text-[var(--color-muted-foreground)] mb-4">
+    <p class="text-muted-foreground mb-4">
       Showing <%= @records.size %> of <%= @pagy.count %> total items (Page <%= @pagy.page %> of <%= @pagy.pages %>)
     </p>
 
-    <div class="border border-[var(--color-border)] rounded-lg overflow-hidden mb-4">
+    <div class="border border-border rounded-lg overflow-hidden mb-4">
       <table class="w-full">
-        <thead class="bg-[var(--color-muted)]">
+        <thead class="bg-muted">
           <tr>
             <th class="px-4 py-2 text-left text-sm font-semibold">#</th>
             <th class="px-4 py-2 text-left text-sm font-semibold">Name</th>
@@ -27,7 +27,7 @@
         </thead>
         <tbody>
           <% @records.each do |record| %>
-            <tr class="border-t border-[var(--color-border)]">
+            <tr class="border-t border-border">
               <td class="px-4 py-2 text-sm"><%= record.id %></td>
               <td class="px-4 py-2 text-sm"><%= record.name %></td>
               <td class="px-4 py-2 text-sm"><%= record.email %></td>
@@ -61,7 +61,7 @@
 <!-- Compact Pagination -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Compact Pagination", anchor_link: true, subtitle: "Examples for Compact Pagination.") %>
-  <p class="text-[var(--color-muted-foreground)] mb-4">
+  <p class="text-muted-foreground mb-4">
     Use compact size for tighter layouts or mobile views.
   </p>
   <%= render FlatPack::Pagination::Component.new(pagy: @pagy, size: :compact) %>
@@ -88,14 +88,14 @@
       <% card.body do %>
         <div class="space-y-2">
           <% @records.first(5).each do |record| %>
-            <div class="flex items-center justify-between p-3 bg-[var(--color-muted)] rounded-lg">
+            <div class="flex items-center justify-between p-3 bg-muted rounded-lg">
               <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-white font-semibold">
+                <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-semibold">
                   <%= record.name.first(1).upcase %>
                 </div>
                 <div>
                   <span class="font-medium"><%= record.name %></span>
-                  <p class="text-xs text-[var(--color-muted-foreground)]"><%= record.category.to_s.titleize %> - <%= number_with_delimiter(record.views_count) %> views</p>
+                  <p class="text-xs text-muted-foreground"><%= record.category.to_s.titleize %> - <%= number_with_delimiter(record.views_count) %> views</p>
                 </div>
               </div>
               <%= render FlatPack::Button::Component.new(text: "View", style: :ghost, size: :sm) %>
@@ -157,7 +157,7 @@
 <!-- Features -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Examples for Features.") %>
-  <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
+  <ul class="list-disc list-inside space-y-2 text-foreground">
     <li><strong>Pagy Integration:</strong> Uses the fast and lightweight Pagy gem</li>
     <li><strong>Accessible:</strong> Proper ARIA attributes and keyboard navigation</li>
     <li><strong>Turbo Friendly:</strong> Works seamlessly with Turbo Frames</li>

@@ -66,15 +66,15 @@ module FlatPack
         end
 
         def brand_badge_classes
-          "w-8 h-8 bg-[var(--color-primary)] rounded-lg flex items-center justify-center text-white font-bold"
+          "w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold"
         end
 
         def collapsed_toggle_classes
-          "hidden items-center justify-center p-2 rounded-lg text-[var(--color-text-muted)] hover:bg-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors"
+          "hidden items-center justify-center p-2 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
         end
 
         def desktop_toggle_classes
-          "ml-auto p-2 rounded-lg text-[var(--color-text-muted)] hover:bg-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors"
+          "ml-auto p-2 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
         end
 
         def brand_data_attributes

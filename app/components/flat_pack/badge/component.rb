@@ -5,12 +5,12 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-[var(--color-muted)]" "text-[var(--color-foreground)]" "bg-[var(--color-primary)]" "text-[var(--color-primary-text)]" "bg-[var(--color-success)]" "text-[var(--color-success-text)]" "bg-[var(--color-warning)]" "text-[var(--color-warning-text)]" "bg-blue-500" "text-white"
+      # "bg-muted" "text-foreground" "bg-primary" "text-primary-text" "bg-success" "text-success-text" "bg-warning" "text-warning-text" "bg-blue-500" "text-white"
       VARIANTS = {
-        default: "bg-[var(--color-muted)] text-[var(--color-foreground)]",
-        primary: "bg-[var(--color-primary)] text-[var(--color-primary-text)]",
-        success: "bg-[var(--color-success)] text-[var(--color-success-text)]",
-        warning: "bg-[var(--color-warning)] text-[var(--color-warning-text)]",
+        default: "bg-muted text-foreground",
+        primary: "bg-primary text-primary-text",
+        success: "bg-success text-success-text",
+        warning: "bg-warning text-warning-text",
         info: "bg-blue-500 text-white"
       }.freeze
 
@@ -66,7 +66,7 @@ module FlatPack
 
         content_tag(:button,
           type: "button",
-          class: "ml-1 inline-flex items-center justify-center rounded-full hover:bg-black/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-ring)]",
+          class: "ml-1 inline-flex items-center justify-center rounded-full hover:bg-black/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring",
           "aria-label": "Remove",
           data: {action: "click->flat-pack--badge#remove"}) do
           # X icon (close)
@@ -91,7 +91,7 @@ module FlatPack
         classes(
           "inline-flex items-center gap-1",
           "rounded-full font-medium",
-          "transition-colors duration-[var(--transition-base)]",
+          "transition-colors duration-base",
           VARIANTS.fetch(@style),
           SIZES.fetch(@size)
         )

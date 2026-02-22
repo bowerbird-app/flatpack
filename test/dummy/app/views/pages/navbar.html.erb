@@ -6,24 +6,24 @@
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Left Slot", anchor_link: true, subtitle: "Examples for Left Slot.") %>
-  <p class="text-sm text-[var(--color-muted-foreground)] mb-4">
+  <p class="text-sm text-muted-foreground mb-4">
     Use the left slot for navigation controls like a mobile menu toggle, back button, and page title.
   </p>
   <div class="rounded-lg overflow-hidden mb-4">
-    <%= render FlatPack::TopNav::Component.new(class: "relative rounded-lg border border-[var(--color-border)]") do |nav| %>
+    <%= render FlatPack::TopNav::Component.new(class: "relative rounded-lg border border-border") do |nav| %>
       <% nav.left do %>
-        <button class="p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors" type="button" aria-label="Toggle sidebar">
+        <button class="p-2 rounded-lg hover:bg-muted transition-colors" type="button" aria-label="Toggle sidebar">
           <%= render FlatPack::Shared::IconComponent.new(name: :menu, size: :md) %>
         </button>
         <h3 class="text-base font-semibold">Dashboard</h3>
       <% end %>
 
       <% nav.center do %>
-        <div class="text-sm text-[var(--color-text-muted)]">Page context</div>
+        <div class="text-sm text-muted-foreground">Page context</div>
       <% end %>
 
       <% nav.right do %>
-        <button class="p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors" type="button" aria-label="Notifications">
+        <button class="p-2 rounded-lg hover:bg-muted transition-colors" type="button" aria-label="Notifications">
           <%= render FlatPack::Shared::IconComponent.new(name: :bell, size: :md) %>
         </button>
       <% end %>
@@ -33,18 +33,18 @@
     code: CGI.unescapeHTML(<<~'CODE')
       &lt;%= render FlatPack::TopNav::Component.new do |nav| %&gt;
         &lt;% nav.left do %&gt;
-          <button type="button" class="p-2 rounded-lg hover:bg-[var(--color-muted)]" aria-label="Toggle sidebar">
+          <button type="button" class="p-2 rounded-lg hover:bg-muted" aria-label="Toggle sidebar">
             &lt;%= render FlatPack::Shared::IconComponent.new(name: :menu, size: :md) %&gt;
           </button>
           <h3 class="text-base font-semibold">Dashboard</h3>
         &lt;% end %&gt;
       
         &lt;% nav.center do %&gt;
-          <div class="text-sm text-[var(--color-text-muted)]">Page context</div>
+          <div class="text-sm text-muted-foreground">Page context</div>
         &lt;% end %&gt;
       
         &lt;% nav.right do %&gt;
-          <button type="button" class="p-2 rounded-lg hover:bg-[var(--color-muted)]" aria-label="Notifications">
+          <button type="button" class="p-2 rounded-lg hover:bg-muted" aria-label="Notifications">
             &lt;%= render FlatPack::Shared::IconComponent.new(name: :bell, size: :md) %&gt;
           </button>
         &lt;% end %&gt;
@@ -55,11 +55,11 @@
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Center Slot", anchor_link: true, subtitle: "Examples for Center Slot.") %>
-  <p class="text-sm text-[var(--color-muted-foreground)] mb-4">
+  <p class="text-sm text-muted-foreground mb-4">
     Use the center slot for search, tabs, or any content that should stay visually centered.
   </p>
   <div class="rounded-lg overflow-hidden mb-4">
-    <%= render FlatPack::TopNav::Component.new(class: "relative rounded-lg border border-[var(--color-border)]") do |nav| %>
+    <%= render FlatPack::TopNav::Component.new(class: "relative rounded-lg border border-border") do |nav| %>
       <% nav.left do %>
         <h3 class="text-base font-semibold">Projects</h3>
       <% end %>
@@ -98,28 +98,28 @@
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Right Slot", anchor_link: true, subtitle: "Examples for Right Slot.") %>
-  <p class="text-sm text-[var(--color-muted-foreground)] mb-4">
+  <p class="text-sm text-muted-foreground mb-4">
     Use the right slot for user actions like notifications, settings, profile, and quick-create actions.
   </p>
   <div class="rounded-lg overflow-hidden mb-4">
-    <%= render FlatPack::TopNav::Component.new(class: "relative rounded-lg border border-[var(--color-border)]") do |nav| %>
+    <%= render FlatPack::TopNav::Component.new(class: "relative rounded-lg border border-border") do |nav| %>
       <% nav.left do %>
         <h3 class="text-base font-semibold">Workspace</h3>
       <% end %>
 
       <% nav.center do %>
-        <div class="text-sm text-[var(--color-text-muted)]">Overview</div>
+        <div class="text-sm text-muted-foreground">Overview</div>
       <% end %>
 
       <% nav.right do %>
         <div class="flex items-center gap-2">
-          <button class="p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors" type="button" aria-label="Help">
+          <button class="p-2 rounded-lg hover:bg-muted transition-colors" type="button" aria-label="Help">
             <%= render FlatPack::Shared::IconComponent.new(name: :question, size: :md) %>
           </button>
-          <button class="p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors" type="button" aria-label="Settings">
+          <button class="p-2 rounded-lg hover:bg-muted transition-colors" type="button" aria-label="Settings">
             <%= render FlatPack::Shared::IconComponent.new(name: :cog, size: :md) %>
           </button>
-          <div class="w-8 h-8 rounded-full bg-[var(--color-muted)] text-sm font-semibold flex items-center justify-center">AB</div>
+          <div class="w-8 h-8 rounded-full bg-muted text-sm font-semibold flex items-center justify-center">AB</div>
         </div>
       <% end %>
     <% end %>
@@ -132,18 +132,18 @@
         &lt;% end %&gt;
       
         &lt;% nav.center do %&gt;
-          <div class="text-sm text-[var(--color-text-muted)]">Overview</div>
+          <div class="text-sm text-muted-foreground">Overview</div>
         &lt;% end %&gt;
       
         &lt;% nav.right do %&gt;
           <div class="flex items-center gap-2">
-            <button type="button" class="p-2 rounded-lg hover:bg-[var(--color-muted)]" aria-label="Help">
+            <button type="button" class="p-2 rounded-lg hover:bg-muted" aria-label="Help">
               &lt;%= render FlatPack::Shared::IconComponent.new(name: :question, size: :md) %&gt;
             </button>
-            <button type="button" class="p-2 rounded-lg hover:bg-[var(--color-muted)]" aria-label="Settings">
+            <button type="button" class="p-2 rounded-lg hover:bg-muted" aria-label="Settings">
               &lt;%= render FlatPack::Shared::IconComponent.new(name: :cog, size: :md) %&gt;
             </button>
-            <div class="w-8 h-8 rounded-full bg-[var(--color-muted)] text-sm font-semibold flex items-center justify-center">AB</div>
+            <div class="w-8 h-8 rounded-full bg-muted text-sm font-semibold flex items-center justify-center">AB</div>
           </div>
         &lt;% end %&gt;
       &lt;% end %&gt;
@@ -153,7 +153,7 @@
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Alignment Rules", anchor_link: true, subtitle: "Examples for Alignment Rules.") %>
-  <p class="text-sm text-[var(--color-muted-foreground)] mb-4">
+  <p class="text-sm text-muted-foreground mb-4">
     <code>left</code> is start-aligned, <code>center</code> is flexed and centered, and <code>right</code> sits at the far edge when center is present.
   </p>
   <%= render FlatPack::CodeBlock::Component.new(

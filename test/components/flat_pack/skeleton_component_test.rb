@@ -69,7 +69,7 @@ module FlatPack
       def test_includes_background_color
         render_inline(Component.new)
 
-        assert_includes page.native.to_html, "bg-[var(--color-muted)]"
+        assert_includes page.native.to_html, "bg-muted"
       end
 
       def test_raises_error_for_invalid_variant

@@ -43,7 +43,7 @@ module FlatPack
       end
 
       def skeleton_classes
-        base = "animate-pulse bg-[var(--color-muted)]"
+        base = "animate-pulse bg-muted"
         variant_classes = VARIANTS.fetch(@variant)
         
         classes(base, variant_classes, custom_size_classes)

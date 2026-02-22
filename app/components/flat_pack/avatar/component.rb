@@ -91,11 +91,11 @@ module FlatPack
       def wrapper_classes
         classes(
           "relative inline-flex items-center justify-center shrink-0 overflow-hidden",
-          "bg-[var(--color-muted)] text-[var(--color-foreground)]",
+          "bg-muted text-foreground",
           "font-medium select-none aspect-square",
           SIZES.fetch(@size),
           SHAPES.fetch(@shape),
-          @href ? "hover:opacity-80 transition-opacity duration-[var(--transition-base)]" : nil
+          @href ? "hover:opacity-80 transition-opacity duration-base" : nil
         )
       end
 

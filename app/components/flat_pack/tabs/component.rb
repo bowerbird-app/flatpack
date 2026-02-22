@@ -99,16 +99,16 @@ module FlatPack
       end
 
       def tab_list_classes
-        "flex gap-1 border-b border-[var(--color-border)]"
+        "flex gap-1 border-b border-border"
       end
 
       def tab_classes(is_active)
-        base = "px-4 py-2 text-sm font-medium rounded-t-[var(--radius-md)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:ring-offset-2"
+        base = "px-4 py-2 text-sm font-medium rounded-t-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
 
         if is_active
-          "#{base} bg-[var(--color-background)] text-[var(--color-primary)] border-b-2 border-[var(--color-primary)] -mb-px"
+          "#{base} bg-background text-primary border-b-2 border-primary -mb-px"
         else
-          "#{base} text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-muted)]"
+          "#{base} text-muted-foreground hover:text-foreground hover:bg-muted"
         end
       end
 

@@ -85,9 +85,9 @@ module FlatPack
 
         def state_classes
           if @active
-            "bg-[var(--color-primary)] text-white"
+            "bg-primary text-white"
           else
-            "text-[var(--color-text-muted)] hover:bg-[var(--color-muted)] hover:text-[var(--color-text)]"
+            "text-muted-foreground hover:bg-muted hover:text-foreground"
           end
         end
 

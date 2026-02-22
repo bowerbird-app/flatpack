@@ -5,12 +5,12 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-[var(--color-primary)]" "bg-[var(--color-success)]" "bg-[var(--color-warning)]" "bg-[var(--color-danger)]"
+      # "bg-primary" "bg-success" "bg-warning" "bg-destructive"
       VARIANTS = {
-        default: "bg-[var(--color-primary)]",
-        success: "bg-[var(--color-success)]",
-        warning: "bg-[var(--color-warning)]",
-        danger: "bg-[var(--color-danger)]"
+        default: "bg-primary",
+        success: "bg-success",
+        warning: "bg-warning",
+        danger: "bg-destructive"
       }.freeze
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
@@ -61,7 +61,7 @@ module FlatPack
         return unless @show_label || @label
 
         label_text = @label || "#{percentage.to_i}%"
-        content_tag(:div, label_text, class: "text-sm font-medium text-[var(--color-foreground)] mb-1")
+        content_tag(:div, label_text, class: "text-sm font-medium text-foreground mb-1")
       end
 
       def render_progress_bar
@@ -97,7 +97,7 @@ module FlatPack
       end
 
       def bar_container_classes
-        "w-full bg-[var(--color-muted)] rounded-full overflow-hidden #{SIZES.fetch(@size)}"
+        "w-full bg-muted rounded-full overflow-hidden #{SIZES.fetch(@size)}"
       end
 
       def bar_fill_classes

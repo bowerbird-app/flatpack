@@ -5,7 +5,7 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-white" "text-black" "border" "border-black/20" "bg-[var(--color-success)]" "text-[var(--color-success-text)]" "bg-[var(--color-warning)]" "text-[var(--color-warning-text)]" "bg-[var(--color-destructive)]" "text-[var(--color-destructive-text)]"
+      # "bg-white" "text-black" "border" "border-black/20" "bg-success" "text-success-text" "bg-warning" "text-warning-text" "bg-destructive" "text-destructive-text"
       VARIANTS = {
         info: {
           border: "border border-black/20",
@@ -15,20 +15,20 @@ module FlatPack
         },
         success: {
           border: nil,
-          bg: "bg-[var(--color-success)]",
-          text: "text-[var(--color-success-text)]",
+          bg: "bg-success",
+          text: "text-success-text",
           icon: "check-circle"
         },
         warning: {
           border: nil,
-          bg: "bg-[var(--color-warning)]",
-          text: "text-[var(--color-warning-text)]",
+          bg: "bg-warning",
+          text: "text-warning-text",
           icon: "alert-triangle"
         },
         danger: {
           border: nil,
-          bg: "bg-[var(--color-destructive)]",
-          text: "text-[var(--color-destructive-text)]",
+          bg: "bg-destructive",
+          text: "text-destructive-text",
           icon: "alert-circle"
         }
       }.freeze
@@ -132,7 +132,7 @@ module FlatPack
 
         content_tag(:button,
           type: "button",
-          class: "ml-auto flex-shrink-0 inline-flex items-center justify-center rounded-md p-1.5 hover:bg-black/5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-ring)]",
+          class: "ml-auto flex-shrink-0 inline-flex items-center justify-center rounded-md p-1.5 hover:bg-black/5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring",
           data: {action: "alert#dismiss"},
           "aria-label": "Dismiss") do
           # X icon
@@ -154,7 +154,7 @@ module FlatPack
       def alert_classes
         classes(
           "relative flex items-center gap-3",
-          "rounded-[var(--radius-md)]",
+          "rounded-md",
           "p-4",
           style_config[:border],
           style_config[:bg],

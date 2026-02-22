@@ -17,9 +17,9 @@ module FlatPack
         def call
           content_tag(:div, **divider_attributes) do
             safe_join([
-              content_tag(:div, nil, class: "flex-1 border-t border-[var(--color-border)]"),
+              content_tag(:div, nil, class: "flex-1 border-t border-border"),
               content_tag(:span, @label, class: label_classes),
-              content_tag(:div, nil, class: "flex-1 border-t border-[var(--color-border)]")
+              content_tag(:div, nil, class: "flex-1 border-t border-border")
             ])
           end
         end
@@ -42,7 +42,7 @@ module FlatPack
         end
 
         def label_classes
-          "text-xs font-medium text-[var(--color-muted-foreground)] whitespace-nowrap"
+          "text-xs font-medium text-muted-foreground whitespace-nowrap"
         end
 
         def validate_label!

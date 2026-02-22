@@ -8,7 +8,7 @@
 <!-- Basic Grid -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Auto-Responsive Grid", anchor_link: true, subtitle: "Examples for Auto-Responsive Grid.") %>
-  <p class="text-[var(--color-muted-foreground)] mb-4">
+  <p class="text-muted-foreground mb-4">
     Default grid automatically adapts: 1 column on mobile, 2 on tablet, 3 on desktop.
   </p>
   <%= render FlatPack::Grid::Component.new do %>
@@ -16,7 +16,7 @@
       <%= render FlatPack::Card::Component.new(style: :outlined) do |card| %>
         <% card.body do %>
           <h3 class="font-semibold mb-2">Item <%= i + 1 %></h3>
-          <p class="text-sm text-[var(--color-muted-foreground)]">
+          <p class="text-sm text-muted-foreground">
             Card content <%= i + 1 %>
           </p>
         <% end %>
@@ -48,12 +48,12 @@
       <%= render FlatPack::Card::Component.new(style: :elevated) do |card| %>
         <% card.body do %>
           <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-lg bg-[var(--color-primary)] flex items-center justify-center text-white font-bold">
+            <div class="w-12 h-12 rounded-lg bg-primary flex items-center justify-center text-white font-bold">
               <%= i + 1 %>
             </div>
             <div>
               <h3 class="font-semibold">Feature <%= i + 1 %></h3>
-              <p class="text-sm text-[var(--color-muted-foreground)]">Description</p>
+              <p class="text-sm text-muted-foreground">Description</p>
             </div>
           </div>
         <% end %>
@@ -77,7 +77,7 @@
   <h3 class="text-lg font-semibold mb-3">Small Gap</h3>
   <%= render FlatPack::Grid::Component.new(cols: 4, gap: :sm) do %>
     <% 4.times do |i| %>
-      <div class="bg-[var(--color-muted)] p-4 rounded-lg text-center">
+      <div class="bg-muted p-4 rounded-lg text-center">
         <%= i + 1 %>
       </div>
     <% end %>
@@ -86,7 +86,7 @@
   <h3 class="text-lg font-semibold mb-3 mt-6">Medium Gap (Default)</h3>
   <%= render FlatPack::Grid::Component.new(cols: 4, gap: :md) do %>
     <% 4.times do |i| %>
-      <div class="bg-[var(--color-muted)] p-4 rounded-lg text-center">
+      <div class="bg-muted p-4 rounded-lg text-center">
         <%= i + 1 %>
       </div>
     <% end %>
@@ -95,7 +95,7 @@
   <h3 class="text-lg font-semibold mb-3 mt-6">Large Gap</h3>
   <%= render FlatPack::Grid::Component.new(cols: 4, gap: :lg) do %>
     <% 4.times do |i| %>
-      <div class="bg-[var(--color-muted)] p-4 rounded-lg text-center">
+      <div class="bg-muted p-4 rounded-lg text-center">
         <%= i + 1 %>
       </div>
     <% end %>
@@ -124,7 +124,7 @@
         <% end %>
         <% card.body do %>
           <h3 class="font-semibold mb-1"><%= product.name %></h3>
-          <p class="text-sm text-[var(--color-muted-foreground)] mb-2">
+          <p class="text-sm text-muted-foreground mb-2">
             <%= product.description %>
           </p>
           <div class="flex items-center justify-between">
@@ -142,7 +142,7 @@
 <!-- Grid Column Options -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Column Options", anchor_link: true, subtitle: "Examples for Column Options.") %>
-  <div class="bg-[var(--color-muted)] p-6 rounded-lg space-y-4">
+  <div class="bg-muted p-6 rounded-lg space-y-4">
     <div class="grid grid-cols-2 gap-4 text-sm">
       <div>
         <strong>cols: 1</strong> - Single column
@@ -169,7 +169,7 @@
 <!-- Features -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Examples for Features.") %>
-  <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
+  <ul class="list-disc list-inside space-y-2 text-foreground">
     <li><strong>Mobile-First:</strong> Starts with 1 column, scales up responsively</li>
     <li><strong>Flexible Columns:</strong> Support for 1, 2, 3, 4, 6, or 12 columns</li>
     <li><strong>Consistent Gaps:</strong> Small, medium, and large gap options</li>

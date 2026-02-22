@@ -31,7 +31,7 @@ module FlatPack
         classes(
           "pb-5",
           "border-b",
-          "border-[var(--color-border)]",
+          "border-border",
           "mb-6"
         )
       end
@@ -52,13 +52,13 @@ module FlatPack
       end
 
       def render_title
-        content_tag(:h1, @title, class: "text-4xl font-bold text-[var(--color-text)] leading-tight")
+        content_tag(:h1, @title, class: "text-4xl font-bold text-foreground leading-tight")
       end
 
       def render_subtitle
         return nil unless @subtitle
 
-        content_tag(:p, @subtitle, class: "mt-2 text-lg text-[var(--color-text-muted)]")
+        content_tag(:p, @subtitle, class: "mt-2 text-lg text-muted-foreground")
       end
 
       def validate_title!

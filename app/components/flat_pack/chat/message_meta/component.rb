@@ -40,13 +40,13 @@ module FlatPack
         def render_timestamp
           return unless @timestamp
 
-          content_tag(:span, formatted_timestamp, class: "text-xs text-[var(--color-muted-foreground)]")
+          content_tag(:span, formatted_timestamp, class: "text-xs text-muted-foreground")
         end
 
         def render_edited_indicator
           return unless @edited
 
-          content_tag(:span, "(edited)", class: "text-xs text-[var(--color-muted-foreground)] italic")
+          content_tag(:span, "(edited)", class: "text-xs text-muted-foreground italic")
         end
 
         def render_state_indicator
@@ -63,7 +63,7 @@ module FlatPack
         end
 
         def render_sending_indicator
-          content_tag(:span, class: "text-xs text-[var(--color-muted-foreground)]") do
+          content_tag(:span, class: "text-xs text-muted-foreground") do
             "Sending..."
           end
         end
@@ -90,7 +90,7 @@ module FlatPack
         end
 
         def render_read_indicator
-          content_tag(:span, class: "text-xs text-[var(--color-primary)]") do
+          content_tag(:span, class: "text-xs text-primary") do
             safe_join([
               # Double check icon
               content_tag(:svg,

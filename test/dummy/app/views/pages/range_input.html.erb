@@ -6,7 +6,7 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Basic Range Inputs", anchor_link: true) %>
   
-  <div class="space-y-6 p-6 bg-[var(--color-background)] border border-[var(--color-border)] rounded-lg">
+  <div class="space-y-6 p-6 bg-[var(--color-background)] border border-border rounded-lg">
     <div>
       <%= render FlatPack::RangeInput::Component.new(
         name: "basic",
@@ -36,7 +36,7 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Custom Ranges", anchor_link: true) %>
   
-  <div class="space-y-6 p-6 bg-[var(--color-background)] border border-[var(--color-border)] rounded-lg">
+  <div class="space-y-6 p-6 bg-[var(--color-background)] border border-border rounded-lg">
     <div>
       <%= render FlatPack::RangeInput::Component.new(
         name: "price",
@@ -75,9 +75,9 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "States", anchor_link: true) %>
   
-  <div class="space-y-6 p-6 bg-[var(--color-background)] border border-[var(--color-border)] rounded-lg">
+  <div class="space-y-6 p-6 bg-[var(--color-background)] border border-border rounded-lg">
     <div>
-      <p class="text-sm text-[var(--color-text-muted)] mb-2">Normal State</p>
+      <p class="text-sm text-muted-foreground mb-2">Normal State</p>
       <%= render FlatPack::RangeInput::Component.new(
         name: "normal",
         label: "Normal",
@@ -86,7 +86,7 @@
     </div>
 
     <div>
-      <p class="text-sm text-[var(--color-text-muted)] mb-2">Disabled State</p>
+      <p class="text-sm text-muted-foreground mb-2">Disabled State</p>
       <%= render FlatPack::RangeInput::Component.new(
         name: "disabled",
         label: "Disabled",
@@ -96,7 +96,7 @@
     </div>
 
     <div>
-      <p class="text-sm text-[var(--color-text-muted)] mb-2">Without Value Display</p>
+      <p class="text-sm text-muted-foreground mb-2">Without Value Display</p>
       <%= render FlatPack::RangeInput::Component.new(
         name: "no_value",
         label: "Hidden Value",
@@ -111,7 +111,7 @@
   <%= render FlatPack::SectionTitle::Component.new(title: "Interactive Demo", anchor_link: true) %>
   
   <div
-    class="p-6 bg-gradient-to-br from-blue-50 to-purple-50 border border-[var(--color-border)] rounded-lg"
+    class="p-6 bg-gradient-to-br from-blue-50 to-purple-50 border border-border rounded-lg"
     data-controller="flat-pack--range-input-demo"
     data-action="range-input:change->flat-pack--range-input-demo#updatePreview"
   >
@@ -150,7 +150,7 @@
       </div>
 
       <div
-        class="mt-6 p-8 rounded-lg border-2 border-[var(--color-border)]"
+        class="mt-6 p-8 rounded-lg border-2 border-border"
         style="background-color: hsl(200, 70%, 50%);"
         data-flat-pack--range-input-demo-target="preview"
       >
@@ -168,7 +168,7 @@
     <%= render FlatPack::Card::Component.new do |card| %>
       <% card.body do %>
         <h3 class="font-semibold mb-2">Volume & Audio Controls</h3>
-        <p class="text-sm text-[var(--color-text-muted)] mb-4">Perfect for media players, volume mixers, and audio settings.</p>
+        <p class="text-sm text-muted-foreground mb-4">Perfect for media players, volume mixers, and audio settings.</p>
         <%= render FlatPack::RangeInput::Component.new(
           name: "audio_volume",
           label: "Master Volume",
@@ -180,7 +180,7 @@
     <%= render FlatPack::Card::Component.new do |card| %>
       <% card.body do %>
         <h3 class="font-semibold mb-2">Price Filters</h3>
-        <p class="text-sm text-[var(--color-text-muted)] mb-4">Allow users to filter products by price range.</p>
+        <p class="text-sm text-muted-foreground mb-4">Allow users to filter products by price range.</p>
         <%= render FlatPack::RangeInput::Component.new(
           name: "max_price",
           label: "Maximum Price",
@@ -195,7 +195,7 @@
     <%= render FlatPack::Card::Component.new do |card| %>
       <% card.body do %>
         <h3 class="font-semibold mb-2">Image Editor Controls</h3>
-        <p class="text-sm text-[var(--color-text-muted)] mb-4">Adjust image properties like brightness, contrast, and saturation.</p>
+        <p class="text-sm text-muted-foreground mb-4">Adjust image properties like brightness, contrast, and saturation.</p>
         <%= render FlatPack::RangeInput::Component.new(
           name: "contrast",
           label: "Contrast",

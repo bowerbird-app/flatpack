@@ -8,7 +8,7 @@
 <!-- Basic Empty State -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Basic Empty State", anchor_link: true, subtitle: "Examples for Basic Empty State.") %>
-  <div class="border border-[var(--color-border)] rounded-lg p-8">
+  <div class="border border-border rounded-lg p-8">
     <%= render FlatPack::EmptyState::Component.new(
       title: "No messages",
       description: "You don't have any messages yet. Start a conversation to see it here."
@@ -29,7 +29,7 @@
 <!-- Empty State with Actions -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Empty State with Actions", anchor_link: true, subtitle: "Examples for Empty State with Actions.") %>
-  <div class="border border-[var(--color-border)] rounded-lg p-8">
+  <div class="border border-border rounded-lg p-8">
     <%= render FlatPack::EmptyState::Component.new(
       title: "No projects found",
       description: "Get started by creating your first project. Projects help you organize your work."
@@ -60,7 +60,7 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Icons", anchor_link: true, subtitle: "Examples for Icons.") %>
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-    <div class="border border-[var(--color-border)] rounded-lg p-8">
+    <div class="border border-border rounded-lg p-8">
       <%= render FlatPack::EmptyState::Component.new(
         title: "Inbox empty",
         description: "All caught up! No new messages.",
@@ -68,7 +68,7 @@
       ) %>
     </div>
     
-    <div class="border border-[var(--color-border)] rounded-lg p-8">
+    <div class="border border-border rounded-lg p-8">
       <%= render FlatPack::EmptyState::Component.new(
         title: "No results",
         description: "Try adjusting your search or filters.",
@@ -76,7 +76,7 @@
       ) %>
     </div>
 
-    <div class="border border-[var(--color-border)] rounded-lg p-8">
+    <div class="border border-border rounded-lg p-8">
       <%= render FlatPack::EmptyState::Component.new(
         title: "No files uploaded",
         description: "Upload files to get started.",
@@ -148,7 +148,7 @@
 <!-- Empty State with Custom Graphic -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Empty State with Custom Graphic", anchor_link: true, subtitle: "Examples for Empty State with Custom Graphic.") %>
-  <div class="border border-[var(--color-border)] rounded-lg p-8">
+  <div class="border border-border rounded-lg p-8">
     <%= render FlatPack::EmptyState::Component.new(
       title: "No data available",
       description: "Upload a CSV file or connect a data source to get started."
@@ -169,7 +169,7 @@
 <!-- Features -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Examples for Features.") %>
-  <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
+  <ul class="list-disc list-inside space-y-2 text-foreground">
     <li><strong>Built-in Icons:</strong> Inbox and search icons included</li>
     <li><strong>Optional Icon:</strong> Pass <code>icon: :inbox</code>, <code>icon: :search</code>, or any icon name when needed</li>
     <li><strong>Custom Graphics:</strong> Slot for custom illustrations or icons</li>

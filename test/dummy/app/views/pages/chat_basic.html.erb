@@ -2,13 +2,13 @@
   <%= render FlatPack::PageTitle::Component.new(title: "Chat Component - Basic Demo") %>
   <%= render "pages/component_method_variables_table", component: :chat_panel %>
   
-  <div class="bg-white dark:bg-zinc-900 rounded-lg shadow-lg border border-[var(--color-border)]" style="height: 600px">
+  <div class="bg-white dark:bg-zinc-900 rounded-lg shadow-lg border border-border" style="height: 600px">
     <%= render(FlatPack::Chat::Panel::Component.new) do |panel| %>
       <% panel.with_header do %>
         <div class="p-4 flex items-center justify-between">
           <div>
-            <h2 class="text-lg font-semibold text-[var(--color-foreground)]">Team Chat</h2>
-            <p class="text-sm text-[var(--color-muted-foreground)]">3 participants</p>
+            <h2 class="text-lg font-semibold text-foreground">Team Chat</h2>
+            <p class="text-sm text-muted-foreground">3 participants</p>
           </div>
           <%= render(FlatPack::AvatarGroup::Component.new(
             items: [
@@ -233,7 +233,7 @@
     <% end %>
   </div>
 
-  <div class="mt-4 text-sm text-[var(--color-muted-foreground)]">
+  <div class="mt-4 text-sm text-muted-foreground">
     <p><strong>Features shown:</strong></p>
     <ul class="list-disc list-inside space-y-1 mt-2">
       <li>Full chat panel with header, messages, and composer</li>

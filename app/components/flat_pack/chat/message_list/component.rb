@@ -119,13 +119,13 @@ module FlatPack
             "flex items-center gap-2",
             "px-4 py-2",
             "bg-white dark:bg-zinc-800",
-            "border border-[var(--color-border)]",
+            "border border-border",
             "rounded-full",
             "shadow-lg",
             "text-sm font-medium",
-            "text-[var(--color-foreground)]",
-            "hover:bg-[var(--color-muted)]",
-            "transition-colors duration-[var(--transition-base)]",
+            "text-foreground",
+            "hover:bg-muted",
+            "transition-colors duration-base",
             "cursor-pointer"
           )
         end
