@@ -57,8 +57,6 @@ module FlatPack
             render_failed_indicator
           when :read
             render_read_indicator
-          else
-            nil
           end
         end
 
@@ -81,8 +79,7 @@ module FlatPack
                   nil,
                   "fill-rule": "evenodd",
                   d: "M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z",
-                  "clip-rule": "evenodd"
-                )
+                  "clip-rule": "evenodd")
               end,
               "Failed"
             ])

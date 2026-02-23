@@ -129,15 +129,13 @@ module FlatPack
           class: classes(
             "h-full w-full object-cover",
             SHAPES.fetch(@shape)
-          )
-        )
+          ))
       end
 
       def render_initials
         content_tag(:span,
           computed_initials,
-          class: "inline-flex h-full w-full items-center justify-center uppercase font-semibold leading-none"
-        )
+          class: "inline-flex h-full w-full items-center justify-center uppercase font-semibold leading-none")
       end
 
       def render_generic_icon
@@ -159,8 +157,7 @@ module FlatPack
         content_tag(:span,
           nil,
           class: status_indicator_classes,
-          "aria-hidden": "true"
-        )
+          "aria-hidden": "true")
       end
 
       def status_indicator_classes
@@ -192,8 +189,6 @@ module FlatPack
           parts[0][0..1]
         elsif parts.length == 1
           parts[0][0]
-        else
-          nil
         end
       end
 

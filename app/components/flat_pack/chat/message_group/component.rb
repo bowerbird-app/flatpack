@@ -45,7 +45,7 @@ module FlatPack
         def render_avatar_section
           return unless @show_avatar
 
-          content_tag(:div, class: "flex-shrink-0 #{@direction == :incoming ? "mr-3" : "ml-3"}") do
+          content_tag(:div, class: "flex-shrink-0 #{(@direction == :incoming) ? "mr-3" : "ml-3"}") do
             if avatar?
               avatar.to_s
             else
@@ -109,7 +109,7 @@ module FlatPack
         def name_classes
           classes(
             "text-sm font-medium text-[var(--chat-message-incoming-text-color)] mb-1",
-            @direction == :outgoing ? "text-right" : "text-left"
+            (@direction == :outgoing) ? "text-right" : "text-left"
           )
         end
 

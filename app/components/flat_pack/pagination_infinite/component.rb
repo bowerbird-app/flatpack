@@ -47,7 +47,7 @@ module FlatPack
 
       def render_loading_indicator
         content_tag(:div, **loading_attributes) do
-          @loading_variant == :cards ? render_cards_loading_indicator : render_table_loading_indicator
+          (@loading_variant == :cards) ? render_cards_loading_indicator : render_table_loading_indicator
         end
       end
 

@@ -190,11 +190,11 @@ module FlatPack
       def validate_character_limits!
         return unless @character_count
 
-        if @min_characters && @min_characters.to_i.negative?
+        if @min_characters&.to_i&.negative?
           raise ArgumentError, "min_characters must be 0 or greater"
         end
 
-        if @max_characters && @max_characters.to_i.negative?
+        if @max_characters&.to_i&.negative?
           raise ArgumentError, "max_characters must be 0 or greater"
         end
 

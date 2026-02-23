@@ -9,7 +9,7 @@ module FlatPack
         renders_one :attachments
 
         def initialize(**system_arguments)
-          super(**system_arguments)
+          super
         end
 
         def call

@@ -168,7 +168,7 @@ module FlatPack
       end
 
       def tab_orientation
-        @variant == :stacked ? "vertical" : "horizontal"
+        (@variant == :stacked) ? "vertical" : "horizontal"
       end
 
       def tab_list_aria_attributes

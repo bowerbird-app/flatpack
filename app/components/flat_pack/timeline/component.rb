@@ -4,7 +4,7 @@ module FlatPack
   module Timeline
     class Component < FlatPack::BaseComponent
       def initialize(**system_arguments)
-        super(**system_arguments)
+        super
       end
 
       def call

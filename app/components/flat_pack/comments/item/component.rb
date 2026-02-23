@@ -116,7 +116,7 @@ module FlatPack
               content_tag(:div, class: "font-medium text-sm text-[var(--surface-content-color)]") do
                 safe_join([
                   content_tag(:span, @author_name),
-                  @state == :system ? render_system_badge : nil
+                  (@state == :system) ? render_system_badge : nil
                 ].compact)
               end,
               @author_meta ? content_tag(:div, @author_meta, class: "text-xs text-[var(--surface-muted-content-color)]") : nil
@@ -127,8 +127,7 @@ module FlatPack
         def render_system_badge
           content_tag(:span,
             "System",
-            class: "ml-2 inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium border border-[var(--badge-info-border-color)] bg-[var(--badge-info-background-color)] text-[var(--badge-info-text-color)]"
-          )
+            class: "ml-2 inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium border border-[var(--badge-info-border-color)] bg-[var(--badge-info-background-color)] text-[var(--badge-info-text-color)]")
         end
 
         def render_timestamp

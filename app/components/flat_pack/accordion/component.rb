@@ -25,7 +25,7 @@ module FlatPack
       def call
         # Trigger block execution to collect items via item() calls
         content
-        
+
         content_tag(:div, **container_attributes) do
           safe_join(@items.map { |item| render_item(item) })
         end

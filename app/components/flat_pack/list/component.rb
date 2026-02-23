@@ -17,7 +17,7 @@ module FlatPack
 
       def call
         tag_name = @ordered ? :ol : :ul
-        
+
         # SECURITY: Content is marked html_safe because it's expected to contain
         # Rails-generated HTML from list items captured via block. Never pass
         # unsanitized user input directly to content.

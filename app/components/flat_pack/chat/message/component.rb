@@ -152,8 +152,6 @@ module FlatPack
             "opacity-60"
           when :failed
             "opacity-50 border-2 border-[var(--chat-message-failed-color)]"
-          else
-            nil
           end
         end
 
