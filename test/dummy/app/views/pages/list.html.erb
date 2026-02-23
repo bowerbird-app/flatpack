@@ -9,42 +9,46 @@
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <div>
       <h3 class="font-semibold mb-4">Unordered List</h3>
-      <div class="border border-[var(--surface-border-color)] rounded-lg p-4">
-        <%= render FlatPack::List::Component.new do %>
-          <%= render FlatPack::List::Item.new do %>
-            First item
-          <% end %>
-          <%= render FlatPack::List::Item.new do %>
-            Second item
-          <% end %>
-          <%= render FlatPack::List::Item.new do %>
-            Third item
-          <% end %>
-          <%= render FlatPack::List::Item.new do %>
-            Fourth item
+      <%= render FlatPack::Card::Component.new do |card| %>
+        <% card.body do %>
+          <%= render FlatPack::List::Component.new do %>
+            <%= render FlatPack::List::Item.new do %>
+              First item
+            <% end %>
+            <%= render FlatPack::List::Item.new do %>
+              Second item
+            <% end %>
+            <%= render FlatPack::List::Item.new do %>
+              Third item
+            <% end %>
+            <%= render FlatPack::List::Item.new do %>
+              Fourth item
+            <% end %>
           <% end %>
         <% end %>
-      </div>
+      <% end %>
     </div>
 
     <div>
       <h3 class="font-semibold mb-4">Ordered List</h3>
-      <div class="border border-[var(--surface-border-color)] rounded-lg p-4">
-        <%= render FlatPack::List::Component.new(ordered: true) do %>
-          <%= render FlatPack::List::Item.new do %>
-            First step
-          <% end %>
-          <%= render FlatPack::List::Item.new do %>
-            Second step
-          <% end %>
-          <%= render FlatPack::List::Item.new do %>
-            Third step
-          <% end %>
-          <%= render FlatPack::List::Item.new do %>
-            Fourth step
+      <%= render FlatPack::Card::Component.new do |card| %>
+        <% card.body do %>
+          <%= render FlatPack::List::Component.new(ordered: true) do %>
+            <%= render FlatPack::List::Item.new do %>
+              First step
+            <% end %>
+            <%= render FlatPack::List::Item.new do %>
+              Second step
+            <% end %>
+            <%= render FlatPack::List::Item.new do %>
+              Third step
+            <% end %>
+            <%= render FlatPack::List::Item.new do %>
+              Fourth step
+            <% end %>
           <% end %>
         <% end %>
-      </div>
+      <% end %>
     </div>
   </div>
 
@@ -100,14 +104,16 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "With Icons", anchor_link: true) %>
   
-  <div class="border border-[var(--surface-border-color)] rounded-lg p-6">
-    <%= render FlatPack::List::Component.new do %>
-      <%= render FlatPack::List::Item.new(icon: :check) { "Task completed successfully" } %>
-      <%= render FlatPack::List::Item.new(icon: :alert) { "Requires attention" } %>
-      <%= render FlatPack::List::Item.new(icon: :user) { "Assigned to team member" } %>
-      <%= render FlatPack::List::Item.new(icon: :calendar) { "Scheduled for tomorrow" } %>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <%= render FlatPack::List::Component.new do %>
+        <%= render FlatPack::List::Item.new(icon: :check) { "Task completed successfully" } %>
+        <%= render FlatPack::List::Item.new(icon: :alert) { "Requires attention" } %>
+        <%= render FlatPack::List::Item.new(icon: :user) { "Assigned to team member" } %>
+        <%= render FlatPack::List::Item.new(icon: :calendar) { "Scheduled for tomorrow" } %>
+      <% end %>
     <% end %>
-  </div>
+  <% end %>
 
   <%= render FlatPack::CodeBlock::Component.new(
     class: "mt-6",
@@ -188,35 +194,37 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Task List", anchor_link: true) %>
   
-  <div class="border border-[var(--surface-border-color)] rounded-lg p-6">
-    <h3 class="font-semibold mb-4">Today's Tasks</h3>
-    <%= render FlatPack::List::Component.new do %>
-      <%= render FlatPack::List::Item.new(icon: :check) do %>
-        <div class="flex items-center justify-between flex-1">
-          <span class="line-through text-[var(--surface-muted-content-color)]">Review pull request #234</span>
-          <%= render FlatPack::Badge::Component.new(text: "Completed", style: :success, size: :sm) %>
-        </div>
-      <% end %>
-      <%= render FlatPack::List::Item.new(icon: :square) do %>
-        <div class="flex items-center justify-between flex-1">
-          <span>Update documentation</span>
-          <%= render FlatPack::Badge::Component.new(text: "In Progress", style: :warning, size: :sm) %>
-        </div>
-      <% end %>
-      <%= render FlatPack::List::Item.new(icon: :square) do %>
-        <div class="flex items-center justify-between flex-1">
-          <span>Fix bug in authentication flow</span>
-          <%= render FlatPack::Badge::Component.new(text: "High Priority", style: :warning, size: :sm) %>
-        </div>
-      <% end %>
-      <%= render FlatPack::List::Item.new(icon: :square) do %>
-        <div class="flex items-center justify-between flex-1">
-          <span>Prepare demo for stakeholders</span>
-          <%= render FlatPack::Badge::Component.new(text: "Todo", style: :default, size: :sm) %>
-        </div>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <h3 class="font-semibold mb-4">Today's Tasks</h3>
+      <%= render FlatPack::List::Component.new do %>
+        <%= render FlatPack::List::Item.new(icon: :check) do %>
+          <div class="flex items-center justify-between flex-1">
+            <span class="line-through text-[var(--surface-muted-content-color)]">Review pull request #234</span>
+            <%= render FlatPack::Badge::Component.new(text: "Completed", style: :success, size: :sm) %>
+          </div>
+        <% end %>
+        <%= render FlatPack::List::Item.new(icon: :square) do %>
+          <div class="flex items-center justify-between flex-1">
+            <span>Update documentation</span>
+            <%= render FlatPack::Badge::Component.new(text: "In Progress", style: :warning, size: :sm) %>
+          </div>
+        <% end %>
+        <%= render FlatPack::List::Item.new(icon: :square) do %>
+          <div class="flex items-center justify-between flex-1">
+            <span>Fix bug in authentication flow</span>
+            <%= render FlatPack::Badge::Component.new(text: "High Priority", style: :warning, size: :sm) %>
+          </div>
+        <% end %>
+        <%= render FlatPack::List::Item.new(icon: :square) do %>
+          <div class="flex items-center justify-between flex-1">
+            <span>Prepare demo for stakeholders</span>
+            <%= render FlatPack::Badge::Component.new(text: "Todo", style: :default, size: :sm) %>
+          </div>
+        <% end %>
       <% end %>
     <% end %>
-  </div>
+  <% end %>
 
   <%= render FlatPack::CodeBlock::Component.new(
     class: "mt-6",
@@ -244,37 +252,39 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Settings List", anchor_link: true) %>
   
-  <div class="border border-[var(--surface-border-color)] rounded-lg divide-y divide-[var(--surface-border-color)]">
-    <%= render FlatPack::List::Component.new do %>
-      <%= render FlatPack::List::Item.new(icon: :bell) do %>
-        <div class="flex items-center justify-between flex-1">
-          <div>
-            <p class="font-medium">Email Notifications</p>
-            <p class="text-sm text-[var(--surface-muted-content-color)]">Receive updates via email</p>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <%= render FlatPack::List::Component.new do %>
+        <%= render FlatPack::List::Item.new(icon: :bell) do %>
+          <div class="flex items-center justify-between flex-1">
+            <div>
+              <p class="font-medium">Email Notifications</p>
+              <p class="text-sm text-[var(--surface-muted-content-color)]">Receive updates via email</p>
+            </div>
+            <%= render FlatPack::Switch::Component.new(name: "email_notifications", checked: true) %>
           </div>
-          <%= render FlatPack::Switch::Component.new(name: "email_notifications", checked: true) %>
-        </div>
-      <% end %>
-      <%= render FlatPack::List::Item.new(icon: :lock) do %>
-        <div class="flex items-center justify-between flex-1">
-          <div>
-            <p class="font-medium">Two-Factor Authentication</p>
-            <p class="text-sm text-[var(--surface-muted-content-color)]">Add an extra layer of security</p>
+        <% end %>
+        <%= render FlatPack::List::Item.new(icon: :lock) do %>
+          <div class="flex items-center justify-between flex-1">
+            <div>
+              <p class="font-medium">Two-Factor Authentication</p>
+              <p class="text-sm text-[var(--surface-muted-content-color)]">Add an extra layer of security</p>
+            </div>
+            <%= render FlatPack::Switch::Component.new(name: "2fa", checked: false) %>
           </div>
-          <%= render FlatPack::Switch::Component.new(name: "2fa", checked: false) %>
-        </div>
-      <% end %>
-      <%= render FlatPack::List::Item.new(icon: :users) do %>
-        <div class="flex items-center justify-between flex-1">
-          <div>
-            <p class="font-medium">Profile Visibility</p>
-            <p class="text-sm text-[var(--surface-muted-content-color)]">Make profile public</p>
+        <% end %>
+        <%= render FlatPack::List::Item.new(icon: :users) do %>
+          <div class="flex items-center justify-between flex-1">
+            <div>
+              <p class="font-medium">Profile Visibility</p>
+              <p class="text-sm text-[var(--surface-muted-content-color)]">Make profile public</p>
+            </div>
+            <%= render FlatPack::Switch::Component.new(name: "public_profile", checked: true) %>
           </div>
-          <%= render FlatPack::Switch::Component.new(name: "public_profile", checked: true) %>
-        </div>
+        <% end %>
       <% end %>
     <% end %>
-  </div>
+  <% end %>
 
   <%= render FlatPack::CodeBlock::Component.new(
     class: "mt-6",
@@ -299,22 +309,24 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Navigation List", anchor_link: true) %>
   
-  <div class="border border-[var(--surface-border-color)] rounded-lg p-4">
-    <%= render FlatPack::List::Component.new do %>
-      <%= render FlatPack::List::Item.new(icon: :home) do %>
-        <%= link_to "Dashboard", "#", class: "text-[var(--color-primary)] hover:underline" %>
-      <% end %>
-      <%= render FlatPack::List::Item.new(icon: :users) do %>
-        <%= link_to "Team Members", "#", class: "text-[var(--color-primary)] hover:underline" %>
-      <% end %>
-      <%= render FlatPack::List::Item.new(icon: :folder) do %>
-        <%= link_to "Projects", "#", class: "text-[var(--color-primary)] hover:underline" %>
-      <% end %>
-      <%= render FlatPack::List::Item.new(icon: :settings) do %>
-        <%= link_to "Settings", "#", class: "text-[var(--color-primary)] hover:underline" %>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <%= render FlatPack::List::Component.new do %>
+        <%= render FlatPack::List::Item.new(icon: :home) do %>
+          <%= link_to "Dashboard", "#", class: "text-[var(--color-primary)] hover:underline" %>
+        <% end %>
+        <%= render FlatPack::List::Item.new(icon: :users) do %>
+          <%= link_to "Team Members", "#", class: "text-[var(--color-primary)] hover:underline" %>
+        <% end %>
+        <%= render FlatPack::List::Item.new(icon: :folder) do %>
+          <%= link_to "Projects", "#", class: "text-[var(--color-primary)] hover:underline" %>
+        <% end %>
+        <%= render FlatPack::List::Item.new(icon: :settings) do %>
+          <%= link_to "Settings", "#", class: "text-[var(--color-primary)] hover:underline" %>
+        <% end %>
       <% end %>
     <% end %>
-  </div>
+  <% end %>
 
   <%= render FlatPack::CodeBlock::Component.new(
     class: "mt-6",

@@ -241,19 +241,11 @@
     <%= render FlatPack::Popover::Component.new(trigger_id: "popover-trigger-more-actions", placement: :bottom) do |popover| %>
       <% popover.with_popover_content do %>
         <div class="py-2 w-48">
-          <a href="#" class="block px-4 py-2 text-sm hover:bg-[var(--surface-muted-background-color)] transition-colors">
-            Edit
-          </a>
-          <a href="#" class="block px-4 py-2 text-sm hover:bg-[var(--surface-muted-background-color)] transition-colors">
-            Duplicate
-          </a>
-          <a href="#" class="block px-4 py-2 text-sm hover:bg-[var(--surface-muted-background-color)] transition-colors">
-            Archive
-          </a>
+          <%= render FlatPack::Button::Component.new(text: "Edit", url: "#", style: :ghost, size: :sm, class: "w-full justify-start") %>
+          <%= render FlatPack::Button::Component.new(text: "Duplicate", url: "#", style: :ghost, size: :sm, class: "w-full justify-start") %>
+          <%= render FlatPack::Button::Component.new(text: "Archive", url: "#", style: :ghost, size: :sm, class: "w-full justify-start") %>
           <div class="border-t border-[var(--surface-border-color)] my-2"></div>
-          <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-[var(--surface-muted-background-color)] transition-colors">
-            Delete
-          </a>
+          <%= render FlatPack::Button::Component.new(text: "Delete", url: "#", style: :ghost, size: :sm, class: "w-full justify-start text-red-600") %>
         </div>
       <% end %>
     <% end %>

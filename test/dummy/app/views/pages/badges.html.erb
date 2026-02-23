@@ -166,43 +166,49 @@
     <%= render FlatPack::SectionTitle::Component.new(title: "Combined Examples", anchor_link: true, subtitle: "Examples for Combined Examples.") %>
     <div class="mb-6">
       <h3 class="text-lg font-medium mb-3">User Profile Card</h3>
-      <div class="border border-[var(--surface-border-color)] rounded-md p-4">
-        <div class="flex items-center justify-between mb-2">
-          <h4 class="font-semibold">John Doe</h4>
-          <%= render FlatPack::Badge::Component.new(text: "Admin", style: :primary, size: :sm) %>
-        </div>
-        <div class="flex gap-2">
-          <%= render FlatPack::Badge::Component.new(text: "Online", style: :success, dot: true, size: :sm) %>
-          <%= render FlatPack::Badge::Component.new(text: "Pro", style: :primary, size: :sm) %>
-        </div>
-      </div>
+      <%= render FlatPack::Card::Component.new do |card| %>
+        <% card.body do %>
+          <div class="flex items-center justify-between mb-2">
+            <h4 class="font-semibold">John Doe</h4>
+            <%= render FlatPack::Badge::Component.new(text: "Admin", style: :primary, size: :sm) %>
+          </div>
+          <div class="flex gap-2">
+            <%= render FlatPack::Badge::Component.new(text: "Online", style: :success, dot: true, size: :sm) %>
+            <%= render FlatPack::Badge::Component.new(text: "Pro", style: :primary, size: :sm) %>
+          </div>
+        <% end %>
+      <% end %>
     </div>
 
     <div class="mb-6">
       <h3 class="text-lg font-medium mb-3">Task List Item</h3>
-      <div class="border border-[var(--surface-border-color)] rounded-md p-4">
-        <div class="flex items-center justify-between">
-          <span>Update documentation</span>
-          <div class="flex gap-2">
-            <%= render FlatPack::Badge::Component.new(text: "High Priority", style: :warning, size: :sm) %>
-            <%= render FlatPack::Badge::Component.new(text: "In Progress", style: :warning, size: :sm) %>
+      <%= render FlatPack::Card::Component.new do |card| %>
+        <% card.body do %>
+          <div class="flex items-center justify-between">
+            <span>Update documentation</span>
+            <div class="flex gap-2">
+              <%= render FlatPack::Badge::Component.new(text: "High Priority", style: :warning, size: :sm) %>
+              <%= render FlatPack::Badge::Component.new(text: "In Progress", style: :warning, size: :sm) %>
+            </div>
           </div>
-        </div>
-      </div>
+        <% end %>
+      <% end %>
     </div>
 
     <div class="mb-6">
       <h3 class="text-lg font-medium mb-3">Skills Tags</h3>
-      <div class="border border-[var(--surface-border-color)] rounded-md p-4">
-        <div class="flex flex-wrap gap-2">
-          <%= render FlatPack::Badge::Component.new(text: "Ruby", removable: true, size: :sm) %>
-          <%= render FlatPack::Badge::Component.new(text: "Rails", removable: true, size: :sm) %>
-          <%= render FlatPack::Badge::Component.new(text: "JavaScript", removable: true, size: :sm) %>
-          <%= render FlatPack::Badge::Component.new(text: "React", removable: true, size: :sm) %>
-          <%= render FlatPack::Badge::Component.new(text: "TypeScript", removable: true, size: :sm) %>
-          <%= render FlatPack::Badge::Component.new(text: "PostgreSQL", removable: true, size: :sm) %>
-        </div>
-      </div>
+      <%= render FlatPack::Card::Component.new do |card| %>
+        <% card.body do %>
+          <div class="flex flex-wrap gap-2">
+            <%= render FlatPack::Badge::Component.new(text: "Ruby", removable: true, size: :sm) %>
+            <%= render FlatPack::Badge::Component.new(text: "Rails", removable: true, size: :sm) %>
+            <%= render FlatPack::Badge::Component.new(text: "JavaScript", removable: true, size: :sm) %>
+            <%= render FlatPack::Badge::Component.new(text: "React", removable: true, size: :sm) %>
+            <%= render FlatPack::Badge::Component.new(text: "TypeScript", removable: true, size: :sm) %>
+            <%= render FlatPack::Badge::Component.new(text: "PostgreSQL", removable: true, size: :sm) %>
+          </div>
+        <% end %>
+      <% end %>
     </div>
 
     <%= render FlatPack::CodeBlock::Component.new(
