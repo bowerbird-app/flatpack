@@ -13,7 +13,7 @@ The Button component renders a button or link with consistent styling and behavi
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `text` | String | `nil` | Button text (required unless `icon` is provided) |
-| `style` | Symbol | `:primary` | Visual style (`:primary`, `:secondary`, `:ghost`, `:success`, `:warning`) |
+| `style` | Symbol | `:default` | Visual style (`:default`, `:primary`, `:secondary`, `:ghost`, `:success`, `:warning`) |
 | `size` | Symbol | `:md` | Button size (`:sm`, `:md`, `:lg`) |
 | `url` | String | `nil` | If provided, renders as link instead of button |
 | `method` | Symbol | `nil` | HTTP method for link (`:get`, `:post`, `:delete`, etc.) |
@@ -26,7 +26,17 @@ The Button component renders a button or link with consistent styling and behavi
 
 ## Schemes
 
-### Primary (Default)
+### Default (Default)
+Neutral action style (white/light surface), used for standard actions.
+
+```erb
+<%= render FlatPack::Button::Component.new(
+  text: "Cancel",
+  style: :default
+) %>
+```
+
+### Primary
 Primary actions, most important button on the page.
 
 ```erb

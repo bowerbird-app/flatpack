@@ -1,0 +1,32 @@
+<div class="container mx-auto max-w-5xl p-4">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Chat::Layout",
+    subtitle: "Single and split layout patterns for messaging interfaces."
+  ) %>
+
+  <div class="mt-6 h-[560px] overflow-hidden rounded-lg border border-[var(--surface-border-color)] bg-[var(--surface-background-color)]">
+    <%= render FlatPack::Chat::Layout::Component.new(variant: :split) do |layout| %>
+      <% layout.with_sidebar do %>
+        <div class="p-4">
+          <h3 class="mb-3 text-sm font-semibold text-[var(--surface-content-color)]">Conversations</h3>
+          <div class="space-y-2">
+            <div class="rounded-lg bg-[var(--surface-muted-background-color)] px-3 py-2 text-sm">Product Launch</div>
+            <div class="rounded-lg px-3 py-2 text-sm text-[var(--surface-muted-content-color)]">Support Team</div>
+            <div class="rounded-lg px-3 py-2 text-sm text-[var(--surface-muted-content-color)]">Marketing</div>
+          </div>
+        </div>
+      <% end %>
+
+      <% layout.with_panel do %>
+        <%= render FlatPack::Chat::Panel::Component.new do |panel| %>
+          <% panel.with_header do %>
+            <div class="p-4 text-sm font-semibold">Product Launch</div>
+          <% end %>
+          <% panel.with_messages do %>
+            <div class="flex-1 p-4 text-sm text-[var(--surface-muted-content-color)]">Panel slot content sits here.</div>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

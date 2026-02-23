@@ -1,0 +1,82 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Stacked Pills",
+  subtitle: "Vertical tab triggers with full keyboard navigation and a responsive stacked-to-two-column layout."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :tabs %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Stacked Variant", anchor_link: true, subtitle: "Use vertical tab triggers for settings and side-panel style navigation.") %>
+  <%= render FlatPack::Tabs::Component.new(variant: :stacked) do |tabs| %>
+    <% tabs.tab(id: "account", label: "Account") %>
+    <% tabs.tab(id: "billing", label: "Billing") %>
+    <% tabs.tab(id: "members", label: "Team Members") %>
+    <% tabs.tab(id: "security", label: "Security") %>
+
+    <% tabs.panel(id: "account") do %>
+      <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg) do %>
+        <h3 class="text-lg font-semibold mb-2">Account Settings</h3>
+        <p class="text-(--surface-content-color)">
+          Stacked pills are ideal when labels are longer or when tab navigation should read like a vertical menu.
+        </p>
+      <% end %>
+    <% end %>
+
+    <% tabs.panel(id: "billing") do %>
+      <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg) do %>
+        <h3 class="text-lg font-semibold mb-2">Billing</h3>
+        <p class="text-(--surface-content-color)">
+          On larger screens, the tab list stays on the left while panel content expands on the right.
+        </p>
+      <% end %>
+    <% end %>
+
+    <% tabs.panel(id: "members") do %>
+      <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg) do %>
+        <h3 class="text-lg font-semibold mb-2">Team Members</h3>
+        <p class="text-(--surface-content-color)">
+          Keyboard support uses Up/Down arrows for vertical tab navigation plus Home/End and Enter/Space activation.
+        </p>
+      <% end %>
+    <% end %>
+
+    <% tabs.panel(id: "security") do %>
+      <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg) do %>
+        <h3 class="text-lg font-semibold mb-2">Security</h3>
+        <p class="text-(--surface-content-color)">
+          The stacked variant keeps the same ARIA roles and panel semantics as existing underline and pills variants.
+        </p>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Tabs::Component.new(variant: :stacked) do |tabs| %&gt;
+        &lt;% tabs.tab(id: "account", label: "Account") %&gt;
+        &lt;% tabs.tab(id: "billing", label: "Billing") %&gt;
+
+        &lt;% tabs.panel(id: "account") do %&gt;
+          <p>Account content...</p>
+        &lt;% end %&gt;
+        &lt;% tabs.panel(id: "billing") do %&gt;
+          <p>Billing content...</p>
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    class: "mt-4"
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Keyboard Navigation", anchor_link: true, subtitle: "Examples for Keyboard Navigation.") %>
+  <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg) do %>
+    <h3 class="font-semibold mb-3">Keyboard Shortcuts:</h3>
+    <%= render FlatPack::List::Component.new(spacing: :dense, class: "text-(--surface-content-color)") do %>
+      <%= render FlatPack::List::Item.new do %><kbd class="px-2 py-1 bg-(--surface-background-color) border border-(--surface-border-color) rounded text-sm">↑</kbd> / <kbd class="px-2 py-1 bg-(--surface-background-color) border border-(--surface-border-color) rounded text-sm">↓</kbd> - Navigate between stacked pills<% end %>
+      <%= render FlatPack::List::Item.new do %><kbd class="px-2 py-1 bg-(--surface-background-color) border border-(--surface-border-color) rounded text-sm">Home</kbd> - Jump to first tab<% end %>
+      <%= render FlatPack::List::Item.new do %><kbd class="px-2 py-1 bg-(--surface-background-color) border border-(--surface-border-color) rounded text-sm">End</kbd> - Jump to last tab<% end %>
+      <%= render FlatPack::List::Item.new do %><kbd class="px-2 py-1 bg-(--surface-background-color) border border-(--surface-border-color) rounded text-sm">Enter</kbd> / <kbd class="px-2 py-1 bg-(--surface-background-color) border border-(--surface-border-color) rounded text-sm">Space</kbd> - Activate focused tab<% end %>
+    <% end %>
+  <% end %>
+</section>

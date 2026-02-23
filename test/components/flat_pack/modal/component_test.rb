@@ -87,7 +87,7 @@ module FlatPack
           component.with_body { "Content" }
         end
 
-        assert_selector "div.max-w-md"
+        assert_selector "div.max-w-xl"
       end
 
       def test_modal_size_large
@@ -95,7 +95,7 @@ module FlatPack
           component.with_body { "Content" }
         end
 
-        assert_selector "div.max-w-lg"
+        assert_selector "div.max-w-2xl"
       end
 
       def test_raises_error_without_id

@@ -18,12 +18,14 @@ module FlatPack
         variant: :text,
         width: nil,
         height: nil,
+        shimmer: true,
         **system_arguments
       )
         super(**system_arguments)
         @variant = variant.to_sym
         @width = width
         @height = height
+        @shimmer = shimmer
 
         validate_variant!
       end
@@ -43,10 +45,16 @@ module FlatPack
       end
 
       def skeleton_classes
-        base = "animate-pulse bg-[var(--color-muted)]"
+        base = "bg-[var(--surface-muted-background-color)]"
         variant_classes = VARIANTS.fetch(@variant)
-        
-        classes(base, variant_classes, custom_size_classes)
+
+        classes(base, shimmer_classes, variant_classes, custom_size_classes)
+      end
+
+      def shimmer_classes
+        return unless @shimmer
+
+        "relative overflow-hidden before:pointer-events-none before:absolute before:inset-0 before:content-[''] before:bg-[linear-gradient(110deg,transparent_20%,rgb(255_255_255_/_0.45)_45%,transparent_70%)] before:translate-x-[-100%] before:animate-[fp-skeleton-shimmer_1.35s_linear_infinite] motion-reduce:before:animate-none"
       end
 
       def custom_size_classes

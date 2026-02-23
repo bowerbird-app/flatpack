@@ -9,7 +9,7 @@ module FlatPack
         renders_one :attachments
 
         def initialize(**system_arguments)
-          super(**system_arguments)
+          super
         end
 
         def call
@@ -31,7 +31,7 @@ module FlatPack
         def render_textarea_section
           content_tag(:div, class: "flex-1 min-w-0") do
             if textarea?
-              textarea
+              textarea.to_s
             else
               render_default_textarea
             end
@@ -48,7 +48,7 @@ module FlatPack
 
         def render_actions_section
           if actions?
-            actions
+            actions.to_s
           else
             render_default_actions
           end
@@ -62,7 +62,7 @@ module FlatPack
           return unless attachments?
 
           content_tag(:div, class: "mb-2") do
-            attachments
+            attachments.to_s
           end
         end
 
@@ -74,8 +74,8 @@ module FlatPack
 
         def composer_classes
           classes(
-            "border-t border-[var(--color-border)]",
-            "bg-[var(--color-background)]",
+            "border-t border-[var(--chat-composer-border-color)]",
+            "bg-[var(--chat-composer-background-color)]",
             "p-4"
           )
         end

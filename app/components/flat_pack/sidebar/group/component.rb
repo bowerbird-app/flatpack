@@ -117,9 +117,9 @@ module FlatPack
             "py-2.5",
             "text-sm",
             "font-medium",
-            "text-[var(--color-text-muted)]",
-            "hover:bg-[var(--color-muted)]",
-            "hover:text-[var(--color-text)]",
+            "text-[var(--sidebar-item-text-color)]",
+            "hover:bg-[var(--sidebar-item-hover-background-color)]",
+            "hover:text-[var(--sidebar-item-hover-text-color)]",
             "transition-colors",
             "rounded-lg",
             "mx-2",
@@ -181,6 +181,7 @@ module FlatPack
             "overflow-hidden",
             "transition-all",
             "duration-200",
+            ("pl-[var(--sidebar-group-item-indent)]" unless @collapsed),
             (@default_open ? "" : "max-h-0")
           )
         end

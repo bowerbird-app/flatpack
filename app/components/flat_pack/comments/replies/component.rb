@@ -38,22 +38,18 @@ module FlatPack
 
         def replies_classes
           # Indent based on depth
-          indent_class = case @depth
-          when 1 then "ml-11"
-          when 2 then "ml-11"
-          else "ml-11"
-          end
+          indent_class = "ml-11"
 
           classes(
             indent_class,
-            "border-l-2 border-[var(--color-border)] pl-4 space-y-4"
+            "border-l-2 border-[var(--surface-border-color)] pl-4 space-y-4"
           )
         end
 
         def render_collapsed_state
           content_tag(:button,
             type: "button",
-            class: "text-sm font-medium text-[var(--color-primary)] hover:text-[var(--color-primary)]/80 transition-colors duration-[var(--transition-base)]") do
+            class: "text-sm font-medium text-primary hover:text-primary/80 transition-colors duration-base") do
             safe_join([
               # Chevron right icon
               content_tag(:svg,
@@ -65,8 +61,7 @@ module FlatPack
                   nil,
                   "fill-rule": "evenodd",
                   d: "M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z",
-                  "clip-rule": "evenodd"
-                )
+                  "clip-rule": "evenodd")
               end,
               content_tag(:span, @collapsed_label)
             ])
@@ -75,7 +70,7 @@ module FlatPack
 
         def render_comments_list
           return unless comments?
-          
+
           safe_join(comments)
         end
       end

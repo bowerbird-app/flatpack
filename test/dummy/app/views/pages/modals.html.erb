@@ -20,10 +20,10 @@
       <h2 class="text-xl font-semibold">Modal Title</h2>
     <% end %>
     <% modal.with_body do %>
-      <p class="text-[var(--color-foreground)]">
+      <p class="text-[var(--surface-content-color)]">
         This is a basic modal dialog. Click the backdrop, press ESC, or click the close button to dismiss.
       </p>
-      <p class="mt-4 text-[var(--color-muted-foreground)]">
+      <p class="mt-4 text-[var(--surface-muted-content-color)]">
         The modal traps focus and prevents interaction with the rest of the page while open.
       </p>
     <% end %>
@@ -130,7 +130,7 @@
 <!-- Modal with Form -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Modal with Form", anchor_link: true, subtitle: "Examples for Modal with Form.") %>
-  <p class="text-[var(--color-muted-foreground)] mb-4">
+  <p class="text-[var(--surface-muted-content-color)] mb-4">
     A practical example of placing a form inside a modal for focused data entry.
   </p>
   <div class="mb-4">
@@ -209,7 +209,7 @@
 <!-- Long Content Modal -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Long Content Modal", anchor_link: true, subtitle: "Examples for Long Content Modal.") %>
-  <p class="text-[var(--color-muted-foreground)] mb-4">
+  <p class="text-[var(--surface-muted-content-color)] mb-4">
     This example includes a large amount of text to test modal body scrolling and overall behavior with long-form content.
   </p>
   <div class="mb-4">
@@ -225,7 +225,7 @@
       <h2 class="text-xl font-semibold">Long Content Test</h2>
     <% end %>
     <% modal.with_body do %>
-      <div class="space-y-4 text-[var(--color-foreground)]">
+      <div class="space-y-4 text-[var(--surface-content-color)]">
         <p>
           This modal intentionally contains a lot of text so you can validate scrolling behavior, focus handling,
           and layout stability with larger content sets.
@@ -249,19 +249,66 @@
       ) %>
     <% end %>
   <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;p class=&quot;text-[var(--surface-muted-content-color)] mb-4&quot;&gt;
+        This example includes a large amount of text to test modal body scrolling and overall behavior with long-form content.
+      &lt;/p&gt;
+      &lt;div class=&quot;mb-4&quot;&gt;
+        &lt;%= render FlatPack::Button::Component.new(
+          text: &quot;Open Long Content Modal&quot;,
+          style: :secondary,
+          data: { action: &quot;click-&gt;flat-pack--modal#open&quot;, &quot;flat-pack--modal-target&quot;: &quot;trigger&quot;, &quot;modal-id&quot;: &quot;long-content-modal&quot; }
+        ) %&gt;
+      &lt;/div&gt;
+    
+      &lt;%= render FlatPack::Modal::Component.new(id: &quot;long-content-modal&quot;, size: :lg) do |modal| %&gt;
+        &lt;% modal.with_header do %&gt;
+          &lt;h2 class=&quot;text-xl font-semibold&quot;&gt;Long Content Test&lt;/h2&gt;
+        &lt;% end %&gt;
+        &lt;% modal.with_body do %&gt;
+          &lt;div class=&quot;space-y-4 text-[var(--surface-content-color)]&quot;&gt;
+            &lt;p&gt;
+              This modal intentionally contains a lot of text so you can validate scrolling behavior, focus handling,
+              and layout stability with larger content sets.
+            &lt;/p&gt;
+            &lt;% 20.times do |i| %&gt;
+              &lt;p&gt;
+                &lt;strong&gt;Section &lt;%= i + 1 %&gt;:&lt;/strong&gt;
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus at augue vitae lacus consequat feugiat.
+                Curabitur suscipit, est in dapibus rhoncus, nisi lectus congue turpis, at interdum turpis dui eget nibh.
+                Integer facilisis velit ac tellus feugiat, non aliquet elit convallis. Aenean tempor sem ut neque luctus,
+                vitae pulvinar ipsum sodales.
+              &lt;/p&gt;
+            &lt;% end %&gt;
+          &lt;/div&gt;
+        &lt;% end %&gt;
+        &lt;% modal.with_footer do %&gt;
+          &lt;%= render FlatPack::Button::Component.new(
+            text: &quot;Close&quot;,
+            style: :secondary,
+            data: { action: &quot;click-&gt;flat-pack--modal#close&quot; }
+          ) %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    language: "erb",
+    title: "Long Content Modal"
+  ) %>
 </section>
 
 <!-- Features -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Examples for Features.") %>
-  <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
-    <li><strong>Focus Trap:</strong> Keeps keyboard focus within the modal while open</li>
-    <li><strong>Focus Restoration:</strong> Returns focus to the trigger element on close</li>
-    <li><strong>ESC to Close:</strong> Press ESC key to dismiss the modal</li>
-    <li><strong>Backdrop Click:</strong> Click outside the modal to close (configurable)</li>
-    <li><strong>Scroll Prevention:</strong> Prevents page scrolling while modal is open</li>
-    <li><strong>Accessibility:</strong> Full ARIA support with role="dialog" and aria-modal="true"</li>
-    <li><strong>Animations:</strong> Smooth fade and scale transitions (respects prefers-reduced-motion)</li>
-    <li><strong>Turbo Compatible:</strong> Works seamlessly with Turbo navigation</li>
-  </ul>
+  <%= render FlatPack::List::Component.new(spacing: :dense, class: "text-[var(--surface-content-color)]") do %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Focus Trap:</strong> Keeps keyboard focus within the modal while open<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Focus Restoration:</strong> Returns focus to the trigger element on close<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>ESC to Close:</strong> Press ESC key to dismiss the modal<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Backdrop Click:</strong> Click outside the modal to close (configurable)<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Scroll Prevention:</strong> Prevents page scrolling while modal is open<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Accessibility:</strong> Full ARIA support with role="dialog" and aria-modal="true"<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Animations:</strong> Smooth fade and scale transitions (respects prefers-reduced-motion)<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Turbo Compatible:</strong> Works seamlessly with Turbo navigation<% end %>
+  <% end %>
 </section>

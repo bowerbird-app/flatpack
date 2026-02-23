@@ -20,7 +20,7 @@ Add to your Gemfile:
 
 ```ruby
 gem 'flat_pack'
-gem 'tailwindcss-rails', '~> 3.0'
+gem 'tailwindcss-rails', '~> 4.0'
 ```
 
 Then install:
@@ -196,7 +196,7 @@ More components coming soon!
 
 - Rails 8.0+
 - Ruby 3.2+
-- Tailwind CSS 3.x or 4.x (via tailwindcss-rails gem)
+- Tailwind CSS 4.x (via tailwindcss-rails gem)
 - Propshaft (asset pipeline)
 - Importmaps (JavaScript)
 

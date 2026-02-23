@@ -1,10 +1,47 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@source "../../../../../app";
 
-/* FlatPack CSS Variables - Compatible with Tailwind CSS 3 */
-@import "flat_pack/variables";
+/* FlatPack CSS Variables */
+@import "../../../../../app/assets/stylesheets/flat_pack/variables.css";
 
-/* Import FlatPack component styles */
-@import "flat_pack/application";
+@layer components {
+	.fp-gradient-1 {
+		background-image: var(--gradient-1);
+	}
 
+	.fp-gradient-2 {
+		background-image: var(--gradient-2);
+	}
+
+	.fp-gradient-3 {
+		background-image: var(--gradient-3);
+	}
+
+	.fp-gradient-4 {
+		background-image: var(--gradient-4);
+	}
+
+	.fp-theme-demo-gradient {
+		min-height: 6rem;
+	}
+
+	.fp-theme-demo-box {
+		min-height: 5rem;
+		padding: 0.75rem;
+	}
+}
+
+@keyframes fp-skeleton-shimmer {
+	to {
+		transform: translateX(100%);
+	}
+}
+
+/* Dummy app override: remove sidebar header bottom border in every theme */
+:root,
+[data-theme="light"],
+[data-theme="dark"],
+[data-theme="ocean"],
+[data-theme="rounded"] {
+	--sidebar-header-border-color: transparent;
+}

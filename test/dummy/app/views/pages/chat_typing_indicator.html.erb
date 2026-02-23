@@ -1,0 +1,16 @@
+<div class="container mx-auto max-w-4xl p-4">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Chat::TypingIndicator",
+    subtitle: "Animated typing feedback with optional avatar slot."
+  ) %>
+
+  <div class="mt-6 space-y-4 rounded-lg border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-6">
+    <%= render FlatPack::Chat::TypingIndicator::Component.new(label: "Teammate is typing") do |indicator| %>
+      <% indicator.with_avatar do %>
+        <%= render FlatPack::Avatar::Component.new(name: "Teammate", initials: "TM", size: :sm) %>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::Chat::TypingIndicator::Component.new(label: "Anonymous user is typing") %>
+  </div>
+</div>

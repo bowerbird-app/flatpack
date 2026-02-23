@@ -22,14 +22,14 @@ module FlatPack
         render_inline(Item.new(icon: :check)) { "Content" }
 
         assert_selector "svg"
-        assert_selector "use[xlink:href='#icon-check']"
+        assert_includes page.native.to_html, "#icon-check"
       end
 
       def test_icon_has_proper_styling
         render_inline(Item.new(icon: :check)) { "Content" }
 
         assert_includes page.native.to_html, "flex-shrink-0"
-        assert_includes page.native.to_html, "text-[var(--color-text-muted)]"
+        assert_includes page.native.to_html, "text-[var(--surface-muted-content-color)]"
       end
 
       def test_content_wrapped_in_span

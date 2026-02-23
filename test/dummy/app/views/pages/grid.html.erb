@@ -8,7 +8,7 @@
 <!-- Basic Grid -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Auto-Responsive Grid", anchor_link: true, subtitle: "Examples for Auto-Responsive Grid.") %>
-  <p class="text-[var(--color-muted-foreground)] mb-4">
+  <p class="text-[var(--surface-muted-content-color)] mb-4">
     Default grid automatically adapts: 1 column on mobile, 2 on tablet, 3 on desktop.
   </p>
   <%= render FlatPack::Grid::Component.new do %>
@@ -16,7 +16,7 @@
       <%= render FlatPack::Card::Component.new(style: :outlined) do |card| %>
         <% card.body do %>
           <h3 class="font-semibold mb-2">Item <%= i + 1 %></h3>
-          <p class="text-sm text-[var(--color-muted-foreground)]">
+          <p class="text-sm text-[var(--surface-muted-content-color)]">
             Card content <%= i + 1 %>
           </p>
         <% end %>
@@ -48,12 +48,12 @@
       <%= render FlatPack::Card::Component.new(style: :elevated) do |card| %>
         <% card.body do %>
           <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-lg bg-[var(--color-primary)] flex items-center justify-center text-white font-bold">
+            <div class="w-12 h-12 rounded-lg bg-primary flex items-center justify-center text-white font-bold">
               <%= i + 1 %>
             </div>
             <div>
               <h3 class="font-semibold">Feature <%= i + 1 %></h3>
-              <p class="text-sm text-[var(--color-muted-foreground)]">Description</p>
+              <p class="text-sm text-[var(--surface-muted-content-color)]">Description</p>
             </div>
           </div>
         <% end %>
@@ -77,7 +77,7 @@
   <h3 class="text-lg font-semibold mb-3">Small Gap</h3>
   <%= render FlatPack::Grid::Component.new(cols: 4, gap: :sm) do %>
     <% 4.times do |i| %>
-      <div class="bg-[var(--color-muted)] p-4 rounded-lg text-center">
+      <div class="bg-[var(--surface-muted-background-color)] p-4 rounded-lg text-center">
         <%= i + 1 %>
       </div>
     <% end %>
@@ -86,7 +86,7 @@
   <h3 class="text-lg font-semibold mb-3 mt-6">Medium Gap (Default)</h3>
   <%= render FlatPack::Grid::Component.new(cols: 4, gap: :md) do %>
     <% 4.times do |i| %>
-      <div class="bg-[var(--color-muted)] p-4 rounded-lg text-center">
+      <div class="bg-[var(--surface-muted-background-color)] p-4 rounded-lg text-center">
         <%= i + 1 %>
       </div>
     <% end %>
@@ -95,7 +95,7 @@
   <h3 class="text-lg font-semibold mb-3 mt-6">Large Gap</h3>
   <%= render FlatPack::Grid::Component.new(cols: 4, gap: :lg) do %>
     <% 4.times do |i| %>
-      <div class="bg-[var(--color-muted)] p-4 rounded-lg text-center">
+      <div class="bg-[var(--surface-muted-background-color)] p-4 rounded-lg text-center">
         <%= i + 1 %>
       </div>
     <% end %>
@@ -124,7 +124,7 @@
         <% end %>
         <% card.body do %>
           <h3 class="font-semibold mb-1"><%= product.name %></h3>
-          <p class="text-sm text-[var(--color-muted-foreground)] mb-2">
+          <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">
             <%= product.description %>
           </p>
           <div class="flex items-center justify-between">
@@ -137,12 +137,42 @@
       <% end %>
     <% end %>
   <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Grid::Component.new(cols: 3) do %&gt;
+        &lt;% @products.first(6).each do |product| %&gt;
+          &lt;%= render FlatPack::Card::Component.new(style: :outlined, hover: :subtle) do |card| %&gt;
+            &lt;% card.media do %&gt;
+              &lt;div class=&quot;h-48 bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center&quot;&gt;
+                &lt;%= render FlatPack::Shared::IconComponent.new(name: :box, size: :lg, class: &quot;text-blue-600&quot;) %&gt;
+              &lt;/div&gt;
+            &lt;% end %&gt;
+            &lt;% card.body do %&gt;
+              &lt;h3 class=&quot;font-semibold mb-1&quot;&gt;&lt;%= product.name %&gt;&lt;/h3&gt;
+              &lt;p class=&quot;text-sm text-[var(--surface-muted-content-color)] mb-2&quot;&gt;
+                &lt;%= product.description %&gt;
+              &lt;/p&gt;
+              &lt;div class=&quot;flex items-center justify-between&quot;&gt;
+                &lt;span class=&quot;text-lg font-bold text-[var(--color-primary)]&quot;&gt;
+                  $&lt;%= product.price %&gt;
+                &lt;/span&gt;
+                &lt;%= render FlatPack::Button::Component.new(text: &quot;Add to Cart&quot;, style: :secondary, size: :sm) %&gt;
+              &lt;/div&gt;
+            &lt;% end %&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    language: "erb",
+    title: "Product Grid Example"
+  ) %>
 </section>
 
 <!-- Grid Column Options -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Column Options", anchor_link: true, subtitle: "Examples for Column Options.") %>
-  <div class="bg-[var(--color-muted)] p-6 rounded-lg space-y-4">
+  <div class="bg-[var(--surface-muted-background-color)] p-6 rounded-lg space-y-4">
     <div class="grid grid-cols-2 gap-4 text-sm">
       <div>
         <strong>cols: 1</strong> - Single column
@@ -169,12 +199,12 @@
 <!-- Features -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Examples for Features.") %>
-  <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
-    <li><strong>Mobile-First:</strong> Starts with 1 column, scales up responsively</li>
-    <li><strong>Flexible Columns:</strong> Support for 1, 2, 3, 4, 6, or 12 columns</li>
-    <li><strong>Consistent Gaps:</strong> Small, medium, and large gap options</li>
-    <li><strong>Auto-Stretch:</strong> Items stretch to fill height by default</li>
-    <li><strong>CSS Grid:</strong> Modern CSS grid implementation</li>
-    <li><strong>Composable:</strong> Works great with Card and other components</li>
-  </ul>
+  <%= render FlatPack::List::Component.new(spacing: :dense, class: "text-[var(--surface-content-color)]") do %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Mobile-First:</strong> Starts with 1 column, scales up responsively<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Flexible Columns:</strong> Support for 1, 2, 3, 4, 6, or 12 columns<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Consistent Gaps:</strong> Small, medium, and large gap options<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Auto-Stretch:</strong> Items stretch to fill height by default<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>CSS Grid:</strong> Modern CSS grid implementation<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Composable:</strong> Works great with Card and other components<% end %>
+  <% end %>
 </section>

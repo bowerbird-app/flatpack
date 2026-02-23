@@ -6,7 +6,7 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Basic Timeline", anchor_link: true) %>
   
-  <div class="border border-[var(--color-border)] rounded-lg p-6">
+  <div class="border border-[var(--surface-border-color)] rounded-lg p-6">
     <%= render FlatPack::Timeline::Component.new do %>
       <%= render FlatPack::Timeline::Item.new(
         title: "Project Created",
@@ -38,12 +38,51 @@
       <% end %>
     <% end %>
   </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;border border-[var(--surface-border-color)] rounded-lg p-6&quot;&gt;
+        &lt;%= render FlatPack::Timeline::Component.new do %&gt;
+          &lt;%= render FlatPack::Timeline::Item.new(
+            title: &quot;Project Created&quot;,
+            timestamp: &quot;Jan 15, 2024&quot;
+          ) do %&gt;
+            &lt;p&gt;The project repository was initialized and the initial commit was pushed to the main branch.&lt;/p&gt;
+          &lt;% end %&gt;
+    
+          &lt;%= render FlatPack::Timeline::Item.new(
+            title: &quot;First Feature Implemented&quot;,
+            timestamp: &quot;Jan 18, 2024&quot;
+          ) do %&gt;
+            &lt;p&gt;Core authentication system implemented with secure password hashing and JWT tokens.&lt;/p&gt;
+          &lt;% end %&gt;
+    
+          &lt;%= render FlatPack::Timeline::Item.new(
+            title: &quot;Beta Testing Started&quot;,
+            timestamp: &quot;Jan 25, 2024&quot;
+          ) do %&gt;
+            &lt;p&gt;First group of beta testers invited. Collecting feedback and tracking issues.&lt;/p&gt;
+          &lt;% end %&gt;
+    
+          &lt;%= render FlatPack::Timeline::Item.new(
+            title: &quot;Production Launch&quot;,
+            timestamp: &quot;Feb 1, 2024&quot;,
+            last: true
+          ) do %&gt;
+            &lt;p&gt;Successfully launched to production with all critical features complete and tested.&lt;/p&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Basic Timeline"
+  ) %>
 </section>
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Deployment Timeline", anchor_link: true) %>
   
-  <div class="border border-[var(--color-border)] rounded-lg p-6">
+  <div class="border border-[var(--surface-border-color)] rounded-lg p-6">
     <%= render FlatPack::Timeline::Component.new do %>
       <%= render FlatPack::Timeline::Item.new(
         title: "Build Started",
@@ -97,12 +136,73 @@
       <% end %>
     <% end %>
   </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;border border-[var(--surface-border-color)] rounded-lg p-6&quot;&gt;
+        &lt;%= render FlatPack::Timeline::Component.new do %&gt;
+          &lt;%= render FlatPack::Timeline::Item.new(
+            title: &quot;Build Started&quot;,
+            timestamp: &quot;10:00 AM&quot;,
+            variant: :default
+          ) do %&gt;
+            &lt;p&gt;Running tests and building Docker container...&lt;/p&gt;
+          &lt;% end %&gt;
+    
+          &lt;%= render FlatPack::Timeline::Item.new(
+            title: &quot;Tests Passed&quot;,
+            timestamp: &quot;10:05 AM&quot;,
+            variant: :success
+          ) do %&gt;
+            &lt;p&gt;All 247 tests passed successfully. Code coverage: 94%&lt;/p&gt;
+            &lt;div class=&quot;mt-2&quot;&gt;
+              &lt;%= render FlatPack::Badge::Component.new(text: &quot;247 tests&quot;, style: :success, size: :sm) %&gt;
+              &lt;%= render FlatPack::Badge::Component.new(text: &quot;94% coverage&quot;, style: :primary, size: :sm) %&gt;
+            &lt;/div&gt;
+          &lt;% end %&gt;
+    
+          &lt;%= render FlatPack::Timeline::Item.new(
+            title: &quot;Security Scan Warning&quot;,
+            timestamp: &quot;10:07 AM&quot;,
+            variant: :warning
+          ) do %&gt;
+            &lt;p&gt;Dependency vulnerability detected in development dependencies (non-blocking).&lt;/p&gt;
+            &lt;%= render FlatPack::Badge::Component.new(text: &quot;Low Severity&quot;, style: :warning, size: :sm, class: &quot;mt-2&quot;) %&gt;
+          &lt;% end %&gt;
+    
+          &lt;%= render FlatPack::Timeline::Item.new(
+            title: &quot;Deployed to Staging&quot;,
+            timestamp: &quot;10:10 AM&quot;,
+            variant: :success
+          ) do %&gt;
+            &lt;p&gt;Application successfully deployed to staging environment.&lt;/p&gt;
+            &lt;p class=&quot;mt-1 text-sm&quot;&gt;&lt;a href=&quot;#&quot; class=&quot;text-[var(--color-primary)] hover:underline&quot;&gt;View staging: https://staging.example.com&lt;/a&gt;&lt;/p&gt;
+          &lt;% end %&gt;
+    
+          &lt;%= render FlatPack::Timeline::Item.new(
+            title: &quot;Production Deployment&quot;,
+            timestamp: &quot;10:15 AM&quot;,
+            variant: :success,
+            last: true
+          ) do %&gt;
+            &lt;p&gt;Production deployment completed. Monitoring for issues.&lt;/p&gt;
+            &lt;div class=&quot;mt-2 space-x-2&quot;&gt;
+              &lt;%= render FlatPack::Button::Component.new(text: &quot;View Logs&quot;, variant: :outline, size: :sm) %&gt;
+              &lt;%= render FlatPack::Button::Component.new(text: &quot;Monitor&quot;, variant: :outline, size: :sm) %&gt;
+            &lt;/div&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Deployment Timeline"
+  ) %>
 </section>
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Order Tracking", anchor_link: true) %>
   
-  <div class="border border-[var(--color-border)] rounded-lg p-6">
+  <div class="border border-[var(--surface-border-color)] rounded-lg p-6">
     <%= render FlatPack::Timeline::Component.new do %>
       <%= render FlatPack::Timeline::Item.new(
         title: "Order Placed",
@@ -110,7 +210,7 @@
         variant: :success
       ) do %>
         <p>Your order #12345 has been confirmed and payment received.</p>
-        <p class="text-sm mt-1 text-[var(--color-text-muted)]">Total: $149.99</p>
+        <p class="text-sm mt-1 text-[var(--surface-muted-content-color)]">Total: $149.99</p>
       <% end %>
 
       <%= render FlatPack::Timeline::Item.new(
@@ -127,7 +227,7 @@
         variant: :success
       ) do %>
         <p>Package has been handed to carrier for delivery.</p>
-        <p class="text-sm mt-1 text-[var(--color-text-muted)]">Tracking: 1Z999AA10123456784</p>
+        <p class="text-sm mt-1 text-[var(--surface-muted-content-color)]">Tracking: 1Z999AA10123456784</p>
       <% end %>
 
       <%= render FlatPack::Timeline::Item.new(
@@ -148,12 +248,65 @@
       <% end %>
     <% end %>
   </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;border border-[var(--surface-border-color)] rounded-lg p-6&quot;&gt;
+        &lt;%= render FlatPack::Timeline::Component.new do %&gt;
+          &lt;%= render FlatPack::Timeline::Item.new(
+            title: &quot;Order Placed&quot;,
+            timestamp: &quot;Feb 20, 10:30 AM&quot;,
+            variant: :success
+          ) do %&gt;
+            &lt;p&gt;Your order #12345 has been confirmed and payment received.&lt;/p&gt;
+            &lt;p class=&quot;text-sm mt-1 text-[var(--surface-muted-content-color)]&quot;&gt;Total: $149.99&lt;/p&gt;
+          &lt;% end %&gt;
+    
+          &lt;%= render FlatPack::Timeline::Item.new(
+            title: &quot;Processing&quot;,
+            timestamp: &quot;Feb 20, 2:15 PM&quot;,
+            variant: :success
+          ) do %&gt;
+            &lt;p&gt;Order is being prepared for shipment at our warehouse.&lt;/p&gt;
+          &lt;% end %&gt;
+    
+          &lt;%= render FlatPack::Timeline::Item.new(
+            title: &quot;Shipped&quot;,
+            timestamp: &quot;Feb 21, 9:00 AM&quot;,
+            variant: :success
+          ) do %&gt;
+            &lt;p&gt;Package has been handed to carrier for delivery.&lt;/p&gt;
+            &lt;p class=&quot;text-sm mt-1 text-[var(--surface-muted-content-color)]&quot;&gt;Tracking: 1Z999AA10123456784&lt;/p&gt;
+          &lt;% end %&gt;
+    
+          &lt;%= render FlatPack::Timeline::Item.new(
+            title: &quot;Out for Delivery&quot;,
+            timestamp: &quot;Feb 22, 8:30 AM&quot;,
+            variant: :warning
+          ) do %&gt;
+            &lt;p&gt;Your package is on the delivery vehicle and will arrive today.&lt;/p&gt;
+          &lt;% end %&gt;
+    
+          &lt;%= render FlatPack::Timeline::Item.new(
+            title: &quot;Expected Delivery&quot;,
+            timestamp: &quot;Feb 22, by 5:00 PM&quot;,
+            variant: :default,
+            last: true
+          ) do %&gt;
+            &lt;p&gt;Package scheduled to arrive by end of day.&lt;/p&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Order Tracking"
+  ) %>
 </section>
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Activity Feed", anchor_link: true) %>
   
-  <div class="border border-[var(--color-border)] rounded-lg p-6">
+  <div class="border border-[var(--surface-border-color)] rounded-lg p-6">
     <%= render FlatPack::Timeline::Component.new do %>
       <%= render FlatPack::Timeline::Item.new(
         title: "Pull Request Opened",
@@ -195,23 +348,76 @@
         last: true
       ) do %>
         <p><strong>John Doe</strong> merged PR #123 into main</p>
-        <p class="text-sm mt-1 text-[var(--color-text-muted)]">Automatically deployed to production</p>
+        <p class="text-sm mt-1 text-[var(--surface-muted-content-color)]">Automatically deployed to production</p>
       <% end %>
     <% end %>
   </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;border border-[var(--surface-border-color)] rounded-lg p-6&quot;&gt;
+        &lt;%= render FlatPack::Timeline::Component.new do %&gt;
+          &lt;%= render FlatPack::Timeline::Item.new(
+            title: &quot;Pull Request Opened&quot;,
+            timestamp: &quot;2 hours ago&quot;
+          ) do %&gt;
+            &lt;p&gt;&lt;strong&gt;John Doe&lt;/strong&gt; opened PR #123: &quot;Add user authentication&quot;&lt;/p&gt;
+            &lt;div class=&quot;mt-2 space-x-2&quot;&gt;
+              &lt;%= render FlatPack::Badge::Component.new(text: &quot;+350&quot;, style: :success, size: :sm) %&gt;
+              &lt;%= render FlatPack::Badge::Component.new(text: &quot;-120&quot;, style: :warning, size: :sm) %&gt;
+            &lt;/div&gt;
+          &lt;% end %&gt;
+    
+          &lt;%= render FlatPack::Timeline::Item.new(
+            title: &quot;Code Review&quot;,
+            timestamp: &quot;1 hour ago&quot;
+          ) do %&gt;
+            &lt;p&gt;&lt;strong&gt;Jane Smith&lt;/strong&gt; reviewed and requested changes on PR #123&lt;/p&gt;
+          &lt;% end %&gt;
+    
+          &lt;%= render FlatPack::Timeline::Item.new(
+            title: &quot;Changes Committed&quot;,
+            timestamp: &quot;30 minutes ago&quot;
+          ) do %&gt;
+            &lt;p&gt;&lt;strong&gt;John Doe&lt;/strong&gt; pushed 3 new commits addressing review feedback&lt;/p&gt;
+          &lt;% end %&gt;
+    
+          &lt;%= render FlatPack::Timeline::Item.new(
+            title: &quot;Approved&quot;,
+            timestamp: &quot;15 minutes ago&quot;,
+            variant: :success
+          ) do %&gt;
+            &lt;p&gt;&lt;strong&gt;Jane Smith&lt;/strong&gt; approved the changes&lt;/p&gt;
+          &lt;% end %&gt;
+    
+          &lt;%= render FlatPack::Timeline::Item.new(
+            title: &quot;Merged&quot;,
+            timestamp: &quot;5 minutes ago&quot;,
+            variant: :success,
+            last: true
+          ) do %&gt;
+            &lt;p&gt;&lt;strong&gt;John Doe&lt;/strong&gt; merged PR #123 into main&lt;/p&gt;
+            &lt;p class=&quot;text-sm mt-1 text-[var(--surface-muted-content-color)]&quot;&gt;Automatically deployed to production&lt;/p&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Activity Feed"
+  ) %>
 </section>
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Use Cases", anchor_link: true) %>
   
   <div class="prose max-w-none">
-    <ul>
-      <li><strong>Activity Feeds:</strong> Display user activities and interactions</li>
-      <li><strong>Order Tracking:</strong> Show shipment and delivery status</li>
-      <li><strong>Project Milestones:</strong> Track project progress over time</li>
-      <li><strong>Deployment History:</strong> Log deployments and releases</li>
-      <li><strong>Git History:</strong> Visualize commits and branches</li>
-      <li><strong>Audit Logs:</strong> Display system events chronologically</li>
-    </ul>
+    <%= render FlatPack::List::Component.new(spacing: :dense) do %>
+      <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Activity Feeds:</strong> Display user activities and interactions<% end %>
+      <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Order Tracking:</strong> Show shipment and delivery status<% end %>
+      <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Project Milestones:</strong> Track project progress over time<% end %>
+      <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Deployment History:</strong> Log deployments and releases<% end %>
+      <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Git History:</strong> Visualize commits and branches<% end %>
+      <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Audit Logs:</strong> Display system events chronologically<% end %>
+    <% end %>
   </div>
 </section>

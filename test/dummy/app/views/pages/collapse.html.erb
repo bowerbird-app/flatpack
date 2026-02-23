@@ -17,17 +17,52 @@
 
     <%= render FlatPack::Collapse::Component.new(id: "collapse3", title: "Advanced Settings") do %>
       <div class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium mb-1">API Endpoint</label>
-          <input type="text" class="w-full px-3 py-2 border rounded" value="https://api.example.com" />
-        </div>
-        <div>
-          <label class="block text-sm font-medium mb-1">Timeout (seconds)</label>
-          <input type="number" class="w-full px-3 py-2 border rounded" value="30" />
-        </div>
+        <%= render FlatPack::TextInput::Component.new(
+          name: "api_endpoint",
+          label: "API Endpoint",
+          value: "https://api.example.com"
+        ) %>
+        <%= render FlatPack::NumberInput::Component.new(
+          name: "timeout_seconds",
+          label: "Timeout (seconds)",
+          value: 30,
+          min: 1
+        ) %>
       </div>
     <% end %>
   </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;space-y-4&quot;&gt;
+        &lt;%= render FlatPack::Collapse::Component.new(id: &quot;collapse1&quot;, title: &quot;What is FlatPack?&quot;) do %&gt;
+          &lt;p&gt;FlatPack is a comprehensive ViewComponent library for Ruby on Rails that provides production-ready UI components with built-in accessibility, responsive design, and thoughtful defaults.&lt;/p&gt;
+        &lt;% end %&gt;
+    
+        &lt;%= render FlatPack::Collapse::Component.new(id: &quot;collapse2&quot;, title: &quot;How do I get started?&quot;, open: true) do %&gt;
+          &lt;p&gt;Add FlatPack to your Gemfile, run &lt;code class=&quot;px-2 py-1 bg-gray-100 rounded&quot;&gt;bundle install&lt;/code&gt;, and start using components in your views. Each component follows Rails conventions and integrates seamlessly with your existing code.&lt;/p&gt;
+        &lt;% end %&gt;
+    
+        &lt;%= render FlatPack::Collapse::Component.new(id: &quot;collapse3&quot;, title: &quot;Advanced Settings&quot;) do %&gt;
+          &lt;div class=&quot;space-y-4&quot;&gt;
+            &lt;%= render FlatPack::TextInput::Component.new(
+              name: &quot;api_endpoint&quot;,
+              label: &quot;API Endpoint&quot;,
+              value: &quot;https://api.example.com&quot;
+            ) %&gt;
+            &lt;%= render FlatPack::NumberInput::Component.new(
+              name: &quot;timeout_seconds&quot;,
+              label: &quot;Timeout (seconds)&quot;,
+              value: 30,
+              min: 1
+            ) %&gt;
+          &lt;/div&gt;
+        &lt;% end %&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Collapse Component"
+  ) %>
 </section>
 
 <section class="mb-12">
@@ -50,6 +85,30 @@
       <p>Please open an issue on our GitHub repository with a detailed description of the problem, including steps to reproduce, expected behavior, and your environment details.</p>
     <% end %>
   <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Accordion::Component.new do |accordion| %&gt;
+        &lt;% accordion.item(id: &quot;faq1&quot;, title: &quot;What browsers are supported?&quot;) do %&gt;
+          &lt;p&gt;FlatPack components work in all modern browsers including Chrome, Firefox, Safari, and Edge. We follow progressive enhancement principles, so components degrade gracefully in older browsers.&lt;/p&gt;
+        &lt;% end %&gt;
+        
+        &lt;% accordion.item(id: &quot;faq2&quot;, title: &quot;Is it accessible?&quot;) do %&gt;
+          &lt;p&gt;Yes! All components follow WCAG 2.1 AA guidelines and include proper ARIA attributes, keyboard navigation, and screen reader support. Accessibility is a core feature, not an afterthought.&lt;/p&gt;
+        &lt;% end %&gt;
+        
+        &lt;% accordion.item(id: &quot;faq3&quot;, title: &quot;Can I customize the styling?&quot;) do %&gt;
+          &lt;p&gt;Absolutely. All components accept custom CSS classes via the &lt;code&gt;class&lt;/code&gt; parameter. You can override default styles with your own CSS or use Tailwind utility classes for quick customizations.&lt;/p&gt;
+        &lt;% end %&gt;
+        
+        &lt;% accordion.item(id: &quot;faq4&quot;, title: &quot;How do I report bugs?&quot;) do %&gt;
+          &lt;p&gt;Please open an issue on our GitHub repository with a detailed description of the problem, including steps to reproduce, expected behavior, and your environment details.&lt;/p&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    language: "erb",
+    title: "Accordion Component"
+  ) %>
 </section>
 
 <section class="mb-12">
@@ -68,6 +127,26 @@
       <p>Tables with sorting, filtering, and pagination. Charts with ApexCharts integration. Cards, badges, avatars, and other display components.</p>
     <% end %>
   <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Accordion::Component.new(allow_multiple: true) do |accordion| %&gt;
+        &lt;% accordion.item(id: &quot;feature1&quot;, title: &quot;Authentication&quot;, open: true) do %&gt;
+          &lt;p&gt;Built-in support for Devise, JWT tokens, and custom authentication strategies. Includes password strength indicators and secure session management.&lt;/p&gt;
+        &lt;% end %&gt;
+        
+        &lt;% accordion.item(id: &quot;feature2&quot;, title: &quot;Form Components&quot;, open: true) do %&gt;
+          &lt;p&gt;Comprehensive form inputs with validation states, help text, and error messages. Includes text inputs, selects, checkboxes, radio buttons, file uploads, and more.&lt;/p&gt;
+        &lt;% end %&gt;
+        
+        &lt;% accordion.item(id: &quot;feature3&quot;, title: &quot;Data Display&quot;) do %&gt;
+          &lt;p&gt;Tables with sorting, filtering, and pagination. Charts with ApexCharts integration. Cards, badges, avatars, and other display components.&lt;/p&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    language: "erb",
+    title: "Allow Multiple Open"
+  ) %>
 </section>
 
 <section class="mb-12">
@@ -75,10 +154,10 @@
   
   <div class="p-6 bg-blue-50 border border-blue-200 rounded-lg">
     <p class="font-medium mb-2">Try these keyboard shortcuts:</p>
-    <ul class="space-y-1 text-sm">
-      <li><kbd class="px-2 py-1 bg-white border rounded">Tab</kbd> - Navigate between collapse/accordion items</li>
-      <li><kbd class="px-2 py-1 bg-white border rounded">Space</kbd> or <kbd class="px-2 py-1 bg-white border rounded">Enter</kbd> - Toggle open/closed</li>
-      <li><kbd class="px-2 py-1 bg-white border rounded">Escape</kbd> - Close focused item (if open)</li>
-    </ul>
+    <%= render FlatPack::List::Component.new(spacing: :dense, class: "text-sm") do %>
+      <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><kbd class="px-2 py-1 bg-white border rounded">Tab</kbd> - Navigate between collapse/accordion items<% end %>
+      <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><kbd class="px-2 py-1 bg-white border rounded">Space</kbd> or <kbd class="px-2 py-1 bg-white border rounded">Enter</kbd> - Toggle open/closed<% end %>
+      <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><kbd class="px-2 py-1 bg-white border rounded">Escape</kbd> - Close focused item (if open)<% end %>
+    <% end %>
   </div>
 </section>

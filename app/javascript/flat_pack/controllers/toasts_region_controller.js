@@ -30,13 +30,27 @@ export default class extends Controller {
   }
 
   addToast(event) {
-    const { type, message, timeout } = event.currentTarget.dataset
+    const trigger = this.resolveTriggerElement(event)
+    if (!trigger) return
+
+    const { type, message, timeout } = trigger.dataset
 
     this.appendToast({
       type: type || "info",
       message,
       timeout: this.parseTimeout(timeout)
     })
+  }
+
+  resolveTriggerElement(event) {
+    if (event.currentTarget?.dataset?.message) return event.currentTarget
+
+    // When the listener is delegated, currentTarget may be the controller root.
+    if (event.target instanceof Element) {
+      return event.target.closest('[data-action*="flat-pack--toasts-region#addToast"]')
+    }
+
+    return null
   }
 
   addToastFromEvent(event) {
@@ -59,8 +73,8 @@ export default class extends Controller {
   buildContainer() {
     const container = document.createElement("div")
     container.className = "fixed z-[60] flex flex-col gap-3 pointer-events-none"
-    container.style.top = "calc(72px + var(--spacing-md))"
-    container.style.right = "var(--spacing-md)"
+    container.style.top = "calc(72px + calc(var(--spacing) * 4))"
+    container.style.right = "calc(var(--spacing) * 4)"
     container.setAttribute("aria-live", "polite")
     container.setAttribute("aria-atomic", "false")
     document.body.appendChild(container)
@@ -115,7 +129,7 @@ export default class extends Controller {
     iconWrap.innerHTML = this.iconSvg(normalizedType)
 
     const messageEl = document.createElement("p")
-    messageEl.className = "flex-1 text-sm font-medium text-[var(--color-text)]"
+    messageEl.className = "flex-1 text-sm font-medium text-[var(--surface-content-color)]"
     messageEl.textContent = message
 
     const dismissButton = document.createElement("button")
@@ -137,24 +151,24 @@ export default class extends Controller {
   typeClasses(type) {
     const classes = {
       info: {
-        border: "border-[var(--color-info)]",
-        bg: "bg-[var(--color-background)]",
-        text: "text-[var(--color-info)]"
+        border: "border-[var(--color-info-border)]",
+        bg: "bg-[var(--surface-background-color)]",
+        text: "text-[var(--surface-content-color)]"
       },
       success: {
-        border: "border-[var(--color-success)]",
-        bg: "bg-[var(--color-background)]",
-        text: "text-[var(--color-success)]"
+        border: "border-[var(--color-success-border)]",
+        bg: "bg-[var(--surface-background-color)]",
+        text: "text-[var(--color-success-border)]"
       },
       warning: {
-        border: "border-[var(--color-warning)]",
-        bg: "bg-[var(--color-background)]",
-        text: "text-[var(--color-warning)]"
+        border: "border-[var(--color-warning-border)]",
+        bg: "bg-[var(--surface-background-color)]",
+        text: "text-[var(--color-warning-border)]"
       },
       error: {
-        border: "border-[var(--color-error)]",
-        bg: "bg-[var(--color-destructive)]",
-        text: "text-[var(--color-error)]"
+        border: "border-[var(--color-danger-border-color)]",
+        bg: "bg-[var(--color-danger-background-color)]",
+        text: "text-[var(--color-danger-border-color)]"
       }
     }
 
@@ -165,10 +179,10 @@ export default class extends Controller {
     const base = "flex-shrink-0 transition-colors rounded-[var(--radius-sm)] p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]"
 
     if (type === "error") {
-      return `${base} bg-[var(--color-destructive-text)]/20 hover:bg-[var(--color-destructive-text)]/30 text-[var(--color-destructive-text)]`
+      return `${base} bg-[var(--color-danger-text-color)]/20 hover:bg-[var(--color-danger-text-color)]/30 text-[var(--color-danger-text-color)]`
     }
 
-    return `${base} text-[var(--color-text-muted)] hover:text-[var(--color-text)]`
+    return `${base} text-[var(--surface-muted-content-color)] hover:text-[var(--surface-content-color)]`
   }
 
   iconSvg(type) {

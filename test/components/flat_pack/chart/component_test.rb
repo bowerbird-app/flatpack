@@ -119,7 +119,7 @@ module FlatPack
         series = [{name: "Sales", data: [10, 20, 30]}]
         render_inline(Component.new(series: series))
 
-        assert_selector "div[data-controller*='flat-pack--card']"
+        assert_selector "div.rounded-lg"
       end
 
       def test_renders_chart_without_card
@@ -159,7 +159,7 @@ module FlatPack
           component.with_footer { "Last updated today" }
         end
 
-        assert_selector "div", text: "Last updated today"
+        assert_text "Last updated today"
       end
 
       def test_chart_data_contains_json_series

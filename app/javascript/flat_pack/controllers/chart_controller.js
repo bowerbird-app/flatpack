@@ -54,7 +54,7 @@ export default class extends Controller {
   showError() {
     this.element.innerHTML = `
       <div class="flex items-center justify-center p-8 text-center">
-        <div class="text-[var(--color-text-muted)]">
+        <div class="text-[var(--surface-muted-content-color)]">
           <svg class="w-12 h-12 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>

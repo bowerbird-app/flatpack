@@ -9,7 +9,7 @@ module FlatPack
         renders_one :composer
 
         def initialize(**system_arguments)
-          super(**system_arguments)
+          super
         end
 
         def call
@@ -55,8 +55,8 @@ module FlatPack
         def header_classes
           classes(
             "flex-shrink-0",
-            "border-b border-[var(--color-border)]",
-            "bg-[var(--color-background)]"
+            "border-b border-[var(--chat-header-border-color)]",
+            "bg-[var(--chat-header-background-color)]"
           )
         end
       end

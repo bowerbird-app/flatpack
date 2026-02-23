@@ -29,7 +29,7 @@ module FlatPack
 
       def group_classes
         classes(
-          "flex items-center gap-2",
+          "flex items-center gap-[var(--chip-group-gap)]",
           @wrap ? "flex-wrap" : nil
         )
       end

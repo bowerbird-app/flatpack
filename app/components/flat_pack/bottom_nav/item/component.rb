@@ -7,8 +7,8 @@ module FlatPack
         # Tailwind CSS scanning requires these classes to be present as string literals.
         # DO NOT REMOVE - These duplicates ensure CSS generation:
         # "flex" "flex-col" "items-center" "justify-center" "gap-1"
-        # "py-2" "text-xs" "font-medium" "text-[var(--color-primary)]"
-        # "text-[var(--color-text-muted)]" "hover:text-[var(--color-text)]"
+        # "py-2" "text-xs" "font-medium" "text-primary"
+        # "text-[var(--surface-muted-content-color)]" "hover:text-[var(--surface-content-color)]"
 
         def initialize(label:, href:, icon: nil, active: false, **system_arguments)
           super(**system_arguments)
@@ -71,9 +71,9 @@ module FlatPack
 
         def state_classes
           if @active
-            "text-[var(--color-primary)]"
+            "text-primary"
           else
-            "text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
+            "text-[var(--surface-muted-content-color)] hover:text-[var(--surface-content-color)]"
           end
         end
 

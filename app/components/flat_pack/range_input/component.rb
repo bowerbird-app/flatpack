@@ -77,12 +77,12 @@ module FlatPack
       def label_attributes
         {
           for: @id,
-          class: "flex items-center justify-between mb-2 text-sm font-medium text-[var(--color-foreground)]"
+          class: "flex items-center justify-between mb-2 text-sm font-medium text-[var(--surface-content-color)]"
         }
       end
 
       def input_attributes
-        {
+        attrs = {
           type: "range",
           name: @name,
           id: @id,
@@ -103,10 +103,12 @@ module FlatPack
             valuemax: @max
           }
         }
+
+        apply_default_validation(attrs, error_id: error_id, has_error: false)
       end
 
       def input_classes
-        "w-full h-2 bg-[var(--color-muted)] rounded-full appearance-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        "w-full h-2 bg-[var(--surface-muted-background-color)] rounded-full appearance-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
       end
 
       def validate_name!
@@ -117,6 +119,10 @@ module FlatPack
       def validate_range!
         return if @min < @max
         raise ArgumentError, "min must be less than max"
+      end
+
+      def error_id
+        "#{@id.to_s.gsub(/[^a-zA-Z0-9_-]/, "_")}_error"
       end
     end
   end

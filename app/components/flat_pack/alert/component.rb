@@ -5,30 +5,37 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-white" "text-black" "border" "border-black/20" "bg-[var(--color-success)]" "text-[var(--color-success-text)]" "bg-[var(--color-warning)]" "text-[var(--color-warning-text)]" "bg-[var(--color-destructive)]" "text-[var(--color-destructive-text)]"
+      # "border-[var(--alert-info-border-color)]" "bg-[var(--alert-info-background-color)]" "text-[var(--alert-info-text-color)]" "text-[var(--alert-info-icon-color)]"
+      # "border-[var(--alert-success-border-color)]" "bg-[var(--alert-success-background-color)]" "text-[var(--alert-success-text-color)]" "text-[var(--alert-success-icon-color)]"
+      # "border-[var(--alert-warning-border-color)]" "bg-[var(--alert-warning-background-color)]" "text-[var(--alert-warning-text-color)]" "text-[var(--alert-warning-icon-color)]"
+      # "border-[var(--alert-danger-border-color)]" "bg-[var(--alert-danger-background-color)]" "text-[var(--alert-danger-text-color)]" "text-[var(--alert-danger-icon-color)]"
       VARIANTS = {
         info: {
-          border: "border border-black/20",
-          bg: "bg-white",
-          text: "text-black",
+          border: "border border-[var(--alert-info-border-color)]",
+          bg: "bg-[var(--alert-info-background-color)]",
+          text: "text-[var(--alert-info-text-color)]",
+          icon_color: "text-[var(--alert-info-icon-color)]",
           icon: "info"
         },
         success: {
-          border: nil,
-          bg: "bg-[var(--color-success)]",
-          text: "text-[var(--color-success-text)]",
+          border: "border border-[var(--alert-success-border-color)]",
+          bg: "bg-[var(--alert-success-background-color)]",
+          text: "text-[var(--alert-success-text-color)]",
+          icon_color: "text-[var(--alert-success-icon-color)]",
           icon: "check-circle"
         },
         warning: {
-          border: nil,
-          bg: "bg-[var(--color-warning)]",
-          text: "text-[var(--color-warning-text)]",
+          border: "border border-[var(--alert-warning-border-color)]",
+          bg: "bg-[var(--alert-warning-background-color)]",
+          text: "text-[var(--alert-warning-text-color)]",
+          icon_color: "text-[var(--alert-warning-icon-color)]",
           icon: "alert-triangle"
         },
         danger: {
-          border: nil,
-          bg: "bg-[var(--color-destructive)]",
-          text: "text-[var(--color-destructive-text)]",
+          border: "border border-[var(--alert-danger-border-color)]",
+          bg: "bg-[var(--alert-danger-background-color)]",
+          text: "text-[var(--alert-danger-text-color)]",
+          icon_color: "text-[var(--alert-danger-icon-color)]",
           icon: "alert-circle"
         }
       }.freeze
@@ -76,7 +83,7 @@ module FlatPack
 
         # Simple icon representation using SVG
         icon_name = style_config[:icon]
-        content_tag(:div, class: "flex-shrink-0") do
+        content_tag(:div, class: classes("flex-shrink-0", style_config[:icon_color])) do
           render_icon_svg(icon_name)
         end
       end
@@ -118,13 +125,13 @@ module FlatPack
       def render_title
         return unless @title
 
-        content_tag(:h3, @title, class: "font-semibold")
+        content_tag(:h3, @title, class: "font-semibold text-[var(--alert-title-color)]")
       end
 
       def render_description
         return unless @description
 
-        content_tag(:p, @description, class: "text-sm")
+        content_tag(:p, @description, class: "text-sm text-[var(--alert-description-color)]")
       end
 
       def render_dismiss_button
@@ -132,7 +139,7 @@ module FlatPack
 
         content_tag(:button,
           type: "button",
-          class: "ml-auto flex-shrink-0 inline-flex items-center justify-center rounded-md p-1.5 hover:bg-black/5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-ring)]",
+          class: "ml-auto flex-shrink-0 inline-flex items-center justify-center rounded-[var(--alert-dismiss-button-radius)] p-1.5 text-[var(--alert-dismiss-button-text-color)] hover:bg-[var(--alert-dismiss-button-hover-background-color)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--alert-dismiss-button-focus-ring-color)]",
           data: {action: "alert#dismiss"},
           "aria-label": "Dismiss") do
           # X icon
@@ -154,8 +161,8 @@ module FlatPack
       def alert_classes
         classes(
           "relative flex items-center gap-3",
-          "rounded-[var(--radius-md)]",
-          "p-4",
+          "rounded-[var(--alert-border-radius)]",
+          "p-[var(--alert-padding)]",
           style_config[:border],
           style_config[:bg],
           style_config[:text]

@@ -1,0 +1,102 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Sidebar Header",
+  subtitle: "Header examples for branding, metadata, and compact secondary menus."
+) %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Header Variants", anchor_link: true) %>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="rounded-lg overflow-hidden h-80">
+      <%= render FlatPack::Sidebar::Component.new(class: "border border-[var(--surface-border-color)] rounded-lg") do |sidebar| %>
+        <% sidebar.header do %>
+          <%= render FlatPack::Sidebar::Header::Component.new(
+            brand_abbr: "FP",
+            title: "FlatPack",
+            subtitle: "Workspace",
+            collapsible: false
+          ) %>
+        <% end %>
+
+        <% sidebar.items do %>
+          <nav class="py-4 space-y-1">
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Overview", href: "#", icon: :home, active: true) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Components", href: "#", icon: :box) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Settings", href: "#", icon: :settings) %>
+          </nav>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="rounded-lg overflow-hidden h-80">
+      <%= render FlatPack::Sidebar::Component.new(class: "border border-[var(--surface-border-color)] rounded-lg") do |sidebar| %>
+        <% sidebar.header do %>
+          <%= render FlatPack::Sidebar::Header::Component.new(
+            brand_abbr: nil,
+            title: "Menu",
+            subtitle: nil,
+            collapsible: false
+          ) %>
+        <% end %>
+
+        <% sidebar.items do %>
+          <nav class="py-4 space-y-1">
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Billing", href: "#", icon: :dashboard, active: true) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Members", href: "#", icon: :user) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "API Keys", href: "#", icon: :key) %>
+          </nav>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;grid grid-cols-1 md:grid-cols-2 gap-6&quot;&gt;
+        &lt;div class=&quot;rounded-lg overflow-hidden h-80&quot;&gt;
+          &lt;%= render FlatPack::Sidebar::Component.new(class: &quot;border border-[var(--surface-border-color)] rounded-lg&quot;) do |sidebar| %&gt;
+            &lt;% sidebar.header do %&gt;
+              &lt;%= render FlatPack::Sidebar::Header::Component.new(
+                brand_abbr: &quot;FP&quot;,
+                title: &quot;FlatPack&quot;,
+                subtitle: &quot;Workspace&quot;,
+                collapsible: false
+              ) %&gt;
+            &lt;% end %&gt;
+    
+            &lt;% sidebar.items do %&gt;
+              &lt;nav class=&quot;py-4 space-y-1&quot;&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Overview&quot;, href: &quot;#&quot;, icon: :home, active: true) %&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Components&quot;, href: &quot;#&quot;, icon: :box) %&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Settings&quot;, href: &quot;#&quot;, icon: :settings) %&gt;
+              &lt;/nav&gt;
+            &lt;% end %&gt;
+          &lt;% end %&gt;
+        &lt;/div&gt;
+    
+        &lt;div class=&quot;rounded-lg overflow-hidden h-80&quot;&gt;
+          &lt;%= render FlatPack::Sidebar::Component.new(class: &quot;border border-[var(--surface-border-color)] rounded-lg&quot;) do |sidebar| %&gt;
+            &lt;% sidebar.header do %&gt;
+              &lt;%= render FlatPack::Sidebar::Header::Component.new(
+                brand_abbr: nil,
+                title: &quot;Menu&quot;,
+                subtitle: nil,
+                collapsible: false
+              ) %&gt;
+            &lt;% end %&gt;
+    
+            &lt;% sidebar.items do %&gt;
+              &lt;nav class=&quot;py-4 space-y-1&quot;&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Billing&quot;, href: &quot;#&quot;, icon: :dashboard, active: true) %&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Members&quot;, href: &quot;#&quot;, icon: :user) %&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;API Keys&quot;, href: &quot;#&quot;, icon: :key) %&gt;
+              &lt;/nav&gt;
+            &lt;% end %&gt;
+          &lt;% end %&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Header Variants"
+  ) %>
+</section>

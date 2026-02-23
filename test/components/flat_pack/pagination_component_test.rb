@@ -31,7 +31,28 @@ module FlatPack
 
         render_inline(Component.new(pagy: pagy, mode: :infinite))
 
-        assert_selector "a[href='?page=2']", text: "Load more"
+        assert_selector "div[data-controller='flat-pack--pagination-infinite']"
+        assert_selector "div[data-flat-pack--pagination-infinite-url-value='?page=2']"
+        assert_selector "div[data-flat-pack--pagination-infinite-page-value='2']"
+      end
+
+      def test_appends_anchor_to_pagination_links
+        pagy = MockPagy.new(page: 2, pages: 5, prev: 1, next_page: 3, series: [1, 2, 3])
+
+        render_inline(Component.new(pagy: pagy, anchor: "basic-pagination"))
+
+        assert_selector "a[href='?page=1#basic-pagination']", text: "1"
+        assert_selector "a[href='?page=3#basic-pagination']", text: "3"
+      end
+
+      def test_targets_links_to_turbo_frame_when_provided
+        pagy = MockPagy.new(page: 2, pages: 5, prev: 1, next_page: 3, series: [1, 2, 3])
+
+        render_inline(Component.new(pagy: pagy, turbo_frame: "pagination_table"))
+
+        assert_selector "a[href='?page=1'][data-turbo-frame='pagination_table']"
+        assert_selector "a[href='?page=3'][data-turbo-frame='pagination_table']"
+        assert_no_selector "a[data-turbo-action='replace']"
       end
     end
   end

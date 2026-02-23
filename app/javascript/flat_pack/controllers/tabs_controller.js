@@ -4,7 +4,8 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = ["tab", "panel"]
   static values = {
-    default: { type: Number, default: 0 }
+    default: { type: Number, default: 0 },
+    orientation: { type: String, default: "horizontal" }
   }
 
   connect() {
@@ -25,23 +26,21 @@ export default class extends Controller {
     if (index < 0 || index >= this.tabTargets.length) return
 
     const selectedTab = this.tabTargets[index]
-    const selectedPanel = this.panelTargets[index]
 
     // Update all tabs
     this.tabTargets.forEach((tab, i) => {
       const isSelected = i === index
+      const activeClasses = this.parseClasses(tab.dataset.flatPackTabsActiveClasses)
+      const inactiveClasses = this.parseClasses(tab.dataset.flatPackTabsInactiveClasses)
       
       tab.setAttribute("aria-selected", isSelected)
       tab.setAttribute("tabindex", isSelected ? "0" : "-1")
       
       // Update classes for active state
-      if (isSelected) {
-        tab.classList.remove("text-[var(--color-text-muted)]", "hover:text-[var(--color-text)]", "hover:bg-[var(--color-muted)]")
-        tab.classList.add("bg-[var(--color-background)]", "text-[var(--color-primary)]", "border-b-2", "border-[var(--color-primary)]", "-mb-px")
-      } else {
-        tab.classList.add("text-[var(--color-text-muted)]", "hover:text-[var(--color-text)]", "hover:bg-[var(--color-muted)]")
-        tab.classList.remove("bg-[var(--color-background)]", "text-[var(--color-primary)]", "border-b-2", "border-[var(--color-primary)]", "-mb-px")
-      }
+      tab.classList.remove(...activeClasses)
+      tab.classList.remove(...inactiveClasses)
+
+      tab.classList.add(...(isSelected ? activeClasses : inactiveClasses))
     })
 
     // Update all panels
@@ -70,15 +69,30 @@ export default class extends Controller {
 
   handleKeydown(event) {
     const currentIndex = this.tabTargets.indexOf(event.currentTarget)
+    const isVertical = this.orientationValue === "vertical"
     let newIndex = currentIndex
 
     switch (event.key) {
       case "ArrowLeft":
+        if (isVertical) return
         event.preventDefault()
         newIndex = currentIndex > 0 ? currentIndex - 1 : this.tabTargets.length - 1
         break
 
       case "ArrowRight":
+        if (isVertical) return
+        event.preventDefault()
+        newIndex = currentIndex < this.tabTargets.length - 1 ? currentIndex + 1 : 0
+        break
+
+      case "ArrowUp":
+        if (!isVertical) return
+        event.preventDefault()
+        newIndex = currentIndex > 0 ? currentIndex - 1 : this.tabTargets.length - 1
+        break
+
+      case "ArrowDown":
+        if (!isVertical) return
         event.preventDefault()
         newIndex = currentIndex < this.tabTargets.length - 1 ? currentIndex + 1 : 0
         break
@@ -106,5 +120,9 @@ export default class extends Controller {
     // Select and focus new tab
     this.selectTabByIndex(newIndex)
     this.tabTargets[newIndex].focus()
+  }
+
+  parseClasses(classString) {
+    return (classString || "").split(/\s+/).filter(Boolean)
   }
 }

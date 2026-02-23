@@ -46,10 +46,10 @@ module FlatPack
 
       def test_renders_with_overlap_styles
         items = [{name: "User 1"}]
-        
+
         Component::OVERLAPS.each do |overlap, classes|
           render_inline(Component.new(items: items, overlap: overlap))
-          
+
           assert_includes page.native.to_html, classes
         end
       end

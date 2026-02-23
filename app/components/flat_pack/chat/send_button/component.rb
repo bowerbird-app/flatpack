@@ -35,8 +35,7 @@ module FlatPack
             class: "h-5 w-5") do
             content_tag(:path,
               nil,
-              d: "M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"
-            )
+              d: "M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z")
           end
         end
 
@@ -79,12 +78,12 @@ module FlatPack
             "flex items-center justify-center",
             "h-10 w-10",
             "rounded-lg",
-            "bg-[var(--color-primary)]",
-            "text-[var(--color-primary-text)]",
-            "hover:bg-[var(--color-primary-hover)]",
+            "bg-[var(--chat-send-button-background-color)]",
+            "text-[var(--chat-send-button-text-color)]",
+            "hover:bg-[var(--chat-send-button-hover-background-color)]",
             "disabled:opacity-50 disabled:cursor-not-allowed",
-            "transition-colors duration-[var(--transition-base)]",
-            "focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)] focus:ring-offset-2",
+            "transition-colors duration-base",
+            "focus:outline-none focus:ring-2 focus:ring-[var(--chat-send-button-focus-ring-color)] focus:ring-offset-2",
             "shrink-0"
           )
         end

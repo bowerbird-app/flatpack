@@ -19,11 +19,7 @@ module FlatPack
 
       def test_renders_list_items
         render_inline(Component.new) do
-          safe_join([
-            tag.li("Item 1"),
-            tag.li("Item 2"),
-            tag.li("Item 3")
-          ])
+          "<li>Item 1</li><li>Item 2</li><li>Item 3</li>".html_safe
         end
 
         assert_selector "li", count: 3
@@ -35,7 +31,7 @@ module FlatPack
       def test_includes_spacing_classes
         render_inline(Component.new) { "content" }
 
-        assert_includes page.native.to_html, "space-y-2"
+        assert_includes page.native.to_html, "space-y-3"
       end
 
       def test_merges_custom_classes

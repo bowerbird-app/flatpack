@@ -4,7 +4,7 @@ module FlatPack
   module Timeline
     class Component < FlatPack::BaseComponent
       def initialize(**system_arguments)
-        super(**system_arguments)
+        super
       end
 
       def call
@@ -24,7 +24,7 @@ module FlatPack
       end
 
       def timeline_classes
-        classes("relative space-y-8")
+        classes("relative")
       end
     end
   end

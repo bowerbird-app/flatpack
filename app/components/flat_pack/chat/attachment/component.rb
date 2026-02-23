@@ -6,15 +6,14 @@ module FlatPack
       class Component < FlatPack::BaseComponent
         # Tailwind CSS scanning requires these classes to be present as string literals.
         # DO NOT REMOVE - These duplicates ensure CSS generation:
-        # "border" "border-[var(--color-border)]" "rounded-lg" "p-3" "hover:bg-[var(--color-muted)]"
+        # "border" "border-[var(--chat-attachment-border-color)]" "rounded-lg" "p-3" "hover:bg-[var(--chat-attachment-hover-background-color)]"
         TYPES = {
           file: "file",
           image: "image"
         }.freeze
 
         def initialize(
-          type: :file,
-          name:,
+          name:, type: :file,
           meta: nil,
           href: nil,
           thumbnail_url: nil,
@@ -55,8 +54,7 @@ module FlatPack
                 src: @thumbnail_url,
                 alt: @name,
                 loading: "lazy",
-                class: "w-full h-full object-cover"
-              )
+                class: "w-full h-full object-cover")
             end
           )
         end
@@ -67,8 +65,8 @@ module FlatPack
               render_file_icon,
               content_tag(:div, class: "flex-1 min-w-0") do
                 safe_join([
-                  content_tag(:div, @name, class: "text-sm font-medium text-[var(--color-foreground)] truncate"),
-                  (@meta ? content_tag(:div, @meta, class: "text-xs text-[var(--color-muted-foreground)]") : nil)
+                  content_tag(:div, @name, class: "text-sm font-medium text-[var(--chat-attachment-text-color)] truncate"),
+                  (@meta ? content_tag(:div, @meta, class: "text-xs text-[var(--chat-attachment-meta-color)]") : nil)
                 ].compact)
               end,
               render_download_icon
@@ -89,13 +87,12 @@ module FlatPack
               xmlns: "http://www.w3.org/2000/svg",
               viewBox: "0 0 20 20",
               fill: "currentColor",
-              class: "h-8 w-8 text-[var(--color-muted-foreground)]") do
+              class: "h-8 w-8 text-[var(--chat-attachment-icon-color)]") do
               content_tag(:path,
                 nil,
                 "fill-rule": "evenodd",
                 d: "M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z",
-                "clip-rule": "evenodd"
-              )
+                "clip-rule": "evenodd")
             end
           end
         end
@@ -109,14 +106,13 @@ module FlatPack
               xmlns: "http://www.w3.org/2000/svg",
               viewBox: "0 0 20 20",
               fill: "currentColor",
-              class: "h-5 w-5 text-[var(--color-muted-foreground)]") do
+              class: "h-5 w-5 text-[var(--chat-attachment-icon-color)]") do
               safe_join([
                 content_tag(:path,
                   nil,
                   "fill-rule": "evenodd",
                   d: "M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z",
-                  "clip-rule": "evenodd"
-                )
+                  "clip-rule": "evenodd")
               ])
             end
           end
@@ -135,7 +131,7 @@ module FlatPack
           classes(
             "rounded-lg overflow-hidden",
             "max-w-sm w-full",
-            "border border-[var(--color-border)]",
+            "border border-[var(--chat-attachment-border-color)]",
             @href ? "cursor-pointer hover:opacity-80 transition-opacity" : nil
           )
         end
@@ -143,10 +139,10 @@ module FlatPack
         def file_container_classes
           classes(
             "flex items-center gap-3",
-            "border border-[var(--color-border)]",
+            "border border-[var(--chat-attachment-border-color)]",
             "rounded-lg",
             "p-3",
-            @href ? "hover:bg-[var(--color-muted)] transition-colors cursor-pointer" : nil
+            @href ? "hover:bg-[var(--chat-attachment-hover-background-color)] transition-colors cursor-pointer" : nil
           )
         end
 

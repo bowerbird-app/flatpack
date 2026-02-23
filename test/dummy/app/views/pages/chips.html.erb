@@ -77,12 +77,42 @@
         <% end %>
       <% end %>
     </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;div class=&quot;flex flex-wrap gap-3 mb-4&quot;&gt;
+          &lt;%= render FlatPack::Chip::Component.new(text: &quot;Ruby&quot;, style: :danger) do |c| %&gt;
+            &lt;% c.with_leading do %&gt;
+              &lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; class=&quot;h-4 w-4&quot; viewBox=&quot;0 0 20 20&quot; fill=&quot;currentColor&quot;&gt;
+                &lt;path fill-rule=&quot;evenodd&quot; d=&quot;M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z&quot; clip-rule=&quot;evenodd&quot; /&gt;
+              &lt;/svg&gt;
+            &lt;% end %&gt;
+          &lt;% end %&gt;
+          &lt;%= render FlatPack::Chip::Component.new(text: &quot;JavaScript&quot;, style: :warning) do |c| %&gt;
+            &lt;% c.with_leading do %&gt;
+              &lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; class=&quot;h-4 w-4&quot; viewBox=&quot;0 0 20 20&quot; fill=&quot;currentColor&quot;&gt;
+                &lt;path fill-rule=&quot;evenodd&quot; d=&quot;M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z&quot; clip-rule=&quot;evenodd&quot; /&gt;
+              &lt;/svg&gt;
+            &lt;% end %&gt;
+          &lt;% end %&gt;
+          &lt;%= render FlatPack::Chip::Component.new(text: &quot;TypeScript&quot;, style: :info) do |c| %&gt;
+            &lt;% c.with_leading do %&gt;
+              &lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; class=&quot;h-4 w-4&quot; viewBox=&quot;0 0 20 20&quot; fill=&quot;currentColor&quot;&gt;
+                &lt;path fill-rule=&quot;evenodd&quot; d=&quot;M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z&quot; clip-rule=&quot;evenodd&quot; /&gt;
+              &lt;/svg&gt;
+            &lt;% end %&gt;
+          &lt;% end %&gt;
+        &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Chips with Leading Icons"
+  ) %>
   </section>
 
   <!-- Removable Chips -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Removable Chips", anchor_link: true, subtitle: "Examples for Removable Chips.") %>
-    <p class="text-sm text-[var(--color-muted-foreground)] mb-4">
+    <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">
       Click the × button to remove chips. Check the console for events.
     </p>
     <div class="flex flex-wrap gap-3 mb-4" id="removable-chips-container">
@@ -112,7 +142,7 @@
   <!-- Selectable Filter Chips -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Selectable Filter Chips", anchor_link: true, subtitle: "Examples for Selectable Filter Chips.") %>
-    <p class="text-sm text-[var(--color-muted-foreground)] mb-4">
+    <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">
       Click to toggle selection. Check the console for events.
     </p>
     <div class="flex flex-wrap gap-3 mb-4">
@@ -217,7 +247,7 @@
   <!-- ChipGroup Examples -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "ChipGroup - Wrapping Chips", anchor_link: true, subtitle: "Examples for ChipGroup - Wrapping Chips.") %>
-    <p class="text-sm text-[var(--color-muted-foreground)] mb-4">
+    <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">
       ChipGroup provides consistent spacing and wrapping for collections of chips.
     </p>
     <%= render FlatPack::ChipGroup::Component.new(class: "mb-4") do %>
@@ -362,22 +392,46 @@
   <!-- Complex Example -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Complete Example - Tag Input", anchor_link: true, subtitle: "Examples for Complete Example - Tag Input.") %>
-    <p class="text-sm text-[var(--color-muted-foreground)] mb-4">
+    <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">
       A practical example showing a tag input interface with removable chips.
     </p>
-    <div class="border border-[var(--color-border)] rounded-lg p-4">
-      <label class="block text-sm font-medium mb-2">Project Tags</label>
+    <div class="border border-[var(--surface-border-color)] rounded-lg p-4">
+      <%= render FlatPack::TextInput::Component.new(
+        name: "project_tags",
+        label: "Project Tags",
+        placeholder: "Add a tag...",
+        class: "mb-3"
+      ) %>
       <%= render FlatPack::ChipGroup::Component.new(class: "mb-3") do %>
         <%= render FlatPack::Chip::Component.new(text: "Frontend", style: :info, removable: true, value: "frontend") %>
         <%= render FlatPack::Chip::Component.new(text: "Backend", style: :success, removable: true, value: "backend") %>
         <%= render FlatPack::Chip::Component.new(text: "Database", style: :warning, removable: true, value: "database") %>
         <%= render FlatPack::Chip::Component.new(text: "UI/UX", style: :primary, removable: true, value: "ui-ux") %>
       <% end %>
-      <input
-        type="text"
-        placeholder="Add a tag..."
-        class="w-full px-3 py-2 border border-[var(--color-border)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)]"
-      />
     </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;p class=&quot;text-sm text-[var(--surface-muted-content-color)] mb-4&quot;&gt;
+          A practical example showing a tag input interface with removable chips.
+        &lt;/p&gt;
+        &lt;div class=&quot;border border-[var(--surface-border-color)] rounded-lg p-4&quot;&gt;
+          &lt;%= render FlatPack::TextInput::Component.new(
+            name: &quot;project_tags&quot;,
+            label: &quot;Project Tags&quot;,
+            placeholder: &quot;Add a tag...&quot;,
+            class: &quot;mb-3&quot;
+          ) %&gt;
+          &lt;%= render FlatPack::ChipGroup::Component.new(class: &quot;mb-3&quot;) do %&gt;
+            &lt;%= render FlatPack::Chip::Component.new(text: &quot;Frontend&quot;, style: :info, removable: true, value: &quot;frontend&quot;) %&gt;
+            &lt;%= render FlatPack::Chip::Component.new(text: &quot;Backend&quot;, style: :success, removable: true, value: &quot;backend&quot;) %&gt;
+            &lt;%= render FlatPack::Chip::Component.new(text: &quot;Database&quot;, style: :warning, removable: true, value: &quot;database&quot;) %&gt;
+            &lt;%= render FlatPack::Chip::Component.new(text: &quot;UI/UX&quot;, style: :primary, removable: true, value: &quot;ui-ux&quot;) %&gt;
+          &lt;% end %&gt;
+        &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Complete Example - Tag Input"
+  ) %>
   </section>
 </div>

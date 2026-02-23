@@ -17,7 +17,7 @@ module FlatPack
 
       def call
         tag_name = @ordered ? :ol : :ul
-        
+
         # SECURITY: Content is marked html_safe because it's expected to contain
         # Rails-generated HTML from list items captured via block. Never pass
         # unsanitized user input directly to content.
@@ -36,7 +36,7 @@ module FlatPack
       def list_classes
         classes(
           (@spacing == :dense) ? "space-y-1" : "space-y-3",
-          ("divide-y divide-[var(--color-border)]" if @divider)
+          ("divide-y divide-[var(--surface-border-color)]" if @divider)
         )
       end
     end

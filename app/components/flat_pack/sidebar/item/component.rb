@@ -85,14 +85,17 @@ module FlatPack
 
         def state_classes
           if @active
-            "bg-[var(--color-primary)] text-white"
+            "bg-[var(--sidebar-item-active-background-color)] text-[var(--sidebar-item-active-text-color)]"
           else
-            "text-[var(--color-text-muted)] hover:bg-[var(--color-muted)] hover:text-[var(--color-text)]"
+            "text-[var(--sidebar-item-text-color)] hover:bg-[var(--sidebar-item-hover-background-color)] hover:text-[var(--sidebar-item-hover-text-color)]"
           end
         end
 
         def icon_wrapper_classes
-          "flex-shrink-0"
+          classes(
+            "flex-shrink-0",
+            (@active ? "text-[var(--sidebar-item-active-icon-color)]" : "text-[var(--sidebar-item-icon-color)]")
+          )
         end
 
         def label_classes

@@ -1,0 +1,126 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Sidebar Footer",
+  subtitle: "Footer examples for account context, environment labels, and status info."
+) %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Footer Variants", anchor_link: true) %>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="rounded-lg overflow-hidden h-[360px]">
+      <%= render FlatPack::Sidebar::Component.new(class: "border border-[var(--surface-border-color)] rounded-lg") do |sidebar| %>
+        <% sidebar.header do %>
+          <%= render FlatPack::Sidebar::Header::Component.new(
+            brand_abbr: "FP",
+            title: "FlatPack",
+            subtitle: "Workspace",
+            collapsible: false
+          ) %>
+        <% end %>
+
+        <% sidebar.items do %>
+          <nav class="py-4 space-y-1">
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Overview", href: "#", icon: :home, active: true) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Projects", href: "#", icon: :dashboard) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Reports", href: "#", icon: :table) %>
+          </nav>
+        <% end %>
+
+        <% sidebar.footer do %>
+          <%= render FlatPack::Sidebar::Footer::Component.new(class: "text-sm text-[var(--surface-muted-content-color)]") do %>
+            Signed in as demo@flatpack.app
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="rounded-lg overflow-hidden h-[360px]">
+      <%= render FlatPack::Sidebar::Component.new(class: "border border-[var(--surface-border-color)] rounded-lg") do |sidebar| %>
+        <% sidebar.header do %>
+          <%= render FlatPack::Sidebar::Header::Component.new(
+            brand_abbr: "AC",
+            title: "Acme Cloud",
+            subtitle: "Production",
+            collapsible: false
+          ) %>
+        <% end %>
+
+        <% sidebar.items do %>
+          <nav class="py-4 space-y-1">
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Deployments", href: "#", icon: :box, active: true) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Incidents", href: "#", icon: :alert) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Audit Logs", href: "#", icon: :file) %>
+          </nav>
+        <% end %>
+
+        <% sidebar.footer do %>
+          <%= render FlatPack::Sidebar::Footer::Component.new(class: "text-sm text-[var(--surface-muted-content-color)]") do %>
+            Environment: Production | Region: us-east-1
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;grid grid-cols-1 md:grid-cols-2 gap-6&quot;&gt;
+        &lt;div class=&quot;rounded-lg overflow-hidden h-[360px]&quot;&gt;
+          &lt;%= render FlatPack::Sidebar::Component.new(class: &quot;border border-[var(--surface-border-color)] rounded-lg&quot;) do |sidebar| %&gt;
+            &lt;% sidebar.header do %&gt;
+              &lt;%= render FlatPack::Sidebar::Header::Component.new(
+                brand_abbr: &quot;FP&quot;,
+                title: &quot;FlatPack&quot;,
+                subtitle: &quot;Workspace&quot;,
+                collapsible: false
+              ) %&gt;
+            &lt;% end %&gt;
+    
+            &lt;% sidebar.items do %&gt;
+              &lt;nav class=&quot;py-4 space-y-1&quot;&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Overview&quot;, href: &quot;#&quot;, icon: :home, active: true) %&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Projects&quot;, href: &quot;#&quot;, icon: :dashboard) %&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Reports&quot;, href: &quot;#&quot;, icon: :table) %&gt;
+              &lt;/nav&gt;
+            &lt;% end %&gt;
+    
+            &lt;% sidebar.footer do %&gt;
+              &lt;%= render FlatPack::Sidebar::Footer::Component.new(class: &quot;text-sm text-[var(--surface-muted-content-color)]&quot;) do %&gt;
+                Signed in as demo@flatpack.app
+              &lt;% end %&gt;
+            &lt;% end %&gt;
+          &lt;% end %&gt;
+        &lt;/div&gt;
+    
+        &lt;div class=&quot;rounded-lg overflow-hidden h-[360px]&quot;&gt;
+          &lt;%= render FlatPack::Sidebar::Component.new(class: &quot;border border-[var(--surface-border-color)] rounded-lg&quot;) do |sidebar| %&gt;
+            &lt;% sidebar.header do %&gt;
+              &lt;%= render FlatPack::Sidebar::Header::Component.new(
+                brand_abbr: &quot;AC&quot;,
+                title: &quot;Acme Cloud&quot;,
+                subtitle: &quot;Production&quot;,
+                collapsible: false
+              ) %&gt;
+            &lt;% end %&gt;
+    
+            &lt;% sidebar.items do %&gt;
+              &lt;nav class=&quot;py-4 space-y-1&quot;&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Deployments&quot;, href: &quot;#&quot;, icon: :box, active: true) %&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Incidents&quot;, href: &quot;#&quot;, icon: :alert) %&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Audit Logs&quot;, href: &quot;#&quot;, icon: :file) %&gt;
+              &lt;/nav&gt;
+            &lt;% end %&gt;
+    
+            &lt;% sidebar.footer do %&gt;
+              &lt;%= render FlatPack::Sidebar::Footer::Component.new(class: &quot;text-sm text-[var(--surface-muted-content-color)]&quot;) do %&gt;
+                Environment: Production | Region: us-east-1
+              &lt;% end %&gt;
+            &lt;% end %&gt;
+          &lt;% end %&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Footer Variants"
+  ) %>
+</section>

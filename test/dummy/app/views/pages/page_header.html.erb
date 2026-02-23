@@ -117,10 +117,10 @@
 <!-- Features -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Examples for Features.") %>
-  <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
-    <li><strong>Simple API:</strong> Required title with optional subtitle</li>
-    <li><strong>Consistent Spacing:</strong> Standardized margins and padding</li>
-    <li><strong>Responsive Typography:</strong> Clear hierarchy for page-level headings</li>
-    <li><strong>Fast Adoption:</strong> Minimal setup for consistent page intros</li>
-  </ul>
+  <%= render FlatPack::List::Component.new(spacing: :dense, class: "text-[var(--surface-content-color)]") do %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Simple API:</strong> Required title with optional subtitle<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Consistent Spacing:</strong> Standardized margins and padding<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Responsive Typography:</strong> Clear hierarchy for page-level headings<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Fast Adoption:</strong> Minimal setup for consistent page intros<% end %>
+  <% end %>
 </section>

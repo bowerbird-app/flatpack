@@ -1,0 +1,180 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Combined Form",
+  subtitle: "A complete example that combines multiple FlatPack form inputs in one page."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :form_input %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Complete Form Example", anchor_link: true) %>
+
+  <form class="space-y-4 p-6 border border-slate-200 rounded-lg bg-slate-50">
+    <%= render FlatPack::TextInput::Component.new(
+      name: "full_name",
+      label: "Full Name",
+      placeholder: "John Doe",
+      required: true
+    ) %>
+
+    <%= render FlatPack::EmailInput::Component.new(
+      name: "contact_email",
+      label: "Email",
+      placeholder: "john@example.com",
+      required: true
+    ) %>
+
+    <%= render FlatPack::PasswordInput::Component.new(
+      name: "account_password",
+      label: "Password",
+      placeholder: "Enter a secure password",
+      required: true
+    ) %>
+
+    <%= render FlatPack::PhoneInput::Component.new(
+      name: "contact_phone",
+      label: "Phone Number",
+      placeholder: "+1 (555) 123-4567"
+    ) %>
+
+    <%= render FlatPack::DateInput::Component.new(
+      name: "birth_date",
+      label: "Birth Date",
+      max: Date.today.to_s
+    ) %>
+
+    <%= render FlatPack::NumberInput::Component.new(
+      name: "age",
+      label: "Age",
+      min: 18,
+      max: 120,
+      step: 1,
+      placeholder: "Enter your age"
+    ) %>
+
+    <%= render FlatPack::RangeInput::Component.new(
+      name: "experience_level",
+      label: "Experience Level",
+      min: 0,
+      max: 10,
+      step: 1,
+      value: 5
+    ) %>
+
+    <%= render FlatPack::Select::Component.new(
+      name: "country",
+      options: [["United States", "us"], ["Canada", "ca"], ["United Kingdom", "uk"]],
+      label: "Country",
+      placeholder: "Select your country",
+      required: true
+    ) %>
+
+    <%= render FlatPack::Checkbox::Component.new(
+      name: "agree_terms",
+      label: "I agree to the terms and conditions",
+      required: true
+    ) %>
+
+    <%= render FlatPack::TextArea::Component.new(
+      name: "bio",
+      label: "Biography",
+      placeholder: "Tell us about yourself...",
+      rows: 4
+    ) %>
+
+    <div class="pt-2">
+      <%= render FlatPack::Button::Component.new(
+        text: "Submit Form",
+        type: "submit",
+        style: :primary
+      ) %>
+    </div>
+  </form>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;form class=&quot;space-y-4 p-6 border border-slate-200 rounded-lg bg-slate-50&quot;&gt;
+        &lt;%= render FlatPack::TextInput::Component.new(
+          name: &quot;full_name&quot;,
+          label: &quot;Full Name&quot;,
+          placeholder: &quot;John Doe&quot;,
+          required: true
+        ) %&gt;
+    
+        &lt;%= render FlatPack::EmailInput::Component.new(
+          name: &quot;contact_email&quot;,
+          label: &quot;Email&quot;,
+          placeholder: &quot;john@example.com&quot;,
+          required: true
+        ) %&gt;
+    
+        &lt;%= render FlatPack::PasswordInput::Component.new(
+          name: &quot;account_password&quot;,
+          label: &quot;Password&quot;,
+          placeholder: &quot;Enter a secure password&quot;,
+          required: true
+        ) %&gt;
+    
+        &lt;%= render FlatPack::PhoneInput::Component.new(
+          name: &quot;contact_phone&quot;,
+          label: &quot;Phone Number&quot;,
+          placeholder: &quot;+1 (555) 123-4567&quot;
+        ) %&gt;
+    
+        &lt;%= render FlatPack::DateInput::Component.new(
+          name: &quot;birth_date&quot;,
+          label: &quot;Birth Date&quot;,
+          max: Date.today.to_s
+        ) %&gt;
+    
+        &lt;%= render FlatPack::NumberInput::Component.new(
+          name: &quot;age&quot;,
+          label: &quot;Age&quot;,
+          min: 18,
+          max: 120,
+          step: 1,
+          placeholder: &quot;Enter your age&quot;
+        ) %&gt;
+    
+        &lt;%= render FlatPack::RangeInput::Component.new(
+          name: &quot;experience_level&quot;,
+          label: &quot;Experience Level&quot;,
+          min: 0,
+          max: 10,
+          step: 1,
+          value: 5
+        ) %&gt;
+    
+        &lt;%= render FlatPack::Select::Component.new(
+          name: &quot;country&quot;,
+          options: [[&quot;United States&quot;, &quot;us&quot;], [&quot;Canada&quot;, &quot;ca&quot;], [&quot;United Kingdom&quot;, &quot;uk&quot;]],
+          label: &quot;Country&quot;,
+          placeholder: &quot;Select your country&quot;,
+          required: true
+        ) %&gt;
+    
+        &lt;%= render FlatPack::Checkbox::Component.new(
+          name: &quot;agree_terms&quot;,
+          label: &quot;I agree to the terms and conditions&quot;,
+          required: true
+        ) %&gt;
+    
+        &lt;%= render FlatPack::TextArea::Component.new(
+          name: &quot;bio&quot;,
+          label: &quot;Biography&quot;,
+          placeholder: &quot;Tell us about yourself...&quot;,
+          rows: 4
+        ) %&gt;
+    
+        &lt;div class=&quot;pt-2&quot;&gt;
+          &lt;%= render FlatPack::Button::Component.new(
+            text: &quot;Submit Form&quot;,
+            type: &quot;submit&quot;,
+            style: :primary
+          ) %&gt;
+        &lt;/div&gt;
+      &lt;/form&gt;
+    CODE
+    language: "erb",
+    title: "Complete Form Example"
+  ) %>
+</section>

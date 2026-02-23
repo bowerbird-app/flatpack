@@ -61,12 +61,13 @@ module FlatPack
           "absolute",
           "z-40",
           "hidden",
-          "bg-[var(--color-background)]",
+          "bg-[var(--popover-background-color)]",
           "border",
-          "border-[var(--color-border)]",
-          "rounded-[var(--radius-md)]",
-          "shadow-lg",
-          "p-4"
+          "border-[var(--popover-border-color)]",
+          "text-[var(--popover-text-color)]",
+          "rounded-[var(--popover-radius)]",
+          "shadow-[var(--popover-shadow)]",
+          "p-[var(--popover-padding)]"
         )
       end
 

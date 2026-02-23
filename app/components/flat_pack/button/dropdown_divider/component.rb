@@ -21,7 +21,7 @@ module FlatPack
           classes(
             "h-px",
             "my-1",
-            "bg-[var(--color-border)]"
+            "bg-[var(--surface-border-color)]"
           )
         end
       end

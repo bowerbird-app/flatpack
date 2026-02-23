@@ -6,7 +6,7 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Basic Range Inputs", anchor_link: true) %>
   
-  <div class="space-y-6 p-6 bg-[var(--color-background)] border border-[var(--color-border)] rounded-lg">
+  <div class="space-y-6 p-6 bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] rounded-lg">
     <div>
       <%= render FlatPack::RangeInput::Component.new(
         name: "basic",
@@ -31,12 +31,44 @@
       ) %>
     </div>
   </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;space-y-6 p-6 bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] rounded-lg&quot;&gt;
+        &lt;div&gt;
+          &lt;%= render FlatPack::RangeInput::Component.new(
+            name: &quot;basic&quot;,
+            value: 50
+          ) %&gt;
+        &lt;/div&gt;
+    
+        &lt;div&gt;
+          &lt;%= render FlatPack::RangeInput::Component.new(
+            name: &quot;volume&quot;,
+            label: &quot;Volume&quot;,
+            value: 75
+          ) %&gt;
+        &lt;/div&gt;
+    
+        &lt;div&gt;
+          &lt;%= render FlatPack::RangeInput::Component.new(
+            name: &quot;brightness&quot;,
+            label: &quot;Brightness&quot;,
+            value: 80,
+            show_value: true
+          ) %&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Basic Range Inputs"
+  ) %>
 </section>
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Custom Ranges", anchor_link: true) %>
   
-  <div class="space-y-6 p-6 bg-[var(--color-background)] border border-[var(--color-border)] rounded-lg">
+  <div class="space-y-6 p-6 bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] rounded-lg">
     <div>
       <%= render FlatPack::RangeInput::Component.new(
         name: "price",
@@ -70,14 +102,55 @@
       ) %>
     </div>
   </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;space-y-6 p-6 bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] rounded-lg&quot;&gt;
+        &lt;div&gt;
+          &lt;%= render FlatPack::RangeInput::Component.new(
+            name: &quot;price&quot;,
+            label: &quot;Price Range ($)&quot;,
+            min: 0,
+            max: 1000,
+            step: 50,
+            value: 500
+          ) %&gt;
+        &lt;/div&gt;
+    
+        &lt;div&gt;
+          &lt;%= render FlatPack::RangeInput::Component.new(
+            name: &quot;temperature&quot;,
+            label: &quot;Temperature (°C)&quot;,
+            min: -20,
+            max: 40,
+            step: 5,
+            value: 20
+          ) %&gt;
+        &lt;/div&gt;
+    
+        &lt;div&gt;
+          &lt;%= render FlatPack::RangeInput::Component.new(
+            name: &quot;opacity&quot;,
+            label: &quot;Opacity&quot;,
+            min: 0,
+            max: 1,
+            step: 0.1,
+            value: 1
+          ) %&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Custom Ranges"
+  ) %>
 </section>
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "States", anchor_link: true) %>
   
-  <div class="space-y-6 p-6 bg-[var(--color-background)] border border-[var(--color-border)] rounded-lg">
+  <div class="space-y-6 p-6 bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] rounded-lg">
     <div>
-      <p class="text-sm text-[var(--color-text-muted)] mb-2">Normal State</p>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Normal State</p>
       <%= render FlatPack::RangeInput::Component.new(
         name: "normal",
         label: "Normal",
@@ -86,7 +159,7 @@
     </div>
 
     <div>
-      <p class="text-sm text-[var(--color-text-muted)] mb-2">Disabled State</p>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Disabled State</p>
       <%= render FlatPack::RangeInput::Component.new(
         name: "disabled",
         label: "Disabled",
@@ -96,7 +169,7 @@
     </div>
 
     <div>
-      <p class="text-sm text-[var(--color-text-muted)] mb-2">Without Value Display</p>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Without Value Display</p>
       <%= render FlatPack::RangeInput::Component.new(
         name: "no_value",
         label: "Hidden Value",
@@ -105,13 +178,50 @@
       ) %>
     </div>
   </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;space-y-6 p-6 bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] rounded-lg&quot;&gt;
+        &lt;div&gt;
+          &lt;p class=&quot;text-sm text-[var(--surface-muted-content-color)] mb-2&quot;&gt;Normal State&lt;/p&gt;
+          &lt;%= render FlatPack::RangeInput::Component.new(
+            name: &quot;normal&quot;,
+            label: &quot;Normal&quot;,
+            value: 60
+          ) %&gt;
+        &lt;/div&gt;
+    
+        &lt;div&gt;
+          &lt;p class=&quot;text-sm text-[var(--surface-muted-content-color)] mb-2&quot;&gt;Disabled State&lt;/p&gt;
+          &lt;%= render FlatPack::RangeInput::Component.new(
+            name: &quot;disabled&quot;,
+            label: &quot;Disabled&quot;,
+            value: 60,
+            disabled: true
+          ) %&gt;
+        &lt;/div&gt;
+    
+        &lt;div&gt;
+          &lt;p class=&quot;text-sm text-[var(--surface-muted-content-color)] mb-2&quot;&gt;Without Value Display&lt;/p&gt;
+          &lt;%= render FlatPack::RangeInput::Component.new(
+            name: &quot;no_value&quot;,
+            label: &quot;Hidden Value&quot;,
+            value: 60,
+            show_value: false
+          ) %&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "States"
+  ) %>
 </section>
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Interactive Demo", anchor_link: true) %>
   
   <div
-    class="p-6 bg-gradient-to-br from-blue-50 to-purple-50 border border-[var(--color-border)] rounded-lg"
+    class="p-6 bg-gradient-to-br from-blue-50 to-purple-50 border border-[var(--surface-border-color)] rounded-lg"
     data-controller="flat-pack--range-input-demo"
     data-action="range-input:change->flat-pack--range-input-demo#updatePreview"
   >
@@ -150,7 +260,7 @@
       </div>
 
       <div
-        class="mt-6 p-8 rounded-lg border-2 border-[var(--color-border)]"
+        class="mt-6 p-8 rounded-lg border-2 border-[var(--surface-border-color)]"
         style="background-color: hsl(200, 70%, 50%);"
         data-flat-pack--range-input-demo-target="preview"
       >
@@ -159,6 +269,62 @@
       </div>
     </div>
   </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div
+        class=&quot;p-6 bg-gradient-to-br from-blue-50 to-purple-50 border border-[var(--surface-border-color)] rounded-lg&quot;
+        data-controller=&quot;flat-pack--range-input-demo&quot;
+        data-action=&quot;range-input:change-&gt;flat-pack--range-input-demo#updatePreview&quot;
+      &gt;
+        &lt;div class=&quot;space-y-6&quot;&gt;
+          &lt;div&gt;
+            &lt;%= render FlatPack::RangeInput::Component.new(
+              name: &quot;demo_hue&quot;,
+              id: &quot;demo_hue&quot;,
+              label: &quot;Hue&quot;,
+              min: 0,
+              max: 360,
+              value: 200
+            ) %&gt;
+          &lt;/div&gt;
+    
+          &lt;div&gt;
+            &lt;%= render FlatPack::RangeInput::Component.new(
+              name: &quot;demo_saturation&quot;,
+              id: &quot;demo_saturation&quot;,
+              label: &quot;Saturation (%)&quot;,
+              min: 0,
+              max: 100,
+              value: 70
+            ) %&gt;
+          &lt;/div&gt;
+    
+          &lt;div&gt;
+            &lt;%= render FlatPack::RangeInput::Component.new(
+              name: &quot;demo_lightness&quot;,
+              id: &quot;demo_lightness&quot;,
+              label: &quot;Lightness (%)&quot;,
+              min: 0,
+              max: 100,
+              value: 50
+            ) %&gt;
+          &lt;/div&gt;
+    
+          &lt;div
+            class=&quot;mt-6 p-8 rounded-lg border-2 border-[var(--surface-border-color)]&quot;
+            style=&quot;background-color: hsl(200, 70%, 50%);&quot;
+            data-flat-pack--range-input-demo-target=&quot;preview&quot;
+          &gt;
+            &lt;p class=&quot;text-center text-white font-medium&quot;&gt;Color Preview&lt;/p&gt;
+            &lt;p class=&quot;mt-2 text-center text-white/90 text-sm font-mono&quot; data-flat-pack--range-input-demo-target=&quot;value&quot;&gt;hsl(200, 70%, 50%)&lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Interactive Demo"
+  ) %>
 </section>
 
 <section class="mb-12">
@@ -168,7 +334,7 @@
     <%= render FlatPack::Card::Component.new do |card| %>
       <% card.body do %>
         <h3 class="font-semibold mb-2">Volume & Audio Controls</h3>
-        <p class="text-sm text-[var(--color-text-muted)] mb-4">Perfect for media players, volume mixers, and audio settings.</p>
+        <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">Perfect for media players, volume mixers, and audio settings.</p>
         <%= render FlatPack::RangeInput::Component.new(
           name: "audio_volume",
           label: "Master Volume",
@@ -180,7 +346,7 @@
     <%= render FlatPack::Card::Component.new do |card| %>
       <% card.body do %>
         <h3 class="font-semibold mb-2">Price Filters</h3>
-        <p class="text-sm text-[var(--color-text-muted)] mb-4">Allow users to filter products by price range.</p>
+        <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">Allow users to filter products by price range.</p>
         <%= render FlatPack::RangeInput::Component.new(
           name: "max_price",
           label: "Maximum Price",
@@ -195,7 +361,7 @@
     <%= render FlatPack::Card::Component.new do |card| %>
       <% card.body do %>
         <h3 class="font-semibold mb-2">Image Editor Controls</h3>
-        <p class="text-sm text-[var(--color-text-muted)] mb-4">Adjust image properties like brightness, contrast, and saturation.</p>
+        <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">Adjust image properties like brightness, contrast, and saturation.</p>
         <%= render FlatPack::RangeInput::Component.new(
           name: "contrast",
           label: "Contrast",
@@ -206,4 +372,53 @@
       <% end %>
     <% end %>
   </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;space-y-4&quot;&gt;
+        &lt;%= render FlatPack::Card::Component.new do |card| %&gt;
+          &lt;% card.body do %&gt;
+            &lt;h3 class=&quot;font-semibold mb-2&quot;&gt;Volume &amp; Audio Controls&lt;/h3&gt;
+            &lt;p class=&quot;text-sm text-[var(--surface-muted-content-color)] mb-4&quot;&gt;Perfect for media players, volume mixers, and audio settings.&lt;/p&gt;
+            &lt;%= render FlatPack::RangeInput::Component.new(
+              name: &quot;audio_volume&quot;,
+              label: &quot;Master Volume&quot;,
+              value: 75
+            ) %&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+    
+        &lt;%= render FlatPack::Card::Component.new do |card| %&gt;
+          &lt;% card.body do %&gt;
+            &lt;h3 class=&quot;font-semibold mb-2&quot;&gt;Price Filters&lt;/h3&gt;
+            &lt;p class=&quot;text-sm text-[var(--surface-muted-content-color)] mb-4&quot;&gt;Allow users to filter products by price range.&lt;/p&gt;
+            &lt;%= render FlatPack::RangeInput::Component.new(
+              name: &quot;max_price&quot;,
+              label: &quot;Maximum Price&quot;,
+              min: 0,
+              max: 500,
+              step: 25,
+              value: 250
+            ) %&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+    
+        &lt;%= render FlatPack::Card::Component.new do |card| %&gt;
+          &lt;% card.body do %&gt;
+            &lt;h3 class=&quot;font-semibold mb-2&quot;&gt;Image Editor Controls&lt;/h3&gt;
+            &lt;p class=&quot;text-sm text-[var(--surface-muted-content-color)] mb-4&quot;&gt;Adjust image properties like brightness, contrast, and saturation.&lt;/p&gt;
+            &lt;%= render FlatPack::RangeInput::Component.new(
+              name: &quot;contrast&quot;,
+              label: &quot;Contrast&quot;,
+              min: -100,
+              max: 100,
+              value: 0
+            ) %&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Use Cases"
+  ) %>
 </section>

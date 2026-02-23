@@ -412,8 +412,8 @@ Here's a complete chat interface example:
     <% panel.header do %>
       <div class="p-4 flex items-center justify-between">
         <div>
-          <h2 class="font-semibold text-[var(--color-foreground)]">Design Team</h2>
-          <p class="text-sm text-[var(--color-muted-foreground)]">3 members</p>
+          <h2 class="font-semibold text-[var(--chat-message-incoming-text-color)]">Design Team</h2>
+          <p class="text-sm text-[var(--chat-message-meta-color)]">3 members</p>
         </div>
         <%= render FlatPack::AvatarGroup::Component.new(
           items: [
@@ -507,7 +507,8 @@ Here's a complete chat interface example:
 ## Styling
 
 All chat components use FlatPack's design system:
-- CSS variables for theming (`--color-*`)
+- Dedicated chat CSS variables for theming (`--chat-*`)
+- Shared semantic variables for brand/feedback (`--color-*`)
 - Tailwind utility classes
 - Proper focus states
 - Dark mode support

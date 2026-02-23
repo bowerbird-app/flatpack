@@ -1,0 +1,14 @@
+<div class="container mx-auto max-w-4xl p-4">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Chat::SendButton",
+    subtitle: "Send action button states for chat composers."
+  ) %>
+
+  <div class="mt-6 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
+    <div class="flex items-center gap-4">
+      <%= render FlatPack::Chat::SendButton::Component.new %>
+      <%= render FlatPack::Chat::SendButton::Component.new(loading: true) %>
+      <%= render FlatPack::Chat::SendButton::Component.new(disabled: true) %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,62 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Text Input",
+  subtitle: "Single-line text field examples with default, error, and disabled states."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :text_input %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Text Input Examples", anchor_link: true) %>
+
+  <div class="space-y-4 p-6 border border-slate-200 rounded-lg bg-white">
+    <%= render FlatPack::TextInput::Component.new(
+      name: "username",
+      label: "Username",
+      placeholder: "Enter your username",
+      required: true
+    ) %>
+
+    <%= render FlatPack::TextInput::Component.new(
+      name: "username_error",
+      label: "Username (with error)",
+      value: "john",
+      error: "Username must be at least 5 characters"
+    ) %>
+
+    <%= render FlatPack::TextInput::Component.new(
+      name: "username_disabled",
+      label: "Username (disabled)",
+      value: "johndoe",
+      disabled: true
+    ) %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;space-y-4 p-6 border border-slate-200 rounded-lg bg-white&quot;&gt;
+        &lt;%= render FlatPack::TextInput::Component.new(
+          name: &quot;username&quot;,
+          label: &quot;Username&quot;,
+          placeholder: &quot;Enter your username&quot;,
+          required: true
+        ) %&gt;
+    
+        &lt;%= render FlatPack::TextInput::Component.new(
+          name: &quot;username_error&quot;,
+          label: &quot;Username (with error)&quot;,
+          value: &quot;john&quot;,
+          error: &quot;Username must be at least 5 characters&quot;
+        ) %&gt;
+    
+        &lt;%= render FlatPack::TextInput::Component.new(
+          name: &quot;username_disabled&quot;,
+          label: &quot;Username (disabled)&quot;,
+          value: &quot;johndoe&quot;,
+          disabled: true
+        ) %&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Text Input Examples"
+  ) %>
+</section>

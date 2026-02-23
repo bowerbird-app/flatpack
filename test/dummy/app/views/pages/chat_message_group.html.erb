@@ -1,0 +1,29 @@
+<div class="container mx-auto max-w-4xl p-4">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Chat::MessageGroup",
+    subtitle: "Group multiple messages from the same sender with optional avatar and sender name."
+  ) %>
+
+  <div class="mt-6 space-y-6 rounded-lg border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-6">
+    <%= render FlatPack::Chat::MessageGroup::Component.new(direction: :incoming, show_avatar: true, show_name: true, sender_name: "Mina") do |group| %>
+      <% group.with_avatar do %>
+        <%= render FlatPack::Avatar::Component.new(name: "Mina Cho", initials: "MC", size: :sm) %>
+      <% end %>
+      <% group.with_message do %>
+        <%= render FlatPack::Chat::Message::Component.new(direction: :incoming) { "First message in the incoming group." } %>
+      <% end %>
+      <% group.with_message do %>
+        <%= render FlatPack::Chat::Message::Component.new(direction: :incoming) { "Second message from the same person." } %>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::Chat::MessageGroup::Component.new(direction: :outgoing, show_avatar: false) do |group| %>
+      <% group.with_message do %>
+        <%= render FlatPack::Chat::Message::Component.new(direction: :outgoing) { "Reply one in outgoing group." } %>
+      <% end %>
+      <% group.with_message do %>
+        <%= render FlatPack::Chat::Message::Component.new(direction: :outgoing) { "Reply two in outgoing group." } %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

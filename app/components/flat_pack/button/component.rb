@@ -3,39 +3,31 @@
 module FlatPack
   module Button
     class Component < FlatPack::BaseComponent
-      # Tailwind CSS scanning requires these classes to be present as string literals.
-      # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-[var(--color-primary)]" "hover:bg-[var(--color-primary-hover)]" "text-[var(--color-primary-text)]" "shadow-[var(--shadow-sm)]" "bg-[var(--color-secondary)]" "hover:bg-[var(--color-secondary-hover)]" "text-[var(--color-secondary-text)]" "border" "border-[var(--color-border)]" "bg-[var(--color-ghost)]" "hover:bg-[var(--color-ghost-hover)]" "text-[var(--color-ghost-text)]" "bg-[var(--color-success)]" "hover:bg-[var(--color-success-hover)]" "text-[var(--color-success-text)]" "bg-[var(--color-warning)]" "hover:bg-[var(--color-warning-hover)]" "text-[var(--color-warning-text)]" "bg-[var(--color-destructive)]" "hover:bg-[var(--color-destructive-hover)]" "text-[var(--color-destructive-text)]" "shadow-[var(--button-shadow)]" "hover:shadow-[var(--button-shadow-active)]" "disabled:shadow-none"
       SCHEMES = {
-        primary: "bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-[var(--color-primary-text)] shadow-[var(--shadow-sm)]",
-        secondary: "bg-[var(--color-secondary)] hover:bg-[var(--color-secondary-hover)] text-[var(--color-secondary-text)] border border-[var(--color-border)]",
-        ghost: "bg-[var(--color-ghost)] hover:bg-[var(--color-ghost-hover)] text-[var(--color-ghost-text)]",
-        success: "bg-[var(--color-success)] hover:bg-[var(--color-success-hover)] text-[var(--color-success-text)] shadow-[var(--shadow-sm)]",
-        warning: "bg-[var(--color-warning)] hover:bg-[var(--color-warning-hover)] text-[var(--color-warning-text)] shadow-[var(--shadow-sm)]",
-        error: "bg-[var(--color-destructive)] hover:bg-[var(--color-destructive-hover)] text-[var(--color-destructive-text)] shadow-[var(--shadow-sm)]"
+        default: "bg-[var(--button-default-background-color)] hover:bg-[var(--button-default-hover-background-color)] text-[var(--button-default-text-color)] border border-[var(--button-default-border-color)] shadow-[var(--button-shadow)]",
+        primary: "bg-[var(--button-primary-background-color)] hover:bg-[var(--button-primary-hover-background-color)] text-[var(--button-primary-text-color)] border border-[var(--button-primary-border-color)] shadow-[var(--button-shadow)]",
+        secondary: "bg-[var(--button-secondary-background-color)] hover:bg-[var(--button-secondary-hover-background-color)] text-[var(--button-secondary-text-color)] border border-[var(--button-secondary-border-color)]",
+        ghost: "bg-[var(--button-ghost-background-color)] hover:bg-[var(--button-ghost-hover-background-color)] text-[var(--button-ghost-text-color)] border border-[var(--button-ghost-border-color)]",
+        success: "bg-[var(--button-success-background-color)] hover:bg-[var(--button-success-hover-background-color)] text-[var(--button-success-text-color)] border border-[var(--button-success-border-color)] shadow-[var(--button-shadow)]",
+        warning: "bg-[var(--button-warning-background-color)] hover:bg-[var(--button-warning-hover-background-color)] text-[var(--button-warning-text-color)] border border-[var(--button-warning-border-color)] shadow-[var(--button-shadow)]",
+        error: "bg-[var(--button-danger-background-color)] hover:bg-[var(--button-danger-hover-background-color)] text-[var(--button-danger-text-color)] border border-[var(--button-danger-border-color)] shadow-[var(--button-shadow)]"
       }.freeze
 
-      # Tailwind CSS scanning requires these classes to be present as string literals.
-      # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "px-3" "py-1.5" "text-xs" "px-4" "py-2" "text-sm" "px-6" "py-3" "text-base"
       SIZES = {
-        sm: "px-3 py-1.5 text-xs",
-        md: "px-4 py-2 text-sm",
-        lg: "px-6 py-3 text-base"
+        sm: "px-[var(--button-padding-x-sm)] py-[var(--button-padding-y-sm)] text-xs",
+        md: "px-[var(--button-padding-x-md)] py-[var(--button-padding-y-md)] text-sm",
+        lg: "px-[var(--button-padding-x-lg)] py-[var(--button-padding-y-lg)] text-base"
       }.freeze
 
-      # Tailwind CSS scanning requires these classes to be present as string literals.
-      # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "p-1.5" "p-2" "p-3"
       ICON_ONLY_SIZES = {
-        sm: "p-1.5",
-        md: "p-2",
-        lg: "p-3"
+        sm: "p-[var(--button-icon-only-padding-sm)]",
+        md: "p-[var(--button-icon-only-padding-md)]",
+        lg: "p-[var(--button-icon-only-padding-lg)]"
       }.freeze
 
       def initialize(
         text: nil,
-        style: :primary,
+        style: :default,
         size: :md,
         url: nil,
         method: nil,
@@ -154,16 +146,15 @@ module FlatPack
       def button_classes
         classes(
           "inline-flex items-center justify-center gap-2",
-          "rounded-[var(--radius-md)]",
+          "rounded-[var(--button-border-radius)]",
           "font-medium",
           "cursor-pointer",
-          "transition-colors duration-[var(--transition-base)]",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:ring-offset-2",
-          "disabled:pointer-events-none disabled:opacity-50",
+          "transition-colors duration-base",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--button-focus-ring-offset-color)]",
+          "disabled:pointer-events-none disabled:opacity-[var(--button-disabled-opacity)]",
           conditional_size_classes,
           style_classes,
-          icon_only_classes,
-          shadow_classes
+          icon_only_classes
         )
       end
 
@@ -179,13 +170,6 @@ module FlatPack
 
       def size_classes
         SIZES.fetch(@size)
-      end
-
-      def shadow_classes
-        # Don't add shadow to link buttons
-        return nil if @url
-
-        "shadow-[var(--button-shadow)] hover:shadow-[var(--button-shadow-active)] disabled:shadow-none"
       end
 
       def validate_style!

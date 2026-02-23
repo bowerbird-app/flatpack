@@ -9,7 +9,7 @@ gem "puma"
 
 # For the dummy application
 gem "propshaft", "~> 1.0"
-gem "tailwindcss-rails", "~> 3.0"
+gem "tailwindcss-rails", "~> 4.0"
 gem "importmap-rails"
 gem "stimulus-rails"
 gem "turbo-rails"
@@ -21,4 +21,5 @@ end
 group :test do
   gem "capybara"
   gem "selenium-webdriver"
+  gem "simplecov", require: false
 end

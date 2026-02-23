@@ -1,0 +1,22 @@
+<div class="container mx-auto max-w-4xl p-4">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Chat::Attachment",
+    subtitle: "File and image attachment cards for message bubbles."
+  ) %>
+
+  <div class="mt-6 space-y-4 rounded-lg border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-6">
+    <%= render FlatPack::Chat::Attachment::Component.new(
+      type: :file,
+      name: "project-plan.pdf",
+      meta: "840 KB",
+      href: "#"
+    ) %>
+
+    <%= render FlatPack::Chat::Attachment::Component.new(
+      type: :image,
+      name: "homepage-wireframe.png",
+      thumbnail_url: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=640&h=360&fit=crop",
+      href: "#"
+    ) %>
+  </div>
+</div>

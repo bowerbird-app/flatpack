@@ -12,11 +12,11 @@ FlatPack is a modern Rails 8 UI Component Library built with ViewComponent, Tail
 
 - Rails 8.0+
 - Ruby 3.2+
-- Tailwind CSS via tailwindcss-rails gem (version 3.x or 4.x) - ✓ Already installed in this project
+- Tailwind CSS via tailwindcss-rails gem (version 4.x) - ✓ Already installed in this project
 - Propshaft (asset pipeline) - ✓ Already installed in this project  
 - Importmaps (JavaScript) - ✓ Already installed in this project
 
-**Note:** FlatPack works with both Tailwind CSS 3 and 4. This project uses Tailwind CSS 4 via the tailwindcss-rails gem.
+**Note:** FlatPack is built for Tailwind CSS 4. This project uses Tailwind CSS 4 via the tailwindcss-rails gem.
 
 ## Installation Steps
 
@@ -198,26 +198,18 @@ If you need to manually configure the JavaScript controllers:
    eagerLoadControllersFrom("controllers/flat_pack", application)
    ```
 
-### 6. Configure Tailwind CSS Content Paths (If Needed)
+### 6. Verify Tailwind CSS Source Scanning
 
-If a `config/tailwind.config.js` file exists, ensure it includes the FlatPack components path:
+Tailwind CSS 4 scans files via `@source` directives in your CSS file (no `tailwind.config.js` required).
 
-```javascript
-module.exports = {
-  content: [
-    './app/views/**/*.{erb,haml,html,slim}',
-    './app/components/**/*.{rb,erb}',
-    './app/helpers/**/*.rb',
-    './app/javascript/**/*.js',
-    // Include FlatPack components
-    './vendor/bundle/ruby/*/gems/flat_pack-*/app/components/**/*.{rb,erb}',
-  ],
-  theme: {
-    extend: {},
-  },
-  plugins: []
-}
+Ensure your Tailwind CSS file includes a FlatPack source path similar to:
+
+```css
+@import "tailwindcss";
+@source "../../../flat_pack/app/components";
 ```
+
+Use the path that matches your environment. If needed, run `bundle show flat_pack` and calculate the correct relative path to the gem's `app/components` directory.
 
 ### 7. Restart Your Rails Server
 
@@ -294,8 +286,8 @@ If the install generator didn't automatically configure Tailwind CSS 4:
    bundle info tailwindcss-rails
    ```
 
-2. **Verify your Tailwind CSS file uses the v4 syntax:**
-   The generator looks for `@import "tailwindcss"` (Tailwind CSS 4) instead of `@tailwind` directives (Tailwind CSS 3).
+2. **Verify your Tailwind CSS file uses Tailwind 4 syntax:**
+   The generator looks for `@import "tailwindcss"` and `@source` directives.
    
    Common locations checked:
    - `app/assets/stylesheets/application.tailwind.css`

@@ -48,7 +48,7 @@
   <!-- Combined Default Grid Card -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Combined Default Card (Grid Default)", anchor_link: true, subtitle: "Examples for Combined Default Card (Grid Default).") %>
-    <p class="text-sm text-[var(--color-muted-foreground)] mb-4">
+    <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">
       Recommended default for grid layouts: edge-to-edge top media, subtle hover interaction, and icon actions at the bottom.
     </p>
     <div class="max-w-sm mb-4">
@@ -58,11 +58,11 @@
         <% end %>
         <% card.body do %>
           <h3 class="text-lg font-semibold mb-2">Grid Card Title</h3>
-          <p class="text-sm text-[var(--color-muted-foreground)]">Edge-to-edge hero media with a compact content block for grid views.</p>
+          <p class="text-sm text-[var(--surface-muted-content-color)]">Edge-to-edge hero media with a compact content block for grid views.</p>
         <% end %>
         <% card.footer(divider: false) do %>
           <div class="flex items-center justify-between">
-            <div class="text-xs text-[var(--color-muted-foreground)]">Updated 2h ago</div>
+            <div class="text-xs text-[var(--surface-muted-content-color)]">Updated 2h ago</div>
             <div class="flex gap-2">
               <%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, style: :ghost, size: :sm, url: "#grid-card-notifications") %>
               <%= render FlatPack::Button::Component.new(icon: "calendar", icon_only: true, style: :ghost, size: :sm, url: "#grid-card-schedule") %>
@@ -80,11 +80,11 @@
           &lt;% end %&gt;
           &lt;% card.body do %&gt;
             <h3 class="text-lg font-semibold mb-2">Grid Card Title</h3>
-            <p class="text-sm text-[var(--color-muted-foreground)]">Edge-to-edge hero media with a compact content block for grid views.</p>
+            <p class="text-sm text-[var(--surface-muted-content-color)]">Edge-to-edge hero media with a compact content block for grid views.</p>
           &lt;% end %&gt;
           &lt;% card.footer(divider: false) do %&gt;
             <div class="flex items-center justify-between">
-              <div class="text-xs text-[var(--color-muted-foreground)]">Updated 2h ago</div>
+              <div class="text-xs text-[var(--surface-muted-content-color)]">Updated 2h ago</div>
               <div class="flex gap-2">
                 &lt;%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, style: :ghost, size: :sm, url: "#grid-card-notifications") %&gt;
                 &lt;%= render FlatPack::Button::Component.new(icon: "calendar", icon_only: true, style: :ghost, size: :sm, url: "#grid-card-schedule") %&gt;
@@ -201,7 +201,7 @@
         <% end %>
         <% card.header do %>
           <h3 class="text-lg font-semibold">Card Title</h3>
-          <p class="text-sm text-[var(--color-muted-foreground)]">Subtitle or metadata</p>
+          <p class="text-sm text-[var(--surface-muted-content-color)]">Subtitle or metadata</p>
         <% end %>
         <% card.body do %>
           <p class="text-sm">This card demonstrates all available slots: media, header, body, and footer.</p>
@@ -224,7 +224,7 @@
           &lt;% end %&gt;
           &lt;% card.header do %&gt;
             <h3 class="text-lg font-semibold">Card Title</h3>
-            <p class="text-sm text-[var(--color-muted-foreground)]">Subtitle or metadata</p>
+            <p class="text-sm text-[var(--surface-muted-content-color)]">Subtitle or metadata</p>
           &lt;% end %&gt;
           &lt;% card.body do %&gt;
             <p class="text-sm">This card demonstrates all available slots: media, header, body, and footer.</p>
@@ -313,7 +313,7 @@
         <% end %>
         <% card.body do %>
           <h3 class="text-lg font-semibold mb-2">Premium Widget</h3>
-          <p class="text-sm text-[var(--color-muted-foreground)] mb-4">High-quality widget with advanced features and premium support.</p>
+          <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">High-quality widget with advanced features and premium support.</p>
           <div class="text-2xl font-bold text-green-600">$99.99</div>
         <% end %>
         <% card.footer do %>
@@ -333,7 +333,7 @@
         <% end %>
         <% card.body do %>
           <h3 class="text-lg font-semibold mb-2">Standard Widget</h3>
-          <p class="text-sm text-[var(--color-muted-foreground)] mb-4">Reliable widget with essential features for everyday use.</p>
+          <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">Reliable widget with essential features for everyday use.</p>
           <div class="text-2xl font-bold text-green-600">$49.99</div>
         <% end %>
         <% card.footer do %>
@@ -353,7 +353,7 @@
         <% end %>
         <% card.body do %>
           <h3 class="text-lg font-semibold mb-2">Basic Widget</h3>
-          <p class="text-sm text-[var(--color-muted-foreground)] mb-4">Simple widget perfect for getting started with basic needs.</p>
+          <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">Simple widget perfect for getting started with basic needs.</p>
           <div class="text-2xl font-bold text-green-600">$29.99</div>
         <% end %>
         <% card.footer do %>
@@ -375,7 +375,7 @@
           &lt;% end %&gt;
           &lt;% card.body do %&gt;
             <h3 class="text-lg font-semibold mb-2">Premium Widget</h3>
-            <p class="text-sm text-[var(--color-muted-foreground)] mb-4">High-quality widget with advanced features and premium support.</p>
+            <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">High-quality widget with advanced features and premium support.</p>
             <div class="text-2xl font-bold text-green-600">$99.99</div>
           &lt;% end %&gt;
           &lt;% card.footer do %&gt;
@@ -466,15 +466,13 @@
       <%= render FlatPack::Card::Component.new(style: :default) do |card| %>
         <% card.body do %>
           <div class="flex items-center space-x-4 mb-4">
-            <div class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-2xl font-bold">
-              JD
-            </div>
+            <%= render FlatPack::Avatar::Component.new(name: "John Doe", initials: "JD", size: :xl) %>
             <div>
               <h3 class="text-lg font-semibold">John Doe</h3>
-              <p class="text-sm text-[var(--color-muted-foreground)]">Senior Developer</p>
+              <p class="text-sm text-[var(--surface-muted-content-color)]">Senior Developer</p>
             </div>
           </div>
-          <p class="text-sm text-[var(--color-muted-foreground)]">
+          <p class="text-sm text-[var(--surface-muted-content-color)]">
             Passionate about building great user experiences and scalable applications.
           </p>
         <% end %>
@@ -482,15 +480,15 @@
           <div class="flex justify-around text-center">
             <div>
               <div class="text-xl font-bold">1,234</div>
-              <div class="text-xs text-[var(--color-muted-foreground)]">Followers</div>
+              <div class="text-xs text-[var(--surface-muted-content-color)]">Followers</div>
             </div>
             <div>
               <div class="text-xl font-bold">567</div>
-              <div class="text-xs text-[var(--color-muted-foreground)]">Following</div>
+              <div class="text-xs text-[var(--surface-muted-content-color)]">Following</div>
             </div>
             <div>
               <div class="text-xl font-bold">89</div>
-              <div class="text-xs text-[var(--color-muted-foreground)]">Posts</div>
+              <div class="text-xs text-[var(--surface-muted-content-color)]">Posts</div>
             </div>
           </div>
         <% end %>
@@ -501,15 +499,13 @@
         &lt;%= render FlatPack::Card::Component.new(style: :default) do |card| %&gt;
           &lt;% card.body do %&gt;
             <div class="flex items-center space-x-4 mb-4">
-              <div class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-2xl font-bold">
-                JD
-              </div>
+              &lt;%= render FlatPack::Avatar::Component.new(name: &quot;John Doe&quot;, initials: &quot;JD&quot;, size: :xl) %&gt;
               <div>
                 <h3 class="text-lg font-semibold">John Doe</h3>
-                <p class="text-sm text-[var(--color-muted-foreground)]">Senior Developer</p>
+                <p class="text-sm text-[var(--surface-muted-content-color)]">Senior Developer</p>
               </div>
             </div>
-            <p class="text-sm text-[var(--color-muted-foreground)]">
+            <p class="text-sm text-[var(--surface-muted-content-color)]">
               Passionate about building great user experiences and scalable applications.
             </p>
           &lt;% end %&gt;
@@ -517,15 +513,15 @@
             <div class="flex justify-around text-center">
               <div>
                 <div class="text-xl font-bold">1,234</div>
-                <div class="text-xs text-[var(--color-muted-foreground)]">Followers</div>
+                <div class="text-xs text-[var(--surface-muted-content-color)]">Followers</div>
               </div>
               <div>
                 <div class="text-xl font-bold">567</div>
-                <div class="text-xs text-[var(--color-muted-foreground)]">Following</div>
+                <div class="text-xs text-[var(--surface-muted-content-color)]">Following</div>
               </div>
               <div>
                 <div class="text-xl font-bold">89</div>
-                <div class="text-xs text-[var(--color-muted-foreground)]">Posts</div>
+                <div class="text-xs text-[var(--surface-muted-content-color)]">Posts</div>
               </div>
             </div>
           &lt;% end %&gt;
@@ -542,21 +538,21 @@
         <% card.header do %>
           <div class="text-center">
             <h3 class="text-xl font-bold mb-2">Basic</h3>
-            <div class="text-3xl font-bold">$9<span class="text-sm text-[var(--color-muted-foreground)]">/mo</span></div>
+            <div class="text-3xl font-bold">$9<span class="text-sm text-[var(--surface-muted-content-color)]">/mo</span></div>
           </div>
         <% end %>
         <% card.body do %>
-          <ul class="space-y-2 text-sm">
-            <li class="flex items-center">
-              <span class="mr-2">✓</span> 10 projects
-            </li>
-            <li class="flex items-center">
-              <span class="mr-2">✓</span> Basic support
-            </li>
-            <li class="flex items-center">
-              <span class="mr-2">✓</span> 1GB storage
-            </li>
-          </ul>
+          <%= render FlatPack::List::Component.new(spacing: :dense, class: "text-sm") do %>
+            <%= render FlatPack::List::Item.new(leading: "✓", class: "py-0 px-0 items-center") do %>
+              10 projects
+            <% end %>
+            <%= render FlatPack::List::Item.new(leading: "✓", class: "py-0 px-0 items-center") do %>
+              Basic support
+            <% end %>
+            <%= render FlatPack::List::Item.new(leading: "✓", class: "py-0 px-0 items-center") do %>
+              1GB storage
+            <% end %>
+          <% end %>
         <% end %>
         <% card.footer do %>
           <%= render FlatPack::Button::Component.new(
@@ -570,23 +566,23 @@
       <%= render FlatPack::Card::Component.new(style: :default, hover: :subtle, class: "border-[var(--color-primary)]") do |card| %>
         <% card.header do %>
           <div class="text-center">
-            <div class="inline-block px-2 py-1 text-xs font-semibold bg-[var(--color-primary)] text-white rounded mb-2">POPULAR</div>
+            <div class="inline-block px-2 py-1 text-xs font-semibold bg-primary text-white rounded mb-2">POPULAR</div>
             <h3 class="text-xl font-bold mb-2">Pro</h3>
-            <div class="text-3xl font-bold">$29<span class="text-sm text-[var(--color-muted-foreground)]">/mo</span></div>
+            <div class="text-3xl font-bold">$29<span class="text-sm text-[var(--surface-muted-content-color)]">/mo</span></div>
           </div>
         <% end %>
         <% card.body do %>
-          <ul class="space-y-2 text-sm">
-            <li class="flex items-center">
-              <span class="mr-2">✓</span> Unlimited projects
-            </li>
-            <li class="flex items-center">
-              <span class="mr-2">✓</span> Priority support
-            </li>
-            <li class="flex items-center">
-              <span class="mr-2">✓</span> 50GB storage
-            </li>
-          </ul>
+          <%= render FlatPack::List::Component.new(spacing: :dense, class: "text-sm") do %>
+            <%= render FlatPack::List::Item.new(leading: "✓", class: "py-0 px-0 items-center") do %>
+              Unlimited projects
+            <% end %>
+            <%= render FlatPack::List::Item.new(leading: "✓", class: "py-0 px-0 items-center") do %>
+              Priority support
+            <% end %>
+            <%= render FlatPack::List::Item.new(leading: "✓", class: "py-0 px-0 items-center") do %>
+              50GB storage
+            <% end %>
+          <% end %>
         <% end %>
         <% card.footer do %>
           <%= render FlatPack::Button::Component.new(
@@ -601,21 +597,21 @@
         <% card.header do %>
           <div class="text-center">
             <h3 class="text-xl font-bold mb-2">Enterprise</h3>
-            <div class="text-3xl font-bold">$99<span class="text-sm text-[var(--color-muted-foreground)]">/mo</span></div>
+            <div class="text-3xl font-bold">$99<span class="text-sm text-[var(--surface-muted-content-color)]">/mo</span></div>
           </div>
         <% end %>
         <% card.body do %>
-          <ul class="space-y-2 text-sm">
-            <li class="flex items-center">
-              <span class="mr-2">✓</span> Unlimited everything
-            </li>
-            <li class="flex items-center">
-              <span class="mr-2">✓</span> 24/7 support
-            </li>
-            <li class="flex items-center">
-              <span class="mr-2">✓</span> Unlimited storage
-            </li>
-          </ul>
+          <%= render FlatPack::List::Component.new(spacing: :dense, class: "text-sm") do %>
+            <%= render FlatPack::List::Item.new(leading: "✓", class: "py-0 px-0 items-center") do %>
+              Unlimited everything
+            <% end %>
+            <%= render FlatPack::List::Item.new(leading: "✓", class: "py-0 px-0 items-center") do %>
+              24/7 support
+            <% end %>
+            <%= render FlatPack::List::Item.new(leading: "✓", class: "py-0 px-0 items-center") do %>
+              Unlimited storage
+            <% end %>
+          <% end %>
         <% end %>
         <% card.footer do %>
           <%= render FlatPack::Button::Component.new(
@@ -632,21 +628,21 @@
           &lt;% card.header do %&gt;
             <div class="text-center">
               <h3 class="text-xl font-bold mb-2">Basic</h3>
-              <div class="text-3xl font-bold">$9<span class="text-sm text-[var(--color-muted-foreground)]">/mo</span></div>
+              <div class="text-3xl font-bold">$9<span class="text-sm text-[var(--surface-muted-content-color)]">/mo</span></div>
             </div>
           &lt;% end %&gt;
           &lt;% card.body do %&gt;
-            <ul class="space-y-2 text-sm">
-              <li class="flex items-center">
-                <span class="mr-2">✓</span> 10 projects
-              </li>
-              <li class="flex items-center">
-                <span class="mr-2">✓</span> Basic support
-              </li>
-              <li class="flex items-center">
-                <span class="mr-2">✓</span> 1GB storage
-              </li>
-            </ul>
+            &lt;%= render FlatPack::List::Component.new(spacing: :dense, class: &quot;text-sm&quot;) do %&gt;
+              &lt;%= render FlatPack::List::Item.new(leading: &quot;✓&quot;, class: &quot;py-0 px-0 items-center&quot;) do %&gt;
+                10 projects
+              &lt;% end %&gt;
+              &lt;%= render FlatPack::List::Item.new(leading: &quot;✓&quot;, class: &quot;py-0 px-0 items-center&quot;) do %&gt;
+                Basic support
+              &lt;% end %&gt;
+              &lt;%= render FlatPack::List::Item.new(leading: &quot;✓&quot;, class: &quot;py-0 px-0 items-center&quot;) do %&gt;
+                1GB storage
+              &lt;% end %&gt;
+            &lt;% end %&gt;
           &lt;% end %&gt;
           &lt;% card.footer do %&gt;
             &lt;%= render FlatPack::Button::Component.new(
@@ -671,15 +667,13 @@
         <% card.body do %>
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
-                A
-              </div>
+              <%= render FlatPack::Avatar::Component.new(name: "Alice", initials: "A", size: :md) %>
               <div>
                 <p class="font-medium">Alice sent you a message</p>
-                <p class="text-sm text-[var(--color-muted-foreground)]">2 minutes ago</p>
+                <p class="text-sm text-[var(--surface-muted-content-color)]">2 minutes ago</p>
               </div>
             </div>
-            <span class="text-xs text-[var(--color-muted-foreground)]">10:30 AM</span>
+            <span class="text-xs text-[var(--surface-muted-content-color)]">10:30 AM</span>
           </div>
         <% end %>
       <% end %>
@@ -691,15 +685,13 @@
         <% card.body do %>
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">
-                B
-              </div>
+              <%= render FlatPack::Avatar::Component.new(name: "Bob", initials: "B", size: :md) %>
               <div>
                 <p class="font-medium">Bob commented on your post</p>
-                <p class="text-sm text-[var(--color-muted-foreground)]">1 hour ago</p>
+                <p class="text-sm text-[var(--surface-muted-content-color)]">1 hour ago</p>
               </div>
             </div>
-            <span class="text-xs text-[var(--color-muted-foreground)]">9:15 AM</span>
+            <span class="text-xs text-[var(--surface-muted-content-color)]">9:15 AM</span>
           </div>
         <% end %>
       <% end %>
@@ -711,15 +703,13 @@
         <% card.body do %>
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold">
-                C
-              </div>
+              <%= render FlatPack::Avatar::Component.new(name: "Charlie", initials: "C", size: :md) %>
               <div>
                 <p class="font-medium">Charlie mentioned you in a comment</p>
-                <p class="text-sm text-[var(--color-muted-foreground)]">3 hours ago</p>
+                <p class="text-sm text-[var(--surface-muted-content-color)]">3 hours ago</p>
               </div>
             </div>
-            <span class="text-xs text-[var(--color-muted-foreground)]">7:45 AM</span>
+            <span class="text-xs text-[var(--surface-muted-content-color)]">7:45 AM</span>
           </div>
         <% end %>
       <% end %>
@@ -730,15 +720,13 @@
           &lt;% card.body do %&gt;
             <div class="flex items-center justify-between">
               <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
-                  A
-                </div>
+                &lt;%= render FlatPack::Avatar::Component.new(name: "Alice", initials: "A", size: :md) %&gt;
                 <div>
                   <p class="font-medium">Alice sent you a message</p>
-                  <p class="text-sm text-[var(--color-muted-foreground)]">2 minutes ago</p>
+                  <p class="text-sm text-[var(--surface-muted-content-color)]">2 minutes ago</p>
                 </div>
               </div>
-              <span class="text-xs text-[var(--color-muted-foreground)]">10:30 AM</span>
+              <span class="text-xs text-[var(--surface-muted-content-color)]">10:30 AM</span>
             </div>
           &lt;% end %&gt;
         &lt;% end %&gt;
@@ -810,7 +798,7 @@
         <% end %>
         <% card.body do %>
           <h3 class="text-lg font-semibold mb-2">Standard Media Slot</h3>
-          <p class="text-sm text-[var(--color-muted-foreground)]">Media appears above content with default card body spacing.</p>
+          <p class="text-sm text-[var(--surface-muted-content-color)]">Media appears above content with default card body spacing.</p>
         <% end %>
       <% end %>
 
@@ -820,7 +808,7 @@
         <% end %>
         <% card.body do %>
           <h3 class="text-lg font-semibold mb-2">Edge-to-Edge Top Media</h3>
-          <p class="text-sm text-[var(--color-muted-foreground)]">Using <code>card.media(..., padding: :none)</code> removes top and side media spacing so the image touches the card edges.</p>
+          <p class="text-sm text-[var(--surface-muted-content-color)]">Using <code>card.media(..., padding: :none)</code> removes top and side media spacing so the image touches the card edges.</p>
         <% end %>
       <% end %>
     </div>
@@ -832,7 +820,7 @@
           &lt;% end %&gt;
           &lt;% card.body do %&gt;
             <h3 class="text-lg font-semibold mb-2">Edge-to-Edge Top Media</h3>
-            <p class="text-sm text-[var(--color-muted-foreground)]">
+            <p class="text-sm text-[var(--surface-muted-content-color)]">
               Using <code>card.media(..., padding: :none)</code> removes top and side media spacing so the image touches the card edges.
             </p>
           &lt;% end %&gt;

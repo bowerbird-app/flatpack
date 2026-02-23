@@ -1,0 +1,50 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Date Input",
+  subtitle: "Date picker examples with minimum and maximum boundaries."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :text_input %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Date Input Examples", anchor_link: true) %>
+
+  <div class="space-y-4 p-6 border border-slate-200 rounded-lg bg-white">
+    <%= render FlatPack::DateInput::Component.new(
+      name: "birth_date",
+      label: "Birth Date",
+      max: Date.today.to_s,
+      required: true
+    ) %>
+
+    <%= render FlatPack::DateInput::Component.new(
+      name: "event_date",
+      label: "Event Date",
+      min: Date.today.to_s,
+      max: (Date.today + 90).to_s,
+      value: (Date.today + 7).to_s
+    ) %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;space-y-4 p-6 border border-slate-200 rounded-lg bg-white&quot;&gt;
+        &lt;%= render FlatPack::DateInput::Component.new(
+          name: &quot;birth_date&quot;,
+          label: &quot;Birth Date&quot;,
+          max: Date.today.to_s,
+          required: true
+        ) %&gt;
+    
+        &lt;%= render FlatPack::DateInput::Component.new(
+          name: &quot;event_date&quot;,
+          label: &quot;Event Date&quot;,
+          min: Date.today.to_s,
+          max: (Date.today + 90).to_s,
+          value: (Date.today + 7).to_s
+        ) %&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Date Input Examples"
+  ) %>
+</section>

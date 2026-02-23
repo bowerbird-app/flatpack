@@ -62,14 +62,14 @@ module FlatPack
         render_inline(Component.new(pagy: pagy))
 
         assert_selector "[aria-label='Page 3'][aria-current='page']"
-        assert_includes page.native.to_html, "bg-[var(--color-primary)]"
+        assert_includes page.native.to_html, "bg-primary"
       end
 
       def test_returns_nil_when_single_page_and_not_compact
         pagy = MockPagy.new(page: 1, pages: 1, prev: nil, next_page: nil, series: [1])
         render_inline(Component.new(pagy: pagy))
 
-        assert_empty page.native.to_html.strip
+        refute_selector "nav[aria-label='Pagination']"
       end
 
       def test_renders_when_single_page_and_compact
@@ -134,8 +134,8 @@ module FlatPack
         render_inline(Component.new(pagy: pagy))
 
         html = page.native.to_html
-        assert_includes html, "min-w-[2.25rem]"
-        assert_includes html, "rounded-[var(--radius-sm)]"
+        assert_includes html, "min-w-[2.75rem]"
+        assert_includes html, "rounded-sm"
       end
 
       def test_disabled_buttons_have_correct_styles

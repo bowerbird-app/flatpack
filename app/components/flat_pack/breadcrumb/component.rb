@@ -139,7 +139,7 @@ module FlatPack
 
       def render_separator
         content_tag(:li,
-          class: "inline-flex items-center mx-2 text-[var(--color-muted-foreground)]",
+          class: "inline-flex items-center mx-2 text-[var(--surface-muted-content-color)]",
           aria: {hidden: "true"}) do
           if @separator == :custom && @separator_icon
             render(FlatPack::Shared::IconComponent.new(

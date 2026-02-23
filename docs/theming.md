@@ -38,6 +38,11 @@ A complete scale of brand colors from lightest to darkest.
 
 #### Semantic Colors
 ```css
+--color-default
+--color-default-hover
+--color-default-text
+--color-default-border
+
 --color-primary
 --color-primary-hover
 --color-primary-text
@@ -50,26 +55,35 @@ A complete scale of brand colors from lightest to darkest.
 --color-ghost-hover
 --color-ghost-text
 
---color-success
---color-success-hover
+--color-success-background-color
+--color-success-hover-background-color
 --color-success-text
+--color-success-border
 
---color-warning
---color-warning-hover
+--color-warning-background-color
+--color-warning-hover-background-color
 --color-warning-text
+--color-warning-border
 
---color-destructive
---color-destructive-hover
---color-destructive-text
+--color-danger-background-color
+--color-danger-hover-background-color
+--color-danger-text-color
+--color-danger-border-color
 
---color-background
---color-foreground
+--surface-background-color
+--surface-page-background-color
+--surface-content-color
 
---color-muted
---color-muted-foreground
+--surface-muted-background-color
+--surface-muted-content-color
 
---color-border
---color-border-hover
+--surface-border-color
+--surface-border-hover-color
+
+--gradient-1
+--gradient-2
+--gradient-3
+--gradient-4
 
 --color-ring
 ```
@@ -108,18 +122,18 @@ A complete scale of brand colors from lightest to darkest.
 ## Component Variable Usage
 
 ### Buttons
-- Colors: `--color-primary-*`, `--color-secondary-*`, `--color-ghost-*`, `--color-success-*`, `--color-warning-*`
+- Colors: `--color-default-*`, `--color-primary-*`, `--color-secondary-*`, `--color-ghost-*`, `--color-success-*`, `--color-warning-*`
 - Radius: `--radius-md`
 - Shadow: `--shadow-sm`
 - Transition: `--transition-base`
 
 ### Input Components (Text, Email, Password, Phone, Search, URL, TextArea)
-- Colors: `--color-foreground`, `--color-background`, `--color-muted-foreground`, `--color-border`, `--color-ring`, `--color-warning`
+- Colors: `--surface-content-color`, `--surface-background-color`, `--surface-muted-content-color`, `--surface-border-color`, `--color-ring`, `--color-warning-border`
 - Radius: `--radius-md`
 - Transition: `--transition-base`
 
 ### Table
-- Colors: `--color-border`, `--color-muted`
+- Colors: `--surface-border-color`, `--surface-muted-background-color`
 - Radius: `--radius-lg`
 - Transition: `--transition-fast`
 

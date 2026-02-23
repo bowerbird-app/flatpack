@@ -1,0 +1,22 @@
+<div class="container mx-auto max-w-4xl p-4">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Chat::Textarea",
+    subtitle: "Single-line starting textarea with optional auto-grow and submit-on-enter."
+  ) %>
+
+  <div class="mt-6 space-y-4 rounded-lg border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-6">
+    <%= render FlatPack::Chat::Textarea::Component.new(
+      name: "message[default]",
+      placeholder: "Auto-grow and submit on Enter",
+      autogrow: true,
+      submit_on_enter: true
+    ) %>
+
+    <%= render FlatPack::Chat::Textarea::Component.new(
+      name: "message[multiline]",
+      placeholder: "Multiline mode without submit on Enter",
+      autogrow: true,
+      submit_on_enter: false
+    ) %>
+  </div>
+</div>

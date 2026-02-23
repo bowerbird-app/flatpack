@@ -1,0 +1,65 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Basic Table Demos",
+  subtitle: "Foundational table patterns: basic columns and formatted cell rendering."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :table %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Basic Table", anchor_link: true, subtitle: "Simple rows and columns.") %>
+  <%= render FlatPack::Table::Component.new(data: @users.first(5), turbo_frame: "basic_table") do |table| %>
+    <% table.column(title: "ID", html: ->(user) { user.id.to_s }) %>
+    <% table.column(title: "Name", html: ->(user) { user.name }) %>
+    <% table.column(title: "Email", html: ->(user) { user.email }) %>
+    <% table.column(title: "Category", html: ->(user) { user.category.to_s.titleize }) %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Table::Component.new(data: @users.first(5), turbo_frame: &quot;basic_table&quot;) do |table| %&gt;
+        &lt;% table.column(title: &quot;ID&quot;, html: -&gt;(user) { user.id.to_s }) %&gt;
+        &lt;% table.column(title: &quot;Name&quot;, html: -&gt;(user) { user.name }) %&gt;
+        &lt;% table.column(title: &quot;Email&quot;, html: -&gt;(user) { user.email }) %&gt;
+        &lt;% table.column(title: &quot;Category&quot;, html: -&gt;(user) { user.category.to_s.titleize }) %&gt;
+      &lt;% end %&gt;
+    CODE
+    language: "erb",
+    title: "Basic Table"
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Formatted Columns", anchor_link: true, subtitle: "Use lambda renderers for custom output.") %>
+  <%= render FlatPack::Table::Component.new(data: @users.first(5)) do |table| %>
+    <% table.column(title: "Name", html: ->(user) { "<strong class=\"text-[var(--color-primary)]\">#{user.name}</strong>".html_safe }) %>
+    <% table.column(title: "Status", html: ->(user) {
+      badge_class = case user.status
+      when "active" then "bg-green-100 text-green-800"
+      when "inactive" then "bg-gray-100 text-gray-800"
+      else "bg-yellow-100 text-yellow-800"
+      end
+      "<span class=\"px-2 py-1 text-xs rounded #{badge_class}\">#{user.status.capitalize}</span>".html_safe
+    }) %>
+    <% table.column(title: "Published", html: ->(user) { user.published_at.strftime("%b %d, %Y") }) %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Table::Component.new(data: @users.first(5)) do |table| %&gt;
+        &lt;% table.column(title: &quot;Name&quot;, html: -&gt;(user) { &quot;&lt;strong class=\&quot;text-[var(--color-primary)]\&quot;&gt;#{user.name}&lt;/strong&gt;&quot;.html_safe }) %&gt;
+        &lt;% table.column(title: &quot;Status&quot;, html: -&gt;(user) {
+          badge_class = case user.status
+          when &quot;active&quot; then &quot;bg-green-100 text-green-800&quot;
+          when &quot;inactive&quot; then &quot;bg-gray-100 text-gray-800&quot;
+          else &quot;bg-yellow-100 text-yellow-800&quot;
+          end
+          &quot;&lt;span class=\&quot;px-2 py-1 text-xs rounded #{badge_class}\&quot;&gt;#{user.status.capitalize}&lt;/span&gt;&quot;.html_safe
+        }) %&gt;
+        &lt;% table.column(title: &quot;Published&quot;, html: -&gt;(user) { user.published_at.strftime(&quot;%b %d, %Y&quot;) }) %&gt;
+      &lt;% end %&gt;
+    CODE
+    language: "erb",
+    title: "Formatted Columns"
+  ) %>
+</section>
+

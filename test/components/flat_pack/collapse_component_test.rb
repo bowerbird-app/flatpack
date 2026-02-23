@@ -47,7 +47,7 @@ module FlatPack
         render_inline(Component.new(id: "test", title: "Section"))
 
         assert_selector "[data-flat-pack--collapse-target='trigger']"
-        assert_selector "[data-flat-pack--collapse-target='content']"
+        assert_selector "[data-flat-pack--collapse-target='content']", visible: false
         assert_selector "[data-flat-pack--collapse-target='icon']"
       end
 
@@ -78,7 +78,7 @@ module FlatPack
       def test_content_has_correct_id
         render_inline(Component.new(id: "my-section", title: "Section"))
 
-        assert_selector "#my-section-content"
+        assert_selector "#my-section-content", visible: false
         assert_selector "[aria-controls='my-section-content']"
       end
 

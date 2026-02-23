@@ -1,0 +1,52 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Select",
+  subtitle: "Dropdown select examples, including searchable options."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :text_input %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Select Examples", anchor_link: true) %>
+
+  <div class="space-y-6 p-6 border border-slate-200 rounded-lg bg-white">
+    <%= render FlatPack::Select::Component.new(
+      name: "country",
+      options: ["United States", "Canada", "United Kingdom", "Australia"],
+      label: "Country",
+      placeholder: "Select a country",
+      required: true
+    ) %>
+
+    <%= render FlatPack::Select::Component.new(
+      name: "city",
+      options: ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix"],
+      label: "City",
+      placeholder: "Search cities...",
+      searchable: true
+    ) %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;space-y-6 p-6 border border-slate-200 rounded-lg bg-white&quot;&gt;
+        &lt;%= render FlatPack::Select::Component.new(
+          name: &quot;country&quot;,
+          options: [&quot;United States&quot;, &quot;Canada&quot;, &quot;United Kingdom&quot;, &quot;Australia&quot;],
+          label: &quot;Country&quot;,
+          placeholder: &quot;Select a country&quot;,
+          required: true
+        ) %&gt;
+    
+        &lt;%= render FlatPack::Select::Component.new(
+          name: &quot;city&quot;,
+          options: [&quot;New York&quot;, &quot;Los Angeles&quot;, &quot;Chicago&quot;, &quot;Houston&quot;, &quot;Phoenix&quot;],
+          label: &quot;City&quot;,
+          placeholder: &quot;Search cities...&quot;,
+          searchable: true
+        ) %&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Select Examples"
+  ) %>
+</section>

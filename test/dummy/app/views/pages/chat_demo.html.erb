@@ -1,0 +1,115 @@
+<div class="container mx-auto max-w-5xl p-4">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Chat Demo",
+    subtitle: "A complete chat panel with message bubbles and composer input."
+  ) %>
+
+  <div class="mt-6 h-[620px] overflow-hidden rounded-lg border border-[var(--surface-border-color)] bg-[var(--surface-background-color)]">
+    <%= render(FlatPack::Chat::Panel::Component.new) do |panel| %>
+      <% panel.with_header do %>
+        <div class="flex items-center justify-between p-4">
+          <div>
+            <h2 class="text-base font-semibold text-[var(--surface-content-color)]">Design Team</h2>
+            <p class="text-sm text-[var(--surface-muted-content-color)]">4 people online</p>
+          </div>
+          <%= render(FlatPack::AvatarGroup::Component.new(
+            items: [
+              {name: "Alex Rivera", initials: "AR"},
+              {name: "Mina Cho", initials: "MC"},
+              {name: "Sam Lee", initials: "SL"},
+              {name: "Jo Kim", initials: "JK"}
+            ],
+            size: :sm,
+            max: 4
+          )) %>
+        </div>
+      <% end %>
+
+      <% panel.with_messages do %>
+        <%= render FlatPack::Chat::MessageList::Component.new do %>
+          <%= render FlatPack::Chat::DateDivider::Component.new(label: "Today") %>
+
+          <%= render FlatPack::Chat::MessageGroup::Component.new(
+            direction: :incoming,
+            show_avatar: true,
+            show_name: true,
+            sender_name: "Mina"
+          ) do |group| %>
+            <% group.with_avatar do %>
+              <%= render FlatPack::Avatar::Component.new(name: "Mina Cho", initials: "MC", size: :sm) %>
+            <% end %>
+            <% group.with_message do %>
+              <%= render FlatPack::Chat::Message::Component.new(direction: :incoming, timestamp: "10:12 AM") do |message| %>
+                I pushed the homepage copy updates. Can someone review?
+                <% message.with_meta do %>
+                  <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "10:12 AM", state: :read) %>
+                <% end %>
+              <% end %>
+            <% end %>
+          <% end %>
+
+          <%= render FlatPack::Chat::MessageGroup::Component.new(direction: :outgoing, show_avatar: false) do |group| %>
+            <% group.with_message do %>
+              <%= render FlatPack::Chat::Message::Component.new(direction: :outgoing, timestamp: "10:14 AM") do |message| %>
+                Looks good. I will handle the final QA pass.
+                <% message.with_meta do %>
+                  <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "10:14 AM", state: :read) %>
+                <% end %>
+              <% end %>
+            <% end %>
+          <% end %>
+
+          <%= render FlatPack::Chat::MessageGroup::Component.new(
+            direction: :incoming,
+            show_avatar: true,
+            show_name: true,
+            sender_name: "Alex"
+          ) do |group| %>
+            <% group.with_avatar do %>
+              <%= render FlatPack::Avatar::Component.new(name: "Alex Rivera", initials: "AR", size: :sm) %>
+            <% end %>
+            <% group.with_message do %>
+              <%= render FlatPack::Chat::Message::Component.new(direction: :incoming, timestamp: "10:17 AM") do |message| %>
+                Added the sprint board screenshot for context.
+                <% message.with_attachment do %>
+                  <%= render FlatPack::Chat::Attachment::Component.new(
+                    type: :file,
+                    name: "sprint-board.png",
+                    meta: "1.1 MB"
+                  ) %>
+                <% end %>
+                <% message.with_meta do %>
+                  <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "10:17 AM", state: :read) %>
+                <% end %>
+              <% end %>
+            <% end %>
+          <% end %>
+
+          <%= render FlatPack::Chat::TypingIndicator::Component.new(label: "Sam is typing") do |indicator| %>
+            <% indicator.with_avatar do %>
+              <%= render FlatPack::Avatar::Component.new(name: "Sam Lee", initials: "SL", size: :sm) %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <% panel.with_composer do %>
+        <%= form_with url: "#", method: :post, local: true do %>
+          <%= render FlatPack::Chat::Composer::Component.new do |composer| %>
+            <% composer.with_textarea do %>
+              <%= render FlatPack::Chat::Textarea::Component.new(
+                name: "chat[message]",
+                placeholder: "Write a message...",
+                autogrow: true,
+                submit_on_enter: true
+              ) %>
+            <% end %>
+            <% composer.with_actions do %>
+              <%= render FlatPack::Chat::SendButton::Component.new %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

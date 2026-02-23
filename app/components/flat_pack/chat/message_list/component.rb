@@ -43,8 +43,7 @@ module FlatPack
                     nil,
                     "fill-rule": "evenodd",
                     d: "M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z",
-                    "clip-rule": "evenodd"
-                  )
+                    "clip-rule": "evenodd")
                 end,
                 content_tag(:span, "Jump to latest")
               ])
@@ -118,14 +117,14 @@ module FlatPack
           classes(
             "flex items-center gap-2",
             "px-4 py-2",
-            "bg-white dark:bg-zinc-800",
-            "border border-[var(--color-border)]",
+            "bg-[var(--chat-jump-button-background-color)]",
+            "border border-[var(--chat-jump-button-border-color)]",
             "rounded-full",
             "shadow-lg",
             "text-sm font-medium",
-            "text-[var(--color-foreground)]",
-            "hover:bg-[var(--color-muted)]",
-            "transition-colors duration-[var(--transition-base)]",
+            "text-[var(--chat-jump-button-text-color)]",
+            "hover:bg-[var(--chat-jump-button-hover-background-color)]",
+            "transition-colors duration-base",
             "cursor-pointer"
           )
         end

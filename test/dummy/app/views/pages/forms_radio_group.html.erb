@@ -1,0 +1,48 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Radio Group",
+  subtitle: "Single-select choice lists using grouped radio inputs."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :text_input %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Radio Group Examples", anchor_link: true) %>
+
+  <div class="space-y-6 p-6 border border-slate-200 rounded-lg bg-white">
+    <%= render FlatPack::RadioGroup::Component.new(
+      name: "size",
+      options: ["Small", "Medium", "Large"],
+      label: "Choose a size",
+      value: "Medium"
+    ) %>
+
+    <%= render FlatPack::RadioGroup::Component.new(
+      name: "payment_method",
+      options: ["Credit Card", "PayPal", "Bank Transfer"],
+      label: "Payment Method",
+      required: true
+    ) %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;space-y-6 p-6 border border-slate-200 rounded-lg bg-white&quot;&gt;
+        &lt;%= render FlatPack::RadioGroup::Component.new(
+          name: &quot;size&quot;,
+          options: [&quot;Small&quot;, &quot;Medium&quot;, &quot;Large&quot;],
+          label: &quot;Choose a size&quot;,
+          value: &quot;Medium&quot;
+        ) %&gt;
+    
+        &lt;%= render FlatPack::RadioGroup::Component.new(
+          name: &quot;payment_method&quot;,
+          options: [&quot;Credit Card&quot;, &quot;PayPal&quot;, &quot;Bank Transfer&quot;],
+          label: &quot;Payment Method&quot;,
+          required: true
+        ) %&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Radio Group Examples"
+  ) %>
+</section>

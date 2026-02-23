@@ -58,7 +58,7 @@ module FlatPack
       def render_avatars
         avatars = []
         visible_items = @items.take(@max)
-        
+
         visible_items.each_with_index do |item, index|
           avatars << render_avatar(item, index)
         end
@@ -74,7 +74,7 @@ module FlatPack
         avatar_attrs = item.is_a?(Hash) ? item.symbolize_keys : {}
         styles = ["z-index: #{@items.length - index}"]
         styles << "margin-left: #{overlap_margin}" if index.positive?
-        
+
         content_tag(:div,
           class: "relative hover:z-10 focus-within:z-10 transition-transform hover:scale-110",
           style: styles.join("; ")) do

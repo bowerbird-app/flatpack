@@ -80,23 +80,27 @@ module FlatPack
       def render_label
         return unless @label
 
-        content_tag(:span, @label, class: "ml-3 text-sm font-medium text-[var(--color-foreground)]")
+        content_tag(:span, @label, class: "ml-3 text-sm font-medium text-[var(--surface-content-color)]")
       end
 
       def render_error
         return unless @error
 
-        content_tag(:span, @error, class: "mt-1 text-sm text-[var(--color-warning)]")
+        content_tag(:span, @error, class: "mt-1 text-sm text-warning", id: error_id)
       end
 
       def input_attributes
-        merge_attributes(type: "checkbox",
+        attrs = {
+          type: "checkbox",
           name: @name,
           value: "1",
           checked: @checked,
           disabled: @disabled,
           required: @required,
-          class: "sr-only peer")
+          class: "sr-only peer"
+        }
+
+        merge_attributes(**apply_default_validation(attrs, error_id: error_id, has_error: @error.present?))
       end
 
       def track_classes
@@ -104,9 +108,9 @@ module FlatPack
           "pointer-events-none",
           "rounded-full transition-colors duration-200",
           SIZES.fetch(@size),
-          "peer-checked:bg-[var(--color-primary)]",
-          "peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--color-ring)] peer-focus-visible:ring-offset-2",
-          @checked ? "bg-[var(--color-primary)]" : "bg-[var(--color-muted)]"
+          "peer-checked:bg-primary",
+          "peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2",
+          @checked ? "bg-primary" : "bg-[var(--surface-muted-background-color)]"
         )
       end
 
@@ -143,6 +147,10 @@ module FlatPack
       def validate_size!
         return if SIZES.key?(@size)
         raise ArgumentError, "Invalid size: #{@size}. Must be one of: #{SIZES.keys.join(", ")}"
+      end
+
+      def error_id
+        "#{@name.to_s.gsub(/[^a-zA-Z0-9_-]/, "_")}_error"
       end
     end
   end

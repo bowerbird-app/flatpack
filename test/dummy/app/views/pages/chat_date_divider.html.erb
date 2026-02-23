@@ -1,0 +1,12 @@
+<div class="container mx-auto max-w-4xl p-4">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Chat::DateDivider",
+    subtitle: "Visual separators for day or session boundaries in message history."
+  ) %>
+
+  <div class="mt-6 rounded-lg border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-6">
+    <%= render FlatPack::Chat::DateDivider::Component.new(label: "Yesterday") %>
+    <%= render FlatPack::Chat::DateDivider::Component.new(label: "Today") %>
+    <%= render FlatPack::Chat::DateDivider::Component.new(label: "This Morning") %>
+  </div>
+</div>

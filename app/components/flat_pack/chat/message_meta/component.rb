@@ -40,13 +40,13 @@ module FlatPack
         def render_timestamp
           return unless @timestamp
 
-          content_tag(:span, formatted_timestamp, class: "text-xs text-[var(--color-muted-foreground)]")
+          content_tag(:span, formatted_timestamp, class: "text-xs text-[var(--chat-message-meta-color)]")
         end
 
         def render_edited_indicator
           return unless @edited
 
-          content_tag(:span, "(edited)", class: "text-xs text-[var(--color-muted-foreground)] italic")
+          content_tag(:span, "(edited)", class: "text-xs text-[var(--chat-message-meta-color)] italic")
         end
 
         def render_state_indicator
@@ -57,19 +57,17 @@ module FlatPack
             render_failed_indicator
           when :read
             render_read_indicator
-          else
-            nil
           end
         end
 
         def render_sending_indicator
-          content_tag(:span, class: "text-xs text-[var(--color-muted-foreground)]") do
+          content_tag(:span, class: "text-xs text-[var(--chat-message-meta-color)]") do
             "Sending..."
           end
         end
 
         def render_failed_indicator
-          content_tag(:span, class: "text-xs text-red-500 flex items-center gap-1") do
+          content_tag(:span, class: "text-xs text-[var(--chat-message-failed-color)] flex items-center gap-1") do
             safe_join([
               # Alert icon
               content_tag(:svg,
@@ -81,8 +79,7 @@ module FlatPack
                   nil,
                   "fill-rule": "evenodd",
                   d: "M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z",
-                  "clip-rule": "evenodd"
-                )
+                  "clip-rule": "evenodd")
               end,
               "Failed"
             ])
@@ -90,7 +87,7 @@ module FlatPack
         end
 
         def render_read_indicator
-          content_tag(:span, class: "text-xs text-[var(--color-primary)]") do
+          content_tag(:span, class: "text-xs text-[var(--chat-read-receipt-color)]") do
             safe_join([
               # Double check icon
               content_tag(:svg,

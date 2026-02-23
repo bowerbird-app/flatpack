@@ -153,6 +153,7 @@ Accessible tabs with keyboard navigation and URL hash support.
 - Full keyboard navigation (arrows, Home/End, Enter/Space)
 - ARIA tablist/tab/tabpanel
 - Optional URL hash synchronization
+- Visual variants: `:underline` (default) and `:pills`
 - Accessible
 
 **Usage:**
@@ -173,6 +174,11 @@ Accessible tabs with keyboard navigation and URL hash support.
   <% tabs.panel(id: "activity") do %>
     <p>Activity content</p>
   <% end %>
+<% end %>
+
+<%= render FlatPack::Tabs::Component.new(variant: :pills) do |tabs| %>
+  <% tabs.tab(label: "Profile", id: "profile") %>
+  <% tabs.tab(label: "Settings", id: "settings") %>
 <% end %>
 ```
 

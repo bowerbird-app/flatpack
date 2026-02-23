@@ -145,6 +145,7 @@
     tabs: [
       { method_or_variable: "Component Method", description: "Render accessible tabs with tab + panel declarations.", accepts: "render FlatPack::Tabs::Component.new(...) do |tabs| ... end" },
       { method_or_variable: "default_tab", description: "Default selected tab index.", accepts: "Integer" },
+      { method_or_variable: "variant", description: "Visual style for tab triggers.", accepts: ":underline (default), :pills, :stacked" },
       { method_or_variable: "tab", description: "Declare tab trigger metadata.", accepts: "label:, id:, **tab_args" },
       { method_or_variable: "panel", description: "Declare panel content.", accepts: "id:, block" }
     ],
@@ -162,17 +163,90 @@
     ]
   }
 
-  rows = rows_by_key.fetch(component.to_sym)
+  token_prefixes_by_key = {
+    alert: ["--alert-"],
+    avatar: ["--avatar-"],
+    badge: ["--badge-"],
+    breadcrumb: [],
+    button: ["--button-"],
+    chart: [],
+    chat_panel: ["--chat-"],
+    chat_message: ["--chat-"],
+    chip: ["--chip-"],
+    code_block: ["--code-block-"],
+    comments_thread: [],
+    empty_state: [],
+    form_input: ["--form-control-"],
+    grid: [],
+    text_input: ["--form-control-"],
+    modal: ["--modal-"],
+    top_nav: ["--top-nav-"],
+    page_title: [],
+    pagination: [],
+    popover: ["--popover-"],
+    search: ["--form-control-"],
+    sidebar_layout: ["--sidebar-", "--top-nav-"],
+    table: ["--table-"],
+    tabs: ["--tabs-"],
+    toast: ["--toast-"],
+    tooltip: ["--tooltip-"]
+  }
+
+  component_key = component.to_sym
+  rows = rows_by_key.fetch(component_key)
   method_row = rows.find { |row| row[:method_or_variable] == "Component Method" }
   method_subtitle = method_row&.fetch(:accepts, nil)
   rows = rows.reject { |row| row[:method_or_variable] == "Component Method" }
+
+  css_source = File.read(FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css"))
+  root_block_match = css_source.match(/^:root\s*\{\n(?<body>.*?)^\}/m)
+  root_block = root_block_match ? root_block_match[:body] : ""
+  token_prefixes = token_prefixes_by_key.fetch(component_key, [])
+
+  tailwind_variables = root_block.lines.filter_map do |line|
+    stripped = line.strip
+    next unless stripped.start_with?("--")
+
+    match = stripped.match(/\A(--[a-z0-9-]+)\s*:\s*(.+);\z/)
+    next unless match
+
+    variable = match[1]
+    value = match[2]
+    next unless token_prefixes.any? { |prefix| variable.start_with?(prefix) }
+
+    {token: variable, default_value: value}
+  end
 %>
 
-<section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: table_title, subtitle: method_subtitle, anchor_link: true, anchor_id: table_anchor) %>
-  <%= render FlatPack::Table::Component.new(data: rows) do |table| %>
-    <% table.column(title: "Variable", html: ->(row) { row[:method_or_variable] }) %>
-    <% table.column(title: "Accepts", html: ->(row) { row[:accepts] }) %>
-    <% table.column(title: "Description", html: ->(row) { row[:description] }) %>
+<section id="<%= table_anchor %>" class="mb-12 scroll-mt-24">
+  <%= render FlatPack::Tabs::Component.new(variant: :pills, default_tab: 0) do |tabs| %>
+    <% tabs.tab(id: "#{component_key}-method", label: "Method") %>
+    <% tabs.tab(id: "#{component_key}-tailwind-variables", label: "Tailwind variables") %>
+
+    <% tabs.panel(id: "#{component_key}-method") do %>
+      <div class="pt-2">
+        <p class="mb-3 text-sm text-(--surface-muted-content-color)"><%= method_subtitle %></p>
+        <%= render FlatPack::Table::Component.new(data: rows) do |table| %>
+          <% table.column(title: "Variable", html: ->(row) { row[:method_or_variable] }) %>
+          <% table.column(title: "Accepts", html: ->(row) { row[:accepts] }) %>
+          <% table.column(title: "Description", html: ->(row) { row[:description] }) %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% tabs.panel(id: "#{component_key}-tailwind-variables") do %>
+      <div class="pt-2">
+        <% if tailwind_variables.any? %>
+          <%= render FlatPack::Table::Component.new(data: tailwind_variables) do |table| %>
+            <% table.column(title: "Token", html: ->(row) { row[:token] }) %>
+            <% table.column(title: "Default value (:root)", html: ->(row) { row[:default_value] }) %>
+          <% end %>
+        <% else %>
+          <p class="rounded-md border border-(--surface-border-color) bg-(--surface-muted-background-color) p-4 text-sm text-(--surface-muted-content-color)">
+            No component-specific Tailwind tokens are defined in <code>variables.css</code> for this component.
+          </p>
+        <% end %>
+      </div>
+    <% end %>
   <% end %>
 </section>

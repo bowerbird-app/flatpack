@@ -1,0 +1,57 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Sidebar with Badges",
+  subtitle: "Sidebar navigation items with badge indicators."
+) %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Badge Navigation", anchor_link: true) %>
+  <div class="rounded-lg overflow-hidden h-[420px] mb-4">
+    <%= render FlatPack::Sidebar::Component.new(class: "border border-[var(--surface-border-color)] rounded-lg") do |sidebar| %>
+      <% sidebar.header do %>
+        <%= render FlatPack::Sidebar::Header::Component.new(
+          brand_abbr: "AC",
+          title: "Acme",
+          subtitle: "Team Space",
+          collapsible: false
+        ) %>
+      <% end %>
+
+      <% sidebar.items do %>
+        <nav class="py-4 space-y-1">
+          <%= render FlatPack::Sidebar::Item::Component.new(label: "Inbox", href: "#", icon: :dashboard, badge: "12", active: true) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(label: "Alerts", href: "#", icon: :alert, badge: "3") %>
+          <%= render FlatPack::Sidebar::Item::Component.new(label: "Reports", href: "#", icon: :table) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(label: "Monitoring", href: "#", icon: :monitor) %>
+        </nav>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;rounded-lg overflow-hidden h-[420px] mb-4&quot;&gt;
+        &lt;%= render FlatPack::Sidebar::Component.new(class: &quot;border border-[var(--surface-border-color)] rounded-lg&quot;) do |sidebar| %&gt;
+          &lt;% sidebar.header do %&gt;
+            &lt;%= render FlatPack::Sidebar::Header::Component.new(
+              brand_abbr: &quot;AC&quot;,
+              title: &quot;Acme&quot;,
+              subtitle: &quot;Team Space&quot;,
+              collapsible: false
+            ) %&gt;
+          &lt;% end %&gt;
+    
+          &lt;% sidebar.items do %&gt;
+            &lt;nav class=&quot;py-4 space-y-1&quot;&gt;
+              &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Inbox&quot;, href: &quot;#&quot;, icon: :dashboard, badge: &quot;12&quot;, active: true) %&gt;
+              &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Alerts&quot;, href: &quot;#&quot;, icon: :alert, badge: &quot;3&quot;) %&gt;
+              &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Reports&quot;, href: &quot;#&quot;, icon: :table) %&gt;
+              &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Monitoring&quot;, href: &quot;#&quot;, icon: :monitor) %&gt;
+            &lt;/nav&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Badge Navigation"
+  ) %>
+</section>

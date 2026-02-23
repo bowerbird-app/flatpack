@@ -18,7 +18,7 @@ module FlatPack
           merge_attributes(
             aria: {live: "polite", atomic: "false"},
             class: container_classes,
-            style: "top: calc(var(--spacing-xl) * 2); right: var(--spacing-md);"
+            style: "top: calc(72px + calc(var(--spacing) * 4)); right: calc(var(--spacing) * 4);"
           )
         end
 

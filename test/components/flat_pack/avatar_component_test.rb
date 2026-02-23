@@ -36,7 +36,7 @@ module FlatPack
       def test_renders_avatar_sizes
         Component::SIZES.each do |size, classes|
           render_inline(Component.new(size: size, name: "Test"))
-          
+
           assert_includes page.native.to_html, classes.split.first
         end
       end
@@ -44,7 +44,7 @@ module FlatPack
       def test_renders_avatar_shapes
         Component::SHAPES.each do |shape, class_name|
           render_inline(Component.new(shape: shape, name: "Test"))
-          
+
           assert_includes page.native.to_html, class_name
         end
       end
@@ -53,13 +53,13 @@ module FlatPack
         render_inline(Component.new(name: "User", status: :online))
 
         assert_selector "span[aria-hidden='true']"
-        assert_includes page.native.to_html, "bg-emerald-500"
+        assert_includes page.native.to_html, "bg-[var(--avatar-status-online-color)]"
       end
 
       def test_renders_all_status_types
         Component::STATUS_COLORS.each do |status, _classes|
           render_inline(Component.new(name: "Test", status: status))
-          
+
           assert_selector "span[aria-hidden='true']"
         end
       end
@@ -92,7 +92,7 @@ module FlatPack
       def test_default_shape_is_circle
         render_inline(Component.new(name: "Test"))
 
-        assert_includes page.native.to_html, "rounded-full"
+        assert_includes page.native.to_html, "rounded-[var(--avatar-radius-circle)]"
         assert_includes page.native.to_html, "aspect-square"
       end
 

@@ -17,18 +17,15 @@ module FlatPack
         assert_includes page.native.to_html, "relative"
       end
 
-      def test_includes_spacing
+      def test_does_not_include_legacy_container_spacing
         render_inline(Component.new) { "content" }
 
-        assert_includes page.native.to_html, "space-y-8"
+        refute_includes page.native.to_html, "space-y-8"
       end
 
       def test_renders_timeline_items
         render_inline(Component.new) do
-          safe_join([
-            tag.div("Item 1"),
-            tag.div("Item 2")
-          ])
+          "<div>Item 1</div><div>Item 2</div>".html_safe
         end
 
         assert_text "Item 1"

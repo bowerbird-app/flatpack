@@ -50,8 +50,8 @@ export default class extends Controller {
       ? `${count}/${this.maxCharactersValue} characters`
       : `${count} characters`
 
-    this.countTarget.classList.toggle("text-[var(--color-warning)]", belowMin || aboveMax)
-    this.countTarget.classList.toggle("text-[var(--color-muted-foreground)]", !(belowMin || aboveMax))
+    this.countTarget.classList.toggle("text-[var(--color-warning-border)]", belowMin || aboveMax)
+    this.countTarget.classList.toggle("text-[var(--surface-muted-content-color)]", !(belowMin || aboveMax))
   }
 
   #isVisible(element) {

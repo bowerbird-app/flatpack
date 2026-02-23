@@ -72,9 +72,8 @@ module FlatPack
           "sticky",
           "top-0",
           "z-10",
-          "bg-[var(--color-background)]/80",
+          "bg-[var(--top-nav-background-color)]",
           "backdrop-blur-lg",
-          "border-[var(--color-border)]",
           "px-4",
           "py-0"
         )

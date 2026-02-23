@@ -52,14 +52,14 @@ module FlatPack
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-[var(--color-background)]" "border" "border-[var(--color-border)]" "shadow-md" "dark:shadow-lg" "border-2" "bg-[var(--color-muted)]"
+      # "bg-[var(--card-background-color)]" "border" "border-[var(--card-border-color)]" "shadow-md" "dark:shadow-lg" "border-2" "bg-[var(--card-background-muted-color)]"
       STYLES = {
-        default: "bg-[var(--color-background)] border border-[var(--color-border)]",
-        elevated: "bg-[var(--color-background)] border border-[var(--color-border)] shadow-md dark:shadow-lg",
-        outlined: "bg-[var(--color-background)] border-2 border-[var(--color-border)]",
-        flat: "bg-[var(--color-muted)]",
-        interactive: "bg-[var(--color-background)] border border-[var(--color-border)]",
-        list: "bg-[var(--color-background)] border border-[var(--color-border)]"
+        default: "bg-[var(--card-background-color)] border border-[var(--card-border-color)]",
+        elevated: "bg-[var(--card-background-color)] border border-[var(--card-border-color)] shadow-md dark:shadow-lg",
+        outlined: "bg-[var(--card-background-color)] border-2 border-[var(--card-border-color)]",
+        flat: "bg-[var(--card-background-muted-color)]",
+        interactive: "bg-[var(--card-background-color)] border border-[var(--card-border-color)]",
+        list: "bg-[var(--card-background-color)] border border-[var(--card-border-color)]"
       }.freeze
 
       HOVERS = {
@@ -79,12 +79,12 @@ module FlatPack
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "p-4" "p-6" "p-8"
+      # "p-[var(--card-padding-sm)]" "p-[var(--card-padding-md)]" "p-[var(--card-padding-lg)]"
       PADDINGS = {
         none: "",
-        sm: "p-4",
-        md: "p-6",
-        lg: "p-8"
+        sm: "p-[var(--card-padding-sm)]",
+        md: "p-[var(--card-padding-md)]",
+        lg: "p-[var(--card-padding-lg)]"
       }.freeze
 
       def initialize(
@@ -146,7 +146,7 @@ module FlatPack
 
       def card_classes
         classes(
-          "rounded-[var(--radius-lg)]",
+          "rounded-lg",
           "overflow-hidden",
           "h-full",
           "flex",

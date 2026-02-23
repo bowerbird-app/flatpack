@@ -5,7 +5,7 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "text-[var(--color-warning)]" "border-[var(--color-warning)]"
+      # "text-warning" "border-warning"
 
       def initialize(
         name:,
@@ -98,7 +98,7 @@ module FlatPack
 
         attrs[:aria] = {invalid: "true", describedby: error_id} if @error
 
-        merge_attributes(**attrs.compact)
+        merge_attributes(**apply_default_validation(attrs.compact, error_id: error_id, has_error: @error.present?))
       end
 
       def wrapper_classes
@@ -119,7 +119,7 @@ module FlatPack
 
       def label_classes
         classes(
-          "block text-sm font-medium text-[var(--color-foreground)] mb-1.5"
+          "block text-sm font-medium text-[var(--surface-content-color)] mb-1.5"
         )
       end
 
@@ -127,34 +127,34 @@ module FlatPack
         base_classes = [
           "flat-pack-input",
           "w-full",
-          "rounded-[var(--radius-md)]",
+          "rounded-md",
           "border",
-          "bg-[var(--color-background)]",
-          "text-[var(--color-foreground)]",
-          "px-3 py-2",
+          "bg-[var(--surface-background-color)]",
+          "text-[var(--surface-content-color)]",
+          "px-[var(--form-control-padding)] py-[var(--form-control-padding)]",
           "text-sm",
-          "transition-colors duration-[var(--transition-base)]",
-          "placeholder:text-[var(--color-muted-foreground)]",
-          "focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[var(--color-ring)] focus:border-transparent",
+          "transition-colors duration-base",
+          "placeholder:text-[var(--surface-muted-content-color)]",
+          "focus:outline-none focus:ring-2 focus:ring-inset focus:ring-ring focus:border-transparent",
           "disabled:opacity-50 disabled:cursor-not-allowed",
           "resize-none"
         ]
 
         base_classes << if @error
-          "border-[var(--color-warning)]"
+          "border-warning"
         else
-          "border-[var(--color-border)]"
+          "border-[var(--surface-border-color)]"
         end
 
         classes(*base_classes, @custom_class)
       end
 
       def error_classes
-        "mt-1 text-sm text-[var(--color-warning)]"
+        "mt-1 text-sm text-warning"
       end
 
       def character_count_classes
-        "mt-1 text-xs text-[var(--color-muted-foreground)]"
+        "mt-1 text-xs text-[var(--surface-muted-content-color)]"
       end
 
       def textarea_id
@@ -190,11 +190,11 @@ module FlatPack
       def validate_character_limits!
         return unless @character_count
 
-        if @min_characters && @min_characters.to_i.negative?
+        if @min_characters&.to_i&.negative?
           raise ArgumentError, "min_characters must be 0 or greater"
         end
 
-        if @max_characters && @max_characters.to_i.negative?
+        if @max_characters&.to_i&.negative?
           raise ArgumentError, "max_characters must be 0 or greater"
         end
 

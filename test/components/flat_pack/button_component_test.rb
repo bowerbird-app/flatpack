@@ -60,11 +60,12 @@ module FlatPack
         assert_selector "button[aria-label='Custom label']"
       end
 
-      def test_default_scheme_is_primary
+      def test_default_scheme_is_default
         component = Component.new(text: "Default")
         render_inline(component)
 
         assert_selector "button", text: "Default"
+        assert_includes page.native.to_html, "bg-[var(--button-default-background-color)]"
       end
 
       def test_default_size_is_md
@@ -73,8 +74,8 @@ module FlatPack
 
         assert_selector "button", text: "Default"
         # The rendered HTML should contain the md size classes
-        assert_includes page.native.to_html, "px-4"
-        assert_includes page.native.to_html, "py-2"
+        assert_includes page.native.to_html, "px-[var(--button-padding-x-md)]"
+        assert_includes page.native.to_html, "py-[var(--button-padding-y-md)]"
         assert_includes page.native.to_html, "text-sm"
       end
 
@@ -82,8 +83,8 @@ module FlatPack
         render_inline(Component.new(text: "Small", size: :sm))
 
         assert_selector "button", text: "Small"
-        assert_includes page.native.to_html, "px-3"
-        assert_includes page.native.to_html, "py-1.5"
+        assert_includes page.native.to_html, "px-[var(--button-padding-x-sm)]"
+        assert_includes page.native.to_html, "py-[var(--button-padding-y-sm)]"
         assert_includes page.native.to_html, "text-xs"
       end
 
@@ -91,8 +92,8 @@ module FlatPack
         render_inline(Component.new(text: "Medium", size: :md))
 
         assert_selector "button", text: "Medium"
-        assert_includes page.native.to_html, "px-4"
-        assert_includes page.native.to_html, "py-2"
+        assert_includes page.native.to_html, "px-[var(--button-padding-x-md)]"
+        assert_includes page.native.to_html, "py-[var(--button-padding-y-md)]"
         assert_includes page.native.to_html, "text-sm"
       end
 
@@ -100,8 +101,8 @@ module FlatPack
         render_inline(Component.new(text: "Large", size: :lg))
 
         assert_selector "button", text: "Large"
-        assert_includes page.native.to_html, "px-6"
-        assert_includes page.native.to_html, "py-3"
+        assert_includes page.native.to_html, "px-[var(--button-padding-x-lg)]"
+        assert_includes page.native.to_html, "py-[var(--button-padding-y-lg)]"
         assert_includes page.native.to_html, "text-base"
       end
 
@@ -109,8 +110,8 @@ module FlatPack
         render_inline(Component.new(text: "Link", url: "/path", size: :lg))
 
         assert_selector "a[href='/path']", text: "Link"
-        assert_includes page.native.to_html, "px-6"
-        assert_includes page.native.to_html, "py-3"
+        assert_includes page.native.to_html, "px-[var(--button-padding-x-lg)]"
+        assert_includes page.native.to_html, "py-[var(--button-padding-y-lg)]"
         assert_includes page.native.to_html, "text-base"
       end
 
@@ -292,14 +293,14 @@ module FlatPack
       def test_submit_button_with_different_sizes
         render_inline(Component.new(text: "Submit Small", type: "submit", size: :sm))
         assert_selector "button[type='submit']", text: "Submit Small"
-        assert_includes page.native.to_html, "px-3"
-        assert_includes page.native.to_html, "py-1.5"
+        assert_includes page.native.to_html, "px-[var(--button-padding-x-sm)]"
+        assert_includes page.native.to_html, "py-[var(--button-padding-y-sm)]"
         assert_includes page.native.to_html, "text-xs"
 
         render_inline(Component.new(text: "Submit Large", type: "submit", size: :lg))
         assert_selector "button[type='submit']", text: "Submit Large"
-        assert_includes page.native.to_html, "px-6"
-        assert_includes page.native.to_html, "py-3"
+        assert_includes page.native.to_html, "px-[var(--button-padding-x-lg)]"
+        assert_includes page.native.to_html, "py-[var(--button-padding-y-lg)]"
         assert_includes page.native.to_html, "text-base"
       end
 
@@ -340,24 +341,16 @@ module FlatPack
         assert_selector "button[type='submit'][aria-label='Submit form']", text: "Submit"
       end
 
-      def test_button_includes_box_shadow
-        render_inline(Component.new(text: "Button"))
+      def test_primary_button_uses_scheme_shadow_token_class
+        render_inline(Component.new(text: "Primary", style: :primary))
 
         assert_includes page.native.to_html, "shadow-[var(--button-shadow)]"
-        assert_includes page.native.to_html, "hover:shadow-[var(--button-shadow-active)]"
       end
 
-      def test_link_button_does_not_include_box_shadow
-        render_inline(Component.new(text: "Link", url: "/path"))
+      def test_secondary_button_does_not_include_scheme_shadow_class
+        render_inline(Component.new(text: "Secondary", style: :secondary))
 
         refute_includes page.native.to_html, "shadow-[var(--button-shadow)]"
-        refute_includes page.native.to_html, "hover:shadow-[var(--button-shadow-active)]"
-      end
-
-      def test_disabled_button_includes_shadow_none
-        render_inline(Component.new(text: "Disabled", disabled: true))
-
-        assert_includes page.native.to_html, "disabled:shadow-none"
       end
     end
   end

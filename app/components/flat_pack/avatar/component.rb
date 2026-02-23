@@ -16,21 +16,21 @@ module FlatPack
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "rounded-full" "rounded-xl" "rounded-md"
+      # "rounded-[var(--avatar-radius-circle)]" "rounded-[var(--avatar-radius-rounded)]" "rounded-[var(--avatar-radius-square)]"
       SHAPES = {
-        circle: "rounded-full",
-        rounded: "rounded-xl",
-        square: "rounded-md"
+        circle: "rounded-[var(--avatar-radius-circle)]",
+        rounded: "rounded-[var(--avatar-radius-rounded)]",
+        square: "rounded-[var(--avatar-radius-square)]"
       }.freeze
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-emerald-500" "bg-zinc-400" "dark:bg-zinc-600" "bg-rose-500" "bg-amber-500"
+      # "bg-[var(--avatar-status-online-color)]" "bg-[var(--avatar-status-offline-color)]" "bg-[var(--avatar-status-busy-color)]" "bg-[var(--avatar-status-away-color)]"
       STATUS_COLORS = {
-        online: "bg-emerald-500",
-        offline: "bg-zinc-400 dark:bg-zinc-600",
-        busy: "bg-rose-500",
-        away: "bg-amber-500"
+        online: "bg-[var(--avatar-status-online-color)]",
+        offline: "bg-[var(--avatar-status-offline-color)]",
+        busy: "bg-[var(--avatar-status-busy-color)]",
+        away: "bg-[var(--avatar-status-away-color)]"
       }.freeze
 
       def initialize(
@@ -91,11 +91,11 @@ module FlatPack
       def wrapper_classes
         classes(
           "relative inline-flex items-center justify-center shrink-0 overflow-hidden",
-          "bg-[var(--color-muted)] text-[var(--color-foreground)]",
+          "bg-[var(--avatar-background-color)] text-[var(--avatar-text-color)]",
           "font-medium select-none aspect-square",
           SIZES.fetch(@size),
           SHAPES.fetch(@shape),
-          @href ? "hover:opacity-80 transition-opacity duration-[var(--transition-base)]" : nil
+          @href ? "hover:opacity-[var(--avatar-link-hover-opacity)] transition-opacity duration-base" : nil
         )
       end
 
@@ -129,15 +129,13 @@ module FlatPack
           class: classes(
             "h-full w-full object-cover",
             SHAPES.fetch(@shape)
-          )
-        )
+          ))
       end
 
       def render_initials
         content_tag(:span,
           computed_initials,
-          class: "inline-flex h-full w-full items-center justify-center uppercase font-semibold leading-none"
-        )
+          class: "inline-flex h-full w-full items-center justify-center uppercase font-semibold leading-none")
       end
 
       def render_generic_icon
@@ -159,8 +157,7 @@ module FlatPack
         content_tag(:span,
           nil,
           class: status_indicator_classes,
-          "aria-hidden": "true"
-        )
+          "aria-hidden": "true")
       end
 
       def status_indicator_classes
@@ -174,7 +171,7 @@ module FlatPack
 
         classes(
           "absolute top-0 right-0 block rounded-full translate-x-1/4 -translate-y-1/4",
-          "ring-2 ring-white dark:ring-zinc-900",
+          "ring-2 ring-[var(--avatar-status-ring-color)]",
           size_class,
           STATUS_COLORS.fetch(@status)
         )
@@ -192,8 +189,6 @@ module FlatPack
           parts[0][0..1]
         elsif parts.length == 1
           parts[0][0]
-        else
-          nil
         end
       end
 

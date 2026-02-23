@@ -32,7 +32,7 @@
 <!-- Tooltip Placements -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Tooltip Placements", anchor_link: true, subtitle: "Examples for Tooltip Placements.") %>
-  <p class="text-[var(--color-muted-foreground)] mb-4">
+  <p class="text-[var(--surface-muted-content-color)] mb-4">
     Tooltips automatically position themselves and adjust for viewport boundaries.
   </p>
   <div class="flex justify-center items-center flex-wrap gap-4 mb-4">
@@ -93,7 +93,7 @@
 <!-- Tooltips in Context -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Tooltips in Context", anchor_link: true, subtitle: "Examples for Tooltips in Context.") %>
-  <p class="text-[var(--color-muted-foreground)] mb-4">
+  <p class="text-[var(--surface-muted-content-color)] mb-4">
     Tooltips work great with icons, links, and inline elements.
   </p>
   
@@ -101,7 +101,7 @@
     <div class="flex items-center gap-2">
       <span>Username</span>
       <%= render FlatPack::Tooltip::Component.new(text: "Your username must be unique, use 3-20 characters, and cannot be changed later.", placement: :right) do %>
-        <span class="inline-flex text-[var(--color-muted-foreground)] cursor-help">
+        <span class="inline-flex text-[var(--surface-muted-content-color)] cursor-help">
           <%= render FlatPack::Shared::IconComponent.new(name: :question, size: :sm) %>
         </span>
       <% end %>
@@ -110,13 +110,13 @@
     <div class="flex items-center gap-2">
       <span>Password Strength</span>
       <%= render FlatPack::Tooltip::Component.new(text: "Use at least 8 characters with uppercase, lowercase, numbers, and symbols for stronger security.", placement: :right) do %>
-        <span class="inline-flex text-[var(--color-muted-foreground)] cursor-help">
+        <span class="inline-flex text-[var(--surface-muted-content-color)] cursor-help">
           <%= render FlatPack::Shared::IconComponent.new(name: :lock, size: :sm) %>
         </span>
       <% end %>
     </div>
     
-    <p class="text-[var(--color-foreground)]">
+    <p class="text-[var(--surface-content-color)]">
       This is a paragraph with an inline
       <%= render FlatPack::Tooltip::Component.new(text: "This inline tooltip provides additional context without interrupting the reading flow.", placement: :top) do %>
         <span class="text-[var(--color-primary)] underline decoration-dotted cursor-help">tooltip</span>
@@ -124,18 +124,56 @@
       that provides more information.
     </p>
   </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;p class=&quot;text-[var(--surface-muted-content-color)] mb-4&quot;&gt;
+        Tooltips work great with icons, links, and inline elements.
+      &lt;/p&gt;
+      
+      &lt;div class=&quot;space-y-4&quot;&gt;
+        &lt;div class=&quot;flex items-center gap-2&quot;&gt;
+          &lt;span&gt;Username&lt;/span&gt;
+          &lt;%= render FlatPack::Tooltip::Component.new(text: &quot;Your username must be unique, use 3-20 characters, and cannot be changed later.&quot;, placement: :right) do %&gt;
+            &lt;span class=&quot;inline-flex text-[var(--surface-muted-content-color)] cursor-help&quot;&gt;
+              &lt;%= render FlatPack::Shared::IconComponent.new(name: :question, size: :sm) %&gt;
+            &lt;/span&gt;
+          &lt;% end %&gt;
+        &lt;/div&gt;
+        
+        &lt;div class=&quot;flex items-center gap-2&quot;&gt;
+          &lt;span&gt;Password Strength&lt;/span&gt;
+          &lt;%= render FlatPack::Tooltip::Component.new(text: &quot;Use at least 8 characters with uppercase, lowercase, numbers, and symbols for stronger security.&quot;, placement: :right) do %&gt;
+            &lt;span class=&quot;inline-flex text-[var(--surface-muted-content-color)] cursor-help&quot;&gt;
+              &lt;%= render FlatPack::Shared::IconComponent.new(name: :lock, size: :sm) %&gt;
+            &lt;/span&gt;
+          &lt;% end %&gt;
+        &lt;/div&gt;
+        
+        &lt;p class=&quot;text-[var(--surface-content-color)]&quot;&gt;
+          This is a paragraph with an inline
+          &lt;%= render FlatPack::Tooltip::Component.new(text: &quot;This inline tooltip provides additional context without interrupting the reading flow.&quot;, placement: :top) do %&gt;
+            &lt;span class=&quot;text-[var(--color-primary)] underline decoration-dotted cursor-help&quot;&gt;tooltip&lt;/span&gt;
+          &lt;% end %&gt;
+          that provides more information.
+        &lt;/p&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Tooltips in Context"
+  ) %>
 </section>
 
 <!-- Features -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Examples for Features.") %>
-  <ul class="list-disc list-inside space-y-2 text-[var(--color-foreground)]">
-    <li><strong>Hover & Focus:</strong> Shows on mouse hover and keyboard focus</li>
-    <li><strong>Smart Positioning:</strong> Automatically positions and adjusts for viewport boundaries</li>
-    <li><strong>Accessible:</strong> Uses role="tooltip" and aria-describedby</li>
-    <li><strong>Keyboard Friendly:</strong> Works with keyboard navigation</li>
-    <li><strong>Smooth Animations:</strong> Fade in/out transitions</li>
-    <li><strong>No JavaScript Lib:</strong> Pure Stimulus implementation, no dependencies</li>
-    <li><strong>Mobile Aware:</strong> Touch-friendly behavior</li>
-  </ul>
+  <%= render FlatPack::List::Component.new(spacing: :dense, class: "text-[var(--surface-content-color)]") do %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Hover & Focus:</strong> Shows on mouse hover and keyboard focus<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Smart Positioning:</strong> Automatically positions and adjusts for viewport boundaries<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Accessible:</strong> Uses role="tooltip" and aria-describedby<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Keyboard Friendly:</strong> Works with keyboard navigation<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Smooth Animations:</strong> Fade in/out transitions<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>No JavaScript Lib:</strong> Pure Stimulus implementation, no dependencies<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Mobile Aware:</strong> Touch-friendly behavior<% end %>
+  <% end %>
 </section>
