@@ -118,7 +118,7 @@ module FlatPack
           "pr-4",
           "py-2",
           "text-sm",
-          "bg-[var(--surface-muted-bg-color)]",
+          "bg-[var(--surface-muted-background-color)]",
           "border",
           "border-transparent",
           "rounded-lg",
@@ -153,7 +153,7 @@ module FlatPack
             "rounded-lg",
             "border",
             "border-[var(--surface-border-color)]",
-            "bg-[var(--surface-bg-color)]",
+            "bg-[var(--surface-background-color)]",
             "shadow-sm"
           ),
           data: {

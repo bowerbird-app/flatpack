@@ -61,7 +61,7 @@ module FlatPack
 
           if footer?
             card.footer do
-              footer
+              footer.to_s
             end
           end
         end

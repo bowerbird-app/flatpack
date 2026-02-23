@@ -1,0 +1,56 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Text Area",
+  subtitle: "Multiline input examples with optional character counting."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :text_input %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Text Area Examples", anchor_link: true) %>
+
+  <div class="space-y-4 p-6 border border-slate-200 rounded-lg bg-white">
+    <%= render FlatPack::TextArea::Component.new(
+      name: "description",
+      label: "Description",
+      placeholder: "Enter a detailed description...",
+      rows: 3
+    ) %>
+
+    <%= render FlatPack::TextArea::Component.new(
+      name: "project_summary",
+      id: "project_summary",
+      label: "Project Summary (with character count)",
+      placeholder: "Write a short summary...",
+      rows: 3,
+      character_count: true,
+      min_characters: 30,
+      max_characters: 140
+    ) %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;space-y-4 p-6 border border-slate-200 rounded-lg bg-white&quot;&gt;
+        &lt;%= render FlatPack::TextArea::Component.new(
+          name: &quot;description&quot;,
+          label: &quot;Description&quot;,
+          placeholder: &quot;Enter a detailed description...&quot;,
+          rows: 3
+        ) %&gt;
+    
+        &lt;%= render FlatPack::TextArea::Component.new(
+          name: &quot;project_summary&quot;,
+          id: &quot;project_summary&quot;,
+          label: &quot;Project Summary (with character count)&quot;,
+          placeholder: &quot;Write a short summary...&quot;,
+          rows: 3,
+          character_count: true,
+          min_characters: 30,
+          max_characters: 140
+        ) %&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Text Area Examples"
+  ) %>
+</section>

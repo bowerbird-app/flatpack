@@ -99,11 +99,11 @@ module FlatPack
           if @disabled
             base_classes << "opacity-50 cursor-not-allowed"
           elsif @destructive
-            base_classes << "text-destructive"
-            base_classes << "hover:bg-destructive-bg/10"
+            base_classes << "text-danger-text-color"
+            base_classes << "hover:bg-danger-background-color/10"
           else
             base_classes << "text-[var(--surface-content-color)]"
-            base_classes << "hover:bg-[var(--surface-muted-bg-color)]"
+            base_classes << "hover:bg-[var(--surface-muted-background-color)]"
             base_classes << "cursor-pointer"
           end
 

@@ -1,0 +1,58 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Number Input",
+  subtitle: "Numeric field examples with min, max, and step constraints."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :text_input %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Number Input Examples", anchor_link: true) %>
+
+  <div class="space-y-4 p-6 border border-slate-200 rounded-lg bg-white">
+    <%= render FlatPack::NumberInput::Component.new(
+      name: "quantity",
+      label: "Quantity",
+      placeholder: "Enter quantity",
+      min: 0,
+      max: 100,
+      step: 1,
+      required: true
+    ) %>
+
+    <%= render FlatPack::NumberInput::Component.new(
+      name: "price",
+      label: "Price (USD)",
+      placeholder: "0.00",
+      min: 0.01,
+      step: 0.01,
+      value: 19.99
+    ) %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;space-y-4 p-6 border border-slate-200 rounded-lg bg-white&quot;&gt;
+        &lt;%= render FlatPack::NumberInput::Component.new(
+          name: &quot;quantity&quot;,
+          label: &quot;Quantity&quot;,
+          placeholder: &quot;Enter quantity&quot;,
+          min: 0,
+          max: 100,
+          step: 1,
+          required: true
+        ) %&gt;
+    
+        &lt;%= render FlatPack::NumberInput::Component.new(
+          name: &quot;price&quot;,
+          label: &quot;Price (USD)&quot;,
+          placeholder: &quot;0.00&quot;,
+          min: 0.01,
+          step: 0.01,
+          value: 19.99
+        ) %&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Number Input Examples"
+  ) %>
+</section>

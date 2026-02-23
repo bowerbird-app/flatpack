@@ -5,12 +5,12 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-primary" "bg-success-bg" "bg-warning-bg" "bg-destructive-bg"
+      # "bg-primary" "bg-success-background-color" "bg-warning-background-color" "bg-danger-background-color"
       VARIANTS = {
         default: "bg-primary",
-        success: "bg-success-bg",
-        warning: "bg-warning-bg",
-        danger: "bg-destructive-bg"
+        success: "bg-success-background-color",
+        warning: "bg-warning-background-color",
+        danger: "bg-danger-background-color"
       }.freeze
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
@@ -97,7 +97,7 @@ module FlatPack
       end
 
       def bar_container_classes
-        "w-full bg-[var(--surface-muted-bg-color)] rounded-full overflow-hidden #{SIZES.fetch(@size)}"
+        "w-full bg-[var(--surface-muted-background-color)] rounded-full overflow-hidden #{SIZES.fetch(@size)}"
       end
 
       def bar_fill_classes

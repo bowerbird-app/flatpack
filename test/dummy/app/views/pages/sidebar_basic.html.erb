@@ -1,0 +1,69 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Sidebar Basic",
+  subtitle: "A simple sidebar with header, items, and footer."
+) %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Basic Sidebar", anchor_link: true) %>
+  <div class="rounded-lg overflow-hidden h-[420px] mb-4">
+    <%= render FlatPack::Sidebar::Component.new(class: "border border-[var(--surface-border-color)] rounded-lg") do |sidebar| %>
+      <% sidebar.header do %>
+        <%= render FlatPack::Sidebar::Header::Component.new(
+          brand_abbr: "FP",
+          title: "FlatPack",
+          subtitle: "Workspace",
+          collapsible: false
+        ) %>
+      <% end %>
+
+      <% sidebar.items do %>
+        <nav class="py-4 space-y-1">
+          <%= render FlatPack::Sidebar::Item::Component.new(label: "Overview", href: demo_path, icon: :home, active: true) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(label: "Buttons", href: demo_buttons_path, icon: :square) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(label: "Forms", href: demo_forms_path, icon: :edit_3) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(label: "Tables", href: demo_tables_basic_path, icon: :table) %>
+        </nav>
+      <% end %>
+
+      <% sidebar.footer do %>
+        <%= render FlatPack::Sidebar::Footer::Component.new(class: "text-sm text-[var(--surface-muted-content-color)]") do %>
+          Signed in as demo@flatpack.app
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;rounded-lg overflow-hidden h-[420px] mb-4&quot;&gt;
+        &lt;%= render FlatPack::Sidebar::Component.new(class: &quot;border border-[var(--surface-border-color)] rounded-lg&quot;) do |sidebar| %&gt;
+          &lt;% sidebar.header do %&gt;
+            &lt;%= render FlatPack::Sidebar::Header::Component.new(
+              brand_abbr: &quot;FP&quot;,
+              title: &quot;FlatPack&quot;,
+              subtitle: &quot;Workspace&quot;,
+              collapsible: false
+            ) %&gt;
+          &lt;% end %&gt;
+    
+          &lt;% sidebar.items do %&gt;
+            &lt;nav class=&quot;py-4 space-y-1&quot;&gt;
+              &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Overview&quot;, href: demo_path, icon: :home, active: true) %&gt;
+              &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Buttons&quot;, href: demo_buttons_path, icon: :square) %&gt;
+              &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Forms&quot;, href: demo_forms_path, icon: :edit_3) %&gt;
+              &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Tables&quot;, href: demo_tables_basic_path, icon: :table) %&gt;
+            &lt;/nav&gt;
+          &lt;% end %&gt;
+    
+          &lt;% sidebar.footer do %&gt;
+            &lt;%= render FlatPack::Sidebar::Footer::Component.new(class: &quot;text-sm text-[var(--surface-muted-content-color)]&quot;) do %&gt;
+              Signed in as demo@flatpack.app
+            &lt;% end %&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Basic Sidebar"
+  ) %>
+</section>

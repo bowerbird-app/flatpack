@@ -6,7 +6,7 @@ module FlatPack
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "text-warning" "border-warning"
-      # "border-[var(--surface-border-color)]" "bg-[var(--surface-bg-color)]"
+      # "border-[var(--surface-border-color)]" "bg-[var(--surface-background-color)]"
       # "text-[var(--surface-content-color)]" "text-[var(--surface-muted-content-color)]"
 
       def initialize(
@@ -155,7 +155,7 @@ module FlatPack
 
         attrs[:aria] = {invalid: "true", describedby: error_id} if @error
 
-        merge_attributes(**attrs.compact)
+        merge_attributes(**apply_default_validation(attrs.compact, error_id: error_id, has_error: @error.present?))
       end
 
       def dropzone_attributes
@@ -198,7 +198,7 @@ module FlatPack
           "w-full",
           "rounded-lg",
           "border border-dashed",
-          "bg-[var(--surface-bg-color)]",
+          "bg-[var(--surface-background-color)]",
           "px-6 py-10",
           "transition-colors duration-base",
           "hover:border-primary",

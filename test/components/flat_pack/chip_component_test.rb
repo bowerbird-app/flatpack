@@ -23,7 +23,7 @@ module FlatPack
         render_inline(Component.new(text: "Default"))
 
         assert_selector "span", text: "Default"
-        assert_includes page.native.to_html, "bg-[var(--surface-muted-bg-color)]"
+        assert_includes page.native.to_html, "bg-[var(--surface-muted-background-color)]"
       end
 
       def test_renders_primary_style
@@ -37,21 +37,21 @@ module FlatPack
         render_inline(Component.new(text: "Success", style: :success))
 
         assert_selector "span", text: "Success"
-        assert_includes page.native.to_html, "bg-success-bg"
+        assert_includes page.native.to_html, "bg-success-background-color"
       end
 
       def test_renders_warning_style
         render_inline(Component.new(text: "Warning", style: :warning))
 
         assert_selector "span", text: "Warning"
-        assert_includes page.native.to_html, "bg-warning-bg"
+        assert_includes page.native.to_html, "bg-warning-background-color"
       end
 
       def test_renders_danger_style
         render_inline(Component.new(text: "Danger", style: :danger))
 
         assert_selector "span", text: "Danger"
-        assert_includes page.native.to_html, "bg-destructive-bg"
+        assert_includes page.native.to_html, "bg-danger-background-color"
       end
 
       def test_renders_info_style

@@ -12,34 +12,15 @@
       Showing <%= @records.size %> of <%= @pagy.count %> total items (Page <%= @pagy.page %> of <%= @pagy.pages %>)
     </p>
 
-    <div class="border border-[var(--surface-border-color)] rounded-lg overflow-hidden mb-4">
-      <table class="w-full">
-        <thead class="bg-[var(--surface-muted-bg-color)]">
-          <tr>
-            <th class="px-4 py-2 text-left text-sm font-semibold">#</th>
-            <th class="px-4 py-2 text-left text-sm font-semibold">Name</th>
-            <th class="px-4 py-2 text-left text-sm font-semibold">Email</th>
-            <th class="px-4 py-2 text-left text-sm font-semibold">Status</th>
-            <th class="px-4 py-2 text-left text-sm font-semibold">Category</th>
-            <th class="px-4 py-2 text-left text-sm font-semibold">Views</th>
-            <th class="px-4 py-2 text-left text-sm font-semibold">Published</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @records.each do |record| %>
-            <tr class="border-t border-[var(--surface-border-color)]">
-              <td class="px-4 py-2 text-sm"><%= record.id %></td>
-              <td class="px-4 py-2 text-sm"><%= record.name %></td>
-              <td class="px-4 py-2 text-sm"><%= record.email %></td>
-              <td class="px-4 py-2 text-sm"><%= record.status.to_s.capitalize %></td>
-              <td class="px-4 py-2 text-sm"><%= record.category.to_s.titleize %></td>
-              <td class="px-4 py-2 text-sm"><%= number_with_delimiter(record.views_count) %></td>
-              <td class="px-4 py-2 text-sm"><%= record.published_at&.strftime("%b %d, %Y") %></td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
+    <%= render FlatPack::Table::Component.new(data: @records, class: "mb-4") do |table| %>
+      <% table.column(title: "#", html: ->(record) { record.id.to_s }) %>
+      <% table.column(title: "Name", html: ->(record) { record.name }) %>
+      <% table.column(title: "Email", html: ->(record) { record.email }) %>
+      <% table.column(title: "Status", html: ->(record) { record.status.to_s.capitalize }) %>
+      <% table.column(title: "Category", html: ->(record) { record.category.to_s.titleize }) %>
+      <% table.column(title: "Views", html: ->(record) { number_with_delimiter(record.views_count) }) %>
+      <% table.column(title: "Published", html: ->(record) { record.published_at&.strftime("%b %d, %Y") }) %>
+    <% end %>
 
     <%= render FlatPack::Pagination::Component.new(
       pagy: @pagy,
@@ -91,11 +72,13 @@
       <% card.body do %>
         <div class="space-y-2">
           <% @records.first(5).each do |record| %>
-            <div class="flex items-center justify-between p-3 bg-[var(--surface-muted-bg-color)] rounded-lg">
+            <div class="flex items-center justify-between p-3 bg-[var(--surface-muted-background-color)] rounded-lg">
               <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-semibold">
-                  <%= record.name.first(1).upcase %>
-                </div>
+                <%= render FlatPack::Avatar::Component.new(
+                  name: record.name,
+                  initials: record.name.first(1).upcase,
+                  size: :md
+                ) %>
                 <div>
                   <span class="font-medium"><%= record.name %></span>
                   <p class="text-xs text-[var(--surface-muted-content-color)]"><%= record.category.to_s.titleize %> - <%= number_with_delimiter(record.views_count) %> views</p>
@@ -115,6 +98,47 @@
       <% end %>
     <% end %>
   <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= turbo_frame_tag &quot;pagination_in_card&quot; do %&gt;
+        &lt;%= render FlatPack::Card::Component.new(style: :outlined) do |card| %&gt;
+          &lt;% card.header do %&gt;
+            &lt;h3 class=&quot;text-lg font-semibold&quot;&gt;Recent Demo Records&lt;/h3&gt;
+          &lt;% end %&gt;
+          &lt;% card.body do %&gt;
+            &lt;div class=&quot;space-y-2&quot;&gt;
+              &lt;% @records.first(5).each do |record| %&gt;
+                &lt;div class=&quot;flex items-center justify-between p-3 bg-[var(--surface-muted-background-color)] rounded-lg&quot;&gt;
+                  &lt;div class=&quot;flex items-center gap-3&quot;&gt;
+                    &lt;%= render FlatPack::Avatar::Component.new(
+                      name: record.name,
+                      initials: record.name.first(1).upcase,
+                      size: :md
+                    ) %&gt;
+                    &lt;div&gt;
+                      &lt;span class=&quot;font-medium&quot;&gt;&lt;%= record.name %&gt;&lt;/span&gt;
+                      &lt;p class=&quot;text-xs text-[var(--surface-muted-content-color)]&quot;&gt;&lt;%= record.category.to_s.titleize %&gt; - &lt;%= number_with_delimiter(record.views_count) %&gt; views&lt;/p&gt;
+                    &lt;/div&gt;
+                  &lt;/div&gt;
+                  &lt;%= render FlatPack::Button::Component.new(text: &quot;View&quot;, style: :ghost, size: :sm) %&gt;
+                &lt;/div&gt;
+              &lt;% end %&gt;
+            &lt;/div&gt;
+          &lt;% end %&gt;
+          &lt;% card.footer do %&gt;
+            &lt;%= render FlatPack::Pagination::Component.new(
+              pagy: @pagy,
+              size: :compact,
+              turbo_frame: &quot;pagination_in_card&quot;
+            ) %&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    language: "erb",
+    title: "Pagination in Card"
+  ) %>
 </section>
 
 <!-- Setup Instructions -->
@@ -164,15 +188,15 @@
 <!-- Features -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Examples for Features.") %>
-  <ul class="list-disc list-inside space-y-2 text-[var(--surface-content-color)]">
-    <li><strong>Pagy Integration:</strong> Uses the fast and lightweight Pagy gem</li>
-    <li><strong>Accessible:</strong> Proper ARIA attributes and keyboard navigation</li>
-    <li><strong>Turbo Friendly:</strong> Works seamlessly with Turbo Frames</li>
-    <li><strong>Compact Mode:</strong> Optional compact size for tighter layouts</li>
-    <li><strong>Smart Series:</strong> Intelligently shows relevant page numbers</li>
-    <li><strong>Previous/Next:</strong> Always shows navigation arrows</li>
-    <li><strong>Current Page:</strong> Visual indication of active page</li>
-  </ul>
+  <%= render FlatPack::List::Component.new(class: "text-[var(--surface-content-color)]") do %>
+    <%= render FlatPack::List::Item.new do %><strong>Pagy Integration:</strong> Uses the fast and lightweight Pagy gem<% end %>
+    <%= render FlatPack::List::Item.new do %><strong>Accessible:</strong> Proper ARIA attributes and keyboard navigation<% end %>
+    <%= render FlatPack::List::Item.new do %><strong>Turbo Friendly:</strong> Works seamlessly with Turbo Frames<% end %>
+    <%= render FlatPack::List::Item.new do %><strong>Compact Mode:</strong> Optional compact size for tighter layouts<% end %>
+    <%= render FlatPack::List::Item.new do %><strong>Smart Series:</strong> Intelligently shows relevant page numbers<% end %>
+    <%= render FlatPack::List::Item.new do %><strong>Previous/Next:</strong> Always shows navigation arrows<% end %>
+    <%= render FlatPack::List::Item.new do %><strong>Current Page:</strong> Visual indication of active page<% end %>
+  <% end %>
 </section>
 
 <!-- Pagy Configuration -->

@@ -117,7 +117,7 @@ module FlatPack
 
         attrs[:aria] = {invalid: "true", describedby: error_id} if @error
 
-        merge_attributes(**attrs.compact)
+        merge_attributes(**apply_default_validation(attrs.compact, error_id: error_id, has_error: @error.present?))
       end
 
       def wrapper_classes
@@ -136,7 +136,7 @@ module FlatPack
           "w-full",
           "rounded-md",
           "border",
-          "bg-[var(--surface-bg-color)]",
+          "bg-[var(--surface-background-color)]",
           "text-[var(--surface-content-color)]",
           "px-[var(--form-control-padding)] py-[var(--form-control-padding)]",
           "pr-10",

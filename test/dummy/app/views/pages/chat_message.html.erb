@@ -1,0 +1,13 @@
+<div class="container mx-auto max-w-4xl p-4">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Chat::Message",
+    subtitle: "Message bubbles for incoming, outgoing, system, and delivery states."
+  ) %>
+
+  <div class="mt-6 space-y-3 rounded-lg border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-6">
+    <%= render FlatPack::Chat::Message::Component.new(direction: :incoming, state: :sent) { "Incoming bubble" } %>
+    <%= render FlatPack::Chat::Message::Component.new(direction: :outgoing, state: :sending) { "Outgoing bubble currently sending" } %>
+    <%= render FlatPack::Chat::Message::Component.new(direction: :outgoing, state: :failed) { "Outgoing bubble failed to send" } %>
+    <%= render FlatPack::Chat::Message::Component.new(variant: :system) { "Alex renamed the channel to Product Launch" } %>
+  </div>
+</div>

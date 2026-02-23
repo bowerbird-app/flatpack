@@ -77,6 +77,54 @@
       <% end %>
     <% end %>
   </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;flex justify-center items-center flex-wrap gap-4 mb-4&quot;&gt;
+        &lt;%= render FlatPack::Button::Component.new(id: &quot;popover-trigger-left&quot;, text: &quot;Left&quot;, style: :secondary) %&gt;
+        &lt;%= render FlatPack::Popover::Component.new(trigger_id: &quot;popover-trigger-left&quot;, placement: :left) do |popover| %&gt;
+          &lt;% popover.with_popover_content do %&gt;
+            &lt;div class=&quot;p-3 w-52 text-[var(--surface-content-color)]&quot;&gt;
+              &lt;p class=&quot;text-sm font-semibold&quot;&gt;Left Popover&lt;/p&gt;
+              &lt;p class=&quot;text-xs text-[var(--surface-muted-content-color)] mt-1&quot;&gt;Works well when space is constrained on the right.&lt;/p&gt;
+            &lt;/div&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+    
+        &lt;%= render FlatPack::Button::Component.new(id: &quot;popover-trigger-top&quot;, text: &quot;Top&quot;, style: :secondary) %&gt;
+        &lt;%= render FlatPack::Popover::Component.new(trigger_id: &quot;popover-trigger-top&quot;, placement: :top) do |popover| %&gt;
+          &lt;% popover.with_popover_content do %&gt;
+            &lt;div class=&quot;p-3 w-52 text-[var(--surface-content-color)]&quot;&gt;
+              &lt;p class=&quot;text-sm font-semibold&quot;&gt;Top Popover&lt;/p&gt;
+              &lt;p class=&quot;text-xs text-[var(--surface-muted-content-color)] mt-1&quot;&gt;Appears above the trigger with short helper text.&lt;/p&gt;
+            &lt;/div&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+    
+        &lt;%= render FlatPack::Button::Component.new(id: &quot;popover-trigger-bottom&quot;, text: &quot;Bottom&quot;, style: :secondary) %&gt;
+        &lt;%= render FlatPack::Popover::Component.new(trigger_id: &quot;popover-trigger-bottom&quot;, placement: :bottom) do |popover| %&gt;
+          &lt;% popover.with_popover_content do %&gt;
+            &lt;div class=&quot;p-3 w-52 text-[var(--surface-content-color)]&quot;&gt;
+              &lt;p class=&quot;text-sm font-semibold&quot;&gt;Bottom Popover&lt;/p&gt;
+              &lt;p class=&quot;text-xs text-[var(--surface-muted-content-color)] mt-1&quot;&gt;A common pattern for menus and quick actions.&lt;/p&gt;
+            &lt;/div&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+    
+        &lt;%= render FlatPack::Button::Component.new(id: &quot;popover-trigger-right&quot;, text: &quot;Right&quot;, style: :secondary) %&gt;
+        &lt;%= render FlatPack::Popover::Component.new(trigger_id: &quot;popover-trigger-right&quot;, placement: :right) do |popover| %&gt;
+          &lt;% popover.with_popover_content do %&gt;
+            &lt;div class=&quot;p-3 w-52 text-[var(--surface-content-color)]&quot;&gt;
+              &lt;p class=&quot;text-sm font-semibold&quot;&gt;Right Popover&lt;/p&gt;
+              &lt;p class=&quot;text-xs text-[var(--surface-muted-content-color)] mt-1&quot;&gt;Useful for inline details beside controls.&lt;/p&gt;
+            &lt;/div&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Popover Placements"
+  ) %>
 </section>
 
 <!-- Rich Content Popover -->
@@ -88,9 +136,7 @@
       <% popover.with_popover_content do %>
         <div class="p-4 w-72">
           <div class="flex items-start gap-3 mb-3">
-            <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white font-semibold">
-              JD
-            </div>
+            <%= render FlatPack::Avatar::Component.new(name: "John Doe", initials: "JD", size: :xl) %>
             <div>
               <h3 class="font-semibold">John Doe</h3>
               <p class="text-sm text-[var(--surface-muted-content-color)]">john@example.com</p>
@@ -104,6 +150,33 @@
       <% end %>
     <% end %>
   </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;mb-4&quot;&gt;
+        &lt;%= render FlatPack::Button::Component.new(id: &quot;popover-trigger-user-info&quot;, text: &quot;User Info&quot;, style: :primary) %&gt;
+        &lt;%= render FlatPack::Popover::Component.new(trigger_id: &quot;popover-trigger-user-info&quot;, placement: :bottom) do |popover| %&gt;
+          &lt;% popover.with_popover_content do %&gt;
+            &lt;div class=&quot;p-4 w-72&quot;&gt;
+              &lt;div class=&quot;flex items-start gap-3 mb-3&quot;&gt;
+                &lt;%= render FlatPack::Avatar::Component.new(name: &quot;John Doe&quot;, initials: &quot;JD&quot;, size: :xl) %&gt;
+                &lt;div&gt;
+                  &lt;h3 class=&quot;font-semibold&quot;&gt;John Doe&lt;/h3&gt;
+                  &lt;p class=&quot;text-sm text-[var(--surface-muted-content-color)]&quot;&gt;john@example.com&lt;/p&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+              &lt;div class=&quot;space-y-2&quot;&gt;
+                &lt;%= render FlatPack::Button::Component.new(text: &quot;View Profile&quot;, style: :secondary, class: &quot;w-full&quot;) %&gt;
+                &lt;%= render FlatPack::Button::Component.new(text: &quot;Send Message&quot;, style: :ghost, class: &quot;w-full&quot;) %&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Rich Content Popover"
+  ) %>
 </section>
 
 <!-- Popover with Form -->
@@ -130,6 +203,34 @@
       <% end %>
     <% end %>
   </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;mb-4&quot;&gt;
+        &lt;%= render FlatPack::Button::Component.new(id: &quot;popover-trigger-add-comment&quot;, text: &quot;Add Comment&quot;, style: :secondary) %&gt;
+        &lt;%= render FlatPack::Popover::Component.new(trigger_id: &quot;popover-trigger-add-comment&quot;, placement: :bottom) do |popover| %&gt;
+          &lt;% popover.with_popover_content do %&gt;
+            &lt;div class=&quot;p-4 w-80&quot;&gt;
+              &lt;h3 class=&quot;font-semibold mb-3&quot;&gt;Quick Comment&lt;/h3&gt;
+              &lt;form class=&quot;space-y-3&quot;&gt;
+                &lt;%= render FlatPack::TextArea::Component.new(
+                  name: &quot;comment&quot;,
+                  placeholder: &quot;Enter your comment...&quot;,
+                  rows: 3
+                ) %&gt;
+                &lt;div class=&quot;flex gap-2&quot;&gt;
+                  &lt;%= render FlatPack::Button::Component.new(text: &quot;Cancel&quot;, style: :ghost, size: :sm) %&gt;
+                  &lt;%= render FlatPack::Button::Component.new(text: &quot;Submit&quot;, style: :primary, size: :sm) %&gt;
+                &lt;/div&gt;
+              &lt;/form&gt;
+            &lt;/div&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Popover with Form"
+  ) %>
 </section>
 
 <!-- Popover with List -->
@@ -140,36 +241,65 @@
     <%= render FlatPack::Popover::Component.new(trigger_id: "popover-trigger-more-actions", placement: :bottom) do |popover| %>
       <% popover.with_popover_content do %>
         <div class="py-2 w-48">
-          <a href="#" class="block px-4 py-2 text-sm hover:bg-[var(--surface-muted-bg-color)] transition-colors">
+          <a href="#" class="block px-4 py-2 text-sm hover:bg-[var(--surface-muted-background-color)] transition-colors">
             Edit
           </a>
-          <a href="#" class="block px-4 py-2 text-sm hover:bg-[var(--surface-muted-bg-color)] transition-colors">
+          <a href="#" class="block px-4 py-2 text-sm hover:bg-[var(--surface-muted-background-color)] transition-colors">
             Duplicate
           </a>
-          <a href="#" class="block px-4 py-2 text-sm hover:bg-[var(--surface-muted-bg-color)] transition-colors">
+          <a href="#" class="block px-4 py-2 text-sm hover:bg-[var(--surface-muted-background-color)] transition-colors">
             Archive
           </a>
           <div class="border-t border-[var(--surface-border-color)] my-2"></div>
-          <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-[var(--surface-muted-bg-color)] transition-colors">
+          <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-[var(--surface-muted-background-color)] transition-colors">
             Delete
           </a>
         </div>
       <% end %>
     <% end %>
   </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;mb-4&quot;&gt;
+        &lt;%= render FlatPack::Button::Component.new(id: &quot;popover-trigger-more-actions&quot;, text: &quot;More Actions&quot;, style: :secondary) %&gt;
+        &lt;%= render FlatPack::Popover::Component.new(trigger_id: &quot;popover-trigger-more-actions&quot;, placement: :bottom) do |popover| %&gt;
+          &lt;% popover.with_popover_content do %&gt;
+            &lt;div class=&quot;py-2 w-48&quot;&gt;
+              &lt;a href=&quot;#&quot; class=&quot;block px-4 py-2 text-sm hover:bg-[var(--surface-muted-background-color)] transition-colors&quot;&gt;
+                Edit
+              &lt;/a&gt;
+              &lt;a href=&quot;#&quot; class=&quot;block px-4 py-2 text-sm hover:bg-[var(--surface-muted-background-color)] transition-colors&quot;&gt;
+                Duplicate
+              &lt;/a&gt;
+              &lt;a href=&quot;#&quot; class=&quot;block px-4 py-2 text-sm hover:bg-[var(--surface-muted-background-color)] transition-colors&quot;&gt;
+                Archive
+              &lt;/a&gt;
+              &lt;div class=&quot;border-t border-[var(--surface-border-color)] my-2&quot;&gt;&lt;/div&gt;
+              &lt;a href=&quot;#&quot; class=&quot;block px-4 py-2 text-sm text-red-600 hover:bg-[var(--surface-muted-background-color)] transition-colors&quot;&gt;
+                Delete
+              &lt;/a&gt;
+            &lt;/div&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Popover with List"
+  ) %>
 </section>
 
 <!-- Features -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Examples for Features.") %>
-  <ul class="list-disc list-inside space-y-2 text-[var(--surface-content-color)]">
-    <li><strong>Click to Open:</strong> Opens on click, not hover</li>
-    <li><strong>Smart Positioning:</strong> Automatically adjusts for viewport boundaries</li>
-    <li><strong>Click Outside:</strong> Closes when clicking outside the popover</li>
-    <li><strong>ESC to Close:</strong> Press ESC key to dismiss</li>
-    <li><strong>Rich Content:</strong> Support for any HTML content</li>
-    <li><strong>No Dependencies:</strong> Pure Stimulus implementation</li>
-    <li><strong>Accessible:</strong> Proper ARIA attributes</li>
-    <li><strong>Smooth Animations:</strong> Fade in/out transitions</li>
-  </ul>
+  <%= render FlatPack::List::Component.new(spacing: :dense, class: "text-[var(--surface-content-color)]") do %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Click to Open:</strong> Opens on click, not hover<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Smart Positioning:</strong> Automatically adjusts for viewport boundaries<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Click Outside:</strong> Closes when clicking outside the popover<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>ESC to Close:</strong> Press ESC key to dismiss<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Rich Content:</strong> Support for any HTML content<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>No Dependencies:</strong> Pure Stimulus implementation<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Accessible:</strong> Proper ARIA attributes<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Smooth Animations:</strong> Fade in/out transitions<% end %>
+  <% end %>
 </section>

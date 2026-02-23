@@ -47,7 +47,7 @@ module FlatPack
 
           content_tag(:div, class: "flex-shrink-0 #{@direction == :incoming ? "mr-3" : "ml-3"}") do
             if avatar?
-              avatar
+              avatar.to_s
             else
               render_default_avatar
             end

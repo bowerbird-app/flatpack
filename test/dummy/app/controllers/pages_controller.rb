@@ -7,6 +7,8 @@ require "pagy/extras/array"
 class PagesController < ApplicationController
   include Pagy::Backend
 
+  before_action :load_table_demo_data, only: %i[tables_basic tables_sortable tables_draggable]
+
   def demo
     @component_index = build_component_index
   end
@@ -14,26 +16,16 @@ class PagesController < ApplicationController
   def buttons
   end
 
-  def tables
-    ensure_demo_table_rows!
+  def tables_basic
+  end
 
-    @users = Array.new(20) do |i|
-      OpenStruct.new(
-        id: i + 1,
-        name: "User #{i + 1}",
-        email: "user#{i + 1}@example.com",
-        status: %w[active inactive pending].sample,
-        created_at: rand(30).days.ago,
-        category: %w[Technology Business Marketing Design].sample,
-        views_count: rand(100..5_000),
-        published_at: rand(60).days.ago
-      )
-    end
+  def tables_empty
+  end
 
-    # Handle sorting for sortable table
-    @sorted_users = sort_users(@users.dup, params[:sort], params[:direction])
-    @demo_table_rows = demo_table_rows_table_exists? ? DemoTableRow.where(list_key: DemoTableRow::DEFAULT_LIST_KEY).ordered : []
-    @demo_table_version = demo_table_rows_table_exists? ? demo_table_version : "0"
+  def tables_sortable
+  end
+
+  def tables_draggable
   end
 
   def tables_reorder
@@ -94,6 +86,51 @@ class PagesController < ApplicationController
     # Display forms page
   end
 
+  def forms_text_input
+  end
+
+  def forms_password_input
+  end
+
+  def forms_email_input
+  end
+
+  def forms_phone_input
+  end
+
+  def forms_search_input
+  end
+
+  def forms_url_input
+  end
+
+  def forms_text_area
+  end
+
+  def forms_number_input
+  end
+
+  def forms_date_input
+  end
+
+  def forms_file_input
+  end
+
+  def forms_checkbox
+  end
+
+  def forms_radio_group
+  end
+
+  def forms_select
+  end
+
+  def forms_switch
+  end
+
+  def forms_combined
+  end
+
   def forms_create
     # Handle POST form submission
     flash[:notice] = "Form submitted successfully with POST method"
@@ -136,6 +173,30 @@ class PagesController < ApplicationController
   def sidebar_layout
   end
 
+  def sidebar_basic
+  end
+
+  def sidebar_header
+  end
+
+  def sidebar_footer
+  end
+
+  def sidebar_badges
+  end
+
+  def sidebar_grouped
+  end
+
+  def sidebar_collapsible
+  end
+
+  def sidebar_collapsed
+  end
+
+  def sidebar_complete
+  end
+
   def cards
   end
 
@@ -152,6 +213,12 @@ class PagesController < ApplicationController
   end
 
   def tabs
+  end
+
+  def tabs_pills
+  end
+
+  def tabs_stacked_pills
   end
 
   def toasts
@@ -224,13 +291,43 @@ class PagesController < ApplicationController
   def comments
   end
 
-  def chat
+  def chat_demo
   end
 
-  def chat_basic
+  def chat_layout
   end
 
-  def chat_states
+  def chat_panel
+  end
+
+  def chat_message_list
+  end
+
+  def chat_message_group
+  end
+
+  def chat_message
+  end
+
+  def chat_message_meta
+  end
+
+  def chat_attachment
+  end
+
+  def chat_date_divider
+  end
+
+  def chat_typing_indicator
+  end
+
+  def chat_composer
+  end
+
+  def chat_textarea
+  end
+
+  def chat_send_button
   end
 
   def progress
@@ -470,19 +567,48 @@ class PagesController < ApplicationController
       {title: "Overview", description: "FlatPack component library home", url: demo_path},
       {title: "Buttons", description: "Button variants and dropdown examples", url: demo_buttons_path},
       {title: "Forms", description: "Form submit patterns with HTTP methods", url: demo_forms_path},
-      {title: "Inputs", description: "Input components with validation and states", url: demo_inputs_path},
-      {title: "Tables", description: "Data tables with sorting support", url: demo_tables_path},
+      {title: "Text Input", description: "Single-line text input examples", url: demo_forms_text_input_path},
+      {title: "Password Input", description: "Masked text input with visibility toggle", url: demo_forms_password_input_path},
+      {title: "Email Input", description: "Email-specific input examples", url: demo_forms_email_input_path},
+      {title: "Phone Input", description: "Telephone input examples", url: demo_forms_phone_input_path},
+      {title: "Search Input", description: "Search field with helper affordances", url: demo_forms_search_input_path},
+      {title: "URL Input", description: "URL input examples", url: demo_forms_url_input_path},
+      {title: "Text Area", description: "Multiline text input examples", url: demo_forms_text_area_path},
+      {title: "Number Input", description: "Numeric input with constraints", url: demo_forms_number_input_path},
+      {title: "Date Input", description: "Date picker input examples", url: demo_forms_date_input_path},
+      {title: "File Input", description: "File upload input examples", url: demo_forms_file_input_path},
+      {title: "Checkbox", description: "Checkbox input examples", url: demo_forms_checkbox_path},
+      {title: "Radio Group", description: "Single-choice radio group examples", url: demo_forms_radio_group_path},
+      {title: "Select", description: "Dropdown select input examples", url: demo_forms_select_path},
+      {title: "Switch", description: "Toggle switch input examples", url: demo_forms_switch_path},
+      {title: "Range Input", description: "Slider input with live value", url: demo_range_input_path},
+      {title: "Combined Form", description: "Full form with multiple input types", url: demo_forms_combined_path},
+      {title: "Tables", description: "Basic table examples with formatting and actions", url: demo_tables_basic_path},
+      {title: "Tables: Basic", description: "Basic table examples with formatting and actions", url: demo_tables_basic_path},
+      {title: "Tables: Empty", description: "Empty state table rendering with no rows", url: demo_tables_empty_path},
+      {title: "Tables: Sortable", description: "Sortable columns with Turbo frame updates", url: demo_tables_sortable_path},
+      {title: "Tables: Draggable", description: "Drag-and-drop row reordering with persistence", url: demo_tables_draggable_path},
       {title: "Cards", description: "Composed card layouts", url: demo_cards_path},
       {title: "Alerts", description: "Status and feedback messages", url: demo_alerts_path},
       {title: "Badges", description: "Label and status indicators", url: demo_badges_path},
       {title: "Breadcrumbs", description: "Hierarchical navigation trails", url: demo_breadcrumbs_path},
       {title: "Top Nav", description: "Header layout with left, center, and right slots", url: demo_navbar_path},
       {title: "Search", description: "Reusable search component with live results", url: demo_search_path},
-      {title: "Sidebar", description: "Sidebar and layout examples", url: demo_sidebar_layout_path},
+      {title: "Sidebar Layout", description: "Sidebar layout shell with left/right positioning", url: demo_sidebar_layout_path},
+      {title: "Sidebar Basic", description: "Basic sidebar with header, items, and footer", url: demo_sidebar_basic_path},
+      {title: "Sidebar Header", description: "Header configurations for sidebar branding and actions", url: demo_sidebar_header_path},
+      {title: "Sidebar Footer", description: "Footer patterns for status, metadata, and account actions", url: demo_sidebar_footer_path},
+      {title: "Sidebar with Badges", description: "Sidebar navigation items with badges", url: demo_sidebar_badges_path},
+      {title: "Sidebar Grouped", description: "Sidebar navigation with grouped items", url: demo_sidebar_grouped_path},
+      {title: "Sidebar Collapsible", description: "Sidebar groups that expand and collapse", url: demo_sidebar_collapsible_path},
+      {title: "Sidebar Collapsed", description: "Icon-only collapsed sidebar pattern", url: demo_sidebar_collapsed_path},
+      {title: "Sidebar Complete", description: "Full-featured sidebar composition", url: demo_sidebar_complete_path},
       {title: "Modals", description: "Dialog overlays with focus trap", url: demo_modals_path},
       {title: "Popovers", description: "Click-triggered floating content", url: demo_popovers_path},
       {title: "Tooltips", description: "Hover/focus tooltips", url: demo_tooltips_path},
-      {title: "Tabs", description: "Tabbed content with keyboard navigation", url: demo_tabs_path},
+      {title: "Tabs", description: "Underlined tabs with keyboard navigation", url: demo_tabs_path},
+      {title: "Pills", description: "Pill-style tabs with shared accessibility behavior", url: demo_tabs_pills_path},
+      {title: "Stacked Pills", description: "Vertical pill-style tabs with two-column layout on larger screens", url: demo_tabs_stacked_pills_path},
       {title: "Toasts", description: "Auto-dismissing notifications", url: demo_toasts_path},
       {title: "Page Title", description: "Page title with optional subtitle", url: demo_page_header_path},
       {title: "Empty State", description: "User-friendly empty states", url: demo_empty_state_path},
@@ -491,5 +617,26 @@ class PagesController < ApplicationController
       {title: "Charts", description: "Data visualization with ApexCharts", url: demo_charts_path},
       {title: "Code Blocks", description: "Reusable snippets for demo pages", url: demo_code_blocks_path}
     ]
+  end
+
+  def load_table_demo_data
+    ensure_demo_table_rows!
+
+    @users = Array.new(20) do |i|
+      OpenStruct.new(
+        id: i + 1,
+        name: "User #{i + 1}",
+        email: "user#{i + 1}@example.com",
+        status: %w[active inactive pending].sample,
+        created_at: rand(30).days.ago,
+        category: %w[Technology Business Marketing Design].sample,
+        views_count: rand(100..5_000),
+        published_at: rand(60).days.ago
+      )
+    end
+
+    @sorted_users = sort_users(@users.dup, params[:sort], params[:direction])
+    @demo_table_rows = demo_table_rows_table_exists? ? DemoTableRow.where(list_key: DemoTableRow::DEFAULT_LIST_KEY).ordered : []
+    @demo_table_version = demo_table_rows_table_exists? ? demo_table_version : "0"
   end
 end

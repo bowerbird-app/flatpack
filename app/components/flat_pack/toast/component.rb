@@ -5,31 +5,34 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "border-info-border" "text-[var(--surface-content-color)]"
-      # "border-success-border" "bg-success-bg/10" "text-success-border"
-      # "border-warning-border" "bg-warning-bg/10" "text-warning-border"
-      # "border-destructive-border" "bg-destructive-bg/10" "bg-destructive-bg" "text-destructive-border"
-      # "bg-destructive-text/20" "hover:bg-destructive-text/30" "text-destructive-text"
+      # "border-[var(--toast-info-border-color)]" "bg-[var(--toast-info-background-color)]" "text-[var(--toast-info-text-color)]" "text-[var(--toast-info-icon-color)]"
+      # "border-[var(--toast-success-border-color)]" "bg-[var(--toast-success-background-color)]" "text-[var(--toast-success-text-color)]" "text-[var(--toast-success-icon-color)]"
+      # "border-[var(--toast-warning-border-color)]" "bg-[var(--toast-warning-background-color)]" "text-[var(--toast-warning-text-color)]" "text-[var(--toast-warning-icon-color)]"
+      # "border-[var(--toast-danger-border-color)]" "bg-[var(--toast-danger-background-color)]" "text-[var(--toast-danger-text-color)]" "text-[var(--toast-danger-icon-color)]"
       TYPES = {
         info: {
-          border: "border-info-border",
-          bg: "bg-[var(--surface-bg-color)]",
-          text: "text-[var(--surface-content-color)]"
+          border: "border-[var(--toast-info-border-color)]",
+          bg: "bg-[var(--toast-info-background-color)]",
+          text: "text-[var(--toast-info-text-color)]",
+          icon: "text-[var(--toast-info-icon-color)]"
         },
         success: {
-          border: "border-success-border",
-          bg: "bg-[var(--surface-bg-color)]",
-          text: "text-success-border"
+          border: "border-[var(--toast-success-border-color)]",
+          bg: "bg-[var(--toast-success-background-color)]",
+          text: "text-[var(--toast-success-text-color)]",
+          icon: "text-[var(--toast-success-icon-color)]"
         },
         warning: {
-          border: "border-warning-border",
-          bg: "bg-[var(--surface-bg-color)]",
-          text: "text-warning-border"
+          border: "border-[var(--toast-warning-border-color)]",
+          bg: "bg-[var(--toast-warning-background-color)]",
+          text: "text-[var(--toast-warning-text-color)]",
+          icon: "text-[var(--toast-warning-icon-color)]"
         },
         error: {
-          border: "border-destructive-border",
-          bg: "bg-destructive-bg",
-          text: "text-destructive-border"
+          border: "border-[var(--toast-danger-border-color)]",
+          bg: "bg-[var(--toast-danger-background-color)]",
+          text: "text-[var(--toast-danger-text-color)]",
+          icon: "text-[var(--toast-danger-icon-color)]"
         }
       }.freeze
 
@@ -82,21 +85,22 @@ module FlatPack
           "flex",
           "items-start",
           "gap-3",
-          "p-4",
-          "rounded-md",
+          "p-[var(--toast-padding)]",
+          "rounded-[var(--toast-border-radius)]",
           "border",
-          "shadow-lg",
+          "shadow-[var(--toast-shadow)]",
           "z-[60]",
           "min-w-[300px]",
           "max-w-md",
           type_styles[:border],
-          type_styles[:bg]
+          type_styles[:bg],
+          type_styles[:text]
         )
       end
 
       def render_icon
         type_styles = TYPES.fetch(@type)
-        content_tag(:div, class: "flex-shrink-0 #{type_styles[:text]}") do
+        content_tag(:div, class: "flex-shrink-0 #{type_styles[:icon]}") do
           icon_svg
         end
       end
@@ -155,7 +159,7 @@ module FlatPack
       end
 
       def render_message
-        content_tag(:p, @message, class: "flex-1 text-sm font-medium text-[var(--surface-content-color)]")
+        content_tag(:p, @message, class: "flex-1 text-sm font-medium")
       end
 
       def render_dismiss_button
@@ -192,9 +196,9 @@ module FlatPack
 
       def dismiss_button_type_classes
         if @type == :error
-          "bg-destructive-text/20 hover:bg-destructive-text/30 text-destructive-text"
+          "bg-[var(--toast-danger-dismiss-background-color)] hover:bg-[var(--toast-danger-dismiss-hover-background-color)] text-[var(--toast-danger-dismiss-text-color)]"
         else
-          "text-[var(--surface-muted-content-color)] hover:text-[var(--surface-content-color)]"
+          "text-[var(--toast-dismiss-text-color)] hover:text-[var(--toast-dismiss-hover-text-color)]"
         end
       end
 

@@ -61,19 +61,19 @@
   
   <div class="prose max-w-none">
     <h3>Client-Side (JavaScript Enabled)</h3>
-    <ul>
-      <li>Uses Intersection Observer API to detect when the "Load more" button enters the viewport</li>
-      <li>Automatically fetches the next page via AJAX</li>
-      <li>Appends new content to the page seamlessly</li>
-      <li>Shows loading spinner during fetch</li>
-    </ul>
+    <%= render FlatPack::List::Component.new do %>
+      <%= render FlatPack::List::Item.new do %>Uses Intersection Observer API to detect when the "Load more" button enters the viewport<% end %>
+      <%= render FlatPack::List::Item.new do %>Automatically fetches the next page via AJAX<% end %>
+      <%= render FlatPack::List::Item.new do %>Appends new content to the page seamlessly<% end %>
+      <%= render FlatPack::List::Item.new do %>Shows loading spinner during fetch<% end %>
+    <% end %>
 
     <h3>Graceful Degradation (No JavaScript)</h3>
-    <ul>
-      <li>The component renders as a regular link</li>
-      <li>Clicking navigates to the next page normally</li>
-      <li>Maintains full functionality without JavaScript</li>
-    </ul>
+    <%= render FlatPack::List::Component.new do %>
+      <%= render FlatPack::List::Item.new do %>The component renders as a regular link<% end %>
+      <%= render FlatPack::List::Item.new do %>Clicking navigates to the next page normally<% end %>
+      <%= render FlatPack::List::Item.new do %>Maintains full functionality without JavaScript<% end %>
+    <% end %>
 
     <h3>Controller Example</h3>
     <%= render FlatPack::CodeBlock::Component.new(
@@ -96,13 +96,13 @@
     <%= render FlatPack::CodeBlock::Component.new(
       language: "erb",
       code: <<~ERB
-        <table>
-          <tbody data-pagination-content>
-            <#{'%'} @records.each do |record| %#{'>'}
-              <!-- row markup -->
-            <#{'%'} end %#{'>'}
-          </tbody>
-        </table>
+        <#{'%'}= render FlatPack::Table::Component.new(
+          data: @records,
+          tbody_data: {pagination_content: true}
+        ) do |table| %#{'>'}
+          <#{'%'} table.column(title: "Name", html: ->(record) { record.name }) %#{'>'}
+          <#{'%'} table.column(title: "Email", html: ->(record) { record.email }) %#{'>'}
+        <#{'%'} end %#{'>'}
 
         <#{'%'}= render FlatPack::Pagination::Component.new(
           mode: :infinite,
@@ -121,8 +121,8 @@
     subtitle: "Use when you want users to explicitly trigger loading"
   ) %>
   
-  <div class="p-6 bg-[var(--surface-muted-bg-color)] rounded-lg">
+  <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg) do %>
     <p class="mb-4">To disable automatic loading on scroll, simply don't set up the Intersection Observer, or add a data attribute to control behavior.</p>
     <p class="text-sm text-[var(--surface-muted-content-color)]">This is useful for feeds where you want users to consciously choose to load more content rather than having it happen automatically.</p>
-  </div>
+  <% end %>
 </section>

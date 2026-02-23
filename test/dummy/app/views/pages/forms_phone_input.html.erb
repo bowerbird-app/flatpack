@@ -1,0 +1,46 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Phone Input",
+  subtitle: "Telephone number field examples including validation feedback."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :text_input %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Phone Input Examples", anchor_link: true) %>
+
+  <div class="space-y-4 p-6 border border-slate-200 rounded-lg bg-white">
+    <%= render FlatPack::PhoneInput::Component.new(
+      name: "phone",
+      label: "Phone Number",
+      placeholder: "+1 (555) 123-4567"
+    ) %>
+
+    <%= render FlatPack::PhoneInput::Component.new(
+      name: "phone_error",
+      label: "Phone (with error)",
+      value: "123",
+      error: "Phone number must be at least 10 digits"
+    ) %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;space-y-4 p-6 border border-slate-200 rounded-lg bg-white&quot;&gt;
+        &lt;%= render FlatPack::PhoneInput::Component.new(
+          name: &quot;phone&quot;,
+          label: &quot;Phone Number&quot;,
+          placeholder: &quot;+1 (555) 123-4567&quot;
+        ) %&gt;
+    
+        &lt;%= render FlatPack::PhoneInput::Component.new(
+          name: &quot;phone_error&quot;,
+          label: &quot;Phone (with error)&quot;,
+          value: &quot;123&quot;,
+          error: &quot;Phone number must be at least 10 digits&quot;
+        ) %&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Phone Input Examples"
+  ) %>
+</section>

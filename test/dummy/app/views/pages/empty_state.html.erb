@@ -143,6 +143,25 @@
       ) %>
     <% end %>
   <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Card::Component.new(style: :outlined) do |card| %&gt;
+        &lt;% card.header do %&gt;
+          &lt;h3 class=&quot;text-lg font-semibold&quot;&gt;Recent Activity&lt;/h3&gt;
+        &lt;% end %&gt;
+        &lt;% card.body do %&gt;
+          &lt;%= render FlatPack::EmptyState::Component.new(
+            title: &quot;No activity yet&quot;,
+            description: &quot;Your recent activity will appear here.&quot;,
+            icon: :inbox
+          ) %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    language: "erb",
+    title: "Empty State in Card"
+  ) %>
 </section>
 
 <!-- Empty State with Custom Graphic -->
@@ -164,18 +183,41 @@
       <% end %>
     <% end %>
   </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;border border-[var(--surface-border-color)] rounded-lg p-8&quot;&gt;
+        &lt;%= render FlatPack::EmptyState::Component.new(
+          title: &quot;No data available&quot;,
+          description: &quot;Upload a CSV file or connect a data source to get started.&quot;
+        ) do |empty| %&gt;
+          &lt;% empty.graphic do %&gt;
+            &lt;div class=&quot;w-32 h-32 rounded-full bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center mb-6&quot;&gt;
+              &lt;%= render FlatPack::Shared::IconComponent.new(name: :upload, size: :lg, class: &quot;text-blue-600&quot;) %&gt;
+            &lt;/div&gt;
+          &lt;% end %&gt;
+          &lt;% empty.actions do %&gt;
+            &lt;%= render FlatPack::Button::Component.new(text: &quot;Upload CSV&quot;, style: :primary) %&gt;
+            &lt;%= render FlatPack::Button::Component.new(text: &quot;Connect Source&quot;, style: :secondary) %&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Empty State with Custom Graphic"
+  ) %>
 </section>
 
 <!-- Features -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Examples for Features.") %>
-  <ul class="list-disc list-inside space-y-2 text-[var(--surface-content-color)]">
-    <li><strong>Built-in Icons:</strong> Inbox and search icons included</li>
-    <li><strong>Optional Icon:</strong> Pass <code>icon: :inbox</code>, <code>icon: :search</code>, or any icon name when needed</li>
-    <li><strong>Custom Graphics:</strong> Slot for custom illustrations or icons</li>
-    <li><strong>Action Buttons:</strong> Add primary and secondary CTAs</li>
-    <li><strong>Centered Layout:</strong> Visually balanced and centered</li>
-    <li><strong>Flexible Content:</strong> Title, description, and actions</li>
-    <li><strong>Responsive:</strong> Adapts to container width</li>
-  </ul>
+  <%= render FlatPack::List::Component.new(spacing: :dense, class: "text-[var(--surface-content-color)]") do %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Built-in Icons:</strong> Inbox and search icons included<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Optional Icon:</strong> Pass <code>icon: :inbox</code>, <code>icon: :search</code>, or any icon name when needed<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Custom Graphics:</strong> Slot for custom illustrations or icons<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Action Buttons:</strong> Add primary and secondary CTAs<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Centered Layout:</strong> Visually balanced and centered<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Flexible Content:</strong> Title, description, and actions<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Responsive:</strong> Adapts to container width<% end %>
+  <% end %>
 </section>

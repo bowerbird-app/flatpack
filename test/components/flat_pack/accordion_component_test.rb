@@ -57,7 +57,7 @@ module FlatPack
         end
 
         assert_selector "[data-flat-pack--accordion-target='trigger']"
-        assert_selector "[data-flat-pack--accordion-target='content']"
+        assert_selector "[data-flat-pack--accordion-target='content']", visible: false
         assert_selector "[data-flat-pack--accordion-target='icon']"
       end
 
@@ -83,7 +83,7 @@ module FlatPack
           accordion.item(id: "my-item", title: "Item") { "Content" }
         end
 
-        assert_selector "#my-item-content"
+        assert_selector "#my-item-content", visible: false
         assert_selector "[aria-controls='my-item-content']"
       end
 

@@ -60,7 +60,7 @@ module FlatPack
         # Rails-generated HTML from components captured via block. Never pass
         # unsanitized user input directly to content.
         content_tag(:div, **content_attributes) do
-          content_tag(:div, content.html_safe, class: "p-4")
+          content_tag(:div, content.to_s.html_safe, class: "p-4")
         end
       end
 
@@ -90,13 +90,13 @@ module FlatPack
       end
 
       def trigger_classes
-        "w-full flex items-center justify-between p-4 text-left bg-[var(--surface-bg-color)] hover:bg-[var(--surface-muted-bg-color)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        "w-full flex items-center justify-between p-4 text-left bg-[var(--surface-background-color)] hover:bg-[var(--surface-muted-background-color)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       end
 
       def content_attributes
         {
           id: content_id,
-          class: "overflow-hidden transition-all duration-300 ease-in-out bg-[var(--surface-bg-color)]",
+          class: "overflow-hidden transition-all duration-300 ease-in-out bg-[var(--surface-background-color)]",
           data: {"flat-pack--collapse-target": "content"},
           hidden: !@open
         }

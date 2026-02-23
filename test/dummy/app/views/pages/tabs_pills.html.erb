@@ -1,0 +1,66 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Pills Tabs",
+  subtitle: "Tabbed content with pill-style triggers and full keyboard navigation."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :tabs %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Pills Variant", anchor_link: true, subtitle: "Use rounded pill-style tab triggers.") %>
+  <%= render FlatPack::Tabs::Component.new(variant: :pills) do |tabs| %>
+    <% tabs.tab(id: "account", label: "Account") %>
+    <% tabs.tab(id: "billing", label: "Billing") %>
+    <% tabs.tab(id: "members", label: "Team Members") %>
+
+    <% tabs.panel(id: "account") do %>
+      <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg) do %>
+        <h3 class="text-lg font-semibold mb-2">Account Preferences</h3>
+        <p class="text-[var(--surface-content-color)]">
+          Pills are useful when you want segmented-control styling while keeping tab semantics and keyboard support.
+        </p>
+      <% end %>
+    <% end %>
+    <% tabs.panel(id: "billing") do %>
+      <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg) do %>
+        <h3 class="text-lg font-semibold mb-2">Billing Settings</h3>
+        <p class="text-[var(--surface-content-color)]">The active pill uses the same theme tokens as the default tabs variant.</p>
+      <% end %>
+    <% end %>
+    <% tabs.panel(id: "members") do %>
+      <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg) do %>
+        <h3 class="text-lg font-semibold mb-2">Team Members</h3>
+        <p class="text-[var(--surface-content-color)]">Switch styles with <code>variant: :pills</code> and keep existing tab/panel declarations.</p>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Tabs::Component.new(variant: :pills) do |tabs| %&gt;
+        &lt;% tabs.tab(id: "account", label: "Account") %&gt;
+        &lt;% tabs.tab(id: "billing", label: "Billing") %&gt;
+
+        &lt;% tabs.panel(id: "account") do %&gt;
+          <p>Account content...</p>
+        &lt;% end %&gt;
+        &lt;% tabs.panel(id: "billing") do %&gt;
+          <p>Billing content...</p>
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    class: "mt-4"
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Keyboard Navigation", anchor_link: true, subtitle: "Examples for Keyboard Navigation.") %>
+  <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg) do %>
+    <h3 class="font-semibold mb-3">Keyboard Shortcuts:</h3>
+    <%= render FlatPack::List::Component.new(spacing: :dense, class: "text-[var(--surface-content-color)]") do %>
+      <%= render FlatPack::List::Item.new do %><kbd class="px-2 py-1 bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] rounded text-sm">←</kbd> / <kbd class="px-2 py-1 bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] rounded text-sm">→</kbd> - Navigate between tabs<% end %>
+      <%= render FlatPack::List::Item.new do %><kbd class="px-2 py-1 bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] rounded text-sm">Home</kbd> - Jump to first tab<% end %>
+      <%= render FlatPack::List::Item.new do %><kbd class="px-2 py-1 bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] rounded text-sm">End</kbd> - Jump to last tab<% end %>
+      <%= render FlatPack::List::Item.new do %><kbd class="px-2 py-1 bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] rounded text-sm">Enter</kbd> / <kbd class="px-2 py-1 bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] rounded text-sm">Space</kbd> - Activate focused tab<% end %>
+    <% end %>
+  <% end %>
+</section>

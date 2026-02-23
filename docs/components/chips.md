@@ -290,11 +290,11 @@ Emitted when a button chip is toggled. Event detail contains:
 ## Styling
 
 Chips use shared semantic color tokens and chip-specific layout tokens:
-- `--surface-muted-bg-color`, `--surface-content-color`, `--surface-border-color` (default chips)
+- `--surface-muted-background-color`, `--surface-content-color`, `--surface-border-color` (default chips)
 - `--color-primary`, `--color-primary-text` (primary chips)
-- `--color-success-bg`, `--color-success-text`, `--color-success-border` (success chips)
-- `--color-warning-bg`, `--color-warning-text`, `--color-warning-border` (warning chips)
-- `--color-destructive-bg`, `--color-destructive-text`, `--color-destructive-border` (danger chips)
+- `--color-success-background-color`, `--color-success-text`, `--color-success-border` (success chips)
+- `--color-warning-background-color`, `--color-warning-text`, `--color-warning-border` (warning chips)
+- `--color-danger-background-color`, `--color-danger-text-color`, `--color-danger-border-color` (danger chips)
 - `--color-secondary`, `--color-secondary-text`, `--color-info-border` (info chips)
 - `--chip-padding-x-sm|md|lg` and `--chip-padding-y-sm|md|lg` for chip spacing
 - `--chip-group-gap` for spacing between chips in `ChipGroup`

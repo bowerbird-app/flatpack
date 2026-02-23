@@ -5,12 +5,12 @@ module FlatPack
     class Item < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-primary" "bg-success-bg" "bg-warning-bg" "bg-destructive-bg"
+      # "bg-primary" "bg-success-background-color" "bg-warning-background-color" "bg-danger-background-color"
       VARIANTS = {
         default: "bg-primary",
-        success: "bg-success-bg",
-        warning: "bg-warning-bg",
-        danger: "bg-destructive-bg"
+        success: "bg-success-background-color",
+        warning: "bg-warning-background-color",
+        danger: "bg-danger-background-color"
       }.freeze
 
       def initialize(
@@ -47,7 +47,7 @@ module FlatPack
       private
 
       def render_marker
-        content_tag(:div, class: "flex flex-col items-center") do
+        content_tag(:div, class: "flex self-stretch flex-col items-center") do
           safe_join([
             render_icon_circle,
             render_line
@@ -70,7 +70,7 @@ module FlatPack
       def render_line
         return if @last
 
-        content_tag(:div, nil, class: "w-0.5 h-full min-h-[2rem] bg-[var(--surface-border-color)]")
+        content_tag(:div, nil, class: "w-0.5 flex-1 min-h-[2rem] bg-[var(--surface-border-color)]")
       end
 
       def render_content_area

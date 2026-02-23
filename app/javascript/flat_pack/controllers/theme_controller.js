@@ -73,9 +73,32 @@ export default class extends Controller {
   }
 
   syncSelect(themeValue) {
+    this.syncDropdownLabel(themeValue)
+
     if (!this.hasSelectTarget) return
 
     this.selectTarget.value = themeValue
+  }
+
+  syncDropdownLabel(themeValue) {
+    const triggerLabel = this.themeTriggerLabel
+    if (!triggerLabel) return
+
+    triggerLabel.textContent = this.themeLabel(themeValue)
+  }
+
+  themeLabel(themeValue) {
+    return {
+      system: 'System',
+      light: 'Light',
+      dark: 'Dark',
+      ocean: 'Ocean',
+      rounded: 'Rounded'
+    }[themeValue] || 'System'
+  }
+
+  get themeTriggerLabel() {
+    return this.element.querySelector('[data-flat-pack--button-dropdown-target="trigger"] span')
   }
 
   handleThemeChanged(event) {

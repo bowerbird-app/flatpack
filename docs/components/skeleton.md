@@ -15,6 +15,7 @@ The Skeleton component displays loading placeholders that match the shape of exp
 | `variant` | Symbol | `:text` | Preset shape (`:text`, `:title`, `:avatar`, `:button`, `:rectangle`) |
 | `width` | String | `nil` | Custom width (e.g., "200px", "50%") |
 | `height` | String | `nil` | Custom height (e.g., "100px", "3rem") |
+| `shimmer` | Boolean | `true` | Enables or disables shimmer animation |
 | `**system_arguments` | Hash | `{}` | HTML attributes (`class`, `data`, `aria`, `id`, etc.) |
 
 ## Variants
@@ -57,6 +58,11 @@ Large rectangular content area.
   width: "300px",
   height: "200px"
 ) %>
+```
+
+### Disable Shimmer
+```erb
+<%= render FlatPack::Skeleton::Component.new(shimmer: false) %>
 ```
 
 ### Loading Card
@@ -105,7 +111,8 @@ Large rectangular content area.
 - Uses `role="status"` for screen reader announcements
 - Includes `aria-busy="true"` to indicate loading state
 - Includes `aria-label="Loading..."` for context
-- Pulse animation provides visual feedback
+- Includes a shimmer animation for visual loading feedback
+- Automatically disables shimmer animation for users who prefer reduced motion
 
 ## Use Cases
 

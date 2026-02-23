@@ -152,23 +152,23 @@ export default class extends Controller {
     const classes = {
       info: {
         border: "border-[var(--color-info-border)]",
-        bg: "bg-[var(--surface-bg-color)]",
+        bg: "bg-[var(--surface-background-color)]",
         text: "text-[var(--surface-content-color)]"
       },
       success: {
         border: "border-[var(--color-success-border)]",
-        bg: "bg-[var(--surface-bg-color)]",
+        bg: "bg-[var(--surface-background-color)]",
         text: "text-[var(--color-success-border)]"
       },
       warning: {
         border: "border-[var(--color-warning-border)]",
-        bg: "bg-[var(--surface-bg-color)]",
+        bg: "bg-[var(--surface-background-color)]",
         text: "text-[var(--color-warning-border)]"
       },
       error: {
-        border: "border-[var(--color-destructive-border)]",
-        bg: "bg-[var(--color-destructive-bg)]",
-        text: "text-[var(--color-destructive-border)]"
+        border: "border-[var(--color-danger-border-color)]",
+        bg: "bg-[var(--color-danger-background-color)]",
+        text: "text-[var(--color-danger-border-color)]"
       }
     }
 
@@ -179,7 +179,7 @@ export default class extends Controller {
     const base = "flex-shrink-0 transition-colors rounded-[var(--radius-sm)] p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]"
 
     if (type === "error") {
-      return `${base} bg-[var(--color-destructive-text)]/20 hover:bg-[var(--color-destructive-text)]/30 text-[var(--color-destructive-text)]`
+      return `${base} bg-[var(--color-danger-text-color)]/20 hover:bg-[var(--color-danger-text-color)]/30 text-[var(--color-danger-text-color)]`
     }
 
     return `${base} text-[var(--surface-muted-content-color)] hover:text-[var(--surface-content-color)]`

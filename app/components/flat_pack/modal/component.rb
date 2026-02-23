@@ -78,7 +78,7 @@ module FlatPack
           "hidden",
           "overflow-y-auto",
           "bg-[var(--modal-backdrop-color)]",
-          "backdrop-blur-[var(--blur-modal-backdrop)]",
+          "backdrop-blur-[var(--modal-backdrop-blur)]",
           "transition-opacity",
           "duration-300"
         )

@@ -129,7 +129,7 @@ module FlatPack
             "overflow-auto",
             "rounded-md",
             "border border-[var(--surface-border-color)]",
-            "bg-[var(--surface-bg-color)]",
+            "bg-[var(--surface-background-color)]",
             "p-1",
             "shadow-lg",
             "opacity-0 scale-95 hidden",

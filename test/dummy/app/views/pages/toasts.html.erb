@@ -149,16 +149,16 @@
 <!-- Features -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Examples for Features.") %>
-  <ul class="list-disc list-inside space-y-2 text-[var(--surface-content-color)]">
-    <li><strong>Auto-Dismiss:</strong> Automatically disappear after a configurable timeout</li>
-    <li><strong>Manual Dismiss:</strong> Click the close button to dismiss immediately</li>
-    <li><strong>ARIA Live Regions:</strong> Screen readers announce new toasts</li>
-    <li><strong>Stacking:</strong> Multiple toasts stack vertically</li>
-    <li><strong>Animations:</strong> Smooth slide and fade animations</li>
-    <li><strong>Reduced Motion:</strong> Respects prefers-reduced-motion</li>
-    <li><strong>Turbo Stream Friendly:</strong> Can be triggered via Turbo Streams</li>
-    <li><strong>Event-Driven:</strong> Trigger via custom JavaScript events</li>
-  </ul>
+  <%= render FlatPack::List::Component.new(spacing: :dense, class: "text-[var(--surface-content-color)]") do %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Auto-Dismiss:</strong> Automatically disappear after a configurable timeout<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Manual Dismiss:</strong> Click the close button to dismiss immediately<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>ARIA Live Regions:</strong> Screen readers announce new toasts<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Stacking:</strong> Multiple toasts stack vertically<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Animations:</strong> Smooth slide and fade animations<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Reduced Motion:</strong> Respects prefers-reduced-motion<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Turbo Stream Friendly:</strong> Can be triggered via Turbo Streams<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Event-Driven:</strong> Trigger via custom JavaScript events<% end %>
+  <% end %>
 </section>
 
 <!-- Turbo Stream Example -->

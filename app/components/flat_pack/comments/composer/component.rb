@@ -55,7 +55,7 @@ module FlatPack
 
         def composer_classes
           classes(
-            "rounded-lg border border-[var(--surface-border-color)] bg-[var(--surface-bg-color)]",
+            "rounded-lg border border-[var(--surface-border-color)] bg-[var(--surface-background-color)]",
             "focus-within:ring-2 focus-within:ring-ring focus-within:border-ring",
             "transition-all duration-base",
             @disabled ? "opacity-60 pointer-events-none" : nil
@@ -110,7 +110,7 @@ module FlatPack
 
         def action_section_classes
           classes(
-            "border-t border-[var(--surface-border-color)] bg-[var(--surface-muted-bg-color)]/30",
+            "border-t border-[var(--surface-border-color)] bg-[var(--surface-muted-background-color)]/30",
             @compact ? "px-2 py-1.5" : "px-3 py-2"
           )
         end
@@ -119,7 +119,7 @@ module FlatPack
           content_tag(:button,
             type: "button",
             disabled: @disabled,
-            class: "px-3 py-1.5 text-sm font-medium text-[var(--surface-content-color)] hover:bg-[var(--surface-muted-bg-color)] rounded-md transition-colors duration-base") do
+            class: "px-3 py-1.5 text-sm font-medium text-[var(--surface-content-color)] hover:bg-[var(--surface-muted-background-color)] rounded-md transition-colors duration-base") do
             @cancel_label
           end
         end

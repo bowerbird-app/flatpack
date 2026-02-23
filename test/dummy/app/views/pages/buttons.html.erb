@@ -88,7 +88,7 @@
     <%= render FlatPack::SectionTitle::Component.new(title: "Buttons as Links", anchor_link: true, subtitle: "Examples for Buttons as Links.") %>
     <div class="flex gap-3 mb-4">
       <%= render FlatPack::Button::Component.new(text: "Go Home", url: root_path, style: :primary) %>
-      <%= render FlatPack::Button::Component.new(text: "View Tables", url: demo_tables_path, style: :secondary) %>
+      <%= render FlatPack::Button::Component.new(text: "View Tables", url: demo_tables_basic_path, style: :secondary) %>
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE')
@@ -113,7 +113,7 @@
       ) %>
       <%= render FlatPack::Button::Component.new(
         text: "Open in Same Tab",
-        url: demo_tables_path,
+        url: demo_tables_basic_path,
         style: :secondary,
         target: "_self"
       ) %>
@@ -142,7 +142,7 @@
       For text links without button styling, use the Link component. It includes built-in URL validation and security features.
     </p>
     <div class="flex gap-4 mb-4">
-      <%= render FlatPack::Link::Component.new(href: demo_tables_path) do %>
+      <%= render FlatPack::Link::Component.new(href: demo_tables_basic_path) do %>
         Go to Tables
       <% end %>
       <%= render FlatPack::Link::Component.new(href: "https://github.com", target: "_blank") do %>
@@ -157,7 +157,7 @@
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE')
-        &lt;%= render FlatPack::Link::Component.new(href: demo_tables_path) do %&gt;
+        &lt;%= render FlatPack::Link::Component.new(href: demo_tables_basic_path) do %&gt;
           Go to Tables
         &lt;% end %&gt;
         

@@ -105,7 +105,7 @@ module FlatPack
           return unless meta?
 
           content_tag(:div, class: "mt-1") do
-            meta
+            meta.to_s
           end
         end
 

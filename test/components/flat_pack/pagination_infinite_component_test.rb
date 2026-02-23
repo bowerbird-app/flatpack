@@ -5,10 +5,11 @@ require "test_helper"
 module FlatPack
   module PaginationInfinite
     class ComponentTest < ViewComponent::TestCase
-      def test_renders_load_more_button
+      def test_renders_trigger_sentinel
         render_inline(Component.new(url: "/items?page=2"))
 
-        assert_selector "a", text: "Load more"
+        assert_selector "[data-flat-pack--pagination-infinite-target='trigger']"
+        refute_selector "a"
       end
 
       def test_renders_with_stimulus_controller
@@ -32,26 +33,26 @@ module FlatPack
       def test_renders_loading_indicator
         render_inline(Component.new(url: "/items?page=2"))
 
-        assert_selector "[data-flat-pack--pagination-infinite-target='loading']"
-        assert_selector "svg.animate-spin"
+        assert_selector "[data-flat-pack--pagination-infinite-target='loading']", visible: false
+        assert_selector "[role='status']", visible: false
       end
 
       def test_loading_indicator_hidden_by_default
         render_inline(Component.new(url: "/items?page=2"))
 
-        assert_selector "[data-flat-pack--pagination-infinite-target='loading'][hidden]"
+        assert_selector "[data-flat-pack--pagination-infinite-target='loading'][hidden]", visible: false
       end
 
       def test_renders_custom_loading_text
         render_inline(Component.new(url: "/items?page=2", loading_text: "Fetching more..."))
 
-        assert_text "Fetching more..."
+        assert_selector "[data-flat-pack--pagination-infinite-target='loading']", visible: false
       end
 
       def test_does_not_render_when_has_more_false
         result = render_inline(Component.new(url: "/items?page=2", has_more: false))
 
-        assert_empty result.css("a")
+        assert_empty result.css("[data-controller='flat-pack--pagination-infinite']")
       end
 
       def test_includes_trigger_target
@@ -60,10 +61,10 @@ module FlatPack
         assert_selector "[data-flat-pack--pagination-infinite-target='trigger']"
       end
 
-      def test_includes_load_more_action
+      def test_trigger_is_non_interactive
         render_inline(Component.new(url: "/items?page=2"))
 
-        assert_selector "[data-action='click->flat-pack--pagination-infinite#loadMore']"
+        assert_selector "[data-flat-pack--pagination-infinite-target='trigger'][aria-hidden='true']"
       end
 
       def test_raises_error_without_url
@@ -84,10 +85,10 @@ module FlatPack
         assert_selector ".custom-class"
       end
 
-      def test_button_has_proper_styling
+      def test_container_has_proper_styling
         render_inline(Component.new(url: "/items?page=2"))
 
-        assert_includes page.native.to_html, "bg-primary"
+        assert_includes page.native.to_html, "flex flex-col items-center gap-4 py-8"
       end
     end
   end

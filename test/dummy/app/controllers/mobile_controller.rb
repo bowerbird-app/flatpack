@@ -3,7 +3,9 @@
 class MobileController < ApplicationController
   layout "mobile"
 
-  def index; end
+  def index
+  end
 
-  def bottom_nav; end
+  def bottom_nav
+  end
 end

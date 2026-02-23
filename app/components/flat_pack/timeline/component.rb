@@ -24,7 +24,7 @@ module FlatPack
       end
 
       def timeline_classes
-        classes("relative space-y-8")
+        classes("relative")
       end
     end
   end

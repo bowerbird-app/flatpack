@@ -466,9 +466,7 @@
       <%= render FlatPack::Card::Component.new(style: :default) do |card| %>
         <% card.body do %>
           <div class="flex items-center space-x-4 mb-4">
-            <div class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-2xl font-bold">
-              JD
-            </div>
+            <%= render FlatPack::Avatar::Component.new(name: "John Doe", initials: "JD", size: :xl) %>
             <div>
               <h3 class="text-lg font-semibold">John Doe</h3>
               <p class="text-sm text-[var(--surface-muted-content-color)]">Senior Developer</p>
@@ -501,9 +499,7 @@
         &lt;%= render FlatPack::Card::Component.new(style: :default) do |card| %&gt;
           &lt;% card.body do %&gt;
             <div class="flex items-center space-x-4 mb-4">
-              <div class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-2xl font-bold">
-                JD
-              </div>
+              &lt;%= render FlatPack::Avatar::Component.new(name: &quot;John Doe&quot;, initials: &quot;JD&quot;, size: :xl) %&gt;
               <div>
                 <h3 class="text-lg font-semibold">John Doe</h3>
                 <p class="text-sm text-[var(--surface-muted-content-color)]">Senior Developer</p>
@@ -546,17 +542,17 @@
           </div>
         <% end %>
         <% card.body do %>
-          <ul class="space-y-2 text-sm">
-            <li class="flex items-center">
-              <span class="mr-2">✓</span> 10 projects
-            </li>
-            <li class="flex items-center">
-              <span class="mr-2">✓</span> Basic support
-            </li>
-            <li class="flex items-center">
-              <span class="mr-2">✓</span> 1GB storage
-            </li>
-          </ul>
+          <%= render FlatPack::List::Component.new(spacing: :dense, class: "text-sm") do %>
+            <%= render FlatPack::List::Item.new(leading: "✓", class: "py-0 px-0 items-center") do %>
+              10 projects
+            <% end %>
+            <%= render FlatPack::List::Item.new(leading: "✓", class: "py-0 px-0 items-center") do %>
+              Basic support
+            <% end %>
+            <%= render FlatPack::List::Item.new(leading: "✓", class: "py-0 px-0 items-center") do %>
+              1GB storage
+            <% end %>
+          <% end %>
         <% end %>
         <% card.footer do %>
           <%= render FlatPack::Button::Component.new(
@@ -576,17 +572,17 @@
           </div>
         <% end %>
         <% card.body do %>
-          <ul class="space-y-2 text-sm">
-            <li class="flex items-center">
-              <span class="mr-2">✓</span> Unlimited projects
-            </li>
-            <li class="flex items-center">
-              <span class="mr-2">✓</span> Priority support
-            </li>
-            <li class="flex items-center">
-              <span class="mr-2">✓</span> 50GB storage
-            </li>
-          </ul>
+          <%= render FlatPack::List::Component.new(spacing: :dense, class: "text-sm") do %>
+            <%= render FlatPack::List::Item.new(leading: "✓", class: "py-0 px-0 items-center") do %>
+              Unlimited projects
+            <% end %>
+            <%= render FlatPack::List::Item.new(leading: "✓", class: "py-0 px-0 items-center") do %>
+              Priority support
+            <% end %>
+            <%= render FlatPack::List::Item.new(leading: "✓", class: "py-0 px-0 items-center") do %>
+              50GB storage
+            <% end %>
+          <% end %>
         <% end %>
         <% card.footer do %>
           <%= render FlatPack::Button::Component.new(
@@ -605,17 +601,17 @@
           </div>
         <% end %>
         <% card.body do %>
-          <ul class="space-y-2 text-sm">
-            <li class="flex items-center">
-              <span class="mr-2">✓</span> Unlimited everything
-            </li>
-            <li class="flex items-center">
-              <span class="mr-2">✓</span> 24/7 support
-            </li>
-            <li class="flex items-center">
-              <span class="mr-2">✓</span> Unlimited storage
-            </li>
-          </ul>
+          <%= render FlatPack::List::Component.new(spacing: :dense, class: "text-sm") do %>
+            <%= render FlatPack::List::Item.new(leading: "✓", class: "py-0 px-0 items-center") do %>
+              Unlimited everything
+            <% end %>
+            <%= render FlatPack::List::Item.new(leading: "✓", class: "py-0 px-0 items-center") do %>
+              24/7 support
+            <% end %>
+            <%= render FlatPack::List::Item.new(leading: "✓", class: "py-0 px-0 items-center") do %>
+              Unlimited storage
+            <% end %>
+          <% end %>
         <% end %>
         <% card.footer do %>
           <%= render FlatPack::Button::Component.new(
@@ -636,17 +632,17 @@
             </div>
           &lt;% end %&gt;
           &lt;% card.body do %&gt;
-            <ul class="space-y-2 text-sm">
-              <li class="flex items-center">
-                <span class="mr-2">✓</span> 10 projects
-              </li>
-              <li class="flex items-center">
-                <span class="mr-2">✓</span> Basic support
-              </li>
-              <li class="flex items-center">
-                <span class="mr-2">✓</span> 1GB storage
-              </li>
-            </ul>
+            &lt;%= render FlatPack::List::Component.new(spacing: :dense, class: &quot;text-sm&quot;) do %&gt;
+              &lt;%= render FlatPack::List::Item.new(leading: &quot;✓&quot;, class: &quot;py-0 px-0 items-center&quot;) do %&gt;
+                10 projects
+              &lt;% end %&gt;
+              &lt;%= render FlatPack::List::Item.new(leading: &quot;✓&quot;, class: &quot;py-0 px-0 items-center&quot;) do %&gt;
+                Basic support
+              &lt;% end %&gt;
+              &lt;%= render FlatPack::List::Item.new(leading: &quot;✓&quot;, class: &quot;py-0 px-0 items-center&quot;) do %&gt;
+                1GB storage
+              &lt;% end %&gt;
+            &lt;% end %&gt;
           &lt;% end %&gt;
           &lt;% card.footer do %&gt;
             &lt;%= render FlatPack::Button::Component.new(
@@ -671,9 +667,7 @@
         <% card.body do %>
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
-                A
-              </div>
+              <%= render FlatPack::Avatar::Component.new(name: "Alice", initials: "A", size: :md) %>
               <div>
                 <p class="font-medium">Alice sent you a message</p>
                 <p class="text-sm text-[var(--surface-muted-content-color)]">2 minutes ago</p>
@@ -691,9 +685,7 @@
         <% card.body do %>
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">
-                B
-              </div>
+              <%= render FlatPack::Avatar::Component.new(name: "Bob", initials: "B", size: :md) %>
               <div>
                 <p class="font-medium">Bob commented on your post</p>
                 <p class="text-sm text-[var(--surface-muted-content-color)]">1 hour ago</p>
@@ -711,9 +703,7 @@
         <% card.body do %>
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold">
-                C
-              </div>
+              <%= render FlatPack::Avatar::Component.new(name: "Charlie", initials: "C", size: :md) %>
               <div>
                 <p class="font-medium">Charlie mentioned you in a comment</p>
                 <p class="text-sm text-[var(--surface-muted-content-color)]">3 hours ago</p>
@@ -730,9 +720,7 @@
           &lt;% card.body do %&gt;
             <div class="flex items-center justify-between">
               <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
-                  A
-                </div>
+                &lt;%= render FlatPack::Avatar::Component.new(name: "Alice", initials: "A", size: :md) %&gt;
                 <div>
                   <p class="font-medium">Alice sent you a message</p>
                   <p class="text-sm text-[var(--surface-muted-content-color)]">2 minutes ago</p>

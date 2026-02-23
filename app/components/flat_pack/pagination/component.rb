@@ -86,7 +86,7 @@ module FlatPack
       end
 
       def pagination_wrapper_classes
-        "inline-flex items-center gap-1.5 rounded-md bg-[var(--surface-bg-color)] border border-[var(--surface-border-color)] p-1.5"
+        "inline-flex items-center gap-1.5 rounded-md bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] p-1.5"
       end
 
       def render_prev_button
@@ -183,7 +183,7 @@ module FlatPack
         elsif active
           "#{base} bg-primary text-primary-text"
         else
-          "#{base} text-[var(--surface-content-color)] hover:bg-[var(--surface-muted-bg-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          "#{base} text-[var(--surface-content-color)] hover:bg-[var(--surface-muted-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         end
       end
 

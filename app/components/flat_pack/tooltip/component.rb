@@ -78,7 +78,7 @@ module FlatPack
       end
 
       def tooltip_fallback_styles
-        "background-color: var(--tooltip-background-color, var(--surface-content-color)); color: var(--tooltip-text-color, var(--surface-bg-color)); border-color: var(--tooltip-border-color, var(--surface-border-color));"
+        "background-color: var(--tooltip-background-color, var(--surface-content-color)); color: var(--tooltip-text-color, var(--surface-background-color)); border-color: var(--tooltip-border-color, var(--surface-border-color));"
       end
 
       def tooltip_classes

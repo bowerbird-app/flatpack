@@ -245,7 +245,7 @@ module FlatPack
         end
 
         html = page.native.to_html
-        assert_includes html, "hover:bg-[var(--surface-muted-bg-color)]"
+        assert_includes html, "hover:bg-[var(--surface-muted-background-color)]"
       end
 
       def test_sidebar_item_renders_as_link_with_href

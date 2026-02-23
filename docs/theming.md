@@ -55,26 +55,26 @@ A complete scale of brand colors from lightest to darkest.
 --color-ghost-hover
 --color-ghost-text
 
---color-success-bg
---color-success-bg-hover
+--color-success-background-color
+--color-success-hover-background-color
 --color-success-text
 --color-success-border
 
---color-warning-bg
---color-warning-bg-hover
+--color-warning-background-color
+--color-warning-hover-background-color
 --color-warning-text
 --color-warning-border
 
---color-destructive-bg
---color-destructive-bg-hover
---color-destructive-text
---color-destructive-border
+--color-danger-background-color
+--color-danger-hover-background-color
+--color-danger-text-color
+--color-danger-border-color
 
---surface-bg-color
---surface-page-bg-color
+--surface-background-color
+--surface-page-background-color
 --surface-content-color
 
---surface-muted-bg-color
+--surface-muted-background-color
 --surface-muted-content-color
 
 --surface-border-color
@@ -128,12 +128,12 @@ A complete scale of brand colors from lightest to darkest.
 - Transition: `--transition-base`
 
 ### Input Components (Text, Email, Password, Phone, Search, URL, TextArea)
-- Colors: `--surface-content-color`, `--surface-bg-color`, `--surface-muted-content-color`, `--surface-border-color`, `--color-ring`, `--color-warning-border`
+- Colors: `--surface-content-color`, `--surface-background-color`, `--surface-muted-content-color`, `--surface-border-color`, `--color-ring`, `--color-warning-border`
 - Radius: `--radius-md`
 - Transition: `--transition-base`
 
 ### Table
-- Colors: `--surface-border-color`, `--surface-muted-bg-color`
+- Colors: `--surface-border-color`, `--surface-muted-background-color`
 - Radius: `--radius-lg`
 - Transition: `--transition-fast`
 

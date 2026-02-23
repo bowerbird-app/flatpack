@@ -53,7 +53,7 @@ module FlatPack
         render_inline(Component.new(name: "User", status: :online))
 
         assert_selector "span[aria-hidden='true']"
-        assert_includes page.native.to_html, "bg-emerald-500"
+        assert_includes page.native.to_html, "bg-[var(--avatar-status-online-color)]"
       end
 
       def test_renders_all_status_types
@@ -92,7 +92,7 @@ module FlatPack
       def test_default_shape_is_circle
         render_inline(Component.new(name: "Test"))
 
-        assert_includes page.native.to_html, "rounded-full"
+        assert_includes page.native.to_html, "rounded-[var(--avatar-radius-circle)]"
         assert_includes page.native.to_html, "aspect-square"
       end
 

@@ -1,0 +1,112 @@
+<div class="space-y-6">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Semantic Colors",
+    subtitle: "These colors adapt to the active theme and generate native Tailwind utilities.",
+    anchor_link: true
+  ) %>
+
+  <div class="space-y-2">
+    <h3 class="text-lg font-medium text-[var(--surface-content-color)]">Default</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="space-y-2">
+        <div class="h-24 rounded-md bg-default border border-default-border flex items-center justify-center">
+          <span class="text-default-text font-mono text-sm">bg-default</span>
+        </div>
+        <p class="text-xs text-[var(--surface-muted-content-color)] font-mono">text-default-text</p>
+      </div>
+      <div class="space-y-2">
+        <div class="h-24 rounded-md bg-default-hover border border-default-border flex items-center justify-center">
+          <span class="text-default-text font-mono text-sm">bg-default-hover</span>
+        </div>
+        <p class="text-xs text-[var(--surface-muted-content-color)]">Hover state</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="space-y-2">
+    <h3 class="text-lg font-medium text-[var(--surface-content-color)]">Primary and Secondary</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="space-y-2">
+        <div class="h-24 rounded-md bg-primary flex items-center justify-center">
+          <span class="text-primary-text font-mono text-sm">bg-primary</span>
+        </div>
+        <p class="text-xs text-[var(--surface-muted-content-color)] font-mono">text-primary-text</p>
+      </div>
+      <div class="space-y-2">
+        <div class="h-24 rounded-md bg-secondary border border-[var(--surface-border-color)] flex items-center justify-center">
+          <span class="text-secondary-text font-mono text-sm">bg-secondary</span>
+        </div>
+        <p class="text-xs text-[var(--surface-muted-content-color)] font-mono">text-secondary-text</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="space-y-2">
+    <h3 class="text-lg font-medium text-[var(--surface-content-color)]">Status Colors</h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="h-20 rounded-md bg-success-background-color flex items-center justify-center">
+        <span class="text-success-text font-mono text-sm">success</span>
+      </div>
+      <div class="h-20 rounded-md bg-warning-background-color flex items-center justify-center">
+        <span class="text-warning-text font-mono text-sm">warning</span>
+      </div>
+      <div class="h-20 rounded-md bg-danger-background-color flex items-center justify-center">
+        <span class="text-danger-text-color font-mono text-sm">destructive</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="space-y-6">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Badge Tokens",
+      subtitle: "Badge variants in the active theme.",
+      anchor_link: true
+    ) %>
+
+    <div class="flex flex-wrap gap-3">
+      <%= render FlatPack::Badge::Component.new(text: "Default", style: :default) %>
+      <%= render FlatPack::Badge::Component.new(text: "Primary", style: :primary) %>
+      <%= render FlatPack::Badge::Component.new(text: "Success", style: :success) %>
+      <%= render FlatPack::Badge::Component.new(text: "Warning", style: :warning) %>
+      <%= render FlatPack::Badge::Component.new(text: "Info", style: :info) %>
+    </div>
+  </div>
+
+  <div class="space-y-6">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Decorative Gradients",
+      subtitle: "Reusable decorative gradients for hero and feature surfaces.",
+      anchor_link: true
+    ) %>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="h-24 rounded-lg border border-[var(--surface-border-color)]" style="background-image: var(--gradient-1);"></div>
+      <div class="h-24 rounded-lg border border-[var(--surface-border-color)]" style="background-image: var(--gradient-2);"></div>
+      <div class="h-24 rounded-lg border border-[var(--surface-border-color)]" style="background-image: var(--gradient-3);"></div>
+      <div class="h-24 rounded-lg border border-[var(--surface-border-color)]" style="background-image: var(--gradient-4);"></div>
+    </div>
+  </div>
+
+  <div class="space-y-6">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Radius and Shadow",
+      subtitle: "Corner radius and elevation utilities under the active theme.",
+      anchor_link: true
+    ) %>
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div class="fp-theme-demo-box rounded-sm bg-[var(--surface-muted-background-color)] border border-[var(--surface-border-color)] flex items-center justify-center">
+        <span class="text-[var(--surface-content-color)] font-mono text-xs">rounded-sm</span>
+      </div>
+      <div class="fp-theme-demo-box rounded-md bg-[var(--surface-muted-background-color)] border border-[var(--surface-border-color)] flex items-center justify-center">
+        <span class="text-[var(--surface-content-color)] font-mono text-xs">rounded-md</span>
+      </div>
+      <div class="fp-theme-demo-box rounded-lg bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] shadow-md flex items-center justify-center">
+        <span class="text-[var(--surface-content-color)] font-mono text-xs">shadow-md</span>
+      </div>
+      <div class="fp-theme-demo-box rounded-xl bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] shadow-lg flex items-center justify-center">
+        <span class="text-[var(--surface-content-color)] font-mono text-xs">shadow-lg</span>
+      </div>
+    </div>
+  </div>
+</div>

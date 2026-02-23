@@ -6,7 +6,7 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Skeleton Variants", anchor_link: true) %>
   
-  <div class="space-y-6 p-6 bg-[var(--surface-bg-color)] border border-[var(--surface-border-color)] rounded-lg">
+  <div class="space-y-6 p-6 bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] rounded-lg">
     <div>
       <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Text</p>
       <%= render FlatPack::Skeleton::Component.new(variant: :text) %>
@@ -32,12 +32,45 @@
       <%= render FlatPack::Skeleton::Component.new(variant: :rectangle) %>
     </div>
   </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;space-y-6 p-6 bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] rounded-lg&quot;&gt;
+        &lt;div&gt;
+          &lt;p class=&quot;text-sm text-[var(--surface-muted-content-color)] mb-2&quot;&gt;Text&lt;/p&gt;
+          &lt;%= render FlatPack::Skeleton::Component.new(variant: :text) %&gt;
+        &lt;/div&gt;
+    
+        &lt;div&gt;
+          &lt;p class=&quot;text-sm text-[var(--surface-muted-content-color)] mb-2&quot;&gt;Title&lt;/p&gt;
+          &lt;%= render FlatPack::Skeleton::Component.new(variant: :title) %&gt;
+        &lt;/div&gt;
+    
+        &lt;div&gt;
+          &lt;p class=&quot;text-sm text-[var(--surface-muted-content-color)] mb-2&quot;&gt;Avatar&lt;/p&gt;
+          &lt;%= render FlatPack::Skeleton::Component.new(variant: :avatar) %&gt;
+        &lt;/div&gt;
+    
+        &lt;div&gt;
+          &lt;p class=&quot;text-sm text-[var(--surface-muted-content-color)] mb-2&quot;&gt;Button&lt;/p&gt;
+          &lt;%= render FlatPack::Skeleton::Component.new(variant: :button) %&gt;
+        &lt;/div&gt;
+    
+        &lt;div&gt;
+          &lt;p class=&quot;text-sm text-[var(--surface-muted-content-color)] mb-2&quot;&gt;Rectangle&lt;/p&gt;
+          &lt;%= render FlatPack::Skeleton::Component.new(variant: :rectangle) %&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Skeleton Variants"
+  ) %>
 </section>
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Custom Dimensions", anchor_link: true) %>
   
-  <div class="space-y-6 p-6 bg-[var(--surface-bg-color)] border border-[var(--surface-border-color)] rounded-lg">
+  <div class="space-y-6 p-6 bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] rounded-lg">
     <div>
       <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Custom Width</p>
       <%= render FlatPack::Skeleton::Component.new(width: "300px") %>
@@ -53,6 +86,29 @@
       <%= render FlatPack::Skeleton::Component.new(width: "250px", height: "150px") %>
     </div>
   </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;space-y-6 p-6 bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] rounded-lg&quot;&gt;
+        &lt;div&gt;
+          &lt;p class=&quot;text-sm text-[var(--surface-muted-content-color)] mb-2&quot;&gt;Custom Width&lt;/p&gt;
+          &lt;%= render FlatPack::Skeleton::Component.new(width: &quot;300px&quot;) %&gt;
+        &lt;/div&gt;
+    
+        &lt;div&gt;
+          &lt;p class=&quot;text-sm text-[var(--surface-muted-content-color)] mb-2&quot;&gt;Custom Height&lt;/p&gt;
+          &lt;%= render FlatPack::Skeleton::Component.new(height: &quot;100px&quot;) %&gt;
+        &lt;/div&gt;
+    
+        &lt;div&gt;
+          &lt;p class=&quot;text-sm text-[var(--surface-muted-content-color)] mb-2&quot;&gt;Custom Width and Height&lt;/p&gt;
+          &lt;%= render FlatPack::Skeleton::Component.new(width: &quot;250px&quot;, height: &quot;150px&quot;) %&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Custom Dimensions"
+  ) %>
 </section>
 
 <section class="mb-12">
@@ -101,6 +157,56 @@
       <% end %>
     <% end %>
   </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;grid grid-cols-1 md:grid-cols-2 gap-6&quot;&gt;
+        &lt;!-- Loading State --&gt;
+        &lt;%= render FlatPack::Card::Component.new do |card| %&gt;
+          &lt;% card.body do %&gt;
+            &lt;div class=&quot;flex items-start gap-4 mb-4&quot;&gt;
+              &lt;%= render FlatPack::Skeleton::Component.new(variant: :avatar) %&gt;
+              &lt;div class=&quot;flex-1 space-y-2&quot;&gt;
+                &lt;%= render FlatPack::Skeleton::Component.new(variant: :title) %&gt;
+                &lt;%= render FlatPack::Skeleton::Component.new(variant: :text, width: &quot;60%&quot;) %&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;space-y-2&quot;&gt;
+              &lt;%= render FlatPack::Skeleton::Component.new(variant: :text) %&gt;
+              &lt;%= render FlatPack::Skeleton::Component.new(variant: :text) %&gt;
+              &lt;%= render FlatPack::Skeleton::Component.new(variant: :text, width: &quot;80%&quot;) %&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;mt-4 flex gap-2&quot;&gt;
+              &lt;%= render FlatPack::Skeleton::Component.new(variant: :button) %&gt;
+              &lt;%= render FlatPack::Skeleton::Component.new(variant: :button) %&gt;
+            &lt;/div&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+    
+        &lt;!-- Loaded State --&gt;
+        &lt;%= render FlatPack::Card::Component.new do |card| %&gt;
+          &lt;% card.body do %&gt;
+            &lt;div class=&quot;flex items-start gap-4 mb-4&quot;&gt;
+              &lt;%= render FlatPack::Avatar::Component.new(name: &quot;Jane Smith&quot;, size: :lg) %&gt;
+              &lt;div class=&quot;flex-1&quot;&gt;
+                &lt;h3 class=&quot;font-semibold text-lg&quot;&gt;Jane Smith&lt;/h3&gt;
+                &lt;p class=&quot;text-sm text-[var(--surface-muted-content-color)]&quot;&gt;Product Designer&lt;/p&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;p class=&quot;text-[var(--surface-content-color)] mb-4&quot;&gt;
+              Passionate about creating intuitive user experiences and beautiful interfaces. Always learning and exploring new design patterns.
+            &lt;/p&gt;
+            &lt;div class=&quot;flex gap-2&quot;&gt;
+              &lt;%= render FlatPack::Button::Component.new(text: &quot;Follow&quot;, variant: :primary) %&gt;
+              &lt;%= render FlatPack::Button::Component.new(text: &quot;Message&quot;, variant: :outline) %&gt;
+            &lt;/div&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Loading Card"
+  ) %>
 </section>
 
 <section class="mb-12">
@@ -135,45 +241,95 @@
       <% end %>
     </div>
   </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;grid grid-cols-1 md:grid-cols-2 gap-6&quot;&gt;
+        &lt;!-- Loading State --&gt;
+        &lt;div class=&quot;space-y-4&quot;&gt;
+          &lt;h3 class=&quot;font-semibold mb-4&quot;&gt;Loading...&lt;/h3&gt;
+          &lt;% 3.times do %&gt;
+            &lt;div class=&quot;flex items-center gap-3 p-4 border border-[var(--surface-border-color)] rounded-lg&quot;&gt;
+              &lt;%= render FlatPack::Skeleton::Component.new(variant: :avatar) %&gt;
+              &lt;div class=&quot;flex-1 space-y-2&quot;&gt;
+                &lt;%= render FlatPack::Skeleton::Component.new(variant: :text) %&gt;
+                &lt;%= render FlatPack::Skeleton::Component.new(variant: :text, width: &quot;70%&quot;) %&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;% end %&gt;
+        &lt;/div&gt;
+    
+        &lt;!-- Loaded State --&gt;
+        &lt;div class=&quot;space-y-4&quot;&gt;
+          &lt;h3 class=&quot;font-semibold mb-4&quot;&gt;Team Members&lt;/h3&gt;
+          &lt;% [&quot;Alice Johnson&quot;, &quot;Bob Williams&quot;, &quot;Carol Davis&quot;].each do |name| %&gt;
+            &lt;div class=&quot;flex items-center gap-3 p-4 border border-[var(--surface-border-color)] rounded-lg&quot;&gt;
+              &lt;%= render FlatPack::Avatar::Component.new(name: name, size: :md) %&gt;
+              &lt;div class=&quot;flex-1&quot;&gt;
+                &lt;p class=&quot;font-medium&quot;&gt;&lt;%= name %&gt;&lt;/p&gt;
+                &lt;p class=&quot;text-sm text-[var(--surface-muted-content-color)]&quot;&gt;Software Engineer&lt;/p&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;% end %&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Loading List"
+  ) %>
 </section>
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Loading Table", anchor_link: true) %>
   
-  <div class="overflow-x-auto border border-[var(--surface-border-color)] rounded-lg">
-    <table class="w-full">
-      <thead class="bg-[var(--surface-muted-bg-color)]">
-        <tr>
-          <th class="px-4 py-3 text-left text-sm font-semibold">Name</th>
-          <th class="px-4 py-3 text-left text-sm font-semibold">Email</th>
-          <th class="px-4 py-3 text-left text-sm font-semibold">Role</th>
-          <th class="px-4 py-3 text-left text-sm font-semibold">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% 5.times do %>
-          <tr class="border-t border-[var(--surface-border-color)]">
-            <td class="px-4 py-3"><%= render FlatPack::Skeleton::Component.new(variant: :text, width: "120px") %></td>
-            <td class="px-4 py-3"><%= render FlatPack::Skeleton::Component.new(variant: :text, width: "150px") %></td>
-            <td class="px-4 py-3"><%= render FlatPack::Skeleton::Component.new(variant: :text, width: "80px") %></td>
-            <td class="px-4 py-3"><%= render FlatPack::Skeleton::Component.new(variant: :button) %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
+  <% loading_rows = Array.new(5) { {} } %>
+  <%= render FlatPack::Table::Component.new(data: loading_rows) do |table| %>
+    <% table.column(title: "Name", html: ->(_row) { render(FlatPack::Skeleton::Component.new(variant: :text, width: "120px")) }) %>
+    <% table.column(title: "Email", html: ->(_row) { render(FlatPack::Skeleton::Component.new(variant: :text, width: "150px")) }) %>
+    <% table.column(title: "Role", html: ->(_row) { render(FlatPack::Skeleton::Component.new(variant: :text, width: "80px")) }) %>
+    <% table.column(title: "Actions", html: ->(_row) { render(FlatPack::Skeleton::Component.new(variant: :button)) }) %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;overflow-x-auto border border-[var(--surface-border-color)] rounded-lg&quot;&gt;
+        &lt;table class=&quot;w-full&quot;&gt;
+          &lt;thead class=&quot;bg-[var(--surface-muted-background-color)]&quot;&gt;
+            &lt;tr&gt;
+              &lt;th class=&quot;px-4 py-3 text-left text-sm font-semibold&quot;&gt;Name&lt;/th&gt;
+              &lt;th class=&quot;px-4 py-3 text-left text-sm font-semibold&quot;&gt;Email&lt;/th&gt;
+              &lt;th class=&quot;px-4 py-3 text-left text-sm font-semibold&quot;&gt;Role&lt;/th&gt;
+              &lt;th class=&quot;px-4 py-3 text-left text-sm font-semibold&quot;&gt;Actions&lt;/th&gt;
+            &lt;/tr&gt;
+          &lt;/thead&gt;
+          &lt;tbody&gt;
+            &lt;% 5.times do %&gt;
+              &lt;tr class=&quot;border-t border-[var(--surface-border-color)]&quot;&gt;
+                &lt;td class=&quot;px-4 py-3&quot;&gt;&lt;%= render FlatPack::Skeleton::Component.new(variant: :text, width: &quot;120px&quot;) %&gt;&lt;/td&gt;
+                &lt;td class=&quot;px-4 py-3&quot;&gt;&lt;%= render FlatPack::Skeleton::Component.new(variant: :text, width: &quot;150px&quot;) %&gt;&lt;/td&gt;
+                &lt;td class=&quot;px-4 py-3&quot;&gt;&lt;%= render FlatPack::Skeleton::Component.new(variant: :text, width: &quot;80px&quot;) %&gt;&lt;/td&gt;
+                &lt;td class=&quot;px-4 py-3&quot;&gt;&lt;%= render FlatPack::Skeleton::Component.new(variant: :button) %&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;% end %&gt;
+          &lt;/tbody&gt;
+        &lt;/table&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Loading Table"
+  ) %>
 </section>
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Use Cases", anchor_link: true) %>
   
   <div class="prose max-w-none">
-    <ul>
-      <li><strong>Data Fetching:</strong> Show skeletons while loading API data</li>
-      <li><strong>Image Loading:</strong> Use rectangle skeleton for image placeholders</li>
-      <li><strong>Async Components:</strong> Display skeletons for lazy-loaded components</li>
-      <li><strong>Perceived Performance:</strong> Improve UX by showing structure immediately</li>
-      <li><strong>Layout Stability:</strong> Prevent content shift when data loads</li>
-    </ul>
+    <%= render FlatPack::List::Component.new(spacing: :dense) do %>
+      <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Data Fetching:</strong> Show skeletons while loading API data<% end %>
+      <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Image Loading:</strong> Use rectangle skeleton for image placeholders<% end %>
+      <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Async Components:</strong> Display skeletons for lazy-loaded components<% end %>
+      <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Perceived Performance:</strong> Improve UX by showing structure immediately<% end %>
+      <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Layout Stability:</strong> Prevent content shift when data loads<% end %>
+    <% end %>
   </div>
 </section>

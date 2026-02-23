@@ -306,7 +306,7 @@ The dropdown inherits button colors and uses theme variables:
   --color-foreground: oklch(0.25 0.02 250);
   --color-border: oklch(0.90 0.01 250);
   --color-muted: oklch(0.96 0.01 250);
-  --color-destructive-bg: oklch(0.55 0.22 25);
+  --color-danger-background-color: oklch(0.55 0.22 25);
   --radius-md: 0.375rem;
   --radius-sm: 0.25rem;
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);

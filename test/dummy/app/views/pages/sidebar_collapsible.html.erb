@@ -1,0 +1,71 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Sidebar Collapsible Group",
+  subtitle: "Use group headers to expand and collapse nested sidebar items."
+) %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Collapsible Group", anchor_link: true) %>
+  <div class="rounded-lg overflow-hidden h-[460px] mb-4">
+    <%= render FlatPack::Sidebar::Component.new(class: "border border-[var(--surface-border-color)] rounded-lg") do |sidebar| %>
+      <% sidebar.header do %>
+        <%= render FlatPack::Sidebar::Header::Component.new(
+          brand_abbr: "FP",
+          title: "Admin",
+          subtitle: "Navigation",
+          collapsible: false
+        ) %>
+      <% end %>
+
+      <% sidebar.items do %>
+        <nav class="py-4 space-y-1">
+          <%= render FlatPack::Sidebar::Item::Component.new(label: "Dashboard", href: "#", icon: :home, active: true) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(label: "Reports", href: "#", icon: :table) %>
+          <%= render FlatPack::Sidebar::Divider::Component.new %>
+
+          <%= render FlatPack::Sidebar::Group::Component.new(label: "Team Settings", icon: :user, default_open: false) do |group| %>
+            <% group.items do %>
+              <%= render FlatPack::Sidebar::Item::Component.new(label: "Members", href: "#", icon: :user) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(label: "Roles", href: "#", icon: :dashboard) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(label: "Permissions", href: "#", icon: :key) %>
+            <% end %>
+          <% end %>
+        </nav>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;rounded-lg overflow-hidden h-[460px] mb-4&quot;&gt;
+        &lt;%= render FlatPack::Sidebar::Component.new(class: &quot;border border-[var(--surface-border-color)] rounded-lg&quot;) do |sidebar| %&gt;
+          &lt;% sidebar.header do %&gt;
+            &lt;%= render FlatPack::Sidebar::Header::Component.new(
+              brand_abbr: &quot;FP&quot;,
+              title: &quot;Admin&quot;,
+              subtitle: &quot;Navigation&quot;,
+              collapsible: false
+            ) %&gt;
+          &lt;% end %&gt;
+    
+          &lt;% sidebar.items do %&gt;
+            &lt;nav class=&quot;py-4 space-y-1&quot;&gt;
+              &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Dashboard&quot;, href: &quot;#&quot;, icon: :home, active: true) %&gt;
+              &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Reports&quot;, href: &quot;#&quot;, icon: :table) %&gt;
+              &lt;%= render FlatPack::Sidebar::Divider::Component.new %&gt;
+    
+              &lt;%= render FlatPack::Sidebar::Group::Component.new(label: &quot;Team Settings&quot;, icon: :user, default_open: false) do |group| %&gt;
+                &lt;% group.items do %&gt;
+                  &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Members&quot;, href: &quot;#&quot;, icon: :user) %&gt;
+                  &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Roles&quot;, href: &quot;#&quot;, icon: :dashboard) %&gt;
+                  &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Permissions&quot;, href: &quot;#&quot;, icon: :key) %&gt;
+                &lt;% end %&gt;
+              &lt;% end %&gt;
+            &lt;/nav&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Collapsible Group"
+  ) %>
+</section>

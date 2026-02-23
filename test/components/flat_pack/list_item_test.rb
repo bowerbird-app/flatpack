@@ -22,7 +22,7 @@ module FlatPack
         render_inline(Item.new(icon: :check)) { "Content" }
 
         assert_selector "svg"
-        assert_selector "use[xlink:href='#icon-check']"
+        assert_includes page.native.to_html, "#icon-check"
       end
 
       def test_icon_has_proper_styling

@@ -46,11 +46,11 @@ export default class extends Controller {
 
   // Highlight row on hover (optional enhancement)
   highlightRow(event) {
-    event.currentTarget.classList.add("bg-[var(--surface-muted-bg-color)]")
+    event.currentTarget.classList.add("bg-[var(--surface-muted-background-color)]")
   }
 
   unhighlightRow(event) {
-    event.currentTarget.classList.remove("bg-[var(--surface-muted-bg-color)]")
+    event.currentTarget.classList.remove("bg-[var(--surface-muted-background-color)]")
   }
 
   // Clear row with animation

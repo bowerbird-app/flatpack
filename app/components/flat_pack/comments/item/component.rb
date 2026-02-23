@@ -10,11 +10,11 @@ module FlatPack
 
         # Tailwind CSS scanning requires these classes to be present as string literals.
         # DO NOT REMOVE - These duplicates ensure CSS generation:
-        # "bg-[var(--surface-bg-color)]" "border-[var(--surface-border-color)]" "bg-zinc-50" "dark:bg-zinc-800/50" "text-[var(--surface-muted-content-color)]"
+        # "bg-[var(--surface-background-color)]" "border-[var(--surface-border-color)]" "bg-zinc-50" "dark:bg-zinc-800/50" "text-[var(--surface-muted-content-color)]"
         STATES = {
-          default: "bg-[var(--surface-bg-color)] border-[var(--surface-border-color)]",
+          default: "bg-[var(--surface-background-color)] border-[var(--surface-border-color)]",
           system: "bg-zinc-50 dark:bg-zinc-800/50 border-[var(--surface-border-color)]",
-          deleted: "bg-[var(--surface-bg-color)] border-[var(--surface-border-color)] opacity-60"
+          deleted: "bg-[var(--surface-background-color)] border-[var(--surface-border-color)] opacity-60"
         }.freeze
 
         def initialize(

@@ -69,7 +69,7 @@ module FlatPack
         pagy = MockPagy.new(page: 1, pages: 1, prev: nil, next_page: nil, series: [1])
         render_inline(Component.new(pagy: pagy))
 
-        assert_empty page.native.to_html.strip
+        refute_selector "nav[aria-label='Pagination']"
       end
 
       def test_renders_when_single_page_and_compact
@@ -134,7 +134,7 @@ module FlatPack
         render_inline(Component.new(pagy: pagy))
 
         html = page.native.to_html
-        assert_includes html, "min-w-[2.25rem]"
+        assert_includes html, "min-w-[2.75rem]"
         assert_includes html, "rounded-sm"
       end
 

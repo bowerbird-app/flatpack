@@ -1,0 +1,56 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Checkbox",
+  subtitle: "Single checkbox examples for consent and preference capture."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :text_input %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Checkbox Examples", anchor_link: true) %>
+
+  <div class="space-y-4 p-6 border border-slate-200 rounded-lg bg-white">
+    <%= render FlatPack::Checkbox::Component.new(
+      name: "terms",
+      label: "I agree to the terms and conditions",
+      required: true
+    ) %>
+
+    <%= render FlatPack::Checkbox::Component.new(
+      name: "newsletter",
+      label: "Subscribe to newsletter",
+      checked: true
+    ) %>
+
+    <%= render FlatPack::Checkbox::Component.new(
+      name: "disabled_checkbox",
+      label: "This checkbox is disabled",
+      disabled: true
+    ) %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;space-y-4 p-6 border border-slate-200 rounded-lg bg-white&quot;&gt;
+        &lt;%= render FlatPack::Checkbox::Component.new(
+          name: &quot;terms&quot;,
+          label: &quot;I agree to the terms and conditions&quot;,
+          required: true
+        ) %&gt;
+    
+        &lt;%= render FlatPack::Checkbox::Component.new(
+          name: &quot;newsletter&quot;,
+          label: &quot;Subscribe to newsletter&quot;,
+          checked: true
+        ) %&gt;
+    
+        &lt;%= render FlatPack::Checkbox::Component.new(
+          name: &quot;disabled_checkbox&quot;,
+          label: &quot;This checkbox is disabled&quot;,
+          disabled: true
+        ) %&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Checkbox Examples"
+  ) %>
+</section>

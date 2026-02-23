@@ -50,3 +50,9 @@
 
 }
 
+@keyframes fp-skeleton-shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+

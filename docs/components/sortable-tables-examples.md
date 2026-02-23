@@ -127,14 +127,14 @@ URL: /tables?sort=status&direction=asc
 ```html
 <turbo-frame id="sortable_table">
   <div class="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--surface-border-color)]">
-    <table class="w-full border-collapse bg-[var(--surface-bg-color)]">
-      <thead class="bg-[var(--surface-muted-bg-color)]">
+    <table class="w-full border-collapse bg-[var(--surface-background-color)]">
+      <thead class="bg-[var(--surface-muted-background-color)]">
         <tr>
           <th><!-- Sortable column headers --></th>
         </tr>
       </thead>
       <tbody class="divide-y divide-[var(--surface-border-color)]">
-        <tr class="hover:bg-[var(--surface-muted-bg-color)] transition-colors">
+        <tr class="hover:bg-[var(--surface-muted-background-color)] transition-colors">
           <td><!-- Table data --></td>
         </tr>
       </tbody>

@@ -31,7 +31,9 @@ module FlatPack
 
         render_inline(Component.new(pagy: pagy, mode: :infinite))
 
-        assert_selector "a[href='?page=2']", text: "Load more"
+        assert_selector "div[data-controller='flat-pack--pagination-infinite']"
+        assert_selector "div[data-flat-pack--pagination-infinite-url-value='?page=2']"
+        assert_selector "div[data-flat-pack--pagination-infinite-page-value='2']"
       end
 
       def test_appends_anchor_to_pagination_links

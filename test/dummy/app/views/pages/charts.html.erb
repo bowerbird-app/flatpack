@@ -353,16 +353,16 @@
 <!-- Features -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Examples for Features.") %>
-  <ul class="list-disc list-inside space-y-2 text-[var(--surface-content-color)]">
-    <li><strong>ApexCharts Integration:</strong> Professional data visualization library</li>
-    <li><strong>Lazy Loading:</strong> Charts load only when needed (via dynamic import)</li>
-    <li><strong>Card Wrapping:</strong> Automatic card wrapper with title, actions, footer</li>
-    <li><strong>6 Chart Types:</strong> Line, bar, area, donut, pie, and more</li>
-    <li><strong>Responsive:</strong> Charts adapt to container size</li>
-    <li><strong>Turbo Compatible:</strong> Properly cleans up on navigation</li>
-    <li><strong>Customizable:</strong> Full access to ApexCharts options</li>
-    <li><strong>Accessible:</strong> Works with screen readers</li>
-  </ul>
+  <%= render FlatPack::List::Component.new(spacing: :dense, class: "text-[var(--surface-content-color)]") do %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>ApexCharts Integration:</strong> Professional data visualization library<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Lazy Loading:</strong> Charts load only when needed (via dynamic import)<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Card Wrapping:</strong> Automatic card wrapper with title, actions, footer<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>6 Chart Types:</strong> Line, bar, area, donut, pie, and more<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Responsive:</strong> Charts adapt to container size<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Turbo Compatible:</strong> Properly cleans up on navigation<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Customizable:</strong> Full access to ApexCharts options<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Accessible:</strong> Works with screen readers<% end %>
+  <% end %>
 </section>
 
 <!-- Chart Types Reference -->

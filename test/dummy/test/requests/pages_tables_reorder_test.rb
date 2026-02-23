@@ -61,6 +61,28 @@ class PagesTablesReorderTest < ActionDispatch::IntegrationTest
     assert_match(/stale/i, payload["error"])
   end
 
+  test "returns unprocessable entity for unsupported strategy" do
+    version = DemoTableRow.where(list_key: @list_key).maximum(:updated_at).to_f.to_s
+
+    patch demo_tables_reorder_path, params: {
+      reorder: {
+        resource: "demo_table_rows",
+        strategy: "unknown_strategy",
+        scope: {list_key: @list_key},
+        version: version,
+        items: [
+          {id: @rows[0].id, position: 1}
+        ]
+      }
+    }, as: :json
+
+    assert_response :unprocessable_entity
+
+    payload = JSON.parse(response.body)
+    assert_equal false, payload["ok"]
+    assert_match(/unsupported strategy/i, payload["error"])
+  end
+
   test "returns service unavailable when demo table is missing" do
     original = DemoTableRow.method(:table_exists?)
     DemoTableRow.define_singleton_method(:table_exists?) { false }

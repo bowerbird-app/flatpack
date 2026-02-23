@@ -5,13 +5,13 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-[var(--surface-muted-bg-color)]" "text-[var(--surface-content-color)]" "border-[var(--surface-border-color)]" "bg-primary" "text-primary-text" "border-primary" "bg-success-bg" "text-success-text" "border-success-border" "bg-warning-bg" "text-warning-text" "border-warning-border" "bg-destructive-bg" "text-destructive-text" "border-destructive-border" "bg-secondary" "text-secondary-text" "border-info-border"
+      # "bg-[var(--surface-muted-background-color)]" "text-[var(--surface-content-color)]" "border-[var(--surface-border-color)]" "bg-primary" "text-primary-text" "border-primary" "bg-success-background-color" "text-success-text" "border-success-border-color" "bg-warning-background-color" "text-warning-text" "border-warning-border-color" "bg-danger-background-color" "text-danger-text-color" "border-danger-border-color" "bg-secondary" "text-secondary-text" "border-info-border"
       STYLES = {
-        default: "bg-[var(--surface-muted-bg-color)] text-[var(--surface-content-color)] border-[var(--surface-border-color)]",
+        default: "bg-[var(--surface-muted-background-color)] text-[var(--surface-content-color)] border-[var(--surface-border-color)]",
         primary: "bg-primary text-primary-text border-primary",
-        success: "bg-success-bg text-success-text border-success-border",
-        warning: "bg-warning-bg text-warning-text border-warning-border",
-        danger: "bg-destructive-bg text-destructive-text border-destructive-border",
+        success: "bg-success-background-color text-success-text border-success-border-color",
+        warning: "bg-warning-background-color text-warning-text border-warning-border-color",
+        danger: "bg-danger-background-color text-danger-text-color border-danger-border-color",
         info: "bg-secondary text-secondary-text border-info-border"
       }.freeze
 

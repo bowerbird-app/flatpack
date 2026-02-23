@@ -182,14 +182,14 @@ When an `error` parameter is provided:
 
 ### Styling
 All components use Tailwind CSS with CSS variables for theming:
-- `--color-background` - Input background
-- `--color-foreground` - Text color
-- `--color-border` - Border color
+- `--surface-background-color` - Input background
+- `--surface-content-color` - Text color
+- `--surface-border-color` - Border color
 - `--color-ring` - Focus ring color
-- `--color-destructive` - Error state color
-- `--color-muted-foreground` - Placeholder color
+- `--color-danger-border-color` - Error state border color
+- `--surface-muted-content-color` - Placeholder color
 - `--radius-md` - Border radius
-- `--transition-base` - Transition duration
+- `--duration-base` - Transition duration
 
 ## Examples
 

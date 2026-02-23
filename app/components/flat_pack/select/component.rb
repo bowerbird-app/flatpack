@@ -92,12 +92,16 @@ module FlatPack
       end
 
       def render_hidden_input
-        tag.input(
+        attrs = {
           type: "hidden",
           name: @name,
+          id: select_id,
           value: @value,
+          required: @required,
           data: {flat_pack__select_target: "hiddenInput"}
-        )
+        }
+
+        tag.input(**apply_default_validation(attrs, error_id: error_id, has_error: @error.present?, type: "custom-select-hidden"))
       end
 
       def render_trigger_button
@@ -225,7 +229,7 @@ module FlatPack
 
         attrs[:aria] = {invalid: "true", describedby: error_id} if @error
 
-        merge_attributes(**attrs.compact)
+        merge_attributes(**apply_default_validation(attrs.compact, error_id: error_id, has_error: @error.present?))
       end
 
       def wrapper_classes
@@ -245,7 +249,7 @@ module FlatPack
           "rounded-md",
           "border",
           "appearance-none",
-          "bg-[var(--surface-bg-color)]",
+          "bg-[var(--surface-background-color)]",
           "text-[var(--surface-content-color)]",
           "px-[var(--form-control-padding)] py-[var(--form-control-padding)]",
           "pr-10",
@@ -270,7 +274,7 @@ module FlatPack
           "relative w-full",
           "rounded-md",
           "border",
-          "bg-[var(--surface-bg-color)]",
+          "bg-[var(--surface-background-color)]",
           "text-[var(--surface-content-color)]",
           "px-[var(--form-control-padding)] py-[var(--form-control-padding)]",
           "pr-10",
@@ -290,11 +294,11 @@ module FlatPack
       end
 
       def dropdown_classes
-        "absolute z-10 mt-1 w-full hidden rounded-md border border-[var(--surface-border-color)] bg-[var(--surface-bg-color)] shadow-lg"
+        "absolute z-10 mt-1 w-full hidden rounded-md border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] shadow-lg"
       end
 
       def search_input_classes
-        "w-full px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-sm border border-[var(--surface-border-color)] bg-[var(--surface-bg-color)] text-[var(--surface-content-color)] focus:outline-none focus:ring-1 focus:ring-ring"
+        "w-full px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-sm border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] text-[var(--surface-content-color)] focus:outline-none focus:ring-1 focus:ring-ring"
       end
 
       def custom_option_classes(selected, disabled)
@@ -310,7 +314,7 @@ module FlatPack
         elsif selected
           "bg-primary text-white cursor-pointer"
         else
-          "hover:bg-[var(--surface-muted-bg-color)] cursor-pointer text-[var(--surface-content-color)]"
+          "hover:bg-[var(--surface-muted-background-color)] cursor-pointer text-[var(--surface-content-color)]"
         end
 
         base.join(" ")

@@ -1,0 +1,10 @@
+<%= render FlatPack::Table::Component.new(data: rows, class: "text-sm") do |table| %>
+  <% table.column(title: "Variable") do |row| %>
+    <span class="font-mono text-xs">
+      <%= sanitize(row[:variable], tags: %w[code], attributes: %w[class]) %>
+    </span>
+  <% end %>
+  <% table.column(title: "What it controls") do |row| %>
+    <%= sanitize(row[:description], tags: %w[code], attributes: %w[class]) %>
+  <% end %>
+<% end %>

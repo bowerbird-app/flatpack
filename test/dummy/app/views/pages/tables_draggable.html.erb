@@ -1,0 +1,41 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Draggable Table Demo",
+  subtitle: "Reorder rows with drag-and-drop and persist positions to the backend."
+) %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Draggable Rows", anchor_link: true, subtitle: "Drag by handle and drop to reorder.") %>
+  <p class="text-(--surface-muted-content-color) mb-4">
+    The table emits a generic reorder payload and updates row positions server-side.
+  </p>
+
+  <%= render FlatPack::Table::Component.new(
+    data: @demo_table_rows,
+    draggable_rows: true,
+    reorder: {
+      url: demo_tables_reorder_path,
+      version: @demo_table_version,
+      scope: { list_key: DemoTableRow::DEFAULT_LIST_KEY }
+    }
+  ) do |table| %>
+    <% table.column(title: "Reorder", html: ->(_row) { "<span aria-hidden=\"true\" class=\"inline-flex text-[var(--surface-muted-content-color)] cursor-grab\">⋮⋮</span>".html_safe }) %>
+    <% table.column(title: "Task", html: ->(row) { row.name }) %>
+    <% table.column(title: "Status", html: ->(row) { row.status.capitalize }) %>
+    <% table.column(title: "Priority", html: ->(row) { row.priority.capitalize }) %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      {
+        reorder: {
+          resource: "demo_table_rows",
+          strategy: "dense_integer",
+          scope: { list_key: "tables-demo" },
+          version: "1739990000.12",
+          items: [{ id: 1, position: 1 }, { id: 2, position: 2 }]
+        }
+      }
+    CODE
+    class: "mt-4"
+  ) %>
+</section>

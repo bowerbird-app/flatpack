@@ -104,7 +104,7 @@ export default class extends Controller {
 
   createFileItem(file, index) {
     const div = document.createElement("div")
-    div.className = "flex items-center justify-between p-3 bg-[var(--surface-bg-color)] border border-[var(--surface-border-color)] rounded-[var(--radius-md)]"
+    div.className = "flex items-center justify-between p-3 bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] rounded-[var(--radius-md)]"
 
     const fileInfo = document.createElement("div")
     fileInfo.className = "flex items-center flex-1 min-w-0"

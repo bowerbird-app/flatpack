@@ -1,0 +1,27 @@
+<div class="container mx-auto max-w-4xl p-4">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Chat::Composer",
+    subtitle: "Message input area with textarea, attachments slot, and actions slot."
+  ) %>
+
+  <div class="mt-6 rounded-lg border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-6">
+    <%= render FlatPack::Chat::Composer::Component.new do |composer| %>
+      <% composer.with_attachments do %>
+        <%= render FlatPack::Chat::Attachment::Component.new(type: :file, name: "draft-copy.txt", meta: "18 KB") %>
+      <% end %>
+
+      <% composer.with_textarea do %>
+        <%= render FlatPack::Chat::Textarea::Component.new(
+          name: "composer[body]",
+          placeholder: "Type your update...",
+          autogrow: true,
+          submit_on_enter: false
+        ) %>
+      <% end %>
+
+      <% composer.with_actions do %>
+        <%= render FlatPack::Chat::SendButton::Component.new %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

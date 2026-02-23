@@ -1,0 +1,71 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Sidebar Grouped Navigation",
+  subtitle: "Grouping sidebar items using divider and group sections."
+) %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Grouped Sidebar", anchor_link: true) %>
+  <div class="rounded-lg overflow-hidden h-[460px] mb-4">
+    <%= render FlatPack::Sidebar::Component.new(class: "border border-[var(--surface-border-color)] rounded-lg") do |sidebar| %>
+      <% sidebar.header do %>
+        <%= render FlatPack::Sidebar::Header::Component.new(
+          brand_abbr: "FP",
+          title: "Docs",
+          subtitle: "Navigation",
+          collapsible: false
+        ) %>
+      <% end %>
+
+      <% sidebar.items do %>
+        <nav class="py-4 space-y-1">
+          <%= render FlatPack::Sidebar::Item::Component.new(label: "Overview", href: "#", icon: :home, active: true) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(label: "Getting Started", href: "#", icon: :box) %>
+          <%= render FlatPack::Sidebar::Divider::Component.new %>
+
+          <%= render FlatPack::Sidebar::Group::Component.new(label: "Components", icon: :dashboard, default_open: true) do |group| %>
+            <% group.items do %>
+              <%= render FlatPack::Sidebar::Item::Component.new(label: "Buttons", href: "#", icon: :square) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(label: "Inputs", href: "#", icon: :type) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(label: "Tables", href: "#", icon: :table) %>
+            <% end %>
+          <% end %>
+        </nav>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;rounded-lg overflow-hidden h-[460px] mb-4&quot;&gt;
+        &lt;%= render FlatPack::Sidebar::Component.new(class: &quot;border border-[var(--surface-border-color)] rounded-lg&quot;) do |sidebar| %&gt;
+          &lt;% sidebar.header do %&gt;
+            &lt;%= render FlatPack::Sidebar::Header::Component.new(
+              brand_abbr: &quot;FP&quot;,
+              title: &quot;Docs&quot;,
+              subtitle: &quot;Navigation&quot;,
+              collapsible: false
+            ) %&gt;
+          &lt;% end %&gt;
+    
+          &lt;% sidebar.items do %&gt;
+            &lt;nav class=&quot;py-4 space-y-1&quot;&gt;
+              &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Overview&quot;, href: &quot;#&quot;, icon: :home, active: true) %&gt;
+              &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Getting Started&quot;, href: &quot;#&quot;, icon: :box) %&gt;
+              &lt;%= render FlatPack::Sidebar::Divider::Component.new %&gt;
+    
+              &lt;%= render FlatPack::Sidebar::Group::Component.new(label: &quot;Components&quot;, icon: :dashboard, default_open: true) do |group| %&gt;
+                &lt;% group.items do %&gt;
+                  &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Buttons&quot;, href: &quot;#&quot;, icon: :square) %&gt;
+                  &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Inputs&quot;, href: &quot;#&quot;, icon: :type) %&gt;
+                  &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Tables&quot;, href: &quot;#&quot;, icon: :table) %&gt;
+                &lt;% end %&gt;
+              &lt;% end %&gt;
+            &lt;/nav&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Grouped Sidebar"
+  ) %>
+</section>

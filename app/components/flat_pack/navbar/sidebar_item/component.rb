@@ -81,7 +81,7 @@ module FlatPack
             "w-full px-3 py-2 rounded-md",
             "text-sm font-medium",
             "transition-colors duration-200",
-            "hover:bg-[var(--surface-muted-bg-color)]",
+            "hover:bg-[var(--surface-muted-background-color)]",
             active_classes
           )
         end

@@ -254,7 +254,7 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Flash Messages Pattern", anchor_link: true, subtitle: "Examples for Flash Messages Pattern.") %>
     <div class="space-y-4 mb-4">
-      <div class="p-4 bg-[var(--surface-muted-bg-color)] rounded">
+      <div class="p-4 bg-[var(--surface-muted-background-color)] rounded">
         <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">Example implementation for Rails flash messages:</p>
         <%= render FlatPack::CodeBlock::Component.new(
           code: CGI.unescapeHTML(<<~'CODE'),
@@ -310,10 +310,38 @@
         dismissible: true
       ) %>
     </div>
-    <button class="px-4 py-2 bg-primary text-primary-text rounded-md" 
-            onclick="window.location.reload()">
-      Reset Demo
-    </button>
+    <%= render FlatPack::Button::Component.new(
+      text: "Reset Demo",
+      style: :primary,
+      onclick: "window.location.reload()"
+    ) %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;p class=&quot;mb-4 text-[var(--surface-muted-content-color)]&quot;&gt;Click the dismiss button (X) on the alerts below to see the fade-out animation:&lt;/p&gt;
+        &lt;div class=&quot;space-y-4 mb-4&quot; id=&quot;dismissible-demo&quot;&gt;
+          &lt;%= render FlatPack::Alert::Component.new(
+            title: &quot;Click to Dismiss&quot;,
+            description: &quot;This alert will fade out and be removed from the page.&quot;,
+            style: :info,
+            dismissible: true
+          ) %&gt;
+          &lt;%= render FlatPack::Alert::Component.new(
+            title: &quot;Try Me Too&quot;,
+            description: &quot;Watch the smooth animation as this alert disappears.&quot;,
+            style: :success,
+            dismissible: true
+          ) %&gt;
+        &lt;/div&gt;
+        &lt;%= render FlatPack::Button::Component.new(
+          text: &quot;Reset Demo&quot;,
+          style: :primary,
+          onclick: &quot;window.location.reload()&quot;
+        ) %&gt;
+    CODE
+    language: "erb",
+    title: "Interactive Demo"
+  ) %>
   </section>
 
   <!-- Documentation Link -->

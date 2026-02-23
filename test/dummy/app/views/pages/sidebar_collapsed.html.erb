@@ -1,0 +1,51 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Sidebar Collapsed",
+  subtitle: "Icon-only sidebar state for compact layouts."
+) %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Icon-Only Sidebar", anchor_link: true) %>
+  <div class="rounded-lg overflow-hidden h-[360px] w-16 mb-4">
+    <%= render FlatPack::Sidebar::Component.new(style: "width: 4rem", class: "border border-[var(--surface-border-color)] rounded-lg") do |sidebar| %>
+      <% sidebar.header do %>
+        <div class="p-4 flex justify-center">
+          <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold">FP</div>
+        </div>
+      <% end %>
+
+      <% sidebar.items do %>
+        <nav class="py-2 space-y-1">
+          <%= render FlatPack::Sidebar::Item::Component.new(label: "Overview", href: "#", icon: :home, collapsed: true, active: true) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(label: "Tables", href: "#", icon: :table, collapsed: true) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(label: "Alerts", href: "#", icon: :alert, collapsed: true) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(label: "Settings", href: "#", icon: :dashboard, collapsed: true) %>
+        </nav>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;rounded-lg overflow-hidden h-[360px] w-16 mb-4&quot;&gt;
+        &lt;%= render FlatPack::Sidebar::Component.new(style: &quot;width: 4rem&quot;, class: &quot;border border-[var(--surface-border-color)] rounded-lg&quot;) do |sidebar| %&gt;
+          &lt;% sidebar.header do %&gt;
+            &lt;div class=&quot;p-4 flex justify-center&quot;&gt;
+              &lt;div class=&quot;w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold&quot;&gt;FP&lt;/div&gt;
+            &lt;/div&gt;
+          &lt;% end %&gt;
+    
+          &lt;% sidebar.items do %&gt;
+            &lt;nav class=&quot;py-2 space-y-1&quot;&gt;
+              &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Overview&quot;, href: &quot;#&quot;, icon: :home, collapsed: true, active: true) %&gt;
+              &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Tables&quot;, href: &quot;#&quot;, icon: :table, collapsed: true) %&gt;
+              &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Alerts&quot;, href: &quot;#&quot;, icon: :alert, collapsed: true) %&gt;
+              &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Settings&quot;, href: &quot;#&quot;, icon: :dashboard, collapsed: true) %&gt;
+            &lt;/nav&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Icon-Only Sidebar"
+  ) %>
+</section>
