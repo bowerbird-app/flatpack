@@ -63,10 +63,10 @@ module FlatPack
           content = content_tag(:div, class: file_container_classes) do
             safe_join([
               render_file_icon,
-              content_tag(:div, class: "flex-1 min-w-0") do
+              content_tag(:div, class: "min-w-0") do
                 safe_join([
-                  content_tag(:div, @name, class: "text-sm font-medium text-[var(--chat-attachment-text-color)] truncate"),
-                  (@meta ? content_tag(:div, @meta, class: "text-xs text-[var(--chat-attachment-meta-color)]") : nil)
+                  content_tag(:div, @name, class: "text-sm font-medium text-[var(--chat-attachment-text-color)] truncate max-w-[32ch]"),
+                  (@meta ? content_tag(:div, @meta, class: "text-xs text-[var(--chat-attachment-meta-color)] truncate max-w-[32ch]") : nil)
                 ].compact)
               end,
               render_download_icon
@@ -123,7 +123,7 @@ module FlatPack
             href: @href,
             target: "_blank",
             rel: "noopener noreferrer",
-            class: "block"
+            class: "inline-block max-w-full align-top"
           )
         end
 
@@ -138,7 +138,7 @@ module FlatPack
 
         def file_container_classes
           classes(
-            "flex items-center gap-3",
+            "inline-flex w-fit max-w-full items-center gap-3",
             "border border-[var(--chat-attachment-border-color)]",
             "rounded-lg",
             "p-3",

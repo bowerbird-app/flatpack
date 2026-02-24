@@ -217,7 +217,7 @@
                 action: "submit->flat-pack--chat-sender#submit",
                 flat_pack__chat_sender_thread_selector_value: "[data-flat-pack--chat-scroll-target='messages']"
               } do %>
-            <%= render FlatPack::Chat::Composer::Component.new(style: "border-top: 0") do |composer| %>
+            <%= render FlatPack::Chat::Composer::Component.new do |composer| %>
               <% composer.left do %>
                 <%= render FlatPack::Button::Dropdown::Component.new(
                   text: "",
@@ -277,7 +277,7 @@
                   action: &quot;submit-&gt;flat-pack--chat-sender#submit&quot;,
                   flat_pack__chat_sender_thread_selector_value: &quot;[data-flat-pack--chat-scroll-target='messages']&quot;
                 } do %&gt;
-            &lt;%= render FlatPack::Chat::Composer::Component.new(style: &quot;border-top: 0&quot;) do |composer| %&gt;
+            &lt;%= render FlatPack::Chat::Composer::Component.new do |composer| %&gt;
               &lt;% composer.left do %&gt;
                 &lt;%= render FlatPack::Button::Dropdown::Component.new(
                   text: &quot;&quot;,

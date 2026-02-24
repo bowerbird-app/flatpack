@@ -123,10 +123,10 @@ module FlatPack
           assert_selector "div[data-controller='test']"
         end
 
-        def test_has_border_top
+        def test_does_not_have_border_top
           render_inline(Component.new)
 
-          assert_selector "div.border-t"
+          assert_no_selector "div.border-t"
         end
 
         def test_uses_theme_token_for_corner_radius

@@ -7,21 +7,14 @@
   <%= render "pages/component_method_variables_table", component: :chat_textarea, anchor: "component-method-variables" %>
 
   <section class="mb-12">
-    <%= render FlatPack::SectionTitle::Component.new(title: "Demo", anchor_link: true, subtitle: "Textarea variants for composer behavior.") %>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Demo: Auto-grow + Submit on Enter", anchor_link: true, subtitle: "Textarea starts as a single line, auto-grows, and submits on Enter.") %>
 
-    <div class="mb-4 mt-6 space-y-4 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
+    <div class="mb-4 mt-6 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
       <%= render FlatPack::Chat::Textarea::Component.new(
         name: "message[default]",
         placeholder: "Auto-grow and submit on Enter",
         autogrow: true,
         submit_on_enter: true
-      ) %>
-
-      <%= render FlatPack::Chat::Textarea::Component.new(
-        name: "message[multiline]",
-        placeholder: "Multiline mode without submit on Enter",
-        autogrow: true,
-        submit_on_enter: false
       ) %>
     </div>
 
@@ -35,7 +28,26 @@
           autogrow: true,
           submit_on_enter: true
         ) %&gt;
+      CODE
+    ) %>
+  </section>
 
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Demo: Multiline (No Submit on Enter)", anchor_link: true, subtitle: "Textarea allows Enter for new lines and does not auto-submit.") %>
+
+    <div class="mb-4 mt-6 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
+      <%= render FlatPack::Chat::Textarea::Component.new(
+        name: "message[multiline]",
+        placeholder: "Multiline mode without submit on Enter",
+        autogrow: true,
+        submit_on_enter: false
+      ) %>
+    </div>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      code: CGI.unescapeHTML(<<~'CODE')
         &lt;%= render FlatPack::Chat::Textarea::Component.new(
           name: "message[multiline]",
           placeholder: "Multiline mode without submit on Enter",
