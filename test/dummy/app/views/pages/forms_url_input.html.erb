@@ -8,24 +8,27 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "URL Input Examples", anchor_link: true) %>
 
-  <div class="space-y-4 p-6 border border-slate-200 rounded-lg bg-white">
-    <%= render FlatPack::UrlInput::Component.new(
-      name: "website",
-      label: "Website URL",
-      placeholder: "https://example.com"
-    ) %>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body(class: "space-y-[var(--stack-gap-md)]") do %>
+      <%= render FlatPack::UrlInput::Component.new(
+        name: "website",
+        label: "Website URL",
+        placeholder: "https://example.com"
+      ) %>
 
-    <%= render FlatPack::UrlInput::Component.new(
-      name: "website_error",
-      label: "Website (with error)",
-      value: "not-a-url",
-      error: "Please enter a valid URL"
-    ) %>
-  </div>
+      <%= render FlatPack::UrlInput::Component.new(
+        name: "website_error",
+        label: "Website (with error)",
+        value: "not-a-url",
+        error: "Please enter a valid URL"
+      ) %>
+    <% end %>
+  <% end %>
 
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE'),
-      &lt;div class=&quot;space-y-4 p-6 border border-slate-200 rounded-lg bg-white&quot;&gt;
+      &lt;%= render FlatPack::Card::Component.new do |card| %&gt;
+        &lt;% card.body do %&gt;
         &lt;%= render FlatPack::UrlInput::Component.new(
           name: &quot;website&quot;,
           label: &quot;Website URL&quot;,
@@ -38,7 +41,8 @@
           value: &quot;not-a-url&quot;,
           error: &quot;Please enter a valid URL&quot;
         ) %&gt;
-      &lt;/div&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
     CODE
     language: "erb",
     title: "URL Input Examples"

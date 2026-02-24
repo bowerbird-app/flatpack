@@ -1,5 +1,32 @@
 # List and List Item Components
 
+## Purpose
+Render consistent semantic lists and list items.
+
+## When to use
+Use List for structured collections where spacing, separators, and optional leading visuals should be standardized.
+
+## Class
+- Primary: `FlatPack::List::Component`
+
+## Props
+See the `Props` section below for supported arguments and defaults.
+
+## Slots
+See item composition examples below.
+
+## Variants
+See ordered/unordered and style variants below.
+
+## Example
+Start with `Basic Usage` below.
+
+## Accessibility
+See accessibility notes below for semantic list markup.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+
 The List component renders semantic lists with optional ordered/unordered styling. List Items provide consistent spacing and optional icons.
 
 ## Basic Usage

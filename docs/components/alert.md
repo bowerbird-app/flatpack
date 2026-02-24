@@ -1,5 +1,33 @@
 # Alert Component
 
+## Purpose
+Display prominent inline status and feedback messages.
+
+## When to use
+Use Alert for success, warning, error, or informational messages that need immediate attention.
+
+## Class
+- Primary: `FlatPack::Alert::Component`
+
+## Props
+See the `Props` section below for supported arguments and defaults.
+
+## Slots
+See rich content examples below for block/slot usage.
+
+## Variants
+See `Variants` below (`:info`, `:success`, `:warning`, `:danger`).
+
+## Example
+Start with `Basic Usage` below.
+
+## Accessibility
+See accessibility notes below, including dismiss controls and labels.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+- Stimulus `alert` controller when using dismissible behavior.
+
 The Alert component displays prominent notifications and messages for user feedback (success, errors, warnings, info).
 
 ## Basic Usage

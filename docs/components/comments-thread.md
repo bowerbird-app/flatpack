@@ -1,5 +1,32 @@
 # Comments Thread Component
 
+## Purpose
+Compose full threaded comment experiences from header, composer, and comment list regions.
+
+## When to use
+Use Comments Thread as the root wrapper for comment UIs with nested replies.
+
+## Class
+- Primary: `FlatPack::Comments::Thread::Component`
+
+## Props
+See the `Props` section below for supported arguments and defaults.
+
+## Slots
+See slot sections below for header, composer, list, and footer composition.
+
+## Variants
+See variant options below for compact/default rendering.
+
+## Example
+Start with `Basic Usage` below.
+
+## Accessibility
+See accessibility notes below for structure and keyboard flow.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+
 A container component for managing comment threads with header, composer, comments list, and footer sections.
 
 ## Basic Usage

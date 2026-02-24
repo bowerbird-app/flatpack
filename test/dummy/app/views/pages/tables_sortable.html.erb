@@ -20,14 +20,7 @@
     <% table.column(title: "Name", html: ->(user) { user.name }, sortable: true, sort_key: :name) %>
     <% table.column(title: "Email", html: ->(user) { user.email }, sortable: true, sort_key: :email) %>
     <% table.column(title: "Category", html: ->(user) { user.category.to_s.titleize }, sortable: true, sort_key: :category) %>
-    <% table.column(title: "Status", sortable: true, sort_key: :status, html: ->(user) {
-      badge_class = case user.status
-      when "active" then "bg-green-100 text-green-800"
-      when "inactive" then "bg-gray-100 text-gray-800"
-      else "bg-yellow-100 text-yellow-800"
-      end
-      "<span class=\"px-2 py-1 text-xs rounded #{badge_class}\">#{user.status.capitalize}</span>".html_safe
-    }) %>
+    <% table.column(title: "Status", sortable: true, sort_key: :status, html: ->(user) { render FlatPack::Badge::Component.new(text: user.status.capitalize, size: :sm) }) %>
     <% table.column(title: "Views", sortable: true, sort_key: :views_count, html: ->(user) { number_with_delimiter(user.views_count) }) %>
     <% table.column(title: "Published", sortable: true, sort_key: :published_at, html: ->(user) { user.published_at.strftime("%b %d, %Y") }) %>
   <% end %>
@@ -49,14 +42,7 @@
         &lt;% table.column(title: &quot;Name&quot;, html: -&gt;(user) { user.name }, sortable: true, sort_key: :name) %&gt;
         &lt;% table.column(title: &quot;Email&quot;, html: -&gt;(user) { user.email }, sortable: true, sort_key: :email) %&gt;
         &lt;% table.column(title: &quot;Category&quot;, html: -&gt;(user) { user.category.to_s.titleize }, sortable: true, sort_key: :category) %&gt;
-        &lt;% table.column(title: &quot;Status&quot;, sortable: true, sort_key: :status, html: -&gt;(user) {
-          badge_class = case user.status
-          when &quot;active&quot; then &quot;bg-green-100 text-green-800&quot;
-          when &quot;inactive&quot; then &quot;bg-gray-100 text-gray-800&quot;
-          else &quot;bg-yellow-100 text-yellow-800&quot;
-          end
-          &quot;&lt;span class=\&quot;px-2 py-1 text-xs rounded #{badge_class}\&quot;&gt;#{user.status.capitalize}&lt;/span&gt;&quot;.html_safe
-        }) %&gt;
+        &lt;% table.column(title: &quot;Status&quot;, sortable: true, sort_key: :status, html: -&gt;(user) { render FlatPack::Badge::Component.new(text: user.status.capitalize, size: :sm) }) %&gt;
         &lt;% table.column(title: &quot;Views&quot;, sortable: true, sort_key: :views_count, html: -&gt;(user) { number_with_delimiter(user.views_count) }) %&gt;
         &lt;% table.column(title: &quot;Published&quot;, sortable: true, sort_key: :published_at, html: -&gt;(user) { user.published_at.strftime(&quot;%b %d, %Y&quot;) }) %&gt;
       &lt;% end %&gt;
@@ -79,14 +65,7 @@
     <% table.column(title: "Name", html: ->(user) { user.name }, sortable: true, sort_key: :name) %>
     <% table.column(title: "Email", html: ->(user) { user.email }, sortable: true, sort_key: :email) %>
     <% table.column(title: "Category", html: ->(user) { user.category.to_s.titleize }, sortable: true, sort_key: :category) %>
-    <% table.column(title: "Status", sortable: true, sort_key: :status, html: ->(user) {
-      badge_class = case user.status
-      when "active" then "bg-green-100 text-green-800"
-      when "inactive" then "bg-gray-100 text-gray-800"
-      else "bg-yellow-100 text-yellow-800"
-      end
-      "<span class=\"px-2 py-1 text-xs rounded #{badge_class}\">#{user.status.capitalize}</span>".html_safe
-    }) %>
+    <% table.column(title: "Status", sortable: true, sort_key: :status, html: ->(user) { render FlatPack::Badge::Component.new(text: user.status.capitalize, size: :sm) }) %>
     <% table.column(title: "Views", sortable: true, sort_key: :views_count, html: ->(user) { number_with_delimiter(user.views_count) }) %>
     <% table.column(title: "Published", sortable: true, sort_key: :published_at, html: ->(user) { user.published_at.strftime("%b %d, %Y") }) %>
   <% end %>
@@ -104,14 +83,7 @@
         &lt;% table.column(title: &quot;Name&quot;, html: -&gt;(user) { user.name }, sortable: true, sort_key: :name) %&gt;
         &lt;% table.column(title: &quot;Email&quot;, html: -&gt;(user) { user.email }, sortable: true, sort_key: :email) %&gt;
         &lt;% table.column(title: &quot;Category&quot;, html: -&gt;(user) { user.category.to_s.titleize }, sortable: true, sort_key: :category) %&gt;
-        &lt;% table.column(title: &quot;Status&quot;, sortable: true, sort_key: :status, html: -&gt;(user) {
-          badge_class = case user.status
-          when &quot;active&quot; then &quot;bg-green-100 text-green-800&quot;
-          when &quot;inactive&quot; then &quot;bg-gray-100 text-gray-800&quot;
-          else &quot;bg-yellow-100 text-yellow-800&quot;
-          end
-          &quot;&lt;span class=\&quot;px-2 py-1 text-xs rounded #{badge_class}\&quot;&gt;#{user.status.capitalize}&lt;/span&gt;&quot;.html_safe
-        }) %&gt;
+        &lt;% table.column(title: &quot;Status&quot;, sortable: true, sort_key: :status, html: -&gt;(user) { render FlatPack::Badge::Component.new(text: user.status.capitalize, size: :sm) }) %&gt;
         &lt;% table.column(title: &quot;Views&quot;, sortable: true, sort_key: :views_count, html: -&gt;(user) { number_with_delimiter(user.views_count) }) %&gt;
         &lt;% table.column(title: &quot;Published&quot;, sortable: true, sort_key: :published_at, html: -&gt;(user) { user.published_at.strftime(&quot;%b %d, %Y&quot;) }) %&gt;
       &lt;% end %&gt;

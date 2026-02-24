@@ -8,23 +8,26 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Search Input Examples", anchor_link: true) %>
 
-  <div class="space-y-4 p-6 border border-slate-200 rounded-lg bg-white">
-    <%= render FlatPack::SearchInput::Component.new(
-      name: "search",
-      label: "Search",
-      placeholder: "Search for anything..."
-    ) %>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body(class: "space-y-[var(--stack-gap-md)]") do %>
+      <%= render FlatPack::SearchInput::Component.new(
+        name: "search",
+        label: "Search",
+        placeholder: "Search for anything..."
+      ) %>
 
-    <%= render FlatPack::SearchInput::Component.new(
-      name: "search_with_value",
-      label: "Search (with value)",
-      value: "sample query"
-    ) %>
-  </div>
+      <%= render FlatPack::SearchInput::Component.new(
+        name: "search_with_value",
+        label: "Search (with value)",
+        value: "sample query"
+      ) %>
+    <% end %>
+  <% end %>
 
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE'),
-      &lt;div class=&quot;space-y-4 p-6 border border-slate-200 rounded-lg bg-white&quot;&gt;
+      &lt;%= render FlatPack::Card::Component.new do |card| %&gt;
+        &lt;% card.body do %&gt;
         &lt;%= render FlatPack::SearchInput::Component.new(
           name: &quot;search&quot;,
           label: &quot;Search&quot;,
@@ -36,7 +39,8 @@
           label: &quot;Search (with value)&quot;,
           value: &quot;sample query&quot;
         ) %&gt;
-      &lt;/div&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
     CODE
     language: "erb",
     title: "Search Input Examples"

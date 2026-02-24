@@ -54,6 +54,7 @@ module FlatPack
 
         assert_selector "span[aria-hidden='true']"
         assert_includes page.native.to_html, "bg-[var(--avatar-status-online-color)]"
+        assert_includes page.native.to_html, "overflow-visible"
       end
 
       def test_renders_all_status_types
@@ -68,6 +69,7 @@ module FlatPack
         render_inline(Component.new(name: "User"))
 
         refute_selector "span[aria-hidden='true']"
+        assert_includes page.native.to_html, "overflow-hidden"
       end
 
       def test_wraps_in_link_when_href_present

@@ -1,5 +1,32 @@
 # Breadcrumb Component
 
+## Purpose
+Show hierarchical navigation context and links back to parent pages.
+
+## When to use
+Use Breadcrumb on nested pages so users can understand location and navigate upward quickly.
+
+## Class
+- Primary: `FlatPack::Breadcrumb::Component`
+
+## Props
+See the `Props` section below for supported arguments and defaults.
+
+## Slots
+See item slot patterns below for breadcrumb entries.
+
+## Variants
+See separator and behavior variants below.
+
+## Example
+Start with `Basic Usage` below.
+
+## Accessibility
+See accessibility notes below for navigation semantics and current-page handling.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+
 A navigation component that shows the user's current location in the site hierarchy and allows them to navigate back to parent pages.
 
 The Breadcrumb component follows Flatpack's patterns with `renders_many :items` for flexible composition. It provides multiple separator styles, support for icons, item collapsing, and full accessibility compliance.

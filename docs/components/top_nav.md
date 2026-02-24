@@ -1,5 +1,32 @@
 # TopNav Component
 
+## Purpose
+Provide a top navigation bar with composable left, center, and right regions.
+
+## When to use
+Use TopNav in app shells for global actions, title context, and user controls.
+
+## Class
+- Primary: `FlatPack::TopNav::Component`
+
+## Props
+See the `Props` section below for supported arguments and defaults.
+
+## Slots
+See left/center/right slot composition below.
+
+## Variants
+See style and layout variants below.
+
+## Example
+Start with `Basic Usage` below.
+
+## Accessibility
+See accessibility notes below for landmarks and control labeling.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+
 The TopNav component provides a sticky header bar with left, center, and right sections for navigation and actions.
 
 ## Features

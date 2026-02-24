@@ -1,5 +1,33 @@
 # Chart Component
 
+## Purpose
+Render interactive charts with a FlatPack component wrapper.
+
+## When to use
+Use Chart for dashboards and analytics views that need configurable data visualization.
+
+## Class
+- Primary: `FlatPack::Chart::Component`
+
+## Props
+See the `Props` section below for supported arguments and defaults.
+
+## Slots
+See examples below for optional slot content and surrounding layout composition.
+
+## Variants
+See chart-type and configuration variants below.
+
+## Example
+Start with `Basic Usage` below.
+
+## Accessibility
+See accessibility and labeling considerations below.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+- ApexCharts (configured via importmap/CDN as documented below).
+
 The Chart component provides easy integration with ApexCharts for rendering interactive, beautiful charts in your Rails application.
 
 ## Installation

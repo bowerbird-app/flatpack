@@ -4,7 +4,7 @@
     subtitle: "A complete commenting system with threads, items, composer, and replies."
   ) %>
 
-  <%= render "pages/component_method_variables_table", component: :comments_thread %>
+  <%= render "pages/component_method_variables_table", components: [:comments_thread, :comments_item, :comments_composer] %>
 
   <%
     erb_open = "<" + "%"

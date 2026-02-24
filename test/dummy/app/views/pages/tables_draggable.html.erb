@@ -20,22 +20,28 @@
   ) do |table| %>
     <% table.column(title: "Reorder", html: ->(_row) { "<span aria-hidden=\"true\" class=\"inline-flex text-[var(--surface-muted-content-color)] cursor-grab\">⋮⋮</span>".html_safe }) %>
     <% table.column(title: "Task", html: ->(row) { row.name }) %>
-    <% table.column(title: "Status", html: ->(row) { row.status.capitalize }) %>
+    <% table.column(title: "Status", html: ->(row) { render FlatPack::Badge::Component.new(text: row.status.capitalize, size: :sm) }) %>
     <% table.column(title: "Priority", html: ->(row) { row.priority.capitalize }) %>
   <% end %>
 
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE'),
-      {
+      &lt;%= render FlatPack::Table::Component.new(
+        data: @demo_table_rows,
+        draggable_rows: true,
         reorder: {
-          resource: "demo_table_rows",
-          strategy: "dense_integer",
-          scope: { list_key: "tables-demo" },
-          version: "1739990000.12",
-          items: [{ id: 1, position: 1 }, { id: 2, position: 2 }]
+          url: demo_tables_reorder_path,
+          version: @demo_table_version,
+          scope: { list_key: DemoTableRow::DEFAULT_LIST_KEY }
         }
-      }
+      ) do |table| %&gt;
+        &lt;% table.column(title: &quot;Reorder&quot;, html: -&gt;(_row) { &quot;&lt;span aria-hidden=\&quot;true\&quot; class=\&quot;inline-flex text-[var(--surface-muted-content-color)] cursor-grab\&quot;&gt;⋮⋮&lt;/span&gt;&quot;.html_safe }) %&gt;
+        &lt;% table.column(title: &quot;Task&quot;, html: -&gt;(row) { row.name }) %&gt;
+        &lt;% table.column(title: &quot;Status&quot;, html: -&gt;(row) { render FlatPack::Badge::Component.new(text: row.status.capitalize, size: :sm) }) %&gt;
+        &lt;% table.column(title: &quot;Priority&quot;, html: -&gt;(row) { row.priority.capitalize }) %&gt;
+      &lt;% end %&gt;
     CODE
-    class: "mt-4"
+    language: "erb",
+    title: "Draggable Rows"
   ) %>
 </section>

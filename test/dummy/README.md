@@ -108,7 +108,8 @@ FlatPack's Stimulus controllers are pinned in `config/importmap.rb`:
 ```ruby
 pin_all_from FlatPack::Engine.root.join("app/javascript/flat_pack/controllers"), 
              under: "controllers/flat_pack", 
-             to: "flat_pack/controllers"
+             to: "flat_pack/controllers",
+             preload: false
 ```
 
 ### 5. Engine Mount

@@ -1,5 +1,33 @@
 # Card Component
 
+## Purpose
+Provide a flexible container for grouped content sections.
+
+## When to use
+Use Card to structure related content with optional header, body, footer, and media.
+
+## Class
+- Primary: `FlatPack::Card::Component`
+- Related classes: `FlatPack::Card::Stat::Component`
+
+## Props
+See the `Props` section below for supported arguments and defaults.
+
+## Slots
+See slot sections below (`header`, `body`, `footer`, `media`).
+
+## Variants
+See style, hover, and clickable variants below.
+
+## Example
+Start with `Simple Card` under `Basic Usage` below.
+
+## Accessibility
+See accessibility notes below for interactive cards and semantic structure.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+
 The Card component renders a flexible container for displaying content with support for slots, styles, and clickable variants.
 
 ## Basic Usage

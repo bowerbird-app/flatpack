@@ -11,6 +11,7 @@ module FlatPack
           icon: nil,
           default_open: false,
           collapsed: false,
+          group_id: nil,
           **system_arguments
         )
           super(**system_arguments)
@@ -18,6 +19,7 @@ module FlatPack
           @icon = icon
           @default_open = default_open
           @collapsed = collapsed
+          @group_id = resolved_group_id(group_id)
         end
 
         def items(**args, &block)
@@ -91,8 +93,16 @@ module FlatPack
         def group_data
           {
             controller: "flat-pack--sidebar-group",
-            "flat-pack--sidebar-group-default-open-value": @default_open
+            "flat-pack--sidebar-group-default-open-value": @default_open,
+            "flat-pack--sidebar-group-group-id-value": @group_id
           }
+        end
+
+        def resolved_group_id(explicit_group_id)
+          raw_group_id = explicit_group_id.presence || @label.to_s
+          normalized = raw_group_id.parameterize
+
+          normalized.presence || "group"
         end
 
         def group_classes

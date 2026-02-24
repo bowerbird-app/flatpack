@@ -1,5 +1,32 @@
 # Progress Bar Component
 
+## Purpose
+Display visual progress for tasks, uploads, and multi-step flows.
+
+## When to use
+Use Progress when users need a clear indicator of completion percentage or current status.
+
+## Class
+- Primary: `FlatPack::Progress::Component`
+
+## Props
+See the `Props` section below for supported arguments and defaults.
+
+## Slots
+Not applicable; Progress is primarily prop-driven.
+
+## Variants
+See style and size variants below.
+
+## Example
+Start with `Basic Usage` below.
+
+## Accessibility
+See accessibility notes below for `aria` progress semantics.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+
 The Progress Bar component displays task completion or loading progress with customizable variants and sizes.
 
 ## Basic Usage

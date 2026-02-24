@@ -3,18 +3,15 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = ["panel", "button", "chevron"]
   static values = {
-    defaultOpen: Boolean
+    defaultOpen: Boolean,
+    groupId: String
   }
 
   connect() {
-    this.isOpen = this.defaultOpenValue
-
-    // Apply initial state
-    if (this.isOpen) {
-      this.open()
-    } else {
-      this.close()
-    }
+    this.suppressInitialTransitions()
+    this.isOpen = this.initialOpenState()
+    this.applyInitialState()
+    this.restoreTransitionsAfterPaint()
   }
 
   toggle() {
@@ -27,6 +24,7 @@ export default class extends Controller {
 
   open() {
     this.isOpen = true
+    this.persistState()
 
     // Update aria-expanded
     if (this.hasButtonTarget) {
@@ -64,6 +62,7 @@ export default class extends Controller {
 
   close() {
     this.isOpen = false
+    this.persistState()
 
     // Update aria-expanded
     if (this.hasButtonTarget) {
@@ -89,5 +88,82 @@ export default class extends Controller {
       // Animate to zero
       panel.style.maxHeight = "0"
     }
+  }
+
+  applyInitialState() {
+    if (this.hasButtonTarget) {
+      this.buttonTarget.setAttribute("aria-expanded", this.isOpen ? "true" : "false")
+    }
+
+    if (this.hasChevronTarget) {
+      this.chevronTarget.style.transform = this.isOpen ? "rotate(0deg)" : "rotate(-90deg)"
+    }
+
+    if (this.hasPanelTarget) {
+      this.panelTarget.style.maxHeight = this.isOpen ? "none" : "0"
+    }
+  }
+
+  initialOpenState() {
+    const persistedState = this.readPersistedState()
+    if (persistedState !== null) return persistedState
+
+    return this.defaultOpenValue
+  }
+
+  persistState() {
+    const key = this.persistenceKey()
+    if (!key) return
+
+    try {
+      localStorage.setItem(key, this.isOpen ? "true" : "false")
+    } catch {
+      // Ignore storage errors (private mode / storage disabled)
+    }
+  }
+
+  readPersistedState() {
+    const key = this.persistenceKey()
+    if (!key) return null
+
+    try {
+      const value = localStorage.getItem(key)
+      if (value === null) return null
+
+      return value === "true"
+    } catch {
+      return null
+    }
+  }
+
+  persistenceKey() {
+    if (!this.hasGroupIdValue || !this.groupIdValue) return null
+
+    const layoutElement = this.element.closest('[data-flat-pack--sidebar-layout-storage-key-value]')
+    const layoutStorageKey = layoutElement?.dataset?.flatPackSidebarLayoutStorageKeyValue || "default"
+
+    return `flat-pack-sidebar-group:${layoutStorageKey}:${this.groupIdValue}`
+  }
+
+  suppressInitialTransitions() {
+    if (this.hasPanelTarget) {
+      this.panelTarget.style.transition = "none"
+    }
+
+    if (this.hasChevronTarget) {
+      this.chevronTarget.style.transition = "none"
+    }
+  }
+
+  restoreTransitionsAfterPaint() {
+    requestAnimationFrame(() => {
+      if (this.hasPanelTarget) {
+        this.panelTarget.style.transition = ""
+      }
+
+      if (this.hasChevronTarget) {
+        this.chevronTarget.style.transition = ""
+      }
+    })
   }
 }

@@ -1,5 +1,32 @@
 # Badge Component
 
+## Purpose
+Render compact labels for status, counts, and metadata.
+
+## When to use
+Use Badge to visually tag state, priority, type, or counts inline with content.
+
+## Class
+- Primary: `FlatPack::Badge::Component`
+
+## Props
+See the `Props` section below for supported arguments and defaults.
+
+## Slots
+See content examples below for block usage.
+
+## Variants
+See style and size variants below.
+
+## Example
+Start with `Basic Usage` below.
+
+## Accessibility
+See accessibility notes below for color contrast and semantic labeling.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+
 The Badge component renders small status indicators, counts, labels, and tags for highlighting information.
 
 ## Basic Usage

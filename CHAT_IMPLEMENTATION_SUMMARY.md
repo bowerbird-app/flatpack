@@ -48,8 +48,9 @@ Successfully implemented a comprehensive Chat Messaging UI component system with
 ### Composer Components (3)
 8. **Chat::Composer::Component** - Message input area
    - Location: `app/components/flat_pack/chat/composer/component.rb`
-   - Slots: `textarea`, `actions`, `attachments`
-   - Default: Renders textarea + send button if no slots
+   - Slots: `left`, `center`, `right`, `attachments`
+   - Preferred API: `left`, `center`, `right` slot methods
+   - Default: Renders center textarea + right send button if no slots
 
 9. **Chat::Textarea::Component** - Auto-growing textarea
    - Location: `app/components/flat_pack/chat/textarea/component.rb`
@@ -162,7 +163,8 @@ Successfully implemented a comprehensive Chat Messaging UI component system with
 
 3. **composer_component_test.rb**
    - Tests: Default composer
-   - Custom slots: textarea, actions, attachments
+   - Custom slots: left, center, right, attachments
+   - Compatibility aliases: textarea, actions
    - System arguments
    - Border styling
 

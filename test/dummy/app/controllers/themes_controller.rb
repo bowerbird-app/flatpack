@@ -1,6 +1,32 @@
 # frozen_string_literal: true
 
 class ThemesController < ApplicationController
+  THEME_TOKEN_GROUPS = {
+    "Core Colors and Surfaces" => [/\A--(color-|surface-|gradient-)/],
+    "Badges" => [/\A--badge-/],
+    "Buttons" => [/\A--button-/],
+    "Alerts" => [/\A--alert-/],
+    "Toasts" => [/\A--toast-/],
+    "Cards" => [/\A--card-/],
+    "Code Blocks" => [/\A--code-block-/],
+    "Tabs" => [/\A--tabs-/],
+    "Modals" => [/\A--modal-/],
+    "Popovers" => [/\A--popover-/],
+    "Tooltips" => [/\A--tooltip-/],
+    "Sidebar" => [/\A--sidebar-/],
+    "Top Nav" => [/\A--top-nav-/],
+    "Chat" => [/\A--chat-/],
+    "Table" => [/\A--table-/],
+    "Chips" => [/\A--chip-/],
+    "Form Controls" => [/\A--form-control-/],
+    "Avatars" => [/\A--avatar-/],
+    "Radii" => [/\A--radius-/],
+    "Shadows" => [/\A--shadow-/],
+    "Motion" => [/\A--duration-/],
+    "Backdrop Effects" => [/\A--blur-/],
+    "Other" => [/.*/]
+  }.freeze
+
   DEMO_THEMES = {
     "system" => "System",
     "light" => "Light",
@@ -17,7 +43,7 @@ class ThemesController < ApplicationController
   }.freeze
 
   def index
-    # Theme showcase page
+    @theme_token_groups = build_theme_token_groups
   end
 
   def demo
@@ -53,6 +79,61 @@ class ThemesController < ApplicationController
 
     selector = THEME_SELECTORS.fetch(theme)
     extract_selector_block(css, selector)
+  end
+
+  def build_theme_token_groups
+    tokens = extract_theme_tokens
+
+    grouped_tokens = tokens.group_by do |token|
+      group_for_token(token.fetch(:variable))
+    end
+
+    THEME_TOKEN_GROUPS.each_with_object([]) do |(title, _patterns), groups|
+      rows = grouped_tokens.fetch(title, [])
+      next if rows.empty?
+
+      groups << {
+        title: title,
+        subtitle: "#{rows.size} token#{'s' unless rows.size == 1} in @theme",
+        rows: rows
+      }
+    end
+  end
+
+  def extract_theme_tokens
+    css = File.read(FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css"))
+    block = css[/@theme\s*\{(?<body>.*?)^\}/m, :body]
+    return [] if block.blank?
+
+    block.lines.filter_map do |line|
+      stripped = line.strip
+      next if stripped.empty? || stripped.start_with?("/*")
+
+      match = stripped.match(/\A(--[a-z0-9-]+)\s*:\s*(.+);\z/)
+      next unless match
+
+      {
+        variable: match[1],
+        default_value: match[2],
+        description: default_value_description(match[2])
+      }
+    end
+  end
+
+  def group_for_token(variable)
+    THEME_TOKEN_GROUPS.each do |title, patterns|
+      return title if patterns.any? { |pattern| variable.match?(pattern) }
+    end
+
+    "Other"
+  end
+
+  def default_value_description(default_value)
+    return "References another token via var()" if default_value.start_with?("var(")
+    return "Gradient token value" if default_value.start_with?("linear-gradient(")
+    return "Color value" if default_value.include?("oklch(") || default_value.include?("rgb(") || default_value.include?("color-mix(")
+
+    "Theme token value"
   end
 
   def extract_selector_block(css, selector)

@@ -1,5 +1,32 @@
 # Button Component
 
+## Purpose
+Render consistent action controls as buttons or links.
+
+## When to use
+Use Button for primary and secondary actions across forms, dialogs, tables, and navigation.
+
+## Class
+- Primary: `FlatPack::Button::Component`
+
+## Props
+See the `Props` section below for supported arguments and defaults.
+
+## Slots
+Not applicable; Button is primarily prop-driven.
+
+## Variants
+See style, size, icon, loading, and link behavior variants below.
+
+## Example
+Start with `Basic Usage` below.
+
+## Accessibility
+See accessibility notes below for labels, keyboard behavior, and icon-only buttons.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+
 The Button component renders a button or link with consistent styling and behavior.
 
 ## Basic Usage

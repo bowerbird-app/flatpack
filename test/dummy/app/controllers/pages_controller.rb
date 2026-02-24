@@ -10,7 +10,7 @@ class PagesController < ApplicationController
   before_action :load_table_demo_data, only: %i[tables_basic tables_sortable tables_draggable]
 
   def demo
-    @component_index = build_component_index
+    @component_index = cached_component_index
   end
 
   def buttons
@@ -227,6 +227,9 @@ class PagesController < ApplicationController
   def page_header
   end
 
+  def text_quote
+  end
+
   def empty_state
   end
 
@@ -239,6 +242,13 @@ class PagesController < ApplicationController
         description: "Description for product #{i + 1}"
       )
     end
+  end
+
+  def grid_movable_cards
+    ensure_demo_movable_cards!
+
+    @movable_cards = demo_table_rows_table_exists? ? DemoTableRow.where(list_key: movable_cards_list_key).ordered : []
+    @movable_cards_version = demo_table_rows_table_exists? ? demo_table_version(list_key: movable_cards_list_key) : "0"
   end
 
   def pagination
@@ -369,6 +379,28 @@ class PagesController < ApplicationController
 
   private
 
+  def cached_component_index
+    Rails.cache.fetch(component_index_cache_key, expires_in: 10.minutes) do
+      build_component_index
+    end
+  end
+
+  def component_index_cache_key
+    ["dummy/component_index", component_index_cache_version]
+  end
+
+  def component_index_cache_version
+    component_files = Dir.glob(FlatPack::Engine.root.join("app/components/flat_pack/**/*.rb"))
+    doc_files = Dir.glob(FlatPack::Engine.root.join("docs/components/*.md"))
+    all_files = component_files + doc_files
+
+    latest_mtime = all_files.filter_map do |path|
+      File.mtime(path).to_i if File.exist?(path)
+    end.max || 0
+
+    "#{latest_mtime}-#{all_files.size}"
+  end
+
   def build_component_index
     component_root = FlatPack::Engine.root.join("app/components/flat_pack")
     files = (
@@ -384,7 +416,10 @@ class PagesController < ApplicationController
   end
 
   def paginated_infinite_records
-    return pagy(DummyDatum.recent, items: 10) if dummy_data_available?
+    if dummy_data_available?
+      records = DummyDatum.recent
+      return pagy(records, items: 10) if records.count > 10
+    end
 
     pagy_array(infinite_demo_records, items: 10)
   rescue ActiveRecord::StatementInvalid
@@ -543,15 +578,20 @@ class PagesController < ApplicationController
       {name: "Retrospective prep", status: "pending", priority: "low"}
     ]
 
-    rows.each_with_index do |row, index|
-      DemoTableRow.create!(
+    timestamp = Time.current
+    rows_to_insert = rows.each_with_index.map do |row, index|
+      {
         list_key: DemoTableRow::DEFAULT_LIST_KEY,
         name: row[:name],
         status: row[:status],
         priority: row[:priority],
-        position: index + 1
-      )
+        position: index + 1,
+        created_at: timestamp,
+        updated_at: timestamp
+      }
     end
+
+    DemoTableRow.insert_all(rows_to_insert, unique_by: :index_demo_table_rows_on_list_key_and_position)
   end
 
   def demo_table_version(scope = {list_key: DemoTableRow::DEFAULT_LIST_KEY})
@@ -560,6 +600,39 @@ class PagesController < ApplicationController
 
   def demo_table_rows_table_exists?
     DemoTableRow.table_exists?
+  end
+
+  def movable_cards_list_key
+    "grid-movable-cards-demo"
+  end
+
+  def ensure_demo_movable_cards!
+    return unless demo_table_rows_table_exists?
+    return if DemoTableRow.where(list_key: movable_cards_list_key).exists?
+
+    cards = [
+      {name: "Weekly roadmap", status: "active", priority: "high"},
+      {name: "Design review", status: "pending", priority: "medium"},
+      {name: "Customer feedback", status: "active", priority: "high"},
+      {name: "Release notes", status: "inactive", priority: "low"},
+      {name: "Sprint retrospective", status: "pending", priority: "medium"},
+      {name: "Backlog cleanup", status: "active", priority: "low"}
+    ]
+
+    timestamp = Time.current
+    rows_to_insert = cards.each_with_index.map do |card, index|
+      {
+        list_key: movable_cards_list_key,
+        name: card[:name],
+        status: card[:status],
+        priority: card[:priority],
+        position: index + 1,
+        created_at: timestamp,
+        updated_at: timestamp
+      }
+    end
+
+    DemoTableRow.insert_all(rows_to_insert, unique_by: :index_demo_table_rows_on_list_key_and_position)
   end
 
   def searchable_items
@@ -611,8 +684,10 @@ class PagesController < ApplicationController
       {title: "Stacked Pills", description: "Vertical pill-style tabs with two-column layout on larger screens", url: demo_tabs_stacked_pills_path},
       {title: "Toasts", description: "Auto-dismissing notifications", url: demo_toasts_path},
       {title: "Page Title", description: "Page title with optional subtitle", url: demo_page_header_path},
+      {title: "Quote", description: "Blockquote and citation text examples", url: demo_text_quote_path},
       {title: "Empty State", description: "User-friendly empty states", url: demo_empty_state_path},
       {title: "Grid", description: "Responsive grid layouts", url: demo_grid_path},
+      {title: "Grid: Movable Cards", description: "Draggable card grid with persisted ordering", url: demo_grid_movable_cards_path},
       {title: "Pagination", description: "Page navigation with Pagy", url: demo_pagination_path},
       {title: "Charts", description: "Data visualization with ApexCharts", url: demo_charts_path},
       {title: "Code Blocks", description: "Reusable snippets for demo pages", url: demo_code_blocks_path}

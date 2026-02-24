@@ -1,5 +1,33 @@
 # Sortable Tables
 
+## Purpose
+Document sortable column behavior for `Table` using Turbo-driven updates.
+
+## When to use
+Use this page when implementing sortable data tables with URL-driven sort state.
+
+## Class
+- Primary: `FlatPack::Table::Component`
+
+## Props
+See sortable props and defaults below.
+
+## Slots
+See column definitions and custom cell rendering examples below.
+
+## Variants
+See ascending/descending and key-specific sort behaviors below.
+
+## Example
+Start with `Basic Usage` below.
+
+## Accessibility
+See accessibility notes below for sortable headers and keyboard interaction.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+- Turbo Frames for incremental sort updates.
+
 The Table component supports sortable columns using Turbo Frames for seamless, no-reload sorting.
 
 ## Basic Usage

@@ -109,6 +109,15 @@ module FlatPack
         assert_selector "input.flat-pack-radio"
       end
 
+      def test_uses_accent_and_checked_state_classes
+        render_inline(Component.new(name: "color", options: ["Red"]))
+
+        html = page.native.to_html
+        assert_includes html, "accent-primary"
+        assert_includes html, "checked:bg-primary"
+        assert_includes html, "checked:border-primary"
+      end
+
       def test_has_wrapper_class
         render_inline(Component.new(name: "color", options: ["Red"]))
 

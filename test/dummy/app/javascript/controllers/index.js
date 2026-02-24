@@ -1,8 +1,8 @@
 import { application } from "controllers/application"
 
 // Eager load all controllers defined in the import map under controllers/**/*_controller
-import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading"
+import { eagerLoadControllersFrom, lazyLoadControllersFrom } from "@hotwired/stimulus-loading"
 eagerLoadControllersFrom("controllers", application)
 
-// Eager load FlatPack controllers
-eagerLoadControllersFrom("controllers/flat_pack", application)
+// Lazy load FlatPack controllers on first use
+lazyLoadControllersFrom("controllers/flat_pack", application)

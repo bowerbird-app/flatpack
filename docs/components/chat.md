@@ -1,5 +1,34 @@
 # Chat Components
 
+## Purpose
+Provide composable building blocks for chat and messaging interfaces.
+
+## When to use
+Use Chat components for conversation UIs with message lists, composer controls, typing states, and attachments.
+
+## Class
+- Primary: `FlatPack::Chat::Panel::Component`
+- Related classes: `FlatPack::Chat::Layout::Component`, `FlatPack::Chat::MessageList::Component`, `FlatPack::Chat::Message::Component`, `FlatPack::Chat::Composer::Component`
+
+## Props
+See each sub-component section below for props and defaults.
+
+## Slots
+See each sub-component section below for supported slots.
+
+## Variants
+See message, layout, and state variants in the sections below.
+
+## Example
+Start with `Complete Example` below.
+
+## Accessibility
+See accessibility notes below for roles, labels, and keyboard interaction.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+- Chat Stimulus controllers (`chat_scroll_controller.js`, `chat_textarea_controller.js`, `chat_sender_controller.js`).
+
 A comprehensive messaging UI component system for building modern chat interfaces in Rails applications.
 
 ## Overview
@@ -274,15 +303,16 @@ Displays timestamp, edited status, and delivery state indicators.
 
 #### Chat::Composer::Component
 
-Message input area with textarea and actions.
+Message input area with flexible left, center, and right regions.
 
 **Slots:**
-- `textarea` - Custom textarea component
-- `actions` - Custom action buttons
+- `left` - Optional controls shown before the input
+- `center` - Main input area (usually `Chat::Textarea`)
+- `right` - Action buttons shown after the input
 - `attachments` - Attachment preview area
 
 **Default Behavior:**
-If no slots provided, renders default textarea and send button.
+If no slots provided, renders a default textarea in center and send button in right.
 
 **Example:**
 ```erb
@@ -291,15 +321,19 @@ If no slots provided, renders default textarea and send button.
 
 <!-- Custom composer -->
 <%= render FlatPack::Chat::Composer::Component.new do |composer| %>
-  <% composer.with_textarea do %>
+  <% composer.left do %>
+    <%= render FlatPack::Button::Component.new(text: "Attach", style: :ghost, size: :sm) %>
+  <% end %>
+
+  <% composer.center do %>
     <%= render FlatPack::Chat::Textarea::Component.new(
       placeholder: "Type your message...",
       autogrow: true,
       submit_on_enter: true
     ) %>
   <% end %>
-  
-  <% composer.with_actions do %>
+
+  <% composer.right do %>
     <%= render FlatPack::Chat::SendButton::Component.new(loading: false) %>
   <% end %>
 <% end %>
@@ -345,6 +379,41 @@ Send button with loading state.
 ```erb
 <%= render FlatPack::Chat::SendButton::Component.new(loading: false) %>
 <%= render FlatPack::Chat::SendButton::Component.new(loading: true) %>
+```
+
+#### Optimistic Send (JavaScript)
+
+Use the `flat-pack--chat-sender` Stimulus controller on your composer form to append outgoing bubbles immediately without a page reload.
+
+**Form wiring:**
+```erb
+<%= form_with url: messages_path, method: :post, local: true,
+  data: {
+    controller: "flat-pack--chat-sender",
+    action: "submit->flat-pack--chat-sender#submit",
+    flat_pack__chat_sender_thread_selector_value: "[data-flat-pack--chat-scroll-target='messages']"
+  } do %>
+  <%= render FlatPack::Chat::Composer::Component.new %>
+<% end %>
+```
+
+**How delivery is pluggable:**
+- The controller dispatches `flat-pack:chat:send` on submit.
+- Your app can call `event.detail.respondWith(promise)` to plug in any async backend flow (DB/API/ActionCable/etc).
+- Resolve with `{ html: "..." }` to replace the optimistic bubble with server-rendered HTML, or `{ body:, timestamp:, state: }` for lightweight confirmation.
+- Reject to mark the optimistic message as failed.
+
+**Host app example:**
+```js
+document.addEventListener("flat-pack:chat:send", (event) => {
+  event.detail.respondWith(
+    fetch("/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: event.detail.payload })
+    }).then((response) => response.json())
+  )
+})
 ```
 
 ### Utility Components
@@ -412,8 +481,8 @@ Here's a complete chat interface example:
     <% panel.header do %>
       <div class="p-4 flex items-center justify-between">
         <div>
-          <h2 class="font-semibold text-[var(--chat-message-incoming-text-color)]">Design Team</h2>
-          <p class="text-sm text-[var(--chat-message-meta-color)]">3 members</p>
+          <h2 class="font-semibold text-(--chat-message-incoming-text-color)">Design Team</h2>
+          <p class="text-sm text-(--chat-message-meta-color)">3 members</p>
         </div>
         <%= render FlatPack::AvatarGroup::Component.new(
           items: [

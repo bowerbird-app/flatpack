@@ -29,7 +29,7 @@ module FlatPack
           return unless avatar?
 
           content_tag(:div, class: "flex-shrink-0 mr-3") do
-            avatar
+            avatar.to_s
           end
         end
 
@@ -37,16 +37,16 @@ module FlatPack
           content_tag(:div, class: bubble_classes) do
             content_tag(:div, class: "flex items-center gap-1") do
               safe_join([
-                render_dot,
-                render_dot,
-                render_dot
+                render_dot(0),
+                render_dot(120),
+                render_dot(240)
               ])
             end
           end
         end
 
-        def render_dot
-          content_tag(:div, nil, class: dot_classes)
+        def render_dot(delay_ms)
+          content_tag(:div, nil, class: dot_classes, style: dot_animation_style(delay_ms))
         end
 
         def indicator_attributes
@@ -77,8 +77,13 @@ module FlatPack
             "h-2 w-2",
             "rounded-full",
             "bg-[var(--chat-typing-dot-color)]",
-            "animate-bounce"
+            "animate-bounce",
+            "motion-reduce:animate-none"
           )
+        end
+
+        def dot_animation_style(delay_ms)
+          "animation-duration: 650ms; animation-delay: #{delay_ms}ms"
         end
       end
     end

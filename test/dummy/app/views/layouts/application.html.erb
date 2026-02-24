@@ -19,7 +19,8 @@
       storage_key: "flatpack-dummy-shell"
     ) do |layout| %>
       <% layout.sidebar do %>
-        <%= render FlatPack::Sidebar::Component.new(side: sidebar_side) do |sidebar| %>
+        <% cache ["dummy/sidebar-shell", request.fullpath, sidebar_side] do %>
+          <%= render FlatPack::Sidebar::Component.new(side: sidebar_side) do |sidebar| %>
           <% sidebar.header do %>
             <%= render FlatPack::Sidebar::Header::Component.new(
               brand_abbr: "FP",
@@ -345,12 +346,30 @@
                 icon: :dashboard,
                 active: current_page?(demo_charts_path)
               ) %>
-              <%= render FlatPack::Sidebar::Item::Component.new(
+              <% grid_section_active = [
+                demo_grid_path,
+                demo_grid_movable_cards_path
+              ].any? { |path| current_page?(path) } %>
+              <%= render FlatPack::Sidebar::Group::Component.new(
                 label: "Grid",
-                href: demo_grid_path,
                 icon: :dashboard,
-                active: current_page?(demo_grid_path)
-              ) %>
+                default_open: grid_section_active
+              ) do |group| %>
+                <% group.items do %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "Layouts",
+                    href: demo_grid_path,
+                    icon: :dashboard,
+                    active: current_page?(demo_grid_path)
+                  ) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "Movable Cards",
+                    href: demo_grid_movable_cards_path,
+                    icon: :chevron_down,
+                    active: current_page?(demo_grid_movable_cards_path)
+                  ) %>
+                <% end %>
+              <% end %>
               <%= render FlatPack::Sidebar::Item::Component.new(
                 label: "Code Blocks",
                 href: demo_code_blocks_path,
@@ -465,7 +484,7 @@
                   <%= render FlatPack::Sidebar::Item::Component.new(
                     label: "Send Button",
                     href: demo_chat_send_button_path,
-                    icon: :arrow_right,
+                    icon: :mail,
                     active: current_page?(demo_chat_send_button_path)
                   ) %>
                 <% end %>
@@ -504,12 +523,30 @@
                 icon: :box,
                 active: current_page?(demo_cards_path)
               ) %>
-              <%= render FlatPack::Sidebar::Item::Component.new(
-                label: "Page Title",
-                href: demo_page_header_path,
+              <% text_section_active = [
+                demo_page_header_path,
+                demo_text_quote_path
+              ].any? { |path| current_page?(path) } %>
+              <%= render FlatPack::Sidebar::Group::Component.new(
+                label: "Text",
                 icon: :align_left,
-                active: current_page?(demo_page_header_path)
-              ) %>
+                default_open: text_section_active
+              ) do |group| %>
+                <% group.items do %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "Page Title",
+                    href: demo_page_header_path,
+                    icon: :type,
+                    active: current_page?(demo_page_header_path)
+                  ) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "Quote",
+                    href: demo_text_quote_path,
+                    icon: :message_circle,
+                    active: current_page?(demo_text_quote_path)
+                  ) %>
+                <% end %>
+              <% end %>
               <%= render FlatPack::Sidebar::Item::Component.new(
                 label: "Empty State",
                 href: demo_empty_state_path,
@@ -648,6 +685,7 @@
             <% end %>
           <% end %>
 
+          <% end %>
         <% end %>
       <% end %>
 

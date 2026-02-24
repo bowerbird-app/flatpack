@@ -40,7 +40,7 @@ module FlatPack
         def render_icon
           return unless @icon
 
-          content_tag(:span, class: icon_wrapper_classes) do
+          content_tag(:span, class: icon_wrapper_classes, data: icon_data) do
             render FlatPack::Shared::IconComponent.new(
               name: @icon,
               size: :md
@@ -63,6 +63,7 @@ module FlatPack
         def link_attributes
           merge_attributes(
             class: link_classes,
+            data: link_data,
             aria: aria_attributes_for_link
           )
         end
@@ -85,17 +86,45 @@ module FlatPack
 
         def state_classes
           if @active
-            "bg-[var(--sidebar-item-active-background-color)] text-[var(--sidebar-item-active-text-color)]"
+            active_link_classes
           else
-            "text-[var(--sidebar-item-text-color)] hover:bg-[var(--sidebar-item-hover-background-color)] hover:text-[var(--sidebar-item-hover-text-color)]"
+            inactive_link_classes
           end
+        end
+
+        def link_data
+          {
+            "flat-pack-sidebar-item": "true"
+          }
+        end
+
+        def active_link_classes
+          "bg-[var(--sidebar-item-active-background-color)] text-[var(--sidebar-item-active-text-color)]"
+        end
+
+        def inactive_link_classes
+          "text-[var(--sidebar-item-text-color)] hover:bg-[var(--sidebar-item-hover-background-color)] hover:text-[var(--sidebar-item-hover-text-color)]"
         end
 
         def icon_wrapper_classes
           classes(
             "flex-shrink-0",
-            (@active ? "text-[var(--sidebar-item-active-icon-color)]" : "text-[var(--sidebar-item-icon-color)]")
+            (@active ? active_icon_classes : inactive_icon_classes)
           )
+        end
+
+        def icon_data
+          {
+            "flat-pack-sidebar-item-icon": "true"
+          }
+        end
+
+        def active_icon_classes
+          "text-[var(--sidebar-item-active-icon-color)]"
+        end
+
+        def inactive_icon_classes
+          "text-[var(--sidebar-item-icon-color)]"
         end
 
         def label_classes

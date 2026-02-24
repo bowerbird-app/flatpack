@@ -8,27 +8,30 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Select Examples", anchor_link: true) %>
 
-  <div class="space-y-6 p-6 border border-slate-200 rounded-lg bg-white">
-    <%= render FlatPack::Select::Component.new(
-      name: "country",
-      options: ["United States", "Canada", "United Kingdom", "Australia"],
-      label: "Country",
-      placeholder: "Select a country",
-      required: true
-    ) %>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body(class: "space-y-[var(--stack-gap-md)]") do %>
+      <%= render FlatPack::Select::Component.new(
+        name: "country",
+        options: ["United States", "Canada", "United Kingdom", "Australia"],
+        label: "Country",
+        placeholder: "Select a country",
+        required: true
+      ) %>
 
-    <%= render FlatPack::Select::Component.new(
-      name: "city",
-      options: ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix"],
-      label: "City",
-      placeholder: "Search cities...",
-      searchable: true
-    ) %>
-  </div>
+      <%= render FlatPack::Select::Component.new(
+        name: "city",
+        options: ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix"],
+        label: "City",
+        placeholder: "Search cities...",
+        searchable: true
+      ) %>
+    <% end %>
+  <% end %>
 
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE'),
-      &lt;div class=&quot;space-y-6 p-6 border border-slate-200 rounded-lg bg-white&quot;&gt;
+      &lt;%= render FlatPack::Card::Component.new do |card| %&gt;
+        &lt;% card.body do %&gt;
         &lt;%= render FlatPack::Select::Component.new(
           name: &quot;country&quot;,
           options: [&quot;United States&quot;, &quot;Canada&quot;, &quot;United Kingdom&quot;, &quot;Australia&quot;],
@@ -44,7 +47,8 @@
           placeholder: &quot;Search cities...&quot;,
           searchable: true
         ) %&gt;
-      &lt;/div&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
     CODE
     language: "erb",
     title: "Select Examples"

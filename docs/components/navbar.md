@@ -1,5 +1,33 @@
 # Navbar Component
 
+## Purpose
+Provide a complete application navigation shell with sidebar and top navigation regions.
+
+## When to use
+Use Navbar when building multi-page app layouts that need responsive primary navigation.
+
+## Class
+- Primary: `FlatPack::Navbar::Component`
+
+## Props
+See the `Props` sections below for Navbar and related subcomponents.
+
+## Slots
+See slot composition sections below (`sidebar`, `top_nav`, items, sections).
+
+## Variants
+See layout and behavior variants below.
+
+## Example
+Start with `Basic Usage` below.
+
+## Accessibility
+See accessibility and keyboard navigation notes below.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+- Stimulus behavior for responsive/collapsible interactions.
+
 The Navbar component provides a complete page layout system with a collapsible sidebar and flexible top navigation bar.
 
 ## Basic Usage

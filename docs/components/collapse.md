@@ -1,5 +1,33 @@
 # Collapse Component
 
+## Purpose
+Show or hide content sections with animated disclosure behavior.
+
+## When to use
+Use Collapse for expandable details, optional advanced settings, and FAQ-style UI.
+
+## Class
+- Primary: `FlatPack::Collapse::Component`
+
+## Props
+See the `Props` section below for supported arguments and defaults.
+
+## Slots
+See sections below for trigger/content composition.
+
+## Variants
+See behavior and styling variants below.
+
+## Example
+Start with `Basic Usage` below.
+
+## Accessibility
+See accessibility notes below for ARIA state and keyboard interaction.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+- Stimulus controller for collapse toggle behavior.
+
 The Collapse component creates expandable/collapsible content sections with smooth animations via Stimulus.
 
 ## Basic Usage

@@ -19,6 +19,12 @@ module FlatPack
         assert_selector "button svg[data-flat-pack--button-dropdown-target='chevron']"
       end
 
+      def test_hides_chevron_when_show_chevron_is_false
+        render_inline(Dropdown::Component.new(text: "Actions", show_chevron: false))
+
+        assert_no_selector "button svg[data-flat-pack--button-dropdown-target='chevron']"
+      end
+
       def test_renders_menu_with_hidden_class
         render_inline(Dropdown::Component.new(text: "Actions"))
 

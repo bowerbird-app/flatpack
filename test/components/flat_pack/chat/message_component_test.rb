@@ -87,6 +87,26 @@ module FlatPack
           assert_text "Meta info"
         end
 
+        def test_applies_incoming_meta_variable_overrides
+          render_inline(Component.new(direction: :incoming)) do |component|
+            component.with_meta { "10:12 AM" }
+            "Incoming message"
+          end
+
+          assert_includes rendered_content, "--chat-message-incoming-meta-color"
+          assert_includes rendered_content, "--chat-message-incoming-read-receipt-color"
+        end
+
+        def test_applies_outgoing_meta_variable_overrides
+          render_inline(Component.new(direction: :outgoing)) do |component|
+            component.with_meta { "10:14 AM" }
+            "Outgoing message"
+          end
+
+          assert_includes rendered_content, "--chat-message-outgoing-meta-color"
+          assert_includes rendered_content, "--chat-message-outgoing-read-receipt-color"
+        end
+
         def test_uses_pre_line_whitespace_for_message_body
           render_inline(Component.new(direction: :incoming)) do
             "Line 1\nLine 2"

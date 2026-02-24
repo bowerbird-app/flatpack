@@ -1,5 +1,32 @@
 # Skeleton Component
 
+## Purpose
+Display loading placeholders that preserve layout shape before content is ready.
+
+## When to use
+Use Skeleton during async loading states to reduce layout shift and improve perceived performance.
+
+## Class
+- Primary: `FlatPack::Skeleton::Component`
+
+## Props
+See the `Props` section below for supported arguments and defaults.
+
+## Slots
+Not applicable; Skeleton is primarily prop-driven.
+
+## Variants
+See shape, size, and animation variants below.
+
+## Example
+Start with `Basic Usage` below.
+
+## Accessibility
+See accessibility notes below for loading-state semantics.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+
 The Skeleton component displays loading placeholders that match the shape of expected content.
 
 ## Basic Usage

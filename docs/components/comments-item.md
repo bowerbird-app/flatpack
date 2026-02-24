@@ -1,5 +1,32 @@
 # Comments Item Component
 
+## Purpose
+Render an individual comment with metadata and optional actions.
+
+## When to use
+Use Comments Item inside threads and replies to display one comment consistently.
+
+## Class
+- Primary: `FlatPack::Comments::Item::Component`
+
+## Props
+See the `Props` section below for supported arguments and defaults.
+
+## Slots
+See slot examples below for actions, media, and custom regions.
+
+## Variants
+See variant sections below for compact/detailed presentation.
+
+## Example
+Start with `Basic Usage` below.
+
+## Accessibility
+See accessibility notes below for semantic markup and controls.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+
 Display an individual comment with avatar, author info, timestamp, body, and optional actions.
 
 ## Basic Usage

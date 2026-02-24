@@ -1,5 +1,32 @@
 # Search Component
 
+## Purpose
+Render a reusable search input pattern for navigation and filter workflows.
+
+## When to use
+Use Search where users need quick keyword filtering in top nav or content surfaces.
+
+## Class
+- Primary: `FlatPack::Search::Component`
+
+## Props
+See the `Props` section below for supported arguments and defaults.
+
+## Slots
+See examples below for embedding in host layouts.
+
+## Variants
+See sizing and placement variants below.
+
+## Example
+Start with `Basic Usage` below.
+
+## Accessibility
+See accessibility notes below for labels and keyboard behavior.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+
 The Search component provides a reusable search input with a leading icon, optimized for navigation and filtering UIs.
 
 ## Features

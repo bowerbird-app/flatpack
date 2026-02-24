@@ -328,6 +328,141 @@
 </section>
 
 <section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Min/Max Double Range Demo", anchor_link: true) %>
+
+  <div
+    class="space-y-6 p-6 bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] rounded-lg"
+    data-controller="flat-pack--range-input-double-demo"
+    data-action="input->flat-pack--range-input-double-demo#sync change->flat-pack--range-input-double-demo#sync"
+  >
+    <div class="space-y-3">
+      <div class="flex items-center justify-between text-sm font-medium text-[var(--surface-content-color)]">
+        <span>Price Range</span>
+        <span class="font-mono" data-flat-pack--range-input-double-demo-target="summary">$200 - $800</span>
+      </div>
+
+      <div class="relative h-8" data-flat-pack--range-input-double-demo-target="sliderRoot">
+        <div class="absolute top-1/2 h-2 w-full -translate-y-1/2 rounded-full bg-[var(--surface-muted-background-color)]"></div>
+        <div
+          class="absolute top-1/2 h-2 -translate-y-1/2 rounded-full bg-[var(--color-primary)]"
+          data-flat-pack--range-input-double-demo-target="selection"
+        ></div>
+
+        <input
+          type="range"
+          name="price_min"
+          id="price_min"
+          min="0"
+          max="1000"
+          step="10"
+          value="200"
+          aria-label="Minimum Price"
+          data-flat-pack--range-input-double-demo-target="minInput"
+          class="fp-double-range absolute top-1/2 w-full -translate-y-1/2"
+        >
+
+        <input
+          type="range"
+          name="price_max"
+          id="price_max"
+          min="0"
+          max="1000"
+          step="10"
+          value="800"
+          aria-label="Maximum Price"
+          data-flat-pack--range-input-double-demo-target="maxInput"
+          class="fp-double-range absolute top-1/2 w-full -translate-y-1/2"
+        >
+      </div>
+
+      <div class="flex items-center justify-between text-xs text-[var(--surface-muted-content-color)]">
+        <span data-flat-pack--range-input-double-demo-target="minValue">Min: $200</span>
+        <span data-flat-pack--range-input-double-demo-target="maxValue">Max: $800</span>
+      </div>
+    </div>
+
+    <style>
+      .fp-double-range {
+        appearance: none;
+        -webkit-appearance: none;
+        background: transparent;
+        pointer-events: none;
+        height: 2rem;
+      }
+
+      .fp-double-range::-webkit-slider-runnable-track {
+        appearance: none;
+        -webkit-appearance: none;
+        background: transparent;
+        height: 0.5rem;
+      }
+
+      .fp-double-range::-webkit-slider-thumb {
+        appearance: none;
+        -webkit-appearance: none;
+        pointer-events: auto;
+        width: 1.125rem;
+        height: 1.125rem;
+        border-radius: 9999px;
+        background: var(--color-primary);
+        border: 2px solid var(--surface-background-color);
+        box-shadow: var(--shadow-sm);
+        cursor: pointer;
+        margin-top: -0.3125rem;
+      }
+
+      .fp-double-range::-moz-range-track {
+        background: transparent;
+        height: 0.5rem;
+      }
+
+      .fp-double-range::-moz-range-thumb {
+        pointer-events: auto;
+        width: 1.125rem;
+        height: 1.125rem;
+        border-radius: 9999px;
+        background: var(--color-primary);
+        border: 2px solid var(--surface-background-color);
+        box-shadow: var(--shadow-sm);
+        cursor: pointer;
+      }
+    </style>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div
+        class=&quot;space-y-6 p-6 bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] rounded-lg&quot;
+        data-controller=&quot;flat-pack--range-input-double-demo&quot;
+        data-action=&quot;input-&gt;flat-pack--range-input-double-demo#sync change-&gt;flat-pack--range-input-double-demo#sync&quot;
+      &gt;
+        &lt;div class=&quot;space-y-3&quot;&gt;
+          &lt;div class=&quot;flex items-center justify-between text-sm font-medium text-[var(--surface-content-color)]&quot;&gt;
+            &lt;span&gt;Price Range&lt;/span&gt;
+            &lt;span class=&quot;font-mono&quot; data-flat-pack--range-input-double-demo-target=&quot;summary&quot;&gt;$200 - $800&lt;/span&gt;
+          &lt;/div&gt;
+
+          &lt;div class=&quot;relative h-8&quot;&gt;
+            &lt;div class=&quot;absolute top-1/2 h-2 w-full -translate-y-1/2 rounded-full bg-[var(--surface-muted-background-color)]&quot;&gt;&lt;/div&gt;
+            &lt;div class=&quot;absolute top-1/2 h-2 -translate-y-1/2 rounded-full bg-[var(--color-primary)]&quot; data-flat-pack--range-input-double-demo-target=&quot;selection&quot;&gt;&lt;/div&gt;
+
+            &lt;input type=&quot;range&quot; name=&quot;price_min&quot; id=&quot;price_min&quot; min=&quot;0&quot; max=&quot;1000&quot; step=&quot;10&quot; value=&quot;200&quot; data-flat-pack--range-input-double-demo-target=&quot;minInput&quot; class=&quot;fp-double-range absolute top-1/2 w-full -translate-y-1/2&quot; /&gt;
+            &lt;input type=&quot;range&quot; name=&quot;price_max&quot; id=&quot;price_max&quot; min=&quot;0&quot; max=&quot;1000&quot; step=&quot;10&quot; value=&quot;800&quot; data-flat-pack--range-input-double-demo-target=&quot;maxInput&quot; class=&quot;fp-double-range absolute top-1/2 w-full -translate-y-1/2&quot; /&gt;
+          &lt;/div&gt;
+
+          &lt;div class=&quot;flex items-center justify-between text-xs text-[var(--surface-muted-content-color)]&quot;&gt;
+            &lt;span data-flat-pack--range-input-double-demo-target=&quot;minValue&quot;&gt;Min: $200&lt;/span&gt;
+            &lt;span data-flat-pack--range-input-double-demo-target=&quot;maxValue&quot;&gt;Max: $800&lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Min/Max Double Range Demo"
+  ) %>
+</section>
+
+<section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Use Cases", anchor_link: true) %>
   
   <div class="space-y-4">

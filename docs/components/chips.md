@@ -1,5 +1,33 @@
 # Chip Component
 
+## Purpose
+Render compact interactive tokens for tags, filters, states, and actions.
+
+## When to use
+Use Chip and ChipGroup for selectable labels, removable tags, and compact metadata.
+
+## Class
+- Primary: `FlatPack::Chip::Component`
+- Related classes: `FlatPack::ChipGroup::Component`
+
+## Props
+See the `Props` sections below for Chip and ChipGroup arguments.
+
+## Slots
+See slot examples below for icons, avatars, and custom content.
+
+## Variants
+See style, size, selection, disabled, and removable variants below.
+
+## Example
+Start with `Basic Usage` below.
+
+## Accessibility
+See accessibility notes below for interactive chip behavior.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+
 Chips are compact elements that represent input, attributes, or actions. They allow users to enter information, make selections, filter content, or trigger actions.
 
 ## Types

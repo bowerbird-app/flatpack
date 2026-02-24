@@ -1,5 +1,34 @@
 # Input Components
 
+## Purpose
+Provide standardized, secure, and accessible form input components.
+
+## When to use
+Use Input Components for forms requiring consistent validation, labeling, and mobile-friendly input behavior.
+
+## Class
+- Primary: `FlatPack::TextInput::Component`
+- Related classes: `FlatPack::PasswordInput::Component`, `FlatPack::EmailInput::Component`, `FlatPack::PhoneInput::Component`, `FlatPack::SearchInput::Component`, `FlatPack::TextArea::Component`, `FlatPack::UrlInput::Component`, `FlatPack::NumberInput::Component`, `FlatPack::DateInput::Component`, `FlatPack::FileInput::Component`, `FlatPack::Checkbox::Component`, `FlatPack::RadioGroup::Component`, `FlatPack::Select::Component`, `FlatPack::Switch::Component`
+
+## Props
+See `Props` and component-specific API sections below.
+
+## Slots
+Most inputs are prop-driven; see component-specific sections for any slot usage.
+
+## Variants
+See each component section below for type-specific variants and options.
+
+## Example
+Start with `Basic Usage` below.
+
+## Accessibility
+See accessibility section below for labels, ARIA, and keyboard interactions.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+- Stimulus controllers for interactive inputs (password, search, text area, select, file input, date input).
+
 FlatPack provides a comprehensive set of form input components with built-in accessibility, security, and mobile optimization.
 
 ## Component Types
@@ -281,11 +310,17 @@ Single checkbox input for boolean values or multi-selection.
 - Accessible label association
 - Visual focus indicators
 - Error state styling
+- Theme token support for size and corner radius
 
 **Additional Props:**
 - `value`: String - The value when checked (default: "1")
 - `checked`: Boolean - Initial checked state (default: false)
 - `label`: String - Label text displayed next to checkbox (optional)
+
+**Theme Tokens:**
+- `--checkbox-size`: Controls checkbox width/height (default: `1.25rem`)
+- `--checkbox-radius`: Controls checkbox border radius (default: `0.125rem`)
+- `--checkbox-label-gap`: Controls spacing between checkbox and label (default: `0.75rem`)
 
 **Example - Accept Terms:**
 ```erb

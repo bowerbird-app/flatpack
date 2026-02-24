@@ -1,5 +1,32 @@
 # AvatarGroup Component
 
+## Purpose
+Display multiple avatars in a compact overlapping cluster.
+
+## When to use
+Use AvatarGroup for teams, participants, assignees, and any list of people where space is limited.
+
+## Class
+- Primary: `FlatPack::AvatarGroup::Component`
+
+## Props
+See the `Props` section below for supported arguments and defaults.
+
+## Slots
+See examples below for composition patterns.
+
+## Variants
+See size and overflow variations below.
+
+## Example
+Start with `Basic Usage` below.
+
+## Accessibility
+See accessibility guidance below for labels and overflow semantics.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+
 Display multiple avatars in an overlapping group with an optional overflow indicator.
 
 ## Basic Usage

@@ -8,30 +8,39 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Email Input Examples", anchor_link: true) %>
 
-  <div class="space-y-4 p-6 border border-slate-200 rounded-lg bg-white">
-    <%= render FlatPack::EmailInput::Component.new(
-      name: "email",
-      label: "Email Address",
-      placeholder: "you@example.com",
-      required: true
-    ) %>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body(class: "space-y-[var(--stack-gap-md)]") do %>
+      <%= render FlatPack::EmailInput::Component.new(
+        name: "email",
+        label: "Email Address",
+        placeholder: "you@example.com",
+        required: true,
+        data: {
+          flat_pack_message_type_mismatch: "Enter a valid email address."
+        }
+      ) %>
 
-    <%= render FlatPack::EmailInput::Component.new(
-      name: "email_error",
-      label: "Email (with error)",
-      value: "invalid-email",
-      error: "Please enter a valid email address"
-    ) %>
-  </div>
+      <%= render FlatPack::EmailInput::Component.new(
+        name: "email_error",
+        label: "Email (with error)",
+        value: "invalid-email",
+        error: "Please enter a valid email address"
+      ) %>
+    <% end %>
+  <% end %>
 
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE'),
-      &lt;div class=&quot;space-y-4 p-6 border border-slate-200 rounded-lg bg-white&quot;&gt;
+      &lt;%= render FlatPack::Card::Component.new do |card| %&gt;
+        &lt;% card.body do %&gt;
         &lt;%= render FlatPack::EmailInput::Component.new(
           name: &quot;email&quot;,
           label: &quot;Email Address&quot;,
           placeholder: &quot;you@example.com&quot;,
-          required: true
+          required: true,
+          data: {
+            flat_pack_message_type_mismatch: &quot;Enter a valid email address.&quot;
+          }
         ) %&gt;
     
         &lt;%= render FlatPack::EmailInput::Component.new(
@@ -40,7 +49,8 @@
           value: &quot;invalid-email&quot;,
           error: &quot;Please enter a valid email address&quot;
         ) %&gt;
-      &lt;/div&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
     CODE
     language: "erb",
     title: "Email Input Examples"

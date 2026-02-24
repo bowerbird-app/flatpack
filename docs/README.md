@@ -23,6 +23,9 @@ FlatPack is a production-grade Rails Engine that provides a comprehensive set of
 - [Security Policy](../SECURITY.md)
 
 ### Components
+- [Components Index (Agent-First)](components/README.md)
+- [Components Manifest (Machine-Readable)](components/manifest.yml)
+- [Component Doc Format](components/DOC_FORMAT.md)
 - [Alert Component](components/alert.md)
 - [Avatar Component](components/avatar.md)
 - [Avatar Group Component](components/avatar-group.md)

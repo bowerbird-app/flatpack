@@ -1,5 +1,34 @@
 # Sidebar Component
 
+## Purpose
+Provide a structured sidebar navigation container with composable regions and items.
+
+## When to use
+Use Sidebar in application shells that need persistent navigation and grouped links.
+
+## Class
+- Primary: `FlatPack::Sidebar::Component`
+- Related classes: `FlatPack::Sidebar::Item::Component`, `FlatPack::Sidebar::Header::Component`, `FlatPack::Sidebar::Divider::Component`, `FlatPack::Sidebar::Group::Component`
+
+## Props
+See the `Props` sections below for sidebar and related subcomponents.
+
+## Slots
+See `header`, `items`, and `footer` slot usage below.
+
+## Variants
+See collapsed/mobile/section variants below.
+
+## Example
+Start with `Basic Usage` below.
+
+## Accessibility
+See accessibility notes below for nav landmarks and keyboard interaction.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+- Stimulus sidebar behavior for collapse/drawer interactions.
+
 The Sidebar component provides a container for sidebar content with header, scrollable items area, and footer sections.
 
 ## Features

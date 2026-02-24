@@ -1,5 +1,33 @@
 # Table Component
 
+## Purpose
+Render structured tabular data with configurable columns and optional interactivity.
+
+## When to use
+Use Table for datasets that need consistent headers, rows, formatting, and optional sorting/actions.
+
+## Class
+- Primary: `FlatPack::Table::Component`
+
+## Props
+See the `Props` section below for supported arguments and defaults.
+
+## Slots
+See column definitions and block/lambda usage below.
+
+## Variants
+See sortable, draggable, Turbo Frame, and stimulus-enabled variants below.
+
+## Example
+Start with `Basic Usage` below.
+
+## Accessibility
+See accessibility notes below for semantic table markup and keyboard behavior.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+- Optional Turbo Frame integration for sortable updates.
+
 The Table component renders data in a tabular format with configurable columns.
 
 ## Basic Usage
@@ -21,6 +49,14 @@ The Table component renders data in a tabular format with configurable columns.
 | `sort` | String | `nil` | Current sort column |
 | `direction` | String | `nil` | Current sort direction ('asc' or 'desc') |
 | `base_url` | String | `nil` | Base URL for sort links |
+| `draggable_rows` | Boolean | `false` | Enable drag-and-drop row reordering with `flat-pack--table-sortable` |
+| `reorder` | Hash | `nil` | Reorder options hash (`url`, `resource`, `strategy`, `scope`, `version`, `row_id`) |
+| `reorder_url` | String | `nil` | Endpoint that receives reorder PATCH payload |
+| `reorder_resource` | String | inferred from row class | Logical list/resource name sent to backend |
+| `reorder_strategy` | String | `"dense_integer"` | Ordering strategy key sent with payload |
+| `reorder_scope` | Hash | `{}` | Optional scope keys for grouped/scoped ordering |
+| `reorder_version` | String | `nil` | Optimistic concurrency token sent with reorder payload |
+| `row_id` | Proc or Symbol | uses `row.id` | Custom row identifier resolver for reorder item IDs |
 | `**system_arguments` | Hash | `{}` | HTML attributes (`class`, `data`, `aria`, `id`, etc.) |
 
 ## Columns
@@ -117,6 +153,33 @@ The table component supports sorting using Turbo Frames for seamless updates:
 - Works with URL parameters for shareable links
 
 See [Sortable Tables](sortable-tables.md) for complete implementation details.
+
+### Draggable Rows (Persisted Reorder)
+
+Enable drag-and-drop row reordering and send the ordered IDs to your backend:
+
+```erb
+<%= render FlatPack::Table::Component.new(
+  data: @rows,
+  draggable_rows: true,
+  reorder: {
+    url: demo_tables_reorder_path,
+    strategy: "dense_integer",
+    scope: { list_key: "tables-demo" },
+    version: @table_version
+  }
+) do |table| %>
+  <% table.column(title: "Task", html: ->(row) { row.name }) %>
+  <% table.column(title: "Priority", html: ->(row) { row.priority }) %>
+<% end %>
+```
+
+Behavior notes:
+- Rows render with sortable controller targets and row IDs.
+- Reordering emits a `table:reordered` browser event with ordered IDs and positions.
+- When `reorder_url` is provided, the component sends a PATCH request with the generic `reorder` payload.
+
+See [Sortable Tables](sortable-tables.md#persisting-row-order-drag-and-drop) for the full reorder contract (`resource`, `strategy`, `scope`, `version`, `items`) and response semantics.
 
 ### Sortable Column with Custom Formatter
 

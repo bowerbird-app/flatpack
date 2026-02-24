@@ -1,5 +1,33 @@
 # Pagination Infinite Scroll Component
 
+## Purpose
+Implement incremental loading and infinite scroll behavior for paginated collections.
+
+## When to use
+Use Pagination Infinite when list/table/grid content should load progressively without full-page pagination controls.
+
+## Class
+- Primary: `FlatPack::PaginationInfinite::Component`
+
+## Props
+See the `Props` section below for supported arguments and defaults.
+
+## Slots
+See examples below for wrapping and content composition.
+
+## Variants
+See loading trigger and fallback variants below.
+
+## Example
+Start with `Basic Usage` below.
+
+## Accessibility
+See accessibility notes below for focus management and loading feedback.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+- Stimulus/Turbo integration for incremental loading.
+
 The Pagination Infinite Scroll component adds infinite scrolling capability with automatic loading and graceful fallback.
 
 ## Basic Usage

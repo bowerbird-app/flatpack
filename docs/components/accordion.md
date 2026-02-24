@@ -1,5 +1,33 @@
 # Accordion Component
 
+## Purpose
+Render grouped collapsible sections with coordinated expand/collapse behavior.
+
+## When to use
+Use Accordion when you need to progressively disclose multiple related content sections.
+
+## Class
+- Primary: `FlatPack::Accordion::Component`
+
+## Props
+See the `Props` section below for supported arguments and defaults.
+
+## Slots
+See the slot usage sections below for item/content composition.
+
+## Variants
+See variant sections below. If no variants are defined, treat as not applicable.
+
+## Example
+Start with `Basic Usage` below.
+
+## Accessibility
+See accessibility notes and keyboard behavior documented below.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+- Stimulus controller if interactive behavior is enabled in your usage.
+
 The Accordion component groups multiple collapsible sections with coordinated expand/collapse behavior.
 
 ## Basic Usage

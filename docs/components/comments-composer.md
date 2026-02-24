@@ -1,5 +1,32 @@
 # Comments Composer Component
 
+## Purpose
+Render a structured comment composer with actions and optional attachments.
+
+## When to use
+Use Comments Composer where users need to submit new comments in threads or discussions.
+
+## Class
+- Primary: `FlatPack::Comments::Composer::Component`
+
+## Props
+See the `Props` section below for supported arguments and defaults.
+
+## Slots
+See slot examples below for toolbar, actions, and attachment customization.
+
+## Variants
+See visual/behavior variants below.
+
+## Example
+Start with `Basic Usage` below.
+
+## Accessibility
+See accessibility notes below for labels, controls, and keyboard flow.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+
 A rich text area component for composing new comments with optional toolbar, attachments, and action buttons.
 
 ## Basic Usage

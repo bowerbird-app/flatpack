@@ -15,6 +15,8 @@ export default class extends Controller {
     this.draggedRow = null
     this.dragOverRow = null
     this.pendingSave = false
+    this.needsSave = false
+    this.conflictRetryPending = false
     this.lastStableOrder = this.currentOrder()
     this.setupDraggableRows()
   }
@@ -93,17 +95,25 @@ export default class extends Controller {
     if (event.stopPropagation) {
       event.stopPropagation()
     }
+
+    const dropTarget = this.dragOverRow || event.currentTarget
     
-    if (this.draggedRow !== this.dragOverRow && this.dragOverRow) {
+    if (this.draggedRow && this.draggedRow !== dropTarget && dropTarget) {
+      const previousOrder = this.currentOrder()
+
       // Reorder rows
       const parent = this.draggedRow.parentNode
       const draggedIndex = Array.from(parent.children).indexOf(this.draggedRow)
-      const dropIndex = Array.from(parent.children).indexOf(this.dragOverRow)
+      const dropIndex = Array.from(parent.children).indexOf(dropTarget)
       
       if (draggedIndex < dropIndex) {
-        parent.insertBefore(this.draggedRow, this.dragOverRow.nextSibling)
+        parent.insertBefore(this.draggedRow, dropTarget.nextSibling)
       } else {
-        parent.insertBefore(this.draggedRow, this.dragOverRow)
+        parent.insertBefore(this.draggedRow, dropTarget)
+      }
+
+      if (!this.pendingSave) {
+        this.lastStableOrder = previousOrder
       }
       
       // Emit reorder event
@@ -150,8 +160,6 @@ export default class extends Controller {
 
     if (orderedIds.length === 0) return
 
-    this.lastStableOrder = orderedIds
-
     const orderedItems = orderedIds.map((id, index) => ({
       id: Number(id),
       position: index + 1
@@ -173,7 +181,12 @@ export default class extends Controller {
   }
 
   async saveOrder() {
-    if (!this.hasReorderUrlValue || this.pendingSave) return
+    if (!this.hasReorderUrlValue) return
+
+    if (this.pendingSave) {
+      this.needsSave = true
+      return
+    }
 
     this.pendingSave = true
 
@@ -205,19 +218,38 @@ export default class extends Controller {
       const payload = await response.json()
 
       if (!response.ok || !payload.ok) {
-        this.restoreOrder(this.lastStableOrder)
+        const isStaleConflict = response.status === 409 || /stale/i.test(payload?.error || "")
+
+        if (isStaleConflict && payload?.version && !this.conflictRetryPending) {
+          this.versionValue = payload.version
+          this.conflictRetryPending = true
+          this.needsSave = true
+          return
+        }
+
+        if (payload?.version) {
+          this.versionValue = payload.version
+        }
+
+        this.conflictRetryPending = false
         this.dispatch("error", { detail: payload })
         return
       }
 
       this.versionValue = payload.version
+      this.conflictRetryPending = false
       this.lastStableOrder = this.currentOrder()
       this.dispatch("saved", { detail: payload })
     } catch (_error) {
-      this.restoreOrder(this.lastStableOrder)
+      this.conflictRetryPending = false
       this.dispatch("error", { detail: { error: "Unable to save row order" } })
     } finally {
       this.pendingSave = false
+
+      if (this.needsSave) {
+        this.needsSave = false
+        this.saveOrder()
+      }
     }
   }
 

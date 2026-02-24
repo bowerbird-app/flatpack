@@ -5,100 +5,105 @@
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Basic Lists", anchor_link: true) %>
-  
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div>
-      <h3 class="font-semibold mb-4">Unordered List</h3>
-      <%= render FlatPack::Card::Component.new do |card| %>
-        <% card.body do %>
-          <%= render FlatPack::List::Component.new do %>
-            <%= render FlatPack::List::Item.new do %>
-              First item
-            <% end %>
-            <%= render FlatPack::List::Item.new do %>
-              Second item
-            <% end %>
-            <%= render FlatPack::List::Item.new do %>
-              Third item
-            <% end %>
-            <%= render FlatPack::List::Item.new do %>
-              Fourth item
+
+  <div class="space-y-(--stack-gap-lg)">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-(--stack-gap-lg)">
+      <div>
+        <%= render FlatPack::Card::Component.new do |card| %>
+          <% card.header do %>
+            <h3 class="font-semibold">Unordered List</h3>
+          <% end %>
+          <% card.body do %>
+            <%= render FlatPack::List::Component.new do %>
+              <%= render FlatPack::List::Item.new do %>
+                First item
+              <% end %>
+              <%= render FlatPack::List::Item.new do %>
+                Second item
+              <% end %>
+              <%= render FlatPack::List::Item.new do %>
+                Third item
+              <% end %>
+              <%= render FlatPack::List::Item.new do %>
+                Fourth item
+              <% end %>
             <% end %>
           <% end %>
         <% end %>
-      <% end %>
+      </div>
+
+      <div>
+        <%= render FlatPack::Card::Component.new do |card| %>
+          <% card.header do %>
+            <h3 class="font-semibold">Ordered List</h3>
+          <% end %>
+          <% card.body do %>
+            <%= render FlatPack::List::Component.new(ordered: true) do %>
+              <%= render FlatPack::List::Item.new do %>
+                First step
+              <% end %>
+              <%= render FlatPack::List::Item.new do %>
+                Second step
+              <% end %>
+              <%= render FlatPack::List::Item.new do %>
+                Third step
+              <% end %>
+              <%= render FlatPack::List::Item.new do %>
+                Fourth step
+              <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
     </div>
 
-    <div>
-      <h3 class="font-semibold mb-4">Ordered List</h3>
-      <%= render FlatPack::Card::Component.new do |card| %>
-        <% card.body do %>
-          <%= render FlatPack::List::Component.new(ordered: true) do %>
-            <%= render FlatPack::List::Item.new do %>
-              First step
-            <% end %>
-            <%= render FlatPack::List::Item.new do %>
-              Second step
-            <% end %>
-            <%= render FlatPack::List::Item.new do %>
-              Third step
-            <% end %>
-            <%= render FlatPack::List::Item.new do %>
-              Fourth step
-            <% end %>
-          <% end %>
-        <% end %>
-      <% end %>
-    </div>
+    <%= render FlatPack::CodeBlock::Component.new(
+      snippets: [
+        {
+          label: "Unordered List",
+          language: "erb",
+          code: CGI.unescapeHTML(<<~'CODE')
+            &lt;%= render FlatPack::List::Component.new do %&gt;
+              &lt;%= render FlatPack::List::Item.new do %&gt;
+                First item
+              &lt;% end %&gt;
+              &lt;%= render FlatPack::List::Item.new do %&gt;
+                Second item
+              &lt;% end %&gt;
+              &lt;%= render FlatPack::List::Item.new do %&gt;
+                Third item
+              &lt;% end %&gt;
+              &lt;%= render FlatPack::List::Item.new do %&gt;
+                Fourth item
+              &lt;% end %&gt;
+            &lt;% end %&gt;
+          CODE
+        },
+        {
+          label: "Ordered List",
+          language: "erb",
+          code: CGI.unescapeHTML(<<~'CODE')
+            &lt;%= render FlatPack::List::Component.new(ordered: true) do %&gt;
+              &lt;%= render FlatPack::List::Item.new do %&gt;
+                First step
+              &lt;% end %&gt;
+              &lt;%= render FlatPack::List::Item.new do %&gt;
+                Second step
+              &lt;% end %&gt;
+              &lt;%= render FlatPack::List::Item.new do %&gt;
+                Third step
+              &lt;% end %&gt;
+              &lt;%= render FlatPack::List::Item.new do %&gt;
+                Fourth step
+              &lt;% end %&gt;
+            &lt;% end %&gt;
+          CODE
+        }
+      ],
+      title: "Basic Lists",
+      separated: false
+    ) %>
   </div>
-
-  <%= render FlatPack::CodeBlock::Component.new(
-    class: "mt-6",
-    snippets: [
-      {
-        label: "Unordered List",
-        language: "erb",
-        code: CGI.unescapeHTML(<<~'CODE')
-          &lt;%= render FlatPack::List::Component.new do %&gt;
-            &lt;%= render FlatPack::List::Item.new do %&gt;
-              First item
-            &lt;% end %&gt;
-            &lt;%= render FlatPack::List::Item.new do %&gt;
-              Second item
-            &lt;% end %&gt;
-            &lt;%= render FlatPack::List::Item.new do %&gt;
-              Third item
-            &lt;% end %&gt;
-            &lt;%= render FlatPack::List::Item.new do %&gt;
-              Fourth item
-            &lt;% end %&gt;
-          &lt;% end %&gt;
-        CODE
-      },
-      {
-        label: "Ordered List",
-        language: "erb",
-        code: CGI.unescapeHTML(<<~'CODE')
-          &lt;%= render FlatPack::List::Component.new(ordered: true) do %&gt;
-            &lt;%= render FlatPack::List::Item.new do %&gt;
-              First step
-            &lt;% end %&gt;
-            &lt;%= render FlatPack::List::Item.new do %&gt;
-              Second step
-            &lt;% end %&gt;
-            &lt;%= render FlatPack::List::Item.new do %&gt;
-              Third step
-            &lt;% end %&gt;
-            &lt;%= render FlatPack::List::Item.new do %&gt;
-              Fourth step
-            &lt;% end %&gt;
-          &lt;% end %&gt;
-        CODE
-      }
-    ],
-    title: "Basic Lists",
-    separated: false
-  ) %>
 </section>
 
 <section class="mb-12">

@@ -1,5 +1,32 @@
 # Avatar Component
 
+## Purpose
+Render user identity visuals using images, initials, or fallback icons.
+
+## When to use
+Use Avatar for profile images in nav, comments, lists, and messaging interfaces.
+
+## Class
+- Primary: `FlatPack::Avatar::Component`
+
+## Props
+See the `Props` section below for supported arguments and defaults.
+
+## Slots
+See examples below for composition patterns.
+
+## Variants
+See size, shape, and status variants below.
+
+## Example
+Start with `Basic Usage` below.
+
+## Accessibility
+See accessibility guidance below for alt text and fallback semantics.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+
 A flexible avatar component that displays user images, initials, or a generic fallback icon with support for different sizes, shapes, and status indicators.
 
 ## Basic Usage

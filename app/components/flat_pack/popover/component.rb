@@ -4,6 +4,15 @@ module FlatPack
   module Popover
     class Component < FlatPack::BaseComponent
       renders_one :popover_content
+      alias_method :with_content, :with_popover_content
+
+      def content(*args, **kwargs, &block)
+        if block_given? || args.any? || kwargs.any?
+          with_popover_content(*args, **kwargs, &block)
+        else
+          super
+        end
+      end
 
       PLACEMENTS = {
         top: :top,

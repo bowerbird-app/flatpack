@@ -1,5 +1,33 @@
 # Button Dropdown Component
 
+## Purpose
+Provide a button-triggered menu for grouped actions.
+
+## When to use
+Use Button Dropdown when you need multiple related actions without exposing all controls at once.
+
+## Class
+- Primary: `FlatPack::Button::Dropdown::Component`
+
+## Props
+See the `Props` section below for supported arguments and defaults.
+
+## Slots
+See dropdown item slot usage below.
+
+## Variants
+See style, size, and placement variants below.
+
+## Example
+Start with `Basic Usage` below.
+
+## Accessibility
+See keyboard and ARIA behavior documented below.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+- Stimulus dropdown behavior from FlatPack controllers.
+
 The Button Dropdown component provides an accessible dropdown menu triggered by a button, with full keyboard navigation support.
 
 ## Basic Usage
@@ -19,6 +47,7 @@ The Button Dropdown component provides an accessible dropdown menu triggered by 
 | `style` | Symbol | `:default` | Visual style (`:default`, `:primary`, `:secondary`, `:ghost`, `:success`, `:warning`) |
 | `size` | Symbol | `:md` | Button size (`:sm`, `:md`, `:lg`) |
 | `icon` | String | `nil` | Icon name to display in button |
+| `show_chevron` | Boolean | `true` | Whether to render the dropdown chevron icon |
 | `disabled` | Boolean | `false` | Disable dropdown interaction |
 | `position` | Symbol | `:bottom_right` | Menu position (`:bottom_right`, `:bottom_left`, `:top_right`, `:top_left`) |
 | `max_height` | String | `"384px"` | Maximum height of dropdown menu |
@@ -227,6 +256,19 @@ Add an icon to the dropdown trigger button:
 <%= render FlatPack::Button::Dropdown::Component.new(text: "Settings", icon: "settings") do |dropdown| %>
   <% dropdown.with_menu_item(text: "Profile", href: "#") %>
   <% dropdown.with_menu_item(text: "Preferences", href: "#") %>
+<% end %>
+```
+
+## Icon-Only Trigger (No Chevron)
+
+```erb
+<%= render FlatPack::Button::Dropdown::Component.new(
+  text: "",
+  icon: "plus",
+  show_chevron: false,
+  aria: {label: "Attach options"}
+) do |dropdown| %>
+  <% dropdown.with_menu_item(text: "Upload file", icon: "file", href: "#") %>
 <% end %>
 ```
 

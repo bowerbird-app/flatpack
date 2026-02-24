@@ -1,5 +1,33 @@
 # Sortable Table Examples
 
+## Purpose
+Provide end-to-end usage examples for sortable table implementations.
+
+## When to use
+Use this page when integrating sortable table behavior and needing copy-ready patterns.
+
+## Class
+- Primary: `FlatPack::Table::Component`
+
+## Props
+See sortable-related props in examples and in the main table docs.
+
+## Slots
+See column definition examples below.
+
+## Variants
+See example scenarios below for different sorting configurations.
+
+## Example
+Start with `Basic Usage` below.
+
+## Accessibility
+See example notes for keyboard and sort-state indicators.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+- Turbo Frames for no-reload sorting flows.
+
 Visual and interactive examples of the sortable table functionality.
 
 ## Basic Usage

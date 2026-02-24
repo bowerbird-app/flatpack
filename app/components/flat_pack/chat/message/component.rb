@@ -9,7 +9,7 @@ module FlatPack
 
         # Tailwind CSS scanning requires these classes to be present as string literals.
         # DO NOT REMOVE - These duplicates ensure CSS generation:
-        # "justify-start" "justify-end" "justify-center" "bg-[var(--chat-message-incoming-background-color)]" "text-[var(--chat-message-incoming-text-color)]" "bg-[var(--chat-message-outgoing-background-color)]" "text-[var(--chat-message-outgoing-text-color)]" "bg-transparent" "text-[var(--chat-message-system-text-color)]" "text-xs" "italic"
+        # "justify-start" "justify-end" "justify-center" "bg-[var(--chat-message-incoming-background-color)]" "text-[var(--chat-message-incoming-text-color)]" "bg-[var(--chat-message-outgoing-background-color)]" "text-[var(--chat-message-outgoing-text-color)]" "bg-transparent" "text-[var(--chat-message-system-text-color)]" "text-xs" "italic" "[--chat-message-meta-color:var(--chat-message-incoming-meta-color)]" "[--chat-read-receipt-color:var(--chat-message-incoming-read-receipt-color)]" "[--chat-message-meta-color:var(--chat-message-outgoing-meta-color)]" "[--chat-read-receipt-color:var(--chat-message-outgoing-read-receipt-color)]"
         DIRECTIONS = {
           incoming: "justify-start",
           outgoing: "justify-end"
@@ -23,6 +23,11 @@ module FlatPack
         BUBBLE_DIRECTIONS = {
           incoming: "bg-[var(--chat-message-incoming-background-color)] text-[var(--chat-message-incoming-text-color)]",
           outgoing: "bg-[var(--chat-message-outgoing-background-color)] text-[var(--chat-message-outgoing-text-color)]"
+        }.freeze
+
+        META_DIRECTIONS = {
+          incoming: "[--chat-message-meta-color:var(--chat-message-incoming-meta-color)] [--chat-read-receipt-color:var(--chat-message-incoming-read-receipt-color)]",
+          outgoing: "[--chat-message-meta-color:var(--chat-message-outgoing-meta-color)] [--chat-read-receipt-color:var(--chat-message-outgoing-read-receipt-color)]"
         }.freeze
 
         STATES = {
@@ -104,9 +109,16 @@ module FlatPack
         def render_meta_section
           return unless meta?
 
-          content_tag(:div, class: "mt-1") do
+          content_tag(:div, class: meta_section_classes) do
             meta.to_s
           end
+        end
+
+        def meta_section_classes
+          classes(
+            "mt-1",
+            META_DIRECTIONS.fetch(@direction)
+          )
         end
 
         def message_attributes

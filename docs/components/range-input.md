@@ -1,5 +1,32 @@
 # Range Input Component
 
+## Purpose
+Provide a slider control for selecting numeric values in a bounded range.
+
+## When to use
+Use Range Input for adjustable values like volume, thresholds, limits, and preferences.
+
+## Class
+- Primary: `FlatPack::RangeInput::Component`
+
+## Props
+See the `Props` section below for supported arguments and defaults.
+
+## Slots
+Not applicable; Range Input is prop-driven.
+
+## Variants
+See size and display variants below.
+
+## Example
+Start with `Basic Usage` below.
+
+## Accessibility
+See accessibility notes below for labeling and keyboard interaction.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+
 The Range Input component provides an accessible slider input with live value display.
 
 ## Basic Usage

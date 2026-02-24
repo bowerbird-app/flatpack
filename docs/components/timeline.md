@@ -1,5 +1,32 @@
 # Timeline and Timeline Item Components
 
+## Purpose
+Display chronological events in a vertical sequence with markers and connectors.
+
+## When to use
+Use Timeline for activity feeds, history logs, release milestones, and step progressions.
+
+## Class
+- Primary: `FlatPack::Timeline::Component`
+
+## Props
+See the `Props` section below for timeline and item arguments.
+
+## Slots
+See item composition usage below.
+
+## Variants
+See timeline and item styling variants below.
+
+## Example
+Start with `Basic Usage` below.
+
+## Accessibility
+See accessibility notes below for semantic list/timeline structure.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+
 The Timeline component displays chronological events with visual markers and connecting lines.
 
 ## Basic Usage

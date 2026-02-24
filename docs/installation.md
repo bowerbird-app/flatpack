@@ -50,8 +50,38 @@ rails generate flat_pack:install
 - Adds `@import "flat_pack/variables.css";` to your `app/assets/stylesheets/application.css`
 - **Automatically configures Tailwind CSS 4** by detecting your Tailwind CSS file and injecting the necessary configuration
 - **Configures importmap** to load FlatPack Stimulus controllers
-- **Configures Stimulus** to eager load FlatPack controllers
+- **Configures Stimulus** to lazy load FlatPack controllers on first use
 - Shows next steps for using components
+
+### 3.1 Optional: Generate a Sidebar Layout Shell
+
+FlatPack also provides a layout generator for creating a starter application shell based on `SidebarLayout` + `TopNav`:
+
+```bash
+rails generate flat_pack:layout --type=sidebar
+```
+
+**What this generator creates:**
+- `app/views/layouts/flat_pack_sidebar.html.erb`
+- `app/views/layouts/flat_pack/_sidebar.html.erb`
+- `app/views/layouts/flat_pack/_top_nav.html.erb`
+
+**Supported options:**
+
+```bash
+rails generate flat_pack:layout \
+   --type=sidebar \
+   --layout_name=flat_pack_sidebar \
+   --side=left \
+   --storage_key=flat-pack-sidebar-layout
+```
+
+- `--type`: layout type to generate (currently: `sidebar`)
+- `--layout_name`: layout filename under `app/views/layouts` (without `.html.erb`)
+- `--side`: sidebar placement (`left` or `right`)
+- `--storage_key`: localStorage key used by `FlatPack::SidebarLayout::Component`
+
+After generation, set the layout in your controller (for example `ApplicationController`) and update the generated sidebar/top-nav partials to match your app routes and actions.
 
 ### 4. Configure Tailwind CSS 4 to Scan FlatPack Components
 
@@ -170,16 +200,21 @@ The install generator automatically configures JavaScript imports for FlatPack's
 # Pin FlatPack controllers
 pin_all_from FlatPack::Engine.root.join("app/javascript/flat_pack/controllers"), 
              under: "controllers/flat_pack", 
-             to: "flat_pack/controllers"
+             to: "flat_pack/controllers",
+             preload: false
 ```
 
 **In `app/javascript/controllers/index.js`:**
 ```javascript
-// Eager load FlatPack controllers
-eagerLoadControllersFrom("controllers/flat_pack", application)
+import { lazyLoadControllersFrom } from "@hotwired/stimulus-loading"
+
+// Lazy load FlatPack controllers on first use
+lazyLoadControllersFrom("controllers/flat_pack", application)
 ```
 
-**Why eager loading?** FlatPack controllers are eagerly loaded (not lazy loaded) to ensure they're available immediately on page load, including hard refreshes. This prevents timing issues where controllers might not be registered when components are rendered.
+**Why lazy loading?** FlatPack controllers are loaded when matching `data-controller` attributes appear, which reduces initial JavaScript requests and improves first-page load performance in apps that only use a subset of components per page.
+
+**Why `preload: false`?** Importmap modulepreload is disabled for FlatPack controller pins so the browser does not fetch every controller on first page load.
 
 **Manual Configuration (if needed):**
 
@@ -189,13 +224,14 @@ If you need to manually configure the JavaScript controllers:
    ```ruby
    pin_all_from FlatPack::Engine.root.join("app/javascript/flat_pack/controllers"), 
                 under: "controllers/flat_pack", 
-                to: "flat_pack/controllers"
+                to: "flat_pack/controllers",
+                preload: false
    ```
 
 2. Add to `app/javascript/controllers/index.js`:
    ```javascript
-   import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading"
-   eagerLoadControllersFrom("controllers/flat_pack", application)
+   import { lazyLoadControllersFrom } from "@hotwired/stimulus-loading"
+   lazyLoadControllersFrom("controllers/flat_pack", application)
    ```
 
 ### 6. Verify Tailwind CSS Source Scanning
@@ -354,7 +390,7 @@ If FlatPack Stimulus controllers are not working (e.g., password toggle, file up
    ```bash
    grep -n "flat_pack" app/javascript/controllers/index.js
    ```
-   Should show: `eagerLoadControllersFrom("controllers/flat_pack", application)`
+   Should show: `lazyLoadControllersFrom("controllers/flat_pack", application)`
 
 4. **Verify Stimulus is installed:**
    ```bash
@@ -363,7 +399,7 @@ If FlatPack Stimulus controllers are not working (e.g., password toggle, file up
 
 5. **Hard refresh the page** (Cmd+R or Ctrl+R) to reload JavaScript
 
-**Common issue:** If controllers work on Turbo navigation but not on hard refresh, make sure you're using `eagerLoadControllersFrom` (not `lazyLoadControllersFrom`) for FlatPack controllers.
+**Common issue:** If controllers are not initializing, verify `data-controller` values match FlatPack controller identifiers (for example, `flat-pack--date-input`) and that `lazyLoadControllersFrom("controllers/flat_pack", application)` is present.
 
 ### Importmap "skipped missing path" Errors
 
@@ -374,7 +410,8 @@ If you see errors like `Importmap skipped missing path: controllers/flat_pack/te
    # config/importmap.rb
    pin_all_from FlatPack::Engine.root.join("app/javascript/flat_pack/controllers"), 
                 under: "controllers/flat_pack", 
-                to: "flat_pack/controllers"  # This is required!
+                to: "flat_pack/controllers",
+                preload: false  # This is required for lazy loading behavior
    ```
 
 2. **Restart the Rails server** after changing importmap configuration

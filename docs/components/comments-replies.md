@@ -1,5 +1,32 @@
 # Comments Replies Component
 
+## Purpose
+Provide a nested container for rendering reply chains in comment threads.
+
+## When to use
+Use Comments Replies when displaying hierarchical conversations with indentation and grouping.
+
+## Class
+- Primary: `FlatPack::Comments::Replies::Component`
+
+## Props
+See the `Props` section below for supported arguments and defaults.
+
+## Slots
+See slot examples below for rendering reply items.
+
+## Variants
+See behavior and styling variants below.
+
+## Example
+Start with `Basic Usage` below.
+
+## Accessibility
+See accessibility notes below for nested thread semantics.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+
 A container for nested comment replies with indentation, left border, and collapsible state.
 
 ## Basic Usage

@@ -4,19 +4,45 @@
     subtitle: "File and image attachment cards for message bubbles."
   ) %>
 
-  <div class="mt-6 space-y-4 rounded-lg border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-6">
-    <%= render FlatPack::Chat::Attachment::Component.new(
-      type: :file,
-      name: "project-plan.pdf",
-      meta: "840 KB",
-      href: "#"
-    ) %>
+  <%= render "pages/component_method_variables_table", component: :chat_attachment, anchor: "component-method-variables" %>
 
-    <%= render FlatPack::Chat::Attachment::Component.new(
-      type: :image,
-      name: "homepage-wireframe.png",
-      thumbnail_url: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=640&h=360&fit=crop",
-      href: "#"
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Demo", anchor_link: true, subtitle: "File and image attachment variations.") %>
+
+    <div class="mb-4 mt-6 space-y-4 rounded-lg border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-6">
+      <%= render FlatPack::Chat::Attachment::Component.new(
+        type: :file,
+        name: "project-plan.pdf",
+        meta: "840 KB",
+        href: "#"
+      ) %>
+
+      <%= render FlatPack::Chat::Attachment::Component.new(
+        type: :image,
+        name: "homepage-wireframe.png",
+        thumbnail_url: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=640&h=360&fit=crop",
+        href: "#"
+      ) %>
+    </div>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Chat::Attachment::Component.new(
+          type: :file,
+          name: "project-plan.pdf",
+          meta: "840 KB",
+          href: "#"
+        ) %&gt;
+
+        &lt;%= render FlatPack::Chat::Attachment::Component.new(
+          type: :image,
+          name: "homepage-wireframe.png",
+          thumbnail_url: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=640&h=360&fit=crop",
+          href: "#"
+        ) %&gt;
+      CODE
     ) %>
-  </div>
+  </section>
 </div>

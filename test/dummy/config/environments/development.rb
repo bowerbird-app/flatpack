@@ -46,4 +46,9 @@ Rails.application.configure do
 
   # Allow GitHub Codespaces hosts
   config.hosts << /.*\.app\.github\.dev/
+
+  # Allow local forwarded origins (e.g. http://localhost:3000) when developing
+  # through Codespaces/browser tunnels so CSRF origin checks don't block demo
+  # XHR PATCH requests like /demo/tables/reorder.
+  config.action_controller.forgery_protection_origin_check = false
 end

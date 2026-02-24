@@ -21,6 +21,7 @@ module FlatPack
           style: :default,
           size: :md,
           icon: nil,
+          show_chevron: true,
           disabled: false,
           position: :bottom_right,
           max_height: "384px",
@@ -31,6 +32,7 @@ module FlatPack
           @style = style.to_sym
           @size = size.to_sym
           @icon = icon
+          @show_chevron = show_chevron
           @disabled = disabled
           @position = position.to_sym
           @max_height = max_height
@@ -92,8 +94,8 @@ module FlatPack
         def button_content
           content = []
           content << render(FlatPack::Shared::IconComponent.new(name: @icon, size: @size)) if @icon
-          content << content_tag(:span, @text)
-          content << chevron_icon
+          content << content_tag(:span, @text) if @text.present?
+          content << chevron_icon if @show_chevron
           safe_join(content)
         end
 

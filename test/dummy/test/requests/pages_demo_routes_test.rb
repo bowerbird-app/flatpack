@@ -47,8 +47,10 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/tabs/stacked_pills
     /demo/toasts
     /demo/page_header
+    /demo/text/quote
     /demo/empty_state
     /demo/grid
+    /demo/grid/movable_cards
     /demo/pagination
     /demo/charts
     /demo/code_blocks
@@ -98,6 +100,14 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_response :success
     payload = JSON.parse(response.body)
     assert payload["results"].any? { |entry| entry["title"].to_s.include?("Button") }
+  end
+
+  test "search results include movable cards grid entry" do
+    get "/demo/search_results", params: {q: "movable cards"}
+
+    assert_response :success
+    payload = JSON.parse(response.body)
+    assert payload["results"].any? { |entry| entry["title"].to_s.include?("Grid: Movable Cards") }
   end
 
   test "form demo submission endpoints redirect" do
