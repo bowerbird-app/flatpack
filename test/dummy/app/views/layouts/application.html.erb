@@ -402,6 +402,7 @@
                 demo_chat_message_list_path,
                 demo_chat_message_group_path,
                 demo_chat_message_path,
+                demo_chat_message_record_path,
                 demo_chat_message_meta_path,
                 demo_chat_attachment_path,
                 demo_chat_date_divider_path,
@@ -451,6 +452,12 @@
                     href: demo_chat_message_path,
                     icon: :message_circle,
                     active: current_page?(demo_chat_message_path)
+                  ) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "Message Record",
+                    href: demo_chat_message_record_path,
+                    icon: :message_circle,
+                    active: current_page?(demo_chat_message_record_path)
                   ) %>
                   <%= render FlatPack::Sidebar::Item::Component.new(
                     label: "Message Meta",

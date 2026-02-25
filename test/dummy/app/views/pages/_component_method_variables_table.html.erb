@@ -85,6 +85,15 @@
         { variable: "variant", accepts: ":default, :system", example: "variant: :system" }
       ]
     },
+    chat_message_record: {
+      label: "Chat Message Record",
+      method_call: "render FlatPack::Chat::MessageRecord::Component.new(record: message)",
+      variables: [
+        { variable: "record", accepts: "message-like object", example: "record: message" },
+        { variable: "direction", accepts: ":incoming, :outgoing, nil", example: "direction: :outgoing" },
+        { variable: "show_avatar", accepts: "true, false, nil", example: "show_avatar: false" }
+      ]
+    },
     chat_attachment: {
       label: "Chat Attachment",
       method_call: "render FlatPack::Chat::Attachment::Component.new(type: :file, name: \"spec.pdf\", meta: \"840 KB\")",

@@ -15,8 +15,7 @@ module Demo
       Turbo::StreamsChannel.broadcast_replace_to(
         message.chat_group.demo_stream_name,
         target: dom_id(message),
-        partial: "demo/chat_messages/message",
-        locals: {message: message}
+        renderable: FlatPack::Chat::MessageRecord::Component.new(record: message)
       )
     end
   end

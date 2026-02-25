@@ -1,0 +1,25 @@
+<div data-pagination-content>
+  <% unless has_more %>
+    <%= render FlatPack::Chat::Message::Component.new(variant: :system) do %>
+      You have reached the start of this chat group.
+    <% end %>
+  <% end %>
+
+  <% messages.each do |message| %>
+    <%= render FlatPack::Chat::MessageRecord::Component.new(record: message, reveal_actions: true) %>
+  <% end %>
+</div>
+
+<%= render FlatPack::PaginationInfinite::Component.new(
+  url: history_url,
+  has_more: has_more,
+  loading_text: "Loading older messages...",
+  loading_variant: :inline,
+  insert_mode: :prepend,
+  observe_root_selector: "[data-flat-pack--chat-scroll-target='messages']",
+  cursor_selector: "[data-pagination-cursor]",
+  cursor_param: "before_id",
+  batch_size: history_limit,
+  batch_size_param: "limit",
+  preserve_scroll_position: true
+) %>

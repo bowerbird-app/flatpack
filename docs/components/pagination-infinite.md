@@ -48,6 +48,14 @@ The Pagination Infinite Scroll component adds infinite scrolling capability with
 | `page` | Number | `1` | Current page number |
 | `has_more` | Boolean | `true` | Whether more content is available |
 | `loading_text` | String | `"Loading more..."` | Text shown while loading |
+| `loading_variant` | Symbol | `:table` | Loading UI variant (`:table`, `:cards`, `:inline`) |
+| `insert_mode` | Symbol | `:append` | Insert fetched content at end or start (`:append`, `:prepend`) |
+| `observe_root_selector` | String | `nil` | CSS selector for custom IntersectionObserver root |
+| `cursor_selector` | String | `nil` | CSS selector for cursor element inside `data-pagination-content` |
+| `cursor_param` | String | `nil` | Query param name to send cursor value |
+| `batch_size` | Number | `nil` | Optional page size/batch size sent with each request |
+| `batch_size_param` | String | `"limit"` | Query param name for `batch_size` |
+| `preserve_scroll_position` | Boolean | `false` | Preserve viewport offset when prepending content |
 | `**system_arguments` | Hash | `{}` | HTML attributes (`class`, `data`, `aria`, `id`, etc.) |
 
 ## Examples
@@ -83,6 +91,22 @@ The Pagination Infinite Scroll component adds infinite scrolling capability with
   url: search_path(q: params[:q], page: @next_page),
   page: @next_page,
   has_more: @has_more
+) %>
+```
+
+### Chat History (Scroll Up)
+```erb
+<%= render FlatPack::PaginationInfinite::Component.new(
+  url: chat_group_messages_path(@chat_group),
+  has_more: @has_more,
+  loading_variant: :inline,
+  insert_mode: :prepend,
+  observe_root_selector: "[data-flat-pack--chat-scroll-target='messages']",
+  cursor_selector: "[data-pagination-cursor]",
+  cursor_param: "before_id",
+  batch_size: 20,
+  batch_size_param: "limit",
+  preserve_scroll_position: true
 ) %>
 ```
 

@@ -305,13 +305,23 @@ class PagesController < ApplicationController
   end
 
   def chat_demo
+    history_limit = 10
+
     if chat_tables_available?
       ensure_chat_demo_messages!
       @chat_group = ChatGroup.order(:id).first
-      @chat_messages = recent_chat_messages(@chat_group)
+      @chat_messages = recent_chat_messages(@chat_group, limit: history_limit)
+
+      oldest_message_id = @chat_messages.first&.id
+      @chat_history_has_more = oldest_message_id.present? && @chat_group.chat_messages.where("id < ?", oldest_message_id).exists?
+      @chat_history_url = demo_chat_group_messages_path(@chat_group)
+      @chat_history_limit = history_limit
     else
       @chat_group = nil
       @chat_messages = []
+      @chat_history_has_more = false
+      @chat_history_url = nil
+      @chat_history_limit = history_limit
     end
   end
 
@@ -328,6 +338,9 @@ class PagesController < ApplicationController
   end
 
   def chat_message
+  end
+
+  def chat_message_record
   end
 
   def chat_message_meta
@@ -665,12 +678,12 @@ class PagesController < ApplicationController
     ChatMessage.insert_all(rows)
   end
 
-  def recent_chat_messages(chat_group)
+  def recent_chat_messages(chat_group, limit: 10)
     return [] unless chat_group
 
     recent_ids = chat_group.chat_messages
       .order(created_at: :desc, id: :desc)
-      .limit(10)
+      .limit(limit)
       .select(:id)
 
     chat_group.chat_messages.where(id: recent_ids).chronological

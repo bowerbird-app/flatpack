@@ -7,7 +7,14 @@ export default class extends Controller {
     url: String,
     page: { type: Number, default: 1 },
     loadingDelay: { type: Number, default: 200 },
-    loadingVariant: { type: String, default: "table" }
+    loadingVariant: { type: String, default: "table" },
+    insertMode: { type: String, default: "append" },
+    observeRootSelector: String,
+    cursorSelector: String,
+    cursorParam: String,
+    batchSize: Number,
+    batchSizeParam: { type: String, default: "limit" },
+    preserveScrollPosition: { type: Boolean, default: false }
   }
 
   connect() {
@@ -31,6 +38,8 @@ export default class extends Controller {
       return
     }
 
+    const observerRoot = this.resolveObserverRoot()
+
     this.observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -40,6 +49,7 @@ export default class extends Controller {
         })
       },
       {
+        root: observerRoot,
         rootMargin: "100px"
       }
     )
@@ -62,7 +72,7 @@ export default class extends Controller {
     this.scheduleLoading()
 
     try {
-      const response = await fetch(this.urlValue, {
+      const response = await fetch(this.resolveUrl(), {
         headers: {
           "Accept": "text/html",
           "X-Requested-With": "XMLHttpRequest"
@@ -92,14 +102,36 @@ export default class extends Controller {
     const newContent = temp.querySelector("[data-pagination-content]")
     const newPagination = temp.querySelector("[data-controller='flat-pack--pagination-infinite']")
 
+    const shouldPreserveScroll = this.insertModeValue === "prepend" && this.preserveScrollPositionValue
+    const scrollContainer = shouldPreserveScroll ? this.resolveScrollContainer() : null
+    const previousScrollHeight = scrollContainer ? scrollContainer.scrollHeight : null
+    const previousScrollTop = scrollContainer ? scrollContainer.scrollTop : null
+
     if (newContent && currentContent) {
       const canAppendInsideCurrent = currentContent.tagName === newContent.tagName
 
       if (canAppendInsideCurrent) {
-        currentContent.insertAdjacentHTML("beforeend", newContent.innerHTML)
+        if (this.insertModeValue === "prepend") {
+          currentContent.insertAdjacentHTML("afterbegin", newContent.innerHTML)
+        } else {
+          currentContent.insertAdjacentHTML("beforeend", newContent.innerHTML)
+        }
       } else {
         this.element.parentElement.insertBefore(newContent, this.element)
       }
+
+      this.dispatch("content-inserted", {
+        prefix: "flat-pack:pagination",
+        detail: {
+          insertMode: this.insertModeValue
+        }
+      })
+    }
+
+    if (scrollContainer && previousScrollHeight !== null && previousScrollTop !== null) {
+      const newScrollHeight = scrollContainer.scrollHeight
+      const delta = newScrollHeight - previousScrollHeight
+      scrollContainer.scrollTop = previousScrollTop + delta
     }
 
     // Replace pagination or remove if no more pages
@@ -108,6 +140,52 @@ export default class extends Controller {
     } else {
       this.element.remove()
     }
+  }
+
+  resolveUrl() {
+    const url = new URL(this.urlValue, window.location.origin)
+    const cursorValue = this.resolveCursorValue()
+
+    if (this.hasCursorParamValue && cursorValue !== null) {
+      url.searchParams.set(this.cursorParamValue, cursorValue)
+    }
+
+    if (this.hasBatchSizeValue && this.batchSizeValue > 0) {
+      const batchParamName = this.batchSizeParamValue || "limit"
+      url.searchParams.set(batchParamName, this.batchSizeValue)
+    }
+
+    return url.toString()
+  }
+
+  resolveCursorValue() {
+    if (!this.hasCursorSelectorValue) {
+      return null
+    }
+
+    const currentContent = this.element.parentElement?.querySelector("[data-pagination-content]")
+    if (!currentContent) {
+      return null
+    }
+
+    const cursorElement = currentContent.querySelector(this.cursorSelectorValue)
+    if (!cursorElement) {
+      return null
+    }
+
+    return cursorElement.getAttribute("data-pagination-cursor")
+  }
+
+  resolveObserverRoot() {
+    if (!this.hasObserveRootSelectorValue) {
+      return null
+    }
+
+    return this.element.closest(this.observeRootSelectorValue) || document.querySelector(this.observeRootSelectorValue)
+  }
+
+  resolveScrollContainer() {
+    return this.resolveObserverRoot()
   }
 
   scheduleLoading() {

@@ -36,7 +36,7 @@ export default class extends Controller {
       submitButton.disabled = true
     }
 
-    this.#notifyNewMessage(threadElement, { forceScroll: true })
+    this.#notifyNewMessage(threadElement)
 
     try {
       const payload = this.#payloadFor(body)
@@ -57,7 +57,7 @@ export default class extends Controller {
       if (submitButton) {
         submitButton.disabled = false
       }
-      this.#notifyNewMessage(threadElement, { forceScroll: true })
+      this.#notifyNewMessage(threadElement)
     }
   }
 

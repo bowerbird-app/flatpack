@@ -5,6 +5,16 @@ require "test_helper"
 class DemoChatMessagesTest < ActionDispatch::IntegrationTest
   setup do
     @chat_group = ChatGroup.create!(name: "Request Test Group")
+
+    12.times do |index|
+      @chat_group.chat_messages.create!(
+        sender_name: "Teammate",
+        body: "History message #{index + 1}",
+        state: "sent",
+        created_at: (12 - index).minutes.ago,
+        updated_at: (12 - index).minutes.ago
+      )
+    end
   end
 
   test "creates a chat message and returns confirmation payload" do
@@ -40,5 +50,34 @@ class DemoChatMessagesTest < ActionDispatch::IntegrationTest
 
     payload = JSON.parse(response.body)
     assert_match(/Body can't be blank/i, payload["error"])
+  end
+
+  test "returns chat history partial for infinite scroll" do
+    cursor_id = @chat_group.chat_messages.order(:id).offset(9).first.id
+
+    get demo_chat_group_messages_path(@chat_group), params: {
+      before_id: cursor_id,
+      limit: 4
+    }
+
+    assert_response :success
+    assert_includes response.body, "data-pagination-content"
+    assert_includes response.body, "flat-pack--pagination-infinite"
+    assert_includes response.body, "data-flat-pack--pagination-infinite-insert-mode-value=\"prepend\""
+    assert_includes response.body, "History message 6"
+    assert_includes response.body, "History message 9"
+  end
+
+  test "renders start-of-chat-group system message on terminal history batch" do
+    cursor_id = @chat_group.chat_messages.order(:id).offset(2).first.id
+
+    get demo_chat_group_messages_path(@chat_group), params: {
+      before_id: cursor_id,
+      limit: 4
+    }
+
+    assert_response :success
+    assert_includes response.body, "You have reached the start of this chat group."
+    refute_includes response.body, "flat-pack--pagination-infinite"
   end
 end

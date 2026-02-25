@@ -20,8 +20,7 @@ module Demo
       Turbo::StreamsChannel.broadcast_append_to(
         chat_group.demo_stream_name,
         target: dom_id(chat_group, :messages),
-        partial: "demo/chat_messages/message",
-        locals: {message: reply}
+        renderable: FlatPack::Chat::MessageRecord::Component.new(record: reply, reveal_actions: true)
       )
 
       Turbo::StreamsChannel.broadcast_update_to(

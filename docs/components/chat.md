@@ -8,7 +8,7 @@ Use Chat components for conversation UIs with message lists, composer controls, 
 
 ## Class
 - Primary: `FlatPack::Chat::Panel::Component`
-- Related classes: `FlatPack::Chat::Layout::Component`, `FlatPack::Chat::MessageList::Component`, `FlatPack::Chat::Message::Component`, `FlatPack::Chat::Composer::Component`
+- Related classes: `FlatPack::Chat::Layout::Component`, `FlatPack::Chat::MessageList::Component`, `FlatPack::Chat::MessageRecord::Component`, `FlatPack::Chat::Message::Component`, `FlatPack::Chat::Composer::Component`
 
 ## Props
 See each sub-component section below for props and defaults.
@@ -104,6 +104,13 @@ Scrollable container for messages with auto-scroll and "Jump to latest" button.
 
 **Props:**
 - `stick_to_bottom`: `true` (default) | `false` - Auto-scroll to bottom
+- `history_url`: String - Endpoint used to fetch older messages when scrolling up
+- `history_has_more`: `false` (default) | `true` - Whether more history exists
+- `history_limit`: Number | `nil` - Optional batch size sent on each history request
+- `history_cursor_selector`: String - Selector used to find the current oldest message cursor
+- `history_cursor_param`: String - Query param name for cursor (default: `before_id`)
+- `history_limit_param`: String - Query param name for batch size (default: `limit`)
+- `history_loading_text`: String - Loading copy shown while fetching older messages
 - `**system_arguments`
 
 **Features:**
@@ -111,29 +118,25 @@ Scrollable container for messages with auto-scroll and "Jump to latest" button.
 - Shows "Jump to latest" button when scrolled up
 - Smooth scrolling
 - Stimulus controller integration
+- Optional infinite history loading when the top sentinel enters view
 
 **Example:**
 ```erb
-<%= render FlatPack::Chat::MessageList::Component.new(stick_to_bottom: true) do %>
+<%= render FlatPack::Chat::MessageList::Component.new(
+  stick_to_bottom: true,
+  history_url: chat_group_messages_path(@chat_group),
+  history_has_more: @has_more_history,
+  history_limit: 20
+) do %>
   <%= render FlatPack::Chat::DateDivider::Component.new(label: "Today") %>
-  
-  <%= render FlatPack::Chat::MessageGroup::Component.new(
-    direction: :incoming,
-    sender_name: "Alice"
-  ) do |group| %>
-    <% group.with_avatar do %>
-      <%= render FlatPack::Avatar::Component.new(name: "Alice") %>
+
+  <div data-pagination-content>
+    <% @messages.each do |message| %>
+      <div data-pagination-cursor="<%= message.id %>">
+        <!-- message markup -->
+      </div>
     <% end %>
-    
-    <% group.with_message do %>
-      <%= render FlatPack::Chat::Message::Component.new(
-        direction: :incoming,
-        timestamp: Time.current
-      ) do %>
-        Hello! How are you?
-      <% end %>
-    <% end %>
-  <% end %>
+  </div>
 <% end %>
 ```
 
@@ -197,6 +200,35 @@ Groups consecutive messages from the same sender.
 ```
 
 ### Message Components
+
+#### Chat::MessageRecord::Component
+
+Model-backed message row component that renders message group, bubble, avatar, and metadata together.
+
+Use this when you have a persisted message object and want to avoid custom partials for incoming/outgoing logic.
+
+**Props:**
+- `record`: message-like object (optional if explicit fields are passed)
+- `body`: String - falls back to `record.body`
+- `sender_name`: String - falls back to `record.sender_name`
+- `timestamp`: Time/String - falls back to `record.created_at`
+- `state`: `:sent` (default fallback) | `:sending` | `:failed` | `:read`
+- `direction`: `:incoming` | `:outgoing` (optional override; inferred from `record.outgoing?` or `sender_name == "You"`)
+- `show_avatar`: `true`/`false` (defaults to `true` for incoming, `false` for outgoing)
+- `show_name`: `true`/`false` (defaults to `true` for incoming, `false` for outgoing)
+- `**system_arguments`
+
+**Example:**
+```erb
+<%= render FlatPack::Chat::MessageRecord::Component.new(record: message) %>
+
+<%= render FlatPack::Chat::MessageRecord::Component.new(
+  body: "Can you confirm launch timing?",
+  sender_name: "Mina",
+  timestamp: Time.current,
+  state: :sent
+) %>
+```
 
 #### Chat::Message::Component
 

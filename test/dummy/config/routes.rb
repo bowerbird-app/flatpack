@@ -76,6 +76,7 @@ Rails.application.routes.draw do
   get "demo/chat/message_list", to: "pages#chat_message_list"
   get "demo/chat/message_group", to: "pages#chat_message_group"
   get "demo/chat/message", to: "pages#chat_message"
+  get "demo/chat/message_record", to: "pages#chat_message_record"
   get "demo/chat/message_meta", to: "pages#chat_message_meta"
   get "demo/chat/attachment", to: "pages#chat_attachment"
   get "demo/chat/date_divider", to: "pages#chat_date_divider"
@@ -86,7 +87,7 @@ Rails.application.routes.draw do
 
   namespace :demo do
     resources :chat_groups, only: [] do
-      resources :messages, only: :create, controller: "chat_messages"
+      resources :messages, only: [:index, :create], controller: "chat_messages"
     end
   end
 

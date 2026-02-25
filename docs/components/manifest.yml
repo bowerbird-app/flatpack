@@ -74,6 +74,7 @@ components:
     related_classes:
       - FlatPack::Chat::Layout::Component
       - FlatPack::Chat::MessageList::Component
+      - FlatPack::Chat::MessageRecord::Component
       - FlatPack::Chat::Message::Component
       - FlatPack::Chat::Composer::Component
     status: documented

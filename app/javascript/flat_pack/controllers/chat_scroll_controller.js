@@ -8,6 +8,15 @@ export default class extends Controller {
   }
 
   connect() {
+    this.wasNearBottom = false
+    this.ignoreNextMutation = false
+    this.isPrependingHistory = false
+    this.prependResetTimer = null
+    this.handlePaginationContentInserted = (event) => this.#onPaginationContentInserted(event)
+    this.handleTurboStreamAppend = (event) => this.#onTurboStreamAppend(event)
+    this.element.addEventListener("flat-pack:pagination:content-inserted", this.handlePaginationContentInserted)
+    document.addEventListener("turbo:before-stream-render", this.handleTurboStreamAppend)
+
     // Initial scroll to bottom if stick_to_bottom is enabled
     if (this.stickToBottomValue) {
       this.scrollToBottom({ instant: true })
@@ -25,6 +34,21 @@ export default class extends Controller {
   }
 
   disconnect() {
+    if (this.prependResetTimer) {
+      window.clearTimeout(this.prependResetTimer)
+      this.prependResetTimer = null
+    }
+
+    if (this.handlePaginationContentInserted) {
+      this.element.removeEventListener("flat-pack:pagination:content-inserted", this.handlePaginationContentInserted)
+      this.handlePaginationContentInserted = null
+    }
+
+    if (this.handleTurboStreamAppend) {
+      document.removeEventListener("turbo:before-stream-render", this.handleTurboStreamAppend)
+      this.handleTurboStreamAppend = null
+    }
+
     this.#stopObservingMessages()
   }
 
@@ -68,6 +92,7 @@ export default class extends Controller {
     // Show jump button if user has scrolled up more than 100px from bottom
     const distanceFromBottom = scrollHeight - scrollTop - clientHeight
     const shouldShowButton = distanceFromBottom > 100
+    this.wasNearBottom = !shouldShowButton
 
     if (shouldShowButton) {
       this.jumpButtonContainerTarget.classList.remove("hidden")
@@ -78,7 +103,12 @@ export default class extends Controller {
 
   // Called when new messages are added to the list
   newMessageAdded() {
-    if (this.stickToBottomValue && this.#isNearBottom()) {
+    if (this.isPrependingHistory) {
+      this.checkScroll()
+      return
+    }
+
+    if (this.stickToBottomValue && this.wasNearBottom) {
       // Auto-scroll to bottom if we're already near the bottom
       this.scrollToBottom()
     } else {
@@ -106,23 +136,71 @@ export default class extends Controller {
       return
     }
 
+    this.wasNearBottom = this.#isNearBottom()
+
     this.messageObserver = new MutationObserver((mutations) => {
+      if (this.ignoreNextMutation) {
+        this.ignoreNextMutation = false
+        this.checkScroll()
+        return
+      }
+
       const hasAddedNodes = mutations.some((mutation) => mutation.addedNodes.length > 0)
       if (!hasAddedNodes) {
         return
       }
 
-      if (this.stickToBottomValue) {
-        this.scrollToBottom()
-      } else {
-        this.checkScroll()
-      }
+      this.checkScroll()
     })
 
     this.messageObserver.observe(this.messagesTarget, {
       childList: true,
       subtree: true
     })
+  }
+
+  #onPaginationContentInserted(event) {
+    if (event?.detail?.insertMode !== "prepend") {
+      return
+    }
+
+    this.isPrependingHistory = true
+    this.ignoreNextMutation = true
+
+    if (this.prependResetTimer) {
+      window.clearTimeout(this.prependResetTimer)
+    }
+
+    this.prependResetTimer = window.setTimeout(() => {
+      this.isPrependingHistory = false
+      this.prependResetTimer = null
+    }, 100)
+  }
+
+  #onTurboStreamAppend(event) {
+    if (!this.hasMessagesTarget) {
+      return
+    }
+
+    const streamElement = event.target
+    if (!(streamElement instanceof Element)) {
+      return
+    }
+
+    if (streamElement.getAttribute("action") !== "append") {
+      return
+    }
+
+    const targetId = this.messagesTarget.getAttribute("id")
+    if (!targetId) {
+      return
+    }
+
+    if (streamElement.getAttribute("target") !== targetId) {
+      return
+    }
+
+    this.newMessageAdded()
   }
 
   #stopObservingMessages() {

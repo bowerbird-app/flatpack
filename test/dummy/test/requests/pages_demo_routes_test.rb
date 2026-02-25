@@ -62,6 +62,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/chat/message_list
     /demo/chat/message_group
     /demo/chat/message
+    /demo/chat/message_record
     /demo/chat/message_meta
     /demo/chat/attachment
     /demo/chat/date_divider

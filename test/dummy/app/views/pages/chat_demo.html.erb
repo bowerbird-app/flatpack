@@ -33,12 +33,16 @@
         <% end %>
 
         <% panel.with_messages do %>
-          <%= render FlatPack::Chat::MessageList::Component.new do %>
+          <%= render FlatPack::Chat::MessageList::Component.new(
+            history_url: @chat_history_url,
+            history_has_more: @chat_history_has_more,
+            history_limit: @chat_history_limit
+          ) do %>
             <%= render FlatPack::Chat::DateDivider::Component.new(label: "Today") %>
 
-            <div id="<%= @chat_group ? dom_id(@chat_group, :messages) : "chat-demo-messages" %>" class="space-y-4">
+            <div id="<%= @chat_group ? dom_id(@chat_group, :messages) : "chat-demo-messages" %>" class="space-y-4" data-pagination-content>
               <% @chat_messages.each do |message| %>
-                <%= render "demo/chat_messages/message", message: message %>
+                <%= render FlatPack::Chat::MessageRecord::Component.new(record: message, reveal_actions: true) %>
               <% end %>
             </div>
 
