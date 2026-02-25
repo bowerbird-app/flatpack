@@ -62,6 +62,7 @@ Rails.application.routes.draw do
   get "demo/text/quote", to: "pages#text_quote"
   get "demo/empty_state", to: "pages#empty_state"
   get "demo/grid", to: "pages#grid"
+  get "demo/grid/two_columns", to: "pages#grid_two_columns"
   get "demo/grid/movable_cards", to: "pages#grid_movable_cards"
   get "demo/pagination", to: "pages#pagination"
   get "demo/charts", to: "pages#charts"
@@ -82,6 +83,12 @@ Rails.application.routes.draw do
   get "demo/chat/composer", to: "pages#chat_composer"
   get "demo/chat/textarea", to: "pages#chat_textarea"
   get "demo/chat/send_button", to: "pages#chat_send_button"
+
+  namespace :demo do
+    resources :chat_groups, only: [] do
+      resources :messages, only: :create, controller: "chat_messages"
+    end
+  end
 
   # New components
   get "demo/progress", to: "pages#progress"

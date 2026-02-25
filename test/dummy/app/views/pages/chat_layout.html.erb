@@ -7,7 +7,45 @@
   <%= render "pages/component_method_variables_table", component: :chat_layout, anchor: "component-method-variables" %>
 
   <section class="mb-12">
-    <%= render FlatPack::SectionTitle::Component.new(title: "Demo", anchor_link: true, subtitle: "Split layout with sidebar and panel slots.") %>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Single", anchor_link: true, subtitle: "Single-column layout using only the panel slot.") %>
+
+    <div class="mb-4 mt-6 h-[360px] overflow-hidden rounded-lg border border-(--surface-border-color) bg-(--surface-background-color)">
+      <%= render FlatPack::Chat::Layout::Component.new do |layout| %>
+        <% layout.with_panel do %>
+          <%= render FlatPack::Chat::Panel::Component.new do |panel| %>
+            <% panel.with_header do %>
+              <div class="p-4 text-sm font-semibold">Product Launch</div>
+            <% end %>
+            <% panel.with_messages do %>
+              <div class="flex-1 p-4 text-sm text-(--surface-muted-content-color)">Single-column panel content sits here.</div>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Chat::Layout::Component.new do |layout| %&gt;
+          &lt;% layout.with_panel do %&gt;
+            &lt;%= render FlatPack::Chat::Panel::Component.new do |panel| %&gt;
+              &lt;% panel.with_header do %&gt;
+                &lt;div class="p-4 text-sm font-semibold"&gt;Product Launch&lt;/div&gt;
+              &lt;% end %&gt;
+              &lt;% panel.with_messages do %&gt;
+                &lt;div class="flex-1 p-4 text-sm text-(--surface-muted-content-color)"&gt;Single-column panel content sits here.&lt;/div&gt;
+              &lt;% end %&gt;
+            &lt;% end %&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
+  </section>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Split", anchor_link: true, subtitle: "Split layout with sidebar and panel slots.") %>
 
     <div class="mb-4 mt-6 h-[560px] overflow-hidden rounded-lg border border-(--surface-border-color) bg-(--surface-background-color)">
       <%= render FlatPack::Chat::Layout::Component.new(variant: :split) do |layout| %>
@@ -50,6 +88,9 @@
             &lt;%= render FlatPack::Chat::Panel::Component.new do |panel| %&gt;
               &lt;% panel.with_header do %&gt;
                 &lt;div class="p-4 text-sm font-semibold"&gt;Product Launch&lt;/div&gt;
+              &lt;% end %&gt;
+              &lt;% panel.with_messages do %&gt;
+                &lt;div class="flex-1 p-4 text-sm text-(--surface-muted-content-color)"&gt;Panel slot content sits here.&lt;/div&gt;
               &lt;% end %&gt;
             &lt;% end %&gt;
           &lt;% end %&gt;

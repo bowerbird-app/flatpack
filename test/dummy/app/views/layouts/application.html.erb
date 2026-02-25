@@ -348,6 +348,7 @@
               ) %>
               <% grid_section_active = [
                 demo_grid_path,
+                demo_grid_two_columns_path,
                 demo_grid_movable_cards_path
               ].any? { |path| current_page?(path) } %>
               <%= render FlatPack::Sidebar::Group::Component.new(
@@ -361,6 +362,12 @@
                     href: demo_grid_path,
                     icon: :dashboard,
                     active: current_page?(demo_grid_path)
+                  ) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "Two Columns",
+                    href: demo_grid_two_columns_path,
+                    icon: :dashboard,
+                    active: current_page?(demo_grid_two_columns_path)
                   ) %>
                   <%= render FlatPack::Sidebar::Item::Component.new(
                     label: "Movable Cards",

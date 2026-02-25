@@ -10,11 +10,11 @@ module FlatPack
 
         # Tailwind CSS scanning requires these classes to be present as string literals.
         # DO NOT REMOVE - These duplicates ensure CSS generation:
-        # "bg-[var(--surface-background-color)]" "border-[var(--surface-border-color)]" "bg-zinc-50" "dark:bg-zinc-800/50" "text-[var(--surface-muted-content-color)]"
+        # "bg-[var(--comments-item-background-color)]" "border-[var(--comments-item-border-color)]" "bg-[var(--comments-item-system-background-color)]" "text-[var(--comments-item-meta-color)]"
         STATES = {
-          default: "bg-[var(--surface-background-color)] border-[var(--surface-border-color)]",
-          system: "bg-zinc-50 dark:bg-zinc-800/50 border-[var(--surface-border-color)]",
-          deleted: "bg-[var(--surface-background-color)] border-[var(--surface-border-color)] opacity-60"
+          default: "bg-[var(--comments-item-background-color)] border-[var(--comments-item-border-color)]",
+          system: "bg-[var(--comments-item-system-background-color)] border-[var(--comments-item-border-color)]",
+          deleted: "bg-[var(--comments-item-background-color)] border-[var(--comments-item-border-color)] opacity-60"
         }.freeze
 
         def initialize(
@@ -113,13 +113,13 @@ module FlatPack
         def render_author_info
           content_tag(:div) do
             safe_join([
-              content_tag(:div, class: "font-medium text-sm text-[var(--surface-content-color)]") do
+              content_tag(:div, class: "font-medium text-sm text-[var(--comments-item-author-color)]") do
                 safe_join([
                   content_tag(:span, @author_name),
                   (@state == :system) ? render_system_badge : nil
                 ].compact)
               end,
-              @author_meta ? content_tag(:div, @author_meta, class: "text-xs text-[var(--surface-muted-content-color)]") : nil
+              @author_meta ? content_tag(:div, @author_meta, class: "text-xs text-[var(--comments-item-meta-color)]") : nil
             ].compact)
           end
         end
@@ -134,7 +134,7 @@ module FlatPack
           return unless @timestamp
 
           time_attrs = {
-            class: "text-xs text-[var(--surface-muted-content-color)] whitespace-nowrap"
+            class: "text-xs text-[var(--comments-item-meta-color)] whitespace-nowrap"
           }
           time_attrs[:datetime] = @timestamp_iso if @timestamp_iso
 
@@ -154,14 +154,14 @@ module FlatPack
           return render_deleted_message if @state == :deleted
 
           if @body_html
-            content_tag(:div, @body_html.html_safe, class: "text-sm text-[var(--surface-content-color)] prose prose-sm max-w-none")
+            content_tag(:div, @body_html.html_safe, class: "text-sm text-[var(--comments-item-body-color)] prose prose-sm max-w-none")
           elsif @body
-            content_tag(:div, @body, class: "text-sm text-[var(--surface-content-color)] whitespace-pre-wrap")
+            content_tag(:div, @body, class: "text-sm text-[var(--comments-item-body-color)] whitespace-pre-wrap")
           end
         end
 
         def render_deleted_message
-          content_tag(:div, class: "text-sm italic text-[var(--surface-muted-content-color)]") do
+          content_tag(:div, class: "text-sm italic text-[var(--comments-item-deleted-text-color)]") do
             "This comment has been deleted."
           end
         end
@@ -169,7 +169,7 @@ module FlatPack
         def render_footer_section
           return unless footer?
 
-          content_tag(:div, footer, class: "pt-2 border-t border-[var(--surface-border-color)]")
+          content_tag(:div, footer, class: "pt-2 border-t border-[var(--comments-item-footer-border-color)]")
         end
 
         def render_actions_section

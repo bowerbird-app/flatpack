@@ -69,9 +69,27 @@
   <div class="space-y-6">
     <%= render FlatPack::SectionTitle::Component.new(
       title: "Theme Demos",
-      subtitle: "Theme demos now live on dedicated pages so each theme has a direct URL.",
+      subtitle: "Compare both light and dark demos inline, with dedicated pages still available.",
       anchor_link: true
     ) %>
+
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+      <div class="space-y-3 p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-background-color)]" data-theme="light">
+        <div class="flex items-center justify-between gap-2">
+          <h3 class="text-base font-medium text-[var(--surface-content-color)]">Light Demo</h3>
+          <%= render FlatPack::Button::Component.new(text: "Open Full Demo", url: theme_demo_path(theme: "light"), style: :secondary, size: :sm) %>
+        </div>
+        <%= render "themes/demo_showcase" %>
+      </div>
+
+      <div class="space-y-3 p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-background-color)]" data-theme="dark">
+        <div class="flex items-center justify-between gap-2">
+          <h3 class="text-base font-medium text-[var(--surface-content-color)]">Dark Demo</h3>
+          <%= render FlatPack::Button::Component.new(text: "Open Full Demo", url: theme_demo_path(theme: "dark"), style: :secondary, size: :sm) %>
+        </div>
+        <%= render "themes/demo_showcase" %>
+      </div>
+    </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <%= render FlatPack::Card::Component.new do |card| %>

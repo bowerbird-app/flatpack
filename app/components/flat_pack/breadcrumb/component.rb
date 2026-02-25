@@ -139,7 +139,7 @@ module FlatPack
 
       def render_separator
         content_tag(:li,
-          class: "inline-flex items-center mx-2 text-[var(--surface-muted-content-color)]",
+          class: "inline-flex items-center mx-[var(--breadcrumb-separator-gap)] text-[var(--breadcrumb-separator-color)]",
           aria: {hidden: "true"}) do
           if @separator == :custom && @separator_icon
             render(FlatPack::Shared::IconComponent.new(
@@ -165,7 +165,7 @@ module FlatPack
       end
 
       def breadcrumb_classes
-        "flex items-center flex-wrap gap-1 text-sm"
+        "flex items-center flex-wrap gap-[var(--breadcrumb-gap)] text-sm"
       end
 
       def validate_separator!

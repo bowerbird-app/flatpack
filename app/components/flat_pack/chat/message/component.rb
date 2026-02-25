@@ -80,12 +80,16 @@ module FlatPack
         def render_default_message
           content_tag(:div, **message_attributes) do
             safe_join([
-              content_tag(:div, class: bubble_classes) do
+              content_tag(:div, class: "flex flex-col") do
                 safe_join([
-                  content_tag(:div, class: "break-words whitespace-pre-line") do
-                    normalized_content
+                  content_tag(:div, class: bubble_classes) do
+                    safe_join([
+                      content_tag(:div, class: "break-words whitespace-pre-line") do
+                        normalized_content
+                      end,
+                      render_attachments
+                    ].compact)
                   end,
-                  render_attachments,
                   render_meta_section
                 ].compact)
               end
@@ -117,6 +121,7 @@ module FlatPack
         def meta_section_classes
           classes(
             "mt-1",
+            (@direction == :outgoing ? "w-full flex justify-end" : nil),
             META_DIRECTIONS.fetch(@direction)
           )
         end

@@ -1,0 +1,458 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - generic [ref=e8]: FP
+        - generic [ref=e10]: FlatPack
+      - button "Collapse sidebar" [expanded] [ref=e11]:
+        - img [ref=e13]
+    - navigation "Main navigation" [ref=e16]:
+      - link "Overview" [ref=e17] [cursor=pointer]:
+        - /url: /demo
+        - img [ref=e19]
+        - generic [ref=e21]: Overview
+      - generic [ref=e22]:
+        - button "Themes" [ref=e23]:
+          - img [ref=e25]
+          - generic [ref=e27]: Themes
+          - img [ref=e29]
+        - generic:
+          - link "Theme Variables" [ref=e31] [cursor=pointer]:
+            - /url: /themes
+            - img [ref=e33]
+            - generic [ref=e35]: Theme Variables
+          - link "System Demo" [ref=e36] [cursor=pointer]:
+            - /url: /themes/demos/system
+            - img [ref=e38]
+            - generic [ref=e40]: System Demo
+          - link "Light Demo" [ref=e41] [cursor=pointer]:
+            - /url: /themes/demos/light
+            - img [ref=e43]
+            - generic [ref=e45]: Light Demo
+          - link "Dark Demo" [ref=e46] [cursor=pointer]:
+            - /url: /themes/demos/dark
+            - img [ref=e48]
+            - generic [ref=e50]: Dark Demo
+          - link "Ocean Demo" [ref=e51] [cursor=pointer]:
+            - /url: /themes/demos/ocean
+            - img [ref=e53]
+            - generic [ref=e55]: Ocean Demo
+          - link "Rounded Demo" [ref=e56] [cursor=pointer]:
+            - /url: /themes/demos/rounded
+            - img [ref=e58]
+            - generic [ref=e60]: Rounded Demo
+      - link "Buttons" [ref=e62] [cursor=pointer]:
+        - /url: /demo/buttons
+        - img [ref=e64]
+        - generic [ref=e66]: Buttons
+      - link "Modals" [ref=e67] [cursor=pointer]:
+        - /url: /demo/modals
+        - img [ref=e69]
+        - generic [ref=e71]: Modals
+      - link "Popovers" [ref=e72] [cursor=pointer]:
+        - /url: /demo/popovers
+        - img [ref=e74]
+        - generic [ref=e76]: Popovers
+      - link "Tooltips" [ref=e77] [cursor=pointer]:
+        - /url: /demo/tooltips
+        - img [ref=e79]
+        - generic [ref=e81]: Tooltips
+      - generic [ref=e82]:
+        - button "Tabs" [ref=e83]:
+          - img [ref=e85]
+          - generic [ref=e87]: Tabs
+          - img [ref=e89]
+        - generic:
+          - link "Underline Tabs" [ref=e91] [cursor=pointer]:
+            - /url: /demo/tabs
+            - img [ref=e93]
+            - generic [ref=e95]: Underline Tabs
+          - link "Pills tabs" [ref=e96] [cursor=pointer]:
+            - /url: /demo/tabs/pills
+            - img [ref=e98]
+            - generic [ref=e100]: Pills tabs
+          - link "Stacked pills" [ref=e101] [cursor=pointer]:
+            - /url: /demo/tabs/stacked_pills
+            - img [ref=e103]
+            - generic [ref=e105]: Stacked pills
+      - link "Toasts" [ref=e106] [cursor=pointer]:
+        - /url: /demo/toasts
+        - img [ref=e108]
+        - generic [ref=e110]: Toasts
+      - link "Collapse" [ref=e111] [cursor=pointer]:
+        - /url: /demo/collapse
+        - img [ref=e113]
+        - generic [ref=e115]: Collapse
+      - generic [ref=e117]:
+        - button "Forms" [expanded] [ref=e118]:
+          - img [ref=e120]
+          - generic [ref=e122]: Forms
+          - img [ref=e124]
+        - generic [ref=e126]:
+          - link "Submit Buttons" [ref=e127] [cursor=pointer]:
+            - /url: /demo/forms
+            - img [ref=e129]
+            - generic [ref=e131]: Submit Buttons
+          - link "Text Input" [active] [ref=e132] [cursor=pointer]:
+            - /url: /demo/forms/text_input
+            - img [ref=e134]
+            - generic [ref=e136]: Text Input
+          - link "Password Input" [ref=e137] [cursor=pointer]:
+            - /url: /demo/forms/password_input
+            - img [ref=e139]
+            - generic [ref=e141]: Password Input
+          - link "Email Input" [ref=e142] [cursor=pointer]:
+            - /url: /demo/forms/email_input
+            - img [ref=e144]
+            - generic [ref=e146]: Email Input
+          - link "Phone Input" [ref=e147] [cursor=pointer]:
+            - /url: /demo/forms/phone_input
+            - img [ref=e149]
+            - generic [ref=e151]: Phone Input
+          - link "Search Input" [ref=e152] [cursor=pointer]:
+            - /url: /demo/forms/search_input
+            - img [ref=e154]
+            - generic [ref=e156]: Search Input
+          - link "URL Input" [ref=e157] [cursor=pointer]:
+            - /url: /demo/forms/url_input
+            - img [ref=e159]
+            - generic [ref=e161]: URL Input
+          - link "Text Area" [ref=e162] [cursor=pointer]:
+            - /url: /demo/forms/text_area
+            - img [ref=e164]
+            - generic [ref=e166]: Text Area
+          - link "Number Input" [ref=e167] [cursor=pointer]:
+            - /url: /demo/forms/number_input
+            - img [ref=e169]
+            - generic [ref=e171]: Number Input
+          - link "Date Input" [ref=e172] [cursor=pointer]:
+            - /url: /demo/forms/date_input
+            - img [ref=e174]
+            - generic [ref=e176]: Date Input
+          - link "File Input" [ref=e177] [cursor=pointer]:
+            - /url: /demo/forms/file_input
+            - img [ref=e179]
+            - generic [ref=e181]: File Input
+          - link "Checkbox" [ref=e182] [cursor=pointer]:
+            - /url: /demo/forms/checkbox
+            - img [ref=e184]
+            - generic [ref=e186]: Checkbox
+          - link "Radio Group" [ref=e187] [cursor=pointer]:
+            - /url: /demo/forms/radio_group
+            - img [ref=e189]
+            - generic [ref=e191]: Radio Group
+          - link "Select" [ref=e192] [cursor=pointer]:
+            - /url: /demo/forms/select
+            - img [ref=e194]
+            - generic [ref=e196]: Select
+          - link "Switch" [ref=e197] [cursor=pointer]:
+            - /url: /demo/forms/switch
+            - img [ref=e199]
+            - generic [ref=e201]: Switch
+          - link "Range Input" [ref=e202] [cursor=pointer]:
+            - /url: /demo/range_input
+            - img [ref=e204]
+            - generic [ref=e206]: Range Input
+          - link "Combined Form" [ref=e207] [cursor=pointer]:
+            - /url: /demo/forms/combined
+            - img [ref=e209]
+            - generic [ref=e211]: Combined Form
+      - generic [ref=e213]:
+        - button "Tables" [ref=e214]:
+          - img [ref=e216]
+          - generic [ref=e218]: Tables
+          - img [ref=e220]
+        - generic:
+          - link "Basic" [ref=e222] [cursor=pointer]:
+            - /url: /demo/tables/basic
+            - img [ref=e224]
+            - generic [ref=e226]: Basic
+          - link "Empty" [ref=e227] [cursor=pointer]:
+            - /url: /demo/tables/empty
+            - img [ref=e229]
+            - generic [ref=e230]: Empty
+          - link "Sortable" [ref=e231] [cursor=pointer]:
+            - /url: /demo/tables/sortable
+            - img [ref=e233]
+            - generic [ref=e235]: Sortable
+          - link "Draggable" [ref=e236] [cursor=pointer]:
+            - /url: /demo/tables/draggable
+            - img [ref=e238]
+            - generic [ref=e240]: Draggable
+      - link "Pagination" [ref=e241] [cursor=pointer]:
+        - /url: /demo/pagination
+        - img [ref=e243]
+        - generic [ref=e245]: Pagination
+      - link "Infinite Scroll" [ref=e246] [cursor=pointer]:
+        - /url: /demo/pagination_infinite
+        - img [ref=e248]
+        - generic [ref=e250]: Infinite Scroll
+      - link "Charts" [ref=e251] [cursor=pointer]:
+        - /url: /demo/charts
+        - img [ref=e253]
+        - generic [ref=e255]: Charts
+      - generic [ref=e256]:
+        - button "Grid" [ref=e257]:
+          - img [ref=e259]
+          - generic [ref=e261]: Grid
+          - img [ref=e263]
+        - generic:
+          - link "Layouts" [ref=e265] [cursor=pointer]:
+            - /url: /demo/grid
+            - img [ref=e267]
+            - generic [ref=e269]: Layouts
+          - link "Two Columns" [ref=e270] [cursor=pointer]:
+            - /url: /demo/grid/two_columns
+            - img [ref=e272]
+            - generic [ref=e274]: Two Columns
+          - link "Movable Cards" [ref=e275] [cursor=pointer]:
+            - /url: /demo/grid/movable_cards
+            - img [ref=e277]
+            - generic [ref=e279]: Movable Cards
+      - link "Code Blocks" [ref=e280] [cursor=pointer]:
+        - /url: /demo/code_blocks
+        - img [ref=e282]
+        - generic [ref=e284]: Code Blocks
+      - link "Avatars" [ref=e285] [cursor=pointer]:
+        - /url: /demo/avatars
+        - img [ref=e287]
+        - generic [ref=e289]: Avatars
+      - link "Comments" [ref=e290] [cursor=pointer]:
+        - /url: /demo/comments
+        - img [ref=e292]
+        - generic [ref=e294]: Comments
+      - generic [ref=e295]:
+        - button "Chat" [ref=e296]:
+          - img [ref=e298]
+          - generic [ref=e300]: Chat
+          - img [ref=e302]
+        - generic:
+          - link "Chat Demo" [ref=e304] [cursor=pointer]:
+            - /url: /demo/chat/demo
+            - img [ref=e306]
+            - generic [ref=e308]: Chat Demo
+          - link "Layout" [ref=e309] [cursor=pointer]:
+            - /url: /demo/chat/layout
+            - img [ref=e311]
+            - generic [ref=e313]: Layout
+          - link "Panel" [ref=e314] [cursor=pointer]:
+            - /url: /demo/chat/panel
+            - img [ref=e316]
+            - generic [ref=e318]: Panel
+          - link "Message List" [ref=e319] [cursor=pointer]:
+            - /url: /demo/chat/message_list
+            - img [ref=e321]
+            - generic [ref=e323]: Message List
+          - link "Message Group" [ref=e324] [cursor=pointer]:
+            - /url: /demo/chat/message_group
+            - img [ref=e326]
+            - generic [ref=e328]: Message Group
+          - link "Message" [ref=e329] [cursor=pointer]:
+            - /url: /demo/chat/message
+            - img [ref=e331]
+            - generic [ref=e333]: Message
+          - link "Message Meta" [ref=e334] [cursor=pointer]:
+            - /url: /demo/chat/message_meta
+            - img [ref=e336]
+            - generic [ref=e338]: Message Meta
+          - link "Attachment" [ref=e339] [cursor=pointer]:
+            - /url: /demo/chat/attachment
+            - img [ref=e341]
+            - generic [ref=e343]: Attachment
+          - link "Date Divider" [ref=e344] [cursor=pointer]:
+            - /url: /demo/chat/date_divider
+            - img [ref=e346]
+            - generic [ref=e348]: Date Divider
+          - link "Typing Indicator" [ref=e349] [cursor=pointer]:
+            - /url: /demo/chat/typing_indicator
+            - img [ref=e351]
+            - generic [ref=e353]: Typing Indicator
+          - link "Composer" [ref=e354] [cursor=pointer]:
+            - /url: /demo/chat/composer
+            - img [ref=e356]
+            - generic [ref=e358]: Composer
+          - link "Textarea" [ref=e359] [cursor=pointer]:
+            - /url: /demo/chat/textarea
+            - img [ref=e361]
+            - generic [ref=e363]: Textarea
+          - link "Send Button" [ref=e364] [cursor=pointer]:
+            - /url: /demo/chat/send_button
+            - img [ref=e366]
+            - generic [ref=e368]: Send Button
+      - link "Progress" [ref=e369] [cursor=pointer]:
+        - /url: /demo/progress
+        - img [ref=e371]
+        - generic [ref=e373]: Progress
+      - link "Skeletons" [ref=e374] [cursor=pointer]:
+        - /url: /demo/skeletons
+        - img [ref=e376]
+        - generic [ref=e378]: Skeletons
+      - link "List" [ref=e379] [cursor=pointer]:
+        - /url: /demo/list
+        - img [ref=e381]
+        - generic [ref=e383]: List
+      - link "Timeline" [ref=e384] [cursor=pointer]:
+        - /url: /demo/timeline
+        - img [ref=e386]
+        - generic [ref=e388]: Timeline
+      - link "Cards" [ref=e390] [cursor=pointer]:
+        - /url: /demo/cards
+        - img [ref=e392]
+        - generic [ref=e394]: Cards
+      - generic [ref=e395]:
+        - button "Text" [ref=e396]:
+          - img [ref=e398]
+          - generic [ref=e400]: Text
+          - img [ref=e402]
+        - generic:
+          - link "Page Title" [ref=e404] [cursor=pointer]:
+            - /url: /demo/page_header
+            - img [ref=e406]
+            - generic [ref=e408]: Page Title
+          - link "Quote" [ref=e409] [cursor=pointer]:
+            - /url: /demo/text/quote
+            - img [ref=e411]
+            - generic [ref=e413]: Quote
+      - link "Empty State" [ref=e414] [cursor=pointer]:
+        - /url: /demo/empty_state
+        - img [ref=e416]
+        - generic [ref=e418]: Empty State
+      - link "Alerts" [ref=e420] [cursor=pointer]:
+        - /url: /demo/alerts
+        - img [ref=e422]
+        - generic [ref=e424]: Alerts
+      - link "Badges" [ref=e425] [cursor=pointer]:
+        - /url: /demo/badges
+        - img [ref=e427]
+        - generic [ref=e429]: Badges
+      - link "Chips" [ref=e430] [cursor=pointer]:
+        - /url: /demo/chips
+        - img [ref=e432]
+        - generic [ref=e434]: Chips
+      - link "Breadcrumbs" [ref=e436] [cursor=pointer]:
+        - /url: /demo/breadcrumbs
+        - img [ref=e438]
+        - generic [ref=e440]: Breadcrumbs
+      - link "Top Nav" [ref=e441] [cursor=pointer]:
+        - /url: /demo/navbar
+        - img [ref=e443]
+        - generic [ref=e445]: Top Nav
+      - link "Search" [ref=e446] [cursor=pointer]:
+        - /url: /demo/search
+        - img [ref=e448]
+        - generic [ref=e450]: Search
+      - generic [ref=e451]:
+        - button "Sidebar" [ref=e452]:
+          - img [ref=e454]
+          - generic [ref=e456]: Sidebar
+          - img [ref=e458]
+        - generic:
+          - link "Layout" [ref=e460] [cursor=pointer]:
+            - /url: /demo/sidebar_layout
+            - img [ref=e462]
+            - generic [ref=e464]: Layout
+          - link "Basic" [ref=e465] [cursor=pointer]:
+            - /url: /demo/sidebar/basic
+            - img [ref=e467]
+            - generic [ref=e469]: Basic
+          - link "Header" [ref=e470] [cursor=pointer]:
+            - /url: /demo/sidebar/header
+            - img [ref=e472]
+            - generic [ref=e474]: Header
+          - link "Footer" [ref=e475] [cursor=pointer]:
+            - /url: /demo/sidebar/footer
+            - img [ref=e477]
+            - generic [ref=e479]: Footer
+          - link "Badges" [ref=e480] [cursor=pointer]:
+            - /url: /demo/sidebar/badges
+            - img [ref=e482]
+            - generic [ref=e484]: Badges
+          - link "Grouped" [ref=e485] [cursor=pointer]:
+            - /url: /demo/sidebar/grouped
+            - img [ref=e487]
+            - generic [ref=e489]: Grouped
+          - link "Collapsible" [ref=e490] [cursor=pointer]:
+            - /url: /demo/sidebar/collapsible
+            - img [ref=e492]
+            - generic [ref=e494]: Collapsible
+          - link "Collapsed" [ref=e495] [cursor=pointer]:
+            - /url: /demo/sidebar/collapsed
+            - img [ref=e497]
+            - generic [ref=e499]: Collapsed
+          - link "Complete" [ref=e500] [cursor=pointer]:
+            - /url: /demo/sidebar/complete
+            - img [ref=e502]
+            - generic [ref=e504]: Complete
+      - link "Mobile" [ref=e505] [cursor=pointer]:
+        - /url: /mobile/bottom_nav
+        - img [ref=e507]
+        - generic [ref=e509]: Mobile
+    - generic [ref=e510]: FlatPack Demo Components
+  - generic [ref=e511]:
+    - banner [ref=e512]:
+      - generic [ref=e513]:
+        - generic [ref=e515]: FlatPack Demo
+        - generic [ref=e518]:
+          - button "System" [ref=e520] [cursor=pointer]:
+            - img [ref=e521]
+            - generic [ref=e523]: System
+            - img [ref=e524]
+          - button "Notifications" [ref=e526] [cursor=pointer]:
+            - img [ref=e527]
+    - main [ref=e530]:
+      - generic [ref=e531]:
+        - generic [ref=e534]:
+          - heading "Text Input" [level=1] [ref=e535]
+          - paragraph [ref=e536]: Single-line text field examples with default, error, and disabled states.
+        - generic [ref=e539]:
+          - tablist "Tabs" [ref=e540]:
+            - tab "Input" [selected] [ref=e541]
+          - tabpanel "Input" [ref=e543]:
+            - generic [ref=e544]:
+              - generic [ref=e545]:
+                - generic [ref=e546]: Method Call
+                - code [ref=e549]: "render FlatPack::TextInput::Component.new(name: \"username\", label: \"Username\")"
+              - table [ref=e551]:
+                - rowgroup [ref=e552]:
+                  - row "Variable Accepts Example" [ref=e553]:
+                    - columnheader "Variable" [ref=e554]
+                    - columnheader "Accepts" [ref=e555]
+                    - columnheader "Example" [ref=e556]
+                - rowgroup [ref=e557]:
+                  - 'row "name String name: \"user[email]\"" [ref=e558]':
+                    - cell "name" [ref=e559]
+                    - cell "String" [ref=e560]
+                    - 'cell "name: \"user[email]\"" [ref=e561]'
+                  - 'row "label String or nil label: \"Email\"" [ref=e562]':
+                    - cell "label" [ref=e563]
+                    - cell "String or nil" [ref=e564]
+                    - 'cell "label: \"Email\"" [ref=e565]'
+                  - 'row "error String or nil error: \"Email is invalid\"" [ref=e566]':
+                    - cell "error" [ref=e567]
+                    - cell "String or nil" [ref=e568]
+                    - 'cell "error: \"Email is invalid\"" [ref=e569]'
+        - generic [ref=e570]:
+          - generic [ref=e572]:
+            - heading "Text Input Examples" [level=2] [ref=e573]
+            - link "Copy link to Text Input Examples" [ref=e575] [cursor=pointer]:
+              - /url: "#text-input-examples"
+              - img [ref=e576]
+          - generic [ref=e579]:
+            - generic [ref=e580]:
+              - generic [ref=e581]: Username
+              - textbox "Username" [ref=e582]:
+                - /placeholder: Enter your username
+            - generic [ref=e583]:
+              - generic [ref=e584]: Username (with error)
+              - textbox "Username (with error)" [ref=e585]: john
+              - paragraph [ref=e586]: Username must be at least 5 characters
+            - generic [ref=e587]:
+              - generic [ref=e588]: Username (disabled)
+              - textbox "Username (disabled)" [disabled] [ref=e589]: johndoe
+          - generic [ref=e590]:
+            - generic [ref=e591]: Text Input Examples
+            - code [ref=e594]: "<%= render FlatPack::Card::Component.new do |card| %> <% card.body do %> <%= render FlatPack::TextInput::Component.new( name: \"username\", label: \"Username\", placeholder: \"Enter your username\", required: true ) %> <%= render FlatPack::TextInput::Component.new( name: \"username_error\", label: \"Username (with error)\", value: \"john\", error: \"Username must be at least 5 characters\" ) %> <%= render FlatPack::TextInput::Component.new( name: \"username_disabled\", label: \"Username (disabled)\", value: \"johndoe\", disabled: true ) %> <% end %> <% end %>"
+```

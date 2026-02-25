@@ -10,7 +10,7 @@ export default class extends Controller {
   connect() {
     // Initial scroll to bottom if stick_to_bottom is enabled
     if (this.stickToBottomValue) {
-      this.scrollToBottom()
+      this.scrollToBottom({ instant: true })
     }
 
     // Hide jump button initially
@@ -20,11 +20,30 @@ export default class extends Controller {
 
     // Check scroll position on connect
     this.checkScroll()
+
+    this.#startObservingMessages()
   }
 
-  scrollToBottom() {
+  disconnect() {
+    this.#stopObservingMessages()
+  }
+
+  scrollToBottom({ instant = false } = {}) {
     if (this.hasMessagesTarget) {
-      this.messagesTarget.scrollTop = this.messagesTarget.scrollHeight
+      const messages = this.messagesTarget
+      const hadSmoothScrolling = messages.classList.contains("scroll-smooth")
+
+      if (instant && hadSmoothScrolling) {
+        messages.classList.remove("scroll-smooth")
+      }
+
+      messages.scrollTop = messages.scrollHeight
+
+      if (instant && hadSmoothScrolling) {
+        requestAnimationFrame(() => {
+          messages.classList.add("scroll-smooth")
+        })
+      }
     }
   }
 
@@ -80,5 +99,38 @@ export default class extends Controller {
     const distanceFromBottom = scrollHeight - scrollTop - clientHeight
 
     return distanceFromBottom < 100
+  }
+
+  #startObservingMessages() {
+    if (!this.hasMessagesTarget) {
+      return
+    }
+
+    this.messageObserver = new MutationObserver((mutations) => {
+      const hasAddedNodes = mutations.some((mutation) => mutation.addedNodes.length > 0)
+      if (!hasAddedNodes) {
+        return
+      }
+
+      if (this.stickToBottomValue) {
+        this.scrollToBottom()
+      } else {
+        this.checkScroll()
+      }
+    })
+
+    this.messageObserver.observe(this.messagesTarget, {
+      childList: true,
+      subtree: true
+    })
+  }
+
+  #stopObservingMessages() {
+    if (!this.messageObserver) {
+      return
+    }
+
+    this.messageObserver.disconnect()
+    this.messageObserver = null
   }
 }

@@ -1,0 +1,32 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Two-Column Grid Demo",
+  subtitle: "Simple two-column layout using the Grid component with one Card in each column."
+) %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Two Columns, Two Cards",
+    anchor_link: true,
+    subtitle: "Each column contains a single Card component."
+  ) %>
+
+  <%= render FlatPack::Grid::Component.new(cols: 2) do %>
+    <%= render FlatPack::Card::Component.new(style: :outlined) do |card| %>
+      <% card.body do %>
+        <h3 class="text-lg font-semibold mb-2">Column One</h3>
+        <p class="text-sm text-(--surface-muted-content-color)">
+          This card is rendered in the first grid column.
+        </p>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::Card::Component.new(style: :outlined) do |card| %>
+      <% card.body do %>
+        <h3 class="text-lg font-semibold mb-2">Column Two</h3>
+        <p class="text-sm text-(--surface-muted-content-color)">
+          This card is rendered in the second grid column.
+        </p>
+      <% end %>
+    <% end %>
+  <% end %>
+</section>

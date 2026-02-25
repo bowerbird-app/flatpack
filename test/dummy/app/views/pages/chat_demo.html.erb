@@ -1,4 +1,8 @@
 <div class="container mx-auto max-w-5xl p-4">
+  <% if @chat_group %>
+    <%= turbo_stream_from @chat_group.demo_stream_name %>
+  <% end %>
+
   <%= render FlatPack::PageTitle::Component.new(
     title: "Chat Demo",
     subtitle: "A complete chat panel with message bubbles and composer input."
@@ -32,190 +36,24 @@
           <%= render FlatPack::Chat::MessageList::Component.new do %>
             <%= render FlatPack::Chat::DateDivider::Component.new(label: "Today") %>
 
-            <%= render FlatPack::Chat::MessageGroup::Component.new(
-              direction: :incoming,
-              show_avatar: true,
-              show_name: true,
-              sender_name: "Mina"
-            ) do |group| %>
-              <% group.with_avatar do %>
-                <%= render FlatPack::Avatar::Component.new(name: "Mina Cho", initials: "MC", size: :sm) %>
+            <div id="<%= @chat_group ? dom_id(@chat_group, :messages) : "chat-demo-messages" %>" class="space-y-4">
+              <% @chat_messages.each do |message| %>
+                <%= render "demo/chat_messages/message", message: message %>
               <% end %>
-              <% group.with_message do %>
-                <%= render FlatPack::Chat::Message::Component.new(direction: :incoming, timestamp: "10:12 AM") do |message| %>
-                  I pushed the homepage copy updates. Can someone review?
-                  <% message.with_meta do %>
-                    <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "10:12 AM", state: :read) %>
-                  <% end %>
-                <% end %>
-              <% end %>
-            <% end %>
+            </div>
 
-            <%= render FlatPack::Chat::MessageGroup::Component.new(direction: :outgoing, show_avatar: false) do |group| %>
-              <% group.with_message do %>
-                <%= render FlatPack::Chat::Message::Component.new(direction: :outgoing, timestamp: "10:13 AM") do |message| %>
-                  Reviewed. Tone is solid — can you also add a shorter hero variant for mobile?
-                  <% message.with_meta do %>
-                    <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "10:13 AM", state: :read) %>
-                  <% end %>
-                <% end %>
-              <% end %>
-            <% end %>
-
-            <%= render FlatPack::Chat::MessageGroup::Component.new(direction: :outgoing, show_avatar: false) do |group| %>
-              <% group.with_message do %>
-                <%= render FlatPack::Chat::Message::Component.new(direction: :outgoing, timestamp: "10:14 AM") do |message| %>
-                  Looks good. I will handle the final QA pass.
-                  <% message.with_meta do %>
-                    <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "10:14 AM", state: :read) %>
-                  <% end %>
-                <% end %>
-              <% end %>
-            <% end %>
-
-            <%= render FlatPack::Chat::MessageGroup::Component.new(
-              direction: :incoming,
-              show_avatar: true,
-              show_name: true,
-              sender_name: "Sam"
-            ) do |group| %>
-              <% group.with_avatar do %>
-                <%= render FlatPack::Avatar::Component.new(name: "Sam Lee", initials: "SL", size: :sm) %>
-              <% end %>
-              <% group.with_message do %>
-                <%= render FlatPack::Chat::Message::Component.new(direction: :incoming, timestamp: "10:15 AM") do |message| %>
-                  I added both hero lengths and updated CTA spacing.
-                  <% message.with_meta do %>
-                    <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "10:15 AM", state: :read) %>
-                  <% end %>
-                <% end %>
-              <% end %>
-              <% group.with_message do %>
-                <%= render FlatPack::Chat::Message::Component.new(direction: :incoming, timestamp: "10:16 AM") do |message| %>
-                  Sharing the latest visual snapshot below.
-                  <% message.with_attachment do %>
-                    <%= render FlatPack::Chat::Attachment::Component.new(
-                      type: :image,
-                      name: "homepage-preview.png",
-                      thumbnail_url: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=640&h=360&fit=crop",
-                      href: "#"
-                    ) %>
-                  <% end %>
-                  <% message.with_meta do %>
-                    <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "10:16 AM", state: :read) %>
-                  <% end %>
-                <% end %>
-              <% end %>
-            <% end %>
-
-            <%= render FlatPack::Chat::MessageGroup::Component.new(
-              direction: :incoming,
-              show_avatar: true,
-              show_name: true,
-              sender_name: "Alex"
-            ) do |group| %>
-              <% group.with_avatar do %>
-                <%= render FlatPack::Avatar::Component.new(name: "Alex Rivera", initials: "AR", size: :sm) %>
-              <% end %>
-              <% group.with_message do %>
-                <%= render FlatPack::Chat::Message::Component.new(direction: :incoming, timestamp: "10:17 AM") do |message| %>
-                  Added the sprint board screenshot for context.
-                  <% message.with_attachment do %>
-                    <%= render FlatPack::Chat::Attachment::Component.new(
-                      type: :file,
-                      name: "sprint-board.png",
-                      meta: "1.1 MB"
-                    ) %>
-                  <% end %>
-                  <% message.with_meta do %>
-                    <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "10:17 AM", state: :read) %>
-                  <% end %>
-                <% end %>
-              <% end %>
-            <% end %>
-
-            <%= render FlatPack::Chat::MessageGroup::Component.new(direction: :outgoing, show_avatar: false) do |group| %>
-              <% group.with_message do %>
-                <%= render FlatPack::Chat::Message::Component.new(direction: :outgoing, timestamp: "10:18 AM") do |message| %>
-                  Perfect, thanks. I also need the editable source file in case we adjust copy after legal review.
-                  <% message.with_meta do %>
-                    <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "10:18 AM", state: :read) %>
-                  <% end %>
-                <% end %>
-              <% end %>
-            <% end %>
-
-            <%= render FlatPack::Chat::MessageGroup::Component.new(
-              direction: :incoming,
-              show_avatar: true,
-              show_name: false,
-              sender_name: "Mina"
-            ) do |group| %>
-              <% group.with_avatar do %>
-                <%= render FlatPack::Avatar::Component.new(name: "Mina Cho", initials: "MC", size: :sm) %>
-              <% end %>
-              <% group.with_message do %>
-                <%= render FlatPack::Chat::Message::Component.new(direction: :incoming, timestamp: "10:19 AM") do |message| %>
-                  Uploaded. It includes all revised headings and alt-text notes.
-                  <% message.with_attachment do %>
-                    <%= render FlatPack::Chat::Attachment::Component.new(
-                      type: :file,
-                      name: "homepage-copy-v4.docx",
-                      meta: "248 KB",
-                      href: "#"
-                    ) %>
-                  <% end %>
-                  <% message.with_meta do %>
-                    <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "10:19 AM", state: :read) %>
-                  <% end %>
-                <% end %>
-              <% end %>
-            <% end %>
-
-            <%= render FlatPack::Chat::MessageGroup::Component.new(direction: :outgoing, show_avatar: false) do |group| %>
-              <% group.with_message do %>
-                <%= render FlatPack::Chat::Message::Component.new(direction: :outgoing, timestamp: "10:21 AM") do |message| %>
-                  Great. Queueing final pass now.
-                  <% message.with_meta do %>
-                    <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "10:21 AM", state: :read) %>
-                  <% end %>
-                <% end %>
-              <% end %>
-            <% end %>
-
-            <%= render FlatPack::Chat::MessageGroup::Component.new(
-              direction: :incoming,
-              show_avatar: true,
-              show_name: false,
-              sender_name: "Alex"
-            ) do |group| %>
-              <% group.with_avatar do %>
-                <%= render FlatPack::Avatar::Component.new(name: "Alex Rivera", initials: "AR", size: :sm) %>
-              <% end %>
-              <% group.with_message do %>
-                <%= render FlatPack::Chat::Message::Component.new(direction: :incoming, timestamp: "10:22 AM") do |message| %>
-                  I will monitor launch metrics and post updates every 15 minutes once we ship.
-                  <% message.with_meta do %>
-                    <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "10:22 AM", state: :read) %>
-                  <% end %>
-                <% end %>
-              <% end %>
-            <% end %>
-
-            <%= render FlatPack::Chat::TypingIndicator::Component.new(label: "Sam is typing") do |indicator| %>
-              <% indicator.with_avatar do %>
-                <%= render FlatPack::Avatar::Component.new(name: "Sam Lee", initials: "SL", size: :sm) %>
-              <% end %>
-            <% end %>
+            <div id="<%= @chat_group ? dom_id(@chat_group, :typing_indicator) : "chat-demo-typing-indicator" %>"></div>
           <% end %>
         <% end %>
 
         <% panel.with_composer do %>
-          <%= form_with url: "#", method: :post, local: true,
+          <%= form_with url: (@chat_group ? demo_chat_group_messages_path(@chat_group) : "#"), method: :post, local: true,
               data: {
                 controller: "flat-pack--chat-sender",
                 action: "submit->flat-pack--chat-sender#submit",
-                flat_pack__chat_sender_thread_selector_value: "[data-flat-pack--chat-scroll-target='messages']"
+                thread_id: @chat_group&.id,
+                flat_pack__chat_sender_thread_selector_value: (@chat_group ? "##{dom_id(@chat_group, :messages)}" : "[data-flat-pack--chat-scroll-target='messages']"),
+                flat_pack__chat_sender_endpoint_value: (@chat_group ? demo_chat_group_messages_path(@chat_group) : nil)
               } do %>
             <%= render FlatPack::Chat::Composer::Component.new do |composer| %>
               <% composer.left do %>
@@ -249,6 +87,13 @@
         <% end %>
       <% end %>
     </div>
+
+    <%= render FlatPack::Alert::Component.new(
+      title: "Demo requirement",
+      description: "Sidekiq must be running for this chat demo to process and display new messages.",
+      style: :info,
+      dismissible: false
+    ) %>
 
     <%= render FlatPack::CodeBlock::Component.new(
       title: "ERB",

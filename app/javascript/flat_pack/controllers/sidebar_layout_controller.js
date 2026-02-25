@@ -1,26 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
-const ACTIVE_LINK_CLASSES = [
-  "bg-[var(--sidebar-item-active-background-color)]",
-  "text-[var(--sidebar-item-active-text-color)]"
-]
-
-const INACTIVE_LINK_CLASSES = [
-  "text-[var(--sidebar-item-text-color)]",
-  "hover:bg-[var(--sidebar-item-hover-background-color)]",
-  "hover:text-[var(--sidebar-item-hover-text-color)]"
-]
-
-const ACTIVE_ICON_CLASSES = [
-  "text-[var(--sidebar-item-active-icon-color)]"
-]
-
-const INACTIVE_ICON_CLASSES = [
-  "text-[var(--sidebar-item-icon-color)]"
-]
-
 export default class extends Controller {
-  static targets = ["sidebar", "menu", "backdrop", "desktopToggle", "collapsedToggle", "mobileToggle", "headerLabel", "headerBrand", "footer"]
+  static targets = ["sidebar", "backdrop", "desktopToggle", "collapsedToggle", "mobileToggle", "headerLabel", "headerBrand", "footer", "scrollContainer"]
   static values = {
     side: String,
     defaultOpen: Boolean,
@@ -34,6 +15,8 @@ export default class extends Controller {
     this.isMobile = window.innerWidth < 768
     this.transitionDuration = "300ms"
     this.transitionEasing = "cubic-bezier(0.4, 0, 0.2, 1)"
+    this.lastAnchorPath = null
+    this.lastAnchorOffset = null
 
     // Load saved desktop state from localStorage
     if (!this.isMobile && this.hasStorageKeyValue) {
@@ -56,202 +39,40 @@ export default class extends Controller {
     this.handleResize = this.handleResize.bind(this)
     window.addEventListener("resize", this.handleResize)
 
-    this.handleSidebarItemPointerDown = this.handleSidebarItemPointerDown.bind(this)
-    this.handleSidebarItemTouchStart = this.handleSidebarItemTouchStart.bind(this)
-    this.handleSidebarItemClick = this.handleSidebarItemClick.bind(this)
-    this.handleMenuScroll = this.handleMenuScroll.bind(this)
-    this.handleBeforeUnload = this.handleBeforeUnload.bind(this)
-    this.handleTurboBeforeVisit = this.handleTurboBeforeVisit.bind(this)
+    // Persist/restore sidebar scroll position around Turbo navigations
+    this.handleTurboBeforeCache = this.handleTurboBeforeCache.bind(this)
     this.handleTurboBeforeRender = this.handleTurboBeforeRender.bind(this)
+    this.handleSidebarLinkClick = this.handleSidebarLinkClick.bind(this)
+    this.handlePageHide = this.handlePageHide.bind(this)
+    this.handleSidebarScroll = this.handleSidebarScroll.bind(this)
 
-    this.sidebarTarget.addEventListener("mousedown", this.handleSidebarItemPointerDown)
-    this.sidebarTarget.addEventListener("touchstart", this.handleSidebarItemTouchStart, { passive: true })
-    this.sidebarTarget.addEventListener("click", this.handleSidebarItemClick)
-    this.menuScrollContainer()?.addEventListener("scroll", this.handleMenuScroll, { passive: true })
-
-    window.addEventListener("beforeunload", this.handleBeforeUnload)
-    document.addEventListener("turbo:before-visit", this.handleTurboBeforeVisit)
+    document.addEventListener("turbo:before-cache", this.handleTurboBeforeCache)
     document.addEventListener("turbo:before-render", this.handleTurboBeforeRender)
+    window.addEventListener("pagehide", this.handlePageHide)
+    this.element.addEventListener("click", this.handleSidebarLinkClick, true)
+    this.bindScrollPersistenceListener()
 
-    this.syncActiveSidebarItemToLocation()
-    this.restoreSidebarScrollPosition()
+    // If this page was pre-restored during turbo:before-render, do not re-apply.
+    const preRestored = this.currentScrollContainer()?.dataset?.flatPackScrollPreRestored === "true"
+    if (!preRestored) {
+      // Restore on direct page loads/non-Turbo navigations.
+      this.restoreScrollPosition()
+    } else {
+      delete this.currentScrollContainer().dataset.flatPackScrollPreRestored
+    }
   }
 
   disconnect() {
     this.clearDesktopRevealTimeout()
     window.removeEventListener("resize", this.handleResize)
-    this.sidebarTarget.removeEventListener("mousedown", this.handleSidebarItemPointerDown)
-    this.sidebarTarget.removeEventListener("touchstart", this.handleSidebarItemTouchStart)
-    this.sidebarTarget.removeEventListener("click", this.handleSidebarItemClick)
-    this.menuScrollContainer()?.removeEventListener("scroll", this.handleMenuScroll)
-    window.removeEventListener("beforeunload", this.handleBeforeUnload)
-    document.removeEventListener("turbo:before-visit", this.handleTurboBeforeVisit)
+    document.removeEventListener("turbo:before-cache", this.handleTurboBeforeCache)
     document.removeEventListener("turbo:before-render", this.handleTurboBeforeRender)
-  }
+    window.removeEventListener("pagehide", this.handlePageHide)
+    this.element.removeEventListener("click", this.handleSidebarLinkClick, true)
+    this.unbindScrollPersistenceListener()
 
-  handleSidebarItemPointerDown(event) {
-    if (event.button !== 0) return
-    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
-
-    const link = this.findSidebarItemLink(event)
-    if (!link) return
-
-    this.setActiveSidebarItem(link)
-  }
-
-  handleSidebarItemTouchStart(event) {
-    const link = this.findSidebarItemLink(event)
-    if (!link) return
-
-    this.setActiveSidebarItem(link)
-  }
-
-  handleSidebarItemClick(event) {
-    const link = this.findSidebarItemLink(event)
-    if (!link) return
-
-    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
-
-    this.setActiveSidebarItem(link)
-    this.saveSidebarScrollPosition()
-  }
-
-  findSidebarItemLink(event) {
-    if (!(event.target instanceof Element)) return null
-
-    const link = event.target.closest('a[data-flat-pack-sidebar-item="true"]')
-    if (!link || !this.sidebarTarget.contains(link)) return null
-
-    return link
-  }
-
-  setActiveSidebarItem(activeLink) {
-    const links = this.sidebarTarget.querySelectorAll('a[data-flat-pack-sidebar-item="true"]')
-    links.forEach((link) => {
-      this.applySidebarLinkState(link, link === activeLink)
-    })
-  }
-
-  applySidebarLinkState(link, active) {
-    link.classList.remove(...ACTIVE_LINK_CLASSES, ...INACTIVE_LINK_CLASSES)
-    link.classList.add(...(active ? ACTIVE_LINK_CLASSES : INACTIVE_LINK_CLASSES))
-
-    if (active) {
-      link.setAttribute("aria-current", "page")
-    } else {
-      link.removeAttribute("aria-current")
-    }
-
-    const icon = link.querySelector('[data-flat-pack-sidebar-item-icon="true"]')
-    if (!icon) return
-
-    icon.classList.remove(...ACTIVE_ICON_CLASSES, ...INACTIVE_ICON_CLASSES)
-    icon.classList.add(...(active ? ACTIVE_ICON_CLASSES : INACTIVE_ICON_CLASSES))
-  }
-
-  syncActiveSidebarItemToLocation() {
-    const links = Array.from(this.sidebarTarget.querySelectorAll('a[data-flat-pack-sidebar-item="true"]'))
-    if (links.length === 0) return
-
-    const currentUrl = new URL(window.location.href)
-    const matchingLink = links.find((link) => this.linkMatchesCurrentLocation(link, currentUrl))
-    if (!matchingLink) return
-
-    this.setActiveSidebarItem(matchingLink)
-  }
-
-  linkMatchesCurrentLocation(link, currentUrl) {
-    const href = link.getAttribute("href")
-    if (!href || href.startsWith("#")) return false
-
-    try {
-      const linkUrl = new URL(href, window.location.href)
-      return linkUrl.origin === currentUrl.origin &&
-        linkUrl.pathname === currentUrl.pathname &&
-        linkUrl.search === currentUrl.search
-    } catch {
-      return false
-    }
-  }
-
-  handleMenuScroll() {
-    this.saveSidebarScrollPosition()
-  }
-
-  handleBeforeUnload() {
-    this.saveSidebarScrollPosition()
-  }
-
-  handleTurboBeforeVisit() {
-    this.saveSidebarScrollPosition()
-  }
-
-  handleTurboBeforeRender(event) {
-    const key = this.sidebarScrollStorageKey()
-    if (!key) return
-
-    const nextBody = event?.detail?.newBody
-    if (!nextBody) return
-
-    try {
-      const saved = sessionStorage.getItem(key)
-      if (saved === null) return
-
-      const scrollTop = Number(saved)
-      if (!Number.isFinite(scrollTop)) return
-
-      const nextContainer = nextBody.querySelector('[data-flat-pack--sidebar-layout-target="menu"]')
-      if (!nextContainer) return
-
-      nextContainer.scrollTop = scrollTop
-    } catch {
-      // Ignore storage errors (private mode / storage disabled)
-    }
-  }
-
-  saveSidebarScrollPosition() {
-    const key = this.sidebarScrollStorageKey()
-    const container = this.menuScrollContainer()
-    if (!key || !container) return
-
-    try {
-      sessionStorage.setItem(key, String(container.scrollTop))
-    } catch {
-      // Ignore storage errors (private mode / storage disabled)
-    }
-  }
-
-  restoreSidebarScrollPosition() {
-    const key = this.sidebarScrollStorageKey()
-    const container = this.menuScrollContainer()
-    if (!key || !container) return
-
-    try {
-      const saved = sessionStorage.getItem(key)
-      if (saved === null) return
-
-      const scrollTop = Number(saved)
-      if (!Number.isFinite(scrollTop)) return
-
-      container.scrollTop = scrollTop
-
-      requestAnimationFrame(() => {
-        container.scrollTop = scrollTop
-      })
-    } catch {
-      // Ignore storage errors (private mode / storage disabled)
-    }
-  }
-
-  menuScrollContainer() {
-    if (this.hasMenuTarget) return this.menuTarget
-
-    return this.sidebarTarget.querySelector("aside > div.flex-1")
-  }
-
-  sidebarScrollStorageKey() {
-    const keyBase = this.hasStorageKeyValue && this.storageKeyValue ? this.storageKeyValue : "default"
-    return `flat-pack-sidebar-scroll:${keyBase}`
+    // Persist as a fallback when leaving without Turbo lifecycle
+    this.persistScrollState()
   }
 
   handleResize() {
@@ -533,6 +354,159 @@ export default class extends Controller {
       if (saved !== null) {
         this.collapsed = saved === "true"
       }
+    }
+  }
+
+  handleTurboBeforeCache() {
+    this.persistScrollState()
+  }
+
+  handleTurboBeforeRender(event) {
+    this.persistScrollState()
+
+    const newBody = event?.detail?.newBody
+    if (!newBody) return
+
+    const newScrollContainer = this.findScrollContainerInBody(newBody)
+    this.restoreScrollPositionInContainer(newScrollContainer, {correctWithAnchor: true})
+    if (newScrollContainer) {
+      newScrollContainer.dataset.flatPackScrollPreRestored = "true"
+    }
+  }
+
+  handleSidebarLinkClick(event) {
+    const link = event.target.closest("a[href]")
+    if (!link || !this.sidebarTarget.contains(link)) return
+
+    const scrollContainer = this.currentScrollContainer()
+    if (!scrollContainer) return
+
+    this.lastAnchorPath = this.normalizePath(link.href)
+    this.lastAnchorOffset = link.getBoundingClientRect().top - scrollContainer.getBoundingClientRect().top
+    this.persistScrollState()
+  }
+
+  handleSidebarScroll() {
+    this.persistScrollState()
+  }
+
+  handlePageHide() {
+    this.persistScrollState()
+  }
+
+  persistScrollState() {
+    const scrollContainer = this.currentScrollContainer()
+    if (!scrollContainer) return
+
+    this.writeScrollState({
+      scrollTop: scrollContainer.scrollTop,
+      anchorPath: this.lastAnchorPath,
+      anchorOffset: this.lastAnchorOffset
+    })
+  }
+
+  restoreScrollPosition(options = {}) {
+    this.restoreScrollPositionInContainer(this.currentScrollContainer(), options)
+  }
+
+  restoreScrollPositionInContainer(scrollContainer, { correctWithAnchor = false } = {}) {
+    if (!scrollContainer) return
+
+    const state = this.readScrollState()
+    if (!state) return
+
+    if (typeof state.scrollTop === "number") {
+      scrollContainer.scrollTop = state.scrollTop
+    }
+
+    if (!correctWithAnchor) return
+
+    if (state.anchorPath && typeof state.anchorOffset === "number") {
+      const anchorLink = this.findSidebarLinkByPath(state.anchorPath)
+      if (anchorLink) {
+        const currentOffset = anchorLink.getBoundingClientRect().top - scrollContainer.getBoundingClientRect().top
+        scrollContainer.scrollTop += (currentOffset - state.anchorOffset)
+      }
+    }
+  }
+
+  findSidebarLinkByPath(path) {
+    const links = this.element.querySelectorAll("a[href]")
+    for (const link of links) {
+      if (this.normalizePath(link.href) === path) {
+        return link
+      }
+    }
+    return null
+  }
+
+  findScrollContainerInBody(body) {
+    return body.querySelector('[data-flat-pack--sidebar-layout-target="scrollContainer"]') ||
+      body.querySelector('[data-flat-pack--sidebar-layout-target="sidebar"] aside > .flex-1.min-h-0.overflow-y-auto')
+  }
+
+  currentScrollContainer() {
+    if (this.hasScrollContainerTarget) {
+      return this.scrollContainerTarget
+    }
+
+    return this.element.querySelector('[data-flat-pack--sidebar-layout-target="scrollContainer"]') ||
+      this.sidebarTarget?.querySelector('aside > .flex-1.min-h-0.overflow-y-auto')
+  }
+
+  bindScrollPersistenceListener() {
+    const scrollContainer = this.currentScrollContainer()
+    if (!scrollContainer) return
+
+    this.scrollPersistenceElement = scrollContainer
+    this.scrollPersistenceElement.addEventListener("scroll", this.handleSidebarScroll, {passive: true})
+  }
+
+  unbindScrollPersistenceListener() {
+    if (!this.scrollPersistenceElement) return
+
+    this.scrollPersistenceElement.removeEventListener("scroll", this.handleSidebarScroll)
+    this.scrollPersistenceElement = null
+  }
+
+  normalizePath(href) {
+    try {
+      const url = new URL(href, window.location.origin)
+      return `${url.pathname}${url.search}`
+    } catch {
+      return null
+    }
+  }
+
+  scrollStateKey() {
+    const baseKey = this.hasStorageKeyValue ? this.storageKeyValue : "flat-pack-sidebar-layout"
+    const sideKey = this.hasSideValue ? this.sideValue : "left"
+    return `${baseKey}:${sideKey}:scroll`
+  }
+
+  writeScrollState(payload) {
+    try {
+      sessionStorage.setItem(this.scrollStateKey(), JSON.stringify(payload))
+    } catch {
+      // Ignore storage errors (private mode / disabled storage)
+    }
+  }
+
+  readScrollState() {
+    try {
+      const raw = sessionStorage.getItem(this.scrollStateKey())
+      if (!raw) return null
+
+      const parsed = JSON.parse(raw)
+      if (!parsed || typeof parsed !== "object") return null
+
+      return {
+        scrollTop: Number.isFinite(parsed.scrollTop) ? parsed.scrollTop : null,
+        anchorPath: typeof parsed.anchorPath === "string" ? parsed.anchorPath : null,
+        anchorOffset: Number.isFinite(parsed.anchorOffset) ? parsed.anchorOffset : null
+      }
+    } catch {
+      return null
     }
   }
 }

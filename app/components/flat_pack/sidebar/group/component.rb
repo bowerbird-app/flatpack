@@ -189,8 +189,6 @@ module FlatPack
         def panel_classes
           classes(
             "overflow-hidden",
-            "transition-all",
-            "duration-200",
             ("pl-[var(--sidebar-group-item-indent)]" unless @collapsed),
             (@default_open ? "" : "max-h-0")
           )

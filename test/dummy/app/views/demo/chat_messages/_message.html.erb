@@ -1,0 +1,30 @@
+<div id="<%= dom_id(message) %>">
+  <% direction = message.outgoing? ? :outgoing : :incoming %>
+  <% initials = message.sender_name.to_s.split.map { |part| part[0] }.join.first(2).upcase.presence || "?" %>
+
+  <%= render FlatPack::Chat::MessageGroup::Component.new(
+    direction: direction,
+    show_avatar: !message.outgoing?,
+    show_name: !message.outgoing?,
+    sender_name: message.sender_name
+  ) do |group| %>
+    <% unless message.outgoing? %>
+      <% group.with_avatar do %>
+        <%= render FlatPack::Avatar::Component.new(name: message.sender_name, initials: initials, size: :sm) %>
+      <% end %>
+    <% end %>
+
+    <% group.with_message do %>
+      <%= render FlatPack::Chat::Message::Component.new(
+        direction: direction,
+        timestamp: message.created_at,
+        state: message.state.to_sym
+      ) do |chat_message| %>
+        <%= message.body %>
+        <% chat_message.with_meta do %>
+          <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: message.created_at, state: message.state.to_sym) %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

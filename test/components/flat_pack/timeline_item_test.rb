@@ -44,25 +44,25 @@ module FlatPack
       def test_renders_default_variant
         render_inline(Item.new(title: "Event"))
 
-        assert_includes page.native.to_html, "bg-primary"
+        assert_includes page.native.to_html, "bg-[var(--timeline-marker-default-background-color)]"
       end
 
       def test_renders_success_variant
         render_inline(Item.new(title: "Event", variant: :success))
 
-        assert_includes page.native.to_html, "bg-success-background-color"
+        assert_includes page.native.to_html, "bg-[var(--timeline-marker-success-background-color)]"
       end
 
       def test_renders_warning_variant
         render_inline(Item.new(title: "Event", variant: :warning))
 
-        assert_includes page.native.to_html, "bg-warning-background-color"
+        assert_includes page.native.to_html, "bg-[var(--timeline-marker-warning-background-color)]"
       end
 
       def test_renders_danger_variant
         render_inline(Item.new(title: "Event", variant: :danger))
 
-        assert_includes page.native.to_html, "bg-danger-background-color"
+        assert_includes page.native.to_html, "bg-[var(--timeline-marker-danger-background-color)]"
       end
 
       def test_renders_icon_circle
@@ -75,14 +75,14 @@ module FlatPack
         render_inline(Item.new(title: "Event", last: false))
 
         assert_includes page.native.to_html, "w-0.5"
-        assert_includes page.native.to_html, "bg-[var(--surface-border-color)]"
+        assert_includes page.native.to_html, "bg-[var(--timeline-line-color)]"
       end
 
       def test_does_not_render_connecting_line_when_last
         render_inline(Item.new(title: "Event", last: true))
 
         # Check that line is not present by looking for specific marker content
-        refute_includes page.native.to_html, "min-h-[2rem]"
+        refute_includes page.native.to_html, "min-h-[var(--timeline-line-min-height)]"
       end
 
       def test_includes_flex_layout

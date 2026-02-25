@@ -8,11 +8,20 @@ class ThemesController < ApplicationController
     "Alerts" => [/\A--alert-/],
     "Toasts" => [/\A--toast-/],
     "Cards" => [/\A--card-/],
+    "Accordion" => [/\A--accordion-/],
+    "Collapse" => [/\A--collapse-/],
+    "Breadcrumbs" => [/\A--breadcrumb-/],
+    "Bottom Nav" => [/\A--bottom-nav-/],
     "Code Blocks" => [/\A--code-block-/],
+    "Comments" => [/\A--comments-/],
+    "Quote" => [/\A--quote-/],
+    "Timeline" => [/\A--timeline-/],
     "Tabs" => [/\A--tabs-/],
     "Modals" => [/\A--modal-/],
     "Popovers" => [/\A--popover-/],
     "Tooltips" => [/\A--tooltip-/],
+    "Switch" => [/\A--switch-/],
+    "Skeleton" => [/\A--skeleton-/],
     "Sidebar" => [/\A--sidebar-/],
     "Top Nav" => [/\A--top-nav-/],
     "Chat" => [/\A--chat-/],
@@ -189,6 +198,14 @@ class ThemesController < ApplicationController
       "Code block"
     when /\A--card-/
       "Cards"
+    when /\A--accordion-/
+      "Accordion"
+    when /\A--collapse-/
+      "Collapse"
+    when /\A--breadcrumb-/
+      "Breadcrumbs"
+    when /\A--bottom-nav-/
+      "Bottom nav"
     when /\A--modal-/
       "Modal"
     when /\A--popover-/
@@ -201,6 +218,12 @@ class ThemesController < ApplicationController
       "Badges"
     when /\A--chat-/
       "Chat"
+    when /\A--comments-/
+      "Comments"
+    when /\A--quote-/
+      "Quote"
+    when /\A--timeline-/
+      "Timeline"
     when /\A--button-/
       "Buttons"
     when /\A--alert-/
@@ -217,6 +240,10 @@ class ThemesController < ApplicationController
       "Table"
     when /\A--tabs-/
       "Tabs"
+    when /\A--switch-/
+      "Switch"
+    when /\A--skeleton-/
+      "Skeleton"
     when /\A--chip-/
       "Chips"
     when /\A--radius-/

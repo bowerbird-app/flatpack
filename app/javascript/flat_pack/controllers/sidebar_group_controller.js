@@ -1,5 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
+const ANIMATION_DURATION = 200
+
 export default class extends Controller {
   static targets = ["panel", "button", "chevron"]
   static values = {
@@ -8,10 +10,9 @@ export default class extends Controller {
   }
 
   connect() {
-    this.suppressInitialTransitions()
+    this.disableTransitions()
     this.isOpen = this.initialOpenState()
     this.applyInitialState()
-    this.restoreTransitionsAfterPaint()
   }
 
   toggle() {
@@ -25,6 +26,7 @@ export default class extends Controller {
   open() {
     this.isOpen = true
     this.persistState()
+    this.enableTransitions()
 
     // Update aria-expanded
     if (this.hasButtonTarget) {
@@ -56,13 +58,14 @@ export default class extends Controller {
         if (this.isOpen) {
           panel.style.maxHeight = "none"
         }
-      }, 200)
+      }, ANIMATION_DURATION)
     }
   }
 
   close() {
     this.isOpen = false
     this.persistState()
+    this.enableTransitions()
 
     // Update aria-expanded
     if (this.hasButtonTarget) {
@@ -145,7 +148,7 @@ export default class extends Controller {
     return `flat-pack-sidebar-group:${layoutStorageKey}:${this.groupIdValue}`
   }
 
-  suppressInitialTransitions() {
+  disableTransitions() {
     if (this.hasPanelTarget) {
       this.panelTarget.style.transition = "none"
     }
@@ -155,15 +158,13 @@ export default class extends Controller {
     }
   }
 
-  restoreTransitionsAfterPaint() {
-    requestAnimationFrame(() => {
-      if (this.hasPanelTarget) {
-        this.panelTarget.style.transition = ""
-      }
+  enableTransitions() {
+    if (this.hasPanelTarget) {
+      this.panelTarget.style.transition = `max-height ${ANIMATION_DURATION}ms ease-in-out`
+    }
 
-      if (this.hasChevronTarget) {
-        this.chevronTarget.style.transition = ""
-      }
-    })
+    if (this.hasChevronTarget) {
+      this.chevronTarget.style.transition = `transform ${ANIMATION_DURATION}ms ease-in-out`
+    }
   }
 }

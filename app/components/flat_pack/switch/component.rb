@@ -80,13 +80,13 @@ module FlatPack
       def render_label
         return unless @label
 
-        content_tag(:span, @label, class: "ml-3 text-sm font-medium text-[var(--surface-content-color)]")
+        content_tag(:span, @label, class: "ml-3 text-sm font-medium text-[var(--switch-label-color)]")
       end
 
       def render_error
         return unless @error
 
-        content_tag(:span, @error, class: "mt-1 text-sm text-warning", id: error_id)
+        content_tag(:span, @error, class: "mt-1 text-sm text-[var(--switch-error-color)]", id: error_id)
       end
 
       def input_attributes
@@ -108,9 +108,9 @@ module FlatPack
           "pointer-events-none",
           "rounded-full transition-colors duration-200",
           SIZES.fetch(@size),
-          "peer-checked:bg-primary",
-          "peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2",
-          @checked ? "bg-primary" : "bg-[var(--surface-muted-background-color)]"
+          "peer-checked:bg-[var(--switch-track-checked-background-color)]",
+          "peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--switch-focus-ring-color)] peer-focus-visible:ring-offset-2",
+          @checked ? "bg-[var(--switch-track-checked-background-color)]" : "bg-[var(--switch-track-background-color)]"
         )
       end
 
@@ -126,7 +126,7 @@ module FlatPack
         classes(
           "pointer-events-none",
           "absolute left-0.5 top-0",
-          "rounded-full bg-white shadow-sm",
+          "rounded-full bg-[var(--switch-thumb-background-color)] shadow-[var(--switch-thumb-shadow)]",
           "transition-transform duration-200",
           "translate-y-0.5",
           size_config[:width],

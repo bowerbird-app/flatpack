@@ -5,7 +5,7 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "fixed" "inset-x-0" "bottom-0" "border-t" "bg-[var(--surface-background-color)]"
+      # "fixed" "inset-x-0" "bottom-0" "border-t" "bg-[var(--bottom-nav-background-color)]"
       # "grid" "grid-cols-4" "w-full"
 
       renders_many :items, "FlatPack::BottomNav::Item::Component"
@@ -43,8 +43,8 @@ module FlatPack
           "w-full",
           "z-40",
           "border-t",
-          "border-[var(--surface-border-color)]",
-          "bg-[var(--surface-background-color)]",
+          "border-[var(--bottom-nav-border-color)]",
+          "bg-[var(--bottom-nav-background-color)]",
           "pb-[env(safe-area-inset-bottom)]"
         )
       end

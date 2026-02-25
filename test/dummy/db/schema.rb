@@ -10,7 +10,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_21_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_25_000000) do
+  create_table "chat_groups", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "chat_messages", force: :cascade do |t|
+    t.text "body", null: false
+    t.integer "chat_group_id", null: false
+    t.string "client_temp_id"
+    t.datetime "created_at", null: false
+    t.string "sender_name", null: false
+    t.string "state", default: "sent", null: false
+    t.datetime "submitted_at"
+    t.datetime "updated_at", null: false
+    t.index ["chat_group_id", "client_temp_id"], name: "index_chat_messages_on_chat_group_id_and_client_temp_id"
+    t.index ["chat_group_id", "created_at"], name: "index_chat_messages_on_chat_group_id_and_created_at"
+    t.index ["chat_group_id"], name: "index_chat_messages_on_chat_group_id"
+  end
+
   create_table "demo_table_rows", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "list_key", null: false
@@ -39,4 +59,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_21_000000) do
     t.index ["position"], name: "index_dummy_data_on_position", unique: true
     t.index ["status", "published_at"], name: "index_dummy_data_on_status_and_published_at"
   end
+
+  add_foreign_key "chat_messages", "chat_groups"
 end

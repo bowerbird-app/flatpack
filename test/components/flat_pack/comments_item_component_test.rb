@@ -106,7 +106,7 @@ module FlatPack
           ))
 
           assert_selector "span", text: "System"
-          assert_includes page.native.to_html, "bg-zinc-50"
+          assert_includes page.native.to_html, "bg-[var(--comments-item-system-background-color)]"
         end
 
         def test_deleted_state

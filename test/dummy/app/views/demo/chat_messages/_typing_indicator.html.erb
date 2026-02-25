@@ -1,0 +1,7 @@
+<% if visible %>
+  <%= render FlatPack::Chat::TypingIndicator::Component.new(label: label) do |indicator| %>
+    <% indicator.with_avatar do %>
+      <%= render FlatPack::Avatar::Component.new(name: sender_name, initials: initials, size: :sm) %>
+    <% end %>
+  <% end %>
+<% end %>

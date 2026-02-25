@@ -244,6 +244,9 @@ class PagesController < ApplicationController
     end
   end
 
+  def grid_two_columns
+  end
+
   def grid_movable_cards
     ensure_demo_movable_cards!
 
@@ -302,6 +305,14 @@ class PagesController < ApplicationController
   end
 
   def chat_demo
+    if chat_tables_available?
+      ensure_chat_demo_messages!
+      @chat_group = ChatGroup.order(:id).first
+      @chat_messages = recent_chat_messages(@chat_group)
+    else
+      @chat_group = nil
+      @chat_messages = []
+    end
   end
 
   def chat_layout
@@ -602,6 +613,69 @@ class PagesController < ApplicationController
     DemoTableRow.table_exists?
   end
 
+  def chat_tables_available?
+    ChatGroup.table_exists? && ChatMessage.table_exists?
+  rescue ActiveRecord::NoDatabaseError, ActiveRecord::StatementInvalid
+    false
+  end
+
+  def ensure_chat_demo_messages!
+    group = ChatGroup.find_or_create_by!(name: "Design Team")
+    return if group.chat_messages.exists?
+
+    timeline = [
+      {sender_name: "Mina", body: "I pushed the homepage copy updates. Can someone review?", state: "read"},
+      {sender_name: "You", body: "Reviewed. Tone is solid — can you also add a shorter hero variant for mobile?", state: "read"},
+      {sender_name: "Sam", body: "I added both hero lengths and updated CTA spacing.", state: "read"},
+      {sender_name: "Alex", body: "Noted. I will sync this with the launch checklist.", state: "read"},
+      {sender_name: "You", body: "Can we tighten spacing in the testimonial section too?", state: "read"},
+      {sender_name: "Mina", body: "Done. Spacing is now 20px desktop and 16px mobile.", state: "read"},
+      {sender_name: "Sam", body: "I updated button hover states to match the latest token values.", state: "read"},
+      {sender_name: "You", body: "Great. Please also confirm dark mode contrast for secondary text.", state: "read"},
+      {sender_name: "Alex", body: "Tracking sheet is ready. I will post click-through updates in this chat group.", state: "read"},
+      {sender_name: "Mina", body: "Hero fallback headline for mobile has been added.", state: "read"},
+      {sender_name: "You", body: "Thanks. Let us freeze copy after one last proofread.", state: "read"},
+      {sender_name: "Sam", body: "Proofread complete. Fixed two punctuation issues.", state: "read"},
+      {sender_name: "Alex", body: "Pre-launch analytics events are now validated in staging.", state: "read"},
+      {sender_name: "You", body: "Please share a screenshot of the updated hero on small screens.", state: "read"},
+      {sender_name: "Mina", body: "Shared in Figma and attached in the release notes.", state: "read"},
+      {sender_name: "Sam", body: "Footer links were re-ordered per legal review.", state: "read"},
+      {sender_name: "You", body: "Can we reduce the CTA shadow to keep it subtle?", state: "read"},
+      {sender_name: "Mina", body: "Yes, reduced. It now uses the lower elevation token.", state: "read"},
+      {sender_name: "Alex", body: "Launch window reminder: 3:00 PM with rollback checkpoint at 3:30.", state: "read"},
+      {sender_name: "You", body: "Perfect. I will stay online through post-launch validation.", state: "read"},
+      {sender_name: "Sam", body: "I added status badges for experiment variants in the dashboard.", state: "read"},
+      {sender_name: "Mina", body: "Final visual QA pass is complete from my side.", state: "read"},
+      {sender_name: "Alex", body: "Monitoring alerts are configured and tested.", state: "read"},
+      {sender_name: "You", body: "All right, locking this version and moving to ship.", state: "read"}
+    ]
+
+    now = Time.current
+    rows = timeline.each_with_index.map do |entry, index|
+      {
+        chat_group_id: group.id,
+        sender_name: entry[:sender_name],
+        body: entry[:body],
+        state: entry[:state],
+        created_at: now - (timeline.length - index).minutes,
+        updated_at: now - (timeline.length - index).minutes
+      }
+    end
+
+    ChatMessage.insert_all(rows)
+  end
+
+  def recent_chat_messages(chat_group)
+    return [] unless chat_group
+
+    recent_ids = chat_group.chat_messages
+      .order(created_at: :desc, id: :desc)
+      .limit(10)
+      .select(:id)
+
+    chat_group.chat_messages.where(id: recent_ids).chronological
+  end
+
   def movable_cards_list_key
     "grid-movable-cards-demo"
   end
@@ -687,6 +761,7 @@ class PagesController < ApplicationController
       {title: "Quote", description: "Blockquote and citation text examples", url: demo_text_quote_path},
       {title: "Empty State", description: "User-friendly empty states", url: demo_empty_state_path},
       {title: "Grid", description: "Responsive grid layouts", url: demo_grid_path},
+      {title: "Grid: Two Columns", description: "Two-column layout with one card in each column", url: demo_grid_two_columns_path},
       {title: "Grid: Movable Cards", description: "Draggable card grid with persisted ordering", url: demo_grid_movable_cards_path},
       {title: "Pagination", description: "Page navigation with Pagy", url: demo_pagination_path},
       {title: "Charts", description: "Data visualization with ApexCharts", url: demo_charts_path},

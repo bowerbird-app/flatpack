@@ -4,9 +4,9 @@ module FlatPack
   module AvatarGroup
     class Component < FlatPack::BaseComponent
       OVERLAPS = {
-        sm: "-0.25rem",
-        md: "-0.5rem",
-        lg: "-0.75rem"
+        sm: "var(--avatar-group-overlap-sm)",
+        md: "var(--avatar-group-overlap-md)",
+        lg: "var(--avatar-group-overlap-lg)"
       }.freeze
 
       OVERLAP_CLASSES = {
@@ -87,7 +87,7 @@ module FlatPack
             shape: :circle,
             status: avatar_attrs[:status],
             href: avatar_attrs[:href],
-            class: "ring-2 ring-white dark:ring-zinc-900"
+            class: "ring-2 ring-[var(--avatar-group-ring-color)]"
           ).render_in(view_context)
         end
       end
@@ -101,7 +101,7 @@ module FlatPack
             size: @size,
             shape: :circle,
             href: @overflow_href,
-            class: "ring-2 ring-white dark:ring-zinc-900"
+            class: "ring-2 ring-[var(--avatar-group-ring-color)]"
           ).render_in(view_context)
         end
       end
