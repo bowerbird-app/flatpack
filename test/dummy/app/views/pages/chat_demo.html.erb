@@ -11,25 +11,86 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Demo", anchor_link: true, subtitle: "End-to-end chat panel composition.") %>
 
-    <div class="mb-4 mt-6 h-[620px] overflow-hidden rounded-lg border border-(--surface-border-color) bg-(--surface-background-color)">
-      <%= render(FlatPack::Chat::Panel::Component.new) do |panel| %>
+    <%= render FlatPack::Chat::Layout::Component.new(
+      variant: :split,
+      class: "mb-4 mt-6 overflow-hidden rounded-lg border",
+      style: "height: 620px; border-color: var(--surface-border-color); background-color: var(--surface-background-color); grid-template-columns: minmax(0, 320px) minmax(0, 1fr);"
+    ) do |layout| %>
+      <% layout.with_sidebar do %>
+        <div id="chat-groups" class="p-3">
+          <p class="px-3 pb-2 text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">
+            Chat Groups Inbox
+          </p>
+
+          <%= render FlatPack::List::Component.new(spacing: :dense, divider: true, selectable: true) do %>
+            <% @chat_group_summaries.each do |summary| %>
+              <% trailing = capture do %>
+                <div class="min-w-13 flex flex-col items-end gap-1">
+                  <span class="text-xs text-(--surface-muted-content-color)"><%= summary[:latest_at]&.strftime("%-l:%M %p") %></span>
+                  <% if summary[:unread_count].positive? %>
+                    <%= render FlatPack::Badge::Component.new(text: summary[:unread_count].to_s, style: :info, size: :sm) %>
+                  <% end %>
+                </div>
+              <% end %>
+
+              <%= render FlatPack::List::Item.new(
+                leading: render(FlatPack::Avatar::Component.new(name: summary[:chat_group].name, initials: summary[:initials], size: :sm)),
+                trailing: trailing,
+                href: demo_chat_demo_path(chat_group_id: summary[:chat_group].id),
+                hover: true,
+                active: summary[:active],
+                link_arguments: {
+                  data: {turbo_frame: "chat-demo-panel"},
+                  aria: {current: (summary[:active] ? "page" : nil)}
+                },
+                class: "overflow-hidden"
+              ) do %>
+                <p class="truncate text-sm font-medium text-(--surface-content-color)"><%= summary[:chat_group].name %></p>
+                <p class="truncate text-xs text-(--surface-muted-content-color)">
+                  <%= [summary[:latest_sender], summary[:latest_preview]].compact.join(": ") %>
+                </p>
+              <% end %>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% layout.with_panel do %>
+        <%= turbo_frame_tag "chat-demo-panel" do %>
+          <%= render FlatPack::Chat::Panel::Component.new do |panel| %>
         <% panel.with_header do %>
-          <div class="flex items-center justify-between p-4">
-            <div>
-              <h2 class="text-base font-semibold text-(--surface-content-color)">Design Team</h2>
-              <p class="text-sm text-(--surface-muted-content-color)">4 people online</p>
-            </div>
-            <%= render(FlatPack::AvatarGroup::Component.new(
-              items: [
-                {name: "Alex Rivera", initials: "AR"},
-                {name: "Mina Cho", initials: "MC"},
-                {name: "Sam Lee", initials: "SL"},
-                {name: "Jo Kim", initials: "JK"}
-              ],
-              size: :sm,
-              max: 4
-            )) %>
-          </div>
+          <%= render FlatPack::Chat::Header::Component.new(
+            title: (@chat_group&.name || "Chat Group"),
+            subtitle: "#{@chat_group_summaries.size} chat groups in your inbox",
+            content_url: "#chat-group-settings",
+            group_avatars: [
+              {name: "Alex Rivera", initials: "AR"},
+              {name: "Mina Cho", initials: "MC"},
+              {name: "Sam Lee", initials: "SL"},
+              {name: "Jo Kim", initials: "JK"},
+              {name: "Rina Park", initials: "RP"},
+              {name: "Dan Wu", initials: "DW"}
+            ],
+            group_max: 4,
+            group_size: :sm
+          ) do |header| %>
+            <% header.right do %>
+              <%= render FlatPack::Button::Component.new(
+                icon: "search",
+                icon_only: true,
+                style: :ghost,
+                size: :sm,
+                url: "#chat-search"
+              ) %>
+              <%= render FlatPack::Button::Component.new(
+                icon: "dots",
+                icon_only: true,
+                style: :ghost,
+                size: :sm,
+                url: "#chat-menu"
+              ) %>
+            <% end %>
+          <% end %>
         <% end %>
 
         <% panel.with_messages do %>
@@ -41,8 +102,8 @@
             <%= render FlatPack::Chat::DateDivider::Component.new(label: "Today") %>
 
             <div id="<%= @chat_group ? dom_id(@chat_group, :messages) : "chat-demo-messages" %>" class="space-y-4" data-pagination-content>
-              <% @chat_messages.each do |message| %>
-                <%= render FlatPack::Chat::MessageRecord::Component.new(record: message, reveal_actions: true) %>
+              <% @chat_items.each do |item| %>
+                <%= render FlatPack::Chat::MessageRecord::Component.new(record: item, reveal_actions: true) %>
               <% end %>
             </div>
 
@@ -59,19 +120,30 @@
                 flat_pack__chat_sender_thread_selector_value: (@chat_group ? "##{dom_id(@chat_group, :messages)}" : "[data-flat-pack--chat-scroll-target='messages']"),
                 flat_pack__chat_sender_endpoint_value: (@chat_group ? demo_chat_group_messages_path(@chat_group) : nil)
               } do %>
+            <input
+              type="file"
+              multiple
+              class="sr-only"
+              data-flat-pack--chat-sender-target="fileInput"
+              data-action="change->flat-pack--chat-sender#handleFileSelection"
+            >
+
             <%= render FlatPack::Chat::Composer::Component.new do |composer| %>
               <% composer.left do %>
                 <%= render FlatPack::Button::Dropdown::Component.new(
                   text: "",
                   icon: "plus",
-                  style: :default,
+                  style: :ghost,
                   size: :md,
                   show_chevron: false,
                   position: :top_left,
-                  aria: {label: "Attach options"}
+                  aria: {label: "Add files or images"}
                 ) do |dropdown| %>
-                  <% dropdown.with_menu_item(text: "Upload file", icon: "file", href: "#") %>
-                  <% dropdown.with_menu_item(text: "Attach from library", icon: "folder", href: "#") %>
+                  <% dropdown.with_menu_item(
+                    text: "Upload files or images",
+                    icon: "file",
+                    data: {action: "click->flat-pack--chat-sender#openFilePicker"}
+                  ) %>
                 <% end %>
               <% end %>
 
@@ -89,8 +161,10 @@
             <% end %>
           <% end %>
         <% end %>
+          <% end %>
+        <% end %>
       <% end %>
-    </div>
+    <% end %>
 
     <%= render FlatPack::Alert::Component.new(
       title: "Demo requirement",
@@ -103,53 +177,88 @@
       title: "ERB",
       language: "erb",
       code: CGI.unescapeHTML(<<~'CODE')
-        &lt;%= render(FlatPack::Chat::Panel::Component.new) do |panel| %&gt;
-          &lt;% panel.with_header do %&gt;
-            &lt;div class="flex items-center justify-between p-4"&gt;...&lt;/div&gt;
-          &lt;% end %&gt;
-
-          &lt;% panel.with_messages do %&gt;
-            &lt;%= render FlatPack::Chat::MessageList::Component.new do %&gt;
-              &lt;%= render FlatPack::Chat::DateDivider::Component.new(label: "Today") %&gt;
-              &lt;%= render FlatPack::Chat::MessageGroup::Component.new(direction: :incoming, show_avatar: true, show_name: true, sender_name: "Mina") do |group| %&gt;
-                &lt;% group.with_message do %&gt;
-                  &lt;%= render FlatPack::Chat::Message::Component.new(direction: :incoming, timestamp: "10:12 AM") { "I pushed the homepage copy updates." } %&gt;
+        &lt;%= render FlatPack::Chat::Layout::Component.new(
+          class: &quot;rounded-lg border&quot;,
+          style: &quot;height: 620px; border-color: var(--surface-border-color); background-color: var(--surface-background-color);&quot;
+        ) do |layout| %&gt;
+          &lt;% layout.with_panel do %&gt;
+            &lt;%= render FlatPack::Chat::Panel::Component.new do |panel| %&gt;
+            &lt;% panel.with_header do %&gt;
+              &lt;%= render FlatPack::Chat::Header::Component.new(
+              title: "Design Team",
+              subtitle: "8 members • 4 online",
+              back_href: "#chat-groups",
+                back_label: nil,
+              content_url: "#chat-group-settings",
+              group_avatars: [
+                {name: "Alex Rivera", initials: "AR"},
+                {name: "Mina Cho", initials: "MC"},
+                {name: "Sam Lee", initials: "SL"},
+                {name: "Jo Kim", initials: "JK"},
+                {name: "Rina Park", initials: "RP"},
+                {name: "Dan Wu", initials: "DW"}
+              ],
+              group_max: 4
+              ) do |header| %&gt;
+                &lt;% header.right do %&gt;
+                  &lt;%= render FlatPack::Button::Component.new(icon: "search", icon_only: true, style: :ghost, size: :sm) %&gt;
                 &lt;% end %&gt;
               &lt;% end %&gt;
             &lt;% end %&gt;
-          &lt;% end %&gt;
 
-          &lt;% panel.with_composer do %&gt;
-            &lt;%= form_with url: &quot;#&quot;, method: :post, local: true,
-                data: {
-                  controller: &quot;flat-pack--chat-sender&quot;,
-                  action: &quot;submit-&gt;flat-pack--chat-sender#submit&quot;,
-                  flat_pack__chat_sender_thread_selector_value: &quot;[data-flat-pack--chat-scroll-target='messages']&quot;
-                } do %&gt;
-            &lt;%= render FlatPack::Chat::Composer::Component.new do |composer| %&gt;
-              &lt;% composer.left do %&gt;
-                &lt;%= render FlatPack::Button::Dropdown::Component.new(
-                  text: &quot;&quot;,
-                  icon: &quot;plus&quot;,
-                  style: :default,
-                  size: :md,
-                  show_chevron: false,
-                  position: :top_left,
-                  aria: {label: &quot;Attach options&quot;}
-                ) do |dropdown| %&gt;
-                  &lt;% dropdown.with_menu_item(text: &quot;Upload file&quot;, icon: &quot;file&quot;, href: &quot;#&quot;) %&gt;
-                  &lt;% dropdown.with_menu_item(text: &quot;Attach from library&quot;, icon: &quot;folder&quot;, href: &quot;#&quot;) %&gt;
+            &lt;% panel.with_messages do %&gt;
+              &lt;%= render FlatPack::Chat::MessageList::Component.new do %&gt;
+                &lt;%= render FlatPack::Chat::DateDivider::Component.new(label: "Today") %&gt;
+                &lt;%= render FlatPack::Chat::MessageGroup::Component.new(direction: :incoming, show_avatar: true, show_name: true, sender_name: "Mina") do |group| %&gt;
+                  &lt;% group.with_message do %&gt;
+                    &lt;%= render FlatPack::Chat::ReceivedMessage::Component.new do |message| %&gt;
+                      &lt;% message.with_meta do %&gt;
+                        &lt;%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "10:12 AM", state: :sent) %&gt;
+                      &lt;% end %&gt;
+                      I pushed the homepage copy updates.
+                    &lt;% end %&gt;
+                  &lt;% end %&gt;
                 &lt;% end %&gt;
               &lt;% end %&gt;
+            &lt;% end %&gt;
 
-              &lt;% composer.center do %&gt;
-                &lt;%= render FlatPack::Chat::Textarea::Component.new(name: "chat[message]", autogrow: true, submit_on_enter: true) %&gt;
+            &lt;% panel.with_composer do %&gt;
+              &lt;%= form_with url: &quot;#&quot;, method: :post, local: true,
+                  data: {
+                    controller: &quot;flat-pack--chat-sender&quot;,
+                    action: &quot;submit-&gt;flat-pack--chat-sender#submit&quot;,
+                    flat_pack__chat_sender_thread_selector_value: &quot;[data-flat-pack--chat-scroll-target='messages']&quot;
+                  } do %&gt;
+              &lt;%= render FlatPack::Chat::Composer::Component.new do |composer| %&gt;
+                &lt;% composer.left do %&gt;
+                  &lt;%= render FlatPack::Button::Dropdown::Component.new(
+                    text: &quot;&quot;,
+                    icon: &quot;plus&quot;,
+                    style: :ghost,
+                    size: :md,
+                    show_chevron: false,
+                    position: :top_left,
+                    aria: {label: &quot;Add files or images&quot;}
+                  ) do |dropdown| %&gt;
+                    &lt;% dropdown.with_menu_item(
+                      text: &quot;Upload files or images&quot;,
+                      icon: &quot;file&quot;,
+                      data: {action: &quot;click-&gt;flat-pack--chat-sender#openFilePicker&quot;}
+                    ) %&gt;
+                  &lt;% end %&gt;
+                &lt;% end %&gt;
+
+                &lt;% composer.center do %&gt;
+                  &lt;%= render FlatPack::Chat::Textarea::Component.new(name: "chat[message]", autogrow: true, submit_on_enter: true) %&gt;
+                &lt;% end %&gt;
+                &lt;% composer.right do %&gt;
+                  &lt;%= render FlatPack::Chat::SendButton::Component.new %&gt;
+                &lt;% end %&gt;
               &lt;% end %&gt;
-              &lt;% composer.right do %&gt;
-                &lt;%= render FlatPack::Chat::SendButton::Component.new %&gt;
               &lt;% end %&gt;
             &lt;% end %&gt;
             &lt;% end %&gt;
+          &lt;% end %&gt;
           &lt;% end %&gt;
         &lt;% end %&gt;
       CODE

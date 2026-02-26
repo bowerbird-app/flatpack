@@ -6,16 +6,21 @@ module Demo
 
     queue_as :default
 
-    def perform(chat_message_id)
-      message = ChatMessage.includes(:chat_group).find_by(id: chat_message_id)
-      return unless message
+    def perform(chat_item_id)
+      item = ChatItem.includes(:chat_group, :chat_item_attachments).find_by(id: chat_item_id)
+      return unless item
 
-      message.update!(state: "read") unless message.state == "read"
+      item.update!(state: "read") unless item.state == "read"
+
+      item_html = ApplicationController.render(
+        renderable: FlatPack::Chat::MessageRecord::Component.new(record: item),
+        layout: false
+      )
 
       Turbo::StreamsChannel.broadcast_replace_to(
-        message.chat_group.demo_stream_name,
-        target: dom_id(message),
-        renderable: FlatPack::Chat::MessageRecord::Component.new(record: message)
+        item.chat_group.demo_stream_name,
+        target: dom_id(item),
+        html: item_html
       )
     end
   end

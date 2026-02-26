@@ -15,12 +15,12 @@
           <%= render FlatPack::Avatar::Component.new(name: "Mina Cho", initials: "MC", size: :sm) %>
         <% end %>
         <% group.with_message do %>
-          <%= render FlatPack::Chat::Message::Component.new(direction: :incoming) do %>
+          <%= render FlatPack::Chat::ReceivedMessage::Component.new do %>
             First message in the incoming group.
           <% end %>
         <% end %>
         <% group.with_message do %>
-          <%= render FlatPack::Chat::Message::Component.new(direction: :incoming) do %>
+          <%= render FlatPack::Chat::ReceivedMessage::Component.new do %>
             Second message from the same person.
           <% end %>
         <% end %>
@@ -28,12 +28,12 @@
 
       <%= render FlatPack::Chat::MessageGroup::Component.new(direction: :outgoing, show_avatar: false) do |group| %>
         <% group.with_message do %>
-          <%= render FlatPack::Chat::Message::Component.new(direction: :outgoing) do %>
+          <%= render FlatPack::Chat::SentMessage::Component.new do %>
             Reply one in outgoing group.
           <% end %>
         <% end %>
         <% group.with_message do %>
-          <%= render FlatPack::Chat::Message::Component.new(direction: :outgoing) do %>
+          <%= render FlatPack::Chat::SentMessage::Component.new do %>
             Reply two in outgoing group.
           <% end %>
         <% end %>
@@ -54,7 +54,7 @@
             &lt;%= render FlatPack::Avatar::Component.new(name: "Mina Cho", initials: "MC", size: :sm) %&gt;
           &lt;% end %&gt;
           &lt;% group.with_message do %&gt;
-            &lt;%= render FlatPack::Chat::Message::Component.new(direction: :incoming) do %&gt;
+            &lt;%= render FlatPack::Chat::ReceivedMessage::Component.new do %&gt;
               First message in the incoming group.
             &lt;% end %&gt;
           &lt;% end %&gt;

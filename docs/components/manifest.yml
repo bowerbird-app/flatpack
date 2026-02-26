@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-02-24
+updated_at: 2026-02-25
 
 format_reference: docs/components/DOC_FORMAT.md
 human_index: docs/components/README.md
@@ -73,9 +73,12 @@ components:
     primary_class: FlatPack::Chat::Panel::Component
     related_classes:
       - FlatPack::Chat::Layout::Component
+      - FlatPack::Chat::Header::Component
       - FlatPack::Chat::MessageList::Component
       - FlatPack::Chat::MessageRecord::Component
-      - FlatPack::Chat::Message::Component
+      - FlatPack::Chat::SentMessage::Component
+      - FlatPack::Chat::ReceivedMessage::Component
+      - FlatPack::Chat::SystemMessage::Component
       - FlatPack::Chat::Composer::Component
     status: documented
 
@@ -97,6 +100,12 @@ components:
     title: Comments Composer
     doc: docs/components/comments-composer.md
     primary_class: FlatPack::Comments::Composer::Component
+    status: documented
+
+  - key: comments_inline_input
+    title: Comments Inline Input
+    doc: docs/components/comments-inline-input.md
+    primary_class: FlatPack::Comments::InlineInput::Component
     status: documented
 
   - key: comments_item

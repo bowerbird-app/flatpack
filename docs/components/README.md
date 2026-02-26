@@ -28,6 +28,7 @@ This is the canonical component index for AI and human lookup.
 | Chat | Messaging UI primitives | `FlatPack::Chat::Panel::Component` | [chat.md](chat.md) |
 | Chip + Chip Group | Compact tags/tokens with optional actions | `FlatPack::Chip::Component` | [chips.md](chips.md) |
 | Collapse | Progressive disclosure region | `FlatPack::Collapse::Component` | [collapse.md](collapse.md) |
+| Comments Inline Input | Minimal single-line comment input + inline submit | `FlatPack::Comments::InlineInput::Component` | [comments-inline-input.md](comments-inline-input.md) |
 | Comments Composer | Comment input/composer | `FlatPack::Comments::Composer::Component` | [comments-composer.md](comments-composer.md) |
 | Comments Item | Single comment item | `FlatPack::Comments::Item::Component` | [comments-item.md](comments-item.md) |
 | Comments Replies | Nested/reply comment region | `FlatPack::Comments::Replies::Component` | [comments-replies.md](comments-replies.md) |

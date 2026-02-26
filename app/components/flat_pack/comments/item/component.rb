@@ -47,9 +47,9 @@ module FlatPack
         def call
           content_tag(:div, **item_attributes) do
             safe_join([
-              render_avatar_column,
-              render_content_column
-            ])
+              render_content_column,
+              render_replies_section
+            ].compact)
           end
         end
 
@@ -63,22 +63,8 @@ module FlatPack
 
         def item_classes
           classes(
-            "flex gap-3"
+            "w-full"
           )
-        end
-
-        def render_avatar_column
-          content_tag(:div, class: "shrink-0") do
-            FlatPack::Avatar::Component.new(
-              src: @avatar[:src],
-              alt: @avatar[:alt] || @author_name,
-              name: @avatar[:name] || @author_name,
-              initials: @avatar[:initials],
-              size: :sm,
-              shape: :circle,
-              href: @avatar[:href]
-            ).render_in(view_context)
-          end
         end
 
         def render_content_column
@@ -111,15 +97,30 @@ module FlatPack
         end
 
         def render_author_info
-          content_tag(:div) do
+          content_tag(:div, class: "flex items-start gap-2 min-w-0") do
             safe_join([
-              content_tag(:div, class: "font-medium text-sm text-[var(--comments-item-author-color)]") do
-                safe_join([
-                  content_tag(:span, @author_name),
-                  (@state == :system) ? render_system_badge : nil
-                ].compact)
+              content_tag(:div, class: "shrink-0") do
+                FlatPack::Avatar::Component.new(
+                  src: @avatar[:src],
+                  alt: @avatar[:alt] || @author_name,
+                  name: @avatar[:name] || @author_name,
+                  initials: @avatar[:initials],
+                  size: :sm,
+                  shape: :circle,
+                  href: @avatar[:href]
+                ).render_in(view_context)
               end,
-              @author_meta ? content_tag(:div, @author_meta, class: "text-xs text-[var(--comments-item-meta-color)]") : nil
+              content_tag(:div, class: "min-w-0") do
+                safe_join([
+                  content_tag(:div, class: "font-medium text-sm text-[var(--comments-item-author-color)]") do
+                    safe_join([
+                      content_tag(:span, @author_name),
+                      (@state == :system) ? render_system_badge : nil
+                    ].compact)
+                  end,
+                  @author_meta ? content_tag(:div, @author_meta, class: "text-xs text-[var(--comments-item-meta-color)]") : nil
+                ].compact)
+              end
             ].compact)
           end
         end
@@ -177,6 +178,12 @@ module FlatPack
           return if @state == :deleted
 
           content_tag(:div, actions, class: "flex items-center gap-3 pt-2")
+        end
+
+        def render_replies_section
+          return unless replies?
+
+          content_tag(:div, replies, class: "pt-2")
         end
 
         def validate_author!

@@ -72,7 +72,7 @@ module FlatPack
         end
 
         def render_default_header
-          content_tag(:div, class: "flex items-center justify-between border-b border-[var(--comments-thread-header-border-color)] pb-4") do
+          content_tag(:div, class: "flex items-center justify-between pb-0") do
             safe_join([
               content_tag(:div, class: "flex items-center gap-2") do
                 safe_join([

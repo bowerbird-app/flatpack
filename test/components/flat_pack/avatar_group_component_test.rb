@@ -117,6 +117,61 @@ module FlatPack
 
         refute_selector "div[onclick]"
       end
+
+      def test_renders_tooltip_for_each_named_avatar
+        items = [
+          {name: "John Doe"},
+          {name: "Jane Smith"}
+        ]
+
+        render_inline(Component.new(items: items))
+
+        assert_selector "div[data-controller='flat-pack--tooltip']", count: 2
+        assert_selector "div[data-flat-pack--tooltip-placement-value='bottom']", count: 2
+        assert_selector "div[role='tooltip']", text: "John Doe"
+        assert_selector "div[role='tooltip']", text: "Jane Smith"
+      end
+
+      def test_does_not_render_tooltip_for_avatar_without_name_or_alt
+        items = [{initials: "AB"}]
+
+        render_inline(Component.new(items: items))
+
+        refute_selector "div[data-controller='flat-pack--tooltip']"
+      end
+
+      def test_renders_overflow_tooltip_with_hidden_names
+        items = [
+          {initials: "A"},
+          {initials: "B"},
+          {name: "User Three"},
+          {name: "User Four"}
+        ]
+
+        render_inline(Component.new(items: items, max: 2))
+
+        assert_selector "span", text: "+2"
+        assert_selector "div[data-controller='flat-pack--tooltip']", count: 1
+        assert_selector "div[data-flat-pack--tooltip-placement-value='bottom']", count: 1
+        assert_selector "div[role='tooltip'] li", count: 2
+        assert_selector "div[role='tooltip'] li", text: "User Three"
+        assert_selector "div[role='tooltip'] li", text: "User Four"
+        assert_selector :xpath, "//li[not(ancestor::div[@role='tooltip'])]", count: 0
+      end
+
+      def test_does_not_render_overflow_tooltip_when_hidden_items_have_no_names
+        items = [
+          {initials: "A"},
+          {initials: "B"},
+          {initials: "C"},
+          {initials: "D"}
+        ]
+
+        render_inline(Component.new(items: items, max: 2))
+
+        assert_selector "span", text: "+2"
+        refute_selector "div[data-controller='flat-pack--tooltip']"
+      end
     end
   end
 end

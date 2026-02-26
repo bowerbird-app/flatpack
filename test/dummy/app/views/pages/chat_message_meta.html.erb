@@ -10,28 +10,28 @@
     <%= render FlatPack::SectionTitle::Component.new(title: "Demo", anchor_link: true, subtitle: "Delivery states and edited indicator examples.") %>
 
     <div class="mb-4 mt-6 space-y-3 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
-      <%= render FlatPack::Chat::Message::Component.new(direction: :incoming, timestamp: "11:02 AM") do |message| %>
+      <%= render FlatPack::Chat::ReceivedMessage::Component.new do |message| %>
         Here’s the latest handoff checklist.
         <% message.with_meta do %>
           <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "11:02 AM", state: :sent) %>
         <% end %>
       <% end %>
 
-      <%= render FlatPack::Chat::Message::Component.new(direction: :outgoing, timestamp: "11:03 AM") do |message| %>
+      <%= render FlatPack::Chat::SentMessage::Component.new do |message| %>
         Thanks — uploading release notes now.
         <% message.with_meta do %>
           <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "11:03 AM", state: :sending) %>
         <% end %>
       <% end %>
 
-      <%= render FlatPack::Chat::Message::Component.new(direction: :outgoing, timestamp: "11:04 AM") do |message| %>
+      <%= render FlatPack::Chat::SentMessage::Component.new do |message| %>
         Retry attempt failed. I’ll resend once I reconnect.
         <% message.with_meta do %>
           <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "11:04 AM", state: :failed) %>
         <% end %>
       <% end %>
 
-      <%= render FlatPack::Chat::Message::Component.new(direction: :outgoing, timestamp: "11:05 AM") do |message| %>
+      <%= render FlatPack::Chat::SentMessage::Component.new do |message| %>
         Resent successfully with the final attachment.
         <% message.with_meta do %>
           <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "11:05 AM", state: :read, edited: true) %>
@@ -43,14 +43,14 @@
       title: "ERB",
       language: "erb",
       code: CGI.unescapeHTML(<<~'CODE')
-        &lt;%= render FlatPack::Chat::Message::Component.new(direction: :outgoing, timestamp: "11:03 AM") do |message| %&gt;
+        &lt;%= render FlatPack::Chat::SentMessage::Component.new do |message| %&gt;
           Thanks — uploading release notes now.
           &lt;% message.with_meta do %&gt;
             &lt;%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "11:03 AM", state: :sending) %&gt;
           &lt;% end %&gt;
         &lt;% end %&gt;
 
-        &lt;%= render FlatPack::Chat::Message::Component.new(direction: :outgoing, timestamp: "11:05 AM") do |message| %&gt;
+        &lt;%= render FlatPack::Chat::SentMessage::Component.new do |message| %&gt;
           Resent successfully with the final attachment.
           &lt;% message.with_meta do %&gt;
             &lt;%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "11:05 AM", state: :read, edited: true) %&gt;

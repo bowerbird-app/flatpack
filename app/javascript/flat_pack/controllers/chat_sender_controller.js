@@ -1,10 +1,31 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
+  static targets = ["fileInput"]
+
   static values = {
     threadSelector: { type: String, default: "[data-flat-pack--chat-scroll-target='messages']" },
     endpoint: String,
     method: { type: String, default: "post" }
+  }
+
+  connect() {
+    this.selectedFiles = []
+  }
+
+  openFilePicker(event) {
+    event.preventDefault()
+
+    if (!this.hasFileInputTarget) {
+      return
+    }
+
+    this.fileInputTarget.click()
+  }
+
+  handleFileSelection(event) {
+    const files = Array.from(event.target?.files || [])
+    this.selectedFiles = files
   }
 
   async submit(event) {
@@ -16,7 +37,9 @@ export default class extends Controller {
     }
 
     const body = textarea.value.trim()
-    if (!body) {
+    const attachments = this.#selectedAttachments()
+
+    if (!body && attachments.length === 0) {
       return
     }
 
@@ -25,11 +48,12 @@ export default class extends Controller {
       return
     }
 
-    const optimisticElement = this.#buildOptimisticMessageElement(body)
+    const optimisticElement = this.#buildOptimisticMessageElement(body, attachments)
     threadElement.append(optimisticElement)
 
     textarea.value = ""
     textarea.dispatchEvent(new Event("input", { bubbles: true }))
+    this.#clearSelectedFiles()
 
     const submitButton = this.#submitButton()
     if (submitButton) {
@@ -39,7 +63,7 @@ export default class extends Controller {
     this.#notifyNewMessage(threadElement)
 
     try {
-      const payload = this.#payloadFor(body)
+      const payload = this.#payloadFor(body, attachments)
       const response = await this.#sendMessage(payload, optimisticElement)
       this.#confirmMessage(optimisticElement, response)
       this.#dispatchLifecycleEvent("flat-pack:chat:message:confirmed", {
@@ -84,8 +108,10 @@ export default class extends Controller {
     return document.querySelector(this.threadSelectorValue)
   }
 
-  #buildOptimisticMessageElement(body) {
+  #buildOptimisticMessageElement(body, attachments) {
     const timestamp = this.#timeLabel()
+    const bodyMarkup = body ? `<div class="wrap-break-word whitespace-pre-line">${this.#escapeHtml(body)}</div>` : ""
+    const attachmentsMarkup = this.#attachmentMarkup(attachments)
 
     const wrapper = document.createElement("div")
     wrapper.className = "flex items-start gap-0 flex-row-reverse"
@@ -96,7 +122,8 @@ export default class extends Controller {
         <div class="space-y-1">
           <div class="flex justify-end" data-chat-message-state="sending">
             <div data-flat-pack-chat-sender-bubble class="relative px-4 py-2 rounded-2xl max-w-[75%] sm:max-w-[500px] shadow-sm bg-(--chat-message-outgoing-background-color) text-(--chat-message-outgoing-text-color) opacity-60">
-              <div class="wrap-break-word whitespace-pre-line">${this.#escapeHtml(body)}</div>
+              ${bodyMarkup}
+              ${attachmentsMarkup}
               <div class="mt-1 [--chat-message-meta-color:var(--chat-message-outgoing-meta-color)] [--chat-read-receipt-color:var(--chat-message-outgoing-read-receipt-color)]">
                 <div data-flat-pack-chat-sender-meta class="flex items-center gap-1.5 text-xs">
                   <span class="text-xs text-(--chat-message-meta-color)">${this.#escapeHtml(timestamp)}</span>
@@ -112,13 +139,87 @@ export default class extends Controller {
     return wrapper
   }
 
-  #payloadFor(body) {
+  #payloadFor(body, attachments) {
     return {
       body,
-      threadId: this.element.dataset.threadId,
+      chatGroupId: this.element.dataset.threadId,
+      attachments,
       clientTempId: this.#tempId(),
       submittedAt: new Date().toISOString()
     }
+  }
+
+  #selectedAttachments() {
+    return this.selectedFiles.map((file) => ({
+      kind: file.type.startsWith("image/") ? "image" : "file",
+      name: file.name,
+      contentType: file.type || null,
+      byteSize: Number.isFinite(file.size) ? file.size : null
+    }))
+  }
+
+  #clearSelectedFiles() {
+    this.selectedFiles = []
+
+    if (this.hasFileInputTarget) {
+      this.fileInputTarget.value = ""
+    }
+  }
+
+  #attachmentMarkup(attachments) {
+    if (!attachments || attachments.length === 0) {
+      return ""
+    }
+
+    const items = attachments.map((attachment) => this.#singleAttachmentMarkup(attachment)).join("")
+    return `<div class="mt-2 space-y-2">${items}</div>`
+  }
+
+  #singleAttachmentMarkup(attachment) {
+    const kind = attachment.kind === "image" ? "image" : "file"
+    const meta = this.#attachmentMeta(attachment)
+    const icon = kind === "image" ? "🖼" : "📎"
+
+    return `
+      <div class="inline-flex w-fit max-w-full items-center gap-3 border border-(--chat-attachment-border-color) rounded-lg p-3">
+        <div class="shrink-0 text-base">${icon}</div>
+        <div class="min-w-0">
+          <div class="text-sm font-medium text-(--chat-attachment-text-color) truncate max-w-[32ch]">${this.#escapeHtml(attachment.name || "Attachment")}</div>
+          ${meta ? `<div class="text-xs text-(--chat-attachment-meta-color) truncate max-w-[32ch]">${this.#escapeHtml(meta)}</div>` : ""}
+        </div>
+      </div>
+    `
+  }
+
+  #attachmentMeta(attachment) {
+    const parts = []
+
+    if (attachment.contentType) {
+      parts.push(attachment.contentType)
+    }
+
+    if (typeof attachment.byteSize === "number" && Number.isFinite(attachment.byteSize)) {
+      parts.push(this.#humanSize(attachment.byteSize))
+    }
+
+    return parts.join(" • ")
+  }
+
+  #humanSize(bytes) {
+    if (bytes < 1024) {
+      return `${bytes} B`
+    }
+
+    const units = ["KB", "MB", "GB"]
+    let value = bytes / 1024
+    let unitIndex = 0
+
+    while (value >= 1024 && unitIndex < units.length - 1) {
+      value /= 1024
+      unitIndex += 1
+    }
+
+    return `${value.toFixed(value >= 10 ? 0 : 1)} ${units[unitIndex]}`
   }
 
   #sendMessage(payload, optimisticElement) {

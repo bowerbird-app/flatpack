@@ -115,7 +115,10 @@ export default class extends Controller {
     }
 
     const trayWidth = this.hasTrayTarget ? Math.ceil(this.trayTarget.getBoundingClientRect().width) : 0
-    const offset = trayWidth > 0 ? trayWidth : 128
+    const surfaceWidth = Math.ceil(this.surfaceTarget.getBoundingClientRect().width)
+    const preferredOffset = trayWidth > 0 ? trayWidth : 128
+    const maxOffset = Math.max(surfaceWidth - 24, 0)
+    const offset = maxOffset > 0 ? Math.min(preferredOffset, maxOffset) : preferredOffset
     const direction = this.direction()
     const signedOffset = direction === "incoming"
       ? offset

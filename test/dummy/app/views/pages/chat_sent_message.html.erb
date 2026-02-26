@@ -1,0 +1,41 @@
+<div class="container mx-auto max-w-4xl p-4">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Chat::SentMessage",
+    subtitle: "Outgoing message bubble with optional slide-to-reveal actions."
+  ) %>
+
+  <%= render "pages/component_method_variables_table", component: :chat_sent_message, anchor: "component-method-variables" %>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Demo", anchor_link: true, subtitle: "Outgoing states with and without reveal actions.") %>
+
+    <div class="mb-4 mt-6 space-y-4 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
+      <%= render FlatPack::Chat::SentMessage::Component.new(state: :sending) do |message| %>
+        <% message.with_meta do %>
+          <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "10:15 AM", state: :sending) %>
+        <% end %>
+        Uploading the latest launch checklist now.
+      <% end %>
+
+      <%= render FlatPack::Chat::SentMessage::Component.new(state: :read, reveal_actions: true, timestamp: Time.current.change(hour: 10, min: 18)) do |message| %>
+        <% message.with_meta do %>
+          <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "10:18 AM", state: :read) %>
+        <% end %>
+        Shared — slide to reveal edit/delete actions.
+      <% end %>
+    </div>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Chat::SentMessage::Component.new(state: :read, reveal_actions: true, timestamp: Time.current) do |message| %&gt;
+          &lt;% message.with_meta do %&gt;
+            &lt;%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "10:18 AM", state: :read) %&gt;
+          &lt;% end %&gt;
+          Shared — slide to reveal edit/delete actions.
+        &lt;% end %&gt;
+      CODE
+    ) %>
+  </section>
+</div>

@@ -6,21 +6,26 @@ module Demo
 
     queue_as :default
 
-    def perform(chat_group_id, outgoing_message_id)
+    def perform(chat_group_id, outgoing_item_id)
       chat_group = ChatGroup.find_by(id: chat_group_id)
-      outgoing_message = ChatMessage.find_by(id: outgoing_message_id)
-      return unless chat_group && outgoing_message
+      outgoing_item = ChatItem.find_by(id: outgoing_item_id)
+      return unless chat_group && outgoing_item
 
-      reply = chat_group.chat_messages.create!(
+      reply = chat_group.chat_items.create!(
         sender_name: "Sam",
-        body: reply_body_for(outgoing_message.body),
+        body: reply_body_for(outgoing_item.body),
         state: "sent"
+      )
+
+      reply_html = ApplicationController.render(
+        renderable: FlatPack::Chat::MessageRecord::Component.new(record: reply, reveal_actions: true),
+        layout: false
       )
 
       Turbo::StreamsChannel.broadcast_append_to(
         chat_group.demo_stream_name,
         target: dom_id(chat_group, :messages),
-        renderable: FlatPack::Chat::MessageRecord::Component.new(record: reply, reveal_actions: true)
+        html: reply_html
       )
 
       Turbo::StreamsChannel.broadcast_update_to(

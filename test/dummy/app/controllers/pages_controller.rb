@@ -302,23 +302,42 @@ class PagesController < ApplicationController
   end
 
   def comments
+    @reply_target_id = params[:reply_to].presence&.to_i
+
+    if comments_table_available?
+      @comments_table_available = true
+      ensure_comments_demo_data!
+
+      all_comments = DemoComment.order(:created_at, :id).to_a
+      @comments_by_parent_id = all_comments.group_by(&:parent_comment_id)
+      @root_comments = @comments_by_parent_id[nil] || []
+      @comments_count = all_comments.length
+    else
+      @comments_table_available = false
+      @comments_by_parent_id = {}
+      @root_comments = []
+      @comments_count = 0
+    end
   end
 
   def chat_demo
     history_limit = 10
 
     if chat_tables_available?
-      ensure_chat_demo_messages!
-      @chat_group = ChatGroup.order(:id).first
-      @chat_messages = recent_chat_messages(@chat_group, limit: history_limit)
+      ensure_chat_demo_items!
+      @chat_group_summaries = build_chat_group_summaries
+      @chat_group = selected_chat_group(@chat_group_summaries)
+      mark_active_chat_group!(@chat_group_summaries, @chat_group)
+      @chat_items = recent_chat_items(@chat_group, limit: history_limit)
 
-      oldest_message_id = @chat_messages.first&.id
-      @chat_history_has_more = oldest_message_id.present? && @chat_group.chat_messages.where("id < ?", oldest_message_id).exists?
-      @chat_history_url = demo_chat_group_messages_path(@chat_group)
+      oldest_item_id = @chat_items.first&.id
+      @chat_history_has_more = oldest_item_id.present? && @chat_group && @chat_group.chat_items.where("id < ?", oldest_item_id).exists?
+      @chat_history_url = @chat_group ? demo_chat_group_messages_path(@chat_group) : nil
       @chat_history_limit = history_limit
     else
       @chat_group = nil
-      @chat_messages = []
+      @chat_group_summaries = []
+      @chat_items = []
       @chat_history_has_more = false
       @chat_history_url = nil
       @chat_history_limit = history_limit
@@ -337,7 +356,19 @@ class PagesController < ApplicationController
   def chat_message_group
   end
 
-  def chat_message
+  def chat_sent_message
+  end
+
+  def chat_received_message
+  end
+
+  def chat_file_message
+  end
+
+  def chat_image_message
+  end
+
+  def chat_system_message
   end
 
   def chat_message_record
@@ -396,6 +427,9 @@ class PagesController < ApplicationController
   end
 
   def list
+    @active_list_demo_item = params[:active_item].to_s
+    valid_items = %w[buttons tables chat_demo search]
+    @active_list_demo_item = "buttons" unless valid_items.include?(@active_list_demo_item)
   end
 
   def timeline
@@ -627,16 +661,47 @@ class PagesController < ApplicationController
   end
 
   def chat_tables_available?
-    ChatGroup.table_exists? && ChatMessage.table_exists?
+    ChatGroup.table_exists? && ChatItem.table_exists?
   rescue ActiveRecord::NoDatabaseError, ActiveRecord::StatementInvalid
     false
   end
 
-  def ensure_chat_demo_messages!
-    group = ChatGroup.find_or_create_by!(name: "Design Team")
-    return if group.chat_messages.exists?
+  def comments_table_available?
+    DemoComment.table_exists?
+  rescue ActiveRecord::NoDatabaseError, ActiveRecord::StatementInvalid
+    false
+  end
 
-    timeline = [
+  def ensure_comments_demo_data!
+    return unless comments_table_available?
+    return if DemoComment.exists?
+
+    alice = DemoComment.create!(
+      author_name: "Alice Johnson",
+      author_meta: "Software Engineer",
+      body: "This is a really great feature! I've been waiting for something like this."
+    )
+
+    bob = DemoComment.create!(
+      author_name: "Bob Smith",
+      body: "I agree. This will save us a lot of time."
+    )
+
+    DemoComment.create!(
+      parent_comment: alice,
+      author_name: "Charlie Brown",
+      body: "Same here. Can we also add a quick start guide?"
+    )
+
+    DemoComment.create!(
+      parent_comment: bob,
+      author_name: "Diana Prince",
+      body: "Good call. I can draft the first pass this week."
+    )
+  end
+
+  def ensure_chat_demo_items!
+    design_team_timeline = [
       {sender_name: "Mina", body: "I pushed the homepage copy updates. Can someone review?", state: "read"},
       {sender_name: "You", body: "Reviewed. Tone is solid — can you also add a shorter hero variant for mobile?", state: "read"},
       {sender_name: "Sam", body: "I added both hero lengths and updated CTA spacing.", state: "read"},
@@ -660,33 +725,149 @@ class PagesController < ApplicationController
       {sender_name: "Sam", body: "I added status badges for experiment variants in the dashboard.", state: "read"},
       {sender_name: "Mina", body: "Final visual QA pass is complete from my side.", state: "read"},
       {sender_name: "Alex", body: "Monitoring alerts are configured and tested.", state: "read"},
+      {
+        sender_name: "You",
+        body: nil,
+        state: "read",
+        attachments: [
+          {kind: "image", name: "hero-mobile-1.png", content_type: "image/png", byte_size: 182_300},
+          {kind: "image", name: "hero-mobile-2.png", content_type: "image/png", byte_size: 194_100},
+          {kind: "image", name: "hero-mobile-3.png", content_type: "image/png", byte_size: 189_000}
+        ]
+      },
       {sender_name: "You", body: "All right, locking this version and moving to ship.", state: "read"}
     ]
 
+    product_updates_timeline = [
+      {sender_name: "Priya", body: "Roadmap draft is up with two candidate launch windows.", state: "read"},
+      {sender_name: "You", body: "Please tag blockers by priority before tomorrow standup.", state: "read"},
+      {sender_name: "Noah", body: "Done. Added risk notes for onboarding copy and billing events.", state: "read"},
+      {sender_name: "Priya", body: "Thanks — sharing revised timeline after lunch.", state: "read"}
+    ]
+
+    launch_ops_timeline = [
+      {sender_name: "Jordan", body: "Status page template is ready for launch-day updates.", state: "read"},
+      {sender_name: "You", body: "Great. Keep incident contact list pinned in this chat group.", state: "read"},
+      {sender_name: "Riley", body: "On-call schedule confirmed through the weekend.", state: "read"},
+      {sender_name: "Jordan", body: "Dry run starts at 2:30 PM. I will post checkpoints here.", state: "read"}
+    ]
+
+    seed_chat_group_timeline!(
+      ChatGroup.find_or_create_by!(name: "Design Team"),
+      design_team_timeline,
+      offset_minutes: 0
+    )
+
+    seed_chat_group_timeline!(
+      ChatGroup.find_or_create_by!(name: "Product Updates"),
+      product_updates_timeline,
+      offset_minutes: 45
+    )
+
+    seed_chat_group_timeline!(
+      ChatGroup.find_or_create_by!(name: "Launch Ops"),
+      launch_ops_timeline,
+      offset_minutes: 90
+    )
+  end
+
+  def seed_chat_group_timeline!(group, timeline, offset_minutes: 0)
+    return if group.chat_items.exists?
+
     now = Time.current
-    rows = timeline.each_with_index.map do |entry, index|
-      {
+    timeline.each_with_index do |entry, index|
+      minutes_ago = (timeline.length - index) + offset_minutes
+
+      item = group.chat_items.create!(
         chat_group_id: group.id,
         sender_name: entry[:sender_name],
         body: entry[:body],
         state: entry[:state],
-        created_at: now - (timeline.length - index).minutes,
-        updated_at: now - (timeline.length - index).minutes
-      }
-    end
+        submitted_at: nil,
+        created_at: now - minutes_ago.minutes,
+        updated_at: now - minutes_ago.minutes
+      )
 
-    ChatMessage.insert_all(rows)
+      Array(entry[:attachments]).each_with_index do |attachment, attachment_index|
+        item.chat_item_attachments.create!(
+          kind: attachment[:kind],
+          name: attachment[:name],
+          content_type: attachment[:content_type],
+          byte_size: attachment[:byte_size],
+          position: attachment_index
+        )
+      end
+    end
   end
 
-  def recent_chat_messages(chat_group, limit: 10)
+  def build_chat_group_summaries
+    ChatGroup.order(:name).map do |group|
+      latest_item = group.chat_items.order(created_at: :desc, id: :desc).first
+
+      {
+        chat_group: group,
+        initials: chat_group_initials(group),
+        latest_sender: latest_item&.sender_name,
+        latest_preview: chat_group_preview(latest_item),
+        latest_at: latest_item&.created_at || group.updated_at || group.created_at,
+        unread_count: demo_chat_group_unread_count(group),
+        active: false
+      }
+    end.sort_by { |summary| summary[:latest_at] || Time.zone.at(0) }.reverse
+  end
+
+  def selected_chat_group(summaries)
+    requested_group_id = params[:chat_group_id].presence&.to_i
+
+    requested_group = if requested_group_id
+      summaries.find { |summary| summary[:chat_group].id == requested_group_id }&.dig(:chat_group)
+    end
+
+    requested_group || summaries.first&.dig(:chat_group)
+  end
+
+  def mark_active_chat_group!(summaries, active_chat_group)
+    active_chat_group_id = active_chat_group&.id
+
+    summaries.each do |summary|
+      summary[:active] = summary[:chat_group].id == active_chat_group_id
+    end
+  end
+
+  def chat_group_initials(group)
+    initials = group.name.to_s.split.map { |part| part[0] }.join.upcase
+    initials.first(2)
+  end
+
+  def chat_group_preview(item)
+    return "No messages yet" unless item
+
+    return item.body if item.body.present?
+    return "Sent #{item.chat_item_attachments.size} attachments" if item.chat_item_attachments.any?
+
+    "Sent an update"
+  end
+
+  def demo_chat_group_unread_count(group)
+    {
+      "Design Team" => 3,
+      "Product Updates" => 1,
+      "Launch Ops" => 0
+    }.fetch(group.name, 0)
+  end
+
+  def recent_chat_items(chat_group, limit: 10)
     return [] unless chat_group
 
-    recent_ids = chat_group.chat_messages
+    recent_ids = chat_group.chat_items
       .order(created_at: :desc, id: :desc)
       .limit(limit)
       .select(:id)
 
-    chat_group.chat_messages.where(id: recent_ids).chronological
+    chat_group.chat_items
+      .includes(:chat_item_attachments)
+      .where(id: recent_ids)
+      .chronological
   end
 
   def movable_cards_list_key

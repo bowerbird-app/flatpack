@@ -24,6 +24,10 @@ Start with `Basic Usage` below.
 ## Accessibility
 See accessibility guidance below for labels and overflow semantics.
 
+- Avatars with a `name` (or `alt`) automatically render a tooltip with that text.
+- Tooltip placement is `:bottom` for each avatar in the group.
+- The overflow `+N` avatar shows a `:bottom` tooltip listing hidden member names, one per row.
+
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
 

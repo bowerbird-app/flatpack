@@ -32,44 +32,52 @@ Successfully implemented a comprehensive Chat Messaging UI component system with
    - Props: `direction`, `show_avatar`, `show_name`, `sender_name`
    - Slots: `avatar`, `messages` (many)
 
-### Message Components (2)
-6. **Chat::Message::Component** - Individual message bubble
-   - Location: `app/components/flat_pack/chat/message/component.rb`
-   - Props: `direction`, `variant`, `state`, `timestamp`, `edited`
-   - Variants: `:default`, `:system`
+### Message Components (4)
+6. **Chat::SentMessage::Component** - Outgoing message bubble
+   - Location: `app/components/flat_pack/chat/sent_message/component.rb`
+   - Props: `state`, `reveal_actions`, `timestamp`
+   - States: `:sent`, `:sending`, `:failed`, `:read`
+   - Slots: `attachments` (many), `meta`, `actions`
+
+7. **Chat::ReceivedMessage::Component** - Incoming message bubble
+   - Location: `app/components/flat_pack/chat/received_message/component.rb`
+   - Props: `state`, `reveal_actions`, `timestamp`
    - States: `:sent`, `:sending`, `:failed`, `:read`
    - Slots: `attachments` (many), `meta`
 
-7. **Chat::MessageMeta::Component** - Message metadata display
+8. **Chat::SystemMessage::Component** - Centered system event row
+   - Location: `app/components/flat_pack/chat/system_message/component.rb`
+
+9. **Chat::MessageMeta::Component** - Message metadata display
    - Location: `app/components/flat_pack/chat/message_meta/component.rb`
    - Props: `timestamp`, `state`, `edited`
    - Shows: Timestamp, edited indicator, delivery status
 
 ### Composer Components (3)
-8. **Chat::Composer::Component** - Message input area
+10. **Chat::Composer::Component** - Message input area
    - Location: `app/components/flat_pack/chat/composer/component.rb`
    - Slots: `left`, `center`, `right`, `attachments`
    - Preferred API: `left`, `center`, `right` slot methods
    - Default: Renders center textarea + right send button if no slots
 
-9. **Chat::Textarea::Component** - Auto-growing textarea
+11. **Chat::Textarea::Component** - Auto-growing textarea
    - Location: `app/components/flat_pack/chat/textarea/component.rb`
    - Props: `name`, `placeholder`, `autogrow`, `submit_on_enter`
    - Stimulus: `chat_textarea_controller.js`
    - Features: Auto-expand, Enter to submit, Shift+Enter for newline
 
-10. **Chat::SendButton::Component** - Send button with loading state
+12. **Chat::SendButton::Component** - Send button with loading state
     - Location: `app/components/flat_pack/chat/send_button/component.rb`
     - Props: `loading`, `disabled`
 
 ### Utility Components (2)
-11. **Chat::TypingIndicator::Component** - Animated typing indicator
+13. **Chat::TypingIndicator::Component** - Animated typing indicator
     - Location: `app/components/flat_pack/chat/typing_indicator/component.rb`
     - Props: `label`
     - Slots: `avatar`
     - Features: 3-dot animation
 
-12. **Chat::Attachment::Component** - File/image attachment preview
+14. **Chat::Attachment::Component** - File/image attachment preview
     - Location: `app/components/flat_pack/chat/attachment/component.rb`
     - Props: `type`, `name`, `meta`, `href`, `thumbnail_url`
     - Types: `:file`, `:image`

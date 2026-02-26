@@ -8,14 +8,14 @@ module Demo
     before_action :set_chat_group
 
     def index
-      messages = history_messages
-      oldest_message_id = messages.first&.id
-      has_more = oldest_message_id.present? && @chat_group.chat_messages.where("id < ?", oldest_message_id).exists?
+      items = history_items
+      oldest_item_id = items.first&.id
+      has_more = oldest_item_id.present? && @chat_group.chat_items.where("id < ?", oldest_item_id).exists?
 
       render partial: "demo/chat_messages/history_results",
         formats: [:html],
         locals: {
-          messages: messages,
+          items: items,
           has_more: has_more,
           history_url: demo_chat_group_messages_path(@chat_group),
           history_limit: history_limit
@@ -23,7 +23,7 @@ module Demo
     end
 
     def create
-      message = @chat_group.chat_messages.build(
+      item = @chat_group.chat_items.build(
         body: payload[:body],
         client_temp_id: payload[:client_temp_id],
         submitted_at: payload[:submitted_at],
@@ -31,18 +31,28 @@ module Demo
         state: "sent"
       )
 
-      if message.save
-        enqueue_chat_simulation(message)
+      payload[:attachments].each_with_index do |attachment, index|
+        item.chat_item_attachments.build(
+          kind: attachment[:kind],
+          name: attachment[:name],
+          content_type: attachment[:content_type],
+          byte_size: attachment[:byte_size],
+          position: index
+        )
+      end
+
+      if item.save
+        enqueue_chat_simulation(item)
 
         render json: {
           html: render_to_string(
-            renderable: FlatPack::Chat::MessageRecord::Component.new(record: message, reveal_actions: true)
+            renderable: FlatPack::Chat::MessageRecord::Component.new(record: item, reveal_actions: true)
           ),
-          state: message.state,
-          timestamp: timestamp_label(message.created_at)
+          state: item.state,
+          timestamp: timestamp_label(item.created_at)
         }, status: :created
       else
-        render json: {error: message.errors.full_messages.to_sentence}, status: :unprocessable_entity
+        render json: {error: item.errors.full_messages.to_sentence}, status: :unprocessable_entity
       end
     end
 
@@ -53,13 +63,33 @@ module Demo
     end
 
     def payload
-      raw = params.fetch(:message, {}).permit(:body, :clientTempId, :submittedAt)
+      raw = params.fetch(:message, {}).permit(:body, :clientTempId, :submittedAt, attachments: [:kind, :name, :contentType, :byteSize])
 
       {
         body: raw[:body],
         client_temp_id: raw[:clientTempId],
-        submitted_at: parse_submitted_at(raw[:submittedAt])
+        submitted_at: parse_submitted_at(raw[:submittedAt]),
+        attachments: normalize_attachments(raw[:attachments])
       }
+    end
+
+    def normalize_attachments(value)
+      Array(value).map do |attachment|
+        {
+          kind: attachment[:kind].to_s == "image" ? "image" : "file",
+          name: attachment[:name].to_s,
+          content_type: attachment[:contentType].presence,
+          byte_size: normalize_byte_size(attachment[:byteSize])
+        }
+      end.select { |attachment| attachment[:name].present? }
+    end
+
+    def normalize_byte_size(value)
+      return nil if value.blank?
+
+      Integer(value, 10)
+    rescue ArgumentError, TypeError
+      nil
     end
 
     def parse_submitted_at(value)
@@ -74,17 +104,17 @@ module Demo
       value.strftime("%l:%M %p").strip
     end
 
-    def enqueue_chat_simulation(message)
+    def enqueue_chat_simulation(item)
       return if Rails.env.test?
 
-      Demo::ChatSimulationOrchestratorWorker.perform_later(@chat_group.id, message.id)
+      Demo::ChatSimulationOrchestratorWorker.perform_later(@chat_group.id, item.id)
     rescue StandardError => error
       Rails.logger.warn("[chat-demo] simulation enqueue skipped: #{error.class}: #{error.message}")
       nil
     end
 
-    def history_messages
-      scope = @chat_group.chat_messages
+    def history_items
+      scope = @chat_group.chat_items.includes(:chat_item_attachments)
       scope = scope.where("id < ?", before_id) if before_id
 
       scope

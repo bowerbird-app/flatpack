@@ -71,7 +71,7 @@
 
 ## Component-Specific Security
 
-### Chat::Message::Component
+### Chat::SentMessage::Component and Chat::ReceivedMessage::Component
 - Content properly escaped
 - No HTML injection possible
 - State transitions don't execute code
@@ -101,7 +101,10 @@
 
 **Example**:
 ```ruby
-<%= render FlatPack::Chat::Message::Component.new(...) do %>
+<%= render FlatPack::Chat::SentMessage::Component.new(...) do |message| %>
+  <% message.with_meta do %>
+    <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: Time.current, state: :sent) %>
+  <% end %>
   <%= sanitize(@message.body, tags: %w[p br strong em]) %>
 <% end %>
 ```

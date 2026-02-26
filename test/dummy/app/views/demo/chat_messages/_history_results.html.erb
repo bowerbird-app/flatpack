@@ -1,12 +1,12 @@
 <div data-pagination-content>
   <% unless has_more %>
-    <%= render FlatPack::Chat::Message::Component.new(variant: :system) do %>
+    <%= render FlatPack::Chat::SystemMessage::Component.new do %>
       You have reached the start of this chat group.
     <% end %>
   <% end %>
 
-  <% messages.each do |message| %>
-    <%= render FlatPack::Chat::MessageRecord::Component.new(record: message, reveal_actions: true) %>
+  <% items.each do |item| %>
+    <%= render FlatPack::Chat::MessageRecord::Component.new(record: item, reveal_actions: true) %>
   <% end %>
 </div>
 

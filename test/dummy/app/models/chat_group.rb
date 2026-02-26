@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ChatGroup < ApplicationRecord
-  has_many :chat_messages, dependent: :destroy
+  has_many :chat_items, dependent: :destroy
 
   validates :name, presence: true
 

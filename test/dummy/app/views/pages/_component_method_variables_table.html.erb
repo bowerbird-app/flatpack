@@ -76,13 +76,49 @@
         { variable: "with_composer", accepts: "slot block", example: "panel.with_composer { ... }" }
       ]
     },
-    chat_message: {
-      label: "Chat Message",
-      method_call: "render FlatPack::Chat::Message::Component.new(direction: :incoming, body: \"Can you review the launch checklist before 3 PM?\")",
+    chat_sent_message: {
+      label: "Chat Sent Message",
+      method_call: "render FlatPack::Chat::SentMessage::Component.new(state: :read, reveal_actions: true, timestamp: Time.current) { \"Message body\" }",
+      variables: [
+        { variable: "state", accepts: ":sent, :sending, :failed, :read", example: "state: :sending" },
+        { variable: "reveal_actions", accepts: "true, false", example: "reveal_actions: true" },
+        { variable: "timestamp", accepts: "Time/String/nil", example: "timestamp: Time.current" }
+      ]
+    },
+    chat_received_message: {
+      label: "Chat Received Message",
+      method_call: "render FlatPack::Chat::ReceivedMessage::Component.new(state: :sent) { \"Incoming message\" }",
+      variables: [
+        { variable: "state", accepts: ":sent, :sending, :failed, :read", example: "state: :sent" },
+        { variable: "with_attachment", accepts: "slot (many)", example: "message.with_attachment { render FlatPack::Chat::Attachment::Component.new(...) }" },
+        { variable: "with_meta", accepts: "slot", example: "message.with_meta { render FlatPack::Chat::MessageMeta::Component.new(...) }" }
+      ]
+    },
+    chat_file_message: {
+      label: "Chat File Message",
+      method_call: "render FlatPack::Chat::FileMessage::Component.new(direction: :outgoing, file_name: \"brief.pdf\", file_meta: \"420 KB\")",
+      variables: [
+        { variable: "direction", accepts: ":incoming, :outgoing", example: "direction: :incoming" },
+        { variable: "file_name", accepts: "String (required)", example: "file_name: \"launch-plan.pdf\"" },
+        { variable: "file_meta", accepts: "String or nil", example: "file_meta: \"840 KB\"" }
+      ]
+    },
+    chat_image_message: {
+      label: "Chat Image Message",
+      method_call: "render FlatPack::Chat::ImageMessage::Component.new(direction: :incoming, image_name: \"mockup.png\", thumbnail_url: \"https://...\")",
       variables: [
         { variable: "direction", accepts: ":incoming, :outgoing", example: "direction: :outgoing" },
-        { variable: "state", accepts: ":sent, :sending, :failed, :read", example: "state: :read" },
-        { variable: "variant", accepts: ":default, :system", example: "variant: :system" }
+        { variable: "image_name", accepts: "String (required)", example: "image_name: \"hero-v2.png\"" },
+        { variable: "thumbnail_url", accepts: "String (required)", example: "thumbnail_url: \"https://images...\"" }
+      ]
+    },
+    chat_system_message: {
+      label: "Chat System Message",
+      method_call: "render FlatPack::Chat::SystemMessage::Component.new { \"Alex renamed the chat group\" }",
+      variables: [
+        { variable: "content", accepts: "block content", example: "{ \"Mina joined the chat group\" }" },
+        { variable: "class", accepts: "String or nil", example: "class: \"my-2\"" },
+        { variable: "id", accepts: "String or nil", example: "id: \"chat-system-event\"" }
       ]
     },
     chat_message_record: {

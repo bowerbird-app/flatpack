@@ -75,7 +75,11 @@ Rails.application.routes.draw do
   get "demo/chat/panel", to: "pages#chat_panel"
   get "demo/chat/message_list", to: "pages#chat_message_list"
   get "demo/chat/message_group", to: "pages#chat_message_group"
-  get "demo/chat/message", to: "pages#chat_message"
+  get "demo/chat/sent_message", to: "pages#chat_sent_message"
+  get "demo/chat/received_message", to: "pages#chat_received_message"
+  get "demo/chat/file_message", to: "pages#chat_file_message"
+  get "demo/chat/image_message", to: "pages#chat_image_message"
+  get "demo/chat/system_message", to: "pages#chat_system_message"
   get "demo/chat/message_record", to: "pages#chat_message_record"
   get "demo/chat/message_meta", to: "pages#chat_message_meta"
   get "demo/chat/attachment", to: "pages#chat_attachment"
@@ -86,6 +90,10 @@ Rails.application.routes.draw do
   get "demo/chat/send_button", to: "pages#chat_send_button"
 
   namespace :demo do
+    resources :comments, only: [:create] do
+      post :replies, on: :member
+    end
+
     resources :chat_groups, only: [] do
       resources :messages, only: [:index, :create], controller: "chat_messages"
     end

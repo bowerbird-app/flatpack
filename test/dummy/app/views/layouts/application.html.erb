@@ -57,33 +57,33 @@
                     active: current_page?(themes_path)
                   ) %>
                   <%= render FlatPack::Sidebar::Item::Component.new(
-                    label: "System Demo",
+                    label: "System theme",
                     href: theme_demo_path(theme: "system"),
                     icon: :monitor,
                     active: current_page?(theme_demo_path(theme: "system"))
                   ) %>
                   <%= render FlatPack::Sidebar::Item::Component.new(
-                    label: "Light Demo",
+                    label: "Light theme",
                     href: theme_demo_path(theme: "light"),
                     icon: :monitor,
                     active: current_page?(theme_demo_path(theme: "light"))
                   ) %>
                   <%= render FlatPack::Sidebar::Item::Component.new(
-                    label: "Dark Demo",
+                    label: "Dark theme",
                     href: theme_demo_path(theme: "dark"),
                     icon: :monitor,
                     active: current_page?(theme_demo_path(theme: "dark"))
                   ) %>
                   <%= render FlatPack::Sidebar::Item::Component.new(
-                    label: "Ocean Demo",
+                    label: "Ocean theme",
                     href: theme_demo_path(theme: "ocean"),
-                    icon: :dashboard,
+                    icon: :monitor,
                     active: current_page?(theme_demo_path(theme: "ocean"))
                   ) %>
                   <%= render FlatPack::Sidebar::Item::Component.new(
-                    label: "Rounded Demo",
+                    label: "Rounded theme",
                     href: theme_demo_path(theme: "rounded"),
-                    icon: :dashboard,
+                    icon: :monitor,
                     active: current_page?(theme_demo_path(theme: "rounded"))
                   ) %>
                 <% end %>
@@ -401,7 +401,11 @@
                 demo_chat_panel_path,
                 demo_chat_message_list_path,
                 demo_chat_message_group_path,
-                demo_chat_message_path,
+                demo_chat_sent_message_path,
+                demo_chat_received_message_path,
+                demo_chat_file_message_path,
+                demo_chat_image_message_path,
+                demo_chat_system_message_path,
                 demo_chat_message_record_path,
                 demo_chat_message_meta_path,
                 demo_chat_attachment_path,
@@ -448,10 +452,34 @@
                     active: current_page?(demo_chat_message_group_path)
                   ) %>
                   <%= render FlatPack::Sidebar::Item::Component.new(
-                    label: "Message",
-                    href: demo_chat_message_path,
+                    label: "Sent Message",
+                    href: demo_chat_sent_message_path,
                     icon: :message_circle,
-                    active: current_page?(demo_chat_message_path)
+                    active: current_page?(demo_chat_sent_message_path)
+                  ) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "Received Message",
+                    href: demo_chat_received_message_path,
+                    icon: :message_circle,
+                    active: current_page?(demo_chat_received_message_path)
+                  ) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "File Message",
+                    href: demo_chat_file_message_path,
+                    icon: :file,
+                    active: current_page?(demo_chat_file_message_path)
+                  ) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "Image Message",
+                    href: demo_chat_image_message_path,
+                    icon: :image,
+                    active: current_page?(demo_chat_image_message_path)
+                  ) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "System Message",
+                    href: demo_chat_system_message_path,
+                    icon: :info,
+                    active: current_page?(demo_chat_system_message_path)
                   ) %>
                   <%= render FlatPack::Sidebar::Item::Component.new(
                     label: "Message Record",
@@ -768,7 +796,7 @@
       <% end %>
 
       <% layout.main do %>
-        <main class="p-8 bg-[var(--surface-page-background-color)] text-[var(--surface-content-color)]">
+        <main class="p-4 sm:p-8 bg-[var(--surface-page-background-color)] text-[var(--surface-content-color)]">
           <div class="max-w-4xl mx-auto pb-24">
             <% if notice.present? %>
               <%= render FlatPack::Alert::Component.new(description: notice, style: :success, dismissible: true, class: "mb-4") %>

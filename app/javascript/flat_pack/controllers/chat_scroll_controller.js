@@ -187,20 +187,123 @@ export default class extends Controller {
       return
     }
 
-    if (streamElement.getAttribute("action") !== "append") {
+    const action = streamElement.getAttribute("action")
+    if (action !== "append" && action !== "update") {
       return
     }
 
-    const targetId = this.messagesTarget.getAttribute("id")
+    const targetId = streamElement.getAttribute("target")
     if (!targetId) {
       return
     }
 
-    if (streamElement.getAttribute("target") !== targetId) {
+    const isMessageAppend = action === "append" && this.#streamTargetsMessages(targetId)
+    const isTypingIndicatorUpdate = action === "update" && this.#streamTargetsTypingIndicator(targetId)
+
+    if (!isMessageAppend && !isTypingIndicatorUpdate) {
       return
     }
 
-    this.newMessageAdded()
+    const shouldAutoScrollAfterRender = isTypingIndicatorUpdate ? this.stickToBottomValue : (this.stickToBottomValue && this.#isNearBottom())
+
+    const originalRender = event.detail?.render
+    if (typeof originalRender !== "function") {
+      const shouldBlockForHistoryPrepend = !isTypingIndicatorUpdate && this.isPrependingHistory
+
+      if (shouldAutoScrollAfterRender && !shouldBlockForHistoryPrepend) {
+        this.#scrollAfterStreamRender({
+          requiresVisibleTypingIndicator: isTypingIndicatorUpdate,
+          typingIndicatorTargetId: targetId
+        })
+      } else {
+        this.checkScroll()
+      }
+      return
+    }
+
+    event.detail.render = (streamElementToRender) => {
+      originalRender(streamElementToRender)
+
+      const shouldBlockForHistoryPrepend = !isTypingIndicatorUpdate && this.isPrependingHistory
+
+      if (shouldAutoScrollAfterRender && !shouldBlockForHistoryPrepend) {
+        this.#scrollAfterStreamRender({
+          requiresVisibleTypingIndicator: isTypingIndicatorUpdate,
+          typingIndicatorTargetId: targetId
+        })
+      } else {
+        this.checkScroll()
+      }
+    }
+  }
+
+  #scrollAfterStreamRender({ requiresVisibleTypingIndicator = false, typingIndicatorTargetId = null } = {}) {
+    this.#scrollAfterStreamRenderAttempt({
+      requiresVisibleTypingIndicator,
+      typingIndicatorTargetId,
+      attempt: 0
+    })
+  }
+
+  #scrollAfterStreamRenderAttempt({ requiresVisibleTypingIndicator = false, typingIndicatorTargetId = null, attempt = 0 } = {}) {
+    requestAnimationFrame(() => {
+      if (requiresVisibleTypingIndicator && !this.#typingIndicatorHasContent(typingIndicatorTargetId)) {
+        if (attempt < 2) {
+          this.#scrollAfterStreamRenderAttempt({
+            requiresVisibleTypingIndicator,
+            typingIndicatorTargetId,
+            attempt: attempt + 1
+          })
+          return
+        }
+
+        this.checkScroll()
+        return
+      }
+
+      this.scrollToBottom({ instant: requiresVisibleTypingIndicator })
+
+      requestAnimationFrame(() => {
+        this.scrollToBottom({ instant: requiresVisibleTypingIndicator })
+      })
+
+      if (requiresVisibleTypingIndicator) {
+        window.setTimeout(() => {
+          this.scrollToBottom({ instant: true })
+        }, 120)
+
+        window.setTimeout(() => {
+          this.scrollToBottom({ instant: true })
+        }, 320)
+      }
+    })
+  }
+
+  #streamTargetsMessages(targetId) {
+    const messagesContainerId = this.messagesTarget.getAttribute("id")
+    if (messagesContainerId && targetId === messagesContainerId) {
+      return true
+    }
+
+    const paginationContent = this.messagesTarget.querySelector("[data-pagination-content][id]")
+    if (paginationContent && targetId === paginationContent.getAttribute("id")) {
+      return true
+    }
+
+    return false
+  }
+
+  #streamTargetsTypingIndicator(targetId) {
+    return targetId === "chat-demo-typing-indicator" || targetId.includes("typing_indicator")
+  }
+
+  #typingIndicatorHasContent(targetId) {
+    const typingIndicatorElement = document.getElementById(targetId)
+    if (!typingIndicatorElement) {
+      return false
+    }
+
+    return typingIndicatorElement.childElementCount > 0 || typingIndicatorElement.textContent.trim().length > 0
   }
 
   #stopObservingMessages() {

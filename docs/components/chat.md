@@ -8,7 +8,7 @@ Use Chat components for conversation UIs with message lists, composer controls, 
 
 ## Class
 - Primary: `FlatPack::Chat::Panel::Component`
-- Related classes: `FlatPack::Chat::Layout::Component`, `FlatPack::Chat::MessageList::Component`, `FlatPack::Chat::MessageRecord::Component`, `FlatPack::Chat::Message::Component`, `FlatPack::Chat::Composer::Component`
+- Related classes: `FlatPack::Chat::Layout::Component`, `FlatPack::Chat::Header::Component`, `FlatPack::Chat::MessageList::Component`, `FlatPack::Chat::MessageRecord::Component`, `FlatPack::Chat::SentMessage::Component`, `FlatPack::Chat::ReceivedMessage::Component`, `FlatPack::Chat::SystemMessage::Component`, `FlatPack::Chat::Composer::Component`
 
 ## Props
 See each sub-component section below for props and defaults.
@@ -92,6 +92,43 @@ Organizes chat panel with header, messages, and composer sections.
   
   <% panel.composer do %>
     <%= render FlatPack::Chat::Composer::Component.new %>
+  <% end %>
+<% end %>
+```
+
+#### Chat::Header::Component
+
+Reusable header for chat panels with optional back button, person avatar, chat group avatars, and right-side actions.
+
+**Props:**
+- `title`: (required) - Header title (person or chat group name)
+- `subtitle`: String - Secondary info (presence, member count, etc.)
+- `back_href`: String - Optional destination for back button
+- `back_label`: String - Back button text (`"Back"` by default)
+- `content_url`: String - Optional link for avatar + title/subtitle area (for example, chat group settings)
+- `avatar_mode`: `:auto` (default) | `:person` | `:group`
+- `person_avatar`: Hash - Props forwarded to `FlatPack::Avatar::Component`
+- `group_avatars`: Array - Items for `FlatPack::AvatarGroup::Component`
+- `group_max`: Number - Max visible chat group avatars before `+n` overflow (default: `5`)
+- `group_size`: `:sm` | `:md` | `:lg` (default: `:sm`)
+- `**system_arguments`
+
+**Slots:**
+- `left_meta` - Optional extra text under the subtitle
+- `right` - Right-side actions (buttons/menus)
+
+**Example:**
+```erb
+<%= render FlatPack::Chat::Header::Component.new(
+  title: "Design Team",
+  subtitle: "14 members",
+  back_href: chat_groups_path,
+  content_url: chat_group_settings_path(@chat_group),
+  group_avatars: @participants,
+  group_max: 5
+) do |header| %>
+  <% header.right do %>
+    <%= render FlatPack::Button::Component.new(icon: "search", icon_only: true, style: :ghost, size: :sm) %>
   <% end %>
 <% end %>
 ```
@@ -186,13 +223,13 @@ Groups consecutive messages from the same sender.
   <% end %>
   
   <% group.with_message do %>
-    <%= render FlatPack::Chat::Message::Component.new(direction: :incoming) do %>
+    <%= render FlatPack::Chat::ReceivedMessage::Component.new do %>
       First message in the group
     <% end %>
   <% end %>
   
   <% group.with_message do %>
-    <%= render FlatPack::Chat::Message::Component.new(direction: :incoming) do %>
+    <%= render FlatPack::Chat::ReceivedMessage::Component.new do %>
       Second message in the group
     <% end %>
   <% end %>
@@ -230,16 +267,14 @@ Use this when you have a persisted message object and want to avoid custom parti
 ) %>
 ```
 
-#### Chat::Message::Component
+#### Chat::ReceivedMessage::Component
 
-Individual message bubble with content, attachments, and metadata.
+Incoming message bubble with optional attachments and meta.
 
 **Props:**
-- `direction`: `:incoming` (default) | `:outgoing`
-- `variant`: `:default` (default) | `:system`
 - `state`: `:sent` (default) | `:sending` | `:failed` | `:read`
+- `reveal_actions`: `false` (default) | `true` (reveals timestamp tray)
 - `timestamp`: Time object or string
-- `edited`: `false` (default) | `true`
 - `**system_arguments`
 
 **Slots:**
@@ -247,68 +282,44 @@ Individual message bubble with content, attachments, and metadata.
 - `attachments` (many) - Attachment components
 - `meta` - MessageMeta component
 
-**States:**
-- `:sent` - Default successful delivery
-- `:sending` - Reduced opacity, shows "Sending..."
-- `:failed` - Red border, alert icon
-- `:read` - Blue check marks
+#### Chat::SentMessage::Component
+
+Outgoing message bubble with optional slide-to-reveal actions.
+
+**Props:**
+- `state`: `:sent` (default) | `:sending` | `:failed` | `:read`
+- `reveal_actions`: `false` (default) | `true`
+- `timestamp`: Time object or string
+- `**system_arguments`
+
+**Slots:**
+- Block content - Message text
+- `attachments` (many) - Attachment components
+- `meta` - MessageMeta component
+- `actions` - Optional custom action controls in reveal tray
+
+#### Chat::SystemMessage::Component
+
+Centered timeline-style system event row.
 
 **Example:**
 ```erb
-<!-- Incoming message -->
-<%= render FlatPack::Chat::Message::Component.new(
-  direction: :incoming,
-  timestamp: Time.current
-) do %>
+<%= render FlatPack::Chat::ReceivedMessage::Component.new do |message| %>
   This is a message from someone else.
-<% end %>
-
-<!-- Outgoing message -->
-<%= render FlatPack::Chat::Message::Component.new(
-  direction: :outgoing,
-  state: :read,
-  timestamp: Time.current
-) do %>
-  This is my message that has been read.
-<% end %>
-
-<!-- Message with metadata -->
-<%= render FlatPack::Chat::Message::Component.new(
-  direction: :outgoing,
-  edited: true
-) do |message| %>
-  Edited message content
-  
   <% message.with_meta do %>
-    <%= render FlatPack::Chat::MessageMeta::Component.new(
-      timestamp: Time.current,
-      edited: true,
-      state: :read
-    ) %>
+    <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: Time.current, state: :sent) %>
   <% end %>
 <% end %>
 
-<!-- System message -->
-<%= render FlatPack::Chat::Message::Component.new(
-  variant: :system
-) do %>
+<%= render FlatPack::Chat::SentMessage::Component.new(state: :read) do |message| %>
+  This is my message that has been read.
+  <% message.with_meta do %>
+    <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: Time.current, state: :read) %>
+  <% end %>
+<% end %>
+
+<%= render FlatPack::Chat::SystemMessage::Component.new do %>
   Alice joined the conversation
-<% end %>
-
-<!-- Message with attachments -->
-<%= render FlatPack::Chat::Message::Component.new(
-  direction: :incoming
-) do |message| %>
-  Check out this file!
-  
-  <% message.with_attachment do %>
-    <%= render FlatPack::Chat::Attachment::Component.new(
-      type: :file,
-      name: "design-specs.pdf",
-      meta: "2.4 MB",
-      href: "/files/design-specs.pdf"
-    ) %>
-  <% end %>
 <% end %>
 ```
 
@@ -511,21 +522,17 @@ Here's a complete chat interface example:
 <div style="height: 600px;">
   <%= render FlatPack::Chat::Panel::Component.new do |panel| %>
     <% panel.header do %>
-      <div class="p-4 flex items-center justify-between">
-        <div>
-          <h2 class="font-semibold text-(--chat-message-incoming-text-color)">Design Team</h2>
-          <p class="text-sm text-(--chat-message-meta-color)">3 members</p>
-        </div>
-        <%= render FlatPack::AvatarGroup::Component.new(
-          items: [
-            { name: "Alice", src: "/images/alice.jpg" },
-            { name: "Bob", src: "/images/bob.jpg" },
-            { name: "Carol", src: "/images/carol.jpg" }
-          ],
-          max: 3,
-          size: :sm
-        ) %>
-      </div>
+      <%= render FlatPack::Chat::Header::Component.new(
+        title: "Design Team",
+        subtitle: "3 members",
+        back_href: chat_groups_path,
+        group_avatars: [
+          { name: "Alice", src: "/images/alice.jpg" },
+          { name: "Bob", src: "/images/bob.jpg" },
+          { name: "Carol", src: "/images/carol.jpg" }
+        ],
+        group_max: 3
+      ) %>
     <% end %>
     
     <% panel.messages do %>
@@ -544,20 +551,21 @@ Here's a complete chat interface example:
           <% end %>
           
           <% group.with_message do %>
-            <%= render FlatPack::Chat::Message::Component.new(
-              direction: :incoming,
-              timestamp: 2.hours.ago
-            ) do %>
+            <%= render FlatPack::Chat::ReceivedMessage::Component.new do |message| %>
+              <% message.with_meta do %>
+                <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: 2.hours.ago, state: :sent) %>
+              <% end %>
               Hey team! I've finished the new design mockups.
             <% end %>
           <% end %>
           
           <% group.with_message do %>
-            <%= render FlatPack::Chat::Message::Component.new(
-              direction: :incoming,
-              timestamp: 2.hours.ago
-            ) do |message| %>
+            <%= render FlatPack::Chat::ReceivedMessage::Component.new do |message| %>
               Take a look and let me know what you think!
+
+              <% message.with_meta do %>
+                <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: 2.hours.ago, state: :sent) %>
+              <% end %>
               
               <% message.with_attachment do %>
                 <%= render FlatPack::Chat::Attachment::Component.new(
@@ -577,11 +585,10 @@ Here's a complete chat interface example:
           show_avatar: false
         ) do |group| %>
           <% group.with_message do %>
-            <%= render FlatPack::Chat::Message::Component.new(
-              direction: :outgoing,
-              state: :read,
-              timestamp: 1.hour.ago
-            ) do %>
+            <%= render FlatPack::Chat::SentMessage::Component.new(state: :read) do |message| %>
+              <% message.with_meta do %>
+                <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: 1.hour.ago, state: :read) %>
+              <% end %>
               Looks great! I really like the new color scheme.
             <% end %>
           <% end %>

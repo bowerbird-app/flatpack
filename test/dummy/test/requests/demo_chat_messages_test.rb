@@ -7,7 +7,7 @@ class DemoChatMessagesTest < ActionDispatch::IntegrationTest
     @chat_group = ChatGroup.create!(name: "Request Test Group")
 
     12.times do |index|
-      @chat_group.chat_messages.create!(
+      @chat_group.chat_items.create!(
         sender_name: "Teammate",
         body: "History message #{index + 1}",
         state: "sent",
@@ -32,14 +32,44 @@ class DemoChatMessagesTest < ActionDispatch::IntegrationTest
     assert_equal "sent", payload["state"]
     assert_includes payload["html"], "Hello from integration test"
 
-    persisted = @chat_group.chat_messages.order(:id).last
+    persisted = @chat_group.chat_items.order(:id).last
     assert_equal "Hello from integration test", persisted.body
     assert_equal "You", persisted.sender_name
     assert_equal "tmp-123", persisted.client_temp_id
     assert_equal "sent", persisted.state
   end
 
-  test "returns unprocessable entity for blank body" do
+  test "creates a chat item with attachments and no body" do
+    post demo_chat_group_messages_path(@chat_group), params: {
+      message: {
+        body: "   ",
+        attachments: [
+          {
+            kind: "image",
+            name: "hero-1.png",
+            contentType: "image/png",
+            byteSize: 235_120
+          },
+          {
+            kind: "file",
+            name: "release-checklist.pdf",
+            contentType: "application/pdf",
+            byteSize: 98_100
+          }
+        ]
+      }
+    }, as: :json
+
+    assert_response :created
+
+    persisted = @chat_group.chat_items.order(:id).last
+    assert_nil persisted.body
+    assert_equal "attachment", persisted.item_type
+    assert_equal 2, persisted.chat_item_attachments.size
+    assert_equal %w[image file], persisted.chat_item_attachments.order(:position).pluck(:kind)
+  end
+
+  test "returns unprocessable entity for blank body and no attachments" do
     post demo_chat_group_messages_path(@chat_group), params: {
       message: {
         body: "   "
@@ -49,11 +79,11 @@ class DemoChatMessagesTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
 
     payload = JSON.parse(response.body)
-    assert_match(/Body can't be blank/i, payload["error"])
+    assert_match(/blank/i, payload["error"])
   end
 
   test "returns chat history partial for infinite scroll" do
-    cursor_id = @chat_group.chat_messages.order(:id).offset(9).first.id
+    cursor_id = @chat_group.chat_items.order(:id).offset(9).first.id
 
     get demo_chat_group_messages_path(@chat_group), params: {
       before_id: cursor_id,
@@ -69,7 +99,7 @@ class DemoChatMessagesTest < ActionDispatch::IntegrationTest
   end
 
   test "renders start-of-chat-group system message on terminal history batch" do
-    cursor_id = @chat_group.chat_messages.order(:id).offset(2).first.id
+    cursor_id = @chat_group.chat_items.order(:id).offset(2).first.id
 
     get demo_chat_group_messages_path(@chat_group), params: {
       before_id: cursor_id,

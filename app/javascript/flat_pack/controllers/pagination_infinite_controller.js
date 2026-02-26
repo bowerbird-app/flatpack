@@ -68,6 +68,8 @@ export default class extends Controller {
       return
     }
 
+    const prependScrollState = this.capturePrependScrollState()
+
     this.isLoading = true
     this.scheduleLoading()
 
@@ -84,7 +86,7 @@ export default class extends Controller {
       }
 
       const html = await response.text()
-      this.appendContent(html)
+      this.appendContent(html, prependScrollState)
     } catch (error) {
       console.error("Error loading more content:", error)
       this.showError()
@@ -94,18 +96,13 @@ export default class extends Controller {
     }
   }
 
-  appendContent(html) {
+  appendContent(html, prependScrollState = null) {
     const temp = document.createElement("div")
     temp.innerHTML = html
 
     const currentContent = this.element.parentElement?.querySelector("[data-pagination-content]")
     const newContent = temp.querySelector("[data-pagination-content]")
     const newPagination = temp.querySelector("[data-controller='flat-pack--pagination-infinite']")
-
-    const shouldPreserveScroll = this.insertModeValue === "prepend" && this.preserveScrollPositionValue
-    const scrollContainer = shouldPreserveScroll ? this.resolveScrollContainer() : null
-    const previousScrollHeight = scrollContainer ? scrollContainer.scrollHeight : null
-    const previousScrollTop = scrollContainer ? scrollContainer.scrollTop : null
 
     if (newContent && currentContent) {
       const canAppendInsideCurrent = currentContent.tagName === newContent.tagName
@@ -120,18 +117,14 @@ export default class extends Controller {
         this.element.parentElement.insertBefore(newContent, this.element)
       }
 
+      this.restorePrependScrollState(prependScrollState)
+
       this.dispatch("content-inserted", {
         prefix: "flat-pack:pagination",
         detail: {
           insertMode: this.insertModeValue
         }
       })
-    }
-
-    if (scrollContainer && previousScrollHeight !== null && previousScrollTop !== null) {
-      const newScrollHeight = scrollContainer.scrollHeight
-      const delta = newScrollHeight - previousScrollHeight
-      scrollContainer.scrollTop = previousScrollTop + delta
     }
 
     // Replace pagination or remove if no more pages
@@ -188,6 +181,103 @@ export default class extends Controller {
     return this.resolveObserverRoot()
   }
 
+  shouldSuppressLoadingForPrepend() {
+    return this.insertModeValue === "prepend" && this.preserveScrollPositionValue
+  }
+
+  capturePrependScrollState() {
+    if (!this.shouldSuppressLoadingForPrepend()) {
+      return null
+    }
+
+    const scrollContainer = this.resolveScrollContainer()
+    const currentContent = this.element.parentElement?.querySelector("[data-pagination-content]")
+
+    if (!scrollContainer || !currentContent) {
+      return null
+    }
+
+    const anchor = this.resolveAnchorElement(currentContent, scrollContainer)
+    const anchorOffsetTop = anchor ? this.elementOffsetTopWithinContainer(anchor, scrollContainer) : null
+
+    return {
+      scrollContainer,
+      previousScrollHeight: scrollContainer.scrollHeight,
+      previousScrollTop: scrollContainer.scrollTop,
+      anchorId: anchor?.id || null,
+      anchorCursor: anchor?.getAttribute("data-pagination-cursor") || null,
+      anchorOffsetTop
+    }
+  }
+
+  restorePrependScrollState(prependScrollState) {
+    if (!prependScrollState?.scrollContainer) {
+      return
+    }
+
+    const {
+      scrollContainer,
+      previousScrollHeight,
+      previousScrollTop,
+      anchorId,
+      anchorCursor,
+      anchorOffsetTop
+    } = prependScrollState
+
+    const anchor = this.findAnchorElement(scrollContainer, anchorId, anchorCursor)
+
+    if (anchor && anchorOffsetTop !== null) {
+      const currentAnchorOffset = this.elementOffsetTopWithinContainer(anchor, scrollContainer)
+      scrollContainer.scrollTop += (currentAnchorOffset - anchorOffsetTop)
+      return
+    }
+
+    if (previousScrollHeight !== null && previousScrollTop !== null) {
+      const newScrollHeight = scrollContainer.scrollHeight
+      const delta = newScrollHeight - previousScrollHeight
+      scrollContainer.scrollTop = previousScrollTop + delta
+    }
+  }
+
+  resolveAnchorElement(contentContainer, scrollContainer) {
+    const candidates = Array.from(contentContainer.querySelectorAll("[data-pagination-cursor]"))
+    if (candidates.length === 0) {
+      return null
+    }
+
+    const containerRect = scrollContainer.getBoundingClientRect()
+
+    for (const candidate of candidates) {
+      const rect = candidate.getBoundingClientRect()
+      if (rect.bottom >= containerRect.top) {
+        return candidate
+      }
+    }
+
+    return candidates[0]
+  }
+
+  findAnchorElement(scrollContainer, anchorId, anchorCursor) {
+    if (anchorId) {
+      const byId = scrollContainer.querySelector(`#${CSS.escape(anchorId)}`)
+      if (byId) {
+        return byId
+      }
+    }
+
+    if (anchorCursor) {
+      return scrollContainer.querySelector(`[data-pagination-cursor="${CSS.escape(anchorCursor)}"]`)
+    }
+
+    return null
+  }
+
+  elementOffsetTopWithinContainer(element, container) {
+    const elementRect = element.getBoundingClientRect()
+    const containerRect = container.getBoundingClientRect()
+    return elementRect.top - containerRect.top
+  }
+
   scheduleLoading() {
     this.clearLoadingTimer()
 
@@ -198,6 +288,16 @@ export default class extends Controller {
   }
 
   showLoading() {
+    if (this.shouldSuppressLoadingForPrepend()) {
+      if (this.hasLoadingTarget) {
+        this.loadingTarget.hidden = true
+      }
+      if (this.hasTriggerTarget) {
+        this.triggerTarget.hidden = false
+      }
+      return
+    }
+
     if (this.loadingVariantValue === "cards") {
       this.showCardGridLoading()
       return
@@ -213,6 +313,16 @@ export default class extends Controller {
 
   hideLoading() {
     this.clearLoadingTimer()
+
+    if (this.shouldSuppressLoadingForPrepend()) {
+      if (this.hasLoadingTarget) {
+        this.loadingTarget.hidden = true
+      }
+      if (this.hasTriggerTarget) {
+        this.triggerTarget.hidden = false
+      }
+      return
+    }
 
     if (this.loadingVariantValue === "cards") {
       this.hideCardGridLoading()

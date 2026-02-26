@@ -114,12 +114,24 @@ module FlatPack
           assert_selector "div[data-chat-message-state='sent']"
         end
 
-        def test_requires_body
+        def test_requires_body_or_attachments
           record = message_record_class.new(sender_name: "Mina", body: nil)
 
           assert_raises ArgumentError do
             Component.new(record: record)
           end
+        end
+
+        def test_allows_attachments_without_body
+          attachments = [
+            {type: :image, name: "hero-1.png", thumbnail_url: "https://picsum.photos/seed/hero-1/480/280"},
+            {type: :file, name: "release-checklist.pdf", meta: "application/pdf • 96 KB"}
+          ]
+
+          render_inline(Component.new(sender_name: "Mina", body: nil, attachments: attachments))
+
+          assert_selector "img[alt='hero-1.png']"
+          assert_text "release-checklist.pdf"
         end
 
         def test_requires_sender_name

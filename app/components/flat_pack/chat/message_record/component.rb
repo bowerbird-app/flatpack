@@ -5,12 +5,19 @@ module FlatPack
     module MessageRecord
       class Component < FlatPack::BaseComponent
         DEFAULT_STATE = :sent
+        STATES = {
+          sent: "sent",
+          sending: "sending",
+          failed: "failed",
+          read: "read"
+        }.freeze
 
         renders_one :actions
 
         def initialize(
           record: nil,
           body: nil,
+          attachments: nil,
           sender_name: nil,
           timestamp: nil,
           state: nil,
@@ -23,6 +30,7 @@ module FlatPack
           super(**system_arguments)
           @record = record
           @body = body.presence || read_record_attribute(:body)
+          @attachments = normalize_attachments(attachments || read_record_attachments)
           @sender_name = sender_name.presence || read_record_attribute(:sender_name)
           @timestamp = timestamp || read_record_attribute(:created_at)
           @state = normalize_state(state || read_record_attribute(:state))
@@ -54,11 +62,7 @@ module FlatPack
               end
 
               group.with_message do
-                if reveal_actions?
-                  render_revealable_message
-                else
-                  render_message
-                end
+                render_message
               end
             end
           end
@@ -75,115 +79,63 @@ module FlatPack
           end
         end
 
-        def render_message(include_meta: true)
-          render FlatPack::Chat::Message::Component.new(
-            direction: @direction,
-            timestamp: @timestamp,
-            state: @state
-          ) do |chat_message|
-            chat_message_meta(chat_message) if include_meta
+        def render_message
+          render message_component_class.new(**message_component_arguments) do |chat_message|
+            chat_message_meta(chat_message) unless hide_meta_until_reveal?
+
+            render_attachments(chat_message)
+
+            if reveal_action_buttons_for_message? && actions?
+              chat_message.with_actions do
+                actions
+              end
+            end
+
             @body
           end
         end
 
-        def render_revealable_message
-          content_tag(
-            :div,
-            class: "relative overflow-hidden rounded-2xl",
-            data: {
-              controller: "chat-message-actions",
-              chat_message_actions_direction_value: @direction,
-              chat_message_actions_side_value: reveal_side,
-              action: "click@window->chat-message-actions#handleWindowClick keydown@window->chat-message-actions#handleWindowKeydown chat-message-actions:opened@window->chat-message-actions#handlePeerOpened"
-            }
-          ) do
-            safe_join([
-              content_tag(
-                :div,
-                class: tray_classes,
-                data: {chat_message_actions_target: "tray"}
-              ) do
-                render_reveal_actions_panel
-              end,
-              content_tag(
-                :div,
-                class: "transform transition-transform duration-200 ease-out cursor-pointer",
-                data: {
-                  chat_message_actions_target: "surface",
-                  action: "click->chat-message-actions#toggle keydown->chat-message-actions#toggleByKey"
-                },
-                role: "button",
-                tabindex: 0,
-                aria: {expanded: false}
-              ) do
-                render_message(include_meta: false)
-              end
-            ])
-          end
-        end
+        def render_attachments(chat_message)
+          return if @attachments.blank?
 
-        def render_reveal_actions_panel
-          content_tag(:div, class: panel_classes) do
-            if @direction == :outgoing
-              safe_join([
-                content_tag(:span, formatted_timestamp, class: "text-xs text-[var(--chat-message-meta-color)]"),
-                render_actions
-              ])
-            else
-              content_tag(:span, formatted_timestamp, class: "text-xs text-[var(--chat-message-meta-color)]")
+          @attachments.each do |attachment|
+            chat_message.with_attachment do
+              render FlatPack::Chat::Attachment::Component.new(**attachment)
             end
           end
-        end
-
-        def render_actions
-          return actions if actions?
-
-          safe_join([
-            render(
-              FlatPack::Button::Component.new(
-                text: "Edit",
-                size: :sm,
-                style: :secondary,
-                data: {action: "click->chat-message-actions#handleEdit"}
-              )
-            ),
-            render(
-              FlatPack::Button::Component.new(
-                text: "Delete",
-                size: :sm,
-                style: :error,
-                data: {action: "click->chat-message-actions#handleDelete"}
-              )
-            )
-          ])
         end
 
         def reveal_actions?
           @reveal_actions
         end
 
-        def reveal_side
-          @direction == :incoming ? "left" : "right"
+        def reveal_actions_for_message?
+          reveal_actions?
         end
 
-        def tray_classes
-          classes(
-            "absolute inset-y-0 flex items-center gap-2 opacity-0 pointer-events-none transition-opacity duration-150",
-            (reveal_side == "left" ? "left-0 pl-2" : "right-0 pr-2")
-          )
+        def reveal_action_buttons_for_message?
+          reveal_actions? && @direction == :outgoing
         end
 
-        def panel_classes
-          classes(
-            "flex items-center gap-2 whitespace-nowrap",
-            (reveal_side == "left" ? "pr-4" : "pl-4")
-          )
+        def hide_meta_until_reveal?
+          reveal_actions? && @direction == :incoming
         end
 
-        def formatted_timestamp
-          return @timestamp.to_s if @timestamp.nil? || !@timestamp.respond_to?(:strftime)
+        def message_component_class
+          @direction == :outgoing ? FlatPack::Chat::SentMessage::Component : FlatPack::Chat::ReceivedMessage::Component
+        end
 
-          @timestamp.strftime("%l:%M %p").strip
+        def message_component_arguments
+          arguments = {
+            state: @state
+          }
+
+          if reveal_actions_for_message?
+            arguments[:timestamp] = @timestamp
+            arguments[:reveal_actions] = true
+          end
+
+          arguments
         end
 
         def wrapper_attributes
@@ -228,7 +180,7 @@ module FlatPack
         def normalize_state(value)
           state = value.presence&.to_sym
           return DEFAULT_STATE if state.blank?
-          return state if FlatPack::Chat::Message::Component::STATES.key?(state)
+          return state if STATES.key?(state)
 
           DEFAULT_STATE
         end
@@ -239,10 +191,51 @@ module FlatPack
           @record.public_send(name)
         end
 
-        def validate_body!
-          return if @body.present?
+        def read_record_attachments
+          return [] unless @record.respond_to?(:chat_item_attachments)
 
-          raise ArgumentError, "body is required"
+          @record.chat_item_attachments.to_a
+        end
+
+        def normalize_attachments(value)
+          Array(value).filter_map do |attachment|
+            normalize_attachment(attachment)
+          end
+        end
+
+        def normalize_attachment(attachment)
+          if attachment.is_a?(Hash)
+            {
+              type: normalize_attachment_type(attachment[:type] || attachment["type"]),
+              name: attachment[:name] || attachment["name"],
+              meta: attachment[:meta] || attachment["meta"],
+              href: attachment[:href] || attachment["href"],
+              thumbnail_url: attachment[:thumbnail_url] || attachment["thumbnail_url"]
+            }.compact
+          else
+            {
+              type: normalize_attachment_type(attachment.kind),
+              name: attachment.name,
+              meta: attachment.respond_to?(:meta_label) ? attachment.meta_label : nil,
+              href: nil,
+              thumbnail_url: attachment.respond_to?(:image?) && attachment.image? ? generated_demo_thumbnail_url(attachment.name) : nil
+            }.compact
+          end
+        end
+
+        def normalize_attachment_type(value)
+          value.to_s == "image" ? :image : :file
+        end
+
+        def generated_demo_thumbnail_url(name)
+          seed = ERB::Util.url_encode(name.to_s)
+          "https://picsum.photos/seed/#{seed}/480/280"
+        end
+
+        def validate_body!
+          return if @body.present? || @attachments.present?
+
+          raise ArgumentError, "body or attachments are required"
         end
 
         def validate_sender_name!
