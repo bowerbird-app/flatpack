@@ -16,21 +16,29 @@ class HardenChatItemAttachmentStructure < ActiveRecord::Migration[8.1]
       add_column :chat_item_attachments, :metadata, :json, null: false, default: {}
     end
 
-    add_check_constraint :chat_items,
-      "attachments_count >= 0",
-      name: "chat_items_attachments_count_non_negative" unless check_constraint_exists?(:chat_items, name: "chat_items_attachments_count_non_negative")
+    unless check_constraint_exists?(:chat_items, name: "chat_items_attachments_count_non_negative")
+      add_check_constraint :chat_items,
+        "attachments_count >= 0",
+        name: "chat_items_attachments_count_non_negative"
+    end
 
-    add_check_constraint :chat_item_attachments,
-      "position >= 0",
-      name: "chat_item_attachments_position_non_negative" unless check_constraint_exists?(:chat_item_attachments, name: "chat_item_attachments_position_non_negative")
+    unless check_constraint_exists?(:chat_item_attachments, name: "chat_item_attachments_position_non_negative")
+      add_check_constraint :chat_item_attachments,
+        "position >= 0",
+        name: "chat_item_attachments_position_non_negative"
+    end
 
-    add_check_constraint :chat_item_attachments,
-      "byte_size IS NULL OR byte_size >= 0",
-      name: "chat_item_attachments_byte_size_non_negative" unless check_constraint_exists?(:chat_item_attachments, name: "chat_item_attachments_byte_size_non_negative")
+    unless check_constraint_exists?(:chat_item_attachments, name: "chat_item_attachments_byte_size_non_negative")
+      add_check_constraint :chat_item_attachments,
+        "byte_size IS NULL OR byte_size >= 0",
+        name: "chat_item_attachments_byte_size_non_negative"
+    end
 
-    add_check_constraint :chat_item_attachments,
-      "kind IN ('image', 'file')",
-      name: "chat_item_attachments_kind_allowed" unless check_constraint_exists?(:chat_item_attachments, name: "chat_item_attachments_kind_allowed")
+    unless check_constraint_exists?(:chat_item_attachments, name: "chat_item_attachments_kind_allowed")
+      add_check_constraint :chat_item_attachments,
+        "kind IN ('image', 'file')",
+        name: "chat_item_attachments_kind_allowed"
+    end
 
     backfill_attachments_count!
   end

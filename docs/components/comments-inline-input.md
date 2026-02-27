@@ -1,26 +1,34 @@
 # Comments Inline Input Component
 
 ## Purpose
-Render a minimal multiline comment input with an inline submit button.
+Render a compact inline comment input with an auto-expanding textarea and submit button.
 
 ## When to use
-Use this component for lightweight comment entry UIs where users may write short or multiline comments without a full composer toolbar.
-
-## Behavior
-
-- The textarea auto-grows as the user types.
-- The container corner radius is controlled by theme tokens.
-- Pressing Enter inserts a new line.
-- Comments are submitted only when the submit button is clicked.
-
-## Theming
-
-- `--comments-inline-input-radius` controls the inline input corner radius.
+Use Inline Input for lightweight comment entry where a full toolbar/composer is not needed.
 
 ## Class
 - Primary: `FlatPack::Comments::InlineInput::Component`
 
-## Basic Usage
+## Props
+
+| name | type | default | required | description |
+|------|------|---------|----------|-------------|
+| `placeholder` | String | `"Write a comment..."` | No | Textarea placeholder text. |
+| `submit_label` | String | `"Comment"` | No | Submit button label. |
+| `disabled` | Boolean | `false` | No | Disables textarea and submit button, and applies muted container styles. |
+| `form` | String or nil | `nil` | No | Associates textarea/button with an external form id. |
+| `name` | String | `"comment"` | No | Textarea `name` attribute. |
+| `value` | String or nil | `nil` | No | Initial textarea content. |
+| `rows` | Integer | `1` | No | Initial textarea rows before auto-expand. |
+| `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into root container. |
+
+## Slots
+None.
+
+## Variants
+None.
+
+## Example
 
 ```erb
 <%= form_with url: demo_comments_path, method: :post, local: true do %>
@@ -32,40 +40,9 @@ Use this component for lightweight comment entry UIs where users may write short
 <% end %>
 ```
 
-## With Custom Label
-
-```erb
-<%= render FlatPack::Comments::InlineInput::Component.new(
-  submit_label: "Post"
-) %>
-```
-
-## With Initial Value
-
-```erb
-<%= render FlatPack::Comments::InlineInput::Component.new(
-  value: "Prefilled text"
-) %>
-```
-
-## Props
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `placeholder` | String | `"Write a comment..."` | Input placeholder text |
-| `submit_label` | String | `"Comment"` | Submit button text |
-| `disabled` | Boolean | `false` | Disable input and submit button |
-| `form` | String | `nil` | Associate input/button to an external form ID |
-| `name` | String | `"comment"` | Input name attribute |
-| `value` | String | `nil` | Input value |
-| `rows` | Integer | `1` | Initial textarea rows |
-| `**system_arguments` | Hash | `{}` | Additional HTML attributes on root container |
-
 ## Accessibility
+Keyboard and form semantics come from native `textarea` and `button[type=submit]`. Add surrounding label context (or ARIA attributes via `system_arguments`) when needed for screen readers.
 
-- The textarea and button are keyboard accessible by default.
-- Use standard Rails form labels or ARIA attributes via `system_arguments` when needed.
-
-## Related
-
-- Use `FlatPack::Comments::Composer::Component` for multiline comments with toolbar/attachments/actions.
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+- Auto-grow behavior requires Stimulus controller `flat-pack--text-area`.

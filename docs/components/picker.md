@@ -1,81 +1,71 @@
 # Picker Component
 
 ## Purpose
-Render a reusable asset picker for images/files while keeping consumer behavior fully configurable.
+Render a modal-based asset picker that supports single or multiple selection and returns selected items through events or field output.
 
 ## When to use
-Use Picker when users need to select one or multiple assets and your feature decides what to do with the selected payload.
+Use Picker when users need to choose image/file assets and your feature controls what happens after confirmation.
 
 ## Class
 - Primary: `FlatPack::Picker::Component`
 
-## Features
+## Props
 
-- Supports image and file items in one reusable UI
-- Single or multi-select modes
-- Optional search using `FlatPack::Search::Component`
-- Local filtering or remote search endpoint mode
-- Consumer-defined behavior via `flat-pack:picker:confirm` event
-- Optional field output mode to write selected JSON to a target input
+| name | type | default | required | description |
+|------|------|---------|----------|-------------|
+| `id` | String | none | Yes | Picker/modal id and event identity (`pickerId`). |
+| `items` | Array<Hash> | `[]` | No | Initial items. Normalized to keys like `id`, `kind`, `label`, `name`, `contentType`, `byteSize`, `thumbnailUrl`, `meta`, `payload`. |
+| `title` | String | `"Select Assets"` | No | Modal title. |
+| `subtitle` | String or nil | `nil` | No | Optional helper text under title. |
+| `confirm_text` | String | `"Use Selected"` | No | Confirm button text. |
+| `close_text` | String | `"Close"` | No | Close button text. |
+| `size` | Symbol | `:lg` | No | Passed to `FlatPack::Modal::Component` size (`:sm`, `:md`, `:lg`, `:xl`, `:"2xl"`). |
+| `selection_mode` | Symbol | `:multiple` | No | Allowed: `:single`, `:multiple`. |
+| `accepted_kinds` | Array<Symbol/String> | `[:image, :file]` | No | Allowed kind filter. Non-`image` values normalize to `file`. |
+| `searchable` | Boolean | `false` | No | Enables search input in picker body. |
+| `search_placeholder` | String | `"Search assets..."` | No | Search input placeholder. |
+| `search_mode` | Symbol | `:local` | No | Allowed: `:local`, `:remote`. |
+| `search_endpoint` | String or nil | `nil` | No | Required when `searchable: true` and `search_mode: :remote`. URL is sanitized. |
+| `search_param` | String | `"q"` | No | Query param key used for remote search requests. |
+| `output_mode` | Symbol | `:event` | No | Allowed: `:event`, `:field`. |
+| `output_target` | String or nil | `nil` | No | CSS selector to receive JSON output when `output_mode: :field`. |
+| `context` | Hash | `{}` | No | Arbitrary hash returned in confirm event payload. |
+| `empty_state_text` | String | `"No assets found"` | No | Empty-results text. |
+| `results_layout` | Symbol | `:list` | No | Allowed: `:list`, `:grid`. |
+| `modal_body_height_mode` | Symbol | `:fixed` | No | Passed to modal body sizing (`:auto`, `:fixed`, `:min`). |
+| `modal_body_height` | String | `"clamp(20rem, 55vh, 30rem)"` | No | Passed to modal body height style. |
+| `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into modal wrapper. |
 
-## Basic Usage
+## Slots
+None.
+
+## Variants
+
+| variant | description |
+|---------|-------------|
+| `selection_mode: :single` | One selected item at a time (radio/list behavior and single grid pressed state). |
+| `selection_mode: :multiple` | Multiple selected items (checkbox/list behavior and multi grid toggles). |
+| `search_mode: :local` | Filters initial `items` in browser. |
+| `search_mode: :remote` | Fetches `GET search_endpoint?search_param=query&kinds=image,file`; expects JSON with `items` array. |
+| `results_layout: :list` | Row-style selectable entries with metadata. |
+| `results_layout: :grid` | Thumbnail grid cards with pressed-state indicator. |
+| `output_mode: :event` | Emits confirm event only. |
+| `output_mode: :field` | Also writes selected JSON to hidden field and optional `output_target`. |
+
+## Example
 
 ```erb
 <%= render FlatPack::Picker::Component.new(
   id: "asset-picker",
-  title: "Select Assets",
-  items: items,
+  items: @assets,
   searchable: true,
   search_mode: :local,
-  context: {target: "composer"}
+  selection_mode: :multiple,
+  context: { target: "composer" }
 ) %>
 ```
 
-## Props
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `id` | String | required | Modal/picker id used for open/close hooks |
-| `items` | Array<Hash> | `[]` | Initial items to display |
-| `title` | String | `"Select Assets"` | Picker heading |
-| `subtitle` | String, nil | `nil` | Optional helper text |
-| `size` | Symbol | `:lg` | Modal size (`:sm`, `:md`, `:lg`, `:xl`, `:"2xl"`) |
-| `selection_mode` | Symbol | `:multiple` | `:single` or `:multiple` |
-| `accepted_kinds` | Array<Symbol/String> | `[:image, :file]` | Filterable kind whitelist |
-| `searchable` | Boolean | `false` | Enable search input |
-| `search_placeholder` | String | `"Search assets..."` | Search placeholder |
-| `search_mode` | Symbol | `:local` | `:local` or `:remote` |
-| `search_endpoint` | String, nil | `nil` | Required for remote mode |
-| `search_param` | String | `"q"` | Remote query param name |
-| `confirm_text` | String | `"Use Selected"` | Confirm button text |
-| `close_text` | String | `"Close"` | Close button text |
-| `output_mode` | Symbol | `:event` | `:event` or `:field` |
-| `output_target` | String, nil | `nil` | CSS selector for field output |
-| `context` | Hash | `{}` | Opaque context passed back in event detail |
-| `empty_state_text` | String | `"No assets found"` | Empty-state copy |
-| `results_layout` | Symbol | `:list` | Results layout: `:list` rows or `:grid` thumbnail cards |
-| `modal_body_height_mode` | Symbol | `:fixed` | Modal body sizing mode: `:auto`, `:fixed`, or `:min` |
-| `modal_body_height` | String | `"clamp(20rem, 55vh, 30rem)"` | Body height value used by non-auto mode |
-
-## Item Schema
-
-```ruby
-{
-  id: "asset-123",
-  kind: "image", # or "file"
-  label: "Homepage Hero",
-  name: "homepage-hero-v2.png",
-  content_type: "image/png",
-  byte_size: 312_400,
-  thumbnail_url: "https://...", # optional
-  meta: "optional helper text",
-  payload: { any: "custom data" }
-}
-```
-
-## Event Contract
-
-Picker emits `flat-pack:picker:confirm` with:
+Confirm event contract:
 
 ```js
 {
@@ -87,55 +77,10 @@ Picker emits `flat-pack:picker:confirm` with:
 }
 ```
 
-Example consumer:
+## Accessibility
+Picker content uses native form controls (`input[type=radio|checkbox]`) for list selection and button semantics for grid selection (`aria-pressed`). Search input includes an accessible label (`"Search available assets"`).
 
-```js
-document.addEventListener("flat-pack:picker:confirm", (event) => {
-  const { pickerId, selection, context } = event.detail
-  if (pickerId !== "asset-picker") return
-
-  // Consumer-specific behavior
-  console.log("Selected", selection, context)
-})
-```
-
-## Field Output Mode
-
-When `output_mode: :field`, picker writes selected JSON to:
-
-- `output_target` selector, if provided
-- internal hidden field target
-
-This is useful for traditional form flows that do not use custom event handlers.
-
-## Stable Modal Height
-
-Picker defaults to a fixed modal body height to avoid layout jumps between populated and empty search states.
-
-```erb
-<%= render FlatPack::Picker::Component.new(
-  id: "asset-picker",
-  items: items,
-  searchable: true,
-  modal_body_height_mode: :fixed,
-  modal_body_height: "clamp(20rem, 55vh, 30rem)"
-) %>
-```
-
-Use `modal_body_height_mode: :min` when you want a minimum body height with room to grow.
-
-## Thumbnail Grid Layout
-
-Use `results_layout: :grid` for image-heavy pickers so users can scan thumbnails instead of row entries.
-
-```erb
-<%= render FlatPack::Picker::Component.new(
-  id: "image-picker",
-  title: "Select Image",
-  items: items,
-  accepted_kinds: [:image],
-  selection_mode: :single,
-  searchable: true,
-  results_layout: :grid
-) %>
-```
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+- Uses `FlatPack::Modal::Component`, `FlatPack::Button::Component`, and `FlatPack::Search::Component`.
+- Interactive behavior requires Stimulus controller `flat-pack--picker`.

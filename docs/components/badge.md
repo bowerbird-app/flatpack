@@ -1,213 +1,46 @@
-# Badge Component
+# Badge
 
 ## Purpose
-Render compact labels for status, counts, and metadata.
+Render compact status/count labels with optional dot and removable behavior.
 
 ## When to use
-Use Badge to visually tag state, priority, type, or counts inline with content.
+Use Badge to annotate items with short labels, status states, or counts.
 
 ## Class
 - Primary: `FlatPack::Badge::Component`
 
 ## Props
-See the `Props` section below for supported arguments and defaults.
+| name | type | default | required | description |
+|---|---|---|---|---|
+| `text` | String | `nil` | yes | Badge text content. |
+| `style` | Symbol | `:default` | no | Variant style: `:default`, `:primary`, `:success`, `:warning`, `:info`; invalid values raise `ArgumentError`. |
+| `size` | Symbol | `:md` | no | Size: `:sm`, `:md`, `:lg`; invalid values raise `ArgumentError`. |
+| `dot` | Boolean | `false` | no | Shows small leading dot indicator. |
+| `removable` | Boolean | `false` | no | Shows remove button and enables removable behavior. |
+| `**system_arguments` | Hash | `{}` | no | HTML attributes for badge wrapper. |
 
 ## Slots
-See content examples below for block usage.
+None.
 
 ## Variants
-See style and size variants below.
+- Styles: `:default`, `:primary`, `:success`, `:warning`, `:info`.
+- Sizes: `:sm`, `:md`, `:lg`.
 
 ## Example
-Start with `Basic Usage` below.
-
-## Accessibility
-See accessibility notes below for color contrast and semantic labeling.
-
-## Dependencies
-- FlatPack install generator setup (`rails generate flat_pack:install`).
-
-The Badge component renders small status indicators, counts, labels, and tags for highlighting information.
-
-## Basic Usage
-
-```erb
-<%= render FlatPack::Badge::Component.new(text: "New") %>
-```
-
-## Props
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `text` | String | **required** | Badge text content |
-| `style` | Symbol | `:default` | Visual style (`:default`, `:primary`, `:success`, `:warning`, `:info`) |
-| `size` | Symbol | `:md` | Badge size (`:sm`, `:md`, `:lg`) |
-| `dot` | Boolean | `false` | Show indicator dot |
-| `removable` | Boolean | `false` | Show remove/close button |
-| `**system_arguments` | Hash | `{}` | HTML attributes (`class`, `data`, `aria`, `id`, etc.) |
-
-## Variants
-
-### Default (Neutral/Gray)
-General purpose badges, neutral information.
-
-```erb
-<%= render FlatPack::Badge::Component.new(text: "Default") %>
-```
-
-### Primary
-Brand color, primary actions or features.
-
-```erb
-<%= render FlatPack::Badge::Component.new(
-  text: "New",
-  style: :primary
-) %>
-```
-
-### Success
-Positive status, completed actions.
-
-```erb
-<%= render FlatPack::Badge::Component.new(
-  text: "Active",
-  style: :success
-) %>
-```
-
-### Warning
-Caution, pending status.
-
-```erb
-<%= render FlatPack::Badge::Component.new(
-  text: "Pending",
-  style: :warning
-) %>
-```
-
-### Info
-Informational badges.
-
-```erb
-<%= render FlatPack::Badge::Component.new(
-  text: "Beta",
-  style: :info
-) %>
-```
-
-## Sizes
-
-### Small
-Compact badges for tight spaces.
-
-```erb
-<%= render FlatPack::Badge::Component.new(
-  text: "Small",
-  size: :sm
-) %>
-```
-
-### Medium (Default)
-Standard size for most use cases.
-
-```erb
-<%= render FlatPack::Badge::Component.new(
-  text: "Medium",
-  size: :md
-) %>
-```
-
-### Large
-Larger badges for emphasis.
-
-```erb
-<%= render FlatPack::Badge::Component.new(
-  text: "Large",
-  size: :lg
-) %>
-```
-
-## Dot Indicator
-Show a status dot alongside the text.
-
 ```erb
 <%= render FlatPack::Badge::Component.new(
   text: "Online",
   style: :success,
-  dot: true
-) %>
-```
-
-## Removable Badge
-Show a close button for removable tags.
-
-```erb
-<%= render FlatPack::Badge::Component.new(
-  text: "Tag",
-  removable: true
-) %>
-```
-
-## Use Cases
-
-### Status Indicators
-```erb
-<%= render FlatPack::Badge::Component.new(text: "Active", style: :success) %>
-<%= render FlatPack::Badge::Component.new(text: "Pending", style: :warning) %>
-<%= render FlatPack::Badge::Component.new(text: "Completed", style: :primary) %>
-```
-
-### Notification Counts
-```erb
-<%= render FlatPack::Badge::Component.new(text: "12 new", style: :primary) %>
-```
-
-### Category Tags
-```erb
-<%= render FlatPack::Badge::Component.new(text: "Ruby", removable: true) %>
-<%= render FlatPack::Badge::Component.new(text: "Rails", removable: true) %>
-<%= render FlatPack::Badge::Component.new(text: "JavaScript", removable: true) %>
-```
-
-### User Roles
-```erb
-<%= render FlatPack::Badge::Component.new(text: "Admin", style: :primary) %>
-<%= render FlatPack::Badge::Component.new(text: "Editor", style: :default) %>
-<%= render FlatPack::Badge::Component.new(text: "Viewer", style: :default) %>
-```
-
-### Feature Flags
-```erb
-<%= render FlatPack::Badge::Component.new(text: "Beta", style: :info) %>
-<%= render FlatPack::Badge::Component.new(text: "New", style: :primary) %>
-<%= render FlatPack::Badge::Component.new(text: "Experimental", style: :warning) %>
-```
-
-## System Arguments
-
-All standard HTML attributes are supported via `**system_arguments`:
-
-```erb
-<%= render FlatPack::Badge::Component.new(
-  text: "Custom",
-  id: "my-badge",
-  class: "mr-2",
-  data: { testid: "status-badge" },
-  aria: { label: "Status indicator" }
+  size: :md,
+  dot: true,
+  removable: false
 ) %>
 ```
 
 ## Accessibility
+- Badge text is always visible so color is not the only status signal.
+- Removable mode uses a button with `aria-label="Remove"`.
 
-- Uses semantic markup with proper color contrast
-- Color is not the only indicator (includes text)
-- Removable badges have accessible close buttons with aria-label
-- Supports custom ARIA attributes via system_arguments
-
-## Testing
-
-```ruby
-# test/components/flat_pack/badge_component_test.rb
-render_inline(FlatPack::Badge::Component.new(text: "Test", style: :success))
-assert_selector "span", text: "Test"
-```
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+- Removable mode attaches Stimulus controller `flat-pack--badge`.

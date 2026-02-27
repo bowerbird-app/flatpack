@@ -1,203 +1,53 @@
-# Comments Thread Component
+# Comments Thread
 
 ## Purpose
-Compose full threaded comment experiences from header, composer, and comment list regions.
+Compose full comment experiences with header, composer, comment list, and footer regions.
 
 ## When to use
-Use Comments Thread as the root wrapper for comment UIs with nested replies.
+Use Comments Thread as the root wrapper for page-level comment sections.
 
 ## Class
 - Primary: `FlatPack::Comments::Thread::Component`
 
 ## Props
-See the `Props` section below for supported arguments and defaults.
+| name | type | default | required | description |
+|---|---|---|---|---|
+| `count` | Integer | `0` | no | Comment count shown in default header. |
+| `title` | String | `"Comments"` | no | Default header title text. |
+| `variant` | Symbol | `:default` | no | Spacing variant: `:default`, `:compact`; invalid values raise `ArgumentError`. |
+| `empty_title` | String | `"No comments yet"` | no | Empty-state title when no comments are rendered. |
+| `empty_body` | String | `"Be the first to share your thoughts."` | no | Empty-state description text. |
+| `locked` | Boolean | `false` | no | Hides composer and shows locked indicator in default header. |
+| `**system_arguments` | Hash | `{}` | no | HTML attributes for thread wrapper. |
 
 ## Slots
-See slot sections below for header, composer, list, and footer composition.
+- `header`: custom header content (replaces default header).
+- `composer`: composer area (suppressed when `locked` is true).
+- `comment` (`renders_many`): comment entries.
+- `footer`: optional footer controls/content.
 
 ## Variants
-See variant options below for compact/default rendering.
+- Spacing variants: `:default`, `:compact`.
+- Interaction mode: unlocked or locked (`locked: true`).
 
 ## Example
-Start with `Basic Usage` below.
-
-## Accessibility
-See accessibility notes below for structure and keyboard flow.
-
-## Dependencies
-- FlatPack install generator setup (`rails generate flat_pack:install`).
-
-A container component for managing comment threads with header, composer, comments list, and footer sections.
-
-## Basic Usage
-
 ```erb
-<%= render FlatPack::Comments::Thread::Component.new(
-  count: 24,
-  title: "Discussion"
-) do |thread| %>
-  <% thread.with_comment do %>
-    <%= render FlatPack::Comments::Item::Component.new(...) %>
-  <% end %>
-<% end %>
-```
-
-## With Composer
-
-Add a composer for creating new comments:
-
-```erb
-<%= render FlatPack::Comments::Thread::Component.new(count: 5) do |thread| %>
+<%= render FlatPack::Comments::Thread::Component.new(count: @comments.count, title: "Discussion") do |thread| %>
   <% thread.with_composer do %>
     <%= render FlatPack::Comments::Composer::Component.new %>
   <% end %>
-  
+
   <% @comments.each do |comment| %>
     <% thread.with_comment do %>
-      <%= render FlatPack::Comments::Item::Component.new(...) %>
+      <%= render FlatPack::Comments::Item::Component.new(author_name: comment.author_name, body: comment.body) %>
     <% end %>
   <% end %>
 <% end %>
 ```
 
-## Empty State
+## Accessibility
+- Default locked indicator is visual + textual (`"Locked"`).
+- Ensure controls inserted via slots have clear labels.
 
-Customize the empty state message:
-
-```erb
-<%= render FlatPack::Comments::Thread::Component.new(
-  empty_title: "No feedback yet",
-  empty_body: "Share your thoughts to start the conversation."
-) %>
-```
-
-## Locked State
-
-Prevent new comments with a locked indicator:
-
-```erb
-<%= render FlatPack::Comments::Thread::Component.new(
-  count: 12,
-  locked: true
-) do |thread| %>
-  <% @comments.each do |comment| %>
-    <% thread.with_comment do %>
-      <%= render FlatPack::Comments::Item::Component.new(...) %>
-    <% end %>
-  <% end %>
-<% end %>
-```
-
-## Custom Header
-
-Replace the default header with custom content:
-
-```erb
-<%= render FlatPack::Comments::Thread::Component.new do |thread| %>
-  <% thread.with_header do %>
-    <div class="flex justify-between items-center">
-      <h2>Custom Header</h2>
-      <button>Sort</button>
-    </div>
-  <% end %>
-  
-  <% thread.with_comment do %>
-    ...
-  <% end %>
-<% end %>
-```
-
-## Variants
-
-Control spacing between comments:
-
-```erb
-<!-- Default spacing -->
-<%= render FlatPack::Comments::Thread::Component.new(variant: :default) %>
-
-<!-- Compact spacing -->
-<%= render FlatPack::Comments::Thread::Component.new(variant: :compact) %>
-```
-
-## With Footer
-
-Add pagination or load more actions:
-
-```erb
-<%= render FlatPack::Comments::Thread::Component.new(count: 50) do |thread| %>
-  <% @comments.each do |comment| %>
-    <% thread.with_comment do %>
-      <%= render FlatPack::Comments::Item::Component.new(...) %>
-    <% end %>
-  <% end %>
-  
-  <% thread.with_footer do %>
-    <%= link_to "Load more comments", "#", class: "text-primary" %>
-  <% end %>
-<% end %>
-```
-
-## Props
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `count` | Integer | `0` | Number of comments |
-| `title` | String | `"Comments"` | Header title |
-| `variant` | Symbol | `:default` | Spacing variant (`:default`, `:compact`) |
-| `empty_title` | String | `"No comments yet"` | Empty state title |
-| `empty_body` | String | `"Be the first..."` | Empty state body |
-| `locked` | Boolean | `false` | Show locked indicator, hide composer |
-| `**system_arguments` | Hash | `{}` | Additional HTML attributes |
-
-## Slots
-
-| Slot | Type | Description |
-|------|------|-------------|
-| `header` | Single | Custom header content |
-| `composer` | Single | Comment composer (hidden when locked) |
-| `comment` | Multiple | Comment items |
-| `footer` | Single | Footer content (pagination, etc.) |
-
-## Examples
-
-### Full Comment Thread
-```erb
-<%= render FlatPack::Comments::Thread::Component.new(
-  count: @post.comments.count,
-  title: "Comments"
-) do |thread| %>
-  <% thread.with_composer do %>
-    <%= form_with model: [@post, Comment.new] do |f| %>
-      <%= render FlatPack::Comments::Composer::Component.new(
-        name: "comment[body]"
-      ) %>
-    <% end %>
-  <% end %>
-  
-  <% @post.comments.each do |comment| %>
-    <% thread.with_comment do %>
-      <%= render FlatPack::Comments::Item::Component.new(
-        author_name: comment.author.name,
-        timestamp: time_ago_in_words(comment.created_at),
-        body: comment.body
-      ) %>
-    <% end %>
-  <% end %>
-<% end %>
-```
-
-### Read-Only Thread
-```erb
-<%= render FlatPack::Comments::Thread::Component.new(
-  count: @archived_comments.count,
-  title: "Archived Discussion",
-  locked: true,
-  variant: :compact
-) do |thread| %>
-  <% @archived_comments.each do |comment| %>
-    <% thread.with_comment do %>
-      <%= render FlatPack::Comments::Item::Component.new(...) %>
-    <% end %>
-  <% end %>
-<% end %>
-```
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).

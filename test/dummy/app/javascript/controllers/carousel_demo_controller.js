@@ -70,16 +70,15 @@ export default class extends Controller {
 
     this.indicatorTargets.forEach((indicator, index) => {
       const isActive = index === this.indexValue
-      indicator.classList.toggle("bg-[var(--color-primary)]", isActive)
-      indicator.classList.toggle("bg-[var(--surface-border-color)]", !isActive)
+      indicator.style.backgroundColor = isActive ? "var(--color-primary)" : "var(--surface-border-color)"
       indicator.setAttribute("aria-current", isActive ? "true" : "false")
     })
 
     this.thumbTargets.forEach((thumb, index) => {
       const isActive = index === this.indexValue
-      thumb.classList.toggle("ring-2", isActive)
-      thumb.classList.toggle("ring-[var(--color-primary)]", isActive)
-      thumb.classList.toggle("opacity-60", !isActive)
+      thumb.style.outline = isActive ? "2px solid var(--color-primary)" : "none"
+      thumb.style.outlineOffset = isActive ? "1px" : "0"
+      thumb.style.opacity = isActive ? "1" : "0.6"
       thumb.setAttribute("aria-current", isActive ? "true" : "false")
     })
 

@@ -1,58 +1,72 @@
-# FlatPack Components Index (Agent-First)
+# FlatPack Components Index (Compact)
 
-This is the canonical component index for AI and human lookup.
+Primary sources:
+- Human index: `docs/components/README.md` (this file)
+- Machine index: `docs/components/manifest.yml`
+- Doc contract: `docs/components/DOC_FORMAT.md`
 
-- Canonical format: `docs/components/DOC_FORMAT.md`
-- Machine-readable inventory: `docs/components/manifest.yml`
+## AI Quick Index
 
-## How to use this index
+Format: `key | primary class | doc`
 
-1. Find the UI task in the table below.
-2. Open the linked component page for props, variants, and examples.
-3. Use the canonical class name listed here.
+```text
+accordion | FlatPack::Accordion::Component | docs/components/accordion.md
+alert | FlatPack::Alert::Component | docs/components/alert.md
+avatar | FlatPack::Avatar::Component | docs/components/avatar.md
+avatar_group | FlatPack::AvatarGroup::Component | docs/components/avatar-group.md
+badge | FlatPack::Badge::Component | docs/components/badge.md
+bottom_nav | FlatPack::BottomNav::Component | docs/components/bottom-nav.md
+breadcrumb | FlatPack::Breadcrumb::Component | docs/components/breadcrumb.md
+button | FlatPack::Button::Component | docs/components/button.md
+button_dropdown | FlatPack::Button::Dropdown::Component | docs/components/button-dropdown.md
+button_group | FlatPack::ButtonGroup::Component | docs/components/button-group.md
+card | FlatPack::Card::Component | docs/components/card.md
+chart | FlatPack::Chart::Component | docs/components/charts.md
+chat | FlatPack::Chat::Panel::Component | docs/components/chat.md
+chips | FlatPack::Chip::Component | docs/components/chips.md
+code_block | FlatPack::CodeBlock::Component | docs/components/code-block.md
+collapse | FlatPack::Collapse::Component | docs/components/collapse.md
+comments_composer | FlatPack::Comments::Composer::Component | docs/components/comments-composer.md
+comments_inline_input | FlatPack::Comments::InlineInput::Component | docs/components/comments-inline-input.md
+comments_item | FlatPack::Comments::Item::Component | docs/components/comments-item.md
+comments_replies | FlatPack::Comments::Replies::Component | docs/components/comments-replies.md
+comments_thread | FlatPack::Comments::Thread::Component | docs/components/comments-thread.md
+empty_state | FlatPack::EmptyState::Component | docs/components/empty-state.md
+grid | FlatPack::Grid::Component | docs/components/grid.md
+inputs | FlatPack::TextInput::Component | docs/components/inputs.md
+link | FlatPack::Link::Component | docs/components/link.md
+list | FlatPack::List::Component | docs/components/list.md
+modal | FlatPack::Modal::Component | docs/components/modal.md
+navbar | FlatPack::Navbar::Component | docs/components/navbar.md
+page_header | FlatPack::PageHeader::Component | docs/components/page-header.md
+page_title | FlatPack::PageTitle::Component | docs/components/page-title.md
+pagination | FlatPack::Pagination::Component | docs/components/pagination.md
+pagination_infinite | FlatPack::PaginationInfinite::Component | docs/components/pagination-infinite.md
+picker | FlatPack::Picker::Component | docs/components/picker.md
+popover | FlatPack::Popover::Component | docs/components/popover.md
+progress | FlatPack::Progress::Component | docs/components/progress.md
+quote | FlatPack::Quote::Component | docs/components/quote.md
+range_input | FlatPack::RangeInput::Component | docs/components/range-input.md
+search | FlatPack::Search::Component | docs/components/search.md
+section_title | FlatPack::SectionTitle::Component | docs/components/section-title.md
+segmented_buttons | FlatPack::SegmentedButtons::Component | docs/components/segmented-buttons.md
+sidebar | FlatPack::Sidebar::Component | docs/components/sidebar.md
+sidebar_group | FlatPack::Sidebar::Group::Component | docs/components/sidebar_group.md
+sidebar_layout | FlatPack::SidebarLayout::Component | docs/components/sidebar_layout.md
+skeleton | FlatPack::Skeleton::Component | docs/components/skeleton.md
+sortable_tables | FlatPack::Table::Component | docs/components/sortable-tables.md
+sortable_tables_examples | FlatPack::Table::Component | docs/components/sortable-tables-examples.md
+table | FlatPack::Table::Component | docs/components/table.md
+tabs | FlatPack::Tabs::Component | docs/components/tabs.md
+timeline | FlatPack::Timeline::Component | docs/components/timeline.md
+toast | FlatPack::Toast::Component | docs/components/toast.md
+toasts | FlatPack::Toasts::Region::Component | docs/components/toasts.md
+tooltip | FlatPack::Tooltip::Component | docs/components/tooltip.md
+top_nav | FlatPack::TopNav::Component | docs/components/top_nav.md
+new_components_summary | FlatPack::Grid::Component | docs/components/NEW_COMPONENTS_SUMMARY.md
+```
 
-## Component Catalog
+## Notes
 
-| Component | Purpose | Primary Class | Docs |
-|---|---|---|---|
-| Accordion | Expand/collapse sections of content | `FlatPack::Accordion::Component` | [accordion.md](accordion.md) |
-| Alert | Inline feedback and status messaging | `FlatPack::Alert::Component` | [alert.md](alert.md) |
-| Avatar | User/profile visual identity | `FlatPack::Avatar::Component` | [avatar.md](avatar.md) |
-| Avatar Group | Compact group of avatars | `FlatPack::AvatarGroup::Component` | [avatar-group.md](avatar-group.md) |
-| Badge | Small status/count labels | `FlatPack::Badge::Component` | [badge.md](badge.md) |
-| Breadcrumb | Hierarchical navigation trail | `FlatPack::Breadcrumb::Component` | [breadcrumb.md](breadcrumb.md) |
-| Button | Trigger actions and links | `FlatPack::Button::Component` | [button.md](button.md) |
-| Button Dropdown | Button-triggered action menu | `FlatPack::Button::Dropdown::Component` | [button-dropdown.md](button-dropdown.md) |
-| Card | Structured content container | `FlatPack::Card::Component` | [card.md](card.md) |
-| Chart | Data visualization cards/charts | `FlatPack::Chart::Component` | [charts.md](charts.md) |
-| Chat | Messaging UI primitives | `FlatPack::Chat::Panel::Component` | [chat.md](chat.md) |
-| Chip + Chip Group | Compact tags/tokens with optional actions | `FlatPack::Chip::Component` | [chips.md](chips.md) |
-| Collapse | Progressive disclosure region | `FlatPack::Collapse::Component` | [collapse.md](collapse.md) |
-| Comments Inline Input | Minimal single-line comment input + inline submit | `FlatPack::Comments::InlineInput::Component` | [comments-inline-input.md](comments-inline-input.md) |
-| Comments Composer | Comment input/composer | `FlatPack::Comments::Composer::Component` | [comments-composer.md](comments-composer.md) |
-| Comments Item | Single comment item | `FlatPack::Comments::Item::Component` | [comments-item.md](comments-item.md) |
-| Comments Replies | Nested/reply comment region | `FlatPack::Comments::Replies::Component` | [comments-replies.md](comments-replies.md) |
-| Comments Thread | Full threaded comments view | `FlatPack::Comments::Thread::Component` | [comments-thread.md](comments-thread.md) |
-| Input Components | Form inputs (text, select, checkbox, etc.) | `FlatPack::TextInput::Component` | [inputs.md](inputs.md) |
-| List | Styled list container/items | `FlatPack::List::Component` | [list.md](list.md) |
-| Grid | Responsive grid layout container | `FlatPack::Grid::Component` | [grid.md](grid.md) |
-| Navbar | App-level nav shell | `FlatPack::Navbar::Component` | [navbar.md](navbar.md) |
-| Pagination Infinite | Incremental loading pagination | `FlatPack::PaginationInfinite::Component` | [pagination-infinite.md](pagination-infinite.md) |
-| Picker | Reusable image/file selector with consumer-defined behavior | `FlatPack::Picker::Component` | [picker.md](picker.md) |
-| Progress | Progress indicators/bars | `FlatPack::Progress::Component` | [progress.md](progress.md) |
-| Range Input | Slider/range selection | `FlatPack::RangeInput::Component` | [range-input.md](range-input.md) |
-| Search | Reusable search UI | `FlatPack::Search::Component` | [search.md](search.md) |
-| Sidebar | Sidebar navigation primitives | `FlatPack::Sidebar::Component` | [sidebar.md](sidebar.md) |
-| Sidebar Group | Collapsible sidebar groups | `FlatPack::Sidebar::Group::Component` | [sidebar_group.md](sidebar_group.md) |
-| Sidebar Layout | Sidebar + content page layout | `FlatPack::SidebarLayout::Component` | [sidebar_layout.md](sidebar_layout.md) |
-| Skeleton | Loading placeholders | `FlatPack::Skeleton::Component` | [skeleton.md](skeleton.md) |
-| Sortable Tables | Sortable table behavior/API | `FlatPack::Table::Component` | [sortable-tables.md](sortable-tables.md) |
-| Sortable Tables Examples | Sortable usage examples | `FlatPack::Table::Component` | [sortable-tables-examples.md](sortable-tables-examples.md) |
-| Table | Structured data tables | `FlatPack::Table::Component` | [table.md](table.md) |
-| Timeline | Chronological sequence UI | `FlatPack::Timeline::Component` | [timeline.md](timeline.md) |
-| Top Nav | Top navigation bar | `FlatPack::TopNav::Component` | [top_nav.md](top_nav.md) |
-
-## Coverage Notes
-
-- Some source component directories are composition/internal helpers and may not have dedicated docs pages.
-- See `undocumented_or_internal_candidates` in `docs/components/manifest.yml` for current gaps.
+- For related classes, aliases, and status metadata, use `docs/components/manifest.yml`.
+- Every component doc should follow `docs/components/DOC_FORMAT.md`.

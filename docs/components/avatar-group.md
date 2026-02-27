@@ -1,176 +1,53 @@
-# AvatarGroup Component
+# Avatar Group
 
 ## Purpose
-Display multiple avatars in a compact overlapping cluster.
+Render overlapping user avatars with optional overflow count for compact participant displays.
 
 ## When to use
-Use AvatarGroup for teams, participants, assignees, and any list of people where space is limited.
+Use Avatar Group for teams, collaborators, or participant lists where many users must fit in limited space.
 
 ## Class
 - Primary: `FlatPack::AvatarGroup::Component`
+- Related classes: `FlatPack::Avatar::Component`, `FlatPack::Tooltip::Component`
 
 ## Props
-See the `Props` section below for supported arguments and defaults.
+| name | type | default | required | description |
+|---|---|---|---|---|
+| `items` | Array<Hash> | `[]` | yes | Avatar item hashes. Each item may include `:src`, `:alt`, `:name`, `:initials`, `:status`, `:href`. |
+| `max` | Integer | `5` | no | Maximum visible avatars before overflow avatar is shown. |
+| `size` | Symbol | `:sm` | no | Passed to each avatar (`FlatPack::Avatar::Component` sizes). |
+| `overlap` | Symbol | `:md` | no | Overlap spacing: `:sm`, `:md`, `:lg`; invalid values raise `ArgumentError`. |
+| `show_overflow` | Boolean | `true` | no | Shows `+N` overflow avatar when hidden items exist. |
+| `overflow_href` | String | `nil` | no | Optional link URL for overflow avatar. |
+| `**system_arguments` | Hash | `{}` | no | HTML attributes for group wrapper. |
 
 ## Slots
-See examples below for composition patterns.
+None.
 
 ## Variants
-See size and overflow variations below.
+- Overlap spacing: `:sm`, `:md`, `:lg`.
+- Avatar appearance is controlled through `size` and per-item avatar fields.
 
 ## Example
-Start with `Basic Usage` below.
+```erb
+<%= render FlatPack::AvatarGroup::Component.new(
+  items: [
+    { name: "Alex Rivera", src: "https://example.com/alex.jpg", status: :online },
+    { name: "Morgan Lee", src: "https://example.com/morgan.jpg" },
+    { name: "Casey Jordan" }
+  ],
+  max: 2,
+  overlap: :md,
+  overflow_href: "/users"
+) %>
+```
 
 ## Accessibility
-See accessibility guidance below for labels and overflow semantics.
-
-- Avatars with a `name` (or `alt`) automatically render a tooltip with that text.
-- Tooltip placement is `:bottom` for each avatar in the group.
-- The overflow `+N` avatar shows a `:bottom` tooltip listing hidden member names, one per row.
+- Individual avatars inherit avatar accessibility behavior (image `alt`, initials fallback).
+- Avatars with `name`/`alt` render tooltip labels at `:bottom` placement.
+- Overflow avatar tooltip lists hidden member names when available.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
-
-Display multiple avatars in an overlapping group with an optional overflow indicator.
-
-## Basic Usage
-
-```erb
-<%= render FlatPack::AvatarGroup::Component.new(
-  items: [
-    {name: "John Doe", src: "https://example.com/john.jpg"},
-    {name: "Jane Smith", src: "https://example.com/jane.jpg"},
-    {name: "Bob Johnson"}
-  ]
-) %>
-```
-
-## With Maximum Display
-
-Limit the number of visible avatars and show an overflow count:
-
-```erb
-<%= render FlatPack::AvatarGroup::Component.new(
-  items: users_array,
-  max: 3,
-  show_overflow: true
-) %>
-<!-- Displays: [Avatar] [Avatar] [Avatar] [+7] -->
-```
-
-## Sizes
-
-The `size` prop is passed to all avatars in the group:
-
-```erb
-<%= render FlatPack::AvatarGroup::Component.new(
-  items: users,
-  size: :sm
-) %>
-```
-
-Available sizes: `:xs`, `:sm` (default), `:md`, `:lg`, `:xl`
-
-## Overlap Spacing
-
-Control how much avatars overlap:
-
-```erb
-<%= render FlatPack::AvatarGroup::Component.new(
-  items: users,
-  overlap: :sm
-) %>
-```
-
-Available overlaps: `:sm`, `:md` (default), `:lg`
-
-## Clickable Overflow
-
-Make the overflow count a link:
-
-```erb
-<%= render FlatPack::AvatarGroup::Component.new(
-  items: users,
-  max: 5,
-  overflow_href: "/users/all"
-) %>
-```
-
-## Item Format
-
-Each item in the `items` array can have these properties:
-
-```ruby
-{
-  src: "https://example.com/avatar.jpg",  # Image URL (optional)
-  name: "John Doe",                        # Name for initials (optional)
-  alt: "John Doe Avatar",                  # Alt text (optional)
-  initials: "JD",                          # Explicit initials (optional)
-  status: :online,                         # Status indicator (optional)
-  href: "/users/1"                         # Link URL (optional)
-}
-```
-
-## Props
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `items` | Array | required | Array of avatar hashes |
-| `max` | Integer | `5` | Maximum avatars to display |
-| `size` | Symbol | `:sm` | Size passed to all avatars |
-| `overlap` | Symbol | `:md` | Overlap spacing (`:sm`, `:md`, `:lg`) |
-| `show_overflow` | Boolean | `true` | Show "+N" indicator for overflow |
-| `overflow_href` | String | `nil` | Link for overflow indicator |
-| `**system_arguments` | Hash | `{}` | Additional HTML attributes |
-
-## Examples
-
-### Team Members
-```erb
-<%= render FlatPack::AvatarGroup::Component.new(
-  items: @team_members.map { |member|
-    {
-      name: member.name,
-      src: member.avatar_url,
-      href: user_path(member)
-    }
-  },
-  size: :md,
-  overlap: :lg
-) %>
-```
-
-### Compact User List
-```erb
-<%= render FlatPack::AvatarGroup::Component.new(
-  items: @participants,
-  max: 3,
-  size: :xs,
-  overlap: :sm,
-  overflow_href: participants_path
-) %>
-```
-
-### With Status Indicators
-```erb
-<%= render FlatPack::AvatarGroup::Component.new(
-  items: [
-    {name: "John", status: :online},
-    {name: "Jane", status: :busy},
-    {name: "Bob", status: :away}
-  ],
-  size: :sm
-) %>
-```
-
-### Hover Effects
-
-Avatars automatically scale up on hover and gain z-index priority for better visibility:
-
-```erb
-<%= render FlatPack::AvatarGroup::Component.new(
-  items: @users,
-  overlap: :md,
-  class: "cursor-pointer"
-) %>
-```
+- Uses `FlatPack::Avatar::Component` to render each item.
+- Uses `FlatPack::Tooltip::Component` for member and overflow tooltips.

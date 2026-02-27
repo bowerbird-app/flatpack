@@ -1,166 +1,55 @@
-# Pagination Infinite Scroll Component
+# Pagination Infinite
 
 ## Purpose
-Implement incremental loading and infinite scroll behavior for paginated collections.
+Load additional paginated content as users scroll to a trigger sentinel.
 
 ## When to use
-Use Pagination Infinite when list/table/grid content should load progressively without full-page pagination controls.
+Use Pagination Infinite when table/card/list results should append or prepend incrementally without classic pagination controls.
 
 ## Class
 - Primary: `FlatPack::PaginationInfinite::Component`
 
 ## Props
-See the `Props` section below for supported arguments and defaults.
+| name | type | default | required | description |
+|---|---|---|---|---|
+| `url` | String | `nil` | yes | Endpoint used for incremental fetches. |
+| `page` | Integer | `1` | no | Current page number; must be greater than zero. |
+| `has_more` | Boolean | `true` | no | When false, component renders nothing. |
+| `loading_text` | String | `"Loading more..."` | no | Text used by inline loading variant. |
+| `loading_variant` | Symbol | `:table` | no | Loading placeholder style: `:table`, `:cards`, `:inline`. |
+| `insert_mode` | Symbol | `:append` | no | Content insertion mode: `:append`, `:prepend`. |
+| `observe_root_selector` | String | `nil` | no | Optional custom `IntersectionObserver` root selector. |
+| `cursor_selector` | String | `nil` | no | Selector for cursor element inside `[data-pagination-content]`. |
+| `cursor_param` | String | `nil` | no | Query param name used to send cursor value. |
+| `batch_size` | Integer | `nil` | no | Optional fetch batch size; must be greater than zero if provided. |
+| `batch_size_param` | String | `"limit"` | no | Query parameter key used for `batch_size`. |
+| `preserve_scroll_position` | Boolean | `false` | no | Preserves viewport position for prepend-mode loading. |
+| `**system_arguments` | Hash | `{}` | no | HTML attributes for wrapper element. |
 
 ## Slots
-See examples below for wrapping and content composition.
+None.
 
 ## Variants
-See loading trigger and fallback variants below.
+- Loading variants: `:table`, `:cards`, `:inline`.
+- Insert modes: `:append`, `:prepend`.
 
 ## Example
-Start with `Basic Usage` below.
-
-## Accessibility
-See accessibility notes below for focus management and loading feedback.
-
-## Dependencies
-- FlatPack install generator setup (`rails generate flat_pack:install`).
-- Stimulus/Turbo integration for incremental loading.
-
-The Pagination Infinite Scroll component adds infinite scrolling capability with automatic loading and graceful fallback.
-
-## Basic Usage
-
 ```erb
 <%= render FlatPack::PaginationInfinite::Component.new(
   url: items_path(page: @next_page),
   page: @next_page,
-  has_more: @has_more
-) %>
-```
-
-## Props
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `url` | String | **required** | URL to fetch next page |
-| `page` | Number | `1` | Current page number |
-| `has_more` | Boolean | `true` | Whether more content is available |
-| `loading_text` | String | `"Loading more..."` | Text shown while loading |
-| `loading_variant` | Symbol | `:table` | Loading UI variant (`:table`, `:cards`, `:inline`) |
-| `insert_mode` | Symbol | `:append` | Insert fetched content at end or start (`:append`, `:prepend`) |
-| `observe_root_selector` | String | `nil` | CSS selector for custom IntersectionObserver root |
-| `cursor_selector` | String | `nil` | CSS selector for cursor element inside `data-pagination-content` |
-| `cursor_param` | String | `nil` | Query param name to send cursor value |
-| `batch_size` | Number | `nil` | Optional page size/batch size sent with each request |
-| `batch_size_param` | String | `"limit"` | Query param name for `batch_size` |
-| `preserve_scroll_position` | Boolean | `false` | Preserve viewport offset when prepending content |
-| `**system_arguments` | Hash | `{}` | HTML attributes (`class`, `data`, `aria`, `id`, etc.) |
-
-## Examples
-
-### Basic Infinite Scroll
-```erb
-<div>
-  <% @items.each do |item| %>
-    <div class="item"><%= item.name %></div>
-  <% end %>
-</div>
-
-<%= render FlatPack::PaginationInfinite::Component.new(
-  url: items_path(page: @pagy.next),
-  page: @pagy.next,
-  has_more: @pagy.next.present?
-) %>
-```
-
-### Custom Loading Text
-```erb
-<%= render FlatPack::PaginationInfinite::Component.new(
-  url: products_path(page: @next_page),
-  page: @next_page,
   has_more: @has_more,
-  loading_text: "Fetching more products..."
+  loading_variant: :cards,
+  insert_mode: :append
 ) %>
-```
-
-### With Query Parameters
-```erb
-<%= render FlatPack::PaginationInfinite::Component.new(
-  url: search_path(q: params[:q], page: @next_page),
-  page: @next_page,
-  has_more: @has_more
-) %>
-```
-
-### Chat History (Scroll Up)
-```erb
-<%= render FlatPack::PaginationInfinite::Component.new(
-  url: chat_group_messages_path(@chat_group),
-  has_more: @has_more,
-  loading_variant: :inline,
-  insert_mode: :prepend,
-  observe_root_selector: "[data-flat-pack--chat-scroll-target='messages']",
-  cursor_selector: "[data-pagination-cursor]",
-  cursor_param: "before_id",
-  batch_size: 20,
-  batch_size_param: "limit",
-  preserve_scroll_position: true
-) %>
-```
-
-## Stimulus Controller
-
-Uses the `flat-pack--pagination-infinite` Stimulus controller for automatic loading.
-
-### Features
-- **Intersection Observer**: Automatically loads when button scrolls into view
-- **Graceful Fallback**: Works as regular link if JavaScript disabled
-- **Loading State**: Shows spinner during fetch
-- **Error Handling**: Displays error message on failure
-
-### Expected Response Format
-
-Your controller should return HTML that includes:
-
-```erb
-<!-- New content -->
-<div data-pagination-content>
-  <% @items.each do |item| %>
-    <!-- item markup -->
-  <% end %>
-</div>
-
-<!-- New pagination component (or omit if no more pages) -->
-<%= render FlatPack::PaginationInfinite::Component.new(...) if @has_more %>
-```
-
-## Controller Example
-
-```ruby
-def index
-  @pagy, @items = pagy(Item.all, items: 20)
-  
-  if request.xhr?
-    render partial: "items_list", locals: { items: @items, pagy: @pagy }
-  else
-    # Full page render
-  end
-end
 ```
 
 ## Accessibility
+- Trigger sentinel is hidden from assistive tech (`aria-hidden="true"`).
+- Loading region visibility is toggled during fetches.
+- Preserve clear heading/landmark context in surrounding result containers.
 
-- Works without JavaScript (regular link fallback)
-- Loading state announced to screen readers
-- Keyboard accessible
-- Focus management preserved during content insertion
-
-## Use Cases
-
-- Blog post feeds
-- Product listings
-- Search results
-- Activity feeds
-- News feeds
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+- Stimulus controller: `flat-pack--pagination-infinite`.
+- Uses `FlatPack::Skeleton::Component` for table/cards loading placeholders.

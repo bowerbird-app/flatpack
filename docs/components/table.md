@@ -1,449 +1,78 @@
 # Table Component
 
 ## Purpose
-Render structured tabular data with configurable columns and optional interactivity.
+Render tabular data with composable column definitions, optional sorting links, and optional drag-and-drop row reordering.
 
 ## When to use
 Use Table for datasets that need consistent headers, rows, formatting, and optional sorting/actions.
 
 ## Class
 - Primary: `FlatPack::Table::Component`
+- Related classes: `FlatPack::Table::Column::Component`
 
 ## Props
-See the `Props` section below for supported arguments and defaults.
+
+| name | type | default | required | description |
+|------|------|---------|----------|-------------|
+| `data` | Array | `[]` | No | Collection rendered as table rows. |
+| `stimulus` | Boolean | `false` | No | Adds `flat-pack--table` Stimulus controller to the table wrapper. |
+| `turbo_frame` | String | `nil` | No | Wraps the table output in `<turbo-frame id="...">`. |
+| `sort` | String | `nil` | No | Current sort key used to render active header state/indicator. |
+| `direction` | String | `nil` | No | Current sort direction (`"asc"` or `"desc"`). |
+| `base_url` | String | `nil` | No | Base URL used by sortable headers to build sort links. |
+| `tbody_class` | String | `nil` | No | Extra class merged into `<tbody>`. |
+| `tbody_data` | Hash | `nil` | No | Data attributes applied to `<tbody>`. |
+| `draggable_rows` | Boolean | `false` | No | Adds `flat-pack--table-sortable` controller and draggable row data hooks. |
+| `reorder` | Hash | `nil` | No | Optional hash override for reorder settings (`url`, `resource`, `strategy`, `scope`, `version`, `row_id`). |
+| `reorder_url` | String | `nil` | No | PATCH endpoint used by sortable controller to persist order. |
+| `reorder_resource` | String | inferred | No | Resource key sent in reorder payload (defaults from sample row class/table name when possible). |
+| `reorder_strategy` | String | `"dense_integer"` | No | Strategy key sent in reorder payload. |
+| `reorder_scope` | Hash | `{}` | No | Scope metadata included in reorder payload. |
+| `reorder_version` | String | `nil` | No | Version token included in reorder payload for conflict handling. |
+| `row_id` | Proc or Symbol | `->(row) { row.id }` | No | Resolver used to populate row `data-id` for reorder tracking. |
+| `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into wrapper element. |
 
 ## Slots
-See column definitions and block/lambda usage below.
+
+`columns` (`renders_many`) via `column`/`with_column`:
+
+| name | type | required | description |
+|------|------|----------|-------------|
+| `title` | String | Yes | Header text for the column. |
+| `html` | Proc | No | Cell renderer proc called with each row. Optional when block is provided. |
+| `sortable` | Boolean | No | Enables sortable header behavior for this column. |
+| `sort_key` | Symbol/String | No | Key written into sort query string for sortable headers. |
+
+When both block and `html` are provided, `html` is used. When neither is provided, cells render empty strings.
 
 ## Variants
-See sortable, draggable, Turbo Frame, and stimulus-enabled variants below.
+
+| variant | description |
+|---------|-------------|
+| Sortable headers | Set column `sortable: true` and provide `base_url` on table component. |
+| Turbo frame wrapper | Provide `turbo_frame:` to wrap output in `<turbo-frame>`. |
+| Stimulus table | Set `stimulus: true` to attach `flat-pack--table`. |
+| Draggable reorder | Set `draggable_rows: true` and optionally `reorder_*` options. |
 
 ## Example
-Start with `Basic Usage` below.
-
-## Accessibility
-See accessibility notes below for semantic table markup and keyboard behavior.
-
-## Dependencies
-- FlatPack install generator setup (`rails generate flat_pack:install`).
-- Optional Turbo Frame integration for sortable updates.
-
-The Table component renders data in a tabular format with configurable columns.
-
-## Basic Usage
-
-```erb
-<%= render FlatPack::Table::Component.new(data: @users) do |table| %>
-  <% table.column(title: "Name", html: ->(row) { row.name }) %>
-  <% table.column(title: "Email", html: ->(row) { row.email }) %>
-<% end %>
-```
-
-## Props
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `data` | Array | `[]` | Data to display in table |
-| `stimulus` | Boolean | `false` | Enable Stimulus controller for interactivity |
-| `turbo_frame` | String | `nil` | Wrap table in a Turbo Frame with this ID |
-| `sort` | String | `nil` | Current sort column |
-| `direction` | String | `nil` | Current sort direction ('asc' or 'desc') |
-| `base_url` | String | `nil` | Base URL for sort links |
-| `draggable_rows` | Boolean | `false` | Enable drag-and-drop row reordering with `flat-pack--table-sortable` |
-| `reorder` | Hash | `nil` | Reorder options hash (`url`, `resource`, `strategy`, `scope`, `version`, `row_id`) |
-| `reorder_url` | String | `nil` | Endpoint that receives reorder PATCH payload |
-| `reorder_resource` | String | inferred from row class | Logical list/resource name sent to backend |
-| `reorder_strategy` | String | `"dense_integer"` | Ordering strategy key sent with payload |
-| `reorder_scope` | Hash | `{}` | Optional scope keys for grouped/scoped ordering |
-| `reorder_version` | String | `nil` | Optimistic concurrency token sent with reorder payload |
-| `row_id` | Proc or Symbol | uses `row.id` | Custom row identifier resolver for reorder item IDs |
-| `**system_arguments` | Hash | `{}` | HTML attributes (`class`, `data`, `aria`, `id`, etc.) |
-
-## Columns
-
-Define columns using `column`:
-
-### Block-based Column
-
-```erb
-<% table.column(title: "Full Name") do |user| %>
-  <%= "#{user.first_name} #{user.last_name}" %>
-<% end %>
-```
-
-Use blocks for custom formatting.
-
-### Lambda-based Column
-
-```erb
-<% table.column(title: "Name", html: ->(user) { user.name }) %>
-```
-
-Use the `html` parameter with a lambda for simple attribute display.
-
-### Column Props
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `title` | String | **required** | Column header text |
-| `html` | Proc | `nil` | Lambda/proc for rendering cell content (optional when using block) |
-| `sortable` | Boolean | `false` | Enable sorting for this column |
-| `sort_key` | Symbol | **(required when sortable)** | Key to use in sort URL |
-
-## Examples
-
-### Complete Table
-
-```erb
-<%= render FlatPack::Table::Component.new(data: @users) do |table| %>
-  <%# Lambda column %>
-  <% table.column(title: "ID", html: ->(row) { row.id.to_s }) %>
-  
-  <%# Block column with formatting %>
-  <% table.column(title: "Name") do |user| %>
-    <strong><%= user.name %></strong>
-  <% end %>
-  
-  <%# Block column with conditional %>
-  <% table.column(title: "Status") do |user| %>
-    <span class="<%= user.active? ? 'text-green-600' : 'text-gray-400' %>">
-      <%= user.active? ? 'Active' : 'Inactive' %>
-    </span>
-  <% end %>
-  
-  <%# Date formatting %>
-  <% table.column(title: "Created") do |user| %>
-    <%= user.created_at.strftime("%b %d, %Y") %>
-  <% end %>
-  
-  <%# Action column with custom controls %>
-  <% table.column(title: "Actions") do |user| %>
-    <div class="flex items-center gap-2">
-      <%= render FlatPack::Button::Component.new(text: "Edit", url: edit_user_path(user), style: :ghost) %>
-      <%= render FlatPack::Button::Component.new(text: "Delete", url: user_path(user), method: :delete, style: :ghost, data: { turbo_confirm: "Delete #{user.name}?" }) %>
-    </div>
-  <% end %>
-<% end %>
-```
-
-### Sortable Tables
-
-The table component supports sorting using Turbo Frames for seamless updates:
 
 ```erb
 <%= render FlatPack::Table::Component.new(
-  data: @sorted_users,
-  turbo_frame: "sortable_table",
+  data: @users,
+  turbo_frame: "users_table",
   sort: params[:sort],
   direction: params[:direction],
   base_url: request.path
 ) do |table| %>
-  <% table.column(title: "Name", html: ->(row) { row.name }, sortable: true, sort_key: :name) %>
-  <% table.column(title: "Email", html: ->(row) { row.email }, sortable: true, sort_key: :email) %>
-  <% table.column(title: "Status", html: ->(row) { row.status }, sortable: true, sort_key: :status) %>
-  <% table.column(title: "Created", html: ->(row) { row.created_at.to_s }, sortable: true, sort_key: :created_at) %>
+  <% table.column(title: "Name", sortable: true, sort_key: :name) { |user| user.name } %>
+  <% table.column(title: "Email", html: ->(user) { user.email }) %>
 <% end %>
-```
-
-**Features:**
-- Click column headers to sort
-- Visual indicators (↑/↓) show current sort state
-- Toggle between ascending/descending on repeated clicks
-- Uses Turbo Frames for no-reload updates
-- Works with URL parameters for shareable links
-
-See [Sortable Tables](sortable-tables.md) for complete implementation details.
-
-### Draggable Rows (Persisted Reorder)
-
-Enable drag-and-drop row reordering and send the ordered IDs to your backend:
-
-```erb
-<%= render FlatPack::Table::Component.new(
-  data: @rows,
-  draggable_rows: true,
-  reorder: {
-    url: demo_tables_reorder_path,
-    strategy: "dense_integer",
-    scope: { list_key: "tables-demo" },
-    version: @table_version
-  }
-) do |table| %>
-  <% table.column(title: "Task", html: ->(row) { row.name }) %>
-  <% table.column(title: "Priority", html: ->(row) { row.priority }) %>
-<% end %>
-```
-
-Behavior notes:
-- Rows render with sortable controller targets and row IDs.
-- Reordering emits a `table:reordered` browser event with ordered IDs and positions.
-- When `reorder_url` is provided, the component sends a PATCH request with the generic `reorder` payload.
-
-See [Sortable Tables](sortable-tables.md#persisting-row-order-drag-and-drop) for the full reorder contract (`resource`, `strategy`, `scope`, `version`, `items`) and response semantics.
-
-### Sortable Column with Custom Formatter
-
-You can combine sorting with custom formatters:
-
-```erb
-<% table.column(
-  title: "Status",
-  sortable: true,
-  sort_key: :status,
-  html: ->(user) {
-    badge_class = case user.status
-    when 'active' then 'bg-green-100 text-green-800'
-    when 'inactive' then 'bg-gray-100 text-gray-800'
-    else 'bg-yellow-100 text-yellow-800'
-    end
-    "<span class=\"px-2 py-1 text-xs rounded #{badge_class}\">#{user.status.capitalize}</span>".html_safe
-  }
-) %>
-```
-
-### Sortable Column with Custom Sort Key
-
-Use a different key for sorting than the displayed value:
-
-```erb
-<% table.column(
-  title: "Name",
-  html: ->(row) { row.full_name },
-  sortable: true,
-  sort_key: :last_name
-) %>
-```
-
-### With Avatar
-
-```erb
-<% table.column(title: "User") do |user| %>
-  <div class="flex items-center gap-2">
-    <%= image_tag user.avatar_url, class: "w-8 h-8 rounded-full" %>
-    <%= user.name %>
-  </div>
-<% end %>
-```
-
-### With Badge
-
-```erb
-<% table.column(title: "Role") do |user| %>
-  <span class="px-2 py-1 text-xs rounded bg-blue-100 text-blue-800">
-    <%= user.role %>
-  </span>
-<% end %>
-```
-
-### Empty State
-
-When `data` is empty, displays "No data available":
-
-```erb
-<%= render FlatPack::Table::Component.new(data: []) do |table| %>
-  <% table.column(title: "Name", html: ->(row) { row.name }) %>
-<% end %>
-```
-
-### With Stimulus Controller
-
-Enable the Stimulus controller for advanced interactions:
-
-```erb
-<%= render FlatPack::Table::Component.new(data: @users, stimulus: true) do |table| %>
-  <% table.column(title: "Name", html: ->(row) { row.name }) %>
-<% end %>
-```
-
-The Stimulus controller (`flat-pack--table`) provides:
-- Row selection
-- Row interactions
-- Hover effects
-
-### Conditional Action Column
-
-```erb
-<% table.column(title: "Actions") do |user| %>
-  <% if policy(user).edit? %>
-    <%= render FlatPack::Button::Component.new(text: "Edit", url: edit_user_path(user), style: :ghost) %>
-  <% end %>
-<% end %>
-```
-
-### Multiple Buttons in One Column
-
-```erb
-<% table.column(title: "Actions") do |user| %>
-  <div class="flex items-center gap-2">
-    <%= render FlatPack::Button::Component.new(text: "View", url: user_path(user), style: :ghost) %>
-    <%= render FlatPack::Button::Component.new(text: "Edit", url: edit_user_path(user), style: :ghost) %>
-    <%= render FlatPack::Button::Component.new(text: "Delete", url: user_path(user), method: :delete, style: :ghost) %>
-  </div>
-<% end %>
-```
-
-### With Pagination
-
-Combine with pagination libraries like Pagy or Kaminari:
-
-```erb
-<%# With Pagy %>
-<%= render FlatPack::Table::Component.new(data: @users) do |table| %>
-  <%# ... columns ... %>
-<% end %>
-
-<%== pagy_nav(@pagy) %>
-```
-
-## System Arguments
-
-### Custom Classes
-
-```erb
-<%= render FlatPack::Table::Component.new(
-  data: @users,
-  class: "mt-8"
-) do |table| %>
-  <%# ... columns ... %>
-<% end %>
-```
-
-Classes are merged using `tailwind_merge`, so Tailwind utilities override correctly.
-
-### Data Attributes
-
-```erb
-<%= render FlatPack::Table::Component.new(
-  data: @users,
-  data: { controller: "sortable" }
-) do |table| %>
-  <%# ... columns ... %>
-<% end %>
-```
-
-## Styling
-
-### CSS Variables
-
-Customize table appearance:
-
-```css
-@theme {
-  --color-border: oklch(0.85 0.02 250);
-  --color-muted: oklch(0.96 0.01 250);
-  --color-muted-foreground: oklch(0.45 0.01 250);
-}
-```
-
-### Custom Styles
-
-Add classes to the container:
-
-```erb
-<%= render FlatPack::Table::Component.new(
-  data: @users,
-  class: "shadow-lg"
-) do |table| %>
-  <%# ... %>
-<% end %>
-```
-
-### Responsive Design
-
-Tables are wrapped in a scrollable container:
-
-```html
-<div class="overflow-x-auto">
-  <table>...</table>
-</div>
-```
-
-For mobile, consider hiding columns:
-
-```erb
-<% table.column(title: "Email", html: ->(row) { row.email }, class: "hidden md:table-cell") %>
 ```
 
 ## Accessibility
+Uses semantic table markup (`table`, `thead`, `tbody`, `th`, `td`). Sort indicators are visual arrows in sortable headers; provide meaningful header labels for screen-reader clarity.
 
-The Table component follows accessibility best practices:
-
-- Uses semantic HTML (`<table>`, `<thead>`, `<tbody>`, `<th>`, `<td>`)
-- Headers use `<th>` with `scope="col"`
-- Proper ARIA attributes for interactive elements
-- Keyboard navigation for interactive controls in cells
-
-### Keyboard Support
-
-- `Tab` - Focus next interactive element
-- `Shift+Tab` - Focus previous interactive element
-- `Enter` / `Space` - Activate focused link or button
-
-## Testing
-
-```ruby
-require "test_helper"
-
-class CustomTableTest < ViewComponent::TestCase
-  def test_renders_table_with_data
-    users = [OpenStruct.new(name: "Alice", email: "alice@example.com")]
-    
-    render_inline FlatPack::Table::Component.new(data: users) do |table|
-      table.column(title: "Name", html: ->(row) { row.name })
-      table.column(title: "Email", html: ->(row) { row.email })
-    end
-    
-    assert_selector "th", text: "Name"
-    assert_selector "td", text: "Alice"
-  end
-end
-```
-
-## API Reference
-
-### Table Component
-
-```ruby
-FlatPack::Table::Component.new(
-  data: Array,                # Optional, default: []
-  stimulus: Boolean,          # Optional, default: false
-  turbo_frame: String,        # Optional, default: nil
-  sort: String,               # Optional, default: nil
-  direction: String,          # Optional, default: nil (either 'asc' or 'desc')
-  base_url: String,           # Optional, default: nil
-  **system_arguments          # Optional
-)
-```
-
-### System Arguments
-
-- `class`: String - Additional CSS classes
-- `data`: Hash - Data attributes
-- `aria`: Hash - ARIA attributes
-- `id`: String - Element ID
-- Any other valid HTML attribute
-
-### Column Component
-
-```ruby
-table.column(
-  title: String,              # Required
-  html: Proc,                 # Optional (use either html or block)
-  sortable: Boolean,          # Optional, default: false
-  sort_key: Symbol,           # Required when sortable is true
-  &block                      # Optional (use either html or block)
-)
-```
-
-## Related Components
-
-- [Button Component](button.md) - For custom controls in table cells
-- [Sortable Tables](sortable-tables.md) - Detailed sorting implementation
-- [Icon Component](../shared/icon.md) - For action icons
-
-## Next Steps
-
-- [Sortable Tables](sortable-tables.md)
-- [Button Component](button.md)
-- [Theming Guide](../theming.md)
-- [Stimulus Controllers](../architecture/assets.md#stimulus-controllers)
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+- Optional sort-link behavior depends on `base_url`, `sort`, and `direction` values.
+- Optional drag-and-drop behavior requires Stimulus controller `flat-pack--table-sortable` (added by `draggable_rows: true`).

@@ -1,134 +1,52 @@
 # Range Input Component
 
 ## Purpose
-Provide a slider control for selecting numeric values in a bounded range.
+Provide a slider control for selecting numeric values within a bounded range.
 
 ## When to use
-Use Range Input for adjustable values like volume, thresholds, limits, and preferences.
+Use `RangeInput` for numeric adjustments such as volume, opacity, thresholds, or scoring where dragging is faster than typing.
 
 ## Class
 - Primary: `FlatPack::RangeInput::Component`
 
 ## Props
-See the `Props` section below for supported arguments and defaults.
+| name | type | default | required | description |
+| --- | --- | --- | --- | --- |
+| `name` | String | none | yes | Form field name for submission. |
+| `id` | String | `name` | no | Input id and label `for` binding. |
+| `value` | Numeric | `min` | no | Initial slider value. |
+| `min` | Numeric | `0` | no | Minimum slider value. Must be less than `max`. |
+| `max` | Numeric | `100` | no | Maximum slider value. Must be greater than `min`. |
+| `step` | Numeric | `1` | no | Slider increment step. |
+| `label` | String | `nil` | no | Optional visible label. |
+| `show_value` | Boolean | `true` | no | Shows current value beside the label. |
+| `disabled` | Boolean | `false` | no | Disables interaction. |
+| `**system_arguments` | Hash | `{}` | no | Standard HTML attributes merged into the container. |
 
 ## Slots
-Not applicable; Range Input is prop-driven.
+None.
 
 ## Variants
-See size and display variants below.
+- Value display: `show_value: true` (default) or `show_value: false`
+- State: enabled or disabled (`disabled: true`)
 
 ## Example
-Start with `Basic Usage` below.
-
-## Accessibility
-See accessibility notes below for labeling and keyboard interaction.
-
-## Dependencies
-- FlatPack install generator setup (`rails generate flat_pack:install`).
-
-The Range Input component provides an accessible slider input with live value display.
-
-## Basic Usage
-
-```erb
-<%= render FlatPack::RangeInput::Component.new(name: "volume") %>
-```
-
-## Props
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `name` | String | **required** | Input name attribute |
-| `id` | String | `name` | Input ID attribute |
-| `value` | Number | `min` | Current value |
-| `min` | Number | `0` | Minimum value |
-| `max` | Number | `100` | Maximum value |
-| `step` | Number | `1` | Step increment |
-| `label` | String | `nil` | Optional label text |
-| `show_value` | Boolean | `true` | Show current value |
-| `disabled` | Boolean | `false` | Disabled state |
-| `**system_arguments` | Hash | `{}` | HTML attributes (`class`, `data`, `aria`, `id`, etc.) |
-
-## Examples
-
-### Basic Range Input
 ```erb
 <%= render FlatPack::RangeInput::Component.new(
   name: "volume",
+  label: "Volume",
+  min: 0,
+  max: 100,
+  step: 1,
   value: 50
 ) %>
 ```
 
-### With Label
-```erb
-<%= render FlatPack::RangeInput::Component.new(
-  name: "volume",
-  label: "Volume Control",
-  value: 75
-) %>
-```
-
-### Custom Range
-```erb
-<%= render FlatPack::RangeInput::Component.new(
-  name: "price",
-  label: "Price Range",
-  min: 0,
-  max: 1000,
-  step: 50,
-  value: 500
-) %>
-```
-
-### Without Value Display
-```erb
-<%= render FlatPack::RangeInput::Component.new(
-  name: "opacity",
-  label: "Opacity",
-  min: 0,
-  max: 1,
-  step: 0.1,
-  value: 1,
-  show_value: false
-) %>
-```
-
-### Disabled State
-```erb
-<%= render FlatPack::RangeInput::Component.new(
-  name: "volume",
-  value: 50,
-  disabled: true
-) %>
-```
-
-## Stimulus Controller
-
-Uses the `flat-pack--range-input` Stimulus controller for live value updates.
-
-### Events
-Dispatches `range-input:change` custom event:
-
-```javascript
-element.addEventListener('range-input:change', (event) => {
-  console.log('New value:', event.detail.value)
-})
-```
-
 ## Accessibility
+- Uses native `<input type="range">` semantics.
+- Sets `aria-label`, `aria-valuenow`, `aria-valuemin`, and `aria-valuemax`.
+- Supports keyboard slider behavior provided by the browser.
 
-- Uses native `<input type="range">` for built-in accessibility
-- Includes proper `aria-label`, `aria-valuenow`, `aria-valuemin`, `aria-valuemax`
-- Keyboard accessible (arrow keys to adjust)
-- Focus visible with ring
-- Value displayed in monospace font for clarity
-
-## Use Cases
-
-- Volume controls
-- Opacity/transparency adjustments
-- Price range filters
-- Zoom level controls
-- Progress indicators (as input)
-- Rating inputs
+## Dependencies
+- Core install: `rails generate flat_pack:install`
+- Stimulus: `flat-pack--range-input` for live value display updates and `range-input:change` custom events

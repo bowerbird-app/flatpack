@@ -1,76 +1,50 @@
 # Grid Component
 
 ## Purpose
-Lay out content in responsive grid columns with configurable gaps, and support interactive card layouts.
+Lay out block content in responsive CSS grid columns with configurable gaps and alignment.
 
 ## When to use
-Use Grid for card collections, dashboards, catalog layouts, and responsive sections that need consistent spacing.
+Use Grid for card collections, dashboards, and responsive sections that need predictable spacing and column behavior.
 
 ## Class
 - Primary: `FlatPack::Grid::Component`
 
 ## Props
-See the `Props` table below.
+
+| name | type | default | required | description |
+|------|------|---------|----------|-------------|
+| `cols` | Symbol or Integer | `:auto` | No | Column preset. Allowed: `:auto`, `1`, `2`, `3`, `4`, `6`, `12`. |
+| `gap` | Symbol | `:md` | No | Gap preset. Allowed: `:sm`, `:md`, `:lg`. |
+| `align` | Symbol | `:stretch` | No | Item alignment preset. Allowed: `:start`, `:center`, `:stretch`. |
+| `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into grid container. |
 
 ## Slots
-Pass content via block; each child becomes a grid item.
+Default block content; each child element participates as a grid item.
 
 ## Variants
-- Auto-responsive layout
-- Fixed column count (`cols`)
-- Gap sizes (`:sm`, `:md`, `:lg`)
-- Movable cards demo (drag reorder)
+
+| variant | description |
+|---------|-------------|
+| `cols: :auto` | Responsive preset `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4`. |
+| `cols: 2/3/4/6/12` | Fixed preset mappings defined in component constants. |
+| `gap: :sm/:md/:lg` | Applies `gap-2`, `gap-4`, or `gap-6`. |
+| `align: :start/:center/:stretch` | Applies `items-start`, `items-center`, or `items-stretch`. |
 
 ## Example
-Start with `Basic Usage`.
-
-## Dependencies
-- FlatPack install generator setup (`rails generate flat_pack:install`)
-- Optional Stimulus controller for drag-and-drop cards (`flat-pack--grid-sortable`)
-
-## Basic Usage
 
 ```erb
-<%= render FlatPack::Grid::Component.new do %>
+<%= render FlatPack::Grid::Component.new(cols: 3, gap: :md, align: :stretch) do %>
   <%= render FlatPack::Card::Component.new(style: :outlined) { "Item 1" } %>
   <%= render FlatPack::Card::Component.new(style: :outlined) { "Item 2" } %>
   <%= render FlatPack::Card::Component.new(style: :outlined) { "Item 3" } %>
 <% end %>
 ```
 
-## Props
+Optional drag-reorder pattern in demos can be composed with Stimulus `flat-pack--grid-sortable` by wrapping grid items with `data-flat-pack--grid-sortable-target="item"` and `data-id`.
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `cols` | Integer | `3` | Grid columns on larger breakpoints |
-| `gap` | Symbol | `:md` | Grid gap size (`:sm`, `:md`, `:lg`) |
-| `class` | String | `nil` | Additional CSS classes |
-| `**system_arguments` | Hash | `{}` | HTML attributes (`id`, `data`, `aria`, etc.) |
+## Accessibility
+Grid is structural layout only. Accessibility is determined by the semantics of content rendered inside each grid item.
 
-## Movable Cards Demo Pattern
-
-Use the grid sortable Stimulus controller with card wrappers as draggable targets:
-
-```erb
-<div
-  data-controller="flat-pack--grid-sortable"
-  data-flat-pack--grid-sortable-reorder-url-value="<%= demo_tables_reorder_path %>"
-  data-flat-pack--grid-sortable-scope-value="<%= { list_key: 'grid-movable-cards-demo' }.to_json %>">
-  <%= render FlatPack::Grid::Component.new(cols: 3) do %>
-    <% @cards.each do |card| %>
-      <div data-flat-pack--grid-sortable-target="item" data-id="<%= card.id %>">
-        <%= render FlatPack::Card::Component.new(style: :outlined) do |component| %>
-          <% component.body { card.name } %>
-        <% end %>
-      </div>
-    <% end %>
-  <% end %>
-</div>
-```
-
-The controller emits `grid:reordered` and sends the same `reorder` payload contract used by table dragging (`resource`, `strategy`, `scope`, `version`, `items`).
-
-## Related Demo Pages
-
-- `/demo/grid`
-- `/demo/grid/movable_cards`
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+- Optional drag-reorder integration uses Stimulus controller `flat-pack--grid-sortable`.
