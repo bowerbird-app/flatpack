@@ -148,8 +148,8 @@ module FlatPack
           component.column(title: "Email", html: ->(user) { user.email }, sortable: true, sort_key: :email)
         end
 
-        # Should show descending arrow for name column
-        assert_selector "th a", text: /Name.*↓/
+        # Should show ascending arrow for name column
+        assert_selector "th a", text: /Name.*↑/
         # Should not show arrow for email column
         assert_no_selector "th a", text: /Email.*[↑↓]/
       end
@@ -164,8 +164,8 @@ module FlatPack
           component.column(title: "Name", html: ->(user) { user.name }, sortable: true, sort_key: :name)
         end
 
-        # Should show ascending arrow for name column
-        assert_selector "th a", text: /Name.*↑/
+        # Should show descending arrow for name column
+        assert_selector "th a", text: /Name.*↓/
       end
 
       def test_non_sortable_columns_remain_static
@@ -250,7 +250,7 @@ module FlatPack
 
         assert_selector "th a[href*='sort=custom_sort']"
         # Should show indicator since sort matches sort_key
-        assert_selector "th a", text: /Name.*↓/
+        assert_selector "th a", text: /Name.*↑/
       end
 
       def test_sortable_column_falls_back_to_attribute_for_sort_key

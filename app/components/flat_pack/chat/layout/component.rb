@@ -38,13 +38,13 @@ module FlatPack
 
         def render_sidebar
           content_tag(:div, class: sidebar_classes) do
-            sidebar
+            sidebar.to_s
           end
         end
 
         def render_panel
           content_tag(:div, class: panel_classes) do
-            panel
+            panel.to_s
           end
         end
 

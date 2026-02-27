@@ -50,6 +50,13 @@ module FlatPack
         render_inline(Component.new(spacing: :dense)) { "content" }
         assert_includes page.native.to_html, "space-y-1"
       end
+
+      def test_enables_selectable_behavior_when_requested
+        render_inline(Component.new(selectable: true)) { "content" }
+
+        assert_selector "ul[data-controller='flat-pack--list-selectable']"
+        assert_selector "ul[data-action='click->flat-pack--list-selectable#activate']"
+      end
     end
   end
 end

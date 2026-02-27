@@ -90,12 +90,12 @@ A complete scale of brand colors from lightest to darkest.
 
 ### Spacing Variables
 ```css
---spacing-xs: 0.25rem
---spacing-sm: 0.5rem
---spacing-md: 1rem
---spacing-lg: 1.5rem
---spacing-xl: 2rem
+--stack-gap-sm: 0.5rem
+--stack-gap-md: 1rem
+--stack-gap-lg: 1.5rem
 ```
+
+Use stack gap tokens on parent layout containers (for example, form stacks) to control spacing between components.
 
 ### Border Radius
 ```css
@@ -131,6 +131,12 @@ A complete scale of brand colors from lightest to darkest.
 - Colors: `--surface-content-color`, `--surface-background-color`, `--surface-muted-content-color`, `--surface-border-color`, `--color-ring`, `--color-warning-border`
 - Radius: `--radius-md`
 - Transition: `--transition-base`
+
+### Checkbox
+- Colors: `--surface-background-color`, `--surface-border-color`, `--color-primary`, `--color-ring`
+- Size: `--checkbox-size`
+- Radius: `--checkbox-radius`
+- Label spacing: `--checkbox-label-gap`
 
 ### Table
 - Colors: `--surface-border-color`, `--surface-muted-background-color`

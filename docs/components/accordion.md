@@ -1,94 +1,54 @@
-# Accordion Component
+# Accordion
 
-The Accordion component groups multiple collapsible sections with coordinated expand/collapse behavior.
+## Purpose
+Render collapsible sections with optional single-open or multi-open behavior.
 
-## Basic Usage
+## When to use
+Use Accordion when related content should be progressively disclosed in stacked sections.
 
-```erb
-<%= render FlatPack::Accordion::Component.new do |accordion| %>
-  <% accordion.item(id: "item1", title: "Section 1") do %>
-    <p>Content for section 1</p>
-  <% end %>
-  <% accordion.item(id: "item2", title: "Section 2") do %>
-    <p>Content for section 2</p>
-  <% end %>
-<% end %>
-```
+## Class
+- Primary: `FlatPack::Accordion::Component`
 
 ## Props
+| name | type | default | required | description |
+|---|---|---|---|---|
+| `allow_multiple` | Boolean | `false` | no | Allows more than one item to stay open. |
+| `single_open` | Boolean | `nil` | no | Alternate switch for one-open mode. When provided, overrides `allow_multiple` (`allow_multiple = !single_open`). |
+| `**system_arguments` | Hash | `{}` | no | HTML attributes for accordion container. |
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `allow_multiple` | Boolean | `false` | Allow multiple items open simultaneously |
-| `**system_arguments` | Hash | `{}` | HTML attributes (`class`, `data`, `aria`, `id`, etc.) |
+`item(...)` builder args:
 
-## Item Props
+| name | type | default | required | description |
+|---|---|---|---|---|
+| `id` | String | `nil` | yes | Unique id used to derive content panel id (`<id>-content`). |
+| `title` | String | `nil` | yes | Trigger label text. |
+| `open` | Boolean | `false` | no | Initial expanded state. |
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `id` | String | **required** | Unique identifier for the item |
-| `title` | String | **required** | Title shown on the trigger button |
-| `open` | Boolean | `false` | Initial expanded state |
+## Slots
+None (items are added through the `item` builder method).
 
-## Examples
+## Variants
+- Single-open mode (default).
+- Multi-open mode (`allow_multiple: true`).
 
-### Basic Accordion
-```erb
-<%= render FlatPack::Accordion::Component.new do |accordion| %>
-  <% accordion.item(id: "faq1", title: "What is FlatPack?") do %>
-    <p>FlatPack is a ViewComponent library for Rails.</p>
-  <% end %>
-  <% accordion.item(id: "faq2", title: "How do I install it?") do %>
-    <p>Add it to your Gemfile and run bundle install.</p>
-  <% end %>
-<% end %>
-```
-
-### Allow Multiple Open
+## Example
 ```erb
 <%= render FlatPack::Accordion::Component.new(allow_multiple: true) do |accordion| %>
-  <% accordion.item(id: "feature1", title: "Feature 1") do %>
-    <p>Details about feature 1</p>
+  <% accordion.item(id: "faq-1", title: "What is FlatPack?", open: true) do %>
+    <p>FlatPack is a ViewComponent library for Rails.</p>
   <% end %>
-  <% accordion.item(id: "feature2", title: "Feature 2") do %>
-    <p>Details about feature 2</p>
-  <% end %>
-<% end %>
-```
 
-### With Default Open Item
-```erb
-<%= render FlatPack::Accordion::Component.new do |accordion| %>
-  <% accordion.item(id: "overview", title: "Overview", open: true) do %>
-    <p>This section is open by default</p>
-  <% end %>
-  <% accordion.item(id: "details", title: "Details") do %>
-    <p>This section is closed by default</p>
+  <% accordion.item(id: "faq-2", title: "How do I install it?") do %>
+    <p>Add the gem and run the install generator.</p>
   <% end %>
 <% end %>
 ```
-
-## Stimulus Controller
-
-Uses the `flat-pack--accordion` Stimulus controller for coordinated animations.
-
-### Behavior
-- By default, opening one item closes others
-- Set `allow_multiple: true` to allow multiple open items
-- Smooth CSS transitions on expand/collapse
-- Icon rotation animation
 
 ## Accessibility
+- Trigger buttons expose `aria-expanded` and `aria-controls`.
+- Content panels are linked by id and hidden when collapsed.
+- Focus-visible ring styles are included on triggers.
 
-- Uses semantic `button` elements for triggers
-- Includes `aria-expanded` attributes
-- Proper `aria-controls` linking
-- Keyboard accessible navigation
-- Focus management with visible focus rings
-
-## Use Cases
-
-- FAQ sections
-- Settings panels with multiple sections
-- Product feature details
-- Documentation navigation
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+- Stimulus controller: `flat-pack--accordion`.

@@ -1,115 +1,291 @@
 <div class="container mx-auto max-w-5xl p-4">
+  <% if @chat_group %>
+    <%= turbo_stream_from @chat_group.demo_stream_name %>
+  <% end %>
+
   <%= render FlatPack::PageTitle::Component.new(
     title: "Chat Demo",
     subtitle: "A complete chat panel with message bubbles and composer input."
   ) %>
 
-  <div class="mt-6 h-[620px] overflow-hidden rounded-lg border border-[var(--surface-border-color)] bg-[var(--surface-background-color)]">
-    <%= render(FlatPack::Chat::Panel::Component.new) do |panel| %>
-      <% panel.with_header do %>
-        <div class="flex items-center justify-between p-4">
-          <div>
-            <h2 class="text-base font-semibold text-[var(--surface-content-color)]">Design Team</h2>
-            <p class="text-sm text-[var(--surface-muted-content-color)]">4 people online</p>
-          </div>
-          <%= render(FlatPack::AvatarGroup::Component.new(
-            items: [
-              {name: "Alex Rivera", initials: "AR"},
-              {name: "Mina Cho", initials: "MC"},
-              {name: "Sam Lee", initials: "SL"},
-              {name: "Jo Kim", initials: "JK"}
-            ],
-            size: :sm,
-            max: 4
-          )) %>
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Demo", anchor_link: true, subtitle: "End-to-end chat panel composition.") %>
+
+    <%= render FlatPack::Chat::Layout::Component.new(
+      variant: :split,
+      class: "mb-4 mt-6 overflow-hidden rounded-lg border",
+      style: "height: 620px; border-color: var(--surface-border-color); background-color: var(--surface-background-color); grid-template-columns: minmax(0, 320px) minmax(0, 1fr);"
+    ) do |layout| %>
+      <% layout.with_sidebar do %>
+        <div id="chat-groups" class="p-3">
+          <p class="px-3 pb-2 text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">
+            Chat Groups Inbox
+          </p>
+
+          <%= render FlatPack::List::Component.new(spacing: :dense, divider: false, selectable: true) do %>
+            <% @chat_group_summaries.each do |summary| %>
+              <%= render FlatPack::Chat::InboxRow::Component.new(
+                chat_group_name: summary[:chat_group].name,
+                avatar_items: summary[:avatar_items],
+                latest_sender: summary[:latest_sender],
+                latest_preview: summary[:latest_preview],
+                latest_at: summary[:latest_at],
+                unread_count: summary[:unread_count],
+                href: demo_chat_demo_path(chat_group_id: summary[:chat_group].id),
+                active: summary[:active],
+                turbo_frame: "chat-demo-panel"
+              ) %>
+            <% end %>
+          <% end %>
         </div>
       <% end %>
 
-      <% panel.with_messages do %>
-        <%= render FlatPack::Chat::MessageList::Component.new do %>
-          <%= render FlatPack::Chat::DateDivider::Component.new(label: "Today") %>
-
-          <%= render FlatPack::Chat::MessageGroup::Component.new(
-            direction: :incoming,
-            show_avatar: true,
-            show_name: true,
-            sender_name: "Mina"
-          ) do |group| %>
-            <% group.with_avatar do %>
-              <%= render FlatPack::Avatar::Component.new(name: "Mina Cho", initials: "MC", size: :sm) %>
-            <% end %>
-            <% group.with_message do %>
-              <%= render FlatPack::Chat::Message::Component.new(direction: :incoming, timestamp: "10:12 AM") do |message| %>
-                I pushed the homepage copy updates. Can someone review?
-                <% message.with_meta do %>
-                  <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "10:12 AM", state: :read) %>
-                <% end %>
-              <% end %>
-            <% end %>
-          <% end %>
-
-          <%= render FlatPack::Chat::MessageGroup::Component.new(direction: :outgoing, show_avatar: false) do |group| %>
-            <% group.with_message do %>
-              <%= render FlatPack::Chat::Message::Component.new(direction: :outgoing, timestamp: "10:14 AM") do |message| %>
-                Looks good. I will handle the final QA pass.
-                <% message.with_meta do %>
-                  <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "10:14 AM", state: :read) %>
-                <% end %>
-              <% end %>
-            <% end %>
-          <% end %>
-
-          <%= render FlatPack::Chat::MessageGroup::Component.new(
-            direction: :incoming,
-            show_avatar: true,
-            show_name: true,
-            sender_name: "Alex"
-          ) do |group| %>
-            <% group.with_avatar do %>
-              <%= render FlatPack::Avatar::Component.new(name: "Alex Rivera", initials: "AR", size: :sm) %>
-            <% end %>
-            <% group.with_message do %>
-              <%= render FlatPack::Chat::Message::Component.new(direction: :incoming, timestamp: "10:17 AM") do |message| %>
-                Added the sprint board screenshot for context.
-                <% message.with_attachment do %>
-                  <%= render FlatPack::Chat::Attachment::Component.new(
-                    type: :file,
-                    name: "sprint-board.png",
-                    meta: "1.1 MB"
-                  ) %>
-                <% end %>
-                <% message.with_meta do %>
-                  <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "10:17 AM", state: :read) %>
-                <% end %>
-              <% end %>
-            <% end %>
-          <% end %>
-
-          <%= render FlatPack::Chat::TypingIndicator::Component.new(label: "Sam is typing") do |indicator| %>
-            <% indicator.with_avatar do %>
-              <%= render FlatPack::Avatar::Component.new(name: "Sam Lee", initials: "SL", size: :sm) %>
+      <% layout.with_panel do %>
+        <%= turbo_frame_tag "chat-demo-panel", class: "block h-full" do %>
+          <%= render FlatPack::Chat::Panel::Component.new do |panel| %>
+        <% panel.with_header do %>
+          <%= render FlatPack::Chat::Header::Component.new(
+            title: (@chat_group&.name || "Chat Group"),
+            subtitle: "#{@chat_group_summaries.size} chat groups in your inbox",
+            content_url: "#chat-group-settings",
+            group_avatars: [
+              {name: "Alex Rivera", initials: "AR"},
+              {name: "Mina Cho", initials: "MC"},
+              {name: "Sam Lee", initials: "SL"},
+              {name: "Jo Kim", initials: "JK"},
+              {name: "Rina Park", initials: "RP"},
+              {name: "Dan Wu", initials: "DW"}
+            ],
+            group_max: 4,
+            group_size: :sm
+          ) do |header| %>
+            <% header.right do %>
+              <%= render FlatPack::Button::Component.new(
+                icon: "search",
+                icon_only: true,
+                style: :ghost,
+                size: :sm,
+                url: "#chat-search"
+              ) %>
+              <%= render FlatPack::Button::Component.new(
+                icon: "dots",
+                icon_only: true,
+                style: :ghost,
+                size: :sm,
+                url: "#chat-menu"
+              ) %>
             <% end %>
           <% end %>
         <% end %>
-      <% end %>
 
-      <% panel.with_composer do %>
-        <%= form_with url: "#", method: :post, local: true do %>
-          <%= render FlatPack::Chat::Composer::Component.new do |composer| %>
-            <% composer.with_textarea do %>
-              <%= render FlatPack::Chat::Textarea::Component.new(
-                name: "chat[message]",
-                placeholder: "Write a message...",
-                autogrow: true,
-                submit_on_enter: true
-              ) %>
+        <% panel.with_messages do %>
+          <%= render FlatPack::Chat::MessageList::Component.new(
+            history_url: @chat_history_url,
+            history_has_more: @chat_history_has_more,
+            history_limit: @chat_history_limit
+          ) do %>
+            <%= render FlatPack::Chat::DateDivider::Component.new(label: "Today") %>
+
+            <div id="<%= @chat_group ? dom_id(@chat_group, :messages) : "chat-demo-messages" %>" class="space-y-4" data-pagination-content>
+              <% @chat_items.each do |item| %>
+                <%= render FlatPack::Chat::MessageRecord::Component.new(record: item, reveal_actions: true) %>
+              <% end %>
+            </div>
+
+            <div id="<%= @chat_group ? dom_id(@chat_group, :typing_indicator) : "chat-demo-typing-indicator" %>"></div>
+          <% end %>
+        <% end %>
+
+        <% panel.with_composer do %>
+          <%= form_with url: (@chat_group ? demo_chat_group_messages_path(@chat_group) : "#"), method: :post, local: true,
+              data: {
+                controller: "flat-pack--chat-sender",
+                action: "submit->flat-pack--chat-sender#submit flat-pack:picker:confirm@document->flat-pack--chat-sender#handlePickerConfirm",
+                thread_id: @chat_group&.id,
+                flat_pack__chat_sender_thread_selector_value: (@chat_group ? "##{dom_id(@chat_group, :messages)}" : "[data-flat-pack--chat-scroll-target='messages']"),
+                flat_pack__chat_sender_endpoint_value: (@chat_group ? demo_chat_group_messages_path(@chat_group) : nil),
+                flat_pack__chat_sender_optimistic_endpoint_value: (@chat_group ? preview_demo_chat_group_messages_path(@chat_group) : nil),
+                flat_pack__chat_sender_composition_mode_value: (params[:composition_mode].presence_in(%w[combined separate]) || "separate"),
+                flat_pack__chat_sender_picker_ids_value: ["chat-picker-images", "chat-picker-files"]
+              } do %>
+            <input
+              type="file"
+              multiple
+              class="sr-only"
+              data-flat-pack--chat-sender-target="fileInput"
+              data-action="change->flat-pack--chat-sender#handleFileSelection"
+            >
+
+            <%= render FlatPack::Chat::Composer::Component.new do |composer| %>
+              <% composer.left do %>
+                <%= render FlatPack::Button::Dropdown::Component.new(
+                  text: "",
+                  icon: "plus",
+                  style: :ghost,
+                  size: :md,
+                  show_chevron: false,
+                  position: :top_left,
+                  aria: {label: "Add files or images"}
+                ) do |dropdown| %>
+                  <% dropdown.with_menu_item(
+                    text: "Images",
+                    icon: "image",
+                    data: {
+                      action: "click->flat-pack--button-dropdown#close click->flat-pack--modal#open",
+                      "modal-id": "chat-picker-images"
+                    }
+                  ) %>
+                  <% dropdown.with_menu_item(
+                    text: "Files",
+                    icon: "file",
+                    data: {
+                      action: "click->flat-pack--button-dropdown#close click->flat-pack--modal#open",
+                      "modal-id": "chat-picker-files"
+                    }
+                  ) %>
+                <% end %>
+              <% end %>
+
+              <% composer.center do %>
+                <%= render FlatPack::Chat::Textarea::Component.new(
+                  name: "chat[message]",
+                  placeholder: "Write a message...",
+                  autogrow: true,
+                  submit_on_enter: true
+                ) %>
+              <% end %>
+              <% composer.right do %>
+                <%= render FlatPack::Chat::SendButton::Component.new %>
+              <% end %>
             <% end %>
-            <% composer.with_actions do %>
-              <%= render FlatPack::Chat::SendButton::Component.new %>
-            <% end %>
+
+            <%= render FlatPack::Picker::Component.new(
+              id: "chat-picker-images",
+              title: "Add Images",
+              subtitle: "Select one or more images to add to this chat group.",
+              items: @chat_attachment_picker_items,
+              accepted_kinds: [:image],
+              selection_mode: :multiple,
+              searchable: true,
+              search_mode: :local,
+              results_layout: :grid,
+              confirm_text: "Add Selected Images"
+            ) %>
+
+            <%= render FlatPack::Picker::Component.new(
+              id: "chat-picker-files",
+              title: "Add Files",
+              subtitle: "Select one or more files to add to this chat group.",
+              items: @chat_attachment_picker_items,
+              accepted_kinds: [:file],
+              searchable: true,
+              search_mode: :local,
+              size: :md,
+              confirm_text: "Add Selected Files"
+            ) %>
+          <% end %>
+        <% end %>
           <% end %>
         <% end %>
       <% end %>
     <% end %>
-  </div>
+
+    <%= render FlatPack::Alert::Component.new(
+      title: "Demo requirement",
+      description: "Sidekiq must be running for this chat demo to process and display new messages.",
+      style: :info,
+      dismissible: false
+    ) %>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Chat::Layout::Component.new(
+          class: &quot;rounded-lg border&quot;,
+          style: &quot;height: 620px; border-color: var(--surface-border-color); background-color: var(--surface-background-color);&quot;
+        ) do |layout| %&gt;
+          &lt;% layout.with_panel do %&gt;
+            &lt;%= render FlatPack::Chat::Panel::Component.new do |panel| %&gt;
+            &lt;% panel.with_header do %&gt;
+              &lt;%= render FlatPack::Chat::Header::Component.new(
+              title: "Design Team",
+              subtitle: "8 members • 4 online",
+              back_href: "#chat-groups",
+                back_label: nil,
+              content_url: "#chat-group-settings",
+              group_avatars: [
+                {name: "Alex Rivera", initials: "AR"},
+                {name: "Mina Cho", initials: "MC"},
+                {name: "Sam Lee", initials: "SL"},
+                {name: "Jo Kim", initials: "JK"},
+                {name: "Rina Park", initials: "RP"},
+                {name: "Dan Wu", initials: "DW"}
+              ],
+              group_max: 4
+              ) do |header| %&gt;
+                &lt;% header.right do %&gt;
+                  &lt;%= render FlatPack::Button::Component.new(icon: "search", icon_only: true, style: :ghost, size: :sm) %&gt;
+                &lt;% end %&gt;
+              &lt;% end %&gt;
+            &lt;% end %&gt;
+
+            &lt;% panel.with_messages do %&gt;
+              &lt;%= render FlatPack::Chat::MessageList::Component.new do %&gt;
+                &lt;%= render FlatPack::Chat::DateDivider::Component.new(label: "Today") %&gt;
+                &lt;%= render FlatPack::Chat::MessageGroup::Component.new(direction: :incoming, show_avatar: true, show_name: true, sender_name: "Mina") do |group| %&gt;
+                  &lt;% group.with_message do %&gt;
+                    &lt;%= render FlatPack::Chat::ReceivedMessage::Component.new do |message| %&gt;
+                      &lt;% message.with_meta do %&gt;
+                        &lt;%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "10:12 AM", state: :sent) %&gt;
+                      &lt;% end %&gt;
+                      I pushed the homepage copy updates.
+                    &lt;% end %&gt;
+                  &lt;% end %&gt;
+                &lt;% end %&gt;
+              &lt;% end %&gt;
+            &lt;% end %&gt;
+
+            &lt;% panel.with_composer do %&gt;
+              &lt;%= form_with url: &quot;#&quot;, method: :post, local: true,
+                  data: {
+                    controller: &quot;flat-pack--chat-sender&quot;,
+                    action: &quot;submit-&gt;flat-pack--chat-sender#submit&quot;,
+                    flat_pack__chat_sender_thread_selector_value: &quot;[data-flat-pack--chat-scroll-target='messages']&quot;
+                  } do %&gt;
+              &lt;%= render FlatPack::Chat::Composer::Component.new do |composer| %&gt;
+                &lt;% composer.left do %&gt;
+                  &lt;%= render FlatPack::Button::Dropdown::Component.new(
+                    text: &quot;&quot;,
+                    icon: &quot;plus&quot;,
+                    style: :ghost,
+                    size: :md,
+                    show_chevron: false,
+                    position: :top_left,
+                    aria: {label: &quot;Add files or images&quot;}
+                  ) do |dropdown| %&gt;
+                    &lt;% dropdown.with_menu_item(
+                      text: &quot;Upload files or images&quot;,
+                      icon: &quot;file&quot;,
+                      data: {action: &quot;click-&gt;flat-pack--chat-sender#openFilePicker&quot;}
+                    ) %&gt;
+                  &lt;% end %&gt;
+                &lt;% end %&gt;
+
+                &lt;% composer.center do %&gt;
+                  &lt;%= render FlatPack::Chat::Textarea::Component.new(name: "chat[message]", autogrow: true, submit_on_enter: true) %&gt;
+                &lt;% end %&gt;
+                &lt;% composer.right do %&gt;
+                  &lt;%= render FlatPack::Chat::SendButton::Component.new %&gt;
+                &lt;% end %&gt;
+              &lt;% end %&gt;
+              &lt;% end %&gt;
+            &lt;% end %&gt;
+            &lt;% end %&gt;
+          &lt;% end %&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
+  </section>
 </div>

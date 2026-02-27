@@ -40,6 +40,8 @@ Rails.application.routes.draw do
   get "demo/navbar", to: "pages#navbar"
   get "demo/search", to: "pages#search"
   get "demo/search_results", to: "pages#search_results"
+  get "demo/picker", to: "pages#picker"
+  get "demo/picker_results", to: "pages#picker_results"
   get "demo/sidebar_layout", to: "pages#sidebar_layout"
   get "demo/sidebar/basic", to: "pages#sidebar_basic"
   get "demo/sidebar/header", to: "pages#sidebar_header"
@@ -59,8 +61,11 @@ Rails.application.routes.draw do
   get "demo/tabs/stacked_pills", to: "pages#tabs_stacked_pills"
   get "demo/toasts", to: "pages#toasts"
   get "demo/page_header", to: "pages#page_header"
+  get "demo/text/quote", to: "pages#text_quote"
   get "demo/empty_state", to: "pages#empty_state"
   get "demo/grid", to: "pages#grid"
+  get "demo/grid/two_columns", to: "pages#grid_two_columns"
+  get "demo/grid/movable_cards", to: "pages#grid_movable_cards"
   get "demo/pagination", to: "pages#pagination"
   get "demo/charts", to: "pages#charts"
   get "demo/code_blocks", to: "pages#code_blocks"
@@ -72,7 +77,14 @@ Rails.application.routes.draw do
   get "demo/chat/panel", to: "pages#chat_panel"
   get "demo/chat/message_list", to: "pages#chat_message_list"
   get "demo/chat/message_group", to: "pages#chat_message_group"
-  get "demo/chat/message", to: "pages#chat_message"
+  get "demo/chat/sent_message", to: "pages#chat_sent_message"
+  get "demo/chat/received_message", to: "pages#chat_received_message"
+  get "demo/chat/file_message", to: "pages#chat_file_message"
+  get "demo/chat/image_message", to: "pages#chat_image_message"
+  get "demo/chat/image_deck", to: "pages#chat_image_deck"
+  get "demo/chat/system_message", to: "pages#chat_system_message"
+  get "demo/chat/message_record", to: "pages#chat_message_record"
+  get "demo/chat/inbox_row", to: "pages#chat_inbox_row"
   get "demo/chat/message_meta", to: "pages#chat_message_meta"
   get "demo/chat/attachment", to: "pages#chat_attachment"
   get "demo/chat/date_divider", to: "pages#chat_date_divider"
@@ -80,6 +92,42 @@ Rails.application.routes.draw do
   get "demo/chat/composer", to: "pages#chat_composer"
   get "demo/chat/textarea", to: "pages#chat_textarea"
   get "demo/chat/send_button", to: "pages#chat_send_button"
+
+  get "demo/carousel", to: "pages#carousel"
+  get "demo/carousel/images", to: "pages#carousel_images"
+  get "demo/carousel/lightbox", to: "pages#carousel_lightbox"
+  get "demo/carousel/thumbnails", to: "pages#carousel_thumbnails"
+  get "demo/carousel/html_cards", to: "pages#carousel_html_cards"
+  get "demo/carousel/videos", to: "pages#carousel_videos"
+  get "demo/carousel/mixed_content", to: "pages#carousel_mixed_content"
+  get "demo/carousel/navigation", to: "pages#carousel_navigation"
+  get "demo/carousel/autoplay_loop", to: "pages#carousel_autoplay_loop"
+  get "demo/carousel/mobile", to: "pages#carousel_mobile"
+  get "demo/carousel/captions", to: "pages#carousel_captions"
+  get "demo/carousel/fullscreen", to: "pages#carousel_fullscreen"
+  get "demo/carousel/rtl", to: "pages#carousel_rtl"
+  get "demo/carousel/video_aware", to: "pages#carousel_video_aware"
+  get "demo/carousel/loading_states", to: "pages#carousel_loading_states"
+  get "demo/carousel/performance", to: "pages#carousel_performance"
+  get "demo/carousel/events_api", to: "pages#carousel_events_api"
+  get "demo/carousel/security", to: "pages#carousel_security"
+  get "demo/carousel/theming", to: "pages#carousel_theming"
+  get "demo/carousel/deep_linking", to: "pages#carousel_deep_linking"
+  get "demo/carousel/reduced_motion", to: "pages#carousel_reduced_motion"
+
+  namespace :demo do
+    resources :comments, only: [:create] do
+      post :replies, on: :member
+    end
+
+    resources :chat_groups, only: [] do
+      resources :messages, only: [:index, :create], controller: "chat_messages" do
+        collection do
+          post :preview
+        end
+      end
+    end
+  end
 
   # New components
   get "demo/progress", to: "pages#progress"

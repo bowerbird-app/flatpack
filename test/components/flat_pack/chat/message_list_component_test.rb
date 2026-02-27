@@ -79,6 +79,29 @@ module FlatPack
 
           assert_selector "div.overflow-hidden"
         end
+
+        def test_renders_history_loader_when_enabled
+          render_inline(Component.new(
+            history_url: "/messages/history",
+            history_has_more: true,
+            history_limit: 20
+          )) do
+            "Content"
+          end
+
+          assert_selector "[data-controller='flat-pack--pagination-infinite']"
+          assert_selector "[data-flat-pack--pagination-infinite-insert-mode-value='prepend']"
+          assert_selector "[data-flat-pack--pagination-infinite-cursor-param-value='before_id']"
+          assert_selector "[data-flat-pack--pagination-infinite-batch-size-value='20']"
+        end
+
+        def test_does_not_render_history_loader_without_url
+          render_inline(Component.new(history_has_more: true)) do
+            "Content"
+          end
+
+          refute_selector "[data-controller='flat-pack--pagination-infinite']"
+        end
       end
     end
   end

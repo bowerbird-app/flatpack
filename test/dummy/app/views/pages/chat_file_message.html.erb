@@ -1,0 +1,34 @@
+<div class="container mx-auto max-w-4xl p-4">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Chat::FileMessage",
+    subtitle: "Direction-aware file message with built-in attachment + meta rendering."
+  ) %>
+
+  <%= render "pages/component_method_variables_table", component: :chat_file_message, anchor: "component-method-variables" %>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Demo", anchor_link: true, subtitle: "Incoming and outgoing file messages.") %>
+
+    <div class="mb-4 mt-6 space-y-4 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
+      <%= render FlatPack::Chat::FileMessage::Component.new(
+        direction: :incoming,
+        file_name: "launch-plan.pdf",
+        file_meta: "840 KB",
+        file_href: "#",
+        timestamp: "10:20 AM",
+        body: "Here is the updated PDF."
+      ) %>
+
+      <%= render FlatPack::Chat::FileMessage::Component.new(
+        direction: :outgoing,
+        file_name: "qa-checklist.csv",
+        file_meta: "96 KB",
+        file_href: "#",
+        timestamp: "10:21 AM",
+        state: :read,
+        body: "Sending this to the release team now.",
+        reveal_actions: true
+      ) %>
+    </div>
+  </section>
+</div>

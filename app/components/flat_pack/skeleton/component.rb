@@ -45,7 +45,7 @@ module FlatPack
       end
 
       def skeleton_classes
-        base = "bg-[var(--surface-muted-background-color)]"
+        base = "bg-[var(--skeleton-background-color)]"
         variant_classes = VARIANTS.fetch(@variant)
 
         classes(base, shimmer_classes, variant_classes, custom_size_classes)
@@ -54,7 +54,7 @@ module FlatPack
       def shimmer_classes
         return unless @shimmer
 
-        "relative overflow-hidden before:pointer-events-none before:absolute before:inset-0 before:content-[''] before:bg-[linear-gradient(110deg,transparent_20%,rgb(255_255_255_/_0.45)_45%,transparent_70%)] before:translate-x-[-100%] before:animate-[fp-skeleton-shimmer_1.35s_linear_infinite] motion-reduce:before:animate-none"
+        "relative overflow-hidden before:pointer-events-none before:absolute before:inset-0 before:content-[''] before:bg-[linear-gradient(110deg,transparent_20%,var(--skeleton-shimmer-highlight-color)_45%,transparent_70%)] before:translate-x-[-100%] before:animate-[fp-skeleton-shimmer_var(--skeleton-shimmer-duration)_linear_infinite] motion-reduce:before:animate-none"
       end
 
       def custom_size_classes

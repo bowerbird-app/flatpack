@@ -3,11 +3,19 @@
 module FlatPack
   module Search
     class Component < FlatPack::BaseComponent
+      MAX_WIDTH_CLASSES = {
+        none: "max-w-none",
+        md: "max-w-md",
+        lg: "max-w-lg",
+        xl: "max-w-xl"
+      }.freeze
+
       def initialize(
         placeholder: "Search...",
         name: "q",
         value: nil,
         search_url: nil,
+        max_width: :md,
         min_characters: 2,
         debounce: 250,
         no_results_text: "No results found",
@@ -18,11 +26,13 @@ module FlatPack
         @name = name
         @value = value
         @search_url = search_url.present? ? FlatPack::AttributeSanitizer.sanitize_url(search_url) : nil
+        @max_width = max_width.to_sym
         @min_characters = min_characters
         @debounce = debounce
         @no_results_text = no_results_text
 
         validate_search_url!(search_url) if search_url.present?
+        validate_max_width!
       end
 
       def call
@@ -74,8 +84,12 @@ module FlatPack
           "flex",
           "items-center",
           "w-full",
-          "max-w-md"
+          max_width_class
         )
+      end
+
+      def max_width_class
+        MAX_WIDTH_CLASSES.fetch(@max_width)
       end
 
       def icon_wrapper_classes
@@ -83,7 +97,7 @@ module FlatPack
           "absolute",
           "left-3",
           "pointer-events-none",
-          "text-[var(--surface-muted-content-color)]"
+          "text-[var(--search-icon-color)]"
         )
       end
 
@@ -100,7 +114,7 @@ module FlatPack
           attrs[:autocomplete] = "off"
           attrs[:data] = {
             flat_pack__search_target: "input",
-            action: "input->flat-pack--search#search focus->flat-pack--search#open keydown->flat-pack--search#handleKeydown"
+            action: "input->flat-pack--search#search keydown->flat-pack--search#handleKeydown"
           }
           attrs[:aria] = {
             haspopup: "listbox",
@@ -118,15 +132,17 @@ module FlatPack
           "pr-4",
           "py-2",
           "text-sm",
-          "bg-[var(--surface-muted-background-color)]",
+          "bg-[var(--search-input-background-color)]",
+          "text-[var(--search-input-text-color)]",
           "border",
-          "border-transparent",
+          "border-[var(--search-input-border-color)]",
           "rounded-lg",
           "focus:outline-none",
           "focus:ring-2",
-          "focus:ring-primary",
+          "focus:ring-inset",
+          "focus:ring-[var(--search-input-focus-ring-color)]",
           "focus:border-transparent",
-          "placeholder:text-[var(--surface-muted-content-color)]"
+          "placeholder:text-[var(--search-input-placeholder-color)]"
         )
       end
 
@@ -134,8 +150,8 @@ module FlatPack
         content_tag(:div, **dropdown_attributes) do
           safe_join([
             content_tag(:ul, "", class: "max-h-72 overflow-y-auto", data: {flat_pack__search_target: "results"}, role: "listbox"),
-            content_tag(:div, @no_results_text, class: "hidden px-3 py-3 text-sm text-[var(--surface-muted-content-color)]", data: {flat_pack__search_target: "noResults"}),
-            content_tag(:div, "Searching...", class: "hidden px-3 py-3 text-sm text-[var(--surface-muted-content-color)]", data: {flat_pack__search_target: "loading"})
+            content_tag(:div, @no_results_text, class: "hidden px-3 py-3 text-sm text-[var(--search-dropdown-muted-text-color)]", data: {flat_pack__search_target: "noResults"}),
+            content_tag(:div, "Searching...", class: "hidden px-3 py-3 text-sm text-[var(--search-dropdown-muted-text-color)]", data: {flat_pack__search_target: "loading"})
           ])
         end
       end
@@ -152,8 +168,8 @@ module FlatPack
             "z-20",
             "rounded-lg",
             "border",
-            "border-[var(--surface-border-color)]",
-            "bg-[var(--surface-background-color)]",
+            "border-[var(--search-dropdown-border-color)]",
+            "bg-[var(--search-dropdown-background-color)]",
             "shadow-sm"
           ),
           data: {
@@ -170,6 +186,12 @@ module FlatPack
         return if @search_url.present?
 
         raise ArgumentError, "Unsafe search_url detected. Only http, https, mailto, tel protocols and relative URLs are allowed."
+      end
+
+      def validate_max_width!
+        return if MAX_WIDTH_CLASSES.key?(@max_width)
+
+        raise ArgumentError, "Invalid max_width: #{@max_width}. Must be one of: #{MAX_WIDTH_CLASSES.keys.join(", ")}."
       end
     end
   end

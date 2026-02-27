@@ -4,9 +4,9 @@ module FlatPack
   module AvatarGroup
     class Component < FlatPack::BaseComponent
       OVERLAPS = {
-        sm: "-0.25rem",
-        md: "-0.5rem",
-        lg: "-0.75rem"
+        sm: "var(--avatar-group-overlap-sm)",
+        md: "var(--avatar-group-overlap-md)",
+        lg: "var(--avatar-group-overlap-lg)"
       }.freeze
 
       OVERLAP_CLASSES = {
@@ -76,38 +76,80 @@ module FlatPack
         styles << "margin-left: #{overlap_margin}" if index.positive?
 
         content_tag(:div,
-          class: "relative hover:z-10 focus-within:z-10 transition-transform hover:scale-110",
+          class: "relative hover:z-10 focus-within:z-10",
           style: styles.join("; ")) do
-          FlatPack::Avatar::Component.new(
-            src: avatar_attrs[:src],
-            alt: avatar_attrs[:alt],
-            name: avatar_attrs[:name],
-            initials: avatar_attrs[:initials],
-            size: @size,
-            shape: :circle,
-            status: avatar_attrs[:status],
-            href: avatar_attrs[:href],
-            class: "ring-2 ring-white dark:ring-zinc-900"
-          ).render_in(view_context)
+          render_avatar_content(avatar_attrs)
+        end
+      end
+
+      def render_avatar_content(avatar_attrs)
+        avatar = FlatPack::Avatar::Component.new(
+          src: avatar_attrs[:src],
+          alt: avatar_attrs[:alt],
+          name: avatar_attrs[:name],
+          initials: avatar_attrs[:initials],
+          size: @size,
+          shape: :circle,
+          status: avatar_attrs[:status],
+          href: avatar_attrs[:href],
+          class: "ring-2 ring-[var(--avatar-group-ring-color)] transition-transform hover:scale-110"
+        )
+
+        tooltip_text = avatar_attrs[:name].presence || avatar_attrs[:alt].presence
+        return avatar.render_in(view_context) if tooltip_text.blank?
+
+        FlatPack::Tooltip::Component.new(text: tooltip_text, placement: :bottom).render_in(view_context) do
+          avatar.render_in(view_context)
         end
       end
 
       def render_overflow
         content_tag(:div,
-          class: "relative hover:z-10 transition-transform hover:scale-110",
+          class: "relative hover:z-10",
           style: overflow_styles) do
-          FlatPack::Avatar::Component.new(
-            initials: "+#{overflow_count}",
-            size: @size,
-            shape: :circle,
-            href: @overflow_href,
-            class: "ring-2 ring-white dark:ring-zinc-900"
-          ).render_in(view_context)
+          render_overflow_content
+        end
+      end
+
+      def render_overflow_content
+        overflow_avatar = FlatPack::Avatar::Component.new(
+          initials: "+#{overflow_count}",
+          size: @size,
+          shape: :circle,
+          href: @overflow_href,
+          class: "ring-2 ring-[var(--avatar-group-ring-color)] transition-transform hover:scale-110"
+        )
+
+        tooltip_text = overflow_tooltip_text
+        return overflow_avatar.render_in(view_context) if tooltip_text.blank?
+
+        tooltip = FlatPack::Tooltip::Component.new(placement: :bottom)
+        tooltip.with_tooltip_content do
+          content_tag(:ul, class: "list-none m-0 p-0 space-y-1") do
+            safe_join(tooltip_text.map { |name| content_tag(:li, name) })
+          end
+        end
+
+        tooltip.render_in(view_context) do
+          overflow_avatar.render_in(view_context)
         end
       end
 
       def overflow_count
         @items.length - @max
+      end
+
+      def overflow_tooltip_text
+        hidden_names = hidden_items.filter_map do |item|
+          attrs = item.is_a?(Hash) ? item.symbolize_keys : {}
+          attrs[:name].presence || attrs[:alt].presence
+        end
+
+        hidden_names.uniq
+      end
+
+      def hidden_items
+        @items.drop(@max)
       end
 
       def overlap_margin

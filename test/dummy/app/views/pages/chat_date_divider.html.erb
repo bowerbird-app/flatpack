@@ -4,9 +4,25 @@
     subtitle: "Visual separators for day or session boundaries in message history."
   ) %>
 
-  <div class="mt-6 rounded-lg border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-6">
-    <%= render FlatPack::Chat::DateDivider::Component.new(label: "Yesterday") %>
-    <%= render FlatPack::Chat::DateDivider::Component.new(label: "Today") %>
-    <%= render FlatPack::Chat::DateDivider::Component.new(label: "This Morning") %>
-  </div>
+  <%= render "pages/component_method_variables_table", component: :chat_date_divider, anchor: "component-method-variables" %>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Demo", anchor_link: true, subtitle: "Common day/session divider labels.") %>
+
+    <div class="mb-4 mt-6 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
+      <%= render FlatPack::Chat::DateDivider::Component.new(label: "Yesterday") %>
+      <%= render FlatPack::Chat::DateDivider::Component.new(label: "Today") %>
+      <%= render FlatPack::Chat::DateDivider::Component.new(label: "This Morning") %>
+    </div>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Chat::DateDivider::Component.new(label: "Yesterday") %&gt;
+        &lt;%= render FlatPack::Chat::DateDivider::Component.new(label: "Today") %&gt;
+        &lt;%= render FlatPack::Chat::DateDivider::Component.new(label: "This Morning") %&gt;
+      CODE
+    ) %>
+  </section>
 </div>

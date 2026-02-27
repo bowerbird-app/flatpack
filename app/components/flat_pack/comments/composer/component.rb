@@ -55,8 +55,8 @@ module FlatPack
 
         def composer_classes
           classes(
-            "rounded-lg border border-[var(--surface-border-color)] bg-[var(--surface-background-color)]",
-            "focus-within:ring-2 focus-within:ring-ring focus-within:border-ring",
+            "rounded-lg border border-[var(--comments-composer-border-color)] bg-[var(--comments-composer-background-color)]",
+            "focus-within:ring-2 focus-within:ring-[var(--comments-composer-focus-ring-color)] focus-within:border-[var(--comments-composer-focus-border-color)]",
             "transition-all duration-base",
             @disabled ? "opacity-60 pointer-events-none" : nil
           )
@@ -69,7 +69,7 @@ module FlatPack
               rows: @rows,
               placeholder: @placeholder,
               disabled: @disabled,
-              class: "w-full resize-none bg-transparent text-sm text-[var(--surface-content-color)] placeholder:text-[var(--surface-muted-content-color)] focus:outline-none"
+              class: "w-full resize-none bg-transparent text-sm text-[var(--comments-composer-text-color)] placeholder:text-[var(--comments-composer-placeholder-color)] focus:outline-none"
             }
             textarea_attrs[:form] = @form if @form
 
@@ -110,7 +110,7 @@ module FlatPack
 
         def action_section_classes
           classes(
-            "border-t border-[var(--surface-border-color)] bg-[var(--surface-muted-background-color)]/30",
+            "border-t border-[var(--comments-composer-border-color)] bg-[var(--comments-composer-actions-background-color)]",
             @compact ? "px-2 py-1.5" : "px-3 py-2"
           )
         end
@@ -119,7 +119,7 @@ module FlatPack
           content_tag(:button,
             type: "button",
             disabled: @disabled,
-            class: "px-3 py-1.5 text-sm font-medium text-[var(--surface-content-color)] hover:bg-[var(--surface-muted-background-color)] rounded-md transition-colors duration-base") do
+            class: "px-3 py-1.5 text-sm font-medium text-[var(--comments-composer-cancel-text-color)] hover:bg-[var(--comments-composer-cancel-hover-background-color)] rounded-md transition-colors duration-base") do
             @cancel_label
           end
         end
@@ -128,7 +128,7 @@ module FlatPack
           content_tag(:button,
             type: "submit",
             disabled: @disabled,
-            class: "px-3 py-1.5 text-sm font-medium text-white bg-primary hover:bg-primary/90 rounded-md transition-colors duration-base disabled:opacity-50") do
+            class: "px-3 py-1.5 text-sm font-medium text-[var(--comments-composer-submit-text-color)] bg-[var(--comments-composer-submit-background-color)] hover:bg-[var(--comments-composer-submit-hover-background-color)] rounded-md transition-colors duration-base disabled:opacity-50") do
             @submit_label
           end
         end

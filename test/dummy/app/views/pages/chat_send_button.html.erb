@@ -4,11 +4,27 @@
     subtitle: "Send action button states for chat composers."
   ) %>
 
-  <div class="mt-6 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
-    <div class="flex items-center gap-4">
-      <%= render FlatPack::Chat::SendButton::Component.new %>
-      <%= render FlatPack::Chat::SendButton::Component.new(loading: true) %>
-      <%= render FlatPack::Chat::SendButton::Component.new(disabled: true) %>
+  <%= render "pages/component_method_variables_table", component: :chat_send_button, anchor: "component-method-variables" %>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Demo", anchor_link: true, subtitle: "Default, loading, and disabled button states.") %>
+
+    <div class="mb-4 mt-6 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
+      <div class="flex items-center gap-4">
+        <%= render FlatPack::Chat::SendButton::Component.new %>
+        <%= render FlatPack::Chat::SendButton::Component.new(loading: true) %>
+        <%= render FlatPack::Chat::SendButton::Component.new(disabled: true) %>
+      </div>
     </div>
-  </div>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Chat::SendButton::Component.new %&gt;
+        &lt;%= render FlatPack::Chat::SendButton::Component.new(loading: true) %&gt;
+        &lt;%= render FlatPack::Chat::SendButton::Component.new(disabled: true) %&gt;
+      CODE
+    ) %>
+  </section>
 </div>

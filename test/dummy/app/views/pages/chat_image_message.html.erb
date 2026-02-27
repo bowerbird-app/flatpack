@@ -1,0 +1,44 @@
+<div class="container mx-auto max-w-4xl p-4">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Chat::ImageMessage",
+    subtitle: "Direction-aware image message with built-in attachment + meta rendering."
+  ) %>
+
+  <%= render "pages/component_method_variables_table", component: :chat_image_message, anchor: "component-method-variables" %>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Demo", anchor_link: true, subtitle: "Image messages with optional captions.") %>
+
+    <div class="mb-4 mt-6 space-y-4 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
+      <%= render FlatPack::Chat::ImageMessage::Component.new(
+        direction: :incoming,
+        image_name: "hero-v2.png",
+        thumbnail_url: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=640&h=360&fit=crop",
+        image_href: "#",
+        timestamp: "10:24 AM",
+        reveal_actions: true,
+        body: "Draft hero image for launch day."
+      ) %>
+
+      <%= render FlatPack::Chat::ImageMessage::Component.new(
+        direction: :outgoing,
+        image_name: "mobile-preview.png",
+        thumbnail_url: "https://images.unsplash.com/photo-1518773553398-650c184e0bb3?w=640&h=360&fit=crop",
+        image_href: "#",
+        timestamp: "10:25 AM",
+        state: :read,
+        reveal_actions: true,
+        body: "Looks good on mobile too."
+      ) %>
+
+      <%= render FlatPack::Chat::ImageMessage::Component.new(
+        direction: :incoming,
+        image_name: "standalone-moodboard.png",
+        thumbnail_url: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=640&h=360&fit=crop",
+        image_href: "#",
+        timestamp: "10:27 AM",
+        reveal_actions: true
+      ) %>
+    </div>
+  </section>
+</div>

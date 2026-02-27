@@ -4,19 +4,57 @@
     subtitle: "Single-line starting textarea with optional auto-grow and submit-on-enter."
   ) %>
 
-  <div class="mt-6 space-y-4 rounded-lg border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-6">
-    <%= render FlatPack::Chat::Textarea::Component.new(
-      name: "message[default]",
-      placeholder: "Auto-grow and submit on Enter",
-      autogrow: true,
-      submit_on_enter: true
-    ) %>
+  <%= render "pages/component_method_variables_table", component: :chat_textarea, anchor: "component-method-variables" %>
 
-    <%= render FlatPack::Chat::Textarea::Component.new(
-      name: "message[multiline]",
-      placeholder: "Multiline mode without submit on Enter",
-      autogrow: true,
-      submit_on_enter: false
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Demo: Auto-grow + Submit on Enter", anchor_link: true, subtitle: "Textarea starts as a single line, auto-grows, and submits on Enter.") %>
+
+    <div class="mb-4 mt-6 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
+      <%= render FlatPack::Chat::Textarea::Component.new(
+        name: "message[default]",
+        placeholder: "Auto-grow and submit on Enter",
+        autogrow: true,
+        submit_on_enter: true
+      ) %>
+    </div>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Chat::Textarea::Component.new(
+          name: "message[default]",
+          placeholder: "Auto-grow and submit on Enter",
+          autogrow: true,
+          submit_on_enter: true
+        ) %&gt;
+      CODE
     ) %>
-  </div>
+  </section>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Demo: Multiline (No Submit on Enter)", anchor_link: true, subtitle: "Textarea allows Enter for new lines and does not auto-submit.") %>
+
+    <div class="mb-4 mt-6 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
+      <%= render FlatPack::Chat::Textarea::Component.new(
+        name: "message[multiline]",
+        placeholder: "Multiline mode without submit on Enter",
+        autogrow: true,
+        submit_on_enter: false
+      ) %>
+    </div>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Chat::Textarea::Component.new(
+          name: "message[multiline]",
+          placeholder: "Multiline mode without submit on Enter",
+          autogrow: true,
+          submit_on_enter: false
+        ) %&gt;
+      CODE
+    ) %>
+  </section>
 </div>

@@ -5,7 +5,7 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "text-warning"
+      # "text-warning" "h-[var(--checkbox-size)]" "w-[var(--checkbox-size)]" "rounded-[var(--checkbox-radius)]" "focus:rounded-[var(--checkbox-radius)]" "ml-[var(--checkbox-label-gap)]"
 
       def initialize(
         name:,
@@ -88,9 +88,9 @@ module FlatPack
       end
 
       def label_classes
-        # Ensure 'ml-2' is present as a string literal for Tailwind CSS
+        # Ensure 'ml-[var(--checkbox-label-gap)]' is present as a string literal for Tailwind CSS
         classes(
-          "ml-2 text-sm font-medium text-[var(--surface-content-color)] ml-2",
+          "ml-[var(--checkbox-label-gap)] text-sm font-medium text-[var(--surface-content-color)]",
           @disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
         )
       end
@@ -98,13 +98,16 @@ module FlatPack
       def input_classes
         base_classes = [
           "flat-pack-checkbox",
-          "h-4 w-4",
-          "rounded-sm",
+          "h-[var(--checkbox-size)] w-[var(--checkbox-size)]",
+          "rounded-[var(--checkbox-radius)]",
           "border",
           "bg-[var(--surface-background-color)]",
+          "accent-primary",
           "text-primary",
+          "checked:bg-primary checked:border-primary",
           "transition-colors duration-base",
-          "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:rounded-sm",
+          "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:rounded-[var(--checkbox-radius)]",
+          "cursor-pointer",
           "disabled:opacity-50 disabled:cursor-not-allowed"
         ]
 

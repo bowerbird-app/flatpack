@@ -7,8 +7,8 @@ module FlatPack
         # Tailwind CSS scanning requires these classes to be present as string literals.
         # DO NOT REMOVE - These duplicates ensure CSS generation:
         # "flex" "flex-col" "items-center" "justify-center" "gap-1"
-        # "py-2" "text-xs" "font-medium" "text-primary"
-        # "text-[var(--surface-muted-content-color)]" "hover:text-[var(--surface-content-color)]"
+        # "py-[var(--bottom-nav-item-padding-y)]" "px-[var(--bottom-nav-item-padding-x)]" "text-xs" "font-medium" "text-[var(--bottom-nav-item-active-color)]"
+        # "text-[var(--bottom-nav-item-color)]" "hover:text-[var(--bottom-nav-item-hover-color)]"
 
         def initialize(label:, href:, icon: nil, active: false, **system_arguments)
           super(**system_arguments)
@@ -60,8 +60,8 @@ module FlatPack
             "items-center",
             "justify-center",
             "gap-1",
-            "px-2",
-            "py-2",
+            "px-[var(--bottom-nav-item-padding-x)]",
+            "py-[var(--bottom-nav-item-padding-y)]",
             "text-xs",
             "font-medium",
             "transition-colors",
@@ -71,9 +71,9 @@ module FlatPack
 
         def state_classes
           if @active
-            "text-primary"
+            "text-[var(--bottom-nav-item-active-color)]"
           else
-            "text-[var(--surface-muted-content-color)] hover:text-[var(--surface-content-color)]"
+            "text-[var(--bottom-nav-item-color)] hover:text-[var(--bottom-nav-item-hover-color)]"
           end
         end
 

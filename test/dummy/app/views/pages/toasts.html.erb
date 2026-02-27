@@ -8,6 +8,21 @@
   <%= render "pages/component_method_variables_table", component: :toast %>
   <%= render FlatPack::Toasts::Region::Component.new(data: { "flat-pack--toasts-region-target": "container" }) %>
 
+  <div class="hidden" aria-hidden="true">
+    <template data-flat-pack--toasts-region-target="infoTemplate">
+      <%= render FlatPack::Toast::Component.new(message: "Template message", type: :info, timeout: 5000) %>
+    </template>
+    <template data-flat-pack--toasts-region-target="successTemplate">
+      <%= render FlatPack::Toast::Component.new(message: "Template message", type: :success, timeout: 5000) %>
+    </template>
+    <template data-flat-pack--toasts-region-target="warningTemplate">
+      <%= render FlatPack::Toast::Component.new(message: "Template message", type: :warning, timeout: 5000) %>
+    </template>
+    <template data-flat-pack--toasts-region-target="errorTemplate">
+      <%= render FlatPack::Toast::Component.new(message: "Template message", type: :error, timeout: 5000) %>
+    </template>
+  </div>
+
 <!-- Basic Toasts -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Basic Toasts", anchor_link: true, subtitle: "Examples for Basic Toasts.") %>

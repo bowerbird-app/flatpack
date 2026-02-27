@@ -41,7 +41,7 @@ module FlatPack
       def render_icon
         content_tag(:svg,
           xmlns: "http://www.w3.org/2000/svg",
-          class: "w-5 h-5 transition-transform duration-200",
+          class: "w-5 h-5 transition-transform duration-200 text-[var(--collapse-icon-color)]",
           fill: "none",
           viewBox: "0 0 24 24",
           stroke: "currentColor",
@@ -60,7 +60,7 @@ module FlatPack
         # Rails-generated HTML from components captured via block. Never pass
         # unsanitized user input directly to content.
         content_tag(:div, **content_attributes) do
-          content_tag(:div, content.to_s.html_safe, class: "p-4")
+          content_tag(:div, content.to_s.html_safe, class: "p-[var(--collapse-content-padding)]")
         end
       end
 
@@ -70,7 +70,7 @@ module FlatPack
             controller: "flat-pack--collapse",
             "flat-pack--collapse-open-value": @open
           },
-          class: "border border-[var(--surface-border-color)] rounded-md overflow-hidden"
+          class: "border border-[var(--collapse-border-color)] rounded-[var(--collapse-border-radius)] overflow-hidden bg-[var(--collapse-background-color)]"
         )
       end
 
@@ -90,13 +90,13 @@ module FlatPack
       end
 
       def trigger_classes
-        "w-full flex items-center justify-between p-4 text-left bg-[var(--surface-background-color)] hover:bg-[var(--surface-muted-background-color)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        "w-full flex items-center justify-between p-[var(--collapse-trigger-padding)] text-left text-[var(--collapse-trigger-text-color)] bg-[var(--collapse-trigger-background-color)] hover:bg-[var(--collapse-trigger-hover-background-color)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--collapse-focus-ring-color)] focus-visible:ring-offset-2"
       end
 
       def content_attributes
         {
           id: content_id,
-          class: "overflow-hidden transition-all duration-300 ease-in-out bg-[var(--surface-background-color)]",
+          class: "overflow-hidden transition-all duration-[var(--collapse-transition-duration)] ease-in-out bg-[var(--collapse-content-background-color)]",
           data: {"flat-pack--collapse-target": "content"},
           hidden: !@open
         }

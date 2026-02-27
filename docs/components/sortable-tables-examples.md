@@ -1,453 +1,74 @@
-# Sortable Table Examples
+# Sortable Tables Examples
 
-Visual and interactive examples of the sortable table functionality.
+## Purpose
+Provide concise copy-ready examples for sortable and draggable `FlatPack::Table::Component` usage.
 
-## Basic Usage
+## When to use
+Use this reference when implementing URL-driven sorting and optional persisted drag reordering.
 
-This document provides practical examples and visual representations of sortable tables in action.
+## Class
+- Primary: `FlatPack::Table::Component`
+- Related classes: `FlatPack::Table::Column::Component`
 
-## Examples
+## Props
+Sorting-focused props:
 
-### Example 1: Initial State (No Sort)
+| name | type | default | required | description |
+|---|---|---|---|---|
+| `sort` | String | `nil` | no | Current sort key from params. |
+| `direction` | String | `nil` | no | Current sort direction (`"asc"` or `"desc"`). |
+| `base_url` | String | `nil` | yes for sorting | Base path used for generated sort links. |
+| `turbo_frame` | String | `nil` | no | Target frame for Turbo-driven updates. |
 
-When a table first loads without sorting:
+Column sorting props:
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│ ID ▼   Name ▼    Email ▼        Status ▼    Created ▼   Actions│
-├─────────────────────────────────────────────────────────────────┤
-│ 1      User 1    user1@...      active      Jan 15, 25  Edit    │
-│ 2      User 2    user2@...      inactive    Jan 10, 25  Edit    │
-│ 3      User 3    user3@...      pending     Jan 20, 25  Edit    │
-└─────────────────────────────────────────────────────────────────┘
+| name | type | default | required | description |
+|---|---|---|---|---|
+| `sortable` | Boolean | `false` | no | Enables sort link in header. |
+| `sort_key` | Symbol/String | `nil` | yes when sortable | Sort query key for this column. |
 
-Note: All column headers are clickable (shown with ▼)
-```
+Drag reorder props:
 
-### Example 2: Sorted by Name (Ascending)
+| name | type | default | required | description |
+|---|---|---|---|---|
+| `draggable_rows` | Boolean | `false` | no | Enables row drag behavior. |
+| `reorder_url` | String | `nil` | no | PATCH endpoint for persistence. |
+| `reorder_strategy` | String | `"dense_integer"` | no | Ordering strategy identifier in payload. |
+| `reorder_scope` | Hash | `{}` | no | Optional scope metadata in payload. |
+| `reorder_version` | String | `nil` | no | Optional optimistic-lock token. |
 
-After clicking the "Name" column header:
+## Slots
+- `column(...)`: define sortable headers and cell rendering.
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│ ID ▼   Name ↑    Email ▼        Status ▼    Created ▼   Actions│
-├─────────────────────────────────────────────────────────────────┤
-│ 1      User 1    user1@...      active      Jan 15, 25  Edit    │
-│ 2      User 2    user2@...      inactive    Jan 10, 25  Edit    │
-│ 3      User 3    user3@...      pending     Jan 20, 25  Edit    │
-└─────────────────────────────────────────────────────────────────┘
+## Variants
+- Header sorting only.
+- Header sorting + Turbo frame updates.
+- Drag reorder only.
+- Combined sorting and drag reorder.
 
-Note: Name column shows ↑ indicating ascending sort
-URL: /tables?sort=name&direction=asc
-```
-
-### Example 3: Sorted by Name (Descending)
-
-After clicking the "Name" column header again:
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│ ID ▼   Name ↓    Email ▼        Status ▼    Created ▼   Actions│
-├─────────────────────────────────────────────────────────────────┤
-│ 3      User 3    user3@...      pending     Jan 20, 25  Edit    │
-│ 2      User 2    user2@...      inactive    Jan 10, 25  Edit    │
-│ 1      User 1    user1@...      active      Jan 15, 25  Edit    │
-└─────────────────────────────────────────────────────────────────┘
-
-Note: Name column shows ↓ indicating descending sort
-URL: /tables?sort=name&direction=desc
-```
-
-### Example 4: Sorted by Status with Formatted Column
-
-Sorting still works with custom formatters:
-
-```
-┌──────────────────────────────────────────────────────────────────────┐
-│ Name ▼   Email ▼        Status ↑              Created ▼     Actions│
-├──────────────────────────────────────────────────────────────────────┤
-│ User 1   user1@...      ╔════════╗            Jan 15, 25    Edit    │
-│                          ║ Active ║                                  │
-│                          ╚════════╝                                  │
-│ User 3   user3@...      ╔═════════╗           Jan 20, 25    Edit    │
-│                          ║ Pending ║                                 │
-│                          ╚═════════╝                                 │
-│ User 2   user2@...      ╔══════════╗          Jan 10, 25    Edit    │
-│                          ║ Inactive ║                                │
-│                          ╚══════════╝                                │
-└──────────────────────────────────────────────────────────────────────┘
-
-Note: Status column is sorted alphabetically (Active, Inactive, Pending)
-      despite having custom formatting (badges)
-URL: /tables?sort=status&direction=asc
-```
-
-## HTML Structure
-
-### Sortable Header (Non-sorted)
-
-```html
-<th class="px-4 py-3 text-left text-xs font-medium text-[var(--surface-muted-content-color)] uppercase tracking-wider cursor-pointer select-none">
-  <a href="/tables?sort=name&direction=asc" 
-     data-turbo-frame="sortable_table"
-     class="group inline-flex items-center gap-1 hover:text-[var(--surface-content-color)] transition-colors">
-    Name
-  </a>
-</th>
-```
-
-### Sortable Header (Sorted Ascending)
-
-```html
-<th class="px-4 py-3 text-left text-xs font-medium text-[var(--surface-muted-content-color)] uppercase tracking-wider cursor-pointer select-none">
-  <a href="/tables?sort=name&direction=desc" 
-     data-turbo-frame="sortable_table"
-     class="group inline-flex items-center gap-1 hover:text-[var(--surface-content-color)] transition-colors">
-    Name
-    <span class="text-[var(--color-primary)] font-bold">↑</span>
-  </a>
-</th>
-```
-
-### Sortable Header (Sorted Descending)
-
-```html
-<th class="px-4 py-3 text-left text-xs font-medium text-[var(--surface-muted-content-color)] uppercase tracking-wider cursor-pointer select-none">
-  <a href="/tables?sort=name&direction=asc" 
-     data-turbo-frame="sortable_table"
-     class="group inline-flex items-center gap-1 hover:text-[var(--surface-content-color)] transition-colors">
-    Name
-    <span class="text-[var(--color-primary)] font-bold">↓</span>
-  </a>
-</th>
-```
-
-### Full Turbo Frame Structure
-
-```html
-<turbo-frame id="sortable_table">
-  <div class="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--surface-border-color)]">
-    <table class="w-full border-collapse bg-[var(--surface-background-color)]">
-      <thead class="bg-[var(--surface-muted-background-color)]">
-        <tr>
-          <th><!-- Sortable column headers --></th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-[var(--surface-border-color)]">
-        <tr class="hover:bg-[var(--surface-muted-background-color)] transition-colors">
-          <td><!-- Table data --></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</turbo-frame>
-```
-
-## User Interaction Flow
-
-```
-1. User sees table with sortable headers
-   ┌─────────────────────┐
-   │ Name ▼ │ Email ▼ │  │
-   │─────────────────────│
-   │ data   │ data    │  │
-   └─────────────────────┘
-
-2. User hovers over "Name" header
-   ┌─────────────────────┐
-   │ Name ▼ │ Email ▼ │  │  ← Cursor changes, color transitions
-   │─────────────────────│
-   │ data   │ data    │  │
-   └─────────────────────┘
-
-3. User clicks "Name" header
-   ┌─────────────────────┐
-   │ Name ↑ │ Email ▼ │  │  ← Arrow appears, data sorts ascending
-   │─────────────────────│
-   │ sorted │ data    │  │
-   └─────────────────────┘
-   
-   URL updates: /tables?sort=name&direction=asc
-   Turbo Frame updates (no page reload)
-
-4. User clicks "Name" header again
-   ┌─────────────────────┐
-   │ Name ↓ │ Email ▼ │  │  ← Arrow flips, data sorts descending
-   │─────────────────────│
-   │ sorted │ data    │  │
-   └─────────────────────┘
-   
-   URL updates: /tables?sort=name&direction=desc
-   Turbo Frame updates (no page reload)
-
-5. User clicks "Email" header
-   ┌─────────────────────┐
-   │ Name ▼ │ Email ↑ │  │  ← Different column sorts, Name arrow gone
-   │─────────────────────│
-   │ data   │ sorted  │  │
-   └─────────────────────┘
-   
-   URL updates: /tables?sort=email&direction=asc
-   Turbo Frame updates (no page reload)
-```
-
-## Responsive Behavior
-
-### Desktop View (1024px+)
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│ ID ▼  Name ▼   Email ▼        Status ▼   Created ▼  Actions│
-├─────────────────────────────────────────────────────────────┤
-│ 1     User 1   user1@example   Active    Jan 15     Edit   │
-│ 2     User 2   user2@example   Inactive  Jan 10     Edit   │
-└─────────────────────────────────────────────────────────────┘
-All columns visible, full width
-```
-
-### Tablet View (768px-1023px)
-
-```
-┌───────────────────────────────────────────────────┐
-│← Name ▼   Email ▼      Status ▼   Created ▼  →  │
-├───────────────────────────────────────────────────┤
-│  User 1   user1@...    Active    Jan 15     →   │
-│  User 2   user2@...    Inactive  Jan 10     →   │
-└───────────────────────────────────────────────────┘
-Horizontal scroll enabled, some columns may be hidden
-```
-
-### Mobile View (< 768px)
-
-```
-┌─────────────────────────────┐
-│← Name ▼   Status ▼   →     │
-├─────────────────────────────┤
-│  User 1   Active      →    │
-│  User 2   Inactive    →    │
-└─────────────────────────────┘
-Horizontal scroll, fewer columns visible
-User can scroll to see more →
-```
-
-## State Diagram
-
-```
-                    ┌──────────────┐
-                    │ Initial Load │
-                    │  (no sort)   │
-                    └──────┬───────┘
-                           │
-                           ↓
-                    ┌──────────────┐
-                    │  Click Name  │
-                    └──────┬───────┘
-                           │
-                           ↓
-                    ┌──────────────┐
-                    │  Sort by     │
-             ┌──────┤  Name ASC    ├──────┐
-             │      └──────────────┘      │
-             │                            │
-    Click Name Again                  Click Email
-             │                            │
-             ↓                            ↓
-      ┌──────────────┐            ┌──────────────┐
-      │  Sort by     │            │  Sort by     │
-      │  Name DESC   │            │  Email ASC   │
-      └──────┬───────┘            └──────┬───────┘
-             │                            │
-             │                            │
-             └──────────┬─────────────────┘
-                        │
-                        ↓
-                  (continues...)
-```
-
-## Styling
-
-### Visual Indicators
-
-Sortable columns show visual feedback:
-
-- **Non-sorted columns**: Normal appearance, hoverable
-- **Sorted ascending**: Column name + ↑ arrow
-- **Sorted descending**: Column name + ↓ arrow
-
-The arrow indicator uses:
-- Primary color: `text-[var(--color-primary)]`
-- Bold font weight: `font-bold`
-- Left margin: `ms-1` (0.25rem)
-
-### CSS Variables
-
-Customize the appearance:
-
-```css
-@theme {
-  /* Sortable header colors */
-  --color-muted-foreground: oklch(0.45 0.01 250);
-  --color-foreground: oklch(0.25 0.02 250);
-  --color-primary: oklch(0.55 0.25 270);
-}
+## Example
+```erb
+<%= render FlatPack::Table::Component.new(
+  data: @users,
+  turbo_frame: "users_table",
+  sort: params[:sort],
+  direction: params[:direction],
+  base_url: request.path,
+  draggable_rows: true,
+  reorder_url: demo_tables_reorder_path,
+  reorder_scope: { list_key: "users" },
+  reorder_version: @version
+) do |table| %>
+  <% table.column(title: "Name", sortable: true, sort_key: :name, html: ->(u) { u.name }) %>
+  <% table.column(title: "Email", sortable: true, sort_key: :email, html: ->(u) { u.email }) %>
+<% end %>
 ```
 
 ## Accessibility
+- Sortable headers are links and remain keyboard accessible.
+- Keep column titles descriptive so sort context is understandable to assistive technology users.
 
-### Keyboard Navigation
-
-```
-┌─────────────────────────────────────────────────┐
-│ Name ↑ (Keyboard focusable, screen reader      │
-│         announces "Name, sorted ascending,      │
-│         click to sort descending")              │
-├─────────────────────────────────────────────────┤
-│ Proper contrast ratio for text and indicators  │
-│ Focus rings visible on keyboard navigation     │
-│ Arrow indicators use semantic Unicode chars    │
-│ Links have hover/focus states                  │
-└─────────────────────────────────────────────────┘
-
-Keyboard Navigation:
-- Tab: Move between sortable headers
-- Enter/Space: Activate sort
-- Shift+Tab: Move backwards
-```
-
-### ARIA Attributes
-
-The implementation supports accessible markup:
-
-- Links are keyboard accessible
-- Header text announces sort state
-- Visual indicators show current sort
-- Focus states on clickable headers
-
-## Performance Notes
-
-### Rendering Performance
-
-- Turbo Frame updates only the table, not entire page
-- No JavaScript execution for DOM manipulation
-- Browser handles HTML replacement natively
-
-### Network Performance
-
-- Only table HTML is transferred
-- Gzip compression reduces payload
-- HTTP/2 multiplexing for parallel requests
-
-### Database Performance
-
-- Sorting happens at database level (when using ActiveRecord)
-- Indexes on sortable columns improve query speed
-- Pagination reduces memory usage
-
-Example Query:
-
-```sql
--- Without sorting
-SELECT * FROM users;
-
--- With sorting (indexed column)
-SELECT * FROM users ORDER BY name ASC;
--- Uses index on (name) - fast
-
--- With sorting (non-indexed column)
-SELECT * FROM users ORDER BY nickname ASC;
--- Full table scan - slow for large tables
-```
-
-## Error States
-
-### No Data
-
-```
-┌─────────────────────────────────────────┐
-│ Name ↑   Email ▼   Status ▼   Actions  │
-├─────────────────────────────────────────┤
-│          No data available              │
-└─────────────────────────────────────────┘
-```
-
-### Invalid Sort Column (Ignored)
-
-```
-URL: /tables?sort=invalid_column&direction=asc
-↓
-Controller validates and ignores invalid column
-↓
-Returns default (unsorted) data
-```
-
-### Invalid Direction (Defaults to ASC)
-
-```
-URL: /tables?sort=name&direction=invalid
-↓
-Controller validates direction
-↓
-Returns data sorted by name ASC
-```
-
-## Browser Support
-
-The sortable tables feature works in all modern browsers:
-
-✅ Chrome 90+
-✅ Firefox 88+
-✅ Safari 14+
-✅ Edge 90+
-✅ Mobile Safari iOS 14+
-✅ Chrome Android
-
-**Requirements:**
-- JavaScript enabled (for Turbo)
-- CSS Grid support
-- Flexbox support
-- CSS Variables support
-
-**Graceful Degradation:**
-- Without JavaScript: Falls back to full page reload
-- Without CSS Variables: Uses fallback colors
-- Without modern CSS: Basic table layout maintained
-
-## API Reference
-
-### Sortable Table Props
-
-```ruby
-FlatPack::Table::Component.new(
-  data: Array,                # Required
-  turbo_frame: String,        # Required for sorting
-  sort: String,               # Required for sorting
-  direction: String,          # Required for sorting
-  base_url: String,           # Required for sorting
-  **system_arguments          # Optional
-)
-```
-
-### Sortable Column Props
-
-```ruby
-table.column(
-  title: String,              # Required
-  html: Proc,                 # Required
-  sortable: Boolean,          # Optional, default: false
-  sort_key: Symbol,           # Required when sortable is true
-  &block                      # Optional
-)
-```
-
-## Related Components
-
-- [Table Component](table.md) - Main table documentation
-- [Sortable Tables](sortable-tables.md) - Detailed implementation guide
-- [Button Component](button.md) - Used for actions
-
-## Next Steps
-
-- [Table Component](table.md)
-- [Sortable Tables](sortable-tables.md)
-- [Turbo Frames](https://turbo.hotwired.dev/handbook/frames)
-- [Theming Guide](../theming.md)
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+- Optional Turbo Frames for partial-table updates.
+- Drag reorder behavior requires Stimulus controller `flat-pack--table-sortable`.

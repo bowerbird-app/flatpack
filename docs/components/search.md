@@ -1,56 +1,44 @@
 # Search Component
 
-The Search component provides a reusable search input with a leading icon, optimized for navigation and filtering UIs.
+## Purpose
+Render a search input with optional live-result dropdown backed by a JSON endpoint.
 
-## Features
+## When to use
+Use Search where users need quick keyword filtering in top nav or content surfaces.
 
-- Reusable across TopNav, sidebars, and page sections
-- Built-in search icon
-- Lightweight API with `placeholder`, `name`, and `value`
-- Configurable live search endpoint via `search_url`
-- Built-in dropdown with no-results messaging
-- Supports system arguments (`class`, `id`, `data`, `aria`)
-
-## Basic Usage
-
-```erb
-<%= render FlatPack::Search::Component.new(
-  search_url: "/search/results",
-  placeholder: "Search..."
-) %>
-```
+## Class
+- Primary: `FlatPack::Search::Component`
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `placeholder` | String | `"Search..."` | Placeholder text |
-| `name` | String | `"q"` | Input name attribute |
-| `value` | String | `nil` | Initial input value |
-| `search_url` | String | `nil` | Endpoint used for live search results |
-| `min_characters` | Integer | `2` | Minimum characters before searching |
-| `debounce` | Integer | `250` | Debounce delay in milliseconds |
-| `no_results_text` | String | `"No results found"` | Message displayed when no results are returned |
-| `**system_arguments` | Hash | `{}` | HTML attributes (`class`, `data`, `aria`, `id`) |
+| name | type | default | required | description |
+|------|------|---------|----------|-------------|
+| `placeholder` | String | `"Search..."` | No | Input placeholder text. |
+| `name` | String | `"q"` | No | Input `name` and query param key used for live search requests. |
+| `value` | String | `nil` | No | Initial input value. |
+| `search_url` | String | `nil` | No | Enables live search when present. URL is sanitized (safe protocols + relative URLs). |
+| `max_width` | Symbol | `:md` | No | Wrapper max width. Allowed: `:none`, `:md`, `:lg`, `:xl`. |
+| `min_characters` | Integer | `2` | No | Minimum trimmed query length before fetch is triggered. |
+| `debounce` | Integer | `250` | No | Debounce delay in milliseconds for live requests. |
+| `no_results_text` | String | `"No results found"` | No | Empty-state text shown in dropdown when no results match. |
+| `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into the wrapper/input (`class`, `id`, `data`, `aria`). |
 
-## Examples
+## Slots
+None.
 
-### In TopNav
+## Variants
+None.
+
+## Example
 
 ```erb
-<%= render FlatPack::TopNav::Component.new do |nav| %>
-  <% nav.center do %>
-    <%= render FlatPack::Search::Component.new(
-      search_url: search_results_path,
-      placeholder: "Search projects, files, or people..."
-    ) %>
-  <% end %>
-<% end %>
+<%= render FlatPack::Search::Component.new(
+  search_url: search_results_path,
+  placeholder: "Search components..."
+) %>
 ```
 
-### Response format
-
-Set `search_url` to any endpoint returning JSON in this shape:
+Expected live-search response shape:
 
 ```json
 {
@@ -64,25 +52,11 @@ Set `search_url` to any endpoint returning JSON in this shape:
 }
 ```
 
-If `results` is empty, the dropdown displays `no_results_text`.
+The controller also accepts a top-level JSON array instead of `{ "results": [...] }`.
 
-### With Custom Name and Value
+## Accessibility
+When `search_url` is present, the input includes `aria-haspopup="listbox"` and toggles `aria-expanded` as the dropdown opens/closes. `Escape` closes the dropdown.
 
-```erb
-<%= render FlatPack::Search::Component.new(
-  name: "query",
-  value: "flatpack",
-  placeholder: "Search components..."
-) %>
-```
-
-## Styling
-
-- Wrapper: `relative flex items-center w-full max-w-md`
-- Icon: absolute positioned at the left
-- Input: rounded field with focus ring and muted placeholder text
-
-## Related Components
-
-- [TopNav](./top_nav.md)
-- [SearchInput](./inputs.md#searchinput)
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+- Live search behavior requires Stimulus controller `flat-pack--search`.

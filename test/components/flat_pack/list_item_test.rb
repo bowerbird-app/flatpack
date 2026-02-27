@@ -35,7 +35,7 @@ module FlatPack
       def test_content_wrapped_in_span
         render_inline(Item.new) { "Content" }
 
-        assert_selector "span.flex-1", text: "Content"
+        assert_selector "span.min-w-0.flex-1", text: "Content"
       end
 
       def test_includes_flex_layout
@@ -60,6 +60,38 @@ module FlatPack
         render_inline(Item.new(data: {testid: "list-item"})) { "Content" }
 
         assert_selector "li[data-testid='list-item']"
+      end
+
+      def test_renders_link_when_href_is_present
+        render_inline(Item.new(href: "/demo/list")) { "Content" }
+
+        assert_selector "li a[href='/demo/list']", text: "Content"
+        assert_includes page.native.to_html, "flat-pack-list-item-link"
+      end
+
+      def test_renders_hover_styles_when_hover_enabled
+        render_inline(Item.new(href: "/demo/list", hover: true)) { "Content" }
+
+        assert_includes page.native.to_html, "hover:bg-[var(--list-item-hover-background-color)]"
+      end
+
+      def test_renders_active_styles_when_active_enabled
+        render_inline(Item.new(href: "/demo/list", active: true)) { "Content" }
+
+        assert_selector "li[class*='bg-[var(--list-item-active-background-color)]']"
+        assert_no_selector "a[class*='bg-[var(--list-item-active-background-color)]']"
+      end
+
+      def test_accepts_link_arguments
+        render_inline(Item.new(href: "/demo/list", link_arguments: {data: {turbo_frame: "chat-demo-panel"}})) { "Content" }
+
+        assert_selector "li a[data-turbo-frame='chat-demo-panel']"
+      end
+
+      def test_raises_error_for_unsafe_href
+        assert_raises ArgumentError do
+          Item.new(href: "javascript:alert('xss')")
+        end
       end
     end
   end

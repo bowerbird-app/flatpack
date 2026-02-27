@@ -93,6 +93,14 @@ module FlatPack
           assert_text "Footer"
         end
 
+        def test_renders_replies_slot
+          component = Component.new(author_name: "John Doe")
+          component.with_replies { "Replies content" }
+          render_inline(component)
+
+          assert_text "Replies content"
+        end
+
         def test_default_state
           render_inline(Component.new(author_name: "John Doe"))
 
@@ -106,7 +114,7 @@ module FlatPack
           ))
 
           assert_selector "span", text: "System"
-          assert_includes page.native.to_html, "bg-zinc-50"
+          assert_includes page.native.to_html, "bg-[var(--comments-item-system-background-color)]"
         end
 
         def test_deleted_state

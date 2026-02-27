@@ -133,6 +133,34 @@ module FlatPack
 
         assert_selector "div[data-flat-pack--modal-close-on-escape-value='false']"
       end
+
+      def test_supports_fixed_body_height
+        render_inline(Component.new(id: "my-modal", body_height_mode: :fixed, body_height: "24rem")) do |component|
+          component.with_body { "Content" }
+        end
+
+        assert_selector "div[style*='--flatpack-modal-body-height: 24rem'][style*='height: var(--flatpack-modal-body-height)']"
+      end
+
+      def test_supports_min_body_height
+        render_inline(Component.new(id: "my-modal", body_height_mode: :min, body_height: "20rem")) do |component|
+          component.with_body { "Content" }
+        end
+
+        assert_selector "div[style*='--flatpack-modal-body-height: 20rem'][style*='min-height: var(--flatpack-modal-body-height)']"
+      end
+
+      def test_raises_error_for_invalid_body_height_mode
+        assert_raises(ArgumentError) do
+          Component.new(id: "my-modal", body_height_mode: :invalid)
+        end
+      end
+
+      def test_raises_error_when_non_auto_body_height_missing
+        assert_raises(ArgumentError) do
+          Component.new(id: "my-modal", body_height_mode: :fixed)
+        end
+      end
     end
   end
 end

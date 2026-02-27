@@ -1,122 +1,41 @@
-# Skeleton Component
+# Skeleton
 
-The Skeleton component displays loading placeholders that match the shape of expected content.
+## Purpose
+Render placeholder UI shapes while content is loading.
 
-## Basic Usage
+## When to use
+Use Skeleton when data is pending and layout stability should be preserved.
 
-```erb
-<%= render FlatPack::Skeleton::Component.new %>
-```
+## Class
+- Primary: `FlatPack::Skeleton::Component`
 
 ## Props
+| name | type | default | required | description |
+|---|---|---|---|---|
+| `variant` | Symbol | `:text` | no | Shape preset: `:text`, `:title`, `:avatar`, `:button`, `:rectangle`; invalid values raise `ArgumentError`. |
+| `width` | String | `nil` | no | Custom width utility value (for example `"240px"`, `"75%"`). |
+| `height` | String | `nil` | no | Custom height utility value. |
+| `shimmer` | Boolean | `true` | no | Enables shimmer animation when true. |
+| `**system_arguments` | Hash | `{}` | no | HTML attributes for skeleton element. |
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `variant` | Symbol | `:text` | Preset shape (`:text`, `:title`, `:avatar`, `:button`, `:rectangle`) |
-| `width` | String | `nil` | Custom width (e.g., "200px", "50%") |
-| `height` | String | `nil` | Custom height (e.g., "100px", "3rem") |
-| `shimmer` | Boolean | `true` | Enables or disables shimmer animation |
-| `**system_arguments` | Hash | `{}` | HTML attributes (`class`, `data`, `aria`, `id`, etc.) |
+## Slots
+None.
 
 ## Variants
+- `:text`, `:title`, `:avatar`, `:button`, `:rectangle`.
 
-### Text (Default)
-Single line of text placeholder.
+## Example
 ```erb
-<%= render FlatPack::Skeleton::Component.new(variant: :text) %>
-```
-
-### Title
-Larger heading placeholder.
-```erb
-<%= render FlatPack::Skeleton::Component.new(variant: :title) %>
-```
-
-### Avatar
-Circular avatar placeholder.
-```erb
-<%= render FlatPack::Skeleton::Component.new(variant: :avatar) %>
-```
-
-### Button
-Button-shaped placeholder.
-```erb
-<%= render FlatPack::Skeleton::Component.new(variant: :button) %>
-```
-
-### Rectangle
-Large rectangular content area.
-```erb
-<%= render FlatPack::Skeleton::Component.new(variant: :rectangle) %>
-```
-
-## Examples
-
-### Custom Dimensions
-```erb
-<%= render FlatPack::Skeleton::Component.new(
-  width: "300px",
-  height: "200px"
-) %>
-```
-
-### Disable Shimmer
-```erb
-<%= render FlatPack::Skeleton::Component.new(shimmer: false) %>
-```
-
-### Loading Card
-```erb
-<div class="border rounded-lg p-4 space-y-4">
-  <%= render FlatPack::Skeleton::Component.new(variant: :avatar) %>
-  <%= render FlatPack::Skeleton::Component.new(variant: :title) %>
+<div class="space-y-3">
+  <%= render FlatPack::Skeleton::Component.new(variant: :title, width: "60%") %>
   <%= render FlatPack::Skeleton::Component.new(variant: :text) %>
-  <%= render FlatPack::Skeleton::Component.new(variant: :text) %>
-  <%= render FlatPack::Skeleton::Component.new(variant: :button) %>
+  <%= render FlatPack::Skeleton::Component.new(variant: :text, width: "80%") %>
 </div>
-```
-
-### Loading List
-```erb
-<div class="space-y-4">
-  <% 3.times do %>
-    <div class="flex items-center gap-3">
-      <%= render FlatPack::Skeleton::Component.new(variant: :avatar) %>
-      <div class="flex-1 space-y-2">
-        <%= render FlatPack::Skeleton::Component.new(variant: :text) %>
-        <%= render FlatPack::Skeleton::Component.new(variant: :text, width: "70%") %>
-      </div>
-    </div>
-  <% end %>
-</div>
-```
-
-### Loading Table
-```erb
-<table class="w-full">
-  <tbody>
-    <% 5.times do %>
-      <tr>
-        <td><%= render FlatPack::Skeleton::Component.new(variant: :text) %></td>
-        <td><%= render FlatPack::Skeleton::Component.new(variant: :text) %></td>
-        <td><%= render FlatPack::Skeleton::Component.new(variant: :button) %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
 ```
 
 ## Accessibility
+- Renders `role="status"` with `aria-busy="true"` and `aria-label="Loading..."`.
+- Shimmer animation respects reduced-motion preferences via CSS utility classes.
 
-- Uses `role="status"` for screen reader announcements
-- Includes `aria-busy="true"` to indicate loading state
-- Includes `aria-label="Loading..."` for context
-- Includes a shimmer animation for visual loading feedback
-- Automatically disables shimmer animation for users who prefer reduced motion
-
-## Use Cases
-
-- Loading states for data fetching
-- Placeholder for async content
-- Improved perceived performance
-- Reducing layout shift during loading
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).

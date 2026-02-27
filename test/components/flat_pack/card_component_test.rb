@@ -224,6 +224,14 @@ module FlatPack
         assert_includes page.native.to_html, "p-[var(--card-padding-md)]"
       end
 
+      def test_header_merges_custom_classes_with_defaults
+        render_inline(Header::Component.new(class: "custom-header", divider: true)) { "Header" }
+        html = page.native.to_html
+        assert_includes html, "custom-header"
+        assert_includes html, "p-[var(--card-padding-md)]"
+        assert_includes html, "border-b"
+      end
+
       # Body Component Tests
       def test_body_component_renders
         render_inline(Body::Component.new) { "Body content" }
@@ -233,6 +241,14 @@ module FlatPack
       def test_body_has_padding_classes
         render_inline(Body::Component.new) { "Body" }
         assert_includes page.native.to_html, "p-[var(--card-padding-md)]"
+      end
+
+      def test_body_merges_custom_classes_with_defaults
+        render_inline(Body::Component.new(class: "space-y-4")) { "Body" }
+        html = page.native.to_html
+        assert_includes html, "space-y-4"
+        assert_includes html, "p-[var(--card-padding-md)]"
+        assert_includes html, "flex-1"
       end
 
       # Footer Component Tests
@@ -260,6 +276,14 @@ module FlatPack
       def test_footer_has_padding_classes
         render_inline(Footer::Component.new) { "Footer" }
         assert_includes page.native.to_html, "p-[var(--card-padding-md)]"
+      end
+
+      def test_footer_merges_custom_classes_with_defaults
+        render_inline(Footer::Component.new(class: "custom-footer", divider: true)) { "Footer" }
+        html = page.native.to_html
+        assert_includes html, "custom-footer"
+        assert_includes html, "p-[var(--card-padding-md)]"
+        assert_includes html, "border-t"
       end
 
       # Media Component Tests
@@ -306,6 +330,14 @@ module FlatPack
       def test_media_with_padding_md
         render_inline(Media::Component.new(padding: :md)) { "Media" }
         assert_includes page.native.to_html, "px-[var(--card-padding-md)] pt-[var(--card-padding-md)]"
+      end
+
+      def test_media_merges_custom_classes_with_defaults
+        render_inline(Media::Component.new(class: "custom-media", padding: :md)) { "Media" }
+        html = page.native.to_html
+        assert_includes html, "custom-media"
+        assert_includes html, "overflow-hidden"
+        assert_includes html, "px-[var(--card-padding-md)] pt-[var(--card-padding-md)]"
       end
 
       def test_media_validates_padding

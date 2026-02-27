@@ -1,0 +1,43 @@
+<div class="container mx-auto max-w-5xl p-4">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Carousel Demos",
+    subtitle: "Working carousel examples for images, lightbox, thumbnails, HTML cards, and videos."
+  ) %>
+
+  <div class="mt-6 mb-6">
+    <%= render FlatPack::Alert::Component.new(
+      type: :success,
+      title: "Interactive demos",
+      message: "These pages demonstrate real carousel behavior in the dummy app using live slide navigation."
+    ) %>
+  </div>
+
+  <section class="mb-10">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Overview",
+      anchor_link: true,
+      subtitle: "Open each page to see a concrete carousel scenario in action."
+    ) %>
+
+    <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <% @carousel_featured_examples.each_value do |example| %>
+        <%= render FlatPack::Card::Component.new(style: :default, hover: :subtle) do |card| %>
+          <% card.header do %>
+            <h3 class="text-base font-semibold"><%= example[:title] %></h3>
+          <% end %>
+          <% card.body do %>
+            <p class="text-sm text-(--surface-muted-content-color)"><%= example[:subtitle] %></p>
+          <% end %>
+          <% card.footer(divider: false) do %>
+            <%= render FlatPack::Button::Component.new(
+              text: "Open",
+              style: :ghost,
+              size: :sm,
+              href: send(example[:route])
+            ) %>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+  </section>
+</div>

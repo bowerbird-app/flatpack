@@ -1,5 +1,34 @@
 # New UI Components - Implementation Summary
 
+## Purpose
+Summarize recently added UI components and their implementation status.
+
+## When to use
+Use this page when you need a high-level snapshot of newly introduced components before opening individual component docs.
+
+## Class
+- Primary: `FlatPack::Grid::Component` (summary entrypoint)
+- Related classes: multiple components are covered in this summary.
+
+## Props
+Not applicable for this summary page. Refer to each component’s dedicated doc for prop details.
+
+## Slots
+Not applicable for this summary page. Refer to each component’s dedicated doc.
+
+## Variants
+Not applicable for this summary page. Refer to each component’s dedicated doc.
+
+## Example
+Start with the usage examples under each component section in this document.
+
+## Accessibility
+Accessibility notes are listed per component in each section.
+
+## Dependencies
+- Depends on the component-specific dependencies listed in each section.
+- Some entries require Stimulus controllers or optional libraries (for example Pagy, ApexCharts).
+
 This document summarizes the 11 new components added to FlatPack as part of the comprehensive UI expansion.
 
 ## Components Implemented
@@ -40,8 +69,8 @@ User-friendly empty states with optional icons, overridable icon names, actions,
 <% end %>
 ```
 
-### 3. ✅ PageHeader Component
-**Location:** `app/components/flat_pack/page_header/component.rb`  
+### 3. ✅ PageTitle Component
+**Location:** `app/components/flat_pack/page_title/component.rb`  
 **Stimulus:** No  
 **Tests:** 5 tests, all passing
 
@@ -49,7 +78,7 @@ Consistent page headers with a required title and optional subtitle.
 
 **Usage:**
 ```erb
-<%= render FlatPack::PageHeader::Component.new(
+<%= render FlatPack::PageTitle::Component.new(
   title: "Dashboard",
   subtitle: "Welcome back"
 ) %>
@@ -136,7 +165,7 @@ Click-triggered popovers with rich content support.
 <button id="trigger-btn">Click me</button>
 
 <%= render FlatPack::Popover::Component.new(trigger_id: "trigger-btn", placement: :bottom) do |popover| %>
-  <% popover.with_popover_content do %>
+  <% popover.content do %>
     <h4>Popover Title</h4>
     <p>Rich content goes here</p>
   <% end %>

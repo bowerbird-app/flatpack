@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["sidebar", "backdrop", "desktopToggle", "collapsedToggle", "mobileToggle", "headerLabel", "headerBrand", "footer"]
+  static targets = ["sidebar", "backdrop", "desktopToggle", "collapsedToggle", "mobileToggle", "headerLabel", "headerBrand", "footer", "scrollContainer"]
   static values = {
     side: String,
     defaultOpen: Boolean,
@@ -15,6 +15,8 @@ export default class extends Controller {
     this.isMobile = window.innerWidth < 768
     this.transitionDuration = "300ms"
     this.transitionEasing = "cubic-bezier(0.4, 0, 0.2, 1)"
+    this.lastAnchorPath = null
+    this.lastAnchorOffset = null
 
     // Load saved desktop state from localStorage
     if (!this.isMobile && this.hasStorageKeyValue) {
@@ -36,11 +38,41 @@ export default class extends Controller {
     // Listen for window resize
     this.handleResize = this.handleResize.bind(this)
     window.addEventListener("resize", this.handleResize)
+
+    // Persist/restore sidebar scroll position around Turbo navigations
+    this.handleTurboBeforeCache = this.handleTurboBeforeCache.bind(this)
+    this.handleTurboBeforeRender = this.handleTurboBeforeRender.bind(this)
+    this.handleSidebarLinkClick = this.handleSidebarLinkClick.bind(this)
+    this.handlePageHide = this.handlePageHide.bind(this)
+    this.handleSidebarScroll = this.handleSidebarScroll.bind(this)
+
+    document.addEventListener("turbo:before-cache", this.handleTurboBeforeCache)
+    document.addEventListener("turbo:before-render", this.handleTurboBeforeRender)
+    window.addEventListener("pagehide", this.handlePageHide)
+    this.element.addEventListener("click", this.handleSidebarLinkClick, true)
+    this.bindScrollPersistenceListener()
+
+    // If this page was pre-restored during turbo:before-render, do not re-apply.
+    const preRestored = this.currentScrollContainer()?.dataset?.flatPackScrollPreRestored === "true"
+    if (!preRestored) {
+      // Restore on direct page loads/non-Turbo navigations.
+      this.restoreScrollPosition()
+    } else {
+      delete this.currentScrollContainer().dataset.flatPackScrollPreRestored
+    }
   }
 
   disconnect() {
     this.clearDesktopRevealTimeout()
     window.removeEventListener("resize", this.handleResize)
+    document.removeEventListener("turbo:before-cache", this.handleTurboBeforeCache)
+    document.removeEventListener("turbo:before-render", this.handleTurboBeforeRender)
+    window.removeEventListener("pagehide", this.handlePageHide)
+    this.element.removeEventListener("click", this.handleSidebarLinkClick, true)
+    this.unbindScrollPersistenceListener()
+
+    // Persist as a fallback when leaving without Turbo lifecycle
+    this.persistScrollState()
   }
 
   handleResize() {
@@ -273,6 +305,27 @@ export default class extends Controller {
         footer.classList.add("hidden")
       }
     })
+
+    // Group items are rendered with indent for expanded mode.
+    // Remove that indent in collapsed mode so icons align with top-level items.
+    const groupPanels = this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-group-target="panel"]')
+    groupPanels.forEach(panel => {
+      if (visible) {
+        panel.classList.add("pl-[var(--sidebar-group-item-indent)]")
+      } else {
+        panel.classList.remove("pl-[var(--sidebar-group-item-indent)]")
+      }
+    })
+
+    // Hide group chevrons when collapsed so only icons remain visible.
+    const groupChevrons = this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-group-target="chevron"]')
+    groupChevrons.forEach(chevron => {
+      if (visible) {
+        chevron.classList.remove("hidden")
+      } else {
+        chevron.classList.add("hidden")
+      }
+    })
   }
 
   clearDesktopRevealTimeout() {
@@ -322,6 +375,159 @@ export default class extends Controller {
       if (saved !== null) {
         this.collapsed = saved === "true"
       }
+    }
+  }
+
+  handleTurboBeforeCache() {
+    this.persistScrollState()
+  }
+
+  handleTurboBeforeRender(event) {
+    this.persistScrollState()
+
+    const newBody = event?.detail?.newBody
+    if (!newBody) return
+
+    const newScrollContainer = this.findScrollContainerInBody(newBody)
+    this.restoreScrollPositionInContainer(newScrollContainer, {correctWithAnchor: true})
+    if (newScrollContainer) {
+      newScrollContainer.dataset.flatPackScrollPreRestored = "true"
+    }
+  }
+
+  handleSidebarLinkClick(event) {
+    const link = event.target.closest("a[href]")
+    if (!link || !this.sidebarTarget.contains(link)) return
+
+    const scrollContainer = this.currentScrollContainer()
+    if (!scrollContainer) return
+
+    this.lastAnchorPath = this.normalizePath(link.href)
+    this.lastAnchorOffset = link.getBoundingClientRect().top - scrollContainer.getBoundingClientRect().top
+    this.persistScrollState()
+  }
+
+  handleSidebarScroll() {
+    this.persistScrollState()
+  }
+
+  handlePageHide() {
+    this.persistScrollState()
+  }
+
+  persistScrollState() {
+    const scrollContainer = this.currentScrollContainer()
+    if (!scrollContainer) return
+
+    this.writeScrollState({
+      scrollTop: scrollContainer.scrollTop,
+      anchorPath: this.lastAnchorPath,
+      anchorOffset: this.lastAnchorOffset
+    })
+  }
+
+  restoreScrollPosition(options = {}) {
+    this.restoreScrollPositionInContainer(this.currentScrollContainer(), options)
+  }
+
+  restoreScrollPositionInContainer(scrollContainer, { correctWithAnchor = false } = {}) {
+    if (!scrollContainer) return
+
+    const state = this.readScrollState()
+    if (!state) return
+
+    if (typeof state.scrollTop === "number") {
+      scrollContainer.scrollTop = state.scrollTop
+    }
+
+    if (!correctWithAnchor) return
+
+    if (state.anchorPath && typeof state.anchorOffset === "number") {
+      const anchorLink = this.findSidebarLinkByPath(state.anchorPath)
+      if (anchorLink) {
+        const currentOffset = anchorLink.getBoundingClientRect().top - scrollContainer.getBoundingClientRect().top
+        scrollContainer.scrollTop += (currentOffset - state.anchorOffset)
+      }
+    }
+  }
+
+  findSidebarLinkByPath(path) {
+    const links = this.element.querySelectorAll("a[href]")
+    for (const link of links) {
+      if (this.normalizePath(link.href) === path) {
+        return link
+      }
+    }
+    return null
+  }
+
+  findScrollContainerInBody(body) {
+    return body.querySelector('[data-flat-pack--sidebar-layout-target="scrollContainer"]') ||
+      body.querySelector('[data-flat-pack--sidebar-layout-target="sidebar"] aside > .flex-1.min-h-0.overflow-y-auto')
+  }
+
+  currentScrollContainer() {
+    if (this.hasScrollContainerTarget) {
+      return this.scrollContainerTarget
+    }
+
+    return this.element.querySelector('[data-flat-pack--sidebar-layout-target="scrollContainer"]') ||
+      this.sidebarTarget?.querySelector('aside > .flex-1.min-h-0.overflow-y-auto')
+  }
+
+  bindScrollPersistenceListener() {
+    const scrollContainer = this.currentScrollContainer()
+    if (!scrollContainer) return
+
+    this.scrollPersistenceElement = scrollContainer
+    this.scrollPersistenceElement.addEventListener("scroll", this.handleSidebarScroll, {passive: true})
+  }
+
+  unbindScrollPersistenceListener() {
+    if (!this.scrollPersistenceElement) return
+
+    this.scrollPersistenceElement.removeEventListener("scroll", this.handleSidebarScroll)
+    this.scrollPersistenceElement = null
+  }
+
+  normalizePath(href) {
+    try {
+      const url = new URL(href, window.location.origin)
+      return `${url.pathname}${url.search}`
+    } catch {
+      return null
+    }
+  }
+
+  scrollStateKey() {
+    const baseKey = this.hasStorageKeyValue ? this.storageKeyValue : "flat-pack-sidebar-layout"
+    const sideKey = this.hasSideValue ? this.sideValue : "left"
+    return `${baseKey}:${sideKey}:scroll`
+  }
+
+  writeScrollState(payload) {
+    try {
+      sessionStorage.setItem(this.scrollStateKey(), JSON.stringify(payload))
+    } catch {
+      // Ignore storage errors (private mode / disabled storage)
+    }
+  }
+
+  readScrollState() {
+    try {
+      const raw = sessionStorage.getItem(this.scrollStateKey())
+      if (!raw) return null
+
+      const parsed = JSON.parse(raw)
+      if (!parsed || typeof parsed !== "object") return null
+
+      return {
+        scrollTop: Number.isFinite(parsed.scrollTop) ? parsed.scrollTop : null,
+        anchorPath: typeof parsed.anchorPath === "string" ? parsed.anchorPath : null,
+        anchorOffset: Number.isFinite(parsed.anchorOffset) ? parsed.anchorOffset : null
+      }
+    } catch {
+      return null
     }
   }
 }

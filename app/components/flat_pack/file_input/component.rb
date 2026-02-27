@@ -92,7 +92,7 @@ module FlatPack
           elements = [
             content_tag(:div, class: "flex justify-center text-sm/6 text-[var(--surface-muted-content-color)]") do
               safe_join([
-                content_tag(:label, for: input_id, class: "relative cursor-pointer rounded-md bg-transparent font-semibold text-primary focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-primary hover:text-primary/80") do
+                content_tag(:button, type: "button", class: "relative cursor-pointer rounded-md bg-transparent font-semibold text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary hover:text-primary/80", data: {action: "flat-pack--file-input#clickInput"}) do
                   content_tag(:span, "Upload a file")
                 end,
                 content_tag(:p, " or drag and drop", class: "pl-1")
@@ -146,7 +146,7 @@ module FlatPack
           required: @required,
           accept: @accept,
           multiple: @multiple,
-          class: "sr-only",
+          class: "hidden",
           data: {
             flat_pack__file_input_target: "input",
             action: "change->flat-pack--file-input#handleFiles"

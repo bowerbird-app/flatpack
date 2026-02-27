@@ -3,47 +3,7 @@
     subtitle: "Flexible, composable cards for displaying content in structured containers."
   ) %>
 
-  <section class="mb-12">
-    <%= render FlatPack::SectionTitle::Component.new(
-      title: "Component Method & Variables",
-      anchor_link: true,
-      subtitle: "render FlatPack::Card::Component.new(...) do |card| ... end"
-    ) %>
-
-    <%= render FlatPack::Table::Component.new(
-      data: [
-        {
-          method_or_variable: "style",
-          description: "Visual card style preset.",
-          accepts: ":default, :elevated, :outlined, :flat, :interactive, :list"
-        },
-        {
-          method_or_variable: "hover",
-          description: "Optional hover behavior override.",
-          accepts: "nil, :none, :subtle, :strong"
-        },
-        {
-          method_or_variable: "clickable",
-          description: "Renders card as a link when true and href is provided.",
-          accepts: "true, false"
-        },
-        {
-          method_or_variable: "href",
-          description: "Destination URL for clickable cards.",
-          accepts: "Relative URL or allowed protocols (http, https, mailto, tel)"
-        },
-        {
-          method_or_variable: "padding",
-          description: "Default content padding, and default media padding when used.",
-          accepts: ":none, :sm, :md, :lg"
-        }
-      ]
-    ) do |table| %>
-      <% table.column(title: "Variable", html: ->(row) { row[:method_or_variable] }) %>
-      <% table.column(title: "Accepts", html: ->(row) { row[:accepts] }) %>
-      <% table.column(title: "Description", html: ->(row) { row[:description] }) %>
-    <% end %>
-  </section>
+  <%= render "pages/component_method_variables_table", component: :card %>
 
   <!-- Combined Default Grid Card -->
   <section class="mb-12">

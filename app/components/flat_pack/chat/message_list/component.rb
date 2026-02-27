@@ -6,10 +6,24 @@ module FlatPack
       class Component < FlatPack::BaseComponent
         def initialize(
           stick_to_bottom: true,
+          history_url: nil,
+          history_has_more: false,
+          history_limit: nil,
+          history_cursor_selector: "[data-pagination-cursor]",
+          history_cursor_param: "before_id",
+          history_limit_param: "limit",
+          history_loading_text: "Loading older messages...",
           **system_arguments
         )
           super(**system_arguments)
           @stick_to_bottom = stick_to_bottom
+          @history_url = history_url
+          @history_has_more = history_has_more
+          @history_limit = history_limit
+          @history_cursor_selector = history_cursor_selector
+          @history_cursor_param = history_cursor_param
+          @history_limit_param = history_limit_param
+          @history_loading_text = history_loading_text
         end
 
         def call
@@ -25,8 +39,30 @@ module FlatPack
 
         def render_messages_area
           content_tag(:div, **messages_attributes) do
-            content
+            safe_join([
+              render_history_loader,
+              content
+            ].compact)
           end
+        end
+
+        def render_history_loader
+          return nil unless @history_has_more
+          return nil if @history_url.blank?
+
+          render FlatPack::PaginationInfinite::Component.new(
+            url: @history_url,
+            has_more: @history_has_more,
+            loading_text: @history_loading_text,
+            loading_variant: :inline,
+            insert_mode: :prepend,
+            observe_root_selector: "[data-flat-pack--chat-scroll-target='messages']",
+            cursor_selector: @history_cursor_selector,
+            cursor_param: @history_cursor_param,
+            batch_size: @history_limit,
+            batch_size_param: @history_limit_param,
+            preserve_scroll_position: true
+          )
         end
 
         def render_jump_button

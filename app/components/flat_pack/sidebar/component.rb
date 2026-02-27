@@ -74,7 +74,7 @@ module FlatPack
       def render_items_container
         return unless items?
 
-        content_tag(:div, items.to_s, class: items_container_classes)
+        content_tag(:div, items.to_s, class: items_container_classes, data: {"flat-pack--sidebar-layout-target": "scrollContainer"})
       end
 
       def sidebar_attributes

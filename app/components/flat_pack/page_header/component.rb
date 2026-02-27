@@ -16,53 +16,28 @@ module FlatPack
       end
 
       def call
-        content_tag(:div, **container_attributes) { render_header_content }
+        content_tag(:div, **container_attributes) do
+          safe_join([
+            content_tag(:h1, @title, class: "text-4xl font-bold text-[var(--surface-content-color)] leading-tight"),
+            (@subtitle.present? ? content_tag(:p, @subtitle, class: "mt-2 text-lg text-[var(--surface-muted-content-color)]") : nil)
+          ].compact)
+        end
       end
 
       private
 
       def container_attributes
         merge_attributes(
-          class: container_classes
+          class: classes(
+            "border-b border-[var(--surface-border-color)]",
+            "pb-8 mb-6"
+          )
         )
-      end
-
-      def container_classes
-        classes(
-          "pb-5",
-          "border-b",
-          "border-[var(--surface-border-color)]",
-          "mb-6"
-        )
-      end
-
-      def render_header_content
-        content_tag(:div, class: "flex items-start gap-4") do
-          render_title_section
-        end
-      end
-
-      def render_title_section
-        content_tag(:div, class: "flex-1 min-w-0") do
-          safe_join([
-            render_title,
-            render_subtitle
-          ].compact)
-        end
-      end
-
-      def render_title
-        content_tag(:h1, @title, class: "text-4xl font-bold text-[var(--surface-content-color)] leading-tight")
-      end
-
-      def render_subtitle
-        return nil unless @subtitle
-
-        content_tag(:p, @subtitle, class: "mt-2 text-lg text-[var(--surface-muted-content-color)]")
       end
 
       def validate_title!
         return if @title.present?
+
         raise ArgumentError, "title is required"
       end
     end

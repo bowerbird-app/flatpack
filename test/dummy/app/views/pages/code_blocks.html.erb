@@ -9,7 +9,6 @@
 
   component_docs = [
     {
-      collapse_id: "components-code-block",
       title: "Code Block",
       method_call: <<~CODE,
         #{erb_output_open} render FlatPack::CodeBlock::Component.new(
@@ -19,11 +18,31 @@
         ) #{erb_tag_close}
       CODE
       variables: [
-        { variable: "code", accepts: "String (required unless snippets are provided)" },
-        { variable: "snippets", accepts: "Array of hashes: [{ label:, code:, language: }]" },
-        { variable: "language", accepts: "String or nil" },
-        { variable: "title", accepts: "String or nil" },
-        { variable: "separated", accepts: "true, false" }
+        {
+          variable: "code",
+          accepts: "String (required unless snippets are provided)",
+          example: "code: \"render FlatPack::Button::Component.new(text: \\\"Primary\\\")\""
+        },
+        {
+          variable: "snippets",
+          accepts: "Array of hashes: [{ label:, code:, language: }]",
+          example: "snippets: [{ label: \"Primary\", code: \"...\", language: \"erb\" }]"
+        },
+        {
+          variable: "language",
+          accepts: "String or nil",
+          example: "language: \"erb\""
+        },
+        {
+          variable: "title",
+          accepts: "String or nil",
+          example: "title: \"Method Call\""
+        },
+        {
+          variable: "separated",
+          accepts: "true, false",
+          example: "separated: true"
+        }
       ]
     }
   ]
@@ -38,18 +57,24 @@
   ) %>
 
   <div class="space-y-4">
-    <% component_docs.each do |component_doc| %>
-      <%= render FlatPack::Collapse::Component.new(id: component_doc[:collapse_id], title: component_doc[:title]) do %>
-        <%= render FlatPack::CodeBlock::Component.new(
-          title: "Method Call",
-          language: "erb",
-          code: CGI.unescapeHTML(component_doc[:method_call]),
-          class: "mb-4"
-        ) %>
+    <% component_docs.each_with_index do |component_doc, index| %>
+      <%= render FlatPack::Tabs::Component.new(variant: :pills) do |tabs| %>
+        <% tab_id = "component-doc-tab-#{index}" %>
+        <% tabs.tab(id: tab_id, label: component_doc[:title]) %>
 
-        <%= render FlatPack::Table::Component.new(data: component_doc[:variables]) do |table| %>
-          <% table.column(title: "Variable", html: ->(row) { row[:variable] }) %>
-          <% table.column(title: "Accepts", html: ->(row) { row[:accepts] }) %>
+        <% tabs.panel(id: tab_id) do %>
+          <%= render FlatPack::CodeBlock::Component.new(
+            title: "Method Call",
+            language: "erb",
+            code: CGI.unescapeHTML(component_doc[:method_call]),
+            class: "mb-4"
+          ) %>
+
+          <%= render FlatPack::Table::Component.new(data: component_doc[:variables]) do |table| %>
+            <% table.column(title: "Variable", html: ->(row) { row[:variable] }) %>
+            <% table.column(title: "Accepts", html: ->(row) { row[:accepts] }) %>
+            <% table.column(title: "Example", html: ->(row) { row[:example] }) %>
+          <% end %>
         <% end %>
       <% end %>
     <% end %>

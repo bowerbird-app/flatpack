@@ -7,12 +7,14 @@ module FlatPack
         ordered: false,
         spacing: :comfortable,
         divider: false,
+        selectable: false,
         **system_arguments
       )
         super(**system_arguments)
         @ordered = ordered
         @spacing = spacing.to_sym
         @divider = divider
+        @selectable = selectable
       end
 
       def call
@@ -27,10 +29,20 @@ module FlatPack
       private
 
       def list_attributes
-        merge_attributes(
+        attrs = {
           class: list_classes,
           role: "list"
-        )
+        }
+
+        if @selectable
+          attrs[:data] = {
+            controller: "flat-pack--list-selectable",
+            action: "click->flat-pack--list-selectable#activate",
+            flat_pack__list_selectable_active_class_value: "bg-[var(--list-item-active-background-color)]"
+          }
+        end
+
+        merge_attributes(**attrs)
       end
 
       def list_classes

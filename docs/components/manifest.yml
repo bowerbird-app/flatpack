@@ -1,0 +1,382 @@
+version: 1
+updated_at: 2026-02-27
+
+format_reference: docs/components/DOC_FORMAT.md
+human_index: docs/components/README.md
+
+components:
+  - key: accordion
+    title: Accordion
+    doc: docs/components/accordion.md
+    primary_class: FlatPack::Accordion::Component
+    status: documented
+
+  - key: alert
+    title: Alert
+    doc: docs/components/alert.md
+    primary_class: FlatPack::Alert::Component
+    status: documented
+
+  - key: avatar
+    title: Avatar
+    doc: docs/components/avatar.md
+    primary_class: FlatPack::Avatar::Component
+    status: documented
+
+  - key: avatar_group
+    title: Avatar Group
+    doc: docs/components/avatar-group.md
+    primary_class: FlatPack::AvatarGroup::Component
+    status: documented
+
+  - key: badge
+    title: Badge
+    doc: docs/components/badge.md
+    primary_class: FlatPack::Badge::Component
+    status: documented
+
+  - key: bottom_nav
+    title: Bottom Nav
+    doc: docs/components/bottom-nav.md
+    primary_class: FlatPack::BottomNav::Component
+    related_classes:
+      - FlatPack::BottomNav::Item::Component
+    status: documented
+
+  - key: breadcrumb
+    title: Breadcrumb
+    doc: docs/components/breadcrumb.md
+    primary_class: FlatPack::Breadcrumb::Component
+    status: documented
+
+  - key: button
+    title: Button
+    doc: docs/components/button.md
+    primary_class: FlatPack::Button::Component
+    status: documented
+
+  - key: button_dropdown
+    title: Button Dropdown
+    doc: docs/components/button-dropdown.md
+    primary_class: FlatPack::Button::Dropdown::Component
+    status: documented
+
+  - key: button_group
+    title: Button Group
+    doc: docs/components/button-group.md
+    primary_class: FlatPack::ButtonGroup::Component
+    status: documented
+
+  - key: card
+    title: Card
+    doc: docs/components/card.md
+    primary_class: FlatPack::Card::Component
+    related_classes:
+      - FlatPack::Card::Stat::Component
+    status: documented
+
+  - key: chart
+    title: Chart
+    doc: docs/components/charts.md
+    primary_class: FlatPack::Chart::Component
+    status: documented
+
+  - key: chat
+    title: Chat
+    doc: docs/components/chat.md
+    primary_class: FlatPack::Chat::Panel::Component
+    related_classes:
+      - FlatPack::Chat::Attachment::Component
+      - FlatPack::Chat::Composer::Component
+      - FlatPack::Chat::DateDivider::Component
+      - FlatPack::Chat::FileMessage::Component
+      - FlatPack::Chat::Header::Component
+      - FlatPack::Chat::ImageDeck::Component
+      - FlatPack::Chat::ImageMessage::Component
+      - FlatPack::Chat::InboxRow::Component
+      - FlatPack::Chat::Layout::Component
+      - FlatPack::Chat::MessageGroup::Component
+      - FlatPack::Chat::MessageList::Component
+      - FlatPack::Chat::MessageMeta::Component
+      - FlatPack::Chat::MessageRecord::Component
+      - FlatPack::Chat::ReceivedMessage::Component
+      - FlatPack::Chat::SendButton::Component
+      - FlatPack::Chat::SentMessage::Component
+      - FlatPack::Chat::SystemMessage::Component
+      - FlatPack::Chat::Textarea::Component
+      - FlatPack::Chat::TypingIndicator::Component
+    status: documented
+
+  - key: chips
+    title: Chip + Chip Group
+    doc: docs/components/chips.md
+    primary_class: FlatPack::Chip::Component
+    related_classes:
+      - FlatPack::ChipGroup::Component
+    status: documented
+
+  - key: code_block
+    title: Code Block
+    doc: docs/components/code-block.md
+    primary_class: FlatPack::CodeBlock::Component
+    status: documented
+
+  - key: collapse
+    title: Collapse
+    doc: docs/components/collapse.md
+    primary_class: FlatPack::Collapse::Component
+    status: documented
+
+  - key: comments_composer
+    title: Comments Composer
+    doc: docs/components/comments-composer.md
+    primary_class: FlatPack::Comments::Composer::Component
+    status: documented
+
+  - key: comments_inline_input
+    title: Comments Inline Input
+    doc: docs/components/comments-inline-input.md
+    primary_class: FlatPack::Comments::InlineInput::Component
+    status: documented
+
+  - key: comments_item
+    title: Comments Item
+    doc: docs/components/comments-item.md
+    primary_class: FlatPack::Comments::Item::Component
+    status: documented
+
+  - key: comments_replies
+    title: Comments Replies
+    doc: docs/components/comments-replies.md
+    primary_class: FlatPack::Comments::Replies::Component
+    status: documented
+
+  - key: comments_thread
+    title: Comments Thread
+    doc: docs/components/comments-thread.md
+    primary_class: FlatPack::Comments::Thread::Component
+    status: documented
+
+  - key: empty_state
+    title: Empty State
+    doc: docs/components/empty-state.md
+    primary_class: FlatPack::EmptyState::Component
+    status: documented
+
+  - key: grid
+    title: Grid
+    doc: docs/components/grid.md
+    primary_class: FlatPack::Grid::Component
+    status: documented
+
+  - key: inputs
+    title: Input Components
+    doc: docs/components/inputs.md
+    primary_class: FlatPack::TextInput::Component
+    related_classes:
+      - FlatPack::PasswordInput::Component
+      - FlatPack::EmailInput::Component
+      - FlatPack::PhoneInput::Component
+      - FlatPack::SearchInput::Component
+      - FlatPack::TextArea::Component
+      - FlatPack::UrlInput::Component
+      - FlatPack::NumberInput::Component
+      - FlatPack::DateInput::Component
+      - FlatPack::FileInput::Component
+      - FlatPack::Checkbox::Component
+      - FlatPack::RadioGroup::Component
+      - FlatPack::Select::Component
+      - FlatPack::Switch::Component
+    status: documented
+
+  - key: link
+    title: Link
+    doc: docs/components/link.md
+    primary_class: FlatPack::Link::Component
+    status: documented
+
+  - key: list
+    title: List
+    doc: docs/components/list.md
+    primary_class: FlatPack::List::Component
+    status: documented
+
+  - key: modal
+    title: Modal
+    doc: docs/components/modal.md
+    primary_class: FlatPack::Modal::Component
+    status: documented
+
+  - key: navbar
+    title: Navbar
+    doc: docs/components/navbar.md
+    primary_class: FlatPack::Navbar::Component
+    status: documented
+
+  - key: page_header
+    title: Page Header
+    doc: docs/components/page-header.md
+    primary_class: FlatPack::PageHeader::Component
+    status: documented
+
+  - key: page_title
+    title: Page Title
+    doc: docs/components/page-title.md
+    primary_class: FlatPack::PageTitle::Component
+    status: documented
+
+  - key: pagination
+    title: Pagination
+    doc: docs/components/pagination.md
+    primary_class: FlatPack::Pagination::Component
+    related_classes:
+      - FlatPack::PaginationInfinite::Component
+    status: documented
+
+  - key: pagination_infinite
+    title: Pagination Infinite
+    doc: docs/components/pagination-infinite.md
+    primary_class: FlatPack::PaginationInfinite::Component
+    status: documented
+
+  - key: picker
+    title: Picker
+    doc: docs/components/picker.md
+    primary_class: FlatPack::Picker::Component
+    status: documented
+
+  - key: popover
+    title: Popover
+    doc: docs/components/popover.md
+    primary_class: FlatPack::Popover::Component
+    status: documented
+
+  - key: progress
+    title: Progress
+    doc: docs/components/progress.md
+    primary_class: FlatPack::Progress::Component
+    status: documented
+
+  - key: quote
+    title: Quote
+    doc: docs/components/quote.md
+    primary_class: FlatPack::Quote::Component
+    status: documented
+
+  - key: range_input
+    title: Range Input
+    doc: docs/components/range-input.md
+    primary_class: FlatPack::RangeInput::Component
+    status: documented
+
+  - key: search
+    title: Search
+    doc: docs/components/search.md
+    primary_class: FlatPack::Search::Component
+    status: documented
+
+  - key: section_title
+    title: Section Title
+    doc: docs/components/section-title.md
+    primary_class: FlatPack::SectionTitle::Component
+    status: documented
+
+  - key: segmented_buttons
+    title: Segmented Buttons
+    doc: docs/components/segmented-buttons.md
+    primary_class: FlatPack::SegmentedButtons::Component
+    status: documented
+
+  - key: sidebar
+    title: Sidebar
+    doc: docs/components/sidebar.md
+    primary_class: FlatPack::Sidebar::Component
+    related_classes:
+      - FlatPack::Sidebar::Item::Component
+      - FlatPack::Sidebar::Header::Component
+      - FlatPack::Sidebar::Divider::Component
+      - FlatPack::Sidebar::Group::Component
+    status: documented
+
+  - key: sidebar_group
+    title: Sidebar Group
+    doc: docs/components/sidebar_group.md
+    primary_class: FlatPack::Sidebar::Group::Component
+    status: documented
+
+  - key: sidebar_layout
+    title: Sidebar Layout
+    doc: docs/components/sidebar_layout.md
+    primary_class: FlatPack::SidebarLayout::Component
+    status: documented
+
+  - key: skeleton
+    title: Skeleton
+    doc: docs/components/skeleton.md
+    primary_class: FlatPack::Skeleton::Component
+    status: documented
+
+  - key: sortable_tables
+    title: Sortable Tables
+    doc: docs/components/sortable-tables.md
+    primary_class: FlatPack::Table::Component
+    status: documented
+
+  - key: sortable_tables_examples
+    title: Sortable Tables Examples
+    doc: docs/components/sortable-tables-examples.md
+    primary_class: FlatPack::Table::Component
+    status: documented
+
+  - key: table
+    title: Table
+    doc: docs/components/table.md
+    primary_class: FlatPack::Table::Component
+    status: documented
+
+  - key: tabs
+    title: Tabs
+    doc: docs/components/tabs.md
+    primary_class: FlatPack::Tabs::Component
+    status: documented
+
+  - key: timeline
+    title: Timeline
+    doc: docs/components/timeline.md
+    primary_class: FlatPack::Timeline::Component
+    status: documented
+
+  - key: toast
+    title: Toast
+    doc: docs/components/toast.md
+    primary_class: FlatPack::Toast::Component
+    status: documented
+
+  - key: toasts
+    title: Toast Region
+    doc: docs/components/toasts.md
+    primary_class: FlatPack::Toasts::Region::Component
+    related_classes:
+      - FlatPack::Toast::Component
+    status: documented
+
+  - key: tooltip
+    title: Tooltip
+    doc: docs/components/tooltip.md
+    primary_class: FlatPack::Tooltip::Component
+    status: documented
+
+  - key: top_nav
+    title: Top Nav
+    doc: docs/components/top_nav.md
+    primary_class: FlatPack::TopNav::Component
+    status: documented
+
+  - key: new_components_summary
+    title: New Components Summary
+    doc: docs/components/NEW_COMPONENTS_SUMMARY.md
+    primary_class: FlatPack::Grid::Component
+    status: summary
+
+undocumented_or_internal_candidates:
+  - shared

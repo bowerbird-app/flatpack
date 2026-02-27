@@ -4,13 +4,33 @@
     subtitle: "Animated typing feedback with optional avatar slot."
   ) %>
 
-  <div class="mt-6 space-y-4 rounded-lg border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-6">
-    <%= render FlatPack::Chat::TypingIndicator::Component.new(label: "Teammate is typing") do |indicator| %>
-      <% indicator.with_avatar do %>
-        <%= render FlatPack::Avatar::Component.new(name: "Teammate", initials: "TM", size: :sm) %>
-      <% end %>
-    <% end %>
+  <%= render "pages/component_method_variables_table", component: :chat_typing_indicator, anchor: "component-method-variables" %>
 
-    <%= render FlatPack::Chat::TypingIndicator::Component.new(label: "Anonymous user is typing") %>
-  </div>
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Demo", anchor_link: true, subtitle: "Typing indicator with and without avatar slot.") %>
+
+    <div class="mb-4 mt-6 space-y-4 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
+      <%= render FlatPack::Chat::TypingIndicator::Component.new(label: "Teammate is typing") do |indicator| %>
+        <% indicator.with_avatar do %>
+          <%= render FlatPack::Avatar::Component.new(name: "Teammate", initials: "TM", size: :sm) %>
+        <% end %>
+      <% end %>
+
+      <%= render FlatPack::Chat::TypingIndicator::Component.new(label: "Anonymous user is typing") %>
+    </div>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Chat::TypingIndicator::Component.new(label: "Teammate is typing") do |indicator| %&gt;
+          &lt;% indicator.with_avatar do %&gt;
+            &lt;%= render FlatPack::Avatar::Component.new(name: "Teammate", initials: "TM", size: :sm) %&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+
+        &lt;%= render FlatPack::Chat::TypingIndicator::Component.new(label: "Anonymous user is typing") %&gt;
+      CODE
+    ) %>
+  </section>
 </div>

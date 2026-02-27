@@ -1,2 +1,90 @@
 #!/usr/bin/env ruby
-exec "./bin/rails", "server", "-b", "0.0.0.0", *ARGV
+
+require "socket"
+require "uri"
+
+root = File.expand_path("..", __dir__)
+env = ENV.fetch("RAILS_ENV", "development")
+
+redis_url = ENV.fetch("REDIS_URL", "redis://localhost:6379/1")
+redis_uri = URI.parse(redis_url)
+
+def redis_available?(host, port)
+  return false if host.nil? || port.nil?
+
+  TCPSocket.new(host, port).close
+  true
+rescue
+  false
+end
+
+def local_redis_host?(host)
+  ["localhost", "127.0.0.1", "::1"].include?(host)
+end
+
+def command_available?(command)
+  system("command -v #{command} >/dev/null 2>&1")
+end
+
+redis_pid = nil
+
+if local_redis_host?(redis_uri.host) && !redis_available?(redis_uri.host, redis_uri.port)
+  if command_available?("redis-server")
+    redis_pid = Process.spawn(
+      "redis-server", "--port", redis_uri.port.to_s,
+      chdir: root,
+      out: $stdout,
+      err: $stderr
+    )
+
+    50.times do
+      break if redis_available?(redis_uri.host, redis_uri.port)
+      sleep 0.1
+    end
+  else
+    warn "redis-server was not found on PATH; please start Redis separately."
+  end
+end
+
+sidekiq_pid = Process.spawn(
+  {"RAILS_ENV" => env},
+  "bundle", "exec", "sidekiq", "-e", env, "-C", "config/sidekiq.yml",
+  chdir: root,
+  out: $stdout,
+  err: $stderr
+)
+
+rails_pid = Process.spawn(
+  {"RAILS_ENV" => env},
+  "./bin/rails", "server", "-b", "0.0.0.0", *ARGV,
+  chdir: root,
+  out: $stdout,
+  err: $stderr
+)
+
+shutdown = lambda do
+  [rails_pid, sidekiq_pid, redis_pid].compact.each do |pid|
+    Process.kill("TERM", pid)
+  rescue Errno::ESRCH
+  end
+end
+
+trap("INT", &shutdown)
+trap("TERM", &shutdown)
+
+_, rails_status = Process.wait2(rails_pid)
+shutdown.call
+
+begin
+  Process.wait(sidekiq_pid)
+rescue Errno::ECHILD
+end
+
+if redis_pid
+  begin
+    Process.wait(redis_pid)
+  rescue Errno::ECHILD
+  end
+end
+
+exit(rails_status.exitstatus || 0)

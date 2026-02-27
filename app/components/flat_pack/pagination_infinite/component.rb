@@ -5,7 +5,13 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       LOADING_VARIANTS = {
         table: :table,
-        cards: :cards
+        cards: :cards,
+        inline: :inline
+      }.freeze
+
+      INSERT_MODES = {
+        append: :append,
+        prepend: :prepend
       }.freeze
 
       def initialize(
@@ -14,6 +20,13 @@ module FlatPack
         has_more: true,
         loading_text: "Loading more...",
         loading_variant: :table,
+        insert_mode: :append,
+        observe_root_selector: nil,
+        cursor_selector: nil,
+        cursor_param: nil,
+        batch_size: nil,
+        batch_size_param: "limit",
+        preserve_scroll_position: false,
         **system_arguments
       )
         super(**system_arguments)
@@ -22,10 +35,19 @@ module FlatPack
         @has_more = has_more
         @loading_text = loading_text
         @loading_variant = loading_variant.to_sym
+        @insert_mode = insert_mode.to_sym
+        @observe_root_selector = observe_root_selector.to_s.presence
+        @cursor_selector = cursor_selector.to_s.presence
+        @cursor_param = cursor_param.to_s.presence
+        @batch_size = batch_size&.to_i
+        @batch_size_param = batch_size_param.to_s.presence
+        @preserve_scroll_position = preserve_scroll_position
 
         validate_url!
         validate_page!
         validate_loading_variant!
+        validate_insert_mode!
+        validate_batch_size!
       end
 
       def call
@@ -47,7 +69,14 @@ module FlatPack
 
       def render_loading_indicator
         content_tag(:div, **loading_attributes) do
-          (@loading_variant == :cards) ? render_cards_loading_indicator : render_table_loading_indicator
+          case @loading_variant
+          when :cards
+            render_cards_loading_indicator
+          when :inline
+            render_inline_loading_indicator
+          else
+            render_table_loading_indicator
+          end
         end
       end
 
@@ -88,15 +117,39 @@ module FlatPack
         end
       end
 
+      def render_inline_loading_indicator
+        content_tag(:div, class: "py-2 text-sm text-[var(--surface-muted-content-color)]") do
+          @loading_text
+        end
+      end
+
       def container_attributes
         merge_attributes(
-          data: {
-            controller: "flat-pack--pagination-infinite",
-            "flat-pack--pagination-infinite-url-value": @url,
-            "flat-pack--pagination-infinite-page-value": @page,
-            "flat-pack--pagination-infinite-loading-variant-value": @loading_variant
-          },
-          class: "flex flex-col items-center gap-4 py-8"
+          data: data_attributes,
+          class: container_classes
+        )
+      end
+
+      def data_attributes
+        {
+          controller: "flat-pack--pagination-infinite",
+          "flat-pack--pagination-infinite-url-value": @url,
+          "flat-pack--pagination-infinite-page-value": @page,
+          "flat-pack--pagination-infinite-loading-variant-value": @loading_variant,
+          "flat-pack--pagination-infinite-insert-mode-value": @insert_mode,
+          "flat-pack--pagination-infinite-observe-root-selector-value": @observe_root_selector,
+          "flat-pack--pagination-infinite-cursor-selector-value": @cursor_selector,
+          "flat-pack--pagination-infinite-cursor-param-value": @cursor_param,
+          "flat-pack--pagination-infinite-batch-size-value": @batch_size,
+          "flat-pack--pagination-infinite-batch-size-param-value": @batch_size_param,
+          "flat-pack--pagination-infinite-preserve-scroll-position-value": @preserve_scroll_position
+        }.compact
+      end
+
+      def container_classes
+        classes(
+          "flex flex-col items-center gap-4",
+          (@insert_mode == :prepend) ? "py-2" : "py-8"
         )
       end
 
@@ -135,6 +188,18 @@ module FlatPack
       def validate_loading_variant!
         return if LOADING_VARIANTS.key?(@loading_variant)
         raise ArgumentError, "Invalid loading_variant: #{@loading_variant}. Must be one of: #{LOADING_VARIANTS.keys.join(", ")}"
+      end
+
+      def validate_insert_mode!
+        return if INSERT_MODES.key?(@insert_mode)
+        raise ArgumentError, "Invalid insert_mode: #{@insert_mode}. Must be one of: #{INSERT_MODES.keys.join(", ")}"
+      end
+
+      def validate_batch_size!
+        return if @batch_size.nil?
+        return if @batch_size > 0
+
+        raise ArgumentError, "batch_size must be greater than zero"
       end
     end
   end

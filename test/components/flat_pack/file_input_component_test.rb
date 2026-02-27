@@ -123,7 +123,13 @@ module FlatPack
       def test_renders_hidden_file_input
         render_inline(Component.new(name: "document"))
 
-        assert_selector "input[type='file'].sr-only"
+        assert_selector "input[type='file'].hidden"
+      end
+
+      def test_renders_upload_trigger_button
+        render_inline(Component.new(name: "document"))
+
+        assert_selector "button[type='button'][data-action='flat-pack--file-input#clickInput']", text: "Upload a file"
       end
 
       def test_renders_stimulus_controller

@@ -18,10 +18,14 @@ module FlatPack
         "2xl": "max-w-6xl"
       }.freeze
 
+      BODY_HEIGHT_MODES = %i[auto fixed min].freeze
+
       def initialize(
         id:,
         title: nil,
         size: :md,
+        body_height_mode: :auto,
+        body_height: nil,
         close_on_backdrop: true,
         close_on_escape: true,
         **system_arguments
@@ -30,11 +34,15 @@ module FlatPack
         @modal_id = id
         @title = title
         @size = size.to_sym
+        @body_height_mode = body_height_mode.to_sym
+        @body_height = body_height
         @close_on_backdrop = close_on_backdrop
         @close_on_escape = close_on_escape
 
         validate_id!
         validate_size!
+        validate_body_height_mode!
+        validate_body_height!
       end
 
       def call
@@ -162,7 +170,7 @@ module FlatPack
       end
 
       def close_button_classes
-        "shrink-0 text-[var(--modal-close-icon-color)] hover:text-[var(--modal-close-icon-hover-color)] transition-colors rounded-sm p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        "shrink-0 cursor-pointer text-[var(--modal-close-icon-color)] hover:text-[var(--modal-close-icon-hover-color)] transition-colors rounded-sm p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       end
 
       def render_header_section
@@ -212,7 +220,17 @@ module FlatPack
         # SECURITY: Slot content is marked html_safe because it's expected to contain
         # Rails-generated HTML from other components. Never pass unsanitized user input
         # directly to this slot.
-        content_tag(:div, body.to_s.html_safe, class: body_classes)
+        content_tag(:div, body.to_s.html_safe, **body_attributes)
+      end
+
+      def body_attributes
+        attributes = {
+          class: body_classes
+        }
+
+        height_style = body_style
+        attributes[:style] = height_style if height_style.present?
+        attributes
       end
 
       def render_footer_content
@@ -229,7 +247,29 @@ module FlatPack
       end
 
       def body_classes
-        "min-h-0 flex-1 overflow-y-auto py-4 text-sm text-[var(--modal-body-color)]"
+        classes(
+          "min-h-0",
+          body_layout_class,
+          "overflow-y-auto",
+          "py-4",
+          "text-sm",
+          "text-[var(--modal-body-color)]"
+        )
+      end
+
+      def body_layout_class
+        (@body_height_mode == :auto) ? "flex-1" : "shrink-0"
+      end
+
+      def body_style
+        return nil unless @body_height_mode != :auto
+
+        case @body_height_mode
+        when :fixed
+          "--flatpack-modal-body-height: #{@body_height}; height: var(--flatpack-modal-body-height);"
+        when :min
+          "--flatpack-modal-body-height: #{@body_height}; min-height: var(--flatpack-modal-body-height);"
+        end
       end
 
       def footer_classes
@@ -248,6 +288,19 @@ module FlatPack
       def validate_size!
         return if SIZES.key?(@size)
         raise ArgumentError, "Invalid size: #{@size}. Must be one of: #{SIZES.keys.join(", ")}"
+      end
+
+      def validate_body_height_mode!
+        return if BODY_HEIGHT_MODES.include?(@body_height_mode)
+
+        raise ArgumentError, "Invalid body_height_mode: #{@body_height_mode}. Must be one of: #{BODY_HEIGHT_MODES.join(", ")}"
+      end
+
+      def validate_body_height!
+        return if @body_height_mode == :auto
+        return if @body_height.present? && @body_height.match?(/\A[0-9a-zA-Z\s\-+*%.,()\[\]_]+\z/)
+
+        raise ArgumentError, "body_height is required for non-auto body_height_mode and may only contain CSS length/expression characters"
       end
     end
   end

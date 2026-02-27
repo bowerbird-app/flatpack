@@ -79,7 +79,7 @@ module FlatPack
         def sort_indicator(current_sort, current_direction)
           return "" unless current_sort.to_s == @sort_key.to_s
 
-          arrow = (current_direction == "asc") ? "↓" : "↑"
+          arrow = (current_direction == "asc") ? "↑" : "↓"
           tag.span(arrow, class: "ms-1 text-primary font-bold")
         end
 

@@ -1,0 +1,32 @@
+<div class="container mx-auto max-w-4xl p-4">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Chat::SystemMessage",
+    subtitle: "System-level events for chat group timeline markers."
+  ) %>
+
+  <%= render "pages/component_method_variables_table", component: :chat_system_message, anchor: "component-method-variables" %>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Demo", anchor_link: true, subtitle: "System event rows centered in the chat stream.") %>
+
+    <div class="mb-4 mt-6 space-y-2 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
+      <%= render FlatPack::Chat::SystemMessage::Component.new do %>
+        Mina joined the chat group
+      <% end %>
+
+      <%= render FlatPack::Chat::SystemMessage::Component.new do %>
+        Alex renamed the chat group to Product Launch
+      <% end %>
+    </div>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Chat::SystemMessage::Component.new do %&gt;
+          Alex renamed the chat group to Product Launch
+        &lt;% end %&gt;
+      CODE
+    ) %>
+  </section>
+</div>

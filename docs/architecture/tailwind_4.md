@@ -37,7 +37,7 @@ Define theme configuration in CSS:
   --color-brand-500: oklch(0.62 0.22 250);
   
   /* Spacing */
-  --spacing-lg: 1.5rem;
+  --stack-gap-lg: 1.5rem;
   
   /* Border radius */
   --radius-md: 0.375rem;

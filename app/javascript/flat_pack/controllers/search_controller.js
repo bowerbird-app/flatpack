@@ -32,7 +32,6 @@ export default class extends Controller {
     }
 
     this.showLoading()
-    this.open()
 
     this.clearDebounce()
     this.debounceTimer = setTimeout(() => {
@@ -111,20 +110,20 @@ export default class extends Controller {
 
   buildResultItem(result) {
     const listItem = document.createElement("li")
-    listItem.className = "border-b border-[var(--surface-border-color)] last:border-b-0"
+    listItem.className = "border-b border-[var(--search-result-divider-color)] last:border-b-0"
 
     const link = document.createElement("a")
-    link.className = "block px-3 py-2 hover:bg-[var(--surface-muted-background-color)] focus:outline-none focus:bg-[var(--surface-muted-background-color)]"
+    link.className = "block px-3 py-2 hover:bg-[var(--search-result-hover-background-color)] focus:outline-none focus:bg-[var(--search-result-hover-background-color)]"
     link.href = result.url || "#"
 
     const title = document.createElement("div")
-    title.className = "text-sm font-medium text-[var(--surface-content-color)]"
+    title.className = "text-sm font-medium text-[var(--search-result-title-color)]"
     title.textContent = result.title || result.label || "Result"
     link.append(title)
 
     if (result.description) {
       const description = document.createElement("div")
-      description.className = "mt-0.5 text-xs text-[var(--surface-muted-content-color)]"
+      description.className = "mt-0.5 text-xs text-[var(--search-result-description-color)]"
       description.textContent = result.description
       link.append(description)
     }

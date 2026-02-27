@@ -11,16 +11,16 @@ module FlatPack
           inactive: "text-[var(--surface-muted-content-color)] hover:text-[var(--surface-content-color)] hover:bg-[var(--surface-muted-background-color)]"
         },
         pills: {
-          tab_list: "inline-flex gap-1 rounded-full border border-[var(--tabs-pill-list-border-color)] bg-[var(--tabs-pill-list-background-color)] p-1",
-          tab_base: "border border-transparent px-4 py-2 text-sm font-medium rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+          tab_list: "inline-flex gap-1 [border-radius:var(--tabs-pill-corner-radius)] p-1",
+          tab_base: "border border-transparent px-4 py-2 text-sm font-medium [border-radius:var(--tabs-pill-corner-radius)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
           active: "border-[var(--tabs-pill-active-border-color)] bg-[var(--tabs-pill-active-background-color)] text-[var(--tabs-pill-active-text-color)] shadow-[var(--tabs-pill-active-shadow)]",
           inactive: "text-[var(--tabs-pill-inactive-text-color)] hover:text-[var(--tabs-pill-inactive-hover-text-color)] hover:bg-[var(--tabs-pill-inactive-hover-background-color)]"
         },
         stacked: {
-          tab_list: "flex flex-col gap-1 rounded-lg bg-[var(--surface-muted-background-color)] p-1",
-          tab_base: "w-full rounded-md px-3 py-2 text-left text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-          active: "border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] text-primary shadow-sm",
-          inactive: "border border-transparent text-[var(--surface-muted-content-color)] hover:text-[var(--surface-content-color)] hover:bg-[var(--surface-background-color)]"
+          tab_list: "flex flex-col gap-1 [border-radius:var(--tabs-pill-corner-radius)] p-1 bg-[var(--tabs-stacked-pill-list-background-color)] border border-[var(--tabs-pill-list-border-color)]",
+          tab_base: "w-full [border-radius:var(--tabs-pill-corner-radius)] px-3 py-2 text-left text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+          active: "border border-[var(--tabs-pill-active-border-color)] bg-[var(--tabs-pill-active-background-color)] text-[var(--tabs-pill-active-text-color)] shadow-[var(--tabs-pill-active-shadow)]",
+          inactive: "border border-transparent text-[var(--tabs-pill-inactive-text-color)] hover:text-[var(--tabs-pill-inactive-hover-text-color)] hover:bg-[var(--tabs-pill-inactive-hover-background-color)]"
         }
       }.freeze
 

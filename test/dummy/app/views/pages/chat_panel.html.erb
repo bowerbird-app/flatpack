@@ -4,25 +4,75 @@
     subtitle: "Header, messages, and composer sections in one container."
   ) %>
 
-  <div class="mt-6 h-[560px] overflow-hidden rounded-lg border border-[var(--surface-border-color)] bg-[var(--surface-background-color)]">
-    <%= render FlatPack::Chat::Panel::Component.new do |panel| %>
-      <% panel.with_header do %>
-        <div class="p-4">
-          <h3 class="font-semibold">Panel Header</h3>
-          <p class="text-sm text-[var(--surface-muted-content-color)]">Use this area for participants and context.</p>
-        </div>
-      <% end %>
+  <%= render "pages/component_method_variables_table", component: :chat_panel, anchor: "component-method-variables" %>
 
-      <% panel.with_messages do %>
-        <div class="flex-1 space-y-3 overflow-y-auto p-4">
-          <%= render FlatPack::Chat::Message::Component.new(direction: :incoming) { "Incoming message in panel body" } %>
-          <%= render FlatPack::Chat::Message::Component.new(direction: :outgoing) { "Outgoing message in panel body" } %>
-        </div>
-      <% end %>
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Demo", anchor_link: true, subtitle: "Panel header, messages, and composer slots.") %>
 
-      <% panel.with_composer do %>
-        <%= render FlatPack::Chat::Composer::Component.new %>
+    <div class="mb-4 mt-6 h-[560px] overflow-hidden rounded-lg border border-(--surface-border-color) bg-(--surface-background-color)">
+      <%= render FlatPack::Chat::Panel::Component.new do |panel| %>
+        <% panel.with_header do %>
+          <%= render FlatPack::Chat::Header::Component.new(
+            title: "Alicia Chen",
+            subtitle: "Online",
+            back_href: "#chat-groups",
+            back_label: "Back to chat groups",
+            person_avatar: {name: "Alicia Chen", size: :sm}
+          ) do |header| %>
+            <% header.right do %>
+              <%= render FlatPack::Button::Component.new(
+                icon: "dots",
+                icon_only: true,
+                style: :ghost,
+                size: :sm,
+                url: "#chat-actions"
+              ) %>
+            <% end %>
+          <% end %>
+        <% end %>
+
+        <% panel.with_messages do %>
+          <div class="flex-1 space-y-3 overflow-y-auto p-4">
+            <%= render FlatPack::Chat::ReceivedMessage::Component.new { "Incoming message in panel body" } %>
+            <%= render FlatPack::Chat::SentMessage::Component.new { "Outgoing message in panel body" } %>
+          </div>
+        <% end %>
+
+        <% panel.with_composer do %>
+          <%= render FlatPack::Chat::Composer::Component.new %>
+        <% end %>
       <% end %>
-    <% end %>
-  </div>
+    </div>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Chat::Panel::Component.new do |panel| %&gt;
+          &lt;% panel.with_header do %&gt;
+            &lt;%= render FlatPack::Chat::Header::Component.new(
+              title: "Alicia Chen",
+              subtitle: "Online",
+              back_href: "#chat-groups",
+              person_avatar: {name: "Alicia Chen", size: :sm}
+            ) do |header| %&gt;
+              &lt;% header.right do %&gt;
+                &lt;%= render FlatPack::Button::Component.new(icon: "dots", icon_only: true, style: :ghost, size: :sm) %&gt;
+              &lt;% end %&gt;
+            &lt;% end %&gt;
+          &lt;% end %&gt;
+
+          &lt;% panel.with_messages do %&gt;
+            &lt;div class="flex-1 space-y-3 overflow-y-auto p-4"&gt;
+              &lt;%= render FlatPack::Chat::ReceivedMessage::Component.new { "Incoming message in panel body" } %&gt;
+            &lt;/div&gt;
+          &lt;% end %&gt;
+
+          &lt;% panel.with_composer do %&gt;
+            &lt;%= render FlatPack::Chat::Composer::Component.new %&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
+  </section>
 </div>

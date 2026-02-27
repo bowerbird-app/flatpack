@@ -8,28 +8,31 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "File Input Examples", anchor_link: true) %>
 
-  <div class="space-y-4 p-6 border border-slate-200 rounded-lg bg-white">
-    <%= render FlatPack::FileInput::Component.new(
-      name: "avatar",
-      label: "Profile Picture",
-      accept: "image/png,image/jpeg,image/gif",
-      max_size: 2_097_152,
-      preview: true
-    ) %>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body(class: "space-y-[var(--stack-gap-md)]") do %>
+      <%= render FlatPack::FileInput::Component.new(
+        name: "avatar",
+        label: "Profile Picture",
+        accept: "image/png,image/jpeg,image/gif",
+        max_size: 2_097_152,
+        preview: true
+      ) %>
 
-    <%= render FlatPack::FileInput::Component.new(
-      name: "documents",
-      label: "Upload Documents",
-      accept: ".pdf,.doc,.docx",
-      multiple: true,
-      max_size: 5_242_880,
-      preview: false
-    ) %>
-  </div>
+      <%= render FlatPack::FileInput::Component.new(
+        name: "documents",
+        label: "Upload Documents",
+        accept: ".pdf,.doc,.docx",
+        multiple: true,
+        max_size: 5_242_880,
+        preview: false
+      ) %>
+    <% end %>
+  <% end %>
 
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE'),
-      &lt;div class=&quot;space-y-4 p-6 border border-slate-200 rounded-lg bg-white&quot;&gt;
+      &lt;%= render FlatPack::Card::Component.new do |card| %&gt;
+        &lt;% card.body do %&gt;
         &lt;%= render FlatPack::FileInput::Component.new(
           name: &quot;avatar&quot;,
           label: &quot;Profile Picture&quot;,
@@ -46,7 +49,8 @@
           max_size: 5_242_880,
           preview: false
         ) %&gt;
-      &lt;/div&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
     CODE
     language: "erb",
     title: "File Input Examples"

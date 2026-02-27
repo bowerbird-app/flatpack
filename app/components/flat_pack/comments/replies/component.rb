@@ -42,14 +42,14 @@ module FlatPack
 
           classes(
             indent_class,
-            "border-l-2 border-[var(--surface-border-color)] pl-4 space-y-4"
+            "border-l-2 border-[var(--comments-replies-border-color)] pl-4 space-y-4"
           )
         end
 
         def render_collapsed_state
           content_tag(:button,
             type: "button",
-            class: "text-sm font-medium text-primary hover:text-primary/80 transition-colors duration-base") do
+            class: "text-sm font-medium text-[var(--comments-replies-toggle-color)] hover:text-[var(--comments-replies-toggle-hover-color)] transition-colors duration-base") do
             safe_join([
               # Chevron right icon
               content_tag(:svg,

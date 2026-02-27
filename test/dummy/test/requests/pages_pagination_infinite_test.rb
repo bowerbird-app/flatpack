@@ -32,4 +32,23 @@ class PagesPaginationInfiniteTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, "data-pagination-content"
   end
+
+  test "pagination infinite falls back to demo records when dummy_data is sparse" do
+    original_table_exists = DummyDatum.method(:table_exists?)
+    original_recent = DummyDatum.method(:recent)
+
+    DummyDatum.define_singleton_method(:table_exists?) { true }
+    DummyDatum.define_singleton_method(:recent) { DummyDatum.none }
+
+    begin
+      get demo_pagination_infinite_path
+    ensure
+      DummyDatum.define_singleton_method(:table_exists?, original_table_exists)
+      DummyDatum.define_singleton_method(:recent, original_recent)
+    end
+
+    assert_response :success
+    assert_includes response.body, "Demo User 1"
+    assert_includes response.body, "data-controller=\"flat-pack--pagination-infinite\""
+  end
 end

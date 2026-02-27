@@ -3,7 +3,7 @@
     subtitle: "Examples of forms using submit buttons with different HTTP methods (POST, PATCH, PUT, DELETE)."
   ) %>
 
-  <%= render "pages/component_method_variables_table", component: :form_input %>
+  <%= render "pages/component_method_variables_table", components: [:form_input, :button] %>
 
   <!-- Flash Messages -->
   <% if flash[:notice] %>

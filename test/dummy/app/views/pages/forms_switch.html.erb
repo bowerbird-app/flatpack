@@ -8,28 +8,31 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Switch Examples", anchor_link: true) %>
 
-  <div class="space-y-4 p-6 border border-slate-200 rounded-lg bg-white">
-    <%= render FlatPack::Switch::Component.new(
-      name: "feature_toggle",
-      label: "Enable feature"
-    ) %>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body(class: "space-y-[var(--stack-gap-md)]") do %>
+      <%= render FlatPack::Switch::Component.new(
+        name: "feature_toggle",
+        label: "Enable feature"
+      ) %>
 
-    <%= render FlatPack::Switch::Component.new(
-      name: "autosave_toggle",
-      label: "Auto-save",
-      checked: true
-    ) %>
+      <%= render FlatPack::Switch::Component.new(
+        name: "autosave_toggle",
+        label: "Auto-save",
+        checked: true
+      ) %>
 
-    <%= render FlatPack::Switch::Component.new(
-      name: "disabled_toggle",
-      label: "Disabled toggle",
-      disabled: true
-    ) %>
-  </div>
+      <%= render FlatPack::Switch::Component.new(
+        name: "disabled_toggle",
+        label: "Disabled toggle",
+        disabled: true
+      ) %>
+    <% end %>
+  <% end %>
 
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE'),
-      &lt;div class=&quot;space-y-4 p-6 border border-slate-200 rounded-lg bg-white&quot;&gt;
+      &lt;%= render FlatPack::Card::Component.new do |card| %&gt;
+        &lt;% card.body do %&gt;
         &lt;%= render FlatPack::Switch::Component.new(
           name: &quot;feature_toggle&quot;,
           label: &quot;Enable feature&quot;
@@ -46,7 +49,8 @@
           label: &quot;Disabled toggle&quot;,
           disabled: true
         ) %&gt;
-      &lt;/div&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
     CODE
     language: "erb",
     title: "Switch Examples"

@@ -74,7 +74,7 @@ module FlatPack
         end
 
         def desktop_toggle_classes
-          "ml-auto p-2 rounded-lg text-[var(--sidebar-header-icon-color)] hover:bg-[var(--sidebar-header-icon-hover-background-color)] hover:text-[var(--sidebar-header-icon-hover-color)] transition-colors"
+          "hidden ml-auto p-2 rounded-lg text-[var(--sidebar-header-icon-color)] hover:bg-[var(--sidebar-header-icon-hover-background-color)] hover:text-[var(--sidebar-header-icon-hover-color)] transition-colors"
         end
 
         def brand_data_attributes

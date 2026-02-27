@@ -40,10 +40,23 @@ Rails.application.configure do
 
   # Highlight code that enqueued background job in logs.
   config.active_job.verbose_enqueue_logs = true
+  # Use async by default so demo background interactions (chat typing/replies)
+  # work even when Sidekiq is not running. Opt into Sidekiq explicitly.
+  config.active_job.queue_adapter = if ENV["DUMMY_USE_SIDEKIQ"] == "1" &&
+      Gem::Specification.find_all_by_name("sidekiq").any?
+    :sidekiq
+  else
+    :async
+  end
 
   # Raise error when a before_action's only/except options reference missing actions.
   config.action_controller.raise_on_missing_callback_actions = true
 
   # Allow GitHub Codespaces hosts
   config.hosts << /.*\.app\.github\.dev/
+
+  # Allow local forwarded origins (e.g. http://localhost:3000) when developing
+  # through Codespaces/browser tunnels so CSRF origin checks don't block demo
+  # XHR PATCH requests like /demo/tables/reorder.
+  config.action_controller.forgery_protection_origin_check = false
 end

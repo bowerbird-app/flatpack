@@ -30,6 +30,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/breadcrumbs
     /demo/navbar
     /demo/search
+    /demo/picker
     /demo/sidebar_layout
     /demo/sidebar/basic
     /demo/sidebar/header
@@ -47,8 +48,10 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/tabs/stacked_pills
     /demo/toasts
     /demo/page_header
+    /demo/text/quote
     /demo/empty_state
     /demo/grid
+    /demo/grid/movable_cards
     /demo/pagination
     /demo/charts
     /demo/code_blocks
@@ -59,7 +62,14 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/chat/panel
     /demo/chat/message_list
     /demo/chat/message_group
-    /demo/chat/message
+    /demo/chat/sent_message
+    /demo/chat/received_message
+    /demo/chat/file_message
+    /demo/chat/image_message
+    /demo/chat/system_message
+    /demo/chat/image_deck
+    /demo/chat/message_record
+    /demo/chat/inbox_row
     /demo/chat/message_meta
     /demo/chat/attachment
     /demo/chat/date_divider
@@ -67,6 +77,27 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/chat/composer
     /demo/chat/textarea
     /demo/chat/send_button
+    /demo/carousel
+    /demo/carousel/images
+    /demo/carousel/lightbox
+    /demo/carousel/thumbnails
+    /demo/carousel/html_cards
+    /demo/carousel/videos
+    /demo/carousel/mixed_content
+    /demo/carousel/navigation
+    /demo/carousel/autoplay_loop
+    /demo/carousel/mobile
+    /demo/carousel/captions
+    /demo/carousel/fullscreen
+    /demo/carousel/rtl
+    /demo/carousel/video_aware
+    /demo/carousel/loading_states
+    /demo/carousel/performance
+    /demo/carousel/events_api
+    /demo/carousel/security
+    /demo/carousel/theming
+    /demo/carousel/deep_linking
+    /demo/carousel/reduced_motion
     /demo/progress
     /demo/collapse
     /demo/range_input
@@ -84,6 +115,81 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "chat demo keeps composer visible in full-height panel" do
+    get "/demo/chat/demo"
+
+    assert_response :success
+    assert_includes response.body, "id=\"chat-demo-panel\""
+    assert_includes response.body, "class=\"block h-full\""
+    assert_includes response.body, "data-controller=\"flat-pack--chat-sender\""
+    assert_includes response.body, "modal-id=\"chat-picker-images\""
+    assert_includes response.body, "modal-id=\"chat-picker-files\""
+    assert_includes response.body, "id=\"chat-picker-images\""
+    assert_includes response.body, "id=\"chat-picker-files\""
+    assert_includes response.body, "flat-pack:picker:confirm@document-&gt;flat-pack--chat-sender#handlePickerConfirm"
+    assert_includes response.body, "data-flat-pack--chat-sender-optimistic-endpoint-value=\"/demo/chat_groups/"
+    assert_includes response.body, "data-flat-pack--chat-sender-picker-ids-value=\"[&quot;chat-picker-images&quot;,&quot;chat-picker-files&quot;]\""
+  end
+
+  test "picker demo renders reusable picker component examples" do
+    get "/demo/picker"
+
+    assert_response :success
+    assert_includes response.body, "Open Local Picker"
+    assert_includes response.body, "Open Image Picker"
+    assert_includes response.body, "id=\"picker-demo-local\""
+    assert_includes response.body, "id=\"picker-demo-images\""
+    assert_includes response.body, "id=\"picker-demo-remote\""
+    assert_includes response.body, "id=\"picker-demo-field\""
+    assert_includes response.body, "data-controller=\"picker-demo\""
+  end
+
+  test "chat demo inbox renders compact chat group avatar clusters" do
+    get "/demo/chat/demo"
+
+    assert_response :success
+    assert_includes response.body, "data-chat-group-inbox-avatar=\"true\""
+    assert_includes response.body, "data-max-visible-avatars=\"2\""
+  end
+
+  test "chat inbox row demo renders reusable row examples" do
+    get "/demo/chat/inbox_row"
+
+    assert_response :success
+    assert_includes response.body, "Chat::InboxRow"
+    assert_includes response.body, "Design Team"
+    assert_includes response.body, "data-chat-group-inbox-avatar=\"true\""
+  end
+
+  test "carousel overview renders live demo cards" do
+    get "/demo/carousel"
+
+    assert_response :success
+    assert_includes response.body, "Carousel Demos"
+    assert_includes response.body, "Interactive demos"
+    assert_includes response.body, "Image Carousel"
+    assert_includes response.body, "Video Carousel"
+  end
+
+  test "carousel example page renders live interactive content" do
+    get "/demo/carousel/images"
+
+    assert_response :success
+    assert_includes response.body, "Carousel Demo: Image Carousel"
+    assert_includes response.body, "data-controller=\"carousel-demo\""
+    assert_includes response.body, "Go to slide 1"
+    assert_includes response.body, "Back to Carousel Overview"
+  end
+
+  test "sidebar includes collapsible carousel group" do
+    get "/demo/carousel"
+
+    assert_response :success
+    assert_includes response.body, "Carousel"
+    assert_includes response.body, "/demo/carousel/images"
+    assert_includes response.body, "/demo/carousel/videos"
+  end
+
   test "search results returns empty array for blank query" do
     get "/demo/search_results", params: {q: "   "}
 
@@ -98,6 +204,37 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_response :success
     payload = JSON.parse(response.body)
     assert payload["results"].any? { |entry| entry["title"].to_s.include?("Button") }
+  end
+
+  test "search results include movable cards grid entry" do
+    get "/demo/search_results", params: {q: "movable cards"}
+
+    assert_response :success
+    payload = JSON.parse(response.body)
+    assert payload["results"].any? { |entry| entry["title"].to_s.include?("Grid: Movable Cards") }
+  end
+
+  test "search results include sidebar section pages like themes and timeline" do
+    get "/demo/search_results", params: {q: "ocean theme"}
+
+    assert_response :success
+    payload = JSON.parse(response.body)
+    assert payload["results"].any? { |entry| entry["title"] == "Ocean theme" }
+
+    get "/demo/search_results", params: {q: "timeline"}
+
+    assert_response :success
+    payload = JSON.parse(response.body)
+    assert payload["results"].any? { |entry| entry["title"] == "Timeline" }
+  end
+
+  test "top nav includes live demo search" do
+    get "/demo"
+
+    assert_response :success
+    assert_includes response.body, "Search demo pages..."
+    assert_includes response.body, "data-controller=\"flat-pack--search\""
+    assert_includes response.body, "data-flat-pack--search-url-value=\"/demo/search_results\""
   end
 
   test "form demo submission endpoints redirect" do

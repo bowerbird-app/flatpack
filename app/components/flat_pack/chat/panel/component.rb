@@ -26,16 +26,16 @@ module FlatPack
 
         def render_header_section
           content_tag(:div, class: header_classes) do
-            header
+            header.to_s
           end
         end
 
         def render_messages_section
-          messages
+          messages.to_s
         end
 
         def render_composer_section
-          composer
+          composer.to_s
         end
 
         def panel_attributes

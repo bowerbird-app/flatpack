@@ -51,12 +51,28 @@ module FlatPack
 
         def render_state_indicator
           case @state
+          when :sent
+            render_sent_indicator
           when :sending
             render_sending_indicator
           when :failed
             render_failed_indicator
           when :read
             render_read_indicator
+          end
+        end
+
+        def render_sent_indicator
+          content_tag(:span, class: "text-xs text-[var(--chat-message-meta-color)]") do
+            safe_join([
+              content_tag(:svg,
+                xmlns: "http://www.w3.org/2000/svg",
+                viewBox: "0 0 20 20",
+                fill: "currentColor",
+                class: "h-3 w-3 inline") do
+                content_tag(:path, nil, d: "M7.78 13.78a.75.75 0 01-1.06 0L3.22 10.28a.75.75 0 111.06-1.06l2.97 2.97 8.47-8.47a.75.75 0 111.06 1.06z")
+              end
+            ])
           end
         end
 

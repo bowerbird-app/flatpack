@@ -50,16 +50,16 @@ module FlatPack
           end
 
           # Add the pin configuration
-          pin_config = "\n# Pin FlatPack controllers\npin_all_from FlatPack::Engine.root.join(\"app/javascript/flat_pack/controllers\"), under: \"controllers/flat_pack\", to: \"flat_pack/controllers\"\n"
+          pin_config = "\n# Pin FlatPack controllers without modulepreload for lazy loading\npin_all_from FlatPack::Engine.root.join(\"app/javascript/flat_pack/controllers\"), under: \"controllers/flat_pack\", to: \"flat_pack/controllers\", preload: false\n"
 
           File.write(importmap_path, content + pin_config)
 
           say "\n✓ Configured importmap for FlatPack controllers", :green
-          say "  - Added pin_all_from for controllers/flat_pack", :green
+          say "  - Added pin_all_from for controllers/flat_pack with preload: false", :green
         else
           say "\n⊙ Importmap configuration file not found", :yellow
           say "  If using importmaps, manually add to config/importmap.rb:", :yellow
-          say "  pin_all_from FlatPack::Engine.root.join(\"app/javascript/flat_pack/controllers\"), under: \"controllers/flat_pack\", to: \"flat_pack/controllers\"", :cyan
+          say "  pin_all_from FlatPack::Engine.root.join(\"app/javascript/flat_pack/controllers\"), under: \"controllers/flat_pack\", to: \"flat_pack/controllers\", preload: false", :cyan
         end
       end
 
@@ -75,17 +75,20 @@ module FlatPack
             return
           end
 
-          # Add eager loading for FlatPack controllers
-          flat_pack_config = "\n// Eager load FlatPack controllers\neagerLoadControllersFrom(\"controllers/flat_pack\", application)\n"
+          content = ensure_lazy_stimulus_loader_import(content)
+
+          # Add lazy loading for FlatPack controllers
+          flat_pack_config = "\n// Lazy load FlatPack controllers on first use\nlazyLoadControllersFrom(\"controllers/flat_pack\", application)\n"
 
           File.write(controllers_index_path, content + flat_pack_config)
 
           say "\n✓ Configured Stimulus for FlatPack controllers", :green
-          say "  - Added eagerLoadControllersFrom for controllers/flat_pack", :green
+          say "  - Added lazyLoadControllersFrom for controllers/flat_pack", :green
         else
           say "\n⊙ Stimulus controllers index not found", :yellow
           say "  If using Stimulus, manually add to app/javascript/controllers/index.js:", :yellow
-          say "  eagerLoadControllersFrom(\"controllers/flat_pack\", application)", :cyan
+          say "  import { lazyLoadControllersFrom } from \"@hotwired/stimulus-loading\"", :cyan
+          say "  lazyLoadControllersFrom(\"controllers/flat_pack\", application)", :cyan
         end
       end
 
@@ -215,6 +218,21 @@ module FlatPack
         say "   }\n"
         say "\nFor complete configuration, see: docs/installation.md", :cyan
         say "=" * 70, :cyan
+      end
+
+      def ensure_lazy_stimulus_loader_import(content)
+        import_pattern = /import\s*\{\s*([^}]+)\s*\}\s*from\s*["']@hotwired\/stimulus-loading["']/
+
+        match = content.match(import_pattern)
+        if match
+          imported_symbols = match[1].split(",").map(&:strip)
+          return content if imported_symbols.include?("lazyLoadControllersFrom")
+
+          updated_symbols = (imported_symbols + ["lazyLoadControllersFrom"]).uniq.join(", ")
+          return content.sub(import_pattern, "import { #{updated_symbols} } from \"@hotwired/stimulus-loading\"")
+        end
+
+        "import { lazyLoadControllersFrom } from \"@hotwired/stimulus-loading\"\n" + content
       end
 
       def show_next_steps

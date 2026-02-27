@@ -3,7 +3,7 @@
   subtitle: "Layout shell examples for placing the sidebar on the left or right."
 ) %>
 
-<%= render "pages/component_method_variables_table", component: :sidebar_layout %>
+<%= render "pages/component_method_variables_table", components: [:sidebar_layout, :top_nav] %>
 
 <% sidebar_side = params[:side].in?(%w[left right]) ? params[:side] : "left" %>
 

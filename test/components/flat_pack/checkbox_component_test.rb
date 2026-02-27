@@ -100,6 +100,31 @@ module FlatPack
         assert_selector "input.flat-pack-checkbox"
       end
 
+      def test_uses_theme_tokens_for_size_and_radius
+        render_inline(Component.new(name: "agree"))
+
+        html = page.native.to_html
+        assert_includes html, "h-[var(--checkbox-size)]"
+        assert_includes html, "w-[var(--checkbox-size)]"
+        assert_includes html, "rounded-[var(--checkbox-radius)]"
+      end
+
+      def test_uses_accent_and_checked_state_classes
+        render_inline(Component.new(name: "agree"))
+
+        html = page.native.to_html
+        assert_includes html, "accent-primary"
+        assert_includes html, "checked:bg-primary"
+        assert_includes html, "checked:border-primary"
+      end
+
+      def test_uses_theme_token_for_label_gap
+        render_inline(Component.new(name: "agree", label: "I agree"))
+
+        html = page.native.to_html
+        assert_includes html, "ml-[var(--checkbox-label-gap)]"
+      end
+
       def test_has_wrapper_class
         render_inline(Component.new(name: "agree"))
 

@@ -1,73 +1,51 @@
 # Progress Bar Component
 
-The Progress Bar component displays task completion or loading progress with customizable variants and sizes.
+## Purpose
+Display numeric progress as a horizontal bar with optional label text.
 
-## Basic Usage
+## When to use
+Use Progress when users need a visual indicator of completion for uploads, tasks, or step flows.
 
-```erb
-<%= render FlatPack::Progress::Component.new(value: 50) %>
-```
+## Class
+- Primary: `FlatPack::Progress::Component`
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `value` | Number | **required** | Current progress value |
-| `max` | Number | `100` | Maximum value |
-| `variant` | Symbol | `:default` | Visual style (`:default`, `:success`, `:warning`, `:danger`) |
-| `size` | Symbol | `:md` | Bar height (`:sm`, `:md`, `:lg`, `:xl`) |
-| `label` | String | `nil` | Optional label text |
-| `show_label` | Boolean | `false` | Show percentage as label |
-| `**system_arguments` | Hash | `{}` | HTML attributes (`class`, `data`, `aria`, `id`, etc.) |
+| name | type | default | required | description |
+|------|------|---------|----------|-------------|
+| `value` | Numeric | none | Yes | Current progress value. Must be non-negative. |
+| `max` | Numeric | `100` | No | Maximum value. Must be greater than zero. |
+| `variant` | Symbol | `:default` | No | Fill color variant. Allowed: `:default`, `:success`, `:warning`, `:danger`. |
+| `size` | Symbol | `:md` | No | Bar height. Allowed: `:sm`, `:md`, `:lg`, `:xl`. |
+| `label` | String or nil | `nil` | No | Optional visible label text and default `aria-label` source. |
+| `show_label` | Boolean | `false` | No | When true and `label` is nil, renders computed percentage text. |
+| `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into outer wrapper. |
 
-## Examples
+## Slots
+None.
 
-### Basic Progress Bar
-```erb
-<%= render FlatPack::Progress::Component.new(value: 65) %>
-```
+## Variants
 
-### With Label
-```erb
-<%= render FlatPack::Progress::Component.new(
-  value: 75,
-  label: "Upload Progress"
-) %>
-```
+| variant | description |
+|---------|-------------|
+| `variant: :default` | Primary fill color (`bg-primary`). |
+| `variant: :success` | Success fill color (`bg-success-background-color`). |
+| `variant: :warning` | Warning fill color (`bg-warning-background-color`). |
+| `variant: :danger` | Danger fill color (`bg-danger-background-color`). |
 
-### Show Percentage
+## Example
+
 ```erb
 <%= render FlatPack::Progress::Component.new(
-  value: 80,
+  value: 72,
+  max: 100,
+  variant: :default,
   show_label: true
 ) %>
 ```
 
-### Variants
-```erb
-<%= render FlatPack::Progress::Component.new(value: 100, variant: :success) %>
-<%= render FlatPack::Progress::Component.new(value: 60, variant: :warning) %>
-<%= render FlatPack::Progress::Component.new(value: 30, variant: :danger) %>
-```
-
-### Sizes
-```erb
-<%= render FlatPack::Progress::Component.new(value: 50, size: :sm) %>
-<%= render FlatPack::Progress::Component.new(value: 50, size: :md) %>
-<%= render FlatPack::Progress::Component.new(value: 50, size: :lg) %>
-<%= render FlatPack::Progress::Component.new(value: 50, size: :xl) %>
-```
-
 ## Accessibility
+The inner track uses `role="progressbar"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax`, and `aria-label` (from `label` or fallback `"Progress"`). A screen-reader-only percentage is included inside the fill element.
 
-- Uses `role="progressbar"` with proper ARIA attributes
-- Includes `aria-valuenow`, `aria-valuemin`, and `aria-valuemax`
-- Screen reader accessible percentage hidden visually with `.sr-only`
-- Supports custom ARIA labels via `system_arguments`
-
-## Use Cases
-
-- File upload progress
-- Multi-step form completion
-- Task completion indicators
-- Loading states with known duration
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).

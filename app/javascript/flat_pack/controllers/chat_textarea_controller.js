@@ -20,12 +20,17 @@ export default class extends Controller {
     }
 
     const textarea = this.textareaTarget
-    
+
     // Reset height to auto to get the correct scrollHeight
     textarea.style.height = "auto"
-    
-    // Set the height to match the content
-    textarea.style.height = `${textarea.scrollHeight}px`
+
+    const computedStyle = window.getComputedStyle(textarea)
+    const minHeight = parseFloat(computedStyle.minHeight) || 0
+    const borderHeight = textarea.offsetHeight - textarea.clientHeight
+    const targetHeight = textarea.scrollHeight + borderHeight
+
+    // Ensure baseline control height is preserved before/without focus
+    textarea.style.height = `${Math.max(targetHeight, minHeight)}px`
   }
 
   handleKeydown(event) {

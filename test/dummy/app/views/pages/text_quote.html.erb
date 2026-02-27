@@ -1,0 +1,47 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Quote",
+  subtitle: "Text quote patterns with optional citation and supporting context."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :quote %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Basic Quote", anchor_link: true, subtitle: "A simple quote with source attribution.") %>
+
+  <%= render FlatPack::Card::Component.new(class: "mt-6") do |card| %>
+    <% card.body(class: "space-y-4") do %>
+      <%= render FlatPack::Quote::Component.new(
+        text: "Good design is as little design as possible.",
+        cite: "Dieter Rams"
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Quote::Component.new(
+        text: &quot;Good design is as little design as possible.&quot;,
+        cite: &quot;Dieter Rams&quot;
+      ) %&gt;
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Quote in Content", anchor_link: true, subtitle: "Use quotes inside longer body copy sections.") %>
+
+  <%= render FlatPack::Card::Component.new(class: "mt-6") do |card| %>
+    <% card.body(class: "space-y-4") do %>
+      <p class="text-(--surface-content-color)">
+        Quotes can support a key idea and create visual rhythm in long-form content.
+      </p>
+      <%= render FlatPack::Quote::Component.new(
+        text: "Typography is the craft of endowing human language with a durable visual form.",
+        cite: "Robert Bringhurst",
+        size: :lg
+      ) %>
+    <% end %>
+  <% end %>
+</section>

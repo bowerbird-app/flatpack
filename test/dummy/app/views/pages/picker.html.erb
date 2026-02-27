@@ -1,0 +1,169 @@
+<div class="container mx-auto max-w-5xl p-4" data-controller="picker-demo" data-action="flat-pack:picker:confirm@document->picker-demo#handleConfirm">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Picker",
+    subtitle: "Reusable image/file picker that lets each consumer decide what to do with selections."
+  ) %>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Event Output",
+      anchor_link: true,
+      subtitle: "Selection is emitted as an event so consumers can map to any workflow."
+    ) %>
+
+    <%= render FlatPack::Card::Component.new(class: "mt-6") do |card| %>
+      <% card.body do %>
+        <div class="space-y-4">
+          <p class="text-sm text-(--surface-muted-content-color)">
+            This picker emits <code>flat-pack:picker:confirm</code>. These demos also pin modal body height so search states do not cause layout jumps.
+          </p>
+
+          <div class="flex flex-wrap gap-2">
+            <%= render FlatPack::Button::Component.new(
+              text: "Open Local Picker",
+              icon: "image",
+              data: {
+                action: "click->flat-pack--modal#open",
+                "modal-id": "picker-demo-local"
+              }
+            ) %>
+
+            <%= render FlatPack::Button::Component.new(
+              text: "Open Remote Picker",
+              icon: "search",
+              style: :secondary,
+              data: {
+                action: "click->flat-pack--modal#open",
+                "modal-id": "picker-demo-remote"
+              }
+            ) %>
+          </div>
+
+          <div class="rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-3">
+            <p class="text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">Selection Summary</p>
+            <ul class="mt-2 space-y-1 text-sm" data-picker-demo-target="eventOutput">
+              <li class="text-(--surface-muted-content-color)">No items selected yet.</li>
+            </ul>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::Picker::Component.new(
+      id: "picker-demo-local",
+      title: "Select Assets",
+      subtitle: "Local search across image and file assets with a fixed modal body height.",
+      items: @picker_demo_items,
+      searchable: true,
+      search_mode: :local,
+      modal_body_height_mode: :fixed,
+      modal_body_height: "clamp(20rem, 55vh, 30rem)",
+      confirm_text: "Use Selection",
+      context: {target: "picker-demo-local"}
+    ) %>
+
+    <%= render FlatPack::Picker::Component.new(
+      id: "picker-demo-remote",
+      title: "Search Remote Assets",
+      subtitle: "Remote search keeps a fixed modal body height for stable layout while result counts change.",
+      items: @picker_demo_items.first(2),
+      searchable: true,
+      search_mode: :remote,
+      search_endpoint: demo_picker_results_path,
+      modal_body_height_mode: :fixed,
+      modal_body_height: "clamp(20rem, 55vh, 30rem)",
+      confirm_text: "Use Remote Selection",
+      context: {target: "picker-demo-remote"}
+    ) %>
+  </section>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Image Picker",
+      anchor: "image-picker",
+      anchor_link: true,
+      subtitle: "Image-only picker demo for media selection workflows."
+    ) %>
+
+    <%= render FlatPack::Card::Component.new(class: "mt-6") do |card| %>
+      <% card.body do %>
+        <div class="space-y-4">
+          <p class="text-sm text-(--surface-muted-content-color)">
+            This configuration filters to image assets only, supports multi-select, shows thumbnail cards in a grid, and keeps modal height stable during empty search results.
+          </p>
+
+          <div class="flex flex-wrap gap-2">
+            <%= render FlatPack::Button::Component.new(
+              text: "Open Image Picker",
+              icon: "image",
+              data: {
+                action: "click->flat-pack--modal#open",
+                "modal-id": "picker-demo-images"
+              }
+            ) %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::Picker::Component.new(
+      id: "picker-demo-images",
+      title: "Select Image",
+      subtitle: "Choose one or more image assets.",
+      items: @picker_demo_items,
+      accepted_kinds: [:image],
+      selection_mode: :multiple,
+      searchable: true,
+      search_mode: :local,
+      results_layout: :grid,
+      modal_body_height_mode: :fixed,
+      modal_body_height: "clamp(18rem, 50vh, 26rem)",
+      confirm_text: "Use Image",
+      context: {target: "picker-demo-images"}
+    ) %>
+  </section>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Field Output",
+      anchor: "field-output",
+      anchor_link: true,
+      subtitle: "Picker can also write selected JSON to a target field for form-driven workflows."
+    ) %>
+
+    <%= render FlatPack::Card::Component.new(class: "mt-6") do |card| %>
+      <% card.body do %>
+        <div class="space-y-4">
+          <div class="flex flex-wrap gap-2">
+            <%= render FlatPack::Button::Component.new(
+              text: "Open Field Picker",
+              icon: "file",
+              data: {
+                action: "click->flat-pack--modal#open",
+                "modal-id": "picker-demo-field"
+              }
+            ) %>
+          </div>
+
+          <input id="picker-selected-assets-field" type="text" readonly class="w-full rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-2 text-xs text-(--surface-muted-content-color)" placeholder="Selected JSON appears here">
+        </div>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::Picker::Component.new(
+      id: "picker-demo-field",
+      title: "Select Files",
+      subtitle: "Writes selected items to a consumer-provided field selector.",
+      items: @picker_demo_items,
+      accepted_kinds: [:file],
+      searchable: true,
+      search_mode: :local,
+      modal_body_height_mode: :fixed,
+      modal_body_height: "24rem",
+      output_mode: :field,
+      output_target: "#picker-selected-assets-field",
+      confirm_text: "Store Selection",
+      context: {target: "picker-demo-field"}
+    ) %>
+  </section>
+</div>

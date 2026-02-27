@@ -1,0 +1,62 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Movable Cards Grid",
+  subtitle: "Drag cards to reorder and persist positions using the shared reorder contract."
+) %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Movable Cards", anchor_link: true, subtitle: "Drag any card and drop it in a new position.") %>
+
+  <p class="text-(--surface-muted-content-color) mb-4">
+    This demo uses the same reorder endpoint and dense integer strategy as draggable tables.
+  </p>
+
+  <% if @movable_cards.any? %>
+    <div
+      data-controller="flat-pack--grid-sortable"
+      data-flat-pack--grid-sortable-reorder-url-value="<%= demo_tables_reorder_path %>"
+      data-flat-pack--grid-sortable-resource-value="demo_table_rows"
+      data-flat-pack--grid-sortable-strategy-value="dense_integer"
+      data-flat-pack--grid-sortable-version-value="<%= @movable_cards_version %>"
+      data-flat-pack--grid-sortable-scope-value="<%= { list_key: 'grid-movable-cards-demo' }.to_json %>">
+      <%= render FlatPack::Grid::Component.new(cols: 3) do %>
+        <% @movable_cards.each do |card| %>
+          <div
+            data-flat-pack--grid-sortable-target="item"
+            data-id="<%= card.id %>"
+            class="cursor-grab active:cursor-grabbing">
+            <%= render FlatPack::Card::Component.new(style: :outlined, class: "h-full") do |component| %>
+              <% component.body do %>
+                <div class="flex items-start justify-between gap-4 mb-3">
+                  <h3 class="font-semibold text-(--surface-content-color)"><%= card.name %></h3>
+                  <span class="text-(--surface-muted-content-color)" aria-hidden="true">⋮⋮</span>
+                </div>
+                <div class="space-y-1 text-sm text-(--surface-muted-content-color)">
+                  <p>Status: <strong class="text-(--surface-content-color)"><%= card.status.capitalize %></strong></p>
+                  <p>Priority: <strong class="text-(--surface-content-color)"><%= card.priority.capitalize %></strong></p>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <%= render FlatPack::Alert::Component.new(
+      title: "Movable cards data unavailable",
+      description: "Run migrations in test/dummy to create demo_table_rows before trying this demo.",
+      variant: :warning
+    ) %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      <div data-controller="flat-pack--grid-sortable"
+           data-flat-pack--grid-sortable-reorder-url-value="/demo/tables/reorder"
+           data-flat-pack--grid-sortable-scope-value='{"list_key":"grid-movable-cards-demo"}'>
+        <div data-flat-pack--grid-sortable-target="item" data-id="1">...</div>
+        <div data-flat-pack--grid-sortable-target="item" data-id="2">...</div>
+      </div>
+    CODE
+    class: "mt-4"
+  ) %>
+</section>

@@ -26,10 +26,16 @@ module FlatPack
         end
 
         def call
-          content_tag(:div, content, class: media_classes, **@system_arguments)
+          content_tag(:div, content, **merged_system_arguments(media_classes))
         end
 
         private
+
+        def merged_system_arguments(default_classes)
+          @system_arguments.merge(
+            class: class_names(default_classes, @system_arguments[:class])
+          )
+        end
 
         def media_classes
           classes = ["overflow-hidden", padding_classes]

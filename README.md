@@ -36,6 +36,23 @@ rails generate flat_pack:install
 - ✨ Injects `@source` directive, `@theme` block, and CSS variable mappings
 - ✨ No manual path finding or configuration copying required!
 
+Optional layout scaffold:
+
+```bash
+rails generate flat_pack:layout --type=sidebar
+```
+
+The layout generator creates a sidebar + top-nav app shell in:
+- `app/views/layouts/flat_pack_sidebar.html.erb`
+- `app/views/layouts/flat_pack/_sidebar.html.erb`
+- `app/views/layouts/flat_pack/_top_nav.html.erb`
+
+You can customize the output with flags:
+
+```bash
+rails generate flat_pack:layout --type=sidebar --side=right --layout_name=admin
+```
+
 See the [Installation Guide](docs/installation.md) for detailed setup instructions.
 
 ## Quick Start
@@ -145,6 +162,10 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
 ## Documentation
 
 - 📚 [Full Documentation](docs/)
+- 🧭 [Components Index (Agent-First)](docs/components/README.md)
+- 🤖 [Components Manifest (Machine-Readable)](docs/components/manifest.yml)
+- 📐 [Component Doc Format](docs/components/DOC_FORMAT.md)
+- ↕️ [Sortable & Draggable Tables](docs/components/sortable-tables.md)
 - 🚀 [Installation Guide](docs/installation.md)
 - 🎨 [Theming Guide](docs/theming.md)
 - 🌙 [Dark Mode Guide](docs/dark_mode.md)

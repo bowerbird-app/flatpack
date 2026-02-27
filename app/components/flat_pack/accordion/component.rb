@@ -34,7 +34,7 @@ module FlatPack
       private
 
       def render_item(item)
-        content_tag(:div, class: "border-b border-[var(--surface-border-color)] last:border-b-0") do
+        content_tag(:div, class: "border-b border-[var(--accordion-item-border-color)] last:border-b-0") do
           safe_join([
             render_item_trigger(item),
             render_item_content(item)
@@ -73,7 +73,7 @@ module FlatPack
         # Rails-generated HTML from components captured via block. Never pass
         # unsanitized user input directly to content.
         content_tag(:div, **item_content_attributes(item)) do
-          content_tag(:div, item[:content].html_safe, class: "p-4")
+          content_tag(:div, item[:content].html_safe, class: "p-[var(--accordion-content-padding)]")
         end
       end
 
@@ -83,7 +83,7 @@ module FlatPack
             controller: "flat-pack--accordion",
             "flat-pack--accordion-allow-multiple-value": @allow_multiple
           },
-          class: "border border-[var(--surface-border-color)] rounded-md overflow-hidden bg-[var(--surface-background-color)]"
+          class: "border border-[var(--accordion-border-color)] rounded-[var(--accordion-border-radius)] overflow-hidden bg-[var(--accordion-background-color)]"
         )
       end
 
@@ -103,13 +103,13 @@ module FlatPack
       end
 
       def trigger_classes
-        "w-full flex items-center justify-between p-4 text-left hover:bg-[var(--surface-muted-background-color)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+        "w-full flex items-center justify-between p-[var(--accordion-trigger-padding)] text-left text-[var(--accordion-trigger-text-color)] hover:bg-[var(--accordion-trigger-hover-background-color)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accordion-focus-ring-color)] focus-visible:ring-inset"
       end
 
       def item_content_attributes(item)
         {
           id: item_content_id(item[:id]),
-          class: "overflow-hidden transition-all duration-300 ease-in-out",
+          class: "overflow-hidden transition-all duration-[var(--accordion-transition-duration)] ease-in-out bg-[var(--accordion-content-background-color)]",
           data: {
             "flat-pack--accordion-target": "content",
             "flat-pack--accordion-open": item[:open]

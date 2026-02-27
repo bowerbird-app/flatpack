@@ -8,32 +8,35 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Text Input Examples", anchor_link: true) %>
 
-  <div class="space-y-4 p-6 border border-slate-200 rounded-lg bg-white">
-    <%= render FlatPack::TextInput::Component.new(
-      name: "username",
-      label: "Username",
-      placeholder: "Enter your username",
-      required: true
-    ) %>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body(class: "space-y-[var(--stack-gap-md)]") do %>
+      <%= render FlatPack::TextInput::Component.new(
+        name: "username",
+        label: "Username",
+        placeholder: "Enter your username",
+        required: true
+      ) %>
 
-    <%= render FlatPack::TextInput::Component.new(
-      name: "username_error",
-      label: "Username (with error)",
-      value: "john",
-      error: "Username must be at least 5 characters"
-    ) %>
+      <%= render FlatPack::TextInput::Component.new(
+        name: "username_error",
+        label: "Username (with error)",
+        value: "john",
+        error: "Username must be at least 5 characters"
+      ) %>
 
-    <%= render FlatPack::TextInput::Component.new(
-      name: "username_disabled",
-      label: "Username (disabled)",
-      value: "johndoe",
-      disabled: true
-    ) %>
-  </div>
+      <%= render FlatPack::TextInput::Component.new(
+        name: "username_disabled",
+        label: "Username (disabled)",
+        value: "johndoe",
+        disabled: true
+      ) %>
+    <% end %>
+  <% end %>
 
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE'),
-      &lt;div class=&quot;space-y-4 p-6 border border-slate-200 rounded-lg bg-white&quot;&gt;
+      &lt;%= render FlatPack::Card::Component.new do |card| %&gt;
+        &lt;% card.body do %&gt;
         &lt;%= render FlatPack::TextInput::Component.new(
           name: &quot;username&quot;,
           label: &quot;Username&quot;,
@@ -54,7 +57,8 @@
           value: &quot;johndoe&quot;,
           disabled: true
         ) %&gt;
-      &lt;/div&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
     CODE
     language: "erb",
     title: "Text Input Examples"

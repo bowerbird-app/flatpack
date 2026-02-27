@@ -8,25 +8,28 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Radio Group Examples", anchor_link: true) %>
 
-  <div class="space-y-6 p-6 border border-slate-200 rounded-lg bg-white">
-    <%= render FlatPack::RadioGroup::Component.new(
-      name: "size",
-      options: ["Small", "Medium", "Large"],
-      label: "Choose a size",
-      value: "Medium"
-    ) %>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body(class: "space-y-[var(--stack-gap-md)]") do %>
+      <%= render FlatPack::RadioGroup::Component.new(
+        name: "size",
+        options: ["Small", "Medium", "Large"],
+        label: "Choose a size",
+        value: "Medium"
+      ) %>
 
-    <%= render FlatPack::RadioGroup::Component.new(
-      name: "payment_method",
-      options: ["Credit Card", "PayPal", "Bank Transfer"],
-      label: "Payment Method",
-      required: true
-    ) %>
-  </div>
+      <%= render FlatPack::RadioGroup::Component.new(
+        name: "payment_method",
+        options: ["Credit Card", "PayPal", "Bank Transfer"],
+        label: "Payment Method",
+        required: true
+      ) %>
+    <% end %>
+  <% end %>
 
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE'),
-      &lt;div class=&quot;space-y-6 p-6 border border-slate-200 rounded-lg bg-white&quot;&gt;
+      &lt;%= render FlatPack::Card::Component.new do |card| %&gt;
+        &lt;% card.body do %&gt;
         &lt;%= render FlatPack::RadioGroup::Component.new(
           name: &quot;size&quot;,
           options: [&quot;Small&quot;, &quot;Medium&quot;, &quot;Large&quot;],
@@ -40,7 +43,8 @@
           label: &quot;Payment Method&quot;,
           required: true
         ) %&gt;
-      &lt;/div&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
     CODE
     language: "erb",
     title: "Radio Group Examples"

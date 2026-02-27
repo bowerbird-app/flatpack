@@ -90,7 +90,8 @@ module FlatPack
 
       def wrapper_classes
         classes(
-          "relative inline-flex items-center justify-center shrink-0 overflow-hidden",
+          "relative inline-flex items-center justify-center shrink-0",
+          @status ? "overflow-visible" : "overflow-hidden",
           "bg-[var(--avatar-background-color)] text-[var(--avatar-text-color)]",
           "font-medium select-none aspect-square",
           SIZES.fetch(@size),
@@ -170,7 +171,7 @@ module FlatPack
         end
 
         classes(
-          "absolute top-0 right-0 block rounded-full translate-x-1/4 -translate-y-1/4",
+          "absolute top-0 right-0 z-10 block rounded-full translate-x-1/4 -translate-y-1/4",
           "ring-2 ring-[var(--avatar-status-ring-color)]",
           size_class,
           STATUS_COLORS.fetch(@status)

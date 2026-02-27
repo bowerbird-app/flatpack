@@ -5,12 +5,12 @@ module FlatPack
     class Item < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-primary" "bg-success-background-color" "bg-warning-background-color" "bg-danger-background-color"
+      # "bg-[var(--timeline-marker-default-background-color)]" "bg-[var(--timeline-marker-success-background-color)]" "bg-[var(--timeline-marker-warning-background-color)]" "bg-[var(--timeline-marker-danger-background-color)]"
       VARIANTS = {
-        default: "bg-primary",
-        success: "bg-success-background-color",
-        warning: "bg-warning-background-color",
-        danger: "bg-danger-background-color"
+        default: "bg-[var(--timeline-marker-default-background-color)]",
+        success: "bg-[var(--timeline-marker-success-background-color)]",
+        warning: "bg-[var(--timeline-marker-warning-background-color)]",
+        danger: "bg-[var(--timeline-marker-danger-background-color)]"
       }.freeze
 
       def initialize(
@@ -64,17 +64,17 @@ module FlatPack
       def render_icon_content
         return @icon.html_safe if @icon.is_a?(String) && @icon.start_with?("<svg")
 
-        content_tag(:span, nil, class: "w-2 h-2 rounded-full bg-white")
+        content_tag(:span, nil, class: "w-2 h-2 rounded-full bg-[var(--timeline-marker-icon-color)]")
       end
 
       def render_line
         return if @last
 
-        content_tag(:div, nil, class: "w-0.5 flex-1 min-h-[2rem] bg-[var(--surface-border-color)]")
+        content_tag(:div, nil, class: "w-0.5 flex-1 min-h-[var(--timeline-line-min-height)] bg-[var(--timeline-line-color)]")
       end
 
       def render_content_area
-        content_tag(:div, class: "flex-1 pb-8 pl-4") do
+        content_tag(:div, class: "flex-1 pb-[var(--timeline-item-padding-bottom)] pl-[var(--timeline-content-padding-left)]") do
           safe_join([
             render_header,
             render_content
@@ -85,7 +85,7 @@ module FlatPack
       def render_header
         content_tag(:div, class: "flex items-baseline justify-between mb-1") do
           safe_join([
-            content_tag(:h3, @title, class: "text-base font-semibold text-[var(--surface-content-color)]"),
+            content_tag(:h3, @title, class: "text-base font-semibold text-[var(--timeline-title-color)]"),
             render_timestamp
           ].compact)
         end
@@ -94,17 +94,17 @@ module FlatPack
       def render_timestamp
         return unless @timestamp
 
-        content_tag(:time, @timestamp, class: "text-sm text-[var(--surface-muted-content-color)]")
+        content_tag(:time, @timestamp, class: "text-sm text-[var(--timeline-timestamp-color)]")
       end
 
       def render_content
-        return content_tag(:div, @description, class: "text-sm text-[var(--surface-content-color)] mt-2") if @description.present?
+        return content_tag(:div, @description, class: "text-sm text-[var(--timeline-content-color)] mt-2") if @description.present?
         return unless content?
 
         # SECURITY: Content is marked html_safe because it's expected to contain
         # Rails-generated HTML from components captured via block. Never pass
         # unsanitized user input directly to content.
-        content_tag(:div, content.html_safe, class: "text-sm text-[var(--surface-content-color)] mt-2")
+        content_tag(:div, content.html_safe, class: "text-sm text-[var(--timeline-content-color)] mt-2")
       end
 
       def item_attributes

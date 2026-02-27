@@ -4,7 +4,9 @@ test:
   adapter: test
 
 development:
-  adapter: async
+  adapter: redis
+  url: <%= ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" } %>
+  channel_prefix: flat_pack_development
 
 production:
   adapter: redis

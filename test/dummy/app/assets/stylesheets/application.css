@@ -99,9 +99,13 @@
   --chat-message-outgoing-background-color: var(--color-primary);
   --chat-message-outgoing-text-color: var(--color-primary-text);
   --chat-message-system-text-color: var(--surface-muted-content-color);
-  --chat-message-meta-color: var(--surface-muted-content-color);
+  --chat-message-incoming-meta-color: var(--surface-muted-content-color);
+  --chat-message-outgoing-meta-color: var(--surface-muted-content-color);
+  --chat-message-meta-color: var(--chat-message-incoming-meta-color);
   --chat-message-failed-color: var(--color-danger-border-color);
-  --chat-read-receipt-color: var(--color-primary);
+  --chat-message-incoming-read-receipt-color: var(--chat-message-incoming-text-color);
+  --chat-message-outgoing-read-receipt-color: var(--surface-muted-content-color);
+  --chat-read-receipt-color: var(--chat-message-incoming-read-receipt-color);
   --chat-date-divider-line-color: var(--surface-border-color);
   --chat-date-divider-text-color: var(--surface-muted-content-color);
   --chat-attachment-border-color: var(--surface-border-color);
@@ -192,6 +196,9 @@
   --spacing-md: 1rem;
   --spacing-lg: 1.5rem;
   --spacing-xl: 2rem;
+  --stack-gap-sm: 0.5rem;
+  --stack-gap-md: 1rem;
+  --stack-gap-lg: 1.5rem;
   
   /* Border Radius */
   --radius-sm: 0.25rem;
@@ -283,9 +290,13 @@
   --chat-message-outgoing-background-color: var(--color-primary);
   --chat-message-outgoing-text-color: var(--color-primary-text);
   --chat-message-system-text-color: var(--surface-muted-content-color);
-  --chat-message-meta-color: var(--surface-muted-content-color);
+  --chat-message-incoming-meta-color: var(--surface-muted-content-color);
+  --chat-message-outgoing-meta-color: var(--surface-muted-content-color);
+  --chat-message-meta-color: var(--chat-message-incoming-meta-color);
   --chat-message-failed-color: var(--color-danger-border-color);
-  --chat-read-receipt-color: var(--color-primary);
+  --chat-message-incoming-read-receipt-color: var(--chat-message-incoming-text-color);
+  --chat-message-outgoing-read-receipt-color: var(--surface-muted-content-color);
+  --chat-read-receipt-color: var(--chat-message-incoming-read-receipt-color);
   --chat-date-divider-line-color: var(--surface-border-color);
   --chat-date-divider-text-color: var(--surface-muted-content-color);
   --chat-attachment-border-color: var(--surface-border-color);
@@ -402,9 +413,13 @@
   --chat-message-outgoing-background-color: var(--color-primary);
   --chat-message-outgoing-text-color: var(--color-primary-text);
   --chat-message-system-text-color: var(--surface-muted-content-color);
-  --chat-message-meta-color: var(--surface-muted-content-color);
+  --chat-message-incoming-meta-color: var(--surface-muted-content-color);
+  --chat-message-outgoing-meta-color: var(--surface-muted-content-color);
+  --chat-message-meta-color: var(--chat-message-incoming-meta-color);
   --chat-message-failed-color: var(--color-danger-border-color);
-  --chat-read-receipt-color: var(--color-primary);
+  --chat-message-incoming-read-receipt-color: var(--chat-message-incoming-text-color);
+  --chat-message-outgoing-read-receipt-color: var(--surface-muted-content-color);
+  --chat-read-receipt-color: var(--chat-message-incoming-read-receipt-color);
   --chat-date-divider-line-color: var(--surface-border-color);
   --chat-date-divider-text-color: var(--surface-muted-content-color);
   --chat-attachment-border-color: var(--surface-border-color);
@@ -518,9 +533,13 @@
   --chat-message-outgoing-background-color: var(--color-primary);
   --chat-message-outgoing-text-color: var(--color-primary-text);
   --chat-message-system-text-color: var(--surface-muted-content-color);
-  --chat-message-meta-color: var(--surface-muted-content-color);
+  --chat-message-incoming-meta-color: var(--surface-muted-content-color);
+  --chat-message-outgoing-meta-color: var(--surface-muted-content-color);
+  --chat-message-meta-color: var(--chat-message-incoming-meta-color);
   --chat-message-failed-color: var(--color-danger-border-color);
-  --chat-read-receipt-color: var(--color-primary);
+  --chat-message-incoming-read-receipt-color: var(--chat-message-incoming-text-color);
+  --chat-message-outgoing-read-receipt-color: var(--surface-muted-content-color);
+  --chat-read-receipt-color: var(--chat-message-incoming-read-receipt-color);
   --chat-date-divider-line-color: var(--surface-border-color);
   --chat-date-divider-text-color: var(--surface-muted-content-color);
   --chat-attachment-border-color: var(--surface-border-color);

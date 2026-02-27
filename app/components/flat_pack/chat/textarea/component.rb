@@ -49,7 +49,10 @@ module FlatPack
         def textarea_classes
           classes(
             "w-full",
-            "px-4 py-2.5",
+            "block",
+            "min-h-[var(--chat-composer-control-height)]",
+            "px-4 py-2",
+            "text-sm leading-5",
             "border border-[var(--chat-input-border-color)]",
             "rounded-lg",
             "bg-[var(--chat-input-background-color)]",

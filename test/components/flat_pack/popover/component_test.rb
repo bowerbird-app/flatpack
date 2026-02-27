@@ -7,7 +7,7 @@ module FlatPack
     class ComponentTest < ViewComponent::TestCase
       def test_renders_popover_content
         render_inline(Component.new(trigger_id: "test-trigger")) do |component|
-          component.with_popover_content { "Popover content" }
+          component.content { "Popover content" }
         end
 
         assert_text "Popover content"
@@ -15,7 +15,7 @@ module FlatPack
 
       def test_has_stimulus_controller
         render_inline(Component.new(trigger_id: "test-trigger")) do |component|
-          component.with_popover_content { "Content" }
+          component.content { "Content" }
         end
 
         assert_selector "div[data-controller='flat-pack--popover']"
@@ -23,7 +23,7 @@ module FlatPack
 
       def test_has_trigger_id_value
         render_inline(Component.new(trigger_id: "my-trigger")) do |component|
-          component.with_popover_content { "Content" }
+          component.content { "Content" }
         end
 
         assert_selector "div[data-flat-pack--popover-trigger-id-value='my-trigger']"
@@ -31,7 +31,7 @@ module FlatPack
 
       def test_placement_top
         render_inline(Component.new(trigger_id: "trigger", placement: :top)) do |component|
-          component.with_popover_content { "Content" }
+          component.content { "Content" }
         end
 
         assert_selector "div[data-flat-pack--popover-placement-value='top']"
@@ -39,7 +39,7 @@ module FlatPack
 
       def test_placement_bottom
         render_inline(Component.new(trigger_id: "trigger", placement: :bottom)) do |component|
-          component.with_popover_content { "Content" }
+          component.content { "Content" }
         end
 
         assert_selector "div[data-flat-pack--popover-placement-value='bottom']"
@@ -47,7 +47,7 @@ module FlatPack
 
       def test_placement_left
         render_inline(Component.new(trigger_id: "trigger", placement: :left)) do |component|
-          component.with_popover_content { "Content" }
+          component.content { "Content" }
         end
 
         assert_selector "div[data-flat-pack--popover-placement-value='left']"
@@ -55,7 +55,7 @@ module FlatPack
 
       def test_placement_right
         render_inline(Component.new(trigger_id: "trigger", placement: :right)) do |component|
-          component.with_popover_content { "Content" }
+          component.content { "Content" }
         end
 
         assert_selector "div[data-flat-pack--popover-placement-value='right']"
@@ -63,7 +63,7 @@ module FlatPack
 
       def test_hidden_by_default
         render_inline(Component.new(trigger_id: "trigger")) do |component|
-          component.with_popover_content { "Content" }
+          component.content { "Content" }
         end
 
         assert_selector "div.hidden"

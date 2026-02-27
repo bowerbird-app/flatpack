@@ -32,14 +32,7 @@
   <%= render FlatPack::SectionTitle::Component.new(title: "Formatted Columns", anchor_link: true, subtitle: "Use lambda renderers for custom output.") %>
   <%= render FlatPack::Table::Component.new(data: @users.first(5)) do |table| %>
     <% table.column(title: "Name", html: ->(user) { "<strong class=\"text-[var(--color-primary)]\">#{user.name}</strong>".html_safe }) %>
-    <% table.column(title: "Status", html: ->(user) {
-      badge_class = case user.status
-      when "active" then "bg-green-100 text-green-800"
-      when "inactive" then "bg-gray-100 text-gray-800"
-      else "bg-yellow-100 text-yellow-800"
-      end
-      "<span class=\"px-2 py-1 text-xs rounded #{badge_class}\">#{user.status.capitalize}</span>".html_safe
-    }) %>
+    <% table.column(title: "Status", html: ->(user) { render FlatPack::Badge::Component.new(text: user.status.capitalize, size: :sm) }) %>
     <% table.column(title: "Published", html: ->(user) { user.published_at.strftime("%b %d, %Y") }) %>
   <% end %>
 
@@ -47,14 +40,7 @@
     code: CGI.unescapeHTML(<<~'CODE'),
       &lt;%= render FlatPack::Table::Component.new(data: @users.first(5)) do |table| %&gt;
         &lt;% table.column(title: &quot;Name&quot;, html: -&gt;(user) { &quot;&lt;strong class=\&quot;text-[var(--color-primary)]\&quot;&gt;#{user.name}&lt;/strong&gt;&quot;.html_safe }) %&gt;
-        &lt;% table.column(title: &quot;Status&quot;, html: -&gt;(user) {
-          badge_class = case user.status
-          when &quot;active&quot; then &quot;bg-green-100 text-green-800&quot;
-          when &quot;inactive&quot; then &quot;bg-gray-100 text-gray-800&quot;
-          else &quot;bg-yellow-100 text-yellow-800&quot;
-          end
-          &quot;&lt;span class=\&quot;px-2 py-1 text-xs rounded #{badge_class}\&quot;&gt;#{user.status.capitalize}&lt;/span&gt;&quot;.html_safe
-        }) %&gt;
+        &lt;% table.column(title: &quot;Status&quot;, html: -&gt;(user) { render FlatPack::Badge::Component.new(text: user.status.capitalize, size: :sm) }) %&gt;
         &lt;% table.column(title: &quot;Published&quot;, html: -&gt;(user) { user.published_at.strftime(&quot;%b %d, %Y&quot;) }) %&gt;
       &lt;% end %&gt;
     CODE

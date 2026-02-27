@@ -10,6 +10,8 @@ gem "rails", "~> 8.0"
 gem "puma", ">= 5.0"
 gem "propshaft", "~> 1.0"
 gem "sqlite3", ">= 2.1"
+gem "sidekiq"
+gem "redis"
 
 # Asset pipeline and frontend
 gem "tailwindcss-rails", "~> 4.0"

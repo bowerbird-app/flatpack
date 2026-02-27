@@ -15,7 +15,8 @@
     <div class="p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-background-color)] space-y-3">
       <p class="text-sm text-[var(--surface-muted-content-color)]">
         Themes are defined with Tailwind v4 tokens (for example <code class="font-mono text-xs">--color-primary</code>,
-        <code class="font-mono text-xs">--radius-md</code>, and <code class="font-mono text-xs">--shadow-md</code>).
+        <code class="font-mono text-xs">--radius-md</code>, <code class="font-mono text-xs">--search-input-background-color</code>,
+        and <code class="font-mono text-xs">--shadow-md</code>).
         Tailwind then generates semantic utilities like <code class="font-mono text-xs">bg-primary</code>,
         <code class="font-mono text-xs">text-[var(--surface-content-color)]</code>, and <code class="font-mono text-xs">border-[var(--surface-border-color)]</code>.
       </p>
@@ -46,397 +47,23 @@
       <p class="text-xs text-[var(--surface-muted-content-color)]">
         Tip: these variables map to semantic utilities like <code class="font-mono">bg-primary</code>,
         <code class="font-mono">text-[var(--surface-content-color)]</code>, and <code class="font-mono">border-[var(--surface-border-color)]</code>.
+        Search component tokens use the <code class="font-mono">--search-*</code> prefix for input, dropdown, and result row styling.
       </p>
     </div>
 
     <div class="space-y-4">
-      <div class="space-y-3">
-        <%= render FlatPack::SectionTitle::Component.new(title: "Brand and Action Colors", subtitle: "Core action tokens for default, primary, secondary, and ghost interactive styles.", anchor_link: true) %>
-              <% token_rows = [
-    { variable: "--color-default", description: "Default action/background surface (neutral button)." },
-    { variable: "--color-default-hover", description: "Hover state for default actions." },
-    { variable: "--color-default-text", description: "Text/icon color on default action surfaces." },
-    { variable: "--color-default-border", description: "Border color for default actions." },
-    { variable: "--color-primary", description: "Emphasized brand/action background." },
-    { variable: "--color-primary-hover", description: "Hover state for primary actions." },
-    { variable: "--color-primary-text", description: "Text/icon color shown on primary surfaces." },
-    { variable: "--color-secondary", description: "Secondary action/background surface." },
-    { variable: "--color-secondary-hover", description: "Hover state for secondary surfaces." },
-    { variable: "--color-secondary-text", description: "Text/icon color on secondary surfaces." },
-    { variable: "--color-ghost", description: "Base ghost treatment (often transparent)." },
-    { variable: "--color-ghost-hover", description: "Hover surface for ghost controls and subtle rows." },
-    { variable: "--color-ghost-text", description: "Text/icon color for ghost treatment." }
-      ] %>
-      <div class="p-4 rounded-lg bg-[var(--surface-background-color)]">
-        <%= render "themes/token_table", rows: token_rows %>
-      </div>
-      </div>
-
-      <div class="space-y-3">
-        <%= render FlatPack::SectionTitle::Component.new(title: "Feedback Colors", subtitle: "Status tokens for success, warning, destructive, and informational feedback states.", anchor_link: true) %>
-              <% token_rows = [
-    { variable: "--color-success-background-color", description: "Success/positive state background surfaces." },
-    { variable: "--color-success-hover-background-color", description: "Hover state for success background surfaces." },
-    { variable: "--color-success-text", description: "Text/icon on success surfaces." },
-    { variable: "--color-success-border", description: "Border color for success alerts and toasts." },
-    { variable: "--color-warning-background-color", description: "Warning/caution background surfaces." },
-    { variable: "--color-warning-hover-background-color", description: "Hover state for warning background surfaces." },
-    { variable: "--color-warning-text", description: "Text/icon on warning surfaces." },
-    { variable: "--color-warning-border", description: "Border color for warning alerts and toasts." },
-    { variable: "--color-danger-background-color", description: "Destructive/error background surfaces." },
-    { variable: "--color-danger-hover-background-color", description: "Hover state for destructive background surfaces." },
-    { variable: "--color-danger-text-color", description: "Text/icon on destructive surfaces." },
-    { variable: "--color-danger-border-color", description: "Border color for destructive/error alerts and toasts." },
-    { variable: "--color-info-border", description: "Border color for info alerts and toasts." }
-      ] %>
-      <div class="p-4 rounded-lg bg-[var(--surface-background-color)]">
-        <%= render "themes/token_table", rows: token_rows %>
-      </div>
-      </div>
-
-      <div class="space-y-3">
-        <%= render FlatPack::SectionTitle::Component.new(title: "Surface colors", subtitle: "Foundational background, text, and border tokens used across app surfaces.", anchor_link: true) %>
-              <% token_rows = [
-    { variable: "--surface-background-color", description: "Default component and surface background." },
-    { variable: "--surface-page-background-color", description: "App shell/page canvas background." },
-    { variable: "--surface-content-color", description: "Primary body text/icon color on surfaces." },
-    { variable: "--surface-muted-background-color", description: "Subtle low-emphasis surface backgrounds." },
-    { variable: "--surface-muted-content-color", description: "Text/icon color on muted surfaces." },
-    { variable: "--surface-border-color", description: "Default border and divider color." },
-    { variable: "--surface-border-hover-color", description: "Emphasized border on hover/focus contexts." }
-      ] %>
-      <div class="p-4 rounded-lg bg-[var(--surface-background-color)]">
-        <%= render "themes/token_table", rows: token_rows %>
-      </div>
-      </div>
-
-      <div class="space-y-3">
-        <%= render FlatPack::SectionTitle::Component.new(title: "Decorative Gradients", subtitle: "Accent gradient tokens for visual emphasis on featured and decorative surfaces.", anchor_link: true) %>
-              <% token_rows = [
-    { variable: "--gradient-1", description: "Decorative gradient token 1 (hero/featured card backgrounds)." },
-    { variable: "--gradient-2", description: "Decorative gradient token 2 (alternate feature surfaces)." },
-    { variable: "--gradient-3", description: "Decorative gradient token 3 (supporting card accents)." },
-    { variable: "--gradient-4", description: "Decorative gradient token 4 (secondary accent surfaces)." }
-      ] %>
-      <div class="p-4 rounded-lg bg-[var(--surface-background-color)]">
-        <%= render "themes/token_table", rows: token_rows %>
-      </div>
-      </div>
-
-      <div class="space-y-3">
-        <%= render FlatPack::SectionTitle::Component.new(title: "Badge Styling", subtitle: "Variant-specific badge tokens for background, text, and border treatments.", anchor_link: true) %>
-              <% token_rows = [
-    { variable: "--badge-default-background-color", description: "Default badge background." },
-    { variable: "--badge-default-text-color", description: "Default badge text color." },
-    { variable: "--badge-default-border-color", description: "Default badge border color." },
-    { variable: "--badge-primary-background-color", description: "Primary badge background." },
-    { variable: "--badge-primary-text-color", description: "Primary badge text color." },
-    { variable: "--badge-primary-border-color", description: "Primary badge border color." },
-    { variable: "--badge-secondary-background-color", description: "Secondary badge background." },
-    { variable: "--badge-secondary-text-color", description: "Secondary badge text color." },
-    { variable: "--badge-secondary-border-color", description: "Secondary badge border color." },
-    { variable: "--badge-success-background-color", description: "Success badge background." },
-    { variable: "--badge-success-text-color", description: "Success badge text color." },
-    { variable: "--badge-success-border-color", description: "Success badge border color." },
-    { variable: "--badge-warning-background-color", description: "Warning badge background." },
-    { variable: "--badge-warning-text-color", description: "Warning badge text color." },
-    { variable: "--badge-warning-border-color", description: "Warning badge border color." },
-    { variable: "--badge-danger-background-color", description: "Danger badge background." },
-    { variable: "--badge-danger-text-color", description: "Danger badge text color." },
-    { variable: "--badge-danger-border-color", description: "Danger badge border color." },
-    { variable: "--badge-info-background-color", description: "Info badge background." },
-    { variable: "--badge-info-text-color", description: "Info badge text color." },
-    { variable: "--badge-info-border-color", description: "Info badge border color." }
-      ] %>
-      <div class="p-4 rounded-lg bg-[var(--surface-background-color)]">
-        <%= render "themes/token_table", rows: token_rows %>
-      </div>
-      </div>
-
-      <div class="space-y-3">
-        <%= render FlatPack::SectionTitle::Component.new(title: "Code Block Styling", subtitle: "Tokens that style code block containers, tabs, and code text readability.", anchor_link: true) %>
-              <% token_rows = [
-    { variable: "--code-block-background-color", description: "Code block wrapper background." },
-    { variable: "--code-block-border-color", description: "Code block border and title divider color." },
-    { variable: "--code-block-title-color", description: "Code block title text color." },
-    { variable: "--code-block-code-color", description: "Code text color inside <code class=\"font-mono\">pre/code</code>." },
-    { variable: "--code-block-tab-color", description: "Inactive tab text color." },
-    { variable: "--code-block-tab-hover-color", description: "Inactive tab hover text color." },
-    { variable: "--code-block-tab-active-background-color", description: "Active tab background color." },
-    { variable: "--code-block-tab-active-color", description: "Active tab text color." }
-      ] %>
-      <div class="p-4 rounded-lg bg-[var(--surface-background-color)]">
-        <%= render "themes/token_table", rows: token_rows %>
-      </div>
-      </div>
-
-      <div class="space-y-3">
-        <%= render FlatPack::SectionTitle::Component.new(title: "Card Styling", subtitle: "Surface and interaction tokens for card layout, borders, and hover treatments.", anchor_link: true) %>
-              <% token_rows = [
-    { variable: "--card-background-color", description: "Default card background." },
-    { variable: "--card-background-muted-color", description: "Muted/flat card background." },
-    { variable: "--card-border-color", description: "Card border and section divider color." },
-    { variable: "--card-hover-subtle-background-color", description: "Hover background for subtle interactive cards." },
-    { variable: "--card-hover-strong-border-color", description: "Hover border color for strong interactive cards." },
-    { variable: "--card-hover-strong-shadow", description: "Hover shadow for strong interactive cards." },
-    { variable: "--card-hover-strong-shadow-dark", description: "Dark mode hover shadow for strong interactive cards." }
-      ] %>
-      <div class="p-4 rounded-lg bg-[var(--surface-background-color)]">
-        <%= render "themes/token_table", rows: token_rows %>
-      </div>
-      </div>
-
-      <div class="space-y-3">
-        <%= render FlatPack::SectionTitle::Component.new(title: "Chat Styling", subtitle: "Chat-specific tokens for panels, bubbles, attachments, composer, and message metadata.", anchor_link: true) %>
-              <% token_rows = [
-    { variable: "--chat-background-color", description: "Chat layout and panel background." },
-    { variable: "--chat-border-color", description: "Chat layout split/sidebar border." },
-    { variable: "--chat-header-background-color", description: "Chat panel header background." },
-    { variable: "--chat-header-border-color", description: "Chat panel header bottom border." },
-    { variable: "--chat-composer-background-color", description: "Chat composer/footer background." },
-    { variable: "--chat-composer-border-color", description: "Chat composer top border." },
-    { variable: "--chat-input-background-color", description: "Textarea/input background color." },
-    { variable: "--chat-input-border-color", description: "Textarea/input border color." },
-    { variable: "--chat-input-text-color", description: "Textarea/input text color." },
-    { variable: "--chat-input-placeholder-color", description: "Textarea/input placeholder color." },
-    { variable: "--chat-input-focus-ring-color", description: "Textarea/input focus ring color." },
-    { variable: "--chat-message-incoming-background-color", description: "Incoming message bubble background." },
-    { variable: "--chat-message-incoming-text-color", description: "Incoming message bubble text color." },
-    { variable: "--chat-message-outgoing-background-color", description: "Outgoing message bubble background." },
-    { variable: "--chat-message-outgoing-text-color", description: "Outgoing message bubble text color." },
-    { variable: "--chat-message-system-text-color", description: "System message text color." },
-    { variable: "--chat-message-meta-color", description: "Timestamp/edited/sending metadata color." },
-    { variable: "--chat-message-failed-color", description: "Failed-state message border and meta color." },
-    { variable: "--chat-read-receipt-color", description: "Read receipt/checkmark color." },
-    { variable: "--chat-date-divider-line-color", description: "Date divider line color." },
-    { variable: "--chat-date-divider-text-color", description: "Date divider label text color." },
-    { variable: "--chat-attachment-border-color", description: "Attachment border color." },
-    { variable: "--chat-attachment-hover-background-color", description: "Attachment hover background." },
-    { variable: "--chat-attachment-text-color", description: "Attachment title text color." },
-    { variable: "--chat-attachment-meta-color", description: "Attachment metadata text color." },
-    { variable: "--chat-attachment-icon-color", description: "Attachment icon color." },
-    { variable: "--chat-jump-button-background-color", description: "Jump-to-latest button background." },
-    { variable: "--chat-jump-button-border-color", description: "Jump-to-latest button border color." },
-    { variable: "--chat-jump-button-text-color", description: "Jump-to-latest button text color." },
-    { variable: "--chat-jump-button-hover-background-color", description: "Jump-to-latest button hover background." },
-    { variable: "--chat-typing-background-color", description: "Typing indicator bubble background." },
-    { variable: "--chat-typing-dot-color", description: "Typing indicator dots color." },
-    { variable: "--chat-avatar-placeholder-background-color", description: "Default avatar placeholder background." },
-    { variable: "--chat-avatar-placeholder-text-color", description: "Default avatar placeholder text color." },
-    { variable: "--chat-send-button-background-color", description: "Send button background." },
-    { variable: "--chat-send-button-hover-background-color", description: "Send button hover background." },
-    { variable: "--chat-send-button-text-color", description: "Send button icon/text color." },
-    { variable: "--chat-send-button-focus-ring-color", description: "Send button focus ring color." }
-      ] %>
-      <div class="p-4 rounded-lg bg-[var(--surface-background-color)]">
-        <%= render "themes/token_table", rows: token_rows %>
-      </div>
-      </div>
-
-      <div class="space-y-3">
-        <%= render FlatPack::SectionTitle::Component.new(title: "Table Styling", subtitle: "Table structure and interaction tokens for headers, rows, cells, and sorting states.", anchor_link: true) %>
-              <% token_rows = [
-    { variable: "--table-padding", description: "Baseline table cell padding." },
-    { variable: "--table-background-color", description: "Table base background." },
-    { variable: "--table-border-color", description: "Outer table container border." },
-    { variable: "--table-header-background-color", description: "Header row background." },
-    { variable: "--table-header-border-color", description: "Header bottom divider/border." },
-    { variable: "--table-header-text-color", description: "Header label text color." },
-    { variable: "--table-row-divider-color", description: "Body row divider color." },
-    { variable: "--table-row-hover-background-color", description: "Row hover background." },
-    { variable: "--table-cell-text-color", description: "Body cell text color." },
-    { variable: "--table-cell-muted-text-color", description: "Muted table text color (auxiliary content)." },
-    { variable: "--table-empty-state-text-color", description: "Empty-state text color." },
-    { variable: "--table-sort-link-hover-color", description: "Sortable header link hover color." }
-      ] %>
-      <div class="p-4 rounded-lg bg-[var(--surface-background-color)]">
-        <%= render "themes/token_table", rows: token_rows %>
-      </div>
-      </div>
-
-      <div class="space-y-3">
-        <%= render FlatPack::SectionTitle::Component.new(title: "Chip Styling", subtitle: "Chip appearance and spacing tokens for removable, variant, and grouped chip patterns.", anchor_link: true) %>
-              <% token_rows = [
-    { variable: "(shared) --surface-muted-background-color, --surface-content-color, --surface-border-color", description: "Default chip colors." },
-    { variable: "(shared) --color-primary, --color-primary-text", description: "Primary chip colors." },
-    { variable: "(shared) --color-success-background-color, --color-success-text, --color-success-border", description: "Success chip colors." },
-    { variable: "(shared) --color-warning-background-color, --color-warning-text, --color-warning-border", description: "Warning chip colors." },
-    { variable: "(shared) --color-danger-background-color, --color-danger-text-color, --color-danger-border-color", description: "Danger chip colors." },
-    { variable: "(shared) --color-secondary, --color-secondary-text, --color-info-border", description: "Info chip colors." },
-    { variable: "--chip-remove-hover-background-color", description: "Hover background behind chip remove icon." },
-    { variable: "--chip-border-radius", description: "Chip container corner radius." },
-    { variable: "--chip-group-gap", description: "Spacing between chips in chip groups." },
-    { variable: "--chip-padding-x-sm", description: "Horizontal padding for small chips." },
-    { variable: "--chip-padding-y-sm", description: "Vertical padding for small chips." },
-    { variable: "--chip-padding-x-md", description: "Horizontal padding for medium chips." },
-    { variable: "--chip-padding-y-md", description: "Vertical padding for medium chips." },
-    { variable: "--chip-padding-x-lg", description: "Horizontal padding for large chips." },
-    { variable: "--chip-padding-y-lg", description: "Vertical padding for large chips." }
-      ] %>
-      <div class="p-4 rounded-lg bg-[var(--surface-background-color)]">
-        <%= render "themes/token_table", rows: token_rows %>
-      </div>
-      </div>
-
-      <div class="space-y-3">
-        <%= render FlatPack::SectionTitle::Component.new(title: "Modal Styling", subtitle: "Dialog, backdrop, and close-control tokens for modal presentation and accessibility.", anchor_link: true) %>
-              <% token_rows = [
-    { variable: "--modal-backdrop-color", description: "Modal overlay tint color/opacity." },
-    { variable: "--modal-surface-color", description: "Modal dialog surface background." },
-    { variable: "--modal-border-color", description: "Modal dialog border color." },
-    { variable: "--modal-title-color", description: "Modal title text color." },
-    { variable: "--modal-body-color", description: "Modal body text color." },
-    { variable: "--modal-close-icon-color", description: "Default close icon color." },
-    { variable: "--modal-close-icon-hover-color", description: "Close icon hover color." },
-    { variable: "--modal-backdrop-blur", description: "Backdrop blur strength behind open modals." }
-      ] %>
-      <div class="p-4 rounded-lg bg-[var(--surface-background-color)]">
-        <%= render "themes/token_table", rows: token_rows %>
-      </div>
-      </div>
-
-      <div class="space-y-3">
-        <%= render FlatPack::SectionTitle::Component.new(title: "Popover Styling", subtitle: "Panel, spacing, border, and elevation tokens for contextual popover overlays.", anchor_link: true) %>
-              <% token_rows = [
-    { variable: "--popover-background-color", description: "Popover panel background." },
-    { variable: "--popover-border-color", description: "Popover panel border color." },
-    { variable: "--popover-text-color", description: "Popover content text color." },
-    { variable: "--popover-shadow", description: "Popover elevation shadow." },
-    { variable: "--popover-padding", description: "Popover inner spacing." },
-    { variable: "--popover-radius", description: "Popover corner radius." }
-      ] %>
-      <div class="p-4 rounded-lg bg-[var(--surface-background-color)]">
-        <%= render "themes/token_table", rows: token_rows %>
-      </div>
-      </div>
-
-      <div class="space-y-3">
-        <%= render FlatPack::SectionTitle::Component.new(title: "Tooltip Styling", subtitle: "Compact overlay tokens controlling tooltip shape, spacing, and readability.", anchor_link: true) %>
-              <% token_rows = [
-    { variable: "--tooltip-background-color", description: "Tooltip panel background." },
-    { variable: "--tooltip-border-color", description: "Tooltip border color." },
-    { variable: "--tooltip-text-color", description: "Tooltip text color." },
-    { variable: "--tooltip-shadow", description: "Tooltip elevation shadow." },
-    { variable: "--tooltip-padding-x", description: "Horizontal tooltip padding." },
-    { variable: "--tooltip-padding-y", description: "Vertical tooltip padding." },
-    { variable: "--tooltip-radius", description: "Tooltip corner radius." },
-    { variable: "--tooltip-font-size", description: "Tooltip text size." },
-    { variable: "--tooltip-max-width", description: "Maximum tooltip width." }
-      ] %>
-      <div class="p-4 rounded-lg bg-[var(--surface-background-color)]">
-        <%= render "themes/token_table", rows: token_rows %>
-      </div>
-      </div>
-
-      <div class="space-y-3">
-        <%= render FlatPack::SectionTitle::Component.new(title: "Top Nav Styling", subtitle: "Navigation bar tokens for active, hover, icon, and text states in top nav.", anchor_link: true) %>
-              <% token_rows = [
-    { variable: "--top-nav-background-color", description: "Top navigation bar background." },
-    { variable: "--top-nav-border-color", description: "Top navigation border/divider color." },
-    { variable: "--top-nav-item-text-color", description: "Default top nav item text color." },
-    { variable: "--top-nav-item-icon-color", description: "Default top nav icon color." },
-    { variable: "--top-nav-item-hover-background-color", description: "Top nav item hover background." },
-    { variable: "--top-nav-item-hover-text-color", description: "Top nav item hover text/icon color." },
-    { variable: "--top-nav-item-active-background-color", description: "Active/current top nav item background." },
-    { variable: "--top-nav-item-active-text-color", description: "Active/current top nav item text color." },
-    { variable: "--top-nav-item-active-icon-color", description: "Active/current top nav item icon color." }
-      ] %>
-      <div class="p-4 rounded-lg bg-[var(--surface-background-color)]">
-        <%= render "themes/token_table", rows: token_rows %>
-      </div>
-      </div>
-
-      <div class="space-y-3">
-        <%= render FlatPack::SectionTitle::Component.new(title: "Sidebar Styling", subtitle: "Sidebar container and navigation item tokens, including header and footer variants.", anchor_link: true) %>
-              <% token_rows = [
-    { variable: "--sidebar-background-color", description: "Sidebar panel background." },
-    { variable: "--sidebar-border-color", description: "Sidebar container and footer border color." },
-    { variable: "--sidebar-divider-color", description: "Divider lines between sidebar sections." },
-    { variable: "--sidebar-item-text-color", description: "Default menu item text color." },
-    { variable: "--sidebar-item-icon-color", description: "Default menu item icon color." },
-    { variable: "--sidebar-item-hover-background-color", description: "Menu item hover background." },
-    { variable: "--sidebar-item-hover-text-color", description: "Menu item hover text color." },
-    { variable: "--sidebar-item-active-background-color", description: "Active/current menu item background." },
-    { variable: "--sidebar-item-active-text-color", description: "Active/current menu item text color." },
-    { variable: "--sidebar-item-active-icon-color", description: "Active/current menu item icon color." },
-    { variable: "--sidebar-group-item-indent", description: "Left indent for items inside expanded sidebar groups." },
-    { variable: "--sidebar-footer-text-color", description: "Sidebar footer text color." },
-    { variable: "--sidebar-header-background-color", description: "Sidebar header background." },
-    { variable: "--sidebar-header-border-color", description: "Sidebar header bottom border color." },
-    { variable: "--sidebar-header-text-color", description: "Sidebar header title text color." },
-    { variable: "--sidebar-header-icon-color", description: "Sidebar header toggle icon color." },
-    { variable: "--sidebar-header-icon-hover-background-color", description: "Sidebar header toggle hover background." },
-    { variable: "--sidebar-header-icon-hover-color", description: "Sidebar header toggle hover icon color." },
-    { variable: "--sidebar-header-badge-background-color", description: "Sidebar brand badge background." },
-    { variable: "--sidebar-header-badge-text-color", description: "Sidebar brand badge text color." }
-      ] %>
-      <div class="p-4 rounded-lg bg-[var(--surface-background-color)]">
-        <%= render "themes/token_table", rows: token_rows %>
-      </div>
-      </div>
-
-      <div class="space-y-3">
-        <%= render FlatPack::SectionTitle::Component.new(title: "Interaction and Focus", subtitle: "Input focus and keyboard navigation tokens for accessible interaction feedback.", anchor_link: true) %>
-              <% token_rows = [
-    { variable: "--color-ring", description: "Focus ring color for keyboard states." }
-      ] %>
-      <div class="p-4 rounded-lg bg-[var(--surface-background-color)]">
-        <%= render "themes/token_table", rows: token_rows %>
-      </div>
-      </div>
-
-      <div class="space-y-3">
-        <%= render FlatPack::SectionTitle::Component.new(title: "Radii", subtitle: "Corner radius scale tokens used for consistent component roundness.", anchor_link: true) %>
-              <% token_rows = [
-    { variable: "--radius-sm", description: "Small corner radius." },
-    { variable: "--radius-md", description: "Default component corner radius." },
-    { variable: "--radius-lg", description: "Large corner radius." },
-    { variable: "--radius-xl", description: "Extra large corner radius." }
-      ] %>
-      <div class="p-4 rounded-lg bg-[var(--surface-background-color)]">
-        <%= render "themes/token_table", rows: token_rows %>
-      </div>
-      </div>
-
-      <div class="space-y-3">
-          <%= render FlatPack::SectionTitle::Component.new(title: "Spacing Tokens", subtitle: "Reusable spacing tokens for cards, form controls, and table cell rhythm.", anchor_link: true) %>
-                <% token_rows = [
-    { variable: "--card-padding-sm", description: "Compact padding for card sections." },
-    { variable: "--card-padding-md", description: "Default padding for card sections." },
-    { variable: "--card-padding-lg", description: "Spacious padding for card sections." },
-    { variable: "--form-control-padding", description: "Baseline padding for form controls." },
-    { variable: "--table-padding", description: "Baseline table cell padding." }
-      ] %>
-      <div class="p-4 rounded-lg bg-[var(--surface-background-color)]">
-        <%= render "themes/token_table", rows: token_rows %>
-      </div>
-      </div>
-
-      <div class="space-y-3">
-          <%= render FlatPack::SectionTitle::Component.new(title: "Shadows", subtitle: "Elevation tokens defining subtle to strong depth and pressed button states.", anchor_link: true) %>
-                <% token_rows = [
-    { variable: "--shadow-sm", description: "Subtle elevation shadow." },
-    { variable: "--shadow-md", description: "Medium elevation shadow." },
-    { variable: "--shadow-lg", description: "High elevation shadow." },
-    { variable: "--shadow-button", description: "Default button shadow." },
-    { variable: "--shadow-button-active", description: "Pressed/active button shadow." }
-      ] %>
-      <div class="p-4 rounded-lg bg-[var(--surface-background-color)]">
-        <%= render "themes/token_table", rows: token_rows %>
-      </div>
-      </div>
-
-      <div class="space-y-3">
-          <%= render FlatPack::SectionTitle::Component.new(title: "Motion", subtitle: "Animation duration tokens for fast, standard, and emphasized UI transitions.", anchor_link: true) %>
-                <% token_rows = [
-    { variable: "--duration-fast", description: "Fast transition timing." },
-    { variable: "--duration-base", description: "Default transition timing." },
-    { variable: "--duration-slow", description: "Slow/emphasized transition timing." }
-      ] %>
-      <div class="p-4 rounded-lg bg-[var(--surface-background-color)]">
-        <%= render "themes/token_table", rows: token_rows %>
-      </div>
-      </div>
+      <% @theme_token_groups.each do |group| %>
+        <div class="space-y-3">
+          <%= render FlatPack::SectionTitle::Component.new(
+            title: group.fetch(:title),
+            subtitle: group.fetch(:subtitle),
+            anchor_link: true
+          ) %>
+          <div class="rounded-lg bg-[var(--surface-background-color)]">
+            <%= render "themes/token_table", rows: group.fetch(:rows) %>
+          </div>
+        </div>
+      <% end %>
     </div>
   </div>
 
@@ -444,9 +71,27 @@
   <div class="space-y-6">
     <%= render FlatPack::SectionTitle::Component.new(
       title: "Theme Demos",
-      subtitle: "Theme demos now live on dedicated pages so each theme has a direct URL.",
+      subtitle: "Compare both light and dark demos inline, with dedicated pages still available.",
       anchor_link: true
     ) %>
+
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+      <div class="space-y-3 p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-background-color)]" data-theme="light">
+        <div class="flex items-center justify-between gap-2">
+          <h3 class="text-base font-medium text-[var(--surface-content-color)]">Light Demo</h3>
+          <%= render FlatPack::Button::Component.new(text: "Open Full Demo", url: theme_demo_path(theme: "light"), style: :secondary, size: :sm) %>
+        </div>
+        <%= render "themes/demo_showcase" %>
+      </div>
+
+      <div class="space-y-3 p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-background-color)]" data-theme="dark">
+        <div class="flex items-center justify-between gap-2">
+          <h3 class="text-base font-medium text-[var(--surface-content-color)]">Dark Demo</h3>
+          <%= render FlatPack::Button::Component.new(text: "Open Full Demo", url: theme_demo_path(theme: "dark"), style: :secondary, size: :sm) %>
+        </div>
+        <%= render "themes/demo_showcase" %>
+      </div>
+    </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <%= render FlatPack::Card::Component.new do |card| %>

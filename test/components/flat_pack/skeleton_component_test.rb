@@ -63,21 +63,21 @@ module FlatPack
       def test_includes_shimmer_animation
         render_inline(Component.new)
 
-        assert_includes page.native.to_html, "before:animate-[fp-skeleton-shimmer_1.35s_linear_infinite]"
+        assert_includes page.native.to_html, "before:animate-[fp-skeleton-shimmer_var(--skeleton-shimmer-duration)_linear_infinite]"
         assert_includes page.native.to_html, "motion-reduce:before:animate-none"
       end
 
       def test_can_disable_shimmer
         render_inline(Component.new(shimmer: false))
 
-        refute_includes page.native.to_html, "before:animate-[fp-skeleton-shimmer_1.35s_linear_infinite]"
+        refute_includes page.native.to_html, "before:animate-[fp-skeleton-shimmer_var(--skeleton-shimmer-duration)_linear_infinite]"
         refute_includes page.native.to_html, "motion-reduce:before:animate-none"
       end
 
       def test_includes_background_color
         render_inline(Component.new)
 
-        assert_includes page.native.to_html, "bg-[var(--surface-muted-background-color)]"
+        assert_includes page.native.to_html, "bg-[var(--skeleton-background-color)]"
       end
 
       def test_raises_error_for_invalid_variant
