@@ -155,6 +155,10 @@ class PagesController < ApplicationController
   def search
   end
 
+  def picker
+    @picker_demo_items = picker_demo_items
+  end
+
   def search_results
     query = params[:q].to_s.strip.downcase
 
@@ -168,6 +172,26 @@ class PagesController < ApplicationController
     end
 
     render json: {results: results.first(10)}
+  end
+
+  def picker_results
+    query = params[:q].to_s.strip.downcase
+    kinds = params[:kinds].to_s.split(",").map(&:strip).presence
+
+    results = picker_demo_items
+    if kinds.present?
+      results = results.select { |item| kinds.include?(item[:kind]) }
+    end
+
+    if query.present?
+      results = results.select do |item|
+        [item[:label], item[:name], item[:content_type], item[:kind]].compact.any? { |value| value.downcase.include?(query) }
+      end
+    end
+
+    render json: {
+      items: results.first(30).map { |item| picker_item_payload(item) }
+    }
   end
 
   def sidebar_layout
@@ -322,6 +346,7 @@ class PagesController < ApplicationController
 
   def chat_demo
     history_limit = 10
+    @chat_attachment_picker_items = chat_attachment_picker_items
 
     if chat_tables_available?
       ensure_chat_demo_items!
@@ -333,15 +358,14 @@ class PagesController < ApplicationController
       oldest_item_id = @chat_items.first&.id
       @chat_history_has_more = oldest_item_id.present? && @chat_group && @chat_group.chat_items.where("id < ?", oldest_item_id).exists?
       @chat_history_url = @chat_group ? demo_chat_group_messages_path(@chat_group) : nil
-      @chat_history_limit = history_limit
     else
       @chat_group = nil
       @chat_group_summaries = []
       @chat_items = []
       @chat_history_has_more = false
       @chat_history_url = nil
-      @chat_history_limit = history_limit
     end
+    @chat_history_limit = history_limit
   end
 
   def chat_layout
@@ -368,10 +392,16 @@ class PagesController < ApplicationController
   def chat_image_message
   end
 
+  def chat_image_deck
+  end
+
   def chat_system_message
   end
 
   def chat_message_record
+  end
+
+  def chat_inbox_row
   end
 
   def chat_message_meta
@@ -393,6 +423,91 @@ class PagesController < ApplicationController
   end
 
   def chat_send_button
+  end
+
+  def carousel
+    @carousel_examples = carousel_examples
+    @carousel_featured_examples = carousel_featured_examples
+  end
+
+  def carousel_images
+    render_carousel_example(:images)
+  end
+
+  def carousel_lightbox
+    render_carousel_example(:lightbox)
+  end
+
+  def carousel_thumbnails
+    render_carousel_example(:thumbnails)
+  end
+
+  def carousel_html_cards
+    render_carousel_example(:html_cards)
+  end
+
+  def carousel_videos
+    render_carousel_example(:videos)
+  end
+
+  def carousel_mixed_content
+    render_carousel_example(:mixed_content)
+  end
+
+  def carousel_navigation
+    render_carousel_example(:navigation)
+  end
+
+  def carousel_autoplay_loop
+    render_carousel_example(:autoplay_loop)
+  end
+
+  def carousel_mobile
+    render_carousel_example(:mobile)
+  end
+
+  def carousel_captions
+    render_carousel_example(:captions)
+  end
+
+  def carousel_fullscreen
+    render_carousel_example(:fullscreen)
+  end
+
+  def carousel_rtl
+    render_carousel_example(:rtl)
+  end
+
+  def carousel_video_aware
+    render_carousel_example(:video_aware)
+  end
+
+  def carousel_loading_states
+    render_carousel_example(:loading_states)
+  end
+
+  def carousel_performance
+    render_carousel_example(:performance)
+  end
+
+  def carousel_events_api
+    render_carousel_example(:events_api)
+  end
+
+  def carousel_security
+    render_carousel_example(:security)
+  end
+
+  def carousel_theming
+    render_carousel_example(:theming)
+  end
+
+  def carousel_deep_linking
+    render_carousel_example(:deep_linking)
+  end
+
+  def carousel_reduced_motion
+    render_carousel_example(:reduced_motion)
   end
 
   def progress
@@ -771,6 +886,91 @@ class PagesController < ApplicationController
     )
   end
 
+  def picker_demo_items
+    [
+      {
+        id: "asset-homepage-hero",
+        kind: "image",
+        name: "homepage-hero-v2.png",
+        content_type: "image/png",
+        byte_size: 312_400,
+        label: "Homepage Hero",
+        thumbnail_url: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=640&h=360&fit=crop",
+        meta: "Homepage refresh"
+      },
+      {
+        id: "asset-checkout-mobile",
+        kind: "image",
+        name: "checkout-mobile-a.png",
+        content_type: "image/png",
+        byte_size: 198_250,
+        label: "Checkout Mobile",
+        thumbnail_url: "https://images.unsplash.com/photo-1518773553398-650c184e0bb3?w=640&h=360&fit=crop",
+        meta: "Flow variant A"
+      },
+      {
+        id: "asset-pricing-grid",
+        kind: "image",
+        name: "pricing-grid-rev3.jpg",
+        content_type: "image/jpeg",
+        byte_size: 421_900,
+        label: "Pricing Grid",
+        thumbnail_url: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=640&h=360&fit=crop",
+        meta: "Desktop layout"
+      },
+      {
+        id: "asset-funnel-sketch",
+        kind: "image",
+        name: "onboarding-funnel-sketch.jpg",
+        content_type: "image/jpeg",
+        byte_size: 287_210,
+        label: "Onboarding Funnel",
+        thumbnail_url: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=640&h=360&fit=crop",
+        meta: "Journey board"
+      },
+      {
+        id: "asset-launch-checklist",
+        kind: "file",
+        name: "launch-readiness-checklist.pdf",
+        content_type: "application/pdf",
+        byte_size: 96_800,
+        label: "Launch Checklist",
+        meta: "PDF"
+      },
+      {
+        id: "asset-experiment-results",
+        kind: "file",
+        name: "experiment-results-q1.csv",
+        content_type: "text/csv",
+        byte_size: 43_200,
+        label: "Experiment Results",
+        meta: "CSV"
+      },
+      {
+        id: "asset-handoff-notes",
+        kind: "file",
+        name: "handoff-notes.zip",
+        content_type: "application/zip",
+        byte_size: 1_204_800,
+        label: "Handoff Notes",
+        meta: "ZIP"
+      },
+      {
+        id: "asset-quarterly-plan",
+        kind: "file",
+        name: "quarterly-launch-plan.docx",
+        content_type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        byte_size: 212_640,
+        label: "Quarterly Launch Plan",
+        meta: "DOCX"
+      }
+    ]
+  end
+
+  def chat_attachment_picker_items
+    picker_demo_items.first(6)
+  end
+
   def seed_chat_group_timeline!(group, timeline, offset_minutes: 0)
     return if group.chat_items.exists?
 
@@ -778,7 +978,7 @@ class PagesController < ApplicationController
     timeline.each_with_index do |entry, index|
       minutes_ago = (timeline.length - index) + offset_minutes
 
-      item = group.chat_items.create!(
+      item = group.chat_items.build(
         chat_group_id: group.id,
         sender_name: entry[:sender_name],
         body: entry[:body],
@@ -789,7 +989,7 @@ class PagesController < ApplicationController
       )
 
       Array(entry[:attachments]).each_with_index do |attachment, attachment_index|
-        item.chat_item_attachments.create!(
+        item.chat_item_attachments.build(
           kind: attachment[:kind],
           name: attachment[:name],
           content_type: attachment[:content_type],
@@ -797,6 +997,8 @@ class PagesController < ApplicationController
           position: attachment_index
         )
       end
+
+      item.save!
     end
   end
 
@@ -807,6 +1009,7 @@ class PagesController < ApplicationController
       {
         chat_group: group,
         initials: chat_group_initials(group),
+        avatar_items: chat_group_avatar_items(group),
         latest_sender: latest_item&.sender_name,
         latest_preview: chat_group_preview(latest_item),
         latest_at: latest_item&.created_at || group.updated_at || group.created_at,
@@ -839,6 +1042,35 @@ class PagesController < ApplicationController
     initials.first(2)
   end
 
+  def chat_group_avatar_items(group)
+    participant_names = group.chat_items
+      .order(created_at: :desc, id: :desc)
+      .pluck(:sender_name)
+      .map { |name| name.to_s.strip }
+      .reject(&:blank?)
+      .uniq
+
+    # Prefer showing other members first when available, but keep "You" when relevant.
+    non_self, self_names = participant_names.partition { |name| !name.casecmp?("You") }
+    ordered_names = non_self + self_names
+
+    items = ordered_names.map do |name|
+      {
+        name: name,
+        initials: participant_initials(name)
+      }
+    end
+
+    return items if items.any?
+
+    [{name: group.name, initials: chat_group_initials(group)}]
+  end
+
+  def participant_initials(name)
+    initials = name.to_s.split.map { |part| part[0] }.join.upcase
+    initials.first(2)
+  end
+
   def chat_group_preview(item)
     return "No messages yet" unless item
 
@@ -849,11 +1081,8 @@ class PagesController < ApplicationController
   end
 
   def demo_chat_group_unread_count(group)
-    {
-      "Design Team" => 3,
-      "Product Updates" => 1,
-      "Launch Ops" => 0
-    }.fetch(group.name, 0)
+    # In this demo inbox, badge count reflects total messages in the chat group.
+    group.chat_items.count
   end
 
   def recent_chat_items(chat_group, limit: 10)
@@ -906,6 +1135,12 @@ class PagesController < ApplicationController
   def searchable_items
     [
       {title: "Overview", description: "FlatPack component library home", url: demo_path},
+      {title: "Theme Variables", description: "Theme token values and CSS variable reference", url: themes_path},
+      {title: "System theme", description: "System color scheme demo", url: theme_demo_path(theme: "system")},
+      {title: "Light theme", description: "Light color scheme demo", url: theme_demo_path(theme: "light")},
+      {title: "Dark theme", description: "Dark color scheme demo", url: theme_demo_path(theme: "dark")},
+      {title: "Ocean theme", description: "Ocean color scheme demo", url: theme_demo_path(theme: "ocean")},
+      {title: "Rounded theme", description: "Rounded theme demo", url: theme_demo_path(theme: "rounded")},
       {title: "Buttons", description: "Button variants and dropdown examples", url: demo_buttons_path},
       {title: "Forms", description: "Form submit patterns with HTTP methods", url: demo_forms_path},
       {title: "Text Input", description: "Single-line text input examples", url: demo_forms_text_input_path},
@@ -932,9 +1167,11 @@ class PagesController < ApplicationController
       {title: "Cards", description: "Composed card layouts", url: demo_cards_path},
       {title: "Alerts", description: "Status and feedback messages", url: demo_alerts_path},
       {title: "Badges", description: "Label and status indicators", url: demo_badges_path},
+      {title: "Chips", description: "Compact filter and tag components", url: demo_chips_path},
       {title: "Breadcrumbs", description: "Hierarchical navigation trails", url: demo_breadcrumbs_path},
       {title: "Top Nav", description: "Header layout with left, center, and right slots", url: demo_navbar_path},
       {title: "Search", description: "Reusable search component with live results", url: demo_search_path},
+      {title: "Picker", description: "Reusable file and image picker for any workflow", url: demo_picker_path},
       {title: "Sidebar Layout", description: "Sidebar layout shell with left/right positioning", url: demo_sidebar_layout_path},
       {title: "Sidebar Basic", description: "Basic sidebar with header, items, and footer", url: demo_sidebar_basic_path},
       {title: "Sidebar Header", description: "Header configurations for sidebar branding and actions", url: demo_sidebar_header_path},
@@ -958,8 +1195,58 @@ class PagesController < ApplicationController
       {title: "Grid: Two Columns", description: "Two-column layout with one card in each column", url: demo_grid_two_columns_path},
       {title: "Grid: Movable Cards", description: "Draggable card grid with persisted ordering", url: demo_grid_movable_cards_path},
       {title: "Pagination", description: "Page navigation with Pagy", url: demo_pagination_path},
+      {title: "Infinite Scroll", description: "Infinite scrolling pagination patterns", url: demo_pagination_infinite_path},
       {title: "Charts", description: "Data visualization with ApexCharts", url: demo_charts_path},
-      {title: "Code Blocks", description: "Reusable snippets for demo pages", url: demo_code_blocks_path}
+      {title: "Code Blocks", description: "Reusable snippets for demo pages", url: demo_code_blocks_path},
+      {title: "Avatars", description: "Avatar and avatar group examples", url: demo_avatars_path},
+      {title: "Comments", description: "Comments threads and reply composer patterns", url: demo_comments_path},
+      {title: "Chat Demo", description: "End-to-end chat demo experience", url: demo_chat_demo_path},
+      {title: "Chat Layout", description: "Two-panel chat layout examples", url: demo_chat_layout_path},
+      {title: "Chat Panel", description: "Chat panel container patterns", url: demo_chat_panel_path},
+      {title: "Chat Message List", description: "Chat message list patterns", url: demo_chat_message_list_path},
+      {title: "Chat Message Group", description: "Grouped chat message patterns", url: demo_chat_message_group_path},
+      {title: "Chat Sent Message", description: "Outgoing message examples", url: demo_chat_sent_message_path},
+      {title: "Chat Received Message", description: "Incoming message examples", url: demo_chat_received_message_path},
+      {title: "Chat File Message", description: "File attachment message examples", url: demo_chat_file_message_path},
+      {title: "Chat Image Message", description: "Image attachment message examples", url: demo_chat_image_message_path},
+      {title: "Chat Image Deck", description: "Overlapping multi-image chat message examples", url: demo_chat_image_deck_path},
+      {title: "Chat System Message", description: "System message examples", url: demo_chat_system_message_path},
+      {title: "Chat Message Record", description: "Message record component examples", url: demo_chat_message_record_path},
+      {title: "Chat Message Meta", description: "Message metadata component examples", url: demo_chat_message_meta_path},
+      {title: "Chat Attachment", description: "Attachment component examples", url: demo_chat_attachment_path},
+      {title: "Chat Date Divider", description: "Date divider component examples", url: demo_chat_date_divider_path},
+      {title: "Chat Typing Indicator", description: "Typing indicator component examples", url: demo_chat_typing_indicator_path},
+      {title: "Chat Composer", description: "Composer input and action patterns", url: demo_chat_composer_path},
+      {title: "Chat Textarea", description: "Chat textarea component examples", url: demo_chat_textarea_path},
+      {title: "Chat Send Button", description: "Send button component examples", url: demo_chat_send_button_path},
+      {title: "Carousel", description: "Carousel proposal overview and demo plan", url: demo_carousel_path},
+      {title: "Carousel: Images", description: "Image-based carousel with controls and keyboard navigation", url: demo_carousel_images_path},
+      {title: "Carousel: Lightbox", description: "Open active slide in a fullscreen modal lightbox", url: demo_carousel_lightbox_path},
+      {title: "Carousel: Thumbnails", description: "Thumbnail-driven carousel navigation", url: demo_carousel_thumbnails_path},
+      {title: "Carousel: HTML Cards", description: "Rich HTML card content rendered as carousel slides", url: demo_carousel_html_cards_path},
+      {title: "Carousel: Videos", description: "Video slides with poster and playback controls", url: demo_carousel_videos_path},
+      {title: "Carousel: Mixed Content", description: "Slides for image, video, and custom HTML", url: demo_carousel_mixed_content_path},
+      {title: "Carousel: Navigation", description: "Centered thumbs, indicator circles, and controls", url: demo_carousel_navigation_path},
+      {title: "Carousel: Autoplay + Loop", description: "Auto-advance timing with loop options", url: demo_carousel_autoplay_loop_path},
+      {title: "Carousel: Mobile", description: "Mobile responsive behavior and touch interactions", url: demo_carousel_mobile_path},
+      {title: "Carousel: Captions", description: "Optional overlay or below-media caption modes", url: demo_carousel_captions_path},
+      {title: "Carousel: Fullscreen", description: "Fullscreen and lightbox mode behavior", url: demo_carousel_fullscreen_path},
+      {title: "Carousel: RTL", description: "Right-to-left direction and control semantics", url: demo_carousel_rtl_path},
+      {title: "Carousel: Video Aware", description: "Video playback coordination with autoplay", url: demo_carousel_video_aware_path},
+      {title: "Carousel: Loading States", description: "Skeleton and fallback states for failed media", url: demo_carousel_loading_states_path},
+      {title: "Carousel: Performance", description: "Virtualization and adjacent preload strategy", url: demo_carousel_performance_path},
+      {title: "Carousel: Events API", description: "Imperative API and lifecycle events", url: demo_carousel_events_api_path},
+      {title: "Carousel: Security", description: "Sanitization and safe HTML slide policy", url: demo_carousel_security_path},
+      {title: "Carousel: Theming", description: "Tokenized styles for controls, thumbs, and captions", url: demo_carousel_theming_path},
+      {title: "Carousel: Deep Linking", description: "URL state sync and shareable slide links", url: demo_carousel_deep_linking_path},
+      {title: "Carousel: Reduced Motion", description: "Reduced-motion behavior and autoplay policy", url: demo_carousel_reduced_motion_path},
+      {title: "Progress", description: "Progress indicators and loading states", url: demo_progress_path},
+      {title: "Collapse", description: "Expandable and collapsible content patterns", url: demo_collapse_path},
+      {title: "Skeletons", description: "Skeleton loading placeholders", url: demo_skeletons_path},
+      {title: "List", description: "List component demos and selectable rows", url: demo_list_path},
+      {title: "Timeline", description: "Chronological timeline layouts", url: demo_timeline_path},
+      {title: "Mobile", description: "Mobile demo index", url: mobile_path},
+      {title: "Bottom Nav", description: "Mobile bottom navigation demo", url: mobile_bottom_nav_path}
     ]
   end
 
@@ -982,5 +1269,256 @@ class PagesController < ApplicationController
     @sorted_users = sort_users(@users.dup, params[:sort], params[:direction])
     @demo_table_rows = demo_table_rows_table_exists? ? DemoTableRow.where(list_key: DemoTableRow::DEFAULT_LIST_KEY).ordered : []
     @demo_table_version = demo_table_rows_table_exists? ? demo_table_version : "0"
+  end
+
+  def picker_item_payload(item)
+    {
+      id: item[:id],
+      kind: item[:kind],
+      label: item[:label],
+      name: item[:name],
+      contentType: item[:content_type],
+      byteSize: item[:byte_size],
+      thumbnailUrl: item[:thumbnail_url],
+      meta: item[:meta],
+      payload: item[:payload] || {}
+    }.compact
+  end
+
+  def render_carousel_example(key)
+    @carousel_examples = carousel_examples
+    @carousel_example = @carousel_examples.fetch(key)
+    render "pages/carousel_example"
+  end
+
+  def carousel_featured_examples
+    %i[images lightbox thumbnails html_cards videos].to_h do |key|
+      [key, carousel_examples.fetch(key)]
+    end
+  end
+
+  def carousel_examples
+    {
+      images: {
+        title: "Image Carousel",
+        subtitle: "Swipe or click through image slides with keyboard and control support.",
+        route: :demo_carousel_images_path,
+        demo_type: :images,
+        bullets: [
+          "Supports previous/next controls and keyboard arrows.",
+          "Includes slide counter and optional captions.",
+          "Designed for responsive media previews."
+        ]
+      },
+      lightbox: {
+        title: "Lightbox Carousel",
+        subtitle: "Open active slide in a modal lightbox for focused viewing.",
+        route: :demo_carousel_lightbox_path,
+        demo_type: :lightbox,
+        bullets: [
+          "Open the selected slide in a large modal canvas.",
+          "Retains current slide context between inline and modal.",
+          "Useful for product galleries and media review flows."
+        ]
+      },
+      thumbnails: {
+        title: "Thumbnail Navigation",
+        subtitle: "Use thumbnail strip navigation for fast slide selection.",
+        route: :demo_carousel_thumbnails_path,
+        demo_type: :thumbnails,
+        bullets: [
+          "Thumbnail strip reflects active state.",
+          "Tap/click a thumb to jump directly to a slide.",
+          "Great for dense media sets."
+        ]
+      },
+      html_cards: {
+        title: "HTML Card Slides",
+        subtitle: "Render full HTML card content as carousel slides.",
+        route: :demo_carousel_html_cards_path,
+        demo_type: :html_cards,
+        bullets: [
+          "Supports interactive card layouts per slide.",
+          "Works for announcements, release notes, and marketing tiles.",
+          "Keeps carousel controls while preserving rich content."
+        ]
+      },
+      videos: {
+        title: "Video Carousel",
+        subtitle: "Cycle through video slides with controls and poster previews.",
+        route: :demo_carousel_videos_path,
+        demo_type: :videos,
+        bullets: [
+          "Supports native video controls per slide.",
+          "Pauses background videos when slide changes.",
+          "Suitable for tutorials and product walkthrough reels."
+        ]
+      },
+      mixed_content: {
+        title: "Mixed Content Slides",
+        subtitle: "Support image, video, and custom HTML slide types in one carousel.",
+        route: :demo_carousel_mixed_content_path,
+        demo_type: :html_cards,
+        bullets: [
+          "Image slides require src and alt text.",
+          "Video slides support poster, controls, and media-specific options.",
+          "HTML slides use sanitized markup by default."
+        ]
+      },
+      navigation: {
+        title: "Navigation Controls",
+        subtitle: "Configurable thumbs, indicator circles, and forward/back controls.",
+        route: :demo_carousel_navigation_path,
+        demo_type: :thumbnails,
+        bullets: [
+          "Thumb strip supports centered alignment.",
+          "Indicator circles map to slide index and current state.",
+          "Prev/next controls disable at edges unless loop is enabled."
+        ]
+      },
+      autoplay_loop: {
+        title: "Autoplay And Loop",
+        subtitle: "Timer-based progression with interaction-aware pause and loop behavior.",
+        route: :demo_carousel_autoplay_loop_path,
+        demo_type: :images,
+        bullets: [
+          "Global autoplay interval with per-slide override options.",
+          "Pause on hover/focus and resume when safe.",
+          "Loop toggles wrap-around navigation behavior."
+        ]
+      },
+      mobile: {
+        title: "Mobile Responsive",
+        subtitle: "Mobile-first layout with touch gestures and breakpoint overrides.",
+        route: :demo_carousel_mobile_path,
+        demo_type: :images,
+        bullets: [
+          "Use larger tap targets for controls.",
+          "Enable horizontal swipe while preserving vertical page scroll.",
+          "Allow per-breakpoint toggles for thumbs and indicators."
+        ]
+      },
+      captions: {
+        title: "Optional Captions",
+        subtitle: "Render captions as overlay or below the carousel body.",
+        route: :demo_carousel_captions_path,
+        demo_type: :images,
+        bullets: [
+          "Support plain-text captions by default.",
+          "Optional sanitized caption HTML for richer formatting.",
+          "Associate captions with active slide using aria-describedby."
+        ]
+      },
+      fullscreen: {
+        title: "Fullscreen Mode",
+        subtitle: "Lightbox-like fullscreen presentation for media-heavy experiences.",
+        route: :demo_carousel_fullscreen_path,
+        demo_type: :lightbox,
+        bullets: [
+          "Fullscreen toggle with Escape-to-close.",
+          "Preserve keyboard navigation in fullscreen.",
+          "Retain current slide index between inline and fullscreen modes."
+        ]
+      },
+      rtl: {
+        title: "RTL Support",
+        subtitle: "Respect right-to-left layout semantics for controls and gestures.",
+        route: :demo_carousel_rtl_path,
+        demo_type: :images,
+        bullets: [
+          "Reverse control direction and key bindings in RTL contexts.",
+          "Adjust swipe semantics to match reading direction.",
+          "Mirror track translation rules for visual consistency."
+        ]
+      },
+      video_aware: {
+        title: "Video-Aware Behavior",
+        subtitle: "Coordinate carousel timing with video playback state.",
+        route: :demo_carousel_video_aware_path,
+        demo_type: :videos,
+        bullets: [
+          "Pause autoplay while active video is playing.",
+          "Optionally advance when video ends.",
+          "Handle muted autoplay constraints gracefully."
+        ]
+      },
+      loading_states: {
+        title: "Loading And Error States",
+        subtitle: "Provide resilient fallbacks for slow or failed media resources.",
+        route: :demo_carousel_loading_states_path,
+        demo_type: :images,
+        bullets: [
+          "Slide-level skeleton placeholders.",
+          "Error fallback UI for failed image/video sources.",
+          "Retry and alternate content affordances."
+        ]
+      },
+      performance: {
+        title: "Performance Guardrails",
+        subtitle: "Scale to larger collections with virtualization and selective preload.",
+        route: :demo_carousel_performance_path,
+        demo_type: :images,
+        bullets: [
+          "Render active and adjacent slides only when slide count is high.",
+          "Preload neighboring media for smoother transitions.",
+          "Avoid layout shift with fixed ratio containers."
+        ]
+      },
+      events_api: {
+        title: "Imperative API And Events",
+        subtitle: "Expose stable public methods and lifecycle events for integrations.",
+        route: :demo_carousel_events_api_path,
+        demo_type: :images,
+        bullets: [
+          "Methods: next, prev, goTo, play, pause.",
+          "Events: carousel:change, carousel:play, carousel:pause, carousel:error.",
+          "Enable analytics and cross-component orchestration."
+        ]
+      },
+      security: {
+        title: "Security And Sanitization",
+        subtitle: "Secure default handling for custom HTML and captions.",
+        route: :demo_carousel_security_path,
+        demo_type: :html_cards,
+        bullets: [
+          "Use allowlisted sanitization for HTML slide content.",
+          "Prefer plain text fields for captions and labels.",
+          "Keep unsafe mode opt-in only and documented."
+        ]
+      },
+      theming: {
+        title: "Theming Hooks",
+        subtitle: "Expose tokens for controls, indicators, thumbs, and captions.",
+        route: :demo_carousel_theming_path,
+        demo_type: :images,
+        bullets: [
+          "Tokenized color, radius, spacing, and focus-ring values.",
+          "Theme consistency across light/dark/custom themes.",
+          "Support brand overrides without custom component forks."
+        ]
+      },
+      deep_linking: {
+        title: "Deep Linking",
+        subtitle: "Optional URL sync to restore and share carousel state.",
+        route: :demo_carousel_deep_linking_path,
+        demo_type: :images,
+        bullets: [
+          "Sync active slide to hash or query param.",
+          "Restore initial slide from URL on load.",
+          "Preserve history behavior for navigation ergonomics."
+        ]
+      },
+      reduced_motion: {
+        title: "Reduced Motion",
+        subtitle: "Respect motion preferences with safer defaults.",
+        route: :demo_carousel_reduced_motion_path,
+        demo_type: :images,
+        bullets: [
+          "Disable autoplay by default when reduced motion is requested.",
+          "Use simplified transitions and avoid parallax effects.",
+          "Keep navigation fully functional without motion dependency."
+        ]
+      }
+    }
   end
 end

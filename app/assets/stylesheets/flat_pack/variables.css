@@ -396,6 +396,20 @@
   --top-nav-item-active-background-color: oklch(0.52 0.26 250);
   --top-nav-item-active-text-color: oklch(1.0 0 0);
   --top-nav-item-active-icon-color: oklch(1.0 0 0);
+
+  --search-icon-color: var(--surface-muted-content-color);
+  --search-input-background-color: var(--surface-muted-background-color);
+  --search-input-border-color: transparent;
+  --search-input-text-color: var(--surface-content-color);
+  --search-input-placeholder-color: var(--surface-muted-content-color);
+  --search-input-focus-ring-color: var(--color-primary);
+  --search-dropdown-background-color: var(--surface-background-color);
+  --search-dropdown-border-color: var(--surface-border-color);
+  --search-dropdown-muted-text-color: var(--surface-muted-content-color);
+  --search-result-title-color: var(--surface-content-color);
+  --search-result-description-color: var(--surface-muted-content-color);
+  --search-result-hover-background-color: var(--surface-muted-background-color);
+  --search-result-divider-color: var(--surface-border-color);
   
   --color-ring: oklch(0.52 0.26 250);
   
@@ -844,6 +858,20 @@
   --top-nav-item-active-background-color: oklch(0.52 0.26 250);
   --top-nav-item-active-text-color: oklch(1.0 0 0);
   --top-nav-item-active-icon-color: oklch(1.0 0 0);
+
+  --search-icon-color: var(--surface-muted-content-color);
+  --search-input-background-color: var(--surface-muted-background-color);
+  --search-input-border-color: transparent;
+  --search-input-text-color: var(--surface-content-color);
+  --search-input-placeholder-color: var(--surface-muted-content-color);
+  --search-input-focus-ring-color: var(--color-primary);
+  --search-dropdown-background-color: var(--surface-background-color);
+  --search-dropdown-border-color: var(--surface-border-color);
+  --search-dropdown-muted-text-color: var(--surface-muted-content-color);
+  --search-result-title-color: var(--surface-content-color);
+  --search-result-description-color: var(--surface-muted-content-color);
+  --search-result-hover-background-color: var(--surface-muted-background-color);
+  --search-result-divider-color: var(--surface-border-color);
   
   --color-ring: oklch(0.52 0.26 250);
 
@@ -1279,6 +1307,20 @@
   --top-nav-item-active-background-color: oklch(0.62 0.22 250);
   --top-nav-item-active-text-color: oklch(0.15 0.01 250);
   --top-nav-item-active-icon-color: oklch(0.15 0.01 250);
+
+  --search-icon-color: var(--surface-muted-content-color);
+  --search-input-background-color: var(--surface-muted-background-color);
+  --search-input-border-color: transparent;
+  --search-input-text-color: var(--surface-content-color);
+  --search-input-placeholder-color: var(--surface-muted-content-color);
+  --search-input-focus-ring-color: var(--color-primary);
+  --search-dropdown-background-color: var(--surface-background-color);
+  --search-dropdown-border-color: var(--surface-border-color);
+  --search-dropdown-muted-text-color: var(--surface-muted-content-color);
+  --search-result-title-color: var(--surface-content-color);
+  --search-result-description-color: var(--surface-muted-content-color);
+  --search-result-hover-background-color: var(--surface-muted-background-color);
+  --search-result-divider-color: var(--surface-border-color);
   
   --color-ring: oklch(0.62 0.22 250);
 
@@ -1713,6 +1755,20 @@
   --top-nav-item-active-background-color: oklch(0.52 0.15 220);
   --top-nav-item-active-text-color: oklch(1.0 0 0);
   --top-nav-item-active-icon-color: oklch(1.0 0 0);
+
+  --search-icon-color: var(--surface-muted-content-color);
+  --search-input-background-color: var(--surface-muted-background-color);
+  --search-input-border-color: transparent;
+  --search-input-text-color: var(--surface-content-color);
+  --search-input-placeholder-color: var(--surface-muted-content-color);
+  --search-input-focus-ring-color: var(--color-primary);
+  --search-dropdown-background-color: var(--surface-background-color);
+  --search-dropdown-border-color: var(--surface-border-color);
+  --search-dropdown-muted-text-color: var(--surface-muted-content-color);
+  --search-result-title-color: var(--surface-content-color);
+  --search-result-description-color: var(--surface-muted-content-color);
+  --search-result-hover-background-color: var(--surface-muted-background-color);
+  --search-result-divider-color: var(--surface-border-color);
   
   --color-ring: oklch(0.52 0.15 220);
 
@@ -2147,6 +2203,20 @@
   --top-nav-item-active-background-color: #333;
   --top-nav-item-active-text-color: #fff;
   --top-nav-item-active-icon-color: #fff;
+
+  --search-icon-color: var(--surface-muted-content-color);
+  --search-input-background-color: var(--surface-muted-background-color);
+  --search-input-border-color: var(--surface-border-hover-color);
+  --search-input-text-color: var(--surface-content-color);
+  --search-input-placeholder-color: var(--surface-muted-content-color);
+  --search-input-focus-ring-color: var(--color-primary);
+  --search-dropdown-background-color: var(--surface-background-color);
+  --search-dropdown-border-color: var(--surface-border-color);
+  --search-dropdown-muted-text-color: var(--surface-muted-content-color);
+  --search-result-title-color: var(--surface-content-color);
+  --search-result-description-color: var(--surface-muted-content-color);
+  --search-result-hover-background-color: var(--surface-muted-background-color);
+  --search-result-divider-color: var(--surface-border-color);
 
   --color-ring: #333;
 

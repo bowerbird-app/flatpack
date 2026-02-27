@@ -13,7 +13,10 @@ module Demo
       item.update!(state: "read") unless item.state == "read"
 
       item_html = ApplicationController.render(
-        renderable: FlatPack::Chat::MessageRecord::Component.new(record: item),
+        renderable: FlatPack::Chat::MessageRecord::Component.new(
+          record: item,
+          reveal_actions: item.outgoing?
+        ),
         layout: false
       )
 

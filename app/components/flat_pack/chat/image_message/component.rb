@@ -5,12 +5,10 @@ module FlatPack
     module ImageMessage
       class Component < FlatPack::BaseComponent
         def initialize(
-          direction: :incoming,
+          image_name:, thumbnail_url:, direction: :incoming,
           state: :sent,
           timestamp: nil,
           edited: false,
-          image_name:,
-          thumbnail_url:,
           image_href: nil,
           body: nil,
           reveal_actions: false,
@@ -32,7 +30,7 @@ module FlatPack
 
         def call
           render message_component_class.new(**message_component_arguments) do |message|
-            message.with_attachment do
+            message.with_media_attachment do
               render FlatPack::Chat::Attachment::Component.new(
                 type: :image,
                 name: @image_name,
@@ -56,7 +54,7 @@ module FlatPack
         private
 
         def message_component_class
-          @direction == :outgoing ? FlatPack::Chat::SentMessage::Component : FlatPack::Chat::ReceivedMessage::Component
+          (@direction == :outgoing) ? FlatPack::Chat::SentMessage::Component : FlatPack::Chat::ReceivedMessage::Component
         end
 
         def message_component_arguments
@@ -64,9 +62,9 @@ module FlatPack
             state: @state
           }
 
-          if @direction == :outgoing
+          if @reveal_actions
             base_arguments[:timestamp] = @timestamp
-            base_arguments[:reveal_actions] = @reveal_actions
+            base_arguments[:reveal_actions] = true
           end
 
           base_arguments

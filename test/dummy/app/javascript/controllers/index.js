@@ -4,5 +4,7 @@ import { application } from "controllers/application"
 import { eagerLoadControllersFrom, lazyLoadControllersFrom } from "@hotwired/stimulus-loading"
 eagerLoadControllersFrom("controllers", application)
 
-// Lazy load FlatPack controllers on first use
-lazyLoadControllersFrom("controllers/flat_pack", application)
+// Lazy load FlatPack controllers on first use.
+// FlatPack identifiers are namespaced (e.g. flat-pack--chat-sender),
+// so lazy loading must start at "controllers" to avoid duplicate path segments.
+lazyLoadControllersFrom("controllers", application)

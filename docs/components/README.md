@@ -38,6 +38,7 @@ This is the canonical component index for AI and human lookup.
 | Grid | Responsive grid layout container | `FlatPack::Grid::Component` | [grid.md](grid.md) |
 | Navbar | App-level nav shell | `FlatPack::Navbar::Component` | [navbar.md](navbar.md) |
 | Pagination Infinite | Incremental loading pagination | `FlatPack::PaginationInfinite::Component` | [pagination-infinite.md](pagination-infinite.md) |
+| Picker | Reusable image/file selector with consumer-defined behavior | `FlatPack::Picker::Component` | [picker.md](picker.md) |
 | Progress | Progress indicators/bars | `FlatPack::Progress::Component` | [progress.md](progress.md) |
 | Range Input | Slider/range selection | `FlatPack::RangeInput::Component` | [range-input.md](range-input.md) |
 | Search | Reusable search UI | `FlatPack::Search::Component` | [search.md](search.md) |

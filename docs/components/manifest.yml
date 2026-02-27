@@ -76,6 +76,7 @@ components:
       - FlatPack::Chat::Header::Component
       - FlatPack::Chat::MessageList::Component
       - FlatPack::Chat::MessageRecord::Component
+      - FlatPack::Chat::InboxRow::Component
       - FlatPack::Chat::SentMessage::Component
       - FlatPack::Chat::ReceivedMessage::Component
       - FlatPack::Chat::SystemMessage::Component
@@ -186,6 +187,12 @@ components:
     title: Search
     doc: docs/components/search.md
     primary_class: FlatPack::Search::Component
+    status: documented
+
+  - key: picker
+    title: Picker
+    doc: docs/components/picker.md
+    primary_class: FlatPack::Picker::Component
     status: documented
 
   - key: sidebar

@@ -22,41 +22,26 @@
             Chat Groups Inbox
           </p>
 
-          <%= render FlatPack::List::Component.new(spacing: :dense, divider: true, selectable: true) do %>
+          <%= render FlatPack::List::Component.new(spacing: :dense, divider: false, selectable: true) do %>
             <% @chat_group_summaries.each do |summary| %>
-              <% trailing = capture do %>
-                <div class="min-w-13 flex flex-col items-end gap-1">
-                  <span class="text-xs text-(--surface-muted-content-color)"><%= summary[:latest_at]&.strftime("%-l:%M %p") %></span>
-                  <% if summary[:unread_count].positive? %>
-                    <%= render FlatPack::Badge::Component.new(text: summary[:unread_count].to_s, style: :info, size: :sm) %>
-                  <% end %>
-                </div>
-              <% end %>
-
-              <%= render FlatPack::List::Item.new(
-                leading: render(FlatPack::Avatar::Component.new(name: summary[:chat_group].name, initials: summary[:initials], size: :sm)),
-                trailing: trailing,
+              <%= render FlatPack::Chat::InboxRow::Component.new(
+                chat_group_name: summary[:chat_group].name,
+                avatar_items: summary[:avatar_items],
+                latest_sender: summary[:latest_sender],
+                latest_preview: summary[:latest_preview],
+                latest_at: summary[:latest_at],
+                unread_count: summary[:unread_count],
                 href: demo_chat_demo_path(chat_group_id: summary[:chat_group].id),
-                hover: true,
                 active: summary[:active],
-                link_arguments: {
-                  data: {turbo_frame: "chat-demo-panel"},
-                  aria: {current: (summary[:active] ? "page" : nil)}
-                },
-                class: "overflow-hidden"
-              ) do %>
-                <p class="truncate text-sm font-medium text-(--surface-content-color)"><%= summary[:chat_group].name %></p>
-                <p class="truncate text-xs text-(--surface-muted-content-color)">
-                  <%= [summary[:latest_sender], summary[:latest_preview]].compact.join(": ") %>
-                </p>
-              <% end %>
+                turbo_frame: "chat-demo-panel"
+              ) %>
             <% end %>
           <% end %>
         </div>
       <% end %>
 
       <% layout.with_panel do %>
-        <%= turbo_frame_tag "chat-demo-panel" do %>
+        <%= turbo_frame_tag "chat-demo-panel", class: "block h-full" do %>
           <%= render FlatPack::Chat::Panel::Component.new do |panel| %>
         <% panel.with_header do %>
           <%= render FlatPack::Chat::Header::Component.new(
@@ -115,10 +100,13 @@
           <%= form_with url: (@chat_group ? demo_chat_group_messages_path(@chat_group) : "#"), method: :post, local: true,
               data: {
                 controller: "flat-pack--chat-sender",
-                action: "submit->flat-pack--chat-sender#submit",
+                action: "submit->flat-pack--chat-sender#submit flat-pack:picker:confirm@document->flat-pack--chat-sender#handlePickerConfirm",
                 thread_id: @chat_group&.id,
                 flat_pack__chat_sender_thread_selector_value: (@chat_group ? "##{dom_id(@chat_group, :messages)}" : "[data-flat-pack--chat-scroll-target='messages']"),
-                flat_pack__chat_sender_endpoint_value: (@chat_group ? demo_chat_group_messages_path(@chat_group) : nil)
+                flat_pack__chat_sender_endpoint_value: (@chat_group ? demo_chat_group_messages_path(@chat_group) : nil),
+                flat_pack__chat_sender_optimistic_endpoint_value: (@chat_group ? preview_demo_chat_group_messages_path(@chat_group) : nil),
+                flat_pack__chat_sender_composition_mode_value: (params[:composition_mode].presence_in(%w[combined separate]) || "separate"),
+                flat_pack__chat_sender_picker_ids_value: ["chat-picker-images", "chat-picker-files"]
               } do %>
             <input
               type="file"
@@ -140,9 +128,20 @@
                   aria: {label: "Add files or images"}
                 ) do |dropdown| %>
                   <% dropdown.with_menu_item(
-                    text: "Upload files or images",
+                    text: "Images",
+                    icon: "image",
+                    data: {
+                      action: "click->flat-pack--button-dropdown#close click->flat-pack--modal#open",
+                      "modal-id": "chat-picker-images"
+                    }
+                  ) %>
+                  <% dropdown.with_menu_item(
+                    text: "Files",
                     icon: "file",
-                    data: {action: "click->flat-pack--chat-sender#openFilePicker"}
+                    data: {
+                      action: "click->flat-pack--button-dropdown#close click->flat-pack--modal#open",
+                      "modal-id": "chat-picker-files"
+                    }
                   ) %>
                 <% end %>
               <% end %>
@@ -159,6 +158,31 @@
                 <%= render FlatPack::Chat::SendButton::Component.new %>
               <% end %>
             <% end %>
+
+            <%= render FlatPack::Picker::Component.new(
+              id: "chat-picker-images",
+              title: "Add Images",
+              subtitle: "Select one or more images to add to this chat group.",
+              items: @chat_attachment_picker_items,
+              accepted_kinds: [:image],
+              selection_mode: :multiple,
+              searchable: true,
+              search_mode: :local,
+              results_layout: :grid,
+              confirm_text: "Add Selected Images"
+            ) %>
+
+            <%= render FlatPack::Picker::Component.new(
+              id: "chat-picker-files",
+              title: "Add Files",
+              subtitle: "Select one or more files to add to this chat group.",
+              items: @chat_attachment_picker_items,
+              accepted_kinds: [:file],
+              searchable: true,
+              search_mode: :local,
+              size: :md,
+              confirm_text: "Add Selected Files"
+            ) %>
           <% end %>
         <% end %>
           <% end %>

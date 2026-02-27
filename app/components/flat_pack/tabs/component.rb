@@ -17,7 +17,7 @@ module FlatPack
           inactive: "text-[var(--tabs-pill-inactive-text-color)] hover:text-[var(--tabs-pill-inactive-hover-text-color)] hover:bg-[var(--tabs-pill-inactive-hover-background-color)]"
         },
         stacked: {
-          tab_list: "flex flex-col gap-1 [border-radius:var(--tabs-pill-corner-radius)] p-1",
+          tab_list: "flex flex-col gap-1 [border-radius:var(--tabs-pill-corner-radius)] p-1 bg-[var(--tabs-stacked-pill-list-background-color)] border border-[var(--tabs-pill-list-border-color)]",
           tab_base: "w-full [border-radius:var(--tabs-pill-corner-radius)] px-3 py-2 text-left text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
           active: "border border-[var(--tabs-pill-active-border-color)] bg-[var(--tabs-pill-active-background-color)] text-[var(--tabs-pill-active-text-color)] shadow-[var(--tabs-pill-active-shadow)]",
           inactive: "border border-transparent text-[var(--tabs-pill-inactive-text-color)] hover:text-[var(--tabs-pill-inactive-hover-text-color)] hover:bg-[var(--tabs-pill-inactive-hover-background-color)]"

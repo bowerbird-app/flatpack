@@ -1,0 +1,69 @@
+<div class="container mx-auto max-w-5xl p-4">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Chat::InboxRow",
+    subtitle: "Reusable inbox row for chat group lists with avatars, preview text, and unread counts."
+  ) %>
+
+  <%= render "pages/component_method_variables_table", component: :chat_inbox_row, anchor: "component-method-variables" %>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Demo", anchor_link: true, subtitle: "Inbox rows rendered as list items.") %>
+
+    <% rows = [
+      {
+        chat_group_name: "Design Team",
+        latest_sender: "Mina",
+        latest_preview: "Uploaded revised launch copy",
+        latest_at: Time.current.change(hour: 10, min: 12),
+        unread_count: 3,
+        avatar_items: [
+          {name: "Mina Cho", initials: "MC"},
+          {name: "Sam Lee", initials: "SL"},
+          {name: "Jo Kim", initials: "JK"}
+        ]
+      },
+      {
+        chat_group_name: "Product Updates",
+        latest_sender: "You",
+        latest_preview: "I will ship the patch this afternoon",
+        latest_at: Time.current.change(hour: 9, min: 55),
+        unread_count: 0,
+        avatar_items: [
+          {name: "Alex Rivera", initials: "AR"},
+          {name: "Rina Park", initials: "RP"}
+        ]
+      }
+    ] %>
+
+    <div class="mb-4 mt-6 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-3">
+      <%= render FlatPack::List::Component.new(spacing: :dense, divider: false, selectable: true) do %>
+        <% rows.each_with_index do |row, index| %>
+          <%= render FlatPack::Chat::InboxRow::Component.new(**row, href: "#chat-group-#{index}", active: index.zero?, turbo_frame: "chat-demo-panel") %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::List::Component.new(spacing: :dense, selectable: true) do %&gt;
+          &lt;%= render FlatPack::Chat::InboxRow::Component.new(
+            chat_group_name: "Design Team",
+            latest_sender: "Mina",
+            latest_preview: "Uploaded revised launch copy",
+            latest_at: Time.current,
+            unread_count: 3,
+            avatar_items: [
+              {name: "Mina Cho", initials: "MC"},
+              {name: "Sam Lee", initials: "SL"}
+            ],
+            href: demo_chat_demo_path(chat_group_id: 1),
+            active: true,
+            turbo_frame: "chat-demo-panel"
+          ) %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
+  </section>
+</div>

@@ -98,11 +98,32 @@ module FlatPack
         def render_attachments(chat_message)
           return if @attachments.blank?
 
-          @attachments.each do |attachment|
+          image_attachments, file_attachments = @attachments.partition { |attachment| image_attachment?(attachment) }
+
+          if image_attachments.length > 1
+            chat_message.with_media_attachment do
+              render FlatPack::Chat::ImageDeck::Component.new(
+                images: image_attachments,
+                direction: @direction
+              )
+            end
+          else
+            image_attachments.each do |attachment|
+              chat_message.with_media_attachment do
+                render FlatPack::Chat::Attachment::Component.new(**attachment)
+              end
+            end
+          end
+
+          file_attachments.each do |attachment|
             chat_message.with_attachment do
               render FlatPack::Chat::Attachment::Component.new(**attachment)
             end
           end
+        end
+
+        def image_attachment?(attachment)
+          normalize_attachment_type(attachment[:type] || attachment["type"]) == :image
         end
 
         def reveal_actions?
@@ -122,7 +143,7 @@ module FlatPack
         end
 
         def message_component_class
-          @direction == :outgoing ? FlatPack::Chat::SentMessage::Component : FlatPack::Chat::ReceivedMessage::Component
+          (@direction == :outgoing) ? FlatPack::Chat::SentMessage::Component : FlatPack::Chat::ReceivedMessage::Component
         end
 
         def message_component_arguments
@@ -218,18 +239,28 @@ module FlatPack
               name: attachment.name,
               meta: attachment.respond_to?(:meta_label) ? attachment.meta_label : nil,
               href: nil,
-              thumbnail_url: attachment.respond_to?(:image?) && attachment.image? ? generated_demo_thumbnail_url(attachment.name) : nil
+              thumbnail_url: record_attachment_thumbnail_url(attachment)
             }.compact
           end
         end
 
         def normalize_attachment_type(value)
-          value.to_s == "image" ? :image : :file
+          (value.to_s == "image") ? :image : :file
         end
 
         def generated_demo_thumbnail_url(name)
           seed = ERB::Util.url_encode(name.to_s)
           "https://picsum.photos/seed/#{seed}/480/280"
+        end
+
+        def record_attachment_thumbnail_url(attachment)
+          return unless attachment.respond_to?(:image?) && attachment.image?
+
+          thumbnail_url = if attachment.respond_to?(:thumbnail_url)
+            attachment.thumbnail_url
+          end
+
+          thumbnail_url.presence || generated_demo_thumbnail_url(attachment.name)
         end
 
         def validate_body!

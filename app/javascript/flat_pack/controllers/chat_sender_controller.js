@@ -1,16 +1,88 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["fileInput"]
+  static targets = ["fileInput", "pickerCheckbox"]
 
   static values = {
     threadSelector: { type: String, default: "[data-flat-pack--chat-scroll-target='messages']" },
     endpoint: String,
-    method: { type: String, default: "post" }
+    optimisticEndpoint: String,
+    method: { type: String, default: "post" },
+    compositionMode: { type: String, default: "separate" },
+    pickerScope: String,
+    pickerIds: Array
   }
 
   connect() {
     this.selectedFiles = []
+  }
+
+  async handlePickerConfirm(event) {
+    const detail = event?.detail || {}
+    const selection = Array.isArray(detail.selection) ? detail.selection : []
+    if (selection.length === 0) {
+      return
+    }
+
+    // Ignore picker events unrelated to this chat form.
+    if (!this.#pickerEventMatches(detail)) {
+      return
+    }
+
+    const attachments = selection
+      .map((item) => this.#attachmentFromDataset(item || {}))
+      .filter(Boolean)
+
+    if (attachments.length === 0) {
+      return
+    }
+
+    await this.#sendFromComposer("", attachments, { clearComposer: false })
+  }
+
+  async addPickerAttachment(event) {
+    event.preventDefault()
+
+    const attachment = this.#attachmentFromDataset(event.currentTarget?.dataset || {})
+    if (!attachment) {
+      return
+    }
+
+    await this.#sendFromComposer("", [attachment], { clearComposer: false })
+  }
+
+  async addSelectedPickerAttachments(event) {
+    event.preventDefault()
+
+    const pickerKind = String(event.currentTarget?.dataset.pickerKind || "").trim()
+    const attachments = this.#selectedPickerAttachments(pickerKind)
+
+    if (attachments.length === 0) {
+      return
+    }
+
+    await this.#sendFromComposer("", attachments, { clearComposer: false })
+    this.clearPickerSelection(event)
+  }
+
+  clearPickerSelection(event) {
+    const pickerKind = String(event?.currentTarget?.dataset?.pickerKind || "").trim()
+
+    if (!this.hasPickerCheckboxTarget) {
+      return
+    }
+
+    this.pickerCheckboxTargets.forEach((checkbox) => {
+      if (!(checkbox instanceof HTMLInputElement)) {
+        return
+      }
+
+      if (pickerKind && checkbox.dataset.attachmentKind !== pickerKind) {
+        return
+      }
+
+      checkbox.checked = false
+    })
   }
 
   openFilePicker(event) {
@@ -43,17 +115,28 @@ export default class extends Controller {
       return
     }
 
+    await this.#sendFromComposer(body, attachments)
+  }
+
+  async #sendFromComposer(body, attachments, { clearComposer = true } = {}) {
+    const textarea = this.#textarea()
+    if (!textarea) {
+      return
+    }
+
     const threadElement = this.#threadElement()
     if (!threadElement) {
       return
     }
 
-    const optimisticElement = this.#buildOptimisticMessageElement(body, attachments)
+    const optimisticElement = await this.#buildOptimisticMessageElement(body, attachments)
     threadElement.append(optimisticElement)
 
-    textarea.value = ""
-    textarea.dispatchEvent(new Event("input", { bubbles: true }))
-    this.#clearSelectedFiles()
+    if (clearComposer) {
+      textarea.value = ""
+      textarea.dispatchEvent(new Event("input", { bubbles: true }))
+      this.#clearSelectedFiles()
+    }
 
     const submitButton = this.#submitButton()
     if (submitButton) {
@@ -108,33 +191,152 @@ export default class extends Controller {
     return document.querySelector(this.threadSelectorValue)
   }
 
-  #buildOptimisticMessageElement(body, attachments) {
-    const timestamp = this.#timeLabel()
-    const bodyMarkup = body ? `<div class="wrap-break-word whitespace-pre-line">${this.#escapeHtml(body)}</div>` : ""
-    const attachmentsMarkup = this.#attachmentMarkup(attachments)
+  async #buildOptimisticMessageElement(body, attachments) {
+    const payload = {
+      body,
+      attachments,
+      timestamp: this.#timeLabel(),
+      state: "sending",
+      direction: "outgoing"
+    }
 
+    const customElement = this.#optimisticElementFromEvent(payload)
+    if (customElement) {
+      return customElement
+    }
+
+    if (this.hasOptimisticEndpointValue) {
+      const endpointElement = await this.#optimisticElementFromEndpoint(payload)
+      if (endpointElement) {
+        return endpointElement
+      }
+    }
+
+    return this.#buildDefaultOptimisticMessageElement(payload)
+  }
+
+  #optimisticElementFromEvent(payload) {
+    let providedElement = null
+
+    const renderEvent = new CustomEvent("flat-pack:chat:render-optimistic", {
+      bubbles: true,
+      cancelable: true,
+      detail: {
+        payload,
+        form: this.element,
+        respondWith: (elementLike) => {
+          providedElement = this.#coerceOptimisticElement(elementLike)
+        }
+      }
+    })
+
+    this.element.dispatchEvent(renderEvent)
+    return providedElement
+  }
+
+  #coerceOptimisticElement(elementLike) {
+    if (elementLike instanceof Element) {
+      return elementLike
+    }
+
+    if (typeof elementLike === "string") {
+      const template = document.createElement("template")
+      template.innerHTML = elementLike.trim()
+
+      if (template.content.childElementCount === 1) {
+        return template.content.firstElementChild
+      }
+
+      if (template.content.childElementCount > 1) {
+        const wrapper = document.createElement("div")
+        wrapper.dataset.flatPackChatSenderOptimisticWrapper = ""
+        wrapper.append(...Array.from(template.content.children))
+        return wrapper
+      }
+
+      return null
+    }
+
+    return null
+  }
+
+  async #optimisticElementFromEndpoint(payload) {
+    try {
+      const response = await fetch(this.optimisticEndpointValue, {
+        method: this.methodValue.toUpperCase(),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "X-CSRF-Token": this.#csrfToken()
+        },
+        body: JSON.stringify({ message: payload })
+      })
+
+      if (!response.ok) {
+        return null
+      }
+
+      const parsed = await response.json().catch(() => ({}))
+      return this.#coerceOptimisticElement(parsed?.html)
+    } catch (_error) {
+      return null
+    }
+  }
+
+  #buildDefaultOptimisticMessageElement(payload) {
     const wrapper = document.createElement("div")
     wrapper.className = "flex items-start gap-0 flex-row-reverse"
     wrapper.dataset.flatPackChatSenderTempId = `${Date.now()}-${Math.floor(Math.random() * 10_000)}`
 
-    wrapper.innerHTML = `
-      <div class="flex-1 min-w-0 space-y-1">
-        <div class="space-y-1">
-          <div class="flex justify-end" data-chat-message-state="sending">
-            <div data-flat-pack-chat-sender-bubble class="relative px-4 py-2 rounded-2xl max-w-[75%] sm:max-w-[500px] shadow-sm bg-(--chat-message-outgoing-background-color) text-(--chat-message-outgoing-text-color) opacity-60">
-              ${bodyMarkup}
-              ${attachmentsMarkup}
-              <div class="mt-1 [--chat-message-meta-color:var(--chat-message-outgoing-meta-color)] [--chat-read-receipt-color:var(--chat-message-outgoing-read-receipt-color)]">
-                <div data-flat-pack-chat-sender-meta class="flex items-center gap-1.5 text-xs">
-                  <span class="text-xs text-(--chat-message-meta-color)">${this.#escapeHtml(timestamp)}</span>
-                  <span class="text-xs text-(--chat-message-meta-color)">Sending...</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    `
+    const column = document.createElement("div")
+    column.className = "flex-1 min-w-0 space-y-1"
+
+    const stack = document.createElement("div")
+    stack.className = "space-y-1"
+
+    const messageState = document.createElement("div")
+    messageState.className = "flex justify-end"
+    messageState.dataset.chatMessageState = payload.state
+
+    const bubble = document.createElement("div")
+    bubble.dataset.flatPackChatSenderBubble = ""
+    bubble.className = "relative px-4 py-2 rounded-2xl max-w-[75%] sm:max-w-[500px] shadow-sm bg-(--chat-message-outgoing-background-color) text-(--chat-message-outgoing-text-color) opacity-60"
+
+    if (payload.body) {
+      const bodyNode = document.createElement("div")
+      bodyNode.className = "wrap-break-word whitespace-pre-line"
+      bodyNode.textContent = payload.body
+      bubble.append(bodyNode)
+    }
+
+    const attachmentsContainer = this.#buildAttachmentsContainer(payload.attachments)
+    if (attachmentsContainer) {
+      bubble.append(attachmentsContainer)
+    }
+
+    const metaWrapper = document.createElement("div")
+    metaWrapper.className = "mt-1 [--chat-message-meta-color:var(--chat-message-outgoing-meta-color)] [--chat-read-receipt-color:var(--chat-message-outgoing-read-receipt-color)]"
+
+    const meta = document.createElement("div")
+    meta.dataset.flatPackChatSenderMeta = ""
+    meta.className = "flex items-center gap-1.5 text-xs"
+
+    const timestamp = document.createElement("span")
+    timestamp.className = "text-xs text-(--chat-message-meta-color)"
+    timestamp.textContent = payload.timestamp
+
+    const status = document.createElement("span")
+    status.className = "text-xs text-(--chat-message-meta-color)"
+    status.textContent = "Sending..."
+
+    meta.append(timestamp, status)
+    metaWrapper.append(meta)
+    bubble.append(metaWrapper)
+
+    messageState.append(bubble)
+    stack.append(messageState)
+    column.append(stack)
+    wrapper.append(column)
 
     return wrapper
   }
@@ -142,7 +344,7 @@ export default class extends Controller {
   #payloadFor(body, attachments) {
     return {
       body,
-      chatGroupId: this.element.dataset.threadId,
+      compositionMode: this.compositionModeValue,
       attachments,
       clientTempId: this.#tempId(),
       submittedAt: new Date().toISOString()
@@ -158,6 +360,37 @@ export default class extends Controller {
     }))
   }
 
+  #selectedPickerAttachments(pickerKind) {
+    if (!this.hasPickerCheckboxTarget) {
+      return []
+    }
+
+    return this.pickerCheckboxTargets
+      .filter((checkbox) => checkbox.checked)
+      .filter((checkbox) => !pickerKind || checkbox.dataset.attachmentKind === pickerKind)
+      .map((checkbox) => this.#attachmentFromDataset(checkbox.dataset))
+      .filter(Boolean)
+  }
+
+  #attachmentFromDataset(dataset) {
+    const name = String(dataset.attachmentName || dataset.name || "").trim()
+    if (!name) {
+      return null
+    }
+
+    const kind = (dataset.attachmentKind || dataset.kind) === "image" ? "image" : "file"
+    const byteSizeRaw = dataset.attachmentByteSize || dataset.byteSize
+    const parsedByteSize = Number.parseInt(byteSizeRaw, 10)
+
+    return {
+      kind,
+      name,
+      contentType: dataset.attachmentContentType || dataset.contentType || null,
+      byteSize: Number.isFinite(parsedByteSize) ? parsedByteSize : null,
+      thumbnailUrl: dataset.attachmentThumbnailUrl || dataset.thumbnailUrl || null
+    }
+  }
+
   #clearSelectedFiles() {
     this.selectedFiles = []
 
@@ -166,29 +399,53 @@ export default class extends Controller {
     }
   }
 
-  #attachmentMarkup(attachments) {
+  #buildAttachmentsContainer(attachments) {
     if (!attachments || attachments.length === 0) {
-      return ""
+      return null
     }
 
-    const items = attachments.map((attachment) => this.#singleAttachmentMarkup(attachment)).join("")
-    return `<div class="mt-2 space-y-2">${items}</div>`
+    const container = document.createElement("div")
+    container.className = "mt-2 space-y-2"
+
+    attachments.forEach((attachment) => {
+      const node = this.#buildAttachmentNode(attachment)
+      if (node) {
+        container.append(node)
+      }
+    })
+
+    return container.childElementCount > 0 ? container : null
   }
 
-  #singleAttachmentMarkup(attachment) {
+  #buildAttachmentNode(attachment) {
     const kind = attachment.kind === "image" ? "image" : "file"
     const meta = this.#attachmentMeta(attachment)
-    const icon = kind === "image" ? "🖼" : "📎"
 
-    return `
-      <div class="inline-flex w-fit max-w-full items-center gap-3 border border-(--chat-attachment-border-color) rounded-lg p-3">
-        <div class="shrink-0 text-base">${icon}</div>
-        <div class="min-w-0">
-          <div class="text-sm font-medium text-(--chat-attachment-text-color) truncate max-w-[32ch]">${this.#escapeHtml(attachment.name || "Attachment")}</div>
-          ${meta ? `<div class="text-xs text-(--chat-attachment-meta-color) truncate max-w-[32ch]">${this.#escapeHtml(meta)}</div>` : ""}
-        </div>
-      </div>
-    `
+    const wrapper = document.createElement("div")
+    wrapper.className = "inline-flex w-fit max-w-full items-center gap-3 border border-(--chat-attachment-border-color) rounded-lg p-3"
+
+    const icon = document.createElement("div")
+    icon.className = "shrink-0 text-base"
+    icon.textContent = kind === "image" ? "[IMG]" : "[FILE]"
+
+    const body = document.createElement("div")
+    body.className = "min-w-0"
+
+    const name = document.createElement("div")
+    name.className = "text-sm font-medium text-(--chat-attachment-text-color) truncate max-w-[32ch]"
+    name.textContent = attachment.name || "Attachment"
+
+    body.append(name)
+
+    if (meta) {
+      const metaNode = document.createElement("div")
+      metaNode.className = "text-xs text-(--chat-attachment-meta-color) truncate max-w-[32ch]"
+      metaNode.textContent = meta
+      body.append(metaNode)
+    }
+
+    wrapper.append(icon, body)
+    return wrapper
   }
 
   #attachmentMeta(attachment) {
@@ -203,6 +460,33 @@ export default class extends Controller {
     }
 
     return parts.join(" • ")
+  }
+
+  #pickerEventMatches(detail) {
+    const pickerId = String(detail?.pickerId || "").trim()
+
+    if (this.hasPickerIdsValue && Array.isArray(this.pickerIdsValue) && this.pickerIdsValue.length > 0) {
+      if (!pickerId) {
+        return false
+      }
+
+      return this.pickerIdsValue.includes(pickerId)
+    }
+
+    const context = detail?.context || {}
+    const contextScope = String(context.scope || context.target || "").trim()
+    const expectedScope = String(this.pickerScopeValue || "").trim()
+
+    if (expectedScope.length > 0) {
+      return contextScope === expectedScope
+    }
+
+    // If this sender is unscoped, ignore explicitly scoped picker events.
+    if (contextScope.length > 0) {
+      return false
+    }
+
+    return true
   }
 
   #humanSize(bytes) {
@@ -287,8 +571,11 @@ export default class extends Controller {
 
     const metaElement = optimisticElement.querySelector("[data-flat-pack-chat-sender-meta]")
     if (metaElement) {
-      const timestamp = this.#escapeHtml(response?.timestamp || this.#timeLabel())
-      metaElement.innerHTML = `<span class="text-xs text-(--chat-message-meta-color)">${timestamp}</span>`
+      metaElement.replaceChildren()
+      const timestampNode = document.createElement("span")
+      timestampNode.className = "text-xs text-(--chat-message-meta-color)"
+      timestampNode.textContent = response?.timestamp || this.#timeLabel()
+      metaElement.append(timestampNode)
     }
   }
 
@@ -306,7 +593,11 @@ export default class extends Controller {
 
     const metaElement = optimisticElement.querySelector("[data-flat-pack-chat-sender-meta]")
     if (metaElement) {
-      metaElement.innerHTML = "<span class='text-xs text-(--chat-message-failed-color)'>Failed to send</span>"
+      metaElement.replaceChildren()
+      const errorNode = document.createElement("span")
+      errorNode.className = "text-xs text-(--chat-message-failed-color)"
+      errorNode.textContent = "Failed to send"
+      metaElement.append(errorNode)
     }
   }
 
@@ -339,15 +630,6 @@ export default class extends Controller {
 
   #csrfToken() {
     return document.querySelector("meta[name='csrf-token']")?.content || ""
-  }
-
-  #escapeHtml(value) {
-    return String(value)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#39;")
   }
 
   #tempId() {

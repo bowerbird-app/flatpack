@@ -28,6 +28,45 @@
 </section>
 
 <section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Theme Tokens", anchor_link: true, subtitle: "Dedicated --search-* tokens for styling the Search component.") %>
+  <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">
+    Search now exposes dedicated theme tokens for the icon, input, dropdown, and result items.
+    Override these per theme or per container to customize search without changing component markup.
+  </p>
+
+  <div class="rounded-lg border border-[var(--surface-border-color)] p-6 bg-[var(--surface-background-color)] mb-4">
+    <div class="max-w-lg" style="--search-input-background-color: color-mix(in oklab, var(--color-primary) 8%, var(--surface-background-color)); --search-input-border-color: var(--color-primary); --search-input-focus-ring-color: var(--color-primary); --search-dropdown-border-color: var(--color-primary); --search-result-hover-background-color: color-mix(in oklab, var(--color-primary) 10%, var(--surface-background-color)); --search-icon-color: var(--color-primary);">
+      <%= render FlatPack::Search::Component.new(
+        search_url: demo_search_results_path,
+        placeholder: "Search with token overrides...",
+        no_results_text: "No tokenized matches"
+      ) %>
+    </div>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    language: "css",
+    code: <<~CSS
+      :root {
+        --search-icon-color: var(--surface-muted-content-color);
+        --search-input-background-color: var(--surface-muted-background-color);
+        --search-input-border-color: transparent;
+        --search-input-text-color: var(--surface-content-color);
+        --search-input-placeholder-color: var(--surface-muted-content-color);
+        --search-input-focus-ring-color: var(--color-primary);
+        --search-dropdown-background-color: var(--surface-background-color);
+        --search-dropdown-border-color: var(--surface-border-color);
+        --search-dropdown-muted-text-color: var(--surface-muted-content-color);
+        --search-result-title-color: var(--surface-content-color);
+        --search-result-description-color: var(--surface-muted-content-color);
+        --search-result-hover-background-color: var(--surface-muted-background-color);
+        --search-result-divider-color: var(--surface-border-color);
+      }
+    CSS
+  ) %>
+</section>
+
+<section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Custom Name and Value", anchor_link: true, subtitle: "Examples for Custom Name and Value.") %>
   <div class="rounded-lg border border-[var(--surface-border-color)] p-6 bg-[var(--surface-background-color)] mb-4">
     <%= render FlatPack::Search::Component.new(

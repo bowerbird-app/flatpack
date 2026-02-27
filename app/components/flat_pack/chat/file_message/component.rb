@@ -5,11 +5,10 @@ module FlatPack
     module FileMessage
       class Component < FlatPack::BaseComponent
         def initialize(
-          direction: :incoming,
+          file_name:, direction: :incoming,
           state: :sent,
           timestamp: nil,
           edited: false,
-          file_name:,
           file_meta: nil,
           file_href: nil,
           body: nil,
@@ -56,7 +55,7 @@ module FlatPack
         private
 
         def message_component_class
-          @direction == :outgoing ? FlatPack::Chat::SentMessage::Component : FlatPack::Chat::ReceivedMessage::Component
+          (@direction == :outgoing) ? FlatPack::Chat::SentMessage::Component : FlatPack::Chat::ReceivedMessage::Component
         end
 
         def message_component_arguments

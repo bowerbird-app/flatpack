@@ -78,7 +78,8 @@ module FlatPack
       def test_renders_active_styles_when_active_enabled
         render_inline(Item.new(href: "/demo/list", active: true)) { "Content" }
 
-        assert_includes page.native.to_html, "bg-[var(--list-item-active-background-color)]"
+        assert_selector "li[class*='bg-[var(--list-item-active-background-color)]']"
+        assert_no_selector "a[class*='bg-[var(--list-item-active-background-color)]']"
       end
 
       def test_accepts_link_arguments

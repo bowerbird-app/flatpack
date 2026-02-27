@@ -267,6 +267,12 @@
                     active: current_page?(demo_forms_select_path)
                   ) %>
                   <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "Picker",
+                    href: demo_picker_path,
+                    icon: :image,
+                    active: current_page?(demo_picker_path)
+                  ) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
                     label: "Switch",
                     href: demo_forms_switch_path,
                     icon: :settings,
@@ -405,8 +411,10 @@
                 demo_chat_received_message_path,
                 demo_chat_file_message_path,
                 demo_chat_image_message_path,
+                demo_chat_image_deck_path,
                 demo_chat_system_message_path,
                 demo_chat_message_record_path,
+                demo_chat_inbox_row_path,
                 demo_chat_message_meta_path,
                 demo_chat_attachment_path,
                 demo_chat_date_divider_path,
@@ -476,6 +484,12 @@
                     active: current_page?(demo_chat_image_message_path)
                   ) %>
                   <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "Image Deck",
+                    href: demo_chat_image_deck_path,
+                    icon: :image,
+                    active: current_page?(demo_chat_image_deck_path)
+                  ) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
                     label: "System Message",
                     href: demo_chat_system_message_path,
                     icon: :info,
@@ -486,6 +500,12 @@
                     href: demo_chat_message_record_path,
                     icon: :message_circle,
                     active: current_page?(demo_chat_message_record_path)
+                  ) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "Inbox Row",
+                    href: demo_chat_inbox_row_path,
+                    icon: :align_left,
+                    active: current_page?(demo_chat_inbox_row_path)
                   ) %>
                   <%= render FlatPack::Sidebar::Item::Component.new(
                     label: "Message Meta",
@@ -529,6 +549,58 @@
                     icon: :mail,
                     active: current_page?(demo_chat_send_button_path)
                   ) %>
+                <% end %>
+              <% end %>
+              <% carousel_section_active = [
+                demo_carousel_path,
+                demo_carousel_images_path,
+                demo_carousel_lightbox_path,
+                demo_carousel_thumbnails_path,
+                demo_carousel_html_cards_path,
+                demo_carousel_videos_path,
+                demo_carousel_mixed_content_path,
+                demo_carousel_navigation_path,
+                demo_carousel_autoplay_loop_path,
+                demo_carousel_mobile_path,
+                demo_carousel_captions_path,
+                demo_carousel_fullscreen_path,
+                demo_carousel_rtl_path,
+                demo_carousel_video_aware_path,
+                demo_carousel_loading_states_path,
+                demo_carousel_performance_path,
+                demo_carousel_events_api_path,
+                demo_carousel_security_path,
+                demo_carousel_theming_path,
+                demo_carousel_deep_linking_path,
+                demo_carousel_reduced_motion_path
+              ].any? { |path| current_page?(path) } %>
+              <%= render FlatPack::Sidebar::Group::Component.new(
+                label: "Carousel",
+                icon: :image,
+                default_open: carousel_section_active
+              ) do |group| %>
+                <% group.items do %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(label: "Overview", href: demo_carousel_path, icon: :image, active: current_page?(demo_carousel_path)) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(label: "Images", href: demo_carousel_images_path, icon: :image, active: current_page?(demo_carousel_images_path)) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(label: "Lightbox", href: demo_carousel_lightbox_path, icon: :box, active: current_page?(demo_carousel_lightbox_path)) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(label: "Thumbnails", href: demo_carousel_thumbnails_path, icon: :image, active: current_page?(demo_carousel_thumbnails_path)) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(label: "HTML Cards", href: demo_carousel_html_cards_path, icon: :align_left, active: current_page?(demo_carousel_html_cards_path)) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(label: "Videos", href: demo_carousel_videos_path, icon: :monitor, active: current_page?(demo_carousel_videos_path)) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(label: "Mixed Content", href: demo_carousel_mixed_content_path, icon: :image, active: current_page?(demo_carousel_mixed_content_path)) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(label: "Navigation", href: demo_carousel_navigation_path, icon: :chevron_right, active: current_page?(demo_carousel_navigation_path)) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(label: "Autoplay + Loop", href: demo_carousel_autoplay_loop_path, icon: :play, active: current_page?(demo_carousel_autoplay_loop_path)) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(label: "Mobile", href: demo_carousel_mobile_path, icon: :monitor, active: current_page?(demo_carousel_mobile_path)) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(label: "Captions", href: demo_carousel_captions_path, icon: :type, active: current_page?(demo_carousel_captions_path)) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(label: "Fullscreen", href: demo_carousel_fullscreen_path, icon: :box, active: current_page?(demo_carousel_fullscreen_path)) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(label: "RTL", href: demo_carousel_rtl_path, icon: :align_left, active: current_page?(demo_carousel_rtl_path)) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(label: "Video Aware", href: demo_carousel_video_aware_path, icon: :monitor, active: current_page?(demo_carousel_video_aware_path)) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(label: "Loading States", href: demo_carousel_loading_states_path, icon: :dashboard, active: current_page?(demo_carousel_loading_states_path)) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(label: "Performance", href: demo_carousel_performance_path, icon: :zap, active: current_page?(demo_carousel_performance_path)) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(label: "Events API", href: demo_carousel_events_api_path, icon: :dashboard, active: current_page?(demo_carousel_events_api_path)) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(label: "Security", href: demo_carousel_security_path, icon: :alert, active: current_page?(demo_carousel_security_path)) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(label: "Theming", href: demo_carousel_theming_path, icon: :dashboard, active: current_page?(demo_carousel_theming_path)) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(label: "Deep Linking", href: demo_carousel_deep_linking_path, icon: :chevron_right, active: current_page?(demo_carousel_deep_linking_path)) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(label: "Reduced Motion", href: demo_carousel_reduced_motion_path, icon: :dashboard, active: current_page?(demo_carousel_reduced_motion_path)) %>
                 <% end %>
               <% end %>
               <%= render FlatPack::Sidebar::Item::Component.new(
@@ -749,7 +821,16 @@
             <span class="text-sm font-medium text-[var(--surface-muted-content-color)]">FlatPack Demo</span>
           <% end %>
 
-          <% nav.center do %><% end %>
+          <% nav.center do %>
+            <%= render FlatPack::Search::Component.new(
+              search_url: demo_search_results_path,
+              placeholder: "Search demo pages...",
+              no_results_text: "No demo pages found",
+              min_characters: 1,
+              debounce: 150,
+              class: "max-w-xl"
+            ) %>
+          <% end %>
 
           <% nav.right do %>
             <div class="ml-auto flex items-center gap-3" data-controller="flat-pack--theme">

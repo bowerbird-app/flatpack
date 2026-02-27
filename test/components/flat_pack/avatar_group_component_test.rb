@@ -20,7 +20,7 @@ module FlatPack
         render_inline(Component.new(items: items, max: 3))
 
         # Should render 3 avatars + 1 overflow
-        assert_selector "div > div", count: 4
+        assert_selector ".ring-2", count: 4
       end
 
       def test_shows_overflow_count

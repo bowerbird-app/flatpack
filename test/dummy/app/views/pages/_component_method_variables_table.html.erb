@@ -112,6 +112,15 @@
         { variable: "thumbnail_url", accepts: "String (required)", example: "thumbnail_url: \"https://images...\"" }
       ]
     },
+    chat_image_deck: {
+      label: "Chat Image Deck",
+      method_call: "render FlatPack::Chat::ImageDeck::Component.new(images: [{ name: \"hero-1.png\", thumbnail_url: \"https://...\" }], direction: :incoming)",
+      variables: [
+        { variable: "images", accepts: "Array of image hashes", example: "images: [{ name: \"hero-1.png\", thumbnail_url: \"https://...\" }]" },
+        { variable: "direction", accepts: ":incoming, :outgoing", example: "direction: :outgoing" },
+        { variable: "max_visible", accepts: "Integer", example: "max_visible: 3" }
+      ]
+    },
     chat_system_message: {
       label: "Chat System Message",
       method_call: "render FlatPack::Chat::SystemMessage::Component.new { \"Alex renamed the chat group\" }",
@@ -128,6 +137,15 @@
         { variable: "record", accepts: "message-like object", example: "record: message" },
         { variable: "direction", accepts: ":incoming, :outgoing, nil", example: "direction: :outgoing" },
         { variable: "show_avatar", accepts: "true, false, nil", example: "show_avatar: false" }
+      ]
+    },
+    chat_inbox_row: {
+      label: "Chat Inbox Row",
+      method_call: "render FlatPack::Chat::InboxRow::Component.new(chat_group_name: \"Design Team\", latest_sender: \"Mina\", latest_preview: \"Can you review this?\")",
+      variables: [
+        { variable: "chat_group_name", accepts: "String (required)", example: "chat_group_name: \"Design Team\"" },
+        { variable: "avatar_items", accepts: "Array", example: "avatar_items: [{name: \"Mina\", initials: \"MC\"}]" },
+        { variable: "unread_count", accepts: "Integer", example: "unread_count: 3" }
       ]
     },
     chat_attachment: {

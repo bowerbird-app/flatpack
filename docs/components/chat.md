@@ -8,7 +8,7 @@ Use Chat components for conversation UIs with message lists, composer controls, 
 
 ## Class
 - Primary: `FlatPack::Chat::Panel::Component`
-- Related classes: `FlatPack::Chat::Layout::Component`, `FlatPack::Chat::Header::Component`, `FlatPack::Chat::MessageList::Component`, `FlatPack::Chat::MessageRecord::Component`, `FlatPack::Chat::SentMessage::Component`, `FlatPack::Chat::ReceivedMessage::Component`, `FlatPack::Chat::SystemMessage::Component`, `FlatPack::Chat::Composer::Component`
+- Related classes: `FlatPack::Chat::Layout::Component`, `FlatPack::Chat::Header::Component`, `FlatPack::Chat::MessageList::Component`, `FlatPack::Chat::MessageRecord::Component`, `FlatPack::Chat::InboxRow::Component`, `FlatPack::Chat::SentMessage::Component`, `FlatPack::Chat::ReceivedMessage::Component`, `FlatPack::Chat::SystemMessage::Component`, `FlatPack::Chat::Composer::Component`
 
 ## Props
 See each sub-component section below for props and defaults.
@@ -267,6 +267,41 @@ Use this when you have a persisted message object and want to avoid custom parti
 ) %>
 ```
 
+#### Chat::InboxRow::Component
+
+Reusable inbox row for chat group sidebars. It composes avatar clusters, latest preview text, timestamp, and unread count into one list item.
+
+**Props:**
+- `chat_group_name`: String (required)
+- `avatar_items`: Array - forwarded to `FlatPack::AvatarGroup::Component`
+- `latest_sender`: String - optional sender label used in preview
+- `latest_preview`: String - optional preview copy
+- `latest_at`: Time/String - optional trailing time label
+- `unread_count`: Integer - optional unread badge count
+- `href`: String - optional link target
+- `active`: `true` | `false` (default: `false`)
+- `turbo_frame`: String - optional `data-turbo-frame` forwarding for linked rows
+
+**Example:**
+```erb
+<%= render FlatPack::List::Component.new(spacing: :dense, selectable: true) do %>
+  <%= render FlatPack::Chat::InboxRow::Component.new(
+    chat_group_name: "Design Team",
+    latest_sender: "Mina",
+    latest_preview: "Uploaded revised launch copy",
+    latest_at: Time.current,
+    unread_count: 3,
+    avatar_items: [
+      {name: "Mina Cho", initials: "MC"},
+      {name: "Sam Lee", initials: "SL"}
+    ],
+    href: demo_chat_demo_path(chat_group_id: 1),
+    turbo_frame: "chat-demo-panel",
+    active: true
+  ) %>
+<% end %>
+```
+
 #### Chat::ReceivedMessage::Component
 
 Incoming message bubble with optional attachments and meta.
@@ -433,18 +468,53 @@ Use the `flat-pack--chat-sender` Stimulus controller on your composer form to ap
 <%= form_with url: messages_path, method: :post, local: true,
   data: {
     controller: "flat-pack--chat-sender",
-    action: "submit->flat-pack--chat-sender#submit",
-    flat_pack__chat_sender_thread_selector_value: "[data-flat-pack--chat-scroll-target='messages']"
+    action: "submit->flat-pack--chat-sender#submit flat-pack:picker:confirm@document->flat-pack--chat-sender#handlePickerConfirm",
+    flat_pack__chat_sender_thread_selector_value: "[data-flat-pack--chat-scroll-target='messages']",
+    flat_pack__chat_sender_optimistic_endpoint_value: "/messages/preview",
+    flat_pack__chat_sender_composition_mode_value: "separate",
+    flat_pack__chat_sender_picker_ids_value: ["chat-picker-images", "chat-picker-files"]
   } do %>
   <%= render FlatPack::Chat::Composer::Component.new %>
 <% end %>
 ```
 
+`composition_mode` controls how mixed text + attachments are sent to your backend:
+- `"separate"` (default): text and each attachment are separate chat items.
+- `"combined"`: text + attachments are sent as one chat item payload.
+
+Picker event scoping options:
+- `flat_pack__chat_sender_picker_ids_value`: preferred. Array of picker ids this sender should accept.
+- `flat_pack__chat_sender_picker_scope_value`: optional scope label matched against `event.detail.context.scope` (or `context.target` for backwards compatibility).
+
 **How delivery is pluggable:**
 - The controller dispatches `flat-pack:chat:send` on submit.
+- The controller dispatches `flat-pack:chat:render-optimistic` before appending the optimistic message bubble.
 - Your app can call `event.detail.respondWith(promise)` to plug in any async backend flow (DB/API/ActionCable/etc).
 - Resolve with `{ html: "..." }` to replace the optimistic bubble with server-rendered HTML, or `{ body:, timestamp:, state: }` for lightweight confirmation.
 - Reject to mark the optimistic message as failed.
+
+**How optimistic rendering is pluggable:**
+- Listen for `flat-pack:chat:render-optimistic`.
+- Call `event.detail.respondWith(elementOrHtml)` to provide your own optimistic message element.
+- If no response is provided, FlatPack uses the built-in optimistic renderer.
+- If `flat_pack__chat_sender_optimistic_endpoint_value` is provided, FlatPack will request `{ html }` from that endpoint before falling back to the built-in renderer.
+
+**Optimistic endpoint contract (optional):**
+- Method: `POST` (uses `flat_pack__chat_sender_method_value`, default `post`)
+- Request body: `{ message: payload }`
+- Response JSON: `{ html: "<div>...</div>" }`
+- If `html` contains multiple top-level elements, FlatPack wraps them in a temporary container so nothing is dropped.
+
+**Optimistic render override example:**
+```js
+document.addEventListener("flat-pack:chat:render-optimistic", (event) => {
+  const { payload } = event.detail
+  const wrapper = document.createElement("div")
+  wrapper.className = "flex justify-end"
+  wrapper.textContent = payload.body || "Sending attachment..."
+  event.detail.respondWith(wrapper)
+})
+```
 
 **Host app example:**
 ```js

@@ -73,7 +73,7 @@ module FlatPack
       def validate_size!
         return if SIZES.key?(@size)
 
-        raise ArgumentError, "Invalid size: #{@size}. Must be one of: #{SIZES.keys.join(', ')}"
+        raise ArgumentError, "Invalid size: #{@size}. Must be one of: #{SIZES.keys.join(", ")}"
       end
     end
   end

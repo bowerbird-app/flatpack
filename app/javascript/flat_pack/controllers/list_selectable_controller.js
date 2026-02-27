@@ -9,19 +9,29 @@ export default class extends Controller {
     const clickedLink = event.target.closest("a.flat-pack-list-item-link")
     if (!clickedLink || !this.element.contains(clickedLink)) return
 
-    this.setActiveLink(clickedLink)
+    const clickedListItem = clickedLink.closest("li[role='listitem']")
+    if (!clickedListItem || !this.element.contains(clickedListItem)) return
+
+    this.setActiveListItem(clickedListItem, clickedLink)
   }
 
-  setActiveLink(activeLink) {
+  setActiveListItem(activeListItem, activeLink) {
     const activeClasses = this.activeClassValue.split(" ").filter(Boolean)
 
+    this.listItems.forEach((listItem) => {
+      listItem.classList.remove(...activeClasses)
+    })
+
     this.listItemLinks.forEach((link) => {
-      link.classList.remove(...activeClasses)
       link.removeAttribute("aria-current")
     })
 
-    activeLink.classList.add(...activeClasses)
+    activeListItem.classList.add(...activeClasses)
     activeLink.setAttribute("aria-current", "page")
+  }
+
+  get listItems() {
+    return this.element.querySelectorAll("li[role='listitem']")
   }
 
   get listItemLinks() {

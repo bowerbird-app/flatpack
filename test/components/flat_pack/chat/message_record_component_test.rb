@@ -124,14 +124,40 @@ module FlatPack
 
         def test_allows_attachments_without_body
           attachments = [
-            {type: :image, name: "hero-1.png", thumbnail_url: "https://picsum.photos/seed/hero-1/480/280"},
-            {type: :file, name: "release-checklist.pdf", meta: "application/pdf • 96 KB"}
+            {type: :image, name: "hero-1.png", thumbnail_url: "https://picsum.photos/seed/hero-1/480/280"}
           ]
 
           render_inline(Component.new(sender_name: "Mina", body: nil, attachments: attachments))
 
           assert_selector "img[alt='hero-1.png']"
-          assert_text "release-checklist.pdf"
+          assert_no_selector "div.px-4.py-2"
+        end
+
+        def test_renders_text_bubble_and_image_attachment_separately
+          attachments = [
+            {type: :image, name: "hero-2.png", thumbnail_url: "https://picsum.photos/seed/hero-2/480/280"}
+          ]
+
+          render_inline(Component.new(sender_name: "You", body: "Looks good", attachments: attachments))
+
+          assert_text "Looks good"
+          assert_selector "img[alt='hero-2.png']"
+          assert_no_selector "div.px-4.py-2 img"
+        end
+
+        def test_renders_multi_image_attachments_as_image_deck
+          attachments = [
+            {type: :image, name: "hero-1.png", thumbnail_url: "https://picsum.photos/seed/hero-1/480/280"},
+            {type: :image, name: "hero-2.png", thumbnail_url: "https://picsum.photos/seed/hero-2/480/280"},
+            {type: :image, name: "hero-3.png", thumbnail_url: "https://picsum.photos/seed/hero-3/480/280"},
+            {type: :image, name: "hero-4.png", thumbnail_url: "https://picsum.photos/seed/hero-4/480/280"}
+          ]
+
+          render_inline(Component.new(sender_name: "You", body: nil, attachments: attachments, direction: :outgoing))
+
+          assert_selector "div[data-flat-pack-chat-image-deck='true']"
+          assert_selector "div[data-flat-pack--chat-image-deck-target='card']", count: 3
+          assert_text "+1"
         end
 
         def test_requires_sender_name

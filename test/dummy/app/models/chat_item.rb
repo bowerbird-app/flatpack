@@ -15,6 +15,7 @@ class ChatItem < ApplicationRecord
   validates :body, length: {maximum: 4000}, allow_blank: true
   validates :state, presence: true, inclusion: {in: STATES}
   validates :item_type, presence: true, inclusion: {in: ITEM_TYPES}
+  validates :attachments_count, numericality: {greater_than_or_equal_to: 0, only_integer: true}
   validate :must_have_body_or_attachments
 
   before_validation :normalize_body

@@ -39,7 +39,7 @@ module FlatPack
         @observe_root_selector = observe_root_selector.to_s.presence
         @cursor_selector = cursor_selector.to_s.presence
         @cursor_param = cursor_param.to_s.presence
-        @batch_size = batch_size.nil? ? nil : batch_size.to_i
+        @batch_size = batch_size&.to_i
         @batch_size_param = batch_size_param.to_s.presence
         @preserve_scroll_position = preserve_scroll_position
 
@@ -149,7 +149,7 @@ module FlatPack
       def container_classes
         classes(
           "flex flex-col items-center gap-4",
-          @insert_mode == :prepend ? "py-2" : "py-8"
+          (@insert_mode == :prepend) ? "py-2" : "py-8"
         )
       end
 
@@ -192,7 +192,7 @@ module FlatPack
 
       def validate_insert_mode!
         return if INSERT_MODES.key?(@insert_mode)
-        raise ArgumentError, "Invalid insert_mode: #{@insert_mode}. Must be one of: #{INSERT_MODES.keys.join(", ")}" 
+        raise ArgumentError, "Invalid insert_mode: #{@insert_mode}. Must be one of: #{INSERT_MODES.keys.join(", ")}"
       end
 
       def validate_batch_size!

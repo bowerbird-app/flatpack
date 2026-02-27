@@ -17,7 +17,22 @@ module FlatPack
 
           assert_text "Image preview"
           assert_selector "img[alt='preview.png']"
+          assert_no_selector "div.px-4.py-2 img"
           assert_text "10:24 AM"
+        end
+
+        def test_supports_reveal_actions_for_incoming
+          render_inline(Component.new(
+            direction: :incoming,
+            image_name: "preview.png",
+            thumbnail_url: "https://example.com/preview.png",
+            timestamp: "10:24 AM",
+            reveal_actions: true,
+            body: "Tap to reveal"
+          ))
+
+          assert_includes rendered_content, "chat-message-actions"
+          assert_includes rendered_content, "chat-message-actions-side-value=\"left\""
         end
       end
     end

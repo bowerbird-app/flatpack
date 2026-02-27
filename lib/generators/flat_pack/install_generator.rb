@@ -221,7 +221,7 @@ module FlatPack
       end
 
       def ensure_lazy_stimulus_loader_import(content)
-        import_pattern = /import\s*\{\s*([^}]+)\s*\}\s*from\s*[\"']@hotwired\/stimulus-loading[\"']/
+        import_pattern = /import\s*\{\s*([^}]+)\s*\}\s*from\s*["']@hotwired\/stimulus-loading["']/
 
         match = content.match(import_pattern)
         if match

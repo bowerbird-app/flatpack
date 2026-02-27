@@ -305,6 +305,27 @@ export default class extends Controller {
         footer.classList.add("hidden")
       }
     })
+
+    // Group items are rendered with indent for expanded mode.
+    // Remove that indent in collapsed mode so icons align with top-level items.
+    const groupPanels = this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-group-target="panel"]')
+    groupPanels.forEach(panel => {
+      if (visible) {
+        panel.classList.add("pl-[var(--sidebar-group-item-indent)]")
+      } else {
+        panel.classList.remove("pl-[var(--sidebar-group-item-indent)]")
+      }
+    })
+
+    // Hide group chevrons when collapsed so only icons remain visible.
+    const groupChevrons = this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-group-target="chevron"]')
+    groupChevrons.forEach(chevron => {
+      if (visible) {
+        chevron.classList.remove("hidden")
+      } else {
+        chevron.classList.add("hidden")
+      }
+    })
   }
 
   clearDesktopRevealTimeout() {

@@ -5,6 +5,7 @@ module FlatPack
     module SentMessage
       class Component < FlatPack::BaseComponent
         renders_many :attachments
+        renders_many :media_attachments
         renders_one :meta
         renders_one :actions
 
@@ -116,13 +117,20 @@ module FlatPack
         def render_message_surface(include_meta:)
           content_tag(:div, class: "flex flex-col items-end") do
             safe_join([
-              content_tag(:div, class: bubble_classes) do
-                safe_join([
-                  content_tag(:div, normalized_content, class: "break-words whitespace-pre-line"),
-                  render_attachments
-                ].compact)
-              end,
+              render_bubble,
+              render_media_attachments,
               (include_meta ? render_meta_section : nil)
+            ].compact)
+          end
+        end
+
+        def render_bubble
+          return unless bubble_content?
+
+          content_tag(:div, class: bubble_classes) do
+            safe_join([
+              (content_tag(:div, normalized_content, class: "break-words whitespace-pre-line") if normalized_content.present?),
+              render_attachments
             ].compact)
           end
         end
@@ -137,6 +145,18 @@ module FlatPack
           content_tag(:div, class: "mt-2 space-y-2") do
             safe_join(attachments)
           end
+        end
+
+        def render_media_attachments
+          return unless media_attachments?
+
+          content_tag(:div, class: "mt-2 space-y-2 max-w-[75%] sm:max-w-[500px]") do
+            safe_join(media_attachments)
+          end
+        end
+
+        def bubble_content?
+          normalized_content.present? || attachments?
         end
 
         def render_meta_section

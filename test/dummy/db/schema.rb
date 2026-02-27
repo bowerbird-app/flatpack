@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_26_090000) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_26_110000) do
   create_table "chat_groups", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name", null: false
@@ -20,17 +20,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_26_090000) do
   create_table "chat_item_attachments", force: :cascade do |t|
     t.integer "byte_size"
     t.integer "chat_item_id", null: false
+    t.string "checksum"
     t.string "content_type"
     t.datetime "created_at", null: false
     t.string "kind", null: false
+    t.json "metadata", default: {}, null: false
     t.string "name", null: false
     t.integer "position", default: 0, null: false
+    t.string "storage_key"
     t.datetime "updated_at", null: false
     t.index ["chat_item_id", "position"], name: "index_chat_item_attachments_on_chat_item_id_and_position"
     t.index ["chat_item_id"], name: "index_chat_item_attachments_on_chat_item_id"
+    t.check_constraint "byte_size IS NULL OR byte_size >= 0", name: "chat_item_attachments_byte_size_non_negative"
+    t.check_constraint "kind IN ('image', 'file')", name: "chat_item_attachments_kind_allowed"
+    t.check_constraint "position >= 0", name: "chat_item_attachments_position_non_negative"
   end
 
   create_table "chat_items", force: :cascade do |t|
+    t.integer "attachments_count", default: 0, null: false
     t.text "body"
     t.integer "chat_group_id", null: false
     t.string "client_temp_id"
@@ -44,6 +51,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_26_090000) do
     t.index ["chat_group_id", "created_at"], name: "index_chat_items_on_chat_group_id_and_created_at"
     t.index ["chat_group_id"], name: "index_chat_items_on_chat_group_id"
     t.index ["item_type"], name: "index_chat_items_on_item_type"
+    t.check_constraint "attachments_count >= 0", name: "chat_items_attachments_count_non_negative"
   end
 
   create_table "demo_comments", force: :cascade do |t|

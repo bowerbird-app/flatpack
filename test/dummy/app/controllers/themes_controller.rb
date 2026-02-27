@@ -24,6 +24,7 @@ class ThemesController < ApplicationController
     "Skeleton" => [/\A--skeleton-/],
     "Sidebar" => [/\A--sidebar-/],
     "Top Nav" => [/\A--top-nav-/],
+    "Search" => [/\A--search-/],
     "Chat" => [/\A--chat-/],
     "Table" => [/\A--table-/],
     "Chips" => [/\A--chip-/],
@@ -103,7 +104,7 @@ class ThemesController < ApplicationController
 
       groups << {
         title: title,
-        subtitle: "#{rows.size} token#{'s' unless rows.size == 1} in @theme",
+        subtitle: "#{rows.size} token#{"s" unless rows.size == 1} in @theme",
         rows: rows
       }
     end
@@ -234,6 +235,8 @@ class ThemesController < ApplicationController
       "Avatars"
     when /\A--top-nav-/
       "Top nav"
+    when /\A--search-/
+      "Search"
     when /\A--form-control-/
       "Form controls"
     when /\A--table-/

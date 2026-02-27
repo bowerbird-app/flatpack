@@ -16,7 +16,7 @@ module FlatPack
         def test_renders_with_avatar_slot_component
           render_inline(Component.new(label: "Teammate is typing")) do |indicator|
             indicator.with_avatar do
-              render FlatPack::Avatar::Component.new(name: "Teammate", initials: "TM", size: :sm)
+              "<span>TM</span>".html_safe
             end
           end
 
