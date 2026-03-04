@@ -56,7 +56,12 @@ export default class extends Controller {
     const preRestored = this.currentScrollContainer()?.dataset?.flatPackScrollPreRestored === "true"
     if (!preRestored) {
       // Restore on direct page loads/non-Turbo navigations.
-      this.restoreScrollPosition()
+      const hasPersistedScrollState = !!this.readScrollState()
+      if (hasPersistedScrollState) {
+        this.restoreScrollPosition()
+      } else {
+        this.scrollActiveItemIntoView()
+      }
     } else {
       delete this.currentScrollContainer().dataset.flatPackScrollPreRestored
     }
@@ -529,5 +534,25 @@ export default class extends Controller {
     } catch {
       return null
     }
+  }
+
+  scrollActiveItemIntoView() {
+    const scrollContainer = this.currentScrollContainer()
+    if (!scrollContainer) return
+
+    const activeItem = this.element.querySelector('a[data-flat-pack-sidebar-item="true"][aria-current="page"]')
+    if (!activeItem) return
+
+    requestAnimationFrame(() => {
+      const containerRect = scrollContainer.getBoundingClientRect()
+      const itemRect = activeItem.getBoundingClientRect()
+      const margin = 12
+
+      if (itemRect.top < containerRect.top + margin) {
+        scrollContainer.scrollTop -= (containerRect.top + margin) - itemRect.top
+      } else if (itemRect.bottom > containerRect.bottom - margin) {
+        scrollContainer.scrollTop += itemRect.bottom - (containerRect.bottom - margin)
+      }
+    })
   }
 }

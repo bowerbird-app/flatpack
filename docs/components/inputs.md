@@ -100,6 +100,7 @@ Additional focused examples:
 - Label-to-control association is provided when `label` is passed (`for`/`id` linkage).
 - Error state adds `aria-invalid` and `aria-describedby` for controls that receive `error`.
 - Native controls are used for checkbox/radio/select/input/textarea semantics.
+- `SearchInput` keeps a single clear control by using the component clear button and suppressing browser-native search clear icons.
 - Searchable select trigger exposes `aria-haspopup` and toggles `aria-expanded`.
 - `Switch` renders a checkbox input and switch track with `role="switch"` and `aria-checked`.
 

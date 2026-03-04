@@ -462,6 +462,22 @@
   --duration-slow: 300ms;
 }
 
+input.flat-pack-input[type="search"]::-webkit-search-cancel-button,
+input.flat-pack-input[type="search"]::-webkit-search-decoration,
+input.flat-pack-input[type="search"]::-webkit-search-results-button,
+input.flat-pack-input[type="search"]::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
+}
+
+input.flat-pack-input[type="search"]::-ms-clear,
+input.flat-pack-input[type="search"]::-ms-reveal {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
 /* Light mode palette (default) */
 :root {
   --color-primary: oklch(0.52 0.26 250);
