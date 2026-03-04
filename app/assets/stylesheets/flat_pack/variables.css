@@ -445,6 +445,13 @@
   --chip-padding-y-md: 0.25rem;
   --chip-padding-x-lg: 1rem;
   --chip-padding-y-lg: 0.375rem;
+
+  --page-title-h1-size: 2.25rem;
+  --page-title-h2-size: 1.875rem;
+  --page-title-h3-size: 1.5rem;
+  --page-title-h4-size: 1.25rem;
+  --page-title-h5-size: 1.125rem;
+  --page-title-h6-size: 1rem;
   
   /* Shadow tokens that generate utilities like shadow-sm, shadow-md */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
@@ -917,6 +924,13 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --chip-padding-y-md: 0.25rem;
   --chip-padding-x-lg: 1rem;
   --chip-padding-y-lg: 0.375rem;
+
+  --page-title-h1-size: 2.25rem;
+  --page-title-h2-size: 1.875rem;
+  --page-title-h3-size: 1.5rem;
+  --page-title-h4-size: 1.25rem;
+  --page-title-h5-size: 1.125rem;
+  --page-title-h6-size: 1rem;
   
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
@@ -1366,6 +1380,13 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --chip-padding-y-md: 0.25rem;
   --chip-padding-x-lg: 1rem;
   --chip-padding-y-lg: 0.375rem;
+
+  --page-title-h1-size: 2.25rem;
+  --page-title-h2-size: 1.875rem;
+  --page-title-h3-size: 1.5rem;
+  --page-title-h4-size: 1.25rem;
+  --page-title-h5-size: 1.125rem;
+  --page-title-h6-size: 1rem;
   
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5);
@@ -1814,6 +1835,13 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --chip-padding-y-md: 0.25rem;
   --chip-padding-x-lg: 1rem;
   --chip-padding-y-lg: 0.375rem;
+
+  --page-title-h1-size: 2.25rem;
+  --page-title-h2-size: 1.875rem;
+  --page-title-h3-size: 1.5rem;
+  --page-title-h4-size: 1.25rem;
+  --page-title-h5-size: 1.125rem;
+  --page-title-h6-size: 1rem;
   
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
@@ -2262,6 +2290,13 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --chip-padding-y-md: 0.25rem;
   --chip-padding-x-lg: 1rem;
   --chip-padding-y-lg: 0.375rem;
+
+  --page-title-h1-size: 2.25rem;
+  --page-title-h2-size: 1.875rem;
+  --page-title-h3-size: 1.5rem;
+  --page-title-h4-size: 1.25rem;
+  --page-title-h5-size: 1.125rem;
+  --page-title-h6-size: 1rem;
 
   --radius-sm: 0.75rem;
   --radius-md: 1rem;

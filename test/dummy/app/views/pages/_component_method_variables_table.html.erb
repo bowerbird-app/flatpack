@@ -8,6 +8,8 @@
       label: "Alert",
       method_call: "render FlatPack::Alert::Component.new(title: \"Success\", description: \"Saved\", style: :success)",
       variables: [
+        { variable: "title", accepts: "String or nil", example: "title: \"Success\"" },
+        { variable: "description", accepts: "String or nil", example: "description: \"Saved\"" },
         { variable: "style", accepts: ":info, :success, :warning, :danger", example: "style: :success" },
         { variable: "dismissible", accepts: "true, false", example: "dismissible: true" },
         { variable: "icon", accepts: "true, false", example: "icon: true" }

@@ -162,6 +162,8 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, ">Heading Variant H4</h4>"
     assert_includes response.body, ">Heading Variant H5</h5>"
     assert_includes response.body, ">Heading Variant H6</h6>"
+    assert_includes response.body, "--page-title-h1-size"
+    assert_includes response.body, "--page-title-h6-size"
   end
 
   test "range input demo variable table includes full option set" do

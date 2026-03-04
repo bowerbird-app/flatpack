@@ -29,6 +29,7 @@ class ThemesController < ApplicationController
     "Table" => [/\A--table-/],
     "Chips" => [/\A--chip-/],
     "Form Controls" => [/\A--form-control-/],
+    "Page Title" => [/\A--page-title-/],
     "Avatars" => [/\A--avatar-/],
     "Radii" => [/\A--radius-/],
     "Shadows" => [/\A--shadow-/],
@@ -253,6 +254,8 @@ class ThemesController < ApplicationController
       "Search"
     when /\A--form-control-/
       "Form controls"
+    when /\A--page-title-/
+      "Page title"
     when /\A--table-/
       "Table"
     when /\A--tabs-/

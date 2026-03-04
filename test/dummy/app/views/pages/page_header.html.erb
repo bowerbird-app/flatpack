@@ -5,6 +5,19 @@
 <%= render "pages/component_method_variables_table", component: :page_title %>
 
 <%
+  page_title_theme_token_rows = [
+    { variable: "--surface-content-color", default_value: "var(--surface-content-color)" },
+    { variable: "--surface-muted-content-color", default_value: "var(--surface-muted-content-color)" },
+    { variable: "--page-title-h1-size", default_value: "2.25rem" },
+    { variable: "--page-title-h2-size", default_value: "1.875rem" },
+    { variable: "--page-title-h3-size", default_value: "1.5rem" },
+    { variable: "--page-title-h4-size", default_value: "1.25rem" },
+    { variable: "--page-title-h5-size", default_value: "1.125rem" },
+    { variable: "--page-title-h6-size", default_value: "1rem" }
+  ]
+%>
+
+<%
   erb_output_open = "<" + "%="
   erb_tag_close = "%" + ">"
 %>
@@ -171,3 +184,5 @@
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Fast Adoption:</strong> Minimal setup for consistent page intros<% end %>
   <% end %>
 </section>
+
+<%= render "pages/theme_token_reference", title: "Page Title", rows: page_title_theme_token_rows %>

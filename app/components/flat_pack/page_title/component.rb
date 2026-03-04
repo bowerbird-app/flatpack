@@ -52,7 +52,16 @@ module FlatPack
       end
 
       def render_title
-        content_tag(@variant, @title, class: "text-4xl font-bold text-[var(--surface-content-color)] leading-tight")
+        content_tag(
+          @variant,
+          @title,
+          class: "font-bold text-[var(--surface-content-color)] leading-tight",
+          style: "font-size: #{heading_size_token};"
+        )
+      end
+
+      def heading_size_token
+        "var(--page-title-#{@variant}-size)"
       end
 
       def render_subtitle
