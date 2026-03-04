@@ -124,7 +124,7 @@ module FlatPack
         return overflow_avatar.render_in(view_context) if tooltip_text.blank?
 
         tooltip = FlatPack::Tooltip::Component.new(placement: :bottom)
-        tooltip.with_tooltip_content do
+        tooltip.content do
           content_tag(:ul, class: "list-none m-0 p-0 space-y-1") do
             safe_join(tooltip_text.map { |name| content_tag(:li, name) })
           end

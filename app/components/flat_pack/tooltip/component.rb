@@ -5,6 +5,14 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       renders_one :tooltip_content
 
+      def content(*args, **kwargs, &block)
+        if block_given? || args.any? || kwargs.any?
+          with_tooltip_content(*args, **kwargs, &block)
+        else
+          super
+        end
+      end
+
       PLACEMENTS = {
         top: :top,
         bottom: :bottom,

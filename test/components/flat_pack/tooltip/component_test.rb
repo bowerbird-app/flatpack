@@ -16,7 +16,7 @@ module FlatPack
 
       def test_renders_tooltip_with_content_slot
         render_inline(Component.new) do |component|
-          component.with_tooltip_content { "Custom tooltip content" }
+          component.content { "Custom tooltip content" }
           "Trigger element"
         end
 
