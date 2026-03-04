@@ -6,12 +6,6 @@
 <%= render "pages/component_method_variables_table", component: :table %>
 
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(
-    title: "Empty Table",
-    anchor_link: true,
-    subtitle: "Render column headers and an empty-state body for zero rows."
-  ) %>
-
   <%= render FlatPack::Table::Component.new(data: []) do |table| %>
     <% table.column(title: "Name", html: ->(user) { user.name }) %>
     <% table.column(title: "Email", html: ->(user) { user.email }) %>
@@ -19,11 +13,6 @@
 
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE'),
-        title: &quot;Empty Table&quot;,
-        anchor_link: true,
-        subtitle: &quot;Render column headers and an empty-state body for zero rows.&quot;
-      ) %&gt;
-    
       &lt;%= render FlatPack::Table::Component.new(data: []) do |table| %&gt;
         &lt;% table.column(title: &quot;Name&quot;, html: -&gt;(user) { user.name }) %&gt;
         &lt;% table.column(title: &quot;Email&quot;, html: -&gt;(user) { user.email }) %&gt;
