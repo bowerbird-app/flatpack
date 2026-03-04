@@ -437,7 +437,7 @@
   --table-empty-state-text-color: var(--surface-muted-content-color);
   --table-sort-link-hover-color: var(--surface-content-color);
   --chip-remove-hover-background-color: rgb(0 0 0 / 0.1);
-  --chip-border-radius: 9999px;
+  --chip-border-radius: 0.5rem;
   --chip-group-gap: 0.5rem;
   --chip-padding-x-sm: 0.5rem;
   --chip-padding-y-sm: 0.125rem;
@@ -916,7 +916,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --table-empty-state-text-color: var(--surface-muted-content-color);
   --table-sort-link-hover-color: var(--surface-content-color);
   --chip-remove-hover-background-color: rgb(0 0 0 / 0.1);
-  --chip-border-radius: 9999px;
+  --chip-border-radius: 0.5rem;
   --chip-group-gap: 0.5rem;
   --chip-padding-x-sm: 0.5rem;
   --chip-padding-y-sm: 0.125rem;
@@ -1372,7 +1372,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --table-empty-state-text-color: var(--surface-muted-content-color);
   --table-sort-link-hover-color: var(--surface-content-color);
   --chip-remove-hover-background-color: rgb(255 255 255 / 0.16);
-  --chip-border-radius: 9999px;
+  --chip-border-radius: 0.5rem;
   --chip-group-gap: 0.5rem;
   --chip-padding-x-sm: 0.5rem;
   --chip-padding-y-sm: 0.125rem;
@@ -1827,7 +1827,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --table-empty-state-text-color: var(--surface-muted-content-color);
   --table-sort-link-hover-color: var(--surface-content-color);
   --chip-remove-hover-background-color: rgb(0 0 0 / 0.1);
-  --chip-border-radius: 9999px;
+  --chip-border-radius: 0.5rem;
   --chip-group-gap: 0.5rem;
   --chip-padding-x-sm: 0.5rem;
   --chip-padding-y-sm: 0.125rem;
@@ -2282,7 +2282,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --table-empty-state-text-color: var(--surface-muted-content-color);
   --table-sort-link-hover-color: var(--surface-content-color);
   --chip-remove-hover-background-color: rgb(0 0 0 / 0.1);
-  --chip-border-radius: 9999px;
+  --chip-border-radius: 0.5rem;
   --chip-group-gap: 0.5rem;
   --chip-padding-x-sm: 0.5rem;
   --chip-padding-y-sm: 0.125rem;
