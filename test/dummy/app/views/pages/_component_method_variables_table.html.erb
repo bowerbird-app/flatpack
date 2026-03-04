@@ -440,9 +440,15 @@
       label: "Search",
       method_call: "render FlatPack::Search::Component.new(name: \"query\", placeholder: \"Search...\")",
       variables: [
+        { variable: "placeholder", accepts: "String", example: "placeholder: \"Search components...\"" },
+        { variable: "name", accepts: "String", example: "name: \"query\"" },
+        { variable: "value", accepts: "String or nil", example: "value: \"tabs\"" },
         { variable: "search_url", accepts: "Relative/allowed URL or nil", example: "search_url: demo_search_path" },
+        { variable: "max_width", accepts: ":none, :md, :lg, :xl", example: "max_width: :lg" },
         { variable: "min_characters", accepts: "Integer", example: "min_characters: 2" },
-        { variable: "debounce", accepts: "Integer (ms)", example: "debounce: 250" }
+        { variable: "debounce", accepts: "Integer (ms)", example: "debounce: 250" },
+        { variable: "no_results_text", accepts: "String", example: "no_results_text: \"No matching components\"" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"max-w-xl\", data: { testid: \"search\" }" }
       ]
     },
     skeleton: {

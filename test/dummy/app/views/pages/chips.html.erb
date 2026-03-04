@@ -1,8 +1,12 @@
 <div class="max-w-6xl mx-auto p-6">
   <%= render FlatPack::PageTitle::Component.new(
     title: "Chip Component",
-    subtitle: "Compact elements that represent input, attributes, or actions. Use chips for tags, filters, selections, and more."
+    subtitle: "Interactive elements for actions like filter toggles, selection, navigation, and removal."
   ) %>
+
+  <p class="text-sm text-(--surface-muted-content-color) mb-6">
+    Chips are action-oriented. Use chips when users need to click, select, remove, or navigate. For display-only labels and status indicators, use badges instead.
+  </p>
 
   <%= render "pages/component_method_variables_table", component: :chip %>
 

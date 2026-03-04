@@ -189,6 +189,21 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "--color-success-background-color"
   end
 
+  test "search demo variable table includes full option set" do
+    get "/demo/search"
+
+    assert_response :success
+    assert_includes response.body, ">placeholder</td>"
+    assert_includes response.body, ">name</td>"
+    assert_includes response.body, ">value</td>"
+    assert_includes response.body, ">search_url</td>"
+    assert_includes response.body, ">max_width</td>"
+    assert_includes response.body, ">min_characters</td>"
+    assert_includes response.body, ">debounce</td>"
+    assert_includes response.body, ">no_results_text</td>"
+    assert_includes response.body, "**system_arguments"
+  end
+
   test "select demo uses overflow-visible card for searchable dropdowns" do
     get "/demo/forms/select"
 

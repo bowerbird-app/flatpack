@@ -1,7 +1,11 @@
   <%= render FlatPack::PageTitle::Component.new(
     title: "Badge Component",
-    subtitle: "Small status indicators, counts, labels, and tags for highlighting information."
+    subtitle: "Display-only status indicators, counts, and labels. Use badges to show information, not for user actions."
   ) %>
+
+  <p class="text-sm text-(--surface-muted-content-color) mb-6">
+    Badges are for display only. Use badges to communicate status, counts, roles, and metadata; use chips when users need to click, select, remove, or navigate.
+  </p>
 
   <%= render "pages/component_method_variables_table", component: :badge %>
 
@@ -63,25 +67,6 @@
         &lt;%= render FlatPack::Badge::Component.new(text: "Away", style: :warning, dot: true) %&gt;
         &lt;%= render FlatPack::Badge::Component.new(text: "Offline", style: :default, dot: true) %&gt;
         &lt;%= render FlatPack::Badge::Component.new(text: "Busy", style: :warning, dot: true) %&gt;
-      CODE
-    ) %>
-  </section>
-
-  <!-- Removable Badges -->
-  <section class="mb-12">
-    <%= render FlatPack::SectionTitle::Component.new(title: "Removable Badges (Tags)", anchor_link: true, subtitle: "Examples for Removable Badges (Tags).") %>
-    <div class="flex flex-wrap gap-3 mb-4">
-      <%= render FlatPack::Badge::Component.new(text: "Ruby", removable: true) %>
-      <%= render FlatPack::Badge::Component.new(text: "Rails", removable: true) %>
-      <%= render FlatPack::Badge::Component.new(text: "JavaScript", removable: true) %>
-      <%= render FlatPack::Badge::Component.new(text: "React", removable: true) %>
-      <%= render FlatPack::Badge::Component.new(text: "TypeScript", removable: true) %>
-    </div>
-    <%= render FlatPack::CodeBlock::Component.new(
-      code: CGI.unescapeHTML(<<~'CODE')
-        &lt;%= render FlatPack::Badge::Component.new(text: "Ruby", removable: true) %&gt;
-        &lt;%= render FlatPack::Badge::Component.new(text: "Rails", removable: true) %&gt;
-        &lt;%= render FlatPack::Badge::Component.new(text: "JavaScript", removable: true) %&gt;
       CODE
     ) %>
   </section>
@@ -200,12 +185,12 @@
       <%= render FlatPack::Card::Component.new do |card| %>
         <% card.body do %>
           <div class="flex flex-wrap gap-2">
-            <%= render FlatPack::Badge::Component.new(text: "Ruby", removable: true, size: :sm) %>
-            <%= render FlatPack::Badge::Component.new(text: "Rails", removable: true, size: :sm) %>
-            <%= render FlatPack::Badge::Component.new(text: "JavaScript", removable: true, size: :sm) %>
-            <%= render FlatPack::Badge::Component.new(text: "React", removable: true, size: :sm) %>
-            <%= render FlatPack::Badge::Component.new(text: "TypeScript", removable: true, size: :sm) %>
-            <%= render FlatPack::Badge::Component.new(text: "PostgreSQL", removable: true, size: :sm) %>
+            <%= render FlatPack::Badge::Component.new(text: "Ruby", size: :sm) %>
+            <%= render FlatPack::Badge::Component.new(text: "Rails", size: :sm) %>
+            <%= render FlatPack::Badge::Component.new(text: "JavaScript", size: :sm) %>
+            <%= render FlatPack::Badge::Component.new(text: "React", size: :sm) %>
+            <%= render FlatPack::Badge::Component.new(text: "TypeScript", size: :sm) %>
+            <%= render FlatPack::Badge::Component.new(text: "PostgreSQL", size: :sm) %>
           </div>
         <% end %>
       <% end %>
