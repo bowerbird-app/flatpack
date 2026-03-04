@@ -417,6 +417,17 @@
         { variable: "debounce", accepts: "Integer (ms)", example: "debounce: 250" }
       ]
     },
+    skeleton: {
+      label: "Skeleton",
+      method_call: "render FlatPack::Skeleton::Component.new(variant: :text, width: \"240px\", shimmer: true)",
+      variables: [
+        { variable: "variant", accepts: ":text, :title, :avatar, :button, :rectangle", example: "variant: :title" },
+        { variable: "width", accepts: "String or nil", example: "width: \"320px\"" },
+        { variable: "height", accepts: "String or nil", example: "height: \"96px\"" },
+        { variable: "shimmer", accepts: "true, false", example: "shimmer: false" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"rounded-xl\", id: \"profile-skeleton\"" }
+      ]
+    },
     sidebar_layout: {
       label: "Sidebar Layout",
       method_call: "render FlatPack::SidebarLayout::Component.new(side: :left, default_open: true) do |layout| ... end",
