@@ -128,10 +128,10 @@
 
   <% if demo_type == :lightbox %>
     <%= render FlatPack::Modal::Component.new(id: "carousel-lightbox-modal", size: :xl) do |modal| %>
-      <% modal.with_header do %>
+      <% modal.header_content do %>
         <h3 class="text-lg font-semibold text-(--surface-content-color)">Carousel Lightbox</h3>
       <% end %>
-      <% modal.with_body do %>
+      <% modal.body_content do %>
         <div class="space-y-3">
           <img data-carousel-demo-target="lightboxImage" src="" alt="Lightbox slide" class="max-h-[70vh] w-full rounded-lg object-contain bg-black">
           <p data-carousel-demo-target="lightboxCaption" class="text-sm text-(--surface-muted-content-color)"></p>

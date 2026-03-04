@@ -75,14 +75,14 @@ module FlatPack
           body_height: @modal_body_height,
           **@system_arguments
         ) do |modal|
-          modal.with_header do
+          modal.header_content do
             safe_join([
               content_tag(:h2, @title, class: "text-lg font-semibold text-(--surface-content-color)"),
               (@subtitle.present? ? content_tag(:p, @subtitle, class: "mt-1 text-sm text-(--surface-muted-content-color)") : nil)
             ].compact)
           end
 
-          modal.with_body do
+          modal.body_content do
             content_tag(:div, **picker_attributes) do
               safe_join([
                 render_search,
