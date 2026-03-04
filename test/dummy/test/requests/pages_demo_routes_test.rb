@@ -152,6 +152,14 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "value: &quot;john.doe&quot;"
   end
 
+  test "select demo uses overflow-visible card for searchable dropdowns" do
+    get "/demo/forms/select"
+
+    assert_response :success
+    assert_includes response.body, "flat-pack-select-trigger"
+    assert_includes response.body, "overflow-visible"
+  end
+
   test "chat demo inbox renders compact chat group avatar clusters" do
     get "/demo/chat/demo"
 

@@ -147,7 +147,7 @@ module FlatPack
       def card_classes
         classes(
           "rounded-lg",
-          "overflow-hidden",
+          overflow_class,
           "h-full",
           "flex",
           "flex-col",
@@ -155,6 +155,10 @@ module FlatPack
           hover_classes,
           container_padding_classes
         )
+      end
+
+      def overflow_class
+        media? ? "overflow-hidden" : "overflow-visible"
       end
 
       def container_padding_classes
