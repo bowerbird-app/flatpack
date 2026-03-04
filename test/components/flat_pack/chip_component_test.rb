@@ -197,7 +197,7 @@ module FlatPack
 
       def test_renders_leading_slot
         render_inline(Component.new(text: "With Icon")) do |c|
-          c.with_leading { "🔥" }
+          c.leading_content { "🔥" }
         end
 
         assert_selector "span", text: /🔥.*With Icon/

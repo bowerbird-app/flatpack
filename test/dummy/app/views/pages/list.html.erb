@@ -3,6 +3,8 @@
   subtitle: "Semantic lists with consistent spacing and optional icons."
 ) %>
 
+<%= render "pages/component_method_variables_table", components: [:list, :list_item] %>
+
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Basic Lists", anchor_link: true) %>
 
@@ -112,10 +114,18 @@
   <%= render FlatPack::Card::Component.new do |card| %>
     <% card.body do %>
       <%= render FlatPack::List::Component.new(selectable: true) do %>
-        <%= render FlatPack::List::Item.new(icon: :check) { "Task completed successfully" } %>
-        <%= render FlatPack::List::Item.new(icon: :alert) { "Requires attention" } %>
-        <%= render FlatPack::List::Item.new(icon: :user) { "Assigned to team member" } %>
-        <%= render FlatPack::List::Item.new(icon: :calendar) { "Scheduled for tomorrow" } %>
+        <%= render FlatPack::List::Item.new(icon: :check) do %>
+          Task completed successfully
+        <% end %>
+        <%= render FlatPack::List::Item.new(icon: :alert) do %>
+          Requires attention
+        <% end %>
+        <%= render FlatPack::List::Item.new(icon: :user) do %>
+          Assigned to team member
+        <% end %>
+        <%= render FlatPack::List::Item.new(icon: :calendar) do %>
+          Scheduled for tomorrow
+        <% end %>
       <% end %>
     <% end %>
   <% end %>
@@ -124,10 +134,18 @@
     class: "mt-6",
     code: CGI.unescapeHTML(<<~'CODE'),
       &lt;%= render FlatPack::List::Component.new(selectable: true) do %&gt;
-        &lt;%= render FlatPack::List::Item.new(icon: :check) { "Task completed successfully" } %&gt;
-        &lt;%= render FlatPack::List::Item.new(icon: :alert) { "Requires attention" } %&gt;
-        &lt;%= render FlatPack::List::Item.new(icon: :user) { "Assigned to team member" } %&gt;
-        &lt;%= render FlatPack::List::Item.new(icon: :calendar) { "Scheduled for tomorrow" } %&gt;
+        &lt;%= render FlatPack::List::Item.new(icon: :check) do %&gt;
+          Task completed successfully
+        &lt;% end %&gt;
+        &lt;%= render FlatPack::List::Item.new(icon: :alert) do %&gt;
+          Requires attention
+        &lt;% end %&gt;
+        &lt;%= render FlatPack::List::Item.new(icon: :user) do %&gt;
+          Assigned to team member
+        &lt;% end %&gt;
+        &lt;%= render FlatPack::List::Item.new(icon: :calendar) do %&gt;
+          Scheduled for tomorrow
+        &lt;% end %&gt;
       &lt;% end %&gt;
     CODE
     title: "With Icons",
@@ -260,7 +278,7 @@
   <%= render FlatPack::Card::Component.new do |card| %>
     <% card.body do %>
       <%= render FlatPack::List::Component.new do %>
-        <%= render FlatPack::List::Item.new(icon: :bell) do %>
+        <%= render FlatPack::List::Item.new(icon: :bell, class: "!items-center") do %>
           <div class="flex items-center justify-between flex-1">
             <div>
               <p class="font-medium">Email Notifications</p>
@@ -269,7 +287,7 @@
             <%= render FlatPack::Switch::Component.new(name: "email_notifications", checked: true) %>
           </div>
         <% end %>
-        <%= render FlatPack::List::Item.new(icon: :lock) do %>
+        <%= render FlatPack::List::Item.new(icon: :lock, class: "!items-center") do %>
           <div class="flex items-center justify-between flex-1">
             <div>
               <p class="font-medium">Two-Factor Authentication</p>
@@ -278,7 +296,7 @@
             <%= render FlatPack::Switch::Component.new(name: "2fa", checked: false) %>
           </div>
         <% end %>
-        <%= render FlatPack::List::Item.new(icon: :users) do %>
+        <%= render FlatPack::List::Item.new(icon: :users, class: "!items-center") do %>
           <div class="flex items-center justify-between flex-1">
             <div>
               <p class="font-medium">Profile Visibility</p>
@@ -295,7 +313,7 @@
     class: "mt-6",
     code: CGI.unescapeHTML(<<~'CODE'),
       &lt;%= render FlatPack::List::Component.new do %&gt;
-        &lt;%= render FlatPack::List::Item.new(icon: :bell) do %&gt;
+        &lt;%= render FlatPack::List::Item.new(icon: :bell, class: "!items-center") do %&gt;
           &lt;div class="flex items-center justify-between flex-1"&gt;
             &lt;div&gt;
               &lt;p class="font-medium"&gt;Email Notifications&lt;/p&gt;

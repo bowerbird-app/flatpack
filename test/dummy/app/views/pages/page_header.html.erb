@@ -5,6 +5,19 @@
 <%= render "pages/component_method_variables_table", component: :page_title %>
 
 <%
+  page_title_theme_token_rows = [
+    { variable: "--surface-content-color", default_value: "var(--surface-content-color)" },
+    { variable: "--surface-muted-content-color", default_value: "var(--surface-muted-content-color)" },
+    { variable: "--page-title-h1-size", default_value: "2.25rem" },
+    { variable: "--page-title-h2-size", default_value: "1.875rem" },
+    { variable: "--page-title-h3-size", default_value: "1.5rem" },
+    { variable: "--page-title-h4-size", default_value: "1.25rem" },
+    { variable: "--page-title-h5-size", default_value: "1.125rem" },
+    { variable: "--page-title-h6-size", default_value: "1rem" }
+  ]
+%>
+
+<%
   erb_output_open = "<" + "%="
   erb_tag_close = "%" + ">"
 %>
@@ -39,6 +52,53 @@
     language: "erb",
     code: <<~CODE
       #{erb_output_open} render FlatPack::PageTitle::Component.new(title: "Settings") #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<!-- Heading Variants -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Heading Variants (h1-h6)",
+    anchor_link: true,
+    subtitle: "Examples for each PageTitle heading level variant."
+  ) %>
+
+  <div class="space-y-6">
+    <% [
+      [:h1, "Heading Variant H1"],
+      [:h2, "Heading Variant H2"],
+      [:h3, "Heading Variant H3"],
+      [:h4, "Heading Variant H4"],
+      [:h5, "Heading Variant H5"],
+      [:h6, "Heading Variant H6"]
+    ].each do |variant, title| %>
+      <%= render FlatPack::PageTitle::Component.new(
+        title: title,
+        subtitle: "Rendered using variant: #{variant}",
+        variant: variant
+      ) %>
+    <% end %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} [
+        :h1,
+        :h2,
+        :h3,
+        :h4,
+        :h5,
+        :h6
+      ].each do |variant| #{erb_tag_close}
+        #{erb_output_open} render FlatPack::PageTitle::Component.new(
+          title: "Heading Variant #{'#{variant.to_s.upcase}'}",
+          subtitle: "Rendered using variant: #{'#{variant}'}",
+          variant: variant
+        ) #{erb_tag_close}
+      #{erb_output_open} end #{erb_tag_close}
     CODE
   ) %>
 </section>
@@ -124,3 +184,5 @@
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Fast Adoption:</strong> Minimal setup for consistent page intros<% end %>
   <% end %>
 </section>
+
+<%= render "pages/theme_token_reference", title: "Page Title", rows: page_title_theme_token_rows %>

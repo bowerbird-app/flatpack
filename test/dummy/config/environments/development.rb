@@ -59,4 +59,8 @@ Rails.application.configure do
   # through Codespaces/browser tunnels so CSRF origin checks don't block demo
   # XHR PATCH requests like /demo/tables/reorder.
   config.action_controller.forgery_protection_origin_check = false
+
+  # Ensure importmap fingerprints are refreshed when FlatPack engine controllers
+  # change during development, preventing stale digested module URLs.
+  config.importmap.cache_sweepers << FlatPack::Engine.root.join("app/javascript/flat_pack/controllers")
 end

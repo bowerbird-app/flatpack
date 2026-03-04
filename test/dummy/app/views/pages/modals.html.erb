@@ -16,10 +16,10 @@
   </div>
   
   <%= render FlatPack::Modal::Component.new(id: "basic-modal", size: :md) do |modal| %>
-    <% modal.with_header do %>
+    <% modal.header_content do %>
       <h2 class="text-xl font-semibold">Modal Title</h2>
     <% end %>
-    <% modal.with_body do %>
+    <% modal.body_content do %>
       <p class="text-[var(--surface-content-color)]">
         This is a basic modal dialog. Click the backdrop, press ESC, or click the close button to dismiss.
       </p>
@@ -27,7 +27,7 @@
         The modal traps focus and prevents interaction with the rest of the page while open.
       </p>
     <% end %>
-    <% modal.with_footer do %>
+    <% modal.footer_content do %>
       <%= render FlatPack::Button::Component.new(
         text: "Cancel",
         style: :secondary,
@@ -44,13 +44,13 @@
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE')
       &lt;%= render FlatPack::Modal::Component.new(id: "basic-modal", size: :md) do |modal| %&gt;
-        &lt;% modal.with_header do %&gt;
+        &lt;% modal.header_content do %&gt;
           <h2>Modal Title</h2>
         &lt;% end %&gt;
-        &lt;% modal.with_body do %&gt;
+        &lt;% modal.body_content do %&gt;
           <p>Modal content goes here...</p>
         &lt;% end %&gt;
-        &lt;% modal.with_footer do %&gt;
+        &lt;% modal.footer_content do %&gt;
           &lt;%= render FlatPack::Button::Component.new(
             text: "Close",
             data: { action: "click->flat-pack--modal#close" }
@@ -83,37 +83,37 @@
   </div>
   
   <%= render FlatPack::Modal::Component.new(id: "small-modal", size: :sm) do |modal| %>
-    <% modal.with_header do %>
+    <% modal.header_content do %>
       <h2 class="text-xl font-semibold">Small Modal</h2>
     <% end %>
-    <% modal.with_body do %>
+    <% modal.body_content do %>
       <p>This is a small modal with limited width.</p>
     <% end %>
-    <% modal.with_footer do %>
+    <% modal.footer_content do %>
       <%= render FlatPack::Button::Component.new(text: "Close", style: :secondary, data: { action: "click->flat-pack--modal#close" }) %>
     <% end %>
   <% end %>
   
   <%= render FlatPack::Modal::Component.new(id: "medium-modal", size: :md) do |modal| %>
-    <% modal.with_header do %>
+    <% modal.header_content do %>
       <h2 class="text-xl font-semibold">Medium Modal (Default)</h2>
     <% end %>
-    <% modal.with_body do %>
+    <% modal.body_content do %>
       <p>This is a medium-sized modal, which is the default size.</p>
     <% end %>
-    <% modal.with_footer do %>
+    <% modal.footer_content do %>
       <%= render FlatPack::Button::Component.new(text: "Close", style: :secondary, data: { action: "click->flat-pack--modal#close" }) %>
     <% end %>
   <% end %>
   
   <%= render FlatPack::Modal::Component.new(id: "large-modal", size: :lg) do |modal| %>
-    <% modal.with_header do %>
+    <% modal.header_content do %>
       <h2 class="text-xl font-semibold">Large Modal</h2>
     <% end %>
-    <% modal.with_body do %>
+    <% modal.body_content do %>
       <p>This is a large modal with more width for complex content.</p>
     <% end %>
-    <% modal.with_footer do %>
+    <% modal.footer_content do %>
       <%= render FlatPack::Button::Component.new(text: "Close", style: :secondary, data: { action: "click->flat-pack--modal#close" }) %>
     <% end %>
   <% end %>
@@ -142,10 +142,10 @@
   </div>
 
   <%= render FlatPack::Modal::Component.new(id: "form-modal", size: :md) do |modal| %>
-    <% modal.with_header do %>
+    <% modal.header_content do %>
       <h2 class="text-xl font-semibold">Contact Sales</h2>
     <% end %>
-    <% modal.with_body do %>
+    <% modal.body_content do %>
       <form class="space-y-4">
         <%= render FlatPack::TextInput::Component.new(
           name: "contact[name]",
@@ -187,10 +187,10 @@
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE')
       &lt;%= render FlatPack::Modal::Component.new(id: "form-modal", size: :md) do |modal| %&gt;
-        &lt;% modal.with_header do %&gt;
+        &lt;% modal.header_content do %&gt;
           <h2>Contact Sales</h2>
         &lt;% end %&gt;
-        &lt;% modal.with_body do %&gt;
+        &lt;% modal.body_content do %&gt;
           <form class="space-y-4">
             &lt;%= render FlatPack::TextInput::Component.new(...) %&gt;
             &lt;%= render FlatPack::EmailInput::Component.new(...) %&gt;
@@ -221,10 +221,10 @@
   </div>
 
   <%= render FlatPack::Modal::Component.new(id: "long-content-modal", size: :lg) do |modal| %>
-    <% modal.with_header do %>
+    <% modal.header_content do %>
       <h2 class="text-xl font-semibold">Long Content Test</h2>
     <% end %>
-    <% modal.with_body do %>
+    <% modal.body_content do %>
       <div class="space-y-4 text-[var(--surface-content-color)]">
         <p>
           This modal intentionally contains a lot of text so you can validate scrolling behavior, focus handling,
@@ -241,7 +241,7 @@
         <% end %>
       </div>
     <% end %>
-    <% modal.with_footer do %>
+    <% modal.footer_content do %>
       <%= render FlatPack::Button::Component.new(
         text: "Close",
         style: :secondary,
@@ -264,10 +264,10 @@
       &lt;/div&gt;
     
       &lt;%= render FlatPack::Modal::Component.new(id: &quot;long-content-modal&quot;, size: :lg) do |modal| %&gt;
-        &lt;% modal.with_header do %&gt;
+        &lt;% modal.header_content do %&gt;
           &lt;h2 class=&quot;text-xl font-semibold&quot;&gt;Long Content Test&lt;/h2&gt;
         &lt;% end %&gt;
-        &lt;% modal.with_body do %&gt;
+        &lt;% modal.body_content do %&gt;
           &lt;div class=&quot;space-y-4 text-[var(--surface-content-color)]&quot;&gt;
             &lt;p&gt;
               This modal intentionally contains a lot of text so you can validate scrolling behavior, focus handling,
@@ -284,7 +284,7 @@
             &lt;% end %&gt;
           &lt;/div&gt;
         &lt;% end %&gt;
-        &lt;% modal.with_footer do %&gt;
+        &lt;% modal.footer_content do %&gt;
           &lt;%= render FlatPack::Button::Component.new(
             text: &quot;Close&quot;,
             style: :secondary,

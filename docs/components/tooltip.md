@@ -19,7 +19,7 @@ Use Tooltip for brief explanatory text tied to controls or compact UI affordance
 ## Slots
 | name | type | required | description |
 |---|---|---|---|
-| `tooltip_content` (`with_tooltip_content`) | slot | no | Custom tooltip body content; overrides `text`. |
+| `tooltip_content` (`content`) | slot | no | Custom tooltip body content; overrides `text`. |
 
 ## Variants
 - Placement variants: `:top`, `:bottom`, `:left`, `:right`.

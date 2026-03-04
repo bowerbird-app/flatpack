@@ -1,0 +1,11 @@
+<section class="mt-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Theme Tokens",
+    subtitle: "#{title} tokens available for this demo page (#{rows.size} total).",
+    anchor_link: true
+  ) %>
+
+  <div class="mt-4 rounded-lg border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-4">
+    <%= render "themes/token_table", rows: rows %>
+  </div>
+</section>

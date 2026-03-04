@@ -8,6 +8,8 @@
       label: "Alert",
       method_call: "render FlatPack::Alert::Component.new(title: \"Success\", description: \"Saved\", style: :success)",
       variables: [
+        { variable: "title", accepts: "String or nil", example: "title: \"Success\"" },
+        { variable: "description", accepts: "String or nil", example: "description: \"Saved\"" },
         { variable: "style", accepts: ":info, :success, :warning, :danger", example: "style: :success" },
         { variable: "dismissible", accepts: "true, false", example: "dismissible: true" },
         { variable: "icon", accepts: "true, false", example: "icon: true" }
@@ -33,11 +35,32 @@
     },
     breadcrumb: {
       label: "Breadcrumb",
-      method_call: "render FlatPack::Breadcrumb::Component.new(items: [{ label: \"Home\", href: \"/\" }, { label: \"Settings\" }])",
+      method_call: "render FlatPack::Breadcrumb::Component.new(separator: :chevron, show_home: true, max_items: 4) do |breadcrumb| ... end",
       variables: [
-        { variable: "items", accepts: "Array of item hashes", example: "items: [{ label: \"Home\", href: \"/\" }, { label: \"Billing\" }]" },
+        { variable: "item", accepts: "builder method (text:, href:, icon:)", example: "breadcrumb.item(text: \"Settings\", href: \"/settings\")" },
+        { variable: "items", accepts: "Array of item hashes", example: "items: [{ text: \"Home\", href: \"/\" }, { text: \"Billing\" }]" },
         { variable: "separator", accepts: ":chevron, :slash, :arrow, :dot, :custom", example: "separator: :slash" },
-        { variable: "show_home", accepts: "true, false", example: "show_home: true" }
+        { variable: "separator_icon", accepts: "String or nil", example: "separator_icon: \"chevron-right\"" },
+        { variable: "show_back", accepts: "true, false", example: "show_back: true" },
+        { variable: "back_text", accepts: "String", example: "back_text: \"Go Back\"" },
+        { variable: "back_icon", accepts: "String", example: "back_icon: \"chevron-left\"" },
+        { variable: "back_fallback_url", accepts: "String", example: "back_fallback_url: \"/dashboard\"" },
+        { variable: "show_home", accepts: "true, false", example: "show_home: true" },
+        { variable: "home_url", accepts: "String", example: "home_url: \"/dashboard\"" },
+        { variable: "home_text", accepts: "String", example: "home_text: \"Dashboard\"" },
+        { variable: "home_icon", accepts: "String", example: "home_icon: \"home\"" },
+        { variable: "max_items", accepts: "Integer or nil", example: "max_items: 4" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"mb-4\", id: \"main-breadcrumb\", data: { testid: \"breadcrumb\" }" }
+      ]
+    },
+    breadcrumb_item: {
+      label: "Breadcrumb Item",
+      method_call: "render FlatPack::Breadcrumb::Item::Component.new(text: \"Home\", href: \"/\", icon: \"home\")",
+      variables: [
+        { variable: "text", accepts: "String (required)", example: "text: \"Settings\"" },
+        { variable: "href", accepts: "String or nil", example: "href: \"/settings\"" },
+        { variable: "icon", accepts: "String or nil", example: "icon: \"home\"" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"font-semibold\", data: { turbo: false }" }
       ]
     },
     button: {
@@ -208,6 +231,7 @@
       variables: [
         { variable: "text", accepts: "String", example: "text: \"Backend\"" },
         { variable: "style", accepts: ":default, :primary, :success, :warning, :danger, :info", example: "style: :info" },
+        { variable: "leading_content", accepts: "block", example: "c.leading_content { ... }" },
         { variable: "removable", accepts: "true, false", example: "removable: true" }
       ]
     },
@@ -302,6 +326,22 @@
         { variable: "required", accepts: "true, false", example: "required: true" }
       ]
     },
+    range_input: {
+      label: "Range Input",
+      method_call: "render FlatPack::RangeInput::Component.new(name: \"volume\", label: \"Volume\", min: 0, max: 100, step: 1, value: 50)",
+      variables: [
+        { variable: "name", accepts: "String (required)", example: "name: \"volume\"" },
+        { variable: "id", accepts: "String or nil", example: "id: \"volume-slider\"" },
+        { variable: "value", accepts: "Numeric or nil", example: "value: 50" },
+        { variable: "min", accepts: "Numeric", example: "min: 0" },
+        { variable: "max", accepts: "Numeric", example: "max: 100" },
+        { variable: "step", accepts: "Numeric", example: "step: 1" },
+        { variable: "label", accepts: "String or nil", example: "label: \"Volume\"" },
+        { variable: "show_value", accepts: "true, false", example: "show_value: true" },
+        { variable: "disabled", accepts: "true, false", example: "disabled: true" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"w-full\", data: { testid: \"range-input\" }" }
+      ]
+    },
     grid: {
       label: "Grid",
       method_call: "render FlatPack::Grid::Component.new(cols: :auto, gap: :md) do ... end",
@@ -311,13 +351,43 @@
         { variable: "align", accepts: ":start, :center, :end, :stretch", example: "align: :stretch" }
       ]
     },
+    list: {
+      label: "List",
+      method_call: "render FlatPack::List::Component.new(ordered: false, spacing: :comfortable, divider: false, selectable: false) do ... end",
+      variables: [
+        { variable: "ordered", accepts: "true, false", example: "ordered: true" },
+        { variable: "spacing", accepts: ":comfortable, :dense", example: "spacing: :dense" },
+        { variable: "divider", accepts: "true, false", example: "divider: true" },
+        { variable: "selectable", accepts: "true, false", example: "selectable: true" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"mt-4\", id: \"settings-list\"" }
+      ]
+    },
+    list_item: {
+      label: "List Item",
+      method_call: "render FlatPack::List::Item.new(icon: :check, href: demo_buttons_path, hover: true, active: false) { \"Task completed\" }",
+      variables: [
+        { variable: "icon", accepts: "Symbol/String/SVG String or nil", example: "icon: :check" },
+        { variable: "leading", accepts: "String/HTML or nil", example: "leading: content_tag(:strong, \"1\")" },
+        { variable: "trailing", accepts: "String/HTML or nil", example: "trailing: render(FlatPack::Badge::Component.new(text: \"New\"))" },
+        { variable: "href", accepts: "String URL or nil", example: "href: demo_tables_basic_path" },
+        { variable: "hover", accepts: "true, false", example: "hover: true" },
+        { variable: "active", accepts: "true, false", example: "active: true" },
+        { variable: "link_arguments", accepts: "Hash", example: "link_arguments: { data: { turbo: true }, class: \"group\" }" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"py-1\", id: \"list-item-1\"" }
+      ]
+    },
     text_input: {
       label: "Input",
       method_call: "render FlatPack::TextInput::Component.new(name: \"username\", label: \"Username\")",
       variables: [
-        { variable: "name", accepts: "String", example: "name: \"user[email]\"" },
+        { variable: "name", accepts: "String (required)", example: "name: \"user[email]\"" },
+        { variable: "value", accepts: "String, Numeric, Date, Time, DateTime, nil", example: "value: \"john.doe\"" },
+        { variable: "placeholder", accepts: "String or nil", example: "placeholder: \"you@example.com\"" },
+        { variable: "disabled", accepts: "true, false", example: "disabled: true" },
+        { variable: "required", accepts: "true, false", example: "required: true" },
         { variable: "label", accepts: "String or nil", example: "label: \"Email\"" },
-        { variable: "error", accepts: "String or nil", example: "error: \"Email is invalid\"" }
+        { variable: "error", accepts: "String or nil", example: "error: \"Email is invalid\"" },
+        { variable: "**system_arguments", accepts: "Hash", example: "id: \"email\", class: \"w-full\", data: { testid: \"email-input\" }" }
       ]
     },
     modal: {
@@ -340,11 +410,12 @@
     },
     page_title: {
       label: "Page Title",
-      method_call: "render FlatPack::PageTitle::Component.new(title: \"Dashboard\", subtitle: \"Overview\")",
+      method_call: "render FlatPack::PageTitle::Component.new(title: \"Dashboard\", subtitle: \"Overview\", variant: :h2)",
       variables: [
         { variable: "title", accepts: "String (required)", example: "title: \"Account Settings\"" },
         { variable: "subtitle", accepts: "String or nil", example: "subtitle: \"Manage your profile and preferences.\"" },
-        { variable: "class", accepts: "String or nil", example: "class: \"mb-8\"" }
+        { variable: "variant", accepts: ":h1, :h2, :h3, :h4, :h5, :h6", example: "variant: :h3" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"mb-8\", id: \"settings-title\"" }
       ]
     },
     quote: {
@@ -374,13 +445,43 @@
         { variable: "content", accepts: "slot block", example: "popover.content { \"Help text\" }" }
       ]
     },
+    progress: {
+      label: "Progress",
+      method_call: "render FlatPack::Progress::Component.new(value: 72, max: 100, variant: :default, size: :md, show_label: true)",
+      variables: [
+        { variable: "value", accepts: "Numeric (required)", example: "value: 72" },
+        { variable: "max", accepts: "Numeric", example: "max: 100" },
+        { variable: "variant", accepts: ":default, :success, :warning, :danger", example: "variant: :success" },
+        { variable: "size", accepts: ":sm, :md, :lg, :xl", example: "size: :lg" },
+        { variable: "label", accepts: "String or nil", example: "label: \"Upload Progress\"" },
+        { variable: "show_label", accepts: "true, false", example: "show_label: true" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"w-full\", data: { testid: \"progress\" }" }
+      ]
+    },
     search: {
       label: "Search",
       method_call: "render FlatPack::Search::Component.new(name: \"query\", placeholder: \"Search...\")",
       variables: [
+        { variable: "placeholder", accepts: "String", example: "placeholder: \"Search components...\"" },
+        { variable: "name", accepts: "String", example: "name: \"query\"" },
+        { variable: "value", accepts: "String or nil", example: "value: \"tabs\"" },
         { variable: "search_url", accepts: "Relative/allowed URL or nil", example: "search_url: demo_search_path" },
+        { variable: "max_width", accepts: ":none, :md, :lg, :xl", example: "max_width: :lg" },
         { variable: "min_characters", accepts: "Integer", example: "min_characters: 2" },
-        { variable: "debounce", accepts: "Integer (ms)", example: "debounce: 250" }
+        { variable: "debounce", accepts: "Integer (ms)", example: "debounce: 250" },
+        { variable: "no_results_text", accepts: "String", example: "no_results_text: \"No matching components\"" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"max-w-xl\", data: { testid: \"search\" }" }
+      ]
+    },
+    skeleton: {
+      label: "Skeleton",
+      method_call: "render FlatPack::Skeleton::Component.new(variant: :text, width: \"240px\", shimmer: true)",
+      variables: [
+        { variable: "variant", accepts: ":text, :title, :avatar, :button, :rectangle", example: "variant: :title" },
+        { variable: "width", accepts: "String or nil", example: "width: \"320px\"" },
+        { variable: "height", accepts: "String or nil", example: "height: \"96px\"" },
+        { variable: "shimmer", accepts: "true, false", example: "shimmer: false" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"rounded-xl\", id: \"profile-skeleton\"" }
       ]
     },
     sidebar_layout: {
@@ -410,6 +511,29 @@
         { variable: "tab / panel", accepts: "id:, label:, block", example: "tabs.tab(id: \"overview\", label: \"Overview\")" }
       ]
     },
+    timeline: {
+      label: "Timeline",
+      method_call: "render FlatPack::Timeline::Component.new(class: \"max-w-2xl\") do ... end",
+      variables: [
+        { variable: "content", accepts: "Timeline item components via block", example: "render FlatPack::Timeline::Item.new(title: \"Created\")" },
+        { variable: "class", accepts: "String or nil", example: "class: \"max-w-2xl\"" },
+        { variable: "**system_arguments", accepts: "Hash", example: "id: \"project-timeline\", data: { testid: \"timeline\" }" }
+      ]
+    },
+    timeline_item: {
+      label: "Timeline Item",
+      method_call: "render FlatPack::Timeline::Item.new(title: \"Build Started\", timestamp: \"10:00 AM\", variant: :default) { \"Running tests\" }",
+      variables: [
+        { variable: "title", accepts: "String (required)", example: "title: \"Build Started\"" },
+        { variable: "timestamp", accepts: "String or nil", example: "timestamp: \"10:00 AM\"" },
+        { variable: "variant", accepts: ":default, :success, :warning, :danger", example: "variant: :success" },
+        { variable: "status", accepts: ":default, :success, :warning, :danger or nil", example: "status: :warning" },
+        { variable: "description", accepts: "String or nil", example: "description: \"Deployment finished\"" },
+        { variable: "icon", accepts: "SVG string or nil", example: "icon: '<svg ...></svg>'" },
+        { variable: "last", accepts: "true, false", example: "last: true" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"mb-2\", data: { testid: \"timeline-item\" }" }
+      ]
+    },
     toast: {
       label: "Toast",
       method_call: "render FlatPack::Toast::Component.new(message: \"Saved\", type: :success, timeout: 5000)",
@@ -425,7 +549,7 @@
       variables: [
         { variable: "text", accepts: "String", example: "text: \"Copy to clipboard\"" },
         { variable: "placement", accepts: ":top, :right, :bottom, :left", example: "placement: :left" },
-        { variable: "with_tooltip_content", accepts: "slot block", example: "tooltip.with_tooltip_content { \"Custom tooltip body\" }" }
+        { variable: "content", accepts: "slot block", example: "tooltip.content { \"Custom tooltip body\" }" }
       ]
     }
   }

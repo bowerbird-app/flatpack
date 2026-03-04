@@ -22,13 +22,13 @@
   </div>
   
   <%= render FlatPack::CodeBlock::Component.new(
-    code: <<~CODE
-      render FlatPack::Button::Component.new(id: "popover-trigger", text: "Click me")
-      render FlatPack::Popover::Component.new(trigger_id: "popover-trigger", placement: :bottom) do |popover|
-        popover.content do
-          "<div class='p-4'><h3>Title</h3><p>Content...</p></div>"
-        end
-      end
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Button::Component.new(id: "popover-trigger", text: "Click me") %&gt;
+      &lt;%= render FlatPack::Popover::Component.new(trigger_id: "popover-trigger", placement: :bottom) do |popover| %&gt;
+        &lt;% popover.content do %&gt;
+          &lt;div class='p-4'&gt;&lt;h3&gt;Title&lt;/h3&gt;&lt;p&gt;Content...&lt;/p&gt;&lt;/div&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
     CODE
   ) %>
 </section>

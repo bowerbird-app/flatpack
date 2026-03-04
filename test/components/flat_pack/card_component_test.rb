@@ -450,8 +450,16 @@ module FlatPack
         assert_includes page.native.to_html, "rounded-lg"
       end
 
-      def test_card_has_overflow_hidden
+      def test_card_without_media_has_overflow_visible
         render_inline(Component.new)
+        assert_includes page.native.to_html, "overflow-visible"
+      end
+
+      def test_card_with_media_has_overflow_hidden
+        render_inline(Component.new) do |component|
+          component.media { "Media" }
+        end
+
         assert_includes page.native.to_html, "overflow-hidden"
       end
 

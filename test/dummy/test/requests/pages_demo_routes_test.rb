@@ -144,6 +144,74 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "data-controller=\"picker-demo\""
   end
 
+  test "text input demo variable table includes value option" do
+    get "/demo/forms/text_input"
+
+    assert_response :success
+    assert_includes response.body, "<td class=\"px-4 py-3 text-sm text-primary font-medium\">value</td>"
+    assert_includes response.body, "value: &quot;john.doe&quot;"
+  end
+
+  test "page header demo includes all page title heading variants" do
+    get "/demo/page_header"
+
+    assert_response :success
+    assert_includes response.body, ">Heading Variant H1</h1>"
+    assert_includes response.body, ">Heading Variant H2</h2>"
+    assert_includes response.body, ">Heading Variant H3</h3>"
+    assert_includes response.body, ">Heading Variant H4</h4>"
+    assert_includes response.body, ">Heading Variant H5</h5>"
+    assert_includes response.body, ">Heading Variant H6</h6>"
+    assert_includes response.body, "--page-title-h1-size"
+    assert_includes response.body, "--page-title-h6-size"
+  end
+
+  test "range input demo variable table includes full option set" do
+    get "/demo/range_input"
+
+    assert_response :success
+    assert_includes response.body, ">min</td>"
+    assert_includes response.body, ">max</td>"
+    assert_includes response.body, ">step</td>"
+    assert_includes response.body, "**system_arguments"
+  end
+
+  test "progress demo variable table includes core options" do
+    get "/demo/progress"
+
+    assert_response :success
+    assert_includes response.body, ">value</td>"
+    assert_includes response.body, ">variant</td>"
+    assert_includes response.body, ">size</td>"
+    assert_includes response.body, "show_label: true"
+    assert_includes response.body, "Theme Tokens"
+    assert_includes response.body, "--surface-muted-background-color"
+    assert_includes response.body, "--color-success-background-color"
+  end
+
+  test "search demo variable table includes full option set" do
+    get "/demo/search"
+
+    assert_response :success
+    assert_includes response.body, ">placeholder</td>"
+    assert_includes response.body, ">name</td>"
+    assert_includes response.body, ">value</td>"
+    assert_includes response.body, ">search_url</td>"
+    assert_includes response.body, ">max_width</td>"
+    assert_includes response.body, ">min_characters</td>"
+    assert_includes response.body, ">debounce</td>"
+    assert_includes response.body, ">no_results_text</td>"
+    assert_includes response.body, "**system_arguments"
+  end
+
+  test "select demo uses overflow-visible card for searchable dropdowns" do
+    get "/demo/forms/select"
+
+    assert_response :success
+    assert_includes response.body, "flat-pack-select-trigger"
+    assert_includes response.body, "overflow-visible"
+  end
+
   test "chat demo inbox renders compact chat group avatar clusters" do
     get "/demo/chat/demo"
 

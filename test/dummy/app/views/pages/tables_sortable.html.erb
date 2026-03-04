@@ -4,10 +4,7 @@
 ) %>
 
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Sortable Table", anchor_link: true, subtitle: "Click column headers to change ordering.") %>
-  <p class="text-(--surface-muted-content-color) mb-4">
-    Sorting happens via query params and updates within a Turbo Frame for smooth navigation.
-  </p>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Sortable Table", anchor_link: true, subtitle: "Click column headers to change ordering. Sorting happens via query params and updates within a Turbo Frame for smooth navigation.") %>
 
   <%= render FlatPack::Table::Component.new(
     data: @sorted_users,
@@ -27,10 +24,6 @@
 
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE'),
-      &lt;p class=&quot;text-(--surface-muted-content-color) mb-4&quot;&gt;
-        Sorting happens via query params and updates within a Turbo Frame for smooth navigation.
-      &lt;/p&gt;
-    
       &lt;%= render FlatPack::Table::Component.new(
         data: @sorted_users,
         turbo_frame: &quot;sortable_table&quot;,

@@ -20,6 +20,10 @@ Use Card to group related content in a consistent surface with optional hover an
 | `padding` | Symbol | `:md` | no | Container padding for non-slot content: `:none`, `:sm`, `:md`, `:lg`; invalid values raise `ArgumentError`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for card root. |
 
+Behavior note:
+- Card root uses `overflow-visible` by default so pop-out UI (for example, dropdown menus) is not clipped by the card container.
+- When the `media` slot is present, card root switches to `overflow-hidden` to preserve media edge clipping.
+
 ## Slots
 | name | type | required | description |
 |---|---|---|---|

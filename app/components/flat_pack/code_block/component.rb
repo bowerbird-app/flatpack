@@ -1,8 +1,26 @@
 # frozen_string_literal: true
 
+require "cgi"
+
 module FlatPack
   module CodeBlock
     class Component < FlatPack::BaseComponent
+      @decoded_code_cache = {}
+      @decoded_code_cache_mutex = Mutex.new
+
+      class << self
+        def decode_code(code)
+          return code unless code.include?("&lt;") || code.include?("&gt;") || code.include?("&amp;")
+
+          cached = @decoded_code_cache[code]
+          return cached if cached
+
+          @decoded_code_cache_mutex.synchronize do
+            @decoded_code_cache[code] ||= CGI.unescapeHTML(code).freeze
+          end
+        end
+      end
+
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "bg-[var(--code-block-background-color)]" "border" "border-[var(--code-block-border-color)]" "rounded-lg" "whitespace-pre-wrap" "break-words" "font-mono" "text-sm" "text-[var(--code-block-code-color)]" "text-[var(--code-block-title-color)]"
@@ -182,7 +200,7 @@ module FlatPack
             snippet_language = snippet_hash[:language] || snippet_hash["language"]
 
             {
-              code: snippet_code.to_s,
+              code: self.class.decode_code(snippet_code.to_s),
               label: snippet_label.presence || snippet_fallback_label(snippet_language),
               language: snippet_language
             }
@@ -191,7 +209,7 @@ module FlatPack
           return normalized if normalized.any?
         end
 
-        return [{code: code.to_s, label: snippet_fallback_label(language), language: language}] if code.present?
+        return [{code: self.class.decode_code(code.to_s), label: snippet_fallback_label(language), language: language}] if code.present?
 
         raise ArgumentError, "CodeBlock::Component requires `code:` or non-empty `snippets:`"
       end

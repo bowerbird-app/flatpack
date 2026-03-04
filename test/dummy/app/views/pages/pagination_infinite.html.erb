@@ -59,58 +59,66 @@
     anchor_link: true
   ) %>
   
-  <div class="prose max-w-none">
-    <h3>Client-Side (JavaScript Enabled)</h3>
-    <%= render FlatPack::List::Component.new do %>
-      <%= render FlatPack::List::Item.new do %>Uses Intersection Observer API to detect when the "Load more" button enters the viewport<% end %>
-      <%= render FlatPack::List::Item.new do %>Automatically fetches the next page via AJAX<% end %>
-      <%= render FlatPack::List::Item.new do %>Appends new content to the page seamlessly<% end %>
-      <%= render FlatPack::List::Item.new do %>Shows loading spinner during fetch<% end %>
-    <% end %>
+  <div class="space-y-8">
+    <div>
+      <h3 class="text-lg font-semibold mb-3">Client-Side (JavaScript Enabled)</h3>
+      <%= render FlatPack::List::Component.new(spacing: :dense) do %>
+        <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %>Uses Intersection Observer API to detect when the "Load more" button enters the viewport<% end %>
+        <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %>Automatically fetches the next page via AJAX<% end %>
+        <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %>Appends new content to the page seamlessly<% end %>
+        <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %>Shows loading spinner during fetch<% end %>
+      <% end %>
+    </div>
 
-    <h3>Graceful Degradation (No JavaScript)</h3>
-    <%= render FlatPack::List::Component.new do %>
-      <%= render FlatPack::List::Item.new do %>The component renders as a regular link<% end %>
-      <%= render FlatPack::List::Item.new do %>Clicking navigates to the next page normally<% end %>
-      <%= render FlatPack::List::Item.new do %>Maintains full functionality without JavaScript<% end %>
-    <% end %>
+    <div>
+      <h3 class="text-lg font-semibold mb-3">Graceful Degradation (No JavaScript)</h3>
+      <%= render FlatPack::List::Component.new(spacing: :dense) do %>
+        <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %>The component renders as a regular link<% end %>
+        <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %>Clicking navigates to the next page normally<% end %>
+        <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %>Maintains full functionality without JavaScript<% end %>
+      <% end %>
+    </div>
 
-    <h3>Controller Example</h3>
-    <%= render FlatPack::CodeBlock::Component.new(
-      language: "ruby",
-      code: <<~RUBY
-        def pagination_infinite
-          @pagy, @records = pagy(DummyDatum.recent, items: 10)
-          @has_more = @pagy.next.present?
-          @infinite_url = @has_more ? demo_pagination_infinite_path(page: @pagy.next) : "#"
+    <div>
+      <h3 class="text-lg font-semibold mb-3">Controller Example</h3>
+      <%= render FlatPack::CodeBlock::Component.new(
+        language: "ruby",
+        code: <<~RUBY
+          def pagination_infinite
+            @pagy, @records = pagy(DummyDatum.recent, items: 10)
+            @has_more = @pagy.next.present?
+            @infinite_url = @has_more ? demo_pagination_infinite_path(page: @pagy.next) : "#"
 
-          if request.xhr?
-            render partial: "pages/pagination_infinite_results",
-              locals: { records: @records, pagy: @pagy, has_more: @has_more, infinite_url: @infinite_url }
+            if request.xhr?
+              render partial: "pages/pagination_infinite_results",
+                locals: { records: @records, pagy: @pagy, has_more: @has_more, infinite_url: @infinite_url }
+            end
           end
-        end
-      RUBY
-    ) %>
+        RUBY
+      ) %>
+    </div>
 
-    <h3>View Example</h3>
-    <%= render FlatPack::CodeBlock::Component.new(
-      language: "erb",
-      code: <<~ERB
-        <#{'%'}= render FlatPack::Table::Component.new(
-          data: @records,
-          tbody_data: {pagination_content: true}
-        ) do |table| %#{'>'}
-          <#{'%'} table.column(title: "Name", html: ->(record) { record.name }) %#{'>'}
-          <#{'%'} table.column(title: "Email", html: ->(record) { record.email }) %#{'>'}
-        <#{'%'} end %#{'>'}
+    <div>
+      <h3 class="text-lg font-semibold mb-3">View Example</h3>
+      <%= render FlatPack::CodeBlock::Component.new(
+        language: "erb",
+        code: <<~ERB
+          <#{'%'}= render FlatPack::Table::Component.new(
+            data: @records,
+            tbody_data: {pagination_content: true}
+          ) do |table| %#{'>'}
+            <#{'%'} table.column(title: "Name", html: ->(record) { record.name }) %#{'>'}
+            <#{'%'} table.column(title: "Email", html: ->(record) { record.email }) %#{'>'}
+          <#{'%'} end %#{'>'}
 
-        <#{'%'}= render FlatPack::Pagination::Component.new(
-          mode: :infinite,
-          infinite_url: demo_pagination_infinite_path(page: @pagy.next),
-          has_more: @pagy.next.present?
-        ) if @pagy.next %#{'>'}
-      ERB
-    ) %>
+          <#{'%'}= render FlatPack::Pagination::Component.new(
+            mode: :infinite,
+            infinite_url: demo_pagination_infinite_path(page: @pagy.next),
+            has_more: @pagy.next.present?
+          ) if @pagy.next %#{'>'}
+        ERB
+      ) %>
+    </div>
   </div>
 </section>
 

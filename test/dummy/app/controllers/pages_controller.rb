@@ -7,7 +7,37 @@ require "pagy/extras/array"
 class PagesController < ApplicationController
   include Pagy::Backend
 
+  DEMO_THEME_TOKEN_MAPPINGS = [
+    {action: /\Abuttons\z/, title: "Buttons", patterns: [/\A--button-/]},
+    {action: /\Aalerts\z/, title: "Alerts", patterns: [/\A--alert-/]},
+    {action: /\Abadges\z/, title: "Badges", patterns: [/\A--badge-/]},
+    {action: /\Achips\z/, title: "Chips", patterns: [/\A--chip-/]},
+    {action: /\Acards\z/, title: "Cards", patterns: [/\A--card-/]},
+    {action: /\Abreadcrumbs\z/, title: "Breadcrumbs", patterns: [/\A--breadcrumb-/]},
+    {action: /\Anavbar\z/, title: "Top Nav", patterns: [/\A--top-nav-/]},
+    {action: /\Asidebar(_.*)?\z/, title: "Sidebar", patterns: [/\A--sidebar-/]},
+    {action: /\Amodals\z/, title: "Modals", patterns: [/\A--modal-/]},
+    {action: /\Apopovers\z/, title: "Popovers", patterns: [/\A--popover-/]},
+    {action: /\Atooltips\z/, title: "Tooltips", patterns: [/\A--tooltip-/]},
+    {action: /\Atabs(_.*)?\z/, title: "Tabs", patterns: [/\A--tabs-/]},
+    {action: /\Atoasts\z/, title: "Toasts", patterns: [/\A--toast-/]},
+    {action: /\Atext_quote\z/, title: "Quote", patterns: [/\A--quote-/]},
+    {action: /\Acode_blocks\z/, title: "Code Blocks", patterns: [/\A--code-block-/]},
+    {action: /\Aavatars\z/, title: "Avatars", patterns: [/\A--avatar-/]},
+    {action: /\Acomments\z/, title: "Comments", patterns: [/\A--comments-/]},
+    {action: /\Achat(_.*)?\z/, title: "Chat", patterns: [/\A--chat-/]},
+    {action: /\Atables(_.*)?\z/, title: "Table", patterns: [/\A--table-/]},
+    {action: /\A(forms(_.*)?|inputs|range_input)\z/, title: "Form Controls", patterns: [/\A--form-control-/]},
+    {action: /\Aforms_switch\z/, title: "Form Controls & Switch", patterns: [/\A--form-control-/, /\A--switch-/]},
+    {action: /\Aforms_checkbox\z/, title: "Form Controls & Checkbox", patterns: [/\A--form-control-/, /\A--checkbox-/]},
+    {action: /\Acollapse\z/, title: "Collapse", patterns: [/\A--collapse-/]},
+    {action: /\Askeletons\z/, title: "Skeleton", patterns: [/\A--skeleton-/]},
+    {action: /\Atimeline\z/, title: "Timeline", patterns: [/\A--timeline-/]},
+    {action: /\Alist\z/, title: "List", patterns: [/\A--list-item-/]}
+  ].freeze
+
   before_action :load_table_demo_data, only: %i[tables_basic tables_sortable tables_draggable]
+  before_action :load_demo_theme_tokens
 
   def demo
     @component_index = cached_component_index
@@ -1520,5 +1550,54 @@ class PagesController < ApplicationController
         ]
       }
     }
+  end
+
+  def load_demo_theme_tokens
+    return unless request.get?
+    return unless request.format.html?
+
+    mapping = DEMO_THEME_TOKEN_MAPPINGS.find { |entry| action_name.match?(entry.fetch(:action)) }
+    return unless mapping
+
+    rows = extract_theme_tokens.select do |token|
+      mapping.fetch(:patterns).any? { |pattern| token.fetch(:variable).match?(pattern) }
+    end
+    return if rows.empty?
+
+    @demo_theme_token_title = mapping.fetch(:title)
+    @demo_theme_token_rows = rows
+  end
+
+  def extract_theme_tokens
+    css = cached_theme_variables_css
+    block = css[/@theme\s*\{(?<body>.*?)^\}/m, :body]
+    return [] if block.blank?
+
+    block.lines.filter_map do |line|
+      stripped = line.strip
+      next if stripped.empty? || stripped.start_with?("/*")
+
+      match = stripped.match(/\A(--[a-z0-9-]+)\s*:\s*(.+);\z/)
+      next unless match
+
+      {
+        variable: match[1],
+        default_value: match[2]
+      }
+    end
+  end
+
+  def cached_theme_variables_css
+    path = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css")
+    mtime = File.mtime(path).to_i
+
+    cache = self.class.instance_variable_get(:@theme_variables_css_cache)
+    if cache&.fetch(:mtime, nil) == mtime
+      return cache.fetch(:css)
+    end
+
+    css = File.read(path)
+    self.class.instance_variable_set(:@theme_variables_css_cache, {mtime: mtime, css: css})
+    css
   end
 end

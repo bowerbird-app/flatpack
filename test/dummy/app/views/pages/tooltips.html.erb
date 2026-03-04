@@ -69,7 +69,7 @@
   <div class="mb-4">
     <%= render FlatPack::Tooltip::Component.new(placement: :top) do |tooltip| %>
       <%= render FlatPack::Button::Component.new(text: "Hover for details", style: :primary) %>
-      <% tooltip.with_tooltip_content do %>
+      <% tooltip.content do %>
         <div class="space-y-1">
           <strong class="block">Rich Tooltip</strong>
           <p class="text-sm">Tooltips can contain formatted content with multiple lines.</p>
@@ -82,7 +82,7 @@
     code: CGI.unescapeHTML(<<~'CODE')
       &lt;%= render FlatPack::Tooltip::Component.new(placement: :top) do |tooltip| %&gt;
         &lt;%= render FlatPack::Button::Component.new(text: "Hover me") %&gt;
-        &lt;% tooltip.with_tooltip_content do %&gt;
+        &lt;% tooltip.content do %&gt;
           <div>Rich HTML content here</div>
         &lt;% end %&gt;
       &lt;% end %&gt;

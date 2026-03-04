@@ -29,6 +29,7 @@ class ThemesController < ApplicationController
     "Table" => [/\A--table-/],
     "Chips" => [/\A--chip-/],
     "Form Controls" => [/\A--form-control-/],
+    "Page Title" => [/\A--page-title-/],
     "Avatars" => [/\A--avatar-/],
     "Radii" => [/\A--radius-/],
     "Shadows" => [/\A--shadow-/],
@@ -68,7 +69,7 @@ class ThemesController < ApplicationController
   private
 
   def theme_variables_code(theme)
-    css = File.read(FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css"))
+    css = cached_theme_variables_css
 
     if theme == "system"
       light_block = extract_selector_block(css, THEME_SELECTORS.fetch("light"))
@@ -111,7 +112,7 @@ class ThemesController < ApplicationController
   end
 
   def extract_theme_tokens
-    css = File.read(FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css"))
+    css = cached_theme_variables_css
     block = css[/@theme\s*\{(?<body>.*?)^\}/m, :body]
     return [] if block.blank?
 
@@ -128,6 +129,20 @@ class ThemesController < ApplicationController
         description: default_value_description(match[2])
       }
     end
+  end
+
+  def cached_theme_variables_css
+    path = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css")
+    mtime = File.mtime(path).to_i
+
+    cache = self.class.instance_variable_get(:@theme_variables_css_cache)
+    if cache&.fetch(:mtime, nil) == mtime
+      return cache.fetch(:css)
+    end
+
+    css = File.read(path)
+    self.class.instance_variable_set(:@theme_variables_css_cache, {mtime: mtime, css: css})
+    css
   end
 
   def group_for_token(variable)
@@ -239,6 +254,8 @@ class ThemesController < ApplicationController
       "Search"
     when /\A--form-control-/
       "Form controls"
+    when /\A--page-title-/
+      "Page title"
     when /\A--table-/
       "Table"
     when /\A--tabs-/

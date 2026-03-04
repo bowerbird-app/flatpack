@@ -7,6 +7,24 @@ module FlatPack
       renders_one :body
       renders_one :footer
 
+      def header_content(&block)
+        return header unless block
+
+        with_header(&block)
+      end
+
+      def body_content(&block)
+        return body unless block
+
+        with_body(&block)
+      end
+
+      def footer_content(&block)
+        return footer unless block
+
+        with_footer(&block)
+      end
+
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "max-w-sm" "max-w-xl" "max-w-2xl" "max-w-4xl" "max-w-6xl"

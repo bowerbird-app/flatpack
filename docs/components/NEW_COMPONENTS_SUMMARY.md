@@ -114,10 +114,10 @@ Accessible modal dialogs with focus trap, backdrop/ESC close, and animations.
 **Usage:**
 ```erb
 <%= render FlatPack::Modal::Component.new(id: "confirm-modal", title: "Confirm Action") do |modal| %>
-  <% modal.with_body do %>
+  <% modal.body_content do %>
     Are you sure you want to delete this item?
   <% end %>
-  <% modal.with_footer do %>
+  <% modal.footer_content do %>
     <%= render FlatPack::Button::Component.new(text: "Cancel", style: :ghost, data: {action: "flat-pack--modal#close"}) %>
     <%= render FlatPack::Button::Component.new(text: "Delete", style: :error) %>
   <% end %>
