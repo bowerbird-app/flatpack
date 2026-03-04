@@ -60,21 +60,21 @@
     <%= render FlatPack::SectionTitle::Component.new(title: "Chips with Leading Icons", anchor_link: true, subtitle: "Examples for Chips with Leading Icons.") %>
     <div class="flex flex-wrap gap-3 mb-4">
       <%= render FlatPack::Chip::Component.new(text: "Ruby", style: :danger) do |c| %>
-        <% c.with_leading do %>
+        <% c.leading_content do %>
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
           </svg>
         <% end %>
       <% end %>
       <%= render FlatPack::Chip::Component.new(text: "JavaScript", style: :warning) do |c| %>
-        <% c.with_leading do %>
+        <% c.leading_content do %>
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
           </svg>
         <% end %>
       <% end %>
       <%= render FlatPack::Chip::Component.new(text: "TypeScript", style: :info) do |c| %>
-        <% c.with_leading do %>
+        <% c.leading_content do %>
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
           </svg>
@@ -86,21 +86,21 @@
     code: CGI.unescapeHTML(<<~'CODE'),
         &lt;div class=&quot;flex flex-wrap gap-3 mb-4&quot;&gt;
           &lt;%= render FlatPack::Chip::Component.new(text: &quot;Ruby&quot;, style: :danger) do |c| %&gt;
-            &lt;% c.with_leading do %&gt;
+            &lt;% c.leading_content do %&gt;
               &lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; class=&quot;h-4 w-4&quot; viewBox=&quot;0 0 20 20&quot; fill=&quot;currentColor&quot;&gt;
                 &lt;path fill-rule=&quot;evenodd&quot; d=&quot;M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z&quot; clip-rule=&quot;evenodd&quot; /&gt;
               &lt;/svg&gt;
             &lt;% end %&gt;
           &lt;% end %&gt;
           &lt;%= render FlatPack::Chip::Component.new(text: &quot;JavaScript&quot;, style: :warning) do |c| %&gt;
-            &lt;% c.with_leading do %&gt;
+            &lt;% c.leading_content do %&gt;
               &lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; class=&quot;h-4 w-4&quot; viewBox=&quot;0 0 20 20&quot; fill=&quot;currentColor&quot;&gt;
                 &lt;path fill-rule=&quot;evenodd&quot; d=&quot;M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z&quot; clip-rule=&quot;evenodd&quot; /&gt;
               &lt;/svg&gt;
             &lt;% end %&gt;
           &lt;% end %&gt;
           &lt;%= render FlatPack::Chip::Component.new(text: &quot;TypeScript&quot;, style: :info) do |c| %&gt;
-            &lt;% c.with_leading do %&gt;
+            &lt;% c.leading_content do %&gt;
               &lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; class=&quot;h-4 w-4&quot; viewBox=&quot;0 0 20 20&quot; fill=&quot;currentColor&quot;&gt;
                 &lt;path fill-rule=&quot;evenodd&quot; d=&quot;M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z&quot; clip-rule=&quot;evenodd&quot; /&gt;
               &lt;/svg&gt;
@@ -302,7 +302,7 @@
     <%= render FlatPack::SectionTitle::Component.new(title: "Chips with Avatars", anchor_link: true, subtitle: "Examples for Chips with Avatars.") %>
     <div class="flex flex-wrap gap-3 mb-4">
       <%= render FlatPack::Chip::Component.new(text: "Nathan Garcia") do |c| %>
-        <% c.with_leading do %>
+        <% c.leading_content do %>
           <%= render FlatPack::Avatar::Component.new(
             initials: "NG",
             size: :xs
@@ -310,7 +310,7 @@
         <% end %>
       <% end %>
       <%= render FlatPack::Chip::Component.new(text: "Jane Doe", style: :primary) do |c| %>
-        <% c.with_leading do %>
+        <% c.leading_content do %>
           <%= render FlatPack::Avatar::Component.new(
             initials: "JD",
             size: :xs
@@ -318,7 +318,7 @@
         <% end %>
       <% end %>
       <%= render FlatPack::Chip::Component.new(text: "Alex Brown", style: :success) do |c| %>
-        <% c.with_leading do %>
+        <% c.leading_content do %>
           <%= render FlatPack::Avatar::Component.new(
             initials: "AB",
             size: :xs
@@ -329,7 +329,7 @@
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE')
         &lt;%= render FlatPack::Chip::Component.new(text: "Nathan Garcia") do |c| %&gt;
-          &lt;% c.with_leading do %&gt;
+          &lt;% c.leading_content do %&gt;
             &lt;%= render FlatPack::Avatar::Component.new(
               initials: "NG",
               size: :xs
@@ -345,7 +345,7 @@
     <%= render FlatPack::SectionTitle::Component.new(title: "Chips with Avatar Groups", anchor_link: true, subtitle: "Examples for Chips with Avatar Groups.") %>
     <div class="flex flex-wrap gap-3 mb-4">
       <%= render FlatPack::Chip::Component.new(text: "Design Team", style: :primary) do |c| %>
-        <% c.with_leading do %>
+        <% c.leading_content do %>
           <%= render FlatPack::AvatarGroup::Component.new(
             items: [
               { initials: "NG", size: :xs },
@@ -359,7 +359,7 @@
         <% end %>
       <% end %>
       <%= render FlatPack::Chip::Component.new(text: "Engineering Team", style: :info) do |c| %>
-        <% c.with_leading do %>
+        <% c.leading_content do %>
           <%= render FlatPack::AvatarGroup::Component.new(
             items: [
               { initials: "MK", size: :xs },
@@ -377,7 +377,7 @@
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE')
         &lt;%= render FlatPack::Chip::Component.new(text: "Design Team", style: :primary) do |c| %&gt;
-          &lt;% c.with_leading do %&gt;
+          &lt;% c.leading_content do %&gt;
             &lt;%= render FlatPack::AvatarGroup::Component.new(
               items: [
                 { initials: "NG", size: :xs },

@@ -30,6 +30,12 @@ module FlatPack
       renders_one :trailing
       renders_one :remove_button
 
+      def leading_content(content = nil, &block)
+        return leading if content.nil? && !block_given?
+
+        with_leading(content, &block)
+      end
+
       def initialize(
         text: nil,
         style: :default,

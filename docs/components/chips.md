@@ -26,7 +26,7 @@ Use Chip for tags, filters, selected states, and quick token-like actions.
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for chip root element. |
 
 ## Slots
-- `leading`: content shown before label.
+- `leading_content`: sets content shown before label.
 - `trailing`: content shown after label.
 - `remove_button`: custom remove control (overrides default removable button).
 
