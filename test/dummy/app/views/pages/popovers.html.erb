@@ -23,12 +23,12 @@
   
   <%= render FlatPack::CodeBlock::Component.new(
     code: <<~CODE
-      render FlatPack::Button::Component.new(id: "popover-trigger", text: "Click me")
-      render FlatPack::Popover::Component.new(trigger_id: "popover-trigger", placement: :bottom) do |popover|
+      <%= render FlatPack::Button::Component.new(id: "popover-trigger", text: "Click me") %>
+      <%= render FlatPack::Popover::Component.new(trigger_id: "popover-trigger", placement: :bottom) do |popover| %>
         popover.content do
           "<div class='p-4'><h3>Title</h3><p>Content...</p></div>"
         end
-      end
+      <% end %>
     CODE
   ) %>
 </section>
