@@ -144,6 +144,14 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "data-controller=\"picker-demo\""
   end
 
+  test "text input demo variable table includes value option" do
+    get "/demo/forms/text_input"
+
+    assert_response :success
+    assert_includes response.body, "<td class=\"px-4 py-3 text-sm text-primary font-medium\">value</td>"
+    assert_includes response.body, "value: &quot;john.doe&quot;"
+  end
+
   test "chat demo inbox renders compact chat group avatar clusters" do
     get "/demo/chat/demo"
 

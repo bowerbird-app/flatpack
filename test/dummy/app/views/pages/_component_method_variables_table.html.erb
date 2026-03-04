@@ -315,9 +315,14 @@
       label: "Input",
       method_call: "render FlatPack::TextInput::Component.new(name: \"username\", label: \"Username\")",
       variables: [
-        { variable: "name", accepts: "String", example: "name: \"user[email]\"" },
+        { variable: "name", accepts: "String (required)", example: "name: \"user[email]\"" },
+        { variable: "value", accepts: "String, Numeric, Date, Time, DateTime, nil", example: "value: \"john.doe\"" },
+        { variable: "placeholder", accepts: "String or nil", example: "placeholder: \"you@example.com\"" },
+        { variable: "disabled", accepts: "true, false", example: "disabled: true" },
+        { variable: "required", accepts: "true, false", example: "required: true" },
         { variable: "label", accepts: "String or nil", example: "label: \"Email\"" },
-        { variable: "error", accepts: "String or nil", example: "error: \"Email is invalid\"" }
+        { variable: "error", accepts: "String or nil", example: "error: \"Email is invalid\"" },
+        { variable: "**system_arguments", accepts: "Hash", example: "id: \"email\", class: \"w-full\", data: { testid: \"email-input\" }" }
       ]
     },
     modal: {
