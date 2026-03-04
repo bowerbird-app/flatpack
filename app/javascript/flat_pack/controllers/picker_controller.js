@@ -227,6 +227,7 @@ export default class extends Controller {
     const isChecked = this.selectedIds.has(String(item.id)) ? "checked" : ""
     const controlType = this.selectionModeValue === "single" ? "radio" : "checkbox"
     const controlName = `picker_${this.#escapeHtml(this.pickerIdValue)}_selection`
+    const controlClass = controlType === "checkbox" ? this.#checkboxInputClasses() : "mt-1 cursor-pointer"
     const meta = this.#escapeHtml(this.#metaText(item))
 
     const preview = kind === "image" && thumbnailUrl
@@ -234,29 +235,49 @@ export default class extends Controller {
       : `<span class="inline-flex h-10 w-10 items-center justify-center rounded border border-(--surface-border-color) text-sm text-(--surface-muted-content-color)">${kind === "image" ? "IMG" : "FILE"}</span>`
 
     return `
-      <label class="flex cursor-pointer items-start gap-3 rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-3">
-        <input
-          type="${controlType}"
-          name="${controlName}"
-          class="mt-1"
-          data-item-id="${itemId}"
-          ${isChecked}
-          data-action="change->flat-pack--picker#handleSelectionChange"
-        >
-        ${preview}
-        <span class="min-w-0 flex-1">
-          <span class="block truncate text-sm font-medium text-(--surface-content-color)">${label}</span>
-          <span class="block truncate text-xs text-(--surface-muted-content-color)">${meta}</span>
-        </span>
-        <span class="hidden"
-          data-kind="${this.#escapeHtml(kind)}"
-          data-name="${name}"
-          data-content-type="${contentType}"
-          data-byte-size="${byteSize}"
-          data-thumbnail-url="${thumbnailUrl}">
-        </span>
-      </label>
+      <div class="flat-pack-checkbox-wrapper">
+        <label class="flex cursor-pointer items-start gap-3 rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-3">
+          <input
+            type="${controlType}"
+            name="${controlName}"
+            class="${controlClass}"
+            data-item-id="${itemId}"
+            ${isChecked}
+            data-action="change->flat-pack--picker#handleSelectionChange"
+          >
+          ${preview}
+          <span class="min-w-0 flex-1 ml-(--checkbox-label-gap)">
+            <span class="block truncate text-sm font-medium text-(--surface-content-color)">${label}</span>
+            <span class="block truncate text-xs text-(--surface-muted-content-color)">${meta}</span>
+          </span>
+          <span class="hidden"
+            data-kind="${this.#escapeHtml(kind)}"
+            data-name="${name}"
+            data-content-type="${contentType}"
+            data-byte-size="${byteSize}"
+            data-thumbnail-url="${thumbnailUrl}">
+          </span>
+        </label>
+      </div>
     `
+  }
+
+  #checkboxInputClasses() {
+    return [
+      "flat-pack-checkbox",
+      "h-[var(--checkbox-size)] w-[var(--checkbox-size)]",
+      "rounded-[var(--checkbox-radius)]",
+      "border",
+      "bg-[var(--surface-background-color)]",
+      "accent-primary",
+      "text-primary",
+      "checked:bg-primary checked:border-primary",
+      "transition-colors duration-base",
+      "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:rounded-[var(--checkbox-radius)]",
+      "cursor-pointer",
+      "disabled:opacity-50 disabled:cursor-not-allowed",
+      "border-[var(--surface-border-color)]"
+    ].join(" ")
   }
 
   #gridItemMarkup(item) {
