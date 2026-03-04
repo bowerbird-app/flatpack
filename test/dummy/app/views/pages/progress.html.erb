@@ -3,6 +3,21 @@
   subtitle: "Display task completion or loading progress with customizable variants and sizes."
 ) %>
 
+<%= render "pages/component_method_variables_table", component: :progress %>
+
+<%
+  progress_theme_token_rows = [
+    { variable: "--surface-content-color", default_value: "var(--surface-content-color)" },
+    { variable: "--surface-muted-background-color", default_value: "var(--surface-muted-background-color)" },
+    { variable: "--color-primary", default_value: "var(--color-primary)" },
+    { variable: "--color-success-background-color", default_value: "var(--color-success-background-color)" },
+    { variable: "--color-warning-background-color", default_value: "var(--color-warning-background-color)" },
+    { variable: "--color-danger-background-color", default_value: "var(--color-danger-background-color)" }
+  ]
+%>
+
+<%= render "pages/theme_token_reference", title: "Progress", rows: progress_theme_token_rows %>
+
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Basic Progress Bars", anchor_link: true) %>
   

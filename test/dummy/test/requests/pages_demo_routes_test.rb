@@ -162,6 +162,19 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "**system_arguments"
   end
 
+  test "progress demo variable table includes core options" do
+    get "/demo/progress"
+
+    assert_response :success
+    assert_includes response.body, ">value</td>"
+    assert_includes response.body, ">variant</td>"
+    assert_includes response.body, ">size</td>"
+    assert_includes response.body, "show_label: true"
+    assert_includes response.body, "Theme Tokens"
+    assert_includes response.body, "--surface-muted-background-color"
+    assert_includes response.body, "--color-success-background-color"
+  end
+
   test "select demo uses overflow-visible card for searchable dropdowns" do
     get "/demo/forms/select"
 

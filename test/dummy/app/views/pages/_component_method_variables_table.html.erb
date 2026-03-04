@@ -395,6 +395,19 @@
         { variable: "content", accepts: "slot block", example: "popover.content { \"Help text\" }" }
       ]
     },
+    progress: {
+      label: "Progress",
+      method_call: "render FlatPack::Progress::Component.new(value: 72, max: 100, variant: :default, size: :md, show_label: true)",
+      variables: [
+        { variable: "value", accepts: "Numeric (required)", example: "value: 72" },
+        { variable: "max", accepts: "Numeric", example: "max: 100" },
+        { variable: "variant", accepts: ":default, :success, :warning, :danger", example: "variant: :success" },
+        { variable: "size", accepts: ":sm, :md, :lg, :xl", example: "size: :lg" },
+        { variable: "label", accepts: "String or nil", example: "label: \"Upload Progress\"" },
+        { variable: "show_label", accepts: "true, false", example: "show_label: true" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"w-full\", data: { testid: \"progress\" }" }
+      ]
+    },
     search: {
       label: "Search",
       method_call: "render FlatPack::Search::Component.new(name: \"query\", placeholder: \"Search...\")",
