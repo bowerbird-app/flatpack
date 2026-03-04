@@ -152,6 +152,16 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "value: &quot;john.doe&quot;"
   end
 
+  test "range input demo variable table includes full option set" do
+    get "/demo/range_input"
+
+    assert_response :success
+    assert_includes response.body, ">min</td>"
+    assert_includes response.body, ">max</td>"
+    assert_includes response.body, ">step</td>"
+    assert_includes response.body, "**system_arguments"
+  end
+
   test "select demo uses overflow-visible card for searchable dropdowns" do
     get "/demo/forms/select"
 

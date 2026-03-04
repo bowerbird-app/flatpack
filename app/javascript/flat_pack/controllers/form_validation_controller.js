@@ -145,13 +145,29 @@ export default class extends Controller {
     node.id = this.errorIdValue
     node.className = "mt-1 text-sm text-warning hidden"
 
-    const parent = this.element.parentElement
-    if (parent) {
-      parent.appendChild(node)
+    const container = this.errorContainer()
+    if (container) {
+      container.appendChild(node)
       return node
     }
 
     return null
+  }
+
+  errorContainer() {
+    if (!(this.element instanceof HTMLElement)) {
+      return null
+    }
+
+    if (this.element.type === "checkbox") {
+      return this.element.closest(".flat-pack-checkbox-wrapper") || this.element.parentElement
+    }
+
+    if (this.element.type === "radio") {
+      return this.element.closest(".flat-pack-radio-group-wrapper") || this.element.parentElement
+    }
+
+    return this.element.parentElement
   }
 
   syncDescribedBy(errorId) {

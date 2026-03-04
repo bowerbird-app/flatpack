@@ -302,6 +302,22 @@
         { variable: "required", accepts: "true, false", example: "required: true" }
       ]
     },
+    range_input: {
+      label: "Range Input",
+      method_call: "render FlatPack::RangeInput::Component.new(name: \"volume\", label: \"Volume\", min: 0, max: 100, step: 1, value: 50)",
+      variables: [
+        { variable: "name", accepts: "String (required)", example: "name: \"volume\"" },
+        { variable: "id", accepts: "String or nil", example: "id: \"volume-slider\"" },
+        { variable: "value", accepts: "Numeric or nil", example: "value: 50" },
+        { variable: "min", accepts: "Numeric", example: "min: 0" },
+        { variable: "max", accepts: "Numeric", example: "max: 100" },
+        { variable: "step", accepts: "Numeric", example: "step: 1" },
+        { variable: "label", accepts: "String or nil", example: "label: \"Volume\"" },
+        { variable: "show_value", accepts: "true, false", example: "show_value: true" },
+        { variable: "disabled", accepts: "true, false", example: "disabled: true" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"w-full\", data: { testid: \"range-input\" }" }
+      ]
+    },
     grid: {
       label: "Grid",
       method_call: "render FlatPack::Grid::Component.new(cols: :auto, gap: :md) do ... end",
