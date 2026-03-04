@@ -59,3 +59,4 @@ yarn-debug.log*
 
 # Ignore built assets
 /test/dummy/public/assets
+/test/dummy/app/assets/builds/tailwind.css
