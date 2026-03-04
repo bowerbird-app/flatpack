@@ -32,10 +32,10 @@ module FlatPack
         assert_includes page.native.to_html, "text-[var(--surface-muted-content-color)]"
       end
 
-      def test_content_wrapped_in_span
+      def test_content_wrapped_in_container
         render_inline(Item.new) { "Content" }
 
-        assert_selector "span.min-w-0.flex-1", text: "Content"
+        assert_selector "div.min-w-0.flex-1", text: "Content"
       end
 
       def test_includes_flex_layout

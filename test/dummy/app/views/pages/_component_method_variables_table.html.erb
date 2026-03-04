@@ -386,11 +386,12 @@
     },
     page_title: {
       label: "Page Title",
-      method_call: "render FlatPack::PageTitle::Component.new(title: \"Dashboard\", subtitle: \"Overview\")",
+      method_call: "render FlatPack::PageTitle::Component.new(title: \"Dashboard\", subtitle: \"Overview\", variant: :h2)",
       variables: [
         { variable: "title", accepts: "String (required)", example: "title: \"Account Settings\"" },
         { variable: "subtitle", accepts: "String or nil", example: "subtitle: \"Manage your profile and preferences.\"" },
-        { variable: "class", accepts: "String or nil", example: "class: \"mb-8\"" }
+        { variable: "variant", accepts: ":h1, :h2, :h3, :h4, :h5, :h6", example: "variant: :h3" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"mb-8\", id: \"settings-title\"" }
       ]
     },
     quote: {

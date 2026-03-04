@@ -3,16 +3,21 @@
 module FlatPack
   module PageTitle
     class Component < FlatPack::BaseComponent
+      VARIANTS = %i[h1 h2 h3 h4 h5 h6].freeze
+
       def initialize(
         title:,
         subtitle: nil,
+        variant: :h1,
         **system_arguments
       )
         super(**system_arguments)
         @title = title
         @subtitle = subtitle
+        @variant = variant.to_sym
 
         validate_title!
+        validate_variant!
       end
 
       def call
@@ -47,7 +52,7 @@ module FlatPack
       end
 
       def render_title
-        content_tag(:h1, @title, class: "text-4xl font-bold text-[var(--surface-content-color)] leading-tight")
+        content_tag(@variant, @title, class: "text-4xl font-bold text-[var(--surface-content-color)] leading-tight")
       end
 
       def render_subtitle
@@ -59,6 +64,12 @@ module FlatPack
       def validate_title!
         return if @title.present?
         raise ArgumentError, "title is required"
+      end
+
+      def validate_variant!
+        return if VARIANTS.include?(@variant)
+
+        raise ArgumentError, "Invalid variant: #{@variant}. Must be one of: #{VARIANTS.join(", ")}"
       end
     end
   end

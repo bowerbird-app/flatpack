@@ -152,6 +152,18 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "value: &quot;john.doe&quot;"
   end
 
+  test "page header demo includes all page title heading variants" do
+    get "/demo/page_header"
+
+    assert_response :success
+    assert_includes response.body, ">Heading Variant H1</h1>"
+    assert_includes response.body, ">Heading Variant H2</h2>"
+    assert_includes response.body, ">Heading Variant H3</h3>"
+    assert_includes response.body, ">Heading Variant H4</h4>"
+    assert_includes response.body, ">Heading Variant H5</h5>"
+    assert_includes response.body, ">Heading Variant H6</h6>"
+  end
+
   test "range input demo variable table includes full option set" do
     get "/demo/range_input"
 
