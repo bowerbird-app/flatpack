@@ -327,6 +327,31 @@
         { variable: "align", accepts: ":start, :center, :end, :stretch", example: "align: :stretch" }
       ]
     },
+    list: {
+      label: "List",
+      method_call: "render FlatPack::List::Component.new(ordered: false, spacing: :comfortable, divider: false, selectable: false) do ... end",
+      variables: [
+        { variable: "ordered", accepts: "true, false", example: "ordered: true" },
+        { variable: "spacing", accepts: ":comfortable, :dense", example: "spacing: :dense" },
+        { variable: "divider", accepts: "true, false", example: "divider: true" },
+        { variable: "selectable", accepts: "true, false", example: "selectable: true" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"mt-4\", id: \"settings-list\"" }
+      ]
+    },
+    list_item: {
+      label: "List Item",
+      method_call: "render FlatPack::List::Item.new(icon: :check, href: demo_buttons_path, hover: true, active: false) { \"Task completed\" }",
+      variables: [
+        { variable: "icon", accepts: "Symbol/String/SVG String or nil", example: "icon: :check" },
+        { variable: "leading", accepts: "String/HTML or nil", example: "leading: content_tag(:strong, \"1\")" },
+        { variable: "trailing", accepts: "String/HTML or nil", example: "trailing: render(FlatPack::Badge::Component.new(text: \"New\"))" },
+        { variable: "href", accepts: "String URL or nil", example: "href: demo_tables_basic_path" },
+        { variable: "hover", accepts: "true, false", example: "hover: true" },
+        { variable: "active", accepts: "true, false", example: "active: true" },
+        { variable: "link_arguments", accepts: "Hash", example: "link_arguments: { data: { turbo: true }, class: \"group\" }" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"py-1\", id: \"list-item-1\"" }
+      ]
+    },
     text_input: {
       label: "Input",
       method_call: "render FlatPack::TextInput::Component.new(name: \"username\", label: \"Username\")",
@@ -453,6 +478,29 @@
         { variable: "variant", accepts: ":underline, :pills, :stacked", example: "variant: :stacked" },
         { variable: "default_tab", accepts: "Integer", example: "default_tab: 1" },
         { variable: "tab / panel", accepts: "id:, label:, block", example: "tabs.tab(id: \"overview\", label: \"Overview\")" }
+      ]
+    },
+    timeline: {
+      label: "Timeline",
+      method_call: "render FlatPack::Timeline::Component.new(class: \"max-w-2xl\") do ... end",
+      variables: [
+        { variable: "content", accepts: "Timeline item components via block", example: "render FlatPack::Timeline::Item.new(title: \"Created\")" },
+        { variable: "class", accepts: "String or nil", example: "class: \"max-w-2xl\"" },
+        { variable: "**system_arguments", accepts: "Hash", example: "id: \"project-timeline\", data: { testid: \"timeline\" }" }
+      ]
+    },
+    timeline_item: {
+      label: "Timeline Item",
+      method_call: "render FlatPack::Timeline::Item.new(title: \"Build Started\", timestamp: \"10:00 AM\", variant: :default) { \"Running tests\" }",
+      variables: [
+        { variable: "title", accepts: "String (required)", example: "title: \"Build Started\"" },
+        { variable: "timestamp", accepts: "String or nil", example: "timestamp: \"10:00 AM\"" },
+        { variable: "variant", accepts: ":default, :success, :warning, :danger", example: "variant: :success" },
+        { variable: "status", accepts: ":default, :success, :warning, :danger or nil", example: "status: :warning" },
+        { variable: "description", accepts: "String or nil", example: "description: \"Deployment finished\"" },
+        { variable: "icon", accepts: "SVG string or nil", example: "icon: '<svg ...></svg>'" },
+        { variable: "last", accepts: "true, false", example: "last: true" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"mb-2\", data: { testid: \"timeline-item\" }" }
       ]
     },
     toast: {

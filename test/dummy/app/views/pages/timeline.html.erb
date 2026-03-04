@@ -3,6 +3,8 @@
   subtitle: "Display chronological events with visual markers and connecting lines."
 ) %>
 
+<%= render "pages/component_method_variables_table", components: [:timeline, :timeline_item] %>
+
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Basic Timeline", anchor_link: true) %>
   
