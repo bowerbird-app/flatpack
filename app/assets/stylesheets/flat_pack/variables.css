@@ -107,7 +107,7 @@
   --breadcrumb-separator-color: var(--surface-muted-content-color);
   --breadcrumb-gap: 0.25rem;
   --breadcrumb-separator-gap: 0.5rem;
-  --switch-track-background-color: var(--surface-muted-background-color);
+  --switch-track-background-color: color-mix(in oklab, var(--surface-muted-background-color) 92%, black);
   --switch-track-checked-background-color: var(--color-primary);
   --switch-focus-ring-color: var(--color-ring);
   --switch-label-color: var(--surface-content-color);
@@ -585,7 +585,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --breadcrumb-separator-color: var(--surface-muted-content-color);
   --breadcrumb-gap: 0.25rem;
   --breadcrumb-separator-gap: 0.5rem;
-  --switch-track-background-color: var(--surface-muted-background-color);
+  --switch-track-background-color: color-mix(in oklab, var(--surface-muted-background-color) 92%, black);
   --switch-track-checked-background-color: var(--color-primary);
   --switch-focus-ring-color: var(--color-ring);
   --switch-label-color: var(--surface-content-color);
@@ -1034,7 +1034,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --breadcrumb-separator-color: var(--surface-muted-content-color);
   --breadcrumb-gap: 0.25rem;
   --breadcrumb-separator-gap: 0.5rem;
-  --switch-track-background-color: var(--surface-muted-background-color);
+  --switch-track-background-color: color-mix(in oklab, oklch(0.38 0.05 249.96) 92%, black);
   --switch-track-checked-background-color: var(--color-primary);
   --switch-focus-ring-color: var(--color-ring);
   --switch-label-color: var(--surface-content-color);
@@ -1483,7 +1483,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --breadcrumb-separator-color: var(--surface-muted-content-color);
   --breadcrumb-gap: 0.25rem;
   --breadcrumb-separator-gap: 0.5rem;
-  --switch-track-background-color: var(--surface-muted-background-color);
+  --switch-track-background-color: color-mix(in oklab, var(--surface-muted-background-color) 92%, black);
   --switch-track-checked-background-color: var(--color-primary);
   --switch-focus-ring-color: var(--color-ring);
   --switch-label-color: var(--surface-content-color);
@@ -1931,7 +1931,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --breadcrumb-separator-color: var(--surface-muted-content-color);
   --breadcrumb-gap: 0.25rem;
   --breadcrumb-separator-gap: 0.5rem;
-  --switch-track-background-color: var(--surface-muted-background-color);
+  --switch-track-background-color: color-mix(in oklab, var(--surface-muted-background-color) 92%, black);
   --switch-track-checked-background-color: var(--color-primary);
   --switch-focus-ring-color: var(--color-ring);
   --switch-label-color: var(--surface-content-color);
