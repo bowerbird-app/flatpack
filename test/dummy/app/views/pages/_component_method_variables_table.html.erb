@@ -35,11 +35,32 @@
     },
     breadcrumb: {
       label: "Breadcrumb",
-      method_call: "render FlatPack::Breadcrumb::Component.new(items: [{ label: \"Home\", href: \"/\" }, { label: \"Settings\" }])",
+      method_call: "render FlatPack::Breadcrumb::Component.new(separator: :chevron, show_home: true, max_items: 4) do |breadcrumb| ... end",
       variables: [
-        { variable: "items", accepts: "Array of item hashes", example: "items: [{ label: \"Home\", href: \"/\" }, { label: \"Billing\" }]" },
+        { variable: "item", accepts: "builder method (text:, href:, icon:)", example: "breadcrumb.item(text: \"Settings\", href: \"/settings\")" },
+        { variable: "items", accepts: "Array of item hashes", example: "items: [{ text: \"Home\", href: \"/\" }, { text: \"Billing\" }]" },
         { variable: "separator", accepts: ":chevron, :slash, :arrow, :dot, :custom", example: "separator: :slash" },
-        { variable: "show_home", accepts: "true, false", example: "show_home: true" }
+        { variable: "separator_icon", accepts: "String or nil", example: "separator_icon: \"chevron-right\"" },
+        { variable: "show_back", accepts: "true, false", example: "show_back: true" },
+        { variable: "back_text", accepts: "String", example: "back_text: \"Go Back\"" },
+        { variable: "back_icon", accepts: "String", example: "back_icon: \"chevron-left\"" },
+        { variable: "back_fallback_url", accepts: "String", example: "back_fallback_url: \"/dashboard\"" },
+        { variable: "show_home", accepts: "true, false", example: "show_home: true" },
+        { variable: "home_url", accepts: "String", example: "home_url: \"/dashboard\"" },
+        { variable: "home_text", accepts: "String", example: "home_text: \"Dashboard\"" },
+        { variable: "home_icon", accepts: "String", example: "home_icon: \"home\"" },
+        { variable: "max_items", accepts: "Integer or nil", example: "max_items: 4" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"mb-4\", id: \"main-breadcrumb\", data: { testid: \"breadcrumb\" }" }
+      ]
+    },
+    breadcrumb_item: {
+      label: "Breadcrumb Item",
+      method_call: "render FlatPack::Breadcrumb::Item::Component.new(text: \"Home\", href: \"/\", icon: \"home\")",
+      variables: [
+        { variable: "text", accepts: "String (required)", example: "text: \"Settings\"" },
+        { variable: "href", accepts: "String or nil", example: "href: \"/settings\"" },
+        { variable: "icon", accepts: "String or nil", example: "icon: \"home\"" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"font-semibold\", data: { turbo: false }" }
       ]
     },
     button: {
