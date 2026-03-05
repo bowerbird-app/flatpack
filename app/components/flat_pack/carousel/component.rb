@@ -166,18 +166,19 @@ module FlatPack
             draggable: false
           )
         when :video
-          content_tag(:div, class: "relative h-full w-full") do
+          content_tag(:div, class: "relative h-full w-full overflow-hidden") do
             safe_join([
               (slide[:poster].present? ? tag.img(
                 src: slide[:poster],
                 alt: "",
-                class: "absolute inset-0 h-full w-full object-cover",
+                class: "absolute inset-0 h-full w-full object-cover pointer-events-none",
                 loading: "lazy",
                 draggable: false,
                 aria: {hidden: true}
               ) : nil),
               content_tag(:video,
-                class: "relative z-10 h-full w-full object-cover",
+                class: "absolute inset-0 z-10 block h-full w-full object-cover",
+                style: "width: 100%; height: 100%; object-fit: cover;",
                 controls: slide[:controls],
                 muted: slide[:muted],
                 loop: slide[:video_loop],
