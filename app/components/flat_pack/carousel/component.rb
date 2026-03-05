@@ -109,7 +109,7 @@ module FlatPack
       def render_viewport
         content_tag(:div,
           class: viewport_classes,
-          style: "aspect-ratio: #{@aspect_ratio};",
+          style: viewport_style,
           tabindex: 0,
           role: "region",
           aria: {label: @aria_label},
@@ -159,7 +159,8 @@ module FlatPack
             src: slide[:src],
             alt: slide[:alt],
             class: "h-full w-full object-cover",
-            loading: "lazy"
+            loading: "lazy",
+            draggable: false
           )
         when :video
           content_tag(:video,
@@ -256,9 +257,9 @@ module FlatPack
         thumb_src = slide[:thumb_src].presence || slide[:src]
 
         if slide[:type] == :image && thumb_src.present?
-          tag.img(src: thumb_src, alt: "Thumbnail #{index + 1}", class: "h-full w-full object-cover", loading: "lazy")
+          tag.img(src: thumb_src, alt: "Thumbnail #{index + 1}", class: "h-full w-full object-cover", loading: "lazy", draggable: false)
         elsif slide[:type] == :video && slide[:poster].present?
-          tag.img(src: slide[:poster], alt: "Video thumbnail #{index + 1}", class: "h-full w-full object-cover", loading: "lazy")
+          tag.img(src: slide[:poster], alt: "Video thumbnail #{index + 1}", class: "h-full w-full object-cover", loading: "lazy", draggable: false)
         else
           content_tag(:span,
             "#{index + 1}",
@@ -303,8 +304,15 @@ module FlatPack
 
       def viewport_classes
         classes(
-          "flat-pack-carousel__viewport relative overflow-hidden rounded-lg border border-[var(--carousel-viewport-border-color)] bg-[var(--carousel-viewport-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          "flat-pack-carousel__viewport relative overflow-hidden rounded-lg border border-[var(--carousel-viewport-border-color)] bg-[var(--carousel-viewport-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          @touch_swipe ? "cursor-grab select-none" : nil
         )
+      end
+
+      def viewport_style
+        declarations = ["aspect-ratio: #{@aspect_ratio}"]
+        declarations << "touch-action: pan-y" if @touch_swipe
+        "#{declarations.join("; ")};"
       end
 
       def hide_slide?(is_active)

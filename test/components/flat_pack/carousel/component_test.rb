@@ -66,6 +66,24 @@ module FlatPack
         assert_equal "slide", root["data-flat-pack--carousel-transition-value"]
       end
 
+      def test_adds_drag_and_touch_swipe_viewport_affordances_when_enabled
+        render_inline(Component.new(slides: sample_slides, touch_swipe: true))
+
+        viewport = page.find("div[data-flat-pack--carousel-target='viewport']")
+        assert_includes viewport[:class], "cursor-grab"
+        assert_includes viewport[:class], "select-none"
+        assert_includes viewport[:style], "touch-action: pan-y"
+      end
+
+      def test_omits_drag_and_touch_swipe_viewport_affordances_when_disabled
+        render_inline(Component.new(slides: sample_slides, touch_swipe: false))
+
+        viewport = page.find("div[data-flat-pack--carousel-target='viewport']")
+        refute_includes viewport[:class], "cursor-grab"
+        refute_includes viewport[:class], "select-none"
+        refute_includes viewport[:style], "touch-action: pan-y"
+      end
+
       def test_renders_thumbs_when_enabled
         render_inline(Component.new(slides: sample_slides, show_thumbs: true))
 

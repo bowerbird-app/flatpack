@@ -18,7 +18,10 @@ export default class extends Controller {
     this.currentIndex = this.#clampIndex(this.initialIndexValue)
     this.autoplayTimer = null
     this.pauseReasons = new Set()
+    this.activePointerId = null
     this.pointerStartX = null
+    this.pointerStartY = null
+    this.pointerLastX = null
 
     this.#bindInteropEvents()
     this.#bindViewportInteractions()
@@ -33,6 +36,7 @@ export default class extends Controller {
 
   disconnect() {
     this.#clearAutoplayTimer()
+    this.#resetPointerDragState()
     this.#unbindInteropEvents()
     this.#unbindViewportInteractions()
 
@@ -219,20 +223,49 @@ export default class extends Controller {
     }
 
     this.pointerDownHandler = (event) => {
-      if (!this.touchSwipeValue) {
+      if (!this.touchSwipeValue || !this.#isPrimarySwipePointer(event)) {
         return
       }
+
+      this.activePointerId = event.pointerId
       this.pointerStartX = event.clientX
+      this.pointerStartY = event.clientY
+      this.pointerLastX = event.clientX
+
+      if (typeof this.viewportTarget.setPointerCapture === "function") {
+        this.viewportTarget.setPointerCapture(event.pointerId)
+      }
+
+      if (event.pointerType === "mouse") {
+        this.viewportTarget.classList.add("cursor-grabbing")
+      }
+    }
+
+    this.pointerMoveHandler = (event) => {
+      if (!this.touchSwipeValue || !this.#isActivePointer(event) || this.pointerStartX === null || this.pointerStartY === null) {
+        return
+      }
+
+      this.pointerLastX = event.clientX
+      const deltaX = event.clientX - this.pointerStartX
+      const deltaY = event.clientY - this.pointerStartY
+
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        event.preventDefault()
+      }
     }
 
     this.pointerUpHandler = (event) => {
-      if (!this.touchSwipeValue || this.pointerStartX === null) {
+      if (!this.touchSwipeValue || !this.#isActivePointer(event) || this.pointerStartX === null) {
         return
       }
 
-      const deltaX = event.clientX - this.pointerStartX
-      this.pointerStartX = null
-      if (Math.abs(deltaX) < 35) {
+      const endX = Number.isFinite(event.clientX) ? event.clientX : this.pointerLastX
+      const deltaX = endX - this.pointerStartX
+
+      this.#resetPointerDragState()
+
+      if (Math.abs(deltaX) < this.#swipeThresholdPx()) {
         return
       }
 
@@ -244,8 +277,72 @@ export default class extends Controller {
       }
     }
 
+    this.pointerCancelHandler = () => {
+      this.#resetPointerDragState()
+    }
+
+    this.mouseDownHandler = (event) => {
+      if (!this.touchSwipeValue || this.activePointerId !== null || event.button !== 0) {
+        return
+      }
+
+      this.pointerStartX = event.clientX
+      this.pointerStartY = event.clientY
+      this.pointerLastX = event.clientX
+      this.viewportTarget.classList.add("cursor-grabbing")
+    }
+
+    this.mouseMoveHandler = (event) => {
+      if (!this.touchSwipeValue || this.pointerStartX === null || this.activePointerId !== null) {
+        return
+      }
+
+      this.pointerLastX = event.clientX
+      const deltaX = event.clientX - this.pointerStartX
+      const deltaY = event.clientY - this.pointerStartY
+
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        event.preventDefault()
+      }
+    }
+
+    this.mouseUpHandler = (event) => {
+      if (!this.touchSwipeValue || this.pointerStartX === null || this.activePointerId !== null) {
+        return
+      }
+
+      const deltaX = event.clientX - this.pointerStartX
+      this.#resetPointerDragState()
+
+      if (Math.abs(deltaX) < this.#swipeThresholdPx()) {
+        return
+      }
+
+      const isRtl = this.#isRtl()
+      if (deltaX < 0) {
+        isRtl ? this.prev() : this.next()
+      } else {
+        isRtl ? this.next() : this.prev()
+      }
+    }
+
+    this.dragStartHandler = (event) => {
+      if (!this.touchSwipeValue) {
+        return
+      }
+
+      event.preventDefault()
+    }
+
     this.viewportTarget.addEventListener("pointerdown", this.pointerDownHandler)
+    this.viewportTarget.addEventListener("pointermove", this.pointerMoveHandler)
     this.viewportTarget.addEventListener("pointerup", this.pointerUpHandler)
+    this.viewportTarget.addEventListener("pointercancel", this.pointerCancelHandler)
+    this.viewportTarget.addEventListener("lostpointercapture", this.pointerCancelHandler)
+    this.viewportTarget.addEventListener("mousedown", this.mouseDownHandler)
+    this.viewportTarget.addEventListener("mousemove", this.mouseMoveHandler)
+    this.viewportTarget.addEventListener("mouseup", this.mouseUpHandler)
+    this.viewportTarget.addEventListener("dragstart", this.dragStartHandler)
 
     if (this.pauseOnHoverValue) {
       this.hoverInHandler = () => {
@@ -293,6 +390,31 @@ export default class extends Controller {
 
     if (this.pointerUpHandler) {
       this.viewportTarget.removeEventListener("pointerup", this.pointerUpHandler)
+    }
+
+    if (this.pointerMoveHandler) {
+      this.viewportTarget.removeEventListener("pointermove", this.pointerMoveHandler)
+    }
+
+    if (this.pointerCancelHandler) {
+      this.viewportTarget.removeEventListener("pointercancel", this.pointerCancelHandler)
+      this.viewportTarget.removeEventListener("lostpointercapture", this.pointerCancelHandler)
+    }
+
+    if (this.mouseDownHandler) {
+      this.viewportTarget.removeEventListener("mousedown", this.mouseDownHandler)
+    }
+
+    if (this.mouseMoveHandler) {
+      this.viewportTarget.removeEventListener("mousemove", this.mouseMoveHandler)
+    }
+
+    if (this.mouseUpHandler) {
+      this.viewportTarget.removeEventListener("mouseup", this.mouseUpHandler)
+    }
+
+    if (this.dragStartHandler) {
+      this.viewportTarget.removeEventListener("dragstart", this.dragStartHandler)
     }
 
     if (this.hoverInHandler) {
@@ -381,6 +503,45 @@ export default class extends Controller {
       bubbles: true,
       detail
     }))
+  }
+
+  #isPrimarySwipePointer(event) {
+    if (event.isPrimary === false) {
+      return false
+    }
+
+    if (event.pointerType === "mouse" && event.button !== 0) {
+      return false
+    }
+
+    return true
+  }
+
+  #isActivePointer(event) {
+    return this.activePointerId !== null && event.pointerId === this.activePointerId
+  }
+
+  #swipeThresholdPx() {
+    if (!this.hasViewportTarget) {
+      return 35
+    }
+
+    return Math.max(35, Math.round(this.viewportTarget.clientWidth * 0.1))
+  }
+
+  #resetPointerDragState() {
+    if (this.hasViewportTarget && this.activePointerId !== null && this.viewportTarget.hasPointerCapture?.(this.activePointerId)) {
+      this.viewportTarget.releasePointerCapture(this.activePointerId)
+    }
+
+    this.activePointerId = null
+    this.pointerStartX = null
+    this.pointerStartY = null
+    this.pointerLastX = null
+
+    if (this.hasViewportTarget) {
+      this.viewportTarget.classList.remove("cursor-grabbing")
+    }
   }
 
   #exposeApi() {
