@@ -81,6 +81,7 @@ module FlatPack
         render_inline(Component.new(slides: sample_slides))
 
         root = page.find("section[data-controller='flat-pack--carousel']")
+        assert_equal "true", root["data-flat-pack--carousel-loop-value"]
         assert_equal "slide", root["data-flat-pack--carousel-transition-value"]
       end
 

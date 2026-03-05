@@ -23,7 +23,7 @@ Use Carousel when users need to browse a sequence of visual or rich-content slid
 | `autoplay_interval_ms` | Integer | `5000` | no | Autoplay interval in milliseconds. |
 | `pause_on_hover` | Boolean | `true` | no | Pause autoplay while pointer hovers. |
 | `pause_on_focus` | Boolean | `true` | no | Pause autoplay while keyboard focus is inside. |
-| `loop` | Boolean | `false` | no | Wrap from last slide to first slide. |
+| `loop` | Boolean | `true` | no | Wrap from last slide to first slide. |
 | `transition` | Symbol | `:slide` | no | Transition style: `:slide`, `:fade`. |
 | `aspect_ratio` | String | `"16/9"` | no | CSS aspect ratio (`"16/9"` format). |
 | `responsive` | Boolean | `true` | no | Keep container responsive width behavior. |

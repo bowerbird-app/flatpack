@@ -37,7 +37,7 @@ module FlatPack
         autoplay_interval_ms: 5000,
         pause_on_hover: true,
         pause_on_focus: true,
-        loop: false,
+        loop: true,
         transition: :slide,
         aspect_ratio: "16/9",
         responsive: true,
