@@ -108,6 +108,19 @@ module FlatPack
         refute_includes rendered_content, "javascript:alert"
       end
 
+      def test_renders_video_poster_as_absolute_background_image
+        render_inline(Component.new(slides: sample_slides))
+
+        assert_includes rendered_content, "<img src=\"https://images.example.com/poster.jpg\""
+        assert_includes rendered_content, "class=\"absolute inset-0 h-full w-full object-cover\""
+        assert_includes rendered_content, "aria-hidden=\"true\""
+        assert_selector "video.relative.z-10.h-full.w-full.object-cover", visible: :all
+        assert_selector "video source[src='https://videos.example.com/two.mp4'][type='video/mp4']", visible: :all
+
+        video = page.find("video.relative.z-10.h-full.w-full.object-cover", visible: :all)
+        assert_nil video[:poster]
+      end
+
       def test_ignores_invalid_slide_sources
         render_inline(
           Component.new(

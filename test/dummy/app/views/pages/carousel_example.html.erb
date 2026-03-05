@@ -1,0 +1,216 @@
+<div class="container mx-auto max-w-4xl p-4">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Carousel Demo: #{@carousel_example[:title]}",
+    subtitle: @carousel_example[:subtitle]
+  ) %>
+
+  <% demo_type = (@carousel_example[:demo_type] || :images).to_sym %>
+  <% image_slides = [
+    {
+      type: :image,
+      src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1600&h=900&fit=crop",
+      alt: "Product analytics dashboard",
+      caption: "Analytics dashboard concept"
+    },
+    {
+      type: :image,
+      src: "https://images.unsplash.com/photo-1518773553398-650c184e0bb3?w=1600&h=900&fit=crop",
+      alt: "Mobile checkout experience",
+      caption: "Mobile checkout experience"
+    },
+    {
+      type: :image,
+      src: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1600&h=900&fit=crop",
+      alt: "Planning workshop board",
+      caption: "Planning workshop board"
+    }
+  ] %>
+
+  <% video_slides = [
+    {
+      type: :video,
+      src: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+      poster: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800&h=450&fit=crop",
+      caption: "Product teaser clip"
+    },
+    {
+      type: :video,
+      src: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/earth.mp4",
+      poster: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=800&h=450&fit=crop",
+      caption: "Earth rotation footage"
+    },
+    {
+      type: :video,
+      src: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/bee.mp4",
+      poster: "https://images.unsplash.com/photo-1472396961693-142e6e269027?w=800&h=450&fit=crop",
+      caption: "Macro lifestyle clip"
+    }
+  ] %>
+
+  <% html_card_slides = [
+    {
+      type: :html,
+      caption: "Release Notes",
+      html: <<~HTML
+        <div class="flex h-full flex-col justify-between rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6 shadow-sm">
+          <div>
+            <h3 class="text-xl font-semibold text-(--surface-content-color)">Release Notes</h3>
+            <p class="mt-3 text-sm text-(--surface-muted-content-color)">Version 2.4 shipped with faster search and improved composer states.</p>
+          </div>
+          <div class="mt-6">
+            <a href="#" class="inline-flex items-center rounded-md border border-(--surface-border-color) px-3 py-1.5 text-sm font-medium">Read Changelog</a>
+          </div>
+        </div>
+      HTML
+    },
+    {
+      type: :html,
+      caption: "Experiment Result",
+      html: <<~HTML
+        <div class="flex h-full flex-col justify-between rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6 shadow-sm">
+          <div>
+            <h3 class="text-xl font-semibold text-(--surface-content-color)">Experiment Result</h3>
+            <p class="mt-3 text-sm text-(--surface-muted-content-color)">Variant B improved activation by 11% in this week's onboarding cohort.</p>
+          </div>
+          <div class="mt-6">
+            <a href="#" class="inline-flex items-center rounded-md border border-(--surface-border-color) px-3 py-1.5 text-sm font-medium">View Report</a>
+          </div>
+        </div>
+      HTML
+    },
+    {
+      type: :html,
+      caption: "Roadmap Update",
+      html: <<~HTML
+        <div class="flex h-full flex-col justify-between rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6 shadow-sm">
+          <div>
+            <h3 class="text-xl font-semibold text-(--surface-content-color)">Roadmap Update</h3>
+            <p class="mt-3 text-sm text-(--surface-muted-content-color)">Next sprint focuses on media flows, review tooling, and admin controls.</p>
+          </div>
+          <div class="mt-6">
+            <a href="#" class="inline-flex items-center rounded-md border border-(--surface-border-color) px-3 py-1.5 text-sm font-medium">Open Roadmap</a>
+          </div>
+        </div>
+      HTML
+    }
+  ] %>
+
+  <% mixed_slides = [image_slides.first, video_slides.first, html_card_slides.first] %>
+  <% deep_link_index = Integer(params[:slide], exception: false) %>
+
+  <% slides = case demo_type
+  when :videos
+    video_slides
+  when :html_cards, :security
+    html_card_slides
+  when :mixed_content
+    mixed_slides
+  else
+    image_slides
+  end %>
+
+  <% carousel_options = {
+    slides: slides,
+    initial_index: deep_link_index || 0,
+    show_thumbs: false,
+    show_indicators: true,
+    show_controls: true,
+    autoplay: false,
+    autoplay_interval_ms: 4500,
+    pause_on_hover: true,
+    pause_on_focus: true,
+    loop: false,
+    transition: :slide,
+    aspect_ratio: "16/9",
+    touch_swipe: true,
+    show_captions: true,
+    caption_mode: :below
+  } %>
+
+  <% if [:thumbnails, :navigation].include?(demo_type) %>
+    <% carousel_options[:show_thumbs] = true %>
+    <% carousel_options[:thumbs_position] = :bottom %>
+    <% carousel_options[:thumbs_alignment] = :center %>
+  <% end %>
+
+  <% if demo_type == :autoplay_loop %>
+    <% carousel_options[:autoplay] = true %>
+    <% carousel_options[:loop] = true %>
+    <% carousel_options[:autoplay_interval_ms] = 3000 %>
+  <% end %>
+
+  <% if demo_type == :captions %>
+    <% carousel_options[:caption_mode] = :overlay %>
+  <% end %>
+
+  <% if demo_type == :mobile %>
+    <% carousel_options[:aspect_ratio] = "4/3" %>
+  <% end %>
+
+  <% if demo_type == :fullscreen %>
+    <% carousel_options[:show_thumbs] = true %>
+    <% carousel_options[:loop] = true %>
+    <% carousel_options[:caption_mode] = :overlay %>
+    <% carousel_options[:aspect_ratio] = "21/9" %>
+  <% end %>
+
+  <% if demo_type == :reduced_motion %>
+    <% carousel_options[:autoplay] = false %>
+    <% carousel_options[:transition] = :fade %>
+  <% end %>
+
+  <% if demo_type == :video_aware %>
+    <% carousel_options[:slides] = video_slides %>
+    <% carousel_options[:autoplay] = true %>
+    <% carousel_options[:autoplay_interval_ms] = 7000 %>
+  <% end %>
+
+  <section class="mb-8">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Live Demo",
+      anchor_link: true,
+      subtitle: "Use arrows, indicators, and optional thumbnails to move through slides."
+    ) %>
+
+    <div class="mt-6 overflow-hidden rounded-xl border border-(--surface-border-color) bg-(--surface-background-color) p-4">
+      <% if demo_type == :rtl %>
+        <div dir="rtl">
+          <%= render FlatPack::Carousel::Component.new(**carousel_options) %>
+        </div>
+      <% else %>
+        <%= render FlatPack::Carousel::Component.new(**carousel_options) %>
+      <% end %>
+    </div>
+  </section>
+
+  <section class="mb-10">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Demo Notes",
+      subtitle: "Current behavior this page demonstrates."
+    ) %>
+
+    <%= render FlatPack::Card::Component.new(style: :default, class: "mt-6") do |card| %>
+      <% card.body do %>
+        <ul class="list-disc space-y-2 pl-5 text-sm text-(--surface-content-color)">
+          <% @carousel_example[:bullets].each do |bullet| %>
+            <li><%= bullet %></li>
+          <% end %>
+        </ul>
+      <% end %>
+    <% end %>
+  </section>
+
+  <section class="mb-10">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Next",
+      subtitle: "Jump to another carousel demo page."
+    ) %>
+
+    <div class="mt-4 flex flex-wrap gap-2">
+      <%= render FlatPack::Button::Component.new(text: "Back to Carousel Overview", style: :ghost, href: demo_carousel_path) %>
+      <% @carousel_examples.each_value do |example| %>
+        <%= render FlatPack::Button::Component.new(text: example[:title], style: :secondary, size: :sm, href: send(example[:route])) %>
+      <% end %>
+    </div>
+  </section>
+</div>

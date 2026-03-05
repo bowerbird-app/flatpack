@@ -166,15 +166,26 @@ module FlatPack
             draggable: false
           )
         when :video
-          content_tag(:video,
-            class: "h-full w-full object-cover",
-            controls: slide[:controls],
-            muted: slide[:muted],
-            loop: slide[:video_loop],
-            playsinline: slide[:playsinline],
-            poster: slide[:poster],
-            preload: "metadata") do
-            tag.source(src: slide[:src], type: "video/mp4")
+          content_tag(:div, class: "relative h-full w-full") do
+            safe_join([
+              (slide[:poster].present? ? tag.img(
+                src: slide[:poster],
+                alt: "",
+                class: "absolute inset-0 h-full w-full object-cover",
+                loading: "lazy",
+                draggable: false,
+                aria: {hidden: true}
+              ) : nil),
+              content_tag(:video,
+                class: "relative z-10 h-full w-full object-cover",
+                controls: slide[:controls],
+                muted: slide[:muted],
+                loop: slide[:video_loop],
+                playsinline: slide[:playsinline],
+                preload: "metadata") do
+                tag.source(src: slide[:src], type: "video/mp4")
+              end
+            ].compact)
           end
         else
           # SECURITY: HTML content is sanitized before being marked as safe.
