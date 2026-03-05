@@ -37,10 +37,7 @@ module FlatPack
 
         def container_attributes
           merge_attributes(
-            class: container_classes,
-            data: {
-              controller: "flat-pack--text-area"
-            }
+            class: container_classes
           )
         end
 
@@ -54,32 +51,39 @@ module FlatPack
         end
 
         def render_textarea
-          attrs = {
-            name: @name,
-            rows: @rows,
-            placeholder: @placeholder,
-            disabled: @disabled,
-            class: "min-w-0 flex-1 resize-none overflow-hidden border-0 bg-transparent px-0 py-1 text-sm text-[var(--comments-composer-text-color)] placeholder:text-[var(--comments-composer-placeholder-color)] focus:outline-none focus:ring-0",
-            data: {
-              flat_pack__text_area_target: "textarea",
-              action: "input->flat-pack--text-area#autoExpand"
-            }
-          }
-
-          attrs[:form] = @form if @form
-          content_tag(:textarea, @value, **attrs)
+          content_tag(:div, class: "min-w-0 flex-1") do
+            render FlatPack::TextArea::Component.new(**textarea_component_arguments)
+          end
         end
 
         def render_submit_button
-          button_attrs = {
-            type: "submit",
+          render FlatPack::Button::Component.new(**submit_button_arguments)
+        end
+
+        def textarea_component_arguments
+          args = {
+            name: @name,
+            value: @value,
+            rows: @rows,
+            placeholder: @placeholder,
             disabled: @disabled,
-            class: "shrink-0 rounded-full px-3 py-1 text-sm font-medium text-[var(--comments-composer-submit-text-color)] bg-[var(--comments-composer-submit-background-color)] hover:bg-[var(--comments-composer-submit-hover-background-color)] transition-colors duration-base disabled:opacity-50"
+            class: "min-w-0 w-full resize-none overflow-hidden border-0 bg-transparent px-0 py-1 text-sm text-[var(--comments-composer-text-color)] placeholder:text-[var(--comments-composer-placeholder-color)] focus:ring-0 focus:border-transparent"
           }
+          args[:form] = @form if @form
+          args
+        end
 
-          button_attrs[:form] = @form if @form
-
-          content_tag(:button, @submit_label, **button_attrs)
+        def submit_button_arguments
+          args = {
+            text: @submit_label,
+            type: "submit",
+            style: :primary,
+            size: :sm,
+            disabled: @disabled,
+            class: "shrink-0 rounded-full"
+          }
+          args[:form] = @form if @form
+          args
         end
       end
     end
