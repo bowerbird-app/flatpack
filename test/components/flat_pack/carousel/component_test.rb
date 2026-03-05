@@ -96,13 +96,14 @@ module FlatPack
             slides: [
               {
                 type: :html,
-                html: "<p>Safe</p><script>alert('x')</script><a href='javascript:alert(1)'>bad</a>"
+                html: "<label for='lead_email'>Work email</label><input id='lead_email' name='lead[email]' type='text' required><script>alert('x')</script><a href='javascript:alert(1)'>bad</a>"
               }
             ]
           )
         )
 
-        assert_includes rendered_content, "<p>Safe</p>"
+        assert_includes rendered_content, "<label for=\"lead_email\">Work email</label>"
+        assert_includes rendered_content, "<input id=\"lead_email\" name=\"lead[email]\" type=\"text\" required=\"required\">"
         refute_includes rendered_content, "<script>"
         refute_includes rendered_content, "javascript:alert"
       end

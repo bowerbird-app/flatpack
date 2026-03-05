@@ -14,12 +14,15 @@ module FlatPack
         p div span a ul ol li strong em b i u br
         h1 h2 h3 h4 h5 h6
         code pre blockquote
+        form label input
       ].freeze
 
       SANITIZED_HTML_ATTRIBUTES = %w[
         class id title
         href rel target
         aria-label aria-hidden aria-current
+        for type name value placeholder required disabled autocomplete
+        aria-invalid aria-describedby
       ].freeze
 
       def initialize(

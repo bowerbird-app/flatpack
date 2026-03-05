@@ -32,6 +32,50 @@
       ) %&gt;
     CODE
   ) %>
+
+  <p class="mt-6 mb-2 text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">Full Slide Structure (Including HTML Slide)</p>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      @carousel_slides = [
+        {
+          type: :image,
+          src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1600&h=900&fit=crop",
+          thumb_src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=320&h=180&fit=crop",
+          alt: "Product analytics dashboard",
+          caption: "Analytics dashboard concept"
+        },
+        {
+          type: :video,
+          src: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+          poster: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=1600&h=900&fit=crop",
+          caption: "Product teaser clip"
+        },
+        {
+          type: :html,
+          caption: "Email capture form",
+          html: ApplicationController.render(
+            renderable: FlatPack::TextInput::Component.new(
+              name: "lead[email]",
+              label: "Work email",
+              placeholder: "you@company.com",
+              required: true
+            ),
+            layout: false
+          )
+        }
+      ]
+
+      &lt;%= render FlatPack::Carousel::Component.new(
+        slides: @carousel_slides,
+        show_controls: true,
+        show_indicators: true,
+        show_captions: true,
+        caption_mode: :below,
+        aspect_ratio: "16/9",
+        aria_label: "Basic carousel demo"
+      ) %&gt;
+    CODE
+  ) %>
 </section>
 
 <!-- Carousel with Thumbnails and Autoplay -->

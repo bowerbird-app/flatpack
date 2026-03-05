@@ -459,7 +459,7 @@ class PagesController < ApplicationController
   def carousel
     @carousel_slides = carousel_demo_slides
     @carousel_notes = [
-      "Uses FlatPack::Carousel::Component with mixed image, video, and sanitized HTML slides.",
+      "Uses FlatPack::Carousel::Component with image, video, and component-rendered HTML slides.",
       "Demonstrates autoplay, loop, indicators, controls, and thumbnail navigation.",
       "Uses secure defaults for rich content and supports keyboard plus touch interactions."
     ]
@@ -1237,16 +1237,17 @@ class PagesController < ApplicationController
       },
       {
         type: :html,
-        caption: "Release notes card",
-        html: <<~HTML
-          <article class=\"flex h-full flex-col justify-between rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6\">
-            <div>
-              <h3 class=\"text-xl font-semibold text-(--surface-content-color)\">Release Notes</h3>
-              <p class=\"mt-3 text-sm text-(--surface-muted-content-color)\">Version 2.4 shipped with faster search and improved composer states.</p>
-            </div>
-            <p class=\"mt-5 text-xs uppercase tracking-wide text-(--surface-muted-content-color)\">Updated this week</p>
-          </article>
-        HTML
+        caption: "Email capture form",
+        html: ApplicationController.render(
+          renderable: FlatPack::TextInput::Component.new(
+            name: "lead[email]",
+            label: "Work email",
+            placeholder: "you@company.com",
+            required: true,
+            class: "w-full"
+          ),
+          layout: false
+        )
       },
       {
         type: :image,
