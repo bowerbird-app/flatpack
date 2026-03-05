@@ -122,7 +122,7 @@ module FlatPack
             (@show_controls ? render_controls : nil),
             render_counter,
             (@show_indicators ? render_indicators : nil),
-            (@show_captions && @caption_mode == :overlay ? render_overlay_caption : nil)
+            ((@show_captions && @caption_mode == :overlay) ? render_overlay_caption : nil)
           ].compact)
         end
       end
@@ -425,7 +425,7 @@ module FlatPack
       def validate_option!(name, value, allowed)
         return if allowed.include?(value)
 
-        raise ArgumentError, "Invalid #{name}: #{value}. Must be one of: #{allowed.join(', ')}"
+        raise ArgumentError, "Invalid #{name}: #{value}. Must be one of: #{allowed.join(", ")}"
       end
     end
   end
