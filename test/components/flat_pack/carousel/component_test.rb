@@ -59,6 +59,13 @@ module FlatPack
         assert_equal "false", root["data-flat-pack--carousel-touch-swipe-value"]
       end
 
+      def test_defaults_transition_to_slide
+        render_inline(Component.new(slides: sample_slides))
+
+        root = page.find("section[data-controller='flat-pack--carousel']")
+        assert_equal "slide", root["data-flat-pack--carousel-transition-value"]
+      end
+
       def test_renders_thumbs_when_enabled
         render_inline(Component.new(slides: sample_slides, show_thumbs: true))
 

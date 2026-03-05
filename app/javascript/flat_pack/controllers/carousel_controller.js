@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["viewport", "slide", "indicator", "thumb", "caption", "counter"]
+  static targets = ["viewport", "frame", "slide", "indicator", "thumb", "caption", "counter"]
 
   static values = {
     initialIndex: { type: Number, default: 0 },
@@ -141,11 +141,15 @@ export default class extends Controller {
         slide.classList.toggle("opacity-100", isActive)
         slide.classList.toggle("pointer-events-none", !isActive)
       } else {
-        slide.hidden = !isActive
+        slide.hidden = false
       }
 
       slide.setAttribute("aria-hidden", (!isActive).toString())
     })
+
+    if (!useFade && this.hasFrameTarget) {
+      this.frameTarget.style.transform = `translate3d(-${this.currentIndex * 100}%, 0, 0)`
+    }
 
     this.indicatorTargets.forEach((indicator, index) => {
       const isActive = index === this.currentIndex

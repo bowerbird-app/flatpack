@@ -128,7 +128,7 @@ module FlatPack
       end
 
       def render_slides
-        content_tag(:div, class: slide_frame_classes) do
+        content_tag(:div, class: slide_frame_classes, data: {flat_pack__carousel_target: "frame"}) do
           safe_join(@slides.map.with_index { |slide, index| render_slide(slide, index) })
         end
       end
@@ -284,12 +284,12 @@ module FlatPack
         if @transition == :fade
           "relative h-full w-full overflow-hidden"
         else
-          "relative h-full w-full"
+          "flex h-full w-full transition-transform duration-300 ease-out"
         end
       end
 
       def slide_classes
-        base = "h-full w-full"
+        base = "h-full w-full shrink-0"
         return "absolute inset-0 transition-opacity duration-300 #{base}" if @transition == :fade
 
         base
