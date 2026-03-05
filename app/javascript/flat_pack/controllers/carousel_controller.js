@@ -223,7 +223,7 @@ export default class extends Controller {
     }
 
     this.pointerDownHandler = (event) => {
-      if (!this.touchSwipeValue || !this.#isPrimarySwipePointer(event)) {
+      if (!this.touchSwipeValue || !this.#isPrimarySwipePointer(event) || this.#isInteractiveElement(event.target)) {
         return
       }
 
@@ -282,7 +282,7 @@ export default class extends Controller {
     }
 
     this.mouseDownHandler = (event) => {
-      if (!this.touchSwipeValue || this.activePointerId !== null || event.button !== 0) {
+      if (!this.touchSwipeValue || this.activePointerId !== null || event.button !== 0 || this.#isInteractiveElement(event.target)) {
         return
       }
 
@@ -515,6 +515,10 @@ export default class extends Controller {
     }
 
     return true
+  }
+
+  #isInteractiveElement(target) {
+    return Boolean(target?.closest?.("button, a, input, select, textarea, summary, video, [role='button'], [data-action]"))
   }
 
   #isActivePointer(event) {

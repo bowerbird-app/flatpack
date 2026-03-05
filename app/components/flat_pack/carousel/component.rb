@@ -202,14 +202,15 @@ module FlatPack
 
       def control_button(direction:, classes:)
         label = (direction == :prev) ? "Previous slide" : "Next slide"
-        symbol = (direction == :prev) ? "\u2039" : "\u203A"
+        icon_name = (direction == :prev) ? :chevron_left : :chevron_right
 
         content_tag(:button,
-          symbol,
           type: "button",
-          class: "absolute top-1/2 z-20 -translate-y-1/2 rounded-full bg-[var(--carousel-control-background-color)] px-3 py-1 text-xl leading-none text-[var(--carousel-control-text-color)] transition hover:bg-[var(--carousel-control-hover-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring #{classes}",
+          class: "absolute top-1/2 z-20 flex w-10 -translate-y-1/2 cursor-pointer aspect-square items-center justify-center rounded-[9999px] bg-[var(--carousel-chevron-background-color)] text-[var(--carousel-control-text-color)] transition hover:bg-[var(--carousel-control-hover-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring #{classes}",
           aria: {label: label},
-          data: {action: "click->flat-pack--carousel##{direction}"})
+          data: {action: "click->flat-pack--carousel##{direction}"}) do
+          render FlatPack::Shared::IconComponent.new(name: icon_name, size: :md, class: "pointer-events-none")
+        end
       end
 
       def render_counter
@@ -232,7 +233,7 @@ module FlatPack
         content_tag(:button,
           "",
           type: "button",
-          class: "h-2.5 w-2.5 rounded-full bg-[var(--carousel-indicator-background-color)] transition",
+          class: "h-2.5 w-2.5 cursor-pointer rounded-full bg-[var(--carousel-indicator-background-color)] transition",
           aria: {
             label: "Go to slide #{index + 1}",
             current: (index == @initial_index).to_s

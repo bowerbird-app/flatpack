@@ -33,8 +33,26 @@ module FlatPack
         assert_selector "section[data-controller='flat-pack--carousel']"
         assert_selector "div[data-flat-pack--carousel-target='slide']", count: 3, visible: :all
         assert_selector "button[data-flat-pack--carousel-target='indicator']", count: 3
+        indicator = page.find("button[data-flat-pack--carousel-target='indicator']", match: :first)
+        assert_includes indicator[:class], "cursor-pointer"
         assert_selector "button[data-action='click->flat-pack--carousel#prev']"
         assert_selector "button[data-action='click->flat-pack--carousel#next']"
+      end
+
+      def test_renders_circular_flex_chevron_controls_with_theme_token_background
+        render_inline(Component.new(slides: sample_slides))
+
+        prev_button = page.find("button[data-action='click->flat-pack--carousel#prev']")
+        control_classes = prev_button[:class]
+
+        assert_includes control_classes, "rounded-[9999px]"
+        assert_includes control_classes, "aspect-square"
+        assert_includes control_classes, "flex"
+        assert_includes control_classes, "cursor-pointer"
+        assert_includes control_classes, "bg-[var(--carousel-chevron-background-color)]"
+        assert_includes rendered_content, "#icon-chevron-left"
+        assert_includes rendered_content, "#icon-chevron-right"
+        assert_selector "button[data-action='click->flat-pack--carousel#prev'] svg.pointer-events-none", visible: :all
       end
 
       def test_exposes_owl_style_configuration_values
