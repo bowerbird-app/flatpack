@@ -1,6 +1,9 @@
 # Carousel Component Proposal
 
-Status: proposal only (not implemented)
+Status: implemented (see `docs/components/carousel.md`)
+
+For the implemented docs format, including `Interactive Demo` and `Code Example`, use:
+- `docs/components/carousel.md`
 
 ## Goals
 

@@ -78,26 +78,6 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/chat/textarea
     /demo/chat/send_button
     /demo/carousel
-    /demo/carousel/images
-    /demo/carousel/lightbox
-    /demo/carousel/thumbnails
-    /demo/carousel/html_cards
-    /demo/carousel/videos
-    /demo/carousel/mixed_content
-    /demo/carousel/navigation
-    /demo/carousel/autoplay_loop
-    /demo/carousel/mobile
-    /demo/carousel/captions
-    /demo/carousel/fullscreen
-    /demo/carousel/rtl
-    /demo/carousel/video_aware
-    /demo/carousel/loading_states
-    /demo/carousel/performance
-    /demo/carousel/events_api
-    /demo/carousel/security
-    /demo/carousel/theming
-    /demo/carousel/deep_linking
-    /demo/carousel/reduced_motion
     /demo/progress
     /demo/collapse
     /demo/range_input
@@ -229,33 +209,30 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "data-chat-group-inbox-avatar=\"true\""
   end
 
-  test "carousel overview renders live demo cards" do
+  test "carousel page renders rebuilt component demo" do
     get "/demo/carousel"
 
     assert_response :success
-    assert_includes response.body, "Carousel Demos"
-    assert_includes response.body, "Interactive demos"
-    assert_includes response.body, "Image Carousel"
-    assert_includes response.body, "Video Carousel"
+    assert_includes response.body, "Carousel Component"
+    assert_includes response.body, "Basic Carousel"
+    assert_includes response.body, "Carousel with Thumbnails and Autoplay"
+    assert_includes response.body, "Fade Transition"
+    assert_includes response.body, "data-controller=\"flat-pack--carousel\""
+    assert_includes response.body, "Examples for Basic Carousel"
+    assert_includes response.body, ">Variable</th>"
+    assert_includes response.body, ">Accepts</th>"
+    assert_includes response.body, ">Example</th>"
+    assert_includes response.body, "Theme Tokens"
+    assert_includes response.body, "--carousel-viewport-background-color"
   end
 
-  test "carousel example page renders live interactive content" do
-    get "/demo/carousel/images"
-
-    assert_response :success
-    assert_includes response.body, "Carousel Demo: Image Carousel"
-    assert_includes response.body, "data-controller=\"carousel-demo\""
-    assert_includes response.body, "Go to slide 1"
-    assert_includes response.body, "Back to Carousel Overview"
-  end
-
-  test "sidebar includes collapsible carousel group" do
+  test "sidebar includes carousel demo entry" do
     get "/demo/carousel"
 
     assert_response :success
     assert_includes response.body, "Carousel"
-    assert_includes response.body, "/demo/carousel/images"
-    assert_includes response.body, "/demo/carousel/videos"
+    assert_includes response.body, "/demo/carousel"
+    refute_includes response.body, "/demo/carousel/images"
   end
 
   test "search results returns empty array for blank query" do

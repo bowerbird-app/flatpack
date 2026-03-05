@@ -81,6 +81,23 @@
         { variable: "padding", accepts: ":none, :sm, :md, :lg", example: "padding: :lg" }
       ]
     },
+    carousel: {
+      label: "Carousel",
+      method_call: "render FlatPack::Carousel::Component.new(slides: slides, show_controls: true, show_indicators: true)",
+      variables: [
+        { variable: "slides", accepts: "Array<Hash> (required)", example: "slides: [{ type: :image, src: \"https://...\", alt: \"Preview\" }]" },
+        { variable: "show_controls", accepts: "true, false", example: "show_controls: true" },
+        { variable: "show_indicators", accepts: "true, false", example: "show_indicators: true" },
+        { variable: "show_thumbs", accepts: "true, false", example: "show_thumbs: true" },
+        { variable: "transition", accepts: ":slide, :fade", example: "transition: :fade" },
+        { variable: "autoplay", accepts: "true, false", example: "autoplay: true" },
+        { variable: "autoplay_interval_ms", accepts: "Integer", example: "autoplay_interval_ms: 4000" },
+        { variable: "loop", accepts: "true, false", example: "loop: true" },
+        { variable: "caption_mode", accepts: ":below, :overlay", example: "caption_mode: :overlay" },
+        { variable: "aspect_ratio", accepts: "String", example: "aspect_ratio: \"16/9\"" },
+        { variable: "aria_label", accepts: "String", example: "aria_label: \"Product carousel\"" }
+      ]
+    },
     chart: {
       label: "Chart",
       method_call: "render FlatPack::Chart::Component.new(type: :line, series: [{ name: \"Sales\", data: [10, 20] }])",

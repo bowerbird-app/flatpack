@@ -94,26 +94,6 @@ Rails.application.routes.draw do
   get "demo/chat/send_button", to: "pages#chat_send_button"
 
   get "demo/carousel", to: "pages#carousel"
-  get "demo/carousel/images", to: "pages#carousel_images"
-  get "demo/carousel/lightbox", to: "pages#carousel_lightbox"
-  get "demo/carousel/thumbnails", to: "pages#carousel_thumbnails"
-  get "demo/carousel/html_cards", to: "pages#carousel_html_cards"
-  get "demo/carousel/videos", to: "pages#carousel_videos"
-  get "demo/carousel/mixed_content", to: "pages#carousel_mixed_content"
-  get "demo/carousel/navigation", to: "pages#carousel_navigation"
-  get "demo/carousel/autoplay_loop", to: "pages#carousel_autoplay_loop"
-  get "demo/carousel/mobile", to: "pages#carousel_mobile"
-  get "demo/carousel/captions", to: "pages#carousel_captions"
-  get "demo/carousel/fullscreen", to: "pages#carousel_fullscreen"
-  get "demo/carousel/rtl", to: "pages#carousel_rtl"
-  get "demo/carousel/video_aware", to: "pages#carousel_video_aware"
-  get "demo/carousel/loading_states", to: "pages#carousel_loading_states"
-  get "demo/carousel/performance", to: "pages#carousel_performance"
-  get "demo/carousel/events_api", to: "pages#carousel_events_api"
-  get "demo/carousel/security", to: "pages#carousel_security"
-  get "demo/carousel/theming", to: "pages#carousel_theming"
-  get "demo/carousel/deep_linking", to: "pages#carousel_deep_linking"
-  get "demo/carousel/reduced_motion", to: "pages#carousel_reduced_motion"
 
   namespace :demo do
     resources :comments, only: [:create] do

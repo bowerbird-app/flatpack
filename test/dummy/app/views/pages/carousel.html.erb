@@ -1,43 +1,118 @@
-<div class="container mx-auto max-w-5xl p-4">
-  <%= render FlatPack::PageTitle::Component.new(
-    title: "Carousel Demos",
-    subtitle: "Working carousel examples for images, lightbox, thumbnails, HTML cards, and videos."
-  ) %>
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Carousel Component",
+  subtitle: "Carousel with mixed content, controls, indicators, thumbnails, and transitions."
+) %>
 
-  <div class="mt-6 mb-6">
-    <%= render FlatPack::Alert::Component.new(
-      type: :success,
-      title: "Interactive demos",
-      message: "These pages demonstrate real carousel behavior in the dummy app using live slide navigation."
+<%= render "pages/component_method_variables_table", component: :carousel %>
+
+<!-- Basic Carousel -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Basic Carousel", anchor_link: true, subtitle: "Examples for Basic Carousel.") %>
+  <div class="mb-4 overflow-hidden rounded-xl border border-(--surface-border-color) bg-(--surface-background-color) p-4">
+    <%= render FlatPack::Carousel::Component.new(
+      slides: @carousel_slides,
+      show_controls: true,
+      show_indicators: true,
+      show_captions: true,
+      caption_mode: :below,
+      aspect_ratio: "16/9",
+      aria_label: "Basic carousel demo"
     ) %>
   </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Carousel::Component.new(
+        slides: @carousel_slides,
+        show_controls: true,
+        show_indicators: true,
+        show_captions: true,
+        caption_mode: :below,
+        aspect_ratio: "16/9"
+      ) %&gt;
+    CODE
+  ) %>
+</section>
 
-  <section class="mb-10">
-    <%= render FlatPack::SectionTitle::Component.new(
-      title: "Overview",
-      anchor_link: true,
-      subtitle: "Open each page to see a concrete carousel scenario in action."
+<!-- Carousel with Thumbnails and Autoplay -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Carousel with Thumbnails and Autoplay", anchor_link: true, subtitle: "Examples for Carousel with Thumbnails and Autoplay.") %>
+  <div class="mb-4 overflow-hidden rounded-xl border border-(--surface-border-color) bg-(--surface-background-color) p-4">
+    <%= render FlatPack::Carousel::Component.new(
+      slides: @carousel_slides,
+      show_thumbs: true,
+      thumbs_position: :bottom,
+      thumbs_alignment: :center,
+      show_indicators: true,
+      show_controls: true,
+      autoplay: true,
+      autoplay_interval_ms: 4000,
+      pause_on_hover: true,
+      pause_on_focus: true,
+      loop: true,
+      caption_mode: :overlay,
+      aspect_ratio: "16/9",
+      aria_label: "Carousel with thumbnails and autoplay"
     ) %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Carousel::Component.new(
+        slides: @carousel_slides,
+        show_thumbs: true,
+        thumbs_position: :bottom,
+        thumbs_alignment: :center,
+        autoplay: true,
+        autoplay_interval_ms: 4000,
+        pause_on_hover: true,
+        loop: true,
+        caption_mode: :overlay
+      ) %&gt;
+    CODE
+  ) %>
+</section>
 
-    <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      <% @carousel_featured_examples.each_value do |example| %>
-        <%= render FlatPack::Card::Component.new(style: :default, hover: :subtle) do |card| %>
-          <% card.header do %>
-            <h3 class="text-base font-semibold"><%= example[:title] %></h3>
-          <% end %>
-          <% card.body do %>
-            <p class="text-sm text-(--surface-muted-content-color)"><%= example[:subtitle] %></p>
-          <% end %>
-          <% card.footer(divider: false) do %>
-            <%= render FlatPack::Button::Component.new(
-              text: "Open",
-              style: :ghost,
-              size: :sm,
-              href: send(example[:route])
-            ) %>
-          <% end %>
-        <% end %>
-      <% end %>
-    </div>
-  </section>
-</div>
+<!-- Fade Transition Carousel -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Fade Transition", anchor_link: true, subtitle: "Examples for Fade Transition.") %>
+  <div class="mb-4 overflow-hidden rounded-xl border border-(--surface-border-color) bg-(--surface-background-color) p-4">
+    <%= render FlatPack::Carousel::Component.new(
+      slides: @carousel_slides,
+      transition: :fade,
+      show_controls: true,
+      show_indicators: true,
+      show_captions: true,
+      caption_mode: :overlay,
+      aspect_ratio: "16/9",
+      aria_label: "Fade transition carousel demo"
+    ) %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Carousel::Component.new(
+        slides: @carousel_slides,
+        transition: :fade,
+        show_controls: true,
+        show_indicators: true,
+        caption_mode: :overlay
+      ) %&gt;
+    CODE
+  ) %>
+</section>
+
+<!-- Demo Notes -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Demo Notes", anchor_link: true, subtitle: "Examples for Demo Notes.") %>
+  <ul class="list-disc space-y-2 pl-5 text-sm text-(--surface-content-color) mb-4">
+    <% @carousel_notes.each do |note| %>
+      <li><%= note %></li>
+    <% end %>
+  </ul>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      # Suggested note content
+      # - Uses FlatPack::Carousel::Component with mixed image, video, and sanitized HTML slides.
+      # - Demonstrates autoplay, loop, indicators, controls, and thumbnail navigation.
+      # - Uses secure defaults for rich content and supports keyboard plus touch interactions.
+    CODE
+  ) %>
+</section>
