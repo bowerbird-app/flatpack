@@ -86,17 +86,25 @@
       method_call: "render FlatPack::Carousel::Component.new(slides: slides, show_controls: true, show_indicators: true)",
       variables: [
         { variable: "slides", accepts: "Array<Hash> (required)", example: "slides: [{ type: :image, src: \"https://...\", alt: \"Preview\" }]" },
+        { variable: "initial_index", accepts: "Integer", example: "initial_index: 0" },
         { variable: "show_controls", accepts: "true, false", example: "show_controls: true" },
         { variable: "show_indicators", accepts: "true, false", example: "show_indicators: true" },
         { variable: "show_thumbs", accepts: "true, false", example: "show_thumbs: true" },
+        { variable: "thumbs_position", accepts: ":top, :bottom", example: "thumbs_position: :bottom" },
+        { variable: "thumbs_alignment", accepts: ":start, :center, :end", example: "thumbs_alignment: :center" },
         { variable: "show_captions", accepts: "true, false", example: "show_captions: true" },
         { variable: "transition", accepts: ":slide, :fade", example: "transition: :fade" },
         { variable: "autoplay", accepts: "true, false", example: "autoplay: true" },
         { variable: "autoplay_interval_ms", accepts: "Integer", example: "autoplay_interval_ms: 4000" },
+        { variable: "pause_on_hover", accepts: "true, false", example: "pause_on_hover: true" },
+        { variable: "pause_on_focus", accepts: "true, false", example: "pause_on_focus: true" },
         { variable: "loop", accepts: "true, false", example: "loop: true" },
+        { variable: "responsive", accepts: "true, false", example: "responsive: true" },
+        { variable: "touch_swipe", accepts: "true, false", example: "touch_swipe: true" },
         { variable: "caption_mode", accepts: ":below, :overlay", example: "caption_mode: :overlay" },
         { variable: "aspect_ratio", accepts: "String", example: "aspect_ratio: \"16/9\"" },
-        { variable: "aria_label", accepts: "String", example: "aria_label: \"Product carousel\"" }
+        { variable: "aria_label", accepts: "String", example: "aria_label: \"Product carousel\"" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"shadow-lg\", data: { testid: \"carousel\" }" }
       ]
     },
     chart: {

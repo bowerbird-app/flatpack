@@ -42,21 +42,8 @@ None.
 
 ## Interactive Demo
 - `/demo/carousel`
-- `/demo/carousel/mixed_content`
-- `/demo/carousel/navigation`
-- `/demo/carousel/autoplay_loop`
-- `/demo/carousel/mobile`
-- `/demo/carousel/captions`
-- `/demo/carousel/fullscreen`
-- `/demo/carousel/rtl`
-- `/demo/carousel/video_aware`
-- `/demo/carousel/loading_states`
-- `/demo/carousel/performance`
-- `/demo/carousel/events_api`
-- `/demo/carousel/security`
-- `/demo/carousel/theming`
-- `/demo/carousel/deep_linking`
-- `/demo/carousel/reduced_motion`
+
+The dummy app consolidates carousel behavior (basic, autoplay, thumbnails, transitions, keyboard/touch notes, and token reference) on this single page.
 
 ## Code Example
 ```erb
