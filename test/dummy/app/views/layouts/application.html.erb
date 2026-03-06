@@ -795,23 +795,23 @@
                 position: :bottom_right,
                 icon: "cog"
               ) do |dropdown| %>
-                <% dropdown.with_menu_item(
+                <% dropdown.menu_item(
                   text: "System",
                   data: { action: "click->flat-pack--theme#switch click->flat-pack--button-dropdown#toggle", theme_value: "system" }
                 ) %>
-                <% dropdown.with_menu_item(
+                <% dropdown.menu_item(
                   text: "Light",
                   data: { action: "click->flat-pack--theme#switch click->flat-pack--button-dropdown#toggle", theme_value: "light" }
                 ) %>
-                <% dropdown.with_menu_item(
+                <% dropdown.menu_item(
                   text: "Dark",
                   data: { action: "click->flat-pack--theme#switch click->flat-pack--button-dropdown#toggle", theme_value: "dark" }
                 ) %>
-                <% dropdown.with_menu_item(
+                <% dropdown.menu_item(
                   text: "Ocean",
                   data: { action: "click->flat-pack--theme#switch click->flat-pack--button-dropdown#toggle", theme_value: "ocean" }
                 ) %>
-                <% dropdown.with_menu_item(
+                <% dropdown.menu_item(
                   text: "Rounded",
                   data: { action: "click->flat-pack--theme#switch click->flat-pack--button-dropdown#toggle", theme_value: "rounded" }
                 ) %>

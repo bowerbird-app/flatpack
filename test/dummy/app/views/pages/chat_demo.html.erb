@@ -127,7 +127,7 @@
                   position: :top_left,
                   aria: {label: "Add files or images"}
                 ) do |dropdown| %>
-                  <% dropdown.with_menu_item(
+                  <% dropdown.menu_item(
                     text: "Images",
                     icon: "image",
                     data: {
@@ -135,7 +135,7 @@
                       "modal-id": "chat-picker-images"
                     }
                   ) %>
-                  <% dropdown.with_menu_item(
+                  <% dropdown.menu_item(
                     text: "Files",
                     icon: "file",
                     data: {
@@ -264,7 +264,7 @@
                     position: :top_left,
                     aria: {label: &quot;Add files or images&quot;}
                   ) do |dropdown| %&gt;
-                    &lt;% dropdown.with_menu_item(
+                    &lt;% dropdown.menu_item(
                       text: &quot;Upload files or images&quot;,
                       icon: &quot;file&quot;,
                       data: {action: &quot;click-&gt;flat-pack--chat-sender#openFilePicker&quot;}

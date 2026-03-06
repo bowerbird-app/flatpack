@@ -26,10 +26,10 @@ Use Button Dropdown when multiple related actions should be grouped behind a sin
 ## Slots
 | name | type | required | description |
 |---|---|---|---|
-| `with_menu_item` | slot | no | Adds `FlatPack::Button::DropdownItem::Component` entries. |
-| `with_menu_divider` | slot | no | Adds `FlatPack::Button::DropdownDivider::Component` separators. |
+| `menu_item` | slot | no | Adds `FlatPack::Button::DropdownItem::Component` entries. |
+| `menu_divider` | slot | no | Adds `FlatPack::Button::DropdownDivider::Component` separators. |
 
-`with_menu_item` props:
+`menu_item` props:
 
 | name | type | default | required | description |
 |---|---|---|---|---|
@@ -49,9 +49,9 @@ Use Button Dropdown when multiple related actions should be grouped behind a sin
 ## Example
 ```erb
 <%= render FlatPack::Button::Dropdown::Component.new(text: "Actions", position: :bottom_right) do |dropdown| %>
-  <% dropdown.with_menu_item(text: "Edit", href: edit_post_path(@post)) %>
-  <% dropdown.with_menu_divider %>
-  <% dropdown.with_menu_item(text: "Delete", destructive: true) %>
+  <% dropdown.menu_item(text: "Edit", href: edit_post_path(@post)) %>
+  <% dropdown.menu_divider %>
+  <% dropdown.menu_item(text: "Delete", destructive: true) %>
 <% end %>
 ```
 

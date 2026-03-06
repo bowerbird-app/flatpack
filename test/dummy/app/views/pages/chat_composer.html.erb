@@ -25,8 +25,8 @@
             position: :top_left,
             aria: {label: "Attach options"}
           ) do |dropdown| %>
-            <% dropdown.with_menu_item(text: "Upload file", icon: "file", href: "#") %>
-            <% dropdown.with_menu_item(text: "Attach from library", icon: "folder", href: "#") %>
+            <% dropdown.menu_item(text: "Upload file", icon: "file", href: "#") %>
+            <% dropdown.menu_item(text: "Attach from library", icon: "folder", href: "#") %>
           <% end %>
         <% end %>
 
@@ -64,8 +64,8 @@
               position: :top_left,
               aria: {label: "Attach options"}
             ) do |dropdown| %&gt;
-              &lt;% dropdown.with_menu_item(text: "Upload file", icon: "file", href: "#") %&gt;
-              &lt;% dropdown.with_menu_item(text: "Attach from library", icon: "folder", href: "#") %&gt;
+              &lt;% dropdown.menu_item(text: "Upload file", icon: "file", href: "#") %&gt;
+              &lt;% dropdown.menu_item(text: "Attach from library", icon: "folder", href: "#") %&gt;
             &lt;% end %&gt;
           &lt;% end %&gt;
 
