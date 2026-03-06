@@ -12,7 +12,7 @@
     <div class="mb-4 mt-6 space-y-4 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
       <%= render FlatPack::Chat::TypingIndicator::Component.new(label: "Teammate is typing") do |indicator| %>
         <% indicator.with_avatar do %>
-          <%= render FlatPack::Avatar::Component.new(name: "Teammate", initials: "TM", size: :sm) %>
+          <%= render FlatPack::Avatar::Component.new(name: "Teammate", size: :sm) %>
         <% end %>
       <% end %>
 
@@ -25,7 +25,7 @@
       code: CGI.unescapeHTML(<<~'CODE')
         &lt;%= render FlatPack::Chat::TypingIndicator::Component.new(label: "Teammate is typing") do |indicator| %&gt;
           &lt;% indicator.with_avatar do %&gt;
-            &lt;%= render FlatPack::Avatar::Component.new(name: "Teammate", initials: "TM", size: :sm) %&gt;
+            &lt;%= render FlatPack::Avatar::Component.new(name: "Teammate", size: :sm) %&gt;
           &lt;% end %&gt;
         &lt;% end %&gt;
 

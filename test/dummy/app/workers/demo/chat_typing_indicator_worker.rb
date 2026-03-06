@@ -20,8 +20,7 @@ module Demo
         locals: {
           visible: visible,
           label: "Sam is typing",
-          sender_name: "Sam Lee",
-          initials: "SL"
+          sender_name: "Sam Lee"
         }
       )
     end

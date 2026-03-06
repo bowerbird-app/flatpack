@@ -422,7 +422,7 @@ export default class extends Controller {
     const meta = this.#attachmentMeta(attachment)
 
     const wrapper = document.createElement("div")
-    wrapper.className = "inline-flex w-fit max-w-full items-center gap-3 border border-(--chat-attachment-border-color) rounded-lg p-3"
+    wrapper.className = "inline-flex w-fit max-w-full items-center gap-3 border border-(--chat-attachment-border-color) rounded-lg bg-white p-3"
 
     const icon = document.createElement("div")
     icon.className = "shrink-0 text-base"

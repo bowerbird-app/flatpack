@@ -9,7 +9,7 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Demo", anchor_link: true, subtitle: "Incoming and outgoing file messages.") %>
 
-    <div class="mb-4 mt-6 space-y-4 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
+    <div class="mb-4 mt-6 space-y-4 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6" style="--chat-message-outgoing-text-color: #fff;">
       <%= render FlatPack::Chat::FileMessage::Component.new(
         direction: :incoming,
         file_name: "launch-plan.pdf",

@@ -35,8 +35,7 @@ module Demo
         locals: {
           visible: false,
           label: "Sam is typing",
-          sender_name: "Sam Lee",
-          initials: "SL"
+          sender_name: "Sam Lee"
         }
       )
     end
