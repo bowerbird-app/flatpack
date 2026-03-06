@@ -13,7 +13,7 @@ Use Avatar Group for teams, collaborators, or participant lists where many users
 ## Props
 | name | type | default | required | description |
 |---|---|---|---|---|
-| `items` | Array<Hash> | `[]` | yes | Avatar item hashes. Each item may include `:src`, `:alt`, `:name`, `:initials`, `:status`, `:href`. |
+| `items` | Array<Hash> | `[]` | yes | Avatar item hashes. Each item may include `:src`, `:alt`, `:name`, `:status`, `:href`. |
 | `max` | Integer | `5` | no | Maximum visible avatars before overflow avatar is shown. |
 | `size` | Symbol | `:sm` | no | Passed to each avatar (`FlatPack::Avatar::Component` sizes). |
 | `overlap` | Symbol | `:md` | no | Overlap spacing: `:sm`, `:md`, `:lg`; invalid values raise `ArgumentError`. |

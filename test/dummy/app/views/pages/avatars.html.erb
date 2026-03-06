@@ -259,7 +259,7 @@
     <%= render FlatPack::SectionTitle::Component.new(
       title: "Fallback Types",
       anchor_link: true,
-      subtitle: "Fallback priority is image, then initials, then generic icon."
+      subtitle: "Fallback priority is image, then initials from name/alt, then generic icon."
     ) %>
     <div class="flex items-center gap-4 mb-4">
       <%= render FlatPack::Avatar::Component.new(
@@ -272,7 +272,7 @@
         size: :lg
       ) %>
       <%= render FlatPack::Avatar::Component.new(
-        initials: "AB",
+        alt: "Alex Brown",
         size: :lg
       ) %>
       <%= render FlatPack::Avatar::Component.new(
@@ -297,10 +297,10 @@
           CODE
         },
         {
-          label: "Custom Initials",
+          label: "Alt Initials",
           language: "erb",
           code: <<~CODE
-            #{erb_output_open} render FlatPack::Avatar::Component.new(initials: "AB", size: :lg) #{erb_tag_close}
+            #{erb_output_open} render FlatPack::Avatar::Component.new(alt: "Alex Brown", size: :lg) #{erb_tag_close}
           CODE
         },
         {

@@ -15,7 +15,6 @@ Use Avatar in navigation, lists, comments, and profile surfaces where a compact 
 | `src` | String | `nil` | no | Image URL; when present, image is rendered. |
 | `alt` | String | `name` or `"Avatar"` | no | `img` alt text. |
 | `name` | String | `nil` | no | Name used for initials fallback and default alt text. |
-| `initials` | String | `nil` | no | Explicit initials override computed initials. |
 | `size` | Symbol | `:md` | no | Size: `:xs`, `:sm`, `:md`, `:lg`, `:xl`; invalid values raise `ArgumentError`. |
 | `shape` | Symbol | `:circle` | no | Shape: `:circle`, `:rounded`, `:square`; invalid values raise `ArgumentError`. |
 | `status` | Symbol | `nil` | no | Status dot: `:online`, `:offline`, `:busy`, `:away`; invalid values raise `ArgumentError`. |
@@ -43,7 +42,7 @@ None.
 
 ## Accessibility
 - Provide `alt` for image avatars; if omitted, component falls back to `name` then `"Avatar"`.
-- Initials and icon fallback remain visible identity markers when image is unavailable.
+- Initials are computed from `name` or `alt`; icon fallback is used when neither is available.
 - Status indicator is decorative and rendered with `aria-hidden="true"`.
 
 ## Dependencies

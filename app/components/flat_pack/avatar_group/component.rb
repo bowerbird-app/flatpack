@@ -87,7 +87,6 @@ module FlatPack
           src: avatar_attrs[:src],
           alt: avatar_attrs[:alt],
           name: avatar_attrs[:name],
-          initials: avatar_attrs[:initials],
           size: @size,
           shape: :circle,
           status: avatar_attrs[:status],
@@ -114,10 +113,11 @@ module FlatPack
 
       def render_overflow_content
         overflow_avatar = FlatPack::Avatar::Component.new(
-          initials: "+#{overflow_count}",
+          alt: "+#{overflow_count}",
           size: @size,
           shape: :circle,
           href: @overflow_href,
+          show_tooltip: false,
           class: "ring-2 ring-[var(--avatar-group-ring-color)] transition-transform hover:scale-110"
         )
 
