@@ -278,7 +278,7 @@ module FlatPack
           tag.img(src: slide[:poster], alt: "Video thumbnail #{index + 1}", class: "h-full w-full object-cover", loading: "lazy", draggable: false)
         else
           content_tag(:span,
-            "#{index + 1}",
+            (index + 1).to_s,
             class: "flex h-full w-full items-center justify-center bg-[var(--carousel-thumb-placeholder-background-color)] text-xs font-medium text-[var(--carousel-thumb-placeholder-text-color)]")
         end
       end
