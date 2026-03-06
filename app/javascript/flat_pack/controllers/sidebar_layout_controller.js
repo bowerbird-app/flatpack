@@ -59,12 +59,12 @@ export default class extends Controller {
       const hasPersistedScrollState = !!this.readScrollState()
       if (hasPersistedScrollState) {
         this.restoreScrollPosition()
-      } else {
-        this.scrollActiveItemIntoView()
       }
     } else {
       delete this.currentScrollContainer().dataset.flatPackScrollPreRestored
     }
+
+    this.scrollActiveItemIntoView()
   }
 
   disconnect() {
@@ -553,6 +553,8 @@ export default class extends Controller {
       } else if (itemRect.bottom > containerRect.bottom - margin) {
         scrollContainer.scrollTop += itemRect.bottom - (containerRect.bottom - margin)
       }
+
+      this.persistScrollState()
     })
   }
 }
