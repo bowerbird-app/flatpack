@@ -86,9 +86,19 @@ module FlatPack
             "disabled:pointer-events-none disabled:opacity-50"
           ]
 
-          base_classes << FlatPack::Button::Component::SIZES.fetch(@size)
+          if icon_only_button?
+            base_classes << "aspect-square"
+            base_classes << FlatPack::Button::Component::ICON_ONLY_SIZES.fetch(@size)
+          else
+            base_classes << FlatPack::Button::Component::SIZES.fetch(@size)
+          end
+
           base_classes << FlatPack::Button::Component::SCHEMES.fetch(@style)
           base_classes.join(" ")
+        end
+
+        def icon_only_button?
+          @icon.present? && @text.blank? && !@show_chevron
         end
 
         def button_content
