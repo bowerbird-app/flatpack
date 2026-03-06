@@ -13,8 +13,8 @@ Use Skeleton when data is pending and layout stability should be preserved.
 | name | type | default | required | description |
 |---|---|---|---|---|
 | `variant` | Symbol | `:text` | no | Shape preset: `:text`, `:title`, `:avatar`, `:button`, `:rectangle`; invalid values raise `ArgumentError`. |
-| `width` | String | `nil` | no | Custom width utility value (for example `"240px"`, `"75%"`). |
-| `height` | String | `nil` | no | Custom height utility value. |
+| `width` | String | `nil` | no | Custom CSS width value (for example `"240px"`, `"75%"`). |
+| `height` | String | `nil` | no | Custom CSS height value. |
 | `shimmer` | Boolean | `true` | no | Enables shimmer animation when true. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for skeleton element. |
 

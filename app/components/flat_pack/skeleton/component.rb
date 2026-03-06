@@ -37,18 +37,23 @@ module FlatPack
       private
 
       def skeleton_attributes
-        merge_attributes(
+        attrs = {
           class: skeleton_classes,
           aria: {busy: true, label: "Loading..."},
           role: "status"
-        )
+        }
+
+        style = custom_size_style
+        attrs[:style] = style if style
+
+        merge_attributes(**attrs)
       end
 
       def skeleton_classes
         base = "bg-[var(--skeleton-background-color)]"
         variant_classes = VARIANTS.fetch(@variant)
 
-        classes(base, shimmer_classes, variant_classes, custom_size_classes)
+        classes(base, shimmer_classes, variant_classes)
       end
 
       def shimmer_classes
@@ -57,11 +62,16 @@ module FlatPack
         "relative overflow-hidden before:pointer-events-none before:absolute before:inset-0 before:content-[''] before:bg-[linear-gradient(110deg,transparent_20%,var(--skeleton-shimmer-highlight-color)_45%,transparent_70%)] before:translate-x-[-100%] before:animate-[fp-skeleton-shimmer_var(--skeleton-shimmer-duration)_linear_infinite] motion-reduce:before:animate-none"
       end
 
-      def custom_size_classes
-        custom = []
-        custom << "w-[#{@width}]" if @width
-        custom << "h-[#{@height}]" if @height
-        custom.join(" ")
+      def custom_size_style
+        custom_styles = []
+        custom_styles << "width: #{@width}" if @width.present?
+        custom_styles << "height: #{@height}" if @height.present?
+        return if custom_styles.empty?
+
+        existing_style = @system_arguments[:style] || @system_arguments["style"]
+        return custom_styles.join("; ") unless existing_style.present?
+
+        "#{existing_style.to_s.rstrip.sub(/;+\z/, "")}; #{custom_styles.join("; ")}"
       end
 
       def validate_variant!
