@@ -105,6 +105,21 @@
         { variable: "aspect_ratio", accepts: "String", example: "aspect_ratio: \"16/9\"" },
         { variable: "aria_label", accepts: "String", example: "aria_label: \"Product carousel\"" },
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"shadow-lg\", data: { testid: \"carousel\" }" }
+      ],
+      slides_hash_options: [
+        { key: "type", applies_to: "image, video, html", accepts: ":image, :video, :html", default: "inferred", example: "type: :image" },
+        { key: "src", applies_to: "image, video", accepts: "String URL", default: "required", example: "src: \"https://...\"" },
+        { key: "thumb_src", applies_to: "image", accepts: "String URL", default: "nil", example: "thumb_src: \"https://...\"" },
+        { key: "thumb", applies_to: "image", accepts: "String URL", default: "nil", example: "thumb: \"https://...\"" },
+        { key: "alt", applies_to: "image", accepts: "String", default: "\"Slide n\"", example: "alt: \"Preview\"" },
+        { key: "caption", applies_to: "image, video, html", accepts: "String", default: "\"\"", example: "caption: \"Analytics dashboard concept\"" },
+        { key: "lightbox", applies_to: "image, video, html", accepts: "true, false", default: "image: true, others: false", example: "lightbox: false" },
+        { key: "poster", applies_to: "video", accepts: "String URL", default: "nil", example: "poster: \"https://...\"" },
+        { key: "controls", applies_to: "video", accepts: "true, false", default: "true", example: "controls: false" },
+        { key: "muted", applies_to: "video", accepts: "true, false", default: "false", example: "muted: true" },
+        { key: "video_loop", applies_to: "video", accepts: "true, false", default: "false", example: "video_loop: true" },
+        { key: "playsinline", applies_to: "video", accepts: "true, false", default: "true", example: "playsinline: false" },
+        { key: "html", applies_to: "html", accepts: "String HTML", default: "required for :html", example: "html: \"<div>Custom content</div>\"" }
       ]
     },
     chart: {
@@ -647,6 +662,19 @@
             <% table.column(title: "Variable", html: ->(row) { row[:variable] }) %>
             <% table.column(title: "Accepts", html: ->(row) { row[:accepts] }) %>
             <% table.column(title: "Example", html: ->(row) { row[:example] }) %>
+          <% end %>
+
+          <% if component_doc[:slides_hash_options].present? %>
+            <div class="mt-6">
+              <h4 class="mb-2 text-sm font-semibold text-(--surface-content-color)">Slides Hash Options</h4>
+              <%= render FlatPack::Table::Component.new(data: component_doc[:slides_hash_options]) do |table| %>
+                <% table.column(title: "Key", html: ->(row) { row[:key] }) %>
+                <% table.column(title: "Applies To", html: ->(row) { row[:applies_to] }) %>
+                <% table.column(title: "Accepts", html: ->(row) { row[:accepts] }) %>
+                <% table.column(title: "Default", html: ->(row) { row[:default] }) %>
+                <% table.column(title: "Example", html: ->(row) { row[:example] }) %>
+              <% end %>
+            </div>
           <% end %>
         </div>
       <% end %>

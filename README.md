@@ -109,6 +109,47 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
 <% end %>
 ```
 
+### Carousel Component
+
+```erb
+<%= render FlatPack::Carousel::Component.new(
+  slides: [
+    {
+      type: :image,
+      src: "https://images.example.com/hero.jpg",
+      alt: "Hero",
+      caption: "Hero image",
+      lightbox: true
+    },
+    {
+      type: :video,
+      src: "https://videos.example.com/teaser.mp4",
+      poster: "https://images.example.com/poster.jpg",
+      caption: "Teaser"
+    }
+  ],
+  show_controls: true,
+  show_indicators: true
+) %>
+```
+
+`slides` hash options:
+
+| Key | Applies To | Accepts | Default |
+|---|---|---|---|
+| `type` | image, video, html | `:image`, `:video`, `:html` | inferred |
+| `src` | image, video | String URL | required |
+| `thumb_src` / `thumb` | image | String URL | `nil` |
+| `alt` | image | String | `"Slide n"` |
+| `caption` | image, video, html | String | `""` |
+| `lightbox` | image, video, html | `true`, `false` | image: `true`, others: `false` |
+| `poster` | video | String URL | `nil` |
+| `controls` | video | `true`, `false` | `true` |
+| `muted` | video | `true`, `false` | `false` |
+| `video_loop` | video | `true`, `false` | `false` |
+| `playsinline` | video | `true`, `false` | `true` |
+| `html` | html | String HTML | required for `:html` |
+
 ### Input Components
 
 ```erb

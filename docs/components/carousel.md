@@ -60,6 +60,23 @@ The dummy app consolidates carousel behavior (basic, autoplay, thumbnails, trans
 ) %>
 ```
 
+## Slides Hash Options
+| key | applies to | accepts | default | notes |
+|---|---|---|---|---|
+| `type` | image, video, html | `:image`, `:video`, `:html` | inferred | Optional if inferable from payload. |
+| `src` | image, video | String URL | required | Required for image/video slides. |
+| `thumb_src` | image | String URL | `nil` | Thumbnail source for `show_thumbs`. |
+| `thumb` | image | String URL | `nil` | Alias for `thumb_src`. |
+| `alt` | image | String | `"Slide n"` | Falls back to slide index label. |
+| `caption` | image, video, html | String | `""` | Used by caption rendering modes. |
+| `lightbox` | image, video, html | `true`, `false` | image: `true`, others: `false` | Only image slides can actually open lightbox. |
+| `poster` | video | String URL | `nil` | Poster image behind video element. |
+| `controls` | video | `true`, `false` | `true` | Native video controls toggle. |
+| `muted` | video | `true`, `false` | `false` | Passed to `<video muted>`. |
+| `video_loop` | video | `true`, `false` | `false` | Passed to `<video loop>`. |
+| `playsinline` | video | `true`, `false` | `true` | Passed to `<video playsinline>`. |
+| `html` | html | String HTML | required for `:html` | HTML content is sanitized before render. |
+
 ## JS API (owl-style)
 The Stimulus controller exposes methods both as component actions and as an imperative API:
 - `next()`
