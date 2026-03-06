@@ -1,18 +1,27 @@
 <div class="pt-2">
   <%= form_with url: replies_demo_comment_path(parent_comment), method: :post, local: true do %>
     <%= render FlatPack::Comments::Composer::Component.new(
-      name: "comment[body]",
-      placeholder: "Write a reply...",
-      submit_label: "Reply",
-      compact: true,
-      rows: 2,
-      show_cancel: true,
-      cancel_label: "Cancel"
-    ) do |composer| %>
+        name: "comment[body]",
+        placeholder: "Write a reply...",
+        submit_label: "Reply",
+        compact: true,
+        rows: 2
+      ) do |composer| %>
       <% composer.with_actions do %>
-        <div class="flex items-center justify-between w-full">
-          <%= link_to "Cancel", demo_comments_path(anchor: "comment-#{parent_comment.id}"), class: "text-sm text-[var(--surface-muted-content-color)] hover:text-[var(--surface-content-color)]" %>
-          <%= button_tag "Reply", type: "submit", class: "rounded-md bg-[var(--color-primary)] px-3 py-1.5 text-sm font-medium text-[var(--color-primary-content)]" %>
+        <div class="flex items-center justify-end w-full gap-2">
+          <%= render FlatPack::Button::Component.new(
+            text: "Cancel",
+            url: demo_comments_path(anchor: "comment-#{parent_comment.id}"),
+            style: :ghost,
+            size: :sm
+          ) %>
+
+          <%= render FlatPack::Button::Component.new(
+            text: "Reply",
+            type: "submit",
+            style: :primary,
+            size: :sm
+          ) %>
         </div>
       <% end %>
     <% end %>

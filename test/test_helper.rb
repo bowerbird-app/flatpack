@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
-require "simplecov"
-SimpleCov.start "rails"
+begin
+  require "simplecov"
+  SimpleCov.start "rails"
+rescue LoadError
+  # Allow dummy app test runs that use a Gemfile without simplecov.
+end
 
 # Configure Rails Environment
 ENV["RAILS_ENV"] = "test"

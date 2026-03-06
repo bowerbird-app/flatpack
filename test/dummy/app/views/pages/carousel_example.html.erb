@@ -1,4 +1,4 @@
-<div class="container mx-auto max-w-4xl p-4" data-controller="carousel-demo" data-carousel-demo-index-value="0">
+<div class="container mx-auto max-w-4xl p-4">
   <%= render FlatPack::PageTitle::Component.new(
     title: "Carousel Demo: #{@carousel_example[:title]}",
     subtitle: @carousel_example[:subtitle]
@@ -6,15 +6,164 @@
 
   <% demo_type = (@carousel_example[:demo_type] || :images).to_sym %>
   <% image_slides = [
-    {src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1600&h=900&fit=crop", alt: "Product analytics dashboard", caption: "Analytics dashboard concept"},
-    {src: "https://images.unsplash.com/photo-1518773553398-650c184e0bb3?w=1600&h=900&fit=crop", alt: "Mobile checkout experience", caption: "Mobile checkout experience"},
-    {src: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1600&h=900&fit=crop", alt: "Planning workshop board", caption: "Planning workshop board"}
+    {
+      type: :image,
+      src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1600&h=900&fit=crop",
+      alt: "Product analytics dashboard",
+      caption: "Analytics dashboard concept"
+    },
+    {
+      type: :image,
+      src: "https://images.unsplash.com/photo-1518773553398-650c184e0bb3?w=1600&h=900&fit=crop",
+      alt: "Mobile checkout experience",
+      caption: "Mobile checkout experience"
+    },
+    {
+      type: :image,
+      src: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1600&h=900&fit=crop",
+      alt: "Planning workshop board",
+      caption: "Planning workshop board"
+    }
   ] %>
+
   <% video_slides = [
-    {src: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4", caption: "Product teaser clip"},
-    {src: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/earth.mp4", caption: "Earth rotation footage"},
-    {src: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/bee.mp4", caption: "Macro lifestyle clip"}
+    {
+      type: :video,
+      src: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+      poster: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800&h=450&fit=crop",
+      caption: "Product teaser clip"
+    },
+    {
+      type: :video,
+      src: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/earth.mp4",
+      poster: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=800&h=450&fit=crop",
+      caption: "Earth rotation footage"
+    },
+    {
+      type: :video,
+      src: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/bee.mp4",
+      poster: "https://images.unsplash.com/photo-1472396961693-142e6e269027?w=800&h=450&fit=crop",
+      caption: "Macro lifestyle clip"
+    }
   ] %>
+
+  <% html_card_slides = [
+    {
+      type: :html,
+      caption: "Release Notes",
+      html: <<~HTML
+        <div class="flex h-full flex-col justify-between rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6 shadow-sm">
+          <div>
+            <h3 class="text-xl font-semibold text-(--surface-content-color)">Release Notes</h3>
+            <p class="mt-3 text-sm text-(--surface-muted-content-color)">Version 2.4 shipped with faster search and improved composer states.</p>
+          </div>
+          <div class="mt-6">
+            <a href="#" class="inline-flex items-center rounded-md border border-(--surface-border-color) px-3 py-1.5 text-sm font-medium">Read Changelog</a>
+          </div>
+        </div>
+      HTML
+    },
+    {
+      type: :html,
+      caption: "Experiment Result",
+      html: <<~HTML
+        <div class="flex h-full flex-col justify-between rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6 shadow-sm">
+          <div>
+            <h3 class="text-xl font-semibold text-(--surface-content-color)">Experiment Result</h3>
+            <p class="mt-3 text-sm text-(--surface-muted-content-color)">Variant B improved activation by 11% in this week's onboarding cohort.</p>
+          </div>
+          <div class="mt-6">
+            <a href="#" class="inline-flex items-center rounded-md border border-(--surface-border-color) px-3 py-1.5 text-sm font-medium">View Report</a>
+          </div>
+        </div>
+      HTML
+    },
+    {
+      type: :html,
+      caption: "Roadmap Update",
+      html: <<~HTML
+        <div class="flex h-full flex-col justify-between rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6 shadow-sm">
+          <div>
+            <h3 class="text-xl font-semibold text-(--surface-content-color)">Roadmap Update</h3>
+            <p class="mt-3 text-sm text-(--surface-muted-content-color)">Next sprint focuses on media flows, review tooling, and admin controls.</p>
+          </div>
+          <div class="mt-6">
+            <a href="#" class="inline-flex items-center rounded-md border border-(--surface-border-color) px-3 py-1.5 text-sm font-medium">Open Roadmap</a>
+          </div>
+        </div>
+      HTML
+    }
+  ] %>
+
+  <% mixed_slides = [image_slides.first, video_slides.first, html_card_slides.first] %>
+  <% deep_link_index = Integer(params[:slide], exception: false) %>
+
+  <% slides = case demo_type
+  when :videos
+    video_slides
+  when :html_cards, :security
+    html_card_slides
+  when :mixed_content
+    mixed_slides
+  else
+    image_slides
+  end %>
+
+  <% carousel_options = {
+    slides: slides,
+    initial_index: deep_link_index || 0,
+    show_thumbs: false,
+    show_indicators: true,
+    show_controls: true,
+    autoplay: false,
+    autoplay_interval_ms: 4500,
+    pause_on_hover: true,
+    pause_on_focus: true,
+    loop: false,
+    transition: :slide,
+    aspect_ratio: "16/9",
+    touch_swipe: true,
+    show_captions: true,
+    caption_mode: :below
+  } %>
+
+  <% if [:thumbnails, :navigation].include?(demo_type) %>
+    <% carousel_options[:show_thumbs] = true %>
+    <% carousel_options[:thumbs_position] = :bottom %>
+    <% carousel_options[:thumbs_alignment] = :center %>
+  <% end %>
+
+  <% if demo_type == :autoplay_loop %>
+    <% carousel_options[:autoplay] = true %>
+    <% carousel_options[:loop] = true %>
+    <% carousel_options[:autoplay_interval_ms] = 3000 %>
+  <% end %>
+
+  <% if demo_type == :captions %>
+    <% carousel_options[:caption_mode] = :overlay %>
+  <% end %>
+
+  <% if demo_type == :mobile %>
+    <% carousel_options[:aspect_ratio] = "4/3" %>
+  <% end %>
+
+  <% if demo_type == :fullscreen %>
+    <% carousel_options[:show_thumbs] = true %>
+    <% carousel_options[:loop] = true %>
+    <% carousel_options[:caption_mode] = :overlay %>
+    <% carousel_options[:aspect_ratio] = "21/9" %>
+  <% end %>
+
+  <% if demo_type == :reduced_motion %>
+    <% carousel_options[:autoplay] = false %>
+    <% carousel_options[:transition] = :fade %>
+  <% end %>
+
+  <% if demo_type == :video_aware %>
+    <% carousel_options[:slides] = video_slides %>
+    <% carousel_options[:autoplay] = true %>
+    <% carousel_options[:autoplay_interval_ms] = 7000 %>
+  <% end %>
 
   <section class="mb-8">
     <%= render FlatPack::SectionTitle::Component.new(
@@ -24,121 +173,15 @@
     ) %>
 
     <div class="mt-6 overflow-hidden rounded-xl border border-(--surface-border-color) bg-(--surface-background-color) p-4">
-      <div>
-        <div class="relative aspect-video overflow-hidden rounded-lg border border-(--surface-border-color) bg-(--surface-muted-background-color)">
-          <% if demo_type == :videos %>
-            <% video_slides.each_with_index do |slide, index| %>
-              <div data-carousel-demo-target="slide" data-caption="<%= slide[:caption] %>" class="<%= index.zero? ? '' : 'hidden' %> h-full w-full" aria-hidden="<%= (!index.zero?).to_s %>">
-                <video class="h-full w-full object-cover" controls preload="metadata">
-                  <source src="<%= slide[:src] %>" type="video/mp4">
-                </video>
-              </div>
-            <% end %>
-          <% elsif demo_type == :html_cards %>
-            <% [
-              {title: "Release Notes", body: "Version 2.4 shipped with faster search and improved composer states.", cta: "Read Changelog"},
-              {title: "Experiment Result", body: "Variant B improved activation by 11% in this week’s onboarding cohort.", cta: "View Report"},
-              {title: "Roadmap Update", body: "Next sprint focuses on media flows, review tooling, and admin controls.", cta: "Open Roadmap"}
-            ].each_with_index do |card, index| %>
-              <div data-carousel-demo-target="slide" data-caption="<%= card[:title] %>" class="<%= index.zero? ? '' : 'hidden' %> h-full w-full p-6" aria-hidden="<%= (!index.zero?).to_s %>">
-                <div class="flex h-full flex-col justify-between rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6 shadow-sm">
-                  <div>
-                    <h3 class="text-xl font-semibold text-(--surface-content-color)"><%= card[:title] %></h3>
-                    <p class="mt-3 text-sm text-(--surface-muted-content-color)"><%= card[:body] %></p>
-                  </div>
-                  <div class="mt-6">
-                    <%= render FlatPack::Button::Component.new(text: card[:cta], style: :secondary, size: :sm) %>
-                  </div>
-                </div>
-              </div>
-            <% end %>
-          <% else %>
-            <% image_slides.each_with_index do |slide, index| %>
-              <div data-carousel-demo-target="slide" data-caption="<%= slide[:caption] %>" class="<%= index.zero? ? '' : 'hidden' %> h-full w-full" aria-hidden="<%= (!index.zero?).to_s %>">
-                <img src="<%= slide[:src] %>" alt="<%= slide[:alt] %>" class="h-full w-full object-cover">
-                <% if demo_type == :lightbox %>
-                  <button
-                    type="button"
-                    class="absolute bottom-3 right-3 rounded-md bg-black/70 px-3 py-1.5 text-xs font-medium text-white"
-                    data-action="click->carousel-demo#openLightbox click->flat-pack--modal#open"
-                    data-modal-id="carousel-lightbox-modal"
-                    data-lightbox-src="<%= slide[:src] %>"
-                    data-lightbox-alt="<%= slide[:alt] %>"
-                    data-lightbox-caption="<%= slide[:caption] %>">
-                    Open Lightbox
-                  </button>
-                <% end %>
-              </div>
-            <% end %>
-          <% end %>
-
-          <div class="absolute inset-0 z-20 p-3 sm:p-4">
-            <div class="flex justify-end">
-              <span data-carousel-demo-target="counter" class="rounded-full bg-black/60 px-2.5 py-1 text-xs font-medium text-white backdrop-blur-sm"></span>
-            </div>
-
-            <div class="absolute inset-y-0 left-2 flex items-center sm:left-3">
-              <div class="rounded-full bg-black/50 p-1 backdrop-blur-sm">
-                <%= render FlatPack::Button::Component.new(text: "<", style: :secondary, size: :sm, data: {action: "click->carousel-demo#prev"}) %>
-              </div>
-            </div>
-
-            <div class="absolute inset-y-0 right-2 flex items-center sm:right-3">
-              <div class="rounded-full bg-black/50 p-1 backdrop-blur-sm">
-                <%= render FlatPack::Button::Component.new(text: ">", style: :secondary, size: :sm, data: {action: "click->carousel-demo#next"}) %>
-              </div>
-            </div>
-
-            <div class="absolute inset-x-0 bottom-3 flex justify-center sm:bottom-4">
-              <div class="flex items-center gap-2 rounded-full bg-black/50 px-3 py-2 backdrop-blur-sm">
-                <% slide_count = demo_type == :videos ? video_slides.length : 3 %>
-                <% slide_count.times do |index| %>
-                  <button
-                    type="button"
-                    data-carousel-demo-target="indicator"
-                    data-action="click->carousel-demo#goTo"
-                    data-index="<%= index %>"
-                    class="h-2.5 w-2.5 rounded-full bg-(--surface-border-color)"
-                    aria-label="Go to slide <%= index + 1 %>"></button>
-                <% end %>
-              </div>
-            </div>
-          </div>
+      <% if demo_type == :rtl %>
+        <div dir="rtl">
+          <%= render FlatPack::Carousel::Component.new(**carousel_options) %>
         </div>
-
-        <% if demo_type == :thumbnails %>
-          <div class="mt-4 flex flex-wrap items-center gap-2">
-            <% image_slides.each_with_index do |slide, index| %>
-              <button
-                type="button"
-                data-carousel-demo-target="thumb"
-                data-action="click->carousel-demo#goTo"
-                data-index="<%= index %>"
-                class="h-16 w-16 shrink-0 overflow-hidden rounded-md border border-(--surface-border-color) sm:h-20 sm:w-20">
-                <img src="<%= slide[:src] %>" alt="Thumbnail <%= index + 1 %>" class="h-full w-full object-cover">
-              </button>
-            <% end %>
-          </div>
-        <% end %>
-
-        <p data-carousel-demo-target="caption" class="mt-3 text-sm text-(--surface-muted-content-color)"></p>
-      </div>
+      <% else %>
+        <%= render FlatPack::Carousel::Component.new(**carousel_options) %>
+      <% end %>
     </div>
   </section>
-
-  <% if demo_type == :lightbox %>
-    <%= render FlatPack::Modal::Component.new(id: "carousel-lightbox-modal", size: :xl) do |modal| %>
-      <% modal.header_content do %>
-        <h3 class="text-lg font-semibold text-(--surface-content-color)">Carousel Lightbox</h3>
-      <% end %>
-      <% modal.body_content do %>
-        <div class="space-y-3">
-          <img data-carousel-demo-target="lightboxImage" src="" alt="Lightbox slide" class="max-h-[70vh] w-full rounded-lg object-contain bg-black">
-          <p data-carousel-demo-target="lightboxCaption" class="text-sm text-(--surface-muted-content-color)"></p>
-        </div>
-      <% end %>
-    <% end %>
-  <% end %>
 
   <section class="mb-10">
     <%= render FlatPack::SectionTitle::Component.new(

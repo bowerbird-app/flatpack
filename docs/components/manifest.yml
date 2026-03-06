@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-02-27
+updated_at: 2026-03-05
 
 format_reference: docs/components/DOC_FORMAT.md
 human_index: docs/components/README.md
@@ -73,6 +73,12 @@ components:
     primary_class: FlatPack::Card::Component
     related_classes:
       - FlatPack::Card::Stat::Component
+    status: documented
+
+  - key: carousel
+    title: Carousel
+    doc: docs/components/carousel.md
+    primary_class: FlatPack::Carousel::Component
     status: documented
 
   - key: chart

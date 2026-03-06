@@ -21,6 +21,7 @@ button | FlatPack::Button::Component | docs/components/button.md
 button_dropdown | FlatPack::Button::Dropdown::Component | docs/components/button-dropdown.md
 button_group | FlatPack::ButtonGroup::Component | docs/components/button-group.md
 card | FlatPack::Card::Component | docs/components/card.md
+carousel | FlatPack::Carousel::Component | docs/components/carousel.md
 chart | FlatPack::Chart::Component | docs/components/charts.md
 chat | FlatPack::Chat::Panel::Component | docs/components/chat.md
 chips | FlatPack::Chip::Component | docs/components/chips.md

@@ -143,6 +143,23 @@
   --card-hover-strong-border-color: var(--color-primary);
   --card-hover-strong-shadow: var(--shadow-md);
   --card-hover-strong-shadow-dark: var(--shadow-lg);
+  --carousel-viewport-background-color: var(--surface-muted-background-color);
+  --carousel-viewport-border-color: var(--surface-border-color);
+  --carousel-chevron-background-color: rgb(0 0 0 / 0.6);
+  --carousel-control-background-color: rgb(0 0 0 / 0.6);
+  --carousel-control-hover-background-color: rgb(0 0 0 / 0.8);
+  --carousel-control-text-color: oklch(1.0 0 0);
+  --carousel-counter-background-color: rgb(0 0 0 / 0.6);
+  --carousel-counter-text-color: oklch(1.0 0 0);
+  --carousel-indicator-track-background-color: rgb(0 0 0 / 0.5);
+  --carousel-indicator-background-color: rgb(255 255 255 / 0.5);
+  --carousel-indicator-active-background-color: rgb(255 255 255);
+  --carousel-thumb-border-color: var(--surface-border-color);
+  --carousel-thumb-placeholder-background-color: var(--surface-muted-background-color);
+  --carousel-thumb-placeholder-text-color: var(--surface-muted-content-color);
+  --carousel-caption-overlay-background-color: rgb(0 0 0 / 0.6);
+  --carousel-caption-overlay-text-color: oklch(1.0 0 0);
+  --carousel-caption-below-text-color: var(--surface-muted-content-color);
   --modal-backdrop-color: rgb(0 0 0 / 0.5);
   --modal-surface-color: var(--surface-background-color);
   --modal-border-color: var(--surface-border-color);
@@ -991,6 +1008,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   
   --surface-border-color: oklch(0.30 0.02 250);
   --surface-border-hover-color: oklch(0.40 0.03 250);
+  --carousel-chevron-background-color: rgb(15 20 36 / 0.72);
   --checkbox-size: 1.25rem;
   --checkbox-radius: 0.125rem;
   --checkbox-label-gap: 0.75rem;
@@ -1447,6 +1465,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   
   --surface-border-color: oklch(0.87 0.02 220);
   --surface-border-hover-color: oklch(0.80 0.03 220);
+  --carousel-chevron-background-color: rgb(14 79 128 / 0.72);
   --checkbox-size: 1.25rem;
   --checkbox-radius: 0.125rem;
   --checkbox-label-gap: 0.75rem;
@@ -1902,6 +1921,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
 
   --surface-border-color: #d1d5db;
   --surface-border-hover-color: #d1d5db;
+  --carousel-chevron-background-color: rgb(31 41 55 / 0.68);
   --checkbox-size: 1.25rem;
   --checkbox-radius: 0.125rem;
   --checkbox-label-gap: 0.75rem;

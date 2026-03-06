@@ -64,16 +64,7 @@ module FlatPack
 
         def render_textarea_section
           content_tag(:div, class: @compact ? "p-2" : "p-3") do
-            textarea_attrs = {
-              name: @name,
-              rows: @rows,
-              placeholder: @placeholder,
-              disabled: @disabled,
-              class: "w-full resize-none bg-transparent text-sm text-[var(--comments-composer-text-color)] placeholder:text-[var(--comments-composer-placeholder-color)] focus:outline-none"
-            }
-            textarea_attrs[:form] = @form if @form
-
-            content_tag(:textarea, @value, **textarea_attrs)
+            render FlatPack::TextArea::Component.new(**textarea_component_arguments)
           end
         end
 
@@ -116,21 +107,48 @@ module FlatPack
         end
 
         def render_cancel_button
-          content_tag(:button,
-            type: "button",
-            disabled: @disabled,
-            class: "px-3 py-1.5 text-sm font-medium text-[var(--comments-composer-cancel-text-color)] hover:bg-[var(--comments-composer-cancel-hover-background-color)] rounded-md transition-colors duration-base") do
-            @cancel_label
-          end
+          render FlatPack::Button::Component.new(**cancel_button_arguments)
         end
 
         def render_submit_button
-          content_tag(:button,
-            type: "submit",
+          render FlatPack::Button::Component.new(**submit_button_arguments)
+        end
+
+        def textarea_component_arguments
+          args = {
+            name: @name,
+            value: @value,
+            rows: @rows,
+            placeholder: @placeholder,
             disabled: @disabled,
-            class: "px-3 py-1.5 text-sm font-medium text-[var(--comments-composer-submit-text-color)] bg-[var(--comments-composer-submit-background-color)] hover:bg-[var(--comments-composer-submit-hover-background-color)] rounded-md transition-colors duration-base disabled:opacity-50") do
-            @submit_label
-          end
+            class: "w-full resize-none border-0 bg-transparent px-0 py-0 text-sm text-[var(--comments-composer-text-color)] placeholder:text-[var(--comments-composer-placeholder-color)] focus:ring-0 focus:border-transparent"
+          }
+          args[:form] = @form if @form
+          args
+        end
+
+        def cancel_button_arguments
+          args = {
+            text: @cancel_label,
+            type: "button",
+            style: :ghost,
+            size: :sm,
+            disabled: @disabled
+          }
+          args[:form] = @form if @form
+          args
+        end
+
+        def submit_button_arguments
+          args = {
+            text: @submit_label,
+            type: "submit",
+            style: :primary,
+            size: :sm,
+            disabled: @disabled
+          }
+          args[:form] = @form if @form
+          args
         end
       end
     end

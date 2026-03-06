@@ -81,6 +81,32 @@
         { variable: "padding", accepts: ":none, :sm, :md, :lg", example: "padding: :lg" }
       ]
     },
+    carousel: {
+      label: "Carousel",
+      method_call: "render FlatPack::Carousel::Component.new(slides: slides, show_controls: true, show_indicators: true)",
+      variables: [
+        { variable: "slides", accepts: "Array<Hash> (required)", example: "slides: [{ type: :image, src: \"https://...\", alt: \"Preview\" }]" },
+        { variable: "initial_index", accepts: "Integer", example: "initial_index: 0" },
+        { variable: "show_controls", accepts: "true, false", example: "show_controls: true" },
+        { variable: "show_indicators", accepts: "true, false", example: "show_indicators: true" },
+        { variable: "show_thumbs", accepts: "true, false", example: "show_thumbs: true" },
+        { variable: "thumbs_position", accepts: ":top, :bottom", example: "thumbs_position: :bottom" },
+        { variable: "thumbs_alignment", accepts: ":start, :center, :end", example: "thumbs_alignment: :center" },
+        { variable: "show_captions", accepts: "true, false", example: "show_captions: true" },
+        { variable: "transition", accepts: ":slide, :fade", example: "transition: :fade" },
+        { variable: "autoplay", accepts: "true, false", example: "autoplay: true" },
+        { variable: "autoplay_interval_ms", accepts: "Integer", example: "autoplay_interval_ms: 4000" },
+        { variable: "pause_on_hover", accepts: "true, false", example: "pause_on_hover: true" },
+        { variable: "pause_on_focus", accepts: "true, false", example: "pause_on_focus: true" },
+        { variable: "loop", accepts: "true, false", example: "loop: true" },
+        { variable: "responsive", accepts: "true, false", example: "responsive: true" },
+        { variable: "touch_swipe", accepts: "true, false", example: "touch_swipe: true" },
+        { variable: "caption_mode", accepts: ":below, :overlay", example: "caption_mode: :overlay" },
+        { variable: "aspect_ratio", accepts: "String", example: "aspect_ratio: \"16/9\"" },
+        { variable: "aria_label", accepts: "String", example: "aria_label: \"Product carousel\"" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"shadow-lg\", data: { testid: \"carousel\" }" }
+      ]
+    },
     chart: {
       label: "Chart",
       method_call: "render FlatPack::Chart::Component.new(type: :line, series: [{ name: \"Sales\", data: [10, 20] }])",
@@ -250,7 +276,10 @@
       variables: [
         { variable: "count", accepts: "Integer", example: "count: 4" },
         { variable: "title", accepts: "String", example: "title: \"Discussion\"" },
-        { variable: "variant", accepts: ":default, :compact", example: "variant: :compact" }
+        { variable: "variant", accepts: ":default, :compact", example: "variant: :compact" },
+        { variable: "empty_title", accepts: "String", example: "empty_title: \"No comments yet\"" },
+        { variable: "empty_body", accepts: "String", example: "empty_body: \"Be the first to share your thoughts.\"" },
+        { variable: "locked", accepts: "true, false", example: "locked: true" }
       ]
     },
     comments_item: {
@@ -258,17 +287,54 @@
       method_call: "render FlatPack::Comments::Item::Component.new(author_name: \"Alice\", body: \"Looks good\")",
       variables: [
         { variable: "author_name", accepts: "String", example: "author_name: \"Alice Johnson\"" },
+        { variable: "author_meta", accepts: "String or nil", example: "author_meta: \"Designer\"" },
         { variable: "body", accepts: "String or nil", example: "body: \"This is great work.\"" },
-        { variable: "timestamp", accepts: "String, Time, or nil", example: "timestamp: \"2 hours ago\"" }
+        { variable: "body_html", accepts: "String or nil", example: "body_html: \"<strong>Looks good</strong>\"" },
+        { variable: "timestamp", accepts: "String or nil", example: "timestamp: \"2 hours ago\"" },
+        { variable: "timestamp_iso", accepts: "String or nil", example: "timestamp_iso: comment.created_at.iso8601" },
+        { variable: "edited", accepts: "true, false", example: "edited: true" },
+        { variable: "state", accepts: ":default, :system, :deleted", example: "state: :system" },
+        { variable: "avatar", accepts: "Hash", example: "avatar: { name: \"Alice Johnson\" }" }
+      ]
+    },
+    comments_replies: {
+      label: "Comments Replies",
+      method_call: "render FlatPack::Comments::Replies::Component.new(depth: 1) do |replies| ... end",
+      variables: [
+        { variable: "depth", accepts: "Integer", example: "depth: 2" },
+        { variable: "collapsed", accepts: "true, false", example: "collapsed: false" },
+        { variable: "collapsed_label", accepts: "String", example: "collapsed_label: \"Show replies\"" },
+        { variable: "comments", accepts: "slot block", example: "replies.with_comment { ... }" }
       ]
     },
     comments_composer: {
       label: "Comments Composer",
-      method_call: "render FlatPack::Comments::Composer::Component.new(placeholder: \"Write a comment...\")",
+      method_call: "render FlatPack::Comments::Composer::Component.new(name: \"comment[body]\", submit_label: \"Reply\", compact: true, rows: 2)",
       variables: [
         { variable: "placeholder", accepts: "String", example: "placeholder: \"Share feedback...\"" },
         { variable: "submit_label", accepts: "String", example: "submit_label: \"Post\"" },
-        { variable: "disabled", accepts: "true, false", example: "disabled: false" }
+        { variable: "cancel_label", accepts: "String", example: "cancel_label: \"Cancel\"" },
+        { variable: "show_cancel", accepts: "true, false", example: "show_cancel: true" },
+        { variable: "disabled", accepts: "true, false", example: "disabled: false" },
+        { variable: "compact", accepts: "true, false", example: "compact: true" },
+        { variable: "form", accepts: "String or nil", example: "form: \"reply-form\"" },
+        { variable: "name", accepts: "String", example: "name: \"comment[body]\"" },
+        { variable: "value", accepts: "String or nil", example: "value: \"Draft comment\"" },
+        { variable: "rows", accepts: "Integer", example: "rows: 2" },
+        { variable: "toolbar / attachments / actions", accepts: "slot block", example: "composer.with_actions { ... }" }
+      ]
+    },
+    comments_inline_input: {
+      label: "Comments Inline Input",
+      method_call: "render FlatPack::Comments::InlineInput::Component.new(name: \"comment[body]\", submit_label: \"Comment\")",
+      variables: [
+        { variable: "placeholder", accepts: "String", example: "placeholder: \"Write a comment...\"" },
+        { variable: "submit_label", accepts: "String", example: "submit_label: \"Comment\"" },
+        { variable: "disabled", accepts: "true, false", example: "disabled: false" },
+        { variable: "form", accepts: "String or nil", example: "form: \"new-comment-form\"" },
+        { variable: "name", accepts: "String", example: "name: \"comment[body]\"" },
+        { variable: "value", accepts: "String or nil", example: "value: \"Draft\"" },
+        { variable: "rows", accepts: "Integer", example: "rows: 1" }
       ]
     },
     chat_message_group: {

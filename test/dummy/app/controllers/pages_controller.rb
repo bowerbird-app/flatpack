@@ -23,6 +23,7 @@ class PagesController < ApplicationController
     {action: /\Atoasts\z/, title: "Toasts", patterns: [/\A--toast-/]},
     {action: /\Atext_quote\z/, title: "Quote", patterns: [/\A--quote-/]},
     {action: /\Acode_blocks\z/, title: "Code Blocks", patterns: [/\A--code-block-/]},
+    {action: /\Acarousel\z/, title: "Carousel", patterns: [/\A--carousel-/]},
     {action: /\Aavatars\z/, title: "Avatars", patterns: [/\A--avatar-/]},
     {action: /\Acomments\z/, title: "Comments", patterns: [/\A--comments-/]},
     {action: /\Achat(_.*)?\z/, title: "Chat", patterns: [/\A--chat-/]},
@@ -456,88 +457,12 @@ class PagesController < ApplicationController
   end
 
   def carousel
-    @carousel_examples = carousel_examples
-    @carousel_featured_examples = carousel_featured_examples
-  end
-
-  def carousel_images
-    render_carousel_example(:images)
-  end
-
-  def carousel_lightbox
-    render_carousel_example(:lightbox)
-  end
-
-  def carousel_thumbnails
-    render_carousel_example(:thumbnails)
-  end
-
-  def carousel_html_cards
-    render_carousel_example(:html_cards)
-  end
-
-  def carousel_videos
-    render_carousel_example(:videos)
-  end
-
-  def carousel_mixed_content
-    render_carousel_example(:mixed_content)
-  end
-
-  def carousel_navigation
-    render_carousel_example(:navigation)
-  end
-
-  def carousel_autoplay_loop
-    render_carousel_example(:autoplay_loop)
-  end
-
-  def carousel_mobile
-    render_carousel_example(:mobile)
-  end
-
-  def carousel_captions
-    render_carousel_example(:captions)
-  end
-
-  def carousel_fullscreen
-    render_carousel_example(:fullscreen)
-  end
-
-  def carousel_rtl
-    render_carousel_example(:rtl)
-  end
-
-  def carousel_video_aware
-    render_carousel_example(:video_aware)
-  end
-
-  def carousel_loading_states
-    render_carousel_example(:loading_states)
-  end
-
-  def carousel_performance
-    render_carousel_example(:performance)
-  end
-
-  def carousel_events_api
-    render_carousel_example(:events_api)
-  end
-
-  def carousel_security
-    render_carousel_example(:security)
-  end
-
-  def carousel_theming
-    render_carousel_example(:theming)
-  end
-
-  def carousel_deep_linking
-    render_carousel_example(:deep_linking)
-  end
-
-  def carousel_reduced_motion
-    render_carousel_example(:reduced_motion)
+    @carousel_slides = carousel_demo_slides
+    @carousel_notes = [
+      "Uses FlatPack::Carousel::Component with image, video, and component-rendered HTML slides.",
+      "Demonstrates autoplay, loop, indicators, controls, and thumbnail navigation.",
+      "Uses secure defaults for rich content and supports keyboard plus touch interactions."
+    ]
   end
 
   def progress
@@ -1249,27 +1174,7 @@ class PagesController < ApplicationController
       {title: "Chat Composer", description: "Composer input and action patterns", url: demo_chat_composer_path},
       {title: "Chat Textarea", description: "Chat textarea component examples", url: demo_chat_textarea_path},
       {title: "Chat Send Button", description: "Send button component examples", url: demo_chat_send_button_path},
-      {title: "Carousel", description: "Carousel proposal overview and demo plan", url: demo_carousel_path},
-      {title: "Carousel: Images", description: "Image-based carousel with controls and keyboard navigation", url: demo_carousel_images_path},
-      {title: "Carousel: Lightbox", description: "Open active slide in a fullscreen modal lightbox", url: demo_carousel_lightbox_path},
-      {title: "Carousel: Thumbnails", description: "Thumbnail-driven carousel navigation", url: demo_carousel_thumbnails_path},
-      {title: "Carousel: HTML Cards", description: "Rich HTML card content rendered as carousel slides", url: demo_carousel_html_cards_path},
-      {title: "Carousel: Videos", description: "Video slides with poster and playback controls", url: demo_carousel_videos_path},
-      {title: "Carousel: Mixed Content", description: "Slides for image, video, and custom HTML", url: demo_carousel_mixed_content_path},
-      {title: "Carousel: Navigation", description: "Centered thumbs, indicator circles, and controls", url: demo_carousel_navigation_path},
-      {title: "Carousel: Autoplay + Loop", description: "Auto-advance timing with loop options", url: demo_carousel_autoplay_loop_path},
-      {title: "Carousel: Mobile", description: "Mobile responsive behavior and touch interactions", url: demo_carousel_mobile_path},
-      {title: "Carousel: Captions", description: "Optional overlay or below-media caption modes", url: demo_carousel_captions_path},
-      {title: "Carousel: Fullscreen", description: "Fullscreen and lightbox mode behavior", url: demo_carousel_fullscreen_path},
-      {title: "Carousel: RTL", description: "Right-to-left direction and control semantics", url: demo_carousel_rtl_path},
-      {title: "Carousel: Video Aware", description: "Video playback coordination with autoplay", url: demo_carousel_video_aware_path},
-      {title: "Carousel: Loading States", description: "Skeleton and fallback states for failed media", url: demo_carousel_loading_states_path},
-      {title: "Carousel: Performance", description: "Virtualization and adjacent preload strategy", url: demo_carousel_performance_path},
-      {title: "Carousel: Events API", description: "Imperative API and lifecycle events", url: demo_carousel_events_api_path},
-      {title: "Carousel: Security", description: "Sanitization and safe HTML slide policy", url: demo_carousel_security_path},
-      {title: "Carousel: Theming", description: "Tokenized styles for controls, thumbs, and captions", url: demo_carousel_theming_path},
-      {title: "Carousel: Deep Linking", description: "URL state sync and shareable slide links", url: demo_carousel_deep_linking_path},
-      {title: "Carousel: Reduced Motion", description: "Reduced-motion behavior and autoplay policy", url: demo_carousel_reduced_motion_path},
+      {title: "Carousel", description: "FlatPack carousel demo with mixed media and navigation controls", url: demo_carousel_path},
       {title: "Progress", description: "Progress indicators and loading states", url: demo_progress_path},
       {title: "Collapse", description: "Expandable and collapsible content patterns", url: demo_collapse_path},
       {title: "Skeletons", description: "Skeleton loading placeholders", url: demo_skeletons_path},
@@ -1315,241 +1220,43 @@ class PagesController < ApplicationController
     }.compact
   end
 
-  def render_carousel_example(key)
-    @carousel_examples = carousel_examples
-    @carousel_example = @carousel_examples.fetch(key)
-    render "pages/carousel_example"
-  end
-
-  def carousel_featured_examples
-    %i[images lightbox thumbnails html_cards videos].to_h do |key|
-      [key, carousel_examples.fetch(key)]
-    end
-  end
-
-  def carousel_examples
-    {
-      images: {
-        title: "Image Carousel",
-        subtitle: "Swipe or click through image slides with keyboard and control support.",
-        route: :demo_carousel_images_path,
-        demo_type: :images,
-        bullets: [
-          "Supports previous/next controls and keyboard arrows.",
-          "Includes slide counter and optional captions.",
-          "Designed for responsive media previews."
-        ]
+  def carousel_demo_slides
+    [
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1600&h=900&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=320&h=180&fit=crop",
+        alt: "Product analytics dashboard",
+        caption: "Analytics dashboard concept"
       },
-      lightbox: {
-        title: "Lightbox Carousel",
-        subtitle: "Open active slide in a modal lightbox for focused viewing.",
-        route: :demo_carousel_lightbox_path,
-        demo_type: :lightbox,
-        bullets: [
-          "Open the selected slide in a large modal canvas.",
-          "Retains current slide context between inline and modal.",
-          "Useful for product galleries and media review flows."
-        ]
+      {
+        type: :video,
+        src: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+        poster: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=1600&h=900&fit=crop",
+        caption: "Product teaser clip"
       },
-      thumbnails: {
-        title: "Thumbnail Navigation",
-        subtitle: "Use thumbnail strip navigation for fast slide selection.",
-        route: :demo_carousel_thumbnails_path,
-        demo_type: :thumbnails,
-        bullets: [
-          "Thumbnail strip reflects active state.",
-          "Tap/click a thumb to jump directly to a slide.",
-          "Great for dense media sets."
-        ]
+      {
+        type: :html,
+        caption: "Email capture form",
+        html: ApplicationController.render(
+          renderable: FlatPack::TextInput::Component.new(
+            name: "lead[email]",
+            label: "Work email",
+            placeholder: "you@company.com",
+            required: true,
+            class: "w-full"
+          ),
+          layout: false
+        )
       },
-      html_cards: {
-        title: "HTML Card Slides",
-        subtitle: "Render full HTML card content as carousel slides.",
-        route: :demo_carousel_html_cards_path,
-        demo_type: :html_cards,
-        bullets: [
-          "Supports interactive card layouts per slide.",
-          "Works for announcements, release notes, and marketing tiles.",
-          "Keeps carousel controls while preserving rich content."
-        ]
-      },
-      videos: {
-        title: "Video Carousel",
-        subtitle: "Cycle through video slides with controls and poster previews.",
-        route: :demo_carousel_videos_path,
-        demo_type: :videos,
-        bullets: [
-          "Supports native video controls per slide.",
-          "Pauses background videos when slide changes.",
-          "Suitable for tutorials and product walkthrough reels."
-        ]
-      },
-      mixed_content: {
-        title: "Mixed Content Slides",
-        subtitle: "Support image, video, and custom HTML slide types in one carousel.",
-        route: :demo_carousel_mixed_content_path,
-        demo_type: :html_cards,
-        bullets: [
-          "Image slides require src and alt text.",
-          "Video slides support poster, controls, and media-specific options.",
-          "HTML slides use sanitized markup by default."
-        ]
-      },
-      navigation: {
-        title: "Navigation Controls",
-        subtitle: "Configurable thumbs, indicator circles, and forward/back controls.",
-        route: :demo_carousel_navigation_path,
-        demo_type: :thumbnails,
-        bullets: [
-          "Thumb strip supports centered alignment.",
-          "Indicator circles map to slide index and current state.",
-          "Prev/next controls disable at edges unless loop is enabled."
-        ]
-      },
-      autoplay_loop: {
-        title: "Autoplay And Loop",
-        subtitle: "Timer-based progression with interaction-aware pause and loop behavior.",
-        route: :demo_carousel_autoplay_loop_path,
-        demo_type: :images,
-        bullets: [
-          "Global autoplay interval with per-slide override options.",
-          "Pause on hover/focus and resume when safe.",
-          "Loop toggles wrap-around navigation behavior."
-        ]
-      },
-      mobile: {
-        title: "Mobile Responsive",
-        subtitle: "Mobile-first layout with touch gestures and breakpoint overrides.",
-        route: :demo_carousel_mobile_path,
-        demo_type: :images,
-        bullets: [
-          "Use larger tap targets for controls.",
-          "Enable horizontal swipe while preserving vertical page scroll.",
-          "Allow per-breakpoint toggles for thumbs and indicators."
-        ]
-      },
-      captions: {
-        title: "Optional Captions",
-        subtitle: "Render captions as overlay or below the carousel body.",
-        route: :demo_carousel_captions_path,
-        demo_type: :images,
-        bullets: [
-          "Support plain-text captions by default.",
-          "Optional sanitized caption HTML for richer formatting.",
-          "Associate captions with active slide using aria-describedby."
-        ]
-      },
-      fullscreen: {
-        title: "Fullscreen Mode",
-        subtitle: "Lightbox-like fullscreen presentation for media-heavy experiences.",
-        route: :demo_carousel_fullscreen_path,
-        demo_type: :lightbox,
-        bullets: [
-          "Fullscreen toggle with Escape-to-close.",
-          "Preserve keyboard navigation in fullscreen.",
-          "Retain current slide index between inline and fullscreen modes."
-        ]
-      },
-      rtl: {
-        title: "RTL Support",
-        subtitle: "Respect right-to-left layout semantics for controls and gestures.",
-        route: :demo_carousel_rtl_path,
-        demo_type: :images,
-        bullets: [
-          "Reverse control direction and key bindings in RTL contexts.",
-          "Adjust swipe semantics to match reading direction.",
-          "Mirror track translation rules for visual consistency."
-        ]
-      },
-      video_aware: {
-        title: "Video-Aware Behavior",
-        subtitle: "Coordinate carousel timing with video playback state.",
-        route: :demo_carousel_video_aware_path,
-        demo_type: :videos,
-        bullets: [
-          "Pause autoplay while active video is playing.",
-          "Optionally advance when video ends.",
-          "Handle muted autoplay constraints gracefully."
-        ]
-      },
-      loading_states: {
-        title: "Loading And Error States",
-        subtitle: "Provide resilient fallbacks for slow or failed media resources.",
-        route: :demo_carousel_loading_states_path,
-        demo_type: :images,
-        bullets: [
-          "Slide-level skeleton placeholders.",
-          "Error fallback UI for failed image/video sources.",
-          "Retry and alternate content affordances."
-        ]
-      },
-      performance: {
-        title: "Performance Guardrails",
-        subtitle: "Scale to larger collections with virtualization and selective preload.",
-        route: :demo_carousel_performance_path,
-        demo_type: :images,
-        bullets: [
-          "Render active and adjacent slides only when slide count is high.",
-          "Preload neighboring media for smoother transitions.",
-          "Avoid layout shift with fixed ratio containers."
-        ]
-      },
-      events_api: {
-        title: "Imperative API And Events",
-        subtitle: "Expose stable public methods and lifecycle events for integrations.",
-        route: :demo_carousel_events_api_path,
-        demo_type: :images,
-        bullets: [
-          "Methods: next, prev, goTo, play, pause.",
-          "Events: carousel:change, carousel:play, carousel:pause, carousel:error.",
-          "Enable analytics and cross-component orchestration."
-        ]
-      },
-      security: {
-        title: "Security And Sanitization",
-        subtitle: "Secure default handling for custom HTML and captions.",
-        route: :demo_carousel_security_path,
-        demo_type: :html_cards,
-        bullets: [
-          "Use allowlisted sanitization for HTML slide content.",
-          "Prefer plain text fields for captions and labels.",
-          "Keep unsafe mode opt-in only and documented."
-        ]
-      },
-      theming: {
-        title: "Theming Hooks",
-        subtitle: "Expose tokens for controls, indicators, thumbs, and captions.",
-        route: :demo_carousel_theming_path,
-        demo_type: :images,
-        bullets: [
-          "Tokenized color, radius, spacing, and focus-ring values.",
-          "Theme consistency across light/dark/custom themes.",
-          "Support brand overrides without custom component forks."
-        ]
-      },
-      deep_linking: {
-        title: "Deep Linking",
-        subtitle: "Optional URL sync to restore and share carousel state.",
-        route: :demo_carousel_deep_linking_path,
-        demo_type: :images,
-        bullets: [
-          "Sync active slide to hash or query param.",
-          "Restore initial slide from URL on load.",
-          "Preserve history behavior for navigation ergonomics."
-        ]
-      },
-      reduced_motion: {
-        title: "Reduced Motion",
-        subtitle: "Respect motion preferences with safer defaults.",
-        route: :demo_carousel_reduced_motion_path,
-        demo_type: :images,
-        bullets: [
-          "Disable autoplay by default when reduced motion is requested.",
-          "Use simplified transitions and avoid parallax effects.",
-          "Keep navigation fully functional without motion dependency."
-        ]
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1600&h=900&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=320&h=180&fit=crop",
+        alt: "Planning workshop board",
+        caption: "Planning workshop board"
       }
-    }
+    ]
   end
 
   def load_demo_theme_tokens
