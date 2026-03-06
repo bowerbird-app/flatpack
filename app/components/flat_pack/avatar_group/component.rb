@@ -92,7 +92,7 @@ module FlatPack
           status: avatar_attrs[:status],
           href: avatar_attrs[:href],
           show_tooltip: false,
-          class: "ring-2 ring-[var(--avatar-group-ring-color)] transition-transform hover:scale-110"
+          class: "ring-2 ring-[var(--avatar-group-ring-color)] transition-transform hover:scale-110 hover:!opacity-100"
         )
 
         tooltip_text = avatar_attrs[:name].presence || avatar_attrs[:alt].presence
@@ -118,7 +118,7 @@ module FlatPack
           shape: :circle,
           href: @overflow_href,
           show_tooltip: false,
-          class: "ring-2 ring-[var(--avatar-group-ring-color)] transition-transform hover:scale-110"
+          class: "ring-2 ring-[var(--avatar-group-ring-color)] transition-transform hover:scale-110 hover:!opacity-100"
         )
 
         tooltip_text = overflow_tooltip_text

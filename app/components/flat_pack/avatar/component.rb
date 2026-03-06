@@ -107,8 +107,7 @@ module FlatPack
           "bg-[var(--avatar-background-color)] text-[var(--avatar-text-color)]",
           "font-medium select-none aspect-square",
           SIZES.fetch(@size),
-          SHAPES.fetch(@shape),
-          @href ? "hover:opacity-[var(--avatar-link-hover-opacity)] transition-opacity duration-base" : nil
+          SHAPES.fetch(@shape)
         )
       end
 

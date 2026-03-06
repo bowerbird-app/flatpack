@@ -44,6 +44,17 @@ module FlatPack
         assert_selector "a[href='/users']"
       end
 
+      def test_linked_avatars_keep_full_opacity_on_hover
+        items = [
+          {name: "User 1", href: "/users/1"},
+          {name: "User 2", href: "/users/2"}
+        ]
+
+        render_inline(Component.new(items: items))
+
+        assert_includes page.native.to_html, "hover:!opacity-100"
+      end
+
       def test_renders_with_overlap_styles
         items = [{name: "User 1"}]
 
