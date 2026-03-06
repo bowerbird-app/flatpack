@@ -551,15 +551,12 @@
                   ) %>
                 <% end %>
               <% end %>
-              <%= render FlatPack::Sidebar::Group::Component.new(
+              <%= render FlatPack::Sidebar::Item::Component.new(
                 label: "Carousel",
+                href: demo_carousel_path(anchor: "component-method-variables-carousel-0"),
                 icon: :image,
-                default_open: current_page?(demo_carousel_path)
-              ) do |group| %>
-                <% group.items do %>
-                  <%= render FlatPack::Sidebar::Item::Component.new(label: "Demo", href: demo_carousel_path, icon: :image, active: current_page?(demo_carousel_path)) %>
-                <% end %>
-              <% end %>
+                active: current_page?(demo_carousel_path)
+              ) %>
               <%= render FlatPack::Sidebar::Item::Component.new(
                 label: "Progress",
                 href: demo_progress_path,

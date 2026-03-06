@@ -122,7 +122,7 @@ module FlatPack
         )
 
         assert_includes rendered_content, "<label for=\"lead_email\">Work email</label>"
-        assert_includes rendered_content, "<input id=\"lead_email\" name=\"lead[email]\" type=\"text\" required=\"required\">"
+        assert_selector "input#lead_email[name='lead[email]'][type='text'][required]", visible: :all
         refute_includes rendered_content, "<script>"
         refute_includes rendered_content, "javascript:alert"
       end
