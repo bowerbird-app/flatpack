@@ -4,7 +4,8 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = ["tooltip"]
   static values = {
-    placement: { type: String, default: "top" }
+    placement: { type: String, default: "top" },
+    collapsedOnly: { type: Boolean, default: false }
   }
 
   connect() {
@@ -18,6 +19,8 @@ export default class extends Controller {
 
   // Show tooltip on mouseenter or focus
   show(event) {
+    if (!this.shouldShowTooltip()) return
+
     this.clearTimeouts()
     
     // Small delay before showing
@@ -182,5 +185,14 @@ export default class extends Controller {
       clearTimeout(this.hideTimeout)
       this.hideTimeout = null
     }
+  }
+
+  shouldShowTooltip() {
+    if (!this.collapsedOnlyValue) return true
+
+    const label = this.element.querySelector("span.flex-1")
+    if (!label) return true
+
+    return label.classList.contains("sr-only")
   }
 }

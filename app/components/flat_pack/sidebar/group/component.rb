@@ -48,9 +48,14 @@ module FlatPack
             safe_join([
               render_icon,
               render_label,
-              render_chevron
+              render_chevron,
+              render_collapsed_tooltip
             ].compact)
           end
+        end
+
+        def render_collapsed_tooltip
+          content_tag(:div, @label, **tooltip_attributes)
         end
 
         def render_panel
@@ -139,8 +144,11 @@ module FlatPack
 
         def header_button_data
           {
-            "flat-pack--sidebar-group-target": "button",
-            action: "click->flat-pack--sidebar-group#toggle"
+            controller: "flat-pack--tooltip",
+            action: "mouseenter->flat-pack--tooltip#show mouseleave->flat-pack--tooltip#hide focusin->flat-pack--tooltip#show focusout->flat-pack--tooltip#hide click->flat-pack--sidebar-group#toggle",
+            "flat-pack--tooltip-placement-value": "right",
+            "flat-pack--tooltip-collapsed-only-value": true,
+            "flat-pack--sidebar-group-target": "button"
           }
         end
 
@@ -184,6 +192,47 @@ module FlatPack
             class: panel_classes,
             data: panel_data
           }
+        end
+
+        def tooltip_attributes
+          {
+            role: "tooltip",
+            class: tooltip_classes,
+            style: tooltip_fallback_styles,
+            data: {
+              "flat-pack--tooltip-target": "tooltip"
+            }
+          }
+        end
+
+        def tooltip_fallback_styles
+          "background-color: var(--tooltip-background-color, var(--surface-content-color)); color: var(--tooltip-text-color, var(--surface-background-color)); border-color: var(--tooltip-border-color, var(--surface-border-color));"
+        end
+
+        def tooltip_classes
+          classes(
+            "fixed",
+            "z-50",
+            "hidden",
+            "px-[var(--tooltip-padding-x)]",
+            "py-[var(--tooltip-padding-y)]",
+            "text-[length:var(--tooltip-font-size)]",
+            "leading-snug",
+            "font-medium",
+            "text-[var(--tooltip-text-color)]",
+            "bg-[var(--tooltip-background-color)]",
+            "border",
+            "border-[var(--tooltip-border-color)]",
+            "rounded-[var(--tooltip-radius)]",
+            "shadow-[var(--tooltip-shadow)]",
+            "max-w-[var(--tooltip-max-width)]",
+            "whitespace-normal",
+            "break-words",
+            "pointer-events-none",
+            "opacity-0",
+            "transition-opacity",
+            "duration-200"
+          )
         end
 
         def panel_classes

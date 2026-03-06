@@ -253,6 +253,13 @@ export default class extends Controller {
       }
     }
 
+    this.sidebarTarget.dataset.flatPackSidebarCollapsed = this.collapsed ? "true" : "false"
+    if (sidebarContent) {
+      sidebarContent.dataset.flatPackSidebarCollapsed = this.collapsed ? "true" : "false"
+    }
+
+    this.updateCollapsedScrollContainerState()
+
     this.clearDesktopRevealTimeout()
 
     if (this.collapsed) {
@@ -331,6 +338,13 @@ export default class extends Controller {
         chevron.classList.add("hidden")
       }
     })
+  }
+
+  updateCollapsedScrollContainerState() {
+    const scrollContainer = this.currentScrollContainer()
+    if (!scrollContainer) return
+
+    scrollContainer.classList.toggle("fp-scrollbar-hidden", this.collapsed)
   }
 
   clearDesktopRevealTimeout() {

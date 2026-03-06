@@ -36,6 +36,8 @@ module FlatPack
           render_inline(Component.new(label: "Reports", href: "#"))
 
           assert_selector "a[data-controller='flat-pack--tooltip']"
+          assert_selector "a[data-flat-pack--tooltip-placement-value='right']"
+          assert_selector "a[data-flat-pack--tooltip-collapsed-only-value='true']"
           assert_selector "a[data-flat-pack-sidebar-item='true']"
           assert_selector "[data-flat-pack--tooltip-target='tooltip']"
         end

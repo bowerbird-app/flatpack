@@ -5,6 +5,34 @@
 @import "../../../../../app/assets/stylesheets/flat_pack/variables.css";
 
 @layer components {
+	.fp-scrollbar-hidden {
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+	}
+
+	.fp-scrollbar-hidden::-webkit-scrollbar {
+		display: none;
+		width: 0;
+		height: 0;
+	}
+
+	[data-flat-pack-sidebar-collapsed="true"] [data-flat-pack--sidebar-layout-target="scrollContainer"] {
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+	}
+
+	[data-flat-pack-sidebar-collapsed="true"] [data-flat-pack--sidebar-layout-target="scrollContainer"]::-webkit-scrollbar {
+		display: none;
+		width: 0;
+		height: 0;
+	}
+
+	[data-flat-pack-sidebar-collapsed="true"] .flex-1.min-h-0.overflow-y-auto.overscroll-y-contain::-webkit-scrollbar {
+		display: none;
+		width: 0;
+		height: 0;
+	}
+
 	.fp-gradient-1 {
 		background-image: var(--gradient-1);
 	}
