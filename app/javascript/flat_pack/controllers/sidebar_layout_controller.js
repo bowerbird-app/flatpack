@@ -558,15 +558,10 @@ export default class extends Controller {
     if (!activeItem) return
 
     requestAnimationFrame(() => {
+      // Align active navigation item to the top edge of the scroll container.
       const containerRect = scrollContainer.getBoundingClientRect()
       const itemRect = activeItem.getBoundingClientRect()
-      const margin = 12
-
-      if (itemRect.top < containerRect.top + margin) {
-        scrollContainer.scrollTop -= (containerRect.top + margin) - itemRect.top
-      } else if (itemRect.bottom > containerRect.bottom - margin) {
-        scrollContainer.scrollTop += itemRect.bottom - (containerRect.bottom - margin)
-      }
+      scrollContainer.scrollTop += itemRect.top - containerRect.top
 
       this.persistScrollState()
     })
