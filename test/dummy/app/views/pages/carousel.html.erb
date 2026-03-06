@@ -33,6 +33,33 @@
     CODE
   ) %>
 
+  <p class="mt-6 mb-2 text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">Lightbox Example (In Basic Carousel)</p>
+  <p class="mb-3 text-sm text-(--surface-muted-content-color)">
+    Image slides open in lightbox by default. Click the expand icon in the top-right corner (below the slide count) to open the active image.
+  </p>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      @carousel_slides = [
+        {
+          type: :image,
+          src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1600&h=900&fit=crop",
+          thumb_src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=320&h=180&fit=crop",
+          alt: "Product analytics dashboard",
+          caption: "Analytics dashboard concept",
+          lightbox: true
+        },
+        {
+          type: :image,
+          src: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1600&h=900&fit=crop",
+          thumb_src: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=320&h=180&fit=crop",
+          alt: "Planning workshop board",
+          caption: "Planning workshop board",
+          lightbox: false
+        }
+      ]
+    CODE
+  ) %>
+
   <p class="mt-6 mb-2 text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">Full Slide Structure (Including HTML Slide)</p>
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE')
@@ -42,7 +69,8 @@
           src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1600&h=900&fit=crop",
           thumb_src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=320&h=180&fit=crop",
           alt: "Product analytics dashboard",
-          caption: "Analytics dashboard concept"
+          caption: "Analytics dashboard concept",
+          lightbox: true
         },
         {
           type: :video,
@@ -160,6 +188,7 @@
       # Suggested note content
       # - Uses FlatPack::Carousel::Component with mixed image, video, and sanitized HTML slides.
       # - Demonstrates autoplay, loop, indicators, controls, and thumbnail navigation.
+      # - Image slides enable lightbox by default and support per-slide override via lightbox: false.
       # - Uses secure defaults for rich content and supports keyboard plus touch interactions.
     CODE
   ) %>

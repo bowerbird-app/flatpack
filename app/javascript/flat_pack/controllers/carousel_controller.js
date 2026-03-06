@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["viewport", "frame", "slide", "indicator", "thumb", "caption", "counter"]
+  static targets = ["viewport", "frame", "slide", "indicator", "thumb", "caption", "counter", "lightboxToggle", "lightbox", "lightboxImage", "lightboxCaption"]
 
   static values = {
     initialIndex: { type: Number, default: 0 },
@@ -22,6 +22,8 @@ export default class extends Controller {
     this.pointerStartX = null
     this.pointerStartY = null
     this.pointerLastX = null
+    this.isLightboxOpen = false
+    this.lightboxPreviouslyFocusedElement = null
 
     this.#bindInteropEvents()
     this.#bindViewportInteractions()
@@ -35,6 +37,7 @@ export default class extends Controller {
   }
 
   disconnect() {
+    this.#hideLightbox({ restoreFocus: false, emit: false })
     this.#clearAutoplayTimer()
     this.#resetPointerDragState()
     this.#unbindInteropEvents()
@@ -97,6 +100,49 @@ export default class extends Controller {
   refresh() {
     this.currentIndex = this.#clampIndex(this.currentIndex)
     this.render({ emit: false })
+  }
+
+  openLightbox() {
+    const activeSlide = this.slideTargets[this.currentIndex]
+    const source = activeSlide?.dataset?.lightboxSrc
+    const enabled = activeSlide?.dataset?.lightboxEnabled === "true"
+
+    if (!enabled || !source || !this.hasLightboxTarget || !this.hasLightboxImageTarget) {
+      return
+    }
+
+    this.lightboxPreviouslyFocusedElement = document.activeElement
+
+    this.lightboxImageTarget.src = source
+    this.lightboxImageTarget.alt = activeSlide?.dataset?.lightboxAlt || ""
+
+    if (this.hasLightboxCaptionTarget) {
+      const caption = activeSlide?.dataset?.caption || ""
+      this.lightboxCaptionTarget.textContent = caption
+      this.lightboxCaptionTarget.classList.toggle("hidden", caption.trim().length === 0)
+    }
+
+    this.lightboxTarget.classList.remove("hidden")
+    this.lightboxTarget.setAttribute("aria-hidden", "false")
+    this.isLightboxOpen = true
+    document.body.classList.add("overflow-hidden")
+
+    this.pauseReasons.add("lightbox")
+    this.#toggleAutoplay(false)
+
+    window.requestAnimationFrame(() => {
+      this.lightboxTarget.focus()
+    })
+
+    this.#dispatch("carousel:lightbox-open", { index: this.currentIndex })
+  }
+
+  closeLightbox(event) {
+    if (event?.type === "click" && event.currentTarget === this.lightboxTarget && event.target !== event.currentTarget) {
+      return
+    }
+
+    this.#hideLightbox()
   }
 
   handleKeydown(event) {
@@ -174,6 +220,8 @@ export default class extends Controller {
     if (this.hasCounterTarget) {
       this.counterTarget.textContent = `${this.currentIndex + 1} / ${this.slideTargets.length}`
     }
+
+    this.#updateLightboxToggle()
 
     if (this.hasCaptionTarget) {
       const activeSlide = this.slideTargets[this.currentIndex]
@@ -558,6 +606,52 @@ export default class extends Controller {
       pause: () => this.pause(),
       stop: () => this.stop(),
       refresh: () => this.refresh()
+    }
+  }
+
+  #updateLightboxToggle() {
+    if (!this.hasLightboxToggleTarget) {
+      return
+    }
+
+    const activeSlide = this.slideTargets[this.currentIndex]
+    const canOpenLightbox = activeSlide?.dataset?.lightboxEnabled === "true" && Boolean(activeSlide?.dataset?.lightboxSrc)
+
+    this.lightboxToggleTarget.hidden = !canOpenLightbox
+
+    if (!canOpenLightbox && this.isLightboxOpen) {
+      this.#hideLightbox({ restoreFocus: false, emit: false })
+    }
+  }
+
+  #hideLightbox(options = {}) {
+    const { restoreFocus = true, emit = true } = options
+
+    if (!this.hasLightboxTarget) {
+      return
+    }
+
+    this.lightboxTarget.classList.add("hidden")
+    this.lightboxTarget.setAttribute("aria-hidden", "true")
+
+    if (this.hasLightboxImageTarget) {
+      this.lightboxImageTarget.src = ""
+      this.lightboxImageTarget.alt = ""
+    }
+
+    this.isLightboxOpen = false
+    document.body.classList.remove("overflow-hidden")
+    this.pauseReasons.delete("lightbox")
+    this.#toggleAutoplay(false)
+
+    if (restoreFocus && this.lightboxPreviouslyFocusedElement instanceof HTMLElement) {
+      this.lightboxPreviouslyFocusedElement.focus()
+    }
+
+    this.lightboxPreviouslyFocusedElement = null
+
+    if (emit) {
+      this.#dispatch("carousel:lightbox-close", { index: this.currentIndex })
     }
   }
 }

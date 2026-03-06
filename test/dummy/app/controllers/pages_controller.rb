@@ -461,6 +461,7 @@ class PagesController < ApplicationController
     @carousel_notes = [
       "Uses FlatPack::Carousel::Component with image, video, and component-rendered HTML slides.",
       "Demonstrates autoplay, loop, indicators, controls, and thumbnail navigation.",
+      "Image slides enable lightbox by default and can opt out per slide with lightbox: false.",
       "Uses secure defaults for rich content and supports keyboard plus touch interactions."
     ]
   end
@@ -1227,7 +1228,8 @@ class PagesController < ApplicationController
         src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1600&h=900&fit=crop",
         thumb_src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=320&h=180&fit=crop",
         alt: "Product analytics dashboard",
-        caption: "Analytics dashboard concept"
+        caption: "Analytics dashboard concept",
+        lightbox: true
       },
       {
         type: :video,
@@ -1254,7 +1256,8 @@ class PagesController < ApplicationController
         src: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1600&h=900&fit=crop",
         thumb_src: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=320&h=180&fit=crop",
         alt: "Planning workshop board",
-        caption: "Planning workshop board"
+        caption: "Planning workshop board",
+        lightbox: false
       }
     ]
   end

@@ -85,7 +85,7 @@
       label: "Carousel",
       method_call: "render FlatPack::Carousel::Component.new(slides: slides, show_controls: true, show_indicators: true)",
       variables: [
-        { variable: "slides", accepts: "Array<Hash> (required)", example: "slides: [{ type: :image, src: \"https://...\", alt: \"Preview\" }]" },
+        { variable: "slides", accepts: "Array<Hash> (required)", example: "slides: [{ type: :image, src: \"https://...\", alt: \"Preview\", lightbox: true }]" },
         { variable: "initial_index", accepts: "Integer", example: "initial_index: 0" },
         { variable: "show_controls", accepts: "true, false", example: "show_controls: true" },
         { variable: "show_indicators", accepts: "true, false", example: "show_indicators: true" },

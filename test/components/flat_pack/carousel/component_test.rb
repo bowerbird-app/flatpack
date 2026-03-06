@@ -27,6 +27,31 @@ module FlatPack
         ]
       end
 
+      def lightbox_slides
+        [
+          {
+            type: :image,
+            src: "https://images.example.com/one.jpg",
+            alt: "Slide one",
+            caption: "First"
+          },
+          {
+            type: :image,
+            src: "https://images.example.com/two.jpg",
+            alt: "Slide two",
+            caption: "Second",
+            lightbox: false
+          },
+          {
+            type: :video,
+            src: "https://videos.example.com/two.mp4",
+            poster: "https://images.example.com/poster.jpg",
+            caption: "Third",
+            lightbox: true
+          }
+        ]
+      end
+
       def test_renders_carousel_shell_with_targets
         render_inline(Component.new(slides: sample_slides))
 
@@ -53,6 +78,26 @@ module FlatPack
         assert_includes rendered_content, "#icon-chevron-left"
         assert_includes rendered_content, "#icon-chevron-right"
         assert_selector "button[data-action='click->flat-pack--carousel#prev'] svg.pointer-events-none", visible: :all
+      end
+
+      def test_enables_lightbox_by_default_for_images_and_disables_for_non_image_slides
+        render_inline(Component.new(slides: lightbox_slides))
+
+        slides = page.all("div[data-flat-pack--carousel-target='slide']", visible: :all)
+
+        assert_equal "true", slides[0]["data-lightbox-enabled"]
+        assert_equal "https://images.example.com/one.jpg", slides[0]["data-lightbox-src"]
+        assert_equal "false", slides[1]["data-lightbox-enabled"]
+        assert_nil slides[1]["data-lightbox-src"]
+        assert_equal "false", slides[2]["data-lightbox-enabled"]
+        assert_nil slides[2]["data-lightbox-src"]
+      end
+
+      def test_renders_lightbox_toggle_button_with_expand_icon
+        render_inline(Component.new(slides: sample_slides))
+
+        assert_selector "button[data-flat-pack--carousel-target='lightboxToggle'][data-action='click->flat-pack--carousel#openLightbox']", count: 1
+        assert_includes rendered_content, "#icon-arrows-pointing-out"
       end
 
       def test_exposes_owl_style_configuration_values

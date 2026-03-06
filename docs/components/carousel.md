@@ -12,7 +12,7 @@ Use Carousel when users need to browse a sequence of visual or rich-content slid
 ## Props
 | name | type | default | required | description |
 |---|---|---|---|---|
-| `slides` | Array<Hash> | `[]` | yes | Slide payloads (`:image`, `:video`, `:html`) with sanitization. |
+| `slides` | Array<Hash> | `[]` | yes | Slide payloads (`:image`, `:video`, `:html`) with sanitization. Image slides accept `lightbox` (default `true`), while non-image slides default `lightbox` to `false`. |
 | `initial_index` | Integer | `0` | no | Zero-based starting slide index. |
 | `show_thumbs` | Boolean | `false` | no | Render clickable thumbnail navigation. |
 | `thumbs_position` | Symbol | `:bottom` | no | Thumbnail row position: `:top`, `:bottom`. |
@@ -49,7 +49,7 @@ The dummy app consolidates carousel behavior (basic, autoplay, thumbnails, trans
 ```erb
 <%= render FlatPack::Carousel::Component.new(
   slides: [
-    {type: :image, src: "https://images.example.com/hero.jpg", alt: "Hero", caption: "Hero image"},
+    {type: :image, src: "https://images.example.com/hero.jpg", alt: "Hero", caption: "Hero image", lightbox: true},
     {type: :video, src: "https://videos.example.com/teaser.mp4", poster: "https://images.example.com/poster.jpg", caption: "Teaser"},
     {type: :html, html: "<div class='p-6'><h3>Release Notes</h3><p>Shipped this week.</p></div>", caption: "Custom card"}
   ],
