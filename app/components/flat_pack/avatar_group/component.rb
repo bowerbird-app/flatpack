@@ -76,7 +76,7 @@ module FlatPack
         styles << "margin-left: #{overlap_margin}" if index.positive?
 
         content_tag(:div,
-          class: "relative hover:z-10 focus-within:z-10",
+          class: "relative hover:!z-[999] focus-within:!z-[999]",
           style: styles.join("; ")) do
           render_avatar_content(avatar_attrs)
         end
@@ -105,7 +105,7 @@ module FlatPack
 
       def render_overflow
         content_tag(:div,
-          class: "relative hover:z-10",
+          class: "relative hover:!z-[999]",
           style: overflow_styles) do
           render_overflow_content
         end

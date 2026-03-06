@@ -54,6 +54,20 @@ module FlatPack
         end
       end
 
+      def test_hover_uses_important_z_index_while_preserving_base_stack
+        items = [
+          {name: "User 1"},
+          {name: "User 2"}
+        ]
+
+        render_inline(Component.new(items: items))
+
+        assert_includes page.native.to_html, "hover:!z-[999]"
+        assert_includes page.native.to_html, "focus-within:!z-[999]"
+        assert_includes page.native.to_html, "style=\"z-index: 2\""
+        assert_includes page.native.to_html, "style=\"z-index: 1; margin-left: var(--avatar-group-overlap-md)\""
+      end
+
       def test_passes_size_to_avatars
         items = [{name: "User"}]
         render_inline(Component.new(items: items, size: :lg))
