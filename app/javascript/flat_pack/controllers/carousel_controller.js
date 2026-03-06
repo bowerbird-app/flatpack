@@ -566,7 +566,8 @@ export default class extends Controller {
   }
 
   #isInteractiveElement(target) {
-    return Boolean(target?.closest?.("button, a, input, select, textarea, summary, video, [role='button'], [data-action]"))
+    // Ignore only true interactive controls so the viewport's own data-action doesn't block swipe start.
+    return Boolean(target?.closest?.("button, a, input, select, textarea, summary, video, [role='button']"))
   }
 
   #isActivePointer(event) {
