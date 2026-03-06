@@ -154,6 +154,15 @@ module FlatPack
         refute_selector "div[data-controller='flat-pack--tooltip']"
       end
 
+      def test_renders_tooltip_for_avatar_with_only_alt
+        items = [{alt: "Alt Only User"}]
+
+        render_inline(Component.new(items: items))
+
+        assert_selector "div[data-controller='flat-pack--tooltip']", count: 1
+        assert_selector "div[role='tooltip']", text: "Alt Only User"
+      end
+
       def test_renders_overflow_tooltip_with_hidden_names
         items = [
           {initials: "A"},
@@ -185,6 +194,22 @@ module FlatPack
 
         assert_selector "span", text: "+2"
         refute_selector "div[data-controller='flat-pack--tooltip']"
+      end
+
+      def test_renders_overflow_tooltip_when_hidden_items_only_have_alt
+        items = [
+          {name: "Visible User"},
+          {name: "Visible User 2"},
+          {alt: "Hidden Alt One"},
+          {alt: "Hidden Alt Two"}
+        ]
+
+        render_inline(Component.new(items: items, max: 2))
+
+        assert_selector "span", text: "+2"
+        assert_selector "div[data-controller='flat-pack--tooltip']", count: 3
+        assert_selector "div[role='tooltip'] li", text: "Hidden Alt One"
+        assert_selector "div[role='tooltip'] li", text: "Hidden Alt Two"
       end
     end
   end

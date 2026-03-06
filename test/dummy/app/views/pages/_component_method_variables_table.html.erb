@@ -19,9 +19,17 @@
       label: "Avatar",
       method_call: "render FlatPack::Avatar::Component.new(name: \"Jane Doe\", src: \"https://...\", size: :md)",
       variables: [
+        { variable: "src", accepts: "String or nil", example: "src: \"https://i.pravatar.cc/150?img=1\"" },
+        { variable: "alt", accepts: "String or nil", example: "alt: \"Jane Doe\"" },
         { variable: "name", accepts: "String or nil", example: "name: \"Jane Doe\"" },
+        { variable: "initials", accepts: "String or nil", example: "initials: \"JD\"" },
         { variable: "size", accepts: ":xs, :sm, :md, :lg, :xl", example: "size: :lg" },
-        { variable: "shape", accepts: ":circle, :rounded, :square", example: "shape: :rounded" }
+        { variable: "shape", accepts: ":circle, :rounded, :square", example: "shape: :rounded" },
+        { variable: "status", accepts: ":online, :offline, :busy, :away or nil", example: "status: :online" },
+        { variable: "href", accepts: "String or nil", example: "href: \"/profile\"" },
+        { variable: "show_tooltip", accepts: "true, false", example: "show_tooltip: false" },
+        { variable: "tooltip_placement", accepts: ":top, :right, :bottom, :left", example: "tooltip_placement: :bottom" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"ring-2\", id: \"user-avatar\", data: { testid: \"avatar\" }" }
       ]
     },
     badge: {

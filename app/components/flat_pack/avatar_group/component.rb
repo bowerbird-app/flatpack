@@ -92,6 +92,7 @@ module FlatPack
           shape: :circle,
           status: avatar_attrs[:status],
           href: avatar_attrs[:href],
+          show_tooltip: false,
           class: "ring-2 ring-[var(--avatar-group-ring-color)] transition-transform hover:scale-110"
         )
 

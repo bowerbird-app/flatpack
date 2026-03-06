@@ -163,6 +163,39 @@ module FlatPack
 
         assert_selector "span", text: "JM"
       end
+
+      def test_extracts_initials_from_alt_when_name_missing
+        render_inline(Component.new(alt: "Jane Smith"))
+
+        assert_selector "span", text: "JS"
+      end
+
+      def test_renders_tooltip_when_name_present
+        render_inline(Component.new(name: "Tooltip User"))
+
+        assert_selector "div[data-controller='flat-pack--tooltip']", count: 1
+        assert_selector "div[data-flat-pack--tooltip-placement-value='bottom']", count: 1
+        assert_selector "div[role='tooltip']", text: "Tooltip User"
+      end
+
+      def test_does_not_render_tooltip_without_name
+        render_inline(Component.new(initials: "AB"))
+
+        refute_selector "div[data-controller='flat-pack--tooltip']"
+      end
+
+      def test_renders_tooltip_with_alt_when_name_missing
+        render_inline(Component.new(alt: "Alt Tooltip User", initials: "AT"))
+
+        assert_selector "div[data-controller='flat-pack--tooltip']", count: 1
+        assert_selector "div[role='tooltip']", text: "Alt Tooltip User"
+      end
+
+      def test_does_not_render_tooltip_when_show_tooltip_false
+        render_inline(Component.new(name: "Tooltip User", show_tooltip: false))
+
+        refute_selector "div[data-controller='flat-pack--tooltip']"
+      end
     end
   end
 end

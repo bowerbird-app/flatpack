@@ -42,10 +42,14 @@ module FlatPack
         shape: :circle,
         status: nil,
         href: nil,
+        show_tooltip: true,
+        tooltip_placement: :bottom,
         **system_arguments
       )
         super(**system_arguments)
         @src = src
+        @provided_alt = alt
+        @tooltip_text = name.presence || alt.presence
         @alt = alt || name || "Avatar"
         @name = name
         @initials = initials
@@ -53,6 +57,8 @@ module FlatPack
         @shape = shape.to_sym
         @status = status&.to_sym
         @href = href
+        @show_tooltip = show_tooltip
+        @tooltip_placement = tooltip_placement
 
         validate_size!
         validate_shape!
@@ -60,11 +66,17 @@ module FlatPack
       end
 
       def call
-        wrapper_tag do
+        avatar = wrapper_tag do
           safe_join([
             render_image_or_fallback,
             render_status_indicator
           ])
+        end
+
+        return avatar unless render_tooltip?
+
+        FlatPack::Tooltip::Component.new(text: @tooltip_text, placement: @tooltip_placement).render_in(view_context) do
+          avatar
         end
       end
 
@@ -180,10 +192,11 @@ module FlatPack
 
       def computed_initials
         return @initials if @initials.present?
-        return nil unless @name.present?
+        source_text = @name.presence || @provided_alt.presence
+        return nil unless source_text.present?
 
-        # Extract initials from name (first letter of first two words)
-        parts = @name.strip.split(/\s+/)
+        # Extract initials from the best available identity text.
+        parts = source_text.strip.split(/\s+/)
         if parts.length >= 2
           "#{parts[0][0]}#{parts[1][0]}"
         elsif parts.length == 1 && parts[0].length >= 2
@@ -191,6 +204,10 @@ module FlatPack
         elsif parts.length == 1
           parts[0][0]
         end
+      end
+
+      def render_tooltip?
+        @show_tooltip && @tooltip_text.present?
       end
 
       def validate_size!
