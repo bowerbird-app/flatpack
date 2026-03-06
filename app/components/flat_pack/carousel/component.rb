@@ -182,7 +182,7 @@ module FlatPack
                 aria: {hidden: true}
               ) : nil),
               content_tag(:video,
-                class: "absolute inset-0 z-10 block h-full w-full object-cover",
+                class: "absolute inset-0 z-10 block h-full w-full min-w-full object-cover",
                 style: "width: 100%; height: 100%; object-fit: cover;",
                 controls: slide[:controls],
                 muted: slide[:muted],

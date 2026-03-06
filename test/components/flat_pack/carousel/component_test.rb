@@ -178,10 +178,10 @@ module FlatPack
         assert_includes rendered_content, "<img src=\"https://images.example.com/poster.jpg\""
         assert_includes rendered_content, "class=\"absolute inset-0 h-full w-full object-cover pointer-events-none\""
         assert_includes rendered_content, "aria-hidden=\"true\""
-        assert_selector "video.absolute.inset-0.z-10.block.h-full.w-full.object-cover", visible: :all
+        assert_selector "video.absolute.inset-0.z-10.block.h-full.w-full.min-w-full.object-cover", visible: :all
         assert_selector "video source[src='https://videos.example.com/two.mp4'][type='video/mp4']", visible: :all
 
-        video = page.find("video.absolute.inset-0.z-10.block.h-full.w-full.object-cover", visible: :all)
+        video = page.find("video.absolute.inset-0.z-10.block.h-full.w-full.min-w-full.object-cover", visible: :all)
         assert_nil video[:poster]
         assert_equal "width: 100%; height: 100%; object-fit: cover;", video[:style]
       end
