@@ -247,6 +247,8 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Gallery Using Carousel"
     assert_includes response.body, "data-controller=\"flat-pack--carousel\""
     assert_includes response.body, "Expand image"
+    assert_equal 15, response.body.scan('data-flat-pack--carousel-target="slide"').size
+    assert_equal 13, response.body.scan('data-flat-pack--carousel-target="thumb"').size
   end
 
   test "chat inbox row demo renders reusable row examples" do

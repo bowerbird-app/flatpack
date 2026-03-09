@@ -192,6 +192,16 @@ module FlatPack
         assert_selector "button[data-flat-pack--carousel-target='thumb']", count: 3
       end
 
+      def test_thumbs_force_root_overflow_visible_to_preserve_active_ring
+        render_inline(Component.new(slides: sample_slides, show_thumbs: true, class: "overflow-hidden rounded-2xl"))
+
+        root = page.find("section[data-controller='flat-pack--carousel']")
+
+        assert_includes root[:class], "overflow-visible"
+        refute_includes root[:class], "overflow-hidden"
+        assert_includes root[:class], "rounded-2xl"
+      end
+
       def test_sanitizes_html_slides
         render_inline(
           Component.new(

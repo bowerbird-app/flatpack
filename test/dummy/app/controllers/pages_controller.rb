@@ -1343,6 +1343,48 @@ class PagesController < ApplicationController
         src: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1600&h=1200&fit=crop",
         thumb_src: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=320&h=240&fit=crop",
         lightbox: true
+      },
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1600&h=1200&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=320&h=240&fit=crop",
+        lightbox: true
+      },
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?w=1600&h=1200&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?w=320&h=240&fit=crop",
+        lightbox: true
+      },
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=1600&h=1200&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=320&h=240&fit=crop",
+        lightbox: true
+      },
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1497366412874-3415097a27e7?w=1600&h=1200&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1497366412874-3415097a27e7?w=320&h=240&fit=crop",
+        lightbox: true
+      },
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&h=1200&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=320&h=240&fit=crop",
+        lightbox: true
+      },
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1600&h=1200&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=320&h=240&fit=crop",
+        lightbox: true
+      },
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1600&h=1200&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=320&h=240&fit=crop",
+        lightbox: true
       }
     ]
   end

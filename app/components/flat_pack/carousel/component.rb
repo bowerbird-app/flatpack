@@ -106,6 +106,7 @@ module FlatPack
       def root_classes
         classes(
           "flat-pack-carousel relative w-full",
+          @show_thumbs ? "overflow-visible" : nil,
           @responsive ? "max-w-full" : nil
         )
       end
