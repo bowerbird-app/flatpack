@@ -412,7 +412,6 @@
                 demo_chat_file_message_path,
                 demo_chat_images_path,
                 demo_chat_system_message_path,
-                demo_chat_message_record_path,
                 demo_chat_inbox_row_path,
                 demo_chat_message_meta_path,
                 demo_chat_attachment_path,
@@ -487,12 +486,6 @@
                     href: demo_chat_system_message_path,
                     icon: :info,
                     active: current_page?(demo_chat_system_message_path)
-                  ) %>
-                  <%= render FlatPack::Sidebar::Item::Component.new(
-                    label: "Message Record",
-                    href: demo_chat_message_record_path,
-                    icon: :message_circle,
-                    active: current_page?(demo_chat_message_record_path)
                   ) %>
                   <%= render FlatPack::Sidebar::Item::Component.new(
                     label: "Inbox Row",

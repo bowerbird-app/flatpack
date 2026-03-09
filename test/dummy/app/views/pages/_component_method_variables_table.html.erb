@@ -216,15 +216,6 @@
         { variable: "id", accepts: "String or nil", example: "id: \"chat-system-event\"" }
       ]
     },
-    chat_message_record: {
-      label: "Chat Message Record",
-      method_call: "render FlatPack::Chat::MessageRecord::Component.new(record: message)",
-      variables: [
-        { variable: "record", accepts: "message-like object", example: "record: message" },
-        { variable: "direction", accepts: ":incoming, :outgoing, nil", example: "direction: :outgoing" },
-        { variable: "show_avatar", accepts: "true, false, nil", example: "show_avatar: false" }
-      ]
-    },
     chat_inbox_row: {
       label: "Chat Inbox Row",
       method_call: "render FlatPack::Chat::InboxRow::Component.new(chat_group_name: \"Design Team\", latest_sender: \"Mina\", latest_preview: \"Can you review this?\")",

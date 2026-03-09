@@ -31,6 +31,9 @@ class DemoChatMessagesTest < ActionDispatch::IntegrationTest
     payload = JSON.parse(response.body)
     assert_equal "sent", payload["state"]
     assert_includes payload["html"], "Hello from integration test"
+  assert_includes payload["html"], 'data-flat-pack-chat-record-direction="outgoing"'
+  assert_includes payload["html"], 'data-flat-pack-chat-record-sender="You"'
+  assert_not_includes payload["html"], "flat-pack--chat-message-actions"
 
     persisted = @chat_group.chat_items.order(:id).last
     assert_equal "Hello from integration test", persisted.body
@@ -223,6 +226,8 @@ class DemoChatMessagesTest < ActionDispatch::IntegrationTest
     payload = JSON.parse(response.body)
     assert_includes payload["html"], "Preview only"
     assert_includes payload["html"], "Sending"
+    assert_includes payload["html"], 'data-flat-pack-chat-record-direction="outgoing"'
+    assert_not_includes payload["html"], "flat-pack--chat-message-actions"
     assert_equal original_count, @chat_group.chat_items.count
   end
 

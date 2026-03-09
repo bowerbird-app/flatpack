@@ -6,7 +6,7 @@
   <% end %>
 
   <% items.each do |item| %>
-    <%= render FlatPack::Chat::MessageRecord::Component.new(record: item, reveal_actions: true) %>
+    <%= render_chat_demo_message(item, reveal_actions: false) %>
   <% end %>
 </div>
 

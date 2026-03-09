@@ -88,7 +88,7 @@
 
             <div id="<%= @chat_group ? dom_id(@chat_group, :messages) : "chat-demo-messages" %>" data-pagination-content>
               <% @chat_items.each do |item| %>
-                <%= render FlatPack::Chat::MessageRecord::Component.new(record: item, reveal_actions: true) %>
+                <%= render_chat_demo_message(item, reveal_actions: false) %>
               <% end %>
             </div>
 

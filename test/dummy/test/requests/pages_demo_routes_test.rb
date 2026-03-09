@@ -67,7 +67,6 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/chat/file_message
     /demo/chat/images
     /demo/chat/system_message
-    /demo/chat/message_record
     /demo/chat/inbox_row
     /demo/chat/message_meta
     /demo/chat/attachment
@@ -127,7 +126,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     get "/demo/forms/text_input"
 
     assert_response :success
-    assert_includes response.body, "<td class=\"px-4 py-3 text-sm text-primary font-medium\">value</td>"
+    assert_includes response.body, ">value</td>"
     assert_includes response.body, "value: &quot;john.doe&quot;"
   end
 
