@@ -33,7 +33,7 @@ class DemoChatReadReceiptWorkerTest < ActiveJob::TestCase
 
   test "does not enable reveal actions for incoming item" do
     item = @chat_group.chat_items.create!(
-      sender_name: "Sam",
+      sender_name: "Sam Lee",
       body: "Looks good",
       state: "sent"
     )

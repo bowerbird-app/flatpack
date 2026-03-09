@@ -242,17 +242,36 @@ class DemoChatMessagesTest < ActionDispatch::IntegrationTest
   test "falls back to in-process simulation when enqueue fails in development" do
     fallback_calls = []
 
-    Demo::ChatSimulationFallback.stub(:call, ->(*args) { fallback_calls << args }) do
-      Demo::ChatSimulationOrchestratorWorker.stub(:perform_later, ->(*) { raise "queue unavailable" }) do
-        Rails.stub(:env, ActiveSupport::StringInquirer.new("development")) do
-          post demo_chat_group_messages_path(@chat_group), params: {
-            message: {
-              body: "Trigger fallback",
-              clientTempId: "tmp-fallback"
-            }
-          }, as: :json
-        end
+    fallback_singleton = Demo::ChatSimulationFallback.singleton_class
+    worker_singleton = Demo::ChatSimulationOrchestratorWorker.singleton_class
+    rails_singleton = Rails.singleton_class
+    original_fallback_call = Demo::ChatSimulationFallback.method(:call)
+    original_perform_later = Demo::ChatSimulationOrchestratorWorker.method(:perform_later)
+    original_env = Rails.method(:env)
+
+    begin
+      fallback_singleton.define_method(:call) do |*args|
+        fallback_calls << args
       end
+
+      worker_singleton.define_method(:perform_later) do |*|
+        raise "queue unavailable"
+      end
+
+      rails_singleton.define_method(:env) do
+        ActiveSupport::StringInquirer.new("development")
+      end
+
+      post demo_chat_group_messages_path(@chat_group), params: {
+        message: {
+          body: "Trigger fallback",
+          clientTempId: "tmp-fallback"
+        }
+      }, as: :json
+    ensure
+      fallback_singleton.define_method(:call, original_fallback_call)
+      worker_singleton.define_method(:perform_later, original_perform_later)
+      rails_singleton.define_method(:env, original_env)
     end
 
     assert_response :created

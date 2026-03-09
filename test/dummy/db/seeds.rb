@@ -122,9 +122,9 @@ def seed_chat_data!
   return unless ChatGroup.table_exists? && ChatItem.table_exists? && ChatItemAttachment.table_exists?
 
   design_team_timeline = [
-    {sender_name: "Mina", body: "I pushed the homepage copy updates. Can someone review?", state: "read"},
+    {sender_name: "Mina Cho", body: "I pushed the homepage copy updates. Can someone review?", state: "read"},
     {sender_name: "You", body: "Reviewed. Tone is solid — can you also add a shorter hero variant for mobile?", state: "read"},
-    {sender_name: "Sam", body: "I added both hero lengths and updated CTA spacing.", state: "read"},
+    {sender_name: "Sam Lee", body: "I added both hero lengths and updated CTA spacing.", state: "read"},
     {
       sender_name: "You",
       body: nil,
@@ -146,7 +146,7 @@ def seed_chat_data!
         }
       ]
     },
-    {sender_name: "Alex", body: "Launch window reminder: 3:00 PM with rollback checkpoint at 3:30.", state: "read"}
+    {sender_name: "Alex Rivera", body: "Launch window reminder: 3:00 PM with rollback checkpoint at 3:30.", state: "read"}
   ]
 
   product_updates_timeline = [

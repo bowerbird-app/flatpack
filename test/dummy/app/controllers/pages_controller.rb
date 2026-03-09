@@ -772,30 +772,32 @@ class PagesController < ApplicationController
   end
 
   def ensure_chat_demo_items!
+    normalize_chat_demo_sender_names!
+
     design_team_timeline = [
-      {sender_name: "Mina", body: "I pushed the homepage copy updates. Can someone review?", state: "read"},
+      {sender_name: "Mina Cho", body: "I pushed the homepage copy updates. Can someone review?", state: "read"},
       {sender_name: "You", body: "Reviewed. Tone is solid — can you also add a shorter hero variant for mobile?", state: "read"},
-      {sender_name: "Sam", body: "I added both hero lengths and updated CTA spacing.", state: "read"},
-      {sender_name: "Alex", body: "Noted. I will sync this with the launch checklist.", state: "read"},
+      {sender_name: "Sam Lee", body: "I added both hero lengths and updated CTA spacing.", state: "read"},
+      {sender_name: "Alex Rivera", body: "Noted. I will sync this with the launch checklist.", state: "read"},
       {sender_name: "You", body: "Can we tighten spacing in the testimonial section too?", state: "read"},
-      {sender_name: "Mina", body: "Done. Spacing is now 20px desktop and 16px mobile.", state: "read"},
-      {sender_name: "Sam", body: "I updated button hover states to match the latest token values.", state: "read"},
+      {sender_name: "Mina Cho", body: "Done. Spacing is now 20px desktop and 16px mobile.", state: "read"},
+      {sender_name: "Sam Lee", body: "I updated button hover states to match the latest token values.", state: "read"},
       {sender_name: "You", body: "Great. Please also confirm dark mode contrast for secondary text.", state: "read"},
-      {sender_name: "Alex", body: "Tracking sheet is ready. I will post click-through updates in this chat group.", state: "read"},
-      {sender_name: "Mina", body: "Hero fallback headline for mobile has been added.", state: "read"},
+      {sender_name: "Alex Rivera", body: "Tracking sheet is ready. I will post click-through updates in this chat group.", state: "read"},
+      {sender_name: "Mina Cho", body: "Hero fallback headline for mobile has been added.", state: "read"},
       {sender_name: "You", body: "Thanks. Let us freeze copy after one last proofread.", state: "read"},
-      {sender_name: "Sam", body: "Proofread complete. Fixed two punctuation issues.", state: "read"},
-      {sender_name: "Alex", body: "Pre-launch analytics events are now validated in staging.", state: "read"},
+      {sender_name: "Sam Lee", body: "Proofread complete. Fixed two punctuation issues.", state: "read"},
+      {sender_name: "Alex Rivera", body: "Pre-launch analytics events are now validated in staging.", state: "read"},
       {sender_name: "You", body: "Please share a screenshot of the updated hero on small screens.", state: "read"},
-      {sender_name: "Mina", body: "Shared in Figma and attached in the release notes.", state: "read"},
-      {sender_name: "Sam", body: "Footer links were re-ordered per legal review.", state: "read"},
+      {sender_name: "Mina Cho", body: "Shared in Figma and attached in the release notes.", state: "read"},
+      {sender_name: "Sam Lee", body: "Footer links were re-ordered per legal review.", state: "read"},
       {sender_name: "You", body: "Can we reduce the CTA shadow to keep it subtle?", state: "read"},
-      {sender_name: "Mina", body: "Yes, reduced. It now uses the lower elevation token.", state: "read"},
-      {sender_name: "Alex", body: "Launch window reminder: 3:00 PM with rollback checkpoint at 3:30.", state: "read"},
+      {sender_name: "Mina Cho", body: "Yes, reduced. It now uses the lower elevation token.", state: "read"},
+      {sender_name: "Alex Rivera", body: "Launch window reminder: 3:00 PM with rollback checkpoint at 3:30.", state: "read"},
       {sender_name: "You", body: "Perfect. I will stay online through post-launch validation.", state: "read"},
-      {sender_name: "Sam", body: "I added status badges for experiment variants in the dashboard.", state: "read"},
-      {sender_name: "Mina", body: "Final visual QA pass is complete from my side.", state: "read"},
-      {sender_name: "Alex", body: "Monitoring alerts are configured and tested.", state: "read"},
+      {sender_name: "Sam Lee", body: "I added status badges for experiment variants in the dashboard.", state: "read"},
+      {sender_name: "Mina Cho", body: "Final visual QA pass is complete from my side.", state: "read"},
+      {sender_name: "Alex Rivera", body: "Monitoring alerts are configured and tested.", state: "read"},
       {
         sender_name: "You",
         body: nil,
@@ -840,6 +842,16 @@ class PagesController < ApplicationController
       launch_ops_timeline,
       offset_minutes: 90
     )
+  end
+
+  def normalize_chat_demo_sender_names!
+    {
+      "Alex" => "Alex Rivera",
+      "Mina" => "Mina Cho",
+      "Sam" => "Sam Lee"
+    }.each do |legacy_name, canonical_name|
+      ChatItem.where(sender_name: legacy_name).update_all(sender_name: canonical_name, updated_at: Time.current)
+    end
   end
 
   def picker_demo_items
