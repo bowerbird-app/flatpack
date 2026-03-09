@@ -484,9 +484,6 @@ class PagesController < ApplicationController
   def chat_textarea
   end
 
-  def chat_send_button
-  end
-
   def carousel
     @carousel_slides = carousel_demo_slides
     @carousel_single_slide = carousel_demo_single_slide
@@ -1215,7 +1212,6 @@ class PagesController < ApplicationController
       {title: "Chat Typing Indicator", description: "Typing indicator component examples", url: demo_chat_typing_indicator_path},
       {title: "Chat Composer", description: "Composer input and action patterns", url: demo_chat_composer_path},
       {title: "Chat Textarea", description: "Chat textarea component examples", url: demo_chat_textarea_path},
-      {title: "Chat Send Button", description: "Send button component examples", url: demo_chat_send_button_path},
       {title: "Carousel", description: "FlatPack carousel demo with mixed media and navigation controls", url: demo_carousel_path},
       {title: "Progress", description: "Progress indicators and loading states", url: demo_progress_path},
       {title: "Collapse", description: "Expandable and collapsible content patterns", url: demo_collapse_path},

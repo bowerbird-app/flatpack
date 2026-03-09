@@ -106,7 +106,7 @@ components:
       - FlatPack::Chat::MessageList::Component
       - FlatPack::Chat::MessageMeta::Component
       - FlatPack::Chat::ReceivedMessage::Component
-      - FlatPack::Chat::SendButton::Component
+      - FlatPack::Button::Component
       - FlatPack::Chat::SentMessage::Component
       - FlatPack::Chat::SystemMessage::Component
       - FlatPack::Chat::Textarea::Component

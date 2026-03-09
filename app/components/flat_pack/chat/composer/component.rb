@@ -115,7 +115,15 @@ module FlatPack
         end
 
         def render_default_right
-          render FlatPack::Chat::SendButton::Component.new
+          render FlatPack::Button::Component.new(
+            icon: "send",
+            icon_only: true,
+            size: :md,
+            style: :primary,
+            type: "submit",
+            aria: {label: "Send message"},
+            class: "border-transparent bg-[var(--chat-send-button-background-color)] text-[var(--chat-send-button-text-color)] hover:bg-[var(--chat-send-button-hover-background-color)] focus-visible:ring-[var(--chat-send-button-focus-ring-color)] shrink-0"
+          )
         end
 
         def render_attachments_section

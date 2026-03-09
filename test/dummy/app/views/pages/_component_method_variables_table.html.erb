@@ -375,15 +375,6 @@
         { variable: "right", accepts: "slot block", example: "composer.right { ... }" }
       ]
     },
-    chat_send_button: {
-      label: "Chat Send Button",
-      method_call: "render FlatPack::Chat::SendButton::Component.new(loading: false, disabled: false)",
-      variables: [
-        { variable: "loading", accepts: "true, false", example: "loading: true" },
-        { variable: "disabled", accepts: "true, false", example: "disabled: true" },
-        { variable: "class", accepts: "String or nil", example: "class: \"ml-auto\"" }
-      ]
-    },
     chat_date_divider: {
       label: "Chat Date Divider",
       method_call: "render FlatPack::Chat::DateDivider::Component.new(label: \"Today\")",

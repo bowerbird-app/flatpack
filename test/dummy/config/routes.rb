@@ -92,7 +92,6 @@ Rails.application.routes.draw do
   get "demo/chat/typing_indicator", to: "pages#chat_typing_indicator"
   get "demo/chat/composer", to: "pages#chat_composer"
   get "demo/chat/textarea", to: "pages#chat_textarea"
-  get "demo/chat/send_button", to: "pages#chat_send_button"
 
   get "demo/carousel", to: "pages#carousel"
 

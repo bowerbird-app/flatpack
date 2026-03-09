@@ -43,7 +43,15 @@
         <% end %>
 
         <% composer.right do %>
-          <%= render FlatPack::Chat::SendButton::Component.new %>
+          <%= render FlatPack::Button::Component.new(
+            icon: "send",
+            icon_only: true,
+            style: :primary,
+            size: :md,
+            type: "submit",
+            aria: {label: "Send message"},
+            class: "border-transparent bg-[var(--chat-send-button-background-color)] text-[var(--chat-send-button-text-color)] hover:bg-[var(--chat-send-button-hover-background-color)] focus-visible:ring-[var(--chat-send-button-focus-ring-color)] shrink-0"
+          ) %>
         <% end %>
       <% end %>
     </div>
@@ -85,7 +93,15 @@
           &lt;% end %&gt;
 
           &lt;% composer.right do %&gt;
-            &lt;%= render FlatPack::Chat::SendButton::Component.new %&gt;
+            &lt;%= render FlatPack::Button::Component.new(
+              icon: "send",
+              icon_only: true,
+              style: :primary,
+              size: :md,
+              type: "submit",
+              aria: {label: "Send message"},
+              class: "border-transparent bg-[var(--chat-send-button-background-color)] text-[var(--chat-send-button-text-color)] hover:bg-[var(--chat-send-button-hover-background-color)] focus-visible:ring-[var(--chat-send-button-focus-ring-color)] shrink-0"
+            ) %&gt;
           &lt;% end %&gt;
         &lt;% end %&gt;
       CODE
@@ -118,7 +134,15 @@
         <% end %>
 
         <% composer.right do %>
-          <%= render FlatPack::Chat::SendButton::Component.new(class: "[--button-border-radius:9999px]") %>
+          <%= render FlatPack::Button::Component.new(
+            icon: "send",
+            icon_only: true,
+            style: :primary,
+            size: :md,
+            type: "submit",
+            aria: {label: "Send message"},
+            class: "border-transparent bg-[var(--chat-send-button-background-color)] text-[var(--chat-send-button-text-color)] hover:bg-[var(--chat-send-button-hover-background-color)] focus-visible:ring-[var(--chat-send-button-focus-ring-color)] shrink-0 [--button-border-radius:9999px]"
+          ) %>
         <% end %>
       <% end %>
     </div>
@@ -149,7 +173,15 @@
           &lt;% end %&gt;
 
           &lt;% composer.right do %&gt;
-            &lt;%= render FlatPack::Chat::SendButton::Component.new(class: "[--button-border-radius:9999px]") %&gt;
+            &lt;%= render FlatPack::Button::Component.new(
+              icon: "send",
+              icon_only: true,
+              style: :primary,
+              size: :md,
+              type: "submit",
+              aria: {label: "Send message"},
+              class: "border-transparent bg-[var(--chat-send-button-background-color)] text-[var(--chat-send-button-text-color)] hover:bg-[var(--chat-send-button-hover-background-color)] focus-visible:ring-[var(--chat-send-button-focus-ring-color)] shrink-0 [--button-border-radius:9999px]"
+            ) %&gt;
           &lt;% end %&gt;
         &lt;% end %&gt;
       CODE
@@ -171,7 +203,15 @@
         <% end %>
 
         <% composer.right do %>
-          <%= render FlatPack::Chat::SendButton::Component.new %>
+          <%= render FlatPack::Button::Component.new(
+            icon: "send",
+            icon_only: true,
+            style: :primary,
+            size: :md,
+            type: "submit",
+            aria: {label: "Send message"},
+            class: "border-transparent bg-[var(--chat-send-button-background-color)] text-[var(--chat-send-button-text-color)] hover:bg-[var(--chat-send-button-hover-background-color)] focus-visible:ring-[var(--chat-send-button-focus-ring-color)] shrink-0"
+          ) %>
         <% end %>
       <% end %>
     </div>
@@ -191,7 +231,15 @@
           &lt;% end %&gt;
 
           &lt;% composer.right do %&gt;
-            &lt;%= render FlatPack::Chat::SendButton::Component.new %&gt;
+            &lt;%= render FlatPack::Button::Component.new(
+              icon: "send",
+              icon_only: true,
+              style: :primary,
+              size: :md,
+              type: "submit",
+              aria: {label: "Send message"},
+              class: "border-transparent bg-[var(--chat-send-button-background-color)] text-[var(--chat-send-button-text-color)] hover:bg-[var(--chat-send-button-hover-background-color)] focus-visible:ring-[var(--chat-send-button-focus-ring-color)] shrink-0"
+            ) %&gt;
           &lt;% end %&gt;
         &lt;% end %&gt;
       CODE

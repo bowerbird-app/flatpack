@@ -58,7 +58,7 @@ Successfully implemented a comprehensive Chat Messaging UI component system with
    - Location: `app/components/flat_pack/chat/composer/component.rb`
    - Slots: `left`, `center`, `right`, `attachments`
    - Preferred API: `left`, `center`, `right` slot methods
-   - Default: Renders center textarea + right send button if no slots
+   - Default: Renders center textarea + right submit button if no slots
 
 11. **Chat::Textarea::Component** - Auto-growing textarea
    - Location: `app/components/flat_pack/chat/textarea/component.rb`
@@ -66,18 +66,14 @@ Successfully implemented a comprehensive Chat Messaging UI component system with
    - Stimulus: `chat_textarea_controller.js`
    - Features: Auto-expand, Enter to submit, Shift+Enter for newline
 
-12. **Chat::SendButton::Component** - Send button with loading state
-    - Location: `app/components/flat_pack/chat/send_button/component.rb`
-    - Props: `loading`, `disabled`
-
 ### Utility Components (2)
-13. **Chat::TypingIndicator::Component** - Animated typing indicator
+12. **Chat::TypingIndicator::Component** - Animated typing indicator
     - Location: `app/components/flat_pack/chat/typing_indicator/component.rb`
     - Props: `label`
     - Slots: `avatar`
     - Features: 3-dot animation
 
-14. **Chat::Attachment::Component** - File/image attachment preview
+13. **Chat::Attachment::Component** - File/image attachment preview
     - Location: `app/components/flat_pack/chat/attachment/component.rb`
     - Props: `type`, `name`, `meta`, `href`, `thumbnail_url`
     - Types: `:file`, `:image`
@@ -248,7 +244,7 @@ Successfully implemented a comprehensive Chat Messaging UI component system with
 
 ## Files Created (31 total)
 
-### Components (12)
+### Components (11)
 - app/components/flat_pack/chat/layout/component.rb
 - app/components/flat_pack/chat/panel/component.rb
 - app/components/flat_pack/chat/message_list/component.rb
@@ -258,7 +254,6 @@ Successfully implemented a comprehensive Chat Messaging UI component system with
 - app/components/flat_pack/chat/message_meta/component.rb
 - app/components/flat_pack/chat/composer/component.rb
 - app/components/flat_pack/chat/textarea/component.rb
-- app/components/flat_pack/chat/send_button/component.rb
 - app/components/flat_pack/chat/typing_indicator/component.rb
 - app/components/flat_pack/chat/attachment/component.rb
 

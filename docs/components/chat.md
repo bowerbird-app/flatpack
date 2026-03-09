@@ -9,7 +9,7 @@ When chat rows rendered inside `MessageList` include FlatPack chat record data a
 
 ## Class
 - Primary: `FlatPack::Chat::Panel::Component`
-- Related classes: `FlatPack::Chat::Layout::Component`, `FlatPack::Chat::Header::Component`, `FlatPack::Chat::MessageList::Component`, `FlatPack::Chat::MessageGroup::Component`, `FlatPack::Chat::ReceivedMessage::Component`, `FlatPack::Chat::SentMessage::Component`, `FlatPack::Chat::Composer::Component`, `FlatPack::Chat::Textarea::Component`, `FlatPack::Chat::SendButton::Component`, `FlatPack::Chat::Attachment::Component`, `FlatPack::Chat::Images::Component`, `FlatPack::Chat::ImageMessage::Component`, `FlatPack::Chat::ImageDeck::Component`, `FlatPack::Chat::InboxRow::Component`, `FlatPack::Chat::TypingIndicator::Component`
+- Related classes: `FlatPack::Chat::Layout::Component`, `FlatPack::Chat::Header::Component`, `FlatPack::Chat::MessageList::Component`, `FlatPack::Chat::MessageGroup::Component`, `FlatPack::Chat::ReceivedMessage::Component`, `FlatPack::Chat::SentMessage::Component`, `FlatPack::Chat::Composer::Component`, `FlatPack::Chat::Textarea::Component`, `FlatPack::Button::Component`, `FlatPack::Chat::Attachment::Component`, `FlatPack::Chat::Images::Component`, `FlatPack::Chat::ImageMessage::Component`, `FlatPack::Chat::ImageDeck::Component`, `FlatPack::Chat::InboxRow::Component`, `FlatPack::Chat::TypingIndicator::Component`
 
 ## Props
 Core container props:
@@ -32,11 +32,10 @@ High-use interaction props:
 | `FlatPack::Chat::Images::Component#body` | String | `nil` | no | Message copy rendered under the image carousel; blank bodies render a spacer to preserve the message shell. |
 | `FlatPack::Chat::Images::Component#timestamp` | String, Time, DateTime | `nil` | no | Passed to `FlatPack::Chat::MessageMeta::Component`. |
 | `FlatPack::Chat::Images::Component#reveal_actions` | Boolean | `false` | no | Enables reveal-action message behavior using the underlying sent/received message components. |
-| `FlatPack::Chat::Composer::Component` | n/a | n/a | n/a | Slot-driven; defaults to chat textarea + send button when slots are omitted. |
+| `FlatPack::Chat::Composer::Component` | n/a | n/a | n/a | Slot-driven; defaults to chat textarea + submit-ready `FlatPack::Button::Component` when slots are omitted. |
 | `FlatPack::Chat::Textarea::Component#name` | String | `"message[body]"` | no | Textarea field name. |
 | `FlatPack::Chat::Textarea::Component#autogrow` | Boolean | `true` | no | Auto-resize behavior. |
 | `FlatPack::Chat::Textarea::Component#submit_on_enter` | Boolean | `true` | no | Enter-to-submit behavior. |
-| `FlatPack::Chat::SendButton::Component#loading` | Boolean | `false` | no | Shows sending/loading state. |
 | `FlatPack::Chat::Attachment::Component#name` | String | `nil` | yes | Attachment label; blank raises `ArgumentError`. |
 | `FlatPack::Chat::Attachment::Component#type` | Symbol | `:file` | no | Attachment type: `:file`, `:image`; invalid values raise `ArgumentError`. |
 | `FlatPack::Chat::InboxRow::Component#chat_group_name` | String | `nil` | yes | Inbox row title; blank raises `ArgumentError`. |
@@ -146,7 +145,7 @@ Use `FlatPack::Chat::InboxRow::Component` for chat list entries with participant
 - Message list jump button includes explicit `aria-label`.
 - Date dividers render `role="separator"` with labels.
 - Outgoing/incoming reveal-actions surfaces are keyboard focusable (`role="button"`, `tabindex="0"`).
-- Send button sets contextual `aria-label` (`"Send message"` / `"Sending..."`).
+- Chat send actions should use `FlatPack::Button::Component` with an icon-only submit button and contextual `aria-label` (`"Send message"` / `"Sending..."`).
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
