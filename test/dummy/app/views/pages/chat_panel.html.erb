@@ -16,17 +16,29 @@
             title: "Alicia Chen",
             subtitle: "Online",
             back_href: "#chat-groups",
-            back_label: "Back to chat groups",
+            back_label: nil,
+            back_tooltip: "Back to chat groups",
             person_avatar: {name: "Alicia Chen", size: :sm}
           ) do |header| %>
             <% header.right do %>
-              <%= render FlatPack::Button::Component.new(
+              <%= render FlatPack::Button::Dropdown::Component.new(
+                text: "",
                 icon: "dots",
-                icon_only: true,
                 style: :ghost,
                 size: :sm,
-                url: "#chat-actions"
-              ) %>
+                show_chevron: false,
+                position: :bottom_right,
+                trigger_attributes: {
+                  title: "Conversation actions",
+                  aria: {label: "Conversation actions"}
+                }
+              ) do |dropdown| %>
+                <% dropdown.menu_item(text: "Search conversation", icon: "search", href: "#chat-search") %>
+                <% dropdown.menu_item(text: "View details", icon: "dashboard", href: "#chat-details") %>
+                <% dropdown.menu_divider %>
+                <% dropdown.menu_item(text: "Notification settings", icon: "settings", href: "#chat-notifications") %>
+                <% dropdown.menu_item(text: "Archive", icon: "folder", href: "#chat-archive") %>
+              <% end %>
             <% end %>
           <% end %>
         <% end %>
@@ -54,10 +66,29 @@
               title: "Alicia Chen",
               subtitle: "Online",
               back_href: "#chat-groups",
+              back_label: nil,
+              back_tooltip: "Back to chat groups",
               person_avatar: {name: "Alicia Chen", size: :sm}
             ) do |header| %&gt;
               &lt;% header.right do %&gt;
-                &lt;%= render FlatPack::Button::Component.new(icon: "dots", icon_only: true, style: :ghost, size: :sm) %&gt;
+                &lt;%= render FlatPack::Button::Dropdown::Component.new(
+                  text: "",
+                  icon: "dots",
+                  style: :ghost,
+                  size: :sm,
+                  show_chevron: false,
+                  position: :bottom_right,
+                  trigger_attributes: {
+                    title: "Conversation actions",
+                    aria: {label: "Conversation actions"}
+                  }
+                ) do |dropdown| %&gt;
+                  &lt;% dropdown.menu_item(text: "Search conversation", icon: "search", href: "#chat-search") %&gt;
+                  &lt;% dropdown.menu_item(text: "View details", icon: "dashboard", href: "#chat-details") %&gt;
+                  &lt;% dropdown.menu_divider %&gt;
+                  &lt;% dropdown.menu_item(text: "Notification settings", icon: "settings", href: "#chat-notifications") %&gt;
+                  &lt;% dropdown.menu_item(text: "Archive", icon: "folder", href: "#chat-archive") %&gt;
+                &lt;% end %&gt;
               &lt;% end %&gt;
             &lt;% end %&gt;
           &lt;% end %&gt;

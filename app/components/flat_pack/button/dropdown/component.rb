@@ -30,6 +30,7 @@ module FlatPack
           disabled: false,
           position: :bottom_right,
           max_height: "384px",
+          trigger_attributes: {},
           **system_arguments
         )
           super(**system_arguments)
@@ -41,6 +42,7 @@ module FlatPack
           @disabled = disabled
           @position = position.to_sym
           @max_height = max_height
+          @trigger_attributes = sanitize_args(trigger_attributes)
 
           validate_position!
         end
@@ -66,7 +68,7 @@ module FlatPack
         end
 
         def button_attributes
-          {
+          merge_trigger_attributes(
             class: button_classes,
             aria: {
               haspopup: "true",
@@ -76,7 +78,7 @@ module FlatPack
               flat_pack__button_dropdown_target: "trigger",
               action: "click->flat-pack--button-dropdown#toggle"
             }
-          }
+          )
         end
 
         def button_classes
@@ -160,6 +162,20 @@ module FlatPack
 
           raise ArgumentError,
             "Invalid position: #{@position}. Must be one of: #{POSITIONS.keys.join(", ")}"
+        end
+
+        def merge_trigger_attributes(**additional_attrs)
+          trigger_attributes = @trigger_attributes.dup
+          merger = TailwindMerge::Merger.new
+          trigger_class = trigger_attributes.delete(:class)
+          merged_data = (trigger_attributes.delete(:data) || {}).merge(additional_attrs.delete(:data) || {})
+          merged_aria = (trigger_attributes.delete(:aria) || {}).merge(additional_attrs.delete(:aria) || {})
+
+          {
+            class: merger.merge([trigger_class, additional_attrs.delete(:class)].compact.join(" ")),
+            data: merged_data,
+            aria: merged_aria
+          }.merge(trigger_attributes).merge(additional_attrs).compact
         end
       end
     end

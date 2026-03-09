@@ -23,7 +23,10 @@
             size: :md,
             show_chevron: false,
             position: :top_left,
-            aria: {label: "Attach options"}
+            trigger_attributes: {
+              aria: {label: "Attach options"},
+              title: "Attach options"
+            }
           ) do |dropdown| %>
             <% dropdown.menu_item(text: "Upload file", icon: "file", href: "#") %>
             <% dropdown.menu_item(text: "Attach from library", icon: "folder", href: "#") %>
@@ -62,7 +65,10 @@
               size: :md,
               show_chevron: false,
               position: :top_left,
-              aria: {label: "Attach options"}
+              trigger_attributes: {
+                aria: {label: "Attach options"},
+                title: "Attach options"
+              }
             ) do |dropdown| %&gt;
               &lt;% dropdown.menu_item(text: "Upload file", icon: "file", href: "#") %&gt;
               &lt;% dropdown.menu_item(text: "Attach from library", icon: "folder", href: "#") %&gt;

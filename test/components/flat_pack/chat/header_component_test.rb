@@ -20,6 +20,19 @@ module FlatPack
           assert_text "Back to chat groups"
         end
 
+        def test_renders_back_button_tooltip_when_provided
+          render_inline(Component.new(
+            title: "Design Team",
+            back_href: "/chat-groups",
+            back_label: nil,
+            back_tooltip: "Back to chat groups"
+          ))
+
+          assert_selector "a[href='/chat-groups'][title='Back to chat groups']"
+          assert_selector "a[href='/chat-groups'][aria-label='Back to chat groups']"
+          assert_no_selector "a[href='/chat-groups'] span", text: "<"
+        end
+
         def test_renders_single_person_avatar
           render_inline(Component.new(
             title: "Alicia Chen",

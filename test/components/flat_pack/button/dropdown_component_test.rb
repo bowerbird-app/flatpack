@@ -135,6 +135,20 @@ module FlatPack
         assert_selector "button", text: "Actions"
       end
 
+      def test_applies_trigger_attributes_to_button
+        render_inline(Dropdown::Component.new(
+          text: "",
+          icon: "dots",
+          show_chevron: false,
+          trigger_attributes: {
+            title: "Conversation actions",
+            aria: {label: "Conversation actions"}
+          }
+        ))
+
+        assert_selector "button[title='Conversation actions'][aria-label='Conversation actions']"
+      end
+
       # Disabled state
       def test_renders_disabled_button
         render_inline(Dropdown::Component.new(text: "Actions", disabled: true))

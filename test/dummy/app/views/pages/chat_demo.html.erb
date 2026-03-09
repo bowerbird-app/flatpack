@@ -125,7 +125,10 @@
                   size: :md,
                   show_chevron: false,
                   position: :top_left,
-                  aria: {label: "Add files or images"}
+                  trigger_attributes: {
+                    aria: {label: "Add files or images"},
+                    title: "Add files or images"
+                  }
                 ) do |dropdown| %>
                   <% dropdown.menu_item(
                     text: "Images",
@@ -262,7 +265,10 @@
                     size: :md,
                     show_chevron: false,
                     position: :top_left,
-                    aria: {label: &quot;Add files or images&quot;}
+                    trigger_attributes: {
+                      aria: {label: &quot;Add files or images&quot;},
+                      title: &quot;Add files or images&quot;
+                    }
                   ) do |dropdown| %&gt;
                     &lt;% dropdown.menu_item(
                       text: &quot;Upload files or images&quot;,
