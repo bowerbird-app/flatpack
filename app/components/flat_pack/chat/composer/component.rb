@@ -74,6 +74,10 @@ module FlatPack
           right?
         end
 
+        def attachment(...)
+          with_attachments(...)
+        end
+
         private
 
         def render_left_section

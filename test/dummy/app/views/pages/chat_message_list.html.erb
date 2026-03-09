@@ -15,14 +15,14 @@
         <% 12.times do |index| %>
           <% if index.even? %>
             <%= render FlatPack::Chat::ReceivedMessage::Component.new do |message| %>
-              <% message.with_meta do %>
+              <% message.meta do %>
                 <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "9:#{format('%02d', index)} AM", state: :sent) %>
               <% end %>
               Message <%= index + 1 %> inside the message list component.
             <% end %>
           <% else %>
             <%= render FlatPack::Chat::SentMessage::Component.new do |message| %>
-              <% message.with_meta do %>
+              <% message.meta do %>
                 <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "9:#{format('%02d', index)} AM", state: :sent) %>
               <% end %>
               Message <%= index + 1 %> inside the message list component.
@@ -41,14 +41,14 @@
           &lt;% 12.times do |index| %&gt;
             &lt;% if index.even? %&gt;
               &lt;%= render FlatPack::Chat::ReceivedMessage::Component.new do |message| %&gt;
-                &lt;% message.with_meta do %&gt;
+                &lt;% message.meta do %&gt;
                   &lt;%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "9:#{format('%02d', index)} AM", state: :sent) %&gt;
                 &lt;% end %&gt;
                 Message &lt;%= index + 1 %&gt; inside the message list component.
               &lt;% end %&gt;
             &lt;% else %&gt;
               &lt;%= render FlatPack::Chat::SentMessage::Component.new do |message| %&gt;
-                &lt;% message.with_meta do %&gt;
+                &lt;% message.meta do %&gt;
                   &lt;%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "9:#{format('%02d', index)} AM", state: :sent) %&gt;
                 &lt;% end %&gt;
                 Message &lt;%= index + 1 %&gt; inside the message list component.

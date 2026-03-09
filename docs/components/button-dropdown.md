@@ -24,6 +24,8 @@ Use Button Dropdown when multiple related actions should be grouped behind a sin
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for wrapper. |
 
 ## Slots
+Use `menu_item` and `menu_divider` as the slot builders (without a `with_` prefix).
+
 | name | type | required | description |
 |---|---|---|---|
 | `menu_item` | slot | no | Adds `FlatPack::Button::DropdownItem::Component` entries. |

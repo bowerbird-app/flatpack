@@ -7,6 +7,21 @@ module FlatPack
         renders_one :sidebar
         renders_one :panel
 
+        alias_method :sidebar_slot, :sidebar
+        alias_method :panel_slot, :panel
+
+        def sidebar(*args, &block)
+          return with_sidebar(*args, &block) if block_given? || args.any?
+
+          sidebar_slot
+        end
+
+        def panel(*args, &block)
+          return with_panel(*args, &block) if block_given? || args.any?
+
+          panel_slot
+        end
+
         # Tailwind CSS scanning requires these classes to be present as string literals.
         # DO NOT REMOVE - These duplicates ensure CSS generation:
         # "flex" "flex-col" "grid" "grid-cols-[280px_1fr]"

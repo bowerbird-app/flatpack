@@ -8,6 +8,14 @@ module FlatPack
         renders_many :media_attachments
         renders_one :meta
 
+        alias_method :meta_slot, :meta
+
+        def meta(*args, &block)
+          return with_meta(*args, &block) if block_given? || args.any?
+
+          meta_slot
+        end
+
         STATES = {
           sent: "sent",
           sending: "sending",

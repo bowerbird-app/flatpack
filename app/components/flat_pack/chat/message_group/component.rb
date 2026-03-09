@@ -7,6 +7,15 @@ module FlatPack
         renders_one :avatar
         renders_many :messages
 
+        alias_method :avatar_slot, :avatar
+        alias_method :message, :with_message
+
+        def avatar(*args, &block)
+          return with_avatar(*args, &block) if block_given? || args.any?
+
+          avatar_slot
+        end
+
         # Tailwind CSS scanning requires these classes to be present as string literals.
         # DO NOT REMOVE - These duplicates ensure CSS generation:
         # "flex-row" "flex-row-reverse"

@@ -16,7 +16,7 @@
       class: "mb-4 mt-6 overflow-hidden rounded-lg border",
       style: "height: 620px; border-color: var(--surface-border-color); background-color: var(--surface-background-color); grid-template-columns: minmax(0, 320px) minmax(0, 1fr);"
     ) do |layout| %>
-      <% layout.with_sidebar do %>
+      <% layout.sidebar do %>
         <div id="chat-groups" class="p-3">
           <p class="px-3 pb-2 text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">
             Chat Groups Inbox
@@ -40,10 +40,10 @@
         </div>
       <% end %>
 
-      <% layout.with_panel do %>
+      <% layout.panel do %>
         <%= turbo_frame_tag "chat-demo-panel", class: "block h-full" do %>
           <%= render FlatPack::Chat::Panel::Component.new do |panel| %>
-        <% panel.with_header do %>
+        <% panel.header do %>
           <%= render FlatPack::Chat::Header::Component.new(
             title: (@chat_group&.name || "Chat Group"),
             subtitle: "#{@chat_group_summaries.size} chat groups in your inbox",
@@ -78,7 +78,7 @@
           <% end %>
         <% end %>
 
-        <% panel.with_messages do %>
+        <% panel.messages do %>
           <%= render FlatPack::Chat::MessageList::Component.new(
             history_url: @chat_history_url,
             history_has_more: @chat_history_has_more,
@@ -96,7 +96,7 @@
           <% end %>
         <% end %>
 
-        <% panel.with_composer do %>
+        <% panel.composer do %>
           <%= form_with url: (@chat_group ? demo_chat_group_messages_path(@chat_group) : "#"), method: :post, local: true,
               data: {
                 controller: "flat-pack--chat-sender",
@@ -205,9 +205,9 @@
           class: &quot;rounded-lg border&quot;,
           style: &quot;height: 620px; border-color: var(--surface-border-color); background-color: var(--surface-background-color);&quot;
         ) do |layout| %&gt;
-          &lt;% layout.with_panel do %&gt;
+          &lt;% layout.panel do %&gt;
             &lt;%= render FlatPack::Chat::Panel::Component.new do |panel| %&gt;
-            &lt;% panel.with_header do %&gt;
+            &lt;% panel.header do %&gt;
               &lt;%= render FlatPack::Chat::Header::Component.new(
               title: "Design Team",
               subtitle: "8 members • 4 online",
@@ -230,13 +230,13 @@
               &lt;% end %&gt;
             &lt;% end %&gt;
 
-            &lt;% panel.with_messages do %&gt;
+            &lt;% panel.messages do %&gt;
               &lt;%= render FlatPack::Chat::MessageList::Component.new do %&gt;
                 &lt;%= render FlatPack::Chat::DateDivider::Component.new(label: "Today") %&gt;
                 &lt;%= render FlatPack::Chat::MessageGroup::Component.new(direction: :incoming, show_avatar: true, show_name: true, sender_name: "Mina") do |group| %&gt;
-                  &lt;% group.with_message do %&gt;
+                  &lt;% group.message do %&gt;
                     &lt;%= render FlatPack::Chat::ReceivedMessage::Component.new do |message| %&gt;
-                      &lt;% message.with_meta do %&gt;
+                      &lt;% message.meta do %&gt;
                         &lt;%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "10:12 AM", state: :sent) %&gt;
                       &lt;% end %&gt;
                       I pushed the homepage copy updates.
@@ -246,7 +246,7 @@
               &lt;% end %&gt;
             &lt;% end %&gt;
 
-            &lt;% panel.with_composer do %&gt;
+            &lt;% panel.composer do %&gt;
               &lt;%= form_with url: &quot;#&quot;, method: :post, local: true,
                   data: {
                     controller: &quot;flat-pack--chat-sender&quot;,

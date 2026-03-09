@@ -9,15 +9,10 @@ module FlatPack
           divider: FlatPack::Button::DropdownDivider::Component
         }
 
-        # Convenience aliases for polymorphic slot builders.
-        # Keep ViewComponent-generated with_* helpers supported.
-        def menu_item(...)
-          with_menu_item(...)
-        end
-
-        def menu_divider(...)
-          with_menu_divider(...)
-        end
+        # Use concise slot-builder names in templates.
+        alias_method :menu_item, :with_menu_item
+        alias_method :menu_divider, :with_menu_divider
+        private :with_menu_item, :with_menu_divider
 
         POSITIONS = {
           bottom_right: "top-full right-0 mt-2",
