@@ -82,8 +82,9 @@ Rails.application.routes.draw do
   get "demo/chat/file_message", to: "pages#chat_file_message"
   get "demo/chat/files/:slug", to: "pages#chat_file_download", as: :demo_chat_file_download,
     constraints: {slug: /[a-z0-9-]+/}
-  get "demo/chat/image_message", to: "pages#chat_image_message"
-  get "demo/chat/image_deck", to: "pages#chat_image_deck"
+  get "demo/chat/images", to: "pages#chat_images"
+  get "demo/chat/image_message", to: redirect("/demo/chat/images")
+  get "demo/chat/image_deck", to: redirect("/demo/chat/images")
   get "demo/chat/system_message", to: "pages#chat_system_message"
   get "demo/chat/message_record", to: "pages#chat_message_record"
   get "demo/chat/inbox_row", to: "pages#chat_inbox_row"

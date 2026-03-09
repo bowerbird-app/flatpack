@@ -456,10 +456,11 @@ class PagesController < ApplicationController
     )
   end
 
-  def chat_image_message
-  end
-
-  def chat_image_deck
+  def chat_images
+    @chat_images_single_incoming_slides = chat_images_single_incoming_slides
+    @chat_images_single_outgoing_slides = chat_images_single_outgoing_slides
+    @chat_images_incoming_slides = chat_images_incoming_slides
+    @chat_images_outgoing_slides = chat_images_outgoing_slides
   end
 
   def chat_system_message
@@ -1212,8 +1213,7 @@ class PagesController < ApplicationController
       {title: "Chat Sent Message", description: "Outgoing message examples", url: demo_chat_sent_message_path},
       {title: "Chat Received Message", description: "Incoming message examples", url: demo_chat_received_message_path},
       {title: "Chat File Message", description: "File attachment message examples", url: demo_chat_file_message_path},
-      {title: "Chat Image Message", description: "Image attachment message examples", url: demo_chat_image_message_path},
-      {title: "Chat Image Deck", description: "Overlapping multi-image chat message examples", url: demo_chat_image_deck_path},
+      {title: "Chat Images", description: "Single and multi-image chat message examples with carousel lightbox", url: demo_chat_images_path},
       {title: "Chat System Message", description: "System message examples", url: demo_chat_system_message_path},
       {title: "Chat Message Record", description: "Message record component examples", url: demo_chat_message_record_path},
       {title: "Chat Message Meta", description: "Message metadata component examples", url: demo_chat_message_meta_path},
@@ -1306,6 +1306,74 @@ class PagesController < ApplicationController
         alt: "Planning workshop board",
         caption: "Planning workshop board",
         lightbox: false
+      }
+    ]
+  end
+
+  def chat_images_incoming_slides
+    [
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1600&h=1200&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=320&h=240&fit=crop",
+        lightbox: true
+      },
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1518773553398-650c184e0bb3?w=1600&h=1200&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1518773553398-650c184e0bb3?w=320&h=240&fit=crop",
+        lightbox: true
+      },
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1600&h=1200&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=320&h=240&fit=crop",
+        lightbox: true
+      }
+    ]
+  end
+
+  def chat_images_outgoing_slides
+    [
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1600&h=1200&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=320&h=240&fit=crop",
+        lightbox: true
+      },
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1600&h=1200&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=320&h=240&fit=crop",
+        lightbox: true
+      },
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?w=1600&h=1200&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?w=320&h=240&fit=crop",
+        lightbox: true
+      }
+    ]
+  end
+
+  def chat_images_single_incoming_slides
+    [
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1600&h=1200&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=320&h=240&fit=crop",
+        lightbox: true
+      }
+    ]
+  end
+
+  def chat_images_single_outgoing_slides
+    [
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1518773553398-650c184e0bb3?w=1600&h=1200&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1518773553398-650c184e0bb3?w=320&h=240&fit=crop",
+        lightbox: true
       }
     ]
   end

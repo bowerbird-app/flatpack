@@ -16,7 +16,9 @@ module FlatPack
           ))
 
           assert_text "Image preview"
+          assert_selector "section[data-controller='flat-pack--carousel']"
           assert_selector "img[alt='preview.png']"
+          assert_selector "button[aria-label='Expand image']"
           assert_no_selector "div.px-4.py-2 img"
           assert_text "10:24 AM"
         end

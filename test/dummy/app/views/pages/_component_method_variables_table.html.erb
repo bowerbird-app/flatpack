@@ -174,22 +174,37 @@
         { variable: "file_meta", accepts: "String or nil", example: "file_meta: \"840 KB\"" }
       ]
     },
-    chat_image_message: {
-      label: "Chat Image Message",
-      method_call: "render FlatPack::Chat::ImageMessage::Component.new(direction: :incoming, image_name: \"mockup.png\", thumbnail_url: \"https://...\")",
+    chat_images: {
+      label: "Chat Images",
+      method_call: "render FlatPack::Chat::Images::Component.new(direction: :incoming, carousel: { slides: slides, show_thumbs: true })",
       variables: [
         { variable: "direction", accepts: ":incoming, :outgoing", example: "direction: :outgoing" },
-        { variable: "image_name", accepts: "String (required)", example: "image_name: \"hero-v2.png\"" },
-        { variable: "thumbnail_url", accepts: "String (required)", example: "thumbnail_url: \"https://images...\"" }
-      ]
-    },
-    chat_image_deck: {
-      label: "Chat Image Deck",
-      method_call: "render FlatPack::Chat::ImageDeck::Component.new(images: [{ name: \"hero-1.png\", thumbnail_url: \"https://...\" }], direction: :incoming)",
-      variables: [
-        { variable: "images", accepts: "Array of image hashes", example: "images: [{ name: \"hero-1.png\", thumbnail_url: \"https://...\" }]" },
-        { variable: "direction", accepts: ":incoming, :outgoing", example: "direction: :outgoing" },
-        { variable: "max_visible", accepts: "Integer", example: "max_visible: 3" }
+        { variable: "carousel", accepts: "Hash (required)", example: "carousel: { slides: [{ type: :image, src: \"https://...\", lightbox: true }] }" },
+        { variable: "state", accepts: ":sent, :sending, :failed, :read", example: "state: :read" },
+        { variable: "body", accepts: "String or nil", example: "body: \"Sharing the listing set.\"" },
+        { variable: "timestamp", accepts: "String, Time, DateTime, or nil", example: "timestamp: \"10:27 AM\"" },
+        { variable: "edited", accepts: "true, false", example: "edited: true" },
+        { variable: "reveal_actions", accepts: "true, false", example: "reveal_actions: true" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"mb-4\", data: { testid: \"chat-images\" }" }
+      ],
+      carousel_hash_options: [
+        { key: "slides", accepts: "Array<Hash> (required)", default: "none", example: "slides: [{ type: :image, src: \"https://...\" }]" },
+        { key: "show_controls", accepts: "true, false", default: "auto: true when multiple slides", example: "show_controls: false" },
+        { key: "show_indicators", accepts: "true, false", default: "auto: true when multiple slides", example: "show_indicators: true" },
+        { key: "show_thumbs", accepts: "true, false", default: "auto: true when multiple slides", example: "show_thumbs: true" },
+        { key: "show_captions", accepts: "true, false", default: "false", example: "show_captions: false" },
+        { key: "aspect_ratio", accepts: "String", default: "\"4/3\"", example: "aspect_ratio: \"16/9\"" },
+        { key: "aria_label", accepts: "String", default: "direction-based label", example: "aria_label: \"Incoming gallery\"" },
+        { key: "...", accepts: "Any FlatPack::Carousel::Component option", default: "passed through", example: "autoplay: true" }
+      ],
+      slides_hash_options: [
+        { key: "type", applies_to: "image, video, html", accepts: ":image, :video, :html", default: "inferred", example: "type: :image" },
+        { key: "src", applies_to: "image, video", accepts: "String URL", default: "required unless normalized from href/thumbnail_url", example: "src: \"https://...\"" },
+        { key: "thumb_src", applies_to: "image", accepts: "String URL", default: "nil", example: "thumb_src: \"https://...\"" },
+        { key: "href", applies_to: "image shorthand", accepts: "String URL", default: "nil", example: "href: \"https://images.example.com/full.jpg\"" },
+        { key: "thumbnail_url", applies_to: "image shorthand", accepts: "String URL", default: "nil", example: "thumbnail_url: \"https://images.example.com/thumb.jpg\"" },
+        { key: "name", applies_to: "image shorthand", accepts: "String", default: "nil", example: "name: \"hero-v2.png\"" },
+        { key: "lightbox", applies_to: "image, video, html", accepts: "true, false", default: "image: true, others: false", example: "lightbox: false" }
       ]
     },
     chat_system_message: {
@@ -677,6 +692,18 @@
               <%= render FlatPack::Table::Component.new(data: component_doc[:slides_hash_options]) do |table| %>
                 <% table.column(title: "Key", html: ->(row) { row[:key] }) %>
                 <% table.column(title: "Applies To", html: ->(row) { row[:applies_to] }) %>
+                <% table.column(title: "Accepts", html: ->(row) { row[:accepts] }) %>
+                <% table.column(title: "Default", html: ->(row) { row[:default] }) %>
+                <% table.column(title: "Example", html: ->(row) { row[:example] }) %>
+              <% end %>
+            </div>
+          <% end %>
+
+          <% if component_doc[:carousel_hash_options].present? %>
+            <div class="mt-6">
+              <h4 class="mb-2 text-sm font-semibold text-(--surface-content-color)">Carousel Hash Options</h4>
+              <%= render FlatPack::Table::Component.new(data: component_doc[:carousel_hash_options]) do |table| %>
+                <% table.column(title: "Key", html: ->(row) { row[:key] }) %>
                 <% table.column(title: "Accepts", html: ->(row) { row[:accepts] }) %>
                 <% table.column(title: "Default", html: ->(row) { row[:default] }) %>
                 <% table.column(title: "Example", html: ->(row) { row[:example] }) %>

@@ -97,6 +97,7 @@ components:
       - FlatPack::Chat::DateDivider::Component
       - FlatPack::Chat::FileMessage::Component
       - FlatPack::Chat::Header::Component
+      - FlatPack::Chat::Images::Component
       - FlatPack::Chat::ImageDeck::Component
       - FlatPack::Chat::ImageMessage::Component
       - FlatPack::Chat::InboxRow::Component

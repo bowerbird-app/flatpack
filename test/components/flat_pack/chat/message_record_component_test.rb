@@ -145,7 +145,7 @@ module FlatPack
           assert_no_selector "div.px-4.py-2 img"
         end
 
-        def test_renders_multi_image_attachments_as_image_deck
+        def test_renders_multi_image_attachments_as_carousel_gallery
           attachments = [
             {type: :image, name: "hero-1.png", thumbnail_url: "https://picsum.photos/seed/hero-1/480/280"},
             {type: :image, name: "hero-2.png", thumbnail_url: "https://picsum.photos/seed/hero-2/480/280"},
@@ -155,9 +155,10 @@ module FlatPack
 
           render_inline(Component.new(sender_name: "You", body: nil, attachments: attachments, direction: :outgoing))
 
-          assert_selector "div[data-flat-pack-chat-image-deck='true']"
-          assert_selector "div[data-flat-pack--chat-image-deck-target='card']", count: 3
-          assert_text "+1"
+          assert_selector "section[data-controller='flat-pack--carousel']"
+          assert_selector "button[aria-label='Show slide 1']"
+          assert_selector "button[aria-label='Expand image']"
+          refute_includes rendered_content, "data-flat-pack-chat-image-deck='true'"
         end
 
         def test_requires_sender_name

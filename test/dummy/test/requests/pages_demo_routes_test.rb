@@ -65,9 +65,8 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/chat/sent_message
     /demo/chat/received_message
     /demo/chat/file_message
-    /demo/chat/image_message
+    /demo/chat/images
     /demo/chat/system_message
-    /demo/chat/image_deck
     /demo/chat/message_record
     /demo/chat/inbox_row
     /demo/chat/message_meta
@@ -225,6 +224,27 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.headers["Content-Disposition"], "attachment"
     assert_includes response.headers["Content-Disposition"], "launch-plan.pdf"
     assert_includes response.body, "Demo launch plan PDF"
+  end
+
+  test "legacy chat image demo routes redirect to consolidated images page" do
+    get "/demo/chat/image_message"
+
+    assert_redirected_to "/demo/chat/images"
+
+    get "/demo/chat/image_deck"
+
+    assert_redirected_to "/demo/chat/images"
+  end
+
+  test "chat images demo renders single-image and carousel examples" do
+    get "/demo/chat/images"
+
+    assert_response :success
+    assert_includes response.body, "Chat::Images"
+    assert_includes response.body, "Single Image Attachment"
+    assert_includes response.body, "Gallery Using Carousel"
+    assert_includes response.body, "data-controller=\"flat-pack--carousel\""
+    assert_includes response.body, "Expand image"
   end
 
   test "chat inbox row demo renders reusable row examples" do

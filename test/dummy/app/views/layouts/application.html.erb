@@ -410,8 +410,7 @@
                 demo_chat_sent_message_path,
                 demo_chat_received_message_path,
                 demo_chat_file_message_path,
-                demo_chat_image_message_path,
-                demo_chat_image_deck_path,
+                demo_chat_images_path,
                 demo_chat_system_message_path,
                 demo_chat_message_record_path,
                 demo_chat_inbox_row_path,
@@ -478,16 +477,10 @@
                     active: current_page?(demo_chat_file_message_path)
                   ) %>
                   <%= render FlatPack::Sidebar::Item::Component.new(
-                    label: "Image Message",
-                    href: demo_chat_image_message_path,
+                    label: "Images",
+                    href: demo_chat_images_path,
                     icon: :image,
-                    active: current_page?(demo_chat_image_message_path)
-                  ) %>
-                  <%= render FlatPack::Sidebar::Item::Component.new(
-                    label: "Image Deck",
-                    href: demo_chat_image_deck_path,
-                    icon: :image,
-                    active: current_page?(demo_chat_image_deck_path)
+                    active: current_page?(demo_chat_images_path)
                   ) %>
                   <%= render FlatPack::Sidebar::Item::Component.new(
                     label: "System Message",

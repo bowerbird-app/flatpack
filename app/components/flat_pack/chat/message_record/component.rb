@@ -102,9 +102,15 @@ module FlatPack
 
           if image_attachments.length > 1
             chat_message.with_media_attachment do
-              render FlatPack::Chat::ImageDeck::Component.new(
-                images: image_attachments,
-                direction: @direction
+              render FlatPack::Carousel::Component.new(
+                slides: image_attachments.map { |attachment| image_attachment_slide(attachment) },
+                show_thumbs: true,
+                show_controls: true,
+                show_indicators: true,
+                show_captions: false,
+                aspect_ratio: "4/3",
+                aria_label: multi_image_aria_label,
+                class: "overflow-hidden rounded-2xl"
               )
             end
           else
@@ -124,6 +130,20 @@ module FlatPack
 
         def image_attachment?(attachment)
           normalize_attachment_type(attachment[:type] || attachment["type"]) == :image
+        end
+
+        def image_attachment_slide(attachment)
+          {
+            type: :image,
+            src: attachment[:href].presence || attachment[:thumbnail_url],
+            thumb_src: attachment[:thumbnail_url].presence,
+            alt: attachment[:name].presence,
+            lightbox: true
+          }.compact
+        end
+
+        def multi_image_aria_label
+          (@direction == :outgoing) ? "Outgoing chat image gallery" : "Incoming chat image gallery"
         end
 
         def reveal_actions?

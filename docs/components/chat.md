@@ -9,7 +9,7 @@ When `MessageRecord` rows are rendered inside `MessageList`, consecutive rows fr
 
 ## Class
 - Primary: `FlatPack::Chat::Panel::Component`
-- Related classes: `FlatPack::Chat::Layout::Component`, `FlatPack::Chat::Header::Component`, `FlatPack::Chat::MessageList::Component`, `FlatPack::Chat::MessageRecord::Component`, `FlatPack::Chat::Composer::Component`, `FlatPack::Chat::Textarea::Component`, `FlatPack::Chat::SendButton::Component`, `FlatPack::Chat::Attachment::Component`, `FlatPack::Chat::ImageDeck::Component`, `FlatPack::Chat::InboxRow::Component`, `FlatPack::Chat::TypingIndicator::Component`
+- Related classes: `FlatPack::Chat::Layout::Component`, `FlatPack::Chat::Header::Component`, `FlatPack::Chat::MessageList::Component`, `FlatPack::Chat::MessageRecord::Component`, `FlatPack::Chat::Composer::Component`, `FlatPack::Chat::Textarea::Component`, `FlatPack::Chat::SendButton::Component`, `FlatPack::Chat::Attachment::Component`, `FlatPack::Chat::Images::Component`, `FlatPack::Chat::ImageMessage::Component`, `FlatPack::Chat::ImageDeck::Component`, `FlatPack::Chat::InboxRow::Component`, `FlatPack::Chat::TypingIndicator::Component`
 
 ## Props
 Core container props:
@@ -31,6 +31,10 @@ High-use interaction props:
 | `FlatPack::Chat::MessageRecord::Component#record` | Object | `nil` | no | Message-like record source for body/sender/state/timestamp/attachments. |
 | `FlatPack::Chat::MessageRecord::Component#state` | Symbol | inferred / `:sent` | no | Message state: `:sent`, `:sending`, `:failed`, `:read`. |
 | `FlatPack::Chat::MessageRecord::Component#direction` | Symbol | inferred | no | `:incoming` or `:outgoing`. |
+| `FlatPack::Chat::Images::Component#carousel` | Hash | n/a | yes | Carousel-compatible hash; passed through to `FlatPack::Carousel::Component` after slide normalization. Accepts direct carousel slide hashes or attachment-like image hashes such as `href`, `thumbnail_url`, and `name`. |
+| `FlatPack::Chat::Images::Component#body` | String | `nil` | no | Message copy rendered under the image carousel; blank bodies render a spacer to preserve the message shell. |
+| `FlatPack::Chat::Images::Component#timestamp` | String, Time, DateTime | `nil` | no | Passed to `FlatPack::Chat::MessageMeta::Component`. |
+| `FlatPack::Chat::Images::Component#reveal_actions` | Boolean | `false` | no | Enables reveal-action message behavior using the underlying sent/received message components. |
 | `FlatPack::Chat::Composer::Component` | n/a | n/a | n/a | Slot-driven; defaults to chat textarea + send button when slots are omitted. |
 | `FlatPack::Chat::Textarea::Component#name` | String | `"message[body]"` | no | Textarea field name. |
 | `FlatPack::Chat::Textarea::Component#autogrow` | Boolean | `true` | no | Auto-resize behavior. |
@@ -79,6 +83,32 @@ High-use interaction props:
 <% end %>
 ```
 
+## Image Galleries
+
+Use `FlatPack::Chat::Images::Component` when a message should render one or more images through the carousel/lightbox path.
+
+```erb
+<%= render FlatPack::Chat::Images::Component.new(
+  direction: :incoming,
+  state: :sent,
+  timestamp: "10:27 AM",
+  body: "Sharing the latest listing photos.",
+  carousel: {
+    slides: [
+      { href: "https://images.example.com/full-1.jpg", thumbnail_url: "https://images.example.com/thumb-1.jpg", name: "front-wheel.jpg" },
+      { href: "https://images.example.com/full-2.jpg", thumbnail_url: "https://images.example.com/thumb-2.jpg", name: "rear-rack.jpg" }
+    ],
+    show_thumbs: true,
+    show_captions: false,
+    aspect_ratio: "4/3"
+  }
+) %>
+```
+
+`FlatPack::Chat::ImageMessage::Component` now delegates to `Chat::Images` internally for its single-image case, preserving its existing API while using the carousel/lightbox rendering path.
+
+`FlatPack::Chat::MessageRecord::Component` renders multi-image attachments with `FlatPack::Carousel::Component` inside the message media slot so attachment records and direct `Chat::Images` calls share the same gallery behavior.
+
 ## Accessibility
 - Message list jump button includes explicit `aria-label`.
 - Date dividers render `role="separator"` with labels.
@@ -87,5 +117,5 @@ High-use interaction props:
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
-- Stimulus controllers: `flat-pack--chat-scroll`, `flat-pack--chat-grouping`, `flat-pack--chat-textarea`, `chat-message-actions`, `flat-pack--chat-image-deck`.
+- Stimulus controllers: `flat-pack--chat-scroll`, `flat-pack--chat-grouping`, `flat-pack--chat-textarea`, `chat-message-actions`, `flat-pack--carousel`, `flat-pack--chat-image-deck`.
 - Message history loading uses `FlatPack::PaginationInfinite::Component` when configured.
