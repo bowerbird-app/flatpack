@@ -413,7 +413,6 @@
                 demo_chat_images_path,
                 demo_chat_system_message_path,
                 demo_chat_inbox_row_path,
-                demo_chat_message_meta_path,
                 demo_chat_attachment_path,
                 demo_chat_date_divider_path,
                 demo_chat_typing_indicator_path,
@@ -492,12 +491,6 @@
                     href: demo_chat_inbox_row_path,
                     icon: :align_left,
                     active: current_page?(demo_chat_inbox_row_path)
-                  ) %>
-                  <%= render FlatPack::Sidebar::Item::Component.new(
-                    label: "Message Meta",
-                    href: demo_chat_message_meta_path,
-                    icon: :clock,
-                    active: current_page?(demo_chat_message_meta_path)
                   ) %>
                   <%= render FlatPack::Sidebar::Item::Component.new(
                     label: "Attachment",

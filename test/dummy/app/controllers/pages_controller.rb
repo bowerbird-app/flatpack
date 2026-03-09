@@ -469,9 +469,6 @@ class PagesController < ApplicationController
   def chat_inbox_row
   end
 
-  def chat_message_meta
-  end
-
   def chat_attachment
   end
 
@@ -1213,7 +1210,6 @@ class PagesController < ApplicationController
       {title: "Chat File Message", description: "File attachment message examples", url: demo_chat_file_message_path},
       {title: "Chat Images", description: "Single and multi-image chat message examples with carousel lightbox", url: demo_chat_images_path},
       {title: "Chat System Message", description: "System message examples", url: demo_chat_system_message_path},
-      {title: "Chat Message Meta", description: "Message metadata component examples", url: demo_chat_message_meta_path},
       {title: "Chat Attachment", description: "Attachment component examples", url: demo_chat_attachment_path},
       {title: "Chat Date Divider", description: "Date divider component examples", url: demo_chat_date_divider_path},
       {title: "Chat Typing Indicator", description: "Typing indicator component examples", url: demo_chat_typing_indicator_path},

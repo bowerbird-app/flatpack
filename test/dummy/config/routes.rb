@@ -87,7 +87,6 @@ Rails.application.routes.draw do
   get "demo/chat/image_deck", to: redirect("/demo/chat/images")
   get "demo/chat/system_message", to: "pages#chat_system_message"
   get "demo/chat/inbox_row", to: "pages#chat_inbox_row"
-  get "demo/chat/message_meta", to: "pages#chat_message_meta"
   get "demo/chat/attachment", to: "pages#chat_attachment"
   get "demo/chat/date_divider", to: "pages#chat_date_divider"
   get "demo/chat/typing_indicator", to: "pages#chat_typing_indicator"

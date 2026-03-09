@@ -270,15 +270,6 @@
         { variable: "class", accepts: "String or nil", example: "class: \"max-h-[420px]\"" }
       ]
     },
-    chat_message_meta: {
-      label: "Chat Message Meta",
-      method_call: "render FlatPack::Chat::MessageMeta::Component.new(timestamp: \"11:02 AM\", state: :sent)",
-      variables: [
-        { variable: "timestamp", accepts: "String or nil", example: "timestamp: \"11:05 AM\"" },
-        { variable: "state", accepts: ":sent, :sending, :failed, :read", example: "state: :failed" },
-        { variable: "edited", accepts: "true, false", example: "edited: true" }
-      ]
-    },
     chip: {
       label: "Chip",
       method_call: "render FlatPack::Chip::Component.new(text: \"Backend\", style: :primary)",

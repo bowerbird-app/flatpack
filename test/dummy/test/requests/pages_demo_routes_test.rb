@@ -68,7 +68,6 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/chat/images
     /demo/chat/system_message
     /demo/chat/inbox_row
-    /demo/chat/message_meta
     /demo/chat/attachment
     /demo/chat/date_divider
     /demo/chat/typing_indicator
@@ -107,6 +106,12 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "flat-pack:picker:confirm@document-&gt;flat-pack--chat-sender#handlePickerConfirm"
     assert_includes response.body, "data-flat-pack--chat-sender-optimistic-endpoint-value=\"/demo/chat_groups/"
     assert_includes response.body, "data-flat-pack--chat-sender-picker-ids-value=\"[&quot;chat-picker-images&quot;,&quot;chat-picker-files&quot;]\""
+  end
+
+  test "standalone chat message meta demo route is not exposed" do
+    get "/demo/chat/message_meta"
+
+    assert_response :not_found
   end
 
   test "picker demo renders reusable picker component examples" do
