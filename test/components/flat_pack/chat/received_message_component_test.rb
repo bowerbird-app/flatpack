@@ -17,7 +17,7 @@ module FlatPack
 
         def test_renders_meta_slot
           render_inline(Component.new(state: :sent)) do |message|
-            message.with_meta { "10:12 AM" }
+            message.meta { "10:12 AM" }
             "Incoming with meta"
           end
 

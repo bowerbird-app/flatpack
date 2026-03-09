@@ -36,7 +36,7 @@ module FlatPack
 
         def test_renders_with_attachments
           render_inline(Component.new) do |composer|
-            composer.with_attachments do
+            composer.attachment do
               "Attachment preview"
             end
           end
@@ -55,7 +55,7 @@ module FlatPack
             composer.right do
               "Right"
             end
-            composer.with_attachments do
+            composer.attachment do
               "Attachments"
             end
           end

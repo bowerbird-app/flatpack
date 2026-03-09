@@ -11,9 +11,13 @@ module FlatPack
         alias_method :meta_slot, :meta
 
         def meta(*args, &block)
-          return with_meta(*args, &block) if block_given? || args.any?
+          return with_meta(*args, &block) if block || args.any?
 
           meta_slot
+        end
+
+        def attachment(...)
+          with_attachment(...)
         end
 
         STATES = {

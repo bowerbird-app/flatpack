@@ -8,9 +8,9 @@ module FlatPack
       class ComponentTest < ViewComponent::TestCase
         def test_renders_header_messages_and_composer_slots
           render_inline(Component.new) do |panel|
-            panel.with_header { "Header" }
-            panel.with_messages { "Messages" }
-            panel.with_composer { "Composer" }
+            panel.header { "Header" }
+            panel.messages { "Messages" }
+            panel.composer { "Composer" }
           end
 
           assert_text "Header"
@@ -20,7 +20,7 @@ module FlatPack
 
         def test_applies_header_container_styles
           render_inline(Component.new) do |panel|
-            panel.with_header { "Header" }
+            panel.header { "Header" }
           end
 
           assert_selector "div.border-b"

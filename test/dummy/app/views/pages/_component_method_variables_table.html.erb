@@ -142,9 +142,9 @@
       label: "Chat Panel",
       method_call: "render FlatPack::Chat::Panel::Component.new do |panel| ... end",
       variables: [
-        { variable: "with_header", accepts: "slot block", example: "panel.with_header { ... }" },
-        { variable: "with_messages", accepts: "slot block", example: "panel.with_messages { ... }" },
-        { variable: "with_composer", accepts: "slot block", example: "panel.with_composer { ... }" }
+        { variable: "header", accepts: "slot block", example: "panel.header { ... }" },
+        { variable: "messages", accepts: "slot block", example: "panel.messages { ... }" },
+        { variable: "composer", accepts: "slot block", example: "panel.composer { ... }" }
       ]
     },
     chat_sent_message: {
@@ -161,8 +161,8 @@
       method_call: "render FlatPack::Chat::ReceivedMessage::Component.new(state: :sent) { \"Incoming message\" }",
       variables: [
         { variable: "state", accepts: ":sent, :sending, :failed, :read", example: "state: :sent" },
-        { variable: "with_attachment", accepts: "slot (many)", example: "message.with_attachment { render FlatPack::Chat::Attachment::Component.new(...) }" },
-        { variable: "with_meta", accepts: "slot", example: "message.with_meta { render FlatPack::Chat::MessageMeta::Component.new(...) }" }
+        { variable: "attachment", accepts: "slot (many)", example: "message.attachment { render FlatPack::Chat::Attachment::Component.new(...) }" },
+        { variable: "meta", accepts: "slot", example: "message.meta { render FlatPack::Chat::MessageMeta::Component.new(...) }" }
       ]
     },
     chat_file_message: {
@@ -242,7 +242,7 @@
       method_call: "render FlatPack::Chat::TypingIndicator::Component.new(label: \"Teammate is typing\")",
       variables: [
         { variable: "label", accepts: "String", example: "label: \"Sam is typing\"" },
-        { variable: "with_avatar", accepts: "slot block", example: "indicator.with_avatar { render FlatPack::Avatar::Component.new(...) }" },
+        { variable: "avatar", accepts: "slot block", example: "indicator.avatar { render FlatPack::Avatar::Component.new(...) }" },
         { variable: "class", accepts: "String or nil", example: "class: \"mt-2\"" }
       ]
     },
@@ -251,8 +251,8 @@
       method_call: "render FlatPack::Chat::Layout::Component.new(variant: :split) do |layout| ... end",
       variables: [
         { variable: "variant", accepts: ":single, :split", example: "variant: :split" },
-        { variable: "with_sidebar", accepts: "slot block", example: "layout.with_sidebar { ... }" },
-        { variable: "with_panel", accepts: "slot block", example: "layout.with_panel { ... }" }
+        { variable: "sidebar", accepts: "slot block", example: "layout.sidebar { ... }" },
+        { variable: "panel", accepts: "slot block", example: "layout.panel { ... }" }
       ]
     },
     chat_message_list: {
@@ -372,7 +372,7 @@
       label: "Chat Composer",
       method_call: "render FlatPack::Chat::Composer::Component.new do |composer| ... end",
       variables: [
-        { variable: "with_attachments", accepts: "slot block", example: "composer.with_attachments { ... }" },
+        { variable: "attachment", accepts: "slot block", example: "composer.attachment { ... }" },
         { variable: "left", accepts: "slot block", example: "composer.left { ... }" },
         { variable: "center", accepts: "slot block", example: "composer.center { ... }" },
         { variable: "right", accepts: "slot block", example: "composer.right { ... }" }

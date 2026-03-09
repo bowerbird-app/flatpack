@@ -20,8 +20,8 @@ module FlatPack
 
         def test_renders_sidebar_and_panel_slots
           render_inline(Component.new(variant: :split)) do |layout|
-            layout.with_sidebar { "Sidebar content" }
-            layout.with_panel { "Panel content" }
+            layout.sidebar { "Sidebar content" }
+            layout.panel { "Panel content" }
           end
 
           assert_text "Sidebar content"
