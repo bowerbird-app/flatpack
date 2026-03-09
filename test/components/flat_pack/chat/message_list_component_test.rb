@@ -46,6 +46,7 @@ module FlatPack
           end
 
           assert_selector "div[data-flat-pack--chat-scroll-target='messages']"
+          assert_selector "div[data-controller~='flat-pack--chat-grouping']"
         end
 
         def test_has_jump_button_container_target

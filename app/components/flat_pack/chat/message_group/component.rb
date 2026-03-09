@@ -11,7 +11,7 @@ module FlatPack
         alias_method :message, :with_message
 
         def avatar(*args, &block)
-          return with_avatar(*args, &block) if block_given? || args.any?
+          return with_avatar(*args, &block) if block || args.any?
 
           avatar_slot
         end
@@ -54,7 +54,7 @@ module FlatPack
         def render_avatar_section
           return unless @show_avatar
 
-          content_tag(:div, class: "flex-shrink-0 #{(@direction == :incoming) ? "mr-3" : "ml-3"}") do
+          content_tag(:div, class: "flex-shrink-0 #{(@direction == :incoming) ? "mr-3" : "ml-3"}", data: {flat_pack_chat_group_avatar: true}) do
             if avatar?
               avatar.to_s
             else
@@ -84,9 +84,7 @@ module FlatPack
         def render_sender_name
           return unless @show_name && @sender_name.present?
 
-          content_tag(:div, class: name_classes) do
-            @sender_name
-          end
+          content_tag(:div, @sender_name, class: name_classes, data: {flat_pack_chat_group_name: true})
         end
 
         def render_messages_list
@@ -97,7 +95,11 @@ module FlatPack
 
         def group_attributes
           merge_attributes(
-            class: group_classes
+            class: group_classes,
+            data: {
+              flat_pack_chat_group: true,
+              flat_pack_chat_group_direction: @direction
+            }
           )
         end
 

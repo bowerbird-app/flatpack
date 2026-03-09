@@ -5,6 +5,7 @@ Provide composable chat group UI building blocks for panels, message rendering, 
 
 ## When to use
 Use Chat components when building chat group interfaces with message history, typing states, attachments, and send flows.
+When `MessageRecord` rows are rendered inside `MessageList`, consecutive rows from the same sender are grouped automatically on the client so callers do not need to pre-wrap adjacent records in `MessageGroup`.
 
 ## Class
 - Primary: `FlatPack::Chat::Panel::Component`
@@ -86,5 +87,5 @@ High-use interaction props:
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
-- Stimulus controllers: `flat-pack--chat-scroll`, `flat-pack--chat-textarea`, `chat-message-actions`, `flat-pack--chat-image-deck`.
+- Stimulus controllers: `flat-pack--chat-scroll`, `flat-pack--chat-grouping`, `flat-pack--chat-textarea`, `chat-message-actions`, `flat-pack--chat-image-deck`.
 - Message history loading uses `FlatPack::PaginationInfinite::Component` when configured.

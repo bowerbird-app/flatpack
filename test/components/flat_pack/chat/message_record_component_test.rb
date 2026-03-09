@@ -19,7 +19,7 @@ module FlatPack
 
           assert_text "Mina Cho"
           assert_text "Can you review this before lunch?"
-          assert_selector "div[data-pagination-cursor='41']"
+          assert_selector "div[data-pagination-cursor='41'][data-flat-pack-chat-record='true'][data-flat-pack-chat-record-sender='Mina Cho'][data-flat-pack-chat-record-direction='incoming']"
           assert_selector "div[data-chat-message-state='sent']"
         end
 

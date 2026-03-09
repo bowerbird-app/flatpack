@@ -107,6 +107,7 @@ module FlatPack
           {
             class: messages_classes,
             data: {
+              controller: "flat-pack--chat-grouping",
               flat_pack__chat_scroll_target: "messages",
               action: "scroll->flat-pack--chat-scroll#checkScroll"
             }

@@ -161,8 +161,12 @@ module FlatPack
 
         def wrapper_attributes
           attrs = merge_attributes(
+            class: "transition-[margin] duration-base",
             id: dom_id_for_record,
             data: {
+              flat_pack_chat_record: true,
+              flat_pack_chat_record_sender: @sender_name,
+              flat_pack_chat_record_direction: @direction,
               pagination_cursor: read_record_attribute(:id)
             }
           )
