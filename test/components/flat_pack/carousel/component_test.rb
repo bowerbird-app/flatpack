@@ -58,10 +58,23 @@ module FlatPack
         assert_selector "section[data-controller='flat-pack--carousel']"
         assert_selector "div[data-flat-pack--carousel-target='slide']", count: 3, visible: :all
         assert_selector "button[data-flat-pack--carousel-target='indicator']", count: 3
+        assert_selector "div[data-flat-pack--carousel-target='counter']"
         indicator = page.find("button[data-flat-pack--carousel-target='indicator']", match: :first)
         assert_includes indicator[:class], "cursor-pointer"
         assert_selector "button[data-action='click->flat-pack--carousel#prev']"
         assert_selector "button[data-action='click->flat-pack--carousel#next']"
+      end
+
+      def test_places_counter_in_bottom_footer_row_with_indicators
+        render_inline(Component.new(slides: sample_slides))
+
+        counter = page.find("div[data-flat-pack--carousel-target='counter']", visible: :all)
+        footer = counter.find(:xpath, "./ancestor::div[contains(@class, 'bottom-3') and contains(@class, 'grid')][1]", visible: :all)
+        counter = footer.find("div[data-flat-pack--carousel-target='counter']", visible: :all)
+        indicators = footer.find("button[data-flat-pack--carousel-target='indicator']", match: :first, visible: :all)
+
+        assert_includes counter[:class], "justify-self-end"
+        assert_includes indicators.find(:xpath, "ancestor::div[1]")[:class], "rounded-full"
       end
 
       def test_renders_circular_flex_chevron_controls_with_theme_token_background
@@ -96,7 +109,10 @@ module FlatPack
       def test_renders_lightbox_toggle_button_with_expand_icon
         render_inline(Component.new(slides: sample_slides))
 
-        assert_selector "button[data-flat-pack--carousel-target='lightboxToggle'][data-action='click->flat-pack--carousel#openLightbox']", count: 1
+        lightbox_toggle = page.find("button[data-flat-pack--carousel-target='lightboxToggle'][data-action='click->flat-pack--carousel#openLightbox']", visible: :all)
+
+        assert_includes lightbox_toggle[:class], "top-3"
+        refute_includes lightbox_toggle[:class], "top-12"
         assert_includes rendered_content, "#icon-arrows-pointing-out"
       end
 

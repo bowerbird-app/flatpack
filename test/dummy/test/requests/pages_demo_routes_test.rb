@@ -169,6 +169,15 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "--color-success-background-color"
   end
 
+  test "carousel demo renders lightbox control and footer counter copy" do
+    get "/demo/carousel"
+
+    assert_response :success
+    assert_includes response.body, "data-flat-pack--carousel-target=\"counter\""
+    assert_includes response.body, "data-flat-pack--carousel-target=\"lightboxToggle\""
+    assert_includes response.body, "The slide count now sits in the bottom-right footer beside the dot navigation."
+  end
+
   test "search demo variable table includes full option set" do
     get "/demo/search"
 

@@ -124,9 +124,8 @@ module FlatPack
           safe_join([
             render_slides,
             (@show_controls ? render_controls : nil),
-            render_counter,
             render_lightbox_toggle,
-            (@show_indicators ? render_indicators : nil),
+            render_footer,
             ((@show_captions && @caption_mode == :overlay) ? render_overlay_caption : nil)
           ].compact)
         end
@@ -219,10 +218,26 @@ module FlatPack
         end
       end
 
+      def render_footer
+        footer_classes = if @show_indicators
+          "absolute inset-x-0 bottom-3 z-20 grid grid-cols-[1fr_auto_1fr] items-center px-3"
+        else
+          "absolute inset-x-0 bottom-3 z-20 flex justify-end px-3"
+        end
+
+        content_tag(:div, class: footer_classes) do
+          safe_join([
+            (@show_indicators ? content_tag(:div, nil) : nil),
+            (@show_indicators ? render_indicators : nil),
+            render_counter
+          ].compact)
+        end
+      end
+
       def render_counter
         content_tag(:div,
           "",
-          class: "absolute right-3 top-3 z-20 rounded-full bg-[var(--carousel-counter-background-color)] px-2 py-1 text-xs font-medium text-[var(--carousel-counter-text-color)]",
+          class: "justify-self-end rounded-full bg-[var(--carousel-counter-background-color)] px-2 py-1 text-xs font-medium text-[var(--carousel-counter-text-color)]",
           data: {flat_pack__carousel_target: "counter"})
       end
 
@@ -230,7 +245,7 @@ module FlatPack
         content_tag(:button,
           type: "button",
           hidden: !lightbox_available_for_index?(@initial_index),
-          class: "absolute right-3 top-12 z-20 flex aspect-square flex-nowrap items-center justify-center cursor-pointer rounded-full bg-[var(--carousel-counter-background-color)] p-2 text-[var(--carousel-counter-text-color)] transition hover:bg-[var(--carousel-control-hover-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          class: "absolute right-3 top-3 z-20 flex aspect-square flex-nowrap items-center justify-center cursor-pointer rounded-full bg-[var(--carousel-counter-background-color)] p-2 text-[var(--carousel-counter-text-color)] transition hover:bg-[var(--carousel-control-hover-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
           aria: {label: "Expand image"},
           data: {
             flat_pack__carousel_target: "lightboxToggle",
@@ -293,8 +308,7 @@ module FlatPack
       end
 
       def render_indicators
-        content_tag(:div,
-          class: "absolute inset-x-0 bottom-3 z-20 flex justify-center") do
+        content_tag(:div, class: "justify-self-center") do
           content_tag(:div, class: "flex items-center gap-2 rounded-full bg-[var(--carousel-indicator-track-background-color)] px-3 py-2") do
             safe_join(@slides.map.with_index { |_slide, index| render_indicator(index) })
           end
