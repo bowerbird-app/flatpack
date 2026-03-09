@@ -43,6 +43,15 @@ module FlatPack
           assert_no_text "+"
         end
 
+        def test_renders_person_avatar_online_status
+          render_inline(Component.new(
+            title: "Alicia Chen",
+            person_avatar: {name: "Alicia Chen", size: :sm, status: :online}
+          ))
+
+          assert_includes page.native.to_html, "bg-[var(--avatar-status-online-color)]"
+        end
+
         def test_renders_group_avatars_with_overflow
           render_inline(Component.new(
             title: "Design Team",

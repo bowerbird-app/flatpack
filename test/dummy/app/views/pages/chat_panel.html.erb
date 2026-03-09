@@ -18,7 +18,7 @@
             back_href: "#chat-groups",
             back_label: nil,
             back_tooltip: "Back to chat groups",
-            person_avatar: {name: "Alicia Chen", size: :sm}
+            person_avatar: {name: "Alicia Chen", size: :sm, status: :online}
           ) do |header| %>
             <% header.right do %>
               <%= render FlatPack::Button::Dropdown::Component.new(
@@ -68,7 +68,7 @@
               back_href: "#chat-groups",
               back_label: nil,
               back_tooltip: "Back to chat groups",
-              person_avatar: {name: "Alicia Chen", size: :sm}
+              person_avatar: {name: "Alicia Chen", size: :sm, status: :online}
             ) do |header| %&gt;
               &lt;% header.right do %&gt;
                 &lt;%= render FlatPack::Button::Dropdown::Component.new(
