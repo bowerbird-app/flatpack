@@ -20,6 +20,17 @@ module FlatPack
           assert_text "420 KB"
           assert_text "10:21 AM"
         end
+
+        def test_wraps_attachment_in_link_when_file_href_is_provided
+          render_inline(Component.new(
+            direction: :incoming,
+            file_name: "brief.pdf",
+            file_meta: "420 KB",
+            file_href: "/demo/chat/files/brief"
+          ))
+
+          assert_selector "a[href='/demo/chat/files/brief'][target='_blank']", text: /brief\.pdf/
+        end
       end
     end
   end

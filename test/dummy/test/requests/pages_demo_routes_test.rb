@@ -200,6 +200,24 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "data-max-visible-avatars=\"2\""
   end
 
+  test "chat file message demo exposes real file download links" do
+    get "/demo/chat/file_message"
+
+    assert_response :success
+    assert_includes response.body, "/demo/chat/files/launch-plan"
+    assert_includes response.body, "/demo/chat/files/qa-checklist"
+  end
+
+  test "chat file download returns attachment content" do
+    get "/demo/chat/files/launch-plan"
+
+    assert_response :success
+    assert_equal "application/pdf", response.media_type
+    assert_includes response.headers["Content-Disposition"], "attachment"
+    assert_includes response.headers["Content-Disposition"], "launch-plan.pdf"
+    assert_includes response.body, "Demo launch plan PDF"
+  end
+
   test "chat inbox row demo renders reusable row examples" do
     get "/demo/chat/inbox_row"
 

@@ -80,6 +80,8 @@ Rails.application.routes.draw do
   get "demo/chat/sent_message", to: "pages#chat_sent_message"
   get "demo/chat/received_message", to: "pages#chat_received_message"
   get "demo/chat/file_message", to: "pages#chat_file_message"
+  get "demo/chat/files/:slug", to: "pages#chat_file_download", as: :demo_chat_file_download,
+    constraints: {slug: /[a-z0-9-]+/}
   get "demo/chat/image_message", to: "pages#chat_image_message"
   get "demo/chat/image_deck", to: "pages#chat_image_deck"
   get "demo/chat/system_message", to: "pages#chat_system_message"

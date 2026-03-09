@@ -7,6 +7,30 @@ require "pagy/extras/array"
 class PagesController < ApplicationController
   include Pagy::Backend
 
+  DEMO_CHAT_FILE_DOWNLOADS = {
+    "launch-plan" => {
+      filename: "launch-plan.pdf",
+      content_type: "application/pdf",
+      body: <<~PDF
+        %PDF-1.4
+        1 0 obj
+        << /Type /Catalog >>
+        endobj
+        Demo launch plan PDF for FlatPack chat file message previews.
+      PDF
+    },
+    "qa-checklist" => {
+      filename: "qa-checklist.csv",
+      content_type: "text/csv",
+      body: <<~CSV
+        item,status,owner
+        Release smoke test,complete,QA
+        Accessibility spot check,in_progress,Design Systems
+        Production sign-off,pending,Release Team
+      CSV
+    }
+  }.freeze
+
   DEMO_THEME_TOKEN_MAPPINGS = [
     {action: /\Abuttons\z/, title: "Buttons", patterns: [/\A--button-/]},
     {action: /\Aalerts\z/, title: "Alerts", patterns: [/\A--alert-/]},
@@ -418,6 +442,18 @@ class PagesController < ApplicationController
   end
 
   def chat_file_message
+  end
+
+  def chat_file_download
+    file = DEMO_CHAT_FILE_DOWNLOADS[params[:slug].to_s]
+    raise ActionController::RoutingError, "Not Found" unless file
+
+    send_data(
+      file.fetch(:body),
+      filename: file.fetch(:filename),
+      type: file.fetch(:content_type),
+      disposition: :attachment
+    )
   end
 
   def chat_image_message
