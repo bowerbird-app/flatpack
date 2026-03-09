@@ -62,7 +62,7 @@ module FlatPack
 
           render_inline(Component.new(record: record))
 
-          refute_includes rendered_content, "chat-message-actions"
+          refute_includes rendered_content, "flat-pack--chat-message-actions"
         end
 
         def test_reveal_actions_renders_for_outgoing_when_enabled
@@ -76,8 +76,8 @@ module FlatPack
 
           render_inline(Component.new(record: record, reveal_actions: true))
 
-          assert_includes rendered_content, "chat-message-actions"
-          assert_includes rendered_content, "chat-message-actions-side-value=\"right\""
+          assert_includes rendered_content, "flat-pack--chat-message-actions"
+          assert_includes rendered_content, "data-flat-pack--chat-message-actions-side-value=\"right\""
           assert_text "Edit"
           assert_text "Delete"
           assert_text "5:07 PM"
@@ -94,8 +94,8 @@ module FlatPack
 
           render_inline(Component.new(record: record, reveal_actions: true))
 
-          assert_includes rendered_content, "chat-message-actions"
-          assert_includes rendered_content, "chat-message-actions-side-value=\"left\""
+          assert_includes rendered_content, "flat-pack--chat-message-actions"
+          assert_includes rendered_content, "data-flat-pack--chat-message-actions-side-value=\"left\""
           assert_text "4:47 PM"
           refute_text "Edit"
           refute_text "Delete"

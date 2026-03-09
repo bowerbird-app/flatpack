@@ -26,7 +26,7 @@ class DemoChatReadReceiptWorkerTest < ActiveJob::TestCase
     assert_equal 1, broadcast_calls.size
 
     _, kwargs = broadcast_calls.first
-    assert_includes kwargs[:html], 'data-controller="chat-message-actions"'
+    assert_includes kwargs[:html], 'data-controller="flat-pack--chat-message-actions"'
     assert_includes kwargs[:html], "Edit"
     assert_includes kwargs[:html], "Delete"
   end
@@ -50,6 +50,6 @@ class DemoChatReadReceiptWorkerTest < ActiveJob::TestCase
     assert_equal 1, broadcast_calls.size
 
     _, kwargs = broadcast_calls.first
-    refute_includes kwargs[:html], 'data-controller="chat-message-actions"'
+    refute_includes kwargs[:html], 'data-controller="flat-pack--chat-message-actions"'
   end
 end

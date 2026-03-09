@@ -55,17 +55,17 @@ module FlatPack
             :div,
             class: "relative w-full overflow-hidden rounded-2xl",
             data: {
-              controller: "chat-message-actions",
-              chat_message_actions_direction_value: :outgoing,
-              chat_message_actions_side_value: "right",
-              action: "click@window->chat-message-actions#handleWindowClick keydown@window->chat-message-actions#handleWindowKeydown chat-message-actions:opened@window->chat-message-actions#handlePeerOpened"
+              controller: "flat-pack--chat-message-actions",
+              flat_pack__chat_message_actions_direction_value: :outgoing,
+              flat_pack__chat_message_actions_side_value: "right",
+              action: "click@window->flat-pack--chat-message-actions#handleWindowClick keydown@window->flat-pack--chat-message-actions#handleWindowKeydown chat-message-actions:opened@window->flat-pack--chat-message-actions#handlePeerOpened"
             }
           ) do
             safe_join([
               content_tag(
                 :div,
                 class: "absolute inset-y-0 right-0 z-0 pr-2 flex items-center gap-2 opacity-0 pointer-events-none transition-opacity duration-150",
-                data: {chat_message_actions_target: "tray"}
+                data: {flat_pack__chat_message_actions_target: "tray"}
               ) do
                 content_tag(:div, class: "flex items-center gap-2 whitespace-nowrap pl-4") do
                   safe_join([
@@ -78,8 +78,8 @@ module FlatPack
                 :div,
                 class: "relative z-10 w-full transform transition-transform duration-200 ease-out cursor-pointer",
                 data: {
-                  chat_message_actions_target: "surface",
-                  action: "click->chat-message-actions#toggle keydown->chat-message-actions#toggleByKey"
+                  flat_pack__chat_message_actions_target: "surface",
+                  action: "click->flat-pack--chat-message-actions#toggle keydown->flat-pack--chat-message-actions#toggleByKey"
                 },
                 role: "button",
                 tabindex: 0,
@@ -108,7 +108,7 @@ module FlatPack
                 text: "Edit",
                 size: :sm,
                 style: :secondary,
-                data: {action: "click->chat-message-actions#handleEdit"}
+                data: {action: "click->flat-pack--chat-message-actions#handleEdit"}
               )
             ),
             render(
@@ -116,7 +116,7 @@ module FlatPack
                 text: "Delete",
                 size: :sm,
                 style: :error,
-                data: {action: "click->chat-message-actions#handleDelete"}
+                data: {action: "click->flat-pack--chat-message-actions#handleDelete"}
               )
             )
           ])
