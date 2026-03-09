@@ -123,9 +123,9 @@ module FlatPack
           }) do
           safe_join([
             render_slides,
-            (@show_controls ? render_controls : nil),
+            (controls_visible? ? render_controls : nil),
             render_lightbox_toggle,
-            render_footer,
+            (footer_visible? ? render_footer : nil),
             ((@show_captions && @caption_mode == :overlay) ? render_overlay_caption : nil)
           ].compact)
         end
@@ -219,7 +219,7 @@ module FlatPack
       end
 
       def render_footer
-        footer_classes = if @show_indicators
+        footer_classes = if indicators_visible?
           "absolute inset-x-0 bottom-3 z-20 grid grid-cols-[1fr_auto_1fr] items-center px-3"
         else
           "absolute inset-x-0 bottom-3 z-20 flex justify-end px-3"
@@ -227,11 +227,31 @@ module FlatPack
 
         content_tag(:div, class: footer_classes) do
           safe_join([
-            (@show_indicators ? content_tag(:div, nil) : nil),
-            (@show_indicators ? render_indicators : nil),
-            render_counter
+            (indicators_visible? ? content_tag(:div, nil) : nil),
+            (indicators_visible? ? render_indicators : nil),
+            (counter_visible? ? render_counter : nil)
           ].compact)
         end
+      end
+
+      def controls_visible?
+        @show_controls && multiple_slides?
+      end
+
+      def footer_visible?
+        indicators_visible? || counter_visible?
+      end
+
+      def counter_visible?
+        multiple_slides?
+      end
+
+      def indicators_visible?
+        @show_indicators && multiple_slides?
+      end
+
+      def multiple_slides?
+        @slides.length > 1
       end
 
       def render_counter

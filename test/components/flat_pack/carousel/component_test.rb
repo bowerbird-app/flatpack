@@ -52,6 +52,18 @@ module FlatPack
         ]
       end
 
+      def single_lightbox_slide
+        [
+          {
+            type: :image,
+            src: "https://images.example.com/single.jpg",
+            alt: "Single slide",
+            caption: "Only",
+            lightbox: true
+          }
+        ]
+      end
+
       def test_renders_carousel_shell_with_targets
         render_inline(Component.new(slides: sample_slides))
 
@@ -114,6 +126,16 @@ module FlatPack
         assert_includes lightbox_toggle[:class], "top-3"
         refute_includes lightbox_toggle[:class], "top-12"
         assert_includes rendered_content, "#icon-arrows-pointing-out"
+      end
+
+      def test_hides_controls_and_counter_for_single_slide_but_keeps_lightbox_toggle
+        render_inline(Component.new(slides: single_lightbox_slide))
+
+        assert_no_selector "button[data-action='click->flat-pack--carousel#prev']"
+        assert_no_selector "button[data-action='click->flat-pack--carousel#next']"
+        assert_no_selector "div[data-flat-pack--carousel-target='counter']"
+        assert_no_selector "button[data-flat-pack--carousel-target='indicator']"
+        assert_selector "button[data-flat-pack--carousel-target='lightboxToggle']", count: 1, visible: :all
       end
 
       def test_exposes_owl_style_configuration_values

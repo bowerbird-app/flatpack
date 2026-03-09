@@ -175,6 +175,8 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "data-flat-pack--carousel-target=\"counter\""
     assert_includes response.body, "data-flat-pack--carousel-target=\"lightboxToggle\""
     assert_includes response.body, "The slide count now sits in the bottom-right footer beside the dot navigation."
+    assert_includes response.body, "Single Slide Example"
+    assert_includes response.body, "With only one slide, the carousel keeps the content and lightbox expand button but skips the chevron controls, dot navigation, and slide count."
   end
 
   test "search demo variable table includes full option set" do

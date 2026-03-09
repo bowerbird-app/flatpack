@@ -495,6 +495,7 @@ class PagesController < ApplicationController
 
   def carousel
     @carousel_slides = carousel_demo_slides
+    @carousel_single_slide = carousel_demo_single_slide
     @carousel_notes = [
       "Uses FlatPack::Carousel::Component with image, video, and component-rendered HTML slides.",
       "Demonstrates autoplay, loop, indicators, controls, and thumbnail navigation.",
@@ -1306,6 +1307,19 @@ class PagesController < ApplicationController
         alt: "Planning workshop board",
         caption: "Planning workshop board",
         lightbox: false
+      }
+    ]
+  end
+
+  def carousel_demo_single_slide
+    [
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1518773553398-650c184e0bb3?w=1600&h=900&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1518773553398-650c184e0bb3?w=320&h=180&fit=crop",
+        alt: "Single slide gallery preview",
+        caption: "Single slide example with lightbox enabled",
+        lightbox: true
       }
     ]
   end

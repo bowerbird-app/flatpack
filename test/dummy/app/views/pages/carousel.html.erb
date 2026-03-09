@@ -106,6 +106,49 @@
   ) %>
 </section>
 
+<!-- Single Slide Carousel -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Single Slide Example", anchor_link: true, subtitle: "Examples for a single-slide carousel where arrows and the slide count stay hidden.") %>
+  <div class="mb-4 overflow-hidden rounded-xl border border-(--surface-border-color) bg-(--surface-background-color) p-4">
+    <%= render FlatPack::Carousel::Component.new(
+      slides: @carousel_single_slide,
+      show_controls: true,
+      show_indicators: true,
+      show_captions: true,
+      caption_mode: :below,
+      aspect_ratio: "16/9",
+      aria_label: "Single slide carousel demo"
+    ) %>
+  </div>
+  <p class="mb-3 text-sm text-(--surface-muted-content-color)">
+    With only one slide, the carousel keeps the content and lightbox expand button but skips the chevron controls, dot navigation, and slide count.
+  </p>
+  <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">Code Example</p>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      @carousel_single_slide = [
+        {
+          type: :image,
+          src: "https://images.unsplash.com/photo-1518773553398-650c184e0bb3?w=1600&h=900&fit=crop",
+          thumb_src: "https://images.unsplash.com/photo-1518773553398-650c184e0bb3?w=320&h=180&fit=crop",
+          alt: "Single slide gallery preview",
+          caption: "Single slide example with lightbox enabled",
+          lightbox: true
+        }
+      ]
+
+      &lt;%= render FlatPack::Carousel::Component.new(
+        slides: @carousel_single_slide,
+        show_controls: true,
+        show_indicators: true,
+        show_captions: true,
+        caption_mode: :below,
+        aspect_ratio: "16/9"
+      ) %&gt;
+    CODE
+  ) %>
+</section>
+
 <!-- Carousel with Thumbnails and Autoplay -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Carousel with Thumbnails and Autoplay", anchor_link: true, subtitle: "Examples for Carousel with Thumbnails and Autoplay.") %>
