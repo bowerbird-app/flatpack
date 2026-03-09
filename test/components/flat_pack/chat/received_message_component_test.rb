@@ -17,7 +17,7 @@ module FlatPack
 
         def test_renders_meta_slot
           render_inline(Component.new(state: :sent)) do |message|
-            message.with_meta { "10:12 AM" }
+            message.meta { "10:12 AM" }
             "Incoming with meta"
           end
 
@@ -30,8 +30,8 @@ module FlatPack
             "Incoming reveal"
           end
 
-          assert_includes rendered_content, "chat-message-actions"
-          assert_includes rendered_content, "chat-message-actions-side-value=\"left\""
+          assert_includes rendered_content, "flat-pack--chat-message-actions"
+          assert_includes rendered_content, "data-flat-pack--chat-message-actions-side-value=\"left\""
           assert_text "10:12 AM"
           refute_text "Edit"
           refute_text "Delete"

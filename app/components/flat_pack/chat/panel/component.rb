@@ -8,6 +8,28 @@ module FlatPack
         renders_one :messages
         renders_one :composer
 
+        alias_method :header_slot, :header
+        alias_method :messages_slot, :messages
+        alias_method :composer_slot, :composer
+
+        def header(*args, &block)
+          return with_header(*args, &block) if block_given? || args.any?
+
+          header_slot
+        end
+
+        def messages(*args, &block)
+          return with_messages(*args, &block) if block_given? || args.any?
+
+          messages_slot
+        end
+
+        def composer(*args, &block)
+          return with_composer(*args, &block) if block_given? || args.any?
+
+          composer_slot
+        end
+
         def initialize(**system_arguments)
           super
         end

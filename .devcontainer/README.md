@@ -162,5 +162,6 @@ The following environment variables are automatically set in the devcontainer:
 
 - The workspace is mounted at `/workspace` inside the container
 - Bundle gems are cached in a Docker volume for faster rebuilds
+- The container intentionally does not set `BUNDLE_BIN`; shared Bundler binstubs can break `bundle exec` when multiple Gemfiles are used in the workspace
 - PostgreSQL and Redis data are persisted in Docker volumes
 - The container runs as `root` user for maximum flexibility

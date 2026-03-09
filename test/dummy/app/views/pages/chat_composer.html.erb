@@ -11,7 +11,7 @@
 
     <div class="mb-4 mt-6 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
       <%= render FlatPack::Chat::Composer::Component.new do |composer| %>
-        <% composer.with_attachments do %>
+        <% composer.attachment do %>
           <%= render FlatPack::Chat::Attachment::Component.new(type: :file, name: "draft-copy.txt", meta: "18 KB") %>
         <% end %>
 
@@ -23,24 +23,37 @@
             size: :md,
             show_chevron: false,
             position: :top_left,
-            aria: {label: "Attach options"}
+            trigger_attributes: {
+              aria: {label: "Attach options"},
+              title: "Attach options"
+            }
           ) do |dropdown| %>
-            <% dropdown.with_menu_item(text: "Upload file", icon: "file", href: "#") %>
-            <% dropdown.with_menu_item(text: "Attach from library", icon: "folder", href: "#") %>
+            <% dropdown.menu_item(text: "Upload file", icon: "file", href: "#") %>
+            <% dropdown.menu_item(text: "Attach from library", icon: "folder", href: "#") %>
           <% end %>
         <% end %>
 
         <% composer.center do %>
-          <%= render FlatPack::Chat::Textarea::Component.new(
+          <%= render FlatPack::TextArea::Component.new(
             name: "composer[body]",
             placeholder: "Type your update...",
+            rows: 1,
             autogrow: true,
-            submit_on_enter: false
+            submit_on_enter: false,
+            class: "min-h-[var(--chat-composer-control-height)] rounded-lg border-[var(--chat-input-border-color)] bg-[var(--chat-input-background-color)] px-4 py-2 text-sm leading-5 text-[var(--chat-input-text-color)] placeholder:text-[var(--chat-input-placeholder-color)] focus:ring-[var(--chat-input-focus-ring-color)] max-h-32"
           ) %>
         <% end %>
 
         <% composer.right do %>
-          <%= render FlatPack::Chat::SendButton::Component.new %>
+          <%= render FlatPack::Button::Component.new(
+            icon: "send",
+            icon_only: true,
+            style: :primary,
+            size: :md,
+            type: "submit",
+            aria: {label: "Send message"},
+            class: "border-transparent bg-[var(--chat-send-button-background-color)] text-[var(--chat-send-button-text-color)] hover:bg-[var(--chat-send-button-hover-background-color)] focus-visible:ring-[var(--chat-send-button-focus-ring-color)] shrink-0"
+          ) %>
         <% end %>
       <% end %>
     </div>
@@ -50,7 +63,7 @@
       language: "erb",
       code: CGI.unescapeHTML(<<~'CODE')
         &lt;%= render FlatPack::Chat::Composer::Component.new do |composer| %&gt;
-          &lt;% composer.with_attachments do %&gt;
+          &lt;% composer.attachment do %&gt;
             &lt;%= render FlatPack::Chat::Attachment::Component.new(type: :file, name: "draft-copy.txt", meta: "18 KB") %&gt;
           &lt;% end %&gt;
 
@@ -62,24 +75,37 @@
               size: :md,
               show_chevron: false,
               position: :top_left,
-              aria: {label: "Attach options"}
+              trigger_attributes: {
+                aria: {label: "Attach options"},
+                title: "Attach options"
+              }
             ) do |dropdown| %&gt;
-              &lt;% dropdown.with_menu_item(text: "Upload file", icon: "file", href: "#") %&gt;
-              &lt;% dropdown.with_menu_item(text: "Attach from library", icon: "folder", href: "#") %&gt;
+              &lt;% dropdown.menu_item(text: "Upload file", icon: "file", href: "#") %&gt;
+              &lt;% dropdown.menu_item(text: "Attach from library", icon: "folder", href: "#") %&gt;
             &lt;% end %&gt;
           &lt;% end %&gt;
 
           &lt;% composer.center do %&gt;
-            &lt;%= render FlatPack::Chat::Textarea::Component.new(
+            &lt;%= render FlatPack::TextArea::Component.new(
               name: "composer[body]",
               placeholder: "Type your update...",
+              rows: 1,
               autogrow: true,
-              submit_on_enter: false
+              submit_on_enter: false,
+              class: "min-h-[var(--chat-composer-control-height)] rounded-lg border-[var(--chat-input-border-color)] bg-[var(--chat-input-background-color)] px-4 py-2 text-sm leading-5 text-[var(--chat-input-text-color)] placeholder:text-[var(--chat-input-placeholder-color)] focus:ring-[var(--chat-input-focus-ring-color)] max-h-32"
             ) %&gt;
           &lt;% end %&gt;
 
           &lt;% composer.right do %&gt;
-            &lt;%= render FlatPack::Chat::SendButton::Component.new %&gt;
+            &lt;%= render FlatPack::Button::Component.new(
+              icon: "send",
+              icon_only: true,
+              style: :primary,
+              size: :md,
+              type: "submit",
+              aria: {label: "Send message"},
+              class: "border-transparent bg-[var(--chat-send-button-background-color)] text-[var(--chat-send-button-text-color)] hover:bg-[var(--chat-send-button-hover-background-color)] focus-visible:ring-[var(--chat-send-button-focus-ring-color)] shrink-0"
+            ) %&gt;
           &lt;% end %&gt;
         &lt;% end %&gt;
       CODE
@@ -103,16 +129,26 @@
         <% end %>
 
         <% composer.center do %>
-          <%= render FlatPack::Chat::Textarea::Component.new(
+          <%= render FlatPack::TextArea::Component.new(
             name: "composer[body_rounded]",
             placeholder: "Write a quick update...",
+            rows: 1,
             autogrow: true,
-            submit_on_enter: false
+            submit_on_enter: false,
+            class: "min-h-[var(--chat-composer-control-height)] rounded-[9999px] border-[var(--chat-input-border-color)] bg-[var(--chat-input-background-color)] px-4 py-2 text-sm leading-5 text-[var(--chat-input-text-color)] placeholder:text-[var(--chat-input-placeholder-color)] focus:ring-[var(--chat-input-focus-ring-color)] max-h-32"
           ) %>
         <% end %>
 
         <% composer.right do %>
-          <%= render FlatPack::Chat::SendButton::Component.new(class: "[--button-border-radius:9999px]") %>
+          <%= render FlatPack::Button::Component.new(
+            icon: "send",
+            icon_only: true,
+            style: :primary,
+            size: :md,
+            type: "submit",
+            aria: {label: "Send message"},
+            class: "border-transparent bg-[var(--chat-send-button-background-color)] text-[var(--chat-send-button-text-color)] hover:bg-[var(--chat-send-button-hover-background-color)] focus-visible:ring-[var(--chat-send-button-focus-ring-color)] shrink-0 [--button-border-radius:9999px]"
+          ) %>
         <% end %>
       <% end %>
     </div>
@@ -134,16 +170,26 @@
           &lt;% end %&gt;
 
           &lt;% composer.center do %&gt;
-            &lt;%= render FlatPack::Chat::Textarea::Component.new(
+            &lt;%= render FlatPack::TextArea::Component.new(
               name: "composer[body_rounded]",
               placeholder: "Write a quick update...",
+              rows: 1,
               autogrow: true,
-              submit_on_enter: false
+              submit_on_enter: false,
+              class: "min-h-[var(--chat-composer-control-height)] rounded-[9999px] border-[var(--chat-input-border-color)] bg-[var(--chat-input-background-color)] px-4 py-2 text-sm leading-5 text-[var(--chat-input-text-color)] placeholder:text-[var(--chat-input-placeholder-color)] focus:ring-[var(--chat-input-focus-ring-color)] max-h-32"
             ) %&gt;
           &lt;% end %&gt;
 
           &lt;% composer.right do %&gt;
-            &lt;%= render FlatPack::Chat::SendButton::Component.new(class: "[--button-border-radius:9999px]") %&gt;
+            &lt;%= render FlatPack::Button::Component.new(
+              icon: "send",
+              icon_only: true,
+              style: :primary,
+              size: :md,
+              type: "submit",
+              aria: {label: "Send message"},
+              class: "border-transparent bg-[var(--chat-send-button-background-color)] text-[var(--chat-send-button-text-color)] hover:bg-[var(--chat-send-button-hover-background-color)] focus-visible:ring-[var(--chat-send-button-focus-ring-color)] shrink-0 [--button-border-radius:9999px]"
+            ) %&gt;
           &lt;% end %&gt;
         &lt;% end %&gt;
       CODE
@@ -156,16 +202,26 @@
     <div class="mb-4 mt-6 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
       <%= render FlatPack::Chat::Composer::Component.new do |composer| %>
         <% composer.center do %>
-          <%= render FlatPack::Chat::Textarea::Component.new(
+          <%= render FlatPack::TextArea::Component.new(
             name: "composer[body_no_attachment]",
             placeholder: "Type your message...",
+            rows: 1,
             autogrow: true,
-            submit_on_enter: false
+            submit_on_enter: false,
+            class: "min-h-[var(--chat-composer-control-height)] rounded-lg border-[var(--chat-input-border-color)] bg-[var(--chat-input-background-color)] px-4 py-2 text-sm leading-5 text-[var(--chat-input-text-color)] placeholder:text-[var(--chat-input-placeholder-color)] focus:ring-[var(--chat-input-focus-ring-color)] max-h-32"
           ) %>
         <% end %>
 
         <% composer.right do %>
-          <%= render FlatPack::Chat::SendButton::Component.new %>
+          <%= render FlatPack::Button::Component.new(
+            icon: "send",
+            icon_only: true,
+            style: :primary,
+            size: :md,
+            type: "submit",
+            aria: {label: "Send message"},
+            class: "border-transparent bg-[var(--chat-send-button-background-color)] text-[var(--chat-send-button-text-color)] hover:bg-[var(--chat-send-button-hover-background-color)] focus-visible:ring-[var(--chat-send-button-focus-ring-color)] shrink-0"
+          ) %>
         <% end %>
       <% end %>
     </div>
@@ -176,16 +232,26 @@
       code: CGI.unescapeHTML(<<~'CODE')
         &lt;%= render FlatPack::Chat::Composer::Component.new do |composer| %&gt;
           &lt;% composer.center do %&gt;
-            &lt;%= render FlatPack::Chat::Textarea::Component.new(
+            &lt;%= render FlatPack::TextArea::Component.new(
               name: "composer[body_no_attachment]",
               placeholder: "Type your message...",
+              rows: 1,
               autogrow: true,
-              submit_on_enter: false
+              submit_on_enter: false,
+              class: "min-h-[var(--chat-composer-control-height)] rounded-lg border-[var(--chat-input-border-color)] bg-[var(--chat-input-background-color)] px-4 py-2 text-sm leading-5 text-[var(--chat-input-text-color)] placeholder:text-[var(--chat-input-placeholder-color)] focus:ring-[var(--chat-input-focus-ring-color)] max-h-32"
             ) %&gt;
           &lt;% end %&gt;
 
           &lt;% composer.right do %&gt;
-            &lt;%= render FlatPack::Chat::SendButton::Component.new %&gt;
+            &lt;%= render FlatPack::Button::Component.new(
+              icon: "send",
+              icon_only: true,
+              style: :primary,
+              size: :md,
+              type: "submit",
+              aria: {label: "Send message"},
+              class: "border-transparent bg-[var(--chat-send-button-background-color)] text-[var(--chat-send-button-text-color)] hover:bg-[var(--chat-send-button-hover-background-color)] focus-visible:ring-[var(--chat-send-button-focus-ring-color)] shrink-0"
+            ) %&gt;
           &lt;% end %&gt;
         &lt;% end %&gt;
       CODE

@@ -356,6 +356,7 @@ DEPENDENCIES
   importmap-rails
   propshaft (~> 1.0)
   puma
+  rubocop
   selenium-webdriver
   simplecov
   sqlite3 (~> 2.0)

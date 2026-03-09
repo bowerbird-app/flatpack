@@ -11,15 +11,15 @@
 
     <div class="mb-4 mt-6 space-y-6 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
       <%= render FlatPack::Chat::MessageGroup::Component.new(direction: :incoming, show_avatar: true, show_name: true, sender_name: "Mina") do |group| %>
-        <% group.with_avatar do %>
-          <%= render FlatPack::Avatar::Component.new(name: "Mina Cho", initials: "MC", size: :sm) %>
+        <% group.avatar do %>
+          <%= render FlatPack::Avatar::Component.new(name: "Mina Cho", size: :sm) %>
         <% end %>
-        <% group.with_message do %>
+        <% group.message do %>
           <%= render FlatPack::Chat::ReceivedMessage::Component.new do %>
             First message in the incoming group.
           <% end %>
         <% end %>
-        <% group.with_message do %>
+        <% group.message do %>
           <%= render FlatPack::Chat::ReceivedMessage::Component.new do %>
             Second message from the same person.
           <% end %>
@@ -27,12 +27,12 @@
       <% end %>
 
       <%= render FlatPack::Chat::MessageGroup::Component.new(direction: :outgoing, show_avatar: false) do |group| %>
-        <% group.with_message do %>
+        <% group.message do %>
           <%= render FlatPack::Chat::SentMessage::Component.new do %>
             Reply one in outgoing group.
           <% end %>
         <% end %>
-        <% group.with_message do %>
+        <% group.message do %>
           <%= render FlatPack::Chat::SentMessage::Component.new do %>
             Reply two in outgoing group.
           <% end %>
@@ -50,10 +50,10 @@
           show_name: true,
           sender_name: "Mina"
         ) do |group| %&gt;
-          &lt;% group.with_avatar do %&gt;
-            &lt;%= render FlatPack::Avatar::Component.new(name: "Mina Cho", initials: "MC", size: :sm) %&gt;
+          &lt;% group.avatar do %&gt;
+            &lt;%= render FlatPack::Avatar::Component.new(name: "Mina Cho", size: :sm) %&gt;
           &lt;% end %&gt;
-          &lt;% group.with_message do %&gt;
+          &lt;% group.message do %&gt;
             &lt;%= render FlatPack::Chat::ReceivedMessage::Component.new do %&gt;
               First message in the incoming group.
             &lt;% end %&gt;

@@ -11,7 +11,9 @@ module FlatPack
 
           # Should have default textarea and send button
           assert_selector "textarea"
+          assert_selector "textarea[name='message[body]']"
           assert_selector "button[type='submit']"
+          assert_selector "button[aria-label='Send message']"
         end
 
         def test_renders_custom_textarea
@@ -36,7 +38,7 @@ module FlatPack
 
         def test_renders_with_attachments
           render_inline(Component.new) do |composer|
-            composer.with_attachments do
+            composer.attachment do
               "Attachment preview"
             end
           end
@@ -55,7 +57,7 @@ module FlatPack
             composer.right do
               "Right"
             end
-            composer.with_attachments do
+            composer.attachment do
               "Attachments"
             end
           end

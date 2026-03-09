@@ -51,9 +51,7 @@ module Demo
       preview_item = build_preview_item
 
       render json: {
-        html: render_to_string(
-          renderable: FlatPack::Chat::MessageRecord::Component.new(record: preview_item, reveal_actions: true)
-        )
+        html: view_context.render_chat_demo_message(preview_item, reveal_actions: false)
       }, status: :ok
     rescue ArgumentError => error
       render json: {error: error.message}, status: :unprocessable_entity
@@ -193,9 +191,7 @@ module Demo
 
     def rendered_items_html(items)
       items.map do |item|
-        render_to_string(
-          renderable: FlatPack::Chat::MessageRecord::Component.new(record: item, reveal_actions: true)
-        )
+        view_context.render_chat_demo_message(item, reveal_actions: false)
       end.join
     end
 

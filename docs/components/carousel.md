@@ -12,7 +12,7 @@ Use Carousel when users need to browse a sequence of visual or rich-content slid
 ## Props
 | name | type | default | required | description |
 |---|---|---|---|---|
-| `slides` | Array<Hash> | `[]` | yes | Slide payloads (`:image`, `:video`, `:html`) with sanitization. |
+| `slides` | Array<Hash> | `[]` | yes | Slide payloads (`:image`, `:video`, `:html`) with sanitization. Image slides accept `lightbox` (default `true`), while non-image slides default `lightbox` to `false`. |
 | `initial_index` | Integer | `0` | no | Zero-based starting slide index. |
 | `show_thumbs` | Boolean | `false` | no | Render clickable thumbnail navigation. |
 | `thumbs_position` | Symbol | `:bottom` | no | Thumbnail row position: `:top`, `:bottom`. |
@@ -49,7 +49,7 @@ The dummy app consolidates carousel behavior (basic, autoplay, thumbnails, trans
 ```erb
 <%= render FlatPack::Carousel::Component.new(
   slides: [
-    {type: :image, src: "https://images.example.com/hero.jpg", alt: "Hero", caption: "Hero image"},
+    {type: :image, src: "https://images.example.com/hero.jpg", alt: "Hero", caption: "Hero image", lightbox: true},
     {type: :video, src: "https://videos.example.com/teaser.mp4", poster: "https://images.example.com/poster.jpg", caption: "Teaser"},
     {type: :html, html: "<div class='p-6'><h3>Release Notes</h3><p>Shipped this week.</p></div>", caption: "Custom card"}
   ],
@@ -59,6 +59,23 @@ The dummy app consolidates carousel behavior (basic, autoplay, thumbnails, trans
   transition: :fade
 ) %>
 ```
+
+## Slides Hash Options
+| key | applies to | accepts | default | notes |
+|---|---|---|---|---|
+| `type` | image, video, html | `:image`, `:video`, `:html` | inferred | Optional if inferable from payload. |
+| `src` | image, video | String URL | required | Required for image/video slides. |
+| `thumb_src` | image | String URL | `nil` | Thumbnail source for `show_thumbs`. |
+| `thumb` | image | String URL | `nil` | Alias for `thumb_src`. |
+| `alt` | image | String | `"Slide n"` | Falls back to slide index label. |
+| `caption` | image, video, html | String | `""` | Used by caption rendering modes. |
+| `lightbox` | image, video, html | `true`, `false` | image: `true`, others: `false` | Only image slides can actually open lightbox. |
+| `poster` | video | String URL | `nil` | Poster image behind video element. |
+| `controls` | video | `true`, `false` | `true` | Native video controls toggle. |
+| `muted` | video | `true`, `false` | `false` | Passed to `<video muted>`. |
+| `video_loop` | video | `true`, `false` | `false` | Passed to `<video loop>`. |
+| `playsinline` | video | `true`, `false` | `true` | Passed to `<video playsinline>`. |
+| `html` | html | String HTML | required for `:html` | HTML content is sanitized before render. |
 
 ## JS API (owl-style)
 The Stimulus controller exposes methods both as component actions and as an imperative API:

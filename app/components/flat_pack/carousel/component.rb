@@ -78,7 +78,8 @@ module FlatPack
             (@show_thumbs && @thumbs_position == :top) ? render_thumbs : nil,
             render_viewport,
             (@show_captions && @caption_mode == :below) ? render_below_caption : nil,
-            (@show_thumbs && @thumbs_position == :bottom) ? render_thumbs : nil
+            (@show_thumbs && @thumbs_position == :bottom) ? render_thumbs : nil,
+            render_lightbox_overlay
           ].compact)
         end
       end
@@ -105,6 +106,7 @@ module FlatPack
       def root_classes
         classes(
           "flat-pack-carousel relative w-full",
+          @show_thumbs ? "overflow-visible" : nil,
           @responsive ? "max-w-full" : nil
         )
       end
@@ -122,9 +124,9 @@ module FlatPack
           }) do
           safe_join([
             render_slides,
-            (@show_controls ? render_controls : nil),
-            render_counter,
-            (@show_indicators ? render_indicators : nil),
+            (controls_visible? ? render_controls : nil),
+            render_lightbox_toggle,
+            (footer_visible? ? render_footer : nil),
             ((@show_captions && @caption_mode == :overlay) ? render_overlay_caption : nil)
           ].compact)
         end
@@ -145,7 +147,10 @@ module FlatPack
           data: {
             flat_pack__carousel_target: "slide",
             index: index,
-            caption: slide[:caption].to_s
+            caption: slide[:caption].to_s,
+            lightbox_enabled: slide_lightbox_enabled?(slide).to_s,
+            lightbox_src: slide_lightbox_src(slide),
+            lightbox_alt: slide_lightbox_alt(slide)
           },
           aria: {
             hidden: (!is_active).to_s,
@@ -177,7 +182,7 @@ module FlatPack
                 aria: {hidden: true}
               ) : nil),
               content_tag(:video,
-                class: "absolute inset-0 z-10 block h-full w-full object-cover",
+                class: "absolute inset-0 z-10 block h-full w-full min-w-full object-cover",
                 style: "width: 100%; height: 100%; object-fit: cover;",
                 controls: slide[:controls],
                 muted: slide[:muted],
@@ -214,16 +219,117 @@ module FlatPack
         end
       end
 
+      def render_footer
+        footer_classes = if indicators_visible?
+          "absolute inset-x-0 bottom-3 z-20 grid grid-cols-[1fr_auto_1fr] items-center px-3"
+        else
+          "absolute inset-x-0 bottom-3 z-20 flex justify-end px-3"
+        end
+
+        content_tag(:div, class: footer_classes) do
+          safe_join([
+            (indicators_visible? ? content_tag(:div, nil) : nil),
+            (indicators_visible? ? render_indicators : nil),
+            (counter_visible? ? render_counter : nil)
+          ].compact)
+        end
+      end
+
+      def controls_visible?
+        @show_controls && multiple_slides?
+      end
+
+      def footer_visible?
+        indicators_visible? || counter_visible?
+      end
+
+      def counter_visible?
+        multiple_slides?
+      end
+
+      def indicators_visible?
+        @show_indicators && multiple_slides?
+      end
+
+      def multiple_slides?
+        @slides.length > 1
+      end
+
       def render_counter
         content_tag(:div,
           "",
-          class: "absolute right-3 top-3 z-20 rounded-full bg-[var(--carousel-counter-background-color)] px-2 py-1 text-xs font-medium text-[var(--carousel-counter-text-color)]",
+          class: "justify-self-end rounded-full bg-[var(--carousel-counter-background-color)] px-2 py-1 text-xs font-medium text-[var(--carousel-counter-text-color)]",
           data: {flat_pack__carousel_target: "counter"})
       end
 
-      def render_indicators
+      def render_lightbox_toggle
+        content_tag(:button,
+          type: "button",
+          hidden: !lightbox_available_for_index?(@initial_index),
+          class: "absolute right-3 top-3 z-20 flex aspect-square flex-nowrap items-center justify-center cursor-pointer rounded-full bg-[var(--carousel-counter-background-color)] p-2 text-[var(--carousel-counter-text-color)] transition hover:bg-[var(--carousel-control-hover-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          aria: {label: "Expand image"},
+          data: {
+            flat_pack__carousel_target: "lightboxToggle",
+            action: "click->flat-pack--carousel#openLightbox"
+          }) do
+          render FlatPack::Shared::IconComponent.new(name: :arrows_pointing_out, size: :sm, class: "pointer-events-none")
+        end
+      end
+
+      def render_lightbox_overlay
         content_tag(:div,
-          class: "absolute inset-x-0 bottom-3 z-20 flex justify-center") do
+          class: "fixed inset-0 z-50 hidden bg-[var(--modal-backdrop-color)] backdrop-blur-[var(--modal-backdrop-blur)] p-4 sm:p-6",
+          tabindex: -1,
+          role: "dialog",
+          aria: {modal: true, hidden: "true", label: "Image lightbox"},
+          data: {
+            flat_pack__carousel_target: "lightbox",
+            action: "click->flat-pack--carousel#closeLightbox keydown.esc->flat-pack--carousel#closeLightbox"
+          }) do
+          content_tag(:div, class: "relative flex min-h-full items-center justify-center") do
+            safe_join([
+              content_tag(:button,
+                type: "button",
+                class: "absolute right-2 top-2 z-10 cursor-pointer rounded-full bg-[var(--modal-surface-color)] p-2 text-[var(--modal-close-icon-color)] shadow-sm transition hover:text-[var(--modal-close-icon-hover-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:right-4 sm:top-4",
+                aria: {label: "Close lightbox"},
+                data: {action: "click->flat-pack--carousel#closeLightbox"}) do
+                content_tag(:svg,
+                  class: "h-5 w-5 pointer-events-none",
+                  xmlns: "http://www.w3.org/2000/svg",
+                  fill: "none",
+                  viewBox: "0 0 24 24",
+                  stroke: "currentColor",
+                  aria: {hidden: true}) do
+                  tag.path(
+                    "stroke-linecap": "round",
+                    "stroke-linejoin": "round",
+                    "stroke-width": "1.8",
+                    d: "M6 18 18 6M6 6l12 12"
+                  )
+                end
+              end,
+              content_tag(:figure, class: "w-full max-w-6xl overflow-hidden rounded-xl border border-[var(--modal-border-color)] bg-[var(--modal-surface-color)]") do
+                safe_join([
+                  tag.img(
+                    src: "",
+                    alt: "",
+                    class: "max-h-[80vh] w-full object-contain bg-black/20",
+                    draggable: false,
+                    data: {flat_pack__carousel_target: "lightboxImage"}
+                  ),
+                  content_tag(:figcaption,
+                    "",
+                    class: "hidden border-t border-[var(--modal-border-color)] px-4 py-3 text-sm text-[var(--modal-body-color)]",
+                    data: {flat_pack__carousel_target: "lightboxCaption"})
+                ])
+              end
+            ])
+          end
+        end
+      end
+
+      def render_indicators
+        content_tag(:div, class: "justify-self-center") do
           content_tag(:div, class: "flex items-center gap-2 rounded-full bg-[var(--carousel-indicator-track-background-color)] px-3 py-2") do
             safe_join(@slides.map.with_index { |_slide, index| render_indicator(index) })
           end
@@ -360,6 +466,7 @@ module FlatPack
             src: src,
             alt: payload[:alt].presence || "Slide #{index + 1}",
             thumb_src: FlatPack::AttributeSanitizer.sanitize_url(payload[:thumb_src] || payload[:thumb]),
+            lightbox: normalize_lightbox(payload[:lightbox], default: true),
             caption: caption
           }
         when :video
@@ -374,6 +481,7 @@ module FlatPack
             muted: payload.fetch(:muted, false),
             video_loop: payload.fetch(:video_loop, false),
             playsinline: payload.fetch(:playsinline, true),
+            lightbox: normalize_lightbox(payload[:lightbox], default: false),
             caption: caption
           }
         else
@@ -383,9 +491,33 @@ module FlatPack
           {
             type: :html,
             html: sanitize_html(raw_html),
+            lightbox: normalize_lightbox(payload[:lightbox], default: false),
             caption: caption
           }
         end
+      end
+
+      def normalize_lightbox(value, default:)
+        return default if value.nil?
+
+        ActiveModel::Type::Boolean.new.cast(value)
+      end
+
+      def slide_lightbox_enabled?(slide)
+        slide[:type] == :image && slide[:lightbox] && slide[:src].present?
+      end
+
+      def slide_lightbox_src(slide)
+        slide_lightbox_enabled?(slide) ? slide[:src] : nil
+      end
+
+      def slide_lightbox_alt(slide)
+        slide_lightbox_enabled?(slide) ? slide[:alt] : nil
+      end
+
+      def lightbox_available_for_index?(index)
+        slide = @slides[index]
+        slide.present? && slide_lightbox_enabled?(slide)
       end
 
       def sanitize_html(raw_html)

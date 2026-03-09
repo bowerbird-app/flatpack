@@ -27,16 +27,66 @@ module FlatPack
         ]
       end
 
+      def lightbox_slides
+        [
+          {
+            type: :image,
+            src: "https://images.example.com/one.jpg",
+            alt: "Slide one",
+            caption: "First"
+          },
+          {
+            type: :image,
+            src: "https://images.example.com/two.jpg",
+            alt: "Slide two",
+            caption: "Second",
+            lightbox: false
+          },
+          {
+            type: :video,
+            src: "https://videos.example.com/two.mp4",
+            poster: "https://images.example.com/poster.jpg",
+            caption: "Third",
+            lightbox: true
+          }
+        ]
+      end
+
+      def single_lightbox_slide
+        [
+          {
+            type: :image,
+            src: "https://images.example.com/single.jpg",
+            alt: "Single slide",
+            caption: "Only",
+            lightbox: true
+          }
+        ]
+      end
+
       def test_renders_carousel_shell_with_targets
         render_inline(Component.new(slides: sample_slides))
 
         assert_selector "section[data-controller='flat-pack--carousel']"
         assert_selector "div[data-flat-pack--carousel-target='slide']", count: 3, visible: :all
         assert_selector "button[data-flat-pack--carousel-target='indicator']", count: 3
+        assert_selector "div[data-flat-pack--carousel-target='counter']"
         indicator = page.find("button[data-flat-pack--carousel-target='indicator']", match: :first)
         assert_includes indicator[:class], "cursor-pointer"
         assert_selector "button[data-action='click->flat-pack--carousel#prev']"
         assert_selector "button[data-action='click->flat-pack--carousel#next']"
+      end
+
+      def test_places_counter_in_bottom_footer_row_with_indicators
+        render_inline(Component.new(slides: sample_slides))
+
+        counter = page.find("div[data-flat-pack--carousel-target='counter']", visible: :all)
+        footer = counter.find(:xpath, "./ancestor::div[contains(@class, 'bottom-3') and contains(@class, 'grid')][1]", visible: :all)
+        counter = footer.find("div[data-flat-pack--carousel-target='counter']", visible: :all)
+        indicators = footer.find("button[data-flat-pack--carousel-target='indicator']", match: :first, visible: :all)
+
+        assert_includes counter[:class], "justify-self-end"
+        assert_includes indicators.find(:xpath, "ancestor::div[1]")[:class], "rounded-full"
       end
 
       def test_renders_circular_flex_chevron_controls_with_theme_token_background
@@ -53,6 +103,39 @@ module FlatPack
         assert_includes rendered_content, "#icon-chevron-left"
         assert_includes rendered_content, "#icon-chevron-right"
         assert_selector "button[data-action='click->flat-pack--carousel#prev'] svg.pointer-events-none", visible: :all
+      end
+
+      def test_enables_lightbox_by_default_for_images_and_disables_for_non_image_slides
+        render_inline(Component.new(slides: lightbox_slides))
+
+        slides = page.all("div[data-flat-pack--carousel-target='slide']", visible: :all)
+
+        assert_equal "true", slides[0]["data-lightbox-enabled"]
+        assert_equal "https://images.example.com/one.jpg", slides[0]["data-lightbox-src"]
+        assert_equal "false", slides[1]["data-lightbox-enabled"]
+        assert_nil slides[1]["data-lightbox-src"]
+        assert_equal "false", slides[2]["data-lightbox-enabled"]
+        assert_nil slides[2]["data-lightbox-src"]
+      end
+
+      def test_renders_lightbox_toggle_button_with_expand_icon
+        render_inline(Component.new(slides: sample_slides))
+
+        lightbox_toggle = page.find("button[data-flat-pack--carousel-target='lightboxToggle'][data-action='click->flat-pack--carousel#openLightbox']", visible: :all)
+
+        assert_includes lightbox_toggle[:class], "top-3"
+        refute_includes lightbox_toggle[:class], "top-12"
+        assert_includes rendered_content, "#icon-arrows-pointing-out"
+      end
+
+      def test_hides_controls_and_counter_for_single_slide_but_keeps_lightbox_toggle
+        render_inline(Component.new(slides: single_lightbox_slide))
+
+        assert_no_selector "button[data-action='click->flat-pack--carousel#prev']"
+        assert_no_selector "button[data-action='click->flat-pack--carousel#next']"
+        assert_no_selector "div[data-flat-pack--carousel-target='counter']"
+        assert_no_selector "button[data-flat-pack--carousel-target='indicator']"
+        assert_selector "button[data-flat-pack--carousel-target='lightboxToggle']", count: 1, visible: :all
       end
 
       def test_exposes_owl_style_configuration_values
@@ -109,6 +192,16 @@ module FlatPack
         assert_selector "button[data-flat-pack--carousel-target='thumb']", count: 3
       end
 
+      def test_thumbs_force_root_overflow_visible_to_preserve_active_ring
+        render_inline(Component.new(slides: sample_slides, show_thumbs: true, class: "overflow-hidden rounded-2xl"))
+
+        root = page.find("section[data-controller='flat-pack--carousel']")
+
+        assert_includes root[:class], "overflow-visible"
+        refute_includes root[:class], "overflow-hidden"
+        assert_includes root[:class], "rounded-2xl"
+      end
+
       def test_sanitizes_html_slides
         render_inline(
           Component.new(
@@ -133,10 +226,10 @@ module FlatPack
         assert_includes rendered_content, "<img src=\"https://images.example.com/poster.jpg\""
         assert_includes rendered_content, "class=\"absolute inset-0 h-full w-full object-cover pointer-events-none\""
         assert_includes rendered_content, "aria-hidden=\"true\""
-        assert_selector "video.absolute.inset-0.z-10.block.h-full.w-full.object-cover", visible: :all
+        assert_selector "video.absolute.inset-0.z-10.block.h-full.w-full.min-w-full.object-cover", visible: :all
         assert_selector "video source[src='https://videos.example.com/two.mp4'][type='video/mp4']", visible: :all
 
-        video = page.find("video.absolute.inset-0.z-10.block.h-full.w-full.object-cover", visible: :all)
+        video = page.find("video.absolute.inset-0.z-10.block.h-full.w-full.min-w-full.object-cover", visible: :all)
         assert_nil video[:poster]
         assert_equal "width: 100%; height: 100%; object-fit: cover;", video[:style]
       end

@@ -16,7 +16,10 @@ module FlatPack
 
         def message_attributes
           merge_attributes(
-            class: "flex justify-center w-full bg-transparent text-[var(--chat-message-system-text-color)] text-xs italic"
+            class: "flex justify-center w-full bg-transparent text-[var(--chat-message-system-text-color)] text-xs italic",
+            data: {
+              flat_pack_chat_group_break: true
+            }
           )
         end
       end

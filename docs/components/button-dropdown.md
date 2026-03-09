@@ -21,15 +21,18 @@ Use Button Dropdown when multiple related actions should be grouped behind a sin
 | `disabled` | Boolean | `false` | no | Disables trigger interaction and applies disabled styling. |
 | `position` | Symbol | `:bottom_right` | no | Menu placement: `:bottom_right`, `:bottom_left`, `:top_right`, `:top_left`; invalid values raise `ArgumentError`. |
 | `max_height` | String | `"384px"` | no | Applied to menu `max-height` style; menu scrolls when content exceeds this value. |
+| `trigger_attributes` | Hash | `{}` | no | HTML attributes applied to the trigger button, useful for icon-only `title`, `aria-label`, or extra classes. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for wrapper. |
 
 ## Slots
+Use `menu_item` and `menu_divider` as the slot builders (without a `with_` prefix).
+
 | name | type | required | description |
 |---|---|---|---|
-| `with_menu_item` | slot | no | Adds `FlatPack::Button::DropdownItem::Component` entries. |
-| `with_menu_divider` | slot | no | Adds `FlatPack::Button::DropdownDivider::Component` separators. |
+| `menu_item` | slot | no | Adds `FlatPack::Button::DropdownItem::Component` entries. |
+| `menu_divider` | slot | no | Adds `FlatPack::Button::DropdownDivider::Component` separators. |
 
-`with_menu_item` props:
+`menu_item` props:
 
 | name | type | default | required | description |
 |---|---|---|---|---|
@@ -49,14 +52,32 @@ Use Button Dropdown when multiple related actions should be grouped behind a sin
 ## Example
 ```erb
 <%= render FlatPack::Button::Dropdown::Component.new(text: "Actions", position: :bottom_right) do |dropdown| %>
-  <% dropdown.with_menu_item(text: "Edit", href: edit_post_path(@post)) %>
-  <% dropdown.with_menu_divider %>
-  <% dropdown.with_menu_item(text: "Delete", destructive: true) %>
+  <% dropdown.menu_item(text: "Edit", href: edit_post_path(@post)) %>
+  <% dropdown.menu_divider %>
+  <% dropdown.menu_item(text: "Delete", destructive: true) %>
+<% end %>
+```
+
+```erb
+<%= render FlatPack::Button::Dropdown::Component.new(
+  text: "",
+  icon: "dots",
+  style: :ghost,
+  size: :sm,
+  show_chevron: false,
+  trigger_attributes: {
+    title: "Conversation actions",
+    aria: { label: "Conversation actions" }
+  }
+) do |dropdown| %>
+  <% dropdown.menu_item(text: "Search conversation", icon: "search", href: "#") %>
+  <% dropdown.menu_item(text: "Archive", icon: "folder", href: "#") %>
 <% end %>
 ```
 
 ## Accessibility
 - Trigger uses `aria-haspopup="true"` and toggles `aria-expanded`.
+- For icon-only triggers, pass a descriptive `aria-label` via `trigger_attributes`.
 - Menu uses `role="menu"`; items use `role="menuitem"`; divider uses `role="separator"`.
 - Keyboard behavior supports `Escape`, arrow navigation, `Home`, and `End`.
 

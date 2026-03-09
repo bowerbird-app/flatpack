@@ -7,6 +7,30 @@ require "pagy/extras/array"
 class PagesController < ApplicationController
   include Pagy::Backend
 
+  DEMO_CHAT_FILE_DOWNLOADS = {
+    "launch-plan" => {
+      filename: "launch-plan.pdf",
+      content_type: "application/pdf",
+      body: <<~PDF
+        %PDF-1.4
+        1 0 obj
+        << /Type /Catalog >>
+        endobj
+        Demo launch plan PDF for FlatPack chat file message previews.
+      PDF
+    },
+    "qa-checklist" => {
+      filename: "qa-checklist.csv",
+      content_type: "text/csv",
+      body: <<~CSV
+        item,status,owner
+        Release smoke test,complete,QA
+        Accessibility spot check,in_progress,Design Systems
+        Production sign-off,pending,Release Team
+      CSV
+    }
+  }.freeze
+
   DEMO_THEME_TOKEN_MAPPINGS = [
     {action: /\Abuttons\z/, title: "Buttons", patterns: [/\A--button-/]},
     {action: /\Aalerts\z/, title: "Alerts", patterns: [/\A--alert-/]},
@@ -420,22 +444,29 @@ class PagesController < ApplicationController
   def chat_file_message
   end
 
-  def chat_image_message
+  def chat_file_download
+    file = DEMO_CHAT_FILE_DOWNLOADS[params[:slug].to_s]
+    raise ActionController::RoutingError, "Not Found" unless file
+
+    send_data(
+      file.fetch(:body),
+      filename: file.fetch(:filename),
+      type: file.fetch(:content_type),
+      disposition: :attachment
+    )
   end
 
-  def chat_image_deck
+  def chat_images
+    @chat_images_single_incoming_slides = chat_images_single_incoming_slides
+    @chat_images_single_outgoing_slides = chat_images_single_outgoing_slides
+    @chat_images_incoming_slides = chat_images_incoming_slides
+    @chat_images_outgoing_slides = chat_images_outgoing_slides
   end
 
   def chat_system_message
   end
 
-  def chat_message_record
-  end
-
   def chat_inbox_row
-  end
-
-  def chat_message_meta
   end
 
   def chat_attachment
@@ -450,17 +481,13 @@ class PagesController < ApplicationController
   def chat_composer
   end
 
-  def chat_textarea
-  end
-
-  def chat_send_button
-  end
-
   def carousel
     @carousel_slides = carousel_demo_slides
+    @carousel_single_slide = carousel_demo_single_slide
     @carousel_notes = [
       "Uses FlatPack::Carousel::Component with image, video, and component-rendered HTML slides.",
       "Demonstrates autoplay, loop, indicators, controls, and thumbnail navigation.",
+      "Image slides enable lightbox by default and can opt out per slide with lightbox: false.",
       "Uses secure defaults for rich content and supports keyboard plus touch interactions."
     ]
   end
@@ -771,30 +798,32 @@ class PagesController < ApplicationController
   end
 
   def ensure_chat_demo_items!
+    normalize_chat_demo_sender_names!
+
     design_team_timeline = [
-      {sender_name: "Mina", body: "I pushed the homepage copy updates. Can someone review?", state: "read"},
+      {sender_name: "Mina Cho", body: "I pushed the homepage copy updates. Can someone review?", state: "read"},
       {sender_name: "You", body: "Reviewed. Tone is solid — can you also add a shorter hero variant for mobile?", state: "read"},
-      {sender_name: "Sam", body: "I added both hero lengths and updated CTA spacing.", state: "read"},
-      {sender_name: "Alex", body: "Noted. I will sync this with the launch checklist.", state: "read"},
+      {sender_name: "Sam Lee", body: "I added both hero lengths and updated CTA spacing.", state: "read"},
+      {sender_name: "Alex Rivera", body: "Noted. I will sync this with the launch checklist.", state: "read"},
       {sender_name: "You", body: "Can we tighten spacing in the testimonial section too?", state: "read"},
-      {sender_name: "Mina", body: "Done. Spacing is now 20px desktop and 16px mobile.", state: "read"},
-      {sender_name: "Sam", body: "I updated button hover states to match the latest token values.", state: "read"},
+      {sender_name: "Mina Cho", body: "Done. Spacing is now 20px desktop and 16px mobile.", state: "read"},
+      {sender_name: "Sam Lee", body: "I updated button hover states to match the latest token values.", state: "read"},
       {sender_name: "You", body: "Great. Please also confirm dark mode contrast for secondary text.", state: "read"},
-      {sender_name: "Alex", body: "Tracking sheet is ready. I will post click-through updates in this chat group.", state: "read"},
-      {sender_name: "Mina", body: "Hero fallback headline for mobile has been added.", state: "read"},
+      {sender_name: "Alex Rivera", body: "Tracking sheet is ready. I will post click-through updates in this chat group.", state: "read"},
+      {sender_name: "Mina Cho", body: "Hero fallback headline for mobile has been added.", state: "read"},
       {sender_name: "You", body: "Thanks. Let us freeze copy after one last proofread.", state: "read"},
-      {sender_name: "Sam", body: "Proofread complete. Fixed two punctuation issues.", state: "read"},
-      {sender_name: "Alex", body: "Pre-launch analytics events are now validated in staging.", state: "read"},
+      {sender_name: "Sam Lee", body: "Proofread complete. Fixed two punctuation issues.", state: "read"},
+      {sender_name: "Alex Rivera", body: "Pre-launch analytics events are now validated in staging.", state: "read"},
       {sender_name: "You", body: "Please share a screenshot of the updated hero on small screens.", state: "read"},
-      {sender_name: "Mina", body: "Shared in Figma and attached in the release notes.", state: "read"},
-      {sender_name: "Sam", body: "Footer links were re-ordered per legal review.", state: "read"},
+      {sender_name: "Mina Cho", body: "Shared in Figma and attached in the release notes.", state: "read"},
+      {sender_name: "Sam Lee", body: "Footer links were re-ordered per legal review.", state: "read"},
       {sender_name: "You", body: "Can we reduce the CTA shadow to keep it subtle?", state: "read"},
-      {sender_name: "Mina", body: "Yes, reduced. It now uses the lower elevation token.", state: "read"},
-      {sender_name: "Alex", body: "Launch window reminder: 3:00 PM with rollback checkpoint at 3:30.", state: "read"},
+      {sender_name: "Mina Cho", body: "Yes, reduced. It now uses the lower elevation token.", state: "read"},
+      {sender_name: "Alex Rivera", body: "Launch window reminder: 3:00 PM with rollback checkpoint at 3:30.", state: "read"},
       {sender_name: "You", body: "Perfect. I will stay online through post-launch validation.", state: "read"},
-      {sender_name: "Sam", body: "I added status badges for experiment variants in the dashboard.", state: "read"},
-      {sender_name: "Mina", body: "Final visual QA pass is complete from my side.", state: "read"},
-      {sender_name: "Alex", body: "Monitoring alerts are configured and tested.", state: "read"},
+      {sender_name: "Sam Lee", body: "I added status badges for experiment variants in the dashboard.", state: "read"},
+      {sender_name: "Mina Cho", body: "Final visual QA pass is complete from my side.", state: "read"},
+      {sender_name: "Alex Rivera", body: "Monitoring alerts are configured and tested.", state: "read"},
       {
         sender_name: "You",
         body: nil,
@@ -839,6 +868,16 @@ class PagesController < ApplicationController
       launch_ops_timeline,
       offset_minutes: 90
     )
+  end
+
+  def normalize_chat_demo_sender_names!
+    {
+      "Alex" => "Alex Rivera",
+      "Mina" => "Mina Cho",
+      "Sam" => "Sam Lee"
+    }.each do |legacy_name, canonical_name|
+      ChatItem.where(sender_name: legacy_name).update_all(sender_name: canonical_name, updated_at: Time.current)
+    end
   end
 
   def picker_demo_items
@@ -1163,17 +1202,12 @@ class PagesController < ApplicationController
       {title: "Chat Sent Message", description: "Outgoing message examples", url: demo_chat_sent_message_path},
       {title: "Chat Received Message", description: "Incoming message examples", url: demo_chat_received_message_path},
       {title: "Chat File Message", description: "File attachment message examples", url: demo_chat_file_message_path},
-      {title: "Chat Image Message", description: "Image attachment message examples", url: demo_chat_image_message_path},
-      {title: "Chat Image Deck", description: "Overlapping multi-image chat message examples", url: demo_chat_image_deck_path},
+      {title: "Chat Images", description: "Single and multi-image chat message examples with carousel lightbox", url: demo_chat_images_path},
       {title: "Chat System Message", description: "System message examples", url: demo_chat_system_message_path},
-      {title: "Chat Message Record", description: "Message record component examples", url: demo_chat_message_record_path},
-      {title: "Chat Message Meta", description: "Message metadata component examples", url: demo_chat_message_meta_path},
       {title: "Chat Attachment", description: "Attachment component examples", url: demo_chat_attachment_path},
       {title: "Chat Date Divider", description: "Date divider component examples", url: demo_chat_date_divider_path},
       {title: "Chat Typing Indicator", description: "Typing indicator component examples", url: demo_chat_typing_indicator_path},
       {title: "Chat Composer", description: "Composer input and action patterns", url: demo_chat_composer_path},
-      {title: "Chat Textarea", description: "Chat textarea component examples", url: demo_chat_textarea_path},
-      {title: "Chat Send Button", description: "Send button component examples", url: demo_chat_send_button_path},
       {title: "Carousel", description: "FlatPack carousel demo with mixed media and navigation controls", url: demo_carousel_path},
       {title: "Progress", description: "Progress indicators and loading states", url: demo_progress_path},
       {title: "Collapse", description: "Expandable and collapsible content patterns", url: demo_collapse_path},
@@ -1227,7 +1261,8 @@ class PagesController < ApplicationController
         src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1600&h=900&fit=crop",
         thumb_src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=320&h=180&fit=crop",
         alt: "Product analytics dashboard",
-        caption: "Analytics dashboard concept"
+        caption: "Analytics dashboard concept",
+        lightbox: true
       },
       {
         type: :video,
@@ -1254,7 +1289,131 @@ class PagesController < ApplicationController
         src: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1600&h=900&fit=crop",
         thumb_src: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=320&h=180&fit=crop",
         alt: "Planning workshop board",
-        caption: "Planning workshop board"
+        caption: "Planning workshop board",
+        lightbox: false
+      }
+    ]
+  end
+
+  def carousel_demo_single_slide
+    [
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1518773553398-650c184e0bb3?w=1600&h=900&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1518773553398-650c184e0bb3?w=320&h=180&fit=crop",
+        alt: "Single slide gallery preview",
+        caption: "Single slide example with lightbox enabled",
+        lightbox: true
+      }
+    ]
+  end
+
+  def chat_images_incoming_slides
+    [
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1600&h=1200&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=320&h=240&fit=crop",
+        lightbox: true
+      },
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1518773553398-650c184e0bb3?w=1600&h=1200&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1518773553398-650c184e0bb3?w=320&h=240&fit=crop",
+        lightbox: true
+      },
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1600&h=1200&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=320&h=240&fit=crop",
+        lightbox: true
+      },
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1600&h=1200&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=320&h=240&fit=crop",
+        lightbox: true
+      },
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?w=1600&h=1200&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?w=320&h=240&fit=crop",
+        lightbox: true
+      },
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=1600&h=1200&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=320&h=240&fit=crop",
+        lightbox: true
+      },
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1497366412874-3415097a27e7?w=1600&h=1200&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1497366412874-3415097a27e7?w=320&h=240&fit=crop",
+        lightbox: true
+      },
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&h=1200&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=320&h=240&fit=crop",
+        lightbox: true
+      },
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1600&h=1200&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=320&h=240&fit=crop",
+        lightbox: true
+      },
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1600&h=1200&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=320&h=240&fit=crop",
+        lightbox: true
+      }
+    ]
+  end
+
+  def chat_images_outgoing_slides
+    [
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1600&h=1200&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=320&h=240&fit=crop",
+        lightbox: true
+      },
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1600&h=1200&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=320&h=240&fit=crop",
+        lightbox: true
+      },
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?w=1600&h=1200&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?w=320&h=240&fit=crop",
+        lightbox: true
+      }
+    ]
+  end
+
+  def chat_images_single_incoming_slides
+    [
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1600&h=1200&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=320&h=240&fit=crop",
+        lightbox: true
+      }
+    ]
+  end
+
+  def chat_images_single_outgoing_slides
+    [
+      {
+        type: :image,
+        src: "https://images.unsplash.com/photo-1518773553398-650c184e0bb3?w=1600&h=1200&fit=crop",
+        thumb_src: "https://images.unsplash.com/photo-1518773553398-650c184e0bb3?w=320&h=240&fit=crop",
+        lightbox: true
       }
     ]
   end

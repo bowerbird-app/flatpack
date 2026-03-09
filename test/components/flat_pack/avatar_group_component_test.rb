@@ -44,6 +44,17 @@ module FlatPack
         assert_selector "a[href='/users']"
       end
 
+      def test_linked_avatars_keep_full_opacity_on_hover
+        items = [
+          {name: "User 1", href: "/users/1"},
+          {name: "User 2", href: "/users/2"}
+        ]
+
+        render_inline(Component.new(items: items))
+
+        assert_includes page.native.to_html, "hover:!opacity-100"
+      end
+
       def test_renders_with_overlap_styles
         items = [{name: "User 1"}]
 
@@ -52,6 +63,20 @@ module FlatPack
 
           assert_includes page.native.to_html, classes
         end
+      end
+
+      def test_hover_uses_important_z_index_while_preserving_base_stack
+        items = [
+          {name: "User 1"},
+          {name: "User 2"}
+        ]
+
+        render_inline(Component.new(items: items))
+
+        assert_includes page.native.to_html, "hover:!z-[999]"
+        assert_includes page.native.to_html, "focus-within:!z-[999]"
+        assert_includes page.native.to_html, "style=\"z-index: 2\""
+        assert_includes page.native.to_html, "style=\"z-index: 1; margin-left: var(--avatar-group-overlap-md)\""
       end
 
       def test_passes_size_to_avatars
@@ -140,6 +165,15 @@ module FlatPack
         refute_selector "div[data-controller='flat-pack--tooltip']"
       end
 
+      def test_renders_tooltip_for_avatar_with_only_alt
+        items = [{alt: "Alt Only User"}]
+
+        render_inline(Component.new(items: items))
+
+        assert_selector "div[data-controller='flat-pack--tooltip']", count: 1
+        assert_selector "div[role='tooltip']", text: "Alt Only User"
+      end
+
       def test_renders_overflow_tooltip_with_hidden_names
         items = [
           {initials: "A"},
@@ -171,6 +205,22 @@ module FlatPack
 
         assert_selector "span", text: "+2"
         refute_selector "div[data-controller='flat-pack--tooltip']"
+      end
+
+      def test_renders_overflow_tooltip_when_hidden_items_only_have_alt
+        items = [
+          {name: "Visible User"},
+          {name: "Visible User 2"},
+          {alt: "Hidden Alt One"},
+          {alt: "Hidden Alt Two"}
+        ]
+
+        render_inline(Component.new(items: items, max: 2))
+
+        assert_selector "span", text: "+2"
+        assert_selector "div[data-controller='flat-pack--tooltip']", count: 3
+        assert_selector "div[role='tooltip'] li", text: "Hidden Alt One"
+        assert_selector "div[role='tooltip'] li", text: "Hidden Alt Two"
       end
     end
   end

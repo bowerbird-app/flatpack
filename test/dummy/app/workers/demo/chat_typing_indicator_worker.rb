@@ -19,9 +19,8 @@ module Demo
         partial: "demo/chat_messages/typing_indicator",
         locals: {
           visible: visible,
-          label: "Sam is typing",
-          sender_name: "Sam Lee",
-          initials: "SL"
+          label: "Sam Lee is typing",
+          sender_name: "Sam Lee"
         }
       )
     end
@@ -30,7 +29,7 @@ module Demo
 
     def reply_already_sent?(chat_group, outgoing_item)
       chat_group.chat_items
-        .where(sender_name: "Sam")
+        .where(sender_name: "Sam Lee")
         .where("created_at > ?", outgoing_item.created_at)
         .exists?
     end

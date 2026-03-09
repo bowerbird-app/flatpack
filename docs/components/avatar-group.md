@@ -13,8 +13,8 @@ Use Avatar Group for teams, collaborators, or participant lists where many users
 ## Props
 | name | type | default | required | description |
 |---|---|---|---|---|
-| `items` | Array<Hash> | `[]` | yes | Avatar item hashes. Each item may include `:src`, `:alt`, `:name`, `:initials`, `:status`, `:href`. |
-| `max` | Integer | `5` | no | Maximum visible avatars before overflow avatar is shown. |
+| `items` | Array<Hash> | `[]` | yes | Avatar item hashes. Each item may include `:src`, `:alt`, `:name`, `:status`, `:href`. |
+| `max` | Integer | `5` | no | Maximum visible member avatars before an additional overflow avatar is shown. When hidden items exist and `show_overflow` is true, the rendered group can display `max + 1` total circles. |
 | `size` | Symbol | `:sm` | no | Passed to each avatar (`FlatPack::Avatar::Component` sizes). |
 | `overlap` | Symbol | `:md` | no | Overlap spacing: `:sm`, `:md`, `:lg`; invalid values raise `ArgumentError`. |
 | `show_overflow` | Boolean | `true` | no | Shows `+N` overflow avatar when hidden items exist. |
@@ -41,6 +41,10 @@ None.
   overflow_href: "/users"
 ) %>
 ```
+
+## Notes
+- `max` applies to visible member avatars, not the overall rendered circle count.
+- Components such as `FlatPack::Chat::InboxRow::Component` may pass a smaller `max` value when they need the overflow avatar to fit inside a stricter overall display cap.
 
 ## Accessibility
 - Individual avatars inherit avatar accessibility behavior (image `alt`, initials fallback).

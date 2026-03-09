@@ -161,17 +161,20 @@
     <div class="flex items-center gap-4 mb-4">
       <%= render FlatPack::Avatar::Component.new(
         src: "https://i.pravatar.cc/150?img=1",
+        name: "User 1",
         alt: "User 1",
         size: :lg
       ) %>
       <%= render FlatPack::Avatar::Component.new(
         src: "https://i.pravatar.cc/150?img=2",
+        name: "User 2",
         alt: "User 2",
         size: :lg,
         status: :online
       ) %>
       <%= render FlatPack::Avatar::Component.new(
         src: "https://i.pravatar.cc/150?img=3",
+        name: "User 3",
         alt: "User 3",
         size: :lg,
         shape: :rounded
@@ -184,21 +187,21 @@
           label: "Basic",
           language: "erb",
           code: <<~CODE
-            #{erb_output_open} render FlatPack::Avatar::Component.new(src: "https://i.pravatar.cc/150?img=1", alt: "User 1", size: :lg) #{erb_tag_close}
+            #{erb_output_open} render FlatPack::Avatar::Component.new(src: "https://i.pravatar.cc/150?img=1", name: "User 1", alt: "User 1", size: :lg) #{erb_tag_close}
           CODE
         },
         {
           label: "With Status",
           language: "erb",
           code: <<~CODE
-            #{erb_output_open} render FlatPack::Avatar::Component.new(src: "https://i.pravatar.cc/150?img=2", alt: "User 2", size: :lg, status: :online) #{erb_tag_close}
+            #{erb_output_open} render FlatPack::Avatar::Component.new(src: "https://i.pravatar.cc/150?img=2", name: "User 2", alt: "User 2", size: :lg, status: :online) #{erb_tag_close}
           CODE
         },
         {
           label: "Rounded",
           language: "erb",
           code: <<~CODE
-            #{erb_output_open} render FlatPack::Avatar::Component.new(src: "https://i.pravatar.cc/150?img=3", alt: "User 3", size: :lg, shape: :rounded) #{erb_tag_close}
+            #{erb_output_open} render FlatPack::Avatar::Component.new(src: "https://i.pravatar.cc/150?img=3", name: "User 3", alt: "User 3", size: :lg, shape: :rounded) #{erb_tag_close}
           CODE
         }
       ]
@@ -256,7 +259,7 @@
     <%= render FlatPack::SectionTitle::Component.new(
       title: "Fallback Types",
       anchor_link: true,
-      subtitle: "Fallback priority is image, then initials, then generic icon."
+      subtitle: "Fallback priority is image, then initials from name/alt, then generic icon."
     ) %>
     <div class="flex items-center gap-4 mb-4">
       <%= render FlatPack::Avatar::Component.new(
@@ -269,7 +272,7 @@
         size: :lg
       ) %>
       <%= render FlatPack::Avatar::Component.new(
-        initials: "AB",
+        alt: "Alex Brown",
         size: :lg
       ) %>
       <%= render FlatPack::Avatar::Component.new(
@@ -294,10 +297,10 @@
           CODE
         },
         {
-          label: "Custom Initials",
+          label: "Alt Initials",
           language: "erb",
           code: <<~CODE
-            #{erb_output_open} render FlatPack::Avatar::Component.new(initials: "AB", size: :lg) #{erb_tag_close}
+            #{erb_output_open} render FlatPack::Avatar::Component.new(alt: "Alex Brown", size: :lg) #{erb_tag_close}
           CODE
         },
         {

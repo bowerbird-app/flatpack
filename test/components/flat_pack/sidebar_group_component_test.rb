@@ -77,7 +77,16 @@ module FlatPack
 
         def test_button_has_action
           render_inline(Component.new(label: "More"))
-          assert_selector "button[data-action='click->flat-pack--sidebar-group#toggle']"
+          assert_selector "button[data-action*='click->flat-pack--sidebar-group#toggle']"
+        end
+
+        def test_includes_tooltip_controller_data_attributes
+          render_inline(Component.new(label: "More"))
+
+          assert_selector "button[data-controller='flat-pack--tooltip']"
+          assert_selector "button[data-flat-pack--tooltip-placement-value='right']"
+          assert_selector "button[data-flat-pack--tooltip-collapsed-only-value='true']"
+          assert_selector "[data-flat-pack--tooltip-target='tooltip']", text: "More"
         end
 
         def test_aria_controls_attribute

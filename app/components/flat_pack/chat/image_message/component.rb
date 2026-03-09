@@ -29,46 +29,33 @@ module FlatPack
         end
 
         def call
-          render message_component_class.new(**message_component_arguments) do |message|
-            message.with_media_attachment do
-              render FlatPack::Chat::Attachment::Component.new(
-                type: :image,
-                name: @image_name,
-                thumbnail_url: @thumbnail_url,
-                href: @image_href
-              )
-            end
-
-            message.with_meta do
-              render FlatPack::Chat::MessageMeta::Component.new(
-                timestamp: @timestamp,
-                state: @state,
-                edited: @edited
-              )
-            end
-
-            @body.presence || " "
-          end
+          render FlatPack::Chat::Images::Component.new(
+            direction: @direction,
+            state: @state,
+            timestamp: @timestamp,
+            edited: @edited,
+            body: @body,
+            reveal_actions: @reveal_actions,
+            carousel: {
+              slides: [
+                {
+                  type: :image,
+                  src: @image_href.presence || @thumbnail_url,
+                  thumb_src: @thumbnail_url,
+                  alt: @image_name,
+                  lightbox: true
+                }
+              ],
+              show_controls: true,
+              show_indicators: false,
+              show_thumbs: false,
+              show_captions: false,
+              aspect_ratio: "4/3"
+            }
+          )
         end
 
         private
-
-        def message_component_class
-          (@direction == :outgoing) ? FlatPack::Chat::SentMessage::Component : FlatPack::Chat::ReceivedMessage::Component
-        end
-
-        def message_component_arguments
-          base_arguments = {
-            state: @state
-          }
-
-          if @reveal_actions
-            base_arguments[:timestamp] = @timestamp
-            base_arguments[:reveal_actions] = true
-          end
-
-          base_arguments
-        end
 
         def validate_direction!
           return if [:incoming, :outgoing].include?(@direction)

@@ -2,6 +2,10 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["surface", "tray"]
+  static values = {
+    direction: String,
+    side: String
+  }
 
   connect() {
     if (!this.hasSurfaceTarget) {
@@ -61,6 +65,7 @@ export default class extends Controller {
     event.stopPropagation()
 
     this.dispatch("edit", {
+      prefix: "chat-message-actions",
       detail: {
         element: this.element
       }
@@ -73,6 +78,7 @@ export default class extends Controller {
     event.stopPropagation()
 
     this.dispatch("delete", {
+      prefix: "chat-message-actions",
       detail: {
         element: this.element
       }
@@ -86,7 +92,7 @@ export default class extends Controller {
       return
     }
 
-    this.dispatch("opened", {bubbles: true})
+    this.dispatch("opened", { bubbles: true, prefix: "chat-message-actions" })
     this.setSurfaceOffset(true)
     this.setTrayVisibility(true)
     this.surfaceTarget.setAttribute("aria-expanded", "true")
@@ -137,12 +143,12 @@ export default class extends Controller {
   }
 
   side() {
-    const side = this.element.getAttribute("data-chat-message-actions-side-value")
-    return side === "left" ? "left" : "right"
+    return this.hasSideValue && this.sideValue === "left" ? "left" : "right"
   }
 
   direction() {
-    const direction = this.element.getAttribute("data-chat-message-actions-direction-value")
-    return direction === "incoming" || direction === "outgoing" ? direction : null
+    return this.hasDirectionValue && ["incoming", "outgoing"].includes(this.directionValue)
+      ? this.directionValue
+      : null
   }
 }

@@ -12,13 +12,17 @@ module Demo
       return unless chat_group && outgoing_item
 
       reply = chat_group.chat_items.create!(
-        sender_name: "Sam",
+        sender_name: "Sam Lee",
         body: reply_body_for(outgoing_item.body),
         state: "sent"
       )
 
       reply_html = ApplicationController.render(
-        renderable: FlatPack::Chat::MessageRecord::Component.new(record: reply, reveal_actions: true),
+        partial: "demo/chat_messages/message",
+        locals: {
+          record: reply,
+          reveal_actions: true
+        },
         layout: false
       )
 
@@ -34,9 +38,8 @@ module Demo
         partial: "demo/chat_messages/typing_indicator",
         locals: {
           visible: false,
-          label: "Sam is typing",
-          sender_name: "Sam Lee",
-          initials: "SL"
+          label: "Sam Lee is typing",
+          sender_name: "Sam Lee"
         }
       )
     end

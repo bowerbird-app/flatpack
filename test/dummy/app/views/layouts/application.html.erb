@@ -410,18 +410,13 @@
                 demo_chat_sent_message_path,
                 demo_chat_received_message_path,
                 demo_chat_file_message_path,
-                demo_chat_image_message_path,
-                demo_chat_image_deck_path,
+                demo_chat_images_path,
                 demo_chat_system_message_path,
-                demo_chat_message_record_path,
                 demo_chat_inbox_row_path,
-                demo_chat_message_meta_path,
                 demo_chat_attachment_path,
                 demo_chat_date_divider_path,
                 demo_chat_typing_indicator_path,
-                demo_chat_composer_path,
-                demo_chat_textarea_path,
-                demo_chat_send_button_path
+                demo_chat_composer_path
               ].any? { |path| current_page?(path) } %>
               <%= render FlatPack::Sidebar::Group::Component.new(
                 label: "Chat",
@@ -478,16 +473,10 @@
                     active: current_page?(demo_chat_file_message_path)
                   ) %>
                   <%= render FlatPack::Sidebar::Item::Component.new(
-                    label: "Image Message",
-                    href: demo_chat_image_message_path,
+                    label: "Images",
+                    href: demo_chat_images_path,
                     icon: :image,
-                    active: current_page?(demo_chat_image_message_path)
-                  ) %>
-                  <%= render FlatPack::Sidebar::Item::Component.new(
-                    label: "Image Deck",
-                    href: demo_chat_image_deck_path,
-                    icon: :image,
-                    active: current_page?(demo_chat_image_deck_path)
+                    active: current_page?(demo_chat_images_path)
                   ) %>
                   <%= render FlatPack::Sidebar::Item::Component.new(
                     label: "System Message",
@@ -496,22 +485,10 @@
                     active: current_page?(demo_chat_system_message_path)
                   ) %>
                   <%= render FlatPack::Sidebar::Item::Component.new(
-                    label: "Message Record",
-                    href: demo_chat_message_record_path,
-                    icon: :message_circle,
-                    active: current_page?(demo_chat_message_record_path)
-                  ) %>
-                  <%= render FlatPack::Sidebar::Item::Component.new(
                     label: "Inbox Row",
                     href: demo_chat_inbox_row_path,
                     icon: :align_left,
                     active: current_page?(demo_chat_inbox_row_path)
-                  ) %>
-                  <%= render FlatPack::Sidebar::Item::Component.new(
-                    label: "Message Meta",
-                    href: demo_chat_message_meta_path,
-                    icon: :clock,
-                    active: current_page?(demo_chat_message_meta_path)
                   ) %>
                   <%= render FlatPack::Sidebar::Item::Component.new(
                     label: "Attachment",
@@ -536,18 +513,6 @@
                     href: demo_chat_composer_path,
                     icon: :edit_3,
                     active: current_page?(demo_chat_composer_path)
-                  ) %>
-                  <%= render FlatPack::Sidebar::Item::Component.new(
-                    label: "Textarea",
-                    href: demo_chat_textarea_path,
-                    icon: :align_left,
-                    active: current_page?(demo_chat_textarea_path)
-                  ) %>
-                  <%= render FlatPack::Sidebar::Item::Component.new(
-                    label: "Send Button",
-                    href: demo_chat_send_button_path,
-                    icon: :mail,
-                    active: current_page?(demo_chat_send_button_path)
                   ) %>
                 <% end %>
               <% end %>
@@ -795,23 +760,23 @@
                 position: :bottom_right,
                 icon: "cog"
               ) do |dropdown| %>
-                <% dropdown.with_menu_item(
+                <% dropdown.menu_item(
                   text: "System",
                   data: { action: "click->flat-pack--theme#switch click->flat-pack--button-dropdown#toggle", theme_value: "system" }
                 ) %>
-                <% dropdown.with_menu_item(
+                <% dropdown.menu_item(
                   text: "Light",
                   data: { action: "click->flat-pack--theme#switch click->flat-pack--button-dropdown#toggle", theme_value: "light" }
                 ) %>
-                <% dropdown.with_menu_item(
+                <% dropdown.menu_item(
                   text: "Dark",
                   data: { action: "click->flat-pack--theme#switch click->flat-pack--button-dropdown#toggle", theme_value: "dark" }
                 ) %>
-                <% dropdown.with_menu_item(
+                <% dropdown.menu_item(
                   text: "Ocean",
                   data: { action: "click->flat-pack--theme#switch click->flat-pack--button-dropdown#toggle", theme_value: "ocean" }
                 ) %>
-                <% dropdown.with_menu_item(
+                <% dropdown.menu_item(
                   text: "Rounded",
                   data: { action: "click->flat-pack--theme#switch click->flat-pack--button-dropdown#toggle", theme_value: "rounded" }
                 ) %>

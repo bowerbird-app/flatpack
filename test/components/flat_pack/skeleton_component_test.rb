@@ -51,13 +51,19 @@ module FlatPack
       def test_renders_with_custom_width
         render_inline(Component.new(width: "200px"))
 
-        assert_includes page.native.to_html, "w-[200px]"
+        assert_includes page.native.to_html, "style=\"width: 200px\""
       end
 
       def test_renders_with_custom_height
         render_inline(Component.new(height: "50px"))
 
-        assert_includes page.native.to_html, "h-[50px]"
+        assert_includes page.native.to_html, "style=\"height: 50px\""
+      end
+
+      def test_merges_existing_style_with_custom_dimensions
+        render_inline(Component.new(width: "200px", style: "opacity: .5;"))
+
+        assert_includes page.native.to_html, "style=\"opacity: .5; width: 200px\""
       end
 
       def test_includes_shimmer_animation

@@ -97,6 +97,7 @@ components:
       - FlatPack::Chat::DateDivider::Component
       - FlatPack::Chat::FileMessage::Component
       - FlatPack::Chat::Header::Component
+      - FlatPack::Chat::Images::Component
       - FlatPack::Chat::ImageDeck::Component
       - FlatPack::Chat::ImageMessage::Component
       - FlatPack::Chat::InboxRow::Component
@@ -104,12 +105,11 @@ components:
       - FlatPack::Chat::MessageGroup::Component
       - FlatPack::Chat::MessageList::Component
       - FlatPack::Chat::MessageMeta::Component
-      - FlatPack::Chat::MessageRecord::Component
       - FlatPack::Chat::ReceivedMessage::Component
-      - FlatPack::Chat::SendButton::Component
+      - FlatPack::Button::Component
       - FlatPack::Chat::SentMessage::Component
       - FlatPack::Chat::SystemMessage::Component
-      - FlatPack::Chat::Textarea::Component
+      - FlatPack::TextArea::Component
       - FlatPack::Chat::TypingIndicator::Component
     status: documented
 

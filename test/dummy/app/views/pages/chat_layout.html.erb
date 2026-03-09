@@ -11,12 +11,12 @@
 
     <div class="mb-4 mt-6 h-[360px] overflow-hidden rounded-lg border border-(--surface-border-color) bg-(--surface-background-color)">
       <%= render FlatPack::Chat::Layout::Component.new do |layout| %>
-        <% layout.with_panel do %>
+        <% layout.panel do %>
           <%= render FlatPack::Chat::Panel::Component.new do |panel| %>
-            <% panel.with_header do %>
+            <% panel.header do %>
               <div class="p-4 text-sm font-semibold">Product Launch</div>
             <% end %>
-            <% panel.with_messages do %>
+            <% panel.messages do %>
               <div class="flex-1 p-4 text-sm text-(--surface-muted-content-color)">Single-column panel content sits here.</div>
             <% end %>
           <% end %>
@@ -29,12 +29,12 @@
       language: "erb",
       code: CGI.unescapeHTML(<<~'CODE')
         &lt;%= render FlatPack::Chat::Layout::Component.new do |layout| %&gt;
-          &lt;% layout.with_panel do %&gt;
+          &lt;% layout.panel do %&gt;
             &lt;%= render FlatPack::Chat::Panel::Component.new do |panel| %&gt;
-              &lt;% panel.with_header do %&gt;
+              &lt;% panel.header do %&gt;
                 &lt;div class="p-4 text-sm font-semibold"&gt;Product Launch&lt;/div&gt;
               &lt;% end %&gt;
-              &lt;% panel.with_messages do %&gt;
+              &lt;% panel.messages do %&gt;
                 &lt;div class="flex-1 p-4 text-sm text-(--surface-muted-content-color)"&gt;Single-column panel content sits here.&lt;/div&gt;
               &lt;% end %&gt;
             &lt;% end %&gt;
@@ -49,7 +49,7 @@
 
     <div class="mb-4 mt-6 h-[560px] overflow-hidden rounded-lg border border-(--surface-border-color) bg-(--surface-background-color)">
       <%= render FlatPack::Chat::Layout::Component.new(variant: :split) do |layout| %>
-        <% layout.with_sidebar do %>
+        <% layout.sidebar do %>
           <div class="p-4">
             <h3 class="mb-3 text-sm font-semibold text-(--surface-content-color)">Conversations</h3>
             <div class="space-y-2">
@@ -60,12 +60,12 @@
           </div>
         <% end %>
 
-        <% layout.with_panel do %>
+        <% layout.panel do %>
           <%= render FlatPack::Chat::Panel::Component.new do |panel| %>
-            <% panel.with_header do %>
+            <% panel.header do %>
               <div class="p-4 text-sm font-semibold">Product Launch</div>
             <% end %>
-            <% panel.with_messages do %>
+            <% panel.messages do %>
               <div class="flex-1 p-4 text-sm text-(--surface-muted-content-color)">Panel slot content sits here.</div>
             <% end %>
           <% end %>
@@ -78,18 +78,18 @@
       language: "erb",
       code: CGI.unescapeHTML(<<~'CODE')
         &lt;%= render FlatPack::Chat::Layout::Component.new(variant: :split) do |layout| %&gt;
-          &lt;% layout.with_sidebar do %&gt;
+          &lt;% layout.sidebar do %&gt;
             &lt;div class="p-4"&gt;
               &lt;h3 class="mb-3 text-sm font-semibold text-(--surface-content-color)"&gt;Conversations&lt;/h3&gt;
             &lt;/div&gt;
           &lt;% end %&gt;
 
-          &lt;% layout.with_panel do %&gt;
+          &lt;% layout.panel do %&gt;
             &lt;%= render FlatPack::Chat::Panel::Component.new do |panel| %&gt;
-              &lt;% panel.with_header do %&gt;
+              &lt;% panel.header do %&gt;
                 &lt;div class="p-4 text-sm font-semibold"&gt;Product Launch&lt;/div&gt;
               &lt;% end %&gt;
-              &lt;% panel.with_messages do %&gt;
+              &lt;% panel.messages do %&gt;
                 &lt;div class="flex-1 p-4 text-sm text-(--surface-muted-content-color)"&gt;Panel slot content sits here.&lt;/div&gt;
               &lt;% end %&gt;
             &lt;% end %&gt;

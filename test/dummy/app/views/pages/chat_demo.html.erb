@@ -1,4 +1,4 @@
-<div class="container mx-auto max-w-5xl p-4">
+/<div class="container mx-auto max-w-5xl p-4">
   <% if @chat_group %>
     <%= turbo_stream_from @chat_group.demo_stream_name %>
   <% end %>
@@ -16,7 +16,7 @@
       class: "mb-4 mt-6 overflow-hidden rounded-lg border",
       style: "height: 620px; border-color: var(--surface-border-color); background-color: var(--surface-background-color); grid-template-columns: minmax(0, 320px) minmax(0, 1fr);"
     ) do |layout| %>
-      <% layout.with_sidebar do %>
+      <% layout.sidebar do %>
         <div id="chat-groups" class="p-3">
           <p class="px-3 pb-2 text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">
             Chat Groups Inbox
@@ -40,21 +40,21 @@
         </div>
       <% end %>
 
-      <% layout.with_panel do %>
+      <% layout.panel do %>
         <%= turbo_frame_tag "chat-demo-panel", class: "block h-full" do %>
           <%= render FlatPack::Chat::Panel::Component.new do |panel| %>
-        <% panel.with_header do %>
+        <% panel.header do %>
           <%= render FlatPack::Chat::Header::Component.new(
             title: (@chat_group&.name || "Chat Group"),
             subtitle: "#{@chat_group_summaries.size} chat groups in your inbox",
             content_url: "#chat-group-settings",
             group_avatars: [
-              {name: "Alex Rivera", initials: "AR"},
-              {name: "Mina Cho", initials: "MC"},
-              {name: "Sam Lee", initials: "SL"},
-              {name: "Jo Kim", initials: "JK"},
-              {name: "Rina Park", initials: "RP"},
-              {name: "Dan Wu", initials: "DW"}
+              {name: "Alex Rivera"},
+              {name: "Mina Cho"},
+              {name: "Sam Lee"},
+              {name: "Jo Kim"},
+              {name: "Rina Park"},
+              {name: "Dan Wu"}
             ],
             group_max: 4,
             group_size: :sm
@@ -78,7 +78,7 @@
           <% end %>
         <% end %>
 
-        <% panel.with_messages do %>
+        <% panel.messages do %>
           <%= render FlatPack::Chat::MessageList::Component.new(
             history_url: @chat_history_url,
             history_has_more: @chat_history_has_more,
@@ -86,9 +86,9 @@
           ) do %>
             <%= render FlatPack::Chat::DateDivider::Component.new(label: "Today") %>
 
-            <div id="<%= @chat_group ? dom_id(@chat_group, :messages) : "chat-demo-messages" %>" class="space-y-4" data-pagination-content>
+            <div id="<%= @chat_group ? dom_id(@chat_group, :messages) : "chat-demo-messages" %>" data-pagination-content>
               <% @chat_items.each do |item| %>
-                <%= render FlatPack::Chat::MessageRecord::Component.new(record: item, reveal_actions: true) %>
+                <%= render_chat_demo_message(item, reveal_actions: false) %>
               <% end %>
             </div>
 
@@ -96,7 +96,7 @@
           <% end %>
         <% end %>
 
-        <% panel.with_composer do %>
+        <% panel.composer do %>
           <%= form_with url: (@chat_group ? demo_chat_group_messages_path(@chat_group) : "#"), method: :post, local: true,
               data: {
                 controller: "flat-pack--chat-sender",
@@ -125,9 +125,12 @@
                   size: :md,
                   show_chevron: false,
                   position: :top_left,
-                  aria: {label: "Add files or images"}
+                  trigger_attributes: {
+                    aria: {label: "Add files or images"},
+                    title: "Add files or images"
+                  }
                 ) do |dropdown| %>
-                  <% dropdown.with_menu_item(
+                  <% dropdown.menu_item(
                     text: "Images",
                     icon: "image",
                     data: {
@@ -135,7 +138,7 @@
                       "modal-id": "chat-picker-images"
                     }
                   ) %>
-                  <% dropdown.with_menu_item(
+                  <% dropdown.menu_item(
                     text: "Files",
                     icon: "file",
                     data: {
@@ -147,15 +150,25 @@
               <% end %>
 
               <% composer.center do %>
-                <%= render FlatPack::Chat::Textarea::Component.new(
+                <%= render FlatPack::TextArea::Component.new(
                   name: "chat[message]",
                   placeholder: "Write a message...",
+                  rows: 1,
                   autogrow: true,
-                  submit_on_enter: true
+                  submit_on_enter: true,
+                  class: "min-h-[var(--chat-composer-control-height)] rounded-lg border-[var(--chat-input-border-color)] bg-[var(--chat-input-background-color)] px-4 py-2 text-sm leading-5 text-[var(--chat-input-text-color)] placeholder:text-[var(--chat-input-placeholder-color)] focus:ring-[var(--chat-input-focus-ring-color)] max-h-32"
                 ) %>
               <% end %>
               <% composer.right do %>
-                <%= render FlatPack::Chat::SendButton::Component.new %>
+                <%= render FlatPack::Button::Component.new(
+                  icon: "send",
+                  icon_only: true,
+                  style: :primary,
+                  size: :md,
+                  type: "submit",
+                  aria: {label: "Send message"},
+                  class: "border-transparent bg-[var(--chat-send-button-background-color)] text-[var(--chat-send-button-text-color)] hover:bg-[var(--chat-send-button-hover-background-color)] focus-visible:ring-[var(--chat-send-button-focus-ring-color)] shrink-0"
+                ) %>
               <% end %>
             <% end %>
 
@@ -205,9 +218,9 @@
           class: &quot;rounded-lg border&quot;,
           style: &quot;height: 620px; border-color: var(--surface-border-color); background-color: var(--surface-background-color);&quot;
         ) do |layout| %&gt;
-          &lt;% layout.with_panel do %&gt;
+          &lt;% layout.panel do %&gt;
             &lt;%= render FlatPack::Chat::Panel::Component.new do |panel| %&gt;
-            &lt;% panel.with_header do %&gt;
+            &lt;% panel.header do %&gt;
               &lt;%= render FlatPack::Chat::Header::Component.new(
               title: "Design Team",
               subtitle: "8 members • 4 online",
@@ -215,12 +228,12 @@
                 back_label: nil,
               content_url: "#chat-group-settings",
               group_avatars: [
-                {name: "Alex Rivera", initials: "AR"},
-                {name: "Mina Cho", initials: "MC"},
-                {name: "Sam Lee", initials: "SL"},
-                {name: "Jo Kim", initials: "JK"},
-                {name: "Rina Park", initials: "RP"},
-                {name: "Dan Wu", initials: "DW"}
+                  {name: "Alex Rivera"},
+                  {name: "Mina Cho"},
+                  {name: "Sam Lee"},
+                  {name: "Jo Kim"},
+                  {name: "Rina Park"},
+                  {name: "Dan Wu"}
               ],
               group_max: 4
               ) do |header| %&gt;
@@ -230,13 +243,13 @@
               &lt;% end %&gt;
             &lt;% end %&gt;
 
-            &lt;% panel.with_messages do %&gt;
+            &lt;% panel.messages do %&gt;
               &lt;%= render FlatPack::Chat::MessageList::Component.new do %&gt;
                 &lt;%= render FlatPack::Chat::DateDivider::Component.new(label: "Today") %&gt;
                 &lt;%= render FlatPack::Chat::MessageGroup::Component.new(direction: :incoming, show_avatar: true, show_name: true, sender_name: "Mina") do |group| %&gt;
-                  &lt;% group.with_message do %&gt;
+                  &lt;% group.message do %&gt;
                     &lt;%= render FlatPack::Chat::ReceivedMessage::Component.new do |message| %&gt;
-                      &lt;% message.with_meta do %&gt;
+                      &lt;% message.meta do %&gt;
                         &lt;%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: "10:12 AM", state: :sent) %&gt;
                       &lt;% end %&gt;
                       I pushed the homepage copy updates.
@@ -246,7 +259,7 @@
               &lt;% end %&gt;
             &lt;% end %&gt;
 
-            &lt;% panel.with_composer do %&gt;
+            &lt;% panel.composer do %&gt;
               &lt;%= form_with url: &quot;#&quot;, method: :post, local: true,
                   data: {
                     controller: &quot;flat-pack--chat-sender&quot;,
@@ -262,9 +275,12 @@
                     size: :md,
                     show_chevron: false,
                     position: :top_left,
-                    aria: {label: &quot;Add files or images&quot;}
+                    trigger_attributes: {
+                      aria: {label: &quot;Add files or images&quot;},
+                      title: &quot;Add files or images&quot;
+                    }
                   ) do |dropdown| %&gt;
-                    &lt;% dropdown.with_menu_item(
+                    &lt;% dropdown.menu_item(
                       text: &quot;Upload files or images&quot;,
                       icon: &quot;file&quot;,
                       data: {action: &quot;click-&gt;flat-pack--chat-sender#openFilePicker&quot;}
@@ -273,10 +289,18 @@
                 &lt;% end %&gt;
 
                 &lt;% composer.center do %&gt;
-                  &lt;%= render FlatPack::Chat::Textarea::Component.new(name: "chat[message]", autogrow: true, submit_on_enter: true) %&gt;
+                  &lt;%= render FlatPack::TextArea::Component.new(name: "chat[message]", rows: 1, autogrow: true, submit_on_enter: true, class: "min-h-[var(--chat-composer-control-height)] rounded-lg border-[var(--chat-input-border-color)] bg-[var(--chat-input-background-color)] px-4 py-2 text-sm leading-5 text-[var(--chat-input-text-color)] placeholder:text-[var(--chat-input-placeholder-color)] focus:ring-[var(--chat-input-focus-ring-color)] max-h-32") %&gt;
                 &lt;% end %&gt;
                 &lt;% composer.right do %&gt;
-                  &lt;%= render FlatPack::Chat::SendButton::Component.new %&gt;
+                  &lt;%= render FlatPack::Button::Component.new(
+                    icon: "send",
+                    icon_only: true,
+                    style: :primary,
+                    size: :md,
+                    type: "submit",
+                    aria: {label: "Send message"},
+                    class: "border-transparent bg-[var(--chat-send-button-background-color)] text-[var(--chat-send-button-text-color)] hover:bg-[var(--chat-send-button-hover-background-color)] focus-visible:ring-[var(--chat-send-button-focus-ring-color)] shrink-0"
+                  ) %&gt;
                 &lt;% end %&gt;
               &lt;% end %&gt;
               &lt;% end %&gt;

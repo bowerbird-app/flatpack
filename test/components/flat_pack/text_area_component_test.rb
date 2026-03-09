@@ -66,12 +66,28 @@ module FlatPack
 
         assert_selector "div[data-controller='flat-pack--text-area']"
         assert_selector "textarea[data-flat-pack--text-area-target='textarea']"
+        assert_selector "div[data-flat-pack--text-area-autogrow-value='true']"
+        assert_selector "div[data-flat-pack--text-area-submit-on-enter-value='false']"
       end
 
       def test_has_auto_expand_action
         render_inline(Component.new(name: "description"))
 
         assert_selector "textarea[data-action='input->flat-pack--text-area#autoExpand input->flat-pack--text-area#updateCharacterCount']"
+      end
+
+      def test_can_disable_auto_expand_action
+        render_inline(Component.new(name: "description", autogrow: false))
+
+        assert_selector "div[data-flat-pack--text-area-autogrow-value='false']"
+        assert_selector "textarea[data-action='input->flat-pack--text-area#updateCharacterCount']"
+      end
+
+      def test_can_submit_on_enter
+        render_inline(Component.new(name: "description", submit_on_enter: true))
+
+        assert_selector "div[data-flat-pack--text-area-submit-on-enter-value='true']"
+        assert_selector "textarea[data-action='input->flat-pack--text-area#autoExpand input->flat-pack--text-area#updateCharacterCount keydown->flat-pack--text-area#handleKeydown']"
       end
 
       def test_renders_character_count_when_enabled

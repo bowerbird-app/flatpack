@@ -29,6 +29,9 @@ module FlatPack
         def divider_attributes
           merge_attributes(
             class: divider_classes,
+            data: {
+              flat_pack_chat_group_break: true
+            },
             role: "separator",
             "aria-label": @label
           )

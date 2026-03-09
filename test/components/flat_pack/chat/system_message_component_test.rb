@@ -13,6 +13,7 @@ module FlatPack
 
           assert_selector "div", text: "System event"
           assert_includes rendered_content, "justify-center"
+          assert_selector "div[data-flat-pack-chat-group-break='true']"
         end
       end
     end

@@ -16,7 +16,9 @@ module FlatPack
           ))
 
           assert_text "Image preview"
+          assert_selector "section[data-controller='flat-pack--carousel']"
           assert_selector "img[alt='preview.png']"
+          assert_selector "button[aria-label='Expand image']"
           assert_no_selector "div.px-4.py-2 img"
           assert_text "10:24 AM"
         end
@@ -31,8 +33,8 @@ module FlatPack
             body: "Tap to reveal"
           ))
 
-          assert_includes rendered_content, "chat-message-actions"
-          assert_includes rendered_content, "chat-message-actions-side-value=\"left\""
+          assert_includes rendered_content, "flat-pack--chat-message-actions"
+          assert_includes rendered_content, "data-flat-pack--chat-message-actions-side-value=\"left\""
         end
       end
     end

@@ -65,18 +65,13 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/chat/sent_message
     /demo/chat/received_message
     /demo/chat/file_message
-    /demo/chat/image_message
+    /demo/chat/images
     /demo/chat/system_message
-    /demo/chat/image_deck
-    /demo/chat/message_record
     /demo/chat/inbox_row
-    /demo/chat/message_meta
     /demo/chat/attachment
     /demo/chat/date_divider
     /demo/chat/typing_indicator
     /demo/chat/composer
-    /demo/chat/textarea
-    /demo/chat/send_button
     /demo/carousel
     /demo/progress
     /demo/collapse
@@ -111,6 +106,12 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "data-flat-pack--chat-sender-picker-ids-value=\"[&quot;chat-picker-images&quot;,&quot;chat-picker-files&quot;]\""
   end
 
+  test "standalone chat message meta demo route is not exposed" do
+    get "/demo/chat/message_meta"
+
+    assert_response :not_found
+  end
+
   test "picker demo renders reusable picker component examples" do
     get "/demo/picker"
 
@@ -128,7 +129,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     get "/demo/forms/text_input"
 
     assert_response :success
-    assert_includes response.body, "<td class=\"px-4 py-3 text-sm text-primary font-medium\">value</td>"
+    assert_includes response.body, ">value</td>"
     assert_includes response.body, "value: &quot;john.doe&quot;"
   end
 
@@ -169,6 +170,17 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "--color-success-background-color"
   end
 
+  test "carousel demo renders lightbox control and footer counter copy" do
+    get "/demo/carousel"
+
+    assert_response :success
+    assert_includes response.body, "data-flat-pack--carousel-target=\"counter\""
+    assert_includes response.body, "data-flat-pack--carousel-target=\"lightboxToggle\""
+    assert_includes response.body, "The slide count now sits in the bottom-right footer beside the dot navigation."
+    assert_includes response.body, "Single Slide Example"
+    assert_includes response.body, "With only one slide, the carousel keeps the content and lightbox expand button but skips the chevron controls, dot navigation, and slide count."
+  end
+
   test "search demo variable table includes full option set" do
     get "/demo/search"
 
@@ -200,6 +212,47 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "data-max-visible-avatars=\"2\""
   end
 
+  test "chat file message demo exposes real file download links" do
+    get "/demo/chat/file_message"
+
+    assert_response :success
+    assert_includes response.body, "/demo/chat/files/launch-plan"
+    assert_includes response.body, "/demo/chat/files/qa-checklist"
+  end
+
+  test "chat file download returns attachment content" do
+    get "/demo/chat/files/launch-plan"
+
+    assert_response :success
+    assert_equal "application/pdf", response.media_type
+    assert_includes response.headers["Content-Disposition"], "attachment"
+    assert_includes response.headers["Content-Disposition"], "launch-plan.pdf"
+    assert_includes response.body, "Demo launch plan PDF"
+  end
+
+  test "legacy chat image demo routes redirect to consolidated images page" do
+    get "/demo/chat/image_message"
+
+    assert_redirected_to "/demo/chat/images"
+
+    get "/demo/chat/image_deck"
+
+    assert_redirected_to "/demo/chat/images"
+  end
+
+  test "chat images demo renders single-image and carousel examples" do
+    get "/demo/chat/images"
+
+    assert_response :success
+    assert_includes response.body, "Chat::Images"
+    assert_includes response.body, "Single Image Attachment"
+    assert_includes response.body, "Gallery Using Carousel"
+    assert_includes response.body, "data-controller=\"flat-pack--carousel\""
+    assert_includes response.body, "Expand image"
+    assert_equal 15, response.body.scan('data-flat-pack--carousel-target="slide"').size
+    assert_equal 13, response.body.scan('data-flat-pack--carousel-target="thumb"').size
+  end
+
   test "chat inbox row demo renders reusable row examples" do
     get "/demo/chat/inbox_row"
 
@@ -207,6 +260,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Chat::InboxRow"
     assert_includes response.body, "Design Team"
     assert_includes response.body, "data-chat-group-inbox-avatar=\"true\""
+    assert_includes response.body, "+2"
   end
 
   test "carousel page renders rebuilt component demo" do

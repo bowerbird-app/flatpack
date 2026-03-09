@@ -11,34 +11,46 @@
 
     <div class="mb-4 mt-6 h-[560px] overflow-hidden rounded-lg border border-(--surface-border-color) bg-(--surface-background-color)">
       <%= render FlatPack::Chat::Panel::Component.new do |panel| %>
-        <% panel.with_header do %>
+        <% panel.header do %>
           <%= render FlatPack::Chat::Header::Component.new(
             title: "Alicia Chen",
             subtitle: "Online",
             back_href: "#chat-groups",
-            back_label: "Back to chat groups",
-            person_avatar: {name: "Alicia Chen", size: :sm}
+            back_label: nil,
+            back_tooltip: "Back to chat groups",
+            person_avatar: {name: "Alicia Chen", size: :sm, status: :online}
           ) do |header| %>
             <% header.right do %>
-              <%= render FlatPack::Button::Component.new(
+              <%= render FlatPack::Button::Dropdown::Component.new(
+                text: "",
                 icon: "dots",
-                icon_only: true,
                 style: :ghost,
                 size: :sm,
-                url: "#chat-actions"
-              ) %>
+                show_chevron: false,
+                position: :bottom_right,
+                trigger_attributes: {
+                  title: "Conversation actions",
+                  aria: {label: "Conversation actions"}
+                }
+              ) do |dropdown| %>
+                <% dropdown.menu_item(text: "Search conversation", icon: "search", href: "#chat-search") %>
+                <% dropdown.menu_item(text: "View details", icon: "dashboard", href: "#chat-details") %>
+                <% dropdown.menu_divider %>
+                <% dropdown.menu_item(text: "Notification settings", icon: "settings", href: "#chat-notifications") %>
+                <% dropdown.menu_item(text: "Archive", icon: "folder", href: "#chat-archive") %>
+              <% end %>
             <% end %>
           <% end %>
         <% end %>
 
-        <% panel.with_messages do %>
+        <% panel.messages do %>
           <div class="flex-1 space-y-3 overflow-y-auto p-4">
             <%= render FlatPack::Chat::ReceivedMessage::Component.new { "Incoming message in panel body" } %>
             <%= render FlatPack::Chat::SentMessage::Component.new { "Outgoing message in panel body" } %>
           </div>
         <% end %>
 
-        <% panel.with_composer do %>
+        <% panel.composer do %>
           <%= render FlatPack::Chat::Composer::Component.new %>
         <% end %>
       <% end %>
@@ -49,26 +61,45 @@
       language: "erb",
       code: CGI.unescapeHTML(<<~'CODE')
         &lt;%= render FlatPack::Chat::Panel::Component.new do |panel| %&gt;
-          &lt;% panel.with_header do %&gt;
+          &lt;% panel.header do %&gt;
             &lt;%= render FlatPack::Chat::Header::Component.new(
               title: "Alicia Chen",
               subtitle: "Online",
               back_href: "#chat-groups",
-              person_avatar: {name: "Alicia Chen", size: :sm}
+              back_label: nil,
+              back_tooltip: "Back to chat groups",
+              person_avatar: {name: "Alicia Chen", size: :sm, status: :online}
             ) do |header| %&gt;
               &lt;% header.right do %&gt;
-                &lt;%= render FlatPack::Button::Component.new(icon: "dots", icon_only: true, style: :ghost, size: :sm) %&gt;
+                &lt;%= render FlatPack::Button::Dropdown::Component.new(
+                  text: "",
+                  icon: "dots",
+                  style: :ghost,
+                  size: :sm,
+                  show_chevron: false,
+                  position: :bottom_right,
+                  trigger_attributes: {
+                    title: "Conversation actions",
+                    aria: {label: "Conversation actions"}
+                  }
+                ) do |dropdown| %&gt;
+                  &lt;% dropdown.menu_item(text: "Search conversation", icon: "search", href: "#chat-search") %&gt;
+                  &lt;% dropdown.menu_item(text: "View details", icon: "dashboard", href: "#chat-details") %&gt;
+                  &lt;% dropdown.menu_divider %&gt;
+                  &lt;% dropdown.menu_item(text: "Notification settings", icon: "settings", href: "#chat-notifications") %&gt;
+                  &lt;% dropdown.menu_item(text: "Archive", icon: "folder", href: "#chat-archive") %&gt;
+                &lt;% end %&gt;
               &lt;% end %&gt;
             &lt;% end %&gt;
           &lt;% end %&gt;
 
-          &lt;% panel.with_messages do %&gt;
+          &lt;% panel.messages do %&gt;
             &lt;div class="flex-1 space-y-3 overflow-y-auto p-4"&gt;
               &lt;%= render FlatPack::Chat::ReceivedMessage::Component.new { "Incoming message in panel body" } %&gt;
             &lt;/div&gt;
           &lt;% end %&gt;
 
-          &lt;% panel.with_composer do %&gt;
+          &lt;% panel.composer do %&gt;
             &lt;%= render FlatPack::Chat::Composer::Component.new %&gt;
           &lt;% end %&gt;
         &lt;% end %&gt;

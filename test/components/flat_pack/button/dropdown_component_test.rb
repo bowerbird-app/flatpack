@@ -135,6 +135,20 @@ module FlatPack
         assert_selector "button", text: "Actions"
       end
 
+      def test_applies_trigger_attributes_to_button
+        render_inline(Dropdown::Component.new(
+          text: "",
+          icon: "dots",
+          show_chevron: false,
+          trigger_attributes: {
+            title: "Conversation actions",
+            aria: {label: "Conversation actions"}
+          }
+        ))
+
+        assert_selector "button[title='Conversation actions'][aria-label='Conversation actions']"
+      end
+
       # Disabled state
       def test_renders_disabled_button
         render_inline(Dropdown::Component.new(text: "Actions", disabled: true))
@@ -143,21 +157,21 @@ module FlatPack
       end
 
       # Items rendering
-      def test_renders_dropdown_with_menu_items
+      def test_renders_dropdown_menu_items
         render_inline(Dropdown::Component.new(text: "Actions")) do |dropdown|
-          dropdown.with_menu_item(text: "Edit", href: "/edit")
-          dropdown.with_menu_item(text: "Delete", href: "/delete")
+          dropdown.menu_item(text: "Edit", href: "/edit")
+          dropdown.menu_item(text: "Delete", href: "/delete")
         end
 
         assert_selector "a[href='/edit']", text: "Edit"
         assert_selector "a[href='/delete']", text: "Delete"
       end
 
-      def test_renders_dropdown_with_menu_items_and_divider
+      def test_renders_dropdown_menu_items_and_divider
         render_inline(Dropdown::Component.new(text: "Actions")) do |dropdown|
-          dropdown.with_menu_item(text: "Edit", href: "/edit")
-          dropdown.with_menu_divider
-          dropdown.with_menu_item(text: "Delete", href: "/delete")
+          dropdown.menu_item(text: "Edit", href: "/edit")
+          dropdown.menu_divider
+          dropdown.menu_item(text: "Delete", href: "/delete")
         end
 
         assert_selector "a[href='/edit']", text: "Edit"
@@ -167,7 +181,7 @@ module FlatPack
 
       def test_renders_item_with_icon
         render_inline(Dropdown::Component.new(text: "Actions")) do |dropdown|
-          dropdown.with_menu_item(text: "Edit", icon: "edit", href: "/edit")
+          dropdown.menu_item(text: "Edit", icon: "edit", href: "/edit")
         end
 
         assert_selector "a[href='/edit']", text: "Edit"
@@ -175,7 +189,7 @@ module FlatPack
 
       def test_renders_item_with_badge
         render_inline(Dropdown::Component.new(text: "Actions")) do |dropdown|
-          dropdown.with_menu_item(text: "Messages", badge: "5", href: "/messages")
+          dropdown.menu_item(text: "Messages", badge: "5", href: "/messages")
         end
 
         assert_selector "a[href='/messages']", text: "Messages"
@@ -184,7 +198,7 @@ module FlatPack
 
       def test_renders_disabled_item
         render_inline(Dropdown::Component.new(text: "Actions")) do |dropdown|
-          dropdown.with_menu_item(text: "Disabled", disabled: true)
+          dropdown.menu_item(text: "Disabled", disabled: true)
         end
 
         assert_selector "button[disabled]", text: "Disabled"
@@ -192,7 +206,7 @@ module FlatPack
 
       def test_renders_destructive_item
         render_inline(Dropdown::Component.new(text: "Actions")) do |dropdown|
-          dropdown.with_menu_item(text: "Delete", destructive: true, href: "/delete")
+          dropdown.menu_item(text: "Delete", destructive: true, href: "/delete")
         end
 
         assert_selector "a[href='/delete']", text: "Delete"
@@ -220,7 +234,7 @@ module FlatPack
 
       def test_renders_menuitem_role_on_items
         render_inline(Dropdown::Component.new(text: "Actions")) do |dropdown|
-          dropdown.with_menu_item(text: "Edit", href: "/edit")
+          dropdown.menu_item(text: "Edit", href: "/edit")
         end
 
         assert_selector "a[role='menuitem']"
@@ -228,7 +242,7 @@ module FlatPack
 
       def test_renders_separator_role_on_divider
         render_inline(Dropdown::Component.new(text: "Actions")) do |dropdown|
-          dropdown.with_menu_divider
+          dropdown.menu_divider
         end
 
         assert_selector "div[role='separator']"
@@ -295,14 +309,14 @@ module FlatPack
       def test_item_sanitizes_unsafe_url
         assert_raises(ArgumentError) do
           render_inline(Dropdown::Component.new(text: "Actions")) do |dropdown|
-            dropdown.with_menu_item(text: "Evil", href: "javascript:alert('xss')")
+            dropdown.menu_item(text: "Evil", href: "javascript:alert('xss')")
           end
         end
       end
 
       def test_item_allows_safe_url
         render_inline(Dropdown::Component.new(text: "Actions")) do |dropdown|
-          dropdown.with_menu_item(text: "Safe", href: "https://example.com")
+          dropdown.menu_item(text: "Safe", href: "https://example.com")
         end
 
         assert_selector "a[href='https://example.com']", text: "Safe"
@@ -310,7 +324,7 @@ module FlatPack
 
       def test_item_allows_relative_url
         render_inline(Dropdown::Component.new(text: "Actions")) do |dropdown|
-          dropdown.with_menu_item(text: "Safe", href: "/path/to/page")
+          dropdown.menu_item(text: "Safe", href: "/path/to/page")
         end
 
         assert_selector "a[href='/path/to/page']", text: "Safe"

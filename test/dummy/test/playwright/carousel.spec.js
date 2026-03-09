@@ -52,4 +52,25 @@ test.describe('carousel drag swipe', () => {
 
     await expect(counter).toHaveText('1 / 4')
   })
+
+  test('image lightbox opens and closes from expand control', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 1800 })
+    await page.goto('http://127.0.0.1:3000/demo/carousel', { waitUntil: 'networkidle' })
+
+    const carousel = page.locator('section[data-controller="flat-pack--carousel"]').first()
+    const expandButton = carousel.locator('button[data-flat-pack--carousel-target="lightboxToggle"]')
+    const lightbox = carousel.locator('[data-flat-pack--carousel-target="lightbox"]')
+    const lightboxImage = carousel.locator('[data-flat-pack--carousel-target="lightboxImage"]')
+
+    await expect(expandButton).toBeVisible()
+    await expect(lightbox).toBeHidden()
+
+    await expandButton.click()
+
+    await expect(lightbox).toBeVisible()
+    await expect(lightboxImage).toHaveAttribute('src', /photo-1460925895917-afdab827c52f/)
+
+    await page.keyboard.press('Escape')
+    await expect(lightbox).toBeHidden()
+  })
 })

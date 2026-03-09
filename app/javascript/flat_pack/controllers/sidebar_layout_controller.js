@@ -253,6 +253,13 @@ export default class extends Controller {
       }
     }
 
+    this.sidebarTarget.dataset.flatPackSidebarCollapsed = this.collapsed ? "true" : "false"
+    if (sidebarContent) {
+      sidebarContent.dataset.flatPackSidebarCollapsed = this.collapsed ? "true" : "false"
+    }
+
+    this.updateCollapsedScrollContainerState()
+
     this.clearDesktopRevealTimeout()
 
     if (this.collapsed) {
@@ -331,6 +338,13 @@ export default class extends Controller {
         chevron.classList.add("hidden")
       }
     })
+  }
+
+  updateCollapsedScrollContainerState() {
+    const scrollContainer = this.currentScrollContainer()
+    if (!scrollContainer) return
+
+    scrollContainer.classList.toggle("fp-scrollbar-hidden", this.collapsed)
   }
 
   clearDesktopRevealTimeout() {
@@ -544,15 +558,10 @@ export default class extends Controller {
     if (!activeItem) return
 
     requestAnimationFrame(() => {
+      // Align active navigation item to the top edge of the scroll container.
       const containerRect = scrollContainer.getBoundingClientRect()
       const itemRect = activeItem.getBoundingClientRect()
-      const margin = 12
-
-      if (itemRect.top < containerRect.top + margin) {
-        scrollContainer.scrollTop -= (containerRect.top + margin) - itemRect.top
-      } else if (itemRect.bottom > containerRect.bottom - margin) {
-        scrollContainer.scrollTop += itemRect.bottom - (containerRect.bottom - margin)
-      }
+      scrollContainer.scrollTop += itemRect.top - containerRect.top
 
       this.persistScrollState()
     })

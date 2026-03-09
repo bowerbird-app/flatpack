@@ -74,6 +74,10 @@ module FlatPack
           right?
         end
 
+        def attachment(...)
+          with_attachments(...)
+        end
+
         private
 
         def render_left_section
@@ -95,10 +99,13 @@ module FlatPack
         end
 
         def render_default_center
-          render FlatPack::Chat::Textarea::Component.new(
+          render FlatPack::TextArea::Component.new(
+            name: "message[body]",
             placeholder: "Type a message...",
+            rows: 1,
             autogrow: true,
-            submit_on_enter: true
+            submit_on_enter: true,
+            class: "min-h-[var(--chat-composer-control-height)] rounded-lg border-[var(--chat-input-border-color)] bg-[var(--chat-input-background-color)] px-4 py-2 text-sm leading-5 text-[var(--chat-input-text-color)] placeholder:text-[var(--chat-input-placeholder-color)] focus:ring-[var(--chat-input-focus-ring-color)] max-h-32"
           )
         end
 
@@ -111,7 +118,15 @@ module FlatPack
         end
 
         def render_default_right
-          render FlatPack::Chat::SendButton::Component.new
+          render FlatPack::Button::Component.new(
+            icon: "send",
+            icon_only: true,
+            size: :md,
+            style: :primary,
+            type: "submit",
+            aria: {label: "Send message"},
+            class: "border-transparent bg-[var(--chat-send-button-background-color)] text-[var(--chat-send-button-text-color)] hover:bg-[var(--chat-send-button-hover-background-color)] focus-visible:ring-[var(--chat-send-button-focus-ring-color)] shrink-0"
+          )
         end
 
         def render_attachments_section

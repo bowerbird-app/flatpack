@@ -76,7 +76,7 @@ module FlatPack
         styles << "margin-left: #{overlap_margin}" if index.positive?
 
         content_tag(:div,
-          class: "relative hover:z-10 focus-within:z-10",
+          class: "relative hover:!z-[999] focus-within:!z-[999]",
           style: styles.join("; ")) do
           render_avatar_content(avatar_attrs)
         end
@@ -87,12 +87,12 @@ module FlatPack
           src: avatar_attrs[:src],
           alt: avatar_attrs[:alt],
           name: avatar_attrs[:name],
-          initials: avatar_attrs[:initials],
           size: @size,
           shape: :circle,
           status: avatar_attrs[:status],
           href: avatar_attrs[:href],
-          class: "ring-2 ring-[var(--avatar-group-ring-color)] transition-transform hover:scale-110"
+          show_tooltip: false,
+          class: "ring-2 ring-[var(--avatar-group-ring-color)] transition-transform hover:scale-110 hover:!opacity-100"
         )
 
         tooltip_text = avatar_attrs[:name].presence || avatar_attrs[:alt].presence
@@ -105,7 +105,7 @@ module FlatPack
 
       def render_overflow
         content_tag(:div,
-          class: "relative hover:z-10",
+          class: "relative hover:!z-[999]",
           style: overflow_styles) do
           render_overflow_content
         end
@@ -113,11 +113,12 @@ module FlatPack
 
       def render_overflow_content
         overflow_avatar = FlatPack::Avatar::Component.new(
-          initials: "+#{overflow_count}",
+          alt: "+#{overflow_count}",
           size: @size,
           shape: :circle,
           href: @overflow_href,
-          class: "ring-2 ring-[var(--avatar-group-ring-color)] transition-transform hover:scale-110"
+          show_tooltip: false,
+          class: "ring-2 ring-[var(--avatar-group-ring-color)] transition-transform hover:scale-110 hover:!opacity-100"
         )
 
         tooltip_text = overflow_tooltip_text

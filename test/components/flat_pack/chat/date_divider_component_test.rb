@@ -16,6 +16,7 @@ module FlatPack
           render_inline(Component.new(label: "Yesterday"))
 
           assert_selector "div[role='separator'][aria-label='Yesterday']"
+          assert_selector "div[data-flat-pack-chat-group-break='true']"
         end
 
         def test_raises_when_label_missing
