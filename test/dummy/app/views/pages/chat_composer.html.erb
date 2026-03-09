@@ -34,11 +34,13 @@
         <% end %>
 
         <% composer.center do %>
-          <%= render FlatPack::Chat::Textarea::Component.new(
+          <%= render FlatPack::TextArea::Component.new(
             name: "composer[body]",
             placeholder: "Type your update...",
+            rows: 1,
             autogrow: true,
-            submit_on_enter: false
+            submit_on_enter: false,
+            class: "min-h-[var(--chat-composer-control-height)] rounded-lg border-[var(--chat-input-border-color)] bg-[var(--chat-input-background-color)] px-4 py-2 text-sm leading-5 text-[var(--chat-input-text-color)] placeholder:text-[var(--chat-input-placeholder-color)] focus:ring-[var(--chat-input-focus-ring-color)] max-h-32"
           ) %>
         <% end %>
 
@@ -84,11 +86,13 @@
           &lt;% end %&gt;
 
           &lt;% composer.center do %&gt;
-            &lt;%= render FlatPack::Chat::Textarea::Component.new(
+            &lt;%= render FlatPack::TextArea::Component.new(
               name: "composer[body]",
               placeholder: "Type your update...",
+              rows: 1,
               autogrow: true,
-              submit_on_enter: false
+              submit_on_enter: false,
+              class: "min-h-[var(--chat-composer-control-height)] rounded-lg border-[var(--chat-input-border-color)] bg-[var(--chat-input-background-color)] px-4 py-2 text-sm leading-5 text-[var(--chat-input-text-color)] placeholder:text-[var(--chat-input-placeholder-color)] focus:ring-[var(--chat-input-focus-ring-color)] max-h-32"
             ) %&gt;
           &lt;% end %&gt;
 
@@ -125,11 +129,13 @@
         <% end %>
 
         <% composer.center do %>
-          <%= render FlatPack::Chat::Textarea::Component.new(
+          <%= render FlatPack::TextArea::Component.new(
             name: "composer[body_rounded]",
             placeholder: "Write a quick update...",
+            rows: 1,
             autogrow: true,
-            submit_on_enter: false
+            submit_on_enter: false,
+            class: "min-h-[var(--chat-composer-control-height)] rounded-[9999px] border-[var(--chat-input-border-color)] bg-[var(--chat-input-background-color)] px-4 py-2 text-sm leading-5 text-[var(--chat-input-text-color)] placeholder:text-[var(--chat-input-placeholder-color)] focus:ring-[var(--chat-input-focus-ring-color)] max-h-32"
           ) %>
         <% end %>
 
@@ -164,11 +170,13 @@
           &lt;% end %&gt;
 
           &lt;% composer.center do %&gt;
-            &lt;%= render FlatPack::Chat::Textarea::Component.new(
+            &lt;%= render FlatPack::TextArea::Component.new(
               name: "composer[body_rounded]",
               placeholder: "Write a quick update...",
+              rows: 1,
               autogrow: true,
-              submit_on_enter: false
+              submit_on_enter: false,
+              class: "min-h-[var(--chat-composer-control-height)] rounded-[9999px] border-[var(--chat-input-border-color)] bg-[var(--chat-input-background-color)] px-4 py-2 text-sm leading-5 text-[var(--chat-input-text-color)] placeholder:text-[var(--chat-input-placeholder-color)] focus:ring-[var(--chat-input-focus-ring-color)] max-h-32"
             ) %&gt;
           &lt;% end %&gt;
 
@@ -194,11 +202,13 @@
     <div class="mb-4 mt-6 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
       <%= render FlatPack::Chat::Composer::Component.new do |composer| %>
         <% composer.center do %>
-          <%= render FlatPack::Chat::Textarea::Component.new(
+          <%= render FlatPack::TextArea::Component.new(
             name: "composer[body_no_attachment]",
             placeholder: "Type your message...",
+            rows: 1,
             autogrow: true,
-            submit_on_enter: false
+            submit_on_enter: false,
+            class: "min-h-[var(--chat-composer-control-height)] rounded-lg border-[var(--chat-input-border-color)] bg-[var(--chat-input-background-color)] px-4 py-2 text-sm leading-5 text-[var(--chat-input-text-color)] placeholder:text-[var(--chat-input-placeholder-color)] focus:ring-[var(--chat-input-focus-ring-color)] max-h-32"
           ) %>
         <% end %>
 
@@ -222,11 +232,13 @@
       code: CGI.unescapeHTML(<<~'CODE')
         &lt;%= render FlatPack::Chat::Composer::Component.new do |composer| %&gt;
           &lt;% composer.center do %&gt;
-            &lt;%= render FlatPack::Chat::Textarea::Component.new(
+            &lt;%= render FlatPack::TextArea::Component.new(
               name: "composer[body_no_attachment]",
               placeholder: "Type your message...",
+              rows: 1,
               autogrow: true,
-              submit_on_enter: false
+              submit_on_enter: false,
+              class: "min-h-[var(--chat-composer-control-height)] rounded-lg border-[var(--chat-input-border-color)] bg-[var(--chat-input-background-color)] px-4 py-2 text-sm leading-5 text-[var(--chat-input-text-color)] placeholder:text-[var(--chat-input-placeholder-color)] focus:ring-[var(--chat-input-focus-ring-color)] max-h-32"
             ) %&gt;
           &lt;% end %&gt;
 

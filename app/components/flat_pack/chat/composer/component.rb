@@ -99,10 +99,13 @@ module FlatPack
         end
 
         def render_default_center
-          render FlatPack::Chat::Textarea::Component.new(
+          render FlatPack::TextArea::Component.new(
+            name: "message[body]",
             placeholder: "Type a message...",
+            rows: 1,
             autogrow: true,
-            submit_on_enter: true
+            submit_on_enter: true,
+            class: "min-h-[var(--chat-composer-control-height)] rounded-lg border-[var(--chat-input-border-color)] bg-[var(--chat-input-background-color)] px-4 py-2 text-sm leading-5 text-[var(--chat-input-text-color)] placeholder:text-[var(--chat-input-placeholder-color)] focus:ring-[var(--chat-input-focus-ring-color)] max-h-32"
           )
         end
 

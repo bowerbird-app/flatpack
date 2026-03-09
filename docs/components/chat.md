@@ -9,7 +9,7 @@ When chat rows rendered inside `MessageList` include FlatPack chat record data a
 
 ## Class
 - Primary: `FlatPack::Chat::Panel::Component`
-- Related classes: `FlatPack::Chat::Layout::Component`, `FlatPack::Chat::Header::Component`, `FlatPack::Chat::MessageList::Component`, `FlatPack::Chat::MessageGroup::Component`, `FlatPack::Chat::ReceivedMessage::Component`, `FlatPack::Chat::SentMessage::Component`, `FlatPack::Chat::Composer::Component`, `FlatPack::Chat::Textarea::Component`, `FlatPack::Button::Component`, `FlatPack::Chat::Attachment::Component`, `FlatPack::Chat::Images::Component`, `FlatPack::Chat::ImageMessage::Component`, `FlatPack::Chat::ImageDeck::Component`, `FlatPack::Chat::InboxRow::Component`, `FlatPack::Chat::TypingIndicator::Component`
+- Related classes: `FlatPack::Chat::Layout::Component`, `FlatPack::Chat::Header::Component`, `FlatPack::Chat::MessageList::Component`, `FlatPack::Chat::MessageGroup::Component`, `FlatPack::Chat::ReceivedMessage::Component`, `FlatPack::Chat::SentMessage::Component`, `FlatPack::Chat::Composer::Component`, `FlatPack::TextArea::Component`, `FlatPack::Button::Component`, `FlatPack::Chat::Attachment::Component`, `FlatPack::Chat::Images::Component`, `FlatPack::Chat::ImageMessage::Component`, `FlatPack::Chat::ImageDeck::Component`, `FlatPack::Chat::InboxRow::Component`, `FlatPack::Chat::TypingIndicator::Component`
 
 ## Props
 Core container props:
@@ -32,10 +32,11 @@ High-use interaction props:
 | `FlatPack::Chat::Images::Component#body` | String | `nil` | no | Message copy rendered under the image carousel; blank bodies render a spacer to preserve the message shell. |
 | `FlatPack::Chat::Images::Component#timestamp` | String, Time, DateTime | `nil` | no | Passed to `FlatPack::Chat::MessageMeta::Component`. |
 | `FlatPack::Chat::Images::Component#reveal_actions` | Boolean | `false` | no | Enables reveal-action message behavior using the underlying sent/received message components. |
-| `FlatPack::Chat::Composer::Component` | n/a | n/a | n/a | Slot-driven; defaults to chat textarea + submit-ready `FlatPack::Button::Component` when slots are omitted. |
-| `FlatPack::Chat::Textarea::Component#name` | String | `"message[body]"` | no | Textarea field name. |
-| `FlatPack::Chat::Textarea::Component#autogrow` | Boolean | `true` | no | Auto-resize behavior. |
-| `FlatPack::Chat::Textarea::Component#submit_on_enter` | Boolean | `true` | no | Enter-to-submit behavior. |
+| `FlatPack::Chat::Composer::Component` | n/a | n/a | n/a | Slot-driven; defaults to a chat-styled `FlatPack::TextArea::Component` plus a submit-ready `FlatPack::Button::Component` when slots are omitted. |
+| `FlatPack::TextArea::Component#name` | String | n/a | yes | Textarea field name. |
+| `FlatPack::TextArea::Component#autogrow` | Boolean | `true` | no | Auto-resize behavior. |
+| `FlatPack::TextArea::Component#submit_on_enter` | Boolean | `false` | no | Enter-to-submit behavior for chat-style forms. |
+| `FlatPack::TextArea::Component#rows` | Integer | `3` | no | Set to `1` for composer-style single-line starts. |
 | `FlatPack::Chat::Attachment::Component#name` | String | `nil` | yes | Attachment label; blank raises `ArgumentError`. |
 | `FlatPack::Chat::Attachment::Component#type` | Symbol | `:file` | no | Attachment type: `:file`, `:image`; invalid values raise `ArgumentError`. |
 | `FlatPack::Chat::InboxRow::Component#chat_group_name` | String | `nil` | yes | Inbox row title; blank raises `ArgumentError`. |
@@ -149,5 +150,5 @@ Use `FlatPack::Chat::InboxRow::Component` for chat list entries with participant
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
-- Stimulus controllers: `flat-pack--chat-scroll`, `flat-pack--chat-grouping`, `flat-pack--chat-textarea`, `chat-message-actions`, `flat-pack--carousel`, `flat-pack--chat-image-deck`.
+- Stimulus controllers: `flat-pack--chat-scroll`, `flat-pack--chat-grouping`, `flat-pack--text-area`, `chat-message-actions`, `flat-pack--carousel`, `flat-pack--chat-image-deck`.
 - Message history loading uses `FlatPack::PaginationInfinite::Component` when configured.

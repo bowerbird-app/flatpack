@@ -16,6 +16,8 @@ module FlatPack
         label: nil,
         error: nil,
         rows: 3,
+        autogrow: true,
+        submit_on_enter: false,
         character_count: false,
         min_characters: nil,
         max_characters: nil,
@@ -31,6 +33,8 @@ module FlatPack
         @label = label
         @error = error
         @rows = rows
+        @autogrow = autogrow
+        @submit_on_enter = submit_on_enter
         @character_count = character_count
         @min_characters = min_characters
         @max_characters = max_characters
@@ -92,7 +96,7 @@ module FlatPack
           class: textarea_classes,
           data: {
             flat_pack__text_area_target: "textarea",
-            action: "input->flat-pack--text-area#autoExpand input->flat-pack--text-area#updateCharacterCount"
+            action: textarea_actions
           }.compact
         }
 
@@ -110,6 +114,8 @@ module FlatPack
           class: wrapper_classes,
           data: {
             controller: "flat-pack--text-area",
+            flat_pack__text_area_autogrow_value: @autogrow,
+            flat_pack__text_area_submit_on_enter_value: @submit_on_enter,
             flat_pack__text_area_min_characters_value: @min_characters,
             flat_pack__text_area_max_characters_value: @max_characters,
             flat_pack__text_area_character_count_enabled_value: @character_count
@@ -181,6 +187,13 @@ module FlatPack
 
       def validate_name!
         raise ArgumentError, "name is required" if @name.nil? || @name.to_s.strip.empty?
+      end
+
+      def textarea_actions
+        actions = ["input->flat-pack--text-area#updateCharacterCount"]
+        actions.unshift("input->flat-pack--text-area#autoExpand") if @autogrow
+        actions << "keydown->flat-pack--text-area#handleKeydown" if @submit_on_enter
+        actions.join(" ")
       end
 
       def validate_rows!

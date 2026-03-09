@@ -60,25 +60,19 @@ Successfully implemented a comprehensive Chat Messaging UI component system with
    - Preferred API: `left`, `center`, `right` slot methods
    - Default: Renders center textarea + right submit button if no slots
 
-11. **Chat::Textarea::Component** - Auto-growing textarea
-   - Location: `app/components/flat_pack/chat/textarea/component.rb`
-   - Props: `name`, `placeholder`, `autogrow`, `submit_on_enter`
-   - Stimulus: `chat_textarea_controller.js`
-   - Features: Auto-expand, Enter to submit, Shift+Enter for newline
-
 ### Utility Components (2)
-12. **Chat::TypingIndicator::Component** - Animated typing indicator
+11. **Chat::TypingIndicator::Component** - Animated typing indicator
     - Location: `app/components/flat_pack/chat/typing_indicator/component.rb`
     - Props: `label`
     - Slots: `avatar`
     - Features: 3-dot animation
 
-13. **Chat::Attachment::Component** - File/image attachment preview
+12. **Chat::Attachment::Component** - File/image attachment preview
     - Location: `app/components/flat_pack/chat/attachment/component.rb`
     - Props: `type`, `name`, `meta`, `href`, `thumbnail_url`
     - Types: `:file`, `:image`
 
-## Stimulus Controllers (2)
+## Stimulus Controllers (1)
 
 1. **chat_scroll_controller.js**
    - Location: `app/javascript/flat_pack/controllers/chat_scroll_controller.js`
@@ -86,13 +80,6 @@ Successfully implemented a comprehensive Chat Messaging UI component system with
    - Values: `stickToBottom`
    - Actions: `checkScroll()`, `jump()`, `newMessageAdded()`
    - Features: Auto-scroll, show/hide jump button, smooth scrolling
-
-2. **chat_textarea_controller.js**
-   - Location: `app/javascript/flat_pack/controllers/chat_textarea_controller.js`
-   - Targets: `textarea`
-   - Values: `autogrow`, `submitOnEnter`
-   - Actions: `autoExpand()`, `handleKeydown()`, `submitForm()`, `clear()`
-   - Features: Auto-grow on input, Enter to submit, Shift+Enter for newline
 
 ## Demo Pages (3)
 
@@ -244,7 +231,7 @@ Successfully implemented a comprehensive Chat Messaging UI component system with
 
 ## Files Created (31 total)
 
-### Components (11)
+### Components (10)
 - app/components/flat_pack/chat/layout/component.rb
 - app/components/flat_pack/chat/panel/component.rb
 - app/components/flat_pack/chat/message_list/component.rb
@@ -253,13 +240,11 @@ Successfully implemented a comprehensive Chat Messaging UI component system with
 - app/components/flat_pack/chat/message/component.rb
 - app/components/flat_pack/chat/message_meta/component.rb
 - app/components/flat_pack/chat/composer/component.rb
-- app/components/flat_pack/chat/textarea/component.rb
 - app/components/flat_pack/chat/typing_indicator/component.rb
 - app/components/flat_pack/chat/attachment/component.rb
 
-### Stimulus Controllers (2)
+### Stimulus Controllers (1)
 - app/javascript/flat_pack/controllers/chat_scroll_controller.js
-- app/javascript/flat_pack/controllers/chat_textarea_controller.js
 
 ### Demo Pages (3)
 - test/dummy/app/views/pages/chat.html.erb

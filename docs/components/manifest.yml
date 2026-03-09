@@ -109,7 +109,7 @@ components:
       - FlatPack::Button::Component
       - FlatPack::Chat::SentMessage::Component
       - FlatPack::Chat::SystemMessage::Component
-      - FlatPack::Chat::Textarea::Component
+      - FlatPack::TextArea::Component
       - FlatPack::Chat::TypingIndicator::Component
     status: documented
 

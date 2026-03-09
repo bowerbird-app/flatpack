@@ -481,9 +481,6 @@ class PagesController < ApplicationController
   def chat_composer
   end
 
-  def chat_textarea
-  end
-
   def carousel
     @carousel_slides = carousel_demo_slides
     @carousel_single_slide = carousel_demo_single_slide
@@ -1211,7 +1208,6 @@ class PagesController < ApplicationController
       {title: "Chat Date Divider", description: "Date divider component examples", url: demo_chat_date_divider_path},
       {title: "Chat Typing Indicator", description: "Typing indicator component examples", url: demo_chat_typing_indicator_path},
       {title: "Chat Composer", description: "Composer input and action patterns", url: demo_chat_composer_path},
-      {title: "Chat Textarea", description: "Chat textarea component examples", url: demo_chat_textarea_path},
       {title: "Carousel", description: "FlatPack carousel demo with mixed media and navigation controls", url: demo_carousel_path},
       {title: "Progress", description: "Progress indicators and loading states", url: demo_progress_path},
       {title: "Collapse", description: "Expandable and collapsible content patterns", url: demo_collapse_path},

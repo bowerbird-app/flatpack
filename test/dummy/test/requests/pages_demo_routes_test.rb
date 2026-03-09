@@ -72,7 +72,6 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/chat/date_divider
     /demo/chat/typing_indicator
     /demo/chat/composer
-    /demo/chat/textarea
     /demo/carousel
     /demo/progress
     /demo/collapse

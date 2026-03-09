@@ -11,6 +11,7 @@ module FlatPack
 
           # Should have default textarea and send button
           assert_selector "textarea"
+          assert_selector "textarea[name='message[body]']"
           assert_selector "button[type='submit']"
           assert_selector "button[aria-label='Send message']"
         end

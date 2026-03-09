@@ -416,8 +416,7 @@
                 demo_chat_attachment_path,
                 demo_chat_date_divider_path,
                 demo_chat_typing_indicator_path,
-                demo_chat_composer_path,
-                demo_chat_textarea_path
+                demo_chat_composer_path
               ].any? { |path| current_page?(path) } %>
               <%= render FlatPack::Sidebar::Group::Component.new(
                 label: "Chat",
@@ -514,12 +513,6 @@
                     href: demo_chat_composer_path,
                     icon: :edit_3,
                     active: current_page?(demo_chat_composer_path)
-                  ) %>
-                  <%= render FlatPack::Sidebar::Item::Component.new(
-                    label: "Textarea",
-                    href: demo_chat_textarea_path,
-                    icon: :align_left,
-                    active: current_page?(demo_chat_textarea_path)
                   ) %>
                 <% end %>
               <% end %>

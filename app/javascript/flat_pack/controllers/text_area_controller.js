@@ -4,6 +4,8 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = ["textarea", "count"]
   static values = {
+    autogrow: { type: Boolean, default: true },
+    submitOnEnter: { type: Boolean, default: false },
     characterCountEnabled: Boolean,
     minCharacters: Number,
     maxCharacters: Number
@@ -19,11 +21,21 @@ export default class extends Controller {
       return
     }
 
-    this.autoExpand()
+    if (this.autogrowValue) {
+      this.autoExpand()
+    } else {
+      this.textareaTarget.style.height = ""
+    }
+
     this.updateCharacterCount()
   }
 
   autoExpand() {
+    if (!this.autogrowValue) {
+      this.textareaTarget.style.height = ""
+      return
+    }
+
     const textarea = this.textareaTarget
 
     if (!this.#isVisible(textarea)) {
@@ -36,6 +48,24 @@ export default class extends Controller {
     
     // Set the height to match the content
     textarea.style.height = `${textarea.scrollHeight}px`
+  }
+
+  handleKeydown(event) {
+    if (!this.submitOnEnterValue) {
+      return
+    }
+
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault()
+      this.submitForm()
+    }
+  }
+
+  submitForm() {
+    const form = this.textareaTarget.closest("form")
+    if (form) {
+      form.requestSubmit()
+    }
   }
 
   updateCharacterCount() {

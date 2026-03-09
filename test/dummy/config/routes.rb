@@ -91,7 +91,6 @@ Rails.application.routes.draw do
   get "demo/chat/date_divider", to: "pages#chat_date_divider"
   get "demo/chat/typing_indicator", to: "pages#chat_typing_indicator"
   get "demo/chat/composer", to: "pages#chat_composer"
-  get "demo/chat/textarea", to: "pages#chat_textarea"
 
   get "demo/carousel", to: "pages#carousel"
 
