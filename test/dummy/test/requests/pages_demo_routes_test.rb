@@ -257,6 +257,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Chat::InboxRow"
     assert_includes response.body, "Design Team"
     assert_includes response.body, "data-chat-group-inbox-avatar=\"true\""
+    assert_includes response.body, "+2"
   end
 
   test "carousel page renders rebuilt component demo" do

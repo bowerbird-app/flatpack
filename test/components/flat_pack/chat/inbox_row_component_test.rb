@@ -52,6 +52,21 @@ module FlatPack
           assert_selector "[data-max-visible-avatars='2']"
         end
 
+        def test_limits_avatar_display_to_one_avatar_plus_overflow_for_larger_groups
+          render_inline(Component.new(
+            chat_group_name: "Design Team",
+            avatar_items: [
+              {name: "Mina Cho"},
+              {name: "Sam Lee"},
+              {name: "Jo Kim"}
+            ]
+          ))
+
+          assert_selector "[data-chat-group-inbox-avatar='true'] span", text: "MC"
+          assert_selector "[data-chat-group-inbox-avatar='true'] span", text: "+2"
+          assert_no_selector "[data-chat-group-inbox-avatar='true'] span", text: "SL"
+        end
+
         def test_requires_chat_group_name
           assert_raises ArgumentError do
             Component.new(chat_group_name: "   ")

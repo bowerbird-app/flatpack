@@ -60,7 +60,7 @@ module FlatPack
         def leading_avatar
           render FlatPack::AvatarGroup::Component.new(
             items: @avatar_items,
-            max: @max_visible_avatars,
+            max: avatar_group_max,
             size: :xs,
             overlap: :sm,
             data: {
@@ -93,6 +93,12 @@ module FlatPack
 
         def subtitle_text
           [@latest_sender, @latest_preview].compact.join(": ")
+        end
+
+        def avatar_group_max
+          return @max_visible_avatars if @avatar_items.length <= @max_visible_avatars
+
+          [@max_visible_avatars - 1, 1].max
         end
 
         def link_arguments

@@ -42,6 +42,10 @@ High-use interaction props:
 | `FlatPack::Chat::SendButton::Component#loading` | Boolean | `false` | no | Shows sending/loading state. |
 | `FlatPack::Chat::Attachment::Component#name` | String | `nil` | yes | Attachment label; blank raises `ArgumentError`. |
 | `FlatPack::Chat::Attachment::Component#type` | Symbol | `:file` | no | Attachment type: `:file`, `:image`; invalid values raise `ArgumentError`. |
+| `FlatPack::Chat::InboxRow::Component#chat_group_name` | String | `nil` | yes | Inbox row title; blank raises `ArgumentError`. |
+| `FlatPack::Chat::InboxRow::Component#avatar_items` | Array<Hash> | `[]` | no | Participant avatars for the row. |
+| `FlatPack::Chat::InboxRow::Component#max_visible_avatars` | Integer | `2` | no | Total avatar slots shown in the inbox row. For groups larger than the limit, the row reserves the last slot for a `+N` overflow avatar. |
+| `FlatPack::Chat::InboxRow::Component#unread_count` | Integer | `0` | no | Positive values render the unread badge. |
 
 ## Slots
 - `Layout`: `sidebar`, `panel`.
@@ -108,6 +112,30 @@ Use `FlatPack::Chat::Images::Component` when a message should render one or more
 `FlatPack::Chat::ImageMessage::Component` now delegates to `Chat::Images` internally for its single-image case, preserving its existing API while using the carousel/lightbox rendering path.
 
 `FlatPack::Chat::MessageRecord::Component` renders multi-image attachments with `FlatPack::Carousel::Component` inside the message media slot so attachment records and direct `Chat::Images` calls share the same gallery behavior.
+
+## Inbox Rows
+
+Use `FlatPack::Chat::InboxRow::Component` for chat list entries with participant avatars, latest-message preview text, and unread state.
+
+`max_visible_avatars` limits the total number of visible avatar slots in the row, including overflow. With the default value of `2`, a two-person thread shows two participant avatars, while a larger group shows the first participant plus a `+N` overflow avatar.
+
+```erb
+<%= render FlatPack::Chat::InboxRow::Component.new(
+  chat_group_name: "Design Team",
+  latest_sender: "Mina",
+  latest_preview: "Uploaded revised launch copy",
+  latest_at: Time.current,
+  unread_count: 3,
+  avatar_items: [
+    { name: "Mina Cho" },
+    { name: "Sam Lee" },
+    { name: "Jo Kim" }
+  ],
+  href: "/demo/chat/demo?chat_group_id=1",
+  active: true,
+  turbo_frame: "chat-demo-panel"
+) %>
+```
 
 ## Accessibility
 - Message list jump button includes explicit `aria-label`.
