@@ -18,7 +18,11 @@ module Demo
       )
 
       reply_html = ApplicationController.render(
-        renderable: FlatPack::Chat::MessageRecord::Component.new(record: reply, reveal_actions: true),
+        partial: "demo/chat_messages/message",
+        locals: {
+          record: reply,
+          reveal_actions: true
+        },
         layout: false
       )
 

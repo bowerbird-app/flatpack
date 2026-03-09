@@ -15,9 +15,17 @@ class DemoChatReadReceiptWorkerTest < ActiveJob::TestCase
     )
 
     broadcast_calls = []
+    channel_singleton = Turbo::StreamsChannel.singleton_class
+    original_broadcast_replace_to = Turbo::StreamsChannel.method(:broadcast_replace_to)
 
-    Turbo::StreamsChannel.stub(:broadcast_replace_to, ->(*args, **kwargs) { broadcast_calls << [args, kwargs] }) do
+    begin
+      channel_singleton.define_method(:broadcast_replace_to) do |*args, **kwargs|
+        broadcast_calls << [args, kwargs]
+      end
+
       Demo::ChatReadReceiptWorker.new.perform(item.id)
+    ensure
+      channel_singleton.define_method(:broadcast_replace_to, original_broadcast_replace_to)
     end
 
     item.reload
@@ -39,9 +47,17 @@ class DemoChatReadReceiptWorkerTest < ActiveJob::TestCase
     )
 
     broadcast_calls = []
+    channel_singleton = Turbo::StreamsChannel.singleton_class
+    original_broadcast_replace_to = Turbo::StreamsChannel.method(:broadcast_replace_to)
 
-    Turbo::StreamsChannel.stub(:broadcast_replace_to, ->(*args, **kwargs) { broadcast_calls << [args, kwargs] }) do
+    begin
+      channel_singleton.define_method(:broadcast_replace_to) do |*args, **kwargs|
+        broadcast_calls << [args, kwargs]
+      end
+
       Demo::ChatReadReceiptWorker.new.perform(item.id)
+    ensure
+      channel_singleton.define_method(:broadcast_replace_to, original_broadcast_replace_to)
     end
 
     item.reload

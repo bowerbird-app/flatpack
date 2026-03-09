@@ -5,11 +5,11 @@ Provide composable chat group UI building blocks for panels, message rendering, 
 
 ## When to use
 Use Chat components when building chat group interfaces with message history, typing states, attachments, and send flows.
-When `MessageRecord` rows are rendered inside `MessageList`, consecutive rows from the same sender are grouped automatically on the client so callers do not need to pre-wrap adjacent records in `MessageGroup`.
+When chat rows rendered inside `MessageList` include FlatPack chat record data attributes, consecutive rows from the same sender are grouped automatically on the client so callers do not need to pre-wrap adjacent records in `MessageGroup`.
 
 ## Class
 - Primary: `FlatPack::Chat::Panel::Component`
-- Related classes: `FlatPack::Chat::Layout::Component`, `FlatPack::Chat::Header::Component`, `FlatPack::Chat::MessageList::Component`, `FlatPack::Chat::MessageRecord::Component`, `FlatPack::Chat::Composer::Component`, `FlatPack::Chat::Textarea::Component`, `FlatPack::Chat::SendButton::Component`, `FlatPack::Chat::Attachment::Component`, `FlatPack::Chat::Images::Component`, `FlatPack::Chat::ImageMessage::Component`, `FlatPack::Chat::ImageDeck::Component`, `FlatPack::Chat::InboxRow::Component`, `FlatPack::Chat::TypingIndicator::Component`
+- Related classes: `FlatPack::Chat::Layout::Component`, `FlatPack::Chat::Header::Component`, `FlatPack::Chat::MessageList::Component`, `FlatPack::Chat::MessageGroup::Component`, `FlatPack::Chat::ReceivedMessage::Component`, `FlatPack::Chat::SentMessage::Component`, `FlatPack::Chat::Composer::Component`, `FlatPack::Chat::Textarea::Component`, `FlatPack::Chat::SendButton::Component`, `FlatPack::Chat::Attachment::Component`, `FlatPack::Chat::Images::Component`, `FlatPack::Chat::ImageMessage::Component`, `FlatPack::Chat::ImageDeck::Component`, `FlatPack::Chat::InboxRow::Component`, `FlatPack::Chat::TypingIndicator::Component`
 
 ## Props
 Core container props:
@@ -28,9 +28,6 @@ High-use interaction props:
 | `FlatPack::Chat::MessageList::Component#stick_to_bottom` | Boolean | `true` | no | Auto-stick to latest message behavior. |
 | `FlatPack::Chat::MessageList::Component#history_url` | String | `nil` | no | Endpoint for older-message loading. |
 | `FlatPack::Chat::MessageList::Component#history_has_more` | Boolean | `false` | no | Enables history loader when true. |
-| `FlatPack::Chat::MessageRecord::Component#record` | Object | `nil` | no | Message-like record source for body/sender/state/timestamp/attachments. |
-| `FlatPack::Chat::MessageRecord::Component#state` | Symbol | inferred / `:sent` | no | Message state: `:sent`, `:sending`, `:failed`, `:read`. |
-| `FlatPack::Chat::MessageRecord::Component#direction` | Symbol | inferred | no | `:incoming` or `:outgoing`. |
 | `FlatPack::Chat::Images::Component#carousel` | Hash | n/a | yes | Carousel-compatible hash; passed through to `FlatPack::Carousel::Component` after slide normalization. Accepts direct carousel slide hashes or attachment-like image hashes such as `href`, `thumbnail_url`, and `name`. |
 | `FlatPack::Chat::Images::Component#body` | String | `nil` | no | Message copy rendered under the image carousel; blank bodies render a spacer to preserve the message shell. |
 | `FlatPack::Chat::Images::Component#timestamp` | String, Time, DateTime | `nil` | no | Passed to `FlatPack::Chat::MessageMeta::Component`. |
@@ -71,13 +68,21 @@ High-use interaction props:
 
   <% panel.messages do %>
     <%= render FlatPack::Chat::MessageList::Component.new(stick_to_bottom: true) do %>
-      <%= render FlatPack::Chat::MessageRecord::Component.new(
-        body: "Can we ship this by Friday?",
-        sender_name: "Mina",
+      <%= render FlatPack::Chat::MessageGroup::Component.new(
         direction: :incoming,
-        state: :sent,
-        timestamp: Time.current
-      ) %>
+        show_avatar: true,
+        show_name: true,
+        sender_name: "Mina"
+      ) do |group| %>
+        <% group.with_message do %>
+          <%= render FlatPack::Chat::ReceivedMessage::Component.new(state: :sent) do |message| %>
+            <% message.meta do %>
+              <%= render FlatPack::Chat::MessageMeta::Component.new(timestamp: Time.current, state: :sent) %>
+            <% end %>
+            Can we ship this by Friday?
+          <% end %>
+        <% end %>
+      <% end %>
     <% end %>
   <% end %>
 
@@ -111,7 +116,7 @@ Use `FlatPack::Chat::Images::Component` when a message should render one or more
 
 `FlatPack::Chat::ImageMessage::Component` now delegates to `Chat::Images` internally for its single-image case, preserving its existing API while using the carousel/lightbox rendering path.
 
-`FlatPack::Chat::MessageRecord::Component` renders multi-image attachments with `FlatPack::Carousel::Component` inside the message media slot so attachment records and direct `Chat::Images` calls share the same gallery behavior.
+Multi-image attachments can be rendered with `FlatPack::Carousel::Component` inside the message media slot so attachment-heavy rows and direct `Chat::Images` calls share the same gallery behavior.
 
 ## Inbox Rows
 
