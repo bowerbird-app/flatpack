@@ -9,8 +9,8 @@ module FlatPack
         renders_one :actions
 
         undef_method :with_toolbar, :with_toolbar_content,
-                     :with_attachments, :with_attachments_content,
-                     :with_actions, :with_actions_content
+          :with_attachments, :with_attachments_content,
+          :with_actions, :with_actions_content
 
         def initialize(
           placeholder: "Write a comment...",

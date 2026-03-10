@@ -14,7 +14,7 @@ module FlatPack
         alias_method :meta_slot, :meta
 
         undef_method :with_attachment, :with_attachment_content,
-                     :with_meta, :with_meta_content
+          :with_meta, :with_meta_content
 
         def attachment(*args, **kwargs, &block)
           set_slot(:attachments, nil, *args, **kwargs, &block)

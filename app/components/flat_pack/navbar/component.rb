@@ -16,7 +16,7 @@ module FlatPack
       }
 
       undef_method :with_sidebar, :with_sidebar_content,
-                   :with_top_nav, :with_top_nav_content
+        :with_top_nav, :with_top_nav_content
 
       def initialize(**system_arguments)
         super

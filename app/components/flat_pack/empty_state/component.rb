@@ -10,7 +10,7 @@ module FlatPack
       alias_method :graphic_slot, :graphic
 
       undef_method :with_actions, :with_actions_content,
-                   :with_graphic, :with_graphic_content
+        :with_graphic, :with_graphic_content
 
       # Icon constants with hardcoded SVG for performance
       # SECURITY: These SVG strings are developer-controlled constants, not user input.

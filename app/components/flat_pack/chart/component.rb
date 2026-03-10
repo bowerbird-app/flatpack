@@ -10,7 +10,7 @@ module FlatPack
       alias_method :footer_slot, :footer
 
       undef_method :with_actions, :with_actions_content,
-                   :with_footer, :with_footer_content
+        :with_footer, :with_footer_content
 
       TYPES = {
         line: :line,

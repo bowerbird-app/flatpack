@@ -8,7 +8,7 @@ module FlatPack
         renders_many :messages
 
         undef_method :with_avatar, :with_avatar_content,
-                     :with_message, :with_message_content
+          :with_message, :with_message_content
 
         def avatar(*args, **kwargs, &block)
           return get_slot(:avatar) if args.empty? && kwargs.empty? && !block_given?

@@ -9,8 +9,8 @@ module FlatPack
         renders_one :replies
 
         undef_method :with_actions, :with_actions_content,
-                     :with_footer, :with_footer_content,
-                     :with_replies, :with_replies_content
+          :with_footer, :with_footer_content,
+          :with_replies, :with_replies_content
 
         # Tailwind CSS scanning requires these classes to be present as string literals.
         # DO NOT REMOVE - These duplicates ensure CSS generation:

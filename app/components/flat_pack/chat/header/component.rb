@@ -14,7 +14,7 @@ module FlatPack
         renders_one :right_slot
 
         undef_method :with_left_meta, :with_left_meta_content,
-               :with_right_slot, :with_right_slot_content
+          :with_right_slot, :with_right_slot_content
 
         def initialize(
           title:,

@@ -8,8 +8,8 @@ module FlatPack
       renders_one :right_slot
 
       undef_method :with_left_slot, :with_left_slot_content,
-                   :with_center_slot, :with_center_slot_content,
-                   :with_right_slot, :with_right_slot_content
+        :with_center_slot, :with_center_slot_content,
+        :with_right_slot, :with_right_slot_content
 
       def left(**args, &block)
         return left_slot unless block
