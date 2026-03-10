@@ -28,6 +28,7 @@ module FlatPack
           disabled: false,
           position: :bottom_right,
           max_height: "384px",
+          trigger_attributes: {},
           **system_arguments
         )
           super(**system_arguments)
@@ -39,16 +40,17 @@ module FlatPack
           @disabled = disabled
           @position = position.to_sym
           @max_height = max_height
+          @trigger_attributes = sanitize_args(trigger_attributes)
 
           validate_position!
         end
 
-        def menu_item(*args, &block)
-          set_polymorphic_slot(:menu, :item, *args, &block)
+        def menu_item(**kwargs, &block)
+          set_polymorphic_slot(:menu, :item, **kwargs, &block)
         end
 
-        def menu_divider(*args, &block)
-          set_polymorphic_slot(:menu, :divider, *args, &block)
+        def menu_divider(**kwargs, &block)
+          set_polymorphic_slot(:menu, :divider, **kwargs, &block)
         end
 
         private
@@ -72,17 +74,19 @@ module FlatPack
         end
 
         def button_attributes
+          attrs = @trigger_attributes.dup
+
           {
-            class: button_classes,
-            aria: {
+            class: TailwindMerge::Merger.new.merge([attrs.delete(:class), attrs.delete("class"), button_classes].compact.join(" ")),
+            aria: extract_nested_attributes(attrs, :aria).merge(
               haspopup: "true",
               expanded: "false"
-            },
-            data: {
+            ),
+            data: extract_nested_attributes(attrs, :data).merge(
               flat_pack__button_dropdown_target: "trigger",
               action: "click->flat-pack--button-dropdown#toggle"
-            }
-          }
+            )
+          }.merge(attrs).compact
         end
 
         def button_classes
@@ -156,6 +160,10 @@ module FlatPack
 
           raise ArgumentError,
             "Invalid position: #{@position}. Must be one of: #{POSITIONS.keys.join(", ")}"
+        end
+
+        def extract_nested_attributes(attrs, key)
+          (attrs.delete(key) || {}).merge(attrs.delete(key.to_s) || {})
         end
       end
     end

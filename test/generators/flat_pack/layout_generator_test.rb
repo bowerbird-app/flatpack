@@ -43,13 +43,17 @@ module FlatPack
       end
 
       test "unsupported layout type does not generate files" do
-        run_generator %w[--type invalid]
+        quietly do
+          run_generator %w[--type invalid]
+        end
 
         assert_no_file "app/views/layouts/flat_pack_sidebar.html.erb"
       end
 
       test "unsupported side does not generate files" do
-        run_generator %w[--side upside]
+        quietly do
+          run_generator %w[--side upside]
+        end
 
         assert_no_file "app/views/layouts/flat_pack_sidebar.html.erb"
       end

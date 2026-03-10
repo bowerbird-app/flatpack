@@ -21,6 +21,7 @@ module FlatPack
           subtitle: nil,
           back_href: nil,
           back_label: "Back",
+          back_tooltip: nil,
           content_url: nil,
           avatar_mode: :auto,
           person_avatar: nil,
@@ -34,6 +35,7 @@ module FlatPack
           @subtitle = subtitle
           @back_href = back_href
           @back_label = back_label
+          @back_tooltip = back_tooltip
           @content_url = sanitize_url(content_url)
           @avatar_mode = avatar_mode.to_sym
           @person_avatar = normalize_hash(person_avatar)
@@ -113,10 +115,17 @@ module FlatPack
           render FlatPack::Button::Component.new(
             text: @back_label,
             icon: "chevron-left",
+            icon_only: @back_label.blank?,
             style: :ghost,
             size: :sm,
-            url: @back_href
+            url: @back_href,
+            title: back_accessible_label,
+            aria: {label: back_accessible_label}
           )
+        end
+
+        def back_accessible_label
+          @back_tooltip.presence || @back_label.presence
         end
 
         def render_avatar

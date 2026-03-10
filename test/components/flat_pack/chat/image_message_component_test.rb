@@ -33,8 +33,8 @@ module FlatPack
             body: "Tap to reveal"
           ))
 
-          assert_includes rendered_content, "flat-pack--chat-message-actions"
-          assert_includes rendered_content, "data-flat-pack--chat-message-actions-side-value=\"left\""
+          assert_includes rendered_content, "chat-message-actions"
+          assert_includes rendered_content, "data-chat-message-actions-side-value=\"left\""
         end
       end
     end
