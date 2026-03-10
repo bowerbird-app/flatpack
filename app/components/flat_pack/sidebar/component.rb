@@ -7,6 +7,10 @@ module FlatPack
       renders_one :items_slot
       renders_one :footer_slot
 
+      undef_method :with_header_slot, :with_header_slot_content
+      undef_method :with_items_slot, :with_items_slot_content
+      undef_method :with_footer_slot, :with_footer_slot_content
+
       def initialize(
         collapsed: false,
         collapsible: true,
@@ -22,21 +26,21 @@ module FlatPack
       end
 
       def header(**args, &block)
-        return header_slot unless block
+        return header_slot if args.empty? && !block
 
-        with_header_slot(**args, &block)
+        set_slot(:header_slot, nil, **args, &block)
       end
 
       def items(**args, &block)
-        return items_slot unless block
+        return items_slot if args.empty? && !block
 
-        with_items_slot(**args, &block)
+        set_slot(:items_slot, nil, **args, &block)
       end
 
       def footer(**args, &block)
-        return footer_slot unless block
+        return footer_slot if args.empty? && !block
 
-        with_footer_slot(**args, &block)
+        set_slot(:footer_slot, nil, **args, &block)
       end
 
       def header?

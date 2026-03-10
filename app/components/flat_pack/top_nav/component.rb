@@ -7,22 +7,26 @@ module FlatPack
       renders_one :center_slot
       renders_one :right_slot
 
+      undef_method :with_left_slot, :with_left_slot_content,
+                   :with_center_slot, :with_center_slot_content,
+                   :with_right_slot, :with_right_slot_content
+
       def left(**args, &block)
         return left_slot unless block
 
-        with_left_slot(**args, &block)
+        set_slot(:left_slot, nil, **args, &block)
       end
 
       def center(**args, &block)
         return center_slot unless block
 
-        with_center_slot(**args, &block)
+        set_slot(:center_slot, nil, **args, &block)
       end
 
       def right(**args, &block)
         return right_slot unless block
 
-        with_right_slot(**args, &block)
+        set_slot(:right_slot, nil, **args, &block)
       end
 
       def left?

@@ -342,24 +342,24 @@
     <%= render FlatPack::SectionTitle::Component.new(title: "Button Groups (Wrapped Together)", anchor_link: true, subtitle: "Examples for Button Groups (Wrapped Together).") %>
     <div class="mb-4">
       <%= render FlatPack::ButtonGroup::Component.new do |group| %>
-        <% group.with_button(FlatPack::Button::Component.new(text: "Left", style: :secondary)) %>
-        <% group.with_button(FlatPack::Button::Component.new(text: "Middle", style: :secondary)) %>
-        <% group.with_button(FlatPack::Button::Component.new(text: "Right", style: :secondary)) %>
+        <% group.button(FlatPack::Button::Component.new(text: "Left", style: :secondary)) %>
+        <% group.button(FlatPack::Button::Component.new(text: "Middle", style: :secondary)) %>
+        <% group.button(FlatPack::Button::Component.new(text: "Right", style: :secondary)) %>
       <% end %>
     </div>
     <div class="mb-4">
       <%= render FlatPack::ButtonGroup::Component.new do |group| %>
-        <% group.with_button(FlatPack::Button::Component.new(icon: "align-left", icon_only: true, style: :secondary)) %>
-        <% group.with_button(FlatPack::Button::Component.new(icon: "align-center", icon_only: true, style: :secondary)) %>
-        <% group.with_button(FlatPack::Button::Component.new(icon: "align-right", icon_only: true, style: :secondary)) %>
+        <% group.button(FlatPack::Button::Component.new(icon: "align-left", icon_only: true, style: :secondary)) %>
+        <% group.button(FlatPack::Button::Component.new(icon: "align-center", icon_only: true, style: :secondary)) %>
+        <% group.button(FlatPack::Button::Component.new(icon: "align-right", icon_only: true, style: :secondary)) %>
       <% end %>
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE')
         &lt;%= render FlatPack::ButtonGroup::Component.new do |group| %&gt;
-          &lt;% group.with_button(FlatPack::Button::Component.new(text: "Left", style: :secondary)) %&gt;
-          &lt;% group.with_button(FlatPack::Button::Component.new(text: "Middle", style: :secondary)) %&gt;
-          &lt;% group.with_button(FlatPack::Button::Component.new(text: "Right", style: :secondary)) %&gt;
+          &lt;% group.button(FlatPack::Button::Component.new(text: "Left", style: :secondary)) %&gt;
+          &lt;% group.button(FlatPack::Button::Component.new(text: "Middle", style: :secondary)) %&gt;
+          &lt;% group.button(FlatPack::Button::Component.new(text: "Right", style: :secondary)) %&gt;
         &lt;% end %&gt;
       CODE
     ) %>
