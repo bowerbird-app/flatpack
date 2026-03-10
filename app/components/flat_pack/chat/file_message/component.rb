@@ -31,7 +31,7 @@ module FlatPack
 
         def call
           render message_component_class.new(**message_component_arguments) do |message|
-            message.with_attachment do
+            message.attachment do
               render FlatPack::Chat::Attachment::Component.new(
                 type: :file,
                 name: @file_name,
@@ -40,7 +40,7 @@ module FlatPack
               )
             end
 
-            message.with_meta do
+            message.meta do
               render FlatPack::Chat::MessageMeta::Component.new(
                 timestamp: @timestamp,
                 state: @state,

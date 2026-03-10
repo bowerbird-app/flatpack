@@ -30,11 +30,31 @@ module FlatPack
             "Incoming reveal"
           end
 
-          assert_includes rendered_content, "flat-pack--chat-message-actions"
-          assert_includes rendered_content, "data-flat-pack--chat-message-actions-side-value=\"left\""
+          assert_includes rendered_content, "chat-message-actions"
+          assert_includes rendered_content, "data-chat-message-actions-side-value=\"left\""
           assert_text "10:12 AM"
           refute_text "Edit"
           refute_text "Delete"
+        end
+
+        def test_renders_attachment_slot_without_with_prefix
+          render_inline(Component.new(state: :sent)) do |message|
+            message.attachment { "Attachment" }
+            "Incoming with attachment"
+          end
+
+          assert_text "Incoming with attachment"
+          assert_text "Attachment"
+        end
+
+        def test_renders_media_attachment_slot_without_with_prefix
+          render_inline(Component.new(state: :sent)) do |message|
+            message.media_attachment { "Media" }
+            "Incoming with media"
+          end
+
+          assert_text "Incoming with media"
+          assert_text "Media"
         end
       end
     end

@@ -10,14 +10,22 @@ module FlatPack
 
         alias_method :meta_slot, :meta
 
-        def meta(*args, &block)
-          return with_meta(*args, &block) if block || args.any?
+        undef_method :with_attachment, :with_attachment_content,
+                     :with_media_attachment, :with_media_attachment_content,
+                     :with_meta, :with_meta_content
 
-          meta_slot
+        def attachment(*args, **kwargs, &block)
+          set_slot(:attachments, nil, *args, **kwargs, &block)
         end
 
-        def attachment(...)
-          with_attachment(...)
+        def media_attachment(*args, **kwargs, &block)
+          set_slot(:media_attachments, nil, *args, **kwargs, &block)
+        end
+
+        def meta(*args, **kwargs, &block)
+          return meta_slot if args.empty? && kwargs.empty? && !block_given?
+
+          set_slot(:meta, nil, *args, **kwargs, &block)
         end
 
         STATES = {

@@ -34,7 +34,7 @@ Use Table for datasets that need consistent headers, rows, formatting, and optio
 
 ## Slots
 
-`columns` (`renders_many`) via `column`/`with_column`:
+`columns` (`renders_many`) via `column`:
 
 | name | type | required | description |
 |------|------|----------|-------------|

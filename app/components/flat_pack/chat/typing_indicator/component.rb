@@ -6,6 +6,16 @@ module FlatPack
       class Component < FlatPack::BaseComponent
         renders_one :avatar
 
+        alias_method :avatar_slot, :avatar
+
+        undef_method :with_avatar, :with_avatar_content
+
+        def avatar(content = nil, **args, &block)
+          return avatar_slot if content.nil? && args.empty? && !block_given?
+
+          set_slot(:avatar, content, **args, &block)
+        end
+
         def initialize(
           label: "Someone is typing",
           **system_arguments

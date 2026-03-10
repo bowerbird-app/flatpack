@@ -91,6 +91,16 @@ module FlatPack
           assert_text "Actions"
         end
 
+        def test_renders_left_meta_content
+          render_inline(Component.new(title: "Design Team")) do |header|
+            header.left_meta do
+              "5 active now"
+            end
+          end
+
+          assert_text "5 active now"
+        end
+
         def test_renders_clickable_content_when_content_url_present
           render_inline(Component.new(
             title: "Design Team",
