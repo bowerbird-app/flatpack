@@ -9,6 +9,11 @@ module FlatPack
         renders_one :right_slot
         renders_one :attachments
 
+        undef_method :with_left_slot, :with_left_slot_content,
+                     :with_center_slot, :with_center_slot_content,
+                     :with_right_slot, :with_right_slot_content,
+                     :with_attachments, :with_attachments_content
+
         def initialize(**system_arguments)
           super
         end
@@ -28,22 +33,40 @@ module FlatPack
           end
         end
 
-        def left(*args, &block)
-          return with_left_slot(*args, &block) if block_given? || args.any?
+        def left_slot(*args, **kwargs, &block)
+          return get_slot(:left_slot) if args.empty? && kwargs.empty? && !block_given?
 
-          left_slot
+          set_slot(:left_slot, nil, *args, **kwargs, &block)
         end
 
-        def center(*args, &block)
-          return with_center_slot(*args, &block) if block_given? || args.any?
+        def center_slot(*args, **kwargs, &block)
+          return get_slot(:center_slot) if args.empty? && kwargs.empty? && !block_given?
 
-          center_slot
+          set_slot(:center_slot, nil, *args, **kwargs, &block)
         end
 
-        def right(*args, &block)
-          return with_right_slot(*args, &block) if block_given? || args.any?
+        def right_slot(*args, **kwargs, &block)
+          return get_slot(:right_slot) if args.empty? && kwargs.empty? && !block_given?
 
-          right_slot
+          set_slot(:right_slot, nil, *args, **kwargs, &block)
+        end
+
+        def attachments(*args, **kwargs, &block)
+          return get_slot(:attachments) if args.empty? && kwargs.empty? && !block_given?
+
+          set_slot(:attachments, nil, *args, **kwargs, &block)
+        end
+
+        def left(*args, **kwargs, &block)
+          left_slot(*args, **kwargs, &block)
+        end
+
+        def center(*args, **kwargs, &block)
+          center_slot(*args, **kwargs, &block)
+        end
+
+        def right(*args, **kwargs, &block)
+          right_slot(*args, **kwargs, &block)
         end
 
         def left?

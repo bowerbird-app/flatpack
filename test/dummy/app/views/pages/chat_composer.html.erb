@@ -11,7 +11,7 @@
 
     <div class="mb-4 mt-6 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
       <%= render FlatPack::Chat::Composer::Component.new do |composer| %>
-        <% composer.attachment do %>
+        <% composer.attachments do %>
           <%= render FlatPack::Chat::Attachment::Component.new(type: :file, name: "draft-copy.txt", meta: "18 KB") %>
         <% end %>
 
@@ -63,7 +63,7 @@
       language: "erb",
       code: CGI.unescapeHTML(<<~'CODE')
         &lt;%= render FlatPack::Chat::Composer::Component.new do |composer| %&gt;
-          &lt;% composer.attachment do %&gt;
+          &lt;% composer.attachments do %&gt;
             &lt;%= render FlatPack::Chat::Attachment::Component.new(type: :file, name: "draft-copy.txt", meta: "18 KB") %&gt;
           &lt;% end %&gt;
 
