@@ -150,7 +150,7 @@ module FlatPack
             action: "click->flat-pack--sidebar-group#toggle mouseenter->flat-pack--tooltip#show mouseleave->flat-pack--tooltip#hide focusin->flat-pack--tooltip#show focusout->flat-pack--tooltip#hide",
             "flat-pack--tooltip-placement-value": "right",
             "flat-pack--tooltip-collapsed-only-value": true,
-            "flat-pack--sidebar-group-target": "button",
+            "flat-pack--sidebar-group-target": "button"
           }
         end
 
