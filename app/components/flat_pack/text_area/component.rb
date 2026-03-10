@@ -21,6 +21,9 @@ module FlatPack
         character_count: false,
         min_characters: nil,
         max_characters: nil,
+        rich_text_editor: false,
+        rich_text_editor_options: {},
+        rich_text_editor_mode: :inline,
         **system_arguments
       )
         @custom_class = system_arguments[:class]
@@ -38,6 +41,9 @@ module FlatPack
         @character_count = character_count
         @min_characters = min_characters
         @max_characters = max_characters
+        @rich_text_editor = rich_text_editor
+        @rich_text_editor_mode = normalize_rich_text_editor_mode(rich_text_editor_mode)
+        @rich_text_editor_options = normalize_rich_text_editor_options(rich_text_editor_options)
 
         validate_name!
         validate_rows!
@@ -64,7 +70,7 @@ module FlatPack
       end
 
       def render_textarea
-        content_tag(:textarea, @value, **textarea_attributes)
+        content_tag(:textarea, textarea_value, **textarea_attributes)
       end
 
       def render_error
@@ -94,10 +100,7 @@ module FlatPack
           required: @required,
           rows: @rows,
           class: textarea_classes,
-          data: {
-            flat_pack__text_area_target: "textarea",
-            action: textarea_actions
-          }.compact
+          data: textarea_data_attributes
         }
 
         attrs[:aria] = {invalid: "true", describedby: error_id} if @error
@@ -112,14 +115,7 @@ module FlatPack
       def wrapper_attributes
         {
           class: wrapper_classes,
-          data: {
-            controller: "flat-pack--text-area",
-            flat_pack__text_area_autogrow_value: @autogrow,
-            flat_pack__text_area_submit_on_enter_value: @submit_on_enter,
-            flat_pack__text_area_min_characters_value: @min_characters,
-            flat_pack__text_area_max_characters_value: @max_characters,
-            flat_pack__text_area_character_count_enabled_value: @character_count
-          }.compact
+          data: wrapper_data_attributes
         }
       end
 
@@ -167,6 +163,12 @@ module FlatPack
         @textarea_id ||= @system_arguments[:id] || "#{@name.to_s.gsub(/[^a-zA-Z0-9_-]/, "_")}_#{SecureRandom.hex(4)}"
       end
 
+      def textarea_value
+        return @value unless rich_text_editor?
+
+        @textarea_value ||= sanitize_rich_text_value(@value)
+      end
+
       def error_id
         "#{textarea_id}_error"
       end
@@ -194,6 +196,148 @@ module FlatPack
         actions.unshift("input->flat-pack--text-area#autoExpand") if @autogrow
         actions << "keydown->flat-pack--text-area#handleKeydown" if @submit_on_enter
         actions.join(" ")
+      end
+
+      def rich_text_editor?
+        @rich_text_editor
+      end
+
+      def wrapper_data_attributes
+        return text_area_wrapper_data_attributes unless rich_text_editor?
+
+        {
+          controller: "flat-pack--rich-text-editor",
+          flat_pack__rich_text_editor_mode_value: @rich_text_editor_mode,
+          flat_pack__rich_text_editor_config_value: @rich_text_editor_options.to_json
+        }.compact
+      end
+
+      def text_area_wrapper_data_attributes
+        {
+          controller: "flat-pack--text-area",
+          flat_pack__text_area_autogrow_value: @autogrow,
+          flat_pack__text_area_submit_on_enter_value: @submit_on_enter,
+          flat_pack__text_area_min_characters_value: @min_characters,
+          flat_pack__text_area_max_characters_value: @max_characters,
+          flat_pack__text_area_character_count_enabled_value: @character_count
+        }.compact
+      end
+
+      def textarea_data_attributes
+        return rich_text_textarea_data_attributes if rich_text_editor?
+
+        {
+          flat_pack__text_area_target: "textarea",
+          action: textarea_actions
+        }.compact
+      end
+
+      def rich_text_textarea_data_attributes
+        {
+          flat_pack__rich_text_editor_target: "textarea"
+        }.compact
+      end
+
+      def normalize_rich_text_editor_mode(mode)
+        normalized_mode = mode.to_s.presence || "inline"
+
+        return normalized_mode if normalized_mode == "inline"
+
+        raise ArgumentError, "rich_text_editor_mode must be inline"
+      end
+
+      def normalize_rich_text_editor_options(options)
+        return {} unless rich_text_editor?
+        raise ArgumentError, "rich_text_editor_options must be a Hash" unless options.is_a?(Hash)
+
+        options.each_with_object({}) do |(key, value), normalized|
+          case key.to_s
+          when "toolbar_groups", "toolbarGroups"
+            toolbar_groups = normalize_toolbar_groups(value)
+            normalized["toolbarGroups"] = toolbar_groups if toolbar_groups.present?
+          when "balloon_toolbar", "balloonToolbar"
+            balloon_toolbar = normalize_editor_string_list(value)
+            normalized["balloonToolbar"] = balloon_toolbar if balloon_toolbar.present?
+          when "placeholder"
+            placeholder = value.to_s.strip
+            normalized["placeholder"] = placeholder if placeholder.present?
+          when "height"
+            height = normalize_height(value)
+            normalized["height"] = height if height.present?
+          when "extra_plugins", "extraPlugins"
+            extra_plugins = normalize_editor_string_list(value)
+            normalized["extraPlugins"] = extra_plugins if extra_plugins.present?
+          when "remove_plugins", "removePlugins"
+            remove_plugins = normalize_editor_string_list(value)
+            normalized["removePlugins"] = remove_plugins if remove_plugins.present?
+          when "content_css", "contentCss", "contentsCss"
+            contents_css = normalize_contents_css(value)
+            normalized["contentsCss"] = contents_css if contents_css.present?
+          end
+        end
+      end
+
+      def normalize_toolbar_groups(value)
+        Array.wrap(value).filter_map do |group|
+          if group.is_a?(Hash)
+            name = normalize_editor_identifier(group[:name] || group["name"])
+            groups = normalize_editor_string_list(group[:groups] || group["groups"])
+            next if name.blank?
+
+            normalized_group = {"name" => name}
+            normalized_group["groups"] = groups if groups.present?
+            normalized_group
+          else
+            normalize_editor_identifier(group)
+          end
+        end
+      end
+
+      def normalize_editor_string_list(value)
+        Array.wrap(value).flat_map { |item| item.to_s.split(",") }.filter_map do |item|
+          normalize_editor_identifier(item)
+        end.uniq
+      end
+
+      def normalize_contents_css(value)
+        Array.wrap(value).flat_map { |item| item.to_s.split(",") }.filter_map do |item|
+          normalized_item = item.to_s.strip
+          next if normalized_item.blank?
+          next unless normalized_item.match?(/\A[\w\-.:\/]+\z/)
+
+          normalized_item
+        end.uniq
+      end
+
+      def normalize_height(value)
+        case value
+        when Integer
+          "#{value}px" if value.positive?
+        else
+          string_value = value.to_s.strip
+          return if string_value.blank?
+          return unless string_value.match?(/\A\d+(px|rem|em|vh|%)?\z/)
+
+          string_value.match?(/\A\d+\z/) ? "#{string_value}px" : string_value
+        end
+      end
+
+      def normalize_editor_identifier(value)
+        identifier = value.to_s.strip
+        return if identifier.blank?
+        return unless identifier.match?(/\A[\w-]+\z/)
+
+        identifier
+      end
+
+      def sanitize_rich_text_value(value)
+        pruned_html = Loofah.fragment(value.to_s).scrub!(:prune).to_s
+
+        ActionController::Base.helpers.sanitize(
+          pruned_html,
+          tags: %w[p br strong em u s ul ol li a blockquote code pre h2 h3 h4],
+          attributes: %w[href target rel]
+        )
       end
 
       def validate_rows!

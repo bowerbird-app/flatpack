@@ -159,6 +159,16 @@ end
 - ✅ All JavaScript in separate files via Stimulus
 - ✅ All styles in CSS files
 
+### 4. Rich Text Inputs
+
+`FlatPack::TextArea::Component` can optionally boot CKEditor 4 in a hybrid setup:
+
+- CKEditor is served as a self-hosted classic script and exposes `window.CKEDITOR`
+- FlatPack still uses importmap + Stimulus for initialization and synchronization
+- The component only exposes an allowlisted editor config subset; arbitrary executable config is not passed through
+
+When you enable rich text mode, continue sanitizing submitted HTML on the server before storing or re-rendering it. The editor improves authoring ergonomics, but it does not replace server-side HTML sanitization.
+
 ## Supply Chain Security
 
 ### 1. Minimal Dependencies

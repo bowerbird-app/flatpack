@@ -15,6 +15,7 @@ module FlatPack
       find_initializer("flat_pack.assets").block.call(app)
 
       assert_includes app.config.assets.paths, FlatPack::Engine.root.join("app/assets/stylesheets")
+      assert_includes app.config.assets.paths, FlatPack::Engine.root.join("app/assets/javascripts")
       assert_includes app.config.assets.paths, FlatPack::Engine.root.join("app/javascript")
     end
 

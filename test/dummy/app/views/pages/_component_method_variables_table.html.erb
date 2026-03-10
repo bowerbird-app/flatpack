@@ -457,6 +457,27 @@
         { variable: "**system_arguments", accepts: "Hash", example: "id: \"email\", class: \"w-full\", data: { testid: \"email-input\" }" }
       ]
     },
+    text_area: {
+      label: "Text Area",
+      method_call: "render FlatPack::TextArea::Component.new(name: \"message[body]\", label: \"Message\", rows: 4)",
+      variables: [
+        { variable: "name", accepts: "String (required)", example: "name: \"message[body]\"" },
+        { variable: "value", accepts: "String or nil", example: "value: \"Draft body\"" },
+        { variable: "placeholder", accepts: "String or nil", example: "placeholder: \"Write your message...\"" },
+        { variable: "disabled", accepts: "true, false", example: "disabled: true" },
+        { variable: "required", accepts: "true, false", example: "required: true" },
+        { variable: "label", accepts: "String or nil", example: "label: \"Body\"" },
+        { variable: "error", accepts: "String or nil", example: "error: \"Body is required\"" },
+        { variable: "rows", accepts: "Integer", example: "rows: 5" },
+        { variable: "character_count", accepts: "true, false", example: "character_count: true" },
+        { variable: "min_characters", accepts: "Integer or nil", example: "min_characters: 30" },
+        { variable: "max_characters", accepts: "Integer or nil", example: "max_characters: 280" },
+        { variable: "rich_text_editor", accepts: "true, false", example: "rich_text_editor: true" },
+        { variable: "rich_text_editor_mode", accepts: "\"inline\"", example: "rich_text_editor_mode: :inline" },
+        { variable: "rich_text_editor_options", accepts: "Hash", example: "rich_text_editor_options: { placeholder: \"Write...\", balloon_toolbar: %w[Bold Italic Link] }" },
+        { variable: "**system_arguments", accepts: "Hash", example: "id: \"message-body\", class: \"w-full\", data: { testid: \"message-body\" }" }
+      ]
+    },
     modal: {
       label: "Modal",
       method_call: "render FlatPack::Modal::Component.new(id: \"confirm-delete\", size: :md) do |modal| ... end",

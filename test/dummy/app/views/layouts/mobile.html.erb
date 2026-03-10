@@ -7,6 +7,7 @@
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag flat_pack.ckeditor_asset_path(path: "ckeditor.js"), "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 

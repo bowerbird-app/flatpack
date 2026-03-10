@@ -3,6 +3,7 @@
 
 /* FlatPack CSS Variables */
 @import "../../../../../app/assets/stylesheets/flat_pack/variables.css";
+@import "../../../../../app/assets/stylesheets/flat_pack/ckeditor.css";
 
 @layer components {
 	.fp-scrollbar-hidden {

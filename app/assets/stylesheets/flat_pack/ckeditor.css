@@ -1,0 +1,131 @@
+@layer components {
+  .fp-rich-text-editor {
+    background-color: var(--surface-background-color);
+    border: 1px solid var(--surface-border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    color: var(--surface-content-color);
+    line-height: 1.6;
+    min-height: 10rem;
+    outline: none;
+    padding: var(--form-control-padding);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+
+  .fp-rich-text-editor:focus {
+    border-color: var(--color-ring);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-ring) 18%, transparent);
+  }
+
+  .fp-rich-text-editor[contenteditable="true"]:empty::before {
+    color: var(--surface-muted-content-color);
+    content: attr(data-placeholder);
+    pointer-events: none;
+  }
+
+  .fp-rich-text-editor p,
+  .fp-rich-text-editor ul,
+  .fp-rich-text-editor ol,
+  .fp-rich-text-editor blockquote,
+  .fp-rich-text-editor pre {
+    margin: 0 0 1rem;
+  }
+
+  .fp-rich-text-editor h2,
+  .fp-rich-text-editor h3,
+  .fp-rich-text-editor h4 {
+    color: var(--surface-content-color);
+    font-weight: 600;
+    line-height: 1.25;
+    margin: 1.25rem 0 0.75rem;
+  }
+
+  .fp-rich-text-editor h2 {
+    font-size: 1.25rem;
+  }
+
+  .fp-rich-text-editor h3 {
+    font-size: 1.125rem;
+  }
+
+  .fp-rich-text-editor h4 {
+    font-size: 1rem;
+  }
+
+  .fp-rich-text-editor ul,
+  .fp-rich-text-editor ol {
+    padding-left: 1.5rem;
+  }
+
+  .fp-rich-text-editor blockquote {
+    border-left: 3px solid var(--surface-border-color);
+    color: var(--surface-muted-content-color);
+    padding-left: 1rem;
+  }
+
+  .fp-rich-text-editor a {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+
+  .fp-rich-text-editor code,
+  .fp-rich-text-editor pre {
+    background-color: var(--surface-muted-background-color);
+    border-radius: var(--radius-sm);
+  }
+
+  .fp-rich-text-editor code {
+    font-size: 0.875em;
+    padding: 0.125rem 0.25rem;
+  }
+
+  .fp-rich-text-editor pre {
+    overflow-x: auto;
+    padding: 0.75rem 1rem;
+  }
+
+  .cke_balloontoolbar,
+  .cke_panel {
+    background-color: var(--surface-background-color);
+    border: 1px solid var(--surface-border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .cke_balloontoolbar .cke_toolgroup,
+  .cke_panel .cke_panel_block {
+    background-color: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .cke_button,
+  .cke_combo_button {
+    border-radius: var(--radius-sm);
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+  }
+
+  .cke_button:hover,
+  .cke_button:focus,
+  .cke_button.cke_button_on,
+  .cke_combo_button:hover,
+  .cke_combo_button:focus {
+    background-color: var(--surface-muted-background-color);
+  }
+
+  .cke_button_icon {
+    filter: none;
+  }
+
+  .cke_panel_listItem a,
+  .cke_panel_listItem a.cke_selected,
+  .cke_panel_listItem a:hover {
+    border-radius: var(--radius-sm);
+    color: var(--surface-content-color);
+  }
+
+  .cke_panel_listItem a:hover,
+  .cke_panel_listItem a.cke_selected {
+    background-color: var(--surface-muted-background-color);
+  }
+}
