@@ -234,6 +234,15 @@
         { variable: "meta", accepts: "String or nil", example: "meta: \"840 KB\"" }
       ]
     },
+    chat_textarea: {
+      label: "Chat Textarea",
+      method_call: "render FlatPack::Chat::Textarea::Component.new(name: \"chat[message]\", autogrow: true)",
+      variables: [
+        { variable: "name", accepts: "String", example: "name: \"chat[message]\"" },
+        { variable: "autogrow", accepts: "true, false", example: "autogrow: true" },
+        { variable: "submit_on_enter", accepts: "true, false", example: "submit_on_enter: false" }
+      ]
+    },
     chat_typing_indicator: {
       label: "Chat Typing Indicator",
       method_call: "render FlatPack::Chat::TypingIndicator::Component.new(label: \"Teammate is typing\")",
@@ -364,6 +373,15 @@
         { variable: "left", accepts: "slot block", example: "composer.left { ... }" },
         { variable: "center", accepts: "slot block", example: "composer.center { ... }" },
         { variable: "right", accepts: "slot block", example: "composer.right { ... }" }
+      ]
+    },
+    chat_send_button: {
+      label: "Chat Send Button",
+      method_call: "render FlatPack::Chat::SendButton::Component.new(loading: false, disabled: false)",
+      variables: [
+        { variable: "loading", accepts: "true, false", example: "loading: true" },
+        { variable: "disabled", accepts: "true, false", example: "disabled: true" },
+        { variable: "class", accepts: "String or nil", example: "class: \"ml-auto\"" }
       ]
     },
     chat_date_divider: {

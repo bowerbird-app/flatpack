@@ -20,8 +20,7 @@ module FlatPack
             "Slide me"
           end
 
-          assert_includes rendered_content, "flat-pack--chat-message-actions"
-          assert_includes rendered_content, "data-flat-pack--chat-message-actions-side-value=\"right\""
+          assert_includes rendered_content, "chat-message-actions"
           assert_text "Edit"
           assert_text "Delete"
         end

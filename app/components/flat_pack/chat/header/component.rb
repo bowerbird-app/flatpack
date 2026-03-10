@@ -18,7 +18,6 @@ module FlatPack
           subtitle: nil,
           back_href: nil,
           back_label: "Back",
-          back_tooltip: nil,
           content_url: nil,
           avatar_mode: :auto,
           person_avatar: nil,
@@ -32,7 +31,6 @@ module FlatPack
           @subtitle = subtitle
           @back_href = back_href
           @back_label = back_label
-          @back_tooltip = back_tooltip
           @content_url = sanitize_url(content_url)
           @avatar_mode = avatar_mode.to_sym
           @person_avatar = normalize_hash(person_avatar)
@@ -103,16 +101,12 @@ module FlatPack
         def render_back_button
           return unless @back_href.present?
 
-          tooltip_label = @back_tooltip.presence || @back_label
-
           render FlatPack::Button::Component.new(
             text: @back_label,
             icon: "chevron-left",
             style: :ghost,
             size: :sm,
-            url: @back_href,
-            title: tooltip_label,
-            aria: {label: tooltip_label}
+            url: @back_href
           )
         end
 

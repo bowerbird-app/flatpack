@@ -58,17 +58,17 @@ module FlatPack
             :div,
             class: "relative w-full overflow-hidden rounded-2xl",
             data: {
-              controller: "flat-pack--chat-message-actions",
-              flat_pack__chat_message_actions_direction_value: :incoming,
-              flat_pack__chat_message_actions_side_value: "left",
-              action: "click@window->flat-pack--chat-message-actions#handleWindowClick keydown@window->flat-pack--chat-message-actions#handleWindowKeydown chat-message-actions:opened@window->flat-pack--chat-message-actions#handlePeerOpened"
+              controller: "chat-message-actions",
+              chat_message_actions_direction_value: :incoming,
+              chat_message_actions_side_value: "left",
+              action: "click@window->chat-message-actions#handleWindowClick keydown@window->chat-message-actions#handleWindowKeydown chat-message-actions:opened@window->chat-message-actions#handlePeerOpened"
             }
           ) do
             safe_join([
               content_tag(
                 :div,
                 class: "absolute inset-y-0 left-0 z-0 pl-2 flex items-center gap-2 opacity-0 pointer-events-none transition-opacity duration-150",
-                data: {flat_pack__chat_message_actions_target: "tray"}
+                data: {chat_message_actions_target: "tray"}
               ) do
                 content_tag(:div, class: "flex items-center gap-2 whitespace-nowrap pr-4") do
                   render_reveal_meta
@@ -78,8 +78,8 @@ module FlatPack
                 :div,
                 class: "relative z-10 w-full transform transition-transform duration-200 ease-out cursor-pointer",
                 data: {
-                  flat_pack__chat_message_actions_target: "surface",
-                  action: "click->flat-pack--chat-message-actions#toggle keydown->flat-pack--chat-message-actions#toggleByKey"
+                  chat_message_actions_target: "surface",
+                  action: "click->chat-message-actions#toggle keydown->chat-message-actions#toggleByKey"
                 },
                 role: "button",
                 tabindex: 0,
