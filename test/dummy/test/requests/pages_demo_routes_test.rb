@@ -208,6 +208,9 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     get "/demo/chat/demo"
 
     assert_response :success
+    assert_includes response.body, 'data-flat-pack-chat-record="true"'
+    assert_includes response.body, 'data-flat-pack-chat-record-direction="incoming"'
+    assert_includes response.body, "Footer links were re-ordered per legal review."
     assert_includes response.body, "data-chat-group-inbox-avatar=\"true\""
     assert_includes response.body, "data-max-visible-avatars=\"2\""
   end
