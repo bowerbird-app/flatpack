@@ -10,8 +10,10 @@ module FlatPack
 
       renders_many :items, "FlatPack::BottomNav::Item::Component"
 
+      undef_method :with_item, :with_item_content
+
       def item(**args, &block)
-        with_item(**args, &block)
+        set_slot(:items, nil, **args, &block)
       end
 
       def call
