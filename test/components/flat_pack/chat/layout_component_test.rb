@@ -28,6 +28,13 @@ module FlatPack
           assert_text "Panel content"
         end
 
+        def test_does_not_expose_with_prefixed_slot_setters
+          component = Component.new
+
+          refute_respond_to component, :with_sidebar
+          refute_respond_to component, :with_panel
+        end
+
         def test_raises_for_invalid_variant
           error = assert_raises(ArgumentError) do
             Component.new(variant: :invalid)

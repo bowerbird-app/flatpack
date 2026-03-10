@@ -65,7 +65,7 @@ module FlatPack
 
         def test_renders_with_attachments
           render_inline(Component.new(direction: :incoming)) do |component|
-            component.with_attachment do
+            component.attachment do
               "Attachment"
             end
             "Message with attachment"
@@ -77,7 +77,7 @@ module FlatPack
 
         def test_renders_with_meta
           render_inline(Component.new(direction: :outgoing)) do |component|
-            component.with_meta do
+            component.meta do
               "Meta info"
             end
             "Message with meta"
@@ -90,7 +90,7 @@ module FlatPack
 
         def test_applies_incoming_meta_variable_overrides
           render_inline(Component.new(direction: :incoming)) do |component|
-            component.with_meta { "10:12 AM" }
+            component.meta { "10:12 AM" }
             "Incoming message"
           end
 
@@ -100,7 +100,7 @@ module FlatPack
 
         def test_applies_outgoing_meta_variable_overrides
           render_inline(Component.new(direction: :outgoing)) do |component|
-            component.with_meta { "10:14 AM" }
+            component.meta { "10:14 AM" }
             "Outgoing message"
           end
 
@@ -152,6 +152,13 @@ module FlatPack
           end
 
           assert_selector "div[data-controller='test']"
+        end
+
+        def test_does_not_expose_with_prefixed_slot_helpers
+          component = Component.new(direction: :incoming)
+
+          assert_not_respond_to component, :with_attachment
+          assert_not_respond_to component, :with_meta
         end
       end
     end

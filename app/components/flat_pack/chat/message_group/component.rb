@@ -7,13 +7,17 @@ module FlatPack
         renders_one :avatar
         renders_many :messages
 
-        alias_method :avatar_slot, :avatar
-        alias_method :message, :with_message
+        undef_method :with_avatar, :with_avatar_content,
+                     :with_message, :with_message_content
 
-        def avatar(*args, &block)
-          return with_avatar(*args, &block) if block || args.any?
+        def avatar(*args, **kwargs, &block)
+          return get_slot(:avatar) if args.empty? && kwargs.empty? && !block_given?
 
-          avatar_slot
+          set_slot(:avatar, nil, *args, **kwargs, &block)
+        end
+
+        def message(*args, **kwargs, &block)
+          set_slot(:messages, nil, *args, **kwargs, &block)
         end
 
         # Tailwind CSS scanning requires these classes to be present as string literals.

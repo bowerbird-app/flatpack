@@ -18,6 +18,14 @@ module FlatPack
           assert_text "Composer"
         end
 
+        def test_does_not_expose_with_prefixed_slot_setters
+          component = Component.new
+
+          refute_respond_to component, :with_header
+          refute_respond_to component, :with_messages
+          refute_respond_to component, :with_composer
+        end
+
         def test_applies_header_container_styles
           render_inline(Component.new) do |panel|
             panel.header { "Header" }

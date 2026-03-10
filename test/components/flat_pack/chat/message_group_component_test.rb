@@ -8,10 +8,10 @@ module FlatPack
       class ComponentTest < ViewComponent::TestCase
         def test_renders_incoming_message_group
           render_inline(Component.new(direction: :incoming)) do |group|
-            group.with_message do
+            group.message do
               "First message"
             end
-            group.with_message do
+            group.message do
               "Second message"
             end
           end
@@ -22,7 +22,7 @@ module FlatPack
 
         def test_renders_outgoing_message_group
           render_inline(Component.new(direction: :outgoing)) do |group|
-            group.with_message do
+            group.message do
               "My message"
             end
           end
@@ -32,10 +32,10 @@ module FlatPack
 
         def test_renders_with_avatar
           render_inline(Component.new(direction: :incoming, show_avatar: true)) do |group|
-            group.with_avatar do
+            group.avatar do
               "Avatar"
             end
-            group.with_message do
+            group.message do
               "Message"
             end
           end
@@ -50,7 +50,7 @@ module FlatPack
             show_name: true,
             sender_name: "Alice Johnson"
           )) do |group|
-            group.with_message do
+            group.message do
               "Hello!"
             end
           end
@@ -61,10 +61,10 @@ module FlatPack
 
         def test_hides_avatar_when_show_avatar_false
           render_inline(Component.new(direction: :incoming, show_avatar: false)) do |group|
-            group.with_avatar do
+            group.avatar do
               "Avatar"
             end
-            group.with_message do
+            group.message do
               "Message"
             end
           end
@@ -81,7 +81,7 @@ module FlatPack
 
         def test_applies_custom_class
           render_inline(Component.new(direction: :incoming, class: "custom-class")) do |group|
-            group.with_message do
+            group.message do
               "Test"
             end
           end
@@ -94,12 +94,19 @@ module FlatPack
             direction: :incoming,
             data: {test: "value"}
           )) do |group|
-            group.with_message do
+            group.message do
               "Test"
             end
           end
 
           assert_selector "div[data-test='value']"
+        end
+
+        def test_does_not_expose_with_prefixed_slot_setters
+          component = Component.new(direction: :incoming)
+
+          refute_respond_to component, :with_avatar
+          refute_respond_to component, :with_message
         end
       end
     end

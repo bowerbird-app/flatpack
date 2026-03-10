@@ -8,8 +8,30 @@ module FlatPack
         renders_one :messages
         renders_one :composer
 
+        undef_method :with_header, :with_header_content
+        undef_method :with_messages, :with_messages_content
+        undef_method :with_composer, :with_composer_content
+
         def initialize(**system_arguments)
           super
+        end
+
+        def header(*args, **kwargs, &block)
+          return get_slot(:header) if args.empty? && kwargs.empty? && !block_given?
+
+          set_slot(:header, nil, *args, **kwargs, &block)
+        end
+
+        def messages(*args, **kwargs, &block)
+          return get_slot(:messages) if args.empty? && kwargs.empty? && !block_given?
+
+          set_slot(:messages, nil, *args, **kwargs, &block)
+        end
+
+        def composer(*args, **kwargs, &block)
+          return get_slot(:composer) if args.empty? && kwargs.empty? && !block_given?
+
+          set_slot(:composer, nil, *args, **kwargs, &block)
         end
 
         def call
