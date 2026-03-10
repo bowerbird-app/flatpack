@@ -5,9 +5,10 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       renders_many :items, FlatPack::Breadcrumb::Item::Component
 
-      # Alias for shorter syntax
+      undef_method :with_item, :with_item_content
+
       def item(**kwargs, &block)
-        with_item(**kwargs, &block)
+        set_slot(:items, nil, **kwargs, &block)
       end
 
       SEPARATORS = {

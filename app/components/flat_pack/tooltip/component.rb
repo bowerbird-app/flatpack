@@ -5,12 +5,20 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       renders_one :tooltip_content
 
+      alias_method :tooltip_content_slot, :tooltip_content
+
+      undef_method :with_tooltip_content, :with_tooltip_content_content
+
       def content(*args, **kwargs, &block)
-        if block_given? || args.any? || kwargs.any?
-          with_tooltip_content(*args, **kwargs, &block)
-        else
-          super
-        end
+        return super if args.empty? && kwargs.empty? && !block_given?
+
+        tooltip_content(*args, **kwargs, &block)
+      end
+
+      def tooltip_content(*args, **kwargs, &block)
+        return tooltip_content_slot if args.empty? && kwargs.empty? && !block_given?
+
+        set_slot(:tooltip_content, nil, *args, **kwargs, &block)
       end
 
       PLACEMENTS = {

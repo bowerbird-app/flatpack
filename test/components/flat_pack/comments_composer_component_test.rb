@@ -88,7 +88,7 @@ module FlatPack
 
         def test_renders_toolbar_slot
           component = Component.new
-          component.with_toolbar { "Toolbar" }
+          component.toolbar { "Toolbar" }
           render_inline(component)
 
           assert_text "Toolbar"
@@ -96,7 +96,7 @@ module FlatPack
 
         def test_renders_attachments_slot
           component = Component.new
-          component.with_attachments { "Attachments" }
+          component.attachments { "Attachments" }
           render_inline(component)
 
           assert_text "Attachments"
@@ -104,10 +104,18 @@ module FlatPack
 
         def test_renders_custom_actions_slot
           component = Component.new
-          component.with_actions { "Custom Actions" }
+          component.actions { "Custom Actions" }
           render_inline(component)
 
           assert_text "Custom Actions"
+        end
+
+        def test_does_not_expose_with_slot_aliases
+          component = Component.new
+
+          assert_not_respond_to component, :with_toolbar
+          assert_not_respond_to component, :with_attachments
+          assert_not_respond_to component, :with_actions
         end
 
         def test_default_placeholder

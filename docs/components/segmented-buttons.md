@@ -18,7 +18,7 @@ Use Segmented Buttons for small mutually-related action sets such as view mode o
 ## Slots
 | name | type | required | description |
 |---|---|---|---|
-| `button` (`with_button`) | slot | no | Creates a `FlatPack::Button::Component` via `text:`, `selected:`, and forwarded button args. |
+| `button` | slot | no | Creates a `FlatPack::Button::Component` via `text:`, `selected:`, and forwarded button args. |
 
 ## Variants
 - Per-button selected state: `selected: true` uses button `style: :primary`; otherwise `:secondary`.
@@ -26,9 +26,9 @@ Use Segmented Buttons for small mutually-related action sets such as view mode o
 ## Example
 ```erb
 <%= render FlatPack::SegmentedButtons::Component.new do |group| %>
-  <% group.with_button(text: "Day") %>
-  <% group.with_button(text: "Week", selected: true) %>
-  <% group.with_button(text: "Month") %>
+  <% group.button(text: "Day") %>
+  <% group.button(text: "Week", selected: true) %>
+  <% group.button(text: "Month") %>
 <% end %>
 ```
 

@@ -19,7 +19,7 @@ Use Popover for contextual content such as menus, hints, and quick actions ancho
 ## Slots
 | name | type | required | description |
 |---|---|---|---|
-| `content` (`with_content` / `with_popover_content`) | slot | yes | Popover body content. |
+| `popover_content` (`content`) | slot | yes | Popover body content. |
 
 ## Variants
 - Placement variants: `:top`, `:bottom`, `:left`, `:right`.
@@ -29,7 +29,7 @@ Use Popover for contextual content such as menus, hints, and quick actions ancho
 <button id="account-trigger" type="button">Account</button>
 
 <%= render FlatPack::Popover::Component.new(trigger_id: "account-trigger", placement: :bottom) do |popover| %>
-  <% popover.with_content do %>
+  <% popover.popover_content do %>
     <div class="space-y-2">
       <%= render FlatPack::Link::Component.new(href: "/profile") { "Profile" } %>
       <%= render FlatPack::Link::Component.new(href: "/settings") { "Settings" } %>

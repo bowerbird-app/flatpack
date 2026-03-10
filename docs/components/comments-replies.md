@@ -18,7 +18,7 @@ Use Comments Replies when comment hierarchies need visual nesting and optional c
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for replies wrapper. |
 
 ## Slots
-- `comment` (`renders_many`): reply items/content rendered when not collapsed.
+- `comment`: reply items/content rendered when not collapsed.
 
 ## Variants
 - Expanded list mode (`collapsed: false`).
@@ -27,7 +27,7 @@ Use Comments Replies when comment hierarchies need visual nesting and optional c
 ## Example
 ```erb
 <%= render FlatPack::Comments::Replies::Component.new(depth: 1) do |replies| %>
-  <% replies.with_comment do %>
+  <% replies.comment do %>
     <%= render FlatPack::Comments::Item::Component.new(author_name: "Sam", body: "Agree with this") %>
   <% end %>
 <% end %>

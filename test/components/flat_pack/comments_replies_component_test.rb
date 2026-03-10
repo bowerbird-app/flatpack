@@ -14,8 +14,8 @@ module FlatPack
 
         def test_renders_comment_slots
           component = Component.new
-          component.with_comment { "Reply 1" }
-          component.with_comment { "Reply 2" }
+          component.comment { "Reply 1" }
+          component.comment { "Reply 2" }
           render_inline(component)
 
           assert_text "Reply 1"
@@ -30,7 +30,7 @@ module FlatPack
 
         def test_hides_comments_when_collapsed
           component = Component.new(collapsed: true)
-          component.with_comment { "Hidden Reply" }
+          component.comment { "Hidden Reply" }
           render_inline(component)
 
           refute_text "Hidden Reply"
@@ -38,7 +38,7 @@ module FlatPack
 
         def test_shows_comments_when_not_collapsed
           component = Component.new(collapsed: false)
-          component.with_comment { "Visible Reply" }
+          component.comment { "Visible Reply" }
           render_inline(component)
 
           assert_text "Visible Reply"

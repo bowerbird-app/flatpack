@@ -20,7 +20,7 @@ module FlatPack
 
         def test_renders_custom_header_slot
           component = Component.new
-          component.with_header { "Custom Header" }
+          component.header { "Custom Header" }
           render_inline(component)
 
           assert_text "Custom Header"
@@ -28,7 +28,7 @@ module FlatPack
 
         def test_renders_composer_slot
           component = Component.new
-          component.with_composer { "Composer" }
+          component.composer { "Composer" }
           render_inline(component)
 
           assert_text "Composer"
@@ -36,8 +36,8 @@ module FlatPack
 
         def test_renders_comment_slots
           component = Component.new(count: 2)
-          component.with_comment { "Comment 1" }
-          component.with_comment { "Comment 2" }
+          component.comment { "Comment 1" }
+          component.comment { "Comment 2" }
           render_inline(component)
 
           assert_text "Comment 1"
@@ -46,10 +46,19 @@ module FlatPack
 
         def test_renders_footer_slot
           component = Component.new
-          component.with_footer { "Footer Content" }
+          component.footer { "Footer Content" }
           render_inline(component)
 
           assert_text "Footer Content"
+        end
+
+        def test_does_not_expose_with_slot_helpers
+          component = Component.new
+
+          refute component.respond_to?(:with_header, true)
+          refute component.respond_to?(:with_composer, true)
+          refute component.respond_to?(:with_comment, true)
+          refute component.respond_to?(:with_footer, true)
         end
 
         def test_renders_empty_state_when_no_comments
@@ -78,7 +87,7 @@ module FlatPack
 
         def test_hides_composer_when_locked
           component = Component.new(locked: true)
-          component.with_composer { "Composer" }
+          component.composer { "Composer" }
           render_inline(component)
 
           refute_text "Composer"
@@ -86,7 +95,7 @@ module FlatPack
 
         def test_shows_composer_when_not_locked
           component = Component.new(locked: false)
-          component.with_composer { "Composer" }
+          component.composer { "Composer" }
           render_inline(component)
 
           assert_text "Composer"

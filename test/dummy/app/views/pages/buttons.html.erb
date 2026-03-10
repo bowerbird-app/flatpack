@@ -370,26 +370,26 @@
     <%= render FlatPack::SectionTitle::Component.new(title: "Segmented Buttons (Selected State)", anchor_link: true, subtitle: "Examples for Segmented Buttons (Selected State).") %>
     <div class="mb-4">
       <%= render FlatPack::SegmentedButtons::Component.new do |group| %>
-        <% group.with_button(text: "Day", selected: true) %>
-        <% group.with_button(text: "Week") %>
-        <% group.with_button(text: "Month") %>
-        <% group.with_button(text: "Year") %>
+        <% group.button(text: "Day", selected: true) %>
+        <% group.button(text: "Week") %>
+        <% group.button(text: "Month") %>
+        <% group.button(text: "Year") %>
       <% end %>
     </div>
     <div class="mb-4">
       <%= render FlatPack::SegmentedButtons::Component.new do |group| %>
-        <% group.with_button(text: "List") %>
-        <% group.with_button(text: "Grid", selected: true) %>
-        <% group.with_button(text: "Table") %>
+        <% group.button(text: "List") %>
+        <% group.button(text: "Grid", selected: true) %>
+        <% group.button(text: "Table") %>
       <% end %>
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE')
         &lt;%= render FlatPack::SegmentedButtons::Component.new do |group| %&gt;
-          &lt;% group.with_button(text: "Day", selected: true) %&gt;
-          &lt;% group.with_button(text: "Week") %&gt;
-          &lt;% group.with_button(text: "Month") %&gt;
-          &lt;% group.with_button(text: "Year") %&gt;
+          &lt;% group.button(text: "Day", selected: true) %&gt;
+          &lt;% group.button(text: "Week") %&gt;
+          &lt;% group.button(text: "Month") %&gt;
+          &lt;% group.button(text: "Year") %&gt;
         &lt;% end %&gt;
       CODE
     ) %>

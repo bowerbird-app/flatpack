@@ -144,19 +144,19 @@ module FlatPack
         assert_selector "p", text: "Monthly data"
       end
 
-      def test_renders_chart_with_actions_slot
+      def test_renders_chart_with_actions
         series = [{name: "Sales", data: [10, 20, 30]}]
         render_inline(Component.new(series: series)) do |component|
-          component.with_actions { "Export" }
+          component.actions { "Export" }
         end
 
         assert_selector "div", text: "Export"
       end
 
-      def test_renders_chart_with_footer_slot
+      def test_renders_chart_with_footer
         series = [{name: "Sales", data: [10, 20, 30]}]
         render_inline(Component.new(series: series)) do |component|
-          component.with_footer { "Last updated today" }
+          component.footer { "Last updated today" }
         end
 
         assert_text "Last updated today"

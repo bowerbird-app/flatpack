@@ -8,6 +8,10 @@ module FlatPack
         renders_one :footer
         renders_one :replies
 
+        undef_method :with_actions, :with_actions_content,
+                     :with_footer, :with_footer_content,
+                     :with_replies, :with_replies_content
+
         # Tailwind CSS scanning requires these classes to be present as string literals.
         # DO NOT REMOVE - These duplicates ensure CSS generation:
         # "bg-[var(--comments-item-background-color)]" "border-[var(--comments-item-border-color)]" "bg-[var(--comments-item-system-background-color)]" "text-[var(--comments-item-meta-color)]"
@@ -51,6 +55,24 @@ module FlatPack
               render_replies_section
             ].compact)
           end
+        end
+
+        def actions(*args, **kwargs, &block)
+          return get_slot(:actions) if args.empty? && kwargs.empty? && !block_given?
+
+          set_slot(:actions, nil, *args, **kwargs, &block)
+        end
+
+        def footer(*args, **kwargs, &block)
+          return get_slot(:footer) if args.empty? && kwargs.empty? && !block_given?
+
+          set_slot(:footer, nil, *args, **kwargs, &block)
+        end
+
+        def replies(*args, **kwargs, &block)
+          return get_slot(:replies) if args.empty? && kwargs.empty? && !block_given?
+
+          set_slot(:replies, nil, *args, **kwargs, &block)
         end
 
         private

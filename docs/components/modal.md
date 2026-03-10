@@ -24,9 +24,9 @@ Use Modal for confirmation flows, forms, and detailed contextual content that sh
 ## Slots
 | name | type | required | description |
 |---|---|---|---|
-| `header_content` | method/slot | no | Provides custom header content (replaces title text area). |
-| `body_content` | method/slot | no | Provides main scrollable dialog body content. |
-| `footer_content` | method/slot | no | Provides footer action row content. |
+| `header` | method/slot | no | Provides custom header content (replaces title text area). |
+| `body` | method/slot | no | Provides main scrollable dialog body content. |
+| `footer` | method/slot | no | Provides footer action row content. |
 
 ## Variants
 - Size variants via `size`.
@@ -35,11 +35,11 @@ Use Modal for confirmation flows, forms, and detailed contextual content that sh
 ## Example
 ```erb
 <%= render FlatPack::Modal::Component.new(id: "invite-modal", title: "Invite member", size: :lg) do |modal| %>
-  <% modal.body_content do %>
+  <% modal.body do %>
     <p class="text-sm">Send access to a new collaborator.</p>
   <% end %>
 
-  <% modal.footer_content do %>
+  <% modal.footer do %>
     <%= render FlatPack::Button::Component.new(text: "Cancel", style: :secondary) %>
     <%= render FlatPack::Button::Component.new(text: "Send invite") %>
   <% end %>

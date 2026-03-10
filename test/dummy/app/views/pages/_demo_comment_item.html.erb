@@ -14,16 +14,16 @@
   id: "comment-#{comment.id}"
 ) do |item| %>
   <% if allow_reply %>
-    <% item.with_actions do %>
+    <% item.actions do %>
       <%= link_to "Reply", demo_comments_path(reply_to: comment.id, anchor: "comment-#{comment.id}"), class: "text-sm font-medium text-[var(--color-primary)] hover:underline" %>
     <% end %>
   <% end %>
 
   <% if replies.any? || reply_target_id == comment.id %>
-    <% item.with_replies do %>
+    <% item.replies do %>
       <%= render FlatPack::Comments::Replies::Component.new(depth: depth) do |thread_replies| %>
         <% replies.each do |reply| %>
-          <% thread_replies.with_comment do %>
+          <% thread_replies.comment do %>
             <%= render "pages/demo_comment_item",
               comment: reply,
               depth: depth + 1,
@@ -34,7 +34,7 @@
         <% end %>
 
         <% if reply_target_id == comment.id && allow_reply %>
-          <% thread_replies.with_comment do %>
+          <% thread_replies.comment do %>
             <%= render "pages/demo_reply_form", parent_comment: comment %>
           <% end %>
         <% end %>

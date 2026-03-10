@@ -6,6 +6,12 @@ module FlatPack
       renders_one :actions
       renders_one :footer
 
+      alias_method :actions_slot, :actions
+      alias_method :footer_slot, :footer
+
+      undef_method :with_actions, :with_actions_content,
+                   :with_footer, :with_footer_content
+
       TYPES = {
         line: :line,
         bar: :bar,
@@ -45,6 +51,18 @@ module FlatPack
         else
           render_chart_only
         end
+      end
+
+      def actions(*args, **kwargs, &block)
+        return actions_slot if args.empty? && kwargs.empty? && !block_given?
+
+        set_slot(:actions, nil, *args, **kwargs, &block)
+      end
+
+      def footer(*args, **kwargs, &block)
+        return footer_slot if args.empty? && kwargs.empty? && !block_given?
+
+        set_slot(:footer, nil, *args, **kwargs, &block)
       end
 
       private

@@ -323,7 +323,7 @@
         { variable: "depth", accepts: "Integer", example: "depth: 2" },
         { variable: "collapsed", accepts: "true, false", example: "collapsed: false" },
         { variable: "collapsed_label", accepts: "String", example: "collapsed_label: \"Show replies\"" },
-        { variable: "comments", accepts: "slot block", example: "replies.with_comment { ... }" }
+        { variable: "comments", accepts: "slot block", example: "replies.comment { ... }" }
       ]
     },
     comments_composer: {
@@ -340,7 +340,7 @@
         { variable: "name", accepts: "String", example: "name: \"comment[body]\"" },
         { variable: "value", accepts: "String or nil", example: "value: \"Draft comment\"" },
         { variable: "rows", accepts: "Integer", example: "rows: 2" },
-        { variable: "toolbar / attachments / actions", accepts: "slot block", example: "composer.with_actions { ... }" }
+        { variable: "toolbar / attachments / actions", accepts: "slot block", example: "composer.actions { ... }" }
       ]
     },
     comments_inline_input: {

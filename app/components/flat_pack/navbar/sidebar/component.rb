@@ -18,6 +18,9 @@ module FlatPack
           FlatPack::Navbar::SidebarSection::Component.new(**params)
         }
 
+        undef_method :with_item, :with_item_content
+        undef_method :with_section, :with_section_content
+
         def initialize(**kwargs)
           @collapsed = kwargs[:collapsed] || false
           @expanded_width = kwargs[:expanded_width] || "256px"
@@ -26,12 +29,12 @@ module FlatPack
           super(**kwargs.except(:collapsed, :expanded_width, :collapsed_width))
         end
 
-        def item(...)
-          with_item(...)
+        def item(*args, **kwargs, &block)
+          set_slot(:items, nil, *args, **kwargs, &block)
         end
 
-        def section(...)
-          with_section(...)
+        def section(*args, **kwargs, &block)
+          set_slot(:sections, nil, *args, **kwargs, &block)
         end
 
         def call

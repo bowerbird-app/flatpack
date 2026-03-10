@@ -7,22 +7,26 @@ module FlatPack
       renders_one :body
       renders_one :footer
 
-      def header_content(&block)
-        return header unless block
+      undef_method :with_header, :with_header_content
+      undef_method :with_body, :with_body_content
+      undef_method :with_footer, :with_footer_content
 
-        with_header(&block)
+      def header(*args, **kwargs, &block)
+        return get_slot(:header) if args.empty? && kwargs.empty? && !block_given?
+
+        set_slot(:header, nil, *args, **kwargs, &block)
       end
 
-      def body_content(&block)
-        return body unless block
+      def body(*args, **kwargs, &block)
+        return get_slot(:body) if args.empty? && kwargs.empty? && !block_given?
 
-        with_body(&block)
+        set_slot(:body, nil, *args, **kwargs, &block)
       end
 
-      def footer_content(&block)
-        return footer unless block
+      def footer(*args, **kwargs, &block)
+        return get_slot(:footer) if args.empty? && kwargs.empty? && !block_given?
 
-        with_footer(&block)
+        set_slot(:footer, nil, *args, **kwargs, &block)
       end
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
