@@ -6,6 +6,8 @@ module FlatPack
       class Component < FlatPack::BaseComponent
         renders_one :items_slot
 
+        undef_method :with_items_slot, :with_items_slot_content
+
         def initialize(
           label:,
           icon: nil,
@@ -25,7 +27,7 @@ module FlatPack
         def items(**args, &block)
           return items_slot unless block
 
-          with_items_slot(**args, &block)
+          set_slot(:items_slot, nil, **args, &block)
         end
 
         def items?
