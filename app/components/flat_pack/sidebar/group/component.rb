@@ -6,6 +6,8 @@ module FlatPack
       class Component < FlatPack::BaseComponent
         renders_one :items_slot
 
+        undef_method :with_items_slot, :with_items_slot_content
+
         def initialize(
           label:,
           icon: nil,
@@ -25,7 +27,7 @@ module FlatPack
         def items(**args, &block)
           return items_slot unless block
 
-          with_items_slot(**args, &block)
+          set_slot(:items_slot, nil, **args, &block)
         end
 
         def items?
@@ -52,10 +54,6 @@ module FlatPack
               render_collapsed_tooltip
             ].compact)
           end
-        end
-
-        def render_collapsed_tooltip
-          content_tag(:div, @label, **tooltip_attributes)
         end
 
         def render_panel
@@ -88,6 +86,10 @@ module FlatPack
           end
         end
 
+        def render_collapsed_tooltip
+          content_tag(:div, @label, **tooltip_attributes)
+        end
+
         def group_attributes
           merge_attributes(
             class: group_classes,
@@ -118,7 +120,7 @@ module FlatPack
           {
             class: header_button_classes,
             type: "button",
-            data: header_button_data,
+            data: merge_data_attributes(data_attributes, header_button_data),
             aria: header_aria_attributes
           }
         end
@@ -145,7 +147,7 @@ module FlatPack
         def header_button_data
           {
             controller: "flat-pack--tooltip",
-            action: "mouseenter->flat-pack--tooltip#show mouseleave->flat-pack--tooltip#hide focusin->flat-pack--tooltip#show focusout->flat-pack--tooltip#hide click->flat-pack--sidebar-group#toggle",
+            action: "click->flat-pack--sidebar-group#toggle mouseenter->flat-pack--tooltip#show mouseleave->flat-pack--tooltip#hide focusin->flat-pack--tooltip#show focusout->flat-pack--tooltip#hide",
             "flat-pack--tooltip-placement-value": "right",
             "flat-pack--tooltip-collapsed-only-value": true,
             "flat-pack--sidebar-group-target": "button"
@@ -183,14 +185,6 @@ module FlatPack
         def chevron_data
           {
             "flat-pack--sidebar-group-target": "chevron"
-          }
-        end
-
-        def panel_attributes
-          {
-            id: "sidebar-group-panel-#{object_id}",
-            class: panel_classes,
-            data: panel_data
           }
         end
 
@@ -233,6 +227,14 @@ module FlatPack
             "transition-opacity",
             "duration-200"
           )
+        end
+
+        def panel_attributes
+          {
+            id: "sidebar-group-panel-#{object_id}",
+            class: panel_classes,
+            data: panel_data
+          }
         end
 
         def panel_classes

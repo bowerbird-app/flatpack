@@ -6,6 +6,12 @@ module FlatPack
       renders_one :actions
       renders_one :graphic
 
+      alias_method :actions_slot, :actions
+      alias_method :graphic_slot, :graphic
+
+      undef_method :with_actions, :with_actions_content,
+        :with_graphic, :with_graphic_content
+
       # Icon constants with hardcoded SVG for performance
       # SECURITY: These SVG strings are developer-controlled constants, not user input.
       # They are marked html_safe because they contain intentional HTML markup that
@@ -47,6 +53,18 @@ module FlatPack
             render_actions
           ].compact)
         end
+      end
+
+      def actions(*args, **kwargs, &block)
+        return actions_slot if args.empty? && kwargs.empty? && !block_given?
+
+        set_slot(:actions, nil, *args, **kwargs, &block)
+      end
+
+      def graphic(*args, **kwargs, &block)
+        return graphic_slot if args.empty? && kwargs.empty? && !block_given?
+
+        set_slot(:graphic, nil, *args, **kwargs, &block)
       end
 
       private

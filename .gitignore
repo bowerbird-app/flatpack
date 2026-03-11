@@ -24,6 +24,8 @@
 /test/dummy/tmp/*
 !/test/dummy/tmp/.keep
 
+/test/tmp/generators/*
+
 /test/dummy/log/*
 !/test/dummy/log/.keep
 

@@ -8,29 +8,33 @@ module FlatPack
       renders_one :footer_slot, FlatPack::Card::Footer::Component
       renders_one :media_slot, FlatPack::Card::Media::Component
 
-      # Custom setter methods that provide the cleaner syntax
-      def header(**args, &block)
-        return header_slot unless block
+      undef_method :with_header_slot, :with_header_slot_content
+      undef_method :with_body_slot, :with_body_slot_content
+      undef_method :with_footer_slot, :with_footer_slot_content
+      undef_method :with_media_slot, :with_media_slot_content
 
-        with_header_slot(**args, &block)
+      def header(**args, &block)
+        return header_slot if args.empty? && !block
+
+        set_slot(:header_slot, nil, **args, &block)
       end
 
       def body(**args, &block)
-        return body_slot unless block
+        return body_slot if args.empty? && !block
 
-        with_body_slot(**args, &block)
+        set_slot(:body_slot, nil, **args, &block)
       end
 
       def footer(**args, &block)
-        return footer_slot unless block
+        return footer_slot if args.empty? && !block
 
-        with_footer_slot(**args, &block)
+        set_slot(:footer_slot, nil, **args, &block)
       end
 
       def media(**args, &block)
-        return media_slot unless block
+        return media_slot if args.empty? && !block
 
-        with_media_slot(**default_media_arguments.merge(args), &block)
+        set_slot(:media_slot, nil, **default_media_arguments.merge(args), &block)
       end
 
       # Custom predicate methods

@@ -38,11 +38,11 @@ module FlatPack
 
         def call
           render message_component_class.new(**message_component_arguments.merge(@message_system_arguments)) do |message|
-            message.with_media_attachment do
+            message.media_attachment do
               render FlatPack::Carousel::Component.new(**@carousel)
             end
 
-            message.with_meta do
+            message.meta do
               render FlatPack::Chat::MessageMeta::Component.new(
                 timestamp: @timestamp,
                 state: @state,

@@ -8,30 +8,30 @@ module FlatPack
         renders_one :messages
         renders_one :composer
 
-        alias_method :header_slot, :header
-        alias_method :messages_slot, :messages
-        alias_method :composer_slot, :composer
-
-        def header(*args, &block)
-          return with_header(*args, &block) if block_given? || args.any?
-
-          header_slot
-        end
-
-        def messages(*args, &block)
-          return with_messages(*args, &block) if block_given? || args.any?
-
-          messages_slot
-        end
-
-        def composer(*args, &block)
-          return with_composer(*args, &block) if block_given? || args.any?
-
-          composer_slot
-        end
+        undef_method :with_header, :with_header_content
+        undef_method :with_messages, :with_messages_content
+        undef_method :with_composer, :with_composer_content
 
         def initialize(**system_arguments)
           super
+        end
+
+        def header(*args, **kwargs, &block)
+          return get_slot(:header) if args.empty? && kwargs.empty? && !block_given?
+
+          set_slot(:header, nil, *args, **kwargs, &block)
+        end
+
+        def messages(*args, **kwargs, &block)
+          return get_slot(:messages) if args.empty? && kwargs.empty? && !block_given?
+
+          set_slot(:messages, nil, *args, **kwargs, &block)
+        end
+
+        def composer(*args, **kwargs, &block)
+          return get_slot(:composer) if args.empty? && kwargs.empty? && !block_given?
+
+          set_slot(:composer, nil, *args, **kwargs, &block)
         end
 
         def call

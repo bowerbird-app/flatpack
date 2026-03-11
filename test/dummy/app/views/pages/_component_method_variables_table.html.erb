@@ -234,6 +234,15 @@
         { variable: "meta", accepts: "String or nil", example: "meta: \"840 KB\"" }
       ]
     },
+    chat_textarea: {
+      label: "Chat Textarea",
+      method_call: "render FlatPack::Chat::Textarea::Component.new(name: \"chat[message]\", autogrow: true)",
+      variables: [
+        { variable: "name", accepts: "String", example: "name: \"chat[message]\"" },
+        { variable: "autogrow", accepts: "true, false", example: "autogrow: true" },
+        { variable: "submit_on_enter", accepts: "true, false", example: "submit_on_enter: false" }
+      ]
+    },
     chat_typing_indicator: {
       label: "Chat Typing Indicator",
       method_call: "render FlatPack::Chat::TypingIndicator::Component.new(label: \"Teammate is typing\")",
@@ -267,7 +276,7 @@
       variables: [
         { variable: "text", accepts: "String", example: "text: \"Backend\"" },
         { variable: "style", accepts: ":default, :primary, :success, :warning, :danger, :info", example: "style: :info" },
-        { variable: "leading_content", accepts: "block", example: "c.leading_content { ... }" },
+        { variable: "leading", accepts: "block", example: "c.leading { ... }" },
         { variable: "removable", accepts: "true, false", example: "removable: true" }
       ]
     },
@@ -314,7 +323,7 @@
         { variable: "depth", accepts: "Integer", example: "depth: 2" },
         { variable: "collapsed", accepts: "true, false", example: "collapsed: false" },
         { variable: "collapsed_label", accepts: "String", example: "collapsed_label: \"Show replies\"" },
-        { variable: "comments", accepts: "slot block", example: "replies.with_comment { ... }" }
+        { variable: "comments", accepts: "slot block", example: "replies.comment { ... }" }
       ]
     },
     comments_composer: {
@@ -331,7 +340,7 @@
         { variable: "name", accepts: "String", example: "name: \"comment[body]\"" },
         { variable: "value", accepts: "String or nil", example: "value: \"Draft comment\"" },
         { variable: "rows", accepts: "Integer", example: "rows: 2" },
-        { variable: "toolbar / attachments / actions", accepts: "slot block", example: "composer.with_actions { ... }" }
+        { variable: "toolbar / attachments / actions", accepts: "slot block", example: "composer.actions { ... }" }
       ]
     },
     comments_inline_input: {
@@ -360,10 +369,19 @@
       label: "Chat Composer",
       method_call: "render FlatPack::Chat::Composer::Component.new do |composer| ... end",
       variables: [
-        { variable: "attachment", accepts: "slot block", example: "composer.attachment { ... }" },
+        { variable: "attachments", accepts: "slot block", example: "composer.attachments { ... }" },
         { variable: "left", accepts: "slot block", example: "composer.left { ... }" },
         { variable: "center", accepts: "slot block", example: "composer.center { ... }" },
         { variable: "right", accepts: "slot block", example: "composer.right { ... }" }
+      ]
+    },
+    chat_send_button: {
+      label: "Chat Send Button",
+      method_call: "render FlatPack::Chat::SendButton::Component.new(loading: false, disabled: false)",
+      variables: [
+        { variable: "loading", accepts: "true, false", example: "loading: true" },
+        { variable: "disabled", accepts: "true, false", example: "disabled: true" },
+        { variable: "class", accepts: "String or nil", example: "class: \"ml-auto\"" }
       ]
     },
     chat_date_divider: {

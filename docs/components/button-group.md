@@ -17,7 +17,7 @@ Use Button Group when a compact row of related actions should look visually conn
 ## Slots
 | name | type | required | description |
 |---|---|---|---|
-| `button` (`with_button`) | slot | no | Add rendered button-like content (typically `FlatPack::Button::Component`). |
+| `button` | slot | no | Add rendered button-like content (typically `FlatPack::Button::Component`). |
 
 ## Variants
 None.
@@ -25,9 +25,9 @@ None.
 ## Example
 ```erb
 <%= render FlatPack::ButtonGroup::Component.new do |group| %>
-  <% group.with_button(render(FlatPack::Button::Component.new(text: "Day", style: :secondary))) %>
-  <% group.with_button(render(FlatPack::Button::Component.new(text: "Week", style: :secondary))) %>
-  <% group.with_button(render(FlatPack::Button::Component.new(text: "Month", style: :primary))) %>
+  <% group.button(render(FlatPack::Button::Component.new(text: "Day", style: :secondary))) %>
+  <% group.button(render(FlatPack::Button::Component.new(text: "Week", style: :secondary))) %>
+  <% group.button(render(FlatPack::Button::Component.new(text: "Month", style: :primary))) %>
 <% end %>
 ```
 

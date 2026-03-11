@@ -21,6 +21,12 @@ module FlatPack
         assert_text "Laptops"
       end
 
+      def test_does_not_expose_with_item_helper
+        component = Component.new
+
+        refute component.respond_to?(:with_item, true)
+      end
+
       def test_renders_single_item
         render_inline(Component.new) do |breadcrumb|
           breadcrumb.item(text: "Home", href: "/")

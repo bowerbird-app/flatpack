@@ -195,6 +195,13 @@ module FlatPack
         assert_selector "span", text: "Dashboard"
       end
 
+      def test_sidebar_does_not_expose_with_item_or_with_section_helpers
+        sidebar = Sidebar::Component.new
+
+        refute sidebar.respond_to?(:with_item, true)
+        refute sidebar.respond_to?(:with_section, true)
+      end
+
       def test_sidebar_item_with_icon_and_target
         render_inline(Component.new) do |navbar|
           navbar.sidebar do |sidebar|
@@ -296,6 +303,12 @@ module FlatPack
         assert_selector "h3", text: "Main Navigation"
       end
 
+      def test_sidebar_section_does_not_expose_with_item_helper
+        section = SidebarSection::Component.new
+
+        refute section.respond_to?(:with_item, true)
+      end
+
       def test_sidebar_section_title_has_target
         render_inline(Component.new) do |navbar|
           navbar.sidebar do |sidebar|
@@ -383,6 +396,14 @@ module FlatPack
         end
 
         assert_selector "button[data-action='click->flat-pack--navbar#toggle']"
+      end
+
+      def test_top_nav_does_not_expose_with_section_slot_helpers
+        top_nav = TopNav::Component.new
+
+        refute top_nav.respond_to?(:with_left_section_slot, true)
+        refute top_nav.respond_to?(:with_center_section_slot, true)
+        refute top_nav.respond_to?(:with_right_section_slot, true)
       end
 
       def test_top_nav_left_section_content

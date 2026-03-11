@@ -79,7 +79,7 @@ module FlatPack
 
         def test_renders_actions_slot
           component = Component.new(author_name: "John Doe")
-          component.with_actions { "Actions" }
+          component.actions { "Actions" }
           render_inline(component)
 
           assert_text "Actions"
@@ -87,7 +87,7 @@ module FlatPack
 
         def test_renders_footer_slot
           component = Component.new(author_name: "John Doe")
-          component.with_footer { "Footer" }
+          component.footer { "Footer" }
           render_inline(component)
 
           assert_text "Footer"
@@ -95,7 +95,7 @@ module FlatPack
 
         def test_renders_replies_slot
           component = Component.new(author_name: "John Doe")
-          component.with_replies { "Replies content" }
+          component.replies { "Replies content" }
           render_inline(component)
 
           assert_text "Replies content"
@@ -129,10 +129,18 @@ module FlatPack
 
         def test_deleted_state_hides_actions
           component = Component.new(author_name: "John Doe", state: :deleted)
-          component.with_actions { "Actions" }
+          component.actions { "Actions" }
           render_inline(component)
 
           refute_text "Actions"
+        end
+
+        def test_does_not_expose_with_prefixed_slot_helpers
+          component = Component.new(author_name: "John Doe")
+
+          assert_not_respond_to component, :with_actions
+          assert_not_respond_to component, :with_footer
+          assert_not_respond_to component, :with_replies
         end
 
         def test_raises_error_without_author_name

@@ -7,7 +7,7 @@
         compact: true,
         rows: 2
       ) do |composer| %>
-      <% composer.with_actions do %>
+      <% composer.actions do %>
         <div class="flex items-center justify-end w-full gap-2">
           <%= render FlatPack::Button::Component.new(
             text: "Cancel",

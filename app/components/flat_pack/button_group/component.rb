@@ -5,8 +5,14 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       renders_many :buttons, ->(component) { component }
 
+      undef_method :with_button, :with_button_content
+
       def initialize(**system_arguments)
         super
+      end
+
+      def button(*args, &block)
+        set_slot(:buttons, nil, *args, &block)
       end
 
       private

@@ -38,7 +38,7 @@ module FlatPack
 
         def test_renders_with_attachments
           render_inline(Component.new) do |composer|
-            composer.attachment do
+            composer.attachments do
               "Attachment preview"
             end
           end
@@ -57,7 +57,7 @@ module FlatPack
             composer.right do
               "Right"
             end
-            composer.attachment do
+            composer.attachments do
               "Attachments"
             end
           end
@@ -104,6 +104,10 @@ module FlatPack
           assert_not_respond_to component, :with_left
           assert_not_respond_to component, :with_center
           assert_not_respond_to component, :with_right
+          assert_not_respond_to component, :with_left_slot
+          assert_not_respond_to component, :with_center_slot
+          assert_not_respond_to component, :with_right_slot
+          assert_not_respond_to component, :with_attachments
         end
 
         def test_does_not_expose_with_textarea_or_with_actions_aliases

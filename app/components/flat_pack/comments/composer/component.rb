@@ -8,6 +8,10 @@ module FlatPack
         renders_one :attachments
         renders_one :actions
 
+        undef_method :with_toolbar, :with_toolbar_content,
+          :with_attachments, :with_attachments_content,
+          :with_actions, :with_actions_content
+
         def initialize(
           placeholder: "Write a comment...",
           submit_label: "Comment",
@@ -43,6 +47,24 @@ module FlatPack
               render_actions_section
             ].compact)
           end
+        end
+
+        def toolbar(*args, **kwargs, &block)
+          return get_slot(:toolbar) if args.empty? && kwargs.empty? && !block_given?
+
+          set_slot(:toolbar, nil, *args, **kwargs, &block)
+        end
+
+        def attachments(*args, **kwargs, &block)
+          return get_slot(:attachments) if args.empty? && kwargs.empty? && !block_given?
+
+          set_slot(:attachments, nil, *args, **kwargs, &block)
+        end
+
+        def actions(*args, **kwargs, &block)
+          return get_slot(:actions) if args.empty? && kwargs.empty? && !block_given?
+
+          set_slot(:actions, nil, *args, **kwargs, &block)
         end
 
         private

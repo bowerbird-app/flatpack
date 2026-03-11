@@ -53,7 +53,7 @@ module FlatPack
 
       def test_renders_actions_slot
         render_inline(Component.new(title: "Empty")) do |component|
-          component.with_actions do
+          component.actions do
             "Action buttons"
           end
         end
@@ -63,13 +63,20 @@ module FlatPack
 
       def test_renders_custom_graphic_slot
         render_inline(Component.new(title: "Empty")) do |component|
-          component.with_graphic do
+          component.graphic do
             "Custom graphic"
           end
         end
 
         assert_text "Custom graphic"
         # Should not render default icon when custom graphic provided
+      end
+
+      def test_does_not_expose_with_actions_or_with_graphic_aliases
+        component = Component.new(title: "Empty")
+
+        assert_not_respond_to component, :with_actions
+        assert_not_respond_to component, :with_graphic
       end
 
       def test_raises_error_without_title

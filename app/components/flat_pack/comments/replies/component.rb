@@ -6,6 +6,12 @@ module FlatPack
       class Component < FlatPack::BaseComponent
         renders_many :comments
 
+        undef_method :with_comment, :with_comment_content
+
+        def comment(*args, **kwargs, &block)
+          set_slot(:comments, nil, *args, **kwargs, &block)
+        end
+
         def initialize(
           depth: 1,
           collapsed: false,

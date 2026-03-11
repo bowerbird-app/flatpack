@@ -8,10 +8,12 @@ module FlatPack
 
         alias_method :avatar_slot, :avatar
 
-        def avatar(*args, &block)
-          return with_avatar(*args, &block) if block_given? || args.any?
+        undef_method :with_avatar, :with_avatar_content
 
-          avatar_slot
+        def avatar(content = nil, **args, &block)
+          return avatar_slot if content.nil? && args.empty? && !block_given?
+
+          set_slot(:avatar, content, **args, &block)
         end
 
         def initialize(

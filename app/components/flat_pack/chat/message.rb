@@ -11,6 +11,21 @@ module FlatPack
         renders_many :attachments
         renders_one :meta
 
+        alias_method :meta_slot, :meta
+
+        undef_method :with_attachment, :with_attachment_content,
+          :with_meta, :with_meta_content
+
+        def attachment(*args, **kwargs, &block)
+          set_slot(:attachments, nil, *args, **kwargs, &block)
+        end
+
+        def meta(*args, **kwargs, &block)
+          return meta_slot if args.empty? && kwargs.empty? && !block_given?
+
+          set_slot(:meta, nil, *args, **kwargs, &block)
+        end
+
         def initialize(
           direction: :incoming,
           variant: :default,

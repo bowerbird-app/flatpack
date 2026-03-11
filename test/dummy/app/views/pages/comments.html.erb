@@ -43,13 +43,13 @@
     title: "Discussion"
   ) do |thread| %>
     <% if @comments_table_available %>
-      <% thread.with_composer do %>
+      <% thread.composer do %>
         <%= render "pages/demo_comment_form" %>
       <% end %>
     <% end %>
 
     <% @root_comments.each do |comment| %>
-      <% thread.with_comment do %>
+      <% thread.comment do %>
         <%= render "pages/demo_comment_item",
           comment: comment,
           depth: 1,
@@ -75,7 +75,7 @@
         title: "Discussion"
       ) do |thread| %&gt;
         &lt;% if @comments_table_available %&gt;
-          &lt;% thread.with_composer do %&gt;
+          &lt;% thread.composer do %&gt;
             &lt;%= form_with url: demo_comments_path, method: :post, local: true do %&gt;
               &lt;%= render FlatPack::Comments::InlineInput::Component.new(
                 name: "comment[body]",
@@ -87,7 +87,7 @@
         &lt;% end %&gt;
 
         &lt;% @root_comments.each do |comment| %&gt;
-          &lt;% thread.with_comment do %&gt;
+          &lt;% thread.comment do %&gt;
             &lt;%= render "pages/demo_comment_item",
               comment: comment,
               depth: 1,
@@ -107,7 +107,7 @@
           compact: true,
           rows: 2
         ) do |composer| %&gt;
-          &lt;% composer.with_actions do %&gt;
+          &lt;% composer.actions do %&gt;
             &lt;div class="flex items-center justify-end w-full gap-2"&gt;
               &lt;%= render FlatPack::Button::Component.new(
                 text: "Cancel",

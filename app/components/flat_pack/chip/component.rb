@@ -26,14 +26,29 @@ module FlatPack
 
       TYPES = %i[static button link].freeze
 
-      renders_one :leading
-      renders_one :trailing
-      renders_one :remove_button
+      renders_one :leading_slot
+      renders_one :trailing_slot
+      renders_one :remove_button_slot
 
-      def leading_content(content = nil, &block)
-        return leading if content.nil? && !block_given?
+      undef_method :with_leading_slot, :with_trailing_slot, :with_remove_button_slot
+      undef_method :with_leading_slot_content, :with_trailing_slot_content, :with_remove_button_slot_content
 
-        with_leading(content, &block)
+      def leading(content = nil, **args, &block)
+        return leading_slot if content.nil? && args.empty? && !block_given?
+
+        set_slot(:leading_slot, content, **args, &block)
+      end
+
+      def trailing(content = nil, **args, &block)
+        return trailing_slot if content.nil? && args.empty? && !block_given?
+
+        set_slot(:trailing_slot, content, **args, &block)
+      end
+
+      def remove_button(content = nil, **args, &block)
+        return remove_button_slot if content.nil? && args.empty? && !block_given?
+
+        set_slot(:remove_button_slot, content, **args, &block)
       end
 
       def initialize(

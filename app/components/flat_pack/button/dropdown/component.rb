@@ -9,10 +9,8 @@ module FlatPack
           divider: FlatPack::Button::DropdownDivider::Component
         }
 
-        # Use concise slot-builder names in templates.
-        alias_method :menu_item, :with_menu_item
-        alias_method :menu_divider, :with_menu_divider
-        private :with_menu_item, :with_menu_divider
+        undef_method :with_menu_item, :with_menu_divider
+        undef_method :with_menu_item_content, :with_menu_divider_content
 
         POSITIONS = {
           bottom_right: "top-full right-0 mt-2",
@@ -47,6 +45,14 @@ module FlatPack
           validate_position!
         end
 
+        def menu_item(**kwargs, &block)
+          set_polymorphic_slot(:menu, :item, **kwargs, &block)
+        end
+
+        def menu_divider(**kwargs, &block)
+          set_polymorphic_slot(:menu, :divider, **kwargs, &block)
+        end
+
         private
 
         def wrapper_attributes
@@ -68,17 +74,19 @@ module FlatPack
         end
 
         def button_attributes
-          merge_trigger_attributes(
-            class: button_classes,
-            aria: {
+          attrs = @trigger_attributes.dup
+
+          {
+            class: TailwindMerge::Merger.new.merge([attrs.delete(:class), attrs.delete("class"), button_classes].compact.join(" ")),
+            aria: extract_nested_attributes(attrs, :aria).merge(
               haspopup: "true",
               expanded: "false"
-            },
-            data: {
+            ),
+            data: extract_nested_attributes(attrs, :data).merge(
               flat_pack__button_dropdown_target: "trigger",
               action: "click->flat-pack--button-dropdown#toggle"
-            }
-          )
+            )
+          }.merge(attrs).compact
         end
 
         def button_classes
@@ -93,19 +101,9 @@ module FlatPack
             "disabled:pointer-events-none disabled:opacity-50"
           ]
 
-          if icon_only_button?
-            base_classes << "aspect-square"
-            base_classes << FlatPack::Button::Component::ICON_ONLY_SIZES.fetch(@size)
-          else
-            base_classes << FlatPack::Button::Component::SIZES.fetch(@size)
-          end
-
+          base_classes << FlatPack::Button::Component::SIZES.fetch(@size)
           base_classes << FlatPack::Button::Component::SCHEMES.fetch(@style)
           base_classes.join(" ")
-        end
-
-        def icon_only_button?
-          @icon.present? && @text.blank? && !@show_chevron
         end
 
         def button_content
@@ -164,18 +162,8 @@ module FlatPack
             "Invalid position: #{@position}. Must be one of: #{POSITIONS.keys.join(", ")}"
         end
 
-        def merge_trigger_attributes(**additional_attrs)
-          trigger_attributes = @trigger_attributes.dup
-          merger = TailwindMerge::Merger.new
-          trigger_class = trigger_attributes.delete(:class)
-          merged_data = (trigger_attributes.delete(:data) || {}).merge(additional_attrs.delete(:data) || {})
-          merged_aria = (trigger_attributes.delete(:aria) || {}).merge(additional_attrs.delete(:aria) || {})
-
-          {
-            class: merger.merge([trigger_class, additional_attrs.delete(:class)].compact.join(" ")),
-            data: merged_data,
-            aria: merged_aria
-          }.merge(trigger_attributes).merge(additional_attrs).compact
+        def extract_nested_attributes(attrs, key)
+          (attrs.delete(key) || {}).merge(attrs.delete(key.to_s) || {})
         end
       end
     end

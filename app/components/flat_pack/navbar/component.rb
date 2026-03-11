@@ -3,37 +3,43 @@
 module FlatPack
   module Navbar
     class Component < FlatPack::BaseComponent
-      renders_one :sidebar_slot, lambda { |*args|
+      renders_one :sidebar, lambda { |*args|
         kwargs = {}
         args.each_slice(2) { |k, v| kwargs[k] = v }
         FlatPack::Navbar::Sidebar::Component.new(**kwargs)
       }
 
-      renders_one :top_nav_slot, lambda { |*args|
+      renders_one :top_nav, lambda { |*args|
         kwargs = {}
         args.each_slice(2) { |k, v| kwargs[k] = v }
         FlatPack::Navbar::TopNav::Component.new(**kwargs)
       }
 
+      undef_method :with_sidebar, :with_sidebar_content,
+        :with_top_nav, :with_top_nav_content
+
       def initialize(**system_arguments)
         super
       end
 
-      # Define cleaner API methods
-      def sidebar(...)
-        with_sidebar_slot(...)
+      def sidebar(*args, **kwargs, &block)
+        return get_slot(:sidebar) if args.empty? && kwargs.empty? && !block_given? && sidebar?
+
+        set_slot(:sidebar, nil, *args, **kwargs, &block)
       end
 
-      def top_nav(...)
-        with_top_nav_slot(...)
+      def top_nav(*args, **kwargs, &block)
+        return get_slot(:top_nav) if args.empty? && kwargs.empty? && !block_given? && top_nav?
+
+        set_slot(:top_nav, nil, *args, **kwargs, &block)
       end
 
       def call
         content_tag(:div, **wrapper_attributes) do
           safe_join([
-            sidebar_slot,
+            sidebar,
             content_tag(:div, class: "flex flex-col flex-1") do
-              safe_join([top_nav_slot, content_tag(:main, content, class: main_classes)].compact)
+              safe_join([top_nav, content_tag(:main, content, class: main_classes)].compact)
             end
           ].compact)
         end

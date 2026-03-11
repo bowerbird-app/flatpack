@@ -9,6 +9,11 @@ module FlatPack
         renders_many :comments
         renders_one :footer
 
+        undef_method :with_header, :with_header_content
+        undef_method :with_composer, :with_composer_content
+        undef_method :with_comment, :with_comment_content
+        undef_method :with_footer, :with_footer_content
+
         # Tailwind CSS scanning requires these classes to be present as string literals.
         # DO NOT REMOVE - These duplicates ensure CSS generation:
         # "space-y-4" "space-y-2"
@@ -35,6 +40,28 @@ module FlatPack
           @locked = locked
 
           validate_variant!
+        end
+
+        def header(*args, **kwargs, &block)
+          return get_slot(:header) if args.empty? && kwargs.empty? && !block_given?
+
+          set_slot(:header, nil, *args, **kwargs, &block)
+        end
+
+        def composer(*args, **kwargs, &block)
+          return get_slot(:composer) if args.empty? && kwargs.empty? && !block_given?
+
+          set_slot(:composer, nil, *args, **kwargs, &block)
+        end
+
+        def comment(*args, **kwargs, &block)
+          set_slot(:comments, nil, *args, **kwargs, &block)
+        end
+
+        def footer(*args, **kwargs, &block)
+          return get_slot(:footer) if args.empty? && kwargs.empty? && !block_given?
+
+          set_slot(:footer, nil, *args, **kwargs, &block)
         end
 
         def call

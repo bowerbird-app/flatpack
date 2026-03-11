@@ -4,14 +4,21 @@ module FlatPack
   module Popover
     class Component < FlatPack::BaseComponent
       renders_one :popover_content
-      alias_method :with_content, :with_popover_content
+
+      alias_method :popover_content_slot, :popover_content
+
+      undef_method :with_popover_content, :with_popover_content_content
 
       def content(*args, **kwargs, &block)
-        if block_given? || args.any? || kwargs.any?
-          with_popover_content(*args, **kwargs, &block)
-        else
-          super
-        end
+        return super if args.empty? && kwargs.empty? && !block_given?
+
+        popover_content(*args, **kwargs, &block)
+      end
+
+      def popover_content(*args, **kwargs, &block)
+        return popover_content_slot if args.empty? && kwargs.empty? && !block_given?
+
+        set_slot(:popover_content, nil, *args, **kwargs, &block)
       end
 
       PLACEMENTS = {

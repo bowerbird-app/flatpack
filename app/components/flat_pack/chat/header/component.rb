@@ -13,6 +13,9 @@ module FlatPack
         renders_one :left_meta
         renders_one :right_slot
 
+        undef_method :with_left_meta, :with_left_meta_content,
+          :with_right_slot, :with_right_slot_content
+
         def initialize(
           title:,
           subtitle: nil,
@@ -54,10 +57,16 @@ module FlatPack
           end
         end
 
-        def right(*args, &block)
-          return with_right_slot(*args, &block) if block_given? || args.any?
+        def left_meta(**args, &block)
+          return get_slot(:left_meta) unless block
 
-          right_slot
+          set_slot(:left_meta, nil, **args, &block)
+        end
+
+        def right(**args, &block)
+          return right_slot unless block
+
+          set_slot(:right_slot, nil, **args, &block)
         end
 
         def right?
@@ -103,17 +112,20 @@ module FlatPack
         def render_back_button
           return unless @back_href.present?
 
-          tooltip_label = @back_tooltip.presence || @back_label
-
           render FlatPack::Button::Component.new(
             text: @back_label,
             icon: "chevron-left",
+            icon_only: @back_label.blank?,
             style: :ghost,
             size: :sm,
             url: @back_href,
-            title: tooltip_label,
-            aria: {label: tooltip_label}
+            title: back_accessible_label,
+            aria: {label: back_accessible_label}
           )
+        end
+
+        def back_accessible_label
+          @back_tooltip.presence || @back_label.presence
         end
 
         def render_avatar

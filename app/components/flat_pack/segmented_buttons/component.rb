@@ -8,8 +8,14 @@ module FlatPack
         FlatPack::Button::Component.new(text: text, style: style, **args)
       end
 
+      undef_method :with_button, :with_button_content
+
       def initialize(**system_arguments)
         super
+      end
+
+      def button(*args, **kwargs, &block)
+        set_slot(:buttons, nil, *args, **kwargs, &block)
       end
 
       def call

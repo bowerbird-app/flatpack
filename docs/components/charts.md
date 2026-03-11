@@ -43,7 +43,7 @@ Use this for dashboard and analytics charts when data is available in ApexCharts
   title: "Financial Overview",
   subtitle: "Last 7 months"
 ) do |chart| %>
-  <% chart.with_actions do %>
+  <% chart.actions do %>
     <%= render FlatPack::Button::Component.new(text: "Export", size: :sm, style: :ghost) %>
   <% end %>
 <% end %>

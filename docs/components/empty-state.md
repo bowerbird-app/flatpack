@@ -33,7 +33,7 @@ None.
   description: "Try a different filter or keyword.",
   icon: :search
 ) do |state| %>
-  <% state.with_actions do %>
+  <% state.actions do %>
     <%= render FlatPack::Button::Component.new(text: "Clear filters") %>
   <% end %>
 <% end %>

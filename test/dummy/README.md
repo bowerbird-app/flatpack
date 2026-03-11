@@ -149,8 +149,8 @@ Example usage in views:
 
 <%# Table Component %>
 <%= render FlatPack::Table::Component.new do |table| %>
-  <% table.with_column(header: "Name", accessor: :name) %>
-  <% table.with_column(header: "Email", accessor: :email) %>
+  <% table.column(title: "Name") { |row| row.name } %>
+  <% table.column(title: "Email") { |row| row.email } %>
 <% end %>
 ```
 

@@ -11,6 +11,8 @@ module FlatPack
           FlatPack::Navbar::SidebarItem::Component.new(**params)
         }
 
+        undef_method :with_item, :with_item_content
+
         def initialize(title: nil, collapsible: false, collapsed: false, **system_arguments, &block)
           @title = title
           @collapsible = collapsible
@@ -20,8 +22,8 @@ module FlatPack
           super(**system_arguments)
         end
 
-        def item(...)
-          with_item(...)
+        def item(*args, **kwargs, &block)
+          set_slot(:items, nil, *args, **kwargs, &block)
         end
 
         def call
