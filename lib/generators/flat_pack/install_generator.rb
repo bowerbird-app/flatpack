@@ -61,12 +61,12 @@ module FlatPack
 
           if updated
             File.write(importmap_path, content)
-            say "\n✓ Configured importmap for FlatPack controllers and TipTap", :green
+            say "\n✓ Configured importmap for FlatPack controllers, TipTap, and the TipTap UI bridge", :green
             say "  - Added pin_all_from for controllers/flat_pack with preload: false", :green
             say "  - Added pin_all_from for flat_pack/tiptap helper modules", :green
             say "  - Added built-in TipTap pins for rich text support", :green
           else
-            say "\n⊙ Importmap already configured for FlatPack controllers and TipTap", :yellow
+            say "\n⊙ Importmap already configured for FlatPack controllers, TipTap, and the TipTap UI bridge", :yellow
           end
         else
           say "\n⊙ Importmap configuration file not found", :yellow

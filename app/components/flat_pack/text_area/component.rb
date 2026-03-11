@@ -242,13 +242,15 @@ module FlatPack
       end
 
       def render_rich_text_editor
-        safe_join([
-          render_rich_text_toolbar,
-          render_editor_surface,
-          render_hidden_submission_field,
-          render_bubble_menu,
-          render_floating_menu
-        ].compact)
+        content_tag(:div, class: rich_text_ui_root_classes, data: {flat_pack__tiptap_target: "uiRoot", flat_pack__tiptap_ui_role: "root"}) do
+          safe_join([
+            render_rich_text_toolbar,
+            render_editor_surface,
+            render_hidden_submission_field,
+            render_bubble_menu,
+            render_floating_menu
+          ].compact)
+        end
       end
 
       def render_rich_text_toolbar
@@ -258,8 +260,13 @@ module FlatPack
         content_tag(
           :div,
           safe_join(toolbar[:items].map { |item| render_toolbar_button(item) }),
-          class: "mb-2 flex flex-wrap items-center gap-2 rounded-md border border-[var(--surface-border-color)] bg-[var(--surface-panel-background-color)] p-2",
-          data: {flat_pack__tiptap_target: "toolbar"}
+          class: rich_text_toolbar_classes,
+          role: "toolbar",
+          aria: {label: @rich_text_options.dig(:ui, :toolbar_label)},
+          data: {
+            flat_pack__tiptap_target: "toolbar",
+            flat_pack__tiptap_ui_role: "toolbar"
+          }
         )
       end
 
@@ -274,7 +281,8 @@ module FlatPack
           aria: {label: definition.fetch(:label), pressed: "false"},
           data: {
             action: "click->flat-pack--tiptap#runToolbarAction",
-            flat_pack__tiptap_command: definition.fetch(:command)
+            flat_pack__tiptap_command: definition.fetch(:command),
+            flat_pack__tiptap_ui_component: "button"
           }.tap do |data|
             data[:flat_pack__tiptap_value] = definition[:value] if definition[:value]
           end
@@ -299,8 +307,13 @@ module FlatPack
         content_tag(
           :div,
           safe_join(%i[bold italic underline link].map { |item| render_toolbar_button(item) }),
-          class: "hidden items-center gap-1 rounded-md border border-[var(--surface-border-color)] bg-[var(--surface-panel-background-color)] p-2 shadow-lg",
-          data: {flat_pack__tiptap_target: "bubbleMenu"}
+          class: rich_text_menu_classes,
+          role: "toolbar",
+          aria: {label: @rich_text_options.dig(:ui, :bubble_menu_label)},
+          data: {
+            flat_pack__tiptap_target: "bubbleMenu",
+            flat_pack__tiptap_ui_role: "bubble-menu"
+          }
         )
       end
 
@@ -310,8 +323,13 @@ module FlatPack
         content_tag(
           :div,
           safe_join(%i[heading_2 bullet_list ordered_list blockquote].map { |item| render_toolbar_button(item) }),
-          class: "hidden items-center gap-1 rounded-md border border-[var(--surface-border-color)] bg-[var(--surface-panel-background-color)] p-2 shadow-lg",
-          data: {flat_pack__tiptap_target: "floatingMenu"}
+          class: rich_text_menu_classes,
+          role: "toolbar",
+          aria: {label: @rich_text_options.dig(:ui, :floating_menu_label)},
+          data: {
+            flat_pack__tiptap_target: "floatingMenu",
+            flat_pack__tiptap_ui_role: "floating-menu"
+          }
         )
       end
 
@@ -551,6 +569,8 @@ module FlatPack
         parsed_value = JSON.parse(value)
         extract_text_nodes(parsed_value).join
       rescue JSON::ParserError
+        # Fall back to the raw string so character-count rendering stays resilient
+        # even if malformed persisted JSON reaches the component.
         value.to_s
       end
 
@@ -599,6 +619,27 @@ module FlatPack
 
       def toolbar_button_classes
         "inline-flex items-center justify-center rounded-md border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] px-2.5 py-1.5 text-xs font-medium text-[var(--surface-content-color)] transition hover:bg-[var(--surface-muted-background-color)] focus:outline-none focus:ring-2 focus:ring-ring"
+      end
+
+      def rich_text_ui_root_classes
+        density_class = @rich_text_options.dig(:ui, :density) == :compact ? "space-y-2" : "space-y-3"
+        classes("flat-pack-tiptap-ui", density_class)
+      end
+
+      def rich_text_toolbar_classes
+        density_padding = @rich_text_options.dig(:ui, :density) == :compact ? "p-1.5" : "p-2"
+        classes(
+          "flat-pack-tiptap-ui-toolbar mb-2 flex flex-wrap items-center gap-2 rounded-md border border-[var(--surface-border-color)] bg-[var(--surface-panel-background-color)]",
+          density_padding
+        )
+      end
+
+      def rich_text_menu_classes
+        density_padding = @rich_text_options.dig(:ui, :density) == :compact ? "p-1.5" : "p-2"
+        classes(
+          "flat-pack-tiptap-ui-menu hidden items-center gap-1 rounded-md border border-[var(--surface-border-color)] bg-[var(--surface-panel-background-color)] shadow-lg",
+          density_padding
+        )
       end
     end
   end

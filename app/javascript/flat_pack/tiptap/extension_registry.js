@@ -231,7 +231,10 @@ const REGISTRY = {
       if (!Extension) return null
 
       const document = context.resolveRuntimeReference(value?.document_key)
-      if (!document) return null
+      if (!document) {
+        console.warn("[FlatPack::TipTap] Collaboration document not found for key:", value?.document_key)
+        return null
+      }
 
       return Extension.configure({ document })
     }
@@ -242,7 +245,10 @@ const REGISTRY = {
       if (!Extension) return null
 
       const provider = context.resolveRuntimeReference(value?.provider_key)
-      if (!provider) return null
+      if (!provider) {
+        console.warn("[FlatPack::TipTap] Collaboration provider not found for key:", value?.provider_key)
+        return null
+      }
 
       return Extension.configure({
         provider,

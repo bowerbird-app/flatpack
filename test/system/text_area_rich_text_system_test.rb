@@ -7,6 +7,7 @@ class TextAreaRichTextSystemTest < ApplicationSystemTestCase
     visit "/demo/forms/text_area"
 
     assert_selector "#rich-text-minimal.ProseMirror", wait: 10
+    assert_selector "[data-flat-pack--tiptap-ui-role='toolbar'][aria-label='TipTap UI toolbar']", wait: 10
 
     find("#rich-text-minimal").click.send_keys(" Additional copy")
 
@@ -48,6 +49,6 @@ class TextAreaRichTextSystemTest < ApplicationSystemTestCase
       }
     JS
 
-    assert_selector "[data-flat-pack--tiptap-target='bubbleMenu']:not(.hidden)", wait: 10
+    assert_selector "[data-flat-pack--tiptap-target='bubbleMenu'][data-flat-pack--tiptap-ui-role='bubble-menu']:not(.hidden)", wait: 10
   end
 end

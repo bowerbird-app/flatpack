@@ -244,6 +244,8 @@ module FlatPack
         ))
 
         assert_selector "div[data-controller='flat-pack--tiptap']"
+        assert_selector "div[data-flat-pack--tiptap-target='uiRoot'][data-flat-pack--tiptap-ui-role='root']"
+        assert_selector "div[role='toolbar'][data-flat-pack--tiptap-ui-role='toolbar']"
         assert_selector "div[role='textbox'][data-flat-pack--tiptap-target='editor']"
         assert_selector "input[type='hidden'][name='article[body]'][data-flat-pack--tiptap-target='input']", visible: false
         refute_selector "div[data-controller='flat-pack--tiptap'] textarea:not([hidden])"
@@ -286,6 +288,8 @@ module FlatPack
         assert_equal true, config["bubble_menu"]
         assert_equal true, config.dig("extensions", "table_kit")
         assert_equal true, config.dig("extensions", "bubble_menu")
+        assert_equal "adaptive", config.dig("ui", "mode")
+        assert_equal "flatpack", config.dig("ui", "theme")
       end
 
       def test_rich_text_supports_disabled_required_error_and_custom_classes
@@ -343,6 +347,18 @@ module FlatPack
         end
 
         assert_includes error.message, "framework-specific TipTap wrapper"
+      end
+
+      def test_rich_text_rejects_invalid_ui_options
+        error = assert_raises(ArgumentError) do
+          Component.new(
+            name: "article[body]",
+            rich_text: true,
+            rich_text_options: {ui: "nope"}
+          )
+        end
+
+        assert_includes error.message, "rich_text_options.ui must be a Hash"
       end
     end
   end

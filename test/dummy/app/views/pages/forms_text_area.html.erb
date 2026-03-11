@@ -111,7 +111,7 @@
 </section>
 
 <section class="mb-12 space-y-6">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Rich Text Examples", anchor_link: true, subtitle: "TipTap ships with FlatPack and is enabled with rich_text: true.") %>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Rich Text Examples", anchor_link: true, subtitle: "TipTap ships with FlatPack and is enabled with rich_text: true using a FlatPack-themed TipTap UI bridge for vanilla Stimulus.") %>
 
   <%= form_with url: demo_forms_create_path, method: :post, local: true, class: "space-y-6" do %>
     <div class="grid gap-6 lg:grid-cols-2">
@@ -120,7 +120,7 @@
           <h3 class="text-base font-semibold">Minimal rich text editor</h3>
         <% end %>
         <% card.body(class: "space-y-3") do %>
-          <p class="text-sm text-[var(--surface-muted-content-color)]">StarterKit + placeholder + bubble menu + character count.</p>
+          <p class="text-sm text-[var(--surface-muted-content-color)]">StarterKit + placeholder + bubble menu + character count through the FlatPack-themed TipTap UI layer.</p>
           <%= render FlatPack::TextArea::Component.new(
             name: "post[minimal_body]",
             id: "rich-text-minimal",
@@ -151,7 +151,8 @@
             rich_text: true,
             rich_text_options: {
               preset: :content,
-              toolbar: :standard
+              toolbar: :standard,
+              ui: {theme: :flatpack}
             }
           ) %>
         <% end %>
@@ -162,7 +163,7 @@
           <h3 class="text-base font-semibold">Full preset with table/media content</h3>
         <% end %>
         <% card.body(class: "space-y-3") do %>
-          <p class="text-sm text-[var(--surface-muted-content-color)]">Demonstrates the broader extension registry and full toolbar surface.</p>
+          <p class="text-sm text-[var(--surface-muted-content-color)]">Demonstrates the broader extension registry and the TipTap UI toolbar surface themed for FlatPack.</p>
           <%= render FlatPack::TextArea::Component.new(
             name: "post[full_body]",
             id: "rich-text-full",
@@ -172,7 +173,8 @@
             rich_text_options: {
               preset: :full,
               toolbar: :full,
-              tables: {resizable: true, last_column_resizable: true}
+              tables: {resizable: true, last_column_resizable: true},
+              ui: {theme: :flatpack, density: :compact}
             }
           ) %>
         <% end %>
@@ -296,7 +298,8 @@
           preset: :content,
           format: :json,
           toolbar: :standard,
-          bubble_menu: true
+          bubble_menu: true,
+          ui: { theme: :flatpack }
         }
       ) %&gt;
     CODE

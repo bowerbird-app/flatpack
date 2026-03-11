@@ -50,7 +50,7 @@ rails generate flat_pack:install
 - Adds `@import "flat_pack/variables.css";` to your `app/assets/stylesheets/application.css`
 - **Automatically configures Tailwind CSS 4** by detecting your Tailwind CSS file and injecting the necessary configuration
 - **Configures importmap** to load FlatPack Stimulus controllers
-- **Pins TipTap dependencies** so rich text support is available through `FlatPack::TextArea::Component` by default
+- **Pins TipTap dependencies and the FlatPack TipTap UI bridge** so rich text support is available through `FlatPack::TextArea::Component` by default
 - **Configures Stimulus** to lazy load FlatPack controllers on first use
 - Shows next steps for using components
 

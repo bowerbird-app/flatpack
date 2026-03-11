@@ -20,6 +20,7 @@ module FlatPack
         autofocus
         output_input_type
         sanitization_profile
+        ui
       ].freeze
 
       FORMAT_VALUES = %i[json html].freeze
@@ -27,6 +28,11 @@ module FlatPack
       TOOLBAR_PRESET_VALUES = %i[minimal standard full].freeze
       OUTPUT_INPUT_TYPE_VALUES = %i[hidden_input hidden_textarea].freeze
       SANITIZATION_PROFILE_VALUES = %i[flatpack relaxed none].freeze
+      UI_THEME_VALUES = %i[flatpack].freeze
+      # `:adaptive` means "prefer TipTap menu/editor primitives, and bridge the
+      # UI in FlatPack where upstream TipTap UI remains React/CLI-specific."
+      UI_MODE_VALUES = %i[adaptive].freeze
+      UI_DENSITY_VALUES = %i[comfortable compact].freeze
 
       TOOLBAR_ITEMS = %i[
         bold italic underline strike code highlight
@@ -157,6 +163,7 @@ module FlatPack
       MENTIONS_KEYS = %i[trigger items items_url min_query_length suggestion_limit].freeze
       UPLOAD_KEYS = %i[endpoint method field_name accepted_types max_size].freeze
       COLLABORATION_KEYS = %i[provider_key document_key user_name user_color].freeze
+      UI_KEYS = %i[theme mode density toolbar_label bubble_menu_label floating_menu_label].freeze
 
       class << self
         def normalize(raw_options, component_defaults: {})
@@ -181,6 +188,7 @@ module FlatPack
             options.fetch(:sanitization_profile, :flatpack),
             SANITIZATION_PROFILE_VALUES
           )
+          ui = normalize_ui(options[:ui], bubble_menu: bubble_menu, floating_menu: floating_menu)
 
           mentions = normalize_optional_settings(:mentions, options[:mentions], MENTIONS_KEYS) if options.key?(:mentions)
           uploads = normalize_optional_settings(:uploads, options[:uploads], UPLOAD_KEYS) if options.key?(:uploads)
@@ -216,7 +224,8 @@ module FlatPack
             readonly: readonly,
             autofocus: autofocus,
             output_input_type: output_input_type,
-            sanitization_profile: sanitization_profile
+            sanitization_profile: sanitization_profile,
+            ui: ui
           }.compact
         end
 
@@ -357,6 +366,25 @@ module FlatPack
           raise ArgumentError, "Unknown rich_text_options.#{name} keys: #{unknown_keys.join(', ')}" if unknown_keys.any?
 
           normalized
+        end
+
+        def normalize_ui(value, bubble_menu:, floating_menu:)
+          raise ArgumentError, "rich_text_options.ui must be a Hash" unless value.nil? || value.is_a?(Hash)
+
+          normalized = deep_symbolize(value || {})
+          unknown_keys = normalized.keys - UI_KEYS
+          raise ArgumentError, "Unknown rich_text_options.ui keys: #{unknown_keys.join(', ')}" if unknown_keys.any?
+
+          {
+            theme: normalize_enum(:ui_theme, normalized.fetch(:theme, :flatpack), UI_THEME_VALUES),
+            mode: normalize_enum(:ui_mode, normalized.fetch(:mode, :adaptive), UI_MODE_VALUES),
+            density: normalize_enum(:ui_density, normalized.fetch(:density, :comfortable), UI_DENSITY_VALUES),
+            toolbar_label: normalize_string(:ui_toolbar_label, normalized.fetch(:toolbar_label, "TipTap UI toolbar"), allow_blank: false),
+            bubble_menu_label: normalize_string(:ui_bubble_menu_label, normalized.fetch(:bubble_menu_label, "TipTap UI bubble menu"), allow_blank: false),
+            floating_menu_label: normalize_string(:ui_floating_menu_label, normalized.fetch(:floating_menu_label, "TipTap UI floating menu"), allow_blank: false),
+            bubble_menu: bubble_menu,
+            floating_menu: floating_menu
+          }
         end
 
         def normalize_enum(name, value, allowed_values)

@@ -1,12 +1,13 @@
 import { Controller } from "@hotwired/stimulus"
 
-import { runCommand, updateCommandButtons } from "flat_pack/tiptap/commands"
+import { runCommand } from "flat_pack/tiptap/commands"
 import { editorCharacterCount, editorIsEmpty, parseInitialContent, serializeEditorContent } from "flat_pack/tiptap/content"
 import { buildExtensions, loadTipTapRuntime } from "flat_pack/tiptap/extension_registry"
+import { createTipTapUiBridge } from "flat_pack/tiptap/ui_bridge"
 const SAFE_URL_PROTOCOLS = new Set(["http:", "https:", "mailto:", "tel:"])
 
 export default class extends Controller {
-  static targets = ["editor", "input", "toolbar", "bubbleMenu", "floatingMenu", "count", "error"]
+  static targets = ["editor", "input", "toolbar", "bubbleMenu", "floatingMenu", "count", "error", "uiRoot"]
   static values = {
     config: String,
     minCharacters: Number,
@@ -17,12 +18,15 @@ export default class extends Controller {
     this.form = this.element.closest("form")
     this.onFormSubmit = this.handleFormSubmit.bind(this)
     this.form?.addEventListener("submit", this.onFormSubmit)
+    this.uiBridge = createTipTapUiBridge(this)
+    this.uiBridge.mount()
     this.initializeEditor()
   }
 
   disconnect() {
     this.form?.removeEventListener("submit", this.onFormSubmit)
     this.destroyEditor()
+    this.uiBridge?.destroy()
   }
 
   focus(event) {
@@ -126,10 +130,12 @@ export default class extends Controller {
     loadTipTapRuntime()
       .then((runtime) => {
         this.runtime = runtime
+        this.uiBridge?.setMode("tiptap")
         this.initializeTipTapEditor(runtime)
       })
       .catch((error) => {
         console.warn("[FlatPack::TipTap] Falling back to the built-in contenteditable runtime", error)
+        this.uiBridge?.setMode("bridge-fallback")
         this.initializeFallbackEditor()
       })
   }
@@ -162,21 +168,8 @@ export default class extends Controller {
   }
 
   refreshUi() {
-    if (this.hasToolbarTarget) {
-      updateCommandButtons(this.toolbarTarget, this.editor, { disabled: !this.editor?.isEditable })
-    }
-
-    if (this.hasBubbleMenuTarget) {
-      updateCommandButtons(this.bubbleMenuTarget, this.editor, { disabled: this.fallbackMode ? this.config.disabled || this.config.readonly : !this.editor?.isEditable })
-    }
-
-    if (this.hasFloatingMenuTarget) {
-      updateCommandButtons(this.floatingMenuTarget, this.editor, { disabled: !this.editor?.isEditable })
-    }
-
-    if (this.fallbackMode) {
-      this.updateFallbackBubbleMenu()
-    }
+    const disabled = this.fallbackMode ? this.config.disabled || this.config.readonly : !this.editor?.isEditable
+    this.uiBridge?.refresh(this.editor, { fallbackMode: this.fallbackMode, disabled })
 
     this.updateCharacterCount()
   }
@@ -290,6 +283,7 @@ export default class extends Controller {
     if (!trimmed) return ""
 
     // Allow same-origin relative paths for app-managed uploads/assets.
+    // Applications should still validate and authorize these paths on the backend.
     if (trimmed.startsWith("/")) return trimmed
 
     try {
@@ -372,8 +366,9 @@ export default class extends Controller {
   async runFallbackCommand(command, value) {
     this.editorTarget.focus()
 
-    switch (command) {
+      switch (command) {
       case "bold":
+        // Deprecated DOM editing API used only as a last-resort fallback path.
         document.execCommand("bold")
         break
       case "italic":
@@ -443,17 +438,6 @@ export default class extends Controller {
       default:
         break
     }
-  }
-
-  updateFallbackBubbleMenu() {
-    if (!this.hasBubbleMenuTarget) return
-
-    const selection = window.getSelection()
-    const selectedText = selection?.toString()?.trim()
-    const withinEditor = selection?.anchorNode && this.editorTarget.contains(selection.anchorNode)
-
-    this.bubbleMenuTarget.classList.toggle("hidden", !(withinEditor && selectedText))
-    this.bubbleMenuTarget.classList.toggle("flex", Boolean(withinEditor && selectedText))
   }
 
   initialFallbackMarkup() {

@@ -127,6 +127,7 @@ Additional focused examples:
 
 - `rich_text: false` keeps the current native `<textarea>` behavior.
 - `rich_text: true` renders a TipTap-backed editor surface plus a synchronized hidden form field.
+- FlatPack uses a TipTap UI-focused integration layer for menus and controls, themed to match FlatPack tokens.
 - The hidden field keeps normal Rails form submission semantics through the component `name`.
 
 Recommended storage format:
@@ -154,6 +155,14 @@ Supported top-level `rich_text_options` keys:
 | `autofocus` | `true`, `false` | `false` | Focus editor on connect. |
 | `output_input_type` | `:hidden_input`, `:hidden_textarea` | `:hidden_input` | Real field used for submission. |
 | `sanitization_profile` | `:flatpack`, `:relaxed`, `:none` | `:flatpack` | Applied to initial HTML-mode content before editor boot. |
+| `ui` | Hash | themed defaults | TipTap UI presentation settings for FlatPack’s vanilla bridge layer. |
+
+Supported `ui` keys:
+
+- `theme` — currently `:flatpack`
+- `mode` — currently `:adaptive` (prefer TipTap UI primitives/menus where applicable, bridge where upstream React-only UI is not available to vanilla Stimulus)
+- `density` — `:comfortable` or `:compact`
+- `toolbar_label`, `bubble_menu_label`, `floating_menu_label` — accessible labels for the themed TipTap UI regions
 
 Preset guidance:
 
@@ -163,13 +172,14 @@ Preset guidance:
 
 Bubble Menu notes:
 
-- Bubble Menu is part of the default rich text story and uses TipTap’s own extension behavior instead of FlatPack’s generic popover controller.
+- Bubble Menu is part of the default rich text story and uses TipTap’s own menu extension behavior instead of FlatPack’s generic popover controller.
 - It exposes common inline formatting actions and is selection-aware.
 
 Extension strategy:
 
 - FlatPack validates and normalizes `rich_text_options` in Ruby before serializing config to the frontend.
 - All open-source TipTap extensions in the built-in registry are shipped through the normal install path, but presets keep the default editor smaller than “enable everything”.
+- FlatPack’s TipTap UI layer is themed for Rails/ViewComponent usage. Official upstream TipTap UI packages are React/CLI-first, so the vanilla Stimulus integration uses a small FlatPack bridge around TipTap’s menu/editor primitives where upstream prebuilt UI components are not directly applicable.
 - Relative URLs for links/images can be used for app-managed same-origin assets, but your backend should still validate upload endpoints and sanitize/render stored rich content defensively.
 - Framework-specific wrappers such as `Drag Handle React` and `Drag Handle Vue` are documented as upstream TipTap wrappers and are not applicable to FlatPack’s Stimulus integration.
 
