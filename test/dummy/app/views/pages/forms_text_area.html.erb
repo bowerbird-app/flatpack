@@ -63,11 +63,13 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Rich Text Editor (TipTap)", anchor_link: true) %>
 
-  <%# ── Minimal editor ───────────────────────────────────────────────────── %>
+  <%# ── Minimal preset ──────────────────────────────────────────────────── %>
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Minimal preset",
+    subtitle: "Bold, italic, and links only — smallest possible extension set.",
+    anchor_link: true
+  ) %>
   <%= render FlatPack::Card::Component.new do |card| %>
-    <% card.header do %>
-      <p class="text-sm font-medium">Minimal preset &mdash; bold / italic / links only</p>
-    <% end %>
     <% card.body do %>
       <%= render FlatPack::TextArea::Component.new(
         name: "comment[body]",
@@ -100,11 +102,13 @@
     title: "Minimal Rich Text Editor"
   ) %>
 
-  <%# ── Standard content editor ─────────────────────────────────────────── %>
+  <%# ── Content preset ──────────────────────────────────────────────────── %>
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Content preset",
+    subtitle: "Headings, lists, tables, images, highlights, and task lists.",
+    anchor_link: true
+  ) %>
   <%= render FlatPack::Card::Component.new do |card| %>
-    <% card.header do %>
-      <p class="text-sm font-medium">Content preset &mdash; headings, lists, tables, images</p>
-    <% end %>
     <% card.body do %>
       <%= render FlatPack::TextArea::Component.new(
         name: "post[body]",
@@ -140,11 +144,13 @@
     title: "Standard Content Editor"
   ) %>
 
-  <%# ── Full editor ──────────────────────────────────────────────────────── %>
+  <%# ── Full preset ─────────────────────────────────────────────────────── %>
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Full preset",
+    subtitle: "All extensions — subscript, superscript, math, drag handle, floating menu, and more.",
+    anchor_link: true
+  ) %>
   <%= render FlatPack::Card::Component.new do |card| %>
-    <% card.header do %>
-      <p class="text-sm font-medium">Full preset &mdash; all extensions including subscript, superscript, math</p>
-    <% end %>
     <% card.body do %>
       <%= render FlatPack::TextArea::Component.new(
         name: "document[body]",
@@ -177,11 +183,13 @@
     title: "Full Editor with Floating Menu"
   ) %>
 
-  <%# ── Bubble menu only (no toolbar) ───────────────────────────────────── %>
+  <%# ── No toolbar ──────────────────────────────────────────────────────── %>
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "No toolbar",
+    subtitle: "Bubble menu only — formatting appears on text selection, no persistent toolbar.",
+    anchor_link: true
+  ) %>
   <%= render FlatPack::Card::Component.new do |card| %>
-    <% card.header do %>
-      <p class="text-sm font-medium">No toolbar &mdash; bubble menu only (appears on text selection)</p>
-    <% end %>
     <% card.body do %>
       <%= render FlatPack::TextArea::Component.new(
         name: "note[body]",
@@ -214,11 +222,13 @@
     title: "Bubble Menu Only"
   ) %>
 
-  <%# ── Error state ──────────────────────────────────────────────────────── %>
+  <%# ── Error state ─────────────────────────────────────────────────────── %>
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Error state",
+    subtitle: "Pass an error message to highlight the field and display inline validation feedback.",
+    anchor_link: true
+  ) %>
   <%= render FlatPack::Card::Component.new do |card| %>
-    <% card.header do %>
-      <p class="text-sm font-medium">Error state</p>
-    <% end %>
     <% card.body do %>
       <%= render FlatPack::TextArea::Component.new(
         name: "review[body]",
@@ -243,11 +253,13 @@
     title: "Rich Text Error State"
   ) %>
 
-  <%# ── Disabled state ───────────────────────────────────────────────────── %>
+  <%# ── Disabled state ──────────────────────────────────────────────────── %>
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Disabled state",
+    subtitle: "Read-only editor with pre-loaded content — no interaction permitted.",
+    anchor_link: true
+  ) %>
   <%= render FlatPack::Card::Component.new do |card| %>
-    <% card.header do %>
-      <p class="text-sm font-medium">Disabled state</p>
-    <% end %>
     <% card.body do %>
       <%= render FlatPack::TextArea::Component.new(
         name: "archived[body]",
@@ -274,11 +286,13 @@
     title: "Disabled Rich Text Editor"
   ) %>
 
-  <%# ── HTML output mode ────────────────────────────────────────────────── %>
+  <%# ── HTML output format ──────────────────────────────────────────────── %>
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "HTML output format",
+    subtitle: "Default format — editor syncs rendered HTML to the hidden field. Sanitize with FlatPack::RichTextSanitizer before display.",
+    anchor_link: true
+  ) %>
   <%= render FlatPack::Card::Component.new do |card| %>
-    <% card.header do %>
-      <p class="text-sm font-medium">HTML output format (instead of default JSON)</p>
-    <% end %>
     <% card.body do %>
       <%= render FlatPack::TextArea::Component.new(
         name: "page[content]",
