@@ -40,6 +40,9 @@ module FlatPack
           assert_equal 1, content.scan("pin_all_from FlatPack::Engine.root.join").length
           assert_includes content, "controllers/flat_pack"
           assert_includes content, "preload: false"
+          assert_equal 1, content.scan('pin "@tiptap/core"').length
+          assert_equal 1, content.scan('pin "@tiptap/starter-kit"').length
+          assert_equal 1, content.scan('pin "@tiptap/extensions"').length
         end
       end
 
