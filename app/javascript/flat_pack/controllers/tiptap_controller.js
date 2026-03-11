@@ -179,7 +179,7 @@ export default class extends Controller {
 
   #parseInitialContent(opts) {
     const raw    = this.valueValue
-    const format = opts.format || "json"
+    const format = opts.format || "html"
 
     if (!raw || raw === "") return ""
 
@@ -205,7 +205,7 @@ export default class extends Controller {
     if (!hiddenFieldEl) return
     if (opts.readonly || this.disabledValue) return
 
-    const format = opts.format || "json"
+    const format = opts.format || "html"
     hiddenFieldEl.value = format === "html"
       ? editor.getHTML()
       : JSON.stringify(editor.getJSON())

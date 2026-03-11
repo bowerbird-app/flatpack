@@ -104,7 +104,7 @@ When `rich_text: true` is set on `FlatPack::TextArea::Component`, the native `<t
 
 ### How it works
 
-- The editor output (JSON by default, or HTML) is written to a hidden `<input type="hidden">` that carries the field `name`, so the form submits as normal.
+- The editor output (HTML by default, or JSON) is written to a hidden `<input type="hidden">` that carries the field `name`, so the form submits as normal.
 - Toolbar, bubble menu, and floating menu regions are pre-rendered in HTML and populated by JS after `Editor` is initialised.
 - TipTap UI components (BubbleMenu, FloatingMenu) are used — not custom headless implementations.
 - React and Vue framework wrappers are intentionally excluded; only the core vanilla-JS TipTap API is used.
@@ -116,7 +116,7 @@ Pass any of these keys inside `rich_text_options: { ... }`. All keys accept symb
 | key | type | default | description |
 | --- | --- | --- | --- |
 | `preset` | Symbol | `:minimal` | Extension set: `:minimal`, `:content`, or `:full`. |
-| `format` | Symbol | `:json` | Output format synced to the hidden field: `:json` or `:html`. |
+| `format` | Symbol | `:html` | Output format synced to the hidden field: `:html` or `:json`. |
 | `toolbar` | Symbol \| Array | `:standard` | Toolbar preset (`:minimal`, `:standard`, `:full`, `:none`) or an Array of tool names. |
 | `bubble_menu` | Boolean | `true` | Show TipTap BubbleMenu on text selection. |
 | `floating_menu` | Boolean | `false` | Show TipTap FloatingMenu at the start of an empty line. |

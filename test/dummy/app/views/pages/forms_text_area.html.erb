@@ -311,3 +311,146 @@
     title: "HTML Output Mode"
   ) %>
 </section>
+
+<%# ── Form Submit Test ───────────────────────────────────────────────── %>
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Form Submit Test", anchor_link: true) %>
+
+  <% if @body.present? %>
+    <%= render FlatPack::Card::Component.new do |card| %>
+      <% card.header do %>
+        <p class="text-sm font-medium">
+          Submitted &mdash; <code class="font-mono text-xs">params[:article][:body]</code>
+          <span class="ml-2 text-base-content/50">(format: <%= @body_format %>)</span>
+        </p>
+      <% end %>
+      <% card.body(class: "space-y-6") do %>
+        <div>
+          <p class="text-xs font-medium text-base-content/60 uppercase tracking-wide mb-2">Raw param value</p>
+          <%= render FlatPack::CodeBlock::Component.new(
+            code: @body,
+            language: @body_format == "json" ? "json" : "html",
+            title: "params[:article][:body]"
+          ) %>
+        </div>
+
+        <% if @body_format == "json" %>
+          <div>
+            <p class="text-xs font-medium text-base-content/60 uppercase tracking-wide mb-2">Parsed JSON</p>
+            <%= render FlatPack::CodeBlock::Component.new(
+              code: (JSON.pretty_generate(JSON.parse(@body)) rescue @body),
+              language: "json",
+              title: "JSON.parse(body)"
+            ) %>
+          </div>
+        <% else %>
+          <div>
+            <p class="text-xs font-medium text-base-content/60 uppercase tracking-wide mb-2">
+              Rendered after <code class="font-mono text-xs">FlatPack::RichTextSanitizer.sanitize(body)</code>
+            </p>
+            <div class="prose prose-sm max-w-none rounded-md border border-base-300 bg-base-100 p-4">
+              <%= FlatPack::RichTextSanitizer.sanitize(@body).html_safe %>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%# ── HTML format form ──────────────────────────────────────────────────── %>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.header do %>
+      <p class="text-sm font-medium">Submit with <strong>HTML</strong> format &mdash; default</p>
+    <% end %>
+    <% card.body do %>
+      <%= form_with url: demo_forms_text_area_path, method: :post do |f| %>
+        <input type="hidden" name="article[body_format]" value="html">
+        <div class="space-y-[var(--stack-gap-md)]">
+          <%= render FlatPack::TextArea::Component.new(
+            name: "article[body]",
+            id: "article-body-html",
+            label: "Article body",
+            placeholder: "Write something and click Submit to see the submitted HTML value…",
+            rich_text: true,
+            rich_text_options: {
+              preset: :content,
+              toolbar: :standard,
+              format: :html
+            }
+          ) %>
+          <div class="pt-1">
+            <%= render FlatPack::Button::Component.new(
+              text: "Submit (HTML format)",
+              type: "submit",
+              style: :primary
+            ) %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%# ── JSON format form ──────────────────────────────────────────────────── %>
+  <%= render FlatPack::Card::Component.new(class: "mt-6") do |card| %>
+    <% card.header do %>
+      <p class="text-sm font-medium">Submit with <strong>JSON</strong> format &mdash; lossless round-trip opt-in</p>
+    <% end %>
+    <% card.body do %>
+      <%= form_with url: demo_forms_text_area_path, method: :post do |f| %>
+        <input type="hidden" name="article[body_format]" value="json">
+        <div class="space-y-[var(--stack-gap-md)]">
+          <%= render FlatPack::TextArea::Component.new(
+            name: "article[body]",
+            id: "article-body-json",
+            label: "Article body",
+            placeholder: "Write something and click Submit to see the TipTap JSON document…",
+            rich_text: true,
+            rich_text_options: {
+              preset: :content,
+              toolbar: :standard,
+              format: :json
+            }
+          ) %>
+          <div class="pt-1">
+            <%= render FlatPack::Button::Component.new(
+              text: "Submit (JSON format)",
+              type: "submit",
+              style: :secondary
+            ) %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      # routes.rb
+      get  "demo/forms/text_area", to: "pages#forms_text_area"
+      post "demo/forms/text_area", to: "pages#forms_text_area_submit"
+
+      # controller
+      def forms_text_area_submit
+        @body        = params.dig(:article, :body).to_s
+        @body_format = params.dig(:article, :body_format).presence || "html"
+        render :forms_text_area
+      end
+
+      # view — HTML format form
+      &lt;%= form_with url: demo_forms_text_area_path, method: :post do |f| %&gt;
+        &lt;input type="hidden" name="article[body_format]" value="html"&gt;
+        &lt;%= render FlatPack::TextArea::Component.new(
+          name: "article[body]",
+          rich_text: true,
+          rich_text_options: { preset: :content, format: :html }
+        ) %&gt;
+        &lt;%= render FlatPack::Button::Component.new(text: "Submit", type: "submit", style: :primary) %&gt;
+      &lt;% end %&gt;
+
+      # In a real controller, sanitize before rendering:
+      @safe_body = FlatPack::RichTextSanitizer.sanitize(@body)
+    CODE
+    language: "erb",
+    title: "Form Submit Example"
+  ) %>
+</section>

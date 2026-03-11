@@ -9,7 +9,7 @@ module FlatPack
     #
     # == Supported options
     #
-    #   format:          :json | :html                 (default: :json)
+    #   format:          :html | :json                 (default: :html)
     #   preset:          :minimal | :content | :full   (default: :minimal)
     #   toolbar:         :minimal | :standard | :full | :none | Array<String>  (default: :standard)
     #   bubble_menu:     Boolean                        (default: true)
@@ -27,8 +27,8 @@ module FlatPack
     #
     # == Format semantics
     #
-    #   :json — canonical internal format; stores TipTap JSON document; recommended for persistence
-    #   :html — stores rendered HTML; requires sanitization before display
+    #   :html — stores rendered HTML; requires sanitization before display (default)
+    #   :json — lossless internal format; stores TipTap JSON document; recommended for lossless round-trips
     #
     # == Preset definitions (see extension_registry.js for the JS side)
     #
@@ -47,26 +47,26 @@ module FlatPack
     #   Do not attempt to use React/Vue TipTap UI wrappers in a FlatPack application.
     #
     class RichTextOptions
-      VALID_FORMATS          = %i[json html].freeze
-      VALID_PRESETS          = %i[minimal content full].freeze
-      VALID_TOOLBAR_PRESETS  = %i[minimal standard full none].freeze
+      VALID_FORMATS = %i[json html].freeze
+      VALID_PRESETS = %i[minimal content full].freeze
+      VALID_TOOLBAR_PRESETS = %i[minimal standard full none].freeze
 
       DEFAULTS = {
-        format:          :json,
-        preset:          :minimal,
-        toolbar:         :standard,
-        bubble_menu:     true,
-        floating_menu:   false,
-        placeholder:     nil,
+        format: :html,
+        preset: :minimal,
+        toolbar: :standard,
+        bubble_menu: true,
+        floating_menu: false,
+        placeholder: nil,
         character_count: false,
-        readonly:        false,
-        autofocus:       false,
-        mentions:        false,
-        uploads:         false,
-        tables:          false,
-        collaboration:   false,
-        extensions:      {},
-        ui:              {}
+        readonly: false,
+        autofocus: false,
+        mentions: false,
+        uploads: false,
+        tables: false,
+        collaboration: false,
+        extensions: {},
+        ui: {}
       }.freeze
 
       attr_reader :options
@@ -97,21 +97,21 @@ module FlatPack
         result = DEFAULTS.merge(opts)
 
         # Normalize enum fields to Symbol (allow String input)
-        result[:format]  = normalize_sym(result[:format])
-        result[:preset]  = normalize_sym(result[:preset])
+        result[:format] = normalize_sym(result[:format])
+        result[:preset] = normalize_sym(result[:preset])
         result[:toolbar] = result[:toolbar].is_a?(Array) ? result[:toolbar] : normalize_sym(result[:toolbar])
 
         validate_format!(result[:format])
         validate_preset!(result[:preset])
         validate_toolbar!(result[:toolbar])
-        validate_boolean!(:bubble_menu,     result[:bubble_menu])
-        validate_boolean!(:floating_menu,   result[:floating_menu])
+        validate_boolean!(:bubble_menu, result[:bubble_menu])
+        validate_boolean!(:floating_menu, result[:floating_menu])
         validate_boolean!(:character_count, result[:character_count])
-        validate_boolean!(:readonly,        result[:readonly])
-        validate_boolean!(:autofocus,       result[:autofocus])
-        validate_flex_config!(:mentions,     result[:mentions])
-        validate_flex_config!(:uploads,      result[:uploads])
-        validate_flex_config!(:tables,       result[:tables])
+        validate_boolean!(:readonly, result[:readonly])
+        validate_boolean!(:autofocus, result[:autofocus])
+        validate_flex_config!(:mentions, result[:mentions])
+        validate_flex_config!(:uploads, result[:uploads])
+        validate_flex_config!(:tables, result[:tables])
         validate_flex_config!(:collaboration, result[:collaboration])
         validate_extensions!(result[:extensions])
         validate_ui!(result[:ui])
@@ -191,9 +191,9 @@ module FlatPack
       def deep_serialize(val)
         case val
         when Symbol then val.to_s
-        when Hash   then val.transform_keys(&:to_s).transform_values { |v| deep_serialize(v) }
-        when Array  then val.map { |v| deep_serialize(v) }
-        else             val
+        when Hash then val.transform_keys(&:to_s).transform_values { |v| deep_serialize(v) }
+        when Array then val.map { |v| deep_serialize(v) }
+        else val
         end
       end
     end

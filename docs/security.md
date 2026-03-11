@@ -371,6 +371,51 @@ end
 <%= render MyComponent.new(posts: @posts) %>
 ```
 
+## Displaying TipTap HTML Output
+
+When using the TipTap rich text editor with the default `:html` format, always sanitize stored content before rendering it:
+
+```ruby
+# Safe — run stored HTML through the allowlist sanitizer
+<%= raw FlatPack::RichTextSanitizer.sanitize(@post.body) %>
+```
+
+**Never** use `raw()` or `html_safe` directly on stored TipTap HTML without sanitizing first:
+
+```ruby
+# UNSAFE — do not do this
+<%= raw @post.body %>
+<%= @post.body.html_safe %>
+```
+
+### What the sanitizer allows
+
+`FlatPack::RichTextSanitizer` maintains an allowlist of tags and attributes needed by TipTap extensions:
+
+| Attribute | Element | Why |
+|-----------|---------|-----|
+| `data-color` | `mark` | Highlight multicolor stores the colour value here |
+| `style` | `mark`, `span`, `p`, headings | Color, BackgroundColor, TextAlign emit inline styles |
+| `data-type` | `ul` | TaskList sets `data-type="taskList"` |
+| `data-checked` | `li` | TaskItem stores checked state |
+| `data-colwidth` | `th`, `td` | Table resizable column widths |
+| `class` | `code` | CodeBlockLowlight sets `language-*` class |
+| `colspan`, `rowspan` | `th`, `td` | Standard table spanning |
+
+### Using JSON format for lossless round-trips
+
+If you need to preserve all TipTap document structure (e.g. for re-editing without loss), opt in to `:json` format:
+
+```ruby
+<%= render FlatPack::TextArea::Component.new(
+  name: "body",
+  rich_text: true,
+  rich_text_options: { format: :json }
+) %>
+```
+
+JSON-format values are TipTap document JSON and should be parsed with `JSON.parse` rather than rendered directly as HTML.
+
 ## Additional Resources
 
 - [OWASP XSS Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html)

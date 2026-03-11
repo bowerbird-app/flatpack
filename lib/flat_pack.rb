@@ -3,6 +3,7 @@
 require "flat_pack/version"
 require "flat_pack/engine"
 require "flat_pack/attribute_sanitizer"
+require "flat_pack/rich_text_sanitizer"
 
 module FlatPack
   class << self

@@ -157,14 +157,14 @@ module FlatPack
       def test_rich_text_mode_options_json_includes_preset
         render_inline(Component.new(name: "body", rich_text: true, rich_text_options: {preset: :content}))
         wrapper = page.find("[data-flat-pack--tiptap-options-value]")
-        json    = JSON.parse(wrapper["data-flat-pack--tiptap-options-value"])
+        json = JSON.parse(wrapper["data-flat-pack--tiptap-options-value"])
         assert_equal "content", json["preset"]
       end
 
       def test_rich_text_mode_options_json_includes_format
         render_inline(Component.new(name: "body", rich_text: true, rich_text_options: {format: :html}))
         wrapper = page.find("[data-flat-pack--tiptap-options-value]")
-        json    = JSON.parse(wrapper["data-flat-pack--tiptap-options-value"])
+        json = JSON.parse(wrapper["data-flat-pack--tiptap-options-value"])
         assert_equal "html", json["format"]
       end
 
@@ -259,42 +259,49 @@ module FlatPack
       def test_bubble_menu_true_reflected_in_options_json
         render_inline(Component.new(name: "body", rich_text: true, rich_text_options: {bubble_menu: true}))
         wrapper = page.find("[data-flat-pack--tiptap-options-value]")
-        json    = JSON.parse(wrapper["data-flat-pack--tiptap-options-value"])
+        json = JSON.parse(wrapper["data-flat-pack--tiptap-options-value"])
         assert_equal true, json["bubble_menu"]
       end
 
       def test_bubble_menu_false_reflected_in_options_json
         render_inline(Component.new(name: "body", rich_text: true, rich_text_options: {bubble_menu: false}))
         wrapper = page.find("[data-flat-pack--tiptap-options-value]")
-        json    = JSON.parse(wrapper["data-flat-pack--tiptap-options-value"])
+        json = JSON.parse(wrapper["data-flat-pack--tiptap-options-value"])
         assert_equal false, json["bubble_menu"]
       end
 
       def test_minimal_preset_reflected_in_options_json
         render_inline(Component.new(name: "body", rich_text: true, rich_text_options: {preset: :minimal}))
         wrapper = page.find("[data-flat-pack--tiptap-options-value]")
-        json    = JSON.parse(wrapper["data-flat-pack--tiptap-options-value"])
+        json = JSON.parse(wrapper["data-flat-pack--tiptap-options-value"])
         assert_equal "minimal", json["preset"]
       end
 
       def test_full_preset_reflected_in_options_json
         render_inline(Component.new(name: "body", rich_text: true, rich_text_options: {preset: :full}))
         wrapper = page.find("[data-flat-pack--tiptap-options-value]")
-        json    = JSON.parse(wrapper["data-flat-pack--tiptap-options-value"])
+        json = JSON.parse(wrapper["data-flat-pack--tiptap-options-value"])
         assert_equal "full", json["preset"]
       end
 
       def test_html_format_reflected_in_options_json
         render_inline(Component.new(name: "body", rich_text: true, rich_text_options: {format: :html}))
         wrapper = page.find("[data-flat-pack--tiptap-options-value]")
-        json    = JSON.parse(wrapper["data-flat-pack--tiptap-options-value"])
+        json = JSON.parse(wrapper["data-flat-pack--tiptap-options-value"])
         assert_equal "html", json["format"]
       end
 
-      def test_json_format_is_default_in_options_json
+      def test_html_format_is_default_in_options_json
         render_inline(Component.new(name: "body", rich_text: true))
         wrapper = page.find("[data-flat-pack--tiptap-options-value]")
-        json    = JSON.parse(wrapper["data-flat-pack--tiptap-options-value"])
+        json = JSON.parse(wrapper["data-flat-pack--tiptap-options-value"])
+        assert_equal "html", json["format"]
+      end
+
+      def test_json_format_explicit_still_works
+        render_inline(Component.new(name: "body", rich_text: true, rich_text_options: {format: :json}))
+        wrapper = page.find("[data-flat-pack--tiptap-options-value]")
+        json = JSON.parse(wrapper["data-flat-pack--tiptap-options-value"])
         assert_equal "json", json["format"]
       end
 
