@@ -150,6 +150,7 @@ async function buildContentExtensions(config) {
     typographyMod,
     imageMod,
     codeLowlightMod,
+    lowlightMod,
     taskListMod,
     taskItemMod,
     tableMod,
@@ -163,6 +164,7 @@ async function buildContentExtensions(config) {
     tryImport("@tiptap/extension-typography"),
     tryImport("@tiptap/extension-image"),
     tryImport("@tiptap/extension-code-block-lowlight"),
+    tryImport("lowlight"),
     tryImport("@tiptap/extension-task-list"),
     tryImport("@tiptap/extension-task-item"),
     tryImport("@tiptap/extension-table"),
@@ -173,18 +175,20 @@ async function buildContentExtensions(config) {
 
   const additions = []
 
-  if (highlightMod)     additions.push(highlightMod.Highlight.configure({ multicolor: true }))
-  if (textStyleMod)     additions.push(textStyleMod.TextStyle)
-  if (colorMod && textStyleMod) additions.push(colorMod.Color)
-  if (typographyMod)    additions.push(typographyMod.Typography)
-  if (imageMod)         additions.push(imageMod.Image.configure({ inline: false, allowBase64: false }))
-  if (codeLowlightMod)  additions.push(codeLowlightMod.CodeBlockLowlight)
-  if (taskListMod)      additions.push(taskListMod.TaskList)
-  if (taskItemMod)      additions.push(taskItemMod.TaskItem.configure({ nested: true }))
+  if (highlightMod?.Highlight)     additions.push(highlightMod.Highlight.configure({ multicolor: true }))
+  if (textStyleMod?.TextStyle)     additions.push(textStyleMod.TextStyle)
+  if (colorMod?.Color && textStyleMod?.TextStyle) additions.push(colorMod.Color)
+  if (typographyMod?.Typography)    additions.push(typographyMod.Typography)
+  if (imageMod?.Image)         additions.push(imageMod.Image.configure({ inline: false, allowBase64: false }))
+  if (codeLowlightMod?.CodeBlockLowlight && lowlightMod?.createLowlight) {
+    const lowlight = lowlightMod.createLowlight(lowlightMod.common || {})
+    additions.push(codeLowlightMod.CodeBlockLowlight.configure({ lowlight }))
+  }
+  if (taskListMod?.TaskList)      additions.push(taskListMod.TaskList)
+  if (taskItemMod?.TaskItem)      additions.push(taskItemMod.TaskItem.configure({ nested: true }))
 
   // Table extensions — all four must be present together
-  if (tableMod && tableRowMod && tableCellMod && tableHeaderMod) {
-    // tableHeaderMod uses .TableHeader export
+  if (tableMod?.Table && tableRowMod?.TableRow && tableCellMod?.TableCell && tableHeaderMod?.TableHeader) {
     additions.push(
       tableMod.Table.configure({ resizable: true }),
       tableRowMod.TableRow,
@@ -208,18 +212,15 @@ async function buildFullExtensions(config) {
     fontFamilyMod,
     mentionMod,
     youtubeMod,
-    audioMod,
     detailsMod,
     detailsContentMod,
     detailsSummaryMod,
-    trailingNodeMod,
     uniqueIdMod,
     focusMod,
     listKeymapMod,
     collaborationMod,
     collaborationCursorMod,
     dragHandleMod,
-    listKitmapMod,
     // Note: the packages below may require TipTap Pro or optional dependencies.
     // They are included here for full-preset support. If unavailable, they are
     // silently skipped (tryImport returns null).
@@ -233,11 +234,9 @@ async function buildFullExtensions(config) {
     tryImport("@tiptap/extension-font-family"),
     tryImport("@tiptap/extension-mention"),
     tryImport("@tiptap/extension-youtube"),
-    tryImport("@tiptap/extension-audio"),
     tryImport("@tiptap/extension-details"),
     tryImport("@tiptap/extension-details-content"),
     tryImport("@tiptap/extension-details-summary"),
-    tryImport("@tiptap/extension-trailing-node"),
     tryImport("@tiptap/extension-unique-id"),
     tryImport("@tiptap/extension-focus"),
     tryImport("@tiptap/extension-list-keymap"),
@@ -246,7 +245,6 @@ async function buildFullExtensions(config) {
     // Drag Handle — vanilla JS core. React/Vue wrappers from @tiptap-ui are
     // NOT used; FlatPack wires drag-handle through Stimulus instead.
     tryImport("@tiptap/extension-drag-handle"),
-    tryImport("@tiptap/extension-list-keymap"),
     // Optional/Pro packages — graceful skip if unavailable
     tryImport("@tiptap/extension-mathematics"),
     tryImport("@tiptap/extension-emoji"),
@@ -256,11 +254,11 @@ async function buildFullExtensions(config) {
 
   const additions = []
 
-  if (subscriptMod)     additions.push(subscriptMod.Subscript)
-  if (superscriptMod)   additions.push(superscriptMod.Superscript)
-  if (fontFamilyMod)    additions.push(fontFamilyMod.FontFamily)
+  if (subscriptMod?.Subscript)     additions.push(subscriptMod.Subscript)
+  if (superscriptMod?.Superscript)   additions.push(superscriptMod.Superscript)
+  if (fontFamilyMod?.FontFamily)    additions.push(fontFamilyMod.FontFamily)
 
-  if (mentionMod) {
+  if (mentionMod?.Mention) {
     const mentionConfig = typeof config.opts.mentions === "object"
       ? config.opts.mentions
       : {}
@@ -272,10 +270,9 @@ async function buildFullExtensions(config) {
     )
   }
 
-  if (youtubeMod) additions.push(youtubeMod.Youtube.configure({ controls: true }))
-  if (audioMod)   additions.push(audioMod.Audio)
+  if (youtubeMod?.Youtube) additions.push(youtubeMod.Youtube.configure({ controls: true }))
 
-  if (detailsMod && detailsContentMod && detailsSummaryMod) {
+  if (detailsMod?.Details && detailsContentMod?.DetailsContent && detailsSummaryMod?.DetailsSummary) {
     additions.push(
       detailsMod.Details,
       detailsContentMod.DetailsContent,
@@ -283,18 +280,17 @@ async function buildFullExtensions(config) {
     )
   }
 
-  if (trailingNodeMod) additions.push(trailingNodeMod.TrailingNode)
-  if (uniqueIdMod)     additions.push(uniqueIdMod.UniqueID.configure({ types: ["heading", "paragraph"] }))
-  if (focusMod)        additions.push(focusMod.Focus.configure({ className: "flat-pack-richtext-focus", mode: "all" }))
-  if (listKeymapMod)   additions.push(listKeymapMod.ListKeymap)
+  if (uniqueIdMod?.UniqueID)     additions.push(uniqueIdMod.UniqueID.configure({ types: ["heading", "paragraph"] }))
+  if (focusMod?.Focus)        additions.push(focusMod.Focus.configure({ className: "flat-pack-richtext-focus", mode: "all" }))
+  if (listKeymapMod?.ListKeymap)   additions.push(listKeymapMod.ListKeymap)
 
   // Collaboration — requires an external Y.js provider; enable when configured
   const collabConfig = typeof config.opts.collaboration === "object"
     ? config.opts.collaboration
     : null
-  if (collaborationMod && collabConfig?.provider) {
+  if (collaborationMod?.Collaboration && collabConfig?.provider) {
     additions.push(collaborationMod.Collaboration.configure({ document: collabConfig.ydoc }))
-    if (collaborationCursorMod && collabConfig.provider) {
+    if (collaborationCursorMod?.CollaborationCursor && collabConfig.provider) {
       additions.push(
         collaborationCursorMod.CollaborationCursor.configure({
           provider: collabConfig.provider,
@@ -305,13 +301,13 @@ async function buildFullExtensions(config) {
   }
 
   // Drag Handle — vanilla JS; React/Vue wrappers not used (see file header)
-  if (dragHandleMod) additions.push(dragHandleMod.DragHandle)
+  if (dragHandleMod?.DragHandle) additions.push(dragHandleMod.DragHandle)
 
   // Optional packages (may be Pro or require extra deps)
-  if (mathematicsMod)      additions.push(mathematicsMod.Mathematics)
-  if (emojiMod)            additions.push(emojiMod.Emoji)
-  if (invisibleCharsMod)   additions.push(invisibleCharsMod.InvisibleCharacters)
-  if (tableOfContentsMod)  additions.push(tableOfContentsMod.TableOfContents)
+  if (mathematicsMod?.Mathematics)      additions.push(mathematicsMod.Mathematics)
+  if (emojiMod?.Emoji)            additions.push(emojiMod.Emoji)
+  if (invisibleCharsMod?.InvisibleCharacters)   additions.push(invisibleCharsMod.InvisibleCharacters)
+  if (tableOfContentsMod?.TableOfContents)  additions.push(tableOfContentsMod.TableOfContents)
 
   return [...base, ...additions]
 }
