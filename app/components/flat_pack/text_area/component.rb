@@ -455,8 +455,7 @@ module FlatPack
         when nil, ""
           JSON.generate(default_rich_text_document)
         when String
-          JSON.parse(value)
-          value
+          JSON.generate(JSON.parse(value))
         when Hash
           JSON.generate(value.deep_stringify_keys)
         else

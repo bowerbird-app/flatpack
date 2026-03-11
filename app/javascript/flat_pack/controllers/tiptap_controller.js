@@ -19,7 +19,7 @@ export default class extends Controller {
       floatingMenu: this.hasFloatingMenuTarget ? this.floatingMenuTarget : null
     })
 
-    this.handleKeydown = this.handleKeydown?.bind(this) || this.#handleKeydown.bind(this)
+    this.handleKeydown = this.#handleKeydown.bind(this)
 
     this.editor = new Editor({
       element: this.editorTarget,
@@ -70,7 +70,7 @@ export default class extends Controller {
     try {
       return JSON.parse(this.configValue || "{}")
     } catch (error) {
-      console.warn("[FlatPack::TextArea] Invalid rich text config", error)
+      console.warn("[flat-pack-tiptap] Invalid rich text config", error)
       return {}
     }
   }

@@ -110,7 +110,7 @@ async function loadAdvancedExtension(key, config) {
 
     return extension
   } catch (error) {
-    console.warn(`[FlatPack::TextArea] Unable to load TipTap extension ${key}`, error)
+    console.warn(`[flat-pack-tiptap] Unable to load TipTap extension ${key}`, error)
     return null
   }
 }
@@ -145,7 +145,8 @@ function dedupeExtensions(extensions) {
   const seen = new Set()
 
   return extensions.filter((extension) => {
-    const name = extension?.name || extension?.config?.name || Math.random().toString(36)
+    const name = extension?.name || extension?.config?.name || extension?.constructor?.name
+    if (!name) return true
     if (seen.has(name)) return false
     seen.add(name)
     return true

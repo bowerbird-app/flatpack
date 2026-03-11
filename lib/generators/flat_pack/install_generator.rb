@@ -42,19 +42,21 @@ module FlatPack
 
         if File.exist?(importmap_path)
           content = File.read(importmap_path)
+          has_flat_pack_controller_pin = content.include?("pin_all_from FlatPack::Engine.root.join(\"app/javascript/flat_pack/controllers\")")
+          has_tiptap_pins = content.include?("@tiptap/core")
 
           # Check if already configured
-          if content.include?("controllers/flat_pack") && content.include?("flat_pack/controllers") && content.include?("@tiptap/core")
+          if has_flat_pack_controller_pin && has_tiptap_pins
             say "\n⊙ Importmap already configured for FlatPack controllers", :yellow
             return
           end
 
           pin_config = []
-          unless content.include?("controllers/flat_pack") && content.include?("flat_pack/controllers")
+          unless has_flat_pack_controller_pin
             pin_config << "\n# Pin FlatPack controllers without modulepreload for lazy loading\npin_all_from FlatPack::Engine.root.join(\"app/javascript/flat_pack/controllers\"), under: \"controllers/flat_pack\", to: \"flat_pack/controllers\", preload: false\n"
           end
 
-          unless content.include?("@tiptap/core")
+          unless has_tiptap_pins
             pin_config << "\n# Built-in TipTap rich text dependencies\n#{tiptap_importmap_pins}\n"
           end
 
@@ -62,7 +64,7 @@ module FlatPack
 
           say "\n✓ Configured importmap for FlatPack controllers", :green
           say "  - Added pin_all_from for controllers/flat_pack with preload: false", :green
-          say "  - Added built-in TipTap rich text pins", :green if pin_config.any? { |entry| entry.include?("@tiptap/core") }
+          say "  - Added built-in TipTap rich text pins", :green unless has_tiptap_pins
         else
           say "\n⊙ Importmap configuration file not found", :yellow
           say "  If using importmaps, manually add to config/importmap.rb:", :yellow
