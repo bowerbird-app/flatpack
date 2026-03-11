@@ -234,6 +234,132 @@ module FlatPack
         assert_selector "textarea[rows='5']"
         assert_selector "textarea.custom"
       end
+
+      def test_renders_rich_text_editor_shell
+        render_inline(Component.new(
+          name: "article[body]",
+          label: "Body",
+          value: {type: "doc", content: [{type: "paragraph", content: [{type: "text", text: "Hello"}]}]},
+          rich_text: true
+        ))
+
+        assert_selector "div[data-controller='flat-pack--tiptap']"
+        assert_selector "div[data-flat-pack--tiptap-target='uiRoot'][data-flat-pack--tiptap-ui-role='root']"
+        assert_selector "div[role='toolbar'][data-flat-pack--tiptap-ui-role='toolbar']"
+        assert_selector "div[role='textbox'][data-flat-pack--tiptap-target='editor']"
+        assert_selector "input[type='hidden'][name='article[body]'][data-flat-pack--tiptap-target='input']", visible: false
+        refute_selector "div[data-controller='flat-pack--tiptap'] textarea:not([hidden])"
+      end
+
+      def test_rich_text_renders_hidden_field_with_serialized_json
+        render_inline(Component.new(
+          name: "article[body]",
+          value: "Hello world",
+          rich_text: true
+        ))
+
+        value = page.find("input[type='hidden'][name='article[body]']", visible: false).value
+        parsed = JSON.parse(value)
+
+        assert_equal "doc", parsed["type"]
+        assert_includes parsed.to_s, "Hello world"
+      end
+
+      def test_rich_text_supports_hidden_textarea_output
+        render_inline(Component.new(
+          name: "article[body]",
+          rich_text: true,
+          rich_text_options: {output_input_type: :hidden_textarea}
+        ))
+
+        assert_selector "textarea.hidden[name='article[body]'][data-flat-pack--tiptap-target='input']", visible: false
+      end
+
+      def test_rich_text_serializes_bubble_menu_and_preset_configuration
+        render_inline(Component.new(
+          name: "article[body]",
+          rich_text: true,
+          rich_text_options: {preset: :content, bubble_menu: true}
+        ))
+
+        config = JSON.parse(page.find("div[data-controller='flat-pack--tiptap']")["data-flat-pack--tiptap-config-value"])
+
+        assert_equal "content", config["preset"]
+        assert_equal true, config["bubble_menu"]
+        assert_equal true, config.dig("extensions", "table_kit")
+        assert_equal true, config.dig("extensions", "bubble_menu")
+        assert_equal "adaptive", config.dig("ui", "mode")
+        assert_equal "flatpack", config.dig("ui", "theme")
+      end
+
+      def test_rich_text_supports_disabled_required_error_and_custom_classes
+        render_inline(Component.new(
+          name: "article[body]",
+          rich_text: true,
+          label: "Body",
+          required: true,
+          disabled: true,
+          error: "Body is required",
+          class: "custom-rich-text"
+        ))
+
+        assert_selector "label", text: "Body"
+        assert_selector "div[role='textbox'].custom-rich-text[aria-required='true'][aria-disabled='true'][aria-invalid='true']"
+        assert_selector "p", text: "Body is required"
+        assert_selector "input[type='hidden'][disabled]", visible: false
+      end
+
+      def test_rich_text_uses_placeholder_override
+        render_inline(Component.new(
+          name: "article[body]",
+          placeholder: "Component placeholder",
+          rich_text: true,
+          rich_text_options: {placeholder: "Rich placeholder"}
+        ))
+
+        config = JSON.parse(page.find("div[data-controller='flat-pack--tiptap']")["data-flat-pack--tiptap-config-value"])
+        assert_equal "Rich placeholder", config["placeholder"]
+      end
+
+      def test_rich_text_rejects_invalid_option_type
+        error = assert_raises(ArgumentError) do
+          Component.new(name: "article[body]", rich_text: true, rich_text_options: "oops")
+        end
+
+        assert_includes error.message, "rich_text_options must be a Hash"
+      end
+
+      def test_rich_text_rejects_invalid_enum_values
+        error = assert_raises(ArgumentError) do
+          Component.new(name: "article[body]", rich_text: true, rich_text_options: {format: :markdown})
+        end
+
+        assert_includes error.message, "rich_text_options.format"
+      end
+
+      def test_rich_text_rejects_framework_specific_wrappers
+        error = assert_raises(ArgumentError) do
+          Component.new(
+            name: "article[body]",
+            rich_text: true,
+            rich_text_options: {extensions: {drag_handle_react: true}}
+          )
+        end
+
+        assert_includes error.message, "framework-specific TipTap wrapper"
+      end
+
+      def test_rich_text_rejects_invalid_ui_options
+        error = assert_raises(ArgumentError) do
+          Component.new(
+            name: "article[body]",
+            rich_text: true,
+            rich_text_options: {ui: "nope"}
+          )
+        end
+
+        assert_includes error.message, "rich_text_options.ui must be a Hash"
+      end
     end
   end
 end

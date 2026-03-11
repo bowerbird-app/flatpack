@@ -50,6 +50,7 @@ rails generate flat_pack:install
 - Adds `@import "flat_pack/variables.css";` to your `app/assets/stylesheets/application.css`
 - **Automatically configures Tailwind CSS 4** by detecting your Tailwind CSS file and injecting the necessary configuration
 - **Configures importmap** to load FlatPack Stimulus controllers
+- **Pins TipTap dependencies and the FlatPack TipTap UI bridge** so rich text support is available through `FlatPack::TextArea::Component` by default
 - **Configures Stimulus** to lazy load FlatPack controllers on first use
 - Shows next steps for using components
 
@@ -384,7 +385,7 @@ If FlatPack Stimulus controllers are not working (e.g., password toggle, file up
    ```bash
    bin/rails runner "puts Rails.application.importmap.packages.keys.grep(/flat_pack/)"
    ```
-   Should show: `controllers/flat_pack/text_area_controller`, `controllers/flat_pack/password_input_controller`, etc.
+   Should show: `controllers/flat_pack/text_area_controller`, `controllers/flat_pack/tiptap_controller`, `@tiptap/core`, etc.
 
 3. **Check controllers/index.js:**
    ```bash

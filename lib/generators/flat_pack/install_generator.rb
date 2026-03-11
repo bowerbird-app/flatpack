@@ -42,24 +42,42 @@ module FlatPack
 
         if File.exist?(importmap_path)
           content = File.read(importmap_path)
+          updated = false
 
-          # Check if already configured
-          if content.include?("controllers/flat_pack") && content.include?("flat_pack/controllers")
-            say "\n⊙ Importmap already configured for FlatPack controllers", :yellow
-            return
+          unless content.include?("controllers/flat_pack") && content.include?("flat_pack/controllers")
+            content += "\n# Pin FlatPack controllers without modulepreload for lazy loading\npin_all_from FlatPack::Engine.root.join(\"app/javascript/flat_pack/controllers\"), under: \"controllers/flat_pack\", to: \"flat_pack/controllers\", preload: false\n"
+            updated = true
           end
 
-          # Add the pin configuration
-          pin_config = "\n# Pin FlatPack controllers without modulepreload for lazy loading\npin_all_from FlatPack::Engine.root.join(\"app/javascript/flat_pack/controllers\"), under: \"controllers/flat_pack\", to: \"flat_pack/controllers\", preload: false\n"
+          unless content.include?('pin_all_from FlatPack::Engine.root.join("app/javascript/flat_pack/tiptap")')
+            content += "pin_all_from FlatPack::Engine.root.join(\"app/javascript/flat_pack/tiptap\"), under: \"flat_pack/tiptap\", to: \"flat_pack/tiptap\", preload: false\n"
+            updated = true
+          end
 
-          File.write(importmap_path, content + pin_config)
+          unless tiptap_importmap_configured?(content)
+            content += tiptap_importmap_pins
+            updated = true
+          end
 
-          say "\n✓ Configured importmap for FlatPack controllers", :green
-          say "  - Added pin_all_from for controllers/flat_pack with preload: false", :green
+          if updated
+            File.write(importmap_path, content)
+            say "\n✓ Configured importmap for FlatPack controllers, TipTap, and the TipTap UI bridge", :green
+            say "  - Added pin_all_from for controllers/flat_pack with preload: false", :green
+            say "  - Added pin_all_from for flat_pack/tiptap helper modules", :green
+            say "  - Added built-in TipTap pins for rich text support", :green
+          else
+            say "\n⊙ Importmap already configured for FlatPack controllers, TipTap, and the TipTap UI bridge", :yellow
+          end
         else
           say "\n⊙ Importmap configuration file not found", :yellow
           say "  If using importmaps, manually add to config/importmap.rb:", :yellow
           say "  pin_all_from FlatPack::Engine.root.join(\"app/javascript/flat_pack/controllers\"), under: \"controllers/flat_pack\", to: \"flat_pack/controllers\", preload: false", :cyan
+          say "  pin_all_from FlatPack::Engine.root.join(\"app/javascript/flat_pack/tiptap\"), under: \"flat_pack/tiptap\", to: \"flat_pack/tiptap\", preload: false", :cyan
+          tiptap_importmap_pins.lines.each do |line|
+            next if line.strip.empty?
+
+            say "  #{line.rstrip}", :cyan
+          end
         end
       end
 
@@ -218,6 +236,24 @@ module FlatPack
         say "   }\n"
         say "\nFor complete configuration, see: docs/installation.md", :cyan
         say "=" * 70, :cyan
+      end
+
+      def tiptap_importmap_configured?(content)
+        content.include?('pin "@tiptap/core"') &&
+          content.include?('pin "@tiptap/starter-kit"') &&
+          content.include?('pin "@tiptap/extensions"')
+      end
+
+      def tiptap_importmap_pins
+        <<~RUBY
+
+          # Built-in TipTap rich text dependencies
+          pin "@tiptap/core", to: "https://esm.sh/@tiptap/core?bundle"
+          pin "@tiptap/starter-kit", to: "https://esm.sh/@tiptap/starter-kit?bundle"
+          pin "@tiptap/extensions", to: "https://esm.sh/@tiptap/extensions?bundle"
+          pin "lowlight", to: "https://esm.sh/lowlight?bundle"
+          pin "yjs", to: "https://esm.sh/yjs?bundle"
+        RUBY
       end
 
       def ensure_lazy_stimulus_loader_import(content)
