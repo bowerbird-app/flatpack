@@ -1,5 +1,6 @@
 /* FlatPack Application Stylesheet */
 @import "flat_pack/variables.css";
+@import "flat_pack/ckeditor.css";
 
 /* Base layer for component styles */
 @layer components {
@@ -83,4 +84,3 @@
     transform: translateX(180%);
   }
 }
-

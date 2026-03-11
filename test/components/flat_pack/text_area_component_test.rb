@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require "json"
 
 module FlatPack
   module TextArea
@@ -213,6 +214,69 @@ module FlatPack
         render_inline(Component.new(name: "description", onclick: "alert('xss')"))
 
         refute_selector "textarea[onclick]"
+      end
+
+      def test_rich_text_mode_sets_dedicated_controller_and_targets
+        render_inline(Component.new(name: "description", rich_text_editor: true))
+
+        assert_selector "div[data-controller='flat-pack--rich-text-editor']"
+        assert_selector "textarea[data-flat-pack--rich-text-editor-target='textarea']"
+        refute_selector "div[data-controller='flat-pack--text-area']"
+      end
+
+      def test_rich_text_mode_serializes_allowlisted_options_only
+        render_inline(Component.new(
+          name: "description",
+          rich_text_editor: true,
+          rich_text_editor_options: {
+            placeholder: "Write here",
+            height: 240,
+            balloon_toolbar: %w[Bold Italic Link],
+            extra_plugins: %w[autogrow],
+            remove_plugins: "resize,elementspath",
+            content_css: ["flat_pack/ckeditor.css"],
+            toolbar_groups: [{name: "basicstyles", groups: %w[basicstyles cleanup]}],
+            on: "alert(1)"
+          }
+        ))
+
+        config = JSON.parse(page.find("div[data-controller='flat-pack--rich-text-editor']")["data-flat-pack--rich-text-editor-config-value"])
+
+        assert_equal "Write here", config["placeholder"]
+        assert_equal "240px", config["height"]
+        assert_equal ["Bold", "Italic", "Link"], config["balloonToolbar"]
+        assert_equal ["autogrow"], config["extraPlugins"]
+        assert_equal ["resize", "elementspath"], config["removePlugins"]
+        assert_equal ["flat_pack/ckeditor.css"], config["contentsCss"]
+        assert_equal [{"name" => "basicstyles", "groups" => ["basicstyles", "cleanup"]}], config["toolbarGroups"]
+        refute_includes config.keys, "on"
+      end
+
+      def test_rich_text_mode_preserves_accessibility_and_error_state
+        render_inline(Component.new(
+          name: "description",
+          id: "description-field",
+          label: "Description",
+          error: "Description is required",
+          required: true,
+          rich_text_editor: true
+        ))
+
+        assert_selector "label[for='description-field']", text: "Description"
+        assert_selector "textarea#description-field[required][aria-invalid='true'][aria-describedby='description-field_error']"
+        assert_selector "p#description-field_error", text: "Description is required"
+      end
+
+      def test_rich_text_mode_sanitizes_initial_html_value
+        render_inline(Component.new(
+          name: "description",
+          rich_text_editor: true,
+          value: "<script>alert('xss')</script><p><strong>Safe</strong> copy</p>"
+        ))
+
+        html = page.native.to_html
+        refute_includes html, "<script>"
+        assert_includes html, "<p><strong>Safe</strong> copy</p>"
       end
 
       def test_renders_with_all_parameters

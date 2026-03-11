@@ -33,6 +33,9 @@ Component-specific props:
 | `character_count` | Boolean | `false` | no | Enables live count text in `TextArea`. |
 | `min_characters` | Integer | `nil` | no | Low threshold warning for `TextArea` count color. |
 | `max_characters` | Integer | `nil` | no | High threshold and `current/max` format for `TextArea` count. |
+| `rich_text_editor` | Boolean | `false` | no | Enables the CKEditor-backed rich text mode for `TextArea`. |
+| `rich_text_editor_mode` | Symbol, String | `:inline` | no | Explicit editor mode. The current implementation supports `:inline`. |
+| `rich_text_editor_options` | Hash | `{}` | no | Allowlisted CKEditor config subset for `TextArea`: `toolbar_groups`, `balloon_toolbar`, `placeholder`, `height`, `extra_plugins`, `remove_plugins`, `content_css`. |
 | `min` | Numeric or date-like | `nil` (`NumberInput`), `0` (`RangeInput`) | no | Minimum value/date (`NumberInput`, `DateInput`, `RangeInput`). |
 | `max` | Numeric or date-like | `nil` (`NumberInput`), `100` (`RangeInput`) | no | Maximum value/date (`NumberInput`, `DateInput`, `RangeInput`). |
 | `step` | Numeric | `1` | no | Step increment (`NumberInput`, `RangeInput`). |
@@ -77,6 +80,19 @@ Additional focused examples:
 ```
 
 ```erb
+<%= render FlatPack::TextArea::Component.new(
+  name: "announcement[body]",
+  label: "Announcement",
+  rich_text_editor: true,
+  rich_text_editor_options: {
+    placeholder: "Share an update...",
+    height: 208,
+    balloon_toolbar: %w[Bold Italic Link Unlink BulletedList NumberedList Blockquote]
+  }
+) %>
+```
+
+```erb
 <%= render FlatPack::Select::Component.new(
   name: "user[country]",
   label: "Country",
@@ -106,12 +122,28 @@ Additional focused examples:
 
 ## Dependencies
 - Core install: `rails generate flat_pack:install`
+- Rich-text `TextArea` uses a hybrid setup:
+  - CKEditor 4 is loaded as a classic self-hosted script and exposes `window.CKEDITOR`
+  - FlatPack still loads behavior through importmap Stimulus modules
+  - Include the CKEditor script before `javascript_importmap_tags`, for example:
+
+```erb
+<%= javascript_include_tag flat_pack.ckeditor_asset_path(path: "ckeditor.js"), "data-turbo-track": "reload" %>
+<%= javascript_importmap_tags %>
+```
+
 - Stimulus controllers used by input components:
   - `flat-pack--password-input` (`PasswordInput`)
   - `flat-pack--search-input` (`SearchInput`)
   - `flat-pack--text-area` (`TextArea`)
+  - `flat-pack--rich-text-editor` (`TextArea` with `rich_text_editor: true`)
   - `flat-pack--select` (`Select` when `searchable: true`)
   - `flat-pack--date-input` (`DateInput`)
   - `flat-pack--file-input` (`FileInput`)
 - Related component dependency:
   - `flat-pack--range-input` (`RangeInput`; documented in `docs/components/range-input.md`)
+
+## Security
+- Rich text mode only accepts an allowlisted CKEditor config subset; arbitrary executable editor configuration is not passed through.
+- The submitted field remains the underlying `<textarea>` so host apps keep their normal form-processing flow.
+- Sanitize submitted HTML on the server before rendering it back to users. FlatPack does not change that security model.

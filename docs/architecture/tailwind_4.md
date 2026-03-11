@@ -94,6 +94,19 @@ SCHEMES = {
 
 The `[var(--color-primary)]` syntax allows Tailwind to use CSS variables as values.
 
+### Rich Text Editor Styling
+
+FlatPack ships CKEditor override styles in `app/assets/stylesheets/flat_pack/ckeditor.css`, imported from `flat_pack/application.css`. The stylesheet maps FlatPack tokens onto CKEditor chrome (balloon toolbar, buttons, panels, focus rings, borders, shadows) and the inline editable content surface.
+
+If your host app builds Tailwind from its own entry CSS, import the CKEditor stylesheet alongside FlatPack variables whenever you enable `rich_text_editor: true`:
+
+```css
+@import "flat_pack/variables.css";
+@import "flat_pack/ckeditor.css";
+```
+
+For inline mode, most typography inherits from the host page. If you add replace/iframe mode later, plan on a dedicated iframe contents stylesheet instead of injecting Tailwind utilities into CKEditor DOM at runtime.
+
 ### Safelist Comments for Ruby Constants
 
 **Important:** Tailwind CSS 4's `@source` directive scans for string literals but cannot detect classes stored in Ruby constants. To ensure all classes are generated, add safelist comments immediately above any constant containing Tailwind classes.

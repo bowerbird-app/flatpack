@@ -1,32 +1,55 @@
 <%= render FlatPack::PageTitle::Component.new(
   title: "Text Area",
-  subtitle: "Multiline input examples with optional character counting."
+  subtitle: "Multiline input examples with optional character counting or rich text editing."
 ) %>
 
-<%= render "pages/component_method_variables_table", component: :text_input %>
+<%= render "pages/component_method_variables_table", component: :text_area %>
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Text Area Examples", anchor_link: true) %>
 
   <%= render FlatPack::Card::Component.new do |card| %>
-    <% card.body(class: "space-y-[var(--stack-gap-md)]") do %>
-      <%= render FlatPack::TextArea::Component.new(
-        name: "description",
-        label: "Description",
-        placeholder: "Enter a detailed description...",
-        rows: 3
-      ) %>
+    <% card.body(class: "grid gap-[var(--stack-gap-md)] lg:grid-cols-2") do %>
+      <div class="space-y-[var(--stack-gap-md)]">
+        <%= render FlatPack::TextArea::Component.new(
+          name: "description",
+          label: "Description",
+          placeholder: "Enter a detailed description...",
+          rows: 3
+        ) %>
 
-      <%= render FlatPack::TextArea::Component.new(
-        name: "project_summary",
-        id: "project_summary",
-        label: "Project Summary (with character count)",
-        placeholder: "Write a short summary...",
-        rows: 3,
-        character_count: true,
-        min_characters: 30,
-        max_characters: 140
-      ) %>
+        <%= render FlatPack::TextArea::Component.new(
+          name: "project_summary",
+          id: "project_summary",
+          label: "Project Summary (with character count)",
+          placeholder: "Write a short summary...",
+          rows: 3,
+          character_count: true,
+          min_characters: 30,
+          max_characters: 140
+        ) %>
+      </div>
+
+      <div class="space-y-[var(--stack-gap-md)]">
+        <%= render FlatPack::TextArea::Component.new(
+          name: "announcement[body]",
+          id: "announcement_body",
+          label: "Announcement Body (rich text)",
+          value: "<p>Ship notes with <strong>light formatting</strong> and <a href=\"https://flatpack.dev\">links</a>.</p>",
+          placeholder: "Write an announcement...",
+          rows: 6,
+          rich_text_editor: true,
+          rich_text_editor_options: {
+            placeholder: "Write an announcement...",
+            height: 208,
+            balloon_toolbar: %w[Bold Italic Link Unlink BulletedList NumberedList Blockquote]
+          }
+        ) %>
+
+        <p class="text-sm text-[var(--surface-muted-content-color)]">
+          CKEditor 4 is loaded as a classic self-hosted script, while the field behavior still comes from FlatPack's importmap + Stimulus controllers.
+        </p>
+      </div>
     <% end %>
   <% end %>
 
@@ -50,6 +73,18 @@
           character_count: true,
           min_characters: 30,
           max_characters: 140
+        ) %&gt;
+
+        &lt;%= render FlatPack::TextArea::Component.new(
+          name: &quot;announcement[body]&quot;,
+          id: &quot;announcement_body&quot;,
+          label: &quot;Announcement Body (rich text)&quot;,
+          rich_text_editor: true,
+          rich_text_editor_options: {
+            placeholder: &quot;Write an announcement...&quot;,
+            height: 208,
+            balloon_toolbar: %w[Bold Italic Link Unlink BulletedList NumberedList Blockquote]
+          }
         ) %&gt;
         &lt;% end %&gt;
       &lt;% end %&gt;
