@@ -49,7 +49,7 @@ rails generate flat_pack:install
 **What the generator does:**
 - Adds `@import "flat_pack/variables.css";` to your `app/assets/stylesheets/application.css`
 - **Automatically configures Tailwind CSS 4** by detecting your Tailwind CSS file and injecting the necessary configuration
-- **Configures importmap** to load FlatPack Stimulus controllers
+- **Configures importmap** to load FlatPack Stimulus controllers and built-in TipTap rich text modules
 - **Configures Stimulus** to lazy load FlatPack controllers on first use
 - Shows next steps for using components
 

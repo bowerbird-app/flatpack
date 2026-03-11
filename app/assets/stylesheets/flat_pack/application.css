@@ -70,6 +70,36 @@
     height: 0;
   }
 
+
+  .flat-pack-tiptap-editor {
+    min-height: calc(var(--form-control-padding) * 6 + 3rem);
+  }
+
+  .flat-pack-tiptap-prosemirror {
+    min-height: calc(var(--form-control-padding) * 6 + 3rem);
+    padding: var(--form-control-padding);
+    outline: none;
+  }
+
+  .flat-pack-tiptap-prosemirror p.is-editor-empty:first-child::before {
+    color: var(--surface-muted-content-color);
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+  }
+
+  .flat-pack-tiptap-menu[data-active="true"],
+  .flat-pack-tiptap-button[data-active="true"] {
+    background-color: var(--color-primary);
+    color: var(--color-primary-text);
+  }
+
+  .flat-pack-tiptap-editor[aria-disabled="true"] .flat-pack-tiptap-prosemirror,
+  .flat-pack-tiptap-editor[aria-readonly="true"] .flat-pack-tiptap-prosemirror {
+    cursor: default;
+  }
+
   @media (prefers-color-scheme: dark) {
     .fp-card-hover-strong:hover {
       box-shadow: var(--card-hover-strong-shadow-dark);

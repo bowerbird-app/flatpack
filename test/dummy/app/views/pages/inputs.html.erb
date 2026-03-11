@@ -247,7 +247,7 @@
   <!-- Text Area -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Text Area", anchor_link: true, subtitle: "Examples for Text Area.") %>
-    <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">Multi-line input that auto-expands and supports optional live character counting with min/max thresholds</p>
+    <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">Multi-line input that supports plain text and FlatPack-themed TipTap rich text with Bubble Menu and configurable toolbars</p>
     
     <div class="space-y-4">
       <%= render FlatPack::TextArea::Component.new(
@@ -281,6 +281,17 @@
         min_characters: 30,
         max_characters: 140
       ) %>
+
+      <%= render FlatPack::TextArea::Component.new(
+        name: "rich_description",
+        label: "Rich Description",
+        rich_text: true,
+        rich_text_options: {
+          preset: :content,
+          toolbar: :standard,
+          bubble_menu: true
+        }
+      ) %>
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE'),
@@ -306,6 +317,13 @@
           min_characters: 30,
           max_characters: 140,
           rows: 3
+        ) %&gt;
+
+        &lt;%= render FlatPack::TextArea::Component.new(
+          name: &quot;rich_description&quot;,
+          label: &quot;Rich Description&quot;,
+          rich_text: true,
+          rich_text_options: { preset: :content, toolbar: :standard, bubble_menu: true }
         ) %&gt;
       CODE
       class: "mt-4"
@@ -1003,4 +1021,3 @@
       class: "mt-4"
     ) %>
   </section>
-

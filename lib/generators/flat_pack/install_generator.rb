@@ -42,24 +42,34 @@ module FlatPack
 
         if File.exist?(importmap_path)
           content = File.read(importmap_path)
+          has_flat_pack_controller_pin = content.include?("pin_all_from FlatPack::Engine.root.join(\"app/javascript/flat_pack/controllers\")")
+          has_tiptap_pins = content.include?("@tiptap/core")
 
           # Check if already configured
-          if content.include?("controllers/flat_pack") && content.include?("flat_pack/controllers")
+          if has_flat_pack_controller_pin && has_tiptap_pins
             say "\n⊙ Importmap already configured for FlatPack controllers", :yellow
             return
           end
 
-          # Add the pin configuration
-          pin_config = "\n# Pin FlatPack controllers without modulepreload for lazy loading\npin_all_from FlatPack::Engine.root.join(\"app/javascript/flat_pack/controllers\"), under: \"controllers/flat_pack\", to: \"flat_pack/controllers\", preload: false\n"
+          pin_config = []
+          unless has_flat_pack_controller_pin
+            pin_config << "\n# Pin FlatPack controllers without modulepreload for lazy loading\npin_all_from FlatPack::Engine.root.join(\"app/javascript/flat_pack/controllers\"), under: \"controllers/flat_pack\", to: \"flat_pack/controllers\", preload: false\n"
+          end
 
-          File.write(importmap_path, content + pin_config)
+          unless has_tiptap_pins
+            pin_config << "\n# Built-in TipTap rich text dependencies\n#{tiptap_importmap_pins}\n"
+          end
+
+          File.write(importmap_path, content + pin_config.join)
 
           say "\n✓ Configured importmap for FlatPack controllers", :green
           say "  - Added pin_all_from for controllers/flat_pack with preload: false", :green
+          say "  - Added built-in TipTap rich text pins", :green unless has_tiptap_pins
         else
           say "\n⊙ Importmap configuration file not found", :yellow
           say "  If using importmaps, manually add to config/importmap.rb:", :yellow
           say "  pin_all_from FlatPack::Engine.root.join(\"app/javascript/flat_pack/controllers\"), under: \"controllers/flat_pack\", to: \"flat_pack/controllers\", preload: false", :cyan
+          say "  # Built-in TipTap rich text pins are documented in docs/installation.md", :cyan
         end
       end
 
@@ -244,13 +254,39 @@ module FlatPack
         say "   bin/rails tailwindcss:build"
         say "\n3. Verify JavaScript controllers are working:"
         say "   Check browser console for any controller loading errors"
-        say "\n4. Test FlatPack components in your views:"
+        say "\n4. TipTap rich text is now built in:"
+        say "   render FlatPack::TextArea::Component.new(name: \"post[body]\", rich_text: true)"
+        say "\n5. Test FlatPack components in your views:"
         say "   <%= render FlatPack::Button::Component.new("
         say "     label: 'Click me',"
         say "     scheme: :primary"
         say "   ) %>\n"
         say "\nDocumentation: docs/", :cyan
         say "=" * 70, :cyan
+      end
+
+      def tiptap_importmap_pins
+        <<~RUBY.chomp
+          pin "@tiptap/core", to: "https://esm.sh/@tiptap/core?bundle"
+          pin "@tiptap/starter-kit", to: "https://esm.sh/@tiptap/starter-kit?bundle"
+          pin "@tiptap/extension-placeholder", to: "https://esm.sh/@tiptap/extension-placeholder?bundle"
+          pin "@tiptap/extension-character-count", to: "https://esm.sh/@tiptap/extension-character-count?bundle"
+          pin "@tiptap/extension-link", to: "https://esm.sh/@tiptap/extension-link?bundle"
+          pin "@tiptap/extension-underline", to: "https://esm.sh/@tiptap/extension-underline?bundle"
+          pin "@tiptap/extension-highlight", to: "https://esm.sh/@tiptap/extension-highlight?bundle"
+          pin "@tiptap/extension-text-style", to: "https://esm.sh/@tiptap/extension-text-style?bundle"
+          pin "@tiptap/extension-color", to: "https://esm.sh/@tiptap/extension-color?bundle"
+          pin "@tiptap/extension-text-align", to: "https://esm.sh/@tiptap/extension-text-align?bundle"
+          pin "@tiptap/extension-bubble-menu", to: "https://esm.sh/@tiptap/extension-bubble-menu?bundle"
+          pin "@tiptap/extension-floating-menu", to: "https://esm.sh/@tiptap/extension-floating-menu?bundle"
+          pin "@tiptap/extension-task-list", to: "https://esm.sh/@tiptap/extension-task-list?bundle"
+          pin "@tiptap/extension-task-item", to: "https://esm.sh/@tiptap/extension-task-item?bundle"
+          pin "@tiptap/extension-image", to: "https://esm.sh/@tiptap/extension-image?bundle"
+          pin "@tiptap/extension-table", to: "https://esm.sh/@tiptap/extension-table?bundle"
+          pin "@tiptap/extension-table-row", to: "https://esm.sh/@tiptap/extension-table-row?bundle"
+          pin "@tiptap/extension-table-header", to: "https://esm.sh/@tiptap/extension-table-header?bundle"
+          pin "@tiptap/extension-table-cell", to: "https://esm.sh/@tiptap/extension-table-cell?bundle"
+        RUBY
       end
     end
   end
