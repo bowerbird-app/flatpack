@@ -1,5 +1,6 @@
 /* FlatPack Application Stylesheet */
 @import "flat_pack/variables.css";
+@import "flat_pack/rich_text.css";
 
 /* Base layer for component styles */
 @layer components {

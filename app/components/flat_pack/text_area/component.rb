@@ -21,82 +21,81 @@ module FlatPack
         character_count: false,
         min_characters: nil,
         max_characters: nil,
+        rich_text: false,
+        rich_text_options: {},
         **system_arguments
       )
-        @custom_class = system_arguments[:class]
+        @custom_class    = system_arguments[:class]
         super(**system_arguments)
-        @name = name
-        @value = value
-        @placeholder = placeholder
-        @disabled = disabled
-        @required = required
-        @label = label
-        @error = error
-        @rows = rows
-        @autogrow = autogrow
+        @name            = name
+        @value           = value
+        @placeholder     = placeholder
+        @disabled        = disabled
+        @required        = required
+        @label           = label
+        @error           = error
+        @rows            = rows
+        @autogrow        = autogrow
         @submit_on_enter = submit_on_enter
         @character_count = character_count
-        @min_characters = min_characters
-        @max_characters = max_characters
+        @min_characters  = min_characters
+        @max_characters  = max_characters
+        @rich_text       = rich_text
+
+        # Build and validate rich text options early so consumers get clear feedback.
+        @rich_text_options = @rich_text ? RichTextOptions.new(rich_text_options) : nil
 
         validate_name!
-        validate_rows!
-        validate_character_limits!
+        validate_rows!             unless @rich_text
+        validate_character_limits! unless @rich_text
       end
 
       def call
         content_tag(:div, **wrapper_attributes) do
-          safe_join([
-            render_label,
-            render_textarea,
-            render_character_count,
-            render_error
-          ].compact)
+          if @rich_text
+            safe_join([
+              render_label,
+              render_rich_text_editor_surface,
+              render_rich_text_character_count,
+              render_error
+            ].compact)
+          else
+            safe_join([
+              render_label,
+              render_textarea,
+              render_character_count,
+              render_error
+            ].compact)
+          end
         end
       end
 
       private
 
+      # ── Shared helpers used in both modes ────────────────────────────────────
+
       def render_label
         return unless @label
 
-        label_tag(textarea_id, @label, class: label_classes)
+        label_tag(field_id, @label, class: label_classes)
       end
 
       def render_textarea
         content_tag(:textarea, @value, **textarea_attributes)
       end
 
-      def render_error
-        return unless @error
-
-        content_tag(:p, @error, class: error_classes, id: error_id)
-      end
-
-      def render_character_count
-        return unless @character_count
-
-        content_tag(
-          :p,
-          character_count_text,
-          id: character_count_id,
-          class: character_count_classes,
-          data: {flat_pack__text_area_target: "count"}
-        )
-      end
-
       def textarea_attributes
         attrs = {
-          name: @name,
-          id: textarea_id,
+          name:        @name,
+          id:          field_id,
           placeholder: @placeholder,
-          disabled: @disabled,
-          required: @required,
-          rows: @rows,
-          class: textarea_classes,
+          disabled:    @disabled,
+          required:    @required,
+          rows:        @rows,
+          class:       textarea_classes,
           data: {
             flat_pack__text_area_target: "textarea",
-            action: textarea_actions
+            action:                      textarea_actions
           }.compact
         }
 
@@ -105,28 +104,178 @@ module FlatPack
         merge_attributes(**apply_default_validation(attrs.compact, error_id: error_id, has_error: @error.present?))
       end
 
-      def wrapper_classes
-        "flat-pack-input-wrapper"
+      def render_error
+        return unless @error
+
+        content_tag(:p, @error, class: error_classes, id: error_id)
       end
 
+      # ── Plain textarea mode ──────────────────────────────────────────────────
+
+      def render_character_count
+        return unless @character_count
+
+        content_tag(
+          :p,
+          character_count_text,
+          id:    character_count_id,
+          class: character_count_classes,
+          data:  {flat_pack__text_area_target: "count"}
+        )
+      end
+
+      # ── Rich text editor mode ────────────────────────────────────────────────
+
+      # Renders the full rich-text editor scaffold: toolbar, editor surface,
+      # bubble/floating menu containers, and the hidden submission field.
+      # All containers are populated by the TipTap Stimulus controller
+      # (flat-pack--tiptap) after TipTap is initialized client-side.
+      def render_rich_text_editor_surface
+        safe_join([
+          render_rich_text_toolbar_region,
+          render_rich_text_editor_container,
+          render_bubble_menu_region,
+          render_floating_menu_region,
+          render_rich_text_hidden_field
+        ].compact)
+      end
+
+      # Empty toolbar container — JavaScript populates buttons based on preset.
+      def render_rich_text_toolbar_region
+        return if @rich_text_options.options[:toolbar] == :none
+
+        content_tag(
+          :div,
+          "",
+          class: "flat-pack-richtext-toolbar",
+          role:  "toolbar",
+          data:  {flat_pack__tiptap_target: "toolbar"},
+          aria:  {label: "Formatting toolbar"}
+        )
+      end
+
+      # The container where TipTap mounts the ProseMirror contenteditable surface.
+      def render_rich_text_editor_container
+        content_tag(
+          :div,
+          "",
+          class: rich_text_editor_container_classes,
+          data:  {flat_pack__tiptap_target: "editorContainer"}
+        )
+      end
+
+      # Shown by TipTap's BubbleMenu extension when text is selected.
+      def render_bubble_menu_region
+        return unless @rich_text_options.options[:bubble_menu]
+
+        content_tag(
+          :div,
+          "",
+          class: "flat-pack-richtext-bubble-menu",
+          data:  {flat_pack__tiptap_target: "bubbleMenu"}
+        )
+      end
+
+      # Shown by TipTap's FloatingMenu extension at empty paragraphs.
+      def render_floating_menu_region
+        return unless @rich_text_options.options[:floating_menu]
+
+        content_tag(
+          :div,
+          "",
+          class: "flat-pack-richtext-floating-menu",
+          data:  {flat_pack__tiptap_target: "floatingMenu"}
+        )
+      end
+
+      # Character count display updated by TipTap's CharacterCount extension.
+      # Enabled when character_count is set via component prop OR rich_text_options.
+      def render_rich_text_character_count
+        return unless @character_count || @rich_text_options.options[:character_count]
+
+        content_tag(
+          :p,
+          "0 characters",
+          id:    character_count_id,
+          class: character_count_classes,
+          data:  {flat_pack__tiptap_target: "characterCount"}
+        )
+      end
+
+      # Hidden input synchronized by the TipTap controller; the actual form field.
+      def render_rich_text_hidden_field
+        attrs = {
+          type:  "hidden",
+          name:  @name,
+          id:    "#{field_id}_hidden",
+          value: (@value || "").to_s,
+          data:  {flat_pack__tiptap_target: "hiddenField"}
+        }
+        attrs[:disabled] = true if @disabled
+        tag.input(**attrs)
+      end
+
+      # ── Wrapper attributes dispatched by mode ────────────────────────────────
+
       def wrapper_attributes
+        @rich_text ? rich_text_wrapper_attributes : plain_textarea_wrapper_attributes
+      end
+
+      def plain_textarea_wrapper_attributes
         {
           class: wrapper_classes,
-          data: {
-            controller: "flat-pack--text-area",
-            flat_pack__text_area_autogrow_value: @autogrow,
-            flat_pack__text_area_submit_on_enter_value: @submit_on_enter,
-            flat_pack__text_area_min_characters_value: @min_characters,
-            flat_pack__text_area_max_characters_value: @max_characters,
+          data:  {
+            controller:                                         "flat-pack--text-area",
+            flat_pack__text_area_autogrow_value:                @autogrow,
+            flat_pack__text_area_submit_on_enter_value:         @submit_on_enter,
+            flat_pack__text_area_min_characters_value:          @min_characters,
+            flat_pack__text_area_max_characters_value:          @max_characters,
             flat_pack__text_area_character_count_enabled_value: @character_count
           }.compact
         }
       end
 
+      def rich_text_wrapper_attributes
+        opts_json = @rich_text_options.for_json.to_json
+
+        data_attrs = {
+          controller:                               "flat-pack--tiptap",
+          flat_pack__tiptap_options_value:          opts_json,
+          flat_pack__tiptap_editor_id_value:        field_id,
+          flat_pack__tiptap_placeholder_value:      @placeholder,
+          flat_pack__tiptap_disabled_value:         @disabled,
+          flat_pack__tiptap_required_value:         @required,
+          flat_pack__tiptap_has_error_value:        @error.present?,
+          flat_pack__tiptap_error_id_value:         @error.present? ? error_id : nil,
+          flat_pack__tiptap_value_value:            (@value || "").to_s
+        }.compact
+
+        {class: rich_text_wrapper_classes, data: data_attrs}
+      end
+
+      # ── CSS class helpers ────────────────────────────────────────────────────
+
+      def wrapper_classes
+        "flat-pack-input-wrapper"
+      end
+
+      def rich_text_wrapper_classes
+        base = ["flat-pack-input-wrapper", "flat-pack-richtext-wrapper"]
+        base << "flat-pack-richtext--error"    if @error.present?
+        base << "flat-pack-richtext--disabled" if @disabled
+        base << "flat-pack-richtext--required" if @required
+        classes(*base, @custom_class)
+      end
+
+      def rich_text_editor_container_classes
+        [
+          "flat-pack-richtext-editor",
+          @error ? "border-warning" : "border-[var(--surface-border-color)]"
+        ].join(" ")
+      end
+
       def label_classes
-        classes(
-          "block text-sm font-medium text-[var(--surface-content-color)] mb-1.5"
-        )
+        classes("block text-sm font-medium text-[var(--surface-content-color)] mb-1.5")
       end
 
       def textarea_classes
@@ -163,16 +312,25 @@ module FlatPack
         "mt-1 text-xs text-[var(--surface-muted-content-color)]"
       end
 
-      def textarea_id
-        @textarea_id ||= @system_arguments[:id] || "#{@name.to_s.gsub(/[^a-zA-Z0-9_-]/, "_")}_#{SecureRandom.hex(4)}"
+      # ── ID helpers ───────────────────────────────────────────────────────────
+
+      # Unified field ID for the label `for` attribute in both modes.
+      # In rich text mode, this ID is passed to JS which sets it as the
+      # editorProps id on the ProseMirror element for label-to-editor association.
+      def field_id
+        @field_id ||= @system_arguments[:id] ||
+          "#{@name.to_s.gsub(/[^a-zA-Z0-9_-]/, "_")}_#{SecureRandom.hex(4)}"
       end
 
+      # Backward-compatible alias so plain-textarea internal methods still work.
+      alias_method :textarea_id, :field_id
+
       def error_id
-        "#{textarea_id}_error"
+        "#{field_id}_error"
       end
 
       def character_count_id
-        "#{textarea_id}_character_count"
+        "#{field_id}_character_count"
       end
 
       def character_count_text

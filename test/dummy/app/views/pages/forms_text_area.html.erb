@@ -58,3 +58,256 @@
     title: "Text Area Examples"
   ) %>
 </section>
+
+<%# ── Rich Text Examples ────────────────────────────────────────────────── %>
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Rich Text Editor (TipTap)", anchor_link: true) %>
+
+  <%# ── Minimal editor ───────────────────────────────────────────────────── %>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.header do %>
+      <p class="text-sm font-medium">Minimal preset &mdash; bold / italic / links only</p>
+    <% end %>
+    <% card.body do %>
+      <%= render FlatPack::TextArea::Component.new(
+        name: "comment[body]",
+        id: "comment-body",
+        label: "Comment",
+        placeholder: "Write your comment...",
+        rich_text: true,
+        rich_text_options: {
+          preset: :minimal,
+          toolbar: :minimal
+        }
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::TextArea::Component.new(
+        name: &quot;comment[body]&quot;,
+        label: &quot;Comment&quot;,
+        placeholder: &quot;Write your comment...&quot;,
+        rich_text: true,
+        rich_text_options: {
+          preset: :minimal,
+          toolbar: :minimal
+        }
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Minimal Rich Text Editor"
+  ) %>
+
+  <%# ── Standard content editor ─────────────────────────────────────────── %>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.header do %>
+      <p class="text-sm font-medium">Content preset &mdash; headings, lists, tables, images</p>
+    <% end %>
+    <% card.body do %>
+      <%= render FlatPack::TextArea::Component.new(
+        name: "post[body]",
+        id: "post-body",
+        label: "Post Body",
+        placeholder: "Start writing...",
+        required: true,
+        rich_text: true,
+        rich_text_options: {
+          preset: :content,
+          toolbar: :standard,
+          character_count: true
+        }
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::TextArea::Component.new(
+        name: &quot;post[body]&quot;,
+        label: &quot;Post Body&quot;,
+        required: true,
+        rich_text: true,
+        rich_text_options: {
+          preset: :content,
+          toolbar: :standard,
+          character_count: true
+        }
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Standard Content Editor"
+  ) %>
+
+  <%# ── Full editor ──────────────────────────────────────────────────────── %>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.header do %>
+      <p class="text-sm font-medium">Full preset &mdash; all extensions including subscript, superscript, math</p>
+    <% end %>
+    <% card.body do %>
+      <%= render FlatPack::TextArea::Component.new(
+        name: "document[body]",
+        id: "document-body",
+        label: "Document",
+        rich_text: true,
+        rich_text_options: {
+          preset: :full,
+          toolbar: :full,
+          floating_menu: true
+        }
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::TextArea::Component.new(
+        name: &quot;document[body]&quot;,
+        label: &quot;Document&quot;,
+        rich_text: true,
+        rich_text_options: {
+          preset: :full,
+          toolbar: :full,
+          floating_menu: true
+        }
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Full Editor with Floating Menu"
+  ) %>
+
+  <%# ── Bubble menu only (no toolbar) ───────────────────────────────────── %>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.header do %>
+      <p class="text-sm font-medium">No toolbar &mdash; bubble menu only (appears on text selection)</p>
+    <% end %>
+    <% card.body do %>
+      <%= render FlatPack::TextArea::Component.new(
+        name: "note[body]",
+        id: "note-body",
+        label: "Note",
+        placeholder: "Select text to see the bubble menu...",
+        rich_text: true,
+        rich_text_options: {
+          toolbar: :none,
+          bubble_menu: true
+        }
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::TextArea::Component.new(
+        name: &quot;note[body]&quot;,
+        label: &quot;Note&quot;,
+        placeholder: &quot;Select text to see the bubble menu...&quot;,
+        rich_text: true,
+        rich_text_options: {
+          toolbar: :none,
+          bubble_menu: true
+        }
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Bubble Menu Only"
+  ) %>
+
+  <%# ── Error state ──────────────────────────────────────────────────────── %>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.header do %>
+      <p class="text-sm font-medium">Error state</p>
+    <% end %>
+    <% card.body do %>
+      <%= render FlatPack::TextArea::Component.new(
+        name: "review[body]",
+        id: "review-body",
+        label: "Review",
+        rich_text: true,
+        error: "Review body can't be blank"
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::TextArea::Component.new(
+        name: &quot;review[body]&quot;,
+        label: &quot;Review&quot;,
+        rich_text: true,
+        error: &quot;Review body can't be blank&quot;
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Rich Text Error State"
+  ) %>
+
+  <%# ── Disabled state ───────────────────────────────────────────────────── %>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.header do %>
+      <p class="text-sm font-medium">Disabled state</p>
+    <% end %>
+    <% card.body do %>
+      <%= render FlatPack::TextArea::Component.new(
+        name: "archived[body]",
+        id: "archived-body",
+        label: "Archived Content",
+        value: '{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"This content is read-only."}]}]}',
+        rich_text: true,
+        disabled: true
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::TextArea::Component.new(
+        name: &quot;archived[body]&quot;,
+        label: &quot;Archived Content&quot;,
+        value: '{"type":"doc",...}',
+        rich_text: true,
+        disabled: true
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Disabled Rich Text Editor"
+  ) %>
+
+  <%# ── HTML output mode ────────────────────────────────────────────────── %>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.header do %>
+      <p class="text-sm font-medium">HTML output format (instead of default JSON)</p>
+    <% end %>
+    <% card.body do %>
+      <%= render FlatPack::TextArea::Component.new(
+        name: "page[content]",
+        id: "page-content",
+        label: "Page Content",
+        rich_text: true,
+        rich_text_options: {
+          format: :html,
+          preset: :content,
+          toolbar: :standard
+        }
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::TextArea::Component.new(
+        name: &quot;page[content]&quot;,
+        label: &quot;Page Content&quot;,
+        rich_text: true,
+        rich_text_options: {
+          format: :html,
+          preset: :content,
+          toolbar: :standard
+        }
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "HTML Output Mode"
+  ) %>
+</section>
