@@ -475,6 +475,26 @@
         { variable: "**system_arguments", accepts: "Hash", example: "id: \"email\", class: \"w-full\", data: { testid: \"email-input\" }" }
       ]
     },
+    text_area: {
+      label: "Text Area",
+      method_call: "render FlatPack::TextArea::Component.new(name: \"post[body]\", label: \"Body\", rich_text: true, rich_text_options: { preset: :content })",
+      variables: [
+        { variable: "name", accepts: "String (required)", example: "name: \"post[body]\"" },
+        { variable: "value", accepts: "String, Hash, Array, nil", example: "value: { type: \"doc\", content: [...] }" },
+        { variable: "placeholder", accepts: "String or nil", example: "placeholder: \"Start writing...\"" },
+        { variable: "label", accepts: "String or nil", example: "label: \"Body\"" },
+        { variable: "error", accepts: "String or nil", example: "error: \"Body can't be blank\"" },
+        { variable: "rows", accepts: "Integer", example: "rows: 4" },
+        { variable: "autogrow", accepts: "true, false", example: "autogrow: true" },
+        { variable: "submit_on_enter", accepts: "true, false", example: "submit_on_enter: false" },
+        { variable: "character_count", accepts: "true, false", example: "character_count: true" },
+        { variable: "min_characters", accepts: "Integer or nil", example: "min_characters: 40" },
+        { variable: "max_characters", accepts: "Integer or nil", example: "max_characters: 500" },
+        { variable: "rich_text", accepts: "true, false", example: "rich_text: true" },
+        { variable: "rich_text_options", accepts: "Hash", example: "rich_text_options: { preset: :content, format: :json, bubble_menu: true, toolbar: :standard }" },
+        { variable: "**system_arguments", accepts: "Hash", example: "id: \"post-body\", class: \"w-full\", data: { testid: \"body-editor\" }" }
+      ]
+    },
     modal: {
       label: "Modal",
       method_call: "render FlatPack::Modal::Component.new(id: \"confirm-delete\", size: :md) do |modal| ... end",

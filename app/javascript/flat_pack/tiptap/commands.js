@@ -86,6 +86,10 @@ export async function runCommand(editor, command, value, context = {}) {
 }
 
 function buttonState(editor, command, value) {
+  if (!editor || typeof editor.isActive !== "function") {
+    return false
+  }
+
   switch (command) {
     case "bold":
     case "italic":

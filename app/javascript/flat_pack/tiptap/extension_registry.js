@@ -1,6 +1,4 @@
-import StarterKit from "@tiptap/starter-kit"
-import * as TiptapExtensions from "@tiptap/extensions"
-import * as LowlightModule from "lowlight"
+let runtimePromise
 
 const STARTER_KIT_KEYS = new Set([
   "bold",
@@ -26,9 +24,27 @@ const LIST_KIT_KEYS = new Set(["bullet_list", "ordered_list", "list_item", "task
 const TABLE_KIT_KEYS = new Set(["table", "table_row", "table_header", "table_cell"])
 const TEXT_STYLE_KIT_KEYS = new Set(["text_style", "color", "background_color", "font_family", "font_size", "line_height"])
 
-function extensionExport(...names) {
+export async function loadTipTapRuntime() {
+  if (!runtimePromise) {
+    runtimePromise = Promise.all([
+      import("@tiptap/core"),
+      import("@tiptap/starter-kit"),
+      import("@tiptap/extensions"),
+      import("lowlight")
+    ]).then(([core, starterKit, extensions, lowlight]) => ({
+      Editor: core.Editor,
+      StarterKit: starterKit.default || starterKit,
+      extensions,
+      lowlight
+    }))
+  }
+
+  return runtimePromise
+}
+
+function extensionExport(runtime, ...names) {
   for (const name of names) {
-    if (TiptapExtensions[name]) return TiptapExtensions[name]
+    if (runtime.extensions[name]) return runtime.extensions[name]
   }
 
   return null
@@ -78,47 +94,47 @@ function resolveMentionItems(config) {
   })
 }
 
-function lowlightAdapter() {
-  if (typeof LowlightModule.createLowlight !== "function") return null
+function lowlightAdapter(runtime) {
+  if (typeof runtime.lowlight?.createLowlight !== "function") return null
 
-  return LowlightModule.createLowlight(LowlightModule.common || {})
+  return runtime.lowlight.createLowlight(runtime.lowlight.common || {})
 }
 
 const REGISTRY = {
   starter_kit: {
-    build: (_value, context) => StarterKit.configure(starterKitOptions(context.config))
+    build: (runtime, _value, context) => runtime.StarterKit.configure(starterKitOptions(context.config))
   },
   placeholder: {
-    build: (_value, context) => configureIfPossible(
-      extensionExport("Placeholder"),
+    build: (runtime, _value, context) => configureIfPossible(
+      extensionExport(runtime, "Placeholder"),
       _value,
       () => ({ placeholder: context.config.placeholder || "" })
     )
   },
   bubble_menu: {
-    build: (_value, context) => context.hasBubbleMenuTarget ? configureIfPossible(
-      extensionExport("BubbleMenu"),
+    build: (runtime, _value, context) => context.hasBubbleMenuTarget ? configureIfPossible(
+      extensionExport(runtime, "BubbleMenu"),
       _value,
       () => ({ element: context.bubbleMenuTarget })
     ) : null
   },
   floating_menu: {
-    build: (_value, context) => context.hasFloatingMenuTarget ? configureIfPossible(
-      extensionExport("FloatingMenu"),
+    build: (runtime, _value, context) => context.hasFloatingMenuTarget ? configureIfPossible(
+      extensionExport(runtime, "FloatingMenu"),
       _value,
       () => ({ element: context.floatingMenuTarget })
     ) : null
   },
   character_count: {
-    build: (_value, context) => configureIfPossible(
-      extensionExport("CharacterCount"),
+    build: (runtime, _value, context) => configureIfPossible(
+      extensionExport(runtime, "CharacterCount"),
       _value,
       () => context.hasMaxCharactersValue ? { limit: context.maxCharactersValue } : {}
     )
   },
   link: {
-    build: () => configureIfPossible(
-      extensionExport("Link"),
+    build: (runtime) => configureIfPossible(
+      extensionExport(runtime, "Link"),
       true,
       () => ({
         openOnClick: false,
@@ -127,49 +143,49 @@ const REGISTRY = {
       })
     )
   },
-  underline: { build: () => extensionExport("Underline") },
-  highlight: { build: () => extensionExport("Highlight") },
-  text_style: { build: () => extensionExport("TextStyle") },
+  underline: { build: (runtime) => extensionExport(runtime, "Underline") },
+  highlight: { build: (runtime) => extensionExport(runtime, "Highlight") },
+  text_style: { build: (runtime) => extensionExport(runtime, "TextStyle") },
   text_align: {
-    build: () => configureIfPossible(
-      extensionExport("TextAlign"),
+    build: (runtime) => configureIfPossible(
+      extensionExport(runtime, "TextAlign"),
       true,
       () => ({ types: ["heading", "paragraph"] })
     )
   },
-  color: { build: () => extensionExport("Color") },
-  background_color: { build: () => extensionExport("BackgroundColor") },
-  typography: { build: () => extensionExport("Typography") },
-  list_kit: { build: () => extensionExport("ListKit") },
+  color: { build: (runtime) => extensionExport(runtime, "Color") },
+  background_color: { build: (runtime) => extensionExport(runtime, "BackgroundColor") },
+  typography: { build: (runtime) => extensionExport(runtime, "Typography") },
+  list_kit: { build: (runtime) => extensionExport(runtime, "ListKit") },
   table_kit: {
-    build: (value) => configureIfPossible(
-      extensionExport("TableKit"),
+    build: (runtime, value) => configureIfPossible(
+      extensionExport(runtime, "TableKit"),
       value,
       (settings) => settings && settings !== true ? settings : {}
     )
   },
   image: {
-    build: () => configureIfPossible(
-      extensionExport("Image"),
+    build: (runtime) => configureIfPossible(
+      extensionExport(runtime, "Image"),
       true,
       () => ({ allowBase64: false })
     )
   },
-  code_block: { build: () => extensionExport("CodeBlock") },
+  code_block: { build: (runtime) => extensionExport(runtime, "CodeBlock") },
   code_block_lowlight: {
-    build: () => {
-      const Extension = extensionExport("CodeBlockLowlight")
-      const lowlight = lowlightAdapter()
+    build: (runtime) => {
+      const Extension = extensionExport(runtime, "CodeBlockLowlight")
+      const lowlight = lowlightAdapter(runtime)
       if (!Extension || !lowlight) return null
 
       return Extension.configure({ lowlight })
     }
   },
-  task_list: { build: () => extensionExport("TaskList") },
-  task_item: { build: () => configureIfPossible(extensionExport("TaskItem"), true, () => ({ nested: true })) },
+  task_list: { build: (runtime) => extensionExport(runtime, "TaskList") },
+  task_item: { build: (runtime) => configureIfPossible(extensionExport(runtime, "TaskItem"), true, () => ({ nested: true })) },
   file_handler: {
-    build: (_value, context) => configureIfPossible(
-      extensionExport("FileHandler"),
+    build: (runtime, _value, context) => configureIfPossible(
+      extensionExport(runtime, "FileHandler"),
       _value,
       () => ({
         onDrop: (_editor, files, pos) => context.handleUploadFiles(files, { pos }),
@@ -177,13 +193,13 @@ const REGISTRY = {
       })
     )
   },
-  text_style_kit: { build: () => extensionExport("TextStyleKit") },
-  font_family: { build: () => extensionExport("FontFamily") },
-  font_size: { build: () => extensionExport("FontSize") },
-  line_height: { build: () => extensionExport("LineHeight") },
+  text_style_kit: { build: (runtime) => extensionExport(runtime, "TextStyleKit") },
+  font_family: { build: (runtime) => extensionExport(runtime, "FontFamily") },
+  font_size: { build: (runtime) => extensionExport(runtime, "FontSize") },
+  line_height: { build: (runtime) => extensionExport(runtime, "LineHeight") },
   mention: {
-    build: (value) => {
-      const Extension = extensionExport("Mention")
+    build: (runtime, value) => {
+      const Extension = extensionExport(runtime, "Mention")
       if (!Extension) return null
 
       const items = resolveMentionItems(value)
@@ -200,18 +216,18 @@ const REGISTRY = {
       })
     }
   },
-  mathematics: { build: () => extensionExport("Mathematics") },
-  emoji: { build: () => extensionExport("Emoji") },
-  audio: { build: () => extensionExport("Audio") },
-  youtube: { build: () => extensionExport("Youtube", "YouTube") },
-  twitch: { build: () => extensionExport("Twitch") },
-  details: { build: () => extensionExport("Details") },
-  details_content: { build: () => extensionExport("DetailsContent") },
-  details_summary: { build: () => extensionExport("DetailsSummary") },
-  table_of_contents: { build: () => extensionExport("TableOfContents") },
+  mathematics: { build: (runtime) => extensionExport(runtime, "Mathematics") },
+  emoji: { build: (runtime) => extensionExport(runtime, "Emoji") },
+  audio: { build: (runtime) => extensionExport(runtime, "Audio") },
+  youtube: { build: (runtime) => extensionExport(runtime, "Youtube", "YouTube") },
+  twitch: { build: (runtime) => extensionExport(runtime, "Twitch") },
+  details: { build: (runtime) => extensionExport(runtime, "Details") },
+  details_content: { build: (runtime) => extensionExport(runtime, "DetailsContent") },
+  details_summary: { build: (runtime) => extensionExport(runtime, "DetailsSummary") },
+  table_of_contents: { build: (runtime) => extensionExport(runtime, "TableOfContents") },
   collaboration: {
-    build: (value, context) => {
-      const Extension = extensionExport("Collaboration")
+    build: (runtime, value, context) => {
+      const Extension = extensionExport(runtime, "Collaboration")
       if (!Extension) return null
 
       const document = context.resolveRuntimeReference(value?.document_key)
@@ -221,8 +237,8 @@ const REGISTRY = {
     }
   },
   collaboration_caret: {
-    build: (value, context) => {
-      const Extension = extensionExport("CollaborationCaret", "CollaborationCursor")
+    build: (runtime, value, context) => {
+      const Extension = extensionExport(runtime, "CollaborationCaret", "CollaborationCursor")
       if (!Extension) return null
 
       const provider = context.resolveRuntimeReference(value?.provider_key)
@@ -237,35 +253,35 @@ const REGISTRY = {
       })
     }
   },
-  drag_handle: { build: () => extensionExport("DragHandle") },
-  invisible_characters: { build: () => extensionExport("InvisibleCharacters") },
-  unique_id: { build: () => extensionExport("UniqueID", "UniqueId") },
-  focus: { build: () => extensionExport("Focus") },
-  selection: { build: () => extensionExport("Selection") },
-  trailing_node: { build: () => extensionExport("TrailingNode") },
-  gapcursor: { build: () => extensionExport("Gapcursor", "GapCursor") },
-  dropcursor: { build: () => extensionExport("Dropcursor", "DropCursor") },
-  list_keymap: { build: () => extensionExport("ListKeymap", "ListKeyMap") },
-  bold: { build: () => extensionExport("Bold") },
-  code: { build: () => extensionExport("Code") },
-  italic: { build: () => extensionExport("Italic") },
-  strike: { build: () => extensionExport("Strike") },
-  subscript: { build: () => extensionExport("Subscript") },
-  superscript: { build: () => extensionExport("Superscript") },
-  blockquote: { build: () => extensionExport("Blockquote") },
-  bullet_list: { build: () => extensionExport("BulletList") },
-  document: { build: () => extensionExport("Document") },
-  hard_break: { build: () => extensionExport("HardBreak") },
-  heading: { build: () => extensionExport("Heading") },
-  horizontal_rule: { build: () => extensionExport("HorizontalRule") },
-  list_item: { build: () => extensionExport("ListItem") },
-  ordered_list: { build: () => extensionExport("OrderedList") },
-  paragraph: { build: () => extensionExport("Paragraph") },
-  table: { build: () => extensionExport("Table") },
-  table_cell: { build: () => extensionExport("TableCell") },
-  table_header: { build: () => extensionExport("TableHeader") },
-  table_row: { build: () => extensionExport("TableRow") },
-  text: { build: () => extensionExport("Text") }
+  drag_handle: { build: (runtime) => extensionExport(runtime, "DragHandle") },
+  invisible_characters: { build: (runtime) => extensionExport(runtime, "InvisibleCharacters") },
+  unique_id: { build: (runtime) => extensionExport(runtime, "UniqueID", "UniqueId") },
+  focus: { build: (runtime) => extensionExport(runtime, "Focus") },
+  selection: { build: (runtime) => extensionExport(runtime, "Selection") },
+  trailing_node: { build: (runtime) => extensionExport(runtime, "TrailingNode") },
+  gapcursor: { build: (runtime) => extensionExport(runtime, "Gapcursor", "GapCursor") },
+  dropcursor: { build: (runtime) => extensionExport(runtime, "Dropcursor", "DropCursor") },
+  list_keymap: { build: (runtime) => extensionExport(runtime, "ListKeymap", "ListKeyMap") },
+  bold: { build: (runtime) => extensionExport(runtime, "Bold") },
+  code: { build: (runtime) => extensionExport(runtime, "Code") },
+  italic: { build: (runtime) => extensionExport(runtime, "Italic") },
+  strike: { build: (runtime) => extensionExport(runtime, "Strike") },
+  subscript: { build: (runtime) => extensionExport(runtime, "Subscript") },
+  superscript: { build: (runtime) => extensionExport(runtime, "Superscript") },
+  blockquote: { build: (runtime) => extensionExport(runtime, "Blockquote") },
+  bullet_list: { build: (runtime) => extensionExport(runtime, "BulletList") },
+  document: { build: (runtime) => extensionExport(runtime, "Document") },
+  hard_break: { build: (runtime) => extensionExport(runtime, "HardBreak") },
+  heading: { build: (runtime) => extensionExport(runtime, "Heading") },
+  horizontal_rule: { build: (runtime) => extensionExport(runtime, "HorizontalRule") },
+  list_item: { build: (runtime) => extensionExport(runtime, "ListItem") },
+  ordered_list: { build: (runtime) => extensionExport(runtime, "OrderedList") },
+  paragraph: { build: (runtime) => extensionExport(runtime, "Paragraph") },
+  table: { build: (runtime) => extensionExport(runtime, "Table") },
+  table_cell: { build: (runtime) => extensionExport(runtime, "TableCell") },
+  table_header: { build: (runtime) => extensionExport(runtime, "TableHeader") },
+  table_row: { build: (runtime) => extensionExport(runtime, "TableRow") },
+  text: { build: (runtime) => extensionExport(runtime, "Text") }
 }
 
 function managedByKit(key, config) {
@@ -277,7 +293,7 @@ function managedByKit(key, config) {
   return false
 }
 
-export function buildExtensions(config, context) {
+export function buildExtensions(runtime, config, context) {
   const extensions = []
 
   Object.entries(config.extensions || {}).forEach(([key, value]) => {
@@ -288,7 +304,7 @@ export function buildExtensions(config, context) {
     if (!entry) return
 
     try {
-      const extension = entry.build(value, context)
+      const extension = entry.build(runtime, value, context)
       if (Array.isArray(extension)) {
         extension.filter(Boolean).forEach((item) => extensions.push(item))
       } else if (extension) {
@@ -300,8 +316,4 @@ export function buildExtensions(config, context) {
   })
 
   return extensions
-}
-
-export function supportedExtensionKeys() {
-  return Object.keys(REGISTRY)
 }

@@ -37,8 +37,10 @@ module FlatPack
           generator.configure_importmap
 
           content = importmap.read
-          assert_equal 1, content.scan("pin_all_from FlatPack::Engine.root.join").length
+          assert_equal 1, content.scan('pin_all_from FlatPack::Engine.root.join("app/javascript/flat_pack/controllers")').length
+          assert_equal 1, content.scan('pin_all_from FlatPack::Engine.root.join("app/javascript/flat_pack/tiptap")').length
           assert_includes content, "controllers/flat_pack"
+          assert_includes content, "flat_pack/tiptap"
           assert_includes content, "preload: false"
           assert_equal 1, content.scan('pin "@tiptap/core"').length
           assert_equal 1, content.scan('pin "@tiptap/starter-kit"').length

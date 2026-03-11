@@ -49,6 +49,11 @@ module FlatPack
             updated = true
           end
 
+          unless content.include?('pin_all_from FlatPack::Engine.root.join("app/javascript/flat_pack/tiptap")')
+            content += "pin_all_from FlatPack::Engine.root.join(\"app/javascript/flat_pack/tiptap\"), under: \"flat_pack/tiptap\", to: \"flat_pack/tiptap\", preload: false\n"
+            updated = true
+          end
+
           unless tiptap_importmap_configured?(content)
             content += tiptap_importmap_pins
             updated = true
@@ -58,6 +63,7 @@ module FlatPack
             File.write(importmap_path, content)
             say "\n✓ Configured importmap for FlatPack controllers and TipTap", :green
             say "  - Added pin_all_from for controllers/flat_pack with preload: false", :green
+            say "  - Added pin_all_from for flat_pack/tiptap helper modules", :green
             say "  - Added built-in TipTap pins for rich text support", :green
           else
             say "\n⊙ Importmap already configured for FlatPack controllers and TipTap", :yellow
@@ -66,6 +72,7 @@ module FlatPack
           say "\n⊙ Importmap configuration file not found", :yellow
           say "  If using importmaps, manually add to config/importmap.rb:", :yellow
           say "  pin_all_from FlatPack::Engine.root.join(\"app/javascript/flat_pack/controllers\"), under: \"controllers/flat_pack\", to: \"flat_pack/controllers\", preload: false", :cyan
+          say "  pin_all_from FlatPack::Engine.root.join(\"app/javascript/flat_pack/tiptap\"), under: \"flat_pack/tiptap\", to: \"flat_pack/tiptap\", preload: false", :cyan
           tiptap_importmap_pins.lines.each do |line|
             next if line.strip.empty?
 

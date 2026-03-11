@@ -1,12 +1,91 @@
+<%
+  json_body = {
+    type: "doc",
+    content: [
+      {
+        type: "paragraph",
+        content: [
+          {type: "text", text: "FlatPack now ships with built-in rich text support powered by TipTap."}
+        ]
+      }
+    ]
+  }.to_json
+
+  content_body = {
+    type: "doc",
+    content: [
+      {
+        type: "heading",
+        attrs: {level: 2},
+        content: [{type: "text", text: "Release notes"}]
+      },
+      {
+        type: "paragraph",
+        content: [
+          {type: "text", text: "Use the content preset for longer-form product updates, links, highlights, and tables."}
+        ]
+      },
+      {
+        type: "bulletList",
+        content: [
+          {type: "listItem", content: [{type: "paragraph", content: [{type: "text", text: "Rich toolbar"}]}]},
+          {type: "listItem", content: [{type: "paragraph", content: [{type: "text", text: "Bubble menu"}]}]}
+        ]
+      }
+    ]
+  }.to_json
+
+  full_body = {
+    type: "doc",
+    content: [
+      {
+        type: "heading",
+        attrs: {level: 2},
+        content: [{type: "text", text: "Full preset"}]
+      },
+      {
+        type: "paragraph",
+        content: [
+          {type: "text", text: "Tables, media, math, mentions, collaboration hooks, and more are available through validated options."}
+        ]
+      },
+      {
+        type: "table",
+        content: [
+          {
+            type: "tableRow",
+            content: [
+              {type: "tableHeader", content: [{type: "paragraph", content: [{type: "text", text: "Extension"}]}]},
+              {type: "tableHeader", content: [{type: "paragraph", content: [{type: "text", text: "Status"}]}]}
+            ]
+          },
+          {
+            type: "tableRow",
+            content: [
+              {type: "tableCell", content: [{type: "paragraph", content: [{type: "text", text: "Bubble Menu"}]}]},
+              {type: "tableCell", content: [{type: "paragraph", content: [{type: "text", text: "Built in"}]}]}
+            ]
+          }
+        ]
+      }
+    ]
+  }.to_json
+
+  html_body = <<~HTML
+    <h2>HTML mode</h2>
+    <p>This editor accepts and submits HTML while still using the same <code>FlatPack::TextArea::Component</code> API.</p>
+  HTML
+%>
+
 <%= render FlatPack::PageTitle::Component.new(
   title: "Text Area",
-  subtitle: "Multiline input examples with optional character counting."
+  subtitle: "Plain textarea and built-in TipTap rich text examples through one component API."
 ) %>
 
-<%= render "pages/component_method_variables_table", component: :text_input %>
+<%= render "pages/component_method_variables_table", component: :text_area %>
 
-<section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Text Area Examples", anchor_link: true) %>
+<section class="mb-12 space-y-6">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Plain Text Area", anchor_link: true, subtitle: "The native textarea path remains unchanged when rich_text is false.") %>
 
   <%= render FlatPack::Card::Component.new do |card| %>
     <% card.body(class: "space-y-[var(--stack-gap-md)]") do %>
@@ -29,32 +108,199 @@
       ) %>
     <% end %>
   <% end %>
+</section>
+
+<section class="mb-12 space-y-6">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Rich Text Examples", anchor_link: true, subtitle: "TipTap ships with FlatPack and is enabled with rich_text: true.") %>
+
+  <%= form_with url: demo_forms_create_path, method: :post, local: true, class: "space-y-6" do %>
+    <div class="grid gap-6 lg:grid-cols-2">
+      <%= render FlatPack::Card::Component.new do |card| %>
+        <% card.header do %>
+          <h3 class="text-base font-semibold">Minimal rich text editor</h3>
+        <% end %>
+        <% card.body(class: "space-y-3") do %>
+          <p class="text-sm text-[var(--surface-muted-content-color)]">StarterKit + placeholder + bubble menu + character count.</p>
+          <%= render FlatPack::TextArea::Component.new(
+            name: "post[minimal_body]",
+            id: "rich-text-minimal",
+            label: "Minimal editor",
+            value: json_body,
+            placeholder: "Write a short update...",
+            character_count: true,
+            max_characters: 280,
+            rich_text: true,
+            rich_text_options: {
+              preset: :minimal
+            }
+          ) %>
+        <% end %>
+      <% end %>
+
+      <%= render FlatPack::Card::Component.new do |card| %>
+        <% card.header do %>
+          <h3 class="text-base font-semibold">Content preset</h3>
+        <% end %>
+        <% card.body(class: "space-y-3") do %>
+          <p class="text-sm text-[var(--surface-muted-content-color)]">Adds highlight, typography, list, and table support for editorial content.</p>
+          <%= render FlatPack::TextArea::Component.new(
+            name: "post[content_body]",
+            id: "rich-text-content",
+            label: "Content editor",
+            value: content_body,
+            rich_text: true,
+            rich_text_options: {
+              preset: :content,
+              toolbar: :standard
+            }
+          ) %>
+        <% end %>
+      <% end %>
+
+      <%= render FlatPack::Card::Component.new do |card| %>
+        <% card.header do %>
+          <h3 class="text-base font-semibold">Full preset with table/media content</h3>
+        <% end %>
+        <% card.body(class: "space-y-3") do %>
+          <p class="text-sm text-[var(--surface-muted-content-color)]">Demonstrates the broader extension registry and full toolbar surface.</p>
+          <%= render FlatPack::TextArea::Component.new(
+            name: "post[full_body]",
+            id: "rich-text-full",
+            label: "Full editor",
+            value: full_body,
+            rich_text: true,
+            rich_text_options: {
+              preset: :full,
+              toolbar: :full,
+              tables: {resizable: true, last_column_resizable: true}
+            }
+          ) %>
+        <% end %>
+      <% end %>
+
+      <%= render FlatPack::Card::Component.new do |card| %>
+        <% card.header do %>
+          <h3 class="text-base font-semibold">Bubble Menu example</h3>
+        <% end %>
+        <% card.body(class: "space-y-3") do %>
+          <p class="text-sm text-[var(--surface-muted-content-color)]">Select text to reveal the inline Bubble Menu for common formatting actions.</p>
+          <%= render FlatPack::TextArea::Component.new(
+            name: "post[bubble_body]",
+            id: "rich-text-bubble",
+            label: "Bubble menu editor",
+            value: json_body,
+            rich_text: true,
+            rich_text_options: {
+              preset: :minimal,
+              bubble_menu: true
+            }
+          ) %>
+        <% end %>
+      <% end %>
+
+      <%= render FlatPack::Card::Component.new do |card| %>
+        <% card.header do %>
+          <h3 class="text-base font-semibold">Readonly rich text</h3>
+        <% end %>
+        <% card.body(class: "space-y-3") do %>
+          <%= render FlatPack::TextArea::Component.new(
+            name: "post[readonly_body]",
+            id: "rich-text-readonly",
+            label: "Readonly editor",
+            value: content_body,
+            rich_text: true,
+            rich_text_options: {
+              preset: :content,
+              readonly: true
+            }
+          ) %>
+        <% end %>
+      <% end %>
+
+      <%= render FlatPack::Card::Component.new do |card| %>
+        <% card.header do %>
+          <h3 class="text-base font-semibold">Error state</h3>
+        <% end %>
+        <% card.body(class: "space-y-3") do %>
+          <%= render FlatPack::TextArea::Component.new(
+            name: "post[error_body]",
+            id: "rich-text-error",
+            label: "Editor with validation error",
+            value: json_body,
+            error: "Body can't be blank",
+            rich_text: true,
+            rich_text_options: {
+              preset: :minimal
+            }
+          ) %>
+        <% end %>
+      <% end %>
+
+      <%= render FlatPack::Card::Component.new do |card| %>
+        <% card.header do %>
+          <h3 class="text-base font-semibold">HTML submit mode</h3>
+        <% end %>
+        <% card.body(class: "space-y-3") do %>
+          <%= render FlatPack::TextArea::Component.new(
+            name: "post[html_body]",
+            id: "rich-text-html",
+            label: "HTML editor",
+            value: html_body,
+            rich_text: true,
+            rich_text_options: {
+              preset: :content,
+              format: :html,
+              sanitization_profile: :relaxed
+            }
+          ) %>
+        <% end %>
+      <% end %>
+
+      <%= render FlatPack::Card::Component.new do |card| %>
+        <% card.header do %>
+          <h3 class="text-base font-semibold">JSON submit mode</h3>
+        <% end %>
+        <% card.body(class: "space-y-3") do %>
+          <%= render FlatPack::TextArea::Component.new(
+            name: "post[json_body]",
+            id: "rich-text-json",
+            label: "JSON editor",
+            value: json_body,
+            rich_text: true,
+            rich_text_options: {
+              preset: :minimal,
+              format: :json,
+              toolbar: %i[bold italic underline link undo redo]
+            }
+          ) %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="flex justify-end">
+      <%= render FlatPack::Button::Component.new(
+        text: "Submit demo form",
+        type: "submit",
+        style: :primary
+      ) %>
+    </div>
+  <% end %>
 
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE'),
-      &lt;%= render FlatPack::Card::Component.new do |card| %&gt;
-        &lt;% card.body do %&gt;
-        &lt;%= render FlatPack::TextArea::Component.new(
-          name: &quot;description&quot;,
-          label: &quot;Description&quot;,
-          placeholder: &quot;Enter a detailed description...&quot;,
-          rows: 3
-        ) %&gt;
-    
-        &lt;%= render FlatPack::TextArea::Component.new(
-          name: &quot;project_summary&quot;,
-          id: &quot;project_summary&quot;,
-          label: &quot;Project Summary (with character count)&quot;,
-          placeholder: &quot;Write a short summary...&quot;,
-          rows: 3,
-          character_count: true,
-          min_characters: 30,
-          max_characters: 140
-        ) %&gt;
-        &lt;% end %&gt;
-      &lt;% end %&gt;
+      &lt;%= render FlatPack::TextArea::Component.new(
+        name: &quot;post[body]&quot;,
+        label: &quot;Body&quot;,
+        rich_text: true,
+        rich_text_options: {
+          preset: :content,
+          format: :json,
+          toolbar: :standard,
+          bubble_menu: true
+        }
+      ) %&gt;
     CODE
     language: "erb",
-    title: "Text Area Examples"
+    title: "Rich Text TextArea"
   ) %>
 </section>

@@ -11,6 +11,7 @@ A modern Rails 8 UI Component Library built with ViewComponent, Tailwind CSS, an
 - 🚀 **Zero Config** - Works out of the box with tailwindcss-rails gem
 - ✨ **Automated Setup** - Install generator automatically configures Tailwind CSS 4
 - 📦 **No Node.js** - Uses Propshaft + Importmaps
+- ✍️ **Built-in Rich Text** - TipTap ships with FlatPack and plugs into `FlatPack::TextArea::Component`
 - 🔧 **Customizable** - Theme via CSS variables
 - 🧩 **Composable** - Build complex UIs from simple components
 
@@ -34,6 +35,7 @@ rails generate flat_pack:install
 - ✨ Automatically detects your Tailwind CSS 4 configuration file
 - ✨ Calculates the correct relative path to FlatPack components
 - ✨ Injects `@source` directive, `@theme` block, and CSS variable mappings
+- ✨ Pins FlatPack’s built-in TipTap dependencies for rich text support
 - ✨ No manual path finding or configuration copying required!
 
 Optional layout scaffold:
@@ -191,6 +193,18 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
   name: "description",
   label: "Description",
   rows: 3
+) %>
+
+# Rich Text TextArea powered by TipTap
+<%= render FlatPack::TextArea::Component.new(
+  name: "post[body]",
+  label: "Body",
+  rich_text: true,
+  rich_text_options: {
+    preset: :content,
+    format: :json,
+    toolbar: :standard
+  }
 ) %>
 
 # URL Input with validation

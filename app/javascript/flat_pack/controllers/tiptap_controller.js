@@ -1,11 +1,8 @@
 import { Controller } from "@hotwired/stimulus"
-import * as TiptapCore from "@tiptap/core"
 
-import { runCommand, updateCommandButtons } from "../tiptap/commands"
-import { editorCharacterCount, editorIsEmpty, parseInitialContent, serializeEditorContent } from "../tiptap/content"
-import { buildExtensions } from "../tiptap/extension_registry"
-
-const { Editor } = TiptapCore
+import { runCommand, updateCommandButtons } from "flat_pack/tiptap/commands"
+import { editorCharacterCount, editorIsEmpty, parseInitialContent, serializeEditorContent } from "flat_pack/tiptap/content"
+import { buildExtensions, loadTipTapRuntime } from "flat_pack/tiptap/extension_registry"
 const SAFE_URL_PROTOCOLS = new Set(["http:", "https:", "mailto:", "tel:"])
 
 export default class extends Controller {
@@ -37,16 +34,23 @@ export default class extends Controller {
     event.preventDefault()
 
     const button = event.currentTarget
-    await runCommand(
-      this.editor,
-      button.dataset.flatPackTiptapCommand,
-      button.dataset.flatPackTiptapValue,
-      {
-        promptForUrl: this.promptForUrl.bind(this),
-        promptForColor: this.promptForColor.bind(this),
-        pickAndInsertImage: this.pickAndInsertImage.bind(this)
-      }
-    )
+    const command = button.dataset.flatPackTiptapCommand
+    const value = button.dataset.flatPackTiptapValue
+
+    if (this.fallbackMode) {
+      await this.runFallbackCommand(command, value)
+    } else {
+      await runCommand(
+        this.editor,
+        command,
+        value,
+        {
+          promptForUrl: this.promptForUrl.bind(this),
+          promptForColor: this.promptForColor.bind(this),
+          pickAndInsertImage: this.pickAndInsertImage.bind(this)
+        }
+      )
+    }
 
     this.syncInput()
     this.refreshUi()
@@ -119,32 +123,27 @@ export default class extends Controller {
   initializeEditor() {
     this.destroyEditor()
 
-    this.editor = new Editor({
-      element: this.editorTarget,
-      extensions: buildExtensions(this.config, this),
-      content: parseInitialContent(this.inputTarget.value, this.config.format),
-      editable: !this.config.readonly && !this.config.disabled,
-      autofocus: this.config.autofocus ? "end" : false,
-      editorProps: {
-        attributes: {
-          class: "prose prose-sm max-w-none min-h-[8rem] focus:outline-none",
-          "aria-label": this.editorTarget.getAttribute("aria-label") || this.editorTarget.getAttribute("aria-labelledby") || "Rich text editor"
-        }
-      },
-      onCreate: () => {
-        this.syncInput()
-        this.refreshUi()
-      },
-      onUpdate: () => {
-        this.syncInput()
-        this.refreshUi()
-        this.clearError()
-      },
-      onSelectionUpdate: () => this.refreshUi()
-    })
+    loadTipTapRuntime()
+      .then((runtime) => {
+        this.runtime = runtime
+        this.initializeTipTapEditor(runtime)
+      })
+      .catch((error) => {
+        console.warn("[FlatPack::TipTap] Falling back to the built-in contenteditable runtime", error)
+        this.initializeFallbackEditor()
+      })
   }
 
   destroyEditor() {
+    if (this.fallbackMode) {
+      this.editorTarget.removeEventListener("input", this.onFallbackInput)
+      this.editorTarget.removeEventListener("mouseup", this.onFallbackSelectionChange)
+      this.editorTarget.removeEventListener("keyup", this.onFallbackSelectionChange)
+      this.fallbackMode = false
+      this.editor = null
+      return
+    }
+
     if (!this.editor) return
 
     this.editor.destroy()
@@ -154,7 +153,9 @@ export default class extends Controller {
   syncInput() {
     if (!this.editor || !this.hasInputTarget) return
 
-    this.inputTarget.value = serializeEditorContent(this.editor, this.config.format)
+    this.inputTarget.value = this.fallbackMode
+      ? this.serializeFallbackContent()
+      : serializeEditorContent(this.editor, this.config.format)
     this.inputTarget.dispatchEvent(new Event("input", { bubbles: true }))
     this.inputTarget.dispatchEvent(new Event("change", { bubbles: true }))
     this.updateCharacterCount()
@@ -166,11 +167,15 @@ export default class extends Controller {
     }
 
     if (this.hasBubbleMenuTarget) {
-      updateCommandButtons(this.bubbleMenuTarget, this.editor, { disabled: !this.editor?.isEditable })
+      updateCommandButtons(this.bubbleMenuTarget, this.editor, { disabled: this.fallbackMode ? this.config.disabled || this.config.readonly : !this.editor?.isEditable })
     }
 
     if (this.hasFloatingMenuTarget) {
       updateCommandButtons(this.floatingMenuTarget, this.editor, { disabled: !this.editor?.isEditable })
+    }
+
+    if (this.fallbackMode) {
+      this.updateFallbackBubbleMenu()
     }
 
     this.updateCharacterCount()
@@ -179,7 +184,9 @@ export default class extends Controller {
   updateCharacterCount() {
     if (!this.config.character_count || !this.hasCountTarget) return
 
-    const count = editorCharacterCount(this.editor)
+    const count = this.fallbackMode
+      ? this.editorTarget.innerText.length
+      : editorCharacterCount(this.editor)
     const hasMax = this.hasMaxCharactersValue
     const belowMin = this.hasMinCharactersValue && count < this.minCharactersValue
     const aboveMax = hasMax && count > this.maxCharactersValue
@@ -298,5 +305,255 @@ export default class extends Controller {
     }
 
     return this._config
+  }
+
+  initializeTipTapEditor(runtime) {
+    this.fallbackMode = false
+    this.editor = new runtime.Editor({
+      element: this.editorTarget,
+      extensions: buildExtensions(runtime, this.config, this),
+      content: parseInitialContent(this.inputTarget.value, this.config.format),
+      editable: !this.config.readonly && !this.config.disabled,
+      autofocus: this.config.autofocus ? "end" : false,
+      editorProps: {
+        attributes: {
+          class: "ProseMirror prose prose-sm max-w-none min-h-[8rem] focus:outline-none",
+          "aria-label": this.editorTarget.getAttribute("aria-label") || this.editorTarget.getAttribute("aria-labelledby") || "Rich text editor"
+        }
+      },
+      onCreate: () => {
+        this.editorTarget.classList.add("ProseMirror")
+        this.syncInput()
+        this.refreshUi()
+      },
+      onUpdate: () => {
+        this.syncInput()
+        this.refreshUi()
+        this.clearError()
+      },
+      onSelectionUpdate: () => this.refreshUi()
+    })
+  }
+
+  initializeFallbackEditor() {
+    this.fallbackMode = true
+    this.editor = {
+      isEditable: !(this.config.readonly || this.config.disabled),
+      getText: () => this.editorTarget.innerText,
+      getHTML: () => this.editorTarget.innerHTML,
+      getJSON: () => this.fallbackJsonDocument(),
+      commands: {
+        focus: () => this.editorTarget.focus()
+      }
+    }
+
+    this.editorTarget.classList.add("ProseMirror")
+    this.editorTarget.contentEditable = String(!(this.config.readonly || this.config.disabled))
+    this.editorTarget.innerHTML = this.initialFallbackMarkup()
+
+    this.onFallbackInput = () => {
+      this.syncInput()
+      this.refreshUi()
+      this.clearError()
+    }
+    this.onFallbackSelectionChange = () => this.refreshUi()
+
+    this.editorTarget.addEventListener("input", this.onFallbackInput)
+    this.editorTarget.addEventListener("mouseup", this.onFallbackSelectionChange)
+    this.editorTarget.addEventListener("keyup", this.onFallbackSelectionChange)
+
+    this.syncInput()
+    this.refreshUi()
+  }
+
+  async runFallbackCommand(command, value) {
+    this.editorTarget.focus()
+
+    switch (command) {
+      case "bold":
+        document.execCommand("bold")
+        break
+      case "italic":
+        document.execCommand("italic")
+        break
+      case "underline":
+        document.execCommand("underline")
+        break
+      case "strike":
+        document.execCommand("strikeThrough")
+        break
+      case "blockquote":
+        document.execCommand("formatBlock", false, "blockquote")
+        break
+      case "bulletList":
+        document.execCommand("insertUnorderedList")
+        break
+      case "orderedList":
+        document.execCommand("insertOrderedList")
+        break
+      case "heading":
+        document.execCommand("formatBlock", false, `h${value || 2}`)
+        break
+      case "link": {
+        const href = await this.promptForUrl("link")
+        if (href) {
+          document.execCommand("createLink", false, href)
+        }
+        break
+      }
+      case "image": {
+        const uploaded = await this.pickAndInsertImage()
+        if (!uploaded) {
+          const src = await this.promptForUrl("image")
+          if (src) {
+            document.execCommand("insertImage", false, src)
+          }
+        }
+        break
+      }
+      case "table":
+        document.execCommand(
+          "insertHTML",
+          false,
+          "<table><tbody><tr><th>Column</th><th>Value</th></tr><tr><td>Bubble Menu</td><td>Built in</td></tr></tbody></table>"
+        )
+        break
+      case "undo":
+        document.execCommand("undo")
+        break
+      case "redo":
+        document.execCommand("redo")
+        break
+      case "textAlign":
+        document.execCommand(`justify${value ? value.charAt(0).toUpperCase() + value.slice(1) : "Left"}`)
+        break
+      case "color": {
+        const color = await this.promptForColor("text")
+        if (color) document.execCommand("foreColor", false, color)
+        break
+      }
+      case "backgroundColor": {
+        const color = await this.promptForColor("background")
+        if (color) document.execCommand("hiliteColor", false, color)
+        break
+      }
+      default:
+        break
+    }
+  }
+
+  updateFallbackBubbleMenu() {
+    if (!this.hasBubbleMenuTarget) return
+
+    const selection = window.getSelection()
+    const selectedText = selection?.toString()?.trim()
+    const withinEditor = selection?.anchorNode && this.editorTarget.contains(selection.anchorNode)
+
+    this.bubbleMenuTarget.classList.toggle("hidden", !(withinEditor && selectedText))
+    this.bubbleMenuTarget.classList.toggle("flex", Boolean(withinEditor && selectedText))
+  }
+
+  initialFallbackMarkup() {
+    if (this.config.format === "html") {
+      return this.inputTarget.value || "<p></p>"
+    }
+
+    try {
+      const content = JSON.parse(this.inputTarget.value)
+      return this.jsonContentToHtml(content)
+    } catch (_error) {
+      return this.inputTarget.value || "<p></p>"
+    }
+  }
+
+  jsonContentToHtml(node) {
+    if (!node) return "<p></p>"
+
+    if (Array.isArray(node)) {
+      return node.map((child) => this.jsonContentToHtml(child)).join("")
+    }
+
+    const content = this.jsonContentToHtml(node.content)
+
+    switch (node.type) {
+      case "doc":
+        return content || "<p></p>"
+      case "paragraph":
+        return `<p>${content}</p>`
+      case "heading":
+        return `<h${node.attrs?.level || 2}>${content}</h${node.attrs?.level || 2}>`
+      case "text":
+        return node.text || ""
+      case "bulletList":
+        return `<ul>${content}</ul>`
+      case "orderedList":
+        return `<ol>${content}</ol>`
+      case "listItem":
+        return `<li>${content}</li>`
+      case "table":
+        return `<table><tbody>${content}</tbody></table>`
+      case "tableRow":
+        return `<tr>${content}</tr>`
+      case "tableHeader":
+        return `<th>${content}</th>`
+      case "tableCell":
+        return `<td>${content}</td>`
+      default:
+        return content
+    }
+  }
+
+  serializeFallbackContent() {
+    return this.config.format === "html"
+      ? this.editorTarget.innerHTML
+      : JSON.stringify(this.fallbackJsonDocument())
+  }
+
+  fallbackJsonDocument() {
+    const children = Array.from(this.editorTarget.childNodes)
+      .map((node) => this.serializeFallbackNode(node))
+      .filter(Boolean)
+
+    return {
+      type: "doc",
+      content: children.length > 0 ? children : [{ type: "paragraph" }]
+    }
+  }
+
+  serializeFallbackNode(node) {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const text = node.textContent.trim()
+      return text ? { type: "text", text } : null
+    }
+
+    if (node.nodeType !== Node.ELEMENT_NODE) return null
+
+    const content = Array.from(node.childNodes).map((child) => this.serializeFallbackNode(child)).filter(Boolean)
+    const tagName = node.tagName.toLowerCase()
+
+    switch (tagName) {
+      case "p":
+        return { type: "paragraph", content }
+      case "h1":
+      case "h2":
+      case "h3":
+        return { type: "heading", attrs: { level: Number(tagName.replace("h", "")) }, content }
+      case "ul":
+        return { type: "bulletList", content }
+      case "ol":
+        return { type: "orderedList", content }
+      case "li":
+        return { type: "listItem", content }
+      case "table":
+        return { type: "table", content: Array.from(node.querySelectorAll(":scope > tbody > tr")).map((row) => this.serializeFallbackNode(row)).filter(Boolean) }
+      case "tr":
+        return { type: "tableRow", content }
+      case "th":
+        return { type: "tableHeader", content }
+      case "td":
+        return { type: "tableCell", content }
+      default:
+        return content.length === 1 ? content[0] : { type: "paragraph", content }
+    }
   }
 }
