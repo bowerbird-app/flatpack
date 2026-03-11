@@ -480,9 +480,9 @@ module FlatPack
       end
 
       def initial_character_count
-        return (@value || "").to_s.length unless @rich_text
-
-        if rich_text_format == :html
+        @initial_character_count ||= if !@rich_text
+          (@value || "").to_s.length
+        elsif rich_text_format == :html
           helpers.strip_tags(@value.to_s).length
         else
           count_json_text(JSON.parse(rich_text_input_value))

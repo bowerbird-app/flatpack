@@ -69,7 +69,7 @@ module FlatPack
           say "\n⊙ Importmap configuration file not found", :yellow
           say "  If using importmaps, manually add to config/importmap.rb:", :yellow
           say "  pin_all_from FlatPack::Engine.root.join(\"app/javascript/flat_pack/controllers\"), under: \"controllers/flat_pack\", to: \"flat_pack/controllers\", preload: false", :cyan
-          say "  #{tiptap_importmap_pins.lines.first.strip}", :cyan
+          say "  # Built-in TipTap rich text pins are documented in docs/installation.md", :cyan
         end
       end
 

@@ -194,6 +194,9 @@ module FlatPack
           file_handler: true
         }
       }.freeze
+      # Catalog upstream framework-specific wrappers so the normalized config can
+      # document why FlatPack's Stimulus integration uses the framework-agnostic
+      # extension path instead of exposing React/Vue-only helpers at runtime.
       FRAMEWORK_WRAPPERS = {
         drag_handle_react: {package: "@tiptap/extension-drag-handle-react", applicable: false},
         drag_handle_vue: {package: "@tiptap/extension-drag-handle-vue-3", applicable: false}
