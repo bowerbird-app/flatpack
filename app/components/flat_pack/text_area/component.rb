@@ -167,13 +167,12 @@ module FlatPack
       def render_character_count
         return unless effective_character_count?
 
-        target = @rich_text ? "count" : "count"
         content_tag(
           :p,
           character_count_text,
           id: character_count_id,
           class: character_count_classes,
-          data: {@rich_text ? :flat_pack__tiptap_target : :flat_pack__text_area_target => target}
+          data: {@rich_text ? :flat_pack__tiptap_target : :flat_pack__text_area_target => "count"}
         )
       end
 
@@ -322,7 +321,7 @@ module FlatPack
       end
 
       def rich_text_menu_classes
-        "flat-pack-tiptap-menu hidden items-center gap-1 rounded-md border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-1 shadow-lg"
+        "flat-pack-tiptap-menu items-center gap-1 rounded-md border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-1 shadow-lg"
       end
 
       def rich_text_button_classes
@@ -443,13 +442,12 @@ module FlatPack
       end
 
       def rich_text_input_value
-        @rich_text_input_value ||= begin
+        @rich_text_input_value ||=
           if rich_text_format == :json
             serialize_json_content(@value)
           else
             @value.to_s
           end
-        end
       end
 
       def serialize_json_content(value)

@@ -234,6 +234,101 @@ module FlatPack
         assert_selector "textarea[rows='5']"
         assert_selector "textarea.custom"
       end
+
+      def test_renders_rich_text_shell_instead_of_textarea
+        render_inline(Component.new(name: "description", rich_text: true, label: "Description"))
+
+        assert_selector "div[data-controller='flat-pack--tiptap']"
+        assert_selector "div[data-flat-pack--tiptap-target='editor']"
+        assert_selector "div[data-flat-pack--tiptap-target='toolbar']"
+        assert_selector "div[data-flat-pack--tiptap-target='bubbleMenu']"
+        assert_selector "input[type='hidden'][name='description']", visible: false
+        refute_selector "textarea[name='description']"
+      end
+
+      def test_renders_rich_text_hidden_textarea_when_requested
+        render_inline(Component.new(
+          name: "description",
+          rich_text: true,
+          rich_text_options: {output_input_type: :hidden_textarea}
+        ))
+
+        assert_selector "textarea.hidden[name='description'][hidden]", visible: false
+      end
+
+      def test_renders_rich_text_value_for_json_format
+        render_inline(Component.new(
+          name: "description",
+          rich_text: true,
+          value: {type: "doc", content: [{type: "paragraph", content: [{type: "text", text: "Hello"}]}]}
+        ))
+
+        value = page.find("input[type='hidden'][name='description']", visible: false).value
+        assert_includes value, "\"type\":\"doc\""
+        assert_includes value, "\"text\":\"Hello\""
+      end
+
+      def test_rich_text_supports_html_format
+        render_inline(Component.new(
+          name: "description",
+          rich_text: true,
+          value: "<p>Hello</p>",
+          rich_text_options: {format: :html}
+        ))
+
+        assert_equal "<p>Hello</p>", page.find("input[type='hidden'][name='description']", visible: false).value
+      end
+
+      def test_renders_custom_class_and_error_in_rich_text_mode
+        render_inline(Component.new(
+          name: "description",
+          rich_text: true,
+          class: "custom-rich-text",
+          error: "Body is required",
+          required: true
+        ))
+
+        assert_selector "div.custom-rich-text[role='textbox'][aria-invalid='true'][aria-required='true']"
+        assert_selector "p", text: "Body is required"
+      end
+
+      def test_serializes_bubble_menu_and_preset_configuration
+        render_inline(Component.new(
+          name: "description",
+          rich_text: true,
+          rich_text_options: {preset: :full, floating_menu: true}
+        ))
+
+        config = JSON.parse(page.find("div[data-controller='flat-pack--tiptap']", visible: false)["data-flat-pack--tiptap-config-value"])
+        assert_equal true, config["bubble_menu"]
+        assert_equal true, config["floating_menu"]
+        assert_equal "full", config["preset"]
+        assert_equal true, config.dig("extensions", "unique_id")
+      end
+
+      def test_rejects_unknown_rich_text_option
+        error = assert_raises(ArgumentError) do
+          Component.new(name: "description", rich_text: true, rich_text_options: {bogus: true})
+        end
+
+        assert_includes error.message, "Unknown rich_text_options"
+      end
+
+      def test_rejects_unknown_rich_text_toolbar_item
+        error = assert_raises(ArgumentError) do
+          Component.new(name: "description", rich_text: true, rich_text_options: {toolbar: [:bold, :bogus]})
+        end
+
+        assert_includes error.message, "Unknown rich text toolbar item"
+      end
+
+      def test_rejects_invalid_rich_text_json_value
+        error = assert_raises(ArgumentError) do
+          Component.new(name: "description", rich_text: true, value: "{invalid")
+        end
+
+        assert_includes error.message, "Rich text JSON value must be valid JSON"
+      end
     end
   end
 end

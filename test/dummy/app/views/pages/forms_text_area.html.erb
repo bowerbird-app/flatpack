@@ -1,6 +1,6 @@
 <%= render FlatPack::PageTitle::Component.new(
   title: "Text Area",
-  subtitle: "Multiline input examples with optional character counting."
+  subtitle: "Plain text and TipTap-backed rich text examples using one TextArea API."
 ) %>
 
 <%= render "pages/component_method_variables_table", component: :text_input %>
@@ -27,6 +27,52 @@
         min_characters: 30,
         max_characters: 140
       ) %>
+
+      <%= render FlatPack::TextArea::Component.new(
+        name: "post_body_minimal",
+        label: "Rich Text (minimal preset)",
+        rich_text: true,
+        rich_text_options: {
+          preset: :minimal,
+          bubble_menu: true
+        }
+      ) %>
+
+      <%= render FlatPack::TextArea::Component.new(
+        name: "post_body_content",
+        label: "Rich Text (content preset)",
+        rich_text: true,
+        value: {
+          type: "doc",
+          content: [
+            {
+              type: "paragraph",
+              content: [
+                {type: "text", text: "FlatPack themes TipTap UI to match the component system."}
+              ]
+            }
+          ]
+        },
+        rich_text_options: {
+          preset: :content,
+          toolbar: :standard,
+          character_count: true,
+          tables: true
+        }
+      ) %>
+
+      <%= render FlatPack::TextArea::Component.new(
+        name: "post_body_html",
+        label: "Rich Text (HTML submit mode, readonly)",
+        rich_text: true,
+        rich_text_options: {
+          preset: :full,
+          format: :html,
+          floating_menu: true,
+          readonly: true
+        },
+        value: "<p><strong>Readonly</strong> rich text can still render through the shared TextArea API.</p>"
+      ) %>
     <% end %>
   <% end %>
 
@@ -50,6 +96,20 @@
           character_count: true,
           min_characters: 30,
           max_characters: 140
+        ) %&gt;
+
+        &lt;%= render FlatPack::TextArea::Component.new(
+          name: &quot;post_body_minimal&quot;,
+          label: &quot;Rich Text (minimal preset)&quot;,
+          rich_text: true,
+          rich_text_options: { preset: :minimal, bubble_menu: true }
+        ) %&gt;
+
+        &lt;%= render FlatPack::TextArea::Component.new(
+          name: &quot;post_body_content&quot;,
+          label: &quot;Rich Text (content preset)&quot;,
+          rich_text: true,
+          rich_text_options: { preset: :content, toolbar: :standard, character_count: true, tables: true }
         ) %&gt;
         &lt;% end %&gt;
       &lt;% end %&gt;

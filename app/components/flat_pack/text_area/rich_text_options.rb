@@ -221,7 +221,7 @@ module FlatPack
       def to_h
         unknown_keys = @options.keys - ALLOWED_KEYS
         if unknown_keys.any?
-          raise ArgumentError, "Unknown rich_text_options: #{unknown_keys.sort.join(', ')}"
+          raise ArgumentError, "Unknown rich_text_options: #{unknown_keys.sort.join(", ")}"
         end
 
         preset = normalize_enum(:preset, @options[:preset] || :minimal, PRESETS)
@@ -284,7 +284,7 @@ module FlatPack
         override_hash = normalize_hash(overrides, name: :extensions)
         unknown_extensions = override_hash.keys - EXTENSION_CATALOG.keys
         if unknown_extensions.any?
-          raise ArgumentError, "Unknown rich text extensions: #{unknown_extensions.sort.join(', ')}"
+          raise ArgumentError, "Unknown rich text extensions: #{unknown_extensions.sort.join(", ")}"
         end
 
         PRESET_EXTENSIONS.fetch(preset).merge(override_hash.transform_values do |value|
@@ -306,17 +306,17 @@ module FlatPack
         collaboration = normalize_optional_feature_hash(:collaboration, @options[:collaboration])
 
         unless mentions.nil?
-          extensions[:mention] = mentions == false ? false : (mentions.presence || true)
+          extensions[:mention] = (mentions == false) ? false : (mentions.presence || true)
         end
 
         unless uploads.nil?
-          enabled_uploads = uploads == false ? false : (uploads.presence || true)
+          enabled_uploads = (uploads == false) ? false : (uploads.presence || true)
           extensions[:file_handler] = enabled_uploads
           extensions[:image] = enabled_uploads unless enabled_uploads == false
         end
 
         unless tables.nil?
-          enabled_tables = tables == false ? false : (tables.presence || true)
+          enabled_tables = (tables == false) ? false : (tables.presence || true)
           extensions[:table_kit] = enabled_tables
           extensions[:table] = enabled_tables
           extensions[:table_row] = enabled_tables
@@ -325,7 +325,7 @@ module FlatPack
         end
 
         unless collaboration.nil?
-          enabled_collaboration = collaboration == false ? false : (collaboration.presence || true)
+          enabled_collaboration = (collaboration == false) ? false : (collaboration.presence || true)
           extensions[:collaboration] = enabled_collaboration
           extensions[:collaboration_caret] = enabled_collaboration
         end
@@ -392,7 +392,7 @@ module FlatPack
         normalized = value.to_s.underscore.to_sym
         return normalized if allowed_values.include?(normalized)
 
-        raise ArgumentError, "rich_text_options[:#{name}] must be one of: #{allowed_values.join(', ')}"
+        raise ArgumentError, "rich_text_options[:#{name}] must be one of: #{allowed_values.join(", ")}"
       end
     end
   end
