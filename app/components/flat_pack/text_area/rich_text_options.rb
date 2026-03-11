@@ -58,6 +58,9 @@ module FlatPack
       TABLE_KIT_KEYS = %i[table table_row table_header table_cell].freeze
       TEXT_STYLE_KIT_KEYS = %i[text_style color background_color font_family font_size line_height].freeze
 
+      # Presets intentionally build on one another (minimal -> content -> full)
+      # so applications can opt into richer editing surfaces without enabling the
+      # full registry for every editor instance.
       PRESET_EXTENSION_KEYS = {
         minimal: %i[
           starter_kit placeholder bubble_menu character_count link underline text_align
@@ -213,8 +216,7 @@ module FlatPack
             readonly: readonly,
             autofocus: autofocus,
             output_input_type: output_input_type,
-            sanitization_profile: sanitization_profile,
-            unsupported_wrappers: %i[drag_handle_react drag_handle_vue]
+            sanitization_profile: sanitization_profile
           }.compact
         end
 

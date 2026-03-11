@@ -1,4 +1,4 @@
-let runtimePromise
+let tipTapRuntimePromise
 
 const STARTER_KIT_KEYS = new Set([
   "bold",
@@ -25,8 +25,8 @@ const TABLE_KIT_KEYS = new Set(["table", "table_row", "table_header", "table_cel
 const TEXT_STYLE_KIT_KEYS = new Set(["text_style", "color", "background_color", "font_family", "font_size", "line_height"])
 
 export async function loadTipTapRuntime() {
-  if (!runtimePromise) {
-    runtimePromise = Promise.all([
+  if (!tipTapRuntimePromise) {
+    tipTapRuntimePromise = Promise.all([
       import("@tiptap/core"),
       import("@tiptap/starter-kit"),
       import("@tiptap/extensions"),
@@ -39,7 +39,7 @@ export async function loadTipTapRuntime() {
     }))
   }
 
-  return runtimePromise
+  return tipTapRuntimePromise
 }
 
 function extensionExport(runtime, ...names) {

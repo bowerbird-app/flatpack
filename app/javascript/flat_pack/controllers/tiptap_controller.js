@@ -289,10 +289,13 @@ export default class extends Controller {
     const trimmed = value?.trim()
     if (!trimmed) return ""
 
+    // Allow same-origin relative paths for app-managed uploads/assets.
     if (trimmed.startsWith("/")) return trimmed
 
     try {
       const parsed = new URL(trimmed, window.location.origin)
+      // Reject dangerous schemes such as javascript: and vbscript: while allowing
+      // the same safe protocols already accepted by FlatPack link-like components.
       return SAFE_URL_PROTOCOLS.has(parsed.protocol) ? parsed.toString() : null
     } catch (_error) {
       return null

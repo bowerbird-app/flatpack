@@ -1,5 +1,5 @@
 <%
-  json_body = {
+  minimal_json_body = {
     type: "doc",
     content: [
       {
@@ -11,7 +11,7 @@
     ]
   }.to_json
 
-  content_body = {
+  content_json_body = {
     type: "doc",
     content: [
       {
@@ -35,7 +35,7 @@
     ]
   }.to_json
 
-  full_body = {
+  full_json_body = {
     type: "doc",
     content: [
       {
@@ -125,7 +125,7 @@
             name: "post[minimal_body]",
             id: "rich-text-minimal",
             label: "Minimal editor",
-            value: json_body,
+            value: minimal_json_body,
             placeholder: "Write a short update...",
             character_count: true,
             max_characters: 280,
@@ -147,7 +147,7 @@
             name: "post[content_body]",
             id: "rich-text-content",
             label: "Content editor",
-            value: content_body,
+            value: content_json_body,
             rich_text: true,
             rich_text_options: {
               preset: :content,
@@ -167,7 +167,7 @@
             name: "post[full_body]",
             id: "rich-text-full",
             label: "Full editor",
-            value: full_body,
+            value: full_json_body,
             rich_text: true,
             rich_text_options: {
               preset: :full,
@@ -188,7 +188,7 @@
             name: "post[bubble_body]",
             id: "rich-text-bubble",
             label: "Bubble menu editor",
-            value: json_body,
+            value: minimal_json_body,
             rich_text: true,
             rich_text_options: {
               preset: :minimal,
@@ -207,7 +207,7 @@
             name: "post[readonly_body]",
             id: "rich-text-readonly",
             label: "Readonly editor",
-            value: content_body,
+            value: content_json_body,
             rich_text: true,
             rich_text_options: {
               preset: :content,
@@ -226,7 +226,7 @@
             name: "post[error_body]",
             id: "rich-text-error",
             label: "Editor with validation error",
-            value: json_body,
+            value: minimal_json_body,
             error: "Body can't be blank",
             rich_text: true,
             rich_text_options: {
@@ -265,7 +265,7 @@
             name: "post[json_body]",
             id: "rich-text-json",
             label: "JSON editor",
-            value: json_body,
+            value: minimal_json_body,
             rich_text: true,
             rich_text_options: {
               preset: :minimal,

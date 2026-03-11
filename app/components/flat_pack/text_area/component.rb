@@ -70,9 +70,9 @@ module FlatPack
       def render_label
         return unless @label
 
-        return rich_text_label unless @rich_text
+        return label_tag(textarea_id, @label, class: label_classes) unless @rich_text
 
-        label_tag(textarea_id, @label, class: label_classes)
+        rich_text_label
       end
 
       def render_textarea
@@ -469,6 +469,8 @@ module FlatPack
           stripped_value = @value.strip
           return JSON.generate(empty_document) if stripped_value.empty?
 
+          # Parse once here so invalid JSON raises early, but keep the original
+          # string for deterministic hidden-field submission and JS bootstrapping.
           JSON.parse(stripped_value)
           stripped_value
         else

@@ -159,7 +159,7 @@ Preset guidance:
 
 - `:minimal` — StarterKit, Placeholder, Bubble Menu, Character Count, Link, Underline, Text Align.
 - `:content` — `:minimal` plus Highlight, Text Style, Color, Background Color, Typography, ListKit, TableKit, Image, Code Block, Code Block Lowlight.
-- `:full` — `:content` plus Font Family, Font Size, Line Height, Mention, Mathematics, Emoji, Audio, YouTube, Twitch, Details, Table of Contents, collaboration hooks, Drag Handle, Invisible Characters, Unique ID, Floating Menu, and other advanced editing extensions represented in the built-in registry.
+- `:full` — `:content` plus Font Family, Font Size, Line Height, Mention, Mathematics, Emoji, Audio, YouTube, Twitch, Details, Table of Contents, collaboration hooks, the generic Drag Handle extension, Invisible Characters, Unique ID, Floating Menu, and other advanced editing extensions represented in the built-in registry.
 
 Bubble Menu notes:
 
@@ -170,6 +170,7 @@ Extension strategy:
 
 - FlatPack validates and normalizes `rich_text_options` in Ruby before serializing config to the frontend.
 - All open-source TipTap extensions in the built-in registry are shipped through the normal install path, but presets keep the default editor smaller than “enable everything”.
+- Relative URLs for links/images can be used for app-managed same-origin assets, but your backend should still validate upload endpoints and sanitize/render stored rich content defensively.
 - Framework-specific wrappers such as `Drag Handle React` and `Drag Handle Vue` are documented as upstream TipTap wrappers and are not applicable to FlatPack’s Stimulus integration.
 
 ## Dependencies
