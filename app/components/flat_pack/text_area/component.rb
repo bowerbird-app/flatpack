@@ -25,28 +25,28 @@ module FlatPack
         rich_text_options: {},
         **system_arguments
       )
-        @custom_class    = system_arguments[:class]
+        @custom_class = system_arguments[:class]
         super(**system_arguments)
-        @name            = name
-        @value           = value
-        @placeholder     = placeholder
-        @disabled        = disabled
-        @required        = required
-        @label           = label
-        @error           = error
-        @rows            = rows
-        @autogrow        = autogrow
+        @name = name
+        @value = value
+        @placeholder = placeholder
+        @disabled = disabled
+        @required = required
+        @label = label
+        @error = error
+        @rows = rows
+        @autogrow = autogrow
         @submit_on_enter = submit_on_enter
         @character_count = character_count
-        @min_characters  = min_characters
-        @max_characters  = max_characters
-        @rich_text       = rich_text
+        @min_characters = min_characters
+        @max_characters = max_characters
+        @rich_text = rich_text
 
         # Build and validate rich text options early so consumers get clear feedback.
         @rich_text_options = @rich_text ? RichTextOptions.new(rich_text_options) : nil
 
         validate_name!
-        validate_rows!             unless @rich_text
+        validate_rows! unless @rich_text
         validate_character_limits! unless @rich_text
       end
 
@@ -86,16 +86,16 @@ module FlatPack
 
       def textarea_attributes
         attrs = {
-          name:        @name,
-          id:          field_id,
+          name: @name,
+          id: field_id,
           placeholder: @placeholder,
-          disabled:    @disabled,
-          required:    @required,
-          rows:        @rows,
-          class:       textarea_classes,
+          disabled: @disabled,
+          required: @required,
+          rows: @rows,
+          class: textarea_classes,
           data: {
             flat_pack__text_area_target: "textarea",
-            action:                      textarea_actions
+            action: textarea_actions
           }.compact
         }
 
@@ -118,9 +118,9 @@ module FlatPack
         content_tag(
           :p,
           character_count_text,
-          id:    character_count_id,
+          id: character_count_id,
           class: character_count_classes,
-          data:  {flat_pack__text_area_target: "count"}
+          data: {flat_pack__text_area_target: "count"}
         )
       end
 
@@ -148,9 +148,9 @@ module FlatPack
           :div,
           "",
           class: "flat-pack-richtext-toolbar",
-          role:  "toolbar",
-          data:  {flat_pack__tiptap_target: "toolbar"},
-          aria:  {label: "Formatting toolbar"}
+          role: "toolbar",
+          data: {flat_pack__tiptap_target: "toolbar"},
+          aria: {label: "Formatting toolbar"}
         )
       end
 
@@ -160,7 +160,7 @@ module FlatPack
           :div,
           "",
           class: rich_text_editor_container_classes,
-          data:  {flat_pack__tiptap_target: "editorContainer"}
+          data: {flat_pack__tiptap_target: "editorContainer"}
         )
       end
 
@@ -172,7 +172,7 @@ module FlatPack
           :div,
           "",
           class: "flat-pack-richtext-bubble-menu",
-          data:  {flat_pack__tiptap_target: "bubbleMenu"}
+          data: {flat_pack__tiptap_target: "bubbleMenu"}
         )
       end
 
@@ -184,7 +184,7 @@ module FlatPack
           :div,
           "",
           class: "flat-pack-richtext-floating-menu",
-          data:  {flat_pack__tiptap_target: "floatingMenu"}
+          data: {flat_pack__tiptap_target: "floatingMenu"}
         )
       end
 
@@ -196,20 +196,20 @@ module FlatPack
         content_tag(
           :p,
           "0 characters",
-          id:    character_count_id,
+          id: character_count_id,
           class: character_count_classes,
-          data:  {flat_pack__tiptap_target: "characterCount"}
+          data: {flat_pack__tiptap_target: "characterCount"}
         )
       end
 
       # Hidden input synchronized by the TipTap controller; the actual form field.
       def render_rich_text_hidden_field
         attrs = {
-          type:  "hidden",
-          name:  @name,
-          id:    "#{field_id}_hidden",
+          type: "hidden",
+          name: @name,
+          id: "#{field_id}_hidden",
           value: (@value || "").to_s,
-          data:  {flat_pack__tiptap_target: "hiddenField"}
+          data: {flat_pack__tiptap_target: "hiddenField"}
         }
         attrs[:disabled] = true if @disabled
         tag.input(**attrs)
@@ -224,12 +224,12 @@ module FlatPack
       def plain_textarea_wrapper_attributes
         {
           class: wrapper_classes,
-          data:  {
-            controller:                                         "flat-pack--text-area",
-            flat_pack__text_area_autogrow_value:                @autogrow,
-            flat_pack__text_area_submit_on_enter_value:         @submit_on_enter,
-            flat_pack__text_area_min_characters_value:          @min_characters,
-            flat_pack__text_area_max_characters_value:          @max_characters,
+          data: {
+            controller: "flat-pack--text-area",
+            flat_pack__text_area_autogrow_value: @autogrow,
+            flat_pack__text_area_submit_on_enter_value: @submit_on_enter,
+            flat_pack__text_area_min_characters_value: @min_characters,
+            flat_pack__text_area_max_characters_value: @max_characters,
             flat_pack__text_area_character_count_enabled_value: @character_count
           }.compact
         }
@@ -239,15 +239,15 @@ module FlatPack
         opts_json = @rich_text_options.for_json.to_json
 
         data_attrs = {
-          controller:                               "flat-pack--tiptap",
-          flat_pack__tiptap_options_value:          opts_json,
-          flat_pack__tiptap_editor_id_value:        field_id,
-          flat_pack__tiptap_placeholder_value:      @placeholder,
-          flat_pack__tiptap_disabled_value:         @disabled,
-          flat_pack__tiptap_required_value:         @required,
-          flat_pack__tiptap_has_error_value:        @error.present?,
-          flat_pack__tiptap_error_id_value:         @error.present? ? error_id : nil,
-          flat_pack__tiptap_value_value:            (@value || "").to_s
+          controller: "flat-pack--tiptap",
+          flat_pack__tiptap_options_value: opts_json,
+          flat_pack__tiptap_editor_id_value: field_id,
+          flat_pack__tiptap_placeholder_value: @placeholder,
+          flat_pack__tiptap_disabled_value: @disabled,
+          flat_pack__tiptap_required_value: @required,
+          flat_pack__tiptap_has_error_value: @error.present?,
+          flat_pack__tiptap_error_id_value: @error.present? ? error_id : nil,
+          flat_pack__tiptap_value_value: (@value || "").to_s
         }.compact
 
         {class: rich_text_wrapper_classes, data: data_attrs}
@@ -261,7 +261,7 @@ module FlatPack
 
       def rich_text_wrapper_classes
         base = ["flat-pack-input-wrapper", "flat-pack-richtext-wrapper"]
-        base << "flat-pack-richtext--error"    if @error.present?
+        base << "flat-pack-richtext--error" if @error.present?
         base << "flat-pack-richtext--disabled" if @disabled
         base << "flat-pack-richtext--required" if @required
         classes(*base, @custom_class)
