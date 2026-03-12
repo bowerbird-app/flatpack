@@ -68,6 +68,32 @@ export default class extends Controller {
     this.#destroyEditor()
   }
 
+  // Reactive callback: when data-flat-pack--tiptap-disabled-value changes after
+  // connect, toggle editability on the live editor without a full reinit.
+  disabledValueChanged() {
+    if (!this._editor) return
+
+    const disabled = this.disabledValue
+    this._editor.setEditable(!disabled)
+    this.element.classList.toggle("flat-pack-richtext--disabled", disabled)
+
+    const hiddenField = this.hasHiddenFieldTarget ? this.hiddenFieldTarget : null
+    if (hiddenField) {
+      hiddenField.disabled = disabled
+      // Eagerly sync content when enabling so a no-change save still has the value
+      if (!disabled) {
+        const opts   = this.optionsValue
+        const format = opts.format || "html"
+        hiddenField.value = format === "html"
+          ? this._editor.getHTML()
+          : JSON.stringify(this._editor.getJSON())
+      }
+    }
+
+    const pm = this.element.querySelector(".ProseMirror")
+    if (pm) pm.setAttribute("aria-readonly", disabled ? "true" : "false")
+  }
+
   // ── Private ─────────────────────────────────────────────────────────────────
 
   async #initEditor() {
