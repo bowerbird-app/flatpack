@@ -63,4 +63,7 @@ Rails.application.configure do
   # Ensure importmap fingerprints are refreshed when FlatPack engine controllers
   # change during development, preventing stale digested module URLs.
   config.importmap.cache_sweepers << FlatPack::Engine.root.join("app/javascript/flat_pack/controllers")
+
+  # Store uploaded files on the local file system in development.
+  config.active_storage.service = :local
 end

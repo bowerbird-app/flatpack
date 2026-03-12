@@ -1,0 +1,69 @@
+<div class="max-w-4xl mx-auto p-8">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Articles",
+    subtitle: "Manage and edit articles with the Tiptap rich text editor."
+  ) %>
+
+  <% if flash[:notice] %>
+    <%= render FlatPack::Alert::Component.new(
+      title: "Success",
+      description: flash[:notice],
+      variant: :success,
+      dismissible: true
+    ) %>
+  <% end %>
+
+  <div class="flex justify-end mb-6">
+    <%= render FlatPack::Button::Component.new(
+      text: "New Article",
+      url: new_article_path,
+      style: :primary,
+      icon: "plus"
+    ) %>
+  </div>
+
+  <% if @articles.any? %>
+    <%= render FlatPack::Card::Component.new do |card| %>
+      <% card.body(class: "p-0") do %>
+        <ul class="divide-y divide-[var(--card-border-color)]">
+          <% @articles.each do |article| %>
+            <li class="flex items-center justify-between px-6 py-4 gap-4">
+              <div class="flex-1 min-w-0">
+                <%= link_to article.title, article_path(article),
+                    class: "font-medium text-[var(--surface-content-color)] hover:underline truncate block" %>
+                <p class="text-sm text-[var(--surface-muted-content-color)] mt-0.5">
+                  <%= article.created_at.strftime("%B %d, %Y") %>
+                </p>
+              </div>
+              <div class="flex gap-2 shrink-0">
+                <%= render FlatPack::Button::Component.new(
+                  text: "View",
+                  url: article_path(article),
+                  style: :secondary,
+                  size: :sm
+                ) %>
+                <%= render FlatPack::Button::Component.new(
+                  text: "Edit",
+                  url: edit_article_path(article),
+                  style: :ghost,
+                  size: :sm
+                ) %>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
+    <% end %>
+  <% else %>
+    <%= render FlatPack::Card::Component.new do |card| %>
+      <% card.body(class: "py-12 text-center") do %>
+        <p class="text-[var(--surface-muted-content-color)] mb-4">No articles yet.</p>
+        <%= render FlatPack::Button::Component.new(
+          text: "Write your first article",
+          url: new_article_path,
+          style: :primary
+        ) %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

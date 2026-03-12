@@ -581,6 +581,12 @@
                 <% end %>
               <% end %>
               <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Articles",
+                href: articles_path,
+                icon: :edit_3,
+                active: request.path.start_with?("/demo/articles")
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
                 label: "Empty State",
                 href: demo_empty_state_path,
                 icon: :folder,

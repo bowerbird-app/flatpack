@@ -1,0 +1,58 @@
+<div class="max-w-3xl mx-auto p-8">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: @article.title,
+    subtitle: "Published #{@article.created_at.strftime("%B %d, %Y")}"
+  ) %>
+
+  <% if flash[:notice] %>
+    <%= render FlatPack::Alert::Component.new(
+      title: "Success",
+      description: flash[:notice],
+      variant: :success,
+      dismissible: true
+    ) %>
+  <% end %>
+
+  <div data-controller="article-editor"
+       data-article-editor-update-url-value="<%= article_path(@article) %>">
+
+    <div class="flex justify-end gap-2 mb-4">
+      <button data-article-editor-target="editBtn"
+              data-action="article-editor#enableEditing"
+              class="flat-pack-btn flat-pack-btn--primary">
+        Edit page
+      </button>
+      <button data-article-editor-target="saveBtn"
+              data-action="article-editor#save"
+              hidden
+              class="flat-pack-btn flat-pack-btn--primary">
+        Save
+      </button>
+      <button data-article-editor-target="cancelBtn"
+              data-action="article-editor#cancel"
+              hidden
+              class="flat-pack-btn flat-pack-btn--secondary">
+        Cancel
+      </button>
+      <%= render FlatPack::Button::Component.new(
+        text: "Full Edit",
+        url: edit_article_path(@article),
+        style: :ghost,
+        size: :sm
+      ) %>
+    </div>
+
+    <%= render FlatPack::TextArea::Component.new(
+      name: "article[body]",
+      value: @article.body,
+      rich_text: true,
+      disabled: true,
+      rich_text_options: {
+        preset: :content,
+        toolbar: :standard,
+        bubble_menu: true,
+        format: :html
+      }
+    ) %>
+  </div>
+</div>
