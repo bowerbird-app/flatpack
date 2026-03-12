@@ -2,7 +2,13 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["editBtn", "saveBtn", "cancelBtn", "displayContent", "balloonToolbar", "imageInput"]
-  static values  = { updateUrl: String, uploadUrl: String }
+  static values  = {
+    updateUrl:      String,
+    uploadUrl:      { type: String, default: "" },
+    fieldName:      { type: String, default: "body" },
+    fieldFormatName: { type: String, default: "body_format" },
+    fieldFormat:    { type: String, default: "html" },
+  }
 
   #savedContent = null
   #selectionHandler = null
@@ -30,6 +36,7 @@ export default class extends Controller {
   }
 
   triggerImageUpload() {
+    if (!this.uploadUrlValue) return
     // Save the current selection so we can restore it after the file dialog
     const sel = document.getSelection()
     this.#savedRange = (sel && sel.rangeCount > 0) ? sel.getRangeAt(0).cloneRange() : null
@@ -38,6 +45,7 @@ export default class extends Controller {
   }
 
   async imageInputChanged() {
+    if (!this.uploadUrlValue) return
     const file = this.imageInputTarget.files[0]
     if (!file) return
 
@@ -114,6 +122,59 @@ export default class extends Controller {
     this.displayContentTarget.focus()
   }
 
+  async save() {
+    const body = new FormData()
+    body.append(this.fieldNameValue, this.displayContentTarget.innerHTML)
+    body.append(this.fieldFormatNameValue, this.fieldFormatValue)
+    body.append("_method", "patch")
+
+    const csrfToken = document.querySelector("meta[name=csrf-token]")?.content
+    if (!csrfToken) {
+      console.error("CSRF token not found")
+      return
+    }
+
+    const response = await fetch(this.updateUrlValue, {
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": csrfToken
+      },
+      body,
+    })
+
+    if (response.ok) {
+      this.disableEditing()
+    } else {
+      alert("Save failed. Please try again.")
+    }
+  }
+
+  cancel() {
+    if (this.#savedContent !== null) {
+      this.displayContentTarget.innerHTML = this.#savedContent
+    }
+    this.disableEditing()
+  }
+
+  disableEditing() {
+    this.displayContentTarget.contentEditable = "false"
+    this.#savedContent = null
+    this.#selectedImage = null
+    if (this.#imageClickHandler) {
+      this.displayContentTarget.removeEventListener("click", this.#imageClickHandler)
+      this.#imageClickHandler = null
+    }
+    if (this.#selectionHandler) {
+      document.removeEventListener("selectionchange", this.#selectionHandler)
+      this.#selectionHandler = null
+    }
+    this.balloonToolbarTarget.hidden = true
+    this.balloonToolbarTarget.style.display = "none"
+    this.editBtnTarget.hidden   = false
+    this.saveBtnTarget.hidden   = true
+    this.cancelBtnTarget.hidden = true
+  }
+
   #handleImageClick(event) {
     if (event.target.tagName !== "IMG") {
       this.#selectedImage = null
@@ -171,58 +232,5 @@ export default class extends Controller {
 
     toolbar.style.left = `${left}px`
     toolbar.style.top  = `${top}px`
-  }
-
-  async save() {
-    const body = new FormData()
-    body.append("article[body]", this.displayContentTarget.innerHTML)
-    body.append("article[body_format]", "html")
-    body.append("_method", "patch")
-
-    const csrfToken = document.querySelector("meta[name=csrf-token]")?.content
-    if (!csrfToken) {
-      console.error("CSRF token not found")
-      return
-    }
-
-    const response = await fetch(this.updateUrlValue, {
-      method: "POST",
-      headers: {
-        "X-CSRF-Token": csrfToken
-      },
-      body,
-    })
-
-    if (response.ok) {
-      this.disableEditing()
-    } else {
-      alert("Save failed. Please try again.")
-    }
-  }
-
-  cancel() {
-    if (this.#savedContent !== null) {
-      this.displayContentTarget.innerHTML = this.#savedContent
-    }
-    this.disableEditing()
-  }
-
-  disableEditing() {
-    this.displayContentTarget.contentEditable = "false"
-    this.#savedContent = null
-    this.#selectedImage = null
-    if (this.#imageClickHandler) {
-      this.displayContentTarget.removeEventListener("click", this.#imageClickHandler)
-      this.#imageClickHandler = null
-    }
-    if (this.#selectionHandler) {
-      document.removeEventListener("selectionchange", this.#selectionHandler)
-      this.#selectionHandler = null
-    }
-    this.balloonToolbarTarget.hidden = true
-    this.balloonToolbarTarget.style.display = "none"
-    this.editBtnTarget.hidden   = false
-    this.saveBtnTarget.hidden   = true
-    this.cancelBtnTarget.hidden = true
   }
 }

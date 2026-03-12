@@ -27,6 +27,7 @@ chat | FlatPack::Chat::Panel::Component | docs/components/chat.md
 chips | FlatPack::Chip::Component | docs/components/chips.md
 code_block | FlatPack::CodeBlock::Component | docs/components/code-block.md
 collapse | FlatPack::Collapse::Component | docs/components/collapse.md
+content_editor | FlatPack::ContentEditor::Component | docs/components/content-editor.md
 comments_composer | FlatPack::Comments::Composer::Component | docs/components/comments-composer.md
 comments_inline_input | FlatPack::Comments::InlineInput::Component | docs/components/comments-inline-input.md
 comments_item | FlatPack::Comments::Item::Component | docs/components/comments-item.md
