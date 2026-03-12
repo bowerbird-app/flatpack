@@ -204,31 +204,31 @@ def seed_articles!
     {
       title: "Getting Started with FlatPack",
       body: <<~HTML
-        <h1>Getting Started with FlatPack</h1>
-        <p>FlatPack is a Rails UI component library built on <strong>ViewComponent</strong> and <strong>Tailwind CSS 4</strong>. This guide walks you through the essentials so you can ship polished interfaces quickly.</p>
-
-        <h2>Installation</h2>
-        <p>Add FlatPack to your <code>Gemfile</code> and run the install generator:</p>
-        <pre><code>bundle add flat_pack
-rails generate flat_pack:install</code></pre>
-        <p>The generator wires up Tailwind, Stimulus, and Importmap automatically.</p>
-
-        <h2>Your First Component</h2>
-        <p>Render a button in any view:</p>
-        <pre><code>&lt;%= render FlatPack::Button::Component.new(text: "Click me", style: :primary) %&gt;</code></pre>
-
-        <h2>Design Tokens</h2>
-        <p>All colours, shadows, and radii are CSS custom properties. Override them per-theme in your Tailwind file:</p>
-        <ul>
-          <li><code>--color-primary</code> — brand accent colour</li>
-          <li><code>--radius-md</code> — default border radius</li>
-          <li><code>--surface-border-color</code> — separator and border tint</li>
-        </ul>
-
-        <blockquote>Pro tip: use the dark-mode token set by toggling the <code>dark</code> class on <code>&lt;html&gt;</code> — no extra configuration needed.</blockquote>
-
-        <h2>Further Reading</h2>
-        <p>Explore all components in the <a href="/docs">component docs</a> or jump straight to the <a href="/articles">demo articles</a> to see the Content Editor in action.</p>
+                <h1>Getting Started with FlatPack</h1>
+                <p>FlatPack is a Rails UI component library built on <strong>ViewComponent</strong> and <strong>Tailwind CSS 4</strong>. This guide walks you through the essentials so you can ship polished interfaces quickly.</p>
+        
+                <h2>Installation</h2>
+                <p>Add FlatPack to your <code>Gemfile</code> and run the install generator:</p>
+                <pre><code>bundle add flat_pack
+        rails generate flat_pack:install</code></pre>
+                <p>The generator wires up Tailwind, Stimulus, and Importmap automatically.</p>
+        
+                <h2>Your First Component</h2>
+                <p>Render a button in any view:</p>
+                <pre><code>&lt;%= render FlatPack::Button::Component.new(text: "Click me", style: :primary) %&gt;</code></pre>
+        
+                <h2>Design Tokens</h2>
+                <p>All colours, shadows, and radii are CSS custom properties. Override them per-theme in your Tailwind file:</p>
+                <ul>
+                  <li><code>--color-primary</code> — brand accent colour</li>
+                  <li><code>--radius-md</code> — default border radius</li>
+                  <li><code>--surface-border-color</code> — separator and border tint</li>
+                </ul>
+        
+                <blockquote>Pro tip: use the dark-mode token set by toggling the <code>dark</code> class on <code>&lt;html&gt;</code> — no extra configuration needed.</blockquote>
+        
+                <h2>Further Reading</h2>
+                <p>Explore all components in the <a href="/docs">component docs</a> or jump straight to the <a href="/articles">demo articles</a> to see the Content Editor in action.</p>
       HTML
     },
     {
@@ -299,51 +299,51 @@ rails generate flat_pack:install</code></pre>
     {
       title: "Content Editor Reference",
       body: <<~HTML
-        <h1>Content Editor — Full Reference</h1>
-        <p>This article exercises every toolbar option available in <code>FlatPack::ContentEditor::Component</code>.</p>
-
-        <h2>Text Formatting</h2>
-        <p>Inline marks: <strong>bold</strong>, <em>italic</em>, <u>underline</u>, <s>strikethrough</s>. Use <em>Clear Formatting</em> to strip all marks from a selection at once.</p>
-
-        <h2>Headings</h2>
-        <h1>Heading 1 — top-level title</h1>
-        <h2>Heading 2 — major section</h2>
-        <h3>Heading 3 — sub-section</h3>
-
-        <h2>Lists</h2>
-        <p>Unordered list:</p>
-        <ul>
-          <li>Apples</li>
-          <li>Oranges</li>
-          <li>Bananas</li>
-        </ul>
-        <p>Ordered list:</p>
-        <ol>
-          <li>Enable editing by clicking <strong>Edit</strong>.</li>
-          <li>Select text and pick a format from the balloon toolbar.</li>
-          <li>Click <strong>Save</strong> to persist changes.</li>
-        </ol>
-
-        <h2>Blockquote</h2>
-        <blockquote>Any sufficiently advanced technology is indistinguishable from magic. — Arthur C. Clarke</blockquote>
-
-        <h2>Links</h2>
-        <p>Visit the <a href="https://github.com/bowerbird-app/flatpack">FlatPack repository on GitHub</a> for source code and issue tracking. You can also link to <a href="/articles">other articles</a> in the dummy app.</p>
-
-        <h2>Code</h2>
-        <p>Inline code: <code>render FlatPack::ContentEditor::Component.new(update_url: article_path(@article))</code>.</p>
-        <pre><code>&lt;%= render FlatPack::ContentEditor::Component.new(
-  update_url: article_path(@article),
-  upload_url: article_upload_image_path(@article),
-  field_name: "article[body]",
-  field_format_name: "article[body_format]"
-) do %&gt;
-  &lt;%= raw @article.body %&gt;
-&lt;% end %&gt;</code></pre>
-
-        <h2>Horizontal Rule</h2>
-        <hr>
-        <p>A horizontal rule above separates major content regions.</p>
+                <h1>Content Editor — Full Reference</h1>
+                <p>This article exercises every toolbar option available in <code>FlatPack::ContentEditor::Component</code>.</p>
+        
+                <h2>Text Formatting</h2>
+                <p>Inline marks: <strong>bold</strong>, <em>italic</em>, <u>underline</u>, <s>strikethrough</s>. Use <em>Clear Formatting</em> to strip all marks from a selection at once.</p>
+        
+                <h2>Headings</h2>
+                <h1>Heading 1 — top-level title</h1>
+                <h2>Heading 2 — major section</h2>
+                <h3>Heading 3 — sub-section</h3>
+        
+                <h2>Lists</h2>
+                <p>Unordered list:</p>
+                <ul>
+                  <li>Apples</li>
+                  <li>Oranges</li>
+                  <li>Bananas</li>
+                </ul>
+                <p>Ordered list:</p>
+                <ol>
+                  <li>Enable editing by clicking <strong>Edit</strong>.</li>
+                  <li>Select text and pick a format from the balloon toolbar.</li>
+                  <li>Click <strong>Save</strong> to persist changes.</li>
+                </ol>
+        
+                <h2>Blockquote</h2>
+                <blockquote>Any sufficiently advanced technology is indistinguishable from magic. — Arthur C. Clarke</blockquote>
+        
+                <h2>Links</h2>
+                <p>Visit the <a href="https://github.com/bowerbird-app/flatpack">FlatPack repository on GitHub</a> for source code and issue tracking. You can also link to <a href="/articles">other articles</a> in the dummy app.</p>
+        
+                <h2>Code</h2>
+                <p>Inline code: <code>render FlatPack::ContentEditor::Component.new(update_url: article_path(@article))</code>.</p>
+                <pre><code>&lt;%= render FlatPack::ContentEditor::Component.new(
+          update_url: article_path(@article),
+          upload_url: article_upload_image_path(@article),
+          field_name: "article[body]",
+          field_format_name: "article[body_format]"
+        ) do %&gt;
+          &lt;%= raw @article.body %&gt;
+        &lt;% end %&gt;</code></pre>
+        
+                <h2>Horizontal Rule</h2>
+                <hr>
+                <p>A horizontal rule above separates major content regions.</p>
       HTML
     }
   ]
