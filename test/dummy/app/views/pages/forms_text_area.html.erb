@@ -58,3 +58,413 @@
     title: "Text Area Examples"
   ) %>
 </section>
+
+<%# ── Rich Text Examples ────────────────────────────────────────────────── %>
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Rich Text Editor (TipTap)", anchor_link: true) %>
+
+  <%# ── Minimal preset ──────────────────────────────────────────────────── %>
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Minimal preset",
+    subtitle: "Bold, italic, and links only — smallest possible extension set.",
+    anchor_link: true
+  ) %>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <%= render FlatPack::TextArea::Component.new(
+        name: "comment[body]",
+        id: "comment-body",
+        label: "Comment",
+        placeholder: "Write your comment...",
+        rich_text: true,
+        rich_text_options: {
+          preset: :minimal,
+          toolbar: :minimal
+        }
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::TextArea::Component.new(
+        name: &quot;comment[body]&quot;,
+        label: &quot;Comment&quot;,
+        placeholder: &quot;Write your comment...&quot;,
+        rich_text: true,
+        rich_text_options: {
+          preset: :minimal,
+          toolbar: :minimal
+        }
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Minimal Rich Text Editor"
+  ) %>
+
+  <%# ── Content preset ──────────────────────────────────────────────────── %>
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Content preset",
+    subtitle: "Headings, lists, tables, images, highlights, and task lists.",
+    anchor_link: true
+  ) %>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <%= render FlatPack::TextArea::Component.new(
+        name: "post[body]",
+        id: "post-body",
+        label: "Post Body",
+        placeholder: "Start writing...",
+        required: true,
+        rich_text: true,
+        rich_text_options: {
+          preset: :content,
+          toolbar: :standard,
+          character_count: true
+        }
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::TextArea::Component.new(
+        name: &quot;post[body]&quot;,
+        label: &quot;Post Body&quot;,
+        required: true,
+        rich_text: true,
+        rich_text_options: {
+          preset: :content,
+          toolbar: :standard,
+          character_count: true
+        }
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Standard Content Editor"
+  ) %>
+
+  <%# ── Full preset ─────────────────────────────────────────────────────── %>
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Full preset",
+    subtitle: "All extensions — subscript, superscript, math, drag handle, floating menu, and more.",
+    anchor_link: true
+  ) %>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <%= render FlatPack::TextArea::Component.new(
+        name: "document[body]",
+        id: "document-body",
+        label: "Document",
+        rich_text: true,
+        rich_text_options: {
+          preset: :full,
+          toolbar: :full,
+          floating_menu: true
+        }
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::TextArea::Component.new(
+        name: &quot;document[body]&quot;,
+        label: &quot;Document&quot;,
+        rich_text: true,
+        rich_text_options: {
+          preset: :full,
+          toolbar: :full,
+          floating_menu: true
+        }
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Full Editor with Floating Menu"
+  ) %>
+
+  <%# ── No toolbar ──────────────────────────────────────────────────────── %>
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "No toolbar",
+    subtitle: "Bubble menu only — formatting appears on text selection, no persistent toolbar.",
+    anchor_link: true
+  ) %>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <%= render FlatPack::TextArea::Component.new(
+        name: "note[body]",
+        id: "note-body",
+        label: "Note",
+        placeholder: "Select text to see the bubble menu...",
+        rich_text: true,
+        rich_text_options: {
+          toolbar: :none,
+          bubble_menu: true
+        }
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::TextArea::Component.new(
+        name: &quot;note[body]&quot;,
+        label: &quot;Note&quot;,
+        placeholder: &quot;Select text to see the bubble menu...&quot;,
+        rich_text: true,
+        rich_text_options: {
+          toolbar: :none,
+          bubble_menu: true
+        }
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Bubble Menu Only"
+  ) %>
+
+  <%# ── Error state ─────────────────────────────────────────────────────── %>
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Error state",
+    subtitle: "Pass an error message to highlight the field and display inline validation feedback.",
+    anchor_link: true
+  ) %>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <%= render FlatPack::TextArea::Component.new(
+        name: "review[body]",
+        id: "review-body",
+        label: "Review",
+        rich_text: true,
+        error: "Review body can't be blank"
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::TextArea::Component.new(
+        name: &quot;review[body]&quot;,
+        label: &quot;Review&quot;,
+        rich_text: true,
+        error: &quot;Review body can't be blank&quot;
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Rich Text Error State"
+  ) %>
+
+  <%# ── Disabled state ──────────────────────────────────────────────────── %>
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Disabled state",
+    subtitle: "Read-only editor with pre-loaded content — no interaction permitted.",
+    anchor_link: true
+  ) %>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <%= render FlatPack::TextArea::Component.new(
+        name: "archived[body]",
+        id: "archived-body",
+        label: "Archived Content",
+        value: '{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"This content is read-only."}]}]}',
+        rich_text: true,
+        disabled: true
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::TextArea::Component.new(
+        name: &quot;archived[body]&quot;,
+        label: &quot;Archived Content&quot;,
+        value: '{"type":"doc",...}',
+        rich_text: true,
+        disabled: true
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Disabled Rich Text Editor"
+  ) %>
+
+  <%# ── HTML output format ──────────────────────────────────────────────── %>
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "HTML output format",
+    subtitle: "Default format — editor syncs rendered HTML to the hidden field. Sanitize with FlatPack::RichTextSanitizer before display.",
+    anchor_link: true
+  ) %>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <%= render FlatPack::TextArea::Component.new(
+        name: "page[content]",
+        id: "page-content",
+        label: "Page Content",
+        rich_text: true,
+        rich_text_options: {
+          format: :html,
+          preset: :content,
+          toolbar: :standard
+        }
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::TextArea::Component.new(
+        name: &quot;page[content]&quot;,
+        label: &quot;Page Content&quot;,
+        rich_text: true,
+        rich_text_options: {
+          format: :html,
+          preset: :content,
+          toolbar: :standard
+        }
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "HTML Output Mode"
+  ) %>
+</section>
+
+<%# ── Form Submit Test ───────────────────────────────────────────────── %>
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Form Submit Test", anchor_link: true) %>
+
+  <% if @body.present? %>
+    <%= render FlatPack::Card::Component.new do |card| %>
+      <% card.header do %>
+        <p class="text-sm font-medium">
+          Submitted &mdash; <code class="font-mono text-xs">params[:article][:body]</code>
+          <span class="ml-2 text-base-content/50">(format: <%= @body_format %>)</span>
+        </p>
+      <% end %>
+      <% card.body(class: "space-y-6") do %>
+        <div>
+          <p class="text-xs font-medium text-base-content/60 uppercase tracking-wide mb-2">Raw param value</p>
+          <%= render FlatPack::CodeBlock::Component.new(
+            code: @body,
+            language: @body_format == "json" ? "json" : "html",
+            title: "params[:article][:body]"
+          ) %>
+        </div>
+
+        <% if @body_format == "json" %>
+          <div>
+            <p class="text-xs font-medium text-base-content/60 uppercase tracking-wide mb-2">Parsed JSON</p>
+            <%= render FlatPack::CodeBlock::Component.new(
+              code: (JSON.pretty_generate(JSON.parse(@body)) rescue @body),
+              language: "json",
+              title: "JSON.parse(body)"
+            ) %>
+          </div>
+        <% else %>
+          <div>
+            <p class="text-xs font-medium text-base-content/60 uppercase tracking-wide mb-2">
+              Rendered after <code class="font-mono text-xs">FlatPack::RichTextSanitizer.sanitize(body)</code>
+            </p>
+            <div class="prose prose-sm max-w-none rounded-md border border-base-300 bg-base-100 p-4">
+              <%= FlatPack::RichTextSanitizer.sanitize(@body).html_safe %>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%# ── HTML format form ──────────────────────────────────────────────────── %>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.header do %>
+      <p class="text-sm font-medium">Submit with <strong>HTML</strong> format &mdash; default</p>
+    <% end %>
+    <% card.body do %>
+      <%= form_with url: demo_forms_text_area_path, method: :post do |f| %>
+        <input type="hidden" name="article[body_format]" value="html">
+        <div class="space-y-[var(--stack-gap-md)]">
+          <%= render FlatPack::TextArea::Component.new(
+            name: "article[body]",
+            id: "article-body-html",
+            label: "Article body",
+            placeholder: "Write something and click Submit to see the submitted HTML value…",
+            rich_text: true,
+            rich_text_options: {
+              preset: :content,
+              toolbar: :standard,
+              format: :html
+            }
+          ) %>
+          <div class="pt-1">
+            <%= render FlatPack::Button::Component.new(
+              text: "Submit (HTML format)",
+              type: "submit",
+              style: :primary
+            ) %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%# ── JSON format form ──────────────────────────────────────────────────── %>
+  <%= render FlatPack::Card::Component.new(class: "mt-6") do |card| %>
+    <% card.header do %>
+      <p class="text-sm font-medium">Submit with <strong>JSON</strong> format &mdash; lossless round-trip opt-in</p>
+    <% end %>
+    <% card.body do %>
+      <%= form_with url: demo_forms_text_area_path, method: :post do |f| %>
+        <input type="hidden" name="article[body_format]" value="json">
+        <div class="space-y-[var(--stack-gap-md)]">
+          <%= render FlatPack::TextArea::Component.new(
+            name: "article[body]",
+            id: "article-body-json",
+            label: "Article body",
+            placeholder: "Write something and click Submit to see the TipTap JSON document…",
+            rich_text: true,
+            rich_text_options: {
+              preset: :content,
+              toolbar: :standard,
+              format: :json
+            }
+          ) %>
+          <div class="pt-1">
+            <%= render FlatPack::Button::Component.new(
+              text: "Submit (JSON format)",
+              type: "submit",
+              style: :secondary
+            ) %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      # routes.rb
+      get  "demo/forms/text_area", to: "pages#forms_text_area"
+      post "demo/forms/text_area", to: "pages#forms_text_area_submit"
+
+      # controller
+      def forms_text_area_submit
+        @body        = params.dig(:article, :body).to_s
+        @body_format = params.dig(:article, :body_format).presence || "html"
+        render :forms_text_area
+      end
+
+      # view — HTML format form
+      &lt;%= form_with url: demo_forms_text_area_path, method: :post do |f| %&gt;
+        &lt;input type="hidden" name="article[body_format]" value="html"&gt;
+        &lt;%= render FlatPack::TextArea::Component.new(
+          name: "article[body]",
+          rich_text: true,
+          rich_text_options: { preset: :content, format: :html }
+        ) %&gt;
+        &lt;%= render FlatPack::Button::Component.new(text: "Submit", type: "submit", style: :primary) %&gt;
+      &lt;% end %&gt;
+
+      # In a real controller, sanitize before rendering:
+      @safe_body = FlatPack::RichTextSanitizer.sanitize(@body)
+    CODE
+    language: "erb",
+    title: "Form Submit Example"
+  ) %>
+</section>

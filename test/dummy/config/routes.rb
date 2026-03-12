@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   get "demo/forms/search_input", to: "pages#forms_search_input"
   get "demo/forms/url_input", to: "pages#forms_url_input"
   get "demo/forms/text_area", to: "pages#forms_text_area"
+  post "demo/forms/text_area", to: "pages#forms_text_area_submit"
   get "demo/forms/number_input", to: "pages#forms_number_input"
   get "demo/forms/date_input", to: "pages#forms_date_input"
   get "demo/forms/file_input", to: "pages#forms_file_input"

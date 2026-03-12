@@ -13,6 +13,7 @@ A modern Rails 8 UI Component Library built with ViewComponent, Tailwind CSS, an
 - 📦 **No Node.js** - Uses Propshaft + Importmaps
 - 🔧 **Customizable** - Theme via CSS variables
 - 🧩 **Composable** - Build complex UIs from simple components
+- 📝 **Rich Text** - Built-in TipTap editor via `rich_text: true` on `TextArea`
 
 ## Installation
 
@@ -193,6 +194,17 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
   rows: 3
 ) %>
 
+# Rich Text Editor (TipTap — built-in, no extra dependencies)
+<%= render FlatPack::TextArea::Component.new(
+  name: "post[body]",
+  label: "Post Body",
+  rich_text: true,
+  rich_text_options: {
+    preset: :content,
+    toolbar: :standard
+  }
+) %>
+
 # URL Input with validation
 <%= render FlatPack::UrlInput::Component.new(
   name: "website",
@@ -232,7 +244,7 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
 - **EmailInput** - Email field with mobile keyboard support
 - **PhoneInput** - Phone field with numeric keypad
 - **SearchInput** - Search field with clear button
-- **TextArea** - Multi-line auto-expanding text area
+- **TextArea** - Multi-line auto-expanding text area; set `rich_text: true` for full TipTap rich text editor
 - **UrlInput** - URL field with validation
 - **Checkbox** - Single checkbox or checkbox groups
 - **RadioGroup** - Radio button groups

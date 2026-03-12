@@ -4,6 +4,9 @@
 /* FlatPack CSS Variables */
 @import "../../../../../app/assets/stylesheets/flat_pack/variables.css";
 
+/* FlatPack component styles (rich text editor, etc.) */
+@import "../../../../../app/assets/stylesheets/flat_pack/rich_text.css";
+
 @layer components {
 	.fp-scrollbar-hidden {
 		scrollbar-width: none;

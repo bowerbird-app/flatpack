@@ -37,7 +37,7 @@ module FlatPack
           generator.configure_importmap
 
           content = importmap.read
-          assert_equal 1, content.scan("pin_all_from FlatPack::Engine.root.join").length
+          assert_equal 2, content.scan("pin_all_from FlatPack::Engine.root.join").length
           assert_includes content, "controllers/flat_pack"
           assert_includes content, "preload: false"
         end

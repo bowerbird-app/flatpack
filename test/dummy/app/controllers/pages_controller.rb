@@ -162,6 +162,12 @@ class PagesController < ApplicationController
   def forms_text_area
   end
 
+  def forms_text_area_submit
+    @body = params.dig(:article, :body).to_s
+    @body_format = params.dig(:article, :body_format).presence || "html"
+    render :forms_text_area
+  end
+
   def forms_number_input
   end
 
