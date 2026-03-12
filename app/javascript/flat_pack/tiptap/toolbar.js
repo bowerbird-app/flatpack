@@ -158,7 +158,13 @@ function showImagePopover(editor, anchorEl, opts) {
       accept: "image/*",
     })
     fileInput.setAttribute("aria-label", "Upload image file")
-    fileInput.style.cssText = "font-size:12px;width:100%;cursor:pointer;"
+    fileInput.style.cssText = "display:none;"
+
+    const uploadBtn = document.createElement("button")
+    uploadBtn.type = "button"
+    uploadBtn.textContent = "Upload from computer"
+    uploadBtn.style.cssText = "background:transparent;border:none;padding:0;font-size:12px;color:var(--surface-content-color);cursor:pointer;text-decoration:underline;width:100%;text-align:left;"
+    uploadBtn.addEventListener("click", () => fileInput.click())
 
     const statusEl = document.createElement("div")
     statusEl.style.cssText = "font-size:11px;padding-top:4px;color:var(--surface-muted-content-color);display:none;"
@@ -198,6 +204,7 @@ function showImagePopover(editor, anchorEl, opts) {
     })
 
     popover.appendChild(fileInput)
+    popover.appendChild(uploadBtn)
     popover.appendChild(statusEl)
   }
 
