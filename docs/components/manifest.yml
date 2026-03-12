@@ -133,6 +133,12 @@ components:
     primary_class: FlatPack::Collapse::Component
     status: documented
 
+  - key: content_editor
+    title: Content Editor
+    doc: docs/components/content-editor.md
+    primary_class: FlatPack::ContentEditor::Component
+    status: documented
+
   - key: comments_composer
     title: Comments Composer
     doc: docs/components/comments-composer.md

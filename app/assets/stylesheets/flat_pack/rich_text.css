@@ -127,6 +127,27 @@
     pointer-events: none;
   }
 
+  /* View-mode — strips form-control chrome so the editor reads as plain content */
+  .flat-pack-richtext--view-mode .flat-pack-richtext-editor {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+  }
+
+  .flat-pack-richtext--view-mode .flat-pack-richtext-editor .ProseMirror {
+    padding: 0;
+    min-height: auto;
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  /* Override disabled dimming in view mode so content is fully readable */
+  .flat-pack-richtext--view-mode.flat-pack-richtext--disabled .flat-pack-richtext-editor {
+    opacity: 1;
+    pointer-events: auto;
+    cursor: default;
+  }
+
   /* ── ProseMirror core styles ──────────────────────────────────────────────── */
 
   .flat-pack-richtext-editor .ProseMirror {

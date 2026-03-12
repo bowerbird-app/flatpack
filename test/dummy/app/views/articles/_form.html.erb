@@ -1,0 +1,59 @@
+<%= form_with model: article do |f| %>
+  <% if article.errors.any? %>
+    <%= render FlatPack::Alert::Component.new(
+      title: "#{pluralize(article.errors.count, "error")} prevented this article from being saved:",
+      description: article.errors.full_messages.join(", "),
+      variant: :danger,
+      dismissible: true
+    ) %>
+  <% end %>
+
+  <input type="hidden" name="article[body_format]" value="html">
+
+  <div class="space-y-[var(--stack-gap-md)]">
+    <%= render FlatPack::TextInput::Component.new(
+      name: "article[title]",
+      label: "Title",
+      value: article.title,
+      placeholder: "Article title...",
+      required: true,
+      error: article.errors[:title].first
+    ) %>
+
+    <%= render FlatPack::TextArea::Component.new(
+      name: "article[body]",
+      label: "Body",
+      value: article.body,
+      rich_text: true,
+      rich_text_options: {
+        preset: :content,
+        toolbar: %w[
+          bold italic underline sep1 strike code sep2
+          h1 h2 h3 sep3
+          bulletList orderedList sep4
+          blockquote link image sep5
+          undo redo
+        ],
+        bubble_menu: true,
+        format: :html,
+        uploads: {url: article_upload_image_url}
+      },
+      error: article.errors[:body].first
+    ) %>
+
+    <div class="flex gap-2 pt-1">
+      <%= render FlatPack::Button::Component.new(
+        text: article.persisted? ? "Save Article" : "Create Article",
+        type: "submit",
+        style: :primary
+      ) %>
+      <% if article.persisted? %>
+        <%= render FlatPack::Button::Component.new(
+          text: "Cancel",
+          url: article_path(article),
+          style: :secondary
+        ) %>
+      <% end %>
+    </div>
+  </div>
+<% end %>

@@ -6,6 +6,7 @@
 
 /* FlatPack component styles (rich text editor, etc.) */
 @import "../../../../../app/assets/stylesheets/flat_pack/rich_text.css";
+@import "../../../../../app/assets/stylesheets/flat_pack/content_editor.css";
 
 @layer components {
 	.fp-scrollbar-hidden {

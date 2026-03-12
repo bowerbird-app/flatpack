@@ -106,16 +106,29 @@ function showLinkPopover(editor, anchorEl) {
   setTimeout(() => document.addEventListener("mousedown", onOutside), 0)
 }
 
-function showImagePopover(editor, anchorEl) {
+function showImagePopover(editor, anchorEl, opts) {
   if (document.querySelector(".flat-pack-rt-link-popover")) {
     closeLinkPopover()
     return
   }
 
+  const uploadUrl = opts?.uploads?.url || null
+
   const popover = document.createElement("div")
   popover.className = "flat-pack-rt-link-popover"
   popover.setAttribute("role", "dialog")
   popover.setAttribute("aria-label", "Insert image")
+
+  // When upload is available, stack sections vertically
+  if (uploadUrl) {
+    popover.style.flexDirection = "column"
+    popover.style.alignItems = "stretch"
+    popover.style.gap = "0"
+  }
+
+  // ── URL row (always shown) ────────────────────────────────────────────────
+  const urlRow = document.createElement("div")
+  urlRow.style.cssText = "display:flex;align-items:center;gap:6px;"
 
   const input = Object.assign(document.createElement("input"), {
     type: "url",
@@ -129,8 +142,71 @@ function showImagePopover(editor, anchorEl) {
     textContent: "Insert",
   })
 
-  popover.appendChild(input)
-  popover.appendChild(applyBtn)
+  urlRow.appendChild(input)
+  urlRow.appendChild(applyBtn)
+  popover.appendChild(urlRow)
+
+  // ── File upload section (only shown when upload URL is configured) ────────
+  if (uploadUrl) {
+    const divider = document.createElement("div")
+    divider.textContent = "— or upload a file —"
+    divider.style.cssText = "text-align:center;font-size:11px;color:var(--surface-muted-content-color);padding:6px 0 4px;"
+    popover.appendChild(divider)
+
+    const fileInput = Object.assign(document.createElement("input"), {
+      type: "file",
+      accept: "image/*",
+    })
+    fileInput.setAttribute("aria-label", "Upload image file")
+    fileInput.style.cssText = "display:none;"
+
+    const uploadBtn = document.createElement("button")
+    uploadBtn.type = "button"
+    uploadBtn.textContent = "Upload from computer"
+    uploadBtn.style.cssText = "background:transparent;border:none;padding:0;font-size:12px;color:var(--surface-content-color);cursor:pointer;text-decoration:underline;width:100%;text-align:left;"
+    uploadBtn.addEventListener("click", () => fileInput.click())
+
+    const statusEl = document.createElement("div")
+    statusEl.style.cssText = "font-size:11px;padding-top:4px;color:var(--surface-muted-content-color);display:none;"
+
+    fileInput.addEventListener("change", async () => {
+      const file = fileInput.files?.[0]
+      if (!file) return
+
+      statusEl.textContent = "Uploading…"
+      statusEl.style.display = "block"
+
+      const csrfToken = document.querySelector("meta[name=csrf-token]")?.content
+      const formData = new FormData()
+      formData.append("file", file)
+
+      try {
+        const res = await fetch(uploadUrl, {
+          method: "POST",
+          headers: csrfToken ? {"X-CSRF-Token": csrfToken} : {},
+          body: formData,
+        })
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}))
+          statusEl.textContent = err.error || "Upload failed"
+          return
+        }
+
+        const {url} = await res.json()
+        if (url) {
+          editor.chain().focus().setImage({src: url}).run()
+          closeLinkPopover()
+        }
+      } catch {
+        statusEl.textContent = "Upload failed — check your connection"
+      }
+    })
+
+    popover.appendChild(fileInput)
+    popover.appendChild(uploadBtn)
+    popover.appendChild(statusEl)
+  }
 
   document.body.appendChild(popover)
   const rect = anchorEl.getBoundingClientRect()
@@ -362,7 +438,8 @@ const TOOL_DEFINITIONS = [
     label: "Insert image",
     icon: ICONS.image,
     presets: ["full"],
-    action: (e, btnEl) => showImagePopover(e, btnEl),
+    // opts is injected by buildToolbar so upload config can flow through
+    action: (e, btnEl, opts) => showImagePopover(e, btnEl, opts),
     isActive: () => false,
   },
   {
@@ -448,7 +525,8 @@ export function buildToolbar(toolbarEl, editor, opts) {
       label:      def.label,
       icon:       def.icon,
       // btnEl is passed from toolButton's click handler so actions can anchor popovers
-      action:     (btnEl) => def.action(editor, btnEl),
+      // opts is forwarded so image/link actions can read upload config
+      action:     (btnEl) => def.action(editor, btnEl, opts),
       isActive:   () => def.isActive?.(editor) || false,
       isDisabled: () => def.isDisabled?.(editor) || false,
     })

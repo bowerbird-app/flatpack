@@ -196,9 +196,169 @@ def seed_chat_data!
   puts "- ChatItemAttachment: #{ChatItemAttachment.count} rows"
 end
 
+def seed_articles!
+  return unless Article.table_exists?
+  return if Article.exists?
+
+  articles = [
+    {
+      title: "Getting Started with FlatPack",
+      body: <<~HTML
+                <h1>Getting Started with FlatPack</h1>
+                <p>FlatPack is a Rails UI component library built on <strong>ViewComponent</strong> and <strong>Tailwind CSS 4</strong>. This guide walks you through the essentials so you can ship polished interfaces quickly.</p>
+        
+                <h2>Installation</h2>
+                <p>Add FlatPack to your <code>Gemfile</code> and run the install generator:</p>
+                <pre><code>bundle add flat_pack
+        rails generate flat_pack:install</code></pre>
+                <p>The generator wires up Tailwind, Stimulus, and Importmap automatically.</p>
+        
+                <h2>Your First Component</h2>
+                <p>Render a button in any view:</p>
+                <pre><code>&lt;%= render FlatPack::Button::Component.new(text: "Click me", style: :primary) %&gt;</code></pre>
+        
+                <h2>Design Tokens</h2>
+                <p>All colours, shadows, and radii are CSS custom properties. Override them per-theme in your Tailwind file:</p>
+                <ul>
+                  <li><code>--color-primary</code> — brand accent colour</li>
+                  <li><code>--radius-md</code> — default border radius</li>
+                  <li><code>--surface-border-color</code> — separator and border tint</li>
+                </ul>
+        
+                <blockquote>Pro tip: use the dark-mode token set by toggling the <code>dark</code> class on <code>&lt;html&gt;</code> — no extra configuration needed.</blockquote>
+        
+                <h2>Further Reading</h2>
+                <p>Explore all components in the <a href="/docs">component docs</a> or jump straight to the <a href="/articles">demo articles</a> to see the Content Editor in action.</p>
+      HTML
+    },
+    {
+      title: "Typography in the Content Editor",
+      body: <<~HTML
+        <h1>Typography in the Content Editor</h1>
+        <p>The <strong>Content Editor</strong> component ships with a full typographic reset so your content looks great out of the box — even after Tailwind Preflight removes browser defaults.</p>
+
+        <h2>Headings</h2>
+        <p>All six heading levels are supported. Select text and pick H1, H2, or H3 from the balloon toolbar.</p>
+        <h3>Heading 3 — section title</h3>
+        <p>Use heading 3 for sub-sections within a topic. Headings carry <code>font-weight: 700</code> and tightened <code>line-height: 1.3</code>.</p>
+
+        <h2>Inline Formatting</h2>
+        <p>The toolbar exposes the most common inline marks:</p>
+        <ul>
+          <li><strong>Bold</strong> — emphasise key terms</li>
+          <li><em>Italic</em> — titles, foreign words, or gentle stress</li>
+          <li><u>Underline</u> — use sparingly; readers associate underline with links</li>
+          <li><s>Strikethrough</s> — show removed or deprecated items</li>
+        </ul>
+
+        <h2>Block Elements</h2>
+        <p>Beyond paragraphs you can insert:</p>
+        <ol>
+          <li>Ordered lists for sequential steps</li>
+          <li>Unordered lists for non-sequential items</li>
+          <li>Blockquotes for pulled quotes or callouts</li>
+        </ol>
+
+        <blockquote>Good typography is invisible. Bad typography is everywhere. — Beatrice Warde</blockquote>
+
+        <h2>Links</h2>
+        <p>Select any text, press the link button in the toolbar, and enter a URL. To edit an existing link, select it and press the link button again. To remove it, clear the URL field and confirm.</p>
+        <p>Learn more in the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a">MDN anchor element docs</a>.</p>
+      HTML
+    },
+    {
+      title: "Working with Images",
+      body: <<~HTML
+        <h1>Working with Images</h1>
+        <p>The Content Editor supports inline image uploads when an <code>upload_url</code> is provided. Images are uploaded via a secure <code>POST</code> request and inserted at the cursor position — no page reload needed.</p>
+
+        <h2>How It Works</h2>
+        <ol>
+          <li>Click the image icon in the balloon toolbar.</li>
+          <li>A file picker opens — select any <code>image/*</code> file.</li>
+          <li>The editor uploads the file and inserts the returned URL immediately.</li>
+        </ol>
+
+        <h2>Server Requirements</h2>
+        <p>Your upload endpoint must:</p>
+        <ul>
+          <li>Accept a multipart <code>POST</code> with a <code>file</code> field.</li>
+          <li>Return <code>{ "url": "https://..." }</code> JSON on success.</li>
+          <li>Return a non-2xx status with <code>{ "error": "..." }</code> on failure.</li>
+        </ul>
+
+        <blockquote>Always validate file type and size server-side. The browser's <code>accept="image/*"</code> is a hint, not a security control.</blockquote>
+
+        <h2>Linking Images</h2>
+        <p>Click any inserted image to reveal the balloon toolbar. Press the link button to wrap the image in an anchor, or to edit or remove an existing link. This lets you turn screenshots into navigable diagrams.</p>
+
+        <h2>Responsive Images</h2>
+        <p>The content editor stylesheet automatically constrains images to <code>max-width: 100%</code> with <code>height: auto</code>, so they reflow correctly on every screen size without any extra markup.</p>
+      HTML
+    },
+    {
+      title: "Content Editor Reference",
+      body: <<~HTML
+                <h1>Content Editor — Full Reference</h1>
+                <p>This article exercises every toolbar option available in <code>FlatPack::ContentEditor::Component</code>.</p>
+        
+                <h2>Text Formatting</h2>
+                <p>Inline marks: <strong>bold</strong>, <em>italic</em>, <u>underline</u>, <s>strikethrough</s>. Use <em>Clear Formatting</em> to strip all marks from a selection at once.</p>
+        
+                <h2>Headings</h2>
+                <h1>Heading 1 — top-level title</h1>
+                <h2>Heading 2 — major section</h2>
+                <h3>Heading 3 — sub-section</h3>
+        
+                <h2>Lists</h2>
+                <p>Unordered list:</p>
+                <ul>
+                  <li>Apples</li>
+                  <li>Oranges</li>
+                  <li>Bananas</li>
+                </ul>
+                <p>Ordered list:</p>
+                <ol>
+                  <li>Enable editing by clicking <strong>Edit</strong>.</li>
+                  <li>Select text and pick a format from the balloon toolbar.</li>
+                  <li>Click <strong>Save</strong> to persist changes.</li>
+                </ol>
+        
+                <h2>Blockquote</h2>
+                <blockquote>Any sufficiently advanced technology is indistinguishable from magic. — Arthur C. Clarke</blockquote>
+        
+                <h2>Links</h2>
+                <p>Visit the <a href="https://github.com/bowerbird-app/flatpack">FlatPack repository on GitHub</a> for source code and issue tracking. You can also link to <a href="/articles">other articles</a> in the dummy app.</p>
+        
+                <h2>Code</h2>
+                <p>Inline code: <code>render FlatPack::ContentEditor::Component.new(update_url: article_path(@article))</code>.</p>
+                <pre><code>&lt;%= render FlatPack::ContentEditor::Component.new(
+          update_url: article_path(@article),
+          upload_url: article_upload_image_path(@article),
+          field_name: "article[body]",
+          field_format_name: "article[body_format]"
+        ) do %&gt;
+          &lt;%= raw @article.body %&gt;
+        &lt;% end %&gt;</code></pre>
+        
+                <h2>Horizontal Rule</h2>
+                <hr>
+                <p>A horizontal rule above separates major content regions.</p>
+      HTML
+    }
+  ]
+
+  timestamp = Time.current
+  articles.each do |attrs|
+    Article.create!(attrs.merge(body_format: "html", created_at: timestamp, updated_at: timestamp))
+  end
+  puts "- Article: created #{Article.count} rows"
+end
+
 seed_dummy_data!
 seed_demo_table_rows!
 seed_demo_comments!
 seed_chat_data!
+seed_articles!
 
 puts "Seeding complete."

@@ -1,0 +1,31 @@
+<div class="max-w-3xl mx-auto p-8">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: @article.title,
+    subtitle: "Published #{@article.created_at.strftime("%B %d, %Y")}"
+  ) %>
+
+  <% if flash[:notice] %>
+    <%= render FlatPack::Alert::Component.new(
+      title: "Success",
+      description: flash[:notice],
+      variant: :success,
+      dismissible: true
+    ) %>
+  <% end %>
+
+  <%= render FlatPack::ContentEditor::Component.new(
+    update_url: article_path(@article),
+    upload_url: article_upload_image_url,
+    field_name: "article[body]",
+    field_format_name: "article[body_format]"
+  ) do %>
+    <%= raw @article.body %>
+  <% end %>
+
+  <%= render FlatPack::Button::Component.new(
+    text: "Full Edit",
+    url: edit_article_path(@article),
+    style: :ghost,
+    size: :sm
+  ) %>
+</div>

@@ -128,6 +128,9 @@ Rails.application.routes.draw do
   get "mobile", to: "mobile#index"
   get "mobile/bottom_nav", to: "mobile#bottom_nav"
 
+  resources :articles, path: "demo/articles", except: [:destroy]
+  post "demo/articles/upload_image", to: "article_images#create", as: :article_upload_image
+
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", :as => :rails_health_check
