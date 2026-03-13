@@ -8,6 +8,7 @@ gemspec
 gem "puma"
 
 # For the dummy application
+gem "devise"
 gem "propshaft", "~> 1.0"
 gem "tailwindcss-rails", "~> 4.0"
 gem "importmap-rails"
