@@ -9,6 +9,28 @@
 @import "../../../../../app/assets/stylesheets/flat_pack/content_editor.css";
 
 @layer components {
+	/* Sidebar layout: width driven by CSS via data attribute set before first
+	 * paint by the inline FOUC-prevention script. JS toggles this attribute
+	 * for user interactions, letting CSS transitions handle the animation.
+	 */
+	@media (min-width: 768px) {
+		[data-flat-pack-sidebar-collapsed="true"] {
+			width: 4rem !important;
+		}
+
+		[data-flat-pack-sidebar-collapsed="true"] > aside {
+			width: 4rem !important;
+		}
+
+		[data-flat-pack-sidebar-collapsed="false"] {
+			width: 16rem !important;
+		}
+
+		[data-flat-pack-sidebar-collapsed="false"] > aside {
+			width: 16rem !important;
+		}
+	}
+
 	.fp-scrollbar-hidden {
 		scrollbar-width: none;
 		-ms-overflow-style: none;

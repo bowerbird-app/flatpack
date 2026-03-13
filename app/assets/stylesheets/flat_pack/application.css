@@ -55,6 +55,30 @@
     height: 0;
   }
 
+  /* Sidebar layout: width driven by CSS via data attribute set before first paint.
+   * The inline FOUC-prevention script sets data-flat-pack-sidebar-collapsed on
+   * the sidebar wrapper before <aside> is parsed. JS then toggles this attribute
+   * for user interactions, letting CSS transitions handle the animation.
+   * !important overrides Tailwind's w-64 / md:w-auto utilities.
+   */
+  @media (min-width: 768px) {
+    [data-flat-pack-sidebar-collapsed="true"] {
+      width: 4rem !important;
+    }
+
+    [data-flat-pack-sidebar-collapsed="true"] > aside {
+      width: 4rem !important;
+    }
+
+    [data-flat-pack-sidebar-collapsed="false"] {
+      width: 16rem !important;
+    }
+
+    [data-flat-pack-sidebar-collapsed="false"] > aside {
+      width: 16rem !important;
+    }
+  }
+
   [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack--sidebar-layout-target="scrollContainer"] {
     scrollbar-width: none;
     -ms-overflow-style: none;

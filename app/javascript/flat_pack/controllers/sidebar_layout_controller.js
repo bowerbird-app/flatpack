@@ -25,7 +25,10 @@ export default class extends Controller {
       this.collapsed = !this.defaultOpenValue
     }
 
-    // Apply initial desktop state
+    // Apply initial desktop state. The inline FOUC script in the component HTML
+    // already set the correct data attribute before <aside> was parsed, so CSS
+    // has sized the sidebar correctly. Stimulus setting the same attribute value
+    // here causes no CSS change and therefore no animation.
     if (!this.isMobile) {
       this.sidebarTarget.style.pointerEvents = ""
       this.applySidebarPresentationMode()
@@ -211,13 +214,16 @@ export default class extends Controller {
   applyDesktopState({ delayContentReveal = false } = {}) {
     if (this.isMobile) return
 
-    // Update sidebar width
+    // Width is driven by CSS via the data-flat-pack-sidebar-collapsed attribute
+    // (set below, and pre-set by the inline FOUC script before first paint).
+    // Inline styles are set as a fallback for host apps that haven't imported
+    // the FlatPack CSS rules that respond to this attribute.
     const sidebarContent = this.sidebarTarget.querySelector("aside")
     if (this.collapsed) {
-      this.sidebarTarget.style.width = "4rem" // w-16
+      this.sidebarTarget.style.width = "4rem"
       if (sidebarContent) sidebarContent.style.width = "4rem"
     } else {
-      this.sidebarTarget.style.width = "16rem" // w-64
+      this.sidebarTarget.style.width = "16rem"
       if (sidebarContent) sidebarContent.style.width = "16rem"
     }
 

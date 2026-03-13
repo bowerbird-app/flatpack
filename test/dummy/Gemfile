@@ -21,6 +21,7 @@ gem "turbo-rails"
 
 # View components
 gem "view_component"
+gem "devise"
 
 group :development, :test do
   gem "debug", platforms: %i[mri mingw x64_mingw]

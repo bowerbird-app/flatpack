@@ -361,4 +361,19 @@ seed_demo_comments!
 seed_chat_data!
 seed_articles!
 
+# Seed demo login user
+def seed_demo_user!
+  return unless User.table_exists?
+  return if User.exists?(email: "demo@example.com")
+
+  User.create!(
+    email: "demo@example.com",
+    password: "password123",
+    password_confirmation: "password123"
+  )
+  puts "- User: created demo@example.com (password: password123)"
+end
+
+seed_demo_user!
+
 puts "Seeding complete."
