@@ -30,6 +30,7 @@ description: Keep component and architecture docs accurate and synchronized with
 - Required arguments, defaults, and variants match implementation.
 - Accessibility and security caveats are documented where relevant.
 - Cross-links point to existing docs paths.
+- Icon names in examples use Heroicons v2 canonical names (e.g. `"magnifying-glass"`, `"cog-6-tooth"`, `"ellipsis-vertical"`) rather than legacy shorthands (`"search"`, `"cog"`, `"dots"`). Update any stale icon name references when found.
 
 ## Handoff format
 

@@ -32,3 +32,4 @@ description: Implement and fix Rails code with secure defaults and focused tests
 - Do not bypass failing tests by weakening assertions or removing behavior.
 - Do not add dependencies without clear need.
 - Prefer existing project patterns and abstractions.
+- When adding icons to a component, use `FlatPack::Shared::IconComponent` (not inline `<svg>` or `<use xlink:href>`). The icon system loads path data from the importmap-pinned `flat_pack/heroicons` JS module at runtime. Use Heroicons v2 canonical names (e.g. `"magnifying-glass"`, `"cog-6-tooth"`).

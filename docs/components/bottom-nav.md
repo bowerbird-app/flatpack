@@ -37,7 +37,7 @@ None.
 ```erb
 <%= render FlatPack::BottomNav::Component.new do |nav| %>
   <% nav.item(label: "Home", href: "/", icon: :home, active: true) %>
-  <% nav.item(label: "Search", href: "/search", icon: :search) %>
+  <% nav.item(label: "Search", href: "/search", icon: :magnifying_glass) %>
   <% nav.item(label: "Alerts", href: "/alerts", icon: :bell) %>
   <% nav.item(label: "Profile", href: "/profile", icon: :user) %>
 <% end %>
