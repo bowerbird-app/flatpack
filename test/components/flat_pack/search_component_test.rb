@@ -24,7 +24,7 @@ module FlatPack
       def test_renders_search_icon
         render_inline(Component.new)
 
-        assert_includes page.native.to_html, "#icon-search"
+        assert_selector "svg[data-flat-pack--icon-name-value='magnifying-glass']"
       end
 
       def test_merges_custom_classes

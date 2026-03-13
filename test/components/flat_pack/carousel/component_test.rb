@@ -100,8 +100,8 @@ module FlatPack
         assert_includes control_classes, "flex"
         assert_includes control_classes, "cursor-pointer"
         assert_includes control_classes, "bg-[var(--carousel-chevron-background-color)]"
-        assert_includes rendered_content, "#icon-chevron-left"
-        assert_includes rendered_content, "#icon-chevron-right"
+        assert_selector "button[data-action='click->flat-pack--carousel#prev'] svg[data-flat-pack--icon-name-value='chevron-left']", visible: :all
+        assert_selector "button[data-action='click->flat-pack--carousel#next'] svg[data-flat-pack--icon-name-value='chevron-right']", visible: :all
         assert_selector "button[data-action='click->flat-pack--carousel#prev'] svg.pointer-events-none", visible: :all
       end
 
@@ -125,7 +125,7 @@ module FlatPack
 
         assert_includes lightbox_toggle[:class], "top-3"
         refute_includes lightbox_toggle[:class], "top-12"
-        assert_includes rendered_content, "#icon-arrows-pointing-out"
+        assert_selector "button[data-flat-pack--carousel-target='lightboxToggle'] svg[data-flat-pack--icon-name-value='arrows-pointing-out']", visible: :all
       end
 
       def test_hides_controls_and_counter_for_single_slide_but_keeps_lightbox_toggle

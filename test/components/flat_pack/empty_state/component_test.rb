@@ -48,7 +48,7 @@ module FlatPack
       def test_renders_custom_icon_name
         render_inline(Component.new(title: "No uploads", icon: :upload))
 
-        assert_includes page.native.to_html, "#icon-upload"
+        assert_selector "svg[data-flat-pack--icon-name-value='arrow-up-tray']"
       end
 
       def test_renders_actions_slot
