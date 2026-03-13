@@ -608,6 +608,12 @@
                 <% end %>
               <% end %>
               <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Content Editor",
+                href: new_article_path,
+                icon: :edit_3,
+                active: request.path == new_article_path
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
                 label: "Articles",
                 href: articles_path,
                 icon: :edit_3,
