@@ -44,12 +44,6 @@
                 icon: :home,
                 active: current_page?(demo_path)
               ) %>
-              <%= render FlatPack::Sidebar::Item::Component.new(
-                label: "Login Demo",
-                href: new_user_session_path,
-                icon: :settings,
-                active: current_page?(new_user_session_path)
-              ) %>
               <%= render FlatPack::Sidebar::Group::Component.new(
                 label: "Themes",
                 icon: :cog,
@@ -520,6 +514,33 @@
                     icon: :edit_3,
                     active: current_page?(demo_chat_composer_path)
                   ) %>
+                <% end %>
+              <% end %>
+              <% login_section_active = current_page?(new_user_session_path) %>
+              <%= render FlatPack::Sidebar::Group::Component.new(
+                label: "Login Demo",
+                icon: :settings,
+                default_open: login_section_active || user_signed_in?
+              ) do |group| %>
+                <% group.items do %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "Sign in",
+                    href: new_user_session_path,
+                    icon: :settings,
+                    active: current_page?(new_user_session_path)
+                  ) %>
+                  <% if user_signed_in? %>
+                    <%= button_to destroy_user_session_path, method: :delete,
+                          class: "w-full",
+                          form: {data: {turbo: false}} do %>
+                      <span class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium transition-colors rounded-lg mx-2 text-[var(--sidebar-item-text-color)] hover:bg-[var(--sidebar-item-hover-background-color)] hover:text-[var(--sidebar-item-hover-text-color)]">
+                        <span class="flex-shrink-0 flex items-center justify-center w-5 h-5">
+                          <%= render FlatPack::Shared::IconComponent.new(name: :user, size: :md) %>
+                        </span>
+                        <span class="text-left">Logout</span>
+                      </span>
+                    <% end %>
+                  <% end %>
                 <% end %>
               <% end %>
               <%= render FlatPack::Sidebar::Item::Component.new(

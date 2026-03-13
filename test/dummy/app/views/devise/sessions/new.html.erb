@@ -1,14 +1,10 @@
-<div class="min-h-screen flex flex-col items-center justify-center px-4 py-12">
+<div class="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)]">
   <div class="w-full max-w-md space-y-6">
 
-    <%# Brand header %>
-    <div class="text-center space-y-2">
-      <div class="inline-flex items-center justify-center w-12 h-12 rounded-[var(--radius-lg)] bg-[var(--button-primary-background-color)] text-[var(--button-primary-text-color)] text-lg font-bold mb-2">
-        FP
-      </div>
-      <h1 class="text-2xl font-bold text-[var(--surface-content-color)]">Sign in to FlatPack</h1>
-      <p class="text-sm text-[var(--surface-muted-content-color)]">Demo credentials are shown below the form.</p>
-    </div>
+    <%= render FlatPack::PageTitle::Component.new(
+      title: "Login Demo",
+      subtitle: "Sign in with Devise using FlatPack form components."
+    ) %>
 
     <%# Flash alerts %>
     <% if alert.present? %>
@@ -75,13 +71,6 @@
       description: "Email: demo@example.com  ·  Password: password123",
       style: :info
     ) %>
-
-    <%# Back to demo link %>
-    <div class="text-center">
-      <%= render FlatPack::Link::Component.new(href: root_path) do %>
-        ← Back to demo app
-      <% end %>
-    </div>
 
   </div>
 </div>
