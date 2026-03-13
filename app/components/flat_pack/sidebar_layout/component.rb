@@ -96,7 +96,7 @@ module FlatPack
         js = <<~JS.strip
           (function(){
             try{
-              var k=#{@storage_key.to_json},d=#{@default_open ? 'true' : 'false'};
+              var k=#{@storage_key.to_json},d=#{@default_open ? "true" : "false"};
               var s=localStorage.getItem(k);
               var c=s!==null?s==='true':!d;
               document.currentScript.parentElement
