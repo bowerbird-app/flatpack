@@ -56,8 +56,7 @@ module FlatPack
           nav.item(label: "Home", href: "/", icon: :home)
         end
 
-        assert_selector "svg"
-        assert_includes page.native.to_html, "#icon-home"
+        assert_selector "svg[data-flat-pack--icon-name-value='home']"
       end
 
       def test_merges_component_system_arguments_class_data_and_aria

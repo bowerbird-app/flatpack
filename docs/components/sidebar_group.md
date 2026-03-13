@@ -38,12 +38,12 @@ Use Sidebar Group inside sidebar navigation when related links should be grouped
 ```erb
 <%= render FlatPack::Sidebar::Group::Component.new(
   label: "More",
-  icon: :dots,
+  icon: :ellipsis_vertical,
   default_open: true
 ) do |group| %>
   <% group.items do %>
-    <%= render FlatPack::Sidebar::Item::Component.new(label: "Settings", href: "/settings", icon: :cog) %>
-    <%= render FlatPack::Sidebar::Item::Component.new(label: "Help", href: "/help", icon: :question) %>
+    <%= render FlatPack::Sidebar::Item::Component.new(label: "Settings", href: "/settings", icon: :cog_6_tooth) %>
+    <%= render FlatPack::Sidebar::Item::Component.new(label: "Help", href: "/help", icon: :question_mark_circle) %>
   <% end %>
 <% end %>
 ```

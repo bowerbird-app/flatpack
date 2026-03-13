@@ -18,7 +18,7 @@ Use this for primary and secondary actions in forms, toolbars, dialogs, and list
 | `url` | String, nil | `nil` | When present, renders an `<a>` via `link_to`; otherwise a `<button>`. |
 | `method` | Symbol, nil | `nil` | Link method passed to `link_to` (for non-GET link actions). |
 | `target` | String, nil | `nil` | Link target, for example `"_blank"`. |
-| `icon` | String, nil | `nil` | Icon name rendered before text (or alone with `icon_only`). |
+| `icon` | String, nil | `nil` | Heroicons v2 name rendered before text (or alone with `icon_only`), e.g. `"magnifying-glass"`, `"plus"`, `"trash"`. Legacy shorthand aliases are supported for backward compatibility. |
 | `icon_only` | Boolean | `false` | Uses compact icon-only padding and hides text/spinner label. |
 | `loading` | Boolean | `false` | Disables button and shows spinner; text becomes `Loading` when not icon-only. |
 | `type` | String | `"button"` | Native button type for button mode: `button`, `submit`, `reset`. |

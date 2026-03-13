@@ -61,7 +61,7 @@ Use `menu_item` and `menu_divider` as the slot builders (without a `with_` prefi
 ```erb
 <%= render FlatPack::Button::Dropdown::Component.new(
   text: "",
-  icon: "dots",
+  icon: "ellipsis-vertical",
   style: :ghost,
   size: :sm,
   show_chevron: false,
@@ -70,7 +70,7 @@ Use `menu_item` and `menu_divider` as the slot builders (without a `with_` prefi
     aria: { label: "Conversation actions" }
   }
 ) do |dropdown| %>
-  <% dropdown.menu_item(text: "Search conversation", icon: "search", href: "#") %>
+  <% dropdown.menu_item(text: "Search conversation", icon: "magnifying-glass", href: "#") %>
   <% dropdown.menu_item(text: "Archive", icon: "folder", href: "#") %>
 <% end %>
 ```

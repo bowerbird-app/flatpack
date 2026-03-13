@@ -570,6 +570,7 @@ class PagesController < ApplicationController
     ).uniq.sort
 
     files.reject! { |path| path.end_with?("base_component.rb") }
+    files.reject! { |path| path.include?("/shared/") }
 
     files.filter_map do |file_path|
       build_component_entry(file_path, component_root)
@@ -625,14 +626,41 @@ class PagesController < ApplicationController
     "FlatPack::#{component_path.split("/").map(&:camelize).join("::")}"
   end
 
+  DOC_KEY_ALIASES = {
+    "chart" => "charts",
+    "chip" => "chips",
+    "chip_group" => "chips",
+    "checkbox" => "inputs",
+    "date_input" => "inputs",
+    "email_input" => "inputs",
+    "file_input" => "inputs",
+    "number_input" => "inputs",
+    "password_input" => "inputs",
+    "phone_input" => "inputs",
+    "radio_group" => "inputs",
+    "search_input" => "inputs",
+    "select" => "inputs",
+    "switch" => "inputs",
+    "text_area" => "inputs",
+    "text_input" => "inputs",
+    "url_input" => "inputs",
+    "comments" => "comments-thread"
+  }.freeze
+
   def component_description(component_path)
     component_key = component_path.split("/").first
     @component_description_cache ||= {}
     return @component_description_cache[component_key] if @component_description_cache.key?(component_key)
 
-    doc_path = FlatPack::Engine.root.join("docs/components/#{component_key}.md")
+    doc_key = DOC_KEY_ALIASES.fetch(component_key, component_key)
+    dash_key = doc_key.tr("_", "-")
 
-    @component_description_cache[component_key] = if File.exist?(doc_path)
+    doc_path = [
+      FlatPack::Engine.root.join("docs/components/#{doc_key}.md"),
+      FlatPack::Engine.root.join("docs/components/#{dash_key}.md")
+    ].find { |p| File.exist?(p) }
+
+    @component_description_cache[component_key] = if doc_path
       first_paragraph_from_markdown(doc_path)
     else
       "No dedicated documentation available for this component yet."

@@ -114,9 +114,7 @@ module FlatPack
           breadcrumb.item(text: "Products")
         end
 
-        assert_selector "svg"
-        # Check for use element with icon reference
-        assert_includes page.native.to_html, "#icon-chevron-right"
+        assert_selector "svg[data-flat-pack--icon-name-value='chevron-right']"
       end
 
       def test_validates_separator
@@ -141,8 +139,7 @@ module FlatPack
         end
 
         assert_selector "a[href='/']", text: "Home"
-        assert_selector "svg"
-        assert_includes page.native.to_html, "#icon-home"
+        assert_selector "svg[data-flat-pack--icon-name-value='home']"
       end
 
       def test_does_not_render_home_when_disabled
@@ -175,8 +172,7 @@ module FlatPack
           breadcrumb.item(text: "Products")
         end
 
-        assert_selector "svg"
-        assert_includes page.native.to_html, "#icon-house"
+        assert_selector "svg[data-flat-pack--icon-name-value='house']"
         assert_text "Home"
       end
 
@@ -187,7 +183,7 @@ module FlatPack
 
         assert_selector "a[href='/previous']", text: "Back"
         assert_selector "nav ol li:first-child a[href='/previous']", text: "Back"
-        assert_includes page.native.to_html, "#icon-chevron-left"
+        assert_selector "svg[data-flat-pack--icon-name-value='chevron-left']"
       end
 
       def test_renders_back_before_home_when_both_enabled
@@ -349,8 +345,7 @@ module FlatPack
       def test_item_with_icon
         render_inline(Item::Component.new(text: "Home", href: "/", icon: "home"))
 
-        assert_selector "svg"
-        assert_includes page.native.to_html, "#icon-home"
+        assert_selector "svg[data-flat-pack--icon-name-value='home']"
         assert_text "Home"
       end
 
