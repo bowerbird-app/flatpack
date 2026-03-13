@@ -79,7 +79,32 @@ module FlatPack
       def render_sidebar_column
         return unless sidebar?
 
-        content_tag(:div, sidebar.to_s, class: sidebar_column_classes, data: sidebar_column_data)
+        # fouc_prevention_script is injected as the FIRST child so it runs
+        # synchronously before <aside> is parsed, setting the data attribute
+        # that CSS uses to determine width — no paint at wrong size.
+        content = safe_join([fouc_prevention_script, sidebar.to_s].compact)
+        content_tag(:div, content, class: sidebar_column_classes, data: sidebar_column_data)
+      end
+
+      def fouc_prevention_script
+        return unless @storage_key
+
+        # Runs synchronously during HTML parsing (before <aside> is encountered).
+        # Sets data-flat-pack-sidebar-collapsed on the wrapper div so CSS can
+        # size the sidebar correctly before the first paint — no JS-driven
+        # layout shift needed.
+        js = <<~JS.strip
+          (function(){
+            try{
+              var k=#{@storage_key.to_json},d=#{@default_open ? 'true' : 'false'};
+              var s=localStorage.getItem(k);
+              var c=s!==null?s==='true':!d;
+              document.currentScript.parentElement
+                .setAttribute('data-flat-pack-sidebar-collapsed',c?'true':'false');
+            }catch(e){}
+          })();
+        JS
+        content_tag(:script, js.html_safe)
       end
 
       def render_main_column
