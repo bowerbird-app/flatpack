@@ -55,6 +55,9 @@ Rails.application.configure do
   # Allow GitHub Codespaces hosts
   config.hosts << /.*\.app\.github\.dev/
 
+  # Devise requires default_url_options in development
+  config.action_mailer.default_url_options = {host: "localhost", port: 3000}
+
   # Allow local forwarded origins (e.g. http://localhost:3000) when developing
   # through Codespaces/browser tunnels so CSRF origin checks don't block demo
   # XHR PATCH requests like /demo/tables/reorder.

@@ -1,0 +1,87 @@
+<div class="min-h-screen flex flex-col items-center justify-center px-4 py-12">
+  <div class="w-full max-w-md space-y-6">
+
+    <%# Brand header %>
+    <div class="text-center space-y-2">
+      <div class="inline-flex items-center justify-center w-12 h-12 rounded-[var(--radius-lg)] bg-[var(--button-primary-background-color)] text-[var(--button-primary-text-color)] text-lg font-bold mb-2">
+        FP
+      </div>
+      <h1 class="text-2xl font-bold text-[var(--surface-content-color)]">Sign in to FlatPack</h1>
+      <p class="text-sm text-[var(--surface-muted-content-color)]">Demo credentials are shown below the form.</p>
+    </div>
+
+    <%# Flash alerts %>
+    <% if alert.present? %>
+      <%= render FlatPack::Alert::Component.new(
+        title: "Sign in failed",
+        description: alert,
+        style: :danger
+      ) %>
+    <% end %>
+
+    <% if notice.present? %>
+      <%= render FlatPack::Alert::Component.new(
+        title: notice,
+        style: :success
+      ) %>
+    <% end %>
+
+    <%# Login card %>
+    <%= render FlatPack::Card::Component.new(class: "shadow-md") do |card| %>
+      <% card.body do %>
+        <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: {class: "space-y-5"}) do |f| %>
+          <%= render FlatPack::EmailInput::Component.new(
+            name: "#{resource_name}[email]",
+            label: "Email address",
+            placeholder: "you@example.com",
+            value: resource.email,
+            required: true,
+            autofocus: true,
+            autocomplete: "email"
+          ) %>
+
+          <%= render FlatPack::PasswordInput::Component.new(
+            name: "#{resource_name}[password]",
+            label: "Password",
+            placeholder: "Enter your password",
+            required: true,
+            autocomplete: "current-password"
+          ) %>
+
+          <% if devise_mapping.rememberable? %>
+            <%= render FlatPack::Checkbox::Component.new(
+              name: "#{resource_name}[remember_me]",
+              value: "1",
+              label: "Remember me",
+              checked: resource.remember_me == "1"
+            ) %>
+          <% end %>
+
+          <div class="pt-2">
+            <%= render FlatPack::Button::Component.new(
+              text: "Sign in",
+              style: :primary,
+              type: "submit",
+              class: "w-full justify-center"
+            ) %>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <%# Demo credentials hint %>
+    <%= render FlatPack::Alert::Component.new(
+      title: "Demo credentials",
+      description: "Email: demo@example.com  ·  Password: password123",
+      style: :info
+    ) %>
+
+    <%# Back to demo link %>
+    <div class="text-center">
+      <%= render FlatPack::Link::Component.new(href: root_path) do %>
+        ← Back to demo app
+      <% end %>
+    </div>
+
+  </div>
+</div>

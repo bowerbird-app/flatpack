@@ -44,6 +44,12 @@
                 icon: :home,
                 active: current_page?(demo_path)
               ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Login Demo",
+                href: new_user_session_path,
+                icon: :settings,
+                active: current_page?(new_user_session_path)
+              ) %>
               <%= render FlatPack::Sidebar::Group::Component.new(
                 label: "Themes",
                 icon: :cog,
