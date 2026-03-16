@@ -136,10 +136,10 @@ class PagesController < ApplicationController
       OpenStruct.new(
         id: i + 1,
         name: ["Alice Johnson", "Bob Smith", "Carol White", "David Lee", "Eva Martinez",
-               "Frank Brown", "Grace Kim", "Henry Davis", "Iris Chen", "James Wilson",
-               "Karen Taylor", "Liam Moore"][i],
+          "Frank Brown", "Grace Kim", "Henry Davis", "Iris Chen", "James Wilson",
+          "Karen Taylor", "Liam Moore"][i],
         email: ["alice", "bob", "carol", "david", "eva", "frank", "grace",
-                "henry", "iris", "james", "karen", "liam"][i] + "@example.com",
+          "henry", "iris", "james", "karen", "liam"][i] + "@example.com",
         role: %w[Admin Editor Viewer Admin Editor Viewer Admin Editor Viewer Admin Editor Viewer][i],
         status: %w[Active Active Active Active Active Inactive Active Active Active Pending Active Active][i],
         joined_at: (i * 15 + 5).days.ago.strftime("%b %d, %Y")

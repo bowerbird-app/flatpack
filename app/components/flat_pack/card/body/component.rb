@@ -9,7 +9,7 @@ module FlatPack
         end
 
         def call
-          content_tag(:div, content, **merged_system_arguments("p-[var(--card-padding-md)] flex-1"))
+          content_tag(:div, content, **merged_system_arguments("p-[var(--card-padding-md)] flex-1 overflow-hidden"))
         end
 
         private

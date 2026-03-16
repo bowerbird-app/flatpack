@@ -353,66 +353,51 @@
   <!-- Stat Cards -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Stat Cards", anchor_link: true, subtitle: "Examples for Stat Cards.") %>
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-      <%= render FlatPack::Card::Component.new(style: :default, padding: :lg) do |card| %>
-        <% card.body do %>
-          <%= render FlatPack::Card::Stat::Component.new(
-            value: "2,543",
-            label: "Total Users",
-            trend: "12%",
-            trend_direction: :up,
-            value_class: "text-blue-600"
-          ) %>
-        <% end %>
-      <% end %>
-
-      <%= render FlatPack::Card::Component.new(style: :default, padding: :lg) do |card| %>
-        <% card.body do %>
-          <%= render FlatPack::Card::Stat::Component.new(
-            value: "1,234",
-            label: "Active Sessions",
-            trend: "8%",
-            trend_direction: :up,
-            value_class: "text-purple-600"
-          ) %>
-        <% end %>
-      <% end %>
-
-      <%= render FlatPack::Card::Component.new(style: :default, padding: :lg) do |card| %>
-        <% card.body do %>
-          <%= render FlatPack::Card::Stat::Component.new(
-            value: "$45.2K",
-            label: "Revenue",
-            trend: "23%",
-            trend_direction: :up,
-            value_class: "text-green-600"
-          ) %>
-        <% end %>
-      <% end %>
-
-      <%= render FlatPack::Card::Component.new(style: :default, padding: :lg) do |card| %>
-        <% card.body do %>
-          <%= render FlatPack::Card::Stat::Component.new(
-            value: "98.5%",
-            label: "Uptime",
-            trend: "0.5%",
-            trend_direction: :down,
-            value_class: "text-orange-600"
-          ) %>
+    <%
+      stat_cards = [
+        { icon: "users",     label: "Total Users",      value: "2,543",  trend: "+12%", up: true  },
+        { icon: "dashboard", label: "Active Sessions",  value: "1,234",  trend: "+8%",  up: true  },
+        { icon: "dashboard", label: "Revenue",          value: "$45.2K", trend: "+23%", up: true  },
+        { icon: "monitor",   label: "Uptime",           value: "98.5%",  trend: "-0.5%", up: false }
+      ]
+    %>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+      <% stat_cards.each do |stat| %>
+        <%= render FlatPack::Card::Component.new(style: :default, class: "overflow-hidden") do |card| %>
+          <% card.body do %>
+            <div class="flex items-center gap-4">
+              <div class="shrink-0 w-12 h-12 rounded-xl bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] flex items-center justify-center">
+                <%= render FlatPack::Shared::IconComponent.new(name: stat[:icon], size: :lg, class: "text-[var(--surface-muted-content-color)]") %>
+              </div>
+              <div class="flex flex-col">
+                <span class="text-xs font-medium text-[var(--surface-muted-content-color)] uppercase tracking-wide"><%= stat[:label] %></span>
+                <div class="flex items-center gap-1.5 mt-0.5">
+                  <span class="text-2xl font-bold text-[var(--surface-content-color)]"><%= stat[:value] %></span>
+                  <span class="text-xs font-medium" style="color: <%= stat[:up] ? "var(--color-success-background-color)" : "var(--color-danger-background-color)" %>"><%= stat[:trend] %></span>
+                </div>
+              </div>
+            </div>
+          <% end %>
         <% end %>
       <% end %>
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
+      language: "erb",
       code: CGI.unescapeHTML(<<~'CODE')
-        &lt;%= render FlatPack::Card::Component.new(style: :default, padding: :lg) do |card| %&gt;
+        &lt;%= render FlatPack::Card::Component.new(style: :default) do |card| %&gt;
           &lt;% card.body do %&gt;
-            &lt;%= render FlatPack::Card::Stat::Component.new(
-              value: "2,543",
-              label: "Total Users",
-              trend: "12%",
-              trend_direction: :up,
-              value_class: "text-blue-600"
-            ) %&gt;
+            &lt;div class="flex items-center gap-4"&gt;
+              &lt;div class="shrink-0 w-12 h-12 rounded-xl bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] flex items-center justify-center"&gt;
+                &lt;%= render FlatPack::Shared::IconComponent.new(name: "users", size: :lg, class: "text-[var(--surface-muted-content-color)]") %&gt;
+              &lt;/div&gt;
+              &lt;div class="flex flex-col"&gt;
+                &lt;span class="text-xs font-medium text-[var(--surface-muted-content-color)] uppercase tracking-wide"&gt;Total Users&lt;/span&gt;
+                &lt;div class="flex items-center gap-1.5 mt-0.5"&gt;
+                  &lt;span class="text-2xl font-bold text-[var(--surface-content-color)]"&gt;2,543&lt;/span&gt;
+                  &lt;span class="text-xs font-medium" style="color: var(--color-success-background-color)"&gt;+12%&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
           &lt;% end %&gt;
         &lt;% end %&gt;
       CODE
