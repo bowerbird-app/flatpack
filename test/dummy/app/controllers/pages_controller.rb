@@ -71,7 +71,7 @@ class PagesController < ApplicationController
   ].freeze
 
   before_action :serve_from_page_cache, except: UNCACHED_ACTIONS
-  after_action  :write_to_page_cache,   except: UNCACHED_ACTIONS
+  after_action :write_to_page_cache, except: UNCACHED_ACTIONS
 
   def demo
     @component_index = cached_component_index
