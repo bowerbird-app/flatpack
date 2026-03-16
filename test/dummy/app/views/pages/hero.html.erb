@@ -1,0 +1,275 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Hero Component",
+  subtitle: "Seven layout variants for landing-page hero sections."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :hero %>
+
+<div class="pb-24">
+
+  <!-- Centered -->
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Centered", anchor_link: true, subtitle: "Centered text and actions. Supports background colours and gradients.") %>
+    <%= render FlatPack::Hero::Component.new(
+      variant: :centered,
+      tagline: "Introducing FlatPack",
+      headline: "Build beautiful interfaces faster.",
+      description: "A Rails ViewComponent library with Tailwind CSS and no runtime JavaScript dependencies.",
+      background: "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f0fdf4 100%)"
+    ) do |hero|
+      hero.badge { render FlatPack::Badge::Component.new(text: "New", style: :success) }
+      hero.actions do
+        concat render(FlatPack::Button::Component.new(text: "Get started", style: :primary, url: "#"))
+        concat render(FlatPack::Button::Component.new(text: "Learn more", style: :secondary, url: "#"))
+      end
+    end %>
+    <%= render FlatPack::CodeBlock::Component.new(
+      class: "mt-4",
+      language: "erb",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Hero::Component.new(
+          variant: :centered,
+          tagline: "Introducing FlatPack",
+          headline: "Build beautiful interfaces faster.",
+          description: "A Rails ViewComponent library with Tailwind CSS.",
+          background: "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f0fdf4 100%)"
+        ) do |hero|
+          hero.badge { render FlatPack::Badge::Component.new(text: "New", style: :success) }
+          hero.actions do
+            concat render(FlatPack::Button::Component.new(text: "Get started", style: :primary, url: "#"))
+            concat render(FlatPack::Button::Component.new(text: "Learn more", style: :secondary, url: "#"))
+          end
+        end %&gt;
+      CODE
+    ) %>
+  </section>
+
+  <!-- Centered Image -->
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Centered Image", anchor_link: true, subtitle: "Centered text over a full-bleed background image with a dark overlay.") %>
+    <%= render FlatPack::Hero::Component.new(
+      variant: :centered_image,
+      tagline: "Built for teams",
+      headline: "Ship features your users love.",
+      description: "Full-bleed background image with a dark overlay keeps text readable at any resolution.",
+      background_image_url: "https://placehold.co/1600x800/1e293b/334155"
+    ) do |hero|
+      hero.actions do
+        concat render(FlatPack::Button::Component.new(text: "Start for free", style: :primary, url: "#"))
+        concat render(FlatPack::Button::Component.new(text: "Watch demo", style: :secondary, url: "#"))
+      end
+    end %>
+    <%= render FlatPack::CodeBlock::Component.new(
+      class: "mt-4",
+      language: "erb",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Hero::Component.new(
+          variant: :centered_image,
+          tagline: "Built for teams",
+          headline: "Ship features your users love.",
+          description: "Full-bleed background image with a dark overlay.",
+          background_image_url: "https://example.com/hero-bg.jpg"
+        ) do |hero|
+          hero.actions do
+            concat render(FlatPack::Button::Component.new(text: "Start for free", style: :primary, url: "#"))
+            concat render(FlatPack::Button::Component.new(text: "Watch demo", style: :secondary, url: "#"))
+          end
+        end %&gt;
+      CODE
+    ) %>
+  </section>
+
+  <!-- Screenshot -->
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Screenshot", anchor_link: true, subtitle: "Centered text above a large constrained app screenshot.") %>
+    <%= render FlatPack::Hero::Component.new(
+      variant: :screenshot,
+      tagline: "Trusted by developers",
+      headline: "Your whole product, beautifully presented.",
+      description: "Showcase the actual app interface directly below a concise headline.",
+      image_url: "https://placehold.co/1200x700/f1f5f9/94a3b8?text=App+Screenshot",
+      image_alt: "Application dashboard screenshot"
+    ) do |hero|
+      hero.actions do
+        concat render(FlatPack::Button::Component.new(text: "Try it free", style: :primary, url: "#"))
+      end
+    end %>
+    <%= render FlatPack::CodeBlock::Component.new(
+      class: "mt-4",
+      language: "erb",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Hero::Component.new(
+          variant: :screenshot,
+          tagline: "Trusted by developers",
+          headline: "Your whole product, beautifully presented.",
+          description: "Showcase the actual app interface directly below a concise headline.",
+          image_url: "https://example.com/dashboard.png",
+          image_alt: "Application dashboard screenshot"
+        ) do |hero|
+          hero.actions do
+            concat render(FlatPack::Button::Component.new(text: "Try it free", style: :primary, url: "#"))
+          end
+        end %&gt;
+      CODE
+    ) %>
+  </section>
+
+  <!-- Split Image -->
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Split Image", anchor_link: true, subtitle: "Two-column grid: text left, image right. Stacks on mobile.") %>
+    <%= render FlatPack::Hero::Component.new(
+      variant: :split_image,
+      tagline: "Modern design",
+      headline: "Text on the left, imagery on the right.",
+      description: "A classic two-column layout that stacks gracefully on smaller screens. Great for product launches.",
+      image_url: "https://placehold.co/800x600/6366f1/e0e7ff?text=Product+Image",
+      image_alt: "Product image",
+      background: "#f8fafc"
+    ) do |hero|
+      hero.badge { render FlatPack::Badge::Component.new(text: "v2.0") }
+      hero.actions do
+        concat render(FlatPack::Button::Component.new(text: "See the docs", style: :primary, url: "#"))
+        concat render(FlatPack::Button::Component.new(text: "View on GitHub", style: :secondary, url: "#"))
+      end
+    end %>
+    <%= render FlatPack::CodeBlock::Component.new(
+      class: "mt-4",
+      language: "erb",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Hero::Component.new(
+          variant: :split_image,
+          tagline: "Modern design",
+          headline: "Text on the left, imagery on the right.",
+          description: "Stacks gracefully on smaller screens.",
+          image_url: "https://example.com/product.jpg",
+          image_alt: "Product image",
+          background: "#f8fafc"
+        ) do |hero|
+          hero.badge { render FlatPack::Badge::Component.new(text: "v2.0") }
+          hero.actions do
+            concat render(FlatPack::Button::Component.new(text: "See the docs", style: :primary, url: "#"))
+            concat render(FlatPack::Button::Component.new(text: "View on GitHub", style: :secondary, url: "#"))
+          end
+        end %&gt;
+      CODE
+    ) %>
+  </section>
+
+  <!-- Angled Image -->
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Angled Image", anchor_link: true, subtitle: "Text left, image right with a diagonal polygon clip. Mobile shows a stacked image.") %>
+    <%= render FlatPack::Hero::Component.new(
+      variant: :angled_image,
+      tagline: "Stand out",
+      headline: "A diagonal cut for a dynamic first impression.",
+      description: "The angled clip-path creates a bold visual edge between text and image. Hidden on mobile and replaced with a stacked image.",
+      image_url: "https://placehold.co/800x600/0ea5e9/e0f2fe?text=Angled+Image",
+      image_alt: "Angled hero image"
+    ) do |hero|
+      hero.actions do
+        concat render(FlatPack::Button::Component.new(text: "Explore", style: :primary, url: "#"))
+      end
+    end %>
+    <%= render FlatPack::CodeBlock::Component.new(
+      class: "mt-4",
+      language: "erb",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Hero::Component.new(
+          variant: :angled_image,
+          tagline: "Stand out",
+          headline: "A diagonal cut for a dynamic first impression.",
+          description: "The angled clip-path creates a bold visual edge.",
+          image_url: "https://example.com/hero.jpg",
+          image_alt: "Angled hero image"
+        ) do |hero|
+          hero.actions do
+            concat render(FlatPack::Button::Component.new(text: "Explore", style: :primary, url: "#"))
+          end
+        end %&gt;
+      CODE
+    ) %>
+  </section>
+
+  <!-- Image Tiles -->
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Image Tiles", anchor_link: true, subtitle: "Text left, 2x2 image tile grid right. Stacks on mobile.") %>
+    <%= render FlatPack::Hero::Component.new(
+      variant: :image_tiles,
+      tagline: "Versatile & composable",
+      headline: "Show off multiple visuals in one hero.",
+      description: "A 2x2 grid of square images sits beside your copy, giving a rich product feel without a single screenshot.",
+      background: "linear-gradient(to bottom right, #fdf4ff, #faf5ff)",
+      tiles: [
+        {url: "https://placehold.co/400x400/f97316/ffedd5?text=1", alt: "Feature one"},
+        {url: "https://placehold.co/400x400/22c55e/dcfce7?text=2", alt: "Feature two"},
+        {url: "https://placehold.co/400x400/a855f7/f3e8ff?text=3", alt: "Feature three"},
+        {url: "https://placehold.co/400x400/ef4444/fee2e2?text=4", alt: "Feature four"}
+      ]
+    ) do |hero|
+      hero.actions do
+        concat render(FlatPack::Button::Component.new(text: "Get started", style: :primary, url: "#"))
+        concat render(FlatPack::Button::Component.new(text: "Learn more", style: :secondary, url: "#"))
+      end
+    end %>
+    <%= render FlatPack::CodeBlock::Component.new(
+      class: "mt-4",
+      language: "erb",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Hero::Component.new(
+          variant: :image_tiles,
+          tagline: "Versatile & composable",
+          headline: "Show off multiple visuals in one hero.",
+          description: "A 2x2 grid of square images beside your copy.",
+          background: "linear-gradient(to bottom right, #fdf4ff, #faf5ff)",
+          tiles: [
+            { url: "https://example.com/1.jpg", alt: "Feature one" },
+            { url: "https://example.com/2.jpg", alt: "Feature two" },
+            { url: "https://example.com/3.jpg", alt: "Feature three" },
+            { url: "https://example.com/4.jpg", alt: "Feature four" }
+          ]
+        ) do |hero|
+          hero.actions do
+            concat render(FlatPack::Button::Component.new(text: "Get started", style: :primary, url: "#"))
+            concat render(FlatPack::Button::Component.new(text: "Learn more", style: :secondary, url: "#"))
+          end
+        end %&gt;
+      CODE
+    ) %>
+  </section>
+
+  <!-- Offset Image -->
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Offset Image", anchor_link: true, subtitle: "Text left, image partly offset outside the grid via negative margin on large screens.") %>
+    <%= render FlatPack::Hero::Component.new(
+      variant: :offset_image,
+      tagline: "Bold & unconventional",
+      headline: "Let the image break the grid.",
+      description: "On large screens the image extends slightly beyond the container edge via a negative margin, creating a sense of depth and energy.",
+      image_url: "https://placehold.co/900x600/14b8a6/ccfbf1?text=Offset+Image",
+      image_alt: "Offset hero image"
+    ) do |hero|
+      hero.actions do
+        concat render(FlatPack::Button::Component.new(text: "Start now", style: :primary, url: "#"))
+      end
+    end %>
+    <%= render FlatPack::CodeBlock::Component.new(
+      class: "mt-4",
+      language: "erb",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Hero::Component.new(
+          variant: :offset_image,
+          tagline: "Bold & unconventional",
+          headline: "Let the image break the grid.",
+          description: "The image extends beyond the container edge on large screens.",
+          image_url: "https://example.com/hero.jpg",
+          image_alt: "Offset hero image"
+        ) do |hero|
+          hero.actions do
+            concat render(FlatPack::Button::Component.new(text: "Start now", style: :primary, url: "#"))
+          end
+        end %&gt;
+      CODE
+    ) %>
+  </section>
+
+</div>

@@ -35,6 +35,7 @@ comments_replies | FlatPack::Comments::Replies::Component | docs/components/comm
 comments_thread | FlatPack::Comments::Thread::Component | docs/components/comments-thread.md
 empty_state | FlatPack::EmptyState::Component | docs/components/empty-state.md
 grid | FlatPack::Grid::Component | docs/components/grid.md
+hero | FlatPack::Hero::Component | docs/components/hero.md
 inputs | FlatPack::TextInput::Component | docs/components/inputs.md
 link | FlatPack::Link::Component | docs/components/link.md
 list | FlatPack::List::Component | docs/components/list.md

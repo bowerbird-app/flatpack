@@ -578,6 +578,12 @@
               
               <!-- Layout Components -->
               <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Hero",
+                href: pages_hero_path,
+                icon: :rectangle_group,
+                active: current_page?(pages_hero_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
                 label: "Cards",
                 href: demo_cards_path,
                 icon: :box,

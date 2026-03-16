@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   mount FlatPack::Engine => "/flat_pack"
 
   # Demo pages
+  get "pages/hero"
   get "demo", to: "pages#demo"
   get "themes", to: "themes#index"
   get "themes/demos/:theme", to: "themes#demo", as: :theme_demo,
