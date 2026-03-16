@@ -1,0 +1,17 @@
+<div class="fixed top-4 left-4 z-50">
+  <%= render FlatPack::Button::Component.new(text: "← Back to Hero", style: :secondary, url: pages_hero_path) %>
+</div>
+
+<%= render FlatPack::Hero::Component.new(
+  variant: :offset_image,
+  tagline: "Bold & unconventional",
+  headline: "Let the image break the grid.",
+  description: "On large screens the image extends slightly beyond the container edge via a negative margin, creating a sense of depth and energy.",
+  image_url: "/images/hero-packhelp.png",
+  image_alt: "Packhelp packaging",
+  background: "linear-gradient(135deg, #fefce8 0%, #fef9c3 50%, #fef08a 100%)"
+) do |hero|
+  hero.actions do
+    concat render(FlatPack::Button::Component.new(text: "Start now", style: :primary, url: "#"))
+  end
+end %>

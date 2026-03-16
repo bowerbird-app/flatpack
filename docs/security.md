@@ -416,6 +416,90 @@ If you need to preserve all TipTap document structure (e.g. for re-editing witho
 
 JSON-format values are TipTap document JSON and should be parsed with `JSON.parse` rather than rendered directly as HTML.
 
+## Chat Components
+
+The Chat component system follows the same security baseline as all other FlatPack components plus some chat-specific considerations.
+
+### XSS Protection
+
+- All components inherit from `FlatPack::BaseComponent`, which runs attributes through `FlatPack::AttributeSanitizer`.
+- Content rendering uses Rails' `safe_join` and standard escaping — no dangerous HTML interpolation.
+
+### Attachment URLs
+
+`Chat::Attachment::Component` accepts an `href` prop. Sanitization is handled by BaseComponent, but applications should also validate attachment URLs server-side and use signed URLs for sensitive files.
+
+### JavaScript (Stimulus)
+
+- `chat_scroll_controller.js` — safe DOM manipulation via Stimulus targets; no `eval()` or `innerHTML` writes.
+
+### Recommendations for Applications
+
+1. **Sanitize message content** before rendering user-generated text:
+
+   ```ruby
+   <%= sanitize(@message.body, tags: %w[p br strong em]) %>
+   ```
+
+2. **Validate file uploads** server-side — check MIME type, size, and scan for malware.
+
+3. **Authenticate real-time connections** (WebSockets/Action Cable) and rate-limit message sending.
+
+4. **Use HTTPS** for all communication; consider end-to-end encryption for sensitive content.
+
+## Input Components (NumberInput, DateInput, FileInput)
+
+### XSS Prevention
+
+All three components use `merge_attributes` which routes through `FlatPack::AttributeSanitizer`. No `.html_safe` is used on user-provided data; all HTML is generated with Rails content helpers.
+
+### File Upload Security (FileInput)
+
+`FileInput` blocks 18 dangerous file extensions at component initialisation time:
+
+| Category | Extensions |
+|----------|-----------|
+| Windows executables | `.exe`, `.bat`, `.cmd`, `.scr`, `.com`, `.pif`, `.msi` |
+| Scripts | `.sh`, `.vbs`, `.js`, `.ps1`, `.psm1`, `.hta` |
+| Package files | `.jar`, `.app`, `.deb`, `.rpm`, `.apk` |
+
+Passing any of these in the `accept` parameter raises `ArgumentError`. Client-side file-size validation provides UX feedback; server-side validation is **always required** in addition.
+
+### NumberInput Validation
+
+The `step` parameter must be a positive number; invalid values raise `ArgumentError`.
+
+### DateInput
+
+Date values are formatted via `strftime` — no unsafe date parsing from user input.
+
+### Production Recommendations
+
+- **Always validate file types and sizes on the server** — client-side checks are UX, not security.
+- Scan uploaded files for malware before storing.
+- Sanitize uploaded file names; store files outside the web root.
+- Implement proper access controls for uploaded files.
+
+## Security Implementation Notes
+
+### Files
+
+| File | Purpose |
+|------|---------|
+| `lib/flat_pack/attribute_sanitizer.rb` | Core URL and attribute validation (whitelist-based protocol check, dangerous-attribute filter, HTML entity-encoded attack detection). |
+| `app/components/flat_pack/link/component.rb` | Secure link component; auto-adds `rel="noopener noreferrer"` for external links. |
+| `app/components/flat_pack/base_component.rb` | `sanitize_args` method so every component inherits automatic attribute filtering. |
+| `.github/workflows/security.yml` | Automated Brakeman + bundler-audit scans on every push; weekly scheduled scan. |
+
+### Historical Fixes
+
+| Vulnerability | Fix |
+|---------------|-----|
+| URL parsing bypass via `split(':')` | Replaced with robust regex `/\A([a-z][a-z0-9+.-]*):/i` |
+| Silent URL rejection | Changed to explicit `ArgumentError` with generic message (no sensitive data leaked) |
+| HTML entity bypass (`javascript&colon;`) | Added detection of entity-encoded colons |
+| Overly broad entity detection | Narrowed pattern to colon entities only |
+
 ## Additional Resources
 
 - [OWASP XSS Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html)

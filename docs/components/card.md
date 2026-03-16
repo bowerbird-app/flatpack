@@ -23,6 +23,7 @@ Use Card to group related content in a consistent surface with optional hover an
 Behavior note:
 - Card root uses `overflow-visible` by default so pop-out UI (for example, dropdown menus) is not clipped by the card container.
 - When the `media` slot is present, card root switches to `overflow-hidden` to preserve media edge clipping.
+- The `body` slot applies `overflow-hidden` by default to prevent inner content from overflowing the card boundaries.
 
 ## Slots
 | name | type | required | description |

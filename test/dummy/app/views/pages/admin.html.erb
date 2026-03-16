@@ -1,0 +1,87 @@
+<%# Breadcrumb — top right corner %>
+<div class="mb-4">
+  <%= render FlatPack::Breadcrumb::Component.new do |breadcrumb| %>
+    <% breadcrumb.item(text: "Home", href: demo_path) %>
+    <% breadcrumb.item(text: "Admin") %>
+  <% end %>
+</div>
+
+<%# Page title and description %>
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Admin Dashboard",
+  subtitle: "Monitor key metrics, track user activity, and manage your workspace from one place."
+) %>
+
+<%# Stats and chart cards — 3 columns, horizontally scrollable on mobile %>
+<div class="mt-6 mb-8">
+  <div class="flex gap-4 overflow-x-auto pb-2 md:grid md:grid-cols-3 md:overflow-visible md:pb-0">
+    <% @admin_stats.each do |stat| %>
+      <div class="min-w-[220px] md:min-w-0 flex-shrink-0 md:flex-shrink">
+        <%= render FlatPack::Card::Component.new(style: :default, class: "overflow-hidden") do |card| %>
+          <% card.body do %>
+            <div class="flex items-center gap-4">
+              <div class="shrink-0 w-12 h-12 rounded-xl bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] flex items-center justify-center">
+                <%= render FlatPack::Shared::IconComponent.new(name: stat[:icon], size: :lg, class: "text-[var(--surface-muted-content-color)]") %>
+              </div>
+              <div class="flex flex-col">
+                <span class="text-xs font-medium text-[var(--surface-muted-content-color)] uppercase tracking-wide"><%= stat[:label] %></span>
+                <div class="flex items-center gap-1.5 mt-0.5">
+                  <span class="text-2xl font-bold text-[var(--surface-content-color)]"><%= stat[:value] %></span>
+                  <span class="text-xs font-medium" style="color: <%= stat[:trend] == :up ? "var(--color-success-background-color)" : "var(--color-danger-background-color)" %>"><%= stat[:change] %></span>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <%# Chart card — spans full width on mobile scroll, full third column on md %>
+    <div class="min-w-[280px] md:min-w-0 flex-shrink-0 md:flex-shrink md:col-span-3">
+      <%= render FlatPack::Chart::Component.new(
+        type: :area,
+        series: [
+          {name: "Revenue", data: [42, 57, 64, 71, 80, 75, 90, 105, 98, 115, 130, 148]},
+          {name: "Users", data: [18, 25, 30, 38, 42, 50, 55, 62, 70, 75, 82, 91]}
+        ],
+        title: "Monthly Overview",
+        subtitle: "Revenue ($k) vs Active Users",
+        height: 220
+      ) %>
+    </div>
+  </div>
+</div>
+
+<%# Users table %>
+<section>
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "User Management",
+    subtitle: "All registered users and their current status.",
+    anchor_link: true
+  ) %>
+
+  <div class="mt-4">
+    <%= render FlatPack::Table::Component.new(data: @admin_users) do |table| %>
+      <% table.column(title: "ID", html: ->(u) { "<span class=\"text-[var(--surface-muted-content-color)] font-mono text-xs\">##{u.id}</span>".html_safe }) %>
+      <% table.column(title: "Name", html: ->(u) { u.name }) %>
+      <% table.column(title: "Email", html: ->(u) { u.email }) %>
+      <% table.column(title: "Role", html: ->(u) {
+        style = case u.role
+                when "Admin" then :primary
+                when "Editor" then :info
+                else :default
+                end
+        render FlatPack::Badge::Component.new(text: u.role, style: style, size: :sm)
+      }) %>
+      <% table.column(title: "Status", html: ->(u) {
+        style = case u.status
+                when "Active" then :success
+                when "Inactive" then :default
+                else :warning
+                end
+        render FlatPack::Badge::Component.new(text: u.status, style: style, size: :sm)
+      }) %>
+      <% table.column(title: "Joined", html: ->(u) { "<span class=\"text-sm text-[var(--surface-muted-content-color)]\">#{u.joined_at}</span>".html_safe }) %>
+    <% end %>
+  </div>
+</section>

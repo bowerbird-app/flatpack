@@ -1,0 +1,16 @@
+<div class="fixed top-4 left-4 z-50">
+  <%= render FlatPack::Button::Component.new(text: "← Back to Hero", style: :secondary, url: pages_hero_path) %>
+</div>
+
+<%= render FlatPack::Hero::Component.new(
+  variant: :screenshot,
+  tagline: "Trusted by developers",
+  headline: "Your whole product, beautifully presented.",
+  description: "Showcase the actual app interface directly below a concise headline.",
+  image_url: "/images/hero-stool.jpg",
+  image_alt: "DIY flat-pack stool"
+) do |hero|
+  hero.actions do
+    concat render(FlatPack::Button::Component.new(text: "Try it free", style: :primary, url: "#"))
+  end
+end %>

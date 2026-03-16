@@ -1,0 +1,16 @@
+<div class="fixed top-4 left-4 z-50">
+  <%= render FlatPack::Button::Component.new(text: "← Back to Hero", style: :secondary, url: pages_hero_path) %>
+</div>
+
+<%= render FlatPack::Hero::Component.new(
+  variant: :angled_image,
+  tagline: "Stand out",
+  headline: "A diagonal cut for a dynamic first impression.",
+  description: "The angled clip-path creates a bold visual edge between text and image. Hidden on mobile and replaced with a stacked image.",
+  image_url: "/images/hero-stool.jpg",
+  image_alt: "DIY flat-pack stool"
+) do |hero|
+  hero.actions do
+    concat render(FlatPack::Button::Component.new(text: "Explore", style: :primary, url: "#"))
+  end
+end %>

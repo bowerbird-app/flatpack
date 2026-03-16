@@ -91,6 +91,44 @@ Drag reorder payload contract sent by `flat-pack--table-sortable`:
 ## Accessibility
 Sortable headers are rendered as links, so they are keyboard-focusable and activate with standard link keyboard behavior. Keep header text descriptive for assistive technologies.
 
+## Security Considerations
+
+### Whitelist Valid Sort Columns
+
+Never pass raw user input to ActiveRecord `order`. Always whitelist column names:
+
+```ruby
+VALID_SORT_COLUMNS = %w[name email created_at status].freeze
+
+def sorted_records(records, sort_col, direction)
+  return records unless VALID_SORT_COLUMNS.include?(sort_col)
+  dir = direction == "desc" ? :desc : :asc
+  records.order(sort_col => dir)   # hash syntax — no string interpolation
+end
+```
+
+### Validate Direction
+
+```ruby
+direction = params[:direction] == "desc" ? "desc" : "asc"
+```
+
+### Avoid String Interpolation in `order`
+
+```ruby
+# BAD — SQL injection risk
+records.order("#{params[:sort]} #{params[:direction]}")
+
+# GOOD — validated hash syntax
+records.order(validated_column => validated_direction)
+```
+
+## Performance Considerations
+
+- Add database indexes on all sortable columns (`add_index :table, :column`).
+- Use `includes` to prevent N+1 queries when sorting involves associations.
+- For in-memory array sorting the controller handles the sort; database sorting is preferred for large datasets.
+
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
 - Optional Turbo Frames for partial updates.

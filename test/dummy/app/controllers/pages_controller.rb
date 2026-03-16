@@ -64,6 +64,15 @@ class PagesController < ApplicationController
   before_action :load_table_demo_data, only: %i[tables_basic tables_sortable tables_draggable]
   before_action :load_demo_theme_tokens
 
+  # Actions with dynamic data that must not be fully cached
+  UNCACHED_ACTIONS = %i[
+    search_results picker_results pagination_infinite
+    comments admin
+  ].freeze
+
+  before_action :serve_from_page_cache, except: UNCACHED_ACTIONS
+  after_action :write_to_page_cache, except: UNCACHED_ACTIONS
+
   def demo
     @component_index = cached_component_index
   end
@@ -123,6 +132,28 @@ class PagesController < ApplicationController
     end
   rescue Ordering::ReorderService::InvalidPayload => e
     render json: {ok: false, error: e.message}, status: :unprocessable_entity
+  end
+
+  def admin
+    @admin_stats = [
+      {label: "Total Revenue", value: "$84,320", change: "+12.5%", trend: :up, icon: :dashboard},
+      {label: "Active Users", value: "3,842", change: "+8.1%", trend: :up, icon: :users},
+      {label: "Open Tickets", value: "128", change: "-4.3%", trend: :down, icon: :alert}
+    ]
+
+    @admin_users = Array.new(12) do |i|
+      OpenStruct.new(
+        id: i + 1,
+        name: ["Alice Johnson", "Bob Smith", "Carol White", "David Lee", "Eva Martinez",
+          "Frank Brown", "Grace Kim", "Henry Davis", "Iris Chen", "James Wilson",
+          "Karen Taylor", "Liam Moore"][i],
+        email: ["alice", "bob", "carol", "david", "eva", "frank", "grace",
+          "henry", "iris", "james", "karen", "liam"][i] + "@example.com",
+        role: %w[Admin Editor Viewer Admin Editor Viewer Admin Editor Viewer Admin Editor Viewer][i],
+        status: %w[Active Active Active Active Active Inactive Active Active Active Pending Active Active][i],
+        joined_at: (i * 15 + 5).days.ago.strftime("%b %d, %Y")
+      )
+    end
   end
 
   def inputs
@@ -536,6 +567,34 @@ class PagesController < ApplicationController
   end
 
   def timeline
+  end
+
+  def hero_centered
+    render layout: "fullpage"
+  end
+
+  def hero_centered_image
+    render layout: "fullpage"
+  end
+
+  def hero_screenshot
+    render layout: "fullpage"
+  end
+
+  def hero_split_image
+    render layout: "fullpage"
+  end
+
+  def hero_angled_image
+    render layout: "fullpage"
+  end
+
+  def hero_image_tiles
+    render layout: "fullpage"
+  end
+
+  def hero_offset_image
+    render layout: "fullpage"
   end
 
   private
@@ -1220,6 +1279,7 @@ class PagesController < ApplicationController
       {title: "Quote", description: "Blockquote and citation text examples", url: demo_text_quote_path},
       {title: "Empty State", description: "User-friendly empty states", url: demo_empty_state_path},
       {title: "Grid", description: "Responsive grid layouts", url: demo_grid_path},
+      {title: "Hero", description: "Landing-page hero sections with 7 layout variants", url: pages_hero_path},
       {title: "Grid: Two Columns", description: "Two-column layout with one card in each column", url: demo_grid_two_columns_path},
       {title: "Grid: Movable Cards", description: "Draggable card grid with persisted ordering", url: demo_grid_movable_cards_path},
       {title: "Pagination", description: "Page navigation with Pagy", url: demo_pagination_path},
@@ -1499,5 +1559,24 @@ class PagesController < ApplicationController
     css = File.read(path)
     self.class.instance_variable_set(:@theme_variables_css_cache, {mtime: mtime, css: css})
     css
+  end
+
+  def page_cache_key
+    "dummy/full-page/#{request.path}"
+  end
+
+  def serve_from_page_cache
+    return unless request.format.html? && request.get?
+
+    cached = Rails.cache.read(page_cache_key)
+    return unless cached
+
+    render html: cached.html_safe, layout: false and return
+  end
+
+  def write_to_page_cache
+    return unless request.format.html? && request.get? && response.successful?
+
+    Rails.cache.write(page_cache_key, response.body, expires_in: 1.hour)
   end
 end

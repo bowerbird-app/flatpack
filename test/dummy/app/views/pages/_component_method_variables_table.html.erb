@@ -436,6 +436,24 @@
         { variable: "align", accepts: ":start, :center, :end, :stretch", example: "align: :stretch" }
       ]
     },
+    hero: {
+      label: "Hero",
+      method_call: "render FlatPack::Hero::Component.new(variant: :centered, headline: \"Title\") do |hero| ... end",
+      variables: [
+        { variable: "variant", accepts: ":centered, :centered_image, :screenshot, :split_image, :angled_image, :image_tiles, :offset_image", example: "variant: :split_image" },
+        { variable: "tagline", accepts: "String or nil", example: "tagline: \"Introducing FlatPack\"" },
+        { variable: "headline", accepts: "String or nil", example: "headline: \"Build beautiful interfaces faster.\"" },
+        { variable: "description", accepts: "String or nil", example: "description: \"A Rails ViewComponent library.\"" },
+        { variable: "image_url", accepts: "String or nil (sanitized)", example: "image_url: \"https://example.com/product.jpg\"" },
+        { variable: "image_alt", accepts: "String", example: "image_alt: \"Product screenshot\"" },
+        { variable: "background_image_url", accepts: "String or nil (sanitized)", example: "background_image_url: \"https://example.com/bg.jpg\"" },
+        { variable: "background", accepts: "CSS color, gradient, or nil", example: "background: \"linear-gradient(135deg, #667eea, #764ba2)\"" },
+        { variable: "tiles", accepts: "Array of { url:, alt: } hashes (up to 4)", example: "tiles: [{ url: \"https://...\", alt: \"Feature 1\" }]" },
+        { variable: "actions", accepts: "slot block", example: "hero.actions { concat render(FlatPack::Button::Component.new(text: \"Start\", style: :primary, url: \"#\")) }" },
+        { variable: "badge", accepts: "slot block", example: "hero.badge { render FlatPack::Badge::Component.new(text: \"New\", style: :success) }" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"bg-[var(--surface-page-background-color)]\", id: \"main-hero\"" }
+      ]
+    },
     list: {
       label: "List",
       method_call: "render FlatPack::List::Component.new(ordered: false, spacing: :comfortable, divider: false, selectable: false) do ... end",

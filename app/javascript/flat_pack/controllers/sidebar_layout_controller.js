@@ -45,12 +45,14 @@ export default class extends Controller {
     // Persist/restore sidebar scroll position around Turbo navigations
     this.handleTurboBeforeCache = this.handleTurboBeforeCache.bind(this)
     this.handleTurboBeforeRender = this.handleTurboBeforeRender.bind(this)
+    this.handleTurboLoad = this.handleTurboLoad.bind(this)
     this.handleSidebarLinkClick = this.handleSidebarLinkClick.bind(this)
     this.handlePageHide = this.handlePageHide.bind(this)
     this.handleSidebarScroll = this.handleSidebarScroll.bind(this)
 
     document.addEventListener("turbo:before-cache", this.handleTurboBeforeCache)
     document.addEventListener("turbo:before-render", this.handleTurboBeforeRender)
+    document.addEventListener("turbo:load", this.handleTurboLoad)
     window.addEventListener("pagehide", this.handlePageHide)
     this.element.addEventListener("click", this.handleSidebarLinkClick, true)
     this.bindScrollPersistenceListener()
@@ -75,6 +77,7 @@ export default class extends Controller {
     window.removeEventListener("resize", this.handleResize)
     document.removeEventListener("turbo:before-cache", this.handleTurboBeforeCache)
     document.removeEventListener("turbo:before-render", this.handleTurboBeforeRender)
+    document.removeEventListener("turbo:load", this.handleTurboLoad)
     window.removeEventListener("pagehide", this.handlePageHide)
     this.element.removeEventListener("click", this.handleSidebarLinkClick, true)
     this.unbindScrollPersistenceListener()
@@ -405,6 +408,13 @@ export default class extends Controller {
 
   handleTurboBeforeCache() {
     this.persistScrollState()
+  }
+
+  handleTurboLoad() {
+    // activateSidebarNav() in the layout runs on turbo:load and sets aria-current="page".
+    // Calling scrollActiveItemIntoView() here (after that listener) ensures the sidebar
+    // is scrolled to the active item on every navigation and direct page load.
+    this.scrollActiveItemIntoView()
   }
 
   handleTurboBeforeRender(event) {

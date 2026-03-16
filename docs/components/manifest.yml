@@ -181,6 +181,12 @@ components:
     primary_class: FlatPack::Grid::Component
     status: documented
 
+  - key: hero
+    title: Hero
+    doc: docs/components/hero.md
+    primary_class: FlatPack::Hero::Component
+    status: documented
+
   - key: inputs
     title: Input Components
     doc: docs/components/inputs.md
