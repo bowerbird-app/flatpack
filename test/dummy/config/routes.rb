@@ -7,6 +7,13 @@ Rails.application.routes.draw do
 
   # Demo pages
   get "pages/hero"
+  get "pages/hero/centered", to: "pages#hero_centered"
+  get "pages/hero/centered_image", to: "pages#hero_centered_image"
+  get "pages/hero/screenshot", to: "pages#hero_screenshot"
+  get "pages/hero/split_image", to: "pages#hero_split_image"
+  get "pages/hero/angled_image", to: "pages#hero_angled_image"
+  get "pages/hero/image_tiles", to: "pages#hero_image_tiles"
+  get "pages/hero/offset_image", to: "pages#hero_offset_image"
   get "demo", to: "pages#demo"
   get "themes", to: "themes#index"
   get "themes/demos/:theme", to: "themes#demo", as: :theme_demo,

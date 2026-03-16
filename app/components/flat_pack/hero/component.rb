@@ -131,8 +131,16 @@ module FlatPack
       # ─── variant renderers ───────────────────────────────────────────────────
 
       def render_centered
-        content_tag(:section, **merge_attributes(class: "max-w-4xl mx-auto px-6 py-24 text-center", style: background_style)) do
-          render_text_block
+        content_tag(:section, **merge_attributes(class: "w-full px-6 py-24 text-center", style: background_style)) do
+          content_tag(:div, class: "max-w-4xl mx-auto") do
+            safe_join([
+              render_badge_content,
+              render_tagline,
+              render_headline,
+              render_description,
+              render_actions_block(extra_classes: "justify-center")
+            ].compact)
+          end
         end
       end
 
@@ -180,7 +188,7 @@ module FlatPack
       def render_split_image
         content_tag(:section, **merge_attributes(class: "grid lg:grid-cols-2 min-h-[540px]", style: background_style)) do
           safe_join([
-            content_tag(:div, class: "flex flex-col justify-center px-6 py-24 lg:pr-16") do
+            content_tag(:div, class: "flex flex-col justify-center px-16 py-24 lg:pr-16") do
               render_text_block
             end,
             content_tag(:div, class: "relative min-h-[300px] lg:min-h-full") do
@@ -191,9 +199,9 @@ module FlatPack
       end
 
       def render_angled_image
-        content_tag(:section, **merge_attributes(class: "relative overflow-hidden px-6 py-24", style: background_style)) do
+        content_tag(:section, **merge_attributes(class: "relative overflow-hidden py-24", style: background_style)) do
           safe_join([
-            content_tag(:div, class: "lg:grid lg:grid-cols-2 items-center") do
+            content_tag(:div, class: "lg:grid lg:grid-cols-2 items-center px-16") do
               content_tag(:div, render_text_block, class: "")
             end,
             content_tag(:div, class: "hidden lg:block absolute right-0 top-0 h-full w-1/2") do
@@ -212,10 +220,10 @@ module FlatPack
       end
 
       def render_image_tiles
-        content_tag(:section, **merge_attributes(class: "grid lg:grid-cols-2 gap-16 items-center px-6 py-24", style: background_style)) do
+        content_tag(:section, **merge_attributes(class: "grid lg:grid-cols-2 gap-16 items-center py-24", style: background_style)) do
           safe_join([
-            content_tag(:div, render_text_block, class: ""),
-            content_tag(:div, class: "grid grid-cols-2 gap-4") do
+            content_tag(:div, render_text_block, class: "px-16"),
+            content_tag(:div, class: "grid grid-cols-2 gap-4 pr-16") do
               safe_join(@tiles.first(4).map { |tile|
                 tile[:url] ? image_tag(tile[:url], alt: tile[:alt].to_s, class: "rounded-lg object-cover aspect-square w-full") : "".html_safe
               })
@@ -225,8 +233,8 @@ module FlatPack
       end
 
       def render_offset_image
-        content_tag(:section, **merge_attributes(class: "overflow-hidden px-6 py-24", style: background_style)) do
-          content_tag(:div, class: "lg:grid lg:grid-cols-2 gap-16 items-start") do
+        content_tag(:section, **merge_attributes(class: "overflow-hidden py-24", style: background_style)) do
+          content_tag(:div, class: "lg:grid lg:grid-cols-2 gap-16 items-start px-16") do
             safe_join([
               content_tag(:div, render_text_block, class: ""),
               content_tag(:div, class: "relative mt-12 lg:mt-0") do

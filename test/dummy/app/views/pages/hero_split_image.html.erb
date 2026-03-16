@@ -1,0 +1,19 @@
+<div class="fixed top-4 left-4 z-50">
+  <%= render FlatPack::Button::Component.new(text: "← Back to Hero", style: :secondary, url: pages_hero_path) %>
+</div>
+
+<%= render FlatPack::Hero::Component.new(
+  variant: :split_image,
+  tagline: "Modern design",
+  headline: "Text on the left, imagery on the right.",
+  description: "A classic two-column layout that stacks gracefully on smaller screens. Great for product launches.",
+  image_url: "/images/hero-packhelp.png",
+  image_alt: "Packhelp packaging",
+  background: "#f8fafc"
+) do |hero|
+  hero.badge { render FlatPack::Badge::Component.new(text: "v2.0") }
+  hero.actions do
+    concat render(FlatPack::Button::Component.new(text: "See the docs", style: :primary, url: "#"))
+    concat render(FlatPack::Button::Component.new(text: "View on GitHub", style: :secondary, url: "#"))
+  end
+end %>

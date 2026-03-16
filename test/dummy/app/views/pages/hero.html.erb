@@ -10,6 +10,9 @@
   <!-- Centered -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Centered", anchor_link: true, subtitle: "Centered text and actions. Supports background colours and gradients.") %>
+    <div class="mb-4 flex justify-end">
+      <%= render FlatPack::Button::Component.new(text: "View full-page demo", style: :secondary, url: pages_hero_centered_path, target: "_blank") %>
+    </div>
     <%= render FlatPack::Hero::Component.new(
       variant: :centered,
       tagline: "Introducing FlatPack",
@@ -47,12 +50,15 @@
   <!-- Centered Image -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Centered Image", anchor_link: true, subtitle: "Centered text over a full-bleed background image with a dark overlay.") %>
+    <div class="mb-4 flex justify-end">
+      <%= render FlatPack::Button::Component.new(text: "View full-page demo", style: :secondary, url: pages_hero_centered_image_path, target: "_blank") %>
+    </div>
     <%= render FlatPack::Hero::Component.new(
       variant: :centered_image,
       tagline: "Built for teams",
       headline: "Ship features your users love.",
       description: "Full-bleed background image with a dark overlay keeps text readable at any resolution.",
-      background_image_url: "https://placehold.co/1600x800/1e293b/334155"
+      background_image_url: "/images/hero-stool.jpg"
     ) do |hero|
       hero.actions do
         concat render(FlatPack::Button::Component.new(text: "Start for free", style: :primary, url: "#"))
@@ -82,13 +88,16 @@
   <!-- Screenshot -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Screenshot", anchor_link: true, subtitle: "Centered text above a large constrained app screenshot.") %>
+    <div class="mb-4 flex justify-end">
+      <%= render FlatPack::Button::Component.new(text: "View full-page demo", style: :secondary, url: pages_hero_screenshot_path, target: "_blank") %>
+    </div>
     <%= render FlatPack::Hero::Component.new(
       variant: :screenshot,
       tagline: "Trusted by developers",
       headline: "Your whole product, beautifully presented.",
       description: "Showcase the actual app interface directly below a concise headline.",
-      image_url: "https://placehold.co/1200x700/f1f5f9/94a3b8?text=App+Screenshot",
-      image_alt: "Application dashboard screenshot"
+      image_url: "/images/hero-stool.jpg",
+      image_alt: "DIY flat-pack stool"
     ) do |hero|
       hero.actions do
         concat render(FlatPack::Button::Component.new(text: "Try it free", style: :primary, url: "#"))
@@ -117,13 +126,16 @@
   <!-- Split Image -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Split Image", anchor_link: true, subtitle: "Two-column grid: text left, image right. Stacks on mobile.") %>
+    <div class="mb-4 flex justify-end">
+      <%= render FlatPack::Button::Component.new(text: "View full-page demo", style: :secondary, url: pages_hero_split_image_path, target: "_blank") %>
+    </div>
     <%= render FlatPack::Hero::Component.new(
       variant: :split_image,
       tagline: "Modern design",
       headline: "Text on the left, imagery on the right.",
       description: "A classic two-column layout that stacks gracefully on smaller screens. Great for product launches.",
-      image_url: "https://placehold.co/800x600/6366f1/e0e7ff?text=Product+Image",
-      image_alt: "Product image",
+      image_url: "/images/hero-packhelp.png",
+      image_alt: "Packhelp packaging",
       background: "#f8fafc"
     ) do |hero|
       hero.badge { render FlatPack::Badge::Component.new(text: "v2.0") }
@@ -158,13 +170,16 @@
   <!-- Angled Image -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Angled Image", anchor_link: true, subtitle: "Text left, image right with a diagonal polygon clip. Mobile shows a stacked image.") %>
+    <div class="mb-4 flex justify-end">
+      <%= render FlatPack::Button::Component.new(text: "View full-page demo", style: :secondary, url: pages_hero_angled_image_path, target: "_blank") %>
+    </div>
     <%= render FlatPack::Hero::Component.new(
       variant: :angled_image,
       tagline: "Stand out",
       headline: "A diagonal cut for a dynamic first impression.",
       description: "The angled clip-path creates a bold visual edge between text and image. Hidden on mobile and replaced with a stacked image.",
-      image_url: "https://placehold.co/800x600/0ea5e9/e0f2fe?text=Angled+Image",
-      image_alt: "Angled hero image"
+      image_url: "/images/hero-stool.jpg",
+      image_alt: "DIY flat-pack stool"
     ) do |hero|
       hero.actions do
         concat render(FlatPack::Button::Component.new(text: "Explore", style: :primary, url: "#"))
@@ -193,6 +208,9 @@
   <!-- Image Tiles -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Image Tiles", anchor_link: true, subtitle: "Text left, 2x2 image tile grid right. Stacks on mobile.") %>
+    <div class="mb-4 flex justify-end">
+      <%= render FlatPack::Button::Component.new(text: "View full-page demo", style: :secondary, url: pages_hero_image_tiles_path, target: "_blank") %>
+    </div>
     <%= render FlatPack::Hero::Component.new(
       variant: :image_tiles,
       tagline: "Versatile & composable",
@@ -200,10 +218,10 @@
       description: "A 2x2 grid of square images sits beside your copy, giving a rich product feel without a single screenshot.",
       background: "linear-gradient(to bottom right, #fdf4ff, #faf5ff)",
       tiles: [
-        {url: "https://placehold.co/400x400/f97316/ffedd5?text=1", alt: "Feature one"},
-        {url: "https://placehold.co/400x400/22c55e/dcfce7?text=2", alt: "Feature two"},
-        {url: "https://placehold.co/400x400/a855f7/f3e8ff?text=3", alt: "Feature three"},
-        {url: "https://placehold.co/400x400/ef4444/fee2e2?text=4", alt: "Feature four"}
+        {url: "/images/hero-stool.jpg", alt: "DIY flat-pack stool"},
+        {url: "/images/hero-packhelp.png", alt: "Packhelp packaging"},
+        {url: "/images/hero-packaging.jpg", alt: "Subscription box packaging"},
+        {url: "/images/hero-subscription-box.webp", alt: "Subscription box fulfillment"}
       ]
     ) do |hero|
       hero.actions do
@@ -240,13 +258,17 @@
   <!-- Offset Image -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Offset Image", anchor_link: true, subtitle: "Text left, image partly offset outside the grid via negative margin on large screens.") %>
+    <div class="mb-4 flex justify-end">
+      <%= render FlatPack::Button::Component.new(text: "View full-page demo", style: :secondary, url: pages_hero_offset_image_path, target: "_blank") %>
+    </div>
     <%= render FlatPack::Hero::Component.new(
       variant: :offset_image,
       tagline: "Bold & unconventional",
       headline: "Let the image break the grid.",
       description: "On large screens the image extends slightly beyond the container edge via a negative margin, creating a sense of depth and energy.",
-      image_url: "https://placehold.co/900x600/14b8a6/ccfbf1?text=Offset+Image",
-      image_alt: "Offset hero image"
+      image_url: "/images/hero-packhelp.png",
+      image_alt: "Packhelp packaging",
+      background: "linear-gradient(135deg, #fefce8 0%, #fef9c3 50%, #fef08a 100%)"
     ) do |hero|
       hero.actions do
         concat render(FlatPack::Button::Component.new(text: "Start now", style: :primary, url: "#"))

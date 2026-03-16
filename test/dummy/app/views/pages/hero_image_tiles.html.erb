@@ -1,0 +1,22 @@
+<div class="fixed top-4 left-4 z-50">
+  <%= render FlatPack::Button::Component.new(text: "← Back to Hero", style: :secondary, url: pages_hero_path) %>
+</div>
+
+<%= render FlatPack::Hero::Component.new(
+  variant: :image_tiles,
+  tagline: "Versatile & composable",
+  headline: "Show off multiple visuals in one hero.",
+  description: "A 2x2 grid of square images sits beside your copy, giving a rich product feel without a single screenshot.",
+  background: "linear-gradient(to bottom right, #fdf4ff, #faf5ff)",
+  tiles: [
+    {url: "/images/hero-stool.jpg", alt: "DIY flat-pack stool"},
+    {url: "/images/hero-packhelp.png", alt: "Packhelp packaging"},
+    {url: "/images/hero-packaging.jpg", alt: "Subscription box packaging"},
+    {url: "/images/hero-subscription-box.webp", alt: "Subscription box fulfillment"}
+  ]
+) do |hero|
+  hero.actions do
+    concat render(FlatPack::Button::Component.new(text: "Get started", style: :primary, url: "#"))
+    concat render(FlatPack::Button::Component.new(text: "Learn more", style: :secondary, url: "#"))
+  end
+end %>

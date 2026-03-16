@@ -538,6 +538,34 @@ class PagesController < ApplicationController
   def timeline
   end
 
+  def hero_centered
+    render layout: "fullpage"
+  end
+
+  def hero_centered_image
+    render layout: "fullpage"
+  end
+
+  def hero_screenshot
+    render layout: "fullpage"
+  end
+
+  def hero_split_image
+    render layout: "fullpage"
+  end
+
+  def hero_angled_image
+    render layout: "fullpage"
+  end
+
+  def hero_image_tiles
+    render layout: "fullpage"
+  end
+
+  def hero_offset_image
+    render layout: "fullpage"
+  end
+
   private
 
   def cached_component_index
@@ -1220,6 +1248,7 @@ class PagesController < ApplicationController
       {title: "Quote", description: "Blockquote and citation text examples", url: demo_text_quote_path},
       {title: "Empty State", description: "User-friendly empty states", url: demo_empty_state_path},
       {title: "Grid", description: "Responsive grid layouts", url: demo_grid_path},
+      {title: "Hero", description: "Landing-page hero sections with 7 layout variants", url: pages_hero_path},
       {title: "Grid: Two Columns", description: "Two-column layout with one card in each column", url: demo_grid_two_columns_path},
       {title: "Grid: Movable Cards", description: "Draggable card grid with persisted ordering", url: demo_grid_movable_cards_path},
       {title: "Pagination", description: "Page navigation with Pagy", url: demo_pagination_path},
