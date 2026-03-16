@@ -90,3 +90,72 @@ High-use interaction props:
 - FlatPack install generator setup (`rails generate flat_pack:install`).
 - Stimulus controllers: `flat-pack--chat-scroll`, `flat-pack--chat-grouping`, `flat-pack--chat-textarea`, `flat-pack--chat-message-actions`, `flat-pack--chat-image-deck`.
 - Message history loading uses `FlatPack::PaginationInfinite::Component` when configured.
+
+---
+
+## Architecture Reference
+
+### Stimulus Controllers
+
+#### `chat_scroll_controller.js`
+
+- **Location**: `app/javascript/flat_pack/controllers/chat_scroll_controller.js`
+- **Targets**: `messages`, `jumpButtonContainer`
+- **Values**: `stickToBottom`
+- **Actions**: `checkScroll()`, `jump()`, `newMessageAdded()`
+- **Features**: Auto-scrolls to bottom, shows/hides jump button, smooth scrolling
+
+### Design Patterns
+
+#### BaseComponent Inheritance
+
+All components inherit from `FlatPack::BaseComponent`:
+
+- Use `system_arguments` for HTML attributes
+- Use `merge_attributes` for attribute merging
+- Use `classes()` method with TailwindMerge
+
+#### Constant-Based Styling
+
+Tailwind classes are defined as frozen constants with inline comments for Tailwind CSS scanning. Explicit class literals ensure proper CSS generation.
+
+#### Validation
+
+Required props are validated; enums are validated with descriptive `ArgumentError` messages.
+
+### Key Behaviours
+
+- **Message states** — Opacity changes for `:sending`, error indicators for `:failed`, read receipts for `:read`.
+- **Auto-growing textarea** — Expands as the user types up to a max height with smooth transitions.
+- **Smart scrolling** — Auto-scrolls to bottom; shows a jump button when scrolled up.
+- **Avatar integration** — Seamless use of `FlatPack::Avatar::Component` and `FlatPack::AvatarGroup::Component`.
+- **Attachments** — File attachments with icons, image attachments with thumbnails, download/view links.
+
+### Integration Points
+
+| Integration | Notes |
+|-------------|-------|
+| Avatar | Used in message groups |
+| AvatarGroup | Used in chat headers |
+| BaseComponent | All components inherit from it |
+| CSS variables | Uses `--color-*`, `--transition-*`, `--radius-*`; dark-mode support via CSS variables |
+
+### Source Files
+
+**Components**
+- `app/components/flat_pack/chat/layout/component.rb`
+- `app/components/flat_pack/chat/panel/component.rb`
+- `app/components/flat_pack/chat/message_list/component.rb`
+- `app/components/flat_pack/chat/date_divider/component.rb`
+- `app/components/flat_pack/chat/message_group/component.rb`
+- `app/components/flat_pack/chat/message/component.rb`
+- `app/components/flat_pack/chat/message_meta/component.rb`
+- `app/components/flat_pack/chat/composer/component.rb`
+- `app/components/flat_pack/chat/typing_indicator/component.rb`
+- `app/components/flat_pack/chat/attachment/component.rb`
+
+**Tests**
+- `test/components/flat_pack/chat/message_component_test.rb`
+- `test/components/flat_pack/chat/message_group_component_test.rb`
+- `test/components/flat_pack/chat/composer_component_test.rb`
+- `test/components/flat_pack/chat/message_list_component_test.rb`
