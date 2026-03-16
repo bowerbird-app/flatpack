@@ -31,6 +31,7 @@
 
           <% sidebar.items do %>
             <nav class="py-4 space-y-1" aria-label="Main navigation">
+              <p class="px-4 pt-2 pb-1 text-xs font-semibold uppercase tracking-wider text-[var(--sidebar-item-text-color)] opacity-50">Getting Started</p>
               <% themes_section_active = current_page?(themes_path) ||
                                          current_page?(theme_demo_path(theme: "system")) ||
                                          current_page?(theme_demo_path(theme: "light")) ||
@@ -90,8 +91,7 @@
               <% end %>
               
               <%= render FlatPack::Sidebar::Divider::Component.new %>
-              
-              <!-- Interactive Components -->
+              <p class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-[var(--sidebar-item-text-color)] opacity-50">Interactive</p>
               <%= render FlatPack::Sidebar::Item::Component.new(
                 label: "Buttons",
                 href: demo_buttons_path,
@@ -157,8 +157,7 @@
               ) %>
               
               <%= render FlatPack::Sidebar::Divider::Component.new %>
-              
-              <!-- Form Components -->
+              <p class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-[var(--sidebar-item-text-color)] opacity-50">Forms</p>
               <% forms_section_active = current_page?(demo_forms_path) ||
                                         current_page?(demo_forms_text_input_path) ||
                                         current_page?(demo_forms_password_input_path) ||
@@ -294,8 +293,7 @@
               <% end %>
               
               <%= render FlatPack::Sidebar::Divider::Component.new %>
-              
-              <!-- Data Display -->
+              <p class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-[var(--sidebar-item-text-color)] opacity-50">Data Display</p>
               <% tables_section_active = [
                 demo_tables_basic_path,
                 demo_tables_empty_path,
@@ -395,6 +393,205 @@
                 icon: :user,
                 active: current_page?(demo_avatars_path)
               ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Carousel",
+                href: demo_carousel_path(anchor: "component-method-variables-carousel-0"),
+                icon: :image,
+                active: current_page?(demo_carousel_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Progress",
+                href: demo_progress_path,
+                icon: :dashboard,
+                active: current_page?(demo_progress_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Skeletons",
+                href: demo_skeletons_path,
+                icon: :square,
+                active: current_page?(demo_skeletons_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "List",
+                href: demo_list_path,
+                icon: :align_left,
+                active: current_page?(demo_list_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Timeline",
+                href: demo_timeline_path,
+                icon: :calendar,
+                active: current_page?(demo_timeline_path)
+              ) %>
+              
+              <%= render FlatPack::Sidebar::Divider::Component.new %>
+              <p class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-[var(--sidebar-item-text-color)] opacity-50">Layout</p>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Hero",
+                href: pages_hero_path,
+                icon: :rectangle_group,
+                active: current_page?(pages_hero_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Cards",
+                href: demo_cards_path,
+                icon: :box,
+                active: current_page?(demo_cards_path)
+              ) %>
+              <% text_section_active = [
+                demo_page_header_path,
+                demo_text_quote_path
+              ].any? { |path| current_page?(path) } %>
+              <%= render FlatPack::Sidebar::Group::Component.new(
+                label: "Text",
+                icon: :align_left,
+                default_open: text_section_active
+              ) do |group| %>
+                <% group.items do %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "Page Title",
+                    href: demo_page_header_path,
+                    icon: :type,
+                    active: current_page?(demo_page_header_path)
+                  ) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "Quote",
+                    href: demo_text_quote_path,
+                    icon: :message_circle,
+                    active: current_page?(demo_text_quote_path)
+                  ) %>
+                <% end %>
+              <% end %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Empty State",
+                href: demo_empty_state_path,
+                icon: :folder,
+                active: current_page?(demo_empty_state_path)
+              ) %>
+              
+              <%= render FlatPack::Sidebar::Divider::Component.new %>
+              <p class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-[var(--sidebar-item-text-color)] opacity-50">Feedback</p>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Alerts",
+                href: demo_alerts_path,
+                icon: :alert,
+                active: current_page?(demo_alerts_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Badges",
+                href: demo_badges_path,
+                icon: :dashboard,
+                active: current_page?(demo_badges_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Chips",
+                href: demo_chips_path,
+                icon: :dashboard,
+                active: current_page?(demo_chips_path)
+              ) %>
+              
+              <%= render FlatPack::Sidebar::Divider::Component.new %>
+              <p class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-[var(--sidebar-item-text-color)] opacity-50">Navigation</p>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Breadcrumbs",
+                href: demo_breadcrumbs_path,
+                icon: :chevron_right,
+                active: current_page?(demo_breadcrumbs_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Top Nav",
+                href: demo_navbar_path,
+                icon: :monitor,
+                active: current_page?(demo_navbar_path)
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Search",
+                href: demo_search_path,
+                icon: :search,
+                active: current_page?(demo_search_path)
+              ) %>
+              <% sidebar_section_active = [
+                demo_sidebar_layout_path,
+                demo_sidebar_basic_path,
+                demo_sidebar_header_path,
+                demo_sidebar_footer_path,
+                demo_sidebar_badges_path,
+                demo_sidebar_grouped_path,
+                demo_sidebar_collapsible_path,
+                demo_sidebar_collapsed_path,
+                demo_sidebar_complete_path
+              ].any? { |path| current_page?(path) } %>
+              <%= render FlatPack::Sidebar::Group::Component.new(
+                label: "Sidebar",
+                icon: :laptop,
+                default_open: sidebar_section_active
+              ) do |group| %>
+                <% group.items do %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "Layout",
+                    href: demo_sidebar_layout_path,
+                    icon: :monitor,
+                    active: current_page?(demo_sidebar_layout_path)
+                  ) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "Basic",
+                    href: demo_sidebar_basic_path,
+                    icon: :home,
+                    active: current_page?(demo_sidebar_basic_path)
+                  ) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "Header",
+                    href: demo_sidebar_header_path,
+                    icon: :type,
+                    active: current_page?(demo_sidebar_header_path)
+                  ) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "Footer",
+                    href: demo_sidebar_footer_path,
+                    icon: :align_left,
+                    active: current_page?(demo_sidebar_footer_path)
+                  ) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "Badges",
+                    href: demo_sidebar_badges_path,
+                    icon: :dashboard,
+                    active: current_page?(demo_sidebar_badges_path)
+                  ) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "Grouped",
+                    href: demo_sidebar_grouped_path,
+                    icon: :folder,
+                    active: current_page?(demo_sidebar_grouped_path)
+                  ) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "Collapsible",
+                    href: demo_sidebar_collapsible_path,
+                    icon: :chevron_down,
+                    active: current_page?(demo_sidebar_collapsible_path)
+                  ) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "Collapsed",
+                    href: demo_sidebar_collapsed_path,
+                    icon: :menu,
+                    active: current_page?(demo_sidebar_collapsed_path)
+                  ) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "Complete",
+                    href: demo_sidebar_complete_path,
+                    icon: :box,
+                    active: current_page?(demo_sidebar_complete_path)
+                  ) %>
+                <% end %>
+              <% end %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Mobile",
+                href: mobile_bottom_nav_path,
+                icon: :menu,
+                active: current_page?(mobile_path) || current_page?(mobile_bottom_nav_path)
+              ) %>
+
+              <%= render FlatPack::Sidebar::Divider::Component.new %>
+              <p class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-[var(--sidebar-item-text-color)] opacity-50">Demo</p>
               <%= render FlatPack::Sidebar::Item::Component.new(
                 label: "Comments",
                 href: demo_comments_path,
@@ -544,215 +741,10 @@
                 <% end %>
               <% end %>
               <%= render FlatPack::Sidebar::Item::Component.new(
-                label: "Carousel",
-                href: demo_carousel_path(anchor: "component-method-variables-carousel-0"),
-                icon: :image,
-                active: current_page?(demo_carousel_path)
-              ) %>
-              <%= render FlatPack::Sidebar::Item::Component.new(
-                label: "Progress",
-                href: demo_progress_path,
-                icon: :dashboard,
-                active: current_page?(demo_progress_path)
-              ) %>
-              <%= render FlatPack::Sidebar::Item::Component.new(
-                label: "Skeletons",
-                href: demo_skeletons_path,
-                icon: :square,
-                active: current_page?(demo_skeletons_path)
-              ) %>
-              <%= render FlatPack::Sidebar::Item::Component.new(
-                label: "List",
-                href: demo_list_path,
-                icon: :align_left,
-                active: current_page?(demo_list_path)
-              ) %>
-              <%= render FlatPack::Sidebar::Item::Component.new(
-                label: "Timeline",
-                href: demo_timeline_path,
-                icon: :calendar,
-                active: current_page?(demo_timeline_path)
-              ) %>
-              
-              <%= render FlatPack::Sidebar::Divider::Component.new %>
-              
-              <!-- Layout Components -->
-              <%= render FlatPack::Sidebar::Item::Component.new(
-                label: "Hero",
-                href: pages_hero_path,
-                icon: :rectangle_group,
-                active: current_page?(pages_hero_path)
-              ) %>
-              <%= render FlatPack::Sidebar::Item::Component.new(
-                label: "Cards",
-                href: demo_cards_path,
-                icon: :box,
-                active: current_page?(demo_cards_path)
-              ) %>
-              <% text_section_active = [
-                demo_page_header_path,
-                demo_text_quote_path
-              ].any? { |path| current_page?(path) } %>
-              <%= render FlatPack::Sidebar::Group::Component.new(
-                label: "Text",
-                icon: :align_left,
-                default_open: text_section_active
-              ) do |group| %>
-                <% group.items do %>
-                  <%= render FlatPack::Sidebar::Item::Component.new(
-                    label: "Page Title",
-                    href: demo_page_header_path,
-                    icon: :type,
-                    active: current_page?(demo_page_header_path)
-                  ) %>
-                  <%= render FlatPack::Sidebar::Item::Component.new(
-                    label: "Quote",
-                    href: demo_text_quote_path,
-                    icon: :message_circle,
-                    active: current_page?(demo_text_quote_path)
-                  ) %>
-                <% end %>
-              <% end %>
-              <%= render FlatPack::Sidebar::Item::Component.new(
-                label: "Content Editor",
-                href: new_article_path,
-                icon: :edit_3,
-                active: request.path == new_article_path
-              ) %>
-              <%= render FlatPack::Sidebar::Item::Component.new(
                 label: "Articles",
                 href: articles_path,
                 icon: :edit_3,
                 active: request.path.start_with?("/demo/articles")
-              ) %>
-              <%= render FlatPack::Sidebar::Item::Component.new(
-                label: "Empty State",
-                href: demo_empty_state_path,
-                icon: :folder,
-                active: current_page?(demo_empty_state_path)
-              ) %>
-              
-              <%= render FlatPack::Sidebar::Divider::Component.new %>
-              
-              <!-- Feedback Components -->
-              <%= render FlatPack::Sidebar::Item::Component.new(
-                label: "Alerts",
-                href: demo_alerts_path,
-                icon: :alert,
-                active: current_page?(demo_alerts_path)
-              ) %>
-              <%= render FlatPack::Sidebar::Item::Component.new(
-                label: "Badges",
-                href: demo_badges_path,
-                icon: :dashboard,
-                active: current_page?(demo_badges_path)
-              ) %>
-              <%= render FlatPack::Sidebar::Item::Component.new(
-                label: "Chips",
-                href: demo_chips_path,
-                icon: :dashboard,
-                active: current_page?(demo_chips_path)
-              ) %>
-              
-              <%= render FlatPack::Sidebar::Divider::Component.new %>
-              
-              <!-- Navigation Components -->
-              <%= render FlatPack::Sidebar::Item::Component.new(
-                label: "Breadcrumbs",
-                href: demo_breadcrumbs_path,
-                icon: :chevron_right,
-                active: current_page?(demo_breadcrumbs_path)
-              ) %>
-              <%= render FlatPack::Sidebar::Item::Component.new(
-                label: "Top Nav",
-                href: demo_navbar_path,
-                icon: :monitor,
-                active: current_page?(demo_navbar_path)
-              ) %>
-              <%= render FlatPack::Sidebar::Item::Component.new(
-                label: "Search",
-                href: demo_search_path,
-                icon: :search,
-                active: current_page?(demo_search_path)
-              ) %>
-              <% sidebar_section_active = [
-                demo_sidebar_layout_path,
-                demo_sidebar_basic_path,
-                demo_sidebar_header_path,
-                demo_sidebar_footer_path,
-                demo_sidebar_badges_path,
-                demo_sidebar_grouped_path,
-                demo_sidebar_collapsible_path,
-                demo_sidebar_collapsed_path,
-                demo_sidebar_complete_path
-              ].any? { |path| current_page?(path) } %>
-              <%= render FlatPack::Sidebar::Group::Component.new(
-                label: "Sidebar",
-                icon: :laptop,
-                default_open: sidebar_section_active
-              ) do |group| %>
-                <% group.items do %>
-                  <%= render FlatPack::Sidebar::Item::Component.new(
-                    label: "Layout",
-                    href: demo_sidebar_layout_path,
-                    icon: :monitor,
-                    active: current_page?(demo_sidebar_layout_path)
-                  ) %>
-                  <%= render FlatPack::Sidebar::Item::Component.new(
-                    label: "Basic",
-                    href: demo_sidebar_basic_path,
-                    icon: :home,
-                    active: current_page?(demo_sidebar_basic_path)
-                  ) %>
-                  <%= render FlatPack::Sidebar::Item::Component.new(
-                    label: "Header",
-                    href: demo_sidebar_header_path,
-                    icon: :type,
-                    active: current_page?(demo_sidebar_header_path)
-                  ) %>
-                  <%= render FlatPack::Sidebar::Item::Component.new(
-                    label: "Footer",
-                    href: demo_sidebar_footer_path,
-                    icon: :align_left,
-                    active: current_page?(demo_sidebar_footer_path)
-                  ) %>
-                  <%= render FlatPack::Sidebar::Item::Component.new(
-                    label: "Badges",
-                    href: demo_sidebar_badges_path,
-                    icon: :dashboard,
-                    active: current_page?(demo_sidebar_badges_path)
-                  ) %>
-                  <%= render FlatPack::Sidebar::Item::Component.new(
-                    label: "Grouped",
-                    href: demo_sidebar_grouped_path,
-                    icon: :folder,
-                    active: current_page?(demo_sidebar_grouped_path)
-                  ) %>
-                  <%= render FlatPack::Sidebar::Item::Component.new(
-                    label: "Collapsible",
-                    href: demo_sidebar_collapsible_path,
-                    icon: :chevron_down,
-                    active: current_page?(demo_sidebar_collapsible_path)
-                  ) %>
-                  <%= render FlatPack::Sidebar::Item::Component.new(
-                    label: "Collapsed",
-                    href: demo_sidebar_collapsed_path,
-                    icon: :menu,
-                    active: current_page?(demo_sidebar_collapsed_path)
-                  ) %>
-                  <%= render FlatPack::Sidebar::Item::Component.new(
-                    label: "Complete",
-                    href: demo_sidebar_complete_path,
-                    icon: :box,
-                    active: current_page?(demo_sidebar_complete_path)
-                  ) %>
-                <% end %>
-              <% end %>
-              <%= render FlatPack::Sidebar::Item::Component.new(
-                label: "Mobile",
-                href: mobile_bottom_nav_path,
-                icon: :menu,
-                active: current_page?(mobile_path) || current_page?(mobile_bottom_nav_path)
               ) %>
             </nav>
           <% end %>
