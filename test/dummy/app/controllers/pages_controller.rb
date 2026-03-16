@@ -64,6 +64,15 @@ class PagesController < ApplicationController
   before_action :load_table_demo_data, only: %i[tables_basic tables_sortable tables_draggable]
   before_action :load_demo_theme_tokens
 
+  # Actions with dynamic data that must not be fully cached
+  UNCACHED_ACTIONS = %i[
+    search_results picker_results pagination_infinite
+    comments admin
+  ].freeze
+
+  before_action :serve_from_page_cache, except: UNCACHED_ACTIONS
+  after_action  :write_to_page_cache,   except: UNCACHED_ACTIONS
+
   def demo
     @component_index = cached_component_index
   end
@@ -1550,5 +1559,24 @@ class PagesController < ApplicationController
     css = File.read(path)
     self.class.instance_variable_set(:@theme_variables_css_cache, {mtime: mtime, css: css})
     css
+  end
+
+  def page_cache_key
+    "dummy/full-page/#{request.path}"
+  end
+
+  def serve_from_page_cache
+    return unless request.format.html? && request.get?
+
+    cached = Rails.cache.read(page_cache_key)
+    return unless cached
+
+    render html: cached.html_safe, layout: false and return
+  end
+
+  def write_to_page_cache
+    return unless request.format.html? && request.get? && response.successful?
+
+    Rails.cache.write(page_cache_key, response.body, expires_in: 1.hour)
   end
 end
