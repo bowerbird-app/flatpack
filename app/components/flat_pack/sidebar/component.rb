@@ -114,7 +114,7 @@ module FlatPack
       end
 
       def items_container_classes
-        "flex-1 min-h-0 overflow-y-auto overscroll-y-contain"
+        "flex-1 min-h-0 overflow-y-auto overscroll-y-contain scrollbar-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       end
     end
   end
