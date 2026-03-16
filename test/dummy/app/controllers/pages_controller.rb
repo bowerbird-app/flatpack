@@ -125,6 +125,28 @@ class PagesController < ApplicationController
     render json: {ok: false, error: e.message}, status: :unprocessable_entity
   end
 
+  def admin
+    @admin_stats = [
+      {label: "Total Revenue", value: "$84,320", change: "+12.5%", trend: :up, icon: :dashboard},
+      {label: "Active Users", value: "3,842", change: "+8.1%", trend: :up, icon: :users},
+      {label: "Open Tickets", value: "128", change: "-4.3%", trend: :down, icon: :alert}
+    ]
+
+    @admin_users = Array.new(12) do |i|
+      OpenStruct.new(
+        id: i + 1,
+        name: ["Alice Johnson", "Bob Smith", "Carol White", "David Lee", "Eva Martinez",
+               "Frank Brown", "Grace Kim", "Henry Davis", "Iris Chen", "James Wilson",
+               "Karen Taylor", "Liam Moore"][i],
+        email: ["alice", "bob", "carol", "david", "eva", "frank", "grace",
+                "henry", "iris", "james", "karen", "liam"][i] + "@example.com",
+        role: %w[Admin Editor Viewer Admin Editor Viewer Admin Editor Viewer Admin Editor Viewer][i],
+        status: %w[Active Active Active Active Active Inactive Active Active Active Pending Active Active][i],
+        joined_at: (i * 15 + 5).days.ago.strftime("%b %d, %Y")
+      )
+    end
+  end
+
   def inputs
   end
 

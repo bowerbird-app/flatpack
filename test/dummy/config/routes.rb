@@ -118,6 +118,8 @@ Rails.application.routes.draw do
     end
   end
 
+  get "demo/admin", to: "pages#admin"
+
   # New components
   get "demo/progress", to: "pages#progress"
   get "demo/collapse", to: "pages#collapse"
