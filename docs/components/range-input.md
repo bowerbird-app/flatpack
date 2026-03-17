@@ -1,4 +1,4 @@
-# Range Input Component
+# Range Input
 
 ## Purpose
 Provide a slider control for selecting numeric values within a bounded range.

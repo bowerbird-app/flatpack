@@ -1,4 +1,4 @@
-# Grid Component
+# Grid
 
 ## Purpose
 Lay out block content in responsive CSS grid columns with configurable gaps and alignment.

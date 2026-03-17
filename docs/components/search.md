@@ -1,4 +1,4 @@
-# Search Component
+# Search
 
 ## Purpose
 Render a search input with optional live-result dropdown backed by a JSON endpoint.

@@ -1,4 +1,4 @@
-# Comments Inline Input Component
+# Comments Inline Input
 
 ## Purpose
 Render a compact inline comment input with an auto-expanding textarea and submit button.

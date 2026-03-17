@@ -1,4 +1,4 @@
-# Progress Bar Component
+# Progress
 
 ## Purpose
 Display numeric progress as a horizontal bar with optional label text.

@@ -45,7 +45,7 @@ None.
 
 The dummy app consolidates carousel behavior (basic, autoplay, thumbnails, transitions, keyboard/touch notes, and token reference) on this single page.
 
-## Code Example
+## Example
 ```erb
 <%= render FlatPack::Carousel::Component.new(
   slides: [

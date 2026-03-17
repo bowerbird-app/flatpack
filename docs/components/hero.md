@@ -1,10 +1,8 @@
 # Hero
 
-Renders a full-width landing-page hero section in one of seven layout variants with optional badge, tagline, headline, description, and CTA actions.
-
 ## Purpose
 
-Provide a single, opinionated entry point for building page-level hero sections without writing bespoke HTML. Handles responsive layout, background image safe rendering, and URL sanitization internally.
+Render a full-width landing-page hero section in one of seven layout variants with optional badge, tagline, headline, description, and CTA actions. Provides a single, opinionated entry point without writing bespoke HTML; handles responsive layout, background image safe rendering, and URL sanitization internally.
 
 ## When to use
 
