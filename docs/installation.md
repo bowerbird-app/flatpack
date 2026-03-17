@@ -234,6 +234,197 @@ If you need to manually configure the JavaScript controllers:
    lazyLoadControllersFrom("controllers/flat_pack", application)
    ```
 
+### 5.2 JavaScript Controllers — esbuild / Custom Build Pipeline (Non-Importmap Apps)
+
+The automatic install generator configures FlatPack controllers for **importmap-based** apps only. If your app uses **esbuild, Webpack, Vite, or any other bundler**, the FlatPack Stimulus controllers will **not** be loaded automatically — and interactive components such as the sidebar collapse/expand, modals, popovers, tooltips, and tabs will silently fail.
+
+**Root cause:** The `flat-pack--sidebar-layout` controller (and all other FlatPack Stimulus controllers) must be explicitly imported and registered in a bundled app. The importmap setup serves each controller file individually via Rails' asset pipeline; a custom bundler bypasses this entirely.
+
+#### 1. Install npm dependencies
+
+```bash
+npm install --save-dev @hotwired/stimulus esbuild
+```
+
+#### 2. Create a build script
+
+Create `scripts/build_stimulus.js` in your app root (create the `scripts/` directory if it does not exist):
+
+```javascript
+// scripts/build_stimulus.js
+// Dynamically resolves the FlatPack gem path so the bundle always uses the
+// currently-installed version. This is critical for git-sourced gems whose
+// path contains a hash (e.g. flat_pack-abc1234/).
+const { execSync, spawnSync } = require("child_process")
+const { writeFileSync, mkdirSync } = require("fs")
+const path = require("path")
+
+const flatpackRoot = execSync("bundle show flat_pack").toString().trim()
+const controllersDir = path.join(flatpackRoot, "app/javascript/flat_pack/controllers")
+
+// Import all FlatPack controllers.
+const entry = `
+import { Application } from "@hotwired/stimulus";
+import AccordionController        from "${controllersDir}/accordion_controller.js";
+import AlertController            from "${controllersDir}/alert_controller.js";
+import BadgeController            from "${controllersDir}/badge_controller.js";
+import ButtonDropdownController   from "${controllersDir}/button_dropdown_controller.js";
+import CarouselController         from "${controllersDir}/carousel_controller.js";
+import ChartController            from "${controllersDir}/chart_controller.js";
+import ChatGroupingController     from "${controllersDir}/chat_grouping_controller.js";
+import ChatImageDeckController    from "${controllersDir}/chat_image_deck_controller.js";
+import ChatMessageActionsController from "${controllersDir}/chat_message_actions_controller.js";
+import ChatScrollController       from "${controllersDir}/chat_scroll_controller.js";
+import ChatSenderController       from "${controllersDir}/chat_sender_controller.js";
+import ChipController             from "${controllersDir}/chip_controller.js";
+import CodeBlockTabsController    from "${controllersDir}/code_block_tabs_controller.js";
+import CollapseController         from "${controllersDir}/collapse_controller.js";
+import ContentEditorController    from "${controllersDir}/content_editor_controller.js";
+import DateInputController        from "${controllersDir}/date_input_controller.js";
+import FileInputController        from "${controllersDir}/file_input_controller.js";
+import FormValidationController   from "${controllersDir}/form_validation_controller.js";
+import GridSortableController     from "${controllersDir}/grid_sortable_controller.js";
+import IconController             from "${controllersDir}/icon_controller.js";
+import ListSelectableController   from "${controllersDir}/list_selectable_controller.js";
+import ModalController            from "${controllersDir}/modal_controller.js";
+import NavbarController           from "${controllersDir}/navbar_controller.js";
+import PaginationInfiniteController from "${controllersDir}/pagination_infinite_controller.js";
+import PasswordInputController    from "${controllersDir}/password_input_controller.js";
+import PickerController           from "${controllersDir}/picker_controller.js";
+import PopoverController          from "${controllersDir}/popover_controller.js";
+import RangeInputController       from "${controllersDir}/range_input_controller.js";
+import SearchController           from "${controllersDir}/search_controller.js";
+import SearchInputController      from "${controllersDir}/search_input_controller.js";
+import SectionTitleAnchorController from "${controllersDir}/section_title_anchor_controller.js";
+import SelectController           from "${controllersDir}/select_controller.js";
+import SidebarController          from "${controllersDir}/sidebar_controller.js";
+import SidebarGroupController     from "${controllersDir}/sidebar_group_controller.js";
+import SidebarLayoutController    from "${controllersDir}/sidebar_layout_controller.js";
+import TableController            from "${controllersDir}/table_controller.js";
+import TableSortableController    from "${controllersDir}/table_sortable_controller.js";
+import TabsController             from "${controllersDir}/tabs_controller.js";
+import TextAreaController         from "${controllersDir}/text_area_controller.js";
+import ThemeController            from "${controllersDir}/theme_controller.js";
+import TiptapController           from "${controllersDir}/tiptap_controller.js";
+import ToastController            from "${controllersDir}/toast_controller.js";
+import ToastsRegionController     from "${controllersDir}/toasts_region_controller.js";
+import TooltipController          from "${controllersDir}/tooltip_controller.js";
+
+const application = Application.start();
+application.register("flat-pack--accordion",           AccordionController);
+application.register("flat-pack--alert",               AlertController);
+application.register("flat-pack--badge",               BadgeController);
+application.register("flat-pack--button-dropdown",     ButtonDropdownController);
+application.register("flat-pack--carousel",            CarouselController);
+application.register("flat-pack--chart",               ChartController);
+application.register("flat-pack--chat-grouping",       ChatGroupingController);
+application.register("flat-pack--chat-image-deck",     ChatImageDeckController);
+application.register("flat-pack--chat-message-actions", ChatMessageActionsController);
+application.register("flat-pack--chat-scroll",         ChatScrollController);
+application.register("flat-pack--chat-sender",         ChatSenderController);
+application.register("flat-pack--chip",                ChipController);
+application.register("flat-pack--code-block-tabs",     CodeBlockTabsController);
+application.register("flat-pack--collapse",            CollapseController);
+application.register("flat-pack--content-editor",      ContentEditorController);
+application.register("flat-pack--date-input",          DateInputController);
+application.register("flat-pack--file-input",          FileInputController);
+application.register("flat-pack--form-validation",     FormValidationController);
+application.register("flat-pack--grid-sortable",       GridSortableController);
+application.register("flat-pack--icon",                IconController);
+application.register("flat-pack--list-selectable",     ListSelectableController);
+application.register("flat-pack--modal",               ModalController);
+application.register("flat-pack--navbar",              NavbarController);
+application.register("flat-pack--pagination-infinite", PaginationInfiniteController);
+application.register("flat-pack--password-input",      PasswordInputController);
+application.register("flat-pack--picker",              PickerController);
+application.register("flat-pack--popover",             PopoverController);
+application.register("flat-pack--range-input",         RangeInputController);
+application.register("flat-pack--search",              SearchController);
+application.register("flat-pack--search-input",        SearchInputController);
+application.register("flat-pack--section-title-anchor", SectionTitleAnchorController);
+application.register("flat-pack--select",              SelectController);
+application.register("flat-pack--sidebar",             SidebarController);
+application.register("flat-pack--sidebar-group",       SidebarGroupController);
+application.register("flat-pack--sidebar-layout",      SidebarLayoutController);
+application.register("flat-pack--table",               TableController);
+application.register("flat-pack--table-sortable",      TableSortableController);
+application.register("flat-pack--tabs",                TabsController);
+application.register("flat-pack--text-area",           TextAreaController);
+application.register("flat-pack--theme",               ThemeController);
+application.register("flat-pack--tiptap",              TiptapController);
+application.register("flat-pack--toast",               ToastController);
+application.register("flat-pack--toasts-region",       ToastsRegionController);
+application.register("flat-pack--tooltip",             TooltipController);
+`.trim()
+
+const tmpDir = path.join(__dirname, "../tmp")
+mkdirSync(tmpDir, { recursive: true })
+const entryPath = path.join(tmpDir, "flatpack_stimulus_entry.js")
+writeFileSync(entryPath, entry)
+
+const result = spawnSync(
+  "npx",
+  [
+    "esbuild", entryPath,
+    "--bundle",
+    "--format=iife",
+    "--outfile=app/assets/javascripts/stimulus_controllers.js"
+  ],
+  { stdio: "inherit" }
+)
+
+if (result.status !== 0) process.exit(result.status)
+console.log("FlatPack Stimulus bundle written to app/assets/javascripts/stimulus_controllers.js")
+```
+
+#### 3. Add an npm build script
+
+In `package.json`, add to the `scripts` section:
+
+```json
+{
+  "scripts": {
+    "build:stimulus": "node scripts/build_stimulus.js"
+  }
+}
+```
+
+#### 4. Run the build
+
+```bash
+npm run build:stimulus
+```
+
+This generates `app/assets/javascripts/stimulus_controllers.js` — a self-contained IIFE that boots Stimulus and registers all selected FlatPack controllers.
+
+#### 5. Include the bundle in your layout
+
+In your application layout (e.g., `app/views/layouts/application.html.erb`), add the script tag **before** your other application JavaScript:
+
+```erb
+<%# FlatPack Stimulus controllers — must load before scripts that depend on them %>
+<%= javascript_include_tag "stimulus_controllers", defer: true %>
+```
+
+**Important:** `stimulus_controllers.js` must be placed in `app/assets/javascripts/` (or another directory on the Propshaft/Sprockets asset path) so Rails can serve and fingerprint it.
+
+#### 6. Rebuild after FlatPack updates
+
+After running `bundle update flat_pack`, regenerate the bundle because the gem path (which includes a git hash) will have changed:
+
+```bash
+npm run build:stimulus
+```
+
+Add this to your CI / deploy pipeline to keep the bundle current automatically.
+
+**Sidebar localStorage key:** The `flat-pack--sidebar-layout` controller persists the sidebar open/closed state in localStorage. The key is controlled by the `data-flat-pack--sidebar-layout-storage-key-value` attribute on the controller element. The generated sidebar template defaults to `flat-pack-sidebar-layout`. Override it per layout if you need app-specific namespacing:
+
+```erb
+<div data-controller="flat-pack--sidebar-layout"
+     data-flat-pack--sidebar-layout-storage-key-value="my-app-sidebar">
+```
+
 ### 6. Verify Tailwind CSS Source Scanning
 
 Tailwind CSS 4 scans files via `@source` directives in your CSS file (no `tailwind.config.js` required).
@@ -431,6 +622,22 @@ Key points:
    ```
 
 3. Restart the Rails server
+
+### Sidebar / Interactive Components Not Working (Non-Importmap Apps)
+
+**Symptom:** The sidebar does not collapse or expand when the chevron button is clicked. Other interactive components (modals, popovers, tooltips, tabs) also appear inert. No JavaScript errors appear in the browser console.
+
+**Root cause:** The `flat-pack--sidebar-layout` Stimulus controller (and all other FlatPack Stimulus controllers) was never registered with the Stimulus application. The install generator only configures FlatPack for importmap-based Rails apps. Apps that use esbuild, Webpack, Vite, or a custom JS build pipeline bypass the importmap setup entirely, so the controllers are never loaded.
+
+**Fix:** Follow the steps in **Section 5.2** above to:
+
+1. Create `scripts/build_stimulus.js` — a Node script that dynamically resolves the FlatPack gem path via `bundle show flat_pack` and bundles the controllers with esbuild.
+2. Run `npm run build:stimulus` to generate `app/assets/javascripts/stimulus_controllers.js`.
+3. Include the bundle in your layout **before** other scripts using `<%= javascript_include_tag "stimulus_controllers", defer: true %>`.
+
+**Verify the fix:** Open the browser DevTools console. You should see no "Unknown custom element" warnings. Clicking the sidebar chevron should immediately collapse/expand the sidebar, and the state should persist across page reloads via localStorage.
+
+---
 
 ### JavaScript Not Working
 
