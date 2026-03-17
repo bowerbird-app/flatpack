@@ -32,6 +32,7 @@ description: Improve Rails maintainability and convention alignment without chan
 2. Propose or implement minimal refactors at root cause.
 3. Keep behavior unchanged unless explicitly requested.
 4. Add or update targeted tests if behavior-adjacent code changed.
+5. Run `bundle exec rubocop -A` to auto-correct style offenses after all code changes.
 
 ## Guardrails
 

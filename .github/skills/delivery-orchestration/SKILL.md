@@ -18,7 +18,8 @@ description: Coordinate multi-domain implementation quality gates, verification,
 
 ## Verification checklist
 
-- `bundle exec rubocop`
+- `bundle exec rubocop -A` (auto-correct style offenses after all code changes)
+- `bundle exec rubocop` (verify no remaining offenses)
 - `bundle exec rake app:test`
 - If dummy boot/assets/migrations changed:
   - from `test/dummy`: `bundle exec rake db:migrate RAILS_ENV=test`

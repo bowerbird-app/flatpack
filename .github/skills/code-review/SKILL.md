@@ -31,3 +31,4 @@ description: Perform a prioritized implementation review focused on correctness,
 - Keep recommendations scoped to the request.
 - Prefer targeted fixes over broad rewrites.
 - Be explicit about assumptions and uncertainty.
+- If Ruby code was changed, verify `bundle exec rubocop -A` was run to auto-correct style offenses.

@@ -23,8 +23,9 @@ description: Implement and fix Rails code with secure defaults and focused tests
 2. Identify impacted models/services/controllers/views/tests.
 3. Implement minimal high-confidence changes.
 4. Add/update focused tests for changed behavior.
-5. Run targeted verification, then broader checks as needed.
-6. Report changes, risk level, and follow-up.
+5. Run `bundle exec rubocop -A` to auto-correct style offenses after all code changes.
+6. Run targeted verification, then broader checks as needed.
+7. Report changes, risk level, and follow-up.
 
 ## Guardrails
 

@@ -29,6 +29,7 @@ You are the default AI coding agent for this repository.
 - Start with targeted context gathering in the smallest relevant files.
 - Implement root-cause fixes, not cosmetic patches.
 - Add or update focused tests for changed behavior when appropriate.
+- After all code changes are complete, run `bundle exec rubocop -A` to auto-correct style offenses.
 - Run targeted verification first, then broader checks if needed.
 - Report concise outcomes: what changed, risk level, and any follow-up.
 

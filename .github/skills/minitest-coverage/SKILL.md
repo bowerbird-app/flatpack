@@ -26,8 +26,9 @@ description: Expand reliable Minitest coverage for engine and dummy-app integrat
 
 1. Map changed behavior to nearest existing test files.
 2. Add minimal tests that prove expected behavior and guard regressions.
-3. Run targeted tests first, then broader suite if needed.
-4. Report what scenarios are covered and any remaining gaps.
+3. Run `bundle exec rubocop -A` to auto-correct style offenses after all test changes.
+4. Run targeted tests first, then broader suite if needed.
+5. Report what scenarios are covered and any remaining gaps.
 
 ## Guardrails
 
