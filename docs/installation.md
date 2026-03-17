@@ -360,6 +360,64 @@ If the install generator didn't automatically configure Tailwind CSS 4:
 
 4. **Restart the Rails server**
 
+### FlatPack Styles Missing When Using a Custom CSS Build Pipeline
+
+**Root cause:** FlatPack components are Ruby files inside the installed gem that contain inline Tailwind class strings (e.g. `"flex items-center gap-3"`, `"bg-[var(--alert-...)]"`). Without an `@source` directive pointing at those files, Tailwind cannot detect those class names and omits them from the compiled output.
+
+This is straightforward when you use a static CSS file that the generator edits. However, if your app has a **custom Rake task** (e.g. `lib/tasks/example_app_tasks.rake`) that assembles a temporary CSS file before invoking the Tailwind build, that temp file is generated at build time and the generator's static `@source` line is never included.
+
+A second form of the same problem: if your app uses a **watch script** (e.g. `bin/tailwind-watch`) that lists files to monitor for changes, that script won't know about FlatPack's `.rb` component files and won't trigger a rebuild when they change.
+
+#### Fix 1 — Dynamic `@source` injection in a custom Rake build task
+
+In the Rake task method that builds the temp CSS input (commonly `build_input_with_flatpack_variables`), resolve `FlatPack::Engine.root` at build time and inject an `@source` line into the temp file **before** the Tailwind CLI is invoked:
+
+```ruby
+# lib/tasks/example_app_tasks.rake (inside your build helper method)
+
+# Resolve the FlatPack gem root at build time so the path always matches
+# the installed version, regardless of git hash or local path.
+flatpack_components = FlatPack::Engine.root.join("app/components").to_s
+
+# Append a Tailwind @source directive to the temp CSS file so Tailwind
+# scans FlatPack's Ruby component files for inline class strings.
+File.open(temp_css_path, "a") do |f|
+  f.puts %(\n@source "#{flatpack_components}/**/*.rb";)
+end
+```
+
+Key points:
+- Use `FlatPack::Engine.root` (not `Gem.find_files` or a hard-coded path) — it resolves correctly for any install location, including git-sourced gems with a hash in the path.
+- The `@source` glob must cover `**/*.rb` to reach nested component files.
+- Inject **before** the build subprocess is spawned, not after.
+
+#### Fix 2 — Watch FlatPack component files in a custom watch script
+
+If your app uses a custom watch script (e.g. `bin/tailwind-watch`) that decides which files trigger a CSS rebuild, add a helper that locates the FlatPack components directory via Bundler and include its `.rb` files in the watched set:
+
+```ruby
+# bin/tailwind-watch (Ruby example, adapt to your script's language/style)
+
+require "bundler/setup"
+
+def flatpack_components_path
+  spec = Gem.loaded_specs["flat_pack"] || Bundler.definition.specs.find { |s| s.name == "flat_pack" }
+  raise "flat_pack gem not found in bundle" unless spec
+  File.join(spec.gem_dir, "app", "components")
+end
+
+def get_watched_files
+  app_files  = Dir.glob("app/**/*.{rb,erb,html}")
+  fp_files   = Dir.glob(File.join(flatpack_components_path, "**", "*.rb"))
+  app_files + fp_files
+end
+```
+
+Key points:
+- Discover the gem path via `Gem.loaded_specs` or `Bundler.definition.specs` — never hard-code the path or rely on `bundle show` output captured at script startup.
+- Glob for `**/*.rb` inside the gem's `app/components` directory.
+- Any change to a FlatPack component `.rb` file will now trigger a rebuild.
+
 ### Components Not Found
 
 1. Verify the gem is installed:
