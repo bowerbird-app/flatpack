@@ -11,7 +11,7 @@ This document provides an overview of the complete FlatPack Rails 8 Engine proje
 - Importmaps for JavaScript (no Node.js)
 - System-driven dark mode
 
-**Version:** 0.1.2  
+**Version:** 0.1.3  
 **License:** MIT  
 **Ruby:** 3.2+  
 **Rails:** 8.0+
@@ -316,7 +316,7 @@ bin/rubocop
 ### Building Gem
 ```bash
 bundle exec rake build
-# Creates pkg/flat_pack-0.1.2.gem
+# Creates pkg/flat_pack-0.1.3.gem
 ```
 
 ## Documentation
@@ -374,5 +374,5 @@ MIT License - see MIT-LICENSE file.
 
 ---
 
-**Project Status:** Active Development (v0.1.2)  
+**Project Status:** Active Development (v0.1.3)  
 **Last Updated:** 2026-03-17
