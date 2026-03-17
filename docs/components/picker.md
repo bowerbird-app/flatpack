@@ -1,4 +1,4 @@
-# Picker Component
+# Picker
 
 ## Purpose
 Render a modal-based asset picker that supports single or multiple selection and returns selected items through events or field output.

@@ -30,7 +30,8 @@ FlatPack icons are rendered via `FlatPack::Shared::IconComponent` (or the `icon:
 1. Check component docs and existing patterns first.
 2. Replace raw markup with matching FlatPack components where feasible.
 3. Keep changes minimal and preserve behavior.
-4. Validate changed user flows and note any gaps.
+4. Run `bundle exec rubocop -A` to auto-correct style offenses after all code changes.
+5. Validate changed user flows and note any gaps.
 
 ## Guardrails
 

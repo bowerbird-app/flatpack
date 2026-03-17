@@ -1,4 +1,4 @@
-# Sidebar Layout Component
+# Sidebar Layout
 
 ## Purpose
 Compose sidebar, top navigation, and main content into a full-height application shell.

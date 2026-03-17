@@ -1,4 +1,4 @@
-# Table Component
+# Table
 
 ## Purpose
 Render tabular data with composable column definitions, optional sorting links, and optional drag-and-drop row reordering.

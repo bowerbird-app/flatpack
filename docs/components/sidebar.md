@@ -1,4 +1,4 @@
-# Sidebar Component
+# Sidebar
 
 ## Purpose
 Provide a composable sidebar container with optional header, items area, and footer regions.

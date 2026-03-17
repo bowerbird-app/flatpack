@@ -14,8 +14,9 @@ description: Validate code is safe to push by running required quality gates and
 
 Run these checks and require they pass before push:
 
-1. `bundle exec rubocop`
-2. `bundle exec rake app:test`
+1. `bundle exec rubocop -A` (auto-correct style offenses first)
+2. `bundle exec rubocop` (verify no remaining offenses)
+3. `bundle exec rake app:test`
 
 ## Conditional checks
 

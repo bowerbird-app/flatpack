@@ -1,4 +1,4 @@
-# Button Component
+# Button
 
 ## Purpose
 Render a button or link with FlatPack styles, validation, and loading/icon states.
@@ -10,19 +10,19 @@ Use this for primary and secondary actions in forms, toolbars, dialogs, and list
 - `FlatPack::Button::Component`
 
 ## Props
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `text` | String, nil | `nil` | Visible label text. Required unless `icon` is provided. |
-| `style` | Symbol | `:default` | One of `:default`, `:primary`, `:secondary`, `:ghost`, `:success`, `:warning`, `:error`. |
-| `size` | Symbol | `:md` | One of `:sm`, `:md`, `:lg`. |
-| `url` | String, nil | `nil` | When present, renders an `<a>` via `link_to`; otherwise a `<button>`. |
-| `method` | Symbol, nil | `nil` | Link method passed to `link_to` (for non-GET link actions). |
-| `target` | String, nil | `nil` | Link target, for example `"_blank"`. |
-| `icon` | String, nil | `nil` | Heroicons v2 name rendered before text (or alone with `icon_only`), e.g. `"magnifying-glass"`, `"plus"`, `"trash"`. Legacy shorthand aliases are supported for backward compatibility. |
-| `icon_only` | Boolean | `false` | Uses compact icon-only padding and hides text/spinner label. |
-| `loading` | Boolean | `false` | Disables button and shows spinner; text becomes `Loading` when not icon-only. |
-| `type` | String | `"button"` | Native button type for button mode: `button`, `submit`, `reset`. |
-| `**system_arguments` | Hash | `{}` | Forwarded HTML attributes/classes/data/aria. |
+| name | type | default | required | description |
+| --- | --- | --- | --- | --- |
+| `text` | String, nil | `nil` | no | Visible label text. Required unless `icon` is provided. |
+| `style` | Symbol | `:default` | no | One of `:default`, `:primary`, `:secondary`, `:ghost`, `:success`, `:warning`, `:error`. |
+| `size` | Symbol | `:md` | no | One of `:sm`, `:md`, `:lg`. |
+| `url` | String, nil | `nil` | no | When present, renders an `<a>` via `link_to`; otherwise a `<button>`. |
+| `method` | Symbol, nil | `nil` | no | Link method passed to `link_to` (for non-GET link actions). |
+| `target` | String, nil | `nil` | no | Link target, for example `"_blank"`. |
+| `icon` | String, nil | `nil` | no | Heroicons v2 name rendered before text (or alone with `icon_only`), e.g. `"magnifying-glass"`, `"plus"`, `"trash"`. Legacy shorthand aliases are supported for backward compatibility. |
+| `icon_only` | Boolean | `false` | no | Uses compact icon-only padding and hides text/spinner label. |
+| `loading` | Boolean | `false` | no | Disables button and shows spinner; text becomes `Loading` when not icon-only. |
+| `type` | String | `"button"` | no | Native button type for button mode: `button`, `submit`, `reset`. |
+| `**system_arguments` | Hash | `{}` | no | Forwarded HTML attributes/classes/data/aria. |
 
 ## Slots
 No slots.

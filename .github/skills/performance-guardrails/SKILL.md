@@ -24,7 +24,8 @@ description: Detect and prevent common Rails and ViewComponent performance regre
 2. Apply low-risk, behavior-preserving optimizations first.
 3. Prefer query-shape fixes (includes/preload/select) and rendering reductions over broad rewrites.
 4. Add or update focused tests if performance-sensitive behavior changes.
-5. Run targeted checks/tests and report measurable or structural improvements.
+5. Run `bundle exec rubocop -A` to auto-correct style offenses after all code changes.
+6. Run targeted checks/tests and report measurable or structural improvements.
 
 ## Handoff format
 

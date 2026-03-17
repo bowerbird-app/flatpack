@@ -1,4 +1,4 @@
-# TopNav Component
+# Top Nav
 
 ## Purpose
 Render a sticky top navigation bar with composable left, center, and right content regions.

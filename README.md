@@ -227,44 +227,85 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
 
 ## Components
 
-### Layout Components
+### Layout & Structure
 - **Card** - Flexible content containers with header, body, footer, and media slots
+- **Grid** - Responsive CSS grid layout with configurable columns and gaps
+- **SidebarLayout** - Full-height application shell with sidebar, top nav, and main content
+- **Hero** - Full-width landing-page hero with seven layout variants
+- **PageHeader** - Page-level header with title, subtitle, and action slots
+- **PageTitle** - Lightweight semantic heading block with optional subtitle
+- **SectionTitle** - In-page section heading with optional description
 
-### Interactive Components
-- **Button** - Buttons and links with multiple schemes
-- **Table** - Data tables with configurable columns
+### Navigation
+- **Breadcrumb** - Navigation trail showing current location in site hierarchy
+- **Navbar** - Sidebar-first navigation system with collapsible sidebar and responsive top bar
+- **Sidebar** - Composable sidebar with header, items, and footer regions
+- **SidebarGroup** - Collapsible group of sidebar items with persisted state
+- **TopNav** - Sticky top navigation bar with composable left, center, and right regions
+- **BottomNav** - Fixed bottom navigation bar for mobile layouts
+- **Tabs** - Tabbed content panels with URL-aware active state
+- **Pagination** - Page-based navigation with Pagy integration
+- **PaginationInfinite** - Infinite-scroll / load-more pagination
 
-### Feedback Components
-- **Alert** - Prominent notifications and messages (success, errors, warnings, info)
+### Data Display
+- **Table** - Data tables with configurable columns and optional drag-and-drop row reordering
+- **List** - Structured list with composable items, avatars, and actions
+- **Timeline** - Vertical event timeline with icons and timestamps
+- **Chart** - ApexCharts-based visualizations with optional card framing
+- **Progress** - Horizontal progress bar with optional label
 - **Badge** - Status indicators, counts, labels, and tags
+- **Avatar** - User avatar with image, initials, and size variants
+- **AvatarGroup** - Stacked avatar group for compact multi-user display
+- **Skeleton** - Loading placeholder animations for content regions
 
-### Form Components
+### Interactive
+- **Button** - Buttons and links with multiple styles and loading states
+- **ButtonDropdown** - Button with an attached dropdown menu
+- **ButtonGroup** - Grouped button layouts
+- **SegmentedButtons** - Segmented control / toggle group
+- **Accordion** - Collapsible content sections
+- **Collapse** - Single-panel show/hide toggler
+- **Modal** - Accessible dialog overlay
+- **Popover** - Anchored floating panel with Stimulus positioning
+- **Tooltip** - Accessible tooltip via Stimulus
+- **Picker** - Modal-based asset picker with single/multi selection
+- **Carousel** - Interactive slide carousel with controls, autoplay, and lightbox
+- **Chips** - Chip + ChipGroup for tag-like selection UI
+- **RangeInput** - Slider control for bounded numeric values
+- **Search** - Search input with live-result dropdown backed by a JSON endpoint
+
+### Feedback & Notifications
+- **Alert** - Prominent notifications (success, error, warning, info)
+- **Toast** - Single dismissible toast notification
+- **Toasts** - Toast region manager for stacked toast display
+- **EmptyState** - Full-bleed empty state with icon, title, and action
+
+### Content
+- **CodeBlock** - Syntax-highlighted code block
+- **Quote** - Blockquote with optional attribution
+- **ContentEditor** - In-place rich-text editor with balloon toolbar and image upload
+- **Chat** - Full chat UI suite (panel, messages, composer, attachments, inbox)
+- **Comments** - Comment thread system (Thread, Item, Replies, Composer, InlineInput)
+
+### Form Inputs
 - **TextInput** - Single-line text field
 - **PasswordInput** - Masked input with show/hide toggle
 - **EmailInput** - Email field with mobile keyboard support
 - **PhoneInput** - Phone field with numeric keypad
 - **SearchInput** - Search field with clear button
-- **TextArea** - Multi-line auto-expanding text area; set `rich_text: true` for full TipTap rich text editor
+- **TextArea** - Multi-line auto-expanding text area; set `rich_text: true` for full TipTap editor
 - **UrlInput** - URL field with validation
+- **NumberInput** - Numeric input field
+- **DateInput** - Date picker input
+- **FileInput** - File upload input
 - **Checkbox** - Single checkbox or checkbox groups
 - **RadioGroup** - Radio button groups
 - **Select** - Dropdown select menus
 - **Switch** - Toggle switch for boolean states
-- **DateInput** - Date picker input
-- **NumberInput** - Numeric input field
-- **FileInput** - File upload input
 
-### Navigation Components
-- **Breadcrumb** - Navigation trail showing current location in site hierarchy
-- **Navbar** - Sidebar-first navigation system with collapsible sidebar and responsive top bar
-
-### Utility Components
-- **Link** - Styled links with consistent appearance
-- **ButtonGroup** - Grouped button layouts
-- **SegmentedButtons** - Segmented control buttons
-- **Search** - Reusable search field for nav and filtering UIs
-
-More components coming soon!
+### Utility
+- **Link** - Styled link with consistent appearance
+- **Tooltip** - Accessible tooltip wrapper
 
 ## Requirements
 

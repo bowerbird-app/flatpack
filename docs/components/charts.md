@@ -1,4 +1,4 @@
-# Chart Component
+# Chart
 
 ## Purpose
 Render ApexCharts-based visualizations with FlatPack defaults and optional card framing.
@@ -10,16 +10,16 @@ Use this for dashboard and analytics charts when data is available in ApexCharts
 - `FlatPack::Chart::Component`
 
 ## Props
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `series` | Array or Hash | required | Chart series payload passed to ApexCharts. |
-| `type` | Symbol | `:line` | One of `:line`, `:bar`, `:area`, `:donut`, `:pie`, `:radar`. |
-| `options` | Hash | `{}` | ApexCharts options deep-merged over component defaults. |
-| `height` | Integer | `280` | Chart height in pixels; must be positive. |
-| `card` | Boolean | `true` | Wraps chart in `FlatPack::Card::Component` with header/body/footer layout. |
-| `title` | String, nil | `nil` | Optional title shown in card header. |
-| `subtitle` | String, nil | `nil` | Optional subtitle shown under title. |
-| `**system_arguments` | Hash | `{}` | Forwarded HTML attributes for outer container in chart-only mode. |
+| name | type | default | required | description |
+| --- | --- | --- | --- | --- |
+| `series` | Array or Hash | — | yes | Chart series payload passed to ApexCharts. |
+| `type` | Symbol | `:line` | no | One of `:line`, `:bar`, `:area`, `:donut`, `:pie`, `:radar`. |
+| `options` | Hash | `{}` | no | ApexCharts options deep-merged over component defaults. |
+| `height` | Integer | `280` | no | Chart height in pixels; must be positive. |
+| `card` | Boolean | `true` | no | Wraps chart in `FlatPack::Card::Component` with header/body/footer layout. |
+| `title` | String, nil | `nil` | no | Optional title shown in card header. |
+| `subtitle` | String, nil | `nil` | no | Optional subtitle shown under title. |
+| `**system_arguments` | Hash | `{}` | no | Forwarded HTML attributes for outer container in chart-only mode. |
 
 ## Slots
 | Slot | Description |

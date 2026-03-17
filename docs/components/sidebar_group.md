@@ -1,4 +1,4 @@
-# Sidebar Group Component
+# Sidebar Group
 
 ## Purpose
 Render a collapsible group of sidebar items with persisted open/closed state.

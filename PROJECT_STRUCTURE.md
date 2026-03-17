@@ -11,7 +11,7 @@ This document provides an overview of the complete FlatPack Rails 8 Engine proje
 - Importmaps for JavaScript (no Node.js)
 - System-driven dark mode
 
-**Version:** 0.1.0  
+**Version:** 0.1.3  
 **License:** MIT  
 **Ruby:** 3.2+  
 **Rails:** 8.0+
@@ -26,20 +26,87 @@ flat_pack/
 │   │       ├── application.css   # Main stylesheet
 │   │       └── variables.css     # Theme variables (Tailwind 4 @theme)
 │   ├── components/flat_pack/
-│   │   ├── base_component.rb     # Base component with TailwindMerge
-│   │   ├── button/
-│   │   │   ├── component.rb      # Button component logic
-│   │   │   └── component.html.erb # Button template
-│   │   ├── table/
-│   │   │   ├── component.rb      # Table component logic
-│   │   │   ├── component.html.erb # Table template
-│   │   │   ├── column/
-│   │   │   │   └── component.rb # Column sub-component
-│   │   └── shared/
-│   │       └── icon_component.rb  # Shared icon component
+│   │   ├── base_component.rb          # Base component with TailwindMerge
+│   │   ├── shared/
+│   │   │   └── icon_component.rb      # Shared icon component
+│   │   ├── accordion/
+│   │   ├── alert/
+│   │   ├── avatar/
+│   │   ├── avatar_group/
+│   │   ├── badge/
+│   │   ├── bottom_nav/
+│   │   ├── breadcrumb/
+│   │   ├── button/                    # Button + ButtonDropdown
+│   │   ├── button_group/
+│   │   ├── card/                      # Card + Card::Stat
+│   │   ├── carousel/
+│   │   ├── chart/
+│   │   ├── chat/                      # Full chat UI suite
+│   │   ├── checkbox/
+│   │   ├── chip/
+│   │   ├── chip_group/
+│   │   ├── code_block/
+│   │   ├── collapse/
+│   │   ├── comments/                  # Thread, Item, Replies, Composer, InlineInput
+│   │   ├── content_editor/
+│   │   ├── date_input/
+│   │   ├── email_input/
+│   │   ├── empty_state/
+│   │   ├── file_input/
+│   │   ├── grid/
+│   │   ├── hero/
+│   │   ├── link/
+│   │   ├── list/
+│   │   ├── modal/
+│   │   ├── navbar/
+│   │   ├── number_input/
+│   │   ├── page_header/
+│   │   ├── page_title/
+│   │   ├── pagination/
+│   │   ├── pagination_infinite/
+│   │   ├── password_input/
+│   │   ├── phone_input/
+│   │   ├── picker/
+│   │   ├── popover/
+│   │   ├── progress/
+│   │   ├── quote/
+│   │   ├── radio_group/
+│   │   ├── range_input/
+│   │   ├── search/
+│   │   ├── search_input/
+│   │   ├── section_title/
+│   │   ├── segmented_buttons/
+│   │   ├── select/
+│   │   ├── sidebar/                   # Sidebar + Item + Header + Divider + Group
+│   │   ├── sidebar_layout/
+│   │   ├── skeleton/
+│   │   ├── switch/
+│   │   ├── table/                     # Table + Column + sortable support
+│   │   ├── tabs/
+│   │   ├── text_area/                 # Plain + TipTap rich text
+│   │   ├── text_input/
+│   │   ├── timeline/
+│   │   ├── toast/
+│   │   ├── toasts/
+│   │   ├── tooltip/
+│   │   ├── top_nav/
+│   │   └── url_input/
 │   └── javascript/flat_pack/
 │       └── controllers/
-│           └── table_controller.js # Stimulus controller for tables
+│           ├── accordion_controller.js
+│           ├── carousel_controller.js
+│           ├── chart_controller.js
+│           ├── chat_controller.js
+│           ├── collapse_controller.js
+│           ├── content_editor_controller.js
+│           ├── modal_controller.js
+│           ├── picker_controller.js
+│           ├── popover_controller.js
+│           ├── search_controller.js
+│           ├── table_controller.js
+│           ├── tabs_controller.js
+│           ├── toast_controller.js
+│           └── tooltip_controller.js
 │
 ├── bin/                           # Executable scripts
 │   ├── rails                      # Rails command for dummy app
@@ -50,17 +117,21 @@ flat_pack/
 │   └── importmap.rb               # JavaScript module pinning
 │
 ├── docs/                          # Comprehensive documentation
-│   ├── README.md                  # Documentation index
+│   ├── README.md                  # Component index (human + AI quick-reference)
 │   ├── installation.md            # Installation guide
 │   ├── theming.md                 # Theming and customization
 │   ├── dark_mode.md               # Dark mode implementation
+│   ├── security.md                # Security model
 │   ├── components/
-│   │   ├── button.md              # Button component docs
-│   │   └── table.md               # Table component docs
+│   │   ├── manifest.yml           # Machine-readable component index
+│   │   ├── DOC_FORMAT.md          # Documentation contract
+│   │   ├── README.md              # Human component index
+│   │   └── <component>.md         # One file per component (55+ docs)
 │   └── architecture/
 │       ├── engine.md              # Engine architecture
 │       ├── assets.md              # Asset pipeline (Propshaft)
-│       └── tailwind_4.md          # Tailwind CSS 4 integration
+│       ├── tailwind_4.md          # Tailwind CSS 4 integration
+│       └── theme-tokens.md        # Design token reference
 │
 ├── lib/                           # Library code
 │   ├── flat_pack.rb               # Main entry point
@@ -115,43 +186,26 @@ flat_pack/
 
 ## Core Components
 
-### 1. Base Component (`app/components/flat_pack/base_component.rb`)
+### Base Component (`app/components/flat_pack/base_component.rb`)
 - Inherits from `ViewComponent::Base`
 - Includes `TailwindMerge` for class merging
 - Implements system arguments pattern
 - Provides utility methods for all components
 
-### 2. Button Component (`app/components/flat_pack/button/`)
-**Features:**
-- Three schemes: `:primary`, `:secondary`, `:ghost`
-- Renders as `<button>` or `<a>` based on `url` prop
-- Supports HTTP methods (for delete, etc.)
-- Fully accessible (ARIA, keyboard nav)
-- CSS variable-based theming
+### Component Library (`app/components/flat_pack/`)
+FlatPack ships 55+ production-ready components across seven categories:
 
-**Usage:**
-```erb
-<%= render FlatPack::Button::Component.new(
-  text: "Click me",
-  scheme: :primary,
-  url: some_path
-) %>
-```
+| Category | Components |
+|---|---|
+| Layout & Structure | Card, Grid, SidebarLayout, Hero, PageHeader, PageTitle, SectionTitle |
+| Navigation | Breadcrumb, Navbar, Sidebar, SidebarGroup, TopNav, BottomNav, Tabs, Pagination, PaginationInfinite |
+| Data Display | Table, List, Timeline, Chart, Progress, Badge, Avatar, AvatarGroup, Skeleton |
+| Interactive | Button, ButtonDropdown, ButtonGroup, SegmentedButtons, Accordion, Collapse, Modal, Popover, Tooltip, Picker, Carousel, Chips, RangeInput, Search |
+| Feedback | Alert, Toast, Toasts, EmptyState |
+| Content | CodeBlock, Quote, ContentEditor, Chat, Comments |
+| Form Inputs | TextInput, PasswordInput, EmailInput, PhoneInput, SearchInput, TextArea (+ TipTap), UrlInput, NumberInput, DateInput, FileInput, Checkbox, RadioGroup, Select, Switch |
 
-### 3. Table Component (`app/components/flat_pack/table/`)
-**Features:**
-- Data table with configurable columns
-- Lambda-based columns with html parameter
-- Optional Stimulus controller for interactivity
-- Empty state handling
-- Responsive overflow scrolling
-
-**Usage:**
-```erb
-<%= render FlatPack::Table::Component.new(data: @users) do |table| %>
-  <% table.column(title: "Name", html: ->(user) { user.name }) %>
-<% end %>
-```
+See [`docs/components/manifest.yml`](docs/components/manifest.yml) for the full machine-readable index.
 
 ## Styling System
 
@@ -182,9 +236,7 @@ flat_pack/
 ## JavaScript Architecture
 
 ### Stimulus Controllers
-- **table_controller.js**: Row selection, hover effects
-- Lazy-loaded via importmap
-- Namespaced as `flat-pack--table`
+Each interactive component ships a namespaced Stimulus controller (e.g. `flat-pack--modal`, `flat-pack--carousel`, `flat-pack--table`). Controllers are lazy-loaded via importmap.
 
 ### Integration
 ```javascript
@@ -198,7 +250,7 @@ lazyLoadControllersFrom("controllers/flat_pack", application)
 ### Test Suite
 - **Framework**: Minitest (Rails default)
 - **Component Tests**: `test/components/flat_pack/`
-- **Coverage**: Button and Table components
+- **Coverage**: All shipped components
 - **ViewComponent Helpers**: Integrated for rendering tests
 
 ### Running Tests
@@ -222,9 +274,9 @@ rails generate flat_pack:install
 ```
 
 ### Generator Actions
-1. Adds `@import "flat_pack/variables.css"` to `application.css`
-2. Displays Tailwind CSS 4 configuration instructions
-3. Shows next steps
+1. Automatically detects Tailwind CSS 4 configuration file
+2. Injects `@source` directive, `@theme` block, and CSS variable mappings
+3. Falls back to manual instructions if detection fails
 
 ### Configuration
 Host apps can customize via CSS variables:
@@ -264,17 +316,17 @@ bin/rubocop
 ### Building Gem
 ```bash
 bundle exec rake build
-# Creates pkg/flat_pack-0.1.0.gem
+# Creates pkg/flat_pack-0.1.3.gem
 ```
 
 ## Documentation
 
 ### Comprehensive Docs in `docs/`
 - **Getting Started**: Installation, quick start
-- **Components**: Button, Table usage and API
+- **Components**: 55+ component docs in `docs/components/` — see `manifest.yml` for the full index
 - **Theming**: CSS variables, customization
 - **Dark Mode**: System preference implementation
-- **Architecture**: Engine, assets, Tailwind 4
+- **Architecture**: Engine, assets, Tailwind 4, theme tokens
 
 ### Inline Documentation
 - All Ruby code has descriptive comments
@@ -303,18 +355,7 @@ bundle exec rake build
 3. **Composition over inheritance** - Slot-based architecture
 4. **Zero-config installation** - Works immediately
 5. **UI-only responsibility** - No business logic, no AR assumptions
-
-## Future Enhancements
-
-Potential additions (not in v0.1.0):
-- Form components (input, select, checkbox, radio)
-- Modal/dialog component
-- Alert/toast notifications
-- Card component
-- Navigation components (navbar, sidebar)
-- Badge component
-- Avatar component
-- More Stimulus interactions
+6. **Security-first design** - Built-in XSS protection and URL sanitization
 
 ## Contributing
 
@@ -333,5 +374,5 @@ MIT License - see MIT-LICENSE file.
 
 ---
 
-**Project Status:** Initial Release (v0.1.0)  
-**Last Updated:** 2025-01-20
+**Project Status:** Active Development (v0.1.3)  
+**Last Updated:** 2026-03-17

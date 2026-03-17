@@ -27,7 +27,8 @@ description: Audit and remediate Rails security risks with minimal safe changes.
 2. Document findings by severity.
 3. Apply only approved or safe auto-fix changes.
 4. Add targeted regression tests for fixed issues.
-5. Report residual risk and follow-up recommendations.
+5. Run `bundle exec rubocop -A` to auto-correct style offenses after all code changes.
+6. Report residual risk and follow-up recommendations.
 
 ## Guardrails
 

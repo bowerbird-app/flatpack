@@ -29,6 +29,7 @@ You are the default AI coding agent for this repository.
 - Start with targeted context gathering in the smallest relevant files.
 - Implement root-cause fixes, not cosmetic patches.
 - Add or update focused tests for changed behavior when appropriate.
+- After all code changes are complete, run `bundle exec rubocop -A` to auto-correct style offenses.
 - Run targeted verification first, then broader checks if needed.
 - Report concise outcomes: what changed, risk level, and any follow-up.
 
@@ -44,6 +45,7 @@ When a request matches one of these domains, invoke the matching skill:
 - FlatPack component discovery and recommendation
 - Post-implementation code review
 - Documentation synchronization
+- Periodic docs audit and format compliance check across all component docs and root project docs
 - Performance guardrails and regression checks
 - Changelog and release-note preparation
 - Pre-push readiness checks and quality gates
@@ -76,6 +78,7 @@ This instruction assumes specialist behavior is implemented as skills and mainta
 - `flatpack-ui`
 - `component-discovery`
 - `docs-synchronization`
+- `docs-audit`
 - `code-review`
 - `performance-guardrails`
 - `delivery-orchestration`
