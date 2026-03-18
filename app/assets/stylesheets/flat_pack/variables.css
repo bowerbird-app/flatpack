@@ -1553,6 +1553,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --comments-composer-submit-background-color: var(--color-primary);
   --comments-composer-submit-hover-background-color: color-mix(in oklab, var(--color-primary) 90%, black);
   --comments-composer-submit-text-color: var(--color-primary-text);
+  --comments-inline-input-radius: var(--radius-xl);
   --comments-thread-header-border-color: var(--surface-border-color);
   --comments-thread-title-color: var(--surface-content-color);
   --comments-thread-count-color: var(--surface-muted-content-color);
@@ -2009,6 +2010,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --comments-composer-submit-background-color: var(--color-primary);
   --comments-composer-submit-hover-background-color: color-mix(in oklab, var(--color-primary) 90%, black);
   --comments-composer-submit-text-color: var(--color-primary-text);
+  --comments-inline-input-radius: 9999px;
   --comments-thread-header-border-color: var(--surface-border-color);
   --comments-thread-title-color: var(--surface-content-color);
   --comments-thread-count-color: var(--surface-muted-content-color);
@@ -2328,4 +2330,6 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --shadow-lg: 0 18px 30px -10px rgb(0 0 0 / 0.18);
   --shadow-button: 0 8px 18px -8px rgb(0 0 0 / 0.22);
   --shadow-button-active: 0 4px 10px -6px rgb(0 0 0 / 0.28);
+
+  --modal-backdrop-blur: 4px;
 }

@@ -6,7 +6,7 @@ This document provides the exact terminal commands and configuration steps neede
 
 FlatPack is a modern Rails 8 UI Component Library built with ViewComponent, Tailwind CSS, and Hotwire. It provides type-safe, testable components with dark mode support and accessibility features.
 
-**Current Version:** 0.1.1 (Updated January 23, 2026)
+**Current Version:** 0.1.6 (Updated March 18, 2026)
 
 ## Prerequisites
 
@@ -47,9 +47,9 @@ rails generate flat_pack:install
 ```
 
 **What the generator does:**
-- Adds `@import "flat_pack/variables.css";` to your `app/assets/stylesheets/application.css`
-- **Automatically configures Tailwind CSS 4** by detecting your Tailwind CSS file and injecting the necessary configuration
-- **Configures importmap** to load FlatPack Stimulus controllers
+- Adds `@import "flat_pack/variables.css";` to your `app/assets/stylesheets/application.css` — this imports the **complete** FlatPack variable set: all component design tokens in `@theme {}` and the full light-mode palette in `:root {}`
+- **Automatically configures Tailwind CSS 4** by detecting your Tailwind CSS file and injecting the necessary `@source` directive and utility `@theme` block
+- **Configures importmap** to load FlatPack Stimulus controllers and the Heroicons JS module
 - **Configures Stimulus** to lazy load FlatPack controllers on first use
 - Shows next steps for using components
 
@@ -95,7 +95,19 @@ The `rails generate flat_pack:install` command now **automatically configures Ta
 4. **Add** the `@theme` block with all FlatPack design tokens (colors, shadows, radius, transitions)
 5. **Map** CSS variables to `:root` for component compatibility
 
-**The generator automatically adds:**
+**The generator automatically adds two things:**
+
+**1. In `app/assets/stylesheets/application.css`** — the full variable set from FlatPack:
+
+```css
+@import "flat_pack/variables.css";
+```
+
+`flat_pack/variables.css` contains the complete FlatPack theming system:
+- A comprehensive `@theme {}` block with all component design tokens (colors, shadows, radius, transitions, component-level variables for every FlatPack component)
+- A `:root {}` block that establishes the **light theme as the default palette** (see [variables.css](https://github.com/bowerbird-app/flatpack/blob/main/app/assets/stylesheets/flat_pack/variables.css))
+
+**2. In your Tailwind CSS file** (e.g., `app/assets/stylesheets/application.tailwind.css`) — source scanning and utility theme:
 
 ```css
 /* Tailwind CSS - Scan FlatPack components for classes */
@@ -139,24 +151,6 @@ The `rails generate flat_pack:install` command now **automatically configures Ta
   --color-ghost-text: var(--color-fp-ghost-text);
   --color-border: var(--color-fp-border);
 }
-
-/* Map FlatPack CSS variables to :root for component compatibility */
-:root {
-  --color-primary: var(--color-fp-primary);
-  --color-primary-hover: var(--color-fp-primary-hover);
-  --color-primary-text: var(--color-fp-primary-text);
-  --color-secondary: var(--color-fp-secondary);
-  --color-secondary-hover: var(--color-fp-secondary-hover);
-  --color-secondary-text: var(--color-fp-secondary-text);
-  --color-ghost: var(--color-fp-ghost);
-  --color-ghost-hover: var(--color-fp-ghost-hover);
-  --color-ghost-text: var(--color-fp-ghost-text);
-  --color-border: var(--color-fp-border);
-  --shadow-sm: var(--shadow-fp-sm);
-  --radius-md: var(--radius-md);
-  --transition-base: var(--transition-base);
-  --color-ring: var(--color-ring);
-}
 ```
 
 **After the generator runs:**
@@ -174,34 +168,64 @@ If the generator cannot automatically detect your Tailwind CSS 4 file, it will d
 
 2. Adding the configuration to your Tailwind CSS file (e.g., `app/assets/stylesheets/application.tailwind.css`) using the example above, replacing the `@source` path with the correct relative path to your gem's `app/components` directory.
 
-### 5. Add FlatPack CSS Variables (Optional Customization)
+### 5. FlatPack CSS Variables and Default Theme
 
-If you want to customize the theme, add CSS variables to `app/assets/stylesheets/application.css`:
+**Variables are imported automatically.** The `rails generate flat_pack:install` command adds `@import "flat_pack/variables.css";` to `app/assets/stylesheets/application.css`. This single import brings in the complete FlatPack variable system — no manual copying required.
+
+The imported `variables.css` contains:
+- `@theme {}` — all Tailwind design tokens (colors, shadows, radius, transitions, and per-component variables for every FlatPack component)
+- `:root {}` — the **light theme palette** (this is active by default with no additional configuration)
+- `[data-theme="dark"] {}` — dark theme overrides, applied when `data-theme="dark"` is set on `<html>`
+- `[data-theme="ocean"] {}` and `[data-theme="rounded"] {}` — additional theme variants
+
+**Light mode is the default.** The `:root {}` block in `variables.css` establishes the light palette without requiring any attribute. No `data-theme` attribute is needed to get the light theme — it is applied automatically.
+
+To **explicitly force light mode** regardless of any ThemeController state or stored preferences (useful if you are not using the theme switcher), add `data-theme="light"` to your HTML root element in your layout:
+
+```erb
+<%# app/views/layouts/application.html.erb %>
+<html data-theme="light" lang="<%= I18n.locale %>">
+```
+
+> **Note:** When `data-theme` is absent or set to `"light"`, the `:root {}` light palette from `variables.css` is active. The FlatPack `ThemeController` stores user preference in `localStorage` under the key `flatpack-theme` and sets `data-theme` on `document.documentElement` accordingly. If you add `data-theme="light"` to the static HTML, JavaScript will override it once the controller connects — remove the static attribute if you want the ThemeController to manage theme state.
+
+To **customize the theme**, override CSS variables in your own stylesheet after the import:
 
 ```css
+/* app/assets/stylesheets/application.css */
+@import "flat_pack/variables.css";
+
+/* Override FlatPack defaults */
 :root {
-  --color-primary: var(--color-fp-primary);
-  --color-primary-hover: var(--color-fp-primary-hover);
-  --color-primary-text: var(--color-fp-primary-text);
-  --color-background: oklch(1.0 0 0);
-  --color-foreground: oklch(0.20 0.01 250);
-  /* Add other variables as needed */
+  --color-primary: oklch(0.55 0.22 160);        /* teal primary */
+  --color-primary-hover: oklch(0.45 0.22 160);
+  --surface-background-color: oklch(1.0 0 0);   /* white background */
+  --surface-content-color: oklch(0.20 0.01 250); /* dark text */
 }
 ```
 
-### 5. JavaScript Controllers Configuration (Automatic)
+### 5. JavaScript / Importmap Configuration (Automatic)
 
 **✨ Automated Configuration**
 
-The install generator automatically configures JavaScript imports for FlatPack's Stimulus controllers:
+The install generator automatically configures JavaScript imports for FlatPack's Stimulus controllers and the Heroicons module:
 
 **In `config/importmap.rb`:**
 ```ruby
-# Pin FlatPack controllers
+# Pin FlatPack controllers (lazy loaded — fetched only when used)
 pin_all_from FlatPack::Engine.root.join("app/javascript/flat_pack/controllers"), 
              under: "controllers/flat_pack", 
              to: "flat_pack/controllers",
              preload: false
+
+# Pin FlatPack TipTap helpers
+pin_all_from FlatPack::Engine.root.join("app/javascript/flat_pack/tiptap"), 
+             under: "flat_pack/tiptap", 
+             to: "flat_pack/tiptap",
+             preload: false
+
+# Heroicons curated subset — used by FlatPack::Icon::Component
+pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false
 ```
 
 **In `app/javascript/controllers/index.js`:**
@@ -218,7 +242,7 @@ lazyLoadControllersFrom("controllers/flat_pack", application)
 
 **Manual Configuration (if needed):**
 
-If you need to manually configure the JavaScript controllers:
+If you need to manually configure JavaScript:
 
 1. Add to `config/importmap.rb`:
    ```ruby
@@ -226,6 +250,11 @@ If you need to manually configure the JavaScript controllers:
                 under: "controllers/flat_pack", 
                 to: "flat_pack/controllers",
                 preload: false
+   pin_all_from FlatPack::Engine.root.join("app/javascript/flat_pack/tiptap"), 
+                under: "flat_pack/tiptap", 
+                to: "flat_pack/tiptap",
+                preload: false
+   pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false
    ```
 
 2. Add to `app/javascript/controllers/index.js`:
@@ -261,6 +290,7 @@ const path = require("path")
 
 const flatpackRoot = execSync("bundle show flat_pack").toString().trim()
 const controllersDir = path.join(flatpackRoot, "app/javascript/flat_pack/controllers")
+const heroiconsPath = path.join(flatpackRoot, "app/javascript/flat_pack/heroicons.js")
 
 // Import all FlatPack controllers.
 const entry = `
@@ -368,6 +398,8 @@ const result = spawnSync(
     "esbuild", entryPath,
     "--bundle",
     "--format=iife",
+    // Resolve flat_pack/heroicons to the local gem file (used by IconController)
+    `--alias:flat_pack/heroicons=${heroiconsPath}`,
     "--outfile=app/assets/javascripts/stimulus_controllers.js"
   ],
   { stdio: "inherit" }
@@ -438,19 +470,23 @@ Ensure your Tailwind CSS file includes a FlatPack source path similar to:
 
 Use the path that matches your environment. If needed, run `bundle show flat_pack` and calculate the correct relative path to the gem's `app/components` directory.
 
-### 7. Restart Your Rails Server
+### 7. Rebuild CSS and Restart
 
-After installation, restart the Rails server:
+After installation (and after any `bundle update flat_pack`), rebuild Tailwind CSS then restart the server:
 
 ```bash
+bin/rails tailwindcss:build
 bin/rails server
 ```
 
 Or if using Foreman:
 
 ```bash
+bin/rails tailwindcss:build
 bin/dev
 ```
+
+> **Important:** Always run `bin/rails tailwindcss:build` after installing or updating FlatPack. The build scans component files for Tailwind class names and compiles the CSS output. Without this step, FlatPack component styles will be missing.
 
 ## Verification
 
@@ -697,23 +733,25 @@ For more information, see the FlatPack documentation:
 
 ## Summary
 
-The installation process for FlatPack is now fully automated:
+The installation process for FlatPack is fully automated. Quick checklist:
 
 1. ✅ Add gem to Gemfile
 2. ✅ Run `bundle install`
-3. ✅ Run `rails generate flat_pack:install` - **Now automatically configures Tailwind CSS 4!**
-4. Rebuild Tailwind CSS: `bin/rails tailwindcss:build`
-5. Restart Rails server
-6. Start using FlatPack components in your views
+3. ✅ Run `rails generate flat_pack:install` — automatically wires up CSS, JS, Heroicons, and Tailwind
+4. ✅ **Rebuild CSS: `bin/rails tailwindcss:build`** ← do this after every install or gem update
+5. ✅ Restart Rails server
+6. ✅ Start using FlatPack components in your views
 
-**What's Automated:**
-- ✨ Automatic detection of Tailwind CSS 4 configuration file
-- ✨ Automatic calculation of relative paths to FlatPack gem components
-- ✨ Automatic injection of `@source` directive
-- ✨ Automatic injection of `@theme` block with all FlatPack design tokens
-- ✨ Automatic mapping of CSS variables to `:root` for component compatibility
+**What the generator sets up automatically:**
+- ✨ `@import "flat_pack/variables.css"` in `application.css` — imports the complete variable set (all component tokens + light-mode `:root` palette)
+- ✨ `@source` directive in your Tailwind file so Tailwind scans FlatPack components
+- ✨ `@theme` utility block in your Tailwind file for Tailwind class generation
+- ✨ Heroicons importmap pin (`flat_pack/heroicons`) for the Icon component
+- ✨ Stimulus lazy-loading for all FlatPack controllers via importmap
 
-No manual path finding, no manual copying of CSS variables, no manual configuration - just run the generator and you're ready to go!
+**Light theme is the default.** No `data-theme` attribute is required. The `:root {}` block in `variables.css` activates the light palette automatically. Supported themes: `light` (default), `dark`, `ocean`, `rounded` — set via `data-theme` on `<html>`.
+
+No manual path finding, no manual copying of CSS variables, no manual configuration — just run the generator and rebuild CSS.
 
 ## Recent Updates
 
