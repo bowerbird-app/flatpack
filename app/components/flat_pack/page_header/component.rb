@@ -29,7 +29,6 @@ module FlatPack
       def container_attributes
         merge_attributes(
           class: classes(
-            "border-b border-[var(--surface-border-color)]",
             "pb-8 mb-6"
           )
         )
