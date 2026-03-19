@@ -23,10 +23,10 @@ module FlatPack
         assert_selector "p.text-lg", text: "Welcome back"
       end
 
-      def test_has_border_bottom
+      def test_does_not_have_border_bottom
         render_inline(Component.new(title: "Dashboard"))
 
-        assert_selector "div.border-b"
+        assert_no_selector "div.border-b"
       end
 
       def test_raises_error_without_title
