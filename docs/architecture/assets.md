@@ -49,13 +49,15 @@ app/assets/stylesheets/flat_pack/
 
 ### Usage
 
-Import in your `application.css`:
+Load FlatPack stylesheets in your application layout:
 
-```css
-@import "flat_pack/variables.css";
+```erb
+<%# app/views/layouts/application.html.erb %>
+<%= stylesheet_link_tag "flat_pack/variables", "data-turbo-track": "reload" %>
+<%= stylesheet_link_tag "flat_pack/rich_text", "data-turbo-track": "reload" %>
 ```
 
-Propshaft resolves the path and serves the file.
+Propshaft resolves the correct digested path for each file. Using `stylesheet_link_tag` (not `@import`) is required because Propshaft fingerprints asset filenames — a bare CSS `@import "flat_pack/variables.css"` in a statically-served stylesheet would request an un-digested URL that Propshaft does not serve.
 
 ## JavaScript
 
@@ -106,15 +108,16 @@ Tailwind CSS 4 uses a CSS-first configuration model:
 Tell Tailwind to scan FlatPack components:
 
 ```css
-/* app/assets/stylesheets/application.css */
+/* app/assets/stylesheets/application.tailwind.css (Tailwind build file) */
 @import "tailwindcss";
-@import "flat_pack/variables.css";
 
 /* Scan FlatPack components */
 /* @source "../../../.bundle/ruby/*/gems/flat_pack-*/app/components" */
 ```
 
 The `@source` comment tells Tailwind CSS 4 where to find utility classes.
+
+> **Note:** FlatPack CSS variables are loaded via `stylesheet_link_tag` in the layout, not via `@import` inside the Tailwind build file. The generator adds the correct relative `@import` for variables inside the Tailwind file only when the gem is accessible at build time.
 
 ### Path Resolution
 
@@ -192,11 +195,12 @@ If assets aren't loading:
    ls $(bundle info flat_pack --path)/app/assets/stylesheets/
    ```
 
-3. **Check import statement:**
-   ```css
-   @import "flat_pack/variables.css"; /* Correct */
-   @import "flat_pack/variables";     /* Wrong - include .css */
+3. **Check stylesheet link tags in your layout:**
+   ```erb
+   <%# Correct — lets Propshaft resolve the digested URL %>
+   <%= stylesheet_link_tag "flat_pack/variables", "data-turbo-track": "reload" %>
    ```
+   Avoid `@import "flat_pack/variables.css"` in a Propshaft-served stylesheet — Propshaft only serves files at their fingerprinted URLs.
 
 ### Tailwind Not Picking Up Classes
 

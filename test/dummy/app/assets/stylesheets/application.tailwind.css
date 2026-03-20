@@ -1,13 +1,6 @@
 @import "tailwindcss";
 @source "../../../../../app";
 
-/* FlatPack CSS Variables */
-@import "../../../../../app/assets/stylesheets/flat_pack/variables.css";
-
-/* FlatPack component styles (rich text editor, etc.) */
-@import "../../../../../app/assets/stylesheets/flat_pack/rich_text.css";
-@import "../../../../../app/assets/stylesheets/flat_pack/content_editor.css";
-
 @layer components {
 	/* Sidebar layout: width driven by CSS via data attribute set before first
 	 * paint by the inline FOUC-prevention script. JS toggles this attribute

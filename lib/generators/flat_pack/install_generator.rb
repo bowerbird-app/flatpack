@@ -11,33 +11,33 @@ module FlatPack
       desc "Install FlatPack into your application"
 
       def add_stylesheet_import
-        app_css_path = Rails.root.join("app/assets/stylesheets/application.css")
+        layout_path = Rails.root.join("app/views/layouts/application.html.erb")
 
-        if File.exist?(app_css_path)
-          css_content = File.read(app_css_path)
-          vars_import = '@import "flat_pack/variables.css";'
-          rich_import = '@import "flat_pack/rich_text.css";'
+        if File.exist?(layout_path)
+          layout_content = File.read(layout_path)
+          vars_tag = '<%= stylesheet_link_tag "flat_pack/variables", "data-turbo-track": "reload" %>'
+          rich_tag = '<%= stylesheet_link_tag "flat_pack/rich_text", "data-turbo-track": "reload" %>'
 
           added = false
 
-          unless css_content.include?(vars_import)
-            prepend_to_file app_css_path, "#{vars_import}\n"
-            say "✓ Added FlatPack variables stylesheet import to application.css", :green
+          unless layout_content.include?("flat_pack/variables")
+            inject_into_file layout_path, "    #{vars_tag}\n", before: "</head>"
+            say "✓ Added flat_pack/variables stylesheet link to application layout", :green
             added = true
           end
 
-          unless css_content.include?(rich_import)
-            prepend_to_file app_css_path, "#{rich_import}\n"
-            say "✓ Added FlatPack rich_text stylesheet import to application.css", :green
+          unless layout_content.include?("flat_pack/rich_text")
+            inject_into_file layout_path, "    #{rich_tag}\n", before: "</head>"
+            say "✓ Added flat_pack/rich_text stylesheet link to application layout", :green
             added = true
           end
 
-          say "⊙ FlatPack stylesheet imports already exist in application.css", :yellow unless added
+          say "⊙ FlatPack stylesheet tags already exist in application layout", :yellow unless added
         else
-          say "✗ Could not find app/assets/stylesheets/application.css", :red
-          say "  Please manually add to your CSS:", :yellow
-          say "    @import \"flat_pack/variables.css\";", :cyan
-          say "    @import \"flat_pack/rich_text.css\";", :cyan
+          say "✗ Could not find app/views/layouts/application.html.erb", :red
+          say "  Please manually add to your layout's <head>:", :yellow
+          say '    <%= stylesheet_link_tag "flat_pack/variables", "data-turbo-track": "reload" %>', :cyan
+          say '    <%= stylesheet_link_tag "flat_pack/rich_text", "data-turbo-track": "reload" %>', :cyan
         end
       end
 
