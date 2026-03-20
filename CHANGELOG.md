@@ -7,7 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.7] - 2026-03-20
+## [0.1.8] - 2026-03-20
+
+### Fixed
+- CSS variables and component styles now load correctly in host apps using Propshaft.
+  The install generator previously prepended `@import "flat_pack/variables.css"` to
+  `application.css`, which caused 404s because Propshaft only serves fingerprinted
+  (digested) asset URLs. The generator now injects `stylesheet_link_tag` calls for
+  `flat_pack/variables`, `flat_pack/rich_text` into the host app layout instead.
+- Dummy app layouts updated to use `stylesheet_link_tag` for all three FlatPack
+  stylesheets (`variables`, `rich_text`, `content_editor`), matching the documented
+  install approach.
+- Removed `@import` lines for FlatPack CSS from `application.tailwind.css` in the
+  dummy app; styles are now loaded via link tags as documented.
+
+### Changed
+- Updated `docs/installation.md`, `docs/architecture/assets.md`,
+  `docs/architecture/engine.md`, `docs/architecture/tailwind_4.md`,
+  `docs/dark_mode.md`, and `docs/theming.md` to reflect `stylesheet_link_tag`
+  as the correct CSS loading mechanism with Propshaft.
 
 ### Changed
 - Removed `border-bottom` from `PageHeader::Component` and `Sidebar::Header::Component` for cleaner default styling.
@@ -104,6 +122,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dark mode support via system preference (prefers-color-scheme)
 - CSS variables for theming customization
 
+[0.1.8]: https://github.com/bowerbird-app/flat_pack/compare/v0.1.7...v0.1.8
 [0.1.7]: https://github.com/bowerbird-app/flat_pack/compare/v0.1.6...v0.1.7
 [0.1.6]: https://github.com/bowerbird-app/flat_pack/compare/v0.1.5...v0.1.6
 [0.1.5]: https://github.com/bowerbird-app/flat_pack/compare/v0.1.4...v0.1.5

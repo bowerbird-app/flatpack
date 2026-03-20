@@ -6,7 +6,7 @@ This document provides the exact terminal commands and configuration steps neede
 
 FlatPack is a modern Rails 8 UI Component Library built with ViewComponent, Tailwind CSS, and Hotwire. It provides type-safe, testable components with dark mode support and accessibility features.
 
-**Current Version:** 0.1.6 (Updated March 18, 2026)
+**Current Version:** 0.1.8 (Updated March 20, 2026)
 
 ## Prerequisites
 
