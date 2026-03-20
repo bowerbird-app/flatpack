@@ -299,12 +299,13 @@ If your app needs manual toggle, implement it in your application (not the compo
 
 ### Override FlatPack Variables
 
+FlatPack CSS variables are loaded in the layout via `stylesheet_link_tag`. To override them, define your own `:root` block in your application stylesheet and load it **after** the FlatPack link tags:
+
 ```css
 /* app/assets/stylesheets/application.css */
-@import "flat_pack/variables.css";
 
-@theme {
-  /* Your custom colors */
+:root {
+  /* Your custom colors — override FlatPack defaults */
   --color-primary: oklch(0.55 0.25 270); /* Purple */
   --color-primary-hover: oklch(0.45 0.28 270);
 }
@@ -315,10 +316,8 @@ Your values override FlatPack's defaults.
 ### Add New Variables
 
 ```css
-@theme {
-  /* FlatPack variables */
-  @import "flat_pack/variables.css";
-  
+/* app/assets/stylesheets/application.css */
+:root {
   /* Your variables */
   --color-brand-purple: oklch(0.55 0.25 270);
   --spacing-custom: 2.5rem;
@@ -363,12 +362,12 @@ FlatPack's CSS is minimal:
 
 ### Variables Not Applying
 
-1. **Check import order:**
-   ```css
-   @import "tailwindcss";       /* First */
-   @import "flat_pack/variables.css"; /* Second */
-   /* Your overrides */          /* Third */
+1. **Check that FlatPack stylesheet link tags are in your layout:**
+   ```erb
+   <%# app/views/layouts/application.html.erb %>
+   <%= stylesheet_link_tag "flat_pack/variables", "data-turbo-track": "reload" %>
    ```
+   FlatPack variables are loaded via `stylesheet_link_tag`, not `@import`. Override variables in your own stylesheet loaded after these tags.
 
 2. **Inspect computed styles:**
    DevTools → Computed → Filter "color-primary"

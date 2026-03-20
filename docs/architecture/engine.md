@@ -85,9 +85,10 @@ Or for simple components, template can be omitted and `#call` method used.
 
 The engine integrates via:
 
-1. **Stylesheet Import**
-   ```css
-   @import "flat_pack/variables.css";
+1. **Stylesheet Link Tags** (in `app/views/layouts/application.html.erb`)
+   ```erb
+   <%= stylesheet_link_tag "flat_pack/variables", "data-turbo-track": "reload" %>
+   <%= stylesheet_link_tag "flat_pack/rich_text", "data-turbo-track": "reload" %>
    ```
 
 2. **Component Rendering**

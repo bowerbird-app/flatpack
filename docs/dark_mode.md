@@ -55,10 +55,10 @@ Chrome/Edge/Firefox:
 
 ## Customizing Dark Mode
 
-Override dark mode colors in your `application.css`:
+Override dark mode colors in your `application.css`. FlatPack variables are loaded via `stylesheet_link_tag` in the layout, so you only need to add your overrides:
 
 ```css
-@import "flat_pack/variables.css";
+/* app/assets/stylesheets/application.css */
 
 /* Custom dark mode colors */
 @media (prefers-color-scheme: dark) {

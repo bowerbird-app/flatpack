@@ -12,14 +12,13 @@ FlatPack's theming system is built on:
 
 ## Basic Customization
 
-Override FlatPack's CSS variables in your `application.css`:
+FlatPack variables are loaded automatically via `stylesheet_link_tag` in your layout (added by the install generator). To override them, add a `:root` block to your `application.css`:
 
 ```css
-@import "tailwindcss";
-@import "flat_pack/variables.css";
+/* app/assets/stylesheets/application.css */
 
 /* Your custom theme */
-@theme {
+:root {
   --color-primary: oklch(0.55 0.25 270); /* Purple */
   --color-primary-hover: oklch(0.45 0.28 270);
 }
@@ -277,7 +276,7 @@ The `!` prefix ensures your classes override component defaults (via TailwindMer
 ## Troubleshooting
 
 ### Colors not applying
-- Ensure your `@theme` block comes after `@import "flat_pack/variables.css"`
+- Ensure your `application.css` is linked in the layout **after** the FlatPack stylesheet link tags so overrides take precedence
 - Restart your Rails server
 - Clear your browser cache
 

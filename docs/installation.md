@@ -6,7 +6,7 @@ This document provides the exact terminal commands and configuration steps neede
 
 FlatPack is a modern Rails 8 UI Component Library built with ViewComponent, Tailwind CSS, and Hotwire. It provides type-safe, testable components with dark mode support and accessibility features.
 
-**Current Version:** 0.1.6 (Updated March 18, 2026)
+**Current Version:** 0.1.8 (Updated March 20, 2026)
 
 ## Prerequisites
 
@@ -47,7 +47,7 @@ rails generate flat_pack:install
 ```
 
 **What the generator does:**
-- Adds `@import "flat_pack/variables.css";` to your `app/assets/stylesheets/application.css` — this imports the **complete** FlatPack variable set: all component design tokens in `@theme {}` and the full light-mode palette in `:root {}`
+- Adds `stylesheet_link_tag "flat_pack/variables"` and `stylesheet_link_tag "flat_pack/rich_text"` to your `app/views/layouts/application.html.erb` — this lets Propshaft serve the FlatPack CSS files at their correct digested URLs, loading the **complete** FlatPack variable set: all component design tokens in `@theme {}` and the full light-mode palette in `:root {}`
 - **Automatically configures Tailwind CSS 4** by detecting your Tailwind CSS file and injecting the necessary `@source` directive and utility `@theme` block
 - **Configures importmap** to load FlatPack Stimulus controllers and the Heroicons JS module
 - **Configures Stimulus** to lazy load FlatPack controllers on first use
@@ -97,11 +97,14 @@ The `rails generate flat_pack:install` command now **automatically configures Ta
 
 **The generator automatically adds two things:**
 
-**1. In `app/assets/stylesheets/application.css`** — the full variable set from FlatPack:
+**1. In `app/views/layouts/application.html.erb`** — stylesheet link tags that let Propshaft resolve the correct digested file URLs:
 
-```css
-@import "flat_pack/variables.css";
+```erb
+<%= stylesheet_link_tag "flat_pack/variables", "data-turbo-track": "reload" %>
+<%= stylesheet_link_tag "flat_pack/rich_text", "data-turbo-track": "reload" %>
 ```
+
+> **Why `stylesheet_link_tag` and not `@import`?** Propshaft fingerprints asset filenames (e.g. `flat_pack/variables-17d9435e.css`). A bare CSS `@import "flat_pack/variables.css"` in a static stylesheet would send the browser looking for an un-digested URL that Propshaft never serves, resulting in a 404. `stylesheet_link_tag` asks Propshaft for the correct digested path at request time.
 
 `flat_pack/variables.css` contains the complete FlatPack theming system:
 - A comprehensive `@theme {}` block with all component design tokens (colors, shadows, radius, transitions, component-level variables for every FlatPack component)
@@ -170,7 +173,7 @@ If the generator cannot automatically detect your Tailwind CSS 4 file, it will d
 
 ### 5. FlatPack CSS Variables and Default Theme
 
-**Variables are imported automatically.** The `rails generate flat_pack:install` command adds `@import "flat_pack/variables.css";` to `app/assets/stylesheets/application.css`. This single import brings in the complete FlatPack variable system — no manual copying required.
+**Variables are loaded automatically.** The `rails generate flat_pack:install` command adds `stylesheet_link_tag "flat_pack/variables"` and `stylesheet_link_tag "flat_pack/rich_text"` to your application layout. Propshaft resolves the correct digested file URLs at request time, so the complete FlatPack variable system loads without any manual copying.
 
 The imported `variables.css` contains:
 - `@theme {}` — all Tailwind design tokens (colors, shadows, radius, transitions, and per-component variables for every FlatPack component)
@@ -189,13 +192,12 @@ To **explicitly force light mode** regardless of any ThemeController state or st
 
 > **Note:** When `data-theme` is absent or set to `"light"`, the `:root {}` light palette from `variables.css` is active. The FlatPack `ThemeController` stores user preference in `localStorage` under the key `flatpack-theme` and sets `data-theme` on `document.documentElement` accordingly. If you add `data-theme="light"` to the static HTML, JavaScript will override it once the controller connects — remove the static attribute if you want the ThemeController to manage theme state.
 
-To **customize the theme**, override CSS variables in your own stylesheet after the import:
+To **customize the theme**, override CSS variables in your own stylesheet:
 
 ```css
 /* app/assets/stylesheets/application.css */
-@import "flat_pack/variables.css";
 
-/* Override FlatPack defaults */
+/* Override FlatPack defaults (loaded via stylesheet_link_tag in the layout) */
 :root {
   --color-primary: oklch(0.55 0.22 160);        /* teal primary */
   --color-primary-hover: oklch(0.45 0.22 160);
@@ -203,6 +205,8 @@ To **customize the theme**, override CSS variables in your own stylesheet after 
   --surface-content-color: oklch(0.20 0.01 250); /* dark text */
 }
 ```
+
+Make sure `application.css` is linked in your layout **after** the FlatPack stylesheet tags so your overrides take precedence.
 
 ### 5. JavaScript / Importmap Configuration (Automatic)
 
@@ -796,7 +800,7 @@ The installation process for FlatPack is fully automated. Quick checklist:
 6. ✅ Start using FlatPack components in your views
 
 **What the generator sets up automatically:**
-- ✨ `@import "flat_pack/variables.css"` in `application.css` — imports the complete variable set (all component tokens + light-mode `:root` palette)
+- ✨ `stylesheet_link_tag "flat_pack/variables"` and `stylesheet_link_tag "flat_pack/rich_text"` in `app/views/layouts/application.html.erb` — loads the complete variable set (all component tokens + light-mode `:root` palette) via Propshaft's digested URL resolution
 - ✨ `@source` directive in your Tailwind file so Tailwind scans FlatPack components
 - ✨ `@theme` utility block in your Tailwind file for Tailwind class generation
 - ✨ Heroicons importmap pin (`flat_pack/heroicons`) for the Icon component

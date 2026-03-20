@@ -9,19 +9,29 @@ require "generators/flat_pack/install_generator"
 module FlatPack
   module Generators
     class InstallGeneratorTest < ActiveSupport::TestCase
-      test "add_stylesheet_import prepends flatpack import and is idempotent" do
+      test "add_stylesheet_import injects stylesheet_link_tags into layout and is idempotent" do
         with_temp_rails_root do |tmp_root|
-          stylesheets_dir = tmp_root.join("app/assets/stylesheets")
-          FileUtils.mkdir_p(stylesheets_dir)
-          application_css = stylesheets_dir.join("application.css")
-          application_css.write("body { color: black; }\n")
+          layouts_dir = tmp_root.join("app/views/layouts")
+          FileUtils.mkdir_p(layouts_dir)
+          layout = layouts_dir.join("application.html.erb")
+          layout.write("<html><head></head><body></body></html>\n")
 
           generator = build_generator
           generator.add_stylesheet_import
           generator.add_stylesheet_import
 
-          content = application_css.read
-          assert_equal 1, content.scan('@import "flat_pack/variables.css";').length
+          content = layout.read
+          assert_equal 1, content.scan('stylesheet_link_tag "flat_pack/variables"').length
+          assert_equal 1, content.scan('stylesheet_link_tag "flat_pack/rich_text"').length
+        end
+      end
+
+      test "add_stylesheet_import prints manual instructions when layout is missing" do
+        with_temp_rails_root do |_tmp_root|
+          generator = build_generator
+          output = capture_io { generator.add_stylesheet_import }.first
+          assert_includes output, "flat_pack/variables"
+          assert_includes output, "flat_pack/rich_text"
         end
       end
 
