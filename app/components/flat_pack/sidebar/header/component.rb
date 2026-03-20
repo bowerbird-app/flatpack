@@ -133,8 +133,7 @@ module FlatPack
           classes(
             "shrink-0",
             "p-4",
-            "bg-[var(--sidebar-header-background-color)]",
-            "border-b border-[var(--sidebar-header-border-color)]"
+            "bg-[var(--sidebar-header-background-color)]"
           )
         end
       end

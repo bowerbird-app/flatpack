@@ -587,6 +587,59 @@ If the install generator didn't automatically configure Tailwind CSS 4:
 
 4. **Restart the Rails server**
 
+### Circular CSS Variable References (Styles Silently Broken)
+
+**Symptom:** Components render without expected styles — border radius, focus rings, transitions, or colors are missing — even after a successful Tailwind build. No build errors appear.
+
+**Root cause:** In Tailwind CSS 4, variables defined in `@theme` are automatically emitted into `:root` with their concrete values. If you also have a manual `:root` (or `[data-theme="..."]`) block that maps the same variable name back to itself — e.g. `--radius-md: var(--radius-md)` — CSS treats this as a circular reference and resolves the variable to the guaranteed-invalid value. Any component depending on that variable silently receives no value.
+
+**Detection:** Audit every CSS block in your `application.css` (and your Tailwind config file) with this regex, which matches any line where the same variable name appears on both sides of the assignment:
+
+```
+--([a-zA-Z][\w-]*):\s*var\(--\1\)
+```
+
+Check all blocks:
+- `:root { ... }`
+- `[data-theme="dark"] { ... }`
+- `[data-theme="..."] { ... }` (any theme variant)
+- `@layer base { ... }`
+- Any other selector block
+
+**Examples of circular (invalid) references — remove these:**
+
+```css
+--foo: var(--foo);                    /* CIRCULAR — remove */
+--color-ring: var(--color-ring);      /* CIRCULAR — remove */
+--radius-md: var(--radius-md);        /* CIRCULAR — remove */
+```
+
+**Examples of valid cross-mappings — keep these:**
+
+```css
+--color-primary: var(--color-fp-primary);   /* OK — different names */
+--shadow-sm: var(--shadow-fp-sm);           /* OK — different names */
+```
+
+**Fix:**
+
+1. Open your CSS config file (e.g. `app/assets/stylesheets/application.css`).
+2. Search every CSS block for lines matching the regex above.
+3. Delete all matching lines — any `--foo: var(--foo)` self-reference.
+4. Rebuild Tailwind CSS:
+   ```bash
+   bin/rails tailwindcss:build
+   ```
+5. Verify the compiled output (`app/assets/builds/tailwind.css`) resolves each previously-broken variable to a concrete value, not another `var()`:
+   ```
+   GOOD: --radius-md:.375rem;
+   BAD:  --radius-md:var(--radius-md);
+   ```
+
+**Summary rule:** In any CSS block, if the left-hand variable name equals the right-hand `var()` name, the line is invalid. Remove it.
+
+---
+
 ### FlatPack Styles Missing When Using a Custom CSS Build Pipeline
 
 **Root cause:** FlatPack components are Ruby files inside the installed gem that contain inline Tailwind class strings (e.g. `"flex items-center gap-3"`, `"bg-[var(--alert-...)]"`). Without an `@source` directive pointing at those files, Tailwind cannot detect those class names and omits them from the compiled output.

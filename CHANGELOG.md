@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.7] - 2026-03-20
+
+### Changed
+- Removed `border-bottom` from `PageHeader::Component` and `Sidebar::Header::Component` for cleaner default styling.
+- Updated `docs/installation.md` with additional setup guidance.
+
+### Fixed
+- Corrected failing test in `PageHeader::Component` test suite.
+
+## [0.1.6] - 2026-03-18
+
+### Added
+- Security updates: bumped `action_text-trix` to 2.1.17 and `devise` to 5.0.3 to address known vulnerabilities.
+- Expanded `docs/installation.md` with icon JS loading instructions and light theme defaults.
+
 ## [0.1.5] - 2026-03-17
 
 ### Added
@@ -89,6 +104,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dark mode support via system preference (prefers-color-scheme)
 - CSS variables for theming customization
 
+[0.1.7]: https://github.com/bowerbird-app/flat_pack/compare/v0.1.6...v0.1.7
+[0.1.6]: https://github.com/bowerbird-app/flat_pack/compare/v0.1.5...v0.1.6
+[0.1.5]: https://github.com/bowerbird-app/flat_pack/compare/v0.1.4...v0.1.5
+[0.1.4]: https://github.com/bowerbird-app/flat_pack/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/flatpack/flat_pack/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/flatpack/flat_pack/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/flatpack/flat_pack/compare/v0.1.0...v0.1.1
