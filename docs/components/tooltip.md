@@ -35,6 +35,10 @@ Use Tooltip for brief explanatory text tied to controls or compact UI affordance
 - Tooltip body uses `role="tooltip"`.
 - Show/hide is driven by hover and focus events from the trigger wrapper.
 
+## Advanced: collapsed-only tooltips
+
+The `flat-pack--tooltip` Stimulus controller supports a `collapsedOnly` boolean value (default `false`). When set to `true` via `data-flat-pack--tooltip-collapsed-only-value="true"`, the tooltip is suppressed while the sidebar is expanded and only shown when collapsed. This is used internally by `FlatPack::Sidebar::SectionTitle::Component` — it is not exposed as a prop on `FlatPack::Tooltip::Component`.
+
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
 - Stimulus controller: `flat-pack--tooltip`.

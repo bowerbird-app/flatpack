@@ -89,6 +89,25 @@ module FlatPack
 
           assert_includes page.native.to_html, "overflow-hidden"
         end
+
+        def test_tooltip_element_has_role_tooltip
+          render_inline(Component.new(label: "Getting Started"))
+
+          assert_selector "[role='tooltip']"
+        end
+
+        def test_wrapper_has_hover_and_focus_action_data
+          render_inline(Component.new(label: "Getting Started"))
+
+          assert_selector "div[data-action*='mouseenter->flat-pack--tooltip#show']"
+          assert_selector "div[data-action*='focusin->flat-pack--tooltip#show']"
+        end
+
+        def test_label_has_opacity_class
+          render_inline(Component.new(label: "Getting Started"))
+
+          assert_includes page.native.to_html, "opacity-50"
+        end
       end
     end
   end

@@ -30,7 +30,7 @@ module ApplicationHelper
         group.message do
           render chat_demo_message_component_class(direction).new(
             state: item.state.to_sym,
-            reveal_actions: (direction == :outgoing) ? reveal_actions : false
+            reveal_actions: reveal_actions
           ) do |message|
             item.chat_item_attachments.each do |attachment|
               if attachment.image? && attachment.thumbnail_url.present?
