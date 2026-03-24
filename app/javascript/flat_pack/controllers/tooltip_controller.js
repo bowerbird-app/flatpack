@@ -190,9 +190,14 @@ export default class extends Controller {
   shouldShowTooltip() {
     if (!this.collapsedOnlyValue) return true
 
+    // Sidebar item labels: hide when expanded (sr-only removed), show when collapsed
     const label = this.element.querySelector("span.flex-1")
-    if (!label) return true
+    if (label) return label.classList.contains("sr-only")
 
-    return label.classList.contains("sr-only")
+    // Other elements (e.g. section titles): check sidebar ancestor collapsed state
+    const sidebar = this.element.closest("[data-flat-pack-sidebar-collapsed]")
+    if (sidebar) return sidebar.dataset.flatPackSidebarCollapsed === "true"
+
+    return true
   }
 }

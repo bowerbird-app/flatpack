@@ -8,7 +8,7 @@ Use Sidebar in application shells that need persistent navigation and grouped li
 
 ## Class
 - Primary: `FlatPack::Sidebar::Component`
-- Related classes: `FlatPack::Sidebar::Item::Component`, `FlatPack::Sidebar::Header::Component`, `FlatPack::Sidebar::Footer::Component`, `FlatPack::Sidebar::Divider::Component`, `FlatPack::Sidebar::Group::Component`, `FlatPack::Sidebar::Badge::Component`, `FlatPack::Sidebar::CollapseToggle::Component`
+- Related classes: `FlatPack::Sidebar::Item::Component`, `FlatPack::Sidebar::Header::Component`, `FlatPack::Sidebar::Footer::Component`, `FlatPack::Sidebar::Divider::Component`, `FlatPack::Sidebar::Group::Component`, `FlatPack::Sidebar::Badge::Component`, `FlatPack::Sidebar::CollapseToggle::Component`, `FlatPack::Sidebar::SectionTitle::Component`
 
 ## Props
 

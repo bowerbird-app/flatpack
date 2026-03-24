@@ -313,6 +313,9 @@ class PagesController < ApplicationController
   def sidebar_complete
   end
 
+  def sidebar_section_title
+  end
+
   def cards
   end
 
@@ -1268,6 +1271,7 @@ class PagesController < ApplicationController
       {title: "Sidebar Collapsible", description: "Sidebar groups that expand and collapse", url: demo_sidebar_collapsible_path},
       {title: "Sidebar Collapsed", description: "Icon-only collapsed sidebar pattern", url: demo_sidebar_collapsed_path},
       {title: "Sidebar Complete", description: "Full-featured sidebar composition", url: demo_sidebar_complete_path},
+      {title: "Sidebar Section Title", description: "Category labels that group sidebar navigation items", url: demo_sidebar_section_title_path},
       {title: "Modals", description: "Dialog overlays with focus trap", url: demo_modals_path},
       {title: "Popovers", description: "Click-triggered floating content", url: demo_popovers_path},
       {title: "Tooltips", description: "Hover/focus tooltips", url: demo_tooltips_path},

@@ -70,9 +70,11 @@
 
         <% sidebar.items do %>
           <nav class="py-2 space-y-1">
+            <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Main") %>
             <%= render FlatPack::Sidebar::Item::Component.new(label: "Overview", href: "#", icon: :home, active: true) %>
             <%= render FlatPack::Sidebar::Item::Component.new(label: "Alerts", href: "#", icon: :alert) %>
             <%= render FlatPack::Sidebar::Divider::Component.new %>
+            <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Settings") %>
             <%= render FlatPack::Sidebar::Group::Component.new(label: "Settings", icon: :settings, default_open: false) do |group| %>
               <% group.items do %>
                 <%= render FlatPack::Sidebar::Item::Component.new(label: "Team", href: "#", icon: :users) %>
@@ -105,7 +107,10 @@
 
             &lt;% sidebar.items do %&gt;
               &lt;nav class=&quot;py-2 space-y-1&quot;&gt;
+                &lt;%= render FlatPack::Sidebar::SectionTitle::Component.new(label: &quot;Main&quot;) %&gt;
                 &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Overview&quot;, href: &quot;#&quot;, icon: :home) %&gt;
+                &lt;%= render FlatPack::Sidebar::Divider::Component.new %&gt;
+                &lt;%= render FlatPack::Sidebar::SectionTitle::Component.new(label: &quot;Settings&quot;) %&gt;
                 &lt;%= render FlatPack::Sidebar::Group::Component.new(label: &quot;Settings&quot;, icon: :settings) do |group| %&gt;
                   &lt;% group.items do %&gt;
                     &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Team&quot;, href: &quot;#&quot;, icon: :users) %&gt;

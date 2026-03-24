@@ -96,7 +96,7 @@
 
           <% sidebar.items do %>
             <nav class="py-4 space-y-1" aria-label="Main navigation">
-              <p class="px-4 pt-2 pb-1 text-xs font-semibold uppercase tracking-wider text-[var(--sidebar-item-text-color)] opacity-50">Getting Started</p>
+              <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Getting Started") %>
 
               <%= render FlatPack::Sidebar::Item::Component.new(
                 label: "Overview",
@@ -150,7 +150,7 @@
               <% end %>
               
               <%= render FlatPack::Sidebar::Divider::Component.new %>
-              <p class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-[var(--sidebar-item-text-color)] opacity-50">Interactive</p>
+              <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Interactive") %>
               <%= render FlatPack::Sidebar::Item::Component.new(
                 label: "Buttons",
                 href: demo_buttons_path,
@@ -215,7 +215,7 @@
               ) %>
               
               <%= render FlatPack::Sidebar::Divider::Component.new %>
-              <p class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-[var(--sidebar-item-text-color)] opacity-50">Forms</p>
+              <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Forms") %>
               <%= render FlatPack::Sidebar::Group::Component.new(
                 label: "Forms",
                 icon: :edit_3,
@@ -334,7 +334,7 @@
               <% end %>
               
               <%= render FlatPack::Sidebar::Divider::Component.new %>
-              <p class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-[var(--sidebar-item-text-color)] opacity-50">Data Display</p>
+              <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Data Display") %>
               <%= render FlatPack::Sidebar::Group::Component.new(
                 label: "Tables",
                 icon: :table,
@@ -455,7 +455,7 @@
               ) %>
               
               <%= render FlatPack::Sidebar::Divider::Component.new %>
-              <p class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-[var(--sidebar-item-text-color)] opacity-50">Layout</p>
+              <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Layout") %>
               <%= render FlatPack::Sidebar::Item::Component.new(
                 label: "Hero",
                 href: pages_hero_path,
@@ -496,7 +496,7 @@
               ) %>
               
               <%= render FlatPack::Sidebar::Divider::Component.new %>
-              <p class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-[var(--sidebar-item-text-color)] opacity-50">Feedback</p>
+              <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Feedback") %>
               <%= render FlatPack::Sidebar::Item::Component.new(
                 label: "Alerts",
                 href: demo_alerts_path,
@@ -517,7 +517,7 @@
               ) %>
               
               <%= render FlatPack::Sidebar::Divider::Component.new %>
-              <p class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-[var(--sidebar-item-text-color)] opacity-50">Navigation</p>
+              <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Navigation") %>
               <%= render FlatPack::Sidebar::Item::Component.new(
                 label: "Breadcrumbs",
                 href: demo_breadcrumbs_path,
@@ -596,6 +596,12 @@
                     icon: :box,
                     active: false
                   ) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "Section Title",
+                    href: demo_sidebar_section_title_path,
+                    icon: :type,
+                    active: false
+                  ) %>
                 <% end %>
               <% end %>
               <%= render FlatPack::Sidebar::Item::Component.new(
@@ -606,7 +612,7 @@
               ) %>
 
               <%= render FlatPack::Sidebar::Divider::Component.new %>
-              <p class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-[var(--sidebar-item-text-color)] opacity-50">Demo</p>
+              <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Demo") %>
               <%= render FlatPack::Sidebar::Item::Component.new(
                 label: "Admin Page",
                 href: demo_admin_path,

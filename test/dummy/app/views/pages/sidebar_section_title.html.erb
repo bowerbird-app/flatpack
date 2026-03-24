@@ -1,0 +1,187 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Sidebar Section Title",
+  subtitle: "Category labels that group sidebar navigation items."
+) %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Default (Expanded)", anchor_link: true) %>
+  <p class="text-sm text-(--surface-muted-content-color) mb-4">
+    Section titles display as small uppercase labels above groups of navigation items.
+  </p>
+  <div class="rounded-lg overflow-hidden h-[280px] w-64 mb-4">
+    <%= render FlatPack::Sidebar::Component.new(class: "border border-[var(--surface-border-color)] rounded-lg") do |sidebar| %>
+      <% sidebar.header do %>
+        <div class="p-4 flex items-center gap-3">
+          <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold shrink-0">FP</div>
+          <span class="font-semibold text-sm">FlatPack</span>
+        </div>
+      <% end %>
+
+      <% sidebar.items do %>
+        <nav class="py-2 space-y-1">
+          <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Main") %>
+          <%= render FlatPack::Sidebar::Item::Component.new(label: "Overview", href: "#", icon: :home, active: true) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(label: "Alerts", href: "#", icon: :alert) %>
+          <%= render FlatPack::Sidebar::Divider::Component.new %>
+          <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Settings") %>
+          <%= render FlatPack::Sidebar::Item::Component.new(label: "Team", href: "#", icon: :users) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(label: "Permissions", href: "#", icon: :key) %>
+        </nav>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Sidebar::SectionTitle::Component.new(label: &quot;Main&quot;) %&gt;
+      &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Overview&quot;, href: &quot;#&quot;, icon: :home) %&gt;
+      &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Alerts&quot;, href: &quot;#&quot;, icon: :alert) %&gt;
+
+      &lt;%= render FlatPack::Sidebar::Divider::Component.new %&gt;
+
+      &lt;%= render FlatPack::Sidebar::SectionTitle::Component.new(label: &quot;Settings&quot;) %&gt;
+      &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Team&quot;, href: &quot;#&quot;, icon: :users) %&gt;
+      &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Permissions&quot;, href: &quot;#&quot;, icon: :key) %&gt;
+    CODE
+    language: "erb",
+    title: "Section Title in Expanded Sidebar"
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Collapsed (Icon-Only)", anchor_link: true) %>
+  <p class="text-sm text-(--surface-muted-content-color) mb-4">
+    When <code class="text-xs font-mono bg-[var(--surface-card-background-color)] px-1 rounded">collapsed: true</code> is passed,
+    the label is centered and truncated. The tooltip reveals the full label on hover.
+  </p>
+  <div class="rounded-lg overflow-hidden h-[280px] w-16 mb-4">
+    <%= render FlatPack::Sidebar::Component.new(style: "width: 4rem", class: "border border-[var(--surface-border-color)] rounded-lg") do |sidebar| %>
+      <% sidebar.header do %>
+        <div class="p-4 flex justify-center">
+          <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold">FP</div>
+        </div>
+      <% end %>
+
+      <% sidebar.items do %>
+        <nav class="py-2 space-y-1">
+          <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Main", collapsed: true) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(label: "Overview", href: "#", icon: :home, collapsed: true, active: true) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(label: "Alerts", href: "#", icon: :alert, collapsed: true) %>
+          <%= render FlatPack::Sidebar::Divider::Component.new %>
+          <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Settings", collapsed: true) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(label: "Team", href: "#", icon: :users, collapsed: true) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(label: "Permissions", href: "#", icon: :key, collapsed: true) %>
+        </nav>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Sidebar::SectionTitle::Component.new(label: &quot;Main&quot;, collapsed: true) %&gt;
+      &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Overview&quot;, href: &quot;#&quot;, icon: :home, collapsed: true) %&gt;
+    CODE
+    language: "erb",
+    title: "Section Title in Collapsed Sidebar"
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Collapsible Sidebar with Section Titles", anchor_link: true) %>
+  <p class="text-sm text-(--surface-muted-content-color) mb-4">
+    Section titles collapse alongside sidebar items when the layout controller toggles the sidebar. Hover the section title when collapsed to see the tooltip.
+    Click the hamburger icon to toggle expand/collapse.
+  </p>
+  <div
+    data-controller="flat-pack--sidebar-layout"
+    data-flat-pack--sidebar-layout-side-value="left"
+    data-flat-pack--sidebar-layout-default-open-value="true"
+    data-flat-pack--sidebar-layout-storage-key-value="demo-sidebar-section-title"
+    class="rounded-lg overflow-hidden h-[360px] border border-[var(--surface-border-color)] grid grid-cols-[auto_1fr] mb-4"
+  >
+    <div data-flat-pack--sidebar-layout-target="sidebar" class="h-full min-h-0">
+      <%= render FlatPack::Sidebar::Component.new do |sidebar| %>
+        <% sidebar.header do %>
+          <%= render FlatPack::Sidebar::Header::Component.new(brand_abbr: "FP", title: "FlatPack", collapsible: true) %>
+        <% end %>
+
+        <% sidebar.items do %>
+          <nav class="py-2 space-y-1">
+            <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Main") %>
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Overview", href: "#", icon: :home, active: true) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Alerts", href: "#", icon: :alert) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Tables", href: "#", icon: :table) %>
+            <%= render FlatPack::Sidebar::Divider::Component.new %>
+            <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Settings") %>
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Team", href: "#", icon: :users) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Permissions", href: "#", icon: :key) %>
+          </nav>
+        <% end %>
+      <% end %>
+    </div>
+    <div class="min-h-0 bg-[var(--surface-background-color)] flex items-center justify-center text-sm text-[var(--surface-muted-content-color)]">
+      Main content area
+    </div>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div
+        data-controller=&quot;flat-pack--sidebar-layout&quot;
+        data-flat-pack--sidebar-layout-side-value=&quot;left&quot;
+        data-flat-pack--sidebar-layout-default-open-value=&quot;true&quot;
+        data-flat-pack--sidebar-layout-storage-key-value=&quot;my-sidebar&quot;
+        class=&quot;grid grid-cols-[auto_1fr] h-screen overflow-hidden&quot;
+      &gt;
+        &lt;div data-flat-pack--sidebar-layout-target=&quot;sidebar&quot;&gt;
+          &lt;%= render FlatPack::Sidebar::Component.new do |sidebar| %&gt;
+            &lt;% sidebar.header do %&gt;
+              &lt;%= render FlatPack::Sidebar::Header::Component.new(
+                brand_abbr: &quot;FP&quot;,
+                title: &quot;FlatPack&quot;,
+                collapsible: true
+              ) %&gt;
+            &lt;% end %&gt;
+            &lt;% sidebar.items do %&gt;
+              &lt;nav class=&quot;py-2 space-y-1&quot;&gt;
+                &lt;%= render FlatPack::Sidebar::SectionTitle::Component.new(label: &quot;Main&quot;) %&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Overview&quot;, href: &quot;#&quot;, icon: :home) %&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Alerts&quot;, href: &quot;#&quot;, icon: :alert) %&gt;
+                &lt;%= render FlatPack::Sidebar::Divider::Component.new %&gt;
+                &lt;%= render FlatPack::Sidebar::SectionTitle::Component.new(label: &quot;Settings&quot;) %&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Team&quot;, href: &quot;#&quot;, icon: :users) %&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Permissions&quot;, href: &quot;#&quot;, icon: :key) %&gt;
+              &lt;/nav&gt;
+            &lt;% end %&gt;
+          &lt;% end %&gt;
+        &lt;/div&gt;
+        &lt;div&gt;Main content&lt;/div&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Collapsible Sidebar with Section Titles"
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Long Label Truncation", anchor_link: true) %>
+  <p class="text-sm text-(--surface-muted-content-color) mb-4">
+    Long labels are truncated with an ellipsis in both expanded and collapsed states. A tooltip reveals the full label on hover.
+  </p>
+  <div class="flex gap-4 mb-4 items-start">
+    <div class="rounded-lg overflow-hidden w-64">
+      <div class="border border-[var(--surface-border-color)] rounded-lg">
+        <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Very Long Section Title That Will Truncate") %>
+        <%= render FlatPack::Sidebar::Item::Component.new(label: "Item One", href: "#", icon: :home) %>
+        <%= render FlatPack::Sidebar::Item::Component.new(label: "Item Two", href: "#", icon: :alert) %>
+      </div>
+    </div>
+    <div class="rounded-lg overflow-hidden w-16">
+      <div class="border border-[var(--surface-border-color)] rounded-lg" style="width: 4rem">
+        <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Very Long Section Title That Will Truncate", collapsed: true) %>
+        <%= render FlatPack::Sidebar::Item::Component.new(label: "Item One", href: "#", icon: :home, collapsed: true) %>
+        <%= render FlatPack::Sidebar::Item::Component.new(label: "Item Two", href: "#", icon: :alert, collapsed: true) %>
+      </div>
+    </div>
+  </div>
+</section>

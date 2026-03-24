@@ -314,6 +314,13 @@ components:
       - FlatPack::Sidebar::Header::Component
       - FlatPack::Sidebar::Divider::Component
       - FlatPack::Sidebar::Group::Component
+      - FlatPack::Sidebar::SectionTitle::Component
+    status: documented
+
+  - key: sidebar_section_title
+    title: Sidebar Section Title
+    doc: docs/components/sidebar-section-title.md
+    primary_class: FlatPack::Sidebar::SectionTitle::Component
     status: documented
 
   - key: sidebar_group
