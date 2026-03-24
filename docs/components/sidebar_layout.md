@@ -63,15 +63,17 @@ Mobile drawer backdrop uses `aria-hidden` and supports Escape to close via contr
 
 ## Collapsed (icon-only) mode
 
-When the sidebar is collapsed the `flat-pack--sidebar-layout` controller applies compact, centered styles to all sidebar items and group buttons:
+When the sidebar is collapsed the `flat-pack--sidebar-layout` controller applies compact, centered styles to all sidebar items, group buttons, and section titles:
 
 - `px-4` → `px-1` (reduces horizontal padding to `0.25rem`)
 - `justify-center` added (centers the icon within the row)
 - Labels and group chevrons are visually hidden (`sr-only` / `hidden`)
 
-This is applied to every element with `data-flat-pack-sidebar-item="true"`, which includes both `Sidebar::Item::Component` links and `Sidebar::Group::Component` header buttons.
+This is applied to:
+- Every element with `data-flat-pack-sidebar-item="true"` (`Sidebar::Item::Component` links and `Sidebar::Group::Component` header buttons).
+- Every element with `data-flat-pack-sidebar-section-title="true"` (`Sidebar::SectionTitle::Component` labels) — the px-4/px-1 padding is toggled and a tooltip shows the full label text on hover.
 
-For static/non-interactive collapsed demos (without the layout controller) pass `collapsed: true` to `Sidebar::Item::Component` to render the same compact styles server-side.
+For static/non-interactive collapsed demos (without the layout controller) pass `collapsed: true` to `Sidebar::Item::Component` and `Sidebar::SectionTitle::Component` to render the same compact styles server-side.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).

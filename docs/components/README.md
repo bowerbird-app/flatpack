@@ -54,6 +54,7 @@ search | FlatPack::Search::Component | docs/components/search.md
 section_title | FlatPack::SectionTitle::Component | docs/components/section-title.md
 segmented_buttons | FlatPack::SegmentedButtons::Component | docs/components/segmented-buttons.md
 sidebar | FlatPack::Sidebar::Component | docs/components/sidebar.md
+sidebar_section_title | FlatPack::Sidebar::SectionTitle::Component | docs/components/sidebar-section-title.md
 sidebar_group | FlatPack::Sidebar::Group::Component | docs/components/sidebar_group.md
 sidebar_layout | FlatPack::SidebarLayout::Component | docs/components/sidebar_layout.md
 skeleton | FlatPack::Skeleton::Component | docs/components/skeleton.md

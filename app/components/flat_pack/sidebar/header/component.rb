@@ -31,7 +31,7 @@ module FlatPack
         private
 
         def render_default_header_content
-          content_tag(:div, class: "flex items-center gap-3") do
+          content_tag(:div, class: "flex items-center gap-3", data: {"flat-pack--sidebar-layout-target": "headerRow"}) do
             safe_join([
               render_brand,
               (@collapsible ? render_collapsed_toggle : nil),

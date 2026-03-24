@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["sidebar", "backdrop", "desktopToggle", "collapsedToggle", "mobileToggle", "headerLabel", "headerBrand", "footer", "scrollContainer"]
+  static targets = ["sidebar", "backdrop", "desktopToggle", "collapsedToggle", "mobileToggle", "headerLabel", "headerBrand", "headerRow", "footer", "scrollContainer"]
   static values = {
     side: String,
     defaultOpen: Boolean,
@@ -357,6 +357,28 @@ export default class extends Controller {
       } else {
         item.classList.remove("px-4")
         item.classList.add("px-1", "justify-center")
+      }
+    })
+
+    // Center the header row content when collapsed (icon-only mode).
+    const headerRows = this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-layout-target="headerRow"]')
+    headerRows.forEach(row => {
+      if (visible) {
+        row.classList.remove("justify-center")
+      } else {
+        row.classList.add("justify-center")
+      }
+    })
+
+    // Adjust section title padding for collapsed (icon-only) mode.
+    const sectionTitles = this.sidebarTarget.querySelectorAll('[data-flat-pack-sidebar-section-title="true"]')
+    sectionTitles.forEach(title => {
+      if (visible) {
+        title.classList.remove("px-1")
+        title.classList.add("px-4")
+      } else {
+        title.classList.remove("px-4")
+        title.classList.add("px-1")
       }
     })
   }

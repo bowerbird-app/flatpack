@@ -1,7 +1,7 @@
 PATH
   remote: ../..
   specs:
-    flat_pack (0.1.8)
+    flat_pack (0.1.10)
       pagy (~> 9.0)
       rails (~> 8.0)
       tailwind_merge (~> 0.13)

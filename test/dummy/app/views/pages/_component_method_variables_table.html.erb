@@ -587,6 +587,15 @@
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"rounded-xl\", id: \"profile-skeleton\"" }
       ]
     },
+    sidebar_section_title: {
+      label: "Sidebar Section Title",
+      method_call: "render FlatPack::Sidebar::SectionTitle::Component.new(label: \"Main\")",
+      variables: [
+        { variable: "label", accepts: "String (required)", example: "label: \"Main\"" },
+        { variable: "collapsed", accepts: "true, false", example: "collapsed: true" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"mt-2\", data: { testid: \"section-title\" }" }
+      ]
+    },
     sidebar_layout: {
       label: "Sidebar Layout",
       method_call: "render FlatPack::SidebarLayout::Component.new(side: :left, default_open: true) do |layout| ... end",
