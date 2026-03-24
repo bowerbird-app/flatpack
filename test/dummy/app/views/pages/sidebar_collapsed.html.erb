@@ -49,3 +49,76 @@
     title: "Icon-Only Sidebar"
   ) %>
 </section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Collapsible with Groups", anchor_link: true) %>
+  <p class="text-sm text-(--surface-muted-content-color) mb-4">
+    Group header buttons collapse to icon-only alongside items. Click the hamburger toggle to expand and collapse.
+  </p>
+  <div
+    data-controller="flat-pack--sidebar-layout"
+    data-flat-pack--sidebar-layout-side-value="left"
+    data-flat-pack--sidebar-layout-default-open-value="false"
+    data-flat-pack--sidebar-layout-storage-key-value="demo-sidebar-collapsed-groups"
+    class="rounded-lg overflow-hidden h-[360px] border border-[var(--surface-border-color)] grid grid-cols-[auto_1fr] mb-4"
+  >
+    <div data-flat-pack--sidebar-layout-target="sidebar" data-flat-pack-sidebar-collapsed="true" class="h-full min-h-0">
+      <%= render FlatPack::Sidebar::Component.new do |sidebar| %>
+        <% sidebar.header do %>
+          <%= render FlatPack::Sidebar::Header::Component.new(brand_abbr: "FP", title: "FlatPack", collapsible: true) %>
+        <% end %>
+
+        <% sidebar.items do %>
+          <nav class="py-2 space-y-1">
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Overview", href: "#", icon: :home, active: true) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(label: "Alerts", href: "#", icon: :alert) %>
+            <%= render FlatPack::Sidebar::Divider::Component.new %>
+            <%= render FlatPack::Sidebar::Group::Component.new(label: "Settings", icon: :settings, default_open: false) do |group| %>
+              <% group.items do %>
+                <%= render FlatPack::Sidebar::Item::Component.new(label: "Team", href: "#", icon: :users) %>
+                <%= render FlatPack::Sidebar::Item::Component.new(label: "Permissions", href: "#", icon: :key) %>
+              <% end %>
+            <% end %>
+          </nav>
+        <% end %>
+      <% end %>
+    </div>
+    <div class="min-h-0 bg-[var(--surface-background-color)] flex items-center justify-center text-sm text-[var(--surface-muted-content-color)]">
+      Main content area
+    </div>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div
+        data-controller=&quot;flat-pack--sidebar-layout&quot;
+        data-flat-pack--sidebar-layout-side-value=&quot;left&quot;
+        data-flat-pack--sidebar-layout-default-open-value=&quot;false&quot;
+        data-flat-pack--sidebar-layout-storage-key-value=&quot;my-sidebar&quot;
+        class=&quot;grid grid-cols-[auto_1fr] h-screen overflow-hidden&quot;
+      &gt;
+        &lt;div data-flat-pack--sidebar-layout-target=&quot;sidebar&quot; data-flat-pack-sidebar-collapsed=&quot;true&quot;&gt;
+          &lt;%= render FlatPack::Sidebar::Component.new do |sidebar| %&gt;
+            &lt;% sidebar.header do %&gt;
+              &lt;%= render FlatPack::Sidebar::Header::Component.new(brand_abbr: &quot;FP&quot;, title: &quot;FlatPack&quot;, collapsible: true) %&gt;
+            &lt;% end %&gt;
+
+            &lt;% sidebar.items do %&gt;
+              &lt;nav class=&quot;py-2 space-y-1&quot;&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Overview&quot;, href: &quot;#&quot;, icon: :home) %&gt;
+                &lt;%= render FlatPack::Sidebar::Group::Component.new(label: &quot;Settings&quot;, icon: :settings) do |group| %&gt;
+                  &lt;% group.items do %&gt;
+                    &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Team&quot;, href: &quot;#&quot;, icon: :users) %&gt;
+                  &lt;% end %&gt;
+                &lt;% end %&gt;
+              &lt;/nav&gt;
+            &lt;% end %&gt;
+          &lt;% end %&gt;
+        &lt;/div&gt;
+        &lt;main&gt;...&lt;/main&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Collapsible Sidebar with Groups"
+  ) %>
+</section>
