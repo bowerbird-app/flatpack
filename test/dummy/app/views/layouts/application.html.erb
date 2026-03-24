@@ -84,7 +84,7 @@
       storage_key: "flatpack-dummy-shell"
     ) do |layout| %>
       <% layout.sidebar do %>
-        <% cache ["dummy/sidebar-shell", sidebar_side, user_signed_in?] do %>
+        <% cache ["dummy/sidebar-shell-v2", sidebar_side, user_signed_in?] do %>
           <%= render FlatPack::Sidebar::Component.new(side: sidebar_side) do |sidebar| %>
           <% sidebar.header do %>
             <%= render FlatPack::Sidebar::Header::Component.new(

@@ -3,11 +3,10 @@
   subtitle: "Category labels that group sidebar navigation items."
 ) %>
 
+<%= render "pages/component_method_variables_table", component: :sidebar_section_title %>
+
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Default (Expanded)", anchor_link: true) %>
-  <p class="text-sm text-(--surface-muted-content-color) mb-4">
-    Section titles display as small uppercase labels above groups of navigation items.
-  </p>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Default (Expanded)", anchor_link: true, subtitle: "Section titles display as small uppercase labels above groups of navigation items.") %>
   <div class="rounded-lg overflow-hidden h-[280px] w-64 mb-4">
     <%= render FlatPack::Sidebar::Component.new(class: "border border-[var(--surface-border-color)] rounded-lg") do |sidebar| %>
       <% sidebar.header do %>
@@ -49,11 +48,7 @@
 </section>
 
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Collapsed (Icon-Only)", anchor_link: true) %>
-  <p class="text-sm text-(--surface-muted-content-color) mb-4">
-    When <code class="text-xs font-mono bg-[var(--surface-card-background-color)] px-1 rounded">collapsed: true</code> is passed,
-    the label is centered and truncated. The tooltip reveals the full label on hover.
-  </p>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Collapsed (Icon-Only)", anchor_link: true, subtitle: "When collapsed: true is passed, the label is centered and truncated. A tooltip reveals the full label on hover.") %>
   <div class="rounded-lg overflow-hidden h-[280px] w-16 mb-4">
     <%= render FlatPack::Sidebar::Component.new(style: "width: 4rem", class: "border border-[var(--surface-border-color)] rounded-lg") do |sidebar| %>
       <% sidebar.header do %>
@@ -87,11 +82,7 @@
 </section>
 
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Collapsible Sidebar with Section Titles", anchor_link: true) %>
-  <p class="text-sm text-(--surface-muted-content-color) mb-4">
-    Section titles collapse alongside sidebar items when the layout controller toggles the sidebar. Hover the section title when collapsed to see the tooltip.
-    Click the hamburger icon to toggle expand/collapse.
-  </p>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Collapsible Sidebar with Section Titles", anchor_link: true, subtitle: "Section titles collapse alongside sidebar items when the layout controller toggles. Hover the section title when collapsed to see the tooltip.") %>
   <div
     data-controller="flat-pack--sidebar-layout"
     data-flat-pack--sidebar-layout-side-value="left"
@@ -164,10 +155,7 @@
 </section>
 
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Long Label Truncation", anchor_link: true) %>
-  <p class="text-sm text-(--surface-muted-content-color) mb-4">
-    Long labels are truncated with an ellipsis in both expanded and collapsed states. A tooltip reveals the full label on hover.
-  </p>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Long Label Truncation", anchor_link: true, subtitle: "Long labels are truncated with an ellipsis in both expanded and collapsed states. A tooltip reveals the full label on hover.") %>
   <div class="flex gap-4 mb-4 items-start">
     <div class="rounded-lg overflow-hidden w-64">
       <div class="border border-[var(--surface-border-color)] rounded-lg">
