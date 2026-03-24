@@ -347,6 +347,18 @@ export default class extends Controller {
         chevron.classList.add("hidden")
       }
     })
+
+    // Adjust item link/button padding and alignment for collapsed (icon-only) mode.
+    const sidebarItemLinks = this.sidebarTarget.querySelectorAll('[data-flat-pack-sidebar-item="true"]')
+    sidebarItemLinks.forEach(item => {
+      if (visible) {
+        item.classList.remove("px-1", "justify-center")
+        item.classList.add("px-4")
+      } else {
+        item.classList.remove("px-4")
+        item.classList.add("px-1", "justify-center")
+      }
+    })
   }
 
   updateCollapsedScrollContainerState() {

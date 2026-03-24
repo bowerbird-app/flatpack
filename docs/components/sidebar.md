@@ -21,6 +21,17 @@ Primary component (`FlatPack::Sidebar::Component`):
 | `side` | Symbol | `:left` | No | Border side for the shell. Allowed: `:left`, `:right`. |
 | `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into the `<aside>` wrapper. |
 
+`FlatPack::Sidebar::Item::Component`:
+
+| name | type | default | required | description |
+|------|------|---------|----------|-------------|
+| `label` | String | — | Yes | Menu item label text. |
+| `href` | String | — | Yes | Link destination URL. |
+| `icon` | Symbol or nil | `nil` | No | Heroicons v2 icon name. |
+| `active` | Boolean | `false` | No | Marks the item as the current page (`aria-current="page"`). |
+| `collapsed` | Boolean | `false` | No | Renders the item in icon-only mode: applies compact padding (`px-1`) and centered alignment (`justify-center`). Used for static collapsed demos; the `flat-pack--sidebar-layout` controller applies the same classes dynamically during collapse. |
+| `badge` | String or nil | `nil` | No | Optional badge value rendered beside the label. |
+
 ## Slots
 
 | name | type | required | description |
