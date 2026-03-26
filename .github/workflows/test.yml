@@ -76,12 +76,8 @@ jobs:
         with:
           ruby-version: '3.2'
           bundler-cache: true
-          bundler-cache-path: test/dummy-rails-7
+          working-directory: test/dummy-rails-7
           cache-version: 2
-
-      - name: Install Rails 7 dummy app dependencies
-        working-directory: test/dummy-rails-7
-        run: bundle install
 
       - name: Set up database
         working-directory: test/dummy-rails-7
