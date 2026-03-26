@@ -4,13 +4,13 @@ This document provides the exact terminal commands and configuration steps neede
 
 ## Overview
 
-FlatPack is a modern Rails 8 UI Component Library built with ViewComponent, Tailwind CSS, and Hotwire. It provides type-safe, testable components with dark mode support and accessibility features.
+FlatPack is a modern Rails UI Component Library built with ViewComponent, Tailwind CSS, and Hotwire. It provides type-safe, testable components with dark mode support and accessibility features. Supports Rails 7.1 and above.
 
-**Current Version:** 0.1.8 (Updated March 20, 2026)
+**Current Version:** 0.1.11 (Updated March 26, 2026)
 
 ## Prerequisites
 
-- Rails 8.0+
+- Rails 7.1+
 - Ruby 3.2+
 - Tailwind CSS via tailwindcss-rails gem (version 4.x) - ✓ Already installed in this project
 - Propshaft (asset pipeline) - ✓ Already installed in this project  

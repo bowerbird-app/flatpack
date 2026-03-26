@@ -1,6 +1,6 @@
 # FlatPack
 
-A modern Rails 8 UI Component Library built with ViewComponent, Tailwind CSS, and Hotwire.
+A modern Rails UI Component Library built with ViewComponent, Tailwind CSS, and Hotwire. Supports Rails 7.1+.
 
 ## Features
 
@@ -309,7 +309,7 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
 
 ## Requirements
 
-- Rails 8.0+
+- Rails 7.1+
 - Ruby 3.2+
 - Tailwind CSS 4.x (via tailwindcss-rails gem)
 - Propshaft (asset pipeline)
