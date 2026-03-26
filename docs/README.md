@@ -1,10 +1,10 @@
 # FlatPack Documentation
 
-Welcome to FlatPack - a modern Rails 8 UI Component Library built with ViewComponent, Tailwind CSS 4, and modern Rails conventions.
+Welcome to FlatPack - a modern Rails UI Component Library built with ViewComponent, Tailwind CSS 4, and modern Rails conventions. Supports Rails 7.1 and above.
 
 ## Overview
 
-FlatPack is a production-grade Rails Engine that provides a comprehensive set of UI components designed for rapid application development. It follows "The Rails Way" and integrates seamlessly with Rails 8 applications.
+FlatPack is a production-grade Rails Engine that provides a comprehensive set of UI components designed for rapid application development. It follows "The Rails Way" and integrates seamlessly with Rails 7.1+ applications.
 
 ## Table of Contents
 

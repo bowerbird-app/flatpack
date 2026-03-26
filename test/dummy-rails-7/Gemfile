@@ -1,0 +1,30 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+# Use the flatpack gem from the parent directory
+gem "flat_pack", path: "../.."
+
+# Rails 7.1
+gem "rails", "~> 7.1"
+gem "puma", ">= 5.0"
+gem "propshaft", "~> 1.0"
+gem "sqlite3", "~> 1.7"
+
+# Asset pipeline and frontend
+gem "importmap-rails"
+gem "stimulus-rails"
+gem "turbo-rails"
+
+# View components
+gem "view_component", "~> 3.0"
+
+group :development, :test do
+  gem "debug", platforms: %i[mri mingw x64_mingw]
+  # Rails 7.2 test runner is incompatible with minitest 6.x
+  gem "minitest", "~> 5.1"
+end
+
+group :test do
+  gem "capybara"
+end

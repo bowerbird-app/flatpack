@@ -65,8 +65,8 @@ module FlatPack
           generator.configure_stimulus_controllers
 
           content = index_js.read
-          assert_equal 1, content.scan('lazyLoadControllersFrom("controllers/flat_pack", application)').length
-          assert_includes content, "controllers/flat_pack"
+          assert_equal 1, content.scan('lazyLoadControllersFrom("controllers", application)').length
+          assert_includes content, "lazyLoadControllersFrom"
         end
       end
 

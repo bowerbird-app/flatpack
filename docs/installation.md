@@ -4,13 +4,13 @@ This document provides the exact terminal commands and configuration steps neede
 
 ## Overview
 
-FlatPack is a modern Rails 8 UI Component Library built with ViewComponent, Tailwind CSS, and Hotwire. It provides type-safe, testable components with dark mode support and accessibility features.
+FlatPack is a modern Rails UI Component Library built with ViewComponent, Tailwind CSS, and Hotwire. It provides type-safe, testable components with dark mode support and accessibility features. Supports Rails 7.1 and above.
 
-**Current Version:** 0.1.8 (Updated March 20, 2026)
+**Current Version:** 0.1.11 (Updated March 26, 2026)
 
 ## Prerequisites
 
-- Rails 8.0+
+- Rails 7.1+
 - Ruby 3.2+
 - Tailwind CSS via tailwindcss-rails gem (version 4.x) - ✓ Already installed in this project
 - Propshaft (asset pipeline) - ✓ Already installed in this project  
@@ -237,7 +237,7 @@ pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false
 import { lazyLoadControllersFrom } from "@hotwired/stimulus-loading"
 
 // Lazy load FlatPack controllers on first use
-lazyLoadControllersFrom("controllers/flat_pack", application)
+lazyLoadControllersFrom("controllers", application)
 ```
 
 **Why lazy loading?** FlatPack controllers are loaded when matching `data-controller` attributes appear, which reduces initial JavaScript requests and improves first-page load performance in apps that only use a subset of components per page.
@@ -264,7 +264,7 @@ If you need to manually configure JavaScript:
 2. Add to `app/javascript/controllers/index.js`:
    ```javascript
    import { lazyLoadControllersFrom } from "@hotwired/stimulus-loading"
-   lazyLoadControllersFrom("controllers/flat_pack", application)
+   lazyLoadControllersFrom("controllers", application)
    ```
 
 ### 5.2 JavaScript Controllers — esbuild / Custom Build Pipeline (Non-Importmap Apps)
@@ -748,7 +748,7 @@ If FlatPack Stimulus controllers are not working (e.g., password toggle, file up
    ```bash
    grep -n "flat_pack" app/javascript/controllers/index.js
    ```
-   Should show: `lazyLoadControllersFrom("controllers/flat_pack", application)`
+   Should show: `lazyLoadControllersFrom("controllers", application)`
 
 4. **Verify Stimulus is installed:**
    ```bash
@@ -757,7 +757,7 @@ If FlatPack Stimulus controllers are not working (e.g., password toggle, file up
 
 5. **Hard refresh the page** (Cmd+R or Ctrl+R) to reload JavaScript
 
-**Common issue:** If controllers are not initializing, verify `data-controller` values match FlatPack controller identifiers (for example, `flat-pack--date-input`) and that `lazyLoadControllersFrom("controllers/flat_pack", application)` is present.
+**Common issue:** If controllers are not initializing, verify `data-controller` values match FlatPack controller identifiers (for example, `flat-pack--date-input`) and that `lazyLoadControllersFrom("controllers", application)` is present.
 
 ### Importmap "skipped missing path" Errors
 

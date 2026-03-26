@@ -1,0 +1,12 @@
+{
+  "name": "flat_pack",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Build tooling for FlatPack component library",
+  "scripts": {
+    "build:heroicons": "node scripts/build_heroicons.js"
+  },
+  "devDependencies": {
+    "heroicons": "^2.0.0"
+  }
+}
