@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.authors = ["FlatPack Team"]
   spec.email = ["team@flatpack.dev"]
   spec.homepage = "https://github.com/flatpack/flat_pack"
-  spec.summary = "A modern Rails 8 UI component library"
-  spec.description = "FlatPack is a production-grade Rails 8 Engine providing a comprehensive UI component library built with ViewComponent, Tailwind CSS 4, and modern Rails conventions."
+  spec.summary = "A modern Rails UI component library"
+  spec.description = "FlatPack is a production-grade Rails Engine providing a comprehensive UI component library built with ViewComponent, Tailwind CSS, and modern Rails conventions. Supports Rails 7.1 and above."
   spec.license = "MIT"
 
   spec.metadata["homepage_uri"] = spec.homepage
@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = ">= 3.2.0"
 
   # Core dependencies
-  spec.add_dependency "rails", "~> 8.0"
+  spec.add_dependency "rails", ">= 7.1", "< 9"
   spec.add_dependency "view_component", "~> 3.0"
   spec.add_dependency "tailwind_merge", "~> 0.13"
   spec.add_dependency "pagy", "~> 9.0"
