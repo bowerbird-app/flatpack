@@ -85,7 +85,7 @@ module FlatPack
           content = File.read(controllers_index_path)
 
           # Check if already configured
-          if content.include?("controllers/flat_pack")
+          if content.include?("lazyLoadControllersFrom(\"controllers\"")
             say "\n⊙ Stimulus already configured for FlatPack controllers", :yellow
             return
           end
@@ -93,7 +93,7 @@ module FlatPack
           content = ensure_lazy_stimulus_loader_import(content)
 
           # Add lazy loading for FlatPack controllers
-          flat_pack_config = "\n// Lazy load FlatPack controllers on first use\nlazyLoadControllersFrom(\"controllers/flat_pack\", application)\n"
+          flat_pack_config = "\n// Lazy load FlatPack controllers on first use\nlazyLoadControllersFrom(\"controllers\", application)\n"
 
           File.write(controllers_index_path, content + flat_pack_config)
 
@@ -103,7 +103,7 @@ module FlatPack
           say "\n⊙ Stimulus controllers index not found", :yellow
           say "  If using Stimulus, manually add to app/javascript/controllers/index.js:", :yellow
           say "  import { lazyLoadControllersFrom } from \"@hotwired/stimulus-loading\"", :cyan
-          say "  lazyLoadControllersFrom(\"controllers/flat_pack\", application)", :cyan
+          say "  lazyLoadControllersFrom(\"controllers\", application)", :cyan
         end
       end
 

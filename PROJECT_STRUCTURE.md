@@ -242,7 +242,7 @@ Each interactive component ships a namespaced Stimulus controller (e.g. `flat-pa
 ```javascript
 // Host app automatically loads controllers
 import { lazyLoadControllersFrom } from "@hotwired/stimulus-loading"
-lazyLoadControllersFrom("controllers/flat_pack", application)
+lazyLoadControllersFrom("controllers", application)
 ```
 
 ## Testing

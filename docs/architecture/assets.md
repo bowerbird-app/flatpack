@@ -228,7 +228,7 @@ FlatPack's Stimulus controllers are auto-registered via importmap:
 ```javascript
 // app/javascript/controllers/index.js
 import { lazyLoadControllersFrom } from "@hotwired/stimulus-loading"
-lazyLoadControllersFrom("controllers/flat_pack", application)
+lazyLoadControllersFrom("controllers", application)
 ```
 
 ### Usage
