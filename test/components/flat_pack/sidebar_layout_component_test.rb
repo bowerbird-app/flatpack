@@ -137,7 +137,8 @@ module FlatPack
 
         assert_includes page.native.to_html, "min-w-0"
         assert_includes page.native.to_html, "min-h-0"
-        assert_includes page.native.to_html, "overflow-hidden"
+        assert_includes page.native.to_html, "overflow-x-visible"
+        assert_includes page.native.to_html, "overflow-y-hidden"
       end
 
       def test_container_is_locked_to_viewport_height
