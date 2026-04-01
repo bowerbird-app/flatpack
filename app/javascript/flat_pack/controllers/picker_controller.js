@@ -268,10 +268,13 @@ export default class extends Controller {
     const isChecked = isSelected ? "checked" : ""
     const controlType = this.selectionModeValue === "single" ? "radio" : "checkbox"
     const controlName = `picker_${this.#escapeHtml(this.pickerIdValue)}_selection`
-    const controlClass = controlType === "checkbox" ? this.#checkboxInputClasses() : "mt-1 cursor-pointer"
+    const hasThumbnailPreview = kind === "image" && Boolean(thumbnailUrl)
+    const controlClass = hasThumbnailPreview
+      ? "sr-only"
+      : (controlType === "checkbox" ? this.#checkboxInputClasses() : "mt-1 cursor-pointer")
     const meta = this.#escapeHtml(this.#metaText(item))
 
-    const preview = kind === "image" && thumbnailUrl
+    const preview = hasThumbnailPreview
       ? `
         <span class="relative inline-flex h-14 w-20 shrink-0 overflow-hidden rounded">
           ${this.#selectionIndicatorMarkup(isSelected, "left-2 top-2")}

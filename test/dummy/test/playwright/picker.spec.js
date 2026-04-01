@@ -1,7 +1,7 @@
 const { test, expect } = require("@playwright/test")
 
 async function selectPickerRow(container, label) {
-  await container.locator("label").filter({ hasText: label }).first().locator("input[data-item-id]").setChecked(true, { force: true })
+  await container.locator("label").filter({ hasText: label }).first().click()
 }
 
 test.describe("picker demos", () => {
@@ -67,8 +67,11 @@ test.describe("picker demos", () => {
     const inlinePicker = page.locator("#picker-demo-inline")
     const outputField = page.locator("#picker-inline-selected-field")
     const heroRow = inlinePicker.locator("label").filter({ hasText: "Homepage Hero" }).first()
+    const heroInput = heroRow.locator("input[data-item-id]")
 
     await expect(inlinePicker).toBeVisible()
+    await expect(heroInput).toHaveClass(/sr-only/)
+    await expect(heroRow.locator("[data-picker-selection-indicator]")).toBeVisible()
     await selectPickerRow(inlinePicker, "Homepage Hero")
     await expect(heroRow.locator("[data-picker-selection-indicator]")).toHaveClass(/bg-\(--primary-color\)/)
 
