@@ -7,10 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.12] - 2026-04-01
+
 ### Security
 - Updated Rails and Active Storage dependency bundles to patched releases that address the Active Storage proxy-mode multi-range request DoS advisory. The root and Rails 8 dummy bundles now resolve to Rails 8.1.3, and the Rails 7 dummy bundle now resolves to Rails 7.2.3.1.
-
-## [0.1.12] - 2026-04-01
 
 ### Changed
 - `FlatPack::Picker::Component` now renders inline by default. Modal-backed pickers must opt in with `modal: true`.
