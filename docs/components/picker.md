@@ -32,7 +32,7 @@ Use Picker when users need to choose image/file assets and your feature controls
 | `context` | Hash | `{}` | No | Arbitrary hash returned in confirm event payload. |
 | `empty_state_text` | String | `"No assets found"` | No | Empty-results text. |
 | `results_layout` | Symbol | `:list` | No | Allowed: `:list`, `:grid`. |
-| `modal` | Boolean | `true` | No | When `true`, renders inside `FlatPack::Modal::Component`. When `false`, renders inline on the page. |
+| `modal` | Boolean | `false` | No | When `true`, renders inside `FlatPack::Modal::Component`. When `false`, renders inline on the page. |
 | `auto_confirm` | Boolean | `false` | No | When `true` and `selection_mode: :single`, selecting an item immediately confirms it. |
 | `modal_body_height_mode` | Symbol | `:fixed` | No | Passed to modal body sizing (`:auto`, `:fixed`, `:min`). |
 | `modal_body_height` | String | `"clamp(20rem, 55vh, 30rem)"` | No | Passed to modal body height style. |
@@ -53,12 +53,12 @@ None.
 | `results_layout: :grid` | Thumbnail grid cards with pressed-state indicator. |
 | `output_mode: :event` | Emits confirm event only. |
 | `output_mode: :field` | Also writes selected JSON to hidden field and optional `output_target`. |
-| `modal: false` | Renders the picker inline without a modal backdrop or modal close behavior. |
+| `modal: false` | Renders the picker inline without a modal backdrop or modal close behavior. This is the default. |
 | `selection_mode: :single, auto_confirm: true` | Selecting an item immediately syncs field output, emits `flat-pack:picker:confirm`, and closes the modal when modal-backed. |
 
 ## Examples
 
-### Default modal picker
+### Default inline picker
 
 ```erb
 <%= render FlatPack::Picker::Component.new(
@@ -71,28 +71,144 @@ None.
 ) %>
 ```
 
-### Inline picker
+### Modal picker
 
 ```erb
+<%= render FlatPack::Button::Component.new(
+  text: "Open Asset Picker",
+  icon: "image",
+  data: {
+    action: "click->flat-pack--modal#open",
+    "modal-id": "asset-picker-modal"
+  }
+) %>
+
 <%= render FlatPack::Picker::Component.new(
-  id: "inline-asset-picker",
+  id: "asset-picker-modal",
   items: @assets,
+  modal: true,
   searchable: true,
   search_mode: :local,
-  modal: false
+  selection_mode: :multiple,
+  context: { target: "composer" }
+) %>
+```
+
+### Inline auto-confirm picker
+
+```erb
+<input id="picker-inline-selected-field" type="text" readonly class="w-full rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-2 text-xs text-(--surface-muted-content-color)" placeholder="Inline selection JSON appears here">
+
+<%= render FlatPack::Picker::Component.new(
+  id: "picker-demo-inline",
+  title: "Inline Asset Picker",
+  subtitle: "Choose one item to confirm immediately.",
+  items: @picker_demo_items,
+  searchable: true,
+  search_mode: :local,
+  selection_mode: :single,
+  auto_confirm: true,
+  modal: false,
+  output_mode: :field,
+  output_target: "#picker-inline-selected-field",
+  confirm_text: "Use Inline Selection",
+  context: { target: "picker-demo-inline" }
+) %>
+```
+
+### Image picker
+
+```erb
+<%= render FlatPack::Button::Component.new(
+  text: "Open Image Picker",
+  icon: "image",
+  data: {
+    action: "click->flat-pack--modal#open",
+    "modal-id": "picker-demo-images"
+  }
+) %>
+
+<%= render FlatPack::Picker::Component.new(
+  id: "picker-demo-images",
+  title: "Select Image",
+  subtitle: "Choose one or more image assets.",
+  items: @picker_demo_items,
+  modal: true,
+  accepted_kinds: [:image],
+  selection_mode: :multiple,
+  searchable: true,
+  search_mode: :local,
+  results_layout: :grid,
+  modal_body_height_mode: :fixed,
+  modal_body_height: "clamp(18rem, 50vh, 26rem)",
+  confirm_text: "Use Image",
+  context: { target: "picker-demo-images" }
 ) %>
 ```
 
 ### Single-select auto-confirm picker
 
 ```erb
+<%= render FlatPack::Button::Component.new(
+  text: "Open Auto-Confirm Picker",
+  icon: "image",
+  style: :secondary,
+  data: {
+    action: "click->flat-pack--modal#open",
+    "modal-id": "picker-demo-auto-confirm"
+  }
+) %>
+
+<input id="picker-auto-confirm-field" type="text" readonly class="w-full rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-2 text-xs text-(--surface-muted-content-color)" placeholder="Auto-confirm selection JSON appears here">
+
 <%= render FlatPack::Picker::Component.new(
-  id: "avatar-picker",
-  items: @images,
+  id: "picker-demo-auto-confirm",
+  title: "Choose One Asset",
+  subtitle: "Selecting an item confirms immediately and closes the modal.",
+  items: @picker_demo_items,
+  modal: true,
+  searchable: true,
+  search_mode: :local,
   selection_mode: :single,
   auto_confirm: true,
   output_mode: :field,
-  output_target: "#selected-avatar-field"
+  output_target: "#picker-auto-confirm-field",
+  modal_body_height_mode: :fixed,
+  modal_body_height: "clamp(18rem, 50vh, 24rem)",
+  confirm_text: "Use Asset",
+  context: { target: "picker-demo-auto-confirm" }
+) %>
+```
+
+### Field output picker
+
+```erb
+<%= render FlatPack::Button::Component.new(
+  text: "Open Field Picker",
+  icon: "file",
+  data: {
+    action: "click->flat-pack--modal#open",
+    "modal-id": "picker-demo-field"
+  }
+) %>
+
+<input id="picker-selected-assets-field" type="text" readonly class="w-full rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-2 text-xs text-(--surface-muted-content-color)" placeholder="Selected JSON appears here">
+
+<%= render FlatPack::Picker::Component.new(
+  id: "picker-demo-field",
+  title: "Select Files",
+  subtitle: "Writes selected items to a consumer-provided field selector.",
+  items: @picker_demo_items,
+  modal: true,
+  accepted_kinds: [:file],
+  searchable: true,
+  search_mode: :local,
+  modal_body_height_mode: :fixed,
+  modal_body_height: "24rem",
+  output_mode: :field,
+  output_target: "#picker-selected-assets-field",
+  confirm_text: "Store Selection",
+  context: { target: "picker-demo-field" }
 ) %>
 ```
 
@@ -110,8 +226,8 @@ Confirm event contract:
 
 ## Behavior notes
 
-- `modal: true` remains the default, so existing picker triggers and modal-based flows continue to work unchanged.
-- `modal: false` renders the same picker content inline, including header text, search UI, result list/grid, and action buttons.
+- `modal: false` is the default, so picker content renders inline unless a consumer explicitly opts into modal presentation.
+- `modal: true` keeps the existing modal-backed behavior for trigger/button flows.
 - `auto_confirm` only applies to newly selected items in `selection_mode: :single`.
 - In `output_mode: :field`, field output is written before the confirm event is emitted.
 - When `auto_confirm: true` and `modal: true`, the picker closes programmatically after dispatching `flat-pack:picker:confirm`.

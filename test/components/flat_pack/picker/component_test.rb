@@ -27,21 +27,25 @@ module FlatPack
         ]
       end
 
-      def test_renders_picker_modal_shell
-        render_inline(Component.new(id: "demo-picker", items: sample_items))
+      def test_renders_picker_modal_shell_when_modal_enabled
+        render_inline(Component.new(id: "demo-picker", items: sample_items, modal: true))
 
         assert_selector "div#demo-picker[data-controller='flat-pack--modal']"
         assert_selector "div[data-controller='flat-pack--picker'][data-flat-pack--picker-modal-value='true']"
         assert_includes rendered_content, "demo-picker"
       end
 
-      def test_renders_inline_picker_without_modal_wrapper
-        render_inline(Component.new(id: "inline-picker", items: sample_items, modal: false))
+      def test_renders_inline_picker_without_modal_wrapper_by_default
+        render_inline(Component.new(id: "inline-picker", items: sample_items))
 
         assert_selector "div#inline-picker"
         assert_selector "div#inline-picker div[data-controller='flat-pack--picker'][data-flat-pack--picker-modal-value='false']"
         assert_no_selector "div#inline-picker[data-controller='flat-pack--modal']"
         assert_no_match(/flat-pack--modal#close/, rendered_content)
+        assert_match(/border-\[var\(--modal-border-color\)\]/, rendered_content)
+        assert_match(/bg-\[var\(--modal-surface-color\)\]/, rendered_content)
+        assert_match(/shadow-lg/, rendered_content)
+        assert_match(/max-w-2xl/, rendered_content)
       end
 
       def test_defaults_to_list_results_layout
@@ -60,6 +64,13 @@ module FlatPack
         render_inline(Component.new(id: "auto-confirm-picker", items: sample_items, selection_mode: :single, auto_confirm: true))
 
         assert_selector "div[data-flat-pack--picker-selection-mode-value='single'][data-flat-pack--picker-auto-confirm-value='true']"
+      end
+
+      def test_hides_action_buttons_for_single_select_auto_confirm
+        render_inline(Component.new(id: "auto-confirm-picker", items: sample_items, selection_mode: :single, auto_confirm: true))
+
+        assert_no_selector "button", text: "Close"
+        assert_no_selector "button", text: "Use Selected"
       end
 
       def test_supports_grid_results_layout
@@ -108,8 +119,8 @@ module FlatPack
         end
       end
 
-      def test_uses_fixed_modal_body_height_by_default
-        render_inline(Component.new(id: "stable-height-picker", items: sample_items))
+      def test_uses_fixed_modal_body_height_by_default_when_modal_enabled
+        render_inline(Component.new(id: "stable-height-picker", items: sample_items, modal: true))
 
         assert_selector "div[style*='--flatpack-modal-body-height: clamp(20rem, 55vh, 30rem)'][style*='height: var(--flatpack-modal-body-height)']"
       end

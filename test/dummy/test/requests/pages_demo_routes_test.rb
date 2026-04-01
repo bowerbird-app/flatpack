@@ -128,6 +128,19 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "id=\"picker-inline-selected-field\""
     assert_includes response.body, "id=\"picker-auto-confirm-field\""
     assert_includes response.body, "data-controller=\"picker-demo\""
+    assert_includes response.body, "id=\"picker-demo-inline\""
+    assert_includes response.body, "output_target: &quot;#picker-inline-selected-field&quot;"
+    assert_includes response.body, "accepted_kinds: [:image]"
+    assert_includes response.body, "output_target: &quot;#picker-auto-confirm-field&quot;"
+    assert_includes response.body, "output_target: &quot;#picker-selected-assets-field&quot;"
+    assert_includes response.body, "modal: true"
+    assert_includes response.body, "confirm_text: &quot;Use Inline Selection&quot;"
+    assert_includes response.body, "results_layout: :grid"
+    assert_includes response.body, "confirm_text: &quot;Use Asset&quot;"
+    assert_includes response.body, "confirm_text: &quot;Store Selection&quot;"
+
+    assert_select "#picker-demo-auto-confirm .mt-4.flex.items-center.justify-end.gap-2", count: 0
+    assert_select "#picker-demo-auto-confirm button", text: "Use Asset", count: 0
   end
 
   test "text input demo variable table includes value option" do

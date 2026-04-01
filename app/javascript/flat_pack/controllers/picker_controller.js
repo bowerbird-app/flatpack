@@ -87,8 +87,8 @@ export default class extends Controller {
       this.selectedIds.delete(itemId)
     }
 
-    // Grid indicators are custom markup, so refresh cards to reflect checked state.
-    if (this.#isGridLayout()) {
+    // Custom selection indicators need a rerender to reflect checked state.
+    if (this.#resultsNeedSelectionRefresh()) {
       this.#renderResults(this.filteredItems)
     }
 
@@ -264,14 +264,19 @@ export default class extends Controller {
     const contentType = this.#escapeHtml(String(item.contentType || ""))
     const byteSize = Number.isFinite(item.byteSize) ? item.byteSize : ""
     const thumbnailUrl = this.#escapeHtml(String(item.thumbnailUrl || ""))
-    const isChecked = this.selectedIds.has(String(item.id)) ? "checked" : ""
+    const isSelected = this.selectedIds.has(String(item.id))
+    const isChecked = isSelected ? "checked" : ""
     const controlType = this.selectionModeValue === "single" ? "radio" : "checkbox"
     const controlName = `picker_${this.#escapeHtml(this.pickerIdValue)}_selection`
     const controlClass = controlType === "checkbox" ? this.#checkboxInputClasses() : "mt-1 cursor-pointer"
     const meta = this.#escapeHtml(this.#metaText(item))
 
     const preview = kind === "image" && thumbnailUrl
-      ? `<img src="${thumbnailUrl}" alt="${label} preview" class="h-14 w-20 rounded object-cover" loading="lazy">`
+      ? `
+        <span class="relative inline-flex h-14 w-20 shrink-0 overflow-hidden rounded">
+          ${this.#selectionIndicatorMarkup(isSelected, "left-2 top-2")}
+          <img src="${thumbnailUrl}" alt="${label} preview" class="h-14 w-20 rounded object-cover" loading="lazy">
+        </span>`
       : `<span class="inline-flex h-10 w-10 items-center justify-center rounded border border-(--surface-border-color) text-sm text-(--surface-muted-content-color)">${kind === "image" ? "IMG" : "FILE"}</span>`
 
     return `
@@ -286,7 +291,7 @@ export default class extends Controller {
             data-action="change->flat-pack--picker#handleSelectionChange"
           >
           ${preview}
-          <span class="min-w-0 flex-1 ml-(--checkbox-label-gap)">
+          <span class="min-w-0 flex-1">
             <span class="block truncate text-sm font-medium text-(--surface-content-color)">${label}</span>
             <span class="block truncate text-xs text-(--surface-muted-content-color)">${meta}</span>
           </span>
@@ -320,6 +325,19 @@ export default class extends Controller {
     ].join(" ")
   }
 
+  #selectionIndicatorMarkup(isSelected, positionClasses = "") {
+    const indicatorClasses = this.#selectionIndicatorClasses(isSelected)
+
+    return `
+      <span
+        class="pointer-events-none absolute z-10 inline-flex h-5 w-5 items-center justify-center rounded-full border-2 border-white text-white ring-1 ${this.#escapeHtml(positionClasses)} ${indicatorClasses}"
+        data-picker-selection-indicator
+      >
+        <span class="h-1.5 w-1.5 rounded-full bg-white ${isSelected ? "opacity-100" : "opacity-0"}"></span>
+      </span>
+    `
+  }
+
   #gridItemMarkup(item) {
     const itemId = this.#escapeHtml(String(item.id))
     const kind = item.kind === "image" ? "image" : "file"
@@ -329,9 +347,7 @@ export default class extends Controller {
     const byteSize = Number.isFinite(item.byteSize) ? item.byteSize : ""
     const thumbnailUrl = this.#escapeHtml(String(item.thumbnailUrl || ""))
     const isChecked = this.selectedIds.has(String(item.id)) ? "checked" : ""
-    const indicatorClasses = this.selectedIds.has(String(item.id))
-      ? "bg-(--primary-color) ring-(--primary-color)"
-      : "bg-black/30 ring-black/20"
+    const indicatorClasses = this.#selectionIndicatorClasses(this.selectedIds.has(String(item.id)))
     const isPressed = this.selectedIds.has(String(item.id)) ? "true" : "false"
 
     const preview = kind === "image" && thumbnailUrl
@@ -361,12 +377,22 @@ export default class extends Controller {
     `
   }
 
+  #selectionIndicatorClasses(isSelected) {
+    return isSelected
+      ? "bg-(--primary-color) ring-(--primary-color)"
+      : "bg-black/30 ring-black/20"
+  }
+
   #resultsContainerClass() {
     if (this.#isGridLayout()) {
       return "grid grid-cols-2 gap-3 sm:grid-cols-3"
     }
 
     return "space-y-2"
+  }
+
+  #resultsNeedSelectionRefresh() {
+    return this.#isGridLayout() || this.resultsTarget.querySelector("[data-picker-selection-indicator]") !== null
   }
 
   #isGridLayout() {

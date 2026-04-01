@@ -6,16 +6,17 @@
 
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(
-      title: "Event Output",
+      title: "Local Search",
+      anchor: "event-output-local-search",
       anchor_link: true,
-      subtitle: "Selection is emitted as an event so consumers can map to any workflow."
+      subtitle: "Browse assets already on the page, then confirm a selection to see the picker event payload."
     ) %>
 
     <%= render FlatPack::Card::Component.new(class: "mt-6") do |card| %>
       <% card.body do %>
         <div class="space-y-4">
           <p class="text-sm text-(--surface-muted-content-color)">
-            This picker emits <code>flat-pack:picker:confirm</code>. These demos also pin modal body height so search states do not cause layout jumps.
+            Use this when you already have asset data loaded and want to handle the confirmed selection in your own UI.
           </p>
 
           <div class="flex flex-wrap gap-2">
@@ -27,7 +28,81 @@
                 "modal-id": "picker-demo-local"
               }
             ) %>
+          </div>
 
+          <div class="rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-3">
+            <p class="text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">Last Confirmed Picker</p>
+            <p id="picker-demo-local-last-picker" class="mt-1 text-sm text-(--surface-content-color)" data-picker-demo-output-for="picker-demo-local" data-picker-demo-target="lastPickerId">none</p>
+            <p class="text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">Selection Summary</p>
+            <ul id="picker-demo-local-event-output" class="mt-2 space-y-1 text-sm" data-picker-demo-output-for="picker-demo-local" data-picker-demo-target="eventOutput">
+              <li class="text-(--surface-muted-content-color)">No items selected yet.</li>
+            </ul>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      class: "mt-6",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Button::Component.new(
+          text: "Open Local Picker",
+          icon: "image",
+          data: {
+            action: "click-&gt;flat-pack--modal#open",
+            "modal-id": "picker-demo-local"
+          }
+        ) %&gt;
+
+        &lt;%= render FlatPack::Picker::Component.new(
+          id: "picker-demo-local",
+          title: "Select Assets",
+          subtitle: "Local search across image and file assets with a fixed modal body height.",
+          items: @picker_demo_items,
+          modal: true,
+          searchable: true,
+          search_mode: :local,
+          modal_body_height_mode: :fixed,
+          modal_body_height: "clamp(20rem, 55vh, 30rem)",
+          confirm_text: "Use Selection",
+          context: { target: "picker-demo-local" }
+        ) %&gt;
+      CODE
+    ) %>
+
+    <%= render FlatPack::Picker::Component.new(
+      id: "picker-demo-local",
+      title: "Select Assets",
+      subtitle: "Local search across image and file assets with a fixed modal body height.",
+      items: @picker_demo_items,
+      modal: true,
+      searchable: true,
+      search_mode: :local,
+      modal_body_height_mode: :fixed,
+      modal_body_height: "clamp(20rem, 55vh, 30rem)",
+      confirm_text: "Use Selection",
+      context: {target: "picker-demo-local"}
+    ) %>
+  </section>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Remote Search",
+      anchor: "event-output-remote-search",
+      anchor_link: true,
+      subtitle: "Fetch matching assets from the server while keeping the same confirmation flow as the local picker."
+    ) %>
+
+    <%= render FlatPack::Card::Component.new(class: "mt-6") do |card| %>
+      <% card.body do %>
+        <div class="space-y-4">
+          <p class="text-sm text-(--surface-muted-content-color)">
+            Use this when the asset list is too large to preload and you want search results to come from an endpoint instead.
+          </p>
+
+          <div class="flex flex-wrap gap-2">
             <%= render FlatPack::Button::Component.new(
               text: "Open Remote Picker",
               icon: "search",
@@ -41,9 +116,9 @@
 
           <div class="rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-3">
             <p class="text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">Last Confirmed Picker</p>
-            <p class="mt-1 text-sm text-(--surface-content-color)" data-picker-demo-target="lastPickerId">none</p>
+            <p id="picker-demo-remote-last-picker" class="mt-1 text-sm text-(--surface-content-color)" data-picker-demo-output-for="picker-demo-remote" data-picker-demo-target="lastPickerId">none</p>
             <p class="text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">Selection Summary</p>
-            <ul class="mt-2 space-y-1 text-sm" data-picker-demo-target="eventOutput">
+            <ul id="picker-demo-remote-event-output" class="mt-2 space-y-1 text-sm" data-picker-demo-output-for="picker-demo-remote" data-picker-demo-target="eventOutput">
               <li class="text-(--surface-muted-content-color)">No items selected yet.</li>
             </ul>
           </div>
@@ -51,17 +126,36 @@
       <% end %>
     <% end %>
 
-    <%= render FlatPack::Picker::Component.new(
-      id: "picker-demo-local",
-      title: "Select Assets",
-      subtitle: "Local search across image and file assets with a fixed modal body height.",
-      items: @picker_demo_items,
-      searchable: true,
-      search_mode: :local,
-      modal_body_height_mode: :fixed,
-      modal_body_height: "clamp(20rem, 55vh, 30rem)",
-      confirm_text: "Use Selection",
-      context: {target: "picker-demo-local"}
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      class: "mt-6",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Button::Component.new(
+          text: "Open Remote Picker",
+          icon: "search",
+          style: :secondary,
+          data: {
+            action: "click-&gt;flat-pack--modal#open",
+            "modal-id": "picker-demo-remote"
+          }
+        ) %&gt;
+
+        &lt;%= render FlatPack::Picker::Component.new(
+          id: "picker-demo-remote",
+          title: "Search Remote Assets",
+          subtitle: "Remote search keeps a fixed modal body height for stable layout while result counts change.",
+          items: @picker_demo_items.first(2),
+          modal: true,
+          searchable: true,
+          search_mode: :remote,
+          search_endpoint: demo_picker_results_path,
+          modal_body_height_mode: :fixed,
+          modal_body_height: "clamp(20rem, 55vh, 30rem)",
+          confirm_text: "Use Remote Selection",
+          context: { target: "picker-demo-remote" }
+        ) %&gt;
+      CODE
     ) %>
 
     <%= render FlatPack::Picker::Component.new(
@@ -69,6 +163,7 @@
       title: "Search Remote Assets",
       subtitle: "Remote search keeps a fixed modal body height for stable layout while result counts change.",
       items: @picker_demo_items.first(2),
+      modal: true,
       searchable: true,
       search_mode: :remote,
       search_endpoint: demo_picker_results_path,
@@ -81,54 +176,75 @@
 
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(
-      title: "Inline Auto-Confirm",
+      title: "Inline Picker",
       anchor: "inline-auto-confirm",
       anchor_link: true,
-      subtitle: "Inline rendering keeps the picker on the page while single-select auto-confirm updates field output immediately."
+      subtitle: "Keep the picker visible on the page and write the chosen item to a field as soon as it is clicked."
     ) %>
 
-    <%= render FlatPack::Card::Component.new(class: "mt-6") do |card| %>
-      <% card.body do %>
-        <div class="space-y-4">
-          <p class="text-sm text-(--surface-muted-content-color)">
-            This picker renders inline (<code>modal: false</code>) and auto-confirms each single selection without attempting modal close behavior.
-          </p>
+    <div class="mt-6 space-y-4">
+      <p class="text-sm text-(--surface-muted-content-color)">
+        This example is useful for sidebars, forms, or editors where the picker should stay visible instead of opening in a modal.
+      </p>
 
-          <input id="picker-inline-selected-field" type="text" readonly class="w-full rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-2 text-xs text-(--surface-muted-content-color)" placeholder="Inline selection JSON appears here">
+      <input id="picker-inline-selected-field" type="text" readonly class="w-full rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-2 text-xs text-(--surface-muted-content-color)" placeholder="Inline selection JSON appears here">
 
-          <%= render FlatPack::Picker::Component.new(
-            id: "picker-demo-inline",
-            title: "Inline Asset Picker",
-            subtitle: "Choose one item to confirm immediately.",
-            items: @picker_demo_items,
-            searchable: true,
-            search_mode: :local,
-            selection_mode: :single,
-            auto_confirm: true,
-            modal: false,
-            output_mode: :field,
-            output_target: "#picker-inline-selected-field",
-            confirm_text: "Use Inline Selection",
-            context: {target: "picker-demo-inline"}
-          ) %>
-        </div>
-      <% end %>
-    <% end %>
+      <%= render FlatPack::Picker::Component.new(
+        id: "picker-demo-inline",
+        title: "Inline Asset Picker",
+        subtitle: "Choose one item to confirm immediately.",
+        items: @picker_demo_items,
+        searchable: true,
+        search_mode: :local,
+        selection_mode: :single,
+        auto_confirm: true,
+        modal: false,
+        output_mode: :field,
+        output_target: "#picker-inline-selected-field",
+        confirm_text: "Use Inline Selection",
+        context: {target: "picker-demo-inline"}
+      ) %>
+    </div>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      class: "mt-6",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;input id="picker-inline-selected-field" type="text" readonly class="w-full rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-2 text-xs text-(--surface-muted-content-color)" placeholder="Inline selection JSON appears here"&gt;
+
+        &lt;%= render FlatPack::Picker::Component.new(
+          id: "picker-demo-inline",
+          title: "Inline Asset Picker",
+          subtitle: "Choose one item to confirm immediately.",
+          items: @picker_demo_items,
+          searchable: true,
+          search_mode: :local,
+          selection_mode: :single,
+          auto_confirm: true,
+          modal: false,
+          output_mode: :field,
+          output_target: "#picker-inline-selected-field",
+          confirm_text: "Use Inline Selection",
+          context: { target: "picker-demo-inline" }
+        ) %&gt;
+      CODE
+    ) %>
   </section>
 
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(
-      title: "Image Picker",
+      title: "Images",
       anchor: "image-picker",
       anchor_link: true,
-      subtitle: "Image-only picker demo for media selection workflows."
+      subtitle: "Choose one or more images from a thumbnail grid without showing non-image files."
     ) %>
 
     <%= render FlatPack::Card::Component.new(class: "mt-6") do |card| %>
       <% card.body do %>
         <div class="space-y-4">
           <p class="text-sm text-(--surface-muted-content-color)">
-            This configuration filters to image assets only, supports multi-select, shows thumbnail cards in a grid, and keeps modal height stable during empty search results.
+            This is the media-library version of the picker: image-only, searchable, and optimized for browsing thumbnails.
           </p>
 
           <div class="flex flex-wrap gap-2">
@@ -145,11 +261,45 @@
       <% end %>
     <% end %>
 
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      class: "mt-6",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Button::Component.new(
+          text: "Open Image Picker",
+          icon: "image",
+          data: {
+            action: "click-&gt;flat-pack--modal#open",
+            "modal-id": "picker-demo-images"
+          }
+        ) %&gt;
+
+        &lt;%= render FlatPack::Picker::Component.new(
+          id: "picker-demo-images",
+          title: "Select Image",
+          subtitle: "Choose one or more image assets.",
+          items: @picker_demo_items,
+          modal: true,
+          accepted_kinds: [:image],
+          selection_mode: :multiple,
+          searchable: true,
+          search_mode: :local,
+          results_layout: :grid,
+          modal_body_height_mode: :fixed,
+          modal_body_height: "clamp(18rem, 50vh, 26rem)",
+          confirm_text: "Use Image",
+          context: { target: "picker-demo-images" }
+        ) %&gt;
+      CODE
+    ) %>
+
     <%= render FlatPack::Picker::Component.new(
       id: "picker-demo-images",
       title: "Select Image",
       subtitle: "Choose one or more image assets.",
       items: @picker_demo_items,
+      modal: true,
       accepted_kinds: [:image],
       selection_mode: :multiple,
       searchable: true,
@@ -164,15 +314,19 @@
 
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(
-      title: "Single Select Auto-Confirm",
+      title: "Single Select",
       anchor: "single-select-auto-confirm",
       anchor_link: true,
-      subtitle: "Modal-backed single selection can confirm and close immediately after a user chooses an item."
+      subtitle: "Pick one asset and close the modal right away, with the selection written to a field."
     ) %>
 
     <%= render FlatPack::Card::Component.new(class: "mt-6") do |card| %>
       <% card.body do %>
         <div class="space-y-4">
+          <p class="text-sm text-(--surface-muted-content-color)">
+            Use this when a single click should finish the job, such as choosing a cover image or attaching one file.
+          </p>
+
           <div class="flex flex-wrap gap-2">
             <%= render FlatPack::Button::Component.new(
               text: "Open Auto-Confirm Picker",
@@ -190,11 +344,49 @@
       <% end %>
     <% end %>
 
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      class: "mt-6",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Button::Component.new(
+          text: "Open Auto-Confirm Picker",
+          icon: "image",
+          style: :secondary,
+          data: {
+            action: "click-&gt;flat-pack--modal#open",
+            "modal-id": "picker-demo-auto-confirm"
+          }
+        ) %&gt;
+
+        &lt;input id="picker-auto-confirm-field" type="text" readonly class="w-full rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-2 text-xs text-(--surface-muted-content-color)" placeholder="Auto-confirm selection JSON appears here"&gt;
+
+        &lt;%= render FlatPack::Picker::Component.new(
+          id: "picker-demo-auto-confirm",
+          title: "Choose One Asset",
+          subtitle: "Selecting an item confirms immediately and closes the modal.",
+          items: @picker_demo_items,
+          modal: true,
+          searchable: true,
+          search_mode: :local,
+          selection_mode: :single,
+          auto_confirm: true,
+          output_mode: :field,
+          output_target: "#picker-auto-confirm-field",
+          modal_body_height_mode: :fixed,
+          modal_body_height: "clamp(18rem, 50vh, 24rem)",
+          confirm_text: "Use Asset",
+          context: { target: "picker-demo-auto-confirm" }
+        ) %&gt;
+      CODE
+    ) %>
+
     <%= render FlatPack::Picker::Component.new(
       id: "picker-demo-auto-confirm",
       title: "Choose One Asset",
       subtitle: "Selecting an item confirms immediately and closes the modal.",
       items: @picker_demo_items,
+      modal: true,
       searchable: true,
       search_mode: :local,
       selection_mode: :single,
@@ -210,15 +402,19 @@
 
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(
-      title: "Field Output",
+      title: "Files to a Field",
       anchor: "field-output",
       anchor_link: true,
-      subtitle: "Picker can also write selected JSON to a target field for form-driven workflows."
+      subtitle: "Pick files and write the selected JSON straight into a target field for form submissions or previews."
     ) %>
 
     <%= render FlatPack::Card::Component.new(class: "mt-6") do |card| %>
       <% card.body do %>
         <div class="space-y-4">
+          <p class="text-sm text-(--surface-muted-content-color)">
+            This example is useful when another part of the page expects the picker result in a hidden or read-only form field.
+          </p>
+
           <div class="flex flex-wrap gap-2">
             <%= render FlatPack::Button::Component.new(
               text: "Open Field Picker",
@@ -235,11 +431,47 @@
       <% end %>
     <% end %>
 
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      class: "mt-6",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Button::Component.new(
+          text: "Open Field Picker",
+          icon: "file",
+          data: {
+            action: "click-&gt;flat-pack--modal#open",
+            "modal-id": "picker-demo-field"
+          }
+        ) %&gt;
+
+        &lt;input id="picker-selected-assets-field" type="text" readonly class="w-full rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-2 text-xs text-(--surface-muted-content-color)" placeholder="Selected JSON appears here"&gt;
+
+        &lt;%= render FlatPack::Picker::Component.new(
+          id: "picker-demo-field",
+          title: "Select Files",
+          subtitle: "Writes selected items to a consumer-provided field selector.",
+          items: @picker_demo_items,
+          modal: true,
+          accepted_kinds: [:file],
+          searchable: true,
+          search_mode: :local,
+          modal_body_height_mode: :fixed,
+          modal_body_height: "24rem",
+          output_mode: :field,
+          output_target: "#picker-selected-assets-field",
+          confirm_text: "Store Selection",
+          context: { target: "picker-demo-field" }
+        ) %&gt;
+      CODE
+    ) %>
+
     <%= render FlatPack::Picker::Component.new(
       id: "picker-demo-field",
       title: "Select Files",
       subtitle: "Writes selected items to a consumer-provided field selector.",
       items: @picker_demo_items,
+      modal: true,
       accepted_kinds: [:file],
       searchable: true,
       search_mode: :local,

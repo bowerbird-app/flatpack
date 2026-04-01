@@ -31,7 +31,7 @@ module FlatPack
         context: {},
         empty_state_text: "No assets found",
         results_layout: :list,
-        modal: true,
+        modal: false,
         auto_confirm: false,
         modal_body_height_mode: :fixed,
         modal_body_height: "clamp(20rem, 55vh, 30rem)",
@@ -145,6 +145,8 @@ module FlatPack
       end
 
       def render_actions
+        return if auto_confirm_single_select?
+
         close_actions = ["click->flat-pack--picker#clearSelection"]
         close_actions << "click->flat-pack--modal#close" if @modal
 
@@ -173,6 +175,10 @@ module FlatPack
             )
           ])
         end
+      end
+
+      def auto_confirm_single_select?
+        @selection_mode == :single && @auto_confirm
       end
 
       def picker_attributes
