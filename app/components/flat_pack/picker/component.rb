@@ -31,6 +31,8 @@ module FlatPack
         context: {},
         empty_state_text: "No assets found",
         results_layout: :list,
+        modal: true,
+        auto_confirm: false,
         modal_body_height_mode: :fixed,
         modal_body_height: "clamp(20rem, 55vh, 30rem)",
         **system_arguments
@@ -54,6 +56,8 @@ module FlatPack
         @context = context.is_a?(Hash) ? context : {}
         @empty_state_text = empty_state_text
         @results_layout = results_layout.to_sym
+        @modal = !!modal
+        @auto_confirm = !!auto_confirm
         @modal_body_height_mode = modal_body_height_mode
         @modal_body_height = modal_body_height
         @items = normalize_items(items)
@@ -68,6 +72,8 @@ module FlatPack
       end
 
       def call
+        return render_inline_picker unless @modal
+
         render FlatPack::Modal::Component.new(
           id: @id,
           size: @size,
@@ -75,32 +81,51 @@ module FlatPack
           body_height: @modal_body_height,
           **@system_arguments
         ) do |modal|
-          modal.header do
-            safe_join([
-              content_tag(:h2, @title, class: "text-lg font-semibold text-(--surface-content-color)"),
-              (@subtitle.present? ? content_tag(:p, @subtitle, class: "mt-1 text-sm text-(--surface-muted-content-color)") : nil)
-            ].compact)
-          end
+          modal.header { render_header_content }
 
-          modal.body do
-            content_tag(:div, **picker_attributes) do
-              safe_join([
-                render_search,
-                tag.input(type: "hidden", data: {flat_pack__picker_target: "outputField"}),
-                content_tag(:div, class: "min-h-0 flex-1 overflow-y-auto") do
-                  safe_join([
-                    content_tag(:div, "", class: "space-y-2", data: {flat_pack__picker_target: "results"}),
-                    content_tag(:div, @empty_state_text, class: "hidden h-full min-h-32 items-center justify-center rounded-md border border-dashed border-(--surface-border-color) p-4 text-center text-sm text-(--surface-muted-content-color)", data: {flat_pack__picker_target: "emptyState"})
-                  ])
-                end,
-                render_actions
-              ].compact)
-            end
-          end
+          modal.body { render_picker_content }
         end
       end
 
       private
+
+      def render_inline_picker
+        content_tag(:div, **inline_attributes) do
+          safe_join([
+            render_inline_header,
+            content_tag(:div, render_picker_content, **inline_body_attributes)
+          ].compact)
+        end
+      end
+
+      def render_header_content
+        safe_join([
+          content_tag(:h2, @title, class: "text-lg font-semibold text-(--surface-content-color)"),
+          (@subtitle.present? ? content_tag(:p, @subtitle, class: "mt-1 text-sm text-(--surface-muted-content-color)") : nil)
+        ].compact)
+      end
+
+      def render_inline_header
+        return unless @title.present? || @subtitle.present?
+
+        content_tag(:div, render_header_content, class: "shrink-0")
+      end
+
+      def render_picker_content
+        content_tag(:div, **picker_attributes) do
+          safe_join([
+            render_search,
+            tag.input(type: "hidden", data: {flat_pack__picker_target: "outputField"}),
+            content_tag(:div, class: "min-h-0 flex-1 overflow-y-auto") do
+              safe_join([
+                content_tag(:div, "", class: "space-y-2", data: {flat_pack__picker_target: "results"}),
+                content_tag(:div, @empty_state_text, class: "hidden h-full min-h-32 items-center justify-center rounded-md border border-dashed border-(--surface-border-color) p-4 text-center text-sm text-(--surface-muted-content-color)", data: {flat_pack__picker_target: "emptyState"})
+              ])
+            end,
+            render_actions
+          ].compact)
+        end
+      end
 
       def render_search
         return unless @searchable
@@ -120,6 +145,12 @@ module FlatPack
       end
 
       def render_actions
+        close_actions = ["click->flat-pack--picker#clearSelection"]
+        close_actions << "click->flat-pack--modal#close" if @modal
+
+        confirm_actions = ["click->flat-pack--picker#confirmSelection"]
+        confirm_actions << "click->flat-pack--modal#close" if @modal
+
         content_tag(:div, class: "mt-4 flex items-center justify-end gap-2") do
           safe_join([
             render(
@@ -127,7 +158,7 @@ module FlatPack
                 text: @close_text,
                 style: :secondary,
                 data: {
-                  action: "click->flat-pack--picker#clearSelection click->flat-pack--modal#close"
+                  action: close_actions.join(" ")
                 }
               )
             ),
@@ -136,7 +167,7 @@ module FlatPack
                 text: @confirm_text,
                 style: :primary,
                 data: {
-                  action: "click->flat-pack--picker#confirmSelection click->flat-pack--modal#close"
+                  action: confirm_actions.join(" ")
                 }
               )
             )
@@ -161,9 +192,69 @@ module FlatPack
             flat_pack__picker_output_target_value: @output_target,
             flat_pack__picker_context_value: @context.to_json,
             flat_pack__picker_empty_state_text_value: @empty_state_text,
-            flat_pack__picker_results_layout_value: @results_layout
+            flat_pack__picker_results_layout_value: @results_layout,
+            flat_pack__picker_modal_value: @modal,
+            flat_pack__picker_auto_confirm_value: @auto_confirm
           }.compact
         }
+      end
+
+      def inline_attributes
+        merge_attributes(
+          id: @id,
+          class: inline_wrapper_classes
+        )
+      end
+
+      def inline_wrapper_classes
+        classes(
+          "relative",
+          "flex",
+          "flex-col",
+          "min-h-0",
+          "w-full",
+          "overflow-hidden",
+          FlatPack::Modal::Component::SIZES.fetch(@size),
+          "p-4",
+          "sm:p-6",
+          "bg-[var(--modal-surface-color)]",
+          "rounded-lg",
+          "shadow-lg",
+          "border",
+          "border-[var(--modal-border-color)]"
+        )
+      end
+
+      def inline_body_attributes
+        attributes = {
+          class: inline_body_classes
+        }
+
+        height_style = inline_body_style
+        attributes[:style] = height_style if height_style.present?
+        attributes
+      end
+
+      def inline_body_classes
+        classes(
+          "min-h-0",
+          (@modal_body_height_mode == :auto) ? "flex-1" : "shrink-0",
+          "overflow-y-auto",
+          "py-4",
+          "text-sm",
+          "text-[var(--modal-body-color)]"
+        )
+      end
+
+      def inline_body_style
+        return nil unless @modal_body_height_mode != :auto
+
+        case @modal_body_height_mode.to_sym
+        when :fixed
+          "--flatpack-modal-body-height: #{@modal_body_height}; height: var(--flatpack-modal-body-height);"
+        when :min
+          "--flatpack-modal-body-height: #{@modal_body_height}; min-height: var(--flatpack-modal-body-height);"
+        end
       end
 
       def normalize_items(items)

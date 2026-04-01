@@ -7,6 +7,8 @@ export default class extends Controller {
     pickerId: String,
     items: Array,
     selectionMode: { type: String, default: "multiple" },
+    modal: { type: Boolean, default: true },
+    autoConfirm: { type: Boolean, default: false },
     acceptedKinds: Array,
     searchable: { type: Boolean, default: false },
     searchMode: { type: String, default: "local" },
@@ -65,6 +67,8 @@ export default class extends Controller {
       return
     }
 
+    const wasSelected = this.selectedIds.has(itemId)
+
     if (this.selectionModeValue === "single") {
       this.selectedIds.clear()
       if (control.checked) {
@@ -89,6 +93,7 @@ export default class extends Controller {
     }
 
     this.#syncOutputField()
+    this.#autoConfirmSelectionIfNeeded({ selected: control.checked, wasSelected })
   }
 
   selectGridItem(event) {
@@ -102,6 +107,8 @@ export default class extends Controller {
       return
     }
 
+    const wasSelected = this.selectedIds.has(itemId)
+
     if (this.selectionModeValue === "single") {
       this.selectedIds.clear()
       this.selectedIds.add(itemId)
@@ -113,6 +120,7 @@ export default class extends Controller {
 
     this.#renderResults(this.filteredItems)
     this.#syncOutputField()
+    this.#autoConfirmSelectionIfNeeded({ selected: true, wasSelected })
   }
 
   clearSelection() {
@@ -126,6 +134,10 @@ export default class extends Controller {
   }
 
   confirmSelection() {
+    this.#emitConfirmSelection()
+  }
+
+  #emitConfirmSelection({ closeModal = false } = {}) {
     const selection = this.#selectedItems()
     this.#syncOutputField(selection)
 
@@ -139,6 +151,34 @@ export default class extends Controller {
         context: this.contextValue || {}
       }
     }))
+
+    if (closeModal) {
+      this.#closeModal()
+    }
+  }
+
+  #autoConfirmSelectionIfNeeded({ selected = false, wasSelected = false } = {}) {
+    if (this.selectionModeValue !== "single" || !this.autoConfirmValue || !selected || wasSelected) {
+      return
+    }
+
+    this.#emitConfirmSelection({ closeModal: this.modalValue })
+  }
+
+  #closeModal() {
+    if (!this.modalValue) {
+      return
+    }
+
+    const modalElement = this.element.closest("[data-controller~='flat-pack--modal']")
+    if (!(modalElement instanceof HTMLElement)) {
+      return
+    }
+
+    const controller = this.application.getControllerForElementAndIdentifier(modalElement, "flat-pack--modal")
+    if (controller && typeof controller.close === "function") {
+      controller.close()
+    }
   }
 
   #searchRemote(query) {

@@ -40,6 +40,8 @@
           </div>
 
           <div class="rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-3">
+            <p class="text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">Last Confirmed Picker</p>
+            <p class="mt-1 text-sm text-(--surface-content-color)" data-picker-demo-target="lastPickerId">none</p>
             <p class="text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">Selection Summary</p>
             <ul class="mt-2 space-y-1 text-sm" data-picker-demo-target="eventOutput">
               <li class="text-(--surface-muted-content-color)">No items selected yet.</li>
@@ -75,6 +77,43 @@
       confirm_text: "Use Remote Selection",
       context: {target: "picker-demo-remote"}
     ) %>
+  </section>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Inline Auto-Confirm",
+      anchor: "inline-auto-confirm",
+      anchor_link: true,
+      subtitle: "Inline rendering keeps the picker on the page while single-select auto-confirm updates field output immediately."
+    ) %>
+
+    <%= render FlatPack::Card::Component.new(class: "mt-6") do |card| %>
+      <% card.body do %>
+        <div class="space-y-4">
+          <p class="text-sm text-(--surface-muted-content-color)">
+            This picker renders inline (<code>modal: false</code>) and auto-confirms each single selection without attempting modal close behavior.
+          </p>
+
+          <input id="picker-inline-selected-field" type="text" readonly class="w-full rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-2 text-xs text-(--surface-muted-content-color)" placeholder="Inline selection JSON appears here">
+
+          <%= render FlatPack::Picker::Component.new(
+            id: "picker-demo-inline",
+            title: "Inline Asset Picker",
+            subtitle: "Choose one item to confirm immediately.",
+            items: @picker_demo_items,
+            searchable: true,
+            search_mode: :local,
+            selection_mode: :single,
+            auto_confirm: true,
+            modal: false,
+            output_mode: :field,
+            output_target: "#picker-inline-selected-field",
+            confirm_text: "Use Inline Selection",
+            context: {target: "picker-demo-inline"}
+          ) %>
+        </div>
+      <% end %>
+    <% end %>
   </section>
 
   <section class="mb-12">
@@ -120,6 +159,52 @@
       modal_body_height: "clamp(18rem, 50vh, 26rem)",
       confirm_text: "Use Image",
       context: {target: "picker-demo-images"}
+    ) %>
+  </section>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Single Select Auto-Confirm",
+      anchor: "single-select-auto-confirm",
+      anchor_link: true,
+      subtitle: "Modal-backed single selection can confirm and close immediately after a user chooses an item."
+    ) %>
+
+    <%= render FlatPack::Card::Component.new(class: "mt-6") do |card| %>
+      <% card.body do %>
+        <div class="space-y-4">
+          <div class="flex flex-wrap gap-2">
+            <%= render FlatPack::Button::Component.new(
+              text: "Open Auto-Confirm Picker",
+              icon: "image",
+              style: :secondary,
+              data: {
+                action: "click->flat-pack--modal#open",
+                "modal-id": "picker-demo-auto-confirm"
+              }
+            ) %>
+          </div>
+
+          <input id="picker-auto-confirm-field" type="text" readonly class="w-full rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-2 text-xs text-(--surface-muted-content-color)" placeholder="Auto-confirm selection JSON appears here">
+        </div>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::Picker::Component.new(
+      id: "picker-demo-auto-confirm",
+      title: "Choose One Asset",
+      subtitle: "Selecting an item confirms immediately and closes the modal.",
+      items: @picker_demo_items,
+      searchable: true,
+      search_mode: :local,
+      selection_mode: :single,
+      auto_confirm: true,
+      output_mode: :field,
+      output_target: "#picker-auto-confirm-field",
+      modal_body_height_mode: :fixed,
+      modal_body_height: "clamp(18rem, 50vh, 24rem)",
+      confirm_text: "Use Asset",
+      context: {target: "picker-demo-auto-confirm"}
     ) %>
   </section>
 

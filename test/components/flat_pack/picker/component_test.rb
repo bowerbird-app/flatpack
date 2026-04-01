@@ -30,15 +30,36 @@ module FlatPack
       def test_renders_picker_modal_shell
         render_inline(Component.new(id: "demo-picker", items: sample_items))
 
-        assert_selector "div#demo-picker"
-        assert_selector "div[data-controller='flat-pack--picker']"
+        assert_selector "div#demo-picker[data-controller='flat-pack--modal']"
+        assert_selector "div[data-controller='flat-pack--picker'][data-flat-pack--picker-modal-value='true']"
         assert_includes rendered_content, "demo-picker"
+      end
+
+      def test_renders_inline_picker_without_modal_wrapper
+        render_inline(Component.new(id: "inline-picker", items: sample_items, modal: false))
+
+        assert_selector "div#inline-picker"
+        assert_selector "div#inline-picker div[data-controller='flat-pack--picker'][data-flat-pack--picker-modal-value='false']"
+        assert_no_selector "div#inline-picker[data-controller='flat-pack--modal']"
+        assert_no_match(/flat-pack--modal#close/, rendered_content)
       end
 
       def test_defaults_to_list_results_layout
         render_inline(Component.new(id: "layout-default-picker", items: sample_items))
 
         assert_selector "div[data-flat-pack--picker-results-layout-value='list']"
+      end
+
+      def test_defaults_auto_confirm_to_false
+        render_inline(Component.new(id: "manual-picker", items: sample_items))
+
+        assert_selector "div[data-flat-pack--picker-auto-confirm-value='false']"
+      end
+
+      def test_supports_auto_confirm_for_single_select
+        render_inline(Component.new(id: "auto-confirm-picker", items: sample_items, selection_mode: :single, auto_confirm: true))
+
+        assert_selector "div[data-flat-pack--picker-selection-mode-value='single'][data-flat-pack--picker-auto-confirm-value='true']"
       end
 
       def test_supports_grid_results_layout

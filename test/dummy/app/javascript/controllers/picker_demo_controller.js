@@ -1,11 +1,15 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["eventOutput"]
+  static targets = ["eventOutput", "lastPickerId"]
 
   handleConfirm(event) {
     const detail = event?.detail || {}
     const selection = Array.isArray(detail.selection) ? detail.selection : []
+
+    if (this.hasLastPickerIdTarget) {
+      this.lastPickerIdTarget.textContent = String(detail.pickerId || "none")
+    }
 
     if (!this.hasEventOutputTarget) {
       return

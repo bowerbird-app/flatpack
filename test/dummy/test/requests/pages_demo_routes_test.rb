@@ -117,11 +117,16 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_includes response.body, "Open Local Picker"
+    assert_includes response.body, "Open Auto-Confirm Picker"
     assert_includes response.body, "Open Image Picker"
     assert_includes response.body, "id=\"picker-demo-local\""
+    assert_includes response.body, "id=\"picker-demo-inline\""
     assert_includes response.body, "id=\"picker-demo-images\""
     assert_includes response.body, "id=\"picker-demo-remote\""
+    assert_includes response.body, "id=\"picker-demo-auto-confirm\""
     assert_includes response.body, "id=\"picker-demo-field\""
+    assert_includes response.body, "id=\"picker-inline-selected-field\""
+    assert_includes response.body, "id=\"picker-auto-confirm-field\""
     assert_includes response.body, "data-controller=\"picker-demo\""
   end
 
