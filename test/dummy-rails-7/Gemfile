@@ -5,8 +5,8 @@ source "https://rubygems.org"
 # Use the flatpack gem from the parent directory
 gem "flat_pack", path: "../.."
 
-# Rails 7.1
-gem "rails", "~> 7.1"
+# Rails 7.x
+gem "rails", ">= 7.2.3.1", "< 8.0"
 gem "puma", ">= 5.0"
 gem "propshaft", "~> 1.0"
 gem "sqlite3", "~> 1.7"
