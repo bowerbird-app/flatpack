@@ -1,6 +1,6 @@
 {
   "name": "dummy",
-  "version": "1.0.0",
+  "version": "0.1.12",
   "description": "This is a Rails 8 application that demonstrates the FlatPack component library.",
   "main": "popover-scroll-follow.spec.js",
   "directories": {
