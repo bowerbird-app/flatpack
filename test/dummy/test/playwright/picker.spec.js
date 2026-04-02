@@ -41,6 +41,78 @@ test.describe("picker demos", () => {
     await expect(eventOutput).not.toContainText("No items selected yet.")
   })
 
+  test("remote picker preserves selected snake_case items across later search results", async ({ page }) => {
+    await page.route("**/demo/picker_results**", async (route) => {
+      const url = new URL(route.request().url())
+      const query = url.searchParams.get("q")
+
+      if (query === "hero") {
+        await route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify({
+            items: [
+              {
+                id: "remote-hero",
+                kind: "image",
+                name: "remote-hero.png",
+                label: "Remote Hero",
+                content_type: "image/png",
+                byte_size: 2048,
+                thumbnail_url: "https://example.com/remote-hero.png",
+                payload: {
+                  signed_id: "remote-signed-id"
+                }
+              }
+            ]
+          })
+        })
+        return
+      }
+
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          items: [
+            {
+              id: "folder-brand-assets",
+              kind: "record",
+              name: "Brand Assets",
+              label: "Brand Assets",
+              description: "Shared folder for approved creative",
+              path: "/Marketing/Brand Assets",
+              badge: "Folder",
+              meta: "12 items",
+              payload: {
+                record_id: 42
+              }
+            }
+          ]
+        })
+      })
+    })
+
+    await page.goto("http://127.0.0.1:3000/demo/picker", { waitUntil: "networkidle" })
+
+    const remoteModal = page.locator("#picker-demo-remote")
+    const searchInput = remoteModal.locator("input[data-flat-pack--picker-target='searchInput']")
+    const eventOutput = page.locator("#picker-demo-remote-event-output")
+
+    await page.getByRole("button", { name: "Open Remote Picker" }).click()
+    await expect(remoteModal).toBeVisible()
+
+    await searchInput.fill("hero")
+    await expect(remoteModal.locator("label").filter({ hasText: "Remote Hero" })).toBeVisible()
+    await selectPickerRow(remoteModal, "Remote Hero")
+
+    await searchInput.fill("brand")
+    await expect(remoteModal.locator("label").filter({ hasText: "Brand Assets" })).toBeVisible()
+
+    await remoteModal.getByRole("button", { name: "Use Remote Selection" }).click()
+    await expect(eventOutput).toContainText("Remote Hero")
+  })
+
   test("single-select auto-confirm closes modal and syncs field output", async ({ page }) => {
     await page.goto("http://127.0.0.1:3000/demo/picker", { waitUntil: "networkidle" })
 
@@ -128,5 +200,39 @@ test.describe("picker demos", () => {
     await expect(outputField).toHaveValue(/"id":"[^"]+"/)
     await expect(inlinePicker).toBeVisible()
     expect(pageErrors).toEqual([])
+  })
+
+  test("clear selection resets visible state for list and grid layouts", async ({ page }) => {
+    await page.goto("http://127.0.0.1:3000/demo/picker", { waitUntil: "networkidle" })
+
+    const localModal = page.locator("#picker-demo-local")
+    const localHeroRow = localModal.locator("label").filter({ hasText: "Homepage Hero" }).first()
+
+    await page.getByRole("button", { name: "Open Local Picker" }).click()
+    await expect(localModal).toBeVisible()
+    await selectPickerRow(localModal, "Homepage Hero")
+    await expect(localHeroRow.locator("[data-picker-selection-indicator]")).toHaveClass(/bg-\(--primary-color\)/)
+    await localModal.getByRole("button", { name: "Close", exact: true }).last().click()
+    await expect(localModal).toBeHidden()
+
+    await page.getByRole("button", { name: "Open Local Picker" }).click()
+    await expect(localModal).toBeVisible()
+    await expect(localModal.locator("label").filter({ hasText: "Homepage Hero" }).first().locator("[data-picker-selection-indicator]")).not.toHaveClass(/bg-\(--primary-color\)/)
+    await localModal.getByRole("button", { name: "Close", exact: true }).last().click()
+    await expect(localModal).toBeHidden()
+
+    const imageModal = page.locator("#picker-demo-images")
+    const imageTile = imageModal.locator("button[data-item-id='asset-homepage-hero']").first()
+
+    await page.getByRole("button", { name: "Open Image Picker" }).click()
+    await expect(imageModal).toBeVisible()
+    await imageTile.click()
+    await expect(imageTile).toHaveAttribute("aria-pressed", "true")
+    await imageModal.getByRole("button", { name: "Close", exact: true }).last().click()
+    await expect(imageModal).toBeHidden()
+
+    await page.getByRole("button", { name: "Open Image Picker" }).click()
+    await expect(imageModal).toBeVisible()
+    await expect(imageModal.locator("button[data-item-id='asset-homepage-hero']").first()).toHaveAttribute("aria-pressed", "false")
   })
 })

@@ -35,6 +35,30 @@ module FlatPack
         }], items
       end
 
+      def test_normalizes_snake_case_item_keys_into_same_browser_shape
+        items = ItemNormalizer.call([
+          {
+            "id" => "asset-2",
+            "kind" => "file",
+            "name" => "brief.pdf",
+            "content_type" => "application/pdf",
+            "byte_size" => "4096",
+            "thumbnail_url" => "https://example.com/brief.png"
+          }
+        ])
+
+        assert_equal [{
+          "id" => "asset-2",
+          "kind" => "file",
+          "label" => "brief.pdf",
+          "name" => "brief.pdf",
+          "contentType" => "application/pdf",
+          "byteSize" => 4096,
+          "thumbnailUrl" => "https://example.com/brief.png",
+          "payload" => {}
+        }], items
+      end
+
       def test_skips_items_without_name_and_falls_back_unknown_kinds_to_file
         items = ItemNormalizer.call([
           {label: "Missing name"},

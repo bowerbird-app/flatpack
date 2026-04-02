@@ -45,7 +45,9 @@ module FlatPack
         render_inline(Component.new(id: "demo-picker", items: sample_items, modal: true))
 
         assert_selector "div#demo-picker[data-controller='flat-pack--modal']"
-        assert_selector "div[data-controller='flat-pack--picker'][data-flat-pack--picker-modal-value='true']"
+        assert_selector "div[data-controller='flat-pack--picker'][data-flat-pack--picker-config-value]"
+        assert_includes rendered_content, "&quot;presentation&quot;:{&quot;modal&quot;:true,&quot;resultsLayout&quot;:&quot;list&quot;}"
+        refute_includes rendered_content, "data-flat-pack--picker-modal-value"
         assert_includes rendered_content, "demo-picker"
       end
 
@@ -53,7 +55,8 @@ module FlatPack
         render_inline(Component.new(id: "inline-picker", items: sample_items))
 
         assert_selector "div#inline-picker"
-        assert_selector "div#inline-picker div[data-controller='flat-pack--picker'][data-flat-pack--picker-modal-value='false']"
+        assert_selector "div#inline-picker div[data-controller='flat-pack--picker'][data-flat-pack--picker-config-value]"
+        assert_includes rendered_content, "&quot;presentation&quot;:{&quot;modal&quot;:false,&quot;resultsLayout&quot;:&quot;list&quot;}"
         assert_no_selector "div#inline-picker[data-controller='flat-pack--modal']"
         assert_no_match(/flat-pack--modal#close/, rendered_content)
         assert_match(/border-\[var\(--modal-border-color\)\]/, rendered_content)
@@ -65,19 +68,20 @@ module FlatPack
       def test_defaults_to_list_results_layout
         render_inline(Component.new(id: "layout-default-picker", items: sample_items))
 
-        assert_selector "div[data-flat-pack--picker-results-layout-value='list']"
+        assert_includes rendered_content, "&quot;resultsLayout&quot;:&quot;list&quot;"
       end
 
       def test_defaults_auto_confirm_to_false
         render_inline(Component.new(id: "manual-picker", items: sample_items))
 
-        assert_selector "div[data-flat-pack--picker-auto-confirm-value='false']"
+        assert_includes rendered_content, "&quot;autoConfirm&quot;:false"
       end
 
       def test_supports_auto_confirm_for_single_select
         render_inline(Component.new(id: "auto-confirm-picker", items: sample_items, selection_mode: :single, auto_confirm: true))
 
-        assert_selector "div[data-flat-pack--picker-selection-mode-value='single'][data-flat-pack--picker-auto-confirm-value='true']"
+        assert_includes rendered_content, "&quot;selection&quot;:{&quot;mode&quot;:&quot;single&quot;"
+        assert_includes rendered_content, "&quot;autoConfirm&quot;:true"
       end
 
       def test_hides_action_buttons_for_single_select_auto_confirm
@@ -90,13 +94,12 @@ module FlatPack
       def test_supports_grid_results_layout
         render_inline(Component.new(id: "layout-grid-picker", items: sample_items, results_layout: :grid))
 
-        assert_selector "div[data-flat-pack--picker-results-layout-value='grid']"
+        assert_includes rendered_content, "&quot;resultsLayout&quot;:&quot;grid&quot;"
       end
 
       def test_supports_record_kind_items
         render_inline(Component.new(id: "record-picker", items: sample_items, accepted_kinds: [:record]))
 
-        assert_includes rendered_content, "data-flat-pack--picker-accepted-kinds-value=\"[&quot;record&quot;]\""
         assert_includes rendered_content, "data-flat-pack--picker-config-value="
         assert_includes rendered_content, "&quot;selection&quot;:{&quot;mode&quot;:&quot;multiple&quot;,&quot;acceptedKinds&quot;:[&quot;record&quot;],&quot;autoConfirm&quot;:false}"
         assert_includes rendered_content, "&quot;kind&quot;:&quot;record&quot;"
