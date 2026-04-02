@@ -66,8 +66,8 @@ class PagesController < ApplicationController
 
   # Actions with dynamic data that must not be fully cached
   UNCACHED_ACTIONS = %i[
-    search_results picker_results pagination_infinite
-    comments admin
+    picker search_results picker_results pagination_infinite
+    comments admin chat_demo
   ].freeze
 
   before_action :serve_from_page_cache, except: UNCACHED_ACTIONS
@@ -249,6 +249,14 @@ class PagesController < ApplicationController
 
   def picker
     @picker_demo_items = picker_demo_items
+    @picker_form_submission = flash[:picker_form_submission].presence
+  end
+
+  def picker_submissions
+    picker_assignment = params.require(:picker_assignment).permit(:folder_record_id)
+
+    flash[:picker_form_submission] = picker_assignment.to_h
+    redirect_to demo_picker_path(anchor: "built-in-form"), notice: "Picker form submitted successfully"
   end
 
   def search_results
@@ -277,7 +285,7 @@ class PagesController < ApplicationController
 
     if query.present?
       results = results.select do |item|
-        [item[:label], item[:name], item[:content_type], item[:kind]].compact.any? { |value| value.downcase.include?(query) }
+        [item[:label], item[:name], item[:content_type], item[:kind], item[:description], item[:path], item[:badge], item[:meta]].compact.any? { |value| value.downcase.include?(query) }
       end
     end
 
@@ -1053,6 +1061,34 @@ class PagesController < ApplicationController
         byte_size: 212_640,
         label: "Quarterly Launch Plan",
         meta: "DOCX"
+      },
+      {
+        id: "folder-brand-assets",
+        kind: "record",
+        name: "Brand Assets",
+        label: "Brand Assets",
+        description: "Shared folder for approved creative",
+        path: "/Marketing/Brand Assets",
+        badge: "Folder",
+        meta: "12 items",
+        payload: {
+          record_type: "Folder",
+          record_id: 42
+        }
+      },
+      {
+        id: "folder-q2-planning",
+        kind: "record",
+        name: "Q2 Planning",
+        label: "Q2 Planning",
+        description: "Roadmap artifacts and review notes",
+        path: "/Planning/Q2 Planning",
+        badge: "Folder",
+        meta: "8 items",
+        payload: {
+          record_type: "Folder",
+          record_id: 77
+        }
       }
     ]
   end
@@ -1347,6 +1383,9 @@ class PagesController < ApplicationController
       contentType: item[:content_type],
       byteSize: item[:byte_size],
       thumbnailUrl: item[:thumbnail_url],
+      description: item[:description],
+      path: item[:path],
+      badge: item[:badge],
       meta: item[:meta],
       payload: item[:payload] || {}
     }.compact

@@ -23,6 +23,20 @@ module FlatPack
             label: "Brief",
             content_type: "application/pdf",
             byte_size: 4096
+          },
+          {
+            id: "folder-1",
+            kind: "record",
+            name: "Brand Assets",
+            label: "Brand Assets",
+            description: "Shared folder for approved creative",
+            path: "/Marketing/Brand Assets",
+            badge: "Folder",
+            meta: "12 items",
+            payload: {
+              record_type: "Folder",
+              record_id: 42
+            }
           }
         ]
       end
@@ -79,6 +93,39 @@ module FlatPack
         assert_selector "div[data-flat-pack--picker-results-layout-value='grid']"
       end
 
+      def test_supports_record_kind_items
+        render_inline(Component.new(id: "record-picker", items: sample_items, accepted_kinds: [:record]))
+
+        assert_includes rendered_content, "data-flat-pack--picker-accepted-kinds-value=\"[&quot;record&quot;]\""
+        assert_includes rendered_content, "&quot;kind&quot;:&quot;record&quot;"
+        assert_includes rendered_content, "&quot;description&quot;:&quot;Shared folder for approved creative&quot;"
+        assert_includes rendered_content, "&quot;path&quot;:&quot;/Marketing/Brand Assets&quot;"
+        assert_includes rendered_content, "&quot;badge&quot;:&quot;Folder&quot;"
+      end
+
+      def test_renders_builtin_form_wrapper_when_form_config_present
+        render_inline(Component.new(
+          id: "form-picker",
+          items: sample_items,
+          selection_mode: :single,
+          form: {
+            url: "/demo/picker_submissions",
+            scope: :picker_assignment,
+            field: :folder_record_id,
+            value_path: "payload.record_id"
+          }
+        ))
+
+        assert_selector "form[action='/demo/picker_submissions']"
+        assert_selector "form[data-turbo='true']"
+        assert_selector "div[data-flat-pack--picker-target='formFields']"
+        assert_selector "button[type='submit']", text: "Use Selected"
+        assert_includes rendered_content, "&quot;field&quot;:&quot;folder_record_id&quot;"
+        assert_includes rendered_content, "&quot;scope&quot;:&quot;picker_assignment&quot;"
+        assert_includes rendered_content, "&quot;valueMode&quot;:&quot;id&quot;"
+        assert_includes rendered_content, "&quot;valuePath&quot;:&quot;payload.record_id&quot;"
+      end
+
       def test_renders_search_input_when_searchable
         render_inline(Component.new(id: "searchable-picker", items: sample_items, searchable: true))
 
@@ -115,6 +162,45 @@ module FlatPack
             id: "invalid-layout-picker",
             items: sample_items,
             results_layout: :masonry
+          )
+        end
+      end
+
+      def test_rejects_form_mode_without_url
+        assert_raises(ArgumentError) do
+          Component.new(
+            id: "invalid-form-picker",
+            items: sample_items,
+            form: {
+              field: :asset_ids
+            }
+          )
+        end
+      end
+
+      def test_rejects_form_mode_without_field
+        assert_raises(ArgumentError) do
+          Component.new(
+            id: "invalid-form-field-picker",
+            items: sample_items,
+            form: {
+              url: "/demo/picker_submissions"
+            }
+          )
+        end
+      end
+
+      def test_rejects_single_select_ids_form_mode
+        assert_raises(ArgumentError) do
+          Component.new(
+            id: "invalid-single-form-picker",
+            items: sample_items,
+            selection_mode: :single,
+            form: {
+              url: "/demo/picker_submissions",
+              field: :asset_ids,
+              value_mode: :ids
+            }
           )
         end
       end

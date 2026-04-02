@@ -9,7 +9,8 @@ module FlatPack
       SEARCH_MODES = %i[local remote].freeze
       OUTPUT_MODES = %i[event field].freeze
       RESULTS_LAYOUTS = %i[list grid].freeze
-      ACCEPTED_KINDS = %w[image file].freeze
+      FORM_VALUE_MODES = %i[id ids json].freeze
+      ACCEPTED_KINDS = %w[image file record].freeze
 
       def initialize(
         id:,
@@ -35,6 +36,7 @@ module FlatPack
         auto_confirm: false,
         modal_body_height_mode: :fixed,
         modal_body_height: "clamp(20rem, 55vh, 30rem)",
+        form: nil,
         **system_arguments
       )
         super(**system_arguments)
@@ -60,6 +62,7 @@ module FlatPack
         @auto_confirm = !!auto_confirm
         @modal_body_height_mode = modal_body_height_mode
         @modal_body_height = modal_body_height
+        @form = normalize_form(form)
         @items = normalize_items(items)
 
         validate_id!
@@ -69,6 +72,7 @@ module FlatPack
         validate_results_layout!
         validate_search_configuration!
         validate_search_endpoint!(search_endpoint) if search_endpoint.present?
+        validate_form!
       end
 
       def call
@@ -83,7 +87,7 @@ module FlatPack
         ) do |modal|
           modal.header { render_header_content }
 
-          modal.body { render_picker_content }
+          modal.body { render_picker_shell }
         end
       end
 
@@ -93,8 +97,16 @@ module FlatPack
         content_tag(:div, **inline_attributes) do
           safe_join([
             render_inline_header,
-            content_tag(:div, render_picker_content, **inline_body_attributes)
+            content_tag(:div, render_picker_shell, **inline_body_attributes)
           ].compact)
+        end
+      end
+
+      def render_picker_shell
+        return render_picker_content unless @form.present?
+
+        form_with(**picker_form_attributes) do
+          render_picker_content
         end
       end
 
@@ -115,6 +127,7 @@ module FlatPack
         content_tag(:div, **picker_attributes) do
           safe_join([
             render_search,
+            (@form.present? ? content_tag(:div, "", data: {flat_pack__picker_target: "formFields"}) : nil),
             tag.input(type: "hidden", data: {flat_pack__picker_target: "outputField"}),
             content_tag(:div, class: "min-h-0 flex-1 overflow-y-auto") do
               safe_join([
@@ -151,7 +164,7 @@ module FlatPack
         close_actions << "click->flat-pack--modal#close" if @modal
 
         confirm_actions = ["click->flat-pack--picker#confirmSelection"]
-        confirm_actions << "click->flat-pack--modal#close" if @modal
+        confirm_actions << "click->flat-pack--modal#close" if @modal && @form.blank?
 
         content_tag(:div, class: "mt-4 flex items-center justify-end gap-2") do
           safe_join([
@@ -159,6 +172,7 @@ module FlatPack
               FlatPack::Button::Component.new(
                 text: @close_text,
                 style: :secondary,
+                type: "button",
                 data: {
                   action: close_actions.join(" ")
                 }
@@ -168,6 +182,7 @@ module FlatPack
               FlatPack::Button::Component.new(
                 text: @confirm_text,
                 style: :primary,
+                type: @form.present? ? "submit" : "button",
                 data: {
                   action: confirm_actions.join(" ")
                 }
@@ -200,9 +215,35 @@ module FlatPack
             flat_pack__picker_empty_state_text_value: @empty_state_text,
             flat_pack__picker_results_layout_value: @results_layout,
             flat_pack__picker_modal_value: @modal,
-            flat_pack__picker_auto_confirm_value: @auto_confirm
+            flat_pack__picker_auto_confirm_value: @auto_confirm,
+            flat_pack__picker_form_value: picker_form_value
           }.compact
         }
+      end
+
+      def picker_form_attributes
+        {
+          url: @form.fetch(:url),
+          method: @form.fetch(:method),
+          scope: @form[:scope],
+          data: {
+            turbo: @form.fetch(:turbo)
+          },
+          html: {
+            class: "h-full"
+          }
+        }.compact
+      end
+
+      def picker_form_value
+        return unless @form.present?
+
+        {
+          field: @form.fetch(:field),
+          scope: @form[:scope],
+          valueMode: @form.fetch(:value_mode),
+          valuePath: @form.fetch(:value_path)
+        }.to_json
       end
 
       def inline_attributes
@@ -277,6 +318,9 @@ module FlatPack
             "contentType" => source[:content_type].presence || source["content_type"].presence || source[:contentType].presence || source["contentType"].presence,
             "byteSize" => normalize_size(source[:byte_size] || source["byte_size"] || source[:byteSize] || source["byteSize"]),
             "thumbnailUrl" => source[:thumbnail_url].presence || source["thumbnail_url"].presence || source[:thumbnailUrl].presence || source["thumbnailUrl"].presence,
+            "description" => source[:description].presence || source["description"].presence,
+            "path" => source[:path].presence || source["path"].presence,
+            "badge" => source[:badge].presence || source["badge"].presence,
             "meta" => source[:meta].presence || source["meta"].presence,
             "payload" => normalize_payload(source[:payload] || source["payload"])
           }.compact
@@ -295,12 +339,42 @@ module FlatPack
       end
 
       def normalized_kind(kind)
-        (kind.to_s == "image") ? "image" : "file"
+        normalized = kind.to_s
+        ACCEPTED_KINDS.include?(normalized) ? normalized : "file"
       end
 
       def normalize_size(value)
         parsed = Integer(value, exception: false)
         parsed&.positive? ? parsed : nil
+      end
+
+      def normalize_form(form)
+        return nil if form.blank?
+
+        source = form.respond_to?(:to_h) ? form.to_h.symbolize_keys : {}
+        sanitized_url = source[:url].present? ? FlatPack::AttributeSanitizer.sanitize_url(source[:url]) : nil
+
+        {
+          url: sanitized_url,
+          method: normalize_form_method(source[:method]),
+          scope: source[:scope].presence&.to_s,
+          field: source[:field].presence&.to_s,
+          value_mode: normalize_form_value_mode(source[:value_mode]),
+          value_path: source[:value_path].presence&.to_s || "id",
+          turbo: source.key?(:turbo) ? !!source[:turbo] : true
+        }
+      end
+
+      def normalize_form_method(method)
+        return :post if method.blank?
+
+        method.to_sym
+      end
+
+      def normalize_form_value_mode(value_mode)
+        return ((@selection_mode == :multiple) ? :ids : :id) if value_mode.blank?
+
+        value_mode.to_sym
       end
 
       def validate_id!
@@ -344,6 +418,25 @@ module FlatPack
         return if @search_endpoint.present?
 
         raise ArgumentError, "Unsafe search_endpoint detected. Only http, https, mailto, tel protocols and relative URLs are allowed."
+      end
+
+      def validate_form!
+        return unless @form.present?
+
+        raise ArgumentError, "form[:url] is required when form mode is enabled" unless @form[:url].present?
+        raise ArgumentError, "form[:field] is required when form mode is enabled" unless @form[:field].present?
+
+        unless FORM_VALUE_MODES.include?(@form[:value_mode])
+          raise ArgumentError, "Invalid form value_mode: #{@form[:value_mode]}. Must be one of: #{FORM_VALUE_MODES.join(", ")}."
+        end
+
+        if @selection_mode == :multiple && @form[:value_mode] == :id
+          raise ArgumentError, "form[:value_mode] cannot be :id when selection_mode is :multiple"
+        end
+
+        if @selection_mode == :single && @form[:value_mode] == :ids
+          raise ArgumentError, "form[:value_mode] cannot be :ids when selection_mode is :single"
+        end
       end
     end
   end

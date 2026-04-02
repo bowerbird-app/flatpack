@@ -28,6 +28,7 @@ test.describe('carousel drag swipe', () => {
     const counter = carousel.locator('[data-flat-pack--carousel-target="counter"]')
 
     await expect(counter).toHaveText('1 / 4')
+    await viewport.scrollIntoViewIfNeeded()
 
     const box = await viewport.boundingBox()
     if (!box) {

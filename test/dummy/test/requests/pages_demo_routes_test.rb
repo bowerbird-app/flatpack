@@ -116,31 +116,79 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     get "/demo/picker"
 
     assert_response :success
+    assert_includes response.body, "Required Data"
+    assert_includes response.body, "Local items array"
+    assert_includes response.body, "Remote search JSON"
+    assert_includes response.body, "name</code> is required"
+    assert_includes response.body, "signed_id: &quot;blob-signed-id-123&quot;"
+    assert_includes response.body, "record_id: 42"
+    assert_includes response.body, "&quot;kind&quot;: &quot;record&quot;"
     assert_includes response.body, "Open Local Picker"
     assert_includes response.body, "Open Auto-Confirm Picker"
     assert_includes response.body, "Open Image Picker"
+    assert_includes response.body, "Open Folder Picker"
+    assert_includes response.body, "Built-in Form Submission"
     assert_includes response.body, "id=\"picker-demo-local\""
+    assert_includes response.body, "id=\"picker-demo-built-in-form\""
     assert_includes response.body, "id=\"picker-demo-inline\""
     assert_includes response.body, "id=\"picker-demo-images\""
     assert_includes response.body, "id=\"picker-demo-remote\""
     assert_includes response.body, "id=\"picker-demo-auto-confirm\""
+    assert_includes response.body, "id=\"picker-demo-folders\""
     assert_includes response.body, "id=\"picker-demo-field\""
     assert_includes response.body, "id=\"picker-inline-selected-field\""
     assert_includes response.body, "id=\"picker-auto-confirm-field\""
+    assert_includes response.body, "id=\"picker-folder-field\""
     assert_includes response.body, "data-controller=\"picker-demo\""
     assert_includes response.body, "id=\"picker-demo-inline\""
     assert_includes response.body, "output_target: &quot;#picker-inline-selected-field&quot;"
     assert_includes response.body, "accepted_kinds: [:image]"
     assert_includes response.body, "output_target: &quot;#picker-auto-confirm-field&quot;"
+    assert_includes response.body, "accepted_kinds: [:record]"
+    assert_includes response.body, "output_target: &quot;#picker-folder-field&quot;"
     assert_includes response.body, "output_target: &quot;#picker-selected-assets-field&quot;"
+    assert_includes response.body, "value_path: &quot;payload.record_id&quot;"
+    assert_includes response.body, "demo_picker_submissions_path"
     assert_includes response.body, "modal: true"
     assert_includes response.body, "confirm_text: &quot;Use Inline Selection&quot;"
     assert_includes response.body, "results_layout: :grid"
     assert_includes response.body, "confirm_text: &quot;Use Asset&quot;"
+    assert_includes response.body, "confirm_text: &quot;Use Folder&quot;"
     assert_includes response.body, "confirm_text: &quot;Store Selection&quot;"
 
     assert_select "#picker-demo-auto-confirm .mt-4.flex.items-center.justify-end.gap-2", count: 0
     assert_select "#picker-demo-auto-confirm button", text: "Use Asset", count: 0
+  end
+
+  test "picker built-in form submission redirects back with controller params" do
+    post "/demo/picker_submissions", params: {
+      picker_assignment: {
+        folder_record_id: "42"
+      }
+    }
+
+    assert_redirected_to "/demo/picker#built-in-form"
+
+    follow_redirect!
+    assert_response :success
+    assert_includes response.body, "Last Controller Payload"
+    assert_includes response.body, "params[:picker_assignment][:folder_record_id]"
+    assert_includes response.body, ">42<"
+  end
+
+  test "picker results endpoint supports record kinds" do
+    get "/demo/picker_results", params: {q: "brand", kinds: "record"}
+
+    assert_response :success
+
+    body = JSON.parse(response.body)
+    assert_equal ["record"], body.fetch("items").map { |item| item.fetch("kind") }.uniq
+
+    item = body.fetch("items").first
+    assert_equal "Brand Assets", item.fetch("label")
+    assert_equal "/Marketing/Brand Assets", item.fetch("path")
+    assert_equal "Folder", item.fetch("badge")
+    assert_equal({"record_type" => "Folder", "record_id" => 42}, item.fetch("payload"))
   end
 
   test "text input demo variable table includes value option" do

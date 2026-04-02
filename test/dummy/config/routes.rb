@@ -52,6 +52,7 @@ Rails.application.routes.draw do
   get "demo/search_results", to: "pages#search_results"
   get "demo/picker", to: "pages#picker"
   get "demo/picker_results", to: "pages#picker_results"
+  post "demo/picker_submissions", to: "pages#picker_submissions", as: :demo_picker_submissions
   get "demo/sidebar_layout", to: "pages#sidebar_layout"
   get "demo/sidebar/basic", to: "pages#sidebar_basic"
   get "demo/sidebar/header", to: "pages#sidebar_header"
