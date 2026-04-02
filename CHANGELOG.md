@@ -12,12 +12,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Refactored `FlatPack::Picker::Component` so picker config, form config, item normalization, and Stimulus client serialization are handled by dedicated internal classes.
 - Simplified picker rendering so modal and inline wrappers share the same inner body flow, with clearer search, output, results, empty-state, and footer rendering boundaries.
-- Added a structured picker config payload for Stimulus while preserving the existing data attributes and browser-facing behavior for backward compatibility.
+- Replaced the picker's scattered Stimulus values with one structured config payload while preserving the existing browser-facing confirm event contract and field/form output behavior.
+- Normalized picker items from both local and remote sources into one stable browser payload shape, including support for both snake_case and camelCase item keys.
+- Preserved selected remote items across later search result updates and kept selection clearing behavior consistent across list and grid picker layouts.
 - Updated picker docs and dummy app demos to better reflect the presentation, selection, search, and output groupings used by the component.
 
 ### Tests
-- Added focused picker tests for extracted item normalization and form configuration behavior.
-- Refreshed picker component, request, and Playwright verification for the refactor.
+- Added focused picker tests for extracted client config serialization, item normalization, and form configuration behavior.
+- Refreshed picker component, request, and Playwright verification for the refactor, including coverage for remote selection persistence and clear-selection state resets.
 
 ## [0.1.12] - 2026-04-01
 
@@ -191,6 +193,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dark mode support via system preference (prefers-color-scheme)
 - CSS variables for theming customization
 
+[0.1.13]: https://github.com/bowerbird-app/flatpack/compare/v0.1.12...v0.1.13
 [0.1.12]: https://github.com/bowerbird-app/flatpack/compare/v0.1.11...v0.1.12
 [0.1.8]: https://github.com/bowerbird-app/flat_pack/compare/v0.1.7...v0.1.8
 [0.1.7]: https://github.com/bowerbird-app/flat_pack/compare/v0.1.6...v0.1.7

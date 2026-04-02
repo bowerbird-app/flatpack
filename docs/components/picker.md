@@ -17,6 +17,17 @@ Internally the picker now normalizes its configuration into four concerns:
 
 The public initializer remains backward compatible. You can keep passing the existing flat options, or group related options into local hashes in your view for readability.
 
+## How it works
+
+The current picker implementation uses one canonical client payload instead of many separate browser-facing data values.
+
+1. On the Ruby side, `FlatPack::Picker::ClientConfig` serializes one `flat_pack__picker_config_value` JSON object containing `pickerId`, normalized `items`, and grouped `presentation`, `selection`, `search`, `output`, `context`, and `emptyStateText` keys.
+2. On connect, the Stimulus controller normalizes that payload into `this.config` and builds internal state with `baseItems`, `visibleItems`, and `selectedItems`.
+3. Local search filters `baseItems` in memory. Remote search replaces `visibleItems` from `payload.items`, normalizes snake_case and camelCase response keys into the same browser shape, and refreshes any already-selected items by id so selection survives later result sets.
+4. Selection changes always rerender from state, then resync field output, built-in form hidden inputs, and confirm-event payloads from the same selected item objects.
+
+This keeps list and grid layouts, event output, field output, and built-in form submission aligned around the same normalized selection data.
+
 ## Class
 - Primary: `FlatPack::Picker::Component`
 
@@ -144,6 +155,8 @@ The normalized browser payload keeps this stable shape:
 - `meta`
 - `payload`
 
+Unknown `kind` values normalize to `file`, and items without `name` are skipped before they ever reach the browser state.
+
 ### Default inline picker
 
 ```erb
@@ -210,6 +223,8 @@ The normalized browser payload keeps this stable shape:
 ```
 
 Remote search is debounced by 250ms. When `accepted_kinds` is present, the picker appends a `kinds=image,file,record` style query param alongside the configured `search_param`.
+
+Selected remote items remain selected even if later searches return a different result set. Confirm, field, and form output are built from the controller's selected item state rather than only the currently visible rows.
 
 ### Inline auto-confirm picker
 
@@ -420,15 +435,17 @@ Selected items preserve the optional `description`, `path`, and `badge` keys whe
 ## Behavior notes
 
 - The picker serializes a structured client config for Stimulus while preserving the existing browser-facing behavior and event contract.
+- The browser now receives that config through a single `flat_pack__picker_config_value` payload instead of separate per-setting data attributes.
 - `modal: false` is the default, so picker content renders inline unless a consumer explicitly opts into modal presentation.
 - `modal: true` keeps the existing modal-backed behavior for trigger/button flows.
 - Record rows render with a generic record badge and use `description`, `path`, and `badge` when provided.
 - `auto_confirm` only applies to newly selected items in `selection_mode: :single`.
-- Remote searches are debounced by 250ms, request JSON with `Accept: application/json`, and rerender the current result set from `payload.items`.
+- Remote searches are debounced by 250ms, request JSON with `Accept: application/json`, rerender from `payload.items`, and preserve matching selections across later searches.
 - In `output_mode: :field`, field output is written before the confirm event is emitted.
 - When `form:` is configured, the picker maintains hidden inputs for the current selection and submits the generated form when `auto_confirm: true` selects a new single item.
 - When `auto_confirm: true` and `modal: true`, the picker closes programmatically after dispatching `flat-pack:picker:confirm`.
 - When `auto_confirm: true` and `modal: false`, the picker confirms immediately and stays visible inline.
+- `clearSelection()` clears the shared selected-item state, so list indicators, grid pressed states, field output, and form hidden inputs all reset together.
 
 ## Accessibility
 Picker content uses native form controls (`input[type=radio|checkbox]`) for list selection and button semantics for grid selection (`aria-pressed`). Search input includes an accessible label (`"Search available assets"`).
