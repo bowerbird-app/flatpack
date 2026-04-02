@@ -5,14 +5,18 @@ test.describe('chat message grouping', () => {
     await page.goto('http://127.0.0.1:3000/demo/chat/demo', { waitUntil: 'networkidle' })
 
     const transcript = page.locator('[data-pagination-content]').first()
-    const textarea = page.locator('textarea[name="chat[message]"]')
+    const senderForm = page.locator('form[data-controller*="flat-pack--chat-sender"]').first()
+    const textarea = senderForm.locator('textarea[name="chat[message]"]')
+    const sendButton = senderForm.getByRole('button', { name: 'Send message' })
+
+    await expect(senderForm).toBeVisible()
 
     await textarea.fill('First grouped message')
-    await textarea.press('Enter')
+    await sendButton.click()
     await expect(transcript.locator('[data-flat-pack-chat-record]').last()).toContainText('First grouped message')
 
     await textarea.fill('Second grouped message')
-    await textarea.press('Enter')
+    await sendButton.click()
 
     await expect.poll(async () => transcript.locator('[data-flat-pack-chat-record]').count()).toBeGreaterThan(1)
 

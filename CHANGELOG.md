@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.12] - 2026-04-01
+
+### Security
+- Updated Rails and Active Storage dependency bundles to patched releases that address the Active Storage proxy-mode multi-range request DoS advisory. The root and Rails 8 dummy bundles now resolve to Rails 8.1.3, and the Rails 7 dummy bundle now resolves to Rails 7.2.3.1.
+
+### Changed
+- `FlatPack::Picker::Component` now renders inline by default. Modal-backed pickers must opt in with `modal: true`.
+- Updated picker docs and dummy app examples so modal trigger flows explicitly pass `modal: true`, while inline examples rely on the new default.
+- `FlatPack::Picker::Component` now supports an optional `form:` configuration that renders a built-in Rails form wrapper, keeps hidden fields in sync with the current selection, and can submit ids, id arrays, or JSON without consumer-written Stimulus glue.
+- Updated picker component docs to describe the new `form:` API, including `value_path` support for submitting `payload.record_id`, `payload.signed_id`, or other nested values.
+- Added a "Required Data" section to the picker demo page with local `items:` and remote JSON examples showing the payload shape needed to render picker results.
+- `FlatPack::Picker::Component` now preserves a first-class `record` kind, including optional `description`, `path`, and `badge` fields for folder-style selections.
+- Image picker rows now hide the native radio or checkbox control when a thumbnail preview is present, so row clicks and the thumbnail overlay remain the visible selection affordance.
+- Picker list results now apply a subtle hover background so result rows provide clearer pointer feedback before selection.
+- Added a picker demo page example showing built-in form submission to a standard Rails controller, including a code example and a visible result panel after redirect.
+- Added a folder-picker demo and request/component regression coverage for record-backed picker items and remote `kinds=record` searches.
+- Added Playwright regression coverage for inline picker thumbnail rows to verify click-to-select behavior and the visible selection indicator.
+
+### Tests
+- Added picker component, request, and Playwright regression coverage for the built-in form submission flow.
+
 ## [0.1.11] - 2026-03-26
 
 ### Added
@@ -158,6 +179,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dark mode support via system preference (prefers-color-scheme)
 - CSS variables for theming customization
 
+[0.1.12]: https://github.com/bowerbird-app/flatpack/compare/v0.1.11...v0.1.12
 [0.1.8]: https://github.com/bowerbird-app/flat_pack/compare/v0.1.7...v0.1.8
 [0.1.7]: https://github.com/bowerbird-app/flat_pack/compare/v0.1.6...v0.1.7
 [0.1.6]: https://github.com/bowerbird-app/flat_pack/compare/v0.1.5...v0.1.6

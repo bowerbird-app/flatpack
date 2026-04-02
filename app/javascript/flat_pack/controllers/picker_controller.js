@@ -1,12 +1,14 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["searchInput", "results", "emptyState", "outputField"]
+  static targets = ["searchInput", "results", "emptyState", "outputField", "formFields"]
 
   static values = {
     pickerId: String,
     items: Array,
     selectionMode: { type: String, default: "multiple" },
+    modal: { type: Boolean, default: true },
+    autoConfirm: { type: Boolean, default: false },
     acceptedKinds: Array,
     searchable: { type: Boolean, default: false },
     searchMode: { type: String, default: "local" },
@@ -14,6 +16,7 @@ export default class extends Controller {
     searchParam: { type: String, default: "q" },
     outputMode: { type: String, default: "event" },
     outputTarget: String,
+    form: Object,
     context: Object,
     emptyStateText: { type: String, default: "No assets found" },
     resultsLayout: { type: String, default: "list" }
@@ -26,6 +29,7 @@ export default class extends Controller {
     this.abortController = null
     this.#renderResults(this.filteredItems)
     this.#syncOutputField()
+    this.#syncFormFields()
   }
 
   disconnect() {
@@ -65,6 +69,8 @@ export default class extends Controller {
       return
     }
 
+    const wasSelected = this.selectedIds.has(itemId)
+
     if (this.selectionModeValue === "single") {
       this.selectedIds.clear()
       if (control.checked) {
@@ -83,12 +89,14 @@ export default class extends Controller {
       this.selectedIds.delete(itemId)
     }
 
-    // Grid indicators are custom markup, so refresh cards to reflect checked state.
-    if (this.#isGridLayout()) {
+    // Custom selection indicators need a rerender to reflect checked state.
+    if (this.#resultsNeedSelectionRefresh()) {
       this.#renderResults(this.filteredItems)
     }
 
     this.#syncOutputField()
+    this.#syncFormFields()
+    this.#autoConfirmSelectionIfNeeded({ selected: control.checked, wasSelected })
   }
 
   selectGridItem(event) {
@@ -102,6 +110,8 @@ export default class extends Controller {
       return
     }
 
+    const wasSelected = this.selectedIds.has(itemId)
+
     if (this.selectionModeValue === "single") {
       this.selectedIds.clear()
       this.selectedIds.add(itemId)
@@ -113,6 +123,8 @@ export default class extends Controller {
 
     this.#renderResults(this.filteredItems)
     this.#syncOutputField()
+    this.#syncFormFields()
+    this.#autoConfirmSelectionIfNeeded({ selected: true, wasSelected })
   }
 
   clearSelection() {
@@ -123,11 +135,17 @@ export default class extends Controller {
       }
     })
     this.#syncOutputField()
+    this.#syncFormFields()
   }
 
   confirmSelection() {
+    this.#emitConfirmSelection()
+  }
+
+  #emitConfirmSelection({ closeModal = false } = {}) {
     const selection = this.#selectedItems()
     this.#syncOutputField(selection)
+    this.#syncFormFields(selection)
 
     this.element.dispatchEvent(new CustomEvent("flat-pack:picker:confirm", {
       bubbles: true,
@@ -139,6 +157,38 @@ export default class extends Controller {
         context: this.contextValue || {}
       }
     }))
+
+    if (closeModal) {
+      this.#closeModal()
+    }
+  }
+
+  #autoConfirmSelectionIfNeeded({ selected = false, wasSelected = false } = {}) {
+    if (this.selectionModeValue !== "single" || !this.autoConfirmValue || !selected || wasSelected) {
+      return
+    }
+
+    this.#emitConfirmSelection({ closeModal: this.modalValue })
+
+    if (this.#hasFormMode()) {
+      this.#submitForm()
+    }
+  }
+
+  #closeModal() {
+    if (!this.modalValue) {
+      return
+    }
+
+    const modalElement = this.element.closest("[data-controller~='flat-pack--modal']")
+    if (!(modalElement instanceof HTMLElement)) {
+      return
+    }
+
+    const controller = this.application.getControllerForElementAndIdentifier(modalElement, "flat-pack--modal")
+    if (controller && typeof controller.close === "function") {
+      controller.close()
+    }
   }
 
   #searchRemote(query) {
@@ -218,25 +268,44 @@ export default class extends Controller {
 
   #listItemMarkup(item) {
     const itemId = this.#escapeHtml(String(item.id))
-    const kind = item.kind === "image" ? "image" : "file"
+    const kind = this.#normalizedKind(item.kind)
     const label = this.#escapeHtml(String(item.label || item.name || "Untitled"))
     const name = this.#escapeHtml(String(item.name || ""))
     const contentType = this.#escapeHtml(String(item.contentType || ""))
     const byteSize = Number.isFinite(item.byteSize) ? item.byteSize : ""
     const thumbnailUrl = this.#escapeHtml(String(item.thumbnailUrl || ""))
-    const isChecked = this.selectedIds.has(String(item.id)) ? "checked" : ""
+    const description = this.#escapeHtml(String(item.description || ""))
+    const path = this.#escapeHtml(String(item.path || ""))
+    const badge = this.#escapeHtml(String(item.badge || ""))
+    const isSelected = this.selectedIds.has(String(item.id))
+    const isChecked = isSelected ? "checked" : ""
     const controlType = this.selectionModeValue === "single" ? "radio" : "checkbox"
     const controlName = `picker_${this.#escapeHtml(this.pickerIdValue)}_selection`
-    const controlClass = controlType === "checkbox" ? this.#checkboxInputClasses() : "mt-1 cursor-pointer"
+    const hasThumbnailPreview = kind === "image" && Boolean(thumbnailUrl)
+    const controlClass = hasThumbnailPreview
+      ? "sr-only"
+      : (controlType === "checkbox" ? this.#checkboxInputClasses() : "mt-1 cursor-pointer")
     const meta = this.#escapeHtml(this.#metaText(item))
 
-    const preview = kind === "image" && thumbnailUrl
-      ? `<img src="${thumbnailUrl}" alt="${label} preview" class="h-14 w-20 rounded object-cover" loading="lazy">`
-      : `<span class="inline-flex h-10 w-10 items-center justify-center rounded border border-(--surface-border-color) text-sm text-(--surface-muted-content-color)">${kind === "image" ? "IMG" : "FILE"}</span>`
+    const preview = hasThumbnailPreview
+      ? `
+        <span class="relative inline-flex h-14 w-20 shrink-0 overflow-hidden rounded">
+          ${this.#selectionIndicatorMarkup(isSelected, "left-2 top-2")}
+          <img src="${thumbnailUrl}" alt="${label} preview" class="h-14 w-20 rounded object-cover" loading="lazy">
+        </span>`
+      : this.#listFallbackPreviewMarkup(kind, item)
+
+    const recordDescription = kind === "record" && description
+      ? `<span class="mt-1 block truncate text-xs text-(--surface-muted-content-color)">${description}</span>`
+      : ""
+
+    const badgeMarkup = badge
+      ? `<span class="inline-flex shrink-0 items-center rounded-full bg-(--surface-subtle-background-color) px-2 py-1 text-[11px] font-medium text-(--surface-muted-content-color)">${badge}</span>`
+      : ""
 
     return `
       <div class="flat-pack-checkbox-wrapper">
-        <label class="flex cursor-pointer items-start gap-3 rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-3">
+        <label class="flex cursor-pointer items-start gap-3 rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-3 transition-colors duration-base hover:bg-[var(--list-item-hover-background-color)]">
           <input
             type="${controlType}"
             name="${controlName}"
@@ -246,16 +315,21 @@ export default class extends Controller {
             data-action="change->flat-pack--picker#handleSelectionChange"
           >
           ${preview}
-          <span class="min-w-0 flex-1 ml-(--checkbox-label-gap)">
+          <span class="min-w-0 flex-1">
             <span class="block truncate text-sm font-medium text-(--surface-content-color)">${label}</span>
+            ${recordDescription}
             <span class="block truncate text-xs text-(--surface-muted-content-color)">${meta}</span>
           </span>
+          ${badgeMarkup}
           <span class="hidden"
             data-kind="${this.#escapeHtml(kind)}"
             data-name="${name}"
             data-content-type="${contentType}"
             data-byte-size="${byteSize}"
-            data-thumbnail-url="${thumbnailUrl}">
+            data-thumbnail-url="${thumbnailUrl}"
+            data-description="${description}"
+            data-path="${path}"
+            data-badge="${badge}">
           </span>
         </label>
       </div>
@@ -280,23 +354,41 @@ export default class extends Controller {
     ].join(" ")
   }
 
+  #selectionIndicatorMarkup(isSelected, positionClasses = "") {
+    const indicatorClasses = this.#selectionIndicatorClasses(isSelected)
+
+    return `
+      <span
+        class="pointer-events-none absolute z-10 inline-flex h-5 w-5 items-center justify-center rounded-full border-2 border-white text-white ring-1 ${this.#escapeHtml(positionClasses)} ${indicatorClasses}"
+        data-picker-selection-indicator
+      >
+        <span class="h-1.5 w-1.5 rounded-full bg-white ${isSelected ? "opacity-100" : "opacity-0"}"></span>
+      </span>
+    `
+  }
+
   #gridItemMarkup(item) {
     const itemId = this.#escapeHtml(String(item.id))
-    const kind = item.kind === "image" ? "image" : "file"
+    const kind = this.#normalizedKind(item.kind)
     const label = this.#escapeHtml(String(item.label || item.name || "Untitled"))
     const name = this.#escapeHtml(String(item.name || ""))
     const contentType = this.#escapeHtml(String(item.contentType || ""))
     const byteSize = Number.isFinite(item.byteSize) ? item.byteSize : ""
     const thumbnailUrl = this.#escapeHtml(String(item.thumbnailUrl || ""))
+    const description = this.#escapeHtml(String(item.description || ""))
+    const path = this.#escapeHtml(String(item.path || ""))
+    const badge = this.#escapeHtml(String(item.badge || ""))
     const isChecked = this.selectedIds.has(String(item.id)) ? "checked" : ""
-    const indicatorClasses = this.selectedIds.has(String(item.id))
-      ? "bg-(--primary-color) ring-(--primary-color)"
-      : "bg-black/30 ring-black/20"
+    const indicatorClasses = this.#selectionIndicatorClasses(this.selectedIds.has(String(item.id)))
     const isPressed = this.selectedIds.has(String(item.id)) ? "true" : "false"
 
     const preview = kind === "image" && thumbnailUrl
       ? `<img src="${thumbnailUrl}" alt="${label} preview" class="h-28 w-full rounded-md object-cover" loading="lazy">`
-      : `<span class="inline-flex h-28 w-full items-center justify-center rounded-md bg-(--surface-subtle-background-color) text-sm text-(--surface-muted-content-color)">${kind === "image" ? "IMG" : "FILE"}</span>`
+      : this.#gridFallbackPreviewMarkup(kind, item)
+
+    const badgeMarkup = badge
+      ? `<span class="pointer-events-none absolute left-3 top-3 z-10 inline-flex items-center rounded-full bg-black/55 px-2 py-1 text-[11px] font-medium text-white">${badge}</span>`
+      : ""
 
     return `
       <button
@@ -309,16 +401,46 @@ export default class extends Controller {
         <span class="pointer-events-none absolute bottom-3 right-3 z-10 inline-flex h-5 w-5 items-center justify-center rounded-full border-2 border-white text-white ring-1 ${indicatorClasses}">
           <span class="h-1.5 w-1.5 rounded-full bg-white ${isChecked ? "opacity-100" : "opacity-0"}"></span>
         </span>
+        ${badgeMarkup}
         ${preview}
         <span class="hidden"
           data-kind="${this.#escapeHtml(kind)}"
           data-name="${name}"
           data-content-type="${contentType}"
           data-byte-size="${byteSize}"
-          data-thumbnail-url="${thumbnailUrl}">
+          data-thumbnail-url="${thumbnailUrl}"
+          data-description="${description}"
+          data-path="${path}"
+          data-badge="${badge}">
         </span>
       </button>
     `
+  }
+
+  #selectionIndicatorClasses(isSelected) {
+    return isSelected
+      ? "bg-(--primary-color) ring-(--primary-color)"
+      : "bg-black/30 ring-black/20"
+  }
+
+  #listFallbackPreviewMarkup(kind, item) {
+    return ""
+  }
+
+  #gridFallbackPreviewMarkup(kind, item) {
+    if (kind === "file") {
+      const label = this.#escapeHtml(String(item.label || item.name || "Untitled"))
+      const meta = this.#escapeHtml(this.#metaText(item))
+
+      return `
+        <span class="flex h-28 w-full flex-col justify-center rounded-md bg-(--surface-subtle-background-color) px-4 text-left">
+          <span class="truncate text-sm font-medium text-(--surface-content-color)">${label}</span>
+          <span class="mt-1 truncate text-xs text-(--surface-muted-content-color)">${meta}</span>
+        </span>
+      `
+    }
+
+    return `<span class="inline-flex h-28 w-full items-center justify-center rounded-md bg-(--surface-subtle-background-color) text-sm text-(--surface-muted-content-color)">${this.#kindPreviewToken(kind, item)}</span>`
   }
 
   #resultsContainerClass() {
@@ -329,12 +451,28 @@ export default class extends Controller {
     return "space-y-2"
   }
 
+  #resultsNeedSelectionRefresh() {
+    return this.#isGridLayout() || this.resultsTarget.querySelector("[data-picker-selection-indicator]") !== null
+  }
+
   #isGridLayout() {
     return this.resultsLayoutValue === "grid"
   }
 
   #metaText(item) {
     const parts = []
+
+    if (item.kind === "record") {
+      if (item.path) {
+        parts.push(item.path)
+      }
+
+      if (item.meta) {
+        parts.push(item.meta)
+      }
+
+      return parts.join(" • ")
+    }
 
     if (item.contentType) {
       parts.push(item.contentType)
@@ -383,6 +521,9 @@ export default class extends Controller {
         contentType: item.contentType || null,
         byteSize: Number.isFinite(item.byteSize) ? item.byteSize : null,
         thumbnailUrl: item.thumbnailUrl || null,
+        description: item.description || null,
+        path: item.path || null,
+        badge: item.badge || null,
         meta: item.meta || null,
         payload: item.payload || {}
       }))
@@ -408,6 +549,37 @@ export default class extends Controller {
     }
   }
 
+  #syncFormFields(selection = null) {
+    if (!this.#hasFormMode() || !this.hasFormFieldsTarget) {
+      return
+    }
+
+    const selected = selection || this.#selectedItems()
+    const formConfig = this.formValue || {}
+    const fieldName = this.#fieldInputName(formConfig)
+
+    if (!fieldName) {
+      this.formFieldsTarget.innerHTML = ""
+      return
+    }
+
+    if (formConfig.valueMode === "json") {
+      this.formFieldsTarget.innerHTML = this.#hiddenInputMarkup(fieldName, JSON.stringify(selected))
+      return
+    }
+
+    const values = this.#selectedFormValues(selected, formConfig)
+
+    if (formConfig.valueMode === "id") {
+      this.formFieldsTarget.innerHTML = this.#hiddenInputMarkup(fieldName, values[0] || "")
+      return
+    }
+
+    this.formFieldsTarget.innerHTML = values
+      .map((value) => this.#hiddenInputMarkup(`${fieldName}[]`, value))
+      .join("")
+  }
+
   #baseItems() {
     return this.#normalizeItems(this.itemsValue || []).filter((item) => {
       if (!Array.isArray(this.acceptedKindsValue) || this.acceptedKindsValue.length === 0) {
@@ -424,12 +596,15 @@ export default class extends Controller {
       const id = source.id || `picker-item-${index}`
       return {
         id,
-        kind: source.kind === "image" ? "image" : "file",
+        kind: this.#normalizedKind(source.kind),
         label: source.label || source.name || `Item ${index + 1}`,
         name: source.name || source.label || `item-${index + 1}`,
         contentType: source.contentType || null,
         byteSize: Number.isFinite(source.byteSize) ? source.byteSize : null,
         thumbnailUrl: source.thumbnailUrl || null,
+        description: source.description || null,
+        path: source.path || null,
+        badge: source.badge || null,
         meta: source.meta || null,
         payload: source.payload || {}
       }
@@ -445,11 +620,36 @@ export default class extends Controller {
       item.label,
       item.name,
       item.contentType,
+      item.description,
+      item.path,
+      item.badge,
       item.meta,
       item.kind
     ].join(" ").toLowerCase()
 
     return haystack.includes(query.toLowerCase())
+  }
+
+  #normalizedKind(kind) {
+    const value = String(kind || "")
+
+    if (["image", "file", "record"].includes(value)) {
+      return value
+    }
+
+    return "file"
+  }
+
+  #kindPreviewToken(kind, item) {
+    if (kind === "image") {
+      return "IMG"
+    }
+
+    if (kind === "record") {
+      return String(item.badge || "REC").slice(0, 6).toUpperCase()
+    }
+
+    return "FILE"
   }
 
   #escapeHtml(value) {
@@ -459,5 +659,52 @@ export default class extends Controller {
       .replaceAll(">", "&gt;")
       .replaceAll('"', "&quot;")
       .replaceAll("'", "&#39;")
+  }
+
+  #selectedFormValues(selection, formConfig) {
+    return selection
+      .map((item) => this.#valueAtPath(item, formConfig.valuePath || "id"))
+      .filter((value) => value !== null && value !== undefined && String(value) !== "")
+      .map((value) => String(value))
+  }
+
+  #valueAtPath(item, path) {
+    return String(path || "id")
+      .split(".")
+      .filter(Boolean)
+      .reduce((current, key) => {
+        if (current === null || current === undefined || typeof current !== "object") {
+          return undefined
+        }
+
+        return current[key]
+      }, item)
+  }
+
+  #fieldInputName(formConfig) {
+    const field = String(formConfig.field || "").trim()
+    if (!field) {
+      return ""
+    }
+
+    const scope = String(formConfig.scope || "").trim()
+    return scope ? `${scope}[${field}]` : field
+  }
+
+  #hiddenInputMarkup(name, value) {
+    return `<input type="hidden" name="${this.#escapeHtml(name)}" value="${this.#escapeHtml(value)}">`
+  }
+
+  #hasFormMode() {
+    return this.hasFormValue && Boolean(this.formValue?.field)
+  }
+
+  #submitForm() {
+    const form = this.element.closest("form")
+    if (!(form instanceof HTMLFormElement)) {
+      return
+    }
+
+    form.requestSubmit()
   }
 }

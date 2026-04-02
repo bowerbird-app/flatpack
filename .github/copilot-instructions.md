@@ -28,6 +28,8 @@ You are the default AI coding agent for this repository.
 
 - Start with targeted context gathering in the smallest relevant files.
 - Implement root-cause fixes, not cosmetic patches.
+- When a PR includes code changes in this repository, update `lib/flat_pack/version.rb` and `CHANGELOG.md` as part of the same task.
+- Bump the gem version only once per PR. If the intended version bump is already present in the branch, do not increment it again on later edits in that PR.
 - Add or update focused tests for changed behavior when appropriate.
 - After all code changes are complete, run `bundle exec rubocop -A` to auto-correct style offenses.
 - Run targeted verification first, then broader checks if needed.
