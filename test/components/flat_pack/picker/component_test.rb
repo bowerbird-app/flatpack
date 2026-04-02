@@ -97,6 +97,8 @@ module FlatPack
         render_inline(Component.new(id: "record-picker", items: sample_items, accepted_kinds: [:record]))
 
         assert_includes rendered_content, "data-flat-pack--picker-accepted-kinds-value=\"[&quot;record&quot;]\""
+        assert_includes rendered_content, "data-flat-pack--picker-config-value="
+        assert_includes rendered_content, "&quot;selection&quot;:{&quot;mode&quot;:&quot;multiple&quot;,&quot;acceptedKinds&quot;:[&quot;record&quot;],&quot;autoConfirm&quot;:false}"
         assert_includes rendered_content, "&quot;kind&quot;:&quot;record&quot;"
         assert_includes rendered_content, "&quot;description&quot;:&quot;Shared folder for approved creative&quot;"
         assert_includes rendered_content, "&quot;path&quot;:&quot;/Marketing/Brand Assets&quot;"
@@ -124,6 +126,7 @@ module FlatPack
         assert_includes rendered_content, "&quot;scope&quot;:&quot;picker_assignment&quot;"
         assert_includes rendered_content, "&quot;valueMode&quot;:&quot;id&quot;"
         assert_includes rendered_content, "&quot;valuePath&quot;:&quot;payload.record_id&quot;"
+        assert_includes rendered_content, "&quot;output&quot;:{&quot;mode&quot;:&quot;event&quot;,&quot;target&quot;:null,&quot;form&quot;:{&quot;field&quot;:&quot;folder_record_id&quot;,&quot;scope&quot;:&quot;picker_assignment&quot;,&quot;valueMode&quot;:&quot;id&quot;,&quot;valuePath&quot;:&quot;payload.record_id&quot;}}"
       end
 
       def test_renders_search_input_when_searchable

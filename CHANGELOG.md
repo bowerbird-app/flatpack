@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.13] - 2026-04-02
+
+### Changed
+- Refactored `FlatPack::Picker::Component` so picker config, form config, item normalization, and Stimulus client serialization are handled by dedicated internal classes.
+- Simplified picker rendering so modal and inline wrappers share the same inner body flow, with clearer search, output, results, empty-state, and footer rendering boundaries.
+- Added a structured picker config payload for Stimulus while preserving the existing data attributes and browser-facing behavior for backward compatibility.
+- Updated picker docs and dummy app demos to better reflect the presentation, selection, search, and output groupings used by the component.
+
+### Tests
+- Added focused picker tests for extracted item normalization and form configuration behavior.
+- Refreshed picker component, request, and Playwright verification for the refactor.
+
 ## [0.1.12] - 2026-04-01
 
 ### Security

@@ -6,6 +6,17 @@ Render an item picker inline or in a modal. Picker supports images, files, and r
 ## When to use
 Use Picker when users need to choose image assets, files, or application records such as folders, and your feature controls what happens after confirmation.
 
+## Configuration model
+
+Internally the picker now normalizes its configuration into four concerns:
+
+- **presentation** — inline vs modal rendering and result layout
+- **selection** — single vs multiple selection and auto-confirm behavior
+- **search** — local vs remote search behavior
+- **output** — event output, field output, and optional built-in form submission
+
+The public initializer remains backward compatible. You can keep passing the existing flat options, or group related options into local hashes in your view for readability.
+
 ## Class
 - Primary: `FlatPack::Picker::Component`
 
@@ -58,6 +69,48 @@ None.
 | `modal: false` | Renders the picker inline without a modal backdrop or modal close behavior. This is the default. |
 | `selection_mode: :single, auto_confirm: true` | Selecting an item immediately syncs field output, emits `flat-pack:picker:confirm`, and closes the modal when modal-backed. |
 
+## Preferred composition pattern
+
+For larger demos or screens with multiple pickers, group related options before rendering:
+
+```erb
+<%
+  modal_picker = {
+    modal: true,
+    modal_body_height_mode: :fixed,
+    modal_body_height: "clamp(20rem, 55vh, 30rem)"
+  }
+  local_search = {
+    searchable: true,
+    search_mode: :local
+  }
+  single_auto_confirm = {
+    selection_mode: :single,
+    auto_confirm: true
+  }
+%>
+
+<%= render FlatPack::Picker::Component.new(
+  id: "picker-demo-inline",
+  title: "Inline Asset Picker",
+  items: @picker_demo_items,
+  **local_search,
+  **single_auto_confirm,
+  output_mode: :field,
+  output_target: "#picker-inline-selected-field"
+) %>
+
+<%= render FlatPack::Picker::Component.new(
+  id: "picker-demo-modal",
+  title: "Select Assets",
+  items: @picker_demo_items,
+  **modal_picker,
+  **local_search
+) %>
+```
+
+This does not change the component API; it simply mirrors the same presentation/selection/search/output groupings the picker now uses internally.
+
 ## Built-in form config
 
 Use `form:` when you want the picker to submit directly to a standard Rails controller without writing custom Stimulus or providing your own hidden field.
@@ -75,6 +128,21 @@ Use `form:` when you want the picker to submit directly to a standard Rails cont
 ## Example
 
 Each picker item must include `name`. The component normalizes either snake_case or camelCase input keys into the browser payload (`thumbnail_url` and `thumbnailUrl`, `content_type` and `contentType`, `byte_size` and `byteSize`). Remote search responses must return JSON in the shape `{ items: [...] }`.
+
+The normalized browser payload keeps this stable shape:
+
+- `id`
+- `kind`
+- `label`
+- `name`
+- `contentType`
+- `byteSize`
+- `thumbnailUrl`
+- `description`
+- `path`
+- `badge`
+- `meta`
+- `payload`
 
 ### Default inline picker
 
@@ -351,6 +419,7 @@ Selected items preserve the optional `description`, `path`, and `badge` keys whe
 
 ## Behavior notes
 
+- The picker serializes a structured client config for Stimulus while preserving the existing browser-facing behavior and event contract.
 - `modal: false` is the default, so picker content renders inline unless a consumer explicitly opts into modal presentation.
 - `modal: true` keeps the existing modal-backed behavior for trigger/button flows.
 - Record rows render with a generic record badge and use `description`, `path`, and `badge` when provided.

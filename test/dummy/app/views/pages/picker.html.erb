@@ -1,3 +1,19 @@
+<%
+  picker_output_field_classes = "w-full rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-2 text-xs text-(--surface-muted-content-color)"
+  picker_modal_defaults = {
+    modal: true,
+    modal_body_height_mode: :fixed
+  }
+  picker_local_search_defaults = {
+    searchable: true,
+    search_mode: :local
+  }
+  picker_single_auto_confirm_defaults = {
+    selection_mode: :single,
+    auto_confirm: true
+  }
+%>
+
 <div class="container mx-auto max-w-5xl p-4" data-controller="picker-demo" data-action="flat-pack:picker:confirm@document->picker-demo#handleConfirm">
   <%= render FlatPack::PageTitle::Component.new(
     title: "Picker",
@@ -141,7 +157,7 @@
             ) %>
           </div>
 
-          <input id="picker-folder-field" type="text" readonly class="w-full rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-2 text-xs text-(--surface-muted-content-color)" placeholder="Folder selection JSON appears here">
+          <input id="picker-folder-field" type="text" readonly class="<%= picker_output_field_classes %>" placeholder="Folder selection JSON appears here">
         </div>
       <% end %>
     <% end %>
@@ -189,15 +205,12 @@
       title: "Select Folder",
       subtitle: "Choose one folder record to confirm immediately.",
       items: @picker_demo_items,
-      modal: true,
+      **picker_modal_defaults,
       accepted_kinds: [:record],
-      selection_mode: :single,
-      auto_confirm: true,
-      searchable: true,
-      search_mode: :local,
+      **picker_local_search_defaults,
+      **picker_single_auto_confirm_defaults,
       output_mode: :field,
       output_target: "#picker-folder-field",
-      modal_body_height_mode: :fixed,
       modal_body_height: "clamp(18rem, 48vh, 24rem)",
       confirm_text: "Use Folder",
       context: {target: "picker-demo-folders"}
@@ -371,10 +384,8 @@
       title: "Select Assets",
       subtitle: "Local search across image and file assets with a fixed modal body height.",
       items: @picker_demo_items,
-      modal: true,
-      searchable: true,
-      search_mode: :local,
-      modal_body_height_mode: :fixed,
+      **picker_modal_defaults,
+      **picker_local_search_defaults,
       modal_body_height: "clamp(20rem, 55vh, 30rem)",
       confirm_text: "Use Selection",
       context: {target: "picker-demo-local"}
@@ -457,11 +468,10 @@
       title: "Search Remote Assets",
       subtitle: "Remote search keeps a fixed modal body height for stable layout while result counts change.",
       items: @picker_demo_items.first(2),
-      modal: true,
-      searchable: true,
+      **picker_modal_defaults,
       search_mode: :remote,
       search_endpoint: demo_picker_results_path,
-      modal_body_height_mode: :fixed,
+      searchable: true,
       modal_body_height: "clamp(20rem, 55vh, 30rem)",
       confirm_text: "Use Remote Selection",
       context: {target: "picker-demo-remote"}
@@ -481,18 +491,15 @@
         This example is useful for sidebars, forms, or editors where the picker should stay visible instead of opening in a modal.
       </p>
 
-      <input id="picker-inline-selected-field" type="text" readonly class="w-full rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-2 text-xs text-(--surface-muted-content-color)" placeholder="Inline selection JSON appears here">
+      <input id="picker-inline-selected-field" type="text" readonly class="<%= picker_output_field_classes %>" placeholder="Inline selection JSON appears here">
 
       <%= render FlatPack::Picker::Component.new(
         id: "picker-demo-inline",
         title: "Inline Asset Picker",
         subtitle: "Choose one item to confirm immediately.",
         items: @picker_demo_items,
-        searchable: true,
-        search_mode: :local,
-        selection_mode: :single,
-        auto_confirm: true,
-        modal: false,
+        **picker_local_search_defaults,
+        **picker_single_auto_confirm_defaults,
         output_mode: :field,
         output_target: "#picker-inline-selected-field",
         confirm_text: "Use Inline Selection",
@@ -593,13 +600,10 @@
       title: "Select Image",
       subtitle: "Choose one or more image assets.",
       items: @picker_demo_items,
-      modal: true,
+      **picker_modal_defaults,
       accepted_kinds: [:image],
-      selection_mode: :multiple,
-      searchable: true,
-      search_mode: :local,
+      **picker_local_search_defaults,
       results_layout: :grid,
-      modal_body_height_mode: :fixed,
       modal_body_height: "clamp(18rem, 50vh, 26rem)",
       confirm_text: "Use Image",
       context: {target: "picker-demo-images"}
@@ -633,7 +637,7 @@
             ) %>
           </div>
 
-          <input id="picker-auto-confirm-field" type="text" readonly class="w-full rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-2 text-xs text-(--surface-muted-content-color)" placeholder="Auto-confirm selection JSON appears here">
+          <input id="picker-auto-confirm-field" type="text" readonly class="<%= picker_output_field_classes %>" placeholder="Auto-confirm selection JSON appears here">
         </div>
       <% end %>
     <% end %>
@@ -680,14 +684,11 @@
       title: "Choose One Asset",
       subtitle: "Selecting an item confirms immediately and closes the modal.",
       items: @picker_demo_items,
-      modal: true,
-      searchable: true,
-      search_mode: :local,
-      selection_mode: :single,
-      auto_confirm: true,
+      **picker_modal_defaults,
+      **picker_local_search_defaults,
+      **picker_single_auto_confirm_defaults,
       output_mode: :field,
       output_target: "#picker-auto-confirm-field",
-      modal_body_height_mode: :fixed,
       modal_body_height: "clamp(18rem, 50vh, 24rem)",
       confirm_text: "Use Asset",
       context: {target: "picker-demo-auto-confirm"}
@@ -765,11 +766,9 @@
       title: "Select Files",
       subtitle: "Writes selected items to a consumer-provided field selector.",
       items: @picker_demo_items,
-      modal: true,
+      **picker_modal_defaults,
       accepted_kinds: [:file],
-      searchable: true,
-      search_mode: :local,
-      modal_body_height_mode: :fixed,
+      **picker_local_search_defaults,
       modal_body_height: "24rem",
       output_mode: :field,
       output_target: "#picker-selected-assets-field",

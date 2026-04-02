@@ -4,6 +4,7 @@ export default class extends Controller {
   static targets = ["searchInput", "results", "emptyState", "outputField", "formFields"]
 
   static values = {
+    config: Object,
     pickerId: String,
     items: Array,
     selectionMode: { type: String, default: "multiple" },
@@ -23,6 +24,7 @@ export default class extends Controller {
   }
 
   connect() {
+    this.config = this.#buildConfig()
     this.filteredItems = this.#baseItems()
     this.selectedIds = new Set()
     this.debounceTimer = null
@@ -45,11 +47,11 @@ export default class extends Controller {
   search(event) {
     const query = String(event?.target?.value || "").trim()
 
-    if (!this.searchableValue) {
+    if (!this.#searchEnabled()) {
       return
     }
 
-    if (this.searchModeValue === "remote") {
+    if (this.#searchMode() === "remote") {
       this.#searchRemote(query)
       return
     }
@@ -71,7 +73,7 @@ export default class extends Controller {
 
     const wasSelected = this.selectedIds.has(itemId)
 
-    if (this.selectionModeValue === "single") {
+    if (this.#selectionMode() === "single") {
       this.selectedIds.clear()
       if (control.checked) {
         this.selectedIds.add(itemId)
@@ -112,7 +114,7 @@ export default class extends Controller {
 
     const wasSelected = this.selectedIds.has(itemId)
 
-    if (this.selectionModeValue === "single") {
+    if (this.#selectionMode() === "single") {
       this.selectedIds.clear()
       this.selectedIds.add(itemId)
     } else if (this.selectedIds.has(itemId)) {
@@ -150,11 +152,11 @@ export default class extends Controller {
     this.element.dispatchEvent(new CustomEvent("flat-pack:picker:confirm", {
       bubbles: true,
       detail: {
-        pickerId: this.pickerIdValue,
+        pickerId: this.#pickerId(),
         selection,
-        selectionMode: this.selectionModeValue,
-        acceptedKinds: this.acceptedKindsValue,
-        context: this.contextValue || {}
+        selectionMode: this.#selectionMode(),
+        acceptedKinds: this.#acceptedKinds(),
+        context: this.#context()
       }
     }))
 
@@ -164,11 +166,11 @@ export default class extends Controller {
   }
 
   #autoConfirmSelectionIfNeeded({ selected = false, wasSelected = false } = {}) {
-    if (this.selectionModeValue !== "single" || !this.autoConfirmValue || !selected || wasSelected) {
+    if (this.#selectionMode() !== "single" || !this.#autoConfirm() || !selected || wasSelected) {
       return
     }
 
-    this.#emitConfirmSelection({ closeModal: this.modalValue })
+    this.#emitConfirmSelection({ closeModal: this.#modalEnabled() })
 
     if (this.#hasFormMode()) {
       this.#submitForm()
@@ -176,7 +178,7 @@ export default class extends Controller {
   }
 
   #closeModal() {
-    if (!this.modalValue) {
+    if (!this.#modalEnabled()) {
       return
     }
 
@@ -192,7 +194,7 @@ export default class extends Controller {
   }
 
   #searchRemote(query) {
-    if (!this.hasSearchEndpointValue) {
+    if (!this.#searchEndpoint()) {
       return
     }
 
@@ -207,10 +209,10 @@ export default class extends Controller {
 
       this.abortController = new AbortController()
 
-      const url = new URL(this.searchEndpointValue, window.location.origin)
-      url.searchParams.set(this.searchParamValue, query)
-      if (this.acceptedKindsValue.length > 0) {
-        url.searchParams.set("kinds", this.acceptedKindsValue.join(","))
+      const url = new URL(this.#searchEndpoint(), window.location.origin)
+      url.searchParams.set(this.#searchParam(), query)
+      if (this.#acceptedKinds().length > 0) {
+        url.searchParams.set("kinds", this.#acceptedKinds().join(","))
       }
 
       try {
@@ -248,7 +250,7 @@ export default class extends Controller {
 
     if (this.hasEmptyStateTarget) {
       if (items.length === 0) {
-        this.emptyStateTarget.textContent = this.emptyStateTextValue
+        this.emptyStateTarget.textContent = this.#emptyStateText()
         this.emptyStateTarget.classList.remove("hidden")
         this.emptyStateTarget.classList.add("flex")
       } else {
@@ -279,8 +281,8 @@ export default class extends Controller {
     const badge = this.#escapeHtml(String(item.badge || ""))
     const isSelected = this.selectedIds.has(String(item.id))
     const isChecked = isSelected ? "checked" : ""
-    const controlType = this.selectionModeValue === "single" ? "radio" : "checkbox"
-    const controlName = `picker_${this.#escapeHtml(this.pickerIdValue)}_selection`
+    const controlType = this.#selectionMode() === "single" ? "radio" : "checkbox"
+    const controlName = `picker_${this.#escapeHtml(this.#pickerId())}_selection`
     const hasThumbnailPreview = kind === "image" && Boolean(thumbnailUrl)
     const controlClass = hasThumbnailPreview
       ? "sr-only"
@@ -456,7 +458,7 @@ export default class extends Controller {
   }
 
   #isGridLayout() {
-    return this.resultsLayoutValue === "grid"
+    return this.#resultsLayout() === "grid"
   }
 
   #metaText(item) {
@@ -530,15 +532,15 @@ export default class extends Controller {
   }
 
   #syncOutputField(selection = null) {
-    if (this.outputModeValue !== "field") {
+    if (this.#outputMode() !== "field") {
       return
     }
 
     const selected = selection || this.#selectedItems()
     const encoded = JSON.stringify(selected)
 
-    if (this.hasOutputTargetValue && this.outputTargetValue) {
-      const targetElement = document.querySelector(this.outputTargetValue)
+    if (this.#outputTarget()) {
+      const targetElement = document.querySelector(this.#outputTarget())
       if (targetElement) {
         targetElement.value = encoded
       }
@@ -555,7 +557,7 @@ export default class extends Controller {
     }
 
     const selected = selection || this.#selectedItems()
-    const formConfig = this.formValue || {}
+    const formConfig = this.#formConfig()
     const fieldName = this.#fieldInputName(formConfig)
 
     if (!fieldName) {
@@ -582,11 +584,11 @@ export default class extends Controller {
 
   #baseItems() {
     return this.#normalizeItems(this.itemsValue || []).filter((item) => {
-      if (!Array.isArray(this.acceptedKindsValue) || this.acceptedKindsValue.length === 0) {
+      if (this.#acceptedKinds().length === 0) {
         return true
       }
 
-      return this.acceptedKindsValue.includes(item.kind)
+      return this.#acceptedKinds().includes(item.kind)
     })
   }
 
@@ -696,7 +698,7 @@ export default class extends Controller {
   }
 
   #hasFormMode() {
-    return this.hasFormValue && Boolean(this.formValue?.field)
+    return Boolean(this.#formConfig()?.field)
   }
 
   #submitForm() {
@@ -706,5 +708,98 @@ export default class extends Controller {
     }
 
     form.requestSubmit()
+  }
+
+  #buildConfig() {
+    if (this.hasConfigValue && this.configValue && Object.keys(this.configValue).length > 0) {
+      return this.configValue
+    }
+
+    return {
+      pickerId: this.pickerIdValue,
+      presentation: {
+        modal: this.modalValue,
+        resultsLayout: this.resultsLayoutValue
+      },
+      selection: {
+        mode: this.selectionModeValue,
+        acceptedKinds: this.acceptedKindsValue || [],
+        autoConfirm: this.autoConfirmValue
+      },
+      search: {
+        enabled: this.searchableValue,
+        mode: this.searchModeValue,
+        endpoint: this.searchEndpointValue,
+        param: this.searchParamValue
+      },
+      output: {
+        mode: this.outputModeValue,
+        target: this.outputTargetValue,
+        form: this.hasFormValue ? this.formValue : null
+      },
+      context: this.contextValue || {},
+      emptyStateText: this.emptyStateTextValue
+    }
+  }
+
+  #pickerId() {
+    return String(this.config?.pickerId || this.pickerIdValue || "")
+  }
+
+  #selectionMode() {
+    return String(this.config?.selection?.mode || this.selectionModeValue || "multiple")
+  }
+
+  #acceptedKinds() {
+    const acceptedKinds = this.config?.selection?.acceptedKinds
+    return Array.isArray(acceptedKinds) ? acceptedKinds : (this.acceptedKindsValue || [])
+  }
+
+  #autoConfirm() {
+    return Boolean(this.config?.selection?.autoConfirm ?? this.autoConfirmValue)
+  }
+
+  #modalEnabled() {
+    return Boolean(this.config?.presentation?.modal ?? this.modalValue)
+  }
+
+  #resultsLayout() {
+    return String(this.config?.presentation?.resultsLayout || this.resultsLayoutValue || "list")
+  }
+
+  #searchEnabled() {
+    return Boolean(this.config?.search?.enabled ?? this.searchableValue)
+  }
+
+  #searchMode() {
+    return String(this.config?.search?.mode || this.searchModeValue || "local")
+  }
+
+  #searchEndpoint() {
+    return this.config?.search?.endpoint || this.searchEndpointValue || ""
+  }
+
+  #searchParam() {
+    return String(this.config?.search?.param || this.searchParamValue || "q")
+  }
+
+  #outputMode() {
+    return String(this.config?.output?.mode || this.outputModeValue || "event")
+  }
+
+  #outputTarget() {
+    return this.config?.output?.target || this.outputTargetValue || ""
+  }
+
+  #formConfig() {
+    return this.config?.output?.form || (this.hasFormValue ? this.formValue : {})
+  }
+
+  #context() {
+    return this.config?.context || this.contextValue || {}
+  }
+
+  #emptyStateText() {
+    return String(this.config?.emptyStateText || this.emptyStateTextValue || "No assets found")
   }
 }

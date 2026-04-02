@@ -29,7 +29,7 @@ export default class extends Controller {
     const selectionMarkup = selection
       .map((item) => {
         const label = this.#escapeHtml(item.label || item.name || "Untitled")
-        const kind = item.kind === "image" ? "image" : "file"
+        const kind = ["image", "record"].includes(item.kind) ? item.kind : "file"
         return `<li class='truncate text-(--surface-content-color)'>${label} <span class='text-(--surface-muted-content-color)'>(${kind})</span></li>`
       })
       .join("")
