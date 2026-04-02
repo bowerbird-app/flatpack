@@ -41,7 +41,7 @@
             <li><code>thumbnail_url</code> or <code>thumbnailUrl</code> enables image previews.</li>
             <li><code>description</code>, <code>path</code>, and <code>badge</code> help record rows render folders and other app records clearly.</li>
             <li><code>content_type</code>, <code>byte_size</code>, and <code>meta</code> render the metadata line.</li>
-            <li><code>payload</code> is returned in the confirm event so your app can store signed IDs or other references.</li>
+            <li><code>payload</code> is optional and returned in the confirm event so your app can store signed IDs, record IDs, or other references.</li>
           </ul>
         </div>
       <% end %>
@@ -61,10 +61,7 @@
             content_type: "image/png",
             byte_size: 312_400,
             thumbnail_url: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=640&h=360&fit=crop",
-            meta: "Homepage refresh",
-            payload: {
-              signed_id: "blob-signed-id-123"
-            }
+            meta: "Homepage refresh"
           },
           {
             id: "asset-launch-checklist",
@@ -73,10 +70,7 @@
             label: "Launch Checklist",
             content_type: "application/pdf",
             byte_size: 96_800,
-            meta: "PDF",
-            payload: {
-              signed_id: "blob-signed-id-456"
-            }
+            meta: "PDF"
           },
           {
             id: "folder-brand-assets",
@@ -305,7 +299,7 @@
           picker_assignment = params.require(:picker_assignment).permit(:folder_record_id)
 
           flash[:picker_form_submission] = picker_assignment.to_h
-          redirect_to demo_picker_path(anchor: "built-in-form")
+          redirect_to demo_picker_path(anchor: "built-in-form"), notice: "Picker form submitted successfully"
         end
       CODE
     ) %>
@@ -410,7 +404,7 @@
           <div class="flex flex-wrap gap-2">
             <%= render FlatPack::Button::Component.new(
               text: "Open Remote Picker",
-              icon: "search",
+              icon: "magnifying-glass",
               style: :secondary,
               data: {
                 action: "click->flat-pack--modal#open",
@@ -438,7 +432,7 @@
       code: CGI.unescapeHTML(<<~'CODE')
         &lt;%= render FlatPack::Button::Component.new(
           text: "Open Remote Picker",
-          icon: "search",
+          icon: "magnifying-glass",
           style: :secondary,
           data: {
             action: "click-&gt;flat-pack--modal#open",

@@ -120,7 +120,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Local items array"
     assert_includes response.body, "Remote search JSON"
     assert_includes response.body, "name</code> is required"
-    assert_includes response.body, "signed_id: &quot;blob-signed-id-123&quot;"
+    assert_includes response.body, "payload</code> is optional"
     assert_includes response.body, "record_id: 42"
     assert_includes response.body, "&quot;kind&quot;: &quot;record&quot;"
     assert_includes response.body, "Open Local Picker"
