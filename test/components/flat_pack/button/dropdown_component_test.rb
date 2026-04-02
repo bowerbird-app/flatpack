@@ -31,6 +31,7 @@ module FlatPack
         assert_selector "div[role='menu'].hidden"
         assert_selector "div[role='menu'].opacity-0"
         assert_selector "div[role='menu'].scale-95"
+        assert_includes page.native.to_html, "z-[60]"
       end
 
       # Style variants

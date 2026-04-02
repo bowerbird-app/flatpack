@@ -141,7 +141,7 @@ module FlatPack
 
         def menu_classes
           classes(
-            "absolute z-50",
+            "absolute z-[60]",
             "min-w-[12rem]",
             "overflow-auto",
             "rounded-md",
