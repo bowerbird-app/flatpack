@@ -69,7 +69,8 @@ module FlatPack
         def dropdown_data_attributes
           {
             controller: "flat-pack--button-dropdown",
-            flat_pack__button_dropdown_max_height_value: @max_height
+            flat_pack__button_dropdown_max_height_value: @max_height,
+            flat_pack__button_dropdown_position_value: @position
           }
         end
 
@@ -133,6 +134,8 @@ module FlatPack
           {
             class: menu_classes,
             role: "menu",
+            aria: {hidden: "true"},
+            style: "max-height: #{@max_height};",
             data: {
               flat_pack__button_dropdown_target: "menu"
             }
@@ -141,7 +144,7 @@ module FlatPack
 
         def menu_classes
           classes(
-            "absolute z-50",
+            "fixed z-50",
             "min-w-[12rem]",
             "overflow-auto",
             "rounded-md",
@@ -150,8 +153,7 @@ module FlatPack
             "p-1",
             "shadow-lg",
             "opacity-0 scale-95 hidden",
-            "transition-all duration-200",
-            POSITIONS.fetch(@position)
+            "transition-[opacity,transform] duration-200"
           )
         end
 

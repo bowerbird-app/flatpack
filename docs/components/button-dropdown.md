@@ -2,6 +2,7 @@
 
 ## Purpose
 Provide a button-triggered action menu with keyboard navigation and managed open/close behavior.
+The menu is floated with viewport positioning so it can escape clipped cards, panels, and sidebars.
 
 ## When to use
 Use Button Dropdown when multiple related actions should be grouped behind a single trigger.
