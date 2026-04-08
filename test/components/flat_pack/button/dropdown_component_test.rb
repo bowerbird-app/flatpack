@@ -31,6 +31,7 @@ module FlatPack
         assert_selector "div[role='menu'].hidden"
         assert_selector "div[role='menu'].opacity-0"
         assert_selector "div[role='menu'].scale-95"
+        assert_includes page.native.to_html, "transition-[opacity,transform]"
       end
 
       # Style variants
@@ -101,25 +102,25 @@ module FlatPack
       def test_renders_bottom_right_position
         render_inline(Dropdown::Component.new(text: "Actions", position: :bottom_right))
 
-        assert_selector "div[role='menu'].top-full.right-0"
+        assert_selector "div[data-controller='flat-pack--button-dropdown'][data-flat-pack--button-dropdown-position-value='bottom_right']"
       end
 
       def test_renders_bottom_left_position
         render_inline(Dropdown::Component.new(text: "Actions", position: :bottom_left))
 
-        assert_selector "div[role='menu'].top-full.left-0"
+        assert_selector "div[data-controller='flat-pack--button-dropdown'][data-flat-pack--button-dropdown-position-value='bottom_left']"
       end
 
       def test_renders_top_right_position
         render_inline(Dropdown::Component.new(text: "Actions", position: :top_right))
 
-        assert_selector "div[role='menu'].bottom-full.right-0"
+        assert_selector "div[data-controller='flat-pack--button-dropdown'][data-flat-pack--button-dropdown-position-value='top_right']"
       end
 
       def test_renders_top_left_position
         render_inline(Dropdown::Component.new(text: "Actions", position: :top_left))
 
-        assert_selector "div[role='menu'].bottom-full.left-0"
+        assert_selector "div[data-controller='flat-pack--button-dropdown'][data-flat-pack--button-dropdown-position-value='top_left']"
       end
 
       def test_raises_error_for_invalid_position
@@ -253,6 +254,7 @@ module FlatPack
         render_inline(Dropdown::Component.new(text: "Actions"))
 
         assert_selector "div[data-controller='flat-pack--button-dropdown']"
+        assert_selector "div[data-flat-pack--button-dropdown-position-value='bottom_right']"
       end
 
       def test_renders_stimulus_target_on_trigger
@@ -265,6 +267,7 @@ module FlatPack
         render_inline(Dropdown::Component.new(text: "Actions"))
 
         assert_selector "div[data-flat-pack--button-dropdown-target='menu']"
+        assert_selector "div[role='menu'].fixed"
       end
 
       def test_renders_stimulus_action_on_trigger
