@@ -349,6 +349,116 @@
 
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(
+      title: "Items Height",
+      anchor: "items-height",
+      anchor_link: true,
+      subtitle: "Control only the results region height while keeping search and actions at their natural size."
+    ) %>
+
+    <p class="mt-6 text-sm text-(--surface-muted-content-color)">
+      Use <code>items_height: "min-content"</code> to let a short result set collapse, <code>"max-content"</code> to have results fill the available wrapper height, or a fixed CSS length such as <code>"240px"</code> when you want a predictable scroll region.
+    </p>
+  </section>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Min Content",
+      anchor: "items-height-min-content",
+      anchor_link: true,
+      subtitle: "A short result set keeps only the list region as tall as it needs to be, while the action row stays visible."
+    ) %>
+
+    <%= render FlatPack::Card::Component.new(class: "mt-6") do |card| %>
+      <% card.body do %>
+        <%= render FlatPack::Picker::Component.new(
+          id: "picker-demo-items-height-min",
+          title: "Min Content",
+          subtitle: "One result keeps the list region compact.",
+          items: @picker_demo_items.first(1),
+          searchable: true,
+          search_mode: :local,
+          items_height: "min-content",
+          modal: false,
+          selection_mode: :single,
+          confirm_text: "Use Asset"
+        ) %>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      class: "mt-6",
+      code: picker_demo_items_height_min_erb_code
+    ) %>
+  </section>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Max Content",
+      anchor: "items-height-max-content",
+      anchor_link: true,
+      subtitle: "The results region takes the remaining wrapper height and scrolls internally when needed."
+    ) %>
+
+    <%= render FlatPack::Card::Component.new(class: "mt-6") do |card| %>
+      <% card.body do %>
+        <%= render FlatPack::Picker::Component.new(
+          id: "picker-demo-items-height-max",
+          title: "Max Content",
+          subtitle: "The results region expands to fill the wrapper.",
+          items: @picker_demo_items,
+          searchable: true,
+          search_mode: :local,
+          items_height: "max-content",
+          modal: false,
+          confirm_text: "Use Assets"
+        ) %>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      class: "mt-6",
+      code: picker_demo_items_height_max_erb_code
+    ) %>
+  </section>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Fixed Height",
+      anchor: "items-height-fixed-height",
+      anchor_link: true,
+      subtitle: "Use a fixed CSS length when the scroll area needs to stay predictable across pages."
+    ) %>
+
+    <%= render FlatPack::Card::Component.new(class: "mt-6") do |card| %>
+      <% card.body do %>
+        <%= render FlatPack::Picker::Component.new(
+          id: "picker-demo-items-height-fixed",
+          title: "Fixed Height",
+          subtitle: "A 240px results region scrolls once content exceeds the cap.",
+          items: @picker_demo_items,
+          searchable: true,
+          search_mode: :local,
+          items_height: "240px",
+          modal: false,
+          confirm_text: "Use Assets"
+        ) %>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      class: "mt-6",
+      code: picker_demo_items_height_fixed_erb_code
+    ) %>
+  </section>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(
       title: "Images",
       anchor: "image-picker",
       anchor_link: true,

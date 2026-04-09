@@ -72,6 +72,7 @@ module FlatPack
         assert_selector "div#inline-picker"
         assert_selector "div#inline-picker div[data-controller='flat-pack--picker'][data-flat-pack--picker-modal-value='false']"
         assert_no_selector "div#inline-picker[data-controller='flat-pack--modal']"
+        assert_selector "div#inline-picker > div[style*='--flatpack-modal-body-height: clamp(20rem, 55vh, 30rem)'][style*='height: fit-content'][style*='max-height: var(--flatpack-modal-body-height)']"
         assert_no_match(/flat-pack--modal#close/, rendered_content)
         assert_match(/border-\[var\(--modal-border-color\)\]/, rendered_content)
         assert_match(/bg-\[var\(--modal-surface-color\)\]/, rendered_content)
@@ -83,6 +84,25 @@ module FlatPack
         render_inline(Component.new(id: "layout-default-picker", items: sample_items))
 
         assert_selector "div[data-flat-pack--picker-results-layout-value='list']"
+      end
+
+      def test_defaults_items_region_to_wrapper_filling_height
+        render_inline(Component.new(id: "items-height-default-picker", items: sample_items))
+
+        assert_selector "div[data-flat-pack-picker-items-region='true'].min-h-0.flex-1.overflow-y-auto"
+        assert_no_match(/--flatpack-picker-items-height/, rendered_content)
+      end
+
+      def test_supports_min_content_items_region_height
+        render_inline(Component.new(id: "items-height-min-picker", items: sample_items.first(1), items_height: "min-content"))
+
+        assert_selector "div[data-flat-pack-picker-items-region='true'].min-h-0.shrink-0.overflow-y-auto[style*='--flatpack-picker-items-height: min-content'][style*='height: var(--flatpack-picker-items-height)'][style*='max-height: 100%']"
+      end
+
+      def test_supports_fixed_items_region_height
+        render_inline(Component.new(id: "items-height-fixed-picker", items: sample_items, items_height: "240px"))
+
+        assert_selector "div[data-flat-pack-picker-items-region='true'].min-h-0.shrink-0.overflow-y-auto[style*='--flatpack-picker-items-height: 240px'][style*='height: var(--flatpack-picker-items-height)'][style*='max-height: 100%']"
       end
 
       def test_defaults_auto_confirm_to_false

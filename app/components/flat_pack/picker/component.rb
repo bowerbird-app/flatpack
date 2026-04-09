@@ -32,6 +32,7 @@ module FlatPack
         context: {},
         empty_state_text: "No assets found",
         results_layout: :list,
+        items_height: "max-content",
         modal: false,
         auto_confirm: false,
         modal_body_height_mode: :fixed,
@@ -58,6 +59,7 @@ module FlatPack
         @context = context.is_a?(Hash) ? context : {}
         @empty_state_text = empty_state_text
         @results_layout = results_layout.to_sym
+        @items_height = normalize_items_height(items_height)
         @modal = !!modal
         @auto_confirm = !!auto_confirm
         @modal_body_height_mode = modal_body_height_mode
@@ -129,7 +131,7 @@ module FlatPack
             render_search,
             (@form.present? ? content_tag(:div, "", class: "hidden", data: {flat_pack__picker_target: "formFields"}) : nil),
             tag.input(type: "hidden", data: {flat_pack__picker_target: "outputField"}),
-            content_tag(:div, class: "min-h-0 flex-1 overflow-y-auto") do
+            content_tag(:div, **items_region_attributes) do
               safe_join([
                 content_tag(:div, "", class: "space-y-2", data: {flat_pack__picker_target: "results"}),
                 content_tag(:div, @empty_state_text, class: "hidden h-full min-h-32 items-center justify-center rounded-md border border-dashed border-(--surface-border-color) p-4 text-center text-sm text-(--surface-muted-content-color)", data: {flat_pack__picker_target: "emptyState"})
@@ -221,6 +223,33 @@ module FlatPack
         }
       end
 
+      def items_region_attributes
+        attributes = {
+          class: items_region_classes,
+          data: {
+            flat_pack_picker_items_region: true
+          }
+        }
+
+        style = items_region_style
+        attributes[:style] = style if style.present?
+        attributes
+      end
+
+      def items_region_classes
+        [
+          "min-h-0",
+          (@items_height == "max-content") ? "flex-1" : "shrink-0",
+          "overflow-y-auto"
+        ].join(" ")
+      end
+
+      def items_region_style
+        return nil if @items_height == "max-content"
+
+        "--flatpack-picker-items-height: #{@items_height}; height: var(--flatpack-picker-items-height); max-height: 100%;"
+      end
+
       def picker_form_attributes
         {
           url: @form.fetch(:url),
@@ -298,7 +327,7 @@ module FlatPack
 
         case @modal_body_height_mode.to_sym
         when :fixed
-          "--flatpack-modal-body-height: #{@modal_body_height}; height: var(--flatpack-modal-body-height);"
+          "--flatpack-modal-body-height: #{@modal_body_height}; height: fit-content; max-height: var(--flatpack-modal-body-height);"
         when :min
           "--flatpack-modal-body-height: #{@modal_body_height}; min-height: var(--flatpack-modal-body-height);"
         end
@@ -383,6 +412,19 @@ module FlatPack
       def normalize_size(value)
         parsed = Integer(value, exception: false)
         parsed&.positive? ? parsed : nil
+      end
+
+      def normalize_items_height(value)
+        case value
+        when nil
+          "max-content"
+        when Integer
+          "#{value}px"
+        when Symbol
+          value.to_s.tr("_", "-")
+        else
+          value.to_s.strip.presence || "max-content"
+        end
       end
 
       def human_size(value)

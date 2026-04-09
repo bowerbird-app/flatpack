@@ -224,6 +224,55 @@ module PagesHelper
     CODE
   end
 
+  def picker_demo_items_height_min_erb_code
+    picker_demo_full_erb_code(<<~CODE)
+      <%= render FlatPack::Picker::Component.new(
+        id: "picker-demo-items-height-min",
+        title: "Min Content",
+        subtitle: "One result keeps the list region compact.",
+        items: @picker_demo_items.first(1),
+        searchable: true,
+        search_mode: :local,
+        items_height: "min-content",
+        modal: false,
+        selection_mode: :single,
+        confirm_text: "Use Asset"
+      ) %>
+    CODE
+  end
+
+  def picker_demo_items_height_max_erb_code
+    picker_demo_full_erb_code(<<~CODE)
+      <%= render FlatPack::Picker::Component.new(
+        id: "picker-demo-items-height-max",
+        title: "Max Content",
+        subtitle: "The results region expands to fill the wrapper.",
+        items: @picker_demo_items,
+        searchable: true,
+        search_mode: :local,
+        items_height: "max-content",
+        modal: false,
+        confirm_text: "Use Assets"
+      ) %>
+    CODE
+  end
+
+  def picker_demo_items_height_fixed_erb_code
+    picker_demo_full_erb_code(<<~CODE)
+      <%= render FlatPack::Picker::Component.new(
+        id: "picker-demo-items-height-fixed",
+        title: "Fixed Height",
+        subtitle: "A 240px results region scrolls once content exceeds the cap.",
+        items: @picker_demo_items,
+        searchable: true,
+        search_mode: :local,
+        items_height: "240px",
+        modal: false,
+        confirm_text: "Use Assets"
+      ) %>
+    CODE
+  end
+
   def picker_demo_images_erb_code
     picker_demo_full_erb_code(<<~CODE)
       <%= render FlatPack::Button::Component.new(
