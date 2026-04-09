@@ -14,7 +14,7 @@ Use Picker when users need to choose image assets, files, or application records
 | name | type | default | required | description |
 |------|------|---------|----------|-------------|
 | `id` | String | none | Yes | Picker/modal id and event identity (`pickerId`). |
-| `items` | Array<Hash> | `[]` | No | Initial items. Normalized to keys like `id`, `kind`, `label`, `name`, `contentType`, `byteSize`, `thumbnailUrl`, `description`, `path`, `badge`, `meta`, `payload`. |
+| `items` | Array<Hash> | `[]` | No | Initial items. Normalized to keys like `id`, `kind`, `title`, `label`, `name`, `icon`, `contentType`, `byteSize`, `thumbnail_url`, `description`, `right_text`, `path`, `badge`, `meta`, `payload`. |
 | `title` | String | `"Select Assets"` | No | Modal title. |
 | `subtitle` | String or nil | `nil` | No | Optional helper text under title. |
 | `confirm_text` | String | `"Use Selected"` | No | Confirm button text. |
@@ -33,14 +33,23 @@ Use Picker when users need to choose image assets, files, or application records
 | `context` | Hash | `{}` | No | Arbitrary hash returned in confirm event payload. |
 | `empty_state_text` | String | `"No assets found"` | No | Empty-results text. |
 | `results_layout` | Symbol | `:list` | No | Allowed: `:list`, `:grid`. |
+| `items_height` | String, Symbol, or Integer | `"max-content"` | No | Controls the results-region height inside the picker. Use `"max-content"` to fill the available picker body, `"min-content"` to shrink-wrap the current items up to the wrapper height, or a CSS height such as `"240px"`. Integers are converted to pixel values. |
 | `modal` | Boolean | `false` | No | When `true`, renders inside `FlatPack::Modal::Component`. When `false`, renders inline on the page. |
 | `auto_confirm` | Boolean | `false` | No | When `true` and `selection_mode: :single`, selecting an item immediately confirms it. |
-| `modal_body_height_mode` | Symbol | `:fixed` | No | Passed to modal body sizing (`:auto`, `:fixed`, `:min`). |
-| `modal_body_height` | String | `"clamp(20rem, 55vh, 30rem)"` | No | Passed to modal body height style. |
+| `modal_body_height_mode` | Symbol | `:fixed` | No | Passed to modal body sizing (`:auto`, `:fixed`, `:min`). Inline pickers still shrink-wrap short content; `:fixed` acts as a max-height cap for the inline body shell. |
+| `modal_body_height` | String | `"clamp(20rem, 55vh, 30rem)"` | No | Modal body height or inline-body max-height cap, depending on `modal`. |
 | `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into the modal wrapper or inline shell. |
 
-## Slots
-None.
+## Item Display Slots
+
+List rows are rendered through four display regions derived from item data rather than record-type-specific markup.
+
+| region | item fields | fallback behavior |
+|--------|-------------|-------------------|
+| Leading media/icon | `thumbnail_url`, `icon` | Falls back to `photo`, `document-text`, or `folder` based on `kind` when no thumbnail/icon is provided. |
+| Title | `title`, `label`, `name` | Uses the first present value in that order. |
+| Description | `description` | Falls back to `path` or file metadata built from `content_type` and `byte_size`. |
+| Right text | `right_text` | Falls back to `meta`, then `badge`. |
 
 ## Variants
 
@@ -52,10 +61,13 @@ None.
 | `search_mode: :remote` | Fetches `GET search_endpoint?search_param=query&kinds=image,file,record`; expects JSON with `items` array. |
 | `results_layout: :list` | Row-style selectable entries with metadata. Best default for record-like items such as folders. |
 | `results_layout: :grid` | Thumbnail grid cards with pressed-state indicator. |
+| `items_height: "max-content"` | Makes the results region fill the remaining picker body height and scroll within that area when needed. This is the default. |
+| `items_height: "min-content"` | Shrinks the results region to the current item content while still capping at the picker wrapper height. Useful for short lists with only one or two options. |
+| `items_height: "240px"` | Uses a fixed results-region height with overflow scrolling. Any valid CSS height string can be used. |
 | `output_mode: :event` | Emits confirm event only. |
 | `output_mode: :field` | Also writes selected JSON to hidden field and optional `output_target`. |
 | `form: { ... }` | Wraps the picker in a standard Rails form and submits hidden inputs built from the current selection. |
-| `modal: false` | Renders the picker inline without a modal backdrop or modal close behavior. This is the default. |
+| `modal: false` | Renders the picker inline without a modal backdrop or modal close behavior. Inline picker shells shrink-wrap their content and only use `modal_body_height` as a maximum body height cap. This is the default. |
 | `selection_mode: :single, auto_confirm: true` | Selecting an item immediately syncs field output, emits `flat-pack:picker:confirm`, and closes the modal when modal-backed. |
 
 ## Built-in form config
@@ -74,7 +86,7 @@ Use `form:` when you want the picker to submit directly to a standard Rails cont
 
 ## Example
 
-Each picker item must include `name`. The component normalizes either snake_case or camelCase input keys into the browser payload (`thumbnail_url` and `thumbnailUrl`, `content_type` and `contentType`, `byte_size` and `byteSize`). Remote search responses must return JSON in the shape `{ items: [...] }`.
+Each picker item must include `name`. The component uses `thumbnail_url` and `right_text` for picker-specific display fields, alongside `content_type`/`contentType` and `byte_size`/`byteSize` for file metadata. Remote search responses must return JSON in the shape `{ items: [...] }`.
 
 ### Default inline picker
 
@@ -347,13 +359,14 @@ def picker_submissions
 end
 ```
 
-Selected items preserve the optional `description`, `path`, and `badge` keys when present so consumers can round-trip record metadata alongside `payload`.
+Selected items preserve the optional display fields (`title`, `icon`, `description`, `right_text`) alongside `path`, `badge`, `meta`, and `payload` so consumers can round-trip both UI text and record metadata.
 
 ## Behavior notes
 
 - `modal: false` is the default, so picker content renders inline unless a consumer explicitly opts into modal presentation.
 - `modal: true` keeps the existing modal-backed behavior for trigger/button flows.
-- Record rows render with a generic record badge and use `description`, `path`, and `badge` when provided.
+- List rows are built from display slots instead of record-specific row branches, so records, files, and images can share the same row structure.
+- `items_height` only affects the results region that contains picker items. Search controls and action buttons keep their natural height above and below it.
 - `auto_confirm` only applies to newly selected items in `selection_mode: :single`.
 - Remote searches are debounced by 250ms, request JSON with `Accept: application/json`, and rerender the current result set from `payload.items`.
 - In `output_mode: :field`, field output is written before the confirm event is emitted.

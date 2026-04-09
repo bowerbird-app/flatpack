@@ -269,43 +269,29 @@ export default class extends Controller {
   #listItemMarkup(item) {
     const itemId = this.#escapeHtml(String(item.id))
     const kind = this.#normalizedKind(item.kind)
-    const label = this.#escapeHtml(String(item.label || item.name || "Untitled"))
-    const name = this.#escapeHtml(String(item.name || ""))
-    const contentType = this.#escapeHtml(String(item.contentType || ""))
-    const byteSize = Number.isFinite(item.byteSize) ? item.byteSize : ""
-    const thumbnailUrl = this.#escapeHtml(String(item.thumbnailUrl || ""))
+    const title = this.#escapeHtml(String(item.title || item.label || item.name || "Untitled"))
+    const thumbnailUrl = String(item.thumbnail_url || "")
     const description = this.#escapeHtml(String(item.description || ""))
-    const path = this.#escapeHtml(String(item.path || ""))
-    const badge = this.#escapeHtml(String(item.badge || ""))
+    const rightText = this.#escapeHtml(String(item.right_text || ""))
     const isSelected = this.selectedIds.has(String(item.id))
     const isChecked = isSelected ? "checked" : ""
     const controlType = this.selectionModeValue === "single" ? "radio" : "checkbox"
     const controlName = `picker_${this.#escapeHtml(this.pickerIdValue)}_selection`
-    const hasThumbnailPreview = kind === "image" && Boolean(thumbnailUrl)
+    const hasThumbnailPreview = Boolean(thumbnailUrl)
     const controlClass = hasThumbnailPreview
       ? "sr-only"
       : (controlType === "checkbox" ? this.#checkboxInputClasses() : "mt-1 cursor-pointer")
-    const meta = this.#escapeHtml(this.#metaText(item))
-
-    const preview = hasThumbnailPreview
-      ? `
-        <span class="relative inline-flex h-14 w-20 shrink-0 overflow-hidden rounded">
-          ${this.#selectionIndicatorMarkup(isSelected, "left-2 top-2")}
-          <img src="${thumbnailUrl}" alt="${label} preview" class="h-14 w-20 rounded object-cover" loading="lazy">
-        </span>`
-      : this.#listFallbackPreviewMarkup(kind, item)
-
-    const recordDescription = kind === "record" && description
-      ? `<span class="mt-1 block truncate text-xs text-(--surface-muted-content-color)">${description}</span>`
+    const leadingSlot = this.#listLeadingSlotMarkup(item, { isSelected, title })
+    const descriptionMarkup = description
+      ? `<span class="mt-1 block text-xs text-(--surface-muted-content-color)">${description}</span>`
       : ""
-
-    const badgeMarkup = badge
-      ? `<span class="inline-flex shrink-0 items-center rounded-full bg-(--surface-subtle-background-color) px-2 py-1 text-[11px] font-medium text-(--surface-muted-content-color)">${badge}</span>`
+    const rightTextMarkup = rightText
+      ? `<span class="shrink-0 text-right text-xs text-(--surface-muted-content-color)">${rightText}</span>`
       : ""
 
     return `
       <div class="flat-pack-checkbox-wrapper">
-        <label class="flex cursor-pointer items-start gap-3 rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-3 transition-colors duration-base hover:bg-[var(--list-item-hover-background-color)]">
+        <label class="flex cursor-pointer items-start gap-3 rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-3 transition-colors duration-base hover:bg-(--list-item-hover-background-color)">
           <input
             type="${controlType}"
             name="${controlName}"
@@ -314,25 +300,44 @@ export default class extends Controller {
             ${isChecked}
             data-action="change->flat-pack--picker#handleSelectionChange"
           >
-          ${preview}
+          ${leadingSlot}
           <span class="min-w-0 flex-1">
-            <span class="block truncate text-sm font-medium text-(--surface-content-color)">${label}</span>
-            ${recordDescription}
-            <span class="block truncate text-xs text-(--surface-muted-content-color)">${meta}</span>
+            <span class="block truncate text-sm font-medium text-(--surface-content-color)">${title}</span>
+            ${descriptionMarkup}
           </span>
-          ${badgeMarkup}
-          <span class="hidden"
-            data-kind="${this.#escapeHtml(kind)}"
-            data-name="${name}"
-            data-content-type="${contentType}"
-            data-byte-size="${byteSize}"
-            data-thumbnail-url="${thumbnailUrl}"
-            data-description="${description}"
-            data-path="${path}"
-            data-badge="${badge}">
-          </span>
+          ${rightTextMarkup}
         </label>
       </div>
+    `
+  }
+
+  #listLeadingSlotMarkup(item, { isSelected = false, title = "Untitled" } = {}) {
+    const thumbnailUrl = this.#escapeHtml(String(item.thumbnail_url || ""))
+
+    if (thumbnailUrl) {
+      return `
+        <span class="relative inline-flex h-14 w-20 shrink-0 overflow-hidden rounded">
+          ${this.#selectionIndicatorMarkup(isSelected, "left-2 top-2")}
+          <img src="${thumbnailUrl}" alt="${title} preview" class="h-14 w-20 rounded object-cover" loading="lazy">
+        </span>`
+    }
+
+    const icon = this.#escapeHtml(String(item.icon || ""))
+    if (!icon) {
+      return this.#listFallbackPreviewMarkup(this.#normalizedKind(item.kind), item)
+    }
+
+    return `
+      <span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-(--surface-subtle-background-color) text-(--surface-muted-content-color)">
+        <svg
+          class="h-5 w-5"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          data-controller="flat-pack--icon"
+          data-flat-pack--icon-name-value="${icon}"
+          data-flat-pack--icon-variant-value="outline"
+        ></svg>
+      </span>
     `
   }
 
@@ -370,11 +375,11 @@ export default class extends Controller {
   #gridItemMarkup(item) {
     const itemId = this.#escapeHtml(String(item.id))
     const kind = this.#normalizedKind(item.kind)
-    const label = this.#escapeHtml(String(item.label || item.name || "Untitled"))
+    const label = this.#escapeHtml(String(item.title || item.label || item.name || "Untitled"))
     const name = this.#escapeHtml(String(item.name || ""))
     const contentType = this.#escapeHtml(String(item.contentType || ""))
     const byteSize = Number.isFinite(item.byteSize) ? item.byteSize : ""
-    const thumbnailUrl = this.#escapeHtml(String(item.thumbnailUrl || ""))
+    const thumbnailUrl = this.#escapeHtml(String(item.thumbnail_url || ""))
     const description = this.#escapeHtml(String(item.description || ""))
     const path = this.#escapeHtml(String(item.path || ""))
     const badge = this.#escapeHtml(String(item.badge || ""))
@@ -517,11 +522,14 @@ export default class extends Controller {
         id: item.id,
         kind: item.kind,
         label: item.label,
+        title: item.title || item.label,
         name: item.name,
         contentType: item.contentType || null,
         byteSize: Number.isFinite(item.byteSize) ? item.byteSize : null,
-        thumbnailUrl: item.thumbnailUrl || null,
+        thumbnail_url: item.thumbnail_url || null,
+        icon: item.icon || null,
         description: item.description || null,
+        right_text: item.right_text || null,
         path: item.path || null,
         badge: item.badge || null,
         meta: item.meta || null,
@@ -594,15 +602,24 @@ export default class extends Controller {
     return (Array.isArray(items) ? items : []).map((item, index) => {
       const source = item || {}
       const id = source.id || `picker-item-${index}`
+      const kind = this.#normalizedKind(source.kind)
+      const label = source.label || source.title || source.name || `Item ${index + 1}`
+      const byteSize = this.#normalizeByteSize(source.byteSize ?? source.byte_size)
+      const contentType = source.contentType || source.content_type || null
+      const thumbnailUrl = source.thumbnail_url || null
+      const description = this.#displayDescription(source, kind, { contentType, byteSize })
       return {
         id,
-        kind: this.#normalizedKind(source.kind),
-        label: source.label || source.name || `Item ${index + 1}`,
-        name: source.name || source.label || `item-${index + 1}`,
-        contentType: source.contentType || null,
-        byteSize: Number.isFinite(source.byteSize) ? source.byteSize : null,
-        thumbnailUrl: source.thumbnailUrl || null,
-        description: source.description || null,
+        kind,
+        label,
+        title: source.title || label,
+        name: source.name || label || `item-${index + 1}`,
+        contentType,
+        byteSize,
+        thumbnail_url: thumbnailUrl,
+        icon: this.#displayIcon(source, kind, thumbnailUrl),
+        description,
+        right_text: this.#displayRightText(source),
         path: source.path || null,
         badge: source.badge || null,
         meta: source.meta || null,
@@ -617,13 +634,16 @@ export default class extends Controller {
     }
 
     const haystack = [
+      item.title,
       item.label,
       item.name,
       item.contentType,
       item.description,
+      item.right_text,
       item.path,
       item.badge,
       item.meta,
+      item.icon,
       item.kind
     ].join(" ").toLowerCase()
 
@@ -650,6 +670,56 @@ export default class extends Controller {
     }
 
     return "FILE"
+  }
+
+  #normalizeByteSize(value) {
+    if (Number.isFinite(value)) {
+      return value
+    }
+
+    const parsed = Number.parseInt(value, 10)
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : null
+  }
+
+  #displayDescription(source, kind, { contentType = null, byteSize = null } = {}) {
+    const explicitDescription = source.description || null
+    const path = source.path || null
+
+    if (explicitDescription || path) {
+      return [explicitDescription, path].filter(Boolean).join(" • ")
+    }
+
+    if (kind === "record") {
+      return null
+    }
+
+    return [contentType, Number.isFinite(byteSize) ? this.#humanSize(byteSize) : null]
+      .filter(Boolean)
+      .join(" • ") || null
+  }
+
+  #displayRightText(source) {
+    return source.right_text || source.meta || source.badge || null
+  }
+
+  #displayIcon(source, kind, thumbnailUrl) {
+    if (source.icon) {
+      return source.icon
+    }
+
+    if (thumbnailUrl) {
+      return null
+    }
+
+    if (kind === "image") {
+      return "photo"
+    }
+
+    if (kind === "record") {
+      return "folder"
+    }
+
+    return "document-text"
   }
 
   #escapeHtml(value) {

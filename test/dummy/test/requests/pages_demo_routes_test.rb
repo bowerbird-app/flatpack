@@ -128,9 +128,20 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Open Image Picker"
     assert_includes response.body, "Open Folder Picker"
     assert_includes response.body, "Built-in Form Submission"
+    assert_includes response.body, "Items Height"
+    assert_includes response.body, "items-height-min-content"
+    assert_includes response.body, "items-height-max-content"
+    assert_includes response.body, "items-height-fixed-height"
+    assert_includes response.body, "picker-demo-code-required-data-local-items"
+    assert_includes response.body, "picker-demo-code-field-output-erb"
+    assert_includes response.body, "View ERB Code"
+    assert_includes response.body, "View Controller Code"
     assert_includes response.body, "id=\"picker-demo-local\""
     assert_includes response.body, "id=\"picker-demo-built-in-form\""
     assert_includes response.body, "id=\"picker-demo-inline\""
+    assert_includes response.body, "id=\"picker-demo-items-height-min\""
+    assert_includes response.body, "id=\"picker-demo-items-height-max\""
+    assert_includes response.body, "id=\"picker-demo-items-height-fixed\""
     assert_includes response.body, "id=\"picker-demo-images\""
     assert_includes response.body, "id=\"picker-demo-remote\""
     assert_includes response.body, "id=\"picker-demo-auto-confirm\""
@@ -155,9 +166,16 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "confirm_text: &quot;Use Asset&quot;"
     assert_includes response.body, "confirm_text: &quot;Use Folder&quot;"
     assert_includes response.body, "confirm_text: &quot;Store Selection&quot;"
+    assert_includes response.body, "items_height: &quot;min-content&quot;"
+    assert_includes response.body, "items_height: &quot;max-content&quot;"
+    assert_includes response.body, "items_height: &quot;240px&quot;"
+    assert_includes response.body, "selection_mode: :single"
 
     assert_select "#picker-demo-auto-confirm .mt-4.flex.items-center.justify-end.gap-2", count: 0
     assert_select "#picker-demo-auto-confirm button", text: "Use Asset", count: 0
+    assert_select "#picker-demo-items-height-min .mt-4.flex.items-center.justify-end.gap-2", count: 1
+    assert_select "#picker-demo-items-height-min button", text: "Close", count: 1
+    assert_select "#picker-demo-items-height-min button", text: "Use Asset", count: 1
   end
 
   test "picker built-in form submission redirects back with controller params" do

@@ -994,7 +994,11 @@ class PagesController < ApplicationController
         byte_size: 312_400,
         label: "Homepage Hero",
         thumbnail_url: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=640&h=360&fit=crop",
-        meta: "Homepage refresh"
+        right_text: "Homepage refresh",
+        meta: "Homepage refresh",
+        payload: {
+          signed_id: "blob-signed-id-123"
+        }
       },
       {
         id: "asset-checkout-mobile",
@@ -1004,7 +1008,11 @@ class PagesController < ApplicationController
         byte_size: 198_250,
         label: "Checkout Mobile",
         thumbnail_url: "https://images.unsplash.com/photo-1518773553398-650c184e0bb3?w=640&h=360&fit=crop",
-        meta: "Flow variant A"
+        right_text: "Flow variant A",
+        meta: "Flow variant A",
+        payload: {
+          signed_id: "blob-signed-id-124"
+        }
       },
       {
         id: "asset-pricing-grid",
@@ -1014,7 +1022,11 @@ class PagesController < ApplicationController
         byte_size: 421_900,
         label: "Pricing Grid",
         thumbnail_url: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=640&h=360&fit=crop",
-        meta: "Desktop layout"
+        right_text: "Desktop layout",
+        meta: "Desktop layout",
+        payload: {
+          signed_id: "blob-signed-id-125"
+        }
       },
       {
         id: "asset-funnel-sketch",
@@ -1024,51 +1036,77 @@ class PagesController < ApplicationController
         byte_size: 287_210,
         label: "Onboarding Funnel",
         thumbnail_url: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=640&h=360&fit=crop",
-        meta: "Journey board"
+        right_text: "Journey board",
+        meta: "Journey board",
+        payload: {
+          signed_id: "blob-signed-id-126"
+        }
       },
       {
         id: "asset-launch-checklist",
         kind: "file",
         name: "launch-readiness-checklist.pdf",
+        icon: "document-text",
         content_type: "application/pdf",
         byte_size: 96_800,
         label: "Launch Checklist",
-        meta: "PDF"
+        right_text: "PDF",
+        meta: "PDF",
+        payload: {
+          signed_id: "blob-signed-id-456"
+        }
       },
       {
         id: "asset-experiment-results",
         kind: "file",
         name: "experiment-results-q1.csv",
+        icon: "document-text",
         content_type: "text/csv",
         byte_size: 43_200,
         label: "Experiment Results",
-        meta: "CSV"
+        right_text: "CSV",
+        meta: "CSV",
+        payload: {
+          signed_id: "blob-signed-id-457"
+        }
       },
       {
         id: "asset-handoff-notes",
         kind: "file",
         name: "handoff-notes.zip",
+        icon: "document-text",
         content_type: "application/zip",
         byte_size: 1_204_800,
         label: "Handoff Notes",
-        meta: "ZIP"
+        right_text: "ZIP",
+        meta: "ZIP",
+        payload: {
+          signed_id: "blob-signed-id-458"
+        }
       },
       {
         id: "asset-quarterly-plan",
         kind: "file",
         name: "quarterly-launch-plan.docx",
+        icon: "document-text",
         content_type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         byte_size: 212_640,
         label: "Quarterly Launch Plan",
-        meta: "DOCX"
+        right_text: "DOCX",
+        meta: "DOCX",
+        payload: {
+          signed_id: "blob-signed-id-459"
+        }
       },
       {
         id: "folder-brand-assets",
         kind: "record",
         name: "Brand Assets",
         label: "Brand Assets",
+        icon: "folder",
         description: "Shared folder for approved creative",
         path: "/Marketing/Brand Assets",
+        right_text: "12 items",
         badge: "Folder",
         meta: "12 items",
         payload: {
@@ -1081,8 +1119,10 @@ class PagesController < ApplicationController
         kind: "record",
         name: "Q2 Planning",
         label: "Q2 Planning",
+        icon: "folder",
         description: "Roadmap artifacts and review notes",
         path: "/Planning/Q2 Planning",
+        right_text: "8 items",
         badge: "Folder",
         meta: "8 items",
         payload: {
@@ -1379,11 +1419,14 @@ class PagesController < ApplicationController
       id: item[:id],
       kind: item[:kind],
       label: item[:label],
+      title: item[:title],
       name: item[:name],
       contentType: item[:content_type],
       byteSize: item[:byte_size],
-      thumbnailUrl: item[:thumbnail_url],
+      thumbnail_url: item[:thumbnail_url],
+      icon: item[:icon],
       description: item[:description],
+      right_text: item[:right_text],
       path: item[:path],
       badge: item[:badge],
       meta: item[:meta],

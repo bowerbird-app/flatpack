@@ -41,6 +41,23 @@ module FlatPack
         ]
       end
 
+      def explicit_slot_items
+        [
+          {
+            id: "record-1",
+            kind: "record",
+            name: "brand-assets",
+            title: "Brand Assets",
+            description: "Shared folder for approved creative",
+            right_text: "12 items",
+            icon: "folder",
+            payload: {
+              record_id: 42
+            }
+          }
+        ]
+      end
+
       def test_renders_picker_modal_shell_when_modal_enabled
         render_inline(Component.new(id: "demo-picker", items: sample_items, modal: true))
 
@@ -55,6 +72,7 @@ module FlatPack
         assert_selector "div#inline-picker"
         assert_selector "div#inline-picker div[data-controller='flat-pack--picker'][data-flat-pack--picker-modal-value='false']"
         assert_no_selector "div#inline-picker[data-controller='flat-pack--modal']"
+        assert_selector "div#inline-picker > div[style*='--flatpack-modal-body-height: clamp(20rem, 55vh, 30rem)'][style*='height: fit-content'][style*='max-height: var(--flatpack-modal-body-height)']"
         assert_no_match(/flat-pack--modal#close/, rendered_content)
         assert_match(/border-\[var\(--modal-border-color\)\]/, rendered_content)
         assert_match(/bg-\[var\(--modal-surface-color\)\]/, rendered_content)
@@ -66,6 +84,25 @@ module FlatPack
         render_inline(Component.new(id: "layout-default-picker", items: sample_items))
 
         assert_selector "div[data-flat-pack--picker-results-layout-value='list']"
+      end
+
+      def test_defaults_items_region_to_wrapper_filling_height
+        render_inline(Component.new(id: "items-height-default-picker", items: sample_items))
+
+        assert_selector "div[data-flat-pack-picker-items-region='true'].min-h-0.flex-1.overflow-y-auto"
+        assert_no_match(/--flatpack-picker-items-height/, rendered_content)
+      end
+
+      def test_supports_min_content_items_region_height
+        render_inline(Component.new(id: "items-height-min-picker", items: sample_items.first(1), items_height: "min-content"))
+
+        assert_selector "div[data-flat-pack-picker-items-region='true'].min-h-0.shrink-0.overflow-y-auto[style*='--flatpack-picker-items-height: min-content'][style*='height: var(--flatpack-picker-items-height)'][style*='max-height: 100%']"
+      end
+
+      def test_supports_fixed_items_region_height
+        render_inline(Component.new(id: "items-height-fixed-picker", items: sample_items, items_height: "240px"))
+
+        assert_selector "div[data-flat-pack-picker-items-region='true'].min-h-0.shrink-0.overflow-y-auto[style*='--flatpack-picker-items-height: 240px'][style*='height: var(--flatpack-picker-items-height)'][style*='max-height: 100%']"
       end
 
       def test_defaults_auto_confirm_to_false
@@ -98,9 +135,21 @@ module FlatPack
 
         assert_includes rendered_content, "data-flat-pack--picker-accepted-kinds-value=\"[&quot;record&quot;]\""
         assert_includes rendered_content, "&quot;kind&quot;:&quot;record&quot;"
-        assert_includes rendered_content, "&quot;description&quot;:&quot;Shared folder for approved creative&quot;"
+        assert_includes rendered_content, "&quot;title&quot;:&quot;Brand Assets&quot;"
+        assert_includes rendered_content, "&quot;icon&quot;:&quot;folder&quot;"
+        assert_includes rendered_content, "&quot;right_text&quot;:&quot;12 items&quot;"
+        assert_includes rendered_content, "&quot;description&quot;:&quot;Shared folder for approved creative • /Marketing/Brand Assets&quot;"
         assert_includes rendered_content, "&quot;path&quot;:&quot;/Marketing/Brand Assets&quot;"
         assert_includes rendered_content, "&quot;badge&quot;:&quot;Folder&quot;"
+      end
+
+      def test_supports_explicit_display_slot_fields
+        render_inline(Component.new(id: "slot-picker", items: explicit_slot_items, accepted_kinds: [:record]))
+
+        assert_includes rendered_content, "&quot;title&quot;:&quot;Brand Assets&quot;"
+        assert_includes rendered_content, "&quot;description&quot;:&quot;Shared folder for approved creative&quot;"
+        assert_includes rendered_content, "&quot;right_text&quot;:&quot;12 items&quot;"
+        assert_includes rendered_content, "&quot;icon&quot;:&quot;folder&quot;"
       end
 
       def test_renders_builtin_form_wrapper_when_form_config_present
@@ -118,7 +167,7 @@ module FlatPack
 
         assert_selector "form[action='/demo/picker_submissions']"
         assert_selector "form[data-turbo='true']"
-        assert_selector "div[data-flat-pack--picker-target='formFields']"
+        assert_selector "div.hidden[data-flat-pack--picker-target='formFields']"
         assert_selector "button[type='submit']", text: "Use Selected"
         assert_includes rendered_content, "&quot;field&quot;:&quot;folder_record_id&quot;"
         assert_includes rendered_content, "&quot;scope&quot;:&quot;picker_assignment&quot;"
