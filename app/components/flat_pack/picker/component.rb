@@ -127,7 +127,7 @@ module FlatPack
         content_tag(:div, **picker_attributes) do
           safe_join([
             render_search,
-            (@form.present? ? content_tag(:div, "", data: {flat_pack__picker_target: "formFields"}) : nil),
+            (@form.present? ? content_tag(:div, "", class: "hidden", data: {flat_pack__picker_target: "formFields"}) : nil),
             tag.input(type: "hidden", data: {flat_pack__picker_target: "outputField"}),
             content_tag(:div, class: "min-h-0 flex-1 overflow-y-auto") do
               safe_join([
@@ -310,21 +310,58 @@ module FlatPack
           name = source[:name].presence || source["name"].presence
           next unless name
 
+          kind = normalized_kind(source[:kind] || source["kind"])
+          label = source[:label].presence || source["label"].presence || name
+          thumbnail_url = source[:thumbnail_url].presence || source["thumbnail_url"].presence
+
           {
             "id" => source[:id].presence || source["id"].presence || "picker-item-#{index}",
-            "kind" => normalized_kind(source[:kind] || source["kind"]),
-            "label" => source[:label].presence || source["label"].presence || name,
+            "kind" => kind,
+            "label" => label,
+            "title" => normalize_display_title(source, label, name),
             "name" => name,
             "contentType" => source[:content_type].presence || source["content_type"].presence || source[:contentType].presence || source["contentType"].presence,
             "byteSize" => normalize_size(source[:byte_size] || source["byte_size"] || source[:byteSize] || source["byteSize"]),
-            "thumbnailUrl" => source[:thumbnail_url].presence || source["thumbnail_url"].presence || source[:thumbnailUrl].presence || source["thumbnailUrl"].presence,
-            "description" => source[:description].presence || source["description"].presence,
+            "thumbnail_url" => thumbnail_url,
+            "icon" => normalize_display_icon(source, kind, thumbnail_url),
+            "description" => normalize_display_description(source, kind),
+            "right_text" => normalize_display_right_text(source),
             "path" => source[:path].presence || source["path"].presence,
             "badge" => source[:badge].presence || source["badge"].presence,
             "meta" => source[:meta].presence || source["meta"].presence,
             "payload" => normalize_payload(source[:payload] || source["payload"])
           }.compact
         end
+      end
+
+      def normalize_display_title(source, label, name)
+        source[:title].presence || source["title"].presence || label || name
+      end
+
+      def normalize_display_icon(source, kind, thumbnail_url)
+        return source[:icon].presence || source["icon"].presence if source[:icon].presence || source["icon"].presence
+        return nil if thumbnail_url.present?
+
+        default_icon_for_kind(kind)
+      end
+
+      def normalize_display_description(source, kind)
+        explicit_description = source[:description].presence || source["description"].presence
+        path = source[:path].presence || source["path"].presence
+
+        return join_display_parts(explicit_description, path) if explicit_description.present? || path.present?
+        return nil if kind == "record"
+
+        join_display_parts(
+          source[:content_type].presence || source["content_type"].presence || source[:contentType].presence || source["contentType"].presence,
+          human_size(source[:byte_size] || source["byte_size"] || source[:byteSize] || source["byteSize"])
+        )
+      end
+
+      def normalize_display_right_text(source)
+        source[:right_text].presence || source["right_text"].presence ||
+          source[:meta].presence || source["meta"].presence ||
+          source[:badge].presence || source["badge"].presence
       end
 
       def normalize_payload(payload)
@@ -346,6 +383,40 @@ module FlatPack
       def normalize_size(value)
         parsed = Integer(value, exception: false)
         parsed&.positive? ? parsed : nil
+      end
+
+      def human_size(value)
+        bytes = normalize_size(value)
+        return nil unless bytes
+
+        return "#{bytes} B" if bytes < 1024
+
+        units = %w[KB MB GB].freeze
+        unit_index = 0
+        size = bytes.to_f / 1024
+
+        while size >= 1024 && unit_index < units.length - 1
+          size /= 1024
+          unit_index += 1
+        end
+
+        formatted_size = (size >= 10) ? size.round.to_s : Kernel.format("%.1f", size)
+        "#{formatted_size} #{units[unit_index]}"
+      end
+
+      def join_display_parts(*parts)
+        parts.filter_map(&:presence).join(" • ").presence
+      end
+
+      def default_icon_for_kind(kind)
+        case kind
+        when "image"
+          "photo"
+        when "record"
+          "folder"
+        else
+          "document-text"
+        end
       end
 
       def normalize_form(form)

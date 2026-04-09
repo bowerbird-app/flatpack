@@ -17,14 +17,14 @@
         <div class="space-y-3 text-sm text-(--surface-content-color)">
           <p>
             The picker needs an <code>id</code> and an <code>items</code> array. For each item, <code>name</code> is required.
-            The remaining fields control how the result row or grid tile is displayed.
+            In list mode, each row is rendered through four display slots: leading media or icon, title, description, and right text.
           </p>
           <ul class="list-disc space-y-1 pl-5 text-(--surface-muted-content-color)">
-            <li><code>label</code> renders the visible title and falls back to <code>name</code>.</li>
+            <li><code>title</code> renders the primary row text and falls back to <code>label</code> or <code>name</code>.</li>
             <li><code>kind</code> should be <code>"image"</code>, <code>"file"</code>, or <code>"record"</code>.</li>
-            <li><code>thumbnail_url</code> or <code>thumbnailUrl</code> enables image previews.</li>
-            <li><code>description</code>, <code>path</code>, and <code>badge</code> help record rows render folders and other app records clearly.</li>
-            <li><code>content_type</code>, <code>byte_size</code>, and <code>meta</code> render the metadata line.</li>
+            <li><code>thumbnail_url</code> fills the leading media slot, while <code>icon</code> fills the leading icon slot when no thumbnail is present.</li>
+            <li><code>description</code> renders the text below the title. When omitted, the picker falls back to <code>path</code> or file metadata.</li>
+            <li><code>right_text</code> fills the trailing text slot and falls back to <code>meta</code> or <code>badge</code>.</li>
             <li><code>payload</code> is returned in the confirm event so your app can store signed IDs or other references.</li>
           </ul>
         </div>
@@ -35,82 +35,14 @@
       title: "Local items array",
       language: "ruby",
       class: "mt-6",
-      code: CGI.unescapeHTML(<<~'CODE')
-        @picker_demo_items = [
-          {
-            id: "asset-homepage-hero",
-            kind: "image",
-            name: "homepage-hero-v2.png",
-            label: "Homepage Hero",
-            content_type: "image/png",
-            byte_size: 312_400,
-            thumbnail_url: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=640&h=360&fit=crop",
-            meta: "Homepage refresh",
-            payload: {
-              signed_id: "blob-signed-id-123"
-            }
-          },
-          {
-            id: "asset-launch-checklist",
-            kind: "file",
-            name: "launch-readiness-checklist.pdf",
-            label: "Launch Checklist",
-            content_type: "application/pdf",
-            byte_size: 96_800,
-            meta: "PDF",
-            payload: {
-              signed_id: "blob-signed-id-456"
-            }
-          },
-          {
-            id: "folder-brand-assets",
-            kind: "record",
-            name: "Brand Assets",
-            label: "Brand Assets",
-            description: "Shared folder for approved creative",
-            path: "/Marketing/Brand Assets",
-            badge: "Folder",
-            meta: "12 items",
-            payload: {
-              record_type: "Folder",
-              record_id: 42
-            }
-          }
-        ]
-
-        &lt;%= render FlatPack::Picker::Component.new(
-          id: "picker-demo-local",
-          items: @picker_demo_items,
-          searchable: true,
-          search_mode: :local
-        ) %&gt;
-      CODE
+      code: picker_demo_local_items_code
     ) %>
 
     <%= render FlatPack::CodeBlock::Component.new(
       title: "Remote search JSON",
       language: "json",
       class: "mt-6",
-      code: <<~'CODE'
-        {
-          "items": [
-            {
-              "id": "folder-brand-assets",
-              "kind": "record",
-              "label": "Brand Assets",
-              "name": "Brand Assets",
-              "description": "Shared folder for approved creative",
-              "path": "/Marketing/Brand Assets",
-              "badge": "Folder",
-              "meta": "12 items",
-              "payload": {
-                "record_type": "Folder",
-                "record_id": 42
-              }
-            }
-          ]
-        }
-      CODE
+      code: picker_demo_items_json_code
     ) %>
   </section>
 
@@ -126,7 +58,7 @@
       <% card.body do %>
         <div class="space-y-4">
           <p class="text-sm text-(--surface-muted-content-color)">
-            This example treats folders as records. It keeps the single-select auto-confirm flow, but the selected JSON now carries folder identifiers in <code>payload</code>.
+            This example treats folders as records. It keeps the single-select auto-confirm flow, while the row itself is filled by the picker display slots instead of record-specific rendering branches.
           </p>
 
           <div class="flex flex-wrap gap-2">
@@ -150,38 +82,7 @@
       title: "ERB",
       language: "erb",
       class: "mt-6",
-      code: CGI.unescapeHTML(<<~'CODE')
-        &lt;%= render FlatPack::Button::Component.new(
-          text: "Open Folder Picker",
-          icon: "folder",
-          style: :secondary,
-          data: {
-            action: "click-&gt;flat-pack--modal#open",
-            "modal-id": "picker-demo-folders"
-          }
-        ) %&gt;
-
-        &lt;input id="picker-folder-field" type="text" readonly class="w-full rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-2 text-xs text-(--surface-muted-content-color)" placeholder="Folder selection JSON appears here"&gt;
-
-        &lt;%= render FlatPack::Picker::Component.new(
-          id: "picker-demo-folders",
-          title: "Select Folder",
-          subtitle: "Choose one folder record to confirm immediately.",
-          items: @picker_demo_items,
-          modal: true,
-          accepted_kinds: [:record],
-          selection_mode: :single,
-          auto_confirm: true,
-          searchable: true,
-          search_mode: :local,
-          output_mode: :field,
-          output_target: "#picker-folder-field",
-          modal_body_height_mode: :fixed,
-          modal_body_height: "clamp(18rem, 48vh, 24rem)",
-          confirm_text: "Use Folder",
-          context: { target: "picker-demo-folders" }
-        ) %&gt;
-      CODE
+      code: picker_demo_records_erb_code
     ) %>
 
     <%= render FlatPack::Picker::Component.new(
@@ -259,28 +160,7 @@
       title: "ERB",
       language: "erb",
       class: "mt-6",
-      code: CGI.unescapeHTML(<<~'CODE')
-        &lt;%= render FlatPack::Picker::Component.new(
-          id: "picker-demo-built-in-form",
-          title: "Assign Folder",
-          subtitle: "Choose one folder and submit it through a built-in Rails form wrapper.",
-          items: @picker_demo_items,
-          accepted_kinds: [:record],
-          selection_mode: :single,
-          searchable: true,
-          search_mode: :local,
-          confirm_text: "Assign Folder",
-          form: {
-            url: demo_picker_submissions_path,
-            method: :post,
-            scope: :picker_assignment,
-            field: :folder_record_id,
-            value_mode: :id,
-            value_path: "payload.record_id",
-            turbo: false
-          }
-        ) %&gt;
-      CODE
+      code: picker_demo_builtin_form_erb_code
     ) %>
 
     <%= render FlatPack::CodeBlock::Component.new(
@@ -340,30 +220,7 @@
       title: "ERB",
       language: "erb",
       class: "mt-6",
-      code: CGI.unescapeHTML(<<~'CODE')
-        &lt;%= render FlatPack::Button::Component.new(
-          text: "Open Local Picker",
-          icon: "image",
-          data: {
-            action: "click-&gt;flat-pack--modal#open",
-            "modal-id": "picker-demo-local"
-          }
-        ) %&gt;
-
-        &lt;%= render FlatPack::Picker::Component.new(
-          id: "picker-demo-local",
-          title: "Select Assets",
-          subtitle: "Local search across image and file assets with a fixed modal body height.",
-          items: @picker_demo_items,
-          modal: true,
-          searchable: true,
-          search_mode: :local,
-          modal_body_height_mode: :fixed,
-          modal_body_height: "clamp(20rem, 55vh, 30rem)",
-          confirm_text: "Use Selection",
-          context: { target: "picker-demo-local" }
-        ) %&gt;
-      CODE
+      code: picker_demo_local_search_erb_code
     ) %>
 
     <%= render FlatPack::Picker::Component.new(
@@ -424,32 +281,14 @@
       title: "ERB",
       language: "erb",
       class: "mt-6",
-      code: CGI.unescapeHTML(<<~'CODE')
-        &lt;%= render FlatPack::Button::Component.new(
-          text: "Open Remote Picker",
-          icon: "search",
-          style: :secondary,
-          data: {
-            action: "click-&gt;flat-pack--modal#open",
-            "modal-id": "picker-demo-remote"
-          }
-        ) %&gt;
+      code: picker_demo_remote_search_erb_code
+    ) %>
 
-        &lt;%= render FlatPack::Picker::Component.new(
-          id: "picker-demo-remote",
-          title: "Search Remote Assets",
-          subtitle: "Remote search keeps a fixed modal body height for stable layout while result counts change.",
-          items: @picker_demo_items.first(2),
-          modal: true,
-          searchable: true,
-          search_mode: :remote,
-          search_endpoint: demo_picker_results_path,
-          modal_body_height_mode: :fixed,
-          modal_body_height: "clamp(20rem, 55vh, 30rem)",
-          confirm_text: "Use Remote Selection",
-          context: { target: "picker-demo-remote" }
-        ) %&gt;
-      CODE
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "Controller",
+      language: "ruby",
+      class: "mt-6",
+      code: picker_demo_remote_controller_code(items: @picker_demo_items.first(3))
     ) %>
 
     <%= render FlatPack::Picker::Component.new(
@@ -504,25 +343,7 @@
       title: "ERB",
       language: "erb",
       class: "mt-6",
-      code: CGI.unescapeHTML(<<~'CODE')
-        &lt;input id="picker-inline-selected-field" type="text" readonly class="w-full rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-2 text-xs text-(--surface-muted-content-color)" placeholder="Inline selection JSON appears here"&gt;
-
-        &lt;%= render FlatPack::Picker::Component.new(
-          id: "picker-demo-inline",
-          title: "Inline Asset Picker",
-          subtitle: "Choose one item to confirm immediately.",
-          items: @picker_demo_items,
-          searchable: true,
-          search_mode: :local,
-          selection_mode: :single,
-          auto_confirm: true,
-          modal: false,
-          output_mode: :field,
-          output_target: "#picker-inline-selected-field",
-          confirm_text: "Use Inline Selection",
-          context: { target: "picker-demo-inline" }
-        ) %&gt;
-      CODE
+      code: picker_demo_inline_erb_code
     ) %>
   </section>
 
@@ -559,33 +380,7 @@
       title: "ERB",
       language: "erb",
       class: "mt-6",
-      code: CGI.unescapeHTML(<<~'CODE')
-        &lt;%= render FlatPack::Button::Component.new(
-          text: "Open Image Picker",
-          icon: "image",
-          data: {
-            action: "click-&gt;flat-pack--modal#open",
-            "modal-id": "picker-demo-images"
-          }
-        ) %&gt;
-
-        &lt;%= render FlatPack::Picker::Component.new(
-          id: "picker-demo-images",
-          title: "Select Image",
-          subtitle: "Choose one or more image assets.",
-          items: @picker_demo_items,
-          modal: true,
-          accepted_kinds: [:image],
-          selection_mode: :multiple,
-          searchable: true,
-          search_mode: :local,
-          results_layout: :grid,
-          modal_body_height_mode: :fixed,
-          modal_body_height: "clamp(18rem, 50vh, 26rem)",
-          confirm_text: "Use Image",
-          context: { target: "picker-demo-images" }
-        ) %&gt;
-      CODE
+      code: picker_demo_images_erb_code
     ) %>
 
     <%= render FlatPack::Picker::Component.new(
@@ -642,37 +437,7 @@
       title: "ERB",
       language: "erb",
       class: "mt-6",
-      code: CGI.unescapeHTML(<<~'CODE')
-        &lt;%= render FlatPack::Button::Component.new(
-          text: "Open Auto-Confirm Picker",
-          icon: "image",
-          style: :secondary,
-          data: {
-            action: "click-&gt;flat-pack--modal#open",
-            "modal-id": "picker-demo-auto-confirm"
-          }
-        ) %&gt;
-
-        &lt;input id="picker-auto-confirm-field" type="text" readonly class="w-full rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-2 text-xs text-(--surface-muted-content-color)" placeholder="Auto-confirm selection JSON appears here"&gt;
-
-        &lt;%= render FlatPack::Picker::Component.new(
-          id: "picker-demo-auto-confirm",
-          title: "Choose One Asset",
-          subtitle: "Selecting an item confirms immediately and closes the modal.",
-          items: @picker_demo_items,
-          modal: true,
-          searchable: true,
-          search_mode: :local,
-          selection_mode: :single,
-          auto_confirm: true,
-          output_mode: :field,
-          output_target: "#picker-auto-confirm-field",
-          modal_body_height_mode: :fixed,
-          modal_body_height: "clamp(18rem, 50vh, 24rem)",
-          confirm_text: "Use Asset",
-          context: { target: "picker-demo-auto-confirm" }
-        ) %&gt;
-      CODE
+      code: picker_demo_single_select_erb_code
     ) %>
 
     <%= render FlatPack::Picker::Component.new(
@@ -729,35 +494,7 @@
       title: "ERB",
       language: "erb",
       class: "mt-6",
-      code: CGI.unescapeHTML(<<~'CODE')
-        &lt;%= render FlatPack::Button::Component.new(
-          text: "Open Field Picker",
-          icon: "file",
-          data: {
-            action: "click-&gt;flat-pack--modal#open",
-            "modal-id": "picker-demo-field"
-          }
-        ) %&gt;
-
-        &lt;input id="picker-selected-assets-field" type="text" readonly class="w-full rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-2 text-xs text-(--surface-muted-content-color)" placeholder="Selected JSON appears here"&gt;
-
-        &lt;%= render FlatPack::Picker::Component.new(
-          id: "picker-demo-field",
-          title: "Select Files",
-          subtitle: "Writes selected items to a consumer-provided field selector.",
-          items: @picker_demo_items,
-          modal: true,
-          accepted_kinds: [:file],
-          searchable: true,
-          search_mode: :local,
-          modal_body_height_mode: :fixed,
-          modal_body_height: "24rem",
-          output_mode: :field,
-          output_target: "#picker-selected-assets-field",
-          confirm_text: "Store Selection",
-          context: { target: "picker-demo-field" }
-        ) %&gt;
-      CODE
+      code: picker_demo_field_output_erb_code
     ) %>
 
     <%= render FlatPack::Picker::Component.new(

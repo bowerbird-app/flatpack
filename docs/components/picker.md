@@ -14,7 +14,7 @@ Use Picker when users need to choose image assets, files, or application records
 | name | type | default | required | description |
 |------|------|---------|----------|-------------|
 | `id` | String | none | Yes | Picker/modal id and event identity (`pickerId`). |
-| `items` | Array<Hash> | `[]` | No | Initial items. Normalized to keys like `id`, `kind`, `label`, `name`, `contentType`, `byteSize`, `thumbnailUrl`, `description`, `path`, `badge`, `meta`, `payload`. |
+| `items` | Array<Hash> | `[]` | No | Initial items. Normalized to keys like `id`, `kind`, `title`, `label`, `name`, `icon`, `contentType`, `byteSize`, `thumbnail_url`, `description`, `right_text`, `path`, `badge`, `meta`, `payload`. |
 | `title` | String | `"Select Assets"` | No | Modal title. |
 | `subtitle` | String or nil | `nil` | No | Optional helper text under title. |
 | `confirm_text` | String | `"Use Selected"` | No | Confirm button text. |
@@ -39,8 +39,16 @@ Use Picker when users need to choose image assets, files, or application records
 | `modal_body_height` | String | `"clamp(20rem, 55vh, 30rem)"` | No | Passed to modal body height style. |
 | `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into the modal wrapper or inline shell. |
 
-## Slots
-None.
+## Item Display Slots
+
+List rows are rendered through four display regions derived from item data rather than record-type-specific markup.
+
+| region | item fields | fallback behavior |
+|--------|-------------|-------------------|
+| Leading media/icon | `thumbnail_url`, `icon` | Falls back to `photo`, `document-text`, or `folder` based on `kind` when no thumbnail/icon is provided. |
+| Title | `title`, `label`, `name` | Uses the first present value in that order. |
+| Description | `description` | Falls back to `path` or file metadata built from `content_type` and `byte_size`. |
+| Right text | `right_text` | Falls back to `meta`, then `badge`. |
 
 ## Variants
 
@@ -74,7 +82,7 @@ Use `form:` when you want the picker to submit directly to a standard Rails cont
 
 ## Example
 
-Each picker item must include `name`. The component normalizes either snake_case or camelCase input keys into the browser payload (`thumbnail_url` and `thumbnailUrl`, `content_type` and `contentType`, `byte_size` and `byteSize`). Remote search responses must return JSON in the shape `{ items: [...] }`.
+Each picker item must include `name`. The component uses `thumbnail_url` and `right_text` for picker-specific display fields, alongside `content_type`/`contentType` and `byte_size`/`byteSize` for file metadata. Remote search responses must return JSON in the shape `{ items: [...] }`.
 
 ### Default inline picker
 
@@ -347,13 +355,13 @@ def picker_submissions
 end
 ```
 
-Selected items preserve the optional `description`, `path`, and `badge` keys when present so consumers can round-trip record metadata alongside `payload`.
+Selected items preserve the optional display fields (`title`, `icon`, `description`, `right_text`) alongside `path`, `badge`, `meta`, and `payload` so consumers can round-trip both UI text and record metadata.
 
 ## Behavior notes
 
 - `modal: false` is the default, so picker content renders inline unless a consumer explicitly opts into modal presentation.
 - `modal: true` keeps the existing modal-backed behavior for trigger/button flows.
-- Record rows render with a generic record badge and use `description`, `path`, and `badge` when provided.
+- List rows are built from display slots instead of record-specific row branches, so records, files, and images can share the same row structure.
 - `auto_confirm` only applies to newly selected items in `selection_mode: :single`.
 - Remote searches are debounced by 250ms, request JSON with `Accept: application/json`, and rerender the current result set from `payload.items`.
 - In `output_mode: :field`, field output is written before the confirm event is emitted.

@@ -41,6 +41,23 @@ module FlatPack
         ]
       end
 
+      def explicit_slot_items
+        [
+          {
+            id: "record-1",
+            kind: "record",
+            name: "brand-assets",
+            title: "Brand Assets",
+            description: "Shared folder for approved creative",
+            right_text: "12 items",
+            icon: "folder",
+            payload: {
+              record_id: 42
+            }
+          }
+        ]
+      end
+
       def test_renders_picker_modal_shell_when_modal_enabled
         render_inline(Component.new(id: "demo-picker", items: sample_items, modal: true))
 
@@ -98,9 +115,21 @@ module FlatPack
 
         assert_includes rendered_content, "data-flat-pack--picker-accepted-kinds-value=\"[&quot;record&quot;]\""
         assert_includes rendered_content, "&quot;kind&quot;:&quot;record&quot;"
-        assert_includes rendered_content, "&quot;description&quot;:&quot;Shared folder for approved creative&quot;"
+        assert_includes rendered_content, "&quot;title&quot;:&quot;Brand Assets&quot;"
+        assert_includes rendered_content, "&quot;icon&quot;:&quot;folder&quot;"
+        assert_includes rendered_content, "&quot;right_text&quot;:&quot;12 items&quot;"
+        assert_includes rendered_content, "&quot;description&quot;:&quot;Shared folder for approved creative • /Marketing/Brand Assets&quot;"
         assert_includes rendered_content, "&quot;path&quot;:&quot;/Marketing/Brand Assets&quot;"
         assert_includes rendered_content, "&quot;badge&quot;:&quot;Folder&quot;"
+      end
+
+      def test_supports_explicit_display_slot_fields
+        render_inline(Component.new(id: "slot-picker", items: explicit_slot_items, accepted_kinds: [:record]))
+
+        assert_includes rendered_content, "&quot;title&quot;:&quot;Brand Assets&quot;"
+        assert_includes rendered_content, "&quot;description&quot;:&quot;Shared folder for approved creative&quot;"
+        assert_includes rendered_content, "&quot;right_text&quot;:&quot;12 items&quot;"
+        assert_includes rendered_content, "&quot;icon&quot;:&quot;folder&quot;"
       end
 
       def test_renders_builtin_form_wrapper_when_form_config_present
@@ -118,7 +147,7 @@ module FlatPack
 
         assert_selector "form[action='/demo/picker_submissions']"
         assert_selector "form[data-turbo='true']"
-        assert_selector "div[data-flat-pack--picker-target='formFields']"
+        assert_selector "div.hidden[data-flat-pack--picker-target='formFields']"
         assert_selector "button[type='submit']", text: "Use Selected"
         assert_includes rendered_content, "&quot;field&quot;:&quot;folder_record_id&quot;"
         assert_includes rendered_content, "&quot;scope&quot;:&quot;picker_assignment&quot;"
