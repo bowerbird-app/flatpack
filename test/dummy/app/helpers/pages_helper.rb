@@ -45,6 +45,16 @@ module PagesHelper
     CODE
   end
 
+  def picker_demo_collapsible_code_example(id:, collapse_title:, code_title:, language:, code:, open: false)
+    render FlatPack::Collapse::Component.new(id: id, title: collapse_title, open: open, class: "mt-6") do
+      render FlatPack::CodeBlock::Component.new(
+        title: code_title,
+        language: language,
+        code: code
+      )
+    end
+  end
+
   def picker_demo_local_items_code
     picker_demo_full_erb_code(<<~CODE)
       <%= render FlatPack::Picker::Component.new(

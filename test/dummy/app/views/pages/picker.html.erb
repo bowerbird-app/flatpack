@@ -31,17 +31,19 @@
       <% end %>
     <% end %>
 
-    <%= render FlatPack::CodeBlock::Component.new(
-      title: "Local items array",
+    <%= picker_demo_collapsible_code_example(
+      id: "picker-demo-code-required-data-local-items",
+      collapse_title: "View Local Items Array",
+      code_title: "Local items array",
       language: "ruby",
-      class: "mt-6",
       code: picker_demo_local_items_code
     ) %>
 
-    <%= render FlatPack::CodeBlock::Component.new(
-      title: "Remote search JSON",
+    <%= picker_demo_collapsible_code_example(
+      id: "picker-demo-code-required-data-remote-json",
+      collapse_title: "View Remote Search JSON",
+      code_title: "Remote search JSON",
       language: "json",
-      class: "mt-6",
       code: picker_demo_items_json_code
     ) %>
   </section>
@@ -78,10 +80,11 @@
       <% end %>
     <% end %>
 
-    <%= render FlatPack::CodeBlock::Component.new(
-      title: "ERB",
+    <%= picker_demo_collapsible_code_example(
+      id: "picker-demo-code-records-erb",
+      collapse_title: "View ERB Code",
+      code_title: "ERB",
       language: "erb",
-      class: "mt-6",
       code: picker_demo_records_erb_code
     ) %>
 
@@ -156,17 +159,19 @@
       <% end %>
     <% end %>
 
-    <%= render FlatPack::CodeBlock::Component.new(
-      title: "ERB",
+    <%= picker_demo_collapsible_code_example(
+      id: "picker-demo-code-built-in-form-erb",
+      collapse_title: "View ERB Code",
+      code_title: "ERB",
       language: "erb",
-      class: "mt-6",
       code: picker_demo_builtin_form_erb_code
     ) %>
 
-    <%= render FlatPack::CodeBlock::Component.new(
-      title: "Controller",
+    <%= picker_demo_collapsible_code_example(
+      id: "picker-demo-code-built-in-form-controller",
+      collapse_title: "View Controller Code",
+      code_title: "Controller",
       language: "ruby",
-      class: "mt-6",
       code: <<~'CODE'
         def picker_submissions
           picker_assignment = params.require(:picker_assignment).permit(:folder_record_id)
@@ -216,10 +221,11 @@
       <% end %>
     <% end %>
 
-    <%= render FlatPack::CodeBlock::Component.new(
-      title: "ERB",
+    <%= picker_demo_collapsible_code_example(
+      id: "picker-demo-code-local-search-erb",
+      collapse_title: "View ERB Code",
+      code_title: "ERB",
       language: "erb",
-      class: "mt-6",
       code: picker_demo_local_search_erb_code
     ) %>
 
@@ -277,17 +283,19 @@
       <% end %>
     <% end %>
 
-    <%= render FlatPack::CodeBlock::Component.new(
-      title: "ERB",
+    <%= picker_demo_collapsible_code_example(
+      id: "picker-demo-code-remote-search-erb",
+      collapse_title: "View ERB Code",
+      code_title: "ERB",
       language: "erb",
-      class: "mt-6",
       code: picker_demo_remote_search_erb_code
     ) %>
 
-    <%= render FlatPack::CodeBlock::Component.new(
-      title: "Controller",
+    <%= picker_demo_collapsible_code_example(
+      id: "picker-demo-code-remote-search-controller",
+      collapse_title: "View Controller Code",
+      code_title: "Controller",
       language: "ruby",
-      class: "mt-6",
       code: picker_demo_remote_controller_code(items: @picker_demo_items.first(3))
     ) %>
 
@@ -339,10 +347,11 @@
       ) %>
     </div>
 
-    <%= render FlatPack::CodeBlock::Component.new(
-      title: "ERB",
+    <%= picker_demo_collapsible_code_example(
+      id: "picker-demo-code-inline-erb",
+      collapse_title: "View ERB Code",
+      code_title: "ERB",
       language: "erb",
-      class: "mt-6",
       code: picker_demo_inline_erb_code
     ) %>
   </section>
@@ -385,10 +394,11 @@
       <% end %>
     <% end %>
 
-    <%= render FlatPack::CodeBlock::Component.new(
-      title: "ERB",
+    <%= picker_demo_collapsible_code_example(
+      id: "picker-demo-code-items-height-min-erb",
+      collapse_title: "View ERB Code",
+      code_title: "ERB",
       language: "erb",
-      class: "mt-6",
       code: picker_demo_items_height_min_erb_code
     ) %>
   </section>
@@ -417,10 +427,11 @@
       <% end %>
     <% end %>
 
-    <%= render FlatPack::CodeBlock::Component.new(
-      title: "ERB",
+    <%= picker_demo_collapsible_code_example(
+      id: "picker-demo-code-items-height-max-erb",
+      collapse_title: "View ERB Code",
+      code_title: "ERB",
       language: "erb",
-      class: "mt-6",
       code: picker_demo_items_height_max_erb_code
     ) %>
   </section>
@@ -449,10 +460,11 @@
       <% end %>
     <% end %>
 
-    <%= render FlatPack::CodeBlock::Component.new(
-      title: "ERB",
+    <%= picker_demo_collapsible_code_example(
+      id: "picker-demo-code-items-height-fixed-erb",
+      collapse_title: "View ERB Code",
+      code_title: "ERB",
       language: "erb",
-      class: "mt-6",
       code: picker_demo_items_height_fixed_erb_code
     ) %>
   </section>
@@ -486,10 +498,11 @@
       <% end %>
     <% end %>
 
-    <%= render FlatPack::CodeBlock::Component.new(
-      title: "ERB",
+    <%= picker_demo_collapsible_code_example(
+      id: "picker-demo-code-images-erb",
+      collapse_title: "View ERB Code",
+      code_title: "ERB",
       language: "erb",
-      class: "mt-6",
       code: picker_demo_images_erb_code
     ) %>
 
@@ -543,10 +556,11 @@
       <% end %>
     <% end %>
 
-    <%= render FlatPack::CodeBlock::Component.new(
-      title: "ERB",
+    <%= picker_demo_collapsible_code_example(
+      id: "picker-demo-code-single-select-erb",
+      collapse_title: "View ERB Code",
+      code_title: "ERB",
       language: "erb",
-      class: "mt-6",
       code: picker_demo_single_select_erb_code
     ) %>
 
@@ -600,10 +614,11 @@
       <% end %>
     <% end %>
 
-    <%= render FlatPack::CodeBlock::Component.new(
-      title: "ERB",
+    <%= picker_demo_collapsible_code_example(
+      id: "picker-demo-code-field-output-erb",
+      collapse_title: "View ERB Code",
+      code_title: "ERB",
       language: "erb",
-      class: "mt-6",
       code: picker_demo_field_output_erb_code
     ) %>
 
