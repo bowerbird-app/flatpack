@@ -106,6 +106,14 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "data-flat-pack--chat-sender-picker-ids-value=\"[&quot;chat-picker-images&quot;,&quot;chat-picker-files&quot;]\""
   end
 
+  test "tooltips demo uses dummy app default icon variant" do
+    get "/demo/tooltips"
+
+    assert_response :success
+    assert_includes response.body, 'data-flat-pack--icon-variant-value="mini"'
+    assert_includes response.body, 'viewBox="0 0 20 20"'
+  end
+
   test "standalone chat message meta demo route is not exposed" do
     get "/demo/chat/message_meta"
 
