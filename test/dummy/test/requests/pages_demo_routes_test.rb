@@ -114,6 +114,15 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, 'viewBox="0 0 20 20"'
   end
 
+  test "dummy layouts load the compiled application stylesheet" do
+    get "/"
+
+    assert_response :success
+    assert_includes response.body, 'href="/assets/application-'
+    assert_includes response.body, 'href="/assets/flat_pack/variables-'
+    refute_includes response.body, 'href="/assets/tailwind-'
+  end
+
   test "standalone chat message meta demo route is not exposed" do
     get "/demo/chat/message_meta"
 

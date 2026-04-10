@@ -5,14 +5,14 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-[var(--surface-muted-background-color)]" "text-[var(--surface-content-color)]" "border-[var(--surface-border-color)]" "bg-primary" "text-primary-text" "border-primary" "bg-success-background-color" "text-success-text" "border-success-border-color" "bg-warning-background-color" "text-warning-text" "border-warning-border-color" "bg-danger-background-color" "text-danger-text-color" "border-danger-border-color" "bg-secondary" "text-secondary-text" "border-info-border"
+      # "bg-[var(--surface-muted-background-color)]" "text-[var(--surface-content-color)]" "border-[var(--surface-border-color)]" "bg-[var(--color-primary)]" "text-[var(--color-primary-text)]" "border-[var(--color-primary)]" "bg-[var(--color-success-background-color)]" "text-[var(--color-success-text)]" "border-[var(--color-success-border)]" "bg-[var(--color-warning-background-color)]" "text-[var(--color-warning-text)]" "border-[var(--color-warning-border)]" "bg-[var(--color-danger-background-color)]" "text-[var(--color-danger-text-color)]" "border-[var(--color-danger-border-color)]" "bg-[var(--color-secondary)]" "text-[var(--color-secondary-text)]" "border-[var(--color-info-border)]"
       STYLES = {
         default: "bg-[var(--surface-muted-background-color)] text-[var(--surface-content-color)] border-[var(--surface-border-color)]",
-        primary: "bg-primary text-primary-text border-primary",
-        success: "bg-success-background-color text-success-text border-success-border-color",
-        warning: "bg-warning-background-color text-warning-text border-warning-border-color",
-        danger: "bg-danger-background-color text-danger-text-color border-danger-border-color",
-        info: "bg-secondary text-secondary-text border-info-border"
+        primary: "bg-[var(--color-primary)] text-[var(--color-primary-text)] border-[var(--color-primary)]",
+        success: "bg-[var(--color-success-background-color)] text-[var(--color-success-text)] border-[var(--color-success-border)]",
+        warning: "bg-[var(--color-warning-background-color)] text-[var(--color-warning-text)] border-[var(--color-warning-border)]",
+        danger: "bg-[var(--color-danger-background-color)] text-[var(--color-danger-text-color)] border-[var(--color-danger-border-color)]",
+        info: "bg-[var(--color-secondary)] text-[var(--color-secondary-text)] border-[var(--color-info-border)]"
       }.freeze
 
       # Tailwind CSS scanning requires these classes to be present as string literals.

@@ -30,35 +30,45 @@ module FlatPack
         render_inline(Component.new(text: "Primary", style: :primary))
 
         assert_selector "span", text: "Primary"
-        assert_includes page.native.to_html, "bg-primary"
+        assert_includes page.native.to_html, "bg-[var(--color-primary)]"
+        assert_includes page.native.to_html, "text-[var(--color-primary-text)]"
+        assert_includes page.native.to_html, "border-[var(--color-primary)]"
       end
 
       def test_renders_success_style
         render_inline(Component.new(text: "Success", style: :success))
 
         assert_selector "span", text: "Success"
-        assert_includes page.native.to_html, "bg-success-background-color"
+        assert_includes page.native.to_html, "bg-[var(--color-success-background-color)]"
+        assert_includes page.native.to_html, "text-[var(--color-success-text)]"
+        assert_includes page.native.to_html, "border-[var(--color-success-border)]"
       end
 
       def test_renders_warning_style
         render_inline(Component.new(text: "Warning", style: :warning))
 
         assert_selector "span", text: "Warning"
-        assert_includes page.native.to_html, "bg-warning-background-color"
+        assert_includes page.native.to_html, "bg-[var(--color-warning-background-color)]"
+        assert_includes page.native.to_html, "text-[var(--color-warning-text)]"
+        assert_includes page.native.to_html, "border-[var(--color-warning-border)]"
       end
 
       def test_renders_danger_style
         render_inline(Component.new(text: "Danger", style: :danger))
 
         assert_selector "span", text: "Danger"
-        assert_includes page.native.to_html, "bg-danger-background-color"
+        assert_includes page.native.to_html, "bg-[var(--color-danger-background-color)]"
+        assert_includes page.native.to_html, "text-[var(--color-danger-text-color)]"
+        assert_includes page.native.to_html, "border-[var(--color-danger-border-color)]"
       end
 
       def test_renders_info_style
         render_inline(Component.new(text: "Info", style: :info))
 
         assert_selector "span", text: "Info"
-        assert_includes page.native.to_html, "bg-secondary"
+        assert_includes page.native.to_html, "bg-[var(--color-secondary)]"
+        assert_includes page.native.to_html, "text-[var(--color-secondary-text)]"
+        assert_includes page.native.to_html, "border-[var(--color-info-border)]"
       end
 
       def test_renders_small_size

@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.18] - 2026-04-10
+
+### Fixed
+- The Rails 8 dummy app now builds and serves its compiled Tailwind bundle as `application.css`, matching the layout asset tag and avoiding unstyled pages when running `test/dummy/bin/dev`.
+
+### Tests
+- Added dummy app request coverage to assert the demo layouts link the compiled `application` stylesheet instead of the legacy `tailwind` asset name.
+
+## [0.1.17] - 2026-04-10
+
+### Fixed
+- `FlatPack::Chip::Component` now renders variant colors with explicit CSS-variable Tailwind utilities instead of semantic shorthand classes, restoring chip styling in the dummy app when the Tailwind v4 build does not emit those semantic utilities.
+
+### Tests
+- Updated chip component regression coverage to assert the explicit CSS-variable classes used for each variant style.
+
 ## [0.1.16] - 2026-04-10
 
 ### Changed
