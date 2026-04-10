@@ -417,19 +417,26 @@
     <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">
       A practical example showing a tag input interface with removable chips.
     </p>
-    <div class="border border-[var(--surface-border-color)] rounded-lg p-4">
+    <div class="border border-[var(--surface-border-color)] rounded-lg p-4" data-controller="chip-tag-input">
       <%= render FlatPack::TextInput::Component.new(
         name: "project_tags",
         label: "Project Tags",
         placeholder: "Add a tag...",
+        data: {
+          chip_tag_input_target: "input",
+          action: "keydown->chip-tag-input#handleKeydown"
+        },
         class: "mb-3"
       ) %>
-      <%= render FlatPack::ChipGroup::Component.new(class: "mb-3") do %>
+      <%= render FlatPack::ChipGroup::Component.new(class: "mb-3", data: {chip_tag_input_target: "chips"}) do %>
         <%= render FlatPack::Chip::Component.new(text: "Frontend", style: :info, removable: true, value: "frontend") %>
         <%= render FlatPack::Chip::Component.new(text: "Backend", style: :success, removable: true, value: "backend") %>
         <%= render FlatPack::Chip::Component.new(text: "Database", style: :warning, removable: true, value: "database") %>
         <%= render FlatPack::Chip::Component.new(text: "UI/UX", style: :primary, removable: true, value: "ui-ux") %>
       <% end %>
+      <template data-chip-tag-input-target="template">
+        <%= render FlatPack::Chip::Component.new(text: "__TAG_TEXT__", style: :info, removable: true, value: "__TAG_VALUE__") %>
+      </template>
     </div>
 
   <%= render FlatPack::CodeBlock::Component.new(
@@ -437,19 +444,26 @@
         &lt;p class=&quot;text-sm text-[var(--surface-muted-content-color)] mb-4&quot;&gt;
           A practical example showing a tag input interface with removable chips.
         &lt;/p&gt;
-        &lt;div class=&quot;border border-[var(--surface-border-color)] rounded-lg p-4&quot;&gt;
+        &lt;div class=&quot;border border-[var(--surface-border-color)] rounded-lg p-4&quot; data-controller=&quot;chip-tag-input&quot;&gt;
           &lt;%= render FlatPack::TextInput::Component.new(
             name: &quot;project_tags&quot;,
             label: &quot;Project Tags&quot;,
             placeholder: &quot;Add a tag...&quot;,
+            data: {
+              chip_tag_input_target: &quot;input&quot;,
+              action: &quot;keydown-&gt;chip-tag-input#handleKeydown&quot;
+            },
             class: &quot;mb-3&quot;
           ) %&gt;
-          &lt;%= render FlatPack::ChipGroup::Component.new(class: &quot;mb-3&quot;) do %&gt;
+          &lt;%= render FlatPack::ChipGroup::Component.new(class: &quot;mb-3&quot;, data: { chip_tag_input_target: &quot;chips&quot; }) do %&gt;
             &lt;%= render FlatPack::Chip::Component.new(text: &quot;Frontend&quot;, style: :info, removable: true, value: &quot;frontend&quot;) %&gt;
             &lt;%= render FlatPack::Chip::Component.new(text: &quot;Backend&quot;, style: :success, removable: true, value: &quot;backend&quot;) %&gt;
             &lt;%= render FlatPack::Chip::Component.new(text: &quot;Database&quot;, style: :warning, removable: true, value: &quot;database&quot;) %&gt;
             &lt;%= render FlatPack::Chip::Component.new(text: &quot;UI/UX&quot;, style: :primary, removable: true, value: &quot;ui-ux&quot;) %&gt;
           &lt;% end %&gt;
+          &lt;template data-chip-tag-input-target=&quot;template&quot;&gt;
+            &lt;%= render FlatPack::Chip::Component.new(text: &quot;__TAG_TEXT__&quot;, style: :info, removable: true, value: &quot;__TAG_VALUE__&quot;) %&gt;
+          &lt;/template&gt;
         &lt;/div&gt;
     CODE
     language: "erb",
