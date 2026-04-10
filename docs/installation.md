@@ -6,7 +6,7 @@ This document provides the exact terminal commands and configuration steps neede
 
 FlatPack is a modern Rails UI Component Library built with ViewComponent, Tailwind CSS, and Hotwire. It provides type-safe, testable components with dark mode support and accessibility features. Supports Rails 7.1 and above.
 
-**Current Version:** 0.1.11 (Updated March 26, 2026)
+**Current Version:** 0.1.16 (Updated April 10, 2026)
 
 ## Prerequisites
 
@@ -82,6 +82,23 @@ rails generate flat_pack:layout \
 - `--storage_key`: localStorage key used by `FlatPack::SidebarLayout::Component`
 
 After generation, set the layout in your controller (for example `ApplicationController`) and update the generated sidebar/top-nav partials to match your app routes and actions.
+
+### 3.2 Optional: Create `config/initializers/flat_pack.rb`
+
+FlatPack works out of the box without a Ruby initializer, but app-wide settings such as the default Heroicons variant belong in `config/initializers/flat_pack.rb`:
+
+```ruby
+# config/initializers/flat_pack.rb
+FlatPack.configure do |config|
+   config.default_theme = :light
+   config.default_icon_variant = :outline
+end
+```
+
+Notes:
+- `default_icon_variant` accepts `:outline`, `:solid`, `:mini`, or `:micro`.
+- If you omit `default_icon_variant`, FlatPack defaults to `:outline`.
+- Per-component `variant:` values on `FlatPack::Shared::IconComponent` still override the app default.
 
 ### 4. Configure Tailwind CSS 4 to Scan FlatPack Components
 
@@ -228,7 +245,7 @@ pin_all_from FlatPack::Engine.root.join("app/javascript/flat_pack/tiptap"),
              to: "flat_pack/tiptap",
              preload: false
 
-# Heroicons curated subset — used by FlatPack::Icon::Component
+# Heroicons icon banks — used by FlatPack::Icon::Component
 pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false
 ```
 
@@ -804,6 +821,7 @@ The installation process for FlatPack is fully automated. Quick checklist:
 - ✨ `@source` directive in your Tailwind file so Tailwind scans FlatPack components
 - ✨ `@theme` utility block in your Tailwind file for Tailwind class generation
 - ✨ Heroicons importmap pin (`flat_pack/heroicons`) for the Icon component
+- ✨ Optional app-wide FlatPack settings via `config/initializers/flat_pack.rb`, including `config.default_icon_variant = :outline`
 - ✨ Stimulus lazy-loading for all FlatPack controllers via importmap
 
 **Light theme is the default.** No `data-theme` attribute is required. The `:root {}` block in `variables.css` activates the light palette automatically. Supported themes: `light` (default), `dark`, `ocean`, `rounded` — set via `data-theme` on `<html>`.

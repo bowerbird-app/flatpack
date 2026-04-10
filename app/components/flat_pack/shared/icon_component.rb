@@ -13,6 +13,13 @@ module FlatPack
         xl: "w-8 h-8"
       }.freeze
 
+      VIEWBOXES = {
+        outline: "0 0 24 24",
+        solid: "0 0 24 24",
+        mini: "0 0 20 20",
+        micro: "0 0 16 16"
+      }.freeze
+
       # Maps legacy/shorthand names to canonical Heroicons v2 names.
       # Keys use dash-separated strings (underscores are converted before lookup).
       NAME_MAP = {
@@ -50,11 +57,11 @@ module FlatPack
         "keyboard" => "rectangle-group"
       }.freeze
 
-      def initialize(name:, size: :md, variant: :outline, **system_arguments)
+      def initialize(name:, size: :md, variant: nil, **system_arguments)
         super(**system_arguments)
         @name = name
         @size = size.to_sym
-        @variant = variant.to_sym
+        @variant = normalize_variant(variant)
 
         validate_size!
       end
@@ -71,7 +78,7 @@ module FlatPack
         merge_attributes(
           class: icon_classes,
           xmlns: "http://www.w3.org/2000/svg",
-          viewBox: "0 0 24 24",
+          viewBox: VIEWBOXES.fetch(@variant),
           fill: "none",
           stroke: "currentColor",
           "stroke-width": "1.5",
@@ -95,6 +102,14 @@ module FlatPack
       def validate_size!
         return if SIZES.key?(@size)
         raise ArgumentError, "Invalid size: #{@size}. Must be one of: #{SIZES.keys.join(", ")}"
+      end
+
+      def normalize_variant(variant)
+        normalized_variant = (variant || FlatPack.configuration.default_icon_variant).to_sym
+
+        return normalized_variant if VIEWBOXES.key?(normalized_variant)
+
+        raise ArgumentError, "Invalid heroicon variant: #{variant}. Must be one of: #{VIEWBOXES.keys.join(", ")}"
       end
 
       def heroicon_name

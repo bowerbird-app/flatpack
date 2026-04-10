@@ -86,6 +86,7 @@ FlatPack can be configured in an initializer:
 # config/initializers/flat_pack.rb
 FlatPack.configure do |config|
   config.default_theme = :light
+  config.default_icon_variant = :outline
 end
 ```
 

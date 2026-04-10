@@ -67,7 +67,7 @@ Propshaft resolves the correct digested path for each file. Using `stylesheet_li
 app/javascript/flat_pack/
 ├── controllers/
 │   └── ..._controller.js   # Stimulus controllers
-└── heroicons.js            # Curated Heroicons v2 subset for icons
+└── heroicons.js            # Generated Heroicons v2 icon banks for FlatPack icons
 ```
 
 ### Importmap Integration
@@ -80,7 +80,7 @@ pin_all_from File.expand_path("../app/javascript/flat_pack/controllers", __dir__
   under: "controllers/flat_pack",
   to: "flat_pack/controllers"
 
-# Heroicons curated subset — served as a local JS module, no gem required
+# Heroicons icon banks — served as a local JS module, no gem required
 pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false
 ```
 
@@ -90,7 +90,8 @@ FlatPack icons are rendered entirely client-side via the `flat-pack--icon` Stimu
 
 This means:
 - No server-side SVG sprite partial is required in the host layout.
-- Icons support `:outline` (default) and `:solid` variants.
+- Icons support `:outline`, `:solid`, `:mini`, and `:micro` variants.
+- Host apps can set a global default with `FlatPack.configure { |config| config.default_icon_variant = :outline }`.
 - Icon names follow [Heroicons v2](https://heroicons.com) canonical names (e.g. `magnifying-glass`, `cog-6-tooth`, `exclamation-triangle`). A set of legacy shorthand aliases (e.g. `search`, `settings`, `alert`) are mapped internally for backward compatibility.
 
 ## Tailwind CSS 4 Integration
