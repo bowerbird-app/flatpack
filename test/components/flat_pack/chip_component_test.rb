@@ -155,7 +155,7 @@ module FlatPack
         render_inline(Component.new(text: "Selected", type: :button, selected: true))
 
         assert_includes page.native.to_html, "ring-2"
-        assert_includes page.native.to_html, "ring-ring"
+        assert_includes page.native.to_html, "ring-[var(--color-ring)]"
       end
 
       def test_selected_static_does_not_add_ring_classes
@@ -169,6 +169,12 @@ module FlatPack
 
         assert_selector "span[data-controller='flat-pack--chip']"
         assert_selector "span[data-flat-pack--chip-target='chip']"
+      end
+
+      def test_button_type_adds_controller_for_toggle_interactions
+        render_inline(Component.new(text: "Filter", type: :button, value: "filter"))
+
+        assert_selector "button[data-controller='flat-pack--chip'][data-flat-pack--chip-target='chip'][data-flat-pack--chip-value-value='filter']"
       end
 
       def test_removable_adds_remove_button
@@ -206,18 +212,18 @@ module FlatPack
         refute_selector "span[data-controller='flat-pack--chip']"
       end
 
-      def test_button_has_focus_ring
+      def test_button_does_not_add_focus_ring_classes
         render_inline(Component.new(text: "Button", type: :button))
 
-        assert_includes page.native.to_html, "focus:outline-none"
-        assert_includes page.native.to_html, "focus:ring-2"
+        refute_includes page.native.to_html, "focus:outline-none"
+        refute_includes page.native.to_html, "focus:ring-2"
       end
 
-      def test_link_has_focus_ring
+      def test_link_does_not_add_focus_ring_classes
         render_inline(Component.new(text: "Link", type: :link, href: "/test"))
 
-        assert_includes page.native.to_html, "focus:outline-none"
-        assert_includes page.native.to_html, "focus:ring-2"
+        refute_includes page.native.to_html, "focus:outline-none"
+        refute_includes page.native.to_html, "focus:ring-2"
       end
 
       def test_renders_leading_slot

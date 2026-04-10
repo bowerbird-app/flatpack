@@ -3603,6 +3603,11 @@
       --tw-ring-color: var(--chat-input-focus-ring-color);
     }
   }
+  .focus\:ring-\[var\(--color-ring\)\] {
+    &:focus {
+      --tw-ring-color: var(--color-ring);
+    }
+  }
   .focus\:ring-\[var\(--search-input-focus-ring-color\)\] {
     &:focus {
       --tw-ring-color: var(--search-input-focus-ring-color);

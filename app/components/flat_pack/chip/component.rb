@@ -124,7 +124,7 @@ module FlatPack
 
         content_tag(:button,
           type: "button",
-          class: "ml-1 inline-flex items-center justify-center rounded-full hover:bg-[var(--chip-remove-hover-background-color)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring",
+          class: "ml-1 inline-flex items-center justify-center rounded-full hover:bg-[var(--chip-remove-hover-background-color)]",
           "aria-label": "Remove",
           data: {action: "click->flat-pack--chip#remove"}) do
           # X icon (close)
@@ -137,8 +137,7 @@ module FlatPack
       def chip_attributes
         attrs = {class: chip_classes}
 
-        # Add controller and target if removable
-        if @removable
+        if chip_controller_enabled?
           attrs[:data] = {
             controller: "flat-pack--chip",
             flat_pack__chip_target: "chip",
@@ -188,12 +187,15 @@ module FlatPack
 
       def selected_classes
         return unless @selected && @type == :button
-        "ring-2 ring-ring"
+        "ring-2 ring-[var(--color-ring)]"
       end
 
       def focus_classes
-        return unless @type == :button || @type == :link
-        "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+        nil
+      end
+
+      def chip_controller_enabled?
+        @removable || @type == :button
       end
 
       def validate_style!
