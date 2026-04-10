@@ -30,35 +30,45 @@ module FlatPack
         render_inline(Component.new(text: "Primary", style: :primary))
 
         assert_selector "span", text: "Primary"
-        assert_includes page.native.to_html, "bg-primary"
+        assert_includes page.native.to_html, "bg-[var(--color-primary)]"
+        assert_includes page.native.to_html, "text-[var(--color-primary-text)]"
+        assert_includes page.native.to_html, "border-[var(--color-primary)]"
       end
 
       def test_renders_success_style
         render_inline(Component.new(text: "Success", style: :success))
 
         assert_selector "span", text: "Success"
-        assert_includes page.native.to_html, "bg-success-background-color"
+        assert_includes page.native.to_html, "bg-[var(--color-success-background-color)]"
+        assert_includes page.native.to_html, "text-[var(--color-success-text)]"
+        assert_includes page.native.to_html, "border-[var(--color-success-border)]"
       end
 
       def test_renders_warning_style
         render_inline(Component.new(text: "Warning", style: :warning))
 
         assert_selector "span", text: "Warning"
-        assert_includes page.native.to_html, "bg-warning-background-color"
+        assert_includes page.native.to_html, "bg-[var(--color-warning-background-color)]"
+        assert_includes page.native.to_html, "text-[var(--color-warning-text)]"
+        assert_includes page.native.to_html, "border-[var(--color-warning-border)]"
       end
 
       def test_renders_danger_style
         render_inline(Component.new(text: "Danger", style: :danger))
 
         assert_selector "span", text: "Danger"
-        assert_includes page.native.to_html, "bg-danger-background-color"
+        assert_includes page.native.to_html, "bg-[var(--color-danger-background-color)]"
+        assert_includes page.native.to_html, "text-[var(--color-danger-text-color)]"
+        assert_includes page.native.to_html, "border-[var(--color-danger-border-color)]"
       end
 
       def test_renders_info_style
         render_inline(Component.new(text: "Info", style: :info))
 
         assert_selector "span", text: "Info"
-        assert_includes page.native.to_html, "bg-secondary"
+        assert_includes page.native.to_html, "bg-[var(--color-secondary)]"
+        assert_includes page.native.to_html, "text-[var(--color-secondary-text)]"
+        assert_includes page.native.to_html, "border-[var(--color-info-border)]"
       end
 
       def test_renders_small_size
@@ -145,7 +155,7 @@ module FlatPack
         render_inline(Component.new(text: "Selected", type: :button, selected: true))
 
         assert_includes page.native.to_html, "ring-2"
-        assert_includes page.native.to_html, "ring-ring"
+        assert_includes page.native.to_html, "ring-[var(--color-ring)]"
       end
 
       def test_selected_static_does_not_add_ring_classes
@@ -161,6 +171,12 @@ module FlatPack
         assert_selector "span[data-flat-pack--chip-target='chip']"
       end
 
+      def test_button_type_adds_controller_for_toggle_interactions
+        render_inline(Component.new(text: "Filter", type: :button, value: "filter"))
+
+        assert_selector "button[data-controller='flat-pack--chip'][data-flat-pack--chip-target='chip'][data-flat-pack--chip-value-value='filter']"
+      end
+
       def test_removable_adds_remove_button
         render_inline(Component.new(text: "Tag", removable: true))
 
@@ -174,6 +190,21 @@ module FlatPack
         assert_selector "span[data-flat-pack--chip-value-value='ruby']"
       end
 
+      def test_removable_with_request_configuration
+        render_inline(Component.new(
+          text: "Tag",
+          removable: true,
+          value: "ruby",
+          remove_url: "/demo/chips/remove",
+          remove_method: :get,
+          remove_params: {tag: "ruby", source: "filters"}
+        ))
+
+        assert_selector "span[data-flat-pack--chip-remove-url-value='/demo/chips/remove']"
+        assert_selector "span[data-flat-pack--chip-remove-method-value='get']"
+        assert_includes page.native.to_html, "data-flat-pack--chip-remove-params-value='#{{tag: "ruby", source: "filters"}.to_json}'"
+      end
+
       def test_disabled_overrides_removable
         render_inline(Component.new(text: "Disabled", removable: true, disabled: true))
 
@@ -181,18 +212,18 @@ module FlatPack
         refute_selector "span[data-controller='flat-pack--chip']"
       end
 
-      def test_button_has_focus_ring
+      def test_button_does_not_add_focus_ring_classes
         render_inline(Component.new(text: "Button", type: :button))
 
-        assert_includes page.native.to_html, "focus:outline-none"
-        assert_includes page.native.to_html, "focus:ring-2"
+        refute_includes page.native.to_html, "focus:outline-none"
+        refute_includes page.native.to_html, "focus:ring-2"
       end
 
-      def test_link_has_focus_ring
+      def test_link_does_not_add_focus_ring_classes
         render_inline(Component.new(text: "Link", type: :link, href: "/test"))
 
-        assert_includes page.native.to_html, "focus:outline-none"
-        assert_includes page.native.to_html, "focus:ring-2"
+        refute_includes page.native.to_html, "focus:outline-none"
+        refute_includes page.native.to_html, "focus:ring-2"
       end
 
       def test_renders_leading_slot
@@ -256,6 +287,24 @@ module FlatPack
       def test_raises_error_for_invalid_type
         assert_raises(ArgumentError) do
           Component.new(text: "Invalid", type: :invalid)
+        end
+      end
+
+      def test_raises_error_for_invalid_remove_method
+        assert_raises(ArgumentError) do
+          Component.new(text: "Invalid", removable: true, remove_method: :delete)
+        end
+      end
+
+      def test_raises_error_for_unsafe_remove_url
+        assert_raises(ArgumentError) do
+          Component.new(text: "Invalid", removable: true, remove_url: "javascript:alert('xss')")
+        end
+      end
+
+      def test_raises_error_when_remove_params_is_not_a_hash
+        assert_raises(ArgumentError) do
+          Component.new(text: "Invalid", removable: true, remove_params: ["ruby"])
         end
       end
     end

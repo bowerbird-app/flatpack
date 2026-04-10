@@ -117,14 +117,25 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Removable Chips", anchor_link: true, subtitle: "Examples for Removable Chips.") %>
     <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">
-      Click the × button to remove chips. Check the console for events.
+      Click the × button to remove chips. Check the console for events. The main chips issue GET callbacks before removal, and the warning chip below demonstrates a failed POST removal.
     </p>
     <div class="flex flex-wrap gap-3 mb-4" id="removable-chips-container">
-      <%= render FlatPack::Chip::Component.new(text: "Ruby", style: :danger, removable: true, value: "ruby") %>
-      <%= render FlatPack::Chip::Component.new(text: "Rails", style: :danger, removable: true, value: "rails") %>
-      <%= render FlatPack::Chip::Component.new(text: "JavaScript", style: :warning, removable: true, value: "javascript") %>
-      <%= render FlatPack::Chip::Component.new(text: "React", style: :info, removable: true, value: "react") %>
-      <%= render FlatPack::Chip::Component.new(text: "TypeScript", style: :info, removable: true, value: "typescript") %>
+      <%= render FlatPack::Chip::Component.new(text: "Ruby", style: :danger, removable: true, value: "ruby", remove_url: "/demo/chips/remove_callback", remove_method: :get, remove_params: {tag: "ruby", source: "chips_demo"}) %>
+      <%= render FlatPack::Chip::Component.new(text: "Rails", style: :danger, removable: true, value: "rails", remove_url: "/demo/chips/remove_callback", remove_method: :get, remove_params: {tag: "rails", source: "chips_demo"}) %>
+      <%= render FlatPack::Chip::Component.new(text: "JavaScript", style: :warning, removable: true, value: "javascript", remove_url: "/demo/chips/remove_callback", remove_method: :get, remove_params: {tag: "javascript", source: "chips_demo"}) %>
+      <%= render FlatPack::Chip::Component.new(text: "React", style: :info, removable: true, value: "react", remove_url: "/demo/chips/remove_callback", remove_method: :get, remove_params: {tag: "react", source: "chips_demo"}) %>
+      <%= render FlatPack::Chip::Component.new(text: "TypeScript", style: :info, removable: true, value: "typescript", remove_url: "/demo/chips/remove_callback", remove_method: :get, remove_params: {tag: "typescript", source: "chips_demo"}) %>
+    </div>
+    <div class="flex flex-wrap gap-3 mb-4" id="removable-failed-callback-chips-container">
+      <%= render FlatPack::Chip::Component.new(
+        text: "Ruby Failure",
+        style: :warning,
+        removable: true,
+        value: "ruby-failure",
+        remove_url: "/demo/chips/remove_callback",
+        remove_method: :post,
+        remove_params: {tag: "ruby", source: "chips_demo", fail: true}
+      ) %>
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE')
@@ -132,13 +143,20 @@
           text: "Ruby",
           style: :danger,
           removable: true,
-          value: "ruby"
+          value: "ruby",
+          remove_url: "/demo/chips/remove_callback",
+          remove_method: :get,
+          remove_params: { tag: "ruby", source: "chips_demo" }
         ) %&gt;
       CODE
     ) %>
     <script>
       document.addEventListener('chip:removed', (event) => {
         console.log('Chip removed:', event.detail.value)
+      })
+
+      document.addEventListener('chip:remove-failed', (event) => {
+        console.log('Chip remove failed:', event.detail.value, event.detail.error)
       })
     </script>
   </section>
@@ -399,19 +417,26 @@
     <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">
       A practical example showing a tag input interface with removable chips.
     </p>
-    <div class="border border-[var(--surface-border-color)] rounded-lg p-4">
+    <div class="border border-[var(--surface-border-color)] rounded-lg p-4" data-controller="chip-tag-input">
       <%= render FlatPack::TextInput::Component.new(
         name: "project_tags",
         label: "Project Tags",
         placeholder: "Add a tag...",
+        data: {
+          chip_tag_input_target: "input",
+          action: "keydown->chip-tag-input#handleKeydown"
+        },
         class: "mb-3"
       ) %>
-      <%= render FlatPack::ChipGroup::Component.new(class: "mb-3") do %>
+      <%= render FlatPack::ChipGroup::Component.new(class: "mb-3", data: {chip_tag_input_target: "chips"}) do %>
         <%= render FlatPack::Chip::Component.new(text: "Frontend", style: :info, removable: true, value: "frontend") %>
         <%= render FlatPack::Chip::Component.new(text: "Backend", style: :success, removable: true, value: "backend") %>
         <%= render FlatPack::Chip::Component.new(text: "Database", style: :warning, removable: true, value: "database") %>
         <%= render FlatPack::Chip::Component.new(text: "UI/UX", style: :primary, removable: true, value: "ui-ux") %>
       <% end %>
+      <template data-chip-tag-input-target="template">
+        <%= render FlatPack::Chip::Component.new(text: "__TAG_TEXT__", style: :info, removable: true, value: "__TAG_VALUE__") %>
+      </template>
     </div>
 
   <%= render FlatPack::CodeBlock::Component.new(
@@ -419,19 +444,26 @@
         &lt;p class=&quot;text-sm text-[var(--surface-muted-content-color)] mb-4&quot;&gt;
           A practical example showing a tag input interface with removable chips.
         &lt;/p&gt;
-        &lt;div class=&quot;border border-[var(--surface-border-color)] rounded-lg p-4&quot;&gt;
+        &lt;div class=&quot;border border-[var(--surface-border-color)] rounded-lg p-4&quot; data-controller=&quot;chip-tag-input&quot;&gt;
           &lt;%= render FlatPack::TextInput::Component.new(
             name: &quot;project_tags&quot;,
             label: &quot;Project Tags&quot;,
             placeholder: &quot;Add a tag...&quot;,
+            data: {
+              chip_tag_input_target: &quot;input&quot;,
+              action: &quot;keydown-&gt;chip-tag-input#handleKeydown&quot;
+            },
             class: &quot;mb-3&quot;
           ) %&gt;
-          &lt;%= render FlatPack::ChipGroup::Component.new(class: &quot;mb-3&quot;) do %&gt;
+          &lt;%= render FlatPack::ChipGroup::Component.new(class: &quot;mb-3&quot;, data: { chip_tag_input_target: &quot;chips&quot; }) do %&gt;
             &lt;%= render FlatPack::Chip::Component.new(text: &quot;Frontend&quot;, style: :info, removable: true, value: &quot;frontend&quot;) %&gt;
             &lt;%= render FlatPack::Chip::Component.new(text: &quot;Backend&quot;, style: :success, removable: true, value: &quot;backend&quot;) %&gt;
             &lt;%= render FlatPack::Chip::Component.new(text: &quot;Database&quot;, style: :warning, removable: true, value: &quot;database&quot;) %&gt;
             &lt;%= render FlatPack::Chip::Component.new(text: &quot;UI/UX&quot;, style: :primary, removable: true, value: &quot;ui-ux&quot;) %&gt;
           &lt;% end %&gt;
+          &lt;template data-chip-tag-input-target=&quot;template&quot;&gt;
+            &lt;%= render FlatPack::Chip::Component.new(text: &quot;__TAG_TEXT__&quot;, style: :info, removable: true, value: &quot;__TAG_VALUE__&quot;) %&gt;
+          &lt;/template&gt;
         &lt;/div&gt;
     CODE
     language: "erb",

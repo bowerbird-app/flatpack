@@ -5,14 +5,14 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-[var(--surface-muted-background-color)]" "text-[var(--surface-content-color)]" "border-[var(--surface-border-color)]" "bg-primary" "text-primary-text" "border-primary" "bg-success-background-color" "text-success-text" "border-success-border-color" "bg-warning-background-color" "text-warning-text" "border-warning-border-color" "bg-danger-background-color" "text-danger-text-color" "border-danger-border-color" "bg-secondary" "text-secondary-text" "border-info-border"
+      # "bg-[var(--surface-muted-background-color)]" "text-[var(--surface-content-color)]" "border-[var(--surface-border-color)]" "bg-[var(--color-primary)]" "text-[var(--color-primary-text)]" "border-[var(--color-primary)]" "bg-[var(--color-success-background-color)]" "text-[var(--color-success-text)]" "border-[var(--color-success-border)]" "bg-[var(--color-warning-background-color)]" "text-[var(--color-warning-text)]" "border-[var(--color-warning-border)]" "bg-[var(--color-danger-background-color)]" "text-[var(--color-danger-text-color)]" "border-[var(--color-danger-border-color)]" "bg-[var(--color-secondary)]" "text-[var(--color-secondary-text)]" "border-[var(--color-info-border)]"
       STYLES = {
         default: "bg-[var(--surface-muted-background-color)] text-[var(--surface-content-color)] border-[var(--surface-border-color)]",
-        primary: "bg-primary text-primary-text border-primary",
-        success: "bg-success-background-color text-success-text border-success-border-color",
-        warning: "bg-warning-background-color text-warning-text border-warning-border-color",
-        danger: "bg-danger-background-color text-danger-text-color border-danger-border-color",
-        info: "bg-secondary text-secondary-text border-info-border"
+        primary: "bg-[var(--color-primary)] text-[var(--color-primary-text)] border-[var(--color-primary)]",
+        success: "bg-[var(--color-success-background-color)] text-[var(--color-success-text)] border-[var(--color-success-border)]",
+        warning: "bg-[var(--color-warning-background-color)] text-[var(--color-warning-text)] border-[var(--color-warning-border)]",
+        danger: "bg-[var(--color-danger-background-color)] text-[var(--color-danger-text-color)] border-[var(--color-danger-border-color)]",
+        info: "bg-[var(--color-secondary)] text-[var(--color-secondary-text)] border-[var(--color-info-border)]"
       }.freeze
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
@@ -25,6 +25,7 @@ module FlatPack
       }.freeze
 
       TYPES = %i[static button link].freeze
+      REMOVE_METHODS = %i[get post].freeze
 
       renders_one :leading_slot
       renders_one :trailing_slot
@@ -62,6 +63,9 @@ module FlatPack
         type: :static,
         value: nil,
         name: nil,
+        remove_url: nil,
+        remove_method: :post,
+        remove_params: nil,
         **system_arguments
       )
         super(**system_arguments)
@@ -75,10 +79,15 @@ module FlatPack
         @type = type.to_sym
         @value = value
         @name = name
+        @remove_url = remove_url.presence
+        @remove_method = remove_method.to_sym
+        @remove_params = normalize_remove_params(remove_params)
 
         validate_style!
         validate_size!
         validate_type!
+        validate_remove_method!
+        validate_remove_url!
       end
 
       def call
@@ -115,7 +124,7 @@ module FlatPack
 
         content_tag(:button,
           type: "button",
-          class: "ml-1 inline-flex items-center justify-center rounded-full hover:bg-[var(--chip-remove-hover-background-color)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring",
+          class: "ml-1 inline-flex items-center justify-center rounded-full hover:bg-[var(--chip-remove-hover-background-color)]",
           "aria-label": "Remove",
           data: {action: "click->flat-pack--chip#remove"}) do
           # X icon (close)
@@ -128,13 +137,18 @@ module FlatPack
       def chip_attributes
         attrs = {class: chip_classes}
 
-        # Add controller and target if removable
-        if @removable
+        if chip_controller_enabled?
           attrs[:data] = {
             controller: "flat-pack--chip",
             flat_pack__chip_target: "chip",
             flat_pack__chip_value_value: @value
           }
+
+          if @remove_url.present?
+            attrs[:data][:"flat-pack--chip-remove-url-value"] = @remove_url
+            attrs[:data][:"flat-pack--chip-remove-method-value"] = @remove_method.to_s
+            attrs[:data][:"flat-pack--chip-remove-params-value"] = @remove_params.to_json if @remove_params.present?
+          end
         end
 
         # Add button-specific attributes
@@ -173,12 +187,15 @@ module FlatPack
 
       def selected_classes
         return unless @selected && @type == :button
-        "ring-2 ring-ring"
+        "ring-2 ring-[var(--color-ring)]"
       end
 
       def focus_classes
-        return unless @type == :button || @type == :link
-        "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+        nil
+      end
+
+      def chip_controller_enabled?
+        @removable || @type == :button
       end
 
       def validate_style!
@@ -194,6 +211,28 @@ module FlatPack
       def validate_type!
         return if TYPES.include?(@type)
         raise ArgumentError, "Invalid type: #{@type}. Must be one of: #{TYPES.join(", ")}"
+      end
+
+      def validate_remove_method!
+        return if REMOVE_METHODS.include?(@remove_method)
+
+        raise ArgumentError, "Invalid remove_method: #{@remove_method}. Must be one of: #{REMOVE_METHODS.join(", ")}"
+      end
+
+      def validate_remove_url!
+        return if @remove_url.blank?
+
+        sanitized_url = FlatPack::AttributeSanitizer.sanitize_url(@remove_url)
+        raise ArgumentError, "Unsafe remove_url detected: #{@remove_url}" if sanitized_url.nil?
+
+        @remove_url = sanitized_url
+      end
+
+      def normalize_remove_params(remove_params)
+        return if remove_params.nil?
+        return remove_params if remove_params.is_a?(Hash)
+
+        raise ArgumentError, "remove_params must be a Hash"
       end
     end
   end

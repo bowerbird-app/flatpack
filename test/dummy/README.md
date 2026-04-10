@@ -40,9 +40,9 @@ This will:
    ```
 
 3. **Build Tailwind CSS:**
-   ```bash
-   bin/rails tailwindcss:build
-   ```
+  ```bash
+  bundle exec tailwindcss -i app/assets/tailwind/application.css -o app/assets/builds/application.css
+  ```
 
 4. **Start the server:**
    ```bash
@@ -66,18 +66,12 @@ gem "flat_pack", path: "../.."
 
 ### 2. CSS Variables Import
 
-The FlatPack CSS variables are included directly in `app/assets/stylesheets/application.css`:
+The dummy app builds its Tailwind bundle into `app/assets/builds/application.css` and loads FlatPack variables via `stylesheet_link_tag` in the layout:
 
 ```css
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-/* FlatPack CSS Variables */
-:root {
-  --color-primary: var(--color-brand-600);
-  /* ... other variables */
-}
+/* Tailwind build-only customizations live in application.tailwind.css */
 ```
 
 For production apps, you can also use the import approach (requires proper asset path configuration):
@@ -170,7 +164,8 @@ test/dummy/
 ├── app/
 │   ├── assets/
 │   │   └── stylesheets/
-│   │       └── application.css      # Imports FlatPack CSS
+│   │       ├── application.css      # Dummy app theme tokens and overrides
+│   │       └── application.tailwind.css
 │   ├── controllers/
 │   │   └── pages_controller.rb      # Demo page controller
 │   ├── javascript/

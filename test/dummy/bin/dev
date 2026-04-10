@@ -54,6 +54,17 @@ sidekiq_pid = Process.spawn(
   err: $stderr
 )
 
+css_pid = Process.spawn(
+  {"RAILS_ENV" => env},
+  "bundle", "exec", "tailwindcss",
+  "-i", "app/assets/tailwind/application.css",
+  "-o", "app/assets/builds/application.css",
+  "--watch",
+  chdir: root,
+  out: $stdout,
+  err: $stderr
+)
+
 rails_pid = Process.spawn(
   {"RAILS_ENV" => env},
   "./bin/rails", "server", "-b", "0.0.0.0", *ARGV,
@@ -63,7 +74,7 @@ rails_pid = Process.spawn(
 )
 
 shutdown = lambda do
-  [rails_pid, sidekiq_pid, redis_pid].compact.each do |pid|
+  [rails_pid, sidekiq_pid, css_pid, redis_pid].compact.each do |pid|
     Process.kill("TERM", pid)
   rescue Errno::ESRCH
   end
@@ -72,19 +83,27 @@ end
 trap("INT", &shutdown)
 trap("TERM", &shutdown)
 
-_, rails_status = Process.wait2(rails_pid)
-shutdown.call
+managed_pids = [rails_pid, sidekiq_pid, css_pid, redis_pid].compact
 
-begin
-  Process.wait(sidekiq_pid)
-rescue Errno::ECHILD
+terminated_pid = nil
+terminated_status = nil
+
+until managed_pids.empty?
+  pid, status = Process.wait2
+  next unless managed_pids.delete(pid)
+
+  terminated_pid = pid
+  terminated_status = status
+  break
 end
 
-if redis_pid
+shutdown.call
+
+managed_pids.each do |pid|
   begin
-    Process.wait(redis_pid)
+    Process.wait(pid)
   rescue Errno::ECHILD
   end
 end
 
-exit(rails_status.exitstatus || 0)
+exit(terminated_status&.exitstatus || 0)
