@@ -5,6 +5,10 @@ require "test_helper"
 module FlatPack
   module Shared
     class IconComponentTest < ViewComponent::TestCase
+      setup do
+        FlatPack.configuration = nil
+      end
+
       # --- SVG shell structure --------------------------------------------------
 
       def test_renders_an_svg_element
@@ -51,9 +55,31 @@ module FlatPack
         assert_selector "svg[data-flat-pack--icon-variant-value='outline']"
       end
 
+      def test_default_variant_uses_flat_pack_configuration
+        FlatPack.configure { |config| config.default_icon_variant = :mini }
+
+        render_inline(IconComponent.new(name: :search))
+
+        assert_selector "svg[data-flat-pack--icon-variant-value='mini'][viewbox='0 0 20 20']"
+      end
+
       def test_solid_variant_is_passed_through
         render_inline(IconComponent.new(name: :search, variant: :solid))
         assert_selector "svg[data-flat-pack--icon-variant-value='solid']"
+      end
+
+      def test_explicit_variant_overrides_configured_default
+        FlatPack.configure { |config| config.default_icon_variant = :micro }
+
+        render_inline(IconComponent.new(name: :search, variant: :solid))
+
+        assert_selector "svg[data-flat-pack--icon-variant-value='solid'][viewbox='0 0 24 24']"
+      end
+
+      def test_micro_variant_sets_micro_viewbox
+        render_inline(IconComponent.new(name: :search, variant: :micro))
+
+        assert_selector "svg[data-flat-pack--icon-variant-value='micro'][viewbox='0 0 16 16']"
       end
 
       # --- Size classes ---------------------------------------------------------

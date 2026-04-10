@@ -228,7 +228,7 @@ pin_all_from FlatPack::Engine.root.join("app/javascript/flat_pack/tiptap"),
              to: "flat_pack/tiptap",
              preload: false
 
-# Heroicons curated subset — used by FlatPack::Icon::Component
+# Heroicons icon banks — used by FlatPack::Icon::Component
 pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false
 ```
 
@@ -804,6 +804,7 @@ The installation process for FlatPack is fully automated. Quick checklist:
 - ✨ `@source` directive in your Tailwind file so Tailwind scans FlatPack components
 - ✨ `@theme` utility block in your Tailwind file for Tailwind class generation
 - ✨ Heroicons importmap pin (`flat_pack/heroicons`) for the Icon component
+- ✨ Optional `FlatPack.configure { |config| config.default_icon_variant = :outline }` support for app-wide Heroicons defaults
 - ✨ Stimulus lazy-loading for all FlatPack controllers via importmap
 
 **Light theme is the default.** No `data-theme` attribute is required. The `:root {}` block in `variables.css` activates the light palette automatically. Supported themes: `light` (default), `dark`, `ocean`, `rounded` — set via `data-theme` on `<html>`.

@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-import { outline, solid } from "flat_pack/heroicons"
+import { micro, mini, outline, solid } from "flat_pack/heroicons"
 
 const VARIANT_ATTRS = {
   outline: {
@@ -18,7 +18,14 @@ const VARIANT_ATTRS = {
   },
 }
 
-const ICON_BANKS = { outline, solid, mini: solid, micro: solid }
+const ICON_BANKS = { outline, solid, mini, micro }
+
+const VIEWBOXES = {
+  outline: "0 0 24 24",
+  solid: "0 0 24 24",
+  mini: "0 0 20 20",
+  micro: "0 0 16 16",
+}
 
 export default class extends Controller {
   static values = {
@@ -54,6 +61,7 @@ export default class extends Controller {
     // Set SVG presentation attributes for the chosen variant
     const attrs = VARIANT_ATTRS[variant] || VARIANT_ATTRS.outline
     Object.entries(attrs).forEach(([k, v]) => this.element.setAttribute(k, v))
+    this.element.setAttribute("viewBox", VIEWBOXES[variant] || VIEWBOXES.outline)
 
     // Remove attributes that don't apply to this variant
     if (variant === "solid" || variant === "mini" || variant === "micro") {

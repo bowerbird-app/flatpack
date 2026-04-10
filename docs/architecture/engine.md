@@ -188,6 +188,7 @@ Located in `test/dummy`, provides:
 ```ruby
 FlatPack.configure do |config|
   config.default_theme = :light
+  config.default_icon_variant = :outline
 end
 ```
 

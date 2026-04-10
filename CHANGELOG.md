@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.16] - 2026-04-10
+
+### Changed
+- `FlatPack.configure` now accepts `default_icon_variant`, allowing host apps to set the default Heroicons variant globally while keeping `:outline` as the gem default.
+- `FlatPack::Shared::IconComponent` now uses the configured default variant when no per-icon variant is passed, and applies the correct SVG `viewBox` for `:outline`, `:solid`, `:mini`, and `:micro`.
+- The generated `flat_pack/heroicons` JavaScript module now exports real Heroicons banks for all four variants instead of aliasing `:mini` and `:micro` to the 24px solid set.
+
+### Tests
+- Added configuration and icon component regression coverage for app-level default icon variants and the `mini`/`micro` SVG viewBox behavior.
+
 ## [0.1.15] - 2026-04-09
 
 ### Changed
