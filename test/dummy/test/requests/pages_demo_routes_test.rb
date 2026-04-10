@@ -128,7 +128,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, 'data-flat-pack--chip-remove-method-value="post"'
     assert_includes response.body, "&quot;fail&quot;:true"
     assert_includes response.body, 'data-controller="chip-tag-input"'
-    assert_includes response.body, 'keydown-&gt;chip-tag-input#handleKeydown'
+    assert_includes response.body, "keydown-&gt;chip-tag-input#handleKeydown"
     assert_includes response.body, 'data-chip-tag-input-target="template"'
   end
 
