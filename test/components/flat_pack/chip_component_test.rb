@@ -184,6 +184,21 @@ module FlatPack
         assert_selector "span[data-flat-pack--chip-value-value='ruby']"
       end
 
+      def test_removable_with_request_configuration
+        render_inline(Component.new(
+          text: "Tag",
+          removable: true,
+          value: "ruby",
+          remove_url: "/demo/chips/remove",
+          remove_method: :get,
+          remove_params: {tag: "ruby", source: "filters"}
+        ))
+
+        assert_selector "span[data-flat-pack--chip-remove-url-value='/demo/chips/remove']"
+        assert_selector "span[data-flat-pack--chip-remove-method-value='get']"
+        assert_includes page.native.to_html, "data-flat-pack--chip-remove-params-value='#{{tag: "ruby", source: "filters"}.to_json}'"
+      end
+
       def test_disabled_overrides_removable
         render_inline(Component.new(text: "Disabled", removable: true, disabled: true))
 
@@ -266,6 +281,24 @@ module FlatPack
       def test_raises_error_for_invalid_type
         assert_raises(ArgumentError) do
           Component.new(text: "Invalid", type: :invalid)
+        end
+      end
+
+      def test_raises_error_for_invalid_remove_method
+        assert_raises(ArgumentError) do
+          Component.new(text: "Invalid", removable: true, remove_method: :delete)
+        end
+      end
+
+      def test_raises_error_for_unsafe_remove_url
+        assert_raises(ArgumentError) do
+          Component.new(text: "Invalid", removable: true, remove_url: "javascript:alert('xss')")
+        end
+      end
+
+      def test_raises_error_when_remove_params_is_not_a_hash
+        assert_raises(ArgumentError) do
+          Component.new(text: "Invalid", removable: true, remove_params: ["ruby"])
         end
       end
     end

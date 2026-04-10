@@ -25,6 +25,7 @@ module FlatPack
       }.freeze
 
       TYPES = %i[static button link].freeze
+      REMOVE_METHODS = %i[get post].freeze
 
       renders_one :leading_slot
       renders_one :trailing_slot
@@ -62,6 +63,9 @@ module FlatPack
         type: :static,
         value: nil,
         name: nil,
+        remove_url: nil,
+        remove_method: :post,
+        remove_params: nil,
         **system_arguments
       )
         super(**system_arguments)
@@ -75,10 +79,15 @@ module FlatPack
         @type = type.to_sym
         @value = value
         @name = name
+        @remove_url = remove_url.presence
+        @remove_method = remove_method.to_sym
+        @remove_params = normalize_remove_params(remove_params)
 
         validate_style!
         validate_size!
         validate_type!
+        validate_remove_method!
+        validate_remove_url!
       end
 
       def call
@@ -135,6 +144,12 @@ module FlatPack
             flat_pack__chip_target: "chip",
             flat_pack__chip_value_value: @value
           }
+
+          if @remove_url.present?
+            attrs[:data][:"flat-pack--chip-remove-url-value"] = @remove_url
+            attrs[:data][:"flat-pack--chip-remove-method-value"] = @remove_method.to_s
+            attrs[:data][:"flat-pack--chip-remove-params-value"] = @remove_params.to_json if @remove_params.present?
+          end
         end
 
         # Add button-specific attributes
@@ -194,6 +209,28 @@ module FlatPack
       def validate_type!
         return if TYPES.include?(@type)
         raise ArgumentError, "Invalid type: #{@type}. Must be one of: #{TYPES.join(", ")}"
+      end
+
+      def validate_remove_method!
+        return if REMOVE_METHODS.include?(@remove_method)
+
+        raise ArgumentError, "Invalid remove_method: #{@remove_method}. Must be one of: #{REMOVE_METHODS.join(", ")}"
+      end
+
+      def validate_remove_url!
+        return if @remove_url.blank?
+
+        sanitized_url = FlatPack::AttributeSanitizer.sanitize_url(@remove_url)
+        raise ArgumentError, "Unsafe remove_url detected: #{@remove_url}" if sanitized_url.nil?
+
+        @remove_url = sanitized_url
+      end
+
+      def normalize_remove_params(remove_params)
+        return if remove_params.nil?
+        return remove_params if remove_params.is_a?(Hash)
+
+        raise ArgumentError, "remove_params must be a Hash"
       end
     end
   end

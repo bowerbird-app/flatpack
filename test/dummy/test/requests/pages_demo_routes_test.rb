@@ -114,6 +114,42 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, 'viewBox="0 0 20 20"'
   end
 
+  test "chips demo includes removable callback example" do
+    get "/demo/chips"
+
+    assert_response :success
+    assert_includes response.headers["Cache-Control"], "no-store"
+    assert_includes response.body, 'id="removable-failed-callback-chips-container"'
+    assert_includes response.body, 'data-flat-pack--chip-remove-url-value="/demo/chips/remove_callback"'
+    assert_includes response.body, 'data-flat-pack--chip-remove-method-value="get"'
+    assert_includes response.body, "data-flat-pack--chip-remove-params-value="
+    assert_includes response.body, "&quot;tag&quot;:&quot;ruby&quot;,&quot;source&quot;:&quot;chips_demo&quot;"
+    assert_includes response.body, "&quot;tag&quot;:&quot;rails&quot;,&quot;source&quot;:&quot;chips_demo&quot;"
+    assert_includes response.body, 'data-flat-pack--chip-remove-method-value="post"'
+    assert_includes response.body, "&quot;fail&quot;:true"
+  end
+
+  test "chip removal callback endpoint accepts get and post" do
+    get "/demo/chips/remove_callback", params: {tag: "ruby", source: "chips_demo"}
+
+    assert_response :success
+    assert_includes response.headers["Cache-Control"], "no-store"
+    assert_equal({"ok" => true, "method" => "GET", "params" => {"tag" => "ruby", "source" => "chips_demo"}}, JSON.parse(response.body))
+
+    post "/demo/chips/remove_callback", params: {tag: "ruby", source: "chips_demo"}, as: :json
+
+    assert_response :success
+    assert_includes response.headers["Cache-Control"], "no-store"
+    assert_equal({"ok" => true, "method" => "POST", "params" => {"tag" => "ruby", "source" => "chips_demo"}}, JSON.parse(response.body))
+  end
+
+  test "chip removal callback endpoint can reject a removal" do
+    post "/demo/chips/remove_callback", params: {tag: "ruby", source: "chips_demo", fail: true}, as: :json
+
+    assert_response :unprocessable_entity
+    assert_equal({"ok" => false, "error" => "Removal denied", "params" => {"tag" => "ruby", "source" => "chips_demo"}}, JSON.parse(response.body))
+  end
+
   test "dummy layouts load the compiled application stylesheet" do
     get "/"
 

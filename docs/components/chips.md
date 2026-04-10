@@ -18,11 +18,14 @@ Use Chip for tags, filters, selected states, and quick token-like actions.
 | `size` | Symbol | `:md` | no | Size: `:sm`, `:md`, `:lg`; invalid values raise `ArgumentError`. |
 | `selected` | Boolean | `false` | no | Selected state; applies visual ring for `type: :button`. |
 | `disabled` | Boolean | `false` | no | Disabled state; disables button chips and renders disabled link chips as `<span>`. |
-| `removable` | Boolean | `false` | no | Adds remove control and `flat-pack--chip` controller when not disabled. |
+| `removable` | Boolean | `false` | no | Adds remove control and `flat-pack--chip` controller when not disabled. Without `remove_url`, removal stays client-side only. |
 | `href` | String | `nil` | no | Link URL used when `type: :link` and not disabled. |
 | `type` | Symbol | `:static` | no | Root type: `:static`, `:button`, `:link`; invalid values raise `ArgumentError`. |
 | `value` | String | `nil` | no | Value passed through removable-chip data payload/events. |
 | `name` | String | `nil` | no | Reserved name metadata for future form integration. |
+| `remove_url` | String | `nil` | no | Optional URL requested before a removable chip is removed. Supports safe relative URLs and `http`/`https`. |
+| `remove_method` | Symbol | `:post` | no | HTTP verb used with `remove_url`. Supported values: `:get`, `:post`. Ignored when `remove_url` is omitted. |
+| `remove_params` | Hash | `nil` | no | Params sent with the optional removal request. GET requests append query params; POST requests send JSON. Ignored when `remove_url` is omitted. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for chip root element. |
 
 ## Slots
@@ -46,6 +49,17 @@ Use Chip for tags, filters, selected states, and quick token-like actions.
 ) %>
 ```
 
+```erb
+<%= render FlatPack::Chip::Component.new(
+  text: "Ruby",
+  removable: true,
+  value: "ruby",
+  remove_url: tags_path,
+  remove_method: :get,
+  remove_params: { tag: "ruby", source: "chips_demo" }
+) %>
+```
+
 ## Accessibility
 - Button chips expose `aria-pressed` for selected state.
 - Disabled chips use disabled semantics for buttons and non-interactive rendering for links.
@@ -54,3 +68,8 @@ Use Chip for tags, filters, selected states, and quick token-like actions.
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
 - Removable chips attach Stimulus controller `flat-pack--chip`.
+
+## Notes
+- When `removable: true` is set without `remove_url`, the chip uses the default client-side removal animation and emits `chip:removed` immediately.
+- When `remove_url` is present, the chip waits for the GET or POST request to succeed before it runs the existing removal animation and emits `chip:removed`.
+- Failed removal requests keep the chip in place and emit `chip:remove-failed` with the request error message in `event.detail.error`.

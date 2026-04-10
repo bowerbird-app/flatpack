@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.19] - 2026-04-10
+
+### Changed
+- `FlatPack::Chip::Component` removable chips now accept optional `remove_url`, `remove_method`, and `remove_params` options so a chip can trigger a GET or POST callback before the existing removal animation completes.
+- The `flat-pack--chip` Stimulus controller now preserves the chip when that optional callback fails and emits `chip:remove-failed` for host-side error handling.
+- The dummy chips demo now applies the GET callback flow to the main removable chip examples, matching the visible sample code instead of reserving request-backed removal for a separate demo chip.
+- The `flat-pack--chip` Stimulus controller now falls back to the rendered `data-*` attributes when Stimulus value flags are unavailable at runtime, preventing stale browser sessions from silently skipping callback-backed removals.
+- The dummy `chips` page and removal callback endpoint now bypass page caching and send no-store cache headers so the demo does not keep serving stale importmap/controller asset references.
+
+### Docs
+- Updated the chip component documentation to clarify that `remove_url`, `remove_method`, and `remove_params` are optional and that removable chips stay client-side only unless a `remove_url` is provided.
+
+### Tests
+- Added chip component and demo regression coverage for removable request configuration, invalid remove methods, unsafe remove URLs, invalid remove params, successful GET callbacks, and failed removal callbacks that keep the chip in place.
+
 ## [0.1.18] - 2026-04-10
 
 ### Fixed

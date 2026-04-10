@@ -67,11 +67,12 @@ class PagesController < ApplicationController
   # Actions with dynamic data that must not be fully cached
   UNCACHED_ACTIONS = %i[
     picker search_results picker_results pagination_infinite
-    comments admin chat_demo
+    comments admin chat_demo chips chip_remove_callback
   ].freeze
 
   before_action :serve_from_page_cache, except: UNCACHED_ACTIONS
   after_action :write_to_page_cache, except: UNCACHED_ACTIONS
+  before_action :disable_http_cache, only: %i[chips chip_remove_callback]
 
   def demo
     @component_index = cached_component_index
@@ -163,6 +164,29 @@ class PagesController < ApplicationController
   end
 
   def chips
+  end
+
+  def chip_remove_callback
+    if ActiveModel::Type::Boolean.new.cast(params[:fail])
+      render json: {
+        ok: false,
+        error: "Removal denied",
+        params: {
+          tag: params[:tag],
+          source: params[:source]
+        }
+      }, status: :unprocessable_entity
+      return
+    end
+
+    render json: {
+      ok: true,
+      method: request.method,
+      params: {
+        tag: params[:tag],
+        source: params[:source]
+      }
+    }
   end
 
   def alerts
@@ -1664,5 +1688,11 @@ class PagesController < ApplicationController
     return unless request.format.html? && request.get? && response.successful?
 
     Rails.cache.write(page_cache_key, response.body, expires_in: 1.hour)
+  end
+
+  def disable_http_cache
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
   end
 end
