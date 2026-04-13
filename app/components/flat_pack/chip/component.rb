@@ -35,19 +35,19 @@ module FlatPack
       undef_method :with_leading_slot_content, :with_trailing_slot_content, :with_remove_button_slot_content
 
       def leading(content = nil, **args, &block)
-        return leading_slot if content.nil? && args.empty? && !block_given?
+        return leading_slot if content.nil? && args.empty? && !block
 
         set_slot(:leading_slot, content, **args, &block)
       end
 
       def trailing(content = nil, **args, &block)
-        return trailing_slot if content.nil? && args.empty? && !block_given?
+        return trailing_slot if content.nil? && args.empty? && !block
 
         set_slot(:trailing_slot, content, **args, &block)
       end
 
       def remove_button(content = nil, **args, &block)
-        return remove_button_slot if content.nil? && args.empty? && !block_given?
+        return remove_button_slot if content.nil? && args.empty? && !block
 
         set_slot(:remove_button_slot, content, **args, &block)
       end
