@@ -17,11 +17,11 @@ module FlatPack
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "text-xs" "px-[var(--chip-padding-x-sm)]" "py-[var(--chip-padding-y-sm)]" "text-sm" "px-[var(--chip-padding-x-md)]" "py-[var(--chip-padding-y-md)]" "text-base" "px-[var(--chip-padding-x-lg)]" "py-[var(--chip-padding-y-lg)]"
+      # "text-xs" "px-[var(--chip-padding-x-sm)]" "py-[var(--button-padding-y-sm)]" "text-sm" "px-[var(--chip-padding-x-md)]" "py-[var(--button-padding-y-md)]" "text-base" "px-[var(--chip-padding-x-lg)]" "py-[var(--button-padding-y-lg)]"
       SIZES = {
-        sm: "text-xs px-[var(--chip-padding-x-sm)] py-[var(--chip-padding-y-sm)]",
-        md: "text-sm px-[var(--chip-padding-x-md)] py-[var(--chip-padding-y-md)]",
-        lg: "text-base px-[var(--chip-padding-x-lg)] py-[var(--chip-padding-y-lg)]"
+        sm: "text-xs px-[var(--chip-padding-x-sm)] py-[var(--button-padding-y-sm)]",
+        md: "text-sm px-[var(--chip-padding-x-md)] py-[var(--button-padding-y-md)]",
+        lg: "text-base px-[var(--chip-padding-x-lg)] py-[var(--button-padding-y-lg)]"
       }.freeze
 
       TYPES = %i[static button link].freeze
@@ -35,19 +35,19 @@ module FlatPack
       undef_method :with_leading_slot_content, :with_trailing_slot_content, :with_remove_button_slot_content
 
       def leading(content = nil, **args, &block)
-        return leading_slot if content.nil? && args.empty? && !block_given?
+        return leading_slot if content.nil? && args.empty? && !block
 
         set_slot(:leading_slot, content, **args, &block)
       end
 
       def trailing(content = nil, **args, &block)
-        return trailing_slot if content.nil? && args.empty? && !block_given?
+        return trailing_slot if content.nil? && args.empty? && !block
 
         set_slot(:trailing_slot, content, **args, &block)
       end
 
       def remove_button(content = nil, **args, &block)
-        return remove_button_slot if content.nil? && args.empty? && !block_given?
+        return remove_button_slot if content.nil? && args.empty? && !block
 
         set_slot(:remove_button_slot, content, **args, &block)
       end

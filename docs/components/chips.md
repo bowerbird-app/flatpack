@@ -35,7 +35,7 @@ Use Chip for tags, filters, selected states, and quick token-like actions.
 
 ## Variants
 - Styles: `:default`, `:primary`, `:success`, `:warning`, `:danger`, `:info`.
-- Sizes: `:sm`, `:md`, `:lg`.
+- Sizes: `:sm`, `:md`, `:lg`. These sizes align to the button height scale: small is 30px, medium is 38px, and large is 50px.
 - Types: `:static`, `:button`, `:link`.
 
 ## Example
@@ -68,8 +68,46 @@ Use Chip for tags, filters, selected states, and quick token-like actions.
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
 - Removable chips attach Stimulus controller `flat-pack--chip`.
+- Optional request-backed tag input uses Stimulus controller `flat-pack--chip-tag-input`.
 
 ## Notes
 - When `removable: true` is set without `remove_url`, the chip uses the default client-side removal animation and emits `chip:removed` immediately.
 - When `remove_url` is present, the chip waits for the GET or POST request to succeed before it runs the existing removal animation and emits `chip:removed`.
 - Failed removal requests keep the chip in place and emit `chip:remove-failed` with the request error message in `event.detail.error`.
+- Adding chips from a tag-input flow is not configured on `FlatPack::Chip::Component` itself. Use `flat-pack--chip-tag-input` on the wrapper that owns the input, chip group, and template.
+- Auto-submit for added chips is optional and defaults to off. Without configuration, the tag-input controller inserts chips locally with no request.
+- To turn auto-submit on, set `data-flat-pack--chip-tag-input-auto-submit-value="true"` and provide `data-flat-pack--chip-tag-input-add-url-value`. Optional `add_method` and `add_params` values mirror the remove callback pattern.
+- The tag-input controller emits `chip:added` after a local insert or a successful add callback, and emits `chip:add-failed` when the optional add callback returns a failure.
+
+## Tag Input Integration
+```erb
+<div data-controller="flat-pack--chip-tag-input">
+  <%= render FlatPack::TextInput::Component.new(
+    name: "project_tags",
+    label: "Project Tags",
+    data: {
+      flat_pack__chip_tag_input_target: "input",
+      action: "keydown->flat-pack--chip-tag-input#handleKeydown"
+    }
+  ) %>
+
+  <%= render FlatPack::ChipGroup::Component.new(data: { flat_pack__chip_tag_input_target: "chips" }) do %>
+    <%= render FlatPack::Chip::Component.new(text: "Frontend", removable: true, value: "frontend") %>
+  <% end %>
+
+  <template data-flat-pack--chip-tag-input-target="template">
+    <%= render FlatPack::Chip::Component.new(text: "__TAG_TEXT__", removable: true, value: "__TAG_VALUE__") %>
+  </template>
+</div>
+```
+
+```erb
+<div
+  data-controller="flat-pack--chip-tag-input"
+  data-flat-pack--chip-tag-input-auto-submit-value="true"
+  data-flat-pack--chip-tag-input-add-url-value="/tags"
+  data-flat-pack--chip-tag-input-add-method-value="post"
+  data-flat-pack--chip-tag-input-add-params-value='<%= { source: "chips_demo" }.to_json %>'>
+  ...
+</div>
+```

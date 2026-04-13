@@ -127,9 +127,36 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "&quot;tag&quot;:&quot;rails&quot;,&quot;source&quot;:&quot;chips_demo&quot;"
     assert_includes response.body, 'data-flat-pack--chip-remove-method-value="post"'
     assert_includes response.body, "&quot;fail&quot;:true"
-    assert_includes response.body, 'data-controller="chip-tag-input"'
-    assert_includes response.body, "keydown-&gt;chip-tag-input#handleKeydown"
-    assert_includes response.body, 'data-chip-tag-input-target="template"'
+    assert_includes response.body, 'data-controller="flat-pack--chip-tag-input"'
+    assert_includes response.body, "keydown-&gt;flat-pack--chip-tag-input#handleKeydown"
+    assert_includes response.body, 'data-flat-pack--chip-tag-input-target="template"'
+    assert_includes response.body, 'data-flat-pack--chip-tag-input-auto-submit-value="true"'
+    assert_includes response.body, 'data-flat-pack--chip-tag-input-add-url-value="/demo/chips/add_callback"'
+    assert_includes response.body, "&quot;mode&quot;:&quot;auto&quot;"
+    assert_includes response.body, "&quot;tag&quot;:&quot;frontend&quot;,&quot;source&quot;:&quot;chips_demo_local&quot;"
+    assert_includes response.body, "&quot;tag&quot;:&quot;api&quot;,&quot;source&quot;:&quot;chips_demo_auto&quot;"
+    assert_includes response.body, "&quot;tag&quot;:&quot;__TAG_VALUE__&quot;,&quot;source&quot;:&quot;chips_demo_auto&quot;"
+  end
+
+  test "chip add callback endpoint accepts get and post" do
+    get "/demo/chips/add_callback", params: {text: "API Platform", value: "api-platform", source: "chips_demo"}
+
+    assert_response :success
+    assert_includes response.headers["Cache-Control"], "no-store"
+    assert_equal({"ok" => true, "method" => "GET", "params" => {"text" => "API Platform", "value" => "api-platform", "source" => "chips_demo"}}, JSON.parse(response.body))
+
+    post "/demo/chips/add_callback", params: {text: "API Platform", value: "api-platform", source: "chips_demo"}, as: :json
+
+    assert_response :success
+    assert_includes response.headers["Cache-Control"], "no-store"
+    assert_equal({"ok" => true, "method" => "POST", "params" => {"text" => "API Platform", "value" => "api-platform", "source" => "chips_demo"}}, JSON.parse(response.body))
+  end
+
+  test "chip add callback endpoint can reject an addition" do
+    post "/demo/chips/add_callback", params: {text: "Blocked", value: "blocked", source: "chips_demo", fail: true}, as: :json
+
+    assert_response :unprocessable_entity
+    assert_equal({"ok" => false, "error" => "Add denied", "params" => {"text" => "Blocked", "value" => "blocked", "source" => "chips_demo"}}, JSON.parse(response.body))
   end
 
   test "chip removal callback endpoint accepts get and post" do
