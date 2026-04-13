@@ -2208,15 +2208,6 @@
   .py-\[var\(--button-padding-y-sm\)\] {
     padding-block: var(--button-padding-y-sm);
   }
-  .py-\[var\(--chip-padding-y-lg\)\] {
-    padding-block: var(--chip-padding-y-lg);
-  }
-  .py-\[var\(--chip-padding-y-md\)\] {
-    padding-block: var(--chip-padding-y-md);
-  }
-  .py-\[var\(--chip-padding-y-sm\)\] {
-    padding-block: var(--chip-padding-y-sm);
-  }
   .py-\[var\(--form-control-padding\)\] {
     padding-block: var(--form-control-padding);
   }
