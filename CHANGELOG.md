@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.22] - 2026-04-13
+
+### Changed
+- `FlatPack::Picker::Component` now renders local search by default, while a new `minimum_searchable` option can hide the local search bar when the initial item count is less than or equal to a chosen threshold.
+- Remote picker search now always renders the search bar whenever `search_mode: :remote` is used, even if `searchable: false` is passed.
+
+### Docs
+- Updated the picker component docs to describe the new default local search behavior, the `minimum_searchable` option, and the remote-search visibility rule.
+
+### Tests
+- Added picker component regression coverage for default search rendering, threshold-based hiding, local hard-off behavior, remote search visibility, and invalid `minimum_searchable` values.
+
 ## [0.1.21] - 2026-04-13
 
 ### Changed

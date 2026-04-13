@@ -22,7 +22,8 @@ module FlatPack
         size: :lg,
         selection_mode: :multiple,
         accepted_kinds: ACCEPTED_KINDS,
-        searchable: false,
+        searchable: true,
+        minimum_searchable: nil,
         search_placeholder: "Search assets...",
         search_mode: :local,
         search_endpoint: nil,
@@ -49,7 +50,8 @@ module FlatPack
         @size = size
         @selection_mode = selection_mode.to_sym
         @accepted_kinds = normalize_kinds(accepted_kinds)
-        @searchable = searchable
+        @searchable = searchable.nil? || !!searchable
+        @minimum_searchable = normalize_minimum_searchable(minimum_searchable)
         @search_placeholder = search_placeholder
         @search_mode = search_mode.to_sym
         @search_endpoint = search_endpoint.present? ? FlatPack::AttributeSanitizer.sanitize_url(search_endpoint) : nil
@@ -143,7 +145,7 @@ module FlatPack
       end
 
       def render_search
-        return unless @searchable
+        return unless effective_searchable?
 
         render FlatPack::Search::Component.new(
           placeholder: @search_placeholder,
@@ -207,7 +209,7 @@ module FlatPack
             flat_pack__picker_items_value: @items.to_json,
             flat_pack__picker_selection_mode_value: @selection_mode,
             flat_pack__picker_accepted_kinds_value: @accepted_kinds.to_json,
-            flat_pack__picker_searchable_value: @searchable,
+            flat_pack__picker_searchable_value: effective_searchable?,
             flat_pack__picker_search_mode_value: @search_mode,
             flat_pack__picker_search_endpoint_value: @search_endpoint,
             flat_pack__picker_search_param_value: @search_param,
@@ -427,6 +429,15 @@ module FlatPack
         end
       end
 
+      def normalize_minimum_searchable(value)
+        return nil if value.nil?
+
+        parsed = Integer(value, exception: false)
+        return parsed if parsed&.>= 0
+
+        raise ArgumentError, "minimum_searchable must be a non-negative integer"
+      end
+
       def human_size(value)
         bytes = normalize_size(value)
         return nil unless bytes
@@ -521,10 +532,10 @@ module FlatPack
       end
 
       def validate_search_configuration!
-        return unless @search_mode == :remote && @searchable
+        return unless @search_mode == :remote
         return if @search_endpoint.present?
 
-        raise ArgumentError, "search_endpoint is required when searchable is true and search_mode is :remote"
+        raise ArgumentError, "search_endpoint is required when search_mode is :remote"
       end
 
       def validate_search_endpoint!(original_url)
@@ -550,6 +561,14 @@ module FlatPack
         if @selection_mode == :single && @form[:value_mode] == :ids
           raise ArgumentError, "form[:value_mode] cannot be :ids when selection_mode is :single"
         end
+      end
+
+      def effective_searchable?
+        return true if @search_mode == :remote
+        return false unless @searchable
+        return true if @minimum_searchable.nil?
+
+        @items.length > @minimum_searchable
       end
     end
   end

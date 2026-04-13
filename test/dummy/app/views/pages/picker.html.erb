@@ -97,7 +97,6 @@
       accepted_kinds: [:record],
       selection_mode: :single,
       auto_confirm: true,
-      searchable: true,
       search_mode: :local,
       output_mode: :field,
       output_target: "#picker-folder-field",
@@ -142,7 +141,6 @@
             items: @picker_demo_items,
             accepted_kinds: [:record],
             selection_mode: :single,
-            searchable: true,
             search_mode: :local,
             confirm_text: "Assign Folder",
             form: {
@@ -235,12 +233,70 @@
       subtitle: "Local search across image and file assets with a fixed modal body height.",
       items: @picker_demo_items,
       modal: true,
-      searchable: true,
       search_mode: :local,
       modal_body_height_mode: :fixed,
       modal_body_height: "clamp(20rem, 55vh, 30rem)",
       confirm_text: "Use Selection",
       context: {target: "picker-demo-local"}
+    ) %>
+  </section>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Search Visibility",
+      anchor: "search-visibility",
+      anchor_link: true,
+      subtitle: "Control when local search is shown, and compare that with the remote picker override."
+    ) %>
+
+    <%= render FlatPack::Card::Component.new(class: "mt-6") do |card| %>
+      <% card.body do %>
+        <div class="space-y-4">
+          <p class="text-sm text-(--surface-muted-content-color)">
+            Use <code>searchable: false</code> to hide local search completely, or <code>minimum_searchable</code> to hide it only when the initial local result set is short. Remote pickers ignore the local hard-off flag and still render search.
+          </p>
+
+          <div class="grid gap-6 lg:grid-cols-2">
+            <div class="space-y-3">
+              <p class="text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">Explicit Hard Off</p>
+
+              <%= render FlatPack::Picker::Component.new(
+                id: "picker-demo-searchable-off",
+                title: "Search Hidden",
+                subtitle: "Local search is disabled even with a full item list.",
+                items: @picker_demo_items,
+                searchable: false,
+                modal: false,
+                items_height: "min-content",
+                confirm_text: "Use Assets"
+              ) %>
+            </div>
+
+            <div class="space-y-3">
+              <p class="text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">Thresholded Local Search</p>
+
+              <%= render FlatPack::Picker::Component.new(
+                id: "picker-demo-minimum-searchable",
+                title: "Threshold Search",
+                subtitle: "This shortlist hides search because 4 items are at or below the threshold of 5.",
+                items: @picker_demo_items.first(4),
+                minimum_searchable: 5,
+                modal: false,
+                items_height: "min-content",
+                confirm_text: "Use Assets"
+              ) %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+
+    <%= picker_demo_collapsible_code_example(
+      id: "picker-demo-code-search-visibility-erb",
+      collapse_title: "View ERB Code",
+      code_title: "ERB",
+      language: "erb",
+      code: picker_demo_search_visibility_erb_code
     ) %>
   </section>
 
@@ -302,10 +358,10 @@
     <%= render FlatPack::Picker::Component.new(
       id: "picker-demo-remote",
       title: "Search Remote Assets",
-      subtitle: "Remote search keeps a fixed modal body height for stable layout while result counts change.",
+      subtitle: "Remote search keeps a fixed modal body height for stable layout while result counts change, and it still renders search even when searchable is false.",
       items: @picker_demo_items.first(2),
       modal: true,
-      searchable: true,
+      searchable: false,
       search_mode: :remote,
       search_endpoint: demo_picker_results_path,
       modal_body_height_mode: :fixed,
@@ -335,7 +391,6 @@
         title: "Inline Asset Picker",
         subtitle: "Choose one item to confirm immediately.",
         items: @picker_demo_items,
-        searchable: true,
         search_mode: :local,
         selection_mode: :single,
         auto_confirm: true,
@@ -384,7 +439,6 @@
           title: "Min Content",
           subtitle: "One result keeps the list region compact.",
           items: @picker_demo_items.first(1),
-          searchable: true,
           search_mode: :local,
           items_height: "min-content",
           modal: false,
@@ -418,7 +472,6 @@
           title: "Max Content",
           subtitle: "The results region expands to fill the wrapper.",
           items: @picker_demo_items,
-          searchable: true,
           search_mode: :local,
           items_height: "max-content",
           modal: false,
@@ -451,7 +504,6 @@
           title: "Fixed Height",
           subtitle: "A 240px results region scrolls once content exceeds the cap.",
           items: @picker_demo_items,
-          searchable: true,
           search_mode: :local,
           items_height: "240px",
           modal: false,
@@ -514,7 +566,6 @@
       modal: true,
       accepted_kinds: [:image],
       selection_mode: :multiple,
-      searchable: true,
       search_mode: :local,
       results_layout: :grid,
       modal_body_height_mode: :fixed,
@@ -570,7 +621,6 @@
       subtitle: "Selecting an item confirms immediately and closes the modal.",
       items: @picker_demo_items,
       modal: true,
-      searchable: true,
       search_mode: :local,
       selection_mode: :single,
       auto_confirm: true,
@@ -629,7 +679,6 @@
       items: @picker_demo_items,
       modal: true,
       accepted_kinds: [:file],
-      searchable: true,
       search_mode: :local,
       modal_body_height_mode: :fixed,
       modal_body_height: "24rem",
