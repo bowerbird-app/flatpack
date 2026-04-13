@@ -67,12 +67,12 @@ class PagesController < ApplicationController
   # Actions with dynamic data that must not be fully cached
   UNCACHED_ACTIONS = %i[
     picker search_results picker_results pagination_infinite
-    comments admin chat_demo chips chip_remove_callback
+    comments admin chat_demo chips chip_add_callback chip_remove_callback
   ].freeze
 
   before_action :serve_from_page_cache, except: UNCACHED_ACTIONS
   after_action :write_to_page_cache, except: UNCACHED_ACTIONS
-  before_action :disable_http_cache, only: %i[chips chip_remove_callback]
+  before_action :disable_http_cache, only: %i[chips chip_add_callback chip_remove_callback]
 
   def demo
     @component_index = cached_component_index
@@ -164,6 +164,31 @@ class PagesController < ApplicationController
   end
 
   def chips
+  end
+
+  def chip_add_callback
+    if ActiveModel::Type::Boolean.new.cast(params[:fail])
+      render json: {
+        ok: false,
+        error: "Add denied",
+        params: {
+          text: params[:text],
+          value: params[:value],
+          source: params[:source]
+        }
+      }, status: :unprocessable_entity
+      return
+    end
+
+    render json: {
+      ok: true,
+      method: request.method,
+      params: {
+        text: params[:text],
+        value: params[:value],
+        source: params[:source]
+      }
+    }
   end
 
   def chip_remove_callback

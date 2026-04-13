@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Added a reusable `flat-pack--chip-tag-input` Stimulus controller for chip tag-input flows, keeping local chip insertion as the default behavior and making request-backed add callbacks explicitly opt-in.
+- The dummy chips page now demonstrates both local-only chip entry and an optional request-backed add flow that posts to a path only when auto-submit is enabled.
+
+### Docs
+- Updated the chips component docs to describe the `flat-pack--chip-tag-input` integration and clarify that add auto-submit is optional and defaults to off.
+
+### Tests
+- Expanded chip tag-input JavaScript coverage for local mode, request-backed success, and request-backed failure, and added dummy request coverage for the add callback endpoint.
+
 ## [0.1.19] - 2026-04-10
 
 ### Changed

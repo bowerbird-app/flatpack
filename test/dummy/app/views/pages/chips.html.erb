@@ -413,56 +413,108 @@
 
   <!-- Complex Example -->
   <section class="mb-12">
-    <%= render FlatPack::SectionTitle::Component.new(title: "Complete Example - Tag Input", anchor_link: true, subtitle: "Examples for Complete Example - Tag Input.") %>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Complete Example - Tag Input", anchor_link: true, subtitle: "Examples for local-only and optional auto-submit tag input flows.") %>
     <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">
-      A practical example showing a tag input interface with removable chips.
+      The first tag input keeps the existing local-only add behavior while removals still use callbacks. The second turns on request-backed add callbacks explicitly, and both examples use removal callbacks for existing and newly added chips.
     </p>
-    <div class="border border-[var(--surface-border-color)] rounded-lg p-4" data-controller="chip-tag-input">
+    <div class="border border-[var(--surface-border-color)] rounded-lg p-4 mb-4" data-controller="flat-pack--chip-tag-input">
       <%= render FlatPack::TextInput::Component.new(
         name: "project_tags",
         label: "Project Tags",
         placeholder: "Add a tag...",
         data: {
-          chip_tag_input_target: "input",
-          action: "keydown->chip-tag-input#handleKeydown"
+          flat_pack__chip_tag_input_target: "input",
+          action: "keydown->flat-pack--chip-tag-input#handleKeydown"
         },
         class: "mb-3"
       ) %>
-      <%= render FlatPack::ChipGroup::Component.new(class: "mb-3", data: {chip_tag_input_target: "chips"}) do %>
-        <%= render FlatPack::Chip::Component.new(text: "Frontend", style: :info, removable: true, value: "frontend") %>
-        <%= render FlatPack::Chip::Component.new(text: "Backend", style: :success, removable: true, value: "backend") %>
-        <%= render FlatPack::Chip::Component.new(text: "Database", style: :warning, removable: true, value: "database") %>
-        <%= render FlatPack::Chip::Component.new(text: "UI/UX", style: :primary, removable: true, value: "ui-ux") %>
+      <%= render FlatPack::ChipGroup::Component.new(class: "mb-3", data: {flat_pack__chip_tag_input_target: "chips"}) do %>
+        <%= render FlatPack::Chip::Component.new(text: "Frontend", style: :info, removable: true, value: "frontend", remove_url: "/demo/chips/remove_callback", remove_method: :post, remove_params: {tag: "frontend", source: "chips_demo_local"}) %>
+        <%= render FlatPack::Chip::Component.new(text: "Backend", style: :success, removable: true, value: "backend", remove_url: "/demo/chips/remove_callback", remove_method: :post, remove_params: {tag: "backend", source: "chips_demo_local"}) %>
+        <%= render FlatPack::Chip::Component.new(text: "Database", style: :warning, removable: true, value: "database", remove_url: "/demo/chips/remove_callback", remove_method: :post, remove_params: {tag: "database", source: "chips_demo_local"}) %>
+        <%= render FlatPack::Chip::Component.new(text: "UI/UX", style: :primary, removable: true, value: "ui-ux", remove_url: "/demo/chips/remove_callback", remove_method: :post, remove_params: {tag: "ui-ux", source: "chips_demo_local"}) %>
       <% end %>
-      <template data-chip-tag-input-target="template">
-        <%= render FlatPack::Chip::Component.new(text: "__TAG_TEXT__", style: :info, removable: true, value: "__TAG_VALUE__") %>
+      <template data-flat-pack--chip-tag-input-target="template">
+        <%= render FlatPack::Chip::Component.new(text: "__TAG_TEXT__", style: :info, removable: true, value: "__TAG_VALUE__", remove_url: "/demo/chips/remove_callback", remove_method: :post, remove_params: {tag: "__TAG_VALUE__", source: "chips_demo_local"}) %>
+      </template>
+    </div>
+
+    <div
+      class="border border-[var(--surface-border-color)] rounded-lg p-4"
+      data-controller="flat-pack--chip-tag-input"
+      data-flat-pack--chip-tag-input-auto-submit-value="true"
+      data-flat-pack--chip-tag-input-add-url-value="/demo/chips/add_callback"
+      data-flat-pack--chip-tag-input-add-method-value="post"
+      data-flat-pack--chip-tag-input-add-params-value="<%= { source: 'chips_demo', mode: 'auto' }.to_json %>">
+      <%= render FlatPack::TextInput::Component.new(
+        name: "project_tags_remote",
+        label: "Project Tags with Optional Auto-Submit",
+        placeholder: "Add a tag and sync it...",
+        data: {
+          flat_pack__chip_tag_input_target: "input",
+          action: "keydown->flat-pack--chip-tag-input#handleKeydown"
+        },
+        class: "mb-3"
+      ) %>
+      <%= render FlatPack::ChipGroup::Component.new(class: "mb-3", data: {flat_pack__chip_tag_input_target: "chips"}) do %>
+        <%= render FlatPack::Chip::Component.new(text: "API", style: :info, removable: true, value: "api", remove_url: "/demo/chips/remove_callback", remove_method: :post, remove_params: {tag: "api", source: "chips_demo_auto"}) %>
+        <%= render FlatPack::Chip::Component.new(text: "Billing", style: :success, removable: true, value: "billing", remove_url: "/demo/chips/remove_callback", remove_method: :post, remove_params: {tag: "billing", source: "chips_demo_auto"}) %>
+      <% end %>
+      <template data-flat-pack--chip-tag-input-target="template">
+        <%= render FlatPack::Chip::Component.new(text: "__TAG_TEXT__", style: :success, removable: true, value: "__TAG_VALUE__", remove_url: "/demo/chips/remove_callback", remove_method: :post, remove_params: {tag: "__TAG_VALUE__", source: "chips_demo_auto"}) %>
       </template>
     </div>
 
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE'),
         &lt;p class=&quot;text-sm text-[var(--surface-muted-content-color)] mb-4&quot;&gt;
-          A practical example showing a tag input interface with removable chips.
+          The first tag input keeps the existing local-only add behavior while removals still use callbacks. The second turns on request-backed add callbacks explicitly, and both examples use removal callbacks for existing and newly added chips.
         &lt;/p&gt;
-        &lt;div class=&quot;border border-[var(--surface-border-color)] rounded-lg p-4&quot; data-controller=&quot;chip-tag-input&quot;&gt;
+        &lt;div class=&quot;border border-[var(--surface-border-color)] rounded-lg p-4 mb-4&quot; data-controller=&quot;flat-pack--chip-tag-input&quot;&gt;
           &lt;%= render FlatPack::TextInput::Component.new(
             name: &quot;project_tags&quot;,
             label: &quot;Project Tags&quot;,
             placeholder: &quot;Add a tag...&quot;,
             data: {
-              chip_tag_input_target: &quot;input&quot;,
-              action: &quot;keydown-&gt;chip-tag-input#handleKeydown&quot;
+              flat_pack__chip_tag_input_target: &quot;input&quot;,
+              action: &quot;keydown-&gt;flat-pack--chip-tag-input#handleKeydown&quot;
             },
             class: &quot;mb-3&quot;
           ) %&gt;
-          &lt;%= render FlatPack::ChipGroup::Component.new(class: &quot;mb-3&quot;, data: { chip_tag_input_target: &quot;chips&quot; }) do %&gt;
-            &lt;%= render FlatPack::Chip::Component.new(text: &quot;Frontend&quot;, style: :info, removable: true, value: &quot;frontend&quot;) %&gt;
-            &lt;%= render FlatPack::Chip::Component.new(text: &quot;Backend&quot;, style: :success, removable: true, value: &quot;backend&quot;) %&gt;
-            &lt;%= render FlatPack::Chip::Component.new(text: &quot;Database&quot;, style: :warning, removable: true, value: &quot;database&quot;) %&gt;
-            &lt;%= render FlatPack::Chip::Component.new(text: &quot;UI/UX&quot;, style: :primary, removable: true, value: &quot;ui-ux&quot;) %&gt;
+          &lt;%= render FlatPack::ChipGroup::Component.new(class: &quot;mb-3&quot;, data: { flat_pack__chip_tag_input_target: &quot;chips&quot; }) do %&gt;
+            &lt;%= render FlatPack::Chip::Component.new(text: &quot;Frontend&quot;, style: :info, removable: true, value: &quot;frontend&quot;, remove_url: &quot;/demo/chips/remove_callback&quot;, remove_method: :post, remove_params: {tag: &quot;frontend&quot;, source: &quot;chips_demo_local&quot;}) %&gt;
+            &lt;%= render FlatPack::Chip::Component.new(text: &quot;Backend&quot;, style: :success, removable: true, value: &quot;backend&quot;, remove_url: &quot;/demo/chips/remove_callback&quot;, remove_method: :post, remove_params: {tag: &quot;backend&quot;, source: &quot;chips_demo_local&quot;}) %&gt;
+            &lt;%= render FlatPack::Chip::Component.new(text: &quot;Database&quot;, style: :warning, removable: true, value: &quot;database&quot;, remove_url: &quot;/demo/chips/remove_callback&quot;, remove_method: :post, remove_params: {tag: &quot;database&quot;, source: &quot;chips_demo_local&quot;}) %&gt;
+            &lt;%= render FlatPack::Chip::Component.new(text: &quot;UI/UX&quot;, style: :primary, removable: true, value: &quot;ui-ux&quot;, remove_url: &quot;/demo/chips/remove_callback&quot;, remove_method: :post, remove_params: {tag: &quot;ui-ux&quot;, source: &quot;chips_demo_local&quot;}) %&gt;
           &lt;% end %&gt;
-          &lt;template data-chip-tag-input-target=&quot;template&quot;&gt;
-            &lt;%= render FlatPack::Chip::Component.new(text: &quot;__TAG_TEXT__&quot;, style: :info, removable: true, value: &quot;__TAG_VALUE__&quot;) %&gt;
+          &lt;template data-flat-pack--chip-tag-input-target=&quot;template&quot;&gt;
+            &lt;%= render FlatPack::Chip::Component.new(text: &quot;__TAG_TEXT__&quot;, style: :info, removable: true, value: &quot;__TAG_VALUE__&quot;, remove_url: &quot;/demo/chips/remove_callback&quot;, remove_method: :post, remove_params: {tag: &quot;__TAG_VALUE__&quot;, source: &quot;chips_demo_local&quot;}) %&gt;
+          &lt;/template&gt;
+        &lt;/div&gt;
+
+        &lt;div
+          class=&quot;border border-[var(--surface-border-color)] rounded-lg p-4&quot;
+          data-controller=&quot;flat-pack--chip-tag-input&quot;
+          data-flat-pack--chip-tag-input-auto-submit-value=&quot;true&quot;
+          data-flat-pack--chip-tag-input-add-url-value=&quot;/demo/chips/add_callback&quot;
+          data-flat-pack--chip-tag-input-add-method-value=&quot;post&quot;
+          data-flat-pack--chip-tag-input-add-params-value=&quot;&lt;%= { source: &#39;chips_demo&#39;, mode: &#39;auto&#39; }.to_json %&gt;&quot;&gt;
+          &lt;%= render FlatPack::TextInput::Component.new(
+            name: &quot;project_tags_remote&quot;,
+            label: &quot;Project Tags with Optional Auto-Submit&quot;,
+            placeholder: &quot;Add a tag and sync it...&quot;,
+            data: {
+              flat_pack__chip_tag_input_target: &quot;input&quot;,
+              action: &quot;keydown-&gt;flat-pack--chip-tag-input#handleKeydown&quot;
+            },
+            class: &quot;mb-3&quot;
+          ) %&gt;
+          &lt;%= render FlatPack::ChipGroup::Component.new(class: &quot;mb-3&quot;, data: { flat_pack__chip_tag_input_target: &quot;chips&quot; }) do %&gt;
+            &lt;%= render FlatPack::Chip::Component.new(text: &quot;API&quot;, style: :info, removable: true, value: &quot;api&quot;, remove_url: &quot;/demo/chips/remove_callback&quot;, remove_method: :post, remove_params: {tag: &quot;api&quot;, source: &quot;chips_demo_auto&quot;}) %&gt;
+            &lt;%= render FlatPack::Chip::Component.new(text: &quot;Billing&quot;, style: :success, removable: true, value: &quot;billing&quot;, remove_url: &quot;/demo/chips/remove_callback&quot;, remove_method: :post, remove_params: {tag: &quot;billing&quot;, source: &quot;chips_demo_auto&quot;}) %&gt;
+          &lt;% end %&gt;
+          &lt;template data-flat-pack--chip-tag-input-target=&quot;template&quot;&gt;
+            &lt;%= render FlatPack::Chip::Component.new(text: &quot;__TAG_TEXT__&quot;, style: :success, removable: true, value: &quot;__TAG_VALUE__&quot;, remove_url: &quot;/demo/chips/remove_callback&quot;, remove_method: :post, remove_params: {tag: &quot;__TAG_VALUE__&quot;, source: &quot;chips_demo_auto&quot;}) %&gt;
           &lt;/template&gt;
         &lt;/div&gt;
     CODE
