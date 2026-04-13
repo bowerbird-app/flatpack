@@ -22,10 +22,11 @@ Use Picker when users need to choose image assets, files, or application records
 | `size` | Symbol | `:lg` | No | Passed to `FlatPack::Modal::Component` size in modal mode, and reused for inline shell width (`:sm`, `:md`, `:lg`, `:xl`, `:"2xl"`). |
 | `selection_mode` | Symbol | `:multiple` | No | Allowed: `:single`, `:multiple`. |
 | `accepted_kinds` | Array<Symbol/String> | `[:image, :file, :record]` | No | Allowed kind filter. Unknown kinds normalize to `file`. |
-| `searchable` | Boolean | `false` | No | Enables search input in picker body. |
+| `searchable` | Boolean | `true` | No | Enables the local search input. When `false`, local pickers hide the search bar entirely. Remote pickers still render search. |
+| `minimum_searchable` | Integer or nil | `nil` | No | For local pickers, hide the search bar when the initial item count is less than or equal to this threshold. |
 | `search_placeholder` | String | `"Search assets..."` | No | Search input placeholder. |
 | `search_mode` | Symbol | `:local` | No | Allowed: `:local`, `:remote`. |
-| `search_endpoint` | String or nil | `nil` | No | Required when `searchable: true` and `search_mode: :remote`. URL is sanitized. |
+| `search_endpoint` | String or nil | `nil` | No | Required when `search_mode: :remote`. URL is sanitized. |
 | `search_param` | String | `"q"` | No | Query param key used for remote search requests. |
 | `output_mode` | Symbol | `:event` | No | Allowed: `:event`, `:field`. |
 | `output_target` | String or nil | `nil` | No | CSS selector to receive JSON output when `output_mode: :field`. |
@@ -58,7 +59,9 @@ List rows are rendered through four display regions derived from item data rathe
 | `selection_mode: :single` | One selected item at a time (radio/list behavior and single grid pressed state). |
 | `selection_mode: :multiple` | Multiple selected items (checkbox/list behavior and multi grid toggles). |
 | `search_mode: :local` | Filters initial `items` in browser. |
-| `search_mode: :remote` | Fetches `GET search_endpoint?search_param=query&kinds=image,file,record`; expects JSON with `items` array. |
+| `search_mode: :remote` | Fetches `GET search_endpoint?search_param=query&kinds=image,file,record`; expects JSON with `items` array and always renders the search bar. |
+| `searchable: false` | Hides the search bar for local pickers regardless of item count. |
+| `minimum_searchable: 5` | For local pickers, hides the search bar when the initial item count is 5 or fewer items. |
 | `results_layout: :list` | Row-style selectable entries with metadata. Best default for record-like items such as folders. |
 | `results_layout: :grid` | Thumbnail grid cards with pressed-state indicator. |
 | `items_height: "max-content"` | Makes the results region fill the remaining picker body height and scroll within that area when needed. This is the default. |
@@ -94,10 +97,21 @@ Each picker item must include `name`. The component uses `thumbnail_url` and `ri
 <%= render FlatPack::Picker::Component.new(
   id: "asset-picker",
   items: @assets,
-  searchable: true,
   search_mode: :local,
   selection_mode: :multiple,
   context: { target: "composer" }
+) %>
+```
+
+### Thresholded local picker
+
+```erb
+<%= render FlatPack::Picker::Component.new(
+  id: "asset-picker-shortlist",
+  items: @assets.first(4),
+  minimum_searchable: 5,
+  selection_mode: :multiple,
+  context: { target: "shortlist" }
 ) %>
 ```
 
@@ -117,7 +131,6 @@ Each picker item must include `name`. The component uses `thumbnail_url` and `ri
   id: "asset-picker-modal",
   items: @assets,
   modal: true,
-  searchable: true,
   search_mode: :local,
   selection_mode: :multiple,
   context: { target: "composer" }
@@ -143,7 +156,6 @@ Each picker item must include `name`. The component uses `thumbnail_url` and `ri
   subtitle: "Fetch matching assets from the server while keeping a stable modal height.",
   items: @picker_demo_items.first(2),
   modal: true,
-  searchable: true,
   search_mode: :remote,
   search_endpoint: demo_picker_results_path,
   modal_body_height_mode: :fixed,
@@ -153,7 +165,7 @@ Each picker item must include `name`. The component uses `thumbnail_url` and `ri
 ) %>
 ```
 
-Remote search is debounced by 250ms. When `accepted_kinds` is present, the picker appends a `kinds=image,file,record` style query param alongside the configured `search_param`.
+Remote search is debounced by 250ms and always renders the search bar, even if `searchable: false` is passed. When `accepted_kinds` is present, the picker appends a `kinds=image,file,record` style query param alongside the configured `search_param`.
 
 ### Inline auto-confirm picker
 
@@ -165,7 +177,6 @@ Remote search is debounced by 250ms. When `accepted_kinds` is present, the picke
   title: "Inline Asset Picker",
   subtitle: "Choose one item to confirm immediately.",
   items: @picker_demo_items,
-  searchable: true,
   search_mode: :local,
   selection_mode: :single,
   auto_confirm: true,
@@ -197,7 +208,6 @@ Remote search is debounced by 250ms. When `accepted_kinds` is present, the picke
   modal: true,
   accepted_kinds: [:image],
   selection_mode: :multiple,
-  searchable: true,
   search_mode: :local,
   results_layout: :grid,
   modal_body_height_mode: :fixed,
@@ -231,7 +241,6 @@ Remote search is debounced by 250ms. When `accepted_kinds` is present, the picke
   accepted_kinds: [:record],
   selection_mode: :single,
   auto_confirm: true,
-  searchable: true,
   search_mode: :local,
   output_mode: :field,
   output_target: "#picker-folder-field",

@@ -60,8 +60,33 @@ module PagesHelper
       <%= render FlatPack::Picker::Component.new(
         id: "picker-demo-local",
         items: @picker_demo_items,
-        searchable: true,
         search_mode: :local
+      ) %>
+    CODE
+  end
+
+  def picker_demo_search_visibility_erb_code
+    picker_demo_full_erb_code(<<~CODE)
+      <%= render FlatPack::Picker::Component.new(
+        id: "picker-demo-searchable-off",
+        title: "Search Hidden",
+        subtitle: "Explicitly disable local search even when the picker has several items.",
+        items: @picker_demo_items,
+        searchable: false,
+        modal: false,
+        items_height: "min-content",
+        confirm_text: "Use Assets"
+      ) %>
+
+      <%= render FlatPack::Picker::Component.new(
+        id: "picker-demo-minimum-searchable",
+        title: "Threshold Search",
+        subtitle: "Hide the local search bar when the initial list is short.",
+        items: @picker_demo_items.first(4),
+        minimum_searchable: 5,
+        modal: false,
+        items_height: "min-content",
+        confirm_text: "Use Assets"
       ) %>
     CODE
   end
@@ -89,7 +114,6 @@ module PagesHelper
         accepted_kinds: [:record],
         selection_mode: :single,
         auto_confirm: true,
-        searchable: true,
         search_mode: :local,
         output_mode: :field,
         output_target: "#picker-folder-field",
@@ -122,7 +146,6 @@ module PagesHelper
         items: @picker_demo_items,
         accepted_kinds: [:record],
         selection_mode: :single,
-        searchable: true,
         search_mode: :local,
         confirm_text: "Assign Folder",
         form: {
@@ -164,7 +187,6 @@ module PagesHelper
         subtitle: "Local search across image and file assets with a fixed modal body height.",
         items: @picker_demo_items,
         modal: true,
-        searchable: true,
         search_mode: :local,
         modal_body_height_mode: :fixed,
         modal_body_height: "clamp(20rem, 55vh, 30rem)",
@@ -201,7 +223,7 @@ module PagesHelper
         subtitle: "Remote search keeps a fixed modal body height for stable layout while result counts change.",
         items: @picker_demo_items.first(2),
         modal: true,
-        searchable: true,
+        searchable: false,
         search_mode: :remote,
         search_endpoint: demo_picker_results_path,
         modal_body_height_mode: :fixed,
@@ -221,7 +243,6 @@ module PagesHelper
         title: "Inline Asset Picker",
         subtitle: "Choose one item to confirm immediately.",
         items: @picker_demo_items,
-        searchable: true,
         search_mode: :local,
         selection_mode: :single,
         auto_confirm: true,
@@ -241,7 +262,6 @@ module PagesHelper
         title: "Min Content",
         subtitle: "One result keeps the list region compact.",
         items: @picker_demo_items.first(1),
-        searchable: true,
         search_mode: :local,
         items_height: "min-content",
         modal: false,
@@ -258,7 +278,6 @@ module PagesHelper
         title: "Max Content",
         subtitle: "The results region expands to fill the wrapper.",
         items: @picker_demo_items,
-        searchable: true,
         search_mode: :local,
         items_height: "max-content",
         modal: false,
@@ -274,7 +293,6 @@ module PagesHelper
         title: "Fixed Height",
         subtitle: "A 240px results region scrolls once content exceeds the cap.",
         items: @picker_demo_items,
-        searchable: true,
         search_mode: :local,
         items_height: "240px",
         modal: false,
@@ -302,7 +320,6 @@ module PagesHelper
         modal: true,
         accepted_kinds: [:image],
         selection_mode: :multiple,
-        searchable: true,
         search_mode: :local,
         results_layout: :grid,
         modal_body_height_mode: :fixed,
@@ -333,7 +350,6 @@ module PagesHelper
         subtitle: "Selecting an item confirms immediately and closes the modal.",
         items: @picker_demo_items,
         modal: true,
-        searchable: true,
         search_mode: :local,
         selection_mode: :single,
         auto_confirm: true,
@@ -367,7 +383,6 @@ module PagesHelper
         items: @picker_demo_items,
         modal: true,
         accepted_kinds: [:file],
-        searchable: true,
         search_mode: :local,
         modal_body_height_mode: :fixed,
         modal_body_height: "24rem",

@@ -175,11 +175,45 @@ module FlatPack
         assert_includes rendered_content, "&quot;valuePath&quot;:&quot;payload.record_id&quot;"
       end
 
-      def test_renders_search_input_when_searchable
-        render_inline(Component.new(id: "searchable-picker", items: sample_items, searchable: true))
+      def test_renders_search_input_by_default_for_local_picker
+        render_inline(Component.new(id: "searchable-picker", items: sample_items))
 
         assert_selector "input[name='picker_query_searchable-picker'][placeholder='Search assets...']"
         assert_selector "input[data-flat-pack--picker-target='searchInput']"
+      end
+
+      def test_does_not_render_search_input_when_searchable_is_false_for_local_picker
+        render_inline(Component.new(id: "hidden-search-picker", items: sample_items, searchable: false))
+
+        assert_no_selector "input[name='picker_query_hidden-search-picker']"
+        assert_selector "div[data-flat-pack--picker-searchable-value='false']"
+      end
+
+      def test_hides_search_input_when_local_item_count_is_at_or_below_minimum_searchable
+        render_inline(Component.new(id: "threshold-hidden-picker", items: sample_items, minimum_searchable: 3))
+
+        assert_no_selector "input[name='picker_query_threshold-hidden-picker']"
+        assert_selector "div[data-flat-pack--picker-searchable-value='false']"
+      end
+
+      def test_renders_search_input_when_local_item_count_exceeds_minimum_searchable
+        render_inline(Component.new(id: "threshold-visible-picker", items: sample_items, minimum_searchable: 2))
+
+        assert_selector "input[name='picker_query_threshold-visible-picker']"
+        assert_selector "div[data-flat-pack--picker-searchable-value='true']"
+      end
+
+      def test_renders_search_input_for_remote_picker_even_when_searchable_is_false
+        render_inline(Component.new(
+          id: "remote-search-picker",
+          items: sample_items,
+          searchable: false,
+          search_mode: :remote,
+          search_endpoint: "/demo/picker_results"
+        ))
+
+        assert_selector "input[name='picker_query_remote-search-picker']"
+        assert_selector "div[data-flat-pack--picker-searchable-value='true'][data-flat-pack--picker-search-mode-value='remote']"
       end
 
       def test_requires_search_endpoint_for_remote_search
@@ -187,7 +221,6 @@ module FlatPack
           Component.new(
             id: "remote-picker",
             items: sample_items,
-            searchable: true,
             search_mode: :remote
           )
         end
@@ -198,9 +231,18 @@ module FlatPack
           Component.new(
             id: "unsafe-picker",
             items: sample_items,
-            searchable: true,
             search_mode: :remote,
             search_endpoint: "javascript:alert('xss')"
+          )
+        end
+      end
+
+      def test_rejects_negative_minimum_searchable
+        assert_raises(ArgumentError) do
+          Component.new(
+            id: "invalid-minimum-searchable-picker",
+            items: sample_items,
+            minimum_searchable: -1
           )
         end
       end

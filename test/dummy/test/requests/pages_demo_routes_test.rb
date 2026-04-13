@@ -110,8 +110,8 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     get "/demo/tooltips"
 
     assert_response :success
-    assert_includes response.body, 'data-flat-pack--icon-variant-value="mini"'
-    assert_includes response.body, 'viewBox="0 0 20 20"'
+    assert_includes response.body, 'data-flat-pack--icon-variant-value="outline"'
+    assert_includes response.body, 'viewBox="0 0 24 24"'
   end
 
   test "chips demo includes removable callback example" do
@@ -210,18 +210,26 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Open Auto-Confirm Picker"
     assert_includes response.body, "Open Image Picker"
     assert_includes response.body, "Open Folder Picker"
+    assert_includes response.body, "Search Visibility"
+    assert_includes response.body, "Explicit Hard Off"
+    assert_includes response.body, "Thresholded Local Search"
     assert_includes response.body, "Built-in Form Submission"
     assert_includes response.body, "Items Height"
     assert_includes response.body, "items-height-min-content"
     assert_includes response.body, "items-height-max-content"
     assert_includes response.body, "items-height-fixed-height"
+    assert_includes response.body, "searchable: false"
+    assert_includes response.body, "minimum_searchable: 5"
     assert_includes response.body, "picker-demo-code-required-data-local-items"
+    assert_includes response.body, "picker-demo-code-search-visibility-erb"
     assert_includes response.body, "picker-demo-code-field-output-erb"
     assert_includes response.body, "View ERB Code"
     assert_includes response.body, "View Controller Code"
     assert_includes response.body, "id=\"picker-demo-local\""
     assert_includes response.body, "id=\"picker-demo-built-in-form\""
     assert_includes response.body, "id=\"picker-demo-inline\""
+    assert_includes response.body, "id=\"picker-demo-searchable-off\""
+    assert_includes response.body, "id=\"picker-demo-minimum-searchable\""
     assert_includes response.body, "id=\"picker-demo-items-height-min\""
     assert_includes response.body, "id=\"picker-demo-items-height-max\""
     assert_includes response.body, "id=\"picker-demo-items-height-fixed\""
