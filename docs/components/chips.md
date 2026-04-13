@@ -35,7 +35,7 @@ Use Chip for tags, filters, selected states, and quick token-like actions.
 
 ## Variants
 - Styles: `:default`, `:primary`, `:success`, `:warning`, `:danger`, `:info`.
-- Sizes: `:sm`, `:md`, `:lg`.
+- Sizes: `:sm`, `:md`, `:lg`. These sizes align to the button height scale: small is 30px, medium is 38px, and large is 50px.
 - Types: `:static`, `:button`, `:link`.
 
 ## Example
