@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Added a reusable `flat-pack--chip-tag-input` Stimulus controller for chip tag-input flows, keeping local chip insertion as the default behavior and making request-backed add callbacks explicitly opt-in.
 - The dummy chips page now demonstrates both local-only chip entry and an optional request-backed add flow that posts to a path only when auto-submit is enabled.
+- `FlatPack::Chip::Component` size variants now use the same vertical spacing scale as buttons, aligning chip heights to the 30px, 38px, and 50px button sizes while keeping chip-specific horizontal padding.
 
 ### Docs
 - Updated the chips component docs to describe the `flat-pack--chip-tag-input` integration and clarify that add auto-submit is optional and defaults to off.
