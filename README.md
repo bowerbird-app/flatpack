@@ -6,7 +6,7 @@ A modern Rails UI Component Library built with ViewComponent, Tailwind CSS, and 
 
 - 🎨 **ViewComponent-based** - Type-safe, testable components
 - 🌈 **Tailwind CSS** - Modern utility-first CSS with CSS variables
-- 🌙 **Dark Mode** - System preference-driven (no toggle required)
+- 🌙 **Themes** - Light by default, with dark and custom `data-theme` variants
 - ♿ **Accessible** - WCAG AA compliant, keyboard-friendly
 - 🚀 **Zero Config** - Works out of the box with tailwindcss-rails gem
 - ✨ **Automated Setup** - Install generator automatically configures Tailwind CSS 4
@@ -29,6 +29,8 @@ Then install:
 ```bash
 bundle install
 rails generate flat_pack:install
+bin/rake flat_pack:contract
+bin/rake flat_pack:verify_install
 ```
 
 **What the generator does:**
@@ -55,6 +57,15 @@ rails generate flat_pack:layout --type=sidebar --side=right --layout_name=admin
 ```
 
 See the [Installation Guide](docs/installation.md) for detailed setup instructions.
+
+## AI Entry Points
+
+For AI-assisted installation and usage, start with the gem-shipped contract and verification surfaces instead of inferring setup from prose alone:
+
+- [AI Entry Point](docs/ai/README.md)
+- [AI Install Contract](docs/ai/install_contract.json)
+- [Install Verification Workflow](docs/installation.md#verification)
+- [Components Manifest (Machine-Readable)](docs/components/manifest.yml)
 
 ## Quick Start
 
@@ -215,6 +226,8 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
 ## Documentation
 
 - 📚 [Full Documentation](docs/)
+- 🤖 [AI Entry Point](docs/ai/README.md)
+- 🧪 [AI Install Contract](docs/ai/install_contract.json)
 - 🧭 [Components Index (Agent-First)](docs/components/README.md)
 - 🤖 [Components Manifest (Machine-Readable)](docs/components/manifest.yml)
 - 📐 [Component Doc Format](docs/components/DOC_FORMAT.md)
@@ -370,7 +383,7 @@ bin/rubocop
 FlatPack follows these principles:
 
 1. **Variables over configuration** - Customize via CSS variables
-2. **System-driven dark mode** - Respects OS preference
+2. **Theme variants over hardcoded palettes** - Default light theme plus `data-theme` overrides when needed
 3. **Composition over inheritance** - Build complex UIs from simple parts
 4. **Zero-config installation** - Works immediately
 5. **UI-only responsibility** - No business logic

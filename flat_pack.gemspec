@@ -15,6 +15,9 @@ Gem::Specification.new do |spec|
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = spec.homepage
   spec.metadata["changelog_uri"] = "#{spec.homepage}/blob/main/CHANGELOG.md"
+  spec.metadata["documentation_uri"] = "#{spec.homepage}/tree/main/docs"
+  spec.metadata["ai_entrypoint_path"] = "docs/ai/README.md"
+  spec.metadata["ai_contract_path"] = "docs/ai/install_contract.json"
 
   spec.files = Dir.chdir(File.expand_path(__dir__)) do
     Dir["{app,config,lib,docs}/**/*", "MIT-LICENSE", "Rakefile", "README.md", "CHANGELOG.md"]

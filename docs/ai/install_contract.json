@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-04-14",
+  "gem": {
+    "name": "flat_pack",
+    "version": "0.1.23"
+  },
+  "compatibility": {
+    "ruby": ">= 3.2.0",
+    "rails": ">= 7.1, < 9",
+    "tailwindcss_rails": "~> 4.0",
+    "asset_pipeline": [
+      "propshaft"
+    ],
+    "javascript": [
+      "importmap",
+      "stimulus"
+    ]
+  },
+  "artifacts": {
+    "ai_entrypoint": "docs/ai/README.md",
+    "component_manifest": "docs/components/manifest.yml",
+    "installation_guide": "docs/installation.md",
+    "component_doc_format": "docs/components/DOC_FORMAT.md"
+  },
+  "install": {
+    "required_commands": [
+      "bundle install",
+      "bin/rails generate flat_pack:install"
+    ],
+    "optional_commands": [
+      "bin/rails generate flat_pack:layout --type=sidebar"
+    ],
+    "verification_command": "bin/rake flat_pack:verify_install",
+    "contract_command": "bin/rake flat_pack:contract"
+  },
+  "verification": {
+    "checks": [
+      {
+        "id": "layout_stylesheet_tags",
+        "type": "file_contains_all",
+        "path": "app/views/layouts/application.html.erb",
+        "description": "Application layout loads FlatPack stylesheets",
+        "matches": [
+          "stylesheet_link_tag \"flat_pack/variables\"",
+          "stylesheet_link_tag \"flat_pack/rich_text\""
+        ],
+        "success_message": "Verified FlatPack stylesheet tags in app/views/layouts/application.html.erb"
+      },
+      {
+        "id": "importmap_pins",
+        "type": "file_contains_all",
+        "path": "config/importmap.rb",
+        "description": "Importmap pins FlatPack controllers, TipTap helpers, and Heroicons",
+        "matches": [
+          "controllers/flat_pack",
+          "flat_pack/controllers",
+          "flat_pack/tiptap",
+          "pin \"flat_pack/heroicons\""
+        ],
+        "success_message": "Verified FlatPack importmap pins in config/importmap.rb"
+      },
+      {
+        "id": "stimulus_lazy_loading",
+        "type": "file_contains_all",
+        "path": "app/javascript/controllers/index.js",
+        "description": "Stimulus index lazy-loads FlatPack controllers",
+        "matches": [
+          "lazyLoadControllersFrom",
+          "lazyLoadControllersFrom(\"controllers\", application)"
+        ],
+        "success_message": "Verified FlatPack Stimulus lazy loading in app/javascript/controllers/index.js"
+      },
+      {
+        "id": "tailwind_source_and_tokens",
+        "type": "first_existing_file_contains_all",
+        "paths": [
+          "app/assets/stylesheets/application.tailwind.css",
+          "app/assets/stylesheets/application.css",
+          "app/assets/tailwind/application.css"
+        ],
+        "description": "Tailwind CSS 4 scans FlatPack components and loads FlatPack design tokens",
+        "matches": [
+          "@source",
+          "app/components",
+          "--color-fp-primary",
+          "--color-primary: var(--color-fp-primary);"
+        ],
+        "success_message": "Verified FlatPack Tailwind CSS 4 wiring"
+      }
+    ]
+  }
+}
