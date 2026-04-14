@@ -1,8 +1,10 @@
 version: 1
-updated_at: 2026-03-13
+updated_at: 2026-04-14
 
 format_reference: docs/components/DOC_FORMAT.md
 human_index: docs/components/README.md
+ai_entrypoint: docs/ai/README.md
+install_contract: docs/ai/install_contract.json
 
 components:
   - key: accordion

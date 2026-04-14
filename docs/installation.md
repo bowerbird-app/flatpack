@@ -6,7 +6,17 @@ This document provides the exact terminal commands and configuration steps neede
 
 FlatPack is a modern Rails UI Component Library built with ViewComponent, Tailwind CSS, and Hotwire. It provides type-safe, testable components with dark mode support and accessibility features. Supports Rails 7.1 and above.
 
-**Current Version:** 0.1.16 (Updated April 10, 2026)
+**Current Version:** 0.1.23 (Updated April 14, 2026)
+
+## AI-first installation entrypoint
+
+If you are integrating FlatPack from tooling or an external AI system, use the gem-shipped contract first:
+
+- Read `docs/ai/install_contract.json`
+- Run `bin/rake flat_pack:contract` to print the current contract from the installed gem
+- Run `bin/rake flat_pack:verify_install` after installation to confirm the host app matches the contract
+
+This keeps setup tied to the exact installed FlatPack version instead of a potentially stale hosted page.
 
 ## Prerequisites
 
@@ -44,6 +54,12 @@ FlatPack provides a custom Rails generator that automates the installation:
 
 ```bash
 rails generate flat_pack:install
+```
+
+After installation, verify the host app wiring:
+
+```bash
+bin/rake flat_pack:verify_install
 ```
 
 **What the generator does:**
@@ -176,6 +192,27 @@ The `rails generate flat_pack:install` command now **automatically configures Ta
 **After the generator runs:**
 - Rebuild Tailwind CSS: `bin/rails tailwindcss:build`
 - Restart your Rails server
+
+## Verification
+
+Run the install verifier after `rails generate flat_pack:install`:
+
+```bash
+bin/rake flat_pack:verify_install
+```
+
+The verifier checks:
+
+- `app/views/layouts/application.html.erb` for FlatPack stylesheet tags
+- `config/importmap.rb` for FlatPack controller, TipTap, and Heroicons pins
+- `app/javascript/controllers/index.js` for Stimulus lazy loading
+- a Tailwind CSS 4 file for the FlatPack `@source`, `@theme`, and `:root` mappings
+
+To print the exact contract used by that verification step:
+
+```bash
+bin/rake flat_pack:contract
+```
 
 **Manual Configuration (If Automatic Detection Fails)**
 

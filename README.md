@@ -29,6 +29,7 @@ Then install:
 ```bash
 bundle install
 rails generate flat_pack:install
+bin/rake flat_pack:verify_install
 ```
 
 **What the generator does:**
@@ -55,6 +56,15 @@ rails generate flat_pack:layout --type=sidebar --side=right --layout_name=admin
 ```
 
 See the [Installation Guide](docs/installation.md) for detailed setup instructions.
+
+## AI Entry Points
+
+For AI-assisted installation and usage, start with the gem-shipped contract and verification surfaces instead of inferring setup from prose alone:
+
+- [AI Entry Point](docs/ai/README.md)
+- [AI Install Contract](docs/ai/install_contract.json)
+- [Install Verification Workflow](docs/installation.md#verification)
+- [Components Manifest (Machine-Readable)](docs/components/manifest.yml)
 
 ## Quick Start
 
@@ -215,6 +225,8 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
 ## Documentation
 
 - 📚 [Full Documentation](docs/)
+- 🤖 [AI Entry Point](docs/ai/README.md)
+- 🧪 [AI Install Contract](docs/ai/install_contract.json)
 - 🧭 [Components Index (Agent-First)](docs/components/README.md)
 - 🤖 [Components Manifest (Machine-Readable)](docs/components/manifest.yml)
 - 📐 [Component Doc Format](docs/components/DOC_FORMAT.md)

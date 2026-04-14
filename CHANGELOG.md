@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.23] - 2026-04-14
+
+### Added
+- Shipped an AI-oriented install contract at `docs/ai/install_contract.json` plus an AI entrypoint guide at `docs/ai/README.md`, so host apps and external tooling can read the exact FlatPack integration contract from the installed gem.
+- Added `FlatPack::InstallContract`, `FlatPack::InstallVerifier`, `bin/rake flat_pack:contract`, and `bin/rake flat_pack:verify_install` so installation requirements can be read and verified programmatically.
+
+### Docs
+- Updated the top-level and docs index installation guidance to point to the new AI contract and verification workflow.
+
+### Tests
+- Added regression coverage for install-contract loading and host-app installation verification checks.
+
 ## [0.1.22] - 2026-04-13
 
 ### Changed

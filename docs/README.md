@@ -6,10 +6,14 @@ Welcome to FlatPack - a modern Rails UI Component Library built with ViewCompone
 
 FlatPack is a production-grade Rails Engine that provides a comprehensive set of UI components designed for rapid application development. It follows "The Rails Way" and integrates seamlessly with Rails 7.1+ applications.
 
+For automated setup and external AI retrieval, start with [ai/README.md](ai/README.md) and [ai/install_contract.json](ai/install_contract.json), then fall back to [installation.md](installation.md) and the component docs for examples.
+
 ## Table of Contents
 
 ### Getting Started
 - [Installation Guide](installation.md)
+- [AI Entry Point](ai/README.md)
+- [AI Install Contract](ai/install_contract.json)
 - [Quick Start](#quick-start)
 - [Configuration](#configuration)
 
