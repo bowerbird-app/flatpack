@@ -6,7 +6,7 @@ A modern Rails UI Component Library built with ViewComponent, Tailwind CSS, and 
 
 - 🎨 **ViewComponent-based** - Type-safe, testable components
 - 🌈 **Tailwind CSS** - Modern utility-first CSS with CSS variables
-- 🌙 **Dark Mode** - System preference-driven (no toggle required)
+- 🌙 **Themes** - Light by default, with dark and custom `data-theme` variants
 - ♿ **Accessible** - WCAG AA compliant, keyboard-friendly
 - 🚀 **Zero Config** - Works out of the box with tailwindcss-rails gem
 - ✨ **Automated Setup** - Install generator automatically configures Tailwind CSS 4
@@ -29,6 +29,7 @@ Then install:
 ```bash
 bundle install
 rails generate flat_pack:install
+bin/rake flat_pack:contract
 bin/rake flat_pack:verify_install
 ```
 
@@ -382,7 +383,7 @@ bin/rubocop
 FlatPack follows these principles:
 
 1. **Variables over configuration** - Customize via CSS variables
-2. **System-driven dark mode** - Respects OS preference
+2. **Theme variants over hardcoded palettes** - Default light theme plus `data-theme` overrides when needed
 3. **Composition over inheritance** - Build complex UIs from simple parts
 4. **Zero-config installation** - Works immediately
 5. **UI-only responsibility** - No business logic

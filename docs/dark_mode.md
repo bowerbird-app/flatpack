@@ -1,197 +1,110 @@
 # Dark Mode Guide
 
-FlatPack implements dark mode using system preferences only (`prefers-color-scheme`). There is no manual toggle.
+FlatPack ships a light theme by default and supports dark or custom theme variants through CSS variables and `data-theme` selectors.
 
-## Philosophy
+## Overview
 
-FlatPack's dark mode approach:
-- **System-driven only** - Respects OS/browser preference
-- **No manual toggle** - Reduces complexity and state management
-- **Automatic switching** - Changes instantly when system preference changes
-- **Consistent behavior** - All components respect system preference
+FlatPack theme behavior is split into two layers:
+
+- **CSS defaults** - `:root {}` in `flat_pack/variables.css` provides the default light palette.
+- **Theme variants** - selectors such as `[data-theme="dark"]`, `[data-theme="ocean"]`, and `[data-theme="rounded"]` override those variables.
+- **Optional controller support** - the `flat-pack--theme` Stimulus controller can switch between `system`, `light`, `dark`, and custom variants while persisting the choice in `localStorage` under `flatpack-theme`.
 
 ## How It Works
 
-FlatPack uses CSS media queries to detect system preference:
+If no theme attribute is present, FlatPack stays on the default light palette.
 
-```css
-/* Light mode (default) */
-@theme {
-  --color-background: oklch(1.0 0 0); /* White */
-  --color-foreground: oklch(0.20 0.01 250); /* Dark gray */
-}
-
-/* Dark mode (system preference) */
-@media (prefers-color-scheme: dark) {
-  @theme {
-    --color-background: oklch(0.15 0.01 250); /* Dark */
-    --color-foreground: oklch(0.95 0.01 250); /* Light */
-  }
-}
+```html
+<html lang="en">
 ```
 
-## Testing Dark Mode
+To force a built-in variant, set `data-theme` on the root element:
 
-### macOS
-1. System Preferences → General → Appearance
-2. Select "Dark"
+```html
+<html data-theme="dark" lang="en">
+```
 
-### Windows
-1. Settings → Personalization → Colors
-2. Choose "Dark" under "Choose your color"
+Supported built-in values documented by the install guide are:
 
-### Linux (GNOME)
-1. Settings → Appearance
-2. Select "Dark"
+- `light` - same as omitting the attribute
+- `dark`
+- `ocean`
+- `rounded`
 
-### Browser DevTools
-Chrome/Edge/Firefox:
-1. Open DevTools (F12)
-2. Open Command Palette (Ctrl+Shift+P / Cmd+Shift+P)
-3. Type "Render"
-4. Select "Show Rendering"
-5. Find "Emulate CSS media feature prefers-color-scheme"
-6. Select "prefers-color-scheme: dark"
+## System Mode
 
-## Customizing Dark Mode
+When you use the optional `flat-pack--theme` controller, selecting `system` checks `prefers-color-scheme: dark` and then either:
 
-Override dark mode colors in your `application.css`. FlatPack variables are loaded via `stylesheet_link_tag` in the layout, so you only need to add your overrides:
+- removes `data-theme` for the light palette, or
+- sets `data-theme="dark"` when the OS prefers dark mode
+
+That controller also keeps `dark` and `light` classes in sync on `<html>` for legacy selectors.
+
+## Customizing Dark Theme Tokens
+
+Override FlatPack variables in your application stylesheet after the FlatPack link tags have loaded:
 
 ```css
 /* app/assets/stylesheets/application.css */
 
-/* Custom dark mode colors */
-@media (prefers-color-scheme: dark) {
-  @theme {
-    --color-primary: oklch(0.70 0.25 270); /* Lighter purple for dark bg */
-    --color-background: oklch(0.10 0.02 250); /* Darker background */
-    --color-foreground: oklch(0.98 0.01 250); /* Brighter text */
-  }
+[data-theme="dark"] {
+  --color-primary: oklch(0.70 0.20 250);
+  --color-primary-hover: oklch(0.64 0.18 250);
+  --surface-background-color: oklch(0.18 0.01 250);
+  --surface-content-color: oklch(0.95 0.01 250);
+  --surface-border-color: oklch(0.30 0.02 250);
 }
 ```
 
-## Complete Dark Mode Example
+You can define additional custom themes the same way:
 
 ```css
-@theme {
-  /* Light mode */
-  --color-primary: oklch(0.55 0.25 230);
-  --color-background: oklch(1.0 0 0);
-  --color-foreground: oklch(0.15 0.01 230);
-  --color-border: oklch(0.85 0.02 230);
-}
-
-@media (prefers-color-scheme: dark) {
-  @theme {
-    /* Dark mode - adjust lightness and chroma */
-    --color-primary: oklch(0.65 0.22 230); /* Lighter, less saturated */
-    --color-background: oklch(0.12 0.01 230); /* Very dark */
-    --color-foreground: oklch(0.95 0.01 230); /* Very light */
-    --color-border: oklch(0.25 0.02 230); /* Subtle border */
-  }
+[data-theme="forest"] {
+  --color-primary: oklch(0.58 0.18 155);
+  --surface-background-color: oklch(0.98 0.01 150);
 }
 ```
 
-## Dark Mode Considerations
+## Testing Themes
 
-### Contrast
-- Ensure sufficient contrast in both modes (WCAG AA: 4.5:1)
-- Test all button schemes in dark mode
-- Check border visibility
+### Explicit theme variants
 
-### Shadows
-- Shadows are more pronounced in light mode
-- FlatPack adjusts shadow opacity automatically
-- Override `--shadow-*` variables if needed
-
-### Images and Icons
-- Consider providing dark variants of logos
-- Use CSS `filter: invert()` for simple icons
-- SVGs with `currentColor` adapt automatically
-
-### Colors
-- Reduce chroma (saturation) in dark mode for comfort
-- Increase lightness for foreground colors
-- Decrease lightness for background colors
-
-## Why No Manual Toggle?
-
-FlatPack intentionally doesn't provide a manual dark mode toggle:
-
-### Advantages
-1. **Simplicity** - No state management, no storage, no hydration issues
-2. **Consistency** - Matches user's OS preference across all apps
-3. **Accessibility** - Respects system-wide accessibility settings
-4. **Performance** - No JavaScript required
-5. **Privacy** - No preference tracking
-
-### When You Need Manual Toggle
-
-If your application requires manual dark mode toggle:
-
-1. Implement it in your application (not the component library)
-2. Use a class-based approach (e.g., `.dark` on `<html>`)
-3. Override FlatPack variables within that class:
-
-```css
-/* Your application's manual dark mode */
-.dark {
-  @theme {
-    --color-background: oklch(0.15 0.01 250);
-    --color-foreground: oklch(0.95 0.01 250);
-    /* ... etc */
-  }
-}
-```
-
-Then manage the `.dark` class with JavaScript:
+Set the root attribute in the browser console:
 
 ```javascript
-// Your application code
-document.documentElement.classList.toggle('dark')
+document.documentElement.setAttribute("data-theme", "dark")
 ```
 
-## Testing Checklist
+Reset to the default light palette:
 
-- [ ] All buttons visible in both modes
-- [ ] Tables have sufficient contrast
-- [ ] Borders visible in both modes
-- [ ] Focus rings visible
-- [ ] Hover states work correctly
-- [ ] Text is readable
-- [ ] Icons are visible
+```javascript
+document.documentElement.removeAttribute("data-theme")
+```
 
-## Browser Support
+### System mode
 
-Dark mode via `prefers-color-scheme` is supported in:
-- Chrome 76+
-- Firefox 67+
-- Safari 12.1+
-- Edge 79+
+When testing `system` mode, use your browser's `prefers-color-scheme` emulation and verify that the theme controller updates the root attribute as expected.
 
 ## Troubleshooting
 
-### Dark mode not activating
-1. Check system preference is set to dark
-2. Check browser supports `prefers-color-scheme`
-3. Clear browser cache
-4. Restart Rails server
+### Dark theme not appearing
 
-### Colors look wrong in dark mode
-1. Verify your custom colors are in the media query
-2. Check OKLCH values (L should be higher for foreground, lower for background)
-3. Test in actual dark mode, not DevTools emulation
+1. Confirm `flat_pack/variables` is linked in your layout.
+2. Check whether `<html>` has the expected `data-theme` attribute.
+3. If you use the theme controller, inspect `localStorage.getItem("flatpack-theme")`.
 
-### Flash of wrong theme on page load
-This doesn't occur with system preference approach (no JavaScript).
+### Wrong colors after overriding
 
-## Resources
+1. Make sure your stylesheet loads after FlatPack's stylesheet tags.
+2. Override concrete variable values, not self-referential mappings such as `--radius-md: var(--radius-md)`.
+3. Verify your selector matches the active theme, for example `[data-theme="dark"]`.
 
-- [MDN: prefers-color-scheme](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme)
-- [Web.dev: prefers-color-scheme](https://web.dev/prefers-color-scheme/)
-- [Contrast Checker](https://webaim.org/resources/contrastchecker/)
+### Flash of the light theme
+
+If you rely on the optional JS controller to restore a saved theme, the page may paint the default light palette before JavaScript runs. To avoid that, render the expected `data-theme` attribute server-side.
 
 ## Next Steps
 
 - [Theming Guide](theming.md)
-- [Component Documentation](components/)
+- [Installation Guide](installation.md)
+- [Architecture: Tailwind 4](architecture/tailwind_4.md)

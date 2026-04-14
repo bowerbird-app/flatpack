@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs
+- Synchronized the root README, docs index, project structure guide, and theming/dark-mode architecture notes with the current AI install-contract workflow, Propshaft/importmap asset wiring, and theme-variant behavior.
+
 ## [0.1.23] - 2026-04-14
 
 ### Added

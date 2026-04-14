@@ -43,8 +43,10 @@ config.assets.compile = false
 
 ```
 app/assets/stylesheets/flat_pack/
-├── application.css       # Main stylesheet
-└── variables.css         # CSS variables (theme)
+├── application.css       # Convenience bundle importing FlatPack stylesheets
+├── content_editor.css    # Content editor surface styles
+├── rich_text.css         # TipTap rich text editor styles
+└── variables.css         # Theme tokens and built-in theme variants
 ```
 
 ### Usage
@@ -67,7 +69,9 @@ Propshaft resolves the correct digested path for each file. Using `stylesheet_li
 app/javascript/flat_pack/
 ├── controllers/
 │   └── ..._controller.js   # Stimulus controllers
-└── heroicons.js            # Generated Heroicons v2 icon banks for FlatPack icons
+├── heroicons.js            # Generated Heroicons v2 icon banks for FlatPack icons
+└── tiptap/
+   └── ...js              # Rich-text helper modules imported by tiptap_controller
 ```
 
 ### Importmap Integration
@@ -78,7 +82,13 @@ FlatPack registers its JavaScript modules:
 # config/importmap.rb
 pin_all_from File.expand_path("../app/javascript/flat_pack/controllers", __dir__),
   under: "controllers/flat_pack",
-  to: "flat_pack/controllers"
+   to: "flat_pack/controllers",
+   preload: false
+
+pin_all_from File.expand_path("../app/javascript/flat_pack/tiptap", __dir__),
+   under: "flat_pack/tiptap",
+   to: "flat_pack/tiptap",
+   preload: false
 
 # Heroicons icon banks — served as a local JS module, no gem required
 pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false
@@ -118,7 +128,7 @@ Tell Tailwind to scan FlatPack components:
 
 The `@source` comment tells Tailwind CSS 4 where to find utility classes.
 
-> **Note:** FlatPack CSS variables are loaded via `stylesheet_link_tag` in the layout, not via `@import` inside the Tailwind build file. The generator adds the correct relative `@import` for variables inside the Tailwind file only when the gem is accessible at build time.
+> **Note:** FlatPack CSS variables are loaded via `stylesheet_link_tag` in the layout, not via `@import` inside the Tailwind build file. The install generator updates the host Tailwind file with `@source` and token mappings, while Propshaft serves the FlatPack stylesheets from digested URLs.
 
 ### Path Resolution
 
@@ -224,13 +234,15 @@ If assets aren't loading:
 
 ### Registration
 
-FlatPack's Stimulus controllers are auto-registered via importmap:
+FlatPack's Stimulus controllers are typically registered via importmap lazy loading:
 
 ```javascript
 // app/javascript/controllers/index.js
 import { lazyLoadControllersFrom } from "@hotwired/stimulus-loading"
 lazyLoadControllersFrom("controllers", application)
 ```
+
+If the host app also calls `eagerLoadControllersFrom("controllers", application)`, that eager pass can import FlatPack controllers at boot even though the FlatPack importmap pins use `preload: false`.
 
 ### Usage
 
@@ -244,25 +256,17 @@ Controllers are namespaced:
 
 ## Performance
 
-### Asset Size
-
-FlatPack's assets are minimal:
-- `variables.css`: ~3KB
-- `table_controller.js`: ~1.5KB
-
-Total: ~4.5KB (uncompressed)
-
 ### Loading Strategy
 
 - **CSS**: Loaded in `<head>`, blocking (intentional for FOUC prevention)
-- **JS**: Loaded via importmap, non-blocking
-- **Stimulus controllers**: Lazy-loaded on demand
+- **JS modules**: Exposed through importmap and fetched when imported
+- **Stimulus controllers**: Lazy-load well when the host app avoids eager-loading the full `controllers` namespace
 
 ## Best Practices
 
 1. **Keep assets in engine** - Don't copy to host app
 2. **Use CSS variables** - Don't override classes
-3. **Import only what you need** - Selective imports reduce size
+3. **Keep eager-loading narrow** - Avoid eager-loading the full `controllers` namespace if you want FlatPack controllers to stay lazy
 4. **Leverage HTTP/2** - Multiple small files are efficient
 5. **Trust Propshaft** - Let it handle fingerprinting
 

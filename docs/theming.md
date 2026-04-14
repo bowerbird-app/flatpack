@@ -8,7 +8,7 @@ FlatPack's theming system is built on:
 - Tailwind CSS 4's `@theme` directive
 - CSS custom properties (variables)
 - OKLCH color space for perceptual uniformity
-- System preference detection for dark mode
+- Default `:root` variables plus optional `data-theme` variant overrides
 
 ## Basic Customization
 
@@ -169,19 +169,19 @@ Use stack gap tokens on parent layout containers (for example, form stacks) to c
 }
 ```
 
-## Dark Mode Theme
+## Theme Variants
 
-Dark mode variables are defined within a `@media (prefers-color-scheme: dark)` query:
+FlatPack ships a default light palette and can be customized per variant by overriding variables under `data-theme` selectors:
 
 ```css
-@media (prefers-color-scheme: dark) {
-  @theme {
-    --color-primary: oklch(0.65 0.25 270);
-    --color-primary-hover: oklch(0.75 0.22 270);
-    /* Adjust other colors for dark mode */
-  }
+[data-theme="dark"] {
+  --color-primary: oklch(0.65 0.25 270);
+  --color-primary-hover: oklch(0.75 0.22 270);
+  /* Adjust other colors for the dark variant */
 }
 ```
+
+If you use the optional theme controller, `system` mode maps the current OS preference to either the default light palette or `data-theme="dark"`.
 
 See [Dark Mode Guide](dark_mode.md) for details.
 
@@ -281,7 +281,8 @@ The `!` prefix ensures your classes override component defaults (via TailwindMer
 - Clear your browser cache
 
 ### Dark mode not working
-- Check system preference is set to dark mode
+- Check whether `<html>` has the expected `data-theme` value
+- If you use the theme controller, inspect `localStorage.getItem("flatpack-theme")`
 - See [Dark Mode Guide](dark_mode.md)
 
 ## Next Steps

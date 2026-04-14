@@ -263,37 +263,29 @@ Fallbacks not needed as these are modern browsers.
 
 ## Dark Mode Implementation
 
-### System Preference Only
+### Default Light Palette + Theme Variants
 
-FlatPack uses `prefers-color-scheme` media query:
+FlatPack defines the default light palette in `:root` and layers additional variants on top with selectors such as `[data-theme="dark"]`.
 
 ```css
-@theme {
-  --color-background: oklch(1.0 0 0); /* White */
+:root {
+  --surface-background-color: oklch(1 0 0);
 }
 
-@media (prefers-color-scheme: dark) {
-  @theme {
-    --color-background: oklch(0.15 0.01 250); /* Dark */
-  }
+[data-theme="dark"] {
+  --surface-background-color: oklch(0.15 0.01 250);
 }
 ```
 
-No JavaScript, no toggle, just CSS.
+This keeps Tailwind token generation CSS-first while allowing the host app to choose themes declaratively.
 
-### Why Not `dark:` Class?
+### Optional System Mode
 
-Tailwind v4 still supports `dark:` prefix, but FlatPack doesn't use it:
+When the host app uses FlatPack's optional `flat-pack--theme` controller, `system` mode evaluates `prefers-color-scheme` and then switches between the default light palette and `data-theme="dark"`.
 
-**Advantages of System Preference:**
-- No JavaScript required
-- Instant switching
-- Respects OS settings
-- No state management
-- No flash of wrong theme
+### Why Not Depend on `dark:` Utilities?
 
-**When to Use `dark:` Class:**
-If your app needs manual toggle, implement it in your application (not the component library).
+Tailwind v4 still supports `dark:` prefixes, but FlatPack primarily relies on CSS variables so the same component classes can adapt across multiple variants, not just a binary light/dark toggle.
 
 ## Customization
 

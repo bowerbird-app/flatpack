@@ -8,6 +8,13 @@ FlatPack is a production-grade Rails Engine that provides a comprehensive set of
 
 For automated setup and external AI retrieval, start with [ai/README.md](ai/README.md) and [ai/install_contract.json](ai/install_contract.json), then fall back to [installation.md](installation.md) and the component docs for examples.
 
+For the installed-gem contract in a host app, use:
+
+```bash
+bin/rake flat_pack:contract
+bin/rake flat_pack:verify_install
+```
+
 ## Table of Contents
 
 ### Getting Started
@@ -97,7 +104,7 @@ end
 ## Design Principles
 
 1. **Variables over configuration** - Customize via CSS variables, not Ruby config
-2. **System-driven dark mode** - Uses `prefers-color-scheme` only
+2. **Theme variants over one-off overrides** - Light is the default palette, with `data-theme` variants and optional system-mode JS
 3. **Composition over inheritance** - Build complex UIs from simple components
 4. **Zero-config installation** - Works out of the box
 5. **UI-only responsibility** - No business logic, no ActiveRecord assumptions
@@ -125,7 +132,7 @@ All FlatPack components:
 - Use TailwindMerge for class composition
 - Accept system arguments (class, data, aria)
 - Render correctly without JavaScript
-- Support dark mode via system preference
+- Support light, dark, and custom theme variants via CSS variables
 - Follow accessibility best practices
 
 ## Browser Support
