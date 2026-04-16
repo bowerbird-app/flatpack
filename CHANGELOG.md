@@ -7,11 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.27] - 2026-04-16
+
 ### Fixed
 - Removed circular Tailwind CSS variable mappings from the Rails 8 dummy app stylesheet so shared radius, transition, and focus-ring tokens resolve to concrete values again, restoring rounded buttons and form controls in the demo app.
+- Restored shared `.text-warning` and `.border-warning` utility classes in the engine stylesheet, mapped `.text-warning` to the visible warning accent token, preserved server-rendered validation error styling when the shared JS validator clears client-side errors, added explicit fallback copy for required-field blur validation when browsers do not surface a native message, aligned the text input demo error example with real `minlength` validation plus a matching too-short message override, and restored the baseline themed border class when JS clears warning state so fields do not fall back to a black browser-default border.
+- Updated the dummy full-page cache key to include the current layout stylesheet digests and importmap digest so cached demo HTML no longer points at stale missing asset URLs after CSS or lazy-loaded controller JS changes.
 
 ### Tests
 - Added regression coverage to prevent self-referential CSS variable assignments from reappearing in the dummy Tailwind source.
+- Added regression coverage to keep the warning utility helpers present in the shared theme stylesheet.
+- Added dummy controller regression coverage to ensure full-page cache keys roll when the layout stylesheet asset digests change.
 
 ### Docs
 - Synchronized the root README, docs index, project structure guide, and theming/dark-mode architecture notes with the current AI install-contract workflow, Propshaft/importmap asset wiring, and theme-variant behavior.
