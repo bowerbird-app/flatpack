@@ -23,7 +23,7 @@ Common props used across most input components:
 | `error` | String | `nil` | no | Error message; enables invalid styling and `aria-describedby`. |
 | `disabled` | Boolean | `false` | no | Disables interaction and submission for the control. |
 | `required` | Boolean | `false` | no | Marks the control as required. |
-| `**system_arguments` | Hash | `{}` | no | Standard HTML attributes (`id`, `class`, `data`, `aria`, etc.). |
+| `**system_arguments` | Hash | `{}` | no | Standard HTML attributes (`id`, `class`, `data`, `aria`, native validation attrs like `minlength`, etc.). Use `data: { flat_pack_message_too_short: "..." }` and related `flat_pack_message_*` keys to override shared client-side validation copy. |
 
 Component-specific props:
 
@@ -62,6 +62,20 @@ None.
   label: "Email",
   placeholder: "you@example.com",
   required: true
+) %>
+```
+
+```erb
+<%= render FlatPack::TextInput::Component.new(
+  name: "username",
+  label: "Username",
+  value: "john",
+  required: true,
+  minlength: 5,
+  error: "Username must be at least 5 characters",
+  data: {
+    flat_pack_message_too_short: "Username must be at least 5 characters"
+  }
 ) %>
 ```
 
@@ -329,6 +343,7 @@ Always sanitize HTML output before rendering it back to users:
 ## Accessibility
 - Label-to-control association is provided when `label` is passed (`for`/`id` linkage).
 - Error state adds `aria-invalid` and `aria-describedby` for controls that receive `error`.
+- Shared client-side validation uses the same error node and warning styling. For text-like inputs, pair native HTML validation attrs such as `required`, `minlength`, `maxlength`, `pattern`, `min`, `max`, and `step` with matching `flat_pack_message_*` overrides when you need custom copy.
 - Native controls are used for checkbox/radio/select/input/textarea semantics.
 - `SearchInput` keeps a single clear control by using the component clear button and suppressing browser-native search clear icons.
 - Searchable select trigger exposes `aria-haspopup` and toggles `aria-expanded`.

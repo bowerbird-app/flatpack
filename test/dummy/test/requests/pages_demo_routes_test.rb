@@ -308,6 +308,28 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "value: &quot;john.doe&quot;"
   end
 
+  test "text input demo renders server error styling hooks" do
+    get "/demo/forms/text_input"
+
+    assert_response :success
+    assert_includes response.body, "Username must be at least 5 characters"
+    assert_includes response.body, "mt-1 text-sm text-warning"
+    assert_includes response.body, "border-warning"
+    assert_includes response.body, 'name="username_error"'
+    assert_includes response.body, 'minlength="5"'
+    assert_includes response.body, 'data-flat-pack-message-too-short="Username must be at least 5 characters"'
+  end
+
+  test "text input demo renders required field validation hooks" do
+    get "/demo/forms/text_input"
+
+    assert_response :success
+    assert_includes response.body, 'name="username"'
+    assert_includes response.body, 'required="required"'
+    assert_includes response.body, 'data-controller="flat-pack--form-validation"'
+    assert_includes response.body, "data-flat-pack--form-validation-error-id-value="
+  end
+
   test "page header demo includes all page title heading variants" do
     get "/demo/page_header"
 

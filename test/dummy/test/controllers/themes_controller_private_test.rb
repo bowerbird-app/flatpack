@@ -40,6 +40,17 @@ class ThemesControllerPrivateTest < ActiveSupport::TestCase
     assert_includes code, "--color-primary"
   end
 
+  test "cached theme variables css exposes warning utility helpers" do
+    controller = ThemesController.new
+
+    css = controller.send(:cached_theme_variables_css)
+
+    assert_includes css, ".text-warning"
+    assert_includes css, "color: var(--color-warning-border);"
+    assert_includes css, ".border-warning"
+    assert_includes css, "border-color: var(--color-warning-border);"
+  end
+
   test "variable_section_label classifies blur and unknown variables" do
     controller = ThemesController.new
 
