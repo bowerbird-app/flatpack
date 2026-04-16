@@ -85,6 +85,27 @@
     --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     --default-font-family: var(--font-sans);
     --default-mono-font-family: var(--font-mono);
+    --color-fp-primary: oklch(0.52 0.26 250);
+    --color-fp-primary-hover: oklch(0.42 0.24 250);
+    --color-fp-primary-text: oklch(1 0 0);
+    --color-fp-secondary: oklch(0.95 0.01 250);
+    --color-fp-secondary-hover: oklch(0.9 0.02 250);
+    --color-fp-secondary-text: oklch(0.25 0.02 250);
+    --color-fp-ghost: transparent;
+    --color-fp-ghost-hover: oklch(0.96 0.01 250);
+    --color-fp-ghost-text: oklch(0.35 0.02 250);
+    --color-fp-border: oklch(0.89 0.01 250);
+    --color-ring: oklch(0.52 0.26 250);
+    --shadow-fp-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --color-primary: var(--color-fp-primary);
+    --color-primary-hover: var(--color-fp-primary-hover);
+    --color-primary-text: var(--color-fp-primary-text);
+    --color-secondary: var(--color-fp-secondary);
+    --color-secondary-hover: var(--color-fp-secondary-hover);
+    --color-secondary-text: var(--color-fp-secondary-text);
+    --color-ghost: var(--color-fp-ghost);
+    --color-ghost-hover: var(--color-fp-ghost-hover);
+    --color-ghost-text: var(--color-fp-ghost-text);
   }
 }
 @layer base {
@@ -1571,6 +1592,9 @@
   .border-blue-200 {
     border-color: var(--color-blue-200);
   }
+  .border-primary {
+    border-color: var(--color-primary);
+  }
   .border-transparent {
     border-color: transparent;
   }
@@ -1761,7 +1785,7 @@
     background-color: var(--color-primary);
   }
   .bg-\[var\(--color-primary\)\]\/5 {
-    background-color: var(--color-primary);
+    background-color: color-mix(in srgb, oklch(0.52 0.26 250) 5%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       background-color: color-mix(in oklab, var(--color-primary) 5%, transparent);
     }
@@ -1942,6 +1966,12 @@
   }
   .bg-gray-100 {
     background-color: var(--color-gray-100);
+  }
+  .bg-primary {
+    background-color: var(--color-primary);
+  }
+  .bg-secondary {
+    background-color: var(--color-secondary);
   }
   .bg-transparent {
     background-color: transparent;
@@ -2827,8 +2857,17 @@
   .text-green-600 {
     color: var(--color-green-600);
   }
+  .text-primary {
+    color: var(--color-primary);
+  }
+  .text-primary-text {
+    color: var(--color-primary-text);
+  }
   .text-red-600 {
     color: var(--color-red-600);
+  }
+  .text-secondary-text {
+    color: var(--color-secondary-text);
   }
   .text-white {
     color: var(--color-white);
@@ -2865,6 +2904,9 @@
   }
   .decoration-dotted {
     text-decoration-style: dotted;
+  }
+  .accent-primary {
+    accent-color: var(--color-primary);
   }
   .opacity-0 {
     opacity: 0%;
@@ -2967,6 +3009,9 @@
     @supports (color: color-mix(in lab, red, red)) {
       --tw-ring-color: color-mix(in oklab, var(--color-black) 20%, transparent);
     }
+  }
+  .ring-primary {
+    --tw-ring-color: var(--color-primary);
   }
   .outline {
     outline-style: var(--tw-outline-style);
@@ -3195,6 +3240,16 @@
       border-bottom-width: 0px;
     }
   }
+  .checked\:border-primary {
+    &:checked {
+      border-color: var(--color-primary);
+    }
+  }
+  .checked\:bg-primary {
+    &:checked {
+      background-color: var(--color-primary);
+    }
+  }
   .focus-within\:\!z-\[999\] {
     &:focus-within {
       z-index: 999 !important;
@@ -3230,6 +3285,13 @@
         --tw-scale-y: 110%;
         --tw-scale-z: 110%;
         scale: var(--tw-scale-x) var(--tw-scale-y);
+      }
+    }
+  }
+  .hover\:border-primary {
+    &:hover {
+      @media (hover: hover) {
+        border-color: var(--color-primary);
       }
     }
   }
@@ -3418,6 +3480,13 @@
       }
     }
   }
+  .hover\:bg-primary {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-primary);
+      }
+    }
+  }
   .hover\:text-\(--top-nav-item-hover-text-color\) {
     &:hover {
       @media (hover: hover) {
@@ -3523,6 +3592,16 @@
       }
     }
   }
+  .hover\:text-primary\/80 {
+    &:hover {
+      @media (hover: hover) {
+        color: color-mix(in srgb, oklch(0.52 0.26 250) 80%, transparent);
+        @supports (color: color-mix(in lab, red, red)) {
+          color: color-mix(in oklab, var(--color-primary) 80%, transparent);
+        }
+      }
+    }
+  }
   .hover\:underline {
     &:hover {
       @media (hover: hover) {
@@ -3599,6 +3678,11 @@
       --tw-ring-color: var(--search-input-focus-ring-color);
     }
   }
+  .focus\:ring-ring {
+    &:focus {
+      --tw-ring-color: var(--color-ring);
+    }
+  }
   .focus\:ring-offset-2 {
     &:focus {
       --tw-ring-offset-width: 2px;
@@ -3647,6 +3731,11 @@
       --tw-ring-color: var(--collapse-focus-ring-color);
     }
   }
+  .focus-visible\:ring-ring {
+    &:focus-visible {
+      --tw-ring-color: var(--color-ring);
+    }
+  }
   .focus-visible\:ring-offset-2 {
     &:focus-visible {
       --tw-ring-offset-width: 2px;
@@ -3667,6 +3756,11 @@
   .focus-visible\:outline-offset-2 {
     &:focus-visible {
       outline-offset: 2px;
+    }
+  }
+  .focus-visible\:outline-primary {
+    &:focus-visible {
+      outline-color: var(--color-primary);
     }
   }
   .focus-visible\:outline-none {
@@ -4011,6 +4105,19 @@
       border-right-width: 1px;
     }
   }
+}
+:root {
+  --color-primary: var(--color-fp-primary);
+  --color-primary-hover: var(--color-fp-primary-hover);
+  --color-primary-text: var(--color-fp-primary-text);
+  --color-secondary: var(--color-fp-secondary);
+  --color-secondary-hover: var(--color-fp-secondary-hover);
+  --color-secondary-text: var(--color-fp-secondary-text);
+  --color-ghost: var(--color-fp-ghost);
+  --color-ghost-hover: var(--color-fp-ghost-hover);
+  --color-ghost-text: var(--color-fp-ghost-text);
+  --color-border: var(--color-fp-border);
+  --shadow-sm: var(--shadow-fp-sm);
 }
 @layer components {
   @media (min-width: 768px) {

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Removed circular Tailwind CSS variable mappings from the Rails 8 dummy app stylesheet so shared radius, transition, and focus-ring tokens resolve to concrete values again, restoring rounded buttons and form controls in the demo app.
+
+### Tests
+- Added regression coverage to prevent self-referential CSS variable assignments from reappearing in the dummy Tailwind source.
+
 ### Docs
 - Synchronized the root README, docs index, project structure guide, and theming/dark-mode architecture notes with the current AI install-contract workflow, Propshaft/importmap asset wiring, and theme-variant behavior.
 
