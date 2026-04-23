@@ -1711,7 +1711,19 @@ class PagesController < ApplicationController
   def page_cache_asset_version
     asset_paths = CACHED_LAYOUT_STYLESHEETS.map { |logical_path| helpers.asset_path(logical_path) }
     asset_paths << current_importmap_digest
+    asset_paths << page_template_cache_version
     Digest::SHA256.hexdigest(asset_paths.join("|"))[0, 12]
+  end
+
+  def page_template_cache_version
+    template_files = Dir[Rails.root.join("app/views/layouts/**/*")].concat(Dir[Rails.root.join("app/views/pages/**/*")]).sort
+    template_versions = template_files.filter_map do |path|
+      next unless File.file?(path)
+
+      "#{path}:#{File.mtime(path).to_f}"
+    end
+
+    Digest::SHA256.hexdigest(template_versions.join("|"))[0, 12]
   end
 
   def current_importmap_digest

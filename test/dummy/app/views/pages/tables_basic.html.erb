@@ -12,6 +12,14 @@
     <% table.column(title: "Name", html: ->(user) { user.name }) %>
     <% table.column(title: "Email", html: ->(user) { user.email }) %>
     <% table.column(title: "Category", html: ->(user) { user.category.to_s.titleize }) %>
+    <% table.column(title: "Actions", html: ->(user) {
+      dropdown = FlatPack::Button::Dropdown::Component.new(text: "Actions", style: :ghost)
+      dropdown.menu_item(text: "View #{user.name}", icon: "eye", href: "#")
+      dropdown.menu_item(text: "Edit #{user.name}", icon: "pencil", href: "#")
+      dropdown.menu_divider
+      dropdown.menu_item(text: "Delete", icon: "trash", destructive: true, href: "#")
+      render dropdown
+    }) %>
   <% end %>
 
   <%= render FlatPack::CodeBlock::Component.new(
@@ -21,6 +29,14 @@
         &lt;% table.column(title: &quot;Name&quot;, html: -&gt;(user) { user.name }) %&gt;
         &lt;% table.column(title: &quot;Email&quot;, html: -&gt;(user) { user.email }) %&gt;
         &lt;% table.column(title: &quot;Category&quot;, html: -&gt;(user) { user.category.to_s.titleize }) %&gt;
+        &lt;% table.column(title: &quot;Actions&quot;, html: -&gt;(user) {
+          dropdown = FlatPack::Button::Dropdown::Component.new(text: &quot;Actions&quot;, style: :ghost)
+          dropdown.menu_item(text: &quot;View #{user.name}&quot;, icon: &quot;eye&quot;, href: &quot;#&quot;)
+          dropdown.menu_item(text: &quot;Edit #{user.name}&quot;, icon: &quot;pencil&quot;, href: &quot;#&quot;)
+          dropdown.menu_divider
+          dropdown.menu_item(text: &quot;Delete&quot;, icon: &quot;trash&quot;, destructive: true, href: &quot;#&quot;)
+          render dropdown
+        }) %&gt;
       &lt;% end %&gt;
     CODE
     language: "erb",
