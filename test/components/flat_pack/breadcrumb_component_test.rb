@@ -176,7 +176,7 @@ module FlatPack
         assert_text "Home"
       end
 
-      def test_renders_back_item_when_enabled
+      def test_renders_back_item_when_enabled_with_fallback
         render_inline(Component.new(show_back: true, back_fallback_url: "/previous")) do |breadcrumb|
           breadcrumb.item(text: "Current")
         end
@@ -184,6 +184,43 @@ module FlatPack
         assert_selector "a[href='/previous']", text: "Back"
         assert_selector "nav ol li:first-child a[href='/previous']", text: "Back"
         assert_selector "svg[data-flat-pack--icon-name-value='chevron-left']"
+      end
+
+      def test_renders_back_item_from_previous_breadcrumb_link
+        render_inline(Component.new(show_back: true, back_fallback_url: "/previous")) do |breadcrumb|
+          breadcrumb.item(text: "Home", href: "/")
+          breadcrumb.item(text: "Dashboard", href: "/dashboard")
+          breadcrumb.item(text: "Post", href: "/posts/1")
+          breadcrumb.item(text: "Edit")
+        end
+
+        assert_selector "nav ol li:first-child a[href='/posts/1']", text: "Back"
+        refute_selector "a[href='/previous']", text: "Back"
+      end
+
+      def test_ignores_referer_to_avoid_back_link_loop
+        component = Component.new(show_back: true, back_fallback_url: "/previous")
+        component.define_singleton_method(:request) do
+          Struct.new(:referer).new("/posts/1/edit")
+        end
+
+        render_inline(component) do |breadcrumb|
+          breadcrumb.item(text: "Home", href: "/")
+          breadcrumb.item(text: "Dashboard", href: "/dashboard")
+          breadcrumb.item(text: "Post")
+        end
+
+        assert_selector "nav ol li:first-child a[href='/dashboard']", text: "Back"
+        refute_selector "a[href='/posts/1/edit']", text: "Back"
+      end
+
+      def test_back_href_override_takes_precedence
+        render_inline(Component.new(show_back: true, back_href: "/custom-back", back_fallback_url: "/previous")) do |breadcrumb|
+          breadcrumb.item(text: "Home", href: "/")
+          breadcrumb.item(text: "Current")
+        end
+
+        assert_selector "nav ol li:first-child a[href='/custom-back']", text: "Back"
       end
 
       def test_renders_back_before_home_when_both_enabled
@@ -200,7 +237,7 @@ module FlatPack
           breadcrumb.item(text: "Current")
         end
 
-        assert_selector "a[href='/previous']", text: "Back"
+        assert_selector "a[href='/']", text: "Back"
         assert_selector "a[href='/']", text: "Home"
         assert_no_selector "nav[aria-label='Breadcrumb'] li:first-child + li[aria-hidden='true']"
         assert_selector "nav[aria-label='Breadcrumb'] li[aria-hidden='true']"
@@ -212,6 +249,14 @@ module FlatPack
         end
 
         assert_selector "a[href='/prev']", text: "Go Back"
+      end
+
+      def test_falls_back_when_no_previous_breadcrumb_link_exists
+        render_inline(Component.new(show_back: true, back_fallback_url: "/prev")) do |breadcrumb|
+          breadcrumb.item(text: "Current")
+        end
+
+        assert_selector "a[href='/prev']", text: "Back"
       end
 
       # Collapsed Items Tests

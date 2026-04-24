@@ -126,7 +126,7 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "With Back Item", anchor_link: true, subtitle: "Examples for With Back Item.") %>
     <p class="text-sm text-[var(--surface-muted-content-color)] mb-3">
-      The back link is prepended as the first breadcrumb item and resolves to the previous page when available.
+      The back link is prepended as the first breadcrumb item and resolves to the previous linked breadcrumb level by default.
     </p>
     <div class="mb-4">
       <%= render FlatPack::Breadcrumb::Component.new(
@@ -146,6 +146,7 @@
           &lt;% breadcrumb.item(text: "Settings", href: "/settings") %&gt;
           &lt;% breadcrumb.item(text: "Profile") %&gt;
         &lt;% end %&gt;
+        &lt;!-- Back resolves to /settings here, and falls back to /demo only when no earlier linked item exists. --&gt;
       CODE
     ) %>
   </section>

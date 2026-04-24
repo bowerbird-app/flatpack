@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.28] - 2026-04-24
+
+### Fixed
+- Changed breadcrumb back-link resolution to derive from the previous linked breadcrumb level instead of the HTTP referer, preventing breadcrumb back buttons from looping between sibling pages, while preserving explicit override and fallback behavior.
+
+### Tests
+- Added breadcrumb regression coverage for derived back-link targets, explicit `back_href` overrides, and fallback behavior when no earlier linked breadcrumb item exists.
+
+### Docs
+- Updated breadcrumb component documentation and dummy demo copy to describe hierarchy-based back-link behavior and the new `back_href` option.
+
 ## [0.1.27] - 2026-04-16
 
 ### Fixed

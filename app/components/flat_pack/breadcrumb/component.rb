@@ -25,6 +25,7 @@ module FlatPack
         show_back: false,
         back_text: "Back",
         back_icon: "chevron-left",
+        back_href: nil,
         back_fallback_url: "/",
         show_home: false,
         home_url: "/",
@@ -41,6 +42,7 @@ module FlatPack
         @show_back = show_back
         @back_text = back_text
         @back_icon = back_icon
+        @back_href_override = back_href
         @back_fallback_url = back_fallback_url
         @show_home = show_home
         @home_url = home_url
@@ -87,16 +89,23 @@ module FlatPack
       end
 
       def build_items_list
+        breadcrumb_items = build_breadcrumb_items
         items_list = []
 
         # Add back item if requested
         if @show_back
           items_list << item(
             text: @back_text,
-            href: back_href,
+            href: resolved_back_href(breadcrumb_items),
             icon: @back_icon
           )
         end
+
+        items_list + breadcrumb_items
+      end
+
+      def build_breadcrumb_items
+        items_list = []
 
         # Add home item if requested
         if @show_home
@@ -110,8 +119,12 @@ module FlatPack
         items_list + items
       end
 
-      def back_href
-        request&.referer || @back_fallback_url
+      def resolved_back_href(breadcrumb_items)
+        @back_href_override || previous_breadcrumb_href(breadcrumb_items) || @back_fallback_url
+      end
+
+      def previous_breadcrumb_href(breadcrumb_items)
+        breadcrumb_items[0...-1].reverse_each.find(&:href)&.href
       end
 
       def maybe_collapse_items(items_list)
