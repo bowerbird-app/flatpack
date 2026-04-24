@@ -83,5 +83,7 @@
       }) %>
       <% table.column(title: "Joined", html: ->(u) { "<span class=\"text-sm text-[var(--surface-muted-content-color)]\">#{u.joined_at}</span>".html_safe }) %>
     <% end %>
+
+    <%= render FlatPack::Pagination::Component.new(pagy: @admin_pagy, class: "mt-4") %>
   </div>
 </section>

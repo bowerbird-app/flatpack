@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.29] - 2026-04-24
+
+### Changed
+- Added the standard FlatPack pagination component to the dummy admin dashboard user-management table and expanded the demo dataset so the page consistently shows a multi-page admin listing.
+
+### Tests
+- Added dummy request coverage to ensure the admin demo responds successfully and continues rendering pagination controls.
+
 ## [0.1.28] - 2026-04-24
 
 ### Fixed

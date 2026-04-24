@@ -53,6 +53,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/grid
     /demo/grid/movable_cards
     /demo/pagination
+    /demo/admin
     /demo/charts
     /demo/code_blocks
     /demo/avatars
@@ -88,6 +89,14 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
       get path
       assert_response :success, "Expected #{path} to return success"
     end
+  end
+
+  test "admin demo renders pagination" do
+    get "/demo/admin"
+
+    assert_response :success
+    assert_includes response.body, 'aria-label="Pagination"'
+    assert_includes response.body, "?page=2"
   end
 
   test "chat demo keeps composer visible in full-height panel" do
