@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.32] - 2026-04-27
+
+### Added
+- Added DigitalOcean App Platform deployment support for the Rails dummy app, including a checked-in app spec with separate web and Sidekiq worker services.
+
+### Changed
+- Switched the Rails 8 dummy app to PostgreSQL in production, added a production Puma config, and enabled production defaults for static assets, SSL, and Sidekiq-backed Active Job.
+
+### Docs
+- Added a dedicated DigitalOcean deployment guide for the dummy app and linked it from the main documentation surfaces.
+
 ## [0.1.30] - 2026-04-24
 
 ### Changed

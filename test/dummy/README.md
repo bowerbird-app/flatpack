@@ -157,6 +157,17 @@ cd ../..
 bundle exec rake test
 ```
 
+## Deployment
+
+The dummy app can be deployed to DigitalOcean App Platform with the checked-in example spec at `test/dummy/.do/app.yaml`.
+
+- Use managed PostgreSQL for `DATABASE_URL`
+- Use managed Redis for `REDIS_URL`
+- Set `SECRET_KEY_BASE` in App Platform secrets
+- Run `bundle exec rails db:prepare` after the first deploy
+
+See [../../docs/deployment_digitalocean.md](../../docs/deployment_digitalocean.md) for the full setup flow.
+
 ## Directory Structure
 
 ```

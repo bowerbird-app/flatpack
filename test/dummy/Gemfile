@@ -9,7 +9,6 @@ gem "flat_pack", path: "../.."
 gem "rails", ">= 8.1.2.1", "< 8.2"
 gem "puma", ">= 5.0"
 gem "propshaft", "~> 1.0"
-gem "sqlite3", ">= 2.1"
 gem "sidekiq"
 gem "redis"
 
@@ -24,7 +23,12 @@ gem "view_component"
 gem "devise"
 
 group :development, :test do
+  gem "sqlite3", ">= 2.1"
   gem "debug", platforms: %i[mri mingw x64_mingw]
+end
+
+group :production do
+  gem "pg", "~> 1.5"
 end
 
 group :development do

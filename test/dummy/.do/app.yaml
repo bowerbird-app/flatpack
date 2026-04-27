@@ -1,0 +1,86 @@
+name: flatpack-dummy
+region: nyc
+
+services:
+  - name: dummy-web
+    github:
+      repo: bowerbird-app/flatpack
+      branch: main
+      deploy_on_push: false
+    source_dir: test/dummy
+    environment_slug: ruby
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    http_port: 8080
+    build_command: bundle install && bundle exec rails assets:precompile
+    run_command: bundle exec puma -C config/puma.rb
+    health_check:
+      http_path: /up
+    envs:
+      - key: RAILS_ENV
+        scope: RUN_AND_BUILD_TIME
+        value: production
+      - key: RAILS_SERVE_STATIC_FILES
+        scope: RUN_AND_BUILD_TIME
+        value: "1"
+      - key: RAILS_FORCE_SSL
+        scope: RUN_TIME
+        value: "true"
+      - key: ACTIVE_STORAGE_SERVICE
+        scope: RUN_TIME
+        value: local
+      - key: SECRET_KEY_BASE
+        scope: RUN_TIME
+        type: SECRET
+        value: REPLACE_ME
+      - key: DATABASE_URL
+        scope: RUN_TIME
+        type: SECRET
+        value: REPLACE_ME
+      - key: REDIS_URL
+        scope: RUN_TIME
+        type: SECRET
+        value: REPLACE_ME
+      - key: RAILS_MASTER_KEY
+        scope: RUN_TIME
+        type: SECRET
+        value: OPTIONAL_IF_USING_ENCRYPTED_CREDENTIALS
+
+workers:
+  - name: dummy-worker
+    github:
+      repo: bowerbird-app/flatpack
+      branch: main
+      deploy_on_push: false
+    source_dir: test/dummy
+    environment_slug: ruby
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    build_command: bundle install
+    run_command: bundle exec sidekiq -e production -C config/sidekiq.yml
+    envs:
+      - key: RAILS_ENV
+        scope: RUN_AND_BUILD_TIME
+        value: production
+      - key: RAILS_FORCE_SSL
+        scope: RUN_TIME
+        value: "true"
+      - key: ACTIVE_STORAGE_SERVICE
+        scope: RUN_TIME
+        value: local
+      - key: SECRET_KEY_BASE
+        scope: RUN_TIME
+        type: SECRET
+        value: REPLACE_ME
+      - key: DATABASE_URL
+        scope: RUN_TIME
+        type: SECRET
+        value: REPLACE_ME
+      - key: REDIS_URL
+        scope: RUN_TIME
+        type: SECRET
+        value: REPLACE_ME
+      - key: RAILS_MASTER_KEY
+        scope: RUN_TIME
+        type: SECRET
+        value: OPTIONAL_IF_USING_ENCRYPTED_CREDENTIALS
