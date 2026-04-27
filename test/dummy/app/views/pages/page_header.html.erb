@@ -103,6 +103,36 @@
   ) %>
 </section>
 
+<!-- Page Title with Actions -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Page Title with Actions", anchor_link: true, subtitle: "Examples for Page Title with Actions.") %>
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Admin Dashboard",
+    subtitle: "Monitor key metrics, track user activity, and manage your workspace from one place."
+  ) do |page_title| %>
+    <% page_title.actions do %>
+      <%= render FlatPack::Button::Component.new(text: "Filter", style: :secondary, size: :sm) %>
+      <%= render FlatPack::Button::Component.new(text: "Export", style: :ghost, size: :sm) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::PageTitle::Component.new(
+        title: "Admin Dashboard",
+        subtitle: "Monitor key metrics, track user activity, and manage your workspace from one place."
+      ) do |page_title| #{erb_tag_close}
+        #{erb_output_open} page_title.actions do #{erb_tag_close}
+          #{erb_output_open} render FlatPack::Button::Component.new(text: "Filter", style: :secondary, size: :sm) #{erb_tag_close}
+          #{erb_output_open} render FlatPack::Button::Component.new(text: "Export", style: :ghost, size: :sm) #{erb_tag_close}
+        #{erb_output_open} end #{erb_tag_close}
+      #{erb_output_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
 <!-- Page Header with Longer Subtitle -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Page Header with Longer Subtitle", anchor_link: true, subtitle: "Examples for Page Header with Longer Subtitle.") %>

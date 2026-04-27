@@ -10,7 +10,11 @@
 <%= render FlatPack::PageTitle::Component.new(
   title: "Admin Dashboard",
   subtitle: "Monitor key metrics, track user activity, and manage your workspace from one place."
-) %>
+) do |page_title| %>
+  <% page_title.actions do %>
+    <%= render FlatPack::Button::Component.new(text: "Filter", style: :secondary, size: :sm) %>
+  <% end %>
+<% end %>
 
 <%# Stats and chart cards — 3 columns, horizontally scrollable on mobile %>
 <div class="mt-6 mb-8">

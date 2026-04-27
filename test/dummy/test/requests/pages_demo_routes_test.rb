@@ -95,6 +95,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     get "/demo/admin"
 
     assert_response :success
+    assert_includes response.body, "Filter"
     assert_includes response.body, 'aria-label="Pagination"'
     assert_includes response.body, "?page=2"
   end

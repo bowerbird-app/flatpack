@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.30] - 2026-04-24
+
+### Changed
+- Added an `actions` slot to `FlatPack::PageTitle::Component`, rendering action content directly below the subtitle when present and directly below the title when no subtitle is provided.
+- Updated the admin dashboard and page-title demo pages to use the new `PageTitle` actions slot for inline page-level controls.
+
+### Tests
+- Added focused component coverage for `PageTitle` actions placement with and without a subtitle, and kept the admin demo request coverage asserting the rendered action button.
+
+### Docs
+- Updated the Page Title component documentation to describe the new `actions` slot, its placement behavior, and block-based usage examples.
+
 ## [0.1.29] - 2026-04-24
 
 ### Changed

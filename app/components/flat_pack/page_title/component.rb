@@ -5,6 +5,12 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       VARIANTS = %i[h1 h2 h3 h4 h5 h6].freeze
 
+      renders_one :actions
+
+      alias_method :actions_slot, :actions
+
+      undef_method :with_actions, :with_actions_content
+
       def initialize(
         title:,
         subtitle: nil,
@@ -22,6 +28,12 @@ module FlatPack
 
       def call
         content_tag(:div, **container_attributes) { render_header_content }
+      end
+
+      def actions(*args, **kwargs, &block)
+        return actions_slot if args.empty? && kwargs.empty? && !block_given?
+
+        set_slot(:actions, nil, *args, **kwargs, &block)
       end
 
       private
@@ -46,7 +58,8 @@ module FlatPack
         content_tag(:div, class: "flex-1 min-w-0") do
           safe_join([
             render_title,
-            render_subtitle
+            render_subtitle,
+            render_actions
           ].compact)
         end
       end
@@ -68,6 +81,12 @@ module FlatPack
         return nil unless @subtitle
 
         content_tag(:p, @subtitle, class: "mt-2 text-lg text-[var(--surface-muted-content-color)]")
+      end
+
+      def render_actions
+        return nil unless actions?
+
+        content_tag(:div, actions, class: "page-title-actions mt-4 flex flex-wrap items-center gap-3")
       end
 
       def validate_title!
