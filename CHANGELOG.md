@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.30] - 2026-04-24
+
+### Changed
+- Added an `actions` slot to `FlatPack::PageTitle::Component`, rendering action content directly below the subtitle when present and directly below the title when no subtitle is provided.
+- Updated the admin dashboard and page-title demo pages to use the new `PageTitle` actions slot for inline page-level controls.
+
+### Tests
+- Added focused component coverage for `PageTitle` actions placement with and without a subtitle, and kept the admin demo request coverage asserting the rendered action button.
+
+### Docs
+- Updated the Page Title component documentation to describe the new `actions` slot, its placement behavior, and block-based usage examples.
+
+## [0.1.29] - 2026-04-24
+
+### Changed
+- Added the standard FlatPack pagination component to the dummy admin dashboard user-management table and expanded the demo dataset so the page consistently shows a multi-page admin listing.
+
+### Tests
+- Added dummy request coverage to ensure the admin demo responds successfully and continues rendering pagination controls.
+
+## [0.1.28] - 2026-04-24
+
+### Fixed
+- Changed breadcrumb back-link resolution to derive from the previous linked breadcrumb level instead of the HTTP referer, preventing breadcrumb back buttons from looping between sibling pages, while preserving explicit override and fallback behavior.
+
+### Tests
+- Added breadcrumb regression coverage for derived back-link targets, explicit `back_href` overrides, and fallback behavior when no earlier linked breadcrumb item exists.
+
+### Docs
+- Updated breadcrumb component documentation and dummy demo copy to describe hierarchy-based back-link behavior and the new `back_href` option.
+
 ## [0.1.27] - 2026-04-16
 
 ### Fixed

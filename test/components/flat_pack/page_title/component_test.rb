@@ -37,6 +37,26 @@ module FlatPack
         assert_selector "p", text: "Welcome back"
       end
 
+      def test_renders_actions_slot_below_subtitle
+        render_inline(Component.new(title: "Dashboard", subtitle: "Welcome back")) do |component|
+          component.actions do
+            "Filter"
+          end
+        end
+
+        assert_selector "p + div.page-title-actions", text: "Filter"
+      end
+
+      def test_renders_actions_slot_below_title_when_subtitle_missing
+        render_inline(Component.new(title: "Dashboard")) do |component|
+          component.actions do
+            "Filter"
+          end
+        end
+
+        assert_selector "h1 + div.page-title-actions", text: "Filter"
+      end
+
       def test_raises_error_for_invalid_variant
         error = assert_raises(ArgumentError) do
           render_inline(Component.new(title: "Dashboard", variant: :heading))

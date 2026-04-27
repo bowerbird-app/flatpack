@@ -60,6 +60,31 @@ class PagesControllerPrivateTest < ActiveSupport::TestCase
     assert_includes new_key, request.path
   end
 
+  test "page_cache_key changes when page template version changes" do
+    controller = PagesController.new
+    request = OpenStruct.new(path: "/demo/tables/basic")
+    controller.define_singleton_method(:request) { request }
+
+    helpers = Object.new
+    define_asset_path_helper(helpers, {
+      "application.css" => "/assets/application-stable.css",
+      "flat_pack/variables.css" => "/assets/flat_pack/variables-stable.css",
+      "flat_pack/rich_text.css" => "/assets/flat_pack/rich_text-stable.css",
+      "flat_pack/content_editor.css" => "/assets/flat_pack/content_editor-stable.css"
+    })
+
+    controller.define_singleton_method(:helpers) { helpers }
+    controller.define_singleton_method(:current_importmap_digest) { "importmap-stable" }
+    controller.define_singleton_method(:page_template_cache_version) { "templates-old" }
+    old_key = controller.send(:page_cache_key)
+
+    controller.define_singleton_method(:page_template_cache_version) { "templates-new" }
+    new_key = controller.send(:page_cache_key)
+
+    refute_equal old_key, new_key
+    assert_includes new_key, request.path
+  end
+
   private
 
   def define_asset_path_helper(helper, asset_paths)

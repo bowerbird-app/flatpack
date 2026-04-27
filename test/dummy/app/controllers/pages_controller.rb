@@ -150,19 +150,36 @@ class PagesController < ApplicationController
       {label: "Open Tickets", value: "128", change: "-4.3%", trend: :down, icon: :alert}
     ]
 
-    @admin_users = Array.new(12) do |i|
+    admin_user_templates = [
+      {name: "Alice Johnson", email: "alice@example.com", role: "Admin", status: "Active"},
+      {name: "Bob Smith", email: "bob@example.com", role: "Editor", status: "Active"},
+      {name: "Carol White", email: "carol@example.com", role: "Viewer", status: "Active"},
+      {name: "David Lee", email: "david@example.com", role: "Admin", status: "Active"},
+      {name: "Eva Martinez", email: "eva@example.com", role: "Editor", status: "Active"},
+      {name: "Frank Brown", email: "frank@example.com", role: "Viewer", status: "Inactive"},
+      {name: "Grace Kim", email: "grace@example.com", role: "Admin", status: "Active"},
+      {name: "Henry Davis", email: "henry@example.com", role: "Editor", status: "Active"},
+      {name: "Iris Chen", email: "iris@example.com", role: "Viewer", status: "Active"},
+      {name: "James Wilson", email: "james@example.com", role: "Admin", status: "Pending"},
+      {name: "Karen Taylor", email: "karen@example.com", role: "Editor", status: "Active"},
+      {name: "Liam Moore", email: "liam@example.com", role: "Viewer", status: "Active"}
+    ]
+
+    @admin_users = Array.new(24) do |i|
+      template = admin_user_templates[i % admin_user_templates.length]
+      email_local, email_domain = template[:email].split("@", 2)
+
       OpenStruct.new(
         id: i + 1,
-        name: ["Alice Johnson", "Bob Smith", "Carol White", "David Lee", "Eva Martinez",
-          "Frank Brown", "Grace Kim", "Henry Davis", "Iris Chen", "James Wilson",
-          "Karen Taylor", "Liam Moore"][i],
-        email: ["alice", "bob", "carol", "david", "eva", "frank", "grace",
-          "henry", "iris", "james", "karen", "liam"][i] + "@example.com",
-        role: %w[Admin Editor Viewer Admin Editor Viewer Admin Editor Viewer Admin Editor Viewer][i],
-        status: %w[Active Active Active Active Active Inactive Active Active Active Pending Active Active][i],
+        name: template[:name],
+        email: "#{email_local}+#{i + 1}@#{email_domain}",
+        role: template[:role],
+        status: template[:status],
         joined_at: (i * 15 + 5).days.ago.strftime("%b %d, %Y")
       )
     end
+
+    @admin_pagy, @admin_users = pagy_array(@admin_users, items: 10)
   end
 
   def inputs
@@ -1711,7 +1728,19 @@ class PagesController < ApplicationController
   def page_cache_asset_version
     asset_paths = CACHED_LAYOUT_STYLESHEETS.map { |logical_path| helpers.asset_path(logical_path) }
     asset_paths << current_importmap_digest
+    asset_paths << page_template_cache_version
     Digest::SHA256.hexdigest(asset_paths.join("|"))[0, 12]
+  end
+
+  def page_template_cache_version
+    template_files = Dir[Rails.root.join("app/views/layouts/**/*")].concat(Dir[Rails.root.join("app/views/pages/**/*")]).sort
+    template_versions = template_files.filter_map do |path|
+      next unless File.file?(path)
+
+      "#{path}:#{File.mtime(path).to_f}"
+    end
+
+    Digest::SHA256.hexdigest(template_versions.join("|"))[0, 12]
   end
 
   def current_importmap_digest

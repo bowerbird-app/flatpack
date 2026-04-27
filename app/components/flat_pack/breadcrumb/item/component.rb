@@ -4,6 +4,8 @@ module FlatPack
   module Breadcrumb
     module Item
       class Component < ViewComponent::Base
+        attr_reader :href
+
         def initialize(
           text:,
           href: nil,
@@ -19,7 +21,7 @@ module FlatPack
         end
 
         def current?
-          @href.nil?
+          href.nil?
         end
 
         def call
@@ -41,7 +43,7 @@ module FlatPack
         end
 
         def render_link_item
-          link_to(@href,
+          link_to(href,
             {
               class: "flex items-center text-[var(--breadcrumb-link-color)] hover:text-[var(--breadcrumb-link-hover-color)] transition-colors"
             }.merge(@system_arguments)) do
