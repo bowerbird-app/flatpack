@@ -61,19 +61,19 @@ Commit the updated `Gemfile.app_platform.lock` along with the app or engine chan
 Web build command:
 
 ```bash
-bundle install && bundle exec rails assets:precompile
+export BUNDLE_GEMFILE=Gemfile.app_platform BUNDLE_WITHOUT=development:test && bundle install && bundle exec rails assets:precompile
 ```
 
 Web run command:
 
 ```bash
-bundle exec puma -C config/puma.rb
+export BUNDLE_GEMFILE=Gemfile.app_platform BUNDLE_WITHOUT=development:test && bundle exec puma -C config/puma.rb
 ```
 
 Worker run command:
 
 ```bash
-bundle exec sidekiq -e production -C config/sidekiq.yml
+export BUNDLE_GEMFILE=Gemfile.app_platform BUNDLE_WITHOUT=development:test && bundle exec sidekiq -e production -C config/sidekiq.yml
 ```
 
 The checked-in app spec also sets:
