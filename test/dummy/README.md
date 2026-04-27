@@ -161,10 +161,19 @@ bundle exec rake test
 
 The dummy app can be deployed to DigitalOcean App Platform with the checked-in example spec at `test/dummy/.do/app.yaml`.
 
+- Local repo development still uses `Gemfile` with `flat_pack` from `../..`.
+- App Platform uses `Gemfile.app_platform` plus `Gemfile.app_platform.lock` so deployment does not rely on a mutable path gem.
 - Use managed PostgreSQL for `DATABASE_URL`
 - Use managed Redis for `REDIS_URL`
 - Set `SECRET_KEY_BASE` in App Platform secrets
 - Run `bundle exec rails db:prepare` after the first deploy
+
+When FlatPack engine changes should be reflected in App Platform, refresh the deploy lockfile:
+
+```bash
+cd test/dummy
+BUNDLE_GEMFILE=Gemfile.app_platform bundle lock
+```
 
 See [../../docs/deployment_digitalocean.md](../../docs/deployment_digitalocean.md) for the full setup flow.
 

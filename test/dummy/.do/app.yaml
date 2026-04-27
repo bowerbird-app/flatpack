@@ -20,6 +20,12 @@ services:
       - key: RAILS_ENV
         scope: RUN_AND_BUILD_TIME
         value: production
+      - key: BUNDLE_GEMFILE
+        scope: RUN_AND_BUILD_TIME
+        value: Gemfile.app_platform
+      - key: BUNDLE_WITHOUT
+        scope: RUN_AND_BUILD_TIME
+        value: development:test
       - key: RAILS_SERVE_STATIC_FILES
         scope: RUN_AND_BUILD_TIME
         value: "1"
@@ -62,6 +68,12 @@ workers:
       - key: RAILS_ENV
         scope: RUN_AND_BUILD_TIME
         value: production
+      - key: BUNDLE_GEMFILE
+        scope: RUN_AND_BUILD_TIME
+        value: Gemfile.app_platform
+      - key: BUNDLE_WITHOUT
+        scope: RUN_AND_BUILD_TIME
+        value: development:test
       - key: RAILS_FORCE_SSL
         scope: RUN_TIME
         value: "true"
