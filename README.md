@@ -58,6 +58,8 @@ rails generate flat_pack:layout --type=sidebar --side=right --layout_name=admin
 
 See the [Installation Guide](docs/installation.md) for detailed setup instructions.
 
+If you want to deploy the dummy Rails app in `test/dummy`, use the [DigitalOcean deployment guide](docs/deployment_digitalocean.md). That guide is for the demo app only, not a requirement for FlatPack host applications.
+
 ## AI Entry Points
 
 For AI-assisted installation and usage, start with the gem-shipped contract and verification surfaces instead of inferring setup from prose alone:

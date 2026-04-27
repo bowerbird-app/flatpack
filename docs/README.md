@@ -19,6 +19,7 @@ bin/rake flat_pack:verify_install
 
 ### Getting Started
 - [Installation Guide](installation.md)
+- [DigitalOcean Deployment for the Dummy App](deployment_digitalocean.md)
 - [AI Entry Point](ai/README.md)
 - [AI Install Contract](ai/install_contract.json)
 - [Quick Start](#quick-start)
