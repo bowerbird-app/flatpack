@@ -49,6 +49,10 @@ jobs:
       - name: Rebuild native extensions
         run: bundle pristine
 
+      - name: Refresh vendored FlatPack snapshot
+        working-directory: test/dummy
+        run: bin/refresh_flat_pack_vendor
+
       - name: Install dummy app dependencies
         working-directory: test/dummy
         run: bundle install

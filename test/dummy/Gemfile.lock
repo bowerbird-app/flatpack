@@ -1,5 +1,5 @@
 PATH
-  remote: ../..
+  remote: vendor/flat_pack
   specs:
     flat_pack (0.1.32)
       pagy (~> 9.0)

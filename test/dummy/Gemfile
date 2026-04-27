@@ -2,7 +2,8 @@
 
 source "https://rubygems.org"
 
-# Use the flatpack gem from the parent directory
-gem "flat_pack", path: "../.."
+# The deployable dummy app uses a checked-in FlatPack snapshot so App Platform's
+# automatic bundle install and rake detection do not depend on a mutable parent path.
+gem "flat_pack", path: "vendor/flat_pack"
 
 eval_gemfile "Gemfile.common"
