@@ -207,7 +207,7 @@
 
     <%= render FlatPack::Alert::Component.new(
       title: "Demo requirement",
-      description: "Sidekiq must be running for this chat demo to process and display new messages.",
+      description: "This demo needs a working Active Job adapter. The default App Platform SQLite setup runs chat simulation in the web process.",
       style: :info,
       dismissible: false
     ) %>

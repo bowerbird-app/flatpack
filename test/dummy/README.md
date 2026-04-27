@@ -164,9 +164,9 @@ The dummy app can be deployed to DigitalOcean App Platform with the checked-in e
 - The default dummy `Gemfile` and `Gemfile.lock` point at the checked-in `vendor/flat_pack` snapshot, so App Platform can use the standard Bundler flow.
 - `Gemfile.app_platform` mirrors the same vendored source for manual deploy-specific Bundler use.
 - Production stays on SQLite via `storage/production.sqlite3`
-- Use managed Redis for `REDIS_URL`
+- The checked-in App Platform spec runs `rails db:prepare` in the web command so the web instance initializes its own local SQLite database
+- Active Job defaults to `async` for the SQLite App Platform path, so the demo runs on a single web service by default
 - Set `SECRET_KEY_BASE` in App Platform secrets
-- Run `bundle exec rails db:prepare` after the first deploy
 
 When FlatPack engine changes should be reflected in App Platform, refresh the vendored engine snapshot and lockfiles:
 
