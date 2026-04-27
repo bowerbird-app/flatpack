@@ -1,0 +1,27 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "fileutils"
+
+dummy_root = File.expand_path("..", __dir__)
+repo_root = File.expand_path("../../..", __dir__)
+vendor_root = File.join(dummy_root, "vendor/flat_pack")
+
+copy_entries = %w[
+  app
+  config
+  lib
+  CHANGELOG.md
+  MIT-LICENSE
+  README.md
+  flat_pack.gemspec
+]
+
+FileUtils.rm_rf(vendor_root)
+FileUtils.mkdir_p(vendor_root)
+
+copy_entries.each do |entry|
+  FileUtils.cp_r(File.join(repo_root, entry), vendor_root)
+end
+
+puts "Refreshed vendored FlatPack at #{vendor_root}"

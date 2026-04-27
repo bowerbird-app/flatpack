@@ -1,0 +1,228 @@
+# frozen_string_literal: true
+
+module FlatPack
+  module Avatar
+    class Component < FlatPack::BaseComponent
+      # Tailwind CSS scanning requires these classes to be present as string literals.
+      # DO NOT REMOVE - These duplicates ensure CSS generation:
+      # "h-6" "w-6" "text-[10px]" "h-8" "w-8" "text-xs" "h-10" "w-10" "text-sm" "h-12" "w-12" "text-base" "h-16" "w-16" "text-lg"
+      SIZES = {
+        xs: "h-6 w-6 text-[10px]",
+        sm: "h-8 w-8 text-xs",
+        md: "h-10 w-10 text-sm",
+        lg: "h-12 w-12 text-base",
+        xl: "h-16 w-16 text-lg"
+      }.freeze
+
+      # Tailwind CSS scanning requires these classes to be present as string literals.
+      # DO NOT REMOVE - These duplicates ensure CSS generation:
+      # "rounded-[var(--avatar-radius-circle)]" "rounded-[var(--avatar-radius-rounded)]" "rounded-[var(--avatar-radius-square)]"
+      SHAPES = {
+        circle: "rounded-[var(--avatar-radius-circle)]",
+        rounded: "rounded-[var(--avatar-radius-rounded)]",
+        square: "rounded-[var(--avatar-radius-square)]"
+      }.freeze
+
+      # Tailwind CSS scanning requires these classes to be present as string literals.
+      # DO NOT REMOVE - These duplicates ensure CSS generation:
+      # "bg-[var(--avatar-status-online-color)]" "bg-[var(--avatar-status-offline-color)]" "bg-[var(--avatar-status-busy-color)]" "bg-[var(--avatar-status-away-color)]"
+      STATUS_COLORS = {
+        online: "bg-[var(--avatar-status-online-color)]",
+        offline: "bg-[var(--avatar-status-offline-color)]",
+        busy: "bg-[var(--avatar-status-busy-color)]",
+        away: "bg-[var(--avatar-status-away-color)]"
+      }.freeze
+
+      def initialize(
+        src: nil,
+        alt: nil,
+        name: nil,
+        initials: nil,
+        size: :md,
+        shape: :circle,
+        status: nil,
+        href: nil,
+        show_tooltip: true,
+        tooltip_placement: :bottom,
+        **system_arguments
+      )
+        super(**system_arguments)
+        @src = src
+        @provided_alt = alt
+        @tooltip_text = name.presence || alt.presence
+        @alt = alt || name || "Avatar"
+        @name = name
+        @initials = initials
+        @size = size.to_sym
+        @shape = shape.to_sym
+        @status = status&.to_sym
+        @href = href
+        @show_tooltip = show_tooltip
+        @tooltip_placement = tooltip_placement
+
+        validate_size!
+        validate_shape!
+        validate_status! if @status
+      end
+
+      def call
+        avatar = wrapper_tag do
+          safe_join([
+            render_image_or_fallback,
+            render_status_indicator
+          ])
+        end
+
+        return avatar unless render_tooltip?
+
+        FlatPack::Tooltip::Component.new(text: @tooltip_text, placement: @tooltip_placement).render_in(view_context) do
+          avatar
+        end
+      end
+
+      private
+
+      def wrapper_tag(&block)
+        if @href
+          content_tag(:a, href: @href, **wrapper_attributes, &block)
+        else
+          content_tag(:span, **wrapper_attributes, &block)
+        end
+      end
+
+      def wrapper_attributes
+        existing_style = html_attributes[:style]
+        combined_style = [existing_style, size_fallback_style].compact.join("; ")
+
+        merge_attributes(
+          class: wrapper_classes,
+          style: combined_style.presence
+        )
+      end
+
+      def wrapper_classes
+        classes(
+          "relative inline-flex items-center justify-center shrink-0",
+          @status ? "overflow-visible" : "overflow-hidden",
+          "bg-[var(--avatar-background-color)] text-[var(--avatar-text-color)]",
+          "font-medium select-none aspect-square",
+          SIZES.fetch(@size),
+          SHAPES.fetch(@shape)
+        )
+      end
+
+      def render_image_or_fallback
+        if @src.present?
+          render_image
+        elsif computed_initials.present?
+          render_initials
+        else
+          render_generic_icon
+        end
+      end
+
+      def size_fallback_style
+        case @size
+        when :xs then "width: 1.5rem; height: 1.5rem"
+        when :sm then "width: 2rem; height: 2rem"
+        when :md then "width: 2.5rem; height: 2.5rem"
+        when :lg then "width: 3rem; height: 3rem"
+        when :xl then "width: 4rem; height: 4rem"
+        end
+      end
+
+      def render_image
+        content_tag(:img,
+          nil,
+          src: @src,
+          alt: @alt,
+          loading: "lazy",
+          decoding: "async",
+          class: classes(
+            "h-full w-full object-cover",
+            SHAPES.fetch(@shape)
+          ))
+      end
+
+      def render_initials
+        content_tag(:span,
+          computed_initials,
+          class: "inline-flex h-full w-full items-center justify-center uppercase font-semibold leading-none")
+      end
+
+      def render_generic_icon
+        # Generic user icon SVG
+        content_tag(:svg,
+          xmlns: "http://www.w3.org/2000/svg",
+          viewBox: "0 0 24 24",
+          fill: "currentColor",
+          class: "h-3/5 w-3/5 opacity-50") do
+          safe_join([
+            content_tag(:path, nil, d: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z")
+          ])
+        end
+      end
+
+      def render_status_indicator
+        return unless @status
+
+        content_tag(:span,
+          nil,
+          class: status_indicator_classes,
+          "aria-hidden": "true")
+      end
+
+      def status_indicator_classes
+        size_class = case @size
+        when :xs then "h-1.5 w-1.5"
+        when :sm then "h-2 w-2"
+        when :md then "h-2.5 w-2.5"
+        when :lg then "h-3 w-3"
+        when :xl then "h-4 w-4"
+        end
+
+        classes(
+          "absolute top-0 right-0 z-10 block rounded-full translate-x-1/4 -translate-y-1/4",
+          "ring-2 ring-[var(--avatar-status-ring-color)]",
+          size_class,
+          STATUS_COLORS.fetch(@status)
+        )
+      end
+
+      def computed_initials
+        return @initials if @initials.present?
+        source_text = @name.presence || @provided_alt.presence
+        return nil unless source_text.present?
+
+        # Extract initials from the best available identity text.
+        parts = source_text.strip.split(/\s+/)
+        if parts.length >= 2
+          "#{parts[0][0]}#{parts[1][0]}"
+        elsif parts.length == 1 && parts[0].length >= 2
+          parts[0][0..1]
+        elsif parts.length == 1
+          parts[0][0]
+        end
+      end
+
+      def render_tooltip?
+        @show_tooltip && @tooltip_text.present?
+      end
+
+      def validate_size!
+        return if SIZES.key?(@size)
+        raise ArgumentError, "Invalid size: #{@size}. Must be one of: #{SIZES.keys.join(", ")}"
+      end
+
+      def validate_shape!
+        return if SHAPES.key?(@shape)
+        raise ArgumentError, "Invalid shape: #{@shape}. Must be one of: #{SHAPES.keys.join(", ")}"
+      end
+
+      def validate_status!
+        return if STATUS_COLORS.key?(@status)
+        raise ArgumentError, "Invalid status: #{@status}. Must be one of: #{STATUS_COLORS.keys.join(", ")}"
+      end
+    end
+  end
+end

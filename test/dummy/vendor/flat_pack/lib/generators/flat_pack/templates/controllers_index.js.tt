@@ -1,0 +1,2 @@
+// Lazy load FlatPack controllers on first use
+lazyLoadControllersFrom("controllers", application)

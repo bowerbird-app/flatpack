@@ -1,0 +1,217 @@
+# frozen_string_literal: true
+
+module FlatPack
+  module Table
+    class Component < FlatPack::BaseComponent
+      renders_many :columns, FlatPack::Table::Column::Component
+
+      undef_method :with_column, :with_column_content
+
+      def initialize(
+        data: [],
+        stimulus: false,
+        turbo_frame: nil,
+        sort: nil,
+        direction: nil,
+        base_url: nil,
+        tbody_class: nil,
+        tbody_data: nil,
+        draggable_rows: false,
+        reorder: nil,
+        reorder_url: nil,
+        reorder_resource: nil,
+        reorder_strategy: "dense_integer",
+        reorder_scope: {},
+        reorder_version: nil,
+        row_id: nil,
+        **system_arguments
+      )
+        super(**system_arguments)
+        @data = data
+        @stimulus = stimulus
+        @turbo_frame = turbo_frame
+        @sort = sort
+        @direction = direction
+        @base_url = base_url
+        @tbody_class = tbody_class
+        @tbody_data = tbody_data
+        @draggable_rows = draggable_rows
+
+        reorder_options = normalize_reorder_options(reorder)
+        @reorder_url = reorder_options[:url] || reorder_url
+        @reorder_resource = reorder_options[:resource] || reorder_resource || inferred_reorder_resource
+        @reorder_strategy = reorder_options[:strategy] || reorder_strategy
+        @reorder_scope = reorder_options[:scope] || reorder_scope || {}
+        @reorder_version = reorder_options[:version] || reorder_version
+        @row_id = reorder_options[:row_id] || row_id || ->(row) { row.respond_to?(:id) ? row.id : nil }
+      end
+
+      def column(title:, html: nil, sortable: false, sort_key: nil, &block)
+        if block && html.nil?
+          html = block
+        end
+
+        set_slot(:columns, nil, title: title, html: html, sortable: sortable, sort_key: sort_key)
+        self
+      end
+
+      def call
+        content = tag.div(**container_attributes) do
+          tag.table(**table_attributes) do
+            safe_join([render_header, render_body])
+          end
+        end
+
+        # Wrap in turbo frame if specified
+        if @turbo_frame
+          tag.turbo_frame(id: @turbo_frame) { content }
+        else
+          content
+        end
+      end
+
+      private
+
+      def container_attributes
+        attrs = merge_attributes(
+          class: "overflow-x-auto rounded-lg border border-[var(--table-border-color)]"
+        )
+
+        attrs[:data] ||= {}
+        attrs[:data][:controller] = controller_names if controller_names.present?
+
+        if @draggable_rows
+          attrs[:data][:"flat-pack--table-sortable-reorder-url-value"] = @reorder_url if @reorder_url.present?
+          attrs[:data][:"flat-pack--table-sortable-resource-value"] = @reorder_resource if @reorder_resource.present?
+          attrs[:data][:"flat-pack--table-sortable-strategy-value"] = @reorder_strategy if @reorder_strategy.present?
+          attrs[:data][:"flat-pack--table-sortable-version-value"] = @reorder_version if @reorder_version.present?
+          attrs[:data][:"flat-pack--table-sortable-scope-value"] = @reorder_scope.to_json if @reorder_scope.present?
+        end
+
+        attrs
+      end
+
+      def table_attributes
+        {
+          class: classes(
+            "w-full",
+            "border-collapse",
+            "bg-[var(--table-background-color)]"
+          )
+        }
+      end
+
+      def render_header
+        return unless columns.any?
+
+        tag.thead class: "bg-[var(--table-header-background-color)] border-b border-[var(--table-header-border-color)]" do
+          tag.tr do
+            safe_join(columns.map { |column|
+              column.render_header(
+                current_sort: @sort,
+                current_direction: @direction,
+                base_url: @base_url,
+                turbo_frame: @turbo_frame
+              )
+            })
+          end
+        end
+      end
+
+      def render_body
+        tag.tbody(**tbody_attributes) do
+          if @data.any?
+            safe_join(@data.map { |row| render_row(row) })
+          else
+            render_empty_state
+          end
+        end
+      end
+
+      def tbody_attributes
+        attrs = {
+          class: classes(
+            "divide-y divide-[var(--table-row-divider-color)]",
+            @tbody_class
+          )
+        }
+
+        attrs[:data] = @tbody_data if @tbody_data.present?
+        attrs
+      end
+
+      def render_row(row)
+        tag.tr(**row_attributes(row)) do
+          safe_join(columns.map { |column| column.render_cell(row) })
+        end
+      end
+
+      def row_attributes(row)
+        attrs = {
+          class: "hover:bg-[var(--table-row-hover-background-color)] transition-colors duration-fast"
+        }
+
+        return attrs unless @draggable_rows
+
+        attrs[:data] = {
+          "flat-pack--table-sortable-target": "row",
+          id: row_identifier(row)
+        }
+
+        attrs
+      end
+
+      def row_identifier(row)
+        return @row_id.call(row).to_s if @row_id.respond_to?(:call)
+        return row.public_send(@row_id).to_s if @row_id.is_a?(Symbol) && row.respond_to?(@row_id)
+        return row.id.to_s if row.respond_to?(:id)
+
+        nil
+      end
+
+      def controller_names
+        names = []
+        names << "flat-pack--table" if @stimulus
+        names << "flat-pack--table-sortable" if @draggable_rows
+        names.join(" ").presence
+      end
+
+      def normalize_reorder_options(reorder)
+        return {} unless reorder.is_a?(Hash)
+
+        reorder.to_h.symbolize_keys
+      end
+
+      def inferred_reorder_resource
+        sample_row = @data.first
+        return unless sample_row
+
+        if sample_row.class.respond_to?(:table_name)
+          sample_row.class.table_name
+        else
+          sample_row.class.name.underscore.pluralize
+        end
+      end
+
+      def render_empty_state
+        tag.tr do
+          tag.td colspan: column_count, class: "#{body_cell_classes} text-center text-[var(--table-empty-state-text-color)]" do
+            "No data available"
+          end
+        end
+      end
+
+      def header_cell_classes
+        "px-[var(--table-padding)] py-[var(--table-padding)] text-left text-xs font-medium text-[var(--table-header-text-color)] uppercase tracking-wider"
+      end
+
+      def body_cell_classes
+        "px-[var(--table-padding)] py-[var(--table-padding)] text-sm text-[var(--table-cell-text-color)]"
+      end
+
+      def column_count
+        columns.size
+      end
+    end
+  end
+end

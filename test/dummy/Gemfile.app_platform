@@ -2,8 +2,8 @@
 
 source "https://rubygems.org"
 
-# App Platform cannot reliably deploy the dummy app against a mutable path gem.
-# Use a git-sourced FlatPack dependency and lock it in Gemfile.app_platform.lock.
-gem "flat_pack", git: "https://github.com/bowerbird-app/flatpack.git", branch: "main"
+# App Platform cannot reliably deploy the dummy app against a mutable path gem
+# or a git checkout that may be cleaned before rake task detection.
+gem "flat_pack", path: "vendor/flat_pack"
 
 eval_gemfile "Gemfile.common"
