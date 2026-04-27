@@ -8,7 +8,8 @@ This guide deploys the Rails demo app in `test/dummy` to DigitalOcean App Platfo
 - `test/dummy/config/database.yml` expects `DATABASE_URL` in production so the dummy app can use managed PostgreSQL.
 - `test/dummy/config/environments/production.rb` serves precompiled assets, enables SSL, and uses Sidekiq for Active Job.
 - `test/dummy/.do/app.yaml` defines a web service plus a Sidekiq worker for App Platform.
-- `test/dummy/Gemfile.app_platform` and `test/dummy/Gemfile.app_platform.lock` give App Platform a deploy-safe Bundler entrypoint that does not depend on the local path gem used for repository development.
+- `test/dummy/Gemfile.app_platform` and `test/dummy/Gemfile.app_platform.lock` give App Platform a deploy-safe Bundler entrypoint that points at `test/dummy/vendor/flat_pack`.
+- `test/dummy/bin/refresh_flat_pack_vendor` refreshes that vendored FlatPack snapshot from the repository root.
 
 ## Recommended DigitalOcean resources
 
@@ -45,16 +46,17 @@ Set these in App Platform before the first successful deploy:
 
 Local repository development keeps using `test/dummy/Gemfile`, which points `flat_pack` at `../..`.
 
-App Platform uses `test/dummy/Gemfile.app_platform` instead. That file pulls `flat_pack` from the GitHub repository and locks the exact revision in `test/dummy/Gemfile.app_platform.lock`, which avoids Bundler frozen-mode failures caused by mutable path gems.
+App Platform uses `test/dummy/Gemfile.app_platform` instead. That file points `flat_pack` at the checked-in snapshot under `test/dummy/vendor/flat_pack`, and `test/dummy/Gemfile.app_platform.lock` locks against that vendored path. This avoids both the mutable parent path gem used for repo development and the buildpack issues that can occur with git-sourced gems during rake-task detection.
 
-When FlatPack gem code changes in a way that the deployed dummy app should pick up, refresh the deploy lockfile before deploying:
+When FlatPack gem code changes in a way that the deployed dummy app should pick up, refresh the vendored snapshot and deploy lockfile before deploying:
 
 ```bash
 cd test/dummy
+bin/refresh_flat_pack_vendor
 BUNDLE_GEMFILE=Gemfile.app_platform bundle lock
 ```
 
-Commit the updated `Gemfile.app_platform.lock` along with the app or engine change.
+Commit the updated `vendor/flat_pack` snapshot and `Gemfile.app_platform.lock` along with the app or engine change.
 
 ## Commands used by the checked-in app spec
 
@@ -86,4 +88,4 @@ The checked-in app spec also sets:
 - The dummy app keeps Active Storage on local disk by default. App Platform filesystems are ephemeral, so uploads do not persist across rebuilds unless you add object storage.
 - If you want persistent uploads, add a production storage service backed by DigitalOcean Spaces and switch `ACTIVE_STORAGE_SERVICE` to that service name.
 - The checked-in app spec disables `deploy_on_push` by default. Enable it if you want every push to `main` to roll out automatically.
-- If the deploy starts failing after FlatPack engine changes, regenerate `Gemfile.app_platform.lock` so the deploy-specific git dependency stays aligned with the revision you want App Platform to use.
+- If the deploy starts failing after FlatPack engine changes, refresh `vendor/flat_pack` and regenerate `Gemfile.app_platform.lock` so the vendored dependency stays aligned with the code you want App Platform to use.

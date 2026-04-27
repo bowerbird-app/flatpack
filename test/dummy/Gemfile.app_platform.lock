@@ -1,7 +1,5 @@
-GIT
-  remote: https://github.com/bowerbird-app/flatpack.git
-  revision: 8ee61d01f65d18b925b37abf7c1f96fa1e9e0807
-  branch: main
+PATH
+  remote: vendor/flat_pack
   specs:
     flat_pack (0.1.32)
       pagy (~> 9.0)

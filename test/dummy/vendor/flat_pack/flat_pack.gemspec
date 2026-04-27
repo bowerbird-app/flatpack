@@ -1,0 +1,40 @@
+# frozen_string_literal: true
+
+require_relative "lib/flat_pack/version"
+
+Gem::Specification.new do |spec|
+  spec.name = "flat_pack"
+  spec.version = FlatPack::VERSION
+  spec.authors = ["FlatPack Team"]
+  spec.email = ["team@flatpack.dev"]
+  spec.homepage = "https://github.com/flatpack/flat_pack"
+  spec.summary = "A modern Rails UI component library"
+  spec.description = "FlatPack is a production-grade Rails Engine providing a comprehensive UI component library built with ViewComponent, Tailwind CSS, and modern Rails conventions. Supports Rails 7.1 and above."
+  spec.license = "MIT"
+
+  spec.metadata["homepage_uri"] = spec.homepage
+  spec.metadata["source_code_uri"] = spec.homepage
+  spec.metadata["changelog_uri"] = "#{spec.homepage}/blob/main/CHANGELOG.md"
+  spec.metadata["documentation_uri"] = "#{spec.homepage}/tree/main/docs"
+  spec.metadata["ai_entrypoint_path"] = "docs/ai/README.md"
+  spec.metadata["ai_contract_path"] = "docs/ai/install_contract.json"
+
+  spec.files = Dir.chdir(File.expand_path(__dir__)) do
+    Dir["{app,config,lib,docs}/**/*", "MIT-LICENSE", "Rakefile", "README.md", "CHANGELOG.md"]
+  end
+
+  spec.required_ruby_version = ">= 3.2.0"
+
+  # Core dependencies
+  spec.add_dependency "rails", ">= 7.1", "< 9"
+  spec.add_dependency "view_component", "~> 3.0"
+  spec.add_dependency "tailwind_merge", "~> 0.13"
+  spec.add_dependency "pagy", "~> 9.0"
+
+  # Development dependencies
+  spec.add_development_dependency "sqlite3", "~> 2.0"
+  spec.add_development_dependency "standard", "~> 1.35"
+  spec.add_development_dependency "propshaft", "~> 1.0"
+  spec.add_development_dependency "brakeman", "~> 6.0"
+  spec.add_development_dependency "bundler-audit", "~> 0.9"
+end

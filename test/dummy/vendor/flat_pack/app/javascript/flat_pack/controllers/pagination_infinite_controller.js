@@ -1,0 +1,417 @@
+// FlatPack Pagination Infinite Scroll Stimulus Controller
+import { Controller } from "@hotwired/stimulus"
+
+export default class extends Controller {
+  static targets = ["trigger", "loading"]
+  static values = {
+    url: String,
+    page: { type: Number, default: 1 },
+    loadingDelay: { type: Number, default: 200 },
+    loadingVariant: { type: String, default: "table" },
+    insertMode: { type: String, default: "append" },
+    observeRootSelector: String,
+    cursorSelector: String,
+    cursorParam: String,
+    batchSize: Number,
+    batchSizeParam: { type: String, default: "limit" },
+    preserveScrollPosition: { type: Boolean, default: false }
+  }
+
+  connect() {
+    this.observer = null
+    this.loadingTimer = null
+    this.injectedSkeletons = []
+    this.setupIntersectionObserver()
+  }
+
+  disconnect() {
+    this.clearLoadingTimer()
+
+    if (this.observer) {
+      this.observer.disconnect()
+    }
+  }
+
+  setupIntersectionObserver() {
+    // Only setup observer if IntersectionObserver is supported
+    if (!("IntersectionObserver" in window)) {
+      return
+    }
+
+    const observerRoot = this.resolveObserverRoot()
+
+    this.observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !this.isLoading) {
+            this.loadMore()
+          }
+        })
+      },
+      {
+        root: observerRoot,
+        rootMargin: "100px"
+      }
+    )
+
+    if (this.hasTriggerTarget) {
+      this.observer.observe(this.triggerTarget)
+    }
+  }
+
+  async loadMore(event) {
+    if (event) {
+      event.preventDefault()
+    }
+
+    if (this.isLoading) {
+      return
+    }
+
+    const prependScrollState = this.capturePrependScrollState()
+
+    this.isLoading = true
+    this.scheduleLoading()
+
+    try {
+      const response = await fetch(this.resolveUrl(), {
+        headers: {
+          "Accept": "text/html",
+          "X-Requested-With": "XMLHttpRequest"
+        }
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const html = await response.text()
+      this.appendContent(html, prependScrollState)
+    } catch (error) {
+      console.error("Error loading more content:", error)
+      this.showError()
+    } finally {
+      this.hideLoading()
+      this.isLoading = false
+    }
+  }
+
+  appendContent(html, prependScrollState = null) {
+    const temp = document.createElement("div")
+    temp.innerHTML = html
+
+    const currentContent = this.element.parentElement?.querySelector("[data-pagination-content]")
+    const newContent = temp.querySelector("[data-pagination-content]")
+    const newPagination = temp.querySelector("[data-controller='flat-pack--pagination-infinite']")
+
+    if (newContent && currentContent) {
+      const canAppendInsideCurrent = currentContent.tagName === newContent.tagName
+
+      if (canAppendInsideCurrent) {
+        if (this.insertModeValue === "prepend") {
+          currentContent.insertAdjacentHTML("afterbegin", newContent.innerHTML)
+        } else {
+          currentContent.insertAdjacentHTML("beforeend", newContent.innerHTML)
+        }
+      } else {
+        this.element.parentElement.insertBefore(newContent, this.element)
+      }
+
+      this.restorePrependScrollState(prependScrollState)
+
+      this.dispatch("content-inserted", {
+        prefix: "flat-pack:pagination",
+        detail: {
+          insertMode: this.insertModeValue
+        }
+      })
+    }
+
+    // Replace pagination or remove if no more pages
+    if (newPagination) {
+      this.element.replaceWith(newPagination)
+    } else {
+      this.element.remove()
+    }
+  }
+
+  resolveUrl() {
+    const url = new URL(this.urlValue, window.location.origin)
+    const cursorValue = this.resolveCursorValue()
+
+    if (this.hasCursorParamValue && cursorValue !== null) {
+      url.searchParams.set(this.cursorParamValue, cursorValue)
+    }
+
+    if (this.hasBatchSizeValue && this.batchSizeValue > 0) {
+      const batchParamName = this.batchSizeParamValue || "limit"
+      url.searchParams.set(batchParamName, this.batchSizeValue)
+    }
+
+    return url.toString()
+  }
+
+  resolveCursorValue() {
+    if (!this.hasCursorSelectorValue) {
+      return null
+    }
+
+    const currentContent = this.element.parentElement?.querySelector("[data-pagination-content]")
+    if (!currentContent) {
+      return null
+    }
+
+    const cursorElement = currentContent.querySelector(this.cursorSelectorValue)
+    if (!cursorElement) {
+      return null
+    }
+
+    return cursorElement.getAttribute("data-pagination-cursor")
+  }
+
+  resolveObserverRoot() {
+    if (!this.hasObserveRootSelectorValue) {
+      return null
+    }
+
+    return this.element.closest(this.observeRootSelectorValue) || document.querySelector(this.observeRootSelectorValue)
+  }
+
+  resolveScrollContainer() {
+    return this.resolveObserverRoot()
+  }
+
+  shouldSuppressLoadingForPrepend() {
+    return this.insertModeValue === "prepend" && this.preserveScrollPositionValue
+  }
+
+  capturePrependScrollState() {
+    if (!this.shouldSuppressLoadingForPrepend()) {
+      return null
+    }
+
+    const scrollContainer = this.resolveScrollContainer()
+    const currentContent = this.element.parentElement?.querySelector("[data-pagination-content]")
+
+    if (!scrollContainer || !currentContent) {
+      return null
+    }
+
+    const anchor = this.resolveAnchorElement(currentContent, scrollContainer)
+    const anchorOffsetTop = anchor ? this.elementOffsetTopWithinContainer(anchor, scrollContainer) : null
+
+    return {
+      scrollContainer,
+      previousScrollHeight: scrollContainer.scrollHeight,
+      previousScrollTop: scrollContainer.scrollTop,
+      anchorId: anchor?.id || null,
+      anchorCursor: anchor?.getAttribute("data-pagination-cursor") || null,
+      anchorOffsetTop
+    }
+  }
+
+  restorePrependScrollState(prependScrollState) {
+    if (!prependScrollState?.scrollContainer) {
+      return
+    }
+
+    const {
+      scrollContainer,
+      previousScrollHeight,
+      previousScrollTop,
+      anchorId,
+      anchorCursor,
+      anchorOffsetTop
+    } = prependScrollState
+
+    const anchor = this.findAnchorElement(scrollContainer, anchorId, anchorCursor)
+
+    if (anchor && anchorOffsetTop !== null) {
+      const currentAnchorOffset = this.elementOffsetTopWithinContainer(anchor, scrollContainer)
+      scrollContainer.scrollTop += (currentAnchorOffset - anchorOffsetTop)
+      return
+    }
+
+    if (previousScrollHeight !== null && previousScrollTop !== null) {
+      const newScrollHeight = scrollContainer.scrollHeight
+      const delta = newScrollHeight - previousScrollHeight
+      scrollContainer.scrollTop = previousScrollTop + delta
+    }
+  }
+
+  resolveAnchorElement(contentContainer, scrollContainer) {
+    const candidates = Array.from(contentContainer.querySelectorAll("[data-pagination-cursor]"))
+    if (candidates.length === 0) {
+      return null
+    }
+
+    const containerRect = scrollContainer.getBoundingClientRect()
+
+    for (const candidate of candidates) {
+      const rect = candidate.getBoundingClientRect()
+      if (rect.bottom >= containerRect.top) {
+        return candidate
+      }
+    }
+
+    return candidates[0]
+  }
+
+  findAnchorElement(scrollContainer, anchorId, anchorCursor) {
+    if (anchorId) {
+      const byId = scrollContainer.querySelector(`#${CSS.escape(anchorId)}`)
+      if (byId) {
+        return byId
+      }
+    }
+
+    if (anchorCursor) {
+      return scrollContainer.querySelector(`[data-pagination-cursor="${CSS.escape(anchorCursor)}"]`)
+    }
+
+    return null
+  }
+
+  elementOffsetTopWithinContainer(element, container) {
+    const elementRect = element.getBoundingClientRect()
+    const containerRect = container.getBoundingClientRect()
+    return elementRect.top - containerRect.top
+  }
+
+  scheduleLoading() {
+    this.clearLoadingTimer()
+
+    const delay = this.loadingDelayValue >= 0 ? this.loadingDelayValue : 200
+    this.loadingTimer = window.setTimeout(() => {
+      this.showLoading()
+    }, delay)
+  }
+
+  showLoading() {
+    if (this.shouldSuppressLoadingForPrepend()) {
+      if (this.hasLoadingTarget) {
+        this.loadingTarget.hidden = true
+      }
+      if (this.hasTriggerTarget) {
+        this.triggerTarget.hidden = false
+      }
+      return
+    }
+
+    if (this.loadingVariantValue === "cards") {
+      this.showCardGridLoading()
+      return
+    }
+
+    if (this.hasTriggerTarget) {
+      this.triggerTarget.hidden = true
+    }
+    if (this.hasLoadingTarget) {
+      this.loadingTarget.hidden = false
+    }
+  }
+
+  hideLoading() {
+    this.clearLoadingTimer()
+
+    if (this.shouldSuppressLoadingForPrepend()) {
+      if (this.hasLoadingTarget) {
+        this.loadingTarget.hidden = true
+      }
+      if (this.hasTriggerTarget) {
+        this.triggerTarget.hidden = false
+      }
+      return
+    }
+
+    if (this.loadingVariantValue === "cards") {
+      this.hideCardGridLoading()
+    }
+
+    if (this.hasTriggerTarget) {
+      this.triggerTarget.hidden = false
+    }
+    if (this.hasLoadingTarget) {
+      this.loadingTarget.hidden = true
+    }
+  }
+
+  showError() {
+    // Simple error handling - could be enhanced
+    if (this.hasTriggerTarget) {
+      this.triggerTarget.textContent = "Error loading. Try again."
+    }
+  }
+
+  clearLoadingTimer() {
+    if (this.loadingTimer) {
+      window.clearTimeout(this.loadingTimer)
+      this.loadingTimer = null
+    }
+  }
+
+  showCardGridLoading() {
+    if (this.hasTriggerTarget) {
+      this.triggerTarget.hidden = true
+    }
+
+    const currentContent = this.element.parentElement?.querySelector("[data-pagination-content]")
+    if (!currentContent) {
+      if (this.hasLoadingTarget) {
+        this.loadingTarget.hidden = false
+      }
+      return
+    }
+
+    if (this.injectedSkeletons.length > 0) {
+      return
+    }
+
+    const columns = this.gridColumnCount(currentContent)
+    const itemCount = currentContent.children.length
+    const remainder = itemCount % columns
+    const placeholdersToAdd = remainder === 0 ? columns : (columns - remainder)
+
+    for (let i = 0; i < placeholdersToAdd; i += 1) {
+      const placeholder = document.createElement("div")
+      placeholder.dataset.paginationLoadingCard = "true"
+      placeholder.className = "border border-[var(--surface-border-color)] rounded-lg p-4 space-y-3"
+      const skeletonBase = "relative overflow-hidden bg-[var(--surface-muted-background-color)] before:pointer-events-none before:absolute before:inset-0 before:content-[''] before:bg-[linear-gradient(110deg,transparent_20%,rgb(255_255_255_/_0.45)_45%,transparent_70%)] before:translate-x-[-100%] before:animate-[fp-skeleton-shimmer_1.35s_linear_infinite] motion-reduce:before:animate-none"
+      placeholder.innerHTML = [
+        `<div class="${skeletonBase} w-full rounded-lg h-[120px]" aria-busy="true" aria-label="Loading..." role="status"></div>`,
+        `<div class="${skeletonBase} h-8 rounded w-[60%]" aria-busy="true" aria-label="Loading..." role="status"></div>`,
+        `<div class="${skeletonBase} h-4 rounded w-[90%]" aria-busy="true" aria-label="Loading..." role="status"></div>`,
+        `<div class="${skeletonBase} h-4 rounded w-[75%]" aria-busy="true" aria-label="Loading..." role="status"></div>`
+      ].join("")
+
+      currentContent.appendChild(placeholder)
+      this.injectedSkeletons.push(placeholder)
+    }
+  }
+
+  hideCardGridLoading() {
+    this.injectedSkeletons.forEach((placeholder) => {
+      placeholder.remove()
+    })
+    this.injectedSkeletons = []
+
+    if (this.hasLoadingTarget) {
+      this.loadingTarget.hidden = true
+    }
+  }
+
+  gridColumnCount(gridElement) {
+    const computedColumns = window.getComputedStyle(gridElement).gridTemplateColumns
+
+    if (!computedColumns) {
+      return 1
+    }
+
+    const columns = computedColumns
+      .trim()
+      .split(/\s+/)
+      .filter((column) => column.length > 0)
+
+    return Math.max(columns.length, 1)
+  }
+}

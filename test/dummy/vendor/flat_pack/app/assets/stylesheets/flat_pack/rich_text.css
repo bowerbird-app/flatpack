@@ -1,0 +1,541 @@
+/**
+ * FlatPack Rich Text Editor Styles
+ *
+ * Styles for the TipTap-powered rich text editor surfaces.
+ * All values use CSS variables from FlatPack's design system so they
+ * automatically adapt to theme changes (light/dark/custom tokens).
+ *
+ * Structure:
+ *   .flat-pack-richtext-wrapper       — outer wrapper (mirrors flat-pack-input-wrapper)
+ *   .flat-pack-richtext-toolbar       — formatting toolbar
+ *   .flat-pack-richtext-editor        — ProseMirror editor surface
+ *   .flat-pack-richtext-bubble-menu   — BubbleMenu floating container
+ *   .flat-pack-richtext-floating-menu — FloatingMenu container
+ *   .ProseMirror                      — TipTap's contenteditable element
+ */
+
+@layer components {
+  /* ── Wrapper ─────────────────────────────────────────────────────────────── */
+
+  .flat-pack-richtext-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .flat-pack-richtext-wrapper.flat-pack-richtext--focused .flat-pack-richtext-editor {
+    outline: none;
+    box-shadow: 0 0 0 2px inset var(--color-ring, oklch(0.52 0.26 250));
+    border-color: transparent;
+  }
+
+  /* ── Toolbar ─────────────────────────────────────────────────────────────── */
+
+  .flat-pack-richtext-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2px;
+    padding: 4px 8px;
+    background-color: var(--surface-muted-background-color);
+    border: 1px solid var(--surface-border-color);
+    border-bottom: none;
+    border-radius: calc(var(--radius-md, 0.375rem) - 1px) calc(var(--radius-md, 0.375rem) - 1px) 0 0;
+    min-height: 2.25rem;
+  }
+
+  .flat-pack-richtext-toolbar-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 6px;
+    min-width: 1.75rem;
+    height: 1.75rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm, 0.25rem);
+    background: transparent;
+    color: var(--surface-content-color);
+    cursor: pointer;
+    font-size: 0.75rem;
+    line-height: 1;
+    transition: background-color 0.1s, color 0.1s, border-color 0.1s;
+    user-select: none;
+  }
+
+  .flat-pack-richtext-toolbar-btn:hover {
+    background-color: var(--surface-background-color);
+    border-color: var(--surface-border-color);
+    color: var(--surface-content-color);
+  }
+
+  .flat-pack-richtext-toolbar-btn.is-active {
+    background-color: var(--color-primary);
+    color: var(--color-primary-text, #fff);
+    border-color: var(--color-primary);
+  }
+
+  .flat-pack-richtext-toolbar-btn.is-active:hover {
+    background-color: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+  }
+
+  .flat-pack-richtext-toolbar-btn.is-disabled,
+  .flat-pack-richtext-toolbar-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .flat-pack-richtext-toolbar-sep {
+    width: 1px;
+    height: 1.25rem;
+    background-color: var(--surface-border-color);
+    margin: 0 4px;
+    flex-shrink: 0;
+  }
+
+  /* ── Editor surface ──────────────────────────────────────────────────────── */
+
+  .flat-pack-richtext-editor {
+    background-color: var(--surface-background-color);
+    border: 1px solid var(--surface-border-color);
+    border-radius: 0 0 calc(var(--radius-md, 0.375rem) - 1px) calc(var(--radius-md, 0.375rem) - 1px);
+    transition: border-color 0.15s;
+    overflow: hidden;
+  }
+
+  /* When there is no toolbar, round all corners */
+  .flat-pack-richtext-wrapper:not(:has(.flat-pack-richtext-toolbar)) .flat-pack-richtext-editor {
+    border-radius: calc(var(--radius-md, 0.375rem) - 1px);
+  }
+
+  /* Error state border is set inline by Ruby; mirror focus ring to warning */
+  .flat-pack-richtext--error.flat-pack-richtext-wrapper.flat-pack-richtext--focused .flat-pack-richtext-editor {
+    box-shadow: 0 0 0 2px inset var(--color-warning-border);
+    border-color: transparent;
+  }
+
+  /* Disabled state */
+  .flat-pack-richtext--disabled .flat-pack-richtext-editor {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: not-allowed;
+  }
+
+  .flat-pack-richtext--disabled .flat-pack-richtext-toolbar {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  /* View-mode — strips form-control chrome so the editor reads as plain content */
+  .flat-pack-richtext--view-mode .flat-pack-richtext-editor {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+  }
+
+  .flat-pack-richtext--view-mode .flat-pack-richtext-editor .ProseMirror {
+    padding: 0;
+    min-height: auto;
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  /* Override disabled dimming in view mode so content is fully readable */
+  .flat-pack-richtext--view-mode.flat-pack-richtext--disabled .flat-pack-richtext-editor {
+    opacity: 1;
+    pointer-events: auto;
+    cursor: default;
+  }
+
+  /* ── ProseMirror core styles ──────────────────────────────────────────────── */
+
+  .flat-pack-richtext-editor .ProseMirror {
+    padding: var(--form-control-padding, 0.625rem) var(--form-control-padding, 0.625rem);
+    min-height: 8rem;
+    max-height: 60vh;
+    overflow-y: auto;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--surface-content-color);
+    outline: none;
+    cursor: text;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  /* Placeholder text */
+  .flat-pack-richtext-editor .ProseMirror p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    color: var(--surface-muted-content-color);
+    pointer-events: none;
+    height: 0;
+    float: left;
+  }
+
+  /* Typography */
+  .flat-pack-richtext-editor .ProseMirror h1,
+  .flat-pack-richtext-editor .ProseMirror h2,
+  .flat-pack-richtext-editor .ProseMirror h3,
+  .flat-pack-richtext-editor .ProseMirror h4,
+  .flat-pack-richtext-editor .ProseMirror h5,
+  .flat-pack-richtext-editor .ProseMirror h6 {
+    line-height: 1.3;
+    font-weight: 700;
+    color: var(--surface-content-color);
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+  }
+
+  .flat-pack-richtext-editor .ProseMirror h1 { font-size: 1.875rem; }
+  .flat-pack-richtext-editor .ProseMirror h2 { font-size: 1.5rem; }
+  .flat-pack-richtext-editor .ProseMirror h3 { font-size: 1.25rem; }
+  .flat-pack-richtext-editor .ProseMirror h4 { font-size: 1.125rem; }
+  .flat-pack-richtext-editor .ProseMirror h5,
+  .flat-pack-richtext-editor .ProseMirror h6 { font-size: 1rem; }
+
+  .flat-pack-richtext-editor .ProseMirror p {
+    margin-bottom: 0.75em;
+  }
+
+  .flat-pack-richtext-editor .ProseMirror p:last-child {
+    margin-bottom: 0;
+  }
+
+  .flat-pack-richtext-editor .ProseMirror strong { font-weight: 700; }
+  .flat-pack-richtext-editor .ProseMirror em     { font-style: italic; }
+  .flat-pack-richtext-editor .ProseMirror u      { text-decoration: underline; }
+  .flat-pack-richtext-editor .ProseMirror s      { text-decoration: line-through; }
+
+  .flat-pack-richtext-editor .ProseMirror code {
+    background-color: var(--surface-muted-background-color);
+    border: 1px solid var(--surface-border-color);
+    border-radius: var(--radius-sm, 0.25rem);
+    padding: 0.1em 0.35em;
+    font-size: 0.8125em;
+    font-family: ui-monospace, "Cascadia Code", Menlo, monospace;
+    color: var(--surface-content-color);
+  }
+
+  .flat-pack-richtext-editor .ProseMirror pre {
+    background-color: var(--surface-muted-background-color);
+    border: 1px solid var(--surface-border-color);
+    border-radius: var(--radius-md, 0.375rem);
+    padding: 0.875rem 1rem;
+    overflow-x: auto;
+    font-size: 0.8125rem;
+    margin-bottom: 0.75em;
+  }
+
+  .flat-pack-richtext-editor .ProseMirror pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: inherit;
+  }
+
+  .flat-pack-richtext-editor .ProseMirror blockquote {
+    border-left: 3px solid var(--surface-border-color);
+    padding-left: 1rem;
+    color: var(--surface-muted-content-color);
+    margin: 0 0 0.75em 0;
+  }
+
+  .flat-pack-richtext-editor .ProseMirror ul,
+  .flat-pack-richtext-editor .ProseMirror ol {
+    padding-left: 1.5rem;
+    margin-bottom: 0.75em;
+  }
+
+  .flat-pack-richtext-editor .ProseMirror li { margin-bottom: 0.25em; }
+
+  .flat-pack-richtext-editor .ProseMirror hr {
+    border: none;
+    border-top: 1px solid var(--surface-border-color);
+    margin: 1rem 0;
+  }
+
+  .flat-pack-richtext-editor .ProseMirror img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-md, 0.375rem);
+    display: block;
+    margin: 0.5rem 0;
+  }
+
+  .flat-pack-richtext-editor .ProseMirror img.ProseMirror-selectednode {
+    outline: 2px solid var(--color-primary);
+  }
+
+  /* Task list */
+  .flat-pack-richtext-editor .ProseMirror ul[data-type="taskList"] {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .flat-pack-richtext-editor .ProseMirror ul[data-type="taskList"] li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .flat-pack-richtext-editor .ProseMirror ul[data-type="taskList"] li > label {
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  .flat-pack-richtext-editor .ProseMirror ul[data-type="taskList"] li > label input[type="checkbox"] {
+    cursor: pointer;
+  }
+
+  /* Tables */
+  .flat-pack-richtext-editor .ProseMirror table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 0.75em;
+    overflow: auto;
+    table-layout: fixed;
+  }
+
+  .flat-pack-richtext-editor .ProseMirror th,
+  .flat-pack-richtext-editor .ProseMirror td {
+    border: 1px solid var(--surface-border-color);
+    padding: 0.375rem 0.75rem;
+    vertical-align: top;
+    min-width: 60px;
+    font-size: 0.875rem;
+  }
+
+  .flat-pack-richtext-editor .ProseMirror th {
+    background-color: var(--surface-muted-background-color);
+    font-weight: 600;
+    text-align: left;
+  }
+
+  .flat-pack-richtext-editor .ProseMirror .selectedCell::after {
+    background: oklch(0.52 0.26 250 / 0.15);
+    content: "";
+    display: block;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    pointer-events: none;
+    position: absolute;
+    z-index: 2;
+  }
+
+  .flat-pack-richtext-editor .ProseMirror .column-resize-handle {
+    background-color: var(--color-primary);
+    bottom: -2px;
+    position: absolute;
+    right: -2px;
+    pointer-events: none;
+    top: 0;
+    width: 4px;
+  }
+
+  /* Highlight mark */
+  .flat-pack-richtext-editor .ProseMirror mark {
+    background-color: oklch(0.96 0.08 90);
+    border-radius: 2px;
+    padding: 0.05em 0.2em;
+    color: inherit;
+  }
+
+  /* Mention */
+  .flat-pack-richtext-mention {
+    background-color: var(--color-secondary);
+    border-radius: var(--radius-sm, 0.25rem);
+    color: var(--surface-content-color);
+    font-weight: 600;
+    padding: 0.05em 0.3em;
+    white-space: nowrap;
+  }
+
+  /* Gap cursor */
+  .flat-pack-richtext-editor .ProseMirror .ProseMirror-gapcursor:after {
+    border-top: 1px solid var(--surface-content-color);
+  }
+
+  /* Drop cursor */
+  .flat-pack-richtext-editor .ProseMirror .ProseMirror-dropcursor {
+    background-color: var(--color-primary);
+  }
+
+  /* Focus ring for focused nodes (Focus extension, full preset) */
+  .flat-pack-richtext-focus {
+    outline: 2px solid oklch(0.52 0.26 250 / 0.4);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm, 0.25rem);
+  }
+
+  /* Details/Summary */
+  .flat-pack-richtext-editor .ProseMirror details {
+    border: 1px solid var(--surface-border-color);
+    border-radius: var(--radius-md, 0.375rem);
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0.75em;
+  }
+
+  .flat-pack-richtext-editor .ProseMirror summary {
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+    list-style-position: inside;
+  }
+
+  /* ── Bubble Menu ─────────────────────────────────────────────────────────── */
+
+  .flat-pack-richtext-bubble-menu {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 4px 6px;
+    background-color: var(--surface-background-color);
+    border: 1px solid var(--surface-border-color);
+    border-radius: var(--radius-md, 0.375rem);
+    box-shadow: 0 4px 12px oklch(0 0 0 / 0.12), 0 1px 4px oklch(0 0 0 / 0.08);
+    z-index: 50;
+  }
+
+  .flat-pack-richtext-bubble-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 5px;
+    min-width: 1.625rem;
+    height: 1.625rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm, 0.25rem);
+    background: transparent;
+    color: var(--surface-content-color);
+    cursor: pointer;
+    font-size: 0.75rem;
+    line-height: 1;
+    transition: background-color 0.1s, color 0.1s;
+  }
+
+  .flat-pack-richtext-bubble-btn:hover {
+    background-color: var(--surface-muted-background-color);
+    border-color: var(--surface-border-color);
+  }
+
+  .flat-pack-richtext-bubble-btn.is-active {
+    background-color: var(--color-primary);
+    color: var(--color-primary-text, #fff);
+    border-color: var(--color-primary);
+  }
+
+  .flat-pack-richtext-bubble-sep {
+    width: 1px;
+    height: 1rem;
+    background-color: var(--surface-border-color);
+    margin: 0 3px;
+    flex-shrink: 0;
+  }
+
+  /* ── Floating Menu ───────────────────────────────────────────────────────── */
+
+  .flat-pack-richtext-floating-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 4px;
+    background-color: var(--surface-background-color);
+    border: 1px solid var(--surface-border-color);
+    border-radius: var(--radius-md, 0.375rem);
+    box-shadow: 0 4px 12px oklch(0 0 0 / 0.12);
+    z-index: 40;
+    min-width: 10rem;
+  }
+
+  .flat-pack-richtext-floating-btn {
+    padding: 6px 10px;
+    text-align: left;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-sm, 0.25rem);
+    color: var(--surface-content-color);
+    font-size: 0.8125rem;
+    cursor: pointer;
+    transition: background-color 0.1s;
+  }
+
+  .flat-pack-richtext-floating-btn:hover {
+    background-color: var(--surface-muted-background-color);
+  }
+
+  /* ── Inline link / image popover ─────────────────────────────────────────── */
+
+  .flat-pack-rt-link-popover {
+    position: fixed;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 8px;
+    background-color: var(--surface-background-color);
+    border: 1px solid var(--surface-border-color);
+    border-radius: var(--radius-md, 0.375rem);
+    box-shadow: 0 4px 16px oklch(0 0 0 / 0.14), 0 1px 4px oklch(0 0 0 / 0.08);
+    min-width: 20rem;
+  }
+
+  .flat-pack-rt-link-input {
+    flex: 1;
+    padding: 4px 8px;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    border: 1px solid var(--surface-border-color);
+    border-radius: var(--radius-sm, 0.25rem);
+    background-color: var(--surface-background-color);
+    color: var(--surface-content-color);
+    outline: none;
+    min-width: 0;
+  }
+
+  .flat-pack-rt-link-input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px oklch(0.52 0.26 250 / 0.15);
+  }
+
+  .flat-pack-rt-link-apply-btn {
+    flex-shrink: 0;
+    padding: 4px 12px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--color-primary-text, #fff);
+    background-color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+    border-radius: var(--radius-sm, 0.25rem);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.1s, border-color 0.1s;
+  }
+
+  .flat-pack-rt-link-apply-btn:hover {
+    background-color: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+  }
+
+  .flat-pack-rt-link-remove-btn {
+    flex-shrink: 0;
+    padding: 4px 10px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--surface-content-color);
+    background-color: transparent;
+    border: 1px solid var(--surface-border-color);
+    border-radius: var(--radius-sm, 0.25rem);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.1s;
+  }
+
+  .flat-pack-rt-link-remove-btn:hover {
+    background-color: var(--surface-muted-background-color);
+  }
+}
