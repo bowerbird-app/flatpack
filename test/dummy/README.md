@@ -163,7 +163,7 @@ The dummy app can be deployed to DigitalOcean App Platform with the checked-in e
 
 - The default dummy `Gemfile` and `Gemfile.lock` point at the checked-in `vendor/flat_pack` snapshot, so App Platform can use the standard Bundler flow.
 - `Gemfile.app_platform` mirrors the same vendored source for manual deploy-specific Bundler use.
-- Use managed PostgreSQL for `DATABASE_URL`
+- Production stays on SQLite via `storage/production.sqlite3`
 - Use managed Redis for `REDIS_URL`
 - Set `SECRET_KEY_BASE` in App Platform secrets
 - Run `bundle exec rails db:prepare` after the first deploy

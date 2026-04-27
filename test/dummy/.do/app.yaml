@@ -36,10 +36,6 @@ services:
         scope: RUN_TIME
         type: SECRET
         value: REPLACE_ME
-      - key: DATABASE_URL
-        scope: RUN_TIME
-        type: SECRET
-        value: REPLACE_ME
       - key: REDIS_URL
         scope: RUN_TIME
         type: SECRET
@@ -75,10 +71,6 @@ workers:
         scope: RUN_TIME
         value: local
       - key: SECRET_KEY_BASE
-        scope: RUN_TIME
-        type: SECRET
-        value: REPLACE_ME
-      - key: DATABASE_URL
         scope: RUN_TIME
         type: SECRET
         value: REPLACE_ME
