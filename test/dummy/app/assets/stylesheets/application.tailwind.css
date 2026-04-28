@@ -41,6 +41,9 @@
 	--color-ghost-text: var(--color-fp-ghost-text);
 	--color-border: var(--color-fp-border);
 	--shadow-sm: var(--shadow-fp-sm);
+	--radius-md: var(--radius-md);
+	--transition-base: var(--transition-base);
+	--color-ring: var(--color-ring);
 }
 
 @layer components {
