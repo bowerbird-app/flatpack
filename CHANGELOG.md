@@ -64,7 +64,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Tests
 - Added regression coverage to keep the warning utility helpers present in the shared theme stylesheet.
 - Added dummy controller regression coverage to ensure full-page cache keys roll when the layout stylesheet asset digests change.
-### Docs
 
 ## [0.1.23] - 2026-04-14
 

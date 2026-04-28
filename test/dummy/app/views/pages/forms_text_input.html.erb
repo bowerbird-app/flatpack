@@ -21,12 +21,7 @@
         name: "username_error",
         label: "Username (with error)",
         value: "john",
-        error: "Username must be at least 5 characters",
-        required: true,
-        minlength: 5,
-        data: {
-          flat_pack_message_too_short: "Username must be at least 5 characters"
-        }
+        error: "Username must be at least 5 characters"
       ) %>
 
       <%= render FlatPack::TextInput::Component.new(
@@ -53,12 +48,7 @@
           name: &quot;username_error&quot;,
           label: &quot;Username (with error)&quot;,
           value: &quot;john&quot;,
-          error: &quot;Username must be at least 5 characters&quot;,
-          required: true,
-          minlength: 5,
-          data: {
-            flat_pack_message_too_short: &quot;Username must be at least 5 characters&quot;
-          }
+          error: &quot;Username must be at least 5 characters&quot;
         ) %&gt;
     
         &lt;%= render FlatPack::TextInput::Component.new(

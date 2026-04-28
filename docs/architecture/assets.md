@@ -244,8 +244,6 @@ lazyLoadControllersFrom("controllers", application)
 
 If the host app also calls `eagerLoadControllersFrom("controllers", application)`, that eager pass can import FlatPack controllers at boot even though the FlatPack importmap pins use `preload: false`.
 
-If your app caches full HTML pages that include `javascript_importmap_tags`, version that page cache with the current importmap digest as well as any stylesheet digests. Otherwise cached HTML can keep pointing at stale fingerprinted module URLs after a FlatPack controller changes, which surfaces in the browser as a failed dynamic import for a digested controller file that no longer exists.
-
 ### Usage
 
 Controllers are namespaced:
@@ -291,8 +289,6 @@ bin/rails importmap:audit
 # Pin missing dependencies
 bin/importmap pin @hotwired/stimulus
 ```
-
-If the browser reports `Failed to fetch dynamically imported module` for a digested FlatPack controller URL, check any full-page HTML caching first. The usual cause is cached markup containing an old importmap payload rather than a missing controller source file.
 
 ## Next Steps
 

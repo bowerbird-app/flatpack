@@ -35,7 +35,7 @@ module FlatPack
         write_file(root, "app/assets/stylesheets/application.tailwind.css", <<~CSS)
           @import "tailwindcss";
 
-          @source "../../../bundle/ruby/3.2.0/gems/flat_pack-0.1.27/app/components";
+          @source "../../../bundle/ruby/3.2.0/gems/flat_pack-0.1.23/app/components";
 
           @theme {
             --color-fp-primary: oklch(0.52 0.26 250);

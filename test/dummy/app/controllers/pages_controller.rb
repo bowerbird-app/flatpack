@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "digest"
 require "ostruct"
 require "pagy"
 require "pagy/extras/array"
@@ -69,13 +68,6 @@ class PagesController < ApplicationController
   UNCACHED_ACTIONS = %i[
     picker search_results picker_results pagination_infinite
     comments admin chat_demo chips chip_add_callback chip_remove_callback
-  ].freeze
-
-  CACHED_LAYOUT_STYLESHEETS = %w[
-    application.css
-    flat_pack/variables.css
-    flat_pack/rich_text.css
-    flat_pack/content_editor.css
   ].freeze
 
   before_action :serve_from_page_cache, except: UNCACHED_ACTIONS
@@ -1722,14 +1714,7 @@ class PagesController < ApplicationController
   end
 
   def page_cache_key
-    "dummy/full-page/#{request.path}:#{page_cache_asset_version}"
-  end
-
-  def page_cache_asset_version
-    asset_paths = CACHED_LAYOUT_STYLESHEETS.map { |logical_path| helpers.asset_path(logical_path) }
-    asset_paths << current_importmap_digest
-    asset_paths << page_template_cache_version
-    Digest::SHA256.hexdigest(asset_paths.join("|"))[0, 12]
+    "dummy/full-page/#{request.path}:#{page_template_cache_version}"
   end
 
   def page_template_cache_version
@@ -1741,10 +1726,6 @@ class PagesController < ApplicationController
     end
 
     Digest::SHA256.hexdigest(template_versions.join("|"))[0, 12]
-  end
-
-  def current_importmap_digest
-    Rails.application.importmap.digest(resolver: helpers)
   end
 
   def serve_from_page_cache

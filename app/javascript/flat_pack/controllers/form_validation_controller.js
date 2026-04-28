@@ -1,8 +1,6 @@
 // FlatPack Form Validation Stimulus Controller
 import { Controller } from "@hotwired/stimulus"
 
-const DEFAULT_BORDER_CLASS = "border-[var(--surface-border-color)]"
-
 const MESSAGE_KEYS = {
   valueMissing: "required",
   typeMismatch: "typeMismatch",
@@ -15,19 +13,6 @@ const MESSAGE_KEYS = {
   badInput: "badInput"
 }
 
-const DEFAULT_MESSAGES = {
-  required: "Please fill out this field.",
-  typeMismatch: "Please enter a valid value.",
-  patternMismatch: "Please match the requested format.",
-  tooShort: "Please lengthen this text.",
-  tooLong: "Please shorten this text.",
-  rangeUnderflow: "Value is too low.",
-  rangeOverflow: "Value is too high.",
-  stepMismatch: "Please enter a valid step value.",
-  badInput: "Please enter a valid value.",
-  customError: "Invalid value."
-}
-
 export default class extends Controller {
   static values = {
     errorId: String,
@@ -35,12 +20,8 @@ export default class extends Controller {
   }
 
   connect() {
-    this.initialValue = this.element.value
     this.initialDescribedBy = this.element.getAttribute("aria-describedby") || ""
     this.initialBorderColor = this.element.style.borderColor || ""
-    this.initialHasDefaultBorderClass = this.element.classList.contains(DEFAULT_BORDER_CLASS)
-    this.initialErrorState = this.captureInitialErrorState()
-    this.baseDescribedBy = this.describedByWithoutError(this.initialDescribedBy)
     this.onValidate = this.validate.bind(this)
     this.onInvalid = this.invalid.bind(this)
 
@@ -99,12 +80,12 @@ export default class extends Controller {
 
     for (const [flag, messageKey] of Object.entries(MESSAGE_KEYS)) {
       if (validity[flag]) {
-        return this.messageOverride(messageKey) || this.element.validationMessage || this.defaultMessage(messageKey)
+        return this.messageOverride(messageKey) || this.element.validationMessage
       }
     }
 
     if (validity.customError) {
-      return this.messageOverride("customError") || this.element.validationMessage || this.defaultMessage("customError")
+      return this.messageOverride("customError") || this.element.validationMessage
     }
 
     return this.element.validationMessage || "Invalid value."
@@ -112,7 +93,7 @@ export default class extends Controller {
 
   messageOverride(key) {
     const dataKey = `flatPackMessage${key.charAt(0).toUpperCase()}${key.slice(1)}`
-    return (this.element.dataset || {})[dataKey]
+    return this.element.dataset[dataKey]
   }
 
   showError(message) {
@@ -120,7 +101,6 @@ export default class extends Controller {
     if (!errorNode) return
 
     errorNode.textContent = message
-    errorNode.classList.add("text-warning")
     errorNode.classList.remove("hidden")
 
     // Apply a visible invalid border for JS-driven validation states.
@@ -133,50 +113,21 @@ export default class extends Controller {
 
   clearError() {
     const errorNode = this.errorNode(false)
-    const shouldRestoreInitialError = this.shouldRestoreInitialError()
-
     if (errorNode) {
-      if (shouldRestoreInitialError) {
-        errorNode.className = this.initialErrorState.className
-        errorNode.textContent = this.initialErrorState.textContent
-
-        if (this.initialErrorState.hidden) {
-          errorNode.classList.add("hidden")
-        } else {
-          errorNode.classList.remove("hidden")
-        }
-      } else {
-        errorNode.classList.add("hidden")
-        errorNode.textContent = ""
-      }
+      errorNode.classList.add("hidden")
+      errorNode.textContent = ""
     }
 
-    if (shouldRestoreInitialError) {
-      this.element.classList.add("border-warning")
-      if (this.initialHasDefaultBorderClass) {
-        this.element.classList.add(DEFAULT_BORDER_CLASS)
-      }
-    } else {
-      this.element.classList.remove("border-warning")
-      this.element.classList.add(DEFAULT_BORDER_CLASS)
-    }
-
+    this.element.classList.remove("border-warning")
     if (this.initialBorderColor) {
       this.element.style.borderColor = this.initialBorderColor
     } else {
       this.element.style.removeProperty("border-color")
     }
 
-    if (shouldRestoreInitialError) {
-      this.element.setAttribute("aria-invalid", "true")
-    } else {
-      this.element.removeAttribute("aria-invalid")
-    }
-
-    if (shouldRestoreInitialError && this.initialDescribedBy) {
+    this.element.removeAttribute("aria-invalid")
+    if (this.initialDescribedBy) {
       this.element.setAttribute("aria-describedby", this.initialDescribedBy)
-    } else if (this.baseDescribedBy) {
-      this.element.setAttribute("aria-describedby", this.baseDescribedBy)
     } else {
       this.element.removeAttribute("aria-describedby")
     }
@@ -217,33 +168,6 @@ export default class extends Controller {
     }
 
     return this.element.parentElement
-  }
-
-  captureInitialErrorState() {
-    const errorNode = this.errorNode(false)
-    if (!errorNode) return null
-
-    return {
-      className: errorNode.className,
-      hidden: errorNode.classList.contains("hidden"),
-      textContent: errorNode.textContent
-    }
-  }
-
-  defaultMessage(key) {
-    return DEFAULT_MESSAGES[key] || "Invalid value."
-  }
-
-  shouldRestoreInitialError() {
-    return Boolean(this.initialErrorState) && this.element.value === this.initialValue
-  }
-
-  describedByWithoutError(describedBy) {
-    return describedBy
-      .split(/\s+/)
-      .filter(Boolean)
-      .filter((token) => token !== this.errorIdValue)
-      .join(" ")
   }
 
   syncDescribedBy(errorId) {
