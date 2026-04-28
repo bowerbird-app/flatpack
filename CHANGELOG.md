@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.33] - 2026-04-28
+
+### Fixed
+- Removed self-referential Tailwind token mappings from the generated `application.tailwind.css` scaffold so new FlatPack installs no longer emit invalid `:root` assignments for shared radius, transition, and focus-ring variables.
+- Synchronized the shipped AI install contract metadata and the Rails 7 dummy lockfile with the current `0.1.33` gem version so contract validation and frozen bundle installs stay in sync.
+
+### Tests
+- Added regression coverage to keep the install generator's Tailwind template free of self-referential CSS variable mappings.
+
+### Docs
+- Updated the installation guide, AI entrypoint, and project-structure reference to reflect the `0.1.33` release metadata and current install-contract workflow.
+
 ## [0.1.32] - 2026-04-27
 
 ### Added
@@ -52,17 +64,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.27] - 2026-04-16
 
 ### Fixed
-- Removed circular Tailwind CSS variable mappings from the Rails 8 dummy app stylesheet so shared radius, transition, and focus-ring tokens resolve to concrete values again, restoring rounded buttons and form controls in the demo app.
 - Restored shared `.text-warning` and `.border-warning` utility classes in the engine stylesheet, mapped `.text-warning` to the visible warning accent token, preserved server-rendered validation error styling when the shared JS validator clears client-side errors, added explicit fallback copy for required-field blur validation when browsers do not surface a native message, aligned the text input demo error example with real `minlength` validation plus a matching too-short message override, and restored the baseline themed border class when JS clears warning state so fields do not fall back to a black browser-default border.
 - Updated the dummy full-page cache key to include the current layout stylesheet digests and importmap digest so cached demo HTML no longer points at stale missing asset URLs after CSS or lazy-loaded controller JS changes.
 
 ### Tests
-- Added regression coverage to prevent self-referential CSS variable assignments from reappearing in the dummy Tailwind source.
 - Added regression coverage to keep the warning utility helpers present in the shared theme stylesheet.
 - Added dummy controller regression coverage to ensure full-page cache keys roll when the layout stylesheet asset digests change.
-
-### Docs
-- Synchronized the root README, docs index, project structure guide, and theming/dark-mode architecture notes with the current AI install-contract workflow, Propshaft/importmap asset wiring, and theme-variant behavior.
 
 ## [0.1.23] - 2026-04-14
 
@@ -340,6 +347,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CSS variables for theming customization
 
 [0.1.12]: https://github.com/bowerbird-app/flatpack/compare/v0.1.11...v0.1.12
+[0.1.33]: https://github.com/bowerbird-app/flatpack/compare/v0.1.32...v0.1.33
 [0.1.8]: https://github.com/bowerbird-app/flat_pack/compare/v0.1.7...v0.1.8
 [0.1.7]: https://github.com/bowerbird-app/flat_pack/compare/v0.1.6...v0.1.7
 [0.1.6]: https://github.com/bowerbird-app/flat_pack/compare/v0.1.5...v0.1.6

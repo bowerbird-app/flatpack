@@ -413,6 +413,7 @@
   --top-nav-item-active-background-color: oklch(0.52 0.26 250);
   --top-nav-item-active-text-color: oklch(1.0 0 0);
   --top-nav-item-active-icon-color: oklch(1.0 0 0);
+
   --search-icon-color: var(--surface-muted-content-color);
   --search-input-background-color: var(--surface-muted-background-color);
   --search-input-border-color: transparent;
@@ -483,16 +484,6 @@
   --duration-fast: 150ms;
   --duration-base: 200ms;
   --duration-slow: 300ms;
-}
-
-@layer utilities {
-  .text-warning {
-    color: var(--color-warning-border);
-  }
-
-  .border-warning {
-    border-color: var(--color-warning-border);
-  }
 }
 
 input.flat-pack-input[type="search"]::-webkit-search-cancel-button,
