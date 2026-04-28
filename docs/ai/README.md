@@ -15,6 +15,7 @@ Use this directory when FlatPack is being installed, inspected, or consumed by e
 ```bash
 bundle install
 bin/rails generate flat_pack:install
+bin/rake flat_pack:contract
 bin/rake flat_pack:verify_install
 ```
 

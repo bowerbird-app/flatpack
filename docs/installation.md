@@ -6,7 +6,7 @@ This document provides the exact terminal commands and configuration steps neede
 
 FlatPack is a modern Rails UI Component Library built with ViewComponent, Tailwind CSS, and Hotwire. It provides type-safe, testable components with dark mode support and accessibility features. Supports Rails 7.1 and above.
 
-**Current Version:** 0.1.23 (Updated April 14, 2026)
+**Current Version:** 0.1.33 (Updated April 28, 2026)
 
 ## AI-first installation entrypoint
 
@@ -59,12 +59,14 @@ rails generate flat_pack:install
 After installation, verify the host app wiring:
 
 ```bash
+bin/rake flat_pack:contract
 bin/rake flat_pack:verify_install
 ```
 
 **What the generator does:**
 - Adds `stylesheet_link_tag "flat_pack/variables"` and `stylesheet_link_tag "flat_pack/rich_text"` to your `app/views/layouts/application.html.erb` — this lets Propshaft serve the FlatPack CSS files at their correct digested URLs, loading the **complete** FlatPack variable set: all component design tokens in `@theme {}` and the full light-mode palette in `:root {}`
 - **Automatically configures Tailwind CSS 4** by detecting your Tailwind CSS file and injecting the necessary `@source` directive and utility `@theme` block
+- Avoids self-referential Tailwind token mappings such as `--radius-md: var(--radius-md)` in the generated scaffold, preventing invalid shared radius, transition, and focus-ring values
 - **Configures importmap** to load FlatPack Stimulus controllers and the Heroicons JS module
 - **Configures Stimulus** to lazy load FlatPack controllers on first use
 - Shows next steps for using components

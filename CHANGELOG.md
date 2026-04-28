@@ -7,11 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.33] - 2026-04-28
+
 ### Fixed
 - Removed self-referential Tailwind token mappings from the generated `application.tailwind.css` scaffold so new FlatPack installs no longer emit invalid `:root` assignments for shared radius, transition, and focus-ring variables.
+- Synchronized the shipped AI install contract metadata and the Rails 7 dummy lockfile with the current `0.1.33` gem version so contract validation and frozen bundle installs stay in sync.
 
 ### Tests
 - Added regression coverage to keep the install generator's Tailwind template free of self-referential CSS variable mappings.
+
+### Docs
+- Updated the installation guide, AI entrypoint, and project-structure reference to reflect the `0.1.33` release metadata and current install-contract workflow.
 
 ## [0.1.32] - 2026-04-27
 
@@ -341,6 +347,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CSS variables for theming customization
 
 [0.1.12]: https://github.com/bowerbird-app/flatpack/compare/v0.1.11...v0.1.12
+[0.1.33]: https://github.com/bowerbird-app/flatpack/compare/v0.1.32...v0.1.33
 [0.1.8]: https://github.com/bowerbird-app/flat_pack/compare/v0.1.7...v0.1.8
 [0.1.7]: https://github.com/bowerbird-app/flat_pack/compare/v0.1.6...v0.1.7
 [0.1.6]: https://github.com/bowerbird-app/flat_pack/compare/v0.1.5...v0.1.6

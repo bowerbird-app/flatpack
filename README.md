@@ -37,6 +37,7 @@ bin/rake flat_pack:verify_install
 - ✨ Automatically detects your Tailwind CSS 4 configuration file
 - ✨ Calculates the correct relative path to FlatPack components
 - ✨ Injects `@source` directive, `@theme` block, and CSS variable mappings
+- ✨ Avoids invalid self-referential Tailwind token mappings in the generated scaffold
 - ✨ No manual path finding or configuration copying required!
 
 Optional layout scaffold:
