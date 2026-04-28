@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Removed self-referential Tailwind token mappings from the generated `application.tailwind.css` scaffold so new FlatPack installs no longer emit invalid `:root` assignments for shared radius, transition, and focus-ring variables.
+
+### Tests
+- Added regression coverage to keep the install generator's Tailwind template free of self-referential CSS variable mappings.
+
 ## [0.1.32] - 2026-04-27
 
 ### Added
