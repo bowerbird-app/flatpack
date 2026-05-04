@@ -101,7 +101,7 @@ module FlatPack
         def test_renders_avatar_in_default_mode
           render_inline(Component.new)
 
-          assert_selector "img[alt='You']"
+          assert_selector "span", text: "Yo"
         end
 
         def test_hides_avatar_in_compact_mode
