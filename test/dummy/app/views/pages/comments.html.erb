@@ -107,13 +107,15 @@
                 text: "Cancel",
                 url: demo_comments_path(anchor: "comment-#{parent_comment.id}"),
                 style: :ghost,
-                size: :sm
+                size: :sm,
+                class: "rounded-xl"
               ) %&gt;
               &lt;%= render FlatPack::Button::Component.new(
                 text: "Reply",
                 type: "submit",
                 style: :primary,
-                size: :sm
+                size: :sm,
+                class: "rounded-xl"
               ) %&gt;
             &lt;/div&gt;
           &lt;% end %&gt;

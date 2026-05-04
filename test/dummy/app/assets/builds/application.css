@@ -489,9 +489,6 @@
   .mt-auto {
     margin-top: auto;
   }
-  .mr-1 {
-    margin-right: calc(var(--spacing) * 1);
-  }
   .mr-2 {
     margin-right: calc(var(--spacing) * 2);
   }
@@ -545,9 +542,6 @@
   }
   .ml-8 {
     margin-left: calc(var(--spacing) * 8);
-  }
-  .ml-11 {
-    margin-left: calc(var(--spacing) * 11);
   }
   .ml-\[var\(--checkbox-label-gap\)\] {
     margin-left: var(--checkbox-label-gap);
@@ -973,9 +967,6 @@
     --tw-scale-z: 100%;
     scale: var(--tw-scale-x) var(--tw-scale-y);
   }
-  .rotate-45 {
-    rotate: 45deg;
-  }
   .rotate-90 {
     rotate: 90deg;
   }
@@ -1327,14 +1318,8 @@
   .rounded-2xl {
     border-radius: var(--radius-2xl);
   }
-  .rounded-\[28px\] {
-    border-radius: 28px;
-  }
   .rounded-\[32px\] {
     border-radius: 32px;
-  }
-  .rounded-\[40px\] {
-    border-radius: 40px;
   }
   .rounded-\[9999px\] {
     border-radius: 9999px;
@@ -1451,10 +1436,6 @@
   .border-l {
     border-left-style: var(--tw-border-style);
     border-left-width: 1px;
-  }
-  .border-l-2 {
-    border-left-style: var(--tw-border-style);
-    border-left-width: 2px;
   }
   .border-dashed {
     --tw-border-style: dashed;
@@ -1582,12 +1563,6 @@
   }
   .border-\[var\(--comments-composer-border-color\)\] {
     border-color: var(--comments-composer-border-color);
-  }
-  .border-\[var\(--comments-item-border-color\)\] {
-    border-color: var(--comments-item-border-color);
-  }
-  .border-\[var\(--comments-item-footer-border-color\)\] {
-    border-color: var(--comments-item-footer-border-color);
   }
   .border-\[var\(--comments-replies-border-color\)\] {
     border-color: var(--comments-replies-border-color);
@@ -1859,17 +1834,11 @@
       background-color: color-mix(in oklab, var(--color-warning-background-color) 10%, transparent);
     }
   }
-  .bg-\[var\(--comments-composer-actions-background-color\)\] {
-    background-color: var(--comments-composer-actions-background-color);
-  }
   .bg-\[var\(--comments-composer-background-color\)\] {
     background-color: var(--comments-composer-background-color);
   }
   .bg-\[var\(--comments-composer-submit-background-color\)\] {
     background-color: var(--comments-composer-submit-background-color);
-  }
-  .bg-\[var\(--comments-item-background-color\)\] {
-    background-color: var(--comments-item-background-color);
   }
   .bg-\[var\(--comments-item-system-background-color\)\] {
     background-color: var(--comments-item-system-background-color);
@@ -2205,9 +2174,6 @@
   .px-4 {
     padding-inline: calc(var(--spacing) * 4);
   }
-  .px-5 {
-    padding-inline: calc(var(--spacing) * 5);
-  }
   .px-6 {
     padding-inline: calc(var(--spacing) * 6);
   }
@@ -2354,9 +2320,6 @@
   }
   .pr-16 {
     padding-right: calc(var(--spacing) * 16);
-  }
-  .pb-0 {
-    padding-bottom: calc(var(--spacing) * 0);
   }
   .pb-1 {
     padding-bottom: calc(var(--spacing) * 1);
@@ -3514,13 +3477,6 @@
     &:hover {
       @media (hover: hover) {
         background-color: var(--sidebar-item-hover-background-color);
-      }
-    }
-  }
-  .hover\:bg-\[var\(--surface-background-color\)\] {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--surface-background-color);
       }
     }
   }

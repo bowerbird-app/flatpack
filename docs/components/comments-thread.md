@@ -134,13 +134,15 @@ https://redesigned-doodle-7vv56g46g9fp6qr-3000.app.github.dev/demo/comments?repl
                       text: "Cancel",
                       url: demo_comments_path(anchor: "comment-#{comment.id}"),
                       style: :ghost,
-                      size: :sm
+                      size: :sm,
+                      class: "rounded-xl"
                     ) %>
                     <%= render FlatPack::Button::Component.new(
                       text: "Reply",
                       type: "submit",
                       style: :primary,
-                      size: :sm
+                      size: :sm,
+                      class: "rounded-xl"
                     ) %>
                   </div>
                 <% end %>

@@ -48,6 +48,13 @@ module FlatPack
         assert_selector "button.custom-class"
       end
 
+      def test_custom_radius_class_overrides_default_radius
+        render_inline(Component.new(text: "Rounded", class: "rounded-xl"))
+
+        assert_selector "button.rounded-xl"
+        refute_includes page.native.to_html, "rounded-[var(--button-border-radius)]"
+      end
+
       def test_accepts_data_attributes
         render_inline(Component.new(text: "Data", data: {action: "click"}))
 
