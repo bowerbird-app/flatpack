@@ -44,30 +44,32 @@ module FlatPack
 
         def replies_classes
           # Indent based on depth
-          indent_class = "ml-11"
+          indent_class = (@depth > 1) ? "ml-8" : "ml-6"
 
           classes(
             indent_class,
-            "border-l-2 border-[var(--comments-replies-border-color)] pl-4 space-y-4"
+            "space-y-6 border-l border-[var(--comments-replies-border-color)] pl-4"
           )
         end
 
         def render_collapsed_state
           content_tag(:button,
             type: "button",
-            class: "text-sm font-medium text-[var(--comments-replies-toggle-color)] hover:text-[var(--comments-replies-toggle-hover-color)] transition-colors duration-base") do
+            class: "inline-flex items-center gap-2 text-sm font-bold text-[var(--comments-replies-toggle-color)] transition-colors duration-base hover:text-[var(--comments-replies-toggle-hover-color)]") do
             safe_join([
-              # Chevron right icon
+              # Chevron down icon
               content_tag(:svg,
                 xmlns: "http://www.w3.org/2000/svg",
-                viewBox: "0 0 20 20",
-                fill: "currentColor",
-                class: "inline h-4 w-4 mr-1") do
+                fill: "none",
+                viewBox: "0 0 24 24",
+                stroke: "currentColor",
+                class: "h-4 w-4") do
                 content_tag(:path,
                   nil,
-                  "fill-rule": "evenodd",
-                  d: "M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z",
-                  "clip-rule": "evenodd")
+                  "stroke-linecap": "round",
+                  "stroke-linejoin": "round",
+                  "stroke-width": "3",
+                  d: "M19 9l-7 7-7-7")
               end,
               content_tag(:span, @collapsed_label)
             ])

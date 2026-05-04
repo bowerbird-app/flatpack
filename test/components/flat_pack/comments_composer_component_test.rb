@@ -45,7 +45,7 @@ module FlatPack
         def test_renders_submit_button
           render_inline(Component.new)
 
-          assert_selector "button[type='submit']", text: "Comment"
+          assert_selector "button[type='submit'][aria-label='Comment']"
         end
 
         def test_renders_custom_submit_label
@@ -83,7 +83,31 @@ module FlatPack
         def test_compact_mode
           render_inline(Component.new(compact: true))
 
-          assert_includes page.native.to_html, "p-2"
+          assert_includes page.native.to_html, "min-h-[5.5rem]"
+        end
+
+        def test_uses_rounded_xl_textarea_shell
+          render_inline(Component.new)
+
+          assert_includes page.native.to_html, "rounded-xl"
+        end
+
+        def test_rotates_floating_submit_icon_to_90_degrees
+          render_inline(Component.new)
+
+          assert_includes page.native.to_html, "rotate-90"
+        end
+
+        def test_renders_avatar_in_default_mode
+          render_inline(Component.new)
+
+          assert_selector "img[alt='You']"
+        end
+
+        def test_hides_avatar_in_compact_mode
+          render_inline(Component.new(compact: true))
+
+          refute_selector "img[alt='You']"
         end
 
         def test_renders_toolbar_slot

@@ -6,6 +6,8 @@ Render a comment entry surface with textarea, optional toolbar/attachments, and 
 ## When to use
 Use Comments Composer where users create or edit comments with optional custom actions.
 
+The default composer uses a rounded-xl textarea shell and a floating send control.
+
 ## Class
 - Primary: `FlatPack::Comments::Composer::Component`
 
@@ -22,6 +24,7 @@ Use Comments Composer where users create or edit comments with optional custom a
 | `name` | String | `"comment"` | no | Textarea name attribute. |
 | `value` | String | `nil` | no | Initial textarea content. |
 | `rows` | Integer | `3` | no | Initial textarea row count. |
+| `avatar` | Hash | `nil` | no | Optional avatar overrides (`src`, `alt`, `name`, `initials`) for the non-compact composer. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for composer wrapper. |
 
 ## Slots
@@ -39,7 +42,8 @@ Use Comments Composer where users create or edit comments with optional custom a
   name: "comment[body]",
   placeholder: "Add a comment...",
   submit_label: "Post",
-  show_cancel: true
+  show_cancel: true,
+  avatar: {name: "You"}
 ) %>
 ```
 

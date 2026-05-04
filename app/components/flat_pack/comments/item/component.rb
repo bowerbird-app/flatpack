@@ -14,11 +14,11 @@ module FlatPack
 
         # Tailwind CSS scanning requires these classes to be present as string literals.
         # DO NOT REMOVE - These duplicates ensure CSS generation:
-        # "bg-[var(--comments-item-background-color)]" "border-[var(--comments-item-border-color)]" "bg-[var(--comments-item-system-background-color)]" "text-[var(--comments-item-meta-color)]"
+        # "bg-[var(--comments-item-background-color)]" "bg-[var(--comments-item-system-background-color)]" "text-[var(--comments-item-meta-color)]" "rounded-[32px]" "shadow-sm"
         STATES = {
-          default: "bg-[var(--comments-item-background-color)] border-[var(--comments-item-border-color)]",
-          system: "bg-[var(--comments-item-system-background-color)] border-[var(--comments-item-border-color)]",
-          deleted: "bg-[var(--comments-item-background-color)] border-[var(--comments-item-border-color)] opacity-60"
+          default: nil,
+          system: "rounded-[32px] bg-[var(--comments-item-system-background-color)] p-5 shadow-sm",
+          deleted: "opacity-60"
         }.freeze
 
         def initialize(
@@ -51,8 +51,8 @@ module FlatPack
         def call
           content_tag(:div, **item_attributes) do
             safe_join([
-              render_content_column,
-              render_replies_section
+              render_avatar_column,
+              render_content_column
             ].compact)
           end
         end
@@ -85,64 +85,64 @@ module FlatPack
 
         def item_classes
           classes(
-            "w-full"
+            "group flex w-full gap-4"
           )
         end
 
-        def render_content_column
-          content_tag(:div, class: "flex-1 min-w-0") do
-            content_tag(:div, class: content_card_classes) do
-              safe_join([
-                render_header,
-                render_body,
-                render_footer_section,
-                render_actions_section
-              ].compact)
-            end
+        def render_avatar_column
+          content_tag(:div, class: "shrink-0") do
+            FlatPack::Avatar::Component.new(
+              src: @avatar[:src],
+              alt: @avatar[:alt] || @author_name,
+              name: @avatar[:name] || @author_name,
+              initials: @avatar[:initials],
+              size: :md,
+              shape: :circle,
+              href: @avatar[:href]
+            ).render_in(view_context)
           end
         end
 
-        def content_card_classes
+        def render_content_column
+          content_tag(:div, class: content_column_classes) do
+            safe_join([
+              render_header,
+              render_body,
+              render_actions_section,
+              render_footer_section,
+              render_replies_section
+            ].compact)
+          end
+        end
+
+        def content_column_classes
           classes(
-            "rounded-lg border p-4 space-y-3",
+            "min-w-0 flex-1 space-y-3",
             STATES.fetch(@state)
           )
         end
 
         def render_header
-          content_tag(:div, class: "flex items-start justify-between gap-2") do
-            safe_join([
-              render_author_info,
-              render_timestamp
-            ].compact)
+          content_tag(:div, class: "flex items-start justify-between gap-4") do
+            render_author_info
           end
         end
 
         def render_author_info
-          content_tag(:div, class: "flex items-start gap-2 min-w-0") do
+          content_tag(:div, class: "min-w-0") do
             safe_join([
-              content_tag(:div, class: "shrink-0") do
-                FlatPack::Avatar::Component.new(
-                  src: @avatar[:src],
-                  alt: @avatar[:alt] || @author_name,
-                  name: @avatar[:name] || @author_name,
-                  initials: @avatar[:initials],
-                  size: :sm,
-                  shape: :circle,
-                  href: @avatar[:href]
-                ).render_in(view_context)
-              end,
-              content_tag(:div, class: "min-w-0") do
+              content_tag(:div, class: "flex flex-wrap items-center gap-x-2 gap-y-1") do
                 safe_join([
-                  content_tag(:div, class: "font-medium text-sm text-[var(--comments-item-author-color)]") do
+                  content_tag(:div, class: "text-lg font-bold text-[var(--comments-item-author-color)]") do
                     safe_join([
                       content_tag(:span, @author_name),
                       (@state == :system) ? render_system_badge : nil
                     ].compact)
                   end,
-                  @author_meta ? content_tag(:div, @author_meta, class: "text-xs text-[var(--comments-item-meta-color)]") : nil
+                  render_timestamp
                 ].compact)
-              end
+              end,
+              @author_meta ? content_tag(:div, @author_meta, class: "text-sm text-[var(--comments-item-meta-color)]") : nil
             ].compact)
           end
         end
@@ -150,14 +150,14 @@ module FlatPack
         def render_system_badge
           content_tag(:span,
             "System",
-            class: "ml-2 inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium border border-[var(--badge-info-border-color)] bg-[var(--badge-info-background-color)] text-[var(--badge-info-text-color)]")
+            class: "ml-2 inline-flex items-center rounded-full border border-[var(--badge-info-border-color)] bg-[var(--badge-info-background-color)] px-2 py-0.5 text-[10px] font-medium text-[var(--badge-info-text-color)]")
         end
 
         def render_timestamp
           return unless @timestamp
 
           time_attrs = {
-            class: "text-xs text-[var(--comments-item-meta-color)] whitespace-nowrap"
+            class: "text-sm text-[var(--comments-item-meta-color)] whitespace-nowrap"
           }
           time_attrs[:datetime] = @timestamp_iso if @timestamp_iso
 
@@ -177,9 +177,9 @@ module FlatPack
           return render_deleted_message if @state == :deleted
 
           if @body_html
-            content_tag(:div, @body_html.html_safe, class: "text-sm text-[var(--comments-item-body-color)] prose prose-sm max-w-none")
+            content_tag(:div, @body_html.html_safe, class: "prose prose-sm mt-2 max-w-none text-[var(--comments-item-body-color)]")
           elsif @body
-            content_tag(:div, @body, class: "text-sm text-[var(--comments-item-body-color)] whitespace-pre-wrap")
+            content_tag(:div, @body, class: "mt-2 whitespace-pre-wrap text-sm leading-relaxed text-[var(--comments-item-body-color)]")
           end
         end
 
@@ -192,20 +192,20 @@ module FlatPack
         def render_footer_section
           return unless footer?
 
-          content_tag(:div, footer, class: "pt-2 border-t border-[var(--comments-item-footer-border-color)]")
+          content_tag(:div, footer, class: "mt-4 flex flex-wrap items-center gap-6")
         end
 
         def render_actions_section
           return unless actions?
           return if @state == :deleted
 
-          content_tag(:div, actions, class: "flex items-center gap-3 pt-2")
+          content_tag(:div, actions, class: "mt-2")
         end
 
         def render_replies_section
           return unless replies?
 
-          content_tag(:div, replies, class: "pt-2")
+          content_tag(:div, replies, class: "mt-4")
         end
 
         def validate_author!

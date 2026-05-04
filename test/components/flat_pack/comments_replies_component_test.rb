@@ -56,19 +56,19 @@ module FlatPack
         def test_renders_with_depth
           render_inline(Component.new(depth: 2))
 
-          assert_includes page.native.to_html, "ml-11"
+          assert_includes page.native.to_html, "ml-8"
         end
 
         def test_default_depth_is_1
           render_inline(Component.new)
 
-          assert_includes page.native.to_html, "ml-11"
+          assert_includes page.native.to_html, "ml-6"
         end
 
         def test_includes_border_left
           render_inline(Component.new)
 
-          assert_includes page.native.to_html, "border-l-2"
+          assert_includes page.native.to_html, "border-l"
         end
 
         def test_merges_custom_classes

@@ -76,13 +76,7 @@
       ) do |thread| %&gt;
         &lt;% if @comments_table_available %&gt;
           &lt;% thread.composer do %&gt;
-            &lt;%= form_with url: demo_comments_path, method: :post, local: true do %&gt;
-              &lt;%= render FlatPack::Comments::InlineInput::Component.new(
-                name: "comment[body]",
-                placeholder: "Write a comment...",
-                submit_label: "Comment"
-              ) %&gt;
-            &lt;% end %&gt;
+            &lt;%= render "pages/demo_comment_form" %&gt;
           &lt;% end %&gt;
         &lt;% end %&gt;
 

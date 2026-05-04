@@ -16,10 +16,10 @@ module FlatPack
 
         # Tailwind CSS scanning requires these classes to be present as string literals.
         # DO NOT REMOVE - These duplicates ensure CSS generation:
-        # "space-y-4" "space-y-2"
+        # "space-y-10" "space-y-6" "rounded-xl" "bg-[var(--surface-background-color)]"
         VARIANTS = {
-          default: "space-y-4",
-          compact: "space-y-2"
+          default: "space-y-10",
+          compact: "space-y-6"
         }.freeze
 
         def initialize(
@@ -85,29 +85,29 @@ module FlatPack
 
         def thread_classes
           classes(
-            "space-y-6",
-            VARIANTS.fetch(@variant)
+            "w-full max-w-3xl rounded-xl bg-[var(--surface-background-color)] p-10 shadow-2xl"
           )
         end
 
         def render_header_section
           if header?
-            header
+            content_tag(:div, header, class: "mb-8")
           else
             render_default_header
           end
         end
 
         def render_default_header
-          content_tag(:div, class: "flex items-center justify-between pb-0") do
+          content_tag(:div, class: "mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between") do
             safe_join([
-              content_tag(:div, class: "flex items-center gap-2") do
+              content_tag(:h2, class: "text-xl font-bold text-[var(--comments-thread-title-color)]") do
                 safe_join([
-                  content_tag(:h3, @title, class: "text-lg font-semibold text-[var(--comments-thread-title-color)]"),
-                  content_tag(:span, @count.to_s, class: "text-sm text-[var(--comments-thread-count-color)]")
+                  @title,
+                  " ",
+                  content_tag(:span, formatted_count, class: "font-medium text-[var(--comments-thread-count-color)]")
                 ])
               end,
-              @locked ? render_locked_indicator : nil
+              (@locked ? render_locked_indicator : nil)
             ].compact)
           end
         end
@@ -136,11 +136,13 @@ module FlatPack
           return if @locked
           return unless composer?
 
-          content_tag(:div, composer, class: "pt-2")
+          content_tag(:div, composer, class: "mb-12")
         end
 
         def render_comments_section
-          comments? ? safe_join(comments) : render_empty_state
+          content_tag(:div, class: VARIANTS.fetch(@variant)) do
+            comments? ? safe_join(comments) : render_empty_state
+          end
         end
 
         def render_empty_state
@@ -153,7 +155,13 @@ module FlatPack
         end
 
         def render_footer_section
-          footer if footer?
+          return unless footer?
+
+          content_tag(:div, footer, class: "mt-8")
+        end
+
+        def formatted_count
+          "(#{@count})"
         end
 
         def validate_variant!

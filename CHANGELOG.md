@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.34] - 2026-05-04
+
+### Changed
+- Refreshed the comments thread, composer, item, and replies components to use the new card-style layout with avatar-led composition, default sort pills in the thread header, and the floating composer submit affordance.
+- Switched the dummy comments demo and component docs to the updated composer-based layout so the shipped examples match the rendered component structure.
+
+### Tests
+- Updated the comments component regression suite to cover the new default layout classes, sort controls, composer avatar behavior, and replies indentation.
+
 ## [0.1.33] - 2026-04-28
 
 ### Fixed

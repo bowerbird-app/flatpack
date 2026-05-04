@@ -10,7 +10,11 @@
   body: comment.body,
   edited: edited,
   state: comment.state.to_sym,
-  avatar: {name: comment.author_name},
+  avatar: {
+    name: comment.author_name,
+    src: "https://i.pravatar.cc/160?u=#{ERB::Util.url_encode(comment.author_name)}",
+    alt: "#{comment.author_name} avatar"
+  },
   id: "comment-#{comment.id}"
 ) do |item| %>
   <% if allow_reply %>
