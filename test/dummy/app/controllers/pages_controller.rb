@@ -1714,7 +1714,15 @@ class PagesController < ApplicationController
   end
 
   def page_cache_key
-    "dummy/full-page/#{request.path}:#{page_template_cache_version}"
+    "dummy/full-page/#{request.path}:#{page_cache_version}"
+  end
+
+  def page_cache_version
+    Digest::SHA256.hexdigest([
+      page_template_cache_version,
+      layout_stylesheet_cache_version,
+      importmap_cache_version
+    ].join("|")).first(12)
   end
 
   def page_template_cache_version
@@ -1726,6 +1734,33 @@ class PagesController < ApplicationController
     end
 
     Digest::SHA256.hexdigest(template_versions.join("|"))[0, 12]
+  end
+
+  def layout_stylesheet_cache_version
+    stylesheet_versions = %w[
+      application.css
+      flat_pack/variables.css
+      flat_pack/rich_text.css
+      flat_pack/content_editor.css
+    ].map do |logical_path|
+      asset = Rails.application.assets.load_path.find(logical_path)
+      "#{logical_path}:#{asset&.digested_path || "missing"}"
+    end
+
+    Digest::SHA256.hexdigest(stylesheet_versions.join("|"))[0, 12]
+  end
+
+  def importmap_cache_version
+    importmap_versions = [
+      Rails.root.join("config/importmap.rb"),
+      FlatPack::Engine.root.join("config/importmap.rb")
+    ].filter_map do |path|
+      next unless File.file?(path)
+
+      "#{path}:#{File.mtime(path).to_f}"
+    end
+
+    Digest::SHA256.hexdigest(importmap_versions.join("|"))[0, 12]
   end
 
   def serve_from_page_cache
