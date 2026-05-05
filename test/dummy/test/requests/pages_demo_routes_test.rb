@@ -80,6 +80,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/range_input
     /demo/skeletons
     /demo/list
+    /demo/tree
     /demo/timeline
     /mobile
     /mobile/bottom_nav
@@ -545,6 +546,12 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_response :success
     payload = JSON.parse(response.body)
     assert payload["results"].any? { |entry| entry["title"] == "Timeline" }
+
+    get "/demo/search_results", params: {q: "folder tree"}
+
+    assert_response :success
+    payload = JSON.parse(response.body)
+    assert payload["results"].any? { |entry| entry["title"] == "Tree" }
   end
 
   test "top nav includes live demo search" do

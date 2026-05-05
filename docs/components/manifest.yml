@@ -361,6 +361,12 @@ components:
     primary_class: FlatPack::Table::Component
     status: documented
 
+  - key: tree
+    title: Tree
+    doc: docs/components/tree.md
+    primary_class: FlatPack::Tree::Component
+    status: documented
+
   - key: tabs
     title: Tabs
     doc: docs/components/tabs.md

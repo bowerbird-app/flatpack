@@ -1,0 +1,106 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Tree Component",
+  subtitle: "Expandable hierarchical trees for folder structures, navigation, and nested content lists."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :tree %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "VS Code-style File Tree",
+    anchor_link: true,
+    subtitle: "A compact folder explorer inspired by editor sidebars, built entirely from the Tree component API."
+  ) %>
+
+  <%= render FlatPack::Card::Component.new(class: "mt-6 max-w-xl overflow-hidden") do |card| %>
+    <% card.body(class: "p-0") do %>
+      <div class="bg-[oklch(21%_0.01_250)] [--surface-content-color:oklch(88%_0_0)] [--surface-muted-content-color:oklch(62%_0_0)] [--surface-border-color:oklch(30%_0.02_250)] [--surface-subtle-background-color:oklch(28%_0.02_250)] [--button-focus-ring-color:oklch(72%_0.16_240)] [--color-primary:oklch(72%_0.16_240)]">
+        <%= render FlatPack::Tree::Component.new(compact: true, class: "w-64 p-2 font-sans") do |tree| %>
+          <% tree.node(label: "src", expanded: true, icon: :folder) do |src| %>
+            <% src.node(label: "components", expanded: true, icon: :folder) do |components| %>
+              <% components.node(label: "Button.tsx", icon: "code-bracket-square") %>
+              <% components.node(label: "Card.tsx", icon: "code-bracket-square") %>
+            <% end %>
+
+            <% src.node(label: "App.js", icon: "code-bracket-square", active: true) %>
+            <% src.node(label: "index.css", icon: "paint-brush") %>
+          <% end %>
+
+          <% tree.node(label: "package.json", icon: "document-text") %>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    class: "mt-6",
+    language: "erb",
+    title: "VS Code-style File Tree",
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;bg-[oklch(21%_0.01_250)] [--surface-content-color:oklch(88%_0_0)] [--surface-muted-content-color:oklch(62%_0_0)] [--surface-border-color:oklch(30%_0.02_250)] [--surface-subtle-background-color:oklch(28%_0.02_250)] [--button-focus-ring-color:oklch(72%_0.16_240)] [--color-primary:oklch(72%_0.16_240)]&quot;&gt;
+        &lt;%= render FlatPack::Tree::Component.new(compact: true, class: &quot;w-64 p-2 font-sans&quot;) do |tree| %&gt;
+          &lt;% tree.node(label: &quot;src&quot;, expanded: true, icon: :folder) do |src| %&gt;
+            &lt;% src.node(label: &quot;components&quot;, expanded: true, icon: :folder) do |components| %&gt;
+              &lt;% components.node(label: &quot;Button.tsx&quot;, icon: &quot;code-bracket-square&quot;) %&gt;
+              &lt;% components.node(label: &quot;Card.tsx&quot;, icon: &quot;code-bracket-square&quot;) %&gt;
+            &lt;% end %&gt;
+
+            &lt;% src.node(label: &quot;App.js&quot;, icon: &quot;code-bracket-square&quot;, active: true) %&gt;
+            &lt;% src.node(label: &quot;index.css&quot;, icon: &quot;paint-brush&quot;) %&gt;
+          &lt;% end %&gt;
+
+          &lt;% tree.node(label: &quot;package.json&quot;, icon: &quot;document-text&quot;) %&gt;
+        &lt;% end %&gt;
+      &lt;/div&gt;
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Nested Navigation List",
+    anchor_link: true,
+    subtitle: "The same component can also render expandable documentation or settings navigation trees."
+  ) %>
+
+  <div class="mt-6 grid gap-6 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)]">
+    <%= render FlatPack::Card::Component.new do |card| %>
+      <% card.body do %>
+        <%= render FlatPack::Tree::Component.new(class: "max-w-sm") do |tree| %>
+          <% tree.node(label: "Getting Started", expanded: true, icon: "rocket-launch") do |section| %>
+            <% section.node(label: "Installation", href: "#installation", icon: "document-text") %>
+            <% section.node(label: "Theming", href: "#theming", icon: "swatch") %>
+          <% end %>
+
+          <% tree.node(label: "Components", expanded: true, icon: :folder) do |section| %>
+            <% section.node(label: "Buttons", href: demo_buttons_path, icon: "cursor-arrow-rays") %>
+            <% section.node(label: "Tables", href: demo_tables_basic_path, icon: "table-cells") %>
+            <% section.node(label: "Tree", href: demo_tree_path, icon: :folder, active: true, meta: "New" ) %>
+          <% end %>
+
+          <% tree.node(label: "Changelog", href: "#changelog", icon: "clock") %>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::Card::Component.new do |card| %>
+      <% card.body(class: "space-y-4") do %>
+        <p class="text-sm text-(--surface-muted-content-color)">
+          Tree is useful when the relationship between items matters as much as the items themselves. Use it for file explorers, docs sidebars, settings panels, or any expandable nested list where parent-child structure should stay visible.
+        </p>
+
+        <%= render FlatPack::List::Component.new(spacing: :dense, class: "text-sm") do %>
+          <%= render FlatPack::List::Item.new(icon: "folder") do %>
+            Expand groups by nesting <code>node</code> calls inside a parent node block.
+          <% end %>
+          <%= render FlatPack::List::Item.new(icon: "document-text") do %>
+            Pass <code>href:</code> for leaf nodes that should act like navigation links.
+          <% end %>
+          <%= render FlatPack::List::Item.new(icon: "paint-brush") do %>
+            Override row styling with per-node <code>class:</code> values to match brand or product-specific shells.
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+</section>

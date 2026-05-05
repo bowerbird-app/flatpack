@@ -624,6 +624,16 @@
         { variable: "tab / panel", accepts: "id:, label:, block", example: "tabs.tab(id: \"overview\", label: \"Overview\")" }
       ]
     },
+    tree: {
+      label: "Tree",
+      method_call: "render FlatPack::Tree::Component.new(compact: true, guides: true) do |tree| ... end",
+      variables: [
+        { variable: "compact", accepts: "true, false", example: "compact: true" },
+        { variable: "guides", accepts: "true, false", example: "guides: false" },
+        { variable: "node", accepts: "label:, href:, icon:, expanded:, active:, meta:, block", example: "tree.node(label: \"src\", expanded: true) { |node| node.node(label: \"App.js\") }" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"max-w-sm\", data: { testid: \"tree\" }" }
+      ]
+    },
     timeline: {
       label: "Timeline",
       method_call: "render FlatPack::Timeline::Component.new(class: \"max-w-2xl\") do ... end",

@@ -58,7 +58,8 @@ class PagesController < ApplicationController
     {action: /\Acollapse\z/, title: "Collapse", patterns: [/\A--collapse-/]},
     {action: /\Askeletons\z/, title: "Skeleton", patterns: [/\A--skeleton-/]},
     {action: /\Atimeline\z/, title: "Timeline", patterns: [/\A--timeline-/]},
-    {action: /\Alist\z/, title: "List", patterns: [/\A--list-item-/]}
+    {action: /\Alist\z/, title: "List", patterns: [/\A--list-item-/]},
+    {action: /\Atree\z/, title: "Tree", patterns: []}
   ].freeze
 
   before_action :load_table_demo_data, only: %i[tables_basic tables_sortable tables_draggable]
@@ -644,6 +645,9 @@ class PagesController < ApplicationController
     @active_list_demo_item = params[:active_item].to_s
     valid_items = %w[buttons tables chat_demo search]
     @active_list_demo_item = "buttons" unless valid_items.include?(@active_list_demo_item)
+  end
+
+  def tree
   end
 
   def timeline
@@ -1456,6 +1460,7 @@ class PagesController < ApplicationController
       {title: "Collapse", description: "Expandable and collapsible content patterns", url: demo_collapse_path},
       {title: "Skeletons", description: "Skeleton loading placeholders", url: demo_skeletons_path},
       {title: "List", description: "List component demos and selectable rows", url: demo_list_path},
+      {title: "Tree", description: "Folder tree views for folder structures and hierarchical lists", url: demo_tree_path},
       {title: "Timeline", description: "Chronological timeline layouts", url: demo_timeline_path},
       {title: "Mobile", description: "Mobile demo index", url: mobile_path},
       {title: "Bottom Nav", description: "Mobile bottom navigation demo", url: mobile_bottom_nav_path}
@@ -1723,6 +1728,7 @@ class PagesController < ApplicationController
   def page_cache_version
     Digest::SHA256.hexdigest([
       page_template_cache_version,
+      component_cache_version,
       layout_stylesheet_cache_version,
       importmap_cache_version
     ].join("|")).first(12)
@@ -1737,6 +1743,25 @@ class PagesController < ApplicationController
     end
 
     Digest::SHA256.hexdigest(template_versions.join("|"))[0, 12]
+  end
+
+  def component_cache_version
+    component_roots = [
+      Rails.root.join("app/components"),
+      FlatPack::Engine.root.join("app/components")
+    ].uniq
+
+    component_files = component_roots.flat_map do |root|
+      Dir[root.join("**/*.rb")]
+    end.uniq.sort
+
+    component_versions = component_files.filter_map do |path|
+      next unless File.file?(path)
+
+      "#{path}:#{File.mtime(path).to_f}"
+    end
+
+    Digest::SHA256.hexdigest(component_versions.join("|"))[0, 12]
   end
 
   def layout_stylesheet_cache_version

@@ -132,6 +132,7 @@ Rails.application.routes.draw do
   get "demo/range_input", to: "pages#range_input"
   get "demo/skeletons", to: "pages#skeletons"
   get "demo/list", to: "pages#list"
+  get "demo/tree", to: "pages#tree"
   get "demo/timeline", to: "pages#timeline"
 
   # Form submission endpoints for demonstration
