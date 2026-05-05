@@ -75,6 +75,7 @@ Rails.application.routes.draw do
   get "demo/tabs/stacked_pills", to: "pages#tabs_stacked_pills"
   get "demo/toasts", to: "pages#toasts"
   get "demo/page_header", to: "pages#page_header"
+  get "demo/text/content", to: "pages#text_content"
   get "demo/text/quote", to: "pages#text_quote"
   get "demo/empty_state", to: "pages#empty_state"
   get "demo/grid", to: "pages#grid"

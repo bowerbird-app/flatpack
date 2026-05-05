@@ -420,6 +420,9 @@ class PagesController < ApplicationController
   def page_header
   end
 
+  def text_content
+  end
+
   def text_quote
   end
 

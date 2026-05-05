@@ -481,6 +481,12 @@
                     active: false
                   ) %>
                   <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "Content",
+                    href: demo_text_content_path,
+                    icon: :align_left,
+                    active: false
+                  ) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
                     label: "Quote",
                     href: demo_text_quote_path,
                     icon: :message_circle,

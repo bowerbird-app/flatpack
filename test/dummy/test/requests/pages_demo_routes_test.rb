@@ -48,6 +48,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/tabs/stacked_pills
     /demo/toasts
     /demo/page_header
+    /demo/text/content
     /demo/text/quote
     /demo/empty_state
     /demo/grid
@@ -330,6 +331,17 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, ">Heading Variant H6</h6>"
     assert_includes response.body, "--page-title-h1-size"
     assert_includes response.body, "--page-title-h6-size"
+  end
+
+  test "text content demo renders long-form marketing copy" do
+    get "/demo/text/content"
+
+    assert_response :success
+    assert_includes response.body, ">Content</h1>"
+    assert_includes response.body, ">A better workflow</h1>"
+    assert_includes response.body, "text-(--color-primary)"
+    assert_includes response.body, "Push to deploy."
+    assert_includes response.body, "No server? No problem."
   end
 
   test "range input demo variable table includes full option set" do
