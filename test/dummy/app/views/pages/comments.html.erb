@@ -123,4 +123,96 @@
       &lt;% end %&gt;
     CODE
   ) %>
+
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Rich Text Composer Variants",
+    subtitle: "Examples of the comments composer using the shared TipTap-backed text area.",
+    anchor_link: true
+  ) %>
+
+  <div class="grid gap-6 lg:grid-cols-2">
+    <%= render FlatPack::Card::Component.new do |card| %>
+      <% card.body do %>
+        <div class="space-y-4">
+          <div>
+            <h3 class="text-base font-semibold text-[var(--color-foreground)]">Rich text with toolbar</h3>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">Uses the standard toolbar for persistent formatting controls.</p>
+          </div>
+
+          <%= render FlatPack::Comments::Composer::Component.new(
+            name: "toolbar_comment[body]",
+            placeholder: "Write a formatted comment...",
+            submit_label: "Post",
+            avatar: {name: "You"},
+            rich_text: true,
+            rich_text_options: {
+              preset: :content,
+              toolbar: :standard
+            }
+          ) %>
+
+          <%= render FlatPack::CodeBlock::Component.new(
+            title: "ERB",
+            language: "erb",
+            code: CGI.unescapeHTML(<<~'CODE')
+              &lt;%= render FlatPack::Comments::Composer::Component.new(
+                name: &quot;toolbar_comment[body]&quot;,
+                placeholder: &quot;Write a formatted comment...&quot;,
+                submit_label: &quot;Post&quot;,
+                avatar: {name: &quot;You&quot;},
+                rich_text: true,
+                rich_text_options: {
+                  preset: :content,
+                  toolbar: :standard
+                }
+              ) %&gt;
+            CODE
+          ) %>
+        </div>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::Card::Component.new do |card| %>
+      <% card.body do %>
+        <div class="space-y-4">
+          <div>
+            <h3 class="text-base font-semibold text-[var(--color-foreground)]">Rich text with bubble menu</h3>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">No persistent toolbar; select text inside the draft to reveal inline formatting actions.</p>
+          </div>
+
+          <%= render FlatPack::Comments::Composer::Component.new(
+            name: "bubble_comment[body]",
+            value: "<p>Select part of this draft reply to open the bubble formatting menu.</p>",
+            submit_label: "Reply",
+            compact: true,
+            rich_text: true,
+            rich_text_options: {
+              preset: :minimal,
+              toolbar: :none,
+              bubble_menu: true
+            }
+          ) %>
+
+          <%= render FlatPack::CodeBlock::Component.new(
+            title: "ERB",
+            language: "erb",
+            code: CGI.unescapeHTML(<<~'CODE')
+              &lt;%= render FlatPack::Comments::Composer::Component.new(
+                name: &quot;bubble_comment[body]&quot;,
+                value: &quot;&lt;p&gt;Select part of this draft reply to open the bubble formatting menu.&lt;/p&gt;&quot;,
+                submit_label: &quot;Reply&quot;,
+                compact: true,
+                rich_text: true,
+                rich_text_options: {
+                  preset: :minimal,
+                  toolbar: :none,
+                  bubble_menu: true
+                }
+              ) %&gt;
+            CODE
+          ) %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
 </div>

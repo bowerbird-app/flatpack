@@ -26,11 +26,6 @@
     --color-purple-600: oklch(55.8% 0.288 302.321);
     --color-pink-500: oklch(65.6% 0.241 354.308);
     --color-gray-100: oklch(96.7% 0.003 264.542);
-    --color-gray-300: oklch(87.2% 0.01 258.338);
-    --color-gray-400: oklch(70.7% 0.022 261.325);
-    --color-gray-600: oklch(44.6% 0.03 256.802);
-    --color-gray-700: oklch(37.3% 0.034 259.733);
-    --color-gray-900: oklch(21% 0.034 264.665);
     --color-black: #000;
     --color-white: #fff;
     --spacing: 0.25rem;
@@ -1647,23 +1642,14 @@
   .bg-\(--chat-message-outgoing-background-color\) {
     background-color: var(--chat-message-outgoing-background-color);
   }
-  .bg-\(--color-primary\) {
-    background-color: var(--color-primary);
-  }
   .bg-\(--primary-color\) {
     background-color: var(--primary-color);
-  }
-  .bg-\(--sidebar-item-active-background-color\) {
-    background-color: var(--sidebar-item-active-background-color);
   }
   .bg-\(--surface-background-color\) {
     background-color: var(--surface-background-color);
   }
   .bg-\(--surface-muted-background-color\) {
     background-color: var(--surface-muted-background-color);
-  }
-  .bg-\(--surface-page-background-color\) {
-    background-color: var(--surface-page-background-color);
   }
   .bg-\(--surface-subtle-background-color\) {
     background-color: var(--surface-subtle-background-color);
@@ -2024,13 +2010,6 @@
   }
   .bg-white {
     background-color: var(--color-white);
-  }
-  .bg-linear-to-br {
-    --tw-gradient-position: to bottom right;
-    @supports (background-image: linear-gradient(in lab, red, red)) {
-      --tw-gradient-position: to bottom right in oklab;
-    }
-    background-image: linear-gradient(var(--tw-gradient-stops));
   }
   .bg-gradient-to-br {
     --tw-gradient-position: to bottom right in oklab;
@@ -2558,18 +2537,6 @@
   .text-\(--color-primary\) {
     color: var(--color-primary);
   }
-  .text-\(--sidebar-item-active-icon-color\) {
-    color: var(--sidebar-item-active-icon-color);
-  }
-  .text-\(--sidebar-item-active-text-color\) {
-    color: var(--sidebar-item-active-text-color);
-  }
-  .text-\(--sidebar-item-icon-color\) {
-    color: var(--sidebar-item-icon-color);
-  }
-  .text-\(--sidebar-item-text-color\) {
-    color: var(--sidebar-item-text-color);
-  }
   .text-\(--surface-content-color\) {
     color: var(--surface-content-color);
   }
@@ -2752,6 +2719,12 @@
   }
   .text-\[var\(--color-danger-text-color\)\] {
     color: var(--color-danger-text-color);
+  }
+  .text-\[var\(--color-foreground\)\] {
+    color: var(--color-foreground);
+  }
+  .text-\[var\(--color-muted-foreground\)\] {
+    color: var(--color-muted-foreground);
   }
   .text-\[var\(--color-primary\)\] {
     color: var(--color-primary);
@@ -2944,15 +2917,6 @@
   }
   .text-blue-600 {
     color: var(--color-blue-600);
-  }
-  .text-gray-600 {
-    color: var(--color-gray-600);
-  }
-  .text-gray-700 {
-    color: var(--color-gray-700);
-  }
-  .text-gray-900 {
-    color: var(--color-gray-900);
   }
   .text-green-600 {
     color: var(--color-green-600);
@@ -3402,13 +3366,6 @@
       }
     }
   }
-  .hover\:bg-\(--sidebar-item-hover-background-color\) {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--sidebar-item-hover-background-color);
-      }
-    }
-  }
   .hover\:bg-\(--top-nav-item-hover-background-color\) {
     &:hover {
       @media (hover: hover) {
@@ -3598,13 +3555,6 @@
     &:hover {
       @media (hover: hover) {
         background-color: var(--color-primary);
-      }
-    }
-  }
-  .hover\:text-\(--sidebar-item-hover-text-color\) {
-    &:hover {
-      @media (hover: hover) {
-        color: var(--sidebar-item-hover-text-color);
       }
     }
   }
@@ -4174,11 +4124,6 @@
       padding: calc(var(--spacing) * 12);
     }
   }
-  .lg\:px-10 {
-    @media (width >= 64rem) {
-      padding-inline: calc(var(--spacing) * 10);
-    }
-  }
   .lg\:pr-16 {
     @media (width >= 64rem) {
       padding-right: calc(var(--spacing) * 16);
@@ -4198,21 +4143,6 @@
   .xl\:grid-cols-4 {
     @media (width >= 80rem) {
       grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-  }
-  .dark\:text-gray-300 {
-    @media (prefers-color-scheme: dark) {
-      color: var(--color-gray-300);
-    }
-  }
-  .dark\:text-gray-400 {
-    @media (prefers-color-scheme: dark) {
-      color: var(--color-gray-400);
-    }
-  }
-  .dark\:text-white {
-    @media (prefers-color-scheme: dark) {
-      color: var(--color-white);
     }
   }
   .dark\:shadow-lg {

@@ -101,6 +101,26 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "?page=2"
   end
 
+  test "comments demo renders rich text composer examples" do
+    get "/demo/comments"
+
+    assert_response :success
+    assert_includes response.body, "Rich Text Composer Variants"
+    assert_includes response.body, "Rich text with toolbar"
+    assert_includes response.body, "Rich text with bubble menu"
+    assert_includes response.body, 'name="toolbar_comment[body]"'
+    assert_includes response.body, 'name="bubble_comment[body]"'
+    assert_includes response.body, 'data-controller="flat-pack--tiptap"'
+  end
+
+  test "dummy importmap includes tiptap package pins" do
+    importmap = File.read(Rails.root.join("config/importmap.rb"))
+
+    assert_includes importmap, 'pin "@tiptap/core", to: "https://esm.sh/@tiptap/core@#{TIPTAP_VERSION}"'
+    assert_includes importmap, 'pin "@tiptap/extension-bubble-menu", to: "https://esm.sh/@tiptap/extension-bubble-menu@#{TIPTAP_VERSION}"'
+    assert_includes importmap, 'pin "@tiptap/extension-table-of-contents", to: "https://esm.sh/@tiptap/extension-table-of-contents@#{TIPTAP_VERSION}"'
+  end
+
   test "chat demo keeps composer visible in full-height panel" do
     get "/demo/chat/demo"
 
