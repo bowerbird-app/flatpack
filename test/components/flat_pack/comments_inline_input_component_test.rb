@@ -12,6 +12,19 @@ module FlatPack
           assert_selector "textarea"
         end
 
+        def test_defaults_to_plain_textarea_mode
+          render_inline(Component.new)
+
+          refute_selector "[data-controller='flat-pack--tiptap']"
+        end
+
+        def test_allows_rich_text_mode
+          render_inline(Component.new(rich_text: true))
+
+          assert_selector "div[data-controller='flat-pack--tiptap']"
+          refute_selector "textarea"
+        end
+
         def test_renders_default_placeholder
           render_inline(Component.new)
 

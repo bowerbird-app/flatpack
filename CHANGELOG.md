@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added a new dummy Text Content demo page under `/demo/text/content` to showcase long-form editorial and marketing copy with primary-theme color accents.
 
+### Changed
+- Added `rich_text` and `rich_text_options` pass-through support to the comments composer and inline input wrappers so reply and comment fields can opt into the shared TipTap-backed `TextArea` editor while remaining plain text by default.
+
 ## [0.1.35] - 2026-05-04
 
 ### Fixed

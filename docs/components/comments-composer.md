@@ -24,6 +24,8 @@ The default composer uses a rounded-xl textarea shell and a floating send contro
 | `name` | String | `"comment"` | no | Textarea name attribute. |
 | `value` | String | `nil` | no | Initial textarea content. |
 | `rows` | Integer | `3` | no | Initial textarea row count. |
+| `rich_text` | Boolean | `false` | no | Opts the composer into the TipTap-backed `TextArea` rich text mode. |
+| `rich_text_options` | Hash | `{}` | no | Pass-through options for `FlatPack::TextArea::Component` rich text configuration. |
 | `avatar` | Hash | `nil` | no | Optional avatar overrides (`src`, `alt`, `name`, `initials`) for the non-compact composer. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for composer wrapper. |
 
@@ -42,13 +44,16 @@ The default composer uses a rounded-xl textarea shell and a floating send contro
   name: "comment[body]",
   placeholder: "Add a comment...",
   submit_label: "Post",
+  rich_text: true,
+  rich_text_options: {toolbar: :full},
   show_cancel: true,
   avatar: {name: "You"}
 ) %>
 ```
 
 ## Accessibility
-- Uses native `<textarea>` and submit `<button>` controls.
+- Defaults to native `<textarea>` and submit `<button>` controls.
+- When `rich_text: true`, the composer uses the same TipTap-backed editor surface as `FlatPack::TextArea::Component`.
 - Provide surrounding label context (or `aria-*` attributes) in composed forms.
 
 ## Dependencies

@@ -23,6 +23,8 @@ module FlatPack
           name: "comment",
           value: nil,
           rows: 3,
+          rich_text: false,
+          rich_text_options: {},
           avatar: nil,
           **system_arguments
         )
@@ -37,6 +39,8 @@ module FlatPack
           @name = name
           @value = value
           @rows = rows
+          @rich_text = rich_text
+          @rich_text_options = rich_text_options
           @avatar = avatar.is_a?(Hash) ? avatar.symbolize_keys : avatar
         end
 
@@ -205,6 +209,8 @@ module FlatPack
             rows: @rows,
             placeholder: @placeholder,
             disabled: @disabled,
+            rich_text: @rich_text,
+            rich_text_options: @rich_text_options,
             class: classes(
               "w-full resize-none border-0 bg-transparent px-0 py-0 text-sm text-[var(--comments-composer-text-color)] placeholder:text-[var(--comments-composer-placeholder-color)] focus:ring-0 focus:border-transparent",
               @compact ? "min-h-[4rem]" : "min-h-16"
