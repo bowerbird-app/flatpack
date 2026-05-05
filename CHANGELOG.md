@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.38] - 2026-05-05
+
+### Changed
+- Added an optional card `theme:` hash that can override background, text, muted text, and primary tokens for a single card subtree while preserving existing token fallbacks for any omitted keys.
+
+### Tests
+- Added regression coverage for partial card theme hashes, safe CSS color validation, and card-local primary token inheritance.
+
 ## [0.1.37] - 2026-05-05
 
 ### Added

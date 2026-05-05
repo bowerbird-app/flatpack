@@ -149,6 +149,17 @@ module FlatPack
       assert_equal({}, AttributeSanitizer.sanitize_attributes({}))
     end
 
+    test "sanitize_css_color allows supported color formats" do
+      assert_equal "#0f172a", AttributeSanitizer.sanitize_css_color("#0f172a")
+      assert_equal "oklch(0.72 0.16 240)", AttributeSanitizer.sanitize_css_color("oklch(0.72 0.16 240)")
+      assert_equal "var(--color-primary)", AttributeSanitizer.sanitize_css_color("var(--color-primary)")
+    end
+
+    test "sanitize_css_color rejects unsafe values" do
+      assert_nil AttributeSanitizer.sanitize_css_color("#0f172a; background: url(javascript:alert('xss'))")
+      assert_nil AttributeSanitizer.sanitize_css_color("expression(alert('xss'))")
+    end
+
     test "validate_href! returns sanitized href for safe URLs" do
       url = "https://example.com"
       assert_equal url, AttributeSanitizer.validate_href!(url)
