@@ -103,6 +103,121 @@ module FlatPack
         assert_includes page.native.to_html, "p-[var(--card-padding-lg)]"
       end
 
+      def test_renders_theme_overrides_for_supplied_keys_only
+        render_inline(Component.new(theme: {
+          background: "#101820",
+          primary: "oklch(0.72 0.16 240)"
+        }))
+
+        html = page.native.to_html
+        assert_includes html, "--card-background-color: #101820"
+        assert_includes html, "--color-primary: oklch(0.72 0.16 240)"
+        refute_includes html, "--surface-content-color:"
+        refute_includes html, "--surface-muted-content-color:"
+        refute_includes html, "--color-primary-hover:"
+        refute_includes html, "--color-primary-text:"
+      end
+
+      def test_renders_theme_with_surface_text_class
+        render_inline(Component.new(theme: {text: "#e2e8f0"})) do
+          "Card content"
+        end
+
+        html = page.native.to_html
+        assert_includes html, "text-[var(--surface-content-color)]"
+        assert_includes html, "--surface-content-color: #e2e8f0"
+      end
+
+      def test_merges_theme_style_with_existing_style_attribute
+        render_inline(Component.new(
+          :theme => {background: "#101820"},
+          "style" => "--custom-card-token: 1"
+        ))
+
+        html = page.native.to_html
+        assert_includes html, "--custom-card-token: 1"
+        assert_includes html, "--card-background-color: #101820"
+      end
+
+      def test_validates_theme_keys
+        error = assert_raises(ArgumentError) do
+          render_inline(Component.new(theme: {accent: "#101820"}))
+        end
+
+        assert_includes error.message, "Invalid theme keys"
+      end
+
+      def test_validates_theme_color_values
+        error = assert_raises(ArgumentError) do
+          render_inline(Component.new(theme: {background: "#101820; background: red"}))
+        end
+
+        assert_includes error.message, "Theme values must be safe CSS color values"
+      end
+
+      def test_nested_primary_button_keeps_scoped_theme_variables_on_card
+        render_inline(Component.new(theme: {
+          primary: "#2f80ed",
+          primary_hover: "#1d4ed8",
+          primary_text: "#ffffff"
+        })) do |card|
+          card.footer do
+            <<~HTML.html_safe
+              <button class="bg-[var(--button-primary-background-color)] text-[var(--button-primary-text-color)]">
+                Pay now
+              </button>
+            HTML
+          end
+        end
+
+        html = page.native.to_html
+        assert_includes html, "--color-primary: #2f80ed"
+        assert_includes html, "--button-primary-background-color: #2f80ed"
+        assert_includes html, "--button-primary-border-color: #2f80ed"
+        assert_includes html, "--button-primary-hover-background-color: #1d4ed8"
+        assert_includes html, "--color-primary-text: #ffffff"
+        assert_includes html, "--button-primary-text-color: #ffffff"
+        assert_includes html, "bg-[var(--button-primary-background-color)]"
+      end
+
+      def test_default_and_secondary_button_theme_variables_can_be_overridden
+        render_inline(Component.new(theme: {
+          default_button: "#f8fafc",
+          default_button_hover: "#e2e8f0",
+          default_button_text: "#0f172a",
+          default_button_border: "#cbd5e1",
+          secondary_button: "#111827",
+          secondary_button_hover: "#1f2937",
+          secondary_button_text: "#f9fafb",
+          secondary_button_border: "#4b5563"
+        })) do |card|
+          card.footer do
+            <<~HTML.html_safe
+              <div class="flex gap-2">
+                <button class="bg-[var(--button-default-background-color)] text-[var(--button-default-text-color)] border-[var(--button-default-border-color)]">
+                  Default action
+                </button>
+                <button class="bg-[var(--button-secondary-background-color)] text-[var(--button-secondary-text-color)] border-[var(--button-secondary-border-color)]">
+                  Secondary action
+                </button>
+              </div>
+            HTML
+          end
+        end
+
+        html = page.native.to_html
+        assert_includes html, "--button-default-background-color: #f8fafc"
+        assert_includes html, "--button-default-hover-background-color: #e2e8f0"
+        assert_includes html, "--button-default-text-color: #0f172a"
+        assert_includes html, "--button-default-border-color: #cbd5e1"
+        assert_includes html, "--button-secondary-background-color: #111827"
+        assert_includes html, "--button-secondary-hover-background-color: #1f2937"
+        assert_includes html, "--button-secondary-text-color: #f9fafb"
+        assert_includes html, "--button-secondary-border-color: #4b5563"
+        assert_includes html, "bg-[var(--button-default-background-color)]"
+        assert_includes html, "bg-[var(--button-secondary-background-color)]"
+      end
+
       def test_validates_padding
         error = assert_raises(ArgumentError) do
           render_inline(Component.new(padding: :invalid))

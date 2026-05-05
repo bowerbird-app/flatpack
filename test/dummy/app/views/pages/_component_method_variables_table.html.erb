@@ -86,7 +86,8 @@
       variables: [
         { variable: "style", accepts: ":default, :elevated, :outlined, :flat, :interactive, :list", example: "style: :outlined" },
         { variable: "hover", accepts: "nil, :none, :subtle, :strong", example: "hover: :subtle" },
-        { variable: "padding", accepts: ":none, :sm, :md, :lg", example: "padding: :lg" }
+        { variable: "padding", accepts: ":none, :sm, :md, :lg", example: "padding: :lg" },
+        { variable: "theme", accepts: "Hash with any subset of :background, :text, :muted_text, :primary, :primary_hover, :primary_text, :default_button, :default_button_hover, :default_button_text, :default_button_border, :secondary_button, :secondary_button_hover, :secondary_button_text, :secondary_button_border", example: 'theme: { background: "#163300", text: "#9FE870", primary: "#9FE870", primary_text: "#163300" }' }
       ]
     },
     carousel: {

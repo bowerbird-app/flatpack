@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.39] - 2026-05-05
+
+### Changed
+- Expanded card-scoped `theme:` overrides to cover primary, default, and secondary button tokens alongside the card surface tokens.
+- Updated the card docs and dummy demo variable tables so the new theme options and Wise-style example are reflected in both markdown docs and `/demo/cards`.
+
+## [0.1.38] - 2026-05-05
+
+### Changed
+- Added an optional card `theme:` hash that can override background, text, muted text, and primary tokens for a single card subtree while preserving existing token fallbacks for any omitted keys.
+
+### Tests
+- Added regression coverage for partial card theme hashes, safe CSS color validation, and card-local primary token inheritance.
+
 ## [0.1.37] - 2026-05-05
 
 ### Added
@@ -20,6 +34,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Restored the dummy app importmap's missing `@tiptap/*` package pins so rich-text comment and textarea demos can actually boot the `flat-pack--tiptap` controller in the browser.
 - Explicitly registered the dummy app's `flat-pack--tiptap` Stimulus controller so rich-text demos do not rely solely on nested lazy controller discovery at first paint.
 - Added component file versions to the dummy app's full-page cache key so component-only demo updates, including the new Tree markup, no longer serve stale cached HTML until the cache expires.
+
+## [0.1.36] - 2026-05-05
+
+### Added
+- Added a new `FlatPack::Tree::Component` for rendering expandable folder trees and hierarchical lists with a nested node DSL.
+- Added dummy app route, sidebar entry, search index coverage, and documentation for the new Tree component.
+
+## [0.1.35] - 2026-05-04
+
+### Fixed
+- Removed the stale self-referential Tailwind root token mappings from the dummy app scaffold and vendored install template so token-driven button radii resolve correctly during local preview and generated installs.
+- Restored stylesheet- and importmap-aware dummy full-page cache keys so refreshed demo pages stop serving stale HTML that points at old digested CSS assets.
+
+### Tests
+- Added regression coverage to keep both the install-template scaffold and the dummy app Tailwind scaffold free of circular CSS variable mappings.
+- Added controller regression coverage to keep dummy page-cache keys sensitive to layout stylesheet and importmap version changes.
+
+## [0.1.34] - 2026-05-04
+
+### Changed
+- Refreshed the comments thread, composer, item, and replies components to use the new card-style layout with avatar-led composition, default sort pills in the thread header, and the floating composer submit affordance.
+- Switched the dummy comments demo and component docs to the updated composer-based layout so the shipped examples match the rendered component structure.
+
+### Tests
+- Updated the comments component regression suite to cover the new default layout classes, sort controls, composer avatar behavior, and replies indentation.
+
+## [0.1.33] - 2026-04-28
+
+### Fixed
+- Removed self-referential Tailwind token mappings from the generated `application.tailwind.css` scaffold so new FlatPack installs no longer emit invalid `:root` assignments for shared radius, transition, and focus-ring variables.
+- Synchronized the shipped AI install contract metadata and the Rails 7 dummy lockfile with the current `0.1.33` gem version so contract validation and frozen bundle installs stay in sync.
+
+### Tests
+- Added regression coverage to keep the install generator's Tailwind template free of self-referential CSS variable mappings.
+
+### Docs
+- Updated the installation guide, AI entrypoint, and project-structure reference to reflect the `0.1.33` release metadata and current install-contract workflow.
 
 ## [0.1.32] - 2026-04-27
 
@@ -66,17 +117,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.27] - 2026-04-16
 
 ### Fixed
-- Removed circular Tailwind CSS variable mappings from the Rails 8 dummy app stylesheet so shared radius, transition, and focus-ring tokens resolve to concrete values again, restoring rounded buttons and form controls in the demo app.
 - Restored shared `.text-warning` and `.border-warning` utility classes in the engine stylesheet, mapped `.text-warning` to the visible warning accent token, preserved server-rendered validation error styling when the shared JS validator clears client-side errors, added explicit fallback copy for required-field blur validation when browsers do not surface a native message, aligned the text input demo error example with real `minlength` validation plus a matching too-short message override, and restored the baseline themed border class when JS clears warning state so fields do not fall back to a black browser-default border.
 - Updated the dummy full-page cache key to include the current layout stylesheet digests and importmap digest so cached demo HTML no longer points at stale missing asset URLs after CSS or lazy-loaded controller JS changes.
 
 ### Tests
-- Added regression coverage to prevent self-referential CSS variable assignments from reappearing in the dummy Tailwind source.
 - Added regression coverage to keep the warning utility helpers present in the shared theme stylesheet.
 - Added dummy controller regression coverage to ensure full-page cache keys roll when the layout stylesheet asset digests change.
-
-### Docs
-- Synchronized the root README, docs index, project structure guide, and theming/dark-mode architecture notes with the current AI install-contract workflow, Propshaft/importmap asset wiring, and theme-variant behavior.
 
 ## [0.1.23] - 2026-04-14
 
@@ -354,6 +400,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CSS variables for theming customization
 
 [0.1.12]: https://github.com/bowerbird-app/flatpack/compare/v0.1.11...v0.1.12
+[0.1.33]: https://github.com/bowerbird-app/flatpack/compare/v0.1.32...v0.1.33
 [0.1.8]: https://github.com/bowerbird-app/flat_pack/compare/v0.1.7...v0.1.8
 [0.1.7]: https://github.com/bowerbird-app/flat_pack/compare/v0.1.6...v0.1.7
 [0.1.6]: https://github.com/bowerbird-app/flat_pack/compare/v0.1.5...v0.1.6

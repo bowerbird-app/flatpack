@@ -601,6 +601,82 @@
     ) %>
   </section>
 
+  <!-- Themed Cards -->
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Themed Cards", anchor_link: true, subtitle: "Card-local palette overrides for standout layouts without changing neighboring cards.") %>
+    <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 mb-4">
+      <%= render FlatPack::Card::Component.new(
+        style: :elevated,
+        theme: {
+          background: "#163300",
+          text: "#9FE870",
+          muted_text: "#9FE870",
+          primary: "#9FE870",
+          primary_hover: "#9FE870",
+          primary_text: "#163300"
+        },
+        class: "shadow-xl"
+      ) do |card| %>
+        <% card.header(divider: false) do %>
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.25em] opacity-80">Wise-style promo</p>
+              <h3 class="mt-3 text-2xl font-semibold">Spend abroad with local rates</h3>
+            </div>
+            <span class="rounded-full bg-white/15 px-3 py-1 text-xs font-medium">Live</span>
+          </div>
+        <% end %>
+        <% card.body do %>
+          <div class="space-y-4">
+            <p class="max-w-md text-sm text-[var(--surface-muted-content-color)]">This card overrides only its own background, text, muted text, and primary tokens. The CTA button and any nested accents inherit the local palette automatically.</p>
+            <div class="rounded-2xl bg-white/10 p-4">
+              <p class="text-xs uppercase tracking-[0.2em] text-[var(--surface-muted-content-color)]">Available to spend</p>
+              <p class="mt-2 text-3xl font-semibold">$4,280.14</p>
+            </div>
+          </div>
+        <% end %>
+        <% card.footer(divider: false) do %>
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p class="text-sm text-[var(--surface-muted-content-color)]">Partial theme hashes also work. Omitted values fall back to the default card tokens.</p>
+            <%= render FlatPack::Button::Component.new(text: "Add money", style: :primary) %>
+          </div>
+        <% end %>
+      <% end %>
+
+      <%= render FlatPack::Card::Component.new(style: :elevated) do |card| %>
+        <% card.header do %>
+          <h3 class="text-xl font-semibold">Default neighboring card</h3>
+        <% end %>
+        <% card.body do %>
+          <div class="space-y-3">
+            <p class="text-sm text-[var(--surface-muted-content-color)]">This card stays on the standard FlatPack palette to show that the themed card does not leak its overrides into the surrounding layout.</p>
+            <%= render FlatPack::Button::Component.new(text: "Standard action", style: :primary) %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Card::Component.new(
+          style: :elevated,
+          theme: {
+            background: &quot;#163300&quot;,
+            text: &quot;#9FE870&quot;,
+            muted_text: &quot;#9FE870&quot;,
+            primary: &quot;#9FE870&quot;,
+            primary_hover: &quot;#9FE870&quot;,
+            primary_text: &quot;#163300&quot;
+          }
+        ) do |card| %&gt;
+          &lt;% card.body do %&gt;
+            <p class="text-sm text-[var(--surface-muted-content-color)]">Only this card gets the override.</p>
+            &lt;%= render FlatPack::Button::Component.new(text: "Add money", style: :primary) %&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
+  </section>
+
   <!-- List Cards -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "List Cards (Horizontal)", anchor_link: true, subtitle: "Examples for List Cards (Horizontal).") %>

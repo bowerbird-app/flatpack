@@ -91,12 +91,36 @@ module FlatPack
         lg: "p-[var(--card-padding-lg)]"
       }.freeze
 
+      THEME_VARIABLES = {
+        background: "--card-background-color",
+        text: "--surface-content-color",
+        muted_text: "--surface-muted-content-color",
+        primary: "--color-primary",
+        primary_hover: "--color-primary-hover",
+        primary_text: "--color-primary-text"
+      }.freeze
+
+      BUTTON_THEME_VARIABLES = {
+        primary: ["--button-primary-background-color", "--button-primary-border-color"],
+        primary_hover: ["--button-primary-hover-background-color"],
+        primary_text: ["--button-primary-text-color"],
+        default_button: ["--button-default-background-color"],
+        default_button_hover: ["--button-default-hover-background-color"],
+        default_button_text: ["--button-default-text-color"],
+        default_button_border: ["--button-default-border-color"],
+        secondary_button: ["--button-secondary-background-color"],
+        secondary_button_hover: ["--button-secondary-hover-background-color"],
+        secondary_button_text: ["--button-secondary-text-color"],
+        secondary_button_border: ["--button-secondary-border-color"]
+      }.freeze
+
       def initialize(
         style: :default,
         hover: nil,
         clickable: false,
         href: nil,
         padding: :md,
+        theme: nil,
         **system_arguments
       )
         super(**system_arguments)
@@ -104,6 +128,7 @@ module FlatPack
         @hover = hover&.to_sym
         @clickable = clickable
         @padding = padding.to_sym
+        @theme = normalize_theme(theme)
 
         # Sanitize URL for security and validate
         if href
@@ -116,6 +141,7 @@ module FlatPack
         validate_style!
         validate_hover!
         validate_padding!
+        validate_theme!
       end
 
       def call
@@ -143,9 +169,13 @@ module FlatPack
       end
 
       def container_attributes
-        merge_attributes(
+        attributes = merge_attributes(
           class: card_classes
         )
+
+        attributes.delete("style")
+        attributes[:style] = combined_style if combined_style.present?
+        attributes
       end
 
       def card_classes
@@ -155,10 +185,16 @@ module FlatPack
           "h-full",
           "flex",
           "flex-col",
+          "text-[var(--surface-content-color)]",
           style_classes,
           hover_classes,
           container_padding_classes
         )
+      end
+
+      def combined_style
+        existing_style = html_attributes[:style] || html_attributes["style"]
+        [existing_style, theme_style].compact.join("; ").presence
       end
 
       def overflow_class
@@ -195,6 +231,34 @@ module FlatPack
         @hover || STYLE_DEFAULT_HOVERS.fetch(@style)
       end
 
+      def theme_style
+        return if @theme.empty?
+
+        direct_variables = @theme.filter_map do |key, value|
+          next unless THEME_VARIABLES.key?(key)
+
+          "#{THEME_VARIABLES.fetch(key)}: #{value}"
+        end
+
+        button_variables = @theme.flat_map do |key, value|
+          Array(BUTTON_THEME_VARIABLES[key]).map do |variable|
+            "#{variable}: #{value}"
+          end
+        end
+
+        [*direct_variables, *button_variables].join("; ")
+      end
+
+      def normalize_theme(theme)
+        return {} if theme.nil?
+
+        theme.to_h.each_with_object({}) do |(key, value), normalized|
+          normalized[key.to_sym] = value
+        end
+      rescue NoMethodError
+        raise ArgumentError, "Theme must be a hash of color overrides."
+      end
+
       def validate_style!
         return if STYLES.key?(@style)
         raise ArgumentError, "Invalid style: #{@style}. Must be one of: #{STYLES.keys.join(", ")}"
@@ -208,6 +272,24 @@ module FlatPack
       def validate_hover!
         return if @hover.nil? || HOVERS.key?(@hover)
         raise ArgumentError, "Invalid hover: #{@hover}. Must be one of: #{HOVERS.keys.join(", ")}"
+      end
+
+      def validate_theme!
+        valid_theme_keys = THEME_VARIABLES.keys | BUTTON_THEME_VARIABLES.keys
+        invalid_keys = @theme.keys - valid_theme_keys
+        return if invalid_keys.empty? && valid_theme_colors?
+
+        unless invalid_keys.empty?
+          raise ArgumentError, "Invalid theme keys: #{invalid_keys.join(", ")}. Must be one of: #{valid_theme_keys.join(", ")}"
+        end
+
+        raise ArgumentError, "Theme values must be safe CSS color values."
+      end
+
+      def valid_theme_colors?
+        @theme.all? do |_key, value|
+          FlatPack::AttributeSanitizer.sanitize_css_color(value).present?
+        end
       end
 
       def validate_href!(original_href)

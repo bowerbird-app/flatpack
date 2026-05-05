@@ -37,6 +37,7 @@ bin/rake flat_pack:verify_install
 - ✨ Automatically detects your Tailwind CSS 4 configuration file
 - ✨ Calculates the correct relative path to FlatPack components
 - ✨ Injects `@source` directive, `@theme` block, and CSS variable mappings
+- ✨ Avoids invalid self-referential Tailwind token mappings in the generated scaffold
 - ✨ No manual path finding or configuration copying required!
 
 Optional layout scaffold:
@@ -265,6 +266,7 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
 ### Data Display
 - **Table** - Data tables with configurable columns and optional drag-and-drop row reordering
 - **List** - Structured list with composable items, avatars, and actions
+- **Tree** - Nested hierarchical tree for folder explorers, file structures, and expandable lists
 - **Timeline** - Vertical event timeline with icons and timestamps
 - **Chart** - ApexCharts-based visualizations with optional card framing
 - **Progress** - Horizontal progress bar with optional label

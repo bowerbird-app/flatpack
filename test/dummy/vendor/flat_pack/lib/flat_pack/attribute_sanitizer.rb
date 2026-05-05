@@ -7,6 +7,14 @@ module FlatPack
     # List of allowed URL protocols (whitelist approach)
     ALLOWED_PROTOCOLS = %w[http https mailto tel].freeze
 
+    CSS_COLOR_KEYWORDS = %w[
+      transparent currentcolor inherit initial unset revert revert-layer
+    ].freeze
+
+    CSS_COLOR_FUNCTION_PATTERN = /\A(?:rgb|rgba|hsl|hsla|oklab|oklch|lab|lch|color)\([a-z0-9\s.,%+\-\/#]+\)\z/i
+    CSS_COLOR_VAR_PATTERN = /\Avar\(--[a-z0-9-]+\)\z/i
+    CSS_HEX_COLOR_PATTERN = /\A#(?:[\da-f]{3}|[\da-f]{4}|[\da-f]{6}|[\da-f]{8})\z/i
+
     # List of dangerous HTML attributes that should be filtered out
     DANGEROUS_ATTRIBUTES = %w[
       onclick onload onerror onmouseover onmouseout onmousemove
@@ -76,6 +84,25 @@ module FlatPack
           attribute_name = key.to_s.downcase
           DANGEROUS_ATTRIBUTES.include?(attribute_name)
         end
+      end
+
+      # Validates CSS color values that are safe to interpolate into a style
+      # attribute as custom property values.
+      #
+      # @param value [String] The CSS color token to validate
+      # @return [String, nil] The sanitized color value if valid, nil otherwise
+      def sanitize_css_color(value)
+        return nil if value.nil?
+
+        color = value.to_s.strip
+        return nil if color.empty?
+
+        return color if CSS_HEX_COLOR_PATTERN.match?(color)
+        return color if CSS_COLOR_VAR_PATTERN.match?(color)
+        return color if CSS_COLOR_FUNCTION_PATTERN.match?(color)
+        return color if CSS_COLOR_KEYWORDS.include?(color.downcase)
+
+        nil
       end
 
       # Validates and sanitizes a href attribute specifically
