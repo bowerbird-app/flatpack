@@ -34,7 +34,14 @@ Use Comments Thread as the root wrapper for page-level comment sections.
 ```erb
 <%= render FlatPack::Comments::Thread::Component.new(count: @comments.count, title: "Discussion") do |thread| %>
   <% thread.composer do %>
-    <%= render FlatPack::Comments::Composer::Component.new(avatar: {name: "You"}) %>
+    <%= render FlatPack::Comments::Composer::Component.new(
+      avatar: { name: "You" },
+      rich_text: true,
+      rich_text_options: {
+        preset: :content,
+        toolbar: :standard
+      }
+    ) %>
   <% end %>
 
   <% @comments.each do |comment| %>
@@ -52,6 +59,8 @@ Use Comments Thread as the root wrapper for page-level comment sections.
   <% end %>
 <% end %>
 ```
+
+The nested composer accepts the same `rich_text` and `rich_text_options` props as [comments-composer.md](comments-composer.md), so thread-level comment forms can opt into the TipTap toolbar or bubble-menu modes without custom wrapper code.
 
 ## Interactive Demo
 https://redesigned-doodle-7vv56g46g9fp6qr-3000.app.github.dev/demo/comments?reply_to=1#interactive-thread
