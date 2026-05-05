@@ -84,15 +84,11 @@ trap("INT", &shutdown)
 trap("TERM", &shutdown)
 
 managed_pids = [rails_pid, sidekiq_pid, css_pid, redis_pid].compact
-
-terminated_pid = nil
 terminated_status = nil
 
 until managed_pids.empty?
   pid, status = Process.wait2
   next unless managed_pids.delete(pid)
-
-  terminated_pid = pid
   terminated_status = status
   break
 end
@@ -100,10 +96,8 @@ end
 shutdown.call
 
 managed_pids.each do |pid|
-  begin
-    Process.wait(pid)
-  rescue Errno::ECHILD
-  end
+  Process.wait(pid)
+rescue Errno::ECHILD
 end
 
 exit(terminated_status&.exitstatus || 0)
