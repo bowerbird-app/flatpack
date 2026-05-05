@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.39] - 2026-05-05
+
+### Changed
+- Expanded card-scoped `theme:` overrides to cover primary, default, and secondary button tokens alongside the card surface tokens.
+- Updated the card docs and dummy demo variable tables so the new theme options and Wise-style example are reflected in both markdown docs and `/demo/cards`.
+
 ## [0.1.38] - 2026-05-05
 
 ### Changed
