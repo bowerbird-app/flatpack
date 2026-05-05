@@ -53,6 +53,24 @@ Slot props:
 - Omitted keys are not inferred from other values; they keep the original card or global token as a fallback.
 - Theme values must be safe CSS colors such as hex, `oklch(...)`, `rgb(...)`, `hsl(...)`, or `var(--token)`.
 
+| variable | accepts | example |
+|---|---|---|
+| `theme` | Full card-local override hash | `theme: { background: "#163300", text: "#9FE870", muted_text: "#9FE870", primary: "#9FE870", primary_hover: "#9FE870", primary_text: "#163300" }` |
+| `background` | Card background color | `background: "#163300"` |
+| `text` | Primary text color inside the card | `text: "#9FE870"` |
+| `muted_text` | Muted/supporting text color inside the card | `muted_text: "#9FE870"` |
+| `primary` | Shared primary accent and primary button background/border | `primary: "#9FE870"` |
+| `primary_hover` | Shared primary hover accent and primary button hover background | `primary_hover: "#84cc16"` |
+| `primary_text` | Shared primary contrast text and primary button text | `primary_text: "#163300"` |
+| `default_button` | Default button background color | `default_button: "#f8fafc"` |
+| `default_button_hover` | Default button hover background color | `default_button_hover: "#e2e8f0"` |
+| `default_button_text` | Default button text color | `default_button_text: "#0f172a"` |
+| `default_button_border` | Default button border color | `default_button_border: "#cbd5e1"` |
+| `secondary_button` | Secondary button background color | `secondary_button: "#111827"` |
+| `secondary_button_hover` | Secondary button hover background color | `secondary_button_hover: "#1f2937"` |
+| `secondary_button_text` | Secondary button text color | `secondary_button_text: "#f9fafb"` |
+| `secondary_button_border` | Secondary button border color | `secondary_button_border: "#4b5563"` |
+
 ## Example
 ```erb
 <%= render FlatPack::Card::Component.new(style: :interactive, clickable: true, href: post_path(@post)) do |card| %>
