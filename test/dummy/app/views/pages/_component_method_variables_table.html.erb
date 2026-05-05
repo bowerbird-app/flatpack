@@ -304,7 +304,7 @@
     },
     comments_item: {
       label: "Comments Item",
-      method_call: "render FlatPack::Comments::Item::Component.new(author_name: \"Alice\", body: \"Looks good\")",
+      method_call: "render FlatPack::Comments::Item::Component.new(author_name: \"Alice\", body: \"Looks good\", avatar: { name: \"Alice Johnson\", src: \"https://example.com/alice.jpg\" })",
       variables: [
         { variable: "author_name", accepts: "String", example: "author_name: \"Alice Johnson\"" },
         { variable: "author_meta", accepts: "String or nil", example: "author_meta: \"Designer\"" },
@@ -314,7 +314,7 @@
         { variable: "timestamp_iso", accepts: "String or nil", example: "timestamp_iso: comment.created_at.iso8601" },
         { variable: "edited", accepts: "true, false", example: "edited: true" },
         { variable: "state", accepts: ":default, :system, :deleted", example: "state: :system" },
-        { variable: "avatar", accepts: "Hash", example: "avatar: { name: \"Alice Johnson\" }" }
+        { variable: "avatar", accepts: "Hash", example: "avatar: { name: \"Alice Johnson\", src: \"https://example.com/alice.jpg\", alt: \"Alice Johnson avatar\" }" }
       ]
     },
     comments_replies: {

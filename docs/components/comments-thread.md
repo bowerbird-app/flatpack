@@ -34,16 +34,33 @@ Use Comments Thread as the root wrapper for page-level comment sections.
 ```erb
 <%= render FlatPack::Comments::Thread::Component.new(count: @comments.count, title: "Discussion") do |thread| %>
   <% thread.composer do %>
-    <%= render FlatPack::Comments::Composer::Component.new %>
+    <%= render FlatPack::Comments::Composer::Component.new(
+      avatar: { name: "You" },
+      rich_text: true,
+      rich_text_options: {
+        preset: :content,
+        toolbar: :standard
+      }
+    ) %>
   <% end %>
 
   <% @comments.each do |comment| %>
     <% thread.comment do %>
-      <%= render FlatPack::Comments::Item::Component.new(author_name: comment.author_name, body: comment.body) %>
+      <%= render FlatPack::Comments::Item::Component.new(
+        author_name: comment.author_name,
+        body: comment.body,
+        avatar: {
+          name: comment.author_name,
+          src: comment.avatar_url,
+          alt: "#{comment.author_name} avatar"
+        }
+      ) %>
     <% end %>
   <% end %>
 <% end %>
 ```
+
+The nested composer accepts the same `rich_text` and `rich_text_options` props as [comments-composer.md](comments-composer.md), so thread-level comment forms can opt into the TipTap toolbar or bubble-menu modes without custom wrapper code.
 
 ## Interactive Demo
 https://redesigned-doodle-7vv56g46g9fp6qr-3000.app.github.dev/demo/comments?reply_to=1#interactive-thread
@@ -56,13 +73,7 @@ https://redesigned-doodle-7vv56g46g9fp6qr-3000.app.github.dev/demo/comments?repl
 ) do |thread| %>
   <% if @comments_table_available %>
     <% thread.composer do %>
-      <%= form_with url: demo_comments_path, method: :post, local: true do %>
-        <%= render FlatPack::Comments::InlineInput::Component.new(
-          name: "comment[body]",
-          placeholder: "Write a comment...",
-          submit_label: "Comment"
-        ) %>
-      <% end %>
+        <%= render "pages/demo_comment_form" %>
     <% end %>
   <% end %>
 
@@ -89,7 +100,11 @@ https://redesigned-doodle-7vv56g46g9fp6qr-3000.app.github.dev/demo/comments?repl
   body: comment.body,
   edited: comment.edited?,
   state: comment.state.to_sym,
-  avatar: {name: comment.author_name},
+  avatar: {
+    name: comment.author_name,
+    src: "https://i.pravatar.cc/160?u=#{ERB::Util.url_encode(comment.author_name)}",
+    alt: "#{comment.author_name} avatar"
+  },
   id: "comment-#{comment.id}"
 ) do |item| %>
   <% if allow_reply %>
@@ -128,13 +143,15 @@ https://redesigned-doodle-7vv56g46g9fp6qr-3000.app.github.dev/demo/comments?repl
                       text: "Cancel",
                       url: demo_comments_path(anchor: "comment-#{comment.id}"),
                       style: :ghost,
-                      size: :sm
+                      size: :sm,
+                      class: "rounded-xl"
                     ) %>
                     <%= render FlatPack::Button::Component.new(
                       text: "Reply",
                       type: "submit",
                       style: :primary,
-                      size: :sm
+                      size: :sm,
+                      class: "rounded-xl"
                     ) %>
                   </div>
                 <% end %>

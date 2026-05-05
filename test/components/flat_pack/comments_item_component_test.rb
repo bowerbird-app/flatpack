@@ -104,7 +104,7 @@ module FlatPack
         def test_default_state
           render_inline(Component.new(author_name: "John Doe"))
 
-          assert_includes page.native.to_html, Component::STATES[:default]
+          assert_includes page.native.to_html, "group flex w-full gap-4"
         end
 
         def test_system_state
@@ -125,6 +125,15 @@ module FlatPack
 
           assert_selector "div", text: "This comment has been deleted."
           assert_includes page.native.to_html, "opacity-60"
+        end
+
+        def test_renders_avatar_outside_content_column
+          render_inline(Component.new(
+            author_name: "John Doe",
+            avatar: {src: "https://example.com/avatar.jpg"}
+          ))
+
+          assert_selector "img[src='https://example.com/avatar.jpg']"
         end
 
         def test_deleted_state_hides_actions

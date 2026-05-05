@@ -21,7 +21,7 @@ Use Comments Item inside lists or nested replies to keep comment presentation co
 | `body_html` | String | `nil` | no | HTML body content; rendered as trusted HTML. |
 | `edited` | Boolean | `false` | no | Appends `(edited)` marker beside timestamp. |
 | `state` | Symbol | `:default` | no | Visual state: `:default`, `:system`, `:deleted`; invalid values raise `ArgumentError`. |
-| `avatar` | Hash | `{}` | no | Avatar overrides (`src`, `alt`, `name`, `initials`, `href`). |
+| `avatar` | Hash | `{}` | no | Avatar overrides (`src`, `alt`, `name`, `initials`, `href`). Set `src` to an image URL when you want the comment avatar to render a real image instead of initials. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for item wrapper. |
 
 ## Slots
@@ -39,7 +39,12 @@ Use Comments Item inside lists or nested replies to keep comment presentation co
   author_meta: "Designer",
   timestamp: "2h ago",
   body: "Shipping this in the next iteration looks good.",
-  state: :default
+  state: :default,
+  avatar: {
+    name: "Mina Cho",
+    src: "https://example.com/avatars/mina-cho.jpg",
+    alt: "Mina Cho profile photo"
+  }
 ) %>
 ```
 

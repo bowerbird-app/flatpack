@@ -1,7 +1,8 @@
 <%= form_with url: demo_comments_path, method: :post, local: true do %>
-  <%= render FlatPack::Comments::InlineInput::Component.new(
+  <%= render FlatPack::Comments::Composer::Component.new(
     name: "comment[body]",
     placeholder: "Write a comment...",
-    submit_label: "Comment"
+    submit_label: "Comment",
+    avatar: {name: "You"}
   ) %>
 <% end %>

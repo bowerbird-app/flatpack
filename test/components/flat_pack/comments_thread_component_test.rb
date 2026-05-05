@@ -9,7 +9,7 @@ module FlatPack
         def test_renders_thread_with_title
           render_inline(Component.new(title: "Discussion"))
 
-          assert_selector "h3", text: "Discussion"
+          assert_selector "h2", text: "Discussion"
         end
 
         def test_renders_comment_count
@@ -104,13 +104,20 @@ module FlatPack
         def test_default_variant
           render_inline(Component.new)
 
-          assert_includes page.native.to_html, "space-y-4"
+          assert_includes page.native.to_html, "space-y-10"
         end
 
         def test_compact_variant
           render_inline(Component.new(variant: :compact))
 
-          assert_includes page.native.to_html, "space-y-2"
+          assert_includes page.native.to_html, "space-y-6"
+        end
+
+        def test_default_header_does_not_render_sort_controls
+          render_inline(Component.new)
+
+          refute_text "Newest"
+          refute_text "Popular"
         end
 
         def test_raises_error_for_invalid_variant

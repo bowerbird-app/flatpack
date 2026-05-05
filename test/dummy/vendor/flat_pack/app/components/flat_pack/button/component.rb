@@ -146,7 +146,7 @@ module FlatPack
       def button_classes
         classes(
           "inline-flex items-center justify-center gap-2",
-          "rounded-[var(--button-border-radius)]",
+          default_radius_class,
           "font-medium",
           "cursor-pointer",
           "transition-colors duration-base",
@@ -156,6 +156,20 @@ module FlatPack
           style_classes,
           icon_only_classes
         )
+      end
+
+      def default_radius_class
+        return if custom_radius_override?
+
+        "rounded-[var(--button-border-radius)]"
+      end
+
+      def custom_radius_override?
+        class_tokens = Array(@system_arguments[:class]).flat_map { |value| value.to_s.split }
+
+        class_tokens.any? do |token|
+          token.match?(/\A!?rounded(?:$|-(?:none|sm|md|lg|xl|2xl|3xl|4xl|full|\[[^\]]+\]))\z/)
+        end
       end
 
       def icon_only_classes

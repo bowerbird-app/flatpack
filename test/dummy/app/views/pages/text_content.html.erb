@@ -1,0 +1,56 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Content",
+  subtitle: "Long-form content layouts for marketing copy, editorial sections, and documentation pages."
+) %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Long-form Content",
+    anchor_link: true,
+    subtitle: "A sample hero and article body that works for text-heavy pages while keeping the primary color reserved for emphasis."
+  ) %>
+
+  <%= render FlatPack::Card::Component.new(class: "mt-6") do |card| %>
+    <% card.body(class: "p-6 sm:p-8 lg:p-12") do %>
+      <div class="mx-auto max-w-4xl">
+        <p class="text-base/7 font-semibold text-(--color-primary)">Publish Faster</p>
+        <h1 class="mt-2 text-4xl font-semibold tracking-tight text-pretty text-(--surface-content-color) sm:text-5xl">A Mastered Workflow</h1>
+        <p class="mt-6 text-xl/8 text-(--surface-muted-content-color)">
+          Your stories deserve a platform as refined as your prose. Our intuitive interface streamlines the path from blank page to published work, removing the technical hurdles that stall your creative momentum so you can focus entirely on the narrative.
+        </p>
+
+        <div class="mt-10 max-w-xl space-y-8 text-base/7 text-(--surface-muted-content-color) lg:max-w-none">
+          <p>
+            Experience a workspace designed by writers, for writers. From seamless version control to real-time collaborative editing, every feature is polished to ensure your journey from first draft to final release is fluid, focused, and fast.
+          </p>
+
+          <ul role="list" class="space-y-3 text-(--surface-muted-content-color)">
+            <li class="flex gap-x-3">
+              <%= render FlatPack::Shared::IconComponent.new(name: "arrow-up-tray", size: :md, class: "mt-1 flex-none text-[var(--color-primary)]") %>
+              <span><strong class="font-semibold text-(--surface-content-color)">One-Click Distribution.</strong> Turn your manuscript into a live digital publication or print-ready file instantly. No more manual formatting headaches.</span>
+            </li>
+            <li class="flex gap-x-3">
+              <%= render FlatPack::Shared::IconComponent.new(name: "lock-closed", size: :md, class: "mt-1 flex-none text-[var(--color-primary)]") %>
+              <span><strong class="font-semibold text-(--surface-content-color)">Built-in Proofing.</strong> Advanced linguistic AI scans for tone, clarity, and consistency so your voice always hits the mark.</span>
+            </li>
+            <li class="flex gap-x-3">
+              <%= render FlatPack::Shared::IconComponent.new(name: "circle-stack", size: :md, class: "mt-1 flex-none text-[var(--color-primary)]") %>
+              <span><strong class="font-semibold text-(--surface-content-color)">Cloud Syncing.</strong> Your work is automatically saved and backed up across all devices. Never lose a sentence, even if you’re offline.</span>
+            </li>
+          </ul>
+
+          <p>
+            Your words are the priority. We handle the rest. By automating the heavy lifting of layout and metadata, we give you back the hours you used to spend on "admin" tasks. It’s time to move beyond the draft and share your vision with the world.
+          </p>
+
+          <div>
+            <h2 class="text-2xl font-bold tracking-tight text-(--surface-content-color)">No Publisher? No Problem.</h2>
+            <p class="mt-4">
+              You own your rights and your audience. Our platform empowers independent creators to build their own literary empires without the gatekeepers. Manage your subscribers, track your readership analytics, and scale your brand—all from a single, elegant dashboard designed for the modern storyteller.
+            </p>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</section>

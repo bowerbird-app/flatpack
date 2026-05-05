@@ -48,6 +48,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/tabs/stacked_pills
     /demo/toasts
     /demo/page_header
+    /demo/text/content
     /demo/text/quote
     /demo/empty_state
     /demo/grid
@@ -98,6 +99,26 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Filter"
     assert_includes response.body, 'aria-label="Pagination"'
     assert_includes response.body, "?page=2"
+  end
+
+  test "comments demo renders rich text composer examples" do
+    get "/demo/comments"
+
+    assert_response :success
+    assert_includes response.body, "Rich Text Composer Variants"
+    assert_includes response.body, "Rich text with toolbar"
+    assert_includes response.body, "Rich text with bubble menu"
+    assert_includes response.body, 'name="toolbar_comment[body]"'
+    assert_includes response.body, 'name="bubble_comment[body]"'
+    assert_includes response.body, 'data-controller="flat-pack--tiptap"'
+  end
+
+  test "dummy importmap includes tiptap package pins" do
+    importmap = File.read(Rails.root.join("config/importmap.rb"))
+
+    assert_includes importmap, 'pin "@tiptap/core", to: "https://esm.sh/@tiptap/core@#{TIPTAP_VERSION}"'
+    assert_includes importmap, 'pin "@tiptap/extension-bubble-menu", to: "https://esm.sh/@tiptap/extension-bubble-menu@#{TIPTAP_VERSION}"'
+    assert_includes importmap, 'pin "@tiptap/extension-table-of-contents", to: "https://esm.sh/@tiptap/extension-table-of-contents@#{TIPTAP_VERSION}"'
   end
 
   test "chat demo keeps composer visible in full-height panel" do
@@ -330,6 +351,17 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, ">Heading Variant H6</h6>"
     assert_includes response.body, "--page-title-h1-size"
     assert_includes response.body, "--page-title-h6-size"
+  end
+
+  test "text content demo renders long-form marketing copy" do
+    get "/demo/text/content"
+
+    assert_response :success
+    assert_includes response.body, ">Content</h1>"
+    assert_includes response.body, ">A better workflow</h1>"
+    assert_includes response.body, "text-(--color-primary)"
+    assert_includes response.body, "Push to deploy."
+    assert_includes response.body, "No server? No problem."
   end
 
   test "range input demo variable table includes full option set" do

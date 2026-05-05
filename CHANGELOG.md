@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Added a new dummy Text Content demo page under `/demo/text/content` to showcase long-form editorial and marketing copy with primary-theme color accents.
+
+### Changed
+- Added `rich_text` and `rich_text_options` pass-through support to the comments composer and inline input wrappers so reply and comment fields can opt into the shared TipTap-backed `TextArea` editor while remaining plain text by default.
+
+### Fixed
+- Restored the dummy app importmap's missing `@tiptap/*` package pins so rich-text comment and textarea demos can actually boot the `flat-pack--tiptap` controller in the browser.
+- Explicitly registered the dummy app's `flat-pack--tiptap` Stimulus controller so rich-text demos do not rely solely on nested lazy controller discovery at first paint.
+
+## [0.1.35] - 2026-05-04
+
+### Fixed
+- Removed the stale self-referential Tailwind root token mappings from the dummy app scaffold and vendored install template so token-driven button radii resolve correctly during local preview and generated installs.
+- Restored stylesheet- and importmap-aware dummy full-page cache keys so refreshed demo pages stop serving stale HTML that points at old digested CSS assets.
+
+### Tests
+- Added regression coverage to keep both the install-template scaffold and the dummy app Tailwind scaffold free of circular CSS variable mappings.
+- Added controller regression coverage to keep dummy page-cache keys sensitive to layout stylesheet and importmap version changes.
+
+## [0.1.34] - 2026-05-04
+
+### Changed
+- Refreshed the comments thread, composer, item, and replies components to use the new card-style layout with avatar-led composition, default sort pills in the thread header, and the floating composer submit affordance.
+- Switched the dummy comments demo and component docs to the updated composer-based layout so the shipped examples match the rendered component structure.
+
+### Tests
+- Updated the comments component regression suite to cover the new default layout classes, sort controls, composer avatar behavior, and replies indentation.
+
 ## [0.1.33] - 2026-04-28
 
 ### Fixed

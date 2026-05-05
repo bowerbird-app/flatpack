@@ -12,6 +12,8 @@ module FlatPack
           name: "comment",
           value: nil,
           rows: 1,
+          rich_text: false,
+          rich_text_options: {},
           **system_arguments
         )
           super(**system_arguments)
@@ -22,6 +24,8 @@ module FlatPack
           @name = name
           @value = value
           @rows = rows
+          @rich_text = rich_text
+          @rich_text_options = rich_text_options
         end
 
         def call
@@ -67,6 +71,8 @@ module FlatPack
             rows: @rows,
             placeholder: @placeholder,
             disabled: @disabled,
+            rich_text: @rich_text,
+            rich_text_options: @rich_text_options,
             class: "min-w-0 w-full resize-none overflow-hidden border-0 bg-transparent px-0 py-1 text-sm text-[var(--comments-composer-text-color)] placeholder:text-[var(--comments-composer-placeholder-color)] focus:ring-0 focus:border-transparent"
           }
           args[:form] = @form if @form

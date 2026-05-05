@@ -102,6 +102,8 @@ Additional focused examples:
 
 When `rich_text: true` is set on `FlatPack::TextArea::Component`, the native `<textarea>` is replaced with a fully featured [TipTap](https://tiptap.dev) editor. The editor is rendered server-side as empty containers and bootstrapped by the `flat-pack--tiptap` Stimulus controller at runtime.
 
+`FlatPack::Comments::Composer::Component` and `FlatPack::Comments::InlineInput::Component` both forward `rich_text` and `rich_text_options` directly to this same `TextArea` API, so the toolbar, bubble menu, and preset behavior documented below also apply to those comments components.
+
 ### How it works
 
 - The editor output (HTML by default, or JSON) is written to a hidden `<input type="hidden">` that carries the field `name`, so the form submits as normal.
@@ -194,6 +196,22 @@ Pass any of these keys inside `rich_text_options: { ... }`. All keys accept symb
   rich_text_options: {
     toolbar: :none,
     bubble_menu: true
+  }
+) %>
+```
+
+### Example — Comments composer with standard toolbar
+
+```erb
+<%= render FlatPack::Comments::Composer::Component.new(
+  name: "comment[body]",
+  placeholder: "Write a formatted comment...",
+  submit_label: "Post",
+  avatar: { name: "You" },
+  rich_text: true,
+  rich_text_options: {
+    preset: :content,
+    toolbar: :standard
   }
 ) %>
 ```
