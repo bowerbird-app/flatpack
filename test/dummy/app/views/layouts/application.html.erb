@@ -448,6 +448,12 @@
                 active: false
               ) %>
               <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Tree",
+                href: demo_tree_path,
+                icon: :folder,
+                active: false
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
                 label: "Timeline",
                 href: demo_timeline_path,
                 icon: :calendar,
