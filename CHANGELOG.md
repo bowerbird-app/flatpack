@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.37] - 2026-05-05
+
 ### Added
 - Added a new dummy Text Content demo page under `/demo/text/content` to showcase long-form editorial and marketing copy with primary-theme color accents.
 - Added a new `FlatPack::Tree::Component` plus `/demo/tree` examples for VS Code-style folder explorers and nested list navigation.
