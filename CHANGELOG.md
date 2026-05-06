@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.47] - 2026-05-06
+
+### Changed
+- Tightened the comments-composer rich text editor override so `.flat-pack-comments-composer-input .flat-pack-richtext-editor` now removes the editor border entirely, in addition to clearing its box shadow.
+
+## [0.1.46] - 2026-05-06
+
+### Changed
+- Added a comments-composer scoped rich text editor override so `.flat-pack-comments-composer-input .flat-pack-richtext-editor` clears the default editor box shadow and border color in the shared FlatPack stylesheet.
+
+## [0.1.45] - 2026-05-06
+
+### Changed
+- Added bubble-only comments composer rich text overrides so `.flat-pack-comments-richtext--bubble-only` removes the editor border and inner TipTap padding in the shared FlatPack stylesheet.
+
 ## [0.1.44] - 2026-05-06
 
 ### Changed
