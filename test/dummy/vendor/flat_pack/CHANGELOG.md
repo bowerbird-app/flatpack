@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.40] - 2026-05-06
+## [0.1.41] - 2026-05-06
 
 ### Added
 - Added a host-app TipTap addon registry so `FlatPack::TextArea` rich text editors can opt into application-registered extensions without forking FlatPack.
