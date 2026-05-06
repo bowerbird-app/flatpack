@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.49] - 2026-05-06
+
+### Changed
+- Added `padding:` support to `FlatPack::Card::Body::Component`, including `padding: :none` for compact card body layouts.
+- Added a `background_muted` card theme token override so flat cards can override their muted surface color independently of the standard background token.
+- Synced the card docs and `/demo/cards` media gallery example with the current card API and the transparent gallery card surface example.
+- Updated the dummy Rails 8 and Rails 7 app version metadata and lockfiles so CI resolves the current `flat_pack` gem version.
+
 ## [0.1.48] - 2026-05-06
 
 ### Changed

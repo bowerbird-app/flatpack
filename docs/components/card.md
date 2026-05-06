@@ -18,7 +18,7 @@ Use Card to group related content in a consistent surface with optional hover an
 | `clickable` | Boolean | `false` | no | When true and `href` is present, wraps card in a link element. |
 | `href` | String | `nil` | no | Link target for clickable cards. Sanitized via `FlatPack::AttributeSanitizer`; unsafe URLs raise `ArgumentError`. |
 | `padding` | Symbol | `:md` | no | Container padding for non-slot content: `:none`, `:sm`, `:md`, `:lg`; invalid values raise `ArgumentError`. |
-| `theme` | Hash | `nil` | no | Optional card-local token overrides. Supported keys: `:background`, `:text`, `:muted_text`, `:primary`, `:primary_hover`, `:primary_text`, `:default_button`, `:default_button_hover`, `:default_button_text`, `:default_button_border`, `:secondary_button`, `:secondary_button_hover`, `:secondary_button_text`, and `:secondary_button_border`. Only supplied keys override the card subtree; omitted keys continue using the existing theme tokens. Invalid keys or unsafe CSS color values raise `ArgumentError`. |
+| `theme` | Hash | `nil` | no | Optional card-local token overrides. Supported keys: `:background`, `:background_muted`, `:text`, `:muted_text`, `:primary`, `:primary_hover`, `:primary_text`, `:default_button`, `:default_button_hover`, `:default_button_text`, `:default_button_border`, `:secondary_button`, `:secondary_button_hover`, `:secondary_button_text`, and `:secondary_button_border`. Only supplied keys override the card subtree; omitted keys continue using the existing theme tokens. Invalid keys or unsafe CSS color values raise `ArgumentError`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for card root. |
 
 Behavior note:
@@ -39,6 +39,7 @@ Slot props:
 | name | type | default | required | description |
 |---|---|---|---|---|
 | `header.divider` | Boolean | `true` | no | Adds bottom border separator. |
+| `body.padding` | Symbol | `:md` | no | Body inset spacing: `:none`, `:sm`, `:md`, `:lg`; invalid values raise `ArgumentError`. |
 | `footer.divider` | Boolean | `true` | no | Adds top border separator. |
 | `media.aspect_ratio` | String | `nil` | no | Aspect ratio class (`"16/9"`, `"4/3"`, `"1/1"`, or custom ratio string). |
 | `media.padding` | Symbol | `:md` | no | Media inset spacing: `:none`, `:sm`, `:md`, `:lg`; invalid values raise `ArgumentError`. |
@@ -49,7 +50,7 @@ Slot props:
 
 ## Theme overrides
 - `theme` writes CSS custom-property overrides on the card root, so nested content and token-driven components inherit the new palette only inside that card.
-- Pass any subset of `:background`, `:text`, `:muted_text`, `:primary`, `:primary_hover`, `:primary_text`, `:default_button`, `:default_button_hover`, `:default_button_text`, `:default_button_border`, `:secondary_button`, `:secondary_button_hover`, `:secondary_button_text`, and `:secondary_button_border`.
+- Pass any subset of `:background`, `:background_muted`, `:text`, `:muted_text`, `:primary`, `:primary_hover`, `:primary_text`, `:default_button`, `:default_button_hover`, `:default_button_text`, `:default_button_border`, `:secondary_button`, `:secondary_button_hover`, `:secondary_button_text`, and `:secondary_button_border`.
 - Omitted keys are not inferred from other values; they keep the original card or global token as a fallback.
 - Theme values must be safe CSS colors such as hex, `oklch(...)`, `rgb(...)`, `hsl(...)`, or `var(--token)`.
 
@@ -57,6 +58,7 @@ Slot props:
 |---|---|---|
 | `theme` | Full card-local override hash | `theme: { background: "#163300", text: "#9FE870", muted_text: "#9FE870", primary: "#9FE870", primary_hover: "#9FE870", primary_text: "#163300" }` |
 | `background` | Card background color | `background: "#163300"` |
+| `background_muted` | Flat-card muted surface color | `background_muted: "transparent"` |
 | `text` | Primary text color inside the card | `text: "#9FE870"` |
 | `muted_text` | Muted/supporting text color inside the card | `muted_text: "#9FE870"` |
 | `primary` | Shared primary accent and primary button background/border | `primary: "#9FE870"` |
@@ -86,25 +88,18 @@ Slot props:
 
 ```erb
 <%= render FlatPack::Card::Component.new(
-  style: :elevated,
+  style: :flat,
   theme: {
-    background: "#163300",
-    text: "#9FE870",
-    primary: "#9FE870",
-    primary_text: "#163300"
+    background_muted: "transparent"
   }
 ) do |card| %>
-  <% card.header do %>
-    <p class="text-sm font-medium uppercase tracking-[0.2em] opacity-80">Wise-style balance</p>
-    <h3 class="mt-2 text-2xl font-semibold">Travel card</h3>
+  <% card.media(aspect_ratio: "4/3", padding: :none) do %>
+    <%= image_tag image_url, class: "h-full w-full rounded-lg object-cover", alt: "Preview" %>
   <% end %>
 
-  <% card.body do %>
-    <p class="text-sm text-[var(--surface-muted-content-color)]">Local tokens stay inside this card. A neighboring card keeps the default FlatPack theme.</p>
-  <% end %>
-
-  <% card.footer do %>
-    <%= render FlatPack::Button::Component.new(text: "Add money", style: :primary) %>
+  <% card.body(padding: :none, class: "px-3 py-2") do %>
+    <p class="truncate text-sm font-medium text-[var(--surface-content-color)]">IMG_4985.HEIC</p>
+    <p class="text-sm font-medium text-[var(--color-primary)]">3.9 MB</p>
   <% end %>
 <% end %>
 ```
