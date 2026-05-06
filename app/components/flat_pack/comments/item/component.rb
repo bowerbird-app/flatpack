@@ -85,7 +85,7 @@ module FlatPack
 
         def item_classes
           classes(
-            "group flex w-full gap-4"
+            "flat-pack-comments-item group flex w-full gap-4"
           )
         end
 

@@ -109,6 +109,7 @@ module FlatPack
         def test_uses_rounded_xl_textarea_shell
           render_inline(Component.new)
 
+          assert_selector ".flat-pack-comments-composer-input"
           assert_includes page.native.to_html, "rounded-xl"
         end
 

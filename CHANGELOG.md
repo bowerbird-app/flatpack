@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.42] - 2026-05-06
+
+### Changed
+- Added a stable `flat-pack-comments-item` root class to `FlatPack::Comments::Item::Component` so host apps can target comment-level CSS without relying on utility class internals.
+- Added a stable `flat-pack-comments-composer-input` class to the comments composer textarea shell so host apps can target the rich/plain comment input surface without depending on utility class internals.
+
 ## [0.1.41] - 2026-05-06
 
 ### Added
