@@ -114,6 +114,19 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, 'data-controller="flat-pack--tiptap"'
   end
 
+  test "cards demo renders media gallery example" do
+    get "/demo/cards"
+
+    assert_response :success
+    assert_includes response.body, "Media Gallery Cards"
+    assert_includes response.body, "IMG_4985.HEIC"
+    assert_includes response.body, "View details for IMG_5644.HEIC"
+    assert_includes response.body, 'class="flex-1 overflow-hidden pointer-events-none px-3 py-2"'
+    refute_includes response.body, "p-[var(--card-padding-md)] flex-1 overflow-hidden pointer-events-none px-3 py-2"
+    assert_includes response.body, "&quot;style&quot; =&gt; &quot;background-color: transparent&quot;"
+    refute_includes response.body, "style: &quot;background-color: transparent&quot;"
+  end
+
   test "dummy importmap includes tiptap package pins" do
     importmap = File.read(Rails.root.join("config/importmap.rb"))
 

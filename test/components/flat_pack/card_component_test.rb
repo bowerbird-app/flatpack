@@ -118,6 +118,14 @@ module FlatPack
         refute_includes html, "--color-primary-text:"
       end
 
+      def test_renders_theme_with_muted_background_override
+        render_inline(Component.new(style: :flat, theme: {background_muted: "transparent"}))
+
+        html = page.native.to_html
+        assert_includes html, "bg-[var(--card-background-muted-color)]"
+        assert_includes html, "--card-background-muted-color: transparent"
+      end
+
       def test_renders_theme_with_surface_text_class
         render_inline(Component.new(theme: {text: "#e2e8f0"})) do
           "Card content"
@@ -356,6 +364,15 @@ module FlatPack
       def test_body_has_padding_classes
         render_inline(Body::Component.new) { "Body" }
         assert_includes page.native.to_html, "p-[var(--card-padding-md)]"
+      end
+
+      def test_body_allows_padding_none
+        render_inline(Body::Component.new(padding: :none, class: "px-3 py-2")) { "Body" }
+
+        html = page.native.to_html
+        refute_includes html, "p-[var(--card-padding-md)]"
+        assert_includes html, "px-3"
+        assert_includes html, "py-2"
       end
 
       def test_body_merges_custom_classes_with_defaults

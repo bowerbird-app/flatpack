@@ -57,6 +57,82 @@
     ) %>
   </section>
 
+  <!-- Media Gallery Cards -->
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Media Gallery Cards", anchor_link: true, subtitle: "A compact file-browser style card grid for image-heavy layouts.") %>
+    <p class="mb-4 text-sm text-[var(--surface-muted-content-color)]">
+      This layout keeps the image preview dominant while moving filename and size metadata below the card, which works well for asset libraries and media pickers.
+    </p>
+    <%
+      gallery_cards = [
+        {name: "IMG_4985.HEIC", size: "3.9 MB", image_url: "https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80"},
+        {name: "IMG_5214.HEIC", size: "4 MB", image_url: "https://images.unsplash.com/photo-1614926857083-7be149266cda?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=512&q=80"},
+        {name: "IMG_3851.HEIC", size: "3.8 MB", image_url: "https://images.unsplash.com/photo-1614705827065-62c3dc488f40?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80"},
+        {name: "IMG_4278.HEIC", size: "4.1 MB", image_url: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80"},
+        {name: "IMG_6842.HEIC", size: "4 MB", image_url: "https://images.unsplash.com/photo-1586348943529-beaae6c28db9?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80"},
+        {name: "IMG_3284.HEIC", size: "3.9 MB", image_url: "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=512&q=80"},
+        {name: "IMG_4841.HEIC", size: "3.8 MB", image_url: "https://images.unsplash.com/photo-1547036967-23d11aacaee0?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80"},
+        {name: "IMG_5644.HEIC", size: "4 MB", image_url: "https://images.unsplash.com/photo-1492724724894-7464c27d0ceb?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80"}
+      ]
+    %>
+    <div class="mb-4 grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
+      <% gallery_cards.each do |image| %>
+        <%= render FlatPack::Card::Component.new(
+          style: :flat,
+          hover: :subtle,
+          clickable: true,
+          href: "#gallery-#{image[:name].parameterize}",
+          aria: {label: "View details for #{image[:name]}"},
+          "style" => "background-color: transparent",
+          class: "group shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 dark:focus-visible:ring-indigo-500"
+        ) do |card| %>
+          <% card.media(
+            aspect_ratio: "4/3",
+            padding: :none,
+            class: "rounded-lg bg-gray-100 dark:bg-gray-800"
+          ) do %>
+            <%= image_tag image[:image_url], class: "pointer-events-none h-full w-full rounded-lg object-cover outline -outline-offset-1 outline-black/5 transition duration-200 group-hover:opacity-75 dark:outline-white/10", alt: "" %>
+          <% end %>
+          <% card.body(padding: :none, class: "pointer-events-none px-3 py-2") do %>
+            <p class="block truncate text-sm font-medium text-[var(--surface-content-color)]"><%= image[:name] %></p>
+            <p class="block text-sm font-medium text-[var(--color-primary)]"><%= image[:size] %></p>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+    <%= render FlatPack::CodeBlock::Component.new(
+      language: "erb",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;% gallery_cards = [
+          {name: &quot;IMG_4985.HEIC&quot;, size: &quot;3.9 MB&quot;, image_url: &quot;https://images.unsplash.com/photo-1582053433976-25c00369fc93?...&quot;},
+          {name: &quot;IMG_5214.HEIC&quot;, size: &quot;4 MB&quot;, image_url: &quot;https://images.unsplash.com/photo-1614926857083-7be149266cda?...&quot;}
+        ] %&gt;
+
+        &lt;div class=&quot;grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4&quot;&gt;
+          &lt;% gallery_cards.each do |image| %&gt;
+            &lt;%= render FlatPack::Card::Component.new(
+              style: :flat,
+              hover: :subtle,
+              clickable: true,
+              href: &quot;#gallery-#{image[:name].parameterize}&quot;,
+              aria: {label: &quot;View details for #{image[:name]}&quot;},
+              &quot;style&quot; =&gt; &quot;background-color: transparent&quot;,
+              class: &quot;group shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 dark:focus-visible:ring-indigo-500&quot;
+            ) do |card| %&gt;
+              &lt;% card.media(aspect_ratio: &quot;4/3&quot;, padding: :none, class: &quot;rounded-lg bg-gray-100 dark:bg-gray-800&quot;) do %&gt;
+                &lt;%= image_tag image[:image_url], class: &quot;pointer-events-none h-full w-full rounded-lg object-cover outline -outline-offset-1 outline-black/5 group-hover:opacity-75 dark:outline-white/10&quot;, alt: &quot;&quot; %&gt;
+              &lt;% end %&gt;
+              &lt;% card.body(padding: :none, class: &quot;pointer-events-none px-3 py-2&quot;) do %&gt;
+                &lt;p class=&quot;block truncate text-sm font-medium text-[var(--surface-content-color)]&quot;&gt;&lt;%= image[:name] %&gt;&lt;/p&gt;
+                &lt;p class=&quot;block text-sm font-medium text-[var(--color-primary)]&quot;&gt;&lt;%= image[:size] %&gt;&lt;/p&gt;
+              &lt;% end %&gt;
+            &lt;% end %&gt;
+          &lt;% end %&gt;
+        &lt;/div&gt;
+      CODE
+    ) %>
+  </section>
+
   <!-- Card Styles -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Card Styles", anchor_link: true, subtitle: "Examples for Card Styles.") %>

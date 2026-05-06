@@ -93,6 +93,7 @@ module FlatPack
 
       THEME_VARIABLES = {
         background: "--card-background-color",
+        background_muted: "--card-background-muted-color",
         text: "--surface-content-color",
         muted_text: "--surface-muted-content-color",
         primary: "--color-primary",

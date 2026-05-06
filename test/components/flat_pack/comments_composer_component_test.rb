@@ -109,7 +109,56 @@ module FlatPack
         def test_uses_rounded_xl_textarea_shell
           render_inline(Component.new)
 
+          assert_selector ".flat-pack-comments-composer-input"
           assert_includes page.native.to_html, "rounded-xl"
+        end
+
+        def test_adds_bubble_only_hook_class_for_bubble_menu_variant
+          render_inline(Component.new(
+            rich_text: true,
+            rich_text_options: {
+              toolbar: :none,
+              bubble_menu: true
+            }
+          ))
+
+          assert_selector ".flat-pack-comments-composer-input.flat-pack-comments-richtext--bubble-only"
+        end
+
+        def test_adds_toolbar_hook_class_for_toolbar_rich_text_variant
+          render_inline(Component.new(
+            rich_text: true,
+            rich_text_options: {
+              toolbar: :standard,
+              bubble_menu: true
+            }
+          ))
+
+          assert_selector ".flat-pack-comments-composer-input.flat-pack-comments-richtext--has-toolbar"
+        end
+
+        def test_does_not_add_bubble_only_hook_class_for_standard_rich_text
+          render_inline(Component.new(
+            rich_text: true,
+            rich_text_options: {
+              toolbar: :standard,
+              bubble_menu: true
+            }
+          ))
+
+          refute_selector ".flat-pack-comments-richtext--bubble-only"
+        end
+
+        def test_does_not_add_toolbar_hook_class_for_bubble_only_rich_text
+          render_inline(Component.new(
+            rich_text: true,
+            rich_text_options: {
+              toolbar: :none,
+              bubble_menu: true
+            }
+          ))
+
+          refute_selector ".flat-pack-comments-richtext--has-toolbar"
         end
 
         def test_rotates_floating_submit_icon_to_90_degrees

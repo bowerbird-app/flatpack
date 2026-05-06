@@ -7,6 +7,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.49] - 2026-05-06
+
+### Changed
+- Added `padding:` support to `FlatPack::Card::Body::Component`, including `padding: :none` for compact card body layouts.
+- Added a `background_muted` card theme token override so flat cards can override their muted surface color independently of the standard background token.
+- Synced the card docs and `/demo/cards` media gallery example with the current card API and the transparent gallery card surface example.
+- Updated the dummy Rails 8 and Rails 7 app version metadata and lockfiles so CI resolves the current `flat_pack` gem version.
+
+## [0.1.48] - 2026-05-06
+
+### Changed
+- Added a media gallery card example to the dummy `/demo/cards` page, showing how to build file-browser style image grids with `FlatPack::Card::Component` media and body slots.
+
+## [0.1.47] - 2026-05-06
+
+### Changed
+- Tightened the comments-composer rich text editor override so `.flat-pack-comments-composer-input .flat-pack-richtext-editor` now removes the editor border entirely, in addition to clearing its box shadow.
+
+## [0.1.46] - 2026-05-06
+
+### Changed
+- Added a comments-composer scoped rich text editor override so `.flat-pack-comments-composer-input .flat-pack-richtext-editor` clears the default editor box shadow and border color in the shared FlatPack stylesheet.
+
+## [0.1.45] - 2026-05-06
+
+### Changed
+- Added bubble-only comments composer rich text overrides so `.flat-pack-comments-richtext--bubble-only` removes the editor border and inner TipTap padding in the shared FlatPack stylesheet.
+
+## [0.1.44] - 2026-05-06
+
+### Changed
+- Added a `flat-pack-comments-richtext--has-toolbar` class to the comments composer shell when it renders a rich text variant with a visible toolbar, so host apps can target toolbar mode without relying on utility class internals.
+
+## [0.1.43] - 2026-05-06
+
+### Changed
+- Added a `flat-pack-comments-richtext--bubble-only` class to the comments composer shell when it renders the bubble-menu-only rich text variant, so host apps can target that mode without relying on utility class internals.
+
+## [0.1.42] - 2026-05-06
+
+### Changed
+- Added a stable `flat-pack-comments-item` root class to `FlatPack::Comments::Item::Component` so host apps can target comment-level CSS without relying on utility class internals.
+- Added a stable `flat-pack-comments-composer-input` class to the comments composer textarea shell so host apps can target the rich/plain comment input surface without depending on utility class internals.
+
 ## [0.1.41] - 2026-05-06
 
 ### Added

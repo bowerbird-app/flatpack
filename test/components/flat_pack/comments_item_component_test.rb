@@ -104,6 +104,7 @@ module FlatPack
         def test_default_state
           render_inline(Component.new(author_name: "John Doe"))
 
+          assert_selector ".flat-pack-comments-item"
           assert_includes page.native.to_html, "group flex w-full gap-4"
         end
 
