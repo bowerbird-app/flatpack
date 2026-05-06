@@ -29,6 +29,7 @@
 import { Controller }            from "@hotwired/stimulus"
 import { Editor }                from "@tiptap/core"
 import { buildExtensions }       from "flat_pack/tiptap/extension_registry"
+import { resolveTiptapAddons }   from "flat_pack/tiptap/addon_registry"
 import { buildToolbar,
          updateToolbarState }    from "flat_pack/tiptap/toolbar"
 import { buildBubbleMenu,
@@ -121,8 +122,15 @@ export default class extends Controller {
     }
 
     let extensions
+    let addonState
     try {
-      extensions = await buildExtensions(extConfig)
+      const [baseExtensions, resolvedAddons] = await Promise.all([
+        buildExtensions(extConfig),
+        resolveTiptapAddons(extConfig),
+      ])
+
+      addonState = resolvedAddons
+      extensions = [...baseExtensions, ...resolvedAddons.extensions]
     } catch (err) {
       console.error("[FlatPack TipTap] Failed to build extensions:", err)
       return
@@ -156,7 +164,7 @@ export default class extends Controller {
       onCreate: ({ editor }) => {
         this.#syncContentEl(editor, opts, hiddenFieldEl)
         this.#updateCharacterCountEl(editor, opts, charCountEl)
-        this.#buildMenusEl(editor, opts, bubbleMenuEl, floatingMenuEl)
+        this.#buildMenusEl(editor, opts, bubbleMenuEl, floatingMenuEl, addonState?.bubbleMenuTools || [])
         updateToolbarState(toolbarEl, editor)
       },
 
@@ -182,7 +190,7 @@ export default class extends Controller {
 
     // Build toolbar after editor is created
     if (toolbarEl && opts.toolbar !== "none") {
-      buildToolbar(toolbarEl, this._editor, opts)
+      buildToolbar(toolbarEl, this._editor, opts, addonState?.toolbarTools || [])
     }
   }
 
@@ -269,19 +277,20 @@ export default class extends Controller {
 
   // ── Menu builders ─────────────────────────────────────────────────────────
 
-  #buildMenus(editor, opts) {
+  #buildMenus(editor, opts, bubbleMenuTools = []) {
     this.#buildMenusEl(
       editor, opts,
       this.hasBubbleMenuTarget   ? this.bubbleMenuTarget   : null,
-      this.hasFloatingMenuTarget ? this.floatingMenuTarget : null
+      this.hasFloatingMenuTarget ? this.floatingMenuTarget : null,
+      bubbleMenuTools
     )
   }
 
-  #buildMenusEl(editor, opts, bubbleMenuEl, floatingMenuEl) {
+  #buildMenusEl(editor, opts, bubbleMenuEl, floatingMenuEl, bubbleMenuTools = []) {
     // Bubble menu: element was passed to BubbleMenu extension and may have been
     // teleported by Tippy. Use the stored ref, not a fresh Stimulus target lookup.
     if (bubbleMenuEl && opts.bubble_menu) {
-      buildBubbleMenu(bubbleMenuEl, editor, opts)
+      buildBubbleMenu(bubbleMenuEl, editor, opts, bubbleMenuTools)
     }
     if (floatingMenuEl && opts.floating_menu) {
       this.#buildFloatingMenuEl(editor, floatingMenuEl)

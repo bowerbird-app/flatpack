@@ -26,7 +26,7 @@ Enable `rich_text: true` when the comment flow needs TipTap formatting controls 
 | `value` | String | `nil` | no | Initial textarea content. |
 | `rows` | Integer | `3` | no | Initial textarea row count. |
 | `rich_text` | Boolean | `false` | no | Opts the composer into the TipTap-backed `TextArea` rich text mode. |
-| `rich_text_options` | Hash | `{}` | no | Pass-through options for `FlatPack::TextArea::Component` rich text configuration, including toolbar presets, bubble menu, output format, and preset selection. |
+| `rich_text_options` | Hash | `{}` | no | Pass-through options for `FlatPack::TextArea::Component` rich text configuration, including toolbar presets, bubble menu, output format, preset selection, and host-registered TipTap addons. |
 | `avatar` | Hash | `nil` | no | Optional avatar overrides (`src`, `alt`, `name`, `initials`) for the non-compact composer. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for composer wrapper. |
 
@@ -56,6 +56,8 @@ Enable `rich_text: true` when the comment flow needs TipTap formatting controls 
 ### Rich text toolbar example
 
 Use `rich_text_options[:toolbar]` to control the editor toolbar inside the composer.
+
+If your app registers custom TipTap addons through `flat_pack/tiptap/addon_registry`, the composer can opt into them with `rich_text_options[:addons]`, and custom toolbar arrays may include those addon tool names.
 
 ```erb
 <%= render FlatPack::Comments::Composer::Component.new(

@@ -42,6 +42,117 @@ function bubbleButton({ label, icon, onClick }) {
   return btn
 }
 
+function bubbleToolButton(def, editor, menuEl) {
+  const btn = bubbleButton({
+    label: def.label,
+    icon: def.icon,
+    onClick: () => {
+      def.action(editor)
+      refreshBubbleMenuState(menuEl, editor)
+    },
+  })
+
+  btn.setAttribute("data-tool", def.name)
+  return btn
+}
+
+function mergeBubbleToolDefinitions(defaults, extras) {
+  const merged = []
+  const seen = new Set()
+
+  for (const def of [...defaults, ...extras]) {
+    if (!def?.name) {
+      console.warn("[FlatPack TipTap] Ignoring bubble menu tool definition without a name.")
+      continue
+    }
+
+    if (seen.has(def.name)) {
+      console.warn(`[FlatPack TipTap] Ignoring duplicate bubble menu tool \"${def.name}\".`)
+      continue
+    }
+
+    seen.add(def.name)
+    merged.push(def)
+  }
+
+  return merged
+}
+
+function buildDefaultBubbleTools(opts) {
+  const preset = opts.preset || "minimal"
+  const isContent = preset === "content" || preset === "full"
+  const definitions = [
+    {
+      name: "bold",
+      label: "Bold",
+      icon: ICONS.bold,
+      action: (e) => e.chain().focus().toggleBold().run(),
+      isActive: (e) => e.isActive("bold"),
+    },
+    {
+      name: "italic",
+      label: "Italic",
+      icon: ICONS.italic,
+      action: (e) => e.chain().focus().toggleItalic().run(),
+      isActive: (e) => e.isActive("italic"),
+    },
+    {
+      name: "underline",
+      label: "Underline",
+      icon: ICONS.underline,
+      action: (e) => e.chain().focus().toggleUnderline().run(),
+      isActive: (e) => e.isActive("underline"),
+    },
+    { name: "sep-inline", type: "separator" },
+    {
+      name: "strike",
+      label: "Strikethrough",
+      icon: ICONS.strike,
+      action: (e) => e.chain().focus().toggleStrike().run(),
+      isActive: (e) => e.isActive("strike"),
+    },
+    {
+      name: "code",
+      label: "Inline code",
+      icon: ICONS.code,
+      action: (e) => e.chain().focus().toggleCode().run(),
+      isActive: (e) => e.isActive("code"),
+    },
+  ]
+
+  if (isContent) {
+    definitions.push({
+      name: "highlight",
+      label: "Highlight",
+      icon: ICONS.highlight,
+      action: (e) => e.chain().focus().toggleHighlight().run(),
+      isActive: (e) => e.isActive("highlight"),
+    })
+  }
+
+  definitions.push(
+    { name: "sep-link", type: "separator" },
+    {
+      name: "link",
+      label: "Link",
+      icon: ICONS.link,
+      action: (e) => {
+        const prev = e.getAttributes("link").href || ""
+        const url = window.prompt("Enter link URL:", prev)
+        if (url === null) return
+        if (url === "") {
+          e.chain().focus().extendMarkRange("link").unsetLink().run()
+        } else {
+          e.chain().focus().extendMarkRange("link").setLink({ href: url }).run()
+        }
+      },
+      isActive: (e) => e.isActive("link"),
+    }
+  )
+
+  return definitions
+}
+
 // ── Separator ─────────────────────────────────────────────────────────────────
 
 function separator() {
@@ -64,7 +175,7 @@ function separator() {
  * @param {Editor}  editor - TipTap Editor instance
  * @param {object}  opts   - Rich text options (deserialized from Ruby)
  */
-export function buildBubbleMenu(menuEl, editor, opts) {
+export function buildBubbleMenu(menuEl, editor, opts, extraTools = []) {
   if (!menuEl) return
   if (!opts.bubble_menu) return
 
@@ -73,91 +184,17 @@ export function buildBubbleMenu(menuEl, editor, opts) {
 
   menuEl.setAttribute("role", "toolbar")
   menuEl.setAttribute("aria-label", "Text formatting")
+  const toolDefinitions = mergeBubbleToolDefinitions(buildDefaultBubbleTools(opts), extraTools)
+  menuEl._flatPackBubbleToolDefinitions = toolDefinitions
 
-  const preset = opts.preset || "minimal"
-  const isContent = preset === "content" || preset === "full"
+  for (const def of toolDefinitions) {
+    if (def.type === "separator") {
+      menuEl.appendChild(separator())
+      continue
+    }
 
-  // Core marks — always in bubble menu
-  menuEl.appendChild(bubbleButton({
-    label: "Bold",
-    icon:  ICONS.bold,
-    onClick: () => {
-      editor.chain().focus().toggleBold().run()
-      refreshBubbleMenuState(menuEl, editor)
-    },
-  }))
-
-  menuEl.appendChild(bubbleButton({
-    label: "Italic",
-    icon:  ICONS.italic,
-    onClick: () => {
-      editor.chain().focus().toggleItalic().run()
-      refreshBubbleMenuState(menuEl, editor)
-    },
-  }))
-
-  menuEl.appendChild(bubbleButton({
-    label: "Underline",
-    icon:  ICONS.underline,
-    onClick: () => {
-      editor.chain().focus().toggleUnderline().run()
-      refreshBubbleMenuState(menuEl, editor)
-    },
-  }))
-
-  menuEl.appendChild(separator())
-
-  menuEl.appendChild(bubbleButton({
-    label: "Strikethrough",
-    icon:  ICONS.strike,
-    onClick: () => {
-      editor.chain().focus().toggleStrike().run()
-      refreshBubbleMenuState(menuEl, editor)
-    },
-  }))
-
-  menuEl.appendChild(bubbleButton({
-    label: "Inline code",
-    icon:  ICONS.code,
-    onClick: () => {
-      editor.chain().focus().toggleCode().run()
-      refreshBubbleMenuState(menuEl, editor)
-    },
-  }))
-
-  // Highlight — available in content/full presets
-  if (isContent) {
-    menuEl.appendChild(bubbleButton({
-      label: "Highlight",
-      icon:  ICONS.highlight,
-      onClick: () => {
-        editor.chain().focus().toggleHighlight().run()
-        refreshBubbleMenuState(menuEl, editor)
-      },
-    }))
+    menuEl.appendChild(bubbleToolButton(def, editor, menuEl))
   }
-
-  menuEl.appendChild(separator())
-
-  // Link
-  menuEl.appendChild(bubbleButton({
-    label: "Link",
-    icon:  ICONS.link,
-    onClick: () => {
-      const prev = editor.getAttributes("link").href || ""
-      // Using window.prompt as the minimal accessible approach.
-      // Applications can override this by providing a custom link UI via
-      // rich_text_options[:ui][:link_dialog] configuration (see docs).
-      const url = window.prompt("Enter link URL:", prev)
-      if (url === null) return
-      if (url === "") {
-        editor.chain().focus().extendMarkRange("link").unsetLink().run()
-      } else {
-        editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run()
-      }
-      refreshBubbleMenuState(menuEl, editor)
-    },
-  }))
 
   // Initial state
   refreshBubbleMenuState(menuEl, editor)
@@ -173,36 +210,14 @@ export function buildBubbleMenu(menuEl, editor, opts) {
 export function refreshBubbleMenuState(menuEl, editor) {
   if (!menuEl || !editor) return
 
-  const STATE_MAP = {
-    bold:      (e) => e.isActive("bold"),
-    italic:    (e) => e.isActive("italic"),
-    underline: (e) => e.isActive("underline"),
-    strike:    (e) => e.isActive("strike"),
-    code:      (e) => e.isActive("code"),
-    highlight: (e) => e.isActive("highlight"),
-    link:      (e) => e.isActive("link"),
-  }
+  const toolDefinitions = menuEl._flatPackBubbleToolDefinitions || []
 
-  menuEl.querySelectorAll('[aria-label]').forEach((btn) => {
-    const label    = btn.getAttribute("aria-label")?.toLowerCase()
-    const checker  = Object.entries(STATE_MAP).find(([, fn]) => {
-      // Match by aria-label prefix (e.g. "bold" matches aria-label="Bold")
-      return label === Object.keys(STATE_MAP).find((k) => k === label) ||
-             label === "bold"       && STATE_MAP.bold(editor) !== undefined ||
-             false
-    })
+  menuEl.querySelectorAll("[data-tool]").forEach((btn) => {
+    const def = toolDefinitions.find((entry) => entry.name === btn.getAttribute("data-tool"))
+    if (!def) return
 
-    // Simpler approach: iterate known mark names and compare aria-label
-    const markNames = Object.keys(STATE_MAP)
-    const match = markNames.find((k) => label === k ||
-      label === { bold: "bold", italic: "italic", underline: "underline",
-                  strike: "strikethrough", code: "inline code",
-                  highlight: "highlight", link: "link" }[k])
-
-    if (match) {
-      const active = STATE_MAP[match]?.(editor) || false
-      btn.classList.toggle("is-active", active)
-      btn.setAttribute("aria-pressed", active ? "true" : "false")
-    }
+    const active = def.isActive?.(editor) || false
+    btn.classList.toggle("is-active", active)
+    btn.setAttribute("aria-pressed", active ? "true" : "false")
   })
 }

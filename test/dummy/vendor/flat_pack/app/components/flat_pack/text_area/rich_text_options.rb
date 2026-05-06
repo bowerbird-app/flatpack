@@ -22,6 +22,7 @@ module FlatPack
     #   uploads:         Boolean | Hash                 (default: false)
     #   tables:          Boolean | Hash                 (default: false)
     #   collaboration:   Boolean | Hash                 (default: false)
+    #   addons:          Array<String|Symbol|Hash>     (default: [])
     #   extensions:      Hash of per-extension overrides (default: {})
     #   ui:              Hash for TipTap UI presentation hints (default: {})
     #
@@ -65,6 +66,7 @@ module FlatPack
         uploads: false,
         tables: false,
         collaboration: false,
+        addons: [],
         extensions: {},
         ui: {}
       }.freeze
@@ -113,6 +115,7 @@ module FlatPack
         validate_flex_config!(:uploads, result[:uploads])
         validate_flex_config!(:tables, result[:tables])
         validate_flex_config!(:collaboration, result[:collaboration])
+        validate_addons!(result[:addons])
         validate_extensions!(result[:extensions])
         validate_ui!(result[:ui])
         validate_placeholder!(result[:placeholder])
@@ -172,6 +175,39 @@ module FlatPack
 
         raise ArgumentError,
           "rich_text_options[:extensions] must be a Hash of extension configs, got #{value.class}"
+      end
+
+      def validate_addons!(value)
+        unless value.is_a?(Array)
+          raise ArgumentError,
+            "rich_text_options[:addons] must be an Array of addon descriptors, got #{value.class}"
+        end
+
+        value.each do |addon|
+          validate_addon_descriptor!(addon)
+        end
+      end
+
+      def validate_addon_descriptor!(addon)
+        return if addon.is_a?(String) || addon.is_a?(Symbol)
+
+        unless addon.is_a?(Hash)
+          raise ArgumentError,
+            "rich_text_options[:addons] entries must be a String, Symbol, or Hash, got #{addon.class}"
+        end
+
+        name = addon[:name] || addon["name"]
+        options = addon[:options] || addon["options"]
+
+        unless name.is_a?(String) || name.is_a?(Symbol)
+          raise ArgumentError,
+            "rich_text_options[:addons] Hash entries must include a String or Symbol :name"
+        end
+
+        return if options.nil? || options.is_a?(Hash)
+
+        raise ArgumentError,
+          "rich_text_options[:addons] Hash entries must use a Hash for :options, got #{options.class}"
       end
 
       def validate_ui!(value)

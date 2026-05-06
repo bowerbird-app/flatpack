@@ -21,7 +21,7 @@ Use Inline Input for lightweight comment entry where a full toolbar/composer is 
 | `value` | String or nil | `nil` | No | Initial textarea content. |
 | `rows` | Integer | `1` | No | Initial textarea rows before auto-expand. |
 | `rich_text` | Boolean | `false` | No | Opts the inline input into the TipTap-backed `TextArea` rich text mode. |
-| `rich_text_options` | Hash | `{}` | No | Pass-through options for `FlatPack::TextArea::Component` rich text configuration. |
+| `rich_text_options` | Hash | `{}` | No | Pass-through options for `FlatPack::TextArea::Component` rich text configuration, including host-registered TipTap addons. |
 | `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into root container. |
 
 ## Slots
@@ -44,6 +44,8 @@ None.
 
 ## Accessibility
 Keyboard and form semantics come from native `textarea` and `button[type=submit]` by default. When `rich_text: true`, the input uses the same TipTap-backed editor surface as `FlatPack::TextArea::Component`. Add surrounding label context (or ARIA attributes via `system_arguments`) when needed for screen readers.
+
+If your app registers custom TipTap addons through `flat_pack/tiptap/addon_registry`, the inline input can opt into them with `rich_text_options[:addons]`.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).

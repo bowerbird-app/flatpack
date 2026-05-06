@@ -305,6 +305,23 @@ module FlatPack
         assert_equal "json", json["format"]
       end
 
+      def test_addons_are_serialized_into_options_json
+        render_inline(Component.new(name: "body", rich_text: true, rich_text_options: {
+          addons: [
+            :task_item_plus,
+            {name: :callout_box, options: {tone: "info"}}
+          ]
+        }))
+
+        wrapper = page.find("[data-flat-pack--tiptap-options-value]")
+        json = JSON.parse(wrapper["data-flat-pack--tiptap-options-value"])
+
+        assert_equal [
+          "task_item_plus",
+          {"name" => "callout_box", "options" => {"tone" => "info"}}
+        ], json["addons"]
+      end
+
       # ── RichTextOptions validation ─────────────────────────────────────────
 
       def test_invalid_format_raises_argument_error
@@ -346,6 +363,32 @@ module FlatPack
       def test_invalid_extensions_type_raises_argument_error
         assert_raises(ArgumentError) do
           Component.new(name: "body", rich_text: true, rich_text_options: {extensions: "all"})
+        end
+      end
+
+      def test_invalid_addons_type_raises_argument_error
+        assert_raises(ArgumentError) do
+          Component.new(name: "body", rich_text: true, rich_text_options: {addons: "callout"})
+        end
+      end
+
+      def test_invalid_addon_descriptor_type_raises_argument_error
+        assert_raises(ArgumentError) do
+          Component.new(name: "body", rich_text: true, rich_text_options: {addons: [123]})
+        end
+      end
+
+      def test_invalid_addon_hash_without_name_raises_argument_error
+        assert_raises(ArgumentError) do
+          Component.new(name: "body", rich_text: true, rich_text_options: {addons: [{options: {}}]})
+        end
+      end
+
+      def test_invalid_addon_hash_options_type_raises_argument_error
+        assert_raises(ArgumentError) do
+          Component.new(name: "body", rich_text: true, rich_text_options: {
+            addons: [{name: :callout_box, options: "bad"}]
+          })
         end
       end
 

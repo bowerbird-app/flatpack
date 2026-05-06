@@ -285,8 +285,30 @@ function toolButton({ name, label, icon, action, isActive, isDisabled }) {
   return btn
 }
 
+function mergeToolDefinitions(defaults, extras, scope) {
+  const merged = []
+  const seen = new Set()
+
+  for (const def of [...defaults, ...extras]) {
+    if (!def?.name) {
+      console.warn(`[FlatPack TipTap] Ignoring ${scope} tool definition without a name.`)
+      continue
+    }
+
+    if (seen.has(def.name)) {
+      console.warn(`[FlatPack TipTap] Ignoring duplicate ${scope} tool \"${def.name}\".`)
+      continue
+    }
+
+    seen.add(def.name)
+    merged.push(def)
+  }
+
+  return merged
+}
+
 // Each entry: { name, label, icon, action(editor), isActive?(editor), presets }
-const TOOL_DEFINITIONS = [
+const DEFAULT_TOOL_DEFINITIONS = [
   // Inline marks
   {
     name: "bold",
@@ -482,17 +504,19 @@ const TOOL_DEFINITIONS = [
  * @param {Editor}   editor    - TipTap Editor instance
  * @param {object}   opts      - Rich text options from Ruby (deserialized)
  */
-export function buildToolbar(toolbarEl, editor, opts) {
+export function buildToolbar(toolbarEl, editor, opts, extraTools = []) {
   if (!toolbarEl) return
 
   const preset        = opts.toolbar || "standard"
   const isCustom      = Array.isArray(preset)
   const effectiveSet  = isCustom ? new Set(preset) : null
+  const toolDefinitions = mergeToolDefinitions(DEFAULT_TOOL_DEFINITIONS, extraTools, "toolbar")
 
   // Clear any previous content (guard against double-init)
   toolbarEl.innerHTML = ""
+  toolbarEl._flatPackToolDefinitions = toolDefinitions
 
-  for (const def of TOOL_DEFINITIONS) {
+  for (const def of toolDefinitions) {
     // Skip separators that have no tools on either side (handled below)
     if (def.type === "separator") {
       const sep = document.createElement("div")
@@ -548,10 +572,11 @@ export function updateToolbarState(toolbarEl, editor) {
   if (!toolbarEl || !editor) return
 
   const buttons = toolbarEl.querySelectorAll("[data-tool]")
+  const toolDefinitions = toolbarEl._flatPackToolDefinitions || DEFAULT_TOOL_DEFINITIONS
 
   buttons.forEach((btn) => {
     const name = btn.getAttribute("data-tool")
-    const def  = TOOL_DEFINITIONS.find((d) => d.name === name)
+    const def  = toolDefinitions.find((d) => d.name === name)
     if (!def) return
 
     const active   = def.isActive?.(editor) || false

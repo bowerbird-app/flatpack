@@ -75,6 +75,12 @@
     <p>Select this sentence to reveal the bubble menu with <strong>bold</strong>, <em>italic</em>, <u>underline</u>, <s>strikethrough</s>, <code>inline code</code>, and a <a href="https://example.com/note">link</a>.</p>
   HTML
 
+  addon_image_rich_text_value = <<~HTML.strip
+    <p>This editor starts from the <code>:minimal</code> preset and adds TipTap's <strong>Image</strong> extension from the host app.</p>
+    <p><img src="https://picsum.photos/640/320?random=58" alt="Demo addon image"></p>
+    <p>The toolbar below reuses FlatPack's built-in <code>image</code> button once the addon is registered.</p>
+  HTML
+
   html_format_rich_text_value = <<~HTML.strip
     <h2>HTML Output</h2>
     <p><strong>Bolded</strong>, <em>italic</em>, <u>underlined</u>, and <s>struck through</s> markup is posted back as HTML.</p>
@@ -130,7 +136,7 @@
   <%= render FlatPack::SectionTitle::Component.new(title: "Text Area Examples", anchor_link: true) %>
 
   <%= render FlatPack::Card::Component.new do |card| %>
-    <% card.body(class: "space-y-[var(--stack-gap-md)]") do %>
+    <% card.body(class: "space-y-(--stack-gap-md)") do %>
       <%= render FlatPack::TextArea::Component.new(
         name: "description",
         label: "Description",
@@ -266,6 +272,104 @@
     language: "erb",
     title: "Standard Content Editor"
   ) %>
+
+  <%# ── Host-registered addon example ───────────────────────────────────── %>
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Host-registered addon: TipTap Image",
+    subtitle: "A dummy-app example of registering TipTap's Image extension in host JavaScript and opting into it from rich_text_options.",
+    anchor_link: true
+  ) %>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body(class: "space-y-(--stack-gap-md)") do %>
+      <p class="text-sm text-(--surface-muted-content-color)">
+        This editor uses the <code>:minimal</code> preset, then adds <code>@tiptap/extension-image</code>
+        through <code>registerTiptapAddon</code> in the dummy app. The toolbar reuses FlatPack's built-in
+        <code>image</code> button once the addon is active.
+      </p>
+
+      <%= render FlatPack::TextArea::Component.new(
+        name: "gallery[body]",
+        id: "gallery-body",
+        label: "Gallery notes",
+        value: addon_image_rich_text_value,
+        rich_text: true,
+        rich_text_options: {
+          preset: :minimal,
+          toolbar: ["bold", "italic", "image", "undo", "redo"],
+          addons: [
+            { name: :tiptap_image, options: { inline: false, allowBase64: false } }
+          ]
+        }
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      // app/javascript/tiptap_demo_addons.js
+      import { Image } from &quot;@tiptap/extension-image&quot;
+      import { registerTiptapAddon } from &quot;flat_pack/tiptap/addon_registry&quot;
+
+      registerTiptapAddon(&quot;tiptap-image&quot;, {
+        extensions: ({ addonOptions }) =&gt; [
+          Image.configure({
+            inline: false,
+            allowBase64: false,
+            ...addonOptions
+          })
+        ]
+      })
+
+      // view
+      &lt;%= render FlatPack::TextArea::Component.new(
+        name: &quot;gallery[body]&quot;,
+        rich_text: true,
+        rich_text_options: {
+          preset: :minimal,
+          toolbar: [&quot;bold&quot;, &quot;italic&quot;, &quot;image&quot;, &quot;undo&quot;, &quot;redo&quot;],
+          addons: [{ name: :tiptap_image, options: { inline: false } }]
+        }
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Register and Use TipTap Image Addon"
+  ) %>
+
+  <%= render FlatPack::Card::Component.new(class: "mt-4") do |card| %>
+    <% card.body(class: "space-y-3 text-sm text-[var(--surface-content-color)]") do %>
+      <div>
+        <p class="font-medium">FlatPack owns the extension mechanism:</p>
+        <p>See <code>app/javascript/flat_pack/tiptap/addon_registry.js</code></p>
+      </div>
+
+      <div>
+        <p class="font-medium">The host app owns the actual addon registration:</p>
+        <p>In this repo, the host app is the dummy app, so the example lives in <code>test/dummy/app/javascript/tiptap_demo_addons.js</code></p>
+      </div>
+
+      <div>
+        <p class="font-medium">The host app also has to import that registration file:</p>
+        <p>See <code>test/dummy/app/javascript/application.js</code></p>
+      </div>
+
+      <div>
+        <p class="font-medium">And if the host app uses Importmap, it has to pin anything it imports:</p>
+        <p>See <code>test/dummy/config/importmap.rb</code></p>
+      </div>
+
+      <div>
+        <p class="font-medium">So in a real consumer Rails app, the equivalent would be:</p>
+        <ol class="list-decimal pl-5 space-y-1 text-(--surface-muted-content-color)">
+          <li>Add a JS file in the app, such as <code>app/javascript/tiptap_addons.js</code>.</li>
+          <li>Import <code>Image</code> from <code>@tiptap/extension-image</code> there.</li>
+          <li>Import <code>registerTiptapAddon</code> from FlatPack there.</li>
+          <li>Register the addon there.</li>
+          <li>Import that file from the app's JS entrypoint.</li>
+          <li>Pin the file and the TipTap package in the app's importmap if using Importmap.</li>
+        </ol>
+      </div>
+    <% end %>
+  <% end %>
 
   <%# ── Full preset ─────────────────────────────────────────────────────── %>
   <%= render FlatPack::SectionTitle::Component.new(
@@ -510,7 +614,7 @@
     <% card.body do %>
       <%= form_with url: demo_forms_text_area_path, method: :post do |f| %>
         <input type="hidden" name="article[body_format]" value="html">
-        <div class="space-y-[var(--stack-gap-md)]">
+        <div class="space-y-(--stack-gap-md)">
           <%= render FlatPack::TextArea::Component.new(
             name: "article[body]",
             id: "article-body-html",
@@ -544,7 +648,7 @@
     <% card.body do %>
       <%= form_with url: demo_forms_text_area_path, method: :post do |f| %>
         <input type="hidden" name="article[body_format]" value="json">
-        <div class="space-y-[var(--stack-gap-md)]">
+        <div class="space-y-(--stack-gap-md)">
           <%= render FlatPack::TextArea::Component.new(
             name: "article[body]",
             id: "article-body-json",
