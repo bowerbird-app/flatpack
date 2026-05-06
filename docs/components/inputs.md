@@ -223,6 +223,18 @@ So in a real consumer Rails app, the equivalent would be:
 5. Import that file from the app's JS entrypoint.
 6. Pin the file and the TipTap package in the app's importmap if using Importmap.
 
+#### Upgrading from older FlatPack versions
+
+If your app already uses FlatPack and you are upgrading to pick up the newer TipTap addon support, rerun the install generator and verifier in the host app:
+
+```bash
+bin/rails generate flat_pack:install
+bin/rake flat_pack:contract
+bin/rake flat_pack:verify_install
+```
+
+That makes sure your app has the latest FlatPack importmap and rich-text wiring before you start adding app-owned TipTap addons.
+
 #### Example: adding TipTap Image to the minimal preset
 
 FlatPack already includes the Image extension in the `:content` preset, so you do not need an addon if `preset: :content` already fits your use case. The addon route is useful when you want to bring `Image` into a smaller preset such as `:minimal`, or when you want host-app ownership of the exact extension config.
