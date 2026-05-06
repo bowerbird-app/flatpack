@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.48] - 2026-05-06
+
+### Changed
+- Added a media gallery card example to the dummy `/demo/cards` page, showing how to build file-browser style image grids with `FlatPack::Card::Component` media and body slots.
+
 ## [0.1.47] - 2026-05-06
 
 ### Changed
