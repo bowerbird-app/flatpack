@@ -15,7 +15,7 @@
  *
  *   full     — content + Subscript, Superscript, FontFamily, Mention,
  *              YouTube, Audio, Details, DetailsContent, DetailsSummary,
- *              Mathematics, Emoji, TrailingNode, UniqueID, Focus,
+ *              Mathematics, Emoji, UniqueID, Focus,
  *              ListKeymap, FloatingMenu (when enabled)
  *
  * All imports are dynamic so that missing CDN pins result in a graceful
@@ -34,7 +34,7 @@
  *
  * Open-source extensions documented but not always imported (may require Pro
  * plan or optional packages — see docs/components/inputs.md):
- *   InvisibleCharacters, TableOfContents, Selection, FileHandler
+ *   TableOfContents, Selection, FileHandler
  */
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -226,7 +226,6 @@ async function buildFullExtensions(config) {
     // silently skipped (tryImport returns null).
     mathematicsMod,
     emojiMod,
-    invisibleCharsMod,
     tableOfContentsMod,
   ] = await Promise.all([
     tryImport("@tiptap/extension-subscript"),
@@ -248,7 +247,6 @@ async function buildFullExtensions(config) {
     // Optional/Pro packages — graceful skip if unavailable
     tryImport("@tiptap/extension-mathematics"),
     tryImport("@tiptap/extension-emoji"),
-    tryImport("@tiptap/extension-invisible-characters"),
     tryImport("@tiptap/extension-table-of-contents"),
   ])
 
@@ -306,7 +304,6 @@ async function buildFullExtensions(config) {
   // Optional packages (may be Pro or require extra deps)
   if (mathematicsMod?.Mathematics)      additions.push(mathematicsMod.Mathematics)
   if (emojiMod?.Emoji)            additions.push(emojiMod.Emoji)
-  if (invisibleCharsMod?.InvisibleCharacters)   additions.push(invisibleCharsMod.InvisibleCharacters)
   if (tableOfContentsMod?.TableOfContents)  additions.push(tableOfContentsMod.TableOfContents)
 
   return [...base, ...additions]

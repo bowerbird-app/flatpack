@@ -241,6 +241,16 @@
     margin: 0 0 0.75em 0;
   }
 
+  .flat-pack-richtext-editor ol {
+    list-style: decimal;
+  }
+  .flat-pack-richtext-editor ul {
+    list-style: disc;
+  }
+  .flat-pack-richtext-editor menu {
+    list-style: initial;
+  }
+
   .flat-pack-richtext-editor .ProseMirror ul,
   .flat-pack-richtext-editor .ProseMirror ol {
     padding-left: 1.5rem;

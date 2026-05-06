@@ -3,13 +3,140 @@
   subtitle: "Multiline input examples with optional character counting."
 ) %>
 
+<%
+  minimal_rich_text_value = <<~HTML.strip
+    <p><strong>Bolded</strong></p>
+    <p><em>Italic</em></p>
+    <p><u>Underlined</u></p>
+  HTML
+
+  standard_rich_text_value = <<~HTML.strip
+    <h1>Heading One</h1>
+    <h2>Heading Two</h2>
+    <h3>Heading Three</h3>
+    <p><strong>Bolded</strong>, <em>italic</em>, <u>underlined</u>, <s>struck through</s>, and <code>inline_code()</code> are all visible by default.</p>
+    <ul>
+      <li>Bullet list item</li>
+      <li>Another bullet list item</li>
+    </ul>
+    <ol>
+      <li>Numbered list item</li>
+      <li>Another numbered list item</li>
+    </ol>
+    <blockquote>Blockquotes are useful for pull quotes, testimonials, and highlighted callouts.</blockquote>
+  HTML
+
+  full_rich_text_value = <<~HTML.strip
+    <h1>Full Toolbar Walkthrough</h1>
+    <p><strong>Bolded</strong>, <em>italic</em>, <u>underlined</u>, <s>struck through</s>, <code>inline_code()</code>, and a <a href="https://example.com/docs">link</a> are preloaded here.</p>
+    <p style="text-align:center"><mark>Centered highlighted text</mark> demonstrates both alignment and highlight controls.</p>
+    <p style="text-align:right">Right-aligned copy is included for the alignment tools.</p>
+    <ul>
+      <li>Bullet list item</li>
+      <li>Another bullet list item</li>
+    </ul>
+    <ol>
+      <li>Numbered list item</li>
+      <li>Another numbered list item</li>
+    </ol>
+    <ul data-type="taskList">
+      <li>
+        <label><input type="checkbox" checked="checked"><span></span></label>
+        <div><p>Completed task item</p></div>
+      </li>
+      <li>
+        <label><input type="checkbox"><span></span></label>
+        <div><p>Open task item</p></div>
+      </li>
+    </ul>
+    <blockquote>Use the full preset when you need richer documents with links, media, alignment, and structured blocks.</blockquote>
+    <table>
+      <thead>
+        <tr>
+          <th>Column</th>
+          <th>Example</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Toolbar</td>
+          <td>Full preset</td>
+        </tr>
+        <tr>
+          <td>State</td>
+          <td>Seeded content</td>
+        </tr>
+      </tbody>
+    </table>
+    <p><img src="https://picsum.photos/640/320?random=44" alt="Embedded demo image"></p>
+  HTML
+
+  bubble_menu_rich_text_value = <<~HTML.strip
+    <p>Select this sentence to reveal the bubble menu with <strong>bold</strong>, <em>italic</em>, <u>underline</u>, <s>strikethrough</s>, <code>inline code</code>, and a <a href="https://example.com/note">link</a>.</p>
+  HTML
+
+  addon_image_rich_text_value = <<~HTML.strip
+    <p>This editor starts from the <code>:minimal</code> preset and adds TipTap's <strong>Image</strong> extension from the host app.</p>
+    <p><img src="https://picsum.photos/640/320?random=58" alt="Demo addon image"></p>
+    <p>The toolbar below reuses FlatPack's built-in <code>image</code> button once the addon is registered.</p>
+  HTML
+
+  html_format_rich_text_value = <<~HTML.strip
+    <h2>HTML Output</h2>
+    <p><strong>Bolded</strong>, <em>italic</em>, <u>underlined</u>, and <s>struck through</s> markup is posted back as HTML.</p>
+    <ul>
+      <li>Bullet item for sanitizer output</li>
+      <li>Second bullet item</li>
+    </ul>
+  HTML
+
+  json_format_rich_text_value = JSON.generate({
+    type: "doc",
+    content: [
+      {type: "heading", attrs: {level: 2}, content: [{type: "text", text: "JSON Output"}]},
+      {
+        type: "paragraph",
+        content: [
+          {type: "text", text: "This sample includes "},
+          {type: "text", marks: [{type: "bold"}], text: "bold"},
+          {type: "text", text: ", "},
+          {type: "text", marks: [{type: "italic"}], text: "italic"},
+          {type: "text", text: ", "},
+          {type: "text", marks: [{type: "underline"}], text: "underline"},
+          {type: "text", text: ", "},
+          {type: "text", marks: [{type: "strike"}], text: "strikethrough"},
+          {type: "text", text: ", and "},
+          {type: "text", marks: [{type: "code"}], text: "inline_code()"},
+          {type: "text", text: " in TipTap JSON format."}
+        ]
+      },
+      {
+        type: "bulletList",
+        content: [
+          {type: "listItem", content: [{type: "paragraph", content: [{type: "text", text: "Bullet list item"}]}]},
+          {type: "listItem", content: [{type: "paragraph", content: [{type: "text", text: "Another bullet list item"}]}]}
+        ]
+      },
+      {
+        type: "orderedList",
+        attrs: {start: 1},
+        content: [
+          {type: "listItem", content: [{type: "paragraph", content: [{type: "text", text: "Numbered list item"}]}]},
+          {type: "listItem", content: [{type: "paragraph", content: [{type: "text", text: "Another numbered list item"}]}]}
+        ]
+      },
+      {type: "blockquote", content: [{type: "paragraph", content: [{type: "text", text: "Quoted content is preserved in the JSON document."}]}]}
+    ]
+  })
+%>
+
 <%= render "pages/component_method_variables_table", component: :text_input %>
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Text Area Examples", anchor_link: true) %>
 
   <%= render FlatPack::Card::Component.new do |card| %>
-    <% card.body(class: "space-y-[var(--stack-gap-md)]") do %>
+    <% card.body(class: "space-y-(--stack-gap-md)") do %>
       <%= render FlatPack::TextArea::Component.new(
         name: "description",
         label: "Description",
@@ -76,6 +203,7 @@
         id: "comment-body",
         label: "Comment",
         placeholder: "Write your comment...",
+        value: minimal_rich_text_value,
         rich_text: true,
         rich_text_options: {
           preset: :minimal,
@@ -115,6 +243,7 @@
         id: "post-body",
         label: "Post Body",
         placeholder: "Start writing...",
+        value: standard_rich_text_value,
         required: true,
         rich_text: true,
         rich_text_options: {
@@ -144,6 +273,104 @@
     title: "Standard Content Editor"
   ) %>
 
+  <%# ── Host-registered addon example ───────────────────────────────────── %>
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Host-registered addon: TipTap Image",
+    subtitle: "A dummy-app example of registering TipTap's Image extension in host JavaScript and opting into it from rich_text_options.",
+    anchor_link: true
+  ) %>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body(class: "space-y-(--stack-gap-md)") do %>
+      <p class="text-sm text-(--surface-muted-content-color)">
+        This editor uses the <code>:minimal</code> preset, then adds <code>@tiptap/extension-image</code>
+        through <code>registerTiptapAddon</code> in the dummy app. The toolbar reuses FlatPack's built-in
+        <code>image</code> button once the addon is active.
+      </p>
+
+      <%= render FlatPack::TextArea::Component.new(
+        name: "gallery[body]",
+        id: "gallery-body",
+        label: "Gallery notes",
+        value: addon_image_rich_text_value,
+        rich_text: true,
+        rich_text_options: {
+          preset: :minimal,
+          toolbar: ["bold", "italic", "image", "undo", "redo"],
+          addons: [
+            { name: :tiptap_image, options: { inline: false, allowBase64: false } }
+          ]
+        }
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      // app/javascript/tiptap_demo_addons.js
+      import { Image } from &quot;@tiptap/extension-image&quot;
+      import { registerTiptapAddon } from &quot;flat_pack/tiptap/addon_registry&quot;
+
+      registerTiptapAddon(&quot;tiptap-image&quot;, {
+        extensions: ({ addonOptions }) =&gt; [
+          Image.configure({
+            inline: false,
+            allowBase64: false,
+            ...addonOptions
+          })
+        ]
+      })
+
+      // view
+      &lt;%= render FlatPack::TextArea::Component.new(
+        name: &quot;gallery[body]&quot;,
+        rich_text: true,
+        rich_text_options: {
+          preset: :minimal,
+          toolbar: [&quot;bold&quot;, &quot;italic&quot;, &quot;image&quot;, &quot;undo&quot;, &quot;redo&quot;],
+          addons: [{ name: :tiptap_image, options: { inline: false } }]
+        }
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Register and Use TipTap Image Addon"
+  ) %>
+
+  <%= render FlatPack::Card::Component.new(class: "mt-4") do |card| %>
+    <% card.body(class: "space-y-3 text-sm text-[var(--surface-content-color)]") do %>
+      <div>
+        <p class="font-medium">FlatPack owns the extension mechanism:</p>
+        <p>See <code>app/javascript/flat_pack/tiptap/addon_registry.js</code></p>
+      </div>
+
+      <div>
+        <p class="font-medium">The host app owns the actual addon registration:</p>
+        <p>In this repo, the host app is the dummy app, so the example lives in <code>test/dummy/app/javascript/tiptap_demo_addons.js</code></p>
+      </div>
+
+      <div>
+        <p class="font-medium">The host app also has to import that registration file:</p>
+        <p>See <code>test/dummy/app/javascript/application.js</code></p>
+      </div>
+
+      <div>
+        <p class="font-medium">And if the host app uses Importmap, it has to pin anything it imports:</p>
+        <p>See <code>test/dummy/config/importmap.rb</code></p>
+      </div>
+
+      <div>
+        <p class="font-medium">So in a real consumer Rails app, the equivalent would be:</p>
+        <ol class="list-decimal pl-5 space-y-1 text-(--surface-muted-content-color)">
+          <li>Add a JS file in the app, such as <code>app/javascript/tiptap_addons.js</code>.</li>
+          <li>Import <code>Image</code> from <code>@tiptap/extension-image</code> there.</li>
+          <li>Import <code>registerTiptapAddon</code> from FlatPack there.</li>
+          <li>Register the addon there.</li>
+          <li>Import that file from the app's JS entrypoint.</li>
+          <li>Pin the file and the TipTap package in the app's importmap if using Importmap.</li>
+        </ol>
+      </div>
+    <% end %>
+  <% end %>
+
   <%# ── Full preset ─────────────────────────────────────────────────────── %>
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Full preset",
@@ -156,6 +383,7 @@
         name: "document[body]",
         id: "document-body",
         label: "Document",
+        value: full_rich_text_value,
         rich_text: true,
         rich_text_options: {
           preset: :full,
@@ -196,6 +424,7 @@
         id: "note-body",
         label: "Note",
         placeholder: "Select text to see the bubble menu...",
+        value: bubble_menu_rich_text_value,
         rich_text: true,
         rich_text_options: {
           toolbar: :none,
@@ -234,6 +463,7 @@
         name: "review[body]",
         id: "review-body",
         label: "Review",
+        value: standard_rich_text_value,
         rich_text: true,
         error: "Review body can't be blank"
       ) %>
@@ -265,8 +495,12 @@
         name: "archived[body]",
         id: "archived-body",
         label: "Archived Content",
-        value: '{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"This content is read-only."}]}]}',
+        value: standard_rich_text_value,
         rich_text: true,
+        rich_text_options: {
+          preset: :content,
+          toolbar: :standard
+        },
         disabled: true
       ) %>
     <% end %>
@@ -298,6 +532,7 @@
         name: "page[content]",
         id: "page-content",
         label: "Page Content",
+        value: html_format_rich_text_value,
         rich_text: true,
         rich_text_options: {
           format: :html,
@@ -379,12 +614,13 @@
     <% card.body do %>
       <%= form_with url: demo_forms_text_area_path, method: :post do |f| %>
         <input type="hidden" name="article[body_format]" value="html">
-        <div class="space-y-[var(--stack-gap-md)]">
+        <div class="space-y-(--stack-gap-md)">
           <%= render FlatPack::TextArea::Component.new(
             name: "article[body]",
             id: "article-body-html",
             label: "Article body",
             placeholder: "Write something and click Submit to see the submitted HTML value…",
+            value: html_format_rich_text_value,
             rich_text: true,
             rich_text_options: {
               preset: :content,
@@ -412,12 +648,13 @@
     <% card.body do %>
       <%= form_with url: demo_forms_text_area_path, method: :post do |f| %>
         <input type="hidden" name="article[body_format]" value="json">
-        <div class="space-y-[var(--stack-gap-md)]">
+        <div class="space-y-(--stack-gap-md)">
           <%= render FlatPack::TextArea::Component.new(
             name: "article[body]",
             id: "article-body-json",
             label: "Article body",
             placeholder: "Write something and click Submit to see the TipTap JSON document…",
+            value: json_format_rich_text_value,
             rich_text: true,
             rich_text_options: {
               preset: :content,

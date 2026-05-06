@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.41] - 2026-05-06
+
+### Added
+- Added a host-app TipTap addon registry so `FlatPack::TextArea` rich text editors can opt into application-registered extensions without forking FlatPack.
+- Added `rich_text_options[:addons]` validation and serialization, including support for addon descriptors with per-instance option hashes.
+
+### Changed
+- Refactored the rich text toolbar and bubble menu to accept addon-provided tool definitions alongside the built-in preset tools.
+- Clarified the rich text docs so `addons` is the supported extension point and `extensions` is documented as reserved for FlatPack-managed overrides.
+- Expanded the textarea docs and dummy `/demo/forms/text_area` page with a host-app addon walkthrough, including a working TipTap `Image` extension example registered from the dummy app.
+- Added upgrade guidance telling existing FlatPack apps to rerun `flat_pack:install` and `flat_pack:verify_install` so the latest TipTap/importmap wiring is applied after upgrading.
+
+### Tests
+- Added regression coverage for valid and invalid `rich_text_options[:addons]` payloads and JSON serialization of addon descriptors.
+
 ## [0.1.39] - 2026-05-05
 
 ### Changed

@@ -6,7 +6,7 @@ This document provides the exact terminal commands and configuration steps neede
 
 FlatPack is a modern Rails UI Component Library built with ViewComponent, Tailwind CSS, and Hotwire. It provides type-safe, testable components with dark mode support and accessibility features. Supports Rails 7.1 and above.
 
-**Current Version:** 0.1.39 (Updated May 5, 2026)
+**Current Version:** 0.1.41 (Updated May 6, 2026)
 
 ## AI-first installation entrypoint
 
@@ -117,6 +117,36 @@ Notes:
 - `default_icon_variant` accepts `:outline`, `:solid`, `:mini`, or `:micro`.
 - If you omit `default_icon_variant`, FlatPack defaults to `:outline`.
 - Per-component `variant:` values on `FlatPack::Shared::IconComponent` still override the app default.
+
+## Upgrading Existing Apps
+
+If you are upgrading an existing FlatPack installation rather than starting from scratch, do not assume your host app already has every importmap pin, stylesheet tag, or Stimulus wiring needed by the latest rich-text features.
+
+Recommended upgrade flow:
+
+```bash
+bundle update flat_pack
+bin/rails generate flat_pack:install
+bin/rake flat_pack:contract
+bin/rake flat_pack:verify_install
+```
+
+Why rerun `flat_pack:install` on upgrade:
+
+- It backfills any newer FlatPack stylesheet tags or importmap wiring your app may be missing.
+- It ensures the current TipTap package pins used by FlatPack are present in `config/importmap.rb` for importmap-based apps.
+- It keeps your host app aligned with the installed gem version instead of an older hand-configured setup.
+
+If you want to use host-registered TipTap addons introduced in this release, there is one more host-app step beyond rerunning the generator:
+
+1. Add an app-owned JavaScript file such as `app/javascript/tiptap_addons.js`.
+2. Import the TipTap extension package there, for example `@tiptap/extension-image`.
+3. Import `registerTiptapAddon` from `flat_pack/tiptap/addon_registry` there.
+4. Register the addon there.
+5. Import that file from your app's JavaScript entrypoint.
+6. If you use Importmap, pin both the addon registration file and any TipTap package it imports.
+
+After upgrading, rebuild assets and restart your app if your workflow does not already do that automatically.
 
 ### 4. Configure Tailwind CSS 4 to Scan FlatPack Components
 

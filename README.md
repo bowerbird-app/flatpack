@@ -33,6 +33,8 @@ bin/rake flat_pack:contract
 bin/rake flat_pack:verify_install
 ```
 
+If you are upgrading an existing FlatPack app, rerun `rails generate flat_pack:install` after updating the gem so newer TipTap and importmap wiring is backfilled into the host app before running `bin/rake flat_pack:verify_install`.
+
 **What the generator does:**
 - ✨ Automatically detects your Tailwind CSS 4 configuration file
 - ✨ Calculates the correct relative path to FlatPack components

@@ -119,7 +119,7 @@ Pass any of these keys inside `rich_text_options: { ... }`. All keys accept symb
 | --- | --- | --- | --- |
 | `preset` | Symbol | `:minimal` | Extension set: `:minimal`, `:content`, or `:full`. |
 | `format` | Symbol | `:html` | Output format synced to the hidden field: `:html` or `:json`. |
-| `toolbar` | Symbol \| Array | `:standard` | Toolbar preset (`:minimal`, `:standard`, `:full`, `:none`) or an Array of tool names. |
+| `toolbar` | Symbol \| Array | `:standard` | Toolbar preset (`:minimal`, `:standard`, `:full`, `:none`) or an Array of tool names, including host-registered addon tool names. |
 | `bubble_menu` | Boolean | `true` | Show TipTap BubbleMenu on text selection. |
 | `floating_menu` | Boolean | `false` | Show TipTap FloatingMenu at the start of an empty line. |
 | `character_count` | Boolean | `false` | Display live character count below the editor. |
@@ -129,7 +129,8 @@ Pass any of these keys inside `rich_text_options: { ... }`. All keys accept symb
 | `tables` | Boolean \| Hash | `false` | Enable Table toolbar button and table-keyboard shortcuts. |
 | `collaboration` | Boolean \| Hash | `false` | Enable Collaboration extension (requires `:full` preset). Pass Hash for provider config. |
 | `drag_handle` | Boolean | `false` | Enable drag-handle for block reordering (`:full` preset). |
-| `extensions` | Hash | `{}` | Pass-through config forwarded to individual TipTap extensions. |
+| `addons` | Array | `[]` | Opt into host-registered TipTap addons. Entries may be addon names or `{ name:, options: }` hashes. |
+| `extensions` | Hash | `{}` | Reserved for FlatPack-managed extension overrides. It does not load arbitrary host addons. |
 | `ui` | Hash | `{}` | Reserved for future UI customisation options. |
 | `placeholder` | String | `nil` | Placeholder text shown when the editor is empty (overrides the top-level `placeholder:` prop). |
 
@@ -140,6 +141,103 @@ Pass any of these keys inside `rich_text_options: { ... }`. All keys accept symb
 | `:minimal` | StarterKit, Placeholder, CharacterCount, Link, Underline, TextAlign, BubbleMenu/FloatingMenu (optional) |
 | `:content` | All of `:minimal` + Highlight, TextStyle, Color, Typography, Image, CodeBlockLowlight, TaskList, TaskItem, Table (+Row/Cell/Header) |
 | `:full` | All of `:content` + Subscript, Superscript, FontFamily, Mention, YouTube, Audio, Details, TrailingNode, UniqueID, Focus, ListKeymap, Collaboration+Cursor, DragHandle, Mathematics, Emoji, InvisibleCharacters, TableOfContents |
+
+### Custom addons
+
+FlatPack now supports host-registered TipTap addons without forking the gem. The integration is split in two parts:
+
+- Ruby opts into addons by name via `rich_text_options[:addons]`.
+- JavaScript registers how those addons load extensions and optional toolbar or bubble-menu tools.
+
+When an addon is requested but not registered, FlatPack logs a warning and still boots the editor with the selected built-in preset.
+
+Use this flow when you want to bring in a compatible TipTap extension from the official extensions overview:
+
+- Pick a TipTap extension from <https://tiptap.dev/docs/editor/extensions/overview>.
+- Install or pin the package in your host app.
+- Register the extension with `registerTiptapAddon(...)` in host-app JavaScript.
+- Opt into it from `rich_text_options[:addons]`.
+- If the addon needs UI, either reuse an existing FlatPack toolbar tool or register addon-specific tools.
+
+#### 1. Register the addon in app JavaScript
+
+```js
+import { registerTiptapAddon } from "flat_pack/tiptap/addon_registry"
+import { Image } from "@tiptap/extension-image"
+
+registerTiptapAddon("tiptap-image", {
+  extensions: ({ addonOptions }) => [
+    Image.configure({
+      inline: false,
+      allowBase64: false,
+      ...addonOptions,
+    })
+  ]
+})
+```
+
+If you use Importmap, pin any third-party TipTap package in your app's `config/importmap.rb`. If you use npm, install the package into your app bundle as usual.
+
+#### 2. Opt into the addon from Ruby
+
+```erb
+<%= render FlatPack::TextArea::Component.new(
+  name: "article[body]",
+  rich_text: true,
+  rich_text_options: {
+    preset: :minimal,
+    addons: [
+      { name: :tiptap_image, options: { inline: false } }
+    ],
+    toolbar: ["bold", "italic", "image", "undo", "redo"]
+  }
+) %>
+```
+
+Custom toolbar arrays may include registered addon tool names. They may also reuse existing FlatPack tools that depend on an addon-provided extension, like the built-in `image` toolbar button shown above. Addon bubble-menu tools are appended automatically when the addon is active and `bubble_menu: true`.
+
+#### Where this code lives
+
+FlatPack owns the extension mechanism:
+
+- See `app/javascript/flat_pack/tiptap/addon_registry.js`
+
+The host app owns the actual addon registration:
+
+- In this repo, the host app is the dummy app, so the example lives in `test/dummy/app/javascript/tiptap_demo_addons.js`
+
+The host app also has to import that registration file:
+
+- See `test/dummy/app/javascript/application.js`
+
+And if the host app uses Importmap, it has to pin anything it imports:
+
+- See `test/dummy/config/importmap.rb`
+
+So in a real consumer Rails app, the equivalent would be:
+
+1. Add a JS file in the app, such as `app/javascript/tiptap_addons.js`.
+2. Import `Image` from `@tiptap/extension-image` there.
+3. Import `registerTiptapAddon` from FlatPack there.
+4. Register the addon there.
+5. Import that file from the app's JS entrypoint.
+6. Pin the file and the TipTap package in the app's importmap if using Importmap.
+
+#### Upgrading from older FlatPack versions
+
+If your app already uses FlatPack and you are upgrading to pick up the newer TipTap addon support, rerun the install generator and verifier in the host app:
+
+```bash
+bin/rails generate flat_pack:install
+bin/rake flat_pack:contract
+bin/rake flat_pack:verify_install
+```
+
+That makes sure your app has the latest FlatPack importmap and rich-text wiring before you start adding app-owned TipTap addons.
+
+#### Example: adding TipTap Image to the minimal preset
+
+FlatPack already includes the Image extension in the `:content` preset, so you do not need an addon if `preset: :content` already fits your use case. The addon route is useful when you want to bring `Image` into a smaller preset such as `:minimal`, or when you want host-app ownership of the exact extension config.
 
 ### Example — Minimal editor
 
