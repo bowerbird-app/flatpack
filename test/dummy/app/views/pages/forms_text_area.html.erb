@@ -3,6 +3,127 @@
   subtitle: "Multiline input examples with optional character counting."
 ) %>
 
+<%
+  minimal_rich_text_value = <<~HTML.strip
+    <p><strong>Bolded</strong></p>
+    <p><em>Italic</em></p>
+    <p><u>Underlined</u></p>
+  HTML
+
+  standard_rich_text_value = <<~HTML.strip
+    <h1>Heading One</h1>
+    <h2>Heading Two</h2>
+    <h3>Heading Three</h3>
+    <p><strong>Bolded</strong>, <em>italic</em>, <u>underlined</u>, <s>struck through</s>, and <code>inline_code()</code> are all visible by default.</p>
+    <ul>
+      <li>Bullet list item</li>
+      <li>Another bullet list item</li>
+    </ul>
+    <ol>
+      <li>Numbered list item</li>
+      <li>Another numbered list item</li>
+    </ol>
+    <blockquote>Blockquotes are useful for pull quotes, testimonials, and highlighted callouts.</blockquote>
+  HTML
+
+  full_rich_text_value = <<~HTML.strip
+    <h1>Full Toolbar Walkthrough</h1>
+    <p><strong>Bolded</strong>, <em>italic</em>, <u>underlined</u>, <s>struck through</s>, <code>inline_code()</code>, and a <a href="https://example.com/docs">link</a> are preloaded here.</p>
+    <p style="text-align:center"><mark>Centered highlighted text</mark> demonstrates both alignment and highlight controls.</p>
+    <p style="text-align:right">Right-aligned copy is included for the alignment tools.</p>
+    <ul>
+      <li>Bullet list item</li>
+      <li>Another bullet list item</li>
+    </ul>
+    <ol>
+      <li>Numbered list item</li>
+      <li>Another numbered list item</li>
+    </ol>
+    <ul data-type="taskList">
+      <li>
+        <label><input type="checkbox" checked="checked"><span></span></label>
+        <div><p>Completed task item</p></div>
+      </li>
+      <li>
+        <label><input type="checkbox"><span></span></label>
+        <div><p>Open task item</p></div>
+      </li>
+    </ul>
+    <blockquote>Use the full preset when you need richer documents with links, media, alignment, and structured blocks.</blockquote>
+    <table>
+      <thead>
+        <tr>
+          <th>Column</th>
+          <th>Example</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Toolbar</td>
+          <td>Full preset</td>
+        </tr>
+        <tr>
+          <td>State</td>
+          <td>Seeded content</td>
+        </tr>
+      </tbody>
+    </table>
+    <p><img src="https://picsum.photos/640/320?random=44" alt="Embedded demo image"></p>
+  HTML
+
+  bubble_menu_rich_text_value = <<~HTML.strip
+    <p>Select this sentence to reveal the bubble menu with <strong>bold</strong>, <em>italic</em>, <u>underline</u>, <s>strikethrough</s>, <code>inline code</code>, and a <a href="https://example.com/note">link</a>.</p>
+  HTML
+
+  html_format_rich_text_value = <<~HTML.strip
+    <h2>HTML Output</h2>
+    <p><strong>Bolded</strong>, <em>italic</em>, <u>underlined</u>, and <s>struck through</s> markup is posted back as HTML.</p>
+    <ul>
+      <li>Bullet item for sanitizer output</li>
+      <li>Second bullet item</li>
+    </ul>
+  HTML
+
+  json_format_rich_text_value = JSON.generate({
+    type: "doc",
+    content: [
+      {type: "heading", attrs: {level: 2}, content: [{type: "text", text: "JSON Output"}]},
+      {
+        type: "paragraph",
+        content: [
+          {type: "text", text: "This sample includes "},
+          {type: "text", marks: [{type: "bold"}], text: "bold"},
+          {type: "text", text: ", "},
+          {type: "text", marks: [{type: "italic"}], text: "italic"},
+          {type: "text", text: ", "},
+          {type: "text", marks: [{type: "underline"}], text: "underline"},
+          {type: "text", text: ", "},
+          {type: "text", marks: [{type: "strike"}], text: "strikethrough"},
+          {type: "text", text: ", and "},
+          {type: "text", marks: [{type: "code"}], text: "inline_code()"},
+          {type: "text", text: " in TipTap JSON format."}
+        ]
+      },
+      {
+        type: "bulletList",
+        content: [
+          {type: "listItem", content: [{type: "paragraph", content: [{type: "text", text: "Bullet list item"}]}]},
+          {type: "listItem", content: [{type: "paragraph", content: [{type: "text", text: "Another bullet list item"}]}]}
+        ]
+      },
+      {
+        type: "orderedList",
+        attrs: {start: 1},
+        content: [
+          {type: "listItem", content: [{type: "paragraph", content: [{type: "text", text: "Numbered list item"}]}]},
+          {type: "listItem", content: [{type: "paragraph", content: [{type: "text", text: "Another numbered list item"}]}]}
+        ]
+      },
+      {type: "blockquote", content: [{type: "paragraph", content: [{type: "text", text: "Quoted content is preserved in the JSON document."}]}]}
+    ]
+  })
+%>
+
 <%= render "pages/component_method_variables_table", component: :text_input %>
 
 <section class="mb-12">
@@ -76,6 +197,7 @@
         id: "comment-body",
         label: "Comment",
         placeholder: "Write your comment...",
+        value: minimal_rich_text_value,
         rich_text: true,
         rich_text_options: {
           preset: :minimal,
@@ -115,6 +237,7 @@
         id: "post-body",
         label: "Post Body",
         placeholder: "Start writing...",
+        value: standard_rich_text_value,
         required: true,
         rich_text: true,
         rich_text_options: {
@@ -156,6 +279,7 @@
         name: "document[body]",
         id: "document-body",
         label: "Document",
+        value: full_rich_text_value,
         rich_text: true,
         rich_text_options: {
           preset: :full,
@@ -196,6 +320,7 @@
         id: "note-body",
         label: "Note",
         placeholder: "Select text to see the bubble menu...",
+        value: bubble_menu_rich_text_value,
         rich_text: true,
         rich_text_options: {
           toolbar: :none,
@@ -234,6 +359,7 @@
         name: "review[body]",
         id: "review-body",
         label: "Review",
+        value: standard_rich_text_value,
         rich_text: true,
         error: "Review body can't be blank"
       ) %>
@@ -265,8 +391,12 @@
         name: "archived[body]",
         id: "archived-body",
         label: "Archived Content",
-        value: '{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"This content is read-only."}]}]}',
+        value: standard_rich_text_value,
         rich_text: true,
+        rich_text_options: {
+          preset: :content,
+          toolbar: :standard
+        },
         disabled: true
       ) %>
     <% end %>
@@ -298,6 +428,7 @@
         name: "page[content]",
         id: "page-content",
         label: "Page Content",
+        value: html_format_rich_text_value,
         rich_text: true,
         rich_text_options: {
           format: :html,
@@ -385,6 +516,7 @@
             id: "article-body-html",
             label: "Article body",
             placeholder: "Write something and click Submit to see the submitted HTML value…",
+            value: html_format_rich_text_value,
             rich_text: true,
             rich_text_options: {
               preset: :content,
@@ -418,6 +550,7 @@
             id: "article-body-json",
             label: "Article body",
             placeholder: "Write something and click Submit to see the TipTap JSON document…",
+            value: json_format_rich_text_value,
             rich_text: true,
             rich_text_options: {
               preset: :content,

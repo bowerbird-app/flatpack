@@ -58,19 +58,19 @@ module FlatPack
         end
 
         def actions(*args, **kwargs, &block)
-          return get_slot(:actions) if args.empty? && kwargs.empty? && !block_given?
+          return get_slot(:actions) if args.empty? && kwargs.empty? && !block
 
           set_slot(:actions, nil, *args, **kwargs, &block)
         end
 
         def footer(*args, **kwargs, &block)
-          return get_slot(:footer) if args.empty? && kwargs.empty? && !block_given?
+          return get_slot(:footer) if args.empty? && kwargs.empty? && !block
 
           set_slot(:footer, nil, *args, **kwargs, &block)
         end
 
         def replies(*args, **kwargs, &block)
-          return get_slot(:replies) if args.empty? && kwargs.empty? && !block_given?
+          return get_slot(:replies) if args.empty? && kwargs.empty? && !block
 
           set_slot(:replies, nil, *args, **kwargs, &block)
         end
