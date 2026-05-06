@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.44] - 2026-05-06
+
+### Changed
+- Added a `flat-pack-comments-richtext--has-toolbar` class to the comments composer shell when it renders a rich text variant with a visible toolbar, so host apps can target toolbar mode without relying on utility class internals.
+
+## [0.1.43] - 2026-05-06
+
+### Changed
+- Added a `flat-pack-comments-richtext--bubble-only` class to the comments composer shell when it renders the bubble-menu-only rich text variant, so host apps can target that mode without relying on utility class internals.
+
 ## [0.1.42] - 2026-05-06
 
 ### Changed

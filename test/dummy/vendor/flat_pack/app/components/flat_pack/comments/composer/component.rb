@@ -163,8 +163,18 @@ module FlatPack
           classes(
             "flat-pack-comments-composer-input relative overflow-hidden rounded-xl border border-[var(--comments-composer-border-color)] bg-[var(--comments-composer-background-color)] shadow-sm transition-all duration-base",
             "focus-within:border-[var(--comments-composer-focus-border-color)] focus-within:ring-2 focus-within:ring-[var(--comments-composer-focus-ring-color)]",
+            rich_text_with_toolbar? ? "flat-pack-comments-richtext--has-toolbar" : nil,
+            bubble_only_rich_text? ? "flat-pack-comments-richtext--bubble-only" : nil,
             @compact ? "min-h-[5.5rem] px-3 py-3 pr-14" : "min-h-24 px-4 py-4 pr-16"
           )
+        end
+
+        def rich_text_with_toolbar?
+          @rich_text && @rich_text_options[:toolbar] != :none
+        end
+
+        def bubble_only_rich_text?
+          @rich_text && @rich_text_options[:toolbar] == :none && @rich_text_options[:bubble_menu]
         end
 
         def render_floating_submit_button
