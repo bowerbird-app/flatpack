@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.50] - 2026-05-07
+
+### Changed
+- Updated the `/demo/cards` media gallery example to show hover-only checkbox and action controls over the image preview.
+- Added a checked-state full-card ring that uses the FlatPack primary theme token instead of hard-coded indigo utilities.
+- Removed the default gallery card preview outline and adjusted the ring-offset behavior so no idle edge artifact appears around the card.
+
 ## [0.1.49] - 2026-05-06
 
 ### Changed
