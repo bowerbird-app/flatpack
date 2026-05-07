@@ -19,6 +19,7 @@ module FlatPack
         ))
 
         assert_selector "input[type='text'][name='query'][placeholder='Search components...'][value='flatpack']"
+        assert_selector "button[aria-label='Clear search']:not(.hidden)"
       end
 
       def test_renders_search_icon
@@ -39,10 +40,11 @@ module FlatPack
           no_results_text: "Nothing found"
         ))
 
-        assert_selector "div[data-controller='flat-pack--search']"
-        assert_selector "input[data-flat-pack--search-target='input']"
+        assert_selector "div[data-controller='flat-pack--search-input flat-pack--search']"
+        assert_selector "input[data-flat-pack--search-target='input'][data-flat-pack--search-input-target='input']"
         assert_selector "div[data-flat-pack--search-target='dropdown'].hidden"
         assert_selector "div[data-flat-pack--search-target='noResults']", text: "Nothing found"
+        assert_selector "button.hidden[data-flat-pack--search-input-target='clearButton'][aria-label='Clear search']"
       end
 
       def test_raises_error_with_unsafe_search_url

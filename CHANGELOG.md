@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.51] - 2026-05-07
+
+### Changed
+- Added a right-side clear control to `FlatPack::Search::Component` when the input has a value, including the `/demo/search` live-search examples.
+
 ## [0.1.50] - 2026-05-07
 
 ### Changed

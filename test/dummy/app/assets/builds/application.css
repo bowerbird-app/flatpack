@@ -3170,19 +3170,9 @@
   .ring-primary {
     --tw-ring-color: var(--color-primary);
   }
-  .ring-offset-2 {
-    --tw-ring-offset-width: 2px;
-    --tw-ring-offset-shadow: var(--tw-ring-inset,) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
-  }
-  .ring-offset-white {
-    --tw-ring-offset-color: var(--color-white);
-  }
   .outline {
     outline-style: var(--tw-outline-style);
     outline-width: 1px;
-  }
-  .-outline-offset-1 {
-    outline-offset: calc(1px * -1);
   }
   .outline-black\/5 {
     outline-color: color-mix(in srgb, #000 5%, transparent);
@@ -3774,6 +3764,13 @@
       }
     }
   }
+  .hover\:text-\[var\(--search-input-text-color\)\] {
+    &:hover {
+      @media (hover: hover) {
+        color: var(--search-input-text-color);
+      }
+    }
+  }
   .hover\:text-\[var\(--sidebar-header-icon-hover-color\)\] {
     &:hover {
       @media (hover: hover) {
@@ -3972,11 +3969,6 @@
   .focus-visible\:ring-\[var\(--color-primary\)\] {
     &:focus-visible {
       --tw-ring-color: var(--color-primary);
-    }
-  }
-  .focus-visible\:ring-indigo-600 {
-    &:focus-visible {
-      --tw-ring-color: var(--color-indigo-600);
     }
   }
   .focus-visible\:ring-ring {
@@ -4383,11 +4375,6 @@
       box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     }
   }
-  .dark\:ring-indigo-500 {
-    @media (prefers-color-scheme: dark) {
-      --tw-ring-color: var(--color-indigo-500);
-    }
-  }
   .dark\:ring-white\/10 {
     @media (prefers-color-scheme: dark) {
       --tw-ring-color: color-mix(in srgb, #fff 10%, transparent);
@@ -4399,21 +4386,6 @@
   .dark\:ring-offset-gray-950 {
     @media (prefers-color-scheme: dark) {
       --tw-ring-offset-color: var(--color-gray-950);
-    }
-  }
-  .dark\:outline-white\/10 {
-    @media (prefers-color-scheme: dark) {
-      outline-color: color-mix(in srgb, #fff 10%, transparent);
-      @supports (color: color-mix(in lab, red, red)) {
-        outline-color: color-mix(in oklab, var(--color-white) 10%, transparent);
-      }
-    }
-  }
-  .dark\:focus-visible\:ring-indigo-500 {
-    @media (prefers-color-scheme: dark) {
-      &:focus-visible {
-        --tw-ring-color: var(--color-indigo-500);
-      }
     }
   }
   .\[\&\:\:-webkit-scrollbar\]\:hidden {
