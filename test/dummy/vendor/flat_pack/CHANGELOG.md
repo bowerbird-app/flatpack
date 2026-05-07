@@ -7,20 +7,64 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.53] - 2026-05-07
+## [0.1.50] - 2026-05-07
 
 ### Added
 - Added `FlatPack::Button::Pill::Component`, a reusable grouped pill-link component that renders item hashes with required `href`, optional `id`, and `active` state support for segmented navigation outside tabs.
 
 ### Changed
-- Added a `/demo/buttons` pill-buttons example directly below the wrapped button groups section.
-
-## [0.1.52] - 2026-05-07
-
-### Changed
+- Updated the `/demo/cards` media gallery example to show hover-only checkbox and action controls over the image preview.
+- Added a checked-state full-card ring that uses the FlatPack primary theme token instead of hard-coded indigo utilities.
+- Removed the default gallery card preview outline and adjusted the ring-offset behavior so no idle edge artifact appears around the card.
+- Added a right-side clear control to `FlatPack::Search::Component` when the input has a value, including the `/demo/search` live-search examples.
 - Updated `FlatPack::Modal::Component` so header, body, and footer wrappers only render when those sections have content, keeping the close control aligned with the header title when present and independently rendered otherwise.
 - Adjusted modal section spacing so the body uses top padding only and the header does not add default bottom padding, avoiding assumed spacing when adjacent sections are omitted.
 - Added `/demo/modals` examples for headerless, bodyless, and footerless modal configurations.
+- Added a `/demo/buttons` pill-buttons example directly below the wrapped button groups section.
+
+## [0.1.49] - 2026-05-06
+
+### Changed
+- Added `padding:` support to `FlatPack::Card::Body::Component`, including `padding: :none` for compact card body layouts.
+- Added a `background_muted` card theme token override so flat cards can override their muted surface color independently of the standard background token.
+- Synced the card docs and `/demo/cards` media gallery example with the current card API and the transparent gallery card surface example.
+- Updated the dummy Rails 8 and Rails 7 app version metadata and lockfiles so CI resolves the current `flat_pack` gem version.
+
+## [0.1.48] - 2026-05-06
+
+### Changed
+- Added a media gallery card example to the dummy `/demo/cards` page, showing how to build file-browser style image grids with `FlatPack::Card::Component` media and body slots.
+
+## [0.1.47] - 2026-05-06
+
+### Changed
+- Tightened the comments-composer rich text editor override so `.flat-pack-comments-composer-input .flat-pack-richtext-editor` now removes the editor border entirely, in addition to clearing its box shadow.
+
+## [0.1.46] - 2026-05-06
+
+### Changed
+- Added a comments-composer scoped rich text editor override so `.flat-pack-comments-composer-input .flat-pack-richtext-editor` clears the default editor box shadow and border color in the shared FlatPack stylesheet.
+
+## [0.1.45] - 2026-05-06
+
+### Changed
+- Added bubble-only comments composer rich text overrides so `.flat-pack-comments-richtext--bubble-only` removes the editor border and inner TipTap padding in the shared FlatPack stylesheet.
+
+## [0.1.44] - 2026-05-06
+
+### Changed
+- Added a `flat-pack-comments-richtext--has-toolbar` class to the comments composer shell when it renders a rich text variant with a visible toolbar, so host apps can target toolbar mode without relying on utility class internals.
+
+## [0.1.43] - 2026-05-06
+
+### Changed
+- Added a `flat-pack-comments-richtext--bubble-only` class to the comments composer shell when it renders the bubble-menu-only rich text variant, so host apps can target that mode without relying on utility class internals.
+
+## [0.1.42] - 2026-05-06
+
+### Changed
+- Added a stable `flat-pack-comments-item` root class to `FlatPack::Comments::Item::Component` so host apps can target comment-level CSS without relying on utility class internals.
+- Added a stable `flat-pack-comments-composer-input` class to the comments composer textarea shell so host apps can target the rich/plain comment input surface without depending on utility class internals.
 
 ## [0.1.41] - 2026-05-06
 

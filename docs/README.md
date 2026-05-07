@@ -27,6 +27,7 @@ bin/rake flat_pack:verify_install
 
 ### Theming & Styling
 - [Theming Guide](theming.md)
+- [Custom Theming Guide](custom_theming.md)
 - [Dark Mode](dark_mode.md)
 - [CSS Variables](#css-variables)
 
