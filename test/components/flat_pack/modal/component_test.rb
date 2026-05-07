@@ -20,6 +20,8 @@ module FlatPack
         end
 
         assert_selector "h2", text: "Confirm Action"
+        assert_selector ".flat-pack-modal__header button[aria-label='Close']"
+        assert_no_selector ".flat-pack-modal__close"
       end
 
       def test_renders_modal_with_header_slot
@@ -28,6 +30,9 @@ module FlatPack
           component.body { "Content" }
         end
 
+        assert_selector ".flat-pack-modal__header"
+        assert_selector ".flat-pack-modal__header button[aria-label='Close']"
+        assert_no_selector ".flat-pack-modal__close"
         assert_text "Custom header"
         assert_text "Content"
       end
@@ -46,7 +51,38 @@ module FlatPack
           component.footer { "Footer buttons" }
         end
 
+        assert_selector ".flat-pack-modal__footer"
         assert_text "Footer buttons"
+      end
+
+      def test_does_not_render_header_wrapper_without_title_or_header
+        render_inline(Component.new(id: "my-modal")) do |component|
+          component.body { "Content" }
+        end
+
+        assert_no_selector ".flat-pack-modal__header"
+        assert_no_selector "div[aria-labelledby]"
+        assert_selector ".flat-pack-modal__close"
+        assert_selector ".flat-pack-modal__close button[aria-label='Close']"
+      end
+
+      def test_does_not_render_body_wrapper_without_body
+        render_inline(Component.new(id: "my-modal", title: "Only header and footer")) do |component|
+          component.footer { "Footer buttons" }
+        end
+
+        assert_selector ".flat-pack-modal__header"
+        assert_no_selector ".flat-pack-modal__body"
+        assert_selector ".flat-pack-modal__footer"
+      end
+
+      def test_does_not_render_footer_wrapper_without_footer
+        render_inline(Component.new(id: "my-modal", title: "No footer")) do |component|
+          component.body { "Content" }
+        end
+
+        assert_selector ".flat-pack-modal__body"
+        assert_no_selector ".flat-pack-modal__footer"
       end
 
       def test_renders_close_button

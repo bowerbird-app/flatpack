@@ -1482,6 +1482,9 @@
     --tw-border-style: dashed;
     border-style: dashed;
   }
+  .border-\(--border-color\) {
+    border-color: var(--border-color);
+  }
   .border-\(--chat-attachment-border-color\) {
     border-color: var(--chat-attachment-border-color);
   }
@@ -1526,6 +1529,9 @@
   }
   .border-\[var\(--badge-warning-border-color\)\] {
     border-color: var(--badge-warning-border-color);
+  }
+  .border-\[var\(--border-color\)\] {
+    border-color: var(--border-color);
   }
   .border-\[var\(--bottom-nav-border-color\)\] {
     border-color: var(--bottom-nav-border-color);
@@ -1685,6 +1691,9 @@
   }
   .bg-\(--surface-muted-background-color\) {
     background-color: var(--surface-muted-background-color);
+  }
+  .bg-\(--surface-muted-color\) {
+    background-color: var(--surface-muted-color);
   }
   .bg-\(--surface-subtle-background-color\) {
     background-color: var(--surface-subtle-background-color);
@@ -1931,6 +1940,9 @@
   }
   .bg-\[var\(--surface-muted-background-color\)\] {
     background-color: var(--surface-muted-background-color);
+  }
+  .bg-\[var\(--surface-muted-color\)\] {
+    background-color: var(--surface-muted-color);
   }
   .bg-\[var\(--surface-page-background-color\)\] {
     background-color: var(--surface-page-background-color);
