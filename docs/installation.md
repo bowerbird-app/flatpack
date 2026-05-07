@@ -294,6 +294,8 @@ To **customize the theme**, override CSS variables in your own stylesheet:
 
 Make sure `application.css` is linked in your layout **after** the FlatPack stylesheet tags so your overrides take precedence.
 
+If you want to create a fully named host-app theme such as `[data-theme="brand"]` with the complete current FlatPack variable set, use the [Custom Theming Guide](custom_theming.md).
+
 ### 5. JavaScript / Importmap Configuration (Automatic)
 
 **✨ Automated Configuration**

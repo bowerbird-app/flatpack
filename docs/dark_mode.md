@@ -65,6 +65,8 @@ You can define additional custom themes the same way:
 }
 ```
 
+For a complete copy-pasteable selector with the full current FlatPack variable set, use the [Custom Theming Guide](custom_theming.md).
+
 ## Testing Themes
 
 ### Explicit theme variants
@@ -106,5 +108,6 @@ If you rely on the optional JS controller to restore a saved theme, the page may
 ## Next Steps
 
 - [Theming Guide](theming.md)
+- [Custom Theming Guide](custom_theming.md)
 - [Installation Guide](installation.md)
 - [Architecture: Tailwind 4](architecture/tailwind_4.md)

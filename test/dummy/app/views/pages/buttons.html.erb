@@ -365,6 +365,29 @@
     ) %>
   </section>
 
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Pill Buttons", anchor_link: true, subtitle: "Reusable pill-style links for segmented navigation and filters.") %>
+    <%= render FlatPack::Button::Pill::Component.new(
+      class: "mb-4",
+      items: [
+        {text: "Overview", href: demo_buttons_path, active: true, id: "pill-overview"},
+        {text: "Billing", href: demo_tabs_pills_path},
+        {text: "Team Members", href: demo_search_path}
+      ]
+    ) %>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Button::Pill::Component.new(
+          items: [
+            {text: "Overview", href: demo_buttons_path, active: true, id: "pill-overview"},
+            {text: "Billing", href: demo_tabs_pills_path},
+            {text: "Team Members", href: demo_search_path}
+          ]
+        ) %&gt;
+      CODE
+    ) %>
+  </section>
+
   <!-- Segmented Buttons -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Segmented Buttons (Selected State)", anchor_link: true, subtitle: "Examples for Segmented Buttons (Selected State).") %>
