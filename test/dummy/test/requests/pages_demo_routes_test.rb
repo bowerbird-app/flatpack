@@ -102,6 +102,16 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "?page=2"
   end
 
+  test "buttons demo renders pill button examples" do
+    get "/demo/buttons"
+
+    assert_response :success
+    assert_includes response.body, "Pill Buttons"
+    assert_includes response.body, "pill-overview"
+    assert_includes response.body, "Team Members"
+    assert_includes response.body, 'aria-current="page"'
+  end
+
   test "comments demo renders rich text composer examples" do
     get "/demo/comments"
 

@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.53] - 2026-05-07
+
+### Added
+- Added `FlatPack::Button::Pill::Component`, a reusable grouped pill-link component that renders item hashes with required `href`, optional `id`, and `active` state support for segmented navigation outside tabs.
+
+### Changed
+- Added a `/demo/buttons` pill-buttons example directly below the wrapped button groups section.
+
 ## [0.1.52] - 2026-05-07
 
 ### Changed
