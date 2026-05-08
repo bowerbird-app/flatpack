@@ -266,7 +266,7 @@ module FlatPack
         content_tag(:button,
           type: "button",
           hidden: !lightbox_available_for_index?(@initial_index),
-          class: "absolute right-3 top-3 z-20 flex aspect-square flex-nowrap items-center justify-center cursor-pointer rounded-full bg-[var(--carousel-counter-background-color)] p-2 text-[var(--carousel-counter-text-color)] transition hover:bg-[var(--carousel-control-hover-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          class: "absolute right-3 top-3 z-20 flex aspect-square flex-nowrap items-center justify-center cursor-pointer rounded-full bg-[rgba(0,0,0,0.5)] p-2 text-white transition hover:bg-[rgba(0,0,0,0.75)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
           aria: {label: "Expand image"},
           data: {
             flat_pack__carousel_target: "lightboxToggle",

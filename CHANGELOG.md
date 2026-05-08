@@ -13,9 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated carousel thumbnail buttons so chat image carousel previews show a pointer cursor and restore full opacity plus the active ring styling on hover.
 - Updated carousel chevron controls to keep a square footprint with a fully round shape, a dark translucent tint, and white chevron icons.
 - Updated the carousel slide counter to use the same dark translucent tint and white text treatment as the refreshed chevron controls.
+- Updated the carousel lightbox toggle to use the same dark translucent tint and white icon treatment as the refreshed carousel controls.
 
 ### Tests
 - Added component coverage to verify carousel thumbnails include the interactive cursor, hover opacity, and hover ring classes.
+- Extended carousel component coverage for the refreshed lightbox toggle styling.
 
 ## [0.1.52] - 2026-05-08
 

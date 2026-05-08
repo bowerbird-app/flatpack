@@ -128,6 +128,9 @@ module FlatPack
         lightbox_toggle = page.find("button[data-flat-pack--carousel-target='lightboxToggle'][data-action='click->flat-pack--carousel#openLightbox']", visible: :all)
 
         assert_includes lightbox_toggle[:class], "top-3"
+        assert_includes lightbox_toggle[:class], "bg-[rgba(0,0,0,0.5)]"
+        assert_includes lightbox_toggle[:class], "hover:bg-[rgba(0,0,0,0.75)]"
+        assert_includes lightbox_toggle[:class], "text-white"
         refute_includes lightbox_toggle[:class], "top-12"
         assert_selector "button[data-flat-pack--carousel-target='lightboxToggle'] svg[data-flat-pack--icon-name-value='arrows-pointing-out']", visible: :all
       end
