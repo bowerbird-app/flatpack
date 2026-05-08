@@ -48,6 +48,17 @@ module FlatPack
 
           assert_selector "div[data-testid='chat-layout']"
         end
+
+        def test_adds_root_chat_border
+          render_inline(Component.new(data: {testid: "chat-layout"}))
+
+          layout = page.find("div[data-testid='chat-layout']", visible: :all)
+
+          assert_includes layout[:class], "border"
+          assert_includes layout[:class], "border-[var(--chat-border-color)]"
+          assert_includes layout[:class], "rounded-lg"
+          assert_includes layout[:class], "overflow-hidden"
+        end
       end
     end
   end

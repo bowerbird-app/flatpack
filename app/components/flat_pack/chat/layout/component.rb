@@ -72,6 +72,9 @@ module FlatPack
         def layout_classes
           classes(
             "h-full",
+            "border border-[var(--chat-border-color)]",
+            "rounded-lg",
+            "overflow-hidden",
             "bg-[var(--chat-background-color)]",
             VARIANTS.fetch(@variant)
           )
