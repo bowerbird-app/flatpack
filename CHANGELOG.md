@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.51] - 2026-05-07
+
+### Added
+- Added configurable theme metadata support to `flat-pack--theme`, so host apps can expose custom theme names in the existing theme picker without forking the controller label map.
+- Added a custom theming guide with a complete copy-pasteable starter template for host-app named theme selectors.
+
+### Changed
+- Added a `sunrise` host-app theme example to the dummy app theme picker and stylesheet to demonstrate first-class custom theme integration.
+
+### Tests
+- Added Playwright coverage to verify a custom host-app theme can be selected from the theme picker and restored after reload.
+
 ## [0.1.50] - 2026-05-07
 
 ### Added
