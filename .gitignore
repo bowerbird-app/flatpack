@@ -3,6 +3,7 @@
 /vendor/bundle
 /test/dummy/.bundle
 /test/dummy/vendor/bundle
+/test/dummy-rails-7/vendor/bundle
 
 # Ignore all logfiles and tempfiles.
 /log/*
