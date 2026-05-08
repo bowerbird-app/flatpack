@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.53] - 2026-05-08
+
+### Changed
+- Updated carousel thumbnail buttons so chat image carousel previews show a pointer cursor and restore full opacity on hover.
+
+### Tests
+- Added component coverage to verify carousel thumbnails include the interactive cursor and hover opacity classes.
+
 ## [0.1.52] - 2026-05-08
 
 ### Changed

@@ -190,6 +190,11 @@ module FlatPack
         render_inline(Component.new(slides: sample_slides, show_thumbs: true))
 
         assert_selector "button[data-flat-pack--carousel-target='thumb']", count: 3
+
+        thumb = page.find("button[data-flat-pack--carousel-target='thumb']", match: :first)
+
+        assert_includes thumb[:class], "cursor-pointer"
+        assert_includes thumb[:class], "hover:opacity-100"
       end
 
       def test_thumbs_force_root_overflow_visible_to_preserve_active_ring

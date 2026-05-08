@@ -361,7 +361,7 @@ module FlatPack
       def render_thumb(slide, index)
         content_tag(:button,
           type: "button",
-          class: "h-16 w-16 shrink-0 overflow-hidden rounded-md border border-[var(--carousel-thumb-border-color)]",
+          class: "h-16 w-16 shrink-0 cursor-pointer overflow-hidden rounded-md border border-[var(--carousel-thumb-border-color)] transition-opacity hover:opacity-100",
           aria: {
             label: "Show slide #{index + 1}",
             current: (index == @initial_index).to_s
