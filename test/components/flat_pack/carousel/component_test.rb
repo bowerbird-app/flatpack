@@ -135,6 +135,25 @@ module FlatPack
         assert_selector "button[data-flat-pack--carousel-target='lightboxToggle'] svg[data-flat-pack--icon-name-value='arrows-pointing-out']", visible: :all
       end
 
+      def test_renders_lightbox_image_with_intrinsic_sizing_capped_to_90_percent_viewport_bounds
+        render_inline(Component.new(slides: lightbox_slides))
+
+        lightbox_image = page.find("img[data-flat-pack--carousel-target='lightboxImage']", visible: :all)
+        figure = lightbox_image.find(:xpath, "./ancestor::figure[1]", visible: :all)
+        image_classes = lightbox_image[:class].split
+        figure_classes = figure[:class].split
+
+        assert_includes image_classes, "w-auto"
+        assert_includes image_classes, "h-auto"
+        assert_includes image_classes, "max-w-[90vw]"
+        assert_includes image_classes, "max-h-[90vh]"
+        refute_includes image_classes, "w-full"
+        assert_includes figure_classes, "inline-flex"
+        assert_includes figure_classes, "max-w-full"
+        refute_includes figure_classes, "w-full"
+        refute_includes figure_classes, "max-w-6xl"
+      end
+
       def test_hides_controls_and_counter_for_single_slide_but_keeps_lightbox_toggle
         render_inline(Component.new(slides: single_lightbox_slide))
 

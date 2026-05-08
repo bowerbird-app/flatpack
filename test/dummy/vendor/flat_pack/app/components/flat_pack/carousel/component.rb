@@ -308,12 +308,12 @@ module FlatPack
                   )
                 end
               end,
-              content_tag(:figure, class: "w-full max-w-6xl overflow-hidden rounded-xl border border-[var(--modal-border-color)] bg-[var(--modal-surface-color)]") do
+              content_tag(:figure, class: "inline-flex max-w-full flex-col overflow-hidden rounded-xl border border-[var(--modal-border-color)] bg-[var(--modal-surface-color)]") do
                 safe_join([
                   tag.img(
                     src: "",
                     alt: "",
-                    class: "max-h-[80vh] w-full object-contain bg-black/20",
+                    class: "h-auto max-h-[90vh] w-auto max-w-[90vw] object-contain bg-black/20",
                     draggable: false,
                     data: {flat_pack__carousel_target: "lightboxImage"}
                   ),

@@ -694,6 +694,9 @@
   .h-\[var\(--checkbox-size\)\] {
     height: var(--checkbox-size);
   }
+  .h-auto {
+    height: auto;
+  }
   .h-full {
     height: 100%;
   }
@@ -718,11 +721,17 @@
   .max-h-\[80vh\] {
     max-height: 80vh;
   }
+  .max-h-\[90vh\] {
+    max-height: 90vh;
+  }
   .max-h-\[420px\] {
     max-height: 420px;
   }
   .max-h-\[calc\(100vh-2rem\)\] {
     max-height: calc(100vh - 2rem);
+  }
+  .max-h-screen {
+    max-height: 100vh;
   }
   .min-h-0 {
     min-height: calc(var(--spacing) * 0);
@@ -862,6 +871,9 @@
   .w-\[var\(--checkbox-size\)\] {
     width: var(--checkbox-size);
   }
+  .w-auto {
+    width: auto;
+  }
   .w-fit {
     width: fit-content;
   }
@@ -888,6 +900,9 @@
   }
   .max-w-\[75\%\] {
     max-width: 75%;
+  }
+  .max-w-\[90vw\] {
+    max-width: 90vw;
   }
   .max-w-\[var\(--tooltip-max-width\)\] {
     max-width: var(--tooltip-max-width);

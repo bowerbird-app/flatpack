@@ -14,10 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated carousel chevron controls to keep a square footprint with a fully round shape, a dark translucent tint, and white chevron icons.
 - Updated the carousel slide counter to use the same dark translucent tint and white text treatment as the refreshed chevron controls.
 - Updated the carousel lightbox toggle to use the same dark translucent tint and white icon treatment as the refreshed carousel controls.
+- Updated carousel lightbox images to size to the underlying image while capping them to `90vw` by `90vh`, leaving room for captions instead of forcing full-width rendering.
 
 ### Tests
 - Added component coverage to verify carousel thumbnails include the interactive cursor, hover opacity, and hover ring classes.
 - Extended carousel component coverage for the refreshed lightbox toggle styling.
+- Added carousel lightbox coverage to verify intrinsic image sizing with `90vw` and `90vh` viewport max bounds.
 
 ## [0.1.52] - 2026-05-08
 
