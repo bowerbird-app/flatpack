@@ -126,7 +126,7 @@ module FlatPack
         content_tag(:div, class: dialog_wrapper_classes) do
           content_tag(:div, **dialog_attributes) do
             safe_join([
-              render_header_section,
+              render_header_section || render_close_button_row,
               render_body_content,
               render_footer_content
             ].compact)
@@ -139,17 +139,19 @@ module FlatPack
       end
 
       def dialog_attributes
-        {
+        attributes = {
           role: "dialog",
           aria: {
-            modal: "true",
-            labelledby: header_id
+            modal: "true"
           },
           class: dialog_classes,
           data: {
             "flat-pack--modal-target": "dialog"
           }
         }
+
+        attributes[:aria][:labelledby] = header_id if header_section?
+        attributes
       end
 
       def dialog_classes
@@ -196,18 +198,18 @@ module FlatPack
       end
 
       def render_header_section
-        if @title || header?
-          content_tag(:div, class: "shrink-0 flex items-start justify-between gap-3 pb-4") do
-            safe_join([
-              render_header_content,
-              render_close_button
-            ].compact)
-          end
-        else
-          content_tag(:div, class: "shrink-0 flex justify-end pb-2") do
+        return nil unless header_section?
+
+        content_tag(:div, class: header_wrapper_classes) do
+          safe_join([
+            render_header_content,
             render_close_button
-          end
+          ])
         end
+      end
+
+      def render_close_button_row
+        content_tag(:div, class: close_button_row_classes) { render_close_button }
       end
 
       def close_icon
@@ -264,16 +266,35 @@ module FlatPack
         content_tag(:div, footer.to_s.html_safe, class: footer_classes)
       end
 
+      def header_section?
+        @title.present? || header?
+      end
+
+      def header_wrapper_classes
+        "flat-pack-modal__header shrink-0 flex items-start justify-between gap-3"
+      end
+
+      def close_button_row_classes
+        classes(
+          "flat-pack-modal__close",
+          "shrink-0",
+          "flex",
+          "justify-end",
+          (header_section? ? nil : "pb-2")
+        )
+      end
+
       def header_classes
-        "min-w-0 flex-1"
+        "min-w-0"
       end
 
       def body_classes
         classes(
+          "flat-pack-modal__body",
           "min-h-0",
           body_layout_class,
           "overflow-y-auto",
-          "py-4",
+          "pt-4",
           "text-sm",
           "text-[var(--modal-body-color)]"
         )
@@ -295,7 +316,7 @@ module FlatPack
       end
 
       def footer_classes
-        "shrink-0 pt-4 flex justify-end gap-3"
+        "flat-pack-modal__footer shrink-0 pt-4 flex justify-end gap-3"
       end
 
       def header_id

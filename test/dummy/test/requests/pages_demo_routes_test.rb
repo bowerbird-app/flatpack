@@ -102,6 +102,16 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "?page=2"
   end
 
+  test "buttons demo renders pill button examples" do
+    get "/demo/buttons"
+
+    assert_response :success
+    assert_includes response.body, "Pill Buttons"
+    assert_includes response.body, "pill-overview"
+    assert_includes response.body, "Team Members"
+    assert_includes response.body, 'aria-current="page"'
+  end
+
   test "comments demo renders rich text composer examples" do
     get "/demo/comments"
 
@@ -121,6 +131,16 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Media Gallery Cards"
     assert_includes response.body, "IMG_4985.HEIC"
     assert_includes response.body, "View details for IMG_5644.HEIC"
+    assert_includes response.body, "Select IMG_4985.HEIC"
+    assert_includes response.body, "Edit IMG_4985.HEIC"
+    assert_includes response.body, "Delete IMG_4985.HEIC"
+    assert_includes response.body, "group-hover:opacity-100"
+    assert_includes response.body, "has-[:checked]:ring-2"
+    assert_includes response.body, "ring-[var(--color-primary)]"
+    refute_includes response.body, "ring-indigo-600"
+    refute_includes response.body, "ring-indigo-500"
+    refute_includes response.body, "dark:ring-offset-gray-950"
+    refute_includes response.body, "outline-black/5"
     assert_includes response.body, 'class="flex-1 overflow-hidden pointer-events-none px-3 py-2"'
     refute_includes response.body, "p-[var(--card-padding-md)] flex-1 overflow-hidden pointer-events-none px-3 py-2"
     assert_includes response.body, "&quot;style&quot; =&gt; &quot;background-color: transparent&quot;"

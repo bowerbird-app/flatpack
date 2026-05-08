@@ -131,6 +131,19 @@
 [data-theme="light"],
 [data-theme="dark"],
 [data-theme="ocean"],
-[data-theme="rounded"] {
+[data-theme="rounded"],
+[data-theme="sunrise"] {
 	--sidebar-header-border-color: transparent;
+}
+
+[data-theme="sunrise"] {
+	--color-primary: oklch(0.68 0.19 35);
+	--color-primary-hover: oklch(0.61 0.17 32);
+	--color-primary-text: oklch(1 0 0);
+	--surface-background-color: oklch(0.99 0.01 80);
+	--surface-page-background-color: oklch(0.98 0.01 85);
+	--surface-muted-background-color: oklch(0.95 0.02 70);
+	--surface-border-color: oklch(0.85 0.03 55);
+	--surface-content-color: oklch(0.32 0.04 35);
+	--color-ring: oklch(0.7 0.16 28);
 }

@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.51] - 2026-05-07
+
+### Added
+- Added configurable theme metadata support to `flat-pack--theme`, so host apps can expose custom theme names in the existing theme picker without forking the controller label map.
+- Added a custom theming guide with a complete copy-pasteable starter template for host-app named theme selectors.
+
+### Changed
+- Added a `sunrise` host-app theme example to the dummy app theme picker and stylesheet to demonstrate first-class custom theme integration.
+
+### Tests
+- Added Playwright coverage to verify a custom host-app theme can be selected from the theme picker and restored after reload.
+
+## [0.1.50] - 2026-05-07
+
+### Added
+- Added `FlatPack::Button::Pill::Component`, a reusable grouped pill-link component that renders item hashes with required `href`, optional `id`, and `active` state support for segmented navigation outside tabs.
+
+### Changed
+- Updated the `/demo/cards` media gallery example to show hover-only checkbox and action controls over the image preview.
+- Added a checked-state full-card ring that uses the FlatPack primary theme token instead of hard-coded indigo utilities.
+- Removed the default gallery card preview outline and adjusted the ring-offset behavior so no idle edge artifact appears around the card.
+- Added a right-side clear control to `FlatPack::Search::Component` when the input has a value, including the `/demo/search` live-search examples.
+- Updated `FlatPack::Modal::Component` so header, body, and footer wrappers only render when those sections have content, keeping the close control aligned with the header title when present and independently rendered otherwise.
+- Adjusted modal section spacing so the body uses top padding only and the header does not add default bottom padding, avoiding assumed spacing when adjacent sections are omitted.
+- Added `/demo/modals` examples for headerless, bodyless, and footerless modal configurations.
+- Added a `/demo/buttons` pill-buttons example directly below the wrapped button groups section.
+
 ## [0.1.49] - 2026-05-06
 
 ### Changed

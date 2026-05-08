@@ -80,18 +80,50 @@
         <%= render FlatPack::Card::Component.new(
           style: :flat,
           hover: :subtle,
-          clickable: true,
-          href: "#gallery-#{image[:name].parameterize}",
-          aria: {label: "View details for #{image[:name]}"},
           "style" => "background-color: transparent",
-          class: "group shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 dark:focus-visible:ring-indigo-500"
+          class: "group shadow-none ring-0 ring-[var(--color-primary)] transition duration-200 has-[:checked]:ring-2 has-[:checked]:ring-offset-2 has-[:checked]:ring-offset-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
         ) do |card| %>
           <% card.media(
             aspect_ratio: "4/3",
             padding: :none,
-            class: "rounded-lg bg-gray-100 dark:bg-gray-800"
+            class: "relative rounded-lg bg-gray-100 dark:bg-gray-800"
           ) do %>
-            <%= image_tag image[:image_url], class: "pointer-events-none h-full w-full rounded-lg object-cover outline -outline-offset-1 outline-black/5 transition duration-200 group-hover:opacity-75 dark:outline-white/10", alt: "" %>
+            <a
+              href="#gallery-<%= image[:name].parameterize %>"
+              aria-label="View details for <%= image[:name] %>"
+              class="absolute inset-0 z-10 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2"
+            ></a>
+            <%= image_tag image[:image_url], class: "pointer-events-none h-full w-full rounded-lg object-cover transition duration-200 group-hover:opacity-75", alt: "" %>
+            <div class="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-start justify-between gap-3 p-3 opacity-0 transition duration-200 group-hover:opacity-100 group-focus-within:opacity-100">
+              <div class="pointer-events-auto rounded-md bg-white/90 p-2 shadow-sm ring-1 ring-black/5 backdrop-blur-sm dark:bg-gray-900/85 dark:ring-white/10">
+                <%= render FlatPack::Checkbox::Component.new(
+                  name: "selected_images[]",
+                  value: image[:name],
+                  aria: {label: "Select #{image[:name]}"},
+                  class: "bg-white dark:bg-gray-950"
+                ) %>
+              </div>
+              <div class="pointer-events-auto flex items-center gap-2">
+                <%= render FlatPack::Button::Component.new(
+                  icon: "pencil-square",
+                  icon_only: true,
+                  style: :secondary,
+                  size: :sm,
+                  url: "#edit-#{image[:name].parameterize}",
+                  aria: {label: "Edit #{image[:name]}"},
+                  class: "backdrop-blur-sm shadow-sm"
+                ) %>
+                <%= render FlatPack::Button::Component.new(
+                  icon: "trash",
+                  icon_only: true,
+                  style: :secondary,
+                  size: :sm,
+                  url: "#delete-#{image[:name].parameterize}",
+                  aria: {label: "Delete #{image[:name]}"},
+                  class: "backdrop-blur-sm shadow-sm"
+                ) %>
+              </div>
+            </div>
           <% end %>
           <% card.body(padding: :none, class: "pointer-events-none px-3 py-2") do %>
             <p class="block truncate text-sm font-medium text-[var(--surface-content-color)]"><%= image[:name] %></p>
@@ -113,14 +145,46 @@
             &lt;%= render FlatPack::Card::Component.new(
               style: :flat,
               hover: :subtle,
-              clickable: true,
-              href: &quot;#gallery-#{image[:name].parameterize}&quot;,
-              aria: {label: &quot;View details for #{image[:name]}&quot;},
               &quot;style&quot; =&gt; &quot;background-color: transparent&quot;,
-              class: &quot;group shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 dark:focus-visible:ring-indigo-500&quot;
+              class: &quot;group shadow-none ring-0 ring-[var(--color-primary)] transition duration-200 has-[:checked]:ring-2 has-[:checked]:ring-offset-2 has-[:checked]:ring-offset-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-white&quot;
             ) do |card| %&gt;
-              &lt;% card.media(aspect_ratio: &quot;4/3&quot;, padding: :none, class: &quot;rounded-lg bg-gray-100 dark:bg-gray-800&quot;) do %&gt;
-                &lt;%= image_tag image[:image_url], class: &quot;pointer-events-none h-full w-full rounded-lg object-cover outline -outline-offset-1 outline-black/5 group-hover:opacity-75 dark:outline-white/10&quot;, alt: &quot;&quot; %&gt;
+              &lt;% card.media(aspect_ratio: &quot;4/3&quot;, padding: :none, class: &quot;relative rounded-lg bg-gray-100 dark:bg-gray-800&quot;) do %&gt;
+                &lt;a
+                  href=&quot;#gallery-#{image[:name].parameterize}&quot;
+                  aria-label=&quot;View details for #{image[:name]}&quot;
+                  class=&quot;absolute inset-0 z-10 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2&quot;
+                &gt;&lt;/a&gt;
+                &lt;%= image_tag image[:image_url], class: &quot;pointer-events-none h-full w-full rounded-lg object-cover group-hover:opacity-75&quot;, alt: &quot;&quot; %&gt;
+                &lt;div class=&quot;pointer-events-none absolute inset-x-0 top-0 z-20 flex items-start justify-between gap-3 p-3 opacity-0 transition duration-200 group-hover:opacity-100 group-focus-within:opacity-100&quot;&gt;
+                  &lt;div class=&quot;pointer-events-auto rounded-md bg-white/90 p-2 shadow-sm ring-1 ring-black/5 backdrop-blur-sm dark:bg-gray-900/85 dark:ring-white/10&quot;&gt;
+                    &lt;%= render FlatPack::Checkbox::Component.new(
+                      name: &quot;selected_images[]&quot;,
+                      value: image[:name],
+                      aria: {label: &quot;Select #{image[:name]}&quot;},
+                      class: &quot;bg-white dark:bg-gray-950&quot;
+                    ) %&gt;
+                  &lt;/div&gt;
+                  &lt;div class=&quot;pointer-events-auto flex items-center gap-2&quot;&gt;
+                    &lt;%= render FlatPack::Button::Component.new(
+                      icon: &quot;pencil-square&quot;,
+                      icon_only: true,
+                      style: :secondary,
+                      size: :sm,
+                      url: &quot;#edit-#{image[:name].parameterize}&quot;,
+                      aria: {label: &quot;Edit #{image[:name]}&quot;},
+                      class: &quot;backdrop-blur-sm shadow-sm&quot;
+                    ) %&gt;
+                    &lt;%= render FlatPack::Button::Component.new(
+                      icon: &quot;trash&quot;,
+                      icon_only: true,
+                      style: :secondary,
+                      size: :sm,
+                      url: &quot;#delete-#{image[:name].parameterize}&quot;,
+                      aria: {label: &quot;Delete #{image[:name]}&quot;},
+                      class: &quot;backdrop-blur-sm shadow-sm&quot;
+                    ) %&gt;
+                  &lt;/div&gt;
+                &lt;/div&gt;
               &lt;% end %&gt;
               &lt;% card.body(padding: :none, class: &quot;pointer-events-none px-3 py-2&quot;) do %&gt;
                 &lt;p class=&quot;block truncate text-sm font-medium text-[var(--surface-content-color)]&quot;&gt;&lt;%= image[:name] %&gt;&lt;/p&gt;

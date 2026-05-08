@@ -8,6 +8,7 @@ Use this for primary and secondary actions in forms, toolbars, dialogs, and list
 
 ## Class
 - `FlatPack::Button::Component`
+- `FlatPack::Button::Pill::Component`
 
 ## Props
 | name | type | default | required | description |
@@ -32,6 +33,24 @@ No slots.
 - Sizes: `:sm`, `:md`, `:lg`
 - Render modes: button mode (`type`) and link mode (`url`, optional `method`, optional `target`)
 - States: loading, icon + text, icon-only
+
+## Pill Group Variant
+Use `FlatPack::Button::Pill::Component` when you need the rounded pills styling from the tabs demo as a grouped set of plain link controls for filters, view switches, or segmented navigation outside a tablist.
+
+### Pill Group Props
+| name | type | default | required | description |
+| --- | --- | --- | --- | --- |
+| `items` | Array<Hash> | none | yes | One or more pill definitions. Each item requires `text` and `href`, and may include `id`, `active`, `target`, `class`, `data`, and `aria`. |
+| `**system_arguments` | Hash | `{}` | no | Forwarded HTML attributes/classes/data/aria for the outer group wrapper. |
+
+```erb
+<%= render FlatPack::Button::Pill::Component.new(
+  items: [
+    {text: "All products", href: products_path, active: true, id: "products-pill"},
+    {text: "On sale", href: sale_products_path}
+  ]
+) %>
+```
 
 ## Example
 ```erb

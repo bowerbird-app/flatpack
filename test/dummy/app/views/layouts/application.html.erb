@@ -810,7 +810,11 @@
           <% end %>
 
           <% nav.right do %>
-            <div class="ml-auto flex items-center gap-3" data-controller="flat-pack--theme">
+            <div
+              class="ml-auto flex items-center gap-3"
+              data-controller="flat-pack--theme"
+              data-flat-pack--theme-themes-value='[{"value":"system","label":"System"},{"value":"light","label":"Light"},{"value":"dark","label":"Dark"},{"value":"ocean","label":"Ocean"},{"value":"rounded","label":"Rounded"},{"value":"sunrise","label":"Sunrise"}]'
+            >
               <%= render FlatPack::Button::Dropdown::Component.new(
                 text: "Theme",
                 style: :ghost,
@@ -837,6 +841,10 @@
                 <% dropdown.menu_item(
                   text: "Rounded",
                   data: { action: "click->flat-pack--theme#switch click->flat-pack--button-dropdown#toggle", theme_value: "rounded" }
+                ) %>
+                <% dropdown.menu_item(
+                  text: "Sunrise",
+                  data: { action: "click->flat-pack--theme#switch click->flat-pack--button-dropdown#toggle", theme_value: "sunrise", theme_label: "Sunrise" }
                 ) %>
               <% end %>
 

@@ -2,6 +2,8 @@
 
 FlatPack uses CSS variables for theming, allowing you to customize the appearance without modifying component code.
 
+If you want a complete copy-pasteable custom theme with every current FlatPack variable, use the [Custom Theming Guide](custom_theming.md).
+
 ## Overview
 
 FlatPack's theming system is built on:
@@ -23,6 +25,8 @@ FlatPack variables are loaded automatically via `stylesheet_link_tag` in your la
   --color-primary-hover: oklch(0.45 0.28 270);
 }
 ```
+
+For a named host-app variant such as `[data-theme="sunrise"]`, including a complete starter template you can rename, see the [Custom Theming Guide](custom_theming.md).
 
 ## Available Variables
 
@@ -183,7 +187,7 @@ FlatPack ships a default light palette and can be customized per variant by over
 
 If you use the optional theme controller, `system` mode maps the current OS preference to either the default light palette or `data-theme="dark"`.
 
-See [Dark Mode Guide](dark_mode.md) for details.
+See the [Custom Theming Guide](custom_theming.md) for a complete starter block and the [Dark Mode Guide](dark_mode.md) for runtime switching details.
 
 ## Using OKLCH Colors
 

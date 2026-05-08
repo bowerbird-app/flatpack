@@ -40,6 +40,7 @@ module FlatPack
           safe_join([
             render_icon,
             render_input,
+            render_clear_button,
             (render_dropdown if live_search?)
           ].compact)
         end
@@ -60,19 +61,37 @@ module FlatPack
         tag.input(**input_attributes)
       end
 
+      def render_clear_button
+        content_tag(:button,
+          type: "button",
+          class: clear_button_classes,
+          data: {
+            action: "flat-pack--search-input#clear",
+            flat_pack__search_input_target: "clearButton"
+          },
+          aria: {label: "Clear search"}) do
+          render FlatPack::Shared::IconComponent.new(
+            name: "x-mark",
+            size: :sm
+          )
+        end
+      end
+
       def wrapper_attributes
         attrs = {
-          class: wrapper_classes
+          class: wrapper_classes,
+          data: {
+            controller: wrapper_controller_names
+          }
         }
 
         if live_search?
-          attrs[:data] = {
-            controller: "flat-pack--search",
+          attrs[:data].merge!(
             flat_pack__search_url_value: @search_url,
             flat_pack__search_param_value: @name,
             flat_pack__search_min_characters_value: @min_characters,
             flat_pack__search_debounce_value: @debounce
-          }
+          )
         end
 
         merge_attributes(**attrs)
@@ -107,15 +126,16 @@ module FlatPack
           name: @name,
           value: @value,
           placeholder: @placeholder,
-          class: input_classes
+          class: input_classes,
+          data: {
+            flat_pack__search_input_target: "input",
+            action: input_action
+          }
         }
 
         if live_search?
           attrs[:autocomplete] = "off"
-          attrs[:data] = {
-            flat_pack__search_target: "input",
-            action: "input->flat-pack--search#search keydown->flat-pack--search#handleKeydown"
-          }
+          attrs[:data][:flat_pack__search_target] = "input"
           attrs[:aria] = {
             haspopup: "listbox",
             expanded: "false"
@@ -129,7 +149,7 @@ module FlatPack
         classes(
           "w-full",
           "pl-10",
-          "pr-4",
+          "pr-10",
           "py-2",
           "text-sm",
           "bg-[var(--search-input-background-color)]",
@@ -143,6 +163,36 @@ module FlatPack
           "focus:ring-[var(--search-input-focus-ring-color)]",
           "focus:border-transparent",
           "placeholder:text-[var(--search-input-placeholder-color)]"
+        )
+      end
+
+      def clear_button_classes
+        classes(
+          "absolute",
+          "right-3",
+          "top-1/2",
+          "-translate-y-1/2",
+          "h-full",
+          "leading-none",
+          "cursor-pointer",
+          "text-[var(--search-icon-color)]",
+          "transition-colors",
+          "hover:text-[var(--search-input-text-color)]",
+          ("hidden" unless @value.present?)
+        )
+      end
+
+      def wrapper_controller_names
+        classes(
+          "flat-pack--search-input",
+          ("flat-pack--search" if live_search?)
+        )
+      end
+
+      def input_action
+        classes(
+          "input->flat-pack--search-input#toggleClearButton",
+          ("input->flat-pack--search#search keydown->flat-pack--search#handleKeydown" if live_search?)
         )
       end
 

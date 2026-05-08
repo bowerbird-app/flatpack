@@ -239,6 +239,7 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
 - ↕️ [Sortable & Draggable Tables](docs/components/sortable-tables.md)
 - 🚀 [Installation Guide](docs/installation.md)
 - 🎨 [Theming Guide](docs/theming.md)
+- 🎨 [Custom Theming Guide](docs/custom_theming.md)
 - 🌙 [Dark Mode Guide](docs/dark_mode.md)
 - 🧩 [Component Documentation](docs/components/)
 - 🏗️ [Architecture](docs/architecture/)
