@@ -9,7 +9,7 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Single", anchor_link: true, subtitle: "Single-column layout using only the panel slot.") %>
 
-    <div class="mb-4 mt-6 h-[360px] overflow-hidden rounded-lg border border-(--surface-border-color) bg-(--surface-background-color)">
+    <div class="mb-4 mt-6 h-[360px] overflow-hidden rounded-lg bg-(--surface-background-color)">
       <%= render FlatPack::Chat::Layout::Component.new do |layout| %>
         <% layout.panel do %>
           <%= render FlatPack::Chat::Panel::Component.new do |panel| %>
@@ -47,7 +47,7 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Split", anchor_link: true, subtitle: "Split layout with sidebar and panel slots.") %>
 
-    <div class="mb-4 mt-6 h-[560px] overflow-hidden rounded-lg border border-(--surface-border-color) bg-(--surface-background-color)">
+    <div class="mb-4 mt-6 h-[560px] overflow-hidden rounded-lg bg-(--surface-background-color)">
       <%= render FlatPack::Chat::Layout::Component.new(variant: :split) do |layout| %>
         <% layout.sidebar do %>
           <div class="p-4">

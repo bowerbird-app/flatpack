@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.53] - 2026-05-08
+
+### Changed
+- Updated `FlatPack::Chat::Layout::Component` to render a rounded root border using the chat border token, and removed the duplicate dummy demo wrapper borders so `/demo/chat/layout` shows the component-owned frame.
+- Updated carousel thumbnail buttons so chat image carousel previews show a pointer cursor and restore full opacity plus the active ring styling on hover.
+- Updated carousel chevron controls to keep a square footprint with a fully round shape, a dark translucent tint, and white chevron icons.
+- Updated the carousel slide counter to use the same dark translucent tint and white text treatment as the refreshed chevron controls.
+- Updated the carousel lightbox toggle to use the same dark translucent tint and white icon treatment as the refreshed carousel controls.
+- Updated carousel lightbox images to size to the underlying image while capping them to `90vw` by `90vh`, leaving room for captions instead of forcing full-width rendering.
+
+### Tests
+- Added chat layout component coverage to verify the root wrapper includes the chat border classes.
+- Added component coverage to verify carousel thumbnails include the interactive cursor, hover opacity, and hover ring classes.
+- Extended carousel component coverage for the refreshed lightbox toggle styling.
+- Added carousel lightbox coverage to verify intrinsic image sizing with `90vw` and `90vh` viewport max bounds.
+
+## [0.1.52] - 2026-05-08
+
+### Changed
+- Updated the chat sender optimistic fallback so newly sent messages use the same chat record, message group, attachment, and meta structure as the FlatPack chat components when server-rendered preview HTML is unavailable.
+
+### Tests
+- Added Playwright coverage for optimistic fallback sends so the demo verifies the component-compatible chat structure during message submission.
+
 ## [0.1.51] - 2026-05-07
 
 ### Added

@@ -86,20 +86,24 @@ module FlatPack
         indicators = footer.find("button[data-flat-pack--carousel-target='indicator']", match: :first, visible: :all)
 
         assert_includes counter[:class], "justify-self-end"
+        assert_includes counter[:class], "bg-[rgba(0,0,0,0.5)]"
+        assert_includes counter[:class], "text-white"
         assert_includes indicators.find(:xpath, "ancestor::div[1]")[:class], "rounded-full"
       end
 
-      def test_renders_circular_flex_chevron_controls_with_theme_token_background
+      def test_renders_circular_flex_chevron_controls_with_tinted_round_background
         render_inline(Component.new(slides: sample_slides))
 
         prev_button = page.find("button[data-action='click->flat-pack--carousel#prev']")
         control_classes = prev_button[:class]
 
-        assert_includes control_classes, "rounded-[9999px]"
+        assert_includes control_classes, "rounded-full"
         assert_includes control_classes, "aspect-square"
         assert_includes control_classes, "flex"
         assert_includes control_classes, "cursor-pointer"
-        assert_includes control_classes, "bg-[var(--carousel-chevron-background-color)]"
+        assert_includes control_classes, "bg-[rgba(0,0,0,0.5)]"
+        assert_includes control_classes, "hover:bg-[rgba(0,0,0,0.75)]"
+        assert_includes control_classes, "text-white"
         assert_selector "button[data-action='click->flat-pack--carousel#prev'] svg[data-flat-pack--icon-name-value='chevron-left']", visible: :all
         assert_selector "button[data-action='click->flat-pack--carousel#next'] svg[data-flat-pack--icon-name-value='chevron-right']", visible: :all
         assert_selector "button[data-action='click->flat-pack--carousel#prev'] svg.pointer-events-none", visible: :all
@@ -124,8 +128,30 @@ module FlatPack
         lightbox_toggle = page.find("button[data-flat-pack--carousel-target='lightboxToggle'][data-action='click->flat-pack--carousel#openLightbox']", visible: :all)
 
         assert_includes lightbox_toggle[:class], "top-3"
+        assert_includes lightbox_toggle[:class], "bg-[rgba(0,0,0,0.5)]"
+        assert_includes lightbox_toggle[:class], "hover:bg-[rgba(0,0,0,0.75)]"
+        assert_includes lightbox_toggle[:class], "text-white"
         refute_includes lightbox_toggle[:class], "top-12"
         assert_selector "button[data-flat-pack--carousel-target='lightboxToggle'] svg[data-flat-pack--icon-name-value='arrows-pointing-out']", visible: :all
+      end
+
+      def test_renders_lightbox_image_with_intrinsic_sizing_capped_to_90_percent_viewport_bounds
+        render_inline(Component.new(slides: lightbox_slides))
+
+        lightbox_image = page.find("img[data-flat-pack--carousel-target='lightboxImage']", visible: :all)
+        figure = lightbox_image.find(:xpath, "./ancestor::figure[1]", visible: :all)
+        image_classes = lightbox_image[:class].split
+        figure_classes = figure[:class].split
+
+        assert_includes image_classes, "w-auto"
+        assert_includes image_classes, "h-auto"
+        assert_includes image_classes, "max-w-[90vw]"
+        assert_includes image_classes, "max-h-[90vh]"
+        refute_includes image_classes, "w-full"
+        assert_includes figure_classes, "inline-flex"
+        assert_includes figure_classes, "max-w-full"
+        refute_includes figure_classes, "w-full"
+        refute_includes figure_classes, "max-w-6xl"
       end
 
       def test_hides_controls_and_counter_for_single_slide_but_keeps_lightbox_toggle
@@ -190,6 +216,13 @@ module FlatPack
         render_inline(Component.new(slides: sample_slides, show_thumbs: true))
 
         assert_selector "button[data-flat-pack--carousel-target='thumb']", count: 3
+
+        thumb = page.find("button[data-flat-pack--carousel-target='thumb']", match: :first)
+
+        assert_includes thumb[:class], "cursor-pointer"
+        assert_includes thumb[:class], "hover:opacity-100"
+        assert_includes thumb[:class], "hover:ring-2"
+        assert_includes thumb[:class], "hover:ring-primary"
       end
 
       def test_thumbs_force_root_overflow_visible_to_preserve_active_ring
