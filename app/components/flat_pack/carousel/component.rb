@@ -212,7 +212,7 @@ module FlatPack
 
         content_tag(:button,
           type: "button",
-          class: "absolute top-1/2 z-20 flex w-10 -translate-y-1/2 cursor-pointer aspect-square items-center justify-center rounded-[9999px] bg-[var(--carousel-chevron-background-color)] text-[var(--carousel-control-text-color)] transition hover:bg-[var(--carousel-control-hover-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring #{classes}",
+          class: "absolute top-1/2 z-20 flex w-10 -translate-y-1/2 cursor-pointer aspect-square items-center justify-center rounded-full bg-[rgba(0,0,0,0.5)] text-white transition hover:bg-[rgba(0,0,0,0.75)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring #{classes}",
           aria: {label: label},
           data: {action: "click->flat-pack--carousel##{direction}"}) do
           render FlatPack::Shared::IconComponent.new(name: icon_name, size: :md, class: "pointer-events-none")
@@ -258,7 +258,7 @@ module FlatPack
       def render_counter
         content_tag(:div,
           "",
-          class: "justify-self-end rounded-full bg-[var(--carousel-counter-background-color)] px-2 py-1 text-xs font-medium text-[var(--carousel-counter-text-color)]",
+          class: "justify-self-end rounded-full bg-[rgba(0,0,0,0.5)] px-2 py-1 text-xs font-medium text-white",
           data: {flat_pack__carousel_target: "counter"})
       end
 
@@ -361,7 +361,7 @@ module FlatPack
       def render_thumb(slide, index)
         content_tag(:button,
           type: "button",
-          class: "h-16 w-16 shrink-0 cursor-pointer overflow-hidden rounded-md border border-[var(--carousel-thumb-border-color)] transition-opacity hover:opacity-100",
+          class: "h-16 w-16 shrink-0 cursor-pointer overflow-hidden rounded-md border border-[var(--carousel-thumb-border-color)] transition-opacity hover:opacity-100 hover:ring-2 hover:ring-primary",
           aria: {
             label: "Show slide #{index + 1}",
             current: (index == @initial_index).to_s
