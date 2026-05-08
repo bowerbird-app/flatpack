@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.52] - 2026-05-08
+
+### Changed
+- Updated the chat sender optimistic fallback so newly sent messages use the same chat record, message group, attachment, and meta structure as the FlatPack chat components when server-rendered preview HTML is unavailable.
+
+### Tests
+- Added Playwright coverage for optimistic fallback sends so the demo verifies the component-compatible chat structure during message submission.
+
 ## [0.1.51] - 2026-05-07
 
 ### Added

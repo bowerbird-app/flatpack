@@ -284,9 +284,17 @@ export default class extends Controller {
   }
 
   #buildDefaultOptimisticMessageElement(payload) {
-    const wrapper = document.createElement("div")
-    wrapper.className = "flex items-start gap-0 flex-row-reverse"
-    wrapper.dataset.flatPackChatSenderTempId = `${Date.now()}-${Math.floor(Math.random() * 10_000)}`
+    const record = document.createElement("div")
+    record.className = "transition-[margin] duration-base"
+    record.dataset.flatPackChatSenderTempId = `${Date.now()}-${Math.floor(Math.random() * 10_000)}`
+    record.dataset.flatPackChatRecord = "true"
+    record.dataset.flatPackChatRecordSender = "You"
+    record.dataset.flatPackChatRecordDirection = "outgoing"
+
+    const group = document.createElement("div")
+    group.className = "flex items-start gap-0 flex-row-reverse"
+    group.dataset.flatPackChatGroup = "true"
+    group.dataset.flatPackChatGroupDirection = "outgoing"
 
     const column = document.createElement("div")
     column.className = "flex-1 min-w-0 space-y-1"
@@ -298,47 +306,67 @@ export default class extends Controller {
     messageState.className = "flex justify-end"
     messageState.dataset.chatMessageState = payload.state
 
-    const bubble = document.createElement("div")
-    bubble.dataset.flatPackChatSenderBubble = ""
-    bubble.className = "relative px-4 py-2 rounded-2xl max-w-[75%] sm:max-w-[500px] shadow-sm bg-(--chat-message-outgoing-background-color) text-(--chat-message-outgoing-text-color) opacity-60"
+    const surface = document.createElement("div")
+    surface.className = "flex flex-col items-end"
 
-    if (payload.body) {
-      const bodyNode = document.createElement("div")
-      bodyNode.className = "wrap-break-word whitespace-pre-line"
-      bodyNode.textContent = payload.body
-      bubble.append(bodyNode)
+    const fileAttachments = []
+    const mediaAttachments = []
+
+    ;(payload.attachments || []).forEach((attachment) => {
+      const node = this.#buildAttachmentNode(attachment)
+      if (!node) {
+        return
+      }
+
+      if (attachment.kind === "image" && attachment.thumbnailUrl) {
+        mediaAttachments.push(node)
+      } else {
+        fileAttachments.push(node)
+      }
+    })
+
+    if (payload.body || fileAttachments.length > 0) {
+      const bubble = document.createElement("div")
+      bubble.dataset.flatPackChatSenderBubble = ""
+      bubble.className = "relative px-4 py-2 rounded-2xl max-w-[75%] sm:max-w-[500px] shadow-sm bg-[var(--chat-message-outgoing-background-color)] text-[var(--chat-message-outgoing-text-color)] opacity-60"
+
+      if (payload.body) {
+        const bodyNode = document.createElement("div")
+        bodyNode.className = "break-words whitespace-pre-line"
+        bodyNode.textContent = payload.body
+        bubble.append(bodyNode)
+      }
+
+      const attachmentsContainer = this.#wrapAttachmentNodes(fileAttachments, "mt-2 space-y-2")
+      if (attachmentsContainer) {
+        bubble.append(attachmentsContainer)
+      }
+
+      surface.append(bubble)
     }
 
-    const attachmentsContainer = this.#buildAttachmentsContainer(payload.attachments)
-    if (attachmentsContainer) {
-      bubble.append(attachmentsContainer)
+    const mediaContainer = this.#wrapAttachmentNodes(mediaAttachments, "mt-2 space-y-2 max-w-[75%] sm:max-w-[500px]")
+    if (mediaContainer) {
+      surface.append(mediaContainer)
     }
 
     const metaWrapper = document.createElement("div")
-    metaWrapper.className = "mt-1 [--chat-message-meta-color:var(--chat-message-outgoing-meta-color)] [--chat-read-receipt-color:var(--chat-message-outgoing-read-receipt-color)]"
+    metaWrapper.className = "mt-1 w-full flex justify-end [--chat-message-meta-color:var(--chat-message-outgoing-meta-color)] [--chat-read-receipt-color:var(--chat-message-outgoing-read-receipt-color)]"
 
     const meta = document.createElement("div")
     meta.dataset.flatPackChatSenderMeta = ""
     meta.className = "flex items-center gap-1.5 text-xs"
-
-    const timestamp = document.createElement("span")
-    timestamp.className = "text-xs text-(--chat-message-meta-color)"
-    timestamp.textContent = payload.timestamp
-
-    const status = document.createElement("span")
-    status.className = "text-xs text-(--chat-message-meta-color)"
-    status.textContent = "Sending..."
-
-    meta.append(timestamp, status)
+    this.#renderMetaContent(meta, payload.timestamp, payload.state)
     metaWrapper.append(meta)
-    bubble.append(metaWrapper)
+    surface.append(metaWrapper)
 
-    messageState.append(bubble)
+    messageState.append(surface)
     stack.append(messageState)
     column.append(stack)
-    wrapper.append(column)
+    group.append(column)
+    record.append(group)
 
-    return wrapper
+    return record
   }
 
   #payloadFor(body, attachments) {
@@ -399,53 +427,167 @@ export default class extends Controller {
     }
   }
 
-  #buildAttachmentsContainer(attachments) {
-    if (!attachments || attachments.length === 0) {
+  #wrapAttachmentNodes(nodes, className) {
+    if (!nodes || nodes.length === 0) {
       return null
     }
 
     const container = document.createElement("div")
-    container.className = "mt-2 space-y-2"
-
-    attachments.forEach((attachment) => {
-      const node = this.#buildAttachmentNode(attachment)
-      if (node) {
-        container.append(node)
-      }
-    })
-
-    return container.childElementCount > 0 ? container : null
+    container.className = className
+    container.append(...nodes)
+    return container
   }
 
   #buildAttachmentNode(attachment) {
     const kind = attachment.kind === "image" ? "image" : "file"
     const meta = this.#attachmentMeta(attachment)
 
+    if (kind === "image" && attachment.thumbnailUrl) {
+      return this.#buildImageAttachmentNode(attachment)
+    }
+
     const wrapper = document.createElement("div")
-    wrapper.className = "inline-flex w-fit max-w-full items-center gap-3 border border-(--chat-attachment-border-color) rounded-lg bg-white p-3"
+    wrapper.className = "inline-flex w-fit max-w-full items-center gap-3 border border-[var(--chat-attachment-border-color)] rounded-lg bg-white p-3"
 
     const icon = document.createElement("div")
-    icon.className = "shrink-0 text-base"
-    icon.textContent = kind === "image" ? "[IMG]" : "[FILE]"
+    icon.className = "flex-shrink-0"
+    icon.append(this.#buildFileIcon())
 
     const body = document.createElement("div")
     body.className = "min-w-0"
 
     const name = document.createElement("div")
-    name.className = "text-sm font-medium text-(--chat-attachment-text-color) truncate max-w-[32ch]"
+    name.className = "text-sm font-medium text-[var(--chat-attachment-text-color)] truncate max-w-[32ch]"
     name.textContent = attachment.name || "Attachment"
 
     body.append(name)
 
     if (meta) {
       const metaNode = document.createElement("div")
-      metaNode.className = "text-xs text-(--chat-attachment-meta-color) truncate max-w-[32ch]"
+      metaNode.className = "text-xs text-[var(--chat-attachment-meta-color)] truncate max-w-[32ch]"
       metaNode.textContent = meta
       body.append(metaNode)
     }
 
     wrapper.append(icon, body)
     return wrapper
+  }
+
+  #buildImageAttachmentNode(attachment) {
+    const frame = document.createElement("div")
+    frame.className = "rounded-lg overflow-hidden max-w-sm w-full border border-[var(--chat-attachment-border-color)]"
+
+    const image = document.createElement("img")
+    image.src = attachment.thumbnailUrl
+    image.alt = attachment.name || "Attachment"
+    image.loading = "lazy"
+    image.className = "w-full h-full object-cover"
+    frame.append(image)
+
+    if (!attachment.thumbnailUrl) {
+      return frame
+    }
+
+    const link = document.createElement("a")
+    link.href = attachment.thumbnailUrl
+    link.target = "_blank"
+    link.rel = "noopener noreferrer"
+    link.append(frame)
+    return link
+  }
+
+  #buildFileIcon() {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+    svg.setAttribute("xmlns", "http://www.w3.org/2000/svg")
+    svg.setAttribute("viewBox", "0 0 20 20")
+    svg.setAttribute("fill", "currentColor")
+    svg.setAttribute("class", "h-8 w-8 text-[var(--chat-attachment-icon-color)]")
+
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path")
+    path.setAttribute("fill-rule", "evenodd")
+    path.setAttribute("clip-rule", "evenodd")
+    path.setAttribute("d", "M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z")
+    svg.append(path)
+
+    return svg
+  }
+
+  #renderMetaContent(metaElement, timestamp, state) {
+    metaElement.replaceChildren()
+
+    if (timestamp) {
+      const timestampNode = document.createElement("span")
+      timestampNode.className = "text-xs text-[var(--chat-message-meta-color)]"
+      timestampNode.textContent = timestamp
+      metaElement.append(timestampNode)
+    }
+
+    const indicator = this.#buildMetaStateIndicator(state)
+    if (indicator) {
+      metaElement.append(indicator)
+    }
+  }
+
+  #buildMetaStateIndicator(state) {
+    switch (state) {
+      case "sending":
+        return this.#buildTextMetaNode("Sending...")
+      case "failed":
+        return this.#buildFailedMetaNode()
+      case "read":
+        return this.#buildReadMetaNode()
+      case "sent":
+        return this.#buildSentMetaNode()
+      default:
+        return null
+    }
+  }
+
+  #buildTextMetaNode(text) {
+    const node = document.createElement("span")
+    node.className = "text-xs text-[var(--chat-message-meta-color)]"
+    node.textContent = text
+    return node
+  }
+
+  #buildSentMetaNode() {
+    const node = document.createElement("span")
+    node.className = "text-xs text-[var(--chat-message-meta-color)]"
+    node.append(this.#buildMetaIcon("M7.78 13.78a.75.75 0 01-1.06 0L3.22 10.28a.75.75 0 111.06-1.06l2.97 2.97 8.47-8.47a.75.75 0 111.06 1.06z", "h-3 w-3 inline"))
+    return node
+  }
+
+  #buildReadMetaNode() {
+    const node = document.createElement("span")
+    node.className = "text-xs text-[var(--chat-read-receipt-color)]"
+    node.append(this.#buildMetaIcon("M0 11l2-2 5 5L18 3l2 2L7 18z", "h-3 w-3 inline"))
+    return node
+  }
+
+  #buildFailedMetaNode() {
+    const node = document.createElement("span")
+    node.className = "text-xs text-[var(--chat-message-failed-color)] flex items-center gap-1"
+    node.append(this.#buildMetaIcon("M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z", "h-3 w-3", true))
+    node.append(document.createTextNode("Failed"))
+    return node
+  }
+
+  #buildMetaIcon(pathData, className, evenOdd = false) {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+    svg.setAttribute("xmlns", "http://www.w3.org/2000/svg")
+    svg.setAttribute("viewBox", "0 0 20 20")
+    svg.setAttribute("fill", "currentColor")
+    svg.setAttribute("class", className)
+
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path")
+    if (evenOdd) {
+      path.setAttribute("fill-rule", "evenodd")
+      path.setAttribute("clip-rule", "evenodd")
+    }
+    path.setAttribute("d", pathData)
+    svg.append(path)
+
+    return svg
   }
 
   #attachmentMeta(attachment) {
@@ -571,11 +713,7 @@ export default class extends Controller {
 
     const metaElement = optimisticElement.querySelector("[data-flat-pack-chat-sender-meta]")
     if (metaElement) {
-      metaElement.replaceChildren()
-      const timestampNode = document.createElement("span")
-      timestampNode.className = "text-xs text-(--chat-message-meta-color)"
-      timestampNode.textContent = response?.timestamp || this.#timeLabel()
-      metaElement.append(timestampNode)
+      this.#renderMetaContent(metaElement, response?.timestamp || this.#timeLabel(), response?.state || "sent")
     }
   }
 
@@ -593,11 +731,7 @@ export default class extends Controller {
 
     const metaElement = optimisticElement.querySelector("[data-flat-pack-chat-sender-meta]")
     if (metaElement) {
-      metaElement.replaceChildren()
-      const errorNode = document.createElement("span")
-      errorNode.className = "text-xs text-(--chat-message-failed-color)"
-      errorNode.textContent = "Failed to send"
-      metaElement.append(errorNode)
+      this.#renderMetaContent(metaElement, null, "failed")
     }
   }
 
