@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.55] - 2026-05-11
+
+### Changed
+- Removed the redundant top-level pill button example from the `/demo/buttons` page so the remaining pill demos focus on the same-page anchor and direct-link examples.
+
+### Tests
+- Updated the `/demo/buttons` request coverage to match the trimmed pill demo section.
+
+## [0.1.54] - 2026-05-11
+
+### Changed
+- Added two `/demo/buttons` pill-button demos: same-page anchors with Stimulus-managed active state updates, and deep links to the `/demo/tabs/pills#account` example.
+
+### Tests
+- Expanded the `/demo/buttons` request coverage to assert the new pill demo markup and deep-link example render correctly.
+
 ## [0.1.53] - 2026-05-08
 
 ### Changed
