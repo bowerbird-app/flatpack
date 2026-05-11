@@ -26,6 +26,7 @@ module FlatPack
           render_inline(Component.new(items: [{text: "Tables", href: "/demo/tables"}]))
 
           assert_selector "a[href='/demo/tables']", text: "Tables"
+          assert_includes page.native.to_html, "border-transparent"
           assert_includes page.native.to_html, "text-[var(--tabs-pill-inactive-text-color)]"
           assert_includes page.native.to_html, "hover:bg-[var(--tabs-pill-inactive-hover-background-color)]"
         end

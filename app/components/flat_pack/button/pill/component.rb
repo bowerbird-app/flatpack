@@ -7,7 +7,7 @@ module FlatPack
         GROUP_CLASSES = "inline-flex gap-1 [border-radius:var(--tabs-pill-corner-radius)] p-1"
         ITEM_BASE_CLASSES = "inline-flex items-center justify-center border border-transparent px-4 py-2 text-sm font-medium [border-radius:var(--tabs-pill-corner-radius)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--button-focus-ring-offset-color)]"
         ITEM_ACTIVE_CLASSES = "border-[var(--tabs-pill-active-border-color)] bg-[var(--tabs-pill-active-background-color)] text-[var(--tabs-pill-active-text-color)] shadow-[var(--tabs-pill-active-shadow)]"
-        ITEM_INACTIVE_CLASSES = "text-[var(--tabs-pill-inactive-text-color)] hover:text-[var(--tabs-pill-inactive-hover-text-color)] hover:bg-[var(--tabs-pill-inactive-hover-background-color)]"
+        ITEM_INACTIVE_CLASSES = "border-transparent text-[var(--tabs-pill-inactive-text-color)] hover:text-[var(--tabs-pill-inactive-hover-text-color)] hover:bg-[var(--tabs-pill-inactive-hover-background-color)]"
 
         def initialize(items:, **system_arguments)
           super(**system_arguments)

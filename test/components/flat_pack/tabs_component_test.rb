@@ -46,6 +46,7 @@ module FlatPack
         assert_includes tablist[:class], "[border-radius:var(--tabs-pill-corner-radius)]"
         assert_includes page.first("button[role='tab']")[:class], "[border-radius:var(--tabs-pill-corner-radius)]"
         assert_includes page.native.to_html, "data-flat-pack-tabs-active-classes=\"border-[var(--tabs-pill-active-border-color)] bg-[var(--tabs-pill-active-background-color)] text-[var(--tabs-pill-active-text-color)] shadow-[var(--tabs-pill-active-shadow)]\""
+        assert_includes page.native.to_html, "data-flat-pack-tabs-inactive-classes=\"border-transparent text-[var(--tabs-pill-inactive-text-color)] hover:text-[var(--tabs-pill-inactive-hover-text-color)] hover:bg-[var(--tabs-pill-inactive-hover-background-color)]\""
       end
 
       def test_stacked_variant_reuses_pill_theme_tokens

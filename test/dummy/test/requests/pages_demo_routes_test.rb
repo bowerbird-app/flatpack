@@ -108,6 +108,11 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, "Pill Buttons"
     assert_includes response.body, "pill-overview"
+    assert_includes response.body, "Same-page anchors without a reload"
+    assert_includes response.body, 'data-controller="pill-buttons-demo"'
+    assert_includes response.body, "pill-anchor-account"
+    assert_includes response.body, 'data-action="pill-buttons-demo#activate"'
+    assert_includes response.body, "/demo/tabs/pills#account"
     assert_includes response.body, "Team Members"
     assert_includes response.body, 'aria-current="page"'
   end
