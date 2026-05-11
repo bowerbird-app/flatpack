@@ -115,6 +115,12 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "/demo/tabs/pills#account"
     assert_includes response.body, "Team Members"
     assert_includes response.body, 'aria-current="page"'
+    assert_includes response.body, 'data-controller="segmented-buttons-demo"'
+    assert_includes response.body, 'data-action="segmented-buttons-demo#activate"'
+    assert_includes response.body, 'aria-pressed="true"'
+    assert_includes response.body, "Button Groups (Wrapped Together)"
+    assert_includes response.body, "Left"
+    assert_includes response.body, "Middle"
   end
 
   test "comments demo renders rich text composer examples" do
