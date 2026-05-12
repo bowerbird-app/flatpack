@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Updated the locked `nokogiri` versions in the root and dummy app bundle files to `1.19.3` to address the published security advisories.
 
+## [0.1.57] - 2026-05-12
+
+### Changed
+- Bumped the gem version and synchronized the versioned docs and dummy lockfiles.
+
 ## [0.1.56] - 2026-05-12
 
 ### Added

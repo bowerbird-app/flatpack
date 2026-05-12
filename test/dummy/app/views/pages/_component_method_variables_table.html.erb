@@ -458,12 +458,17 @@
     },
     list: {
       label: "List",
-      method_call: "render FlatPack::List::Component.new(ordered: false, spacing: :comfortable, divider: false, selectable: false) do ... end",
+      method_call: "render FlatPack::List::Component.new(ordered: false, spacing: :comfortable, divider: false, selectable: false, orderable: false) do ... end",
       variables: [
         { variable: "ordered", accepts: "true, false", example: "ordered: true" },
         { variable: "spacing", accepts: ":comfortable, :dense", example: "spacing: :dense" },
         { variable: "divider", accepts: "true, false", example: "divider: true" },
         { variable: "selectable", accepts: "true, false", example: "selectable: true" },
+        { variable: "orderable", accepts: "true, false", example: "orderable: true" },
+        { variable: "orderable_path", accepts: "String or nil", example: "orderable_path: demo_list_reorder_path" },
+        { variable: "orderable_method", accepts: ":patch, :put", example: "orderable_method: :put" },
+        { variable: "param_uuid_name", accepts: "String", example: "param_uuid_name: \"moving_recording_id\"" },
+        { variable: "param_target_position_name", accepts: "String", example: "param_target_position_name: \"target_position\"" },
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"mt-4\", id: \"settings-list\"" }
       ]
     },
