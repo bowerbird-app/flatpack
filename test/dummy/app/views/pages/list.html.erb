@@ -329,6 +329,64 @@
   ) %>
 </section>
 
+<section class="mb-12" id="orderable-list">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Orderable List", anchor_link: true, subtitle: "Drag any item to a new position and persist the UUID plus position.") %>
+
+  <p class="text-(--surface-muted-content-color) mb-4">
+    This demo sends a PATCH request with the dragged item's UUID and its new 1-based position.
+  </p>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <%= render FlatPack::List::Component.new(
+        orderable: true,
+        orderable_path: demo_list_reorder_path,
+        param_uuid_name: "moving_recording_id",
+        param_target_position_name: "target_position",
+        divider: true
+      ) do %>
+        <%= render FlatPack::List::Item.new(id: "2b6f8d0d-3c1b-4ec0-9ed0-7a5d8d3b4e11") do %>
+          <div class="flex items-center justify-between flex-1">
+            <span class="font-medium">Reorder onboarding checklist</span>
+            <span class="text-sm text-[var(--surface-muted-content-color)]">UUID 1</span>
+          </div>
+        <% end %>
+        <%= render FlatPack::List::Item.new(id: "44d7b3a8-9a16-4f34-8c7a-9f0c8cb2f3f2") do %>
+          <div class="flex items-center justify-between flex-1">
+            <span class="font-medium">Plan launch review</span>
+            <span class="text-sm text-[var(--surface-muted-content-color)]">UUID 2</span>
+          </div>
+        <% end %>
+        <%= render FlatPack::List::Item.new(id: "7d3d8bb5-6a44-49c8-9a68-135b4fb0b4bc") do %>
+          <div class="flex items-center justify-between flex-1">
+            <span class="font-medium">Collect feedback notes</span>
+            <span class="text-sm text-[var(--surface-muted-content-color)]">UUID 3</span>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    class: "mt-6",
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::List::Component.new(
+        orderable: true,
+        orderable_path: demo_list_reorder_path,
+        param_uuid_name: &quot;moving_recording_id&quot;,
+        param_target_position_name: &quot;target_position&quot;,
+        divider: true
+      ) do %&gt;
+        &lt;%= render FlatPack::List::Item.new(id: &quot;2b6f8d0d-3c1b-4ec0-9ed0-7a5d8d3b4e11&quot;) do %&gt;
+          Reorder onboarding checklist
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    title: "Orderable List",
+    separated: false
+  ) %>
+</section>
+
 <section class="mb-12" id="linked-list-items">
   <%= render FlatPack::SectionTitle::Component.new(title: "Linked List Items", anchor_link: true) %>
   

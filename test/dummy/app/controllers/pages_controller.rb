@@ -136,6 +136,24 @@ class PagesController < ApplicationController
     render json: {ok: false, error: e.message}, status: :unprocessable_entity
   end
 
+  def list_reorder
+    item_id = params[:moving_recording_id].presence || params[:id].presence
+    target_position = params[:target_position].presence || params[:position].presence
+
+    raise KeyError if item_id.blank? || target_position.blank?
+
+    render json: {
+      ok: true,
+      item: {
+        id: item_id.to_s,
+        position: target_position.to_i
+      },
+      method: request.method
+    }
+  rescue KeyError
+    render json: {ok: false, error: "Invalid list reorder payload"}, status: :unprocessable_entity
+  end
+
   def admin
     @admin_stats = [
       {label: "Total Revenue", value: "$84,320", change: "+12.5%", trend: :up, icon: :dashboard},

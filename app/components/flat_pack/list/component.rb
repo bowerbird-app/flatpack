@@ -8,6 +8,11 @@ module FlatPack
         spacing: :comfortable,
         divider: false,
         selectable: false,
+        orderable: false,
+        orderable_path: nil,
+        orderable_method: :patch,
+        param_uuid_name: "id",
+        param_target_position_name: "position",
         **system_arguments
       )
         super(**system_arguments)
@@ -15,6 +20,11 @@ module FlatPack
         @spacing = spacing.to_sym
         @divider = divider
         @selectable = selectable
+        @orderable = orderable
+        @orderable_path = orderable_path
+        @orderable_method = orderable_method
+        @param_uuid_name = param_uuid_name
+        @param_target_position_name = param_target_position_name
       end
 
       def call
@@ -34,15 +44,29 @@ module FlatPack
           role: "list"
         }
 
+        attrs[:data] = orderable_data_attributes if @orderable
+
         if @selectable
-          attrs[:data] = {
-            controller: "flat-pack--list-selectable",
-            action: "click->flat-pack--list-selectable#activate",
-            flat_pack__list_selectable_active_class_value: "bg-[var(--list-item-active-background-color)]"
-          }
+          attrs[:data] ||= {}
+          attrs[:data][:controller] = merge_space_tokens(attrs[:data][:controller], "flat-pack--list-selectable")
+          attrs[:data][:action] = merge_space_tokens(attrs[:data][:action], "click->flat-pack--list-selectable#activate")
+          attrs[:data][:flat_pack__list_selectable_active_class_value] = "bg-[var(--list-item-active-background-color)]"
         end
 
         merge_attributes(**attrs)
+      end
+
+      def orderable_data_attributes
+        data = {
+          controller: "flat-pack--list-orderable"
+        }
+
+        data[:flat_pack__list_orderable_orderable_path_value] = @orderable_path if @orderable_path.present?
+        data[:flat_pack__list_orderable_orderable_method_value] = @orderable_method.to_s.upcase if @orderable_method.present?
+        data[:flat_pack__list_orderable_param_uuid_name_value] = @param_uuid_name if @param_uuid_name.present?
+        data[:flat_pack__list_orderable_param_target_position_name_value] = @param_target_position_name if @param_target_position_name.present?
+
+        data
       end
 
       def list_classes
@@ -50,6 +74,13 @@ module FlatPack
           (@spacing == :dense) ? "space-y-1" : "space-y-3",
           ("divide-y divide-[var(--surface-border-color)]" if @divider)
         )
+      end
+
+      def merge_space_tokens(left_value, right_value)
+        tokens = [left_value, right_value].compact.flat_map { |value| value.to_s.split }
+        return nil if tokens.empty?
+
+        tokens.uniq.join(" ")
       end
     end
   end

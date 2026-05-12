@@ -10,6 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Updated the locked `nokogiri` versions in the root and dummy app bundle files to `1.19.3` to address the published security advisories.
 
+## [0.1.56] - 2026-05-12
+
+### Added
+- Added drag-and-drop orderable support to `FlatPack::List::Component`, including a configurable persistence endpoint and a single-item reorder payload.
+
+### Tests
+- Added List component, dummy request, and Stimulus controller coverage for the new orderable list behavior.
+
 ## [0.1.55] - 2026-05-11
 
 ### Changed

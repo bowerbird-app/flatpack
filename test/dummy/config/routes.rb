@@ -41,6 +41,7 @@ Rails.application.routes.draw do
   get "demo/tables/sortable", to: "pages#tables_sortable"
   get "demo/tables/draggable", to: "pages#tables_draggable"
   patch "demo/tables/reorder", to: "pages#tables_reorder"
+  match "demo/list/reorder", to: "pages#list_reorder", via: [:patch, :put]
   get "demo/inputs", to: "pages#inputs"
   get "demo/badges", to: "pages#badges"
   get "demo/chips", to: "pages#chips"
