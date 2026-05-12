@@ -57,6 +57,34 @@ module FlatPack
         assert_selector "ul[data-controller='flat-pack--list-selectable']"
         assert_selector "ul[data-action='click->flat-pack--list-selectable#activate']"
       end
+
+      def test_enables_orderable_behavior_when_requested
+        render_inline(Component.new(
+          orderable: true,
+          orderable_path: "/demo/list/reorder",
+          param_uuid_name: "moving_recording_id",
+          param_target_position_name: "target_position"
+        )) { "content" }
+
+        assert_selector "ul[data-controller='flat-pack--list-orderable']"
+        assert_selector "ul[data-flat-pack--list-orderable-orderable-path-value='/demo/list/reorder']"
+        assert_selector "ul[data-flat-pack--list-orderable-orderable-method-value='PATCH']"
+        assert_selector "ul[data-flat-pack--list-orderable-param-uuid-name-value='moving_recording_id']"
+        assert_selector "ul[data-flat-pack--list-orderable-param-target-position-name-value='target_position']"
+      end
+
+      def test_combines_selectable_and_orderable_controllers
+        render_inline(Component.new(
+          selectable: true,
+          orderable: true,
+          orderable_path: "/demo/list/reorder",
+          param_uuid_name: "moving_recording_id",
+          param_target_position_name: "target_position"
+        )) { "content" }
+
+        assert_selector "ul[data-controller='flat-pack--list-orderable flat-pack--list-selectable']"
+        assert_selector "ul[data-action='click->flat-pack--list-selectable#activate']"
+      end
     end
   end
 end

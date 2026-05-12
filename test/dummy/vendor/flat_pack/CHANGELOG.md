@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.57] - 2026-05-12
+
+### Changed
+- Bumped the vendored FlatPack version to keep the dummy app snapshot aligned with the root gem.
+
+## [0.1.56] - 2026-05-12
+
+### Added
+- Added drag-and-drop orderable support to `FlatPack::List::Component`, including a configurable persistence endpoint and a single-item reorder payload.
+
+### Tests
+- Added List component, dummy request, and Stimulus controller coverage for the new orderable list behavior.
+
 ## [0.1.55] - 2026-05-11
 
 ### Changed
