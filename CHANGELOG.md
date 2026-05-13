@@ -11,6 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated the locked `nokogiri` versions in the root and dummy app bundle files to `1.19.3` to address the published security advisories.
 - Updated the root bundle lockfile to `rack 3.2.6` to address the published CVEs affecting static file handling and multipart byte-range processing.
 
+## [0.1.58] - 2026-05-13
+
+### Fixed
+- Fixed `FlatPack::Breadcrumb::Component` so combined Back and Home trails render Home only once, kept the Back link spacing consistent, and refreshed the dummy breadcrumb example.
+- Updated text input and shared form-validation warning states to use the semantic `var(--color-warning)` token in both server-rendered and JS-driven validation flows.
+
+### Tests
+- Added breadcrumb regression coverage for the Back + Home rendering path and class merging on breadcrumb links.
+- Added focused regression coverage for the text input warning token classes and a Node-based test for the shared form-validation controller.
+
 ## [0.1.57] - 2026-05-12
 
 ### Changed
