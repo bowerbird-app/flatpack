@@ -94,10 +94,11 @@ module FlatPack
 
         # Add back item if requested
         if @show_back
-          items_list << item(
+          items_list << build_internal_item(
             text: @back_text,
             href: resolved_back_href(breadcrumb_items),
-            icon: @back_icon
+            icon: @back_icon,
+            class: "mr-3"
           )
         end
 
@@ -109,7 +110,7 @@ module FlatPack
 
         # Add home item if requested
         if @show_home
-          items_list << item(
+          items_list << build_internal_item(
             text: @home_text,
             href: @home_url,
             icon: @home_icon
@@ -125,6 +126,10 @@ module FlatPack
 
       def previous_breadcrumb_href(breadcrumb_items)
         breadcrumb_items[0...-1].reverse_each.find(&:href)&.href
+      end
+
+      def build_internal_item(**kwargs)
+        FlatPack::Breadcrumb::Item::Component.new(**kwargs)
       end
 
       def maybe_collapse_items(items_list)
