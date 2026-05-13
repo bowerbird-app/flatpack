@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fixed `FlatPack::Breadcrumb::Component` so combined Back and Home trails render Home only once, kept the Back link spacing consistent, and refreshed the dummy breadcrumb example.
 - Updated text input and shared form-validation warning states to use the semantic `var(--color-warning)` token in both server-rendered and JS-driven validation flows.
+- Refreshed the root and dummy bundle lockfiles to resolve `addressable` and `rack-session` to patched versions for the current `bundle-audit` advisories.
 
 ### Tests
 - Added breadcrumb regression coverage for the Back + Home rendering path and class merging on breadcrumb links.

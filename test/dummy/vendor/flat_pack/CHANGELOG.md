@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fixed the breadcrumb Back + Home rendering path so Home appears once, kept the Back link spacing consistent, and refreshed the dummy breadcrumb example.
 - Updated server-rendered and JS-driven text input warning states to use the semantic `var(--color-warning)` token.
+- Refreshed the root and dummy bundle lockfiles to resolve `addressable` and `rack-session` to patched versions for the current `bundle-audit` advisories.
 
 ### Tests
 - Added breadcrumb regression coverage for duplicate Home prevention and breadcrumb link class merging.
