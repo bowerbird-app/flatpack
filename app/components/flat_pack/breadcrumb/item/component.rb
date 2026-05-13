@@ -45,10 +45,17 @@ module FlatPack
         def render_link_item
           link_to(href,
             {
-              class: "flex items-center text-[var(--breadcrumb-link-color)] hover:text-[var(--breadcrumb-link-hover-color)] transition-colors"
-            }.merge(@system_arguments)) do
+              class: link_classes
+            }.merge(@system_arguments.except(:class))) do
             item_content
           end
+        end
+
+        def link_classes
+          [
+            "flex items-center text-[var(--breadcrumb-link-color)] hover:text-[var(--breadcrumb-link-hover-color)] transition-colors",
+            @system_arguments[:class]
+          ].compact.join(" ")
         end
 
         def item_content

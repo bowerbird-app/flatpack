@@ -138,7 +138,7 @@ module FlatPack
           breadcrumb.item(text: "Products", href: "/products")
         end
 
-        assert_selector "a[href='/']", text: "Home"
+        assert_selector "a[href='/']", text: "Home", count: 1
         assert_selector "svg[data-flat-pack--icon-name-value='home']"
       end
 
@@ -183,6 +183,7 @@ module FlatPack
 
         assert_selector "a[href='/previous']", text: "Back"
         assert_selector "nav ol li:first-child a[href='/previous']", text: "Back"
+        assert_selector "a[href='/previous'].mr-3", text: "Back", count: 1
         assert_selector "svg[data-flat-pack--icon-name-value='chevron-left']"
       end
 
@@ -232,13 +233,23 @@ module FlatPack
         assert_operator html.index("Back"), :<, html.index("Home")
       end
 
+      def test_renders_home_only_once_when_back_and_home_are_enabled
+        render_inline(Component.new(show_back: true, back_href: "/back", show_home: true)) do |breadcrumb|
+          breadcrumb.item(text: "Create ordered list")
+        end
+
+        assert_selector "a[href='/back']", text: "Back", count: 1
+        assert_selector "a[href='/']", text: "Home", count: 1
+        assert_selector "span[aria-current='page']", text: "Create ordered list", count: 1
+      end
+
       def test_hides_separator_to_the_right_of_back_item
-        render_inline(Component.new(show_back: true, show_home: true, back_fallback_url: "/previous")) do |breadcrumb|
+        render_inline(Component.new(show_back: true, show_home: true, back_href: "/previous")) do |breadcrumb|
           breadcrumb.item(text: "Current")
         end
 
-        assert_selector "a[href='/']", text: "Back"
-        assert_selector "a[href='/']", text: "Home"
+        assert_selector "a[href='/previous']", text: "Back", count: 1
+        assert_selector "a[href='/']", text: "Home", count: 1
         assert_no_selector "nav[aria-label='Breadcrumb'] li:first-child + li[aria-hidden='true']"
         assert_selector "nav[aria-label='Breadcrumb'] li[aria-hidden='true']"
       end
@@ -410,6 +421,14 @@ module FlatPack
         render_inline(Item::Component.new(text: "Home", href: "/"))
 
         assert_includes page.native.to_html, "hover:text-[var(--breadcrumb-link-hover-color)]"
+        assert_includes page.native.to_html, "transition-colors"
+      end
+
+      def test_item_merges_custom_link_classes
+        render_inline(Item::Component.new(text: "Home", href: "/", class: "mr-3"))
+
+        assert_selector "a[href='/'].mr-3", text: "Home"
+        assert_includes page.native.to_html, "text-[var(--breadcrumb-link-color)]"
         assert_includes page.native.to_html, "transition-colors"
       end
 

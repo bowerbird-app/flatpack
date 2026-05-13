@@ -125,13 +125,16 @@
   <!-- With Back Item -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "With Back Item", anchor_link: true, subtitle: "Examples for With Back Item.") %>
-    <p class="text-sm text-[var(--surface-muted-content-color)] mb-3">
-      The back link is prepended as the first breadcrumb item and resolves to the previous linked breadcrumb level by default.
+    <p class="text-sm text-(--surface-muted-content-color) mb-3">
+      The back link is prepended first. When combined with show_home, Home is rendered once before declared items.
     </p>
     <div class="mb-4">
       <%= render FlatPack::Breadcrumb::Component.new(
         show_back: true,
-        back_fallback_url: "/demo"
+        back_href: "javascript:window.history.back()",
+        show_home: true,
+        home_url: demo_path,
+        class: "mb-2"
       ) do |breadcrumb| %>
         <% breadcrumb.item(text: "Settings", href: "/settings") %>
         <% breadcrumb.item(text: "Profile") %>
@@ -141,12 +144,15 @@
       code: CGI.unescapeHTML(<<~'CODE')
         &lt;%= render FlatPack::Breadcrumb::Component.new(
           show_back: true,
-          back_fallback_url: "/demo"
+          back_href: "javascript:window.history.back()",
+          show_home: true,
+          home_url: demo_path,
+          class: "mb-2"
         ) do |breadcrumb| %&gt;
           &lt;% breadcrumb.item(text: "Settings", href: "/settings") %&gt;
           &lt;% breadcrumb.item(text: "Profile") %&gt;
         &lt;% end %&gt;
-        &lt;!-- Back resolves to /settings here, and falls back to /demo only when no earlier linked item exists. --&gt;
+        &lt;!-- Back uses the explicit history target, and Home is rendered only once. --&gt;
       CODE
     ) %>
   </section>
