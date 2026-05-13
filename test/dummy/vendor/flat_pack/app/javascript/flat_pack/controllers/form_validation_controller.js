@@ -104,7 +104,7 @@ export default class extends Controller {
     errorNode.classList.remove("hidden")
 
     // Apply a visible invalid border for JS-driven validation states.
-    this.element.classList.add("border-warning")
+    this.element.classList.add("border-[var(--color-warning)]")
     this.element.style.borderColor = "var(--color-warning)"
 
     this.element.setAttribute("aria-invalid", "true")
@@ -118,7 +118,7 @@ export default class extends Controller {
       errorNode.textContent = ""
     }
 
-    this.element.classList.remove("border-warning")
+    this.element.classList.remove("border-[var(--color-warning)]")
     if (this.initialBorderColor) {
       this.element.style.borderColor = this.initialBorderColor
     } else {
@@ -143,7 +143,7 @@ export default class extends Controller {
 
     const node = document.createElement("p")
     node.id = this.errorIdValue
-    node.className = "mt-1 text-sm text-warning hidden"
+    node.className = "mt-1 text-sm text-[var(--color-warning)] hidden"
 
     const container = this.errorContainer()
     if (container) {

@@ -1608,6 +1608,9 @@
   .border-\[var\(--color-success-border\)\] {
     border-color: var(--color-success-border);
   }
+  .border-\[var\(--color-warning\)\] {
+    border-color: var(--color-warning);
+  }
   .border-\[var\(--color-warning-border\)\] {
     border-color: var(--color-warning-border);
   }
@@ -2786,6 +2789,9 @@
   }
   .text-\[var\(--color-success-text\)\] {
     color: var(--color-success-text);
+  }
+  .text-\[var\(--color-warning\)\] {
+    color: var(--color-warning);
   }
   .text-\[var\(--color-warning-border\)\] {
     color: var(--color-warning-border);
