@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.59] - 2026-05-14
+
+### Changed
+- Removed the default `pb-8` class from `FlatPack::PageTitle::Component` so page titles no longer force extra bottom padding.
+
+### Tests
+- Updated the PageTitle component regression coverage to assert the wrapper no longer renders `pb-8`.
+
 ## [0.1.58] - 2026-05-13
 
 ### Fixed
