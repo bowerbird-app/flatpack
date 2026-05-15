@@ -93,6 +93,15 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "list demo renders orderable event listener example" do
+    get "/demo/list"
+
+    assert_response :success
+    assert_includes response.body, "Listen for Orderable Events"
+    assert_includes response.body, "list:saved"
+    assert_includes response.body, "list:error"
+  end
+
   test "admin demo renders pagination" do
     get "/demo/admin"
 
