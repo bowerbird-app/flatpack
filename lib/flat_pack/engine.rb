@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rails"
+require "view_component/errors"
 require "view_component"
 require "tailwind_merge"
 
