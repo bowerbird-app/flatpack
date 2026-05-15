@@ -10,6 +10,18 @@ module FlatPack
 
     private
 
+    def set_slot(slot_name, slot_definition = nil, *args, **kwargs, &block)
+      __vc_set_slot(slot_name, slot_definition, *args, **kwargs, &block)
+    end
+
+    def get_slot(slot_name)
+      __vc_get_slot(slot_name)
+    end
+
+    def set_polymorphic_slot(slot_name, poly_type = nil, *args, **kwargs, &block)
+      __vc_set_polymorphic_slot(slot_name, poly_type, *args, **kwargs, &block)
+    end
+
     # Extract and merge classes using tailwind_merge
     def classes(*additional_classes)
       base_classes = @system_arguments.delete(:class) || ""
