@@ -102,6 +102,15 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "list:error"
   end
 
+  test "tables draggable demo renders event listener example" do
+    get "/demo/tables/draggable"
+
+    assert_response :success
+    assert_includes response.body, "Listen for Table Events"
+    assert_includes response.body, "table:reordered"
+    assert_includes response.body, "flat-pack--table-sortable:saved"
+  end
+
   test "admin demo renders pagination" do
     get "/demo/admin"
 

@@ -44,4 +44,20 @@
     language: "erb",
     title: "Draggable Rows"
   ) %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    class: "mt-6",
+    code: CGI.unescapeHTML(<<~'CODE'),
+      window.addEventListener("table:reordered", (event) =&gt; {
+        console.log("Table order changed", event.detail)
+      })
+
+      window.addEventListener("flat-pack--table-sortable:saved", (event) =&gt; {
+        console.log("Table order saved", event.detail)
+      })
+    CODE
+    language: "js",
+    title: "Listen for Table Events",
+    separated: false
+  ) %>
 </section>
