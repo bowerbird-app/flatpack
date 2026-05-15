@@ -27,9 +27,10 @@ module FlatPack
     end
 
     # Add view component preview paths for development
-    initializer "flat_pack.view_component" do |app|
+    initializer "flat_pack.view_component", after: "view_component.set_configs" do |app|
       if (Rails.env.development? || Rails.env.test?) && app.config.respond_to?(:view_component)
-        app.config.view_component.preview_paths << root.join("test/components/previews").to_s
+        app.config.view_component ||= ViewComponent::Config.new
+        app.config.view_component.previews.paths << root.join("test/components/previews").to_s
       end
     end
 
