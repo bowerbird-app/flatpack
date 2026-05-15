@@ -9,6 +9,8 @@ require "rails/all"
 Bundler.require(*Rails.groups)
 require "flat_pack"
 
+ENV["DEFAULT_TEST_EXCLUDE"] ||= "test/{system,dummy,dummy-rails-7,fixtures,**/vendor}/**/*_test.rb"
+
 module Dummy
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.

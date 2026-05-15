@@ -50,6 +50,14 @@ module FlatPack
       refute app.config.respond_to?(:view_component)
     end
 
+    test "view component slot compatibility helpers are available" do
+      component = FlatPack::Comments::Thread::Component.new
+
+      assert component.respond_to?(:set_slot, true)
+      assert component.respond_to?(:get_slot, true)
+      assert component.respond_to?(:set_polymorphic_slot, true)
+    end
+
     private
 
     def find_initializer(name)
