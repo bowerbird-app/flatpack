@@ -1987,7 +1987,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --switch-thumb-background-color: var(--surface-background-color);
   --switch-thumb-shadow: var(--shadow-sm);
   --switch-error-color: var(--color-warning);
-  --skeleton-background-color: #e5e5e5;
+  --skeleton-background-color: var(--surface-muted-background-color);
   --skeleton-shimmer-highlight-color: rgb(255 255 255 / 0.45);
   --skeleton-shimmer-duration: 1.35s;
   --comments-item-background-color: var(--surface-background-color);

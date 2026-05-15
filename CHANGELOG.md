@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.60] - 2026-05-15
 
 ### Fixed
-- Updated the rounded theme skeleton background token to `#e5e5e5` for a softer neutral loading state.
+- Updated the rounded theme skeleton background token to follow `--surface-muted-background-color`, matching the other themes while keeping the softer neutral loading state.
 - Updated the rounded theme muted surface background token to `#e5e5e5` for a softer neutral palette.
 
 ## [0.1.59] - 2026-05-14
