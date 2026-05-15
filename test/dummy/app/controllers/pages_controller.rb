@@ -290,6 +290,12 @@ class PagesController < ApplicationController
   def forms_date_input
   end
 
+  def forms_date_time_input
+  end
+
+  def forms_time_input
+  end
+
   def forms_file_input
   end
 
@@ -1409,6 +1415,8 @@ class PagesController < ApplicationController
       {title: "Text Area", description: "Multiline text input examples", url: demo_forms_text_area_path},
       {title: "Number Input", description: "Numeric input with constraints", url: demo_forms_number_input_path},
       {title: "Date Input", description: "Date picker input examples", url: demo_forms_date_input_path},
+      {title: "Date Time Input", description: "Datetime-local input examples", url: demo_forms_date_time_input_path},
+      {title: "Time Input", description: "Native time input examples", url: demo_forms_time_input_path},
       {title: "File Input", description: "File upload input examples", url: demo_forms_file_input_path},
       {title: "Checkbox", description: "Checkbox input examples", url: demo_forms_checkbox_path},
       {title: "Radio Group", description: "Single-choice radio group examples", url: demo_forms_radio_group_path},

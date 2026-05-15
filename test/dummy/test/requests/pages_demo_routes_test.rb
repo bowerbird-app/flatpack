@@ -16,6 +16,8 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/forms/text_area
     /demo/forms/number_input
     /demo/forms/date_input
+    /demo/forms/date_time_input
+    /demo/forms/time_input
     /demo/forms/file_input
     /demo/forms/checkbox
     /demo/forms/radio_group

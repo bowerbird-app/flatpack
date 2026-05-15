@@ -1,0 +1,67 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Time Input",
+  subtitle: "Native time input examples with minimum and maximum boundaries."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :text_input %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Time Input Examples", anchor_link: true) %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body(class: "space-y-[var(--stack-gap-md)]") do %>
+      <%= render FlatPack::TimeInput::Component.new(
+        name: "opens_at",
+        label: "Opens At",
+        min: "09:00",
+        max: "17:00",
+        required: true
+      ) %>
+
+      <%= render FlatPack::TimeInput::Component.new(
+        name: "break_time",
+        label: "Break Time",
+        min: "09:00",
+        max: "17:00",
+        value: "12:30"
+      ) %>
+
+      <%= render FlatPack::TimeInput::Component.new(
+        name: "opens_at_error",
+        label: "Opens At (with error)",
+        error: "Time is required"
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Card::Component.new do |card| %&gt;
+        &lt;% card.body do %&gt;
+        &lt;%= render FlatPack::TimeInput::Component.new(
+          name: &quot;opens_at&quot;,
+          label: &quot;Opens At&quot;,
+          min: &quot;09:00&quot;,
+          max: &quot;17:00&quot;,
+          required: true
+        ) %&gt;
+
+        &lt;%= render FlatPack::TimeInput::Component.new(
+          name: &quot;break_time&quot;,
+          label: &quot;Break Time&quot;,
+          min: &quot;09:00&quot;,
+          max: &quot;17:00&quot;,
+          value: &quot;12:30&quot;
+        ) %&gt;
+
+        &lt;%= render FlatPack::TimeInput::Component.new(
+          name: &quot;opens_at_error&quot;,
+          label: &quot;Opens At (with error)&quot;,
+          error: &quot;Time is required&quot;
+        ) %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    class: "mt-4"
+  ) %>
+</section>

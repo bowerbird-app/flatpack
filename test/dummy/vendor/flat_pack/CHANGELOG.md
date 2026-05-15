@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Added `FlatPack::DateTimeInput::Component` and `FlatPack::TimeInput::Component`, plus matching dummy demos and regression coverage.
+
 ## [0.1.60] - 2026-05-15
 
 ### Fixed

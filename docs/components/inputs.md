@@ -8,7 +8,7 @@ Use these components when you need FlatPack-styled form controls with consistent
 
 ## Class
 - Primary: `FlatPack::TextInput::Component`
-- Related classes: `FlatPack::PasswordInput::Component`, `FlatPack::EmailInput::Component`, `FlatPack::PhoneInput::Component`, `FlatPack::SearchInput::Component`, `FlatPack::TextArea::Component`, `FlatPack::UrlInput::Component`, `FlatPack::NumberInput::Component`, `FlatPack::DateInput::Component`, `FlatPack::FileInput::Component`, `FlatPack::Checkbox::Component`, `FlatPack::RadioGroup::Component`, `FlatPack::Select::Component`, `FlatPack::Switch::Component`
+- Related classes: `FlatPack::PasswordInput::Component`, `FlatPack::EmailInput::Component`, `FlatPack::PhoneInput::Component`, `FlatPack::SearchInput::Component`, `FlatPack::TextArea::Component`, `FlatPack::UrlInput::Component`, `FlatPack::NumberInput::Component`, `FlatPack::DateInput::Component`, `FlatPack::DateTimeInput::Component`, `FlatPack::TimeInput::Component`, `FlatPack::FileInput::Component`, `FlatPack::Checkbox::Component`, `FlatPack::RadioGroup::Component`, `FlatPack::Select::Component`, `FlatPack::Switch::Component`
 - Related docs: [Range Input](range-input.md) (`FlatPack::RangeInput::Component`)
 
 ## Props
@@ -35,8 +35,8 @@ Component-specific props:
 | `rich_text_options` | Hash | `{}` | no | Fine-grained config for the rich text editor; see [Rich Text Options](#rich-text-options) below. |
 | `min_characters` | Integer | `nil` | no | Low threshold warning for `TextArea` count color. |
 | `max_characters` | Integer | `nil` | no | High threshold and `current/max` format for `TextArea` count. |
-| `min` | Numeric or date-like | `nil` (`NumberInput`), `0` (`RangeInput`) | no | Minimum value/date (`NumberInput`, `DateInput`, `RangeInput`). |
-| `max` | Numeric or date-like | `nil` (`NumberInput`), `100` (`RangeInput`) | no | Maximum value/date (`NumberInput`, `DateInput`, `RangeInput`). |
+| `min` | Numeric or date-like | `nil` (`NumberInput`), `0` (`RangeInput`) | no | Minimum value/date/time (`NumberInput`, `DateInput`, `DateTimeInput`, `TimeInput`, `RangeInput`). |
+| `max` | Numeric or date-like | `nil` (`NumberInput`), `100` (`RangeInput`) | no | Maximum value/date/time (`NumberInput`, `DateInput`, `DateTimeInput`, `TimeInput`, `RangeInput`). |
 | `step` | Numeric | `1` | no | Step increment (`NumberInput`, `RangeInput`). |
 | `accept` | String | `nil` | no | File MIME/extensions whitelist for `FileInput`. Dangerous executable extensions raise `ArgumentError`. |
 | `multiple` | Boolean | `false` | no | Enables multiple file selection (`FileInput`). |

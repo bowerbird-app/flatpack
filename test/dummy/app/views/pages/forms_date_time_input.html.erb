@@ -1,0 +1,67 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Date Time Input",
+  subtitle: "Datetime-local input examples with minimum and maximum boundaries."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :text_input %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Date Time Input Examples", anchor_link: true) %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body(class: "space-y-[var(--stack-gap-md)]") do %>
+      <%= render FlatPack::DateTimeInput::Component.new(
+        name: "starts_at",
+        label: "Starts At",
+        min: Time.new(2024, 1, 1, 9, 0, 0),
+        max: Time.new(2024, 12, 31, 17, 0, 0),
+        required: true
+      ) %>
+
+      <%= render FlatPack::DateTimeInput::Component.new(
+        name: "event_starts_at",
+        label: "Event Starts At",
+        min: Time.new(2024, 1, 1, 9, 0, 0),
+        max: Time.new(2024, 12, 31, 17, 0, 0),
+        value: Time.new(2024, 6, 15, 13, 30, 0)
+      ) %>
+
+      <%= render FlatPack::DateTimeInput::Component.new(
+        name: "starts_at_error",
+        label: "Starts At (with error)",
+        error: "Start date and time is required"
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Card::Component.new do |card| %&gt;
+        &lt;% card.body do %&gt;
+        &lt;%= render FlatPack::DateTimeInput::Component.new(
+          name: &quot;starts_at&quot;,
+          label: &quot;Starts At&quot;,
+          min: Time.new(2024, 1, 1, 9, 0, 0),
+          max: Time.new(2024, 12, 31, 17, 0, 0),
+          required: true
+        ) %&gt;
+
+        &lt;%= render FlatPack::DateTimeInput::Component.new(
+          name: &quot;event_starts_at&quot;,
+          label: &quot;Event Starts At&quot;,
+          min: Time.new(2024, 1, 1, 9, 0, 0),
+          max: Time.new(2024, 12, 31, 17, 0, 0),
+          value: Time.new(2024, 6, 15, 13, 30, 0)
+        ) %&gt;
+
+        &lt;%= render FlatPack::DateTimeInput::Component.new(
+          name: &quot;starts_at_error&quot;,
+          label: &quot;Starts At (with error)&quot;,
+          error: &quot;Start date and time is required&quot;
+        ) %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    class: "mt-4"
+  ) %>
+</section>

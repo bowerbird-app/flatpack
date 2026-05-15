@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- Added `FlatPack::DateTimeInput::Component` and `FlatPack::TimeInput::Component`, plus matching dummy demos and regression coverage.
 - Updated the locked `nokogiri` versions in the root and dummy app bundle files to `1.19.3` to address the published security advisories.
 - Updated the root bundle lockfile to `rack 3.2.6` to address the published CVEs affecting static file handling and multipart byte-range processing.
 
