@@ -7,18 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.59] - 2026-05-15
+
 ### Fixed
 - Added `FlatPack::DateTimeInput::Component` and `FlatPack::TimeInput::Component`, plus matching dummy demos and regression coverage.
 - Updated the locked `nokogiri` versions in the root and dummy app bundle files to `1.19.3` to address the published security advisories.
 - Updated the root bundle lockfile to `rack 3.2.6` to address the published CVEs affecting static file handling and multipart byte-range processing.
-
-## [0.1.60] - 2026-05-15
-
-### Fixed
 - Updated the rounded theme skeleton background token to follow `--surface-muted-background-color`, matching the other themes while keeping the softer neutral loading state.
 - Updated the rounded theme muted surface background token to `#e5e5e5` for a softer neutral palette.
-
-## [0.1.59] - 2026-05-14
 
 ### Changed
 - Removed the default `pb-8` class from `FlatPack::PageTitle::Component` so page titles no longer force extra bottom padding.
