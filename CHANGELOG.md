@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Updated the locked `net-imap` and `view_component` dependencies to patched versions so `bundle-audit` no longer reports the published advisories.
 
+## [0.1.60] - 2026-05-15
+
+### Fixed
+- Restored FlatPack slot helper compatibility on ViewComponent 4.x so table and other slot-backed components render correctly in the dummy app and engine tests.
+
 ## [0.1.59] - 2026-05-15
 
 ### Fixed
