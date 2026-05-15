@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Updated the locked `net-imap` and `view_component` dependencies to patched versions so `bundle-audit` no longer reports the published advisories.
+
+## [0.1.59] - 2026-05-15
+
+### Fixed
+- Added `FlatPack::DateTimeInput::Component` and `FlatPack::TimeInput::Component`, plus matching dummy demos and regression coverage.
+- Updated the rounded theme skeleton background token to follow `--surface-muted-background-color`, matching the other themes while keeping the softer neutral loading state.
+- Updated the rounded theme muted surface background token to `#e5e5e5` for a softer neutral palette.
+
+### Changed
+- Removed the default `pb-8` class from `FlatPack::PageTitle::Component` so page titles no longer force extra bottom padding.
+
+### Tests
+- Updated the PageTitle component regression coverage to assert the wrapper no longer renders `pb-8`.
+
 ## [0.1.58] - 2026-05-13
 
 ### Fixed

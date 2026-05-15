@@ -25,10 +25,10 @@ module FlatPack
         refute_selector "div.border-b"
       end
 
-      def test_renders_page_title_with_bottom_padding
+      def test_renders_page_title_without_bottom_padding
         render_inline(Component.new(title: "Dashboard"))
 
-        assert_selector "div.pb-8"
+        refute_selector "div.pb-8"
       end
 
       def test_renders_page_title_with_subtitle

@@ -16,6 +16,8 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/forms/text_area
     /demo/forms/number_input
     /demo/forms/date_input
+    /demo/forms/date_time_input
+    /demo/forms/time_input
     /demo/forms/file_input
     /demo/forms/checkbox
     /demo/forms/radio_group
@@ -91,6 +93,24 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
       get path
       assert_response :success, "Expected #{path} to return success"
     end
+  end
+
+  test "list demo renders orderable event listener example" do
+    get "/demo/list"
+
+    assert_response :success
+    assert_includes response.body, "Listen for Orderable Events"
+    assert_includes response.body, "list:saved"
+    assert_includes response.body, "list:error"
+  end
+
+  test "tables draggable demo renders event listener example" do
+    get "/demo/tables/draggable"
+
+    assert_response :success
+    assert_includes response.body, "Listen for Table Events"
+    assert_includes response.body, "table:reordered"
+    assert_includes response.body, "flat-pack--table-sortable:saved"
   end
 
   test "admin demo renders pagination" do

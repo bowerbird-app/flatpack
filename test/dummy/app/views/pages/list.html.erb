@@ -385,6 +385,22 @@
     title: "Orderable List",
     separated: false
   ) %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    class: "mt-6",
+    code: CGI.unescapeHTML(<<~'CODE'),
+      window.addEventListener("list:saved", (event) =&gt; {
+        console.log("List order saved", event.detail)
+      })
+
+      window.addEventListener("list:error", (event) =&gt; {
+        console.error("List order failed", event.detail)
+      })
+    CODE
+    language: "js",
+    title: "Listen for Orderable Events",
+    separated: false
+  ) %>
 </section>
 
 <section class="mb-12" id="linked-list-items">

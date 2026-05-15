@@ -30,6 +30,8 @@ Rails.application.routes.draw do
   post "demo/forms/text_area", to: "pages#forms_text_area_submit"
   get "demo/forms/number_input", to: "pages#forms_number_input"
   get "demo/forms/date_input", to: "pages#forms_date_input"
+  get "demo/forms/date_time_input", to: "pages#forms_date_time_input"
+  get "demo/forms/time_input", to: "pages#forms_time_input"
   get "demo/forms/file_input", to: "pages#forms_file_input"
   get "demo/forms/checkbox", to: "pages#forms_checkbox"
   get "demo/forms/radio_group", to: "pages#forms_radio_group"

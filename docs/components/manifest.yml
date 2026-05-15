@@ -202,6 +202,8 @@ components:
       - FlatPack::UrlInput::Component
       - FlatPack::NumberInput::Component
       - FlatPack::DateInput::Component
+      - FlatPack::DateTimeInput::Component
+      - FlatPack::TimeInput::Component
       - FlatPack::FileInput::Component
       - FlatPack::Checkbox::Component
       - FlatPack::RadioGroup::Component

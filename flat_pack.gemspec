@@ -27,7 +27,7 @@ Gem::Specification.new do |spec|
 
   # Core dependencies
   spec.add_dependency "rails", ">= 7.1", "< 9"
-  spec.add_dependency "view_component", "~> 3.0"
+  spec.add_dependency "view_component", "~> 4.9.0"
   spec.add_dependency "tailwind_merge", "~> 0.13"
   spec.add_dependency "pagy", "~> 9.0"
 

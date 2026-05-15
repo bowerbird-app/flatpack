@@ -45,7 +45,7 @@ module FlatPack
       end
 
       def container_classes
-        classes("pb-8", "mb-6")
+        classes("mb-6")
       end
 
       def render_header_content

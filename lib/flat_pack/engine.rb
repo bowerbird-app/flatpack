@@ -1,8 +1,32 @@
 # frozen_string_literal: true
 
 require "rails"
+require "view_component/errors"
 require "view_component"
+require "view_component/slotable"
 require "tailwind_merge"
+
+if defined?(ViewComponent::Slotable) &&
+    !ViewComponent::Slotable.private_method_defined?(:set_slot) &&
+    !ViewComponent::Slotable.private_method_defined?(:get_slot)
+  module ViewComponent
+    module Slotable
+      private
+
+      def set_slot(slot_name, slot_definition = nil, *args, **kwargs, &block)
+        __vc_set_slot(slot_name, slot_definition, *args, **kwargs, &block)
+      end
+
+      def get_slot(slot_name)
+        __vc_get_slot(slot_name)
+      end
+
+      def set_polymorphic_slot(slot_name, poly_type = nil, *args, **kwargs, &block)
+        __vc_set_polymorphic_slot(slot_name, poly_type, *args, **kwargs, &block)
+      end
+    end
+  end
+end
 
 module FlatPack
   class Engine < ::Rails::Engine
@@ -27,9 +51,10 @@ module FlatPack
     end
 
     # Add view component preview paths for development
-    initializer "flat_pack.view_component" do |app|
+    initializer "flat_pack.view_component", after: "view_component.set_configs" do |app|
       if (Rails.env.development? || Rails.env.test?) && app.config.respond_to?(:view_component)
-        app.config.view_component.preview_paths << root.join("test/components/previews").to_s
+        app.config.view_component ||= ViewComponent::Config.new
+        app.config.view_component.previews.paths << root.join("test/components/previews").to_s
       end
     end
 

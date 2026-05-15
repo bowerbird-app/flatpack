@@ -27,11 +27,19 @@ module FlatPack
     end
 
     test "view component initializer appends preview path in test env" do
-      app = OpenStruct.new(config: OpenStruct.new(view_component: OpenStruct.new(preview_paths: [])))
+      app = OpenStruct.new(config: OpenStruct.new(view_component: OpenStruct.new(previews: OpenStruct.new(paths: []))))
 
       find_initializer("flat_pack.view_component").block.call(app)
 
-      assert_includes app.config.view_component.preview_paths, FlatPack::Engine.root.join("test/components/previews").to_s
+      assert_includes app.config.view_component.previews.paths, FlatPack::Engine.root.join("test/components/previews").to_s
+    end
+
+    test "view component initializer initializes nil config and appends preview path in test env" do
+      app = OpenStruct.new(config: OpenStruct.new(view_component: nil))
+
+      find_initializer("flat_pack.view_component").block.call(app)
+
+      assert_includes app.config.view_component.previews.paths, FlatPack::Engine.root.join("test/components/previews").to_s
     end
 
     test "view component initializer is a no-op when config has no view_component" do
@@ -40,6 +48,14 @@ module FlatPack
       find_initializer("flat_pack.view_component").block.call(app)
 
       refute app.config.respond_to?(:view_component)
+    end
+
+    test "view component slot compatibility helpers are available" do
+      component = FlatPack::Comments::Thread::Component.new
+
+      assert component.respond_to?(:set_slot, true)
+      assert component.respond_to?(:get_slot, true)
+      assert component.respond_to?(:set_polymorphic_slot, true)
     end
 
     private

@@ -74,6 +74,11 @@ The orderable controller sends a form-encoded payload shaped like:
 moving_recording_id=2b6f8d0d-3c1b-4ec0-9ed0-7a5d8d3b4e11&target_position=2
 ```
 
+## Events
+- `list:reordered` fires immediately after the DOM order changes, with `detail.id` and `detail.position` for the dragged item.
+- `list:saved` fires after the backend returns `ok: true`.
+- `list:error` fires when the backend rejects the update or the request fails.
+
 ## Accessibility
 - List renders semantic `<ul>`/`<ol>` with `role="list"`.
 - Items render `<li role="listitem">`.
