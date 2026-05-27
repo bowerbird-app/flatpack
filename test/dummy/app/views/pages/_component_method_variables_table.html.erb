@@ -550,11 +550,14 @@
     },
     page_title: {
       label: "Page Title",
-      method_call: "render FlatPack::PageTitle::Component.new(title: \"Dashboard\", subtitle: \"Overview\", variant: :h2)",
+      method_call: "render FlatPack::PageTitle::Component.new(title: \"Dashboard\", subtitle: \"Overview\", variant: :h2, large_subtitle: true, title_color: \"var(--color-primary)\", subtitle_color: \"#445566\")",
       variables: [
         { variable: "title", accepts: "String (required)", example: "title: \"Account Settings\"" },
         { variable: "subtitle", accepts: "String or nil", example: "subtitle: \"Manage your profile and preferences.\"" },
         { variable: "variant", accepts: ":h1, :h2, :h3, :h4, :h5, :h6", example: "variant: :h3" },
+        { variable: "large_subtitle", accepts: "true, false", example: "large_subtitle: true" },
+        { variable: "title_color", accepts: "String CSS color or nil", example: "title_color: \"var(--color-primary)\"" },
+        { variable: "subtitle_color", accepts: "String CSS color or nil", example: "subtitle_color: \"#445566\"" },
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"mb-8\", id: \"settings-title\"" }
       ]
     },

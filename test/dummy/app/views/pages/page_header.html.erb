@@ -56,6 +56,95 @@
   ) %>
 </section>
 
+<!-- Large Subtitle Examples -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Large Subtitle Examples",
+    anchor_link: true,
+    subtitle: "A set of examples using large_subtitle across different heading variants."
+  ) %>
+
+  <div class="space-y-8">
+    <%= render FlatPack::PageTitle::Component.new(
+      title: "Usage Analytics",
+      subtitle: "Track active users, engagement trends, and retention metrics.",
+      variant: :h2,
+      large_subtitle: true
+    ) %>
+
+    <%= render FlatPack::PageTitle::Component.new(
+      title: "Release Status",
+      subtitle: "Review deployment health, rollout progress, and incident summaries.",
+      variant: :h3,
+      large_subtitle: true
+    ) %>
+
+    <%= render FlatPack::PageTitle::Component.new(
+      title: "Customer Success",
+      subtitle: "Monitor onboarding milestones, satisfaction scores, and renewal risks.",
+      variant: :h4,
+      large_subtitle: true
+    ) %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::PageTitle::Component.new(
+        title: "Usage Analytics",
+        subtitle: "Track active users, engagement trends, and retention metrics.",
+        variant: :h2,
+        large_subtitle: true
+      ) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<!-- Color Override Examples -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Color Override Examples",
+    anchor_link: true,
+    subtitle: "Examples showing different title_color and subtitle_color combinations."
+  ) %>
+
+  <div class="space-y-8">
+    <%= render FlatPack::PageTitle::Component.new(
+      title: "Brand Accent",
+      subtitle: "Use semantic tokens for a branded appearance.",
+      variant: :h2,
+      large_subtitle: true,
+      title_color: "var(--color-success-background-color)",
+      subtitle_color: "#9FE870"
+    ) %>
+
+    <%= render FlatPack::PageTitle::Component.new(
+      title: "Themed Cards Green",
+      subtitle: "A green pairing inspired by the Themed Cards palette.",
+      variant: :h3,
+      large_subtitle: true,
+      title_color: "#9FE870",
+      subtitle_color: "var(--color-success-background-color)"
+    ) %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::PageTitle::Component.new(
+        title: "Themed Cards Green",
+        subtitle: "A green pairing inspired by the Themed Cards palette.",
+        variant: :h3,
+        large_subtitle: true,
+        title_color: "#9FE870",
+        subtitle_color: "var(--color-success-background-color)"
+      ) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
 <!-- Heading Variants -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(

@@ -15,6 +15,9 @@ Use Page Title for page-level headings when you do not want the bordered visual 
 | `title` | String | `nil` | yes | Primary page heading text. |
 | `subtitle` | String | `nil` | no | Supporting text rendered below title. |
 | `variant` | Symbol, String | `:h1` | no | Semantic heading tag. One of `:h1`, `:h2`, `:h3`, `:h4`, `:h5`, `:h6`. |
+| `large_subtitle` | Boolean | `false` | no | When `true`, subtitle matches the selected heading variant size (`h1`-`h6`), uses bold weight, and removes top margin. |
+| `title_color` | String | `nil` | no | Optional CSS color override for the rendered heading tag (`h1`-`h6`). |
+| `subtitle_color` | String | `nil` | no | Optional CSS color override for subtitle `p` text. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for outer wrapper. |
 
 ## Slots
@@ -30,7 +33,10 @@ Use Page Title for page-level headings when you do not want the bordered visual 
 <%= render FlatPack::PageTitle::Component.new(
   title: "Team settings",
   subtitle: "Control membership and permissions",
-  variant: :h2
+  variant: :h2,
+  large_subtitle: true,
+  title_color: "var(--color-primary)",
+  subtitle_color: "oklch(0.35 0.02 250)"
 ) do |page_title| %>
   <% page_title.actions do %>
     <%= render FlatPack::Button::Component.new(text: "Invite member", style: :secondary, size: :sm) %>

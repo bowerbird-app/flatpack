@@ -21,6 +21,36 @@ module FlatPack
         assert_selector "h1", text: "Dashboard"
         assert_selector "p", text: "Welcome back"
         assert_selector "p.text-lg", text: "Welcome back"
+        assert_no_selector "p[style*='font-size: var(--page-title-h1-size']"
+      end
+
+      def test_renders_large_subtitle_styles
+        render_inline(Component.new(
+          title: "Dashboard",
+          subtitle: "Welcome back",
+          large_subtitle: true
+        ))
+
+        assert_selector "p[style*='font-size: var(--page-title-h1-size, 2.25rem)']", text: "Welcome back"
+        assert_selector "p[style*='font-weight: bold']", text: "Welcome back"
+        assert_selector "p[style*='margin-top: 0']", text: "Welcome back"
+        assert_no_selector "p.text-lg"
+      end
+
+      def test_renders_title_color_override
+        render_inline(Component.new(title: "Dashboard", title_color: "#334455"))
+
+        assert_selector "h1[style*='color: #334455']", text: "Dashboard"
+      end
+
+      def test_renders_subtitle_color_override
+        render_inline(Component.new(
+          title: "Dashboard",
+          subtitle: "Welcome back",
+          subtitle_color: "var(--color-primary)"
+        ))
+
+        assert_selector "p[style*='color: var(--color-primary)']", text: "Welcome back"
       end
 
       def test_does_not_have_border_bottom

@@ -15,12 +15,18 @@ module FlatPack
         title:,
         subtitle: nil,
         variant: :h1,
+        large_subtitle: false,
+        title_color: nil,
+        subtitle_color: nil,
         **system_arguments
       )
         super(**system_arguments)
         @title = title
         @subtitle = subtitle
         @variant = variant.to_sym
+        @large_subtitle = large_subtitle
+        @title_color = title_color
+        @subtitle_color = subtitle_color
 
         validate_title!
         validate_variant!
@@ -68,9 +74,21 @@ module FlatPack
         content_tag(
           @variant,
           @title,
-          class: "font-bold text-[var(--surface-content-color)] leading-tight",
-          style: "font-size: #{heading_size_token};"
+          class: title_classes,
+          style: title_style
         )
+      end
+
+      def title_classes
+        classes = ["font-bold", "leading-tight"]
+        classes << "text-[var(--surface-content-color)]" unless @title_color
+        classes.join(" ")
+      end
+
+      def title_style
+        style_rules = ["font-size: #{heading_size_token}"]
+        style_rules << "color: #{@title_color}" if @title_color
+        style_rules.join("; ") + ";"
       end
 
       def heading_size_token
@@ -80,7 +98,28 @@ module FlatPack
       def render_subtitle
         return nil unless @subtitle
 
-        content_tag(:p, @subtitle, class: "mt-2 text-lg text-[var(--surface-muted-content-color)]")
+        content_tag(:p, @subtitle, class: subtitle_classes, style: subtitle_style)
+      end
+
+      def subtitle_classes
+        classes = []
+        classes << "mt-2 text-lg" unless @large_subtitle
+        classes << "text-[var(--surface-muted-content-color)]" unless @subtitle_color
+        classes.join(" ").presence
+      end
+
+      def subtitle_style
+        style_rules = []
+        if @large_subtitle
+          style_rules << "font-size: #{heading_size_token}"
+          style_rules << "font-weight: bold"
+          style_rules << "margin-top: 0"
+        end
+        style_rules << "color: #{@subtitle_color}" if @subtitle_color
+
+        return nil if style_rules.empty?
+
+        style_rules.join("; ") + ";"
       end
 
       def render_actions
