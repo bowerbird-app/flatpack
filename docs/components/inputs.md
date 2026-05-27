@@ -30,11 +30,11 @@ Component-specific props:
 | name | type | default | required | description |
 | --- | --- | --- | --- | --- |
 | `rows` | Integer | `3` | no | Initial row count (`TextArea` plain mode only; ignored when `rich_text: true`). |
-| `character_count` | Boolean | `false` | no | Enables live count text in `TextArea` (both plain and rich text modes). |
+| `character_count` | Boolean | `false` | no | Enables live count text in `TextInput` and `TextArea` (plain and rich text modes). |
 | `rich_text` | Boolean | `false` | no | Activates the TipTap rich text editor in place of the native `<textarea>`. |
 | `rich_text_options` | Hash | `{}` | no | Fine-grained config for the rich text editor; see [Rich Text Options](#rich-text-options) below. |
-| `min_characters` | Integer | `nil` | no | Low threshold warning for `TextArea` count color. |
-| `max_characters` | Integer | `nil` | no | High threshold and `current/max` format for `TextArea` count. |
+| `min_characters` | Integer | `nil` | no | Low threshold warning for `TextInput` and `TextArea` count color. |
+| `max_characters` | Integer | `nil` | no | High threshold and `current/max` format for `TextInput` and `TextArea` count. |
 | `min` | Numeric or date-like | `nil` (`NumberInput`), `0` (`RangeInput`) | no | Minimum value/date/time (`NumberInput`, `DateInput`, `DateTimeInput`, `TimeInput`, `RangeInput`). |
 | `max` | Numeric or date-like | `nil` (`NumberInput`), `100` (`RangeInput`) | no | Maximum value/date/time (`NumberInput`, `DateInput`, `DateTimeInput`, `TimeInput`, `RangeInput`). |
 | `step` | Numeric | `1` | no | Step increment (`NumberInput`, `RangeInput`). |
@@ -62,6 +62,17 @@ None.
   label: "Email",
   placeholder: "you@example.com",
   required: true
+) %>
+```
+
+```erb
+<%= render FlatPack::TextInput::Component.new(
+  name: "post[headline]",
+  label: "Headline",
+  placeholder: "Write a short headline...",
+  character_count: true,
+  min_characters: 20,
+  max_characters: 60
 ) %>
 ```
 

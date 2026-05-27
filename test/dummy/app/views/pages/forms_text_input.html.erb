@@ -34,6 +34,24 @@
         value: "johndoe",
         disabled: true
       ) %>
+
+      <%= render FlatPack::TextInput::Component.new(
+        name: "headline",
+        id: "headline",
+        label: "Headline (with character count)",
+        placeholder: "Write a short headline...",
+        character_count: true,
+        min_characters: 20,
+        max_characters: 60
+      ) %>
+
+      <%= render FlatPack::TextInput::Component.new(
+        name: "tagline",
+        id: "tagline",
+        label: "Tagline (count only)",
+        placeholder: "Add a short tagline...",
+        character_count: true
+      ) %>
     <% end %>
   <% end %>
 
@@ -64,6 +82,24 @@
           label: &quot;Username (disabled)&quot;,
           value: &quot;johndoe&quot;,
           disabled: true
+        ) %&gt;
+
+        &lt;%= render FlatPack::TextInput::Component.new(
+          name: &quot;headline&quot;,
+          id: &quot;headline&quot;,
+          label: &quot;Headline (with character count)&quot;,
+          placeholder: &quot;Write a short headline...&quot;,
+          character_count: true,
+          min_characters: 20,
+          max_characters: 60
+        ) %&gt;
+
+        &lt;%= render FlatPack::TextInput::Component.new(
+          name: &quot;tagline&quot;,
+          id: &quot;tagline&quot;,
+          label: &quot;Tagline (count only)&quot;,
+          placeholder: &quot;Add a short tagline...&quot;,
+          character_count: true
         ) %&gt;
         &lt;% end %&gt;
       &lt;% end %&gt;

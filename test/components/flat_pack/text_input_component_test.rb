@@ -89,6 +89,59 @@ module FlatPack
         assert_selector "input#my-custom-id"
       end
 
+      def test_renders_character_count_when_enabled
+        render_inline(Component.new(name: "headline", character_count: true, value: "Hello"))
+
+        assert_selector "p[id$='_character_count']", text: "5 characters"
+      end
+
+      def test_renders_character_count_with_max
+        render_inline(Component.new(name: "headline", character_count: true, max_characters: 60, value: "Hello"))
+
+        assert_selector "p[id$='_character_count']", text: "5/60 characters"
+      end
+
+      def test_renders_character_count_data_attributes
+        render_inline(Component.new(
+          name: "headline",
+          character_count: true,
+          min_characters: 10,
+          max_characters: 60
+        ))
+
+        assert_selector "div[data-controller='flat-pack--text-input']"
+        assert_selector "div[data-flat-pack--text-input-character-count-enabled-value='true']"
+        assert_selector "div[data-flat-pack--text-input-min-characters-value='10']"
+        assert_selector "div[data-flat-pack--text-input-max-characters-value='60']"
+        assert_selector "input[data-flat-pack--text-input-target='input']"
+        assert_selector "input[data-action='input->flat-pack--text-input#updateCharacterCount']"
+      end
+
+      def test_does_not_render_character_count_when_disabled
+        render_inline(Component.new(name: "headline", character_count: false))
+
+        refute_selector "p[id$='_character_count']"
+        refute_selector "div[data-controller='flat-pack--text-input']"
+      end
+
+      def test_raises_error_with_negative_min_characters
+        assert_raises(ArgumentError) do
+          Component.new(name: "headline", character_count: true, min_characters: -1)
+        end
+      end
+
+      def test_raises_error_with_negative_max_characters
+        assert_raises(ArgumentError) do
+          Component.new(name: "headline", character_count: true, max_characters: -1)
+        end
+      end
+
+      def test_raises_error_when_min_is_greater_than_max
+        assert_raises(ArgumentError) do
+          Component.new(name: "headline", character_count: true, min_characters: 80, max_characters: 60)
+        end
+      end
+
       def test_has_base_flat_pack_input_class
         render_inline(Component.new(name: "username"))
 
