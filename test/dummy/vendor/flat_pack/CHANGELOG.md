@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Added optional live character counting support to `FlatPack::TextInput::Component` via `character_count`, `min_characters`, and `max_characters`, including updated dummy demos, docs, and component method variable listings.
+- Added a `border` option to `FlatPack::Collapse::Component` (default `true`) so borderless collapses can disable the outer border and horizontal trigger/content padding.
+- Added optional `left_slot` trigger content support to `FlatPack::Collapse::Component.new(...)` and per-item `accordion.item(..., left_slot: ...)` in `FlatPack::Accordion::Component` for icon and marker rendering.
+
 ### Fixed
 - Updated the locked `net-imap` and `view_component` dependencies to patched versions so `bundle-audit` no longer reports the published advisories.
 
