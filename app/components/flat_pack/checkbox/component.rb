@@ -5,7 +5,7 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "text-warning" "h-[var(--checkbox-size)]" "w-[var(--checkbox-size)]" "rounded-[var(--checkbox-radius)]" "focus:rounded-[var(--checkbox-radius)]" "ml-[var(--checkbox-label-gap)]"
+      # "text-[var(--color-warning)]" "h-[var(--checkbox-size)]" "w-[var(--checkbox-size)]" "rounded-[var(--checkbox-radius)]" "focus:rounded-[var(--checkbox-radius)]" "ml-[var(--checkbox-label-gap)]"
 
       def initialize(
         name:,
@@ -112,7 +112,7 @@ module FlatPack
         ]
 
         base_classes << if @error
-          "border-warning"
+          "border-[var(--color-warning)]"
         else
           "border-[var(--surface-border-color)]"
         end
@@ -121,7 +121,7 @@ module FlatPack
       end
 
       def error_classes
-        "mt-1 text-sm text-warning"
+        "mt-1 text-sm text-[var(--color-warning)]"
       end
 
       def input_id

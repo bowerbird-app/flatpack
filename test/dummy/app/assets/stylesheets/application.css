@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@theme {
+  --color-warning: var(--color-warning-border);
+}
+
 /* FlatPack CSS Variables */
 
 :root {

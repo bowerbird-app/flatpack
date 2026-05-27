@@ -29,7 +29,11 @@
       <%= render FlatPack::TimeInput::Component.new(
         name: "opens_at_error",
         label: "Opens At (with error)",
-        error: "Time is required"
+        error: "Time is required",
+        required: true,
+        data: {
+          flat_pack_message_required: "Time is required"
+        }
       ) %>
     <% end %>
   <% end %>
@@ -57,7 +61,11 @@
         &lt;%= render FlatPack::TimeInput::Component.new(
           name: &quot;opens_at_error&quot;,
           label: &quot;Opens At (with error)&quot;,
-          error: &quot;Time is required&quot;
+          error: &quot;Time is required&quot;,
+          required: true,
+          data: {
+            flat_pack_message_required: &quot;Time is required&quot;
+          }
         ) %&gt;
         &lt;% end %&gt;
       &lt;% end %&gt;
