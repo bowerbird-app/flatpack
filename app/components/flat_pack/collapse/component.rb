@@ -6,6 +6,7 @@ module FlatPack
       def initialize(
         id:,
         title:,
+        left_slot: nil,
         open: false,
         border: true,
         **system_arguments
@@ -13,6 +14,7 @@ module FlatPack
         super(**system_arguments)
         @id = id
         @title = title
+        @left_slot = left_slot
         @open = open
         @border = border
 
@@ -34,10 +36,25 @@ module FlatPack
       def render_trigger
         content_tag(:button, **trigger_attributes) do
           safe_join([
-            content_tag(:span, @title, class: "font-medium"),
+            render_trigger_label,
             render_icon
           ])
         end
+      end
+
+      def render_trigger_label
+        content_tag(:span, class: "flex items-center gap-2 min-w-0") do
+          safe_join([
+            render_left_slot,
+            content_tag(:span, @title, class: "font-medium")
+          ].compact)
+        end
+      end
+
+      def render_left_slot
+        return if @left_slot.blank?
+
+        content_tag(:span, @left_slot.to_s, class: "shrink-0 inline-flex items-center leading-none")
       end
 
       def render_icon

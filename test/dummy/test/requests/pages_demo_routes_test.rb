@@ -154,6 +154,19 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, 'data-controller="flat-pack--tiptap"'
   end
 
+  test "collapse demo renders component variables tables" do
+    get "/demo/collapse"
+
+    assert_response :success
+    assert_includes response.body, "Method Call"
+    assert_includes response.body, "Variable"
+    assert_includes response.body, "Accepts"
+    assert_includes response.body, "Example"
+    assert_includes response.body, "render FlatPack::Collapse::Component.new"
+    assert_includes response.body, "render FlatPack::Accordion::Component.new"
+    assert_includes response.body, "left_slot"
+  end
+
   test "cards demo renders media gallery example" do
     get "/demo/cards"
 
@@ -422,10 +435,10 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_includes response.body, ">Content</h1>"
-    assert_includes response.body, ">A better workflow</h1>"
+    assert_includes response.body, ">A Mastered Workflow</h1>"
     assert_includes response.body, "text-(--color-primary)"
-    assert_includes response.body, "Push to deploy."
-    assert_includes response.body, "No server? No problem."
+    assert_includes response.body, "One-Click Distribution."
+    assert_includes response.body, "No Publisher? No Problem."
   end
 
   test "range input demo variable table includes full option set" do
@@ -622,7 +635,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_includes response.body, "Search demo pages..."
-    assert_includes response.body, "data-controller=\"flat-pack--search\""
+    assert_match(/data-controller=\"[^\"]*flat-pack--search[^\"]*\"/, response.body)
     assert_includes response.body, "data-flat-pack--search-url-value=\"/demo/search_results\""
   end
 

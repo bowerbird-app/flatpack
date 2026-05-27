@@ -64,6 +64,19 @@ module FlatPack
         assert_selector "svg"
       end
 
+      def test_renders_trigger_left_slot_when_provided
+        render_inline(
+          Component.new(
+            id: "test",
+            title: "Section",
+            left_slot: "<svg class='left-slot-icon'></svg>".html_safe
+          )
+        )
+
+        assert_selector "button .left-slot-icon"
+        assert_selector "button", text: "Section"
+      end
+
       def test_raises_error_without_id
         assert_raises(ArgumentError) do
           Component.new(title: "Section")

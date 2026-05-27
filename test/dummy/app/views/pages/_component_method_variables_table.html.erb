@@ -291,6 +291,33 @@
         { variable: "language", accepts: "String or nil", example: "language: \"ruby\"" }
       ]
     },
+    collapse: {
+      label: "Collapse",
+      method_call: "render FlatPack::Collapse::Component.new(id: \"advanced\", title: \"Advanced Settings\", left_slot: render(FlatPack::Shared::IconComponent.new(name: \"cog-6-tooth\", size: :sm)), open: false, border: true) do ... end",
+      variables: [
+        { variable: "id", accepts: "String (required)", example: "id: \"advanced\"" },
+        { variable: "title", accepts: "String (required)", example: "title: \"Advanced Settings\"" },
+        { variable: "left_slot", accepts: "Renderable content or nil", example: "left_slot: render(FlatPack::Shared::IconComponent.new(name: \"lock-closed\", size: :sm))" },
+        { variable: "open", accepts: "true, false", example: "open: true" },
+        { variable: "border", accepts: "true, false", example: "border: false" },
+        { variable: "content", accepts: "block", example: "do ... end" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"mt-4\", data: { testid: \"collapse\" }" }
+      ]
+    },
+    accordion: {
+      label: "Accordion",
+      method_call: "render FlatPack::Accordion::Component.new(allow_multiple: true) do |accordion| accordion.item(id: \"faq1\", title: \"Question\", left_slot: render(FlatPack::Shared::IconComponent.new(name: \"question-mark-circle\", size: :sm)), open: false) { \"Answer\" } end",
+      variables: [
+        { variable: "allow_multiple", accepts: "true, false", example: "allow_multiple: true" },
+        { variable: "single_open", accepts: "true, false, nil", example: "single_open: true" },
+        { variable: "item id", accepts: "String (required)", example: "accordion.item(id: \"faq1\", ...)" },
+        { variable: "item title", accepts: "String (required)", example: "accordion.item(title: \"What is FlatPack?\", ...)" },
+        { variable: "item left_slot", accepts: "Renderable content or nil", example: "accordion.item(left_slot: render(FlatPack::Shared::IconComponent.new(name: \"computer-desktop\", size: :sm)), ...)" },
+        { variable: "item open", accepts: "true, false", example: "accordion.item(open: true, ...)" },
+        { variable: "item content", accepts: "block", example: "accordion.item(...) { \"Content\" }" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"mt-4\", id: \"faq-accordion\"" }
+      ]
+    },
     comments_thread: {
       label: "Comments Thread",
       method_call: "render FlatPack::Comments::Thread::Component.new(count: 3, title: \"Discussion\") do |thread| ... end",
