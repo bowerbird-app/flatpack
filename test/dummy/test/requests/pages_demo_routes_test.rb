@@ -50,6 +50,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/tabs/stacked_pills
     /demo/toasts
     /demo/page_header
+    /demo/page_nav
     /demo/text/content
     /demo/text/quote
     /demo/empty_state
@@ -140,6 +141,16 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Button Groups (Wrapped Together)"
     assert_includes response.body, "Left"
     assert_includes response.body, "Middle"
+  end
+
+  test "page nav demo renders icon-only navigation" do
+    get "/demo/page_nav"
+
+    assert_response :success
+    assert_includes response.body, "Page Nav Component"
+    assert_includes response.body, "flat-pack--page-nav#back"
+    assert_includes response.body, "x-mark"
+    assert_includes response.body, "plus"
   end
 
   test "comments demo renders rich text composer examples" do

@@ -71,6 +71,27 @@
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"font-semibold\", data: { turbo: false }" }
       ]
     },
+    page_nav: {
+      label: "Page Nav",
+      method_call: "render FlatPack::PageNav::Component.new(close_url: demo_path, add_url: demo_forms_path)",
+      variables: [
+        { variable: "back_icon", accepts: "String", example: "back_icon: \"chevron-left\"" },
+        { variable: "back_label", accepts: "String", example: "back_label: \"Go back\"" },
+        { variable: "back_style", accepts: ":default, :primary, :secondary, :ghost, :success, :warning, :error", example: "back_style: :secondary" },
+        { variable: "back_size", accepts: ":sm, :md, :lg", example: "back_size: :md" },
+        { variable: "close_url", accepts: "String or nil", example: "close_url: demo_path" },
+        { variable: "close_icon", accepts: "String", example: "close_icon: \"x-mark\"" },
+        { variable: "close_label", accepts: "String", example: "close_label: \"Close\"" },
+        { variable: "close_style", accepts: ":default, :primary, :secondary, :ghost, :success, :warning, :error", example: "close_style: :secondary" },
+        { variable: "close_size", accepts: ":sm, :md, :lg", example: "close_size: :md" },
+        { variable: "add_url", accepts: "String or nil", example: "add_url: demo_forms_path" },
+        { variable: "add_icon", accepts: "String", example: "add_icon: \"plus\"" },
+        { variable: "add_label", accepts: "String", example: "add_label: \"Add\"" },
+        { variable: "add_style", accepts: ":default, :primary, :secondary, :ghost, :success, :warning, :error", example: "add_style: :secondary" },
+        { variable: "add_size", accepts: ":sm, :md, :lg", example: "add_size: :md" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"mb-4\", data: { testid: \"page-nav\" }" }
+      ]
+    },
     button: {
       label: "Button",
       method_call: "render FlatPack::Button::Component.new(text: \"Save\", style: :primary, size: :md)",

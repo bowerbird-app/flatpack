@@ -445,6 +445,9 @@ class PagesController < ApplicationController
   def page_header
   end
 
+  def page_nav
+  end
+
   def text_content
   end
 

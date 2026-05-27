@@ -44,6 +44,7 @@ list | FlatPack::List::Component | docs/components/list.md
 modal | FlatPack::Modal::Component | docs/components/modal.md
 navbar | FlatPack::Navbar::Component | docs/components/navbar.md
 page_header | FlatPack::PageHeader::Component | docs/components/page-header.md
+page_nav | FlatPack::PageNav::Component | docs/components/page-nav.md
 page_title | FlatPack::PageTitle::Component | docs/components/page-title.md
 pagination | FlatPack::Pagination::Component | docs/components/pagination.md
 pagination_infinite | FlatPack::PaginationInfinite::Component | docs/components/pagination-infinite.md

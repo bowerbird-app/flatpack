@@ -1,0 +1,88 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Page Nav Component",
+  subtitle: "Compact icon-only page navigation with browser back, optional close link, and optional add link."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :page_nav %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Back Only", anchor_link: true, subtitle: "Always renders browser history back on the left icon.") %>
+  <div class="mb-4">
+    <%= render FlatPack::PageNav::Component.new %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::PageNav::Component.new %&gt;
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "With Close Action", anchor_link: true, subtitle: "Middle icon appears only when close_url is provided.") %>
+  <div class="mb-4">
+    <%= render FlatPack::PageNav::Component.new(
+      close_url: demo_path
+    ) %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::PageNav::Component.new(
+        close_url: demo_path
+      ) %&gt;
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "With Close and Add", anchor_link: true, subtitle: "Line divider fills available space and the right icon links to add flow.") %>
+  <div class="mb-4">
+    <%= render FlatPack::PageNav::Component.new(
+      close_url: demo_path,
+      add_url: demo_forms_path
+    ) %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::PageNav::Component.new(
+        close_url: demo_path,
+        add_url: demo_forms_path
+      ) %&gt;
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Custom Icons and Labels", anchor_link: true, subtitle: "Customize icon names, accessible labels, and button styles.") %>
+  <div class="mb-4">
+    <%= render FlatPack::PageNav::Component.new(
+      back_icon: "arrow-left",
+      back_label: "Back to previous page",
+      close_url: demo_path,
+      close_icon: "trash",
+      close_label: "Discard",
+      add_url: demo_forms_path,
+      add_icon: "check",
+      add_label: "Create",
+      back_style: :ghost,
+      close_style: :ghost,
+      add_style: :primary
+    ) %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::PageNav::Component.new(
+        back_icon: "arrow-left",
+        back_label: "Back to previous page",
+        close_url: demo_path,
+        close_icon: "trash",
+        close_label: "Discard",
+        add_url: demo_forms_path,
+        add_icon: "check",
+        add_label: "Create",
+        back_style: :ghost,
+        close_style: :ghost,
+        add_style: :primary
+      ) %&gt;
+    CODE
+  ) %>
+</section>

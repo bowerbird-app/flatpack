@@ -549,6 +549,12 @@
                 active: false
               ) %>
               <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Page Nav",
+                href: demo_page_nav_path,
+                icon: :chevron_left,
+                active: false
+              ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
                 label: "Top Nav",
                 href: demo_navbar_path,
                 icon: :monitor,
