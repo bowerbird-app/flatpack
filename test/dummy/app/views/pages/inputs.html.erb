@@ -24,7 +24,11 @@
         name: "username_error",
         label: "Username (with error)",
         value: "john",
-        error: "Username must be at least 5 characters"
+        error: "Username must be at least 5 characters",
+        minlength: 5,
+        data: {
+          flat_pack_message_too_short: "Username must be at least 5 characters"
+        }
       ) %>
 
       <%= render FlatPack::TextInput::Component.new(
@@ -32,6 +36,24 @@
         label: "Username (disabled)",
         value: "johndoe",
         disabled: true
+      ) %>
+
+      <%= render FlatPack::TextInput::Component.new(
+        name: "headline",
+        id: "headline",
+        label: "Headline (with character count)",
+        placeholder: "Write a short headline...",
+        character_count: true,
+        min_characters: 20,
+        max_characters: 60
+      ) %>
+
+      <%= render FlatPack::TextInput::Component.new(
+        name: "tagline",
+        id: "tagline",
+        label: "Tagline (count only)",
+        placeholder: "Add a short tagline...",
+        character_count: true
       ) %>
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
@@ -47,7 +69,29 @@
           name: "username_error",
           label: "Username (with error)",
           value: "john",
-          error: "Username must be at least 5 characters"
+          error: "Username must be at least 5 characters",
+          minlength: 5,
+          data: {
+            flat_pack_message_too_short: "Username must be at least 5 characters"
+          }
+        ) %&gt;
+
+        &lt;%= render FlatPack::TextInput::Component.new(
+          name: "headline",
+          id: "headline",
+          label: "Headline (with character count)",
+          placeholder: "Write a short headline...",
+          character_count: true,
+          min_characters: 20,
+          max_characters: 60
+        ) %&gt;
+
+        &lt;%= render FlatPack::TextInput::Component.new(
+          name: "tagline",
+          id: "tagline",
+          label: "Tagline (count only)",
+          placeholder: "Add a short tagline...",
+          character_count: true
         ) %&gt;
       CODE
       class: "mt-4"
@@ -70,7 +114,11 @@
       <%= render FlatPack::PasswordInput::Component.new(
         name: "password_error",
         label: "Password (with error)",
-        error: "Password must contain at least one number"
+        error: "Password must contain at least one number",
+        pattern: "(?=.*\\d).+",
+        data: {
+          flat_pack_message_pattern_mismatch: "Password must contain at least one number"
+        }
       ) %>
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
@@ -85,7 +133,11 @@
         &lt;%= render FlatPack::PasswordInput::Component.new(
           name: "password_error",
           label: "Password (with error)",
-          error: "Password must contain at least one number"
+          error: "Password must contain at least one number",
+          pattern: "(?=.*\d).+",
+          data: {
+            flat_pack_message_pattern_mismatch: "Password must contain at least one number"
+          }
         ) %&gt;
       CODE
       class: "mt-4"
@@ -148,7 +200,11 @@
         name: "phone_error",
         label: "Phone (with error)",
         value: "123",
-        error: "Phone number must be at least 10 digits"
+        error: "Phone number must be at least 10 digits",
+        minlength: 10,
+        data: {
+          flat_pack_message_too_short: "Phone number must be at least 10 digits"
+        }
       ) %>
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
@@ -163,7 +219,11 @@
           name: "phone_error",
           label: "Phone (with error)",
           value: "123",
-          error: "Phone number must be at least 10 digits"
+          error: "Phone number must be at least 10 digits",
+          minlength: 10,
+          data: {
+            flat_pack_message_too_short: "Phone number must be at least 10 digits"
+          }
         ) %&gt;
       CODE
       class: "mt-4"
@@ -268,6 +328,12 @@
         name: "description_error",
         label: "Description (with error)",
         error: "Description must be at least 50 characters",
+        required: true,
+        minlength: 50,
+        data: {
+          flat_pack_message_required: "Description must be at least 50 characters",
+          flat_pack_message_too_short: "Description must be at least 50 characters"
+        },
         rows: 3
       ) %>
 
@@ -295,6 +361,12 @@
           name: "description_error",
           label: "Description (with error)",
           error: "Description must be at least 50 characters",
+          required: true,
+          minlength: 50,
+          data: {
+            flat_pack_message_required: "Description must be at least 50 characters",
+            flat_pack_message_too_short: "Description must be at least 50 characters"
+          },
           rows: 3
         ) %&gt;
         
@@ -395,7 +467,12 @@
       <%= render FlatPack::DateInput::Component.new(
         name: "date_error",
         label: "Date (with error)",
-        error: "Date must be in the future"
+        value: Date.today.to_s,
+        min: Date.tomorrow.to_s,
+        error: "Date must be in the future",
+        data: {
+          flat_pack_message_range_underflow: "Date must be in the future"
+        }
       ) %>
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
@@ -446,7 +523,8 @@
       <%= render FlatPack::FileInput::Component.new(
         name: "file_error",
         label: "File (with error)",
-        error: "File size must not exceed 5MB"
+        error: "File size must not exceed 5MB",
+        max_size: 5_242_880
       ) %>
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
@@ -494,7 +572,11 @@
       <%= render FlatPack::Checkbox::Component.new(
         name: "terms_error",
         label: "I agree to the terms",
-        error: "You must agree to continue"
+        error: "You must agree to continue",
+        required: true,
+        data: {
+          flat_pack_message_required: "You must agree to continue"
+        }
       ) %>
 
       <%= render FlatPack::Checkbox::Component.new(
@@ -556,7 +638,11 @@
         name: "payment_error",
         options: ["Credit Card", "PayPal", "Bank Transfer"],
         label: "Payment Method",
-        error: "Please select a payment method"
+        error: "Please select a payment method",
+        required: true,
+        data: {
+          flat_pack_message_required: "Please select a payment method"
+        }
       ) %>
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
@@ -641,7 +727,11 @@
           name: "category",
           options: ["Electronics", "Clothing", "Books", "Food"],
           label: "Category",
-          error: "Please select a category"
+          error: "Please select a category",
+          required: true,
+          data: {
+            flat_pack_message_required: "Please select a category"
+          }
         ) %>
       </div>
 

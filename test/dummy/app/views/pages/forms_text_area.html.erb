@@ -465,7 +465,11 @@
         label: "Review",
         value: standard_rich_text_value,
         rich_text: true,
-        error: "Review body can't be blank"
+        error: "Review body can't be blank",
+        required: true,
+        data: {
+          flat_pack_message_required: "Review body can't be blank"
+        }
       ) %>
     <% end %>
   <% end %>
@@ -476,7 +480,11 @@
         name: &quot;review[body]&quot;,
         label: &quot;Review&quot;,
         rich_text: true,
-        error: &quot;Review body can't be blank&quot;
+        error: &quot;Review body can't be blank&quot;,
+        required: true,
+        data: {
+          flat_pack_message_required: &quot;Review body can't be blank&quot;
+        }
       ) %&gt;
     CODE
     language: "erb",

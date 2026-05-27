@@ -13,10 +13,11 @@ module FlatPack
         @items = []
       end
 
-      def item(id:, title:, open: false, &block)
+      def item(id:, title:, left_slot: nil, open: false, &block)
         @items << {
           id: id,
           title: title,
+          left_slot: left_slot,
           open: open,
           content: block ? view_context.capture(&block) : ""
         }
@@ -45,10 +46,25 @@ module FlatPack
       def render_item_trigger(item)
         content_tag(:button, **item_trigger_attributes(item)) do
           safe_join([
-            content_tag(:span, item[:title], class: "font-medium"),
+            render_item_label(item),
             render_item_icon
           ])
         end
+      end
+
+      def render_item_label(item)
+        content_tag(:span, class: "flex items-center gap-2 min-w-0") do
+          safe_join([
+            render_item_left_slot(item),
+            content_tag(:span, item[:title], class: "font-medium")
+          ].compact)
+        end
+      end
+
+      def render_item_left_slot(item)
+        return if item[:left_slot].blank?
+
+        content_tag(:span, item[:left_slot].to_s, class: "shrink-0 inline-flex items-center leading-none")
       end
 
       def render_item_icon
@@ -103,7 +119,7 @@ module FlatPack
       end
 
       def trigger_classes
-        "w-full flex items-center justify-between p-[var(--accordion-trigger-padding)] text-left text-[var(--accordion-trigger-text-color)] hover:bg-[var(--accordion-trigger-hover-background-color)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accordion-focus-ring-color)] focus-visible:ring-inset"
+        "w-full flex items-center justify-between cursor-pointer p-[var(--accordion-trigger-padding)] text-left text-[var(--accordion-trigger-text-color)] hover:bg-[var(--accordion-trigger-hover-background-color)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accordion-focus-ring-color)] focus-visible:ring-inset"
       end
 
       def item_content_attributes(item)

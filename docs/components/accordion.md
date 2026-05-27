@@ -22,10 +22,11 @@ Use Accordion when related content should be progressively disclosed in stacked 
 |---|---|---|---|---|
 | `id` | String | `nil` | yes | Unique id used to derive content panel id (`<id>-content`). |
 | `title` | String | `nil` | yes | Trigger label text. |
+| `left_slot` | String | `nil` | no | Optional renderable content shown to the left of each item title (for example an icon component render). |
 | `open` | Boolean | `false` | no | Initial expanded state. |
 
 ## Slots
-None (items are added through the `item` builder method).
+None (items are added through the `item` builder method, which now supports optional `left_slot` trigger content per item).
 
 ## Variants
 - Single-open mode (default).
@@ -34,7 +35,12 @@ None (items are added through the `item` builder method).
 ## Example
 ```erb
 <%= render FlatPack::Accordion::Component.new(allow_multiple: true) do |accordion| %>
-  <% accordion.item(id: "faq-1", title: "What is FlatPack?", open: true) do %>
+  <% accordion.item(
+    id: "faq-1",
+    title: "What is FlatPack?",
+    left_slot: render(FlatPack::Shared::IconComponent.new(name: "question-mark-circle", size: :sm)),
+    open: true
+  ) do %>
     <p>FlatPack is a ViewComponent library for Rails.</p>
   <% end %>
 

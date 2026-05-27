@@ -19,6 +19,7 @@ module FlatPack
 
         assert_selector "button", text: "First Item"
         assert_selector "button", text: "Second Item"
+        assert_selector "button.cursor-pointer", count: 2
         assert_text "Content 1"
         assert_text "Content 2"
       end
@@ -76,6 +77,21 @@ module FlatPack
         end
 
         assert_selector "svg", count: 2
+      end
+
+      def test_renders_item_left_slot_when_provided
+        render_inline(Component.new) do |accordion|
+          accordion.item(
+            id: "item1",
+            title: "Item 1",
+            left_slot: "<svg class='left-slot-icon'></svg>".html_safe
+          ) { "Content" }
+          accordion.item(id: "item2", title: "Item 2") { "Content" }
+        end
+
+        assert_selector "button .left-slot-icon", count: 1
+        assert_selector "button", text: "Item 1"
+        assert_selector "button", text: "Item 2"
       end
 
       def test_item_content_has_correct_id

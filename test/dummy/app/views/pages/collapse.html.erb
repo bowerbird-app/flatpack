@@ -3,11 +3,17 @@
   subtitle: "Expandable content sections with smooth animations and accessible controls."
 ) %>
 
+<%= render "pages/component_method_variables_table", components: [:collapse, :accordion] %>
+
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Collapse Component", anchor_link: true) %>
   
   <div class="space-y-4">
-    <%= render FlatPack::Collapse::Component.new(id: "collapse1", title: "What is FlatPack?") do %>
+    <%= render FlatPack::Collapse::Component.new(
+      id: "collapse1",
+      title: "What is FlatPack?",
+      left_slot: render(FlatPack::Shared::IconComponent.new(name: "question-mark-circle", size: :sm, class: "text-[var(--collapse-icon-color)]"))
+    ) do %>
       <p>FlatPack is a comprehensive ViewComponent library for Ruby on Rails that provides production-ready UI components with built-in accessibility, responsive design, and thoughtful defaults.</p>
     <% end %>
 
@@ -29,6 +35,14 @@
           min: 1
         ) %>
       </div>
+    <% end %>
+
+    <%= render FlatPack::Collapse::Component.new(id: "collapse4", title: "Borderless Variant", border: false) do %>
+      <p>This variant removes the outer border and horizontal padding so content aligns edge-to-edge.</p>
+    <% end %>
+
+    <%= render FlatPack::Collapse::Component.new(id: "collapse5", title: "Borderless (Open by Default)", border: false, open: true) do %>
+      <p>Use this when content should be initially visible without a framed container.</p>
     <% end %>
   </div>
 
@@ -58,6 +72,14 @@
             ) %&gt;
           &lt;/div&gt;
         &lt;% end %&gt;
+
+        &lt;%= render FlatPack::Collapse::Component.new(id: &quot;collapse4&quot;, title: &quot;Borderless Variant&quot;, border: false) do %&gt;
+          &lt;p&gt;This variant removes the outer border and horizontal padding so content aligns edge-to-edge.&lt;/p&gt;
+        &lt;% end %&gt;
+
+        &lt;%= render FlatPack::Collapse::Component.new(id: &quot;collapse5&quot;, title: &quot;Borderless (Open by Default)&quot;, border: false, open: true) do %&gt;
+          &lt;p&gt;Use this when content should be initially visible without a framed container.&lt;/p&gt;
+        &lt;% end %&gt;
       &lt;/div&gt;
     CODE
     language: "erb",
@@ -69,7 +91,11 @@
   <%= render FlatPack::SectionTitle::Component.new(title: "Accordion Component", anchor_link: true, subtitle: "Single open at a time (default behavior)") %>
   
   <%= render FlatPack::Accordion::Component.new do |accordion| %>
-    <% accordion.item(id: "faq1", title: "What browsers are supported?") do %>
+    <% accordion.item(
+      id: "faq1",
+      title: "What browsers are supported?",
+      left_slot: render(FlatPack::Shared::IconComponent.new(name: "computer-desktop", size: :sm, class: "text-[var(--accordion-trigger-text-color)]"))
+    ) do %>
       <p>FlatPack components work in all modern browsers including Chrome, Firefox, Safari, and Edge. We follow progressive enhancement principles, so components degrade gracefully in older browsers.</p>
     <% end %>
     

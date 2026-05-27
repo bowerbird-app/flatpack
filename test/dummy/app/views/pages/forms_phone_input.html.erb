@@ -20,7 +20,11 @@
         name: "phone_error",
         label: "Phone (with error)",
         value: "123",
-        error: "Phone number must be at least 10 digits"
+        error: "Phone number must be at least 10 digits",
+        minlength: 10,
+        data: {
+          flat_pack_message_too_short: "Phone number must be at least 10 digits"
+        }
       ) %>
     <% end %>
   <% end %>
@@ -39,7 +43,11 @@
           name: &quot;phone_error&quot;,
           label: &quot;Phone (with error)&quot;,
           value: &quot;123&quot;,
-          error: &quot;Phone number must be at least 10 digits&quot;
+          error: &quot;Phone number must be at least 10 digits&quot;,
+          minlength: 10,
+          data: {
+            flat_pack_message_too_short: &quot;Phone number must be at least 10 digits&quot;
+          }
         ) %&gt;
         &lt;% end %&gt;
       &lt;% end %&gt;
