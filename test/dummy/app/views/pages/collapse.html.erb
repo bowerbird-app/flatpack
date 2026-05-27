@@ -30,6 +30,14 @@
         ) %>
       </div>
     <% end %>
+
+    <%= render FlatPack::Collapse::Component.new(id: "collapse4", title: "Borderless Variant", border: false) do %>
+      <p>This variant removes the outer border and horizontal padding so content aligns edge-to-edge.</p>
+    <% end %>
+
+    <%= render FlatPack::Collapse::Component.new(id: "collapse5", title: "Borderless (Open by Default)", border: false, open: true) do %>
+      <p>Use this when content should be initially visible without a framed container.</p>
+    <% end %>
   </div>
 
   <%= render FlatPack::CodeBlock::Component.new(
@@ -57,6 +65,14 @@
               min: 1
             ) %&gt;
           &lt;/div&gt;
+        &lt;% end %&gt;
+
+        &lt;%= render FlatPack::Collapse::Component.new(id: &quot;collapse4&quot;, title: &quot;Borderless Variant&quot;, border: false) do %&gt;
+          &lt;p&gt;This variant removes the outer border and horizontal padding so content aligns edge-to-edge.&lt;/p&gt;
+        &lt;% end %&gt;
+
+        &lt;%= render FlatPack::Collapse::Component.new(id: &quot;collapse5&quot;, title: &quot;Borderless (Open by Default)&quot;, border: false, open: true) do %&gt;
+          &lt;p&gt;Use this when content should be initially visible without a framed container.&lt;/p&gt;
         &lt;% end %&gt;
       &lt;/div&gt;
     CODE

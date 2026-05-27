@@ -19,6 +19,7 @@ module FlatPack
 
         assert_selector "button", text: "First Item"
         assert_selector "button", text: "Second Item"
+        assert_selector "button.cursor-pointer", count: 2
         assert_text "Content 1"
         assert_text "Content 2"
       end

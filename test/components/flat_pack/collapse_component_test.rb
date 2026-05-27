@@ -16,6 +16,7 @@ module FlatPack
 
         assert_selector "button[type='button']"
         assert_selector "button[aria-expanded]"
+        assert_selector "button.cursor-pointer"
       end
 
       def test_renders_content_area
@@ -86,6 +87,24 @@ module FlatPack
         render_inline(Component.new(id: "test", title: "Section", class: "custom-class"))
 
         assert_selector ".custom-class"
+      end
+
+      def test_border_enabled_by_default
+        render_inline(Component.new(id: "test", title: "Section"))
+
+        assert_selector "[data-controller='flat-pack--collapse'].border"
+        refute_selector "button[class*='px-0']"
+        refute_selector "#test-content > div[class*='px-0']", visible: false
+        assert_selector "button[class*='hover:bg-[var(--collapse-trigger-hover-background-color)]']"
+      end
+
+      def test_renders_borderless_without_horizontal_padding
+        render_inline(Component.new(id: "test", title: "Section", border: false)) { "Content here" }
+
+        refute_selector "[data-controller='flat-pack--collapse'].border"
+        assert_selector "button[class*='px-0']"
+        assert_selector "#test-content > div[class*='px-0']", visible: false
+        refute_selector "button[class*='hover:bg-[var(--collapse-trigger-hover-background-color)]']"
       end
     end
   end

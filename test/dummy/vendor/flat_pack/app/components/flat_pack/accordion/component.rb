@@ -103,7 +103,7 @@ module FlatPack
       end
 
       def trigger_classes
-        "w-full flex items-center justify-between p-[var(--accordion-trigger-padding)] text-left text-[var(--accordion-trigger-text-color)] hover:bg-[var(--accordion-trigger-hover-background-color)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accordion-focus-ring-color)] focus-visible:ring-inset"
+        "w-full flex items-center justify-between cursor-pointer p-[var(--accordion-trigger-padding)] text-left text-[var(--accordion-trigger-text-color)] hover:bg-[var(--accordion-trigger-hover-background-color)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accordion-focus-ring-color)] focus-visible:ring-inset"
       end
 
       def item_content_attributes(item)

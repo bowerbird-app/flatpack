@@ -15,6 +15,7 @@ Use Collapse for disclosure sections, FAQs, advanced options, and progressive de
 | `id` | String | `nil` | yes | Base identifier for ARIA wiring; content region ID becomes `"#{id}-content"`. |
 | `title` | String | `nil` | yes | Trigger button label text. |
 | `open` | Boolean | `false` | no | Initial expanded state; sets hidden state and controller value. |
+| `border` | Boolean | `true` | no | Controls border and horizontal padding. When `false`, border styles are removed and trigger/content horizontal padding is skipped. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for outer collapse container. |
 
 ## Slots
@@ -27,6 +28,10 @@ Use Collapse for disclosure sections, FAQs, advanced options, and progressive de
 ```erb
 <%= render FlatPack::Collapse::Component.new(id: "advanced", title: "Advanced Settings", open: false) do %>
   <p class="text-sm">Optional details go here.</p>
+<% end %>
+
+<%= render FlatPack::Collapse::Component.new(id: "flush", title: "Borderless", border: false) do %>
+  <p class="text-sm">This variant has no outer border and no horizontal padding.</p>
 <% end %>
 ```
 

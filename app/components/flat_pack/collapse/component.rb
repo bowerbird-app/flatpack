@@ -7,12 +7,14 @@ module FlatPack
         id:,
         title:,
         open: false,
+        border: true,
         **system_arguments
       )
         super(**system_arguments)
         @id = id
         @title = title
         @open = open
+        @border = border
 
         validate_id!
         validate_title!
@@ -60,7 +62,7 @@ module FlatPack
         # Rails-generated HTML from components captured via block. Never pass
         # unsanitized user input directly to content.
         content_tag(:div, **content_attributes) do
-          content_tag(:div, content.to_s.html_safe, class: "p-[var(--collapse-content-padding)]")
+          content_tag(:div, content.to_s.html_safe, class: content_padding_classes)
         end
       end
 
@@ -70,7 +72,7 @@ module FlatPack
             controller: "flat-pack--collapse",
             "flat-pack--collapse-open-value": @open
           },
-          class: "border border-[var(--collapse-border-color)] rounded-[var(--collapse-border-radius)] overflow-hidden bg-[var(--collapse-background-color)]"
+          class: container_classes
         )
       end
 
@@ -90,7 +92,42 @@ module FlatPack
       end
 
       def trigger_classes
-        "w-full flex items-center justify-between p-[var(--collapse-trigger-padding)] text-left text-[var(--collapse-trigger-text-color)] bg-[var(--collapse-trigger-background-color)] hover:bg-[var(--collapse-trigger-hover-background-color)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--collapse-focus-ring-color)] focus-visible:ring-offset-2"
+        [
+          "w-full",
+          "flex items-center justify-between cursor-pointer",
+          trigger_padding_classes,
+          "text-left text-[var(--collapse-trigger-text-color)]",
+          "bg-[var(--collapse-trigger-background-color)]",
+          trigger_hover_classes,
+          "transition-colors",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--collapse-focus-ring-color)] focus-visible:ring-offset-2"
+        ].join(" ")
+      end
+
+      def container_classes
+        [
+          ("border border-[var(--collapse-border-color)] rounded-[var(--collapse-border-radius)]" if @border),
+          "overflow-hidden",
+          "bg-[var(--collapse-background-color)]"
+        ].compact.join(" ")
+      end
+
+      def trigger_padding_classes
+        return "p-[var(--collapse-trigger-padding)]" if @border
+
+        "p-[var(--collapse-trigger-padding)] px-0"
+      end
+
+      def trigger_hover_classes
+        return "hover:bg-[var(--collapse-trigger-hover-background-color)]" if @border
+
+        nil
+      end
+
+      def content_padding_classes
+        return "p-[var(--collapse-content-padding)]" if @border
+
+        "p-[var(--collapse-content-padding)] px-0"
       end
 
       def content_attributes
