@@ -635,7 +635,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_includes response.body, "Search demo pages..."
-    assert_match(/data-controller=\"[^\"]*flat-pack--search[^\"]*\"/, response.body)
+    assert_match(/data-controller="[^"]*flat-pack--search[^"]*"/, response.body)
     assert_includes response.body, "data-flat-pack--search-url-value=\"/demo/search_results\""
   end
 
