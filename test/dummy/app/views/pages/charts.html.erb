@@ -169,6 +169,117 @@
   ) %>
 </section>
 
+<!-- Chart with Day/Month Filter -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Chart with Day/Month Filter", anchor_link: true, subtitle: "Examples for Chart with Day/Month Filter.") %>
+  <p class="text-[var(--surface-muted-content-color)] mb-4">
+    Use segmented action links inside a Turbo Frame to switch day and month datasets without custom JavaScript.
+  </p>
+
+  <%= turbo_frame_tag "chart-period-filter" do %>
+    <%= render FlatPack::Chart::Component.new(
+      type: :line,
+      series: @chart_filter_series,
+      title: "User Activity",
+      subtitle: @chart_filter_subtitle,
+      height: 300,
+      options: {
+        xaxis: {
+          categories: @chart_filter_categories
+        }
+      }
+    ) do |chart| %>
+      <% chart.actions do %>
+        <%= render FlatPack::SegmentedButtons::Component.new do |group| %>
+          <% group.button(
+            text: "Day",
+            selected: @chart_filter_period == "day",
+            size: :sm,
+            url: demo_charts_path(period: "day"),
+            aria: {pressed: @chart_filter_period == "day"},
+            data: {
+              turbo_frame: "chart-period-filter",
+              turbo_prefetch: false
+            }
+          ) %>
+          <% group.button(
+            text: "Month",
+            selected: @chart_filter_period == "month",
+            size: :sm,
+            url: demo_charts_path(period: "month"),
+            aria: {pressed: @chart_filter_period == "month"},
+            data: {
+              turbo_frame: "chart-period-filter",
+              turbo_prefetch: false
+            }
+          ) %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_open}%
+        period = params[:period] == "month" ? "month" : "day"
+
+        day_categories = %w[Mon Tue Wed Thu Fri Sat Sun]
+        month_categories = %w[Jan Feb Mar Apr May Jun Jul Aug]
+        day_series = [{name: "Users", data: [42, 58, 50, 73, 88, 95, 90]}]
+        month_series = [{name: "Users", data: [320, 410, 460, 520, 610, 680, 760, 830]}]
+
+        series = period == "month" ? month_series : day_series
+        categories = period == "month" ? month_categories : day_categories
+        subtitle = period == "month" ? "Month view" : "Day view"
+      %#{erb_tag_close}
+
+      #{erb_output_open} turbo_frame_tag "chart-period-filter" do #{erb_tag_close}
+        #{erb_output_open} render FlatPack::Chart::Component.new(
+          type: :line,
+          series: series,
+          title: "User Activity",
+          subtitle: subtitle,
+          height: 300,
+          options: {
+            xaxis: {
+              categories: categories
+            }
+          }
+        ) do |chart| #{erb_tag_close}
+          #{erb_output_open} chart.actions do #{erb_tag_close}
+            #{erb_output_open} render FlatPack::SegmentedButtons::Component.new do |group| #{erb_tag_close}
+              #{erb_open}% group.button(
+                text: "Day",
+                selected: period == "day",
+                size: :sm,
+                url: demo_charts_path(period: "day"),
+                aria: {pressed: period == "day"},
+                data: {
+                  turbo_frame: "chart-period-filter",
+                  turbo_prefetch: false
+                }
+              ) %#{erb_tag_close}
+              #{erb_open}% group.button(
+                text: "Month",
+                selected: period == "month",
+                size: :sm,
+                url: demo_charts_path(period: "month"),
+                aria: {pressed: period == "month"},
+                data: {
+                  turbo_frame: "chart-period-filter",
+                  turbo_prefetch: false
+                }
+              ) %#{erb_tag_close}
+            #{erb_open} end #{erb_tag_close}
+          #{erb_open} end #{erb_tag_close}
+        #{erb_open} end #{erb_tag_close}
+      #{erb_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
 <!-- Chart without Card -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Chart without Card Wrapper", anchor_link: true, subtitle: "Examples for Chart without Card Wrapper.") %>

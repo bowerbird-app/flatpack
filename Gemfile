@@ -18,6 +18,8 @@ gem "turbo-rails"
 group :development, :test do
   gem "debug"
   gem "rubocop"
+  gem "rubocop-discourse"
+  gem "rubocop-rake"
 end
 
 group :test do

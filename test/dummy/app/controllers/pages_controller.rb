@@ -67,7 +67,7 @@ class PagesController < ApplicationController
 
   # Actions with dynamic data that must not be fully cached
   UNCACHED_ACTIONS = %i[
-    picker search_results picker_results pagination_infinite
+    picker search_results picker_results pagination_infinite charts
     comments admin chat_demo chips chip_add_callback chip_remove_callback
   ].freeze
 
@@ -445,6 +445,9 @@ class PagesController < ApplicationController
   def page_header
   end
 
+  def page_nav
+  end
+
   def text_content
   end
 
@@ -506,6 +509,22 @@ class PagesController < ApplicationController
   end
 
   def charts
+    @chart_filter_period = (params[:period] == "month") ? "month" : "day"
+    @chart_filter_day_categories = %w[Mon Tue Wed Thu Fri Sat Sun]
+    @chart_filter_month_categories = %w[Jan Feb Mar Apr May Jun Jul Aug]
+    @chart_filter_day_series = [{name: "Users", data: [42, 58, 50, 73, 88, 95, 90]}]
+    @chart_filter_month_series = [{name: "Users", data: [320, 410, 460, 520, 610, 680, 760, 830]}]
+
+    if @chart_filter_period == "month"
+      @chart_filter_series = @chart_filter_month_series
+      @chart_filter_categories = @chart_filter_month_categories
+      @chart_filter_subtitle = "Month view"
+    else
+      @chart_filter_series = @chart_filter_day_series
+      @chart_filter_categories = @chart_filter_day_categories
+      @chart_filter_subtitle = "Day view"
+    end
+
     @sales_data = [
       {name: "Jan", value: 30},
       {name: "Feb", value: 40},
