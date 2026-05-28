@@ -89,6 +89,12 @@ components:
     primary_class: FlatPack::Chart::Component
     status: documented
 
+  - key: chart_buttons
+    title: Chart Buttons
+    doc: docs/components/chart-buttons.md
+    primary_class: FlatPack::ChartButtons::Component
+    status: documented
+
   - key: chat
     title: Chat
     doc: docs/components/chat.md

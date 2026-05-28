@@ -169,14 +169,61 @@
   ) %>
 </section>
 
-<!-- Chart with Day/Month Filter -->
+<!-- Chart with Generic Filter Controls -->
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Chart with Day/Month Filter", anchor_link: true, subtitle: "Examples for Chart with Day/Month Filter.") %>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Chart with Generic Filter Controls", anchor_link: true, subtitle: "Examples for Chart with Generic Filter Controls.") %>
   <p class="text-[var(--surface-muted-content-color)] mb-4">
-    Use segmented action links inside a Turbo Frame to switch day and month datasets without custom JavaScript.
+    Use <code>FlatPack::ChartButtons::Component</code> as a sibling control surface for any chart filter UI.
   </p>
 
   <%= turbo_frame_tag "chart-period-filter" do %>
+    <% compare_value = @chart_filter_compare ? "1" : "0" %>
+
+    <%= render FlatPack::ChartButtons::Component.new(turbo_frame: "chart-period-filter") do |controls| %>
+      <% controls.button(
+        text: "Day",
+        url: demo_charts_path(period: "day", compare: compare_value),
+        selected: @chart_filter_period == "day"
+      ) %>
+
+      <% controls.button(
+        text: "Month",
+        url: demo_charts_path(period: "month", compare: compare_value),
+        selected: @chart_filter_period == "month"
+      ) %>
+
+      <% controls.dropdown(
+        text: "Range",
+        style: :ghost,
+        options: [
+          {text: "Day", url: demo_charts_path(period: "day", compare: compare_value), selected: @chart_filter_period == "day"},
+          {text: "Week", url: demo_charts_path(period: "week", compare: compare_value), selected: @chart_filter_period == "week"},
+          {text: "Month", url: demo_charts_path(period: "month", compare: compare_value), selected: @chart_filter_period == "month"},
+          {text: "Year", url: demo_charts_path(period: "year", compare: compare_value), selected: @chart_filter_period == "year"}
+        ]
+      ) %>
+
+      <% controls.checkbox(
+        name: "compare",
+        label: "Compare baseline",
+        checked: @chart_filter_compare,
+        url: demo_charts_path(period: @chart_filter_period)
+      ) %>
+
+      <% controls.control do %>
+        <%= render FlatPack::Button::Component.new(
+          text: "Reset",
+          style: :ghost,
+          size: :sm,
+          url: demo_charts_path(period: "day", compare: "0"),
+          data: {
+            turbo_frame: "chart-period-filter",
+            turbo_prefetch: false
+          }
+        ) %>
+      <% end %>
+    <% end %>
+
     <%= render FlatPack::Chart::Component.new(
       type: :line,
       series: @chart_filter_series,
@@ -188,34 +235,7 @@
           categories: @chart_filter_categories
         }
       }
-    ) do |chart| %>
-      <% chart.actions do %>
-        <%= render FlatPack::SegmentedButtons::Component.new do |group| %>
-          <% group.button(
-            text: "Day",
-            selected: @chart_filter_period == "day",
-            size: :sm,
-            url: demo_charts_path(period: "day"),
-            aria: {pressed: @chart_filter_period == "day"},
-            data: {
-              turbo_frame: "chart-period-filter",
-              turbo_prefetch: false
-            }
-          ) %>
-          <% group.button(
-            text: "Month",
-            selected: @chart_filter_period == "month",
-            size: :sm,
-            url: demo_charts_path(period: "month"),
-            aria: {pressed: @chart_filter_period == "month"},
-            data: {
-              turbo_frame: "chart-period-filter",
-              turbo_prefetch: false
-            }
-          ) %>
-        <% end %>
-      <% end %>
-    <% end %>
+    ) %>
   <% end %>
 
   <%= render FlatPack::CodeBlock::Component.new(
@@ -223,61 +243,170 @@
     language: "erb",
     code: <<~CODE
       #{erb_open}%
-        period = params[:period] == "month" ? "month" : "day"
+        period = %w[day week month year].include?(params[:period]) ? params[:period] : "day"
+        compare = params[:compare] == "1"
 
-        day_categories = %w[Mon Tue Wed Thu Fri Sat Sun]
-        month_categories = %w[Jan Feb Mar Apr May Jun Jul Aug]
-        day_series = [{name: "Users", data: [42, 58, 50, 73, 88, 95, 90]}]
-        month_series = [{name: "Users", data: [320, 410, 460, 520, 610, 680, 760, 830]}]
+        filter_sets = {
+          "day" => {categories: %w[Mon Tue Wed Thu Fri Sat Sun], users: [42, 58, 50, 73, 88, 95, 90], baseline: [36, 49, 44, 64, 79, 87, 84]},
+          "week" => {categories: %w[W1 W2 W3 W4 W5 W6 W7 W8], users: [210, 245, 278, 301, 330, 360, 390, 420], baseline: [198, 226, 253, 281, 305, 331, 357, 388]},
+          "month" => {categories: %w[Jan Feb Mar Apr May Jun Jul Aug], users: [320, 410, 460, 520, 610, 680, 760, 830], baseline: [305, 380, 433, 491, 567, 634, 711, 780]},
+          "year" => {categories: %w[2019 2020 2021 2022 2023 2024 2025 2026], users: [1200, 1360, 1490, 1640, 1800, 1970, 2150, 2360], baseline: [1110, 1265, 1388, 1535, 1674, 1840, 2006, 2192]}
+        }
 
-        series = period == "month" ? month_series : day_series
-        categories = period == "month" ? month_categories : day_categories
-        subtitle = period == "month" ? "Month view" : "Day view"
+        selected = filter_sets.fetch(period)
+        categories = selected[:categories]
+        series = [{name: "Users", data: selected[:users]}]
+        series << {name: "Baseline", data: selected[:baseline]} if compare
+
+        compare_value = compare ? "1" : "0"
+        subtitle = period.capitalize + " view"
+        subtitle += " + baseline" if compare
       %#{erb_tag_close}
 
       #{erb_output_open} turbo_frame_tag "chart-period-filter" do #{erb_tag_close}
+        #{erb_output_open} render FlatPack::ChartButtons::Component.new(turbo_frame: "chart-period-filter") do |controls| #{erb_tag_close}
+          #{erb_open}% controls.button(text: "Day", url: demo_charts_path(period: "day", compare: compare_value), selected: period == "day") %#{erb_tag_close}
+          #{erb_open}% controls.dropdown(text: "Range", options: [
+            {text: "Day", url: demo_charts_path(period: "day", compare: compare_value), selected: period == "day"},
+            {text: "Week", url: demo_charts_path(period: "week", compare: compare_value), selected: period == "week"},
+            {text: "Month", url: demo_charts_path(period: "month", compare: compare_value), selected: period == "month"},
+            {text: "Year", url: demo_charts_path(period: "year", compare: compare_value), selected: period == "year"}
+          ]) %#{erb_tag_close}
+          #{erb_open}% controls.checkbox(name: "compare", label: "Compare baseline", checked: compare, url: demo_charts_path(period: period)) %#{erb_tag_close}
+        #{erb_open} end #{erb_tag_close}
+
         #{erb_output_open} render FlatPack::Chart::Component.new(
           type: :line,
           series: series,
           title: "User Activity",
           subtitle: subtitle,
           height: 300,
-          options: {
-            xaxis: {
-              categories: categories
-            }
-          }
-        ) do |chart| #{erb_tag_close}
-          #{erb_output_open} chart.actions do #{erb_tag_close}
-            #{erb_output_open} render FlatPack::SegmentedButtons::Component.new do |group| #{erb_tag_close}
-              #{erb_open}% group.button(
-                text: "Day",
-                selected: period == "day",
-                size: :sm,
-                url: demo_charts_path(period: "day"),
-                aria: {pressed: period == "day"},
-                data: {
-                  turbo_frame: "chart-period-filter",
-                  turbo_prefetch: false
-                }
-              ) %#{erb_tag_close}
-              #{erb_open}% group.button(
-                text: "Month",
-                selected: period == "month",
-                size: :sm,
-                url: demo_charts_path(period: "month"),
-                aria: {pressed: period == "month"},
-                data: {
-                  turbo_frame: "chart-period-filter",
-                  turbo_prefetch: false
-                }
-              ) %#{erb_tag_close}
-            #{erb_open} end #{erb_tag_close}
-          #{erb_open} end #{erb_tag_close}
-        #{erb_open} end #{erb_tag_close}
+          options: {xaxis: {categories: categories}}
+        ) #{erb_tag_close}
       #{erb_open} end #{erb_tag_close}
     CODE
   ) %>
+
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Single Outer Frame with Multiple Chart Buttons",
+    anchor_link: true,
+    subtitle: "Two button groups control chart 1 and chart 2 while all charts remain inside one outer frame."
+  ) %>
+  <p class="text-[var(--surface-muted-content-color)] mb-4">
+    This example keeps both button groups and all charts inside one outer frame, while each button group targets its own chart frame.
+  </p>
+
+  <%= turbo_frame_tag "chart-period-filter-multi" do %>
+    <div class="space-y-4">
+      <div class="flex flex-wrap items-center gap-3">
+        <%= render FlatPack::ChartButtons::Component.new(margin_bottom: nil) do |controls| %>
+          <% controls.button(
+            text: "Chart 1 Day",
+            url: demo_charts_path(chart_1_period: "day", chart_2_period: @chart_multi_chart_2_period),
+            data: {turbo_frame: "chart-1-frame"}
+          ) %>
+          <% controls.button(
+            text: "Chart 1 Month",
+            url: demo_charts_path(chart_1_period: "month", chart_2_period: @chart_multi_chart_2_period),
+            data: {turbo_frame: "chart-1-frame"}
+          ) %>
+        <% end %>
+
+        <%= render FlatPack::ChartButtons::Component.new(margin_bottom: nil) do |controls| %>
+          <% controls.dropdown(
+            text: "Chart 2 Range",
+            options: [
+              {text: "Week", url: demo_charts_path(chart_1_period: @chart_multi_chart_1_period, chart_2_period: "week"), data: {turbo_frame: "chart-2-frame"}},
+              {text: "Month", url: demo_charts_path(chart_1_period: @chart_multi_chart_1_period, chart_2_period: "month"), data: {turbo_frame: "chart-2-frame"}},
+              {text: "Year", url: demo_charts_path(chart_1_period: @chart_multi_chart_1_period, chart_2_period: "year"), data: {turbo_frame: "chart-2-frame"}}
+            ]
+          ) %>
+        <% end %>
+      </div>
+
+      <%= turbo_frame_tag "chart-1-frame", class: "block mb-4" do %>
+        <%= render FlatPack::Chart::Component.new(
+          type: :line,
+          title: "Chart 1",
+          subtitle: @chart_multi_chart_1_subtitle,
+          series: @chart_multi_chart_1_series,
+          height: 240,
+          options: {
+            xaxis: {
+              categories: @chart_multi_chart_1_categories
+            }
+          }
+        ) %>
+      <% end %>
+
+      <%= turbo_frame_tag "chart-2-frame", class: "block mb-4" do %>
+        <%= render FlatPack::Chart::Component.new(
+          type: :bar,
+          title: "Chart 2",
+          subtitle: @chart_multi_chart_2_subtitle,
+          series: @chart_multi_chart_2_series,
+          height: 240,
+          options: {
+            xaxis: {
+              categories: @chart_multi_chart_2_categories
+            }
+          }
+        ) %>
+      <% end %>
+
+      <div class="mb-4">
+        <%= render FlatPack::Chart::Component.new(
+          type: :area,
+          title: "Chart 3",
+          subtitle: "Static chart in same outer frame",
+          series: @chart_multi_chart_3_series,
+          height: 240,
+          options: {
+            xaxis: {
+              categories: @chart_multi_chart_3_categories
+            }
+          }
+        ) %>
+      </div>
+    </div>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_open}%
+        chart_1_period = %w[day month].include?(params[:chart_1_period]) ? params[:chart_1_period] : "day"
+        chart_2_period = %w[week month year].include?(params[:chart_2_period]) ? params[:chart_2_period] : "week"
+      %#{erb_tag_close}
+
+      #{erb_output_open} turbo_frame_tag "chart-period-filter-multi" do #{erb_tag_close}
+        #{erb_output_open} render FlatPack::ChartButtons::Component.new(margin_bottom: nil) do |controls| #{erb_tag_close}
+          #{erb_open}% controls.button(text: "Chart 1 Day", url: demo_charts_path(chart_1_period: "day", chart_2_period: chart_2_period), data: {turbo_frame: "chart-1-frame"}) %#{erb_tag_close}
+          #{erb_open}% controls.button(text: "Chart 1 Month", url: demo_charts_path(chart_1_period: "month", chart_2_period: chart_2_period), data: {turbo_frame: "chart-1-frame"}) %#{erb_tag_close}
+        #{erb_open} end #{erb_tag_close}
+
+        #{erb_output_open} render FlatPack::ChartButtons::Component.new(margin_bottom: nil) do |controls| #{erb_tag_close}
+          #{erb_open}% controls.dropdown(text: "Chart 2 Range", options: [
+            {text: "Week", url: demo_charts_path(chart_1_period: chart_1_period, chart_2_period: "week"), data: {turbo_frame: "chart-2-frame"}},
+            {text: "Month", url: demo_charts_path(chart_1_period: chart_1_period, chart_2_period: "month"), data: {turbo_frame: "chart-2-frame"}},
+            {text: "Year", url: demo_charts_path(chart_1_period: chart_1_period, chart_2_period: "year"), data: {turbo_frame: "chart-2-frame"}}
+          ]) %#{erb_tag_close}
+        #{erb_open} end #{erb_tag_close}
+
+        #{erb_output_open} turbo_frame_tag "chart-1-frame" do #{erb_tag_close}
+          #{erb_output_open} render FlatPack::Chart::Component.new(type: :line, title: "Chart 1", series: @chart_multi_chart_1_series, options: {xaxis: {categories: @chart_multi_chart_1_categories}}) #{erb_tag_close}
+        #{erb_open} end #{erb_tag_close}
+
+        #{erb_output_open} turbo_frame_tag "chart-2-frame" do #{erb_tag_close}
+          #{erb_output_open} render FlatPack::Chart::Component.new(type: :bar, title: "Chart 2", series: @chart_multi_chart_2_series, options: {xaxis: {categories: @chart_multi_chart_2_categories}}) #{erb_tag_close}
+        #{erb_open} end #{erb_tag_close}
+
+        #{erb_output_open} render FlatPack::Chart::Component.new(type: :area, title: "Chart 3", series: @chart_multi_chart_3_series, options: {xaxis: {categories: @chart_multi_chart_3_categories}}) #{erb_tag_close}
+      #{erb_open} end #{erb_tag_close}
+    CODE
+  ) %>
+
 </section>
 
 <!-- Chart without Card -->

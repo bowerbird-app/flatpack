@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Added `FlatPack::ChartButtons::Component` as a generic sibling control surface for chart filtering, with helper APIs for direct button links, dropdown options, checkbox-driven Turbo GET filters, and custom control slot content.
+
+### Changed
+- Updated `/demo/charts` filter examples to use `FlatPack::ChartButtons::Component` with Turbo Frame targeting across button, dropdown, and checkbox filter controls while keeping chart data selection server-driven.
+
 ## [0.1.66] - 2026-05-28
 
 ### Added
