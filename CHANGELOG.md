@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a `border` option to `FlatPack::Collapse::Component` (default `true`) so borderless collapses can disable the outer border and horizontal trigger/content padding.
 - Added optional `left_slot` trigger content support to `FlatPack::Collapse::Component.new(...)` and per-item `accordion.item(..., left_slot: ...)` in `FlatPack::Accordion::Component` for icon and marker rendering.
 - Added `FlatPack::PageNav::Component` with icon-only controls for browser back plus optional close and add links, including dummy demo, docs, and test coverage.
+- Added a new `/demo/charts` Day/Month filter example that uses segmented actions and a dummy Stimulus controller to switch chart series and x-axis categories client-side without page reload.
 
 ### Fixed
 - Updated the locked `net-imap` and `view_component` dependencies to patched versions so `bundle-audit` no longer reports the published advisories.
