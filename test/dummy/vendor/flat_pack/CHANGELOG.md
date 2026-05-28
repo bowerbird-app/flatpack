@@ -7,10 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.66] - 2026-05-28
+
 ### Added
 - Added optional live character counting support to `FlatPack::TextInput::Component` via `character_count`, `min_characters`, and `max_characters`, including updated dummy demos, docs, and component method variable listings.
 - Added a `border` option to `FlatPack::Collapse::Component` (default `true`) so borderless collapses can disable the outer border and horizontal trigger/content padding.
 - Added optional `left_slot` trigger content support to `FlatPack::Collapse::Component.new(...)` and per-item `accordion.item(..., left_slot: ...)` in `FlatPack::Accordion::Component` for icon and marker rendering.
+- Added `FlatPack::PageNav::Component` with icon-only controls for browser back plus optional close and add links, including dummy demo, docs, and test coverage.
+- Added a new `/demo/charts` Day/Month filter example that uses segmented actions and a dummy Stimulus controller to switch chart series and x-axis categories client-side without page reload.
 
 ### Fixed
 - Updated the locked `net-imap` and `view_component` dependencies to patched versions so `bundle-audit` no longer reports the published advisories.
@@ -24,6 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Added `FlatPack::DateTimeInput::Component` and `FlatPack::TimeInput::Component`, plus matching dummy demos and regression coverage.
+- Updated the locked `nokogiri` versions in the root and dummy app bundle files to `1.19.3` to address the published security advisories.
+- Updated the root bundle lockfile to `rack 3.2.6` to address the published CVEs affecting static file handling and multipart byte-range processing.
 - Updated the rounded theme skeleton background token to follow `--surface-muted-background-color`, matching the other themes while keeping the softer neutral loading state.
 - Updated the rounded theme muted surface background token to `#e5e5e5` for a softer neutral palette.
 
@@ -36,18 +42,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.58] - 2026-05-13
 
 ### Fixed
-- Fixed the breadcrumb Back + Home rendering path so Home appears once, kept the Back link spacing consistent, and refreshed the dummy breadcrumb example.
-- Updated server-rendered and JS-driven text input warning states to use the semantic `var(--color-warning)` token.
+- Fixed `FlatPack::Breadcrumb::Component` so combined Back and Home trails render Home only once, kept the Back link spacing consistent, and refreshed the dummy breadcrumb example.
+- Updated text input and shared form-validation warning states to use the semantic `var(--color-warning)` token in both server-rendered and JS-driven validation flows.
 - Refreshed the root and dummy bundle lockfiles to resolve `addressable` and `rack-session` to patched versions for the current `bundle-audit` advisories.
 
 ### Tests
-- Added breadcrumb regression coverage for duplicate Home prevention and breadcrumb link class merging.
-- Added focused text input warning coverage and a Node-based regression test for the shared form-validation controller.
+- Added breadcrumb regression coverage for the Back + Home rendering path and class merging on breadcrumb links.
+- Added focused regression coverage for the text input warning token classes and a Node-based test for the shared form-validation controller.
 
 ## [0.1.57] - 2026-05-12
 
 ### Changed
-- Bumped the vendored FlatPack version to keep the dummy app snapshot aligned with the root gem.
+- Bumped the gem version and synchronized the versioned docs and dummy lockfiles.
 
 ## [0.1.56] - 2026-05-12
 

@@ -5,11 +5,4 @@ export default class extends Controller {
     event.preventDefault()
     window.history.back()
   }
-}import { Controller } from "@hotwired/stimulus"
-
-export default class extends Controller {
-  back(event) {
-    event.preventDefault()
-    window.history.back()
-  }
 }
