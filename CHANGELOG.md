@@ -9,9 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Added `FlatPack::ChartButtons::Component` as a generic sibling control surface for chart filtering, with helper APIs for direct button links, dropdown options, checkbox-driven Turbo GET filters, and custom control slot content.
+- Added two `/demo/tables/basic` filter/search demos: a generic sibling-control table filter with debounced search input and a multi-control outer-frame example with independently targeted inner table frames.
+- Added `flat-pack--auto-submit` Stimulus controller for debounced GET form submission in Turbo-driven filter/search controls.
 
 ### Changed
 - Updated `/demo/charts` filter examples to use `FlatPack::ChartButtons::Component` with Turbo Frame targeting across button, dropdown, and checkbox filter controls while keeping chart data selection server-driven.
+- Updated table demo controller data preparation to support URL-driven generic filter definitions, selected filter values, and shared search query state for Basic Table interactive examples.
 
 ## [0.1.66] - 2026-05-28
 

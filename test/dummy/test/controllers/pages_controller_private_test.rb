@@ -3,6 +3,11 @@
 require "test_helper"
 
 class PagesControllerPrivateTest < ActiveSupport::TestCase
+  test "query-driven tables demos are uncached" do
+    assert_includes PagesController::UNCACHED_ACTIONS, :tables_basic
+    assert_includes PagesController::UNCACHED_ACTIONS, :tables_sortable
+  end
+
   test "page_cache_key changes when page template version changes" do
     controller = PagesController.new
     request = OpenStruct.new(path: "/demo/tables/basic")

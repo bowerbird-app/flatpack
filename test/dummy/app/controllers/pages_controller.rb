@@ -69,6 +69,7 @@ class PagesController < ApplicationController
   UNCACHED_ACTIONS = %i[
     picker search_results picker_results pagination_infinite charts
     comments admin chat_demo chips chip_add_callback chip_remove_callback
+    tables_basic tables_sortable
   ].freeze
 
   before_action :serve_from_page_cache, except: UNCACHED_ACTIONS
@@ -1605,8 +1606,115 @@ class PagesController < ApplicationController
     end
 
     @sorted_users = sort_users(@users.dup, params[:sort], params[:direction])
+    load_table_generic_filter_demo_data
+    load_table_multi_controls_demo_data
     @demo_table_rows = demo_table_rows_table_exists? ? DemoTableRow.where(list_key: DemoTableRow::DEFAULT_LIST_KEY).ordered : []
     @demo_table_version = demo_table_rows_table_exists? ? demo_table_version : "0"
+  end
+
+  def load_table_generic_filter_demo_data
+    @table_filter_definitions = table_filter_definitions
+    @table_filter_field = if @table_filter_definitions.key?(params[:filter_field].to_s)
+      params[:filter_field].to_s
+    else
+      "category"
+    end
+
+    selected_values = @table_filter_definitions.fetch(@table_filter_field).fetch(:values)
+    requested_filter_value = params[:filter_value].to_s
+    @table_filter_value = selected_values.key?(requested_filter_value) ? requested_filter_value : "all"
+    @table_search_query = params[:q].to_s.strip
+
+    @table_filtered_users = apply_table_filter_and_search(
+      @users,
+      filter_field: @table_filter_field,
+      filter_value: @table_filter_value,
+      query: @table_search_query
+    )
+  end
+
+  def load_table_multi_controls_demo_data
+    @table_multi_category_value = table_category_values.key?(params[:table_1_category].to_s) ? params[:table_1_category].to_s : "all"
+    @table_multi_status_value = table_status_values.key?(params[:table_2_status].to_s) ? params[:table_2_status].to_s : "all"
+    @table_multi_search_query = params[:table_multi_q].to_s.strip
+
+    @table_multi_table_1_users = apply_table_filter_and_search(
+      @users,
+      filter_field: "category",
+      filter_value: @table_multi_category_value,
+      query: @table_multi_search_query
+    )
+
+    @table_multi_table_2_users = apply_table_filter_and_search(
+      @users,
+      filter_field: "status",
+      filter_value: @table_multi_status_value,
+      query: @table_multi_search_query
+    )
+  end
+
+  def table_filter_definitions
+    {
+      "category" => {
+        label: "Category",
+        values: table_category_values
+      },
+      "status" => {
+        label: "Status",
+        values: table_status_values
+      }
+    }
+  end
+
+  def table_category_values
+    {
+      "all" => "All",
+      "technology" => "Technology",
+      "business" => "Business",
+      "marketing" => "Marketing",
+      "design" => "Design"
+    }
+  end
+
+  def table_status_values
+    {
+      "all" => "All",
+      "active" => "Active",
+      "inactive" => "Inactive",
+      "pending" => "Pending"
+    }
+  end
+
+  def apply_table_filter_and_search(users, filter_field:, filter_value:, query:)
+    filtered_users = users
+
+    if filter_value != "all"
+      filtered_users = filtered_users.select { |user| table_filter_match?(user, field: filter_field, value: filter_value) }
+    end
+
+    return filtered_users if query.blank?
+
+    normalized_query = query.downcase
+    filtered_users.select do |user|
+      [
+        user.id.to_s,
+        user.name.to_s,
+        user.email.to_s,
+        user.category.to_s,
+        user.status.to_s
+      ].any? { |candidate| candidate.downcase.include?(normalized_query) }
+    end
+  end
+
+  def table_filter_match?(user, field:, value:)
+    case field
+    when "category"
+      user.category.to_s.downcase == value
+    when "status"
+      user.status.to_s.downcase == value
+    else
+      true
+    end
   end
 
   def picker_item_payload(item)

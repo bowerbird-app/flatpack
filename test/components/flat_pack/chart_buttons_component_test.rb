@@ -7,7 +7,7 @@ module FlatPack
     class ComponentTest < ViewComponent::TestCase
       def test_renders_button_with_container_turbo_defaults
         render_inline(Component.new(turbo_frame: "chart-frame")) do |controls|
-           controls.button(text: "Day", url: "/demo/charts?period=day", selected: true)
+          controls.button(text: "Day", url: "/demo/charts?period=day", selected: true)
         end
 
         assert_selector "div.flex.flex-wrap.items-center.gap-2.mb-3"
@@ -16,7 +16,7 @@ module FlatPack
 
       def test_allows_margin_bottom_override
         render_inline(Component.new(margin_bottom: "mb-6")) do |controls|
-           controls.button(text: "Day", url: "/demo/charts?period=day")
+          controls.button(text: "Day", url: "/demo/charts?period=day")
         end
 
         assert_selector "div.flex.flex-wrap.items-center.gap-2.mb-6"
@@ -25,7 +25,7 @@ module FlatPack
 
       def test_button_allows_turbo_frame_override
         render_inline(Component.new(turbo_frame: "chart-frame")) do |controls|
-            controls.button(
+          controls.button(
             text: "Month",
             url: "/demo/charts?period=month",
             data: {turbo_frame: "custom-frame"}
@@ -37,7 +37,7 @@ module FlatPack
 
       def test_renders_dropdown_with_options
         render_inline(Component.new(turbo_frame: "chart-frame")) do |controls|
-            controls.dropdown(
+          controls.dropdown(
             text: "Range",
             options: [
               {text: "Day", url: "/demo/charts?period=day"},
@@ -53,7 +53,7 @@ module FlatPack
 
       def test_renders_checkbox_with_auto_submit
         render_inline(Component.new(turbo_frame: "chart-frame")) do |controls|
-            controls.checkbox(
+          controls.checkbox(
             name: "compare",
             label: "Compare baseline",
             url: "/demo/charts",

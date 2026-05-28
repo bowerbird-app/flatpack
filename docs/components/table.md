@@ -53,6 +53,34 @@ When both block and `html` are provided, `html` is used. When neither is provide
 | Turbo frame wrapper | Provide `turbo_frame:` to wrap output in `<turbo-frame>`. |
 | Stimulus table | Set `stimulus: true` to attach `flat-pack--table`. |
 | Draggable reorder | Set `draggable_rows: true` and optionally `reorder_*` options. |
+| URL-driven filter/search controls | Compose sibling controls (for example `FlatPack::ChartButtons::Component` and `FlatPack::Search::Component`) around the table and submit GET params into a shared Turbo Frame. |
+
+## Filter And Search Pattern
+
+Use sibling controls as a separate surface around the table and keep all state in query params. This makes links shareable and keeps Turbo updates predictable.
+
+```erb
+<%= turbo_frame_tag "users-table-filters" do %>
+  <%= render FlatPack::ChartButtons::Component.new(turbo_frame: "users-table-filters") do |controls| %>
+    <% controls.button(text: "All", url: demo_tables_basic_path(filter_field: "status", filter_value: "all", q: params[:q]), selected: params[:filter_value] == "all") %>
+    <% controls.dropdown(text: "Status", options: [
+      {text: "Active", url: demo_tables_basic_path(filter_field: "status", filter_value: "active", q: params[:q])},
+      {text: "Inactive", url: demo_tables_basic_path(filter_field: "status", filter_value: "inactive", q: params[:q])}
+    ]) %>
+  <% end %>
+
+  <%= form_with url: demo_tables_basic_path, method: :get, data: {turbo_frame: "users-table-filters"} do %>
+    <%= hidden_field_tag :filter_field, "status" %>
+    <%= hidden_field_tag :filter_value, params[:filter_value] %>
+    <%= render FlatPack::Search::Component.new(name: "q", value: params[:q], placeholder: "Search table rows...", max_width: :none) %>
+  <% end %>
+
+  <%= render FlatPack::Table::Component.new(data: @users) do |table| %>
+    <% table.column(title: "Name", html: ->(user) { user.name }) %>
+    <% table.column(title: "Email", html: ->(user) { user.email }) %>
+  <% end %>
+<% end %>
+```
 
 ## Example
 
