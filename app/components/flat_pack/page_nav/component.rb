@@ -3,21 +3,18 @@
 module FlatPack
   module PageNav
     class Component < FlatPack::BaseComponent
+      renders_one :right_slot
+
       def initialize(
         back_icon: "chevron-left",
         back_label: "Go back",
         back_style: :secondary,
         back_size: :md,
-        close_url: nil,
-        close_icon: "x-mark",
-        close_label: "Close",
-        close_style: :secondary,
-        close_size: :md,
-        add_url: nil,
-        add_icon: "plus",
-        add_label: "Add",
-        add_style: :secondary,
-        add_size: :md,
+        anchor_url: nil,
+        anchor_icon: "x-mark",
+        anchor_label: "Close",
+        anchor_style: :secondary,
+        anchor_size: :md,
         **system_arguments
       )
         super(**system_arguments)
@@ -27,17 +24,25 @@ module FlatPack
         @back_style = back_style
         @back_size = back_size
 
-        @close_url = close_url
-        @close_icon = close_icon
-        @close_label = close_label
-        @close_style = close_style
-        @close_size = close_size
+        @anchor_url = anchor_url
+        @anchor_icon = anchor_icon
+        @anchor_label = anchor_label
+        @anchor_style = anchor_style
+        @anchor_size = anchor_size
+      end
 
-        @add_url = add_url
-        @add_icon = add_icon
-        @add_label = add_label
-        @add_style = add_style
-        @add_size = add_size
+      def right_slot(*args, **kwargs, &block)
+        return get_slot(:right_slot) if args.empty? && kwargs.empty? && !block_given?
+
+        set_slot(:right_slot, nil, *args, **kwargs, &block)
+      end
+
+      def right(*args, **kwargs, &block)
+        right_slot(*args, **kwargs, &block)
+      end
+
+      def right?
+        right_slot?
       end
 
       def call
@@ -71,33 +76,27 @@ module FlatPack
               size: @back_size,
               data: {action: "click->flat-pack--page-nav#back"}
             ),
-            close_action
+            anchor_action
           ].compact)
         end
       end
 
-      def close_action
-        return unless @close_url.present?
+      def anchor_action
+        return unless @anchor_url.present?
 
         icon_button(
-          icon: @close_icon,
-          label: @close_label,
-          style: @close_style,
-          size: @close_size,
-          url: @close_url
+          icon: @anchor_icon,
+          label: @anchor_label,
+          style: @anchor_style,
+          size: @anchor_size,
+          url: @anchor_url
         )
       end
 
       def right_action
-        return unless @add_url.present?
+        return unless right?
 
-        icon_button(
-          icon: @add_icon,
-          label: @add_label,
-          style: @add_style,
-          size: @add_size,
-          url: @add_url
-        )
+        right.to_s
       end
 
       def icon_button(icon:, label:, style:, size:, url: nil, data: nil)

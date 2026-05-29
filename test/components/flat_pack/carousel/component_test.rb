@@ -186,12 +186,94 @@ module FlatPack
         assert_equal "false", root["data-flat-pack--carousel-touch-swipe-value"]
       end
 
+      def test_exposes_logo_cloud_configuration_values
+        render_inline(
+          Component.new(
+            slides: [
+              {type: :image, src: "https://images.example.com/a.svg", alt: "A"},
+              {type: :image, src: "https://images.example.com/b.svg", alt: "B"},
+              {type: :image, src: "https://images.example.com/c.svg", alt: "C"},
+              {type: :image, src: "https://images.example.com/d.svg", alt: "D"}
+            ],
+            variant: :logo_cloud,
+            logo_items_per_view_desktop: 5,
+            logo_items_per_view_tablet: 3,
+            logo_items_per_view_mobile: 3,
+            logo_grayscale: true,
+            logo_opacity: 0.75,
+            logo_wrapper_background: "#f7f8fa"
+          )
+        )
+
+        root = page.find("section[data-controller='flat-pack--carousel']")
+        assert_equal "logo_cloud", root["data-flat-pack--carousel-variant-value"]
+        assert_equal "5", root["data-flat-pack--carousel-logo-items-per-view-desktop-value"]
+        assert_equal "3", root["data-flat-pack--carousel-logo-items-per-view-tablet-value"]
+        assert_equal "3", root["data-flat-pack--carousel-logo-items-per-view-mobile-value"]
+
+        viewport = page.find("div[data-flat-pack--carousel-target='viewport']")
+        assert_includes viewport[:style], "background: transparent"
+      end
+
+      def test_logo_cloud_defaults_to_autoplay_and_hides_controls
+        render_inline(
+          Component.new(
+            slides: [
+              {type: :image, src: "https://images.example.com/a.svg", alt: "A"},
+              {type: :image, src: "https://images.example.com/b.svg", alt: "B"},
+              {type: :image, src: "https://images.example.com/c.svg", alt: "C"},
+              {type: :image, src: "https://images.example.com/d.svg", alt: "D"}
+            ],
+            variant: :logo_cloud
+          )
+        )
+
+        root = page.find("section[data-controller='flat-pack--carousel']")
+        assert_equal "true", root["data-flat-pack--carousel-autoplay-value"]
+        assert_no_selector "button[data-action='click->flat-pack--carousel#prev']"
+        assert_no_selector "button[data-action='click->flat-pack--carousel#next']"
+        assert_no_selector "div[data-flat-pack--carousel-target='counter']"
+      end
+
       def test_defaults_transition_to_slide
         render_inline(Component.new(slides: sample_slides))
 
         root = page.find("section[data-controller='flat-pack--carousel']")
         assert_equal "true", root["data-flat-pack--carousel-loop-value"]
         assert_equal "slide", root["data-flat-pack--carousel-transition-value"]
+      end
+
+      def test_logo_cloud_filters_non_image_slides
+        render_inline(Component.new(slides: sample_slides, variant: :logo_cloud, loop: false))
+
+        assert_selector "div[data-flat-pack--carousel-target='slide']", count: 1, visible: :all
+      end
+
+      def test_logo_cloud_renders_responsive_logo_classes_and_disables_lightbox
+        render_inline(
+          Component.new(
+            slides: [
+              {type: :image, src: "https://images.example.com/a.svg", alt: "A"},
+              {type: :image, src: "https://images.example.com/b.svg", alt: "B"},
+              {type: :image, src: "https://images.example.com/c.svg", alt: "C"},
+              {type: :image, src: "https://images.example.com/d.svg", alt: "D"}
+            ],
+            variant: :logo_cloud,
+            logo_grayscale: true,
+            logo_opacity: 0.8
+          )
+        )
+
+        slide = page.find("div[data-flat-pack--carousel-target='slide']", match: :first, visible: :all)
+        assert_includes slide[:class], "basis-1/3"
+        assert_includes slide[:class], "lg:basis-1/5"
+
+        logo = page.find("div[data-flat-pack--carousel-target='slide'] img", match: :first, visible: :all)
+        assert_includes logo[:class], "object-contain"
+        assert_includes logo[:class], "grayscale"
+        assert_includes logo[:style], "opacity: 0.8"
+
+        assert_no_selector "button[data-flat-pack--carousel-target='lightboxToggle']", visible: :visible
       end
 
       def test_adds_drag_and_touch_swipe_viewport_affordances_when_enabled
@@ -291,6 +373,10 @@ module FlatPack
 
         assert_raises(ArgumentError) do
           Component.new(slides: sample_slides, aspect_ratio: "wide")
+        end
+
+        assert_raises(ArgumentError) do
+          Component.new(slides: sample_slides, variant: :logo_cloud, transition: :fade)
         end
       end
 

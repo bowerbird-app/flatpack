@@ -76,3 +76,4 @@ EngineLoadTest: test_FlatPack_engine_is_mounted
 EngineLoadTest: test_FlatPack_module_is_accessible
 --------------------------------------------------
   [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+Generating image variants require the image_processing gem. Please add `gem "image_processing", "~> 1.2"` to your Gemfile or set `config.active_storage.variant_processor = :disabled`.

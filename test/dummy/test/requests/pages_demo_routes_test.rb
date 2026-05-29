@@ -114,6 +114,16 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "flat-pack--table-sortable:saved"
   end
 
+  test "tables basic demo renders filter and search control sections" do
+    get "/demo/tables/basic"
+
+    assert_response :success
+    assert_includes response.body, "Table with Generic Filter Controls"
+    assert_includes response.body, "Single Outer Frame with Multiple Table Controls"
+    assert_includes response.body, "Search table rows..."
+    assert_includes response.body, "Search both tables..."
+  end
+
   test "admin demo renders pagination" do
     get "/demo/admin"
 

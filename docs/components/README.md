@@ -23,6 +23,7 @@ button_group | FlatPack::ButtonGroup::Component | docs/components/button-group.m
 card | FlatPack::Card::Component | docs/components/card.md
 carousel | FlatPack::Carousel::Component | docs/components/carousel.md
 chart | FlatPack::Chart::Component | docs/components/charts.md
+chart_buttons | FlatPack::ChartButtons::Component | docs/components/chart-buttons.md
 chat | FlatPack::Chat::Panel::Component | docs/components/chat.md
 chips | FlatPack::Chip::Component | docs/components/chips.md
 code_block | FlatPack::CodeBlock::Component | docs/components/code-block.md

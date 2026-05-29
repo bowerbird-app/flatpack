@@ -20,7 +20,7 @@ module FlatPack
         assert_selector "button svg[data-flat-pack--icon-name-value='chevron-left']"
       end
 
-      def test_hides_close_and_add_actions_when_urls_not_provided
+      def test_hides_anchor_and_right_actions_when_not_provided
         render_inline(Component.new)
 
         assert_selector "button", count: 1
@@ -28,32 +28,37 @@ module FlatPack
         refute_selector "a[aria-label='Add']"
       end
 
-      def test_renders_close_action_link_when_close_url_is_provided
-        render_inline(Component.new(close_url: "/demo"))
+      def test_renders_anchor_action_link_when_anchor_url_is_provided
+        render_inline(Component.new(anchor_url: "/demo"))
 
         assert_selector "a[href='/demo'][aria-label='Close']"
         assert_selector "a[href='/demo'] svg[data-flat-pack--icon-name-value='x-mark']"
       end
 
-      def test_renders_add_action_link_when_add_url_is_provided
-        render_inline(Component.new(add_url: "/demo/forms"))
+      def test_renders_right_slot_content_when_provided
+        render_inline(Component.new) do |component|
+          component.right_slot do
+            '<a href="/demo/forms" aria-label="Add"><span data-flat-pack--icon-name-value="plus"></span></a>'.html_safe
+          end
+        end
 
         assert_selector "a[href='/demo/forms'][aria-label='Add']"
-        assert_selector "a[href='/demo/forms'] svg[data-flat-pack--icon-name-value='plus']"
+        assert_selector "a[href='/demo/forms'] span[data-flat-pack--icon-name-value='plus']"
       end
 
       def test_renders_custom_icons_and_labels
         render_inline(Component.new(
-          close_url: "/demo",
-          close_icon: "trash",
-          close_label: "Dismiss",
-          add_url: "/demo/forms",
-          add_icon: "check",
-          add_label: "Confirm"
-        ))
+          anchor_url: "/demo",
+          anchor_icon: "trash",
+          anchor_label: "Dismiss"
+        )) do |component|
+          component.right_slot do
+            '<a href="/demo/forms" aria-label="Confirm"><span data-flat-pack--icon-name-value="check"></span></a>'.html_safe
+          end
+        end
 
         assert_selector "a[href='/demo'][aria-label='Dismiss'] svg[data-flat-pack--icon-name-value='trash']"
-        assert_selector "a[href='/demo/forms'][aria-label='Confirm'] svg[data-flat-pack--icon-name-value='check']"
+        assert_selector "a[href='/demo/forms'][aria-label='Confirm'] span[data-flat-pack--icon-name-value='check']"
       end
 
       def test_applies_custom_wrapper_class

@@ -18,13 +18,20 @@ Use Carousel when users need to browse a sequence of visual or rich-content slid
 | `thumbs_position` | Symbol | `:bottom` | no | Thumbnail row position: `:top`, `:bottom`. |
 | `thumbs_alignment` | Symbol | `:center` | no | Thumbnail row alignment: `:start`, `:center`, `:end`. |
 | `show_indicators` | Boolean | `true` | no | Render indicator dots. |
-| `show_controls` | Boolean | `true` | no | Render previous/next controls. |
-| `autoplay` | Boolean | `false` | no | Automatically advance slides. |
+| `show_controls` | Boolean | `true` (`:default`), `false` (`:logo_cloud`) | no | Render previous/next controls. |
+| `autoplay` | Boolean | `false` (`:default`), `true` (`:logo_cloud`) | no | Automatically advance slides. |
 | `autoplay_interval_ms` | Integer | `5000` | no | Autoplay interval in milliseconds. |
 | `pause_on_hover` | Boolean | `true` | no | Pause autoplay while pointer hovers. |
 | `pause_on_focus` | Boolean | `true` | no | Pause autoplay while keyboard focus is inside. |
 | `loop` | Boolean | `true` | no | Wrap from last slide to first slide. |
 | `transition` | Symbol | `:slide` | no | Transition style: `:slide`, `:fade`. |
+| `variant` | Symbol | `:default` | no | Rendering mode: `:default`, `:logo_cloud` (image-only multi-item row). |
+| `logo_items_per_view_desktop` | Integer | `5` | no | Logos visible at desktop width when `variant: :logo_cloud`. |
+| `logo_items_per_view_tablet` | Integer | `3` | no | Logos visible at tablet width when `variant: :logo_cloud`. |
+| `logo_items_per_view_mobile` | Integer | `3` | no | Logos visible at mobile width when `variant: :logo_cloud`. |
+| `logo_grayscale` | Boolean | `true` | no | Apply grayscale filter to logo images in logo-cloud mode. |
+| `logo_opacity` | Float | `1.0` | no | Opacity for logo images in logo-cloud mode (`0.0..1.0`). |
+| `logo_wrapper_background` | String | `nil` | no | Reserved for compatibility (sanitized input); current logo-cloud rendering keeps wrapper/viewport transparent. |
 | `aspect_ratio` | String | `"16/9"` | no | CSS aspect ratio (`"16/9"` format). |
 | `responsive` | Boolean | `true` | no | Keep container responsive width behavior. |
 | `touch_swipe` | Boolean | `true` | no | Enable pointer swipe navigation. |
@@ -39,6 +46,14 @@ None.
 ## Variants
 - Transition: `:slide`, `:fade`.
 - Caption mode: `:below`, `:overlay`.
+- Carousel variant: `:default`, `:logo_cloud`.
+
+### Logo Cloud Variant Notes
+- Shows multiple logos in one row using responsive counts.
+- Default count targets: desktop `5`, tablet `3`, mobile `3`.
+- Logo-cloud mode only renders image slides (video/html slide payloads are ignored).
+- Fade transition is not supported in logo-cloud mode.
+- Wrapper and viewport use no extra margin/padding and remain transparent in logo-cloud mode.
 
 ## Interactive Demo
 - `/demo/carousel`
@@ -57,6 +72,22 @@ The dummy app consolidates carousel behavior (basic, autoplay, thumbnails, trans
   autoplay: true,
   loop: true,
   transition: :fade
+) %>
+```
+
+## Logo Cloud Example
+```erb
+<%= render FlatPack::Carousel::Component.new(
+  slides: @brand_logos,
+  variant: :logo_cloud,
+  loop: true,
+  logo_items_per_view_desktop: 5,
+  logo_items_per_view_tablet: 3,
+  logo_items_per_view_mobile: 3,
+  logo_grayscale: true,
+  logo_opacity: 0.8,
+  show_indicators: false,
+  show_captions: false
 ) %>
 ```
 

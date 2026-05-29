@@ -45,6 +45,187 @@
 </section>
 
 <section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Table with Generic Filter Controls",
+    anchor_link: true,
+    subtitle: "Use the same sibling control-surface pattern as charts for table filtering and search."
+  ) %>
+
+  <p class="text-[var(--surface-muted-content-color)] mb-4">
+    This demo keeps filter and search state in URL params and refreshes the table via Turbo Frames.
+  </p>
+
+  <%= turbo_frame_tag "basic-table-generic-filter-frame" do %>
+    <% selected_filter = @table_filter_definitions.fetch(@table_filter_field) %>
+
+    <%= render FlatPack::ChartButtons::Component.new(turbo_frame: "basic-table-generic-filter-frame") do |controls| %>
+      <% controls.button(
+        text: "All",
+        url: demo_tables_basic_path(filter_field: @table_filter_field, filter_value: "all", q: @table_search_query),
+        selected: @table_filter_value == "all"
+      ) %>
+
+      <% controls.dropdown(
+        text: "Filter: #{selected_filter.fetch(:label)}",
+        options: @table_filter_definitions.map { |field, definition|
+          {
+            text: definition.fetch(:label),
+            url: demo_tables_basic_path(filter_field: field, filter_value: "all", q: @table_search_query),
+            selected: @table_filter_field == field
+          }
+        }
+      ) %>
+
+      <% controls.dropdown(
+        text: "Value: #{selected_filter.fetch(:values).fetch(@table_filter_value)}",
+        options: selected_filter.fetch(:values).map { |value_key, value_label|
+          {
+            text: value_label,
+            url: demo_tables_basic_path(filter_field: @table_filter_field, filter_value: value_key, q: @table_search_query),
+            selected: @table_filter_value == value_key
+          }
+        }
+      ) %>
+
+      <% controls.control do %>
+        <%= form_with(
+          url: demo_tables_basic_path,
+          method: :get,
+          class: "inline-flex items-center",
+          data: {
+            turbo_frame: "basic-table-generic-filter-frame",
+            controller: "flat-pack--auto-submit",
+            action: "input->flat-pack--auto-submit#queueSubmit",
+            flat_pack__auto_submit_delay_value: 300
+          }
+        ) do %>
+          <%= hidden_field_tag :filter_field, @table_filter_field %>
+          <%= hidden_field_tag :filter_value, @table_filter_value %>
+          <%= render FlatPack::Search::Component.new(
+            name: "q",
+            value: @table_search_query,
+            placeholder: "Search table rows...",
+            max_width: :none,
+            class: "w-56"
+          ) %>
+        <% end %>
+      <% end %>
+
+      <% controls.control do %>
+        <%= render FlatPack::Button::Component.new(
+          text: "Reset",
+          style: :ghost,
+          size: :sm,
+          url: demo_tables_basic_path,
+          data: {
+            turbo_frame: "basic-table-generic-filter-frame",
+            turbo_prefetch: false
+          }
+        ) %>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::Table::Component.new(data: @table_filtered_users.first(10)) do |table| %>
+      <% table.column(title: "ID", html: ->(user) { user.id.to_s }) %>
+      <% table.column(title: "Name", html: ->(user) { user.name }) %>
+      <% table.column(title: "Email", html: ->(user) { user.email }) %>
+      <% table.column(title: "Category", html: ->(user) { user.category.to_s.titleize }) %>
+      <% table.column(title: "Status", html: ->(user) { render FlatPack::Badge::Component.new(text: user.status.capitalize, size: :sm) }) %>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Single Outer Frame with Multiple Table Controls",
+    anchor_link: true,
+    subtitle: "One outer frame contains multiple control groups, each targeting its own inner table frame."
+  ) %>
+
+  <p class="text-[var(--surface-muted-content-color)] mb-4">
+    Search applies to both tables, while each filter group independently targets table 1 or table 2.
+  </p>
+
+  <%= turbo_frame_tag "basic-table-multi-frame" do %>
+    <div class="space-y-4">
+      <%= render FlatPack::ChartButtons::Component.new(
+        turbo_frame: "basic-table-multi-frame",
+        margin_bottom: nil
+      ) do |controls| %>
+        <% controls.control do %>
+          <%= form_with(
+            url: demo_tables_basic_path,
+            method: :get,
+            class: "inline-flex items-center",
+            data: {
+              turbo_frame: "basic-table-multi-frame",
+              controller: "flat-pack--auto-submit",
+              action: "input->flat-pack--auto-submit#queueSubmit",
+              flat_pack__auto_submit_delay_value: 300
+            }
+          ) do %>
+            <%= hidden_field_tag :table_1_category, @table_multi_category_value %>
+            <%= hidden_field_tag :table_2_status, @table_multi_status_value %>
+            <%= render FlatPack::Search::Component.new(
+              name: "table_multi_q",
+              value: @table_multi_search_query,
+              placeholder: "Search both tables...",
+              max_width: :none,
+              class: "w-56"
+            ) %>
+          <% end %>
+        <% end %>
+
+        <% controls.button(
+          text: "Table 1 All",
+          url: demo_tables_basic_path(table_1_category: "all", table_2_status: @table_multi_status_value, table_multi_q: @table_multi_search_query),
+          selected: @table_multi_category_value == "all"
+        ) %>
+        <% controls.button(
+          text: "Table 1 Technology",
+          url: demo_tables_basic_path(table_1_category: "technology", table_2_status: @table_multi_status_value, table_multi_q: @table_multi_search_query),
+          selected: @table_multi_category_value == "technology"
+        ) %>
+        <% controls.button(
+          text: "Table 1 Business",
+          url: demo_tables_basic_path(table_1_category: "business", table_2_status: @table_multi_status_value, table_multi_q: @table_multi_search_query),
+          selected: @table_multi_category_value == "business"
+        ) %>
+
+        <% controls.dropdown(
+          text: "Table 2 Status",
+          options: @table_filter_definitions.fetch("status").fetch(:values).map { |value_key, value_label|
+            {
+              text: value_label,
+              url: demo_tables_basic_path(table_1_category: @table_multi_category_value, table_2_status: value_key, table_multi_q: @table_multi_search_query),
+              selected: @table_multi_status_value == value_key
+            }
+          }
+        ) %>
+      <% end %>
+
+      <%= turbo_frame_tag "basic-table-1-panel", class: "block mb-4" do %>
+        <%= render FlatPack::Table::Component.new(data: @table_multi_table_1_users.first(8)) do |table| %>
+          <% table.column(title: "ID", html: ->(user) { user.id.to_s }) %>
+          <% table.column(title: "Name", html: ->(user) { user.name }) %>
+          <% table.column(title: "Category", html: ->(user) { user.category.to_s.titleize }) %>
+          <% table.column(title: "Email", html: ->(user) { user.email }) %>
+        <% end %>
+      <% end %>
+
+      <%= turbo_frame_tag "basic-table-2-panel", class: "block mb-4" do %>
+        <%= render FlatPack::Table::Component.new(data: @table_multi_table_2_users.first(8)) do |table| %>
+          <% table.column(title: "ID", html: ->(user) { user.id.to_s }) %>
+          <% table.column(title: "Name", html: ->(user) { user.name }) %>
+          <% table.column(title: "Status", html: ->(user) { render FlatPack::Badge::Component.new(text: user.status.capitalize, size: :sm) }) %>
+          <% table.column(title: "Views", html: ->(user) { number_with_delimiter(user.views_count) }) %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+</section>
+
+<section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Formatted Columns", anchor_link: true, subtitle: "Use lambda renderers for custom output.") %>
   <%= render FlatPack::Table::Component.new(data: @users.first(5)) do |table| %>
     <% table.column(title: "Name", html: ->(user) { "<strong class=\"text-[var(--color-primary)]\">#{user.name}</strong>".html_safe }) %>

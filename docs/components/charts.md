@@ -5,6 +5,7 @@ Render ApexCharts-based visualizations with FlatPack defaults and optional card 
 
 ## When to use
 Use this for dashboard and analytics charts when data is available in ApexCharts-compatible series format.
+Use `FlatPack::ChartButtons::Component` as a sibling when you need reusable Turbo Frame filter controls outside the chart card header.
 
 ## Class
 - `FlatPack::Chart::Component`

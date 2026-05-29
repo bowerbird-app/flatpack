@@ -1,6 +1,6 @@
 <%= render FlatPack::PageTitle::Component.new(
   title: "Page Nav Component",
-  subtitle: "Compact icon-only page navigation with browser back, optional close link, and optional add link."
+  subtitle: "Compact icon-only page navigation with browser back, optional anchor link, and optional right slot action."
 ) %>
 
 <%= render "pages/component_method_variables_table", component: :page_nav %>
@@ -18,35 +18,105 @@
 </section>
 
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "With Close Action", anchor_link: true, subtitle: "Middle icon appears only when close_url is provided.") %>
+  <%= render FlatPack::SectionTitle::Component.new(title: "With Anchor Action", anchor_link: true, subtitle: "Middle icon appears only when anchor_url is provided.") %>
   <div class="mb-4">
     <%= render FlatPack::PageNav::Component.new(
-      close_url: demo_path
+      anchor_url: demo_path
     ) %>
   </div>
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE')
       &lt;%= render FlatPack::PageNav::Component.new(
-        close_url: demo_path
+        anchor_url: demo_path
       ) %&gt;
     CODE
   ) %>
 </section>
 
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "With Close and Add", anchor_link: true, subtitle: "Line divider fills available space and the right icon links to add flow.") %>
+  <%= render FlatPack::SectionTitle::Component.new(title: "With Anchor and Right Slot", anchor_link: true, subtitle: "Line divider fills available space and custom right_slot content drives add flow.") %>
   <div class="mb-4">
     <%= render FlatPack::PageNav::Component.new(
-      close_url: demo_path,
-      add_url: demo_forms_path
-    ) %>
+      anchor_url: demo_path
+    ) do |component| %>
+      <% component.right_slot do %>
+        <%= render FlatPack::Button::Component.new(
+          icon: "plus",
+          icon_only: true,
+          style: :secondary,
+          size: :md,
+          url: demo_forms_path,
+          aria: {label: "Add"}
+        ) %>
+      <% end %>
+    <% end %>
   </div>
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE')
       &lt;%= render FlatPack::PageNav::Component.new(
-        close_url: demo_path,
-        add_url: demo_forms_path
-      ) %&gt;
+        anchor_url: demo_path
+      ) do |component| %&gt;
+        &lt;% component.right_slot do %&gt;
+          &lt;%= render FlatPack::Button::Component.new(
+            icon: "plus",
+            icon_only: true,
+            style: :secondary,
+            size: :md,
+            url: demo_forms_path,
+            aria: {label: "Add"}
+          ) %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "With Right Slot Dropdown", anchor_link: true, subtitle: "Use right_slot with a dropdown trigger when multiple actions belong in the nav." ) %>
+  <div class="mb-4">
+    <%= render FlatPack::PageNav::Component.new(
+      anchor_url: demo_path
+    ) do |component| %>
+      <% component.right_slot do %>
+        <%= render FlatPack::Button::Dropdown::Component.new(
+          text: "",
+          icon: "ellipsis-vertical",
+          style: :ghost,
+          size: :sm,
+          show_chevron: false,
+          trigger_attributes: {
+            title: "More actions",
+            aria: {label: "More actions"}
+          }
+        ) do |dropdown| %>
+          <% dropdown.menu_item(text: "Edit", href: demo_forms_path) %>
+          <% dropdown.menu_item(text: "Archive", href: demo_path) %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::PageNav::Component.new(
+        anchor_url: demo_path
+      ) do |component| %&gt;
+        &lt;% component.right_slot do %&gt;
+          &lt;%= render FlatPack::Button::Dropdown::Component.new(
+            text: "",
+            icon: "ellipsis-vertical",
+            style: :ghost,
+            size: :sm,
+            show_chevron: false,
+            trigger_attributes: {
+              title: "More actions",
+              aria: {label: "More actions"}
+            }
+          ) do |dropdown| %&gt;
+            &lt;% dropdown.menu_item(text: "Edit", href: demo_forms_path) %&gt;
+            &lt;% dropdown.menu_item(text: "Archive", href: demo_path) %&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
     CODE
   ) %>
 </section>
@@ -57,32 +127,46 @@
     <%= render FlatPack::PageNav::Component.new(
       back_icon: "arrow-left",
       back_label: "Back to previous page",
-      close_url: demo_path,
-      close_icon: "trash",
-      close_label: "Discard",
-      add_url: demo_forms_path,
-      add_icon: "check",
-      add_label: "Create",
+      anchor_url: demo_path,
+      anchor_icon: "trash",
+      anchor_label: "Discard",
       back_style: :ghost,
-      close_style: :ghost,
-      add_style: :primary
-    ) %>
+      anchor_style: :ghost
+    ) do |component| %>
+      <% component.right_slot do %>
+        <%= render FlatPack::Button::Component.new(
+          icon: "check",
+          icon_only: true,
+          style: :primary,
+          size: :md,
+          url: demo_forms_path,
+          aria: {label: "Create"}
+        ) %>
+      <% end %>
+    <% end %>
   </div>
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE')
       &lt;%= render FlatPack::PageNav::Component.new(
         back_icon: "arrow-left",
         back_label: "Back to previous page",
-        close_url: demo_path,
-        close_icon: "trash",
-        close_label: "Discard",
-        add_url: demo_forms_path,
-        add_icon: "check",
-        add_label: "Create",
+        anchor_url: demo_path,
+        anchor_icon: "trash",
+        anchor_label: "Discard",
         back_style: :ghost,
-        close_style: :ghost,
-        add_style: :primary
-      ) %&gt;
+        anchor_style: :ghost
+      ) do |component| %&gt;
+        &lt;% component.right_slot do %&gt;
+          &lt;%= render FlatPack::Button::Component.new(
+            icon: "check",
+            icon_only: true,
+            style: :primary,
+            size: :md,
+            url: demo_forms_path,
+            aria: {label: "Create"}
+          ) %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
     CODE
   ) %>
 </section>

@@ -69,6 +69,7 @@ class PagesController < ApplicationController
   UNCACHED_ACTIONS = %i[
     picker search_results picker_results pagination_infinite charts
     comments admin chat_demo chips chip_add_callback chip_remove_callback
+    tables_basic tables_sortable
   ].freeze
 
   before_action :serve_from_page_cache, except: UNCACHED_ACTIONS
@@ -509,21 +510,97 @@ class PagesController < ApplicationController
   end
 
   def charts
-    @chart_filter_period = (params[:period] == "month") ? "month" : "day"
-    @chart_filter_day_categories = %w[Mon Tue Wed Thu Fri Sat Sun]
-    @chart_filter_month_categories = %w[Jan Feb Mar Apr May Jun Jul Aug]
-    @chart_filter_day_series = [{name: "Users", data: [42, 58, 50, 73, 88, 95, 90]}]
-    @chart_filter_month_series = [{name: "Users", data: [320, 410, 460, 520, 610, 680, 760, 830]}]
+    chart_filter_sets = {
+      "day" => {
+        categories: %w[Mon Tue Wed Thu Fri Sat Sun],
+        users_data: [42, 58, 50, 73, 88, 95, 90],
+        baseline_data: [36, 49, 44, 64, 79, 87, 84],
+        subtitle: "Day view"
+      },
+      "week" => {
+        categories: %w[W1 W2 W3 W4 W5 W6 W7 W8],
+        users_data: [210, 245, 278, 301, 330, 360, 390, 420],
+        baseline_data: [198, 226, 253, 281, 305, 331, 357, 388],
+        subtitle: "Week view"
+      },
+      "month" => {
+        categories: %w[Jan Feb Mar Apr May Jun Jul Aug],
+        users_data: [320, 410, 460, 520, 610, 680, 760, 830],
+        baseline_data: [305, 380, 433, 491, 567, 634, 711, 780],
+        subtitle: "Month view"
+      },
+      "year" => {
+        categories: %w[2019 2020 2021 2022 2023 2024 2025 2026],
+        users_data: [1200, 1360, 1490, 1640, 1800, 1970, 2150, 2360],
+        baseline_data: [1110, 1265, 1388, 1535, 1674, 1840, 2006, 2192],
+        subtitle: "Year view"
+      }
+    }
 
-    if @chart_filter_period == "month"
-      @chart_filter_series = @chart_filter_month_series
-      @chart_filter_categories = @chart_filter_month_categories
-      @chart_filter_subtitle = "Month view"
-    else
-      @chart_filter_series = @chart_filter_day_series
-      @chart_filter_categories = @chart_filter_day_categories
-      @chart_filter_subtitle = "Day view"
+    requested_period = params[:period].to_s
+    @chart_filter_period = chart_filter_sets.key?(requested_period) ? requested_period : "day"
+    @chart_filter_compare = params[:compare] == "1"
+
+    selected_set = chart_filter_sets.fetch(@chart_filter_period)
+    @chart_filter_categories = selected_set.fetch(:categories)
+    @chart_filter_series = [{name: "Users", data: selected_set.fetch(:users_data)}]
+    @chart_filter_subtitle = selected_set.fetch(:subtitle)
+
+    if @chart_filter_compare
+      @chart_filter_series << {name: "Baseline", data: selected_set.fetch(:baseline_data)}
+      @chart_filter_subtitle = "#{@chart_filter_subtitle} + baseline"
     end
+
+    chart_1_sets = {
+      "day" => {
+        categories: %w[Mon Tue Wed Thu Fri Sat Sun],
+        series: [{name: "Signups", data: [18, 22, 27, 31, 34, 30, 28]}],
+        subtitle: "Chart 1 (day)"
+      },
+      "month" => {
+        categories: %w[Jan Feb Mar Apr May Jun Jul Aug],
+        series: [{name: "Signups", data: [96, 112, 124, 140, 152, 167, 181, 195]}],
+        subtitle: "Chart 1 (month)"
+      }
+    }
+
+    chart_2_sets = {
+      "week" => {
+        categories: %w[W1 W2 W3 W4 W5 W6],
+        series: [{name: "Revenue", data: [320, 348, 361, 389, 410, 438]}],
+        subtitle: "Chart 2 (week)"
+      },
+      "month" => {
+        categories: %w[Jan Feb Mar Apr May Jun Jul Aug],
+        series: [{name: "Revenue", data: [1180, 1260, 1355, 1472, 1568, 1641, 1733, 1820]}],
+        subtitle: "Chart 2 (month)"
+      },
+      "year" => {
+        categories: %w[2019 2020 2021 2022 2023 2024],
+        series: [{name: "Revenue", data: [12_400, 13_050, 13_980, 15_110, 16_420, 17_360]}],
+        subtitle: "Chart 2 (year)"
+      }
+    }
+
+    requested_chart_1_period = params[:chart_1_period].to_s
+    requested_chart_2_period = params[:chart_2_period].to_s
+
+    @chart_multi_chart_1_period = chart_1_sets.key?(requested_chart_1_period) ? requested_chart_1_period : "day"
+    @chart_multi_chart_2_period = chart_2_sets.key?(requested_chart_2_period) ? requested_chart_2_period : "week"
+
+    selected_chart_1_set = chart_1_sets.fetch(@chart_multi_chart_1_period)
+    selected_chart_2_set = chart_2_sets.fetch(@chart_multi_chart_2_period)
+
+    @chart_multi_chart_1_categories = selected_chart_1_set.fetch(:categories)
+    @chart_multi_chart_1_series = selected_chart_1_set.fetch(:series)
+    @chart_multi_chart_1_subtitle = selected_chart_1_set.fetch(:subtitle)
+
+    @chart_multi_chart_2_categories = selected_chart_2_set.fetch(:categories)
+    @chart_multi_chart_2_series = selected_chart_2_set.fetch(:series)
+    @chart_multi_chart_2_subtitle = selected_chart_2_set.fetch(:subtitle)
+
+    @chart_multi_chart_3_categories = %w[Q1 Q2 Q3 Q4]
+    @chart_multi_chart_3_series = [{name: "NPS", data: [41, 45, 47, 50]}]
 
     @sales_data = [
       {name: "Jan", value: 30},
@@ -645,11 +722,13 @@ class PagesController < ApplicationController
   def carousel
     @carousel_slides = carousel_demo_slides
     @carousel_single_slide = carousel_demo_single_slide
+    @carousel_logo_cloud_slides = carousel_demo_logo_cloud_slides
     @carousel_notes = [
       "Uses FlatPack::Carousel::Component with image, video, and component-rendered HTML slides.",
       "Demonstrates autoplay, loop, indicators, controls, and thumbnail navigation.",
       "Image slides enable lightbox by default and can opt out per slide with lightbox: false.",
-      "Uses secure defaults for rich content and supports keyboard plus touch interactions."
+      "Uses secure defaults for rich content and supports keyboard plus touch interactions.",
+      "Includes logo-cloud variant with multi-item responsive layout (5 desktop / 3 tablet / 3 mobile)."
     ]
   end
 
@@ -1529,8 +1608,115 @@ class PagesController < ApplicationController
     end
 
     @sorted_users = sort_users(@users.dup, params[:sort], params[:direction])
+    load_table_generic_filter_demo_data
+    load_table_multi_controls_demo_data
     @demo_table_rows = demo_table_rows_table_exists? ? DemoTableRow.where(list_key: DemoTableRow::DEFAULT_LIST_KEY).ordered : []
     @demo_table_version = demo_table_rows_table_exists? ? demo_table_version : "0"
+  end
+
+  def load_table_generic_filter_demo_data
+    @table_filter_definitions = table_filter_definitions
+    @table_filter_field = if @table_filter_definitions.key?(params[:filter_field].to_s)
+      params[:filter_field].to_s
+    else
+      "category"
+    end
+
+    selected_values = @table_filter_definitions.fetch(@table_filter_field).fetch(:values)
+    requested_filter_value = params[:filter_value].to_s
+    @table_filter_value = selected_values.key?(requested_filter_value) ? requested_filter_value : "all"
+    @table_search_query = params[:q].to_s.strip
+
+    @table_filtered_users = apply_table_filter_and_search(
+      @users,
+      filter_field: @table_filter_field,
+      filter_value: @table_filter_value,
+      query: @table_search_query
+    )
+  end
+
+  def load_table_multi_controls_demo_data
+    @table_multi_category_value = table_category_values.key?(params[:table_1_category].to_s) ? params[:table_1_category].to_s : "all"
+    @table_multi_status_value = table_status_values.key?(params[:table_2_status].to_s) ? params[:table_2_status].to_s : "all"
+    @table_multi_search_query = params[:table_multi_q].to_s.strip
+
+    @table_multi_table_1_users = apply_table_filter_and_search(
+      @users,
+      filter_field: "category",
+      filter_value: @table_multi_category_value,
+      query: @table_multi_search_query
+    )
+
+    @table_multi_table_2_users = apply_table_filter_and_search(
+      @users,
+      filter_field: "status",
+      filter_value: @table_multi_status_value,
+      query: @table_multi_search_query
+    )
+  end
+
+  def table_filter_definitions
+    {
+      "category" => {
+        label: "Category",
+        values: table_category_values
+      },
+      "status" => {
+        label: "Status",
+        values: table_status_values
+      }
+    }
+  end
+
+  def table_category_values
+    {
+      "all" => "All",
+      "technology" => "Technology",
+      "business" => "Business",
+      "marketing" => "Marketing",
+      "design" => "Design"
+    }
+  end
+
+  def table_status_values
+    {
+      "all" => "All",
+      "active" => "Active",
+      "inactive" => "Inactive",
+      "pending" => "Pending"
+    }
+  end
+
+  def apply_table_filter_and_search(users, filter_field:, filter_value:, query:)
+    filtered_users = users
+
+    if filter_value != "all"
+      filtered_users = filtered_users.select { |user| table_filter_match?(user, field: filter_field, value: filter_value) }
+    end
+
+    return filtered_users if query.blank?
+
+    normalized_query = query.downcase
+    filtered_users.select do |user|
+      [
+        user.id.to_s,
+        user.name.to_s,
+        user.email.to_s,
+        user.category.to_s,
+        user.status.to_s
+      ].any? { |candidate| candidate.downcase.include?(normalized_query) }
+    end
+  end
+
+  def table_filter_match?(user, field:, value:)
+    case field
+    when "category"
+      user.category.to_s.downcase == value
+    when "status"
+      user.status.to_s.downcase == value
+    else
+      true
+    end
   end
 
   def picker_item_payload(item)
@@ -1604,6 +1790,21 @@ class PagesController < ApplicationController
         caption: "Single slide example with lightbox enabled",
         lightbox: true
       }
+    ]
+  end
+
+  def carousel_demo_logo_cloud_slides
+    [
+      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/github.svg", alt: "GitHub"},
+      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/gitlab.svg", alt: "GitLab"},
+      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/figma.svg", alt: "Figma"},
+      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/notion.svg", alt: "Notion"},
+      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/linear.svg", alt: "Linear"},
+      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/vercel.svg", alt: "Vercel"},
+      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/netlify.svg", alt: "Netlify"},
+      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/stripe.svg", alt: "Stripe"},
+      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/postgresql.svg", alt: "PostgreSQL"},
+      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/docker.svg", alt: "Docker"}
     ]
   end
 

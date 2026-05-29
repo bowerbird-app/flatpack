@@ -11,7 +11,12 @@ export default class extends Controller {
     pauseOnHover: { type: Boolean, default: true },
     pauseOnFocus: { type: Boolean, default: true },
     touchSwipe: { type: Boolean, default: true },
-    transition: { type: String, default: "slide" }
+    transition: { type: String, default: "slide" },
+    variant: { type: String, default: "default" },
+    logoItemsPerViewMobile: { type: Number, default: 3 },
+    logoItemsPerViewTablet: { type: Number, default: 3 },
+    logoItemsPerViewDesktop: { type: Number, default: 5 },
+    logicalSlideCount: { type: Number, default: 0 }
   }
 
   connect() {
@@ -27,6 +32,7 @@ export default class extends Controller {
 
     this.#bindInteropEvents()
     this.#bindViewportInteractions()
+    this.#bindResizeListener()
     this.#exposeApi()
 
     this.render({ emit: false })
@@ -42,6 +48,7 @@ export default class extends Controller {
     this.#resetPointerDragState()
     this.#unbindInteropEvents()
     this.#unbindViewportInteractions()
+    this.#unbindResizeListener()
 
     if (this.element.flatPackCarousel) {
       delete this.element.flatPackCarousel
@@ -49,10 +56,20 @@ export default class extends Controller {
   }
 
   prev() {
+    if (this.#hasLogoLoopClones() && this.currentIndex === 0) {
+      this.goToIndex(this.#loopBoundaryIndex() - 1, { trigger: "prev" })
+      return
+    }
+
     this.goToIndex(this.currentIndex - 1, { trigger: "prev" })
   }
 
   next() {
+    if (this.#hasLogoLoopClones() && this.currentIndex >= this.#loopBoundaryIndex()) {
+      this.currentIndex = 0
+      this.render({ emit: false, skipAnimation: true })
+    }
+
     this.goToIndex(this.currentIndex + 1, { trigger: "next" })
   }
 
@@ -98,7 +115,7 @@ export default class extends Controller {
   }
 
   refresh() {
-    this.currentIndex = this.#clampIndex(this.currentIndex)
+    this.currentIndex = this.#clampIndex(this.currentIndex, this.#currentPerView())
     this.render({ emit: false })
   }
 
@@ -147,6 +164,7 @@ export default class extends Controller {
 
   handleKeydown(event) {
     const isRtl = this.#isRtl()
+    const perView = this.#currentPerView()
 
     switch (event.key) {
       case "ArrowLeft":
@@ -163,7 +181,7 @@ export default class extends Controller {
         break
       case "End":
         event.preventDefault()
-        this.goToIndex(this.slideTargets.length - 1, { trigger: "end" })
+        this.goToIndex(this.#maxStartIndex(perView), { trigger: "end" })
         break
       case " ":
       case "Spacebar":
@@ -181,9 +199,15 @@ export default class extends Controller {
 
   render(options = {}) {
     const useFade = this.transitionValue === "fade"
+    const perView = this.#currentPerView()
+    const skipAnimation = options.skipAnimation === true
+    this.currentIndex = this.#clampIndex(this.currentIndex, perView)
 
     this.slideTargets.forEach((slide, index) => {
       const isActive = index === this.currentIndex
+      const isVisibleRange = this.#isLogoCloudVariant()
+        ? index >= this.currentIndex && index < this.currentIndex + perView
+        : isActive
 
       if (useFade) {
         slide.hidden = false
@@ -194,11 +218,23 @@ export default class extends Controller {
         slide.hidden = false
       }
 
-      slide.setAttribute("aria-hidden", (!isActive).toString())
+      slide.setAttribute("aria-hidden", (!isVisibleRange).toString())
     })
 
     if (!useFade && this.hasFrameTarget) {
-      this.frameTarget.style.transform = `translate3d(-${this.currentIndex * 100}%, 0, 0)`
+      const shiftPercent = this.#isLogoCloudVariant()
+        ? this.currentIndex * (100 / perView)
+        : this.currentIndex * 100
+
+      if (skipAnimation) {
+        const previousTransition = this.frameTarget.style.transition
+        this.frameTarget.style.transition = "none"
+        this.frameTarget.style.transform = `translate3d(-${shiftPercent}%, 0, 0)`
+        this.frameTarget.offsetHeight // force style flush for transition reset
+        this.frameTarget.style.transition = previousTransition
+      } else {
+        this.frameTarget.style.transform = `translate3d(-${shiftPercent}%, 0, 0)`
+      }
     }
 
     this.indicatorTargets.forEach((indicator, index) => {
@@ -218,7 +254,12 @@ export default class extends Controller {
     })
 
     if (this.hasCounterTarget) {
-      this.counterTarget.textContent = `${this.currentIndex + 1} / ${this.slideTargets.length}`
+      if (this.#isLogoCloudVariant()) {
+        const endIndex = Math.min(this.currentIndex + perView, this.slideTargets.length)
+        this.counterTarget.textContent = `${this.currentIndex + 1}-${endIndex} / ${this.slideTargets.length}`
+      } else {
+        this.counterTarget.textContent = `${this.currentIndex + 1} / ${this.slideTargets.length}`
+      }
     }
 
     this.#updateLightboxToggle()
@@ -484,8 +525,9 @@ export default class extends Controller {
 
   #toggleAutoplay(emitEvent) {
     this.#clearAutoplayTimer()
+    const perView = this.#currentPerView()
 
-    if (!this.autoplayValue || this.pauseReasons.size > 0 || this.slideTargets.length <= 1) {
+    if (!this.autoplayValue || this.pauseReasons.size > 0 || this.#logicalSlideCount() <= perView) {
       if (emitEvent) {
         this.#dispatch("carousel:pause", { reason: "state" })
       }
@@ -509,23 +551,26 @@ export default class extends Controller {
   }
 
   #normalizeIndex(index) {
+    const perView = this.#currentPerView()
     if (this.slideTargets.length === 0) {
       return null
     }
 
+    const maxStartIndex = this.#maxStartIndex(perView)
+
     if (this.loopValue) {
-      const length = this.slideTargets.length
+      const length = maxStartIndex + 1
       return ((index % length) + length) % length
     }
 
-    if (index < 0 || index >= this.slideTargets.length) {
+    if (index < 0 || index > maxStartIndex) {
       return null
     }
 
     return index
   }
 
-  #clampIndex(index) {
+  #clampIndex(index, perView = this.#currentPerView()) {
     if (this.slideTargets.length === 0) {
       return 0
     }
@@ -534,7 +579,72 @@ export default class extends Controller {
       return 0
     }
 
-    return Math.max(0, Math.min(index, this.slideTargets.length - 1))
+    return Math.max(0, Math.min(index, this.#maxStartIndex(perView)))
+  }
+
+  #maxStartIndex(perView = this.#currentPerView()) {
+    if (this.#hasLogoLoopClones()) {
+      return this.#loopBoundaryIndex()
+    }
+
+    return Math.max(0, this.#logicalSlideCount() - perView)
+  }
+
+  #logicalSlideCount() {
+    if (this.#isLogoCloudVariant() && this.logicalSlideCountValue > 0) {
+      return this.logicalSlideCountValue
+    }
+
+    return this.slideTargets.length
+  }
+
+  #hasLogoLoopClones() {
+    return this.#isLogoCloudVariant() && this.loopValue && this.logicalSlideCountValue > 0 && this.slideTargets.length > this.logicalSlideCountValue
+  }
+
+  #loopBoundaryIndex() {
+    return this.#logicalSlideCount()
+  }
+
+  #isLogoCloudVariant() {
+    return this.variantValue === "logo_cloud"
+  }
+
+  #currentPerView() {
+    if (!this.#isLogoCloudVariant()) {
+      return 1
+    }
+
+    if (window.innerWidth >= 1024) {
+      return Math.max(1, this.logoItemsPerViewDesktopValue)
+    }
+
+    if (window.innerWidth >= 768) {
+      return Math.max(1, this.logoItemsPerViewTabletValue)
+    }
+
+    return Math.max(1, this.logoItemsPerViewMobileValue)
+  }
+
+  #bindResizeListener() {
+    if (!this.#isLogoCloudVariant()) {
+      return
+    }
+
+    this.resizeHandler = () => {
+      this.refresh()
+    }
+
+    window.addEventListener("resize", this.resizeHandler)
+  }
+
+  #unbindResizeListener() {
+    if (!this.resizeHandler) {
+      return
+    }
+
+    window.removeEventListener("resize", this.resizeHandler)
+    this.resizeHandler = null
   }
 
   #prefersReducedMotion() {
