@@ -1,10 +1,10 @@
 # Page Nav
 
 ## Purpose
-Render a compact icon-only page navigation row with a browser-history back control plus optional close and add link actions.
+Render a compact icon-only page navigation row with a browser-history back control plus an optional anchor link action and optional right slot action.
 
 ## When to use
-Use Page Nav when the layout needs quick icon actions at the top of a page: go back, close/cancel, and add/create.
+Use Page Nav when the layout needs quick icon actions at the top of a page: go back, close/cancel, and a custom right-side action (for example add/create).
 
 ## Class
 - `FlatPack::PageNav::Component`
@@ -16,39 +16,67 @@ Use Page Nav when the layout needs quick icon actions at the top of a page: go b
 | `back_label` | String | `"Go back"` | no | Accessible label for back icon button. |
 | `back_style` | Symbol | `:secondary` | no | Button style for back action. |
 | `back_size` | Symbol | `:md` | no | Button size for back action. |
-| `close_url` | String, nil | `nil` | no | When present, renders the middle close icon as a link. |
-| `close_icon` | String | `"x-mark"` | no | Icon name for close action. |
-| `close_label` | String | `"Close"` | no | Accessible label for close icon link. |
-| `close_style` | Symbol | `:secondary` | no | Button style for close action. |
-| `close_size` | Symbol | `:md` | no | Button size for close action. |
-| `add_url` | String, nil | `nil` | no | When present, renders the right add icon as a link. |
-| `add_icon` | String | `"plus"` | no | Icon name for add action. |
-| `add_label` | String | `"Add"` | no | Accessible label for add icon link. |
-| `add_style` | Symbol | `:secondary` | no | Button style for add action. |
-| `add_size` | Symbol | `:md` | no | Button size for add action. |
+| `anchor_url` | String, nil | `nil` | no | When present, renders the middle anchor icon as a link. |
+| `anchor_icon` | String | `"x-mark"` | no | Icon name for anchor action. |
+| `anchor_label` | String | `"Close"` | no | Accessible label for anchor icon link. |
+| `anchor_style` | Symbol | `:secondary` | no | Button style for anchor action. |
+| `anchor_size` | Symbol | `:md` | no | Button size for anchor action. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes and classes for the wrapper nav element. |
 
 ## Slots
-None.
+- `right_slot`: Renders custom content on the right side of the nav row.
 
 ## Variants
 - Back only (default)
-- Back + close (`close_url`)
-- Back + add (`add_url`)
-- Back + close + add (`close_url` and `add_url`)
+- Back + anchor (`anchor_url`)
+- Back + right action (`right_slot`)
+- Back + anchor + right action (`anchor_url` and `right_slot`)
 
 ## Example
 ```erb
 <%= render FlatPack::PageNav::Component.new(
-  close_url: demo_path,
-  add_url: demo_forms_path
-) %>
+  anchor_url: demo_path
+) do |component| %>
+  <% component.right_slot do %>
+    <%= render FlatPack::Button::Component.new(
+      icon: "plus",
+      icon_only: true,
+      url: demo_forms_path,
+      aria: { label: "Add" }
+    ) %>
+  <% end %>
+<% end %>
+```
+
+```erb
+<%= render FlatPack::PageNav::Component.new(
+  anchor_url: demo_path
+) do |component| %>
+  <% component.right_slot do %>
+    <%= render FlatPack::Button::Dropdown::Component.new(
+      text: "",
+      icon: "ellipsis-vertical",
+      style: :ghost,
+      size: :sm,
+      show_chevron: false,
+      trigger_attributes: {
+        title: "More actions",
+        aria: { label: "More actions" }
+      }
+    ) do |dropdown| %>
+      <% dropdown.menu_item(text: "Edit", href: demo_forms_path) %>
+      <% dropdown.menu_item(text: "Archive", href: demo_path) %>
+    <% end %>
+  <% end %>
+<% end %>
 ```
 
 ## Accessibility
 - Wrapper renders `nav[aria-label="Page navigation"]`.
 - Icon-only controls include explicit `aria-label` values.
-- Back action uses a button (`window.history.back()`), while close/add use links when URLs are provided.
+- Back action uses a button (`window.history.back()`).
+- Anchor action uses a link when `anchor_url` is provided.
+- Right-side behavior is defined by the consumer via `right_slot` content.
 
 ## Dependencies
 - `FlatPack::Button::Component` for icon-only button rendering and URL sanitization.

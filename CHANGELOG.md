@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Updated `FlatPack::PageNav::Component` to rename `close_*` options to `anchor_*` and replace `add_*` URL options with a `right_slot` API for right-side action content.
+
 ## [0.1.69] - 2026-05-28
 
 ### Added
