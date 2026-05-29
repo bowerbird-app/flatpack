@@ -31,7 +31,7 @@ Use Carousel when users need to browse a sequence of visual or rich-content slid
 | `logo_items_per_view_mobile` | Integer | `3` | no | Logos visible at mobile width when `variant: :logo_cloud`. |
 | `logo_grayscale` | Boolean | `true` | no | Apply grayscale filter to logo images in logo-cloud mode. |
 | `logo_opacity` | Float | `1.0` | no | Opacity for logo images in logo-cloud mode (`0.0..1.0`). |
-| `logo_wrapper_background` | String | `nil` | no | Optional wrapper background style for logo-cloud mode (sanitized). |
+| `logo_wrapper_background` | String | `nil` | no | Reserved for compatibility (sanitized input); current logo-cloud rendering keeps wrapper/viewport transparent. |
 | `aspect_ratio` | String | `"16/9"` | no | CSS aspect ratio (`"16/9"` format). |
 | `responsive` | Boolean | `true` | no | Keep container responsive width behavior. |
 | `touch_swipe` | Boolean | `true` | no | Enable pointer swipe navigation. |
@@ -53,7 +53,7 @@ None.
 - Default count targets: desktop `5`, tablet `3`, mobile `3`.
 - Logo-cloud mode only renders image slides (video/html slide payloads are ignored).
 - Fade transition is not supported in logo-cloud mode.
-- Wrapper uses no extra margin/padding, and `logo_wrapper_background` can tint the outer wrapper.
+- Wrapper and viewport use no extra margin/padding and remain transparent in logo-cloud mode.
 
 ## Interactive Demo
 - `/demo/carousel`

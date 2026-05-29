@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.71] - 2026-05-29
+
+### Added
+- Added a `:logo_cloud` variant to `FlatPack::Carousel::Component` for single-row multi-item logo carousels with responsive visible counts (`5` desktop / `3` tablet / `3` mobile), grayscale toggle, and logo opacity control.
+
+### Changed
+- Updated `FlatPack::PageNav::Component` to rename `close_*` options to `anchor_*` and replace `add_*` URL options with a `right_slot` API for right-side action content.
+- Updated `/demo/carousel` to include a dedicated Logo Cloud variant example and refreshed component method variable docs for the new carousel options.
+
 ## [0.1.69] - 2026-05-28
 
 ### Added
