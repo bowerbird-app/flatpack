@@ -722,11 +722,13 @@ class PagesController < ApplicationController
   def carousel
     @carousel_slides = carousel_demo_slides
     @carousel_single_slide = carousel_demo_single_slide
+    @carousel_logo_cloud_slides = carousel_demo_logo_cloud_slides
     @carousel_notes = [
       "Uses FlatPack::Carousel::Component with image, video, and component-rendered HTML slides.",
       "Demonstrates autoplay, loop, indicators, controls, and thumbnail navigation.",
       "Image slides enable lightbox by default and can opt out per slide with lightbox: false.",
-      "Uses secure defaults for rich content and supports keyboard plus touch interactions."
+      "Uses secure defaults for rich content and supports keyboard plus touch interactions.",
+      "Includes logo-cloud variant with multi-item responsive layout (5 desktop / 3 tablet / 3 mobile)."
     ]
   end
 
@@ -1788,6 +1790,21 @@ class PagesController < ApplicationController
         caption: "Single slide example with lightbox enabled",
         lightbox: true
       }
+    ]
+  end
+
+  def carousel_demo_logo_cloud_slides
+    [
+      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/github.svg", alt: "GitHub"},
+      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/gitlab.svg", alt: "GitLab"},
+      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/figma.svg", alt: "Figma"},
+      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/notion.svg", alt: "Notion"},
+      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/linear.svg", alt: "Linear"},
+      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/vercel.svg", alt: "Vercel"},
+      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/netlify.svg", alt: "Netlify"},
+      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/stripe.svg", alt: "Stripe"},
+      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/postgresql.svg", alt: "PostgreSQL"},
+      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/docker.svg", alt: "Docker"}
     ]
   end
 

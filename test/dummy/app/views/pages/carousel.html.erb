@@ -149,6 +149,44 @@
   ) %>
 </section>
 
+<!-- Logo Cloud Carousel -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Logo Cloud Variant", anchor_link: true, subtitle: "Multi-item logo carousel with responsive counts and image controls.") %>
+  <div class="mb-4 overflow-hidden bg-(--surface-background-color)">
+    <%= render FlatPack::Carousel::Component.new(
+      slides: @carousel_logo_cloud_slides,
+      variant: :logo_cloud,
+      loop: true,
+      logo_items_per_view_desktop: 5,
+      logo_items_per_view_tablet: 3,
+      logo_items_per_view_mobile: 3,
+      logo_grayscale: true,
+      logo_opacity: 0.8,
+      show_indicators: false,
+      show_captions: false,
+      touch_swipe: true,
+      aria_label: "Logo cloud carousel demo"
+    ) %>
+  </div>
+  <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">Code Example</p>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Carousel::Component.new(
+        slides: @carousel_logo_cloud_slides,
+        variant: :logo_cloud,
+        loop: true,
+        logo_items_per_view_desktop: 5,
+        logo_items_per_view_tablet: 3,
+        logo_items_per_view_mobile: 3,
+        logo_grayscale: true,
+        logo_opacity: 0.8,
+        show_indicators: false,
+        show_captions: false
+      ) %&gt;
+    CODE
+  ) %>
+</section>
+
 <!-- Carousel with Thumbnails and Autoplay -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Carousel with Thumbnails and Autoplay", anchor_link: true, subtitle: "Examples for Carousel with Thumbnails and Autoplay.") %>
