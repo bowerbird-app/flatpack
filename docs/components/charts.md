@@ -9,6 +9,7 @@ Use `FlatPack::ChartButtons::Component` as a sibling when you need reusable Turb
 
 ## Class
 - `FlatPack::Chart::Component`
+- `FlatPack::Chart::DefaultFilterComponent`
 
 ## Props
 | name | type | default | required | description |
@@ -33,6 +34,21 @@ Use `FlatPack::ChartButtons::Component` as a sibling when you need reusable Turb
 - Framed (`card: true`) and inline (`card: false`) rendering
 - Axis defaults for line/bar/area/radar and non-axis defaults for donut/pie
 
+## Related Classes
+- `FlatPack::Chart::DefaultFilterComponent`: reusable date range + status filter row designed for chart dashboards.
+
+### DefaultFilter Props
+| name | type | default | required | description |
+| --- | --- | --- | --- | --- |
+| `start_date_name` | String | `"start_date"` | no | GET/POST param name for the range start date hidden input. |
+| `end_date_name` | String | `"end_date"` | no | GET/POST param name for the range end date hidden input. |
+| `start_date_value` | String, Date, nil | `nil` | no | Selected start date value passed to DateInput range state. |
+| `end_date_value` | String, Date, nil | `nil` | no | Selected end date value passed to DateInput range state. |
+| `status_name` | String | `"status"` | no | Form param name for the status select input. |
+| `status` | String, nil | `nil` | no | Selected status value. |
+| `status_lists` | Array, Hash | — | yes | Select options in any `FlatPack::Select::Component`-supported format. |
+| `status_placeholder` | String, nil | `"All statuses"` | no | Placeholder option label for the status select. |
+
 ## Example
 ```erb
 <%= render FlatPack::Chart::Component.new(
@@ -50,6 +66,19 @@ Use `FlatPack::ChartButtons::Component` as a sibling when you need reusable Turb
 <% end %>
 ```
 
+```erb
+<%= form_with url: demo_charts_path, method: :get do %>
+  <%= render FlatPack::Chart::DefaultFilterComponent.new(
+    start_date_value: params[:start_date],
+    end_date_value: params[:end_date],
+    status: params[:status],
+    status_lists: [["Active", "active"], ["Paused", "paused"], ["Archived", "archived"]]
+  ) %>
+
+  <%= render FlatPack::Button::Component.new(text: "Apply filters", type: "submit", size: :sm) %>
+<% end %>
+```
+
 ## Accessibility
 - Provide meaningful `title`/`subtitle` or nearby text that describes chart intent.
 - For critical data, provide a tabular or textual alternative outside the chart canvas.
@@ -59,3 +88,5 @@ Use `FlatPack::ChartButtons::Component` as a sibling when you need reusable Turb
 - Stimulus controller: `app/javascript/flat_pack/controllers/chart_controller.js` (`flat-pack--chart`).
 - ApexCharts import map pin (`import "apexcharts"` via dynamic import in controller).
 - `FlatPack::Card::Component` when `card: true`.
+- `FlatPack::DateInput::Component` with `picker: :flatpack_date_picker` and `range: true` for date-range selection.
+- `FlatPack::Select::Component` for status selection options.

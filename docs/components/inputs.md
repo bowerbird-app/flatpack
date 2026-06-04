@@ -37,6 +37,10 @@ Component-specific props:
 | `max_characters` | Integer | `nil` | no | High threshold and `current/max` format for `TextInput` and `TextArea` count. |
 | `min` | Numeric or date-like | `nil` (`NumberInput`), `0` (`RangeInput`) | no | Minimum value/date/time (`NumberInput`, `DateInput`, `DateTimeInput`, `TimeInput`, `RangeInput`). |
 | `max` | Numeric or date-like | `nil` (`NumberInput`), `100` (`RangeInput`) | no | Maximum value/date/time (`NumberInput`, `DateInput`, `DateTimeInput`, `TimeInput`, `RangeInput`). |
+| `picker` | Symbol | `:native` | no | Date input picker mode (`DateInput`): `:native` or `:flatpack_date_picker`. |
+| `range` | Boolean | `false` | no | Enables start/end selection in `DateInput` custom picker mode. Requires `picker: :flatpack_date_picker`. |
+| `range_start_name` | String | `"#{name}[start]"` | no | Hidden input name for range start value in `DateInput` custom picker mode. |
+| `range_end_name` | String | `"#{name}[end]"` | no | Hidden input name for range end value in `DateInput` custom picker mode. |
 | `step` | Numeric | `1` | no | Step increment (`NumberInput`, `RangeInput`). |
 | `accept` | String | `nil` | no | File MIME/extensions whitelist for `FileInput`. Dangerous executable extensions raise `ArgumentError`. |
 | `multiple` | Boolean | `false` | no | Enables multiple file selection (`FileInput`). |
@@ -108,6 +112,33 @@ Additional focused examples:
   preview: true
 ) %>
 ```
+
+```erb
+<%= render FlatPack::DateInput::Component.new(
+  name: "billing_anchor_date",
+  label: "Billing Anchor Date",
+  picker: :flatpack_date_picker,
+  min: (Date.today - 30).to_s,
+  max: (Date.today + 30).to_s,
+  value: Date.today.to_s
+) %>
+```
+
+```erb
+<%= render FlatPack::DateInput::Component.new(
+  name: "reporting_period",
+  label: "Reporting Period",
+  picker: :flatpack_date_picker,
+  range: true,
+  range_start_name: "reporting_period_start",
+  range_end_name: "reporting_period_end",
+  min: (Date.today - 365).to_s,
+  max: Date.today.to_s
+) %>
+```
+
+In custom picker mode, quick presets include: `Today`, `Yesterday`, `Last 3 days`, `This week`, `Last week`, `This month`, `Last month`, `This year`, `Last year`.
+The popup renders as side-by-side quick ranges + calendar on larger screens and stacks vertically on smaller screens.
 
 ## Rich Text Mode
 

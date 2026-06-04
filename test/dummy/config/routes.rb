@@ -87,6 +87,7 @@ Rails.application.routes.draw do
   get "demo/grid/movable_cards", to: "pages#grid_movable_cards"
   get "demo/pagination", to: "pages#pagination"
   get "demo/charts", to: "pages#charts"
+  get "demo/charts/default_filter", to: "pages#charts_default_filter"
   get "demo/code_blocks", to: "pages#code_blocks"
   get "demo/avatars", to: "pages#avatars"
   get "demo/comments", to: "pages#comments"

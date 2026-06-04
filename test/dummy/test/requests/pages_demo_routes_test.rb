@@ -59,6 +59,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/pagination
     /demo/admin
     /demo/charts
+    /demo/charts/default_filter
     /demo/code_blocks
     /demo/avatars
     /demo/comments
@@ -122,6 +123,24 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Single Outer Frame with Multiple Table Controls"
     assert_includes response.body, "Search table rows..."
     assert_includes response.body, "Search both tables..."
+  end
+
+  test "date input demo renders custom flatpack picker examples" do
+    get "/demo/forms/date_input"
+
+    assert_response :success
+    assert_includes response.body, "picker: :flatpack_date_picker"
+    assert_includes response.body, "range_start_name: &quot;reporting_period_start&quot;"
+    assert_includes response.body, "component-method-variables-date_input-0"
+  end
+
+  test "date time input demo does not include the date range companion example" do
+    get "/demo/forms/date_time_input"
+
+    assert_response :success
+    assert_includes response.body, "component-method-variables-date_time_input-0"
+    refute_includes response.body, "Date Range Companion Example"
+    refute_includes response.body, "component-method-variables-date_input-0"
   end
 
   test "admin demo renders pagination" do

@@ -98,6 +98,29 @@ module FlatPack
         assert_selector "input[data-controller~='flat-pack--date-input']"
       end
 
+      def test_renders_custom_picker_controller_when_picker_enabled
+        render_inline(Component.new(name: "birth_date", picker: :flatpack_date_picker))
+
+        assert_selector "div[data-controller~='flat-pack--flatpack-date-picker']"
+        assert_selector "input[type='hidden'][name='birth_date']", visible: :all
+        assert_selector "input[type='text'][readonly][role='button']"
+      end
+
+      def test_renders_range_hidden_fields_for_custom_picker
+        render_inline(Component.new(
+          name: "reporting_period",
+          picker: :flatpack_date_picker,
+          range: true,
+          value: {start: "2026-05-01", end: "2026-05-31"},
+          range_start_name: "reporting_period_start",
+          range_end_name: "reporting_period_end"
+        ))
+
+        assert_selector "input[type='hidden'][name='reporting_period_start'][value='2026-05-01']", visible: :all
+        assert_selector "input[type='hidden'][name='reporting_period_end'][value='2026-05-31']", visible: :all
+        assert_selector "input[type='text'][value='2026-05-01 to 2026-05-31']"
+      end
+
       def test_renders_with_aria_attributes
         render_inline(Component.new(name: "birth_date", aria: {label: "Custom date"}))
 
@@ -131,6 +154,18 @@ module FlatPack
       def test_raises_error_with_empty_name
         assert_raises(ArgumentError) do
           Component.new(name: "")
+        end
+      end
+
+      def test_raises_error_for_invalid_picker
+        assert_raises(ArgumentError) do
+          Component.new(name: "birth_date", picker: :unknown)
+        end
+      end
+
+      def test_raises_error_for_range_without_custom_picker
+        assert_raises(ArgumentError) do
+          Component.new(name: "birth_date", range: true)
         end
       end
 

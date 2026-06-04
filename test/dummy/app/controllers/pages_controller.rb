@@ -67,7 +67,7 @@ class PagesController < ApplicationController
 
   # Actions with dynamic data that must not be fully cached
   UNCACHED_ACTIONS = %i[
-    picker search_results picker_results pagination_infinite charts
+    picker search_results picker_results pagination_infinite charts charts_default_filter
     comments admin chat_demo chips chip_add_callback chip_remove_callback
     tables_basic tables_sortable
   ].freeze
@@ -612,6 +612,10 @@ class PagesController < ApplicationController
     ]
   end
 
+  def charts_default_filter
+    load_default_chart_filter_demo
+  end
+
   def code_blocks
   end
 
@@ -804,6 +808,17 @@ class PagesController < ApplicationController
   end
 
   private
+
+  def load_default_chart_filter_demo
+    @default_chart_filter_start_date = params[:start_date].presence || 30.days.ago.to_date.iso8601
+    @default_chart_filter_end_date = params[:end_date].presence || Date.current.iso8601
+    @default_chart_filter_status = params[:status].to_s.presence
+    @default_chart_filter_status_lists = [
+      ["Active", "active"],
+      ["Paused", "paused"],
+      ["Archived", "archived"]
+    ]
+  end
 
   def cached_component_index
     Rails.cache.fetch(component_index_cache_key, expires_in: 10.minutes) do
@@ -1562,6 +1577,7 @@ class PagesController < ApplicationController
       {title: "Pagination", description: "Page navigation with Pagy", url: demo_pagination_path},
       {title: "Infinite Scroll", description: "Infinite scrolling pagination patterns", url: demo_pagination_infinite_path},
       {title: "Charts", description: "Data visualization with ApexCharts", url: demo_charts_path},
+      {title: "Charts: Default Filter", description: "Date range and optional status filter for chart controls", url: demo_charts_default_filter_path},
       {title: "Code Blocks", description: "Reusable snippets for demo pages", url: demo_code_blocks_path},
       {title: "Avatars", description: "Avatar and avatar group examples", url: demo_avatars_path},
       {title: "Comments", description: "Comments threads and reply composer patterns", url: demo_comments_path},
