@@ -1,9 +1,9 @@
 <%= render FlatPack::PageTitle::Component.new(
   title: "Date Time Input",
-  subtitle: "Datetime-local examples plus guidance for FlatPack date range picker workflows."
+  subtitle: "Datetime-local examples for FlatPack inputs."
 ) %>
 
-<%= render "pages/component_method_variables_table", components: [:date_time_input, :date_input] %>
+<%= render "pages/component_method_variables_table", component: :date_time_input %>
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Date Time Input Examples", anchor_link: true) %>
@@ -72,32 +72,4 @@
     CODE
     class: "mt-4"
   ) %>
-</section>
-
-<section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Date Range Companion Example", anchor_link: true) %>
-
-  <%= render FlatPack::Card::Component.new do |card| %>
-    <% card.body(class: "space-y-[var(--stack-gap-md)]") do %>
-      <%= render FlatPack::DateInput::Component.new(
-        name: "reporting_period",
-        label: "Reporting Period",
-        picker: :flatpack_date_picker,
-        range: true,
-        range_start_name: "reporting_period_start",
-        range_end_name: "reporting_period_end",
-        min: (Date.today - 365).to_s,
-        max: Date.today.to_s,
-        value: {
-          start: (Date.today - 30).to_s,
-          end: Date.today.to_s
-        }
-      ) %>
-
-      <p class="text-sm text-(--surface-muted-content-color)">
-        Use DateTimeInput for timestamp capture and DateInput with <code>picker: :flatpack_date_picker</code>
-        when users need quick ranges like Today, Last week, or Last month.
-      </p>
-    <% end %>
-  <% end %>
 </section>

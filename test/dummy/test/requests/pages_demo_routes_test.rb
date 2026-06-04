@@ -133,6 +133,15 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "component-method-variables-date_input-0"
   end
 
+  test "date time input demo does not include the date range companion example" do
+    get "/demo/forms/date_time_input"
+
+    assert_response :success
+    assert_includes response.body, "component-method-variables-date_time_input-0"
+    refute_includes response.body, "Date Range Companion Example"
+    refute_includes response.body, "component-method-variables-date_input-0"
+  end
+
   test "admin demo renders pagination" do
     get "/demo/admin"
 
