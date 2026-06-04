@@ -124,6 +124,15 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Search both tables..."
   end
 
+  test "date input demo renders custom flatpack picker examples" do
+    get "/demo/forms/date_input"
+
+    assert_response :success
+    assert_includes response.body, "picker: :flatpack_date_picker"
+    assert_includes response.body, "range_start_name: &quot;reporting_period_start&quot;"
+    assert_includes response.body, "component-method-variables-date_input-0"
+  end
+
   test "admin demo renders pagination" do
     get "/demo/admin"
 

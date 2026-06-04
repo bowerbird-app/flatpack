@@ -1,9 +1,9 @@
 <%= render FlatPack::PageTitle::Component.new(
   title: "Date Input",
-  subtitle: "Date picker examples with minimum and maximum boundaries."
+  subtitle: "Native browser picker and FlatPack custom date picker examples with quick ranges."
 ) %>
 
-<%= render "pages/component_method_variables_table", component: :text_input %>
+<%= render "pages/component_method_variables_table", component: :date_input %>
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Date Input Examples", anchor_link: true) %>
@@ -23,6 +23,26 @@
         min: Date.today.to_s,
         max: (Date.today + 90).to_s,
         value: (Date.today + 7).to_s
+      ) %>
+
+      <%= render FlatPack::DateInput::Component.new(
+        name: "billing_anchor_date",
+        label: "Billing Anchor Date",
+        picker: :flatpack_date_picker,
+        min: (Date.today - 30).to_s,
+        max: (Date.today + 30).to_s,
+        value: Date.today.to_s
+      ) %>
+
+      <%= render FlatPack::DateInput::Component.new(
+        name: "reporting_period",
+        label: "Reporting Period",
+        picker: :flatpack_date_picker,
+        range: true,
+        range_start_name: "reporting_period_start",
+        range_end_name: "reporting_period_end",
+        min: (Date.today - 365).to_s,
+        max: Date.today.to_s
       ) %>
     <% end %>
   <% end %>
@@ -44,6 +64,26 @@
           min: Date.today.to_s,
           max: (Date.today + 90).to_s,
           value: (Date.today + 7).to_s
+        ) %&gt;
+
+        &lt;%= render FlatPack::DateInput::Component.new(
+          name: &quot;billing_anchor_date&quot;,
+          label: &quot;Billing Anchor Date&quot;,
+          picker: :flatpack_date_picker,
+          min: (Date.today - 30).to_s,
+          max: (Date.today + 30).to_s,
+          value: Date.today.to_s
+        ) %&gt;
+
+        &lt;%= render FlatPack::DateInput::Component.new(
+          name: &quot;reporting_period&quot;,
+          label: &quot;Reporting Period&quot;,
+          picker: :flatpack_date_picker,
+          range: true,
+          range_start_name: &quot;reporting_period_start&quot;,
+          range_end_name: &quot;reporting_period_end&quot;,
+          min: (Date.today - 365).to_s,
+          max: Date.today.to_s
         ) %&gt;
         &lt;% end %&gt;
       &lt;% end %&gt;

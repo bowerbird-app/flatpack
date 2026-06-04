@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Added `picker: :flatpack_date_picker` support to `FlatPack::DateInput::Component` with a custom popup layout that combines quick range presets and calendar selection.
+
+### Changed
+- Updated `/demo/forms/date_input` and `/demo/forms/date_time_input` examples to show the new DateInput custom picker workflow and range usage alongside DateTimeInput guidance.
+- Updated input documentation and component method-variable tables to include DateInput picker/range options and DateTimeInput-specific API references.
+
 ## [0.1.71] - 2026-05-29
 
 ### Added
