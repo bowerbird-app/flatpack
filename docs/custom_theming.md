@@ -311,6 +311,7 @@ This block mirrors the current default light palette from `app/assets/stylesheet
   --comments-composer-text-color: var(--surface-content-color);
   --comments-composer-placeholder-color: var(--surface-muted-content-color);
   --comments-composer-actions-background-color: color-mix(in oklab, var(--surface-muted-background-color) 30%, transparent);
+  --comments-composer-slots-background-color: var(--comments-composer-actions-background-color);
   --comments-composer-cancel-text-color: var(--surface-content-color);
   --comments-composer-cancel-hover-background-color: var(--surface-muted-background-color);
   --comments-composer-submit-background-color: var(--color-primary);
