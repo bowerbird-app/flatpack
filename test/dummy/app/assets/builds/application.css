@@ -898,6 +898,12 @@
   .max-w-\[90vw\] {
     max-width: 90vw;
   }
+  .max-w-\[150px\] {
+    max-width: 150px;
+  }
+  .max-w-\[320px\] {
+    max-width: 320px;
+  }
   .max-w-\[var\(--tooltip-max-width\)\] {
     max-width: var(--tooltip-max-width);
   }
@@ -951,6 +957,9 @@
   }
   .flex-none {
     flex: none;
+  }
+  .flex-shrink {
+    flex-shrink: 1;
   }
   .flex-shrink-0 {
     flex-shrink: 0;

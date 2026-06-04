@@ -162,15 +162,17 @@ module FlatPack
       end
 
       def render_quick_range_button(preset)
-        tag.button(
-          preset[:label],
+        render(FlatPack::Button::Component.new(
+          text: preset[:label],
+          style: :ghost,
+          size: :sm,
           type: "button",
-          class: "w-full rounded-md border border-transparent px-3 py-2 text-left text-sm text-[var(--surface-content-color)] transition-colors duration-base hover:bg-[var(--surface-subtle-background-color)] focus:outline-none focus:ring-2 focus:ring-ring",
+          class: "w-full justify-start",
           data: {
             "flat-pack-date-picker-command": "preset",
             "flat-pack-date-picker-preset": preset[:key]
           }
-        )
+        ))
       end
 
       def render_picker_calendar
@@ -178,9 +180,21 @@ module FlatPack
           safe_join([
             content_tag(:div, class: "flex items-center justify-between gap-2") do
               safe_join([
-                tag.button("Prev", type: "button", class: picker_nav_button_classes, data: {"flat-pack-date-picker-command": "previous-month"}),
+                render(FlatPack::Button::Component.new(
+                  text: "Prev",
+                  style: :ghost,
+                  size: :sm,
+                  type: "button",
+                  data: {"flat-pack-date-picker-command": "previous-month"}
+                )),
                 content_tag(:p, "", class: "text-sm font-semibold text-[var(--surface-content-color)]", data: {"flat-pack--flatpack-date-picker-target": "monthLabel"}),
-                tag.button("Next", type: "button", class: picker_nav_button_classes, data: {"flat-pack-date-picker-command": "next-month"})
+                render(FlatPack::Button::Component.new(
+                  text: "Next",
+                  style: :ghost,
+                  size: :sm,
+                  type: "button",
+                  data: {"flat-pack-date-picker-command": "next-month"}
+                ))
               ])
             end,
             content_tag(:div, class: "mt-3 grid grid-cols-7 gap-1 text-center text-xs font-medium text-[var(--surface-muted-content-color)]") do
@@ -253,7 +267,7 @@ module FlatPack
           "hidden",
           "fixed",
           "z-50",
-          "w-[min(92vw,44rem)]",
+          "w-auto",
           "overflow-hidden",
           "rounded-lg",
           "border",
@@ -271,6 +285,7 @@ module FlatPack
           "border-[var(--surface-border-color)]",
           "bg-[var(--surface-subtle-background-color)]",
           "p-3",
+          "max-w-[150px]",
           "md:sticky",
           "md:top-0",
           "md:w-64",
@@ -284,6 +299,7 @@ module FlatPack
         classes(
           "min-w-0",
           "flex-1",
+          "max-w-[320px]",
           "p-3"
         )
       end
