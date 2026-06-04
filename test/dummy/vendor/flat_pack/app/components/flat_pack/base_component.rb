@@ -22,6 +22,12 @@ module FlatPack
       __vc_set_polymorphic_slot(slot_name, poly_type, *args, **kwargs, &block)
     end
 
+    def warn_deprecated_api(old_name, new_name)
+      ActiveSupport::Deprecation._instance.warn(
+        "#{self.class.name}##{old_name} is deprecated and will be removed in a future release. Use ##{new_name} instead."
+      )
+    end
+
     # Extract and merge classes using tailwind_merge
     def classes(*additional_classes)
       base_classes = @system_arguments.delete(:class) || ""

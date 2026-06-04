@@ -11,7 +11,7 @@
   image_alt: "Packhelp packaging",
   background: "linear-gradient(135deg, #fefce8 0%, #fef9c3 50%, #fef08a 100%)"
 ) do |hero|
-  hero.actions do
+  hero.slot do
     concat render(FlatPack::Button::Component.new(text: "Start now", style: :primary, url: "#"))
   end
 end %>

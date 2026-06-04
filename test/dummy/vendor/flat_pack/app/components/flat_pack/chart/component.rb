@@ -53,10 +53,15 @@ module FlatPack
         end
       end
 
-      def actions(*args, **kwargs, &block)
+      def top_right_slot(*args, **kwargs, &block)
         return actions_slot if args.empty? && kwargs.empty? && !block_given?
 
         set_slot(:actions, nil, *args, **kwargs, &block)
+      end
+
+      def actions(*args, **kwargs, &block)
+        warn_deprecated_api(:actions, :top_right_slot)
+        top_right_slot(*args, **kwargs, &block)
       end
 
       def footer(*args, **kwargs, &block)
@@ -106,7 +111,7 @@ module FlatPack
       def render_actions_section
         return nil unless actions?
 
-        content_tag(:div, actions, class: "flex gap-2")
+        content_tag(:div, actions_slot, class: "flex gap-2")
       end
 
       def render_chart_only

@@ -10,7 +10,7 @@
   image_url: "/images/hero-stool.jpg",
   image_alt: "DIY flat-pack stool"
 ) do |hero|
-  hero.actions do
+  hero.slot do
     concat render(FlatPack::Button::Component.new(text: "Explore", style: :primary, url: "#"))
   end
 end %>

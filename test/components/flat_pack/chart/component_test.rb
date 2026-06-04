@@ -144,13 +144,26 @@ module FlatPack
         assert_selector "p", text: "Monthly data"
       end
 
-      def test_renders_chart_with_actions
+      def test_renders_chart_with_top_right_slot
         series = [{name: "Sales", data: [10, 20, 30]}]
         render_inline(Component.new(series: series)) do |component|
-          component.actions { "Export" }
+          component.top_right_slot { "Export" }
         end
 
         assert_selector "div", text: "Export"
+      end
+
+      def test_actions_is_deprecated_in_favor_of_top_right_slot
+        series = [{name: "Sales", data: [10, 20, 30]}]
+
+        _stdout, stderr = capture_io do
+          render_inline(Component.new(series: series)) do |component|
+            component.actions { "Export" }
+          end
+        end
+
+        assert_includes stderr, "FlatPack::Chart::Component#actions is deprecated"
+        assert_includes stderr, "#top_right_slot"
       end
 
       def test_renders_chart_with_footer

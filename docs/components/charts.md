@@ -26,7 +26,7 @@ Use `FlatPack::ChartButtons::Component` as a sibling when you need reusable Turb
 ## Slots
 | Slot | Description |
 | --- | --- |
-| `actions` | Header action area (for buttons, filters, menus) when `card: true`. |
+| `top_right_slot` | Header action area (for buttons, filters, menus) when `card: true`. |
 | `footer` | Card footer content when `card: true`. |
 
 ## Variants
@@ -60,7 +60,7 @@ Use `FlatPack::ChartButtons::Component` as a sibling when you need reusable Turb
   title: "Financial Overview",
   subtitle: "Last 7 months"
 ) do |chart| %>
-  <% chart.actions do %>
+  <% chart.top_right_slot do %>
     <%= render FlatPack::Button::Component.new(text: "Export", size: :sm, style: :ghost) %>
   <% end %>
 <% end %>

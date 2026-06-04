@@ -55,10 +55,19 @@ module FlatPack
         end
       end
 
-      def actions(*args, **kwargs, &block)
+      def slot(*args, **kwargs, &block)
         return actions_slot if args.empty? && kwargs.empty? && !block_given?
 
         set_slot(:actions, nil, *args, **kwargs, &block)
+      end
+
+      def slot?
+        actions?
+      end
+
+      def actions(*args, **kwargs, &block)
+        warn_deprecated_api(:actions, :slot)
+        slot(*args, **kwargs, &block)
       end
 
       def graphic(*args, **kwargs, &block)
@@ -115,9 +124,9 @@ module FlatPack
       end
 
       def render_actions
-        return nil unless actions?
+        return nil unless slot?
 
-        content_tag(:div, actions, class: "flex gap-3 flex-wrap justify-center")
+        content_tag(:div, slot, class: "flex gap-3 flex-wrap justify-center")
       end
 
       def validate_title!

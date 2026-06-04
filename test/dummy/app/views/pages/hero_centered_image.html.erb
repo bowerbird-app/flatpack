@@ -9,7 +9,7 @@
   description: "Full-bleed background image with a dark overlay keeps text readable at any resolution.",
   background_image_url: "/images/hero-stool.jpg"
 ) do |hero|
-  hero.actions do
+  hero.slot do
     concat render(FlatPack::Button::Component.new(text: "Start for free", style: :primary, url: "#"))
     concat render(FlatPack::Button::Component.new(text: "Watch demo", style: :secondary, url: "#"))
   end

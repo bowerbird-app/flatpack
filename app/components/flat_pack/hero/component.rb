@@ -19,10 +19,19 @@ module FlatPack
       undef_method :with_actions_slot, :with_actions_slot_content
       undef_method :with_badge_slot, :with_badge_slot_content
 
-      def actions(**args, &block)
+      def slot(**args, &block)
         return actions_slot if args.empty? && !block
 
         set_slot(:actions_slot, nil, **args, &block)
+      end
+
+      def slot?
+        actions_slot?
+      end
+
+      def actions(**args, &block)
+        warn_deprecated_api(:actions, :slot)
+        slot(**args, &block)
       end
 
       def badge(**args, &block)
@@ -113,9 +122,9 @@ module FlatPack
       end
 
       def render_actions_block(extra_classes: "")
-        return nil unless actions_slot?
+        return nil unless slot?
 
-        content_tag(:div, actions, class: "mt-10 flex flex-col sm:flex-row gap-4 #{extra_classes}".strip)
+        content_tag(:div, slot, class: "mt-10 flex flex-col sm:flex-row gap-4 #{extra_classes}".strip)
       end
 
       def render_text_block
@@ -177,7 +186,7 @@ module FlatPack
                 render_description
               ].compact)
             end,
-            (content_tag(:div, render_actions_block(extra_classes: "justify-center"), class: "mt-10 flex justify-center") if actions_slot?),
+            (content_tag(:div, render_actions_block(extra_classes: "justify-center"), class: "mt-10 flex justify-center") if slot?),
             (@image_url ? content_tag(:div, class: "mt-16 max-w-5xl mx-auto rounded-xl shadow-2xl overflow-hidden") {
               image_tag(@image_url, alt: @image_alt, class: "w-full object-cover")
             } : nil)

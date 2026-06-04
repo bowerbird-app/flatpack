@@ -51,14 +51,25 @@ module FlatPack
         assert_selector "svg[data-flat-pack--icon-name-value='arrow-up-tray']"
       end
 
-      def test_renders_actions_slot
+      def test_renders_slot
         render_inline(Component.new(title: "Empty")) do |component|
-          component.actions do
+          component.slot do
             "Action buttons"
           end
         end
 
         assert_text "Action buttons"
+      end
+
+      def test_actions_is_deprecated_in_favor_of_slot
+        _stdout, stderr = capture_io do
+          render_inline(Component.new(title: "Empty")) do |component|
+            component.actions { "Action buttons" }
+          end
+        end
+
+        assert_includes stderr, "FlatPack::EmptyState::Component#actions is deprecated"
+        assert_includes stderr, "#slot"
       end
 
       def test_renders_custom_graphic_slot

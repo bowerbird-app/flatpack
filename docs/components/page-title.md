@@ -23,7 +23,7 @@ Use Page Title for page-level headings when you do not want the bordered visual 
 ## Slots
 | name | type | description |
 |---|---|---|
-| `actions` | Block | Optional action content rendered directly below the subtitle, or directly below the title when no subtitle is present. |
+| `slot` | Block | Optional action content rendered directly below the subtitle, or directly below the title when no subtitle is present. |
 
 ## Variants
 - Heading level variants: `:h1`, `:h2`, `:h3`, `:h4`, `:h5`, `:h6`
@@ -38,15 +38,15 @@ Use Page Title for page-level headings when you do not want the bordered visual 
   title_color: "var(--color-primary)",
   subtitle_color: "oklch(0.35 0.02 250)"
 ) do |page_title| %>
-  <% page_title.actions do %>
+  <% page_title.slot do %>
     <%= render FlatPack::Button::Component.new(text: "Invite member", style: :secondary, size: :sm) %>
   <% end %>
 <% end %>
 ```
 
 ## Behavior
-- `actions` renders immediately below the subtitle when `subtitle` is present.
-- `actions` renders immediately below the title when `subtitle` is omitted.
+- `slot` renders immediately below the subtitle when `subtitle` is present.
+- `slot` renders immediately below the title when `subtitle` is omitted.
 
 ## Accessibility
 - Uses semantic heading tags via `variant` (`h1`-`h6`).

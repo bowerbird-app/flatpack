@@ -69,9 +69,9 @@ module FlatPack
         assert_selector "p[style*='color: var(--color-primary)']", text: "Welcome back"
       end
 
-      def test_renders_actions_slot_below_subtitle
+      def test_renders_slot_below_subtitle
         render_inline(Component.new(title: "Dashboard", subtitle: "Welcome back")) do |component|
-          component.actions do
+          component.slot do
             "Filter"
           end
         end
@@ -79,14 +79,25 @@ module FlatPack
         assert_selector "p + div.page-title-actions", text: "Filter"
       end
 
-      def test_renders_actions_slot_below_title_when_subtitle_missing
+      def test_renders_slot_below_title_when_subtitle_missing
         render_inline(Component.new(title: "Dashboard")) do |component|
-          component.actions do
+          component.slot do
             "Filter"
           end
         end
 
         assert_selector "h1 + div.page-title-actions", text: "Filter"
+      end
+
+      def test_actions_is_deprecated_in_favor_of_slot
+        _stdout, stderr = capture_io do
+          render_inline(Component.new(title: "Dashboard")) do |component|
+            component.actions { "Filter" }
+          end
+        end
+
+        assert_includes stderr, "FlatPack::PageTitle::Component#actions is deprecated"
+        assert_includes stderr, "#slot"
       end
 
       def test_raises_error_for_invalid_variant

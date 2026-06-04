@@ -36,10 +36,19 @@ module FlatPack
         content_tag(:div, **container_attributes) { render_header_content }
       end
 
-      def actions(*args, **kwargs, &block)
+      def slot(*args, **kwargs, &block)
         return actions_slot if args.empty? && kwargs.empty? && !block_given?
 
         set_slot(:actions, nil, *args, **kwargs, &block)
+      end
+
+      def slot?
+        actions?
+      end
+
+      def actions(*args, **kwargs, &block)
+        warn_deprecated_api(:actions, :slot)
+        slot(*args, **kwargs, &block)
       end
 
       private
@@ -123,9 +132,9 @@ module FlatPack
       end
 
       def render_actions
-        return nil unless actions?
+        return nil unless slot?
 
-        content_tag(:div, actions, class: "page-title-actions mt-4 flex flex-wrap items-center gap-3")
+        content_tag(:div, slot, class: "page-title-actions mt-4 flex flex-wrap items-center gap-3")
       end
 
       def validate_title!

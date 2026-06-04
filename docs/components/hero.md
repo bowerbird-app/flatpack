@@ -35,7 +35,7 @@ Do not use for smaller in-page promotional banners; use `FlatPack::Alert::Compon
 
 | name | required | description |
 |---|---|---|
-| `actions` | no | CTA button area rendered below the description in all variants. Use `concat render(...)` for multiple buttons. |
+| `slot` | no | CTA button area rendered below the description in all variants. Use `concat render(...)` for multiple buttons. |
 | `badge` | no | Optional badge or pill rendered above the tagline. |
 
 Both slots follow the no-`with_` prefix convention. Set via block:
@@ -43,7 +43,7 @@ Both slots follow the no-`with_` prefix convention. Set via block:
 ```erb
 <%= render FlatPack::Hero::Component.new(variant: :centered, headline: "Hello") do |hero|
   hero.badge { render FlatPack::Badge::Component.new(label: "New") }
-  hero.actions do
+  hero.slot do
     concat render(FlatPack::Button::Component.new(label: "Start", href: "#"))
   end
 end %>
@@ -70,7 +70,7 @@ end %>
   headline: "Build beautiful interfaces faster.",
   description: "A Rails ViewComponent library with Tailwind CSS."
 ) do |hero|
-  hero.actions do
+  hero.slot do
     concat render(FlatPack::Button::Component.new(label: "Get started", variant: :primary, href: "/docs"))
     concat render(FlatPack::Button::Component.new(label: "Learn more", variant: :outline, href: "/about"))
   end
@@ -89,7 +89,7 @@ end %>
   image_alt: "Product screenshot"
 ) do |hero|
   hero.badge { render FlatPack::Badge::Component.new(label: "v2.0") }
-  hero.actions do
+  hero.slot do
     concat render(FlatPack::Button::Component.new(label: "View docs", href: "/docs"))
   end
 end %>
@@ -115,7 +115,7 @@ end %>
 - Use a single `<h1>` per page; the hero headline fills that semantic role.
 - Pass `image_alt: ""` for purely decorative images. This renders an empty `alt` attribute, which instructs screen readers to skip the image.
 - The background image in `centered_image` is applied via CSS (`background-image` inline style) and carries no `alt` text, making it presentational by default.
-- Buttons and links inside the `actions` slot must have descriptive labels. Avoid generic labels like "Click here".
+- Buttons and links inside the `slot` area must have descriptive labels. Avoid generic labels like "Click here".
 - Ensure sufficient colour contrast between overlay text and the background for `centered_image`. The built-in `bg-black/60` overlay meets WCAG AA for white text in most cases, but verify with your specific image.
 
 ## Dependencies

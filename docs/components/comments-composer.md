@@ -1,10 +1,10 @@
 # Comments Composer
 
 ## Purpose
-Render a comment entry surface with plain-text or rich-text input, optional custom toolbar/attachments slots, and submit actions.
+Render a comment entry surface with plain-text or rich-text input, optional custom toolbar/attachments slots, and submit controls.
 
 ## When to use
-Use Comments Composer where users create or edit comments with optional custom actions.
+Use Comments Composer where users create or edit comments with optional custom slot content.
 
 The default composer uses a rounded-xl textarea shell and a floating send control.
 Enable `rich_text: true` when the comment flow needs TipTap formatting controls such as the standard toolbar or selection bubble menu.
@@ -16,7 +16,7 @@ Enable `rich_text: true` when the comment flow needs TipTap formatting controls 
 | name | type | default | required | description |
 |---|---|---|---|---|
 | `placeholder` | String | `"Write a comment..."` | no | Textarea placeholder text. |
-| `submit_label` | String | `"Comment"` | no | Default submit button label when custom `actions` slot is not provided. |
+| `submit_label` | String | `"Comment"` | no | Default submit button label when custom `slot` content is not provided. |
 | `cancel_label` | String | `"Cancel"` | no | Default cancel button label when `show_cancel` is true. |
 | `show_cancel` | Boolean | `false` | no | Shows cancel button in default actions row. |
 | `disabled` | Boolean | `false` | no | Disables textarea and default actions and applies muted state. |
@@ -33,11 +33,11 @@ Enable `rich_text: true` when the comment flow needs TipTap formatting controls 
 ## Slots
 - `toolbar`: optional custom slot rendered below the input shell and above attachments/actions. This is separate from the TipTap rich-text toolbar controlled by `rich_text_options[:toolbar]`.
 - `attachments`: optional region for file chips/previews.
-- `actions`: custom actions row; overrides default cancel/submit controls.
+- `slot`: custom controls row; overrides default cancel/submit controls.
 
 ## Variants
 - Density variant via `compact: true/false`.
-- Action mode via default actions or custom `actions` slot.
+- Control mode via default actions or custom `slot` content.
 - Input mode via plain textarea (`rich_text: false`) or TipTap-backed rich text (`rich_text: true`).
 
 ## Example
