@@ -12,7 +12,7 @@
   background: "#f8fafc"
 ) do |hero|
   hero.badge { render FlatPack::Badge::Component.new(text: "v2.0") }
-  hero.actions do
+  hero.slot do
     concat render(FlatPack::Button::Component.new(text: "See the docs", style: :primary, url: "#"))
     concat render(FlatPack::Button::Component.new(text: "View on GitHub", style: :secondary, url: "#"))
   end

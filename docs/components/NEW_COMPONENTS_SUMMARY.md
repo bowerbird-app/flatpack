@@ -63,7 +63,7 @@ User-friendly empty states with optional icons, overridable icon names, actions,
   description: "Try adjusting your search",
   icon: :search
 ) do |component| %>
-  <% component.actions do %>
+  <% component.slot do %>
     <%= render FlatPack::Button::Component.new(text: "Clear filters") %>
   <% end %>
 <% end %>

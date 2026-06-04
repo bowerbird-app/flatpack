@@ -15,7 +15,7 @@
     {url: "/images/hero-subscription-box.webp", alt: "Subscription box fulfillment"}
   ]
 ) do |hero|
-  hero.actions do
+  hero.slot do
     concat render(FlatPack::Button::Component.new(text: "Get started", style: :primary, url: "#"))
     concat render(FlatPack::Button::Component.new(text: "Learn more", style: :secondary, url: "#"))
   end

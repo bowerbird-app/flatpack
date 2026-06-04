@@ -28,9 +28,8 @@ Use Comments Thread as the root wrapper for page-level comment sections.
 
 ## Variants
 - Spacing variants: `:default`, `:compact`.
-- Interaction mode: unlocked or locked (`locked: true`).
+ 
 
-## Example
 ```erb
 <%= render FlatPack::Comments::Thread::Component.new(count: @comments.count, title: "Discussion") do |thread| %>
   <% thread.composer do %>
@@ -137,7 +136,7 @@ https://redesigned-doodle-7vv56g46g9fp6qr-3000.app.github.dev/demo/comments?repl
                 compact: true,
                 rows: 2
               ) do |composer| %>
-                <% composer.actions do %>
+                <% composer.slot do %>
                   <div class="flex items-center justify-end w-full gap-2">
                     <%= render FlatPack::Button::Component.new(
                       text: "Cancel",

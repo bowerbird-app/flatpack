@@ -65,10 +65,19 @@ module FlatPack
           set_slot(:attachments, nil, *args, **kwargs, &block)
         end
 
-        def actions(*args, **kwargs, &block)
+        def slot(*args, **kwargs, &block)
           return get_slot(:actions) if args.empty? && kwargs.empty? && !block
 
           set_slot(:actions, nil, *args, **kwargs, &block)
+        end
+
+        def slot?
+          actions?
+        end
+
+        def actions(*args, **kwargs, &block)
+          warn_deprecated_api(:actions, :slot)
+          slot(*args, **kwargs, &block)
         end
 
         private
@@ -136,7 +145,7 @@ module FlatPack
         end
 
         def render_actions_section
-          return content_tag(:div, actions, class: action_section_classes) if actions?
+          return content_tag(:div, slot, class: action_section_classes) if slot?
           return render_default_actions if @show_cancel
 
           nil

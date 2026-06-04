@@ -143,7 +143,7 @@
     subtitle: "Last 8 months",
     height: 300
   ) do |chart| %>
-    <% chart.actions do %>
+    <% chart.top_right_slot do %>
       <%= render FlatPack::Button::Component.new(text: "Export", style: :ghost, size: :sm) %>
       <%= render FlatPack::Button::Component.new(text: "Share", style: :secondary, size: :sm) %>
     <% end %>
@@ -160,7 +160,7 @@
         subtitle: "Last 8 months",
         height: 300
       ) do |chart| #{erb_tag_close}
-        #{erb_output_open} chart.actions do #{erb_tag_close}
+        #{erb_output_open} chart.top_right_slot do #{erb_tag_close}
           #{erb_output_open} render FlatPack::Button::Component.new(text: "Export", style: :ghost, size: :sm) #{erb_tag_close}
           #{erb_output_open} render FlatPack::Button::Component.new(text: "Share", style: :secondary, size: :sm) #{erb_tag_close}
         #{erb_open} end #{erb_tag_close}

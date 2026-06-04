@@ -21,7 +21,7 @@
       background: "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f0fdf4 100%)"
     ) do |hero|
       hero.badge { render FlatPack::Badge::Component.new(text: "New", style: :success) }
-      hero.actions do
+      hero.slot do
         concat render(FlatPack::Button::Component.new(text: "Get started", style: :primary, url: "#"))
         concat render(FlatPack::Button::Component.new(text: "Learn more", style: :secondary, url: "#"))
       end
@@ -38,7 +38,7 @@
           background: "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f0fdf4 100%)"
         ) do |hero|
           hero.badge { render FlatPack::Badge::Component.new(text: "New", style: :success) }
-          hero.actions do
+          hero.slot do
             concat render(FlatPack::Button::Component.new(text: "Get started", style: :primary, url: "#"))
             concat render(FlatPack::Button::Component.new(text: "Learn more", style: :secondary, url: "#"))
           end
@@ -60,7 +60,7 @@
       description: "Full-bleed background image with a dark overlay keeps text readable at any resolution.",
       background_image_url: "/images/hero-stool.jpg"
     ) do |hero|
-      hero.actions do
+      hero.slot do
         concat render(FlatPack::Button::Component.new(text: "Start for free", style: :primary, url: "#"))
         concat render(FlatPack::Button::Component.new(text: "Watch demo", style: :secondary, url: "#"))
       end
@@ -76,7 +76,7 @@
           description: "Full-bleed background image with a dark overlay.",
           background_image_url: "https://example.com/hero-bg.jpg"
         ) do |hero|
-          hero.actions do
+          hero.slot do
             concat render(FlatPack::Button::Component.new(text: "Start for free", style: :primary, url: "#"))
             concat render(FlatPack::Button::Component.new(text: "Watch demo", style: :secondary, url: "#"))
           end
@@ -99,7 +99,7 @@
       image_url: "/images/hero-stool.jpg",
       image_alt: "DIY flat-pack stool"
     ) do |hero|
-      hero.actions do
+      hero.slot do
         concat render(FlatPack::Button::Component.new(text: "Try it free", style: :primary, url: "#"))
       end
     end %>
@@ -115,7 +115,7 @@
           image_url: "https://example.com/dashboard.png",
           image_alt: "Application dashboard screenshot"
         ) do |hero|
-          hero.actions do
+          hero.slot do
             concat render(FlatPack::Button::Component.new(text: "Try it free", style: :primary, url: "#"))
           end
         end %&gt;
@@ -139,7 +139,7 @@
       background: "#f8fafc"
     ) do |hero|
       hero.badge { render FlatPack::Badge::Component.new(text: "v2.0") }
-      hero.actions do
+      hero.slot do
         concat render(FlatPack::Button::Component.new(text: "See the docs", style: :primary, url: "#"))
         concat render(FlatPack::Button::Component.new(text: "View on GitHub", style: :secondary, url: "#"))
       end
@@ -158,7 +158,7 @@
           background: "#f8fafc"
         ) do |hero|
           hero.badge { render FlatPack::Badge::Component.new(text: "v2.0") }
-          hero.actions do
+          hero.slot do
             concat render(FlatPack::Button::Component.new(text: "See the docs", style: :primary, url: "#"))
             concat render(FlatPack::Button::Component.new(text: "View on GitHub", style: :secondary, url: "#"))
           end
@@ -181,7 +181,7 @@
       image_url: "/images/hero-stool.jpg",
       image_alt: "DIY flat-pack stool"
     ) do |hero|
-      hero.actions do
+      hero.slot do
         concat render(FlatPack::Button::Component.new(text: "Explore", style: :primary, url: "#"))
       end
     end %>
@@ -197,7 +197,7 @@
           image_url: "https://example.com/hero.jpg",
           image_alt: "Angled hero image"
         ) do |hero|
-          hero.actions do
+          hero.slot do
             concat render(FlatPack::Button::Component.new(text: "Explore", style: :primary, url: "#"))
           end
         end %&gt;
@@ -224,7 +224,7 @@
         {url: "/images/hero-subscription-box.webp", alt: "Subscription box fulfillment"}
       ]
     ) do |hero|
-      hero.actions do
+      hero.slot do
         concat render(FlatPack::Button::Component.new(text: "Get started", style: :primary, url: "#"))
         concat render(FlatPack::Button::Component.new(text: "Learn more", style: :secondary, url: "#"))
       end
@@ -246,7 +246,7 @@
             { url: "https://example.com/4.jpg", alt: "Feature four" }
           ]
         ) do |hero|
-          hero.actions do
+          hero.slot do
             concat render(FlatPack::Button::Component.new(text: "Get started", style: :primary, url: "#"))
             concat render(FlatPack::Button::Component.new(text: "Learn more", style: :secondary, url: "#"))
           end
@@ -270,7 +270,7 @@
       image_alt: "Packhelp packaging",
       background: "linear-gradient(135deg, #fefce8 0%, #fef9c3 50%, #fef08a 100%)"
     ) do |hero|
-      hero.actions do
+      hero.slot do
         concat render(FlatPack::Button::Component.new(text: "Start now", style: :primary, url: "#"))
       end
     end %>
@@ -286,7 +286,7 @@
           image_url: "https://example.com/hero.jpg",
           image_alt: "Offset hero image"
         ) do |hero|
-          hero.actions do
+          hero.slot do
             concat render(FlatPack::Button::Component.new(text: "Start now", style: :primary, url: "#"))
           end
         end %&gt;

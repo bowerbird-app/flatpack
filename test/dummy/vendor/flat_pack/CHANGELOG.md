@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.73] - 2026-06-04
+
+### Changed
+- Updated `FlatPack::Chart::Component` to prefer `top_right_slot` over `actions` for header action content while keeping `actions` as a deprecated compatibility alias.
+- Updated `FlatPack::PageTitle::Component`, `FlatPack::EmptyState::Component`, `FlatPack::Hero::Component`, and `FlatPack::Comments::Composer::Component` to prefer `slot` over `actions` while keeping `actions` as a deprecated compatibility alias.
+- Updated component docs and dummy app examples to use the new preferred slot method names and document the deprecated aliases.
+
 ## [0.1.72] - 2026-06-04
 
 ### Added

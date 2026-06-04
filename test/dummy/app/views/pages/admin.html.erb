@@ -11,7 +11,7 @@
   title: "Admin Dashboard",
   subtitle: "Monitor key metrics, track user activity, and manage your workspace from one place."
 ) do |page_title| %>
-  <% page_title.actions do %>
+  <% page_title.slot do %>
     <%= render FlatPack::Button::Component.new(text: "Filter", style: :secondary, size: :sm) %>
   <% end %>
 <% end %>

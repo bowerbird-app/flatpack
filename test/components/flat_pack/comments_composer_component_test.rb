@@ -195,12 +195,23 @@ module FlatPack
           assert_text "Attachments"
         end
 
-        def test_renders_custom_actions_slot
+        def test_renders_custom_slot
           component = Component.new
-          component.actions { "Custom Actions" }
+          component.slot { "Custom Actions" }
           render_inline(component)
 
           assert_text "Custom Actions"
+        end
+
+        def test_actions_is_deprecated_in_favor_of_slot
+          _stdout, stderr = capture_io do
+            component = Component.new
+            component.actions { "Custom Actions" }
+            render_inline(component)
+          end
+
+          assert_includes stderr, "FlatPack::Comments::Composer::Component#actions is deprecated"
+          assert_includes stderr, "#slot"
         end
 
         def test_does_not_expose_with_slot_aliases

@@ -26,15 +26,15 @@
   ) %>
 </section>
 
-<!-- Empty State with Actions -->
+<!-- Empty State with Slot -->
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Empty State with Actions", anchor_link: true, subtitle: "Examples for Empty State with Actions.") %>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Empty State with Slot", anchor_link: true, subtitle: "Examples for Empty State with Slot.") %>
   <div class="border border-[var(--surface-border-color)] rounded-lg p-8">
     <%= render FlatPack::EmptyState::Component.new(
       title: "No projects found",
       description: "Get started by creating your first project. Projects help you organize your work."
     ) do |empty| %>
-      <% empty.actions do %>
+      <% empty.slot do %>
         <%= render FlatPack::Button::Component.new(text: "Create Project", style: :primary) %>
         <%= render FlatPack::Button::Component.new(text: "Import Project", style: :secondary) %>
       <% end %>
@@ -47,7 +47,7 @@
         title: "No projects found",
         description: "Get started by creating your first project."
       ) do |empty| %&gt;
-        &lt;% empty.actions do %&gt;
+        &lt;% empty.slot do %&gt;
           &lt;%= render FlatPack::Button::Component.new(text: "Create Project", style: :primary) %&gt;
         &lt;% end %&gt;
       &lt;% end %&gt;
@@ -177,7 +177,7 @@
           <%= render FlatPack::Shared::IconComponent.new(name: :upload, size: :lg, class: "text-blue-600") %>
         </div>
       <% end %>
-      <% empty.actions do %>
+      <% empty.slot do %>
         <%= render FlatPack::Button::Component.new(text: "Upload CSV", style: :primary) %>
         <%= render FlatPack::Button::Component.new(text: "Connect Source", style: :secondary) %>
       <% end %>
@@ -196,7 +196,7 @@
               &lt;%= render FlatPack::Shared::IconComponent.new(name: :upload, size: :lg, class: &quot;text-blue-600&quot;) %&gt;
             &lt;/div&gt;
           &lt;% end %&gt;
-          &lt;% empty.actions do %&gt;
+          &lt;% empty.slot do %&gt;
             &lt;%= render FlatPack::Button::Component.new(text: &quot;Upload CSV&quot;, style: :primary) %&gt;
             &lt;%= render FlatPack::Button::Component.new(text: &quot;Connect Source&quot;, style: :secondary) %&gt;
           &lt;% end %&gt;
@@ -217,7 +217,7 @@
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Custom Graphics:</strong> Slot for custom illustrations or icons<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Action Buttons:</strong> Add primary and secondary CTAs<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Centered Layout:</strong> Visually balanced and centered<% end %>
-    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Flexible Content:</strong> Title, description, and actions<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Flexible Content:</strong> Title, description, and slot content<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Responsive:</strong> Adapts to container width<% end %>
   <% end %>
 </section>

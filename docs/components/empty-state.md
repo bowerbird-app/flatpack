@@ -21,7 +21,7 @@ Use Empty State when a list, search, inbox, or dashboard panel has no content ye
 | name | type | required | description |
 |---|---|---|---|
 | `graphic` | slot | no | Replaces built-in icon area with custom graphic content. |
-| `actions` | slot | no | Action row (buttons/links). |
+| `slot` | slot | no | Action row (buttons/links). |
 
 ## Variants
 None.
@@ -33,7 +33,7 @@ None.
   description: "Try a different filter or keyword.",
   icon: :search
 ) do |state| %>
-  <% state.actions do %>
+  <% state.slot do %>
     <%= render FlatPack::Button::Component.new(text: "Clear filters") %>
   <% end %>
 <% end %>

@@ -250,7 +250,7 @@
     title: "Admin Dashboard",
     subtitle: "Monitor key metrics, track user activity, and manage your workspace from one place."
   ) do |page_title| %>
-    <% page_title.actions do %>
+    <% page_title.slot do %>
       <%= render FlatPack::Button::Component.new(text: "Filter", style: :secondary, size: :sm) %>
       <%= render FlatPack::Button::Component.new(text: "Export", style: :ghost, size: :sm) %>
     <% end %>
@@ -264,7 +264,7 @@
         title: "Admin Dashboard",
         subtitle: "Monitor key metrics, track user activity, and manage your workspace from one place."
       ) do |page_title| #{erb_tag_close}
-        #{erb_output_open} page_title.actions do #{erb_tag_close}
+        #{erb_output_open} page_title.slot do #{erb_tag_close}
           #{erb_output_open} render FlatPack::Button::Component.new(text: "Filter", style: :secondary, size: :sm) #{erb_tag_close}
           #{erb_output_open} render FlatPack::Button::Component.new(text: "Export", style: :ghost, size: :sm) #{erb_tag_close}
         #{erb_output_open} end #{erb_tag_close}

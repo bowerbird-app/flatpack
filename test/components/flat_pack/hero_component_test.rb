@@ -91,12 +91,23 @@ module FlatPack
       end
 
       # 8. actions slot content appears in output
-      def test_renders_actions_slot_content
+      def test_renders_slot_content
         render_inline(Component.new(variant: :centered, headline: "CTA")) do |c|
-          c.actions { "Get started now" }
+          c.slot { "Get started now" }
         end
 
         assert_text "Get started now"
+      end
+
+      def test_actions_is_deprecated_in_favor_of_slot
+        _stdout, stderr = capture_io do
+          render_inline(Component.new(variant: :centered, headline: "CTA")) do |c|
+            c.actions { "Get started now" }
+          end
+        end
+
+        assert_includes stderr, "FlatPack::Hero::Component#actions is deprecated"
+        assert_includes stderr, "#slot"
       end
 
       # 9. badge slot content appears in output
