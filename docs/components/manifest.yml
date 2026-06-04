@@ -87,6 +87,8 @@ components:
     title: Chart
     doc: docs/components/charts.md
     primary_class: FlatPack::Chart::Component
+    related_classes:
+      - FlatPack::Chart::DefaultFilterComponent
     status: documented
 
   - key: chart_buttons

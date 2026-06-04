@@ -391,12 +391,26 @@
                 icon: :chevron_down,
                 active: false
               ) %>
-              <%= render FlatPack::Sidebar::Item::Component.new(
+              <%= render FlatPack::Sidebar::Group::Component.new(
                 label: "Charts",
-                href: demo_charts_path,
                 icon: :dashboard,
-                active: false
-              ) %>
+                default_open: false
+              ) do |group| %>
+                <% group.items do %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "Overview",
+                    href: demo_charts_path,
+                    icon: :dashboard,
+                    active: false
+                  ) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "Default Filter",
+                    href: demo_charts_default_filter_path,
+                    icon: :dashboard,
+                    active: false
+                  ) %>
+                <% end %>
+              <% end %>
               <%= render FlatPack::Sidebar::Group::Component.new(
                 label: "Grid",
                 icon: :dashboard,

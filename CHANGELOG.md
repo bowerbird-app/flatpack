@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added `FlatPack::Chart::DefaultFilterComponent` to provide a reusable chart filter row with DateInput range selection (`start_date`/`end_date` defaults) and a status dropdown powered by Select options.
 - Added `picker: :flatpack_date_picker` support to `FlatPack::DateInput::Component` with a custom popup layout that combines quick range presets and calendar selection.
 
 ### Changed

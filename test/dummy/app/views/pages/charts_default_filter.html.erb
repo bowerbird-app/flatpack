@@ -1,0 +1,162 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Default Chart Filter Component",
+  subtitle: "Reusable date-range controls with optional status dropdown for chart filtering."
+) %>
+
+<%
+  erb_open = "<" + "%"
+  erb_output_open = "<" + "%="
+  erb_tag_close = "%" + ">"
+%>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Default Chart Filter Component",
+    anchor_link: true,
+    subtitle: "Date range + status filter controls with Turbo Frame auto-submit."
+  ) %>
+
+  <%= turbo_frame_tag "chart-default-filter-frame" do %>
+    <%= form_with(
+      url: demo_charts_default_filter_path,
+      method: :get,
+      class: "mb-4",
+      data: {
+        turbo_frame: "chart-default-filter-frame",
+        controller: "flat-pack--auto-submit",
+        action: "input->flat-pack--auto-submit#queueSubmit change->flat-pack--auto-submit#queueSubmit",
+        flat_pack__auto_submit_delay_value: 250
+      }
+    ) do %>
+      <%= render FlatPack::Chart::DefaultFilterComponent.new(
+        start_date_value: @default_chart_filter_start_date,
+        end_date_value: @default_chart_filter_end_date,
+        status: @default_chart_filter_status,
+        status_lists: @default_chart_filter_status_lists
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%
+    default_filter_variables = [
+      {
+        variable: "start_date_name",
+        accepts: 'String (default: "start_date")',
+        example: 'start_date_name: "filters[start_date]"'
+      },
+      {
+        variable: "end_date_name",
+        accepts: 'String (default: "end_date")',
+        example: 'end_date_name: "filters[end_date]"'
+      },
+      {
+        variable: "start_date_value",
+        accepts: "String, Date, nil (default: nil)",
+        example: "start_date_value: params[:start_date]"
+      },
+      {
+        variable: "end_date_value",
+        accepts: "String, Date, nil (default: nil)",
+        example: "end_date_value: params[:end_date]"
+      },
+      {
+        variable: "status_name",
+        accepts: 'String, nil (default: "status"; nil hides status dropdown)',
+        example: "status_name: nil"
+      },
+      {
+        variable: "status",
+        accepts: "String, nil (default: nil)",
+        example: "status: params[:status]"
+      },
+      {
+        variable: "status_lists",
+        accepts: "Array, Hash",
+        example: '[["Active", "active"], ["Paused", "paused"]]'
+      }
+    ]
+  %>
+
+  <%= render FlatPack::Table::Component.new(data: default_filter_variables, class: "mb-4") do |table| %>
+    <% table.column(title: "Variable", html: ->(row) { row[:variable] }) %>
+    <% table.column(title: "Accepts", html: ->(row) { row[:accepts] }) %>
+    <% table.column(title: "Example", html: ->(row) { row[:example] }) %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} turbo_frame_tag "chart-default-filter-frame" do #{erb_tag_close}
+        #{erb_output_open} form_with(
+          url: demo_charts_default_filter_path,
+          method: :get,
+          data: {
+            turbo_frame: "chart-default-filter-frame",
+            controller: "flat-pack--auto-submit",
+            action: "input->flat-pack--auto-submit#queueSubmit change->flat-pack--auto-submit#queueSubmit"
+          }
+        ) do #{erb_tag_close}
+        #{erb_output_open} render FlatPack::Chart::DefaultFilterComponent.new(
+          start_date_value: params[:start_date],
+          end_date_value: params[:end_date],
+          status: params[:status],
+          status_lists: [["Active", "active"], ["Paused", "paused"], ["Archived", "archived"]]
+        ) #{erb_tag_close}
+        #{erb_open} end #{erb_tag_close}
+      #{erb_open} end #{erb_tag_close}
+    CODE
+  ) %>
+
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Default Chart Filter Component",
+    subtitle: "No-status variant using status_name: nil."
+  ) %>
+
+  <%= turbo_frame_tag "chart-default-filter-no-status-frame" do %>
+    <%= form_with(
+      url: demo_charts_default_filter_path,
+      method: :get,
+      class: "mb-4",
+      data: {
+        turbo_frame: "chart-default-filter-no-status-frame",
+        controller: "flat-pack--auto-submit",
+        action: "input->flat-pack--auto-submit#queueSubmit change->flat-pack--auto-submit#queueSubmit",
+        flat_pack__auto_submit_delay_value: 250
+      }
+    ) do %>
+      <%= render FlatPack::Chart::DefaultFilterComponent.new(
+        start_date_value: @default_chart_filter_start_date,
+        end_date_value: @default_chart_filter_end_date,
+        status_name: nil,
+        status_lists: @default_chart_filter_status_lists
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB (No Status Dropdown)",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} turbo_frame_tag "chart-default-filter-no-status-frame" do #{erb_tag_close}
+        #{erb_output_open} form_with(
+          url: demo_charts_default_filter_path,
+          method: :get,
+          data: {
+            turbo_frame: "chart-default-filter-no-status-frame",
+            controller: "flat-pack--auto-submit",
+            action: "input->flat-pack--auto-submit#queueSubmit change->flat-pack--auto-submit#queueSubmit"
+          }
+        ) do #{erb_tag_close}
+        #{erb_output_open} render FlatPack::Chart::DefaultFilterComponent.new(
+          start_date_value: params[:start_date],
+          end_date_value: params[:end_date],
+          status_name: nil,
+          status_lists: [["Active", "active"], ["Paused", "paused"], ["Archived", "archived"]]
+        ) #{erb_tag_close}
+        #{erb_open} end #{erb_tag_close}
+      #{erb_open} end #{erb_tag_close}
+    CODE
+  ) %>
+
+</section>

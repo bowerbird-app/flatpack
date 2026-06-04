@@ -59,6 +59,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/pagination
     /demo/admin
     /demo/charts
+    /demo/charts/default_filter
     /demo/code_blocks
     /demo/avatars
     /demo/comments
