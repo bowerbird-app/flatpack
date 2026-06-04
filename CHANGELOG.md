@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.74] - 2026-06-04
+
+### Changed
+- Updated dummy page copy for slot-based APIs so component demo headings/subtitles now consistently say "slots" instead of "actions" where applicable.
+- Added `--comments-composer-slots-background-color` as a new token alias backed by `--comments-composer-actions-background-color` to keep theming backward compatible during slot naming migration.
+
 ## [0.1.73] - 2026-06-04
 
 ### Changed
