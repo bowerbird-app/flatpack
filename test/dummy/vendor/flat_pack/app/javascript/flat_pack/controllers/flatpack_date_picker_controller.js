@@ -30,6 +30,8 @@ export default class extends Controller {
     this.visibleMonth = this.initialVisibleMonth()
     this.committed = this.initialCommittedValues()
     this.draft = { ...this.committed }
+    this.committedPresetKey = null
+    this.draftPresetKey = null
 
     this.isOpen = false
     this.panelElement = this.hasPanelTarget ? this.panelTarget : document.getElementById(this.panelIdValue)
@@ -92,6 +94,7 @@ export default class extends Controller {
     this.panelElement.setAttribute("aria-hidden", "false")
     this.triggerTarget?.setAttribute("aria-expanded", "true")
     this.draft = { ...this.committed }
+    this.draftPresetKey = this.committedPresetKey
     this.render()
     this.positionPanel()
     this.addGlobalListeners()
@@ -127,6 +130,7 @@ export default class extends Controller {
   cancel(event) {
     event.preventDefault()
     this.draft = { ...this.committed }
+    this.draftPresetKey = this.committedPresetKey
     this.render()
     this.close()
   }
@@ -141,8 +145,10 @@ export default class extends Controller {
     }
 
     this.committed = normalizedDraft
+    this.committedPresetKey = this.draftPresetKey
+    this.draftPresetKey = this.committedPresetKey
     this.syncFormFields(this.committed)
-    this.syncTriggerValue(this.committed)
+    this.syncTriggerValue(this.committed, this.committedPresetKey)
     this.close()
   }
 
@@ -199,6 +205,8 @@ export default class extends Controller {
       this.draft.end = null
     }
 
+    this.draftPresetKey = preset
+
     this.visibleMonth = new Date(this.draft.start || this.today)
     this.render()
   }
@@ -222,12 +230,14 @@ export default class extends Controller {
 
     if (!this.rangeValue) {
       this.draft = { start: selected, end: null }
+      this.draftPresetKey = null
       this.render()
       return
     }
 
     if (!this.draft.start || (this.draft.start && this.draft.end)) {
       this.draft = { start: selected, end: null }
+      this.draftPresetKey = null
       this.render()
       return
     }
@@ -237,6 +247,8 @@ export default class extends Controller {
     } else {
       this.draft = { start: this.draft.start, end: selected }
     }
+
+    this.draftPresetKey = null
 
     this.render()
   }
@@ -342,7 +354,7 @@ export default class extends Controller {
   render() {
     this.renderCalendar()
     this.renderSummary()
-    this.syncTriggerValue(this.draft)
+    this.syncTriggerValue(this.draft, this.draftPresetKey)
 
     if (this.isOpen) {
       this.positionPanel()
@@ -532,7 +544,12 @@ export default class extends Controller {
     return Boolean(state.end)
   }
 
-  displayValue(state) {
+  displayValue(state, presetKey = null) {
+    const presetLabel = this.presetLabel(presetKey)
+    if (this.rangeValue && presetLabel) {
+      return presetLabel
+    }
+
     if (!state.start) {
       return ""
     }
@@ -549,12 +566,28 @@ export default class extends Controller {
     return `${start} to ${this.toIso(state.end)}`
   }
 
-  syncTriggerValue(state) {
+  syncTriggerValue(state, presetKey = null) {
     if (!this.hasTriggerTarget) {
       return
     }
 
-    this.triggerTarget.value = this.displayValue(state)
+    this.triggerTarget.value = this.displayValue(state, presetKey)
+  }
+
+  presetLabel(key) {
+    const labels = {
+      today: "Today",
+      yesterday: "Yesterday",
+      last_3_days: "Last 3 days",
+      this_week: "This week",
+      last_week: "Last week",
+      this_month: "This month",
+      last_month: "Last month",
+      this_year: "This year",
+      last_year: "Last year"
+    }
+
+    return labels[key] || null
   }
 
   syncFormFields(state) {
