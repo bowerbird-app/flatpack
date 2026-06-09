@@ -1735,6 +1735,15 @@
   .border-l-\[var\(--quote-border-width\)\] {
     border-left-color: var(--quote-border-width);
   }
+  .bg-\(--color-danger-background-color\) {
+    background-color: var(--color-danger-background-color);
+  }
+  .bg-\(--color-success-background-color\) {
+    background-color: var(--color-success-background-color);
+  }
+  .bg-\(--color-warning-background-color\) {
+    background-color: var(--color-warning-background-color);
+  }
   .bg-\(--primary-color\) {
     background-color: var(--primary-color);
   }
@@ -2647,8 +2656,17 @@
   .whitespace-pre-wrap {
     white-space: pre-wrap;
   }
+  .text-\(--color-danger-text-color\) {
+    color: var(--color-danger-text-color);
+  }
   .text-\(--color-primary\) {
     color: var(--color-primary);
+  }
+  .text-\(--color-success-text\) {
+    color: var(--color-success-text);
+  }
+  .text-\(--color-warning-text\) {
+    color: var(--color-warning-text);
   }
   .text-\(--surface-content-color\) {
     color: var(--surface-content-color);
