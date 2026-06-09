@@ -291,6 +291,9 @@ class PagesController < ApplicationController
   def forms_date_input
   end
 
+  def forms_date_range_input
+  end
+
   def forms_date_time_input
   end
 

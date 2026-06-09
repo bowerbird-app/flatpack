@@ -210,6 +210,7 @@ components:
       - FlatPack::UrlInput::Component
       - FlatPack::NumberInput::Component
       - FlatPack::DateInput::Component
+      - FlatPack::DateRangeInput::Component
       - FlatPack::DateTimeInput::Component
       - FlatPack::TimeInput::Component
       - FlatPack::FileInput::Component

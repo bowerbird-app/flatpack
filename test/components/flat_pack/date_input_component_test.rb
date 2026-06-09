@@ -106,19 +106,17 @@ module FlatPack
         assert_selector "input[type='text'][readonly][role='button']"
       end
 
-      def test_renders_range_hidden_fields_for_custom_picker
+      def test_renders_hidden_single_field_for_custom_picker
         render_inline(Component.new(
-          name: "reporting_period",
+          name: "billing_anchor_date",
           picker: :flatpack_date_picker,
-          range: true,
-          value: {start: "2026-05-01", end: "2026-05-31"},
-          range_start_name: "reporting_period_start",
-          range_end_name: "reporting_period_end"
+          value: "2026-05-31"
         ))
 
-        assert_selector "input[type='hidden'][name='reporting_period_start'][value='2026-05-01']", visible: :all
-        assert_selector "input[type='hidden'][name='reporting_period_end'][value='2026-05-31']", visible: :all
-        assert_selector "input[type='text'][value='2026-05-01 to 2026-05-31']"
+        assert_selector "input[type='hidden'][name='billing_anchor_date'][value='2026-05-31']", visible: :all
+        assert_no_selector "input[data-flat-pack--flatpack-date-picker-target='rangeStartField']", visible: :all
+        assert_no_selector "input[data-flat-pack--flatpack-date-picker-target='rangeEndField']", visible: :all
+        assert_selector "input[type='text'][value='2026-05-31']"
       end
 
       def test_renders_with_aria_attributes
@@ -163,10 +161,12 @@ module FlatPack
         end
       end
 
-      def test_raises_error_for_range_without_custom_picker
-        assert_raises(ArgumentError) do
-          Component.new(name: "birth_date", range: true)
-        end
+      def test_ignores_unsupported_range_argument
+        render_inline(Component.new(name: "birth_date", range: true))
+
+        assert_selector "input[type='date'][name='birth_date']"
+        assert_no_selector "input[data-flat-pack--flatpack-date-picker-target='rangeStartField']", visible: :all
+        assert_no_selector "input[data-flat-pack--flatpack-date-picker-target='rangeEndField']", visible: :all
       end
 
       def test_sanitizes_dangerous_onclick_attribute

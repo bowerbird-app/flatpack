@@ -88,5 +88,5 @@ Use `FlatPack::ChartButtons::Component` as a sibling when you need reusable Turb
 - Stimulus controller: `app/javascript/flat_pack/controllers/chart_controller.js` (`flat-pack--chart`).
 - ApexCharts import map pin (`import "apexcharts"` via dynamic import in controller).
 - `FlatPack::Card::Component` when `card: true`.
-- `FlatPack::DateInput::Component` with `picker: :flatpack_date_picker` and `range: true` for date-range selection.
+- `FlatPack::DateRangeInput::Component` for date-range selection.
 - `FlatPack::Select::Component` for status selection options.

@@ -39,13 +39,11 @@ module FlatPack
       private
 
       def render_date_range
-        render FlatPack::DateInput::Component.new(
-          name: "chart_date_range",
-          picker: :flatpack_date_picker,
-          range: true,
-          range_start_name: @start_date_name,
-          range_end_name: @end_date_name,
-          value: {start: @start_date_value, end: @end_date_value},
+        render FlatPack::DateRangeInput::Component.new(
+          start_name: @start_date_name,
+          end_name: @end_date_name,
+          start_value: @start_date_value,
+          end_value: @end_date_value,
           label: "Date Range",
           class: "w-[220px]"
         )

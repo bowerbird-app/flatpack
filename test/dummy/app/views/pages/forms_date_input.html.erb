@@ -33,17 +33,6 @@
         max: (Date.today + 30).to_s,
         value: Date.today.to_s
       ) %>
-
-      <%= render FlatPack::DateInput::Component.new(
-        name: "reporting_period",
-        label: "Reporting Period",
-        picker: :flatpack_date_picker,
-        range: true,
-        range_start_name: "reporting_period_start",
-        range_end_name: "reporting_period_end",
-        min: (Date.today - 365).to_s,
-        max: Date.today.to_s
-      ) %>
     <% end %>
   <% end %>
 
@@ -73,17 +62,6 @@
           min: (Date.today - 30).to_s,
           max: (Date.today + 30).to_s,
           value: Date.today.to_s
-        ) %&gt;
-
-        &lt;%= render FlatPack::DateInput::Component.new(
-          name: &quot;reporting_period&quot;,
-          label: &quot;Reporting Period&quot;,
-          picker: :flatpack_date_picker,
-          range: true,
-          range_start_name: &quot;reporting_period_start&quot;,
-          range_end_name: &quot;reporting_period_end&quot;,
-          min: (Date.today - 365).to_s,
-          max: Date.today.to_s
         ) %&gt;
         &lt;% end %&gt;
       &lt;% end %&gt;

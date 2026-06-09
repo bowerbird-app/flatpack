@@ -7,7 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Added `FlatPack::DateRangeInput::Component` as a standalone date-range form component with quick presets and calendar selection.
+
 ### Changed
+- Updated `FlatPack::Chart::DefaultFilterComponent` to use `FlatPack::DateRangeInput::Component` for date-range controls.
+- Removed DateInput range-mode usage from demos and docs in favor of the standalone DateRangeInput component.
 - Renamed the Carousel logo variant from `:logo_cloud` to `:logo_slider` with no compatibility alias.
 - Updated carousel component internals, Stimulus variant detection, tests, docs, and dummy demos to use the new Logo Slider naming.
 

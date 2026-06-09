@@ -1,15 +1,17 @@
 # frozen_string_literal: true
 
 module FlatPack
-  module DateInput
+  module DateRangeInput
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "text-[var(--color-warning)]" "border-[var(--color-warning)]"
 
       def initialize(
-        name:,
-        value: nil,
+        start_name:,
+        end_name:,
+        start_value: nil,
+        end_value: nil,
         placeholder: nil,
         disabled: false,
         required: false,
@@ -17,14 +19,14 @@ module FlatPack
         error: nil,
         min: nil,
         max: nil,
-        picker: :native,
         **system_arguments
       )
         @custom_class = system_arguments[:class]
         super(**system_arguments)
-        @name = name
-        @picker = normalize_picker(picker)
-        @value = format_date_value(value)
+        @start_name = start_name
+        @end_name = end_name
+        @start_value = format_date_value(start_value)
+        @end_value = format_date_value(end_value)
         @placeholder = placeholder
         @disabled = disabled
         @required = required
@@ -33,8 +35,7 @@ module FlatPack
         @min = format_date_value(min)
         @max = format_date_value(max)
 
-        validate_name!
-        validate_picker!
+        validate_names!
       end
 
       def call
@@ -56,38 +57,6 @@ module FlatPack
       end
 
       def render_input
-        return render_custom_picker if custom_picker_mode?
-
-        tag.input(**native_input_attributes)
-      end
-
-      def render_error
-        return unless @error
-
-        content_tag(:p, @error, class: error_classes, id: error_id)
-      end
-
-      def native_input_attributes
-        attrs = {
-          type: "date",
-          name: @name,
-          id: input_id,
-          value: @value,
-          placeholder: @placeholder,
-          disabled: @disabled,
-          required: @required,
-          min: @min,
-          max: @max,
-          class: input_classes,
-          data: merged_data_attributes
-        }
-
-        attrs[:aria] = {invalid: "true", describedby: error_id} if @error
-
-        merge_attributes(**apply_default_validation(attrs.compact, error_id: error_id, has_error: @error.present?))
-      end
-
-      def render_custom_picker
         content_tag(:div, **picker_root_attributes) do
           safe_join([
             render_picker_trigger,
@@ -97,12 +66,18 @@ module FlatPack
         end
       end
 
+      def render_error
+        return unless @error
+
+        content_tag(:p, @error, class: error_classes, id: error_id)
+      end
+
       def render_picker_trigger
         attrs = {
           type: "text",
           id: input_id,
           value: initial_display_value,
-          placeholder: @placeholder || default_picker_placeholder,
+          placeholder: @placeholder || "Select date range",
           disabled: @disabled,
           required: @required,
           readonly: true,
@@ -126,7 +101,10 @@ module FlatPack
       end
 
       def render_picker_hidden_fields
-        tag.input(type: "hidden", name: @name, value: @value, data: {"flat-pack--flatpack-date-picker-target": "singleField"})
+        safe_join([
+          tag.input(type: "hidden", name: @start_name, value: @start_value, data: {"flat-pack--flatpack-date-picker-target": "rangeStartField"}),
+          tag.input(type: "hidden", name: @end_name, value: @end_value, data: {"flat-pack--flatpack-date-picker-target": "rangeEndField"})
+        ])
       end
 
       def render_picker_panel
@@ -141,7 +119,7 @@ module FlatPack
       def render_picker_quick_ranges
         content_tag(:div, class: picker_ranges_section_classes) do
           safe_join([
-            content_tag(:p, "Quick Select", class: "text-xs font-semibold uppercase tracking-wide text-[var(--surface-muted-content-color)]"),
+            content_tag(:p, "Date Range", class: "text-xs font-semibold uppercase tracking-wide text-[var(--surface-muted-content-color)]"),
             content_tag(:div, class: "mt-2 space-y-1") do
               safe_join(quick_range_presets.map { |preset| render_quick_range_button(preset) })
             end
@@ -228,10 +206,11 @@ module FlatPack
 
         data_attributes.merge(
           controller: controllers,
-          "flat-pack--flatpack-date-picker-range-value": false,
+          "flat-pack--flatpack-date-picker-range-value": true,
           "flat-pack--flatpack-date-picker-min-value": @min,
           "flat-pack--flatpack-date-picker-max-value": @max,
-          "flat-pack--flatpack-date-picker-value-value": @value,
+          "flat-pack--flatpack-date-picker-start-value": @start_value,
+          "flat-pack--flatpack-date-picker-end-value": @end_value,
           "flat-pack--flatpack-date-picker-panel-id-value": panel_id
         ).compact
       end
@@ -290,19 +269,8 @@ module FlatPack
         )
       end
 
-      def picker_nav_button_classes
-        "rounded-md border border-[var(--surface-border-color)] px-2 py-1 text-xs text-[var(--surface-content-color)] transition-colors duration-base hover:bg-[var(--surface-subtle-background-color)] focus:outline-none focus:ring-2 focus:ring-ring"
-      end
-
       def picker_trigger_classes
         classes(input_classes, "cursor-pointer")
-      end
-
-      def merged_data_attributes
-        existing_controller = data_attributes[:controller]
-        controllers = [existing_controller, "flat-pack--date-input"].compact.join(" ")
-
-        data_attributes.merge(controller: controllers)
       end
 
       def wrapper_classes
@@ -345,7 +313,7 @@ module FlatPack
       end
 
       def input_id
-        @input_id ||= @system_arguments[:id] || "#{@name.to_s.gsub(/[^a-zA-Z0-9_-]/, "_")}_#{SecureRandom.hex(4)}"
+        @input_id ||= @system_arguments[:id] || "#{@start_name.to_s.gsub(/[^a-zA-Z0-9_-]/, "_")}_#{SecureRandom.hex(4)}"
       end
 
       def panel_id
@@ -356,30 +324,15 @@ module FlatPack
         "#{input_id}_error"
       end
 
-      def validate_name!
-        raise ArgumentError, "name is required" if @name.nil? || @name.to_s.strip.empty?
-      end
-
-      def validate_picker!
-        unless %i[native flatpack_date_picker].include?(@picker)
-          raise ArgumentError, "picker must be one of: native, flatpack_date_picker"
-        end
-      end
-
-      def normalize_picker(picker)
-        (picker || :native).to_sym
-      end
-
-      def custom_picker_mode?
-        @picker == :flatpack_date_picker
-      end
-
-      def default_picker_placeholder
-        "Select date"
+      def validate_names!
+        raise ArgumentError, "start_name is required" if @start_name.nil? || @start_name.to_s.strip.empty?
+        raise ArgumentError, "end_name is required" if @end_name.nil? || @end_name.to_s.strip.empty?
       end
 
       def initial_display_value
-        @value
+        return nil if @start_value.blank? || @end_value.blank?
+
+        "#{@start_value} to #{@end_value}"
       end
 
       def quick_range_presets

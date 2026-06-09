@@ -16,6 +16,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/forms/text_area
     /demo/forms/number_input
     /demo/forms/date_input
+    /demo/forms/date_range_input
     /demo/forms/date_time_input
     /demo/forms/time_input
     /demo/forms/file_input
@@ -130,8 +131,15 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_includes response.body, "picker: :flatpack_date_picker"
-    assert_includes response.body, "range_start_name: &quot;reporting_period_start&quot;"
     assert_includes response.body, "component-method-variables-date_input-0"
+  end
+
+  test "date range input demo renders standalone date range examples" do
+    get "/demo/forms/date_range_input"
+
+    assert_response :success
+    assert_includes response.body, "FlatPack::DateRangeInput::Component"
+    assert_includes response.body, "component-method-variables-date_range_input-0"
   end
 
   test "date time input demo does not include the date range companion example" do

@@ -1,0 +1,62 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Date Range Input",
+  subtitle: "Standalone custom date-range picker with quick presets and calendar selection."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :date_range_input %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Date Range Input Examples", anchor_link: true) %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body(class: "space-y-[var(--stack-gap-md)]") do %>
+      <%= render FlatPack::DateRangeInput::Component.new(
+        start_name: "reporting_period_start",
+        end_name: "reporting_period_end",
+        label: "Reporting Period",
+        min: (Date.today - 365).to_s,
+        max: Date.today.to_s,
+        start_value: (Date.today - 30).to_s,
+        end_value: Date.today.to_s
+      ) %>
+
+      <%= render FlatPack::DateRangeInput::Component.new(
+        start_name: "compare_period_start",
+        end_name: "compare_period_end",
+        label: "Compare Period",
+        placeholder: "Choose comparison window",
+        min: (Date.today - 730).to_s,
+        max: Date.today.to_s
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Card::Component.new do |card| %&gt;
+        &lt;% card.body do %&gt;
+        &lt;%= render FlatPack::DateRangeInput::Component.new(
+          start_name: &quot;reporting_period_start&quot;,
+          end_name: &quot;reporting_period_end&quot;,
+          label: &quot;Reporting Period&quot;,
+          min: (Date.today - 365).to_s,
+          max: Date.today.to_s,
+          start_value: (Date.today - 30).to_s,
+          end_value: Date.today.to_s
+        ) %&gt;
+
+        &lt;%= render FlatPack::DateRangeInput::Component.new(
+          start_name: &quot;compare_period_start&quot;,
+          end_name: &quot;compare_period_end&quot;,
+          label: &quot;Compare Period&quot;,
+          placeholder: &quot;Choose comparison window&quot;,
+          min: (Date.today - 730).to_s,
+          max: Date.today.to_s
+        ) %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    language: "erb",
+    title: "Date Range Input Examples"
+  ) %>
+</section>

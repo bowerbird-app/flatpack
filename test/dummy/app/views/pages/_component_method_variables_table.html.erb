@@ -556,22 +556,37 @@
     },
     date_input: {
       label: "Date Input",
-      method_call: "render FlatPack::DateInput::Component.new(name: \"reporting_period\", label: \"Reporting Period\", picker: :flatpack_date_picker, range: true)",
+      method_call: "render FlatPack::DateInput::Component.new(name: \"birth_date\", label: \"Birth Date\", picker: :flatpack_date_picker)",
       variables: [
         { variable: "name", accepts: "String (required)", example: "name: \"birth_date\"" },
-        { variable: "value", accepts: "String, Date, Time, DateTime, Hash, nil", example: "value: { start: \"2026-05-01\", end: \"2026-05-31\" }" },
+        { variable: "value", accepts: "String, Date, Time, DateTime, nil", example: "value: \"2026-05-31\"" },
         { variable: "placeholder", accepts: "String or nil", example: "placeholder: \"Select date\"" },
         { variable: "disabled", accepts: "true, false", example: "disabled: true" },
         { variable: "required", accepts: "true, false", example: "required: true" },
-        { variable: "label", accepts: "String or nil", example: "label: \"Reporting Period\"" },
+        { variable: "label", accepts: "String or nil", example: "label: \"Birth Date\"" },
         { variable: "error", accepts: "String or nil", example: "error: \"Date is required\"" },
         { variable: "min", accepts: "String, Date, Time, DateTime, nil", example: "min: \"2026-01-01\"" },
         { variable: "max", accepts: "String, Date, Time, DateTime, nil", example: "max: \"2026-12-31\"" },
         { variable: "picker", accepts: ":native, :flatpack_date_picker", example: "picker: :flatpack_date_picker" },
-        { variable: "range", accepts: "true, false", example: "range: true" },
-        { variable: "range_start_name", accepts: "String or nil", example: "range_start_name: \"reporting_period_start\"" },
-        { variable: "range_end_name", accepts: "String or nil", example: "range_end_name: \"reporting_period_end\"" },
         { variable: "**system_arguments", accepts: "Hash", example: "id: \"reporting-period\", class: \"w-full\", data: { testid: \"date-input\" }" }
+      ]
+    },
+    date_range_input: {
+      label: "Date Range Input",
+      method_call: "render FlatPack::DateRangeInput::Component.new(start_name: \"reporting_period_start\", end_name: \"reporting_period_end\", label: \"Reporting Period\")",
+      variables: [
+        { variable: "start_name", accepts: "String (required)", example: "start_name: \"reporting_period_start\"" },
+        { variable: "end_name", accepts: "String (required)", example: "end_name: \"reporting_period_end\"" },
+        { variable: "start_value", accepts: "String, Date, Time, DateTime, nil", example: "start_value: \"2026-05-01\"" },
+        { variable: "end_value", accepts: "String, Date, Time, DateTime, nil", example: "end_value: \"2026-05-31\"" },
+        { variable: "placeholder", accepts: "String or nil", example: "placeholder: \"Select date range\"" },
+        { variable: "disabled", accepts: "true, false", example: "disabled: true" },
+        { variable: "required", accepts: "true, false", example: "required: true" },
+        { variable: "label", accepts: "String or nil", example: "label: \"Reporting Period\"" },
+        { variable: "error", accepts: "String or nil", example: "error: \"Date range is required\"" },
+        { variable: "min", accepts: "String, Date, Time, DateTime, nil", example: "min: \"2026-01-01\"" },
+        { variable: "max", accepts: "String, Date, Time, DateTime, nil", example: "max: \"2026-12-31\"" },
+        { variable: "**system_arguments", accepts: "Hash", example: "id: \"reporting-period\", class: \"w-full\", data: { testid: \"date-range-input\" }" }
       ]
     },
     date_time_input: {
