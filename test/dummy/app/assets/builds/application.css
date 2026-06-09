@@ -4521,6 +4521,12 @@
       --tw-ring-offset-color: var(--color-gray-950);
     }
   }
+  .dark\:invert {
+    @media (prefers-color-scheme: dark) {
+      --tw-invert: invert(100%);
+      filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
+    }
+  }
   .\[\&\:\:-webkit-scrollbar\]\:hidden {
     &::-webkit-scrollbar {
       display: none;

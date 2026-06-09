@@ -252,7 +252,7 @@ module FlatPack
 
       def render_logo_image(slide)
         image_classes = classes(
-          "h-10 w-auto max-w-full object-contain sm:h-12 md:h-14 lg:h-16",
+          "h-10 w-auto max-w-full object-contain dark:invert sm:h-12 md:h-14 lg:h-16",
           @logo_grayscale ? "grayscale" : nil
         )
 

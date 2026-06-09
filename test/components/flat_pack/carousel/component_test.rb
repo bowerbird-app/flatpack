@@ -270,6 +270,7 @@ module FlatPack
 
         logo = page.find("div[data-flat-pack--carousel-target='slide'] img", match: :first, visible: :all)
         assert_includes logo[:class], "object-contain"
+        assert_includes logo[:class], "dark:invert"
         assert_includes logo[:class], "grayscale"
         assert_includes logo[:style], "opacity: 0.8"
         assert_equal "A", logo[:title]
