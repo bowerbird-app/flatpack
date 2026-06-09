@@ -205,7 +205,7 @@ export default class extends Controller {
 
     this.slideTargets.forEach((slide, index) => {
       const isActive = index === this.currentIndex
-      const isVisibleRange = this.#isLogoCloudVariant()
+      const isVisibleRange = this.#isLogoSliderVariant()
         ? index >= this.currentIndex && index < this.currentIndex + perView
         : isActive
 
@@ -222,7 +222,7 @@ export default class extends Controller {
     })
 
     if (!useFade && this.hasFrameTarget) {
-      const shiftPercent = this.#isLogoCloudVariant()
+      const shiftPercent = this.#isLogoSliderVariant()
         ? this.currentIndex * (100 / perView)
         : this.currentIndex * 100
 
@@ -254,7 +254,7 @@ export default class extends Controller {
     })
 
     if (this.hasCounterTarget) {
-      if (this.#isLogoCloudVariant()) {
+      if (this.#isLogoSliderVariant()) {
         const endIndex = Math.min(this.currentIndex + perView, this.slideTargets.length)
         this.counterTarget.textContent = `${this.currentIndex + 1}-${endIndex} / ${this.slideTargets.length}`
       } else {
@@ -591,7 +591,7 @@ export default class extends Controller {
   }
 
   #logicalSlideCount() {
-    if (this.#isLogoCloudVariant() && this.logicalSlideCountValue > 0) {
+    if (this.#isLogoSliderVariant() && this.logicalSlideCountValue > 0) {
       return this.logicalSlideCountValue
     }
 
@@ -599,19 +599,19 @@ export default class extends Controller {
   }
 
   #hasLogoLoopClones() {
-    return this.#isLogoCloudVariant() && this.loopValue && this.logicalSlideCountValue > 0 && this.slideTargets.length > this.logicalSlideCountValue
+    return this.#isLogoSliderVariant() && this.loopValue && this.logicalSlideCountValue > 0 && this.slideTargets.length > this.logicalSlideCountValue
   }
 
   #loopBoundaryIndex() {
     return this.#logicalSlideCount()
   }
 
-  #isLogoCloudVariant() {
-    return this.variantValue === "logo_cloud"
+  #isLogoSliderVariant() {
+    return this.variantValue === "logo_slider"
   }
 
   #currentPerView() {
-    if (!this.#isLogoCloudVariant()) {
+    if (!this.#isLogoSliderVariant()) {
       return 1
     }
 
@@ -627,7 +627,7 @@ export default class extends Controller {
   }
 
   #bindResizeListener() {
-    if (!this.#isLogoCloudVariant()) {
+    if (!this.#isLogoSliderVariant()) {
       return
     }
 

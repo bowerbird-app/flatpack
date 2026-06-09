@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Renamed the Carousel logo variant from `:logo_cloud` to `:logo_slider` with no compatibility alias.
+- Updated carousel component internals, Stimulus variant detection, tests, docs, and dummy demos to use the new Logo Slider naming.
+
 ## [0.1.74] - 2026-06-04
 
 ### Changed

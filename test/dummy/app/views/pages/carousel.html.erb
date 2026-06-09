@@ -149,13 +149,26 @@
   ) %>
 </section>
 
-<!-- Logo Cloud Carousel -->
+<!-- Logo Slider Carousel -->
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Logo Cloud Variant", anchor_link: true, subtitle: "Multi-item logo carousel with responsive counts and image controls.") %>
+  <% carousel_logo_slider_slides = [
+    {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/github.svg", alt: "GitHub", url: "https://github.com"},
+    {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/gitlab.svg", alt: "GitLab"},
+    {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/figma.svg", alt: "Figma", url: "https://figma.com"},
+    {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/notion.svg", alt: "Notion", url: "https://notion.so"},
+    {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/linear.svg", alt: "Linear"},
+    {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/vercel.svg", alt: "Vercel", url: "https://vercel.com"},
+    {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/netlify.svg", alt: "Netlify"},
+    {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/stripe.svg", alt: "Stripe", url: "https://stripe.com"},
+    {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/postgresql.svg", alt: "PostgreSQL"},
+    {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/docker.svg", alt: "Docker", url: "https://docker.com"}
+  ] %>
+
+  <%= render FlatPack::SectionTitle::Component.new(title: "Logo Slider", anchor_link: true, subtitle: "Multi-item logo carousel with responsive counts and image controls.") %>
   <div class="mb-4 overflow-hidden bg-(--surface-background-color)">
     <%= render FlatPack::Carousel::Component.new(
-      slides: @carousel_logo_cloud_slides,
-      variant: :logo_cloud,
+      slides: carousel_logo_slider_slides,
+      variant: :logo_slider,
       loop: true,
       logo_items_per_view_desktop: 5,
       logo_items_per_view_tablet: 3,
@@ -165,15 +178,28 @@
       show_indicators: false,
       show_captions: false,
       touch_swipe: true,
-      aria_label: "Logo cloud carousel demo"
+      aria_label: "Logo slider carousel demo"
     ) %>
   </div>
   <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">Code Example</p>
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE')
+      &lt;% carousel_logo_slider_slides = [
+        {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/github.svg", alt: "GitHub", url: "https://github.com"},
+        {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/gitlab.svg", alt: "GitLab"},
+        {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/figma.svg", alt: "Figma", url: "https://figma.com"},
+        {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/notion.svg", alt: "Notion", url: "https://notion.so"},
+        {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/linear.svg", alt: "Linear"},
+        {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/vercel.svg", alt: "Vercel", url: "https://vercel.com"},
+        {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/netlify.svg", alt: "Netlify"},
+        {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/stripe.svg", alt: "Stripe", url: "https://stripe.com"},
+        {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/postgresql.svg", alt: "PostgreSQL"},
+        {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/docker.svg", alt: "Docker", url: "https://docker.com"}
+      ] %&gt;
+
       &lt;%= render FlatPack::Carousel::Component.new(
-        slides: @carousel_logo_cloud_slides,
-        variant: :logo_cloud,
+        slides: carousel_logo_slider_slides,
+        variant: :logo_slider,
         loop: true,
         logo_items_per_view_desktop: 5,
         logo_items_per_view_tablet: 3,

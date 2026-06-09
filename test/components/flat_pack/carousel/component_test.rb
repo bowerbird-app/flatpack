@@ -186,7 +186,7 @@ module FlatPack
         assert_equal "false", root["data-flat-pack--carousel-touch-swipe-value"]
       end
 
-      def test_exposes_logo_cloud_configuration_values
+      def test_exposes_logo_slider_configuration_values
         render_inline(
           Component.new(
             slides: [
@@ -195,7 +195,7 @@ module FlatPack
               {type: :image, src: "https://images.example.com/c.svg", alt: "C"},
               {type: :image, src: "https://images.example.com/d.svg", alt: "D"}
             ],
-            variant: :logo_cloud,
+            variant: :logo_slider,
             logo_items_per_view_desktop: 5,
             logo_items_per_view_tablet: 3,
             logo_items_per_view_mobile: 3,
@@ -206,7 +206,7 @@ module FlatPack
         )
 
         root = page.find("section[data-controller='flat-pack--carousel']")
-        assert_equal "logo_cloud", root["data-flat-pack--carousel-variant-value"]
+        assert_equal "logo_slider", root["data-flat-pack--carousel-variant-value"]
         assert_equal "5", root["data-flat-pack--carousel-logo-items-per-view-desktop-value"]
         assert_equal "3", root["data-flat-pack--carousel-logo-items-per-view-tablet-value"]
         assert_equal "3", root["data-flat-pack--carousel-logo-items-per-view-mobile-value"]
@@ -215,7 +215,7 @@ module FlatPack
         assert_includes viewport[:style], "background: transparent"
       end
 
-      def test_logo_cloud_defaults_to_autoplay_and_hides_controls
+      def test_logo_slider_defaults_to_autoplay_and_hides_controls
         render_inline(
           Component.new(
             slides: [
@@ -224,7 +224,7 @@ module FlatPack
               {type: :image, src: "https://images.example.com/c.svg", alt: "C"},
               {type: :image, src: "https://images.example.com/d.svg", alt: "D"}
             ],
-            variant: :logo_cloud
+            variant: :logo_slider
           )
         )
 
@@ -243,22 +243,22 @@ module FlatPack
         assert_equal "slide", root["data-flat-pack--carousel-transition-value"]
       end
 
-      def test_logo_cloud_filters_non_image_slides
-        render_inline(Component.new(slides: sample_slides, variant: :logo_cloud, loop: false))
+      def test_logo_slider_filters_non_image_slides
+        render_inline(Component.new(slides: sample_slides, variant: :logo_slider, loop: false))
 
         assert_selector "div[data-flat-pack--carousel-target='slide']", count: 1, visible: :all
       end
 
-      def test_logo_cloud_renders_responsive_logo_classes_and_disables_lightbox
+      def test_logo_slider_renders_responsive_logo_classes_and_disables_lightbox
         render_inline(
           Component.new(
             slides: [
-              {type: :image, src: "https://images.example.com/a.svg", alt: "A"},
+              {type: :image, src: "https://images.example.com/a.svg", alt: "A", url: "https://example.com/a"},
               {type: :image, src: "https://images.example.com/b.svg", alt: "B"},
               {type: :image, src: "https://images.example.com/c.svg", alt: "C"},
               {type: :image, src: "https://images.example.com/d.svg", alt: "D"}
             ],
-            variant: :logo_cloud,
+            variant: :logo_slider,
             logo_grayscale: true,
             logo_opacity: 0.8
           )
@@ -272,6 +272,12 @@ module FlatPack
         assert_includes logo[:class], "object-contain"
         assert_includes logo[:class], "grayscale"
         assert_includes logo[:style], "opacity: 0.8"
+        assert_equal "A", logo[:title]
+
+        link = page.find("div[data-flat-pack--carousel-target='slide'] a[href='https://example.com/a']", visible: :all, match: :first)
+        assert_equal "_blank", link[:target]
+        assert_includes link[:rel], "noopener"
+        assert_includes link[:rel], "noreferrer"
 
         assert_no_selector "button[data-flat-pack--carousel-target='lightboxToggle']", visible: :visible
       end
@@ -376,7 +382,7 @@ module FlatPack
         end
 
         assert_raises(ArgumentError) do
-          Component.new(slides: sample_slides, variant: :logo_cloud, transition: :fade)
+          Component.new(slides: sample_slides, variant: :logo_slider, transition: :fade)
         end
       end
 
