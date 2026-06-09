@@ -28,7 +28,7 @@ module FlatPack
           text: "text-[var(--toast-warning-text-color)]",
           icon: "text-[var(--toast-warning-icon-color)]"
         },
-        error: {
+        danger: {
           border: "border-[var(--toast-danger-border-color)]",
           bg: "bg-[var(--toast-danger-background-color)]",
           text: "text-[var(--toast-danger-text-color)]",
@@ -111,8 +111,8 @@ module FlatPack
           success_icon
         when :warning
           warning_icon
-        when :error
-          error_icon
+        when :danger
+          danger_icon
         else
           info_icon
         end
@@ -148,7 +148,7 @@ module FlatPack
         end
       end
 
-      def error_icon
+      def danger_icon
         content_tag(:svg, class: "w-5 h-5", fill: "currentColor", viewBox: "0 0 20 20") do
           tag.path(
             "fill-rule": "evenodd",
@@ -195,7 +195,7 @@ module FlatPack
       end
 
       def dismiss_button_type_classes
-        if @type == :error
+        if @type == :danger
           "bg-[var(--toast-danger-dismiss-background-color)] hover:bg-[var(--toast-danger-dismiss-hover-background-color)] text-[var(--toast-danger-dismiss-text-color)]"
         else
           "text-[var(--toast-dismiss-text-color)] hover:text-[var(--toast-dismiss-hover-text-color)]"

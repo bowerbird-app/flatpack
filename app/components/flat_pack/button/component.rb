@@ -10,7 +10,7 @@ module FlatPack
         ghost: "bg-[var(--button-ghost-background-color)] hover:bg-[var(--button-ghost-hover-background-color)] text-[var(--button-ghost-text-color)] border border-[var(--button-ghost-border-color)]",
         success: "bg-[var(--button-success-background-color)] hover:bg-[var(--button-success-hover-background-color)] text-[var(--button-success-text-color)] border border-[var(--button-success-border-color)] shadow-[var(--button-shadow)]",
         warning: "bg-[var(--button-warning-background-color)] hover:bg-[var(--button-warning-hover-background-color)] text-[var(--button-warning-text-color)] border border-[var(--button-warning-border-color)] shadow-[var(--button-shadow)]",
-        error: "bg-[var(--button-danger-background-color)] hover:bg-[var(--button-danger-hover-background-color)] text-[var(--button-danger-text-color)] border border-[var(--button-danger-border-color)] shadow-[var(--button-shadow)]"
+        danger: "bg-[var(--button-danger-background-color)] hover:bg-[var(--button-danger-hover-background-color)] text-[var(--button-danger-text-color)] border border-[var(--button-danger-border-color)] shadow-[var(--button-shadow)]"
       }.freeze
 
       SIZES = {

@@ -19,7 +19,7 @@
       <%= render FlatPack::Toast::Component.new(message: "Template message", type: :warning, timeout: 5000) %>
     </template>
     <template data-flat-pack--toasts-region-target="errorTemplate">
-      <%= render FlatPack::Toast::Component.new(message: "Template message", type: :error, timeout: 5000) %>
+      <%= render FlatPack::Toast::Component.new(message: "Template message", type: :danger, timeout: 5000) %>
     </template>
   </div>
 
@@ -47,7 +47,7 @@
     ) %>
     <%= render FlatPack::Button::Component.new(
       text: "Error Toast",
-      style: :error,
+      style: :danger,
       data: { action: "click->flat-pack--toasts-region#addToast", type: "error", message: "An error occurred. Please try again." }
     ) %>
   </div>

@@ -17,6 +17,7 @@
       <%= render FlatPack::Badge::Component.new(text: "Primary", style: :primary) %>
       <%= render FlatPack::Badge::Component.new(text: "Success", style: :success) %>
       <%= render FlatPack::Badge::Component.new(text: "Warning", style: :warning) %>
+      <%= render FlatPack::Badge::Component.new(text: "Danger", style: :danger) %>
       <%= render FlatPack::Badge::Component.new(text: "Info", style: :info) %>
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
@@ -25,6 +26,7 @@
         &lt;%= render FlatPack::Badge::Component.new(text: "Primary", style: :primary) %&gt;
         &lt;%= render FlatPack::Badge::Component.new(text: "Success", style: :success) %&gt;
         &lt;%= render FlatPack::Badge::Component.new(text: "Warning", style: :warning) %&gt;
+        &lt;%= render FlatPack::Badge::Component.new(text: "Danger", style: :danger) %&gt;
         &lt;%= render FlatPack::Badge::Component.new(text: "Info", style: :info) %&gt;
       CODE
     ) %>
@@ -78,7 +80,8 @@
       <%= render FlatPack::Badge::Component.new(text: "Active", style: :success) %>
       <%= render FlatPack::Badge::Component.new(text: "Pending", style: :warning) %>
       <%= render FlatPack::Badge::Component.new(text: "Completed", style: :primary) %>
-      <%= render FlatPack::Badge::Component.new(text: "Cancelled", style: :default) %>
+        <%= render FlatPack::Badge::Component.new(text: "Cancelled", style: :danger) %>
+      <%= render FlatPack::Badge::Component.new(text: "Archived", style: :default) %>
       <%= render FlatPack::Badge::Component.new(text: "Draft", style: :default) %>
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
@@ -86,6 +89,7 @@
         &lt;%= render FlatPack::Badge::Component.new(text: "Active", style: :success) %&gt;
         &lt;%= render FlatPack::Badge::Component.new(text: "Pending", style: :warning) %&gt;
         &lt;%= render FlatPack::Badge::Component.new(text: "Completed", style: :primary) %&gt;
+        &lt;%= render FlatPack::Badge::Component.new(text: "Cancelled", style: :danger) %&gt;
       CODE
     ) %>
   </section>
@@ -209,5 +213,5 @@
   <!-- Documentation Link -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Documentation", anchor_link: true, subtitle: "Examples for Documentation.") %>
-    <p class="mb-4">For complete documentation, see <a href="https://github.com/bowerbird-app/flatpack/blob/main/docs/components/badge.md" class="text-[var(--color-primary)] underline">Badge Component Documentation</a>.</p>
+    <p class="mb-4">For complete documentation, see <a href="https://github.com/bowerbird-app/flatpack/blob/main/docs/components/badge.md" class="text-(--color-primary) underline">Badge Component Documentation</a>.</p>
   </section>

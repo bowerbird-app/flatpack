@@ -124,7 +124,7 @@
           variant: :success
         ) do %>
           <p>Application successfully deployed to staging environment.</p>
-          <p class="mt-1 text-sm"><a href="#" class="text-[var(--color-primary)] hover:underline">View staging: https://staging.example.com</a></p>
+          <p class="mt-1 text-sm"><a href="#" class="text-(--color-primary) hover:underline">View staging: https://staging.example.com</a></p>
         <% end %>
 
         <%= render FlatPack::Timeline::Item.new(
@@ -217,7 +217,7 @@
           variant: :success
         ) do %>
           <p>Your order #12345 has been confirmed and payment received.</p>
-          <p class="text-sm mt-1 text-[var(--surface-muted-content-color)]">Total: $149.99</p>
+          <p class="text-sm mt-1 text-(--surface-muted-content-color)">Total: $149.99</p>
         <% end %>
 
         <%= render FlatPack::Timeline::Item.new(
@@ -234,7 +234,7 @@
           variant: :success
         ) do %>
           <p>Package has been handed to carrier for delivery.</p>
-          <p class="text-sm mt-1 text-[var(--surface-muted-content-color)]">Tracking: 1Z999AA10123456784</p>
+          <p class="text-sm mt-1 text-(--surface-muted-content-color)">Tracking: 1Z999AA10123456784</p>
         <% end %>
 
         <%= render FlatPack::Timeline::Item.new(
@@ -246,8 +246,16 @@
         <% end %>
 
         <%= render FlatPack::Timeline::Item.new(
+          title: "Delivery Failed",
+          timestamp: "Feb 22, 4:45 PM",
+          variant: :danger
+        ) do %>
+          <p>The carrier could not complete delivery. A new attempt is required.</p>
+        <% end %>
+
+        <%= render FlatPack::Timeline::Item.new(
           title: "Expected Delivery",
-          timestamp: "Feb 22, by 5:00 PM",
+          timestamp: "Feb 23, by 5:00 PM",
           variant: :default,
           last: true
         ) do %>
@@ -294,10 +302,18 @@
           ) do %&gt;
             &lt;p&gt;Your package is on the delivery vehicle and will arrive today.&lt;/p&gt;
           &lt;% end %&gt;
+
+          &lt;%= render FlatPack::Timeline::Item.new(
+            title: &quot;Delivery Failed&quot;,
+            timestamp: &quot;Feb 22, 4:45 PM&quot;,
+            variant: :danger
+          ) do %&gt;
+            &lt;p&gt;The carrier could not complete delivery. A new attempt is required.&lt;/p&gt;
+          &lt;% end %&gt;
     
           &lt;%= render FlatPack::Timeline::Item.new(
             title: &quot;Expected Delivery&quot;,
-            timestamp: &quot;Feb 22, by 5:00 PM&quot;,
+            timestamp: &quot;Feb 23, by 5:00 PM&quot;,
             variant: :default,
             last: true
           ) do %&gt;
@@ -357,7 +373,7 @@
           last: true
         ) do %>
           <p><strong>John Doe</strong> merged PR #123 into main</p>
-          <p class="text-sm mt-1 text-[var(--surface-muted-content-color)]">Automatically deployed to production</p>
+          <p class="text-sm mt-1 text-(--surface-muted-content-color)">Automatically deployed to production</p>
         <% end %>
       <% end %>
     <% end %>

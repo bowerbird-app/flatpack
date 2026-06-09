@@ -30,10 +30,10 @@ module FlatPack
         assert_text "Warning"
       end
 
-      def test_renders_error_toast
-        render_inline(Component.new(message: "Error", type: :error))
+      def test_renders_danger_toast
+        render_inline(Component.new(message: "Danger", type: :danger))
 
-        assert_text "Error"
+        assert_text "Danger"
       end
 
       def test_renders_toast_with_icon

@@ -13,7 +13,7 @@ Use Badge to annotate items with short labels, status states, or counts.
 | name | type | default | required | description |
 |---|---|---|---|---|
 | `text` | String | `nil` | yes | Badge text content. |
-| `style` | Symbol | `:default` | no | Variant style: `:default`, `:primary`, `:success`, `:warning`, `:info`; invalid values raise `ArgumentError`. |
+| `style` | Symbol | `:default` | no | Variant style: `:default`, `:primary`, `:success`, `:warning`, `:danger`, `:info`; invalid values raise `ArgumentError`. |
 | `size` | Symbol | `:md` | no | Size: `:sm`, `:md`, `:lg`; invalid values raise `ArgumentError`. |
 | `dot` | Boolean | `false` | no | Shows small leading dot indicator. |
 | `removable` | Boolean | `false` | no | Shows remove button and enables removable behavior. |
@@ -23,7 +23,7 @@ Use Badge to annotate items with short labels, status states, or counts.
 None.
 
 ## Variants
-- Styles: `:default`, `:primary`, `:success`, `:warning`, `:info`.
+- Styles: `:default`, `:primary`, `:success`, `:warning`, `:danger`, `:info`.
 - Sizes: `:sm`, `:md`, `:lg`.
 
 ## Example
@@ -34,6 +34,12 @@ None.
   size: :md,
   dot: true,
   removable: false
+) %>
+
+<%= render FlatPack::Badge::Component.new(
+  text: "Blocked",
+  style: :danger,
+  size: :md
 ) %>
 ```
 

@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed DateInput range-mode usage from demos and docs in favor of the standalone DateRangeInput component.
 - Renamed the Carousel logo variant from `:logo_cloud` to `:logo_slider` with no compatibility alias.
 - Updated carousel component internals, Stimulus variant detection, tests, docs, and dummy demos to use the new Logo Slider naming.
+- Standardized destructive variants on `:danger` for Button and Toast APIs (replacing previous `:error` usage), and updated source, vendored dummy mirror, tests, demos, and docs accordingly.
+- Updated default danger semantic tokens to Tailwind red (`red-600` base and `red-700` hover) across built-in FlatPack themes.
 
 ## [0.1.74] - 2026-06-04
 

@@ -216,7 +216,7 @@
         <%= render FlatPack::Button::Component.new(
           text: "Delete Account",
           type: "submit",
-          style: :warning
+          style: :danger
         ) %>
         <%= render FlatPack::Button::Component.new(
           text: "Cancel",
@@ -232,7 +232,7 @@
           &lt;%= render FlatPack::Button::Component.new(
             text: "Delete Account",
             type: "submit",
-            style: :warning
+            style: :danger
           ) %&gt;
         &lt;% end %&gt;
       CODE
@@ -270,6 +270,11 @@
             text: "Warning Submit",
             type: "submit",
             style: :warning
+          ) %>
+          <%= render FlatPack::Button::Component.new(
+            text: "Danger Submit",
+            type: "submit",
+            style: :danger
           ) %>
         </div>
       </div>

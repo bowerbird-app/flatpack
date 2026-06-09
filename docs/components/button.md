@@ -14,7 +14,7 @@ Use this for primary and secondary actions in forms, toolbars, dialogs, and list
 | name | type | default | required | description |
 | --- | --- | --- | --- | --- |
 | `text` | String, nil | `nil` | no | Visible label text. Required unless `icon` is provided. |
-| `style` | Symbol | `:default` | no | One of `:default`, `:primary`, `:secondary`, `:ghost`, `:success`, `:warning`, `:error`. |
+| `style` | Symbol | `:default` | no | One of `:default`, `:primary`, `:secondary`, `:ghost`, `:success`, `:warning`, `:danger`. |
 | `size` | Symbol | `:md` | no | One of `:sm`, `:md`, `:lg`. |
 | `url` | String, nil | `nil` | no | When present, renders an `<a>` via `link_to`; otherwise a `<button>`. |
 | `method` | Symbol, nil | `nil` | no | Link method passed to `link_to` (for non-GET link actions). |
@@ -29,7 +29,7 @@ Use this for primary and secondary actions in forms, toolbars, dialogs, and list
 No slots.
 
 ## Variants
-- Styles: `:default`, `:primary`, `:secondary`, `:ghost`, `:success`, `:warning`, `:error`
+- Styles: `:default`, `:primary`, `:secondary`, `:ghost`, `:success`, `:warning`, `:danger`
 - Sizes: `:sm`, `:md`, `:lg`
 - Render modes: button mode (`type`) and link mode (`url`, optional `method`, optional `target`)
 - States: loading, icon + text, icon-only
@@ -56,7 +56,7 @@ Use `FlatPack::Button::Pill::Component` when you need the rounded pills styling 
 ```erb
 <%= render FlatPack::Button::Component.new(
   text: "Delete",
-  style: :error,
+  style: :danger,
   size: :sm,
   url: post_path(@post),
   method: :delete,

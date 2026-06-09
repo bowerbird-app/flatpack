@@ -36,7 +36,7 @@
       method_call: "render FlatPack::Badge::Component.new(text: \"New\", style: :primary)",
       variables: [
         { variable: "text", accepts: "String (required)", example: "text: \"New\"" },
-        { variable: "style", accepts: ":default, :primary, :success, :warning, :info", example: "style: :warning" },
+        { variable: "style", accepts: ":default, :primary, :success, :warning, :danger, :info", example: "style: :danger" },
         { variable: "size", accepts: ":sm, :md, :lg", example: "size: :sm" }
       ]
     },
@@ -77,12 +77,12 @@
       variables: [
         { variable: "back_icon", accepts: "String", example: "back_icon: \"chevron-left\"" },
         { variable: "back_label", accepts: "String", example: "back_label: \"Go back\"" },
-        { variable: "back_style", accepts: ":default, :primary, :secondary, :ghost, :success, :warning, :error", example: "back_style: :secondary" },
+        { variable: "back_style", accepts: ":default, :primary, :secondary, :ghost, :success, :warning, :danger", example: "back_style: :secondary" },
         { variable: "back_size", accepts: ":sm, :md, :lg", example: "back_size: :md" },
         { variable: "anchor_url", accepts: "String or nil", example: "anchor_url: demo_path" },
         { variable: "anchor_icon", accepts: "String", example: "anchor_icon: \"x-mark\"" },
         { variable: "anchor_label", accepts: "String", example: "anchor_label: \"Close\"" },
-        { variable: "anchor_style", accepts: ":default, :primary, :secondary, :ghost, :success, :warning, :error", example: "anchor_style: :secondary" },
+        { variable: "anchor_style", accepts: ":default, :primary, :secondary, :ghost, :success, :warning, :danger", example: "anchor_style: :secondary" },
         { variable: "anchor_size", accepts: ":sm, :md, :lg", example: "anchor_size: :md" },
         { variable: "right_slot", accepts: "slot block", example: "component.right_slot { render FlatPack::Button::Component.new(icon: \"plus\", icon_only: true, url: demo_forms_path) }" },
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"mb-4\", data: { testid: \"page-nav\" }" }
@@ -93,7 +93,7 @@
       method_call: "render FlatPack::Button::Component.new(text: \"Save\", style: :primary, size: :md)",
       variables: [
         { variable: "text", accepts: "String", example: "text: \"Save\"" },
-        { variable: "style", accepts: ":primary, :secondary, :ghost, :success, :warning, :error", example: "style: :secondary" },
+        { variable: "style", accepts: ":primary, :secondary, :ghost, :success, :warning, :danger", example: "style: :secondary" },
         { variable: "loading", accepts: "true, false", example: "loading: true" }
       ]
     },
@@ -776,7 +776,7 @@
       method_call: "render FlatPack::Toast::Component.new(message: \"Saved\", type: :success, timeout: 5000)",
       variables: [
         { variable: "message", accepts: "String (required)", example: "message: \"Changes saved\"" },
-        { variable: "type", accepts: ":info, :success, :warning, :error", example: "type: :error" },
+        { variable: "type", accepts: ":info, :success, :warning, :danger", example: "type: :danger" },
         { variable: "timeout", accepts: "Integer (ms)", example: "timeout: 3000" }
       ]
     },
