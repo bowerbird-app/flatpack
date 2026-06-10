@@ -491,6 +491,12 @@
                 icon: :calendar,
                 active: false
               ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Timestamp",
+                href: demo_timestamp_path,
+                icon: :calendar,
+                active: false
+              ) %>
               
               <%= render FlatPack::Sidebar::Divider::Component.new %>
               <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Layout") %>

@@ -140,6 +140,7 @@ Rails.application.routes.draw do
   get "demo/list", to: "pages#list"
   get "demo/tree", to: "pages#tree"
   get "demo/timeline", to: "pages#timeline"
+  get "demo/timestamp", to: "pages#timestamp"
 
   # Form submission endpoints for demonstration
   post "demo/forms/create", to: "pages#forms_create"

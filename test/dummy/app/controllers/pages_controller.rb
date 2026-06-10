@@ -815,6 +815,9 @@ class PagesController < ApplicationController
   def timeline
   end
 
+  def timestamp
+  end
+
   def hero_centered
     render layout: "fullpage"
   end
@@ -1638,6 +1641,7 @@ class PagesController < ApplicationController
       {title: "List", description: "List component demos and selectable rows", url: demo_list_path},
       {title: "Tree", description: "Folder tree views for folder structures and hierarchical lists", url: demo_tree_path},
       {title: "Timeline", description: "Chronological timeline layouts", url: demo_timeline_path},
+      {title: "Timestamp", description: "Relative timestamps with hover tooltip absolute time", url: demo_timestamp_path},
       {title: "Mobile", description: "Mobile demo index", url: mobile_path},
       {title: "Bottom Nav", description: "Mobile bottom navigation demo", url: mobile_bottom_nav_path}
     ]

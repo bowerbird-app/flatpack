@@ -154,7 +154,7 @@ export default class extends Controller {
     this.committedPresetKey = this.draftPresetKey
     this.draftPresetKey = this.committedPresetKey
     this.syncFormFields(this.committed)
-    this.syncTriggerValue(this.committed, this.committedPresetKey)
+    this.syncTriggerValue(this.committed)
     this.close()
   }
 
@@ -369,7 +369,7 @@ export default class extends Controller {
     this.renderListOptionSelection()
     this.renderCalendar()
     this.renderSummary()
-    this.syncTriggerValue(this.draft, this.draftPresetKey)
+    this.syncTriggerValue(this.draft)
 
     if (this.isOpen) {
       this.positionPanel()
@@ -575,12 +575,7 @@ export default class extends Controller {
     return Boolean(state.end)
   }
 
-  displayValue(state, presetKey = null) {
-    const presetLabel = this.presetLabel(presetKey)
-    if (this.rangeValue && presetLabel) {
-      return presetLabel
-    }
-
+  displayValue(state) {
     if (!state.start) {
       return ""
     }
@@ -597,28 +592,12 @@ export default class extends Controller {
     return `${start} to ${this.toIso(state.end)}`
   }
 
-  syncTriggerValue(state, presetKey = null) {
+  syncTriggerValue(state) {
     if (!this.hasTriggerTarget) {
       return
     }
 
-    this.triggerTarget.value = this.displayValue(state, presetKey)
-  }
-
-  presetLabel(key) {
-    const labels = {
-      today: "Today",
-      yesterday: "Yesterday",
-      last_3_days: "Last 3 days",
-      this_week: "This week",
-      last_week: "Last week",
-      this_month: "This month",
-      last_month: "Last month",
-      this_year: "This year",
-      last_year: "Last year"
-    }
-
-    return labels[key] || null
+    this.triggerTarget.value = this.displayValue(state)
   }
 
   syncFormFields(state) {

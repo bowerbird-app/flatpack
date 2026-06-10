@@ -772,6 +772,17 @@
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"mb-2\", data: { testid: \"timeline-item\" }" }
       ]
     },
+    timestamp: {
+      label: "Timestamp",
+      method_call: "render FlatPack::Timestamp::Component.new(timestamp: 3.minutes.ago)",
+      variables: [
+        { variable: "timestamp", accepts: "Time, DateTime, Date, String, Numeric, or nil", example: "timestamp: article.published_at" },
+        { variable: "class_name", accepts: "String or nil", example: "class_name: \"text-green-600 text-xs\"" },
+        { variable: "tooltip_placement", accepts: ":top, :right, :bottom, :left", example: "tooltip_placement: :right" },
+        { variable: "fallback_text", accepts: "String", example: "fallback_text: \"Unavailable\"" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"text-xs\", data: { testid: \"timestamp\" }" }
+      ]
+    },
     toast: {
       label: "Toast",
       method_call: "render FlatPack::Toast::Component.new(message: \"Saved\", type: :success, timeout: 5000)",
