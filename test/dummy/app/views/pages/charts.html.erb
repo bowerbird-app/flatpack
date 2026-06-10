@@ -41,11 +41,11 @@
   ) %>
 </section>
 
-<!-- Bar Chart -->
+<!-- Column Chart -->
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Bar Chart", anchor_link: true, subtitle: "Examples for Bar Chart.") %>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Column Chart", anchor_link: true, subtitle: "Examples for vertical columns.") %>
   <%= render FlatPack::Chart::Component.new(
-    type: :bar,
+    type: :column,
     series: [{
       name: "Revenue",
       data: [44, 55, 57, 56, 61, 58, 63, 60, 66, 71, 89, 95]
@@ -60,7 +60,7 @@
     language: "erb",
     code: <<~CODE
       #{erb_output_open} render FlatPack::Chart::Component.new(
-        type: :bar,
+        type: :column,
         series: [{
           name: "Revenue",
           data: [44, 55, 57, 56, 61, 58, 63, 60, 66, 71, 89, 95]
@@ -68,6 +68,48 @@
         title: "Quarterly Revenue",
         subtitle: "In thousands",
         height: 300
+      ) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<!-- Bar Chart -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Bar Chart", anchor_link: true, subtitle: "Examples for horizontal bars.") %>
+  <%= render FlatPack::Chart::Component.new(
+    type: :bar,
+    series: [{
+      name: "Tickets",
+      data: [84, 72, 65, 48, 39]
+    }],
+    title: "Support Queue by Team",
+    subtitle: "Open tickets",
+    height: 300,
+    options: {
+      xaxis: {
+        categories: ["API", "Billing", "Onboarding", "Integrations", "Security"]
+      }
+    }
+  ) %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Chart::Component.new(
+        type: :bar,
+        series: [{
+          name: "Tickets",
+          data: [84, 72, 65, 48, 39]
+        }],
+        title: "Support Queue by Team",
+        subtitle: "Open tickets",
+        height: 300,
+        options: {
+          xaxis: {
+            categories: ["API", "Billing", "Onboarding", "Integrations", "Security"]
+          }
+        }
       ) #{erb_tag_close}
     CODE
   ) %>
@@ -356,7 +398,7 @@
 
       <%= turbo_frame_tag "chart-2-frame", class: "block mb-4" do %>
         <%= render FlatPack::Chart::Component.new(
-          type: :bar,
+          type: :column,
           title: "Chart 2",
           subtitle: @chart_multi_chart_2_subtitle,
           series: @chart_multi_chart_2_series,
@@ -414,7 +456,7 @@
         #{erb_open} end #{erb_tag_close}
 
         #{erb_output_open} turbo_frame_tag "chart-2-frame" do #{erb_tag_close}
-          #{erb_output_open} render FlatPack::Chart::Component.new(type: :bar, title: "Chart 2", series: @chart_multi_chart_2_series, options: {xaxis: {categories: @chart_multi_chart_2_categories}}) #{erb_tag_close}
+          #{erb_output_open} render FlatPack::Chart::Component.new(type: :column, title: "Chart 2", series: @chart_multi_chart_2_series, options: {xaxis: {categories: @chart_multi_chart_2_categories}}) #{erb_tag_close}
         #{erb_open} end #{erb_tag_close}
 
         #{erb_output_open} render FlatPack::Chart::Component.new(type: :area, title: "Chart 3", series: @chart_multi_chart_3_series, options: {xaxis: {categories: @chart_multi_chart_3_categories}}) #{erb_tag_close}
@@ -431,7 +473,7 @@
     Set <code>card: false</code> to render the chart without a card wrapper.
   </p>
   <%= render FlatPack::Chart::Component.new(
-    type: :bar,
+    type: :column,
     series: [{name: "Traffic", data: [12, 19, 3, 5, 2, 3]}],
     card: false,
     height: 250
@@ -442,7 +484,7 @@
     language: "erb",
     code: <<~CODE
       #{erb_output_open} render FlatPack::Chart::Component.new(
-        type: :bar,
+        type: :column,
         series: [{name: "Traffic", data: [12, 19, 3, 5, 2, 3]}],
         card: false,
         height: 250
@@ -604,7 +646,7 @@
     ) %>
     
     <%= render FlatPack::Chart::Component.new(
-      type: :bar,
+      type: :column,
       series: [{name: "Conversions", data: [5, 8, 6, 10, 9, 12, 15, 18]}],
       title: "Conversions",
       height: 250
@@ -624,7 +666,7 @@
         ) #{erb_tag_close}
 
         #{erb_output_open} render FlatPack::Chart::Component.new(
-          type: :bar,
+          type: :column,
           series: [{name: "Conversions", data: [5, 8, 6, 10, 9, 12, 15, 18]}],
           title: "Conversions",
           height: 250
@@ -753,7 +795,7 @@
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>ApexCharts Integration:</strong> Professional data visualization library<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Lazy Loading:</strong> Charts load only when needed (via dynamic import)<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Card Wrapping:</strong> Automatic card wrapper with title, actions, footer<% end %>
-    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>6 Chart Types:</strong> Line, bar, area, donut, pie, and more<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>7 Chart Types:</strong> line, column, bar, area, donut, pie, and radar<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Responsive:</strong> Charts adapt to container size<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Turbo Compatible:</strong> Properly cleans up on navigation<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Customizable:</strong> Full access to ApexCharts options<% end %>
@@ -766,10 +808,11 @@
   <%= render FlatPack::SectionTitle::Component.new(title: "Available Chart Types", anchor_link: true, subtitle: "Examples for Available Chart Types.") %>
   <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
     <%= render FlatPack::Badge::Component.new(text: ":line", variant: :default) %>
+    <%= render FlatPack::Badge::Component.new(text: ":column", variant: :default) %>
     <%= render FlatPack::Badge::Component.new(text: ":bar", variant: :default) %>
     <%= render FlatPack::Badge::Component.new(text: ":area", variant: :default) %>
     <%= render FlatPack::Badge::Component.new(text: ":donut", variant: :default) %>
     <%= render FlatPack::Badge::Component.new(text: ":pie", variant: :default) %>
-    <%= render FlatPack::Badge::Component.new(text: ":radial", variant: :default) %>
+    <%= render FlatPack::Badge::Component.new(text: ":radar", variant: :default) %>
   </div>
 </section>

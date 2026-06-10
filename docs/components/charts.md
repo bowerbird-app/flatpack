@@ -15,7 +15,7 @@ Use `FlatPack::ChartButtons::Component` as a sibling when you need reusable Turb
 | name | type | default | required | description |
 | --- | --- | --- | --- | --- |
 | `series` | Array or Hash | — | yes | Chart series payload passed to ApexCharts. |
-| `type` | Symbol | `:line` | no | One of `:line`, `:bar`, `:area`, `:donut`, `:pie`, `:radar`. |
+| `type` | Symbol | `:line` | no | One of `:line`, `:column`, `:bar`, `:area`, `:donut`, `:pie`, `:radar`. Use `:column` for vertical bars and `:bar` for horizontal bars. |
 | `options` | Hash | `{}` | no | ApexCharts options deep-merged over component defaults. |
 | `height` | Integer | `280` | no | Chart height in pixels; must be positive. |
 | `card` | Boolean | `true` | no | Wraps chart in `FlatPack::Card::Component` with header/body/footer layout. |
@@ -32,7 +32,7 @@ Use `FlatPack::ChartButtons::Component` as a sibling when you need reusable Turb
 ## Variants
 - Chart type variant via `type`
 - Framed (`card: true`) and inline (`card: false`) rendering
-- Axis defaults for line/bar/area/radar and non-axis defaults for donut/pie
+- Axis defaults for line/column/bar/area/radar and non-axis defaults for donut/pie
 
 ## Related Classes
 - `FlatPack::Chart::DefaultFilterComponent`: reusable date range + status filter row designed for chart dashboards.
@@ -50,6 +50,24 @@ Use `FlatPack::ChartButtons::Component` as a sibling when you need reusable Turb
 | `status_placeholder` | String, nil | `"All statuses"` | no | Placeholder option label for the status select. |
 
 ## Example
+```erb
+<%= render FlatPack::Chart::Component.new(
+  type: :column,
+  series: [{ name: "Revenue", data: [44, 55, 57, 56] }],
+  options: { xaxis: { categories: ["Q1", "Q2", "Q3", "Q4"] } },
+  title: "Quarterly Revenue"
+) %>
+```
+
+```erb
+<%= render FlatPack::Chart::Component.new(
+  type: :bar,
+  series: [{ name: "Tickets", data: [84, 72, 65, 48, 39] }],
+  options: { xaxis: { categories: ["API", "Billing", "Onboarding", "Integrations", "Security"] } },
+  title: "Support Queue by Team"
+) %>
+```
+
 ```erb
 <%= render FlatPack::Chart::Component.new(
   series: [

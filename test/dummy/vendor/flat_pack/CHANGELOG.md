@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Updated `FlatPack::Chart::DefaultFilterComponent` to use `FlatPack::DateRangeInput::Component` for date-range controls.
 - Removed DateInput range-mode usage from demos and docs in favor of the standalone DateRangeInput component.
+- Corrected chart type naming so `type: :column` renders vertical columns and `type: :bar` renders horizontal bars, with updated chart defaults, demos, tests, and docs.
 - Renamed the Carousel logo variant from `:logo_cloud` to `:logo_slider` with no compatibility alias.
 - Updated carousel component internals, Stimulus variant detection, tests, docs, and dummy demos to use the new Logo Slider naming.
 - Standardized destructive variants on `:danger` for Button and Toast APIs (replacing previous `:error` usage), and updated source, vendored dummy mirror, tests, demos, and docs accordingly.

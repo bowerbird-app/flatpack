@@ -26,6 +26,13 @@ module FlatPack
         assert_selector "[data-flat-pack--chart-type-value='line']"
       end
 
+      def test_renders_chart_with_column_type
+        series = [{name: "Sales", data: [10, 20, 30]}]
+        render_inline(Component.new(series: series, type: :column))
+
+        assert_selector "[data-flat-pack--chart-type-value='bar']"
+      end
+
       def test_renders_chart_with_bar_type
         series = [{name: "Sales", data: [10, 20, 30]}]
         render_inline(Component.new(series: series, type: :bar))
@@ -237,11 +244,27 @@ module FlatPack
         assert_includes html, '"curve":"smooth"'
       end
 
+      def test_bar_defaults_are_horizontal
+        series = [{name: "Sales", data: [10, 20, 30]}]
+        render_inline(Component.new(series: series, type: :bar))
+
+        html = page.native.to_html
+        assert_includes html, '"horizontal":true'
+      end
+
+      def test_column_defaults_are_vertical
+        series = [{name: "Sales", data: [10, 20, 30]}]
+        render_inline(Component.new(series: series, type: :column))
+
+        html = page.native.to_html
+        assert_includes html, '"horizontal":false'
+      end
+
       def test_renders_chart_with_all_options
         series = [{name: "Sales", data: [10, 20, 30]}]
         render_inline(Component.new(
           series: series,
-          type: :bar,
+          type: :column,
           height: 350,
           card: true,
           title: "Test Chart",
