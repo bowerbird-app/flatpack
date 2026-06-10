@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.84] - 2026-06-10
+
 ### Added
 - Added `FlatPack::DateRangeInput::Component` as a standalone date-range form component with quick presets and calendar selection.
 - Added a new `/demo/charts` example that renders mini sparkline-style charts inside a `FlatPack::Table::Component` activity column for repository-style rows.
