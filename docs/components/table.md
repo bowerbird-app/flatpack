@@ -54,6 +54,7 @@ When both block and `html` are provided, `html` is used. When neither is provide
 | Stimulus table | Set `stimulus: true` to attach `flat-pack--table`. |
 | Draggable reorder | Set `draggable_rows: true` and optionally `reorder_*` options. |
 | URL-driven filter/search controls | Compose sibling controls (for example `FlatPack::ChartButtons::Component` and `FlatPack::Search::Component`) around the table and submit GET params into a shared Turbo Frame. |
+| Inline mini charts | Render `FlatPack::Chart::Component` in a column `html` lambda for sparkline activity cells in dense rows. |
 
 ## Filter And Search Pattern
 

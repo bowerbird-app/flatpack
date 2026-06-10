@@ -307,7 +307,7 @@
     anchor_link: true,
     subtitle: "Two button groups control chart 1 and chart 2 while all charts remain inside one outer frame."
   ) %>
-  <p class="text-[var(--surface-muted-content-color)] mb-4">
+  <p class="text-(--surface-muted-content-color) mb-4">
     This example keeps both button groups and all charts inside one outer frame, while each button group targets its own chart frame.
   </p>
 
@@ -447,6 +447,147 @@
         card: false,
         height: 250
       ) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<!-- Mini Charts in Table Column -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Mini Chart in Table Row",
+    anchor_link: true,
+    subtitle: "Render sparkline activity charts in a table column for repository-like rows."
+  ) %>
+  <p class="text-(--surface-muted-content-color) mb-4">
+    This pattern mirrors repository activity rows by combining <code>FlatPack::Table::Component</code> and
+    compact <code>FlatPack::Chart::Component</code> instances with <code>card: false</code>.
+  </p>
+
+  <%= render FlatPack::Table::Component.new(data: @chart_repo_activity_rows) do |table| %>
+    <% table.column(title: "Repository", html: ->(row) {
+      content_tag(:div, class: "min-w-[220px]") do
+        safe_join([
+          content_tag(:div, row[:name], class: "font-medium text-[var(--surface-content-color)]"),
+          content_tag(:div, row[:description], class: "text-xs text-[var(--surface-muted-content-color)] mt-1"),
+          content_tag(:div, class: "mt-2") do
+            render FlatPack::Badge::Component.new(text: row[:language], style: :default, size: :sm)
+          end
+        ])
+      end
+    }) %>
+
+    <% table.column(title: "Commits (7d)", html: ->(row) {
+      content_tag(:span, row[:commits_7d], class: "font-medium")
+    }) %>
+
+    <% table.column(title: "Activity", html: ->(row) {
+      color = "var(--color-success-background-color)"
+      content_tag(:div, class: "w-[104px] min-w-[104px]") do
+        render FlatPack::Chart::Component.new(
+          type: :area,
+          series: [{name: "Commits", data: row[:activity]}],
+          card: false,
+          height: 56,
+          class: "w-full",
+          options: {
+            chart: {
+              sparkline: {enabled: true}
+            },
+            colors: [color],
+            stroke: {
+              curve: "smooth",
+              width: 2
+            },
+            fill: {
+              type: "gradient",
+              gradient: {
+                shade: "light",
+                shadeIntensity: 0,
+                inverseColors: false,
+                gradientToColors: [color],
+                opacityFrom: 0.45,
+                opacityTo: 0.05,
+                stops: [0, 90, 100]
+              }
+            },
+            markers: {
+              size: 0
+            },
+            tooltip: {
+              enabled: false
+            },
+            grid: {
+              show: false
+            },
+            xaxis: {
+              labels: {show: false},
+              axisBorder: {show: false},
+              axisTicks: {show: false}
+            },
+            yaxis: {
+              show: false
+            }
+          }
+        )
+      end
+    }) %>
+
+    <% table.column(title: "Open PRs", html: ->(row) { row[:prs_open] }) %>
+
+    <% table.column(title: "Trend", html: ->(row) {
+      trend_class = row[:trend_up] ? "text-green-700" : "text-red-700"
+      content_tag(:span, row[:trend_label], class: "font-medium #{trend_class}")
+    }) %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_open}%
+        rows = [
+          {name: "flat-pack", language: "Ruby", commits_7d: 34, prs_open: 5, trend_label: "+14%", trend_up: true, activity: [2, 3, 1, 4, 6, 5, 7]},
+          {name: "docs-site", language: "Markdown", commits_7d: 11, prs_open: 1, trend_label: "-4%", trend_up: false, activity: [4, 5, 4, 4, 3, 2, 1]}
+        ]
+      %#{erb_tag_close}
+
+      #{erb_output_open} render FlatPack::Table::Component.new(data: rows) do |table| #{erb_tag_close}
+        #{erb_open}% table.column(title: "Repository", html: ->(row) { row[:name] }) %#{erb_tag_close}
+        #{erb_open}% table.column(title: "Commits (7d)", html: ->(row) { row[:commits_7d] }) %#{erb_tag_close}
+        #{erb_open}% table.column(title: "Activity", html: ->(row) {
+          color = "var(--color-success-background-color)"
+          render FlatPack::Chart::Component.new(
+            type: :area,
+            series: [{name: "Commits", data: row[:activity]}],
+            card: false,
+            height: 56,
+            options: {
+              chart: {sparkline: {enabled: true}},
+              colors: [color],
+              stroke: {curve: "smooth", width: 2},
+              fill: {
+                type: "gradient",
+                gradient: {
+                  shade: "light",
+                  shadeIntensity: 0,
+                  inverseColors: false,
+                  gradientToColors: [color],
+                  opacityFrom: 0.45,
+                  opacityTo: 0.05,
+                  stops: [0, 90, 100]
+                }
+              },
+              markers: {size: 0},
+              tooltip: {enabled: false},
+              grid: {show: false},
+              xaxis: {labels: {show: false}, axisBorder: {show: false}, axisTicks: {show: false}},
+              yaxis: {show: false}
+            }
+          )
+        }) %#{erb_tag_close}
+        #{erb_open}% table.column(title: "Open PRs", html: ->(row) { row[:prs_open] }) %#{erb_tag_close}
+        #{erb_open}% table.column(title: "Trend", html: ->(row) { row[:trend_label] }) %#{erb_tag_close}
+      #{erb_open} end #{erb_tag_close}
     CODE
   ) %>
 </section>

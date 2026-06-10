@@ -79,6 +79,29 @@ Use `FlatPack::ChartButtons::Component` as a sibling when you need reusable Turb
 <% end %>
 ```
 
+```erb
+<%= render FlatPack::Table::Component.new(data: repositories) do |table| %>
+  <% table.column(title: "Repository", html: ->(row) { row[:name] }) %>
+  <% table.column(title: "Activity", html: ->(row) {
+    render FlatPack::Chart::Component.new(
+      type: :area,
+      series: [{ name: "Commits", data: row[:activity] }],
+      card: false,
+      height: 56,
+      options: {
+        chart: { sparkline: { enabled: true } },
+        tooltip: { enabled: false },
+        grid: { show: false },
+        xaxis: { labels: { show: false }, axisBorder: { show: false }, axisTicks: { show: false } },
+        yaxis: { show: false }
+      }
+    )
+  }) %>
+<% end %>
+```
+
+Use this compact pattern for dense tabular contexts such as repository activity rows. Keep `card: false`, small `height`, and sparkline-style options so the chart reads as a trend indicator instead of a full analytics panel.
+
 ## Accessibility
 - Provide meaningful `title`/`subtitle` or nearby text that describes chart intent.
 - For critical data, provide a tabular or textual alternative outside the chart canvas.

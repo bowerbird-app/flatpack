@@ -613,6 +613,39 @@ class PagesController < ApplicationController
       {name: "May", value: 49},
       {name: "Jun", value: 60}
     ]
+
+    @chart_repo_activity_rows = [
+      {
+        name: "flat-pack",
+        description: "Design-system engine",
+        language: "Ruby",
+        commits_7d: 34,
+        prs_open: 5,
+        trend_label: "+14%",
+        trend_up: true,
+        activity: [2, 3, 1, 4, 6, 5, 7, 4, 6, 8, 9, 7, 10, 11]
+      },
+      {
+        name: "theme-tokens",
+        description: "Theme token playground",
+        language: "TypeScript",
+        commits_7d: 18,
+        prs_open: 2,
+        trend_label: "+6%",
+        trend_up: true,
+        activity: [1, 2, 2, 3, 4, 3, 5, 4, 5, 6, 5, 7, 6, 8]
+      },
+      {
+        name: "docs-site",
+        description: "Component docs and examples",
+        language: "Markdown",
+        commits_7d: 11,
+        prs_open: 1,
+        trend_label: "-4%",
+        trend_up: false,
+        activity: [4, 5, 4, 4, 3, 4, 3, 2, 3, 3, 2, 2, 2, 1]
+      }
+    ]
   end
 
   def charts_default_filter
