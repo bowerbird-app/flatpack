@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed DateInput range-mode usage from demos and docs in favor of the standalone DateRangeInput component.
 - Corrected chart type naming so `type: :column` renders vertical columns and `type: :bar` renders horizontal bars, with updated chart defaults, demos, tests, and docs.
 - Updated `FlatPack::Carousel::Component` with configurable default-variant `items_per_view_*` options and a `quick_preview` mode to reveal 25% of the next slide, including docs/tests and a five-chart demo example.
+- Wrapped each chart in the carousel quick preview demo inside an elevated `FlatPack::Card::Component` body slot.
 - Added `controls_on_hover` to `FlatPack::Carousel::Component` so previous/next controls can stay hidden until hover/focus on larger screens while remaining visible on mobile.
 - Renamed the Carousel logo variant from `:logo_cloud` to `:logo_slider` with no compatibility alias.
 - Updated carousel component internals, Stimulus variant detection, tests, docs, and dummy demos to use the new Logo Slider naming.
