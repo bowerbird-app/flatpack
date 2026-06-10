@@ -4,6 +4,8 @@ export default class extends Controller {
   static targets = [
     "trigger",
     "panel",
+    "listView",
+    "calendarView",
     "monthLabel",
     "calendarGrid",
     "summary",
@@ -30,6 +32,7 @@ export default class extends Controller {
     this.visibleMonth = this.initialVisibleMonth()
     this.committed = this.initialCommittedValues()
     this.draft = { ...this.committed }
+    this.viewMode = this.defaultViewMode()
     this.committedPresetKey = null
     this.draftPresetKey = null
 
@@ -38,6 +41,8 @@ export default class extends Controller {
     this.monthLabelElement = this.hasMonthLabelTarget ? this.monthLabelTarget : this.panelElement?.querySelector('[data-flat-pack--flatpack-date-picker-target="monthLabel"]')
     this.calendarGridElement = this.hasCalendarGridTarget ? this.calendarGridTarget : this.panelElement?.querySelector('[data-flat-pack--flatpack-date-picker-target="calendarGrid"]')
     this.summaryElement = this.hasSummaryTarget ? this.summaryTarget : this.panelElement?.querySelector('[data-flat-pack--flatpack-date-picker-target="summary"]')
+    this.listViewElement = this.hasListViewTarget ? this.listViewTarget : this.panelElement?.querySelector('[data-flat-pack--flatpack-date-picker-target="listView"]')
+    this.calendarViewElement = this.hasCalendarViewTarget ? this.calendarViewTarget : this.panelElement?.querySelector('[data-flat-pack--flatpack-date-picker-target="calendarView"]')
     this.panelOriginalParent = null
     this.panelOriginalNextSibling = null
 
@@ -53,7 +58,6 @@ export default class extends Controller {
       this.setPanelInteractivity(false)
     }
 
-    this.render()
     this.syncFormFields(this.committed)
     this.syncTriggerValue(this.committed)
   }
@@ -95,6 +99,7 @@ export default class extends Controller {
     this.triggerTarget?.setAttribute("aria-expanded", "true")
     this.draft = { ...this.committed }
     this.draftPresetKey = this.committedPresetKey
+    this.viewMode = this.defaultViewMode()
     this.render()
     this.positionPanel()
     this.addGlobalListeners()
@@ -131,6 +136,7 @@ export default class extends Controller {
     event.preventDefault()
     this.draft = { ...this.committed }
     this.draftPresetKey = this.committedPresetKey
+    this.viewMode = this.defaultViewMode()
     this.render()
     this.close()
   }
@@ -294,6 +300,12 @@ export default class extends Controller {
       case "preset":
         this.applyPreset(String(commandElement.dataset.flatPackDatePickerPreset || ""))
         break
+      case "show-calendar":
+        this.showCalendar(event)
+        break
+      case "show-ranges":
+        this.showRanges(event)
+        break
       case "day":
         this.applyDaySelection(String(commandElement.dataset.flatPackDatePickerDate || ""))
         break
@@ -338,6 +350,7 @@ export default class extends Controller {
       return
     }
 
+    this.renderViewMode()
     this.positionPanel()
   }
 
@@ -352,6 +365,7 @@ export default class extends Controller {
   }
 
   render() {
+    this.renderViewMode()
     this.renderCalendar()
     this.renderSummary()
     this.syncTriggerValue(this.draft, this.draftPresetKey)
@@ -390,6 +404,22 @@ export default class extends Controller {
     if (!this.panelElement || !this.hasTriggerTarget) {
       return
     }
+
+    if (this.isMobileViewport()) {
+      this.panelElement.style.position = "fixed"
+      this.panelElement.style.inset = "0"
+      this.panelElement.style.left = "0"
+      this.panelElement.style.top = "0"
+      this.panelElement.style.width = "100vw"
+      this.panelElement.style.maxWidth = "100vw"
+      this.panelElement.style.height = "100dvh"
+      this.panelElement.style.maxHeight = "100dvh"
+      return
+    }
+
+    this.panelElement.style.inset = ""
+    this.panelElement.style.height = ""
+    this.panelElement.style.maxHeight = ""
 
     const triggerRect = this.triggerTarget.getBoundingClientRect()
     const panelRect = this.panelElement.getBoundingClientRect()
@@ -767,5 +797,45 @@ export default class extends Controller {
 
   startOfDay(date) {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate())
+  }
+
+  showCalendar(event) {
+    event.preventDefault()
+    this.viewMode = "calendar"
+    this.renderViewMode()
+  }
+
+  showRanges(event) {
+    event.preventDefault()
+    this.viewMode = "list"
+    this.renderViewMode()
+  }
+
+  defaultViewMode() {
+    return this.isMobileViewport() ? "list" : "calendar"
+  }
+
+  isMobileViewport() {
+    return window.matchMedia("(max-width: 767px)").matches
+  }
+
+  renderViewMode() {
+    if (!this.panelElement) {
+      return
+    }
+
+    if (!this.listViewElement || !this.calendarViewElement) {
+      return
+    }
+
+    if (!this.isMobileViewport()) {
+      this.listViewElement.classList.remove("hidden")
+      this.calendarViewElement.classList.remove("hidden")
+      return
+    }
+
+    const showCalendar = this.viewMode === "calendar"
+    this.listViewElement.classList.toggle("hidden", showCalendar)
+    this.calendarViewElement.classList.toggle("hidden", !showCalendar)
   }
 }

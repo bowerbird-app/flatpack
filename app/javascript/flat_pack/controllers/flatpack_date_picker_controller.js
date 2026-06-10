@@ -4,6 +4,8 @@ export default class extends Controller {
   static targets = [
     "trigger",
     "panel",
+    "listView",
+    "calendarView",
     "monthLabel",
     "calendarGrid",
     "summary",
@@ -30,14 +32,15 @@ export default class extends Controller {
     this.visibleMonth = this.initialVisibleMonth()
     this.committed = this.initialCommittedValues()
     this.draft = { ...this.committed }
-    this.committedPresetKey = null
-    this.draftPresetKey = null
+    this.viewMode = this.defaultViewMode()
 
     this.isOpen = false
     this.panelElement = this.hasPanelTarget ? this.panelTarget : document.getElementById(this.panelIdValue)
     this.monthLabelElement = this.hasMonthLabelTarget ? this.monthLabelTarget : this.panelElement?.querySelector('[data-flat-pack--flatpack-date-picker-target="monthLabel"]')
     this.calendarGridElement = this.hasCalendarGridTarget ? this.calendarGridTarget : this.panelElement?.querySelector('[data-flat-pack--flatpack-date-picker-target="calendarGrid"]')
     this.summaryElement = this.hasSummaryTarget ? this.summaryTarget : this.panelElement?.querySelector('[data-flat-pack--flatpack-date-picker-target="summary"]')
+    this.listViewElement = this.hasListViewTarget ? this.listViewTarget : this.panelElement?.querySelector('[data-flat-pack--flatpack-date-picker-target="listView"]')
+    this.calendarViewElement = this.hasCalendarViewTarget ? this.calendarViewTarget : this.panelElement?.querySelector('[data-flat-pack--flatpack-date-picker-target="calendarView"]')
     this.panelOriginalParent = null
     this.panelOriginalNextSibling = null
 
@@ -53,7 +56,6 @@ export default class extends Controller {
       this.setPanelInteractivity(false)
     }
 
-    this.render()
     this.syncFormFields(this.committed)
     this.syncTriggerValue(this.committed)
   }
@@ -94,7 +96,7 @@ export default class extends Controller {
     this.panelElement.setAttribute("aria-hidden", "false")
     this.triggerTarget?.setAttribute("aria-expanded", "true")
     this.draft = { ...this.committed }
-    this.draftPresetKey = this.committedPresetKey
+    this.viewMode = this.defaultViewMode()
     this.render()
     this.positionPanel()
     this.addGlobalListeners()
@@ -130,7 +132,7 @@ export default class extends Controller {
   cancel(event) {
     event.preventDefault()
     this.draft = { ...this.committed }
-    this.draftPresetKey = this.committedPresetKey
+    this.viewMode = this.defaultViewMode()
     this.render()
     this.close()
   }
@@ -145,10 +147,8 @@ export default class extends Controller {
     }
 
     this.committed = normalizedDraft
-    this.committedPresetKey = this.draftPresetKey
-    this.draftPresetKey = this.committedPresetKey
     this.syncFormFields(this.committed)
-    this.syncTriggerValue(this.committed, this.committedPresetKey)
+    this.syncTriggerValue(this.committed)
     this.close()
   }
 
@@ -205,8 +205,6 @@ export default class extends Controller {
       this.draft.end = null
     }
 
-    this.draftPresetKey = preset
-
     this.visibleMonth = new Date(this.draft.start || this.today)
     this.render()
   }
@@ -230,14 +228,12 @@ export default class extends Controller {
 
     if (!this.rangeValue) {
       this.draft = { start: selected, end: null }
-      this.draftPresetKey = null
       this.render()
       return
     }
 
     if (!this.draft.start || (this.draft.start && this.draft.end)) {
       this.draft = { start: selected, end: null }
-      this.draftPresetKey = null
       this.render()
       return
     }
@@ -247,8 +243,6 @@ export default class extends Controller {
     } else {
       this.draft = { start: this.draft.start, end: selected }
     }
-
-    this.draftPresetKey = null
 
     this.render()
   }
@@ -294,6 +288,12 @@ export default class extends Controller {
       case "preset":
         this.applyPreset(String(commandElement.dataset.flatPackDatePickerPreset || ""))
         break
+      case "show-calendar":
+        this.showCalendar(event)
+        break
+      case "show-ranges":
+        this.showRanges(event)
+        break
       case "day":
         this.applyDaySelection(String(commandElement.dataset.flatPackDatePickerDate || ""))
         break
@@ -338,6 +338,7 @@ export default class extends Controller {
       return
     }
 
+    this.renderViewMode()
     this.positionPanel()
   }
 
@@ -352,9 +353,10 @@ export default class extends Controller {
   }
 
   render() {
+    this.renderViewMode()
     this.renderCalendar()
     this.renderSummary()
-    this.syncTriggerValue(this.draft, this.draftPresetKey)
+    this.syncTriggerValue(this.draft)
 
     if (this.isOpen) {
       this.positionPanel()
@@ -390,6 +392,22 @@ export default class extends Controller {
     if (!this.panelElement || !this.hasTriggerTarget) {
       return
     }
+
+    if (this.isMobileViewport()) {
+      this.panelElement.style.position = "fixed"
+      this.panelElement.style.inset = "0"
+      this.panelElement.style.left = "0"
+      this.panelElement.style.top = "0"
+      this.panelElement.style.width = "100vw"
+      this.panelElement.style.maxWidth = "100vw"
+      this.panelElement.style.height = "100dvh"
+      this.panelElement.style.maxHeight = "100dvh"
+      return
+    }
+
+    this.panelElement.style.inset = ""
+    this.panelElement.style.height = ""
+    this.panelElement.style.maxHeight = ""
 
     const triggerRect = this.triggerTarget.getBoundingClientRect()
     const panelRect = this.panelElement.getBoundingClientRect()
@@ -544,12 +562,7 @@ export default class extends Controller {
     return Boolean(state.end)
   }
 
-  displayValue(state, presetKey = null) {
-    const presetLabel = this.presetLabel(presetKey)
-    if (this.rangeValue && presetLabel) {
-      return presetLabel
-    }
-
+  displayValue(state) {
     if (!state.start) {
       return ""
     }
@@ -566,28 +579,12 @@ export default class extends Controller {
     return `${start} to ${this.toIso(state.end)}`
   }
 
-  syncTriggerValue(state, presetKey = null) {
+  syncTriggerValue(state) {
     if (!this.hasTriggerTarget) {
       return
     }
 
-    this.triggerTarget.value = this.displayValue(state, presetKey)
-  }
-
-  presetLabel(key) {
-    const labels = {
-      today: "Today",
-      yesterday: "Yesterday",
-      last_3_days: "Last 3 days",
-      this_week: "This week",
-      last_week: "Last week",
-      this_month: "This month",
-      last_month: "Last month",
-      this_year: "This year",
-      last_year: "Last year"
-    }
-
-    return labels[key] || null
+    this.triggerTarget.value = this.displayValue(state)
   }
 
   syncFormFields(state) {
@@ -767,5 +764,45 @@ export default class extends Controller {
 
   startOfDay(date) {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate())
+  }
+
+  showCalendar(event) {
+    event.preventDefault()
+    this.viewMode = "calendar"
+    this.renderViewMode()
+  }
+
+  showRanges(event) {
+    event.preventDefault()
+    this.viewMode = "list"
+    this.renderViewMode()
+  }
+
+  defaultViewMode() {
+    return this.isMobileViewport() ? "list" : "calendar"
+  }
+
+  isMobileViewport() {
+    return window.matchMedia("(max-width: 767px)").matches
+  }
+
+  renderViewMode() {
+    if (!this.panelElement) {
+      return
+    }
+
+    if (!this.listViewElement || !this.calendarViewElement) {
+      return
+    }
+
+    if (!this.isMobileViewport()) {
+      this.listViewElement.classList.remove("hidden")
+      this.calendarViewElement.classList.remove("hidden")
+      return
+    }
+
+    const showCalendar = this.viewMode === "calendar"
+    this.listViewElement.classList.toggle("hidden", showCalendar)
+    this.calendarViewElement.classList.toggle("hidden", !showCalendar)
   }
 }

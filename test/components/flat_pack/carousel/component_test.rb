@@ -253,7 +253,7 @@ module FlatPack
         render_inline(
           Component.new(
             slides: [
-              {type: :image, src: "https://images.example.com/a.svg", alt: "A", url: "https://example.com/a"},
+              {type: :image, src: "https://images.example.com/a.svg", alt: "A"},
               {type: :image, src: "https://images.example.com/b.svg", alt: "B"},
               {type: :image, src: "https://images.example.com/c.svg", alt: "C"},
               {type: :image, src: "https://images.example.com/d.svg", alt: "D"}
@@ -270,15 +270,8 @@ module FlatPack
 
         logo = page.find("div[data-flat-pack--carousel-target='slide'] img", match: :first, visible: :all)
         assert_includes logo[:class], "object-contain"
-        assert_includes logo[:class], "dark:invert"
         assert_includes logo[:class], "grayscale"
         assert_includes logo[:style], "opacity: 0.8"
-        assert_equal "A", logo[:title]
-
-        link = page.find("div[data-flat-pack--carousel-target='slide'] a[href='https://example.com/a']", visible: :all, match: :first)
-        assert_equal "_blank", link[:target]
-        assert_includes link[:rel], "noopener"
-        assert_includes link[:rel], "noreferrer"
 
         assert_no_selector "button[data-flat-pack--carousel-target='lightboxToggle']", visible: :visible
       end

@@ -111,17 +111,21 @@ module FlatPack
         content_tag(:div, **picker_panel_attributes) do
           safe_join([
             render_picker_quick_ranges,
-            render_picker_calendar
+            render_picker_calendar,
+            render_picker_actions
           ])
         end
       end
 
       def render_picker_quick_ranges
-        content_tag(:div, class: picker_ranges_section_classes) do
+        content_tag(:div, class: picker_ranges_section_classes, data: {"flat-pack--flatpack-date-picker-target": "listView"}) do
           safe_join([
             content_tag(:p, "Date Range", class: "text-xs font-semibold uppercase tracking-wide text-[var(--surface-muted-content-color)]"),
             content_tag(:div, class: "mt-2 space-y-1") do
-              safe_join(quick_range_presets.map { |preset| render_quick_range_button(preset) })
+              safe_join(
+                quick_range_presets.map { |preset| render_quick_range_button(preset) } +
+                [render_open_calendar_button]
+              )
             end
           ])
         end
@@ -142,8 +146,18 @@ module FlatPack
       end
 
       def render_picker_calendar
-        content_tag(:div, class: picker_calendar_section_classes) do
+        content_tag(:div, class: picker_calendar_section_classes, data: {"flat-pack--flatpack-date-picker-target": "calendarView"}) do
           safe_join([
+            content_tag(:div, class: "mb-3 md:hidden") do
+              render(FlatPack::Button::Component.new(
+                text: "Back to Date Range",
+                style: :ghost,
+                size: :sm,
+                type: "button",
+                class: "w-full justify-start",
+                data: {"flat-pack-date-picker-command": "show-ranges"}
+              ))
+            end,
             content_tag(:div, class: "flex items-center justify-between gap-2") do
               safe_join([
                 render(FlatPack::Button::Component.new(
@@ -167,28 +181,42 @@ module FlatPack
               safe_join(%w[Mo Tu We Th Fr Sa Su].map { |day| content_tag(:span, day) })
             end,
             content_tag(:div, "", class: "mt-2 grid grid-cols-7 justify-items-center gap-x-0 gap-y-1", data: {"flat-pack--flatpack-date-picker-target": "calendarGrid"}),
-            content_tag(:p, "", class: "mt-3 text-xs text-[var(--surface-muted-content-color)]", data: {"flat-pack--flatpack-date-picker-target": "summary"}),
-            content_tag(:div, class: "mt-4 flex items-center justify-end gap-2") do
-              safe_join([
-                render(FlatPack::Button::Component.new(
-                  text: "Cancel",
-                  style: :ghost,
-                  size: :sm,
-                  type: "button",
-                  data: {"flat-pack-date-picker-command": "cancel"}
-                )),
-                render(FlatPack::Button::Component.new(
-                  text: "Apply",
-                  style: :primary,
-                  size: :sm,
-                  type: "button",
-                  data: {
-                    "flat-pack-date-picker-command": "apply",
-                    action: "click->flat-pack--flatpack-date-picker#requestApply"
-                  }
-                ))
-              ])
-            end
+            content_tag(:p, "", class: "mt-3 text-xs text-[var(--surface-muted-content-color)]", data: {"flat-pack--flatpack-date-picker-target": "summary"})
+          ])
+        end
+      end
+
+      def render_open_calendar_button
+        render(FlatPack::Button::Component.new(
+          text: "Pick in Calendar",
+          style: :ghost,
+          size: :sm,
+          type: "button",
+          class: "w-full justify-start",
+          data: {"flat-pack-date-picker-command": "show-calendar"}
+        ))
+      end
+
+      def render_picker_actions
+        content_tag(:div, class: picker_actions_section_classes) do
+          safe_join([
+            render(FlatPack::Button::Component.new(
+              text: "Cancel",
+              style: :ghost,
+              size: :sm,
+              type: "button",
+              data: {"flat-pack-date-picker-command": "cancel"}
+            )),
+            render(FlatPack::Button::Component.new(
+              text: "Apply",
+              style: :primary,
+              size: :sm,
+              type: "button",
+              data: {
+                "flat-pack-date-picker-command": "apply",
+                action: "click->flat-pack--flatpack-date-picker#requestApply"
+              }
+            ))
           ])
         end
       end
@@ -232,25 +260,40 @@ module FlatPack
           "hidden",
           "fixed",
           "z-50",
-          "w-auto",
-          "overflow-hidden",
-          "rounded-lg",
-          "border",
-          "border-[var(--surface-border-color)]",
+          "inset-0",
+          "h-dvh",
+          "w-screen",
+          "max-w-none",
+          "overflow-y-auto",
+          "bg-[var(--surface-background-color)]",
+          "md:w-auto",
+          "md:h-auto",
+          "md:inset-auto",
+          "md:max-w-none",
+          "md:overflow-hidden",
+          "md:rounded-lg",
+          "md:border",
+          "md:border-[var(--surface-border-color)]",
           "bg-[var(--surface-background-color)]",
           "shadow-xl",
-          "md:flex",
+          "flex",
+          "flex-col",
+          "md:flex-row",
+          "md:flex-wrap",
           "md:items-stretch"
         )
       end
 
       def picker_ranges_section_classes
         classes(
+          "flat-pack-date-picker-list-view",
           "border-b",
           "border-[var(--surface-border-color)]",
           "bg-[var(--surface-subtle-background-color)]",
           "p-3",
-          "max-w-[150px]",
+          "w-full",
+          "overflow-y-auto",
+          "md:max-w-[150px]",
           "md:sticky",
           "md:top-0",
           "md:w-64",
@@ -262,10 +305,32 @@ module FlatPack
 
       def picker_calendar_section_classes
         classes(
+          "flat-pack-date-picker-calendar-view",
+          "hidden",
+          "md:grid",
           "min-w-0",
           "flex-1",
-          "max-w-[320px]",
           "p-3"
+        )
+      end
+
+      def picker_actions_section_classes
+        classes(
+          "mt-auto",
+          "sticky",
+          "bottom-0",
+          "z-10",
+          "flex",
+          "items-center",
+          "justify-end",
+          "gap-2",
+          "border-t",
+          "border-[var(--surface-border-color)]",
+          "bg-[var(--surface-background-color)]",
+          "p-3",
+          "md:static",
+          "md:w-full",
+          "md:basis-full"
         )
       end
 

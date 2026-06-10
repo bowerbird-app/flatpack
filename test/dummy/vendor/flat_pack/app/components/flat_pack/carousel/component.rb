@@ -252,34 +252,19 @@ module FlatPack
 
       def render_logo_image(slide)
         image_classes = classes(
-          "h-10 w-auto max-w-full object-contain dark:invert sm:h-12 md:h-14 lg:h-16",
+          "h-10 w-auto max-w-full object-contain sm:h-12 md:h-14 lg:h-16",
           @logo_grayscale ? "grayscale" : nil
         )
 
-        image_element = tag.img(
-          src: slide[:src],
-          alt: slide[:alt],
-          title: slide[:alt],
-          class: image_classes,
-          style: "opacity: #{@logo_opacity}",
-          loading: "lazy",
-          draggable: false
-        )
-
         content_tag(:div, class: "flex h-full w-full items-center justify-center p-0 m-0") do
-          if slide[:url].present?
-            link_to(
-              slide[:url],
-              target: "_blank",
-              rel: "noopener noreferrer",
-              aria: {label: "Open #{slide[:alt]}"},
-              class: "inline-flex items-center justify-center"
-            ) do
-              image_element
-            end
-          else
-            image_element
-          end
+          tag.img(
+            src: slide[:src],
+            alt: slide[:alt],
+            class: image_classes,
+            style: "opacity: #{@logo_opacity}",
+            loading: "lazy",
+            draggable: false
+          )
         end
       end
 
@@ -579,7 +564,6 @@ module FlatPack
             type: :image,
             src: src,
             alt: payload[:alt].presence || "Slide #{index + 1}",
-            url: FlatPack::AttributeSanitizer.sanitize_url(payload[:url]),
             thumb_src: FlatPack::AttributeSanitizer.sanitize_url(payload[:thumb_src] || payload[:thumb]),
             lightbox: normalize_lightbox(payload[:lightbox], default: true),
             caption: caption
