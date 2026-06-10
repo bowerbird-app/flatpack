@@ -86,28 +86,28 @@ module FlatPack
       def test_renders_mobile_list_and_calendar_targets
         render_inline(Component.new(start_name: "period_start", end_name: "period_end"))
 
-        assert_selector "[data-flat-pack--flatpack-date-picker-target='listView'].flat-pack-date-picker-list-view"
-        assert_selector "[data-flat-pack--flatpack-date-picker-target='calendarView'].flat-pack-date-picker-calendar-view.hidden.md\\:grid"
+        assert_selector "[data-flat-pack--flatpack-date-picker-target='listView'].flat-pack-date-picker-list-view", visible: :all
+        assert_selector "[data-flat-pack--flatpack-date-picker-target='calendarView'].flat-pack-date-picker-calendar-view.hidden.md\\:grid", visible: :all
       end
 
       def test_renders_pick_in_calendar_as_last_list_action
         render_inline(Component.new(start_name: "period_start", end_name: "period_end"))
 
-        assert_selector "button[data-flat-pack-date-picker-command='show-calendar']", text: "Pick in Calendar"
-        assert_selector "button[data-flat-pack-date-picker-command='show-ranges']", text: "Back to Date Range"
+        assert_selector "button[data-flat-pack-date-picker-command='show-calendar']", text: "Pick in Calendar", visible: :all
+        assert_selector "button[data-flat-pack-date-picker-command='show-ranges']", text: "Back to Date Range", visible: :all
       end
 
       def test_renders_shared_cancel_and_apply_actions
         render_inline(Component.new(start_name: "period_start", end_name: "period_end"))
 
-        assert_selector "button[data-flat-pack-date-picker-command='cancel']", text: "Cancel"
-        assert_selector "button[data-flat-pack-date-picker-command='apply']", text: "Apply"
+        assert_selector "button[data-flat-pack-date-picker-command='cancel']", text: "Cancel", visible: :all
+        assert_selector "button[data-flat-pack-date-picker-command='apply']", text: "Apply", visible: :all
       end
 
       def test_renders_mobile_fullscreen_panel_classes
         render_inline(Component.new(start_name: "period_start", end_name: "period_end"))
 
-        assert_selector "##{css_escape(panel_dom_id)}.inset-0.h-dvh.w-screen.md\\:inset-auto.md\\:w-auto.md\\:h-auto"
+        assert_selector "##{css_escape(panel_dom_id)}.inset-0.h-dvh.w-screen.md\\:inset-auto.md\\:w-auto.md\\:h-auto", visible: :all
       end
 
       def test_raises_error_without_start_name

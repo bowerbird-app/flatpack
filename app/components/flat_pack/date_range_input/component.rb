@@ -247,6 +247,7 @@ module FlatPack
         {
           id: panel_id,
           class: picker_panel_classes,
+          style: "display: none;",
           role: "dialog",
           tabindex: "-1",
           aria: {hidden: "true"},
