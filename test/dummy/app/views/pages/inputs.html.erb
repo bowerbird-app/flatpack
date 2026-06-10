@@ -5,6 +5,8 @@
   subtitle: "Text-based input components with Stimulus integration"
 ) %>
 
+<%= render "pages/toast_region" %>
+
 <%= render "pages/component_method_variables_table", component: :text_input %>
 
   <!-- Text Input -->
@@ -55,6 +57,22 @@
         placeholder: "Add a short tagline...",
         character_count: true
       ) %>
+
+      <%= render FlatPack::TextInput::Component.new(
+        name: "api_key",
+        id: "api_key",
+        label: "API Key (quick copy)",
+        value: "sk_live_1234567890",
+        quick_copy: true
+      ) %>
+
+      <%= render FlatPack::TextInput::Component.new(
+        name: "embed_code",
+        id: "embed_code",
+        label: "Embed Code (quick copy)",
+        value: %q(<iframe src="https://widgets.example.com/reviews" width="100%" height="320" loading="lazy"></iframe>),
+        quick_copy: true
+      ) %>
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE'),
@@ -92,6 +110,22 @@
           label: "Tagline (count only)",
           placeholder: "Add a short tagline...",
           character_count: true
+        ) %&gt;
+
+        &lt;%= render FlatPack::TextInput::Component.new(
+          name: "api_key",
+          id: "api_key",
+          label: "API Key (quick copy)",
+          value: "sk_live_1234567890",
+          quick_copy: true
+        ) %&gt;
+
+        &lt;%= render FlatPack::TextInput::Component.new(
+          name: "embed_code",
+          id: "embed_code",
+          label: "Embed Code (quick copy)",
+          value: %q(&lt;iframe src="https://widgets.example.com/reviews" width="100%" height="320" loading="lazy"&gt;&lt;/iframe&gt;),
+          quick_copy: true
         ) %&gt;
       CODE
       class: "mt-4"

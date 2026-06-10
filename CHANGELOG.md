@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added `FlatPack::DateRangeInput::Component` as a standalone date-range form component with quick presets and calendar selection.
 - Added a new `/demo/charts` example that renders mini sparkline-style charts inside a `FlatPack::Table::Component` activity column for repository-style rows.
+- Added optional `quick_copy` support to `FlatPack::TextInput::Component`, including click-to-copy on the input, a trailing copy icon button, and toast feedback.
 
 ### Changed
 - Updated `FlatPack::Chart::DefaultFilterComponent` to use `FlatPack::DateRangeInput::Component` for date-range controls.

@@ -117,6 +117,37 @@ module FlatPack
         assert_selector "input[data-action='input->flat-pack--text-input#updateCharacterCount']"
       end
 
+      def test_renders_quick_copy_button_and_input_actions
+        render_inline(Component.new(name: "api_key", value: "abc123", quick_copy: true))
+
+        assert_selector "div[data-controller='flat-pack--text-input']"
+        assert_selector "div[data-flat-pack--text-input-quick-copy-enabled-value='true']"
+        assert_selector "input[data-flat-pack--text-input-target='input']"
+        assert_selector "input[data-action='click->flat-pack--text-input#copyFromInput']"
+        assert_selector "button[aria-label='Copy input value'][data-action='click->flat-pack--text-input#copyFromButton']"
+        assert_selector "svg[data-flat-pack--icon-name-value='clipboard-document']"
+      end
+
+      def test_combines_character_count_and_quick_copy_actions
+        render_inline(Component.new(name: "headline", character_count: true, quick_copy: true))
+
+        assert_selector "div[data-flat-pack--text-input-character-count-enabled-value='true']"
+        assert_selector "div[data-flat-pack--text-input-quick-copy-enabled-value='true']"
+        assert_selector "input[data-action='input->flat-pack--text-input#updateCharacterCount click->flat-pack--text-input#copyFromInput']"
+      end
+
+      def test_quick_copy_button_is_disabled_with_disabled_input
+        render_inline(Component.new(name: "api_key", value: "abc123", quick_copy: true, disabled: true))
+
+        assert_selector "button[disabled][aria-label='Copy input value']"
+      end
+
+      def test_quick_copy_renders_readonly_input
+        render_inline(Component.new(name: "api_key", value: "abc123", quick_copy: true))
+
+        assert_selector "input[readonly]"
+      end
+
       def test_does_not_render_character_count_when_disabled
         render_inline(Component.new(name: "headline", character_count: false))
 

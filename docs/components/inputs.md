@@ -31,6 +31,7 @@ Component-specific props:
 | --- | --- | --- | --- | --- |
 | `rows` | Integer | `3` | no | Initial row count (`TextArea` plain mode only; ignored when `rich_text: true`). |
 | `character_count` | Boolean | `false` | no | Enables live count text in `TextInput` and `TextArea` (plain and rich text modes). |
+| `quick_copy` | Boolean | `false` | no | Enables one-click copy for `TextInput` from both field click and a trailing copy icon button, with toast feedback; the input is rendered `readonly` when enabled. |
 | `rich_text` | Boolean | `false` | no | Activates the TipTap rich text editor in place of the native `<textarea>`. |
 | `rich_text_options` | Hash | `{}` | no | Fine-grained config for the rich text editor; see [Rich Text Options](#rich-text-options) below. |
 | `min_characters` | Integer | `nil` | no | Low threshold warning for `TextInput` and `TextArea` count color. |
@@ -78,6 +79,15 @@ None.
   character_count: true,
   min_characters: 20,
   max_characters: 60
+) %>
+```
+
+```erb
+<%= render FlatPack::TextInput::Component.new(
+  name: "api[key]",
+  label: "API Key",
+  value: @api_key,
+  quick_copy: true
 ) %>
 ```
 
