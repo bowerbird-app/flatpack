@@ -26,6 +26,7 @@ export default class extends Controller {
   connect() {
     this.currentIndex = this.#clampIndex(this.initialIndexValue)
     this.autoplayTimer = null
+    this.resizeDispatchFrame = null
     this.pauseReasons = new Set()
     this.activePointerId = null
     this.pointerStartX = null
@@ -40,6 +41,7 @@ export default class extends Controller {
     this.#exposeApi()
 
     this.render({ emit: false })
+    this.#scheduleWindowResizeDispatch()
 
     if (this.autoplayValue && !this.#prefersReducedMotion()) {
       this.play({ emit: false })
@@ -53,6 +55,7 @@ export default class extends Controller {
     this.#unbindInteropEvents()
     this.#unbindViewportInteractions()
     this.#unbindResizeListener()
+    this.#cancelWindowResizeDispatch()
 
     if (this.element.flatPackCarousel) {
       delete this.element.flatPackCarousel
@@ -98,6 +101,7 @@ export default class extends Controller {
 
     this.currentIndex = normalized
     this.render({ emit: options.emit !== false, trigger: options.trigger || "goToIndex" })
+    this.#scheduleWindowResizeDispatch()
   }
 
   play(options = {}) {
@@ -700,6 +704,26 @@ export default class extends Controller {
       bubbles: true,
       detail
     }))
+  }
+
+  #scheduleWindowResizeDispatch() {
+    if (this.resizeDispatchFrame) {
+      return
+    }
+
+    this.resizeDispatchFrame = window.requestAnimationFrame(() => {
+      this.resizeDispatchFrame = null
+      window.dispatchEvent(new Event("resize"))
+    })
+  }
+
+  #cancelWindowResizeDispatch() {
+    if (!this.resizeDispatchFrame) {
+      return
+    }
+
+    window.cancelAnimationFrame(this.resizeDispatchFrame)
+    this.resizeDispatchFrame = null
   }
 
   #isPrimarySwipePointer(event) {
