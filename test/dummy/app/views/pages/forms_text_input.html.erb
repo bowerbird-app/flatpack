@@ -3,6 +3,8 @@
   subtitle: "Single-line text field examples with default, error, and disabled states."
 ) %>
 
+<%= render "pages/toast_region" %>
+
 <%= render "pages/component_method_variables_table", component: :text_input %>
 
 <section class="mb-12">
@@ -52,6 +54,22 @@
         placeholder: "Add a short tagline...",
         character_count: true
       ) %>
+
+      <%= render FlatPack::TextInput::Component.new(
+        name: "api_key",
+        id: "api_key",
+        label: "API Key (quick copy)",
+        value: "sk_live_1234567890",
+        quick_copy: true
+      ) %>
+
+      <%= render FlatPack::TextInput::Component.new(
+        name: "embed_code",
+        id: "embed_code",
+        label: "Embed Code (quick copy)",
+        value: %q(<iframe src="https://widgets.example.com/reviews" width="100%" height="320" loading="lazy"></iframe>),
+        quick_copy: true
+      ) %>
     <% end %>
   <% end %>
 
@@ -100,6 +118,22 @@
           label: &quot;Tagline (count only)&quot;,
           placeholder: &quot;Add a short tagline...&quot;,
           character_count: true
+        ) %&gt;
+
+        &lt;%= render FlatPack::TextInput::Component.new(
+          name: &quot;api_key&quot;,
+          id: &quot;api_key&quot;,
+          label: &quot;API Key (quick copy)&quot;,
+          value: &quot;sk_live_1234567890&quot;,
+          quick_copy: true
+        ) %&gt;
+
+        &lt;%= render FlatPack::TextInput::Component.new(
+          name: &quot;embed_code&quot;,
+          id: &quot;embed_code&quot;,
+          label: &quot;Embed Code (quick copy)&quot;,
+          value: %q(&lt;iframe src=&quot;https://widgets.example.com/reviews&quot; width=&quot;100%&quot; height=&quot;320&quot; loading=&quot;lazy&quot;&gt;&lt;/iframe&gt;),
+          quick_copy: true
         ) %&gt;
         &lt;% end %&gt;
       &lt;% end %&gt;

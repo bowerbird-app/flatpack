@@ -68,6 +68,7 @@ sortable_tables_examples | FlatPack::Table::Component | docs/components/sortable
 table | FlatPack::Table::Component | docs/components/table.md
 tabs | FlatPack::Tabs::Component | docs/components/tabs.md
 timeline | FlatPack::Timeline::Component | docs/components/timeline.md
+timestamp | FlatPack::Timestamp::Component | docs/components/timestamp.md
 tree | FlatPack::Tree::Component | docs/components/tree.md
 toast | FlatPack::Toast::Component | docs/components/toast.md
 toasts | FlatPack::Toasts::Region::Component | docs/components/toasts.md

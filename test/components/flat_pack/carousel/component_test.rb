@@ -109,6 +109,20 @@ module FlatPack
         assert_selector "button[data-action='click->flat-pack--carousel#prev'] svg.pointer-events-none", visible: :all
       end
 
+      def test_hides_controls_until_hover_on_desktop_when_controls_on_hover_enabled
+        render_inline(Component.new(slides: sample_slides, controls_on_hover: true))
+
+        prev_button = page.find("button[data-action='click->flat-pack--carousel#prev']")
+        control_classes = prev_button[:class]
+
+        assert_includes control_classes, "md:opacity-0"
+        assert_includes control_classes, "md:group-hover:opacity-100"
+        assert_includes control_classes, "md:group-focus-within:opacity-100"
+
+        viewport = page.find("div[data-flat-pack--carousel-target='viewport']")
+        assert_includes viewport[:class], "group"
+      end
+
       def test_enables_lightbox_by_default_for_images_and_disables_for_non_image_slides
         render_inline(Component.new(slides: lightbox_slides))
 
@@ -169,6 +183,10 @@ module FlatPack
           Component.new(
             slides: sample_slides,
             initial_index: 1,
+            items_per_view_mobile: 1,
+            items_per_view_tablet: 2,
+            items_per_view_desktop: 3,
+            quick_preview: true,
             autoplay: true,
             autoplay_interval_ms: 3100,
             loop: true,
@@ -184,9 +202,30 @@ module FlatPack
         assert_equal "true", root["data-flat-pack--carousel-loop-value"]
         assert_equal "fade", root["data-flat-pack--carousel-transition-value"]
         assert_equal "false", root["data-flat-pack--carousel-touch-swipe-value"]
+        assert_equal "1", root["data-flat-pack--carousel-items-per-view-mobile-value"]
+        assert_equal "2", root["data-flat-pack--carousel-items-per-view-tablet-value"]
+        assert_equal "3", root["data-flat-pack--carousel-items-per-view-desktop-value"]
+        assert_equal "false", root["data-flat-pack--carousel-quick-preview-value"]
       end
 
-      def test_exposes_logo_cloud_configuration_values
+      def test_exposes_quick_preview_when_enabled_for_default_slide_variant
+        render_inline(
+          Component.new(
+            slides: sample_slides,
+            transition: :slide,
+            quick_preview: true,
+            items_per_view_mobile: 1,
+            items_per_view_tablet: 1,
+            items_per_view_desktop: 3
+          )
+        )
+
+        root = page.find("section[data-controller='flat-pack--carousel']")
+
+        assert_equal "true", root["data-flat-pack--carousel-quick-preview-value"]
+      end
+
+      def test_exposes_logo_slider_configuration_values
         render_inline(
           Component.new(
             slides: [
@@ -195,7 +234,7 @@ module FlatPack
               {type: :image, src: "https://images.example.com/c.svg", alt: "C"},
               {type: :image, src: "https://images.example.com/d.svg", alt: "D"}
             ],
-            variant: :logo_cloud,
+            variant: :logo_slider,
             logo_items_per_view_desktop: 5,
             logo_items_per_view_tablet: 3,
             logo_items_per_view_mobile: 3,
@@ -206,7 +245,7 @@ module FlatPack
         )
 
         root = page.find("section[data-controller='flat-pack--carousel']")
-        assert_equal "logo_cloud", root["data-flat-pack--carousel-variant-value"]
+        assert_equal "logo_slider", root["data-flat-pack--carousel-variant-value"]
         assert_equal "5", root["data-flat-pack--carousel-logo-items-per-view-desktop-value"]
         assert_equal "3", root["data-flat-pack--carousel-logo-items-per-view-tablet-value"]
         assert_equal "3", root["data-flat-pack--carousel-logo-items-per-view-mobile-value"]
@@ -215,7 +254,7 @@ module FlatPack
         assert_includes viewport[:style], "background: transparent"
       end
 
-      def test_logo_cloud_defaults_to_autoplay_and_hides_controls
+      def test_logo_slider_defaults_to_autoplay_and_hides_controls
         render_inline(
           Component.new(
             slides: [
@@ -224,7 +263,7 @@ module FlatPack
               {type: :image, src: "https://images.example.com/c.svg", alt: "C"},
               {type: :image, src: "https://images.example.com/d.svg", alt: "D"}
             ],
-            variant: :logo_cloud
+            variant: :logo_slider
           )
         )
 
@@ -243,13 +282,13 @@ module FlatPack
         assert_equal "slide", root["data-flat-pack--carousel-transition-value"]
       end
 
-      def test_logo_cloud_filters_non_image_slides
-        render_inline(Component.new(slides: sample_slides, variant: :logo_cloud, loop: false))
+      def test_logo_slider_filters_non_image_slides
+        render_inline(Component.new(slides: sample_slides, variant: :logo_slider, loop: false))
 
         assert_selector "div[data-flat-pack--carousel-target='slide']", count: 1, visible: :all
       end
 
-      def test_logo_cloud_renders_responsive_logo_classes_and_disables_lightbox
+      def test_logo_slider_renders_responsive_logo_classes_and_disables_lightbox
         render_inline(
           Component.new(
             slides: [
@@ -258,7 +297,7 @@ module FlatPack
               {type: :image, src: "https://images.example.com/c.svg", alt: "C"},
               {type: :image, src: "https://images.example.com/d.svg", alt: "D"}
             ],
-            variant: :logo_cloud,
+            variant: :logo_slider,
             logo_grayscale: true,
             logo_opacity: 0.8
           )
@@ -362,6 +401,38 @@ module FlatPack
         assert_selector "div[data-flat-pack--carousel-target='slide']", count: 1, visible: :all
       end
 
+      def test_preserves_chart_data_attributes_in_html_slides
+        render_inline(
+          Component.new(
+            slides: [
+              {
+                type: :html,
+                html: '<div data-controller="flat-pack--chart" data-flat-pack--chart-series-value="[{&quot;name&quot;:&quot;Users&quot;,&quot;data&quot;:[1,2,3]}]" data-flat-pack--chart-type-value="line" data-flat-pack--chart-options-value="{}" data-flat-pack--chart-height-value="220"></div>'
+              }
+            ]
+          )
+        )
+
+        assert_selector "div[data-controller='flat-pack--chart'][data-flat-pack--chart-type-value='line']", visible: :all
+      end
+
+      def test_hides_controls_when_items_per_view_exceeds_slide_count
+        render_inline(
+          Component.new(
+            slides: sample_slides,
+            items_per_view_mobile: 4,
+            items_per_view_tablet: 4,
+            items_per_view_desktop: 4,
+            show_controls: true,
+            show_indicators: true
+          )
+        )
+
+        assert_no_selector "button[data-action='click->flat-pack--carousel#prev']"
+        assert_no_selector "button[data-action='click->flat-pack--carousel#next']"
+        assert_no_selector "button[data-flat-pack--carousel-target='indicator']"
+      end
+
       def test_rejects_invalid_configuration
         assert_raises(ArgumentError) do
           Component.new(slides: sample_slides, transition: :zoom)
@@ -376,7 +447,7 @@ module FlatPack
         end
 
         assert_raises(ArgumentError) do
-          Component.new(slides: sample_slides, variant: :logo_cloud, transition: :fade)
+          Component.new(slides: sample_slides, variant: :logo_slider, transition: :fade)
         end
       end
 

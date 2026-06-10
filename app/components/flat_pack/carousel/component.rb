@@ -5,7 +5,7 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       SLIDE_TYPES = %i[image video html].freeze
       TRANSITIONS = %i[slide fade].freeze
-      VARIANTS = %i[default logo_cloud].freeze
+      VARIANTS = %i[default logo_slider].freeze
       THUMBS_POSITIONS = %i[top bottom].freeze
       THUMBS_ALIGNMENTS = %i[start center end].freeze
       CAPTION_MODES = %i[below overlay].freeze
@@ -21,6 +21,11 @@ module FlatPack
       SANITIZED_HTML_ATTRIBUTES = %w[
         class id title
         href rel target
+        data-controller
+        data-flat-pack--chart-series-value
+        data-flat-pack--chart-type-value
+        data-flat-pack--chart-options-value
+        data-flat-pack--chart-height-value
         aria-label aria-hidden aria-current
         for type name value placeholder required disabled autocomplete
         aria-invalid aria-describedby
@@ -34,6 +39,7 @@ module FlatPack
         thumbs_alignment: :center,
         show_indicators: true,
         show_controls: nil,
+        controls_on_hover: false,
         autoplay: nil,
         autoplay_interval_ms: 5000,
         pause_on_hover: true,
@@ -41,6 +47,10 @@ module FlatPack
         loop: true,
         transition: :slide,
         variant: :default,
+        items_per_view_mobile: 1,
+        items_per_view_tablet: 1,
+        items_per_view_desktop: 1,
+        quick_preview: false,
         logo_items_per_view_mobile: 3,
         logo_items_per_view_tablet: 3,
         logo_items_per_view_desktop: 5,
@@ -64,12 +74,13 @@ module FlatPack
         @thumbs_alignment = thumbs_alignment.to_sym
         @show_indicators = !!show_indicators
         @show_controls = if show_controls.nil?
-          @variant != :logo_cloud
+          @variant != :logo_slider
         else
           !!show_controls
         end
+        @controls_on_hover = !!controls_on_hover
         @autoplay = if autoplay.nil?
-          @variant == :logo_cloud
+          @variant == :logo_slider
         else
           !!autoplay
         end
@@ -78,6 +89,10 @@ module FlatPack
         @pause_on_focus = !!pause_on_focus
         @loop = !!loop
         @transition = transition.to_sym
+        @items_per_view_mobile = normalize_items_per_view(items_per_view_mobile, fallback: 1)
+        @items_per_view_tablet = normalize_items_per_view(items_per_view_tablet, fallback: 1)
+        @items_per_view_desktop = normalize_items_per_view(items_per_view_desktop, fallback: 1)
+        @quick_preview = !!quick_preview
         @logo_items_per_view_mobile = normalize_logo_items_per_view(logo_items_per_view_mobile, fallback: 3)
         @logo_items_per_view_tablet = normalize_logo_items_per_view(logo_items_per_view_tablet, fallback: 3)
         @logo_items_per_view_desktop = normalize_logo_items_per_view(logo_items_per_view_desktop, fallback: 5)
@@ -124,6 +139,10 @@ module FlatPack
             flat_pack__carousel_touch_swipe_value: @touch_swipe,
             flat_pack__carousel_transition_value: @transition,
             flat_pack__carousel_variant_value: @variant,
+            flat_pack__carousel_items_per_view_mobile_value: @items_per_view_mobile,
+            flat_pack__carousel_items_per_view_tablet_value: @items_per_view_tablet,
+            flat_pack__carousel_items_per_view_desktop_value: @items_per_view_desktop,
+            flat_pack__carousel_quick_preview_value: quick_preview_enabled?,
             flat_pack__carousel_logo_items_per_view_mobile_value: @logo_items_per_view_mobile,
             flat_pack__carousel_logo_items_per_view_tablet_value: @logo_items_per_view_tablet,
             flat_pack__carousel_logo_items_per_view_desktop_value: @logo_items_per_view_desktop,
@@ -135,7 +154,7 @@ module FlatPack
       def root_classes
         classes(
           "flat-pack-carousel relative w-full",
-          (@variant == :logo_cloud) ? "m-0 p-0 bg-transparent" : nil,
+          (@variant == :logo_slider) ? "m-0 p-0 bg-transparent" : nil,
           @show_thumbs ? "overflow-visible" : nil,
           @responsive ? "max-w-full" : nil
         )
@@ -173,22 +192,22 @@ module FlatPack
       end
 
       def rendered_slides
-        return @slides unless logo_cloud_loop_clones?
+        return @slides unless logo_slider_loop_clones?
 
-        @slides + @slides.first(logo_cloud_clone_count)
+        @slides + @slides.first(logo_slider_clone_count)
       end
 
-      def logo_cloud_loop_clones?
-        @variant == :logo_cloud && @loop && multiple_slides?
+      def logo_slider_loop_clones?
+        @variant == :logo_slider && @loop && multiple_slides?
       end
 
-      def logo_cloud_clone_count
+      def logo_slider_clone_count
         [@logo_items_per_view_mobile, @logo_items_per_view_tablet, @logo_items_per_view_desktop].max
       end
 
       def render_slide(slide, index)
         is_active = index == @initial_index
-        aria_hidden = (@variant == :logo_cloud) ? false : !is_active
+        aria_hidden = (@variant == :logo_slider) ? false : !is_active
 
         content_tag(:div,
           class: [slide_classes, slide_state_classes(is_active)].compact.join(" "),
@@ -212,7 +231,7 @@ module FlatPack
       def render_slide_content(slide)
         case slide[:type]
         when :image
-          return render_logo_image(slide) if @variant == :logo_cloud
+          return render_logo_image(slide) if @variant == :logo_slider
 
           tag.img(
             src: slide[:src],
@@ -246,7 +265,7 @@ module FlatPack
           end
         else
           # SECURITY: HTML content is sanitized before being marked as safe.
-          content_tag(:div, slide[:html].html_safe, class: "h-full w-full overflow-auto p-4")
+          content_tag(:div, slide[:html].html_safe, class: "overflow-auto p-4")
         end
       end
 
@@ -281,11 +300,17 @@ module FlatPack
 
         content_tag(:button,
           type: "button",
-          class: "absolute top-1/2 z-20 flex w-10 -translate-y-1/2 cursor-pointer aspect-square items-center justify-center rounded-full bg-[rgba(0,0,0,0.5)] text-white transition hover:bg-[rgba(0,0,0,0.75)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring #{classes}",
+          class: "absolute top-1/2 z-20 flex w-10 -translate-y-1/2 cursor-pointer aspect-square items-center justify-center rounded-full bg-[rgba(0,0,0,0.5)] text-white transition hover:bg-[rgba(0,0,0,0.75)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring #{controls_visibility_classes} #{classes}",
           aria: {label: label},
           data: {action: "click->flat-pack--carousel##{direction}"}) do
           render FlatPack::Shared::IconComponent.new(name: icon_name, size: :md, class: "pointer-events-none")
         end
+      end
+
+      def controls_visibility_classes
+        return nil unless @controls_on_hover
+
+        "opacity-100 md:opacity-0 md:pointer-events-none md:group-hover:opacity-100 md:group-hover:pointer-events-auto md:group-focus-within:opacity-100 md:group-focus-within:pointer-events-auto"
       end
 
       def render_footer
@@ -313,7 +338,7 @@ module FlatPack
       end
 
       def counter_visible?
-        return false if @variant == :logo_cloud
+        return false if @variant == :logo_slider
 
         multiple_slides?
       end
@@ -327,9 +352,11 @@ module FlatPack
       end
 
       def visible_item_threshold
-        return 1 unless @variant == :logo_cloud
+        if @variant == :logo_slider
+          return [@logo_items_per_view_mobile, @logo_items_per_view_tablet, @logo_items_per_view_desktop].min
+        end
 
-        [@logo_items_per_view_mobile, @logo_items_per_view_tablet, @logo_items_per_view_desktop].min
+        [@items_per_view_mobile, @items_per_view_tablet, @items_per_view_desktop].min
       end
 
       def render_counter
@@ -486,13 +513,13 @@ module FlatPack
         else
           classes(
             "flex h-full w-full transition-transform duration-300 ease-out",
-            (@variant == :logo_cloud) ? "items-center" : nil
+            (@variant == :logo_slider) ? "items-center" : nil
           )
         end
       end
 
       def slide_classes
-        if @variant == :logo_cloud
+        if @variant == :logo_slider
           return "h-full shrink-0 basis-1/3 md:basis-1/3 lg:basis-1/5"
         end
 
@@ -509,15 +536,15 @@ module FlatPack
       end
 
       def viewport_classes
-        return logo_cloud_viewport_classes if @variant == :logo_cloud
+        return logo_slider_viewport_classes if @variant == :logo_slider
 
         classes(
-          "flat-pack-carousel__viewport relative overflow-hidden rounded-lg border border-[var(--carousel-viewport-border-color)] bg-[var(--carousel-viewport-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          "flat-pack-carousel__viewport group relative overflow-hidden rounded-lg border border-[var(--carousel-viewport-border-color)] bg-[var(--carousel-viewport-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
           @touch_swipe ? "cursor-grab select-none" : nil
         )
       end
 
-      def logo_cloud_viewport_classes
+      def logo_slider_viewport_classes
         classes(
           "flat-pack-carousel__viewport relative overflow-hidden rounded-none border-0 bg-transparent",
           @touch_swipe ? "cursor-grab select-none" : nil,
@@ -527,15 +554,15 @@ module FlatPack
 
       def viewport_style
         declarations = []
-        declarations << "aspect-ratio: #{@aspect_ratio}" unless @variant == :logo_cloud
+        declarations << "aspect-ratio: #{@aspect_ratio}" unless @variant == :logo_slider
         declarations << "touch-action: pan-y" if @touch_swipe
-        declarations << "height: auto" if @variant == :logo_cloud
-        declarations << "background: transparent" if @variant == :logo_cloud
+        declarations << "height: auto" if @variant == :logo_slider
+        declarations << "background: transparent" if @variant == :logo_slider
         "#{declarations.join("; ")};"
       end
 
       def hide_slide?(is_active)
-        return false if @variant == :logo_cloud
+        return false if @variant == :logo_slider
         return false if @transition == :fade
 
         !is_active
@@ -546,7 +573,7 @@ module FlatPack
           payload = slide.respond_to?(:to_h) ? slide.to_h.symbolize_keys : {}
           type = (payload[:type] || infer_type(payload)).to_sym
           next unless SLIDE_TYPES.include?(type)
-          next if @variant == :logo_cloud && type != :image
+          next if @variant == :logo_slider && type != :image
 
           normalize_slide(type, payload, index)
         end
@@ -603,7 +630,7 @@ module FlatPack
       end
 
       def slide_lightbox_enabled?(slide)
-        return false if @variant == :logo_cloud
+        return false if @variant == :logo_slider
 
         slide[:type] == :image && slide[:lightbox] && slide[:src].present?
       end
@@ -616,10 +643,18 @@ module FlatPack
       end
 
       def normalize_logo_items_per_view(value, fallback:)
+        normalize_items_per_view(value, fallback: fallback)
+      end
+
+      def normalize_items_per_view(value, fallback:)
         parsed = Integer(value, exception: false)
         return fallback if parsed.nil? || parsed <= 0
 
         parsed
+      end
+
+      def quick_preview_enabled?
+        @variant == :default && @transition == :slide && @quick_preview
       end
 
       def normalize_logo_opacity(value)
@@ -700,8 +735,8 @@ module FlatPack
         validate_option!(:transition, @transition, TRANSITIONS)
         validate_option!(:caption_mode, @caption_mode, CAPTION_MODES)
 
-        if @variant == :logo_cloud && @transition == :fade
-          raise ArgumentError, "logo_cloud variant only supports :slide transition"
+        if @variant == :logo_slider && @transition == :fade
+          raise ArgumentError, "logo_slider variant only supports :slide transition"
         end
       end
 

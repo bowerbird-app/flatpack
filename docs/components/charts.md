@@ -15,7 +15,7 @@ Use `FlatPack::ChartButtons::Component` as a sibling when you need reusable Turb
 | name | type | default | required | description |
 | --- | --- | --- | --- | --- |
 | `series` | Array or Hash | — | yes | Chart series payload passed to ApexCharts. |
-| `type` | Symbol | `:line` | no | One of `:line`, `:bar`, `:area`, `:donut`, `:pie`, `:radar`. |
+| `type` | Symbol | `:line` | no | One of `:line`, `:column`, `:bar`, `:area`, `:donut`, `:pie`, `:radar`. Use `:column` for vertical bars and `:bar` for horizontal bars. |
 | `options` | Hash | `{}` | no | ApexCharts options deep-merged over component defaults. |
 | `height` | Integer | `280` | no | Chart height in pixels; must be positive. |
 | `card` | Boolean | `true` | no | Wraps chart in `FlatPack::Card::Component` with header/body/footer layout. |
@@ -32,7 +32,7 @@ Use `FlatPack::ChartButtons::Component` as a sibling when you need reusable Turb
 ## Variants
 - Chart type variant via `type`
 - Framed (`card: true`) and inline (`card: false`) rendering
-- Axis defaults for line/bar/area/radar and non-axis defaults for donut/pie
+- Axis defaults for line/column/bar/area/radar and non-axis defaults for donut/pie
 
 ## Related Classes
 - `FlatPack::Chart::DefaultFilterComponent`: reusable date range + status filter row designed for chart dashboards.
@@ -50,6 +50,24 @@ Use `FlatPack::ChartButtons::Component` as a sibling when you need reusable Turb
 | `status_placeholder` | String, nil | `"All statuses"` | no | Placeholder option label for the status select. |
 
 ## Example
+```erb
+<%= render FlatPack::Chart::Component.new(
+  type: :column,
+  series: [{ name: "Revenue", data: [44, 55, 57, 56] }],
+  options: { xaxis: { categories: ["Q1", "Q2", "Q3", "Q4"] } },
+  title: "Quarterly Revenue"
+) %>
+```
+
+```erb
+<%= render FlatPack::Chart::Component.new(
+  type: :bar,
+  series: [{ name: "Tickets", data: [84, 72, 65, 48, 39] }],
+  options: { xaxis: { categories: ["API", "Billing", "Onboarding", "Integrations", "Security"] } },
+  title: "Support Queue by Team"
+) %>
+```
+
 ```erb
 <%= render FlatPack::Chart::Component.new(
   series: [
@@ -79,6 +97,29 @@ Use `FlatPack::ChartButtons::Component` as a sibling when you need reusable Turb
 <% end %>
 ```
 
+```erb
+<%= render FlatPack::Table::Component.new(data: repositories) do |table| %>
+  <% table.column(title: "Repository", html: ->(row) { row[:name] }) %>
+  <% table.column(title: "Activity", html: ->(row) {
+    render FlatPack::Chart::Component.new(
+      type: :area,
+      series: [{ name: "Commits", data: row[:activity] }],
+      card: false,
+      height: 56,
+      options: {
+        chart: { sparkline: { enabled: true } },
+        tooltip: { enabled: false },
+        grid: { show: false },
+        xaxis: { labels: { show: false }, axisBorder: { show: false }, axisTicks: { show: false } },
+        yaxis: { show: false }
+      }
+    )
+  }) %>
+<% end %>
+```
+
+Use this compact pattern for dense tabular contexts such as repository activity rows. Keep `card: false`, small `height`, and sparkline-style options so the chart reads as a trend indicator instead of a full analytics panel.
+
 ## Accessibility
 - Provide meaningful `title`/`subtitle` or nearby text that describes chart intent.
 - For critical data, provide a tabular or textual alternative outside the chart canvas.
@@ -88,5 +129,5 @@ Use `FlatPack::ChartButtons::Component` as a sibling when you need reusable Turb
 - Stimulus controller: `app/javascript/flat_pack/controllers/chart_controller.js` (`flat-pack--chart`).
 - ApexCharts import map pin (`import "apexcharts"` via dynamic import in controller).
 - `FlatPack::Card::Component` when `card: true`.
-- `FlatPack::DateInput::Component` with `picker: :flatpack_date_picker` and `range: true` for date-range selection.
+- `FlatPack::DateRangeInput::Component` for date-range selection.
 - `FlatPack::Select::Component` for status selection options.

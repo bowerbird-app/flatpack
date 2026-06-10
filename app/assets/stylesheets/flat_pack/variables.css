@@ -35,8 +35,8 @@
   --color-warning-border: var(--color-warning-background-color);
   --color-warning: var(--color-warning-border);
   
-  --color-danger-background-color: oklch(62.8% .257 29.234);
-  --color-danger-hover-background-color: oklch(57% .257 29.234);
+  --color-danger-background-color: oklch(57.7% 0.245 27.325);
+  --color-danger-hover-background-color: oklch(50.5% 0.213 27.518);
   --color-danger-text-color: oklch(1.0 0 0);
   --color-danger-border-color: var(--color-danger-background-color);
   --color-info-border: var(--surface-border-color);
@@ -538,8 +538,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --color-warning-border: var(--color-warning-background-color);
   --color-warning: var(--color-warning-border);
   
-  --color-danger-background-color: oklch(62.8% .257 29.234);
-  --color-danger-hover-background-color: oklch(57% .257 29.234);
+  --color-danger-background-color: oklch(57.7% 0.245 27.325);
+  --color-danger-hover-background-color: oklch(50.5% 0.213 27.518);
   --color-danger-text-color: oklch(1.0 0 0);
   --color-danger-border-color: var(--color-danger-background-color);
   --color-info-border: var(--surface-border-color);
@@ -995,9 +995,9 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --color-warning-border: var(--color-warning-background-color);
   --color-warning: var(--color-warning-border);
   
-  --color-danger-background-color: oklch(67.8% .257 29.234);
-  --color-danger-hover-background-color: oklch(72% .257 29.234);
-  --color-danger-text-color: oklch(0.15 0.01 250);
+  --color-danger-background-color: oklch(57.7% 0.245 27.325);
+  --color-danger-hover-background-color: oklch(50.5% 0.213 27.518);
+  --color-danger-text-color: oklch(1.0 0 0);
   --color-danger-border-color: var(--color-danger-background-color);
   --color-info-border: var(--surface-border-color);
   
@@ -1453,8 +1453,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --color-warning-border: var(--color-warning-background-color);
   --color-warning: var(--color-warning-border);
   
-  --color-danger-background-color: oklch(62.8% .257 29.234);
-  --color-danger-hover-background-color: oklch(57% .257 29.234);
+  --color-danger-background-color: oklch(57.7% 0.245 27.325);
+  --color-danger-hover-background-color: oklch(50.5% 0.213 27.518);
   --color-danger-text-color: oklch(1.0 0 0);
   --color-danger-border-color: var(--color-danger-background-color);
   --color-info-border: var(--surface-border-color);
@@ -1911,9 +1911,9 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --color-warning-border: var(--color-warning-background-color);
   --color-warning: var(--color-warning-border);
 
-  --color-danger-background-color: oklch(0.66 0.22 25);
-  --color-danger-hover-background-color: oklch(0.61 0.22 25);
-  --color-danger-text-color: #fff;
+  --color-danger-background-color: oklch(57.7% 0.245 27.325);
+  --color-danger-hover-background-color: oklch(50.5% 0.213 27.518);
+  --color-danger-text-color: oklch(1.0 0 0);
   --color-danger-border-color: var(--color-danger-background-color);
   --color-info-border: var(--surface-border-color);
 

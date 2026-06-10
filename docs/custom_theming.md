@@ -79,8 +79,8 @@ This block mirrors the current default light palette from `app/assets/stylesheet
   --color-warning-border: var(--color-warning-background-color);
   --color-warning: var(--color-warning-border);
 
-  --color-danger-background-color: oklch(62.8% .257 29.234);
-  --color-danger-hover-background-color: oklch(57% .257 29.234);
+  --color-danger-background-color: oklch(57.7% 0.245 27.325);
+  --color-danger-hover-background-color: oklch(50.5% 0.213 27.518);
   --color-danger-text-color: oklch(1.0 0 0);
   --color-danger-border-color: var(--color-danger-background-color);
   --color-info-border: var(--surface-border-color);

@@ -5,12 +5,12 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-primary" "bg-success-background-color" "bg-warning-background-color" "bg-danger-background-color"
+      # "bg-primary" "bg-(--color-success-background-color)" "bg-(--color-warning-background-color)" "bg-(--color-danger-background-color)"
       VARIANTS = {
         default: "bg-primary",
-        success: "bg-success-background-color",
-        warning: "bg-warning-background-color",
-        danger: "bg-danger-background-color"
+        success: "bg-(--color-success-background-color)",
+        warning: "bg-(--color-warning-background-color)",
+        danger: "bg-(--color-danger-background-color)"
       }.freeze
 
       # Tailwind CSS scanning requires these classes to be present as string literals.

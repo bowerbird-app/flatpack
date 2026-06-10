@@ -43,6 +43,18 @@
           description: "Your changes have been saved successfully.",
           style: :success
         ) %&gt;
+
+        &lt;%= render FlatPack::Alert::Component.new(
+          title: "Warning",
+          description: "This action cannot be undone.",
+          style: :warning
+        ) %&gt;
+
+        &lt;%= render FlatPack::Alert::Component.new(
+          title: "Error",
+          description: "Failed to save changes. Please try again.",
+          style: :danger
+        ) %&gt;
       CODE
     ) %>
   </section>

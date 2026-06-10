@@ -271,6 +271,7 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
 - **List** - Structured list with composable items, avatars, and actions
 - **Tree** - Nested hierarchical tree for folder explorers, file structures, and expandable lists
 - **Timeline** - Vertical event timeline with icons and timestamps
+- **Timestamp** - Relative time renderer with hover tooltip for absolute local time
 - **Chart** - ApexCharts-based visualizations with optional card framing
 - **Progress** - Horizontal progress bar with optional label
 - **Badge** - Status indicators, counts, labels, and tags

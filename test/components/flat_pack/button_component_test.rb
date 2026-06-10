@@ -172,10 +172,10 @@ module FlatPack
         assert_selector "button", text: "Warning"
       end
 
-      def test_renders_error_scheme
-        render_inline(Component.new(text: "Error", style: :error))
+      def test_renders_danger_scheme
+        render_inline(Component.new(text: "Danger", style: :danger))
 
-        assert_selector "button", text: "Error"
+        assert_selector "button", text: "Danger"
       end
 
       def test_renders_icon_only_button

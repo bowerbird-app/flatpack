@@ -4,6 +4,8 @@ export default class extends Controller {
   static targets = [
     "trigger",
     "panel",
+    "listView",
+    "calendarView",
     "monthLabel",
     "calendarGrid",
     "summary",
@@ -30,12 +32,17 @@ export default class extends Controller {
     this.visibleMonth = this.initialVisibleMonth()
     this.committed = this.initialCommittedValues()
     this.draft = { ...this.committed }
+    this.viewMode = this.defaultViewMode()
+    this.committedPresetKey = null
+    this.draftPresetKey = null
 
     this.isOpen = false
     this.panelElement = this.hasPanelTarget ? this.panelTarget : document.getElementById(this.panelIdValue)
     this.monthLabelElement = this.hasMonthLabelTarget ? this.monthLabelTarget : this.panelElement?.querySelector('[data-flat-pack--flatpack-date-picker-target="monthLabel"]')
     this.calendarGridElement = this.hasCalendarGridTarget ? this.calendarGridTarget : this.panelElement?.querySelector('[data-flat-pack--flatpack-date-picker-target="calendarGrid"]')
     this.summaryElement = this.hasSummaryTarget ? this.summaryTarget : this.panelElement?.querySelector('[data-flat-pack--flatpack-date-picker-target="summary"]')
+    this.listViewElement = this.hasListViewTarget ? this.listViewTarget : this.panelElement?.querySelector('[data-flat-pack--flatpack-date-picker-target="listView"]')
+    this.calendarViewElement = this.hasCalendarViewTarget ? this.calendarViewTarget : this.panelElement?.querySelector('[data-flat-pack--flatpack-date-picker-target="calendarView"]')
     this.panelOriginalParent = null
     this.panelOriginalNextSibling = null
 
@@ -51,7 +58,6 @@ export default class extends Controller {
       this.setPanelInteractivity(false)
     }
 
-    this.render()
     this.syncFormFields(this.committed)
     this.syncTriggerValue(this.committed)
   }
@@ -92,6 +98,8 @@ export default class extends Controller {
     this.panelElement.setAttribute("aria-hidden", "false")
     this.triggerTarget?.setAttribute("aria-expanded", "true")
     this.draft = { ...this.committed }
+    this.draftPresetKey = this.committedPresetKey
+    this.viewMode = this.defaultViewMode()
     this.render()
     this.positionPanel()
     this.addGlobalListeners()
@@ -127,6 +135,8 @@ export default class extends Controller {
   cancel(event) {
     event.preventDefault()
     this.draft = { ...this.committed }
+    this.draftPresetKey = this.committedPresetKey
+    this.viewMode = this.defaultViewMode()
     this.render()
     this.close()
   }
@@ -141,6 +151,8 @@ export default class extends Controller {
     }
 
     this.committed = normalizedDraft
+    this.committedPresetKey = this.draftPresetKey
+    this.draftPresetKey = this.committedPresetKey
     this.syncFormFields(this.committed)
     this.syncTriggerValue(this.committed)
     this.close()
@@ -199,6 +211,8 @@ export default class extends Controller {
       this.draft.end = null
     }
 
+    this.draftPresetKey = preset
+
     this.visibleMonth = new Date(this.draft.start || this.today)
     this.render()
   }
@@ -222,12 +236,14 @@ export default class extends Controller {
 
     if (!this.rangeValue) {
       this.draft = { start: selected, end: null }
+      this.draftPresetKey = null
       this.render()
       return
     }
 
     if (!this.draft.start || (this.draft.start && this.draft.end)) {
       this.draft = { start: selected, end: null }
+      this.draftPresetKey = null
       this.render()
       return
     }
@@ -237,6 +253,8 @@ export default class extends Controller {
     } else {
       this.draft = { start: this.draft.start, end: selected }
     }
+
+    this.draftPresetKey = null
 
     this.render()
   }
@@ -282,6 +300,12 @@ export default class extends Controller {
       case "preset":
         this.applyPreset(String(commandElement.dataset.flatPackDatePickerPreset || ""))
         break
+      case "show-calendar":
+        this.showCalendar(event)
+        break
+      case "show-ranges":
+        this.showRanges(event)
+        break
       case "day":
         this.applyDaySelection(String(commandElement.dataset.flatPackDatePickerDate || ""))
         break
@@ -326,6 +350,7 @@ export default class extends Controller {
       return
     }
 
+    this.renderViewMode()
     this.positionPanel()
   }
 
@@ -340,6 +365,8 @@ export default class extends Controller {
   }
 
   render() {
+    this.renderViewMode()
+    this.renderListOptionSelection()
     this.renderCalendar()
     this.renderSummary()
     this.syncTriggerValue(this.draft)
@@ -378,6 +405,22 @@ export default class extends Controller {
     if (!this.panelElement || !this.hasTriggerTarget) {
       return
     }
+
+    if (this.isMobileViewport()) {
+      this.panelElement.style.position = "fixed"
+      this.panelElement.style.inset = "0"
+      this.panelElement.style.left = "0"
+      this.panelElement.style.top = "0"
+      this.panelElement.style.width = "100vw"
+      this.panelElement.style.maxWidth = "100vw"
+      this.panelElement.style.height = "100dvh"
+      this.panelElement.style.maxHeight = "100dvh"
+      return
+    }
+
+    this.panelElement.style.inset = ""
+    this.panelElement.style.height = ""
+    this.panelElement.style.maxHeight = ""
 
     const triggerRect = this.triggerTarget.getBoundingClientRect()
     const panelRect = this.panelElement.getBoundingClientRect()
@@ -734,5 +777,73 @@ export default class extends Controller {
 
   startOfDay(date) {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate())
+  }
+
+  showCalendar(event) {
+    event.preventDefault()
+    this.draftPresetKey = "pick_in_calendar"
+    this.viewMode = "calendar"
+    this.renderViewMode()
+    this.renderListOptionSelection()
+  }
+
+  showRanges(event) {
+    event.preventDefault()
+    this.viewMode = "list"
+    this.renderViewMode()
+  }
+
+  defaultViewMode() {
+    return this.isMobileViewport() ? "list" : "calendar"
+  }
+
+  isMobileViewport() {
+    return window.matchMedia("(max-width: 767px)").matches
+  }
+
+  renderViewMode() {
+    if (!this.panelElement) {
+      return
+    }
+
+    if (!this.listViewElement || !this.calendarViewElement) {
+      return
+    }
+
+    if (!this.isMobileViewport()) {
+      this.listViewElement.classList.remove("hidden")
+      this.calendarViewElement.classList.remove("hidden")
+      return
+    }
+
+    const showCalendar = this.viewMode === "calendar"
+    this.listViewElement.classList.toggle("hidden", showCalendar)
+    this.calendarViewElement.classList.toggle("hidden", !showCalendar)
+  }
+
+  renderListOptionSelection() {
+    if (!this.panelElement) {
+      return
+    }
+
+    const optionButtons = this.panelElement.querySelectorAll(
+      '[data-flat-pack-date-picker-command="preset"], [data-flat-pack-date-picker-command="show-calendar"]'
+    )
+
+    const selectedClasses = [
+      "bg-[var(--button-primary-background-color)]",
+      "text-[var(--button-primary-text-color)]",
+      "hover:bg-[var(--button-primary-hover-background-color)]"
+    ]
+
+    optionButtons.forEach((button) => {
+      const command = button.dataset.flatPackDatePickerCommand
+      const key = command === "preset" ? String(button.dataset.flatPackDatePickerPreset || "") : "pick_in_calendar"
+      const selected = this.draftPresetKey === key
+
+      selectedClasses.forEach((className) => {
+        button.classList.toggle(className, selected)
+      })
+    })
   }
 }

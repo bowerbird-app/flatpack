@@ -75,7 +75,7 @@ module FlatPack
             :div,
             class: "relative w-full overflow-hidden rounded-2xl",
             data: {
-              controller: "flat-pack--chat-message-actions",
+              style: :danger,
               flat_pack__chat_message_actions_direction_value: :outgoing,
               flat_pack__chat_message_actions_side_value: "right",
               action: "click@window->flat-pack--chat-message-actions#handleWindowClick keydown@window->flat-pack--chat-message-actions#handleWindowKeydown chat-message-actions:opened@window->flat-pack--chat-message-actions#handlePeerOpened"
@@ -135,7 +135,7 @@ module FlatPack
               FlatPack::Button::Component.new(
                 text: "Delete",
                 size: :sm,
-                style: :error,
+                style: :danger,
                 data: {action: "click->flat-pack--chat-message-actions#handleDelete"}
               )
             )

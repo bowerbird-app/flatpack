@@ -8,7 +8,7 @@ Use these components when you need FlatPack-styled form controls with consistent
 
 ## Class
 - Primary: `FlatPack::TextInput::Component`
-- Related classes: `FlatPack::PasswordInput::Component`, `FlatPack::EmailInput::Component`, `FlatPack::PhoneInput::Component`, `FlatPack::SearchInput::Component`, `FlatPack::TextArea::Component`, `FlatPack::UrlInput::Component`, `FlatPack::NumberInput::Component`, `FlatPack::DateInput::Component`, `FlatPack::DateTimeInput::Component`, `FlatPack::TimeInput::Component`, `FlatPack::FileInput::Component`, `FlatPack::Checkbox::Component`, `FlatPack::RadioGroup::Component`, `FlatPack::Select::Component`, `FlatPack::Switch::Component`
+- Related classes: `FlatPack::PasswordInput::Component`, `FlatPack::EmailInput::Component`, `FlatPack::PhoneInput::Component`, `FlatPack::SearchInput::Component`, `FlatPack::TextArea::Component`, `FlatPack::UrlInput::Component`, `FlatPack::NumberInput::Component`, `FlatPack::DateInput::Component`, `FlatPack::DateRangeInput::Component`, `FlatPack::DateTimeInput::Component`, `FlatPack::TimeInput::Component`, `FlatPack::FileInput::Component`, `FlatPack::Checkbox::Component`, `FlatPack::RadioGroup::Component`, `FlatPack::Select::Component`, `FlatPack::Switch::Component`
 - Related docs: [Range Input](range-input.md) (`FlatPack::RangeInput::Component`)
 
 ## Props
@@ -31,6 +31,7 @@ Component-specific props:
 | --- | --- | --- | --- | --- |
 | `rows` | Integer | `3` | no | Initial row count (`TextArea` plain mode only; ignored when `rich_text: true`). |
 | `character_count` | Boolean | `false` | no | Enables live count text in `TextInput` and `TextArea` (plain and rich text modes). |
+| `quick_copy` | Boolean | `false` | no | Enables one-click copy for `TextInput` from both field click and a trailing copy icon button, with toast feedback; the input is rendered `readonly` when enabled. |
 | `rich_text` | Boolean | `false` | no | Activates the TipTap rich text editor in place of the native `<textarea>`. |
 | `rich_text_options` | Hash | `{}` | no | Fine-grained config for the rich text editor; see [Rich Text Options](#rich-text-options) below. |
 | `min_characters` | Integer | `nil` | no | Low threshold warning for `TextInput` and `TextArea` count color. |
@@ -38,9 +39,10 @@ Component-specific props:
 | `min` | Numeric or date-like | `nil` (`NumberInput`), `0` (`RangeInput`) | no | Minimum value/date/time (`NumberInput`, `DateInput`, `DateTimeInput`, `TimeInput`, `RangeInput`). |
 | `max` | Numeric or date-like | `nil` (`NumberInput`), `100` (`RangeInput`) | no | Maximum value/date/time (`NumberInput`, `DateInput`, `DateTimeInput`, `TimeInput`, `RangeInput`). |
 | `picker` | Symbol | `:native` | no | Date input picker mode (`DateInput`): `:native` or `:flatpack_date_picker`. |
-| `range` | Boolean | `false` | no | Enables start/end selection in `DateInput` custom picker mode. Requires `picker: :flatpack_date_picker`. |
-| `range_start_name` | String | `"#{name}[start]"` | no | Hidden input name for range start value in `DateInput` custom picker mode. |
-| `range_end_name` | String | `"#{name}[end]"` | no | Hidden input name for range end value in `DateInput` custom picker mode. |
+| `start_name` | String | none | yes (`DateRangeInput`) | Hidden field name used to submit the selected range start date. |
+| `end_name` | String | none | yes (`DateRangeInput`) | Hidden field name used to submit the selected range end date. |
+| `start_value` | String, Date, Time, DateTime | `nil` | no (`DateRangeInput`) | Initial selected range start date. |
+| `end_value` | String, Date, Time, DateTime | `nil` | no (`DateRangeInput`) | Initial selected range end date. |
 | `step` | Numeric | `1` | no | Step increment (`NumberInput`, `RangeInput`). |
 | `accept` | String | `nil` | no | File MIME/extensions whitelist for `FileInput`. Dangerous executable extensions raise `ArgumentError`. |
 | `multiple` | Boolean | `false` | no | Enables multiple file selection (`FileInput`). |
@@ -77,6 +79,15 @@ None.
   character_count: true,
   min_characters: 20,
   max_characters: 60
+) %>
+```
+
+```erb
+<%= render FlatPack::TextInput::Component.new(
+  name: "api[key]",
+  label: "API Key",
+  value: @api_key,
+  quick_copy: true
 ) %>
 ```
 
@@ -125,19 +136,18 @@ Additional focused examples:
 ```
 
 ```erb
-<%= render FlatPack::DateInput::Component.new(
-  name: "reporting_period",
+<%= render FlatPack::DateRangeInput::Component.new(
+  start_name: "reporting_period_start",
+  end_name: "reporting_period_end",
   label: "Reporting Period",
-  picker: :flatpack_date_picker,
-  range: true,
-  range_start_name: "reporting_period_start",
-  range_end_name: "reporting_period_end",
+  start_value: (Date.today - 30).to_s,
+  end_value: Date.today.to_s,
   min: (Date.today - 365).to_s,
   max: Date.today.to_s
 ) %>
 ```
 
-In custom picker mode, quick presets include: `Today`, `Yesterday`, `Last 3 days`, `This week`, `Last week`, `This month`, `Last month`, `This year`, `Last year`.
+In custom picker mode, both `DateInput` (`picker: :flatpack_date_picker`) and `DateRangeInput` provide quick presets: `Today`, `Yesterday`, `Last 3 days`, `This week`, `Last week`, `This month`, `Last month`, `This year`, `Last year`.
 The popup renders as side-by-side quick ranges + calendar on larger screens and stacks vertically on smaller screens.
 
 ## Rich Text Mode

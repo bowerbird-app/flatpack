@@ -16,6 +16,7 @@ module FlatPack
         label: nil,
         error: nil,
         character_count: false,
+        quick_copy: false,
         min_characters: nil,
         max_characters: nil,
         **system_arguments
@@ -30,6 +31,7 @@ module FlatPack
         @label = label
         @error = error
         @character_count = character_count
+        @quick_copy = quick_copy
         @min_characters = min_characters
         @max_characters = max_characters
 
@@ -57,7 +59,30 @@ module FlatPack
       end
 
       def render_input
-        tag.input(**input_attributes)
+        return tag.input(**input_attributes) unless @quick_copy
+
+        content_tag(:div, class: quick_copy_wrapper_classes) do
+          safe_join([
+            tag.input(**input_attributes),
+            render_copy_button
+          ])
+        end
+      end
+
+      def render_copy_button
+        content_tag(
+          :button,
+          type: "button",
+          class: copy_button_classes,
+          disabled: @disabled,
+          data: {
+            action: "click->flat-pack--text-input#copyFromButton",
+            flat_pack__text_input_target: "copyButton"
+          },
+          aria: {label: "Copy input value"}
+        ) do
+          render FlatPack::Shared::IconComponent.new(name: "clipboard-document", size: :sm)
+        end
       end
 
       def render_error
@@ -86,6 +111,7 @@ module FlatPack
           value: @value,
           placeholder: @placeholder,
           disabled: @disabled,
+          readonly: @quick_copy,
           required: @required,
           class: input_classes,
           data: input_data_attributes
@@ -102,11 +128,12 @@ module FlatPack
 
       def wrapper_attributes
         attrs = {class: wrapper_classes}
-        return attrs unless @character_count
+        return attrs unless behavior_enabled?
 
         attrs[:data] = {
           controller: "flat-pack--text-input",
           flat_pack__text_input_character_count_enabled_value: @character_count,
+          flat_pack__text_input_quick_copy_enabled_value: @quick_copy,
           flat_pack__text_input_min_characters_value: @min_characters,
           flat_pack__text_input_max_characters_value: @max_characters
         }.compact
@@ -135,6 +162,8 @@ module FlatPack
           "disabled:opacity-50 disabled:cursor-not-allowed"
         ]
 
+        base_classes << "pr-10" if @quick_copy
+
         base_classes << if @error
           "border-[var(--color-warning)]"
         else
@@ -153,12 +182,42 @@ module FlatPack
       end
 
       def input_data_attributes
-        return {} unless @character_count
+        return {} unless behavior_enabled?
 
-        {
-          flat_pack__text_input_target: "input",
-          action: "input->flat-pack--text-input#updateCharacterCount"
+        data_attributes = {
+          flat_pack__text_input_target: "input"
         }
+
+        data_attributes[:action] = input_actions
+        data_attributes
+      end
+
+      def input_actions
+        actions = []
+        actions << "input->flat-pack--text-input#updateCharacterCount" if @character_count
+        actions << "click->flat-pack--text-input#copyFromInput" if @quick_copy
+        actions.join(" ")
+      end
+
+      def behavior_enabled?
+        @character_count || @quick_copy
+      end
+
+      def quick_copy_wrapper_classes
+        "relative"
+      end
+
+      def copy_button_classes
+        classes(
+          "absolute right-2 top-1/2 -translate-y-1/2",
+          "inline-flex items-center justify-center",
+          "h-6 w-6 rounded",
+          "text-[var(--surface-muted-content-color)]",
+          "hover:text-[var(--surface-content-color)]",
+          "hover:bg-[var(--surface-muted-background-color)]",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          "disabled:opacity-50 disabled:cursor-not-allowed"
+        )
       end
 
       def input_id

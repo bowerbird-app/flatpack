@@ -291,6 +291,9 @@ class PagesController < ApplicationController
   def forms_date_input
   end
 
+  def forms_date_range_input
+  end
+
   def forms_date_time_input
   end
 
@@ -610,6 +613,39 @@ class PagesController < ApplicationController
       {name: "May", value: 49},
       {name: "Jun", value: 60}
     ]
+
+    @chart_repo_activity_rows = [
+      {
+        name: "flat-pack",
+        description: "Design-system engine",
+        language: "Ruby",
+        commits_7d: 34,
+        prs_open: 5,
+        trend_label: "+14%",
+        trend_up: true,
+        activity: [2, 3, 1, 4, 6, 5, 7, 4, 6, 8, 9, 7, 10, 11]
+      },
+      {
+        name: "theme-tokens",
+        description: "Theme token playground",
+        language: "TypeScript",
+        commits_7d: 18,
+        prs_open: 2,
+        trend_label: "+6%",
+        trend_up: true,
+        activity: [1, 2, 2, 3, 4, 3, 5, 4, 5, 6, 5, 7, 6, 8]
+      },
+      {
+        name: "docs-site",
+        description: "Component docs and examples",
+        language: "Markdown",
+        commits_7d: 11,
+        prs_open: 1,
+        trend_label: "-4%",
+        trend_up: false,
+        activity: [4, 5, 4, 4, 3, 4, 3, 2, 3, 3, 2, 2, 2, 1]
+      }
+    ]
   end
 
   def charts_default_filter
@@ -726,13 +762,15 @@ class PagesController < ApplicationController
   def carousel
     @carousel_slides = carousel_demo_slides
     @carousel_single_slide = carousel_demo_single_slide
-    @carousel_logo_cloud_slides = carousel_demo_logo_cloud_slides
+    @carousel_chart_slides = carousel_demo_chart_slides
+    @carousel_logo_slider_slides = carousel_demo_logo_slider_slides
     @carousel_notes = [
       "Uses FlatPack::Carousel::Component with image, video, and component-rendered HTML slides.",
       "Demonstrates autoplay, loop, indicators, controls, and thumbnail navigation.",
       "Image slides enable lightbox by default and can opt out per slide with lightbox: false.",
       "Uses secure defaults for rich content and supports keyboard plus touch interactions.",
-      "Includes logo-cloud variant with multi-item responsive layout (5 desktop / 3 tablet / 3 mobile)."
+      "Includes logo-slider variant with multi-item responsive layout (5 desktop / 3 tablet / 3 mobile).",
+      "Includes a quick-preview chart carousel demo showing 3.25 slides on desktop and 1.25 slides on mobile/tablet."
     ]
   end
 
@@ -777,6 +815,9 @@ class PagesController < ApplicationController
   end
 
   def timeline
+  end
+
+  def timestamp
   end
 
   def hero_centered
@@ -1602,6 +1643,7 @@ class PagesController < ApplicationController
       {title: "List", description: "List component demos and selectable rows", url: demo_list_path},
       {title: "Tree", description: "Folder tree views for folder structures and hierarchical lists", url: demo_tree_path},
       {title: "Timeline", description: "Chronological timeline layouts", url: demo_timeline_path},
+      {title: "Timestamp", description: "Relative timestamps with hover tooltip absolute time", url: demo_timestamp_path},
       {title: "Mobile", description: "Mobile demo index", url: mobile_path},
       {title: "Bottom Nav", description: "Mobile bottom navigation demo", url: mobile_bottom_nav_path}
     ]
@@ -1809,18 +1851,114 @@ class PagesController < ApplicationController
     ]
   end
 
-  def carousel_demo_logo_cloud_slides
+  def carousel_demo_chart_slides
+    categories = %w[Jan Feb Mar Apr May Jun]
+
     [
-      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/github.svg", alt: "GitHub"},
+      {
+        type: :html,
+        caption: "Signups trend",
+        html: render_carousel_chart_card(
+          FlatPack::Chart::Component.new(
+            type: :line,
+            title: "Signups",
+            subtitle: "Last 6 months",
+            height: 220,
+            card: false,
+            series: [{name: "Signups", data: [22, 28, 31, 36, 41, 48]}],
+            options: {xaxis: {categories: categories}}
+          )
+        )
+      },
+      {
+        type: :html,
+        caption: "Revenue",
+        html: render_carousel_chart_card(
+          FlatPack::Chart::Component.new(
+            type: :column,
+            title: "Revenue",
+            subtitle: "USD (k)",
+            height: 220,
+            card: false,
+            series: [{name: "Revenue", data: [64, 72, 76, 83, 90, 96]}],
+            options: {xaxis: {categories: categories}}
+          )
+        )
+      },
+      {
+        type: :html,
+        caption: "Activation rate",
+        html: render_carousel_chart_card(
+          FlatPack::Chart::Component.new(
+            type: :area,
+            title: "Activation",
+            subtitle: "Percent",
+            height: 220,
+            card: false,
+            series: [{name: "Activation", data: [41, 44, 47, 51, 55, 58]}],
+            options: {xaxis: {categories: categories}}
+          )
+        )
+      },
+      {
+        type: :html,
+        caption: "Churn",
+        html: render_carousel_chart_card(
+          FlatPack::Chart::Component.new(
+            type: :bar,
+            title: "Churn",
+            subtitle: "Accounts",
+            height: 220,
+            card: false,
+            series: [{name: "Churn", data: [19, 16, 15, 12, 11, 9]}],
+            options: {xaxis: {categories: categories}}
+          )
+        )
+      },
+      {
+        type: :html,
+        caption: "Channel mix",
+        html: render_carousel_chart_card(
+          FlatPack::Chart::Component.new(
+            type: :donut,
+            title: "Acquisition",
+            subtitle: "Current month",
+            height: 220,
+            card: false,
+            series: [35, 25, 20, 12, 8],
+            options: {labels: ["Organic", "Paid", "Partner", "Referral", "Other"]}
+          )
+        )
+      }
+    ]
+  end
+
+  def render_carousel_chart_card(chart_component)
+    ApplicationController.render(
+      inline: <<~ERB,
+        <%= render FlatPack::Card::Component.new(style: :elevated) do |card| %>
+          <% card.body do %>
+            <%= render chart_component %>
+          <% end %>
+        <% end %>
+      ERB
+      locals: {chart_component: chart_component},
+      layout: false
+    )
+  end
+
+  def carousel_demo_logo_slider_slides
+    [
+      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/github.svg", alt: "GitHub", url: "https://github.com"},
       {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/gitlab.svg", alt: "GitLab"},
-      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/figma.svg", alt: "Figma"},
-      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/notion.svg", alt: "Notion"},
+      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/figma.svg", alt: "Figma", url: "https://figma.com"},
+      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/notion.svg", alt: "Notion", url: "https://notion.so"},
       {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/linear.svg", alt: "Linear"},
-      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/vercel.svg", alt: "Vercel"},
+      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/vercel.svg", alt: "Vercel", url: "https://vercel.com"},
       {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/netlify.svg", alt: "Netlify"},
-      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/stripe.svg", alt: "Stripe"},
+      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/stripe.svg", alt: "Stripe", url: "https://stripe.com"},
       {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/postgresql.svg", alt: "PostgreSQL"},
-      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/docker.svg", alt: "Docker"}
+      {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/docker.svg", alt: "Docker", url: "https://docker.com"}
     ]
   end
 

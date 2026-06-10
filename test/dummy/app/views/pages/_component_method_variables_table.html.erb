@@ -36,7 +36,7 @@
       method_call: "render FlatPack::Badge::Component.new(text: \"New\", style: :primary)",
       variables: [
         { variable: "text", accepts: "String (required)", example: "text: \"New\"" },
-        { variable: "style", accepts: ":default, :primary, :success, :warning, :info", example: "style: :warning" },
+        { variable: "style", accepts: ":default, :primary, :success, :warning, :danger, :info", example: "style: :danger" },
         { variable: "size", accepts: ":sm, :md, :lg", example: "size: :sm" }
       ]
     },
@@ -77,12 +77,12 @@
       variables: [
         { variable: "back_icon", accepts: "String", example: "back_icon: \"chevron-left\"" },
         { variable: "back_label", accepts: "String", example: "back_label: \"Go back\"" },
-        { variable: "back_style", accepts: ":default, :primary, :secondary, :ghost, :success, :warning, :error", example: "back_style: :secondary" },
+        { variable: "back_style", accepts: ":default, :primary, :secondary, :ghost, :success, :warning, :danger", example: "back_style: :secondary" },
         { variable: "back_size", accepts: ":sm, :md, :lg", example: "back_size: :md" },
         { variable: "anchor_url", accepts: "String or nil", example: "anchor_url: demo_path" },
         { variable: "anchor_icon", accepts: "String", example: "anchor_icon: \"x-mark\"" },
         { variable: "anchor_label", accepts: "String", example: "anchor_label: \"Close\"" },
-        { variable: "anchor_style", accepts: ":default, :primary, :secondary, :ghost, :success, :warning, :error", example: "anchor_style: :secondary" },
+        { variable: "anchor_style", accepts: ":default, :primary, :secondary, :ghost, :success, :warning, :danger", example: "anchor_style: :secondary" },
         { variable: "anchor_size", accepts: ":sm, :md, :lg", example: "anchor_size: :md" },
         { variable: "right_slot", accepts: "slot block", example: "component.right_slot { render FlatPack::Button::Component.new(icon: \"plus\", icon_only: true, url: demo_forms_path) }" },
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"mb-4\", data: { testid: \"page-nav\" }" }
@@ -93,7 +93,7 @@
       method_call: "render FlatPack::Button::Component.new(text: \"Save\", style: :primary, size: :md)",
       variables: [
         { variable: "text", accepts: "String", example: "text: \"Save\"" },
-        { variable: "style", accepts: ":primary, :secondary, :ghost, :success, :warning, :error", example: "style: :secondary" },
+        { variable: "style", accepts: ":primary, :secondary, :ghost, :success, :warning, :danger", example: "style: :secondary" },
         { variable: "loading", accepts: "true, false", example: "loading: true" }
       ]
     },
@@ -113,25 +113,30 @@
       variables: [
         { variable: "slides", accepts: "Array<Hash> (required)", example: "slides: [{ type: :image, src: \"https://...\", alt: \"Preview\", lightbox: true }]" },
         { variable: "initial_index", accepts: "Integer", example: "initial_index: 0" },
-        { variable: "show_controls", accepts: "true, false (default: true for :default, false for :logo_cloud)", example: "show_controls: true" },
+        { variable: "show_controls", accepts: "true, false (default: true for :default, false for :logo_slider)", example: "show_controls: true" },
+        { variable: "controls_on_hover", accepts: "true, false", example: "controls_on_hover: true" },
         { variable: "show_indicators", accepts: "true, false", example: "show_indicators: true" },
         { variable: "show_thumbs", accepts: "true, false", example: "show_thumbs: true" },
         { variable: "thumbs_position", accepts: ":top, :bottom", example: "thumbs_position: :bottom" },
         { variable: "thumbs_alignment", accepts: ":start, :center, :end", example: "thumbs_alignment: :center" },
         { variable: "show_captions", accepts: "true, false", example: "show_captions: true" },
         { variable: "transition", accepts: ":slide, :fade", example: "transition: :fade" },
-        { variable: "autoplay", accepts: "true, false (default: false for :default, true for :logo_cloud)", example: "autoplay: true" },
+        { variable: "autoplay", accepts: "true, false (default: false for :default, true for :logo_slider)", example: "autoplay: true" },
         { variable: "autoplay_interval_ms", accepts: "Integer", example: "autoplay_interval_ms: 4000" },
         { variable: "pause_on_hover", accepts: "true, false", example: "pause_on_hover: true" },
         { variable: "pause_on_focus", accepts: "true, false", example: "pause_on_focus: true" },
         { variable: "loop", accepts: "true, false", example: "loop: true" },
-        { variable: "variant", accepts: ":default, :logo_cloud", example: "variant: :logo_cloud" },
+        { variable: "variant", accepts: ":default, :logo_slider", example: "variant: :logo_slider" },
+        { variable: "items_per_view_desktop", accepts: "Integer (default variant + slide transition)", example: "items_per_view_desktop: 3" },
+        { variable: "items_per_view_tablet", accepts: "Integer (default variant + slide transition)", example: "items_per_view_tablet: 1" },
+        { variable: "items_per_view_mobile", accepts: "Integer (default variant + slide transition)", example: "items_per_view_mobile: 1" },
+        { variable: "quick_preview", accepts: "true, false (default variant + slide transition only)", example: "quick_preview: true" },
         { variable: "logo_items_per_view_desktop", accepts: "Integer", example: "logo_items_per_view_desktop: 5" },
         { variable: "logo_items_per_view_tablet", accepts: "Integer", example: "logo_items_per_view_tablet: 3" },
         { variable: "logo_items_per_view_mobile", accepts: "Integer", example: "logo_items_per_view_mobile: 3" },
         { variable: "logo_grayscale", accepts: "true, false", example: "logo_grayscale: true" },
         { variable: "logo_opacity", accepts: "Float between 0.0 and 1.0", example: "logo_opacity: 0.8" },
-        { variable: "logo_wrapper_background", accepts: "String or nil (reserved; logo-cloud currently renders transparent background)", example: "logo_wrapper_background: \"#f7f8fa\"" },
+        { variable: "logo_wrapper_background", accepts: "String or nil (reserved; logo-slider currently renders transparent background)", example: "logo_wrapper_background: \"#f7f8fa\"" },
         { variable: "responsive", accepts: "true, false", example: "responsive: true" },
         { variable: "touch_swipe", accepts: "true, false", example: "touch_swipe: true" },
         { variable: "caption_mode", accepts: ":below, :overlay", example: "caption_mode: :overlay" },
@@ -160,7 +165,7 @@
       method_call: "render FlatPack::Chart::Component.new(type: :line, series: [{ name: \"Sales\", data: [10, 20] }])",
       variables: [
         { variable: "series", accepts: "Array (required)", example: "series: [{ name: \"Revenue\", data: [12, 19, 24] }]" },
-        { variable: "type", accepts: ":line, :bar, :area, :donut, :pie, :radar", example: "type: :bar" },
+        { variable: "type", accepts: ":line, :column, :bar, :area, :donut, :pie, :radar", example: "type: :column" },
         { variable: "height", accepts: "Integer", example: "height: 320" }
       ]
     },
@@ -549,6 +554,7 @@
         { variable: "label", accepts: "String or nil", example: "label: \"Email\"" },
         { variable: "error", accepts: "String or nil", example: "error: \"Email is invalid\"" },
         { variable: "character_count", accepts: "true, false", example: "character_count: true" },
+        { variable: "quick_copy", accepts: "true, false", example: "quick_copy: true" },
         { variable: "min_characters", accepts: "Integer or nil", example: "min_characters: 20" },
         { variable: "max_characters", accepts: "Integer or nil", example: "max_characters: 60" },
         { variable: "**system_arguments", accepts: "Hash", example: "id: \"email\", class: \"w-full\", data: { testid: \"email-input\" }" }
@@ -556,22 +562,37 @@
     },
     date_input: {
       label: "Date Input",
-      method_call: "render FlatPack::DateInput::Component.new(name: \"reporting_period\", label: \"Reporting Period\", picker: :flatpack_date_picker, range: true)",
+      method_call: "render FlatPack::DateInput::Component.new(name: \"birth_date\", label: \"Birth Date\", picker: :flatpack_date_picker)",
       variables: [
         { variable: "name", accepts: "String (required)", example: "name: \"birth_date\"" },
-        { variable: "value", accepts: "String, Date, Time, DateTime, Hash, nil", example: "value: { start: \"2026-05-01\", end: \"2026-05-31\" }" },
+        { variable: "value", accepts: "String, Date, Time, DateTime, nil", example: "value: \"2026-05-31\"" },
         { variable: "placeholder", accepts: "String or nil", example: "placeholder: \"Select date\"" },
         { variable: "disabled", accepts: "true, false", example: "disabled: true" },
         { variable: "required", accepts: "true, false", example: "required: true" },
-        { variable: "label", accepts: "String or nil", example: "label: \"Reporting Period\"" },
+        { variable: "label", accepts: "String or nil", example: "label: \"Birth Date\"" },
         { variable: "error", accepts: "String or nil", example: "error: \"Date is required\"" },
         { variable: "min", accepts: "String, Date, Time, DateTime, nil", example: "min: \"2026-01-01\"" },
         { variable: "max", accepts: "String, Date, Time, DateTime, nil", example: "max: \"2026-12-31\"" },
         { variable: "picker", accepts: ":native, :flatpack_date_picker", example: "picker: :flatpack_date_picker" },
-        { variable: "range", accepts: "true, false", example: "range: true" },
-        { variable: "range_start_name", accepts: "String or nil", example: "range_start_name: \"reporting_period_start\"" },
-        { variable: "range_end_name", accepts: "String or nil", example: "range_end_name: \"reporting_period_end\"" },
         { variable: "**system_arguments", accepts: "Hash", example: "id: \"reporting-period\", class: \"w-full\", data: { testid: \"date-input\" }" }
+      ]
+    },
+    date_range_input: {
+      label: "Date Range Input",
+      method_call: "render FlatPack::DateRangeInput::Component.new(start_name: \"reporting_period_start\", end_name: \"reporting_period_end\", label: \"Reporting Period\")",
+      variables: [
+        { variable: "start_name", accepts: "String (required)", example: "start_name: \"reporting_period_start\"" },
+        { variable: "end_name", accepts: "String (required)", example: "end_name: \"reporting_period_end\"" },
+        { variable: "start_value", accepts: "String, Date, Time, DateTime, nil", example: "start_value: \"2026-05-01\"" },
+        { variable: "end_value", accepts: "String, Date, Time, DateTime, nil", example: "end_value: \"2026-05-31\"" },
+        { variable: "placeholder", accepts: "String or nil", example: "placeholder: \"Select date range\"" },
+        { variable: "disabled", accepts: "true, false", example: "disabled: true" },
+        { variable: "required", accepts: "true, false", example: "required: true" },
+        { variable: "label", accepts: "String or nil", example: "label: \"Reporting Period\"" },
+        { variable: "error", accepts: "String or nil", example: "error: \"Date range is required\"" },
+        { variable: "min", accepts: "String, Date, Time, DateTime, nil", example: "min: \"2026-01-01\"" },
+        { variable: "max", accepts: "String, Date, Time, DateTime, nil", example: "max: \"2026-12-31\"" },
+        { variable: "**system_arguments", accepts: "Hash", example: "id: \"reporting-period\", class: \"w-full\", data: { testid: \"date-range-input\" }" }
       ]
     },
     date_time_input: {
@@ -756,12 +777,23 @@
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"mb-2\", data: { testid: \"timeline-item\" }" }
       ]
     },
+    timestamp: {
+      label: "Timestamp",
+      method_call: "render FlatPack::Timestamp::Component.new(timestamp: 3.minutes.ago)",
+      variables: [
+        { variable: "timestamp", accepts: "Time, DateTime, Date, String, Numeric, or nil", example: "timestamp: article.published_at" },
+        { variable: "class_name", accepts: "String or nil", example: "class_name: \"text-green-600 text-xs\"" },
+        { variable: "tooltip_placement", accepts: ":top, :right, :bottom, :left", example: "tooltip_placement: :right" },
+        { variable: "fallback_text", accepts: "String", example: "fallback_text: \"Unavailable\"" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"text-xs\", data: { testid: \"timestamp\" }" }
+      ]
+    },
     toast: {
       label: "Toast",
       method_call: "render FlatPack::Toast::Component.new(message: \"Saved\", type: :success, timeout: 5000)",
       variables: [
         { variable: "message", accepts: "String (required)", example: "message: \"Changes saved\"" },
-        { variable: "type", accepts: ":info, :success, :warning, :error", example: "type: :error" },
+        { variable: "type", accepts: ":info, :success, :warning, :danger", example: "type: :danger" },
         { variable: "timeout", accepts: "Integer (ms)", example: "timeout: 3000" }
       ]
     },

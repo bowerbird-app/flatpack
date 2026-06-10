@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-05-27
+updated_at: 2026-06-10
 
 format_reference: docs/components/DOC_FORMAT.md
 human_index: docs/components/README.md
@@ -210,6 +210,7 @@ components:
       - FlatPack::UrlInput::Component
       - FlatPack::NumberInput::Component
       - FlatPack::DateInput::Component
+      - FlatPack::DateRangeInput::Component
       - FlatPack::DateTimeInput::Component
       - FlatPack::TimeInput::Component
       - FlatPack::FileInput::Component
@@ -393,6 +394,12 @@ components:
     title: Timeline
     doc: docs/components/timeline.md
     primary_class: FlatPack::Timeline::Component
+    status: documented
+
+  - key: timestamp
+    title: Timestamp
+    doc: docs/components/timestamp.md
+    primary_class: FlatPack::Timestamp::Component
     status: documented
 
   - key: toast

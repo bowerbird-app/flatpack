@@ -15,7 +15,21 @@ Standard single-line text input field.
   value: @user.username,
   required: true
 ) %>
+
+<%= render FlatPack::TextInput::Component.new(
+  name: "api_key",
+  label: "API Key",
+  value: @api_key,
+  quick_copy: true
+) %>
 ```
+
+Features:
+- Optional quick copy mode (`quick_copy: true`)
+- Copies input value on field click
+- Includes right-side copy icon button
+- Renders the field as read-only in quick copy mode
+- Emits toast notifications for copy success/failure
 
 ### 2. PasswordInput
 Password input with toggle visibility button.

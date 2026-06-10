@@ -14,6 +14,7 @@
       <%= render FlatPack::Button::Component.new(text: "Ghost", style: :ghost) %>
       <%= render FlatPack::Button::Component.new(text: "Success", style: :success) %>
       <%= render FlatPack::Button::Component.new(text: "Warning", style: :warning) %>
+      <%= render FlatPack::Button::Component.new(text: "Danger", style: :danger) %>
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       snippets: [
@@ -50,6 +51,13 @@
           language: "erb",
           code: CGI.unescapeHTML(<<~'CODE')
             &lt;%= render FlatPack::Button::Component.new(text: "Warning", style: :warning) %&gt;
+          CODE
+        },
+        {
+          label: "Danger",
+          language: "erb",
+          code: CGI.unescapeHTML(<<~'CODE')
+            &lt;%= render FlatPack::Button::Component.new(text: "Danger", style: :danger) %&gt;
           CODE
         }
       ]

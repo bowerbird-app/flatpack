@@ -13,6 +13,10 @@ export default class extends Controller {
     touchSwipe: { type: Boolean, default: true },
     transition: { type: String, default: "slide" },
     variant: { type: String, default: "default" },
+    itemsPerViewMobile: { type: Number, default: 1 },
+    itemsPerViewTablet: { type: Number, default: 1 },
+    itemsPerViewDesktop: { type: Number, default: 1 },
+    quickPreview: { type: Boolean, default: false },
     logoItemsPerViewMobile: { type: Number, default: 3 },
     logoItemsPerViewTablet: { type: Number, default: 3 },
     logoItemsPerViewDesktop: { type: Number, default: 5 },
@@ -22,6 +26,7 @@ export default class extends Controller {
   connect() {
     this.currentIndex = this.#clampIndex(this.initialIndexValue)
     this.autoplayTimer = null
+    this.resizeDispatchFrame = null
     this.pauseReasons = new Set()
     this.activePointerId = null
     this.pointerStartX = null
@@ -36,6 +41,7 @@ export default class extends Controller {
     this.#exposeApi()
 
     this.render({ emit: false })
+    this.#scheduleWindowResizeDispatch()
 
     if (this.autoplayValue && !this.#prefersReducedMotion()) {
       this.play({ emit: false })
@@ -49,6 +55,7 @@ export default class extends Controller {
     this.#unbindInteropEvents()
     this.#unbindViewportInteractions()
     this.#unbindResizeListener()
+    this.#cancelWindowResizeDispatch()
 
     if (this.element.flatPackCarousel) {
       delete this.element.flatPackCarousel
@@ -94,6 +101,7 @@ export default class extends Controller {
 
     this.currentIndex = normalized
     this.render({ emit: options.emit !== false, trigger: options.trigger || "goToIndex" })
+    this.#scheduleWindowResizeDispatch()
   }
 
   play(options = {}) {
@@ -205,25 +213,40 @@ export default class extends Controller {
 
     this.slideTargets.forEach((slide, index) => {
       const isActive = index === this.currentIndex
-      const isVisibleRange = this.#isLogoCloudVariant()
+      const effectivePerView = this.#effectivePerView(perView)
+      const isVisibleRange = this.#isLogoSliderVariant()
         ? index >= this.currentIndex && index < this.currentIndex + perView
-        : isActive
+        : this.#isDefaultSlideVariant()
+          ? index >= this.currentIndex && index < this.currentIndex + effectivePerView
+          : isActive
 
       if (useFade) {
         slide.hidden = false
         slide.classList.toggle("opacity-0", !isActive)
         slide.classList.toggle("opacity-100", isActive)
         slide.classList.toggle("pointer-events-none", !isActive)
+        slide.style.flexBasis = ""
+        slide.style.maxWidth = ""
       } else {
         slide.hidden = false
+
+        if (this.#isDefaultSlideVariant()) {
+          const slideWidthPercent = 100 / effectivePerView
+          slide.style.flexBasis = `${slideWidthPercent}%`
+          slide.style.maxWidth = `${slideWidthPercent}%`
+        } else {
+          slide.style.flexBasis = ""
+          slide.style.maxWidth = ""
+        }
       }
 
       slide.setAttribute("aria-hidden", (!isVisibleRange).toString())
     })
 
     if (!useFade && this.hasFrameTarget) {
-      const shiftPercent = this.#isLogoCloudVariant()
-        ? this.currentIndex * (100 / perView)
+      const effectivePerView = this.#effectivePerView(perView)
+      const shiftPercent = this.#isLogoSliderVariant() || this.#isDefaultSlideVariant()
+        ? this.currentIndex * (100 / effectivePerView)
         : this.currentIndex * 100
 
       if (skipAnimation) {
@@ -254,7 +277,7 @@ export default class extends Controller {
     })
 
     if (this.hasCounterTarget) {
-      if (this.#isLogoCloudVariant()) {
+      if (this.#isLogoSliderVariant()) {
         const endIndex = Math.min(this.currentIndex + perView, this.slideTargets.length)
         this.counterTarget.textContent = `${this.currentIndex + 1}-${endIndex} / ${this.slideTargets.length}`
       } else {
@@ -433,6 +456,12 @@ export default class extends Controller {
     this.viewportTarget.addEventListener("mouseup", this.mouseUpHandler)
     this.viewportTarget.addEventListener("dragstart", this.dragStartHandler)
 
+    this.controlsHoverOutHandler = () => {
+      this.#blurFocusedControlButton()
+    }
+
+    this.viewportTarget.addEventListener("mouseleave", this.controlsHoverOutHandler)
+
     if (this.pauseOnHoverValue) {
       this.hoverInHandler = () => {
         this.pauseReasons.add("hover")
@@ -504,6 +533,11 @@ export default class extends Controller {
 
     if (this.dragStartHandler) {
       this.viewportTarget.removeEventListener("dragstart", this.dragStartHandler)
+    }
+
+    if (this.controlsHoverOutHandler) {
+      this.viewportTarget.removeEventListener("mouseleave", this.controlsHoverOutHandler)
+      this.controlsHoverOutHandler = null
     }
 
     if (this.hoverInHandler) {
@@ -591,7 +625,7 @@ export default class extends Controller {
   }
 
   #logicalSlideCount() {
-    if (this.#isLogoCloudVariant() && this.logicalSlideCountValue > 0) {
+    if (this.#isLogoSliderVariant() && this.logicalSlideCountValue > 0) {
       return this.logicalSlideCountValue
     }
 
@@ -599,38 +633,58 @@ export default class extends Controller {
   }
 
   #hasLogoLoopClones() {
-    return this.#isLogoCloudVariant() && this.loopValue && this.logicalSlideCountValue > 0 && this.slideTargets.length > this.logicalSlideCountValue
+    return this.#isLogoSliderVariant() && this.loopValue && this.logicalSlideCountValue > 0 && this.slideTargets.length > this.logicalSlideCountValue
   }
 
   #loopBoundaryIndex() {
     return this.#logicalSlideCount()
   }
 
-  #isLogoCloudVariant() {
-    return this.variantValue === "logo_cloud"
+  #isLogoSliderVariant() {
+    return this.variantValue === "logo_slider"
+  }
+
+  #isDefaultVariant() {
+    return this.variantValue === "default"
+  }
+
+  #isDefaultSlideVariant() {
+    return this.#isDefaultVariant() && this.transitionValue === "slide"
   }
 
   #currentPerView() {
-    if (!this.#isLogoCloudVariant()) {
-      return 1
+    if (this.#isLogoSliderVariant()) {
+      if (window.innerWidth >= 1024) {
+        return Math.max(1, this.logoItemsPerViewDesktopValue)
+      }
+
+      if (window.innerWidth >= 768) {
+        return Math.max(1, this.logoItemsPerViewTabletValue)
+      }
+
+      return Math.max(1, this.logoItemsPerViewMobileValue)
     }
 
     if (window.innerWidth >= 1024) {
-      return Math.max(1, this.logoItemsPerViewDesktopValue)
+      return Math.max(1, this.itemsPerViewDesktopValue)
     }
 
     if (window.innerWidth >= 768) {
-      return Math.max(1, this.logoItemsPerViewTabletValue)
+      return Math.max(1, this.itemsPerViewTabletValue)
     }
 
-    return Math.max(1, this.logoItemsPerViewMobileValue)
+    return Math.max(1, this.itemsPerViewMobileValue)
+  }
+
+  #effectivePerView(perView = this.#currentPerView()) {
+    if (!this.#isDefaultSlideVariant() || !this.quickPreviewValue) {
+      return perView
+    }
+
+    return perView + 0.25
   }
 
   #bindResizeListener() {
-    if (!this.#isLogoCloudVariant()) {
-      return
-    }
-
     this.resizeHandler = () => {
       this.refresh()
     }
@@ -663,6 +717,26 @@ export default class extends Controller {
     }))
   }
 
+  #scheduleWindowResizeDispatch() {
+    if (this.resizeDispatchFrame) {
+      return
+    }
+
+    this.resizeDispatchFrame = window.requestAnimationFrame(() => {
+      this.resizeDispatchFrame = null
+      window.dispatchEvent(new Event("resize"))
+    })
+  }
+
+  #cancelWindowResizeDispatch() {
+    if (!this.resizeDispatchFrame) {
+      return
+    }
+
+    window.cancelAnimationFrame(this.resizeDispatchFrame)
+    this.resizeDispatchFrame = null
+  }
+
   #isPrimarySwipePointer(event) {
     if (event.isPrimary === false) {
       return false
@@ -678,6 +752,25 @@ export default class extends Controller {
   #isInteractiveElement(target) {
     // Ignore only true interactive controls so the viewport's own data-action doesn't block swipe start.
     return Boolean(target?.closest?.("button, a, input, select, textarea, summary, video, [role='button']"))
+  }
+
+  #blurFocusedControlButton() {
+    const active = document.activeElement
+
+    if (!(active instanceof HTMLElement)) {
+      return
+    }
+
+    if (!this.viewportTarget.contains(active)) {
+      return
+    }
+
+    const action = active.getAttribute("data-action") || ""
+    if (!action.includes("flat-pack--carousel#prev") && !action.includes("flat-pack--carousel#next")) {
+      return
+    }
+
+    active.blur()
   }
 
   #isActivePointer(event) {

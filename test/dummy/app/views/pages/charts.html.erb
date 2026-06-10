@@ -41,11 +41,11 @@
   ) %>
 </section>
 
-<!-- Bar Chart -->
+<!-- Column Chart -->
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Bar Chart", anchor_link: true, subtitle: "Examples for Bar Chart.") %>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Column Chart", anchor_link: true, subtitle: "Examples for vertical columns.") %>
   <%= render FlatPack::Chart::Component.new(
-    type: :bar,
+    type: :column,
     series: [{
       name: "Revenue",
       data: [44, 55, 57, 56, 61, 58, 63, 60, 66, 71, 89, 95]
@@ -60,7 +60,7 @@
     language: "erb",
     code: <<~CODE
       #{erb_output_open} render FlatPack::Chart::Component.new(
-        type: :bar,
+        type: :column,
         series: [{
           name: "Revenue",
           data: [44, 55, 57, 56, 61, 58, 63, 60, 66, 71, 89, 95]
@@ -68,6 +68,48 @@
         title: "Quarterly Revenue",
         subtitle: "In thousands",
         height: 300
+      ) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<!-- Bar Chart -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Bar Chart", anchor_link: true, subtitle: "Examples for horizontal bars.") %>
+  <%= render FlatPack::Chart::Component.new(
+    type: :bar,
+    series: [{
+      name: "Tickets",
+      data: [84, 72, 65, 48, 39]
+    }],
+    title: "Support Queue by Team",
+    subtitle: "Open tickets",
+    height: 300,
+    options: {
+      xaxis: {
+        categories: ["API", "Billing", "Onboarding", "Integrations", "Security"]
+      }
+    }
+  ) %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Chart::Component.new(
+        type: :bar,
+        series: [{
+          name: "Tickets",
+          data: [84, 72, 65, 48, 39]
+        }],
+        title: "Support Queue by Team",
+        subtitle: "Open tickets",
+        height: 300,
+        options: {
+          xaxis: {
+            categories: ["API", "Billing", "Onboarding", "Integrations", "Security"]
+          }
+        }
       ) #{erb_tag_close}
     CODE
   ) %>
@@ -307,7 +349,7 @@
     anchor_link: true,
     subtitle: "Two button groups control chart 1 and chart 2 while all charts remain inside one outer frame."
   ) %>
-  <p class="text-[var(--surface-muted-content-color)] mb-4">
+  <p class="text-(--surface-muted-content-color) mb-4">
     This example keeps both button groups and all charts inside one outer frame, while each button group targets its own chart frame.
   </p>
 
@@ -356,7 +398,7 @@
 
       <%= turbo_frame_tag "chart-2-frame", class: "block mb-4" do %>
         <%= render FlatPack::Chart::Component.new(
-          type: :bar,
+          type: :column,
           title: "Chart 2",
           subtitle: @chart_multi_chart_2_subtitle,
           series: @chart_multi_chart_2_series,
@@ -414,7 +456,7 @@
         #{erb_open} end #{erb_tag_close}
 
         #{erb_output_open} turbo_frame_tag "chart-2-frame" do #{erb_tag_close}
-          #{erb_output_open} render FlatPack::Chart::Component.new(type: :bar, title: "Chart 2", series: @chart_multi_chart_2_series, options: {xaxis: {categories: @chart_multi_chart_2_categories}}) #{erb_tag_close}
+          #{erb_output_open} render FlatPack::Chart::Component.new(type: :column, title: "Chart 2", series: @chart_multi_chart_2_series, options: {xaxis: {categories: @chart_multi_chart_2_categories}}) #{erb_tag_close}
         #{erb_open} end #{erb_tag_close}
 
         #{erb_output_open} render FlatPack::Chart::Component.new(type: :area, title: "Chart 3", series: @chart_multi_chart_3_series, options: {xaxis: {categories: @chart_multi_chart_3_categories}}) #{erb_tag_close}
@@ -431,7 +473,7 @@
     Set <code>card: false</code> to render the chart without a card wrapper.
   </p>
   <%= render FlatPack::Chart::Component.new(
-    type: :bar,
+    type: :column,
     series: [{name: "Traffic", data: [12, 19, 3, 5, 2, 3]}],
     card: false,
     height: 250
@@ -442,11 +484,152 @@
     language: "erb",
     code: <<~CODE
       #{erb_output_open} render FlatPack::Chart::Component.new(
-        type: :bar,
+        type: :column,
         series: [{name: "Traffic", data: [12, 19, 3, 5, 2, 3]}],
         card: false,
         height: 250
       ) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<!-- Mini Charts in Table Column -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Mini Chart in Table Row",
+    anchor_link: true,
+    subtitle: "Render sparkline activity charts in a table column for repository-like rows."
+  ) %>
+  <p class="text-(--surface-muted-content-color) mb-4">
+    This pattern mirrors repository activity rows by combining <code>FlatPack::Table::Component</code> and
+    compact <code>FlatPack::Chart::Component</code> instances with <code>card: false</code>.
+  </p>
+
+  <%= render FlatPack::Table::Component.new(data: @chart_repo_activity_rows) do |table| %>
+    <% table.column(title: "Repository", html: ->(row) {
+      content_tag(:div, class: "min-w-[220px]") do
+        safe_join([
+          content_tag(:div, row[:name], class: "font-medium text-[var(--surface-content-color)]"),
+          content_tag(:div, row[:description], class: "text-xs text-[var(--surface-muted-content-color)] mt-1"),
+          content_tag(:div, class: "mt-2") do
+            render FlatPack::Badge::Component.new(text: row[:language], style: :default, size: :sm)
+          end
+        ])
+      end
+    }) %>
+
+    <% table.column(title: "Commits (7d)", html: ->(row) {
+      content_tag(:span, row[:commits_7d], class: "font-medium")
+    }) %>
+
+    <% table.column(title: "Activity", html: ->(row) {
+      color = "var(--color-success-background-color)"
+      content_tag(:div, class: "w-[104px] min-w-[104px]") do
+        render FlatPack::Chart::Component.new(
+          type: :area,
+          series: [{name: "Commits", data: row[:activity]}],
+          card: false,
+          height: 56,
+          class: "w-full",
+          options: {
+            chart: {
+              sparkline: {enabled: true}
+            },
+            colors: [color],
+            stroke: {
+              curve: "smooth",
+              width: 2
+            },
+            fill: {
+              type: "gradient",
+              gradient: {
+                shade: "light",
+                shadeIntensity: 0,
+                inverseColors: false,
+                gradientToColors: [color],
+                opacityFrom: 0.45,
+                opacityTo: 0.05,
+                stops: [0, 90, 100]
+              }
+            },
+            markers: {
+              size: 0
+            },
+            tooltip: {
+              enabled: false
+            },
+            grid: {
+              show: false
+            },
+            xaxis: {
+              labels: {show: false},
+              axisBorder: {show: false},
+              axisTicks: {show: false}
+            },
+            yaxis: {
+              show: false
+            }
+          }
+        )
+      end
+    }) %>
+
+    <% table.column(title: "Open PRs", html: ->(row) { row[:prs_open] }) %>
+
+    <% table.column(title: "Trend", html: ->(row) {
+      trend_class = row[:trend_up] ? "text-green-700" : "text-red-700"
+      content_tag(:span, row[:trend_label], class: "font-medium #{trend_class}")
+    }) %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_open}%
+        rows = [
+          {name: "flat-pack", language: "Ruby", commits_7d: 34, prs_open: 5, trend_label: "+14%", trend_up: true, activity: [2, 3, 1, 4, 6, 5, 7]},
+          {name: "docs-site", language: "Markdown", commits_7d: 11, prs_open: 1, trend_label: "-4%", trend_up: false, activity: [4, 5, 4, 4, 3, 2, 1]}
+        ]
+      %#{erb_tag_close}
+
+      #{erb_output_open} render FlatPack::Table::Component.new(data: rows) do |table| #{erb_tag_close}
+        #{erb_open}% table.column(title: "Repository", html: ->(row) { row[:name] }) %#{erb_tag_close}
+        #{erb_open}% table.column(title: "Commits (7d)", html: ->(row) { row[:commits_7d] }) %#{erb_tag_close}
+        #{erb_open}% table.column(title: "Activity", html: ->(row) {
+          color = "var(--color-success-background-color)"
+          render FlatPack::Chart::Component.new(
+            type: :area,
+            series: [{name: "Commits", data: row[:activity]}],
+            card: false,
+            height: 56,
+            options: {
+              chart: {sparkline: {enabled: true}},
+              colors: [color],
+              stroke: {curve: "smooth", width: 2},
+              fill: {
+                type: "gradient",
+                gradient: {
+                  shade: "light",
+                  shadeIntensity: 0,
+                  inverseColors: false,
+                  gradientToColors: [color],
+                  opacityFrom: 0.45,
+                  opacityTo: 0.05,
+                  stops: [0, 90, 100]
+                }
+              },
+              markers: {size: 0},
+              tooltip: {enabled: false},
+              grid: {show: false},
+              xaxis: {labels: {show: false}, axisBorder: {show: false}, axisTicks: {show: false}},
+              yaxis: {show: false}
+            }
+          )
+        }) %#{erb_tag_close}
+        #{erb_open}% table.column(title: "Open PRs", html: ->(row) { row[:prs_open] }) %#{erb_tag_close}
+        #{erb_open}% table.column(title: "Trend", html: ->(row) { row[:trend_label] }) %#{erb_tag_close}
+      #{erb_open} end #{erb_tag_close}
     CODE
   ) %>
 </section>
@@ -463,7 +646,7 @@
     ) %>
     
     <%= render FlatPack::Chart::Component.new(
-      type: :bar,
+      type: :column,
       series: [{name: "Conversions", data: [5, 8, 6, 10, 9, 12, 15, 18]}],
       title: "Conversions",
       height: 250
@@ -483,7 +666,7 @@
         ) #{erb_tag_close}
 
         #{erb_output_open} render FlatPack::Chart::Component.new(
-          type: :bar,
+          type: :column,
           series: [{name: "Conversions", data: [5, 8, 6, 10, 9, 12, 15, 18]}],
           title: "Conversions",
           height: 250
@@ -612,7 +795,7 @@
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>ApexCharts Integration:</strong> Professional data visualization library<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Lazy Loading:</strong> Charts load only when needed (via dynamic import)<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Card Wrapping:</strong> Automatic card wrapper with title, actions, footer<% end %>
-    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>6 Chart Types:</strong> Line, bar, area, donut, pie, and more<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>7 Chart Types:</strong> line, column, bar, area, donut, pie, and radar<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Responsive:</strong> Charts adapt to container size<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Turbo Compatible:</strong> Properly cleans up on navigation<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Customizable:</strong> Full access to ApexCharts options<% end %>
@@ -625,10 +808,11 @@
   <%= render FlatPack::SectionTitle::Component.new(title: "Available Chart Types", anchor_link: true, subtitle: "Examples for Available Chart Types.") %>
   <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
     <%= render FlatPack::Badge::Component.new(text: ":line", variant: :default) %>
+    <%= render FlatPack::Badge::Component.new(text: ":column", variant: :default) %>
     <%= render FlatPack::Badge::Component.new(text: ":bar", variant: :default) %>
     <%= render FlatPack::Badge::Component.new(text: ":area", variant: :default) %>
     <%= render FlatPack::Badge::Component.new(text: ":donut", variant: :default) %>
     <%= render FlatPack::Badge::Component.new(text: ":pie", variant: :default) %>
-    <%= render FlatPack::Badge::Component.new(text: ":radial", variant: :default) %>
+    <%= render FlatPack::Badge::Component.new(text: ":radar", variant: :default) %>
   </div>
 </section>

@@ -73,6 +73,8 @@ A complete scale of brand colors from lightest to darkest.
 --color-danger-text-color
 --color-danger-border-color
 
+Default mapping: danger uses Tailwind red (`red-600` for base and `red-700` for hover).
+
 --surface-background-color
 --surface-page-background-color
 --surface-content-color

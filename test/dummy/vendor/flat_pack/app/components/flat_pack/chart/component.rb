@@ -14,6 +14,7 @@ module FlatPack
 
       TYPES = {
         line: :line,
+        column: :column,
         bar: :bar,
         area: :area,
         donut: :donut,
@@ -139,7 +140,7 @@ module FlatPack
           data: {
             controller: "flat-pack--chart",
             "flat-pack--chart-series-value": chart_series_json,
-            "flat-pack--chart-type-value": @type,
+            "flat-pack--chart-type-value": apex_chart_type,
             "flat-pack--chart-options-value": chart_options_json,
             "flat-pack--chart-height-value": @height
           }
@@ -188,7 +189,7 @@ module FlatPack
       end
 
       def axis_chart_defaults
-        {
+        defaults = {
           stroke: {
             curve: "smooth",
             width: 2
@@ -218,6 +219,18 @@ module FlatPack
             }
           }
         }
+
+        return defaults unless bar_chart?
+
+        defaults.deep_merge(
+          {
+            plotOptions: {
+              bar: {
+                horizontal: horizontal_bar?
+              }
+            }
+          }
+        )
       end
 
       def non_axis_chart_defaults
@@ -230,6 +243,20 @@ module FlatPack
 
       def non_axis_chart?
         @type == :donut || @type == :pie
+      end
+
+      def bar_chart?
+        @type == :bar || @type == :column
+      end
+
+      def horizontal_bar?
+        @type == :bar
+      end
+
+      def apex_chart_type
+        return :bar if bar_chart?
+
+        @type
       end
 
       def validate_series!

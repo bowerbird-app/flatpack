@@ -18,18 +18,12 @@ module FlatPack
         min: nil,
         max: nil,
         picker: :native,
-        range: false,
-        range_start_name: nil,
-        range_end_name: nil,
         **system_arguments
       )
         @custom_class = system_arguments[:class]
         super(**system_arguments)
         @name = name
         @picker = normalize_picker(picker)
-        @range = range
-        @range_start_name = range_start_name
-        @range_end_name = range_end_name
         @value = format_date_value(value)
         @placeholder = placeholder
         @disabled = disabled
@@ -40,8 +34,7 @@ module FlatPack
         @max = format_date_value(max)
 
         validate_name!
-        validate_picker_and_range!
-        resolve_initial_values(value)
+        validate_picker!
       end
 
       def call
@@ -133,12 +126,7 @@ module FlatPack
       end
 
       def render_picker_hidden_fields
-        return tag.input(type: "hidden", name: @name, value: @single_value, data: {"flat-pack--flatpack-date-picker-target": "singleField"}) unless @range
-
-        safe_join([
-          tag.input(type: "hidden", name: resolved_range_start_name, value: @range_start_value, data: {"flat-pack--flatpack-date-picker-target": "rangeStartField"}),
-          tag.input(type: "hidden", name: resolved_range_end_name, value: @range_end_value, data: {"flat-pack--flatpack-date-picker-target": "rangeEndField"})
-        ])
+        tag.input(type: "hidden", name: @name, value: @value, data: {"flat-pack--flatpack-date-picker-target": "singleField"})
       end
 
       def render_picker_panel
@@ -153,7 +141,7 @@ module FlatPack
       def render_picker_quick_ranges
         content_tag(:div, class: picker_ranges_section_classes) do
           safe_join([
-            content_tag(:p, "Date Range", class: "text-xs font-semibold uppercase tracking-wide text-[var(--surface-muted-content-color)]"),
+            content_tag(:p, "Quick Select", class: "text-xs font-semibold uppercase tracking-wide text-[var(--surface-muted-content-color)]"),
             content_tag(:div, class: "mt-2 space-y-1") do
               safe_join(quick_range_presets.map { |preset| render_quick_range_button(preset) })
             end
@@ -240,12 +228,10 @@ module FlatPack
 
         data_attributes.merge(
           controller: controllers,
-          "flat-pack--flatpack-date-picker-range-value": @range,
+          "flat-pack--flatpack-date-picker-range-value": false,
           "flat-pack--flatpack-date-picker-min-value": @min,
           "flat-pack--flatpack-date-picker-max-value": @max,
-          "flat-pack--flatpack-date-picker-start-value": @range_start_value,
-          "flat-pack--flatpack-date-picker-end-value": @range_end_value,
-          "flat-pack--flatpack-date-picker-value-value": @single_value,
+          "flat-pack--flatpack-date-picker-value-value": @value,
           "flat-pack--flatpack-date-picker-panel-id-value": panel_id
         ).compact
       end
@@ -374,14 +360,10 @@ module FlatPack
         raise ArgumentError, "name is required" if @name.nil? || @name.to_s.strip.empty?
       end
 
-      def validate_picker_and_range!
+      def validate_picker!
         unless %i[native flatpack_date_picker].include?(@picker)
           raise ArgumentError, "picker must be one of: native, flatpack_date_picker"
         end
-
-        return unless @range && @picker != :flatpack_date_picker
-
-        raise ArgumentError, "range mode requires picker: :flatpack_date_picker"
       end
 
       def normalize_picker(picker)
@@ -392,40 +374,12 @@ module FlatPack
         @picker == :flatpack_date_picker
       end
 
-      def resolve_initial_values(raw_value)
-        if @range
-          start_value, end_value = normalize_range_value(raw_value)
-          @range_start_value = format_date_value(start_value)
-          @range_end_value = format_date_value(end_value)
-          @single_value = nil
-        else
-          @single_value = format_date_value(raw_value)
-          @range_start_value = nil
-          @range_end_value = nil
-        end
-      end
-
-      def normalize_range_value(raw_value)
-        case raw_value
-        when Hash
-          [raw_value[:start] || raw_value["start"], raw_value[:end] || raw_value["end"]]
-        when Array
-          [raw_value[0], raw_value[1]]
-        else
-          [nil, nil]
-        end
-      end
-
       def default_picker_placeholder
-        @range ? "Select date range" : "Select date"
+        "Select date"
       end
 
       def initial_display_value
-        return @single_value if @single_value.present?
-        return nil unless @range
-        return nil if @range_start_value.blank? || @range_end_value.blank?
-
-        "#{@range_start_value} to #{@range_end_value}"
+        @value
       end
 
       def quick_range_presets
@@ -440,14 +394,6 @@ module FlatPack
           {key: "this_year", label: "This year"},
           {key: "last_year", label: "Last year"}
         ]
-      end
-
-      def resolved_range_start_name
-        @range_start_name.presence || "#{@name}[start]"
-      end
-
-      def resolved_range_end_name
-        @range_end_name.presence || "#{@name}[end]"
       end
 
       # Convert Date objects to YYYY-MM-DD format string

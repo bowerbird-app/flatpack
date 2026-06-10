@@ -1,0 +1,113 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Timestamp Component",
+  subtitle: "Relative time copy with tooltip absolute time rendered in the user's local timezone."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :timestamp %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Relative Time Labels",
+    anchor_link: true,
+    subtitle: "Future timestamps use 'from now' and past timestamps use 'ago'."
+  ) %>
+
+  <div class="space-y-3 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-4 gap-4">
+    <div class="text-sm text-(--surface-muted-content-color) flex flex-col items-baseline gap-2">
+      Past:
+      <%= render FlatPack::Timestamp::Component.new(timestamp: 3.minutes.ago, class_name: "font-medium text-(--surface-content-color)") %>
+    </div>
+
+    <div class="text-sm text-(--surface-muted-content-color) flex flex-col items-baseline gap-2">
+      Future:
+      <%= render FlatPack::Timestamp::Component.new(timestamp: 3.minutes.from_now, class_name: "font-medium text-(--surface-content-color)") %>
+    </div>
+
+    <div class="text-sm text-(--surface-muted-content-color) flex flex-col items-baseline gap-2">
+      Fixed UTC date (2016-01-01 00:00 +0000 GMT):
+      <%= render FlatPack::Timestamp::Component.new(timestamp: "2016-01-01T00:00:00Z", class_name: "font-medium text-(--surface-content-color)") %>
+    </div>
+
+    <div class="text-sm text-(--surface-muted-content-color) flex flex-col items-baseline gap-2">
+      class_name example (`text-green-600`):
+      <%= render FlatPack::Timestamp::Component.new(timestamp: "2016-01-01T00:00:00Z", class_name: "text-green-600") %>
+    </div>
+
+    <div class="text-sm text-(--surface-muted-content-color) flex flex-col items-baseline gap-2">
+      class_name example (`text-xs`):
+      <%= render FlatPack::Timestamp::Component.new(timestamp: "2016-01-01T00:00:00Z", class_name: "text-xs") %>
+    </div>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Timestamp::Component.new(timestamp: 3.minutes.ago) %&gt;
+      &lt;%= render FlatPack::Timestamp::Component.new(timestamp: 3.minutes.from_now) %&gt;
+      &lt;%= render FlatPack::Timestamp::Component.new(timestamp: "2016-01-01T00:00:00Z") %&gt;
+      &lt;%= render FlatPack::Timestamp::Component.new(timestamp: "2016-01-01T00:00:00Z", class_name: "text-green-600") %&gt;
+      &lt;%= render FlatPack::Timestamp::Component.new(timestamp: "2016-01-01T00:00:00Z", class_name: "text-xs") %&gt;
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Tooltip Placement",
+    anchor_link: true,
+    subtitle: "Hover each timestamp to view absolute time in local browser timezone."
+  ) %>
+
+  <div class="flex flex-wrap items-center gap-4 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-4">
+    <%= render FlatPack::Timestamp::Component.new(timestamp: 20.minutes.ago, tooltip_placement: :top, class: "text-sm") %>
+    <%= render FlatPack::Timestamp::Component.new(timestamp: 20.minutes.ago, tooltip_placement: :right, class: "text-sm") %>
+    <%= render FlatPack::Timestamp::Component.new(timestamp: 20.minutes.ago, tooltip_placement: :bottom, class: "text-sm") %>
+    <%= render FlatPack::Timestamp::Component.new(timestamp: 20.minutes.ago, tooltip_placement: :left, class: "text-sm") %>
+  </div>
+</section>
+
+<section class="mb-12">
+  <% utc_future_timestamp = 7.hours.from_now.utc %>
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "UTC (+0) To Local Time Example",
+    anchor_link: true,
+    subtitle: "This example starts from a +0 timestamp 7 hours in the future and renders the equivalent in your local timezone."
+  ) %>
+
+  <div
+    class="space-y-3 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-4"
+    data-controller="timestamp-timezone-demo"
+    data-timestamp-timezone-demo-iso-value="<%= utc_future_timestamp.iso8601 %>"
+  >
+    <div class="text-sm text-(--surface-muted-content-color) flex flex-col items-baseline gap-2">
+      Original timestamp (+0, 7 hours in future):
+      <span class="font-medium text-(--surface-content-color)"><%= utc_future_timestamp.strftime("%Y-%m-%d %H:%M:%S %z") %> (UTC)</span>
+    </div>
+
+    <div class="text-sm text-(--surface-muted-content-color) flex flex-col items-baseline gap-2">
+      <p>Rendered in your timezone (<span data-timestamp-timezone-demo-target="timezone">detecting...</span>):</p>
+      <span class="font-medium text-(--surface-content-color)" data-timestamp-timezone-demo-target="localTime">loading...</span>
+    </div>
+
+    <div class="text-sm text-(--surface-muted-content-color) flex flex-col items-baseline gap-2">
+      Component example:
+      <%= render FlatPack::Timestamp::Component.new(timestamp: utc_future_timestamp.iso8601, class_name: "font-medium text-(--surface-content-color)") %>
+    </div>
+  </div>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Fallback Rendering",
+    anchor_link: true,
+    subtitle: "Nil or unparsable timestamps render a fallback value."
+  ) %>
+
+  <div class="rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-4">
+    <div class="text-sm text-(--surface-muted-content-color) flex flex-col items-baseline gap-2">
+      Unknown:
+      <%= render FlatPack::Timestamp::Component.new(timestamp: nil, fallback_text: "Unavailable", class_name: "font-medium text-(--surface-content-color)") %>
+    </div>
+  </div>
+</section>

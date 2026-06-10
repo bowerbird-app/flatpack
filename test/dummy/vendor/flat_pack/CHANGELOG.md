@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.84] - 2026-06-10
+
+### Added
+- Added `FlatPack::DateRangeInput::Component` as a standalone date-range form component with quick presets and calendar selection.
+- Added a new `/demo/charts` example that renders mini sparkline-style charts inside a `FlatPack::Table::Component` activity column for repository-style rows.
+- Added optional `quick_copy` support to `FlatPack::TextInput::Component`, including click-to-copy on the input, a trailing copy icon button, and toast feedback.
+- Added `FlatPack::Timestamp::Component` for relative time rendering with automatic `ago`/`from now` copy and a hover tooltip that localizes the absolute timestamp in the browser timezone.
+
+### Changed
+- Updated `FlatPack::Chart::DefaultFilterComponent` to use `FlatPack::DateRangeInput::Component` for date-range controls.
+- Removed DateInput range-mode usage from demos and docs in favor of the standalone DateRangeInput component.
+- Corrected chart type naming so `type: :column` renders vertical columns and `type: :bar` renders horizontal bars, with updated chart defaults, demos, tests, and docs.
+- Updated `FlatPack::Carousel::Component` with configurable default-variant `items_per_view_*` options and a `quick_preview` mode to reveal 25% of the next slide, including docs/tests and a five-chart demo example.
+- Wrapped each chart in the carousel quick preview demo inside an elevated `FlatPack::Card::Component` body slot.
+- Added `controls_on_hover` to `FlatPack::Carousel::Component` so previous/next controls can stay hidden until hover/focus on larger screens while remaining visible on mobile.
+- Renamed the Carousel logo variant from `:logo_cloud` to `:logo_slider` with no compatibility alias.
+- Updated carousel component internals, Stimulus variant detection, tests, docs, and dummy demos to use the new Logo Slider naming.
+- Standardized destructive variants on `:danger` for Button and Toast APIs (replacing previous `:error` usage), and updated source, vendored dummy mirror, tests, demos, and docs accordingly.
+- Updated default danger semantic tokens to Tailwind red (`red-600` base and `red-700` hover) across built-in FlatPack themes.
+- Updated chart and table component docs with guidance for embedding compact sparkline-style charts in table cells using `card: false` and sparkline options.
+
 ## [0.1.74] - 2026-06-04
 
 ### Changed
