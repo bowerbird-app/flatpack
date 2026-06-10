@@ -106,6 +106,55 @@
   ) %>
 </section>
 
+<!-- Charts Quick Preview Carousel -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Charts Quick Preview", anchor_link: true, subtitle: "Five charts with one-quarter preview of the next slide.") %>
+  <style>
+    .charts-quick-preview [data-flat-pack--carousel-target='counter'] {
+      display: none;
+    }
+
+    .charts-quick-preview [data-flat-pack--carousel-target='viewport'] {
+      aspect-ratio: auto !important;
+      height: auto !important;
+    }
+  </style>
+  <div class="mb-4">
+    <%= render FlatPack::Carousel::Component.new(
+      slides: @carousel_chart_slides,
+      show_controls: true,
+      show_indicators: true,
+      show_captions: true,
+      caption_mode: :below,
+      quick_preview: true,
+      items_per_view_desktop: 3,
+      items_per_view_tablet: 1,
+      items_per_view_mobile: 1,
+      class: "charts-quick-preview",
+      style: "--carousel-viewport-border-color: transparent; --carousel-viewport-background-color: transparent;",
+      aria_label: "Charts quick preview carousel"
+    ) %>
+  </div>
+  <p class="mb-3 text-sm text-(--surface-muted-content-color)">
+    Quick preview mode keeps one-quarter of the next slide visible. This demo renders 3.25 cards on desktop and 1.25 cards on tablet/mobile.
+  </p>
+  <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">Code Example</p>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Carousel::Component.new(
+        slides: @carousel_chart_slides,
+        show_controls: true,
+        show_indicators: true,
+        show_captions: true,
+        quick_preview: true,
+        items_per_view_desktop: 3,
+        items_per_view_tablet: 1,
+        items_per_view_mobile: 1
+      ) %&gt;
+    CODE
+  ) %>
+</section>
+
 <!-- Single Slide Carousel -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Single Slide Example", anchor_link: true, subtitle: "Examples for a single-slide carousel where arrows and the slide count stay hidden.") %>

@@ -13,6 +13,10 @@ export default class extends Controller {
     touchSwipe: { type: Boolean, default: true },
     transition: { type: String, default: "slide" },
     variant: { type: String, default: "default" },
+    itemsPerViewMobile: { type: Number, default: 1 },
+    itemsPerViewTablet: { type: Number, default: 1 },
+    itemsPerViewDesktop: { type: Number, default: 1 },
+    quickPreview: { type: Boolean, default: false },
     logoItemsPerViewMobile: { type: Number, default: 3 },
     logoItemsPerViewTablet: { type: Number, default: 3 },
     logoItemsPerViewDesktop: { type: Number, default: 5 },
@@ -205,25 +209,40 @@ export default class extends Controller {
 
     this.slideTargets.forEach((slide, index) => {
       const isActive = index === this.currentIndex
+      const effectivePerView = this.#effectivePerView(perView)
       const isVisibleRange = this.#isLogoSliderVariant()
         ? index >= this.currentIndex && index < this.currentIndex + perView
-        : isActive
+        : this.#isDefaultSlideVariant()
+          ? index >= this.currentIndex && index < this.currentIndex + effectivePerView
+          : isActive
 
       if (useFade) {
         slide.hidden = false
         slide.classList.toggle("opacity-0", !isActive)
         slide.classList.toggle("opacity-100", isActive)
         slide.classList.toggle("pointer-events-none", !isActive)
+        slide.style.flexBasis = ""
+        slide.style.maxWidth = ""
       } else {
         slide.hidden = false
+
+        if (this.#isDefaultSlideVariant()) {
+          const slideWidthPercent = 100 / effectivePerView
+          slide.style.flexBasis = `${slideWidthPercent}%`
+          slide.style.maxWidth = `${slideWidthPercent}%`
+        } else {
+          slide.style.flexBasis = ""
+          slide.style.maxWidth = ""
+        }
       }
 
       slide.setAttribute("aria-hidden", (!isVisibleRange).toString())
     })
 
     if (!useFade && this.hasFrameTarget) {
-      const shiftPercent = this.#isLogoSliderVariant()
-        ? this.currentIndex * (100 / perView)
+      const effectivePerView = this.#effectivePerView(perView)
+      const shiftPercent = this.#isLogoSliderVariant() || this.#isDefaultSlideVariant()
+        ? this.currentIndex * (100 / effectivePerView)
         : this.currentIndex * 100
 
       if (skipAnimation) {
@@ -610,27 +629,47 @@ export default class extends Controller {
     return this.variantValue === "logo_slider"
   }
 
+  #isDefaultVariant() {
+    return this.variantValue === "default"
+  }
+
+  #isDefaultSlideVariant() {
+    return this.#isDefaultVariant() && this.transitionValue === "slide"
+  }
+
   #currentPerView() {
-    if (!this.#isLogoSliderVariant()) {
-      return 1
+    if (this.#isLogoSliderVariant()) {
+      if (window.innerWidth >= 1024) {
+        return Math.max(1, this.logoItemsPerViewDesktopValue)
+      }
+
+      if (window.innerWidth >= 768) {
+        return Math.max(1, this.logoItemsPerViewTabletValue)
+      }
+
+      return Math.max(1, this.logoItemsPerViewMobileValue)
     }
 
     if (window.innerWidth >= 1024) {
-      return Math.max(1, this.logoItemsPerViewDesktopValue)
+      return Math.max(1, this.itemsPerViewDesktopValue)
     }
 
     if (window.innerWidth >= 768) {
-      return Math.max(1, this.logoItemsPerViewTabletValue)
+      return Math.max(1, this.itemsPerViewTabletValue)
     }
 
-    return Math.max(1, this.logoItemsPerViewMobileValue)
+    return Math.max(1, this.itemsPerViewMobileValue)
+  }
+
+  #effectivePerView(perView = this.#currentPerView()) {
+    if (!this.#isDefaultSlideVariant() || !this.quickPreviewValue) {
+      return perView
+    }
+
+    return perView + 0.25
   }
 
   #bindResizeListener() {
-    if (!this.#isLogoSliderVariant()) {
-      return
-    }
-
     this.resizeHandler = () => {
       this.refresh()
     }

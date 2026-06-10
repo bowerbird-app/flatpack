@@ -169,6 +169,10 @@ module FlatPack
           Component.new(
             slides: sample_slides,
             initial_index: 1,
+            items_per_view_mobile: 1,
+            items_per_view_tablet: 2,
+            items_per_view_desktop: 3,
+            quick_preview: true,
             autoplay: true,
             autoplay_interval_ms: 3100,
             loop: true,
@@ -184,6 +188,27 @@ module FlatPack
         assert_equal "true", root["data-flat-pack--carousel-loop-value"]
         assert_equal "fade", root["data-flat-pack--carousel-transition-value"]
         assert_equal "false", root["data-flat-pack--carousel-touch-swipe-value"]
+        assert_equal "1", root["data-flat-pack--carousel-items-per-view-mobile-value"]
+        assert_equal "2", root["data-flat-pack--carousel-items-per-view-tablet-value"]
+        assert_equal "3", root["data-flat-pack--carousel-items-per-view-desktop-value"]
+        assert_equal "false", root["data-flat-pack--carousel-quick-preview-value"]
+      end
+
+      def test_exposes_quick_preview_when_enabled_for_default_slide_variant
+        render_inline(
+          Component.new(
+            slides: sample_slides,
+            transition: :slide,
+            quick_preview: true,
+            items_per_view_mobile: 1,
+            items_per_view_tablet: 1,
+            items_per_view_desktop: 3
+          )
+        )
+
+        root = page.find("section[data-controller='flat-pack--carousel']")
+
+        assert_equal "true", root["data-flat-pack--carousel-quick-preview-value"]
       end
 
       def test_exposes_logo_slider_configuration_values
@@ -360,6 +385,38 @@ module FlatPack
         )
 
         assert_selector "div[data-flat-pack--carousel-target='slide']", count: 1, visible: :all
+      end
+
+      def test_preserves_chart_data_attributes_in_html_slides
+        render_inline(
+          Component.new(
+            slides: [
+              {
+                type: :html,
+                html: '<div data-controller="flat-pack--chart" data-flat-pack--chart-series-value="[{&quot;name&quot;:&quot;Users&quot;,&quot;data&quot;:[1,2,3]}]" data-flat-pack--chart-type-value="line" data-flat-pack--chart-options-value="{}" data-flat-pack--chart-height-value="220"></div>'
+              }
+            ]
+          )
+        )
+
+        assert_selector "div[data-controller='flat-pack--chart'][data-flat-pack--chart-type-value='line']", visible: :all
+      end
+
+      def test_hides_controls_when_items_per_view_exceeds_slide_count
+        render_inline(
+          Component.new(
+            slides: sample_slides,
+            items_per_view_mobile: 4,
+            items_per_view_tablet: 4,
+            items_per_view_desktop: 4,
+            show_controls: true,
+            show_indicators: true
+          )
+        )
+
+        assert_no_selector "button[data-action='click->flat-pack--carousel#prev']"
+        assert_no_selector "button[data-action='click->flat-pack--carousel#next']"
+        assert_no_selector "button[data-flat-pack--carousel-target='indicator']"
       end
 
       def test_rejects_invalid_configuration

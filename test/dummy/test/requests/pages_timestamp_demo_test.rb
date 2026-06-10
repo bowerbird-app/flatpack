@@ -18,7 +18,7 @@ class PagesTimestampDemoTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "UTC (+0) To Local Time Example"
     assert_includes response.body, "Original timestamp (+0, 7 hours in future):"
 
-    iso_match = response.body.match(/data-timestamp-timezone-demo-iso-value=\"([^\"]+)\"/)
+    iso_match = response.body.match(/data-timestamp-timezone-demo-iso-value="([^"]+)"/)
     refute_nil iso_match
 
     demo_time_utc = Time.iso8601(iso_match[1])

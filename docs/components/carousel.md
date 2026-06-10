@@ -26,6 +26,10 @@ Use Carousel when users need to browse a sequence of visual or rich-content slid
 | `loop` | Boolean | `true` | no | Wrap from last slide to first slide. |
 | `transition` | Symbol | `:slide` | no | Transition style: `:slide`, `:fade`. |
 | `variant` | Symbol | `:default` | no | Rendering mode: `:default`, `:logo_slider` (image-only multi-item row). |
+| `items_per_view_desktop` | Integer | `1` | no | Slides visible at desktop width when `variant: :default` and `transition: :slide`. |
+| `items_per_view_tablet` | Integer | `1` | no | Slides visible at tablet width when `variant: :default` and `transition: :slide`. |
+| `items_per_view_mobile` | Integer | `1` | no | Slides visible at mobile width when `variant: :default` and `transition: :slide`. |
+| `quick_preview` | Boolean | `false` | no | In default slide mode, reveals `0.25` of the next slide while preserving configured full items-per-view. Ignored for `:logo_slider` and `:fade`. |
 | `logo_items_per_view_desktop` | Integer | `5` | no | Logos visible at desktop width when `variant: :logo_slider`. |
 | `logo_items_per_view_tablet` | Integer | `3` | no | Logos visible at tablet width when `variant: :logo_slider`. |
 | `logo_items_per_view_mobile` | Integer | `3` | no | Logos visible at mobile width when `variant: :logo_slider`. |
@@ -54,6 +58,11 @@ None.
 - Logo-slider mode only renders image slides (video/html slide payloads are ignored).
 - Fade transition is not supported in logo-slider mode.
 - Wrapper and viewport use no extra margin/padding and remain transparent in logo-slider mode.
+
+### Quick Preview Notes
+- Applies only to `variant: :default` with `transition: :slide`.
+- Adds a visual `+0.25` peek of the next slide.
+- Keep per-breakpoint full-card counts with `items_per_view_desktop`, `items_per_view_tablet`, and `items_per_view_mobile`.
 
 ## Interactive Demo
 - `/demo/carousel`
@@ -88,6 +97,21 @@ The dummy app consolidates carousel behavior (basic, autoplay, thumbnails, trans
   logo_opacity: 0.8,
   show_indicators: false,
   show_captions: false
+) %>
+```
+
+## Quick Preview Charts Example
+```erb
+<%= render FlatPack::Carousel::Component.new(
+  slides: @carousel_chart_slides,
+  quick_preview: true,
+  items_per_view_desktop: 3,
+  items_per_view_tablet: 1,
+  items_per_view_mobile: 1,
+  show_controls: true,
+  show_indicators: true,
+  show_captions: true,
+  caption_mode: :below
 ) %>
 ```
 

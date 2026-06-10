@@ -762,13 +762,15 @@ class PagesController < ApplicationController
   def carousel
     @carousel_slides = carousel_demo_slides
     @carousel_single_slide = carousel_demo_single_slide
+    @carousel_chart_slides = carousel_demo_chart_slides
     @carousel_logo_slider_slides = carousel_demo_logo_slider_slides
     @carousel_notes = [
       "Uses FlatPack::Carousel::Component with image, video, and component-rendered HTML slides.",
       "Demonstrates autoplay, loop, indicators, controls, and thumbnail navigation.",
       "Image slides enable lightbox by default and can opt out per slide with lightbox: false.",
       "Uses secure defaults for rich content and supports keyboard plus touch interactions.",
-      "Includes logo-slider variant with multi-item responsive layout (5 desktop / 3 tablet / 3 mobile)."
+      "Includes logo-slider variant with multi-item responsive layout (5 desktop / 3 tablet / 3 mobile).",
+      "Includes a quick-preview chart carousel demo showing 3.25 slides on desktop and 1.25 slides on mobile/tablet."
     ]
   end
 
@@ -1845,6 +1847,93 @@ class PagesController < ApplicationController
         alt: "Single slide gallery preview",
         caption: "Single slide example with lightbox enabled",
         lightbox: true
+      }
+    ]
+  end
+
+  def carousel_demo_chart_slides
+    categories = %w[Jan Feb Mar Apr May Jun]
+
+    [
+      {
+        type: :html,
+        caption: "Signups trend",
+        html: ApplicationController.render(
+          renderable: FlatPack::Chart::Component.new(
+            type: :line,
+            title: "Signups",
+            subtitle: "Last 6 months",
+            height: 220,
+            card: false,
+            series: [{name: "Signups", data: [22, 28, 31, 36, 41, 48]}],
+            options: {xaxis: {categories: categories}}
+          ),
+          layout: false
+        )
+      },
+      {
+        type: :html,
+        caption: "Revenue",
+        html: ApplicationController.render(
+          renderable: FlatPack::Chart::Component.new(
+            type: :column,
+            title: "Revenue",
+            subtitle: "USD (k)",
+            height: 220,
+            card: false,
+            series: [{name: "Revenue", data: [64, 72, 76, 83, 90, 96]}],
+            options: {xaxis: {categories: categories}}
+          ),
+          layout: false
+        )
+      },
+      {
+        type: :html,
+        caption: "Activation rate",
+        html: ApplicationController.render(
+          renderable: FlatPack::Chart::Component.new(
+            type: :area,
+            title: "Activation",
+            subtitle: "Percent",
+            height: 220,
+            card: false,
+            series: [{name: "Activation", data: [41, 44, 47, 51, 55, 58]}],
+            options: {xaxis: {categories: categories}}
+          ),
+          layout: false
+        )
+      },
+      {
+        type: :html,
+        caption: "Churn",
+        html: ApplicationController.render(
+          renderable: FlatPack::Chart::Component.new(
+            type: :bar,
+            title: "Churn",
+            subtitle: "Accounts",
+            height: 220,
+            card: false,
+            series: [{name: "Churn", data: [19, 16, 15, 12, 11, 9]}],
+            options: {xaxis: {categories: categories}}
+          ),
+          layout: false
+        )
+      },
+      {
+        type: :html,
+        caption: "Channel mix",
+        html: ApplicationController.render(
+          renderable: FlatPack::Chart::Component.new(
+            type: :donut,
+            title: "Acquisition",
+            subtitle: "Current month",
+            height: 220,
+            card: false,
+            series: [35, 25, 20, 12, 8],
+            options: {labels: ["Organic", "Paid", "Partner", "Referral", "Other"]}
+          ),
+          layout: false
+        )
       }
     ]
   end

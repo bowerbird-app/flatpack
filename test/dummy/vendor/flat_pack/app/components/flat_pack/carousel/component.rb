@@ -21,6 +21,11 @@ module FlatPack
       SANITIZED_HTML_ATTRIBUTES = %w[
         class id title
         href rel target
+        data-controller
+        data-flat-pack--chart-series-value
+        data-flat-pack--chart-type-value
+        data-flat-pack--chart-options-value
+        data-flat-pack--chart-height-value
         aria-label aria-hidden aria-current
         for type name value placeholder required disabled autocomplete
         aria-invalid aria-describedby
@@ -41,6 +46,10 @@ module FlatPack
         loop: true,
         transition: :slide,
         variant: :default,
+        items_per_view_mobile: 1,
+        items_per_view_tablet: 1,
+        items_per_view_desktop: 1,
+        quick_preview: false,
         logo_items_per_view_mobile: 3,
         logo_items_per_view_tablet: 3,
         logo_items_per_view_desktop: 5,
@@ -78,6 +87,10 @@ module FlatPack
         @pause_on_focus = !!pause_on_focus
         @loop = !!loop
         @transition = transition.to_sym
+        @items_per_view_mobile = normalize_items_per_view(items_per_view_mobile, fallback: 1)
+        @items_per_view_tablet = normalize_items_per_view(items_per_view_tablet, fallback: 1)
+        @items_per_view_desktop = normalize_items_per_view(items_per_view_desktop, fallback: 1)
+        @quick_preview = !!quick_preview
         @logo_items_per_view_mobile = normalize_logo_items_per_view(logo_items_per_view_mobile, fallback: 3)
         @logo_items_per_view_tablet = normalize_logo_items_per_view(logo_items_per_view_tablet, fallback: 3)
         @logo_items_per_view_desktop = normalize_logo_items_per_view(logo_items_per_view_desktop, fallback: 5)
@@ -124,6 +137,10 @@ module FlatPack
             flat_pack__carousel_touch_swipe_value: @touch_swipe,
             flat_pack__carousel_transition_value: @transition,
             flat_pack__carousel_variant_value: @variant,
+            flat_pack__carousel_items_per_view_mobile_value: @items_per_view_mobile,
+            flat_pack__carousel_items_per_view_tablet_value: @items_per_view_tablet,
+            flat_pack__carousel_items_per_view_desktop_value: @items_per_view_desktop,
+            flat_pack__carousel_quick_preview_value: quick_preview_enabled?,
             flat_pack__carousel_logo_items_per_view_mobile_value: @logo_items_per_view_mobile,
             flat_pack__carousel_logo_items_per_view_tablet_value: @logo_items_per_view_tablet,
             flat_pack__carousel_logo_items_per_view_desktop_value: @logo_items_per_view_desktop,
@@ -246,7 +263,7 @@ module FlatPack
           end
         else
           # SECURITY: HTML content is sanitized before being marked as safe.
-          content_tag(:div, slide[:html].html_safe, class: "h-full w-full overflow-auto p-4")
+          content_tag(:div, slide[:html].html_safe, class: "overflow-auto p-4")
         end
       end
 
@@ -327,9 +344,11 @@ module FlatPack
       end
 
       def visible_item_threshold
-        return 1 unless @variant == :logo_slider
+        if @variant == :logo_slider
+          return [@logo_items_per_view_mobile, @logo_items_per_view_tablet, @logo_items_per_view_desktop].min
+        end
 
-        [@logo_items_per_view_mobile, @logo_items_per_view_tablet, @logo_items_per_view_desktop].min
+        [@items_per_view_mobile, @items_per_view_tablet, @items_per_view_desktop].min
       end
 
       def render_counter
@@ -616,10 +635,18 @@ module FlatPack
       end
 
       def normalize_logo_items_per_view(value, fallback:)
+        normalize_items_per_view(value, fallback: fallback)
+      end
+
+      def normalize_items_per_view(value, fallback:)
         parsed = Integer(value, exception: false)
         return fallback if parsed.nil? || parsed <= 0
 
         parsed
+      end
+
+      def quick_preview_enabled?
+        @variant == :default && @transition == :slide && @quick_preview
       end
 
       def normalize_logo_opacity(value)
