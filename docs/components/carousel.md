@@ -19,6 +19,7 @@ Use Carousel when users need to browse a sequence of visual or rich-content slid
 | `thumbs_alignment` | Symbol | `:center` | no | Thumbnail row alignment: `:start`, `:center`, `:end`. |
 | `show_indicators` | Boolean | `true` | no | Render indicator dots. |
 | `show_controls` | Boolean | `true` (`:default`), `false` (`:logo_slider`) | no | Render previous/next controls. |
+| `controls_on_hover` | Boolean | `false` | no | For desktop/tablet, hide controls until carousel hover/focus-within. Controls remain visible on mobile. |
 | `autoplay` | Boolean | `false` (`:default`), `true` (`:logo_slider`) | no | Automatically advance slides. |
 | `autoplay_interval_ms` | Integer | `5000` | no | Autoplay interval in milliseconds. |
 | `pause_on_hover` | Boolean | `true` | no | Pause autoplay while pointer hovers. |

@@ -456,6 +456,12 @@ export default class extends Controller {
     this.viewportTarget.addEventListener("mouseup", this.mouseUpHandler)
     this.viewportTarget.addEventListener("dragstart", this.dragStartHandler)
 
+    this.controlsHoverOutHandler = () => {
+      this.#blurFocusedControlButton()
+    }
+
+    this.viewportTarget.addEventListener("mouseleave", this.controlsHoverOutHandler)
+
     if (this.pauseOnHoverValue) {
       this.hoverInHandler = () => {
         this.pauseReasons.add("hover")
@@ -527,6 +533,11 @@ export default class extends Controller {
 
     if (this.dragStartHandler) {
       this.viewportTarget.removeEventListener("dragstart", this.dragStartHandler)
+    }
+
+    if (this.controlsHoverOutHandler) {
+      this.viewportTarget.removeEventListener("mouseleave", this.controlsHoverOutHandler)
+      this.controlsHoverOutHandler = null
     }
 
     if (this.hoverInHandler) {
@@ -741,6 +752,25 @@ export default class extends Controller {
   #isInteractiveElement(target) {
     // Ignore only true interactive controls so the viewport's own data-action doesn't block swipe start.
     return Boolean(target?.closest?.("button, a, input, select, textarea, summary, video, [role='button']"))
+  }
+
+  #blurFocusedControlButton() {
+    const active = document.activeElement
+
+    if (!(active instanceof HTMLElement)) {
+      return
+    }
+
+    if (!this.viewportTarget.contains(active)) {
+      return
+    }
+
+    const action = active.getAttribute("data-action") || ""
+    if (!action.includes("flat-pack--carousel#prev") && !action.includes("flat-pack--carousel#next")) {
+      return
+    }
+
+    active.blur()
   }
 
   #isActivePointer(event) {

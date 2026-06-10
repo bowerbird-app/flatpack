@@ -39,6 +39,7 @@ module FlatPack
         thumbs_alignment: :center,
         show_indicators: true,
         show_controls: nil,
+        controls_on_hover: false,
         autoplay: nil,
         autoplay_interval_ms: 5000,
         pause_on_hover: true,
@@ -77,6 +78,7 @@ module FlatPack
         else
           !!show_controls
         end
+        @controls_on_hover = !!controls_on_hover
         @autoplay = if autoplay.nil?
           @variant == :logo_slider
         else
@@ -298,11 +300,17 @@ module FlatPack
 
         content_tag(:button,
           type: "button",
-          class: "absolute top-1/2 z-20 flex w-10 -translate-y-1/2 cursor-pointer aspect-square items-center justify-center rounded-full bg-[rgba(0,0,0,0.5)] text-white transition hover:bg-[rgba(0,0,0,0.75)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring #{classes}",
+          class: "absolute top-1/2 z-20 flex w-10 -translate-y-1/2 cursor-pointer aspect-square items-center justify-center rounded-full bg-[rgba(0,0,0,0.5)] text-white transition hover:bg-[rgba(0,0,0,0.75)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring #{controls_visibility_classes} #{classes}",
           aria: {label: label},
           data: {action: "click->flat-pack--carousel##{direction}"}) do
           render FlatPack::Shared::IconComponent.new(name: icon_name, size: :md, class: "pointer-events-none")
         end
+      end
+
+      def controls_visibility_classes
+        return nil unless @controls_on_hover
+
+        "opacity-100 md:opacity-0 md:pointer-events-none md:group-hover:opacity-100 md:group-hover:pointer-events-auto md:group-focus-within:opacity-100 md:group-focus-within:pointer-events-auto"
       end
 
       def render_footer
@@ -531,7 +539,7 @@ module FlatPack
         return logo_slider_viewport_classes if @variant == :logo_slider
 
         classes(
-          "flat-pack-carousel__viewport relative overflow-hidden rounded-lg border border-[var(--carousel-viewport-border-color)] bg-[var(--carousel-viewport-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          "flat-pack-carousel__viewport group relative overflow-hidden rounded-lg border border-[var(--carousel-viewport-border-color)] bg-[var(--carousel-viewport-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
           @touch_swipe ? "cursor-grab select-none" : nil
         )
       end

@@ -109,6 +109,20 @@ module FlatPack
         assert_selector "button[data-action='click->flat-pack--carousel#prev'] svg.pointer-events-none", visible: :all
       end
 
+      def test_hides_controls_until_hover_on_desktop_when_controls_on_hover_enabled
+        render_inline(Component.new(slides: sample_slides, controls_on_hover: true))
+
+        prev_button = page.find("button[data-action='click->flat-pack--carousel#prev']")
+        control_classes = prev_button[:class]
+
+        assert_includes control_classes, "md:opacity-0"
+        assert_includes control_classes, "md:group-hover:opacity-100"
+        assert_includes control_classes, "md:group-focus-within:opacity-100"
+
+        viewport = page.find("div[data-flat-pack--carousel-target='viewport']")
+        assert_includes viewport[:class], "group"
+      end
+
       def test_enables_lightbox_by_default_for_images_and_disables_for_non_image_slides
         render_inline(Component.new(slides: lightbox_slides))
 
