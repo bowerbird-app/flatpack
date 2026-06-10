@@ -366,6 +366,7 @@ export default class extends Controller {
 
   render() {
     this.renderViewMode()
+    this.renderListOptionSelection()
     this.renderCalendar()
     this.renderSummary()
     this.syncTriggerValue(this.draft, this.draftPresetKey)
@@ -801,8 +802,10 @@ export default class extends Controller {
 
   showCalendar(event) {
     event.preventDefault()
+    this.draftPresetKey = "pick_in_calendar"
     this.viewMode = "calendar"
     this.renderViewMode()
+    this.renderListOptionSelection()
   }
 
   showRanges(event) {
@@ -837,5 +840,31 @@ export default class extends Controller {
     const showCalendar = this.viewMode === "calendar"
     this.listViewElement.classList.toggle("hidden", showCalendar)
     this.calendarViewElement.classList.toggle("hidden", !showCalendar)
+  }
+
+  renderListOptionSelection() {
+    if (!this.panelElement) {
+      return
+    }
+
+    const optionButtons = this.panelElement.querySelectorAll(
+      '[data-flat-pack-date-picker-command="preset"], [data-flat-pack-date-picker-command="show-calendar"]'
+    )
+
+    const selectedClasses = [
+      "bg-[var(--button-primary-background-color)]",
+      "text-[var(--button-primary-text-color)]",
+      "hover:bg-[var(--button-primary-hover-background-color)]"
+    ]
+
+    optionButtons.forEach((button) => {
+      const command = button.dataset.flatPackDatePickerCommand
+      const key = command === "preset" ? String(button.dataset.flatPackDatePickerPreset || "") : "pick_in_calendar"
+      const selected = this.draftPresetKey === key
+
+      selectedClasses.forEach((className) => {
+        button.classList.toggle(className, selected)
+      })
+    })
   }
 }

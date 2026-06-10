@@ -33,6 +33,8 @@ export default class extends Controller {
     this.committed = this.initialCommittedValues()
     this.draft = { ...this.committed }
     this.viewMode = this.defaultViewMode()
+    this.committedPresetKey = null
+    this.draftPresetKey = null
 
     this.isOpen = false
     this.panelElement = this.hasPanelTarget ? this.panelTarget : document.getElementById(this.panelIdValue)
@@ -96,6 +98,7 @@ export default class extends Controller {
     this.panelElement.setAttribute("aria-hidden", "false")
     this.triggerTarget?.setAttribute("aria-expanded", "true")
     this.draft = { ...this.committed }
+    this.draftPresetKey = this.committedPresetKey
     this.viewMode = this.defaultViewMode()
     this.render()
     this.positionPanel()
@@ -132,6 +135,7 @@ export default class extends Controller {
   cancel(event) {
     event.preventDefault()
     this.draft = { ...this.committed }
+    this.draftPresetKey = this.committedPresetKey
     this.viewMode = this.defaultViewMode()
     this.render()
     this.close()
@@ -147,6 +151,8 @@ export default class extends Controller {
     }
 
     this.committed = normalizedDraft
+    this.committedPresetKey = this.draftPresetKey
+    this.draftPresetKey = this.committedPresetKey
     this.syncFormFields(this.committed)
     this.syncTriggerValue(this.committed)
     this.close()
@@ -205,6 +211,8 @@ export default class extends Controller {
       this.draft.end = null
     }
 
+    this.draftPresetKey = preset
+
     this.visibleMonth = new Date(this.draft.start || this.today)
     this.render()
   }
@@ -228,12 +236,14 @@ export default class extends Controller {
 
     if (!this.rangeValue) {
       this.draft = { start: selected, end: null }
+      this.draftPresetKey = null
       this.render()
       return
     }
 
     if (!this.draft.start || (this.draft.start && this.draft.end)) {
       this.draft = { start: selected, end: null }
+      this.draftPresetKey = null
       this.render()
       return
     }
@@ -243,6 +253,8 @@ export default class extends Controller {
     } else {
       this.draft = { start: this.draft.start, end: selected }
     }
+
+    this.draftPresetKey = null
 
     this.render()
   }
@@ -354,6 +366,7 @@ export default class extends Controller {
 
   render() {
     this.renderViewMode()
+    this.renderListOptionSelection()
     this.renderCalendar()
     this.renderSummary()
     this.syncTriggerValue(this.draft)
@@ -768,8 +781,10 @@ export default class extends Controller {
 
   showCalendar(event) {
     event.preventDefault()
+    this.draftPresetKey = "pick_in_calendar"
     this.viewMode = "calendar"
     this.renderViewMode()
+    this.renderListOptionSelection()
   }
 
   showRanges(event) {
@@ -804,5 +819,31 @@ export default class extends Controller {
     const showCalendar = this.viewMode === "calendar"
     this.listViewElement.classList.toggle("hidden", showCalendar)
     this.calendarViewElement.classList.toggle("hidden", !showCalendar)
+  }
+
+  renderListOptionSelection() {
+    if (!this.panelElement) {
+      return
+    }
+
+    const optionButtons = this.panelElement.querySelectorAll(
+      '[data-flat-pack-date-picker-command="preset"], [data-flat-pack-date-picker-command="show-calendar"]'
+    )
+
+    const selectedClasses = [
+      "bg-[var(--button-primary-background-color)]",
+      "text-[var(--button-primary-text-color)]",
+      "hover:bg-[var(--button-primary-hover-background-color)]"
+    ]
+
+    optionButtons.forEach((button) => {
+      const command = button.dataset.flatPackDatePickerCommand
+      const key = command === "preset" ? String(button.dataset.flatPackDatePickerPreset || "") : "pick_in_calendar"
+      const selected = this.draftPresetKey === key
+
+      selectedClasses.forEach((className) => {
+        button.classList.toggle(className, selected)
+      })
+    })
   }
 }
