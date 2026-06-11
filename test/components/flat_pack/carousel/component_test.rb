@@ -186,7 +186,7 @@ module FlatPack
             items_per_view_mobile: 1,
             items_per_view_tablet: 2,
             items_per_view_desktop: 3,
-            quick_preview: true,
+            side_preview: true,
             autoplay: true,
             autoplay_interval_ms: 3100,
             loop: true,
@@ -205,15 +205,15 @@ module FlatPack
         assert_equal "1", root["data-flat-pack--carousel-items-per-view-mobile-value"]
         assert_equal "2", root["data-flat-pack--carousel-items-per-view-tablet-value"]
         assert_equal "3", root["data-flat-pack--carousel-items-per-view-desktop-value"]
-        assert_equal "false", root["data-flat-pack--carousel-quick-preview-value"]
+        assert_equal "false", root["data-flat-pack--carousel-side-preview-value"]
       end
 
-      def test_exposes_quick_preview_when_enabled_for_default_slide_variant
+      def test_exposes_side_preview_when_enabled_for_default_slide_variant
         render_inline(
           Component.new(
             slides: sample_slides,
             transition: :slide,
-            quick_preview: true,
+            side_preview: true,
             items_per_view_mobile: 1,
             items_per_view_tablet: 1,
             items_per_view_desktop: 3
@@ -222,7 +222,7 @@ module FlatPack
 
         root = page.find("section[data-controller='flat-pack--carousel']")
 
-        assert_equal "true", root["data-flat-pack--carousel-quick-preview-value"]
+        assert_equal "true", root["data-flat-pack--carousel-side-preview-value"]
       end
 
       def test_exposes_logo_slider_configuration_values

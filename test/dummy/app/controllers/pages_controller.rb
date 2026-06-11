@@ -792,7 +792,7 @@ class PagesController < ApplicationController
       "Image slides enable lightbox by default and can opt out per slide with lightbox: false.",
       "Uses secure defaults for rich content and supports keyboard plus touch interactions.",
       "Includes logo-slider variant with multi-item responsive layout (5 desktop / 3 tablet / 3 mobile).",
-      "Includes a quick-preview chart carousel demo showing 3.25 slides on desktop and 1.25 slides on mobile/tablet."
+      "Includes a side-preview chart carousel demo showing 3.25 slides on desktop and 1.25 slides on mobile/tablet."
     ]
   end
 

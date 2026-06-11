@@ -50,7 +50,7 @@ module FlatPack
         items_per_view_mobile: 1,
         items_per_view_tablet: 1,
         items_per_view_desktop: 1,
-        quick_preview: false,
+        side_preview: false,
         logo_items_per_view_mobile: 3,
         logo_items_per_view_tablet: 3,
         logo_items_per_view_desktop: 5,
@@ -92,7 +92,7 @@ module FlatPack
         @items_per_view_mobile = normalize_items_per_view(items_per_view_mobile, fallback: 1)
         @items_per_view_tablet = normalize_items_per_view(items_per_view_tablet, fallback: 1)
         @items_per_view_desktop = normalize_items_per_view(items_per_view_desktop, fallback: 1)
-        @quick_preview = !!quick_preview
+        @side_preview = !!side_preview
         @logo_items_per_view_mobile = normalize_logo_items_per_view(logo_items_per_view_mobile, fallback: 3)
         @logo_items_per_view_tablet = normalize_logo_items_per_view(logo_items_per_view_tablet, fallback: 3)
         @logo_items_per_view_desktop = normalize_logo_items_per_view(logo_items_per_view_desktop, fallback: 5)
@@ -142,7 +142,7 @@ module FlatPack
             flat_pack__carousel_items_per_view_mobile_value: @items_per_view_mobile,
             flat_pack__carousel_items_per_view_tablet_value: @items_per_view_tablet,
             flat_pack__carousel_items_per_view_desktop_value: @items_per_view_desktop,
-            flat_pack__carousel_quick_preview_value: quick_preview_enabled?,
+            flat_pack__carousel_side_preview_value: side_preview_enabled?,
             flat_pack__carousel_logo_items_per_view_mobile_value: @logo_items_per_view_mobile,
             flat_pack__carousel_logo_items_per_view_tablet_value: @logo_items_per_view_tablet,
             flat_pack__carousel_logo_items_per_view_desktop_value: @logo_items_per_view_desktop,
@@ -653,8 +653,8 @@ module FlatPack
         parsed
       end
 
-      def quick_preview_enabled?
-        @variant == :default && @transition == :slide && @quick_preview
+      def side_preview_enabled?
+        @variant == :default && @transition == :slide && @side_preview
       end
 
       def normalize_logo_opacity(value)
