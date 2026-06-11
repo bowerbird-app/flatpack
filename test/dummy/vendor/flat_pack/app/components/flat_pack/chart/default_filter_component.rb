@@ -11,6 +11,7 @@ module FlatPack
         status_name: "status",
         status: nil,
         status_placeholder: "All",
+        hide_labels: false,
         **system_arguments
       )
         super(**system_arguments)
@@ -22,6 +23,7 @@ module FlatPack
         @status = status
         @status_lists = status_lists
         @status_placeholder = status_placeholder
+        @hide_labels = hide_labels
 
         validate_names!
         validate_status_lists!
@@ -44,7 +46,7 @@ module FlatPack
           end_name: @end_date_name,
           start_value: @start_date_value,
           end_value: @end_date_value,
-          label: "Date Range",
+          label: (@hide_labels ? nil : "Date Range"),
           class: "w-[220px]"
         )
       end
@@ -57,7 +59,7 @@ module FlatPack
           options: @status_lists,
           value: @status,
           placeholder: @status_placeholder,
-          label: "Status"
+          label: (@hide_labels ? nil : "Status")
         )
       end
 

@@ -48,6 +48,7 @@ Use `FlatPack::ChartButtons::Component` as a sibling when you need reusable Turb
 | `status` | String, nil | `nil` | no | Selected status value. |
 | `status_lists` | Array, Hash | — | yes | Select options in any `FlatPack::Select::Component`-supported format. |
 | `status_placeholder` | String, nil | `"All statuses"` | no | Placeholder option label for the status select. |
+| `hide_labels` | Boolean | `false` | no | When true, omits rendering the Date Range and Status form labels. |
 
 ## Example
 ```erb
@@ -90,7 +91,8 @@ Use `FlatPack::ChartButtons::Component` as a sibling when you need reusable Turb
     start_date_value: params[:start_date],
     end_date_value: params[:end_date],
     status: params[:status],
-    status_lists: [["Active", "active"], ["Paused", "paused"], ["Archived", "archived"]]
+    status_lists: [["Active", "active"], ["Paused", "paused"], ["Archived", "archived"]],
+    hide_labels: true
   ) %>
 
   <%= render FlatPack::Button::Component.new(text: "Apply filters", type: "submit", size: :sm) %>

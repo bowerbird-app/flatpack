@@ -1050,6 +1050,9 @@
   .cursor-grabbing {
     cursor: grabbing;
   }
+  .cursor-help {
+    cursor: help;
+  }
   .cursor-not-allowed {
     cursor: not-allowed;
   }

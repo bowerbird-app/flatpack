@@ -11,8 +11,23 @@ module FlatPack
         assert_selector "input[type='hidden'][name='start_date']", visible: :all
         assert_selector "input[type='hidden'][name='end_date']", visible: :all
         assert_includes rendered_content, "w-[220px]"
+        assert_selector "label", text: "Date Range"
         assert_selector "select[name='status']"
+        assert_selector "label", text: "Status"
         assert_selector "select[name='status'] option[selected][value='']", text: "All"
+      end
+
+      def test_hides_labels_when_hide_labels_is_true
+        render_inline(DefaultFilterComponent.new(
+          status_lists: %w[active inactive],
+          hide_labels: true
+        ))
+
+        assert_selector "input[type='hidden'][name='start_date']", visible: :all
+        assert_selector "input[type='hidden'][name='end_date']", visible: :all
+        assert_selector "select[name='status']"
+        assert_no_selector "label", text: "Date Range"
+        assert_no_selector "label", text: "Status"
       end
 
       def test_renders_with_custom_field_names
