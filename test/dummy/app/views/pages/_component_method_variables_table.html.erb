@@ -560,6 +560,27 @@
         { variable: "**system_arguments", accepts: "Hash", example: "id: \"email\", class: \"w-full\", data: { testid: \"email-input\" }" }
       ]
     },
+    select: {
+      label: "Select",
+      method_call: "render FlatPack::Select::Component.new(name: \"country\", label: \"Country\", options: [[\"United States\", \"US\"], [\"Canada\", \"CA\"]], searchable: true, multiple: true)",
+      variables: [
+        { variable: "name", accepts: "String (required)", example: "name: \"user[country]\"" },
+        { variable: "options", accepts: "Array<String>, Array<[label, value]>, Array<Hash>", example: "options: [[\"United States\", \"US\"], [\"Canada\", \"CA\"]]" },
+        { variable: "value", accepts: "String, Array<String>, nil", example: "value: [\"US\", \"CA\"]" },
+        { variable: "placeholder", accepts: "String or nil", example: "placeholder: \"Select an option\"" },
+        { variable: "label", accepts: "String or nil", example: "label: \"Country\"" },
+        { variable: "searchable", accepts: "true, false", example: "searchable: true" },
+        { variable: "search_mode", accepts: ":local, :remote", example: "search_mode: :remote" },
+        { variable: "search_endpoint", accepts: "String or nil", example: "search_endpoint: demo_forms_select_options_path" },
+        { variable: "search_param", accepts: "String", example: "search_param: \"q\"" },
+        { variable: "min_search_length", accepts: "Integer", example: "min_search_length: 2" },
+        { variable: "multiple", accepts: "true, false", example: "multiple: true" },
+        { variable: "disabled", accepts: "true, false", example: "disabled: true" },
+        { variable: "required", accepts: "true, false", example: "required: true" },
+        { variable: "error", accepts: "String or nil", example: "error: \"Please select at least one option\"" },
+        { variable: "**system_arguments", accepts: "Hash", example: "id: \"country-select\", class: \"w-full\", data: { testid: \"country-select\" }" }
+      ]
+    },
     date_input: {
       label: "Date Input",
       method_call: "render FlatPack::DateInput::Component.new(name: \"birth_date\", label: \"Birth Date\", picker: :flatpack_date_picker)",

@@ -1,15 +1,15 @@
 <%= render FlatPack::PageTitle::Component.new(
   title: "Select",
-  subtitle: "Dropdown select examples, including searchable options."
+  subtitle: "Dropdown select examples, including searchable multiselect options."
 ) %>
 
-<%= render "pages/component_method_variables_table", component: :text_input %>
+<%= render "pages/component_method_variables_table", component: :select %>
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Select Examples", anchor_link: true) %>
 
   <%= render FlatPack::Card::Component.new do |card| %>
-    <% card.body(class: "space-y-[var(--stack-gap-md)]") do %>
+    <% card.body(class: "space-y-[var(--stack-gap-md)]", style: "overflow: visible") do %>
       <%= render FlatPack::Select::Component.new(
         name: "country",
         options: ["United States", "Canada", "United Kingdom", "Australia"],
@@ -25,13 +25,52 @@
         placeholder: "Search cities...",
         searchable: true
       ) %>
+
+      <%= render FlatPack::Select::Component.new(
+        name: "favorite_frameworks",
+        options: [
+          ["Ruby on Rails", "rails"],
+          ["Hotwire", "hotwire"],
+          ["React", "react"],
+          ["Vue", "vue"],
+          ["Svelte", "svelte"]
+        ],
+        label: "Favorite Frameworks",
+        placeholder: "Search and select frameworks...",
+        searchable: true,
+        multiple: true,
+        value: ["rails", "hotwire"]
+      ) %>
+
+      <%= render FlatPack::Select::Component.new(
+        name: "assignee",
+        options: [],
+        label: "Assignee (Remote Search)",
+        placeholder: "Type at least 2 characters...",
+        searchable: true,
+        search_mode: :remote,
+        search_endpoint: demo_forms_select_options_path
+      ) %>
+
+      <%= render FlatPack::Select::Component.new(
+        name: "reviewers",
+        options: [["Alice Johnson", "alice-johnson"], ["Bob Smith", "bob-smith"]],
+        label: "Reviewers (Remote + Multiselect)",
+        placeholder: "Search teammates...",
+        searchable: true,
+        multiple: true,
+        value: ["alice-johnson"],
+        search_mode: :remote,
+        search_endpoint: demo_forms_select_options_path,
+        min_search_length: 2
+      ) %>
     <% end %>
   <% end %>
 
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE'),
       &lt;%= render FlatPack::Card::Component.new do |card| %&gt;
-        &lt;% card.body do %&gt;
+        &lt;% card.body(style: &quot;overflow: visible&quot;) do %&gt;
         &lt;%= render FlatPack::Select::Component.new(
           name: &quot;country&quot;,
           options: [&quot;United States&quot;, &quot;Canada&quot;, &quot;United Kingdom&quot;, &quot;Australia&quot;],
@@ -46,6 +85,45 @@
           label: &quot;City&quot;,
           placeholder: &quot;Search cities...&quot;,
           searchable: true
+        ) %&gt;
+
+        &lt;%= render FlatPack::Select::Component.new(
+          name: &quot;favorite_frameworks&quot;,
+          options: [
+            [&quot;Ruby on Rails&quot;, &quot;rails&quot;],
+            [&quot;Hotwire&quot;, &quot;hotwire&quot;],
+            [&quot;React&quot;, &quot;react&quot;],
+            [&quot;Vue&quot;, &quot;vue&quot;],
+            [&quot;Svelte&quot;, &quot;svelte&quot;]
+          ],
+          label: &quot;Favorite Frameworks&quot;,
+          placeholder: &quot;Search and select frameworks...&quot;,
+          searchable: true,
+          multiple: true,
+          value: [&quot;rails&quot;, &quot;hotwire&quot;]
+        ) %&gt;
+
+        &lt;%= render FlatPack::Select::Component.new(
+          name: &quot;assignee&quot;,
+          options: [],
+          label: &quot;Assignee (Remote Search)&quot;,
+          placeholder: &quot;Type at least 2 characters...&quot;,
+          searchable: true,
+          search_mode: :remote,
+          search_endpoint: demo_forms_select_options_path
+        ) %&gt;
+
+        &lt;%= render FlatPack::Select::Component.new(
+          name: &quot;reviewers&quot;,
+          options: [[&quot;Alice Johnson&quot;, &quot;alice-johnson&quot;], [&quot;Bob Smith&quot;, &quot;bob-smith&quot;]],
+          label: &quot;Reviewers (Remote + Multiselect)&quot;,
+          placeholder: &quot;Search teammates...&quot;,
+          searchable: true,
+          multiple: true,
+          value: [&quot;alice-johnson&quot;],
+          search_mode: :remote,
+          search_endpoint: demo_forms_select_options_path,
+          min_search_length: 2
         ) %&gt;
         &lt;% end %&gt;
       &lt;% end %&gt;

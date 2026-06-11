@@ -45,12 +45,16 @@ Component-specific props:
 | `end_value` | String, Date, Time, DateTime | `nil` | no (`DateRangeInput`) | Initial selected range end date. |
 | `step` | Numeric | `1` | no | Step increment (`NumberInput`, `RangeInput`). |
 | `accept` | String | `nil` | no | File MIME/extensions whitelist for `FileInput`. Dangerous executable extensions raise `ArgumentError`. |
-| `multiple` | Boolean | `false` | no | Enables multiple file selection (`FileInput`). |
+| `multiple` | Boolean | `false` | no | Enables multiple file selection (`FileInput`) and multi-value selection (`Select`). |
 | `max_size` | Integer | `nil` | no | Max file size in bytes for `FileInput` client-side checks. Must be positive when provided. |
 | `preview` | Boolean | `true` | no | Enables image preview area in `FileInput`. |
 | `checked` | Boolean | `false` | no | Initial checked state (`Checkbox`, `Switch`). |
 | `options` | Array | none | yes (`RadioGroup`, `Select`) | Options list. Supports `String`, `[label, value]`, or `{ label:, value:, disabled: }`. |
 | `searchable` | Boolean | `false` | no | Uses custom searchable dropdown mode for `Select`. |
+| `search_mode` | Symbol | `:local` | no | Search mode for `Select`: `:local` (client filter) or `:remote` (AJAX endpoint). |
+| `search_endpoint` | String | `nil` | no | Required when `search_mode: :remote`; URL used to fetch Select options. |
+| `search_param` | String | `"q"` | no | Query string parameter name used for remote Select requests. |
+| `min_search_length` | Integer | `2` | no | Minimum query length before remote Select requests are triggered. |
 | `size` | Symbol | `:md` | no | Switch size: `:sm`, `:md`, `:lg` (`Switch`). |
 
 ## Slots
@@ -60,6 +64,9 @@ None.
 - Input classes by type: `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `UrlInput`, `NumberInput`, `DateInput`, `FileInput`
 - Choice inputs: `Checkbox`, `RadioGroup`, `Select`, `Switch`
 - Select rendering modes: native select (`searchable: false`) and custom searchable select (`searchable: true`)
+- Select selection modes: single-value (`multiple: false`) and multi-value (`multiple: true`)
+- In searchable multiselect mode, selected options render as chips inside the trigger
+- Remote Select mode (`search_mode: :remote`) fetches options from `search_endpoint` with `search_param`
 
 ## Example
 ```erb
@@ -112,6 +119,44 @@ Additional focused examples:
   searchable: true,
   placeholder: "Search..."
 ) %>
+```
+
+```erb
+<%= render FlatPack::Select::Component.new(
+  name: "user[frameworks]",
+  label: "Frameworks",
+  options: [["Ruby on Rails", "rails"], ["Hotwire", "hotwire"], ["React", "react"]],
+  searchable: true,
+  multiple: true,
+  value: ["rails", "hotwire"],
+  placeholder: "Search frameworks..."
+) %>
+```
+
+```erb
+<%= render FlatPack::Select::Component.new(
+  name: "user[assignee]",
+  label: "Assignee",
+  options: [],
+  searchable: true,
+  search_mode: :remote,
+  search_endpoint: demo_forms_select_options_path,
+  search_param: "q",
+  min_search_length: 2,
+  placeholder: "Type to search people..."
+) %>
+```
+
+Remote endpoint response format for `Select` supports either:
+
+```json
+[{ "label": "Alice Johnson", "value": "alice-johnson" }]
+```
+
+or:
+
+```json
+{ "items": [{ "label": "Alice Johnson", "value": "alice-johnson" }] }
 ```
 
 ```erb

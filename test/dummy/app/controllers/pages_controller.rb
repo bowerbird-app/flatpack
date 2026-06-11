@@ -312,6 +312,28 @@ class PagesController < ApplicationController
   def forms_select
   end
 
+  def forms_select_options
+    query = params[:q].to_s.strip.downcase
+
+    options = [
+      {label: "Alice Johnson", value: "alice-johnson"},
+      {label: "Bob Smith", value: "bob-smith"},
+      {label: "Carla Gomez", value: "carla-gomez"},
+      {label: "David Nguyen", value: "david-nguyen"},
+      {label: "Ethan Brown", value: "ethan-brown"},
+      {label: "Fatima Ali", value: "fatima-ali"},
+      {label: "Grace Lee", value: "grace-lee"}
+    ]
+
+    results = if query.blank?
+      []
+    else
+      options.select { |option| option[:label].downcase.include?(query) }.first(10)
+    end
+
+    render json: {items: results}
+  end
+
   def forms_switch
   end
 

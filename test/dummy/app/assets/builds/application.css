@@ -1050,9 +1050,6 @@
   .cursor-grabbing {
     cursor: grabbing;
   }
-  .cursor-help {
-    cursor: help;
-  }
   .cursor-not-allowed {
     cursor: not-allowed;
   }
@@ -1411,6 +1408,9 @@
   }
   .rounded {
     border-radius: 0.25rem;
+  }
+  .rounded-\(--chip-border-radius\) {
+    border-radius: var(--chip-border-radius);
   }
   .rounded-2xl {
     border-radius: var(--radius-2xl);
@@ -2305,6 +2305,9 @@
   .p-\[var\(--toast-padding\)\] {
     padding: var(--toast-padding);
   }
+  .px-\(--chip-padding-x-sm\) {
+    padding-inline: var(--chip-padding-x-sm);
+  }
   .px-0 {
     padding-inline: calc(var(--spacing) * 0);
   }
@@ -2373,6 +2376,9 @@
   }
   .px-\[var\(--tooltip-padding-x\)\] {
     padding-inline: var(--tooltip-padding-x);
+  }
+  .py-\(--button-padding-y-sm\) {
+    padding-block: var(--button-padding-y-sm);
   }
   .py-0 {
     padding-block: calc(var(--spacing) * 0);
@@ -2466,6 +2472,9 @@
   }
   .pr-4 {
     padding-right: calc(var(--spacing) * 4);
+  }
+  .pr-6 {
+    padding-right: calc(var(--spacing) * 6);
   }
   .pr-10 {
     padding-right: calc(var(--spacing) * 10);
@@ -4176,6 +4185,11 @@
   .has-\[\:checked\]\:ring-offset-white {
     &:has(*:is(:checked)) {
       --tw-ring-offset-color: var(--color-white);
+    }
+  }
+  .data-\[results-count\=\'0\'\]\:hidden {
+    &[data-results-count='0'] {
+      display: none;
     }
   }
   .motion-reduce\:animate-none {

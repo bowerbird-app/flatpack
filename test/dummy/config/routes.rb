@@ -37,6 +37,7 @@ Rails.application.routes.draw do
   get "demo/forms/checkbox", to: "pages#forms_checkbox"
   get "demo/forms/radio_group", to: "pages#forms_radio_group"
   get "demo/forms/select", to: "pages#forms_select"
+  get "demo/forms/select/options", to: "pages#forms_select_options"
   get "demo/forms/switch", to: "pages#forms_switch"
   get "demo/forms/combined", to: "pages#forms_combined"
   get "demo/tables/basic", to: "pages#tables_basic"
