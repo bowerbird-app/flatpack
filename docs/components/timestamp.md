@@ -3,6 +3,8 @@
 ## Purpose
 Render human-readable relative time text with an absolute timestamp shown in a tooltip.
 
+Future timestamps render as "In X" while past timestamps render as "X ago".
+
 ## When to use
 Use Timestamp in activity feeds, tables, and metadata rows where relative recency improves scanability while exact time remains available on hover/focus.
 

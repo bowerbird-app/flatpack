@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Updated `FlatPack::Timestamp::Component` future relative copy from `X from now` to `In X` while preserving `X ago` for past timestamps.
+
 ## [0.1.84] - 2026-06-10
 
 ### Added

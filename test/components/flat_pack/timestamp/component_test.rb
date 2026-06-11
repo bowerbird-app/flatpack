@@ -11,10 +11,11 @@ module FlatPack
         assert_text "ago"
       end
 
-      def test_renders_future_timestamp_with_from_now_suffix
+      def test_renders_future_timestamp_with_in_prefix
         render_inline(Component.new(timestamp: 3.minutes.from_now))
 
-        assert_text "from now"
+        assert_text "In"
+        refute_text "from now"
       end
 
       def test_renders_fallback_text_for_nil_timestamp

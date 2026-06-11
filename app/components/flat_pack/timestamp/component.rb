@@ -60,9 +60,12 @@ module FlatPack
       def relative_timestamp_label
         now = Time.current
         distance = time_ago_in_words(@parsed_timestamp)
-        suffix = (@parsed_timestamp > now) ? "from now" : "ago"
 
-        "#{distance} #{suffix}"
+        if @parsed_timestamp > now
+          "In #{distance}"
+        else
+          "#{distance} ago"
+        end
       end
 
       def server_formatted_timestamp
