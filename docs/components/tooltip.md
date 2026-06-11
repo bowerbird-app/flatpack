@@ -34,6 +34,7 @@ Use Tooltip for brief explanatory text tied to controls or compact UI affordance
 ## Accessibility
 - Tooltip body uses `role="tooltip"`.
 - Show/hide is driven by hover and focus events from the trigger wrapper.
+- Tooltip does not enforce a cursor style on the trigger; choose cursor classes in your trigger markup when needed.
 
 ## Advanced: collapsed-only tooltips
 

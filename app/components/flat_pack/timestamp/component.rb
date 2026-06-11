@@ -42,7 +42,7 @@ module FlatPack
 
       def time_attributes
         {
-          class: timestamp_classes("flat-pack-timestamp", "cursor-help"),
+          class: timestamp_classes("flat-pack-timestamp"),
           datetime: @parsed_timestamp.iso8601,
           data: {
             controller: "flat-pack--timestamp",
