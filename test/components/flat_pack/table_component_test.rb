@@ -123,6 +123,21 @@ module FlatPack
         assert_selector "th a[href*='sort=email']"
       end
 
+      def test_sortable_headers_render_sort_tooltips
+        render_inline(Component.new(
+          data: @users,
+          sort: "name",
+          direction: "asc",
+          base_url: "/users"
+        )) do |component|
+          component.column(title: "Name", html: ->(user) { user.name }, sortable: true, sort_key: :name)
+          component.column(title: "Email", html: ->(user) { user.email }, sortable: true, sort_key: :email)
+        end
+
+        assert_selector "th [data-controller='flat-pack--tooltip']", count: 2
+        assert_selector "th [role='tooltip']", text: "Sort", count: 2
+      end
+
       def test_sortable_headers_toggle_direction
         render_inline(Component.new(
           data: @users,

@@ -312,6 +312,28 @@ class PagesController < ApplicationController
   def forms_select
   end
 
+  def forms_select_options
+    query = params[:q].to_s.strip.downcase
+
+    options = [
+      {label: "Alice Johnson", value: "alice-johnson"},
+      {label: "Bob Smith", value: "bob-smith"},
+      {label: "Carla Gomez", value: "carla-gomez"},
+      {label: "David Nguyen", value: "david-nguyen"},
+      {label: "Ethan Brown", value: "ethan-brown"},
+      {label: "Fatima Ali", value: "fatima-ali"},
+      {label: "Grace Lee", value: "grace-lee"}
+    ]
+
+    results = if query.blank?
+      []
+    else
+      options.select { |option| option[:label].downcase.include?(query) }.first(10)
+    end
+
+    render json: {items: results}
+  end
+
   def forms_switch
   end
 
@@ -770,7 +792,7 @@ class PagesController < ApplicationController
       "Image slides enable lightbox by default and can opt out per slide with lightbox: false.",
       "Uses secure defaults for rich content and supports keyboard plus touch interactions.",
       "Includes logo-slider variant with multi-item responsive layout (5 desktop / 3 tablet / 3 mobile).",
-      "Includes a quick-preview chart carousel demo showing 3.25 slides on desktop and 1.25 slides on mobile/tablet."
+      "Includes a side-preview chart carousel demo showing 3.25 slides on desktop and 1.25 slides on mobile/tablet."
     ]
   end
 

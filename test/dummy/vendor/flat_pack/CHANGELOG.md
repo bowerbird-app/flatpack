@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Updated `FlatPack::Timestamp::Component` future relative copy from `X from now` to `In X` while preserving `X ago` for past timestamps.
+- Updated tooltip-related examples to stop using `cursor-help` by default, aligned tooltip demo code snippets with rendered examples, and removed default `cursor-help` styling from `FlatPack::Timestamp::Component` output.
+- Updated `FlatPack::Table::Column::Component` sortable header links to render a `Sort` tooltip on hover/focus via `FlatPack::Tooltip::Component`.
+- Updated `/demo/forms/select` examples so searchable select dropdown menus are not clipped by card body overflow.
+- Added `hide_labels` to `FlatPack::Chart::DefaultFilterComponent` so date range and status labels can be omitted in compact filter rows.
+
 ## [0.1.84] - 2026-06-10
 
 ### Added
@@ -19,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated `FlatPack::Chart::DefaultFilterComponent` to use `FlatPack::DateRangeInput::Component` for date-range controls.
 - Removed DateInput range-mode usage from demos and docs in favor of the standalone DateRangeInput component.
 - Corrected chart type naming so `type: :column` renders vertical columns and `type: :bar` renders horizontal bars, with updated chart defaults, demos, tests, and docs.
-- Updated `FlatPack::Carousel::Component` with configurable default-variant `items_per_view_*` options and a `quick_preview` mode to reveal 25% of the next slide, including docs/tests and a five-chart demo example.
+- Updated `FlatPack::Carousel::Component` with configurable default-variant `items_per_view_*` options and a `side_preview` mode to reveal 25% of the next slide, including docs/tests and a five-chart demo example.
 - Wrapped each chart in the carousel quick preview demo inside an elevated `FlatPack::Card::Component` body slot.
 - Added `controls_on_hover` to `FlatPack::Carousel::Component` so previous/next controls can stay hidden until hover/focus on larger screens while remaining visible on mobile.
 - Renamed the Carousel logo variant from `:logo_cloud` to `:logo_slider` with no compatibility alias.

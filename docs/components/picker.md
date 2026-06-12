@@ -41,7 +41,7 @@ Use Picker when users need to choose image assets, files, or application records
 | `modal_body_height` | String | `"clamp(20rem, 55vh, 30rem)"` | No | Modal body height or inline-body max-height cap, depending on `modal`. |
 | `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into the modal wrapper or inline shell. |
 
-## Item Display Slots
+## Slots
 
 List rows are rendered through four display regions derived from item data rather than record-type-specific markup.
 

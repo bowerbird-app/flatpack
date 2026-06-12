@@ -76,6 +76,20 @@ module FlatPack
         assert_selector "select[required]"
       end
 
+      def test_renders_native_multiple_select
+        render_inline(Component.new(name: "colors", options: ["Red", "Blue", "Green"], value: ["Red", "Green"], multiple: true))
+
+        assert_selector "select[multiple][name='colors[]']"
+        assert_selector "option[value='Red'][selected]"
+        assert_selector "option[value='Green'][selected]"
+      end
+
+      def test_preserves_existing_array_name_for_native_multiple
+        render_inline(Component.new(name: "colors[]", options: ["Red", "Blue"], multiple: true))
+
+        assert_selector "select[multiple][name='colors[]']"
+      end
+
       def test_renders_with_error
         render_inline(Component.new(name: "color", options: ["Red", "Blue"], error: "Please select a color"))
 
@@ -149,10 +163,94 @@ module FlatPack
         assert_selector "input[type='hidden'][value='Blue']", visible: false
       end
 
+      def test_searchable_multiple_renders_hidden_inputs
+        render_inline(Component.new(
+          name: "frameworks",
+          options: [["Rails", "rails"], ["Hotwire", "hotwire"], ["React", "react"]],
+          value: ["rails", "react"],
+          searchable: true,
+          multiple: true
+        ))
+
+        assert_selector "input[type='hidden'][name='frameworks[]'][value='rails']", visible: false
+        assert_selector "input[type='hidden'][name='frameworks[]'][value='react']", visible: false
+      end
+
+      def test_searchable_multiple_renders_selected_chips
+        render_inline(Component.new(
+          name: "frameworks",
+          options: [["Rails", "rails"], ["Hotwire", "hotwire"], ["React", "react"]],
+          value: ["rails", "react"],
+          placeholder: "Search frameworks",
+          searchable: true,
+          multiple: true
+        ))
+
+        assert_selector "[data-flat-pack--select-target='chip'][data-value='rails'] .inline-flex", text: "Rails"
+        assert_selector "[data-flat-pack--select-target='chip'][data-value='react'] .inline-flex", text: "React"
+        assert_selector "[data-flat-pack--select-target='chip'][data-value='hotwire']", visible: false
+        assert_selector "[data-flat-pack--select-target='placeholder'].hidden", text: "Search frameworks"
+      end
+
+      def test_searchable_multiple_chip_has_remove_action
+        render_inline(Component.new(
+          name: "frameworks",
+          options: [["Rails", "rails"], ["Hotwire", "hotwire"]],
+          value: ["rails"],
+          searchable: true,
+          multiple: true
+        ))
+
+        assert_selector "[data-flat-pack--select-target='chip'][data-value='rails'] [data-action*='flat-pack--select#removeChip']"
+        assert_selector "[data-flat-pack--select-target='chip'][data-value='rails'] svg[data-flat-pack--icon-name-value='x-mark']"
+      end
+
       def test_searchable_has_stimulus_controller
         render_inline(Component.new(name: "color", options: ["Red"], searchable: true))
 
         assert_selector "div[data-controller='flat-pack--select']"
+      end
+
+      def test_searchable_remote_sets_controller_values
+        render_inline(Component.new(
+          name: "assignee",
+          options: [],
+          searchable: true,
+          search_mode: :remote,
+          search_endpoint: "/demo/forms/select/options",
+          search_param: "query",
+          min_search_length: 3
+        ))
+
+        assert_selector "div[data-flat-pack--select-search-mode-value='remote']"
+        assert_selector "div[data-flat-pack--select-search-endpoint-value='/demo/forms/select/options']"
+        assert_selector "div[data-flat-pack--select-search-param-value='query']"
+        assert_selector "div[data-flat-pack--select-min-search-length-value='3']"
+        assert_selector "[data-flat-pack--select-target='searchHint']", text: "Type at least 3 characters to search"
+      end
+
+      def test_raises_error_for_invalid_search_mode
+        assert_raises(ArgumentError) do
+          Component.new(name: "color", options: ["Red"], searchable: true, search_mode: :invalid)
+        end
+      end
+
+      def test_raises_error_for_remote_without_endpoint
+        assert_raises(ArgumentError) do
+          Component.new(name: "color", options: ["Red"], searchable: true, search_mode: :remote)
+        end
+      end
+
+      def test_raises_error_for_unsafe_search_endpoint
+        assert_raises(ArgumentError) do
+          Component.new(
+            name: "color",
+            options: ["Red"],
+            searchable: true,
+            search_mode: :remote,
+            search_endpoint: "javascript:alert(1)"
+          )
+        end
       end
 
       def test_renders_with_data_attributes

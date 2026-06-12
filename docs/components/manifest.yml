@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-06-10
+updated_at: 2026-06-12
 
 format_reference: docs/components/DOC_FORMAT.md
 human_index: docs/components/README.md
@@ -218,6 +218,12 @@ components:
       - FlatPack::RadioGroup::Component
       - FlatPack::Select::Component
       - FlatPack::Switch::Component
+    status: documented
+
+  - key: date_range_input
+    title: Date Range Input
+    doc: docs/components/date-range-input.md
+    primary_class: FlatPack::DateRangeInput::Component
     status: documented
 
   - key: link

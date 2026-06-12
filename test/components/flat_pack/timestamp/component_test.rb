@@ -11,10 +11,11 @@ module FlatPack
         assert_text "ago"
       end
 
-      def test_renders_future_timestamp_with_from_now_suffix
+      def test_renders_future_timestamp_with_in_prefix
         render_inline(Component.new(timestamp: 3.minutes.from_now))
 
-        assert_text "from now"
+        assert_text "In"
+        refute_text "from now"
       end
 
       def test_renders_fallback_text_for_nil_timestamp
@@ -52,7 +53,7 @@ module FlatPack
       def test_sets_timestamp_stimulus_data_attributes
         render_inline(Component.new(timestamp: Time.zone.parse("2026-06-10 09:30:00")))
 
-        assert_selector "time.flat-pack-timestamp.cursor-help.mb-0[data-controller='flat-pack--timestamp']"
+        assert_selector "time.flat-pack-timestamp.mb-0[data-controller='flat-pack--timestamp']"
         assert_selector "time[data-flat-pack--timestamp-iso-value]"
         assert_selector "time[data-flat-pack--timestamp-fallback-value]"
         assert_selector "time[data-flat-pack--timestamp-format-value='%e %b %Y %l:%M%P']"
@@ -61,14 +62,14 @@ module FlatPack
       def test_class_name_can_override_default_margin
         render_inline(Component.new(timestamp: Time.zone.parse("2026-06-10 09:30:00"), class_name: "mb-4"))
 
-        assert_selector "time.flat-pack-timestamp.cursor-help.mb-4"
+        assert_selector "time.flat-pack-timestamp.mb-4"
         refute_selector "time.mb-0"
       end
 
       def test_applies_class_name_to_timestamp_time_element
         render_inline(Component.new(timestamp: Time.zone.parse("2026-06-10 09:30:00"), class_name: "text-green-600 text-xs"))
 
-        assert_selector "time.flat-pack-timestamp.cursor-help.text-green-600.text-xs"
+        assert_selector "time.flat-pack-timestamp.text-green-600.text-xs"
       end
 
       def test_raises_error_for_invalid_tooltip_placement

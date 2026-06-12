@@ -16,7 +16,7 @@ export default class extends Controller {
     itemsPerViewMobile: { type: Number, default: 1 },
     itemsPerViewTablet: { type: Number, default: 1 },
     itemsPerViewDesktop: { type: Number, default: 1 },
-    quickPreview: { type: Boolean, default: false },
+    sidePreview: { type: Boolean, default: false },
     logoItemsPerViewMobile: { type: Number, default: 3 },
     logoItemsPerViewTablet: { type: Number, default: 3 },
     logoItemsPerViewDesktop: { type: Number, default: 5 },
@@ -677,7 +677,7 @@ export default class extends Controller {
   }
 
   #effectivePerView(perView = this.#currentPerView()) {
-    if (!this.#isDefaultSlideVariant() || !this.quickPreviewValue) {
+    if (!this.#isDefaultSlideVariant() || !this.sidePreviewValue) {
       return perView
     }
 

@@ -73,6 +73,11 @@
         variable: "status_lists",
         accepts: "Array, Hash",
         example: '[["Active", "active"], ["Paused", "paused"]]'
+      },
+      {
+        variable: "hide_labels",
+        accepts: "Boolean (default: false)",
+        example: "hide_labels: true"
       }
     ]
   %>
@@ -101,7 +106,61 @@
           start_date_value: params[:start_date],
           end_date_value: params[:end_date],
           status: params[:status],
-          status_lists: [["Active", "active"], ["Paused", "paused"], ["Archived", "archived"]]
+          status_lists: [["Active", "active"], ["Paused", "paused"], ["Archived", "archived"]],
+          hide_labels: true
+        ) #{erb_tag_close}
+        #{erb_open} end #{erb_tag_close}
+      #{erb_open} end #{erb_tag_close}
+    CODE
+  ) %>
+
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Default Chart Filter Component",
+    subtitle: "Hidden labels variant using hide_labels: true."
+  ) %>
+
+  <%= turbo_frame_tag "chart-default-filter-hidden-labels-frame" do %>
+    <%= form_with(
+      url: demo_charts_default_filter_path,
+      method: :get,
+      class: "mb-4",
+      data: {
+        turbo_frame: "chart-default-filter-hidden-labels-frame",
+        controller: "flat-pack--auto-submit",
+        action: "input->flat-pack--auto-submit#queueSubmit change->flat-pack--auto-submit#queueSubmit",
+        flat_pack__auto_submit_delay_value: 250
+      }
+    ) do %>
+      <%= render FlatPack::Chart::DefaultFilterComponent.new(
+        start_date_value: @default_chart_filter_start_date,
+        end_date_value: @default_chart_filter_end_date,
+        status: @default_chart_filter_status,
+        status_lists: @default_chart_filter_status_lists,
+        hide_labels: true
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB (Hidden Labels)",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} turbo_frame_tag "chart-default-filter-hidden-labels-frame" do #{erb_tag_close}
+        #{erb_output_open} form_with(
+          url: demo_charts_default_filter_path,
+          method: :get,
+          data: {
+            turbo_frame: "chart-default-filter-hidden-labels-frame",
+            controller: "flat-pack--auto-submit",
+            action: "input->flat-pack--auto-submit#queueSubmit change->flat-pack--auto-submit#queueSubmit"
+          }
+        ) do #{erb_tag_close}
+        #{erb_output_open} render FlatPack::Chart::DefaultFilterComponent.new(
+          start_date_value: params[:start_date],
+          end_date_value: params[:end_date],
+          status: params[:status],
+          status_lists: [["Active", "active"], ["Paused", "paused"], ["Archived", "archived"]],
+          hide_labels: true
         ) #{erb_tag_close}
         #{erb_open} end #{erb_tag_close}
       #{erb_open} end #{erb_tag_close}

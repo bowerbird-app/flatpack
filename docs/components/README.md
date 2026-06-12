@@ -39,6 +39,7 @@ grid | FlatPack::Grid::Component | docs/components/grid.md
 hero | FlatPack::Hero::Component | docs/components/hero.md
 inputs | FlatPack::TextInput::Component | docs/components/inputs.md
 date_input | FlatPack::DateInput::Component | docs/components/inputs.md
+date_range_input | FlatPack::DateRangeInput::Component | docs/components/date-range-input.md
 date_time_input | FlatPack::DateTimeInput::Component | docs/components/inputs.md
 time_input | FlatPack::TimeInput::Component | docs/components/inputs.md
 link | FlatPack::Link::Component | docs/components/link.md

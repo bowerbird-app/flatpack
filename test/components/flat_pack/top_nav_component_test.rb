@@ -48,6 +48,69 @@ module FlatPack
         assert_text "Right"
       end
 
+      def test_renders_all_wrappers_when_left_is_uninitialized
+        render_inline(Component.new) do |nav|
+          nav.center { "Center content" }
+          nav.right { "Right content" }
+        end
+
+        sections = rendered_section_nodes
+
+        assert_equal 3, sections.size
+        assert_includes sections[0]["class"], "min-w-[30%]"
+        assert_includes sections[1]["class"], "min-w-[30%]"
+        assert_includes sections[2]["class"], "min-w-[30%]"
+        assert_includes sections[0]["class"], "gap-2"
+        assert_includes sections[1]["class"], "flex-1"
+        assert_includes sections[2]["class"], "gap-2"
+        assert_includes sections[2]["class"], "justify-end"
+        assert_equal "", sections[0].text.strip
+        assert_equal "Center content", sections[1].text.strip
+        assert_equal "Right content", sections[2].text.strip
+      end
+
+      def test_renders_all_wrappers_when_center_is_uninitialized
+        render_inline(Component.new) do |nav|
+          nav.left { "Left content" }
+          nav.right { "Right content" }
+        end
+
+        sections = rendered_section_nodes
+
+        assert_equal 3, sections.size
+        assert_includes sections[0]["class"], "min-w-[30%]"
+        assert_includes sections[1]["class"], "min-w-[30%]"
+        assert_includes sections[2]["class"], "min-w-[30%]"
+        assert_includes sections[0]["class"], "gap-2"
+        assert_includes sections[1]["class"], "flex-1"
+        assert_includes sections[2]["class"], "gap-2"
+        assert_includes sections[2]["class"], "justify-end"
+        assert_equal "Left content", sections[0].text.strip
+        assert_equal "", sections[1].text.strip
+        assert_equal "Right content", sections[2].text.strip
+      end
+
+      def test_renders_all_wrappers_when_right_is_uninitialized
+        render_inline(Component.new) do |nav|
+          nav.left { "Left content" }
+          nav.center { "Center content" }
+        end
+
+        sections = rendered_section_nodes
+
+        assert_equal 3, sections.size
+        assert_includes sections[0]["class"], "min-w-[30%]"
+        assert_includes sections[1]["class"], "min-w-[30%]"
+        assert_includes sections[2]["class"], "min-w-[30%]"
+        assert_includes sections[0]["class"], "gap-2"
+        assert_includes sections[1]["class"], "flex-1"
+        assert_includes sections[2]["class"], "gap-2"
+        assert_includes sections[2]["class"], "justify-end"
+        assert_equal "Left content", sections[0].text.strip
+        assert_equal "Center content", sections[1].text.strip
+        assert_equal "", sections[2].text.strip
+      end
+
       def test_has_sticky_positioning
         render_inline(Component.new)
         assert_includes page.native.to_html, "sticky"
@@ -74,6 +137,15 @@ module FlatPack
       def test_accepts_data_attributes
         render_inline(Component.new(data: {testid: "top-nav"}))
         assert_selector "header[data-testid='top-nav']"
+      end
+
+      private
+
+      def rendered_section_nodes
+        container = page.native.at_css("header > div")
+        return [] unless container
+
+        container.xpath("./div")
       end
     end
   end

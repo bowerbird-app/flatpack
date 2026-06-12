@@ -13,7 +13,7 @@
     <% end %>
     
     <%= render FlatPack::Tooltip::Component.new(text: "Helpful information appears here when you hover or focus this icon.", placement: :top) do %>
-      <span class="inline-flex items-center gap-1 text-[var(--color-primary)] cursor-help">
+      <span class="inline-flex items-center gap-1 text-[var(--color-primary)]">
         Info
         <%= render FlatPack::Shared::IconComponent.new(name: :question, size: :sm) %>
       </span>
@@ -22,8 +22,8 @@
   
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE')
-      &lt;%= render FlatPack::Tooltip::Component.new(text: "Tooltip text", placement: :top) do %&gt;
-        &lt;%= render FlatPack::Button::Component.new(text: "Hover me") %&gt;
+      &lt;%= render FlatPack::Tooltip::Component.new(text: "This button triggers a tooltip with additional context.", placement: :top) do %&gt;
+        &lt;%= render FlatPack::Button::Component.new(text: "Hover me", style: :secondary) %&gt;
       &lt;% end %&gt;
     CODE
   ) %>
@@ -101,7 +101,7 @@
     <div class="flex items-center gap-2">
       <span>Username</span>
       <%= render FlatPack::Tooltip::Component.new(text: "Your username must be unique, use 3-20 characters, and cannot be changed later.", placement: :right) do %>
-        <span class="inline-flex text-[var(--surface-muted-content-color)] cursor-help">
+        <span class="inline-flex text-[var(--surface-muted-content-color)]">
           <%= render FlatPack::Shared::IconComponent.new(name: :question, size: :sm) %>
         </span>
       <% end %>
@@ -110,7 +110,7 @@
     <div class="flex items-center gap-2">
       <span>Password Strength</span>
       <%= render FlatPack::Tooltip::Component.new(text: "Use at least 8 characters with uppercase, lowercase, numbers, and symbols for stronger security.", placement: :right) do %>
-        <span class="inline-flex text-[var(--surface-muted-content-color)] cursor-help">
+        <span class="inline-flex text-[var(--surface-muted-content-color)]">
           <%= render FlatPack::Shared::IconComponent.new(name: :lock, size: :sm) %>
         </span>
       <% end %>
@@ -119,7 +119,7 @@
     <p class="text-[var(--surface-content-color)]">
       This is a paragraph with an inline
       <%= render FlatPack::Tooltip::Component.new(text: "This inline tooltip provides additional context without interrupting the reading flow.", placement: :top) do %>
-        <span class="text-[var(--color-primary)] underline decoration-dotted cursor-help">tooltip</span>
+        <span class="text-[var(--color-primary)] underline decoration-dotted">tooltip</span>
       <% end %>
       that provides more information.
     </p>
@@ -135,7 +135,7 @@
         &lt;div class=&quot;flex items-center gap-2&quot;&gt;
           &lt;span&gt;Username&lt;/span&gt;
           &lt;%= render FlatPack::Tooltip::Component.new(text: &quot;Your username must be unique, use 3-20 characters, and cannot be changed later.&quot;, placement: :right) do %&gt;
-            &lt;span class=&quot;inline-flex text-[var(--surface-muted-content-color)] cursor-help&quot;&gt;
+            &lt;span class=&quot;inline-flex text-[var(--surface-muted-content-color)]&quot;&gt;
               &lt;%= render FlatPack::Shared::IconComponent.new(name: :question, size: :sm) %&gt;
             &lt;/span&gt;
           &lt;% end %&gt;
@@ -144,7 +144,7 @@
         &lt;div class=&quot;flex items-center gap-2&quot;&gt;
           &lt;span&gt;Password Strength&lt;/span&gt;
           &lt;%= render FlatPack::Tooltip::Component.new(text: &quot;Use at least 8 characters with uppercase, lowercase, numbers, and symbols for stronger security.&quot;, placement: :right) do %&gt;
-            &lt;span class=&quot;inline-flex text-[var(--surface-muted-content-color)] cursor-help&quot;&gt;
+            &lt;span class=&quot;inline-flex text-[var(--surface-muted-content-color)]&quot;&gt;
               &lt;%= render FlatPack::Shared::IconComponent.new(name: :lock, size: :sm) %&gt;
             &lt;/span&gt;
           &lt;% end %&gt;
@@ -153,7 +153,7 @@
         &lt;p class=&quot;text-[var(--surface-content-color)]&quot;&gt;
           This is a paragraph with an inline
           &lt;%= render FlatPack::Tooltip::Component.new(text: &quot;This inline tooltip provides additional context without interrupting the reading flow.&quot;, placement: :top) do %&gt;
-            &lt;span class=&quot;text-[var(--color-primary)] underline decoration-dotted cursor-help&quot;&gt;tooltip&lt;/span&gt;
+            &lt;span class=&quot;text-[var(--color-primary)] underline decoration-dotted&quot;&gt;tooltip&lt;/span&gt;
           &lt;% end %&gt;
           that provides more information.
         &lt;/p&gt;

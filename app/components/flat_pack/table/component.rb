@@ -111,7 +111,8 @@ module FlatPack
                 current_sort: @sort,
                 current_direction: @direction,
                 base_url: @base_url,
-                turbo_frame: @turbo_frame
+                turbo_frame: @turbo_frame,
+                render_context: view_context
               )
             })
           end
