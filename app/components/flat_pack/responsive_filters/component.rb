@@ -164,7 +164,7 @@ module FlatPack
         render FlatPack::Badge::Component.new(
           text: @active_count.to_s,
           style: :primary,
-          size: :sm
+          size: :xs
         )
       end
 

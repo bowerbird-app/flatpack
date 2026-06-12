@@ -36,6 +36,7 @@ module FlatPack
 
         assert_selector "div.md\\:hidden button span", text: "Filter"
         assert_selector "div.md\\:hidden button span.rounded-full", text: "2"
+        assert_includes page.native.to_html, "text-[10px]"
       end
 
       def test_includes_desktop_auto_submit_data_attributes

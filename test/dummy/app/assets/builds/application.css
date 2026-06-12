@@ -2272,6 +2272,9 @@
   .p-10 {
     padding: calc(var(--spacing) * 10);
   }
+  .p-\[0\.15rem\] {
+    padding: 0.15rem;
+  }
   .p-\[var\(--accordion-content-padding\)\] {
     padding: var(--accordion-content-padding);
   }

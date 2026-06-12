@@ -104,7 +104,7 @@
         active_count: @default_chart_filter_active_count,
         reset_url: demo_responsive_filter_path,
         desktop_form_class: "mb-4",
-        mobile_form_class: "space-y-4",
+        mobile_form_class: "space-y-4 p-[0.15rem]",
         mobile_fields_class: "grid gap-3"
       }
     ) %>
@@ -133,7 +133,8 @@
           responsive_options: {
             id: "responsive-filter-chart",
             form_url: demo_responsive_filter_path,
-            turbo_frame: "responsive-filter-chart-frame"
+            turbo_frame: "responsive-filter-chart-frame",
+            mobile_form_class: "space-y-4 p-[0.15rem]"
           }
         ) #{erb_tag_close}
 
@@ -164,7 +165,7 @@
       active_count: @responsive_table_filter_active_count,
       reset_url: demo_responsive_filter_path,
       desktop_form_class: "mb-4 flex flex-wrap items-end gap-3",
-      mobile_form_class: "space-y-3",
+      mobile_form_class: "space-y-3 p-[0.15rem]",
       auto_submit_delay: 300
     ) do |filters| %>
       <% filters.fields do %>
@@ -239,7 +240,7 @@
           active_count: @responsive_table_filter_active_count,
           reset_url: demo_responsive_filter_path,
           desktop_form_class: "mb-4 flex flex-wrap items-end gap-3",
-          mobile_form_class: "space-y-3",
+          mobile_form_class: "space-y-3 p-[0.15rem]",
           auto_submit_delay: 300
         ) do |filters| #{erb_tag_close}
           #{erb_open} filters.fields do #{erb_tag_close}

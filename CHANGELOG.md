@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Updated `FlatPack::ResponsiveFilters::Component` mobile trigger count badge to use `size: :xs`.
 - Added `:xs` size support to `FlatPack::Badge::Component`, including docs and component test coverage.
 - Added `FlatPack::ResponsiveFilters::Component` to provide a shared responsive filter surface with desktop inline controls and a mobile `Filter {count}` modal trigger.
 - Updated `FlatPack::Chart::DefaultFilterComponent` with opt-in responsive rendering (`responsive: true`) powered by `responsive_options`, so chart default filters can render desktop inline + mobile modal flows directly.
