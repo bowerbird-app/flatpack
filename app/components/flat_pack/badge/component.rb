@@ -17,8 +17,9 @@ module FlatPack
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "text-xs" "px-2.5" "py-1" "text-sm" "px-3" "text-base" "px-4" "py-2"
+      # "text-[10px]" "px-2" "py-0.5" "text-xs" "px-2.5" "py-1" "text-sm" "px-3" "text-base" "px-4" "py-2"
       SIZES = {
+        xs: "text-[10px] px-2 py-0.5",
         sm: "text-xs px-2.5 py-1",
         md: "text-sm px-3 py-1",
         lg: "text-base px-4 py-2"

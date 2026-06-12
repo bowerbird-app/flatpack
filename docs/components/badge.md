@@ -14,7 +14,7 @@ Use Badge to annotate items with short labels, status states, or counts.
 |---|---|---|---|---|
 | `text` | String | `nil` | yes | Badge text content. |
 | `style` | Symbol | `:default` | no | Variant style: `:default`, `:primary`, `:success`, `:warning`, `:danger`, `:info`; invalid values raise `ArgumentError`. |
-| `size` | Symbol | `:md` | no | Size: `:sm`, `:md`, `:lg`; invalid values raise `ArgumentError`. |
+| `size` | Symbol | `:md` | no | Size: `:xs`, `:sm`, `:md`, `:lg`; invalid values raise `ArgumentError`. |
 | `dot` | Boolean | `false` | no | Shows small leading dot indicator. |
 | `removable` | Boolean | `false` | no | Shows remove button and enables removable behavior. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for badge wrapper. |
@@ -24,7 +24,7 @@ None.
 
 ## Variants
 - Styles: `:default`, `:primary`, `:success`, `:warning`, `:danger`, `:info`.
-- Sizes: `:sm`, `:md`, `:lg`.
+- Sizes: `:xs`, `:sm`, `:md`, `:lg`.
 
 ## Example
 ```erb

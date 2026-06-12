@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Added `:xs` size support to `FlatPack::Badge::Component`.
 - Updated `FlatPack::Timestamp::Component` future relative copy from `X from now` to `In X` while preserving `X ago` for past timestamps.
 - Updated tooltip-related examples to stop using `cursor-help` by default, aligned tooltip demo code snippets with rendered examples, and removed default `cursor-help` styling from `FlatPack::Timestamp::Component` output.
 - Updated `FlatPack::Table::Column::Component` sortable header links to render a `Sort` tooltip on hover/focus via `FlatPack::Tooltip::Component`.

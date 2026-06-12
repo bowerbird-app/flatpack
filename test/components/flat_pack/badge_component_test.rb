@@ -61,6 +61,14 @@ module FlatPack
         assert_includes page.native.to_html, "px-2.5"
       end
 
+      def test_renders_extra_small_size
+        render_inline(Component.new(text: "Extra Small", size: :xs))
+
+        assert_selector "span", text: "Extra Small"
+        assert_includes page.native.to_html, "text-[10px]"
+        assert_includes page.native.to_html, "px-2"
+      end
+
       def test_renders_medium_size
         render_inline(Component.new(text: "Medium", size: :md))
 
