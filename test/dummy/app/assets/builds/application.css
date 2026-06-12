@@ -1563,9 +1563,6 @@
     --tw-border-style: dashed;
     border-style: dashed;
   }
-  .border-\(--border-color\) {
-    border-color: var(--border-color);
-  }
   .border-\(--surface-border-color\) {
     border-color: var(--surface-border-color);
   }
@@ -1761,23 +1758,20 @@
   .bg-\(--color-danger-background-color\) {
     background-color: var(--color-danger-background-color);
   }
+  .bg-\(--color-primary\) {
+    background-color: var(--color-primary);
+  }
   .bg-\(--color-success-background-color\) {
     background-color: var(--color-success-background-color);
   }
   .bg-\(--color-warning-background-color\) {
     background-color: var(--color-warning-background-color);
   }
-  .bg-\(--primary-color\) {
-    background-color: var(--primary-color);
-  }
   .bg-\(--surface-background-color\) {
     background-color: var(--surface-background-color);
   }
   .bg-\(--surface-muted-background-color\) {
     background-color: var(--surface-muted-background-color);
-  }
-  .bg-\(--surface-muted-color\) {
-    background-color: var(--surface-muted-color);
   }
   .bg-\(--surface-subtle-background-color\) {
     background-color: var(--surface-subtle-background-color);
@@ -3236,8 +3230,8 @@
     --tw-ring-shadow: var(--tw-ring-inset,) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
-  .ring-\(--primary-color\) {
-    --tw-ring-color: var(--primary-color);
+  .ring-\(--color-primary\) {
+    --tw-ring-color: var(--color-primary);
   }
   .ring-\[var\(--avatar-group-ring-color\)\] {
     --tw-ring-color: var(--avatar-group-ring-color);

@@ -24,6 +24,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `hide_labels` to `FlatPack::Chart::DefaultFilterComponent` so date range and status labels can be omitted in compact filter rows.
 - Renamed `FlatPack::Carousel::Component` option `quick_preview` to `side_preview` with no backward compatibility alias, including Stimulus values, tests, and docs.
 
+### Fixed
+- Updated `FlatPack::Picker` selection indicator utility classes to use the canonical `--color-primary` theme token instead of `--primary-color`, preventing missing primary token styling in host apps.
+
 ## [0.1.84] - 2026-06-10
 
 ### Added

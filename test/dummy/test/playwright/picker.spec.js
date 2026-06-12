@@ -17,7 +17,7 @@ test.describe("picker demos", () => {
     await expect(localModal).toBeVisible()
 
     await selectPickerRow(localModal, "Homepage Hero")
-    await expect(heroRow.locator("[data-picker-selection-indicator]")).toHaveClass(/bg-\(--primary-color\)/)
+    await expect(heroRow.locator("[data-picker-selection-indicator]")).toHaveClass(/bg-\(--color-primary\)/)
 
     await localModal.getByRole("button", { name: "Use Selection" }).click()
     await expect(lastPicker).toHaveText("picker-demo-local")
@@ -52,7 +52,7 @@ test.describe("picker demos", () => {
     await expect(autoConfirmModal).toBeVisible()
 
     await selectPickerRow(autoConfirmModal, "Homepage Hero")
-    await expect(heroRow.locator("[data-picker-selection-indicator]")).toHaveClass(/bg-\(--primary-color\)/)
+    await expect(heroRow.locator("[data-picker-selection-indicator]")).toHaveClass(/bg-\(--color-primary\)/)
 
     await expect(outputField).toHaveValue(/"id":"[^"]+"/)
     await expect(autoConfirmModal).toBeHidden()
@@ -120,10 +120,10 @@ test.describe("picker demos", () => {
 
     await expect(inlinePicker).toBeVisible()
     await expect(heroInput).toHaveClass(/sr-only/)
-    await expect(heroRow).toHaveClass(/hover:bg-\[var\(--list-item-hover-background-color\)\]/)
+    await expect(heroRow).toHaveClass(/hover:bg-\(--list-item-hover-background-color\)/)
     await expect(heroRow.locator("[data-picker-selection-indicator]")).toBeVisible()
     await selectPickerRow(inlinePicker, "Homepage Hero")
-    await expect(heroRow.locator("[data-picker-selection-indicator]")).toHaveClass(/bg-\(--primary-color\)/)
+    await expect(heroRow.locator("[data-picker-selection-indicator]")).toHaveClass(/bg-\(--color-primary\)/)
 
     await expect(outputField).toHaveValue(/"id":"[^"]+"/)
     await expect(inlinePicker).toBeVisible()
