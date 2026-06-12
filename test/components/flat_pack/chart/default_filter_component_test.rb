@@ -115,7 +115,8 @@ module FlatPack
           }
         ))
 
-        assert_selector "button", text: "Filter 1"
+        assert_selector "button span", text: "Filter"
+        assert_selector "button span.rounded-full", text: "1"
         assert_selector "div#chart-default-filter-modal"
         assert_selector "div.hidden.md\\:block form[data-turbo-frame='chart-default-filter-frame']"
       end

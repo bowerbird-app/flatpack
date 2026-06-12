@@ -18,6 +18,7 @@ module FlatPack
 
         assert_selector "div.hidden.md\\:block form[data-turbo-frame='basic-table-generic-filter-frame']"
         assert_selector "div.md\\:hidden button", text: "Filter"
+        assert_no_selector "div.md\\:hidden button span.rounded-full"
         assert_selector "div#table-filters-modal"
       end
 
@@ -33,7 +34,8 @@ module FlatPack
           end
         end
 
-        assert_selector "button", text: "Filter 2"
+        assert_selector "div.md\\:hidden button span", text: "Filter"
+        assert_selector "div.md\\:hidden button span.rounded-full", text: "2"
       end
 
       def test_includes_desktop_auto_submit_data_attributes

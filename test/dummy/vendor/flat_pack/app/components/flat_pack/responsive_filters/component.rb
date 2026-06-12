@@ -73,15 +73,16 @@ module FlatPack
 
       def render_mobile_trigger
         content_tag(:div, class: "md:hidden mb-3") do
-          render FlatPack::Button::Component.new(
-            text: filter_button_text,
-            style: :secondary,
-            size: :sm,
+          button_tag(
+            type: "button",
+            class: mobile_trigger_button_classes,
             data: {
               action: "click->flat-pack--modal#open",
               "modal-id": modal_id
             }
-          )
+          ) do
+            mobile_trigger_content
+          end
         end
       end
 
@@ -153,10 +154,32 @@ module FlatPack
         )
       end
 
-      def filter_button_text
-        return @trigger_label if @active_count.zero?
+      def mobile_trigger_content
+        content = [content_tag(:span, @trigger_label)]
+        content << render_mobile_count_badge unless @active_count.zero?
+        safe_join(content)
+      end
 
-        "#{@trigger_label} #{@active_count}"
+      def render_mobile_count_badge
+        render FlatPack::Badge::Component.new(
+          text: @active_count.to_s,
+          style: :primary,
+          size: :sm
+        )
+      end
+
+      def mobile_trigger_button_classes
+        classes(
+          "inline-flex items-center justify-center gap-2",
+          "rounded-[var(--button-border-radius)]",
+          "font-medium",
+          "cursor-pointer",
+          "transition-colors duration-base",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--button-focus-ring-offset-color)]",
+          "disabled:pointer-events-none disabled:opacity-[var(--button-disabled-opacity)]",
+          "px-[var(--button-padding-x-sm)] py-[var(--button-padding-y-sm)] text-xs",
+          "bg-[var(--button-secondary-background-color)] hover:bg-[var(--button-secondary-hover-background-color)] text-[var(--button-secondary-text-color)] border border-[var(--button-secondary-border-color)]"
+        )
       end
 
       def desktop_form_data

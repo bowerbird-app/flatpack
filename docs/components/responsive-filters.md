@@ -1,7 +1,7 @@
 # Responsive Filters
 
 ## Purpose
-Render one reusable filter definition as desktop inline controls and a mobile modal flow, with a mobile trigger label that can include an active-filter count.
+Render one reusable filter definition as desktop inline controls and a mobile modal flow, with a mobile trigger label that can include an active-filter count badge.
 
 ## When to use
 Use this when a chart or table should keep one result surface while filter controls switch presentation by viewport:
@@ -20,7 +20,7 @@ For chart default filtering, prefer `FlatPack::Chart::DefaultFilterComponent` wi
 | `form_url` | String | - | yes | Form submission URL for both desktop and mobile flows. |
 | `turbo_frame` | String | - | yes | Turbo Frame target for filter submissions. |
 | `form_method` | Symbol, String | `:get` | no | Form method used by desktop and mobile forms. |
-| `active_count` | Integer | `0` | no | Count shown on mobile trigger when greater than zero. |
+| `active_count` | Integer | `0` | no | Count shown in a primary small badge on the mobile trigger when greater than zero. |
 | `trigger_label` | String | `"Filter"` | no | Base text for the mobile trigger button. |
 | `modal_title` | String | `"Filters"` | no | Modal heading text. |
 | `submit_label` | String | `"Apply"` | no | Mobile submit button label. |

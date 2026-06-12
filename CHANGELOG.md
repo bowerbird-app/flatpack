@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `FlatPack::ResponsiveFilters::Component` to provide a shared responsive filter surface with desktop inline controls and a mobile `Filter {count}` modal trigger.
 - Updated `FlatPack::Chart::DefaultFilterComponent` with opt-in responsive rendering (`responsive: true`) powered by `responsive_options`, so chart default filters can render desktop inline + mobile modal flows directly.
 - Updated `/demo/charts/default_filter` to use `FlatPack::Chart::DefaultFilterComponent` in responsive mode so desktop keeps inline auto-submit controls while mobile uses an Apply-based modal flow.
+- Added `/demo/responsive_filter` and a Data Display sidebar link above Tables to demonstrate responsive filter patterns with one chart example and one table example, including variable reference and code snippets.
 - Updated `/demo/tables/basic` generic filter demo to use responsive filters with the same table result surface across desktop and mobile.
 - Updated `FlatPack::TopNav::Component` to always render left, center, and right wrappers even when a slot is uninitialized/blank, preserving stable horizontal positioning; added regression tests and blank-slot documentation examples.
 - Updated `FlatPack::Timestamp::Component` future relative copy from `X from now` to `In X` while preserving `X ago` for past timestamps.
