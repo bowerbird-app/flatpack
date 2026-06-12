@@ -29,6 +29,7 @@ Use Comments Thread as the root wrapper for page-level comment sections.
 ## Variants
 - Spacing variants: `:default`, `:compact`.
  
+## Example
 
 ```erb
 <%= render FlatPack::Comments::Thread::Component.new(count: @comments.count, title: "Discussion") do |thread| %>

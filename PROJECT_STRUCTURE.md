@@ -6,11 +6,11 @@ This document summarizes the current FlatPack repository layout and the files th
 
 **FlatPack** is a Rails engine that ships ViewComponent-based UI components, Tailwind CSS 4 token styling, Propshaft-served assets, and importmap-friendly JavaScript.
 
-**Version:** 0.1.69
+**Version:** 0.1.90
 **License:** MIT  
 **Ruby:** 3.2+  
 **Supported host apps:** Rails 7.1+  
-**Last Updated:** 2026-05-28
+**Last Updated:** 2026-06-12
 
 ## Repository Layout
 
@@ -45,6 +45,8 @@ flat_pack/
 │   │   ├── comments/
 │   │   ├── content_editor/
 │   │   ├── date_input/
+│   │   ├── date_range_input/
+│   │   ├── date_time_input/
 │   │   ├── email_input/
 │   │   ├── empty_state/
 │   │   ├── file_input/
@@ -56,6 +58,7 @@ flat_pack/
 │   │   ├── navbar/
 │   │   ├── number_input/
 │   │   ├── page_header/
+│   │   ├── page_nav/
 │   │   ├── page_title/
 │   │   ├── pagination/
 │   │   ├── pagination_infinite/
@@ -81,11 +84,14 @@ flat_pack/
 │   │   ├── tabs/
 │   │   ├── text_area/
 │   │   ├── text_input/
+│   │   ├── time_input/
 │   │   ├── timeline/
+│   │   ├── timestamp/
 │   │   ├── toast/
 │   │   ├── toasts/
 │   │   ├── tooltip/
 │   │   ├── top_nav/
+│   │   ├── tree/
 │   │   ├── url_input/
 │   │   ├── INPUT_COMPONENTS.md
 │   │   └── base_component.rb
@@ -93,6 +99,7 @@ flat_pack/
 │       ├── controllers/
 │       │   ├── accordion_controller.js
 │       │   ├── alert_controller.js
+│       │   ├── auto_submit_controller.js
 │       │   ├── badge_controller.js
 │       │   ├── button_dropdown_controller.js
 │       │   ├── carousel_controller.js
@@ -110,12 +117,15 @@ flat_pack/
 │       │   ├── content_editor_controller.js
 │       │   ├── date_input_controller.js
 │       │   ├── file_input_controller.js
+│       │   ├── flatpack_date_picker_controller.js
 │       │   ├── form_validation_controller.js
 │       │   ├── grid_sortable_controller.js
 │       │   ├── icon_controller.js
+│       │   ├── list_orderable_controller.js
 │       │   ├── list_selectable_controller.js
 │       │   ├── modal_controller.js
 │       │   ├── navbar_controller.js
+│       │   ├── page_nav_controller.js
 │       │   ├── pagination_infinite_controller.js
 │       │   ├── password_input_controller.js
 │       │   ├── picker_controller.js
@@ -134,7 +144,9 @@ flat_pack/
 │       │   ├── table_sortable_controller.js
 │       │   ├── tabs_controller.js
 │       │   ├── text_area_controller.js
+│       │   ├── text_input_controller.js
 │       │   ├── theme_controller.js
+│       │   ├── timestamp_controller.js
 │       │   ├── tiptap_controller.js
 │       │   ├── toast_controller.js
 │       │   ├── toasts_region_controller.js
@@ -159,7 +171,9 @@ flat_pack/
 │   │   ├── README.md
 │   │   ├── manifest.yml
 │   │   └── *.md
+│   ├── custom_theming.md
 │   ├── dark_mode.md
+│   ├── deployment_digitalocean.md
 │   ├── installation.md
 │   ├── security.md
 │   └── theming.md
