@@ -873,14 +873,26 @@ class PagesController < ApplicationController
   private
 
   def load_default_chart_filter_demo
-    @default_chart_filter_start_date = params[:start_date].presence || 30.days.ago.to_date.iso8601
-    @default_chart_filter_end_date = params[:end_date].presence || Date.current.iso8601
+    @default_chart_filter_default_start_date = 30.days.ago.to_date.iso8601
+    @default_chart_filter_default_end_date = Date.current.iso8601
+
+    @default_chart_filter_start_date = params[:start_date].presence || @default_chart_filter_default_start_date
+    @default_chart_filter_end_date = params[:end_date].presence || @default_chart_filter_default_end_date
     @default_chart_filter_status = params[:status].to_s.presence
     @default_chart_filter_status_lists = [
       ["Active", "active"],
       ["Paused", "paused"],
       ["Archived", "archived"]
     ]
+
+    @default_chart_filter_active_count = 0
+    @default_chart_filter_active_count += 1 if @default_chart_filter_start_date != @default_chart_filter_default_start_date ||
+      @default_chart_filter_end_date != @default_chart_filter_default_end_date
+    @default_chart_filter_active_count += 1 if @default_chart_filter_status.present?
+
+    @default_chart_filter_active_count_without_status = 0
+    @default_chart_filter_active_count_without_status += 1 if @default_chart_filter_start_date != @default_chart_filter_default_start_date ||
+      @default_chart_filter_end_date != @default_chart_filter_default_end_date
   end
 
   def cached_component_index
@@ -1695,22 +1707,41 @@ class PagesController < ApplicationController
   end
 
   def load_table_generic_filter_demo_data
-    @table_filter_definitions = table_filter_definitions
-    @table_filter_field = if @table_filter_definitions.key?(params[:filter_field].to_s)
-      params[:filter_field].to_s
-    else
-      "category"
-    end
+    @table_filter_default_category = "all"
+    @table_filter_default_status = "all"
+    @table_filter_default_value = "all"
+    @table_filter_default_search_query = ""
 
-    selected_values = @table_filter_definitions.fetch(@table_filter_field).fetch(:values)
-    requested_filter_value = params[:filter_value].to_s
-    @table_filter_value = selected_values.key?(requested_filter_value) ? requested_filter_value : "all"
+    @table_filter_definitions = table_filter_definitions
+    requested_category = params[:category].to_s
+    requested_status = params[:status].to_s
+    @table_filter_category = table_category_values.key?(requested_category) ? requested_category : @table_filter_default_category
+    @table_filter_status = table_status_values.key?(requested_status) ? requested_status : @table_filter_default_status
     @table_search_query = params[:q].to_s.strip
 
-    @table_filtered_users = apply_table_filter_and_search(
+    @table_filter_active_count = 0
+    @table_filter_active_count += 1 if @table_filter_category != @table_filter_default_category
+    @table_filter_active_count += 1 if @table_filter_status != @table_filter_default_status
+    @table_filter_active_count += 1 if @table_search_query != @table_filter_default_search_query
+
+    filtered_users = apply_table_filter_and_search(
       @users,
-      filter_field: @table_filter_field,
-      filter_value: @table_filter_value,
+      filter_field: "category",
+      filter_value: @table_filter_category,
+      query: ""
+    )
+
+    filtered_users = apply_table_filter_and_search(
+      filtered_users,
+      filter_field: "status",
+      filter_value: @table_filter_status,
+      query: ""
+    )
+
+    @table_filtered_users = apply_table_filter_and_search(
+      filtered_users,
+      filter_field: "category",
+      filter_value: "all",
       query: @table_search_query
     )
   end

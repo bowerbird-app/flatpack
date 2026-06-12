@@ -6,6 +6,7 @@ Render ApexCharts-based visualizations with FlatPack defaults and optional card 
 ## When to use
 Use this for dashboard and analytics charts when data is available in ApexCharts-compatible series format.
 Use `FlatPack::ChartButtons::Component` as a sibling when you need reusable Turbo Frame filter controls outside the chart card header.
+Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status filtering, and enable `responsive: true` when you want built-in desktop/mobile filter presentation.
 
 ## Class
 - `FlatPack::Chart::Component`
@@ -47,8 +48,28 @@ Use `FlatPack::ChartButtons::Component` as a sibling when you need reusable Turb
 | `status_name` | String | `"status"` | no | Form param name for the status select input. |
 | `status` | String, nil | `nil` | no | Selected status value. |
 | `status_lists` | Array, Hash | — | yes | Select options in any `FlatPack::Select::Component`-supported format. |
-| `status_placeholder` | String, nil | `"All statuses"` | no | Placeholder option label for the status select. |
+| `status_placeholder` | String, nil | `"All"` | no | Placeholder option label for the status select. |
 | `hide_labels` | Boolean | `false` | no | When true, omits rendering the Date Range and Status form labels. |
+| `responsive` | Boolean | `false` | no | When true, renders through `FlatPack::ResponsiveFilters::Component` internally. |
+| `responsive_options` | Hash | `{}` | no | Required when `responsive: true`; must include `form_url` and `turbo_frame`. |
+
+### DefaultFilter responsive_options
+| key | type | required | description |
+| --- | --- | --- | --- |
+| `form_url` | String | yes | Form submission URL for desktop and mobile filter flows. |
+| `turbo_frame` | String | yes | Turbo Frame target for filter submissions. |
+| `id` | String | no | Base id for generated modal/form ids. Defaults to `"chart-default-filter"`. |
+| `active_count` | Integer | no | Mobile trigger count (`Filter {count}`). |
+| `reset_url` | String, nil | no | Optional reset link rendered in mobile modal actions. |
+| `trigger_label` | String | no | Mobile trigger label. Default: `"Filter"`. |
+| `modal_title` | String | no | Mobile modal title. Default: `"Filters"`. |
+| `submit_label` | String | no | Mobile apply label. Default: `"Apply"`. |
+| `reset_label` | String | no | Mobile reset label. Default: `"Reset"`. |
+| `auto_submit_desktop` | Boolean | no | Enables debounced auto-submit on desktop form. Default: `true`. |
+| `auto_submit_delay` | Integer | no | Debounce delay for desktop form submit. Default: `250`. |
+| `desktop_form_class` | String, nil | no | Extra classes for desktop form element. |
+| `mobile_form_class` | String, nil | no | Extra classes for mobile form element. |
+| `mobile_fields_class` | String | no | Extra classes for internally generated mobile fields wrapper. Default: `"grid gap-3"`. |
 
 ## Example
 ```erb
@@ -97,6 +118,25 @@ Use `FlatPack::ChartButtons::Component` as a sibling when you need reusable Turb
 
   <%= render FlatPack::Button::Component.new(text: "Apply filters", type: "submit", size: :sm) %>
 <% end %>
+```
+
+```erb
+<%= render FlatPack::Chart::DefaultFilterComponent.new(
+  start_date_value: params[:start_date],
+  end_date_value: params[:end_date],
+  status: params[:status],
+  status_lists: [["Active", "active"], ["Paused", "paused"], ["Archived", "archived"]],
+  responsive: true,
+  responsive_options: {
+    id: "chart-default-filter",
+    form_url: demo_charts_default_filter_path,
+    turbo_frame: "chart-default-filter-frame",
+    active_count: @default_chart_filter_active_count,
+    reset_url: demo_charts_default_filter_path,
+    desktop_form_class: "mb-4",
+    mobile_form_class: "space-y-4"
+  }
+) %>
 ```
 
 ```erb

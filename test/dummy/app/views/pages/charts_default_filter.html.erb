@@ -17,24 +17,23 @@
   ) %>
 
   <%= turbo_frame_tag "chart-default-filter-frame" do %>
-    <%= form_with(
-      url: demo_charts_default_filter_path,
-      method: :get,
-      class: "mb-4",
-      data: {
+    <%= render FlatPack::Chart::DefaultFilterComponent.new(
+      start_date_value: @default_chart_filter_start_date,
+      end_date_value: @default_chart_filter_end_date,
+      status: @default_chart_filter_status,
+      status_lists: @default_chart_filter_status_lists,
+      responsive: true,
+      responsive_options: {
+        id: "chart-default-filter",
+        form_url: demo_charts_default_filter_path,
         turbo_frame: "chart-default-filter-frame",
-        controller: "flat-pack--auto-submit",
-        action: "input->flat-pack--auto-submit#queueSubmit change->flat-pack--auto-submit#queueSubmit",
-        flat_pack__auto_submit_delay_value: 250
+        active_count: @default_chart_filter_active_count,
+        reset_url: demo_charts_default_filter_path,
+        desktop_form_class: "mb-4",
+        mobile_form_class: "space-y-4",
+        mobile_fields_class: "grid gap-3"
       }
-    ) do %>
-      <%= render FlatPack::Chart::DefaultFilterComponent.new(
-        start_date_value: @default_chart_filter_start_date,
-        end_date_value: @default_chart_filter_end_date,
-        status: @default_chart_filter_status,
-        status_lists: @default_chart_filter_status_lists
-      ) %>
-    <% end %>
+    ) %>
   <% end %>
 
   <%
@@ -78,6 +77,16 @@
         variable: "hide_labels",
         accepts: "Boolean (default: false)",
         example: "hide_labels: true"
+      },
+      {
+        variable: "responsive",
+        accepts: "Boolean (default: false)",
+        example: "responsive: true"
+      },
+      {
+        variable: "responsive_options",
+        accepts: "Hash (required when responsive: true)",
+        example: '{ form_url: demo_charts_default_filter_path, turbo_frame: "chart-default-filter-frame" }'
       }
     ]
   %>
@@ -93,23 +102,18 @@
     language: "erb",
     code: <<~CODE
       #{erb_output_open} turbo_frame_tag "chart-default-filter-frame" do #{erb_tag_close}
-        #{erb_output_open} form_with(
-          url: demo_charts_default_filter_path,
-          method: :get,
-          data: {
-            turbo_frame: "chart-default-filter-frame",
-            controller: "flat-pack--auto-submit",
-            action: "input->flat-pack--auto-submit#queueSubmit change->flat-pack--auto-submit#queueSubmit"
-          }
-        ) do #{erb_tag_close}
         #{erb_output_open} render FlatPack::Chart::DefaultFilterComponent.new(
           start_date_value: params[:start_date],
           end_date_value: params[:end_date],
           status: params[:status],
           status_lists: [["Active", "active"], ["Paused", "paused"], ["Archived", "archived"]],
-          hide_labels: true
+          responsive: true,
+          responsive_options: {
+            id: "chart-default-filter",
+            form_url: demo_charts_default_filter_path,
+            turbo_frame: "chart-default-filter-frame"
+          }
         ) #{erb_tag_close}
-        #{erb_open} end #{erb_tag_close}
       #{erb_open} end #{erb_tag_close}
     CODE
   ) %>
@@ -120,25 +124,24 @@
   ) %>
 
   <%= turbo_frame_tag "chart-default-filter-hidden-labels-frame" do %>
-    <%= form_with(
-      url: demo_charts_default_filter_path,
-      method: :get,
-      class: "mb-4",
-      data: {
+    <%= render FlatPack::Chart::DefaultFilterComponent.new(
+      start_date_value: @default_chart_filter_start_date,
+      end_date_value: @default_chart_filter_end_date,
+      status: @default_chart_filter_status,
+      status_lists: @default_chart_filter_status_lists,
+      hide_labels: true,
+      responsive: true,
+      responsive_options: {
+        id: "chart-default-filter-hidden-labels",
+        form_url: demo_charts_default_filter_path,
         turbo_frame: "chart-default-filter-hidden-labels-frame",
-        controller: "flat-pack--auto-submit",
-        action: "input->flat-pack--auto-submit#queueSubmit change->flat-pack--auto-submit#queueSubmit",
-        flat_pack__auto_submit_delay_value: 250
+        active_count: @default_chart_filter_active_count,
+        reset_url: demo_charts_default_filter_path,
+        desktop_form_class: "mb-4",
+        mobile_form_class: "space-y-4",
+        mobile_fields_class: "grid gap-3"
       }
-    ) do %>
-      <%= render FlatPack::Chart::DefaultFilterComponent.new(
-        start_date_value: @default_chart_filter_start_date,
-        end_date_value: @default_chart_filter_end_date,
-        status: @default_chart_filter_status,
-        status_lists: @default_chart_filter_status_lists,
-        hide_labels: true
-      ) %>
-    <% end %>
+    ) %>
   <% end %>
 
   <%= render FlatPack::CodeBlock::Component.new(
@@ -173,24 +176,23 @@
   ) %>
 
   <%= turbo_frame_tag "chart-default-filter-no-status-frame" do %>
-    <%= form_with(
-      url: demo_charts_default_filter_path,
-      method: :get,
-      class: "mb-4",
-      data: {
+    <%= render FlatPack::Chart::DefaultFilterComponent.new(
+      start_date_value: @default_chart_filter_start_date,
+      end_date_value: @default_chart_filter_end_date,
+      status_name: nil,
+      status_lists: @default_chart_filter_status_lists,
+      responsive: true,
+      responsive_options: {
+        id: "chart-default-filter-no-status",
+        form_url: demo_charts_default_filter_path,
         turbo_frame: "chart-default-filter-no-status-frame",
-        controller: "flat-pack--auto-submit",
-        action: "input->flat-pack--auto-submit#queueSubmit change->flat-pack--auto-submit#queueSubmit",
-        flat_pack__auto_submit_delay_value: 250
+        active_count: @default_chart_filter_active_count_without_status,
+        reset_url: demo_charts_default_filter_path,
+        desktop_form_class: "mb-4",
+        mobile_form_class: "space-y-4",
+        mobile_fields_class: "grid gap-3"
       }
-    ) do %>
-      <%= render FlatPack::Chart::DefaultFilterComponent.new(
-        start_date_value: @default_chart_filter_start_date,
-        end_date_value: @default_chart_filter_end_date,
-        status_name: nil,
-        status_lists: @default_chart_filter_status_lists
-      ) %>
-    <% end %>
+    ) %>
   <% end %>
 
   <%= render FlatPack::CodeBlock::Component.new(
