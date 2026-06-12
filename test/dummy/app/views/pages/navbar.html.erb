@@ -5,9 +5,9 @@
 <%= render "pages/component_method_variables_table", component: :top_nav %>
 
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Left Slot", anchor_link: true, subtitle: "Examples for Left Slot.") %>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Called Full Example", anchor_link: true, subtitle: "All slots defined.") %>
   <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">
-    Use the left slot for navigation controls like a mobile menu toggle, back button, and page title.
+    Baseline example with left, center, and right slots all defined.
   </p>
   <div class="rounded-lg overflow-hidden mb-4">
     <%= render FlatPack::TopNav::Component.new(class: "relative rounded-lg border border-[var(--surface-border-color)]") do |nav| %>
@@ -74,24 +74,18 @@
 </section>
 
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Center Slot", anchor_link: true, subtitle: "Examples for Center Slot.") %>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Left + Right Slots (Blank Center)", anchor_link: true, subtitle: "Center slot is undefined.") %>
   <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">
-    Use the center slot for search, tabs, or any content that should stay visually centered.
+    The center wrapper still renders even when <code>nav.center</code> is not defined.
   </p>
   <div class="rounded-lg overflow-hidden mb-4">
     <%= render FlatPack::TopNav::Component.new(class: "relative rounded-lg border border-[var(--surface-border-color)]") do |nav| %>
       <% nav.left do %>
-        <h3 class="text-base font-semibold">Projects</h3>
-      <% end %>
-
-      <% nav.center do %>
-        <%= render FlatPack::Search::Component.new(
-          placeholder: "Search projects, files, or people..."
-        ) %>
+        <h3 class="text-base font-semibold">Dashboard</h3>
       <% end %>
 
       <% nav.right do %>
-        <%= render FlatPack::Button::Component.new(text: "New", size: :sm, style: :primary) %>
+        <%= render FlatPack::Button::Component.new(text: "Create", size: :sm, style: :primary) %>
       <% end %>
     <% end %>
   </div>
@@ -99,17 +93,11 @@
     code: CGI.unescapeHTML(<<~'CODE')
       &lt;%= render FlatPack::TopNav::Component.new do |nav| %&gt;
         &lt;% nav.left do %&gt;
-          <h3 class="text-base font-semibold">Projects</h3>
-        &lt;% end %&gt;
-      
-        &lt;% nav.center do %&gt;
-          &lt;%= render FlatPack::Search::Component.new(
-            placeholder: "Search projects, files, or people..."
-          ) %&gt;
+          <h3 class="text-base font-semibold">Dashboard</h3>
         &lt;% end %&gt;
       
         &lt;% nav.right do %&gt;
-          &lt;%= render FlatPack::Button::Component.new(text: "New", size: :sm, style: :primary) %&gt;
+          &lt;%= render FlatPack::Button::Component.new(text: "Create", size: :sm, style: :primary) %&gt;
         &lt;% end %&gt;
       &lt;% end %&gt;
     CODE
@@ -117,9 +105,44 @@
 </section>
 
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Right Slot", anchor_link: true, subtitle: "Examples for Right Slot.") %>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Center + Right Slots (Blank Left)", anchor_link: true, subtitle: "Left slot is undefined.") %>
   <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">
-    Use the right slot for user actions like notifications, settings, profile, and quick-create actions.
+    The left wrapper still renders even when <code>nav.left</code> is not defined.
+  </p>
+  <div class="rounded-lg overflow-hidden mb-4">
+    <%= render FlatPack::TopNav::Component.new(class: "relative rounded-lg border border-[var(--surface-border-color)]") do |nav| %>
+      <% nav.center do %>
+        <%= render FlatPack::Search::Component.new(
+          placeholder: "Search workspace..."
+        ) %>
+      <% end %>
+
+      <% nav.right do %>
+        <%= render FlatPack::Button::Component.new(text: "Export", size: :sm, style: :primary) %>
+      <% end %>
+    <% end %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::TopNav::Component.new do |nav| %&gt;
+        &lt;% nav.center do %&gt;
+          &lt;%= render FlatPack::Search::Component.new(
+            placeholder: "Search workspace..."
+          ) %&gt;
+        &lt;% end %&gt;
+      
+        &lt;% nav.right do %&gt;
+          &lt;%= render FlatPack::Button::Component.new(text: "Export", size: :sm, style: :primary) %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Left + Center Slots (Blank Right)", anchor_link: true, subtitle: "Right slot is undefined.") %>
+  <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">
+    The right wrapper still renders even when <code>nav.right</code> is not defined.
   </p>
   <div class="rounded-lg overflow-hidden mb-4">
     <%= render FlatPack::TopNav::Component.new(class: "relative rounded-lg border border-[var(--surface-border-color)]") do |nav| %>
@@ -128,29 +151,9 @@
       <% end %>
 
       <% nav.center do %>
-        <div class="text-sm text-[var(--surface-muted-content-color)]">Overview</div>
-      <% end %>
-
-      <% nav.right do %>
-        <div class="flex items-center gap-2">
-          <%= render FlatPack::Button::Component.new(
-            icon: "question",
-            icon_only: true,
-            style: :ghost,
-            size: :md,
-            aria: { label: "Help" },
-            class: "border-0 shadow-none hover:bg-[var(--surface-muted-background-color)] transition-colors"
-          ) %>
-          <%= render FlatPack::Button::Component.new(
-            icon: "cog",
-            icon_only: true,
-            style: :ghost,
-            size: :md,
-            aria: { label: "Settings" },
-            class: "border-0 shadow-none hover:bg-[var(--surface-muted-background-color)] transition-colors"
-          ) %>
-          <%= render FlatPack::Avatar::Component.new(name: "Alex Brown", initials: "AB", size: :sm) %>
-        </div>
+        <%= render FlatPack::Search::Component.new(
+          placeholder: "Search reports..."
+        ) %>
       <% end %>
     <% end %>
   </div>
@@ -160,31 +163,34 @@
         &lt;% nav.left do %&gt;
           <h3 class="text-base font-semibold">Workspace</h3>
         &lt;% end %&gt;
-      
+
         &lt;% nav.center do %&gt;
-          <div class="text-sm text-[var(--surface-muted-content-color)]">Overview</div>
+          &lt;%= render FlatPack::Search::Component.new(
+            placeholder: "Search reports..."
+          ) %&gt;
         &lt;% end %&gt;
-      
+      &lt;% end %&gt;
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Only Right Slot (Blank Left and Center)", anchor_link: true, subtitle: "Left and center slots are undefined.") %>
+  <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">
+    Only <code>nav.right</code> is defined. Left and center remain undefined and render as blank wrappers.
+  </p>
+  <div class="rounded-lg overflow-hidden mb-4">
+    <%= render FlatPack::TopNav::Component.new(class: "relative rounded-lg border border-[var(--surface-border-color)]") do |nav| %>
+      <% nav.right do %>
+        <%= render FlatPack::Button::Component.new(text: "Save", size: :sm, style: :primary) %>
+      <% end %>
+    <% end %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::TopNav::Component.new do |nav| %&gt;
         &lt;% nav.right do %&gt;
-          <div class="flex items-center gap-2">
-            &lt;%= render FlatPack::Button::Component.new(
-              icon: &quot;question&quot;,
-              icon_only: true,
-              style: :ghost,
-              size: :md,
-              aria: { label: &quot;Help&quot; },
-              class: &quot;border-0 shadow-none hover:bg-[var(--surface-muted-background-color)]&quot;
-            ) %&gt;
-            &lt;%= render FlatPack::Button::Component.new(
-              icon: &quot;cog&quot;,
-              icon_only: true,
-              style: :ghost,
-              size: :md,
-              aria: { label: &quot;Settings&quot; },
-              class: &quot;border-0 shadow-none hover:bg-[var(--surface-muted-background-color)]&quot;
-            ) %&gt;
-            &lt;%= render FlatPack::Avatar::Component.new(name: &quot;Alex Brown&quot;, initials: &quot;AB&quot;, size: :sm) %&gt;
-          </div>
+          &lt;%= render FlatPack::Button::Component.new(text: "Save", size: :sm, style: :primary) %&gt;
         &lt;% end %&gt;
       &lt;% end %&gt;
     CODE
@@ -194,7 +200,7 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Alignment Rules", anchor_link: true, subtitle: "Examples for Alignment Rules.") %>
   <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">
-    <code>left</code> is start-aligned, <code>center</code> is flexed and centered, and <code>right</code> sits at the far edge when center is present.
+    <code>left</code> is start-aligned, <code>center</code> is flexed and centered, and <code>right</code> sits at the far edge. Wrappers remain present even when a slot is undefined.
   </p>
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE')

@@ -23,6 +23,8 @@ Use TopNav in app shells for page context, global actions, and optional search o
 | `center` | block slot | No | Center wrapper (`h-full flex-1 flex items-center justify-center`). |
 | `right` | block slot | No | Right-aligned content wrapper (`h-full flex items-center gap-2`). |
 
+TopNav always renders all three wrappers (`left`, `center`, `right`) even if one slot is blank or uninitialized. This keeps horizontal alignment stable across pages and states.
+
 ## Variants
 None.
 
@@ -42,6 +44,50 @@ None.
 
   <% nav.right do %>
     <button type="button" class="p-2 rounded-lg">Alerts</button>
+  <% end %>
+<% end %>
+```
+
+## Blank Slot Examples
+
+### 1) Left is uninitialized/blank
+
+```erb
+<%= render FlatPack::TopNav::Component.new do |nav| %>
+  <% nav.center do %>
+    <%= render FlatPack::Search::Component.new(placeholder: "Search...") %>
+  <% end %>
+
+  <% nav.right do %>
+    <button type="button" class="p-2 rounded-lg">Alerts</button>
+  <% end %>
+<% end %>
+```
+
+### 2) Center is uninitialized/blank
+
+```erb
+<%= render FlatPack::TopNav::Component.new do |nav| %>
+  <% nav.left do %>
+    <h1 class="text-lg font-semibold">Dashboard</h1>
+  <% end %>
+
+  <% nav.right do %>
+    <button type="button" class="p-2 rounded-lg">Alerts</button>
+  <% end %>
+<% end %>
+```
+
+### 3) Right is uninitialized/blank
+
+```erb
+<%= render FlatPack::TopNav::Component.new do |nav| %>
+  <% nav.left do %>
+    <h1 class="text-lg font-semibold">Dashboard</h1>
+  <% end %>
+
+  <% nav.center do %>
+    <%= render FlatPack::Search::Component.new(placeholder: "Search...") %>
   <% end %>
 <% end %>
 ```

@@ -45,10 +45,10 @@ module FlatPack
         content_tag(:header, **header_attributes) do
           content_tag(:div, class: container_classes) do
             safe_join([
-              (render_section(left, "left") if left?),
-              (render_section(center, "center") if center?),
-              (render_section(right, "right") if right?)
-            ].compact)
+              render_section(left, "left"),
+              render_section(center, "center"),
+              render_section(right, "right")
+            ])
           end
         end
       end
@@ -90,11 +90,11 @@ module FlatPack
       def section_classes(alignment)
         case alignment
         when "left"
-          "h-full flex items-center gap-2"
+          "h-full min-w-[30%] flex items-center gap-2"
         when "center"
-          "h-full flex-1 flex items-center justify-center"
+          "h-full min-w-[30%] flex-1 flex items-center justify-center"
         when "right"
-          "h-full flex items-center gap-2"
+          "h-full min-w-[30%] flex items-center justify-end gap-2"
         end
       end
     end
