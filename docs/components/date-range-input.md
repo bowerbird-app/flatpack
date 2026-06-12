@@ -49,6 +49,11 @@ None.
 - Error state sets `aria-invalid="true"` and links to inline error text with `aria-describedby`.
 - Submitted values are stored in hidden `start_name`/`end_name` fields so forms post a predictable date pair.
 
+## Display behavior
+- Selecting a quick preset (for example `Last week`) shows that preset label in the trigger field after Apply.
+- Custom ranges chosen in the calendar continue to display as `YYYY-MM-DD to YYYY-MM-DD`.
+- On first render, if `start_value` and `end_value` match a known quick preset range for today, the trigger displays that preset label.
+
 ## Dependencies
 - Stimulus controller: `app/javascript/flat_pack/controllers/flatpack_date_picker_controller.js`.
 - Uses `FlatPack::Button::Component` for preset, calendar navigation, and action controls.

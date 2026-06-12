@@ -239,6 +239,8 @@ module FlatPack
           "flat-pack--flatpack-date-picker-max-value": @max,
           "flat-pack--flatpack-date-picker-start-value": @start_value,
           "flat-pack--flatpack-date-picker-end-value": @end_value,
+          "flat-pack--flatpack-date-picker-preset-labels-value": quick_range_presets.index_by { |preset| preset[:key] }.transform_values { |preset| preset[:label] },
+          "flat-pack--flatpack-date-picker-preset-key-value": initial_preset_key,
           "flat-pack--flatpack-date-picker-panel-id-value": panel_id
         ).compact
       end
@@ -398,7 +400,60 @@ module FlatPack
       def initial_display_value
         return nil if @start_value.blank? || @end_value.blank?
 
+        preset = quick_range_presets.find { |candidate| candidate[:key] == initial_preset_key }
+        return preset[:label] if preset
+
         "#{@start_value} to #{@end_value}"
+      end
+
+      def initial_preset_key
+        return nil if @start_value.blank? || @end_value.blank?
+
+        quick_range_presets.find do |preset|
+          range = preset_range_for(preset[:key])
+          range[:start] == @start_value && range[:end] == @end_value
+        end&.dig(:key)
+      end
+
+      def preset_range_for(key)
+        today = Date.current
+
+        case key
+        when "today"
+          {start: today.iso8601, end: today.iso8601}
+        when "yesterday"
+          yesterday = (today - 1.day)
+          {start: yesterday.iso8601, end: yesterday.iso8601}
+        when "last_3_days"
+          {start: (today - 2.days).iso8601, end: today.iso8601}
+        when "this_week"
+          week_start = start_of_week(today)
+          {start: week_start.iso8601, end: today.iso8601}
+        when "last_week"
+          this_week_start = start_of_week(today)
+          week_end = this_week_start - 1.day
+          week_start = start_of_week(week_end)
+          {start: week_start.iso8601, end: week_end.iso8601}
+        when "this_month"
+          month_start = Date.new(today.year, today.month, 1)
+          {start: month_start.iso8601, end: today.iso8601}
+        when "last_month"
+          current_month_start = Date.new(today.year, today.month, 1)
+          last_month_start = current_month_start << 1
+          {start: last_month_start.iso8601, end: (current_month_start - 1.day).iso8601}
+        when "this_year"
+          year_start = Date.new(today.year, 1, 1)
+          {start: year_start.iso8601, end: today.iso8601}
+        when "last_year"
+          last_year = today.year - 1
+          {start: Date.new(last_year, 1, 1).iso8601, end: Date.new(last_year, 12, 31).iso8601}
+        else
+          {start: nil, end: nil}
+        end
+      end
+
+      def start_of_week(date)
+        date - ((date.wday + 6) % 7)
       end
 
       def quick_range_presets
