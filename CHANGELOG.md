@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Updated `/demo/forms/date_input` so the `Billing Anchor Date` example uses the browser native date input (`picker: :native`) instead of the FlatPack popup picker.
+- Updated `FlatPack::RangeInput::Component` to apply `--color-primary` to the slider accent/handle so range dots follow active theme primary color instead of browser default blue.
 
 ## [0.1.95] - 2026-06-15
 

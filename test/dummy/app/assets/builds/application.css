@@ -3132,6 +3132,9 @@
   .decoration-dotted {
     text-decoration-style: dotted;
   }
+  .accent-\[var\(--color-primary\)\] {
+    accent-color: var(--color-primary);
+  }
   .accent-primary {
     accent-color: var(--color-primary);
   }
