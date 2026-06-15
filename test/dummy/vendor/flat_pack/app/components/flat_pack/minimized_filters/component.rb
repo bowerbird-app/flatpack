@@ -20,6 +20,7 @@ module FlatPack
         form_method: :get,
         active_count: 0,
         trigger_label: "Filter",
+        button_size: :sm,
         modal_title: "Filters",
         submit_label: "Apply",
         reset_label: "Reset",
@@ -34,6 +35,7 @@ module FlatPack
         @form_method = form_method
         @active_count = active_count.to_i
         @trigger_label = trigger_label
+        @button_size = button_size.to_sym
         @modal_title = modal_title
         @submit_label = submit_label
         @reset_label = reset_label
@@ -43,6 +45,7 @@ module FlatPack
         validate_id!
         validate_labels!
         validate_active_count!
+        validate_button_size!
       end
 
       def call
@@ -147,9 +150,13 @@ module FlatPack
           "transition-colors duration-base",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--button-focus-ring-offset-color)]",
           "disabled:pointer-events-none disabled:opacity-[var(--button-disabled-opacity)]",
-          "px-[var(--button-padding-x-sm)] py-[var(--button-padding-y-sm)] text-xs",
+          button_size_classes,
           "bg-[var(--button-secondary-background-color)] hover:bg-[var(--button-secondary-hover-background-color)] text-[var(--button-secondary-text-color)] border border-[var(--button-secondary-border-color)]"
         )
+      end
+
+      def button_size_classes
+        FlatPack::Button::Component::SIZES.fetch(@button_size)
       end
 
       def filter_body_markup
@@ -187,6 +194,12 @@ module FlatPack
         return if @active_count >= 0
 
         raise ArgumentError, "active_count must be greater than or equal to 0"
+      end
+
+      def validate_button_size!
+        return if FlatPack::Button::Component::SIZES.key?(@button_size)
+
+        raise ArgumentError, "button_size must be one of: #{FlatPack::Button::Component::SIZES.keys.join(", ")}"
       end
     end
   end

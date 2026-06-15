@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Updated `FlatPack::Chart::DefaultFilterComponent` to replace `responsive`/`responsive_options` with `minimized`/`minimized_options`, preserving desktop inline auto-submit filters while using `FlatPack::MinimizedFilters::Component` for mobile modal flows.
 - Updated `/demo/charts/default_filter` and `/demo/tables/basic` to use minimized filter patterns (desktop inline + mobile modal trigger).
+- Updated the inline minimized filter demo trigger to use the larger `lg` button size for the `Filter {count}` action.
 - Removed `/demo/responsive_filter` route/page and migrated Data Display navigation to `Minimized Filters` only.
 - Removed `FlatPack::ResponsiveFilters::Component` and its dedicated docs/tests in favor of minimized filter composition.
 

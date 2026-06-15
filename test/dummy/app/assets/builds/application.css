@@ -2353,6 +2353,9 @@
   .px-\[var\(--button-padding-x-sm\)\] {
     padding-inline: var(--button-padding-x-sm);
   }
+  .px-\[var\(--button-padding-x-xs\)\] {
+    padding-inline: var(--button-padding-x-xs);
+  }
   .px-\[var\(--card-padding-lg\)\] {
     padding-inline: var(--card-padding-lg);
   }
@@ -2433,6 +2436,9 @@
   }
   .py-\[var\(--button-padding-y-sm\)\] {
     padding-block: var(--button-padding-y-sm);
+  }
+  .py-\[var\(--button-padding-y-xs\)\] {
+    padding-block: var(--button-padding-y-xs);
   }
   .py-\[var\(--form-control-padding\)\] {
     padding-block: var(--form-control-padding);
@@ -4321,11 +4327,6 @@
   .md\:col-span-3 {
     @media (width >= 48rem) {
       grid-column: span 3 / span 3;
-    }
-  }
-  .md\:block {
-    @media (width >= 48rem) {
-      display: block;
     }
   }
   .md\:flex {

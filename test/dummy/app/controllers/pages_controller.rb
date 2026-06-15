@@ -1789,6 +1789,39 @@ class PagesController < ApplicationController
       filter_value: "all",
       query: @minimized_filter_search_query
     )
+
+    @minimized_inline_filter_default_category = "all"
+    @minimized_inline_filter_default_status = "all"
+
+    requested_inline_category = params[:inline_category].to_s
+    requested_inline_status = params[:inline_status].to_s
+    @minimized_inline_filter_category = table_category_values.key?(requested_inline_category) ? requested_inline_category : @minimized_inline_filter_default_category
+    @minimized_inline_filter_status = table_status_values.key?(requested_inline_status) ? requested_inline_status : @minimized_inline_filter_default_status
+
+    @minimized_inline_filter_active_count = 0
+    @minimized_inline_filter_active_count += 1 if @minimized_inline_filter_category != @minimized_inline_filter_default_category
+    @minimized_inline_filter_active_count += 1 if @minimized_inline_filter_status != @minimized_inline_filter_default_status
+
+    inline_filtered_users = apply_table_filter_and_search(
+      @users,
+      filter_field: "category",
+      filter_value: @minimized_inline_filter_category,
+      query: ""
+    )
+
+    inline_filtered_users = apply_table_filter_and_search(
+      inline_filtered_users,
+      filter_field: "status",
+      filter_value: @minimized_inline_filter_status,
+      query: ""
+    )
+
+    @minimized_inline_filter_filtered_users = apply_table_filter_and_search(
+      inline_filtered_users,
+      filter_field: "category",
+      filter_value: "all",
+      query: ""
+    )
   end
 
   def load_table_multi_controls_demo_data

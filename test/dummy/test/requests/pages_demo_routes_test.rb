@@ -126,6 +126,16 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Search both tables..."
   end
 
+  test "minimized filter demo renders inline filters table example" do
+    get "/demo/minimized_filter"
+
+    assert_response :success
+    assert_includes response.body, "Table Example with Inline Filters"
+    assert_includes response.body, "Status"
+    assert_includes response.body, "Category"
+    assert_includes response.body, "Filter"
+  end
+
   test "date input demo renders billing anchor date with native picker" do
     get "/demo/forms/date_input"
 

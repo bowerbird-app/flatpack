@@ -145,3 +145,126 @@
     CODE
   ) %>
 </section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Table Example with Inline Filters",
+    anchor_link: true,
+    subtitle: "Desktop and mobile both show Status, Category, and Filter count in one control row."
+  ) %>
+
+  <%= turbo_frame_tag "minimized-filter-inline-table-frame" do %>
+    <div class="mb-4 flex flex-nowrap items-end gap-2 overflow-x-auto pb-1">
+      <%= form_with(
+        url: demo_minimized_filter_path,
+        method: :get,
+        class: "flex flex-nowrap items-end gap-2 shrink-0",
+        data: {
+          turbo_frame: "minimized-filter-inline-table-frame",
+          controller: "flat-pack--auto-submit",
+          action: "input->flat-pack--auto-submit#queueSubmit change->flat-pack--auto-submit#queueSubmit",
+          flat_pack__auto_submit_delay_value: 300
+        }
+      ) do %>
+        <%= render FlatPack::Select::Component.new(
+          name: "inline_status",
+          value: @minimized_inline_filter_status,
+          options: @table_filter_definitions.fetch("status").fetch(:values).map { |value_key, value_label| [value_label, value_key] },
+          label: "Status"
+        ) %>
+
+        <%= render FlatPack::Select::Component.new(
+          name: "inline_category",
+          value: @minimized_inline_filter_category,
+          options: @table_filter_definitions.fetch("category").fetch(:values).map { |value_key, value_label| [value_label, value_key] },
+          label: "Category"
+        ) %>
+      <% end %>
+
+      <div class="shrink-0">
+        <%= render FlatPack::MinimizedFilters::Component.new(
+          id: "minimized-filter-inline-table-controls",
+          form_url: demo_minimized_filter_path,
+          turbo_frame: "minimized-filter-inline-table-frame",
+          active_count: @minimized_inline_filter_active_count,
+          reset_url: demo_minimized_filter_path,
+          mobile_form_class: "space-y-3 p-[0.15rem]",
+          button_size: :lg,
+          class: "w-auto"
+        ) do |minimized_filters| %>
+          <% minimized_filters.filter_body do %>
+            <div class="grid gap-3">
+              <%= render FlatPack::Select::Component.new(
+                name: "inline_status",
+                value: @minimized_inline_filter_status,
+                options: @table_filter_definitions.fetch("status").fetch(:values).map { |value_key, value_label| [value_label, value_key] },
+                label: "Status"
+              ) %>
+
+              <%= render FlatPack::Select::Component.new(
+                name: "inline_category",
+                value: @minimized_inline_filter_category,
+                options: @table_filter_definitions.fetch("category").fetch(:values).map { |value_key, value_label| [value_label, value_key] },
+                label: "Category"
+              ) %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <%= render FlatPack::Table::Component.new(data: @minimized_inline_filter_filtered_users.first(10)) do |table| %>
+      <% table.column(title: "ID", html: ->(user) { user.id.to_s }) %>
+      <% table.column(title: "Name", html: ->(user) { user.name }) %>
+      <% table.column(title: "Email", html: ->(user) { user.email }) %>
+      <% table.column(title: "Category", html: ->(user) { user.category.to_s.titleize }) %>
+      <% table.column(title: "Status", html: ->(user) { render FlatPack::Badge::Component.new(text: user.status.capitalize, size: :sm) }) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB (Inline Filters)",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} turbo_frame_tag "minimized-filter-inline-table-frame" do #{erb_tag_close}
+        #{erb_output_open} form_with(
+          url: demo_minimized_filter_path,
+          method: :get,
+          class: "flex flex-wrap items-end gap-3",
+          data: {
+            turbo_frame: "minimized-filter-inline-table-frame",
+            controller: "flat-pack--auto-submit",
+            action: "input->flat-pack--auto-submit#queueSubmit change->flat-pack--auto-submit#queueSubmit",
+            flat_pack__auto_submit_delay_value: 300
+          }
+        ) do #{erb_tag_close}
+          #{erb_output_open} render FlatPack::Select::Component.new(name: "inline_status", value: @minimized_inline_filter_status, options: @table_filter_definitions.fetch("status").fetch(:values).map { |value_key, value_label| [value_label, value_key] }, label: "Status") #{erb_tag_close}
+          #{erb_output_open} render FlatPack::Select::Component.new(name: "inline_category", value: @minimized_inline_filter_category, options: @table_filter_definitions.fetch("category").fetch(:values).map { |value_key, value_label| [value_label, value_key] }, label: "Category") #{erb_tag_close}
+        #{erb_open} end #{erb_tag_close}
+
+        #{erb_output_open} render FlatPack::MinimizedFilters::Component.new(
+          id: "minimized-filter-inline-table-controls",
+          form_url: demo_minimized_filter_path,
+          turbo_frame: "minimized-filter-inline-table-frame",
+          active_count: @minimized_inline_filter_active_count,
+          reset_url: demo_minimized_filter_path,
+          mobile_form_class: "space-y-3 p-[0.15rem]",
+          button_size: :lg
+        ) do |minimized_filters| #{erb_tag_close}
+          #{erb_open} minimized_filters.filter_body do #{erb_tag_close}
+            #{erb_output_open} render FlatPack::Select::Component.new(name: "inline_status", value: @minimized_inline_filter_status, options: @table_filter_definitions.fetch("status").fetch(:values).map { |value_key, value_label| [value_label, value_key] }, label: "Status") #{erb_tag_close}
+            #{erb_output_open} render FlatPack::Select::Component.new(name: "inline_category", value: @minimized_inline_filter_category, options: @table_filter_definitions.fetch("category").fetch(:values).map { |value_key, value_label| [value_label, value_key] }, label: "Category") #{erb_tag_close}
+          #{erb_open} end #{erb_tag_close}
+        #{erb_open} end #{erb_tag_close}
+
+        #{erb_output_open} render FlatPack::Table::Component.new(data: @minimized_inline_filter_filtered_users.first(10)) do |table| #{erb_tag_close}
+          #{erb_open} table.column(title: "ID", html: ->(user) { user.id.to_s }) #{erb_tag_close}
+          #{erb_open} table.column(title: "Name", html: ->(user) { user.name }) #{erb_tag_close}
+          #{erb_open} table.column(title: "Email", html: ->(user) { user.email }) #{erb_tag_close}
+          #{erb_open} table.column(title: "Category", html: ->(user) { user.category.to_s.titleize }) #{erb_tag_close}
+          #{erb_open} table.column(title: "Status", html: ->(user) { render FlatPack::Badge::Component.new(text: user.status.capitalize, size: :sm) }) #{erb_tag_close}
+        #{erb_open} end #{erb_tag_close}
+      #{erb_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>
