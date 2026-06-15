@@ -97,9 +97,9 @@ module FlatPack
       def test_is_minimized_by_default
         render_inline(DefaultFilterComponent.new(status_lists: ["active", "inactive"]))
 
-        assert_selector "button", text: "Filter"
-        assert_selector "div#chart-default-filter-modal"
-        assert_selector "div.hidden.md\\:block form"
+        assert_selector "form"
+        assert_no_selector "button", text: "Filter"
+        assert_no_selector "div#chart-default-filter-modal"
       end
 
       def test_supports_minimized_mode
@@ -116,10 +116,11 @@ module FlatPack
           }
         ))
 
-        assert_selector "button span", text: "Filter"
-        assert_selector "button span.rounded-full", text: "1"
-        assert_selector "div#chart-default-filter-modal"
-        assert_selector "div.hidden.md\\:block form[data-turbo-frame='chart-default-filter-frame']"
+        assert_selector "form[data-turbo-frame='chart-default-filter-frame']"
+        assert_selector "form[data-controller='flat-pack--auto-submit']"
+        assert_selector "select[name='status'] option[selected][value='active']", text: "active"
+        assert_no_selector "button", text: "Filter"
+        assert_no_selector "div#chart-default-filter-modal"
       end
 
       def test_supports_minimized_mode_without_explicit_form_url_or_turbo_frame
@@ -129,8 +130,9 @@ module FlatPack
           minimized_options: {id: "chart-default-filter"}
         ))
 
-        assert_selector "button", text: "Filter"
-        assert_selector "div#chart-default-filter-modal"
+        assert_selector "form"
+        assert_no_selector "button", text: "Filter"
+        assert_no_selector "div#chart-default-filter-modal"
       end
     end
   end

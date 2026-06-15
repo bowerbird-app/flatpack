@@ -35,56 +35,22 @@ module FlatPack
       end
 
       def call
-        return render_minimized_filter if @minimized
+        return render_inline_filter_form if @minimized
 
         render_filter_fields(hide_labels: @hide_labels)
       end
 
       private
 
-      def render_minimized_filter
-        safe_join([
-          render_desktop_filter_form,
-          render_mobile_filter_form
-        ])
-      end
-
-      def render_desktop_filter_form
-        content_tag(:div, class: "hidden md:block") do
-          form_with(
-            url: minimized_form_url,
-            method: :get,
-            class: minimized_desktop_form_class,
-            data: desktop_form_data
-          ) do
-            render_filter_fields(hide_labels: @hide_labels)
-          end
+      def render_inline_filter_form
+        form_with(
+          url: minimized_form_url,
+          method: :get,
+          class: minimized_desktop_form_class,
+          data: desktop_form_data
+        ) do
+          render_filter_fields(hide_labels: @hide_labels)
         end
-      end
-
-      def render_mobile_filter_form
-        content_tag(:div, class: "md:hidden") do
-          render FlatPack::MinimizedFilters::Component.new(**minimized_component_options) do |filters|
-            filters.filter_body do
-              render_filter_fields(hide_labels: true, container_class: minimized_mobile_fields_class)
-            end
-          end
-        end
-      end
-
-      def minimized_component_options
-        {
-          id: minimized_component_id,
-          form_url: minimized_form_url,
-          turbo_frame: minimized_turbo_frame,
-          active_count: @minimized_options[:active_count].to_i,
-          trigger_label: @minimized_options[:trigger_label] || "Filter",
-          modal_title: @minimized_options[:modal_title] || "Filters",
-          submit_label: @minimized_options[:submit_label] || "Apply",
-          reset_label: @minimized_options[:reset_label] || "Reset",
-          reset_url: @minimized_options[:reset_url],
-          mobile_form_class: @minimized_options[:mobile_form_class]
-        }
       end
 
       def minimized_form_url
@@ -155,14 +121,6 @@ module FlatPack
           placeholder: @status_placeholder,
           label: (hide_labels ? nil : "Status")
         )
-      end
-
-      def minimized_component_id
-        @minimized_options[:id] || "chart-default-filter"
-      end
-
-      def minimized_mobile_fields_class
-        @minimized_options[:mobile_fields_class] || "grid gap-3"
       end
 
       def container_attributes(container_class: nil)
