@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Updated `/demo/forms/date_input` so the `Billing Anchor Date` example uses the browser native date input (`picker: :native`) instead of the FlatPack popup picker.
+
 ## [0.1.95] - 2026-06-15
 
 ### Changed
