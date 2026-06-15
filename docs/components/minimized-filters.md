@@ -21,6 +21,7 @@ Use this when filter controls should be hidden from inline layouts and shown onl
 | `form_method` | Symbol, String | `:get` | no | Form method used by modal form. |
 | `active_count` | Integer | `0` | no | Count shown in an `:xs` primary badge when greater than zero. |
 | `trigger_label` | String | `"Filter"` | no | Trigger base label text. |
+| `button_size` | Symbol | `:sm` | no | Size passed to the Filter trigger button (`:sm`, `:md`, or `:lg`). |
 | `modal_title` | String | `"Filters"` | no | Modal heading text. |
 | `submit_label` | String | `"Apply"` | no | Submit button label. |
 | `reset_label` | String | `"Reset"` | no | Reset link label. |
@@ -41,7 +42,8 @@ Use this when filter controls should be hidden from inline layouts and shown onl
   turbo_frame: "minimized-filter-table-frame",
   active_count: @minimized_filter_active_count,
   reset_url: demo_minimized_filter_path,
-  mobile_form_class: "space-y-3"
+  mobile_form_class: "space-y-3",
+  button_size: :lg
 ) do |minimized_filters| %>
   <% minimized_filters.filter_body do %>
     <%= render FlatPack::Select::Component.new(
