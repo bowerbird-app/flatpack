@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.95] - 2026-06-15
+
 ### Changed
 - Updated `FlatPack::DateRangeInput::Component` so quick preset selections (for example `Last week`) display preset labels in the visible trigger, while custom calendar selections continue to display explicit date ranges.
 - Updated `FlatPack::ResponsiveFilters::Component` mobile trigger count badge to use `size: :xs`.
