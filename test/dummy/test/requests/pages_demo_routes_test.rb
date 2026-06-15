@@ -60,6 +60,8 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/admin
     /demo/charts
     /demo/charts/default_filter
+    /demo/responsive_filter
+    /demo/minimized_filter
     /demo/code_blocks
     /demo/avatars
     /demo/comments

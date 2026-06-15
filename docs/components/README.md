@@ -45,6 +45,7 @@ time_input | FlatPack::TimeInput::Component | docs/components/inputs.md
 link | FlatPack::Link::Component | docs/components/link.md
 list | FlatPack::List::Component | docs/components/list.md
 modal | FlatPack::Modal::Component | docs/components/modal.md
+minimized_filters | FlatPack::MinimizedFilters::Component | docs/components/minimized-filters.md
 navbar | FlatPack::Navbar::Component | docs/components/navbar.md
 page_header | FlatPack::PageHeader::Component | docs/components/page-header.md
 page_nav | FlatPack::PageNav::Component | docs/components/page-nav.md

@@ -91,6 +91,7 @@ Rails.application.routes.draw do
   get "demo/charts", to: "pages#charts"
   get "demo/charts/default_filter", to: "pages#charts_default_filter"
   get "demo/responsive_filter", to: "pages#responsive_filter"
+  get "demo/minimized_filter", to: "pages#minimized_filter"
   get "demo/code_blocks", to: "pages#code_blocks"
   get "demo/avatars", to: "pages#avatars"
   get "demo/comments", to: "pages#comments"

@@ -68,7 +68,7 @@ class PagesController < ApplicationController
   # Actions with dynamic data that must not be fully cached
   UNCACHED_ACTIONS = %i[
     picker search_results picker_results pagination_infinite charts charts_default_filter
-    responsive_filter
+    responsive_filter minimized_filter
     comments admin chat_demo chips chip_add_callback chip_remove_callback
     tables_basic tables_sortable
   ].freeze
@@ -679,6 +679,11 @@ class PagesController < ApplicationController
     load_default_chart_filter_demo
     load_table_demo_data
     load_responsive_filter_table_demo_data
+  end
+
+  def minimized_filter
+    load_table_demo_data
+    load_minimized_filter_demo_data
   end
 
   def code_blocks
@@ -1661,6 +1666,7 @@ class PagesController < ApplicationController
       {title: "Charts", description: "Data visualization with ApexCharts", url: demo_charts_path},
       {title: "Charts: Default Filter", description: "Date range and optional status filter for chart controls", url: demo_charts_default_filter_path},
       {title: "Responsive Filter", description: "Responsive desktop/mobile filter examples for charts and tables", url: demo_responsive_filter_path},
+      {title: "Minimized Filters", description: "Modal-only filter content with dedicated Filter trigger flow", url: demo_minimized_filter_path},
       {title: "Code Blocks", description: "Reusable snippets for demo pages", url: demo_code_blocks_path},
       {title: "Avatars", description: "Avatar and avatar group examples", url: demo_avatars_path},
       {title: "Comments", description: "Comments threads and reply composer patterns", url: demo_comments_path},
@@ -1789,6 +1795,44 @@ class PagesController < ApplicationController
       filter_field: "category",
       filter_value: "all",
       query: @responsive_table_search_query
+    )
+  end
+
+  def load_minimized_filter_demo_data
+    @minimized_filter_default_category = "all"
+    @minimized_filter_default_status = "all"
+    @minimized_filter_default_search_query = ""
+
+    requested_category = params[:minimized_category].to_s
+    requested_status = params[:minimized_status].to_s
+    @minimized_filter_category = table_category_values.key?(requested_category) ? requested_category : @minimized_filter_default_category
+    @minimized_filter_status = table_status_values.key?(requested_status) ? requested_status : @minimized_filter_default_status
+    @minimized_filter_search_query = params[:minimized_q].to_s.strip
+
+    @minimized_filter_active_count = 0
+    @minimized_filter_active_count += 1 if @minimized_filter_category != @minimized_filter_default_category
+    @minimized_filter_active_count += 1 if @minimized_filter_status != @minimized_filter_default_status
+    @minimized_filter_active_count += 1 if @minimized_filter_search_query != @minimized_filter_default_search_query
+
+    filtered_users = apply_table_filter_and_search(
+      @users,
+      filter_field: "category",
+      filter_value: @minimized_filter_category,
+      query: ""
+    )
+
+    filtered_users = apply_table_filter_and_search(
+      filtered_users,
+      filter_field: "status",
+      filter_value: @minimized_filter_status,
+      query: ""
+    )
+
+    @minimized_filter_filtered_users = apply_table_filter_and_search(
+      filtered_users,
+      filter_field: "category",
+      filter_value: "all",
+      query: @minimized_filter_search_query
     )
   end
 

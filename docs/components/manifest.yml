@@ -245,6 +245,12 @@ components:
     primary_class: FlatPack::Modal::Component
     status: documented
 
+  - key: minimized_filters
+    title: Minimized Filters
+    doc: docs/components/minimized-filters.md
+    primary_class: FlatPack::MinimizedFilters::Component
+    status: documented
+
   - key: navbar
     title: Navbar
     doc: docs/components/navbar.md

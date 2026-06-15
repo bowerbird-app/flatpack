@@ -359,6 +359,12 @@
                 icon: :funnel,
                 active: false
               ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Minimized Filters",
+                href: demo_minimized_filter_path,
+                icon: :funnel,
+                active: false
+              ) %>
               <%= render FlatPack::Sidebar::Group::Component.new(
                 label: "Tables",
                 icon: :table,
