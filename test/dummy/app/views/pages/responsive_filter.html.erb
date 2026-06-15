@@ -1,0 +1,263 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Responsive Filter",
+  subtitle: "Build one filter surface that stays inline on desktop and shifts to a modal flow on mobile."
+) %>
+
+<%
+  erb_open = "<" + "%"
+  erb_output_open = "<" + "%="
+  erb_tag_close = "%" + ">"
+%>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Responsive Filter",
+    anchor_link: true,
+    subtitle: "Use responsive filtering patterns for both chart and table result surfaces."
+  ) %>
+
+  <p class="text-(--surface-muted-content-color) mb-4">
+    This page shows two reusable options: <strong>Chart::DefaultFilterComponent</strong> in responsive mode,
+    and <strong>ResponsiveFilters::Component</strong> for custom table controls.
+  </p>
+
+  <%
+    responsive_filter_variables = [
+      {
+        variable: "responsive (Chart::DefaultFilterComponent)",
+        accepts: "Boolean (default: false)",
+        example: "responsive: true"
+      },
+      {
+        variable: "responsive_options (Chart::DefaultFilterComponent)",
+        accepts: "Hash (required when responsive: true)",
+        example: '{ id: "responsive-filter-chart", form_url: demo_responsive_filter_path, turbo_frame: "responsive-filter-chart-frame" }'
+      },
+      {
+        variable: "id (ResponsiveFilters::Component)",
+        accepts: "String (required)",
+        example: 'id: "responsive-filter-table-controls"'
+      },
+      {
+        variable: "form_url (ResponsiveFilters::Component)",
+        accepts: "String (required)",
+        example: "form_url: demo_responsive_filter_path"
+      },
+      {
+        variable: "turbo_frame (ResponsiveFilters::Component)",
+        accepts: "String (required)",
+        example: 'turbo_frame: "responsive-filter-table-frame"'
+      },
+      {
+        variable: "active_count (ResponsiveFilters::Component)",
+        accepts: "Integer (default: 0)",
+        example: "active_count: @responsive_table_filter_active_count"
+      },
+      {
+        variable: "reset_url (ResponsiveFilters::Component)",
+        accepts: "String, nil (default: nil)",
+        example: "reset_url: demo_responsive_filter_path"
+      },
+      {
+        variable: "desktop_form_class (ResponsiveFilters::Component)",
+        accepts: "String, nil",
+        example: 'desktop_form_class: "mb-4 flex flex-wrap items-end gap-3"'
+      },
+      {
+        variable: "mobile_form_class (ResponsiveFilters::Component)",
+        accepts: "String, nil",
+        example: 'mobile_form_class: "space-y-3"'
+      },
+      {
+        variable: "auto_submit_delay (ResponsiveFilters::Component)",
+        accepts: "Integer (default: 250)",
+        example: "auto_submit_delay: 300"
+      }
+    ]
+  %>
+
+  <%= render FlatPack::Table::Component.new(data: responsive_filter_variables, class: "mb-4") do |table| %>
+    <% table.column(title: "Variable", html: ->(row) { row[:variable] }) %>
+    <% table.column(title: "Accepts", html: ->(row) { row[:accepts] }) %>
+    <% table.column(title: "Example", html: ->(row) { row[:example] }) %>
+  <% end %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Chart Example",
+    anchor_link: true,
+    subtitle: "Default chart filter with responsive desktop/mobile behavior."
+  ) %>
+
+  <%= turbo_frame_tag "responsive-filter-chart-frame" do %>
+    <%= render FlatPack::Chart::DefaultFilterComponent.new(
+      start_date_value: @default_chart_filter_start_date,
+      end_date_value: @default_chart_filter_end_date,
+      status: @default_chart_filter_status,
+      status_lists: @default_chart_filter_status_lists,
+      responsive: true,
+      responsive_options: {
+        id: "responsive-filter-chart",
+        form_url: demo_responsive_filter_path,
+        turbo_frame: "responsive-filter-chart-frame",
+        active_count: @default_chart_filter_active_count,
+        reset_url: demo_responsive_filter_path,
+        desktop_form_class: "mb-4",
+        mobile_form_class: "space-y-4 p-[0.15rem]",
+        mobile_fields_class: "grid gap-3"
+      }
+    ) %>
+
+    <%= render FlatPack::Chart::Component.new(
+      type: :line,
+      series: [{name: "Sessions", data: [42, 58, 50, 73, 88, 95, 90]}],
+      title: "Sessions Trend",
+      subtitle: "Example chart target for responsive filters",
+      height: 300,
+      card: false
+    ) %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB (Chart)",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} turbo_frame_tag "responsive-filter-chart-frame" do #{erb_tag_close}
+        #{erb_output_open} render FlatPack::Chart::DefaultFilterComponent.new(
+          start_date_value: params[:start_date],
+          end_date_value: params[:end_date],
+          status: params[:status],
+          status_lists: [["Active", "active"], ["Paused", "paused"], ["Archived", "archived"]],
+          responsive: true,
+          responsive_options: {
+            id: "responsive-filter-chart",
+            form_url: demo_responsive_filter_path,
+            turbo_frame: "responsive-filter-chart-frame",
+            mobile_form_class: "space-y-4 p-[0.15rem]"
+          }
+        ) #{erb_tag_close}
+
+        #{erb_output_open} render FlatPack::Chart::Component.new(
+          type: :line,
+          series: [{name: "Sessions", data: [42, 58, 50, 73, 88, 95, 90]}],
+          title: "Sessions Trend",
+          height: 300,
+          card: false
+        ) #{erb_tag_close}
+      #{erb_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Table Example",
+    anchor_link: true,
+    subtitle: "Custom responsive filters driving a table in the same Turbo Frame."
+  ) %>
+
+  <%= turbo_frame_tag "responsive-filter-table-frame" do %>
+    <%= render FlatPack::ResponsiveFilters::Component.new(
+      id: "responsive-filter-table-controls",
+      form_url: demo_responsive_filter_path,
+      turbo_frame: "responsive-filter-table-frame",
+      active_count: @responsive_table_filter_active_count,
+      reset_url: demo_responsive_filter_path,
+      desktop_form_class: "mb-4 flex flex-wrap items-end gap-3",
+      mobile_form_class: "space-y-3 p-[0.15rem]",
+      auto_submit_delay: 300
+    ) do |filters| %>
+      <% filters.fields do %>
+        <%= render FlatPack::Select::Component.new(
+          name: "table_status",
+          value: @responsive_table_filter_status,
+          options: @table_filter_definitions.fetch("status").fetch(:values).map { |value_key, value_label| [value_label, value_key] },
+          label: "Status"
+        ) %>
+
+        <%= render FlatPack::Select::Component.new(
+          name: "table_category",
+          value: @responsive_table_filter_category,
+          options: @table_filter_definitions.fetch("category").fetch(:values).map { |value_key, value_label| [value_label, value_key] },
+          label: "Category"
+        ) %>
+
+        <%= render FlatPack::Search::Component.new(
+          name: "table_q",
+          value: @responsive_table_search_query,
+          placeholder: "Search table rows...",
+          max_width: :none,
+          class: "w-56"
+        ) %>
+      <% end %>
+
+      <% filters.mobile_fields do %>
+        <div class="grid gap-3">
+          <%= render FlatPack::Select::Component.new(
+            name: "table_status",
+            value: @responsive_table_filter_status,
+            options: @table_filter_definitions.fetch("status").fetch(:values).map { |value_key, value_label| [value_label, value_key] },
+            label: "Status"
+          ) %>
+
+          <%= render FlatPack::Select::Component.new(
+            name: "table_category",
+            value: @responsive_table_filter_category,
+            options: @table_filter_definitions.fetch("category").fetch(:values).map { |value_key, value_label| [value_label, value_key] },
+            label: "Category"
+          ) %>
+
+          <%= render FlatPack::Search::Component.new(
+            name: "table_q",
+            value: @responsive_table_search_query,
+            placeholder: "Search table rows...",
+            max_width: :none,
+            class: "w-full"
+          ) %>
+        </div>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::Table::Component.new(data: @responsive_table_filtered_users.first(10)) do |table| %>
+      <% table.column(title: "ID", html: ->(user) { user.id.to_s }) %>
+      <% table.column(title: "Name", html: ->(user) { user.name }) %>
+      <% table.column(title: "Email", html: ->(user) { user.email }) %>
+      <% table.column(title: "Category", html: ->(user) { user.category.to_s.titleize }) %>
+      <% table.column(title: "Status", html: ->(user) { render FlatPack::Badge::Component.new(text: user.status.capitalize, size: :sm) }) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB (Table)",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} turbo_frame_tag "responsive-filter-table-frame" do #{erb_tag_close}
+        #{erb_output_open} render FlatPack::ResponsiveFilters::Component.new(
+          id: "responsive-filter-table-controls",
+          form_url: demo_responsive_filter_path,
+          turbo_frame: "responsive-filter-table-frame",
+          active_count: @responsive_table_filter_active_count,
+          reset_url: demo_responsive_filter_path,
+          desktop_form_class: "mb-4 flex flex-wrap items-end gap-3",
+          mobile_form_class: "space-y-3 p-[0.15rem]",
+          auto_submit_delay: 300
+        ) do |filters| #{erb_tag_close}
+          #{erb_open} filters.fields do #{erb_tag_close}
+            #{erb_output_open} render FlatPack::Select::Component.new(name: "table_status", value: @responsive_table_filter_status, options: @table_filter_definitions.fetch("status").fetch(:values).map { |value_key, value_label| [value_label, value_key] }, label: "Status") #{erb_tag_close}
+            #{erb_output_open} render FlatPack::Select::Component.new(name: "table_category", value: @responsive_table_filter_category, options: @table_filter_definitions.fetch("category").fetch(:values).map { |value_key, value_label| [value_label, value_key] }, label: "Category") #{erb_tag_close}
+            #{erb_output_open} render FlatPack::Search::Component.new(name: "table_q", value: @responsive_table_search_query, placeholder: "Search table rows...", max_width: :none, class: "w-56") #{erb_tag_close}
+          #{erb_open} end #{erb_tag_close}
+        #{erb_open} end #{erb_tag_close}
+
+        #{erb_output_open} render FlatPack::Table::Component.new(data: @responsive_table_filtered_users.first(10)) do |table| #{erb_tag_close}
+          #{erb_open} table.column(title: "ID", html: ->(user) { user.id.to_s }) #{erb_tag_close}
+          #{erb_open} table.column(title: "Name", html: ->(user) { user.name }) #{erb_tag_close}
+          #{erb_open} table.column(title: "Email", html: ->(user) { user.email }) #{erb_tag_close}
+          #{erb_open} table.column(title: "Category", html: ->(user) { user.category.to_s.titleize }) #{erb_tag_close}
+          #{erb_open} table.column(title: "Status", html: ->(user) { render FlatPack::Badge::Component.new(text: user.status.capitalize, size: :sm) }) #{erb_tag_close}
+        #{erb_open} end #{erb_tag_close}
+      #{erb_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>

@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-06-12
+updated_at: 2026-06-15
 
 format_reference: docs/components/DOC_FORMAT.md
 human_index: docs/components/README.md
@@ -89,6 +89,7 @@ components:
     primary_class: FlatPack::Chart::Component
     related_classes:
       - FlatPack::Chart::DefaultFilterComponent
+      - FlatPack::ResponsiveFilters::Component
     status: documented
 
   - key: chart_buttons
@@ -310,6 +311,12 @@ components:
     title: Range Input
     doc: docs/components/range-input.md
     primary_class: FlatPack::RangeInput::Component
+    status: documented
+
+  - key: responsive_filters
+    title: Responsive Filters
+    doc: docs/components/responsive-filters.md
+    primary_class: FlatPack::ResponsiveFilters::Component
     status: documented
 
   - key: search

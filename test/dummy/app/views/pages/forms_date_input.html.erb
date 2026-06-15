@@ -28,7 +28,7 @@
       <%= render FlatPack::DateInput::Component.new(
         name: "billing_anchor_date",
         label: "Billing Anchor Date",
-        picker: :flatpack_date_picker,
+        picker: :native,
         min: (Date.today - 30).to_s,
         max: (Date.today + 30).to_s,
         value: Date.today.to_s
@@ -58,7 +58,7 @@
         &lt;%= render FlatPack::DateInput::Component.new(
           name: &quot;billing_anchor_date&quot;,
           label: &quot;Billing Anchor Date&quot;,
-          picker: :flatpack_date_picker,
+          picker: :native,
           min: (Date.today - 30).to_s,
           max: (Date.today + 30).to_s,
           value: Date.today.to_s

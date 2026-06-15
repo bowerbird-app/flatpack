@@ -20,13 +20,38 @@ module FlatPack
         render_inline(Component.new(
           start_name: "start_date",
           end_name: "end_date",
-          start_value: "2026-05-01",
-          end_value: "2026-05-31"
+          start_value: "2026-05-02",
+          end_value: "2026-05-30"
         ))
 
-        assert_selector "input[type='hidden'][name='start_date'][value='2026-05-01']", visible: :all
-        assert_selector "input[type='hidden'][name='end_date'][value='2026-05-31']", visible: :all
-        assert_selector "input[type='text'][value='2026-05-01 to 2026-05-31']"
+        assert_selector "input[type='hidden'][name='start_date'][value='2026-05-02']", visible: :all
+        assert_selector "input[type='hidden'][name='end_date'][value='2026-05-30']", visible: :all
+        assert_selector "input[type='text'][value='2026-05-02 to 2026-05-30']"
+      end
+
+      def test_renders_preset_label_when_values_match_today_preset
+        today = Date.current.iso8601
+
+        render_inline(Component.new(
+          start_name: "start_date",
+          end_name: "end_date",
+          start_value: today,
+          end_value: today
+        ))
+
+        assert_selector "input[type='text'][value='Today']"
+        assert_selector "div[data-flat-pack--flatpack-date-picker-preset-key-value='today']", visible: :all
+      end
+
+      def test_exposes_preset_label_map_for_stimulus
+        render_inline(Component.new(
+          start_name: "start_date",
+          end_name: "end_date"
+        ))
+
+        labels_payload = page.first("div[data-flat-pack--flatpack-date-picker-preset-labels-value]", visible: :all)["data-flat-pack--flatpack-date-picker-preset-labels-value"]
+        assert_includes labels_payload, "last_week"
+        assert_includes labels_payload, "Last week"
       end
 
       def test_formats_date_objects

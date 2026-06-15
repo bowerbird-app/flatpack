@@ -318,6 +318,9 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
 - **UrlInput** - URL field with validation
 - **NumberInput** - Numeric input field
 - **DateInput** - Date picker input
+- **DateRangeInput** - Single control that submits start and end dates
+- **DateTimeInput** - Date and time picker input
+- **TimeInput** - Time-only picker input
 - **FileInput** - File upload input
 - **Checkbox** - Single checkbox or checkbox groups
 - **RadioGroup** - Radio button groups

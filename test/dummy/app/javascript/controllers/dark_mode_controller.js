@@ -20,7 +20,7 @@ export default class extends Controller {
     const legacyTheme = localStorage.getItem(this.legacyStorageKey)
     const theme = storedTheme || legacyTheme
 
-    if (theme === "dark" || theme === "light" || theme === "ocean" || theme === "rounded") {
+    if (theme && theme !== "system") {
       return theme
     }
 

@@ -36,17 +36,20 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Badge Sizes", anchor_link: true, subtitle: "Examples for Badge Sizes.") %>
     <div class="flex items-center gap-3 mb-4">
+      <%= render FlatPack::Badge::Component.new(text: "Extra Small", size: :xs) %>
       <%= render FlatPack::Badge::Component.new(text: "Small", size: :sm) %>
       <%= render FlatPack::Badge::Component.new(text: "Medium (default)", size: :md) %>
       <%= render FlatPack::Badge::Component.new(text: "Large", size: :lg) %>
     </div>
     <div class="flex items-center gap-3 mb-4">
+      <%= render FlatPack::Badge::Component.new(text: "Extra Small", style: :primary, size: :xs) %>
       <%= render FlatPack::Badge::Component.new(text: "Small", style: :primary, size: :sm) %>
       <%= render FlatPack::Badge::Component.new(text: "Medium", style: :primary, size: :md) %>
       <%= render FlatPack::Badge::Component.new(text: "Large", style: :primary, size: :lg) %>
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Badge::Component.new(text: "Extra Small", size: :xs) %&gt;
         &lt;%= render FlatPack::Badge::Component.new(text: "Small", size: :sm) %&gt;
         &lt;%= render FlatPack::Badge::Component.new(text: "Medium", size: :md) %&gt;
         &lt;%= render FlatPack::Badge::Component.new(text: "Large", size: :lg) %&gt;

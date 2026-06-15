@@ -21,6 +21,8 @@ export default class extends Controller {
     value: String,
     start: String,
     end: String,
+    presetKey: String,
+    presetLabels: Object,
     panelId: String
   }
 
@@ -33,8 +35,8 @@ export default class extends Controller {
     this.committed = this.initialCommittedValues()
     this.draft = { ...this.committed }
     this.viewMode = this.defaultViewMode()
-    this.committedPresetKey = null
-    this.draftPresetKey = null
+    this.committedPresetKey = this.initialPresetKey()
+    this.draftPresetKey = this.committedPresetKey
 
     this.isOpen = false
     this.panelElement = this.hasPanelTarget ? this.panelTarget : document.getElementById(this.panelIdValue)
@@ -369,7 +371,7 @@ export default class extends Controller {
     this.renderListOptionSelection()
     this.renderCalendar()
     this.renderSummary()
-    this.syncTriggerValue(this.draft)
+    this.syncTriggerValue(this.committed)
 
     if (this.isOpen) {
       this.positionPanel()
@@ -540,7 +542,7 @@ export default class extends Controller {
       return
     }
 
-    const label = this.displayValue(this.draft)
+    const label = this.displayValue(this.draft, this.draftPresetKey)
     this.summaryElement.textContent = label || "Select a date from calendar or use a quick range preset."
   }
 
@@ -575,9 +577,16 @@ export default class extends Controller {
     return Boolean(state.end)
   }
 
-  displayValue(state) {
+  displayValue(state, presetKey = null) {
     if (!state.start) {
       return ""
+    }
+
+    if (presetKey && this.selectionComplete(state)) {
+      const presetLabel = this.labelForPreset(presetKey)
+      if (presetLabel) {
+        return presetLabel
+      }
     }
 
     const start = this.toIso(state.start)
@@ -597,7 +606,58 @@ export default class extends Controller {
       return
     }
 
-    this.triggerTarget.value = this.displayValue(state)
+    const presetKey = this.committedPresetKey
+    this.triggerTarget.value = this.displayValue(state, presetKey)
+  }
+
+  initialPresetKey() {
+    if (this.hasPresetKeyValue && this.presetKeyValue) {
+      return this.presetKeyValue
+    }
+
+    return this.presetKeyForRange(this.committed)
+  }
+
+  labelForPreset(key) {
+    if (!key || key === "pick_in_calendar") {
+      return null
+    }
+
+    const labels = this.hasPresetLabelsValue ? this.presetLabelsValue : {}
+    const label = labels[key]
+    return typeof label === "string" && label.length > 0 ? label : null
+  }
+
+  presetKeyForRange(state) {
+    if (!this.selectionComplete(state)) {
+      return null
+    }
+
+    const labels = this.hasPresetLabelsValue ? this.presetLabelsValue : {}
+    const keys = Object.keys(labels)
+
+    for (const key of keys) {
+      const presetRange = this.computePresetRange(key)
+      if (!presetRange) {
+        continue
+      }
+
+      const clippedPreset = this.clipRange(presetRange)
+      if (this.rangesEqual(clippedPreset, state)) {
+        return key
+      }
+    }
+
+    return null
+  }
+
+  rangesEqual(a, b) {
+    const aStart = a?.start ? this.toIso(a.start) : null
+    const aEnd = a?.end ? this.toIso(a.end) : null
+    const bStart = b?.start ? this.toIso(b.start) : null
+    const bEnd = b?.end ? this.toIso(b.end) : null
+
+    return aStart === bStart && aEnd === bEnd
   }
 
   syncFormFields(state) {

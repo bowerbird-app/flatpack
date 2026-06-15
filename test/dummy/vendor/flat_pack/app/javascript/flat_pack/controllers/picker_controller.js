@@ -424,7 +424,7 @@ export default class extends Controller {
 
   #selectionIndicatorClasses(isSelected) {
     return isSelected
-      ? "bg-(--primary-color) ring-(--primary-color)"
+      ? "bg-(--color-primary) ring-(--color-primary)"
       : "bg-black/30 ring-black/20"
   }
 
