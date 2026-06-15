@@ -6,7 +6,7 @@ Render ApexCharts-based visualizations with FlatPack defaults and optional card 
 ## When to use
 Use this for dashboard and analytics charts when data is available in ApexCharts-compatible series format.
 Use `FlatPack::ChartButtons::Component` as a sibling when you need reusable Turbo Frame filter controls outside the chart card header.
-Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status filtering, and enable `responsive: true` when you want built-in desktop/mobile filter presentation.
+Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status filtering, and enable `minimized: true` when you want desktop inline filters plus a mobile modal trigger.
 
 ## Class
 - `FlatPack::Chart::Component`
@@ -50,14 +50,14 @@ Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status f
 | `status_lists` | Array, Hash | — | yes | Select options in any `FlatPack::Select::Component`-supported format. |
 | `status_placeholder` | String, nil | `"All"` | no | Placeholder option label for the status select. |
 | `hide_labels` | Boolean | `false` | no | When true, omits rendering the Date Range and Status form labels. |
-| `responsive` | Boolean | `false` | no | When true, renders through `FlatPack::ResponsiveFilters::Component` internally. |
-| `responsive_options` | Hash | `{}` | no | Required when `responsive: true`; must include `form_url` and `turbo_frame`. |
+| `minimized` | Boolean | `true` | no | When true, renders desktop inline controls and mobile `FlatPack::MinimizedFilters::Component` modal flow. |
+| `minimized_options` | Hash | `{}` | no | Required when `minimized: true`; include `form_url` and `turbo_frame` for Turbo updates. |
 
-### DefaultFilter responsive_options
+### DefaultFilter minimized_options
 | key | type | required | description |
 | --- | --- | --- | --- |
-| `form_url` | String | yes | Form submission URL for desktop and mobile filter flows. |
-| `turbo_frame` | String | yes | Turbo Frame target for filter submissions. |
+| `form_url` | String | no | Form submission URL for desktop and mobile filter flows. Defaults to current request path. |
+| `turbo_frame` | String | no | Turbo Frame target for filter submissions. |
 | `id` | String | no | Base id for generated modal/form ids. Defaults to `"chart-default-filter"`. |
 | `active_count` | Integer | no | Mobile trigger count (`Filter {count}`). |
 | `reset_url` | String, nil | no | Optional reset link rendered in mobile modal actions. |
@@ -126,8 +126,8 @@ Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status f
   end_date_value: params[:end_date],
   status: params[:status],
   status_lists: [["Active", "active"], ["Paused", "paused"], ["Archived", "archived"]],
-  responsive: true,
-  responsive_options: {
+  minimized: true,
+  minimized_options: {
     id: "chart-default-filter",
     form_url: demo_charts_default_filter_path,
     turbo_frame: "chart-default-filter-frame",

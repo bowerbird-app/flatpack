@@ -11,7 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `FlatPack::MinimizedFilters::Component` for modal-only filtering with a dedicated `filter_body` slot and a `Filter {count}` trigger badge when `active_count > 0`.
 
 ### Changed
-- Added a dedicated `/demo/minimized_filter` page for Minimized Filters so modal-only filter examples are separated from `/demo/responsive_filter`.
+- Updated `FlatPack::Chart::DefaultFilterComponent` to replace `responsive`/`responsive_options` with `minimized`/`minimized_options`, preserving desktop inline auto-submit filters while using `FlatPack::MinimizedFilters::Component` for mobile modal flows.
+- Updated `/demo/charts/default_filter` and `/demo/tables/basic` to use minimized filter patterns (desktop inline + mobile modal trigger).
+- Removed `/demo/responsive_filter` route/page and migrated Data Display navigation to `Minimized Filters` only.
+- Removed `FlatPack::ResponsiveFilters::Component` and its dedicated docs/tests in favor of minimized filter composition.
 
 ### Fixed
 - Updated `/demo/forms/date_input` so the `Billing Anchor Date` example uses the browser native date input (`picker: :native`) instead of the FlatPack popup picker.

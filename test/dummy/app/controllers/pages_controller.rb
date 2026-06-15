@@ -68,7 +68,7 @@ class PagesController < ApplicationController
   # Actions with dynamic data that must not be fully cached
   UNCACHED_ACTIONS = %i[
     picker search_results picker_results pagination_infinite charts charts_default_filter
-    responsive_filter minimized_filter
+    minimized_filter
     comments admin chat_demo chips chip_add_callback chip_remove_callback
     tables_basic tables_sortable
   ].freeze
@@ -673,12 +673,6 @@ class PagesController < ApplicationController
 
   def charts_default_filter
     load_default_chart_filter_demo
-  end
-
-  def responsive_filter
-    load_default_chart_filter_demo
-    load_table_demo_data
-    load_responsive_filter_table_demo_data
   end
 
   def minimized_filter
@@ -1665,7 +1659,6 @@ class PagesController < ApplicationController
       {title: "Infinite Scroll", description: "Infinite scrolling pagination patterns", url: demo_pagination_infinite_path},
       {title: "Charts", description: "Data visualization with ApexCharts", url: demo_charts_path},
       {title: "Charts: Default Filter", description: "Date range and optional status filter for chart controls", url: demo_charts_default_filter_path},
-      {title: "Responsive Filter", description: "Responsive desktop/mobile filter examples for charts and tables", url: demo_responsive_filter_path},
       {title: "Minimized Filters", description: "Modal-only filter content with dedicated Filter trigger flow", url: demo_minimized_filter_path},
       {title: "Code Blocks", description: "Reusable snippets for demo pages", url: demo_code_blocks_path},
       {title: "Avatars", description: "Avatar and avatar group examples", url: demo_avatars_path},
@@ -1757,44 +1750,6 @@ class PagesController < ApplicationController
       filter_field: "category",
       filter_value: "all",
       query: @table_search_query
-    )
-  end
-
-  def load_responsive_filter_table_demo_data
-    @responsive_table_filter_default_category = "all"
-    @responsive_table_filter_default_status = "all"
-    @responsive_table_filter_default_search_query = ""
-
-    requested_category = params[:table_category].to_s
-    requested_status = params[:table_status].to_s
-    @responsive_table_filter_category = table_category_values.key?(requested_category) ? requested_category : @responsive_table_filter_default_category
-    @responsive_table_filter_status = table_status_values.key?(requested_status) ? requested_status : @responsive_table_filter_default_status
-    @responsive_table_search_query = params[:table_q].to_s.strip
-
-    @responsive_table_filter_active_count = 0
-    @responsive_table_filter_active_count += 1 if @responsive_table_filter_category != @responsive_table_filter_default_category
-    @responsive_table_filter_active_count += 1 if @responsive_table_filter_status != @responsive_table_filter_default_status
-    @responsive_table_filter_active_count += 1 if @responsive_table_search_query != @responsive_table_filter_default_search_query
-
-    filtered_users = apply_table_filter_and_search(
-      @users,
-      filter_field: "category",
-      filter_value: @responsive_table_filter_category,
-      query: ""
-    )
-
-    filtered_users = apply_table_filter_and_search(
-      filtered_users,
-      filter_field: "status",
-      filter_value: @responsive_table_filter_status,
-      query: ""
-    )
-
-    @responsive_table_filtered_users = apply_table_filter_and_search(
-      filtered_users,
-      filter_field: "category",
-      filter_value: "all",
-      query: @responsive_table_search_query
     )
   end
 

@@ -37,10 +37,10 @@ Use this when filter controls should be hidden from inline layouts and shown onl
 ```erb
 <%= render FlatPack::MinimizedFilters::Component.new(
   id: "minimized-filter-table-controls",
-  form_url: demo_responsive_filter_path,
+  form_url: demo_minimized_filter_path,
   turbo_frame: "minimized-filter-table-frame",
   active_count: @minimized_filter_active_count,
-  reset_url: demo_responsive_filter_path,
+  reset_url: demo_minimized_filter_path,
   mobile_form_class: "space-y-3"
 ) do |minimized_filters| %>
   <% minimized_filters.filter_body do %>

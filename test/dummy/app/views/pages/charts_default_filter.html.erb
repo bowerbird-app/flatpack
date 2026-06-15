@@ -22,8 +22,8 @@
       end_date_value: @default_chart_filter_end_date,
       status: @default_chart_filter_status,
       status_lists: @default_chart_filter_status_lists,
-      responsive: true,
-      responsive_options: {
+      minimized: true,
+      minimized_options: {
         id: "chart-default-filter",
         form_url: demo_charts_default_filter_path,
         turbo_frame: "chart-default-filter-frame",
@@ -79,13 +79,13 @@
         example: "hide_labels: true"
       },
       {
-        variable: "responsive",
-        accepts: "Boolean (default: false)",
-        example: "responsive: true"
+        variable: "minimized",
+        accepts: "Boolean (default: true)",
+        example: "minimized: true"
       },
       {
-        variable: "responsive_options",
-        accepts: "Hash (required when responsive: true)",
+        variable: "minimized_options",
+        accepts: "Hash (required when minimized: true)",
         example: '{ form_url: demo_charts_default_filter_path, turbo_frame: "chart-default-filter-frame" }'
       }
     ]
@@ -107,8 +107,8 @@
           end_date_value: params[:end_date],
           status: params[:status],
           status_lists: [["Active", "active"], ["Paused", "paused"], ["Archived", "archived"]],
-          responsive: true,
-          responsive_options: {
+          minimized: true,
+          minimized_options: {
             id: "chart-default-filter",
             form_url: demo_charts_default_filter_path,
             turbo_frame: "chart-default-filter-frame"
@@ -130,8 +130,8 @@
       status: @default_chart_filter_status,
       status_lists: @default_chart_filter_status_lists,
       hide_labels: true,
-      responsive: true,
-      responsive_options: {
+      minimized: true,
+      minimized_options: {
         id: "chart-default-filter-hidden-labels",
         form_url: demo_charts_default_filter_path,
         turbo_frame: "chart-default-filter-hidden-labels-frame",
@@ -181,8 +181,8 @@
       end_date_value: @default_chart_filter_end_date,
       status_name: nil,
       status_lists: @default_chart_filter_status_lists,
-      responsive: true,
-      responsive_options: {
+      minimized: true,
+      minimized_options: {
         id: "chart-default-filter-no-status",
         form_url: demo_charts_default_filter_path,
         turbo_frame: "chart-default-filter-no-status-frame",
