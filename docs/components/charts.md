@@ -16,7 +16,7 @@ Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status f
 | name | type | default | required | description |
 | --- | --- | --- | --- | --- |
 | `series` | Array or Hash | — | yes | Chart series payload passed to ApexCharts. |
-| `type` | Symbol | `:line` | no | One of `:line`, `:column`, `:bar`, `:area`, `:donut`, `:pie`, `:radar`. Use `:column` for vertical bars and `:bar` for horizontal bars. |
+| `type` | Symbol | `:line` | no | One of `:line`, `:column`, `:bar`, `:area`, `:donut`, `:pie`, `:radar`, `:gauge`. Use `:column` for vertical bars, `:bar` for horizontal bars, and `:gauge` for radial gauge-style KPI displays. |
 | `options` | Hash | `{}` | no | ApexCharts options deep-merged over component defaults. |
 | `height` | Integer | `280` | no | Chart height in pixels; must be positive. |
 | `card` | Boolean | `true` | no | Wraps chart in `FlatPack::Card::Component` with header/body/footer layout. |
@@ -34,6 +34,7 @@ Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status f
 - Chart type variant via `type`
 - Framed (`card: true`) and inline (`card: false`) rendering
 - Axis defaults for line/column/bar/area/radar and non-axis defaults for donut/pie
+- Gauge defaults for `:gauge` (`radialBar`) with rounded arc ends and primary-color shading
 
 ## Color Defaults
 - By default, charts derive their series palette from `--color-primary`.
@@ -141,6 +142,18 @@ Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status f
     reset_url: demo_charts_default_filter_path,
     desktop_form_class: "mb-4",
     mobile_form_class: "space-y-4"
+  }
+) %>
+```
+
+```erb
+<%= render FlatPack::Chart::Component.new(
+  type: :gauge,
+  series: [67],
+  title: "SLA Compliance",
+  subtitle: "Current period",
+  options: {
+    labels: ["SLA"]
   }
 ) %>
 ```

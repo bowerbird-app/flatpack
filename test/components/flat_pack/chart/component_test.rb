@@ -68,6 +68,13 @@ module FlatPack
         assert_selector "[data-flat-pack--chart-type-value='radar']"
       end
 
+      def test_renders_chart_with_gauge_type
+        series = [67]
+        render_inline(Component.new(series: series, type: :gauge))
+
+        assert_selector "[data-flat-pack--chart-type-value='radialBar']"
+      end
+
       def test_raises_error_for_invalid_type
         series = [{name: "Sales", data: [10, 20, 30]}]
         error = assert_raises(ArgumentError) do
@@ -254,6 +261,47 @@ module FlatPack
         refute_includes html, '"yaxis"'
         refute_includes html, '"grid"'
         refute_includes html, '"curve":"smooth"'
+      end
+
+      def test_gauge_defaults_include_radial_bar_and_do_not_include_axis_options
+        series = [72]
+        render_inline(Component.new(series: series, type: :gauge))
+
+        html = page.native.to_html
+        assert_includes html, '"lineCap":"round"'
+        assert_includes html, '"radialBar":{"startAngle":-135,"endAngle":135'
+        assert_includes html, '"gradientToColors":["color-mix(in oklab, var(--color-primary) 70%, transparent)"]'
+        refute_includes html, '"xaxis"'
+        refute_includes html, '"yaxis"'
+        refute_includes html, '"grid"'
+      end
+
+      def test_gauge_options_allow_overriding_defaults
+        series = [85]
+        options = {
+          stroke: {lineCap: "butt"},
+          fill: {
+            gradient: {
+              stops: [0, 100]
+            }
+          },
+          plotOptions: {
+            radialBar: {
+              dataLabels: {
+                value: {
+                  fontSize: "1.5rem"
+                }
+              }
+            }
+          }
+        }
+
+        render_inline(Component.new(series: series, type: :gauge, options: options))
+
+        html = page.native.to_html
+        assert_includes html, '"lineCap":"butt"'
+        assert_includes html, '"stops":[0,100]'
+        assert_includes html, '"fontSize":"1.5rem"'
       end
 
       def test_line_defaults_include_axis_options
