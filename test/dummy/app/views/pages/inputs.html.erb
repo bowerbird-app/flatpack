@@ -381,6 +381,15 @@
         min_characters: 30,
         max_characters: 140
       ) %>
+
+      <%= render FlatPack::TextArea::Component.new(
+        name: "release_notes",
+        id: "release_notes",
+        label: "Release Notes (quick copy)",
+        value: "Fixed onboarding bug\nAdded quick copy to text area",
+        rows: 3,
+        quick_copy: true
+      ) %>
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE'),
@@ -412,6 +421,15 @@
           min_characters: 30,
           max_characters: 140,
           rows: 3
+        ) %&gt;
+
+        &lt;%= render FlatPack::TextArea::Component.new(
+          name: "release_notes",
+          id: "release_notes",
+          label: "Release Notes (quick copy)",
+          value: "Fixed onboarding bug\nAdded quick copy to text area",
+          rows: 3,
+          quick_copy: true
         ) %&gt;
       CODE
       class: "mt-4"

@@ -19,6 +19,7 @@ module FlatPack
         autogrow: true,
         submit_on_enter: false,
         character_count: false,
+        quick_copy: false,
         min_characters: nil,
         max_characters: nil,
         rich_text: false,
@@ -38,6 +39,7 @@ module FlatPack
         @autogrow = autogrow
         @submit_on_enter = submit_on_enter
         @character_count = character_count
+        @quick_copy = quick_copy
         @min_characters = min_characters
         @max_characters = max_characters
         @rich_text = rich_text
@@ -81,7 +83,14 @@ module FlatPack
       end
 
       def render_textarea
-        content_tag(:textarea, @value, **textarea_attributes)
+        return content_tag(:textarea, @value, **textarea_attributes) unless @quick_copy
+
+        content_tag(:div, class: quick_copy_wrapper_classes) do
+          safe_join([
+            content_tag(:textarea, @value, **textarea_attributes),
+            render_copy_button
+          ])
+        end
       end
 
       def textarea_attributes
@@ -90,6 +99,7 @@ module FlatPack
           id: field_id,
           placeholder: @placeholder,
           disabled: @disabled,
+          readonly: @quick_copy,
           required: @required,
           rows: @rows,
           class: textarea_classes,
@@ -108,6 +118,22 @@ module FlatPack
         return unless @error
 
         content_tag(:p, @error, class: error_classes, id: error_id)
+      end
+
+      def render_copy_button
+        content_tag(
+          :button,
+          type: "button",
+          class: copy_button_classes,
+          disabled: @disabled,
+          data: {
+            action: "click->flat-pack--text-area#copyFromButton",
+            flat_pack__text_area_target: "copyButton"
+          },
+          aria: {label: "Copy textarea value"}
+        ) do
+          render FlatPack::Shared::IconComponent.new(name: "clipboard-document", size: :sm)
+        end
       end
 
       # ── Plain textarea mode ──────────────────────────────────────────────────
@@ -230,7 +256,8 @@ module FlatPack
             flat_pack__text_area_submit_on_enter_value: @submit_on_enter,
             flat_pack__text_area_min_characters_value: @min_characters,
             flat_pack__text_area_max_characters_value: @max_characters,
-            flat_pack__text_area_character_count_enabled_value: @character_count
+            flat_pack__text_area_character_count_enabled_value: @character_count,
+            flat_pack__text_area_quick_copy_enabled_value: @quick_copy
           }.compact
         }
       end
@@ -295,6 +322,8 @@ module FlatPack
           "resize-none"
         ]
 
+        base_classes << "pr-10" if @quick_copy
+
         base_classes << if @error
           "border-[var(--color-warning)]"
         else
@@ -310,6 +339,23 @@ module FlatPack
 
       def character_count_classes
         "mt-1 text-xs text-[var(--surface-muted-content-color)]"
+      end
+
+      def quick_copy_wrapper_classes
+        "relative"
+      end
+
+      def copy_button_classes
+        classes(
+          "absolute right-2 top-2",
+          "inline-flex items-center justify-center",
+          "h-6 w-6 rounded",
+          "text-[var(--surface-muted-content-color)]",
+          "hover:text-[var(--surface-content-color)]",
+          "hover:bg-[var(--surface-muted-background-color)]",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          "disabled:opacity-50 disabled:cursor-not-allowed"
+        )
       end
 
       # ── ID helpers ───────────────────────────────────────────────────────────
@@ -351,6 +397,7 @@ module FlatPack
         actions = ["input->flat-pack--text-area#updateCharacterCount"]
         actions.unshift("input->flat-pack--text-area#autoExpand") if @autogrow
         actions << "keydown->flat-pack--text-area#handleKeydown" if @submit_on_enter
+        actions << "click->flat-pack--text-area#copyFromTextarea" if @quick_copy
         actions.join(" ")
       end
 
