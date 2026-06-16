@@ -23,6 +23,7 @@ module FlatPack
       }.freeze
 
       PRIMARY_COLOR_OPACITY_STEPS = [100, 90, 70, 50, 30, 10].freeze
+      AREA_LINE_OPACITY_STEPS = [100, 85, 70, 55, 40, 25].freeze
 
       def initialize(
         series:,
@@ -57,7 +58,7 @@ module FlatPack
       end
 
       def top_right_slot(*args, **kwargs, &block)
-        return actions_slot if args.empty? && kwargs.empty? && !block_given?
+        return actions_slot if args.empty? && kwargs.empty? && !block
 
         set_slot(:actions, nil, *args, **kwargs, &block)
       end
@@ -68,7 +69,7 @@ module FlatPack
       end
 
       def footer(*args, **kwargs, &block)
-        return footer_slot if args.empty? && kwargs.empty? && !block_given?
+        return footer_slot if args.empty? && kwargs.empty? && !block
 
         set_slot(:footer, nil, *args, **kwargs, &block)
       end
@@ -197,6 +198,12 @@ module FlatPack
         end
       end
 
+      def area_line_colors
+        AREA_LINE_OPACITY_STEPS.map do |opacity|
+          "color-mix(in oklab, var(--color-primary) #{opacity}%, transparent)"
+        end
+      end
+
       def axis_chart_defaults
         defaults = {
           stroke: {
@@ -232,7 +239,7 @@ module FlatPack
         if area_chart?
           defaults = defaults.deep_merge(
             {
-              colors: ["var(--color-primary)"],
+              colors: area_line_colors,
               fill: {
                 type: "solid",
                 colors: ["color-mix(in oklab, var(--color-primary) 10%, transparent)"],

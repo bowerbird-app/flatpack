@@ -38,6 +38,7 @@ Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status f
 ## Color Defaults
 - By default, charts derive their series palette from `--color-primary`.
 - When multiple colors are needed, the component uses six opacity steps from the same primary color in descending strength: `100%`, `90%`, `70%`, `50%`, `30%`, and `10%`.
+- Area charts use a dedicated line-color opacity ramp (`100%`, `85%`, `70%`, `55%`, `40%`, `25%`) so multiple series are easier to distinguish while keeping the area fill at `10%` primary color.
 - If you provide `options[:colors]`, your values are used as-is and override the default theme-derived palette.
 
 ## Related Classes

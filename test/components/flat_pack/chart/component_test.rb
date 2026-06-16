@@ -273,7 +273,9 @@ module FlatPack
 
         html = page.native.to_html
         assert_includes html, '"fill":{"type":"solid","colors":["color-mix(in oklab, var(--color-primary) 10%, transparent)"],"opacity":1}'
-        assert_includes html, '"colors":["var(--color-primary)"]'
+        assert_includes html, '"colors":["color-mix(in oklab, var(--color-primary) 100%, transparent)"'
+        assert_includes html, '"color-mix(in oklab, var(--color-primary) 85%, transparent)"'
+        assert_includes html, '"color-mix(in oklab, var(--color-primary) 70%, transparent)"'
       end
 
       def test_bar_defaults_are_horizontal
