@@ -19,8 +19,12 @@ module FlatPack
         area: :area,
         donut: :donut,
         pie: :pie,
-        radar: :radar
+        radar: :radar,
+        gauge: :gauge
       }.freeze
+
+      PRIMARY_COLOR_OPACITY_STEPS = [100, 90, 70, 50, 30, 10].freeze
+      AREA_LINE_OPACITY_STEPS = [100, 85, 70, 55, 40, 25].freeze
 
       def initialize(
         series:,
@@ -55,7 +59,7 @@ module FlatPack
       end
 
       def top_right_slot(*args, **kwargs, &block)
-        return actions_slot if args.empty? && kwargs.empty? && !block_given?
+        return actions_slot if args.empty? && kwargs.empty? && !block
 
         set_slot(:actions, nil, *args, **kwargs, &block)
       end
@@ -66,7 +70,7 @@ module FlatPack
       end
 
       def footer(*args, **kwargs, &block)
-        return footer_slot if args.empty? && kwargs.empty? && !block_given?
+        return footer_slot if args.empty? && kwargs.empty? && !block
 
         set_slot(:footer, nil, *args, **kwargs, &block)
       end
@@ -167,6 +171,7 @@ module FlatPack
               show: false
             }
           },
+          colors: default_chart_colors,
           theme: {
             mode: "light"
           },
@@ -183,9 +188,23 @@ module FlatPack
           }
         }
 
+        return base_options.merge(gauge_chart_defaults) if gauge_chart?
+
         return base_options.merge(non_axis_chart_defaults) if non_axis_chart?
 
         base_options.merge(axis_chart_defaults)
+      end
+
+      def default_chart_colors
+        PRIMARY_COLOR_OPACITY_STEPS.map do |opacity|
+          "color-mix(in oklab, var(--color-primary) #{opacity}%, transparent)"
+        end
+      end
+
+      def area_line_colors
+        AREA_LINE_OPACITY_STEPS.map do |opacity|
+          "color-mix(in oklab, var(--color-primary) #{opacity}%, transparent)"
+        end
       end
 
       def axis_chart_defaults
@@ -220,6 +239,19 @@ module FlatPack
           }
         }
 
+        if area_chart?
+          defaults = defaults.deep_merge(
+            {
+              colors: area_line_colors,
+              fill: {
+                type: "solid",
+                colors: ["color-mix(in oklab, var(--color-primary) 10%, transparent)"],
+                opacity: 1
+              }
+            }
+          )
+        end
+
         return defaults unless bar_chart?
 
         defaults.deep_merge(
@@ -241,12 +273,67 @@ module FlatPack
         }
       end
 
+      def gauge_chart_defaults
+        {
+          colors: ["color-mix(in oklab, var(--color-primary) 100%, transparent)"],
+          stroke: {
+            lineCap: "round"
+          },
+          fill: {
+            type: "gradient",
+            gradient: {
+              shade: "light",
+              shadeIntensity: 0.45,
+              inverseColors: false,
+              gradientToColors: ["color-mix(in oklab, var(--color-primary) 70%, transparent)"],
+              opacityFrom: 1,
+              opacityTo: 1,
+              stops: [0, 70, 100]
+            }
+          },
+          plotOptions: {
+            radialBar: {
+              startAngle: -135,
+              endAngle: 135,
+              hollow: {
+                size: "66%",
+                background: "transparent"
+              },
+              track: {
+                background: "color-mix(in oklab, var(--color-primary) 18%, transparent)",
+                strokeWidth: "100%",
+                margin: 0
+              },
+              dataLabels: {
+                name: {
+                  show: false
+                },
+                value: {
+                  offsetY: 8,
+                  fontSize: "2rem",
+                  fontWeight: 700,
+                  color: "var(--surface-content-color)"
+                }
+              }
+            }
+          }
+        }
+      end
+
       def non_axis_chart?
         @type == :donut || @type == :pie
       end
 
+      def gauge_chart?
+        @type == :gauge
+      end
+
       def bar_chart?
         @type == :bar || @type == :column
+      end
+
+      def area_chart?
+        @type == :area
       end
 
       def horizontal_bar?
@@ -254,6 +341,7 @@ module FlatPack
       end
 
       def apex_chart_type
+        return :radialBar if gauge_chart?
         return :bar if bar_chart?
 
         @type

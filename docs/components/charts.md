@@ -6,7 +6,7 @@ Render ApexCharts-based visualizations with FlatPack defaults and optional card 
 ## When to use
 Use this for dashboard and analytics charts when data is available in ApexCharts-compatible series format.
 Use `FlatPack::ChartButtons::Component` as a sibling when you need reusable Turbo Frame filter controls outside the chart card header.
-Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status filtering, and enable `responsive: true` when you want built-in desktop/mobile filter presentation.
+Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status filtering, and enable `minimized: true` when you want desktop inline filters plus a mobile modal trigger.
 
 ## Class
 - `FlatPack::Chart::Component`
@@ -16,7 +16,7 @@ Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status f
 | name | type | default | required | description |
 | --- | --- | --- | --- | --- |
 | `series` | Array or Hash | — | yes | Chart series payload passed to ApexCharts. |
-| `type` | Symbol | `:line` | no | One of `:line`, `:column`, `:bar`, `:area`, `:donut`, `:pie`, `:radar`. Use `:column` for vertical bars and `:bar` for horizontal bars. |
+| `type` | Symbol | `:line` | no | One of `:line`, `:column`, `:bar`, `:area`, `:donut`, `:pie`, `:radar`, `:gauge`. Use `:column` for vertical bars, `:bar` for horizontal bars, and `:gauge` for radial gauge-style KPI displays. |
 | `options` | Hash | `{}` | no | ApexCharts options deep-merged over component defaults. |
 | `height` | Integer | `280` | no | Chart height in pixels; must be positive. |
 | `card` | Boolean | `true` | no | Wraps chart in `FlatPack::Card::Component` with header/body/footer layout. |
@@ -34,6 +34,13 @@ Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status f
 - Chart type variant via `type`
 - Framed (`card: true`) and inline (`card: false`) rendering
 - Axis defaults for line/column/bar/area/radar and non-axis defaults for donut/pie
+- Gauge defaults for `:gauge` (`radialBar`) with rounded arc ends and primary-color shading
+
+## Color Defaults
+- By default, charts derive their series palette from `--color-primary`.
+- When multiple colors are needed, the component uses six opacity steps from the same primary color in descending strength: `100%`, `90%`, `70%`, `50%`, `30%`, and `10%`.
+- Area charts use a dedicated line-color opacity ramp (`100%`, `85%`, `70%`, `55%`, `40%`, `25%`) so multiple series are easier to distinguish while keeping the area fill at `10%` primary color.
+- If you provide `options[:colors]`, your values are used as-is and override the default theme-derived palette.
 
 ## Related Classes
 - `FlatPack::Chart::DefaultFilterComponent`: reusable date range + status filter row designed for chart dashboards.
@@ -50,14 +57,14 @@ Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status f
 | `status_lists` | Array, Hash | — | yes | Select options in any `FlatPack::Select::Component`-supported format. |
 | `status_placeholder` | String, nil | `"All"` | no | Placeholder option label for the status select. |
 | `hide_labels` | Boolean | `false` | no | When true, omits rendering the Date Range and Status form labels. |
-| `responsive` | Boolean | `false` | no | When true, renders through `FlatPack::ResponsiveFilters::Component` internally. |
-| `responsive_options` | Hash | `{}` | no | Required when `responsive: true`; must include `form_url` and `turbo_frame`. |
+| `minimized` | Boolean | `true` | no | When true, renders desktop inline controls and mobile `FlatPack::ModalFilter::Component` modal flow. |
+| `minimized_options` | Hash | `{}` | no | Required when `minimized: true`; include `form_url` and `turbo_frame` for Turbo updates. |
 
-### DefaultFilter responsive_options
+### DefaultFilter minimized_options
 | key | type | required | description |
 | --- | --- | --- | --- |
-| `form_url` | String | yes | Form submission URL for desktop and mobile filter flows. |
-| `turbo_frame` | String | yes | Turbo Frame target for filter submissions. |
+| `form_url` | String | no | Form submission URL for desktop and mobile filter flows. Defaults to current request path. |
+| `turbo_frame` | String | no | Turbo Frame target for filter submissions. |
 | `id` | String | no | Base id for generated modal/form ids. Defaults to `"chart-default-filter"`. |
 | `active_count` | Integer | no | Mobile trigger count (`Filter {count}`). |
 | `reset_url` | String, nil | no | Optional reset link rendered in mobile modal actions. |
@@ -126,8 +133,8 @@ Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status f
   end_date_value: params[:end_date],
   status: params[:status],
   status_lists: [["Active", "active"], ["Paused", "paused"], ["Archived", "archived"]],
-  responsive: true,
-  responsive_options: {
+  minimized: true,
+  minimized_options: {
     id: "chart-default-filter",
     form_url: demo_charts_default_filter_path,
     turbo_frame: "chart-default-filter-frame",
@@ -135,6 +142,18 @@ Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status f
     reset_url: demo_charts_default_filter_path,
     desktop_form_class: "mb-4",
     mobile_form_class: "space-y-4"
+  }
+) %>
+```
+
+```erb
+<%= render FlatPack::Chart::Component.new(
+  type: :gauge,
+  series: [67],
+  title: "SLA Compliance",
+  subtitle: "Current period",
+  options: {
+    labels: ["SLA"]
   }
 ) %>
 ```

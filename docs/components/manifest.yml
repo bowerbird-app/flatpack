@@ -89,7 +89,7 @@ components:
     primary_class: FlatPack::Chart::Component
     related_classes:
       - FlatPack::Chart::DefaultFilterComponent
-      - FlatPack::ResponsiveFilters::Component
+      - FlatPack::ModalFilter::Component
     status: documented
 
   - key: chart_buttons
@@ -245,6 +245,12 @@ components:
     primary_class: FlatPack::Modal::Component
     status: documented
 
+  - key: modal_filter
+    title: Modal Filter
+    doc: docs/components/modal-filter.md
+    primary_class: FlatPack::ModalFilter::Component
+    status: documented
+
   - key: navbar
     title: Navbar
     doc: docs/components/navbar.md
@@ -311,12 +317,6 @@ components:
     title: Range Input
     doc: docs/components/range-input.md
     primary_class: FlatPack::RangeInput::Component
-    status: documented
-
-  - key: responsive_filters
-    title: Responsive Filters
-    doc: docs/components/responsive-filters.md
-    primary_class: FlatPack::ResponsiveFilters::Component
     status: documented
 
   - key: search

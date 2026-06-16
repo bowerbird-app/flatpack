@@ -1,24 +1,16 @@
 # frozen_string_literal: true
 
 module FlatPack
-  module ResponsiveFilters
+  module ModalFilter
     class Component < FlatPack::BaseComponent
-      renders_one :fields
-      renders_one :mobile_fields
+      renders_one :filter_body
 
-      undef_method :with_fields, :with_fields_content
-      undef_method :with_mobile_fields, :with_mobile_fields_content
+      undef_method :with_filter_body, :with_filter_body_content
 
-      def fields(*args, **kwargs, &block)
-        return get_slot(:fields) if args.empty? && kwargs.empty? && !block_given?
+      def filter_body(*args, **kwargs, &block)
+        return get_slot(:filter_body) if args.empty? && kwargs.empty? && !block_given?
 
-        set_slot(:fields, nil, *args, **kwargs, &block)
-      end
-
-      def mobile_fields(*args, **kwargs, &block)
-        return get_slot(:mobile_fields) if args.empty? && kwargs.empty? && !block_given?
-
-        set_slot(:mobile_fields, nil, *args, **kwargs, &block)
+        set_slot(:filter_body, nil, *args, **kwargs, &block)
       end
 
       def initialize(
@@ -28,13 +20,11 @@ module FlatPack
         form_method: :get,
         active_count: 0,
         trigger_label: "Filter",
+        button_size: :sm,
         modal_title: "Filters",
         submit_label: "Apply",
         reset_label: "Reset",
         reset_url: nil,
-        auto_submit_desktop: true,
-        auto_submit_delay: 250,
-        desktop_form_class: nil,
         mobile_form_class: nil,
         **system_arguments
       )
@@ -45,61 +35,44 @@ module FlatPack
         @form_method = form_method
         @active_count = active_count.to_i
         @trigger_label = trigger_label
+        @button_size = button_size.to_sym
         @modal_title = modal_title
         @submit_label = submit_label
         @reset_label = reset_label
         @reset_url = reset_url
-        @auto_submit_desktop = auto_submit_desktop
-        @auto_submit_delay = auto_submit_delay
-        @desktop_form_class = desktop_form_class
         @mobile_form_class = mobile_form_class
 
         validate_id!
         validate_labels!
         validate_active_count!
+        validate_button_size!
       end
 
       def call
         content_tag(:div, **container_attributes) do
           safe_join([
-            render_mobile_trigger,
-            render_desktop_form,
-            render_mobile_modal
+            render_trigger,
+            render_modal
           ])
         end
       end
 
       private
 
-      def render_mobile_trigger
-        content_tag(:div, class: "md:hidden mb-3") do
-          button_tag(
-            type: "button",
-            class: mobile_trigger_button_classes,
-            data: {
-              action: "click->flat-pack--modal#open",
-              "modal-id": modal_id
-            }
-          ) do
-            mobile_trigger_content
-          end
+      def render_trigger
+        button_tag(
+          type: "button",
+          class: trigger_button_classes,
+          data: {
+            action: "click->flat-pack--modal#open",
+            "modal-id": modal_id
+          }
+        ) do
+          trigger_content
         end
       end
 
-      def render_desktop_form
-        content_tag(:div, class: "hidden md:block mb-3") do
-          form_with(
-            url: @form_url,
-            method: @form_method,
-            class: @desktop_form_class,
-            data: desktop_form_data
-          ) do
-            fields_markup
-          end
-        end
-      end
-
-      def render_mobile_modal
+      def render_modal
         render FlatPack::Modal::Component.new(id: modal_id, title: @modal_title, size: :md) do |modal|
           modal.body do
             form_with(
@@ -112,15 +85,15 @@ module FlatPack
               }
             ) do
               safe_join([
-                mobile_fields_markup,
-                render_mobile_actions
+                filter_body_markup,
+                render_actions
               ])
             end
           end
         end
       end
 
-      def render_mobile_actions
+      def render_actions
         content_tag(:div, class: "mt-4 flex items-center justify-end gap-2") do
           safe_join([
             render_reset_button,
@@ -154,13 +127,13 @@ module FlatPack
         )
       end
 
-      def mobile_trigger_content
+      def trigger_content
         content = [content_tag(:span, @trigger_label)]
-        content << render_mobile_count_badge unless @active_count.zero?
+        content << render_count_badge if @active_count.positive?
         safe_join(content)
       end
 
-      def render_mobile_count_badge
+      def render_count_badge
         render FlatPack::Badge::Component.new(
           text: @active_count.to_s,
           style: :primary,
@@ -168,7 +141,7 @@ module FlatPack
         )
       end
 
-      def mobile_trigger_button_classes
+      def trigger_button_classes
         classes(
           "inline-flex items-center justify-center gap-2",
           "rounded-[var(--button-border-radius)]",
@@ -177,39 +150,20 @@ module FlatPack
           "transition-colors duration-base",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--button-focus-ring-offset-color)]",
           "disabled:pointer-events-none disabled:opacity-[var(--button-disabled-opacity)]",
-          "px-[var(--button-padding-x-sm)] py-[var(--button-padding-y-sm)] text-xs",
+          button_size_classes,
           "bg-[var(--button-secondary-background-color)] hover:bg-[var(--button-secondary-hover-background-color)] text-[var(--button-secondary-text-color)] border border-[var(--button-secondary-border-color)]"
         )
       end
 
-      def desktop_form_data
-        data = {
-          turbo_frame: @turbo_frame
-        }
-
-        return data unless @auto_submit_desktop
-
-        data.merge(
-          controller: "flat-pack--auto-submit",
-          action: "input->flat-pack--auto-submit#queueSubmit change->flat-pack--auto-submit#queueSubmit",
-          flat_pack__auto_submit_delay_value: @auto_submit_delay
-        )
+      def button_size_classes
+        FlatPack::Button::Component::SIZES.fetch(@button_size)
       end
 
-      def fields_markup
-        if fields?
-          # Slot content comes from view templates and is expected to be pre-escaped.
-          fields.to_s.html_safe
-        else
-          content.to_s
-        end
-      end
-
-      def mobile_fields_markup
-        return fields_markup unless mobile_fields?
+      def filter_body_markup
+        raise ArgumentError, "filter_body slot is required" unless filter_body?
 
         # Slot content comes from view templates and is expected to be pre-escaped.
-        mobile_fields.to_s.html_safe
+        filter_body.to_s.html_safe
       end
 
       def modal_id
@@ -240,6 +194,12 @@ module FlatPack
         return if @active_count >= 0
 
         raise ArgumentError, "active_count must be greater than or equal to 0"
+      end
+
+      def validate_button_size!
+        return if FlatPack::Button::Component::SIZES.key?(@button_size)
+
+        raise ArgumentError, "button_size must be one of: #{FlatPack::Button::Component::SIZES.keys.join(", ")}"
       end
     end
   end

@@ -68,7 +68,7 @@ class PagesController < ApplicationController
   # Actions with dynamic data that must not be fully cached
   UNCACHED_ACTIONS = %i[
     picker search_results picker_results pagination_infinite charts charts_default_filter
-    responsive_filter
+    modal_filter
     comments admin chat_demo chips chip_add_callback chip_remove_callback
     tables_basic tables_sortable
   ].freeze
@@ -675,10 +675,9 @@ class PagesController < ApplicationController
     load_default_chart_filter_demo
   end
 
-  def responsive_filter
-    load_default_chart_filter_demo
+  def modal_filter
     load_table_demo_data
-    load_responsive_filter_table_demo_data
+    load_modal_filter_demo_data
   end
 
   def code_blocks
@@ -1660,7 +1659,7 @@ class PagesController < ApplicationController
       {title: "Infinite Scroll", description: "Infinite scrolling pagination patterns", url: demo_pagination_infinite_path},
       {title: "Charts", description: "Data visualization with ApexCharts", url: demo_charts_path},
       {title: "Charts: Default Filter", description: "Date range and optional status filter for chart controls", url: demo_charts_default_filter_path},
-      {title: "Responsive Filter", description: "Responsive desktop/mobile filter examples for charts and tables", url: demo_responsive_filter_path},
+      {title: "Modal Filter", description: "Modal-only filter content with dedicated Filter trigger flow", url: demo_modal_filter_path},
       {title: "Code Blocks", description: "Reusable snippets for demo pages", url: demo_code_blocks_path},
       {title: "Avatars", description: "Avatar and avatar group examples", url: demo_avatars_path},
       {title: "Comments", description: "Comments threads and reply composer patterns", url: demo_comments_path},
@@ -1754,41 +1753,74 @@ class PagesController < ApplicationController
     )
   end
 
-  def load_responsive_filter_table_demo_data
-    @responsive_table_filter_default_category = "all"
-    @responsive_table_filter_default_status = "all"
-    @responsive_table_filter_default_search_query = ""
+  def load_modal_filter_demo_data
+    @modal_filter_default_category = "all"
+    @modal_filter_default_status = "all"
+    @modal_filter_default_search_query = ""
 
-    requested_category = params[:table_category].to_s
-    requested_status = params[:table_status].to_s
-    @responsive_table_filter_category = table_category_values.key?(requested_category) ? requested_category : @responsive_table_filter_default_category
-    @responsive_table_filter_status = table_status_values.key?(requested_status) ? requested_status : @responsive_table_filter_default_status
-    @responsive_table_search_query = params[:table_q].to_s.strip
+    requested_category = params[:modal_category].to_s
+    requested_status = params[:modal_status].to_s
+    @modal_filter_category = table_category_values.key?(requested_category) ? requested_category : @modal_filter_default_category
+    @modal_filter_status = table_status_values.key?(requested_status) ? requested_status : @modal_filter_default_status
+    @modal_filter_search_query = params[:modal_q].to_s.strip
 
-    @responsive_table_filter_active_count = 0
-    @responsive_table_filter_active_count += 1 if @responsive_table_filter_category != @responsive_table_filter_default_category
-    @responsive_table_filter_active_count += 1 if @responsive_table_filter_status != @responsive_table_filter_default_status
-    @responsive_table_filter_active_count += 1 if @responsive_table_search_query != @responsive_table_filter_default_search_query
+    @modal_filter_active_count = 0
+    @modal_filter_active_count += 1 if @modal_filter_category != @modal_filter_default_category
+    @modal_filter_active_count += 1 if @modal_filter_status != @modal_filter_default_status
+    @modal_filter_active_count += 1 if @modal_filter_search_query != @modal_filter_default_search_query
 
     filtered_users = apply_table_filter_and_search(
       @users,
       filter_field: "category",
-      filter_value: @responsive_table_filter_category,
+      filter_value: @modal_filter_category,
       query: ""
     )
 
     filtered_users = apply_table_filter_and_search(
       filtered_users,
       filter_field: "status",
-      filter_value: @responsive_table_filter_status,
+      filter_value: @modal_filter_status,
       query: ""
     )
 
-    @responsive_table_filtered_users = apply_table_filter_and_search(
+    @modal_filter_filtered_users = apply_table_filter_and_search(
       filtered_users,
       filter_field: "category",
       filter_value: "all",
-      query: @responsive_table_search_query
+      query: @modal_filter_search_query
+    )
+
+    @modal_inline_filter_default_category = "all"
+    @modal_inline_filter_default_status = "all"
+
+    requested_inline_category = params[:inline_category].to_s
+    requested_inline_status = params[:inline_status].to_s
+    @modal_inline_filter_category = table_category_values.key?(requested_inline_category) ? requested_inline_category : @modal_inline_filter_default_category
+    @modal_inline_filter_status = table_status_values.key?(requested_inline_status) ? requested_inline_status : @modal_inline_filter_default_status
+
+    @modal_inline_filter_active_count = 0
+    @modal_inline_filter_active_count += 1 if @modal_inline_filter_category != @modal_inline_filter_default_category
+    @modal_inline_filter_active_count += 1 if @modal_inline_filter_status != @modal_inline_filter_default_status
+
+    inline_filtered_users = apply_table_filter_and_search(
+      @users,
+      filter_field: "category",
+      filter_value: @modal_inline_filter_category,
+      query: ""
+    )
+
+    inline_filtered_users = apply_table_filter_and_search(
+      inline_filtered_users,
+      filter_field: "status",
+      filter_value: @modal_inline_filter_status,
+      query: ""
+    )
+
+    @modal_inline_filter_filtered_users = apply_table_filter_and_search(
+      inline_filtered_users,
+      filter_field: "category",
+      filter_value: "all",
+      query: ""
     )
   end
 

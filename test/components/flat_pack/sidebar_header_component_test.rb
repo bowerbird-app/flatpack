@@ -11,11 +11,13 @@ module FlatPack
 
           assert_text "FP"
           assert_text "FlatPack"
+          assert_text "v#{FlatPack::VERSION}"
           assert_no_text "Workspace"
           assert_selector "div.flex.items-center.gap-3"
           assert_selector "[data-flat-pack--sidebar-layout-target='headerBrand']"
           assert_selector "[data-flat-pack--sidebar-layout-target='headerLabel']"
           assert_selector "[data-flat-pack--sidebar-layout-target='headerLabel'].flex.items-center.h-8"
+          assert_selector "[data-flat-pack--sidebar-layout-target='headerLabel'] > span", count: 1
           assert_selector "[data-flat-pack--sidebar-layout-target='collapsedToggle']"
           assert_selector "[data-flat-pack--sidebar-layout-target='desktopToggle']"
           assert_selector "[data-flat-pack--sidebar-layout-target='desktopToggle'][data-action='click->flat-pack--sidebar-layout#toggleDesktop click->flat-pack--sidebar-layout#toggleMobile']"

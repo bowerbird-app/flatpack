@@ -84,7 +84,7 @@
       storage_key: "flatpack-dummy-shell"
     ) do |layout| %>
       <% layout.sidebar do %>
-        <% cache ["dummy/sidebar-shell-v2", sidebar_side, user_signed_in?] do %>
+        <% cache ["dummy/sidebar-shell-v3", FlatPack::VERSION, sidebar_side, user_signed_in?] do %>
           <%= render FlatPack::Sidebar::Component.new(side: sidebar_side) do |sidebar| %>
           <% sidebar.header do %>
             <%= render FlatPack::Sidebar::Header::Component.new(
@@ -354,8 +354,8 @@
               <%= render FlatPack::Sidebar::Divider::Component.new %>
               <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Data Display") %>
               <%= render FlatPack::Sidebar::Item::Component.new(
-                label: "Responsive Filter",
-                href: demo_responsive_filter_path,
+                label: "Modal Filter",
+                href: demo_modal_filter_path,
                 icon: :funnel,
                 active: false
               ) %>

@@ -56,66 +56,76 @@
   </p>
 
   <%= turbo_frame_tag "basic-table-generic-filter-frame" do %>
-    <%= render FlatPack::ResponsiveFilters::Component.new(
-      id: "basic-table-generic-filters",
-      form_url: demo_tables_basic_path,
-      turbo_frame: "basic-table-generic-filter-frame",
-      active_count: @table_filter_active_count,
-      reset_url: demo_tables_basic_path,
-      desktop_form_class: "mb-4 flex flex-wrap items-end gap-3",
-      mobile_form_class: "space-y-3",
-      auto_submit_delay: 300
-    ) do |filters| %>
-      <% filters.fields do %>
-        <%= render FlatPack::Select::Component.new(
-          name: "status",
-          value: @table_filter_status,
-          options: @table_filter_definitions.fetch("status").fetch(:values).map { |value_key, value_label| [value_label, value_key] },
-          label: "Status"
-        ) %>
+    <%= form_with(
+      url: demo_tables_basic_path,
+      method: :get,
+      class: "hidden md:flex mb-4 flex-wrap items-end gap-3",
+      data: {
+        turbo_frame: "basic-table-generic-filter-frame",
+        controller: "flat-pack--auto-submit",
+        action: "input->flat-pack--auto-submit#queueSubmit change->flat-pack--auto-submit#queueSubmit",
+        flat_pack__auto_submit_delay_value: 300
+      }
+    ) do %>
+      <%= render FlatPack::Select::Component.new(
+        name: "status",
+        value: @table_filter_status,
+        options: @table_filter_definitions.fetch("status").fetch(:values).map { |value_key, value_label| [value_label, value_key] },
+        label: "Status"
+      ) %>
 
-        <%= render FlatPack::Select::Component.new(
-          name: "category",
-          value: @table_filter_category,
-          options: @table_filter_definitions.fetch("category").fetch(:values).map { |value_key, value_label| [value_label, value_key] },
-          label: "Category"
-        ) %>
+      <%= render FlatPack::Select::Component.new(
+        name: "category",
+        value: @table_filter_category,
+        options: @table_filter_definitions.fetch("category").fetch(:values).map { |value_key, value_label| [value_label, value_key] },
+        label: "Category"
+      ) %>
 
-        <%= render FlatPack::Search::Component.new(
-          name: "q",
-          value: @table_search_query,
-          placeholder: "Search table rows...",
-          max_width: :none,
-          class: "w-56"
-        ) %>
-      <% end %>
-
-      <% filters.mobile_fields do %>
-        <div class="grid gap-3">
-          <%= render FlatPack::Select::Component.new(
-            name: "status",
-            value: @table_filter_status,
-            options: @table_filter_definitions.fetch("status").fetch(:values).map { |value_key, value_label| [value_label, value_key] },
-            label: "Status"
-          ) %>
-
-          <%= render FlatPack::Select::Component.new(
-            name: "category",
-            value: @table_filter_category,
-            options: @table_filter_definitions.fetch("category").fetch(:values).map { |value_key, value_label| [value_label, value_key] },
-            label: "Category"
-          ) %>
-
-          <%= render FlatPack::Search::Component.new(
-            name: "q",
-            value: @table_search_query,
-            placeholder: "Search table rows...",
-            max_width: :none,
-            class: "w-full"
-          ) %>
-        </div>
-      <% end %>
+      <%= render FlatPack::Search::Component.new(
+        name: "q",
+        value: @table_search_query,
+        placeholder: "Search table rows...",
+        max_width: :none,
+        class: "w-56"
+      ) %>
     <% end %>
+
+    <div class="mb-4 md:hidden">
+      <%= render FlatPack::ModalFilter::Component.new(
+        id: "basic-table-generic-filters",
+        form_url: demo_tables_basic_path,
+        turbo_frame: "basic-table-generic-filter-frame",
+        active_count: @table_filter_active_count,
+        reset_url: demo_tables_basic_path,
+        mobile_form_class: "space-y-3"
+      ) do |modal_filter| %>
+        <% modal_filter.filter_body do %>
+          <div class="grid gap-3">
+            <%= render FlatPack::Select::Component.new(
+              name: "status",
+              value: @table_filter_status,
+              options: @table_filter_definitions.fetch("status").fetch(:values).map { |value_key, value_label| [value_label, value_key] },
+              label: "Status"
+            ) %>
+
+            <%= render FlatPack::Select::Component.new(
+              name: "category",
+              value: @table_filter_category,
+              options: @table_filter_definitions.fetch("category").fetch(:values).map { |value_key, value_label| [value_label, value_key] },
+              label: "Category"
+            ) %>
+
+            <%= render FlatPack::Search::Component.new(
+              name: "q",
+              value: @table_search_query,
+              placeholder: "Search table rows...",
+              max_width: :none,
+              class: "w-full"
+            ) %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
 
     <%= render FlatPack::Table::Component.new(data: @table_filtered_users.first(10)) do |table| %>
       <% table.column(title: "ID", html: ->(user) { user.id.to_s }) %>
@@ -129,17 +139,48 @@
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE'),
       &lt;%= turbo_frame_tag "basic-table-generic-filter-frame" do %&gt;
-        &lt;%= render FlatPack::ResponsiveFilters::Component.new(
+        &lt;%= form_with(
+          url: demo_tables_basic_path,
+          method: :get,
+          class: "hidden md:flex mb-4 flex-wrap items-end gap-3",
+          data: {
+            turbo_frame: "basic-table-generic-filter-frame",
+            controller: "flat-pack--auto-submit",
+            action: "input-&gt;flat-pack--auto-submit#queueSubmit change-&gt;flat-pack--auto-submit#queueSubmit",
+            flat_pack__auto_submit_delay_value: 300
+          }
+        ) do %&gt;
+          &lt;%= render FlatPack::Select::Component.new(
+            name: "status",
+            value: @table_filter_status,
+            options: @table_filter_definitions.fetch("status").fetch(:values).map { |value_key, value_label| [value_label, value_key] },
+            label: "Status"
+          ) %&gt;
+          &lt;%= render FlatPack::Select::Component.new(
+            name: "category",
+            value: @table_filter_category,
+            options: @table_filter_definitions.fetch("category").fetch(:values).map { |value_key, value_label| [value_label, value_key] },
+            label: "Category"
+          ) %&gt;
+          &lt;%= render FlatPack::Search::Component.new(
+            name: "q",
+            value: @table_search_query,
+            placeholder: "Search table rows...",
+            max_width: :none,
+            class: "w-56"
+          ) %&gt;
+        &lt;% end %&gt;
+
+        &lt;%= render FlatPack::ModalFilter::Component.new(
           id: "basic-table-generic-filters",
           form_url: demo_tables_basic_path,
           turbo_frame: "basic-table-generic-filter-frame",
           active_count: @table_filter_active_count,
           reset_url: demo_tables_basic_path,
-          desktop_form_class: "mb-4 flex flex-wrap items-end gap-3",
-          mobile_form_class: "space-y-3",
-          auto_submit_delay: 300
-        ) do |filters| %&gt;
-          &lt;% filters.fields do %&gt;
+          mobile_form_class: "space-y-3"
+        ) do |modal_filter| %&gt;
+          &lt;% modal_filter.filter_body do %&gt;
+            &lt;div class="grid gap-3"&gt;
             &lt;%= render FlatPack::Select::Component.new(
               name: "status",
               value: @table_filter_status,
@@ -159,8 +200,9 @@
               value: @table_search_query,
               placeholder: "Search table rows...",
               max_width: :none,
-              class: "w-56"
+              class: "w-full"
             ) %&gt;
+            &lt;/div&gt;
           &lt;% end %&gt;
         &lt;% end %&gt;
 

@@ -3,6 +3,8 @@
   subtitle: "Multiline input examples with optional character counting."
 ) %>
 
+<%= render "pages/toast_region" %>
+
 <%
   minimal_rich_text_value = <<~HTML.strip
     <p><strong>Bolded</strong></p>
@@ -154,6 +156,15 @@
         min_characters: 30,
         max_characters: 140
       ) %>
+
+      <%= render FlatPack::TextArea::Component.new(
+        name: "release_notes",
+        id: "release_notes",
+        label: "Release Notes (quick copy)",
+        value: "Fixed onboarding bug\nAdded quick copy to text area",
+        rows: 3,
+        quick_copy: true
+      ) %>
     <% end %>
   <% end %>
 
@@ -177,6 +188,15 @@
           character_count: true,
           min_characters: 30,
           max_characters: 140
+        ) %&gt;
+
+        &lt;%= render FlatPack::TextArea::Component.new(
+          name: &quot;release_notes&quot;,
+          id: &quot;release_notes&quot;,
+          label: &quot;Release Notes (quick copy)&quot;,
+          value: &quot;Fixed onboarding bug\nAdded quick copy to text area&quot;,
+          rows: 3,
+          quick_copy: true
         ) %&gt;
         &lt;% end %&gt;
       &lt;% end %&gt;

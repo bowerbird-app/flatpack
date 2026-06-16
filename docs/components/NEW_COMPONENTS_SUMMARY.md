@@ -249,7 +249,7 @@ Interactive charts powered by ApexCharts.
 
 **Features:**
 - Dynamic import of ApexCharts (lazy loading)
-- Support for multiple chart types (line, column, bar, area, donut, pie, radar)
+- Support for multiple chart types (line, column, bar, area, donut, pie, radar, gauge)
 - `:column` renders vertical bars, `:bar` renders horizontal bars
 - Wrapped in Card by default
 - Theme-aware with CSS variables

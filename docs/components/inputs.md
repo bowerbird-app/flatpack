@@ -31,7 +31,7 @@ Component-specific props:
 | --- | --- | --- | --- | --- |
 | `rows` | Integer | `3` | no | Initial row count (`TextArea` plain mode only; ignored when `rich_text: true`). |
 | `character_count` | Boolean | `false` | no | Enables live count text in `TextInput` and `TextArea` (plain and rich text modes). |
-| `quick_copy` | Boolean | `false` | no | Enables one-click copy for `TextInput` from both field click and a trailing copy icon button, with toast feedback; the input is rendered `readonly` when enabled. |
+| `quick_copy` | Boolean | `false` | no | Enables one-click copy for `TextInput` and plain `TextArea` from both field click and a trailing copy icon button, with toast feedback; the control is rendered `readonly` when enabled. Not applied when `TextArea` uses `rich_text: true`. |
 | `rich_text` | Boolean | `false` | no | Activates the TipTap rich text editor in place of the native `<textarea>`. |
 | `rich_text_options` | Hash | `{}` | no | Fine-grained config for the rich text editor; see [Rich Text Options](#rich-text-options) below. |
 | `min_characters` | Integer | `nil` | no | Low threshold warning for `TextInput` and `TextArea` count color. |
@@ -108,6 +108,16 @@ Additional focused examples:
   character_count: true,
   min_characters: 20,
   max_characters: 280
+) %>
+```
+
+```erb
+<%= render FlatPack::TextArea::Component.new(
+  name: "release[notes]",
+  label: "Release Notes",
+  value: "Fixed onboarding bug\nAdded quick copy to text area",
+  rows: 3,
+  quick_copy: true
 ) %>
 ```
 

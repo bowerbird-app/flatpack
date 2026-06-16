@@ -175,6 +175,38 @@
   ) %>
 </section>
 
+<!-- Gauge Chart -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Gauge Chart", anchor_link: true, subtitle: "Rounded gauge with primary shaded fill.") %>
+  <%= render FlatPack::Chart::Component.new(
+    type: :gauge,
+    series: [67],
+    title: "SLA Compliance",
+    subtitle: "Current period",
+    height: 360,
+    options: {
+      labels: ["SLA"]
+    }
+  ) %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Chart::Component.new(
+        type: :gauge,
+        series: [67],
+        title: "SLA Compliance",
+        subtitle: "Current period",
+        height: 360,
+        options: {
+          labels: ["SLA"]
+        }
+      ) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
 <!-- Chart with Slot -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Chart with Slot", anchor_link: true, subtitle: "Examples for Chart with Slot.") %>
@@ -795,7 +827,7 @@
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>ApexCharts Integration:</strong> Professional data visualization library<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Lazy Loading:</strong> Charts load only when needed (via dynamic import)<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Card Wrapping:</strong> Automatic card wrapper with title, actions, footer<% end %>
-    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>7 Chart Types:</strong> line, column, bar, area, donut, pie, and radar<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>8 Chart Types:</strong> line, column, bar, area, donut, pie, radar, and gauge<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Responsive:</strong> Charts adapt to container size<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Turbo Compatible:</strong> Properly cleans up on navigation<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Customizable:</strong> Full access to ApexCharts options<% end %>
@@ -814,5 +846,6 @@
     <%= render FlatPack::Badge::Component.new(text: ":donut", variant: :default) %>
     <%= render FlatPack::Badge::Component.new(text: ":pie", variant: :default) %>
     <%= render FlatPack::Badge::Component.new(text: ":radar", variant: :default) %>
+    <%= render FlatPack::Badge::Component.new(text: ":gauge", variant: :default) %>
   </div>
 </section>

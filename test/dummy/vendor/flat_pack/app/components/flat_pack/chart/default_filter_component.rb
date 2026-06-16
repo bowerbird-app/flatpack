@@ -12,8 +12,8 @@ module FlatPack
         status: nil,
         status_placeholder: "All",
         hide_labels: false,
-        responsive: true,
-        responsive_options: {},
+        minimized: true,
+        minimized_options: {},
         **system_arguments
       )
         super(**system_arguments)
@@ -26,45 +26,64 @@ module FlatPack
         @status_lists = status_lists
         @status_placeholder = status_placeholder
         @hide_labels = hide_labels
-        @responsive = responsive
-        @responsive_options = responsive_options || {}
+        @minimized = minimized
+        @minimized_options = minimized_options || {}
 
         validate_names!
         validate_status_lists!
-        validate_responsive_options!
+        validate_minimized_options!
       end
 
       def call
-        return render_responsive_filter if @responsive
+        return render_inline_filter_form if @minimized
 
         render_filter_fields(hide_labels: @hide_labels)
       end
 
       private
 
-      def render_responsive_filter
-        render FlatPack::ResponsiveFilters::Component.new(**responsive_component_options) do |filters|
-          filters.fields { render_filter_fields(hide_labels: @hide_labels) }
-          filters.mobile_fields { render_filter_fields(hide_labels: true, container_class: responsive_mobile_fields_class) }
+      def render_inline_filter_form
+        form_with(
+          url: minimized_form_url,
+          method: :get,
+          class: minimized_desktop_form_class,
+          data: desktop_form_data
+        ) do
+          render_filter_fields(hide_labels: @hide_labels)
         end
       end
 
-      def responsive_component_options
-        {
-          id: responsive_component_id,
-          form_url: @responsive_options[:form_url] || default_form_url,
-          turbo_frame: @responsive_options[:turbo_frame],
-          active_count: @responsive_options[:active_count].to_i,
-          trigger_label: @responsive_options[:trigger_label] || "Filter",
-          modal_title: @responsive_options[:modal_title] || "Filters",
-          submit_label: @responsive_options[:submit_label] || "Apply",
-          reset_label: @responsive_options[:reset_label] || "Reset",
-          reset_url: @responsive_options[:reset_url],
-          auto_submit_desktop: @responsive_options.fetch(:auto_submit_desktop, true),
-          auto_submit_delay: @responsive_options.fetch(:auto_submit_delay, 250),
-          desktop_form_class: @responsive_options[:desktop_form_class],
-          mobile_form_class: @responsive_options[:mobile_form_class]
-        }
+      def minimized_form_url
+        @minimized_options[:form_url] || default_form_url
+      end
+
+      def minimized_turbo_frame
+        @minimized_options[:turbo_frame]
+      end
+
+      def minimized_desktop_form_class
+        @minimized_options[:desktop_form_class]
+      end
+
+      def minimized_auto_submit_desktop?
+        @minimized_options.fetch(:auto_submit_desktop, true)
+      end
+
+      def minimized_auto_submit_delay
+        @minimized_options.fetch(:auto_submit_delay, 250)
+      end
+
+      def desktop_form_data
+        data = {}
+        data[:turbo_frame] = minimized_turbo_frame if minimized_turbo_frame.present?
+
+        return data unless minimized_auto_submit_desktop?
+
+        data.merge(
+          controller: "flat-pack--auto-submit",
+          action: "input->flat-pack--auto-submit#queueSubmit change->flat-pack--auto-submit#queueSubmit",
+          flat_pack__auto_submit_delay_value: minimized_auto_submit_delay
+        )
       end
 
       def default_form_url
@@ -104,14 +123,6 @@ module FlatPack
         )
       end
 
-      def responsive_component_id
-        @responsive_options[:id] || "chart-default-filter"
-      end
-
-      def responsive_mobile_fields_class
-        @responsive_options[:mobile_fields_class] || "grid gap-3"
-      end
-
       def container_attributes(container_class: nil)
         class_tokens = [
           @system_arguments[:class],
@@ -138,11 +149,11 @@ module FlatPack
         raise ArgumentError, "status_lists must be an Array or Hash"
       end
 
-      def validate_responsive_options!
-        return unless @responsive
+      def validate_minimized_options!
+        return unless @minimized
 
-        unless @responsive_options.is_a?(Hash)
-          raise ArgumentError, "responsive_options must be a Hash"
+        unless @minimized_options.is_a?(Hash)
+          raise ArgumentError, "minimized_options must be a Hash"
         end
       end
 

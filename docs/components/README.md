@@ -45,6 +45,7 @@ time_input | FlatPack::TimeInput::Component | docs/components/inputs.md
 link | FlatPack::Link::Component | docs/components/link.md
 list | FlatPack::List::Component | docs/components/list.md
 modal | FlatPack::Modal::Component | docs/components/modal.md
+modal_filter | FlatPack::ModalFilter::Component | docs/components/modal-filter.md
 navbar | FlatPack::Navbar::Component | docs/components/navbar.md
 page_header | FlatPack::PageHeader::Component | docs/components/page-header.md
 page_nav | FlatPack::PageNav::Component | docs/components/page-nav.md
@@ -56,7 +57,6 @@ popover | FlatPack::Popover::Component | docs/components/popover.md
 progress | FlatPack::Progress::Component | docs/components/progress.md
 quote | FlatPack::Quote::Component | docs/components/quote.md
 range_input | FlatPack::RangeInput::Component | docs/components/range-input.md
-responsive_filters | FlatPack::ResponsiveFilters::Component | docs/components/responsive-filters.md
 search | FlatPack::Search::Component | docs/components/search.md
 section_title | FlatPack::SectionTitle::Component | docs/components/section-title.md
 segmented_buttons | FlatPack::SegmentedButtons::Component | docs/components/segmented-buttons.md

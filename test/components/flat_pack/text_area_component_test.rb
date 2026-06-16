@@ -115,6 +115,50 @@ module FlatPack
         assert_selector "div[data-flat-pack--text-area-max-characters-value='200']"
       end
 
+      def test_renders_quick_copy_button_and_textarea_actions
+        render_inline(Component.new(name: "api_key", value: "abc123", quick_copy: true))
+
+        assert_selector "div[data-controller='flat-pack--text-area']"
+        assert_selector "div[data-flat-pack--text-area-quick-copy-enabled-value='true']"
+        assert_selector "textarea[data-flat-pack--text-area-target='textarea']"
+        assert_selector "textarea[data-action='input->flat-pack--text-area#autoExpand input->flat-pack--text-area#updateCharacterCount click->flat-pack--text-area#copyFromTextarea']"
+        assert_selector "button[aria-label='Copy textarea value'][data-action='click->flat-pack--text-area#copyFromButton']"
+        assert_selector "svg[data-flat-pack--icon-name-value='clipboard-document']"
+      end
+
+      def test_combines_character_count_submit_on_enter_and_quick_copy_actions
+        render_inline(Component.new(
+          name: "description",
+          character_count: true,
+          submit_on_enter: true,
+          quick_copy: true
+        ))
+
+        assert_selector "div[data-flat-pack--text-area-character-count-enabled-value='true']"
+        assert_selector "div[data-flat-pack--text-area-quick-copy-enabled-value='true']"
+        assert_selector "textarea[data-action='input->flat-pack--text-area#autoExpand input->flat-pack--text-area#updateCharacterCount keydown->flat-pack--text-area#handleKeydown click->flat-pack--text-area#copyFromTextarea']"
+      end
+
+      def test_quick_copy_button_is_disabled_with_disabled_textarea
+        render_inline(Component.new(name: "api_key", value: "abc123", quick_copy: true, disabled: true))
+
+        assert_selector "button[disabled][aria-label='Copy textarea value']"
+      end
+
+      def test_quick_copy_renders_readonly_textarea
+        render_inline(Component.new(name: "api_key", value: "abc123", quick_copy: true))
+
+        assert_selector "textarea[readonly]"
+      end
+
+      def test_quick_copy_is_not_applied_in_rich_text_mode
+        render_inline(Component.new(name: "body", value: "<p>Hello</p>", quick_copy: true, rich_text: true))
+
+        assert_selector "div[data-controller='flat-pack--tiptap']"
+        refute_selector "button[aria-label='Copy textarea value']"
+        refute_selector "textarea[readonly]"
+      end
+
       def test_does_not_render_character_count_when_disabled
         render_inline(Component.new(name: "description", character_count: false))
 
