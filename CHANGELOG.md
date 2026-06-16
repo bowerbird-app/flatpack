@@ -20,6 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Resolved ApexCharts funnel rendering with CSS theme colors by normalizing computed OKLab/OKLCH color values to Apex-compatible RGB strings before chart render.
+- Updated `FlatPack::DateRangeInput::Component` calendar selections so manually picked ranges that exactly match quick presets display the preset label, such as `Last month`, after Apply.
+- Updated dummy demo page caching so cached importmaps invalidate when FlatPack JavaScript controller files change, preventing stale digested controller URLs during development.
 
 ## [0.1.103] - 2026-06-16
 

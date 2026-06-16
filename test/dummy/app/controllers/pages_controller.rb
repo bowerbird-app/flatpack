@@ -2310,10 +2310,21 @@ class PagesController < ApplicationController
   end
 
   def importmap_cache_version
-    importmap_versions = [
+    importmap_files = [
       Rails.root.join("config/importmap.rb"),
       FlatPack::Engine.root.join("config/importmap.rb")
-    ].filter_map do |path|
+    ]
+
+    javascript_roots = [
+      Rails.root.join("app/javascript"),
+      FlatPack::Engine.root.join("app/javascript")
+    ].uniq
+
+    javascript_files = javascript_roots.flat_map do |root|
+      Dir[root.join("**/*.js")]
+    end
+
+    importmap_versions = importmap_files.concat(javascript_files).map(&:to_s).uniq.sort.filter_map do |path|
       next unless File.file?(path)
 
       "#{path}:#{File.mtime(path).to_f}"

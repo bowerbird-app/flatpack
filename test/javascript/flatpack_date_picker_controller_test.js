@@ -29,6 +29,7 @@ function buildController() {
   controller.hasPresetLabelsValue = true
   controller.presetLabelsValue = {
     last_week: 'Last week',
+    last_month: 'Last month',
     today: 'Today'
   }
   controller.hasTriggerTarget = true
@@ -84,4 +85,57 @@ test('syncTriggerValue keeps committed value when picker is open before apply', 
   })
 
   assert.equal(controller.triggerTarget.value, 'Today')
+})
+
+test('manual calendar range matching a preset displays the preset label after apply', () => {
+  const controller = buildController()
+  controller.today = new Date(2026, 5, 16)
+  controller.draft = {
+    start: new Date(2026, 4, 1),
+    end: new Date(2026, 4, 31)
+  }
+  controller.syncFormFields = () => {}
+  controller.close = () => {}
+
+  controller.apply({ preventDefault() {} })
+
+  assert.equal(controller.committedPresetKey, 'last_month')
+  assert.equal(controller.triggerTarget.value, 'Last month')
+})
+
+test('manual calendar range that does not match a preset keeps explicit dates after apply', () => {
+  const controller = buildController()
+  controller.today = new Date(2026, 5, 16)
+  controller.draft = {
+    start: new Date(2026, 4, 2),
+    end: new Date(2026, 4, 30)
+  }
+  controller.syncFormFields = () => {}
+  controller.close = () => {}
+
+  controller.apply({ preventDefault() {} })
+
+  assert.equal(controller.committedPresetKey, null)
+  assert.equal(controller.triggerTarget.value, '2026-05-02 to 2026-05-30')
+})
+
+test('partial manual range keeps unfinished summary text', () => {
+  const controller = buildController()
+  const state = {
+    start: new Date(2026, 4, 1),
+    end: null
+  }
+
+  assert.equal(controller.displayValue(state, controller.resolvedPresetKeyForState(state)), '2026-05-01 to …')
+})
+
+test('automatic calendar preset matching is range only', () => {
+  const controller = buildController()
+  controller.rangeValue = false
+  const state = {
+    start: new Date(2026, 5, 16),
+    end: null
+  }
+
+  assert.equal(controller.resolvedPresetKeyForState(state), null)
 })

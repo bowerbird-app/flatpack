@@ -153,7 +153,7 @@ export default class extends Controller {
     }
 
     this.committed = normalizedDraft
-    this.committedPresetKey = this.draftPresetKey
+    this.committedPresetKey = this.resolvedPresetKeyForState(normalizedDraft, this.draftPresetKey)
     this.draftPresetKey = this.committedPresetKey
     this.syncFormFields(this.committed)
     this.syncTriggerValue(this.committed)
@@ -256,7 +256,7 @@ export default class extends Controller {
       this.draft = { start: this.draft.start, end: selected }
     }
 
-    this.draftPresetKey = null
+    this.draftPresetKey = this.resolvedPresetKeyForState(this.draft)
 
     this.render()
   }
@@ -542,7 +542,7 @@ export default class extends Controller {
       return
     }
 
-    const label = this.displayValue(this.draft, this.draftPresetKey)
+    const label = this.displayValue(this.draft, this.resolvedPresetKeyForState(this.draft, this.draftPresetKey))
     this.summaryElement.textContent = label || "Select a date from calendar or use a quick range preset."
   }
 
@@ -649,6 +649,14 @@ export default class extends Controller {
     }
 
     return null
+  }
+
+  resolvedPresetKeyForState(state, fallbackKey = null) {
+    if (!this.rangeValue) {
+      return fallbackKey
+    }
+
+    return this.presetKeyForRange(state) || fallbackKey
   }
 
   rangesEqual(a, b) {

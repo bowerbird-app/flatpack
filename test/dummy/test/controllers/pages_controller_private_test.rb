@@ -57,6 +57,21 @@ class PagesControllerPrivateTest < ActiveSupport::TestCase
     refute_equal old_key, new_key
   end
 
+  test "importmap cache version changes when flatpack controller javascript changes" do
+    controller = PagesController.new
+    controller_path = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/flatpack_date_picker_controller.js")
+    original_atime = File.atime(controller_path)
+    original_mtime = File.mtime(controller_path)
+    old_version = controller.send(:importmap_cache_version)
+
+    File.utime(original_atime, original_mtime + 5.seconds, controller_path)
+    new_version = controller.send(:importmap_cache_version)
+
+    refute_equal old_version, new_version
+  ensure
+    File.utime(original_atime, original_mtime, controller_path) if original_atime && original_mtime
+  end
+
   test "page_cache_key changes when component version changes" do
     controller = PagesController.new
     request = OpenStruct.new(path: "/demo/tree")
