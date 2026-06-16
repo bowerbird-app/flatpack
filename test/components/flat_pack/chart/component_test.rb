@@ -288,8 +288,9 @@ module FlatPack
         render_inline(Component.new(series: series, type: :funnel))
 
         html = page.native.to_html
-        assert_includes html, '"colors":["#2563eb","#3b82f6","#60a5fa","#93c5fd","#bfdbfe","#dbeafe"]'
-        refute_includes html, '"colors":["color-mix(in oklab, var(--color-primary) 100%, transparent)"'
+        assert_includes html, '"colors":["color-mix(in oklab, var(--color-primary) 100%, transparent)"'
+        assert_includes html, '"color-mix(in oklab, var(--color-primary) 90%, transparent)"'
+        assert_includes html, '"color-mix(in oklab, var(--color-primary) 70%, transparent)"'
         assert_includes html, '"dataLabels":{"enabled":true}'
         assert_includes html, '"legend":{"labels":{"colors":"var(--surface-content-color)"},"show":false}'
         assert_includes html, '"chart":{"fontFamily":"inherit","toolbar":{"show":false},"animations":{"easing":"linear","speed":800,"animateGradually":{"enabled":false}}}'

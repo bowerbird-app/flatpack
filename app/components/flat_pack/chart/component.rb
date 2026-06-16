@@ -26,7 +26,6 @@ module FlatPack
 
       PRIMARY_COLOR_OPACITY_STEPS = [100, 90, 70, 50, 30, 10].freeze
       AREA_LINE_OPACITY_STEPS = [100, 85, 70, 55, 40, 25].freeze
-      FUNNEL_CHART_COLORS = ["#2563eb", "#3b82f6", "#60a5fa", "#93c5fd", "#bfdbfe", "#dbeafe"].freeze
 
       def initialize(
         series:,
@@ -326,7 +325,6 @@ module FlatPack
 
       def funnel_chart_defaults
         {
-          colors: FUNNEL_CHART_COLORS,
           chart: {
             animations: {
               easing: "linear",

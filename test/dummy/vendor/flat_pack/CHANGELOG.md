@@ -13,6 +13,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.104] - 2026-06-16
+
+### Changed
+- Updated `FlatPack::Chart::Component` funnel charts to reuse the theme primary color opacity ramp for stepped segments, matching the default chart palette behavior.
+
+### Fixed
+- Resolved ApexCharts funnel rendering with CSS theme colors by normalizing computed OKLab/OKLCH color values to Apex-compatible RGB strings before chart render.
+
 ## [0.1.103] - 2026-06-16
 
 ### Added

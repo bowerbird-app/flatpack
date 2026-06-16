@@ -14,6 +14,7 @@ class PagesChartsDemoTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "data-flat-pack--chart-type-value=\"bar\""
     assert_includes response.body, "&quot;isFunnel&quot;:true"
     assert_includes response.body, "&quot;distributed&quot;:true"
-    assert_includes response.body, "&quot;colors&quot;:[&quot;#2563eb&quot;,&quot;#3b82f6&quot;,&quot;#60a5fa&quot;,&quot;#93c5fd&quot;,&quot;#bfdbfe&quot;,&quot;#dbeafe&quot;]"
+    assert_includes response.body, "&quot;colors&quot;:[&quot;color-mix(in oklab, var(--color-primary) 100%, transparent)&quot;"
+    assert_includes response.body, "&quot;color-mix(in oklab, var(--color-primary) 90%, transparent)&quot;"
   end
 end

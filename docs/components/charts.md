@@ -34,14 +34,14 @@ Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status f
 - Chart type variant via `type`
 - Framed (`card: true`) and inline (`card: false`) rendering
 - Axis defaults for line/column/bar/area/radar and non-axis defaults for donut/pie
-- Funnel defaults for `:funnel` render through ApexCharts' bar chart mode with funnel plot options, Apex-safe stepped segment colors, and funnel-specific bar sizing
+- Funnel defaults for `:funnel` render through ApexCharts' bar chart mode with funnel plot options, stepped primary-color segments, and funnel-specific bar sizing
 - Gauge defaults for `:gauge` (`radialBar`) with rounded arc ends and primary-color shading
 
 ## Color Defaults
 - By default, charts derive their series palette from `--color-primary`.
 - When multiple colors are needed, the component uses six opacity steps from the same primary color in descending strength: `100%`, `90%`, `70%`, `50%`, `30%`, and `10%`.
 - Area charts use a dedicated line-color opacity ramp (`100%`, `85%`, `70%`, `55%`, `40%`, `25%`) so multiple series are easier to distinguish while keeping the area fill at `10%` primary color.
-- Funnel charts use an Apex-safe stepped hex palette because ApexCharts' bar/funnel renderer cannot parse CSS color functions such as `color-mix(...)`.
+- Funnel charts reuse the same stepped primary palette so each stage stays visually consistent with the rest of the chart family; the chart controller resolves CSS color functions to computed colors before handing options to ApexCharts.
 - If you provide `options[:colors]`, your values are used as-is and override the default theme-derived palette.
 
 ## Related Classes
@@ -165,7 +165,7 @@ Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status f
   type: :funnel,
   series: [{ name: "Funnel Series", data: [1380, 1100, 990, 880, 740, 548, 330, 200] }],
   title: "Recruitment Funnel",
-  subtitle: "Stepped stages",
+  subtitle: "Primary-color stepped stages",
   height: 350,
   options: {
     xaxis: {
