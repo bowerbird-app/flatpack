@@ -45,10 +45,21 @@ module FlatPack
             safe_join([
               (@brand_abbr.present? ? content_tag(:div, @brand_abbr, class: brand_badge_classes) : nil),
               content_tag(:div, class: "flex items-center h-8", data: header_label_data_attributes) do
-                content_tag(:div, @title, class: "font-semibold text-sm text-[var(--sidebar-header-text-color)]")
+                safe_join([
+                  content_tag(:div, @title, class: "font-semibold text-sm text-[var(--sidebar-header-text-color)]"),
+                  content_tag(:span, sidebar_version_label, class: sidebar_version_badge_classes)
+                ])
               end
             ].compact)
           end
+        end
+
+        def sidebar_version_label
+          "v#{FlatPack::VERSION}"
+        end
+
+        def sidebar_version_badge_classes
+          "ml-2 inline-flex items-center rounded-md border px-2 py-0.5 text-[10px] leading-none font-medium bg-[var(--badge-default-background-color)] text-[var(--badge-default-text-color)] border-[var(--badge-default-border-color)]"
         end
 
         def render_collapsed_toggle

@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added first-class gauge support to `FlatPack::Chart::Component` via `type: :gauge`, mapped to ApexCharts `radialBar` with rounded arc ends and primary-color shaded defaults.
 
 ### Changed
+- Updated `FlatPack::Sidebar::Header::Component` to render a compact `v{gem_version}` badge beside the `FlatPack` title in the sidebar header.
 - Renamed `FlatPack::MinimizedFilters::Component` to `FlatPack::ModalFilter::Component` with no backward compatibility alias, including demo docs/tests and `/demo/modal_filter` naming.
 - Updated `FlatPack::Chart::DefaultFilterComponent` to replace `responsive`/`responsive_options` with `minimized`/`minimized_options`, preserving desktop inline auto-submit filters while using `FlatPack::ModalFilter::Component` for mobile modal flows.
 - Updated `/demo/charts/default_filter` and `/demo/tables/basic` to use minimized filter patterns (desktop inline + mobile modal trigger).
