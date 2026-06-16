@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Fixed
+
+## [0.1.103] - 2026-06-16
+
+### Added
 - Added `FlatPack::ModalFilter::Component` for modal-only filtering with a dedicated `filter_body` slot and a `Filter {count}` trigger badge when `active_count > 0`.
 - Added optional `quick_copy` support to plain `FlatPack::TextArea::Component` mode, including click-to-copy on the textarea, a trailing copy icon button, and toast feedback (rich text mode excluded).
 - Added first-class gauge support to `FlatPack::Chart::Component` via `type: :gauge`, mapped to ApexCharts `radialBar` with rounded arc ends and primary-color shaded defaults.

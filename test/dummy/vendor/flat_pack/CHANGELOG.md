@@ -8,14 +8,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Added `FlatPack::MinimizedFilters::Component` for modal-only filtering with a dedicated `filter_body` slot and a `Filter {count}` trigger badge when `active_count > 0`.
-- Added optional `quick_copy` support to plain `FlatPack::TextArea::Component` mode, including click-to-copy on the textarea, a trailing copy icon button, and toast feedback (rich text mode excluded).
 
 ### Changed
-- Updated `FlatPack::Chart::DefaultFilterComponent` to replace `responsive`/`responsive_options` with `minimized`/`minimized_options`, preserving desktop inline auto-submit filters while using `FlatPack::MinimizedFilters::Component` for mobile modal flows.
+
+### Fixed
+
+## [0.1.103] - 2026-06-16
+
+### Added
+- Added `FlatPack::ModalFilter::Component` for modal-only filtering with a dedicated `filter_body` slot and a `Filter {count}` trigger badge when `active_count > 0`.
+- Added optional `quick_copy` support to plain `FlatPack::TextArea::Component` mode, including click-to-copy on the textarea, a trailing copy icon button, and toast feedback (rich text mode excluded).
+- Added first-class gauge support to `FlatPack::Chart::Component` via `type: :gauge`, mapped to ApexCharts `radialBar` with rounded arc ends and primary-color shaded defaults.
+
+### Changed
+- Updated `FlatPack::Sidebar::Header::Component` to render a compact `v{gem_version}` badge beside the `FlatPack` title in the sidebar header.
+- Renamed `FlatPack::MinimizedFilters::Component` to `FlatPack::ModalFilter::Component` with no backward compatibility alias, including demo docs/tests and `/demo/modal_filter` naming.
+- Updated `FlatPack::Chart::DefaultFilterComponent` to replace `responsive`/`responsive_options` with `minimized`/`minimized_options`, preserving desktop inline auto-submit filters while using `FlatPack::ModalFilter::Component` for mobile modal flows.
 - Updated `/demo/charts/default_filter` and `/demo/tables/basic` to use minimized filter patterns (desktop inline + mobile modal trigger).
 - Updated the inline minimized filter demo trigger to use the larger `lg` button size for the `Filter {count}` action.
-- Removed `/demo/responsive_filter` route/page and migrated Data Display navigation to `Minimized Filters` only.
+- Updated `FlatPack::Chart::Component` default series palette to derive from `--color-primary` using descending opacity steps `100%`, `90%`, `70%`, `50%`, `30%`, and `10%`, added a dedicated opacity ramp for multi-series area chart lines (`100%`, `85%`, `70%`, `55%`, `40%`, `25%`) with `10%` primary area fill, and preserved caller-provided `options[:colors]` values when present.
+- Removed `/demo/responsive_filter` route/page and migrated Data Display navigation to `Modal Filter` only.
 - Removed `FlatPack::ResponsiveFilters::Component` and its dedicated docs/tests in favor of minimized filter composition.
 
 ### Fixed
