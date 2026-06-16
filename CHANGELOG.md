@@ -8,8 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added a dedicated list hover background example to the dummy demo page.
 
 ### Changed
+- Updated divided lists to omit vertical spacing utilities so list items do not carry margin gaps between dividers.
 
 ### Fixed
 

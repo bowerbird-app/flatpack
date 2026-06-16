@@ -107,6 +107,17 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "list:error"
   end
 
+  test "list demo renders hover background example" do
+    get "/demo/list"
+
+    assert_response :success
+    assert_includes response.body, "Hover Background"
+    assert_includes response.body, "Calendar invite pending"
+    assert_includes response.body, "New teammate joined"
+    assert_includes response.body, "divide-y"
+    assert_includes response.body, "hover:bg-[var(--list-item-hover-background-color)]"
+  end
+
   test "tables draggable demo renders event listener example" do
     get "/demo/tables/draggable"
 

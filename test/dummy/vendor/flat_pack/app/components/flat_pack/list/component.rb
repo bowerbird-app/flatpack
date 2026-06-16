@@ -71,9 +71,13 @@ module FlatPack
 
       def list_classes
         classes(
-          (@spacing == :dense) ? "space-y-1" : "space-y-3",
+          (spacing_class unless @divider),
           ("divide-y divide-[var(--surface-border-color)]" if @divider)
         )
+      end
+
+      def spacing_class
+        (@spacing == :dense) ? "space-y-1" : "space-y-3"
       end
 
       def merge_space_tokens(left_value, right_value)

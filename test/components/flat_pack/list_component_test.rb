@@ -51,6 +51,14 @@ module FlatPack
         assert_includes page.native.to_html, "space-y-1"
       end
 
+      def test_omits_spacing_classes_when_divider_is_enabled
+        render_inline(Component.new(divider: true)) { "content" }
+
+        assert_includes page.native.to_html, "divide-y"
+        refute_includes page.native.to_html, "space-y-3"
+        refute_includes page.native.to_html, "space-y-1"
+      end
+
       def test_enables_selectable_behavior_when_requested
         render_inline(Component.new(selectable: true)) { "content" }
 

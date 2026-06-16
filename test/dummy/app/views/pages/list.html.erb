@@ -153,6 +153,63 @@
   ) %>
 </section>
 
+<section class="mb-12" id="hover-background">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Hover Background", anchor_link: true) %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <%= render FlatPack::List::Component.new(divider: true) do %>
+        <%= render FlatPack::List::Item.new(icon: :bell, hover: true) do %>
+          <div>
+            <p class="font-medium">System update available</p>
+            <p class="text-sm text-(--surface-muted-content-color)">Hover this row to show the theme-aware background color.</p>
+          </div>
+        <% end %>
+        <%= render FlatPack::List::Item.new(icon: :calendar, hover: true) do %>
+          <div>
+            <p class="font-medium">Calendar invite pending</p>
+            <p class="text-sm text-(--surface-muted-content-color)">Each item opts into the same hover token with <code>hover: true</code>.</p>
+          </div>
+        <% end %>
+        <%= render FlatPack::List::Item.new(icon: :user, hover: true) do %>
+          <div>
+            <p class="font-medium">New teammate joined</p>
+            <p class="text-sm text-(--surface-muted-content-color)">The background follows <code>--list-item-hover-background-color</code>.</p>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    class: "mt-6",
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::List::Component.new(divider: true) do %&gt;
+        &lt;%= render FlatPack::List::Item.new(icon: :bell, hover: true) do %&gt;
+          &lt;div&gt;
+            &lt;p class="font-medium"&gt;System update available&lt;/p&gt;
+            &lt;p class="text-sm text-(--surface-muted-content-color)"&gt;Hover this row to show the theme-aware background color.&lt;/p&gt;
+          &lt;/div&gt;
+        &lt;% end %&gt;
+        &lt;%= render FlatPack::List::Item.new(icon: :calendar, hover: true) do %&gt;
+          &lt;div&gt;
+            &lt;p class="font-medium"&gt;Calendar invite pending&lt;/p&gt;
+            &lt;p class="text-sm text-(--surface-muted-content-color)"&gt;Each item opts into the same hover token with &lt;code&gt;hover: true&lt;/code&gt;.&lt;/p&gt;
+          &lt;/div&gt;
+        &lt;% end %&gt;
+        &lt;%= render FlatPack::List::Item.new(icon: :user, hover: true) do %&gt;
+          &lt;div&gt;
+            &lt;p class="font-medium"&gt;New teammate joined&lt;/p&gt;
+            &lt;p class="text-sm text-(--surface-muted-content-color)"&gt;The background follows &lt;code&gt;--list-item-hover-background-color&lt;/code&gt;.&lt;/p&gt;
+          &lt;/div&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    title: "Hover Background",
+    separated: false
+  ) %>
+</section>
+
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Feature List", anchor_link: true) %>
   

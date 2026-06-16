@@ -16,8 +16,8 @@ Use List when grouped items need consistent spacing and optional active-item sel
 | name | type | default | required | description |
 |---|---|---|---|---|
 | `ordered` | Boolean | `false` | no | Renders `<ol>` when true, otherwise `<ul>`. |
-| `spacing` | Symbol | `:comfortable` | no | Vertical spacing preset; `:dense` uses tighter spacing, other values use comfortable spacing. |
-| `divider` | Boolean | `false` | no | Adds row separators using `divide-y`. |
+| `spacing` | Symbol | `:comfortable` | no | Vertical spacing preset; `:dense` uses tighter spacing, other values use comfortable spacing. Ignored when `divider: true`. |
+| `divider` | Boolean | `false` | no | Adds row separators using `divide-y` and omits vertical spacing so items sit flush against dividers. |
 | `selectable` | Boolean | `false` | no | Enables active-item behavior via `flat-pack--list-selectable`. |
 | `orderable` | Boolean | `false` | no | Enables drag-and-drop reordering via `flat-pack--list-orderable`. |
 | `orderable_path` | String | `nil` | no | PATCH/PUT endpoint used to persist the new item position after drop. |
