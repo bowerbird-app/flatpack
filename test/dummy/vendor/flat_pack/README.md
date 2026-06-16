@@ -258,6 +258,7 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
 ### Navigation
 - **Breadcrumb** - Navigation trail showing current location in site hierarchy
 - **Navbar** - Sidebar-first navigation system with collapsible sidebar and responsive top bar
+- **PageNav** - Section navigation for page-local anchors and active states
 - **Sidebar** - Composable sidebar with header, items, and footer regions
 - **SidebarGroup** - Collapsible group of sidebar items with persisted state
 - **TopNav** - Sticky top navigation bar with composable left, center, and right regions
@@ -273,6 +274,7 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
 - **Timeline** - Vertical event timeline with icons and timestamps
 - **Timestamp** - Relative time renderer with hover tooltip for absolute local time
 - **Chart** - ApexCharts-based visualizations with optional card framing
+- **ChartButtons** - Toggle controls for switching chart views or ranges
 - **Progress** - Horizontal progress bar with optional label
 - **Badge** - Status indicators, counts, labels, and tags
 - **Avatar** - User avatar with image, initials, and size variants
@@ -287,6 +289,7 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
 - **Accordion** - Collapsible content sections
 - **Collapse** - Single-panel show/hide toggler
 - **Modal** - Accessible dialog overlay
+- **ModalFilter** - Mobile-friendly modal filter trigger and filter body composition
 - **Popover** - Anchored floating panel with Stimulus positioning
 - **Tooltip** - Accessible tooltip via Stimulus
 - **Picker** - Modal-based asset picker with single/multi selection

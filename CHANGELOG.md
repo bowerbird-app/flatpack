@@ -8,12 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Fixed
+
+## [0.1.105] - 2026-06-16
+
+### Added
 - Added a dedicated list hover background example to the dummy demo page.
 
 ### Changed
 - Updated divided lists to omit vertical spacing utilities so list items do not carry margin gaps between dividers.
-
-### Fixed
 
 ## [0.1.104] - 2026-06-16
 
