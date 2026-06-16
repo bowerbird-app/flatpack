@@ -1,4 +1,4 @@
-# Minimized Filters
+# Modal Filter
 
 ## Purpose
 Render a single Filter trigger that always opens a modal form, with all filter controls defined in one dedicated slot.
@@ -10,7 +10,7 @@ Use this when filter controls should be hidden from inline layouts and shown onl
 - Shared behavior: filter content renders only in `filter_body` and is never rendered inline.
 
 ## Class
-- Primary: `FlatPack::MinimizedFilters::Component`
+- Primary: `FlatPack::ModalFilter::Component`
 
 ## Props
 | name | type | default | required | description |
@@ -36,33 +36,33 @@ Use this when filter controls should be hidden from inline layouts and shown onl
 
 ## Example
 ```erb
-<%= render FlatPack::MinimizedFilters::Component.new(
-  id: "minimized-filter-table-controls",
-  form_url: demo_minimized_filter_path,
-  turbo_frame: "minimized-filter-table-frame",
-  active_count: @minimized_filter_active_count,
-  reset_url: demo_minimized_filter_path,
+<%= render FlatPack::ModalFilter::Component.new(
+  id: "modal-filter-table-controls",
+  form_url: demo_modal_filter_path,
+  turbo_frame: "modal-filter-table-frame",
+  active_count: @modal_filter_active_count,
+  reset_url: demo_modal_filter_path,
   mobile_form_class: "space-y-3",
   button_size: :lg
-) do |minimized_filters| %>
-  <% minimized_filters.filter_body do %>
+) do |modal_filter| %>
+  <% modal_filter.filter_body do %>
     <%= render FlatPack::Select::Component.new(
-      name: "minimized_status",
-      value: @minimized_filter_status,
+      name: "modal_status",
+      value: @modal_filter_status,
       options: @table_filter_definitions.fetch("status").fetch(:values).map { |value_key, value_label| [value_label, value_key] },
       label: "Status"
     ) %>
 
     <%= render FlatPack::Select::Component.new(
-      name: "minimized_category",
-      value: @minimized_filter_category,
+      name: "modal_category",
+      value: @modal_filter_category,
       options: @table_filter_definitions.fetch("category").fetch(:values).map { |value_key, value_label| [value_label, value_key] },
       label: "Category"
     ) %>
 
     <%= render FlatPack::Search::Component.new(
-      name: "minimized_q",
-      value: @minimized_filter_search_query,
+      name: "modal_q",
+      value: @modal_filter_search_query,
       placeholder: "Search table rows...",
       max_width: :none,
       class: "w-full"

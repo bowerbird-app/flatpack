@@ -89,7 +89,7 @@ components:
     primary_class: FlatPack::Chart::Component
     related_classes:
       - FlatPack::Chart::DefaultFilterComponent
-      - FlatPack::MinimizedFilters::Component
+      - FlatPack::ModalFilter::Component
     status: documented
 
   - key: chart_buttons
@@ -245,10 +245,10 @@ components:
     primary_class: FlatPack::Modal::Component
     status: documented
 
-  - key: minimized_filters
-    title: Minimized Filters
-    doc: docs/components/minimized-filters.md
-    primary_class: FlatPack::MinimizedFilters::Component
+  - key: modal_filter
+    title: Modal Filter
+    doc: docs/components/modal-filter.md
+    primary_class: FlatPack::ModalFilter::Component
     status: documented
 
   - key: navbar

@@ -1,5 +1,5 @@
 <%= render FlatPack::PageTitle::Component.new(
-  title: "Minimized Filters",
+  title: "Modal Filter",
   subtitle: "Keep filters in a dedicated modal-only flow with a single Filter trigger and applied-count badge."
 ) %>
 
@@ -11,9 +11,9 @@
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(
-    title: "Minimized Filters",
+    title: "Modal Filter",
     anchor_link: true,
-    subtitle: "Use MinimizedFilters::Component when filter controls should render only inside the modal body."
+    subtitle: "Use ModalFilter::Component when filter controls should render only inside the modal body."
   ) %>
 
   <p class="text-(--surface-muted-content-color) mb-4">
@@ -22,51 +22,51 @@
   </p>
 
   <%
-    minimized_filter_variables = [
+    modal_filter_variables = [
       {
-        variable: "id (MinimizedFilters::Component)",
+        variable: "id (ModalFilter::Component)",
         accepts: "String (required)",
-        example: 'id: "minimized-filter-table-controls"'
+        example: 'id: "modal-filter-table-controls"'
       },
       {
-        variable: "form_url (MinimizedFilters::Component)",
+        variable: "form_url (ModalFilter::Component)",
         accepts: "String (required)",
-        example: "form_url: demo_minimized_filter_path"
+        example: "form_url: demo_modal_filter_path"
       },
       {
-        variable: "turbo_frame (MinimizedFilters::Component)",
+        variable: "turbo_frame (ModalFilter::Component)",
         accepts: "String (required)",
-        example: 'turbo_frame: "minimized-filter-table-frame"'
+        example: 'turbo_frame: "modal-filter-table-frame"'
       },
       {
-        variable: "active_count (MinimizedFilters::Component)",
+        variable: "active_count (ModalFilter::Component)",
         accepts: "Integer (default: 0)",
-        example: "active_count: @minimized_filter_active_count"
+        example: "active_count: @modal_filter_active_count"
       },
       {
-        variable: "button_size (MinimizedFilters::Component)",
+        variable: "button_size (ModalFilter::Component)",
         accepts: "Symbol (default: :sm)",
         example: "button_size: :lg"
       },
       {
-        variable: "filter_body (MinimizedFilters::Component slot)",
+        variable: "filter_body (ModalFilter::Component slot)",
         accepts: "Slot content (required)",
-        example: "minimized_filters.filter_body do ... end"
+        example: "modal_filter.filter_body do ... end"
       },
       {
-        variable: "reset_url (MinimizedFilters::Component)",
+        variable: "reset_url (ModalFilter::Component)",
         accepts: "String, nil (default: nil)",
-        example: "reset_url: demo_minimized_filter_path"
+        example: "reset_url: demo_modal_filter_path"
       },
       {
-        variable: "mobile_form_class (MinimizedFilters::Component)",
+        variable: "mobile_form_class (ModalFilter::Component)",
         accepts: "String, nil",
         example: 'mobile_form_class: "space-y-3"'
       }
     ]
   %>
 
-  <%= render FlatPack::Table::Component.new(data: minimized_filter_variables, class: "mb-4") do |table| %>
+  <%= render FlatPack::Table::Component.new(data: modal_filter_variables, class: "mb-4") do |table| %>
     <% table.column(title: "Variable", html: ->(row) { row[:variable] }) %>
     <% table.column(title: "Accepts", html: ->(row) { row[:accepts] }) %>
     <% table.column(title: "Example", html: ->(row) { row[:example] }) %>
@@ -80,35 +80,35 @@
     subtitle: "Modal-only filters targeting one table surface in a Turbo Frame."
   ) %>
 
-  <%= turbo_frame_tag "minimized-filter-table-frame" do %>
+  <%= turbo_frame_tag "modal-filter-table-frame" do %>
     <div class="mb-4">
-      <%= render FlatPack::MinimizedFilters::Component.new(
-        id: "minimized-filter-table-controls",
-        form_url: demo_minimized_filter_path,
-        turbo_frame: "minimized-filter-table-frame",
-        active_count: @minimized_filter_active_count,
-        reset_url: demo_minimized_filter_path,
+      <%= render FlatPack::ModalFilter::Component.new(
+        id: "modal-filter-table-controls",
+        form_url: demo_modal_filter_path,
+        turbo_frame: "modal-filter-table-frame",
+        active_count: @modal_filter_active_count,
+        reset_url: demo_modal_filter_path,
         mobile_form_class: "space-y-3 p-[0.15rem]"
-      ) do |minimized_filters| %>
-        <% minimized_filters.filter_body do %>
+      ) do |modal_filter| %>
+        <% modal_filter.filter_body do %>
           <div class="grid gap-3">
             <%= render FlatPack::Select::Component.new(
-              name: "minimized_status",
-              value: @minimized_filter_status,
+              name: "modal_status",
+              value: @modal_filter_status,
               options: @table_filter_definitions.fetch("status").fetch(:values).map { |value_key, value_label| [value_label, value_key] },
               label: "Status"
             ) %>
 
             <%= render FlatPack::Select::Component.new(
-              name: "minimized_category",
-              value: @minimized_filter_category,
+              name: "modal_category",
+              value: @modal_filter_category,
               options: @table_filter_definitions.fetch("category").fetch(:values).map { |value_key, value_label| [value_label, value_key] },
               label: "Category"
             ) %>
 
             <%= render FlatPack::Search::Component.new(
-              name: "minimized_q",
-              value: @minimized_filter_search_query,
+              name: "modal_q",
+              value: @modal_filter_search_query,
               placeholder: "Search table rows...",
               max_width: :none,
               class: "w-full"
@@ -118,7 +118,7 @@
       <% end %>
     </div>
 
-    <%= render FlatPack::Table::Component.new(data: @minimized_filter_filtered_users.first(10)) do |table| %>
+    <%= render FlatPack::Table::Component.new(data: @modal_filter_filtered_users.first(10)) do |table| %>
       <% table.column(title: "ID", html: ->(user) { user.id.to_s }) %>
       <% table.column(title: "Name", html: ->(user) { user.name }) %>
       <% table.column(title: "Email", html: ->(user) { user.email }) %>
@@ -131,19 +131,19 @@
     title: "ERB",
     language: "erb",
     code: <<~CODE
-      #{erb_output_open} turbo_frame_tag "minimized-filter-table-frame" do #{erb_tag_close}
-        #{erb_output_open} render FlatPack::MinimizedFilters::Component.new(
-          id: "minimized-filter-table-controls",
-          form_url: demo_minimized_filter_path,
-          turbo_frame: "minimized-filter-table-frame",
-          active_count: @minimized_filter_active_count,
-          reset_url: demo_minimized_filter_path,
+      #{erb_output_open} turbo_frame_tag "modal-filter-table-frame" do #{erb_tag_close}
+        #{erb_output_open} render FlatPack::ModalFilter::Component.new(
+          id: "modal-filter-table-controls",
+          form_url: demo_modal_filter_path,
+          turbo_frame: "modal-filter-table-frame",
+          active_count: @modal_filter_active_count,
+          reset_url: demo_modal_filter_path,
           mobile_form_class: "space-y-3 p-[0.15rem]"
-        ) do |minimized_filters| #{erb_tag_close}
-          #{erb_open} minimized_filters.filter_body do #{erb_tag_close}
-            #{erb_output_open} render FlatPack::Select::Component.new(name: "minimized_status", value: @minimized_filter_status, options: @table_filter_definitions.fetch("status").fetch(:values).map { |value_key, value_label| [value_label, value_key] }, label: "Status") #{erb_tag_close}
-            #{erb_output_open} render FlatPack::Select::Component.new(name: "minimized_category", value: @minimized_filter_category, options: @table_filter_definitions.fetch("category").fetch(:values).map { |value_key, value_label| [value_label, value_key] }, label: "Category") #{erb_tag_close}
-            #{erb_output_open} render FlatPack::Search::Component.new(name: "minimized_q", value: @minimized_filter_search_query, placeholder: "Search table rows...", max_width: :none, class: "w-full") #{erb_tag_close}
+        ) do |modal_filter| #{erb_tag_close}
+          #{erb_open} modal_filter.filter_body do #{erb_tag_close}
+            #{erb_output_open} render FlatPack::Select::Component.new(name: "modal_status", value: @modal_filter_status, options: @table_filter_definitions.fetch("status").fetch(:values).map { |value_key, value_label| [value_label, value_key] }, label: "Status") #{erb_tag_close}
+            #{erb_output_open} render FlatPack::Select::Component.new(name: "modal_category", value: @modal_filter_category, options: @table_filter_definitions.fetch("category").fetch(:values).map { |value_key, value_label| [value_label, value_key] }, label: "Category") #{erb_tag_close}
+            #{erb_output_open} render FlatPack::Search::Component.new(name: "modal_q", value: @modal_filter_search_query, placeholder: "Search table rows...", max_width: :none, class: "w-full") #{erb_tag_close}
           #{erb_open} end #{erb_tag_close}
         #{erb_open} end #{erb_tag_close}
       #{erb_open} end #{erb_tag_close}
@@ -158,14 +158,14 @@
     subtitle: "Desktop and mobile both show Status, Category, and Filter count in one control row."
   ) %>
 
-  <%= turbo_frame_tag "minimized-filter-inline-table-frame" do %>
+  <%= turbo_frame_tag "modal-filter-inline-table-frame" do %>
     <div class="mb-4 flex flex-nowrap items-end gap-2 overflow-x-auto pb-1">
       <%= form_with(
-        url: demo_minimized_filter_path,
+        url: demo_modal_filter_path,
         method: :get,
         class: "flex flex-nowrap items-end gap-2 shrink-0",
         data: {
-          turbo_frame: "minimized-filter-inline-table-frame",
+          turbo_frame: "modal-filter-inline-table-frame",
           controller: "flat-pack--auto-submit",
           action: "input->flat-pack--auto-submit#queueSubmit change->flat-pack--auto-submit#queueSubmit",
           flat_pack__auto_submit_delay_value: 300
@@ -173,42 +173,42 @@
       ) do %>
         <%= render FlatPack::Select::Component.new(
           name: "inline_status",
-          value: @minimized_inline_filter_status,
+          value: @modal_inline_filter_status,
           options: @table_filter_definitions.fetch("status").fetch(:values).map { |value_key, value_label| [value_label, value_key] },
           label: "Status"
         ) %>
 
         <%= render FlatPack::Select::Component.new(
           name: "inline_category",
-          value: @minimized_inline_filter_category,
+          value: @modal_inline_filter_category,
           options: @table_filter_definitions.fetch("category").fetch(:values).map { |value_key, value_label| [value_label, value_key] },
           label: "Category"
         ) %>
       <% end %>
 
       <div class="shrink-0">
-        <%= render FlatPack::MinimizedFilters::Component.new(
-          id: "minimized-filter-inline-table-controls",
-          form_url: demo_minimized_filter_path,
-          turbo_frame: "minimized-filter-inline-table-frame",
-          active_count: @minimized_inline_filter_active_count,
-          reset_url: demo_minimized_filter_path,
+        <%= render FlatPack::ModalFilter::Component.new(
+          id: "modal-filter-inline-table-controls",
+          form_url: demo_modal_filter_path,
+          turbo_frame: "modal-filter-inline-table-frame",
+          active_count: @modal_inline_filter_active_count,
+          reset_url: demo_modal_filter_path,
           mobile_form_class: "space-y-3 p-[0.15rem]",
           button_size: :lg,
           class: "w-auto"
-        ) do |minimized_filters| %>
-          <% minimized_filters.filter_body do %>
+        ) do |modal_filter| %>
+          <% modal_filter.filter_body do %>
             <div class="grid gap-3">
               <%= render FlatPack::Select::Component.new(
                 name: "inline_status",
-                value: @minimized_inline_filter_status,
+                value: @modal_inline_filter_status,
                 options: @table_filter_definitions.fetch("status").fetch(:values).map { |value_key, value_label| [value_label, value_key] },
                 label: "Status"
               ) %>
 
               <%= render FlatPack::Select::Component.new(
                 name: "inline_category",
-                value: @minimized_inline_filter_category,
+                value: @modal_inline_filter_category,
                 options: @table_filter_definitions.fetch("category").fetch(:values).map { |value_key, value_label| [value_label, value_key] },
                 label: "Category"
               ) %>
@@ -218,7 +218,7 @@
       </div>
     </div>
 
-    <%= render FlatPack::Table::Component.new(data: @minimized_inline_filter_filtered_users.first(10)) do |table| %>
+    <%= render FlatPack::Table::Component.new(data: @modal_inline_filter_filtered_users.first(10)) do |table| %>
       <% table.column(title: "ID", html: ->(user) { user.id.to_s }) %>
       <% table.column(title: "Name", html: ->(user) { user.name }) %>
       <% table.column(title: "Email", html: ->(user) { user.email }) %>
@@ -231,38 +231,38 @@
     title: "ERB (Inline Filters)",
     language: "erb",
     code: <<~CODE
-      #{erb_output_open} turbo_frame_tag "minimized-filter-inline-table-frame" do #{erb_tag_close}
+      #{erb_output_open} turbo_frame_tag "modal-filter-inline-table-frame" do #{erb_tag_close}
         #{erb_output_open} form_with(
-          url: demo_minimized_filter_path,
+          url: demo_modal_filter_path,
           method: :get,
           class: "flex flex-wrap items-end gap-3",
           data: {
-            turbo_frame: "minimized-filter-inline-table-frame",
+            turbo_frame: "modal-filter-inline-table-frame",
             controller: "flat-pack--auto-submit",
             action: "input->flat-pack--auto-submit#queueSubmit change->flat-pack--auto-submit#queueSubmit",
             flat_pack__auto_submit_delay_value: 300
           }
         ) do #{erb_tag_close}
-          #{erb_output_open} render FlatPack::Select::Component.new(name: "inline_status", value: @minimized_inline_filter_status, options: @table_filter_definitions.fetch("status").fetch(:values).map { |value_key, value_label| [value_label, value_key] }, label: "Status") #{erb_tag_close}
-          #{erb_output_open} render FlatPack::Select::Component.new(name: "inline_category", value: @minimized_inline_filter_category, options: @table_filter_definitions.fetch("category").fetch(:values).map { |value_key, value_label| [value_label, value_key] }, label: "Category") #{erb_tag_close}
+          #{erb_output_open} render FlatPack::Select::Component.new(name: "inline_status", value: @modal_inline_filter_status, options: @table_filter_definitions.fetch("status").fetch(:values).map { |value_key, value_label| [value_label, value_key] }, label: "Status") #{erb_tag_close}
+          #{erb_output_open} render FlatPack::Select::Component.new(name: "inline_category", value: @modal_inline_filter_category, options: @table_filter_definitions.fetch("category").fetch(:values).map { |value_key, value_label| [value_label, value_key] }, label: "Category") #{erb_tag_close}
         #{erb_open} end #{erb_tag_close}
 
-        #{erb_output_open} render FlatPack::MinimizedFilters::Component.new(
-          id: "minimized-filter-inline-table-controls",
-          form_url: demo_minimized_filter_path,
-          turbo_frame: "minimized-filter-inline-table-frame",
-          active_count: @minimized_inline_filter_active_count,
-          reset_url: demo_minimized_filter_path,
+        #{erb_output_open} render FlatPack::ModalFilter::Component.new(
+          id: "modal-filter-inline-table-controls",
+          form_url: demo_modal_filter_path,
+          turbo_frame: "modal-filter-inline-table-frame",
+          active_count: @modal_inline_filter_active_count,
+          reset_url: demo_modal_filter_path,
           mobile_form_class: "space-y-3 p-[0.15rem]",
           button_size: :lg
-        ) do |minimized_filters| #{erb_tag_close}
-          #{erb_open} minimized_filters.filter_body do #{erb_tag_close}
-            #{erb_output_open} render FlatPack::Select::Component.new(name: "inline_status", value: @minimized_inline_filter_status, options: @table_filter_definitions.fetch("status").fetch(:values).map { |value_key, value_label| [value_label, value_key] }, label: "Status") #{erb_tag_close}
-            #{erb_output_open} render FlatPack::Select::Component.new(name: "inline_category", value: @minimized_inline_filter_category, options: @table_filter_definitions.fetch("category").fetch(:values).map { |value_key, value_label| [value_label, value_key] }, label: "Category") #{erb_tag_close}
+        ) do |modal_filter| #{erb_tag_close}
+          #{erb_open} modal_filter.filter_body do #{erb_tag_close}
+            #{erb_output_open} render FlatPack::Select::Component.new(name: "inline_status", value: @modal_inline_filter_status, options: @table_filter_definitions.fetch("status").fetch(:values).map { |value_key, value_label| [value_label, value_key] }, label: "Status") #{erb_tag_close}
+            #{erb_output_open} render FlatPack::Select::Component.new(name: "inline_category", value: @modal_inline_filter_category, options: @table_filter_definitions.fetch("category").fetch(:values).map { |value_key, value_label| [value_label, value_key] }, label: "Category") #{erb_tag_close}
           #{erb_open} end #{erb_tag_close}
         #{erb_open} end #{erb_tag_close}
 
-        #{erb_output_open} render FlatPack::Table::Component.new(data: @minimized_inline_filter_filtered_users.first(10)) do |table| #{erb_tag_close}
+        #{erb_output_open} render FlatPack::Table::Component.new(data: @modal_inline_filter_filtered_users.first(10)) do |table| #{erb_tag_close}
           #{erb_open} table.column(title: "ID", html: ->(user) { user.id.to_s }) #{erb_tag_close}
           #{erb_open} table.column(title: "Name", html: ->(user) { user.name }) #{erb_tag_close}
           #{erb_open} table.column(title: "Email", html: ->(user) { user.email }) #{erb_tag_close}

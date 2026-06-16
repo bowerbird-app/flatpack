@@ -57,7 +57,7 @@ Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status f
 | `status_lists` | Array, Hash | — | yes | Select options in any `FlatPack::Select::Component`-supported format. |
 | `status_placeholder` | String, nil | `"All"` | no | Placeholder option label for the status select. |
 | `hide_labels` | Boolean | `false` | no | When true, omits rendering the Date Range and Status form labels. |
-| `minimized` | Boolean | `true` | no | When true, renders desktop inline controls and mobile `FlatPack::MinimizedFilters::Component` modal flow. |
+| `minimized` | Boolean | `true` | no | When true, renders desktop inline controls and mobile `FlatPack::ModalFilter::Component` modal flow. |
 | `minimized_options` | Hash | `{}` | no | Required when `minimized: true`; include `form_url` and `turbo_frame` for Turbo updates. |
 
 ### DefaultFilter minimized_options

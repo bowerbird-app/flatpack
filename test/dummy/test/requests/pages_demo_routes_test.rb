@@ -60,7 +60,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/admin
     /demo/charts
     /demo/charts/default_filter
-    /demo/minimized_filter
+    /demo/modal_filter
     /demo/code_blocks
     /demo/avatars
     /demo/comments
@@ -126,8 +126,8 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Search both tables..."
   end
 
-  test "minimized filter demo renders inline filters table example" do
-    get "/demo/minimized_filter"
+  test "modal filter demo renders inline filters table example" do
+    get "/demo/modal_filter"
 
     assert_response :success
     assert_includes response.body, "Table Example with Inline Filters"

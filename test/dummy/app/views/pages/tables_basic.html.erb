@@ -91,15 +91,15 @@
     <% end %>
 
     <div class="mb-4 md:hidden">
-      <%= render FlatPack::MinimizedFilters::Component.new(
+      <%= render FlatPack::ModalFilter::Component.new(
         id: "basic-table-generic-filters",
         form_url: demo_tables_basic_path,
         turbo_frame: "basic-table-generic-filter-frame",
         active_count: @table_filter_active_count,
         reset_url: demo_tables_basic_path,
         mobile_form_class: "space-y-3"
-      ) do |minimized_filters| %>
-        <% minimized_filters.filter_body do %>
+      ) do |modal_filter| %>
+        <% modal_filter.filter_body do %>
           <div class="grid gap-3">
             <%= render FlatPack::Select::Component.new(
               name: "status",
@@ -171,15 +171,15 @@
           ) %&gt;
         &lt;% end %&gt;
 
-        &lt;%= render FlatPack::MinimizedFilters::Component.new(
+        &lt;%= render FlatPack::ModalFilter::Component.new(
           id: "basic-table-generic-filters",
           form_url: demo_tables_basic_path,
           turbo_frame: "basic-table-generic-filter-frame",
           active_count: @table_filter_active_count,
           reset_url: demo_tables_basic_path,
           mobile_form_class: "space-y-3"
-        ) do |minimized_filters| %&gt;
-          &lt;% minimized_filters.filter_body do %&gt;
+        ) do |modal_filter| %&gt;
+          &lt;% modal_filter.filter_body do %&gt;
             &lt;div class="grid gap-3"&gt;
             &lt;%= render FlatPack::Select::Component.new(
               name: "status",

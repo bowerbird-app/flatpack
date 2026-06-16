@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module FlatPack
-  module MinimizedFilters
+  module ModalFilter
     class Component < FlatPack::BaseComponent
       renders_one :filter_body
 
