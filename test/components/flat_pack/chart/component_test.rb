@@ -201,6 +201,29 @@ module FlatPack
         assert_includes html, '"fontFamily":"inherit"'
       end
 
+      def test_default_options_include_theme_primary_palette
+        series = [{name: "Sales", data: [10, 20, 30]}]
+        render_inline(Component.new(series: series))
+
+        html = page.native.to_html
+        assert_includes html, '"colors":["color-mix(in oklab, var(--color-primary) 100%, transparent)"'
+        assert_includes html, '"color-mix(in oklab, var(--color-primary) 90%, transparent)"'
+        assert_includes html, '"color-mix(in oklab, var(--color-primary) 70%, transparent)"'
+        assert_includes html, '"color-mix(in oklab, var(--color-primary) 50%, transparent)"'
+        assert_includes html, '"color-mix(in oklab, var(--color-primary) 30%, transparent)"'
+        assert_includes html, '"color-mix(in oklab, var(--color-primary) 10%, transparent)"'
+      end
+
+      def test_user_provided_colors_override_default_palette
+        series = [{name: "Sales", data: [10, 20, 30]}]
+        options = {colors: ["#33333310", "#33333330", "#33333350"]}
+        render_inline(Component.new(series: series, options: options))
+
+        html = page.native.to_html
+        assert_includes html, '"colors":["#33333310","#33333330","#33333350"]'
+        refute_includes html, '"color-mix(in oklab, var(--color-primary) 100%, transparent)"'
+      end
+
       def test_default_type_is_line
         series = [{name: "Sales", data: [10, 20, 30]}]
         component = Component.new(series: series)
@@ -242,6 +265,15 @@ module FlatPack
         assert_includes html, '"yaxis"'
         assert_includes html, '"grid"'
         assert_includes html, '"curve":"smooth"'
+      end
+
+      def test_area_defaults_use_primary_fill_with_ten_percent_opacity
+        series = [{name: "Sales", data: [10, 20, 30]}]
+        render_inline(Component.new(series: series, type: :area))
+
+        html = page.native.to_html
+        assert_includes html, '"fill":{"type":"solid","colors":["color-mix(in oklab, var(--color-primary) 10%, transparent)"],"opacity":1}'
+        assert_includes html, '"colors":["var(--color-primary)"]'
       end
 
       def test_bar_defaults_are_horizontal

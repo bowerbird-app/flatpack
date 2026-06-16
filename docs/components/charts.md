@@ -35,6 +35,11 @@ Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status f
 - Framed (`card: true`) and inline (`card: false`) rendering
 - Axis defaults for line/column/bar/area/radar and non-axis defaults for donut/pie
 
+## Color Defaults
+- By default, charts derive their series palette from `--color-primary`.
+- When multiple colors are needed, the component uses six opacity steps from the same primary color in descending strength: `100%`, `90%`, `70%`, `50%`, `30%`, and `10%`.
+- If you provide `options[:colors]`, your values are used as-is and override the default theme-derived palette.
+
 ## Related Classes
 - `FlatPack::Chart::DefaultFilterComponent`: reusable date range + status filter row designed for chart dashboards.
 

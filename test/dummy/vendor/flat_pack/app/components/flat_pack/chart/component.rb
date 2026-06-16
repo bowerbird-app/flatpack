@@ -22,6 +22,8 @@ module FlatPack
         radar: :radar
       }.freeze
 
+      PRIMARY_COLOR_OPACITY_STEPS = [100, 90, 70, 50, 30, 10].freeze
+
       def initialize(
         series:,
         type: :line,
@@ -167,6 +169,7 @@ module FlatPack
               show: false
             }
           },
+          colors: default_chart_colors,
           theme: {
             mode: "light"
           },
@@ -186,6 +189,12 @@ module FlatPack
         return base_options.merge(non_axis_chart_defaults) if non_axis_chart?
 
         base_options.merge(axis_chart_defaults)
+      end
+
+      def default_chart_colors
+        PRIMARY_COLOR_OPACITY_STEPS.map do |opacity|
+          "color-mix(in oklab, var(--color-primary) #{opacity}%, transparent)"
+        end
       end
 
       def axis_chart_defaults
@@ -220,6 +229,19 @@ module FlatPack
           }
         }
 
+        if area_chart?
+          defaults = defaults.deep_merge(
+            {
+              colors: ["var(--color-primary)"],
+              fill: {
+                type: "solid",
+                colors: ["color-mix(in oklab, var(--color-primary) 10%, transparent)"],
+                opacity: 1
+              }
+            }
+          )
+        end
+
         return defaults unless bar_chart?
 
         defaults.deep_merge(
@@ -247,6 +269,10 @@ module FlatPack
 
       def bar_chart?
         @type == :bar || @type == :column
+      end
+
+      def area_chart?
+        @type == :area
       end
 
       def horizontal_bar?
