@@ -16,7 +16,7 @@ Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status f
 | name | type | default | required | description |
 | --- | --- | --- | --- | --- |
 | `series` | Array or Hash | — | yes | Chart series payload passed to ApexCharts. |
-| `type` | Symbol | `:line` | no | One of `:line`, `:column`, `:bar`, `:area`, `:donut`, `:pie`, `:radar`, `:gauge`. Use `:column` for vertical bars, `:bar` for horizontal bars, and `:gauge` for radial gauge-style KPI displays. |
+| `type` | Symbol | `:line` | no | One of `:line`, `:column`, `:bar`, `:area`, `:donut`, `:pie`, `:radar`, `:funnel`, `:gauge`. Use `:column` for vertical bars, `:bar` for horizontal bars, `:funnel` for funnel stages, and `:gauge` for radial gauge-style KPI displays. |
 | `options` | Hash | `{}` | no | ApexCharts options deep-merged over component defaults. |
 | `height` | Integer | `280` | no | Chart height in pixels; must be positive. |
 | `card` | Boolean | `true` | no | Wraps chart in `FlatPack::Card::Component` with header/body/footer layout. |
@@ -34,12 +34,14 @@ Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status f
 - Chart type variant via `type`
 - Framed (`card: true`) and inline (`card: false`) rendering
 - Axis defaults for line/column/bar/area/radar and non-axis defaults for donut/pie
+- Funnel defaults for `:funnel` render through ApexCharts' bar chart mode with funnel plot options, Apex-safe stepped segment colors, and funnel-specific bar sizing
 - Gauge defaults for `:gauge` (`radialBar`) with rounded arc ends and primary-color shading
 
 ## Color Defaults
 - By default, charts derive their series palette from `--color-primary`.
 - When multiple colors are needed, the component uses six opacity steps from the same primary color in descending strength: `100%`, `90%`, `70%`, `50%`, `30%`, and `10%`.
 - Area charts use a dedicated line-color opacity ramp (`100%`, `85%`, `70%`, `55%`, `40%`, `25%`) so multiple series are easier to distinguish while keeping the area fill at `10%` primary color.
+- Funnel charts use an Apex-safe stepped hex palette because ApexCharts' bar/funnel renderer cannot parse CSS color functions such as `color-mix(...)`.
 - If you provide `options[:colors]`, your values are used as-is and override the default theme-derived palette.
 
 ## Related Classes
@@ -154,6 +156,21 @@ Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status f
   subtitle: "Current period",
   options: {
     labels: ["SLA"]
+  }
+) %>
+```
+
+```erb
+<%= render FlatPack::Chart::Component.new(
+  type: :funnel,
+  series: [{ name: "Funnel Series", data: [1380, 1100, 990, 880, 740, 548, 330, 200] }],
+  title: "Recruitment Funnel",
+  subtitle: "Stepped stages",
+  height: 350,
+  options: {
+    xaxis: {
+      categories: ["Sourced", "Screened", "Assessed", "HR Interview", "Technical", "Verify", "Offered", "Hired"]
+    }
   }
 ) %>
 ```

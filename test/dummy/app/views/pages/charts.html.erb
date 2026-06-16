@@ -175,6 +175,48 @@
   ) %>
 </section>
 
+<!-- Funnel Chart -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Funnel Chart", anchor_link: true, subtitle: "Examples for Funnel Chart.") %>
+  <%= render FlatPack::Chart::Component.new(
+    type: :funnel,
+    series: [{
+      name: "Funnel Series",
+      data: [1380, 1100, 990, 880, 740, 548, 330, 200]
+    }],
+    title: "Recruitment Funnel",
+    subtitle: "Stepped stages",
+    height: 350,
+    options: {
+      xaxis: {
+        categories: ["Sourced", "Screened", "Assessed", "HR Interview", "Technical", "Verify", "Offered", "Hired"]
+      }
+    }
+  ) %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Chart::Component.new(
+        type: :funnel,
+        series: [{
+          name: "Funnel Series",
+          data: [1380, 1100, 990, 880, 740, 548, 330, 200]
+        }],
+        title: "Recruitment Funnel",
+        subtitle: "Stepped stages",
+        height: 350,
+        options: {
+          xaxis: {
+            categories: ["Sourced", "Screened", "Assessed", "HR Interview", "Technical", "Verify", "Offered", "Hired"]
+          }
+        }
+      ) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
 <!-- Gauge Chart -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Gauge Chart", anchor_link: true, subtitle: "Rounded gauge with primary shaded fill.") %>
@@ -246,7 +288,7 @@
 <!-- Chart with Generic Filter Controls -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Chart with Generic Filter Controls", anchor_link: true, subtitle: "Examples for Chart with Generic Filter Controls.") %>
-  <p class="text-[var(--surface-muted-content-color)] mb-4">
+  <p class="text-(--surface-muted-content-color) mb-4">
     Use <code>FlatPack::ChartButtons::Component</code> as a sibling control surface for any chart filter UI.
   </p>
 
@@ -501,7 +543,7 @@
 <!-- Chart without Card -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Chart without Card Wrapper", anchor_link: true, subtitle: "Examples for Chart without Card Wrapper.") %>
-  <p class="text-[var(--surface-muted-content-color)] mb-4">
+  <p class="text-(--surface-muted-content-color) mb-4">
     Set <code>card: false</code> to render the chart without a card wrapper.
   </p>
   <%= render FlatPack::Chart::Component.new(
@@ -721,11 +763,11 @@
       <div class="flex items-center justify-between text-sm">
         <div class="flex items-center gap-4">
           <div>
-            <span class="text-[var(--surface-muted-content-color)]">Total:</span>
+            <span class="text-(--surface-muted-content-color)">Total:</span>
             <span class="font-semibold ml-1">$225K</span>
           </div>
           <div>
-            <span class="text-[var(--surface-muted-content-color)]">Avg:</span>
+            <span class="text-(--surface-muted-content-color)">Avg:</span>
             <span class="font-semibold ml-1">$28.1K</span>
           </div>
         </div>
@@ -748,11 +790,11 @@
           <div class="flex items-center justify-between text-sm">
             <div class="flex items-center gap-4">
               <div>
-                <span class="text-[var(--surface-muted-content-color)]">Total:</span>
+                <span class="text-(--surface-muted-content-color)">Total:</span>
                 <span class="font-semibold ml-1">$225K</span>
               </div>
               <div>
-                <span class="text-[var(--surface-muted-content-color)]">Avg:</span>
+                <span class="text-(--surface-muted-content-color)">Avg:</span>
                 <span class="font-semibold ml-1">$28.1K</span>
               </div>
             </div>
@@ -768,7 +810,7 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Setup Instructions", anchor_link: true, subtitle: "Examples for Setup Instructions.") %>
   <h3 class="text-lg font-semibold mb-3">ApexCharts is Already Configured</h3>
-  <p class="text-[var(--surface-muted-content-color)] mb-4">
+  <p class="text-(--surface-muted-content-color) mb-4">
     FlatPack includes ApexCharts via CDN in the importmap. No additional setup required!
   </p>
   
@@ -793,7 +835,7 @@
 <!-- Custom Options -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Custom ApexCharts Options", anchor_link: true, subtitle: "Examples for Custom ApexCharts Options.") %>
-  <p class="text-[var(--surface-muted-content-color)] mb-4">
+  <p class="text-(--surface-muted-content-color) mb-4">
     Pass custom ApexCharts options for full control.
   </p>
   

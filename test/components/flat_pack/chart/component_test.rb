@@ -68,6 +68,13 @@ module FlatPack
         assert_selector "[data-flat-pack--chart-type-value='radar']"
       end
 
+      def test_renders_chart_with_funnel_type
+        series = [{name: "Funnel Series", data: [1380, 1100, 990, 880, 740, 548, 330, 200]}]
+        render_inline(Component.new(series: series, type: :funnel))
+
+        assert_selector "[data-flat-pack--chart-type-value='bar']"
+      end
+
       def test_renders_chart_with_gauge_type
         series = [67]
         render_inline(Component.new(series: series, type: :gauge))
@@ -274,6 +281,22 @@ module FlatPack
         refute_includes html, '"xaxis"'
         refute_includes html, '"yaxis"'
         refute_includes html, '"grid"'
+      end
+
+      def test_funnel_defaults_use_primary_palette_and_funnel_plot_options
+        series = [{name: "Funnel Series", data: [1380, 1100, 990, 880, 740, 548, 330, 200]}]
+        render_inline(Component.new(series: series, type: :funnel))
+
+        html = page.native.to_html
+        assert_includes html, '"colors":["#2563eb","#3b82f6","#60a5fa","#93c5fd","#bfdbfe","#dbeafe"]'
+        refute_includes html, '"colors":["color-mix(in oklab, var(--color-primary) 100%, transparent)"'
+        assert_includes html, '"dataLabels":{"enabled":true}'
+        assert_includes html, '"legend":{"labels":{"colors":"var(--surface-content-color)"},"show":false}'
+        assert_includes html, '"chart":{"fontFamily":"inherit","toolbar":{"show":false},"animations":{"easing":"linear","speed":800,"animateGradually":{"enabled":false}}}'
+        assert_includes html, '"grid":{"show":false,"padding":{"left":0,"right":0}}'
+        assert_includes html, '"plotOptions":{"bar":{"isFunnel":true,"distributed":true,"horizontal":true,"borderRadius":0,"borderRadiusApplication":"around","barHeight":"80%","dataLabels":{"position":"center"}}}'
+        assert_includes html, '"xaxis":{"labels":{"show":false},"tooltip":{"enabled":false},"axisBorder":{"show":false},"axisTicks":{"show":false}}'
+        assert_includes html, '"yaxis":[{"show":false,"title":{"text":""},"axisBorder":{"show":false},"axisTicks":{"show":false},"floating":true}]'
       end
 
       def test_gauge_options_allow_overriding_defaults

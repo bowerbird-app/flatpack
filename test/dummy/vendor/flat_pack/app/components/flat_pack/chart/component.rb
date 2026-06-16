@@ -20,11 +20,13 @@ module FlatPack
         donut: :donut,
         pie: :pie,
         radar: :radar,
+        funnel: :funnel,
         gauge: :gauge
       }.freeze
 
       PRIMARY_COLOR_OPACITY_STEPS = [100, 90, 70, 50, 30, 10].freeze
       AREA_LINE_OPACITY_STEPS = [100, 85, 70, 55, 40, 25].freeze
+      FUNNEL_CHART_COLORS = ["#2563eb", "#3b82f6", "#60a5fa", "#93c5fd", "#bfdbfe", "#dbeafe"].freeze
 
       def initialize(
         series:,
@@ -190,6 +192,8 @@ module FlatPack
 
         return base_options.merge(gauge_chart_defaults) if gauge_chart?
 
+        return base_options.deep_merge(funnel_chart_defaults) if funnel_chart?
+
         return base_options.merge(non_axis_chart_defaults) if non_axis_chart?
 
         base_options.merge(axis_chart_defaults)
@@ -320,12 +324,84 @@ module FlatPack
         }
       end
 
+      def funnel_chart_defaults
+        {
+          colors: FUNNEL_CHART_COLORS,
+          chart: {
+            animations: {
+              easing: "linear",
+              speed: 800,
+              animateGradually: {
+                enabled: false
+              }
+            }
+          },
+          legend: {
+            show: false
+          },
+          dataLabels: {
+            enabled: true
+          },
+          grid: {
+            show: false,
+            padding: {
+              left: 0,
+              right: 0
+            }
+          },
+          plotOptions: {
+            bar: {
+              isFunnel: true,
+              distributed: true,
+              horizontal: true,
+              borderRadius: 0,
+              borderRadiusApplication: "around",
+              barHeight: "80%",
+              dataLabels: {
+                position: "center"
+              }
+            }
+          },
+          xaxis: {
+            labels: {
+              show: false
+            },
+            tooltip: {
+              enabled: false
+            },
+            axisBorder: {
+              show: false
+            },
+            axisTicks: {
+              show: false
+            }
+          },
+          yaxis: [{
+            show: false,
+            title: {
+              text: ""
+            },
+            axisBorder: {
+              show: false
+            },
+            axisTicks: {
+              show: false
+            },
+            floating: true
+          }]
+        }
+      end
+
       def non_axis_chart?
         @type == :donut || @type == :pie
       end
 
       def gauge_chart?
         @type == :gauge
+      end
+
+      def funnel_chart?
+        @type == :funnel
       end
 
       def bar_chart?
@@ -342,6 +418,7 @@ module FlatPack
 
       def apex_chart_type
         return :radialBar if gauge_chart?
+        return :bar if funnel_chart?
         return :bar if bar_chart?
 
         @type
