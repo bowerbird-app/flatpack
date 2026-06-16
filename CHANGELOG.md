@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Updated `FlatPack::Chart::Component` funnel charts to reuse the theme primary color opacity ramp for stepped segments, matching the default chart palette behavior.
+- Updated `FlatPack::DateRangeInput::Component` mobile picker layout to show the calendar immediately with quick ranges in a horizontally scrollable top rail, cap the calendar at 390px, and remove the `Pick in Calendar` mode switch and inline summary text.
 
 ### Fixed
 - Resolved ApexCharts funnel rendering with CSS theme colors by normalizing computed OKLab/OKLCH color values to Apex-compatible RGB strings before chart render.

@@ -54,6 +54,8 @@ None.
 - Calendar ranges that match a quick preset (for example the exact `Last month` dates) display that preset label after Apply.
 - Custom calendar ranges that do not match a quick preset continue to display as `YYYY-MM-DD to YYYY-MM-DD`.
 - On first render, if `start_value` and `end_value` match a known quick preset range for today, the trigger displays that preset label.
+- On mobile, the picker opens directly to the calendar with the Date Range presets rendered above it in a horizontally scrollable rail.
+- On desktop, Date Range presets remain alongside the calendar in the picker panel.
 
 ## Dependencies
 - Stimulus controller: `app/javascript/flat_pack/controllers/flatpack_date_picker_controller.js`.

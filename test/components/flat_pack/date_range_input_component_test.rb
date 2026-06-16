@@ -111,15 +111,31 @@ module FlatPack
       def test_renders_mobile_list_and_calendar_targets
         render_inline(Component.new(start_name: "period_start", end_name: "period_end"))
 
-        assert_selector "[data-flat-pack--flatpack-date-picker-target='listView'].flat-pack-date-picker-list-view", visible: :all
-        assert_selector "[data-flat-pack--flatpack-date-picker-target='calendarView'].flat-pack-date-picker-calendar-view.hidden.md\\:grid", visible: :all
+        assert_selector "[data-flat-pack--flatpack-date-picker-target='listView'].flat-pack-date-picker-list-view.overflow-x-auto.md\\:overflow-x-visible", visible: :all
+        assert_selector "[data-flat-pack--flatpack-date-picker-target='calendarView'].flat-pack-date-picker-calendar-view.grid[style='max-height: 390px;']", visible: :all
+        refute_selector "[data-flat-pack--flatpack-date-picker-target='calendarView'].hidden", visible: :all
       end
 
-      def test_renders_pick_in_calendar_as_last_list_action
+      def test_does_not_render_calendar_summary_text
         render_inline(Component.new(start_name: "period_start", end_name: "period_end"))
 
-        assert_selector "button[data-flat-pack-date-picker-command='show-calendar']", text: "Pick in Calendar", visible: :all
-        assert_selector "button[data-flat-pack-date-picker-command='show-ranges']", text: "Back to Date Range", visible: :all
+        refute_selector "[data-flat-pack--flatpack-date-picker-target='summary']", visible: :all
+      end
+
+      def test_renders_quick_ranges_as_mobile_horizontal_rail
+        render_inline(Component.new(start_name: "period_start", end_name: "period_end"))
+
+        assert_selector "button[data-flat-pack-date-picker-command='preset'].shrink-0.whitespace-nowrap.md\\:w-full", text: "Today", visible: :all
+        assert_selector "button[data-flat-pack-date-picker-command='preset']", count: 9, visible: :all
+      end
+
+      def test_does_not_render_mobile_calendar_mode_switch_buttons
+        render_inline(Component.new(start_name: "period_start", end_name: "period_end"))
+
+        refute_selector "button[data-flat-pack-date-picker-command='show-calendar']", visible: :all
+        refute_selector "button[data-flat-pack-date-picker-command='show-ranges']", visible: :all
+        refute_text "Pick in Calendar"
+        refute_text "Back to Date Range"
       end
 
       def test_renders_shared_cancel_and_apply_actions

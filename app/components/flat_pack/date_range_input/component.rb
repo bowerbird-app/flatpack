@@ -121,11 +121,8 @@ module FlatPack
         content_tag(:div, class: picker_ranges_section_classes, data: {"flat-pack--flatpack-date-picker-target": "listView"}) do
           safe_join([
             content_tag(:p, "Date Range", class: "text-xs font-semibold uppercase tracking-wide text-[var(--surface-muted-content-color)]"),
-            content_tag(:div, class: "mt-2 space-y-1") do
-              safe_join(
-                quick_range_presets.map { |preset| render_quick_range_button(preset) } +
-                [render_open_calendar_button]
-              )
+            content_tag(:div, class: "mt-2 flex gap-2 overflow-x-auto pb-1 md:block md:space-y-1 md:overflow-visible md:pb-0") do
+              safe_join(quick_range_presets.map { |preset| render_quick_range_button(preset) })
             end
           ])
         end
@@ -137,7 +134,7 @@ module FlatPack
           style: :ghost,
           size: :sm,
           type: "button",
-          class: "w-full justify-start",
+          class: "shrink-0 whitespace-nowrap md:w-full md:justify-start",
           data: {
             "flat-pack-date-picker-command": "preset",
             "flat-pack-date-picker-preset": preset[:key]
@@ -146,18 +143,8 @@ module FlatPack
       end
 
       def render_picker_calendar
-        content_tag(:div, class: picker_calendar_section_classes, data: {"flat-pack--flatpack-date-picker-target": "calendarView"}) do
+        content_tag(:div, class: picker_calendar_section_classes, style: "max-height: 390px;", data: {"flat-pack--flatpack-date-picker-target": "calendarView"}) do
           safe_join([
-            content_tag(:div, class: "mb-3 md:hidden") do
-              render(FlatPack::Button::Component.new(
-                text: "Back to Date Range",
-                style: :ghost,
-                size: :sm,
-                type: "button",
-                class: "w-full justify-start",
-                data: {"flat-pack-date-picker-command": "show-ranges"}
-              ))
-            end,
             content_tag(:div, class: "flex items-center justify-between gap-2") do
               safe_join([
                 render(FlatPack::Button::Component.new(
@@ -180,21 +167,9 @@ module FlatPack
             content_tag(:div, class: "mt-3 grid grid-cols-7 gap-1 text-center text-xs font-medium text-[var(--surface-muted-content-color)]") do
               safe_join(%w[Mo Tu We Th Fr Sa Su].map { |day| content_tag(:span, day) })
             end,
-            content_tag(:div, "", class: "mt-2 grid grid-cols-7 justify-items-center gap-x-0 gap-y-1", data: {"flat-pack--flatpack-date-picker-target": "calendarGrid"}),
-            content_tag(:p, "", class: "mt-3 text-xs text-[var(--surface-muted-content-color)]", data: {"flat-pack--flatpack-date-picker-target": "summary"})
+            content_tag(:div, "", class: "mt-2 grid grid-cols-7 justify-items-center gap-x-0 gap-y-1", data: {"flat-pack--flatpack-date-picker-target": "calendarGrid"})
           ])
         end
-      end
-
-      def render_open_calendar_button
-        render(FlatPack::Button::Component.new(
-          text: "Pick in Calendar",
-          style: :ghost,
-          size: :sm,
-          type: "button",
-          class: "w-full justify-start",
-          data: {"flat-pack-date-picker-command": "show-calendar"}
-        ))
       end
 
       def render_picker_actions
@@ -295,7 +270,10 @@ module FlatPack
           "bg-[var(--surface-subtle-background-color)]",
           "p-3",
           "w-full",
-          "overflow-y-auto",
+          "overflow-x-auto",
+          "overflow-y-hidden",
+          "md:overflow-x-visible",
+          "md:overflow-y-auto",
           "md:max-w-[150px]",
           "md:sticky",
           "md:top-0",
@@ -309,8 +287,7 @@ module FlatPack
       def picker_calendar_section_classes
         classes(
           "flat-pack-date-picker-calendar-view",
-          "hidden",
-          "md:grid",
+          "grid",
           "min-w-0",
           "flex-1",
           "p-3"

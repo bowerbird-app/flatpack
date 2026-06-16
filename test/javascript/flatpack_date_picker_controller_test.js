@@ -139,3 +139,43 @@ test('automatic calendar preset matching is range only', () => {
 
   assert.equal(controller.resolvedPresetKeyForState(state), null)
 })
+
+test('renderListOptionSelection highlights preset buttons only', () => {
+  const controller = buildController()
+  const selectedButton = buildOptionButton('last_week')
+  const unselectedButton = buildOptionButton('today', ['bg-[var(--button-primary-background-color)]'])
+  controller.panelElement = {
+    querySelectorAll(selector) {
+      assert.equal(selector, '[data-flat-pack-date-picker-command="preset"]')
+      return [selectedButton, unselectedButton]
+    }
+  }
+  controller.draftPresetKey = 'last_week'
+
+  controller.renderListOptionSelection()
+
+  assert.equal(selectedButton.classes.has('bg-[var(--button-primary-background-color)]'), true)
+  assert.equal(selectedButton.classes.has('text-[var(--button-primary-text-color)]'), true)
+  assert.equal(unselectedButton.classes.has('bg-[var(--button-primary-background-color)]'), false)
+})
+
+function buildOptionButton(preset, initialClasses = []) {
+  const classes = new Set(initialClasses)
+
+  return {
+    classes,
+    dataset: {
+      flatPackDatePickerCommand: 'preset',
+      flatPackDatePickerPreset: preset
+    },
+    classList: {
+      toggle(className, selected) {
+        if (selected) {
+          classes.add(className)
+        } else {
+          classes.delete(className)
+        }
+      }
+    }
+  }
+}

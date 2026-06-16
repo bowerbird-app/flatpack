@@ -34,7 +34,6 @@ export default class extends Controller {
     this.visibleMonth = this.initialVisibleMonth()
     this.committed = this.initialCommittedValues()
     this.draft = { ...this.committed }
-    this.viewMode = this.defaultViewMode()
     this.committedPresetKey = this.initialPresetKey()
     this.draftPresetKey = this.committedPresetKey
 
@@ -101,7 +100,6 @@ export default class extends Controller {
     this.triggerTarget?.setAttribute("aria-expanded", "true")
     this.draft = { ...this.committed }
     this.draftPresetKey = this.committedPresetKey
-    this.viewMode = this.defaultViewMode()
     this.render()
     this.positionPanel()
     this.addGlobalListeners()
@@ -138,7 +136,6 @@ export default class extends Controller {
     event.preventDefault()
     this.draft = { ...this.committed }
     this.draftPresetKey = this.committedPresetKey
-    this.viewMode = this.defaultViewMode()
     this.render()
     this.close()
   }
@@ -301,12 +298,6 @@ export default class extends Controller {
         break
       case "preset":
         this.applyPreset(String(commandElement.dataset.flatPackDatePickerPreset || ""))
-        break
-      case "show-calendar":
-        this.showCalendar(event)
-        break
-      case "show-ranges":
-        this.showRanges(event)
         break
       case "day":
         this.applyDaySelection(String(commandElement.dataset.flatPackDatePickerDate || ""))
@@ -619,7 +610,7 @@ export default class extends Controller {
   }
 
   labelForPreset(key) {
-    if (!key || key === "pick_in_calendar") {
+    if (!key) {
       return null
     }
 
@@ -847,24 +838,6 @@ export default class extends Controller {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate())
   }
 
-  showCalendar(event) {
-    event.preventDefault()
-    this.draftPresetKey = "pick_in_calendar"
-    this.viewMode = "calendar"
-    this.renderViewMode()
-    this.renderListOptionSelection()
-  }
-
-  showRanges(event) {
-    event.preventDefault()
-    this.viewMode = "list"
-    this.renderViewMode()
-  }
-
-  defaultViewMode() {
-    return this.isMobileViewport() ? "list" : "calendar"
-  }
-
   isMobileViewport() {
     return window.matchMedia("(max-width: 767px)").matches
   }
@@ -878,15 +851,8 @@ export default class extends Controller {
       return
     }
 
-    if (!this.isMobileViewport()) {
-      this.listViewElement.classList.remove("hidden")
-      this.calendarViewElement.classList.remove("hidden")
-      return
-    }
-
-    const showCalendar = this.viewMode === "calendar"
-    this.listViewElement.classList.toggle("hidden", showCalendar)
-    this.calendarViewElement.classList.toggle("hidden", !showCalendar)
+    this.listViewElement.classList.remove("hidden")
+    this.calendarViewElement.classList.remove("hidden")
   }
 
   renderListOptionSelection() {
@@ -895,7 +861,7 @@ export default class extends Controller {
     }
 
     const optionButtons = this.panelElement.querySelectorAll(
-      '[data-flat-pack-date-picker-command="preset"], [data-flat-pack-date-picker-command="show-calendar"]'
+      '[data-flat-pack-date-picker-command="preset"]'
     )
 
     const selectedClasses = [
@@ -905,8 +871,7 @@ export default class extends Controller {
     ]
 
     optionButtons.forEach((button) => {
-      const command = button.dataset.flatPackDatePickerCommand
-      const key = command === "preset" ? String(button.dataset.flatPackDatePickerPreset || "") : "pick_in_calendar"
+      const key = String(button.dataset.flatPackDatePickerPreset || "")
       const selected = this.draftPresetKey === key
 
       selectedClasses.forEach((className) => {
