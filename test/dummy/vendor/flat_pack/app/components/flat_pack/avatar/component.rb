@@ -57,7 +57,7 @@ module FlatPack
         @shape = shape.to_sym
         @status = status&.to_sym
         @href = href
-        @show_tooltip = show_tooltip
+        @show_tooltip = ActiveModel::Type::Boolean.new.cast(show_tooltip)
         @tooltip_placement = tooltip_placement
 
         validate_size!
