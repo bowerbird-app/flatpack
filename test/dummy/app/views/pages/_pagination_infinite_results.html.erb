@@ -25,5 +25,6 @@
 <%= render FlatPack::Pagination::Component.new(
   mode: :infinite,
   infinite_url: infinite_url,
-  has_more: has_more
+  has_more: has_more,
+  loading_variant: :table_rows
 ) %>

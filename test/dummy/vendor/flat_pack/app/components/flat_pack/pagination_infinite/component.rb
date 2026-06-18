@@ -5,6 +5,7 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       LOADING_VARIANTS = {
         table: :table,
+        table_rows: :table_rows,
         cards: :cards,
         inline: :inline
       }.freeze
@@ -70,6 +71,8 @@ module FlatPack
       def render_loading_indicator
         content_tag(:div, **loading_attributes) do
           case @loading_variant
+          when :table_rows
+            render_table_rows_loading_indicator
           when :cards
             render_cards_loading_indicator
           when :inline
@@ -99,6 +102,12 @@ module FlatPack
               end)
             end
           end
+        end
+      end
+
+      def render_table_rows_loading_indicator
+        content_tag(:div, class: "py-2 text-sm text-[var(--surface-muted-content-color)]", role: "status") do
+          @loading_text
         end
       end
 
@@ -147,6 +156,8 @@ module FlatPack
       end
 
       def container_classes
+        return "contents" if @loading_variant == :table_rows
+
         classes(
           "flex flex-col items-center gap-4",
           (@insert_mode == :prepend) ? "py-2" : "py-8"

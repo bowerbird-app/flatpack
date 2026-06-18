@@ -33,6 +33,23 @@ class PagesPaginationInfiniteTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "data-pagination-content"
   end
 
+  test "pagination infinite xhr table response uses table row loading variant" do
+    original = DummyDatum.method(:table_exists?)
+    DummyDatum.define_singleton_method(:table_exists?) { false }
+
+    begin
+      get demo_pagination_infinite_path,
+        params: {page: 2},
+        headers: {"X-Requested-With" => "XMLHttpRequest"}
+    ensure
+      DummyDatum.define_singleton_method(:table_exists?, original)
+    end
+
+    assert_response :success
+    assert_includes response.body, "data-flat-pack--pagination-infinite-loading-variant-value=\"table_rows\""
+    refute_includes response.body, "flex flex-col items-center gap-4 py-8"
+  end
+
   test "pagination infinite falls back to demo records when dummy_data is sparse" do
     original_table_exists = DummyDatum.method(:table_exists?)
     original_recent = DummyDatum.method(:recent)

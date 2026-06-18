@@ -303,6 +303,11 @@ export default class extends Controller {
       return
     }
 
+    if (this.loadingVariantValue === "table_rows") {
+      this.showTableRowsLoading()
+      return
+    }
+
     if (this.hasTriggerTarget) {
       this.triggerTarget.hidden = true
     }
@@ -328,6 +333,10 @@ export default class extends Controller {
       this.hideCardGridLoading()
     }
 
+    if (this.loadingVariantValue === "table_rows") {
+      this.hideInjectedSkeletons()
+    }
+
     if (this.hasTriggerTarget) {
       this.triggerTarget.hidden = false
     }
@@ -350,12 +359,67 @@ export default class extends Controller {
     }
   }
 
+  currentContentElement() {
+    return this.element.parentElement?.querySelector("[data-pagination-content]")
+  }
+
+  showTableRowsLoading() {
+    if (this.hasTriggerTarget) {
+      this.triggerTarget.hidden = true
+    }
+
+    const currentContent = this.currentContentElement()
+    if (!currentContent || currentContent.tagName !== "TBODY") {
+      if (this.hasLoadingTarget) {
+        this.loadingTarget.hidden = false
+      }
+      return
+    }
+
+    if (this.injectedSkeletons.length > 0) {
+      return
+    }
+
+    const columns = this.tableColumnCount(currentContent)
+    const widths = ["70px", "140px", "170px", "80px", "100px", "90px", "120px"]
+    const skeletonBase = "relative overflow-hidden bg-[var(--surface-muted-background-color)] before:pointer-events-none before:absolute before:inset-0 before:content-[''] before:bg-[linear-gradient(110deg,transparent_20%,rgb(255_255_255_/_0.45)_45%,transparent_70%)] before:translate-x-[-100%] before:animate-[fp-skeleton-shimmer_1.35s_linear_infinite] motion-reduce:before:animate-none h-4 rounded"
+
+    for (let rowIndex = 0; rowIndex < 5; rowIndex += 1) {
+      const row = document.createElement("tr")
+      row.dataset.paginationLoadingRow = "true"
+      row.className = "border-t border-[var(--surface-border-color)]"
+
+      for (let columnIndex = 0; columnIndex < columns; columnIndex += 1) {
+        const cell = document.createElement("td")
+        cell.className = "px-[var(--table-padding)] py-[var(--table-padding)]"
+
+        const skeleton = document.createElement("div")
+        skeleton.className = skeletonBase
+        skeleton.style.width = widths[columnIndex % widths.length]
+        skeleton.setAttribute("aria-busy", "true")
+        skeleton.setAttribute("aria-label", "Loading...")
+        skeleton.setAttribute("role", "status")
+
+        cell.appendChild(skeleton)
+        row.appendChild(cell)
+      }
+
+      currentContent.appendChild(row)
+      this.injectedSkeletons.push(row)
+    }
+  }
+
+  tableColumnCount(tableBody) {
+    const firstRow = tableBody.querySelector("tr")
+    return Math.max(firstRow?.children.length || 1, 1)
+  }
+
   showCardGridLoading() {
     if (this.hasTriggerTarget) {
       this.triggerTarget.hidden = true
     }
 
-    const currentContent = this.element.parentElement?.querySelector("[data-pagination-content]")
+    const currentContent = this.currentContentElement()
     if (!currentContent) {
       if (this.hasLoadingTarget) {
         this.loadingTarget.hidden = false
@@ -390,14 +454,18 @@ export default class extends Controller {
   }
 
   hideCardGridLoading() {
-    this.injectedSkeletons.forEach((placeholder) => {
-      placeholder.remove()
-    })
-    this.injectedSkeletons = []
+    this.hideInjectedSkeletons()
 
     if (this.hasLoadingTarget) {
       this.loadingTarget.hidden = true
     }
+  }
+
+  hideInjectedSkeletons() {
+    this.injectedSkeletons.forEach((placeholder) => {
+      placeholder.remove()
+    })
+    this.injectedSkeletons = []
   }
 
   gridColumnCount(gridElement) {
