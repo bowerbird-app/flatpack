@@ -6,38 +6,80 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Sortable Table", anchor_link: true, subtitle: "Click column headers to change ordering. Sorting happens via query params and updates within a Turbo Frame for smooth navigation.") %>
 
-  <%= render FlatPack::Table::Component.new(
-    data: @sorted_users,
-    turbo_frame: "sortable_table",
-    sort: params[:sort].presence || "id",
-    direction: params[:direction].presence || "asc",
-    base_url: request.path
-  ) do |table| %>
-    <% table.column(title: "ID", html: ->(user) { user.id.to_s }, sortable: true, sort_key: :id) %>
-    <% table.column(title: "Name", html: ->(user) { user.name }, sortable: true, sort_key: :name) %>
-    <% table.column(title: "Email", html: ->(user) { user.email }, sortable: true, sort_key: :email) %>
-    <% table.column(title: "Category", html: ->(user) { user.category.to_s.titleize }, sortable: true, sort_key: :category) %>
-    <% table.column(title: "Status", sortable: true, sort_key: :status, html: ->(user) { render FlatPack::Badge::Component.new(text: user.status.capitalize, size: :sm) }) %>
-    <% table.column(title: "Views", sortable: true, sort_key: :views_count, html: ->(user) { number_with_delimiter(user.views_count) }) %>
-    <% table.column(title: "Published", sortable: true, sort_key: :published_at, html: ->(user) { user.published_at.strftime("%b %d, %Y") }) %>
+  <%= turbo_frame_tag "sortable_table", class: "fp-turbo-frame-loading-surface block relative min-h-96" do %>
+    <div class="fp-turbo-frame-content">
+      <%= render FlatPack::Table::Component.new(
+        data: @sorted_users,
+        sort: params[:sort].presence || "id",
+        direction: params[:direction].presence || "asc",
+        base_url: request.path
+      ) do |table| %>
+        <% table.column(title: "ID", html: ->(user) { user.id.to_s }, sortable: true, sort_key: :id) %>
+        <% table.column(title: "Name", html: ->(user) { user.name }, sortable: true, sort_key: :name) %>
+        <% table.column(title: "Email", html: ->(user) { user.email }, sortable: true, sort_key: :email) %>
+        <% table.column(title: "Category", html: ->(user) { user.category.to_s.titleize }, sortable: true, sort_key: :category) %>
+        <% table.column(title: "Status", sortable: true, sort_key: :status, html: ->(user) { render FlatPack::Badge::Component.new(text: user.status.capitalize, size: :sm) }) %>
+        <% table.column(title: "Views", sortable: true, sort_key: :views_count, html: ->(user) { number_with_delimiter(user.views_count) }) %>
+        <% table.column(title: "Published", sortable: true, sort_key: :published_at, html: ->(user) { user.published_at.strftime("%b %d, %Y") }) %>
+      <% end %>
+    </div>
+
+    <div class="fp-turbo-frame-skeleton absolute inset-0 bg-(--surface-background-color)">
+      <div class="space-y-4 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-4">
+        <%= render FlatPack::Skeleton::Component.new(variant: :title, width: "35%") %>
+
+        <% 8.times do %>
+          <div class="grid grid-cols-7 gap-4">
+            <%= render FlatPack::Skeleton::Component.new(variant: :text, width: "48px") %>
+            <%= render FlatPack::Skeleton::Component.new(variant: :text, width: "80%") %>
+            <%= render FlatPack::Skeleton::Component.new(variant: :text, width: "90%") %>
+            <%= render FlatPack::Skeleton::Component.new(variant: :text, width: "70%") %>
+            <%= render FlatPack::Skeleton::Component.new(variant: :button, width: "72px", height: "24px") %>
+            <%= render FlatPack::Skeleton::Component.new(variant: :text, width: "64px") %>
+            <%= render FlatPack::Skeleton::Component.new(variant: :text, width: "88px") %>
+          </div>
+        <% end %>
+      </div>
+    </div>
   <% end %>
 
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE'),
-      &lt;%= render FlatPack::Table::Component.new(
-        data: @sorted_users,
-        turbo_frame: &quot;sortable_table&quot;,
-        sort: params[:sort].presence || &quot;id&quot;,
-        direction: params[:direction].presence || &quot;asc&quot;,
-        base_url: request.path
-      ) do |table| %&gt;
-        &lt;% table.column(title: &quot;ID&quot;, html: -&gt;(user) { user.id.to_s }, sortable: true, sort_key: :id) %&gt;
-        &lt;% table.column(title: &quot;Name&quot;, html: -&gt;(user) { user.name }, sortable: true, sort_key: :name) %&gt;
-        &lt;% table.column(title: &quot;Email&quot;, html: -&gt;(user) { user.email }, sortable: true, sort_key: :email) %&gt;
-        &lt;% table.column(title: &quot;Category&quot;, html: -&gt;(user) { user.category.to_s.titleize }, sortable: true, sort_key: :category) %&gt;
-        &lt;% table.column(title: &quot;Status&quot;, sortable: true, sort_key: :status, html: -&gt;(user) { render FlatPack::Badge::Component.new(text: user.status.capitalize, size: :sm) }) %&gt;
-        &lt;% table.column(title: &quot;Views&quot;, sortable: true, sort_key: :views_count, html: -&gt;(user) { number_with_delimiter(user.views_count) }) %&gt;
-        &lt;% table.column(title: &quot;Published&quot;, sortable: true, sort_key: :published_at, html: -&gt;(user) { user.published_at.strftime(&quot;%b %d, %Y&quot;) }) %&gt;
+      &lt;%= turbo_frame_tag &quot;sortable_table&quot;, class: &quot;fp-turbo-frame-loading-surface block relative min-h-96&quot; do %&gt;
+        &lt;div class=&quot;fp-turbo-frame-content&quot;&gt;
+          &lt;%= render FlatPack::Table::Component.new(
+            data: @sorted_users,
+            sort: params[:sort].presence || &quot;id&quot;,
+            direction: params[:direction].presence || &quot;asc&quot;,
+            base_url: request.path
+          ) do |table| %&gt;
+            &lt;% table.column(title: &quot;ID&quot;, html: -&gt;(user) { user.id.to_s }, sortable: true, sort_key: :id) %&gt;
+            &lt;% table.column(title: &quot;Name&quot;, html: -&gt;(user) { user.name }, sortable: true, sort_key: :name) %&gt;
+            &lt;% table.column(title: &quot;Email&quot;, html: -&gt;(user) { user.email }, sortable: true, sort_key: :email) %&gt;
+            &lt;% table.column(title: &quot;Category&quot;, html: -&gt;(user) { user.category.to_s.titleize }, sortable: true, sort_key: :category) %&gt;
+            &lt;% table.column(title: &quot;Status&quot;, sortable: true, sort_key: :status, html: -&gt;(user) { render FlatPack::Badge::Component.new(text: user.status.capitalize, size: :sm) }) %&gt;
+            &lt;% table.column(title: &quot;Views&quot;, sortable: true, sort_key: :views_count, html: -&gt;(user) { number_with_delimiter(user.views_count) }) %&gt;
+            &lt;% table.column(title: &quot;Published&quot;, sortable: true, sort_key: :published_at, html: -&gt;(user) { user.published_at.strftime(&quot;%b %d, %Y&quot;) }) %&gt;
+          &lt;% end %&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;fp-turbo-frame-skeleton absolute inset-0 bg-(--surface-background-color)&quot;&gt;
+          &lt;div class=&quot;space-y-4 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-4&quot;&gt;
+            &lt;%= render FlatPack::Skeleton::Component.new(variant: :title, width: &quot;35%&quot;) %&gt;
+
+            &lt;% 8.times do %&gt;
+              &lt;div class=&quot;grid grid-cols-7 gap-4&quot;&gt;
+                &lt;%= render FlatPack::Skeleton::Component.new(variant: :text, width: &quot;48px&quot;) %&gt;
+                &lt;%= render FlatPack::Skeleton::Component.new(variant: :text, width: &quot;80%&quot;) %&gt;
+                &lt;%= render FlatPack::Skeleton::Component.new(variant: :text, width: &quot;90%&quot;) %&gt;
+                &lt;%= render FlatPack::Skeleton::Component.new(variant: :text, width: &quot;70%&quot;) %&gt;
+                &lt;%= render FlatPack::Skeleton::Component.new(variant: :button, width: &quot;72px&quot;, height: &quot;24px&quot;) %&gt;
+                &lt;%= render FlatPack::Skeleton::Component.new(variant: :text, width: &quot;64px&quot;) %&gt;
+                &lt;%= render FlatPack::Skeleton::Component.new(variant: :text, width: &quot;88px&quot;) %&gt;
+              &lt;/div&gt;
+            &lt;% end %&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
       &lt;% end %&gt;
     CODE
     language: "erb",

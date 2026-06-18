@@ -8,7 +8,8 @@ class PagesController < ApplicationController
   include Pagy::Backend
 
   PAGINATION_INFINITE_LOAD_DELAY_SECONDS = 3
-  MODAL_FILTER_LOAD_DELAY_SECONDS = 10
+  MODAL_FILTER_LOAD_DELAY_SECONDS = 3
+  SORTABLE_TABLE_LOAD_DELAY_SECONDS = 3
 
   DEMO_CHAT_FILE_DOWNLOADS = {
     "launch-plan" => {
@@ -94,6 +95,7 @@ class PagesController < ApplicationController
   end
 
   def tables_sortable
+    delay_sortable_table_load
   end
 
   def tables_draggable
@@ -972,6 +974,12 @@ class PagesController < ApplicationController
     return if Rails.env.test?
 
     sleep MODAL_FILTER_LOAD_DELAY_SECONDS
+  end
+
+  def delay_sortable_table_load
+    return if Rails.env.test?
+
+    sleep SORTABLE_TABLE_LOAD_DELAY_SECONDS
   end
 
   def dummy_data_available?

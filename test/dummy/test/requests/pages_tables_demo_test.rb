@@ -60,4 +60,17 @@ class PagesTablesDemoTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "table_2_status=active"
     assert_includes response.body, 'data-turbo-frame="basic-table-multi-frame"'
   end
+
+  test "tables sortable page renders frame loading skeleton" do
+    get demo_tables_sortable_path
+
+    assert_response :success
+    assert_includes response.body, "Sortable Table Demos"
+    assert_includes response.body, 'id="sortable_table"'
+    assert_includes response.body, "fp-turbo-frame-loading-surface"
+    assert_includes response.body, "fp-turbo-frame-content"
+    assert_includes response.body, "fp-turbo-frame-skeleton"
+    assert_includes response.body, 'data-turbo-frame="sortable_table"'
+    assert_includes response.body, "FlatPack::Skeleton::Component.new(variant: :title"
+  end
 end
