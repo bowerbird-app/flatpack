@@ -91,6 +91,14 @@ module FlatPack
         assert_includes page.native.to_html, "flex flex-col items-center gap-4 py-8"
       end
 
+      def test_table_rows_variant_uses_contents_wrapper
+        render_inline(Component.new(url: "/items?page=2", loading_variant: :table_rows))
+
+        assert_selector "[data-flat-pack--pagination-infinite-loading-variant-value='table_rows']"
+        assert_includes page.native.to_html, "class=\"contents\""
+        refute_includes page.native.to_html, "flex flex-col items-center gap-4 py-8"
+      end
+
       def test_supports_prepend_insert_mode_configuration
         render_inline(Component.new(
           url: "/messages/history",

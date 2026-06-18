@@ -7,6 +7,10 @@ require "pagy/extras/array"
 class PagesController < ApplicationController
   include Pagy::Backend
 
+  PAGINATION_INFINITE_LOAD_DELAY_SECONDS = 3
+  MODAL_FILTER_LOAD_DELAY_SECONDS = 3
+  SORTABLE_TABLE_LOAD_DELAY_SECONDS = 3
+
   DEMO_CHAT_FILE_DOWNLOADS = {
     "launch-plan" => {
       filename: "launch-plan.pdf",
@@ -91,6 +95,7 @@ class PagesController < ApplicationController
   end
 
   def tables_sortable
+    delay_sortable_table_load
   end
 
   def tables_draggable
@@ -682,6 +687,8 @@ class PagesController < ApplicationController
   end
 
   def modal_filter
+    delay_modal_filter_load
+
     load_table_demo_data
     load_modal_filter_demo_data
   end
@@ -823,6 +830,8 @@ class PagesController < ApplicationController
 
     return unless request.xhr?
 
+    delay_pagination_infinite_load
+
     cards_view = params[:view].to_s == "cards"
     render partial: cards_view ? "pages/pagination_infinite_cards_results" : "pages/pagination_infinite_results",
       locals: {
@@ -953,6 +962,24 @@ class PagesController < ApplicationController
     pagy_array(infinite_demo_records, items: 10)
   rescue ActiveRecord::StatementInvalid
     pagy_array(infinite_demo_records, items: 10)
+  end
+
+  def delay_pagination_infinite_load
+    return if Rails.env.test?
+
+    sleep PAGINATION_INFINITE_LOAD_DELAY_SECONDS
+  end
+
+  def delay_modal_filter_load
+    return if Rails.env.test?
+
+    sleep MODAL_FILTER_LOAD_DELAY_SECONDS
+  end
+
+  def delay_sortable_table_load
+    return if Rails.env.test?
+
+    sleep SORTABLE_TABLE_LOAD_DELAY_SECONDS
   end
 
   def dummy_data_available?

@@ -51,7 +51,7 @@ None.
 
 ## Display behavior
 - Selecting a quick preset (for example `Last week`) shows that preset label in the trigger field after Apply.
-- Custom ranges chosen in the calendar continue to display as `YYYY-MM-DD to YYYY-MM-DD`.
+- Calendar ranges display a quick preset label when the chosen start/end exactly match a preset; otherwise they display as `YYYY-MM-DD to YYYY-MM-DD`.
 - On first render, if `start_value` and `end_value` match a known quick preset range for today, the trigger displays that preset label.
 
 ## Dependencies

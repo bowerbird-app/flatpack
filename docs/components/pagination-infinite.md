@@ -16,7 +16,7 @@ Use Pagination Infinite when table/card/list results should append or prepend in
 | `page` | Integer | `1` | no | Current page number; must be greater than zero. |
 | `has_more` | Boolean | `true` | no | When false, component renders nothing. |
 | `loading_text` | String | `"Loading more..."` | no | Text used by inline loading variant. |
-| `loading_variant` | Symbol | `:table` | no | Loading placeholder style: `:table`, `:cards`, `:inline`. |
+| `loading_variant` | Symbol | `:table` | no | Loading placeholder style: `:table`, `:table_rows`, `:cards`, `:inline`. |
 | `insert_mode` | Symbol | `:append` | no | Content insertion mode: `:append`, `:prepend`. |
 | `observe_root_selector` | String | `nil` | no | Optional custom `IntersectionObserver` root selector. |
 | `cursor_selector` | String | `nil` | no | Selector for cursor element inside `[data-pagination-content]`. |
@@ -30,8 +30,10 @@ Use Pagination Infinite when table/card/list results should append or prepend in
 None.
 
 ## Variants
-- Loading variants: `:table`, `:cards`, `:inline`.
+- Loading variants: `:table`, `:table_rows`, `:cards`, `:inline`.
 - Insert modes: `:append`, `:prepend`.
+
+Use `loading_variant: :table_rows` when the pagination trigger sits after an existing table with `[data-pagination-content]` on its `<tbody>`; the loading skeletons are injected as temporary rows instead of rendering a separate placeholder table.
 
 ## Example
 ```erb

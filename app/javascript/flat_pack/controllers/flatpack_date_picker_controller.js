@@ -153,7 +153,7 @@ export default class extends Controller {
     }
 
     this.committed = normalizedDraft
-    this.committedPresetKey = this.draftPresetKey
+    this.committedPresetKey = this.draftPresetKey || this.presetKeyForRange(normalizedDraft)
     this.draftPresetKey = this.committedPresetKey
     this.syncFormFields(this.committed)
     this.syncTriggerValue(this.committed)

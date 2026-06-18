@@ -12,5 +12,6 @@ class PagesModalFilterDemoTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "modal-filter-table-frame"
     assert_includes response.body, "modal-filter-table-controls"
     assert_includes response.body, "modal_status"
+    assert_includes response.body, "FlatPack::Skeleton::Component.new(variant: :button"
   end
 end
