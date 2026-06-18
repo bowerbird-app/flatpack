@@ -29,7 +29,8 @@ function buildController() {
   controller.hasPresetLabelsValue = true
   controller.presetLabelsValue = {
     last_week: 'Last week',
-    today: 'Today'
+    today: 'Today',
+    yesterday: 'Yesterday'
   }
   controller.hasTriggerTarget = true
   controller.triggerTarget = { value: '' }
@@ -84,4 +85,19 @@ test('syncTriggerValue keeps committed value when picker is open before apply', 
   })
 
   assert.equal(controller.triggerTarget.value, 'Today')
+})
+
+test('apply infers preset label for matching calendar-selected range', () => {
+  const controller = buildController()
+  controller.today = new Date(2026, 5, 18)
+  controller.draft = {
+    start: new Date(2026, 5, 17),
+    end: new Date(2026, 5, 17)
+  }
+  controller.draftPresetKey = null
+
+  controller.apply({ preventDefault() {} })
+
+  assert.equal(controller.committedPresetKey, 'yesterday')
+  assert.equal(controller.triggerTarget.value, 'Yesterday')
 })
