@@ -12,6 +12,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 ### Fixed
+
+## [0.1.105] - 2026-06-18
+
+### Added
+
+### Changed
+
+### Fixed
 - Fixed donut chart tooltip contrast in the Rounded theme by forcing a white tooltip surface and primary-color hovered tooltip text.
 - Fixed `FlatPack::Avatar::Component` so boolean-like `show_tooltip` values such as `"false"` suppress the automatic tooltip, and documented the tooltip options with examples.
 
