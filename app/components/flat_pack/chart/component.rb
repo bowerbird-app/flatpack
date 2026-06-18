@@ -20,7 +20,8 @@ module FlatPack
         donut: :donut,
         pie: :pie,
         radar: :radar,
-        gauge: :gauge
+        gauge: :gauge,
+        geochart: :geochart
       }.freeze
 
       PRIMARY_COLOR_OPACITY_STEPS = [100, 90, 70, 50, 30, 10].freeze
@@ -188,6 +189,8 @@ module FlatPack
           }
         }
 
+        return geochart_defaults if geochart?
+
         return base_options.merge(gauge_chart_defaults) if gauge_chart?
 
         return base_options.merge(non_axis_chart_defaults.deep_merge(donut_chart_defaults)) if donut_chart?
@@ -331,6 +334,36 @@ module FlatPack
         }
       end
 
+      def geochart_defaults
+        {
+          region: "world",
+          displayMode: "regions",
+          resolution: "countries",
+          backgroundColor: {
+            fill: "transparent"
+          },
+          datalessRegionColor: "color-mix(in oklab, var(--color-primary) 10%, transparent)",
+          defaultColor: "color-mix(in oklab, var(--color-primary) 30%, transparent)",
+          colorAxis: {
+            colors: geochart_color_axis_colors
+          },
+          legend: {
+            textStyle: {
+              color: "#334155"
+            }
+          },
+          tooltip: {
+            textStyle: {
+              color: "#111827"
+            }
+          }
+        }
+      end
+
+      def geochart_color_axis_colors
+        default_chart_colors.reverse
+      end
+
       def donut_chart?
         @type == :donut
       end
@@ -341,6 +374,10 @@ module FlatPack
 
       def gauge_chart?
         @type == :gauge
+      end
+
+      def geochart?
+        @type == :geochart
       end
 
       def bar_chart?
@@ -357,6 +394,7 @@ module FlatPack
 
       def apex_chart_type
         return :radialBar if gauge_chart?
+        return :geochart if geochart?
         return :bar if bar_chart?
 
         @type

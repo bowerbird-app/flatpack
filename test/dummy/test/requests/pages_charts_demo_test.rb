@@ -17,4 +17,14 @@ class PagesChartsDemoTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "columnWidth"
     assert_includes response.body, "barHeight"
   end
+
+  test "charts page renders geochart example" do
+    get demo_charts_path
+
+    assert_response :success
+    assert_includes response.body, "Geo Chart"
+    assert_includes response.body, "data-flat-pack--chart-type-value=\"geochart\""
+    assert_includes response.body, "United States"
+    assert_includes response.body, ":geochart"
+  end
 end

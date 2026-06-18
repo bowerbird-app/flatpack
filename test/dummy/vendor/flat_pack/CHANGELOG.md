@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added `type: :geochart` support to `FlatPack::Chart::Component`, rendering Google GeoChart region maps with FlatPack defaults and a `/demo/charts` example.
 
 ### Changed
 
@@ -20,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 ### Fixed
+- Fixed `FlatPack::DateRangeInput::Component` so calendar-selected ranges that exactly match a quick preset, such as yesterday, display the preset label after Apply.
 - Fixed donut chart tooltip contrast in the Rounded theme by forcing a white tooltip surface and primary-color hovered tooltip text.
 - Fixed `FlatPack::Avatar::Component` so boolean-like `show_tooltip` values such as `"false"` suppress the automatic tooltip, and documented the tooltip options with examples.
 

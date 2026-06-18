@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added `type: :geochart` support to `FlatPack::Chart::Component`, rendering Google GeoChart region maps with FlatPack defaults and a `/demo/charts` example.
 
 ### Changed
 

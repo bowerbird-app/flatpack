@@ -75,6 +75,13 @@ module FlatPack
         assert_selector "[data-flat-pack--chart-type-value='radialBar']"
       end
 
+      def test_renders_chart_with_geochart_type
+        series = [{name: "Users", data: [{region: "US", value: 120}]}]
+        render_inline(Component.new(series: series, type: :geochart))
+
+        assert_selector "[data-flat-pack--chart-type-value='geochart']"
+      end
+
       def test_raises_error_for_invalid_type
         series = [{name: "Sales", data: [10, 20, 30]}]
         error = assert_raises(ArgumentError) do
@@ -303,6 +310,41 @@ module FlatPack
         assert_includes html, '"lineCap":"butt"'
         assert_includes html, '"stops":[0,100]'
         assert_includes html, '"fontSize":"1.5rem"'
+      end
+
+      def test_geochart_defaults_include_map_options_and_do_not_include_axis_options
+        series = [{name: "Users", data: [{region: "US", value: 120}]}]
+        render_inline(Component.new(series: series, type: :geochart))
+
+        html = page.native.to_html
+        assert_includes html, '"region":"world"'
+        assert_includes html, '"displayMode":"regions"'
+        assert_includes html, '"datalessRegionColor":"color-mix(in oklab, var(--color-primary) 10%, transparent)"'
+        assert_includes html, '"defaultColor":"color-mix(in oklab, var(--color-primary) 30%, transparent)"'
+        assert_includes html, '"colorAxis":{"colors":["color-mix(in oklab, var(--color-primary) 10%, transparent)"'
+        assert_includes html, '"color-mix(in oklab, var(--color-primary) 100%, transparent)"]}'
+        refute_includes html, '"xaxis"'
+        refute_includes html, '"yaxis"'
+        refute_includes html, '"grid"'
+        refute_includes html, '"fontFamily":"inherit"'
+      end
+
+      def test_geochart_options_allow_overriding_defaults
+        series = [{name: "Revenue", data: [{region: "US", value: 120}]}]
+        options = {
+          region: "US",
+          resolution: "provinces",
+          colorAxis: {
+            colors: ["#fef3c7", "#b45309"]
+          }
+        }
+
+        render_inline(Component.new(series: series, type: :geochart, options: options))
+
+        html = page.native.to_html
+        assert_includes html, '"region":"US"'
+        assert_includes html, '"resolution":"provinces"'
+        assert_includes html, '"colorAxis":{"colors":["#fef3c7","#b45309"]}'
       end
 
       def test_line_defaults_include_axis_options

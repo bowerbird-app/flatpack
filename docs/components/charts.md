@@ -16,7 +16,7 @@ Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status f
 | name | type | default | required | description |
 | --- | --- | --- | --- | --- |
 | `series` | Array or Hash | — | yes | Chart series payload passed to ApexCharts. |
-| `type` | Symbol | `:line` | no | One of `:line`, `:column`, `:bar`, `:area`, `:donut`, `:pie`, `:radar`, `:gauge`. Use `:column` for vertical bars, `:bar` for horizontal bars, and `:gauge` for radial gauge-style KPI displays. |
+| `type` | Symbol | `:line` | no | One of `:line`, `:column`, `:bar`, `:area`, `:donut`, `:pie`, `:radar`, `:gauge`, `:geochart`. Use `:column` for vertical bars, `:bar` for horizontal bars, `:gauge` for radial gauge-style KPI displays, and `:geochart` for country or region maps. |
 | `options` | Hash | `{}` | no | ApexCharts options deep-merged over component defaults. |
 | `height` | Integer | `280` | no | Chart height in pixels; must be positive. |
 | `card` | Boolean | `true` | no | Wraps chart in `FlatPack::Card::Component` with header/body/footer layout. |
@@ -35,6 +35,7 @@ Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status f
 - Framed (`card: true`) and inline (`card: false`) rendering
 - Axis defaults for line/column/bar/area/radar and non-axis defaults for donut/pie
 - Gauge defaults for `:gauge` (`radialBar`) with rounded arc ends and primary-color shading
+- Geo chart defaults for `:geochart` with world-region rendering, transparent background, and a primary-color opacity intensity scale
 
 ## Color Defaults
 - By default, charts derive their series palette from `--color-primary`.
@@ -159,6 +160,24 @@ Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status f
 ```
 
 ```erb
+<%= render FlatPack::Chart::Component.new(
+  type: :geochart,
+  series: [{
+    name: "Active accounts",
+    data: [
+      { region: "United States", value: 225 },
+      { region: "Canada", value: 82 },
+      { region: "Brazil", value: 64 },
+      { region: "United Kingdom", value: 118 }
+    ]
+  }],
+  title: "Active Accounts by Country"
+) %>
+```
+
+For `:geochart`, provide data points as `{ region:, value: }` hashes or `[region, value]` pairs. Geo chart rendering is backed by Google GeoChart, matching the charting library used by the referenced `apex-plugins/Geo-Chart` project; standard chart types continue to use ApexCharts.
+
+```erb
 <%= render FlatPack::Table::Component.new(data: repositories) do |table| %>
   <% table.column(title: "Repository", html: ->(row) { row[:name] }) %>
   <% table.column(title: "Activity", html: ->(row) {
@@ -221,6 +240,7 @@ Use this compact pattern for dense tabular contexts such as repository activity 
 ## Dependencies
 - Stimulus controller: `app/javascript/flat_pack/controllers/chart_controller.js` (`flat-pack--chart`).
 - ApexCharts import map pin (`import "apexcharts"` via dynamic import in controller).
+- Google Charts loader for `type: :geochart` only (`https://www.gstatic.com/charts/loader.js`, loaded on demand by the chart controller).
 - `FlatPack::Card::Component` when `card: true`.
 - `FlatPack::DateRangeInput::Component` for date-range selection.
 - `FlatPack::Select::Component` for status selection options.
