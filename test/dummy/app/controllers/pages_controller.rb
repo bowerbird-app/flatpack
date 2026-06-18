@@ -8,6 +8,7 @@ class PagesController < ApplicationController
   include Pagy::Backend
 
   PAGINATION_INFINITE_LOAD_DELAY_SECONDS = 3
+  MODAL_FILTER_LOAD_DELAY_SECONDS = 10
 
   DEMO_CHAT_FILE_DOWNLOADS = {
     "launch-plan" => {
@@ -684,6 +685,8 @@ class PagesController < ApplicationController
   end
 
   def modal_filter
+    delay_modal_filter_load
+
     load_table_demo_data
     load_modal_filter_demo_data
   end
@@ -963,6 +966,12 @@ class PagesController < ApplicationController
     return if Rails.env.test?
 
     sleep PAGINATION_INFINITE_LOAD_DELAY_SECONDS
+  end
+
+  def delay_modal_filter_load
+    return if Rails.env.test?
+
+    sleep MODAL_FILTER_LOAD_DELAY_SECONDS
   end
 
   def dummy_data_available?

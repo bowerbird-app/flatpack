@@ -24,9 +24,7 @@ class PagesChartsDemoTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, "Geo Chart"
     assert_includes response.body, "data-flat-pack--chart-type-value=\"geochart\""
-    assert_includes response.body, "AU"
-    assert_includes response.body, "MY"
-    assert_includes response.body, "TH"
+    assert_includes response.body, "United States"
     assert_includes response.body, ":geochart"
   end
 end

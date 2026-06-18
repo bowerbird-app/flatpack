@@ -80,72 +80,121 @@
     subtitle: "Modal-only filters targeting one table surface in a Turbo Frame."
   ) %>
 
-  <%= turbo_frame_tag "modal-filter-table-frame" do %>
-    <div class="mb-4">
-      <%= render FlatPack::ModalFilter::Component.new(
-        id: "modal-filter-table-controls",
-        form_url: demo_modal_filter_path,
-        turbo_frame: "modal-filter-table-frame",
-        active_count: @modal_filter_active_count,
-        reset_url: demo_modal_filter_path,
-        mobile_form_class: "space-y-3 p-[0.15rem]"
-      ) do |modal_filter| %>
-        <% modal_filter.filter_body do %>
-          <div class="grid gap-3">
-            <%= render FlatPack::Select::Component.new(
-              name: "modal_status",
-              value: @modal_filter_status,
-              options: @table_filter_definitions.fetch("status").fetch(:values).map { |value_key, value_label| [value_label, value_key] },
-              label: "Status"
-            ) %>
-
-            <%= render FlatPack::Select::Component.new(
-              name: "modal_category",
-              value: @modal_filter_category,
-              options: @table_filter_definitions.fetch("category").fetch(:values).map { |value_key, value_label| [value_label, value_key] },
-              label: "Category"
-            ) %>
-
-            <%= render FlatPack::Search::Component.new(
-              name: "modal_q",
-              value: @modal_filter_search_query,
-              placeholder: "Search table rows...",
-              max_width: :none,
-              class: "w-full"
-            ) %>
-          </div>
-        <% end %>
-      <% end %>
-    </div>
-
-    <%= render FlatPack::Table::Component.new(data: @modal_filter_filtered_users.first(10)) do |table| %>
-      <% table.column(title: "ID", html: ->(user) { user.id.to_s }) %>
-      <% table.column(title: "Name", html: ->(user) { user.name }) %>
-      <% table.column(title: "Email", html: ->(user) { user.email }) %>
-      <% table.column(title: "Category", html: ->(user) { user.category.to_s.titleize }) %>
-      <% table.column(title: "Status", html: ->(user) { render FlatPack::Badge::Component.new(text: user.status.capitalize, size: :sm) }) %>
-    <% end %>
-  <% end %>
-
-  <%= render FlatPack::CodeBlock::Component.new(
-    title: "ERB",
-    language: "erb",
-    code: <<~CODE
-      #{erb_output_open} turbo_frame_tag "modal-filter-table-frame" do #{erb_tag_close}
-        #{erb_output_open} render FlatPack::ModalFilter::Component.new(
+  <%= turbo_frame_tag "modal-filter-table-frame", class: "fp-turbo-frame-loading-surface block relative min-h-96" do %>
+    <div class="fp-turbo-frame-content">
+      <div class="mb-4">
+        <%= render FlatPack::ModalFilter::Component.new(
           id: "modal-filter-table-controls",
           form_url: demo_modal_filter_path,
           turbo_frame: "modal-filter-table-frame",
           active_count: @modal_filter_active_count,
           reset_url: demo_modal_filter_path,
           mobile_form_class: "space-y-3 p-[0.15rem]"
-        ) do |modal_filter| #{erb_tag_close}
-          #{erb_open} modal_filter.filter_body do #{erb_tag_close}
-            #{erb_output_open} render FlatPack::Select::Component.new(name: "modal_status", value: @modal_filter_status, options: @table_filter_definitions.fetch("status").fetch(:values).map { |value_key, value_label| [value_label, value_key] }, label: "Status") #{erb_tag_close}
-            #{erb_output_open} render FlatPack::Select::Component.new(name: "modal_category", value: @modal_filter_category, options: @table_filter_definitions.fetch("category").fetch(:values).map { |value_key, value_label| [value_label, value_key] }, label: "Category") #{erb_tag_close}
-            #{erb_output_open} render FlatPack::Search::Component.new(name: "modal_q", value: @modal_filter_search_query, placeholder: "Search table rows...", max_width: :none, class: "w-full") #{erb_tag_close}
+        ) do |modal_filter| %>
+          <% modal_filter.filter_body do %>
+            <div class="grid gap-3">
+              <%= render FlatPack::Select::Component.new(
+                name: "modal_status",
+                value: @modal_filter_status,
+                options: @table_filter_definitions.fetch("status").fetch(:values).map { |value_key, value_label| [value_label, value_key] },
+                label: "Status"
+              ) %>
+
+              <%= render FlatPack::Select::Component.new(
+                name: "modal_category",
+                value: @modal_filter_category,
+                options: @table_filter_definitions.fetch("category").fetch(:values).map { |value_key, value_label| [value_label, value_key] },
+                label: "Category"
+              ) %>
+
+              <%= render FlatPack::Search::Component.new(
+                name: "modal_q",
+                value: @modal_filter_search_query,
+                placeholder: "Search table rows...",
+                max_width: :none,
+                class: "w-full"
+              ) %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+
+      <%= render FlatPack::Table::Component.new(data: @modal_filter_filtered_users.first(10)) do |table| %>
+        <% table.column(title: "ID", html: ->(user) { user.id.to_s }) %>
+        <% table.column(title: "Name", html: ->(user) { user.name }) %>
+        <% table.column(title: "Email", html: ->(user) { user.email }) %>
+        <% table.column(title: "Category", html: ->(user) { user.category.to_s.titleize }) %>
+        <% table.column(title: "Status", html: ->(user) { render FlatPack::Badge::Component.new(text: user.status.capitalize, size: :sm) }) %>
+      <% end %>
+    </div>
+
+    <div class="fp-turbo-frame-skeleton absolute inset-0 bg-(--surface-background-color)">
+      <div class="mb-4">
+        <%= render FlatPack::Skeleton::Component.new(variant: :button, width: "120px") %>
+      </div>
+
+      <div class="space-y-4 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-4">
+        <%= render FlatPack::Skeleton::Component.new(variant: :title, width: "45%") %>
+
+        <% 6.times do %>
+          <div class="grid grid-cols-5 gap-4">
+            <%= render FlatPack::Skeleton::Component.new(variant: :text, width: "48px") %>
+            <%= render FlatPack::Skeleton::Component.new(variant: :text, width: "80%") %>
+            <%= render FlatPack::Skeleton::Component.new(variant: :text, width: "90%") %>
+            <%= render FlatPack::Skeleton::Component.new(variant: :text, width: "70%") %>
+            <%= render FlatPack::Skeleton::Component.new(variant: :button, width: "72px", height: "24px") %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} turbo_frame_tag "modal-filter-table-frame", class: "fp-turbo-frame-loading-surface block relative min-h-96" do #{erb_tag_close}
+        <div class="fp-turbo-frame-content">
+          #{erb_output_open} render FlatPack::ModalFilter::Component.new(
+            id: "modal-filter-table-controls",
+            form_url: demo_modal_filter_path,
+            turbo_frame: "modal-filter-table-frame",
+            active_count: @modal_filter_active_count,
+            reset_url: demo_modal_filter_path,
+            mobile_form_class: "space-y-3 p-[0.15rem]"
+          ) do |modal_filter| #{erb_tag_close}
+            #{erb_open} modal_filter.filter_body do #{erb_tag_close}
+              #{erb_output_open} render FlatPack::Select::Component.new(name: "modal_status", value: @modal_filter_status, options: @table_filter_definitions.fetch("status").fetch(:values).map { |value_key, value_label| [value_label, value_key] }, label: "Status") #{erb_tag_close}
+              #{erb_output_open} render FlatPack::Select::Component.new(name: "modal_category", value: @modal_filter_category, options: @table_filter_definitions.fetch("category").fetch(:values).map { |value_key, value_label| [value_label, value_key] }, label: "Category") #{erb_tag_close}
+              #{erb_output_open} render FlatPack::Search::Component.new(name: "modal_q", value: @modal_filter_search_query, placeholder: "Search table rows...", max_width: :none, class: "w-full") #{erb_tag_close}
+            #{erb_open} end #{erb_tag_close}
           #{erb_open} end #{erb_tag_close}
-        #{erb_open} end #{erb_tag_close}
+
+          #{erb_output_open} render FlatPack::Table::Component.new(data: @modal_filter_filtered_users.first(10)) do |table| #{erb_tag_close}
+            #{erb_open} table.column(title: "ID", html: ->(user) { user.id.to_s }) #{erb_tag_close}
+            #{erb_open} table.column(title: "Name", html: ->(user) { user.name }) #{erb_tag_close}
+            #{erb_open} table.column(title: "Email", html: ->(user) { user.email }) #{erb_tag_close}
+            #{erb_open} table.column(title: "Status", html: ->(user) { render FlatPack::Badge::Component.new(text: user.status.capitalize, size: :sm) }) #{erb_tag_close}
+          #{erb_open} end #{erb_tag_close}
+        </div>
+
+        <div class="fp-turbo-frame-skeleton absolute inset-0 bg-(--surface-background-color)">
+          #{erb_output_open} render FlatPack::Skeleton::Component.new(variant: :button, width: "120px") #{erb_tag_close}
+
+          <div class="mt-4 space-y-4 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-4">
+            #{erb_output_open} render FlatPack::Skeleton::Component.new(variant: :title, width: "45%") #{erb_tag_close}
+
+            #{erb_open} 6.times do #{erb_tag_close}
+              <div class="grid grid-cols-5 gap-4">
+                #{erb_output_open} render FlatPack::Skeleton::Component.new(variant: :text, width: "48px") #{erb_tag_close}
+                #{erb_output_open} render FlatPack::Skeleton::Component.new(variant: :text, width: "80%") #{erb_tag_close}
+                #{erb_output_open} render FlatPack::Skeleton::Component.new(variant: :text, width: "90%") #{erb_tag_close}
+                #{erb_output_open} render FlatPack::Skeleton::Component.new(variant: :text, width: "70%") #{erb_tag_close}
+                #{erb_output_open} render FlatPack::Skeleton::Component.new(variant: :button, width: "72px", height: "24px") #{erb_tag_close}
+              </div>
+            #{erb_open} end #{erb_tag_close}
+          </div>
+        </div>
       #{erb_open} end #{erb_tag_close}
     CODE
   ) %>

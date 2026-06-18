@@ -77,6 +77,22 @@
 		height: 0;
 	}
 
+	.fp-turbo-frame-skeleton {
+		display: none;
+	}
+
+	.fp-turbo-frame-loading-surface[busy] .fp-turbo-frame-content,
+	.fp-turbo-frame-loading-surface[aria-busy="true"] .fp-turbo-frame-content,
+	.fp-turbo-frame-loading-surface:has(form[aria-busy="true"]) .fp-turbo-frame-content {
+		visibility: hidden;
+	}
+
+	.fp-turbo-frame-loading-surface[busy] .fp-turbo-frame-skeleton,
+	.fp-turbo-frame-loading-surface[aria-busy="true"] .fp-turbo-frame-skeleton,
+	.fp-turbo-frame-loading-surface:has(form[aria-busy="true"]) .fp-turbo-frame-skeleton {
+		display: block;
+	}
+
 	[data-flat-pack-sidebar-collapsed="true"] [data-flat-pack--sidebar-layout-target="scrollContainer"] {
 		scrollbar-width: none;
 		-ms-overflow-style: none;
