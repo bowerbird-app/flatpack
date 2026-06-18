@@ -165,17 +165,17 @@ Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status f
   series: [{
     name: "Active accounts",
     data: [
-      { region: "United States", value: 225 },
-      { region: "Canada", value: 82 },
-      { region: "Brazil", value: 64 },
-      { region: "United Kingdom", value: 118 }
+      { region: "US", value: 225 },
+      { region: "AU", value: 58 },
+      { region: "MY", value: 44 },
+      { region: "TH", value: 39 }
     ]
   }],
   title: "Active Accounts by Country"
 ) %>
 ```
 
-For `:geochart`, provide data points as `{ region:, value: }` hashes or `[region, value]` pairs. Geo chart rendering is backed by Google GeoChart, matching the charting library used by the referenced `apex-plugins/Geo-Chart` project; standard chart types continue to use ApexCharts.
+For `:geochart`, provide ISO-style country codes such as `US`, `AU`, `MY`, and `TH` as `{ region:, value: }` hashes or `[region, value]` pairs. Full country names also work when Google GeoChart recognizes them. Geo chart rendering is backed by Google GeoChart, matching the charting library used by the referenced `apex-plugins/Geo-Chart` project; standard chart types continue to use ApexCharts.
 
 ```erb
 <%= render FlatPack::Table::Component.new(data: repositories) do |table| %>

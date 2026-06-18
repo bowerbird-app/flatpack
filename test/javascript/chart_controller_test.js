@@ -107,3 +107,23 @@ test('resolveGeoChartColorOptions converts primary color-mix values to opaque sh
   assert.notEqual(resolvedOptions.backgroundColor, options.backgroundColor)
   assert.ok(createdElements.every((element) => element.removeCalled))
 })
+
+test('geoRows accepts country code region values', () => {
+  const { controller } = buildController()
+  controller.seriesValue = [{
+    name: 'Active accounts',
+    data: [
+      { region: 'AU', value: 58 },
+      { code: 'US', value: 225 },
+      { country: 'MY', count: 44 },
+      ['TH', 39]
+    ]
+  }]
+
+  assert.equal(JSON.stringify(controller.geoRows()), JSON.stringify([
+    ['AU', 58],
+    ['US', 225],
+    ['MY', 44],
+    ['TH', 39]
+  ]))
+})
