@@ -9,7 +9,12 @@ class PagesChartsDemoTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, "Mini Chart in Table Row"
     assert_includes response.body, "flat-pack"
+    assert_includes response.body, "Review Load"
+    assert_includes response.body, "Queue Mix"
     assert_includes response.body, "data-flat-pack--chart-height-value=\"56\""
+    assert_includes response.body, "data-flat-pack--chart-type-value=\"bar\""
     assert_includes response.body, "sparkline"
+    assert_includes response.body, "columnWidth"
+    assert_includes response.body, "barHeight"
   end
 end

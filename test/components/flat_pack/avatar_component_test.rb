@@ -196,6 +196,12 @@ module FlatPack
 
         refute_selector "div[data-controller='flat-pack--tooltip']"
       end
+
+      def test_does_not_render_tooltip_when_show_tooltip_string_false
+        render_inline(Component.new(name: "Tooltip User", show_tooltip: "false"))
+
+        refute_selector "div[data-controller='flat-pack--tooltip']"
+      end
     end
   end
 end

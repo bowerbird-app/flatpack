@@ -646,7 +646,9 @@ class PagesController < ApplicationController
         prs_open: 5,
         trend_label: "+14%",
         trend_up: true,
-        activity: [2, 3, 1, 4, 6, 5, 7, 4, 6, 8, 9, 7, 10, 11]
+        activity: [2, 3, 1, 4, 6, 5, 7, 4, 6, 8, 9, 7, 10, 11],
+        review_load: [3, 5, 4, 7, 6, 8, 5, 6, 9, 7, 8, 10, 9, 11],
+        queue_mix: [8, 5, 3, 6]
       },
       {
         name: "theme-tokens",
@@ -656,7 +658,9 @@ class PagesController < ApplicationController
         prs_open: 2,
         trend_label: "+6%",
         trend_up: true,
-        activity: [1, 2, 2, 3, 4, 3, 5, 4, 5, 6, 5, 7, 6, 8]
+        activity: [1, 2, 2, 3, 4, 3, 5, 4, 5, 6, 5, 7, 6, 8],
+        review_load: [2, 3, 2, 4, 5, 4, 6, 5, 4, 7, 5, 6, 5, 7],
+        queue_mix: [5, 4, 2, 3]
       },
       {
         name: "docs-site",
@@ -666,7 +670,9 @@ class PagesController < ApplicationController
         prs_open: 1,
         trend_label: "-4%",
         trend_up: false,
-        activity: [4, 5, 4, 4, 3, 4, 3, 2, 3, 3, 2, 2, 2, 1]
+        activity: [4, 5, 4, 4, 3, 4, 3, 2, 3, 3, 2, 2, 2, 1],
+        review_load: [6, 5, 7, 6, 5, 4, 6, 5, 4, 3, 4, 3, 2, 3],
+        queue_mix: [3, 6, 4, 2]
       }
     ]
   end

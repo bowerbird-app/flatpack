@@ -176,10 +176,42 @@ Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status f
       }
     )
   }) %>
+  <% table.column(title: "Review Load", html: ->(row) {
+    render FlatPack::Chart::Component.new(
+      type: :column,
+      series: [{ name: "Review Load", data: row[:review_load] }],
+      card: false,
+      height: 56,
+      options: {
+        chart: { sparkline: { enabled: true } },
+        plotOptions: { bar: { columnWidth: "55%", borderRadius: 3 } },
+        tooltip: { enabled: false },
+        grid: { show: false },
+        xaxis: { labels: { show: false }, axisBorder: { show: false }, axisTicks: { show: false } },
+        yaxis: { show: false }
+      }
+    )
+  }) %>
+  <% table.column(title: "Queue Mix", html: ->(row) {
+    render FlatPack::Chart::Component.new(
+      type: :bar,
+      series: [{ name: "Queue Mix", data: row[:queue_mix] }],
+      card: false,
+      height: 56,
+      options: {
+        chart: { sparkline: { enabled: true } },
+        plotOptions: { bar: { barHeight: "55%", borderRadius: 3 } },
+        tooltip: { enabled: false },
+        grid: { show: false },
+        xaxis: { labels: { show: false }, axisBorder: { show: false }, axisTicks: { show: false } },
+        yaxis: { show: false }
+      }
+    )
+  }) %>
 <% end %>
 ```
 
-Use this compact pattern for dense tabular contexts such as repository activity rows. Keep `card: false`, small `height`, and sparkline-style options so the chart reads as a trend indicator instead of a full analytics panel.
+Use this compact pattern for dense tabular contexts such as repository activity rows. Keep `card: false`, small `height`, the primary chart palette, and sparkline-style options so area, column, and horizontal bar charts read as compact row indicators instead of full analytics panels.
 
 ## Accessibility
 - Provide meaningful `title`/`subtitle` or nearby text that describes chart intent.

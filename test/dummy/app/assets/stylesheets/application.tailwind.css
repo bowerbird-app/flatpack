@@ -1,6 +1,6 @@
-@import "tailwindcss";
+@import "tailwindcss" source(none);
+@source "../..";
 @source "../../../../../app";
-@source "../../../../../app/components";
 
 @theme {
 	--color-fp-primary: oklch(0.52 0.26 250);

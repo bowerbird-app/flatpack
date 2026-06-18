@@ -11,6 +11,7 @@ copy_entries = %w[
   app
   config
   lib
+  docs/ai/install_contract.json
   CHANGELOG.md
   MIT-LICENSE
   README.md
@@ -21,7 +22,15 @@ FileUtils.rm_rf(vendor_root)
 FileUtils.mkdir_p(vendor_root)
 
 copy_entries.each do |entry|
-  FileUtils.cp_r(File.join(repo_root, entry), vendor_root)
+  source = File.join(repo_root, entry)
+  destination = File.join(vendor_root, entry)
+
+  if File.directory?(source)
+    FileUtils.cp_r(source, vendor_root)
+  else
+    FileUtils.mkdir_p(File.dirname(destination))
+    FileUtils.cp(source, destination)
+  end
 end
 
 puts "Refreshed vendored FlatPack at #{vendor_root}"

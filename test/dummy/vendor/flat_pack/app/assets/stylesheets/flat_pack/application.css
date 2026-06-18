@@ -55,6 +55,25 @@
     height: 0;
   }
 
+  [data-flat-pack--chart-type-value="donut"] .apexcharts-tooltip,
+  [data-flat-pack--chart-type-value="donut"] .apexcharts-tooltip.apexcharts-theme-light {
+    background: #fff !important;
+    color: var(--color-primary) !important;
+  }
+
+  [data-flat-pack--chart-type-value="donut"] .apexcharts-tooltip-title,
+  [data-flat-pack--chart-type-value="donut"] .apexcharts-tooltip-series-group,
+  [data-flat-pack--chart-type-value="donut"] .apexcharts-tooltip-text,
+  [data-flat-pack--chart-type-value="donut"] .apexcharts-tooltip-y-group,
+  [data-flat-pack--chart-type-value="donut"] .apexcharts-tooltip-text-y-label,
+  [data-flat-pack--chart-type-value="donut"] .apexcharts-tooltip-text-y-value {
+    color: var(--color-primary) !important;
+  }
+
+  [data-flat-pack--chart-type-value="donut"] .apexcharts-tooltip-title {
+    background: #fff !important;
+  }
+
   /* Sidebar layout: width driven by CSS via data attribute set before first paint.
    * The inline FOUC-prevention script sets data-flat-pack-sidebar-collapsed on
    * the sidebar wrapper before <aside> is parsed. JS then toggles this attribute

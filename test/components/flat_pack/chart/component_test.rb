@@ -257,6 +257,7 @@ module FlatPack
 
         html = page.native.to_html
         assert_includes html, '"stroke":{"width":1}'
+        assert_includes html, '"tooltip":{"theme":"light","fillSeriesColor":false}'
         refute_includes html, '"xaxis"'
         refute_includes html, '"yaxis"'
         refute_includes html, '"grid"'

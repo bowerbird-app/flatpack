@@ -190,7 +190,9 @@ module FlatPack
 
         return base_options.merge(gauge_chart_defaults) if gauge_chart?
 
-        return base_options.merge(non_axis_chart_defaults) if non_axis_chart?
+        return base_options.merge(non_axis_chart_defaults.deep_merge(donut_chart_defaults)) if donut_chart?
+
+        return base_options.merge(non_axis_chart_defaults) if pie_chart?
 
         base_options.merge(axis_chart_defaults)
       end
@@ -273,6 +275,15 @@ module FlatPack
         }
       end
 
+      def donut_chart_defaults
+        {
+          tooltip: {
+            theme: "light",
+            fillSeriesColor: false
+          }
+        }
+      end
+
       def gauge_chart_defaults
         {
           colors: ["color-mix(in oklab, var(--color-primary) 100%, transparent)"],
@@ -320,8 +331,12 @@ module FlatPack
         }
       end
 
-      def non_axis_chart?
-        @type == :donut || @type == :pie
+      def donut_chart?
+        @type == :donut
+      end
+
+      def pie_chart?
+        @type == :pie
       end
 
       def gauge_chart?

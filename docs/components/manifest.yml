@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-06-15
+updated_at: 2026-06-18
 
 format_reference: docs/components/DOC_FORMAT.md
 human_index: docs/components/README.md
@@ -225,6 +225,24 @@ components:
     title: Date Range Input
     doc: docs/components/date-range-input.md
     primary_class: FlatPack::DateRangeInput::Component
+    status: documented
+
+  - key: date_input
+    title: Date Input
+    doc: docs/components/inputs.md
+    primary_class: FlatPack::DateInput::Component
+    status: documented
+
+  - key: date_time_input
+    title: Date Time Input
+    doc: docs/components/inputs.md
+    primary_class: FlatPack::DateTimeInput::Component
+    status: documented
+
+  - key: time_input
+    title: Time Input
+    doc: docs/components/inputs.md
+    primary_class: FlatPack::TimeInput::Component
     status: documented
 
   - key: link

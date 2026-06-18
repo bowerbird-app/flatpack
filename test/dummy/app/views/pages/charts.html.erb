@@ -555,7 +555,7 @@
     }) %>
 
     <% table.column(title: "Activity", html: ->(row) {
-      color = "var(--color-success-background-color)"
+      color = "var(--color-primary)"
       content_tag(:div, class: "w-[104px] min-w-[104px]") do
         render FlatPack::Chart::Component.new(
           type: :area,
@@ -606,6 +606,84 @@
       end
     }) %>
 
+    <% table.column(title: "Review Load", html: ->(row) {
+      color = "var(--color-primary)"
+      content_tag(:div, class: "w-[104px] min-w-[104px]") do
+        render FlatPack::Chart::Component.new(
+          type: :column,
+          series: [{name: "Review Load", data: row[:review_load]}],
+          card: false,
+          height: 56,
+          class: "w-full",
+          options: {
+            chart: {
+              sparkline: {enabled: true}
+            },
+            colors: [color],
+            plotOptions: {
+              bar: {
+                columnWidth: "55%",
+                borderRadius: 3
+              }
+            },
+            tooltip: {
+              enabled: false
+            },
+            grid: {
+              show: false
+            },
+            xaxis: {
+              labels: {show: false},
+              axisBorder: {show: false},
+              axisTicks: {show: false}
+            },
+            yaxis: {
+              show: false
+            }
+          }
+        )
+      end
+    }) %>
+
+    <% table.column(title: "Queue Mix", html: ->(row) {
+      color = "var(--color-primary)"
+      content_tag(:div, class: "w-[120px] min-w-[120px]") do
+        render FlatPack::Chart::Component.new(
+          type: :bar,
+          series: [{name: "Queue Mix", data: row[:queue_mix]}],
+          card: false,
+          height: 56,
+          class: "w-full",
+          options: {
+            chart: {
+              sparkline: {enabled: true}
+            },
+            colors: [color],
+            plotOptions: {
+              bar: {
+                barHeight: "55%",
+                borderRadius: 3
+              }
+            },
+            tooltip: {
+              enabled: false
+            },
+            grid: {
+              show: false
+            },
+            xaxis: {
+              labels: {show: false},
+              axisBorder: {show: false},
+              axisTicks: {show: false}
+            },
+            yaxis: {
+              show: false
+            }
+          }
+        )
+      end
+    }) %>
+
     <% table.column(title: "Open PRs", html: ->(row) { row[:prs_open] }) %>
 
     <% table.column(title: "Trend", html: ->(row) {
@@ -620,8 +698,8 @@
     code: <<~CODE
       #{erb_open}%
         rows = [
-          {name: "flat-pack", language: "Ruby", commits_7d: 34, prs_open: 5, trend_label: "+14%", trend_up: true, activity: [2, 3, 1, 4, 6, 5, 7]},
-          {name: "docs-site", language: "Markdown", commits_7d: 11, prs_open: 1, trend_label: "-4%", trend_up: false, activity: [4, 5, 4, 4, 3, 2, 1]}
+          {name: "flat-pack", language: "Ruby", commits_7d: 34, prs_open: 5, trend_label: "+14%", trend_up: true, activity: [2, 3, 1, 4, 6, 5, 7], review_load: [3, 5, 4, 7, 6, 8, 5], queue_mix: [8, 5, 3, 6]},
+          {name: "docs-site", language: "Markdown", commits_7d: 11, prs_open: 1, trend_label: "-4%", trend_up: false, activity: [4, 5, 4, 4, 3, 2, 1], review_load: [6, 5, 7, 6, 5, 4, 3], queue_mix: [3, 6, 4, 2]}
         ]
       %#{erb_tag_close}
 
@@ -629,7 +707,7 @@
         #{erb_open}% table.column(title: "Repository", html: ->(row) { row[:name] }) %#{erb_tag_close}
         #{erb_open}% table.column(title: "Commits (7d)", html: ->(row) { row[:commits_7d] }) %#{erb_tag_close}
         #{erb_open}% table.column(title: "Activity", html: ->(row) {
-          color = "var(--color-success-background-color)"
+          color = "var(--color-primary)"
           render FlatPack::Chart::Component.new(
             type: :area,
             series: [{name: "Commits", data: row[:activity]}],
@@ -652,6 +730,42 @@
                 }
               },
               markers: {size: 0},
+              tooltip: {enabled: false},
+              grid: {show: false},
+              xaxis: {labels: {show: false}, axisBorder: {show: false}, axisTicks: {show: false}},
+              yaxis: {show: false}
+            }
+          )
+        }) %#{erb_tag_close}
+        #{erb_open}% table.column(title: "Review Load", html: ->(row) {
+          color = "var(--color-primary)"
+          render FlatPack::Chart::Component.new(
+            type: :column,
+            series: [{name: "Review Load", data: row[:review_load]}],
+            card: false,
+            height: 56,
+            options: {
+              chart: {sparkline: {enabled: true}},
+              colors: [color],
+              plotOptions: {bar: {columnWidth: "55%", borderRadius: 3}},
+              tooltip: {enabled: false},
+              grid: {show: false},
+              xaxis: {labels: {show: false}, axisBorder: {show: false}, axisTicks: {show: false}},
+              yaxis: {show: false}
+            }
+          )
+        }) %#{erb_tag_close}
+        #{erb_open}% table.column(title: "Queue Mix", html: ->(row) {
+          color = "var(--color-primary)"
+          render FlatPack::Chart::Component.new(
+            type: :bar,
+            series: [{name: "Queue Mix", data: row[:queue_mix]}],
+            card: false,
+            height: 56,
+            options: {
+              chart: {sparkline: {enabled: true}},
+              colors: [color],
+              plotOptions: {bar: {barHeight: "55%", borderRadius: 3}},
               tooltip: {enabled: false},
               grid: {show: false},
               xaxis: {labels: {show: false}, axisBorder: {show: false}, axisTicks: {show: false}},

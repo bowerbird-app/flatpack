@@ -126,6 +126,15 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Search both tables..."
   end
 
+  test "avatars demo renders no tooltip example" do
+    get "/demo/avatars"
+
+    assert_response :success
+    assert_includes response.body, "Avatar Tooltips (ERB)"
+    assert_includes response.body, "No Tooltip"
+    assert_includes response.body, "show_tooltip: false"
+  end
+
   test "modal filter demo renders inline filters table example" do
     get "/demo/modal_filter"
 

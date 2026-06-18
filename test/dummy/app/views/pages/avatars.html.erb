@@ -13,6 +13,37 @@
 
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(
+      title: "Tooltips",
+      anchor_link: true,
+      subtitle: "Avatars show name or alt text in a tooltip by default; set show_tooltip to false when nearby content already labels the avatar."
+    ) %>
+    <div class="flex items-center gap-4 mb-4">
+      <%= render FlatPack::Avatar::Component.new(name: "Tooltip User", size: :lg) %>
+      <%= render FlatPack::Avatar::Component.new(name: "No Tooltip", size: :lg, show_tooltip: false) %>
+    </div>
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "Avatar Tooltips (ERB)",
+      snippets: [
+        {
+          label: "Default",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::Avatar::Component.new(name: "Tooltip User", size: :lg) #{erb_tag_close}
+          CODE
+        },
+        {
+          label: "Disabled",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::Avatar::Component.new(name: "No Tooltip", size: :lg, show_tooltip: false) #{erb_tag_close}
+          CODE
+        }
+      ]
+    ) %>
+  </section>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(
       title: "Sizes",
       anchor_link: true,
       subtitle: "Avatar sizes from xs through xl, with md as the default."
