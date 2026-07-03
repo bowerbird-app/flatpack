@@ -69,7 +69,7 @@ module FlatPack
         def layout_attributes
           merge_attributes(
             class: layout_classes,
-            data: layout_data_attributes
+            data: merge_data_attributes(data_attributes, layout_data_attributes)
           )
         end
 

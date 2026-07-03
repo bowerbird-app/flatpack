@@ -40,6 +40,15 @@ module FlatPack
           assert_selector "button[data-action='click->flat-pack--chat-layout#showSidebar']", text: "Back"
         end
 
+        def test_split_layout_preserves_custom_controller_data
+          render_inline(Component.new(variant: :split, data: {controller: "demo"})) do |layout|
+            layout.sidebar { "Sidebar content" }
+            layout.panel { "Panel content" }
+          end
+
+          assert_selector "div[data-controller='demo flat-pack--chat-layout']"
+        end
+
         def test_split_panel_is_hidden_until_selected_on_mobile
           render_inline(Component.new(variant: :split)) do |layout|
             layout.sidebar { "Sidebar content" }

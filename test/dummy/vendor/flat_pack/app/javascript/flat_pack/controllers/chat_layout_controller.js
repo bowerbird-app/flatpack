@@ -5,6 +5,7 @@ export default class extends Controller {
   static targets = ["sidebar", "panel"]
 
   connect() {
+    this.mobileView = "sidebar"
     this.mediaQuery = window.matchMedia("(min-width: 768px)")
     this.handleViewportChange = () => this.#syncViewport()
 
@@ -47,6 +48,7 @@ export default class extends Controller {
       return
     }
 
+    this.mobileView = "panel"
     this.sidebarTarget.classList.add("hidden")
     this.panelTarget.classList.remove("hidden")
     this.panelTarget.classList.add("flex")
@@ -59,6 +61,7 @@ export default class extends Controller {
       return
     }
 
+    this.mobileView = "sidebar"
     this.sidebarTarget.classList.remove("hidden")
     this.panelTarget.classList.add("hidden")
     this.panelTarget.classList.remove("flex")
@@ -73,7 +76,9 @@ export default class extends Controller {
       this.sidebarTarget.classList.remove("hidden")
       this.panelTarget.classList.remove("hidden")
       this.panelTarget.classList.add("flex")
-    } else if (!this.panelTarget.classList.contains("flex")) {
+    } else if (this.mobileView === "panel") {
+      this.showPanel()
+    } else {
       this.showSidebar()
     }
   }
