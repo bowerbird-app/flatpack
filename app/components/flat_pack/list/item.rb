@@ -62,9 +62,7 @@ module FlatPack
           if @icon.is_a?(String) && @icon.start_with?("<svg")
             @icon.html_safe
           else
-            content_tag(:svg, class: "w-5 h-5", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor") do
-              content_tag(:use, nil, "xlink:href": "#icon-#{@icon}")
-            end
+            render FlatPack::Shared::IconComponent.new(name: @icon, size: :md)
           end
         end
       end

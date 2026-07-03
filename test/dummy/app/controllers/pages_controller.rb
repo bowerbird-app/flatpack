@@ -63,6 +63,7 @@ class PagesController < ApplicationController
     {action: /\Askeletons\z/, title: "Skeleton", patterns: [/\A--skeleton-/]},
     {action: /\Atimeline\z/, title: "Timeline", patterns: [/\A--timeline-/]},
     {action: /\Alist\z/, title: "List", patterns: [/\A--list-item-/]},
+    {action: /\Anotification\z/, title: "Notification", patterns: [/\A--popover-/, /\A--list-item-/]},
     {action: /\Atree\z/, title: "Tree", patterns: []}
   ].freeze
 
@@ -861,6 +862,9 @@ class PagesController < ApplicationController
   end
 
   def timestamp
+  end
+
+  def notification
   end
 
   def local_time

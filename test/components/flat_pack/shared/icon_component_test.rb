@@ -125,6 +125,11 @@ module FlatPack
         assert_selector "svg[data-flat-pack--icon-name-value='squares-2x2']"
       end
 
+      def test_chat_maps_to_chat_bubble_left_ellipsis
+        render_inline(IconComponent.new(name: :chat))
+        assert_selector "svg[data-flat-pack--icon-name-value='chat-bubble-left-ellipsis']"
+      end
+
       def test_unknown_name_passes_through_unchanged
         # Names not in NAME_MAP are passed directly (heroicons may handle them)
         render_inline(IconComponent.new(name: "academic-cap"))

@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-06-18
+updated_at: 2026-07-03
 
 format_reference: docs/components/DOC_FORMAT.md
 human_index: docs/components/README.md
@@ -273,6 +273,12 @@ components:
     title: Navbar
     doc: docs/components/navbar.md
     primary_class: FlatPack::Navbar::Component
+    status: documented
+
+  - key: notification
+    title: Notification
+    doc: docs/components/notification.md
+    primary_class: FlatPack::Notification::Component
     status: documented
 
   - key: page_header

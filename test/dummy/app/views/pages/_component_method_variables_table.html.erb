@@ -718,6 +718,27 @@
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"max-w-xl\", data: { testid: \"search\" }" }
       ]
     },
+    notification: {
+      label: "Notification",
+      method_call: "render FlatPack::Notification::Component.new(unread_count: 12, see_all_href: demo_notification_path, notifications: demo_notifications)",
+      variables: [
+        { variable: "notifications", accepts: "Array<Hash>", example: "notifications: [{ title: \"New comment\", body: \"Marco commented on your post.\", href: \"/notifications/1\", time: \"2026-07-03T10:30:00Z\", unread: true, icon: :bell }]" },
+        { variable: "unread_count", accepts: "Integer", example: "unread_count: 12" },
+        { variable: "see_all_href", accepts: "Relative/allowed URL (required)", example: "see_all_href: demo_notification_path" },
+        { variable: "trigger_id", accepts: "String or nil", example: "trigger_id: \"notification-trigger\"" },
+        { variable: "placement", accepts: ":top, :bottom, :left, :right", example: "placement: :bottom" },
+        { variable: "bell_label", accepts: "String", example: "bell_label: \"Notifications\"" },
+        { variable: "empty_message", accepts: "String", example: "empty_message: \"No recent notifications\"" },
+        { variable: "timestamp_tooltip_placement", accepts: ":top, :right, :bottom, :left", example: "timestamp_tooltip_placement: :left" },
+        { variable: "notification[:title]", accepts: "String", example: "title: \"Build completed\"" },
+        { variable: "notification[:body]", accepts: "String or nil", example: "body: \"Your export is ready to download.\"" },
+        { variable: "notification[:href]", accepts: "Relative/allowed URL or nil", example: "href: \"/notifications/2\"" },
+        { variable: "notification[:time]", accepts: "ISO8601 String or nil", example: "time: \"2026-07-03T09:15:00Z\"" },
+        { variable: "notification[:unread]", accepts: "true, false", example: "unread: true" },
+        { variable: "notification[:icon]", accepts: "Heroicon name Symbol/String or nil", example: "icon: :chat" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"relative\", data: { testid: \"notification\" }" }
+      ]
+    },
     skeleton: {
       label: "Skeleton",
       method_call: "render FlatPack::Skeleton::Component.new(variant: :text, width: \"240px\", shimmer: true)",
