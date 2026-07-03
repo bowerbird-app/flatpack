@@ -143,6 +143,7 @@ Rails.application.routes.draw do
   get "demo/tree", to: "pages#tree"
   get "demo/timeline", to: "pages#timeline"
   get "demo/timestamp", to: "pages#timestamp"
+  get "local-time-demo", to: "local_time_demo#index"
 
   # Form submission endpoints for demonstration
   post "demo/forms/create", to: "pages#forms_create"
