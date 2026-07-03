@@ -32,18 +32,16 @@ class PagesTablesDemoTest < ActionDispatch::IntegrationTest
 
   test "tables basic generic filter/search controls keep selected state in links and form" do
     get demo_tables_basic_path, params: {
-      filter_field: "status",
-      filter_value: "pending",
+      status: "pending",
       q: "user 1"
     }
 
     assert_response :success
-    assert_includes response.body, "Filter: Status"
-    assert_includes response.body, "Value: Pending"
+    assert_includes response.body, 'name="status"'
+    assert_includes response.body, 'value="pending"'
     assert_includes response.body, 'name="q"'
     assert_includes response.body, 'value="user 1"'
-    assert_includes response.body, "filter_field=status"
-    assert_includes response.body, "filter_value=pending"
+    assert_includes response.body, "status=pending"
   end
 
   test "tables basic multi-controls preserve shared query and independent table params" do

@@ -70,6 +70,7 @@ app/javascript/flat_pack/
 ├── controllers/
 │   └── ..._controller.js   # Stimulus controllers
 ├── heroicons.js            # Generated Heroicons v2 icon banks for FlatPack icons
+├── local_time.js           # Framework-independent local/relative time enhancer
 └── tiptap/
    └── ...js              # Rich-text helper modules imported by tiptap_controller
 ```
@@ -89,6 +90,8 @@ pin_all_from File.expand_path("../app/javascript/flat_pack/tiptap", __dir__),
    under: "flat_pack/tiptap",
    to: "flat_pack/tiptap",
    preload: false
+
+pin "flat_pack/local_time", to: "flat_pack/local_time.js", preload: false
 
 # Heroicons icon banks — served as a local JS module, no gem required
 pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false

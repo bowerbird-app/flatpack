@@ -6,7 +6,7 @@ This document provides the exact terminal commands and configuration steps neede
 
 FlatPack is a modern Rails UI Component Library built with ViewComponent, Tailwind CSS, and Hotwire. It provides type-safe, testable components with dark mode support and accessibility features. Supports Rails 7.1 and above.
 
-**Current Version:** 0.1.108 (Updated July 3, 2026)
+**Current Version:** 0.1.110 (Updated July 3, 2026)
 
 ## AI-first installation entrypoint
 
@@ -300,7 +300,7 @@ If you want to create a fully named host-app theme such as `[data-theme="brand"]
 
 **✨ Automated Configuration**
 
-The install generator automatically configures JavaScript imports for FlatPack's Stimulus controllers and the Heroicons module:
+The install generator automatically configures JavaScript imports for FlatPack's Stimulus controllers, local time enhancer, and the Heroicons module:
 
 **In `config/importmap.rb`:**
 ```ruby
@@ -316,8 +316,24 @@ pin_all_from FlatPack::Engine.root.join("app/javascript/flat_pack/tiptap"),
              to: "flat_pack/tiptap",
              preload: false
 
+# Local/relative time enhancer for <time class="local-time">
+pin "flat_pack/local_time", to: "flat_pack/local_time.js", preload: false
+
 # Heroicons icon banks — used by FlatPack::Icon::Component
 pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false
+```
+
+**In `app/javascript/application.js`:**
+```javascript
+import { initLocalTimes } from "flat_pack/local_time"
+
+document.addEventListener("DOMContentLoaded", () => {
+  initLocalTimes()
+})
+
+document.addEventListener("turbo:load", () => {
+  initLocalTimes()
+})
 ```
 
 **In `app/javascript/controllers/index.js`:**
@@ -346,10 +362,24 @@ If you need to manually configure JavaScript:
                 under: "flat_pack/tiptap", 
                 to: "flat_pack/tiptap",
                 preload: false
+   pin "flat_pack/local_time", to: "flat_pack/local_time.js", preload: false
    pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false
    ```
 
-2. Add to `app/javascript/controllers/index.js`:
+2. Add to `app/javascript/application.js`:
+   ```javascript
+   import { initLocalTimes } from "flat_pack/local_time"
+
+   document.addEventListener("DOMContentLoaded", () => {
+     initLocalTimes()
+   })
+
+   document.addEventListener("turbo:load", () => {
+     initLocalTimes()
+   })
+   ```
+
+3. Add to `app/javascript/controllers/index.js`:
    ```javascript
    import { lazyLoadControllersFrom } from "@hotwired/stimulus-loading"
    lazyLoadControllersFrom("controllers", application)
