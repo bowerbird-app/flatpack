@@ -14,6 +14,6 @@ class LocalTimeDemoTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Fallback text should remain"
     assert_includes response.body, "Custom title should not be overwritten"
     assert_includes response.body, "Render UTC timestamps in local browser time"
-    assert_match(/class=\"[^\"]*local-time relative-time/, response.body)
+    assert_match(/class="[^"]*local-time relative-time/, response.body)
   end
 end

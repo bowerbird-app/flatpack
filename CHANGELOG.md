@@ -8,9 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Fixed
+
+## [0.1.110] - 2026-07-03
+
+### Added
 - Added a `flat_pack/local_time` JavaScript module for enhancing `time.local-time` elements with local and relative time rendering, plus a dummy `/demo/local_time` page.
 
 ### Changed
+- Moved the local time demo into the shared Pages demo structure at `/demo/local_time`, removed the standalone `/local-time-demo` route/page, and added a `Local Time` sidebar entry directly below `Timestamp`.
 
 ### Fixed
 
