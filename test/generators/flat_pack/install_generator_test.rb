@@ -68,7 +68,7 @@ module FlatPack
           generator.configure_importmap
 
           content = importmap.read
-          assert_equal 1, content.scan("flat_pack/local_time").length
+          assert_equal 1, content.scan('pin "flat_pack/local_time"').length
         end
       end
 

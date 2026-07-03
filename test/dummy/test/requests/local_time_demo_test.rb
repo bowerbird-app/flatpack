@@ -16,4 +16,3 @@ class LocalTimeDemoTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "class=\"local-time relative-time\""
   end
 end
-

@@ -5,4 +5,3 @@ class LocalTimeDemoController < ApplicationController
     @now = Time.current
   end
 end
-
