@@ -22,7 +22,7 @@ module FlatPack
           content_tag(:div, **composer_attributes) do
             safe_join([
               render_attachments_section,
-              content_tag(:div, class: "flex items-center gap-2") do
+              content_tag(:div, class: composer_controls_classes) do
                 safe_join([
                   render_left_section,
                   render_center_section,
@@ -124,7 +124,7 @@ module FlatPack
             rows: 1,
             autogrow: true,
             submit_on_enter: true,
-            class: "min-h-[var(--chat-composer-control-height)] rounded-lg border-[var(--chat-input-border-color)] bg-[var(--chat-input-background-color)] px-4 py-2 text-sm leading-5 text-[var(--chat-input-text-color)] placeholder:text-[var(--chat-input-placeholder-color)] focus:ring-[var(--chat-input-focus-ring-color)] max-h-32"
+            class: "min-h-[var(--chat-composer-control-height)] rounded-lg border-[var(--chat-input-border-color)] bg-[var(--chat-input-background-color)] px-4 py-[var(--chat-composer-control-padding-y)] text-sm leading-5 text-[var(--chat-input-text-color)] placeholder:text-[var(--chat-input-placeholder-color)] focus:ring-[var(--chat-input-focus-ring-color)] max-h-32"
           )
         end
 
@@ -144,7 +144,7 @@ module FlatPack
             size: :md,
             type: "submit",
             aria: {label: "Send message"},
-            class: "border-transparent bg-[var(--chat-send-button-background-color)] text-[var(--chat-send-button-text-color)] hover:bg-[var(--chat-send-button-hover-background-color)] focus-visible:ring-[var(--chat-send-button-focus-ring-color)] shrink-0"
+            class: "min-h-[var(--chat-composer-control-height)] min-w-[var(--chat-composer-control-height)] shrink-0 border-transparent bg-[var(--chat-send-button-background-color)] text-[var(--chat-send-button-text-color)] hover:bg-[var(--chat-send-button-hover-background-color)] focus-visible:ring-[var(--chat-send-button-focus-ring-color)]"
           )
         end
 
@@ -167,6 +167,16 @@ module FlatPack
             "rounded-[var(--chat-composer-radius)]",
             "bg-[var(--chat-composer-background-color)]",
             "p-4"
+          )
+        end
+
+        def composer_controls_classes
+          classes(
+            "flex items-center gap-2",
+            "[--button-icon-only-padding-md:var(--chat-composer-control-padding-y)]",
+            "[--button-padding-y-md:var(--chat-composer-control-padding-y)]",
+            "[&_button]:min-h-[var(--chat-composer-control-height)]",
+            "[&_button]:min-w-[var(--chat-composer-control-height)]"
           )
         end
       end

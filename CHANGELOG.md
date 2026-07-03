@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 ### Fixed
+- Fixed chat demo mobile layouts to open sidebar-first with panel back navigation, corrected message list scrolling/flex overflow, improved dark-mode attachment contrast, and aligned composer control heights.
 
 ## [0.1.106] - 2026-06-18
 

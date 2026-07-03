@@ -146,6 +146,8 @@ module FlatPack
 
           assert_selector "div.flex.items-center.gap-2"
           assert_includes rendered_content, "min-h-[var(--chat-composer-control-height)]"
+          assert_includes rendered_content, "py-[var(--chat-composer-control-padding-y)]"
+          assert_includes rendered_content, "[&_button]:min-h-[var(--chat-composer-control-height)]"
         end
       end
     end

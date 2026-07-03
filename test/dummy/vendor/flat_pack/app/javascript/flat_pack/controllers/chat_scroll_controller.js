@@ -62,6 +62,7 @@ export default class extends Controller {
       }
 
       messages.scrollTop = messages.scrollHeight
+      this.wasNearBottom = true
 
       if (instant && hadSmoothScrolling) {
         requestAnimationFrame(() => {
@@ -150,7 +151,7 @@ export default class extends Controller {
         return
       }
 
-      this.checkScroll()
+      this.newMessageAdded()
     })
 
     this.messageObserver.observe(this.messagesTarget, {
