@@ -49,7 +49,44 @@ module FlatPack
           content = importmap.read
           assert_equal 2, content.scan("pin_all_from FlatPack::Engine.root.join").length
           assert_includes content, "controllers/flat_pack"
+          assert_includes content, "flat_pack/local_time"
           assert_includes content, "preload: false"
+        end
+      end
+
+      test "configure_importmap backfills local time pin when controllers are configured" do
+        with_temp_rails_root do |tmp_root|
+          config_dir = tmp_root.join("config")
+          FileUtils.mkdir_p(config_dir)
+          importmap = config_dir.join("importmap.rb")
+          importmap.write(<<~RUBY)
+            pin_all_from FlatPack::Engine.root.join("app/javascript/flat_pack/controllers"), under: "controllers/flat_pack", to: "flat_pack/controllers", preload: false
+          RUBY
+
+          generator = build_generator
+          generator.configure_importmap
+          generator.configure_importmap
+
+          content = importmap.read
+          assert_equal 1, content.scan("flat_pack/local_time").length
+        end
+      end
+
+      test "configure_local_time_initializer appends initializer once" do
+        with_temp_rails_root do |tmp_root|
+          javascript_dir = tmp_root.join("app/javascript")
+          FileUtils.mkdir_p(javascript_dir)
+          application_js = javascript_dir.join("application.js")
+          application_js.write("import \"controllers\"\n")
+
+          generator = build_generator
+          generator.configure_local_time_initializer
+          generator.configure_local_time_initializer
+
+          content = application_js.read
+          assert_equal 1, content.scan("flat_pack/local_time").length
+          assert_includes content, "DOMContentLoaded"
+          assert_includes content, "turbo:load"
         end
       end
 
