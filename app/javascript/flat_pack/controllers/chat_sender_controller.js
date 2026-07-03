@@ -447,7 +447,7 @@ export default class extends Controller {
     }
 
     const wrapper = document.createElement("div")
-    wrapper.className = "inline-flex w-fit max-w-full items-center gap-3 border border-[var(--chat-attachment-border-color)] rounded-lg bg-white p-3"
+    wrapper.className = "inline-flex w-fit max-w-full items-center gap-3 border border-[var(--chat-attachment-border-color)] rounded-lg bg-[var(--chat-attachment-background-color)] p-3"
 
     const icon = document.createElement("div")
     icon.className = "flex-shrink-0"

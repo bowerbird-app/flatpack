@@ -13,6 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.108] - 2026-07-03
+
+### Added
+
+### Changed
+
+### Fixed
+- Fixed chat demo mobile layouts to open sidebar-first with panel back navigation, corrected message list scrolling/flex overflow, improved dark-mode attachment contrast, and aligned composer control heights.
+- Fixed chat composer demo `+` attachment trigger sizing to render a strict 1:1 square control.
+- Fixed `FlatPack::Button::Dropdown::Component` trigger class merge order so `trigger_attributes[:class]` can override default size padding classes (for example `p-0` without inherited `px/py`).
+
 ## [0.1.106] - 2026-06-18
 
 ### Added

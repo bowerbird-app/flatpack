@@ -99,7 +99,7 @@ module FlatPack
 
         def container_classes
           classes(
-            "relative flex-1 overflow-hidden"
+            "relative flex min-h-0 flex-1 overflow-hidden"
           )
         end
 
@@ -116,7 +116,7 @@ module FlatPack
 
         def messages_classes
           classes(
-            "h-full overflow-y-auto overflow-x-hidden",
+            "min-h-0 flex-1 overflow-y-auto overflow-x-hidden",
             "px-4 py-4 space-y-4",
             "scroll-smooth"
           )
