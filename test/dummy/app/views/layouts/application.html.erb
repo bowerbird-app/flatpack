@@ -503,6 +503,12 @@
                 icon: :calendar,
                 active: false
               ) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Local Time",
+                href: demo_local_time_path,
+                icon: :clock,
+                active: false
+              ) %>
               
               <%= render FlatPack::Sidebar::Divider::Component.new %>
               <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Layout") %>

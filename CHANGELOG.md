@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Added a `flat_pack/local_time` JavaScript module for enhancing `time.local-time` elements with local and relative time rendering, plus a dummy `/local-time-demo` page.
+- Added a `flat_pack/local_time` JavaScript module for enhancing `time.local-time` elements with local and relative time rendering, plus a dummy `/demo/local_time` page.
 
 ### Changed
 

@@ -87,6 +87,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/list
     /demo/tree
     /demo/timeline
+    /demo/local_time
     /mobile
     /mobile/bottom_nav
   ].freeze

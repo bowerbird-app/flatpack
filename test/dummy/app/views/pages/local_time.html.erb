@@ -1,0 +1,109 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Local Time Demo",
+  subtitle: "Render UTC timestamps in local browser time with optional relative labels."
+) %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Local Time",
+    anchor_link: true,
+    subtitle: "Converts UTC datetime values into local browser display text."
+  ) %>
+
+  <div class="space-y-4 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-4">
+    <div class="text-sm text-(--surface-muted-content-color)">
+      Current time in user locale:
+      <time class="local-time font-medium text-(--surface-content-color)" datetime="<%= @now.utc.iso8601 %>">
+        <%= @now.utc.strftime("%d %b %Y, %I:%M %P UTC") %>
+      </time>
+    </div>
+
+    <div class="text-sm text-(--surface-muted-content-color)">
+      Existing title should be preserved:
+      <time
+        class="local-time font-medium text-(--surface-content-color)"
+        datetime="<%= @now.utc.iso8601 %>"
+        title="Custom title should not be overwritten"
+      >
+        <%= @now.utc.strftime("%d %b %Y, %I:%M %P UTC") %>
+      </time>
+    </div>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;time class=&quot;local-time&quot; datetime=&quot;&lt;%= @now.utc.iso8601 %&gt;&quot;&gt;
+        &lt;%= @now.utc.strftime(&quot;%d %b %Y, %I:%M %P UTC&quot;) %&gt;
+      &lt;/time&gt;
+
+      &lt;time
+        class=&quot;local-time&quot;
+        datetime=&quot;&lt;%= @now.utc.iso8601 %&gt;&quot;
+        title=&quot;Custom title should not be overwritten&quot;
+      &gt;
+        &lt;%= @now.utc.strftime(&quot;%d %b %Y, %I:%M %P UTC&quot;) %&gt;
+      &lt;/time&gt;
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Relative Time",
+    anchor_link: true,
+    subtitle: "Pair local-time and relative-time classes for recency labels."
+  ) %>
+
+  <div class="space-y-3 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-4">
+    <% @relative_time_examples.each do |label, timestamp| %>
+      <div class="text-sm text-(--surface-muted-content-color)">
+        <%= label %>:
+        <time
+          class="local-time relative-time font-medium text-(--surface-content-color)"
+          datetime="<%= timestamp.utc.iso8601 %>"
+        >
+          <%= timestamp.utc.strftime("%d %b %Y, %I:%M %P UTC") %>
+        </time>
+      </div>
+    <% end %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;% @relative_time_examples.each do |label, timestamp| %&gt;
+        &lt;%= label %&gt;:
+        &lt;time class=&quot;local-time relative-time&quot; datetime=&quot;&lt;%= timestamp.utc.iso8601 %&gt;&quot;&gt;
+          &lt;%= timestamp.utc.strftime(&quot;%d %b %Y, %I:%M %P UTC&quot;) %&gt;
+        &lt;/time&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Invalid Or Missing Datetime",
+    anchor_link: true,
+    subtitle: "Fallback text remains unchanged when datetime is invalid or absent."
+  ) %>
+
+  <div class="space-y-4 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-4">
+    <div class="text-sm text-(--surface-muted-content-color)">
+      Invalid datetime:
+      <time class="local-time font-medium text-(--surface-content-color)" datetime="not-a-valid-date">
+        Fallback text should remain
+      </time>
+    </div>
+
+    <div class="text-sm text-(--surface-muted-content-color)">
+      Missing datetime:
+      <time class="local-time font-medium text-(--surface-content-color)">
+        Fallback text should remain
+      </time>
+    </div>
+  </div>
+</section>

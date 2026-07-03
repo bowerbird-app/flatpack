@@ -3,6 +3,7 @@
 # Configure importmap for FlatPack components
 pin_all_from File.expand_path("../app/javascript/flat_pack/controllers", __dir__), under: "controllers/flat_pack", to: "flat_pack/controllers", preload: false
 pin_all_from File.expand_path("../app/javascript/flat_pack/tiptap", __dir__), under: "flat_pack/tiptap", to: "flat_pack/tiptap", preload: false
+pin "flat_pack/local_time", to: "flat_pack/local_time.js", preload: false
 
 # Heroicons curated subset — served as a local JS module, no gem required
 pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false

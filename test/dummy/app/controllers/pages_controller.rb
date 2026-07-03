@@ -74,7 +74,7 @@ class PagesController < ApplicationController
     picker search_results picker_results pagination_infinite charts charts_default_filter
     modal_filter
     comments admin chat_demo chips chip_add_callback chip_remove_callback
-    tables_basic tables_sortable
+    tables_basic tables_sortable local_time
   ].freeze
 
   before_action :serve_from_page_cache, except: UNCACHED_ACTIONS
@@ -861,6 +861,20 @@ class PagesController < ApplicationController
   end
 
   def timestamp
+  end
+
+  def local_time
+    @now = Time.current
+    @relative_time_examples = [
+      ["Just now", 30.seconds.ago],
+      ["Minutes ago", 12.minutes.ago],
+      ["Hours ago", 5.hours.ago],
+      ["Yesterday", 25.hours.ago],
+      ["Days ago", 3.days.ago],
+      ["Weeks ago", 15.days.ago],
+      ["Months ago", 120.days.ago],
+      ["Absolute date", 400.days.ago]
+    ]
   end
 
   def hero_centered
