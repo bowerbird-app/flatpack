@@ -4,9 +4,8 @@ module FlatPack
   module Notification
     class Component < FlatPack::BaseComponent
       def initialize(
-        notifications: [],
+        see_all_href:, notifications: [],
         unread_count: 0,
-        see_all_href:,
         trigger_id: nil,
         placement: :bottom,
         bell_label: "Notifications",
@@ -189,7 +188,7 @@ module FlatPack
       def badge_text
         return nil unless unread?
 
-        unread_count > 9 ? "9+" : unread_count.to_s
+        (unread_count > 9) ? "9+" : unread_count.to_s
       end
 
       def accessible_label

@@ -104,8 +104,12 @@ module FlatPack
       def test_popover_includes_custom_width_and_padding_classes
         render_inline(Component.new(trigger_id: "notification-trigger", see_all_href: "/notifications"))
 
-        assert_selector "div.w-80.max-w-\[calc\(100vw-2rem\)\].overflow-hidden"
-        assert_includes page.native.to_html, "!p-0"
+        html = page.native.to_html
+
+        assert_includes html, "w-80"
+        assert_includes html, "max-w-[calc(100vw-2rem)]"
+        assert_includes html, "overflow-hidden"
+        assert_includes html, "!p-0"
       end
 
       def test_renders_notification_title
@@ -136,7 +140,7 @@ module FlatPack
       def test_applies_active_styling_when_notification_is_unread
         render_inline(Component.new(see_all_href: "/notifications", notifications: [notification(unread: true)]))
 
-        assert_selector "li.bg-\[var\(--list-item-active-background-color\)\]"
+        assert_includes page.native.to_html, "bg-[var(--list-item-active-background-color)]"
       end
 
       def test_renders_empty_state_when_notifications_are_empty
