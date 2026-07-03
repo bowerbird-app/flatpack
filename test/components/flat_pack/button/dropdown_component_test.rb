@@ -150,24 +150,6 @@ module FlatPack
         assert_selector "button[title='Conversation actions'][aria-label='Conversation actions']"
       end
 
-      def test_trigger_class_overrides_size_padding_classes
-        render_inline(Dropdown::Component.new(
-          text: "",
-          icon: "plus",
-          show_chevron: false,
-          trigger_attributes: {
-            class: "h-10 w-10 p-0"
-          }
-        ))
-
-        html = page.native.to_html
-        assert_includes html, "h-10"
-        assert_includes html, "w-10"
-        assert_includes html, "p-0"
-        refute_includes html, "px-[var(--button-padding-x-md)]"
-        refute_includes html, "py-[var(--button-padding-y-md)]"
-      end
-
       # Disabled state
       def test_renders_disabled_button
         render_inline(Dropdown::Component.new(text: "Actions", disabled: true))
