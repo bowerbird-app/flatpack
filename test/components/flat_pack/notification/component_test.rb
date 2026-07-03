@@ -110,6 +110,7 @@ module FlatPack
         assert_includes html, "max-w-[calc(100vw-2rem)]"
         assert_includes html, "overflow-hidden"
         assert_includes html, "!p-0"
+        refute_includes html, "pb-12"
       end
 
       def test_renders_notification_title
@@ -122,6 +123,24 @@ module FlatPack
         render_inline(Component.new(see_all_href: "/notifications", notifications: [notification(body: "Marco commented.")]))
 
         assert_text "Marco commented."
+      end
+
+      def test_applies_zero_bottom_margin_to_notification_rows
+        render_inline(Component.new(see_all_href: "/notifications", notifications: [notification]))
+
+        assert_selector "li.mb-0", text: "New comment"
+      end
+
+      def test_does_not_render_icon_column_when_icon_is_blank
+        render_inline(Component.new(see_all_href: "/notifications", notifications: [notification(icon: "")]))
+
+        refute_selector "li span svg"
+      end
+
+      def test_left_aligns_notification_title_and_body
+        render_inline(Component.new(see_all_href: "/notifications", notifications: [notification]))
+
+        assert_selector "li .text-left", text: "New comment"
       end
 
       def test_renders_linked_notification_item_when_href_is_provided
