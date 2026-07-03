@@ -1,0 +1,95 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Notification Component",
+  subtitle: "Bell trigger with unread badges and a recent notifications popover."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :notification %>
+
+<% demo_notifications = [
+  {
+    title: "New comment",
+    body: "Marco commented on your post.",
+    href: "#new-comment",
+    time: "2026-07-03T10:30:00Z",
+    unread: true,
+    icon: :bell
+  },
+  {
+    title: "Build completed",
+    body: "Your export is ready to download.",
+    href: "#build-completed",
+    time: "2026-07-03T09:15:00Z",
+    unread: false,
+    icon: :check
+  },
+  {
+    title: "Mentioned in a thread",
+    body: "You were mentioned by Alex.",
+    href: nil,
+    time: "2026-07-02T18:45:00Z",
+    unread: true,
+    icon: :chat
+  }
+] %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Badge states",
+    anchor_link: true,
+    subtitle: "Unread counts render no badge, numeric badges, or 9+."
+  ) %>
+
+  <div class="flex flex-wrap items-center gap-6 rounded-lg border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-6">
+    <div class="space-y-2 text-center">
+      <%= render FlatPack::Notification::Component.new(
+        unread_count: 0,
+        see_all_href: demo_notification_path,
+        notifications: []
+      ) %>
+      <p class="text-xs text-[var(--surface-muted-content-color)]">No unread</p>
+    </div>
+
+    <div class="space-y-2 text-center">
+      <%= render FlatPack::Notification::Component.new(
+        unread_count: 1,
+        see_all_href: demo_notification_path,
+        notifications: demo_notifications.first(1)
+      ) %>
+      <p class="text-xs text-[var(--surface-muted-content-color)]">One unread</p>
+    </div>
+
+    <div class="space-y-2 text-center">
+      <%= render FlatPack::Notification::Component.new(
+        unread_count: 9,
+        see_all_href: demo_notification_path,
+        notifications: demo_notifications
+      ) %>
+      <p class="text-xs text-[var(--surface-muted-content-color)]">Nine unread</p>
+    </div>
+
+    <div class="space-y-2 text-center">
+      <%= render FlatPack::Notification::Component.new(
+        unread_count: 12,
+        see_all_href: demo_notification_path,
+        notifications: demo_notifications
+      ) %>
+      <p class="text-xs text-[var(--surface-muted-content-color)]">More than nine</p>
+    </div>
+  </div>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Recent notifications",
+    anchor_link: true,
+    subtitle: "Rows compose FlatPack list items with timestamp components."
+  ) %>
+
+  <div class="rounded-lg border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-6">
+    <%= render FlatPack::Notification::Component.new(
+      unread_count: 12,
+      see_all_href: demo_notification_path,
+      notifications: demo_notifications
+    ) %>
+  </div>
+</section>

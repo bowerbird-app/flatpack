@@ -275,6 +275,12 @@ components:
     primary_class: FlatPack::Navbar::Component
     status: documented
 
+  - key: notification
+    title: Notification
+    doc: docs/components/notification.md
+    primary_class: FlatPack::Notification::Component
+    status: documented
+
   - key: page_header
     title: Page Header
     doc: docs/components/page-header.md
