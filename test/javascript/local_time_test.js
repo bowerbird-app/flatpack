@@ -30,16 +30,12 @@ module.exports = {
 function buildElement(options = {}) {
   const {
     className = 'local-time',
-    datetime,
+    datetime = Object.hasOwn(options, 'datetime') ? options.datetime : '2026-07-03T14:30:00Z',
     title,
     textContent = 'fallback'
   } = options
   const attributes = {}
-  if (Object.hasOwn(options, 'datetime')) {
-    if (datetime !== undefined) attributes.datetime = datetime
-  } else {
-    attributes.datetime = datetime
-  }
+  if (datetime !== undefined) attributes.datetime = datetime
   if (title !== undefined) attributes.title = title
 
   return {
