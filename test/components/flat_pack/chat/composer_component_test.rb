@@ -147,6 +147,10 @@ module FlatPack
           assert_selector "div.flex.items-center.gap-2"
           assert_includes rendered_content, "min-h-[var(--chat-composer-control-height)]"
           assert_includes rendered_content, "py-[var(--chat-composer-control-padding-y)]"
+          assert_includes rendered_content, "self-stretch"
+          assert_includes rendered_content, "[&amp;_.flat-pack-input-wrapper]:flex"
+          assert_includes rendered_content, "[&amp;_.flat-pack-input-wrapper]:h-full"
+          assert_includes rendered_content, "[&amp;_.flat-pack-input]:h-full"
           assert_includes rendered_content, "[&amp;_button]:min-h-[var(--chat-composer-control-height)]"
         end
       end

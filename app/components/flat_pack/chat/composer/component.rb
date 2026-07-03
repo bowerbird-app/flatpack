@@ -108,7 +108,7 @@ module FlatPack
         end
 
         def render_center_section
-          content_tag(:div, class: "flex-1 min-w-0") do
+          content_tag(:div, class: "flex-1 min-w-0 self-stretch") do
             if center?
               center.to_s
             else
@@ -175,6 +175,10 @@ module FlatPack
             "flex items-center gap-2",
             "[--button-icon-only-padding-md:var(--chat-composer-control-padding-y)]",
             "[--button-padding-y-md:var(--chat-composer-control-padding-y)]",
+            "[&_.flat-pack-input-wrapper]:flex",
+            "[&_.flat-pack-input-wrapper]:items-stretch",
+            "[&_.flat-pack-input-wrapper]:h-full",
+            "[&_.flat-pack-input]:h-full",
             "[&_button]:min-h-[var(--chat-composer-control-height)]",
             "[&_button]:min-w-[var(--chat-composer-control-height)]"
           )
