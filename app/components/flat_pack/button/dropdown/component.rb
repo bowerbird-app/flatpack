@@ -78,7 +78,7 @@ module FlatPack
           attrs = @trigger_attributes.dup
 
           {
-            class: TailwindMerge::Merger.new.merge([attrs.delete(:class), attrs.delete("class"), button_classes].compact.join(" ")),
+            class: TailwindMerge::Merger.new.merge([button_classes, attrs.delete(:class), attrs.delete("class")].compact.join(" ")),
             aria: extract_nested_attributes(attrs, :aria).merge(
               haspopup: "true",
               expanded: "false"

@@ -34,25 +34,25 @@ module FlatPack
         end
 
         def left_slot(*args, **kwargs, &block)
-          return get_slot(:left_slot) if args.empty? && kwargs.empty? && !block_given?
+          return get_slot(:left_slot) if args.empty? && kwargs.empty? && !block
 
           set_slot(:left_slot, nil, *args, **kwargs, &block)
         end
 
         def center_slot(*args, **kwargs, &block)
-          return get_slot(:center_slot) if args.empty? && kwargs.empty? && !block_given?
+          return get_slot(:center_slot) if args.empty? && kwargs.empty? && !block
 
           set_slot(:center_slot, nil, *args, **kwargs, &block)
         end
 
         def right_slot(*args, **kwargs, &block)
-          return get_slot(:right_slot) if args.empty? && kwargs.empty? && !block_given?
+          return get_slot(:right_slot) if args.empty? && kwargs.empty? && !block
 
           set_slot(:right_slot, nil, *args, **kwargs, &block)
         end
 
         def attachments(*args, **kwargs, &block)
-          return get_slot(:attachments) if args.empty? && kwargs.empty? && !block_given?
+          return get_slot(:attachments) if args.empty? && kwargs.empty? && !block
 
           set_slot(:attachments, nil, *args, **kwargs, &block)
         end
