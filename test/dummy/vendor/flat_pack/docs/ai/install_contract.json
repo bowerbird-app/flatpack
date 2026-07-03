@@ -3,7 +3,7 @@
   "updated_at": "2026-07-03",
   "gem": {
     "name": "flat_pack",
-    "version": "0.1.108"
+    "version": "0.1.111"
   },
   "compatibility": {
     "ruby": ">= 3.2.0",
@@ -51,11 +51,12 @@
         "id": "importmap_pins",
         "type": "file_contains_all",
         "path": "config/importmap.rb",
-        "description": "Importmap pins FlatPack controllers, TipTap helpers, and Heroicons",
+        "description": "Importmap pins FlatPack controllers, TipTap helpers, local time, and Heroicons",
         "matches": [
           "controllers/flat_pack",
           "flat_pack/controllers",
           "flat_pack/tiptap",
+          "flat_pack/local_time",
           "pin \"flat_pack/heroicons\""
         ],
         "success_message": "Verified FlatPack importmap pins in config/importmap.rb"

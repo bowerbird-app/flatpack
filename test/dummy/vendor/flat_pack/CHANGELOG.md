@@ -13,6 +13,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.111] - 2026-07-03
+
+### Added
+- Added `FlatPack::Notification::Component` with unread badges, popover notification lists, timestamp composition, docs, tests, and a dummy demo page.
+
+### Changed
+
+### Fixed
+
 ## [0.1.110] - 2026-07-03
 
 ### Added
