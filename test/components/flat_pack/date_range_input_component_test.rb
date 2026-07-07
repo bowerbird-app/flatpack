@@ -52,6 +52,15 @@ module FlatPack
         labels_payload = page.first("div[data-flat-pack--flatpack-date-picker-preset-labels-value]", visible: :all)["data-flat-pack--flatpack-date-picker-preset-labels-value"]
         assert_includes labels_payload, "last_week"
         assert_includes labels_payload, "Last week"
+        assert_includes labels_payload, "last_4_weeks"
+        assert_includes labels_payload, "Last 4 weeks"
+      end
+
+      def test_renders_last_4_weeks_between_last_week_and_this_month
+        render_inline(Component.new(start_name: "period_start", end_name: "period_end"))
+
+        preset_labels = page.all("button[data-flat-pack-date-picker-command='preset']", visible: :all).map { |button| button.text.strip }
+        assert_equal ["Last week", "Last 4 weeks", "This month"], preset_labels.slice(4, 3)
       end
 
       def test_formats_date_objects

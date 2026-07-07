@@ -389,6 +389,7 @@ module FlatPack
           {key: "last_3_days", label: "Last 3 days"},
           {key: "this_week", label: "This week"},
           {key: "last_week", label: "Last week"},
+          {key: "last_4_weeks", label: "Last 4 weeks"},
           {key: "this_month", label: "This month"},
           {key: "last_month", label: "Last month"},
           {key: "this_year", label: "This year"},
