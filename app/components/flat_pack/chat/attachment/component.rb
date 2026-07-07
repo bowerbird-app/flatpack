@@ -6,7 +6,7 @@ module FlatPack
       class Component < FlatPack::BaseComponent
         # Tailwind CSS scanning requires these classes to be present as string literals.
         # DO NOT REMOVE - These duplicates ensure CSS generation:
-        # "border" "border-[var(--chat-attachment-border-color)]" "rounded-lg" "p-3" "bg-white"
+        # "border" "border-[var(--chat-attachment-border-color)]" "rounded-lg" "p-3" "bg-[var(--chat-attachment-background-color)]"
         TYPES = {
           file: "file",
           image: "image"
@@ -141,7 +141,8 @@ module FlatPack
             "inline-flex w-fit max-w-full items-center gap-3",
             "border border-[var(--chat-attachment-border-color)]",
             "rounded-lg",
-            "bg-white",
+            "bg-[var(--chat-attachment-background-color)]",
+            @href ? "hover:bg-[var(--chat-attachment-hover-background-color)]" : nil,
             "p-3",
             @href ? "cursor-pointer" : nil
           )

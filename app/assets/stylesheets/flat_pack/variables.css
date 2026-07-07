@@ -237,7 +237,8 @@
   --chat-input-text-color: var(--surface-content-color);
   --chat-input-placeholder-color: var(--surface-muted-content-color);
   --chat-input-focus-ring-color: var(--color-ring);
-  --chat-composer-control-height: calc(1.25rem + (var(--button-icon-only-padding-md) * 2) + 2px);
+  --chat-composer-control-height: calc(1.25rem + (var(--chat-composer-control-padding-y) * 2) + 2px);
+  --chat-composer-control-padding-y: var(--button-icon-only-padding-md);
   --chat-message-incoming-background-color: var(--surface-muted-background-color);
   --chat-message-incoming-text-color: var(--surface-content-color);
   --chat-message-outgoing-background-color: var(--color-primary);
@@ -253,6 +254,7 @@
   --chat-date-divider-line-color: var(--surface-border-color);
   --chat-date-divider-text-color: var(--surface-muted-content-color);
   --chat-attachment-border-color: var(--surface-border-color);
+  --chat-attachment-background-color: var(--surface-background-color);
   --chat-attachment-hover-background-color: var(--surface-muted-background-color);
   --chat-attachment-text-color: var(--surface-content-color);
   --chat-attachment-meta-color: var(--surface-muted-content-color);
@@ -725,7 +727,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --chat-input-text-color: var(--surface-content-color);
   --chat-input-placeholder-color: var(--surface-muted-content-color);
   --chat-input-focus-ring-color: var(--color-ring);
-  --chat-composer-control-height: calc(1.25rem + (var(--button-icon-only-padding-md) * 2) + 2px);
+  --chat-composer-control-height: calc(1.25rem + (var(--chat-composer-control-padding-y) * 2) + 2px);
+  --chat-composer-control-padding-y: var(--button-icon-only-padding-md);
   --chat-message-incoming-background-color: var(--surface-muted-background-color);
   --chat-message-incoming-text-color: var(--surface-content-color);
   --chat-message-outgoing-background-color: var(--color-primary);
@@ -741,6 +744,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --chat-date-divider-line-color: var(--surface-border-color);
   --chat-date-divider-text-color: var(--surface-muted-content-color);
   --chat-attachment-border-color: var(--surface-border-color);
+  --chat-attachment-background-color: var(--surface-background-color);
   --chat-attachment-hover-background-color: var(--surface-muted-background-color);
   --chat-attachment-text-color: var(--surface-content-color);
   --chat-attachment-meta-color: var(--surface-muted-content-color);
@@ -1218,7 +1222,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --chat-input-text-color: var(--surface-content-color);
   --chat-input-placeholder-color: var(--surface-muted-content-color);
   --chat-input-focus-ring-color: var(--color-ring);
-  --chat-composer-control-height: calc(1.25rem + (var(--button-icon-only-padding-md) * 2) + 2px);
+  --chat-composer-control-height: calc(1.25rem + (var(--chat-composer-control-padding-y) * 2) + 2px);
+  --chat-composer-control-padding-y: var(--button-icon-only-padding-md);
   --chat-message-incoming-background-color: var(--surface-muted-background-color);
   --chat-message-incoming-text-color: var(--surface-content-color);
   --chat-message-outgoing-background-color: var(--color-primary);
@@ -1234,6 +1239,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --chat-date-divider-line-color: var(--surface-border-color);
   --chat-date-divider-text-color: var(--surface-muted-content-color);
   --chat-attachment-border-color: var(--surface-border-color);
+  --chat-attachment-background-color: var(--surface-background-color);
   --chat-attachment-hover-background-color: var(--surface-muted-background-color);
   --chat-attachment-text-color: var(--surface-content-color);
   --chat-attachment-meta-color: var(--surface-muted-content-color);
@@ -1676,7 +1682,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --chat-input-text-color: var(--surface-content-color);
   --chat-input-placeholder-color: var(--surface-muted-content-color);
   --chat-input-focus-ring-color: var(--color-ring);
-  --chat-composer-control-height: calc(1.25rem + (var(--button-icon-only-padding-md) * 2) + 2px);
+  --chat-composer-control-height: calc(1.25rem + (var(--chat-composer-control-padding-y) * 2) + 2px);
+  --chat-composer-control-padding-y: var(--button-icon-only-padding-md);
   --chat-message-incoming-background-color: var(--surface-muted-background-color);
   --chat-message-incoming-text-color: var(--surface-content-color);
   --chat-message-outgoing-background-color: var(--color-primary);
@@ -1692,6 +1699,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --chat-date-divider-line-color: var(--surface-border-color);
   --chat-date-divider-text-color: var(--surface-muted-content-color);
   --chat-attachment-border-color: var(--surface-border-color);
+  --chat-attachment-background-color: var(--surface-background-color);
   --chat-attachment-hover-background-color: var(--surface-muted-background-color);
   --chat-attachment-text-color: var(--surface-content-color);
   --chat-attachment-meta-color: var(--surface-muted-content-color);
@@ -2134,7 +2142,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --chat-input-text-color: var(--surface-content-color);
   --chat-input-placeholder-color: var(--surface-muted-content-color);
   --chat-input-focus-ring-color: var(--color-ring);
-  --chat-composer-control-height: calc(1.25rem + (var(--button-icon-only-padding-md) * 2) + 2px);
+  --chat-composer-control-height: calc(1.25rem + (var(--chat-composer-control-padding-y) * 2) + 2px);
+  --chat-composer-control-padding-y: var(--button-icon-only-padding-md);
   --chat-message-incoming-background-color: #e5e7eb;
   --chat-message-incoming-text-color: #1f2937;
   --chat-message-outgoing-background-color: var(--color-primary);
@@ -2150,6 +2159,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --chat-date-divider-line-color: var(--surface-border-color);
   --chat-date-divider-text-color: var(--surface-muted-content-color);
   --chat-attachment-border-color: var(--surface-border-color);
+  --chat-attachment-background-color: var(--surface-background-color);
   --chat-attachment-hover-background-color: var(--surface-muted-background-color);
   --chat-attachment-text-color: var(--surface-content-color);
   --chat-attachment-meta-color: var(--surface-muted-content-color);

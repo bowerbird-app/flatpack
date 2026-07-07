@@ -87,6 +87,9 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/list
     /demo/tree
     /demo/timeline
+    /demo/timestamp
+    /demo/local_time
+    /demo/notification
     /mobile
     /mobile/bottom_nav
   ].freeze
@@ -509,6 +512,19 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, ">max</td>"
     assert_includes response.body, ">step</td>"
     assert_includes response.body, "**system_arguments"
+  end
+
+  test "notification demo renders the notification component examples" do
+    get "/demo/notification"
+
+    assert_response :success
+    assert_includes response.body, "Notification Component"
+    assert_includes response.body, "Badge states"
+    assert_includes response.body, "Recent notifications"
+    assert_includes response.body, "data-controller=\"flat-pack--popover\""
+    assert_includes response.body, "data-controller=\"flat-pack--timestamp\""
+    assert_includes response.body, "See all notifications"
+    assert_includes response.body, "9+"
   end
 
   test "progress demo variable table includes core options" do

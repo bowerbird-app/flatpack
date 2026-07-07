@@ -25,6 +25,14 @@ module FlatPack
           assert_text "very-long-file-name-that-should-be-truncated-when-space-is-limited.pdf"
         end
 
+        def test_uses_attachment_theme_tokens_for_surface_and_text
+          render_inline(Component.new(name: "project-plan.pdf", href: "#"))
+
+          assert_includes rendered_content, "bg-[var(--chat-attachment-background-color)]"
+          assert_includes rendered_content, "hover:bg-[var(--chat-attachment-hover-background-color)]"
+          assert_includes rendered_content, "text-[var(--chat-attachment-text-color)]"
+        end
+
         def test_applies_meta_truncation_classes_when_meta_present
           render_inline(Component.new(name: "report.pdf", meta: "This is very long metadata text that should also be truncated"))
 

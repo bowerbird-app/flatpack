@@ -305,6 +305,7 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
 - **Alert** - Prominent notifications (success, error, warning, info)
 - **Toast** - Single dismissible toast notification
 - **Toasts** - Toast region manager for stacked toast display
+- **Notification** - Notification bell with unread badge and recent activity popover
 - **EmptyState** - Full-bleed empty state with icon, title, and action
 
 ### Content

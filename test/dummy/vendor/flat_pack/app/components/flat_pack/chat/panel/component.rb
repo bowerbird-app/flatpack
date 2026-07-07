@@ -69,7 +69,7 @@ module FlatPack
         def panel_classes
           classes(
             "flex flex-col",
-            "h-full",
+            "h-full min-h-0",
             "overflow-hidden"
           )
         end

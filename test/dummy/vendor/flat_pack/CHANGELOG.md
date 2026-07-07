@@ -13,6 +13,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.112] - 2026-07-03
+
+### Added
+
+### Changed
+- Bumped the gem version to `0.1.112` and synchronized release metadata across root docs.
+- Refreshed `test/dummy` vendored FlatPack snapshot and aligned dummy lockfiles with the current branch state.
+
+### Fixed
+
+## [0.1.111] - 2026-07-03
+
+### Added
+- Added `FlatPack::Notification::Component` with unread badges, popover notification lists, timestamp composition, docs, tests, and a dummy demo page.
+
+### Changed
+
+### Fixed
+
+## [0.1.110] - 2026-07-03
+
+### Added
+- Added a `flat_pack/local_time` JavaScript module for enhancing `time.local-time` elements with local and relative time rendering, plus a dummy `/demo/local_time` page.
+
+### Changed
+- Moved the local time demo into the shared Pages demo structure at `/demo/local_time`, removed the standalone `/local-time-demo` route/page, and added a `Local Time` sidebar entry directly below `Timestamp`.
+
+### Fixed
+
+## [0.1.108] - 2026-07-03
+
+### Added
+
+### Changed
+
+### Fixed
+- Fixed chat demo mobile layouts to open sidebar-first with panel back navigation, corrected message list scrolling/flex overflow, improved dark-mode attachment contrast, and aligned composer control heights.
+- Fixed chat composer demo `+` attachment trigger sizing to render a strict 1:1 square control.
+- Fixed `FlatPack::Button::Dropdown::Component` trigger class merge order so `trigger_attributes[:class]` can override default size padding classes (for example `p-0` without inherited `px/py`).
+
 ## [0.1.106] - 2026-06-18
 
 ### Added

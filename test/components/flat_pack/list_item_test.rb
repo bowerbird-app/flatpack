@@ -21,8 +21,7 @@ module FlatPack
       def test_renders_with_icon
         render_inline(Item.new(icon: :check)) { "Content" }
 
-        assert_selector "svg"
-        assert_includes page.native.to_html, "#icon-check"
+        assert_selector "span svg[data-controller='flat-pack--icon'][data-flat-pack--icon-name-value='check']"
       end
 
       def test_icon_has_proper_styling
@@ -30,6 +29,12 @@ module FlatPack
 
         assert_includes page.native.to_html, "flex-shrink-0"
         assert_includes page.native.to_html, "text-[var(--surface-muted-content-color)]"
+      end
+
+      def test_named_icons_do_not_use_legacy_sprite_markup
+        render_inline(Item.new(icon: :check)) { "Content" }
+
+        refute_includes page.native.to_html, "xlink:href"
       end
 
       def test_content_wrapped_in_container

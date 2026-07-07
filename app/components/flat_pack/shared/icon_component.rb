@@ -46,6 +46,7 @@ module FlatPack
         "calendar" => "calendar-days",
         "file" => "document",
         "image" => "photo",
+        "chat" => "chat-bubble-left-ellipsis",
         "message-circle" => "chat-bubble-left-ellipsis",
         "dots" => "ellipsis-vertical",
         "question" => "question-mark-circle",

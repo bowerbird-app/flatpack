@@ -50,16 +50,18 @@ module FlatPack
           # Check if already configured
           if content.include?("controllers/flat_pack") && content.include?("flat_pack/controllers")
             say "\n⊙ Importmap already configured for FlatPack controllers", :yellow
+            content = configure_local_time_importmap_pin(importmap_path, content)
             configure_tiptap_importmap_pins(importmap_path, content)
             return
           end
 
-          # Add the pin configuration for controllers and tiptap helpers
+          # Add the pin configuration for controllers, helpers, and modules
           pin_config = "\n# Pin FlatPack controllers without modulepreload for lazy loading\n" \
             "pin_all_from FlatPack::Engine.root.join(\"app/javascript/flat_pack/controllers\"), " \
             "under: \"controllers/flat_pack\", to: \"flat_pack/controllers\", preload: false\n" \
             "pin_all_from FlatPack::Engine.root.join(\"app/javascript/flat_pack/tiptap\"), " \
-            "under: \"flat_pack/tiptap\", to: \"flat_pack/tiptap\", preload: false\n"
+            "under: \"flat_pack/tiptap\", to: \"flat_pack/tiptap\", preload: false\n" \
+            "pin \"flat_pack/local_time\", to: \"flat_pack/local_time.js\", preload: false\n"
 
           updated = content + pin_config
           updated = add_tiptap_cdn_pins(updated)
@@ -68,14 +70,50 @@ module FlatPack
           say "\n✓ Configured importmap for FlatPack controllers and TipTap", :green
           say "  - Added pin_all_from for controllers/flat_pack with preload: false", :green
           say "  - Added pin_all_from for flat_pack/tiptap helpers", :green
+          say "  - Added pin for flat_pack/local_time", :green
           say "  - Added TipTap CDN pins for rich text editor support", :green
         else
           say "\n⊙ Importmap configuration file not found", :yellow
           say "  If using importmaps, manually add to config/importmap.rb:", :yellow
           say "  pin_all_from FlatPack::Engine.root.join(\"app/javascript/flat_pack/controllers\"), under: \"controllers/flat_pack\", to: \"flat_pack/controllers\", preload: false", :cyan
           say "  pin_all_from FlatPack::Engine.root.join(\"app/javascript/flat_pack/tiptap\"), under: \"flat_pack/tiptap\", to: \"flat_pack/tiptap\", preload: false", :cyan
+          say "  pin \"flat_pack/local_time\", to: \"flat_pack/local_time.js\", preload: false", :cyan
           say "  # Plus TipTap CDN pins — see docs/installation.md for the full list", :cyan
         end
+      end
+
+      def configure_local_time_initializer
+        application_path = Rails.root.join("app/javascript/application.js")
+
+        unless File.exist?(application_path)
+          say "\n⊙ JavaScript application entrypoint not found", :yellow
+          say "  To initialize local times, manually import and call initLocalTimes:", :yellow
+          say "  import { initLocalTimes } from \"flat_pack/local_time\"", :cyan
+          return
+        end
+
+        content = File.read(application_path)
+        if content.include?("flat_pack/local_time")
+          say "\n⊙ Local time initializer already configured", :yellow
+          return
+        end
+
+        local_time_initializer = <<~JS
+
+          import { initLocalTimes } from "flat_pack/local_time"
+
+          document.addEventListener("DOMContentLoaded", () => {
+            initLocalTimes()
+          })
+
+          document.addEventListener("turbo:load", () => {
+            initLocalTimes()
+          })
+        JS
+
+        File.write(application_path, content + local_time_initializer)
+
+        say "\n✓ Configured local time initializer", :green
       end
 
       def configure_stimulus_controllers
@@ -329,6 +367,15 @@ module FlatPack
 
         File.write(importmap_path, content + tiptap_cdn_pins_config)
         say "\n✓ Added TipTap CDN pins to importmap (rich text editor support)", :green
+      end
+
+      def configure_local_time_importmap_pin(importmap_path, content)
+        return content if content.include?("flat_pack/local_time")
+
+        content += "\npin \"flat_pack/local_time\", to: \"flat_pack/local_time.js\", preload: false\n"
+        File.write(importmap_path, content)
+        say "\n✓ Added local time module pin to importmap", :green
+        content
       end
 
       def add_tiptap_cdn_pins(content)

@@ -81,6 +81,15 @@ module FlatPack
           assert_selector "div.overflow-hidden"
         end
 
+        def test_allows_flex_parent_to_shrink_and_scroll_messages
+          render_inline(Component.new) do
+            "Content"
+          end
+
+          assert_includes rendered_content, "relative flex min-h-0 flex-1 overflow-hidden"
+          assert_includes rendered_content, "min-h-0 flex-1 overflow-y-auto overflow-x-hidden"
+        end
+
         def test_renders_history_loader_when_enabled
           render_inline(Component.new(
             history_url: "/messages/history",
