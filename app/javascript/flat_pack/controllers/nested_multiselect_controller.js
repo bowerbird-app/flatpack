@@ -27,7 +27,6 @@ export default class extends Controller {
 
     this.element.replaceChildren(container, this.hiddenInputsElement)
     this.updateHiddenInputs()
-    this.updateParentCheckboxStates()
   }
 
   renderParent(parent) {
@@ -38,6 +37,7 @@ export default class extends Controller {
       id: parent.id,
       label: parent.label,
       checked: this.isParentChecked(parent),
+      indeterminate: this.isParentIndeterminate(parent),
       classes: "font-medium",
       onChange: (event) => {
         this.setParentSelected(parent, event.currentTarget.checked)
@@ -70,7 +70,7 @@ export default class extends Controller {
     return wrapper
   }
 
-  renderCheckboxRow({ id, label, checked, classes, onChange, dataset }) {
+  renderCheckboxRow({ id, label, checked, indeterminate = false, classes, onChange, dataset }) {
     const labelElement = document.createElement("label")
     labelElement.className = `flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 transition-colors hover:bg-[var(--surface-muted-background-color)] ${classes}`
     labelElement.htmlFor = this.checkboxId(id)
@@ -79,6 +79,7 @@ export default class extends Controller {
     checkbox.id = this.checkboxId(id)
     checkbox.type = "checkbox"
     checkbox.checked = checked
+    checkbox.indeterminate = indeterminate
     checkbox.className = "h-4 w-4 rounded border-[var(--surface-border-color)] text-[var(--color-primary)] accent-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2"
     Object.entries(dataset).forEach(([key, value]) => {
       checkbox.dataset[key] = value
@@ -149,15 +150,6 @@ export default class extends Controller {
       input.name = this.inputNameValue
       input.value = value
       this.hiddenInputsElement.appendChild(input)
-    })
-  }
-
-  updateParentCheckboxStates() {
-    this.normalizedOptions().forEach((parent) => {
-      const checkbox = this.element.querySelector(`[data-parent-id="${CSS.escape(parent.id)}"]:not([data-child-id])`)
-      if (checkbox) {
-        checkbox.indeterminate = this.isParentIndeterminate(parent)
-      }
     })
   }
 

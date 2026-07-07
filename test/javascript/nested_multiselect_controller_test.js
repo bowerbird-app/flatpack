@@ -130,6 +130,10 @@ function hiddenValues(controller) {
   return controller.hiddenInputsElement.children.map((input) => input.value)
 }
 
+function selectedValues(controller) {
+  return Array.from(controller.selectedValues())
+}
+
 test('selecting a parent selects the parent and all children for form submission', () => {
   const controller = buildController()
   const australia = checkbox(controller, { parentId: 'australia' })
@@ -137,7 +141,7 @@ test('selecting a parent selects the parent and all children for form submission
   australia.checked = true
   australia.dispatchEvent({ type: 'change' })
 
-  assert.deepEqual(controller.selectedValues(), ['australia', 'vic', 'nsw'])
+  assert.deepEqual(selectedValues(controller), ['australia', 'vic', 'nsw'])
   assert.deepEqual(hiddenValues(controller), ['australia', 'vic', 'nsw'])
   assert.equal(checkbox(controller, { parentId: 'australia' }).checked, true)
   assert.equal(checkbox(controller, { parentId: 'australia', childId: 'vic' }).checked, true)
@@ -150,7 +154,7 @@ test('deselecting a parent deselects all children', () => {
   australia.checked = false
   australia.dispatchEvent({ type: 'change' })
 
-  assert.deepEqual(controller.selectedValues(), [])
+  assert.deepEqual(selectedValues(controller), [])
   assert.deepEqual(hiddenValues(controller), [])
 })
 
@@ -164,7 +168,7 @@ test('partial child selection makes the parent indeterminate and omits parent va
   const australia = checkbox(controller, { parentId: 'australia' })
   assert.equal(australia.checked, false)
   assert.equal(australia.indeterminate, true)
-  assert.deepEqual(controller.selectedValues(), ['vic'])
+  assert.deepEqual(selectedValues(controller), ['vic'])
   assert.deepEqual(hiddenValues(controller), ['vic'])
 })
 
@@ -182,13 +186,13 @@ test('selecting all children selects the parent automatically', () => {
   const australia = checkbox(controller, { parentId: 'australia' })
   assert.equal(australia.checked, true)
   assert.equal(australia.indeterminate, false)
-  assert.deepEqual(controller.selectedValues(), ['australia', 'vic', 'nsw'])
+  assert.deepEqual(selectedValues(controller), ['australia', 'vic', 'nsw'])
 })
 
 test('initial parent selections expand to include child values', () => {
   const controller = buildController(['malaysia'])
 
-  assert.deepEqual(controller.selectedValues(), ['malaysia', 'penang', 'selangor'])
+  assert.deepEqual(selectedValues(controller), ['malaysia', 'penang', 'selangor'])
   assert.equal(checkbox(controller, { parentId: 'malaysia' }).checked, true)
   assert.equal(checkbox(controller, { parentId: 'malaysia', childId: 'penang' }).checked, true)
 })
