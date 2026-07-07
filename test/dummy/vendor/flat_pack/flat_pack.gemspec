@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
   spec.metadata["ai_contract_path"] = "docs/ai/install_contract.json"
 
   spec.files = Dir.chdir(File.expand_path(__dir__)) do
-    Dir["{app,config,lib,docs}/**/*", "MIT-LICENSE", "Rakefile", "README.md", "CHANGELOG.md"]
+    Dir["{app,config,lib,docs}/**/*", "MIT-LICENSE", "Rakefile", "README.md", "CHANGELOG.md", "SECURITY.md"]
   end
 
   spec.required_ruby_version = ">= 3.2.0"

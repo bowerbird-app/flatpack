@@ -8,12 +8,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Added plain-text `help_text:` support across FlatPack form inputs, including muted helper rendering, `aria-describedby` wiring, docs, tests, and dummy `/demo/forms` plus `/demo/inputs` examples.
 
 ### Changed
 
 ### Fixed
-- Restored TextArea help text top spacing and synchronized the install contract gem version metadata.
+
+## [0.1.115] - 2026-07-07
+
+### Added
+- Added plain-text `help_text:` support across FlatPack form inputs, including muted helper rendering, `aria-describedby` wiring, docs, tests, and dummy `/demo/forms` plus `/demo/inputs` examples.
+
+### Changed
+- Bumped the gem version to `0.1.115` and synchronized release metadata across docs, the AI install contract, and dummy app lockfiles.
+
+### Fixed
+- Kept TextArea help text margin-free while preserving helper rendering and `aria-describedby` coverage.
 
 ## [0.1.113] - 2026-07-07
 
