@@ -16,6 +16,7 @@
         name: "username",
         label: "Username",
         placeholder: "Enter your username",
+        help_text: "Use the name teammates will recognize.",
         required: true
       ) %>
 
@@ -24,6 +25,7 @@
         label: "Username (with error)",
         value: "john",
         error: "Username must be at least 5 characters",
+        help_text: "Usernames should be clear and searchable.",
         minlength: 5,
         data: {
           flat_pack_message_too_short: "Username must be at least 5 characters"
@@ -34,6 +36,7 @@
         name: "username_disabled",
         label: "Username (disabled)",
         value: "johndoe",
+        help_text: "Disabled fields keep their existing value.",
         disabled: true
       ) %>
 
@@ -42,6 +45,7 @@
         id: "headline",
         label: "Headline (with character count)",
         placeholder: "Write a short headline...",
+        help_text: "Keep this headline brief and specific.",
         character_count: true,
         min_characters: 20,
         max_characters: 60
@@ -52,6 +56,7 @@
         id: "tagline",
         label: "Tagline (count only)",
         placeholder: "Add a short tagline...",
+        help_text: "A short tagline works best for cards and previews.",
         character_count: true
       ) %>
 
@@ -60,6 +65,7 @@
         id: "api_key",
         label: "API Key (quick copy)",
         value: "sk_live_1234567890",
+        help_text: "Use quick copy for values users need to paste elsewhere.",
         quick_copy: true
       ) %>
 
@@ -68,6 +74,7 @@
         id: "embed_code",
         label: "Embed Code (quick copy)",
         value: %q(<iframe src="https://widgets.example.com/reviews" width="100%" height="320" loading="lazy"></iframe>),
+        help_text: "Copy the full snippet into the destination page.",
         quick_copy: true
       ) %>
     <% end %>
@@ -81,6 +88,7 @@
           name: &quot;username&quot;,
           label: &quot;Username&quot;,
           placeholder: &quot;Enter your username&quot;,
+          help_text: &quot;Use the name teammates will recognize.&quot;,
           required: true
         ) %&gt;
     
@@ -89,6 +97,7 @@
           label: &quot;Username (with error)&quot;,
           value: &quot;john&quot;,
           error: &quot;Username must be at least 5 characters&quot;,
+          help_text: &quot;Usernames should be clear and searchable.&quot;,
           minlength: 5,
           data: {
             flat_pack_message_too_short: &quot;Username must be at least 5 characters&quot;
@@ -99,6 +108,7 @@
           name: &quot;username_disabled&quot;,
           label: &quot;Username (disabled)&quot;,
           value: &quot;johndoe&quot;,
+          help_text: &quot;Disabled fields keep their existing value.&quot;,
           disabled: true
         ) %&gt;
 
@@ -107,6 +117,7 @@
           id: &quot;headline&quot;,
           label: &quot;Headline (with character count)&quot;,
           placeholder: &quot;Write a short headline...&quot;,
+          help_text: &quot;Keep this headline brief and specific.&quot;,
           character_count: true,
           min_characters: 20,
           max_characters: 60
@@ -117,6 +128,7 @@
           id: &quot;tagline&quot;,
           label: &quot;Tagline (count only)&quot;,
           placeholder: &quot;Add a short tagline...&quot;,
+          help_text: &quot;A short tagline works best for cards and previews.&quot;,
           character_count: true
         ) %&gt;
 
@@ -125,6 +137,7 @@
           id: &quot;api_key&quot;,
           label: &quot;API Key (quick copy)&quot;,
           value: &quot;sk_live_1234567890&quot;,
+          help_text: &quot;Use quick copy for values users need to paste elsewhere.&quot;,
           quick_copy: true
         ) %&gt;
 
@@ -133,6 +146,7 @@
           id: &quot;embed_code&quot;,
           label: &quot;Embed Code (quick copy)&quot;,
           value: %q(&lt;iframe src=&quot;https://widgets.example.com/reviews&quot; width=&quot;100%&quot; height=&quot;320&quot; loading=&quot;lazy&quot;&gt;&lt;/iframe&gt;),
+          help_text: &quot;Copy the full snippet into the destination page.&quot;,
           quick_copy: true
         ) %&gt;
         &lt;% end %&gt;

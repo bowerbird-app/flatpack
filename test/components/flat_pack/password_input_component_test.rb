@@ -30,6 +30,13 @@ module FlatPack
         assert_selector "input[type='password']"
       end
 
+      def test_renders_help_text
+        render_inline(Component.new(name: "password", id: "password", help_text: "Use at least 12 characters."))
+
+        assert_selector "p#password_help_text", text: "Use at least 12 characters."
+        assert_selector "input[aria-describedby='password_help_text']"
+      end
+
       def test_renders_toggle_button
         render_inline(Component.new(name: "password"))
 

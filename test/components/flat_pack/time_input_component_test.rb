@@ -44,6 +44,13 @@ module FlatPack
         assert_selector "input[type='time']"
       end
 
+      def test_renders_help_text
+        render_inline(Component.new(name: "starts_at", id: "starts_at", help_text: "Use 24-hour local time."))
+
+        assert_selector "p#starts_at_help_text", text: "Use 24-hour local time."
+        assert_selector "input[aria-describedby='starts_at_help_text']"
+      end
+
       def test_label_for_attribute_matches_input_id
         render_inline(Component.new(name: "starts_at", label: "Start Time", id: "starts-at-input"))
 

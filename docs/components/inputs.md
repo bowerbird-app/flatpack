@@ -20,6 +20,7 @@ Common props used across most input components:
 | `value` | String, Numeric, Date, Time, DateTime | `nil` | no | Current value. Supported value types vary by component. |
 | `placeholder` | String | `nil` | no | Placeholder text for text-like inputs. |
 | `label` | String | `nil` | no | Visible label text. |
+| `help_text` | String | `nil` | no | Optional plain-text guidance rendered below the control using the same muted text style as character counts. Only plain `String` values are accepted; HTML-like content is escaped as text. |
 | `error` | String | `nil` | no | Error message; enables invalid styling and `aria-describedby`. |
 | `disabled` | Boolean | `false` | no | Disables interaction and submission for the control. |
 | `required` | Boolean | `false` | no | Marks the control as required. |
@@ -74,6 +75,7 @@ None.
   name: "user[email]",
   label: "Email",
   placeholder: "you@example.com",
+  help_text: "Use the address where you receive account updates.",
   required: true
 ) %>
 ```
@@ -126,6 +128,7 @@ Additional focused examples:
   name: "user[country]",
   label: "Country",
   options: [["United States", "US"], ["Canada", "CA"]],
+  help_text: "Choose the country used for billing and tax rules.",
   searchable: true,
   placeholder: "Search..."
 ) %>

@@ -15,6 +15,7 @@
         label: "Opens At",
         min: "09:00",
         max: "17:00",
+        help_text: "Use 24-hour local time.",
         required: true
       ) %>
 
@@ -23,6 +24,7 @@
         label: "Break Time",
         min: "09:00",
         max: "17:00",
+        help_text: "Breaks must fall inside business hours.",
         value: "12:30"
       ) %>
 
@@ -30,6 +32,7 @@
         name: "opens_at_error",
         label: "Opens At (with error)",
         error: "Time is required",
+        help_text: "Opening time is required before publishing hours.",
         required: true,
         data: {
           flat_pack_message_required: "Time is required"
@@ -47,6 +50,7 @@
           label: &quot;Opens At&quot;,
           min: &quot;09:00&quot;,
           max: &quot;17:00&quot;,
+          help_text: &quot;Use 24-hour local time.&quot;,
           required: true
         ) %&gt;
 
@@ -55,6 +59,7 @@
           label: &quot;Break Time&quot;,
           min: &quot;09:00&quot;,
           max: &quot;17:00&quot;,
+          help_text: &quot;Breaks must fall inside business hours.&quot;,
           value: &quot;12:30&quot;
         ) %&gt;
 
@@ -62,6 +67,7 @@
           name: &quot;opens_at_error&quot;,
           label: &quot;Opens At (with error)&quot;,
           error: &quot;Time is required&quot;,
+          help_text: &quot;Opening time is required before publishing hours.&quot;,
           required: true,
           data: {
             flat_pack_message_required: &quot;Time is required&quot;

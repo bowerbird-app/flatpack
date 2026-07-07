@@ -13,7 +13,8 @@
       <%= render FlatPack::PhoneInput::Component.new(
         name: "phone",
         label: "Phone Number",
-        placeholder: "+1 (555) 123-4567"
+        placeholder: "+1 (555) 123-4567",
+        help_text: "Include a country code when collecting international numbers."
       ) %>
 
       <%= render FlatPack::PhoneInput::Component.new(
@@ -21,6 +22,7 @@
         label: "Phone (with error)",
         value: "123",
         error: "Phone number must be at least 10 digits",
+        help_text: "Enter at least 10 digits for domestic numbers.",
         minlength: 10,
         data: {
           flat_pack_message_too_short: "Phone number must be at least 10 digits"
@@ -36,7 +38,8 @@
         &lt;%= render FlatPack::PhoneInput::Component.new(
           name: &quot;phone&quot;,
           label: &quot;Phone Number&quot;,
-          placeholder: &quot;+1 (555) 123-4567&quot;
+          placeholder: &quot;+1 (555) 123-4567&quot;,
+          help_text: &quot;Include a country code when collecting international numbers.&quot;
         ) %&gt;
     
         &lt;%= render FlatPack::PhoneInput::Component.new(
@@ -44,6 +47,7 @@
           label: &quot;Phone (with error)&quot;,
           value: &quot;123&quot;,
           error: &quot;Phone number must be at least 10 digits&quot;,
+          help_text: &quot;Enter at least 10 digits for domestic numbers.&quot;,
           minlength: 10,
           data: {
             flat_pack_message_too_short: &quot;Phone number must be at least 10 digits&quot;

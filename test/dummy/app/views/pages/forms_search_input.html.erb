@@ -13,12 +13,14 @@
       <%= render FlatPack::SearchInput::Component.new(
         name: "search",
         label: "Search",
-        placeholder: "Search for anything..."
+        placeholder: "Search for anything...",
+        help_text: "Search by name, tag, or reference number."
       ) %>
 
       <%= render FlatPack::SearchInput::Component.new(
         name: "search_with_value",
         label: "Search (with value)",
+        help_text: "Prefilled searches can be edited before submitting.",
         value: "sample query"
       ) %>
     <% end %>
@@ -31,12 +33,14 @@
         &lt;%= render FlatPack::SearchInput::Component.new(
           name: &quot;search&quot;,
           label: &quot;Search&quot;,
-          placeholder: &quot;Search for anything...&quot;
+          placeholder: &quot;Search for anything...&quot;,
+          help_text: &quot;Search by name, tag, or reference number.&quot;
         ) %&gt;
     
         &lt;%= render FlatPack::SearchInput::Component.new(
           name: &quot;search_with_value&quot;,
           label: &quot;Search (with value)&quot;,
+          help_text: &quot;Prefilled searches can be edited before submitting.&quot;,
           value: &quot;sample query&quot;
         ) %&gt;
         &lt;% end %&gt;

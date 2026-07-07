@@ -143,6 +143,7 @@
         name: "description",
         label: "Description",
         placeholder: "Enter a detailed description...",
+        help_text: "Plain text help appears below the field and above validation messages.",
         rows: 3
       ) %>
 
@@ -152,6 +153,7 @@
         label: "Project Summary (with character count)",
         placeholder: "Write a short summary...",
         rows: 3,
+        help_text: "Summaries should stay within the configured length range.",
         character_count: true,
         min_characters: 30,
         max_characters: 140
@@ -163,6 +165,7 @@
         label: "Release Notes (quick copy)",
         value: "Fixed onboarding bug\nAdded quick copy to text area",
         rows: 3,
+        help_text: "Quick copy is useful for reusable notes and snippets.",
         quick_copy: true
       ) %>
     <% end %>
@@ -176,6 +179,7 @@
           name: &quot;description&quot;,
           label: &quot;Description&quot;,
           placeholder: &quot;Enter a detailed description...&quot;,
+          help_text: &quot;Plain text help appears below the field and above validation messages.&quot;,
           rows: 3
         ) %&gt;
     
@@ -185,6 +189,7 @@
           label: &quot;Project Summary (with character count)&quot;,
           placeholder: &quot;Write a short summary...&quot;,
           rows: 3,
+          help_text: &quot;Summaries should stay within the configured length range.&quot;,
           character_count: true,
           min_characters: 30,
           max_characters: 140
@@ -196,6 +201,7 @@
           label: &quot;Release Notes (quick copy)&quot;,
           value: &quot;Fixed onboarding bug\nAdded quick copy to text area&quot;,
           rows: 3,
+          help_text: &quot;Quick copy is useful for reusable notes and snippets.&quot;,
           quick_copy: true
         ) %&gt;
         &lt;% end %&gt;
@@ -224,6 +230,7 @@
         label: "Comment",
         placeholder: "Write your comment...",
         value: minimal_rich_text_value,
+        help_text: "Use this editor for short formatted comments.",
         rich_text: true,
         rich_text_options: {
           preset: :minimal,
@@ -239,6 +246,7 @@
         name: &quot;comment[body]&quot;,
         label: &quot;Comment&quot;,
         placeholder: &quot;Write your comment...&quot;,
+        help_text: &quot;Use this editor for short formatted comments.&quot;,
         rich_text: true,
         rich_text_options: {
           preset: :minimal,
@@ -264,6 +272,7 @@
         label: "Post Body",
         placeholder: "Start writing...",
         value: standard_rich_text_value,
+        help_text: "Use headings and lists to structure longer content.",
         required: true,
         rich_text: true,
         rich_text_options: {
@@ -280,6 +289,7 @@
       &lt;%= render FlatPack::TextArea::Component.new(
         name: &quot;post[body]&quot;,
         label: &quot;Post Body&quot;,
+        help_text: &quot;Use headings and lists to structure longer content.&quot;,
         required: true,
         rich_text: true,
         rich_text_options: {
@@ -312,6 +322,7 @@
         id: "gallery-body",
         label: "Gallery notes",
         value: addon_image_rich_text_value,
+        help_text: "Image support is provided by a registered TipTap addon.",
         rich_text: true,
         rich_text_options: {
           preset: :minimal,
@@ -343,6 +354,7 @@
       // view
       &lt;%= render FlatPack::TextArea::Component.new(
         name: &quot;gallery[body]&quot;,
+        help_text: &quot;Image support is provided by a registered TipTap addon.&quot;,
         rich_text: true,
         rich_text_options: {
           preset: :minimal,
@@ -404,6 +416,7 @@
         id: "document-body",
         label: "Document",
         value: full_rich_text_value,
+        help_text: "The full preset enables the broadest editing toolbar.",
         rich_text: true,
         rich_text_options: {
           preset: :full,
@@ -419,6 +432,7 @@
       &lt;%= render FlatPack::TextArea::Component.new(
         name: &quot;document[body]&quot;,
         label: &quot;Document&quot;,
+        help_text: &quot;The full preset enables the broadest editing toolbar.&quot;,
         rich_text: true,
         rich_text_options: {
           preset: :full,
@@ -445,6 +459,7 @@
         label: "Note",
         placeholder: "Select text to see the bubble menu...",
         value: bubble_menu_rich_text_value,
+        help_text: "Formatting actions appear when text is selected.",
         rich_text: true,
         rich_text_options: {
           toolbar: :none,
@@ -460,6 +475,7 @@
         name: &quot;note[body]&quot;,
         label: &quot;Note&quot;,
         placeholder: &quot;Select text to see the bubble menu...&quot;,
+        help_text: &quot;Formatting actions appear when text is selected.&quot;,
         rich_text: true,
         rich_text_options: {
           toolbar: :none,
@@ -486,6 +502,7 @@
         value: standard_rich_text_value,
         rich_text: true,
         error: "Review body can't be blank",
+        help_text: "Review text is required before the form can be submitted.",
         required: true,
         data: {
           flat_pack_message_required: "Review body can't be blank"
@@ -501,6 +518,7 @@
         label: &quot;Review&quot;,
         rich_text: true,
         error: &quot;Review body can't be blank&quot;,
+        help_text: &quot;Review text is required before the form can be submitted.&quot;,
         required: true,
         data: {
           flat_pack_message_required: &quot;Review body can't be blank&quot;
@@ -525,6 +543,7 @@
         label: "Archived Content",
         value: standard_rich_text_value,
         rich_text: true,
+        help_text: "Archived content is read-only in this state.",
         rich_text_options: {
           preset: :content,
           toolbar: :standard
@@ -541,6 +560,7 @@
         label: &quot;Archived Content&quot;,
         value: '{"type":"doc",...}',
         rich_text: true,
+        help_text: &quot;Archived content is read-only in this state.&quot;,
         disabled: true
       ) %&gt;
     CODE
@@ -562,6 +582,7 @@
         label: "Page Content",
         value: html_format_rich_text_value,
         rich_text: true,
+        help_text: "HTML output should be sanitized before display.",
         rich_text_options: {
           format: :html,
           preset: :content,
@@ -577,6 +598,7 @@
         name: &quot;page[content]&quot;,
         label: &quot;Page Content&quot;,
         rich_text: true,
+        help_text: &quot;HTML output should be sanitized before display.&quot;,
         rich_text_options: {
           format: :html,
           preset: :content,
@@ -650,6 +672,7 @@
             placeholder: "Write something and click Submit to see the submitted HTML value…",
             value: html_format_rich_text_value,
             rich_text: true,
+            help_text: "Submit to inspect the synced HTML value.",
             rich_text_options: {
               preset: :content,
               toolbar: :standard,
@@ -684,6 +707,7 @@
             placeholder: "Write something and click Submit to see the TipTap JSON document…",
             value: json_format_rich_text_value,
             rich_text: true,
+            help_text: "Submit to inspect the synced TipTap JSON document.",
             rich_text_options: {
               preset: :content,
               toolbar: :standard,
@@ -721,6 +745,7 @@
         &lt;%= render FlatPack::TextArea::Component.new(
           name: "article[body]",
           rich_text: true,
+          help_text: "Submit to inspect the synced HTML value.",
           rich_text_options: { preset: :content, format: :html }
         ) %&gt;
         &lt;%= render FlatPack::Button::Component.new(text: "Submit", type: "submit", style: :primary) %&gt;

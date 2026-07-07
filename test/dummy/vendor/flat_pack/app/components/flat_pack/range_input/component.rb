@@ -11,6 +11,7 @@ module FlatPack
         max: 100,
         step: 1,
         label: nil,
+        help_text: nil,
         show_value: true,
         disabled: false,
         **system_arguments
@@ -23,6 +24,7 @@ module FlatPack
         @max = max
         @step = step
         @label = label
+        @help_text = normalize_help_text!(help_text)
         @show_value = show_value
         @disabled = disabled
 
@@ -34,7 +36,8 @@ module FlatPack
         content_tag(:div, **container_attributes) do
           safe_join([
             render_label,
-            render_input_wrapper
+            render_input_wrapper,
+            render_help_text
           ].compact)
         end
       end
@@ -100,7 +103,8 @@ module FlatPack
             label: @label || "Range input",
             valuenow: @value,
             valuemin: @min,
-            valuemax: @max
+            valuemax: @max,
+            describedby: (@help_text.present? ? help_text_id : nil)
           }
         }
 
@@ -123,6 +127,10 @@ module FlatPack
 
       def error_id
         "#{@id.to_s.gsub(/[^a-zA-Z0-9_-]/, "_")}_error"
+      end
+
+      def help_text_id
+        "#{@id.to_s.gsub(/[^a-zA-Z0-9_-]/, "_")}_help_text"
       end
     end
   end

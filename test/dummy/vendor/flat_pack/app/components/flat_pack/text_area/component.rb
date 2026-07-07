@@ -15,6 +15,7 @@ module FlatPack
         required: false,
         label: nil,
         error: nil,
+        help_text: nil,
         rows: 3,
         autogrow: true,
         submit_on_enter: false,
@@ -35,6 +36,7 @@ module FlatPack
         @required = required
         @label = label
         @error = error
+        @help_text = normalize_help_text!(help_text)
         @rows = rows
         @autogrow = autogrow
         @submit_on_enter = submit_on_enter
@@ -58,6 +60,7 @@ module FlatPack
             safe_join([
               render_label,
               render_rich_text_editor_surface,
+              render_help_text,
               render_rich_text_character_count,
               render_error
             ].compact)
@@ -65,6 +68,7 @@ module FlatPack
             safe_join([
               render_label,
               render_textarea,
+              render_help_text,
               render_character_count,
               render_error
             ].compact)
@@ -109,7 +113,9 @@ module FlatPack
           }.compact
         }
 
-        attrs[:aria] = {invalid: "true", describedby: error_id} if @error
+        describedby = describedby_tokens((help_text_id if @help_text), (error_id if @error))
+        attrs[:aria] = describedby.present? ? {describedby: describedby} : {}
+        attrs[:aria][:invalid] = "true" if @error
 
         merge_attributes(**apply_default_validation(attrs.compact, error_id: error_id, has_error: @error.present?))
       end
@@ -274,6 +280,7 @@ module FlatPack
           flat_pack__tiptap_required_value: @required,
           flat_pack__tiptap_has_error_value: @error.present?,
           flat_pack__tiptap_error_id_value: @error.present? ? error_id : nil,
+          flat_pack__tiptap_help_text_id_value: @help_text.present? ? help_text_id : nil,
           flat_pack__tiptap_value_value: (@value || "").to_s
         }.compact
 
@@ -341,6 +348,10 @@ module FlatPack
         "mt-1 text-xs text-[var(--surface-muted-content-color)]"
       end
 
+      def help_text_classes
+        "text-xs text-[var(--surface-muted-content-color)]"
+      end
+
       def quick_copy_wrapper_classes
         "relative"
       end
@@ -377,6 +388,10 @@ module FlatPack
 
       def character_count_id
         "#{field_id}_character_count"
+      end
+
+      def help_text_id
+        "#{field_id}_help_text"
       end
 
       def character_count_text

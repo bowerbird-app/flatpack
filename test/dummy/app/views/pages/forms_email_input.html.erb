@@ -14,6 +14,7 @@
         name: "email",
         label: "Email Address",
         placeholder: "you@example.com",
+        help_text: "We only use this for account notifications.",
         required: true,
         data: {
           flat_pack_message_type_mismatch: "Enter a valid email address."
@@ -24,6 +25,7 @@
         name: "email_error",
         label: "Email (with error)",
         value: "invalid-email",
+        help_text: "Email addresses must include a valid domain.",
         error: "Please enter a valid email address"
       ) %>
     <% end %>
@@ -37,6 +39,7 @@
           name: &quot;email&quot;,
           label: &quot;Email Address&quot;,
           placeholder: &quot;you@example.com&quot;,
+          help_text: &quot;We only use this for account notifications.&quot;,
           required: true,
           data: {
             flat_pack_message_type_mismatch: &quot;Enter a valid email address.&quot;
@@ -47,6 +50,7 @@
           name: &quot;email_error&quot;,
           label: &quot;Email (with error)&quot;,
           value: &quot;invalid-email&quot;,
+          help_text: &quot;Email addresses must include a valid domain.&quot;,
           error: &quot;Please enter a valid email address&quot;
         ) %&gt;
         &lt;% end %&gt;

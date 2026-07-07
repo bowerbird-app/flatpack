@@ -58,6 +58,27 @@ module FlatPack
         assert_selector "label", text: "Choose a color"
       end
 
+      def test_renders_help_text_for_native_select
+        render_inline(Component.new(name: "color", options: ["Red", "Blue"], id: "color", help_text: "Choose one color."))
+
+        assert_selector "p#color_help_text", text: "Choose one color."
+        assert_selector "select[aria-describedby='color_help_text']"
+      end
+
+      def test_renders_help_text_for_searchable_select
+        render_inline(Component.new(name: "color", options: ["Red", "Blue"], id: "color", searchable: true, help_text: "Search and choose one color."))
+
+        assert_selector "p#color_help_text", text: "Search and choose one color."
+        assert_selector "button[aria-describedby='color_help_text']"
+        assert_selector "input[type='hidden'][aria-describedby='color_help_text']", visible: :all
+      end
+
+      def test_raises_error_with_non_text_help_text
+        assert_raises(ArgumentError) do
+          Component.new(name: "color", options: ["Red"], help_text: [:not_text])
+        end
+      end
+
       def test_renders_with_placeholder
         render_inline(Component.new(name: "color", options: ["Red", "Blue"], placeholder: "Pick a color"))
 

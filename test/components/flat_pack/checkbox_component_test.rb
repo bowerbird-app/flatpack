@@ -36,6 +36,13 @@ module FlatPack
         assert_selector "input[type='checkbox']"
       end
 
+      def test_renders_help_text
+        render_inline(Component.new(name: "agree", id: "agree", help_text: "Required before creating your account."))
+
+        assert_selector "p#agree_help_text", text: "Required before creating your account."
+        assert_selector "input[aria-describedby='agree_help_text']"
+      end
+
       def test_label_for_attribute_matches_input_id
         render_inline(Component.new(name: "agree", label: "I agree", id: "agree-checkbox"))
 

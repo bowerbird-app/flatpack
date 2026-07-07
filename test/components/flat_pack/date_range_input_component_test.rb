@@ -85,6 +85,18 @@ module FlatPack
         assert_selector "label", text: "Date Range"
       end
 
+      def test_renders_help_text
+        render_inline(Component.new(
+          start_name: "start_date",
+          end_name: "end_date",
+          id: "period",
+          help_text: "Select the inclusive reporting period."
+        ))
+
+        assert_selector "p#period_help_text", text: "Select the inclusive reporting period."
+        assert_selector "input[type='text'][aria-describedby='period_help_text']"
+      end
+
       def test_renders_with_error
         render_inline(Component.new(
           start_name: "start_date",

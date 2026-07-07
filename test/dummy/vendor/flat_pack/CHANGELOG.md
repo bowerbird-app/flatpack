@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added plain-text `help_text:` support across FlatPack form inputs, including muted helper rendering, `aria-describedby` wiring, docs, tests, and dummy `/demo/forms` plus `/demo/inputs` examples.
 
 ### Changed
 

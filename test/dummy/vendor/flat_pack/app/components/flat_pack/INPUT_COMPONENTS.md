@@ -152,6 +152,7 @@ All input components accept these parameters:
 - `value:` (String) - Initial value
 - `placeholder:` (String) - Placeholder text
 - `label:` (String) - Label text
+- `help_text:` (String) - Optional plain-text guidance rendered below the control with muted character-count styling. Non-string and HTML-safe string values raise `ArgumentError`; HTML-like plain strings are escaped as text.
 - `error:` (String) - Error message to display
 - `disabled:` (Boolean, default: false) - Disable the input
 - `required:` (Boolean, default: false) - Mark as required

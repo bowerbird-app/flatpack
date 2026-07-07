@@ -28,6 +28,40 @@ module FlatPack
       )
     end
 
+    def normalize_help_text!(help_text)
+      validate_text_option!(help_text, name: :help_text)
+      help_text.presence
+    end
+
+    def validate_text_option!(value, name:)
+      return if value.nil? || (value.is_a?(String) && !value_html_safe?(value))
+
+      raise ArgumentError, "#{name} must be a String"
+    end
+
+    def render_help_text(text = @help_text, id: help_text_id)
+      return unless text.present?
+
+      content_tag(:p, ERB::Util.html_escape(text.to_s), id: id, class: help_text_classes)
+    end
+
+    def value_html_safe?(value)
+      value.respond_to?(:html_safe?) && value.html_safe?
+    end
+
+    def help_text_classes
+      "mt-1 text-xs text-[var(--surface-muted-content-color)]"
+    end
+
+    def describedby_attributes(*ids)
+      describedby = describedby_tokens(*ids)
+      describedby.present? ? {describedby: describedby} : {}
+    end
+
+    def describedby_tokens(*ids)
+      ids.compact.flat_map { |id| id.to_s.split }.reject(&:blank?).uniq.join(" ")
+    end
+
     # Extract and merge classes using tailwind_merge
     def classes(*additional_classes)
       base_classes = @system_arguments.delete(:class) || ""

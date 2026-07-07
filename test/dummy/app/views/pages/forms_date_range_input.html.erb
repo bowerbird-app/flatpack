@@ -17,7 +17,8 @@
         min: (Date.today - 365).to_s,
         max: Date.today.to_s,
         start_value: (Date.today - 30).to_s,
-        end_value: Date.today.to_s
+        end_value: Date.today.to_s,
+        help_text: "Select the inclusive reporting window for the dashboard."
       ) %>
 
       <%= render FlatPack::DateRangeInput::Component.new(
@@ -26,6 +27,7 @@
         label: "Compare Period",
         placeholder: "Choose comparison window",
         min: (Date.today - 730).to_s,
+        help_text: "Use a matching period to compare performance trends.",
         max: Date.today.to_s
       ) %>
     <% end %>
@@ -42,7 +44,8 @@
           min: (Date.today - 365).to_s,
           max: Date.today.to_s,
           start_value: (Date.today - 30).to_s,
-          end_value: Date.today.to_s
+          end_value: Date.today.to_s,
+          help_text: &quot;Select the inclusive reporting window for the dashboard.&quot;
         ) %&gt;
 
         &lt;%= render FlatPack::DateRangeInput::Component.new(
@@ -51,6 +54,7 @@
           label: &quot;Compare Period&quot;,
           placeholder: &quot;Choose comparison window&quot;,
           min: (Date.today - 730).to_s,
+          help_text: &quot;Use a matching period to compare performance trends.&quot;,
           max: Date.today.to_s
         ) %&gt;
         &lt;% end %&gt;

@@ -12,18 +12,21 @@
     <% card.body(class: "space-y-[var(--stack-gap-md)]") do %>
       <%= render FlatPack::Switch::Component.new(
         name: "feature_toggle",
-        label: "Enable feature"
+        label: "Enable feature",
+        help_text: "Turn this on to expose the feature to the current workspace."
       ) %>
 
       <%= render FlatPack::Switch::Component.new(
         name: "autosave_toggle",
         label: "Auto-save",
+        help_text: "Auto-save keeps changes without a manual submit.",
         checked: true
       ) %>
 
       <%= render FlatPack::Switch::Component.new(
         name: "disabled_toggle",
         label: "Disabled toggle",
+        help_text: "Disabled toggles show unavailable settings.",
         disabled: true
       ) %>
     <% end %>
@@ -35,18 +38,21 @@
         &lt;% card.body do %&gt;
         &lt;%= render FlatPack::Switch::Component.new(
           name: &quot;feature_toggle&quot;,
-          label: &quot;Enable feature&quot;
+          label: &quot;Enable feature&quot;,
+          help_text: &quot;Turn this on to expose the feature to the current workspace.&quot;
         ) %&gt;
     
         &lt;%= render FlatPack::Switch::Component.new(
           name: &quot;autosave_toggle&quot;,
           label: &quot;Auto-save&quot;,
+          help_text: &quot;Auto-save keeps changes without a manual submit.&quot;,
           checked: true
         ) %&gt;
     
         &lt;%= render FlatPack::Switch::Component.new(
           name: &quot;disabled_toggle&quot;,
           label: &quot;Disabled toggle&quot;,
+          help_text: &quot;Disabled toggles show unavailable settings.&quot;,
           disabled: true
         ) %&gt;
         &lt;% end %&gt;

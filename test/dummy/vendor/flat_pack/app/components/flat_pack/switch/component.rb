@@ -17,6 +17,7 @@ module FlatPack
         checked: false,
         label: nil,
         error: nil,
+        help_text: nil,
         disabled: false,
         required: false,
         size: :md,
@@ -27,6 +28,7 @@ module FlatPack
         @checked = checked
         @label = label
         @error = error
+        @help_text = normalize_help_text!(help_text)
         @disabled = disabled
         @required = required
         @size = size.to_sym
@@ -39,6 +41,7 @@ module FlatPack
         content_tag(:div, class: wrapper_classes) do
           safe_join([
             render_switch_and_label,
+            render_help_text,
             render_error
           ].compact)
         end
@@ -100,6 +103,10 @@ module FlatPack
           class: "sr-only peer"
         }
 
+        describedby = describedby_tokens((help_text_id if @help_text), (error_id if @error))
+        attrs[:aria] = describedby.present? ? {describedby: describedby} : {}
+        attrs[:aria][:invalid] = "true" if @error
+
         merge_attributes(**apply_default_validation(attrs, error_id: error_id, has_error: @error.present?))
       end
 
@@ -151,6 +158,10 @@ module FlatPack
 
       def error_id
         "#{@name.to_s.gsub(/[^a-zA-Z0-9_-]/, "_")}_error"
+      end
+
+      def help_text_id
+        "#{@name.to_s.gsub(/[^a-zA-Z0-9_-]/, "_")}_help_text"
       end
     end
   end

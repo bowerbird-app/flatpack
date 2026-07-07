@@ -18,6 +18,13 @@ module FlatPack
         assert_selector "input[type='file']"
       end
 
+      def test_renders_help_text
+        render_inline(Component.new(name: "document", id: "document", help_text: "Upload a PDF smaller than 5 MB."))
+
+        assert_selector "p#document_help_text", text: "Upload a PDF smaller than 5 MB."
+        assert_selector "input[aria-describedby='document_help_text']", visible: :all
+      end
+
       def test_label_for_attribute_matches_input_id
         render_inline(Component.new(name: "document", label: "Document", id: "doc-input"))
 
