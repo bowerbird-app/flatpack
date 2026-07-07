@@ -1888,7 +1888,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
 
 /* Rounded theme palette */
 [data-theme="rounded"] {
-  --color-primary: #333;
+  --color-primary: oklch(0.3211 0 0);
   --color-primary-hover: #1f1f1f;
   --color-primary-text: #fff;
 

@@ -101,3 +101,13 @@ test('apply infers preset label for matching calendar-selected range', () => {
   assert.equal(controller.committedPresetKey, 'yesterday')
   assert.equal(controller.triggerTarget.value, 'Yesterday')
 })
+
+test('computePresetRange returns rolling 4-week range for last_4_weeks', () => {
+  const controller = buildController()
+  controller.today = new Date(2026, 5, 18)
+
+  const range = controller.computePresetRange('last_4_weeks')
+
+  assert.equal(range.start.getTime(), new Date(2026, 4, 22).getTime())
+  assert.equal(range.end.getTime(), new Date(2026, 5, 18).getTime())
+})
