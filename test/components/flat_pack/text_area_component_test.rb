@@ -34,7 +34,7 @@ module FlatPack
         render_inline(Component.new(name: "description", id: "description", help_text: "Keep the description under two paragraphs."))
 
         assert_selector "p#description_help_text", text: "Keep the description under two paragraphs."
-        assert_includes page.native.to_html, "mt-0.5 text-xs text-[var(--surface-muted-content-color)]"
+        assert_includes page.native.to_html, "class=\"text-xs text-[var(--surface-muted-content-color)]\""
         assert_selector "textarea[aria-describedby='description_help_text']"
       end
 

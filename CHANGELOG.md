@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 ### Fixed
+- Restored TextArea help text top spacing and synchronized the install contract gem version metadata.
 
 ## [0.1.113] - 2026-07-07
 
