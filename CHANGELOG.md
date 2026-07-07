@@ -10,9 +10,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+
+### Fixed
+
+## [0.1.109] - 2026-07-07
+
+### Added
+
+### Changed
 - Updated `FlatPack::DateRangeInput::Component` and custom picker quick presets to include `Last 4 weeks` between `Last week` and `This month`, with matching Stimulus date-range computation.
 
 ### Fixed
+- Updated `FlatPack::Search::Component` live-results dropdown wrapper to include `overflow-hidden`, preserving rounded-corner clipping for dropdown content.
 
 ## [0.1.107] - 2026-07-07
 

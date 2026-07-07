@@ -203,6 +203,12 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
   placeholder: "Search..."
 ) %>
 
+# Live search dropdown (JSON endpoint)
+<%= render FlatPack::Search::Component.new(
+  search_url: search_results_path,
+  placeholder: "Search components..."
+) %>
+
 # Text Area with auto-expand
 <%= render FlatPack::TextArea::Component.new(
   name: "description",
