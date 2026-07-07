@@ -207,8 +207,23 @@ export default class extends Controller {
     const context = document.createElement("canvas").getContext("2d")
     if (!context) return color
 
+    if (typeof context.fillRect !== "function" || typeof context.getImageData !== "function") {
+      context.fillStyle = color
+      return context.fillStyle || color
+    }
+
+    context.clearRect(0, 0, 1, 1)
     context.fillStyle = color
-    return context.fillStyle || color
+    context.fillRect(0, 0, 1, 1)
+
+    const { data } = context.getImageData(0, 0, 1, 1)
+    const [red, green, blue, alpha] = data
+    if (alpha === 255) {
+      return `rgb(${red}, ${green}, ${blue})`
+    }
+
+    const normalizedAlpha = Number((alpha / 255).toFixed(3))
+    return `rgba(${red}, ${green}, ${blue}, ${normalizedAlpha})`
   }
 
   geoSeriesName() {

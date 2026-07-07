@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.107] - 2026-07-07
+
+### Added
+
+### Changed
+
+### Fixed
+- Updated Rounded theme primary token to `oklch(0.3211 0 0)`.
+- Fixed `FlatPack::Chart::Component` GeoChart rendering so Google GeoChart receives normalized RGB/RGBA color strings instead of unsupported modern CSS color syntax (for example OKLCH/color-mix), preventing invalid color errors in theme-driven demos.
+
 ## [0.1.106] - 2026-06-18
 
 ### Added

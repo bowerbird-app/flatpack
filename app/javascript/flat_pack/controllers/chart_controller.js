@@ -94,6 +94,7 @@ export default class extends Controller {
 
   renderGeoChart(google) {
     const { regionLabel = "Region", valueLabel = this.geoSeriesName(), ...chartOptions } = this.optionsValue
+    const resolvedChartOptions = this.resolveGeoChartColorOptions(chartOptions)
     const data = google.visualization.arrayToDataTable([
       [regionLabel, valueLabel],
       ...this.geoRows()
@@ -102,7 +103,127 @@ export default class extends Controller {
     this.element.style.height = `${this.heightValue}px`
     this.element.style.width = "100%"
     this.chart = new google.visualization.GeoChart(this.element)
-    this.chart.draw(data, chartOptions)
+    this.chart.draw(data, resolvedChartOptions)
+  }
+
+  resolveGeoChartColorOptions(options) {
+    const resolvedOptions = { ...options }
+
+    if (resolvedOptions.colorAxis?.colors) {
+      resolvedOptions.colorAxis = {
+        ...resolvedOptions.colorAxis,
+        colors: resolvedOptions.colorAxis.colors.map((color) => this.resolveGeoChartColor(color))
+      }
+    }
+
+    const colorOptionKeys = ["datalessRegionColor", "defaultColor"]
+    colorOptionKeys.forEach((key) => {
+      if (resolvedOptions[key]) {
+        resolvedOptions[key] = this.resolveGeoChartColor(resolvedOptions[key])
+      }
+    })
+
+    if (resolvedOptions.backgroundColor?.fill) {
+      resolvedOptions.backgroundColor = {
+        ...resolvedOptions.backgroundColor,
+        fill: this.resolveGeoChartColor(resolvedOptions.backgroundColor.fill)
+      }
+    }
+
+    return resolvedOptions
+  }
+
+  resolveGeoChartColor(color) {
+    if (typeof color !== "string") return color
+
+    const primaryOpacityMatch = color.match(/^color-mix\(in oklab, var\(--color-primary\) (\d+)%, transparent\)$/)
+    if (primaryOpacityMatch) {
+      return this.primaryColorShade(Number(primaryOpacityMatch[1]) / 100)
+    }
+
+    return this.computedColor(color)
+  }
+
+  primaryColorShade(opacity) {
+    const primaryColor = this.computedColor("var(--color-primary)")
+    const primaryChannels = this.colorChannels(primaryColor)
+    if (!primaryChannels) return primaryColor
+
+    const backgroundColor = this.computedColor("var(--surface-background-color)")
+    const backgroundChannels = this.colorChannels(backgroundColor) || { red: 255, green: 255, blue: 255 }
+
+    return this.rgbColor({
+      red: this.blendColorChannel(primaryChannels.red, backgroundChannels.red, opacity),
+      green: this.blendColorChannel(primaryChannels.green, backgroundChannels.green, opacity),
+      blue: this.blendColorChannel(primaryChannels.blue, backgroundChannels.blue, opacity)
+    })
+  }
+
+  colorChannels(color) {
+    const rgbChannels = color.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)$/)
+    if (rgbChannels) {
+      return {
+        red: Number(rgbChannels[1]),
+        green: Number(rgbChannels[2]),
+        blue: Number(rgbChannels[3])
+      }
+    }
+
+    const hexChannels = color.match(/^#([\da-f]{3}|[\da-f]{6})$/i)
+    if (!hexChannels) return null
+
+    const hex = hexChannels[1].length === 3
+      ? hexChannels[1].split("").map((channel) => `${channel}${channel}`).join("")
+      : hexChannels[1]
+
+    return {
+      red: parseInt(hex.slice(0, 2), 16),
+      green: parseInt(hex.slice(2, 4), 16),
+      blue: parseInt(hex.slice(4, 6), 16)
+    }
+  }
+
+  blendColorChannel(foreground, background, opacity) {
+    return Math.round((foreground * opacity) + (background * (1 - opacity)))
+  }
+
+  rgbColor({ red, green, blue }) {
+    return `rgb(${red}, ${green}, ${blue})`
+  }
+
+  computedColor(color) {
+    const colorProbe = document.createElement("span")
+    colorProbe.style.color = color
+    colorProbe.style.display = "none"
+    this.element.appendChild(colorProbe)
+
+    const computedColor = window.getComputedStyle(colorProbe).color || color
+    colorProbe.remove()
+
+    return this.normalizedCanvasColor(computedColor)
+  }
+
+  normalizedCanvasColor(color) {
+    const context = document.createElement("canvas").getContext("2d")
+    if (!context) return color
+
+    if (typeof context.fillRect !== "function" || typeof context.getImageData !== "function") {
+      context.fillStyle = color
+      return context.fillStyle || color
+    }
+
+    context.clearRect(0, 0, 1, 1)
+    context.fillStyle = color
+    context.fillRect(0, 0, 1, 1)
+
+    const { data } = context.getImageData(0, 0, 1, 1)
+    const [red, green, blue, alpha] = data
+    if (alpha === 255) {
+      return `rgb(${red}, ${green}, ${blue})`
+    }
+
+    const normalizedAlpha = Number((alpha / 255).toFixed(3))
+    return `rgba(${red}, ${green}, ${blue}, ${normalizedAlpha})`
   }
 
   geoSeriesName() {
