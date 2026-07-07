@@ -42,6 +42,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.109] - 2026-07-07
+
+### Added
+
+### Changed
+- Updated `FlatPack::DateRangeInput::Component` and custom picker quick presets to include `Last 4 weeks` between `Last week` and `This month`, with matching Stimulus date-range computation.
+
+### Fixed
+- Updated `FlatPack::Search::Component` live-results dropdown wrapper to include `overflow-hidden`, preserving rounded-corner clipping for dropdown content.
+- Updated Rounded theme primary token to `oklch(0.3211 0 0)`.
+- Fixed `FlatPack::Chart::Component` GeoChart rendering so Google GeoChart receives normalized RGB/RGBA color strings instead of unsupported modern CSS color syntax (for example OKLCH/color-mix), preventing invalid color errors in theme-driven demos.
+
 ## [0.1.108] - 2026-07-03
 
 ### Added

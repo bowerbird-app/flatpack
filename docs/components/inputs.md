@@ -202,7 +202,7 @@ or:
 ) %>
 ```
 
-In custom picker mode, both `DateInput` (`picker: :flatpack_date_picker`) and `DateRangeInput` provide quick presets: `Today`, `Yesterday`, `Last 3 days`, `This week`, `Last week`, `This month`, `Last month`, `This year`, `Last year`.
+In custom picker mode, both `DateInput` (`picker: :flatpack_date_picker`) and `DateRangeInput` provide quick presets: `Today`, `Yesterday`, `Last 3 days`, `This week`, `Last week`, `Last 4 weeks`, `This month`, `Last month`, `This year`, `Last year`.
 The popup renders as side-by-side quick ranges + calendar on larger screens and stacks vertically on smaller screens.
 
 ## Rich Text Mode

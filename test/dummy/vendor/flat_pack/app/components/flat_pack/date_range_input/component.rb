@@ -434,6 +434,8 @@ module FlatPack
           week_end = this_week_start - 1.day
           week_start = start_of_week(week_end)
           {start: week_start.iso8601, end: week_end.iso8601}
+        when "last_4_weeks"
+          {start: (today - 27.days).iso8601, end: today.iso8601}
         when "this_month"
           month_start = Date.new(today.year, today.month, 1)
           {start: month_start.iso8601, end: today.iso8601}
@@ -463,6 +465,7 @@ module FlatPack
           {key: "last_3_days", label: "Last 3 days"},
           {key: "this_week", label: "This week"},
           {key: "last_week", label: "Last week"},
+          {key: "last_4_weeks", label: "Last 4 weeks"},
           {key: "this_month", label: "This month"},
           {key: "last_month", label: "Last month"},
           {key: "this_year", label: "This year"},

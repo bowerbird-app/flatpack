@@ -24,14 +24,37 @@ function loadChartController(overrides = {}) {
 
 function buildController() {
   const createdElements = []
+  const canvasContext = {
+    fillStyle: '',
+    clearRect() {},
+    fillRect() {},
+    getImageData() {
+      if (this.fillStyle === 'oklch(0.3211 0 0)') {
+        return { data: [52, 52, 52, 255] }
+      }
+
+      if (this.fillStyle === 'transparent') {
+        return { data: [0, 0, 0, 0] }
+      }
+
+      const rgbMatch = this.fillStyle.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)$/)
+      if (rgbMatch) {
+        const alpha = rgbMatch[4] ? Math.round(Number(rgbMatch[4]) * 255) : 255
+        return {
+          data: [Number(rgbMatch[1]), Number(rgbMatch[2]), Number(rgbMatch[3]), alpha]
+        }
+      }
+
+      return { data: [20, 40, 60, 255] }
+    }
+  }
+
   const document = {
     createElement(tagName) {
       if (tagName === 'canvas') {
         return {
           getContext() {
-            return {
-              fillStyle: ''
-            }
+            return canvasContext
           }
         }
       }
@@ -126,4 +149,11 @@ test('geoRows accepts country code region values', () => {
     ['MY', 44],
     ['TH', 39]
   ]))
+})
+
+test('normalizedCanvasColor returns rgb-compatible color strings', () => {
+  const { controller } = buildController()
+
+  assert.equal(controller.normalizedCanvasColor('oklch(0.3211 0 0)'), 'rgb(52, 52, 52)')
+  assert.equal(controller.normalizedCanvasColor('transparent'), 'rgba(0, 0, 0, 0)')
 })

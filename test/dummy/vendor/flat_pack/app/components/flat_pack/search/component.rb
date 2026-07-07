@@ -220,7 +220,8 @@ module FlatPack
             "border",
             "border-[var(--search-dropdown-border-color)]",
             "bg-[var(--search-dropdown-background-color)]",
-            "shadow-sm"
+            "shadow-sm",
+            "overflow-hidden"
           ),
           data: {
             flat_pack__search_target: "dropdown"

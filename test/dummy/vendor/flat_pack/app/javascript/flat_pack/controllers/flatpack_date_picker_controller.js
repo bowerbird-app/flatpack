@@ -700,6 +700,8 @@ export default class extends Controller {
         const start = this.startOfWeek(end)
         return { start, end }
       }
+      case "last_4_weeks":
+        return { start: this.addDays(today, -27), end: today }
       case "this_month": {
         const start = new Date(today.getFullYear(), today.getMonth(), 1)
         return { start, end: today }
