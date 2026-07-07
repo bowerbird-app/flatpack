@@ -16,6 +16,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/forms/text_area
     /demo/forms/number_input
     /demo/forms/date_input
+    /demo/forms/date_range_input
     /demo/forms/date_time_input
     /demo/forms/time_input
     /demo/forms/file_input
@@ -152,6 +153,8 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     get "/demo/forms/date_input"
 
     assert_response :success
+    assert_select "p[id^='birth_date_'][id$='_help_text']", text: "Future dates are not accepted for birth dates."
+    assert_select "input[name='birth_date'][aria-describedby]"
     assert_includes response.body, "picker: :native"
     assert_includes response.body, "name: &quot;billing_anchor_date&quot;"
     assert_includes response.body, "component-method-variables-date_input-0"
@@ -477,6 +480,20 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, ">value</td>"
     assert_includes response.body, "value: &quot;john.doe&quot;"
+  end
+
+  test "aggregate inputs demo includes help text in rendered examples and code snippets" do
+    get "/demo/inputs"
+
+    assert_response :success
+    assert_includes response.body, "Use the name teammates will recognize."
+    assert_includes response.body, "help_text: &quot;Use the name teammates will recognize.&quot;"
+    assert_includes response.body, "PNG, JPEG, or GIF images up to 2 MB are accepted."
+    assert_includes response.body, "help_text: &quot;PNG, JPEG, or GIF images up to 2 MB are accepted.&quot;"
+    assert_includes response.body, "Turn this on to expose the feature to the current workspace."
+    assert_includes response.body, "help_text: &quot;Turn this on to expose the feature to the current workspace.&quot;"
+    assert_includes response.body, "Choose the country used for billing details."
+    assert_includes response.body, "help_text: &quot;Choose the country used for billing details.&quot;"
   end
 
   test "page header demo includes all page title heading variants" do

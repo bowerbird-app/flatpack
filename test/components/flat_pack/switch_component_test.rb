@@ -32,6 +32,13 @@ module FlatPack
         assert_selector "span", text: "Enable notifications"
       end
 
+      def test_renders_help_text
+        render_inline(Component.new(name: "notifications", help_text: "Receive product update emails."))
+
+        assert_selector "p#notifications_help_text", text: "Receive product update emails."
+        assert_selector "input[aria-describedby='notifications_help_text']"
+      end
+
       def test_renders_without_label
         render_inline(Component.new(name: "notifications"))
 

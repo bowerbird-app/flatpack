@@ -15,6 +15,7 @@
         label: "Starts At",
         min: Time.new(2024, 1, 1, 9, 0, 0),
         max: Time.new(2024, 12, 31, 17, 0, 0),
+        help_text: "Times are interpreted in the browser's local timezone.",
         required: true
       ) %>
 
@@ -23,6 +24,7 @@
         label: "Event Starts At",
         min: Time.new(2024, 1, 1, 9, 0, 0),
         max: Time.new(2024, 12, 31, 17, 0, 0),
+        help_text: "Choose a start time within business hours.",
         value: Time.new(2024, 6, 15, 13, 30, 0)
       ) %>
 
@@ -30,6 +32,7 @@
         name: "starts_at_error",
         label: "Starts At (with error)",
         error: "Start date and time is required",
+        help_text: "A date and time is required before saving.",
         required: true,
         data: {
           flat_pack_message_required: "Start date and time is required"
@@ -47,6 +50,7 @@
           label: &quot;Starts At&quot;,
           min: Time.new(2024, 1, 1, 9, 0, 0),
           max: Time.new(2024, 12, 31, 17, 0, 0),
+          help_text: &quot;Times are interpreted in the browser's local timezone.&quot;,
           required: true
         ) %&gt;
 
@@ -55,6 +59,7 @@
           label: &quot;Event Starts At&quot;,
           min: Time.new(2024, 1, 1, 9, 0, 0),
           max: Time.new(2024, 12, 31, 17, 0, 0),
+          help_text: &quot;Choose a start time within business hours.&quot;,
           value: Time.new(2024, 6, 15, 13, 30, 0)
         ) %&gt;
 
@@ -62,6 +67,7 @@
           name: &quot;starts_at_error&quot;,
           label: &quot;Starts At (with error)&quot;,
           error: &quot;Start date and time is required&quot;,
+          help_text: &quot;A date and time is required before saving.&quot;,
           required: true,
           data: {
             flat_pack_message_required: &quot;Start date and time is required&quot;

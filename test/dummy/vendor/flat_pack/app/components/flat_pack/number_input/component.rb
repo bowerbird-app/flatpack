@@ -15,6 +15,7 @@ module FlatPack
         required: false,
         label: nil,
         error: nil,
+        help_text: nil,
         min: nil,
         max: nil,
         step: 1,
@@ -29,6 +30,7 @@ module FlatPack
         @required = required
         @label = label
         @error = error
+        @help_text = normalize_help_text!(help_text)
         @min = min
         @max = max
         @step = step
@@ -42,6 +44,7 @@ module FlatPack
           safe_join([
             render_label,
             render_input,
+            render_help_text,
             render_error
           ].compact)
         end
@@ -80,7 +83,9 @@ module FlatPack
           class: input_classes
         }
 
-        attrs[:aria] = {invalid: "true", describedby: error_id} if @error
+        describedby = describedby_tokens((help_text_id if @help_text), (error_id if @error))
+        attrs[:aria] = describedby.present? ? {describedby: describedby} : {}
+        attrs[:aria][:invalid] = "true" if @error
 
         merge_attributes(**apply_default_validation(attrs.compact, error_id: error_id, has_error: @error.present?))
       end
@@ -130,6 +135,10 @@ module FlatPack
 
       def error_id
         "#{input_id}_error"
+      end
+
+      def help_text_id
+        "#{input_id}_help_text"
       end
 
       def validate_name!

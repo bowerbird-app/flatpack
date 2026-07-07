@@ -57,6 +57,53 @@ module FlatPack
         assert_selector "input[aria-describedby]"
       end
 
+      def test_renders_help_text_with_character_count_style
+        render_inline(Component.new(name: "username", help_text: "Use your public profile name."))
+
+        assert_selector "p[id$='_help_text']", text: "Use your public profile name."
+        help_text = page.find("p[id$='_help_text']")
+        assert_includes help_text[:class], "mt-1"
+        assert_includes help_text[:class], "text-xs"
+        assert_includes help_text[:class], "text-[var(--surface-muted-content-color)]"
+      end
+
+      def test_does_not_render_blank_help_text
+        render_inline(Component.new(name: "username", help_text: "   "))
+
+        refute_selector "p[id$='_help_text']"
+      end
+
+      def test_help_text_is_in_aria_describedby
+        render_inline(Component.new(name: "username", id: "username", help_text: "Use your public profile name."))
+
+        assert_selector "input[aria-describedby='username_help_text']"
+      end
+
+      def test_help_text_and_error_are_both_in_aria_describedby
+        render_inline(Component.new(name: "username", id: "username", help_text: "Use your public profile name.", error: "Username is required"))
+
+        assert_selector "input[aria-describedby='username_help_text username_error'][aria-invalid='true']"
+      end
+
+      def test_help_text_escapes_html_content
+        render_inline(Component.new(name: "username", help_text: "<strong>Use text only</strong>"))
+
+        assert_text "<strong>Use text only</strong>"
+        refute_selector "p[id$='_help_text'] strong"
+      end
+
+      def test_raises_error_with_html_safe_help_text
+        assert_raises(ArgumentError) do
+          Component.new(name: "username", help_text: "<strong>Use text only</strong>".html_safe)
+        end
+      end
+
+      def test_raises_error_with_non_text_help_text
+        assert_raises(ArgumentError) do
+          Component.new(name: "username", help_text: {text: "Use your public profile name."})
+        end
+      end
+
       def test_error_styles_applied
         render_inline(Component.new(name: "username", error: "Invalid"))
 

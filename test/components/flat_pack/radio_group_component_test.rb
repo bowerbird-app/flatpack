@@ -59,6 +59,13 @@ module FlatPack
         assert_selector "legend", text: "Choose a color"
       end
 
+      def test_renders_help_text
+        render_inline(Component.new(name: "color", options: ["Red", "Blue"], help_text: "Choose one option."))
+
+        assert_selector "p#color_help_text", text: "Choose one option."
+        assert_selector "input[aria-describedby='color_help_text']", count: 2
+      end
+
       def test_renders_all_radios_disabled_when_group_disabled
         render_inline(Component.new(name: "color", options: ["Red", "Blue"], disabled: true))
 

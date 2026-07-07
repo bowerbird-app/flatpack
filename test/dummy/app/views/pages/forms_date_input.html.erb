@@ -14,6 +14,7 @@
         name: "birth_date",
         label: "Birth Date",
         max: Date.today.to_s,
+        help_text: "Future dates are not accepted for birth dates.",
         required: true
       ) %>
 
@@ -22,6 +23,7 @@
         label: "Event Date",
         min: Date.today.to_s,
         max: (Date.today + 90).to_s,
+        help_text: "Events can be scheduled up to 90 days ahead.",
         value: (Date.today + 7).to_s
       ) %>
 
@@ -31,6 +33,7 @@
         picker: :native,
         min: (Date.today - 30).to_s,
         max: (Date.today + 30).to_s,
+        help_text: "Native pickers use the browser date control.",
         value: Date.today.to_s
       ) %>
     <% end %>
@@ -44,6 +47,7 @@
           name: &quot;birth_date&quot;,
           label: &quot;Birth Date&quot;,
           max: Date.today.to_s,
+          help_text: &quot;Future dates are not accepted for birth dates.&quot;,
           required: true
         ) %&gt;
     
@@ -52,6 +56,7 @@
           label: &quot;Event Date&quot;,
           min: Date.today.to_s,
           max: (Date.today + 90).to_s,
+          help_text: &quot;Events can be scheduled up to 90 days ahead.&quot;,
           value: (Date.today + 7).to_s
         ) %&gt;
 
@@ -61,6 +66,7 @@
           picker: :native,
           min: (Date.today - 30).to_s,
           max: (Date.today + 30).to_s,
+          help_text: &quot;Native pickers use the browser date control.&quot;,
           value: Date.today.to_s
         ) %&gt;
         &lt;% end %&gt;

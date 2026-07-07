@@ -44,6 +44,20 @@ module FlatPack
         assert_selector "input[type='date']"
       end
 
+      def test_renders_help_text
+        render_inline(Component.new(name: "birth_date", id: "birth_date", help_text: "Use the date on your government ID."))
+
+        assert_selector "p#birth_date_help_text", text: "Use the date on your government ID."
+        assert_selector "input[aria-describedby='birth_date_help_text']"
+      end
+
+      def test_custom_picker_trigger_references_help_text
+        render_inline(Component.new(name: "birth_date", id: "birth_date", picker: :flatpack_date_picker, help_text: "Pick a date from the calendar."))
+
+        assert_selector "p#birth_date_help_text", text: "Pick a date from the calendar."
+        assert_selector "input[type='text'][aria-describedby='birth_date_help_text']"
+      end
+
       def test_label_for_attribute_matches_input_id
         render_inline(Component.new(name: "birth_date", label: "Birth Date", id: "birth-date-input"))
 

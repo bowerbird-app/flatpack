@@ -15,6 +15,7 @@ module FlatPack
         disabled: false,
         required: false,
         error: nil,
+        help_text: nil,
         **system_arguments
       )
         @custom_class = system_arguments[:class]
@@ -27,6 +28,7 @@ module FlatPack
         @disabled = disabled
         @required = required
         @error = error
+        @help_text = normalize_help_text!(help_text)
 
         validate_name!
         validate_options!
@@ -37,6 +39,7 @@ module FlatPack
           safe_join([
             render_label,
             render_radio_group,
+            render_help_text,
             render_error
           ].compact)
         end
@@ -88,7 +91,9 @@ module FlatPack
           class: radio_classes
         }
 
-        attrs[:aria] = {invalid: "true", describedby: error_id} if @error
+        describedby = describedby_tokens((help_text_id if @help_text), (error_id if @error))
+        attrs[:aria] = describedby.present? ? {describedby: describedby} : {}
+        attrs[:aria][:invalid] = "true" if @error
 
         apply_default_validation(attrs.compact, error_id: error_id, has_error: @error.present?)
       end
@@ -145,6 +150,10 @@ module FlatPack
 
       def error_id
         "#{@name.to_s.gsub(/[^a-zA-Z0-9_-]/, "_")}_error"
+      end
+
+      def help_text_id
+        "#{@name.to_s.gsub(/[^a-zA-Z0-9_-]/, "_")}_help_text"
       end
 
       def normalize_options(options)

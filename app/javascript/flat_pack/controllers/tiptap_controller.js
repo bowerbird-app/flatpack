@@ -23,6 +23,7 @@
  *   required       — Boolean; surfaced via aria-required
  *   hasError       — Boolean; triggers aria-invalid
  *   errorId        — ID of the error message element for aria-describedby
+ *   helpTextId     — ID of the help text element for aria-describedby
  *   value          — Initial content (JSON string or HTML string)
  */
 
@@ -53,6 +54,7 @@ export default class extends Controller {
     required:     { type: Boolean, default: false },
     hasError:     { type: Boolean, default: false },
     errorId:      { type: String,  default: "" },
+    helpTextId:   { type: String,  default: "" },
     value:        { type: String,  default: "" },
   }
 
@@ -137,6 +139,9 @@ export default class extends Controller {
     }
 
     const editable = !this.disabledValue && !opts.readonly
+    const describedBy = [this.helpTextIdValue, this.hasErrorValue ? this.errorIdValue : null]
+      .filter(Boolean)
+      .join(" ")
 
     this._editor = new Editor({
       element:    containerEl,
@@ -152,8 +157,8 @@ export default class extends Controller {
           "aria-multiline": "true",
           "aria-required":  this.requiredValue ? "true" : "false",
           "aria-invalid":   this.hasErrorValue ? "true" : "false",
-          ...(this.hasErrorValue && this.errorIdValue
-            ? { "aria-describedby": this.errorIdValue }
+          ...(describedBy
+            ? { "aria-describedby": describedBy }
             : {}),
           ...(opts.readonly || this.disabledValue
             ? { "aria-readonly": "true" }

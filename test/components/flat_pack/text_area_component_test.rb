@@ -30,6 +30,20 @@ module FlatPack
         assert_selector "textarea"
       end
 
+      def test_renders_help_text
+        render_inline(Component.new(name: "description", id: "description", help_text: "Keep the description under two paragraphs."))
+
+        assert_selector "p#description_help_text", text: "Keep the description under two paragraphs."
+        assert_includes page.native.to_html, "class=\"text-xs text-[var(--surface-muted-content-color)]\""
+        assert_selector "textarea[aria-describedby='description_help_text']"
+      end
+
+      def test_help_text_renders_before_character_count
+        render_inline(Component.new(name: "description", id: "description", help_text: "Keep it brief.", character_count: true, value: "Hello"))
+
+        assert_match(/description_help_text.*description_character_count/m, page.native.to_html)
+      end
+
       def test_label_for_attribute_matches_textarea_id
         render_inline(Component.new(name: "description", label: "Description", id: "user-description"))
 
@@ -157,6 +171,13 @@ module FlatPack
         assert_selector "div[data-controller='flat-pack--tiptap']"
         refute_selector "button[aria-label='Copy textarea value']"
         refute_selector "textarea[readonly]"
+      end
+
+      def test_rich_text_help_text_exposes_tiptap_description_id
+        render_inline(Component.new(name: "body", id: "body", help_text: "Use plain language.", rich_text: true))
+
+        assert_selector "p#body_help_text", text: "Use plain language."
+        assert_selector "div[data-controller='flat-pack--tiptap'][data-flat-pack--tiptap-help-text-id-value='body_help_text']"
       end
 
       def test_does_not_render_character_count_when_disabled

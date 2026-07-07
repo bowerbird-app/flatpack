@@ -13,18 +13,21 @@
       <%= render FlatPack::Checkbox::Component.new(
         name: "terms",
         label: "I agree to the terms and conditions",
+        help_text: "Required before you can continue.",
         required: true
       ) %>
 
       <%= render FlatPack::Checkbox::Component.new(
         name: "newsletter",
         label: "Subscribe to newsletter",
+        help_text: "You can unsubscribe from emails later.",
         checked: true
       ) %>
 
       <%= render FlatPack::Checkbox::Component.new(
         name: "disabled_checkbox",
         label: "This checkbox is disabled",
+        help_text: "Disabled options cannot be changed here.",
         disabled: true
       ) %>
     <% end %>
@@ -37,18 +40,21 @@
         &lt;%= render FlatPack::Checkbox::Component.new(
           name: &quot;terms&quot;,
           label: &quot;I agree to the terms and conditions&quot;,
+          help_text: &quot;Required before you can continue.&quot;,
           required: true
         ) %&gt;
     
         &lt;%= render FlatPack::Checkbox::Component.new(
           name: &quot;newsletter&quot;,
           label: &quot;Subscribe to newsletter&quot;,
+          help_text: &quot;You can unsubscribe from emails later.&quot;,
           checked: true
         ) %&gt;
     
         &lt;%= render FlatPack::Checkbox::Component.new(
           name: &quot;disabled_checkbox&quot;,
           label: &quot;This checkbox is disabled&quot;,
+          help_text: &quot;Disabled options cannot be changed here.&quot;,
           disabled: true
         ) %&gt;
         &lt;% end %&gt;
