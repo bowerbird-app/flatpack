@@ -403,6 +403,7 @@ module FlatPack
 
         html = page.native.to_html
         assert_includes html, '"horizontal":false'
+        assert_includes html, '"tooltip":{"theme":"dark"}'
       end
 
       def test_stacked_bar_defaults_are_stacked_and_horizontal

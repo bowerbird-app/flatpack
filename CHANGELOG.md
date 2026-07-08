@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bumped the gem version to `0.1.117`.
 
 ### Fixed
+- Updated `FlatPack::Chart::Component` bar/column defaults to use a dark tooltip theme so column hover popups render with dark backgrounds instead of white.
 
 ## [0.1.116] - 2026-07-08
 

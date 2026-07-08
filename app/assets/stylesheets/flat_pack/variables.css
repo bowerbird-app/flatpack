@@ -966,6 +966,25 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --modal-backdrop-blur: 4px;
 }
 
+/* ApexCharts tooltips can be rendered outside chart containers and keep
+ * a built-in .apexcharts-theme-light style. Force them to use app surface tokens.
+ */
+.apexcharts-tooltip.apexcharts-theme-light.apexcharts-theme-light,
+.apexcharts-xaxistooltip.apexcharts-theme-light.apexcharts-theme-light,
+.apexcharts-yaxistooltip.apexcharts-theme-light.apexcharts-theme-light {
+  background: var(--surface-page-background-color) !important;
+  border: 1px solid var(--surface-border-color) !important;
+  color: var(--surface-content-color) !important;
+}
+
+.apexcharts-tooltip.apexcharts-theme-light.apexcharts-theme-light .apexcharts-tooltip-title,
+.apexcharts-xaxistooltip.apexcharts-theme-light.apexcharts-theme-light,
+.apexcharts-yaxistooltip.apexcharts-theme-light.apexcharts-theme-light {
+  background: var(--surface-page-background-color) !important;
+  border-color: var(--surface-border-color) !important;
+  color: var(--surface-content-color) !important;
+}
+
 /* Dark theme palette */
 [data-theme="dark"] {
   --color-primary: oklch(0.62 0.22 250);
