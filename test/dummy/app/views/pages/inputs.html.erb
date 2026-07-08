@@ -19,6 +19,7 @@
         name: "username",
         label: "Username",
         placeholder: "Enter your username",
+        help_text: "Use the name teammates will recognize.",
         required: true
       ) %>
 
@@ -27,6 +28,7 @@
         label: "Username (with error)",
         value: "john",
         error: "Username must be at least 5 characters",
+        help_text: "Usernames should be clear and searchable.",
         minlength: 5,
         data: {
           flat_pack_message_too_short: "Username must be at least 5 characters"
@@ -37,6 +39,7 @@
         name: "username_disabled",
         label: "Username (disabled)",
         value: "johndoe",
+        help_text: "Disabled fields keep their existing value.",
         disabled: true
       ) %>
 
@@ -45,6 +48,7 @@
         id: "headline",
         label: "Headline (with character count)",
         placeholder: "Write a short headline...",
+        help_text: "Keep this headline brief and specific.",
         character_count: true,
         min_characters: 20,
         max_characters: 60
@@ -55,6 +59,7 @@
         id: "tagline",
         label: "Tagline (count only)",
         placeholder: "Add a short tagline...",
+        help_text: "A short tagline works best for cards and previews.",
         character_count: true
       ) %>
 
@@ -63,6 +68,7 @@
         id: "api_key",
         label: "API Key (quick copy)",
         value: "sk_live_1234567890",
+        help_text: "Use quick copy for values users need to paste elsewhere.",
         quick_copy: true
       ) %>
 
@@ -71,6 +77,7 @@
         id: "embed_code",
         label: "Embed Code (quick copy)",
         value: %q(<iframe src="https://widgets.example.com/reviews" width="100%" height="320" loading="lazy"></iframe>),
+        help_text: "Copy the full snippet into the destination page.",
         quick_copy: true
       ) %>
     </div>
@@ -80,6 +87,7 @@
           name: "username",
           label: "Username",
           placeholder: "Enter your username",
+          help_text: "Use the name teammates will recognize.",
           required: true
         ) %&gt;
         
@@ -88,6 +96,7 @@
           label: "Username (with error)",
           value: "john",
           error: "Username must be at least 5 characters",
+          help_text: "Usernames should be clear and searchable.",
           minlength: 5,
           data: {
             flat_pack_message_too_short: "Username must be at least 5 characters"
@@ -99,6 +108,7 @@
           id: "headline",
           label: "Headline (with character count)",
           placeholder: "Write a short headline...",
+          help_text: "Keep this headline brief and specific.",
           character_count: true,
           min_characters: 20,
           max_characters: 60
@@ -109,6 +119,7 @@
           id: "tagline",
           label: "Tagline (count only)",
           placeholder: "Add a short tagline...",
+          help_text: "A short tagline works best for cards and previews.",
           character_count: true
         ) %&gt;
 
@@ -117,6 +128,7 @@
           id: "api_key",
           label: "API Key (quick copy)",
           value: "sk_live_1234567890",
+          help_text: "Use quick copy for values users need to paste elsewhere.",
           quick_copy: true
         ) %&gt;
 
@@ -125,6 +137,7 @@
           id: "embed_code",
           label: "Embed Code (quick copy)",
           value: %q(&lt;iframe src="https://widgets.example.com/reviews" width="100%" height="320" loading="lazy"&gt;&lt;/iframe&gt;),
+          help_text: "Copy the full snippet into the destination page.",
           quick_copy: true
         ) %&gt;
       CODE
@@ -142,6 +155,7 @@
         name: "password",
         label: "Password",
         placeholder: "Enter your password",
+        help_text: "Use at least 12 characters for better protection.",
         required: true
       ) %>
 
@@ -149,6 +163,7 @@
         name: "password_error",
         label: "Password (with error)",
         error: "Password must contain at least one number",
+        help_text: "Include at least one number to meet the rule.",
         pattern: "(?=.*\\d).+",
         data: {
           flat_pack_message_pattern_mismatch: "Password must contain at least one number"
@@ -161,6 +176,7 @@
           name: "password",
           label: "Password",
           placeholder: "Enter your password",
+          help_text: "Use at least 12 characters for better protection.",
           required: true
         ) %&gt;
         
@@ -168,6 +184,7 @@
           name: "password_error",
           label: "Password (with error)",
           error: "Password must contain at least one number",
+          help_text: "Include at least one number to meet the rule.",
           pattern: "(?=.*\d).+",
           data: {
             flat_pack_message_pattern_mismatch: "Password must contain at least one number"
@@ -188,6 +205,7 @@
         name: "email",
         label: "Email Address",
         placeholder: "you@example.com",
+        help_text: "We only use this for account notifications.",
         required: true
       ) %>
 
@@ -195,6 +213,7 @@
         name: "email_error",
         label: "Email (with error)",
         value: "invalid-email",
+        help_text: "Email addresses must include a valid domain.",
         error: "Please enter a valid email address"
       ) %>
     </div>
@@ -204,6 +223,7 @@
           name: "email",
           label: "Email Address",
           placeholder: "you@example.com",
+          help_text: "We only use this for account notifications.",
           required: true
         ) %&gt;
         
@@ -211,6 +231,7 @@
           name: "email_error",
           label: "Email (with error)",
           value: "invalid-email",
+          help_text: "Email addresses must include a valid domain.",
           error: "Please enter a valid email address"
         ) %&gt;
       CODE
@@ -227,7 +248,8 @@
       <%= render FlatPack::PhoneInput::Component.new(
         name: "phone",
         label: "Phone Number",
-        placeholder: "+1 (555) 123-4567"
+        placeholder: "+1 (555) 123-4567",
+        help_text: "Include a country code when collecting international numbers."
       ) %>
 
       <%= render FlatPack::PhoneInput::Component.new(
@@ -235,6 +257,7 @@
         label: "Phone (with error)",
         value: "123",
         error: "Phone number must be at least 10 digits",
+        help_text: "Enter at least 10 digits for domestic numbers.",
         minlength: 10,
         data: {
           flat_pack_message_too_short: "Phone number must be at least 10 digits"
@@ -246,7 +269,8 @@
         &lt;%= render FlatPack::PhoneInput::Component.new(
           name: "phone",
           label: "Phone Number",
-          placeholder: "+1 (555) 123-4567"
+          placeholder: "+1 (555) 123-4567",
+          help_text: "Include a country code when collecting international numbers."
         ) %&gt;
         
         &lt;%= render FlatPack::PhoneInput::Component.new(
@@ -254,6 +278,7 @@
           label: "Phone (with error)",
           value: "123",
           error: "Phone number must be at least 10 digits",
+          help_text: "Enter at least 10 digits for domestic numbers.",
           minlength: 10,
           data: {
             flat_pack_message_too_short: "Phone number must be at least 10 digits"
@@ -273,13 +298,15 @@
       <%= render FlatPack::SearchInput::Component.new(
         name: "search",
         label: "Search",
-        placeholder: "Search for anything..."
+        placeholder: "Search for anything...",
+        help_text: "Search by name, tag, or reference number."
       ) %>
 
       <%= render FlatPack::SearchInput::Component.new(
         name: "search_with_value",
         label: "Search (with value)",
-        value: "sample query"
+        value: "sample query",
+        help_text: "Prefilled searches can be edited before submitting."
       ) %>
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
@@ -287,13 +314,15 @@
         &lt;%= render FlatPack::SearchInput::Component.new(
           name: "search",
           label: "Search",
-          placeholder: "Search for anything..."
+          placeholder: "Search for anything...",
+          help_text: "Search by name, tag, or reference number."
         ) %&gt;
         
         &lt;%= render FlatPack::SearchInput::Component.new(
           name: "search_with_value",
           label: "Search (with value)",
-          value: "sample query"
+          value: "sample query",
+          help_text: "Prefilled searches can be edited before submitting."
         ) %&gt;
       CODE
       class: "mt-4"
@@ -309,13 +338,15 @@
       <%= render FlatPack::UrlInput::Component.new(
         name: "website",
         label: "Website URL",
-        placeholder: "https://example.com"
+        placeholder: "https://example.com",
+        help_text: "Use a full URL beginning with https://."
       ) %>
 
       <%= render FlatPack::UrlInput::Component.new(
         name: "website_error",
         label: "Website (with error)",
         value: "not-a-url",
+        help_text: "URLs should include a protocol and valid host.",
         error: "Please enter a valid URL"
       ) %>
     </div>
@@ -324,13 +355,15 @@
         &lt;%= render FlatPack::UrlInput::Component.new(
           name: "website",
           label: "Website URL",
-          placeholder: "https://example.com"
+          placeholder: "https://example.com",
+          help_text: "Use a full URL beginning with https://."
         ) %&gt;
         
         &lt;%= render FlatPack::UrlInput::Component.new(
           name: "website_error",
           label: "Website (with error)",
           value: "not-a-url",
+          help_text: "URLs should include a protocol and valid host.",
           error: "Please enter a valid URL"
         ) %&gt;
       CODE
@@ -348,6 +381,7 @@
         name: "description",
         label: "Description",
         placeholder: "Enter a detailed description...",
+        help_text: "Plain text help appears below the field and above validation messages.",
         rows: 3
       ) %>
 
@@ -355,6 +389,7 @@
         name: "description_with_value",
         label: "Description (with value)",
         value: "This is a sample description.\nIt has multiple lines.\nTry adding more!",
+        help_text: "Existing multiline content can still include helper guidance.",
         rows: 3
       ) %>
 
@@ -362,6 +397,7 @@
         name: "description_error",
         label: "Description (with error)",
         error: "Description must be at least 50 characters",
+        help_text: "Describe the item clearly enough for reviewers.",
         required: true,
         minlength: 50,
         data: {
@@ -377,6 +413,7 @@
         label: "Project Summary (with character count)",
         placeholder: "Write a short summary...",
         rows: 3,
+        help_text: "Summaries should stay within the configured length range.",
         character_count: true,
         min_characters: 30,
         max_characters: 140
@@ -388,6 +425,7 @@
         label: "Release Notes (quick copy)",
         value: "Fixed onboarding bug\nAdded quick copy to text area",
         rows: 3,
+        help_text: "Quick copy is useful for reusable notes and snippets.",
         quick_copy: true
       ) %>
     </div>
@@ -397,6 +435,7 @@
           name: "description",
           label: "Description",
           placeholder: "Enter a detailed description...",
+          help_text: "Plain text help appears below the field and above validation messages.",
           rows: 3
         ) %&gt;
         
@@ -404,6 +443,7 @@
           name: "description_error",
           label: "Description (with error)",
           error: "Description must be at least 50 characters",
+          help_text: "Describe the item clearly enough for reviewers.",
           required: true,
           minlength: 50,
           data: {
@@ -417,6 +457,7 @@
           name: "project_summary",
           id: "project_summary",
           label: "Project Summary (with character count)",
+          help_text: "Summaries should stay within the configured length range.",
           character_count: true,
           min_characters: 30,
           max_characters: 140,
@@ -429,6 +470,7 @@
           label: "Release Notes (quick copy)",
           value: "Fixed onboarding bug\nAdded quick copy to text area",
           rows: 3,
+          help_text: "Quick copy is useful for reusable notes and snippets.",
           quick_copy: true
         ) %&gt;
       CODE
@@ -449,6 +491,7 @@
         min: 0,
         max: 100,
         step: 1,
+        help_text: "Whole numbers from 0 to 100 are accepted.",
         required: true
       ) %>
 
@@ -458,6 +501,7 @@
         placeholder: "0.00",
         min: 0.01,
         step: 0.01,
+        help_text: "Use decimal values for cents.",
         value: 19.99
       ) %>
 
@@ -466,6 +510,7 @@
         label: "Quantity (with error)",
         value: 150,
         error: "Quantity must not exceed 100",
+        help_text: "Keep the quantity within the allowed range.",
         max: 100
       ) %>
     </div>
@@ -478,6 +523,7 @@
           min: 0,
           max: 100,
           step: 1,
+          help_text: "Whole numbers from 0 to 100 are accepted.",
           required: true
         ) %&gt;
         
@@ -487,6 +533,7 @@
           placeholder: "0.00",
           min: 0.01,
           step: 0.01,
+          help_text: "Use decimal values for cents.",
           value: 19.99
         ) %&gt;
       CODE
@@ -505,6 +552,7 @@
         label: "Birth Date",
         placeholder: "Select date",
         max: Date.today.to_s,
+        help_text: "Future dates are not accepted for birth dates.",
         required: true
       ) %>
 
@@ -513,6 +561,7 @@
         label: "Event Date",
         min: Date.today.to_s,
         max: (Date.today + 90).to_s,
+        help_text: "Events can be scheduled up to 90 days ahead.",
         value: (Date.today + 7).to_s
       ) %>
 
@@ -522,6 +571,7 @@
         value: Date.today.to_s,
         min: Date.tomorrow.to_s,
         error: "Date must be in the future",
+        help_text: "Choose a future date for scheduled work.",
         data: {
           flat_pack_message_range_underflow: "Date must be in the future"
         }
@@ -534,6 +584,7 @@
           label: "Birth Date",
           placeholder: "Select date",
           max: Date.today.to_s,
+          help_text: "Future dates are not accepted for birth dates.",
           required: true
         ) %&gt;
         
@@ -542,6 +593,7 @@
           label: "Event Date",
           min: Date.today.to_s,
           max: (Date.today + 90).to_s,
+          help_text: "Events can be scheduled up to 90 days ahead.",
           value: (Date.today + 7).to_s
         ) %&gt;
       CODE
@@ -560,6 +612,7 @@
         label: "Profile Picture",
         accept: "image/png,image/jpeg,image/gif",
         max_size: 2_097_152, # 2MB
+        help_text: "PNG, JPEG, or GIF images up to 2 MB are accepted.",
         preview: true
       ) %>
 
@@ -569,6 +622,7 @@
         accept: ".pdf,.doc,.docx",
         multiple: true,
         max_size: 5_242_880, # 5MB
+        help_text: "Upload one or more PDF or Word documents up to 5 MB each.",
         preview: false
       ) %>
 
@@ -576,6 +630,7 @@
         name: "file_error",
         label: "File (with error)",
         error: "File size must not exceed 5MB",
+        help_text: "Select a smaller file before submitting.",
         max_size: 5_242_880
       ) %>
     </div>
@@ -586,6 +641,7 @@
           label: "Profile Picture",
           accept: "image/png,image/jpeg,image/gif",
           max_size: 2_097_152, # 2MB
+          help_text: "PNG, JPEG, or GIF images up to 2 MB are accepted.",
           preview: true
         ) %&gt;
         
@@ -595,6 +651,7 @@
           accept: ".pdf,.doc,.docx",
           multiple: true,
           max_size: 5_242_880, # 5MB
+          help_text: "Upload one or more PDF or Word documents up to 5 MB each.",
           preview: false
         ) %&gt;
       CODE
@@ -612,12 +669,14 @@
       <%= render FlatPack::Checkbox::Component.new(
         name: "terms",
         label: "I agree to the terms and conditions",
+        help_text: "Required before you can continue.",
         required: true
       ) %>
 
       <%= render FlatPack::Checkbox::Component.new(
         name: "newsletter",
         label: "Subscribe to newsletter",
+        help_text: "You can unsubscribe from emails later.",
         checked: true
       ) %>
 
@@ -625,6 +684,7 @@
         name: "terms_error",
         label: "I agree to the terms",
         error: "You must agree to continue",
+        help_text: "Confirm the terms before submitting.",
         required: true,
         data: {
           flat_pack_message_required: "You must agree to continue"
@@ -634,6 +694,7 @@
       <%= render FlatPack::Checkbox::Component.new(
         name: "disabled_checkbox",
         label: "This checkbox is disabled",
+        help_text: "Disabled options cannot be changed here.",
         disabled: true
       ) %>
     </div>
@@ -642,12 +703,14 @@
         &lt;%= render FlatPack::Checkbox::Component.new(
           name: "terms",
           label: "I agree to the terms and conditions",
+          help_text: "Required before you can continue.",
           required: true
         ) %&gt;
         
         &lt;%= render FlatPack::Checkbox::Component.new(
           name: "newsletter",
           label: "Subscribe to newsletter",
+          help_text: "You can unsubscribe from emails later.",
           checked: true
         ) %&gt;
       CODE
@@ -665,6 +728,7 @@
         name: "size",
         options: ["Small", "Medium", "Large"],
         label: "Choose a size",
+        help_text: "Select the size that best fits the current order.",
         value: "Medium"
       ) %>
 
@@ -672,6 +736,7 @@
         name: "color",
         options: [["Red", "red"], ["Blue", "blue"], ["Green", "green"]],
         label: "Choose a color",
+        help_text: "Pick one color for this item.",
         required: true
       ) %>
 
@@ -683,6 +748,7 @@
           {label: "Enterprise (Coming Soon)", value: "enterprise", disabled: true}
         ],
         label: "Select a plan",
+        help_text: "Disabled plans show options that are not available yet.",
         value: "pro"
       ) %>
 
@@ -691,6 +757,7 @@
         options: ["Credit Card", "PayPal", "Bank Transfer"],
         label: "Payment Method",
         error: "Please select a payment method",
+        help_text: "Choose the payment method to use at checkout.",
         required: true,
         data: {
           flat_pack_message_required: "Please select a payment method"
@@ -703,13 +770,15 @@
           name: "size",
           options: ["Small", "Medium", "Large"],
           label: "Choose a size",
+          help_text: "Select the size that best fits the current order.",
           value: "Medium"
         ) %&gt;
         
         &lt;%= render FlatPack::RadioGroup::Component.new(
           name: "color",
           options: [["Red", "red"], ["Blue", "blue"], ["Green", "green"]],
-          label: "Choose a color"
+          label: "Choose a color",
+          help_text: "Pick one color for this item."
         ) %&gt;
       CODE
       class: "mt-4"
@@ -729,6 +798,7 @@
           options: ["United States", "Canada", "United Kingdom", "Australia"],
           label: "Country",
           placeholder: "Select a country",
+          help_text: "Choose the country used for billing and tax rules.",
           required: true
         ) %>
       </div>
@@ -739,6 +809,7 @@
           name: "state",
           options: [["California", "CA"], ["New York", "NY"], ["Texas", "TX"], ["Florida", "FL"]],
           label: "State",
+          help_text: "Stored values can differ from visible option labels.",
           value: "CA"
         ) %>
       </div>
@@ -754,6 +825,7 @@
           ],
           label: "City",
           placeholder: "Search cities...",
+          help_text: "Type to filter long option lists.",
           searchable: true,
           required: true
         ) %>
@@ -769,6 +841,7 @@
             {label: "Enterprise (Coming Soon)", value: "enterprise", disabled: true}
           ],
           label: "Select a plan",
+          help_text: "Unavailable plans can stay visible as disabled options.",
           value: "pro"
         ) %>
       </div>
@@ -780,6 +853,7 @@
           options: ["Electronics", "Clothing", "Books", "Food"],
           label: "Category",
           error: "Please select a category",
+          help_text: "A category is required before publishing.",
           required: true,
           data: {
             flat_pack_message_required: "Please select a category"
@@ -794,6 +868,7 @@
           options: ["Option 1", "Option 2"],
           label: "Disabled Select",
           value: "Option 1",
+          help_text: "Disabled selects preserve the existing value.",
           disabled: true
         ) %>
       </div>
@@ -804,13 +879,15 @@
           name: "country",
           options: ["United States", "Canada", "United Kingdom"],
           label: "Country",
-          placeholder: "Select a country"
+          placeholder: "Select a country",
+          help_text: "Choose the country used for billing and tax rules."
         ) %&gt;
         
         &lt;%= render FlatPack::Select::Component.new(
           name: "city",
           options: ["New York", "Los Angeles", "Chicago"],
           label: "City",
+          help_text: "Type to filter long option lists.",
           searchable: true
         ) %&gt;
       CODE
@@ -829,16 +906,19 @@
         <div class="space-y-3">
           <%= render FlatPack::Switch::Component.new(
             name: "switch_1",
-            label: "Enable feature"
+            label: "Enable feature",
+            help_text: "Turn this on to expose the feature to the current workspace."
           ) %>
           <%= render FlatPack::Switch::Component.new(
             name: "switch_2",
             label: "Auto-save",
+            help_text: "Auto-save keeps changes without a manual submit.",
             checked: true
           ) %>
           <%= render FlatPack::Switch::Component.new(
             name: "switch_3",
             label: "Disabled switch",
+            help_text: "Disabled toggles show unavailable settings.",
             disabled: true
           ) %>
         </div>
@@ -850,16 +930,19 @@
           <%= render FlatPack::Switch::Component.new(
             name: "switch_sm",
             label: "Small switch",
+            help_text: "Use small switches in dense setting lists.",
             size: :sm
           ) %>
           <%= render FlatPack::Switch::Component.new(
             name: "switch_md",
             label: "Medium switch (default)",
+            help_text: "Medium is the default switch size.",
             size: :md
           ) %>
           <%= render FlatPack::Switch::Component.new(
             name: "switch_lg",
             label: "Large switch",
+            help_text: "Large switches suit roomy form layouts.",
             size: :lg
           ) %>
         </div>
@@ -870,22 +953,26 @@
         <div class="space-y-3">
           <%= render FlatPack::Switch::Component.new(
             name: "switch_off",
-            label: "Unchecked (OFF)"
+            label: "Unchecked (OFF)",
+            help_text: "Unchecked switches submit the off state."
           ) %>
           <%= render FlatPack::Switch::Component.new(
             name: "switch_on",
             label: "Checked (ON)",
+            help_text: "Checked switches show the enabled state.",
             checked: true
           ) %>
           <%= render FlatPack::Switch::Component.new(
             name: "switch_disabled",
             label: "Disabled (OFF)",
+            help_text: "Disabled off switches cannot be changed.",
             disabled: true
           ) %>
           <%= render FlatPack::Switch::Component.new(
             name: "switch_disabled_on",
             label: "Disabled (ON)",
             checked: true,
+            help_text: "Disabled on switches keep their saved value.",
             disabled: true
           ) %>
         </div>
@@ -897,6 +984,7 @@
           name: "switch_error",
           label: "Terms and conditions",
           error: "You must accept the terms and conditions",
+          help_text: "Acceptance is required before continuing.",
           required: true
         ) %>
       </div>
@@ -911,6 +999,7 @@
             </div>
             <%= render FlatPack::Switch::Component.new(
               name: "email_notifications",
+              help_text: "Send product and account updates by email.",
               checked: true
             ) %>
           </div>
@@ -921,7 +1010,8 @@
               <p class="text-sm text-[var(--surface-muted-content-color)]">Receive text messages</p>
             </div>
             <%= render FlatPack::Switch::Component.new(
-              name: "sms_notifications"
+              name: "sms_notifications",
+              help_text: "Send time-sensitive alerts by text message."
             ) %>
           </div>
           
@@ -932,6 +1022,7 @@
             </div>
             <%= render FlatPack::Switch::Component.new(
               name: "dark_mode",
+              help_text: "Use the dark interface theme by default.",
               checked: true
             ) %>
           </div>
@@ -942,7 +1033,8 @@
               <p class="text-sm text-[var(--surface-muted-content-color)]">Make profile visible to others</p>
             </div>
             <%= render FlatPack::Switch::Component.new(
-              name: "public_profile"
+              name: "public_profile",
+              help_text: "Allow other users to view this profile."
             ) %>
           </div>
         </div>
@@ -954,12 +1046,14 @@
         &lt;%= render FlatPack::Switch::Component.new(
           name: "notifications",
           label: "Enable notifications",
+          help_text: "Turn this on to expose the feature to the current workspace.",
           checked: true
         ) %&gt;
         
         &lt;%= render FlatPack::Switch::Component.new(
           name: "dark_mode",
           label: "Dark mode",
+          help_text: "Use the dark interface theme by default.",
           size: :lg
         ) %&gt;
         
@@ -967,6 +1061,7 @@
           name: "terms",
           label: "I agree to the terms",
           required: true,
+          help_text: "Acceptance is required before continuing.",
           error: "You must accept the terms"
         ) %&gt;
       CODE
@@ -983,6 +1078,7 @@
         name: "full_name",
         label: "Full Name",
         placeholder: "John Doe",
+        help_text: "Use the name that should appear on account records.",
         required: true
       ) %>
 
@@ -990,18 +1086,21 @@
         name: "contact_email",
         label: "Email",
         placeholder: "john@example.com",
+        help_text: "Use the email address for account notifications.",
         required: true
       ) %>
 
       <%= render FlatPack::PhoneInput::Component.new(
         name: "contact_phone",
         label: "Phone Number",
-        placeholder: "+1 (555) 123-4567"
+        placeholder: "+1 (555) 123-4567",
+        help_text: "Include a country code when applicable."
       ) %>
 
       <%= render FlatPack::DateInput::Component.new(
         name: "birth_date",
         label: "Birth Date",
+        help_text: "Must be today or earlier.",
         max: Date.today.to_s
       ) %>
 
@@ -1011,20 +1110,23 @@
         min: 18,
         max: 120,
         step: 1,
-        placeholder: "Enter your age"
+        placeholder: "Enter your age",
+        help_text: "Enter a whole number from 18 to 120."
       ) %>
 
       <%= render FlatPack::PasswordInput::Component.new(
         name: "account_password",
         label: "Password",
         placeholder: "Enter a secure password",
+        help_text: "Use at least 12 characters.",
         required: true
       ) %>
 
       <%= render FlatPack::UrlInput::Component.new(
         name: "portfolio",
         label: "Portfolio URL",
-        placeholder: "https://yourportfolio.com"
+        placeholder: "https://yourportfolio.com",
+        help_text: "Use a public portfolio or profile URL."
       ) %>
 
       <%= render FlatPack::FileInput::Component.new(
@@ -1032,6 +1134,7 @@
         label: "Profile Picture",
         accept: "image/png,image/jpeg",
         max_size: 2_097_152,
+        help_text: "Upload a PNG or JPEG image up to 2 MB.",
         preview: true
       ) %>
 
@@ -1040,6 +1143,7 @@
         options: [["United States", "us"], ["Canada", "ca"], ["United Kingdom", "uk"], ["Australia", "au"]],
         label: "Country",
         placeholder: "Select your country",
+        help_text: "Choose the country used for billing details.",
         required: true
       ) %>
 
@@ -1047,24 +1151,28 @@
         name: "notification_preference",
         options: ["Email", "SMS", "Push Notifications"],
         label: "Notification Preference",
+        help_text: "Pick the primary channel for account updates.",
         value: "Email"
       ) %>
 
       <%= render FlatPack::Checkbox::Component.new(
         name: "agree_terms",
         label: "I agree to the terms and conditions",
+        help_text: "Required before submitting the form.",
         required: true
       ) %>
 
       <%= render FlatPack::Checkbox::Component.new(
         name: "subscribe_newsletter",
-        label: "Subscribe to our newsletter"
+        label: "Subscribe to our newsletter",
+        help_text: "Newsletter subscriptions can be changed later."
       ) %>
 
       <%= render FlatPack::TextArea::Component.new(
         name: "bio",
         label: "Biography",
         placeholder: "Tell us about yourself...",
+        help_text: "Keep the summary short and plain text.",
         rows: 4
       ) %>
 
@@ -1083,6 +1191,7 @@
             name: "full_name",
             label: "Full Name",
             placeholder: "John Doe",
+            help_text: "Use the name that should appear on account records.",
             required: true
           ) %&gt;
         
@@ -1090,12 +1199,14 @@
             name: "contact_email",
             label: "Email",
             placeholder: "john@example.com",
+            help_text: "Use the email address for account notifications.",
             required: true
           ) %&gt;
         
           &lt;%= render FlatPack::DateInput::Component.new(
             name: "birth_date",
             label: "Birth Date",
+            help_text: "Must be today or earlier.",
             max: Date.today.to_s
           ) %&gt;
         
@@ -1103,36 +1214,42 @@
             name: "age",
             label: "Age",
             min: 18,
-            max: 120
+            max: 120,
+            help_text: "Enter a whole number from 18 to 120."
           ) %&gt;
         
           &lt;%= render FlatPack::FileInput::Component.new(
             name: "profile_picture",
             label: "Profile Picture",
             accept: "image/png,image/jpeg",
-            max_size: 2_097_152
+            max_size: 2_097_152,
+            help_text: "Upload a PNG or JPEG image up to 2 MB."
           ) %&gt;
         
           &lt;%= render FlatPack::Select::Component.new(
             name: "country",
             options: [["United States", "us"], ["Canada", "ca"]],
-            label: "Country"
+            label: "Country",
+            help_text: "Choose the country used for billing details."
           ) %&gt;
         
           &lt;%= render FlatPack::RadioGroup::Component.new(
             name: "notification_preference",
             options: ["Email", "SMS"],
-            label: "Notification Preference"
+            label: "Notification Preference",
+            help_text: "Pick the primary channel for account updates."
           ) %&gt;
         
           &lt;%= render FlatPack::Checkbox::Component.new(
             name: "agree_terms",
-            label: "I agree to the terms"
+            label: "I agree to the terms",
+            help_text: "Required before submitting the form."
           ) %&gt;
         
           &lt;%= render FlatPack::TextArea::Component.new(
             name: "bio",
             label: "Biography",
+            help_text: "Keep the summary short and plain text.",
             rows: 4
           ) %&gt;
         

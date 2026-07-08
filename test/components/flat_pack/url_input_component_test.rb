@@ -30,6 +30,13 @@ module FlatPack
         assert_selector "input[type='url']"
       end
 
+      def test_renders_help_text
+        render_inline(Component.new(name: "website", id: "website", help_text: "Use a full URL beginning with https://."))
+
+        assert_selector "p#website_help_text", text: "Use a full URL beginning with https://."
+        assert_selector "input[aria-describedby='website_help_text']"
+      end
+
       def test_label_for_attribute_matches_input_id
         render_inline(Component.new(name: "website", label: "Website", id: "user-website"))
 

@@ -30,6 +30,7 @@
           label: "Name",
           name: "user[name]",
           placeholder: "Enter your name",
+          help_text: "This appears on the user's profile.",
           required: true
         ) %>
       </div>
@@ -39,6 +40,7 @@
           label: "Email",
           name: "user[email]",
           placeholder: "your.email@example.com",
+          help_text: "Use an address where the user can receive updates.",
           required: true
         ) %>
       </div>
@@ -60,6 +62,22 @@
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE'),
         &lt;%= form_with url: demo_forms_create_path, method: :post do |f| %&gt;
+          &lt;%= render FlatPack::TextInput::Component.new(
+            label: "Name",
+            name: "user[name]",
+            placeholder: "Enter your name",
+            help_text: "This appears on the user's profile.",
+            required: true
+          ) %&gt;
+
+          &lt;%= render FlatPack::EmailInput::Component.new(
+            label: "Email",
+            name: "user[email]",
+            placeholder: "your.email@example.com",
+            help_text: "Use an address where the user can receive updates.",
+            required: true
+          ) %&gt;
+
           &lt;%= render FlatPack::Button::Component.new(
             text: "Create User",
             type: "submit",
@@ -85,6 +103,7 @@
           name: "user[name]",
           value: "John Doe",
           placeholder: "Enter your name",
+          help_text: "Update the display name shown across the app.",
           required: true
         ) %>
       </div>
@@ -95,6 +114,7 @@
           name: "user[email]",
           value: "john.doe@example.com",
           placeholder: "your.email@example.com",
+          help_text: "Changing this updates future notifications.",
           required: true
         ) %>
       </div>
@@ -103,6 +123,7 @@
         <%= render FlatPack::Select::Component.new(
           label: "Status",
           name: "user[status]",
+          help_text: "Choose the lifecycle state for this user.",
           options: [
             { label: "Active", value: "active" },
             { label: "Inactive", value: "inactive" },
@@ -129,6 +150,27 @@
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE'),
         &lt;%= form_with url: demo_forms_update_path, method: :patch do |f| %&gt;
+          &lt;%= render FlatPack::TextInput::Component.new(
+            label: "Name",
+            name: "user[name]",
+            value: "John Doe",
+            placeholder: "Enter your name",
+            help_text: "Update the display name shown across the app.",
+            required: true
+          ) %&gt;
+
+          &lt;%= render FlatPack::Select::Component.new(
+            label: "Status",
+            name: "user[status]",
+            help_text: "Choose the lifecycle state for this user.",
+            options: [
+              { label: "Active", value: "active" },
+              { label: "Inactive", value: "inactive" },
+              { label: "Pending", value: "pending" }
+            ],
+            selected: "active"
+          ) %&gt;
+
           &lt;%= render FlatPack::Button::Component.new(
             text: "Update User",
             type: "submit",
@@ -154,6 +196,7 @@
           name: "user[username]",
           value: "johndoe",
           placeholder: "Enter username",
+          help_text: "Usernames should be unique and easy to recognize.",
           required: true
         ) %>
       </div>
@@ -162,7 +205,8 @@
         <%= render FlatPack::PasswordInput::Component.new(
           label: "Password",
           name: "user[password]",
-          placeholder: "Enter new password"
+          placeholder: "Enter new password",
+          help_text: "Leave blank if the password should not change."
         ) %>
       </div>
 
@@ -178,6 +222,22 @@
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE'),
         &lt;%= form_with url: demo_forms_update_path, method: :put do |f| %&gt;
+          &lt;%= render FlatPack::TextInput::Component.new(
+            label: "Username",
+            name: "user[username]",
+            value: "johndoe",
+            placeholder: "Enter username",
+            help_text: "Usernames should be unique and easy to recognize.",
+            required: true
+          ) %&gt;
+
+          &lt;%= render FlatPack::PasswordInput::Component.new(
+            label: "Password",
+            name: "user[password]",
+            placeholder: "Enter new password",
+            help_text: "Leave blank if the password should not change."
+          ) %&gt;
+
           &lt;%= render FlatPack::Button::Component.new(
             text: "Save Changes",
             type: "submit",
@@ -208,6 +268,7 @@
         <%= render FlatPack::Checkbox::Component.new(
           label: "I understand this action is permanent",
           name: "confirm_deletion",
+          help_text: "This confirmation is required before deleting the account.",
           required: true
         ) %>
       </div>
@@ -229,6 +290,13 @@
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE'),
         &lt;%= form_with url: demo_forms_destroy_path, method: :delete do |f| %&gt;
+          &lt;%= render FlatPack::Checkbox::Component.new(
+            label: "I understand this action is permanent",
+            name: "confirm_deletion",
+            help_text: "This confirmation is required before deleting the account.",
+            required: true
+          ) %&gt;
+
           &lt;%= render FlatPack::Button::Component.new(
             text: "Delete Account",
             type: "submit",
@@ -375,6 +443,7 @@
           label: "Content",
           name: "post[content]",
           placeholder: "Write something...",
+          help_text: "Draft content can be saved before publishing.",
           required: true
         ) %>
       </div>
@@ -399,6 +468,14 @@
 
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;%= render FlatPack::TextInput::Component.new(
+          label: "Content",
+          name: "post[content]",
+          placeholder: "Write something...",
+          help_text: "Draft content can be saved before publishing.",
+          required: true
+        ) %&gt;
+
         &lt;%= render FlatPack::Button::Component.new(
           text: "Save as Draft",
           type: "submit",
@@ -429,7 +506,8 @@
           label: "Example Input",
           name: "example",
           value: "Test value",
-          placeholder: "Type something..."
+          placeholder: "Type something...",
+          help_text: "Reset returns this field to its initial value."
         ) %>
       </div>
 
@@ -465,6 +543,14 @@
 
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;%= render FlatPack::TextInput::Component.new(
+          label: "Example Input",
+          name: "example",
+          value: "Test value",
+          placeholder: "Type something...",
+          help_text: "Reset returns this field to its initial value."
+        ) %&gt;
+
         <!-- Default type is 'button' -->
         &lt;%= render FlatPack::Button::Component.new(text: "Click me") %&gt;
         

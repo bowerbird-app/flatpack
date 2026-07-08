@@ -30,6 +30,13 @@ module FlatPack
         assert_selector "input[type='email']"
       end
 
+      def test_renders_help_text
+        render_inline(Component.new(name: "email", id: "email", help_text: "Use the address where you receive account updates."))
+
+        assert_selector "p#email_help_text", text: "Use the address where you receive account updates."
+        assert_selector "input[aria-describedby='email_help_text']"
+      end
+
       def test_label_for_attribute_matches_input_id
         render_inline(Component.new(name: "email", label: "Email", id: "user-email"))
 

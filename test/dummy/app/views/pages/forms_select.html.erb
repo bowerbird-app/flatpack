@@ -15,6 +15,7 @@
         options: ["United States", "Canada", "United Kingdom", "Australia"],
         label: "Country",
         placeholder: "Select a country",
+        help_text: "Choose the country used for billing and tax rules.",
         required: true
       ) %>
 
@@ -23,6 +24,7 @@
         options: ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix"],
         label: "City",
         placeholder: "Search cities...",
+        help_text: "Type to filter long option lists.",
         searchable: true
       ) %>
 
@@ -37,6 +39,7 @@
         ],
         label: "Favorite Frameworks",
         placeholder: "Search and select frameworks...",
+        help_text: "Select every framework that applies.",
         searchable: true,
         multiple: true,
         value: ["rails", "hotwire"]
@@ -47,6 +50,7 @@
         options: [],
         label: "Assignee (Remote Search)",
         placeholder: "Type at least 2 characters...",
+        help_text: "Remote search loads matches after enough input.",
         searchable: true,
         search_mode: :remote,
         search_endpoint: demo_forms_select_options_path
@@ -57,6 +61,7 @@
         options: [["Alice Johnson", "alice-johnson"], ["Bob Smith", "bob-smith"]],
         label: "Reviewers (Remote + Multiselect)",
         placeholder: "Search teammates...",
+        help_text: "Add one or more teammates to review the work.",
         searchable: true,
         multiple: true,
         value: ["alice-johnson"],
@@ -76,6 +81,7 @@
           options: [&quot;United States&quot;, &quot;Canada&quot;, &quot;United Kingdom&quot;, &quot;Australia&quot;],
           label: &quot;Country&quot;,
           placeholder: &quot;Select a country&quot;,
+          help_text: &quot;Choose the country used for billing and tax rules.&quot;,
           required: true
         ) %&gt;
     
@@ -84,6 +90,7 @@
           options: [&quot;New York&quot;, &quot;Los Angeles&quot;, &quot;Chicago&quot;, &quot;Houston&quot;, &quot;Phoenix&quot;],
           label: &quot;City&quot;,
           placeholder: &quot;Search cities...&quot;,
+          help_text: &quot;Type to filter long option lists.&quot;,
           searchable: true
         ) %&gt;
 
@@ -98,6 +105,7 @@
           ],
           label: &quot;Favorite Frameworks&quot;,
           placeholder: &quot;Search and select frameworks...&quot;,
+          help_text: &quot;Select every framework that applies.&quot;,
           searchable: true,
           multiple: true,
           value: [&quot;rails&quot;, &quot;hotwire&quot;]
@@ -108,6 +116,7 @@
           options: [],
           label: &quot;Assignee (Remote Search)&quot;,
           placeholder: &quot;Type at least 2 characters...&quot;,
+          help_text: &quot;Remote search loads matches after enough input.&quot;,
           searchable: true,
           search_mode: :remote,
           search_endpoint: demo_forms_select_options_path
@@ -118,6 +127,7 @@
           options: [[&quot;Alice Johnson&quot;, &quot;alice-johnson&quot;], [&quot;Bob Smith&quot;, &quot;bob-smith&quot;]],
           label: &quot;Reviewers (Remote + Multiselect)&quot;,
           placeholder: &quot;Search teammates...&quot;,
+          help_text: &quot;Add one or more teammates to review the work.&quot;,
           searchable: true,
           multiple: true,
           value: [&quot;alice-johnson&quot;],

@@ -15,6 +15,7 @@
         label: "Profile Picture",
         accept: "image/png,image/jpeg,image/gif",
         max_size: 2_097_152,
+        help_text: "PNG, JPEG, or GIF images up to 2 MB are accepted.",
         preview: true
       ) %>
 
@@ -24,6 +25,7 @@
         accept: ".pdf,.doc,.docx",
         multiple: true,
         max_size: 5_242_880,
+        help_text: "Upload one or more PDF or Word documents up to 5 MB each.",
         preview: false
       ) %>
     <% end %>
@@ -38,6 +40,7 @@
           label: &quot;Profile Picture&quot;,
           accept: &quot;image/png,image/jpeg,image/gif&quot;,
           max_size: 2_097_152,
+          help_text: &quot;PNG, JPEG, or GIF images up to 2 MB are accepted.&quot;,
           preview: true
         ) %&gt;
     
@@ -47,6 +50,7 @@
           accept: &quot;.pdf,.doc,.docx&quot;,
           multiple: true,
           max_size: 5_242_880,
+          help_text: &quot;Upload one or more PDF or Word documents up to 5 MB each.&quot;,
           preview: false
         ) %&gt;
         &lt;% end %&gt;

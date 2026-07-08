@@ -15,6 +15,7 @@
           name: "full_name",
           label: "Full Name",
           placeholder: "John Doe",
+          help_text: "Use the name that should appear on account records.",
           required: true
         ) %>
 
@@ -22,6 +23,7 @@
           name: "contact_email",
           label: "Email",
           placeholder: "john@example.com",
+          help_text: "Use the email address for account notifications.",
           required: true
         ) %>
 
@@ -29,18 +31,21 @@
           name: "account_password",
           label: "Password",
           placeholder: "Enter a secure password",
+          help_text: "Use at least 12 characters.",
           required: true
         ) %>
 
         <%= render FlatPack::PhoneInput::Component.new(
           name: "contact_phone",
           label: "Phone Number",
-          placeholder: "+1 (555) 123-4567"
+          placeholder: "+1 (555) 123-4567",
+          help_text: "Include a country code when applicable."
         ) %>
 
         <%= render FlatPack::DateInput::Component.new(
           name: "birth_date",
           label: "Birth Date",
+          help_text: "Must be today or earlier.",
           max: Date.today.to_s
         ) %>
 
@@ -50,7 +55,8 @@
           min: 18,
           max: 120,
           step: 1,
-          placeholder: "Enter your age"
+          placeholder: "Enter your age",
+          help_text: "Enter a whole number from 18 to 120."
         ) %>
 
         <%= render FlatPack::RangeInput::Component.new(
@@ -59,6 +65,7 @@
           min: 0,
           max: 10,
           step: 1,
+          help_text: "Drag to indicate your current comfort level.",
           value: 5
         ) %>
 
@@ -67,12 +74,14 @@
           options: [["United States", "us"], ["Canada", "ca"], ["United Kingdom", "uk"]],
           label: "Country",
           placeholder: "Select your country",
+          help_text: "Choose the country used for billing details.",
           required: true
         ) %>
 
         <%= render FlatPack::Checkbox::Component.new(
           name: "agree_terms",
           label: "I agree to the terms and conditions",
+          help_text: "Required before submitting the form.",
           required: true
         ) %>
 
@@ -80,6 +89,7 @@
           name: "bio",
           label: "Biography",
           placeholder: "Tell us about yourself...",
+          help_text: "Keep the summary short and plain text.",
           rows: 4
         ) %>
 
@@ -103,6 +113,7 @@
           name: &quot;full_name&quot;,
           label: &quot;Full Name&quot;,
           placeholder: &quot;John Doe&quot;,
+          help_text: &quot;Use the name that should appear on account records.&quot;,
           required: true
         ) %&gt;
     
@@ -110,6 +121,7 @@
           name: &quot;contact_email&quot;,
           label: &quot;Email&quot;,
           placeholder: &quot;john@example.com&quot;,
+          help_text: &quot;Use the email address for account notifications.&quot;,
           required: true
         ) %&gt;
     
@@ -117,18 +129,21 @@
           name: &quot;account_password&quot;,
           label: &quot;Password&quot;,
           placeholder: &quot;Enter a secure password&quot;,
+          help_text: &quot;Use at least 12 characters.&quot;,
           required: true
         ) %&gt;
     
         &lt;%= render FlatPack::PhoneInput::Component.new(
           name: &quot;contact_phone&quot;,
           label: &quot;Phone Number&quot;,
-          placeholder: &quot;+1 (555) 123-4567&quot;
+          placeholder: &quot;+1 (555) 123-4567&quot;,
+          help_text: &quot;Include a country code when applicable.&quot;
         ) %&gt;
     
         &lt;%= render FlatPack::DateInput::Component.new(
           name: &quot;birth_date&quot;,
           label: &quot;Birth Date&quot;,
+          help_text: &quot;Must be today or earlier.&quot;,
           max: Date.today.to_s
         ) %&gt;
     
@@ -138,7 +153,8 @@
           min: 18,
           max: 120,
           step: 1,
-          placeholder: &quot;Enter your age&quot;
+          placeholder: &quot;Enter your age&quot;,
+          help_text: &quot;Enter a whole number from 18 to 120.&quot;
         ) %&gt;
     
         &lt;%= render FlatPack::RangeInput::Component.new(
@@ -147,6 +163,7 @@
           min: 0,
           max: 10,
           step: 1,
+          help_text: &quot;Drag to indicate your current comfort level.&quot;,
           value: 5
         ) %&gt;
     
@@ -155,12 +172,14 @@
           options: [[&quot;United States&quot;, &quot;us&quot;], [&quot;Canada&quot;, &quot;ca&quot;], [&quot;United Kingdom&quot;, &quot;uk&quot;]],
           label: &quot;Country&quot;,
           placeholder: &quot;Select your country&quot;,
+          help_text: &quot;Choose the country used for billing details.&quot;,
           required: true
         ) %&gt;
     
         &lt;%= render FlatPack::Checkbox::Component.new(
           name: &quot;agree_terms&quot;,
           label: &quot;I agree to the terms and conditions&quot;,
+          help_text: &quot;Required before submitting the form.&quot;,
           required: true
         ) %&gt;
     
@@ -168,6 +187,7 @@
           name: &quot;bio&quot;,
           label: &quot;Biography&quot;,
           placeholder: &quot;Tell us about yourself...&quot;,
+          help_text: &quot;Keep the summary short and plain text.&quot;,
           rows: 4
         ) %&gt;
     

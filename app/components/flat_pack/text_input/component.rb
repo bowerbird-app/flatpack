@@ -15,6 +15,7 @@ module FlatPack
         required: false,
         label: nil,
         error: nil,
+        help_text: nil,
         character_count: false,
         quick_copy: false,
         min_characters: nil,
@@ -30,6 +31,7 @@ module FlatPack
         @required = required
         @label = label
         @error = error
+        @help_text = normalize_help_text!(help_text)
         @character_count = character_count
         @quick_copy = quick_copy
         @min_characters = min_characters
@@ -44,6 +46,7 @@ module FlatPack
           safe_join([
             render_label,
             render_input,
+            render_help_text,
             render_character_count,
             render_error
           ].compact)
@@ -117,7 +120,9 @@ module FlatPack
           data: input_data_attributes
         }
 
-        attrs[:aria] = {invalid: "true", describedby: error_id} if @error
+        describedby = describedby_tokens((help_text_id if @help_text), (error_id if @error))
+        attrs[:aria] = describedby.present? ? {describedby: describedby} : {}
+        attrs[:aria][:invalid] = "true" if @error
 
         merge_attributes(**apply_default_validation(attrs.compact, error_id: error_id, has_error: @error.present?))
       end
@@ -230,6 +235,10 @@ module FlatPack
 
       def character_count_id
         "#{input_id}_character_count"
+      end
+
+      def help_text_id
+        "#{input_id}_help_text"
       end
 
       def character_count_text

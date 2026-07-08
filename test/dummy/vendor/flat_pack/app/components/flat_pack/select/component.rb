@@ -24,6 +24,7 @@ module FlatPack
         min_search_length: 2,
         multiple: false,
         error: nil,
+        help_text: nil,
         **system_arguments
       )
         @custom_class = system_arguments[:class]
@@ -43,6 +44,7 @@ module FlatPack
         @min_search_length = [min_search_length.to_i, 1].max
         @multiple = multiple
         @error = error
+        @help_text = normalize_help_text!(help_text)
 
         validate_name!
         validate_options!
@@ -56,6 +58,7 @@ module FlatPack
           safe_join([
             render_label,
             render_select_wrapper,
+            render_help_text,
             render_error
           ].compact)
         end
@@ -134,6 +137,10 @@ module FlatPack
           data: {flat_pack__select_target: "hiddenInput"}
         }
 
+        describedby = describedby_tokens((help_text_id if @help_text), (error_id if @error))
+        attrs[:aria] = describedby.present? ? {describedby: describedby} : {}
+        attrs[:aria][:invalid] = "true" if @error
+
         tag.input(**apply_default_validation(attrs, error_id: error_id, has_error: @error.present?, type: "custom-select-hidden"))
       end
 
@@ -162,7 +169,9 @@ module FlatPack
           },
           aria: {
             haspopup: "listbox",
-            expanded: "false"
+            expanded: "false",
+            describedby: describedby_tokens((help_text_id if @help_text), (error_id if @error)).presence,
+            invalid: (@error.present? ? "true" : nil)
           }) do
           @multiple ? render_multiselect_trigger_content : safe_join([
             content_tag(:span, display_text, class: "block truncate"),
@@ -335,7 +344,9 @@ module FlatPack
           class: select_classes
         }
 
-        attrs[:aria] = {invalid: "true", describedby: error_id} if @error
+        describedby = describedby_tokens((help_text_id if @help_text), (error_id if @error))
+        attrs[:aria] = describedby.present? ? {describedby: describedby} : {}
+        attrs[:aria][:invalid] = "true" if @error
 
         merge_attributes(**apply_default_validation(attrs.compact, error_id: error_id, has_error: @error.present?))
       end
@@ -438,6 +449,10 @@ module FlatPack
 
       def error_id
         "#{select_id}_error"
+      end
+
+      def help_text_id
+        "#{select_id}_help_text"
       end
 
       def selected_values

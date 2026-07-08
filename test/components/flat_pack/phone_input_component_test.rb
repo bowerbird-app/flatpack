@@ -30,6 +30,13 @@ module FlatPack
         assert_selector "input[type='tel']"
       end
 
+      def test_renders_help_text
+        render_inline(Component.new(name: "phone", id: "phone", help_text: "Include country code for international numbers."))
+
+        assert_selector "p#phone_help_text", text: "Include country code for international numbers."
+        assert_selector "input[aria-describedby='phone_help_text']"
+      end
+
       def test_label_for_attribute_matches_input_id
         render_inline(Component.new(name: "phone", label: "Phone", id: "user-phone"))
 

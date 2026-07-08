@@ -54,6 +54,13 @@ module FlatPack
         assert_selector "label[for='volume']"
       end
 
+      def test_renders_help_text
+        render_inline(Component.new(name: "volume", help_text: "Drag to set the preferred volume."))
+
+        assert_selector "p#volume_help_text", text: "Drag to set the preferred volume."
+        assert_selector "input[aria-describedby='volume_help_text']"
+      end
+
       def test_renders_value_display_when_show_value_true
         render_inline(Component.new(name: "volume", value: 75, show_value: true, label: "Volume"))
 

@@ -466,6 +466,7 @@
       variables: [
         { variable: "name", accepts: "String", example: "name: \"user[email]\"" },
         { variable: "label", accepts: "String or nil", example: "label: \"Email\"" },
+        { variable: "help_text", accepts: "String or nil", example: "help_text: \"Use your work email address\"" },
         { variable: "required", accepts: "true, false", example: "required: true" }
       ]
     },
@@ -480,6 +481,7 @@
         { variable: "max", accepts: "Numeric", example: "max: 100" },
         { variable: "step", accepts: "Numeric", example: "step: 1" },
         { variable: "label", accepts: "String or nil", example: "label: \"Volume\"" },
+        { variable: "help_text", accepts: "String or nil", example: "help_text: \"Drag to set the preferred volume\"" },
         { variable: "show_value", accepts: "true, false", example: "show_value: true" },
         { variable: "disabled", accepts: "true, false", example: "disabled: true" },
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"w-full\", data: { testid: \"range-input\" }" }
@@ -552,6 +554,7 @@
         { variable: "disabled", accepts: "true, false", example: "disabled: true" },
         { variable: "required", accepts: "true, false", example: "required: true" },
         { variable: "label", accepts: "String or nil", example: "label: \"Email\"" },
+        { variable: "help_text", accepts: "String or nil", example: "help_text: \"Use the address where you receive updates\"" },
         { variable: "error", accepts: "String or nil", example: "error: \"Email is invalid\"" },
         { variable: "character_count", accepts: "true, false", example: "character_count: true" },
         { variable: "quick_copy", accepts: "true, false", example: "quick_copy: true" },
@@ -569,6 +572,7 @@
         { variable: "value", accepts: "String, Array<String>, nil", example: "value: [\"US\", \"CA\"]" },
         { variable: "placeholder", accepts: "String or nil", example: "placeholder: \"Select an option\"" },
         { variable: "label", accepts: "String or nil", example: "label: \"Country\"" },
+        { variable: "help_text", accepts: "String or nil", example: "help_text: \"Choose the billing country\"" },
         { variable: "searchable", accepts: "true, false", example: "searchable: true" },
         { variable: "search_mode", accepts: ":local, :remote", example: "search_mode: :remote" },
         { variable: "search_endpoint", accepts: "String or nil", example: "search_endpoint: demo_forms_select_options_path" },
@@ -601,6 +605,7 @@
         { variable: "disabled", accepts: "true, false", example: "disabled: true" },
         { variable: "required", accepts: "true, false", example: "required: true" },
         { variable: "label", accepts: "String or nil", example: "label: \"Birth Date\"" },
+        { variable: "help_text", accepts: "String or nil", example: "help_text: \"Future dates are not accepted\"" },
         { variable: "error", accepts: "String or nil", example: "error: \"Date is required\"" },
         { variable: "min", accepts: "String, Date, Time, DateTime, nil", example: "min: \"2026-01-01\"" },
         { variable: "max", accepts: "String, Date, Time, DateTime, nil", example: "max: \"2026-12-31\"" },
@@ -620,6 +625,7 @@
         { variable: "disabled", accepts: "true, false", example: "disabled: true" },
         { variable: "required", accepts: "true, false", example: "required: true" },
         { variable: "label", accepts: "String or nil", example: "label: \"Reporting Period\"" },
+        { variable: "help_text", accepts: "String or nil", example: "help_text: \"Select the inclusive reporting period\"" },
         { variable: "error", accepts: "String or nil", example: "error: \"Date range is required\"" },
         { variable: "min", accepts: "String, Date, Time, DateTime, nil", example: "min: \"2026-01-01\"" },
         { variable: "max", accepts: "String, Date, Time, DateTime, nil", example: "max: \"2026-12-31\"" },
@@ -636,6 +642,7 @@
         { variable: "disabled", accepts: "true, false", example: "disabled: true" },
         { variable: "required", accepts: "true, false", example: "required: true" },
         { variable: "label", accepts: "String or nil", example: "label: \"Starts At\"" },
+        { variable: "help_text", accepts: "String or nil", example: "help_text: \"Times use the browser timezone\"" },
         { variable: "error", accepts: "String or nil", example: "error: \"Start date and time is required\"" },
         { variable: "min", accepts: "String, Time, DateTime, Date, nil", example: "min: \"2026-01-01T09:00\"" },
         { variable: "max", accepts: "String, Time, DateTime, Date, nil", example: "max: \"2026-12-31T17:00\"" },

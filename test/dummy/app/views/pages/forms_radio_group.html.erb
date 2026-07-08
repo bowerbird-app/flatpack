@@ -14,6 +14,7 @@
         name: "size",
         options: ["Small", "Medium", "Large"],
         label: "Choose a size",
+        help_text: "Select the size that best fits the current order.",
         value: "Medium"
       ) %>
 
@@ -21,6 +22,7 @@
         name: "payment_method",
         options: ["Credit Card", "PayPal", "Bank Transfer"],
         label: "Payment Method",
+        help_text: "Choose the payment method to use at checkout.",
         required: true
       ) %>
     <% end %>
@@ -34,6 +36,7 @@
           name: &quot;size&quot;,
           options: [&quot;Small&quot;, &quot;Medium&quot;, &quot;Large&quot;],
           label: &quot;Choose a size&quot;,
+          help_text: &quot;Select the size that best fits the current order.&quot;,
           value: &quot;Medium&quot;
         ) %&gt;
     
@@ -41,6 +44,7 @@
           name: &quot;payment_method&quot;,
           options: [&quot;Credit Card&quot;, &quot;PayPal&quot;, &quot;Bank Transfer&quot;],
           label: &quot;Payment Method&quot;,
+          help_text: &quot;Choose the payment method to use at checkout.&quot;,
           required: true
         ) %&gt;
         &lt;% end %&gt;

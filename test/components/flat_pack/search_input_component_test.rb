@@ -30,6 +30,13 @@ module FlatPack
         assert_selector "input[type='search']"
       end
 
+      def test_renders_help_text
+        render_inline(Component.new(name: "query", id: "query", help_text: "Search by customer name or order number."))
+
+        assert_selector "p#query_help_text", text: "Search by customer name or order number."
+        assert_selector "input[aria-describedby='query_help_text']"
+      end
+
       def test_renders_clear_button
         render_inline(Component.new(name: "query"))
 

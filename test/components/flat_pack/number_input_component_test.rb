@@ -30,6 +30,13 @@ module FlatPack
         assert_selector "input[type='number']"
       end
 
+      def test_renders_help_text
+        render_inline(Component.new(name: "quantity", id: "quantity", help_text: "Enter a value between 1 and 10."))
+
+        assert_selector "p#quantity_help_text", text: "Enter a value between 1 and 10."
+        assert_selector "input[aria-describedby='quantity_help_text']"
+      end
+
       def test_label_for_attribute_matches_input_id
         render_inline(Component.new(name: "quantity", label: "Quantity", id: "quantity-input"))
 

@@ -17,6 +17,7 @@ module FlatPack
         required: false,
         label: nil,
         error: nil,
+        help_text: nil,
         min: nil,
         max: nil,
         **system_arguments
@@ -32,6 +33,7 @@ module FlatPack
         @required = required
         @label = label
         @error = error
+        @help_text = normalize_help_text!(help_text)
         @min = format_date_value(min)
         @max = format_date_value(max)
 
@@ -43,6 +45,7 @@ module FlatPack
           safe_join([
             render_label,
             render_input,
+            render_help_text,
             render_error
           ].compact)
         end
@@ -94,7 +97,7 @@ module FlatPack
           expanded: "false",
           controls: panel_id,
           invalid: (@error.present? ? "true" : nil),
-          describedby: (@error.present? ? error_id : nil)
+          describedby: describedby_tokens((help_text_id if @help_text), (error_id if @error)).presence
         }.compact
 
         tag.input(**attrs)
@@ -390,6 +393,10 @@ module FlatPack
 
       def error_id
         "#{input_id}_error"
+      end
+
+      def help_text_id
+        "#{input_id}_help_text"
       end
 
       def validate_names!
