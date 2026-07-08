@@ -22,6 +22,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/forms/checkbox
     /demo/forms/radio_group
     /demo/forms/select
+    /demo/forms/nested_multiselect
     /demo/forms/switch
     /demo/forms/combined
     /demo/inputs
@@ -164,6 +165,16 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "component-method-variables-date_time_input-0"
     refute_includes response.body, "Date Range Companion Example"
     refute_includes response.body, "component-method-variables-date_input-0"
+  end
+
+  test "nested multiselect demo renders controller example and sidebar link" do
+    get "/demo/forms/nested_multiselect"
+
+    assert_response :success
+    assert_includes response.body, "Nested Multiselect"
+    assert_includes response.body, 'data-controller="flat-pack--nested-multiselect"'
+    assert_includes response.body, 'href="/demo/forms/nested_multiselect"'
+    assert_includes response.body, "locations[]"
   end
 
   test "admin demo renders pagination" do

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Added a reusable nested multiselect Stimulus controller with parent/child checkbox state syncing, indeterminate parent states, initial selected values, and hidden form input generation.
+- Added a dummy app nested multiselect demo page under `/demo/forms/nested_multiselect` with sidebar navigation.
 
 ### Changed
 
