@@ -27,4 +27,25 @@ class PagesChartsDemoTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "United States"
     assert_includes response.body, ":geochart"
   end
+
+  test "charts page renders stacked chart examples after matching base charts" do
+    get demo_charts_path
+
+    assert_response :success
+    assert_includes response.body, "Stacked Column Chart"
+    assert_includes response.body, "Stacked Bar Chart"
+    assert_includes response.body, ":stacked_column"
+    assert_includes response.body, ":stacked_bar"
+    assert_includes response.body, "Traffic by Device"
+    assert_includes response.body, "Quarterly Product Mix"
+
+    column_index = response.body.index("Column Chart")
+    stacked_column_index = response.body.index("Stacked Column Chart")
+    bar_index = response.body.index("Bar Chart")
+    stacked_bar_index = response.body.index("Stacked Bar Chart")
+
+    assert_operator column_index, :<, stacked_column_index
+    assert_operator stacked_column_index, :<, bar_index
+    assert_operator bar_index, :<, stacked_bar_index
+  end
 end

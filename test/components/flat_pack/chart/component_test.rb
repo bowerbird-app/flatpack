@@ -40,6 +40,26 @@ module FlatPack
         assert_selector "[data-flat-pack--chart-type-value='bar']"
       end
 
+      def test_renders_chart_with_stacked_column_type
+        series = [
+          {name: "Desktop", data: [45, 40, 50]},
+          {name: "Mobile", data: [35, 42, 30]}
+        ]
+        render_inline(Component.new(series: series, type: :stacked_column))
+
+        assert_selector "[data-flat-pack--chart-type-value='bar']"
+      end
+
+      def test_renders_chart_with_stacked_bar_type
+        series = [
+          {name: "Product A", data: [30, 40, 35]},
+          {name: "Product B", data: [45, 35, 50]}
+        ]
+        render_inline(Component.new(series: series, type: :stacked_bar))
+
+        assert_selector "[data-flat-pack--chart-type-value='bar']"
+      end
+
       def test_renders_chart_with_area_type
         series = [{name: "Sales", data: [10, 20, 30]}]
         render_inline(Component.new(series: series, type: :area))
@@ -383,6 +403,60 @@ module FlatPack
 
         html = page.native.to_html
         assert_includes html, '"horizontal":false'
+      end
+
+      def test_stacked_bar_defaults_are_stacked_and_horizontal
+        series = [
+          {name: "Product A", data: [30, 40, 35]},
+          {name: "Product B", data: [45, 35, 50]},
+          {name: "Product C", data: [25, 30, 20]}
+        ]
+        render_inline(Component.new(series: series, type: :stacked_bar))
+
+        html = page.native.to_html
+        assert_includes html, '"stacked":true'
+        assert_includes html, '"horizontal":true'
+        assert_includes html, '"colors":["color-mix(in oklab, var(--color-primary) 100%, transparent)"'
+        assert_includes html, '"name":"Product A"'
+        assert_includes html, '"name":"Product C"'
+      end
+
+      def test_stacked_column_defaults_are_stacked_and_vertical
+        series = [
+          {name: "Desktop", data: [45, 40, 50]},
+          {name: "Mobile", data: [35, 42, 30]},
+          {name: "Tablet", data: [20, 18, 20]}
+        ]
+        render_inline(Component.new(series: series, type: :stacked_column))
+
+        html = page.native.to_html
+        assert_includes html, '"stacked":true'
+        assert_includes html, '"horizontal":false'
+        assert_includes html, '"colors":["color-mix(in oklab, var(--color-primary) 100%, transparent)"'
+        assert_includes html, '"name":"Desktop"'
+        assert_includes html, '"name":"Tablet"'
+      end
+
+      def test_stacked_chart_user_provided_colors_override_default_palette
+        series = [
+          {name: "Desktop", data: [45, 40, 50]},
+          {name: "Mobile", data: [35, 42, 30]}
+        ]
+        options = {colors: ["#1d4ed8", "#93c5fd"]}
+        render_inline(Component.new(series: series, type: :stacked_column, options: options))
+
+        html = page.native.to_html
+        assert_includes html, '"colors":["#1d4ed8","#93c5fd"]'
+        refute_includes html, '"color-mix(in oklab, var(--color-primary) 100%, transparent)"'
+      end
+
+      def test_stacked_chart_renders_with_empty_series
+        render_inline(Component.new(series: [], type: :stacked_bar))
+
+        html = page.native.to_html
+        assert_selector "[data-flat-pack--chart-type-value='bar']"
+        assert_includes html, "data-flat-pack--chart-series-value=\"[]\""
+        assert_includes html, '"stacked":true'
       end
 
       def test_renders_chart_with_all_options
