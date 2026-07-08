@@ -11,6 +11,62 @@ module FlatPack
         assert_text "ago"
       end
 
+      def test_renders_long_timestamp_by_default
+        travel_to Time.zone.parse("2026-07-03 12:00:00") do
+          render_inline(Component.new(timestamp: 20.minutes.ago))
+        end
+
+        assert_text "20 minutes ago"
+      end
+
+      def test_renders_short_timestamp_for_less_than_a_minute_when_enabled
+        travel_to Time.zone.parse("2026-07-03 12:00:00") do
+          render_inline(Component.new(timestamp: 10.seconds.ago, shorten_timestamp: true))
+        end
+
+        assert_text "a min ago"
+      end
+
+      def test_renders_short_timestamp_for_minutes_when_enabled
+        travel_to Time.zone.parse("2026-07-03 12:00:00") do
+          render_inline(Component.new(timestamp: 20.minutes.ago, shorten_timestamp: true))
+        end
+
+        assert_text "20 min ago"
+      end
+
+      def test_renders_short_timestamp_for_one_minute_when_enabled
+        travel_to Time.zone.parse("2026-07-03 12:00:00") do
+          render_inline(Component.new(timestamp: 1.minute.ago, shorten_timestamp: true))
+        end
+
+        assert_text "a min ago"
+      end
+
+      def test_renders_short_timestamp_for_hours_when_enabled
+        travel_to Time.zone.parse("2026-07-03 12:00:00") do
+          render_inline(Component.new(timestamp: 5.hours.ago, shorten_timestamp: true))
+        end
+
+        assert_text "5hr ago"
+      end
+
+      def test_renders_short_timestamp_for_week_distance_when_enabled
+        travel_to Time.zone.parse("2026-07-03 12:00:00") do
+          render_inline(Component.new(timestamp: 2.weeks.ago, shorten_timestamp: true))
+        end
+
+        assert_text "2wk ago"
+      end
+
+      def test_renders_short_future_timestamp_when_enabled
+        travel_to Time.zone.parse("2026-07-03 12:00:00") do
+          render_inline(Component.new(timestamp: 5.hours.from_now, shorten_timestamp: true))
+        end
+
+        assert_text "In 5hr"
+      end
+
       def test_renders_future_timestamp_with_in_prefix
         render_inline(Component.new(timestamp: 3.minutes.from_now))
 
@@ -57,6 +113,13 @@ module FlatPack
         assert_selector "time[data-flat-pack--timestamp-iso-value]"
         assert_selector "time[data-flat-pack--timestamp-fallback-value]"
         assert_selector "time[data-flat-pack--timestamp-format-value='%e %b %Y %l:%M%P']"
+        refute_selector "time[data-flat-pack--timestamp-shorten-timestamp-value]"
+      end
+
+      def test_sets_shorten_timestamp_data_attribute_when_enabled
+        render_inline(Component.new(timestamp: Time.zone.parse("2026-06-10 09:30:00"), shorten_timestamp: true))
+
+        assert_selector "time[data-flat-pack--timestamp-shorten-timestamp-value='true']"
       end
 
       def test_class_name_can_override_default_margin

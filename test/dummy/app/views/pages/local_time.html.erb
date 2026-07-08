@@ -53,33 +53,89 @@
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Relative Time",
     anchor_link: true,
-    subtitle: "Pair local-time and relative-time classes for recency labels."
+    subtitle: "Compare default and shortened local-time relative labels across common time distances."
   ) %>
 
-  <div class="space-y-3 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-4">
-    <% @relative_time_examples.each do |label, timestamp| %>
-      <div class="text-sm text-(--surface-muted-content-color)">
-        <%= label %>:
-        <time
-          class="local-time relative-time font-medium text-(--surface-content-color)"
-          datetime="<%= timestamp.utc.iso8601 %>"
-        >
-          <%= timestamp.utc.strftime("%d %b %Y, %I:%M %P UTC") %>
-        </time>
-      </div>
-    <% end %>
+  <%= render FlatPack::Table::Component.new(data: @relative_time_examples, class: "mb-4") do |table| %>
+    <% table.column(title: "Example", html: ->(row) { row.first }) %>
+    <% table.column(title: "Unshortened", html: ->(row) {
+      timestamp = row.last
+      tag.time(
+        timestamp.utc.strftime("%d %b %Y, %I:%M %P UTC"),
+        class: "local-time relative-time font-medium text-(--surface-content-color)",
+        datetime: timestamp.utc.iso8601
+      )
+    }) %>
+    <% table.column(title: "Shortened", html: ->(row) {
+      timestamp = row.last
+      tag.time(
+        timestamp.utc.strftime("%d %b %Y, %I:%M %P UTC"),
+        class: "local-time relative-time font-medium text-(--surface-content-color)",
+        datetime: timestamp.utc.iso8601,
+        data: {shorten_timestamp: true}
+      )
+    }) %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Table::Component.new(data: @relative_time_examples) do |table| %&gt;
+        &lt;% table.column(title: "Example", html: -&gt;(row) { row.first }) %&gt;
+        &lt;% table.column(title: "Unshortened", html: -&gt;(row) {
+          timestamp = row.last
+          tag.time(
+            timestamp.utc.strftime("%d %b %Y, %I:%M %P UTC"),
+            class: "local-time relative-time",
+            datetime: timestamp.utc.iso8601
+          )
+        }) %&gt;
+        &lt;% table.column(title: "Shortened", html: -&gt;(row) {
+          timestamp = row.last
+          tag.time(
+            timestamp.utc.strftime("%d %b %Y, %I:%M %P UTC"),
+            class: "local-time relative-time",
+            datetime: timestamp.utc.iso8601,
+            data: {shorten_timestamp: true}
+          )
+        }) %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Short Relative Time",
+    anchor_link: true,
+    subtitle: "Add data-shorten-timestamp for compact recency labels."
+  ) %>
+
+  <div class="rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-4">
+    <div class="text-sm text-(--surface-muted-content-color)">
+      Shortened:
+      <time
+        class="local-time relative-time font-medium text-(--surface-content-color)"
+        datetime="<%= 20.minutes.ago.utc.iso8601 %>"
+        data-shorten-timestamp="true"
+      >
+        <%= 20.minutes.ago.utc.strftime("%d %b %Y, %I:%M %P UTC") %>
+      </time>
+    </div>
   </div>
 
   <%= render FlatPack::CodeBlock::Component.new(
     title: "ERB",
     language: "erb",
     code: CGI.unescapeHTML(<<~'CODE')
-      &lt;% @relative_time_examples.each do |label, timestamp| %&gt;
-        &lt;%= label %&gt;:
-        &lt;time class=&quot;local-time relative-time&quot; datetime=&quot;&lt;%= timestamp.utc.iso8601 %&gt;&quot;&gt;
-          &lt;%= timestamp.utc.strftime(&quot;%d %b %Y, %I:%M %P UTC&quot;) %&gt;
-        &lt;/time&gt;
-      &lt;% end %&gt;
+      &lt;time
+        class=&quot;local-time relative-time&quot;
+        datetime=&quot;&lt;%= 20.minutes.ago.utc.iso8601 %&gt;&quot;
+        data-shorten-timestamp=&quot;true&quot;
+      &gt;
+        &lt;%= 20.minutes.ago.utc.strftime(&quot;%d %b %Y, %I:%M %P UTC&quot;) %&gt;
+      &lt;/time&gt;
     CODE
   ) %>
 </section>

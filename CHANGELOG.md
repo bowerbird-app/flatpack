@@ -8,10 +8,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Fixed
+
+## [0.1.117] - 2026-07-08
+
+### Added
 - Added `:stacked_bar` and `:stacked_column` support to `FlatPack::Chart::Component`, including dummy app examples, docs, and tests.
+- Added `shorten_timestamp:` support to `FlatPack::Timestamp::Component` and enabled compact timestamp labels in notifications.
 
 ### Changed
 - Bumped the gem version to `0.1.117`.
+- Updated the Timestamp and Local Time demos to compare unshortened and shortened relative time labels in tables.
 
 ### Fixed
 - Updated `FlatPack::Chart::Component` bar/column defaults to use a dark tooltip theme so column hover popups render with dark backgrounds instead of white.

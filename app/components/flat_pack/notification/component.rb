@@ -153,6 +153,7 @@ module FlatPack
           timestamp: timestamp,
           tooltip_placement: @timestamp_tooltip_placement,
           fallback_text: "",
+          shorten_timestamp: true,
           class_name: "text-xs text-[var(--surface-muted-content-color)] whitespace-nowrap"
         )
       end

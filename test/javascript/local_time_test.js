@@ -11,6 +11,7 @@ function loadLocalTime() {
 module.exports = {
   initLocalTimes,
   updateLocalTimeElement,
+  shortenTimestamp,
   formatLocalTime,
   formatRelativeTime,
   formatAbsoluteDate
@@ -32,11 +33,13 @@ function buildElement(options = {}) {
     className = 'local-time',
     datetime = Object.hasOwn(options, 'datetime') ? options.datetime : '2026-07-03T14:30:00Z',
     title,
+    shortenTimestamp,
     textContent = 'fallback'
   } = options
   const attributes = {}
   if (datetime !== undefined) attributes.datetime = datetime
   if (title !== undefined) attributes.title = title
+  if (shortenTimestamp !== undefined) attributes['data-flat-pack--timestamp-shorten-timestamp-value'] = shortenTimestamp
 
   return {
     attributes,
@@ -115,6 +118,19 @@ test('formatRelativeTime renders an absolute date after a year', () => {
   assert.equal(formatRelativeTime(date, now), formatAbsoluteDate(date))
 })
 
+test('formatRelativeTime renders shortened text when enabled', () => {
+  const { formatRelativeTime } = loadLocalTime()
+  const now = new Date('2026-07-03T12:00:00Z')
+
+  assert.equal(formatRelativeTime(new Date('2026-07-03T11:59:30Z'), now, true), 'a min ago')
+  assert.equal(formatRelativeTime(new Date('2026-07-03T11:59:00Z'), now, true), 'a min ago')
+  assert.equal(formatRelativeTime(new Date('2026-07-03T11:40:00Z'), now, true), '20 min ago')
+  assert.equal(formatRelativeTime(new Date('2026-07-03T07:00:00Z'), now, true), '5hr ago')
+  assert.equal(formatRelativeTime(new Date('2026-07-02T11:00:00Z'), now, true), '1d ago')
+  assert.equal(formatRelativeTime(new Date('2026-06-18T12:00:00Z'), now, true), '2wk ago')
+  assert.equal(formatRelativeTime(new Date('2026-03-05T12:00:00Z'), now, true), '4mo ago')
+})
+
 test('updateLocalTimeElement replaces valid local time text and adds title', () => {
   const { formatLocalTime, updateLocalTimeElement } = loadLocalTime()
   const datetime = '2026-07-03T14:30:00Z'
@@ -146,6 +162,19 @@ test('updateLocalTimeElement renders relative time for relative-time elements', 
   updateLocalTimeElement(element, new Date('2026-07-03T12:00:00Z'))
 
   assert.equal(element.textContent, '12 minutes ago')
+})
+
+test('updateLocalTimeElement renders shortened relative time when enabled', () => {
+  const { updateLocalTimeElement } = loadLocalTime()
+  const element = buildElement({
+    className: 'local-time relative-time',
+    datetime: '2026-07-03T11:40:00Z',
+    shortenTimestamp: 'true'
+  })
+
+  updateLocalTimeElement(element, new Date('2026-07-03T12:00:00Z'))
+
+  assert.equal(element.textContent, '20 min ago')
 })
 
 test('updateLocalTimeElement leaves invalid datetime unchanged', () => {

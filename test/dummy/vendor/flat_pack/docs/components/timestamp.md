@@ -18,6 +18,7 @@ Use Timestamp in activity feeds, tables, and metadata rows where relative recenc
 | `class_name` | String, nil | `nil` | no | Optional CSS class string applied to the rendered timestamp text (`<time>` or fallback `<span>`). |
 | `tooltip_placement` | Symbol | `:top` | no | Tooltip placement: `:top`, `:right`, `:bottom`, `:left`. |
 | `fallback_text` | String | `"-"` | no | Text rendered when `timestamp` is nil or cannot be parsed. |
+| `shorten_timestamp` | Boolean | `false` | no | Renders compact relative labels such as `a min ago`, `20 min ago`, and `5hr ago`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes forwarded to tooltip wrapper when timestamp is valid. |
 
 ## Slots
@@ -42,6 +43,10 @@ None.
 ```erb
 <%= render FlatPack::Timestamp::Component.new(timestamp: "2016-01-01T00:00:00Z", class_name: "text-green-600") %>
 <%= render FlatPack::Timestamp::Component.new(timestamp: "2016-01-01T00:00:00Z", class_name: "text-xs") %>
+```
+
+```erb
+<%= render FlatPack::Timestamp::Component.new(timestamp: 20.minutes.ago, shorten_timestamp: true) %>
 ```
 
 ## Accessibility

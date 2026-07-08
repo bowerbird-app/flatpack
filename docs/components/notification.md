@@ -57,7 +57,7 @@ Notification timestamps should be provided in ISO8601 format, for example:
 "2026-07-03T10:30:00Z"
 ```
 
-Timestamps are rendered using `FlatPack::Timestamp::Component`, which displays relative time and an absolute timestamp tooltip.
+Timestamps are rendered using `FlatPack::Timestamp::Component` with `shorten_timestamp: true`, which displays compact relative time such as `20 min ago` and an absolute timestamp tooltip.
 
 ## Example
 ```erb
