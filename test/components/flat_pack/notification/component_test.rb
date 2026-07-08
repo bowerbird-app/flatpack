@@ -192,6 +192,12 @@ module FlatPack
         assert_selector "time[data-controller='flat-pack--timestamp']"
       end
 
+      def test_uses_short_timestamp_data_attribute
+        render_inline(Component.new(see_all_href: "/notifications", notifications: [notification(time: "2026-07-03T10:30:00Z")]))
+
+        assert_selector "time[data-flat-pack--timestamp-shorten-timestamp-value='true']"
+      end
+
       def test_uses_timestamp_fallback_behavior_when_timestamp_is_invalid
         render_inline(Component.new(see_all_href: "/notifications", notifications: [notification(time: "not-a-timestamp")]))
 
@@ -199,9 +205,12 @@ module FlatPack
       end
 
       def test_does_not_require_preformatted_relative_timestamp_strings
-        render_inline(Component.new(see_all_href: "/notifications", notifications: [notification(time: "2026-07-03T10:30:00Z")]))
+        travel_to Time.zone.parse("2026-07-03 12:00:00 UTC") do
+          render_inline(Component.new(see_all_href: "/notifications", notifications: [notification(time: "2026-07-03T10:30:00Z")]))
+        end
 
-        refute_text "2m ago"
+        assert_text "2hr ago"
+        refute_text "2 hours ago"
       end
 
       def test_renders_footer_link_text

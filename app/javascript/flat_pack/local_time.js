@@ -18,10 +18,15 @@ export function updateLocalTimeElement(element, now = new Date()) {
   }
 
   if (element.classList.contains("relative-time")) {
-    element.textContent = formatRelativeTime(date, now)
+    element.textContent = formatRelativeTime(date, now, shortenTimestamp(element))
   } else {
     element.textContent = formatLocalTime(date)
   }
+}
+
+export function shortenTimestamp(element) {
+  return element.getAttribute("data-shorten-timestamp") === "true" ||
+    element.getAttribute("data-flat-pack--timestamp-shorten-timestamp-value") === "true"
 }
 
 export function formatLocalTime(date) {
@@ -34,26 +39,26 @@ export function formatLocalTime(date) {
   })
 }
 
-export function formatRelativeTime(date, now = new Date()) {
+export function formatRelativeTime(date, now = new Date(), shorten = false) {
   const elapsedSeconds = Math.floor((now - date) / 1000)
 
-  if (elapsedSeconds < 60) return "Just now"
+  if (elapsedSeconds < 60) return shorten ? "a min ago" : "Just now"
 
   const elapsedMinutes = Math.floor(elapsedSeconds / 60)
-  if (elapsedMinutes < 60) return `${elapsedMinutes} minutes ago`
+  if (elapsedMinutes < 60) return shorten ? `${elapsedMinutes === 1 ? "a" : elapsedMinutes} min ago` : `${elapsedMinutes} minutes ago`
 
   const elapsedHours = Math.floor(elapsedMinutes / 60)
-  if (elapsedHours < 24) return `${elapsedHours} hours ago`
+  if (elapsedHours < 24) return shorten ? `${elapsedHours}hr ago` : `${elapsedHours} hours ago`
 
   const elapsedDays = Math.floor(elapsedHours / 24)
-  if (elapsedDays < 2) return "Yesterday"
-  if (elapsedDays < 7) return `${elapsedDays} days ago`
+  if (elapsedDays < 2) return shorten ? "1d ago" : "Yesterday"
+  if (elapsedDays < 7) return shorten ? `${elapsedDays}d ago` : `${elapsedDays} days ago`
 
   const elapsedWeeks = Math.floor(elapsedDays / 7)
-  if (elapsedDays < 30) return `${elapsedWeeks} weeks ago`
+  if (elapsedDays < 30) return shorten ? `${elapsedWeeks}wk ago` : `${elapsedWeeks} weeks ago`
 
   const elapsedMonths = Math.floor(elapsedDays / 30)
-  if (elapsedDays < 365) return `${elapsedMonths} months ago`
+  if (elapsedDays < 365) return shorten ? `${elapsedMonths}mo ago` : `${elapsedMonths} months ago`
 
   return formatAbsoluteDate(date)
 }

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Added `:stacked_bar` and `:stacked_column` support to `FlatPack::Chart::Component`, including dummy app examples, docs, and tests.
+- Added `shorten_timestamp:` support to `FlatPack::Timestamp::Component` and enabled compact timestamp labels in notifications.
 
 ### Changed
 - Bumped the gem version to `0.1.117`.

@@ -6,23 +6,70 @@
 <%= render "pages/component_method_variables_table", component: :timestamp %>
 
 <section class="mb-12">
+  <% timestamp_examples = [
+    {label: "Less than a minute", timestamp: 10.seconds.ago},
+    {label: "One minute", timestamp: 1.minute.ago},
+    {label: "Minutes", timestamp: 20.minutes.ago},
+    {label: "One hour", timestamp: 1.hour.ago},
+    {label: "Hours", timestamp: 5.hours.ago},
+    {label: "One day", timestamp: 1.day.ago},
+    {label: "Days", timestamp: 3.days.ago},
+    {label: "Weeks", timestamp: 2.weeks.ago},
+    {label: "One month", timestamp: 1.month.ago},
+    {label: "Months", timestamp: 4.months.ago},
+    {label: "One year", timestamp: 1.year.ago},
+    {label: "Years", timestamp: 2.years.ago},
+    {label: "Future", timestamp: 5.hours.from_now}
+  ] %>
+
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Relative Time Labels",
     anchor_link: true,
-    subtitle: "Future timestamps use 'In X' and past timestamps use 'X ago'."
+    subtitle: "Compare default and shortened timestamp labels across common time distances."
+  ) %>
+
+  <%= render FlatPack::Table::Component.new(data: timestamp_examples, class: "mb-4") do |table| %>
+    <% table.column(title: "Example", html: ->(row) { row[:label] }) %>
+    <% table.column(title: "Unshortened", html: ->(row) {
+      render FlatPack::Timestamp::Component.new(
+        timestamp: row[:timestamp],
+        class_name: "font-medium text-(--surface-content-color)"
+      )
+    }) %>
+    <% table.column(title: "Shortened", html: ->(row) {
+      render FlatPack::Timestamp::Component.new(
+        timestamp: row[:timestamp],
+        shorten_timestamp: true,
+        class_name: "font-medium text-(--surface-content-color)"
+      )
+    }) %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Table::Component.new(data: timestamp_examples) do |table| %&gt;
+        &lt;% table.column(title: "Example", html: -&gt;(row) { row[:label] }) %&gt;
+        &lt;% table.column(title: "Unshortened", html: -&gt;(row) {
+          render FlatPack::Timestamp::Component.new(timestamp: row[:timestamp])
+        }) %&gt;
+        &lt;% table.column(title: "Shortened", html: -&gt;(row) {
+          render FlatPack::Timestamp::Component.new(timestamp: row[:timestamp], shorten_timestamp: true)
+        }) %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Styling Examples",
+    anchor_link: true,
+    subtitle: "Use class_name to style the timestamp text without changing tooltip behavior."
   ) %>
 
   <div class="space-y-3 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-4 gap-4">
-    <div class="text-sm text-(--surface-muted-content-color) flex flex-col items-baseline gap-2">
-      Past:
-      <%= render FlatPack::Timestamp::Component.new(timestamp: 3.minutes.ago, class_name: "font-medium text-(--surface-content-color)") %>
-    </div>
-
-    <div class="text-sm text-(--surface-muted-content-color) flex flex-col items-baseline gap-2">
-      Future:
-      <%= render FlatPack::Timestamp::Component.new(timestamp: 3.minutes.from_now, class_name: "font-medium text-(--surface-content-color)") %>
-    </div>
-
     <div class="text-sm text-(--surface-muted-content-color) flex flex-col items-baseline gap-2">
       Fixed UTC date (2016-01-01 00:00 +0000 GMT):
       <%= render FlatPack::Timestamp::Component.new(timestamp: "2016-01-01T00:00:00Z", class_name: "font-medium text-(--surface-content-color)") %>
@@ -38,18 +85,6 @@
       <%= render FlatPack::Timestamp::Component.new(timestamp: "2016-01-01T00:00:00Z", class_name: "text-xs") %>
     </div>
   </div>
-
-  <%= render FlatPack::CodeBlock::Component.new(
-    title: "ERB",
-    language: "erb",
-    code: CGI.unescapeHTML(<<~'CODE')
-      &lt;%= render FlatPack::Timestamp::Component.new(timestamp: 3.minutes.ago) %&gt;
-      &lt;%= render FlatPack::Timestamp::Component.new(timestamp: 3.minutes.from_now) %&gt;
-      &lt;%= render FlatPack::Timestamp::Component.new(timestamp: "2016-01-01T00:00:00Z") %&gt;
-      &lt;%= render FlatPack::Timestamp::Component.new(timestamp: "2016-01-01T00:00:00Z", class_name: "text-green-600") %&gt;
-      &lt;%= render FlatPack::Timestamp::Component.new(timestamp: "2016-01-01T00:00:00Z", class_name: "text-xs") %&gt;
-    CODE
-  ) %>
 </section>
 
 <section class="mb-12">

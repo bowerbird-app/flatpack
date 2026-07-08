@@ -86,6 +86,41 @@
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(
+    title: "Short Relative Time",
+    anchor_link: true,
+    subtitle: "Add data-shorten-timestamp for compact recency labels."
+  ) %>
+
+  <div class="rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-4">
+    <div class="text-sm text-(--surface-muted-content-color)">
+      Shortened:
+      <time
+        class="local-time relative-time font-medium text-(--surface-content-color)"
+        datetime="<%= 20.minutes.ago.utc.iso8601 %>"
+        data-shorten-timestamp="true"
+      >
+        <%= 20.minutes.ago.utc.strftime("%d %b %Y, %I:%M %P UTC") %>
+      </time>
+    </div>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;time
+        class=&quot;local-time relative-time&quot;
+        datetime=&quot;&lt;%= 20.minutes.ago.utc.iso8601 %&gt;&quot;
+        data-shorten-timestamp=&quot;true&quot;
+      &gt;
+        &lt;%= 20.minutes.ago.utc.strftime(&quot;%d %b %Y, %I:%M %P UTC&quot;) %&gt;
+      &lt;/time&gt;
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
     title: "Invalid Or Missing Datetime",
     anchor_link: true,
     subtitle: "Fallback text remains unchanged when datetime is invalid or absent."
