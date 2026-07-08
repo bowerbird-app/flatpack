@@ -581,6 +581,16 @@
         { variable: "**system_arguments", accepts: "Hash", example: "id: \"country-select\", class: \"w-full\", data: { testid: \"country-select\" }" }
       ]
     },
+      nested_multiselect: {
+        label: "Nested Multiselect",
+        method_call: "render tag.div(data: { controller: \"flat-pack--nested-multiselect\", \"flat-pack--nested-multiselect-options-value\": nested_multiselect_options.to_json, \"flat-pack--nested-multiselect-selected-value\": [\"australia\", \"victoria\"].to_json, \"flat-pack--nested-multiselect-input-name-value\": \"locations[]\" })",
+        variables: [
+          { variable: "data-controller", accepts: "String (required)", example: "data-controller=\"flat-pack--nested-multiselect\"" },
+          { variable: "data-flat-pack--nested-multiselect-options-value", accepts: "JSON string for Array<Hash> (required)", example: "data-flat-pack--nested-multiselect-options-value=\"nested_multiselect_options.to_json\"" },
+          { variable: "data-flat-pack--nested-multiselect-selected-value", accepts: "JSON string for Array<String>", example: "data-flat-pack--nested-multiselect-selected-value=\"[\"australia\", \"victoria\"].to_json\"" },
+          { variable: "data-flat-pack--nested-multiselect-input-name-value", accepts: "String", example: "data-flat-pack--nested-multiselect-input-name-value=\"locations[]\"" }
+        ]
+      },
     date_input: {
       label: "Date Input",
       method_call: "render FlatPack::DateInput::Component.new(name: \"birth_date\", label: \"Birth Date\", picker: :flatpack_date_picker)",

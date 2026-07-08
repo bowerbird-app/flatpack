@@ -33,9 +33,11 @@
   subtitle: "Parent and child checkbox groups with synced selection state and hidden form inputs."
 ) %>
 
+<%= render "pages/component_method_variables_table", component: :nested_multiselect %>
+
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(
-    title: "Location Selector",
+    title: "Nested Multiselect Example",
     anchor_link: true,
     subtitle: "Select a parent to include all children, or select children individually to update the parent state."
   ) %>
@@ -67,14 +69,33 @@
 
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;% nested_multiselect_options = [
+        {
+          id: &quot;australia&quot;,
+          label: &quot;Australia&quot;,
+          children: [
+            { id: &quot;victoria&quot;, label: &quot;Victoria&quot; },
+            { id: &quot;new-south-wales&quot;, label: &quot;New South Wales&quot; }
+          ]
+        },
+        {
+          id: &quot;malaysia&quot;,
+          label: &quot;Malaysia&quot;,
+          children: [
+            { id: &quot;penang&quot;, label: &quot;Penang&quot; },
+            { id: &quot;selangor&quot;, label: &quot;Selangor&quot; }
+          ]
+        }
+      ] %&gt;
+
       &lt;div
         data-controller=&quot;flat-pack--nested-multiselect&quot;
         data-flat-pack--nested-multiselect-options-value=&quot;&lt;%= nested_multiselect_options.to_json %&gt;&quot;
-        data-flat-pack--nested-multiselect-selected-value=&quot;&lt;%= [&quot;australia&quot;, &quot;victoria&quot;].to_json %&gt;&quot;
+        data-flat-pack--nested-multiselect-selected-value=&quot;&lt;%= [&quot;australia&quot;, &quot;victoria&quot;, &quot;penang&quot;].to_json %&gt;&quot;
         data-flat-pack--nested-multiselect-input-name-value=&quot;locations[]&quot;&gt;&lt;/div&gt;
     CODE
     language: "erb",
-    title: "Nested Multiselect Stimulus Controller",
+    title: "Code example",
     class: "mt-4"
   ) %>
 </section>
