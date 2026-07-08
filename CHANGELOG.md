@@ -8,10 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Fixed
+
+## [0.1.116] - 2026-07-08
+
+### Added
 - Added a reusable nested multiselect Stimulus controller with parent/child checkbox state syncing, indeterminate parent states, initial selected values, and hidden form input generation.
 - Added a dummy app nested multiselect demo page under `/demo/forms/nested_multiselect` with sidebar navigation.
 
 ### Changed
+- Bumped the gem version to `0.1.116` and synchronized release metadata across docs, the AI install contract, vendored engine snapshot, and dummy app lockfiles.
 
 ### Fixed
 

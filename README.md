@@ -234,6 +234,8 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
 ) %>
 ```
 
+For hierarchical parent/child checkbox selection, see the `flat-pack--nested-multiselect` Stimulus demo at `/demo/forms/nested_multiselect` and the usage notes in `docs/components/inputs.md`.
+
 ## Documentation
 
 - 📚 [Full Documentation](docs/)
@@ -331,8 +333,10 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
 - **FileInput** - File upload input
 - **Checkbox** - Single checkbox or checkbox groups
 - **RadioGroup** - Radio button groups
-- **Select** - Dropdown select menus
+- **Select** - Dropdown select menus with optional searchable single and multiselect modes
 - **Switch** - Toggle switch for boolean states
+
+For parent/child checkbox groups that submit hidden inputs, use the `flat-pack--nested-multiselect` Stimulus controller demonstrated at `/demo/forms/nested_multiselect`.
 
 ### Utility
 - **Link** - Styled link with consistent appearance

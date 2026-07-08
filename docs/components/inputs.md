@@ -4,11 +4,12 @@
 Provide a consistent set of text, choice, and file form inputs with shared validation styling and accessible labeling patterns.
 
 ## When to use
-Use these components when you need FlatPack-styled form controls with consistent error handling, required/disabled states, and optional interactive behaviors.
+Use these components when you need FlatPack-styled form controls with consistent error handling, required/disabled states, and optional interactive behaviors. This guide also covers the `flat-pack--nested-multiselect` Stimulus controller for hierarchical parent/child checkbox groups.
 
 ## Class
 - Primary: `FlatPack::TextInput::Component`
 - Related classes: `FlatPack::PasswordInput::Component`, `FlatPack::EmailInput::Component`, `FlatPack::PhoneInput::Component`, `FlatPack::SearchInput::Component`, `FlatPack::TextArea::Component`, `FlatPack::UrlInput::Component`, `FlatPack::NumberInput::Component`, `FlatPack::DateInput::Component`, `FlatPack::DateRangeInput::Component`, `FlatPack::DateTimeInput::Component`, `FlatPack::TimeInput::Component`, `FlatPack::FileInput::Component`, `FlatPack::Checkbox::Component`, `FlatPack::RadioGroup::Component`, `FlatPack::Select::Component`, `FlatPack::Switch::Component`
+- Related Stimulus controller: `flat-pack--nested-multiselect` for hierarchical checkbox groups that submit hidden inputs.
 - Related docs: [Range Input](range-input.md) (`FlatPack::RangeInput::Component`)
 
 ## Props
@@ -67,6 +68,7 @@ None.
 - Select rendering modes: native select (`searchable: false`) and custom searchable select (`searchable: true`)
 - Select selection modes: single-value (`multiple: false`) and multi-value (`multiple: true`)
 - In searchable multiselect mode, selected options render as chips inside the trigger
+- Hierarchical nested multiselect via `flat-pack--nested-multiselect`, with parent/child synchronization, indeterminate parent states, initial selection hydration, and hidden input generation
 - Remote Select mode (`search_mode: :remote`) fetches options from `search_endpoint` with `search_param`
 
 ## Example
@@ -145,6 +147,35 @@ Additional focused examples:
   placeholder: "Search frameworks..."
 ) %>
 ```
+
+```erb
+<% location_options = [
+  {
+    id: "australia",
+    label: "Australia",
+    children: [
+      { id: "victoria", label: "Victoria" },
+      { id: "new-south-wales", label: "New South Wales" }
+    ]
+  },
+  {
+    id: "malaysia",
+    label: "Malaysia",
+    children: [
+      { id: "penang", label: "Penang" },
+      { id: "selangor", label: "Selangor" }
+    ]
+  }
+] %>
+
+<div
+  data-controller="flat-pack--nested-multiselect"
+  data-flat-pack--nested-multiselect-options-value="<%= location_options.to_json %>"
+  data-flat-pack--nested-multiselect-selected-value="<%= ["australia", "victoria", "penang"].to_json %>"
+  data-flat-pack--nested-multiselect-input-name-value="locations[]"></div>
+```
+
+`flat-pack--nested-multiselect` expects each option group to provide `id`, `label`, and optional `children` entries. When a parent is preselected, the controller automatically selects all of its children; when only some children are selected, the parent checkbox is rendered in the native indeterminate state.
 
 ```erb
 <%= render FlatPack::Select::Component.new(
@@ -558,6 +589,7 @@ Always sanitize HTML output before rendering it back to users:
 - Native controls are used for checkbox/radio/select/input/textarea semantics.
 - `SearchInput` keeps a single clear control by using the component clear button and suppressing browser-native search clear icons.
 - Searchable select trigger exposes `aria-haspopup` and toggles `aria-expanded`.
+- `flat-pack--nested-multiselect` uses native checkbox semantics and applies the browser indeterminate state to partially selected parents.
 - `Switch` renders a checkbox input and switch track with `role="switch"` and `aria-checked`.
 
 ## Dependencies
@@ -568,6 +600,7 @@ Always sanitize HTML output before rendering it back to users:
   - `flat-pack--text-area` (`TextArea` plain mode)
   - `flat-pack--tiptap` (`TextArea` when `rich_text: true`)
   - `flat-pack--select` (`Select` when `searchable: true`)
+  - `flat-pack--nested-multiselect` (hierarchical checkbox groups)
   - `flat-pack--date-input` (`DateInput`)
   - `flat-pack--file-input` (`FileInput`)
 - Related component dependency:
