@@ -55,6 +55,48 @@
     height: 0;
   }
 
+  .apexcharts-tooltip.apexcharts-theme-light,
+  .apexcharts-xaxistooltip.apexcharts-theme-light,
+  .apexcharts-yaxistooltip.apexcharts-theme-light {
+    background: var(--surface-page-background-color) !important;
+    border-color: var(--surface-border-color) !important;
+    color: var(--surface-content-color) !important;
+  }
+
+  .apexcharts-tooltip.apexcharts-theme-light .apexcharts-tooltip-title {
+    background: var(--surface-page-background-color) !important;
+    border-bottom-color: var(--surface-border-color) !important;
+    color: var(--surface-content-color) !important;
+  }
+
+  [data-controller~="flat-pack--chart"] .apexcharts-tooltip,
+  [data-controller~="flat-pack--chart"] .apexcharts-tooltip.apexcharts-theme-light,
+  [data-controller~="flat-pack--chart"] .apexcharts-xaxistooltip,
+  [data-controller~="flat-pack--chart"] .apexcharts-xaxistooltip.apexcharts-theme-light,
+  [data-controller~="flat-pack--chart"] .apexcharts-yaxistooltip,
+  [data-controller~="flat-pack--chart"] .apexcharts-yaxistooltip.apexcharts-theme-light {
+    background: var(--surface-page-background-color) !important;
+    color: var(--surface-content-color) !important;
+    border-color: var(--surface-border-color) !important;
+  }
+
+  [data-controller~="flat-pack--chart"] .apexcharts-tooltip-title,
+  [data-controller~="flat-pack--chart"] .apexcharts-tooltip.apexcharts-theme-light .apexcharts-tooltip-title {
+    background: var(--surface-page-background-color) !important;
+    border-bottom-color: var(--surface-border-color) !important;
+    color: var(--surface-content-color) !important;
+  }
+
+  [data-controller~="flat-pack--chart"] .apexcharts-tooltip-text,
+  [data-controller~="flat-pack--chart"] .apexcharts-tooltip-text-y-label,
+  [data-controller~="flat-pack--chart"] .apexcharts-tooltip-text-y-value,
+  [data-controller~="flat-pack--chart"] .apexcharts-tooltip-text-z-label,
+  [data-controller~="flat-pack--chart"] .apexcharts-tooltip-text-z-value,
+  [data-controller~="flat-pack--chart"] .apexcharts-tooltip-text-goals-label,
+  [data-controller~="flat-pack--chart"] .apexcharts-tooltip-text-goals-value {
+    color: var(--surface-content-color) !important;
+  }
+
   [data-flat-pack--chart-type-value="donut"] .apexcharts-tooltip,
   [data-flat-pack--chart-type-value="donut"] .apexcharts-tooltip.apexcharts-theme-light {
     background: #fff !important;

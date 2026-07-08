@@ -73,6 +73,50 @@
   ) %>
 </section>
 
+<!-- Stacked Column Chart -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Stacked Column Chart", anchor_link: true, subtitle: "Examples for stacked vertical columns.") %>
+  <%= render FlatPack::Chart::Component.new(
+    type: :stacked_column,
+    series: [
+      {name: "Desktop", data: [45, 40, 50]},
+      {name: "Mobile", data: [35, 42, 30]},
+      {name: "Tablet", data: [20, 18, 20]}
+    ],
+    title: "Traffic by Device",
+    subtitle: "Monthly sessions",
+    height: 300,
+    options: {
+      xaxis: {
+        categories: ["Jan", "Feb", "Mar"]
+      }
+    }
+  ) %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Chart::Component.new(
+        type: :stacked_column,
+        series: [
+          {name: "Desktop", data: [45, 40, 50]},
+          {name: "Mobile", data: [35, 42, 30]},
+          {name: "Tablet", data: [20, 18, 20]}
+        ],
+        title: "Traffic by Device",
+        subtitle: "Monthly sessions",
+        height: 300,
+        options: {
+          xaxis: {
+            categories: ["Jan", "Feb", "Mar"]
+          }
+        }
+      ) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
 <!-- Bar Chart -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Bar Chart", anchor_link: true, subtitle: "Examples for horizontal bars.") %>
@@ -108,6 +152,50 @@
         options: {
           xaxis: {
             categories: ["API", "Billing", "Onboarding", "Integrations", "Security"]
+          }
+        }
+      ) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<!-- Stacked Bar Chart -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Stacked Bar Chart", anchor_link: true, subtitle: "Examples for stacked horizontal bars.") %>
+  <%= render FlatPack::Chart::Component.new(
+    type: :stacked_bar,
+    series: [
+      {name: "Product A", data: [30, 40, 35]},
+      {name: "Product B", data: [45, 35, 50]},
+      {name: "Product C", data: [25, 30, 20]}
+    ],
+    title: "Quarterly Product Mix",
+    subtitle: "Units sold",
+    height: 300,
+    options: {
+      xaxis: {
+        categories: ["Q1", "Q2", "Q3"]
+      }
+    }
+  ) %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Chart::Component.new(
+        type: :stacked_bar,
+        series: [
+          {name: "Product A", data: [30, 40, 35]},
+          {name: "Product B", data: [45, 35, 50]},
+          {name: "Product C", data: [25, 30, 20]}
+        ],
+        title: "Quarterly Product Mix",
+        subtitle: "Units sold",
+        height: 300,
+        options: {
+          xaxis: {
+            categories: ["Q1", "Q2", "Q3"]
           }
         }
       ) #{erb_tag_close}

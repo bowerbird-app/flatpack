@@ -16,6 +16,8 @@ module FlatPack
         line: :line,
         column: :column,
         bar: :bar,
+        stacked_column: :stacked_column,
+        stacked_bar: :stacked_bar,
         area: :area,
         donut: :donut,
         pie: :pie,
@@ -259,15 +261,25 @@ module FlatPack
 
         return defaults unless bar_chart?
 
-        defaults.deep_merge(
-          {
-            plotOptions: {
-              bar: {
-                horizontal: horizontal_bar?
-              }
+        bar_defaults = {
+          plotOptions: {
+            bar: {
+              horizontal: horizontal_bar?
             }
           }
-        )
+        }
+
+        if stacked_bar_chart?
+          bar_defaults = bar_defaults.deep_merge(
+            {
+              chart: {
+                stacked: true
+              }
+            }
+          )
+        end
+
+        defaults.deep_merge(bar_defaults)
       end
 
       def non_axis_chart_defaults
@@ -381,7 +393,11 @@ module FlatPack
       end
 
       def bar_chart?
-        @type == :bar || @type == :column
+        @type == :bar || @type == :column || stacked_bar_chart?
+      end
+
+      def stacked_bar_chart?
+        @type == :stacked_bar || @type == :stacked_column
       end
 
       def area_chart?
@@ -389,7 +405,7 @@ module FlatPack
       end
 
       def horizontal_bar?
-        @type == :bar
+        @type == :bar || @type == :stacked_bar
       end
 
       def apex_chart_type
