@@ -8,8 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added `:stacked_bar` and `:stacked_column` support to `FlatPack::Chart::Component`, including dummy app examples, docs, and tests.
 
 ### Changed
+- Bumped the gem version to `0.1.117`.
 
 ### Fixed
 

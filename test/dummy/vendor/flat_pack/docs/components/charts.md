@@ -16,7 +16,7 @@ Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status f
 | name | type | default | required | description |
 | --- | --- | --- | --- | --- |
 | `series` | Array or Hash | — | yes | Chart series payload passed to ApexCharts. |
-| `type` | Symbol | `:line` | no | One of `:line`, `:column`, `:bar`, `:area`, `:donut`, `:pie`, `:radar`, `:gauge`, `:geochart`. Use `:column` for vertical bars, `:bar` for horizontal bars, `:gauge` for radial gauge-style KPI displays, and `:geochart` for country or region maps. |
+| `type` | Symbol | `:line` | no | One of `:line`, `:column`, `:bar`, `:stacked_column`, `:stacked_bar`, `:area`, `:donut`, `:pie`, `:radar`, `:gauge`, `:geochart`. Use `:column` for vertical bars, `:bar` for horizontal bars, `:stacked_column` for stacked vertical columns, `:stacked_bar` for stacked horizontal bars, `:gauge` for radial gauge-style KPI displays, and `:geochart` for country or region maps. |
 | `options` | Hash | `{}` | no | ApexCharts options deep-merged over component defaults. |
 | `height` | Integer | `280` | no | Chart height in pixels; must be positive. |
 | `card` | Boolean | `true` | no | Wraps chart in `FlatPack::Card::Component` with header/body/footer layout. |
@@ -33,7 +33,8 @@ Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status f
 ## Variants
 - Chart type variant via `type`
 - Framed (`card: true`) and inline (`card: false`) rendering
-- Axis defaults for line/column/bar/area/radar and non-axis defaults for donut/pie
+- Axis defaults for line/column/bar/stacked_column/stacked_bar/area/radar and non-axis defaults for donut/pie
+- Stacked bar defaults for `:stacked_bar` and `:stacked_column` set ApexCharts `chart.stacked` and use multiple `series` entries with shared `xaxis.categories`
 - Gauge defaults for `:gauge` (`radialBar`) with rounded arc ends and primary-color shading
 - Geo chart defaults for `:geochart` with world-region rendering, transparent background, and a primary-color opacity intensity scale
 
@@ -97,6 +98,34 @@ Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status f
   title: "Support Queue by Team"
 ) %>
 ```
+
+```erb
+<%= render FlatPack::Chart::Component.new(
+  type: :stacked_column,
+  series: [
+    { name: "Desktop", data: [45, 40, 50] },
+    { name: "Mobile", data: [35, 42, 30] },
+    { name: "Tablet", data: [20, 18, 20] }
+  ],
+  options: { xaxis: { categories: ["Jan", "Feb", "Mar"] } },
+  title: "Traffic by Device"
+) %>
+```
+
+```erb
+<%= render FlatPack::Chart::Component.new(
+  type: :stacked_bar,
+  series: [
+    { name: "Product A", data: [30, 40, 35] },
+    { name: "Product B", data: [45, 35, 50] },
+    { name: "Product C", data: [25, 30, 20] }
+  ],
+  options: { xaxis: { categories: ["Q1", "Q2", "Q3"] } },
+  title: "Quarterly Product Mix"
+) %>
+```
+
+For `:stacked_column` and `:stacked_bar`, provide one series per stacked segment and align each series `data` array with `options[:xaxis][:categories]`. The default primary-color opacity palette supplies one color per series; pass `options: { colors: [...] }` to use custom segment colors.
 
 ```erb
 <%= render FlatPack::Chart::Component.new(
