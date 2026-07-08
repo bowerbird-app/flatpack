@@ -341,6 +341,9 @@ class PagesController < ApplicationController
     render json: {items: results}
   end
 
+  def forms_nested_multiselect
+  end
+
   def forms_switch
   end
 
@@ -1666,6 +1669,7 @@ class PagesController < ApplicationController
       {title: "Checkbox", description: "Checkbox input examples", url: demo_forms_checkbox_path},
       {title: "Radio Group", description: "Single-choice radio group examples", url: demo_forms_radio_group_path},
       {title: "Select", description: "Dropdown select input examples", url: demo_forms_select_path},
+      {title: "Nested Multiselect", description: "Parent and child checkbox multiselect examples", url: demo_forms_nested_multiselect_path},
       {title: "Switch", description: "Toggle switch input examples", url: demo_forms_switch_path},
       {title: "Range Input", description: "Slider input with live value", url: demo_range_input_path},
       {title: "Combined Form", description: "Full form with multiple input types", url: demo_forms_combined_path},

@@ -2,6 +2,7 @@
 
 # Configure importmap for FlatPack components
 pin_all_from File.expand_path("../app/javascript/flat_pack/controllers", __dir__), under: "controllers/flat_pack", to: "flat_pack/controllers", preload: false
+pin "controllers/flat_pack/nested_multiselect_controller", to: "flat_pack/controllers/nested_multiselect_controller.js", preload: false
 pin_all_from File.expand_path("../app/javascript/flat_pack/tiptap", __dir__), under: "flat_pack/tiptap", to: "flat_pack/tiptap", preload: false
 pin "flat_pack/local_time", to: "flat_pack/local_time.js", preload: false
 

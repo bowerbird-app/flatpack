@@ -6,7 +6,7 @@ This document provides the exact terminal commands and configuration steps neede
 
 FlatPack is a modern Rails UI Component Library built with ViewComponent, Tailwind CSS, and Hotwire. It provides type-safe, testable components with dark mode support and accessibility features. Supports Rails 7.1 and above.
 
-**Current Version:** 0.1.115 (Updated July 7, 2026)
+**Current Version:** 0.1.116 (Updated July 8, 2026)
 
 ## AI-first installation entrypoint
 
@@ -440,6 +440,7 @@ import IconController             from "${controllersDir}/icon_controller.js";
 import ListSelectableController   from "${controllersDir}/list_selectable_controller.js";
 import ModalController            from "${controllersDir}/modal_controller.js";
 import NavbarController           from "${controllersDir}/navbar_controller.js";
+import NestedMultiselectController from "${controllersDir}/nested_multiselect_controller.js";
 import PaginationInfiniteController from "${controllersDir}/pagination_infinite_controller.js";
 import PasswordInputController    from "${controllersDir}/password_input_controller.js";
 import PickerController           from "${controllersDir}/picker_controller.js";
@@ -486,6 +487,7 @@ application.register("flat-pack--icon",                IconController);
 application.register("flat-pack--list-selectable",     ListSelectableController);
 application.register("flat-pack--modal",               ModalController);
 application.register("flat-pack--navbar",              NavbarController);
+application.register("flat-pack--nested-multiselect",  NestedMultiselectController);
 application.register("flat-pack--pagination-infinite", PaginationInfiniteController);
 application.register("flat-pack--password-input",      PasswordInputController);
 application.register("flat-pack--picker",              PickerController);

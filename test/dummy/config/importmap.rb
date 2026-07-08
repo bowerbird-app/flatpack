@@ -8,6 +8,7 @@ pin "@hotwired/turbo-rails", to: "turbo.min.js"
 pin "@hotwired/stimulus", to: "stimulus.min.js"
 pin "@hotwired/stimulus-loading", to: "stimulus-loading.js"
 pin_all_from "app/javascript/controllers", under: "controllers"
+pin "controllers/flat_pack/nested_multiselect_controller", to: "flat_pack/controllers/nested_multiselect_controller.js", preload: false
 pin "flat_pack/local_time", to: "flat_pack/local_time.js", preload: false
 
 # Third-party dependencies

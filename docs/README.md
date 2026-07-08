@@ -56,6 +56,8 @@ bin/rake flat_pack:verify_install
 - [Table Component](components/table.md)
 - [Sortable Tables](components/sortable-tables.md)
 
+The [Input Components](components/inputs.md) guide also documents the `flat-pack--nested-multiselect` Stimulus controller used by the dummy `/demo/forms/nested_multiselect` example.
+
 ### Architecture
 - [Engine Architecture](architecture/engine.md)
 - [Asset Pipeline](architecture/assets.md)
