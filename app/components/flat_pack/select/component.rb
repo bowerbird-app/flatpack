@@ -491,7 +491,7 @@ module FlatPack
         base = [
           "flex items-center gap-2",
           "px-[var(--form-control-padding)] py-[var(--form-control-padding)]",
-          "rounded-sm",
+          "rounded-none",
           "transition-colors duration-base"
         ]
 
