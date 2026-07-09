@@ -7,11 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.119] - 2026-07-09
+
 ### Added
+- Added `secondary_anchor_url` and tooltip-specific options to `FlatPack::PageNav::Component`, including Tooltip wrapping and compatibility fallbacks for deprecated label options.
 
 ### Changed
+- Bumped the gem version to `0.1.119`.
+- Updated Page Nav docs with tooltip prop migration guidance.
 
 ### Fixed
+- Preserved Page Nav accessible labels when new tooltip props are blank and when secondary anchors omit tooltip text.
 
 ## [0.1.118] - 2026-07-09
 
