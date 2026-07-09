@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated Page Nav docs with tooltip prop migration guidance.
 
 ### Fixed
+- Preserved Page Nav accessible labels when new tooltip props are blank and when secondary anchors omit tooltip text.
 
 ## [0.1.118] - 2026-07-09
 

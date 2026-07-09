@@ -58,12 +58,26 @@ module FlatPack
         refute_text "Old return"
       end
 
+      def test_uses_deprecated_back_label_when_new_tooltip_is_blank
+        render_inline(Component.new(back_label: "Return", back_tooltip: ""))
+
+        assert_selector "button[aria-label='Return']"
+        assert_selector "[role='tooltip']", text: "Return"
+      end
+
       def test_uses_new_anchor_tooltip_over_deprecated_label
         render_inline(Component.new(anchor_url: "/demo", anchor_label: "Old dismiss", anchor_tooltip: "New dismiss"))
 
         assert_selector "a[href='/demo'][aria-label='New dismiss']"
         assert_selector "[role='tooltip']", text: "New dismiss"
         refute_text "Old dismiss"
+      end
+
+      def test_uses_deprecated_anchor_label_when_new_tooltip_is_blank
+        render_inline(Component.new(anchor_url: "/demo", anchor_label: "Dismiss", anchor_tooltip: ""))
+
+        assert_selector "a[href='/demo'][aria-label='Dismiss']"
+        assert_selector "[role='tooltip']", text: "Dismiss"
       end
 
       def test_renders_secondary_anchor_action_with_tooltip
@@ -74,6 +88,13 @@ module FlatPack
 
         assert_selector "[data-controller='flat-pack--tooltip'] a[href='/secondary'][aria-label='Previous item']"
         assert_selector "[role='tooltip']", text: "Previous item"
+      end
+
+      def test_renders_secondary_anchor_with_default_accessible_label_without_tooltip
+        render_inline(Component.new(secondary_anchor_url: "/secondary"))
+
+        assert_selector "a[href='/secondary'][aria-label='Previous page']"
+        refute_selector "[data-controller='flat-pack--tooltip'] a[href='/secondary']"
       end
 
       def test_renders_secondary_anchor_to_left_of_anchor_action

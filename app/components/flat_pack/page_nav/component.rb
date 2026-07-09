@@ -27,17 +27,18 @@ module FlatPack
         super(**system_arguments)
 
         @back_icon = back_icon
-        @back_label = back_tooltip || back_label
+        @back_label = back_tooltip.presence || back_label
         @back_style = back_style
         @back_size = back_size
 
         @secondary_anchor_url = secondary_anchor_url
         @secondary_anchor_icon = secondary_anchor_icon
-        @secondary_anchor_label = secondary_anchor_tooltip
+        @secondary_anchor_tooltip = secondary_anchor_tooltip
+        @secondary_anchor_label = secondary_anchor_tooltip.presence || "Previous page"
 
         @anchor_url = anchor_url
         @anchor_icon = anchor_icon
-        @anchor_label = anchor_tooltip || anchor_label
+        @anchor_label = anchor_tooltip.presence || anchor_label
         @anchor_style = anchor_style
         @anchor_size = anchor_size
       end
@@ -112,7 +113,7 @@ module FlatPack
       def secondary_anchor_action
         return unless @secondary_anchor_url.present?
 
-        tooltip_wrapper(@secondary_anchor_label) do
+        tooltip_wrapper(@secondary_anchor_tooltip) do
           icon_button(
             icon: @secondary_anchor_icon,
             label: @secondary_anchor_label,

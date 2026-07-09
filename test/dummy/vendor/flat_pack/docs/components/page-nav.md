@@ -19,7 +19,7 @@ Use Page Nav when the layout needs quick icon actions at the top of a page: go b
 | `back_size` | Symbol | `:md` | no | Button size for back action. |
 | `secondary_anchor_url` | String, nil | `nil` | no | When present, renders a secondary anchor link immediately to the left of `anchor_url`. |
 | `secondary_anchor_icon` | String | `"chevron-left"` | no | Icon name for secondary anchor action. |
-| `secondary_anchor_tooltip` | String, nil | `nil` | no | Tooltip and accessible label for secondary anchor action. |
+| `secondary_anchor_tooltip` | String, nil | `nil` | no | Tooltip and accessible label for secondary anchor action. When omitted, the link keeps a default accessible label without rendering a tooltip. |
 | `anchor_url` | String, nil | `nil` | no | When present, renders the primary anchor icon as a link. |
 | `anchor_icon` | String | `"x-mark"` | no | Icon name for anchor action. |
 | `anchor_tooltip` | String, nil | `nil` | no | Tooltip and accessible label for primary anchor action. Takes precedence over `anchor_label`. |
