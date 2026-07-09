@@ -15,6 +15,7 @@ module FlatPack
         render_inline(Component.new)
 
         assert_selector "nav[data-controller='flat-pack--page-nav']"
+        assert_selector "nav > div.flex.gap-2"
         assert_selector "button[data-action='click->flat-pack--page-nav#back']"
         assert_selector "button[aria-label='Go back']"
         assert_selector "button svg[data-flat-pack--icon-name-value='chevron-left']"
@@ -120,6 +121,23 @@ module FlatPack
 
         assert_selector "a[href='/demo/forms'][aria-label='Add']"
         assert_selector "a[href='/demo/forms'] span[data-flat-pack--icon-name-value='plus']"
+      end
+
+      def test_renders_right_slot_in_separate_right_aligned_wrapper
+        render_inline(Component.new(
+          secondary_anchor_url: "/secondary",
+          anchor_url: "/primary"
+        )) do |component|
+          component.right_slot do
+            '<a href="/demo/forms" aria-label="Add"><span data-flat-pack--icon-name-value="plus"></span></a>'.html_safe
+          end
+        end
+
+        assert_selector "nav > div.flex.gap-2 > div", count: 3
+        assert_selector "nav > div.flex.gap-2 > div:nth-child(1) button[data-action='click->flat-pack--page-nav#back']"
+        assert_selector "nav > div.flex.gap-2 > div:nth-child(2) a[href='/secondary']"
+        assert_selector "nav > div.flex.gap-2 > div:nth-child(2) a[href='/primary']"
+        assert_selector "nav > div.flex.gap-2 > div.ml-auto.flex.items-center.gap-2 a[href='/demo/forms'][aria-label='Add']"
       end
 
       def test_renders_custom_icons_and_labels

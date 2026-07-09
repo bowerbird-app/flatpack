@@ -42,7 +42,8 @@ Use Page Nav when the layout needs quick icon actions at the top of a page: go b
 ```erb
 <%= render FlatPack::PageNav::Component.new(
   secondary_anchor_url: demo_forms_path,
-  secondary_anchor_tooltip: "Previous page",
+  secondary_anchor_icon: "home",
+  secondary_anchor_tooltip: "Home",
   anchor_url: demo_path,
   anchor_tooltip: "Close"
 ) do |component| %>

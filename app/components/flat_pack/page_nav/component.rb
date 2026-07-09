@@ -59,10 +59,11 @@ module FlatPack
 
       def call
         content_tag(:nav, **nav_attributes) do
-          content_tag(:div, class: "flex items-center justify-between gap-2") do
+          content_tag(:div, class: "flex gap-2") do
             safe_join([
               left_actions,
-              right_actions
+              anchor_actions,
+              right_slot_wrapper
             ].compact)
           end
         end
@@ -124,16 +125,23 @@ module FlatPack
         end
       end
 
-      def right_actions
+      def anchor_actions
         actions = [
           secondary_anchor_action,
-          anchor_action,
-          right? ? right.to_s : nil
+          anchor_action
         ].compact
         return if actions.empty?
 
         content_tag(:div, class: "flex items-center gap-2") do
           safe_join(actions)
+        end
+      end
+
+      def right_slot_wrapper
+        return unless right?
+
+        content_tag(:div, class: "ml-auto flex items-center gap-2") do
+          right.to_s
         end
       end
 

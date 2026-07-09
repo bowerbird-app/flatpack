@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Bumped the gem version to `0.1.119`.
 - Updated Page Nav docs with tooltip prop migration guidance.
+- Updated the Page Nav action wrapper to use `flex gap-2` for back, secondary anchor, and anchor button layouts.
+- Moved the Page Nav `right_slot` into its own right-aligned wrapper so secondary and primary anchors stay grouped separately from custom right-side actions.
 
 ### Fixed
 - Preserved Page Nav accessible labels when new tooltip props are blank and when secondary anchors omit tooltip text.

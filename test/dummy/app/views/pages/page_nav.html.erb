@@ -40,7 +40,8 @@
   <div class="mb-4">
     <%= render FlatPack::PageNav::Component.new(
       secondary_anchor_url: demo_forms_path,
-      secondary_anchor_tooltip: "Previous page",
+      secondary_anchor_icon: "home",
+      secondary_anchor_tooltip: "Home",
       anchor_url: demo_path,
       anchor_tooltip: "Close"
     ) %>
@@ -49,7 +50,8 @@
     code: CGI.unescapeHTML(<<~'CODE')
       &lt;%= render FlatPack::PageNav::Component.new(
         secondary_anchor_url: demo_forms_path,
-        secondary_anchor_tooltip: "Previous page",
+        secondary_anchor_icon: "home",
+        secondary_anchor_tooltip: "Home",
         anchor_url: demo_path,
         anchor_tooltip: "Close"
       ) %&gt;
