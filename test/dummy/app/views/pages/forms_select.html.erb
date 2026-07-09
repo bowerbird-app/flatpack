@@ -46,6 +46,41 @@
       ) %>
 
       <%= render FlatPack::Select::Component.new(
+        name: "locations",
+        options: [
+          {
+            label: "Australia",
+            value: "australia",
+            children: [
+              { label: "VIC", value: "vic" },
+              { label: "NSW", value: "nsw" },
+              { label: "QLD", value: "qld" },
+              { label: "WA", value: "wa" },
+              { label: "SA", value: "sa" },
+              { label: "TAS", value: "tas" }
+            ]
+          },
+          {
+            label: "Malaysia",
+            value: "malaysia",
+            children: [
+              { label: "Penang", value: "penang" },
+              { label: "Kuala Lumpur", value: "kuala-lumpur" },
+              { label: "Selangor", value: "selangor" },
+              { label: "Kedah", value: "kedah" },
+              { label: "Pahang", value: "pahang" }
+            ]
+          }
+        ],
+        label: "Nested Multiselect Select",
+        placeholder: "Select locations...",
+        help_text: "Select a parent to include every child, or choose individual children.",
+        searchable: true,
+        multiple: true,
+        value: ["australia"]
+      ) %>
+
+      <%= render FlatPack::Select::Component.new(
         name: "assignee",
         options: [],
         label: "Assignee (Remote Search)",
@@ -109,6 +144,41 @@
           searchable: true,
           multiple: true,
           value: [&quot;rails&quot;, &quot;hotwire&quot;]
+        ) %&gt;
+
+        &lt;%= render FlatPack::Select::Component.new(
+          name: &quot;locations&quot;,
+          options: [
+            {
+              label: &quot;Australia&quot;,
+              value: &quot;australia&quot;,
+              children: [
+                { label: &quot;VIC&quot;, value: &quot;vic&quot; },
+                { label: &quot;NSW&quot;, value: &quot;nsw&quot; },
+                { label: &quot;QLD&quot;, value: &quot;qld&quot; },
+                { label: &quot;WA&quot;, value: &quot;wa&quot; },
+                { label: &quot;SA&quot;, value: &quot;sa&quot; },
+                { label: &quot;TAS&quot;, value: &quot;tas&quot; }
+              ]
+            },
+            {
+              label: &quot;Malaysia&quot;,
+              value: &quot;malaysia&quot;,
+              children: [
+                { label: &quot;Penang&quot;, value: &quot;penang&quot; },
+                { label: &quot;Kuala Lumpur&quot;, value: &quot;kuala-lumpur&quot; },
+                { label: &quot;Selangor&quot;, value: &quot;selangor&quot; },
+                { label: &quot;Kedah&quot;, value: &quot;kedah&quot; },
+                { label: &quot;Pahang&quot;, value: &quot;pahang&quot; }
+              ]
+            }
+          ],
+          label: &quot;Nested Multiselect Select&quot;,
+          placeholder: &quot;Select locations...&quot;,
+          help_text: &quot;Select a parent to include every child, or choose individual children.&quot;,
+          searchable: true,
+          multiple: true,
+          value: [&quot;australia&quot;]
         ) %&gt;
 
         &lt;%= render FlatPack::Select::Component.new(

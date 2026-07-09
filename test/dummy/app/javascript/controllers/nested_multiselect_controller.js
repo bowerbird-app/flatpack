@@ -55,7 +55,7 @@ export default class extends Controller {
           id: child.id,
           label: child.label,
           checked: this.selected.has(child.id),
-          classes: "text-sm text-[var(--surface-muted-content-color)]",
+          classes: "text-sm",
           onChange: (event) => {
             this.setChildSelected(parent, child, event.currentTarget.checked)
             this.render()

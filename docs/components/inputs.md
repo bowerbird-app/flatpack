@@ -4,12 +4,12 @@
 Provide a consistent set of text, choice, and file form inputs with shared validation styling and accessible labeling patterns.
 
 ## When to use
-Use these components when you need FlatPack-styled form controls with consistent error handling, required/disabled states, and optional interactive behaviors. This guide also covers the `flat-pack--nested-multiselect` Stimulus controller for hierarchical parent/child checkbox groups.
+Use these components when you need FlatPack-styled form controls with consistent error handling, required/disabled states, and optional interactive behaviors. This guide also covers Select-based nested multiselects for hierarchical parent/child choices.
 
 ## Class
 - Primary: `FlatPack::TextInput::Component`
 - Related classes: `FlatPack::PasswordInput::Component`, `FlatPack::EmailInput::Component`, `FlatPack::PhoneInput::Component`, `FlatPack::SearchInput::Component`, `FlatPack::TextArea::Component`, `FlatPack::UrlInput::Component`, `FlatPack::NumberInput::Component`, `FlatPack::DateInput::Component`, `FlatPack::DateRangeInput::Component`, `FlatPack::DateTimeInput::Component`, `FlatPack::TimeInput::Component`, `FlatPack::FileInput::Component`, `FlatPack::Checkbox::Component`, `FlatPack::RadioGroup::Component`, `FlatPack::Select::Component`, `FlatPack::Switch::Component`
-- Related Stimulus controller: `flat-pack--nested-multiselect` for hierarchical checkbox groups that submit hidden inputs.
+- Related Stimulus controller: `flat-pack--nested-multiselect` for legacy hierarchical checkbox groups that submit hidden inputs.
 - Related docs: [Range Input](range-input.md) (`FlatPack::RangeInput::Component`)
 
 ## Props
@@ -51,7 +51,7 @@ Component-specific props:
 | `max_size` | Integer | `nil` | no | Max file size in bytes for `FileInput` client-side checks. Must be positive when provided. |
 | `preview` | Boolean | `true` | no | Enables image preview area in `FileInput`. |
 | `checked` | Boolean | `false` | no | Initial checked state (`Checkbox`, `Switch`). |
-| `options` | Array | none | yes (`RadioGroup`, `Select`) | Options list. Supports `String`, `[label, value]`, or `{ label:, value:, disabled: }`. |
+| `options` | Array | none | yes (`RadioGroup`, `Select`) | Options list. Supports `String`, `[label, value]`, or `{ label:, value:, disabled: }`. For nested Select multiselects, hashes may include `children:` and may use `id:` instead of `value:`. |
 | `searchable` | Boolean | `false` | no | Uses custom searchable dropdown mode for `Select`. |
 | `search_mode` | Symbol | `:local` | no | Search mode for `Select`: `:local` (client filter) or `:remote` (AJAX endpoint). |
 | `search_endpoint` | String | `nil` | no | Required when `search_mode: :remote`; URL used to fetch Select options. |
@@ -68,7 +68,8 @@ None.
 - Select rendering modes: native select (`searchable: false`) and custom searchable select (`searchable: true`)
 - Select selection modes: single-value (`multiple: false`) and multi-value (`multiple: true`)
 - In searchable multiselect mode, selected options render as chips inside the trigger
-- Hierarchical nested multiselect via `flat-pack--nested-multiselect`, with parent/child synchronization, indeterminate parent states, initial selection hydration, and hidden input generation
+- Hierarchical nested multiselect via `FlatPack::Select::Component` with `multiple: true` and option `children:`, including parent/child synchronization, indeterminate parent states, initial selection hydration, and hidden input generation
+- Legacy hierarchical nested multiselect via `flat-pack--nested-multiselect`; prefer Select for new usage
 - Remote Select mode (`search_mode: :remote`) fetches options from `search_endpoint` with `search_param`
 
 ## Example
@@ -149,6 +150,39 @@ Additional focused examples:
 ```
 
 ```erb
+<%= render FlatPack::Select::Component.new(
+  name: "locations",
+  label: "Service Locations",
+  placeholder: "Select locations...",
+  searchable: true,
+  multiple: true,
+  options: [
+    {
+      label: "Australia",
+      value: "australia",
+      children: [
+        { label: "VIC", value: "vic" },
+        { label: "NSW", value: "nsw" },
+        { label: "QLD", value: "qld" }
+      ]
+    },
+    {
+      label: "Malaysia",
+      value: "malaysia",
+      children: [
+        { label: "Penang", value: "penang" },
+        { label: "Kuala Lumpur", value: "kuala-lumpur" },
+        { label: "Selangor", value: "selangor" }
+      ]
+    }
+  ],
+  value: ["australia"]
+) %>
+```
+
+Nested Select options require `multiple: true`. Selecting a parent selects the parent and all child values; deselecting a parent clears its children. Selecting all children automatically selects the parent, partial child selection renders the parent indeterminate, and submitted hidden inputs are ordered parent first followed by selected children. Nested Select is intended to replace `flat-pack--nested-multiselect` for new usage.
+
+```erb
 <% location_options = [
   {
     id: "australia",
@@ -175,7 +209,7 @@ Additional focused examples:
   data-flat-pack--nested-multiselect-input-name-value="locations[]"></div>
 ```
 
-`flat-pack--nested-multiselect` expects each option group to provide `id`, `label`, and optional `children` entries. When a parent is preselected, the controller automatically selects all of its children; when only some children are selected, the parent checkbox is rendered in the native indeterminate state.
+`flat-pack--nested-multiselect` is retained for backward compatibility but is deprecated for new examples. It expects each option group to provide `id`, `label`, and optional `children` entries. When a parent is preselected, the controller automatically selects all of its children; when only some children are selected, the parent checkbox is rendered in the native indeterminate state.
 
 ```erb
 <%= render FlatPack::Select::Component.new(

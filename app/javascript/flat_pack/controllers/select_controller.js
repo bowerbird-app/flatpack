@@ -2,7 +2,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["trigger", "dropdown", "hiddenInput", "hiddenInputs", "searchInput", "optionsList", "chevron", "chip", "placeholder", "chipsContainer", "searchStatus", "searchHint", "loadingState", "emptyState"]
+  static targets = ["trigger", "dropdown", "hiddenInput", "hiddenInputs", "searchInput", "optionsList", "chevron", "chip", "placeholder", "chipsContainer", "searchStatus", "searchHint", "loadingState", "emptyState", "nestedCheckbox"]
   static values = {
     searchable: Boolean,
     searchMode: { type: String, default: "local" },
@@ -10,12 +10,16 @@ export default class extends Controller {
     searchParam: { type: String, default: "q" },
     minSearchLength: { type: Number, default: 2 },
     multiple: Boolean,
+    nested: Boolean,
+    options: Array,
     inputName: String
   }
 
   connect() {
     this.selectedValues = new Set(this.initialSelectedValues())
     this.optionLabels = this.collectOptionLabels()
+    this.nestedOptions = this.normalizedNestedOptions()
+    this.normalizeNestedSelectedValues()
     this.defaultTriggerText = this.triggerTarget.querySelector("span")?.textContent || ""
     this.debounceTimer = null
     this.abortController = null
@@ -121,6 +125,113 @@ export default class extends Controller {
     this.dispatchChange()
   }
 
+  selectNestedOption(event) {
+    const option = event.currentTarget
+    const disabled = option.dataset.disabled === "true"
+
+    if (disabled) {
+      return
+    }
+
+    const value = option.dataset.value
+    const parentValue = option.dataset.parentValue
+    const optionType = option.dataset.optionType
+
+    if (optionType === "parent") {
+      this.selectParent(parentValue, !this.isParentChecked(this.findParent(parentValue)))
+    } else {
+      this.selectChild(parentValue, value, !this.selectedValues.has(value))
+    }
+
+    this.syncSelectedState()
+    this.dispatchChange()
+  }
+
+  selectParent(parentValue, checked) {
+    const parent = this.findParent(parentValue)
+
+    if (!parent || parent.disabled) {
+      return
+    }
+
+    if (checked) {
+      this.selectedValues.add(parent.value)
+      parent.children.forEach((child) => {
+        if (!child.disabled) {
+          this.selectedValues.add(child.value)
+        }
+      })
+      return
+    }
+
+    this.selectedValues.delete(parent.value)
+    parent.children.forEach((child) => this.selectedValues.delete(child.value))
+  }
+
+  selectChild(parentValue, childValue, checked) {
+    const parent = this.findParent(parentValue)
+    const child = parent?.children.find((candidate) => candidate.value === childValue)
+
+    if (!parent || !child || child.disabled) {
+      return
+    }
+
+    if (checked) {
+      this.selectedValues.add(child.value)
+    } else {
+      this.selectedValues.delete(child.value)
+    }
+
+    this.syncParentSelection(parent)
+  }
+
+  syncParentSelection(parent) {
+    if (!parent || parent.disabled) {
+      return
+    }
+
+    const enabledChildren = parent.children.filter((child) => !child.disabled)
+
+    if (enabledChildren.length === 0) {
+      return
+    }
+
+    if (enabledChildren.every((child) => this.selectedValues.has(child.value))) {
+      this.selectedValues.add(parent.value)
+    } else {
+      this.selectedValues.delete(parent.value)
+    }
+  }
+
+  isParentChecked(parent) {
+    if (!parent) {
+      return false
+    }
+
+    const enabledChildren = parent.children.filter((child) => !child.disabled)
+
+    if (enabledChildren.length === 0) {
+      return this.selectedValues.has(parent.value)
+    }
+
+    return this.selectedValues.has(parent.value) && enabledChildren.every((child) => this.selectedValues.has(child.value))
+  }
+
+  isParentIndeterminate(parent) {
+    if (!parent) {
+      return false
+    }
+
+    const enabledChildren = parent.children.filter((child) => !child.disabled)
+
+    if (enabledChildren.length === 0) {
+      return false
+    }
+
+    const selectedChildren = enabledChildren.filter((child) => this.selectedValues.has(child.value))
+    return selectedChildren.length > 0 && selectedChildren.length < enabledChildren.length
+  }
+
   removeChip(event) {
     event.preventDefault()
     event.stopPropagation()
@@ -130,7 +241,19 @@ export default class extends Controller {
       return
     }
 
-    this.selectedValues.delete(value)
+    if (this.nestedValue) {
+      const parent = this.findParent(value)
+      if (parent) {
+        this.selectParent(value, false)
+      } else {
+        const childParent = this.nestedOptions.find((candidate) => candidate.children.some((child) => child.value === value))
+        this.selectedValues.delete(value)
+        this.syncParentSelection(childParent)
+      }
+    } else {
+      this.selectedValues.delete(value)
+    }
+
     this.syncSelectedState()
     this.dispatchChange()
   }
@@ -203,6 +326,11 @@ export default class extends Controller {
   }
 
   updateSelectedState() {
+    if (this.nestedValue) {
+      this.updateNestedSelectedState()
+      return
+    }
+
     const allOptions = this.optionsListTarget.querySelectorAll("[role='option']")
     
     allOptions.forEach(option => {
@@ -219,6 +347,37 @@ export default class extends Controller {
     })
   }
 
+  updateNestedSelectedState() {
+    const allOptions = this.optionsListTarget.querySelectorAll("[role='option']")
+
+    allOptions.forEach(option => {
+      const parent = this.findParent(option.dataset.parentValue)
+      const isParent = option.dataset.optionType === "parent"
+      const checked = isParent ? this.isParentChecked(parent) : this.selectedValues.has(option.dataset.value)
+      const indeterminate = isParent ? this.isParentIndeterminate(parent) : false
+
+      option.setAttribute("aria-selected", checked.toString())
+      option.dataset.indeterminate = indeterminate.toString()
+
+      const checkbox = option.querySelector("input[type='checkbox']")
+      if (checkbox) {
+        checkbox.checked = checked
+        checkbox.indeterminate = indeterminate
+      }
+
+      if (checked) {
+        option.classList.add("bg-[var(--color-primary)]", "text-white")
+        option.classList.remove("hover:bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]", "bg-[var(--surface-muted-background-color)]")
+      } else if (indeterminate) {
+        option.classList.add("bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]")
+        option.classList.remove("bg-[var(--color-primary)]", "text-white")
+      } else {
+        option.classList.remove("bg-[var(--color-primary)]", "text-white", "bg-[var(--surface-muted-background-color)]")
+        option.classList.add("hover:bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]")
+      }
+    })
+  }
+
   updateHiddenInputs() {
     if (this.multipleValue) {
       if (!this.hasHiddenInputsTarget) {
@@ -226,7 +385,7 @@ export default class extends Controller {
       }
 
       this.hiddenInputsTarget.innerHTML = ""
-      const values = Array.from(this.selectedValues)
+      const values = this.selectedOrderedValues()
 
       if (values.length === 0) {
         const input = this.buildHiddenInput("")
@@ -337,6 +496,12 @@ export default class extends Controller {
     }
 
     const normalizedQuery = query.toLowerCase()
+
+    if (this.nestedValue) {
+      this.searchNestedOptions(normalizedQuery)
+      return
+    }
+
     const options = this.optionsListTarget.querySelectorAll("[role='option']")
     
     options.forEach(option => {
@@ -347,6 +512,29 @@ export default class extends Controller {
       } else {
         option.style.display = "none"
       }
+    })
+  }
+
+  searchNestedOptions(normalizedQuery) {
+    this.nestedOptions.forEach((parent) => {
+      const parentOption = this.optionElement(parent.value)
+      const parentMatches = parent.label.toLowerCase().includes(normalizedQuery)
+      const matchingChildren = parent.children.filter((child) => child.label.toLowerCase().includes(normalizedQuery))
+      const showParent = normalizedQuery === "" || parentMatches || matchingChildren.length > 0
+
+      if (parentOption) {
+        parentOption.style.display = showParent ? "flex" : "none"
+      }
+
+      parent.children.forEach((child) => {
+        const childOption = this.optionElement(child.value)
+        if (!childOption) {
+          return
+        }
+
+        const childMatches = child.label.toLowerCase().includes(normalizedQuery)
+        childOption.style.display = normalizedQuery === "" || parentMatches || childMatches ? "flex" : "none"
+      })
     })
   }
 
@@ -481,8 +669,88 @@ export default class extends Controller {
   showAllOptions() {
     const options = this.optionsListTarget.querySelectorAll("[role='option']")
     options.forEach(option => {
-      option.style.display = "block"
+      option.style.display = this.nestedValue ? "flex" : "block"
     })
+  }
+
+  selectedOrderedValues() {
+    if (!this.nestedValue) {
+      return Array.from(this.selectedValues)
+    }
+
+    const orderedValues = []
+
+    this.nestedOptions.forEach((parent) => {
+      if (this.selectedValues.has(parent.value)) {
+        orderedValues.push(parent.value)
+      }
+
+      parent.children.forEach((child) => {
+        if (this.selectedValues.has(child.value)) {
+          orderedValues.push(child.value)
+        }
+      })
+    })
+
+    this.selectedValues.forEach((value) => {
+      if (!orderedValues.includes(value)) {
+        orderedValues.push(value)
+      }
+    })
+
+    return orderedValues
+  }
+
+  normalizeNestedSelectedValues() {
+    if (!this.nestedValue) {
+      return
+    }
+
+    this.nestedOptions.forEach((parent) => {
+      if (this.selectedValues.has(parent.value)) {
+        parent.children.forEach((child) => {
+          if (!child.disabled) {
+            this.selectedValues.add(child.value)
+          }
+        })
+      }
+
+      this.syncParentSelection(parent)
+    })
+  }
+
+  normalizedNestedOptions() {
+    if (!this.nestedValue || !this.hasOptionsValue || !Array.isArray(this.optionsValue)) {
+      return []
+    }
+
+    return this.optionsValue.map((parent) => {
+      const value = String(parent?.value || parent?.id || "")
+      const children = Array.isArray(parent?.children) ? parent.children : []
+
+      return {
+        value,
+        label: String(parent?.label || value),
+        disabled: parent?.disabled === true,
+        children: children.map((child) => {
+          const childValue = String(child?.value || child?.id || "")
+
+          return {
+            value: childValue,
+            label: String(child?.label || childValue),
+            disabled: child?.disabled === true
+          }
+        }).filter((child) => child.value !== "")
+      }
+    }).filter((parent) => parent.value !== "")
+  }
+
+  findParent(parentValue) {
+    return this.nestedOptions.find((parent) => parent.value === parentValue)
+  }
+
+  optionElement(value) {
+    return this.optionsListTarget.querySelector(`[data-value='${CSS.escape(value || "")}']`)
   }
 
   escapeHtml(value) {

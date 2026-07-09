@@ -226,6 +226,70 @@ module FlatPack
         assert_selector "[data-flat-pack--select-target='chip'][data-value='rails'] svg[data-flat-pack--icon-name-value='x-mark']"
       end
 
+      def test_nested_multiselect_forces_custom_select_and_renders_parent_child_options
+        render_inline(Component.new(
+          name: "locations",
+          label: "Service Locations",
+          options: [
+            {
+              label: "Australia",
+              value: "australia",
+              children: [
+                {label: "VIC", value: "vic"},
+                {label: "NSW", value: "nsw", disabled: true}
+              ]
+            }
+          ],
+          value: ["australia"],
+          multiple: true
+        ))
+
+        refute_selector "select"
+        assert_selector "div[data-controller='flat-pack--select']"
+        assert_selector "div[data-flat-pack--select-nested-value='true']"
+        assert_selector "div[role='option'][data-option-type='parent'][data-value='australia'][data-parent-value='australia']", text: "Australia"
+        assert_selector "div[role='option'][data-option-type='child'][data-value='vic'][data-parent-value='australia']", text: "VIC"
+        assert_selector "div[role='option'][data-option-type='child'][data-value='nsw'][data-disabled='true']", text: "NSW"
+        assert_selector "input[type='hidden'][name='locations[]'][value='australia']", visible: false
+        assert_selector "input[type='hidden'][name='locations[]'][value='vic']", visible: false
+      end
+
+      def test_nested_multiselect_accepts_id_values_and_orders_hidden_inputs
+        render_inline(Component.new(
+          name: "locations",
+          options: [
+            {
+              id: "australia",
+              label: "Australia",
+              children: [
+                {id: "vic", label: "VIC"},
+                {id: "nsw", label: "NSW"}
+              ]
+            },
+            {
+              id: "malaysia",
+              label: "Malaysia",
+              children: [
+                {id: "penang", label: "Penang"}
+              ]
+            }
+          ],
+          value: ["vic", "nsw", "penang"],
+          multiple: true,
+          searchable: true
+        ))
+
+        hidden_values = page.all("input[type='hidden'][name='locations[]']", visible: false).map { |input| input[:value] }
+
+        assert_equal ["australia", "vic", "nsw", "malaysia", "penang"], hidden_values
+        assert_selector "div[role='option'][data-value='australia']"
+        assert_selector "div[role='option'][data-value='vic']"
+        assert_selector "span[data-flat-pack--select-target='chip'][data-value='australia']", visible: false
+        assert_selector "span[data-flat-pack--select-target='chip'][data-value='vic']", visible: false
+        assert_selector "span[data-flat-pack--select-target='chip'][data-value='nsw']", visible: false
+        assert_selector "span[data-flat-pack--select-target='chip'][data-value='penang']", visible: false
+      end
+
       def test_searchable_has_stimulus_controller
         render_inline(Component.new(name: "color", options: ["Red"], searchable: true))
 
