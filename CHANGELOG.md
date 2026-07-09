@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.119] - 2026-07-09
+
 ### Added
 - Added `secondary_anchor_url` and tooltip-specific options to `FlatPack::PageNav::Component`, including Tooltip wrapping and compatibility fallbacks for deprecated label options.
 
