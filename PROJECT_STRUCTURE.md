@@ -10,7 +10,7 @@ This document summarizes the current FlatPack repository layout and the files th
 **License:** MIT  
 **Ruby:** 3.2+  
 **Supported host apps:** Rails 7.1+  
-**Last Updated:** 2026-07-08
+**Last Updated:** 2026-07-09
 
 ## Repository Layout
 
