@@ -25,6 +25,7 @@ module FlatPack
 
         assert_selector "button", count: 1
         refute_selector "a[aria-label='Close']"
+        refute_selector "a[href='/secondary']"
         refute_selector "a[aria-label='Add']"
       end
 
@@ -33,6 +34,60 @@ module FlatPack
 
         assert_selector "a[href='/demo'][aria-label='Close']"
         assert_selector "a[href='/demo'] svg[data-flat-pack--icon-name-value='x-mark']"
+      end
+
+      def test_wraps_back_action_with_tooltip_from_deprecated_label
+        render_inline(Component.new(back_label: "Return"))
+
+        assert_selector "[data-controller='flat-pack--tooltip'] button[aria-label='Return']"
+        assert_selector "[role='tooltip']", text: "Return"
+      end
+
+      def test_wraps_anchor_action_with_tooltip_from_deprecated_label
+        render_inline(Component.new(anchor_url: "/demo", anchor_label: "Dismiss"))
+
+        assert_selector "[data-controller='flat-pack--tooltip'] a[href='/demo'][aria-label='Dismiss']"
+        assert_selector "[role='tooltip']", text: "Dismiss"
+      end
+
+      def test_uses_new_back_tooltip_over_deprecated_label
+        render_inline(Component.new(back_label: "Old return", back_tooltip: "New return"))
+
+        assert_selector "button[aria-label='New return']"
+        assert_selector "[role='tooltip']", text: "New return"
+        refute_text "Old return"
+      end
+
+      def test_uses_new_anchor_tooltip_over_deprecated_label
+        render_inline(Component.new(anchor_url: "/demo", anchor_label: "Old dismiss", anchor_tooltip: "New dismiss"))
+
+        assert_selector "a[href='/demo'][aria-label='New dismiss']"
+        assert_selector "[role='tooltip']", text: "New dismiss"
+        refute_text "Old dismiss"
+      end
+
+      def test_renders_secondary_anchor_action_with_tooltip
+        render_inline(Component.new(
+          secondary_anchor_url: "/secondary",
+          secondary_anchor_tooltip: "Previous item"
+        ))
+
+        assert_selector "[data-controller='flat-pack--tooltip'] a[href='/secondary'][aria-label='Previous item']"
+        assert_selector "[role='tooltip']", text: "Previous item"
+      end
+
+      def test_renders_secondary_anchor_to_left_of_anchor_action
+        render_inline(Component.new(
+          secondary_anchor_url: "/secondary",
+          secondary_anchor_tooltip: "Previous item",
+          anchor_url: "/primary",
+          anchor_tooltip: "Close item"
+        ))
+
+        secondary = page.find("a[href='/secondary']")
+        primary = page.find("a[href='/primary']")
+
+        assert_operator page.native.to_html.index(secondary.native.to_html), :<, page.native.to_html.index(primary.native.to_html)
       end
 
       def test_renders_right_slot_content_when_provided
@@ -50,7 +105,7 @@ module FlatPack
         render_inline(Component.new(
           anchor_url: "/demo",
           anchor_icon: "trash",
-          anchor_label: "Dismiss"
+          anchor_tooltip: "Dismiss"
         )) do |component|
           component.right_slot do
             '<a href="/demo/forms" aria-label="Confirm"><span data-flat-pack--icon-name-value="check"></span></a>'.html_safe
