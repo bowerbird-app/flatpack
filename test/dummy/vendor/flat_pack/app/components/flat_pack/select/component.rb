@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "set"
+
 module FlatPack
   module Select
     class Component < FlatPack::BaseComponent
@@ -73,7 +75,7 @@ module FlatPack
       end
 
       def render_select_wrapper
-        if @searchable
+        if @searchable || nested_options?
           render_custom_select
         else
           render_native_select
@@ -105,6 +107,8 @@ module FlatPack
             flat_pack__select_search_param_value: @search_param,
             flat_pack__select_min_search_length_value: @min_search_length,
             flat_pack__select_multiple_value: @multiple.to_s,
+            flat_pack__select_nested_value: nested_options?.to_s,
+            flat_pack__select_options_value: (nested_options? ? @options.to_json : nil),
             flat_pack__select_input_name_value: hidden_input_name
           }) do
           safe_join([
@@ -156,7 +160,7 @@ module FlatPack
       end
 
       def render_trigger_button
-        selected_option = @options.find { |opt| selected_value?(opt[:value]) }
+        selected_option = flat_options.find { |opt| selected_value?(opt[:value]) }
         display_text = selected_option ? selected_option[:label] : @placeholder
 
         content_tag(:button,
@@ -181,7 +185,7 @@ module FlatPack
       end
 
       def render_multiselect_trigger_content
-        selected_labels = @options.select { |option| selected_value?(option[:value]) }
+        selected_labels = flat_options.select { |option| selected_value?(option[:value]) }
 
         safe_join([
           content_tag(:span,
@@ -189,7 +193,7 @@ module FlatPack
             class: selected_labels.any? ? "hidden block truncate" : "block truncate",
             data: {flat_pack__select_target: "placeholder"}),
           content_tag(:span, class: "flex flex-wrap gap-1 pr-6", data: {flat_pack__select_target: "chipsContainer"}) do
-            safe_join(@options.map { |option| render_trigger_chip(option) })
+            safe_join(flat_options.map { |option| render_trigger_chip(option) })
           end,
           render_chevron_icon
         ])
@@ -256,9 +260,13 @@ module FlatPack
           class: "max-h-60 overflow-y-auto p-1 data-[results-count='0']:hidden",
           data: {
             flat_pack__select_target: "optionsList",
-            results_count: @options.length
+            results_count: flat_options.length
           }) do
-          safe_join(@options.map { |option| render_custom_option(option) })
+          if nested_options?
+            safe_join(@options.map { |option| render_nested_custom_option_group(option) })
+          else
+            safe_join(@options.map { |option| render_custom_option(option) })
+          end
         end
       end
 
@@ -290,6 +298,44 @@ module FlatPack
             disabled: option[:disabled]
           },
           aria: {selected: selected.to_s})
+      end
+
+      def render_nested_custom_option_group(option)
+        safe_join([
+          render_nested_custom_option(option, type: "parent", parent_value: option[:value]),
+          safe_join(option[:children].map { |child| render_nested_custom_option(child, type: "child", parent_value: option[:value]) })
+        ])
+      end
+
+      def render_nested_custom_option(option, type:, parent_value:)
+        selected = selected_value?(option[:value])
+        child = type == "child"
+
+        content_tag(:div,
+          class: nested_custom_option_classes(selected, option[:disabled], child),
+          role: "option",
+          data: {
+            action: "click->flat-pack--select#selectNestedOption",
+            value: option[:value],
+            label: option[:label],
+            disabled: option[:disabled],
+            parent_value: parent_value,
+            option_type: type
+          },
+          aria: {selected: selected.to_s}) do
+          safe_join([
+            tag.input(
+              type: "checkbox",
+              checked: selected,
+              disabled: option[:disabled],
+              tabindex: "-1",
+              class: "h-4 w-4 rounded border-[var(--surface-border-color)] text-[var(--color-primary)] accent-[var(--color-primary)] pointer-events-none",
+              data: {flat_pack__select_target: "nestedCheckbox"},
+              aria: {hidden: "true"}
+            ),
+            content_tag(:span, option[:label], class: child ? "text-sm text-[var(--surface-muted-content-color)]" : "font-medium")
+          ])
+        end
       end
 
       def render_placeholder_option
@@ -439,6 +485,27 @@ module FlatPack
         base.join(" ")
       end
 
+      def nested_custom_option_classes(selected, disabled, child)
+        base = [
+          "flex items-center gap-2",
+          "px-[var(--form-control-padding)] py-[var(--form-control-padding)]",
+          "rounded-sm",
+          "transition-colors duration-base"
+        ]
+
+        base << "ml-6 border-l border-[var(--surface-border-color)] pl-4" if child
+
+        base << if disabled
+          "opacity-50 cursor-not-allowed text-[var(--surface-muted-content-color)]"
+        elsif selected
+          "bg-[var(--color-primary)] text-white cursor-pointer"
+        else
+          "hover:bg-[var(--surface-muted-background-color)] cursor-pointer text-[var(--surface-content-color)]"
+        end
+
+        base.join(" ")
+      end
+
       def error_classes
         "mt-1 text-sm text-[var(--color-warning)]"
       end
@@ -458,7 +525,8 @@ module FlatPack
       def selected_values
         @selected_values ||= begin
           values = @multiple ? Array(@value) : Array(@value).first(1)
-          values.compact.map(&:to_s).reject(&:empty?)
+          values = values.compact.map(&:to_s).reject(&:empty?)
+          nested_options? ? normalized_nested_selected_values(values) : values
         end
       end
 
@@ -481,24 +549,94 @@ module FlatPack
         @searchable && @search_mode == :remote
       end
 
+      def nested_options?
+        @multiple && @options.any? { |option| option[:children].present? }
+      end
+
+      def flat_options
+        @flat_options ||= @options.flat_map { |option| [option, *option.fetch(:children, [])] }
+      end
+
+      def normalized_nested_selected_values(values)
+        selected = values.to_set
+
+        @options.each do |parent|
+          enabled_children = parent.fetch(:children, []).reject { |child| child[:disabled] }
+
+          if selected.include?(parent[:value])
+            enabled_children.each { |child| selected.add(child[:value]) }
+          elsif enabled_children.any? && enabled_children.all? { |child| selected.include?(child[:value]) }
+            selected.add(parent[:value])
+          else
+            selected.delete(parent[:value])
+          end
+        end
+
+        ordered_values(selected)
+      end
+
+      def ordered_values(selected)
+        ordered = []
+
+        @options.each do |parent|
+          ordered << parent[:value] if selected.include?(parent[:value])
+
+          parent.fetch(:children, []).each do |child|
+            ordered << child[:value] if selected.include?(child[:value])
+          end
+        end
+
+        selected.each { |value| ordered << value unless ordered.include?(value) }
+        ordered
+      end
+
       def normalize_options(options)
         return [] if options.nil?
 
         options.map do |option|
           case option
           when String
-            {label: option, value: option, disabled: false}
+            {label: option, value: option, disabled: false, children: []}
           when Array
-            {label: option[0], value: option[1], disabled: false}
+            {label: option[0].to_s, value: option[1].to_s, disabled: false, children: []}
           when Hash
-            {
-              label: option[:label] || option["label"],
-              value: option[:value] || option["value"],
-              disabled: option[:disabled] || option["disabled"] || false
-            }
+            normalize_hash_option(option)
           else
             raise ArgumentError, "Invalid option format: #{option.inspect}"
           end
+        end
+      end
+
+      def normalize_hash_option(option)
+        value = option[:value] || option["value"] || option[:id] || option["id"]
+        label = option[:label] || option["label"] || value
+        children = option[:children] || option["children"] || []
+
+        {
+          label: label.to_s,
+          value: value.to_s,
+          disabled: option[:disabled] || option["disabled"] || false,
+          children: Array(children).map { |child| normalize_child_option(child) }
+        }
+      end
+
+      def normalize_child_option(option)
+        case option
+        when String
+          {label: option, value: option, disabled: false}
+        when Array
+          {label: option[0].to_s, value: option[1].to_s, disabled: false}
+        when Hash
+          value = option[:value] || option["value"] || option[:id] || option["id"]
+          label = option[:label] || option["label"] || value
+
+          {
+            label: label.to_s,
+            value: value.to_s,
+            disabled: option[:disabled] || option["disabled"] || false
+          }
+        else
+          raise ArgumentError, "Invalid option format: #{option.inspect}"
         end
       end
 

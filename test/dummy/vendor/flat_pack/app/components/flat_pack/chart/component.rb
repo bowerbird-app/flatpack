@@ -262,6 +262,9 @@ module FlatPack
         return defaults unless bar_chart?
 
         bar_defaults = {
+          tooltip: {
+            theme: "dark"
+          },
           plotOptions: {
             bar: {
               horizontal: horizontal_bar?

@@ -568,7 +568,7 @@
       method_call: "render FlatPack::Select::Component.new(name: \"country\", label: \"Country\", options: [[\"United States\", \"US\"], [\"Canada\", \"CA\"]], searchable: true, multiple: true)",
       variables: [
         { variable: "name", accepts: "String (required)", example: "name: \"user[country]\"" },
-        { variable: "options", accepts: "Array<String>, Array<[label, value]>, Array<Hash>", example: "options: [[\"United States\", \"US\"], [\"Canada\", \"CA\"]]" },
+        { variable: "options", accepts: "Array<String>, Array<[label, value]>, Array<Hash>", example: "options: [[\"United States\", \"US\"], { label: \"Australia\", value: \"australia\", children: [{ label: \"VIC\", value: \"vic\" }] }]" },
         { variable: "value", accepts: "String, Array<String>, nil", example: "value: [\"US\", \"CA\"]" },
         { variable: "placeholder", accepts: "String or nil", example: "placeholder: \"Select an option\"" },
         { variable: "label", accepts: "String or nil", example: "label: \"Country\"" },
@@ -579,6 +579,7 @@
         { variable: "search_param", accepts: "String", example: "search_param: \"q\"" },
         { variable: "min_search_length", accepts: "Integer", example: "min_search_length: 2" },
         { variable: "multiple", accepts: "true, false", example: "multiple: true" },
+        { variable: "children", accepts: "Array<Hash> within options when multiple is true", example: "children: [{ label: \"VIC\", value: \"vic\" }]" },
         { variable: "disabled", accepts: "true, false", example: "disabled: true" },
         { variable: "required", accepts: "true, false", example: "required: true" },
         { variable: "error", accepts: "String or nil", example: "error: \"Please select at least one option\"" },

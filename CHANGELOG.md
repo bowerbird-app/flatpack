@@ -8,8 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added nested multiselect support to `FlatPack::Select::Component`, including parent/child selection syncing, indeterminate parent states, ordered hidden inputs, docs, dummy examples, and JavaScript/Ruby coverage.
 
 ### Changed
+- Bumped the gem version to `0.1.118`.
+- Marked the legacy nested multiselect controller docs as deprecated for new usage in favor of Select nested options.
 
 ### Fixed
 
