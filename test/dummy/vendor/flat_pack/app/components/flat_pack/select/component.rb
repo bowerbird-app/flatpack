@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "set"
-
 module FlatPack
   module Select
     class Component < FlatPack::BaseComponent

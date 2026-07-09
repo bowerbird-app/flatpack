@@ -281,7 +281,7 @@ module FlatPack
 
         hidden_values = page.all("input[type='hidden'][name='locations[]']", visible: false).map { |input| input[:value] }
 
-        assert_equal ["australia", "vic", "nsw", "penang"], hidden_values
+        assert_equal ["australia", "vic", "nsw", "malaysia", "penang"], hidden_values
         assert_selector "div[role='option'][data-value='australia']"
         assert_selector "div[role='option'][data-value='vic']"
         assert_selector "span[data-flat-pack--select-target='chip'][data-value='australia']", visible: false
