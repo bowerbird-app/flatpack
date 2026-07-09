@@ -68,6 +68,7 @@ None.
 - Select rendering modes: native select (`searchable: false`) and custom searchable select (`searchable: true`)
 - Select selection modes: single-value (`multiple: false`) and multi-value (`multiple: true`)
 - In searchable multiselect mode, selected options render as chips inside the trigger
+- In searchable multiselect dropdown rows, selected state is indicated by checkbox state with neutral row styling (no primary selected row background)
 - Hierarchical nested multiselect via `FlatPack::Select::Component` with `multiple: true` and option `children:`, including parent/child synchronization, indeterminate parent states, initial selection hydration, and hidden input generation
 - Legacy hierarchical nested multiselect via `flat-pack--nested-multiselect`; prefer Select for new usage
 - Remote Select mode (`search_mode: :remote`) fetches options from `search_endpoint` with `search_param`

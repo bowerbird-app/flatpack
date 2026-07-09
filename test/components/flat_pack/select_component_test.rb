@@ -213,6 +213,36 @@ module FlatPack
         assert_selector "[data-flat-pack--select-target='placeholder'].hidden", text: "Search frameworks"
       end
 
+      def test_searchable_multiple_selected_option_uses_checkbox_only_styling
+        render_inline(Component.new(
+          name: "frameworks",
+          options: [["Rails", "rails"], ["Hotwire", "hotwire"]],
+          value: ["rails"],
+          searchable: true,
+          multiple: true
+        ))
+
+        selected_option_classes = page.find("div[role='option'][data-value='rails']")[:class]
+
+        refute_includes selected_option_classes, "bg-[var(--color-primary)]"
+        refute_includes selected_option_classes, "text-white"
+        assert_includes selected_option_classes, "text-[var(--surface-content-color)]"
+      end
+
+      def test_searchable_single_selected_option_keeps_highlight_styling
+        render_inline(Component.new(
+          name: "framework",
+          options: [["Rails", "rails"], ["Hotwire", "hotwire"]],
+          value: "rails",
+          searchable: true
+        ))
+
+        selected_option_classes = page.find("div[role='option'][data-value='rails']")[:class]
+
+        assert_includes selected_option_classes, "bg-[var(--color-primary)]"
+        assert_includes selected_option_classes, "text-white"
+      end
+
       def test_searchable_multiple_chip_has_remove_action
         render_inline(Component.new(
           name: "frameworks",

@@ -475,7 +475,11 @@ module FlatPack
         base << if disabled
           "opacity-50 cursor-not-allowed text-[var(--surface-muted-content-color)]"
         elsif selected
-          "bg-[var(--color-primary)] text-white cursor-pointer"
+          if @multiple
+            "hover:bg-[var(--surface-muted-background-color)] cursor-pointer text-[var(--surface-content-color)]"
+          else
+            "bg-[var(--color-primary)] text-white cursor-pointer"
+          end
         else
           "hover:bg-[var(--surface-muted-background-color)] cursor-pointer text-[var(--surface-content-color)]"
         end
@@ -496,7 +500,7 @@ module FlatPack
         base << if disabled
           "opacity-50 cursor-not-allowed text-[var(--surface-muted-content-color)]"
         elsif selected
-          "bg-[var(--color-primary)] text-white cursor-pointer"
+          "hover:bg-[var(--surface-muted-background-color)] cursor-pointer text-[var(--surface-content-color)]"
         else
           "hover:bg-[var(--surface-muted-background-color)] cursor-pointer text-[var(--surface-content-color)]"
         end

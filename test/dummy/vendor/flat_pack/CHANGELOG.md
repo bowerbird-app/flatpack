@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.120] - 2026-07-09
+
+### Added
+
+### Changed
+- Bumped the gem version to `0.1.120`.
+- Updated `FlatPack::Select::Component` multi-select option styling so selected rows keep neutral text and rely on checkbox state instead of selected highlight backgrounds.
+
+### Fixed
+- Updated Select Stimulus selected-state class toggling so multi-select rows in `/demo/forms/select` no longer apply primary selected background/text classes when selected.
+
 ## [0.1.119] - 2026-07-09
 
 ### Added

@@ -300,6 +300,17 @@ test('nested select marks parent indeterminate when one child is selected', () =
   assert.deepEqual(hiddenValues(controller), ['vic'])
 })
 
+test('nested multiselect selected rows do not use highlighted selected classes', () => {
+  const controller = buildController()
+
+  controller.selectNestedOption({ currentTarget: option(controller, 'australia') })
+
+  const parentOption = option(controller, 'australia')
+  assert.equal(parentOption.classList.contains('bg-[var(--color-primary)]'), false)
+  assert.equal(parentOption.classList.contains('text-white'), false)
+  assert.equal(parentOption.classList.contains('text-[var(--surface-content-color)]'), true)
+})
+
 test('nested select selects parent when all children are selected', () => {
   const controller = buildController()
 
@@ -337,3 +348,14 @@ test('flat multiselect toggles one selected value unchanged', () => {
   assert.deepEqual(hiddenValues(controller), ['hotwire'])
 }
 )
+
+test('flat multiselect selected rows do not use highlighted selected classes', () => {
+  const controller = buildController({ nested: false })
+
+  controller.selectOption({ currentTarget: option(controller, 'rails') })
+
+  const selectedOption = option(controller, 'rails')
+  assert.equal(selectedOption.classList.contains('bg-[var(--color-primary)]'), false)
+  assert.equal(selectedOption.classList.contains('text-white'), false)
+  assert.equal(selectedOption.classList.contains('text-[var(--surface-content-color)]'), true)
+})

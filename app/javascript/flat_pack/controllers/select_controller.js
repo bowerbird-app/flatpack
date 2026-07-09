@@ -338,8 +338,13 @@ export default class extends Controller {
       option.setAttribute("aria-selected", isSelected.toString())
 
       if (isSelected) {
-        option.classList.add("bg-[var(--color-primary)]", "text-white")
-        option.classList.remove("hover:bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]")
+        if (this.multipleValue) {
+          option.classList.remove("bg-[var(--color-primary)]", "text-white")
+          option.classList.add("hover:bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]")
+        } else {
+          option.classList.add("bg-[var(--color-primary)]", "text-white")
+          option.classList.remove("hover:bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]")
+        }
       } else {
         option.classList.remove("bg-[var(--color-primary)]", "text-white")
         option.classList.add("hover:bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]")
@@ -366,8 +371,13 @@ export default class extends Controller {
       }
 
       if (checked) {
-        option.classList.add("bg-[var(--color-primary)]", "text-white")
-        option.classList.remove("hover:bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]", "bg-[var(--surface-muted-background-color)]")
+        if (this.multipleValue) {
+          option.classList.remove("bg-[var(--color-primary)]", "text-white", "bg-[var(--surface-muted-background-color)]")
+          option.classList.add("hover:bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]")
+        } else {
+          option.classList.add("bg-[var(--color-primary)]", "text-white")
+          option.classList.remove("hover:bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]", "bg-[var(--surface-muted-background-color)]")
+        }
       } else if (indeterminate) {
         option.classList.add("bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]")
         option.classList.remove("bg-[var(--color-primary)]", "text-white")
@@ -636,7 +646,9 @@ export default class extends Controller {
     const optionClasses = disabled
       ? "px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-sm transition-colors duration-base opacity-50 cursor-not-allowed text-[var(--surface-muted-content-color)]"
       : selected
-      ? "px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-sm transition-colors duration-base bg-[var(--color-primary)] text-white cursor-pointer"
+      ? (this.multipleValue
+        ? "px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-sm transition-colors duration-base hover:bg-[var(--surface-muted-background-color)] cursor-pointer text-[var(--surface-content-color)]"
+        : "px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-sm transition-colors duration-base bg-[var(--color-primary)] text-white cursor-pointer")
       : "px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-sm transition-colors duration-base hover:bg-[var(--surface-muted-background-color)] cursor-pointer text-[var(--surface-content-color)]"
 
     return `<div role="option" class="${optionClasses}" data-action="click->flat-pack--select#selectOption" data-value="${value}" data-label="${label}" data-disabled="${disabled}" aria-selected="${selected}">${label}</div>`
