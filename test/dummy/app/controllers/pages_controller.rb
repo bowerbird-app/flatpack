@@ -2313,11 +2313,16 @@ class PagesController < ApplicationController
 
   def page_cache_version
     Digest::SHA256.hexdigest([
+      flatpack_version_cache_version,
       page_template_cache_version,
       component_cache_version,
       layout_stylesheet_cache_version,
       importmap_cache_version
     ].join("|")).first(12)
+  end
+
+  def flatpack_version_cache_version
+    FlatPack::VERSION
   end
 
   def page_template_cache_version

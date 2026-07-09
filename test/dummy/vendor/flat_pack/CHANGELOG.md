@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.121] - 2026-07-09
+
+### Added
+
+### Changed
+- Bumped the gem version to `0.1.121`.
+- Updated nested `FlatPack::Select::Component` option row styling to use `rounded-none` instead of `rounded-sm`.
+
+### Fixed
+- Synchronized release metadata, docs contracts, and dummy app lockfiles with version `0.1.121`.
+
 ## [0.1.120] - 2026-07-09
 
 ### Added
