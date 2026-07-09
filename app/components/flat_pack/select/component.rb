@@ -331,7 +331,7 @@ module FlatPack
               data: {flat_pack__select_target: "nestedCheckbox"},
               aria: {hidden: "true"}
             ),
-            content_tag(:span, option[:label], class: child ? "text-sm text-[var(--surface-muted-content-color)]" : "font-medium")
+            content_tag(:span, option[:label], class: child ? "text-sm" : "font-medium")
           ])
         end
       end
