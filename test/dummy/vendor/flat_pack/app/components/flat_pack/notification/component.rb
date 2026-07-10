@@ -257,7 +257,26 @@ module FlatPack
         icon = notification_value(notification, :icon)
         return if icon.respond_to?(:blank?) && icon.blank?
 
-        icon
+        return icon unless unread_notification?(notification)
+
+        return add_red_dot_to_svg(icon) if svg_markup?(icon)
+
+        render FlatPack::Shared::IconComponent.new(name: icon, size: :md, class: "fp-red-dot")
+
+      end
+
+      def svg_markup?(icon)
+        icon.is_a?(String) && icon.strip.start_with?("<svg")
+      end
+
+      def add_red_dot_to_svg(icon)
+        svg = icon.dup
+
+        if svg.match?(/\sclass\s*=\s*"/)
+          svg.sub(/\sclass\s*=\s*"([^"]*)"/, ' class="\\1 fp-red-dot"')
+        else
+          svg.sub("<svg", '<svg class="fp-red-dot"')
+        end
       end
 
       def merge_class_names(*class_names)
