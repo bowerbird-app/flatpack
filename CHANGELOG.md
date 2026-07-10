@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
-- Bumped the gem version to `0.1.123`.
+- Bumped the gem version to `0.1.124`.
 
 ### Fixed
 - Updated the `fp-red-dot` utility to render reliably on SVG icons by appending a foreground SVG dot indicator with `z-index: 999999999`.

@@ -48,7 +48,7 @@ None.
 | `:href` | String | no | Optional notification URL. |
 | `:time` | String | no | ISO8601 timestamp rendered with `FlatPack::Timestamp::Component`. |
 | `:unread` | Boolean | no | Applies unread/active styling. |
-| `:icon` | Symbol, String, nil | no | Optional icon passed to `FlatPack::List::Item`. |
+| `:icon` | Symbol, String, nil | no | Optional icon passed to `FlatPack::List::Item`. Unread rows automatically add the `fp-red-dot` class to this icon. |
 
 ## Timestamp behavior
 Notification timestamps should be provided in ISO8601 format, for example:

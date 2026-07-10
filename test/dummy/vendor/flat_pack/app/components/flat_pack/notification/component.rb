@@ -262,7 +262,6 @@ module FlatPack
         return add_red_dot_to_svg(icon) if svg_markup?(icon)
 
         render FlatPack::Shared::IconComponent.new(name: icon, size: :md, class: "fp-red-dot")
-
       end
 
       def svg_markup?(icon)
