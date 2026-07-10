@@ -11,8 +11,9 @@ copy_entries = %w[
   app
   config
   lib
-  docs/ai/install_contract.json
+  docs
   CHANGELOG.md
+  SECURITY.md
   MIT-LICENSE
   README.md
   flat_pack.gemspec
