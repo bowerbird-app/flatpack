@@ -27,6 +27,13 @@ const VIEWBOXES = {
   micro: "0 0 16 16",
 }
 
+const RED_DOT_CONFIG = {
+  outline: { cx: "20", cy: "4", r: "3" },
+  solid: { cx: "20", cy: "4", r: "3" },
+  mini: { cx: "16.5", cy: "3.5", r: "2.5" },
+  micro: { cx: "13", cy: "3", r: "2" },
+}
+
 export default class extends Controller {
   static values = {
     name: String,
@@ -72,5 +79,21 @@ export default class extends Controller {
     }
 
     this.element.innerHTML = paths
+
+    if (this.element.classList.contains("fp-red-dot")) {
+      this.#appendRedDot(variant)
+    }
+  }
+
+  #appendRedDot(variant) {
+    const config = RED_DOT_CONFIG[variant] || RED_DOT_CONFIG.outline
+    const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle")
+
+    dot.setAttribute("class", "fp-red-dot-indicator")
+    dot.setAttribute("cx", config.cx)
+    dot.setAttribute("cy", config.cy)
+    dot.setAttribute("r", config.r)
+
+    this.element.appendChild(dot)
   }
 }

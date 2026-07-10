@@ -7,6 +7,7 @@
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "flat_pack/application", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "flat_pack/variables", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "flat_pack/rich_text", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "flat_pack/content_editor", "data-turbo-track": "reload" %>
@@ -510,14 +511,23 @@
                 active: false
               ) %>
               <%= render FlatPack::Sidebar::Item::Component.new(
+                label: "Notification",
+                href: demo_notification_path,
+                icon: :bell,
+                active: false
+              ) %>
+
+              <%= render FlatPack::Sidebar::Divider::Component.new %>
+              <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Helpers") %>
+              <%= render FlatPack::Sidebar::Item::Component.new(
                 label: "Local Time",
                 href: demo_local_time_path,
                 icon: :clock,
                 active: false
               ) %>
               <%= render FlatPack::Sidebar::Item::Component.new(
-                label: "Notification",
-                href: demo_notification_path,
+                label: "Red Dot",
+                href: demo_red_dot_path,
                 icon: :bell,
                 active: false
               ) %>

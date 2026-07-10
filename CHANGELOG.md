@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+### Changed
+- Bumped the gem version to `0.1.124`.
+
+### Fixed
+- Updated the `fp-red-dot` utility to render reliably on SVG icons by appending a foreground SVG dot indicator with `z-index: 999999999`.
+
+## [0.1.122] - 2026-07-10
+
+### Added
+- Added the `fp-red-dot` SVG utility class that renders a top-right danger-status dot via `::after` with `8px` size and `z-index: 999`.
+
+### Changed
+- Bumped the gem version to `0.1.122`.
+
+### Fixed
+
 ## [0.1.121] - 2026-07-09
 
 ### Added

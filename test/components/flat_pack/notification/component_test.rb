@@ -162,6 +162,18 @@ module FlatPack
         assert_includes page.native.to_html, "bg-[var(--list-item-active-background-color)]"
       end
 
+      def test_adds_fp_red_dot_class_to_unread_notification_icon
+        render_inline(Component.new(see_all_href: "/notifications", notifications: [notification(unread: true, icon: :bell)]))
+
+        assert_selector "li svg.fp-red-dot[data-flat-pack--icon-name-value='bell']"
+      end
+
+      def test_does_not_add_fp_red_dot_class_to_read_notification_icon
+        render_inline(Component.new(see_all_href: "/notifications", notifications: [notification(unread: false, icon: :bell)]))
+
+        refute_selector "li svg.fp-red-dot[data-flat-pack--icon-name-value='bell']"
+      end
+
       def test_renders_empty_state_when_notifications_are_empty
         render_inline(Component.new(see_all_href: "/notifications"))
 
