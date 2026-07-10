@@ -884,6 +884,9 @@ class PagesController < ApplicationController
     ]
   end
 
+  def red_dot
+  end
+
   def hero_centered
     render layout: "fullpage"
   end

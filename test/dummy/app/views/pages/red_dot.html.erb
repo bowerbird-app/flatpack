@@ -1,0 +1,63 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Red Dot Utility",
+  subtitle: "Show a small danger-status indicator on SVG icons using the fp-red-dot utility class."
+) %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Basic Usage",
+    anchor_link: true,
+    subtitle: "Apply fp-red-dot directly to an SVG icon component class list."
+  ) %>
+
+  <div class="rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
+    <div class="flex flex-wrap items-center gap-8">
+      <div class="flex items-center gap-2 text-sm text-(--surface-muted-content-color)">
+        <%= render FlatPack::Shared::IconComponent.new(name: :bell, size: :lg, class: "fp-red-dot text-(--surface-content-color)") %>
+        Bell
+      </div>
+
+      <div class="flex items-center gap-2 text-sm text-(--surface-muted-content-color)">
+        <%= render FlatPack::Shared::IconComponent.new(name: :envelope, size: :lg, class: "fp-red-dot text-(--surface-content-color)") %>
+        Mail
+      </div>
+
+      <div class="flex items-center gap-2 text-sm text-(--surface-muted-content-color)">
+        <%= render FlatPack::Shared::IconComponent.new(name: :chat, size: :lg, class: "fp-red-dot text-(--surface-content-color)") %>
+        Chat
+      </div>
+    </div>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Shared::IconComponent.new(
+        name: :bell,
+        size: :lg,
+        class: "fp-red-dot"
+      ) %&gt;
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Theme And Positioning",
+    anchor_link: true,
+    subtitle: "The dot is pinned to top-right and uses the danger token color."
+  ) %>
+
+  <div class="rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
+    <ul class="list-disc space-y-2 pl-5 text-sm text-(--surface-content-color)">
+      <li>width: 8px</li>
+      <li>height: 8px</li>
+      <li>z-index: 999999999</li>
+      <li>border-radius: 999px</li>
+      <li>top: 0</li>
+      <li>right: 0</li>
+      <li>background-color: var(--color-danger-background-color)</li>
+    </ul>
+  </div>
+</section>

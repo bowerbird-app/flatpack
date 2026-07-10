@@ -91,6 +91,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/timeline
     /demo/timestamp
     /demo/local_time
+    /demo/red_dot
     /demo/notification
     /mobile
     /mobile/bottom_nav
@@ -553,6 +554,21 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "data-controller=\"flat-pack--timestamp\""
     assert_includes response.body, "See all notifications"
     assert_includes response.body, "9+"
+  end
+
+  test "red dot demo renders helper utility examples and helpers section" do
+    get "/demo/red_dot"
+
+    assert_response :success
+    assert_includes response.body, "Red Dot Utility"
+    assert_includes response.body, "Basic Usage"
+    assert_includes response.body, "Theme And Positioning"
+    assert_includes response.body, "fp-red-dot"
+    assert_includes response.body, "Helpers"
+    assert_includes response.body, "Local Time"
+    assert_includes response.body, "Red Dot"
+    assert_includes response.body, 'href="/demo/local_time"'
+    assert_includes response.body, 'href="/demo/red_dot"'
   end
 
   test "progress demo variable table includes core options" do

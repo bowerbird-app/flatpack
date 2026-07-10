@@ -147,6 +147,11 @@ module FlatPack
         render_inline(IconComponent.new(name: :search, data: {testid: "my-icon"}))
         assert_selector "svg[data-testid='my-icon']"
       end
+
+      def test_accepts_fp_red_dot_utility_class
+        render_inline(IconComponent.new(name: :search, class: "fp-red-dot"))
+        assert_selector "svg.fp-red-dot"
+      end
     end
   end
 end

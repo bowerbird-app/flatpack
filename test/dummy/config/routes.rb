@@ -145,6 +145,7 @@ Rails.application.routes.draw do
   get "demo/timeline", to: "pages#timeline"
   get "demo/timestamp", to: "pages#timestamp"
   get "demo/local_time", to: "pages#local_time"
+  get "demo/red_dot", to: "pages#red_dot"
   get "demo/notification", to: "pages#notification"
 
   # Form submission endpoints for demonstration
