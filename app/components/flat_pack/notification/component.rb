@@ -235,6 +235,7 @@ module FlatPack
       def rollup_parent_item_classes(notification)
         merge_class_names(
           "mb-0",
+          "cursor-pointer",
           "flex items-start py-2 px-3",
           "text-[var(--surface-content-color)]",
           "transition-colors hover:bg-[var(--list-item-hover-background-color)]",
@@ -243,7 +244,7 @@ module FlatPack
       end
 
       def rollup_parent_button_classes
-        "flex w-full items-start text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--button-focus-ring-color)"
+        "cursor-pointer flex w-full items-start text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--button-focus-ring-color)"
       end
 
       def render_rollup_parent_icon(notification)
