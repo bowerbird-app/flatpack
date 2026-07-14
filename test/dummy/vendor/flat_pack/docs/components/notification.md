@@ -48,7 +48,16 @@ None.
 | `:href` | String | no | Optional notification URL. |
 | `:time` | String | no | ISO8601 timestamp rendered with `FlatPack::Timestamp::Component`. |
 | `:unread` | Boolean | no | Applies unread/active styling. |
-| `:icon` | Symbol, String, nil | no | Optional icon passed to `FlatPack::List::Item`. |
+| `:icon` | Symbol, String, nil | no | Optional icon passed to `FlatPack::List::Item`. Unread rows automatically add the `fp-red-dot` class to this icon. |
+| `:rollup` | Boolean | no | When `true` and `:children` are present, renders the row as an expandable rollup parent. Missing key behaves as `false`. |
+| `:children` | Array<Hash>, nil | no | Nested notification rows shown when a rollup parent is expanded. Child rows use the same shape as parent notifications. |
+
+## Rollup behavior
+- Rollup parents render with the same notification row style as regular notifications.
+- A caret is displayed at the end of rollup rows (`chevron-down` collapsed, rotated up when expanded).
+- Rollup parent `href` is optional.
+- Only one rollup group is expanded at a time.
+- Nested children are rendered with left indentation to indicate hierarchy.
 
 ## Timestamp behavior
 Notification timestamps should be provided in ISO8601 format, for example:
@@ -80,6 +89,25 @@ Timestamps are rendered using `FlatPack::Timestamp::Component` with `shorten_tim
       time: "2026-07-03T09:15:00Z",
       unread: false,
       icon: :check
+    },
+    {
+      title: "Build completed",
+      body: "Your export is ready to download.",
+      href: nil,
+      time: "2026-07-03T09:15:00Z",
+      unread: true,
+      icon: :chat,
+      rollup: true,
+      children: [
+        {
+          title: "Build completed",
+          body: "Your export is ready to download.",
+          href: "/notifications/2",
+          time: "2026-07-03T09:15:00Z",
+          unread: true,
+          icon: :chat
+        }
+      ]
     }
   ]
 ) %>
