@@ -105,12 +105,68 @@ module FlatPack
       end
 
       def render_notification_list
-        render FlatPack::List::Component.new(spacing: :dense, divider: true) do
-          safe_join(@notifications.map { |notification| render_notification_item(notification) })
+        render FlatPack::List::Component.new(spacing: :dense, divider: true, data: list_data_attributes) do
+          safe_join(render_notification_rows)
         end
       end
 
-      def render_notification_item(notification)
+      def render_notification_rows
+        @notifications.each_with_index.flat_map do |notification, index|
+          if rollup_notification?(notification)
+            [
+              render_rollup_parent(notification, index),
+              render_rollup_children(notification, index)
+            ]
+          else
+            [render_notification_item(notification)]
+          end
+        end
+      end
+
+      def render_rollup_parent(notification, index)
+        content_tag(:li, role: "listitem", class: rollup_parent_item_classes(notification)) do
+          content_tag(
+            :button,
+            type: "button",
+            class: rollup_parent_button_classes,
+            aria: {
+              expanded: "false",
+              controls: rollup_children_id(index)
+            },
+            data: {
+              "flat-pack--notification-rollup-target": "trigger",
+              action: "click->flat-pack--notification-rollup#toggle keydown.enter->flat-pack--notification-rollup#toggle keydown.space->flat-pack--notification-rollup#toggle"
+            }
+          ) do
+            safe_join([
+              render_rollup_parent_icon(notification),
+              content_tag(:div, render_notification_content(notification), class: "min-w-0 flex-1"),
+              content_tag(:span, rollup_trailing_content(notification), class: "flex-shrink-0 ml-2")
+            ].compact)
+          end
+        end
+      end
+
+      def render_rollup_children(notification, index)
+        children = notification_children(notification)
+
+        content_tag(:li, role: "listitem", class: "py-0 hidden", data: {"flat-pack--notification-rollup-target": "row"}) do
+          content_tag(
+            :div,
+            id: rollup_children_id(index),
+            hidden: true,
+            data: {"flat-pack--notification-rollup-target": "content"}
+          ) do
+            render FlatPack::List::Component.new(spacing: :dense, divider: false) do
+              safe_join(children.map { |child| render_notification_item(child, nested: true) })
+            end
+          end
+        end
+      end
+
+      def render_notification_item(notification, nested: false)
+        return render_nested_notification_item(notification) if nested
+
         render FlatPack::List::Item.new(
           icon: notification_icon(notification),
           href: notification_value(notification, :href),
@@ -120,6 +176,87 @@ module FlatPack
           trailing: render_timestamp(notification_value(notification, :time))
         ) do
           render_notification_content(notification)
+        end
+      end
+
+      def render_nested_notification_item(notification)
+        href = nested_notification_href(notification)
+
+        content_tag(:li, role: "listitem", class: nested_notification_item_classes(notification)) do
+          if href.present?
+            link_to href, class: nested_notification_link_classes do
+              render_nested_notification_inner(notification)
+            end
+          else
+            render_nested_notification_inner(notification)
+          end
+        end
+      end
+
+      def nested_notification_inner_classes
+        "flex w-full items-start"
+      end
+
+      def render_nested_notification_inner(notification)
+        content_tag(:div, class: nested_notification_inner_classes) do
+          safe_join([
+            render_rollup_parent_icon(notification),
+            content_tag(:div, render_notification_content(notification), class: "min-w-0 flex-1"),
+            render_nested_notification_trailing(notification)
+          ].compact)
+        end
+      end
+
+      def render_nested_notification_trailing(notification)
+        trailing = render_timestamp(notification_value(notification, :time))
+        return if trailing.blank?
+
+        content_tag(:span, trailing, class: "flex-shrink-0 ml-2")
+      end
+
+      def nested_notification_href(notification)
+        href = notification_value(notification, :href)
+        return if href.blank?
+
+        FlatPack::AttributeSanitizer.validate_href!(href)
+      end
+
+      def nested_notification_link_classes
+        "flat-pack-list-item-link flex w-full items-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--button-focus-ring-color)"
+      end
+
+      def nested_notification_item_classes(notification)
+        merge_class_names(
+          "mb-0 pl-4 flex items-start py-2 px-3 text-[var(--surface-content-color)] transition-colors hover:bg-[var(--list-item-hover-background-color)]",
+          ("bg-[var(--list-item-active-background-color)]" if unread_notification?(notification))
+        )
+      end
+
+      def rollup_parent_item_classes(notification)
+        merge_class_names(
+          "mb-0",
+          "cursor-pointer",
+          "flex items-start py-2 px-3",
+          "text-[var(--surface-content-color)]",
+          "transition-colors hover:bg-[var(--list-item-hover-background-color)]",
+          ("bg-[var(--list-item-active-background-color)]" if unread_notification?(notification))
+        )
+      end
+
+      def rollup_parent_button_classes
+        "cursor-pointer flex w-full items-start text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--button-focus-ring-color)"
+      end
+
+      def render_rollup_parent_icon(notification)
+        icon = notification_icon(notification)
+        return if icon.nil?
+
+        content_tag(:span, class: "flex-shrink-0 mr-2 text-[var(--surface-muted-content-color)]") do
+          if icon.is_a?(String) && icon.start_with?("<svg")
+            icon.html_safe
+          else
+            render FlatPack::Shared::IconComponent.new(name: icon, size: :md)
+          end
         end
       end
 
@@ -262,6 +399,40 @@ module FlatPack
         return add_red_dot_to_svg(icon) if svg_markup?(icon)
 
         render FlatPack::Shared::IconComponent.new(name: icon, size: :md, class: "fp-red-dot")
+      end
+
+      def rollup_notification?(notification)
+        ActiveModel::Type::Boolean.new.cast(notification_value(notification, :rollup)) && notification_children(notification).any?
+      end
+
+      def notification_children(notification)
+        Array(notification_value(notification, :children)).select { |child| child.respond_to?(:[]) }
+      end
+
+      def rollup_children_id(index)
+        "#{@trigger_id}-rollup-#{index}-children"
+      end
+
+      def rollup_trailing_content(notification)
+        safe_join([
+          render_timestamp(notification_value(notification, :time)),
+          render_rollup_caret
+        ].compact)
+      end
+
+      def render_rollup_caret
+        render FlatPack::Shared::IconComponent.new(
+          name: "chevron-down",
+          size: :sm,
+          class: "ml-1 transition-transform duration-200",
+          data: {"flat-pack--notification-rollup-target": "icon"}
+        )
+      end
+
+      def list_data_attributes
+        return {} unless @notifications.any? { |notification| rollup_notification?(notification) }
+
+        {controller: "flat-pack--notification-rollup"}
       end
 
       def svg_markup?(icon)

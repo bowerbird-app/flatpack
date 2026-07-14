@@ -156,6 +156,37 @@ module FlatPack
         refute_selector "li a"
       end
 
+      def test_rollup_defaults_to_regular_notification_when_rollup_key_is_missing
+        render_inline(Component.new(see_all_href: "/notifications", notifications: [notification(children: [notification(title: "Nested")])]))
+
+        refute_selector "[data-controller='flat-pack--notification-rollup']"
+        refute_selector "[data-flat-pack--notification-rollup-target='trigger']"
+      end
+
+      def test_renders_rollup_controller_and_caret_for_rollup_rows
+        render_inline(Component.new(see_all_href: "/notifications", notifications: [rollup_notification]))
+
+        assert_selector "[data-controller='flat-pack--notification-rollup']"
+        assert_selector "[data-flat-pack--notification-rollup-target='trigger'][aria-expanded='false']"
+        assert_selector "[data-flat-pack--notification-rollup-target='icon'][data-flat-pack--icon-name-value='chevron-down']"
+      end
+
+      def test_rollup_parent_does_not_require_href
+        render_inline(Component.new(see_all_href: "/notifications", notifications: [rollup_notification(href: nil)]))
+
+        assert_selector "[data-flat-pack--notification-rollup-target='trigger']", text: "Build completed"
+      end
+
+      def test_renders_rollup_children_inside_collapsible_container
+        render_inline(Component.new(see_all_href: "/notifications", notifications: [rollup_notification]))
+
+        assert_selector "li[data-flat-pack--notification-rollup-target='row'].hidden", visible: :all
+        assert_selector "div[data-flat-pack--notification-rollup-target='content'][hidden]", visible: :all
+        assert_selector "div[data-flat-pack--notification-rollup-target='content'] li", visible: :all
+        assert_includes page.text(:all), "Nested alert"
+        refute_includes page.native.to_html, " ml-4"
+      end
+
       def test_applies_active_styling_when_notification_is_unread
         render_inline(Component.new(see_all_href: "/notifications", notifications: [notification(unread: true)]))
 
@@ -276,8 +307,33 @@ module FlatPack
           href: "/notifications/1",
           time: nil,
           unread: false,
-          icon: :bell
+          icon: :bell,
+          rollup: false,
+          children: []
         }.merge(overrides)
+      end
+
+      def rollup_notification(**overrides)
+        notification(
+          title: "Build completed",
+          body: "Your export is ready to download.",
+          href: "/notifications/2",
+          time: "2026-07-03T09:15:00Z",
+          unread: true,
+          icon: :chat,
+          rollup: true,
+          children: [
+            notification(
+              title: "Nested alert",
+              body: "A nested notification body.",
+              href: "/notifications/3",
+              unread: false,
+              icon: :check,
+              rollup: false,
+              children: []
+            )
+          ]
+        ).merge(overrides)
       end
     end
   end

@@ -552,6 +552,12 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Recent notifications"
     assert_includes response.body, "data-controller=\"flat-pack--popover\""
     assert_includes response.body, "data-controller=\"flat-pack--timestamp\""
+    assert_includes response.body, "Rollup notifications"
+    assert_includes response.body, "flat-pack--notification-rollup"
+    assert_includes response.body, "Build artifact uploaded"
+    assert_includes response.body, "Build delivered"
+    assert_includes response.body, "Code Example"
+    assert_includes response.body, "rollup_notifications = ["
     assert_includes response.body, "See all notifications"
     assert_includes response.body, "9+"
   end
