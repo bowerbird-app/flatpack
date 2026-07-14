@@ -759,6 +759,8 @@
         { variable: "notification[:time]", accepts: "ISO8601 String or nil", example: "time: \"2026-07-03T09:15:00Z\"" },
         { variable: "notification[:unread]", accepts: "true, false", example: "unread: true" },
         { variable: "notification[:icon]", accepts: "Heroicon name Symbol/String or nil", example: "icon: :chat" },
+        { variable: "notification[:rollup]", accepts: "true, false", example: "rollup: true" },
+        { variable: "notification[:children]", accepts: "Array<Hash> or nil", example: "children: [{ title: \"Build completed\", body: \"Your export is ready to download.\", href: \"/notifications/2\", time: \"2026-07-03T09:15:00Z\", unread: true, icon: :chat }]" },
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"relative\", data: { testid: \"notification\" }" }
       ]
     },

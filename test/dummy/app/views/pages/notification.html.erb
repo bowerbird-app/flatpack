@@ -32,6 +32,76 @@
   }
 ] %>
 
+<% rollup_notifications = [
+  {
+    title: "Weekly digest",
+    body: "You have 7 new updates.",
+    href: "/notifications/1",
+    time: "2026-07-03T11:05:00Z",
+    unread: false,
+    icon: :bell
+  },
+  {
+    title: "Build completed",
+    body: "Your export is ready to download.",
+    href: nil,
+    time: "2026-07-03T09:15:00Z",
+    unread: true,
+    icon: :chat,
+    rollup: true,
+    children: [
+      {
+        title: "Build started",
+        body: "Your export job started.",
+        href: "/notifications/2",
+        time: "2026-07-03T09:10:00Z",
+        unread: true,
+        icon: :chat
+      },
+      {
+        title: "Build in progress",
+        body: "Packaging assets is 64% complete.",
+        href: "/notifications/2",
+        time: "2026-07-03T09:15:00Z",
+        unread: true,
+        icon: :chat
+      },
+      {
+        title: "Build completed",
+        body: "Your export is ready to download.",
+        href: "/notifications/2",
+        time: "2026-07-03T09:18:00Z",
+        unread: true,
+        icon: :chat
+      },
+      {
+        title: "Build artifact uploaded",
+        body: "The artifact is now available.",
+        href: "/notifications/4",
+        time: "2026-07-03T09:20:00Z",
+        unread: false,
+        icon: :check
+      },
+      {
+        title: "Build delivered",
+        body: "The report was delivered to stakeholders.",
+        href: "/notifications/6",
+        time: "2026-07-03T09:24:00Z",
+        unread: false,
+        icon: :check
+      }
+    ]
+  },
+  {
+    title: "Mentioned in a thread",
+    body: "You were mentioned by Alex.",
+    href: "/notifications/5",
+    time: "2026-07-02T18:45:00Z",
+    unread: false,
+    icon: :bell
+  }
+] %>
+
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Badge states",
@@ -76,6 +146,123 @@
       <p class="text-xs text-[var(--surface-muted-content-color)]">More than nine</p>
     </div>
   </div>
+
+  <p class="mb-2 mt-4 text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">Code Example</p>
+  <%= render FlatPack::CodeBlock::Component.new(
+    snippets: [
+      {
+        label: "No unread",
+        language: "erb",
+        code: CGI.unescapeHTML(<<~'CODE')
+          &lt;%= render FlatPack::Notification::Component.new(
+            unread_count: 0,
+            see_all_href: demo_notification_path,
+            notifications: []
+          ) %&gt;
+        CODE
+      },
+      {
+        label: "Nine+ unread",
+        language: "erb",
+        code: CGI.unescapeHTML(<<~'CODE')
+          &lt;%= render FlatPack::Notification::Component.new(
+            unread_count: 12,
+            see_all_href: demo_notification_path,
+            notifications: demo_notifications
+          ) %&gt;
+        CODE
+      }
+    ]
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Rollup notifications",
+    anchor_link: true,
+    subtitle: "Rollup rows expand nested notifications with single-open behavior."
+  ) %>
+
+  <div class="rounded-lg border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-6">
+    <%= render FlatPack::Notification::Component.new(
+      unread_count: 3,
+      see_all_href: demo_notification_path,
+      notifications: rollup_notifications
+    ) %>
+  </div>
+
+  <p class="mb-2 mt-4 text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">Code Example</p>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      rollup_notifications = [
+        {
+          title: "Weekly digest",
+          body: "You have 7 new updates.",
+          href: "/notifications/1",
+          time: "2026-07-03T11:05:00Z",
+          unread: false,
+          icon: :bell
+        },
+        {
+          title: "Build completed",
+          body: "Your export is ready to download.",
+          href: nil,
+          time: "2026-07-03T09:15:00Z",
+          unread: true,
+          icon: :chat,
+          rollup: true,
+          children: [
+            {
+              title: "Build started",
+              body: "Your export job started.",
+              href: "/notifications/2",
+              time: "2026-07-03T09:10:00Z",
+              unread: true,
+              icon: :chat
+            },
+            {
+              title: "Build in progress",
+              body: "Packaging assets is 64% complete.",
+              href: "/notifications/2",
+              time: "2026-07-03T09:15:00Z",
+              unread: true,
+              icon: :chat
+            },
+            {
+              title: "Build completed",
+              body: "Your export is ready to download.",
+              href: "/notifications/2",
+              time: "2026-07-03T09:18:00Z",
+              unread: true,
+              icon: :chat
+            },
+            {
+              title: "Build artifact uploaded",
+              body: "The artifact is now available.",
+              href: "/notifications/4",
+              time: "2026-07-03T09:20:00Z",
+              unread: false,
+              icon: :check
+            },
+            {
+              title: "Build delivered",
+              body: "The report was delivered to stakeholders.",
+              href: "/notifications/6",
+              time: "2026-07-03T09:24:00Z",
+              unread: false,
+              icon: :check
+            }
+          ]
+        }
+      ]
+
+      &lt;%= render FlatPack::Notification::Component.new(
+        unread_count: 3,
+        see_all_href: demo_notification_path,
+        notifications: rollup_notifications
+      ) %&gt;
+    CODE
+  ) %>
 </section>
 
 <section class="mb-12">
@@ -92,4 +279,15 @@
       notifications: demo_notifications
     ) %>
   </div>
+
+  <p class="mb-2 mt-4 text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">Code Example</p>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Notification::Component.new(
+        unread_count: 12,
+        see_all_href: demo_notification_path,
+        notifications: demo_notifications
+      ) %&gt;
+    CODE
+  ) %>
 </section>
