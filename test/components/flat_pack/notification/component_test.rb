@@ -187,6 +187,44 @@ module FlatPack
         refute_includes page.native.to_html, " ml-4"
       end
 
+      def test_rollup_parent_shows_unread_children_counter_badge
+        render_inline(Component.new(see_all_href: "/notifications", notifications: [rollup_notification(children: [
+          notification(title: "Child 1", unread: true),
+          notification(title: "Child 2", unread: true),
+          notification(title: "Child 3", unread: false)
+        ])]))
+
+        assert_selector "[data-flat-pack--notification-rollup-target='trigger'] .fp-rollup-counter-badge[aria-hidden='true']", text: "2"
+      end
+
+      def test_rollup_parent_counter_badge_caps_at_nine_plus
+        children = Array.new(10) { |index| notification(title: "Child #{index}", unread: true) }
+        render_inline(Component.new(see_all_href: "/notifications", notifications: [rollup_notification(children: children)]))
+
+        assert_selector "[data-flat-pack--notification-rollup-target='trigger'] .fp-rollup-counter-badge", text: "9+"
+      end
+
+      def test_rollup_parent_counter_badge_is_hidden_when_no_unread_children
+        render_inline(Component.new(see_all_href: "/notifications", notifications: [rollup_notification(children: [
+          notification(title: "Child 1", unread: false),
+          notification(title: "Child 2", unread: false)
+        ])]))
+
+        refute_selector "[data-flat-pack--notification-rollup-target='trigger'] .fp-rollup-counter-badge"
+      end
+
+      def test_rollup_parent_does_not_use_fp_red_dot_when_counter_badge_is_used
+        render_inline(Component.new(see_all_href: "/notifications", notifications: [rollup_notification(children: [notification(unread: true)])]))
+
+        refute_selector "[data-flat-pack--notification-rollup-target='trigger'] svg.fp-red-dot"
+      end
+
+      def test_nested_unread_icons_still_render_fp_red_dot
+        render_inline(Component.new(see_all_href: "/notifications", notifications: [rollup_notification(children: [notification(unread: true)])]))
+
+        assert_selector "[data-flat-pack--notification-rollup-target='content'] svg.fp-red-dot", visible: :all
+      end
+
       def test_applies_active_styling_when_notification_is_unread
         render_inline(Component.new(see_all_href: "/notifications", notifications: [notification(unread: true)]))
 
