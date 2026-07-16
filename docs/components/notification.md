@@ -48,12 +48,13 @@ None.
 | `:href` | String | no | Optional notification URL. |
 | `:time` | String | no | ISO8601 timestamp rendered with `FlatPack::Timestamp::Component`. |
 | `:unread` | Boolean | no | Applies unread/active styling. |
-| `:icon` | Symbol, String, nil | no | Optional icon passed to `FlatPack::List::Item`. Unread rows automatically add the `fp-red-dot` class to this icon. |
+| `:icon` | Symbol, String, nil | no | Optional icon passed to `FlatPack::List::Item`. Unread regular and nested rows automatically add the `fp-red-dot` class to this icon. |
 | `:rollup` | Boolean | no | When `true` and `:children` are present, renders the row as an expandable rollup parent. Missing key behaves as `false`. |
 | `:children` | Array<Hash>, nil | no | Nested notification rows shown when a rollup parent is expanded. Child rows use the same shape as parent notifications. |
 
 ## Rollup behavior
 - Rollup parents render with the same notification row style as regular notifications.
+- Rollup parent icons render a red counter badge showing unread child count (`9+` cap).
 - A caret is displayed at the end of rollup rows (`chevron-down` collapsed, rotated up when expanded).
 - Rollup parent `href` is optional.
 - Only one rollup group is expanded at a time.

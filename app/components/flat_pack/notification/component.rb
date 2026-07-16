@@ -124,6 +124,8 @@ module FlatPack
       end
 
       def render_rollup_parent(notification, index)
+        unread_children_count = rollup_unread_children_count(notification)
+
         content_tag(:li, role: "listitem", class: rollup_parent_item_classes(notification)) do
           content_tag(
             :button,
@@ -139,7 +141,7 @@ module FlatPack
             }
           ) do
             safe_join([
-              render_rollup_parent_icon(notification),
+              render_rollup_parent_icon(notification, unread_children_count: unread_children_count, suppress_unread_indicator: true),
               content_tag(:div, render_notification_content(notification), class: "min-w-0 flex-1"),
               content_tag(:span, rollup_trailing_content(notification), class: "flex-shrink-0 ml-2")
             ].compact)
@@ -247,17 +249,37 @@ module FlatPack
         "cursor-pointer flex w-full items-start text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--button-focus-ring-color)"
       end
 
-      def render_rollup_parent_icon(notification)
-        icon = notification_icon(notification)
+      def render_rollup_parent_icon(notification, unread_children_count: 0, suppress_unread_indicator: false)
+        icon = notification_icon(notification, decorate_unread: !suppress_unread_indicator)
         return if icon.nil?
 
-        content_tag(:span, class: "flex-shrink-0 mr-2 text-[var(--surface-muted-content-color)]") do
-          if icon.is_a?(String) && icon.start_with?("<svg")
-            icon.html_safe
-          else
-            render FlatPack::Shared::IconComponent.new(name: icon, size: :md)
-          end
+        content_tag(:span, class: "relative flex-shrink-0 mr-2 text-[var(--surface-muted-content-color)]") do
+          safe_join([
+            if icon.is_a?(String) && icon.start_with?("<svg")
+              icon.html_safe
+            else
+              render FlatPack::Shared::IconComponent.new(name: icon, size: :md)
+            end,
+            render_rollup_parent_counter_badge(unread_children_count)
+          ].compact)
         end
+      end
+
+      def render_rollup_parent_counter_badge(count)
+        return unless count.positive?
+
+        content_tag(
+          :span,
+          rollup_counter_text(count),
+          class: "fp-rollup-counter-badge absolute -right-1 -top-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-semibold leading-none text-white ring-2 ring-[var(--surface-background-color)]",
+          aria: {hidden: "true"}
+        )
+      end
+
+      def rollup_counter_text(count)
+        return "9+" if count > 9
+
+        count.to_s
       end
 
       def render_notification_content(notification)
@@ -390,11 +412,11 @@ module FlatPack
         ActiveModel::Type::Boolean.new.cast(notification_value(notification, :unread))
       end
 
-      def notification_icon(notification)
+      def notification_icon(notification, decorate_unread: true)
         icon = notification_value(notification, :icon)
         return if icon.respond_to?(:blank?) && icon.blank?
 
-        return icon unless unread_notification?(notification)
+        return icon unless decorate_unread && unread_notification?(notification)
 
         return add_red_dot_to_svg(icon) if svg_markup?(icon)
 
@@ -407,6 +429,10 @@ module FlatPack
 
       def notification_children(notification)
         Array(notification_value(notification, :children)).select { |child| child.respond_to?(:[]) }
+      end
+
+      def rollup_unread_children_count(notification)
+        notification_children(notification).count { |child| unread_notification?(child) }
       end
 
       def rollup_children_id(index)
