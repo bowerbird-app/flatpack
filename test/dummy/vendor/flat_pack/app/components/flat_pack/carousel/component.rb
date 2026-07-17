@@ -300,7 +300,7 @@ module FlatPack
 
         content_tag(:button,
           type: "button",
-          class: "absolute top-1/2 z-20 flex w-10 -translate-y-1/2 cursor-pointer aspect-square items-center justify-center rounded-full bg-[rgba(0,0,0,0.5)] text-white transition hover:bg-[rgba(0,0,0,0.75)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring #{controls_visibility_classes} #{classes}",
+          class: "absolute top-1/2 z-20 flex w-10 -translate-y-1/2 cursor-pointer aspect-square items-center justify-center rounded-full bg-[rgba(0,0,0,0.5)] text-white transition hover:bg-[rgba(0,0,0,0.75)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring #{controls_visibility_classes} #{classes}",
           aria: {label: label},
           data: {action: "click->flat-pack--carousel##{direction}"}) do
           render FlatPack::Shared::IconComponent.new(name: icon_name, size: :md, class: "pointer-events-none")
@@ -370,7 +370,7 @@ module FlatPack
         content_tag(:button,
           type: "button",
           hidden: !lightbox_available_for_index?(@initial_index),
-          class: "absolute right-3 top-3 z-20 flex aspect-square flex-nowrap items-center justify-center cursor-pointer rounded-full bg-[rgba(0,0,0,0.5)] p-2 text-white transition hover:bg-[rgba(0,0,0,0.75)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          class: "absolute right-3 top-3 z-20 flex aspect-square flex-nowrap items-center justify-center cursor-pointer rounded-full bg-[rgba(0,0,0,0.5)] p-2 text-white transition hover:bg-[rgba(0,0,0,0.75)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
           aria: {label: "Expand image"},
           data: {
             flat_pack__carousel_target: "lightboxToggle",
@@ -394,7 +394,7 @@ module FlatPack
             safe_join([
               content_tag(:button,
                 type: "button",
-                class: "absolute right-2 top-2 z-10 cursor-pointer rounded-full bg-[var(--modal-surface-color)] p-2 text-[var(--modal-close-icon-color)] shadow-sm transition hover:text-[var(--modal-close-icon-hover-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:right-4 sm:top-4",
+                class: "absolute right-2 top-2 z-10 cursor-pointer rounded-full bg-[var(--modal-surface-color)] p-2 text-[var(--modal-close-icon-color)] shadow-sm transition hover:text-[var(--modal-close-icon-hover-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring sm:right-4 sm:top-4",
                 aria: {label: "Close lightbox"},
                 data: {action: "click->flat-pack--carousel#closeLightbox"}) do
                 content_tag(:svg,
@@ -465,7 +465,7 @@ module FlatPack
       def render_thumb(slide, index)
         content_tag(:button,
           type: "button",
-          class: "h-16 w-16 shrink-0 cursor-pointer overflow-hidden rounded-md border border-[var(--carousel-thumb-border-color)] transition-opacity hover:opacity-100 hover:ring-2 hover:ring-primary",
+          class: "h-16 w-16 shrink-0 cursor-pointer overflow-hidden rounded-md border border-[var(--carousel-thumb-border-color)] transition-opacity hover:opacity-100 hover:ring-2 hover:ring-inset hover:ring-primary",
           aria: {
             label: "Show slide #{index + 1}",
             current: (index == @initial_index).to_s
@@ -539,7 +539,7 @@ module FlatPack
         return logo_slider_viewport_classes if @variant == :logo_slider
 
         classes(
-          "flat-pack-carousel__viewport group relative overflow-hidden rounded-lg border border-[var(--carousel-viewport-border-color)] bg-[var(--carousel-viewport-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          "flat-pack-carousel__viewport group relative overflow-hidden rounded-lg border border-[var(--carousel-viewport-border-color)] bg-[var(--carousel-viewport-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
           @touch_swipe ? "cursor-grab select-none" : nil
         )
       end

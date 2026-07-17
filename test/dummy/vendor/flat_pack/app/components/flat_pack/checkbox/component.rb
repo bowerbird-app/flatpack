@@ -111,7 +111,7 @@ module FlatPack
           "text-primary",
           "checked:bg-primary checked:border-primary",
           "transition-colors duration-base",
-          "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:rounded-[var(--checkbox-radius)]",
+          "focus:outline-none focus:ring-2 focus:ring-inset focus:ring-ring focus:ring-offset-2 focus:rounded-[var(--checkbox-radius)]",
           "cursor-pointer",
           "disabled:opacity-50 disabled:cursor-not-allowed"
         ]

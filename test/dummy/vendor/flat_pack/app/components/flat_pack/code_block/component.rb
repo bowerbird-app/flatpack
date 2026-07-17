@@ -168,7 +168,7 @@ module FlatPack
       end
 
       def tab_classes(is_active)
-        base = "px-3 py-1.5 text-sm font-medium rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        base = "px-3 py-1.5 text-sm font-medium rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring focus-visible:ring-offset-2"
 
         if is_active
           "#{base} bg-[var(--code-block-tab-active-background-color)] text-[var(--code-block-tab-active-color)]"

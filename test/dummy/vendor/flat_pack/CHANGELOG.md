@@ -11,12 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added notification rollup support to `FlatPack::Notification::Component` with `notification[:rollup]` and `notification[:children]`, including single-open expand/collapse behavior, caret indicators, and nested child rendering.
 
 ### Changed
-- Bumped the gem version to `0.1.127`.
+- Bumped the gem version to `0.1.128`.
 - Updated rollup notifications in `FlatPack::Notification::Component` to render a red unread-children counter badge on rollup parent icons (capped at `9+`) instead of the unread red dot.
 - Synchronized release metadata across install docs, AI install contract JSON, and dummy app lockfiles.
+- State and focus rings now use `ring-inset` to prevent clipping in overflow contexts.
 
 ### Fixed
 - Updated the `fp-red-dot` utility to render reliably on SVG icons by appending a foreground SVG dot indicator with `z-index: 999999999`.
+- Synchronized the dummy app's vendored Select component so modal-filter demo controls use inset focus rings.
 
 ## [0.1.122] - 2026-07-10
 

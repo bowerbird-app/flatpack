@@ -187,7 +187,7 @@ module FlatPack
 
       def selected_classes
         return unless @selected && @type == :button
-        "ring-2 ring-[var(--color-ring)]"
+        "ring-2 ring-inset ring-[var(--color-ring)]"
       end
 
       def focus_classes
