@@ -117,7 +117,7 @@ module FlatPack
 
         content_tag(:button,
           type: "button",
-          class: "ml-auto flex-shrink-0 inline-flex items-center justify-center rounded-[var(--alert-dismiss-button-radius)] p-1.5 text-[var(--alert-dismiss-button-text-color)] hover:bg-[var(--alert-dismiss-button-hover-background-color)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--alert-dismiss-button-focus-ring-color)]",
+          class: "ml-auto flex-shrink-0 inline-flex items-center justify-center rounded-[var(--alert-dismiss-button-radius)] p-1.5 text-[var(--alert-dismiss-button-text-color)] hover:bg-[var(--alert-dismiss-button-hover-background-color)] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-offset-2 focus:ring-[var(--alert-dismiss-button-focus-ring-color)]",
           data: {action: "alert#dismiss"},
           "aria-label": "Dismiss") do
           # X icon

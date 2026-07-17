@@ -196,3 +196,26 @@ test('custom param names are rendered into the request body', async () => {
 
   assert.equal(fetchCalls[0].options.body, 'moving_recording_id=uuid-2&target_position=1')
 })
+
+test('drag highlight applies and removes an inset ring', () => {
+  const items = [buildItem('uuid-1'), buildItem('uuid-2')]
+  const controller = new (loadController())()
+  controller.element = {
+    querySelectorAll() {
+      return items
+    }
+  }
+  controller.draggedItem = items[0]
+
+  controller.handleDragEnter({currentTarget: items[1]})
+
+  assert.equal(items[1].classNames.has('ring-2'), true)
+  assert.equal(items[1].classNames.has('ring-inset'), true)
+  assert.equal(items[1].classNames.has('ring-[var(--color-primary)]'), true)
+
+  controller.handleDragLeave({currentTarget: items[1]})
+
+  assert.equal(items[1].classNames.has('ring-2'), false)
+  assert.equal(items[1].classNames.has('ring-inset'), false)
+  assert.equal(items[1].classNames.has('ring-[var(--color-primary)]'), false)
+})

@@ -117,7 +117,7 @@ module FlatPack
           "bg-[var(--collapse-trigger-background-color)]",
           trigger_hover_classes,
           "transition-colors",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--collapse-focus-ring-color)] focus-visible:ring-offset-2"
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--collapse-focus-ring-color)] focus-visible:ring-offset-2"
         ].join(" ")
       end
 

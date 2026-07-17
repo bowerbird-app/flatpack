@@ -39,24 +39,8 @@ bin/rake flat_pack:verify_install
 - [Components Index (Agent-First)](components/README.md)
 - [Components Manifest (Machine-Readable)](components/manifest.yml)
 - [Component Doc Format](components/DOC_FORMAT.md)
-- [Alert Component](components/alert.md)
-- [Avatar Component](components/avatar.md)
-- [Avatar Group Component](components/avatar-group.md)
-- [Badge Component](components/badge.md)
-- [Button Component](components/button.md)
-- [Button Dropdown Component](components/button-dropdown.md)
-- [Card Component](components/card.md)
-- [Chat Components](components/chat.md)
-- [Chip Component](components/chips.md)
-- [Comments Thread Component](components/comments-thread.md)
-- [Comments Item Component](components/comments-item.md)
-- [Comments Composer Component](components/comments-composer.md)
-- [Comments Replies Component](components/comments-replies.md)
-- [Input Components](components/inputs.md)
-- [Table Component](components/table.md)
-- [Sortable Tables](components/sortable-tables.md)
 
-The [Input Components](components/inputs.md) guide also documents the `flat-pack--nested-multiselect` Stimulus controller used by the dummy `/demo/forms/nested_multiselect` example.
+The component index is the complete human-readable inventory. The manifest is the canonical machine-readable inventory, including primary classes, related classes, and documentation paths.
 
 ### Architecture
 - [Engine Architecture](architecture/engine.md)

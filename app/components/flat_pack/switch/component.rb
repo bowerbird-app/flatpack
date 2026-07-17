@@ -116,7 +116,7 @@ module FlatPack
           "rounded-full transition-colors duration-200",
           SIZES.fetch(@size),
           "peer-checked:bg-[var(--switch-track-checked-background-color)]",
-          "peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--switch-focus-ring-color)] peer-focus-visible:ring-offset-2",
+          "peer-focus-visible:ring-2 peer-focus-visible:ring-inset peer-focus-visible:ring-[var(--switch-focus-ring-color)] peer-focus-visible:ring-offset-2",
           @checked ? "bg-[var(--switch-track-checked-background-color)]" : "bg-[var(--switch-track-background-color)]"
         )
       end

@@ -57,7 +57,7 @@ export default class extends Controller {
     }
 
     this.itemTargets.forEach((item) => {
-      item.classList.remove("ring-2", "ring-[var(--color-primary)]")
+      item.classList.remove("ring-2", "ring-inset", "ring-[var(--color-primary)]")
     })
 
     this.draggedItem = null
@@ -78,13 +78,13 @@ export default class extends Controller {
 
     if (item !== this.draggedItem) {
       this.dragOverItem = item
-      item.classList.add("ring-2", "ring-[var(--color-primary)]")
+      item.classList.add("ring-2", "ring-inset", "ring-[var(--color-primary)]")
     }
   }
 
   handleDragLeave(event) {
     const item = event.currentTarget
-    item.classList.remove("ring-2", "ring-[var(--color-primary)]")
+    item.classList.remove("ring-2", "ring-inset", "ring-[var(--color-primary)]")
   }
 
   handleDrop(event) {

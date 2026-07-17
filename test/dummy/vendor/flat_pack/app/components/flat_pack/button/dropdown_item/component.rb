@@ -93,7 +93,7 @@ module FlatPack
             "text-left",
             "rounded-sm",
             "transition-colors duration-base",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
           ]
 
           if @disabled

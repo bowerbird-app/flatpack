@@ -34,6 +34,9 @@ Use this when filter controls should be hidden from inline layouts and shown onl
 | --- | --- | --- |
 | `filter_body` | slot | Required modal-only filter controls. Content renders exclusively inside modal body. |
 
+## Variants
+None.
+
 ## Example
 ```erb
 <%= render FlatPack::ModalFilter::Component.new(

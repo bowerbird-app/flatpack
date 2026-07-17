@@ -270,6 +270,7 @@ export default class extends Controller {
     this.thumbTargets.forEach((thumb, index) => {
       const isActive = index === this.currentIndex
       thumb.classList.toggle("ring-2", isActive)
+      thumb.classList.toggle("ring-inset", isActive)
       thumb.classList.toggle("ring-primary", isActive)
       thumb.classList.toggle("opacity-60", !isActive)
       thumb.classList.toggle("opacity-100", isActive)

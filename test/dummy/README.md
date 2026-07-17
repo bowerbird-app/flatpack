@@ -11,7 +11,7 @@ This dummy app serves as:
 
 ## Setup
 
-The dummy app is configured to use the FlatPack gem from the parent directory.
+The dummy app is configured to use the checked-in FlatPack snapshot at `vendor/flat_pack`.
 
 ### Quick Setup
 
@@ -22,7 +22,7 @@ bin/setup --skip-server
 ```
 
 This will:
-- Install all Ruby gem dependencies (including FlatPack parent gem)
+- Install all Ruby gem dependencies (including the vendored FlatPack snapshot)
 - Prepare the database
 - Build Tailwind CSS assets
 - Clear logs and temporary files
@@ -58,10 +58,10 @@ The dummy app demonstrates proper FlatPack installation:
 
 ### 1. Gemfile Configuration
 
-The FlatPack gem is loaded from the parent directory:
+The FlatPack gem is loaded from the checked-in vendor directory:
 
 ```ruby
-gem "flat_pack", path: "../.."
+gem "flat_pack", path: "vendor/flat_pack"
 ```
 
 ### 2. CSS Variables Import
@@ -82,29 +82,19 @@ For production apps, you can also use the import approach (requires proper asset
 
 ### 3. Tailwind Configuration
 
-The `config/tailwind.config.js` includes FlatPack component paths:
+The Tailwind CSS 4 entrypoint includes both the dummy app and FlatPack component sources:
 
-```javascript
-const engineRoot = path.resolve(__dirname, '../../..')
-
-module.exports = {
-  content: [
-    // ... other paths
-    `${engineRoot}/app/components/**/*.{erb,haml,html,slim,rb}`,
-  ]
-}
+```css
+@import "tailwindcss" source(none);
+@source "../..";
+@source "../../../../../app";
 ```
 
 ### 4. Importmap Configuration
 
-FlatPack's Stimulus controllers are pinned in `config/importmap.rb`:
+FlatPack contributes its importmap pins through the engine's `config/importmap.rb`. The dummy app adds only app-specific pins in `test/dummy/config/importmap.rb`.
 
-```ruby
-pin_all_from FlatPack::Engine.root.join("app/javascript/flat_pack/controllers"), 
-             under: "controllers/flat_pack", 
-             to: "flat_pack/controllers",
-             preload: false
-```
+Stimulus loads the engine controllers under the `flat-pack--*` identifiers used by component markup.
 
 ### 5. Engine Mount
 
@@ -124,11 +114,11 @@ The dummy app includes several demo pages:
 
 ## Development
 
-When developing FlatPack components, you can test them immediately in the dummy app by:
+When developing FlatPack components, update the dummy app snapshot before testing:
 
 1. Making changes to components in the parent `app/components` directory
-2. Refreshing the browser to see changes
-3. The Tailwind watcher will automatically rebuild CSS if running in watch mode
+2. Running `ruby test/dummy/bin/refresh_flat_pack_vendor` from the repository root
+3. Rebuilding CSS or restarting the app when the changed assets require it
 
 ## Using Components
 
@@ -137,8 +127,8 @@ Example usage in views:
 ```erb
 <%# Button Component %>
 <%= render FlatPack::Button::Component.new(
-  label: "Click me",
-  scheme: :primary
+  text: "Click me",
+  style: :primary
 ) %>
 
 <%# Table Component %>
@@ -181,27 +171,18 @@ See [../../docs/deployment_digitalocean.md](../../docs/deployment_digitalocean.m
 
 ## Directory Structure
 
-```
+```text
 test/dummy/
 ├── app/
 │   ├── assets/
-│   │   └── stylesheets/
-│   │       ├── application.css      # Dummy app theme tokens and overrides
-│   │       └── application.tailwind.css
-│   ├── controllers/
-│   │   └── pages_controller.rb      # Demo page controller
-│   ├── javascript/
-│   │   └── application.js
-│   └── views/
-│       ├── layouts/
-│       │   └── application.html.erb
-│       └── pages/                   # Demo pages
-│           ├── demo.html.erb
-│           ├── buttons.html.erb
-│           └── tables.html.erb
+│   │   ├── stylesheets/application.tailwind.css
+│   │   └── tailwind/application.css
+│   ├── controllers/pages_controller.rb
+│   ├── javascript/controllers/
+│   └── views/pages/
 ├── config/
-│   ├── routes.rb                    # Mounts FlatPack engine
-│   ├── importmap.rb                 # Pins FlatPack controllers
-│   └── tailwind.config.js           # Includes FlatPack paths
-└── Gemfile                          # References FlatPack gem
+│   ├── importmap.rb
+│   └── routes.rb
+├── vendor/flat_pack/                # Checked-in engine snapshot
+└── Gemfile                          # References vendor/flat_pack
 ```

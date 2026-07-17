@@ -216,7 +216,7 @@ module FlatPack
         def content_link_classes
           classes(
             "flex min-w-0 flex-1 items-center gap-3 rounded-[var(--radius-md)]",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-focus-ring-color)] focus-visible:ring-offset-2"
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--button-focus-ring-color)] focus-visible:ring-offset-2"
           )
         end
 

@@ -143,6 +143,13 @@ Use stack gap tokens on parent layout containers (for example, form stacks) to c
 - Radius: `--checkbox-radius`
 - Label spacing: `--checkbox-label-gap`
 
+### SVG Status Dot Utility
+- Utility class: `fp-red-dot` (apply on an `svg` element)
+- Dot size: `8px` by `8px`
+- Position: top-right (`top: 0`, `right: 0`) with `z-index: 999999999`
+- Color token: `--color-danger-background-color`
+- Example: `<svg class="fp-red-dot ...">...</svg>`
+
 ### Table
 - Colors: `--surface-border-color`, `--surface-muted-background-color`
 - Radius: `--radius-lg`

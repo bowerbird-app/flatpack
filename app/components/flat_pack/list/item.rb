@@ -110,7 +110,7 @@ module FlatPack
         classes(
           "flat-pack-list-item-link",
           "flex w-full items-start",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--button-focus-ring-color)"
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-(--button-focus-ring-color)"
         )
       end
 

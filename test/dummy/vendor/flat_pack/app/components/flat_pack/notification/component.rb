@@ -224,7 +224,7 @@ module FlatPack
       end
 
       def nested_notification_link_classes
-        "flat-pack-list-item-link flex w-full items-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--button-focus-ring-color)"
+        "flat-pack-list-item-link flex w-full items-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-(--button-focus-ring-color)"
       end
 
       def nested_notification_item_classes(notification)
@@ -246,7 +246,7 @@ module FlatPack
       end
 
       def rollup_parent_button_classes
-        "cursor-pointer flex w-full items-start text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--button-focus-ring-color)"
+        "cursor-pointer flex w-full items-start text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-(--button-focus-ring-color)"
       end
 
       def render_rollup_parent_icon(notification, unread_children_count: 0, suppress_unread_indicator: false)
@@ -325,7 +325,7 @@ module FlatPack
           link_to(
             "See all notifications",
             @see_all_href,
-            class: "block px-3 py-3 text-center text-sm font-medium text-[var(--color-primary)] transition-colors hover:bg-[var(--surface-muted-background-color)] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[var(--color-primary)]"
+            class: "block rounded-b-[var(--popover-radius)] px-3 py-3 text-center text-sm font-medium text-[var(--color-primary)] transition-colors hover:bg-[var(--surface-muted-background-color)] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[var(--color-primary)]"
           )
         end
       end
@@ -374,7 +374,7 @@ module FlatPack
           "hover:bg-[var(--surface-muted-background-color)]",
           "hover:text-[var(--surface-content-color)]",
           "focus:outline-none",
-          "focus:ring-2",
+          "focus:ring-2 focus:ring-inset",
           "focus:ring-[var(--color-primary)]",
           "focus:ring-offset-2",
           "focus:ring-offset-[var(--surface-background-color)]"

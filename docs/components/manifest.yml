@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-07-10
+updated_at: 2026-07-17
 
 format_reference: docs/components/DOC_FORMAT.md
 human_index: docs/components/README.md
@@ -472,4 +472,5 @@ components:
     status: summary
 
 undocumented_or_internal_candidates:
+  - dot
   - shared

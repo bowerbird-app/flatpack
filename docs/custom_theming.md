@@ -1,5 +1,7 @@
 # Custom Theming
 
+FlatPack uses inset rings for selected, active, drag, and focus-visible states. Keep focus-ring color tokens sufficiently distinct from their component backgrounds so the indicator remains accessible inside overflow-clipped containers.
+
 FlatPack ships with a default light palette in `:root` and additional named variants under `data-theme` selectors. You can add your own named theme by defining a new selector such as `[data-theme="sunrise"]` in your host app stylesheet and overriding the same variables FlatPack already uses.
 
 Use this guide when you want a complete starting point instead of hand-picking a few overrides.

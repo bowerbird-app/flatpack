@@ -418,7 +418,7 @@ module FlatPack
           "pr-10",
           "text-sm",
           "transition-colors duration-base",
-          "focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent",
+          "focus:outline-none focus:ring-2 focus:ring-inset focus:ring-ring focus:border-transparent",
           "disabled:opacity-50 disabled:cursor-not-allowed"
         ]
 
@@ -443,7 +443,7 @@ module FlatPack
           "pr-10",
           "text-sm text-left",
           "transition-colors duration-base",
-          "focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent",
+          "focus:outline-none focus:ring-2 focus:ring-inset focus:ring-ring focus:border-transparent",
           "disabled:opacity-50 disabled:cursor-not-allowed"
         ]
 
@@ -461,7 +461,7 @@ module FlatPack
       end
 
       def search_input_classes
-        "w-full px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-sm border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] text-[var(--surface-content-color)] focus:outline-none focus:ring-1 focus:ring-ring"
+        "w-full px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-sm border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] text-[var(--surface-content-color)] focus:outline-none focus:ring-1 focus:ring-inset focus:ring-ring"
       end
 
       def custom_option_classes(selected, disabled)

@@ -83,7 +83,7 @@ For AI-assisted installation and usage, start with the gem-shipped contract and 
 ) %>
 ```
 
-Schemes: `:primary`, `:secondary`, `:ghost`
+Styles: `:primary`, `:secondary`, `:ghost`
 
 ### Card Component
 
@@ -270,6 +270,7 @@ For hierarchical parent/child checkbox selection, see the `flat-pack--nested-mul
 - **SidebarGroup** - Collapsible group of sidebar items with persisted state
 - **TopNav** - Sticky top navigation bar with composable left, center, and right regions
 - **BottomNav** - Fixed bottom navigation bar for mobile layouts
+- **PageNav** - In-page navigation with active-section tracking
 - **Tabs** - Tabbed content panels with URL-aware active state
 - **Pagination** - Page-based navigation with Pagy integration
 - **PaginationInfinite** - Infinite-scroll / load-more pagination
@@ -281,6 +282,7 @@ For hierarchical parent/child checkbox selection, see the `flat-pack--nested-mul
 - **Timeline** - Vertical event timeline with icons and timestamps
 - **Timestamp** - Relative time renderer with hover tooltip for absolute local time
 - **Chart** - ApexCharts-based visualizations with optional card framing
+- **ChartButtons** - Preset range controls for chart filtering
 - **Progress** - Horizontal progress bar with optional label
 - **Badge** - Status indicators, counts, labels, and tags
 - **Avatar** - User avatar with image, initials, and size variants
@@ -295,6 +297,7 @@ For hierarchical parent/child checkbox selection, see the `flat-pack--nested-mul
 - **Accordion** - Collapsible content sections
 - **Collapse** - Single-panel show/hide toggler
 - **Modal** - Accessible dialog overlay
+- **ModalFilter** - Modal-only filter form with active-filter count
 - **Popover** - Anchored floating panel with Stimulus positioning
 - **Tooltip** - Accessible tooltip via Stimulus
 - **Picker** - Modal-based asset picker with single/multi selection
@@ -355,8 +358,8 @@ For parent/child checkbox groups that submit hidden inputs, use the `flat-pack--
 Clone the repository:
 
 ```bash
-git clone https://github.com/flatpack/flat_pack.git
-cd flat_pack
+git clone https://github.com/bowerbird-app/flatpack.git
+cd flatpack
 bundle install
 ```
 
@@ -453,5 +456,5 @@ Built with:
 ## Support
 
 - 📖 [Documentation](docs/)
-- 🐛 [Issue Tracker](https://github.com/flatpack/flat_pack/issues)
-- 💬 [Discussions](https://github.com/flatpack/flat_pack/discussions)
+- 🐛 [Issue Tracker](https://github.com/bowerbird-app/flatpack/issues)
+- 💬 [Discussions](https://github.com/bowerbird-app/flatpack/discussions)
