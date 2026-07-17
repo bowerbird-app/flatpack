@@ -43,6 +43,7 @@ function buildController({ fetchImpl, method = 'post', params = {}, value = 'rub
   }
 
   const dispatchedEvents = []
+  const classNames = new Set()
   const element = {
     dataset: {
       flatPackChipRemoveUrlValue: '/demo/chips/remove_callback',
@@ -50,6 +51,24 @@ function buildController({ fetchImpl, method = 'post', params = {}, value = 'rub
       flatPackChipRemoveParamsValue: JSON.stringify(params)
     },
     removed: false,
+    attributes: {},
+    classList: {
+      toggle(token) {
+        if (classNames.has(token)) {
+          classNames.delete(token)
+          return false
+        }
+
+        classNames.add(token)
+        return true
+      }
+    },
+    getAttribute(name) {
+      return this.attributes[name] || null
+    },
+    setAttribute(name, value) {
+      this.attributes[name] = value
+    },
     querySelector(selector) {
       if (selector === "button[aria-label='Remove']") return button
 
@@ -91,8 +110,29 @@ function buildController({ fetchImpl, method = 'post', params = {}, value = 'rub
   controller.hasRemoveMethodValue = true
   controller.hasRemoveParamsValue = true
 
-  return { button, controller, dispatchedEvents, element }
+  return { button, classNames, controller, dispatchedEvents, element }
 }
+
+test('toggle applies and removes the inset selected ring', () => {
+  const { classNames, controller, dispatchedEvents, element } = buildController({
+    fetchImpl: async () => ({ ok: true, status: 200 })
+  })
+
+  controller.toggle()
+
+  assert.equal(element.attributes['aria-pressed'], 'true')
+  assert.equal(classNames.has('ring-2'), true)
+  assert.equal(classNames.has('ring-inset'), true)
+  assert.equal(classNames.has('ring-[var(--color-ring)]'), true)
+  assert.equal(dispatchedEvents[0].detail.selected, true)
+
+  controller.toggle()
+
+  assert.equal(element.attributes['aria-pressed'], 'false')
+  assert.equal(classNames.has('ring-2'), false)
+  assert.equal(classNames.has('ring-inset'), false)
+  assert.equal(classNames.has('ring-[var(--color-ring)]'), false)
+})
 
 test('failed remove request preserves the chip and emits chip:remove-failed', async () => {
   const fetchCalls = []

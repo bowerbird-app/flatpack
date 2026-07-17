@@ -54,6 +54,12 @@ module FlatPack
 
         assert_selector "div.tree-shell[role='tree']"
       end
+
+      def test_uses_an_inset_focus_ring_for_tree_rows
+        render_inline(Component.new) { |tree| tree.node(label: "README.md") }
+
+        assert_selector "div[role='treeitem'][class*='focus-visible:ring-inset']"
+      end
     end
   end
 end

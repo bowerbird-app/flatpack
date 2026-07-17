@@ -80,7 +80,7 @@ export default class extends Controller {
     checkbox.type = "checkbox"
     checkbox.checked = checked
     checkbox.indeterminate = indeterminate
-    checkbox.className = "h-4 w-4 rounded border-[var(--surface-border-color)] text-[var(--color-primary)] accent-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2"
+    checkbox.className = "h-4 w-4 rounded border-[var(--surface-border-color)] text-[var(--color-primary)] accent-[var(--color-primary)] focus:ring-2 focus:ring-inset focus:ring-[var(--color-primary)] focus:ring-offset-2"
     Object.entries(dataset).forEach(([key, value]) => {
       checkbox.dataset[key] = value
     })

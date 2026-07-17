@@ -150,7 +150,7 @@ module FlatPack
           "font-medium",
           "cursor-pointer",
           "transition-colors duration-base",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--button-focus-ring-offset-color)]",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--button-focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--button-focus-ring-offset-color)]",
           "disabled:pointer-events-none disabled:opacity-[var(--button-disabled-opacity)]",
           conditional_size_classes,
           style_classes,

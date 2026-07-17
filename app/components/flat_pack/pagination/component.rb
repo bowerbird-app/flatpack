@@ -183,7 +183,7 @@ module FlatPack
         elsif active
           "#{base} bg-primary text-primary-text"
         else
-          "#{base} text-[var(--surface-content-color)] hover:bg-[var(--surface-muted-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          "#{base} text-[var(--surface-content-color)] hover:bg-[var(--surface-muted-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
         end
       end
 

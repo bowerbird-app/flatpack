@@ -16,7 +16,7 @@ Use Chip for tags, filters, selected states, and quick token-like actions.
 | `text` | String | `nil` | no | Chip label; if omitted, block content is used. |
 | `style` | Symbol | `:default` | no | Style: `:default`, `:primary`, `:success`, `:warning`, `:danger`, `:info`; invalid values raise `ArgumentError`. |
 | `size` | Symbol | `:md` | no | Size: `:sm`, `:md`, `:lg`; invalid values raise `ArgumentError`. |
-| `selected` | Boolean | `false` | no | Selected state; applies visual ring for `type: :button`. |
+| `selected` | Boolean | `false` | no | Selected state; applies an inset visual ring for `type: :button`. |
 | `disabled` | Boolean | `false` | no | Disabled state; disables button chips and renders disabled link chips as `<span>`. |
 | `removable` | Boolean | `false` | no | Adds remove control and `flat-pack--chip` controller when not disabled. Without `remove_url`, removal stays client-side only. |
 | `href` | String | `nil` | no | Link URL used when `type: :link` and not disabled. |
@@ -74,6 +74,7 @@ Use Chip for tags, filters, selected states, and quick token-like actions.
 - When `removable: true` is set without `remove_url`, the chip uses the default client-side removal animation and emits `chip:removed` immediately.
 - When `remove_url` is present, the chip waits for the GET or POST request to succeed before it runs the existing removal animation and emits `chip:removed`.
 - Failed removal requests keep the chip in place and emit `chip:remove-failed` with the request error message in `event.detail.error`.
+- FlatPack uses inset rings for selected, active, drag, and focus-visible states so indicators remain visible inside overflow-clipped containers.
 - Adding chips from a tag-input flow is not configured on `FlatPack::Chip::Component` itself. Use `flat-pack--chip-tag-input` on the wrapper that owns the input, chip group, and template.
 - Auto-submit for added chips is optional and defaults to off. Without configuration, the tag-input controller inserts chips locally with no request.
 - To turn auto-submit on, set `data-flat-pack--chip-tag-input-auto-submit-value="true"` and provide `data-flat-pack--chip-tag-input-add-url-value`. Optional `add_method` and `add_params` values mirror the remove callback pattern.

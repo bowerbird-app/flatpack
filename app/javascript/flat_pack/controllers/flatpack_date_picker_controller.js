@@ -484,7 +484,7 @@ export default class extends Controller {
         "transition-colors",
         "duration-base",
         "focus:outline-none",
-        "focus:ring-2",
+        "focus:ring-2 focus:ring-inset",
         "focus:ring-ring"
       ]
 

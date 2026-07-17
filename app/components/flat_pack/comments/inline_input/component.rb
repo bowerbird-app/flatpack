@@ -48,7 +48,7 @@ module FlatPack
         def container_classes
           classes(
             "flex items-center gap-2 rounded-[var(--comments-inline-input-radius)] border border-[var(--comments-composer-border-color)] bg-[var(--comments-composer-background-color)] px-3 py-1.5",
-            "focus-within:ring-2 focus-within:ring-[var(--comments-composer-focus-ring-color)] focus-within:border-[var(--comments-composer-focus-border-color)]",
+            "focus-within:ring-2 focus-within:ring-inset focus-within:ring-[var(--comments-composer-focus-ring-color)] focus-within:border-[var(--comments-composer-focus-border-color)]",
             "transition-colors duration-base",
             @disabled ? "opacity-60 pointer-events-none" : nil
           )

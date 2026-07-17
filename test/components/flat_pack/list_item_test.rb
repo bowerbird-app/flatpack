@@ -72,6 +72,7 @@ module FlatPack
 
         assert_selector "li a[href='/demo/list']", text: "Content"
         assert_includes page.native.to_html, "flat-pack-list-item-link"
+        assert_includes page.native.to_html, "focus-visible:ring-inset"
       end
 
       def test_renders_hover_styles_when_hover_enabled

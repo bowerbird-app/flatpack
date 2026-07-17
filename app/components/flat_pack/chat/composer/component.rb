@@ -124,7 +124,7 @@ module FlatPack
             rows: 1,
             autogrow: true,
             submit_on_enter: true,
-            class: "min-h-[var(--chat-composer-control-height)] rounded-lg border-[var(--chat-input-border-color)] bg-[var(--chat-input-background-color)] px-4 py-[var(--chat-composer-control-padding-y)] text-sm leading-5 text-[var(--chat-input-text-color)] placeholder:text-[var(--chat-input-placeholder-color)] focus:ring-[var(--chat-input-focus-ring-color)] max-h-32"
+            class: "min-h-[var(--chat-composer-control-height)] rounded-lg border-[var(--chat-input-border-color)] bg-[var(--chat-input-background-color)] px-4 py-[var(--chat-composer-control-padding-y)] text-sm leading-5 text-[var(--chat-input-text-color)] placeholder:text-[var(--chat-input-placeholder-color)] focus:ring-inset focus:ring-[var(--chat-input-focus-ring-color)] max-h-32"
           )
         end
 
@@ -144,7 +144,7 @@ module FlatPack
             size: :md,
             type: "submit",
             aria: {label: "Send message"},
-            class: "min-h-[var(--chat-composer-control-height)] min-w-[var(--chat-composer-control-height)] shrink-0 border-transparent bg-[var(--chat-send-button-background-color)] text-[var(--chat-send-button-text-color)] hover:bg-[var(--chat-send-button-hover-background-color)] focus-visible:ring-[var(--chat-send-button-focus-ring-color)]"
+            class: "min-h-[var(--chat-composer-control-height)] min-w-[var(--chat-composer-control-height)] shrink-0 border-transparent bg-[var(--chat-send-button-background-color)] text-[var(--chat-send-button-text-color)] hover:bg-[var(--chat-send-button-hover-background-color)] focus-visible:ring-inset focus-visible:ring-[var(--chat-send-button-focus-ring-color)]"
           )
         end
 

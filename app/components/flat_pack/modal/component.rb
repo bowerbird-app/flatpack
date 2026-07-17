@@ -194,7 +194,7 @@ module FlatPack
       end
 
       def close_button_classes
-        "shrink-0 cursor-pointer text-[var(--modal-close-icon-color)] hover:text-[var(--modal-close-icon-hover-color)] transition-colors rounded-sm p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        "shrink-0 cursor-pointer text-[var(--modal-close-icon-color)] hover:text-[var(--modal-close-icon-hover-color)] transition-colors rounded-sm p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
       end
 
       def render_header_section

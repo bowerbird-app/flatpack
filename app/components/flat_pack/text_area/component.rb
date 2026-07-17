@@ -364,7 +364,7 @@ module FlatPack
           "text-[var(--surface-muted-content-color)]",
           "hover:text-[var(--surface-content-color)]",
           "hover:bg-[var(--surface-muted-background-color)]",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
           "disabled:opacity-50 disabled:cursor-not-allowed"
         )
       end

@@ -37,8 +37,9 @@ export default class extends Controller {
     const newPressed = !currentPressed
     this.element.setAttribute("aria-pressed", String(newPressed))
 
-    // Toggle selected class (ring-2 ring-[var(--color-ring)])
+    // Toggle selected classes.
     this.element.classList.toggle("ring-2")
+    this.element.classList.toggle("ring-inset")
     this.element.classList.toggle("ring-[var(--color-ring)]")
 
     // Emit chip:toggled event
