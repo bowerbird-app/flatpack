@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.version = FlatPack::VERSION
   spec.authors = ["FlatPack Team"]
   spec.email = ["team@flatpack.dev"]
-  spec.homepage = "https://github.com/flatpack/flat_pack"
+  spec.homepage = "https://github.com/bowerbird-app/flatpack"
   spec.summary = "A modern Rails UI component library"
   spec.description = "FlatPack is a production-grade Rails Engine providing a comprehensive UI component library built with ViewComponent, Tailwind CSS, and modern Rails conventions. Supports Rails 7.1 and above."
   spec.license = "MIT"
