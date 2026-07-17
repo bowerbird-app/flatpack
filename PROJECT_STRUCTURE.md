@@ -6,11 +6,11 @@ This document summarizes the current FlatPack repository layout and the files th
 
 **FlatPack** is a Rails engine that ships ViewComponent-based UI components, Tailwind CSS 4 token styling, Propshaft-served assets, and importmap-friendly JavaScript.
 
-**Version:** 0.1.125
+**Version:** 0.1.129
 **License:** MIT  
 **Ruby:** 3.2+  
 **Supported host apps:** Rails 7.1+  
-**Last Updated:** 2026-07-14
+**Last Updated:** 2026-07-17
 
 ## Repository Layout
 
@@ -110,6 +110,7 @@ flat_pack/
 │       │   ├── chart_buttons_controller.js
 │       │   ├── chat_grouping_controller.js
 │       │   ├── chat_image_deck_controller.js
+│       │   ├── chat_layout_controller.js
 │       │   ├── chat_message_actions_controller.js
 │       │   ├── chat_scroll_controller.js
 │       │   ├── chat_sender_controller.js
@@ -129,6 +130,7 @@ flat_pack/
 │       │   ├── modal_controller.js
 │       │   ├── navbar_controller.js
 │       │   ├── nested_multiselect_controller.js
+│       │   ├── notification_rollup_controller.js
 │       │   ├── page_nav_controller.js
 │       │   ├── pagination_infinite_controller.js
 │       │   ├── password_input_controller.js
