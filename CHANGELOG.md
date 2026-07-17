@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Updated the `fp-red-dot` utility to render reliably on SVG icons by appending a foreground SVG dot indicator with `z-index: 999999999`.
+- Synchronized the dummy app's vendored Select component so modal-filter demo controls use inset focus rings.
 
 ## [0.1.122] - 2026-07-10
 
