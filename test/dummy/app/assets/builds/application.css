@@ -1545,6 +1545,10 @@
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
+  .rounded-b-\[var\(--popover-radius\)\] {
+    border-bottom-right-radius: var(--popover-radius);
+    border-bottom-left-radius: var(--popover-radius);
+  }
   .rounded-b-lg {
     border-bottom-right-radius: var(--radius-lg);
     border-bottom-left-radius: var(--radius-lg);
@@ -3450,6 +3454,9 @@
   .\[scrollbar-width\:none\] {
     scrollbar-width: none;
   }
+  .ring-inset {
+    --tw-ring-inset: inset;
+  }
   .group-open\:rotate-90 {
     &:is(:where(.group):is([open], :popover-open, :open) *) {
       rotate: 90deg;
@@ -3506,6 +3513,11 @@
     &:is(:where(.peer):focus-visible ~ *) {
       --tw-ring-offset-width: 2px;
       --tw-ring-offset-shadow: var(--tw-ring-inset,) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+    }
+  }
+  .peer-focus-visible\:ring-inset {
+    &:is(:where(.peer):focus-visible ~ *) {
+      --tw-ring-inset: inset;
     }
   }
   .placeholder\:text-\[var\(--chat-input-placeholder-color\)\] {
@@ -3618,6 +3630,11 @@
   .focus-within\:ring-\[var\(--comments-composer-focus-ring-color\)\] {
     &:focus-within {
       --tw-ring-color: var(--comments-composer-focus-ring-color);
+    }
+  }
+  .focus-within\:ring-inset {
+    &:focus-within {
+      --tw-ring-inset: inset;
     }
   }
   .hover\:\!z-\[999\] {
@@ -4033,6 +4050,13 @@
     &:hover {
       @media (hover: hover) {
         --tw-ring-color: var(--color-primary);
+      }
+    }
+  }
+  .hover\:ring-inset {
+    &:hover {
+      @media (hover: hover) {
+        --tw-ring-inset: inset;
       }
     }
   }

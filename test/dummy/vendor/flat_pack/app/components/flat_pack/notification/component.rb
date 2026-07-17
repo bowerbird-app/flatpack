@@ -325,7 +325,7 @@ module FlatPack
           link_to(
             "See all notifications",
             @see_all_href,
-            class: "block px-3 py-3 text-center text-sm font-medium text-[var(--color-primary)] transition-colors hover:bg-[var(--surface-muted-background-color)] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[var(--color-primary)]"
+            class: "block rounded-b-[var(--popover-radius)] px-3 py-3 text-center text-sm font-medium text-[var(--color-primary)] transition-colors hover:bg-[var(--surface-muted-background-color)] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[var(--color-primary)]"
           )
         end
       end
