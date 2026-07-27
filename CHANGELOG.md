@@ -8,12 +8,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Fixed
+
+## [0.1.123] - 2026-07-27
+
+### Added
 - Added notification rollup support to `FlatPack::Notification::Component` with `notification[:rollup]` and `notification[:children]`, including single-open expand/collapse behavior, caret indicators, and nested child rendering.
 - Added email-safe reusable components: `FlatPack::EmailCard::Component`, `FlatPack::EmailButton::Component`, and `FlatPack::EmailFooterLinks::Component`, plus `FlatPack::EmailTemplateExample::Component` composition coverage, docs, and tests.
 - Added dummy app email demo pages for `EmailButton`, `EmailCard`, `EmailFooterLinks`, and `EmailTemplateExample`, including dedicated sidebar navigation links.
 
 ### Changed
-- Bumped the gem version to `0.1.130`.
+- Bumped the gem version to `0.1.123`.
 - Updated rollup notifications in `FlatPack::Notification::Component` to render a red unread-children counter badge on rollup parent icons (capped at `9+`) instead of the unread red dot.
 - Synchronized release metadata, documentation indexes, and Rails 7/8 dummy app lockfiles.
 - State and focus rings now use `ring-inset` to prevent clipping in overflow contexts.
@@ -881,6 +889,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CSS variables for theming customization
 
 [0.1.12]: https://github.com/bowerbird-app/flatpack/compare/v0.1.11...v0.1.12
+[0.1.123]: https://github.com/bowerbird-app/flatpack/compare/v0.1.122...v0.1.123
 [0.1.33]: https://github.com/bowerbird-app/flatpack/compare/v0.1.32...v0.1.33
 [0.1.8]: https://github.com/bowerbird-app/flat_pack/compare/v0.1.7...v0.1.8
 [0.1.7]: https://github.com/bowerbird-app/flat_pack/compare/v0.1.6...v0.1.7

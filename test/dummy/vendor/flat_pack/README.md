@@ -320,6 +320,12 @@ For hierarchical parent/child checkbox selection, see the `flat-pack--nested-mul
 - **Chat** - Full chat UI suite (panel, messages, composer, attachments, inbox)
 - **Comments** - Comment thread system (Thread, Item, Replies, Composer, InlineInput)
 
+### Email
+- **EmailCard** - Table-based email-safe card wrapper for transactional email layouts
+- **EmailButton** - Email-safe CTA link component with primary and secondary variants
+- **EmailFooterLinks** - Email-safe footer link row with explicit separators
+- **EmailTemplateExample** - Composed transactional email example built from FlatPack email components
+
 ### Form Inputs
 - **TextInput** - Single-line text field
 - **PasswordInput** - Masked input with show/hide toggle
