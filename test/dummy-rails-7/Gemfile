@@ -9,7 +9,7 @@ gem "flat_pack", path: "../.."
 gem "rails", ">= 7.2.3.1", "< 8.0"
 gem "puma", ">= 5.0"
 gem "propshaft", "~> 1.0"
-gem "sqlite3", "~> 1.7"
+gem "sqlite3", "~> 2.9"
 
 # Asset pipeline and frontend
 gem "importmap-rails"
