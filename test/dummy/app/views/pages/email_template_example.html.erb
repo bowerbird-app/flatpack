@@ -3,7 +3,68 @@
   subtitle: "Reference composition built from FlatPack email-safe components."
 ) %>
 
+<%= render "pages/component_method_variables_table", component: :email_template_example %>
+
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Composed Template", anchor_link: true) %>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Default Template", anchor_link: true, subtitle: "Drop-in transactional composition using FlatPack email primitives.") %>
   <%= render FlatPack::EmailTemplateExample::Component.new %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::EmailTemplateExample::Component.new %&gt;
+    CODE
+  ) %>
 </section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Welcome Template Variant", anchor_link: true, subtitle: "An onboarding-style variant assembled directly from component primitives.") %>
+
+  <%= render FlatPack::EmailCard::Component.new(max_width: 620, padding: "28px") do %>
+    <h1 style="margin:0 0 12px 0;font-family:Arial,sans-serif;font-size:24px;line-height:1.3;color:var(--surface-content-color,#111827);">Welcome aboard</h1>
+    <p style="margin:0 0 16px 0;font-family:Arial,sans-serif;font-size:16px;line-height:1.5;color:var(--surface-muted-content-color,#374151);">Your workspace is ready. Confirm your account details to unlock all features.</p>
+
+    <%= render FlatPack::EmailButton::Component.new(
+      href: "https://example.com/activate",
+      label: "Activate account",
+      variant: :primary,
+      full_width: true
+    ) %>
+
+    <div style="height:12px;line-height:12px;font-size:12px;"></div>
+
+    <%= render FlatPack::EmailButton::Component.new(
+      href: "https://example.com/tour",
+      label: "Take a quick tour",
+      variant: :secondary,
+      full_width: true
+    ) %>
+
+    <div style="height:20px;line-height:20px;font-size:20px;"></div>
+
+    <%= render FlatPack::EmailFooterLinks::Component.new(
+      links: [
+        {label: "Docs", href: "https://example.com/docs"},
+        {label: "Support", href: "https://example.com/support"},
+        {label: "Unsubscribe", href: "https://example.com/unsubscribe"}
+      ]
+    ) %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::EmailCard::Component.new(max_width: 620, padding: "28px") do %&gt;
+        &lt;h1 style="margin:0 0 12px 0;font-family:Arial,sans-serif;font-size:24px;line-height:1.3;color:var(--surface-content-color,#111827);"&gt;
+          Welcome aboard
+        &lt;/h1&gt;
+
+        &lt;%= render FlatPack::EmailButton::Component.new(
+          href: "https://example.com/activate",
+          label: "Activate account",
+          variant: :primary,
+          full_width: true
+        ) %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
+</section>
+

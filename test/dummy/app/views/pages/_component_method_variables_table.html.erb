@@ -127,6 +127,25 @@
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"my-4\", id: \"transaction-card\"" }
       ]
     },
+    email_footer_links: {
+      label: "Email Footer Links",
+      method_call: "render FlatPack::EmailFooterLinks::Component.new(links: [{ label: \"Privacy\", href: \"https://example.com/privacy\" }])",
+      variables: [
+        { variable: "links", accepts: "Array<Hash> (required)", example: "links: [{ label: \"Privacy\", href: \"https://example.com/privacy\" }]" },
+        { variable: "align", accepts: ":left, :center, :right", example: "align: :left" },
+        { variable: "color", accepts: "String", example: "color: \"#6b7280\"" },
+        { variable: "font_size", accepts: "String", example: "font_size: \"12px\"" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"mt-4\", id: \"email-footer-links\"" }
+      ]
+    },
+    email_template_example: {
+      label: "Email Template Example",
+      method_call: "render FlatPack::EmailTemplateExample::Component.new",
+      variables: [
+        { variable: "(none)", accepts: "No initializer arguments", example: "render FlatPack::EmailTemplateExample::Component.new" },
+        { variable: "composition", accepts: "EmailCard + EmailButton + EmailFooterLinks", example: "Uses primary/secondary CTA buttons and legal footer links" }
+      ]
+    },
     card: {
       label: "Card",
       method_call: "render FlatPack::Card::Component.new(style: :default, padding: :md) do |card| ... end",

@@ -9,6 +9,7 @@ module FlatPack
       DEFAULT_BACKGROUND = "#ffffff"
       DEFAULT_BORDER = "#e5e7eb"
       DEFAULT_TEXT = "#111827"
+      DEFAULT_RADIUS = "8px"
       SAFE_SPACING_PATTERN = /\A\d+(?:\.\d+)?(?:px|em|rem|%)(?:\s+\d+(?:\.\d+)?(?:px|em|rem|%)){0,3}\z/
 
       def initialize(
@@ -66,18 +67,28 @@ module FlatPack
           cellspacing: "0",
           border: "0",
           width: "100%",
-          style: "width:100%;max-width:#{@max_width}px;border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;#{alignment_style}"
+          style: [
+            "width:100%",
+            "max-width:#{@max_width}px",
+            "border-collapse:separate",
+            "border-spacing:0",
+            "mso-table-lspace:0pt",
+            "mso-table-rspace:0pt",
+            "background-color:#{@bg_color}",
+            theme_background_override,
+            "border:1px solid #{@border_color}",
+            theme_border_override,
+            "border-radius:#{DEFAULT_RADIUS}",
+            theme_radius_override,
+            "overflow:hidden",
+            alignment_style
+          ].compact.join(";")
         }
       end
 
       def card_cell_style
         [
           "padding:#{@padding}",
-          "background-color:#{@bg_color}",
-          theme_background_override,
-          "border:1px solid #{@border_color}",
-          theme_border_override,
-          "border-radius:8px",
           "font-family:Arial,sans-serif",
           "color:#{DEFAULT_TEXT}",
           theme_text_color_override
@@ -98,6 +109,10 @@ module FlatPack
 
       def theme_text_color_override
         "color:var(--surface-content-color, #{DEFAULT_TEXT})"
+      end
+
+      def theme_radius_override
+        "border-radius:var(--radius-lg, #{DEFAULT_RADIUS})"
       end
 
       def alignment_style

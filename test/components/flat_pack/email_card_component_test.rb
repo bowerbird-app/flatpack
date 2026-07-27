@@ -17,8 +17,11 @@ module FlatPack
 
         html = page.native.to_html
         assert_includes html, "max-width:600px"
+        assert_includes html, "border-collapse:separate"
+        assert_includes html, "border-spacing:0"
         assert_includes html, "background-color:var(--card-background-color, var(--surface-background-color, #ffffff))"
         assert_includes html, "border:1px solid var(--card-border-color, var(--surface-border-color, #e5e7eb))"
+        assert_includes html, "border-radius:var(--radius-lg, 8px)"
         assert_includes html, "color:var(--surface-content-color, #111827)"
       end
 
