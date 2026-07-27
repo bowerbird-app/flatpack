@@ -115,6 +115,18 @@
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"my-2\", id: \"email-cta\"" }
       ]
     },
+    email_card: {
+      label: "Email Card",
+      method_call: "render FlatPack::EmailCard::Component.new(max_width: 600, padding: \"24px\") do ... end",
+      variables: [
+        { variable: "max_width", accepts: "Integer", example: "max_width: 600" },
+        { variable: "padding", accepts: "String", example: "padding: \"24px\"" },
+        { variable: "bg_color", accepts: "String", example: "bg_color: \"#ffffff\"" },
+        { variable: "border_color", accepts: "String", example: "border_color: \"#e5e7eb\"" },
+        { variable: "align", accepts: ":left, :center, :right", example: "align: :left" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"my-4\", id: \"transaction-card\"" }
+      ]
+    },
     card: {
       label: "Card",
       method_call: "render FlatPack::Card::Component.new(style: :default, padding: :md) do |card| ... end",

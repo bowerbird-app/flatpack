@@ -15,7 +15,11 @@ module FlatPack
       def test_uses_default_max_width
         render_inline(Component.new) { "Content" }
 
-        assert_includes page.native.to_html, "max-width:600px"
+        html = page.native.to_html
+        assert_includes html, "max-width:600px"
+        assert_includes html, "background-color:var(--card-background-color, var(--surface-background-color, #ffffff))"
+        assert_includes html, "border:1px solid var(--card-border-color, var(--surface-border-color, #e5e7eb))"
+        assert_includes html, "color:var(--surface-content-color, #111827)"
       end
 
       def test_applies_custom_max_width_and_alignment
@@ -24,6 +28,16 @@ module FlatPack
         html = page.native.to_html
         assert_includes html, "max-width:420px"
         assert_selector "td[align='right']"
+      end
+
+      def test_custom_colors_do_not_add_theme_background_or_border_overrides
+        render_inline(Component.new(bg_color: "#f8fafc", border_color: "#cbd5e1")) { "Content" }
+
+        html = page.native.to_html
+        assert_includes html, "background-color:#f8fafc"
+        assert_includes html, "border:1px solid #cbd5e1"
+        refute_includes html, "background-color:var(--card-background-color"
+        refute_includes html, "border:1px solid var(--card-border-color"
       end
     end
   end

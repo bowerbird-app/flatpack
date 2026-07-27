@@ -8,6 +8,7 @@ module FlatPack
       DEFAULT_PADDING = "24px"
       DEFAULT_BACKGROUND = "#ffffff"
       DEFAULT_BORDER = "#e5e7eb"
+      DEFAULT_TEXT = "#111827"
       SAFE_SPACING_PATTERN = /\A\d+(?:\.\d+)?(?:px|em|rem|%)(?:\s+\d+(?:\.\d+)?(?:px|em|rem|%)){0,3}\z/
 
       def initialize(
@@ -23,6 +24,8 @@ module FlatPack
         @padding = normalize_spacing!(padding)
         @bg_color = normalize_color!(bg_color, :bg_color)
         @border_color = normalize_color!(border_color, :border_color)
+        @default_bg_color = (@bg_color == DEFAULT_BACKGROUND)
+        @default_border_color = (@border_color == DEFAULT_BORDER)
         @align = align.to_sym
 
         validate_max_width!
@@ -71,10 +74,30 @@ module FlatPack
         [
           "padding:#{@padding}",
           "background-color:#{@bg_color}",
+          theme_background_override,
           "border:1px solid #{@border_color}",
+          theme_border_override,
           "border-radius:8px",
-          "font-family:Arial,sans-serif"
-        ].join(";")
+          "font-family:Arial,sans-serif",
+          "color:#{DEFAULT_TEXT}",
+          theme_text_color_override
+        ].compact.join(";")
+      end
+
+      def theme_background_override
+        return unless @default_bg_color
+
+        "background-color:var(--card-background-color, var(--surface-background-color, #{@bg_color}))"
+      end
+
+      def theme_border_override
+        return unless @default_border_color
+
+        "border:1px solid var(--card-border-color, var(--surface-border-color, #{@border_color}))"
+      end
+
+      def theme_text_color_override
+        "color:var(--surface-content-color, #{DEFAULT_TEXT})"
       end
 
       def alignment_style
