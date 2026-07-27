@@ -102,6 +102,19 @@
         { variable: "loading", accepts: "true, false", example: "loading: true" }
       ]
     },
+    email_button: {
+      label: "Email Button",
+      method_call: "render FlatPack::EmailButton::Component.new(href: \"https://example.com\", label: \"Confirm\", variant: :primary)",
+      variables: [
+        { variable: "href", accepts: "String (required)", example: "href: \"https://example.com/confirm\"" },
+        { variable: "label", accepts: "String (required)", example: "label: \"Confirm details\"" },
+        { variable: "variant", accepts: ":primary, :secondary", example: "variant: :secondary" },
+        { variable: "align", accepts: ":left, :center, :right", example: "align: :left" },
+        { variable: "full_width", accepts: "true, false", example: "full_width: true" },
+        { variable: "fit_content", accepts: "true, false", example: "fit_content: true" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"my-2\", id: \"email-cta\"" }
+      ]
+    },
     card: {
       label: "Card",
       method_call: "render FlatPack::Card::Component.new(style: :default, padding: :md) do |card| ... end",
