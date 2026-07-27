@@ -9,9 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Added notification rollup support to `FlatPack::Notification::Component` with `notification[:rollup]` and `notification[:children]`, including single-open expand/collapse behavior, caret indicators, and nested child rendering.
+- Added email-safe reusable components: `FlatPack::EmailCard::Component`, `FlatPack::EmailButton::Component`, and `FlatPack::EmailFooterLinks::Component`, plus `FlatPack::EmailTemplateExample::Component` composition coverage, docs, and tests.
 
 ### Changed
-- Bumped the gem version to `0.1.129`.
+- Bumped the gem version to `0.1.130`.
 - Updated rollup notifications in `FlatPack::Notification::Component` to render a red unread-children counter badge on rollup parent icons (capped at `9+`) instead of the unread red dot.
 - Synchronized release metadata, documentation indexes, and Rails 7/8 dummy app lockfiles.
 - State and focus rings now use `ring-inset` to prevent clipping in overflow contexts.
