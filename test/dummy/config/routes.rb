@@ -71,6 +71,10 @@ Rails.application.routes.draw do
   get "demo/sidebar/collapsed", to: "pages#sidebar_collapsed"
   get "demo/sidebar/complete", to: "pages#sidebar_complete"
   get "demo/sidebar/section_title", to: "pages#sidebar_section_title"
+  get "demo/email/button", to: "pages#email_button"
+  get "demo/email/card", to: "pages#email_card"
+  get "demo/email/footer_links", to: "pages#email_footer_links"
+  get "demo/email/template_example", to: "pages#email_template_example"
 
   # New component demos
   get "demo/modals", to: "pages#modals"

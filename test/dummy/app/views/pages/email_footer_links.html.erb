@@ -1,0 +1,21 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Email Footer Links",
+  subtitle: "Compact footer links for transactional emails."
+) %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Footer Link List", anchor_link: true) %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <%= render FlatPack::EmailFooterLinks::Component.new(
+        links: [
+          {label: "Privacy", href: "https://example.com/privacy"},
+          {label: "Terms", href: "https://example.com/terms"},
+          {label: "Unsubscribe", href: "https://example.com/unsubscribe"},
+          {label: "Help", href: "https://example.com/help"}
+        ]
+      ) %>
+    <% end %>
+  <% end %>
+</section>

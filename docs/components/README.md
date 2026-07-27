@@ -38,6 +38,7 @@ empty_state | FlatPack::EmptyState::Component | docs/components/empty-state.md
 email_button | FlatPack::EmailButton::Component | docs/components/email-button.md
 email_card | FlatPack::EmailCard::Component | docs/components/email-card.md
 email_footer_links | FlatPack::EmailFooterLinks::Component | docs/components/email-footer-links.md
+email_template_example | FlatPack::EmailTemplateExample::Component | docs/components/email-template-example.md
 grid | FlatPack::Grid::Component | docs/components/grid.md
 hero | FlatPack::Hero::Component | docs/components/hero.md
 inputs | FlatPack::TextInput::Component | docs/components/inputs.md

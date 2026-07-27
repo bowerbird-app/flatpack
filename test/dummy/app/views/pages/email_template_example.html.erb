@@ -1,0 +1,9 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Email Template Example",
+  subtitle: "Reference composition built from FlatPack email-safe components."
+) %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Composed Template", anchor_link: true) %>
+  <%= render FlatPack::EmailTemplateExample::Component.new %>
+</section>

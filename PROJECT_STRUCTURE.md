@@ -48,7 +48,11 @@ flat_pack/
 │   │   ├── date_range_input/
 │   │   ├── date_time_input/
 │   │   ├── dot/
+│   │   ├── email_button/
+│   │   ├── email_card/
+│   │   ├── email_footer_links/
 │   │   ├── email_input/
+│   │   ├── email_template_example/
 │   │   ├── empty_state/
 │   │   ├── file_input/
 │   │   ├── grid/

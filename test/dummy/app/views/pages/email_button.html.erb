@@ -1,0 +1,26 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Email Button",
+  subtitle: "Email-safe CTA links rendered with table-based markup."
+) %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Email Button Variants", anchor_link: true) %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body(class: "space-y-4") do %>
+      <%= render FlatPack::EmailButton::Component.new(
+        href: "https://example.com/confirm",
+        label: "Confirm details",
+        variant: :primary,
+        full_width: true
+      ) %>
+
+      <%= render FlatPack::EmailButton::Component.new(
+        href: "https://example.com/settings",
+        label: "Review settings",
+        variant: :secondary,
+        full_width: true
+      ) %>
+    <% end %>
+  <% end %>
+</section>

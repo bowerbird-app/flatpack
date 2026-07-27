@@ -1,0 +1,20 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Email Card",
+  subtitle: "Email-safe wrapper for transactional content."
+) %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Composed Email Card", anchor_link: true) %>
+
+  <%= render FlatPack::EmailCard::Component.new(max_width: 600, padding: "24px") do %>
+    <h1 style="margin:0 0 12px 0;font-family:Arial,sans-serif;font-size:24px;line-height:1.3;color:#111827;">Action required</h1>
+    <p style="margin:0 0 16px 0;font-family:Arial,sans-serif;font-size:16px;line-height:1.5;color:#374151;">Please confirm your account details to continue securely.</p>
+
+    <%= render FlatPack::EmailButton::Component.new(
+      href: "https://example.com/confirm",
+      label: "Confirm details",
+      variant: :primary,
+      full_width: true
+    ) %>
+  <% end %>
+</section>

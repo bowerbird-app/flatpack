@@ -204,6 +204,12 @@ components:
     primary_class: FlatPack::EmailFooterLinks::Component
     status: documented
 
+  - key: email_template_example
+    title: Email Template Example
+    doc: docs/components/email-template-example.md
+    primary_class: FlatPack::EmailTemplateExample::Component
+    status: documented
+
   - key: grid
     title: Grid
     doc: docs/components/grid.md

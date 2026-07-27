@@ -44,6 +44,10 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/sidebar/collapsible
     /demo/sidebar/collapsed
     /demo/sidebar/complete
+    /demo/email/button
+    /demo/email/card
+    /demo/email/footer_links
+    /demo/email/template_example
     /demo/modals
     /demo/popovers
     /demo/tooltips
@@ -179,6 +183,17 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, 'data-controller="flat-pack--nested-multiselect"'
     assert_includes response.body, 'href="/demo/forms/nested_multiselect"'
     assert_includes response.body, "locations[]"
+  end
+
+  test "sidebar renders email section with new component links" do
+    get "/demo/email/template_example"
+
+    assert_response :success
+    assert_includes response.body, "Email"
+    assert_includes response.body, 'href="/demo/email/button"'
+    assert_includes response.body, 'href="/demo/email/card"'
+    assert_includes response.body, 'href="/demo/email/footer_links"'
+    assert_includes response.body, 'href="/demo/email/template_example"'
   end
 
   test "admin demo renders pagination" do
