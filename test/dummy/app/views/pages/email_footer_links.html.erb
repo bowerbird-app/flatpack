@@ -1,0 +1,157 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Email Footer Links",
+  subtitle: "Compact footer links for transactional emails."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :email_footer_links %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Basic Footer Links", anchor_link: true, subtitle: "Standard legal and support links for transactional footers.") %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <%= render FlatPack::EmailFooterLinks::Component.new(
+        links: [
+          {label: "Privacy", href: "https://example.com/privacy"},
+          {label: "Terms", href: "https://example.com/terms"},
+          {label: "Unsubscribe", href: "https://example.com/unsubscribe"},
+          {label: "Help", href: "https://example.com/help"}
+        ]
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::EmailFooterLinks::Component.new(
+        links: [
+          { label: "Privacy", href: "https://example.com/privacy" },
+          { label: "Terms", href: "https://example.com/terms" },
+          { label: "Unsubscribe", href: "https://example.com/unsubscribe" },
+          { label: "Help", href: "https://example.com/help" }
+        ]
+      ) %&gt;
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Alignment Examples", anchor_link: true, subtitle: "Place footer links left, center, or right based on template layout.") %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body(class: "space-y-4") do %>
+      <%= render FlatPack::EmailFooterLinks::Component.new(
+        links: [
+          {label: "Privacy", href: "https://example.com/privacy"},
+          {label: "Terms", href: "https://example.com/terms"}
+        ],
+        align: :left
+      ) %>
+
+      <%= render FlatPack::EmailFooterLinks::Component.new(
+        links: [
+          {label: "Status", href: "https://example.com/status"},
+          {label: "Contact", href: "https://example.com/contact"}
+        ],
+        align: :center
+      ) %>
+
+      <%= render FlatPack::EmailFooterLinks::Component.new(
+        links: [
+          {label: "Support", href: "https://example.com/support"},
+          {label: "Docs", href: "https://example.com/docs"}
+        ],
+        align: :right
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::EmailFooterLinks::Component.new(
+        links: [
+          { label: "Support", href: "https://example.com/support" },
+          { label: "Docs", href: "https://example.com/docs" }
+        ],
+        align: :right
+      ) %&gt;
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Color and Typography", anchor_link: true, subtitle: "Adjust muted footer tone and size while keeping email-safe output.") %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body(class: "space-y-4") do %>
+      <%= render FlatPack::EmailFooterLinks::Component.new(
+        links: [
+          {label: "Manage Preferences", href: "https://example.com/preferences"},
+          {label: "Unsubscribe", href: "https://example.com/unsubscribe"}
+        ],
+        color: "#475569",
+        font_size: "13px"
+      ) %>
+
+      <%= render FlatPack::EmailFooterLinks::Component.new(
+        links: [
+          {label: "Security", href: "https://example.com/security"},
+          {label: "Data Policy", href: "https://example.com/data-policy"}
+        ],
+        color: "#64748b",
+        font_size: "11px"
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::EmailFooterLinks::Component.new(
+        links: [
+          { label: "Manage Preferences", href: "https://example.com/preferences" },
+          { label: "Unsubscribe", href: "https://example.com/unsubscribe" }
+        ],
+        color: "#475569",
+        font_size: "13px"
+      ) %&gt;
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Composed Email Footer", anchor_link: true, subtitle: "Use EmailFooterLinks inside EmailCard for complete transactional templates.") %>
+
+  <%= render FlatPack::EmailCard::Component.new(max_width: 600, padding: "24px") do %>
+    <p style="margin:0 0 16px 0;font-family:Arial,sans-serif;font-size:16px;line-height:1.5;color:var(--surface-muted-content-color,#374151);">
+      You are receiving this email because account notifications are enabled.
+    </p>
+
+    <%= render FlatPack::EmailFooterLinks::Component.new(
+      links: [
+        {label: "Privacy", href: "https://example.com/privacy"},
+        {label: "Terms", href: "https://example.com/terms"},
+        {label: "Unsubscribe", href: "https://example.com/unsubscribe"}
+      ],
+      align: :center
+    ) %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::EmailCard::Component.new(max_width: 600, padding: "24px") do %&gt;
+        &lt;p style="margin:0 0 16px 0;font-family:Arial,sans-serif;font-size:16px;line-height:1.5;color:var(--surface-muted-content-color,#374151);"&gt;
+          You are receiving this email because account notifications are enabled.
+        &lt;/p&gt;
+
+        &lt;%= render FlatPack::EmailFooterLinks::Component.new(
+          links: [
+            { label: "Privacy", href: "https://example.com/privacy" },
+            { label: "Terms", href: "https://example.com/terms" },
+            { label: "Unsubscribe", href: "https://example.com/unsubscribe" }
+          ],
+          align: :center
+        ) %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
+</section>

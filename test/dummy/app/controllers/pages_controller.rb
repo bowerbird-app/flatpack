@@ -451,6 +451,18 @@ class PagesController < ApplicationController
   def sidebar_section_title
   end
 
+  def email_button
+  end
+
+  def email_card
+  end
+
+  def email_footer_links
+  end
+
+  def email_template_example
+  end
+
   def cards
   end
 
@@ -1699,6 +1711,10 @@ class PagesController < ApplicationController
       {title: "Sidebar Collapsed", description: "Icon-only collapsed sidebar pattern", url: demo_sidebar_collapsed_path},
       {title: "Sidebar Complete", description: "Full-featured sidebar composition", url: demo_sidebar_complete_path},
       {title: "Sidebar Section Title", description: "Category labels that group sidebar navigation items", url: demo_sidebar_section_title_path},
+      {title: "Email Button", description: "Email-safe CTA button component", url: demo_email_button_path},
+      {title: "Email Card", description: "Email-safe table-based content wrapper", url: demo_email_card_path},
+      {title: "Email Footer Links", description: "Email-safe footer links list component", url: demo_email_footer_links_path},
+      {title: "Email Template Example", description: "Composed transactional email example built from FlatPack email components", url: demo_email_template_example_path},
       {title: "Modals", description: "Dialog overlays with focus trap", url: demo_modals_path},
       {title: "Popovers", description: "Click-triggered floating content", url: demo_popovers_path},
       {title: "Tooltips", description: "Hover/focus tooltips", url: demo_tooltips_path},

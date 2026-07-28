@@ -1,0 +1,140 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Email Card",
+  subtitle: "Email-safe wrapper for transactional content."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :email_card %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Basic Email Card", anchor_link: true, subtitle: "Default card container for transactional sections.") %>
+
+  <%= render FlatPack::EmailCard::Component.new(max_width: 600, padding: "24px") do %>
+    <h2 style="margin:0 0 8px 0;font-family:Arial,sans-serif;font-size:20px;line-height:1.3;color:var(--surface-content-color,#111827);">Welcome to FlatPack</h2>
+    <p style="margin:0;font-family:Arial,sans-serif;font-size:16px;line-height:1.5;color:var(--surface-muted-content-color,#374151);">Your account is ready. Review your preferences to get started.</p>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::EmailCard::Component.new(max_width: 600, padding: "24px") do %&gt;
+        &lt;h2 style="margin:0 0 8px 0;font-family:Arial,sans-serif;font-size:20px;line-height:1.3;color:var(--surface-content-color,#111827);"&gt;
+          Welcome to FlatPack
+        &lt;/h2&gt;
+        &lt;p style="margin:0;font-family:Arial,sans-serif;font-size:16px;line-height:1.5;color:var(--surface-muted-content-color,#374151);"&gt;
+          Your account is ready. Review your preferences to get started.
+        &lt;/p&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Size and Alignment", anchor_link: true, subtitle: "Control layout width and horizontal position for different email formats.") %>
+
+  <div class="space-y-4">
+    <%= render FlatPack::EmailCard::Component.new(max_width: 520, padding: "20px", align: :left) do %>
+      <p style="margin:0;font-family:Arial,sans-serif;font-size:15px;line-height:1.5;color:#374151;">Left aligned compact card.</p>
+    <% end %>
+
+    <%= render FlatPack::EmailCard::Component.new(max_width: 600, padding: "24px", align: :center) do %>
+      <p style="margin:0;font-family:Arial,sans-serif;font-size:15px;line-height:1.5;color:#374151;">Centered default card.</p>
+    <% end %>
+
+    <%= render FlatPack::EmailCard::Component.new(max_width: 680, padding: "28px", align: :right) do %>
+      <p style="margin:0;font-family:Arial,sans-serif;font-size:15px;line-height:1.5;color:#374151;">Right aligned wide card.</p>
+    <% end %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::EmailCard::Component.new(max_width: 520, padding: "20px", align: :left) do %&gt;
+        &lt;p style="margin:0;font-family:Arial,sans-serif;font-size:15px;line-height:1.5;color:#374151;"&gt;
+          Left aligned compact card.
+        &lt;/p&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Custom Colors", anchor_link: true, subtitle: "Adjust background and border tones while keeping email-safe inline styles.") %>
+
+  <%= render FlatPack::EmailCard::Component.new(
+    max_width: 600,
+    padding: "24px",
+    bg_color: "#f8fafc",
+    border_color: "#cbd5e1"
+  ) do %>
+    <h3 style="margin:0 0 8px 0;font-family:Arial,sans-serif;font-size:18px;line-height:1.3;color:var(--surface-content-color,#0f172a);">Monthly digest</h3>
+    <p style="margin:0;font-family:Arial,sans-serif;font-size:15px;line-height:1.5;color:var(--surface-muted-content-color,#334155);">You have 5 updates waiting in your dashboard.</p>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::EmailCard::Component.new(
+        max_width: 600,
+        padding: "24px",
+        bg_color: "#f8fafc",
+        border_color: "#cbd5e1"
+      ) do %&gt;
+        &lt;h3 style="margin:0 0 8px 0;font-family:Arial,sans-serif;font-size:18px;line-height:1.3;color:var(--surface-content-color,#0f172a);"&gt;
+          Monthly digest
+        &lt;/h3&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Composed Email Card", anchor_link: true, subtitle: "Combine EmailCard with EmailButton and EmailFooterLinks for complete messages.") %>
+
+  <%= render FlatPack::EmailCard::Component.new(max_width: 600, padding: "24px") do %>
+    <h1 style="margin:0 0 12px 0;font-family:Arial,sans-serif;font-size:24px;line-height:1.3;color:var(--surface-content-color,#111827);">Action required</h1>
+    <p style="margin:0 0 16px 0;font-family:Arial,sans-serif;font-size:16px;line-height:1.5;color:var(--surface-muted-content-color,#374151);">Please confirm your account details to continue securely.</p>
+
+    <%= render FlatPack::EmailButton::Component.new(
+      href: "https://example.com/confirm",
+      label: "Confirm details",
+      variant: :primary,
+      full_width: true
+    ) %>
+
+    <div style="height:12px;line-height:12px;font-size:12px;"></div>
+
+    <%= render FlatPack::EmailButton::Component.new(
+      href: "https://example.com/settings",
+      label: "Review settings",
+      variant: :secondary,
+      full_width: true
+    ) %>
+
+    <div style="height:20px;line-height:20px;font-size:20px;"></div>
+
+    <%= render FlatPack::EmailFooterLinks::Component.new(
+      links: [
+        {label: "Privacy", href: "https://example.com/privacy"},
+        {label: "Terms", href: "https://example.com/terms"},
+        {label: "Unsubscribe", href: "https://example.com/unsubscribe"}
+      ]
+    ) %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::EmailCard::Component.new(max_width: 600, padding: "24px") do %&gt;
+        &lt;h1 style="margin:0 0 12px 0;font-family:Arial,sans-serif;font-size:24px;line-height:1.3;color:var(--surface-content-color,#111827);"&gt;
+          Action required
+        &lt;/h1&gt;
+        &lt;p style="margin:0 0 16px 0;font-family:Arial,sans-serif;font-size:16px;line-height:1.5;color:var(--surface-muted-content-color,#374151);"&gt;
+          Please confirm your account details to continue securely.
+        &lt;/p&gt;
+
+        &lt;%= render FlatPack::EmailButton::Component.new(
+          href: "https://example.com/confirm",
+          label: "Confirm details",
+          variant: :primary,
+          full_width: true
+        ) %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
+</section>

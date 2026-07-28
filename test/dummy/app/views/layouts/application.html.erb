@@ -85,7 +85,7 @@
       storage_key: "flatpack-dummy-shell"
     ) do |layout| %>
       <% layout.sidebar do %>
-        <% cache ["dummy/sidebar-shell-v3", FlatPack::VERSION, sidebar_side, user_signed_in?] do %>
+        <% cache ["dummy/sidebar-shell-v4", FlatPack::VERSION, sidebar_side, user_signed_in?] do %>
           <%= render FlatPack::Sidebar::Component.new(side: sidebar_side) do |sidebar| %>
           <% sidebar.header do %>
             <%= render FlatPack::Sidebar::Header::Component.new(
@@ -358,6 +358,41 @@
                 <% end %>
               <% end %>
               
+              <%= render FlatPack::Sidebar::Divider::Component.new %>
+              <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Email") %>
+              <%= render FlatPack::Sidebar::Group::Component.new(
+                label: "Email Components",
+                icon: :envelope,
+                default_open: false
+              ) do |group| %>
+                <% group.items do %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "Button",
+                    href: demo_email_button_path,
+                    icon: :square,
+                    active: false
+                  ) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "Card",
+                    href: demo_email_card_path,
+                    icon: :box,
+                    active: false
+                  ) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "Footer Links",
+                    href: demo_email_footer_links_path,
+                    icon: :link,
+                    active: false
+                  ) %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
+                    label: "Template Example",
+                    href: demo_email_template_example_path,
+                    icon: :envelope,
+                    active: false
+                  ) %>
+                <% end %>
+              <% end %>
+
               <%= render FlatPack::Sidebar::Divider::Component.new %>
               <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Data Display") %>
               <%= render FlatPack::Sidebar::Item::Component.new(
