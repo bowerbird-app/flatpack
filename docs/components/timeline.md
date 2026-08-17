@@ -21,8 +21,7 @@ Use Timeline for activity logs, milestones, process history, and progress narrat
 |---|---|---|---|---|
 | `title` | String | `nil` | yes | Item title; blank values raise `ArgumentError`. |
 | `timestamp` | String | `nil` | no | Optional timestamp text rendered in `<time>`. |
-| `variant` | Symbol | `:default` | no | Marker style: `:default`, `:success`, `:warning`, `:danger`; invalid values raise `ArgumentError`. |
-| `status` | Symbol | `nil` | no | Alias for variant; when provided, overrides `variant`. |
+| `style` | Symbol | `:default` | no | Marker color: `:default`, `:success`, `:warning`, `:danger`; invalid values raise `ArgumentError`. |
 | `description` | String | `nil` | no | Plain text description rendered below header. |
 | `icon` | String | `nil` | no | Optional SVG string (`<svg...`) for marker icon; otherwise dot marker is used. |
 | `last` | Boolean | `false` | no | Hides vertical connector when true. |
@@ -32,8 +31,8 @@ Use Timeline for activity logs, milestones, process history, and progress narrat
 - `FlatPack::Timeline::Component` has no slot API; render `FlatPack::Timeline::Item` instances inside its block.
 - `FlatPack::Timeline::Item` accepts block content as rich body when `description` is not provided.
 
-## Variants
-- Item marker variants: `:default`, `:success`, `:warning`, `:danger`.
+## Styles
+- Item marker styles: `:default`, `:success`, `:warning`, `:danger`.
 - Item connector behavior: standard line or terminal item (`last: true`).
 
 ## Example
@@ -42,7 +41,7 @@ Use Timeline for activity logs, milestones, process history, and progress narrat
   <%= render FlatPack::Timeline::Item.new(
     title: "Deployed",
     timestamp: "5 minutes ago",
-    variant: :success,
+    style: :success,
     last: true
   ) %>
 <% end %>

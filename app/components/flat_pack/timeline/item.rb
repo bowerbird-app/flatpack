@@ -6,7 +6,7 @@ module FlatPack
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "bg-[var(--timeline-marker-default-background-color)]" "bg-[var(--timeline-marker-success-background-color)]" "bg-[var(--timeline-marker-warning-background-color)]" "bg-[var(--timeline-marker-danger-background-color)]"
-      VARIANTS = {
+      STYLES = {
         default: "bg-[var(--timeline-marker-default-background-color)]",
         success: "bg-[var(--timeline-marker-success-background-color)]",
         warning: "bg-[var(--timeline-marker-warning-background-color)]",
@@ -16,8 +16,7 @@ module FlatPack
       def initialize(
         title:,
         timestamp: nil,
-        variant: :default,
-        status: nil,
+        style: :default,
         description: nil,
         icon: nil,
         last: false,
@@ -26,13 +25,13 @@ module FlatPack
         super(**system_arguments)
         @title = title
         @timestamp = timestamp
-        @variant = (status || variant).to_sym
+        @style = style.to_sym
         @description = description
         @icon = icon
         @last = last
 
         validate_title!
-        validate_variant!
+        validate_style!
       end
 
       def call
@@ -122,7 +121,7 @@ module FlatPack
       end
 
       def icon_circle_classes
-        "flex items-center justify-center w-10 h-10 rounded-full #{VARIANTS.fetch(@variant)}"
+        "flex items-center justify-center w-10 h-10 rounded-full #{STYLES.fetch(@style)}"
       end
 
       def validate_title!
@@ -130,9 +129,9 @@ module FlatPack
         raise ArgumentError, "title is required"
       end
 
-      def validate_variant!
-        return if VARIANTS.key?(@variant)
-        raise ArgumentError, "Invalid variant: #{@variant}. Must be one of: #{VARIANTS.keys.join(", ")}"
+      def validate_style!
+        return if STYLES.key?(@style)
+        raise ArgumentError, "Invalid style: #{@style}. Must be one of: #{STYLES.keys.join(", ")}"
       end
     end
   end

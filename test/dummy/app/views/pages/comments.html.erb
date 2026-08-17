@@ -10,7 +10,7 @@
     <%= render FlatPack::Alert::Component.new(
       title: "Success",
       description: flash[:notice],
-      variant: :success,
+      style: :success,
       dismissible: true
     ) %>
   <% end %>
@@ -19,7 +19,7 @@
     <%= render FlatPack::Alert::Component.new(
       title: "Error",
       description: flash[:alert],
-      variant: :danger,
+      style: :danger,
       dismissible: true
     ) %>
   <% end %>
@@ -28,7 +28,7 @@
     <%= render FlatPack::Alert::Component.new(
       title: "Comments table is missing",
       description: "Run `cd test/dummy && bin/rails db:migrate` to enable persisted comments.",
-      variant: :warning
+      style: :warning
     ) %>
   <% end %>
 

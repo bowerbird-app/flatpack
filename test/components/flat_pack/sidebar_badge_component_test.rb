@@ -12,15 +12,15 @@ module FlatPack
           assert_text "12"
         end
 
-        def test_renders_muted_variant
-          render_inline(Component.new(value: "3", variant: :muted))
+        def test_renders_muted_style
+          render_inline(Component.new(value: "3", style: :muted))
 
           assert_includes page.native.to_html, "badge-default-background-color"
         end
 
-        def test_raises_for_invalid_variant
+        def test_raises_for_invalid_style
           assert_raises(ArgumentError) do
-            Component.new(value: "1", variant: :invalid)
+            Component.new(value: "1", style: :invalid)
           end
         end
       end

@@ -10,11 +10,11 @@ module FlatPack
         TREND_DIRECTIONS = {
           up: {
             icon: "↑",
-            class_name: "text-green-600"
+            class: "text-green-600"
           },
           down: {
             icon: "↓",
-            class_name: "text-red-600"
+            class: "text-red-600"
           }
         }.freeze
 
@@ -60,7 +60,7 @@ module FlatPack
         end
 
         def trend_direction_class
-          TREND_DIRECTIONS.fetch(@trend_direction).fetch(:class_name)
+          TREND_DIRECTIONS.fetch(@trend_direction).fetch(:class)
         end
 
         def validate_trend_direction!

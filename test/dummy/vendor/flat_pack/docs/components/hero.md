@@ -42,9 +42,9 @@ Both slots follow the no-`with_` prefix convention. Set via block:
 
 ```erb
 <%= render FlatPack::Hero::Component.new(variant: :centered, headline: "Hello") do |hero|
-  hero.badge { render FlatPack::Badge::Component.new(label: "New") }
+  hero.badge { render FlatPack::Badge::Component.new(text: "New") }
   hero.slot do
-    concat render(FlatPack::Button::Component.new(label: "Start", href: "#"))
+    concat render(FlatPack::Button::Component.new(text: "Start", href: "#"))
   end
 end %>
 ```
@@ -71,8 +71,8 @@ end %>
   description: "A Rails ViewComponent library with Tailwind CSS."
 ) do |hero|
   hero.slot do
-    concat render(FlatPack::Button::Component.new(label: "Get started", variant: :primary, href: "/docs"))
-    concat render(FlatPack::Button::Component.new(label: "Learn more", variant: :outline, href: "/about"))
+    concat render(FlatPack::Button::Component.new(text: "Get started", style: :primary, href: "/docs"))
+    concat render(FlatPack::Button::Component.new(text: "Learn more", style: :ghost, href: "/about"))
   end
 end %>
 ```
@@ -88,9 +88,9 @@ end %>
   image_url: "https://example.com/product.jpg",
   image_alt: "Product screenshot"
 ) do |hero|
-  hero.badge { render FlatPack::Badge::Component.new(label: "v2.0") }
+  hero.badge { render FlatPack::Badge::Component.new(text: "v2.0") }
   hero.slot do
-    concat render(FlatPack::Button::Component.new(label: "View docs", href: "/docs"))
+    concat render(FlatPack::Button::Component.new(text: "View docs", href: "/docs"))
   end
 end %>
 ```

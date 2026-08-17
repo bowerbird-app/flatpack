@@ -876,12 +876,11 @@
     },
     timeline_item: {
       label: "Timeline Item",
-      method_call: "render FlatPack::Timeline::Item.new(title: \"Build Started\", timestamp: \"10:00 AM\", variant: :default) { \"Running tests\" }",
+      method_call: "render FlatPack::Timeline::Item.new(title: \"Build Started\", timestamp: \"10:00 AM\", style: :default) { \"Running tests\" }",
       variables: [
         { variable: "title", accepts: "String (required)", example: "title: \"Build Started\"" },
         { variable: "timestamp", accepts: "String or nil", example: "timestamp: \"10:00 AM\"" },
-        { variable: "variant", accepts: ":default, :success, :warning, :danger", example: "variant: :success" },
-        { variable: "status", accepts: ":default, :success, :warning, :danger or nil", example: "status: :warning" },
+        { variable: "style", accepts: ":default, :success, :warning, :danger", example: "style: :success" },
         { variable: "description", accepts: "String or nil", example: "description: \"Deployment finished\"" },
         { variable: "icon", accepts: "SVG string or nil", example: "icon: '<svg ...></svg>'" },
         { variable: "last", accepts: "true, false", example: "last: true" },
