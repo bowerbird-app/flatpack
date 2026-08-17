@@ -20,7 +20,7 @@ Use List when grouped items need consistent spacing and optional active-item sel
 | `divider` | Boolean | `false` | no | Adds row separators using `divide-y`. |
 | `selectable` | Boolean | `false` | no | Enables active-item behavior via `flat-pack--list-selectable`. |
 | `orderable` | Boolean | `false` | no | Enables drag-and-drop reordering via `flat-pack--list-orderable`. |
-| `orderable_path` | String | `nil` | no | PATCH/PUT endpoint used to persist the new item position after drop. |
+| `orderable_url` | String | `nil` | no | PATCH/PUT endpoint used to persist the new item position after drop. |
 | `orderable_method` | String/Symbol | `:patch` | no | Request method sent by the orderable controller. |
 | `param_uuid_name` | String | `"id"` | no | Form field name used for the dragged item UUID in orderable requests. |
 | `param_target_position_name` | String | `"position"` | no | Form field name used for the destination position in orderable requests. |
@@ -46,7 +46,7 @@ None.
 - Ordered vs unordered (`ordered: true/false`).
 - Spacing variants via `spacing`.
 - Selectable behavior via `selectable: true`.
-- Orderable behavior via `orderable: true` and `orderable_path:`.
+- Orderable behavior via `orderable: true` and `orderable_url:`.
 
 ## Example
 ```erb
@@ -59,7 +59,7 @@ None.
 ```erb
 <%= render FlatPack::List::Component.new(
   orderable: true,
-  orderable_path: patch_path,
+  orderable_url: patch_path,
   param_uuid_name: "moving_recording_id",
   param_target_position_name: "target_position"
 ) do %>

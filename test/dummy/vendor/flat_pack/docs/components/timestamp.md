@@ -15,7 +15,7 @@ Use Timestamp in activity feeds, tables, and metadata rows where relative recenc
 | name | type | default | required | description |
 |---|---|---|---|---|
 | `timestamp` | Time, DateTime, Date, String, Numeric, nil | — | yes | Input value to parse and render. Numeric values are treated as Unix timestamps. |
-| `class_name` | String, nil | `nil` | no | Optional CSS class string applied to the rendered timestamp text (`<time>` or fallback `<span>`). |
+| `class` | String, nil | `nil` | no | Optional CSS class string applied to the rendered timestamp text (`<time>` or fallback `<span>`). |
 | `tooltip_placement` | Symbol | `:top` | no | Tooltip placement: `:top`, `:right`, `:bottom`, `:left`. |
 | `fallback_text` | String | `"-"` | no | Text rendered when `timestamp` is nil or cannot be parsed. |
 | `shorten_timestamp` | Boolean | `false` | no | Renders compact relative labels such as `a min ago`, `20 min ago`, and `5hr ago`. |
@@ -36,13 +36,13 @@ None.
 <%= render FlatPack::Timestamp::Component.new(
   timestamp: 15.minutes.from_now,
   tooltip_placement: :right,
-  class_name: "text-sm text-[var(--surface-muted-content-color)]"
+  class: "text-sm text-[var(--surface-muted-content-color)]"
 ) %>
 ```
 
 ```erb
-<%= render FlatPack::Timestamp::Component.new(timestamp: "2016-01-01T00:00:00Z", class_name: "text-green-600") %>
-<%= render FlatPack::Timestamp::Component.new(timestamp: "2016-01-01T00:00:00Z", class_name: "text-xs") %>
+<%= render FlatPack::Timestamp::Component.new(timestamp: "2016-01-01T00:00:00Z", class: "text-green-600") %>
+<%= render FlatPack::Timestamp::Component.new(timestamp: "2016-01-01T00:00:00Z", class: "text-xs") %>
 ```
 
 ```erb

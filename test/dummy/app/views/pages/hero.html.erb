@@ -11,7 +11,7 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Centered", anchor_link: true, subtitle: "Centered text and slots. Supports background colours and gradients.") %>
     <div class="mb-4 flex justify-end">
-      <%= render FlatPack::Button::Component.new(text: "View full-page demo", style: :secondary, url: pages_hero_centered_path, target: "_blank") %>
+      <%= render FlatPack::Button::Component.new(text: "View full-page demo", style: :secondary, href: pages_hero_centered_path, target: "_blank") %>
     </div>
     <%= render FlatPack::Hero::Component.new(
       variant: :centered,
@@ -22,8 +22,8 @@
     ) do |hero|
       hero.badge { render FlatPack::Badge::Component.new(text: "New", style: :success) }
       hero.slot do
-        concat render(FlatPack::Button::Component.new(text: "Get started", style: :primary, url: "#"))
-        concat render(FlatPack::Button::Component.new(text: "Learn more", style: :secondary, url: "#"))
+        concat render(FlatPack::Button::Component.new(text: "Get started", style: :primary, href: "#"))
+        concat render(FlatPack::Button::Component.new(text: "Learn more", style: :secondary, href: "#"))
       end
     end %>
     <%= render FlatPack::CodeBlock::Component.new(
@@ -39,8 +39,8 @@
         ) do |hero|
           hero.badge { render FlatPack::Badge::Component.new(text: "New", style: :success) }
           hero.slot do
-            concat render(FlatPack::Button::Component.new(text: "Get started", style: :primary, url: "#"))
-            concat render(FlatPack::Button::Component.new(text: "Learn more", style: :secondary, url: "#"))
+            concat render(FlatPack::Button::Component.new(text: "Get started", style: :primary, href: "#"))
+            concat render(FlatPack::Button::Component.new(text: "Learn more", style: :secondary, href: "#"))
           end
         end %&gt;
       CODE
@@ -51,7 +51,7 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Centered Image", anchor_link: true, subtitle: "Centered text over a full-bleed background image with a dark overlay.") %>
     <div class="mb-4 flex justify-end">
-      <%= render FlatPack::Button::Component.new(text: "View full-page demo", style: :secondary, url: pages_hero_centered_image_path, target: "_blank") %>
+      <%= render FlatPack::Button::Component.new(text: "View full-page demo", style: :secondary, href: pages_hero_centered_image_path, target: "_blank") %>
     </div>
     <%= render FlatPack::Hero::Component.new(
       variant: :centered_image,
@@ -61,8 +61,8 @@
       background_image_url: "/images/hero-stool.jpg"
     ) do |hero|
       hero.slot do
-        concat render(FlatPack::Button::Component.new(text: "Start for free", style: :primary, url: "#"))
-        concat render(FlatPack::Button::Component.new(text: "Watch demo", style: :secondary, url: "#"))
+        concat render(FlatPack::Button::Component.new(text: "Start for free", style: :primary, href: "#"))
+        concat render(FlatPack::Button::Component.new(text: "Watch demo", style: :secondary, href: "#"))
       end
     end %>
     <%= render FlatPack::CodeBlock::Component.new(
@@ -77,8 +77,8 @@
           background_image_url: "https://example.com/hero-bg.jpg"
         ) do |hero|
           hero.slot do
-            concat render(FlatPack::Button::Component.new(text: "Start for free", style: :primary, url: "#"))
-            concat render(FlatPack::Button::Component.new(text: "Watch demo", style: :secondary, url: "#"))
+            concat render(FlatPack::Button::Component.new(text: "Start for free", style: :primary, href: "#"))
+            concat render(FlatPack::Button::Component.new(text: "Watch demo", style: :secondary, href: "#"))
           end
         end %&gt;
       CODE
@@ -89,7 +89,7 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Screenshot", anchor_link: true, subtitle: "Centered text above a large constrained app screenshot.") %>
     <div class="mb-4 flex justify-end">
-      <%= render FlatPack::Button::Component.new(text: "View full-page demo", style: :secondary, url: pages_hero_screenshot_path, target: "_blank") %>
+      <%= render FlatPack::Button::Component.new(text: "View full-page demo", style: :secondary, href: pages_hero_screenshot_path, target: "_blank") %>
     </div>
     <%= render FlatPack::Hero::Component.new(
       variant: :screenshot,
@@ -100,7 +100,7 @@
       image_alt: "DIY flat-pack stool"
     ) do |hero|
       hero.slot do
-        concat render(FlatPack::Button::Component.new(text: "Try it free", style: :primary, url: "#"))
+        concat render(FlatPack::Button::Component.new(text: "Try it free", style: :primary, href: "#"))
       end
     end %>
     <%= render FlatPack::CodeBlock::Component.new(
@@ -116,7 +116,7 @@
           image_alt: "Application dashboard screenshot"
         ) do |hero|
           hero.slot do
-            concat render(FlatPack::Button::Component.new(text: "Try it free", style: :primary, url: "#"))
+            concat render(FlatPack::Button::Component.new(text: "Try it free", style: :primary, href: "#"))
           end
         end %&gt;
       CODE
@@ -127,7 +127,7 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Split Image", anchor_link: true, subtitle: "Two-column grid: text left, image right. Stacks on mobile.") %>
     <div class="mb-4 flex justify-end">
-      <%= render FlatPack::Button::Component.new(text: "View full-page demo", style: :secondary, url: pages_hero_split_image_path, target: "_blank") %>
+      <%= render FlatPack::Button::Component.new(text: "View full-page demo", style: :secondary, href: pages_hero_split_image_path, target: "_blank") %>
     </div>
     <%= render FlatPack::Hero::Component.new(
       variant: :split_image,
@@ -140,8 +140,8 @@
     ) do |hero|
       hero.badge { render FlatPack::Badge::Component.new(text: "v2.0") }
       hero.slot do
-        concat render(FlatPack::Button::Component.new(text: "See the docs", style: :primary, url: "#"))
-        concat render(FlatPack::Button::Component.new(text: "View on GitHub", style: :secondary, url: "#"))
+        concat render(FlatPack::Button::Component.new(text: "See the docs", style: :primary, href: "#"))
+        concat render(FlatPack::Button::Component.new(text: "View on GitHub", style: :secondary, href: "#"))
       end
     end %>
     <%= render FlatPack::CodeBlock::Component.new(
@@ -159,8 +159,8 @@
         ) do |hero|
           hero.badge { render FlatPack::Badge::Component.new(text: "v2.0") }
           hero.slot do
-            concat render(FlatPack::Button::Component.new(text: "See the docs", style: :primary, url: "#"))
-            concat render(FlatPack::Button::Component.new(text: "View on GitHub", style: :secondary, url: "#"))
+            concat render(FlatPack::Button::Component.new(text: "See the docs", style: :primary, href: "#"))
+            concat render(FlatPack::Button::Component.new(text: "View on GitHub", style: :secondary, href: "#"))
           end
         end %&gt;
       CODE
@@ -171,7 +171,7 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Angled Image", anchor_link: true, subtitle: "Text left, image right with a diagonal polygon clip. Mobile shows a stacked image.") %>
     <div class="mb-4 flex justify-end">
-      <%= render FlatPack::Button::Component.new(text: "View full-page demo", style: :secondary, url: pages_hero_angled_image_path, target: "_blank") %>
+      <%= render FlatPack::Button::Component.new(text: "View full-page demo", style: :secondary, href: pages_hero_angled_image_path, target: "_blank") %>
     </div>
     <%= render FlatPack::Hero::Component.new(
       variant: :angled_image,
@@ -182,7 +182,7 @@
       image_alt: "DIY flat-pack stool"
     ) do |hero|
       hero.slot do
-        concat render(FlatPack::Button::Component.new(text: "Explore", style: :primary, url: "#"))
+        concat render(FlatPack::Button::Component.new(text: "Explore", style: :primary, href: "#"))
       end
     end %>
     <%= render FlatPack::CodeBlock::Component.new(
@@ -198,7 +198,7 @@
           image_alt: "Angled hero image"
         ) do |hero|
           hero.slot do
-            concat render(FlatPack::Button::Component.new(text: "Explore", style: :primary, url: "#"))
+            concat render(FlatPack::Button::Component.new(text: "Explore", style: :primary, href: "#"))
           end
         end %&gt;
       CODE
@@ -209,7 +209,7 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Image Tiles", anchor_link: true, subtitle: "Text left, 2x2 image tile grid right. Stacks on mobile.") %>
     <div class="mb-4 flex justify-end">
-      <%= render FlatPack::Button::Component.new(text: "View full-page demo", style: :secondary, url: pages_hero_image_tiles_path, target: "_blank") %>
+      <%= render FlatPack::Button::Component.new(text: "View full-page demo", style: :secondary, href: pages_hero_image_tiles_path, target: "_blank") %>
     </div>
     <%= render FlatPack::Hero::Component.new(
       variant: :image_tiles,
@@ -225,8 +225,8 @@
       ]
     ) do |hero|
       hero.slot do
-        concat render(FlatPack::Button::Component.new(text: "Get started", style: :primary, url: "#"))
-        concat render(FlatPack::Button::Component.new(text: "Learn more", style: :secondary, url: "#"))
+        concat render(FlatPack::Button::Component.new(text: "Get started", style: :primary, href: "#"))
+        concat render(FlatPack::Button::Component.new(text: "Learn more", style: :secondary, href: "#"))
       end
     end %>
     <%= render FlatPack::CodeBlock::Component.new(
@@ -247,8 +247,8 @@
           ]
         ) do |hero|
           hero.slot do
-            concat render(FlatPack::Button::Component.new(text: "Get started", style: :primary, url: "#"))
-            concat render(FlatPack::Button::Component.new(text: "Learn more", style: :secondary, url: "#"))
+            concat render(FlatPack::Button::Component.new(text: "Get started", style: :primary, href: "#"))
+            concat render(FlatPack::Button::Component.new(text: "Learn more", style: :secondary, href: "#"))
           end
         end %&gt;
       CODE
@@ -259,7 +259,7 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Offset Image", anchor_link: true, subtitle: "Text left, image partly offset outside the grid via negative margin on large screens.") %>
     <div class="mb-4 flex justify-end">
-      <%= render FlatPack::Button::Component.new(text: "View full-page demo", style: :secondary, url: pages_hero_offset_image_path, target: "_blank") %>
+      <%= render FlatPack::Button::Component.new(text: "View full-page demo", style: :secondary, href: pages_hero_offset_image_path, target: "_blank") %>
     </div>
     <%= render FlatPack::Hero::Component.new(
       variant: :offset_image,
@@ -271,7 +271,7 @@
       background: "linear-gradient(135deg, #fefce8 0%, #fef9c3 50%, #fef08a 100%)"
     ) do |hero|
       hero.slot do
-        concat render(FlatPack::Button::Component.new(text: "Start now", style: :primary, url: "#"))
+        concat render(FlatPack::Button::Component.new(text: "Start now", style: :primary, href: "#"))
       end
     end %>
     <%= render FlatPack::CodeBlock::Component.new(
@@ -287,7 +287,7 @@
           image_alt: "Offset hero image"
         ) do |hero|
           hero.slot do
-            concat render(FlatPack::Button::Component.new(text: "Start now", style: :primary, url: "#"))
+            concat render(FlatPack::Button::Component.new(text: "Start now", style: :primary, href: "#"))
           end
         end %&gt;
       CODE

@@ -24,9 +24,9 @@
           <div class="flex items-center justify-between">
             <div class="text-xs text-[var(--surface-muted-content-color)]">Updated 2h ago</div>
             <div class="flex gap-2">
-              <%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, style: :ghost, size: :sm, url: "#grid-card-notifications") %>
-              <%= render FlatPack::Button::Component.new(icon: "calendar", icon_only: true, style: :ghost, size: :sm, url: "#grid-card-schedule") %>
-              <%= render FlatPack::Button::Component.new(icon: "dots", icon_only: true, style: :ghost, size: :sm, url: "#grid-card-menu") %>
+              <%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, style: :ghost, size: :sm, href: "#grid-card-notifications") %>
+              <%= render FlatPack::Button::Component.new(icon: "calendar", icon_only: true, style: :ghost, size: :sm, href: "#grid-card-schedule") %>
+              <%= render FlatPack::Button::Component.new(icon: "dots", icon_only: true, style: :ghost, size: :sm, href: "#grid-card-menu") %>
             </div>
           </div>
         <% end %>
@@ -46,9 +46,9 @@
             <div class="flex items-center justify-between">
               <div class="text-xs text-[var(--surface-muted-content-color)]">Updated 2h ago</div>
               <div class="flex gap-2">
-                &lt;%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, style: :ghost, size: :sm, url: "#grid-card-notifications") %&gt;
-                &lt;%= render FlatPack::Button::Component.new(icon: "calendar", icon_only: true, style: :ghost, size: :sm, url: "#grid-card-schedule") %&gt;
-                &lt;%= render FlatPack::Button::Component.new(icon: "dots", icon_only: true, style: :ghost, size: :sm, url: "#grid-card-menu") %&gt;
+                &lt;%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, style: :ghost, size: :sm, href: "#grid-card-notifications") %&gt;
+                &lt;%= render FlatPack::Button::Component.new(icon: "calendar", icon_only: true, style: :ghost, size: :sm, href: "#grid-card-schedule") %&gt;
+                &lt;%= render FlatPack::Button::Component.new(icon: "dots", icon_only: true, style: :ghost, size: :sm, href: "#grid-card-menu") %&gt;
               </div>
             </div>
           &lt;% end %&gt;
@@ -109,7 +109,7 @@
                   icon_only: true,
                   style: :secondary,
                   size: :sm,
-                  url: "#edit-#{image[:name].parameterize}",
+                  href: "#edit-#{image[:name].parameterize}",
                   aria: {label: "Edit #{image[:name]}"},
                   class: "backdrop-blur-sm shadow-sm"
                 ) %>
@@ -118,7 +118,7 @@
                   icon_only: true,
                   style: :secondary,
                   size: :sm,
-                  url: "#delete-#{image[:name].parameterize}",
+                  href: "#delete-#{image[:name].parameterize}",
                   aria: {label: "Delete #{image[:name]}"},
                   class: "backdrop-blur-sm shadow-sm"
                 ) %>
@@ -170,7 +170,7 @@
                       icon_only: true,
                       style: :secondary,
                       size: :sm,
-                      url: &quot;#edit-#{image[:name].parameterize}&quot;,
+                      href: &quot;#edit-#{image[:name].parameterize}&quot;,
                       aria: {label: &quot;Edit #{image[:name]}&quot;},
                       class: &quot;backdrop-blur-sm shadow-sm&quot;
                     ) %&gt;
@@ -179,7 +179,7 @@
                       icon_only: true,
                       style: :secondary,
                       size: :sm,
-                      url: &quot;#delete-#{image[:name].parameterize}&quot;,
+                      href: &quot;#delete-#{image[:name].parameterize}&quot;,
                       aria: {label: &quot;Delete #{image[:name]}&quot;},
                       class: &quot;backdrop-blur-sm shadow-sm&quot;
                     ) %&gt;

@@ -105,7 +105,7 @@ test('drop reorders a list item and sends its UUID plus position', async () => {
   })
 
   controller.element = element
-  controller.orderablePathValue = '/demo/list/reorder'
+  controller.orderableUrlValue = '/demo/list/reorder'
   controller.orderableMethodValue = 'PATCH'
   controller.paramUuidNameValue = 'moving_recording_id'
   controller.paramTargetPositionNameValue = 'target_position'
@@ -182,7 +182,7 @@ test('custom param names are rendered into the request body', async () => {
   })
 
   controller.element = element
-  controller.orderablePathValue = '/demo/list/reorder'
+  controller.orderableUrlValue = '/demo/list/reorder'
   controller.orderableMethodValue = 'PATCH'
   controller.paramUuidNameValue = 'moving_recording_id'
   controller.paramTargetPositionNameValue = 'target_position'

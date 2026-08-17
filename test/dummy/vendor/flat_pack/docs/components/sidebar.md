@@ -25,7 +25,7 @@ Primary component (`FlatPack::Sidebar::Component`):
 
 | name | type | default | required | description |
 |------|------|---------|----------|-------------|
-| `label` | String | — | Yes | Menu item label text. |
+| `text` | String | — | Yes | Menu item text. |
 | `href` | String | — | Yes | Link destination URL. |
 | `icon` | Symbol or nil | `nil` | No | Heroicons v2 icon name. |
 | `active` | Boolean | `false` | No | Marks the item as the current page (`aria-current="page"`). |
@@ -61,7 +61,7 @@ Primary component (`FlatPack::Sidebar::Component`):
   <% sidebar.items do %>
     <nav class="py-4 space-y-1">
       <%= render FlatPack::Sidebar::Item::Component.new(
-        label: "Dashboard",
+        text: "Dashboard",
         href: "/dashboard",
         icon: :home,
         active: true

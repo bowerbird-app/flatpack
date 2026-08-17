@@ -6,13 +6,13 @@ module FlatPack
   module EmailButton
     class ComponentTest < ViewComponent::TestCase
       def test_renders_table_based_button_markup
-        render_inline(Component.new(href: "https://example.com", label: "Confirm"))
+        render_inline(Component.new(href: "https://example.com", text: "Confirm"))
 
         assert_selector "table[role='presentation'] tr td a[href='https://example.com']", text: "Confirm"
       end
 
       def test_renders_primary_variant_styles
-        render_inline(Component.new(href: "https://example.com", label: "Primary", variant: :primary))
+        render_inline(Component.new(href: "https://example.com", text: "Primary", style: :primary))
 
         html = page.native.to_html
         assert_includes html, "background-color:#2563eb"
@@ -23,7 +23,7 @@ module FlatPack
       end
 
       def test_renders_secondary_variant_styles
-        render_inline(Component.new(href: "https://example.com", label: "Secondary", variant: :secondary))
+        render_inline(Component.new(href: "https://example.com", text: "Secondary", style: :secondary))
 
         html = page.native.to_html
         assert_includes html, "background-color:#f3f4f6"
@@ -34,14 +34,14 @@ module FlatPack
       end
 
       def test_renders_full_width_button
-        render_inline(Component.new(href: "https://example.com", label: "Full Width", full_width: true))
+        render_inline(Component.new(href: "https://example.com", text: "Full Width", full_width: true))
 
         assert_selector "table[width='100%']"
         assert_includes page.native.to_html, "display:block"
       end
 
       def test_renders_fit_content_button
-        render_inline(Component.new(href: "https://example.com", label: "Fit Content", fit_content: true))
+        render_inline(Component.new(href: "https://example.com", text: "Fit Content", fit_content: true))
 
         html = page.native.to_html
         assert_includes html, "width:auto;"
@@ -49,7 +49,7 @@ module FlatPack
       end
 
       def test_renders_alignment_styles
-        render_inline(Component.new(href: "https://example.com", label: "Right aligned", align: :right, full_width: true))
+        render_inline(Component.new(href: "https://example.com", text: "Right aligned", align: :right, full_width: true))
 
         html = page.native.to_html
         assert_includes html, 'td align="right"'
@@ -58,7 +58,7 @@ module FlatPack
 
       def test_raises_when_full_width_and_fit_content_are_both_enabled
         error = assert_raises(ArgumentError) do
-          Component.new(href: "https://example.com", label: "Invalid", full_width: true, fit_content: true)
+          Component.new(href: "https://example.com", text: "Invalid", full_width: true, fit_content: true)
         end
 
         assert_equal "full_width and fit_content cannot both be true", error.message

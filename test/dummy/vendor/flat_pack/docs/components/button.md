@@ -16,7 +16,7 @@ Use this for primary and secondary actions in forms, toolbars, dialogs, and list
 | `text` | String, nil | `nil` | no | Visible label text. Required unless `icon` is provided. |
 | `style` | Symbol | `:default` | no | One of `:default`, `:primary`, `:secondary`, `:ghost`, `:success`, `:warning`, `:danger`. |
 | `size` | Symbol | `:md` | no | One of `:sm`, `:md`, `:lg`. |
-| `url` | String, nil | `nil` | no | When present, renders an `<a>` via `link_to`; otherwise a `<button>`. |
+| `href` | String, nil | `nil` | no | When present, renders an `<a>` via `link_to`; otherwise a `<button>`. |
 | `method` | Symbol, nil | `nil` | no | Link method passed to `link_to` (for non-GET link actions). |
 | `target` | String, nil | `nil` | no | Link target, for example `"_blank"`. |
 | `icon` | String, nil | `nil` | no | Heroicons v2 name rendered before text (or alone with `icon_only`), e.g. `"magnifying-glass"`, `"plus"`, `"trash"`. Legacy shorthand aliases are supported for backward compatibility. |
@@ -31,7 +31,7 @@ No slots.
 ## Variants
 - Styles: `:default`, `:primary`, `:secondary`, `:ghost`, `:success`, `:warning`, `:danger`
 - Sizes: `:sm`, `:md`, `:lg`
-- Render modes: button mode (`type`) and link mode (`url`, optional `method`, optional `target`)
+- Render modes: button mode (`type`) and link mode (`href`, optional `method`, optional `target`)
 - States: loading, icon + text, icon-only
 
 ## Pill Group Variant
@@ -58,7 +58,7 @@ Use `FlatPack::Button::Pill::Component` when you need the rounded pills styling 
   text: "Delete",
   style: :danger,
   size: :sm,
-  url: post_path(@post),
+  href: post_path(@post),
   method: :delete,
   data: { turbo_confirm: "Delete this post?" }
 ) %>

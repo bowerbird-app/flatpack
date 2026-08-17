@@ -17,8 +17,8 @@ module FlatPack
         items: [],
         title: "Select Assets",
         subtitle: nil,
-        confirm_text: "Use Selected",
-        close_text: "Close",
+        confirm_label: "Use Selected",
+        close_label: "Close",
         size: :lg,
         selection_mode: :multiple,
         accepted_kinds: ACCEPTED_KINDS,
@@ -31,7 +31,7 @@ module FlatPack
         output_mode: :event,
         output_target: nil,
         context: {},
-        empty_state_text: "No assets found",
+        empty_text: "No assets found",
         results_layout: :list,
         items_height: "max-content",
         modal: false,
@@ -45,8 +45,8 @@ module FlatPack
         @id = id
         @title = title
         @subtitle = subtitle
-        @confirm_text = confirm_text
-        @close_text = close_text
+        @confirm_label = confirm_label
+        @close_label = close_label
         @size = size
         @selection_mode = selection_mode.to_sym
         @accepted_kinds = normalize_kinds(accepted_kinds)
@@ -59,7 +59,7 @@ module FlatPack
         @output_mode = output_mode.to_sym
         @output_target = output_target
         @context = context.is_a?(Hash) ? context : {}
-        @empty_state_text = empty_state_text
+        @empty_text = empty_text
         @results_layout = results_layout.to_sym
         @items_height = normalize_items_height(items_height)
         @modal = !!modal
@@ -136,7 +136,7 @@ module FlatPack
             content_tag(:div, **items_region_attributes) do
               safe_join([
                 content_tag(:div, "", class: "space-y-2", data: {flat_pack__picker_target: "results"}),
-                content_tag(:div, @empty_state_text, class: "hidden h-full min-h-32 items-center justify-center rounded-md border border-dashed border-(--surface-border-color) p-4 text-center text-sm text-(--surface-muted-content-color)", data: {flat_pack__picker_target: "emptyState"})
+                content_tag(:div, @empty_text, class: "hidden h-full min-h-32 items-center justify-center rounded-md border border-dashed border-(--surface-border-color) p-4 text-center text-sm text-(--surface-muted-content-color)", data: {flat_pack__picker_target: "emptyState"})
               ])
             end,
             render_actions
@@ -174,7 +174,7 @@ module FlatPack
           safe_join([
             render(
               FlatPack::Button::Component.new(
-                text: @close_text,
+                text: @close_label,
                 style: :secondary,
                 type: "button",
                 data: {
@@ -184,7 +184,7 @@ module FlatPack
             ),
             render(
               FlatPack::Button::Component.new(
-                text: @confirm_text,
+                text: @confirm_label,
                 style: :primary,
                 type: @form.present? ? "submit" : "button",
                 data: {
@@ -216,7 +216,7 @@ module FlatPack
             flat_pack__picker_output_mode_value: @output_mode,
             flat_pack__picker_output_target_value: @output_target,
             flat_pack__picker_context_value: @context.to_json,
-            flat_pack__picker_empty_state_text_value: @empty_state_text,
+            flat_pack__picker_empty_text_value: @empty_text,
             flat_pack__picker_results_layout_value: @results_layout,
             flat_pack__picker_modal_value: @modal,
             flat_pack__picker_auto_confirm_value: @auto_confirm,

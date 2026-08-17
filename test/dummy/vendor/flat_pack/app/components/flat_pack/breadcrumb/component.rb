@@ -26,9 +26,9 @@ module FlatPack
         back_text: "Back",
         back_icon: "chevron-left",
         back_href: nil,
-        back_fallback_url: "/",
+        back_fallback_href: "/",
         show_home: false,
-        home_url: "/",
+        home_href: "/",
         home_text: "Home",
         home_icon: "home",
         max_items: nil,
@@ -43,9 +43,9 @@ module FlatPack
         @back_text = back_text
         @back_icon = back_icon
         @back_href_override = back_href
-        @back_fallback_url = back_fallback_url
+        @back_fallback_href = back_fallback_href
         @show_home = show_home
-        @home_url = home_url
+        @home_href = home_href
         @home_text = home_text
         @home_icon = home_icon
         @max_items = max_items
@@ -112,7 +112,7 @@ module FlatPack
         if @show_home
           items_list << build_internal_item(
             text: @home_text,
-            href: @home_url,
+            href: @home_href,
             icon: @home_icon
           )
         end
@@ -121,7 +121,7 @@ module FlatPack
       end
 
       def resolved_back_href(breadcrumb_items)
-        @back_href_override || previous_breadcrumb_href(breadcrumb_items) || @back_fallback_url
+        @back_href_override || previous_breadcrumb_href(breadcrumb_items) || @back_fallback_href
       end
 
       def previous_breadcrumb_href(breadcrumb_items)

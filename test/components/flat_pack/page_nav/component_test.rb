@@ -31,7 +31,7 @@ module FlatPack
       end
 
       def test_renders_anchor_action_link_when_anchor_url_is_provided
-        render_inline(Component.new(anchor_url: "/demo"))
+        render_inline(Component.new(anchor_href: "/demo"))
 
         assert_selector "a[href='/demo'][aria-label='Close']"
         assert_selector "a[href='/demo'] svg[data-flat-pack--icon-name-value='x-mark']"
@@ -45,7 +45,7 @@ module FlatPack
       end
 
       def test_wraps_anchor_action_with_tooltip_from_deprecated_label
-        render_inline(Component.new(anchor_url: "/demo", anchor_label: "Dismiss"))
+        render_inline(Component.new(anchor_href: "/demo", anchor_label: "Dismiss"))
 
         assert_selector "[data-controller='flat-pack--tooltip'] a[href='/demo'][aria-label='Dismiss']"
         assert_selector "[role='tooltip']", text: "Dismiss"
@@ -67,7 +67,7 @@ module FlatPack
       end
 
       def test_uses_new_anchor_tooltip_over_deprecated_label
-        render_inline(Component.new(anchor_url: "/demo", anchor_label: "Old dismiss", anchor_tooltip: "New dismiss"))
+        render_inline(Component.new(anchor_href: "/demo", anchor_label: "Old dismiss", anchor_tooltip: "New dismiss"))
 
         assert_selector "a[href='/demo'][aria-label='New dismiss']"
         assert_selector "[role='tooltip']", text: "New dismiss"
@@ -75,7 +75,7 @@ module FlatPack
       end
 
       def test_uses_deprecated_anchor_label_when_new_tooltip_is_blank
-        render_inline(Component.new(anchor_url: "/demo", anchor_label: "Dismiss", anchor_tooltip: ""))
+        render_inline(Component.new(anchor_href: "/demo", anchor_label: "Dismiss", anchor_tooltip: ""))
 
         assert_selector "a[href='/demo'][aria-label='Dismiss']"
         assert_selector "[role='tooltip']", text: "Dismiss"
@@ -83,7 +83,7 @@ module FlatPack
 
       def test_renders_secondary_anchor_action_with_tooltip
         render_inline(Component.new(
-          secondary_anchor_url: "/secondary",
+          secondary_anchor_href: "/secondary",
           secondary_anchor_tooltip: "Previous item"
         ))
 
@@ -92,7 +92,7 @@ module FlatPack
       end
 
       def test_renders_secondary_anchor_with_default_accessible_label_without_tooltip
-        render_inline(Component.new(secondary_anchor_url: "/secondary"))
+        render_inline(Component.new(secondary_anchor_href: "/secondary"))
 
         assert_selector "a[href='/secondary'][aria-label='Previous page']"
         refute_selector "[data-controller='flat-pack--tooltip'] a[href='/secondary']"
@@ -100,9 +100,9 @@ module FlatPack
 
       def test_renders_secondary_anchor_to_left_of_anchor_action
         render_inline(Component.new(
-          secondary_anchor_url: "/secondary",
+          secondary_anchor_href: "/secondary",
           secondary_anchor_tooltip: "Previous item",
-          anchor_url: "/primary",
+          anchor_href: "/primary",
           anchor_tooltip: "Close item"
         ))
 
@@ -125,8 +125,8 @@ module FlatPack
 
       def test_renders_right_slot_in_separate_right_aligned_wrapper
         render_inline(Component.new(
-          secondary_anchor_url: "/secondary",
-          anchor_url: "/primary"
+          secondary_anchor_href: "/secondary",
+          anchor_href: "/primary"
         )) do |component|
           component.right_slot do
             '<a href="/demo/forms" aria-label="Add"><span data-flat-pack--icon-name-value="plus"></span></a>'.html_safe
@@ -142,7 +142,7 @@ module FlatPack
 
       def test_renders_custom_icons_and_labels
         render_inline(Component.new(
-          anchor_url: "/demo",
+          anchor_href: "/demo",
           anchor_icon: "trash",
           anchor_tooltip: "Dismiss"
         )) do |component|

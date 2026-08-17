@@ -20,9 +20,9 @@
 
         <% sidebar.items do %>
           <nav class="py-4 space-y-1">
-            <%= render FlatPack::Sidebar::Item::Component.new(label: "Overview", href: "#", icon: :home, active: true) %>
-            <%= render FlatPack::Sidebar::Item::Component.new(label: "Projects", href: "#", icon: :dashboard) %>
-            <%= render FlatPack::Sidebar::Item::Component.new(label: "Reports", href: "#", icon: :table) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(text: "Overview", href: "#", icon: :home, active: true) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(text: "Projects", href: "#", icon: :dashboard) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(text: "Reports", href: "#", icon: :table) %>
           </nav>
         <% end %>
 
@@ -47,9 +47,9 @@
 
         <% sidebar.items do %>
           <nav class="py-4 space-y-1">
-            <%= render FlatPack::Sidebar::Item::Component.new(label: "Deployments", href: "#", icon: :box, active: true) %>
-            <%= render FlatPack::Sidebar::Item::Component.new(label: "Incidents", href: "#", icon: :alert) %>
-            <%= render FlatPack::Sidebar::Item::Component.new(label: "Audit Logs", href: "#", icon: :file) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(text: "Deployments", href: "#", icon: :box, active: true) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(text: "Incidents", href: "#", icon: :alert) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(text: "Audit Logs", href: "#", icon: :file) %>
           </nav>
         <% end %>
 
@@ -78,9 +78,9 @@
     
             &lt;% sidebar.items do %&gt;
               &lt;nav class=&quot;py-4 space-y-1&quot;&gt;
-                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Overview&quot;, href: &quot;#&quot;, icon: :home, active: true) %&gt;
-                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Projects&quot;, href: &quot;#&quot;, icon: :dashboard) %&gt;
-                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Reports&quot;, href: &quot;#&quot;, icon: :table) %&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Overview&quot;, href: &quot;#&quot;, icon: :home, active: true) %&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Projects&quot;, href: &quot;#&quot;, icon: :dashboard) %&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Reports&quot;, href: &quot;#&quot;, icon: :table) %&gt;
               &lt;/nav&gt;
             &lt;% end %&gt;
     
@@ -105,9 +105,9 @@
     
             &lt;% sidebar.items do %&gt;
               &lt;nav class=&quot;py-4 space-y-1&quot;&gt;
-                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Deployments&quot;, href: &quot;#&quot;, icon: :box, active: true) %&gt;
-                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Incidents&quot;, href: &quot;#&quot;, icon: :alert) %&gt;
-                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Audit Logs&quot;, href: &quot;#&quot;, icon: :file) %&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Deployments&quot;, href: &quot;#&quot;, icon: :box, active: true) %&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Incidents&quot;, href: &quot;#&quot;, icon: :alert) %&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Audit Logs&quot;, href: &quot;#&quot;, icon: :file) %&gt;
               &lt;/nav&gt;
             &lt;% end %&gt;
     

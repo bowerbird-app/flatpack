@@ -12,14 +12,14 @@
     <% card.body(class: "space-y-4") do %>
       <%= render FlatPack::EmailButton::Component.new(
         href: "https://example.com/confirm",
-        label: "Confirm details",
-        variant: :primary
+        text: "Confirm details",
+        style: :primary
       ) %>
 
       <%= render FlatPack::EmailButton::Component.new(
         href: "https://example.com/settings",
-        label: "Review settings",
-        variant: :secondary
+        text: "Review settings",
+        style: :secondary
       ) %>
     <% end %>
   <% end %>
@@ -27,24 +27,24 @@
   <%= render FlatPack::CodeBlock::Component.new(
     snippets: [
       {
-        label: "Primary",
+        text: "Primary",
         language: "erb",
         code: CGI.unescapeHTML(<<~'CODE')
           &lt;%= render FlatPack::EmailButton::Component.new(
             href: "https://example.com/confirm",
-            label: "Confirm details",
-            variant: :primary
+            text: "Confirm details",
+            style: :primary
           ) %&gt;
         CODE
       },
       {
-        label: "Secondary",
+        text: "Secondary",
         language: "erb",
         code: CGI.unescapeHTML(<<~'CODE')
           &lt;%= render FlatPack::EmailButton::Component.new(
             href: "https://example.com/settings",
-            label: "Review settings",
-            variant: :secondary
+            text: "Review settings",
+            style: :secondary
           ) %&gt;
         CODE
       }
@@ -59,21 +59,21 @@
     <% card.body(class: "space-y-4") do %>
       <%= render FlatPack::EmailButton::Component.new(
         href: "https://example.com/default",
-        label: "Default width",
-        variant: :primary
+        text: "Default width",
+        style: :primary
       ) %>
 
       <%= render FlatPack::EmailButton::Component.new(
         href: "https://example.com/fit-content",
-        label: "Fit content",
-        variant: :primary,
+        text: "Fit content",
+        style: :primary,
         fit_content: true
       ) %>
 
       <%= render FlatPack::EmailButton::Component.new(
         href: "https://example.com/full-width",
-        label: "Full width CTA",
-        variant: :secondary,
+        text: "Full width CTA",
+        style: :secondary,
         full_width: true
       ) %>
     <% end %>
@@ -83,14 +83,14 @@
     code: CGI.unescapeHTML(<<~'CODE')
       &lt;%= render FlatPack::EmailButton::Component.new(
         href: "https://example.com/fit-content",
-        label: "Fit content",
+        text: "Fit content",
         fit_content: true
       ) %&gt;
 
       &lt;%= render FlatPack::EmailButton::Component.new(
         href: "https://example.com/full-width",
-        label: "Full width CTA",
-        variant: :secondary,
+        text: "Full width CTA",
+        style: :secondary,
         full_width: true
       ) %&gt;
     CODE
@@ -104,21 +104,21 @@
     <% card.body(class: "space-y-4") do %>
       <%= render FlatPack::EmailButton::Component.new(
         href: "https://example.com/left",
-        label: "Left aligned",
+        text: "Left aligned",
         align: :left,
         full_width: true
       ) %>
 
       <%= render FlatPack::EmailButton::Component.new(
         href: "https://example.com/center",
-        label: "Centered",
+        text: "Centered",
         align: :center,
         full_width: true
       ) %>
 
       <%= render FlatPack::EmailButton::Component.new(
         href: "https://example.com/right",
-        label: "Right aligned",
+        text: "Right aligned",
         align: :right,
         full_width: true
       ) %>
@@ -129,7 +129,7 @@
     code: CGI.unescapeHTML(<<~'CODE')
       &lt;%= render FlatPack::EmailButton::Component.new(
         href: "https://example.com/right",
-        label: "Right aligned",
+        text: "Right aligned",
         align: :right,
         full_width: true
       ) %&gt;
@@ -146,8 +146,8 @@
 
     <%= render FlatPack::EmailButton::Component.new(
       href: "https://example.com/confirm",
-      label: "Confirm details",
-      variant: :primary,
+      text: "Confirm details",
+      style: :primary,
       full_width: true
     ) %>
   <% end %>
@@ -164,8 +164,8 @@
 
         &lt;%= render FlatPack::EmailButton::Component.new(
           href: "https://example.com/confirm",
-          label: "Confirm details",
-          variant: :primary,
+          text: "Confirm details",
+          style: :primary,
           full_width: true
         ) %&gt;
       &lt;% end %&gt;

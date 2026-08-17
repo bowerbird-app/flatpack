@@ -33,17 +33,17 @@ export default class extends Controller {
     const trigger = this.resolveTriggerElement(event)
     if (!trigger) return
 
-    const { type, message, timeout } = trigger.dataset
+    const { style, text, timeout } = trigger.dataset
 
     this.appendToast({
-      type: type || "info",
-      message,
+      style: style || "info",
+      text,
       timeout: this.parseTimeout(timeout)
     })
   }
 
   resolveTriggerElement(event) {
-    if (event.currentTarget?.dataset?.message) return event.currentTarget
+    if (event.currentTarget?.dataset?.text) return event.currentTarget
 
     // When the listener is delegated, currentTarget may be the controller root.
     if (event.target instanceof Element) {
@@ -57,16 +57,16 @@ export default class extends Controller {
     const detail = event.detail || {}
 
     this.appendToast({
-      type: detail.type || "info",
-      message: detail.message,
+      style: detail.style || "info",
+      text: detail.text,
       timeout: this.parseTimeout(detail.timeout)
     })
   }
 
-  appendToast({ type, message, timeout }) {
-    if (!message) return
+  appendToast({ style, text, timeout }) {
+    if (!text) return
 
-    const toast = this.buildToastElement({ type, message, timeout })
+    const toast = this.buildToastElement({ style, text, timeout })
     if (!(toast instanceof HTMLElement)) return
 
     this.toastContainer.appendChild(toast)
@@ -100,45 +100,45 @@ export default class extends Controller {
     return Number.isFinite(parsed) && parsed >= 0 ? parsed : 5000
   }
 
-  buildToastElement({ type, message, timeout }) {
-    const normalizedType = this.normalizeType(type)
+  buildToastElement({ style, text, timeout }) {
+    const normalizedStyle = this.normalizeStyle(style)
 
-    const template = this.templateForType(type)
+    const template = this.templateForStyle(normalizedStyle)
     if (!(template instanceof HTMLTemplateElement)) return null
 
     const toast = template.content.firstElementChild?.cloneNode(true)
     if (!(toast instanceof HTMLElement)) return null
 
-    this.applyToastContent(toast, message)
+    this.applyToastContent(toast, text)
     this.applyToastTimeout(toast, timeout)
 
     return toast
   }
 
-  templateForType(type) {
-    switch (type) {
+  templateForStyle(style) {
+    switch (style) {
       case "success":
         return this.hasSuccessTemplateTarget ? this.successTemplateTarget : null
       case "warning":
         return this.hasWarningTemplateTarget ? this.warningTemplateTarget : null
-      case "error":
+      case "danger":
         return this.hasErrorTemplateTarget ? this.errorTemplateTarget : null
       default:
         return this.hasInfoTemplateTarget ? this.infoTemplateTarget : null
     }
   }
 
-  applyToastContent(toast, message) {
+  applyToastContent(toast, text) {
     const messageElement = toast.querySelector("p.flex-1")
-    if (messageElement) messageElement.textContent = message
+    if (messageElement) messageElement.textContent = text
   }
 
   applyToastTimeout(toast, timeout) {
     toast.setAttribute("data-flat-pack--toast-timeout-value", String(timeout))
   }
 
-  normalizeType(type) {
-    const allowedTypes = ["info", "success", "warning", "error"]
-    return allowedTypes.includes(type) ? type : "info"
+  normalizeStyle(style) {
+    const allowedStyles = ["info", "success", "warning", "danger"]
+    return allowedStyles.includes(style) ? style : "info"
   }
 }

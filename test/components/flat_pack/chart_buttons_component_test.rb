@@ -7,7 +7,7 @@ module FlatPack
     class ComponentTest < ViewComponent::TestCase
       def test_renders_button_with_container_turbo_defaults
         render_inline(Component.new(turbo_frame: "chart-frame")) do |controls|
-          controls.button(text: "Day", url: "/demo/charts?period=day", selected: true)
+          controls.button(text: "Day", href: "/demo/charts?period=day", selected: true)
         end
 
         assert_selector "div.flex.flex-wrap.items-center.gap-2.mb-3"
@@ -16,7 +16,7 @@ module FlatPack
 
       def test_allows_margin_bottom_override
         render_inline(Component.new(margin_bottom: "mb-6")) do |controls|
-          controls.button(text: "Day", url: "/demo/charts?period=day")
+          controls.button(text: "Day", href: "/demo/charts?period=day")
         end
 
         assert_selector "div.flex.flex-wrap.items-center.gap-2.mb-6"
@@ -27,7 +27,7 @@ module FlatPack
         render_inline(Component.new(turbo_frame: "chart-frame")) do |controls|
           controls.button(
             text: "Month",
-            url: "/demo/charts?period=month",
+            href: "/demo/charts?period=month",
             data: {turbo_frame: "custom-frame"}
           )
         end
@@ -40,8 +40,8 @@ module FlatPack
           controls.dropdown(
             text: "Range",
             options: [
-              {text: "Day", url: "/demo/charts?period=day"},
-              {text: "Month", url: "/demo/charts?period=month", selected: true}
+              {text: "Day", href: "/demo/charts?period=day"},
+              {text: "Month", href: "/demo/charts?period=month", selected: true}
             ]
           )
         end

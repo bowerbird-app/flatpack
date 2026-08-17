@@ -21,14 +21,14 @@
   <%= render FlatPack::SectionTitle::Component.new(title: "With Anchor Action", anchor_link: true, subtitle: "Right-side icon appears only when anchor_url is provided.") %>
   <div class="mb-4">
     <%= render FlatPack::PageNav::Component.new(
-      anchor_url: demo_path,
+      anchor_href: demo_path,
       anchor_tooltip: "Close"
     ) %>
   </div>
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE')
       &lt;%= render FlatPack::PageNav::Component.new(
-        anchor_url: demo_path,
+        anchor_href: demo_path,
         anchor_tooltip: "Close"
       ) %&gt;
     CODE
@@ -39,20 +39,20 @@
   <%= render FlatPack::SectionTitle::Component.new(title: "With Secondary Anchor", anchor_link: true, subtitle: "Secondary anchor renders immediately to the left of the primary anchor.") %>
   <div class="mb-4">
     <%= render FlatPack::PageNav::Component.new(
-      secondary_anchor_url: demo_forms_path,
+      secondary_anchor_href: demo_forms_path,
       secondary_anchor_icon: "home",
       secondary_anchor_tooltip: "Home",
-      anchor_url: demo_path,
+      anchor_href: demo_path,
       anchor_tooltip: "Close"
     ) %>
   </div>
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE')
       &lt;%= render FlatPack::PageNav::Component.new(
-        secondary_anchor_url: demo_forms_path,
+        secondary_anchor_href: demo_forms_path,
         secondary_anchor_icon: "home",
         secondary_anchor_tooltip: "Home",
-        anchor_url: demo_path,
+        anchor_href: demo_path,
         anchor_tooltip: "Close"
       ) %&gt;
     CODE
@@ -63,7 +63,7 @@
   <%= render FlatPack::SectionTitle::Component.new(title: "With Anchor and Right Slot", anchor_link: true, subtitle: "Line divider fills available space and custom right_slot content drives add flow.") %>
   <div class="mb-4">
     <%= render FlatPack::PageNav::Component.new(
-      anchor_url: demo_path,
+      anchor_href: demo_path,
       anchor_tooltip: "Close"
     ) do |component| %>
       <% component.right_slot do %>
@@ -72,7 +72,7 @@
           icon_only: true,
           style: :secondary,
           size: :md,
-          url: demo_forms_path,
+          href: demo_forms_path,
           aria: {label: "Add"}
         ) %>
       <% end %>
@@ -81,7 +81,7 @@
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE')
       &lt;%= render FlatPack::PageNav::Component.new(
-        anchor_url: demo_path,
+        anchor_href: demo_path,
         anchor_tooltip: "Close"
       ) do |component| %&gt;
         &lt;% component.right_slot do %&gt;
@@ -90,7 +90,7 @@
             icon_only: true,
             style: :secondary,
             size: :md,
-            url: demo_forms_path,
+            href: demo_forms_path,
             aria: {label: "Add"}
           ) %&gt;
         &lt;% end %&gt;
@@ -103,7 +103,7 @@
   <%= render FlatPack::SectionTitle::Component.new(title: "With Right Slot Dropdown", anchor_link: true, subtitle: "Use right_slot with a dropdown trigger when multiple actions belong in the nav." ) %>
   <div class="mb-4">
     <%= render FlatPack::PageNav::Component.new(
-      anchor_url: demo_path,
+      anchor_href: demo_path,
       anchor_tooltip: "Close"
     ) do |component| %>
       <% component.right_slot do %>
@@ -127,7 +127,7 @@
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE')
       &lt;%= render FlatPack::PageNav::Component.new(
-        anchor_url: demo_path,
+        anchor_href: demo_path,
         anchor_tooltip: "Close"
       ) do |component| %&gt;
         &lt;% component.right_slot do %&gt;
@@ -157,7 +157,7 @@
     <%= render FlatPack::PageNav::Component.new(
       back_icon: "arrow-left",
       back_tooltip: "Back to previous page",
-      anchor_url: demo_path,
+      anchor_href: demo_path,
       anchor_icon: "trash",
       anchor_tooltip: "Discard",
       back_style: :ghost,
@@ -169,7 +169,7 @@
           icon_only: true,
           style: :primary,
           size: :md,
-          url: demo_forms_path,
+          href: demo_forms_path,
           aria: {label: "Create"}
         ) %>
       <% end %>
@@ -180,7 +180,7 @@
       &lt;%= render FlatPack::PageNav::Component.new(
         back_icon: "arrow-left",
         back_tooltip: "Back to previous page",
-        anchor_url: demo_path,
+        anchor_href: demo_path,
         anchor_icon: "trash",
         anchor_tooltip: "Discard",
         back_style: :ghost,
@@ -192,7 +192,7 @@
             icon_only: true,
             style: :primary,
             size: :md,
-            url: demo_forms_path,
+            href: demo_forms_path,
             aria: {label: "Create"}
           ) %&gt;
         &lt;% end %&gt;

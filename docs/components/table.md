@@ -63,7 +63,7 @@ Use sibling controls as a separate surface around the table and keep all state i
 ```erb
 <%= turbo_frame_tag "users-table-filters" do %>
   <%= render FlatPack::ChartButtons::Component.new(turbo_frame: "users-table-filters") do |controls| %>
-    <% controls.button(text: "All", url: demo_tables_basic_path(filter_field: "status", filter_value: "all", q: params[:q]), selected: params[:filter_value] == "all") %>
+    <% controls.button(text: "All", href: demo_tables_basic_path(filter_field: "status", filter_value: "all", q: params[:q]), selected: params[:filter_value] == "all") %>
     <% controls.dropdown(text: "Status", options: [
       {text: "Active", url: demo_tables_basic_path(filter_field: "status", filter_value: "active", q: params[:q])},
       {text: "Inactive", url: demo_tables_basic_path(filter_field: "status", filter_value: "inactive", q: params[:q])}

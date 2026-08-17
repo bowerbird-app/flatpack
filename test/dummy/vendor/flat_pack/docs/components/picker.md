@@ -17,8 +17,8 @@ Use Picker when users need to choose image assets, files, or application records
 | `items` | Array<Hash> | `[]` | No | Initial items. Normalized to keys like `id`, `kind`, `title`, `label`, `name`, `icon`, `contentType`, `byteSize`, `thumbnail_url`, `description`, `right_text`, `path`, `badge`, `meta`, `payload`. |
 | `title` | String | `"Select Assets"` | No | Modal title. |
 | `subtitle` | String or nil | `nil` | No | Optional helper text under title. |
-| `confirm_text` | String | `"Use Selected"` | No | Confirm button text. |
-| `close_text` | String | `"Close"` | No | Close button text. |
+| `confirm_label` | String | `"Use Selected"` | No | Confirm button text. |
+| `close_label` | String | `"Close"` | No | Close button text. |
 | `size` | Symbol | `:lg` | No | Passed to `FlatPack::Modal::Component` size in modal mode, and reused for inline shell width (`:sm`, `:md`, `:lg`, `:xl`, `:"2xl"`). |
 | `selection_mode` | Symbol | `:multiple` | No | Allowed: `:single`, `:multiple`. |
 | `accepted_kinds` | Array<Symbol/String> | `[:image, :file, :record]` | No | Allowed kind filter. Unknown kinds normalize to `file`. |
@@ -32,7 +32,7 @@ Use Picker when users need to choose image assets, files, or application records
 | `output_target` | String or nil | `nil` | No | CSS selector to receive JSON output when `output_mode: :field`. |
 | `form` | Hash or nil | `nil` | No | Optional built-in Rails form wrapper. Supports `url`, `method`, `scope`, `field`, `value_mode`, `value_path`, and `turbo`. |
 | `context` | Hash | `{}` | No | Arbitrary hash returned in confirm event payload. |
-| `empty_state_text` | String | `"No assets found"` | No | Empty-results text. |
+| `empty_text` | String | `"No assets found"` | No | Empty-results text. |
 | `results_layout` | Symbol | `:list` | No | Allowed: `:list`, `:grid`. |
 | `items_height` | String, Symbol, or Integer | `"max-content"` | No | Controls the results-region height inside the picker. Use `"max-content"` to fill the available picker body, `"min-content"` to shrink-wrap the current items up to the wrapper height, or a CSS height such as `"240px"`. Integers are converted to pixel values. |
 | `modal` | Boolean | `false` | No | When `true`, renders inside `FlatPack::Modal::Component`. When `false`, renders inline on the page. |
@@ -160,7 +160,7 @@ Each picker item must include `name`. The component uses `thumbnail_url` and `ri
   search_endpoint: demo_picker_results_path,
   modal_body_height_mode: :fixed,
   modal_body_height: "clamp(20rem, 55vh, 30rem)",
-  confirm_text: "Use Remote Selection",
+  confirm_label: "Use Remote Selection",
   context: { target: "picker-demo-remote" }
 ) %>
 ```
@@ -183,7 +183,7 @@ Remote search is debounced by 250ms and always renders the search bar, even if `
   modal: false,
   output_mode: :field,
   output_target: "#picker-inline-selected-field",
-  confirm_text: "Use Inline Selection",
+  confirm_label: "Use Inline Selection",
   context: { target: "picker-demo-inline" }
 ) %>
 ```
@@ -212,7 +212,7 @@ Remote search is debounced by 250ms and always renders the search bar, even if `
   results_layout: :grid,
   modal_body_height_mode: :fixed,
   modal_body_height: "clamp(18rem, 50vh, 26rem)",
-  confirm_text: "Use Image",
+  confirm_label: "Use Image",
   context: { target: "picker-demo-images" }
 ) %>
 ```
@@ -246,7 +246,7 @@ Remote search is debounced by 250ms and always renders the search bar, even if `
   output_target: "#picker-folder-field",
   modal_body_height_mode: :fixed,
   modal_body_height: "clamp(18rem, 48vh, 24rem)",
-  confirm_text: "Use Folder",
+  confirm_label: "Use Folder",
   context: { target: "picker-demo-folders" }
 ) %>
 ```
@@ -280,7 +280,7 @@ Remote search is debounced by 250ms and always renders the search bar, even if `
   output_target: "#picker-auto-confirm-field",
   modal_body_height_mode: :fixed,
   modal_body_height: "clamp(18rem, 50vh, 24rem)",
-  confirm_text: "Use Asset",
+  confirm_label: "Use Asset",
   context: { target: "picker-demo-auto-confirm" }
 ) %>
 ```
@@ -312,7 +312,7 @@ Remote search is debounced by 250ms and always renders the search bar, even if `
   modal_body_height: "24rem",
   output_mode: :field,
   output_target: "#picker-selected-assets-field",
-  confirm_text: "Store Selection",
+  confirm_label: "Store Selection",
   context: { target: "picker-demo-field" }
 ) %>
 ```
@@ -343,7 +343,7 @@ The picker dispatches `flat-pack:picker:confirm` from its root element with `bub
   selection_mode: :single,
   searchable: true,
   search_mode: :local,
-  confirm_text: "Assign Folder",
+  confirm_label: "Assign Folder",
   form: {
     url: demo_picker_submissions_path,
     method: :post,

@@ -109,7 +109,7 @@ module FlatPack
           text: @reset_label,
           style: :ghost,
           size: :sm,
-          url: @reset_url,
+          href: @reset_url,
           data: {
             turbo_frame: @turbo_frame,
             turbo_prefetch: false

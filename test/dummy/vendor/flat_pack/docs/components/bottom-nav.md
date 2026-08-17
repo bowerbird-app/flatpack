@@ -19,7 +19,7 @@ Related item props (`FlatPack::BottomNav::Item::Component`):
 
 | name | type | default | required | description |
 |---|---|---|---|---|
-| `label` | String | none | yes | Item label text shown under icon. |
+| `text` | String | none | yes | Item text shown under icon. |
 | `href` | String | none | yes | Link URL. Sanitized and validated (`http`, `https`, `mailto`, `tel`, or relative URL). |
 | `icon` | Symbol/String | `nil` | no | Icon name for `FlatPack::Shared::IconComponent`. |
 | `active` | Boolean | `false` | no | Marks item as active and sets `aria-current="page"`. |
@@ -36,10 +36,10 @@ None.
 ## Example
 ```erb
 <%= render FlatPack::BottomNav::Component.new do |nav| %>
-  <% nav.item(label: "Home", href: "/", icon: :home, active: true) %>
-  <% nav.item(label: "Search", href: "/search", icon: :magnifying_glass) %>
-  <% nav.item(label: "Alerts", href: "/alerts", icon: :bell) %>
-  <% nav.item(label: "Profile", href: "/profile", icon: :user) %>
+  <% nav.item(text: "Home", href: "/", icon: :home, active: true) %>
+  <% nav.item(text: "Search", href: "/search", icon: :magnifying_glass) %>
+  <% nav.item(text: "Alerts", href: "/alerts", icon: :bell) %>
+  <% nav.item(text: "Profile", href: "/profile", icon: :user) %>
 <% end %>
 ```
 

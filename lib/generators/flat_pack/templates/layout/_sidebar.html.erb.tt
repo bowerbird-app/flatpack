@@ -10,21 +10,21 @@
   <%% sidebar.items do %>
     <nav class="py-4 space-y-1" aria-label="Main navigation">
       <%%= render FlatPack::Sidebar::Item::Component.new(
-        label: "Home",
+        text: "Home",
         href: "/",
         icon: :home,
         active: current_page?("/")
       ) %>
 
       <%%= render FlatPack::Sidebar::Item::Component.new(
-        label: "Projects",
+        text: "Projects",
         href: "/projects",
         icon: :folder,
         active: current_page?("/projects")
       ) %>
 
       <%%= render FlatPack::Sidebar::Item::Component.new(
-        label: "Settings",
+        text: "Settings",
         href: "/settings",
         icon: :cog,
         active: current_page?("/settings")

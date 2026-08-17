@@ -9,7 +9,7 @@ export default class extends Controller {
   static targets = ["trigger", "menu", "chevron"]
   static values = {
     maxHeight: String,
-    position: { type: String, default: "bottom_right" }
+    placement: { type: String, default: "bottom_right" }
   }
 
   connect() {
@@ -269,7 +269,7 @@ export default class extends Controller {
   }
 
   computePosition(triggerRect, menuWidth, menuHeight) {
-    switch (this.positionValue) {
+    switch (this.placementValue) {
       case "bottom_left":
         return {
           top: triggerRect.bottom + this.menuOffset,

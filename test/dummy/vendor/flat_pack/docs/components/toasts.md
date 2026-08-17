@@ -24,8 +24,8 @@ None.
 ## Example
 ```erb
 <%= render FlatPack::Toasts::Region::Component.new do %>
-  <%= render FlatPack::Toast::Component.new(message: "Profile updated", type: :success) %>
-  <%= render FlatPack::Toast::Component.new(message: "Background sync running", type: :info) %>
+  <%= render FlatPack::Toast::Component.new(text: "Profile updated", style: :success) %>
+  <%= render FlatPack::Toast::Component.new(text: "Background sync running", style: :info) %>
 <% end %>
 ```
 
@@ -36,4 +36,4 @@ None.
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
 - Typically composed with `FlatPack::Toast::Component`.
-- Stimulus controller: `flat-pack--toasts-region` when using delegated/event-driven toast appends (`toast:add`).
+- Stimulus controller: `flat-pack--toasts-region` when using delegated/event-driven toast appends (`toast:add` with `{ style, text }`).

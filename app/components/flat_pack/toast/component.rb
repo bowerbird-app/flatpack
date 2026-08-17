@@ -9,7 +9,7 @@ module FlatPack
       # "border-[var(--toast-success-border-color)]" "bg-[var(--toast-success-background-color)]" "text-[var(--toast-success-text-color)]" "text-[var(--toast-success-icon-color)]"
       # "border-[var(--toast-warning-border-color)]" "bg-[var(--toast-warning-background-color)]" "text-[var(--toast-warning-text-color)]" "text-[var(--toast-warning-icon-color)]"
       # "border-[var(--toast-danger-border-color)]" "bg-[var(--toast-danger-background-color)]" "text-[var(--toast-danger-text-color)]" "text-[var(--toast-danger-icon-color)]"
-      TYPES = {
+      STYLES = {
         info: {
           border: "border-[var(--toast-info-border-color)]",
           bg: "bg-[var(--toast-info-background-color)]",
@@ -37,20 +37,20 @@ module FlatPack
       }.freeze
 
       def initialize(
-        message:,
-        type: :info,
+        text:,
+        style: :info,
         timeout: 5000,
         dismissible: true,
         **system_arguments
       )
         super(**system_arguments)
-        @message = message
-        @type = type.to_sym
+        @text = text
+        @style = style.to_sym
         @timeout = timeout
         @dismissible = dismissible
 
-        validate_message!
-        validate_type!
+        validate_text!
+        validate_style!
         validate_timeout!
       end
 
@@ -58,7 +58,7 @@ module FlatPack
         content_tag(:div, **toast_attributes) do
           safe_join([
             render_icon,
-            render_message,
+            render_text,
             render_dismiss_button
           ].compact)
         end
@@ -80,7 +80,7 @@ module FlatPack
       end
 
       def toast_classes
-        type_styles = TYPES.fetch(@type)
+        type_styles = STYLES.fetch(@style)
         classes(
           "flex",
           "items-start",
@@ -99,14 +99,14 @@ module FlatPack
       end
 
       def render_icon
-        type_styles = TYPES.fetch(@type)
+        type_styles = STYLES.fetch(@style)
         content_tag(:div, class: "flex-shrink-0 #{type_styles[:icon]}") do
           icon_svg
         end
       end
 
       def icon_svg
-        case @type
+        case @style
         when :success
           success_icon
         when :warning
@@ -158,8 +158,8 @@ module FlatPack
         end
       end
 
-      def render_message
-        content_tag(:p, @message, class: "flex-1 text-sm font-medium")
+      def render_text
+        content_tag(:p, @text, class: "flex-1 text-sm font-medium")
       end
 
       def render_dismiss_button
@@ -190,26 +190,26 @@ module FlatPack
           "focus-visible:outline-none",
           "focus-visible:ring-2 focus-visible:ring-inset",
           "focus-visible:ring-ring",
-          dismiss_button_type_classes
+          dismiss_button_style_classes
         )
       end
 
-      def dismiss_button_type_classes
-        if @type == :danger
+      def dismiss_button_style_classes
+        if @style == :danger
           "bg-[var(--toast-danger-dismiss-background-color)] hover:bg-[var(--toast-danger-dismiss-hover-background-color)] text-[var(--toast-danger-dismiss-text-color)]"
         else
           "text-[var(--toast-dismiss-text-color)] hover:text-[var(--toast-dismiss-hover-text-color)]"
         end
       end
 
-      def validate_message!
-        return if @message.present?
-        raise ArgumentError, "message is required"
+      def validate_text!
+        return if @text.present?
+        raise ArgumentError, "text is required"
       end
 
-      def validate_type!
-        return if TYPES.key?(@type)
-        raise ArgumentError, "Invalid type: #{@type}. Must be one of: #{TYPES.keys.join(", ")}"
+      def validate_style!
+        return if STYLES.key?(@style)
+        raise ArgumentError, "Invalid style: #{@style}. Must be one of: #{STYLES.keys.join(", ")}"
       end
 
       def validate_timeout!

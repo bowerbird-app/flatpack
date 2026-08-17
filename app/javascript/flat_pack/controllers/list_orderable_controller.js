@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static values = {
-    orderablePath: String,
+    orderableUrl: String,
     orderableMethod: {type: String, default: "PATCH"},
     paramUuidName: {type: String, default: "id"},
     paramTargetPositionName: {type: String, default: "position"}
@@ -183,7 +183,7 @@ export default class extends Controller {
     payload.set(this.paramTargetPositionNameValue || "position", this.currentPosition(item)?.toString() || "")
 
     try {
-      const response = await fetch(this.orderablePathValue, {
+      const response = await fetch(this.orderableUrlValue, {
         method: this.orderableMethodValue || "PATCH",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",

@@ -100,32 +100,32 @@ module FlatPack
 
       # Position options
       def test_renders_bottom_right_position
-        render_inline(Dropdown::Component.new(text: "Actions", position: :bottom_right))
+        render_inline(Dropdown::Component.new(text: "Actions", placement: :bottom_right))
 
         assert_selector "div[data-controller='flat-pack--button-dropdown'][data-flat-pack--button-dropdown-position-value='bottom_right']"
       end
 
       def test_renders_bottom_left_position
-        render_inline(Dropdown::Component.new(text: "Actions", position: :bottom_left))
+        render_inline(Dropdown::Component.new(text: "Actions", placement: :bottom_left))
 
         assert_selector "div[data-controller='flat-pack--button-dropdown'][data-flat-pack--button-dropdown-position-value='bottom_left']"
       end
 
       def test_renders_top_right_position
-        render_inline(Dropdown::Component.new(text: "Actions", position: :top_right))
+        render_inline(Dropdown::Component.new(text: "Actions", placement: :top_right))
 
         assert_selector "div[data-controller='flat-pack--button-dropdown'][data-flat-pack--button-dropdown-position-value='top_right']"
       end
 
       def test_renders_top_left_position
-        render_inline(Dropdown::Component.new(text: "Actions", position: :top_left))
+        render_inline(Dropdown::Component.new(text: "Actions", placement: :top_left))
 
         assert_selector "div[data-controller='flat-pack--button-dropdown'][data-flat-pack--button-dropdown-position-value='top_left']"
       end
 
       def test_raises_error_for_invalid_position
         assert_raises(ArgumentError) do
-          Dropdown::Component.new(text: "Actions", position: :invalid)
+          Dropdown::Component.new(text: "Actions", placement: :invalid)
         end
       end
 

@@ -18,7 +18,7 @@ Use Notification in application navigation, top bars, dashboards, or account are
 | `trigger_id` | String, nil | generated | no | DOM id for the bell trigger. |
 | `placement` | Symbol | `:bottom` | no | Popover placement: `:top`, `:bottom`, `:left`, `:right`. |
 | `bell_label` | String | `"Notifications"` | no | Accessible label for the bell button. |
-| `empty_message` | String | `"No recent notifications"` | no | Empty state text. |
+| `empty_text` | String | `"No recent notifications"` | no | Empty state text. |
 | `timestamp_tooltip_placement` | Symbol | `:left` | no | Tooltip placement for notification timestamps. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for the wrapper. |
 

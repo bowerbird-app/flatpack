@@ -18,7 +18,7 @@ export default class extends Controller {
     outputTarget: String,
     form: Object,
     context: Object,
-    emptyStateText: { type: String, default: "No assets found" },
+    emptyText: { type: String, default: "No assets found" },
     resultsLayout: { type: String, default: "list" }
   }
 
@@ -248,7 +248,7 @@ export default class extends Controller {
 
     if (this.hasEmptyStateTarget) {
       if (items.length === 0) {
-        this.emptyStateTarget.textContent = this.emptyStateTextValue
+        this.emptyStateTarget.textContent = this.emptyTextValue
         this.emptyStateTarget.classList.remove("hidden")
         this.emptyStateTarget.classList.add("flex")
       } else {

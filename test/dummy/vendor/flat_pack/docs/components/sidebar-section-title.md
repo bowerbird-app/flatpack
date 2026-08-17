@@ -13,7 +13,7 @@ Use inside `FlatPack::Sidebar::Component` items area to group navigation links u
 
 | name | type | default | required | description |
 |------|------|---------|----------|-------------|
-| `label` | String | — | Yes | Section heading text displayed and used as tooltip content. |
+| `title` | String | — | Yes | Section heading text displayed and used as tooltip content. |
 | `collapsed` | Boolean | `false` | No | Renders in compact, centered mode (`px-1`). Use for static collapsed demos; the `flat-pack--sidebar-layout` controller toggles this dynamically. |
 | `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into the wrapper `<div>`. |
 
@@ -32,10 +32,10 @@ None
 
 ```erb
 <nav class="py-4 space-y-1">
-  <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Getting Started") %>
+  <%= render FlatPack::Sidebar::SectionTitle::Component.new(title: "Getting Started") %>
 
   <%= render FlatPack::Sidebar::Item::Component.new(
-    label: "Overview",
+    text: "Overview",
     href: "/overview",
     icon: :home,
     active: true
@@ -43,10 +43,10 @@ None
 
   <%= render FlatPack::Sidebar::Divider::Component.new %>
 
-  <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Settings") %>
+  <%= render FlatPack::Sidebar::SectionTitle::Component.new(title: "Settings") %>
 
   <%= render FlatPack::Sidebar::Item::Component.new(
-    label: "Team",
+    text: "Team",
     href: "/settings/team",
     icon: :users
   ) %>
@@ -56,7 +56,7 @@ None
 ### Static collapsed (icon-only) demo
 
 ```erb
-<%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Getting Started", collapsed: true) %>
+<%= render FlatPack::Sidebar::SectionTitle::Component.new(title: "Getting Started", collapsed: true) %>
 ```
 
 ### Dynamic (JS-controlled) sidebar

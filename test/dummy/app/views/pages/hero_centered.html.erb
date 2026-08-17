@@ -1,5 +1,5 @@
 <div class="fixed top-4 left-4 z-50">
-  <%= render FlatPack::Button::Component.new(text: "← Back to Hero", style: :secondary, url: pages_hero_path) %>
+  <%= render FlatPack::Button::Component.new(text: "← Back to Hero", style: :secondary, href: pages_hero_path) %>
 </div>
 
 <%= render FlatPack::Hero::Component.new(
@@ -11,7 +11,7 @@
 ) do |hero|
   hero.badge { render FlatPack::Badge::Component.new(text: "New", style: :success) }
   hero.slot do
-    concat render(FlatPack::Button::Component.new(text: "Get started", style: :primary, url: "#"))
-    concat render(FlatPack::Button::Component.new(text: "Learn more", style: :secondary, url: "#"))
+    concat render(FlatPack::Button::Component.new(text: "Get started", style: :primary, href: "#"))
+    concat render(FlatPack::Button::Component.new(text: "Learn more", style: :secondary, href: "#"))
   end
 end %>

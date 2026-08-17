@@ -14,7 +14,7 @@ Use this as a sibling controls container when chart filtering UI can vary by scr
 | --- | --- | --- | --- | --- |
 | `turbo_frame` | String, nil | `nil` | no | Default Turbo Frame target inherited by control helpers unless overridden per control. |
 | `turbo_prefetch` | Boolean, nil | `false` | no | Default Turbo prefetch behavior for link-based control helpers. |
-| `control_size` | Symbol | `:sm` | no | Default size for helper-generated button and dropdown triggers. |
+| `size` | Symbol | `:sm` | no | Default size for helper-generated button and dropdown triggers. |
 | `margin_bottom` | String, nil | `"mb-3"` | no | Bottom margin utility applied to the wrapper; set to `nil` to remove the default spacing or override with another utility class. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for the controls container wrapper. |
 
@@ -22,7 +22,7 @@ Use this as a sibling controls container when chart filtering UI can vary by scr
 | name | type | description |
 | --- | --- | --- |
 | `control` | slot | Accepts a custom component instance or block content for fully custom controls. |
-| `button` | helper | Renders a Turbo link button helper (`text`, `url`, `selected`, and forwarded button args). |
+| `button` | helper | Renders a Turbo link button helper (`text`, `href`, `selected`, and forwarded button args). |
 | `dropdown` | helper | Renders a dropdown helper with Turbo-linked options. |
 | `checkbox` | helper | Renders a Turbo GET form with checkbox toggle behavior and optional auto-submit. |
 
@@ -34,7 +34,7 @@ None.
 <%= render FlatPack::ChartButtons::Component.new(turbo_frame: "chart-period-filter") do |controls| %>
   <% controls.button(
     text: "Day",
-    url: demo_charts_path(period: "day", compare: "0"),
+    href: demo_charts_path(period: "day", compare: "0"),
     selected: params[:period] == "day"
   ) %>
 
@@ -42,8 +42,8 @@ None.
     text: "Range",
     style: :ghost,
     options: [
-      { text: "Day", url: demo_charts_path(period: "day", compare: params[:compare]) },
-      { text: "Week", url: demo_charts_path(period: "week", compare: params[:compare]), selected: true }
+      { text: "Day", href: demo_charts_path(period: "day", compare: params[:compare]) },
+      { text: "Week", href: demo_charts_path(period: "week", compare: params[:compare]), selected: true }
     ]
   ) %>
 
@@ -59,7 +59,7 @@ None.
       text: "Reset",
       style: :ghost,
       size: :sm,
-      url: demo_charts_path(period: "day", compare: "0"),
+      href: demo_charts_path(period: "day", compare: "0"),
       data: { turbo_frame: "chart-period-filter", turbo_prefetch: false }
     ) %>
   <% end %>

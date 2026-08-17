@@ -4,16 +4,16 @@ module FlatPack
   module Sidebar
     module SectionTitle
       class Component < FlatPack::BaseComponent
-        def initialize(label:, collapsed: false, **system_arguments)
+        def initialize(title:, collapsed: false, **system_arguments)
           super(**system_arguments)
-          @label = label
+          @title = title
           @collapsed = collapsed
         end
 
         def call
           content_tag(:div, **wrapper_attributes) do
             safe_join([
-              content_tag(:p, @label, class: label_classes),
+              content_tag(:p, @title, class: label_classes),
               render_tooltip
             ])
           end
@@ -22,7 +22,7 @@ module FlatPack
         private
 
         def render_tooltip
-          content_tag(:div, @label, **tooltip_attributes)
+          content_tag(:div, @title, **tooltip_attributes)
         end
 
         def wrapper_attributes

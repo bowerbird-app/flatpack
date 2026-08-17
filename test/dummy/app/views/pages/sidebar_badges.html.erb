@@ -18,10 +18,10 @@
 
       <% sidebar.items do %>
         <nav class="py-4 space-y-1">
-          <%= render FlatPack::Sidebar::Item::Component.new(label: "Inbox", href: "#", icon: :dashboard, badge: "12", active: true) %>
-          <%= render FlatPack::Sidebar::Item::Component.new(label: "Alerts", href: "#", icon: :alert, badge: "3") %>
-          <%= render FlatPack::Sidebar::Item::Component.new(label: "Reports", href: "#", icon: :table) %>
-          <%= render FlatPack::Sidebar::Item::Component.new(label: "Monitoring", href: "#", icon: :monitor) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(text: "Inbox", href: "#", icon: :dashboard, badge: "12", active: true) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(text: "Alerts", href: "#", icon: :alert, badge: "3") %>
+          <%= render FlatPack::Sidebar::Item::Component.new(text: "Reports", href: "#", icon: :table) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(text: "Monitoring", href: "#", icon: :monitor) %>
         </nav>
       <% end %>
     <% end %>
@@ -42,10 +42,10 @@
     
           &lt;% sidebar.items do %&gt;
             &lt;nav class=&quot;py-4 space-y-1&quot;&gt;
-              &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Inbox&quot;, href: &quot;#&quot;, icon: :dashboard, badge: &quot;12&quot;, active: true) %&gt;
-              &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Alerts&quot;, href: &quot;#&quot;, icon: :alert, badge: &quot;3&quot;) %&gt;
-              &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Reports&quot;, href: &quot;#&quot;, icon: :table) %&gt;
-              &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Monitoring&quot;, href: &quot;#&quot;, icon: :monitor) %&gt;
+              &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Inbox&quot;, href: &quot;#&quot;, icon: :dashboard, badge: &quot;12&quot;, active: true) %&gt;
+              &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Alerts&quot;, href: &quot;#&quot;, icon: :alert, badge: &quot;3&quot;) %&gt;
+              &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Reports&quot;, href: &quot;#&quot;, icon: :table) %&gt;
+              &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Monitoring&quot;, href: &quot;#&quot;, icon: :monitor) %&gt;
             &lt;/nav&gt;
           &lt;% end %&gt;
         &lt;% end %&gt;

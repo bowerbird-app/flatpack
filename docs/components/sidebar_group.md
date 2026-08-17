@@ -13,11 +13,11 @@ Use Sidebar Group inside sidebar navigation when related links should be grouped
 
 | name | type | default | required | description |
 |------|------|---------|----------|-------------|
-| `label` | String | none | Yes | Group header label text. |
+| `title` | String | none | Yes | Group header title text. |
 | `icon` | Symbol or nil | `nil` | No | Optional leading icon in group header. |
-| `default_open` | Boolean | `false` | No | Initial open state when no persisted state exists. |
-| `collapsed` | Boolean | `false` | No | Collapsed sidebar mode hint; hides label and chevron visuals. |
-| `group_id` | String or nil | `nil` | No | Persistence id. Defaults to parameterized `label` (fallback `"group"`). |
+| `open` | Boolean | `false` | No | Initial open state when no persisted state exists. |
+| `collapsed` | Boolean | `false` | No | Collapsed sidebar mode hint; hides title and chevron visuals. |
+| `group_id` | String or nil | `nil` | No | Persistence id. Defaults to parameterized `title` (fallback `"group"`). |
 | `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into group wrapper. |
 
 ## Slots
@@ -30,20 +30,20 @@ Use Sidebar Group inside sidebar navigation when related links should be grouped
 
 | variant | description |
 |---------|-------------|
-| `default_open: true` | Group starts open unless persisted state overrides it. |
+| `open: true` | Group starts open unless persisted state overrides it. |
 | `collapsed: true` | Label becomes screen-reader-only and chevron hides for icon-only sidebar mode. |
 
 ## Example
 
 ```erb
 <%= render FlatPack::Sidebar::Group::Component.new(
-  label: "More",
+  title: "More",
   icon: :ellipsis_vertical,
-  default_open: true
+  open: true
 ) do |group| %>
   <% group.items do %>
-    <%= render FlatPack::Sidebar::Item::Component.new(label: "Settings", href: "/settings", icon: :cog_6_tooth) %>
-    <%= render FlatPack::Sidebar::Item::Component.new(label: "Help", href: "/help", icon: :question_mark_circle) %>
+    <%= render FlatPack::Sidebar::Item::Component.new(text: "Settings", href: "/settings", icon: :cog_6_tooth) %>
+    <%= render FlatPack::Sidebar::Item::Component.new(text: "Help", href: "/help", icon: :question_mark_circle) %>
   <% end %>
 <% end %>
 ```

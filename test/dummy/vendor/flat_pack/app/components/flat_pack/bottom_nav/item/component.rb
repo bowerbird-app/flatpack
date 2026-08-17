@@ -10,9 +10,9 @@ module FlatPack
         # "py-[var(--bottom-nav-item-padding-y)]" "px-[var(--bottom-nav-item-padding-x)]" "text-xs" "font-medium" "text-[var(--bottom-nav-item-active-color)]"
         # "text-[var(--bottom-nav-item-color)]" "hover:text-[var(--bottom-nav-item-hover-color)]"
 
-        def initialize(label:, href:, icon: nil, active: false, **system_arguments)
+        def initialize(text:, href:, icon: nil, active: false, **system_arguments)
           super(**system_arguments)
-          @label = label
+          @text = text
           @icon = icon
           @active = active
 
@@ -24,7 +24,7 @@ module FlatPack
           link_to @href, **link_attributes do
             safe_join([
               render_icon,
-              render_label
+              render_text
             ].compact)
           end
         end
@@ -41,8 +41,8 @@ module FlatPack
           )
         end
 
-        def render_label
-          content_tag(:span, @label, class: "truncate")
+        def render_text
+          content_tag(:span, @text, class: "truncate")
         end
 
         def link_attributes

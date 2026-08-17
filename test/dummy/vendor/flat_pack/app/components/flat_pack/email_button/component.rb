@@ -4,9 +4,9 @@ module FlatPack
   module EmailButton
     class Component < FlatPack::BaseComponent
       ALIGNMENTS = %i[left center right].freeze
-      VARIANTS = %i[primary secondary].freeze
+      STYLE_VALUES = %i[primary secondary].freeze
 
-      VARIANT_STYLES = {
+      STYLES = {
         primary: {
           background: "#2563eb",
           border: "#2563eb",
@@ -21,32 +21,32 @@ module FlatPack
 
       def initialize(
         href:,
-        label:,
-        variant: :primary,
+        text:,
+        style: :primary,
         align: :center,
         full_width: false,
         fit_content: false,
         **system_arguments
       )
         @href = FlatPack::AttributeSanitizer.validate_href!(href)
-        @label = label.to_s
-        @variant = variant.to_sym
+        @text = text.to_s
+        @style = style.to_sym
         @align = align.to_sym
         @full_width = full_width
         @fit_content = fit_content
         super(**system_arguments)
 
         validate_width_options!
-        validate_variant!
+        validate_style!
         validate_align!
-        validate_label!
+        validate_text!
       end
 
       def call
         content_tag(:table, **outer_table_attributes) do
           content_tag(:tr) do
             content_tag(:td, **button_cell_attributes) do
-              link_to(@href, style: link_style) { ERB::Util.html_escape(@label) }
+              link_to(@href, style: link_style) { ERB::Util.html_escape(@text) }
             end
           end
         end
@@ -66,7 +66,7 @@ module FlatPack
       end
 
       def button_cell_attributes
-        styles = VARIANT_STYLES.fetch(@variant)
+        styles = STYLES.fetch(@style)
         {
           align: @align.to_s,
           bgcolor: styles.fetch(:background),
@@ -82,7 +82,7 @@ module FlatPack
       end
 
       def link_style
-        styles = VARIANT_STYLES.fetch(@variant)
+        styles = STYLES.fetch(@style)
         [
           "display:#{@full_width ? "block" : "inline-block"}",
           (@full_width ? "width:100%" : nil),
@@ -106,21 +106,21 @@ module FlatPack
       end
 
       def theme_background_override
-        return unless %i[primary secondary].include?(@variant)
+        return unless %i[primary secondary].include?(@style)
 
-        "background-color:var(--button-#{@variant}-background-color, #{VARIANT_STYLES.fetch(@variant).fetch(:background)})"
+        "background-color:var(--button-#{@style}-background-color, #{STYLES.fetch(@style).fetch(:background)})"
       end
 
       def theme_border_override
-        return unless %i[primary secondary].include?(@variant)
+        return unless %i[primary secondary].include?(@style)
 
-        "border:1px solid var(--button-#{@variant}-border-color, #{VARIANT_STYLES.fetch(@variant).fetch(:border)})"
+        "border:1px solid var(--button-#{@style}-border-color, #{STYLES.fetch(@style).fetch(:border)})"
       end
 
       def theme_text_color_override
-        return unless %i[primary secondary].include?(@variant)
+        return unless %i[primary secondary].include?(@style)
 
-        "color:var(--button-#{@variant}-text-color, #{VARIANT_STYLES.fetch(@variant).fetch(:color)})"
+        "color:var(--button-#{@style}-text-color, #{STYLES.fetch(@style).fetch(:color)})"
       end
 
       def table_width_style
@@ -137,10 +137,10 @@ module FlatPack
         raise ArgumentError, "full_width and fit_content cannot both be true"
       end
 
-      def validate_variant!
-        return if VARIANTS.include?(@variant)
+      def validate_style!
+        return if STYLE_VALUES.include?(@style)
 
-        raise ArgumentError, "variant must be one of: #{VARIANTS.join(", ")}"
+        raise ArgumentError, "style must be one of: #{STYLE_VALUES.join(", ")}"
       end
 
       def validate_align!
@@ -149,10 +149,10 @@ module FlatPack
         raise ArgumentError, "align must be one of: #{ALIGNMENTS.join(", ")}"
       end
 
-      def validate_label!
-        return if @label.present?
+      def validate_text!
+        return if @text.present?
 
-        raise ArgumentError, "label must be present"
+        raise ArgumentError, "text must be present"
       end
     end
   end

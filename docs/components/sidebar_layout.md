@@ -14,7 +14,7 @@ Use Sidebar Layout for pages that need persistent sidebar navigation with respon
 | name | type | default | required | description |
 |------|------|---------|----------|-------------|
 | `side` | Symbol | `:left` | No | Sidebar side. Allowed: `:left`, `:right`. |
-| `default_open` | Boolean | `true` | No | Initial desktop sidebar state (expanded when true, collapsed when false). |
+| `open` | Boolean | `true` | No | Initial desktop sidebar state (expanded when true, collapsed when false). |
 | `storage_key` | String or nil | `nil` | No | localStorage key used by controller for desktop collapsed-state persistence. |
 | `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into root container. |
 
@@ -41,7 +41,7 @@ Use Sidebar Layout for pages that need persistent sidebar navigation with respon
   <% layout.sidebar do %>
     <%= render FlatPack::Sidebar::Component.new do |sidebar| %>
       <% sidebar.items do %>
-        <%= render FlatPack::Sidebar::Item::Component.new(label: "Dashboard", href: "/", icon: :home, active: true) %>
+        <%= render FlatPack::Sidebar::Item::Component.new(text: "Dashboard", href: "/", icon: :home, active: true) %>
       <% end %>
     <% end %>
   <% end %>

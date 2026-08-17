@@ -250,7 +250,7 @@ module FlatPack
       end
 
       def test_renders_configured_empty_state
-        render_inline(Component.new(see_all_href: "/notifications", empty_message: "Nothing new"))
+        render_inline(Component.new(see_all_href: "/notifications", empty_text: "Nothing new"))
 
         assert_text "Nothing new"
       end

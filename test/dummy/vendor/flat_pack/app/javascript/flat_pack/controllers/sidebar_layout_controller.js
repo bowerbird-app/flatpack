@@ -4,7 +4,7 @@ export default class extends Controller {
   static targets = ["sidebar", "backdrop", "desktopToggle", "collapsedToggle", "mobileToggle", "headerLabel", "headerBrand", "headerRow", "footer", "scrollContainer"]
   static values = {
     side: String,
-    defaultOpen: Boolean,
+    open: Boolean,
     storageKey: String
   }
 
@@ -22,7 +22,7 @@ export default class extends Controller {
     if (!this.isMobile && this.hasStorageKeyValue) {
       this.loadDesktopState()
     } else if (!this.isMobile) {
-      this.collapsed = !this.defaultOpenValue
+      this.collapsed = !this.openValue
     }
 
     // Apply initial desktop state. The inline FOUC script in the component HTML

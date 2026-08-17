@@ -36,3 +36,6 @@ Use this structure for every component doc under `docs/components/`.
 
 - Human index: `docs/components/README.md`
 - Machine index: `docs/components/manifest.yml`
+- Shared param names: `docs/components/PARAMS.md`
+
+Use `docs/components/PARAMS.md` for cross-component param names (`style`, `href`, `text`, `placement`, and the rest). Do not invent synonyms for those shared concepts.

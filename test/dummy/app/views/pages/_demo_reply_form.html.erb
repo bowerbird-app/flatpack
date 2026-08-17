@@ -11,7 +11,7 @@
         <div class="flex items-center justify-end w-full gap-2">
           <%= render FlatPack::Button::Component.new(
             text: "Cancel",
-            url: demo_comments_path(anchor: "comment-#{parent_comment.id}"),
+            href: demo_comments_path(anchor: "comment-#{parent_comment.id}"),
             style: :ghost,
             size: :sm,
             class: "rounded-xl"

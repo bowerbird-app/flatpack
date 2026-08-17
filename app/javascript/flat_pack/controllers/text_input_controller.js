@@ -56,7 +56,7 @@ export default class extends Controller {
       return
     }
 
-    this.dispatchToast("error", "Unable to copy")
+    this.dispatchToast("danger", "Unable to copy")
   }
 
   async writeText(text) {
@@ -81,11 +81,11 @@ export default class extends Controller {
     return copied
   }
 
-  dispatchToast(type, message) {
+  dispatchToast(style, text) {
     document.dispatchEvent(new CustomEvent("toast:add", {
       detail: {
-        type,
-        message,
+        style,
+        text,
         timeout: 3000
       }
     }))

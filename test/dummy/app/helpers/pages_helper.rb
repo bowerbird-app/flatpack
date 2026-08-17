@@ -75,7 +75,7 @@ module PagesHelper
         searchable: false,
         modal: false,
         items_height: "min-content",
-        confirm_text: "Use Assets"
+        confirm_label: "Use Assets"
       ) %>
 
       <%= render FlatPack::Picker::Component.new(
@@ -86,7 +86,7 @@ module PagesHelper
         minimum_searchable: 5,
         modal: false,
         items_height: "min-content",
-        confirm_text: "Use Assets"
+        confirm_label: "Use Assets"
       ) %>
     CODE
   end
@@ -119,7 +119,7 @@ module PagesHelper
         output_target: "#picker-folder-field",
         modal_body_height_mode: :fixed,
         modal_body_height: "clamp(18rem, 48vh, 24rem)",
-        confirm_text: "Use Folder",
+        confirm_label: "Use Folder",
         context: { target: "picker-demo-folders" }
       ) %>
     CODE
@@ -147,7 +147,7 @@ module PagesHelper
         accepted_kinds: [:record],
         selection_mode: :single,
         search_mode: :local,
-        confirm_text: "Assign Folder",
+        confirm_label: "Assign Folder",
         form: {
           url: demo_picker_submissions_path,
           method: :post,
@@ -190,7 +190,7 @@ module PagesHelper
         search_mode: :local,
         modal_body_height_mode: :fixed,
         modal_body_height: "clamp(20rem, 55vh, 30rem)",
-        confirm_text: "Use Selection",
+        confirm_label: "Use Selection",
         context: { target: "picker-demo-local" }
       ) %>
     CODE
@@ -228,7 +228,7 @@ module PagesHelper
         search_endpoint: demo_picker_results_path,
         modal_body_height_mode: :fixed,
         modal_body_height: "clamp(20rem, 55vh, 30rem)",
-        confirm_text: "Use Remote Selection",
+        confirm_label: "Use Remote Selection",
         context: { target: "picker-demo-remote" }
       ) %>
     CODE
@@ -249,7 +249,7 @@ module PagesHelper
         modal: false,
         output_mode: :field,
         output_target: "#picker-inline-selected-field",
-        confirm_text: "Use Inline Selection",
+        confirm_label: "Use Inline Selection",
         context: { target: "picker-demo-inline" }
       ) %>
     CODE
@@ -266,7 +266,7 @@ module PagesHelper
         items_height: "min-content",
         modal: false,
         selection_mode: :single,
-        confirm_text: "Use Asset"
+        confirm_label: "Use Asset"
       ) %>
     CODE
   end
@@ -281,7 +281,7 @@ module PagesHelper
         search_mode: :local,
         items_height: "max-content",
         modal: false,
-        confirm_text: "Use Assets"
+        confirm_label: "Use Assets"
       ) %>
     CODE
   end
@@ -296,7 +296,7 @@ module PagesHelper
         search_mode: :local,
         items_height: "240px",
         modal: false,
-        confirm_text: "Use Assets"
+        confirm_label: "Use Assets"
       ) %>
     CODE
   end
@@ -324,7 +324,7 @@ module PagesHelper
         results_layout: :grid,
         modal_body_height_mode: :fixed,
         modal_body_height: "clamp(18rem, 50vh, 26rem)",
-        confirm_text: "Use Image",
+        confirm_label: "Use Image",
         context: { target: "picker-demo-images" }
       ) %>
     CODE
@@ -357,7 +357,7 @@ module PagesHelper
         output_target: "#picker-auto-confirm-field",
         modal_body_height_mode: :fixed,
         modal_body_height: "clamp(18rem, 50vh, 24rem)",
-        confirm_text: "Use Asset",
+        confirm_label: "Use Asset",
         context: { target: "picker-demo-auto-confirm" }
       ) %>
     CODE
@@ -388,7 +388,7 @@ module PagesHelper
         modal_body_height: "24rem",
         output_mode: :field,
         output_target: "#picker-selected-assets-field",
-        confirm_text: "Store Selection",
+        confirm_label: "Store Selection",
         context: { target: "picker-demo-field" }
       ) %>
     CODE

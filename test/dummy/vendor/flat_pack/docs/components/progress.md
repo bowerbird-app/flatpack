@@ -15,7 +15,7 @@ Use Progress when users need a visual indicator of completion for uploads, tasks
 |------|------|---------|----------|-------------|
 | `value` | Numeric | none | Yes | Current progress value. Must be non-negative. |
 | `max` | Numeric | `100` | No | Maximum value. Must be greater than zero. |
-| `variant` | Symbol | `:default` | No | Fill color variant. Allowed: `:default`, `:success`, `:warning`, `:danger`. |
+| `style` | Symbol | `:default` | No | Fill color style. Allowed: `:default`, `:success`, `:warning`, `:danger`. |
 | `size` | Symbol | `:md` | No | Bar height. Allowed: `:sm`, `:md`, `:lg`, `:xl`. |
 | `label` | String or nil | `nil` | No | Optional visible label text and default `aria-label` source. |
 | `show_label` | Boolean | `false` | No | When true and `label` is nil, renders computed percentage text. |
@@ -26,12 +26,12 @@ None.
 
 ## Variants
 
-| variant | description |
+| style | description |
 |---------|-------------|
-| `variant: :default` | Primary fill color (`bg-primary`). |
-| `variant: :success` | Success fill color (`bg-success-background-color`). |
-| `variant: :warning` | Warning fill color (`bg-warning-background-color`). |
-| `variant: :danger` | Danger fill color (`bg-danger-background-color`). |
+| `style: :default` | Primary fill color (`bg-primary`). |
+| `style: :success` | Success fill color (`bg-success-background-color`). |
+| `style: :warning` | Warning fill color (`bg-warning-background-color`). |
+| `style: :danger` | Danger fill color (`bg-danger-background-color`). |
 
 ## Example
 
@@ -39,7 +39,7 @@ None.
 <%= render FlatPack::Progress::Component.new(
   value: 72,
   max: 100,
-  variant: :default,
+  style: :default,
   show_label: true
 ) %>
 ```
