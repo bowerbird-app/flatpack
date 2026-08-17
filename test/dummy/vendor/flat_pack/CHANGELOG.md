@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Bumped the gem version to `0.1.124`.
 - Standardized shared component param names. This gem is unreleased, so old names were removed rather than aliased.
+- Updated development lockfiles to patched `rails` (`8.1.3.1` / `7.2.3.2`), `json` `2.21.2`, and `sqlite3` `2.9.6`.
 
 #### Upgrade notes
 
@@ -43,7 +44,7 @@ Renames:
 | `Button`, `ChartButtons#button` | `url` | `href` |
 | `PageNav` | `anchor_url`, `secondary_anchor_url` | `anchor_href`, `secondary_anchor_href` |
 | `Breadcrumb` | `home_url`, `back_fallback_url` | `home_href`, `back_fallback_href` |
-| `Progress`, `EmailButton`, `Toast`, `Sidebar::Badge` | `variant` / `type` | `style` |
+| `Progress`, `EmailButton`, `Toast`, `Sidebar::Badge`, `Timeline::Item` | `variant` / `type` / `status` | `style` |
 | `EmailButton`, `Sidebar::Item`, `BottomNav::Item` | `label` | `text` |
 | `Toast` | `message` | `text` |
 | `Button::Dropdown`, `ChartButtons#dropdown` | `position` | `placement` |
@@ -58,7 +59,7 @@ Renames:
 
 The `toast:add` event now uses `{ style, text }` instead of `{ type, message }`. Stimulus values follow the same names (`placement`, `orderableUrl`, `emptyText`, `open`).
 
-Keep `variant` for structural/layout choices such as Hero, Tabs, Carousel, Page Title heading level, and Chat Layout.
+Keep `variant` for structural/layout choices such as Hero, Tabs, Carousel, Page Title heading level, Comments Thread spacing, Skeleton shape, and Chat Layout. `Timeline::Item` no longer accepts `status` as an alias for color.
 
 ### Fixed
 

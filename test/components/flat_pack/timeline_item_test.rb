@@ -41,26 +41,26 @@ module FlatPack
         assert_text "Described event"
       end
 
-      def test_renders_default_variant
+      def test_renders_default_style
         render_inline(Item.new(title: "Event"))
 
         assert_includes page.native.to_html, "bg-[var(--timeline-marker-default-background-color)]"
       end
 
-      def test_renders_success_variant
-        render_inline(Item.new(title: "Event", variant: :success))
+      def test_renders_success_style
+        render_inline(Item.new(title: "Event", style: :success))
 
         assert_includes page.native.to_html, "bg-[var(--timeline-marker-success-background-color)]"
       end
 
-      def test_renders_warning_variant
-        render_inline(Item.new(title: "Event", variant: :warning))
+      def test_renders_warning_style
+        render_inline(Item.new(title: "Event", style: :warning))
 
         assert_includes page.native.to_html, "bg-[var(--timeline-marker-warning-background-color)]"
       end
 
-      def test_renders_danger_variant
-        render_inline(Item.new(title: "Event", variant: :danger))
+      def test_renders_danger_style
+        render_inline(Item.new(title: "Event", style: :danger))
 
         assert_includes page.native.to_html, "bg-[var(--timeline-marker-danger-background-color)]"
       end
@@ -97,9 +97,9 @@ module FlatPack
         end
       end
 
-      def test_raises_error_for_invalid_variant
+      def test_raises_error_for_invalid_style
         assert_raises(ArgumentError) do
-          Item.new(title: "Event", variant: :invalid)
+          Item.new(title: "Event", style: :invalid)
         end
       end
 

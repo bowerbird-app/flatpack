@@ -3,7 +3,7 @@
     <%= render FlatPack::Alert::Component.new(
       title: "#{pluralize(article.errors.count, "error")} prevented this article from being saved:",
       description: article.errors.full_messages.join(", "),
-      variant: :danger,
+      style: :danger,
       dismissible: true
     ) %>
   <% end %>
