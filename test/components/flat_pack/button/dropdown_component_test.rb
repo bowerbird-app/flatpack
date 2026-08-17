@@ -102,25 +102,25 @@ module FlatPack
       def test_renders_bottom_right_position
         render_inline(Dropdown::Component.new(text: "Actions", placement: :bottom_right))
 
-        assert_selector "div[data-controller='flat-pack--button-dropdown'][data-flat-pack--button-dropdown-position-value='bottom_right']"
+        assert_selector "div[data-controller='flat-pack--button-dropdown'][data-flat-pack--button-dropdown-placement-value='bottom_right']"
       end
 
       def test_renders_bottom_left_position
         render_inline(Dropdown::Component.new(text: "Actions", placement: :bottom_left))
 
-        assert_selector "div[data-controller='flat-pack--button-dropdown'][data-flat-pack--button-dropdown-position-value='bottom_left']"
+        assert_selector "div[data-controller='flat-pack--button-dropdown'][data-flat-pack--button-dropdown-placement-value='bottom_left']"
       end
 
       def test_renders_top_right_position
         render_inline(Dropdown::Component.new(text: "Actions", placement: :top_right))
 
-        assert_selector "div[data-controller='flat-pack--button-dropdown'][data-flat-pack--button-dropdown-position-value='top_right']"
+        assert_selector "div[data-controller='flat-pack--button-dropdown'][data-flat-pack--button-dropdown-placement-value='top_right']"
       end
 
       def test_renders_top_left_position
         render_inline(Dropdown::Component.new(text: "Actions", placement: :top_left))
 
-        assert_selector "div[data-controller='flat-pack--button-dropdown'][data-flat-pack--button-dropdown-position-value='top_left']"
+        assert_selector "div[data-controller='flat-pack--button-dropdown'][data-flat-pack--button-dropdown-placement-value='top_left']"
       end
 
       def test_raises_error_for_invalid_position
@@ -254,7 +254,7 @@ module FlatPack
         render_inline(Dropdown::Component.new(text: "Actions"))
 
         assert_selector "div[data-controller='flat-pack--button-dropdown']"
-        assert_selector "div[data-flat-pack--button-dropdown-position-value='bottom_right']"
+        assert_selector "div[data-flat-pack--button-dropdown-placement-value='bottom_right']"
       end
 
       def test_renders_stimulus_target_on_trigger
