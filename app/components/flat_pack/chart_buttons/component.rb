@@ -81,7 +81,7 @@ module FlatPack
       def checkbox(
         name:,
         label:,
-        href:,
+        url:,
         checked: false,
         checked_value: "1",
         unchecked_value: "0",
@@ -95,7 +95,7 @@ module FlatPack
           FlatPack::ChartButtons::CheckboxComponent.new(
             name: name,
             label: label,
-            href: href,
+            url: url,
             checked: checked,
             checked_value: checked_value,
             unchecked_value: unchecked_value,

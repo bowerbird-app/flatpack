@@ -69,7 +69,7 @@ module FlatPack
 
       def test_merges_item_system_arguments_class_data_and_aria
         render_inline(Component.new) do |nav|
-          nav.item(text: "Home", href: "/", class: "custom-item", data: {track: "home"}, aria: {text: "Go home"})
+          nav.item(text: "Home", href: "/", class: "custom-item", data: {track: "home"}, aria: {label: "Go home"})
         end
 
         assert_selector "a.custom-item[data-track='home'][aria-label='Go home']"
