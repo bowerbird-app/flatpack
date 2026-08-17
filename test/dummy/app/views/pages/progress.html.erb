@@ -69,22 +69,22 @@
   <div class="space-y-6 p-6 bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] rounded-lg">
     <div>
       <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Default</p>
-      <%= render FlatPack::Progress::Component.new(value: 60, variant: :default) %>
+      <%= render FlatPack::Progress::Component.new(value: 60, style: :default) %>
     </div>
 
     <div>
       <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Success</p>
-      <%= render FlatPack::Progress::Component.new(value: 100, variant: :success) %>
+      <%= render FlatPack::Progress::Component.new(value: 100, style: :success) %>
     </div>
 
     <div>
       <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Warning</p>
-      <%= render FlatPack::Progress::Component.new(value: 60, variant: :warning) %>
+      <%= render FlatPack::Progress::Component.new(value: 60, style: :warning) %>
     </div>
 
     <div>
       <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Danger</p>
-      <%= render FlatPack::Progress::Component.new(value: 30, variant: :danger) %>
+      <%= render FlatPack::Progress::Component.new(value: 30, style: :danger) %>
     </div>
   </div>
 
@@ -93,22 +93,22 @@
       &lt;div class=&quot;space-y-6 p-6 bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] rounded-lg&quot;&gt;
         &lt;div&gt;
           &lt;p class=&quot;text-sm text-[var(--surface-muted-content-color)] mb-2&quot;&gt;Default&lt;/p&gt;
-          &lt;%= render FlatPack::Progress::Component.new(value: 60, variant: :default) %&gt;
+          &lt;%= render FlatPack::Progress::Component.new(value: 60, style: :default) %&gt;
         &lt;/div&gt;
     
         &lt;div&gt;
           &lt;p class=&quot;text-sm text-[var(--surface-muted-content-color)] mb-2&quot;&gt;Success&lt;/p&gt;
-          &lt;%= render FlatPack::Progress::Component.new(value: 100, variant: :success) %&gt;
+          &lt;%= render FlatPack::Progress::Component.new(value: 100, style: :success) %&gt;
         &lt;/div&gt;
     
         &lt;div&gt;
           &lt;p class=&quot;text-sm text-[var(--surface-muted-content-color)] mb-2&quot;&gt;Warning&lt;/p&gt;
-          &lt;%= render FlatPack::Progress::Component.new(value: 60, variant: :warning) %&gt;
+          &lt;%= render FlatPack::Progress::Component.new(value: 60, style: :warning) %&gt;
         &lt;/div&gt;
     
         &lt;div&gt;
           &lt;p class=&quot;text-sm text-[var(--surface-muted-content-color)] mb-2&quot;&gt;Danger&lt;/p&gt;
-          &lt;%= render FlatPack::Progress::Component.new(value: 30, variant: :danger) %&gt;
+          &lt;%= render FlatPack::Progress::Component.new(value: 30, style: :danger) %&gt;
         &lt;/div&gt;
       &lt;/div&gt;
     CODE
@@ -180,7 +180,7 @@
       <%= render FlatPack::Progress::Component.new(
         value: 45,
         label: "uploading-document.pdf (4.5 MB / 10 MB)",
-        variant: :default,
+        style: :default,
         size: :md
       ) %>
     </div>
@@ -191,7 +191,7 @@
         value: 3,
         max: 5,
         label: "Step 3 of 5",
-        variant: :default
+        style: :default
       ) %>
     </div>
 
@@ -201,7 +201,7 @@
         value: 85,
         show_label: true,
         label: "Project Tasks",
-        variant: :success
+        style: :success
       ) %>
     </div>
   </div>
@@ -214,7 +214,7 @@
           &lt;%= render FlatPack::Progress::Component.new(
             value: 45,
             label: &quot;uploading-document.pdf (4.5 MB / 10 MB)&quot;,
-            variant: :default,
+            style: :default,
             size: :md
           ) %&gt;
         &lt;/div&gt;
@@ -225,7 +225,7 @@
             value: 3,
             max: 5,
             label: &quot;Step 3 of 5&quot;,
-            variant: :default
+            style: :default
           ) %&gt;
         &lt;/div&gt;
     
@@ -235,7 +235,7 @@
             value: 85,
             show_label: true,
             label: &quot;Project Tasks&quot;,
-            variant: :success
+            style: :success
           ) %&gt;
         &lt;/div&gt;
       &lt;/div&gt;

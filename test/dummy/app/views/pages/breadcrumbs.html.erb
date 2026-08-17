@@ -133,7 +133,7 @@
         show_back: true,
         back_href: "javascript:window.history.back()",
         show_home: true,
-        home_url: demo_path,
+        home_href: demo_path,
         class: "mb-2"
       ) do |breadcrumb| %>
         <% breadcrumb.item(text: "Settings", href: "/settings") %>
@@ -146,7 +146,7 @@
           show_back: true,
           back_href: "javascript:window.history.back()",
           show_home: true,
-          home_url: demo_path,
+          home_href: demo_path,
           class: "mb-2"
         ) do |breadcrumb| %&gt;
           &lt;% breadcrumb.item(text: "Settings", href: "/settings") %&gt;
@@ -163,7 +163,7 @@
     <div class="mb-4">
       <%= render FlatPack::Breadcrumb::Component.new(
         show_home: true,
-        home_url: "/dashboard",
+        home_href: "/dashboard",
         home_text: "Dashboard",
         home_icon: "dashboard"
       ) do |breadcrumb| %>
@@ -175,7 +175,7 @@
       code: CGI.unescapeHTML(<<~'CODE')
         &lt;%= render FlatPack::Breadcrumb::Component.new(
           show_home: true,
-          home_url: "/dashboard",
+          home_href: "/dashboard",
           home_text: "Dashboard",
           home_icon: "dashboard"
         ) do |breadcrumb| %&gt;

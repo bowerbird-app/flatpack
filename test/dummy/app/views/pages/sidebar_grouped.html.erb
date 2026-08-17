@@ -18,15 +18,15 @@
 
       <% sidebar.items do %>
         <nav class="py-4 space-y-1">
-          <%= render FlatPack::Sidebar::Item::Component.new(label: "Overview", href: "#", icon: :home, active: true) %>
-          <%= render FlatPack::Sidebar::Item::Component.new(label: "Getting Started", href: "#", icon: :box) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(text: "Overview", href: "#", icon: :home, active: true) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(text: "Getting Started", href: "#", icon: :box) %>
           <%= render FlatPack::Sidebar::Divider::Component.new %>
 
-          <%= render FlatPack::Sidebar::Group::Component.new(label: "Components", icon: :dashboard, default_open: true) do |group| %>
+          <%= render FlatPack::Sidebar::Group::Component.new(title: "Components", icon: :dashboard, open: true) do |group| %>
             <% group.items do %>
-              <%= render FlatPack::Sidebar::Item::Component.new(label: "Buttons", href: "#", icon: :square) %>
-              <%= render FlatPack::Sidebar::Item::Component.new(label: "Inputs", href: "#", icon: :type) %>
-              <%= render FlatPack::Sidebar::Item::Component.new(label: "Tables", href: "#", icon: :table) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(text: "Buttons", href: "#", icon: :square) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(text: "Inputs", href: "#", icon: :type) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(text: "Tables", href: "#", icon: :table) %>
             <% end %>
           <% end %>
         </nav>
@@ -49,15 +49,15 @@
     
           &lt;% sidebar.items do %&gt;
             &lt;nav class=&quot;py-4 space-y-1&quot;&gt;
-              &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Overview&quot;, href: &quot;#&quot;, icon: :home, active: true) %&gt;
-              &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Getting Started&quot;, href: &quot;#&quot;, icon: :box) %&gt;
+              &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Overview&quot;, href: &quot;#&quot;, icon: :home, active: true) %&gt;
+              &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Getting Started&quot;, href: &quot;#&quot;, icon: :box) %&gt;
               &lt;%= render FlatPack::Sidebar::Divider::Component.new %&gt;
     
-              &lt;%= render FlatPack::Sidebar::Group::Component.new(label: &quot;Components&quot;, icon: :dashboard, default_open: true) do |group| %&gt;
+              &lt;%= render FlatPack::Sidebar::Group::Component.new(title: &quot;Components&quot;, icon: :dashboard, open: true) do |group| %&gt;
                 &lt;% group.items do %&gt;
-                  &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Buttons&quot;, href: &quot;#&quot;, icon: :square) %&gt;
-                  &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Inputs&quot;, href: &quot;#&quot;, icon: :type) %&gt;
-                  &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Tables&quot;, href: &quot;#&quot;, icon: :table) %&gt;
+                  &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Buttons&quot;, href: &quot;#&quot;, icon: :square) %&gt;
+                  &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Inputs&quot;, href: &quot;#&quot;, icon: :type) %&gt;
+                  &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Tables&quot;, href: &quot;#&quot;, icon: :table) %&gt;
                 &lt;% end %&gt;
               &lt;% end %&gt;
             &lt;/nav&gt;

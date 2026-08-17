@@ -21,9 +21,9 @@ Use Breadcrumb on nested pages where users need orientation and quick navigation
 | `back_text` | String | `"Back"` | no | Back item text. |
 | `back_icon` | String | `"chevron-left"` | no | Back item icon name. |
 | `back_href` | String | `nil` | no | Explicit back target that overrides derived breadcrumb behavior. |
-| `back_fallback_url` | String | `"/"` | no | URL used when no previous linked breadcrumb level exists. |
+| `back_fallback_href` | String | `"/"` | no | URL used when no previous linked breadcrumb level exists. |
 | `show_home` | Boolean | `false` | no | Prepends a home item before declared items. |
-| `home_url` | String | `"/"` | no | Home item URL. |
+| `home_href` | String | `"/"` | no | Home item URL. |
 | `home_text` | String | `"Home"` | no | Home item label text. |
 | `home_icon` | String | `"home"` | no | Home item icon name. |
 | `max_items` | Integer | `nil` | no | When exceeded, collapses middle items to `...` item. |
@@ -67,7 +67,7 @@ Use Breadcrumb on nested pages where users need orientation and quick navigation
 <% end %>
 ```
 
-When `show_back: true` is enabled, the back item resolves to the previous linked breadcrumb item by default. Use `back_href:` to force a specific destination, and `back_fallback_url:` when the trail has no earlier linked level.
+When `show_back: true` is enabled, the back item resolves to the previous linked breadcrumb item by default. Use `back_href:` to force a specific destination, and `back_fallback_href:` when the trail has no earlier linked level.
 
 ## Accessibility
 - Wrapper uses semantic `<nav aria-label="Breadcrumb">` with ordered list items.

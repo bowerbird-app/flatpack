@@ -233,8 +233,8 @@ Temporary notification toasts with auto-dismiss and animations.
 
 <!-- Individual toast -->
 <%= render FlatPack::Toast::Component.new(
-  message: "Changes saved successfully",
-  type: :success,
+  text: "Changes saved successfully",
+  style: :success,
   timeout: 5000
 ) %>
 ```

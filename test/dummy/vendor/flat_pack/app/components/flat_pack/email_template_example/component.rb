@@ -30,8 +30,8 @@ module FlatPack
       def render_primary_button
         render FlatPack::EmailButton::Component.new(
           href: "https://example.com/confirm",
-          label: "Confirm details",
-          variant: :primary,
+          text: "Confirm details",
+          style: :primary,
           full_width: true
         )
       end
@@ -39,8 +39,8 @@ module FlatPack
       def render_secondary_button
         render FlatPack::EmailButton::Component.new(
           href: "https://example.com/settings",
-          label: "Review settings",
-          variant: :secondary,
+          text: "Review settings",
+          style: :secondary,
           full_width: true
         )
       end

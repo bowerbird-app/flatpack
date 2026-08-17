@@ -394,13 +394,13 @@
     <%= render FlatPack::ChartButtons::Component.new(turbo_frame: "chart-period-filter") do |controls| %>
       <% controls.button(
         text: "Day",
-        url: demo_charts_path(period: "day", compare: compare_value),
+        href: demo_charts_path(period: "day", compare: compare_value),
         selected: @chart_filter_period == "day"
       ) %>
 
       <% controls.button(
         text: "Month",
-        url: demo_charts_path(period: "month", compare: compare_value),
+        href: demo_charts_path(period: "month", compare: compare_value),
         selected: @chart_filter_period == "month"
       ) %>
 
@@ -427,7 +427,7 @@
           text: "Reset",
           style: :ghost,
           size: :sm,
-          url: demo_charts_path(period: "day", compare: "0"),
+          href: demo_charts_path(period: "day", compare: "0"),
           data: {
             turbo_frame: "chart-period-filter",
             turbo_prefetch: false
@@ -477,7 +477,7 @@
 
       #{erb_output_open} turbo_frame_tag "chart-period-filter" do #{erb_tag_close}
         #{erb_output_open} render FlatPack::ChartButtons::Component.new(turbo_frame: "chart-period-filter") do |controls| #{erb_tag_close}
-          #{erb_open}% controls.button(text: "Day", url: demo_charts_path(period: "day", compare: compare_value), selected: period == "day") %#{erb_tag_close}
+          #{erb_open}% controls.button(text: "Day", href: demo_charts_path(period: "day", compare: compare_value), selected: period == "day") %#{erb_tag_close}
           #{erb_open}% controls.dropdown(text: "Range", options: [
             {text: "Day", url: demo_charts_path(period: "day", compare: compare_value), selected: period == "day"},
             {text: "Week", url: demo_charts_path(period: "week", compare: compare_value), selected: period == "week"},
@@ -509,7 +509,7 @@
         text: "Open Default Chart Filter Demo",
         style: :secondary,
         size: :sm,
-        url: demo_charts_default_filter_path
+        href: demo_charts_default_filter_path
       ) %>
     </div>
   </div>
@@ -529,12 +529,12 @@
         <%= render FlatPack::ChartButtons::Component.new(margin_bottom: nil) do |controls| %>
           <% controls.button(
             text: "Chart 1 Day",
-            url: demo_charts_path(chart_1_period: "day", chart_2_period: @chart_multi_chart_2_period),
+            href: demo_charts_path(chart_1_period: "day", chart_2_period: @chart_multi_chart_2_period),
             data: {turbo_frame: "chart-1-frame"}
           ) %>
           <% controls.button(
             text: "Chart 1 Month",
-            url: demo_charts_path(chart_1_period: "month", chart_2_period: @chart_multi_chart_2_period),
+            href: demo_charts_path(chart_1_period: "month", chart_2_period: @chart_multi_chart_2_period),
             data: {turbo_frame: "chart-1-frame"}
           ) %>
         <% end %>
@@ -609,8 +609,8 @@
 
       #{erb_output_open} turbo_frame_tag "chart-period-filter-multi" do #{erb_tag_close}
         #{erb_output_open} render FlatPack::ChartButtons::Component.new(margin_bottom: nil) do |controls| #{erb_tag_close}
-          #{erb_open}% controls.button(text: "Chart 1 Day", url: demo_charts_path(chart_1_period: "day", chart_2_period: chart_2_period), data: {turbo_frame: "chart-1-frame"}) %#{erb_tag_close}
-          #{erb_open}% controls.button(text: "Chart 1 Month", url: demo_charts_path(chart_1_period: "month", chart_2_period: chart_2_period), data: {turbo_frame: "chart-1-frame"}) %#{erb_tag_close}
+          #{erb_open}% controls.button(text: "Chart 1 Day", href: demo_charts_path(chart_1_period: "day", chart_2_period: chart_2_period), data: {turbo_frame: "chart-1-frame"}) %#{erb_tag_close}
+          #{erb_open}% controls.button(text: "Chart 1 Month", href: demo_charts_path(chart_1_period: "month", chart_2_period: chart_2_period), data: {turbo_frame: "chart-1-frame"}) %#{erb_tag_close}
         #{erb_open} end #{erb_tag_close}
 
         #{erb_output_open} render FlatPack::ChartButtons::Component.new(margin_bottom: nil) do |controls| #{erb_tag_close}

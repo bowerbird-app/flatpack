@@ -18,15 +18,15 @@
 
       <% sidebar.items do %>
         <nav class="py-4 space-y-1">
-          <%= render FlatPack::Sidebar::Item::Component.new(label: "Dashboard", href: "#", icon: :home, active: true) %>
-          <%= render FlatPack::Sidebar::Item::Component.new(label: "Reports", href: "#", icon: :table) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(text: "Dashboard", href: "#", icon: :home, active: true) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(text: "Reports", href: "#", icon: :table) %>
           <%= render FlatPack::Sidebar::Divider::Component.new %>
 
-          <%= render FlatPack::Sidebar::Group::Component.new(label: "Team Settings", icon: :user, default_open: false) do |group| %>
+          <%= render FlatPack::Sidebar::Group::Component.new(title: "Team Settings", icon: :user, open: false) do |group| %>
             <% group.items do %>
-              <%= render FlatPack::Sidebar::Item::Component.new(label: "Members", href: "#", icon: :user) %>
-              <%= render FlatPack::Sidebar::Item::Component.new(label: "Roles", href: "#", icon: :dashboard) %>
-              <%= render FlatPack::Sidebar::Item::Component.new(label: "Permissions", href: "#", icon: :key) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(text: "Members", href: "#", icon: :user) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(text: "Roles", href: "#", icon: :dashboard) %>
+              <%= render FlatPack::Sidebar::Item::Component.new(text: "Permissions", href: "#", icon: :key) %>
             <% end %>
           <% end %>
         </nav>
@@ -49,15 +49,15 @@
     
           &lt;% sidebar.items do %&gt;
             &lt;nav class=&quot;py-4 space-y-1&quot;&gt;
-              &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Dashboard&quot;, href: &quot;#&quot;, icon: :home, active: true) %&gt;
-              &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Reports&quot;, href: &quot;#&quot;, icon: :table) %&gt;
+              &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Dashboard&quot;, href: &quot;#&quot;, icon: :home, active: true) %&gt;
+              &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Reports&quot;, href: &quot;#&quot;, icon: :table) %&gt;
               &lt;%= render FlatPack::Sidebar::Divider::Component.new %&gt;
     
-              &lt;%= render FlatPack::Sidebar::Group::Component.new(label: &quot;Team Settings&quot;, icon: :user, default_open: false) do |group| %&gt;
+              &lt;%= render FlatPack::Sidebar::Group::Component.new(title: &quot;Team Settings&quot;, icon: :user, open: false) do |group| %&gt;
                 &lt;% group.items do %&gt;
-                  &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Members&quot;, href: &quot;#&quot;, icon: :user) %&gt;
-                  &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Roles&quot;, href: &quot;#&quot;, icon: :dashboard) %&gt;
-                  &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Permissions&quot;, href: &quot;#&quot;, icon: :key) %&gt;
+                  &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Members&quot;, href: &quot;#&quot;, icon: :user) %&gt;
+                  &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Roles&quot;, href: &quot;#&quot;, icon: :dashboard) %&gt;
+                  &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Permissions&quot;, href: &quot;#&quot;, icon: :key) %&gt;
                 &lt;% end %&gt;
               &lt;% end %&gt;
             &lt;/nav&gt;

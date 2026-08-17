@@ -71,7 +71,7 @@ module FlatPack
         def test_custom_empty_state_messages
           render_inline(Component.new(
             empty_title: "Custom Empty",
-            empty_body: "Custom message"
+            empty_description: "Custom message"
           ))
 
           assert_selector "h4", text: "Custom Empty"

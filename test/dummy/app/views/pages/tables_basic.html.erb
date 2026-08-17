@@ -263,17 +263,17 @@
 
         <% controls.button(
           text: "Table 1 All",
-          url: demo_tables_basic_path(table_1_category: "all", table_2_status: @table_multi_status_value, table_multi_q: @table_multi_search_query),
+          href: demo_tables_basic_path(table_1_category: "all", table_2_status: @table_multi_status_value, table_multi_q: @table_multi_search_query),
           selected: @table_multi_category_value == "all"
         ) %>
         <% controls.button(
           text: "Table 1 Technology",
-          url: demo_tables_basic_path(table_1_category: "technology", table_2_status: @table_multi_status_value, table_multi_q: @table_multi_search_query),
+          href: demo_tables_basic_path(table_1_category: "technology", table_2_status: @table_multi_status_value, table_multi_q: @table_multi_search_query),
           selected: @table_multi_category_value == "technology"
         ) %>
         <% controls.button(
           text: "Table 1 Business",
-          url: demo_tables_basic_path(table_1_category: "business", table_2_status: @table_multi_status_value, table_multi_q: @table_multi_search_query),
+          href: demo_tables_basic_path(table_1_category: "business", table_2_status: @table_multi_status_value, table_multi_q: @table_multi_search_query),
           selected: @table_multi_category_value == "business"
         ) %>
 

@@ -12,7 +12,7 @@ module FlatPack
         undef_method :with_menu_item, :with_menu_divider
         undef_method :with_menu_item_content, :with_menu_divider_content
 
-        POSITIONS = {
+        PLACEMENTS = {
           bottom_right: "top-full right-0 mt-2",
           bottom_left: "top-full left-0 mt-2",
           top_right: "bottom-full right-0 mb-2",
@@ -26,7 +26,7 @@ module FlatPack
           icon: nil,
           show_chevron: true,
           disabled: false,
-          position: :bottom_right,
+          placement: :bottom_right,
           max_height: "384px",
           trigger_attributes: {},
           **system_arguments
@@ -38,11 +38,11 @@ module FlatPack
           @icon = icon
           @show_chevron = show_chevron
           @disabled = disabled
-          @position = position.to_sym
+          @placement = placement.to_sym
           @max_height = max_height
           @trigger_attributes = sanitize_args(trigger_attributes)
 
-          validate_position!
+          validate_placement!
         end
 
         def menu_item(**kwargs, &block)
@@ -70,7 +70,7 @@ module FlatPack
           {
             controller: "flat-pack--button-dropdown",
             flat_pack__button_dropdown_max_height_value: @max_height,
-            flat_pack__button_dropdown_position_value: @position
+            flat_pack__button_dropdown_placement_value: @placement
           }
         end
 
@@ -157,11 +157,11 @@ module FlatPack
           )
         end
 
-        def validate_position!
-          return if POSITIONS.key?(@position)
+        def validate_placement!
+          return if PLACEMENTS.key?(@placement)
 
           raise ArgumentError,
-            "Invalid position: #{@position}. Must be one of: #{POSITIONS.keys.join(", ")}"
+            "Invalid placement: #{@placement}. Must be one of: #{PLACEMENTS.keys.join(", ")}"
         end
 
         def extract_nested_attributes(attrs, key)

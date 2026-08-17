@@ -88,7 +88,7 @@ module FlatPack
       end
 
       def test_applies_class_name_to_fallback_rendering
-        render_inline(Component.new(timestamp: nil, fallback_text: "Unavailable", class_name: "text-green-600 text-xs"))
+        render_inline(Component.new(timestamp: nil, fallback_text: "Unavailable", class: "text-green-600 text-xs"))
 
         assert_selector "span.flat-pack-timestamp.text-green-600.text-xs", text: "Unavailable"
       end
@@ -123,14 +123,14 @@ module FlatPack
       end
 
       def test_class_name_can_override_default_margin
-        render_inline(Component.new(timestamp: Time.zone.parse("2026-06-10 09:30:00"), class_name: "mb-4"))
+        render_inline(Component.new(timestamp: Time.zone.parse("2026-06-10 09:30:00"), class: "mb-4"))
 
         assert_selector "time.flat-pack-timestamp.mb-4"
         refute_selector "time.mb-0"
       end
 
       def test_applies_class_name_to_timestamp_time_element
-        render_inline(Component.new(timestamp: Time.zone.parse("2026-06-10 09:30:00"), class_name: "text-green-600 text-xs"))
+        render_inline(Component.new(timestamp: Time.zone.parse("2026-06-10 09:30:00"), class: "text-green-600 text-xs"))
 
         assert_selector "time.flat-pack-timestamp.text-green-600.text-xs"
       end

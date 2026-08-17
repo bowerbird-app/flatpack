@@ -25,8 +25,8 @@
 
     <%= render FlatPack::EmailButton::Component.new(
       href: "https://example.com/activate",
-      label: "Activate account",
-      variant: :primary,
+      text: "Activate account",
+      style: :primary,
       full_width: true
     ) %>
 
@@ -34,8 +34,8 @@
 
     <%= render FlatPack::EmailButton::Component.new(
       href: "https://example.com/tour",
-      label: "Take a quick tour",
-      variant: :secondary,
+      text: "Take a quick tour",
+      style: :secondary,
       full_width: true
     ) %>
 
@@ -59,8 +59,8 @@
 
         &lt;%= render FlatPack::EmailButton::Component.new(
           href: "https://example.com/activate",
-          label: "Activate account",
-          variant: :primary,
+          text: "Activate account",
+          style: :primary,
           full_width: true
         ) %&gt;
       &lt;% end %&gt;

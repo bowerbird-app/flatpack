@@ -340,7 +340,7 @@
     <% card.body do %>
       <%= render FlatPack::List::Component.new(
         orderable: true,
-        orderable_path: demo_list_reorder_path,
+        orderable_url: demo_list_reorder_path,
         param_uuid_name: "moving_recording_id",
         param_target_position_name: "target_position",
         divider: true
@@ -372,7 +372,7 @@
     code: CGI.unescapeHTML(<<~'CODE'),
       &lt;%= render FlatPack::List::Component.new(
         orderable: true,
-        orderable_path: demo_list_reorder_path,
+        orderable_url: demo_list_reorder_path,
         param_uuid_name: &quot;moving_recording_id&quot;,
         param_target_position_name: &quot;target_position&quot;,
         divider: true

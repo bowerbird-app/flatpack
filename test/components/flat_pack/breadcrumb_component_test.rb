@@ -152,7 +152,7 @@ module FlatPack
       end
 
       def test_renders_home_with_custom_url
-        render_inline(Component.new(show_home: true, home_url: "/dashboard")) do |breadcrumb|
+        render_inline(Component.new(show_home: true, home_href: "/dashboard")) do |breadcrumb|
           breadcrumb.item(text: "Products")
         end
 
@@ -177,7 +177,7 @@ module FlatPack
       end
 
       def test_renders_back_item_when_enabled_with_fallback
-        render_inline(Component.new(show_back: true, back_fallback_url: "/previous")) do |breadcrumb|
+        render_inline(Component.new(show_back: true, back_fallback_href: "/previous")) do |breadcrumb|
           breadcrumb.item(text: "Current")
         end
 
@@ -188,7 +188,7 @@ module FlatPack
       end
 
       def test_renders_back_item_from_previous_breadcrumb_link
-        render_inline(Component.new(show_back: true, back_fallback_url: "/previous")) do |breadcrumb|
+        render_inline(Component.new(show_back: true, back_fallback_href: "/previous")) do |breadcrumb|
           breadcrumb.item(text: "Home", href: "/")
           breadcrumb.item(text: "Dashboard", href: "/dashboard")
           breadcrumb.item(text: "Post", href: "/posts/1")
@@ -200,7 +200,7 @@ module FlatPack
       end
 
       def test_ignores_referer_to_avoid_back_link_loop
-        component = Component.new(show_back: true, back_fallback_url: "/previous")
+        component = Component.new(show_back: true, back_fallback_href: "/previous")
         component.define_singleton_method(:request) do
           Struct.new(:referer).new("/posts/1/edit")
         end
@@ -216,7 +216,7 @@ module FlatPack
       end
 
       def test_back_href_override_takes_precedence
-        render_inline(Component.new(show_back: true, back_href: "/custom-back", back_fallback_url: "/previous")) do |breadcrumb|
+        render_inline(Component.new(show_back: true, back_href: "/custom-back", back_fallback_href: "/previous")) do |breadcrumb|
           breadcrumb.item(text: "Home", href: "/")
           breadcrumb.item(text: "Current")
         end
@@ -225,7 +225,7 @@ module FlatPack
       end
 
       def test_renders_back_before_home_when_both_enabled
-        render_inline(Component.new(show_back: true, show_home: true, back_fallback_url: "/previous")) do |breadcrumb|
+        render_inline(Component.new(show_back: true, show_home: true, back_fallback_href: "/previous")) do |breadcrumb|
           breadcrumb.item(text: "Settings")
         end
 
@@ -255,7 +255,7 @@ module FlatPack
       end
 
       def test_renders_back_with_custom_text
-        render_inline(Component.new(show_back: true, back_text: "Go Back", back_fallback_url: "/prev")) do |breadcrumb|
+        render_inline(Component.new(show_back: true, back_text: "Go Back", back_fallback_href: "/prev")) do |breadcrumb|
           breadcrumb.item(text: "Current")
         end
 
@@ -263,7 +263,7 @@ module FlatPack
       end
 
       def test_falls_back_when_no_previous_breadcrumb_link_exists
-        render_inline(Component.new(show_back: true, back_fallback_url: "/prev")) do |breadcrumb|
+        render_inline(Component.new(show_back: true, back_fallback_href: "/prev")) do |breadcrumb|
           breadcrumb.item(text: "Current")
         end
 

@@ -5,7 +5,7 @@ const ANIMATION_DURATION = 200
 export default class extends Controller {
   static targets = ["panel", "button", "chevron"]
   static values = {
-    defaultOpen: Boolean,
+    open: Boolean,
     groupId: String
   }
 
@@ -111,7 +111,7 @@ export default class extends Controller {
     const persistedState = this.readPersistedState()
     if (persistedState !== null) return persistedState
 
-    return this.defaultOpenValue
+    return this.openValue
   }
 
   persistState() {

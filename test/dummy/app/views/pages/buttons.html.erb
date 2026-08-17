@@ -95,14 +95,14 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Buttons as Links", anchor_link: true, subtitle: "Examples for Buttons as Links.") %>
     <div class="flex gap-3 mb-4">
-      <%= render FlatPack::Button::Component.new(text: "Go Home", url: root_path, style: :primary) %>
-      <%= render FlatPack::Button::Component.new(text: "View Tables", url: demo_tables_basic_path, style: :secondary) %>
+      <%= render FlatPack::Button::Component.new(text: "Go Home", href: root_path, style: :primary) %>
+      <%= render FlatPack::Button::Component.new(text: "View Tables", href: demo_tables_basic_path, style: :secondary) %>
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE')
         &lt;%= render FlatPack::Button::Component.new(
           text: "Go Home",
-          url: root_path,
+          href: root_path,
           style: :primary
         ) %&gt;
       CODE
@@ -115,19 +115,19 @@
     <div class="flex gap-3 mb-4">
       <%= render FlatPack::Button::Component.new(
         text: "Open in New Tab",
-        url: "https://github.com",
+        href: "https://github.com",
         style: :primary,
         target: "_blank"
       ) %>
       <%= render FlatPack::Button::Component.new(
         text: "Open in Same Tab",
-        url: demo_tables_basic_path,
+        href: demo_tables_basic_path,
         style: :secondary,
         target: "_self"
       ) %>
       <%= render FlatPack::Button::Component.new(
         text: "Default (no target)",
-        url: root_path,
+        href: root_path,
         style: :ghost
       ) %>
     </div>
@@ -135,7 +135,7 @@
       code: CGI.unescapeHTML(<<~'CODE')
         &lt;%= render FlatPack::Button::Component.new(
           text: "Open in New Tab",
-          url: "https://github.com",
+          href: "https://github.com",
           style: :primary,
           target: "_blank"  # Automatically adds rel="noopener noreferrer"
         ) %&gt;
@@ -219,7 +219,7 @@
       ) %>
       <%= render FlatPack::Button::Component.new(
         text: "Link with ID",
-        url: root_path,
+        href: root_path,
         style: :secondary,
         id: "my-special-link"
       ) %>
@@ -680,13 +680,13 @@
       Bottom positions (default):
     </p>
     <div class="flex gap-3 mb-8">
-      <%= render FlatPack::Button::Dropdown::Component.new(text: "Bottom Right", position: :bottom_right) do |dropdown| %>
+      <%= render FlatPack::Button::Dropdown::Component.new(text: "Bottom Right", placement: :bottom_right) do |dropdown| %>
         <% dropdown.menu_item(text: "Option 1", href: "#") %>
         <% dropdown.menu_item(text: "Option 2", href: "#") %>
         <% dropdown.menu_item(text: "Option 3", href: "#") %>
       <% end %>
 
-      <%= render FlatPack::Button::Dropdown::Component.new(text: "Bottom Left", position: :bottom_left) do |dropdown| %>
+      <%= render FlatPack::Button::Dropdown::Component.new(text: "Bottom Left", placement: :bottom_left) do |dropdown| %>
         <% dropdown.menu_item(text: "Option 1", href: "#") %>
         <% dropdown.menu_item(text: "Option 2", href: "#") %>
         <% dropdown.menu_item(text: "Option 3", href: "#") %>
@@ -697,13 +697,13 @@
       Top positions (opens upward):
     </p>
     <div class="flex gap-3 mb-4 pt-32">
-      <%= render FlatPack::Button::Dropdown::Component.new(text: "Top Right", position: :top_right) do |dropdown| %>
+      <%= render FlatPack::Button::Dropdown::Component.new(text: "Top Right", placement: :top_right) do |dropdown| %>
         <% dropdown.menu_item(text: "Option 1", href: "#") %>
         <% dropdown.menu_item(text: "Option 2", href: "#") %>
         <% dropdown.menu_item(text: "Option 3", href: "#") %>
       <% end %>
 
-      <%= render FlatPack::Button::Dropdown::Component.new(text: "Top Left", position: :top_left) do |dropdown| %>
+      <%= render FlatPack::Button::Dropdown::Component.new(text: "Top Left", placement: :top_left) do |dropdown| %>
         <% dropdown.menu_item(text: "Option 1", href: "#") %>
         <% dropdown.menu_item(text: "Option 2", href: "#") %>
         <% dropdown.menu_item(text: "Option 3", href: "#") %>
@@ -711,7 +711,7 @@
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE')
-        &lt;%= render FlatPack::Button::Dropdown::Component.new(text: "Bottom Right", position: :bottom_right) do |dropdown| %&gt;
+        &lt;%= render FlatPack::Button::Dropdown::Component.new(text: "Bottom Right", placement: :bottom_right) do |dropdown| %&gt;
           &lt;% dropdown.menu_item(text: "Option 1", href: "#") %&gt;
         &lt;% end %&gt;
       CODE

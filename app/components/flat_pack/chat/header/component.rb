@@ -118,7 +118,7 @@ module FlatPack
             icon_only: @back_label.blank?,
             style: :ghost,
             size: :sm,
-            url: @back_href,
+            href: @back_href,
             title: back_accessible_label,
             aria: {label: back_accessible_label}
           )

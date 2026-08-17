@@ -4,6 +4,7 @@ Primary sources:
 - Human index: `docs/components/README.md` (this file)
 - Machine index: `docs/components/manifest.yml`
 - Doc contract: `docs/components/DOC_FORMAT.md`
+- Shared param names: `docs/components/PARAMS.md`
 
 ## AI Quick Index
 

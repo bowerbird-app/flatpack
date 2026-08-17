@@ -9,13 +9,13 @@ module FlatPack
 
       def initialize(
         side: :left,
-        default_open: true,
+        open: true,
         storage_key: nil,
         **system_arguments
       )
         super(**system_arguments)
         @side = side.to_sym
-        @default_open = default_open
+        @open = open
         @storage_key = storage_key
 
         validate_side!
@@ -96,7 +96,7 @@ module FlatPack
         js = <<~JS.strip
           (function(){
             try{
-              var k=#{@storage_key.to_json},d=#{@default_open ? "true" : "false"};
+              var k=#{@storage_key.to_json},d=#{@open ? "true" : "false"};
               var s=localStorage.getItem(k);
               var c=s!==null?s==='true':!d;
               document.currentScript.parentElement
@@ -133,7 +133,7 @@ module FlatPack
         {
           controller: "flat-pack--sidebar-layout",
           "flat-pack--sidebar-layout-side-value": @side.to_s,
-          "flat-pack--sidebar-layout-default-open-value": @default_open,
+          "flat-pack--sidebar-layout-open-value": @open,
           "flat-pack--sidebar-layout-storage-key-value": @storage_key
         }.compact
       end

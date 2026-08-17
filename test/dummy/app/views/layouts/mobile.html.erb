@@ -23,10 +23,10 @@
     </main>
 
     <%= render FlatPack::BottomNav::Component.new do |nav| %>
-      <% nav.item(label: "Home", href: mobile_path, icon: :home, active: current_page?(mobile_path)) %>
-      <% nav.item(label: "Bottom", href: mobile_bottom_nav_path, icon: :menu, active: current_page?(mobile_bottom_nav_path)) %>
-      <% nav.item(label: "Search", href: demo_search_path, icon: :search) %>
-      <% nav.item(label: "Profile", href: demo_avatars_path, icon: :user) %>
+      <% nav.item(text: "Home", href: mobile_path, icon: :home, active: current_page?(mobile_path)) %>
+      <% nav.item(text: "Bottom", href: mobile_bottom_nav_path, icon: :menu, active: current_page?(mobile_bottom_nav_path)) %>
+      <% nav.item(text: "Search", href: demo_search_path, icon: :search) %>
+      <% nav.item(text: "Profile", href: demo_avatars_path, icon: :user) %>
     <% end %>
   </body>
 </html>

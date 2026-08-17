@@ -5,7 +5,7 @@ module FlatPack
     class ButtonComponent < FlatPack::BaseComponent
       def initialize(
         text:,
-        url:,
+        href:,
         selected: false,
         style: nil,
         size: :sm,
@@ -17,7 +17,7 @@ module FlatPack
       )
         super(**system_arguments)
         @text = text
-        @url = url
+        @href = href
         @selected = selected
         @style = style || (@selected ? :primary : :secondary)
         @size = size
@@ -30,7 +30,7 @@ module FlatPack
       def call
         render FlatPack::Button::Component.new(
           text: @text,
-          url: @url,
+          href: @href,
           style: @style,
           size: @size,
           data: @data,

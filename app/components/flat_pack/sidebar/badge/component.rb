@@ -4,21 +4,21 @@ module FlatPack
   module Sidebar
     module Badge
       class Component < FlatPack::BaseComponent
-        VARIANTS = {
+        STYLES = {
           default: "border border-[var(--badge-primary-border-color)] bg-[var(--badge-primary-background-color)] text-[var(--badge-primary-text-color)]",
           muted: "border border-[var(--badge-default-border-color)] bg-[var(--badge-default-background-color)] text-[var(--badge-default-text-color)]"
         }.freeze
 
         def initialize(
           value:,
-          variant: :default,
+          style: :default,
           **system_arguments
         )
           super(**system_arguments)
           @value = value
-          @variant = variant.to_sym
+          @style = style.to_sym
 
-          validate_variant!
+          validate_style!
         end
 
         def call
@@ -43,17 +43,17 @@ module FlatPack
             "text-xs",
             "font-medium",
             "rounded-full",
-            variant_classes
+            style_classes
           )
         end
 
-        def variant_classes
-          VARIANTS.fetch(@variant)
+        def style_classes
+          STYLES.fetch(@style)
         end
 
-        def validate_variant!
-          return if VARIANTS.key?(@variant)
-          raise ArgumentError, "Invalid variant: #{@variant}. Must be one of: #{VARIANTS.keys.join(", ")}"
+        def validate_style!
+          return if STYLES.key?(@style)
+          raise ArgumentError, "Invalid style: #{@style}. Must be one of: #{STYLES.keys.join(", ")}"
         end
       end
     end

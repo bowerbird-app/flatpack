@@ -7,12 +7,12 @@ module FlatPack
 
       DEFAULT_TOOLTIP_FORMAT = "%e %b %Y %l:%M%P"
 
-      def initialize(timestamp:, tooltip_placement: :top, fallback_text: "-", class_name: nil, shorten_timestamp: false, **system_arguments)
+      def initialize(timestamp:, tooltip_placement: :top, fallback_text: "-", shorten_timestamp: false, **system_arguments)
         super(**system_arguments)
+        @extra_class = @system_arguments.delete(:class)
         @timestamp_value = timestamp
         @tooltip_placement = tooltip_placement.to_sym
         @fallback_text = fallback_text.to_s
-        @class_name = class_name.to_s.presence
         @shorten_timestamp = ActiveModel::Type::Boolean.new.cast(shorten_timestamp)
         @parsed_timestamp = normalize_timestamp(@timestamp_value)
 
@@ -58,7 +58,7 @@ module FlatPack
       end
 
       def timestamp_classes(*base_classes)
-        TailwindMerge::Merger.new.merge([*base_classes, "mb-0", @class_name].compact.join(" "))
+        TailwindMerge::Merger.new.merge([*base_classes, "mb-0", @extra_class].compact.join(" "))
       end
 
       def relative_timestamp_label

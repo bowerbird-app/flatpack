@@ -25,13 +25,13 @@ module FlatPack
       end
 
       def test_renders_link_when_url_provided
-        render_inline(Component.new(text: "Link", url: "/path"))
+        render_inline(Component.new(text: "Link", href: "/path"))
 
         assert_selector "a[href='/path']", text: "Link"
       end
 
       def test_renders_link_with_method
-        render_inline(Component.new(text: "Delete", url: "/path", method: :delete))
+        render_inline(Component.new(text: "Delete", href: "/path", method: :delete))
 
         assert_selector "a[href='/path']", text: "Delete"
       end
@@ -114,7 +114,7 @@ module FlatPack
       end
 
       def test_renders_link_with_size
-        render_inline(Component.new(text: "Link", url: "/path", size: :lg))
+        render_inline(Component.new(text: "Link", href: "/path", size: :lg))
 
         assert_selector "a[href='/path']", text: "Link"
         assert_includes page.native.to_html, "px-[var(--button-padding-x-lg)]"
@@ -129,20 +129,20 @@ module FlatPack
       end
 
       def test_renders_link_with_target_blank
-        render_inline(Component.new(text: "External", url: "https://example.com", target: "_blank"))
+        render_inline(Component.new(text: "External", href: "https://example.com", target: "_blank"))
 
         assert_selector "a[href='https://example.com'][target='_blank']", text: "External"
         assert_selector "a[rel='noopener noreferrer']"
       end
 
       def test_renders_link_with_target_self
-        render_inline(Component.new(text: "Same Tab", url: "/path", target: "_self"))
+        render_inline(Component.new(text: "Same Tab", href: "/path", target: "_self"))
 
         assert_selector "a[href='/path'][target='_self']", text: "Same Tab"
       end
 
       def test_link_without_target_has_no_target_attribute
-        render_inline(Component.new(text: "Link", url: "/path"))
+        render_inline(Component.new(text: "Link", href: "/path"))
 
         assert_selector "a[href='/path']", text: "Link"
         refute_selector "a[target]"
@@ -155,7 +155,7 @@ module FlatPack
       end
 
       def test_accepts_id_attribute_on_link
-        render_inline(Component.new(text: "Link ID", url: "/path", id: "my-link"))
+        render_inline(Component.new(text: "Link ID", href: "/path", id: "my-link"))
 
         assert_selector "a#my-link[href='/path']", text: "Link ID"
       end
@@ -215,32 +215,32 @@ module FlatPack
 
       def test_sanitizes_javascript_url
         error = assert_raises(ArgumentError) do
-          Component.new(text: "Click", url: "javascript:alert('xss')")
+          Component.new(text: "Click", href: "javascript:alert('xss')")
         end
         assert_match(/Unsafe URL detected/, error.message)
       end
 
       def test_sanitizes_data_url
         error = assert_raises(ArgumentError) do
-          Component.new(text: "Click", url: "data:text/html,<script>alert('xss')</script>")
+          Component.new(text: "Click", href: "data:text/html,<script>alert('xss')</script>")
         end
         assert_match(/Unsafe URL detected/, error.message)
       end
 
       def test_sanitizes_vbscript_url
         error = assert_raises(ArgumentError) do
-          Component.new(text: "Click", url: "vbscript:msgbox('xss')")
+          Component.new(text: "Click", href: "vbscript:msgbox('xss')")
         end
         assert_match(/Unsafe URL detected/, error.message)
       end
 
       def test_allows_safe_urls
-        render_inline(Component.new(text: "Click", url: "https://example.com"))
+        render_inline(Component.new(text: "Click", href: "https://example.com"))
         assert_selector "a[href='https://example.com']", text: "Click"
       end
 
       def test_allows_relative_urls
-        render_inline(Component.new(text: "Click", url: "/path/to/page"))
+        render_inline(Component.new(text: "Click", href: "/path/to/page"))
         assert_selector "a[href='/path/to/page']", text: "Click"
       end
 
@@ -268,7 +268,7 @@ module FlatPack
       end
 
       def test_link_does_not_have_type_attribute
-        render_inline(Component.new(text: "Link", url: "/path", type: "submit"))
+        render_inline(Component.new(text: "Link", href: "/path", type: "submit"))
 
         assert_selector "a[href='/path']", text: "Link"
         refute_selector "a[type]"
@@ -281,7 +281,7 @@ module FlatPack
       end
 
       def test_renders_link_with_cursor_pointer_class
-        render_inline(Component.new(text: "Link", url: "/path"))
+        render_inline(Component.new(text: "Link", href: "/path"))
 
         assert_selector "a.cursor-pointer"
       end

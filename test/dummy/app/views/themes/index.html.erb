@@ -79,7 +79,7 @@
       <div class="space-y-3 p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-background-color)]" data-theme="light">
         <div class="flex items-center justify-between gap-2">
           <h3 class="text-base font-medium text-[var(--surface-content-color)]">Light Demo</h3>
-          <%= render FlatPack::Button::Component.new(text: "Open Full Demo", url: theme_demo_path(theme: "light"), style: :secondary, size: :sm) %>
+          <%= render FlatPack::Button::Component.new(text: "Open Full Demo", href: theme_demo_path(theme: "light"), style: :secondary, size: :sm) %>
         </div>
         <%= render "themes/demo_showcase" %>
       </div>
@@ -87,7 +87,7 @@
       <div class="space-y-3 p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-background-color)]" data-theme="dark">
         <div class="flex items-center justify-between gap-2">
           <h3 class="text-base font-medium text-[var(--surface-content-color)]">Dark Demo</h3>
-          <%= render FlatPack::Button::Component.new(text: "Open Full Demo", url: theme_demo_path(theme: "dark"), style: :secondary, size: :sm) %>
+          <%= render FlatPack::Button::Component.new(text: "Open Full Demo", href: theme_demo_path(theme: "dark"), style: :secondary, size: :sm) %>
         </div>
         <%= render "themes/demo_showcase" %>
       </div>
@@ -99,7 +99,7 @@
           <h3 class="text-base font-medium text-[var(--surface-content-color)]">System Theme</h3>
           <p class="text-sm text-[var(--surface-muted-content-color)] mt-1">Follows OS preference with automatic light/dark resolution.</p>
           <div class="mt-4">
-            <%= render FlatPack::Button::Component.new(text: "Open Demo", url: theme_demo_path(theme: "system"), style: :secondary, size: :sm) %>
+            <%= render FlatPack::Button::Component.new(text: "Open Demo", href: theme_demo_path(theme: "system"), style: :secondary, size: :sm) %>
           </div>
         <% end %>
       <% end %>
@@ -109,7 +109,7 @@
           <h3 class="text-base font-medium text-[var(--surface-content-color)]">Light Theme</h3>
           <p class="text-sm text-[var(--surface-muted-content-color)] mt-1">Neutral, high-contrast daytime palette.</p>
           <div class="mt-4">
-            <%= render FlatPack::Button::Component.new(text: "Open Demo", url: theme_demo_path(theme: "light"), style: :secondary, size: :sm) %>
+            <%= render FlatPack::Button::Component.new(text: "Open Demo", href: theme_demo_path(theme: "light"), style: :secondary, size: :sm) %>
           </div>
         <% end %>
       <% end %>
@@ -119,7 +119,7 @@
           <h3 class="text-base font-medium text-[var(--surface-content-color)]">Dark Theme</h3>
           <p class="text-sm text-[var(--surface-muted-content-color)] mt-1">Low-luminance palette tuned for dark surfaces.</p>
           <div class="mt-4">
-            <%= render FlatPack::Button::Component.new(text: "Open Demo", url: theme_demo_path(theme: "dark"), style: :secondary, size: :sm) %>
+            <%= render FlatPack::Button::Component.new(text: "Open Demo", href: theme_demo_path(theme: "dark"), style: :secondary, size: :sm) %>
           </div>
         <% end %>
       <% end %>
@@ -129,7 +129,7 @@
           <h3 class="text-base font-medium text-[var(--surface-content-color)]">Ocean Theme</h3>
           <p class="text-sm text-[var(--surface-muted-content-color)] mt-1">Blue-leaning palette with cool accent contrast.</p>
           <div class="mt-4">
-            <%= render FlatPack::Button::Component.new(text: "Open Demo", url: theme_demo_path(theme: "ocean"), style: :secondary, size: :sm) %>
+            <%= render FlatPack::Button::Component.new(text: "Open Demo", href: theme_demo_path(theme: "ocean"), style: :secondary, size: :sm) %>
           </div>
         <% end %>
       <% end %>
@@ -139,7 +139,7 @@
           <h3 class="text-base font-medium text-[var(--surface-content-color)]">Rounded Theme</h3>
           <p class="text-sm text-[var(--surface-muted-content-color)] mt-1">Soft corners and muted neutrals for a friendly style.</p>
           <div class="mt-4">
-            <%= render FlatPack::Button::Component.new(text: "Open Demo", url: theme_demo_path(theme: "rounded"), style: :secondary, size: :sm) %>
+            <%= render FlatPack::Button::Component.new(text: "Open Demo", href: theme_demo_path(theme: "rounded"), style: :secondary, size: :sm) %>
           </div>
         <% end %>
       <% end %>

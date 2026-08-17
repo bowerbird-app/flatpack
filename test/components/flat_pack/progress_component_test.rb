@@ -25,19 +25,19 @@ module FlatPack
       end
 
       def test_renders_success_variant
-        render_inline(Component.new(value: 50, variant: :success))
+        render_inline(Component.new(value: 50, style: :success))
 
         assert_includes page.native.to_html, "bg-(--color-success-background-color)"
       end
 
       def test_renders_warning_variant
-        render_inline(Component.new(value: 50, variant: :warning))
+        render_inline(Component.new(value: 50, style: :warning))
 
         assert_includes page.native.to_html, "bg-(--color-warning-background-color)"
       end
 
       def test_renders_danger_variant
-        render_inline(Component.new(value: 50, variant: :danger))
+        render_inline(Component.new(value: 50, style: :danger))
 
         assert_includes page.native.to_html, "bg-(--color-danger-background-color)"
       end
@@ -93,7 +93,7 @@ module FlatPack
 
       def test_raises_error_for_invalid_variant
         assert_raises(ArgumentError) do
-          Component.new(value: 50, variant: :invalid)
+          Component.new(value: 50, style: :invalid)
         end
       end
 

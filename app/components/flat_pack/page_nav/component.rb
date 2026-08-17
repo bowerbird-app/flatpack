@@ -12,10 +12,10 @@ module FlatPack
         back_label: "Go back",
         back_style: :secondary,
         back_size: :md,
-        secondary_anchor_url: nil,
+        secondary_anchor_href: nil,
         secondary_anchor_icon: "chevron-left",
         secondary_anchor_tooltip: nil,
-        anchor_url: nil,
+        anchor_href: nil,
         anchor_icon: "x-mark",
         anchor_tooltip: nil,
         # Deprecated: Use anchor_tooltip instead.
@@ -31,12 +31,12 @@ module FlatPack
         @back_style = back_style
         @back_size = back_size
 
-        @secondary_anchor_url = secondary_anchor_url
+        @secondary_anchor_href = secondary_anchor_href
         @secondary_anchor_icon = secondary_anchor_icon
         @secondary_anchor_tooltip = secondary_anchor_tooltip
         @secondary_anchor_label = secondary_anchor_tooltip.presence || "Previous page"
 
-        @anchor_url = anchor_url
+        @anchor_href = anchor_href
         @anchor_icon = anchor_icon
         @anchor_label = anchor_tooltip.presence || anchor_label
         @anchor_style = anchor_style
@@ -98,7 +98,7 @@ module FlatPack
       end
 
       def anchor_action
-        return unless @anchor_url.present?
+        return unless @anchor_href.present?
 
         tooltip_wrapper(@anchor_label) do
           icon_button(
@@ -106,13 +106,13 @@ module FlatPack
             label: @anchor_label,
             style: @anchor_style,
             size: @anchor_size,
-            url: @anchor_url
+            href: @anchor_href
           )
         end
       end
 
       def secondary_anchor_action
-        return unless @secondary_anchor_url.present?
+        return unless @secondary_anchor_href.present?
 
         tooltip_wrapper(@secondary_anchor_tooltip) do
           icon_button(
@@ -120,7 +120,7 @@ module FlatPack
             label: @secondary_anchor_label,
             style: @anchor_style,
             size: @anchor_size,
-            url: @secondary_anchor_url
+            href: @secondary_anchor_href
           )
         end
       end
@@ -154,7 +154,7 @@ module FlatPack
         end
       end
 
-      def icon_button(icon:, label:, style:, size:, url: nil, data: nil)
+      def icon_button(icon:, label:, style:, size:, href: nil, data: nil)
         button_arguments = {
           icon: icon,
           icon_only: true,
@@ -162,7 +162,7 @@ module FlatPack
           size: size,
           aria: {label: label}
         }
-        button_arguments[:url] = url if url.present?
+        button_arguments[:href] = href if href.present?
         button_arguments[:data] = data if data.present?
 
         render FlatPack::Button::Component.new(**button_arguments)

@@ -18,13 +18,13 @@
 
       <% sidebar.items do %>
         <nav class="py-2 space-y-1">
-          <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Main") %>
-          <%= render FlatPack::Sidebar::Item::Component.new(label: "Overview", href: "#", icon: :home, active: true) %>
-          <%= render FlatPack::Sidebar::Item::Component.new(label: "Alerts", href: "#", icon: :alert) %>
+          <%= render FlatPack::Sidebar::SectionTitle::Component.new(title: "Main") %>
+          <%= render FlatPack::Sidebar::Item::Component.new(text: "Overview", href: "#", icon: :home, active: true) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(text: "Alerts", href: "#", icon: :alert) %>
           <%= render FlatPack::Sidebar::Divider::Component.new %>
-          <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Settings") %>
-          <%= render FlatPack::Sidebar::Item::Component.new(label: "Team", href: "#", icon: :users) %>
-          <%= render FlatPack::Sidebar::Item::Component.new(label: "Permissions", href: "#", icon: :key) %>
+          <%= render FlatPack::Sidebar::SectionTitle::Component.new(title: "Settings") %>
+          <%= render FlatPack::Sidebar::Item::Component.new(text: "Team", href: "#", icon: :users) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(text: "Permissions", href: "#", icon: :key) %>
         </nav>
       <% end %>
     <% end %>
@@ -32,15 +32,15 @@
 
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE'),
-      &lt;%= render FlatPack::Sidebar::SectionTitle::Component.new(label: &quot;Main&quot;) %&gt;
-      &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Overview&quot;, href: &quot;#&quot;, icon: :home) %&gt;
-      &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Alerts&quot;, href: &quot;#&quot;, icon: :alert) %&gt;
+      &lt;%= render FlatPack::Sidebar::SectionTitle::Component.new(title: &quot;Main&quot;) %&gt;
+      &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Overview&quot;, href: &quot;#&quot;, icon: :home) %&gt;
+      &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Alerts&quot;, href: &quot;#&quot;, icon: :alert) %&gt;
 
       &lt;%= render FlatPack::Sidebar::Divider::Component.new %&gt;
 
-      &lt;%= render FlatPack::Sidebar::SectionTitle::Component.new(label: &quot;Settings&quot;) %&gt;
-      &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Team&quot;, href: &quot;#&quot;, icon: :users) %&gt;
-      &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Permissions&quot;, href: &quot;#&quot;, icon: :key) %&gt;
+      &lt;%= render FlatPack::Sidebar::SectionTitle::Component.new(title: &quot;Settings&quot;) %&gt;
+      &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Team&quot;, href: &quot;#&quot;, icon: :users) %&gt;
+      &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Permissions&quot;, href: &quot;#&quot;, icon: :key) %&gt;
     CODE
     language: "erb",
     title: "Section Title in Expanded Sidebar"
@@ -59,13 +59,13 @@
 
       <% sidebar.items do %>
         <nav class="py-2 space-y-1">
-          <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Main", collapsed: true) %>
-          <%= render FlatPack::Sidebar::Item::Component.new(label: "Overview", href: "#", icon: :home, collapsed: true, active: true) %>
-          <%= render FlatPack::Sidebar::Item::Component.new(label: "Alerts", href: "#", icon: :alert, collapsed: true) %>
+          <%= render FlatPack::Sidebar::SectionTitle::Component.new(title: "Main", collapsed: true) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(text: "Overview", href: "#", icon: :home, collapsed: true, active: true) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(text: "Alerts", href: "#", icon: :alert, collapsed: true) %>
           <%= render FlatPack::Sidebar::Divider::Component.new %>
-          <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Settings", collapsed: true) %>
-          <%= render FlatPack::Sidebar::Item::Component.new(label: "Team", href: "#", icon: :users, collapsed: true) %>
-          <%= render FlatPack::Sidebar::Item::Component.new(label: "Permissions", href: "#", icon: :key, collapsed: true) %>
+          <%= render FlatPack::Sidebar::SectionTitle::Component.new(title: "Settings", collapsed: true) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(text: "Team", href: "#", icon: :users, collapsed: true) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(text: "Permissions", href: "#", icon: :key, collapsed: true) %>
         </nav>
       <% end %>
     <% end %>
@@ -73,8 +73,8 @@
 
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE'),
-      &lt;%= render FlatPack::Sidebar::SectionTitle::Component.new(label: &quot;Main&quot;, collapsed: true) %&gt;
-      &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Overview&quot;, href: &quot;#&quot;, icon: :home, collapsed: true) %&gt;
+      &lt;%= render FlatPack::Sidebar::SectionTitle::Component.new(title: &quot;Main&quot;, collapsed: true) %&gt;
+      &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Overview&quot;, href: &quot;#&quot;, icon: :home, collapsed: true) %&gt;
     CODE
     language: "erb",
     title: "Section Title in Collapsed Sidebar"
@@ -98,14 +98,14 @@
 
         <% sidebar.items do %>
           <nav class="py-2 space-y-1">
-            <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Main") %>
-            <%= render FlatPack::Sidebar::Item::Component.new(label: "Overview", href: "#", icon: :home, active: true) %>
-            <%= render FlatPack::Sidebar::Item::Component.new(label: "Alerts", href: "#", icon: :alert) %>
-            <%= render FlatPack::Sidebar::Item::Component.new(label: "Tables", href: "#", icon: :table) %>
+            <%= render FlatPack::Sidebar::SectionTitle::Component.new(title: "Main") %>
+            <%= render FlatPack::Sidebar::Item::Component.new(text: "Overview", href: "#", icon: :home, active: true) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(text: "Alerts", href: "#", icon: :alert) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(text: "Tables", href: "#", icon: :table) %>
             <%= render FlatPack::Sidebar::Divider::Component.new %>
-            <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Settings") %>
-            <%= render FlatPack::Sidebar::Item::Component.new(label: "Team", href: "#", icon: :users) %>
-            <%= render FlatPack::Sidebar::Item::Component.new(label: "Permissions", href: "#", icon: :key) %>
+            <%= render FlatPack::Sidebar::SectionTitle::Component.new(title: "Settings") %>
+            <%= render FlatPack::Sidebar::Item::Component.new(text: "Team", href: "#", icon: :users) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(text: "Permissions", href: "#", icon: :key) %>
           </nav>
         <% end %>
       <% end %>
@@ -135,13 +135,13 @@
             &lt;% end %&gt;
             &lt;% sidebar.items do %&gt;
               &lt;nav class=&quot;py-2 space-y-1&quot;&gt;
-                &lt;%= render FlatPack::Sidebar::SectionTitle::Component.new(label: &quot;Main&quot;) %&gt;
-                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Overview&quot;, href: &quot;#&quot;, icon: :home) %&gt;
-                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Alerts&quot;, href: &quot;#&quot;, icon: :alert) %&gt;
+                &lt;%= render FlatPack::Sidebar::SectionTitle::Component.new(title: &quot;Main&quot;) %&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Overview&quot;, href: &quot;#&quot;, icon: :home) %&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Alerts&quot;, href: &quot;#&quot;, icon: :alert) %&gt;
                 &lt;%= render FlatPack::Sidebar::Divider::Component.new %&gt;
-                &lt;%= render FlatPack::Sidebar::SectionTitle::Component.new(label: &quot;Settings&quot;) %&gt;
-                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Team&quot;, href: &quot;#&quot;, icon: :users) %&gt;
-                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Permissions&quot;, href: &quot;#&quot;, icon: :key) %&gt;
+                &lt;%= render FlatPack::Sidebar::SectionTitle::Component.new(title: &quot;Settings&quot;) %&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Team&quot;, href: &quot;#&quot;, icon: :users) %&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Permissions&quot;, href: &quot;#&quot;, icon: :key) %&gt;
               &lt;/nav&gt;
             &lt;% end %&gt;
           &lt;% end %&gt;
@@ -159,16 +159,16 @@
   <div class="flex gap-4 mb-4 items-start">
     <div class="rounded-lg overflow-hidden w-64">
       <div class="border border-[var(--surface-border-color)] rounded-lg">
-        <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Very Long Section Title That Will Truncate") %>
-        <%= render FlatPack::Sidebar::Item::Component.new(label: "Item One", href: "#", icon: :home) %>
-        <%= render FlatPack::Sidebar::Item::Component.new(label: "Item Two", href: "#", icon: :alert) %>
+        <%= render FlatPack::Sidebar::SectionTitle::Component.new(title: "Very Long Section Title That Will Truncate") %>
+        <%= render FlatPack::Sidebar::Item::Component.new(text: "Item One", href: "#", icon: :home) %>
+        <%= render FlatPack::Sidebar::Item::Component.new(text: "Item Two", href: "#", icon: :alert) %>
       </div>
     </div>
     <div class="rounded-lg overflow-hidden w-16">
       <div class="border border-[var(--surface-border-color)] rounded-lg" style="width: 4rem">
-        <%= render FlatPack::Sidebar::SectionTitle::Component.new(label: "Very Long Section Title That Will Truncate", collapsed: true) %>
-        <%= render FlatPack::Sidebar::Item::Component.new(label: "Item One", href: "#", icon: :home, collapsed: true) %>
-        <%= render FlatPack::Sidebar::Item::Component.new(label: "Item Two", href: "#", icon: :alert, collapsed: true) %>
+        <%= render FlatPack::Sidebar::SectionTitle::Component.new(title: "Very Long Section Title That Will Truncate", collapsed: true) %>
+        <%= render FlatPack::Sidebar::Item::Component.new(text: "Item One", href: "#", icon: :home, collapsed: true) %>
+        <%= render FlatPack::Sidebar::Item::Component.new(text: "Item Two", href: "#", icon: :alert, collapsed: true) %>
       </div>
     </div>
   </div>

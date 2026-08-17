@@ -6,7 +6,7 @@ module FlatPack
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "bg-primary" "bg-(--color-success-background-color)" "bg-(--color-warning-background-color)" "bg-(--color-danger-background-color)"
-      VARIANTS = {
+      STYLES = {
         default: "bg-primary",
         success: "bg-(--color-success-background-color)",
         warning: "bg-(--color-warning-background-color)",
@@ -26,7 +26,7 @@ module FlatPack
       def initialize(
         value:,
         max: 100,
-        variant: :default,
+        style: :default,
         size: :md,
         label: nil,
         show_label: false,
@@ -35,14 +35,14 @@ module FlatPack
         super(**system_arguments)
         @value = value.to_f
         @max = max.to_f
-        @variant = variant.to_sym
+        @style = style.to_sym
         @size = size.to_sym
         @label = label
         @show_label = show_label
 
         validate_value!
         validate_max!
-        validate_variant!
+        validate_style!
         validate_size!
       end
 
@@ -101,7 +101,7 @@ module FlatPack
       end
 
       def bar_fill_classes
-        "h-full #{VARIANTS.fetch(@variant)} transition-all duration-300 ease-in-out rounded-full"
+        "h-full #{STYLES.fetch(@style)} transition-all duration-300 ease-in-out rounded-full"
       end
 
       def percentage
@@ -119,9 +119,9 @@ module FlatPack
         raise ArgumentError, "max must be greater than zero"
       end
 
-      def validate_variant!
-        return if VARIANTS.key?(@variant)
-        raise ArgumentError, "Invalid variant: #{@variant}. Must be one of: #{VARIANTS.keys.join(", ")}"
+      def validate_style!
+        return if STYLES.key?(@style)
+        raise ArgumentError, "Invalid style: #{@style}. Must be one of: #{STYLES.keys.join(", ")}"
       end
 
       def validate_size!

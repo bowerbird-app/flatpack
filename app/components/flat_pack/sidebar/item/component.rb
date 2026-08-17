@@ -5,7 +5,7 @@ module FlatPack
     module Item
       class Component < FlatPack::BaseComponent
         def initialize(
-          label:,
+          text:,
           href:,
           icon: nil,
           active: false,
@@ -14,7 +14,7 @@ module FlatPack
           **system_arguments
         )
           super(**system_arguments)
-          @label = label
+          @text = text
           @icon = icon
           @active = active
           @collapsed = collapsed
@@ -29,7 +29,7 @@ module FlatPack
           link_to @href, **link_attributes do
             safe_join([
               render_icon,
-              render_label,
+              render_text,
               render_badge,
               render_collapsed_tooltip
             ].compact)
@@ -49,8 +49,8 @@ module FlatPack
           end
         end
 
-        def render_label
-          content_tag(:span, @label, class: label_classes)
+        def render_text
+          content_tag(:span, @text, class: text_classes)
         end
 
         def render_badge
@@ -62,7 +62,7 @@ module FlatPack
         end
 
         def render_collapsed_tooltip
-          content_tag(:div, @label, **tooltip_attributes)
+          content_tag(:div, @text, **tooltip_attributes)
         end
 
         def link_attributes
@@ -180,7 +180,7 @@ module FlatPack
           "text-[var(--sidebar-item-icon-color)]"
         end
 
-        def label_classes
+        def text_classes
           classes(
             "flex-1",
             ("sr-only" if @collapsed)
@@ -189,7 +189,7 @@ module FlatPack
 
         def aria_attributes_for_link
           attrs = {}
-          attrs[:label] = @label if @collapsed
+          attrs[:label] = @text if @collapsed
           attrs[:current] = "page" if @active
           attrs
         end

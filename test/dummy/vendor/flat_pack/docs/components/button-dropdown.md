@@ -20,7 +20,7 @@ Use Button Dropdown when multiple related actions should be grouped behind a sin
 | `icon` | String/Symbol | `nil` | no | Optional leading icon in the trigger. |
 | `show_chevron` | Boolean | `true` | no | Shows the dropdown chevron icon when true. |
 | `disabled` | Boolean | `false` | no | Disables trigger interaction and applies disabled styling. |
-| `position` | Symbol | `:bottom_right` | no | Menu placement: `:bottom_right`, `:bottom_left`, `:top_right`, `:top_left`; invalid values raise `ArgumentError`. |
+| `placement` | Symbol | `:bottom_right` | no | Menu placement: `:bottom_right`, `:bottom_left`, `:top_right`, `:top_left`; invalid values raise `ArgumentError`. |
 | `max_height` | String | `"384px"` | no | Applied to menu `max-height` style; menu scrolls when content exceeds this value. |
 | `trigger_attributes` | Hash | `{}` | no | HTML attributes applied to the trigger button, useful for icon-only `title`, `aria-label`, or extra classes. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for wrapper. |
@@ -52,7 +52,7 @@ Use `menu_item` and `menu_divider` as the slot builders (without a `with_` prefi
 
 ## Example
 ```erb
-<%= render FlatPack::Button::Dropdown::Component.new(text: "Actions", position: :bottom_right) do |dropdown| %>
+<%= render FlatPack::Button::Dropdown::Component.new(text: "Actions", placement: :bottom_right) do |dropdown| %>
   <% dropdown.menu_item(text: "Edit", href: edit_post_path(@post)) %>
   <% dropdown.menu_divider %>
   <% dropdown.menu_item(text: "Delete", destructive: true) %>

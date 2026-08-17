@@ -8,7 +8,7 @@ module FlatPack
         options:,
         style: :secondary,
         size: :sm,
-        position: :bottom_right,
+        placement: :bottom_right,
         trigger_attributes: {},
         turbo_frame: nil,
         turbo_prefetch: false,
@@ -19,7 +19,7 @@ module FlatPack
         @options = Array(options)
         @style = style
         @size = size
-        @position = position
+        @placement = placement
         @trigger_attributes = trigger_attributes
         @turbo_frame = turbo_frame
         @turbo_prefetch = turbo_prefetch
@@ -30,7 +30,7 @@ module FlatPack
           text: @text,
           style: @style,
           size: @size,
-          position: @position,
+          placement: @placement,
           trigger_attributes: @trigger_attributes,
           **@system_arguments
         )

@@ -33,14 +33,14 @@
     <% table.column(title: "Unshortened", html: ->(row) {
       render FlatPack::Timestamp::Component.new(
         timestamp: row[:timestamp],
-        class_name: "font-medium text-(--surface-content-color)"
+        class: "font-medium text-(--surface-content-color)"
       )
     }) %>
     <% table.column(title: "Shortened", html: ->(row) {
       render FlatPack::Timestamp::Component.new(
         timestamp: row[:timestamp],
         shorten_timestamp: true,
-        class_name: "font-medium text-(--surface-content-color)"
+        class: "font-medium text-(--surface-content-color)"
       )
     }) %>
   <% end %>
@@ -72,17 +72,17 @@
   <div class="space-y-3 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-4 gap-4">
     <div class="text-sm text-(--surface-muted-content-color) flex flex-col items-baseline gap-2">
       Fixed UTC date (2016-01-01 00:00 +0000 GMT):
-      <%= render FlatPack::Timestamp::Component.new(timestamp: "2016-01-01T00:00:00Z", class_name: "font-medium text-(--surface-content-color)") %>
+      <%= render FlatPack::Timestamp::Component.new(timestamp: "2016-01-01T00:00:00Z", class: "font-medium text-(--surface-content-color)") %>
     </div>
 
     <div class="text-sm text-(--surface-muted-content-color) flex flex-col items-baseline gap-2">
       class_name example (`text-green-600`):
-      <%= render FlatPack::Timestamp::Component.new(timestamp: "2016-01-01T00:00:00Z", class_name: "text-green-600") %>
+      <%= render FlatPack::Timestamp::Component.new(timestamp: "2016-01-01T00:00:00Z", class: "text-green-600") %>
     </div>
 
     <div class="text-sm text-(--surface-muted-content-color) flex flex-col items-baseline gap-2">
       class_name example (`text-xs`):
-      <%= render FlatPack::Timestamp::Component.new(timestamp: "2016-01-01T00:00:00Z", class_name: "text-xs") %>
+      <%= render FlatPack::Timestamp::Component.new(timestamp: "2016-01-01T00:00:00Z", class: "text-xs") %>
     </div>
   </div>
 </section>
@@ -127,7 +127,7 @@
 
     <div class="text-sm text-(--surface-muted-content-color) flex flex-col items-baseline gap-2">
       Component example:
-      <%= render FlatPack::Timestamp::Component.new(timestamp: utc_future_timestamp.iso8601, class_name: "font-medium text-(--surface-content-color)") %>
+      <%= render FlatPack::Timestamp::Component.new(timestamp: utc_future_timestamp.iso8601, class: "font-medium text-(--surface-content-color)") %>
     </div>
   </div>
 </section>
@@ -142,7 +142,7 @@
   <div class="rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-4">
     <div class="text-sm text-(--surface-muted-content-color) flex flex-col items-baseline gap-2">
       Unknown:
-      <%= render FlatPack::Timestamp::Component.new(timestamp: nil, fallback_text: "Unavailable", class_name: "font-medium text-(--surface-content-color)") %>
+      <%= render FlatPack::Timestamp::Component.new(timestamp: nil, fallback_text: "Unavailable", class: "font-medium text-(--surface-content-color)") %>
     </div>
   </div>
 </section>

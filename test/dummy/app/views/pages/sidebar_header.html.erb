@@ -20,9 +20,9 @@
 
         <% sidebar.items do %>
           <nav class="py-4 space-y-1">
-            <%= render FlatPack::Sidebar::Item::Component.new(label: "Overview", href: "#", icon: :home, active: true) %>
-            <%= render FlatPack::Sidebar::Item::Component.new(label: "Components", href: "#", icon: :box) %>
-            <%= render FlatPack::Sidebar::Item::Component.new(label: "Settings", href: "#", icon: :settings) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(text: "Overview", href: "#", icon: :home, active: true) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(text: "Components", href: "#", icon: :box) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(text: "Settings", href: "#", icon: :settings) %>
           </nav>
         <% end %>
       <% end %>
@@ -41,9 +41,9 @@
 
         <% sidebar.items do %>
           <nav class="py-4 space-y-1">
-            <%= render FlatPack::Sidebar::Item::Component.new(label: "Billing", href: "#", icon: :dashboard, active: true) %>
-            <%= render FlatPack::Sidebar::Item::Component.new(label: "Members", href: "#", icon: :user) %>
-            <%= render FlatPack::Sidebar::Item::Component.new(label: "API Keys", href: "#", icon: :key) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(text: "Billing", href: "#", icon: :dashboard, active: true) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(text: "Members", href: "#", icon: :user) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(text: "API Keys", href: "#", icon: :key) %>
           </nav>
         <% end %>
       <% end %>
@@ -66,9 +66,9 @@
     
             &lt;% sidebar.items do %&gt;
               &lt;nav class=&quot;py-4 space-y-1&quot;&gt;
-                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Overview&quot;, href: &quot;#&quot;, icon: :home, active: true) %&gt;
-                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Components&quot;, href: &quot;#&quot;, icon: :box) %&gt;
-                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Settings&quot;, href: &quot;#&quot;, icon: :settings) %&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Overview&quot;, href: &quot;#&quot;, icon: :home, active: true) %&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Components&quot;, href: &quot;#&quot;, icon: :box) %&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Settings&quot;, href: &quot;#&quot;, icon: :settings) %&gt;
               &lt;/nav&gt;
             &lt;% end %&gt;
           &lt;% end %&gt;
@@ -87,9 +87,9 @@
     
             &lt;% sidebar.items do %&gt;
               &lt;nav class=&quot;py-4 space-y-1&quot;&gt;
-                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Billing&quot;, href: &quot;#&quot;, icon: :dashboard, active: true) %&gt;
-                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Members&quot;, href: &quot;#&quot;, icon: :user) %&gt;
-                &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;API Keys&quot;, href: &quot;#&quot;, icon: :key) %&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Billing&quot;, href: &quot;#&quot;, icon: :dashboard, active: true) %&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Members&quot;, href: &quot;#&quot;, icon: :user) %&gt;
+                &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;API Keys&quot;, href: &quot;#&quot;, icon: :key) %&gt;
               &lt;/nav&gt;
             &lt;% end %&gt;
           &lt;% end %&gt;

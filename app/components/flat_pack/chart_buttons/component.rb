@@ -10,14 +10,14 @@ module FlatPack
       def initialize(
         turbo_frame: nil,
         turbo_prefetch: false,
-        control_size: :sm,
+        size: :sm,
         margin_bottom: "mb-3",
         **system_arguments
       )
         super(**system_arguments)
         @turbo_frame = turbo_frame
         @turbo_prefetch = turbo_prefetch
-        @control_size = control_size
+        @size = size
         @margin_bottom = margin_bottom
       end
 
@@ -30,7 +30,7 @@ module FlatPack
 
       def button(
         text:,
-        url:,
+        href:,
         selected: false,
         style: nil,
         size: nil,
@@ -41,9 +41,9 @@ module FlatPack
         control(
           FlatPack::ChartButtons::ButtonComponent.new(
             text: text,
-            url: url,
+            href: href,
             style: style,
-            size: size || @control_size,
+            size: size || @size,
             selected: selected,
             turbo_frame: @turbo_frame,
             turbo_prefetch: @turbo_prefetch,
@@ -59,7 +59,7 @@ module FlatPack
         options:,
         style: :secondary,
         size: nil,
-        position: :bottom_right,
+        placement: :bottom_right,
         trigger_attributes: {},
         **system_arguments
       )
@@ -68,8 +68,8 @@ module FlatPack
             text: text,
             options: options,
             style: style,
-            size: size || @control_size,
-            position: position,
+            size: size || @size,
+            placement: placement,
             trigger_attributes: trigger_attributes,
             turbo_frame: @turbo_frame,
             turbo_prefetch: @turbo_prefetch,
@@ -81,7 +81,7 @@ module FlatPack
       def checkbox(
         name:,
         label:,
-        url:,
+        href:,
         checked: false,
         checked_value: "1",
         unchecked_value: "0",
@@ -95,7 +95,7 @@ module FlatPack
           FlatPack::ChartButtons::CheckboxComponent.new(
             name: name,
             label: label,
-            url: url,
+            href: href,
             checked: checked,
             checked_value: checked_value,
             unchecked_value: unchecked_value,
@@ -104,7 +104,7 @@ module FlatPack
             checkbox_data: checkbox_data,
             submit_label: submit_label,
             turbo_frame: @turbo_frame,
-            size: @control_size,
+            size: @size,
             **system_arguments
           )
         )

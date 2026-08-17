@@ -9,17 +9,17 @@ module FlatPack
         undef_method :with_items_slot, :with_items_slot_content
 
         def initialize(
-          label:,
+          title:,
           icon: nil,
-          default_open: false,
+          open: false,
           collapsed: false,
           group_id: nil,
           **system_arguments
         )
           super(**system_arguments)
-          @label = label
+          @title = title
           @icon = icon
-          @default_open = default_open
+          @open = open
           @collapsed = collapsed
           @group_id = resolved_group_id(group_id)
         end
@@ -74,7 +74,7 @@ module FlatPack
         end
 
         def render_label
-          content_tag(:span, @label, class: label_classes)
+          content_tag(:span, @title, class: label_classes)
         end
 
         def render_chevron
@@ -87,7 +87,7 @@ module FlatPack
         end
 
         def render_collapsed_tooltip
-          content_tag(:div, @label, **tooltip_attributes)
+          content_tag(:div, @title, **tooltip_attributes)
         end
 
         def group_attributes
@@ -100,13 +100,13 @@ module FlatPack
         def group_data
           {
             controller: "flat-pack--sidebar-group",
-            "flat-pack--sidebar-group-default-open-value": @default_open,
+            "flat-pack--sidebar-group-open-value": @open,
             "flat-pack--sidebar-group-group-id-value": @group_id
           }
         end
 
         def resolved_group_id(explicit_group_id)
-          raw_group_id = explicit_group_id.presence || @label.to_s
+          raw_group_id = explicit_group_id.presence || @title.to_s
           normalized = raw_group_id.parameterize
 
           normalized.presence || "group"
@@ -157,7 +157,7 @@ module FlatPack
 
         def header_aria_attributes
           {
-            expanded: @default_open,
+            expanded: @open,
             controls: "sidebar-group-panel-#{object_id}"
           }
         end
@@ -242,7 +242,7 @@ module FlatPack
           classes(
             "overflow-hidden",
             ("pl-[var(--sidebar-group-item-indent)]" unless @collapsed),
-            (@default_open ? "" : "max-h-0")
+            (@open ? "" : "max-h-0")
           )
         end
 

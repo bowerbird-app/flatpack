@@ -16,7 +16,7 @@ Use Comments Thread as the root wrapper for page-level comment sections.
 | `title` | String | `"Comments"` | no | Default header title text. |
 | `variant` | Symbol | `:default` | no | Spacing variant: `:default`, `:compact`; invalid values raise `ArgumentError`. |
 | `empty_title` | String | `"No comments yet"` | no | Empty-state title when no comments are rendered. |
-| `empty_body` | String | `"Be the first to share your thoughts."` | no | Empty-state description text. |
+| `empty_description` | String | `"Be the first to share your thoughts."` | no | Empty-state description text. |
 | `locked` | Boolean | `false` | no | Hides composer and shows locked indicator in default header. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for thread wrapper. |
 
@@ -141,7 +141,7 @@ https://redesigned-doodle-7vv56g46g9fp6qr-3000.app.github.dev/demo/comments?repl
                   <div class="flex items-center justify-end w-full gap-2">
                     <%= render FlatPack::Button::Component.new(
                       text: "Cancel",
-                      url: demo_comments_path(anchor: "comment-#{comment.id}"),
+                      href: demo_comments_path(anchor: "comment-#{comment.id}"),
                       style: :ghost,
                       size: :sm,
                       class: "rounded-xl"

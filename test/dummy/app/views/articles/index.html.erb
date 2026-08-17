@@ -16,7 +16,7 @@
   <div class="flex justify-end mb-6">
     <%= render FlatPack::Button::Component.new(
       text: "New Article",
-      url: new_article_path,
+      href: new_article_path,
       style: :primary,
       icon: "plus"
     ) %>
@@ -38,13 +38,13 @@
               <div class="flex gap-2 shrink-0">
                 <%= render FlatPack::Button::Component.new(
                   text: "View",
-                  url: article_path(article),
+                  href: article_path(article),
                   style: :secondary,
                   size: :sm
                 ) %>
                 <%= render FlatPack::Button::Component.new(
                   text: "Edit",
-                  url: edit_article_path(article),
+                  href: edit_article_path(article),
                   style: :ghost,
                   size: :sm
                 ) %>
@@ -60,7 +60,7 @@
         <p class="text-[var(--surface-muted-content-color)] mb-4">No articles yet.</p>
         <%= render FlatPack::Button::Component.new(
           text: "Write your first article",
-          url: new_article_path,
+          href: new_article_path,
           style: :primary
         ) %>
       <% end %>

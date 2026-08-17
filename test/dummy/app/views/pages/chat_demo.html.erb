@@ -65,14 +65,14 @@
                 icon_only: true,
                 style: :ghost,
                 size: :sm,
-                url: "#chat-search"
+                href: "#chat-search"
               ) %>
               <%= render FlatPack::Button::Component.new(
                 icon: "dots",
                 icon_only: true,
                 style: :ghost,
                 size: :sm,
-                url: "#chat-menu"
+                href: "#chat-menu"
               ) %>
             <% end %>
           <% end %>
@@ -124,7 +124,7 @@
                   style: :ghost,
                   size: :md,
                   show_chevron: false,
-                  position: :top_left,
+                  placement: :top_left,
                   trigger_attributes: {
                     aria: {label: "Add files or images"},
                     title: "Add files or images"
@@ -183,7 +183,7 @@
               searchable: true,
               search_mode: :local,
               results_layout: :grid,
-              confirm_text: "Add Selected Images"
+              confirm_label: "Add Selected Images"
             ) %>
 
             <%= render FlatPack::Picker::Component.new(
@@ -196,7 +196,7 @@
               searchable: true,
               search_mode: :local,
               size: :md,
-              confirm_text: "Add Selected Files"
+              confirm_label: "Add Selected Files"
             ) %>
           <% end %>
         <% end %>
@@ -276,7 +276,7 @@
                     style: :ghost,
                     size: :md,
                     show_chevron: false,
-                    position: :top_left,
+                    placement: :top_left,
                     trigger_attributes: {
                       aria: {label: &quot;Add files or images&quot;},
                       title: &quot;Add files or images&quot;

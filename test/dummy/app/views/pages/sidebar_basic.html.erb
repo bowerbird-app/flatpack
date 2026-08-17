@@ -18,10 +18,10 @@
 
       <% sidebar.items do %>
         <nav class="py-4 space-y-1">
-          <%= render FlatPack::Sidebar::Item::Component.new(label: "Overview", href: demo_path, icon: :home, active: true) %>
-          <%= render FlatPack::Sidebar::Item::Component.new(label: "Buttons", href: demo_buttons_path, icon: :square) %>
-          <%= render FlatPack::Sidebar::Item::Component.new(label: "Forms", href: demo_forms_path, icon: :edit_3) %>
-          <%= render FlatPack::Sidebar::Item::Component.new(label: "Tables", href: demo_tables_basic_path, icon: :table) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(text: "Overview", href: demo_path, icon: :home, active: true) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(text: "Buttons", href: demo_buttons_path, icon: :square) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(text: "Forms", href: demo_forms_path, icon: :edit_3) %>
+          <%= render FlatPack::Sidebar::Item::Component.new(text: "Tables", href: demo_tables_basic_path, icon: :table) %>
         </nav>
       <% end %>
 
@@ -48,10 +48,10 @@
     
           &lt;% sidebar.items do %&gt;
             &lt;nav class=&quot;py-4 space-y-1&quot;&gt;
-              &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Overview&quot;, href: demo_path, icon: :home, active: true) %&gt;
-              &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Buttons&quot;, href: demo_buttons_path, icon: :square) %&gt;
-              &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Forms&quot;, href: demo_forms_path, icon: :edit_3) %&gt;
-              &lt;%= render FlatPack::Sidebar::Item::Component.new(label: &quot;Tables&quot;, href: demo_tables_basic_path, icon: :table) %&gt;
+              &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Overview&quot;, href: demo_path, icon: :home, active: true) %&gt;
+              &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Buttons&quot;, href: demo_buttons_path, icon: :square) %&gt;
+              &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Forms&quot;, href: demo_forms_path, icon: :edit_3) %&gt;
+              &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Tables&quot;, href: demo_tables_basic_path, icon: :table) %&gt;
             &lt;/nav&gt;
           &lt;% end %&gt;
     

@@ -50,7 +50,7 @@
       <% if article.persisted? %>
         <%= render FlatPack::Button::Component.new(
           text: "Cancel",
-          url: article_path(article),
+          href: article_path(article),
           style: :secondary
         ) %>
       <% end %>

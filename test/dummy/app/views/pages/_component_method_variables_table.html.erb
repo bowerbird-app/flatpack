@@ -52,9 +52,9 @@
         { variable: "back_text", accepts: "String", example: "back_text: \"Go Back\"" },
         { variable: "back_icon", accepts: "String", example: "back_icon: \"chevron-left\"" },
         { variable: "back_href", accepts: "String or nil", example: "back_href: \"/dashboard\"" },
-        { variable: "back_fallback_url", accepts: "String", example: "back_fallback_url: \"/dashboard\"" },
+        { variable: "back_fallback_href", accepts: "String", example: "back_fallback_href: \"/dashboard\"" },
         { variable: "show_home", accepts: "true, false", example: "show_home: true" },
-        { variable: "home_url", accepts: "String", example: "home_url: \"/dashboard\"" },
+        { variable: "home_href", accepts: "String", example: "home_href: \"/dashboard\"" },
         { variable: "home_text", accepts: "String", example: "home_text: \"Dashboard\"" },
         { variable: "home_icon", accepts: "String", example: "home_icon: \"home\"" },
         { variable: "max_items", accepts: "Integer or nil", example: "max_items: 4" },
@@ -73,23 +73,23 @@
     },
     page_nav: {
       label: "Page Nav",
-      method_call: "render FlatPack::PageNav::Component.new(anchor_url: demo_path, anchor_tooltip: \"Close\") { |component| component.right_slot { render FlatPack::Button::Component.new(icon: \"plus\", icon_only: true, url: demo_forms_path) } }",
+      method_call: "render FlatPack::PageNav::Component.new(anchor_href: demo_path, anchor_tooltip: \"Close\") { |component| component.right_slot { render FlatPack::Button::Component.new(icon: \"plus\", icon_only: true, href: demo_forms_path) } }",
       variables: [
         { variable: "back_icon", accepts: "String", example: "back_icon: \"chevron-left\"" },
         { variable: "back_tooltip", accepts: "String or nil", example: "back_tooltip: \"Go back\"" },
         { variable: "back_label", accepts: "String", example: "back_label: \"Go back\" # deprecated" },
         { variable: "back_style", accepts: ":default, :primary, :secondary, :ghost, :success, :warning, :danger", example: "back_style: :secondary" },
         { variable: "back_size", accepts: ":sm, :md, :lg", example: "back_size: :md" },
-        { variable: "secondary_anchor_url", accepts: "String or nil", example: "secondary_anchor_url: demo_forms_path" },
+        { variable: "secondary_anchor_href", accepts: "String or nil", example: "secondary_anchor_href: demo_forms_path" },
         { variable: "secondary_anchor_icon", accepts: "String", example: "secondary_anchor_icon: \"chevron-left\"" },
         { variable: "secondary_anchor_tooltip", accepts: "String or nil", example: "secondary_anchor_tooltip: \"Previous page\"" },
-        { variable: "anchor_url", accepts: "String or nil", example: "anchor_url: demo_path" },
+        { variable: "anchor_href", accepts: "String or nil", example: "anchor_href: demo_path" },
         { variable: "anchor_icon", accepts: "String", example: "anchor_icon: \"x-mark\"" },
         { variable: "anchor_tooltip", accepts: "String or nil", example: "anchor_tooltip: \"Close\"" },
         { variable: "anchor_label", accepts: "String", example: "anchor_label: \"Close\" # deprecated" },
         { variable: "anchor_style", accepts: ":default, :primary, :secondary, :ghost, :success, :warning, :danger", example: "anchor_style: :secondary" },
         { variable: "anchor_size", accepts: ":sm, :md, :lg", example: "anchor_size: :md" },
-        { variable: "right_slot", accepts: "slot block", example: "component.right_slot { render FlatPack::Button::Component.new(icon: \"plus\", icon_only: true, url: demo_forms_path) }" },
+        { variable: "right_slot", accepts: "slot block", example: "component.right_slot { render FlatPack::Button::Component.new(icon: \"plus\", icon_only: true, href: demo_forms_path) }" },
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"mb-4\", data: { testid: \"page-nav\" }" }
       ]
     },
@@ -104,11 +104,11 @@
     },
     email_button: {
       label: "Email Button",
-      method_call: "render FlatPack::EmailButton::Component.new(href: \"https://example.com\", label: \"Confirm\", variant: :primary)",
+      method_call: "render FlatPack::EmailButton::Component.new(href: \"https://example.com\", text: \"Confirm\", style: :primary)",
       variables: [
         { variable: "href", accepts: "String (required)", example: "href: \"https://example.com/confirm\"" },
-        { variable: "label", accepts: "String (required)", example: "label: \"Confirm details\"" },
-        { variable: "variant", accepts: ":primary, :secondary", example: "variant: :secondary" },
+        { variable: "text", accepts: "String (required)", example: "text: \"Confirm details\"" },
+        { variable: "style", accepts: ":primary, :secondary", example: "style: :secondary" },
         { variable: "align", accepts: ":left, :center, :right", example: "align: :left" },
         { variable: "full_width", accepts: "true, false", example: "full_width: true" },
         { variable: "fit_content", accepts: "true, false", example: "fit_content: true" },
@@ -404,7 +404,7 @@
         { variable: "title", accepts: "String", example: "title: \"Discussion\"" },
         { variable: "variant", accepts: ":default, :compact", example: "variant: :compact" },
         { variable: "empty_title", accepts: "String", example: "empty_title: \"No comments yet\"" },
-        { variable: "empty_body", accepts: "String", example: "empty_body: \"Be the first to share your thoughts.\"" },
+        { variable: "empty_description", accepts: "String", example: "empty_description: \"Be the first to share your thoughts.\"" },
         { variable: "locked", accepts: "true, false", example: "locked: true" }
       ]
     },
@@ -558,7 +558,7 @@
         { variable: "background_image_url", accepts: "String or nil (sanitized)", example: "background_image_url: \"https://example.com/bg.jpg\"" },
         { variable: "background", accepts: "CSS color, gradient, or nil", example: "background: \"linear-gradient(135deg, #667eea, #764ba2)\"" },
         { variable: "tiles", accepts: "Array of { url:, alt: } hashes (up to 4)", example: "tiles: [{ url: \"https://...\", alt: \"Feature 1\" }]" },
-        { variable: "slot", accepts: "slot block", example: "hero.slot { concat render(FlatPack::Button::Component.new(text: \"Start\", style: :primary, url: \"#\")) }" },
+        { variable: "slot", accepts: "slot block", example: "hero.slot { concat render(FlatPack::Button::Component.new(text: \"Start\", style: :primary, href: \"#\")) }" },
         { variable: "badge", accepts: "slot block", example: "hero.badge { render FlatPack::Badge::Component.new(text: \"New\", style: :success) }" },
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"bg-[var(--surface-page-background-color)]\", id: \"main-hero\"" }
       ]
@@ -572,7 +572,7 @@
         { variable: "divider", accepts: "true, false", example: "divider: true" },
         { variable: "selectable", accepts: "true, false", example: "selectable: true" },
         { variable: "orderable", accepts: "true, false", example: "orderable: true" },
-        { variable: "orderable_path", accepts: "String or nil", example: "orderable_path: demo_list_reorder_path" },
+        { variable: "orderable_url", accepts: "String or nil", example: "orderable_url: demo_list_reorder_path" },
         { variable: "orderable_method", accepts: ":patch, :put", example: "orderable_method: :put" },
         { variable: "param_uuid_name", accepts: "String", example: "param_uuid_name: \"moving_recording_id\"" },
         { variable: "param_target_position_name", accepts: "String", example: "param_target_position_name: \"target_position\"" },
@@ -759,11 +759,11 @@
     },
     progress: {
       label: "Progress",
-      method_call: "render FlatPack::Progress::Component.new(value: 72, max: 100, variant: :default, size: :md, show_label: true)",
+      method_call: "render FlatPack::Progress::Component.new(value: 72, max: 100, style: :default, size: :md, show_label: true)",
       variables: [
         { variable: "value", accepts: "Numeric (required)", example: "value: 72" },
         { variable: "max", accepts: "Numeric", example: "max: 100" },
-        { variable: "variant", accepts: ":default, :success, :warning, :danger", example: "variant: :success" },
+        { variable: "style", accepts: ":default, :success, :warning, :danger", example: "style: :success" },
         { variable: "size", accepts: ":sm, :md, :lg, :xl", example: "size: :lg" },
         { variable: "label", accepts: "String or nil", example: "label: \"Upload Progress\"" },
         { variable: "show_label", accepts: "true, false", example: "show_label: true" },
@@ -795,7 +795,7 @@
         { variable: "trigger_id", accepts: "String or nil", example: "trigger_id: \"notification-trigger\"" },
         { variable: "placement", accepts: ":top, :bottom, :left, :right", example: "placement: :bottom" },
         { variable: "bell_label", accepts: "String", example: "bell_label: \"Notifications\"" },
-        { variable: "empty_message", accepts: "String", example: "empty_message: \"No recent notifications\"" },
+        { variable: "empty_text", accepts: "String", example: "empty_text: \"No recent notifications\"" },
         { variable: "timestamp_tooltip_placement", accepts: ":top, :right, :bottom, :left", example: "timestamp_tooltip_placement: :left" },
         { variable: "notification[:title]", accepts: "String", example: "title: \"Build completed\"" },
         { variable: "notification[:body]", accepts: "String or nil", example: "body: \"Your export is ready to download.\"" },
@@ -821,19 +821,19 @@
     },
     sidebar_section_title: {
       label: "Sidebar Section Title",
-      method_call: "render FlatPack::Sidebar::SectionTitle::Component.new(label: \"Main\")",
+      method_call: "render FlatPack::Sidebar::SectionTitle::Component.new(title: \"Main\")",
       variables: [
-        { variable: "label", accepts: "String (required)", example: "label: \"Main\"" },
+        { variable: "title", accepts: "String (required)", example: "title: \"Main\"" },
         { variable: "collapsed", accepts: "true, false", example: "collapsed: true" },
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"mt-2\", data: { testid: \"section-title\" }" }
       ]
     },
     sidebar_layout: {
       label: "Sidebar Layout",
-      method_call: "render FlatPack::SidebarLayout::Component.new(side: :left, default_open: true) do |layout| ... end",
+      method_call: "render FlatPack::SidebarLayout::Component.new(side: :left, open: true) do |layout| ... end",
       variables: [
         { variable: "side", accepts: ":left, :right", example: "side: :right" },
-        { variable: "default_open", accepts: "true, false", example: "default_open: false" },
+        { variable: "open", accepts: "true, false", example: "open: false" },
         { variable: "storage_key", accepts: "String or nil", example: "storage_key: \"demo-sidebar-state\"" }
       ]
     },
@@ -893,7 +893,7 @@
       method_call: "render FlatPack::Timestamp::Component.new(timestamp: 3.minutes.ago)",
       variables: [
         { variable: "timestamp", accepts: "Time, DateTime, Date, String, Numeric, or nil", example: "timestamp: article.published_at" },
-        { variable: "class_name", accepts: "String or nil", example: "class_name: \"text-green-600 text-xs\"" },
+        { variable: "class", accepts: "String or nil", example: "class: \"text-green-600 text-xs\"" },
         { variable: "tooltip_placement", accepts: ":top, :right, :bottom, :left", example: "tooltip_placement: :right" },
         { variable: "fallback_text", accepts: "String", example: "fallback_text: \"Unavailable\"" },
         { variable: "shorten_timestamp", accepts: "true, false", example: "shorten_timestamp: true" },
@@ -902,10 +902,10 @@
     },
     toast: {
       label: "Toast",
-      method_call: "render FlatPack::Toast::Component.new(message: \"Saved\", type: :success, timeout: 5000)",
+      method_call: "render FlatPack::Toast::Component.new(text: \"Saved\", style: :success, timeout: 5000)",
       variables: [
-        { variable: "message", accepts: "String (required)", example: "message: \"Changes saved\"" },
-        { variable: "type", accepts: ":info, :success, :warning, :danger", example: "type: :danger" },
+        { variable: "text", accepts: "String (required)", example: "text: \"Changes saved\"" },
+        { variable: "style", accepts: ":info, :success, :warning, :danger", example: "style: :danger" },
         { variable: "timeout", accepts: "Integer (ms)", example: "timeout: 3000" }
       ]
     },

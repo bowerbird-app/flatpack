@@ -13,6 +13,55 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.124] - 2026-08-17
+
+### Added
+- Added `docs/components/PARAMS.md` as the canonical cross-component param naming guide.
+
+### Changed
+- Bumped the gem version to `0.1.124`.
+- Standardized shared component param names. This gem is unreleased, so old names were removed rather than aliased.
+
+#### Upgrade notes
+
+Use these names everywhere the same concept appears:
+
+- Color / semantic appearance: `style` (not `variant`, `type`, or `scheme`)
+- Navigation destination: `href` (not `url`)
+- Compact visible copy: `text` (not `label` or `message`)
+- Overlay position: `placement` (not `position`)
+- Extra CSS: `class` (not `class_name`)
+- Action button copy: `*_label` (not `*_text`)
+- Empty-state copy: `empty_text` or `empty_title` / `empty_description`
+- Open / closed start state: `open` (not `default_open`)
+- Data / form endpoints stay `*_url`
+
+Renames:
+
+| Component | Old | New |
+| --- | --- | --- |
+| `Button`, `ChartButtons#button` | `url` | `href` |
+| `PageNav` | `anchor_url`, `secondary_anchor_url` | `anchor_href`, `secondary_anchor_href` |
+| `Breadcrumb` | `home_url`, `back_fallback_url` | `home_href`, `back_fallback_href` |
+| `Progress`, `EmailButton`, `Toast`, `Sidebar::Badge` | `variant` / `type` | `style` |
+| `EmailButton`, `Sidebar::Item`, `BottomNav::Item` | `label` | `text` |
+| `Toast` | `message` | `text` |
+| `Button::Dropdown`, `ChartButtons#dropdown` | `position` | `placement` |
+| `Timestamp` | `class_name` | `class` |
+| `Picker` | `confirm_text`, `close_text`, `empty_state_text` | `confirm_label`, `close_label`, `empty_text` |
+| `Notification` | `empty_message` | `empty_text` |
+| `Comments::Thread` | `empty_body` | `empty_description` |
+| `List` | `orderable_path` | `orderable_url` |
+| `Sidebar::SectionTitle`, `Sidebar::Group` | `label` | `title` |
+| `Sidebar::Group`, `SidebarLayout` | `default_open` | `open` |
+| `ChartButtons` | `control_size` | `size` |
+
+The `toast:add` event now uses `{ style, text }` instead of `{ type, message }`. Stimulus values follow the same names (`placement`, `orderableUrl`, `emptyText`, `open`).
+
+Keep `variant` for structural/layout choices such as Hero, Tabs, Carousel, Page Title heading level, and Chat Layout.
+
+### Fixed
+
 ## [0.1.123] - 2026-07-27
 
 ### Added
@@ -889,6 +938,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CSS variables for theming customization
 
 [0.1.12]: https://github.com/bowerbird-app/flatpack/compare/v0.1.11...v0.1.12
+[0.1.124]: https://github.com/bowerbird-app/flatpack/compare/v0.1.123...v0.1.124
 [0.1.123]: https://github.com/bowerbird-app/flatpack/compare/v0.1.122...v0.1.123
 [0.1.33]: https://github.com/bowerbird-app/flatpack/compare/v0.1.32...v0.1.33
 [0.1.8]: https://github.com/bowerbird-app/flat_pack/compare/v0.1.7...v0.1.8

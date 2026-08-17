@@ -9,7 +9,7 @@ module FlatPack
         divider: false,
         selectable: false,
         orderable: false,
-        orderable_path: nil,
+        orderable_url: nil,
         orderable_method: :patch,
         param_uuid_name: "id",
         param_target_position_name: "position",
@@ -21,7 +21,7 @@ module FlatPack
         @divider = divider
         @selectable = selectable
         @orderable = orderable
-        @orderable_path = orderable_path
+        @orderable_url = orderable_url
         @orderable_method = orderable_method
         @param_uuid_name = param_uuid_name
         @param_target_position_name = param_target_position_name
@@ -61,7 +61,7 @@ module FlatPack
           controller: "flat-pack--list-orderable"
         }
 
-        data[:flat_pack__list_orderable_orderable_path_value] = @orderable_path if @orderable_path.present?
+        data[:flat_pack__list_orderable_orderable_url_value] = @orderable_url if @orderable_url.present?
         data[:flat_pack__list_orderable_orderable_method_value] = @orderable_method.to_s.upcase if @orderable_method.present?
         data[:flat_pack__list_orderable_param_uuid_name_value] = @param_uuid_name if @param_uuid_name.present?
         data[:flat_pack__list_orderable_param_target_position_name_value] = @param_target_position_name if @param_target_position_name.present?

@@ -12,8 +12,8 @@ Use Toast for non-blocking feedback such as success confirmations, warnings, and
 ## Props
 | name | type | default | required | description |
 |---|---|---|---|---|
-| `message` | String | `nil` | yes | Notification message content. |
-| `type` | Symbol | `:info` | no | Visual type: `:info`, `:success`, `:warning`, `:danger`. |
+| `text` | String | `nil` | yes | Notification text content. |
+| `style` | Symbol | `:info` | no | Visual style: `:info`, `:success`, `:warning`, `:danger`. |
 | `timeout` | Integer | `5000` | no | Auto-dismiss timeout in milliseconds; must be non-negative. |
 | `dismissible` | Boolean | `true` | no | Shows dismiss button and allows manual dismissal when true. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for toast root. |
@@ -22,13 +22,13 @@ Use Toast for non-blocking feedback such as success confirmations, warnings, and
 None.
 
 ## Variants
-- Type variants: `:info`, `:success`, `:warning`, `:danger`.
+- Styles: `:info`, `:success`, `:warning`, `:danger`.
 
 ## Example
 ```erb
 <%= render FlatPack::Toast::Component.new(
-  message: "Settings saved",
-  type: :success,
+  text: "Settings saved",
+  style: :success,
   timeout: 4000,
   dismissible: true
 ) %>

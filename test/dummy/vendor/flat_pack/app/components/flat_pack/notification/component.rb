@@ -9,7 +9,7 @@ module FlatPack
         trigger_id: nil,
         placement: :bottom,
         bell_label: "Notifications",
-        empty_message: "No recent notifications",
+        empty_text: "No recent notifications",
         timestamp_tooltip_placement: :left,
         **system_arguments
       )
@@ -22,7 +22,7 @@ module FlatPack
         @popover_id = "#{@trigger_id}-popover"
         @placement = placement.to_sym
         @bell_label = bell_label.to_s
-        @empty_message = empty_message.to_s
+        @empty_text = empty_text.to_s
         @timestamp_tooltip_placement = timestamp_tooltip_placement.to_sym
 
         validate_placement!
@@ -313,7 +313,7 @@ module FlatPack
           tooltip_placement: @timestamp_tooltip_placement,
           fallback_text: "",
           shorten_timestamp: true,
-          class_name: "text-xs text-[var(--surface-muted-content-color)] whitespace-nowrap"
+          class: "text-xs text-[var(--surface-muted-content-color)] whitespace-nowrap"
         )
       end
 
@@ -333,7 +333,7 @@ module FlatPack
       def render_empty_state
         content_tag(
           :div,
-          @empty_message,
+          @empty_text,
           class: "px-4 py-6 text-center text-sm text-[var(--surface-muted-content-color)]"
         )
       end

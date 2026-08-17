@@ -29,7 +29,7 @@ module FlatPack
         text: nil,
         style: :default,
         size: :md,
-        url: nil,
+        href: nil,
         method: nil,
         target: nil,
         icon: nil,
@@ -50,11 +50,11 @@ module FlatPack
         @type = type
 
         # Sanitize URL for security and validate
-        if url
-          @url = FlatPack::AttributeSanitizer.sanitize_url(url)
-          validate_url!(url)
+        if href
+          @href = FlatPack::AttributeSanitizer.sanitize_url(href)
+          validate_href!(href)
         else
-          @url = nil
+          @href = nil
         end
 
         validate_style!
@@ -63,7 +63,7 @@ module FlatPack
       end
 
       def call
-        if @url
+        if @href
           render_link
         else
           render_button
@@ -73,7 +73,7 @@ module FlatPack
       private
 
       def render_link
-        link_to @url, **link_attributes do
+        link_to @href, **link_attributes do
           button_content
         end
       end
@@ -208,9 +208,9 @@ module FlatPack
         raise ArgumentError, "Button must have either a text prop or an icon prop"
       end
 
-      def validate_url!(original_url)
+      def validate_href!(original_url)
         # Check if the original URL was provided but sanitization failed
-        return if @url.present?
+        return if @href.present?
 
         # Use a generic error message to avoid leaking sensitive information in logs
         raise ArgumentError, "Unsafe URL detected. Only http, https, mailto, tel protocols and relative URLs are allowed."

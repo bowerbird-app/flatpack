@@ -241,11 +241,11 @@
     <%= render FlatPack::Popover::Component.new(trigger_id: "popover-trigger-more-actions", placement: :bottom) do |popover| %>
       <% popover.content do %>
         <div class="py-2 w-48">
-          <%= render FlatPack::Button::Component.new(text: "Edit", url: "#", style: :ghost, size: :sm, class: "w-full justify-start") %>
-          <%= render FlatPack::Button::Component.new(text: "Duplicate", url: "#", style: :ghost, size: :sm, class: "w-full justify-start") %>
-          <%= render FlatPack::Button::Component.new(text: "Archive", url: "#", style: :ghost, size: :sm, class: "w-full justify-start") %>
+          <%= render FlatPack::Button::Component.new(text: "Edit", href: "#", style: :ghost, size: :sm, class: "w-full justify-start") %>
+          <%= render FlatPack::Button::Component.new(text: "Duplicate", href: "#", style: :ghost, size: :sm, class: "w-full justify-start") %>
+          <%= render FlatPack::Button::Component.new(text: "Archive", href: "#", style: :ghost, size: :sm, class: "w-full justify-start") %>
           <div class="border-t border-[var(--surface-border-color)] my-2"></div>
-          <%= render FlatPack::Button::Component.new(text: "Delete", url: "#", style: :ghost, size: :sm, class: "w-full justify-start text-red-600") %>
+          <%= render FlatPack::Button::Component.new(text: "Delete", href: "#", style: :ghost, size: :sm, class: "w-full justify-start text-red-600") %>
         </div>
       <% end %>
     <% end %>

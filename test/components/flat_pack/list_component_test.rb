@@ -61,7 +61,7 @@ module FlatPack
       def test_enables_orderable_behavior_when_requested
         render_inline(Component.new(
           orderable: true,
-          orderable_path: "/demo/list/reorder",
+          orderable_url: "/demo/list/reorder",
           param_uuid_name: "moving_recording_id",
           param_target_position_name: "target_position"
         )) { "content" }
@@ -77,7 +77,7 @@ module FlatPack
         render_inline(Component.new(
           selectable: true,
           orderable: true,
-          orderable_path: "/demo/list/reorder",
+          orderable_url: "/demo/list/reorder",
           param_uuid_name: "moving_recording_id",
           param_target_position_name: "target_position"
         )) { "content" }

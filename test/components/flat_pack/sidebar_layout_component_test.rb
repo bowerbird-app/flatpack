@@ -29,12 +29,12 @@ module FlatPack
       end
 
       def test_renders_with_default_open_true
-        render_inline(Component.new(default_open: true))
+        render_inline(Component.new(open: true))
         assert_selector "div[data-flat-pack--sidebar-layout-default-open-value='true']"
       end
 
       def test_renders_with_default_open_false
-        render_inline(Component.new(default_open: false))
+        render_inline(Component.new(open: false))
         assert_selector "div[data-flat-pack--sidebar-layout-default-open-value='false']"
       end
 

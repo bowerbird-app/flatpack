@@ -56,7 +56,7 @@ After installation, use FlatPack components in your views:
 <%= render FlatPack::Button::Component.new(
   text: "Click me",
   style: :primary,
-  url: some_path
+  href: some_path
 ) %>
 
 <%# Card Component %>

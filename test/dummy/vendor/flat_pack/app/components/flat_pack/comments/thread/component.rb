@@ -27,7 +27,7 @@ module FlatPack
           title: "Comments",
           variant: :default,
           empty_title: "No comments yet",
-          empty_body: "Be the first to share your thoughts.",
+          empty_description: "Be the first to share your thoughts.",
           locked: false,
           **system_arguments
         )
@@ -36,7 +36,7 @@ module FlatPack
           @title = title
           @variant = variant.to_sym
           @empty_title = empty_title
-          @empty_body = empty_body
+          @empty_description = empty_description
           @locked = locked
 
           validate_variant!
@@ -149,7 +149,7 @@ module FlatPack
           content_tag(:div, class: "py-12 text-center") do
             safe_join([
               content_tag(:h4, @empty_title, class: "text-sm font-medium text-[var(--comments-thread-empty-title-color)] mb-1"),
-              content_tag(:p, @empty_body, class: "text-sm text-[var(--comments-thread-empty-body-color)]")
+              content_tag(:p, @empty_description, class: "text-sm text-[var(--comments-thread-empty-body-color)]")
             ])
           end
         end
