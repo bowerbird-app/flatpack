@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "pathname"
-require "set"
 
 module FlatPack
   # Ensures every CSS custom property referenced in the gem is defined in variables.css.
@@ -30,7 +29,7 @@ module FlatPack
 
     def call
       defined = defined_tokens
-      referenced = referenced_tokens - RUNTIME_TOKENS.to_set
+      referenced = referenced_tokens - RUNTIME_TOKENS
       missing = (referenced - defined).sort
 
       Result.new(defined: defined, referenced: referenced, missing: missing)
@@ -42,11 +41,11 @@ module FlatPack
 
     def defined_tokens
       css = engine_root.join("app/assets/stylesheets/flat_pack/variables.css").read
-      css.scan(/--[A-Za-z0-9-]+(?=\s*:)/).to_set
+      css.scan(/--[A-Za-z0-9-]+(?=\s*:)/).uniq
     end
 
     def referenced_tokens
-      tokens = Set.new
+      tokens = []
 
       scan_globs.each do |path|
         next if path.to_s.end_with?("flat_pack/variables.css")
@@ -60,7 +59,7 @@ module FlatPack
         end
       end
 
-      tokens
+      tokens.uniq
     end
 
     def scan_globs
