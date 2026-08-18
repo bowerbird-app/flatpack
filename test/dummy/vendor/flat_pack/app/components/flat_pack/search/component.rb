@@ -118,6 +118,8 @@ module FlatPack
         classes(
           "absolute",
           "left-3",
+          "top-1/2",
+          "-translate-y-1/2",
           "pointer-events-none",
           "text-[var(--search-icon-color)]"
         )
