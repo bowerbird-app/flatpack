@@ -291,12 +291,51 @@ class DemoCatalog
       end
     end
 
-    # Keep a friendly Tables alias that matches prior search behavior.
     basic = items.find { |item| item[:title] == "Tables: Basic" }
-    items.unshift({title: "Tables", description: basic[:description], url: basic[:url]}) if basic
+    if basic
+      items.insert(
+        items.index(basic),
+        {title: "Tables", description: basic[:description], url: basic[:url]}
+      )
+    end
 
     items.compact
   end
+
+  def self.search(query, limit: 10)
+    needle = query.to_s.strip.downcase
+    return [] if needle.blank?
+
+    searchable_items
+      .map { |item| [search_score(item, needle), item] }
+      .select { |score, _item| score.positive? }
+      .sort_by { |score, item| [-score, item[:title].to_s] }
+      .first(limit)
+      .map(&:last)
+  end
+
+  def self.search_score(item, query)
+    title = item[:title].to_s.downcase
+    description = item[:description].to_s.downcase
+    title_words = search_words(title)
+    description_words = search_words(description)
+
+    return 100 if title == query
+    return 90 if title.start_with?(query)
+    return 80 if title.include?(query)
+    return 70 if title_words.any? { |word| word.start_with?(query) }
+    return 40 if description == query || description.start_with?(query)
+    return 30 if query.include?(" ") && description.include?(query)
+    return 20 if description_words.any? { |word| word == query || word == "#{query}s" }
+
+    0
+  end
+  private_class_method :search_score
+
+  def self.search_words(text)
+    text.split(/[^a-z0-9]+/).reject(&:empty?)
+  end
+  private_class_method :search_words
 
   def self.search_entry(entry)
     {

@@ -414,11 +414,9 @@ class PagesController < ApplicationController
       return
     end
 
-    results = searchable_items.select do |item|
-      item[:title].downcase.include?(query) || item[:description].downcase.include?(query)
-    end
+    results = DemoCatalog.search(query)
 
-    render json: {results: results.first(10)}
+    render json: {results: results}
   end
 
   def picker_results

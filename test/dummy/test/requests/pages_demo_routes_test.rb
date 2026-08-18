@@ -776,6 +776,17 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_equal [], payload["results"]
   end
 
+  test "search results rank form pages ahead of tables" do
+    get "/demo/search_results", params: {q: "form"}
+
+    assert_response :success
+    payload = JSON.parse(response.body)
+    titles = payload.fetch("results").map { |entry| entry["title"] }
+
+    assert titles.first.to_s.downcase.include?("form")
+    refute_equal "Tables", titles.first
+  end
+
   test "search results returns matching entries" do
     get "/demo/search_results", params: {q: "button"}
 
