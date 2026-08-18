@@ -2,8 +2,9 @@
 @source "../..";
 @source "../../../../../app";
 
-/* Tokens come from flat_pack/variables. Do not fork --color-fp-* here.
- * --color-warning is registered so Tailwind emits text-warning / border-warning.
+/* Tokens come from flat_pack/variables. Do not fork --color-fp-* or redefine
+ * --color-primary here (host CSS last wins). --color-warning is registered so
+ * Tailwind emits text-warning / border-warning.
  */
 @theme {
 	--color-warning: var(--color-warning-border);

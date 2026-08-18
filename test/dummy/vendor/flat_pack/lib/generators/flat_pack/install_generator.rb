@@ -209,6 +209,8 @@ module FlatPack
           say "\n✓ Configured Tailwind CSS 4 for FlatPack", :green
           say "  - Added @source directive: #{relative_path}", :green
           say "  - Tokens load from flat_pack/variables (no host-app --color-fp-* fork)", :green
+          say "  - Shared names such as --color-primary / --radius-md follow host CSS when it loads last", :green
+          say "  - Keep a host-only name (e.g. --my-app-primary) if FlatPack must not reuse --color-primary", :green
           say "\n  File updated: #{tailwind_file.relative_path_from(Rails.root)}", :cyan
           write_tailwind_source_helper
         else

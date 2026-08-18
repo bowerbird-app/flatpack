@@ -1,6 +1,12 @@
 /* Scan FlatPack ViewComponents so Tailwind emits their utility classes.
  * Design tokens live in flat_pack/variables (loaded via stylesheet_link_tag).
- * Do not redefine --color-* here — override brand primitives in your app CSS instead:
+ * Do not redefine tokens in this Tailwind entry (no --color-fp-* fork and no
+ * self-referential mappings such as radius-md pointing at itself).
+ *
+ * Shared :root names (host CSS last wins): --color-primary, --color-secondary,
+ * --radius-*, --shadow-*. If the host needs a separate primary, use a host-only
+ * name such as --my-app-primary. To restyle FlatPack, set --brand-* or --color-primary
+ * in a stylesheet loaded after flat_pack/variables:
  *   :root { --brand-hue: 160; --brand-chroma: 0.18; --brand-lightness: 0.52; }
  */
 @source "<%= source_path %>";
