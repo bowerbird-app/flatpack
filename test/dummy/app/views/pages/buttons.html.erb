@@ -8,7 +8,7 @@
   <!-- Basic Buttons -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Basic Buttons", anchor_link: true, subtitle: "Examples for Basic Buttons.") %>
-    <div class="flex gap-3 mb-4">
+    <div class="flex gap-3 mb-4 overflow-x-auto pb-2 md:overflow-visible md:pb-0">
       <%= render FlatPack::Button::Component.new(text: "Primary", style: :primary) %>
       <%= render FlatPack::Button::Component.new(text: "Secondary", style: :secondary) %>
       <%= render FlatPack::Button::Component.new(text: "Ghost", style: :ghost) %>
@@ -67,17 +67,17 @@
   <!-- Button Sizes -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Button Sizes", anchor_link: true, subtitle: "Examples for Button Sizes.") %>
-    <div class="flex items-center gap-3 mb-4">
+    <div class="flex items-center gap-3 mb-4 overflow-x-auto pb-2 md:overflow-visible md:pb-0">
       <%= render FlatPack::Button::Component.new(text: "Small", style: :primary, size: :sm) %>
       <%= render FlatPack::Button::Component.new(text: "Medium (default)", style: :primary, size: :md) %>
       <%= render FlatPack::Button::Component.new(text: "Large", style: :primary, size: :lg) %>
     </div>
-    <div class="flex items-center gap-3 mb-4">
+    <div class="flex items-center gap-3 mb-4 overflow-x-auto pb-2 md:overflow-visible md:pb-0">
       <%= render FlatPack::Button::Component.new(text: "Small", style: :secondary, size: :sm) %>
       <%= render FlatPack::Button::Component.new(text: "Medium", style: :secondary, size: :md) %>
       <%= render FlatPack::Button::Component.new(text: "Large", style: :secondary, size: :lg) %>
     </div>
-    <div class="flex items-center gap-3 mb-4">
+    <div class="flex items-center gap-3 mb-4 overflow-x-auto pb-2 md:overflow-visible md:pb-0">
       <%= render FlatPack::Button::Component.new(text: "Small", style: :ghost, size: :sm) %>
       <%= render FlatPack::Button::Component.new(text: "Medium", style: :ghost, size: :md) %>
       <%= render FlatPack::Button::Component.new(text: "Large", style: :ghost, size: :lg) %>
@@ -94,7 +94,7 @@
   <!-- Buttons as Links -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Buttons as Links", anchor_link: true, subtitle: "Examples for Buttons as Links.") %>
-    <div class="flex gap-3 mb-4">
+    <div class="flex gap-3 mb-4 overflow-x-auto pb-2 md:overflow-visible md:pb-0">
       <%= render FlatPack::Button::Component.new(text: "Go Home", href: root_path, style: :primary) %>
       <%= render FlatPack::Button::Component.new(text: "View Tables", href: demo_tables_basic_path, style: :secondary) %>
     </div>
@@ -112,7 +112,7 @@
   <!-- Links with Target -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Links with Target", anchor_link: true, subtitle: "Examples for Links with Target.") %>
-    <div class="flex gap-3 mb-4">
+    <div class="flex gap-3 mb-4 overflow-x-auto pb-2 md:overflow-visible md:pb-0">
       <%= render FlatPack::Button::Component.new(
         text: "Open in New Tab",
         href: "https://github.com",
@@ -211,7 +211,7 @@
   <!-- Buttons with ID and Custom Classes -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Buttons with ID and Custom Classes", anchor_link: true, subtitle: "Examples for Buttons with ID and Custom Classes.") %>
-    <div class="flex gap-3 mb-4">
+    <div class="flex gap-3 mb-4 overflow-x-auto pb-2 md:overflow-visible md:pb-0">
       <%= render FlatPack::Button::Component.new(
         text: "Button with ID",
         style: :primary,
@@ -270,7 +270,7 @@
   <!-- Disabled Buttons -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Disabled Buttons", anchor_link: true, subtitle: "Examples for Disabled Buttons.") %>
-    <div class="flex gap-3 mb-4">
+    <div class="flex gap-3 mb-4 overflow-x-auto pb-2 md:overflow-visible md:pb-0">
       <%= render FlatPack::Button::Component.new(
         text: "Disabled Primary",
         style: :primary,
@@ -296,12 +296,12 @@
   <!-- Icon Only Buttons -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Icon Only Buttons", anchor_link: true, subtitle: "Examples for Icon Only Buttons.") %>
-    <div class="flex items-center gap-3 mb-4">
+    <div class="flex items-center gap-3 mb-4 overflow-x-auto pb-2 md:overflow-visible md:pb-0">
       <%= render FlatPack::Button::Component.new(icon: "search", icon_only: true, style: :primary, size: :sm) %>
       <%= render FlatPack::Button::Component.new(icon: "search", icon_only: true, style: :primary, size: :md) %>
       <%= render FlatPack::Button::Component.new(icon: "search", icon_only: true, style: :primary, size: :lg) %>
     </div>
-    <div class="flex items-center gap-3 mb-4">
+    <div class="flex items-center gap-3 mb-4 overflow-x-auto pb-2 md:overflow-visible md:pb-0">
       <%= render FlatPack::Button::Component.new(icon: "settings", icon_only: true, style: :secondary) %>
       <%= render FlatPack::Button::Component.new(icon: "trash", icon_only: true, style: :ghost) %>
       <%= render FlatPack::Button::Component.new(icon: "check", icon_only: true, style: :success) %>
@@ -321,7 +321,7 @@
   <!-- Loading Buttons -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Loading Buttons", anchor_link: true, subtitle: "Examples for Loading Buttons.") %>
-    <div class="flex gap-3 mb-4">
+    <div class="flex gap-3 mb-4 overflow-x-auto pb-2 md:overflow-visible md:pb-0">
       <%= render FlatPack::Button::Component.new(text: "Saving", loading: true, style: :primary) %>
       <%= render FlatPack::Button::Component.new(text: "Processing", loading: true, style: :secondary) %>
       <%= render FlatPack::Button::Component.new(icon: "upload", icon_only: true, loading: true, style: :success) %>
@@ -611,7 +611,7 @@
     <p class="text-[var(--surface-muted-content-color)] mb-4">
       Dropdown menus with full keyboard navigation, accessibility support, and multiple styling options.
     </p>
-    <div class="flex gap-3 mb-4">
+    <div class="flex gap-3 mb-4 overflow-x-auto pb-2 md:overflow-visible md:pb-0">
       <%= render FlatPack::Button::Dropdown::Component.new(text: "Actions", style: :primary) do |dropdown| %>
         <% dropdown.menu_item(text: "Search", icon: "search", href: "#") %>
         <% dropdown.menu_item(text: "Dashboard", icon: "dashboard", href: "#") %>
@@ -647,7 +647,7 @@
   <!-- Button Dropdowns - Sizes -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Dropdown Sizes", anchor_link: true, subtitle: "Examples for Dropdown Sizes.") %>
-    <div class="flex items-center gap-3 mb-4">
+    <div class="flex items-center gap-3 mb-4 overflow-x-auto pb-2 md:overflow-visible md:pb-0">
       <%= render FlatPack::Button::Dropdown::Component.new(text: "Small", style: :primary, size: :sm) do |dropdown| %>
         <% dropdown.menu_item(text: "Option 1", href: "#") %>
         <% dropdown.menu_item(text: "Option 2", href: "#") %>
@@ -679,7 +679,7 @@
     <p class="text-[var(--surface-muted-content-color)] mb-4">
       Bottom positions (default):
     </p>
-    <div class="flex gap-3 mb-8">
+    <div class="flex gap-3 mb-8 overflow-x-auto pb-2 md:overflow-visible md:pb-0">
       <%= render FlatPack::Button::Dropdown::Component.new(text: "Bottom Right", placement: :bottom_right) do |dropdown| %>
         <% dropdown.menu_item(text: "Option 1", href: "#") %>
         <% dropdown.menu_item(text: "Option 2", href: "#") %>
@@ -696,7 +696,7 @@
     <p class="text-[var(--surface-muted-content-color)] mb-4">
       Top positions (opens upward):
     </p>
-    <div class="flex gap-3 mb-4 pt-32">
+    <div class="flex gap-3 mb-4 pt-32 overflow-x-auto pb-2 md:overflow-visible md:pb-0">
       <%= render FlatPack::Button::Dropdown::Component.new(text: "Top Right", placement: :top_right) do |dropdown| %>
         <% dropdown.menu_item(text: "Option 1", href: "#") %>
         <% dropdown.menu_item(text: "Option 2", href: "#") %>
@@ -721,7 +721,7 @@
   <!-- Button Dropdowns - With Icons and Badges -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Dropdowns with Icons and Badges", anchor_link: true, subtitle: "Examples for Dropdowns with Icons and Badges.") %>
-    <div class="flex gap-3 mb-4">
+    <div class="flex gap-3 mb-4 overflow-x-auto pb-2 md:overflow-visible md:pb-0">
       <%= render FlatPack::Button::Dropdown::Component.new(text: "Notifications", style: :primary, icon: "dashboard") do |dropdown| %>
         <% dropdown.menu_item(text: "Messages", icon: "box", badge: "12", href: "#") %>
         <% dropdown.menu_item(text: "Alerts", icon: "alert", badge: "3", href: "#") %>
@@ -745,7 +745,7 @@
   <!-- Button Dropdowns - Disabled Items -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Dropdowns with Disabled Items", anchor_link: true, subtitle: "Examples for Dropdowns with Disabled Items.") %>
-    <div class="flex gap-3 mb-4">
+    <div class="flex gap-3 mb-4 overflow-x-auto pb-2 md:overflow-visible md:pb-0">
       <%= render FlatPack::Button::Dropdown::Component.new(text: "File", style: :secondary) do |dropdown| %>
         <% dropdown.menu_item(text: "Home", icon: "home", href: "#") %>
         <% dropdown.menu_item(text: "Dashboard", icon: "dashboard", href: "#") %>
@@ -768,7 +768,7 @@
   <!-- Button Dropdowns - Disabled Dropdown -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Disabled Dropdown", anchor_link: true, subtitle: "Examples for Disabled Dropdown.") %>
-    <div class="flex gap-3 mb-4">
+    <div class="flex gap-3 mb-4 overflow-x-auto pb-2 md:overflow-visible md:pb-0">
       <%= render FlatPack::Button::Dropdown::Component.new(text: "Disabled", style: :primary, disabled: true) do |dropdown| %>
         <% dropdown.menu_item(text: "Option 1", href: "#") %>
         <% dropdown.menu_item(text: "Option 2", href: "#") %>

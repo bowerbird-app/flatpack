@@ -7,6 +7,21 @@ module FlatPack
 
       undef_method :with_column, :with_column_content
 
+      # Minimum table widths keep columns readable inside the horizontally
+      # scrollable container instead of squashing cell content on narrow
+      # viewports. Wider containers ignore the minimum because the table is
+      # already `w-full`.
+      #
+      # Tailwind CSS scanning requires these classes to be present as string literals.
+      # DO NOT REMOVE - These duplicates ensure CSS generation:
+      # "min-w-[30rem]" "min-w-[40rem]" "min-w-[48rem]"
+      MIN_WIDTHS = {
+        none: nil,
+        sm: "min-w-[30rem]",
+        md: "min-w-[40rem]",
+        lg: "min-w-[48rem]"
+      }.freeze
+
       def initialize(
         data: [],
         stimulus: false,
@@ -17,6 +32,7 @@ module FlatPack
         tbody_class: nil,
         tbody_data: nil,
         draggable_rows: false,
+        min_width: :md,
         reorder: nil,
         reorder_url: nil,
         reorder_resource: nil,
@@ -28,6 +44,7 @@ module FlatPack
       )
         super(**system_arguments)
         @data = data
+        @min_width = normalize_min_width(min_width)
         @stimulus = stimulus
         @turbo_frame = turbo_frame
         @sort = sort
@@ -95,10 +112,24 @@ module FlatPack
         {
           class: classes(
             "w-full",
+            @min_width,
             "border-collapse",
             "bg-[var(--table-background-color)]"
           )
         }
+      end
+
+      def normalize_min_width(min_width)
+        return min_width if min_width.is_a?(String)
+        return nil if min_width.nil? || min_width == false
+
+        key = min_width.to_sym
+        unless MIN_WIDTHS.key?(key)
+          raise ArgumentError,
+            "min_width must be one of #{MIN_WIDTHS.keys.join(", ")}, a Tailwind min-width class String, or nil"
+        end
+
+        MIN_WIDTHS[key]
       end
 
       def render_header

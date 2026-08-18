@@ -91,10 +91,26 @@ module FlatPack
         assert_selector "code.language-javascript", text: "const x = 1"
       end
 
-      def test_applies_wrapping_classes_to_pre
+      def test_scrolls_long_lines_horizontally_by_default
         render_inline(Component.new(code: "a_very_long_line_without_spaces"))
 
+        assert_selector "pre.overflow-x-auto.whitespace-pre"
+        refute_selector "pre.break-words"
+      end
+
+      def test_applies_wrapping_classes_to_pre_when_wrap_enabled
+        render_inline(Component.new(code: "a_very_long_line_without_spaces", wrap: true))
+
         assert_selector "pre.whitespace-pre-wrap.break-words"
+      end
+
+      def test_applies_scroll_classes_to_tabbed_panels
+        render_inline(Component.new(snippets: [
+          {label: "ERB", code: "<%= render Example %>", language: "erb"},
+          {label: "Ruby", code: "render Example", language: "ruby"}
+        ]))
+
+        assert_selector "pre.overflow-x-auto.whitespace-pre", minimum: 2, visible: :all
       end
 
       def test_preserves_newlines_in_code_content

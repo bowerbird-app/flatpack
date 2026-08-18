@@ -139,13 +139,101 @@ module FlatPack
         assert_selector "header[data-testid='top-nav']"
       end
 
+      def test_registers_mobile_menu_controller_by_default
+        render_inline(Component.new)
+
+        assert_selector "header[data-controller~='flat-pack--top-nav']"
+        assert_selector "header[data-flat-pack--top-nav-breakpoint-value='768']"
+      end
+
+      def test_mobile_menu_controller_preserves_host_controllers
+        render_inline(Component.new(data: {controller: "host--analytics"}))
+
+        assert_selector "header[data-controller~='host--analytics']"
+        assert_selector "header[data-controller~='flat-pack--top-nav']"
+      end
+
+      def test_accepts_custom_mobile_breakpoint
+        render_inline(Component.new(mobile_breakpoint: 1024))
+
+        assert_selector "header[data-flat-pack--top-nav-breakpoint-value='1024']"
+      end
+
+      def test_renders_mobile_menu_toggle_and_panel
+        render_inline(Component.new(mobile_menu_label: "Open navigation"))
+
+        assert_selector "[data-flat-pack--top-nav-target='menu']", visible: :all
+        assert_selector "[data-flat-pack--top-nav-target='toggle'][aria-label='Open navigation']", visible: :all
+        assert_selector "[data-flat-pack--top-nav-target='panel'][hidden]", visible: :all
+      end
+
+      def test_mobile_menu_toggle_controls_panel
+        render_inline(Component.new)
+
+        toggle = page.native.at_css("[data-flat-pack--top-nav-target='toggle']")
+        panel = page.native.at_css("[data-flat-pack--top-nav-target='panel']")
+
+        assert_equal panel["id"], toggle["aria-controls"]
+        assert_equal "false", toggle["aria-expanded"]
+      end
+
+      def test_left_section_is_always_displayed_by_default
+        render_inline(Component.new) do |nav|
+          nav.left { "Brand" }
+          nav.center { "Search" }
+          nav.right { "Actions" }
+        end
+
+        assert_equal "false", section_for("left")["data-flat-pack-top-nav-collapsible"]
+        assert_equal "true", section_for("center")["data-flat-pack-top-nav-collapsible"]
+        assert_equal "true", section_for("right")["data-flat-pack-top-nav-collapsible"]
+      end
+
+      def test_always_display_opts_sections_out_of_the_mobile_menu
+        render_inline(Component.new) do |nav|
+          nav.left(always_display: false) { "Brand" }
+          nav.center(always_display: true) { "Search" }
+          nav.right(always_display: true) { "Actions" }
+        end
+
+        assert_equal "true", section_for("left")["data-flat-pack-top-nav-collapsible"]
+        assert_equal "false", section_for("center")["data-flat-pack-top-nav-collapsible"]
+        assert_equal "false", section_for("right")["data-flat-pack-top-nav-collapsible"]
+      end
+
+      def test_mobile_menu_toggle_icon_rotates_while_open
+        render_inline(Component.new)
+
+        toggle = page.native.at_css("[data-flat-pack--top-nav-target='toggle']")
+
+        assert_includes toggle["class"], "[&>svg]:transition-transform"
+        assert_includes toggle["class"], "[&>svg]:duration-200"
+        refute_includes toggle["class"], "[&>svg]:rotate-180"
+
+        assert_selector "header[data-flat-pack--top-nav-toggle-open-class='[&>svg]:rotate-180']"
+      end
+
+      def test_mobile_menu_can_be_disabled
+        render_inline(Component.new(mobile_menu: false)) do |nav|
+          nav.center { "Search" }
+        end
+
+        refute_selector "[data-flat-pack--top-nav-target='menu']", visible: :all
+        refute_includes page.native.to_html, "flat-pack--top-nav"
+        assert_text "Search"
+      end
+
       private
+
+      def section_for(alignment)
+        page.native.at_css("[data-flat-pack-top-nav-section='#{alignment}']")
+      end
 
       def rendered_section_nodes
         container = page.native.at_css("header > div")
         return [] unless container
 
-        container.xpath("./div")
+        container.xpath("./div[@data-flat-pack-top-nav-section]")
       end
     end
   end

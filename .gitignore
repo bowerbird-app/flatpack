@@ -37,6 +37,9 @@
 *.sqlite3
 *.sqlite3-*
 
+# Ignore Redis snapshots written by test/dummy/bin/dev (chdir is the dummy app root)
+/test/dummy/dump.rdb
+
 # Ignore node modules
 /node_modules
 

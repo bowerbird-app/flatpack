@@ -13,13 +13,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-## [0.1.124] - 2026-08-17
+## [0.1.131] - 2026-08-18
+
+### Added
+- Added a mobile chevron menu to `FlatPack::TopNav::Component`. Below `mobile_breakpoint` (default `768`), collapsible slot content moves into a right-aligned menu panel opened by a chevron-down toggle and returns to the bar on wider viewports. Content is relocated rather than duplicated, so ids, listeners, and nested Stimulus controllers keep working.
+- Added `always_display:` to the TopNav `left`, `center`, and `right` slots, plus a `data-flat-pack-top-nav-always-display="true"` escape hatch for keeping individual elements in the bar while the rest of their section collapses.
+- Added `mobile_menu`, `mobile_menu_label`, and `mobile_breakpoint` options to `FlatPack::TopNav::Component`.
+- Added the `flat-pack--top-nav` Stimulus controller that drives the mobile chevron menu, including `Escape`, outside-click, and in-menu link dismissal.
+- Added a 180° rotation to the TopNav mobile chevron toggle while the menu is open, driven by the `flat-pack--top-nav-toggle-open-class` Stimulus class (`[&>svg]:rotate-180` by default).
+- Added `min_width` to `FlatPack::Table::Component` (`:none`, `:sm`, `:md`, `:lg`, or a Tailwind `min-w-*` class String).
+- Added `wrap` to `FlatPack::CodeBlock::Component` for opting back into soft-wrapped code.
+
+### Changed
+- Bumped the gem version to `0.1.131`.
+- `FlatPack::Table::Component` now applies a `40rem` minimum table width by default so the existing `overflow-x-auto` wrapper scrolls on narrow viewports instead of squashing columns.
+- `FlatPack::CodeBlock::Component` now scrolls long lines horizontally (`overflow-x-auto whitespace-pre`) instead of soft wrapping them, which previously split identifiers mid-token.
+- Dummy app button demo rows now use the mobile horizontal scroll container pattern (`overflow-x-auto pb-2 md:overflow-visible md:pb-0`) so every style variant stays reachable at 390px.
+
+### Fixed
+- Fixed the crowded mobile top nav where the search field, theme control, and notification button were compressed into an unusable row at narrow widths.
+- Fixed clipped button examples on the dummy app buttons demo where non-wrapping example rows cut off the Success, Warning, and Danger variants on mobile.
+
+### Upgrade notes
+- **TopNav gains a mobile chevron menu by default.** `center` and `right` slot content now collapses below `768px`; `left` stays inline. The toggle uses a chevron-down icon. To keep the previous always-inline layout, pass `mobile_menu: false`, or mark sections with `always_display: true`. Host apps that already implement their own responsive top bar should pass `mobile_menu: false` to avoid two competing mechanisms.
+- **TopNav now requires the `flat-pack--top-nav` Stimulus controller.** It ships through the engine importmap; apps that pin FlatPack controllers manually should confirm `controllers/flat_pack/top_nav_controller` resolves. Without JavaScript, TopNav renders exactly as before (no chevron toggle appears).
+- **Tables now have a default minimum width of `40rem`.** Tables placed in narrow desktop containers (sidebars, cards, split panes) will scroll horizontally where they previously squashed. Pass `min_width: :none` to restore the old behavior, or `min_width: :sm`/`:lg`/a custom `min-w-*` class to tune it.
+- **Code blocks no longer soft wrap.** Long lines scroll horizontally instead. Pass `wrap: true` to restore wrapping where a fixed-height, non-scrolling block is required.
+
+## [0.1.130] - 2026-08-17
 
 ### Added
 - Added `docs/components/PARAMS.md` as the canonical cross-component param naming guide.
 
 ### Changed
-- Bumped the gem version to `0.1.124`.
+- Bumped the gem version to `0.1.130`.
 - Standardized shared component param names. This gem is unreleased, so old names were removed rather than aliased.
 - Updated development lockfiles to patched `rails` (`8.1.3.1` / `7.2.3.2`), `json` `2.21.2`, and `sqlite3` `2.9.6`.
 
@@ -939,7 +966,8 @@ Keep `variant` for structural/layout choices such as Hero, Tabs, Carousel, Page 
 - CSS variables for theming customization
 
 [0.1.12]: https://github.com/bowerbird-app/flatpack/compare/v0.1.11...v0.1.12
-[0.1.124]: https://github.com/bowerbird-app/flatpack/compare/v0.1.123...v0.1.124
+[0.1.131]: https://github.com/bowerbird-app/flatpack/compare/v0.1.130...v0.1.131
+[0.1.130]: https://github.com/bowerbird-app/flatpack/compare/v0.1.129...v0.1.130
 [0.1.123]: https://github.com/bowerbird-app/flatpack/compare/v0.1.122...v0.1.123
 [0.1.33]: https://github.com/bowerbird-app/flatpack/compare/v0.1.32...v0.1.33
 [0.1.8]: https://github.com/bowerbird-app/flat_pack/compare/v0.1.7...v0.1.8

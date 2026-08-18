@@ -20,6 +20,39 @@ module FlatPack
         assert_text "No data available"
       end
 
+      def test_scrollable_container_applies_default_minimum_width
+        render_inline(Component.new(data: @users))
+
+        assert_selector "div.overflow-x-auto > table.min-w-\\[40rem\\]"
+      end
+
+      def test_minimum_width_accepts_named_sizes
+        render_inline(Component.new(data: @users, min_width: :lg))
+
+        assert_selector "table.min-w-\\[48rem\\]"
+      end
+
+      def test_minimum_width_accepts_custom_class
+        render_inline(Component.new(data: @users, min_width: "min-w-[72rem]"))
+
+        assert_selector "table.min-w-\\[72rem\\]"
+      end
+
+      def test_minimum_width_can_be_disabled
+        render_inline(Component.new(data: @users, min_width: :none))
+
+        assert_selector "table.w-full"
+        refute_includes page.native.to_html, "min-w-["
+      end
+
+      def test_minimum_width_rejects_unknown_values
+        error = assert_raises(ArgumentError) do
+          render_inline(Component.new(data: @users, min_width: :enormous))
+        end
+
+        assert_includes error.message, "min_width must be one of"
+      end
+
       def test_renders_table_with_columns
         render_inline(Component.new(data: @users)) do |component|
           component.column(title: "Name", html: ->(user) { user.name })
