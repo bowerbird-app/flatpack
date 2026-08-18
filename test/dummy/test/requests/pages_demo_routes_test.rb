@@ -832,7 +832,9 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, "Search demo pages..."
     assert_match(/data-controller="[^"]*flat-pack--search[^"]*"/, response.body)
-    assert_includes response.body, "data-flat-pack--search-url-value=\"/demo/search_results\""
+    assert_includes response.body, "data-flat-pack--search-items-value"
+    assert_includes response.body, "Accordion"
+    refute_includes response.body, "data-flat-pack--search-url-value=\"/demo/search_results\""
   end
 
   test "form demo submission endpoints redirect" do

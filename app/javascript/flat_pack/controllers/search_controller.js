@@ -6,7 +6,8 @@ export default class extends Controller {
     url: String,
     param: { type: String, default: "q" },
     minCharacters: { type: Number, default: 2 },
-    debounce: { type: Number, default: 250 }
+    debounce: { type: Number, default: 250 },
+    items: { type: Array, default: [] }
   }
 
   connect() {
@@ -31,12 +32,26 @@ export default class extends Controller {
       return
     }
 
-    this.showLoading()
+    if (this.itemsValue.length > 0) {
+      this.renderResults(this.filterLocalItems(query))
+      return
+    }
 
     this.clearDebounce()
     this.debounceTimer = setTimeout(() => {
+      this.showLoading()
       this.fetchResults(query)
     }, this.debounceValue)
+  }
+
+  filterLocalItems(query) {
+    const normalizedQuery = query.toLowerCase()
+
+    return this.itemsValue.filter((item) => {
+      const title = String(item.title || item.label || "").toLowerCase()
+      const description = String(item.description || "").toLowerCase()
+      return title.includes(normalizedQuery) || description.includes(normalizedQuery)
+    }).slice(0, 10)
   }
 
   open() {

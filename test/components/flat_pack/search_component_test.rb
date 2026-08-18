@@ -47,6 +47,22 @@ module FlatPack
         assert_selector "button.hidden[data-flat-pack--search-input-target='clearButton'][aria-label='Clear search']"
       end
 
+      def test_renders_local_items_configuration
+        render_inline(Component.new(
+          items: [
+            {title: "Accordion", description: "Grouped panels", url: "/demo/accordion"}
+          ],
+          no_results_text: "Nothing found"
+        ))
+
+        assert_selector "div[data-controller='flat-pack--search-input flat-pack--search']"
+        assert_selector "div[data-flat-pack--search-items-value]"
+        assert_includes rendered_content, "Accordion"
+        assert_includes rendered_content, "/demo/accordion"
+        assert_selector "div[data-flat-pack--search-target='dropdown'].hidden"
+        assert_selector "div[data-flat-pack--search-target='noResults']", text: "Nothing found"
+      end
+
       def test_raises_error_with_unsafe_search_url
         assert_raises(ArgumentError) do
           Component.new(search_url: "javascript:alert('xss')")
