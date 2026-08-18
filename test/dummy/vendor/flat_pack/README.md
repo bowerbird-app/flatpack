@@ -38,8 +38,9 @@ If you are upgrading an existing FlatPack app, rerun `rails generate flat_pack:i
 **What the generator does:**
 - ✨ Automatically detects your Tailwind CSS 4 configuration file
 - ✨ Calculates the correct relative path to FlatPack components
-- ✨ Injects `@source` directive, `@theme` block, and CSS variable mappings
-- ✨ Avoids invalid self-referential Tailwind token mappings in the generated scaffold
+- ✨ Injects `@source` so Tailwind scans FlatPack ViewComponents
+- ✨ Links `flat_pack/variables`, `flat_pack/application`, and `flat_pack/rich_text` in the layout
+- ✨ Leaves tokens in `flat_pack/variables` (no host-app `--color-fp-*` fork)
 - ✨ No manual path finding or configuration copying required!
 
 Optional layout scaffold:
@@ -413,7 +414,7 @@ bin/rubocop
 
 FlatPack follows these principles:
 
-1. **Variables over configuration** - Customize via CSS variables
+1. **Variables over configuration** - Customize via CSS variables (`--brand-hue` first)
 2. **Theme variants over hardcoded palettes** - Default light theme plus `data-theme` overrides when needed
 3. **Composition over inheritance** - Build complex UIs from simple parts
 4. **Zero-config installation** - Works immediately

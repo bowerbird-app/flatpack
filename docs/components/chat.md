@@ -138,7 +138,7 @@ Required props are validated; enums are validated with descriptive `ArgumentErro
 | Avatar | Used in message groups |
 | AvatarGroup | Used in chat headers |
 | BaseComponent | All components inherit from it |
-| CSS variables | Uses `--color-*`, `--transition-*`, `--radius-*`; dark-mode support via CSS variables |
+| CSS variables | Uses `--color-*`, `--transition-*` (aliases of `--duration-*`), `--radius-*`; named themes inherit via `data-theme` |
 
 ### Source Files
 

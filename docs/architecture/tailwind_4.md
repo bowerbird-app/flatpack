@@ -29,17 +29,14 @@ module.exports = {
 
 ### `@theme` Directive
 
-Define theme configuration in CSS:
+Define theme configuration in CSS. FlatPack's inventory lives in `flat_pack/variables.css`:
 
 ```css
 @theme {
-  /* Colors */
-  --color-brand-500: oklch(0.62 0.22 250);
-  
-  /* Spacing */
-  --stack-gap-lg: 1.5rem;
-  
-  /* Border radius */
+  --brand-hue: 250;
+  --brand-chroma: 0.26;
+
+  --color-primary: oklch(0.52 var(--brand-chroma) var(--brand-hue));
   --radius-md: 0.375rem;
 }
 ```
@@ -61,23 +58,20 @@ FlatPack defines CSS variables in `app/assets/stylesheets/flat_pack/variables.cs
 
 ```css
 @theme {
-  /* Brand colors */
-  --color-brand-500: oklch(0.62 0.22 250);
-  --color-brand-600: oklch(0.52 0.26 250);
-  
-  /* Semantic colors */
-  --color-primary: var(--color-brand-600);
-  --color-primary-hover: var(--color-brand-700);
-  
-  /* ... more variables */
+  --brand-hue: 250;
+  --brand-chroma: 0.26;
+  --color-primary: oklch(0.52 var(--brand-chroma) var(--brand-hue));
+  --button-primary-background-color: var(--color-primary);
 }
 
-/* Dark mode */
-@media (prefers-color-scheme: dark) {
-  @theme {
-    --color-primary: var(--color-brand-500);
-    /* ... adjusted for dark backgrounds */
-  }
+:root {
+  /* Light palette + the same component aliases as @theme */
+  --button-primary-background-color: var(--color-primary);
+}
+
+/* Named themes override brand/semantic tokens only */
+[data-theme="dark"] {
+  --color-primary: oklch(0.70 0.20 250);
 }
 ```
 
@@ -174,21 +168,20 @@ bundle install
 
 ### 2. Set Up Application CSS
 
-Create or update `app/assets/stylesheets/application.css`:
+The install generator injects `@source` into your Tailwind entry. Do **not** copy FlatPack tokens into that file. Tokens load from `flat_pack/variables` via layout `stylesheet_link_tag`s.
 
 ```css
-/* app/assets/stylesheets/application.css */
+/* app/assets/stylesheets/application.tailwind.css */
 @import "tailwindcss";
-
-/* Scan FlatPack component classes */
 @source "../../../flat_pack/app/components";
+```
 
-/* Import FlatPack CSS Variables */
+Override brand primitives in a host stylesheet loaded **after** the gem tags:
+
+```css
 :root {
-  /* Copy CSS variables from FlatPack's variables.css */
-  /* Or include them inline as shown in the example below */
-  --color-primary: oklch(0.52 0.26 250);
-  /* ... other variables */
+  --brand-hue: 270;
+  --brand-chroma: 0.22;
 }
 ```
 
@@ -297,21 +290,19 @@ FlatPack CSS variables are loaded in the layout via `stylesheet_link_tag`. To ov
 /* app/assets/stylesheets/application.css */
 
 :root {
-  /* Your custom colors — override FlatPack defaults */
-  --color-primary: oklch(0.55 0.25 270); /* Purple */
-  --color-primary-hover: oklch(0.45 0.28 270);
+  --brand-hue: 270;
+  --brand-chroma: 0.22;
 }
 ```
 
-Your values override FlatPack's defaults.
+`--color-primary`, surfaces, and component aliases that reference them all follow. Override a semantic token only when you need a one-off exception.
 
 ### Add New Variables
 
 ```css
 /* app/assets/stylesheets/application.css */
 :root {
-  /* Your variables */
-  --color-brand-purple: oklch(0.55 0.25 270);
+  --my-app-accent: oklch(0.55 0.25 270);
   --spacing-custom: 2.5rem;
 }
 ```
@@ -358,8 +349,10 @@ FlatPack's CSS is minimal:
    ```erb
    <%# app/views/layouts/application.html.erb %>
    <%= stylesheet_link_tag "flat_pack/variables", "data-turbo-track": "reload" %>
+   <%= stylesheet_link_tag "flat_pack/application", "data-turbo-track": "reload" %>
+   <%= stylesheet_link_tag "flat_pack/rich_text", "data-turbo-track": "reload" %>
    ```
-   FlatPack variables are loaded via `stylesheet_link_tag`, not `@import`. Override variables in your own stylesheet loaded after these tags.
+   FlatPack variables are loaded via `stylesheet_link_tag`, not `@import`. Override `--brand-hue` / `--brand-chroma` (or semantic tokens) in your own stylesheet loaded after these tags.
 
 2. **Inspect computed styles:**
    DevTools → Computed → Filter "color-primary"

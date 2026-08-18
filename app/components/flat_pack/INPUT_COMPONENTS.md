@@ -204,7 +204,7 @@ All components use Tailwind CSS with CSS variables for theming:
 - `--color-danger-border-color` - Error state border color
 - `--surface-muted-content-color` - Placeholder color
 - `--radius-md` - Border radius
-- `--duration-base` - Transition duration
+- `--duration-base` / `--transition-base` - Transition duration (`--transition-*` aliases `--duration-*`)
 
 ## Examples
 

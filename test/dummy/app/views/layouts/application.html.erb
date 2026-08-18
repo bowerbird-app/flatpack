@@ -6,11 +6,7 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= stylesheet_link_tag "flat_pack/application", "data-turbo-track": "reload" %>
-    <%= stylesheet_link_tag "flat_pack/variables", "data-turbo-track": "reload" %>
-    <%= stylesheet_link_tag "flat_pack/rich_text", "data-turbo-track": "reload" %>
-    <%= stylesheet_link_tag "flat_pack/content_editor", "data-turbo-track": "reload" %>
+    <%= render "layouts/flat_pack_stylesheets" %>
     <%= javascript_importmap_tags %>
     <script>
       // Activate the sidebar nav item matching the current URL.

@@ -88,8 +88,11 @@ The engine integrates via:
 1. **Stylesheet Link Tags** (in `app/views/layouts/application.html.erb`)
    ```erb
    <%= stylesheet_link_tag "flat_pack/variables", "data-turbo-track": "reload" %>
+   <%= stylesheet_link_tag "flat_pack/application", "data-turbo-track": "reload" %>
    <%= stylesheet_link_tag "flat_pack/rich_text", "data-turbo-track": "reload" %>
+   <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
    ```
+   Load the host stylesheet last so `--brand-hue` / named-theme overrides win.
 
 2. **Component Rendering**
    ```erb
@@ -194,11 +197,12 @@ end
 
 ### Component-level Configuration
 
-Via CSS variables in host application:
+Via CSS variables in the host application (after `flat_pack/variables`):
 
 ```css
-@theme {
-  --color-primary: oklch(0.62 0.22 250);
+:root {
+  --brand-hue: 270;
+  --brand-chroma: 0.22;
 }
 ```
 

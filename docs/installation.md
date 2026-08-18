@@ -164,8 +164,7 @@ The `rails generate flat_pack:install` command now **automatically configures Ta
 1. **Detect** your Tailwind CSS 4 configuration file (checks common locations like `app/assets/stylesheets/application.tailwind.css`)
 2. **Calculate** the correct relative path from your Tailwind file to the FlatPack gem components
 3. **Inject** the `@source` directive with the correct path
-4. **Add** the `@theme` block with all FlatPack design tokens (colors, shadows, radius, transitions)
-5. **Map** CSS variables to `:root` for component compatibility
+4. Tokens stay in `flat_pack/variables` — the generator does **not** copy a parallel `--color-fp-*` theme into the host Tailwind file
 
 **The generator automatically adds two things:**
 
@@ -173,59 +172,26 @@ The `rails generate flat_pack:install` command now **automatically configures Ta
 
 ```erb
 <%= stylesheet_link_tag "flat_pack/variables", "data-turbo-track": "reload" %>
+<%= stylesheet_link_tag "flat_pack/application", "data-turbo-track": "reload" %>
 <%= stylesheet_link_tag "flat_pack/rich_text", "data-turbo-track": "reload" %>
 ```
 
 > **Why `stylesheet_link_tag` and not `@import`?** Propshaft fingerprints asset filenames (e.g. `flat_pack/variables-17d9435e.css`). A bare CSS `@import "flat_pack/variables.css"` in a static stylesheet would send the browser looking for an un-digested URL that Propshaft never serves, resulting in a 404. `stylesheet_link_tag` asks Propshaft for the correct digested path at request time.
 
 `flat_pack/variables.css` contains the complete FlatPack theming system:
-- A comprehensive `@theme {}` block with all component design tokens (colors, shadows, radius, transitions, component-level variables for every FlatPack component)
-- A `:root {}` block that establishes the **light theme as the default palette** (see [variables.css](https://github.com/bowerbird-app/flatpack/blob/main/app/assets/stylesheets/flat_pack/variables.css))
+- Brand primitives (`--brand-hue`, `--brand-chroma`) plus semantic and component tokens in `@theme {}`
+- `:root {}` wiring (component aliases map to semantic tokens once)
+- Slim `[data-theme]` override blocks for `dark`, `ocean`, and `rounded`
 
-**2. In your Tailwind CSS file** (e.g., `app/assets/stylesheets/application.tailwind.css`) — source scanning and utility theme:
+**2. In your Tailwind CSS file** (e.g., `app/assets/stylesheets/application.tailwind.css`) — component scanning only:
 
 ```css
-/* Tailwind CSS - Scan FlatPack components for classes */
+/* Scan FlatPack ViewComponents so Tailwind emits their utility classes.
+ * Design tokens live in flat_pack/variables (loaded via stylesheet_link_tag).
+ * Override brand primitives in host CSS instead of redefining --color-* here:
+ *   :root { --brand-hue: 160; --brand-chroma: 0.18; }
+ */
 @source "../path/to/flat_pack/app/components";
-
-/* Extend Tailwind theme with FlatPack design tokens */
-@theme {
-  /* Primary Button Colors */
-  --color-fp-primary: oklch(0.52 0.26 250);
-  --color-fp-primary-hover: oklch(0.42 0.24 250);
-  --color-fp-primary-text: oklch(1.0 0 0);
-  
-  /* Secondary Button Colors */
-  --color-fp-secondary: oklch(0.95 0.01 250);
-  --color-fp-secondary-hover: oklch(0.90 0.02 250);
-  --color-fp-secondary-text: oklch(0.25 0.02 250);
-  
-  /* Ghost Button Colors */
-  --color-fp-ghost: transparent;
-  --color-fp-ghost-hover: oklch(0.96 0.01 250);
-  --color-fp-ghost-text: oklch(0.35 0.02 250);
-  
-  /* Border and Ring Colors */
-  --color-fp-border: oklch(0.89 0.01 250);
-  --color-ring: oklch(0.52 0.26 250);
-  
-  /* Design tokens */
-  --shadow-fp-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --radius-md: 0.375rem;
-  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
-  
-  /* Map to Tailwind utility class names */
-  --color-primary: var(--color-fp-primary);
-  --color-primary-hover: var(--color-fp-primary-hover);
-  --color-primary-text: var(--color-fp-primary-text);
-  --color-secondary: var(--color-fp-secondary);
-  --color-secondary-hover: var(--color-fp-secondary-hover);
-  --color-secondary-text: var(--color-fp-secondary-text);
-  --color-ghost: var(--color-fp-ghost);
-  --color-ghost-hover: var(--color-fp-ghost-hover);
-  --color-ghost-text: var(--color-fp-ghost-text);
-  --color-border: var(--color-fp-border);
-}
 ```
 
 **After the generator runs:**
@@ -245,7 +211,7 @@ The verifier checks:
 - `app/views/layouts/application.html.erb` for FlatPack stylesheet tags
 - `config/importmap.rb` for FlatPack controller, TipTap, and Heroicons pins
 - `app/javascript/controllers/index.js` for Stimulus lazy loading
-- a Tailwind CSS 4 file for the FlatPack `@source`, `@theme`, and `:root` mappings
+- a Tailwind CSS 4 file for the FlatPack `@source` (component scan)
 
 To print the exact contract used by that verification step:
 
@@ -266,13 +232,25 @@ If the generator cannot automatically detect your Tailwind CSS 4 file, it will d
 
 ### 5. FlatPack CSS Variables and Default Theme
 
-**Variables are loaded automatically.** The `rails generate flat_pack:install` command adds `stylesheet_link_tag "flat_pack/variables"` and `stylesheet_link_tag "flat_pack/rich_text"` to your application layout. Propshaft resolves the correct digested file URLs at request time, so the complete FlatPack variable system loads without any manual copying.
+**Variables are loaded automatically.** The `rails generate flat_pack:install` command adds `stylesheet_link_tag "flat_pack/variables"`, `stylesheet_link_tag "flat_pack/application"`, and `stylesheet_link_tag "flat_pack/rich_text"` to your application layout. Propshaft resolves the correct digested file URLs at request time, so the complete FlatPack variable system loads without any manual copying.
 
 The imported `variables.css` contains:
-- `@theme {}` — all Tailwind design tokens (colors, shadows, radius, transitions, and per-component variables for every FlatPack component)
-- `:root {}` — the **light theme palette** (this is active by default with no additional configuration)
-- `[data-theme="dark"] {}` — dark theme overrides, applied when `data-theme="dark"` is set on `<html>`
-- `[data-theme="ocean"] {}` and `[data-theme="rounded"] {}` — additional theme variants
+- `@theme {}` — token inventory (brand primitives, semantics, component aliases)
+- `:root {}` — the **light theme palette** plus once-defined component wiring
+- `[data-theme="dark"] {}` — dark overrides only (component aliases inherit)
+- `[data-theme="ocean"] {}` and `[data-theme="rounded"] {}` — additional theme variants (overrides only)
+
+To recolor without copying the full token list:
+
+```bash
+bin/rails generate flat_pack:theme Sunrise --hue=35
+```
+
+or in host CSS loaded after FlatPack:
+
+```css
+:root { --brand-hue: 160; --brand-chroma: 0.18; }
+```
 
 **Light mode is the default.** The `:root {}` block in `variables.css` establishes the light palette without requiring any attribute. No `data-theme` attribute is needed to get the light theme — it is applied automatically.
 
@@ -694,7 +672,7 @@ If the install generator didn't automatically configure Tailwind CSS 4:
    ```
 
 4. **Manually verify the configuration was added:**
-   Check your Tailwind CSS file for the `@source` directive and `@theme` block.
+   Check your Tailwind CSS file for the `@source` directive pointing at FlatPack `app/components`.
 
 ### Styles Not Applying
 
@@ -705,11 +683,10 @@ If the install generator didn't automatically configure Tailwind CSS 4:
    
    The output shows the full path. The `@source` directive in your Tailwind file should point to this path's `app/components` directory using a relative path.
 
-2. **Ensure all required CSS variables are defined:**
-   The generator automatically adds these to the `@theme` block:
-   - Color variables: `--color-fp-primary`, `--color-fp-secondary`, `--color-fp-ghost`, etc.
-   - Supporting variables: `--radius-md`, `--transition-base`, `--color-ring`, `--color-border`
-   - These must be in `@theme` to work with arbitrary values like `bg-[var(--color-secondary)]`
+2. **Ensure FlatPack variables are loaded from the gem stylesheet**, not re-declared in the host Tailwind file:
+   - Layout includes `stylesheet_link_tag "flat_pack/variables"`
+   - Host Tailwind file has `@source` for components and does **not** define `--color-fp-*`
+   - Recolor with `--brand-hue` / `--brand-chroma` (see [Theming](theming.md))
 
 3. **Rebuild Tailwind CSS:**
    ```bash
@@ -748,8 +725,8 @@ Check all blocks:
 **Examples of valid cross-mappings — keep these:**
 
 ```css
---color-primary: var(--color-fp-primary);   /* OK — different names */
---shadow-sm: var(--shadow-fp-sm);           /* OK — different names */
+--button-primary-background-color: var(--color-primary);   /* OK — component alias → semantic */
+--color-primary: oklch(0.52 var(--brand-chroma) var(--brand-hue)); /* OK — semantic → primitives */
 ```
 
 **Fix:**
@@ -761,7 +738,7 @@ Check all blocks:
    ```bash
    bin/rails tailwindcss:build
    ```
-5. Verify the compiled output (`app/assets/builds/tailwind.css`) resolves each previously-broken variable to a concrete value, not another `var()`:
+5. Verify the compiled output (`app/assets/builds/application.css`) resolves each previously-broken variable to a concrete value, not another `var()`:
    ```
    GOOD: --radius-md:.375rem;
    BAD:  --radius-md:var(--radius-md);
@@ -927,9 +904,10 @@ The installation process for FlatPack is fully automated. Quick checklist:
 6. ✅ Start using FlatPack components in your views
 
 **What the generator sets up automatically:**
-- ✨ `stylesheet_link_tag "flat_pack/variables"` and `stylesheet_link_tag "flat_pack/rich_text"` in `app/views/layouts/application.html.erb` — loads the complete variable set (all component tokens + light-mode `:root` palette) via Propshaft's digested URL resolution
+- ✨ `stylesheet_link_tag "flat_pack/variables"`, `flat_pack/application`, and `flat_pack/rich_text` in the application layout
 - ✨ `@source` directive in your Tailwind file so Tailwind scans FlatPack components
-- ✨ `@theme` utility block in your Tailwind file for Tailwind class generation
+- ✨ Tokens from `flat_pack/variables` (no host `--color-fp-*` fork)
+- ✨ Optional `rails g flat_pack:theme NAME --hue=…` for brand overrides
 - ✨ Heroicons importmap pin (`flat_pack/heroicons`) for the Icon component
 - ✨ Optional app-wide FlatPack settings via `config/initializers/flat_pack.rb`, including `config.default_icon_variant = :outline`
 - ✨ Stimulus lazy-loading for all FlatPack controllers via importmap
@@ -955,7 +933,7 @@ No manual path finding, no manual copying of CSS variables, no manual configurat
 **How to Apply:**
 1. Run `bundle show flat_pack` to get the correct gem path
 2. Update the `@source` path in `app/assets/tailwind/application.css`
-3. Ensure all CSS variables from the example above are in your `@theme` block
+3. Ensure brand/semantic tokens live in `flat_pack/variables` (or a host override after it), not a `--color-fp-*` fork in the Tailwind entry
 4. Run `bin/rails tailwindcss:build` to regenerate the CSS
 5. Refresh your browser
 

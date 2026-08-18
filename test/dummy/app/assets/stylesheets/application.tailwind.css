@@ -2,45 +2,11 @@
 @source "../..";
 @source "../../../../../app";
 
+/* Tokens come from flat_pack/variables. Do not fork --color-fp-* here.
+ * --color-warning is registered so Tailwind emits text-warning / border-warning.
+ */
 @theme {
-	--color-fp-primary: oklch(0.52 0.26 250);
-	--color-fp-primary-hover: oklch(0.42 0.24 250);
-	--color-fp-primary-text: oklch(1 0 0);
-	--color-fp-secondary: oklch(0.95 0.01 250);
-	--color-fp-secondary-hover: oklch(0.9 0.02 250);
-	--color-fp-secondary-text: oklch(0.25 0.02 250);
-	--color-fp-ghost: transparent;
-	--color-fp-ghost-hover: oklch(0.96 0.01 250);
-	--color-fp-ghost-text: oklch(0.35 0.02 250);
-	--color-fp-border: oklch(0.89 0.01 250);
-	--color-ring: oklch(0.52 0.26 250);
-	--shadow-fp-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-	--radius-md: 0.375rem;
-	--transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
-	--color-primary: var(--color-fp-primary);
-	--color-primary-hover: var(--color-fp-primary-hover);
-	--color-primary-text: var(--color-fp-primary-text);
-	--color-secondary: var(--color-fp-secondary);
-	--color-secondary-hover: var(--color-fp-secondary-hover);
-	--color-secondary-text: var(--color-fp-secondary-text);
-	--color-ghost: var(--color-fp-ghost);
-	--color-ghost-hover: var(--color-fp-ghost-hover);
-	--color-ghost-text: var(--color-fp-ghost-text);
-	--color-border: var(--color-fp-border);
-}
-
-:root {
-	--color-primary: var(--color-fp-primary);
-	--color-primary-hover: var(--color-fp-primary-hover);
-	--color-primary-text: var(--color-fp-primary-text);
-	--color-secondary: var(--color-fp-secondary);
-	--color-secondary-hover: var(--color-fp-secondary-hover);
-	--color-secondary-text: var(--color-fp-secondary-text);
-	--color-ghost: var(--color-fp-ghost);
-	--color-ghost-hover: var(--color-fp-ghost-hover);
-	--color-ghost-text: var(--color-fp-ghost-text);
-	--color-border: var(--color-fp-border);
-	--shadow-sm: var(--shadow-fp-sm);
+	--color-warning: var(--color-warning-border);
 }
 
 @layer components {
@@ -134,6 +100,49 @@
 		min-height: 5rem;
 		padding: 0.75rem;
 	}
+
+	.container {
+		@apply mx-auto px-4 max-w-7xl;
+	}
+
+	.shadow-button {
+		box-shadow: var(--button-shadow);
+	}
+
+	.shadow-button:hover,
+	.shadow-button:focus,
+	.shadow-button:active {
+		box-shadow: var(--button-shadow-active);
+	}
+
+	.shadow-button:disabled {
+		box-shadow: none;
+	}
+
+	.fp-card-hover-subtle {
+		transition: background-color var(--transition-fast);
+		cursor: pointer;
+	}
+
+	.fp-card-hover-subtle:hover {
+		background-color: var(--surface-muted-background-color);
+	}
+
+	.fp-card-hover-strong {
+		transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
+		cursor: pointer;
+	}
+
+	.fp-card-hover-strong:hover {
+		box-shadow: var(--shadow-md);
+		border-color: var(--color-primary);
+	}
+}
+
+@layer base {
+	body {
+		@apply bg-[var(--surface-background-color)] text-[var(--surface-content-color)];
+	}
 }
 
 @keyframes fp-skeleton-shimmer {
@@ -152,14 +161,13 @@
 	--sidebar-header-border-color: transparent;
 }
 
+/* Example host theme: change brand primitives, plus a few surface tweaks */
 [data-theme="sunrise"] {
-	--color-primary: oklch(0.68 0.19 35);
-	--color-primary-hover: oklch(0.61 0.17 32);
-	--color-primary-text: oklch(1 0 0);
+	--brand-hue: 35;
+	--brand-chroma: 0.19;
 	--surface-background-color: oklch(0.99 0.01 80);
 	--surface-page-background-color: oklch(0.98 0.01 85);
 	--surface-muted-background-color: oklch(0.95 0.02 70);
 	--surface-border-color: oklch(0.85 0.03 55);
 	--surface-content-color: oklch(0.32 0.04 35);
-	--color-ring: oklch(0.7 0.16 28);
 }

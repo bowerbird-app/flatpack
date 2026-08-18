@@ -2,6 +2,7 @@
 
 class ThemesController < ApplicationController
   THEME_TOKEN_GROUPS = {
+    "Brand primitives" => [/\A--brand-/],
     "Core Colors and Surfaces" => [/\A--(color-|surface-|gradient-)/],
     "Badges" => [/\A--badge-/],
     "Buttons" => [/\A--button-/],
@@ -33,7 +34,7 @@ class ThemesController < ApplicationController
     "Avatars" => [/\A--avatar-/],
     "Radii" => [/\A--radius-/],
     "Shadows" => [/\A--shadow-/],
-    "Motion" => [/\A--duration-/],
+    "Motion" => [/\A--(duration-|transition-)/],
     "Backdrop Effects" => [/\A--blur-/],
     "Other" => [/.*/]
   }.freeze
@@ -206,6 +207,8 @@ class ThemesController < ApplicationController
 
   def variable_section_label(variable_name)
     case variable_name
+    when /\A--brand-/
+      "Brand primitives"
     when /\A--color-ring\z/
       "Focus"
     when /\A--(color-|gradient-|surface-)/
@@ -270,6 +273,8 @@ class ThemesController < ApplicationController
       "Radii"
     when /\A--shadow-/
       "Shadows"
+    when /\A--(duration-|transition-)/
+      "Motion"
     when /\A--blur-/
       "Backdrop effects"
     else

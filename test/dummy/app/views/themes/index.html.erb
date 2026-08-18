@@ -8,22 +8,24 @@
   <div class="space-y-6">
     <%= render FlatPack::SectionTitle::Component.new(
       title: "How Theming Works",
-      subtitle: "FlatPack uses Tailwind v4 @theme tokens and per-theme variable overrides.",
+      subtitle: "Brand primitives drive semantic tokens; component tokens inherit automatically.",
       anchor_link: true
     ) %>
 
     <div class="p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-background-color)] space-y-3">
       <p class="text-sm text-[var(--surface-muted-content-color)]">
-        Themes are defined with Tailwind v4 tokens (for example <code class="font-mono text-xs">--color-primary</code>,
-        <code class="font-mono text-xs">--radius-md</code>, <code class="font-mono text-xs">--search-input-background-color</code>,
-        and <code class="font-mono text-xs">--shadow-md</code>).
-        Tailwind then generates semantic utilities like <code class="font-mono text-xs">bg-primary</code>,
-        <code class="font-mono text-xs">text-[var(--surface-content-color)]</code>, and <code class="font-mono text-xs">border-[var(--surface-border-color)]</code>.
+        FlatPack tokens have three layers:
+        <code class="font-mono text-xs">--brand-hue</code> / <code class="font-mono text-xs">--brand-chroma</code>
+        (primitives), semantic tokens such as <code class="font-mono text-xs">--color-primary</code> and
+        <code class="font-mono text-xs">--surface-content-color</code>, then component aliases such as
+        <code class="font-mono text-xs">--button-primary-background-color</code> which map once to
+        <code class="font-mono text-xs">var(--color-primary)</code>.
       </p>
       <p class="text-sm text-[var(--surface-muted-content-color)]">
-        To add a new theme, define the same variable names under a new selector
-        (for example <code class="font-mono text-xs">[data-theme=\"forest\"]</code>) and provide different values.
-        Components keep the same class names, and only token values change.
+        Recolor the app by changing brand primitives (or
+        <code class="font-mono text-xs">rails g flat_pack:theme Sunrise --hue=35</code>).
+        Named themes under <code class="font-mono text-xs">[data-theme="…"]</code> should override
+        brand/semantic tokens only — component aliases inherit from <code class="font-mono text-xs">:root</code>.
       </p>
     </div>
   </div>
@@ -38,16 +40,15 @@
 
     <div class="p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-background-color)] space-y-3">
       <p class="text-sm text-[var(--surface-muted-content-color)]">
-        Keep the same token names across every theme and only change values.
-        Suffixes: <code class="font-mono text-xs">-bg</code> is the base feedback surface,
-        <code class="font-mono text-xs">-bg-hover</code> is interactive hover state,
-        <code class="font-mono text-xs">-text</code> is text/icon color on that surface, and
-        <code class="font-mono text-xs">-border</code> controls feedback borders.
+        This catalog lists the <code class="font-mono text-xs">@theme</code> inventory from
+        <code class="font-mono text-xs">flat_pack/variables.css</code>. Values that start with
+        <code class="font-mono text-xs">var(</code> are aliases — change the referenced semantic token
+        (or <code class="font-mono text-xs">--brand-hue</code>) instead of editing the alias.
       </p>
       <p class="text-xs text-[var(--surface-muted-content-color)]">
-        Tip: these variables map to semantic utilities like <code class="font-mono">bg-primary</code>,
-        <code class="font-mono">text-[var(--surface-content-color)]</code>, and <code class="font-mono">border-[var(--surface-border-color)]</code>.
-        Search component tokens use the <code class="font-mono">--search-*</code> prefix for input, dropdown, and result row styling.
+        Tip: utilities such as <code class="font-mono">bg-primary</code> come from semantic
+        <code class="font-mono">--color-*</code> tokens. Component tables on demo pages (Buttons, Sidebar, …)
+        show the matching <code class="font-mono">--button-*</code> / <code class="font-mono">--sidebar-*</code> aliases.
       </p>
     </div>
 

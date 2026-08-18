@@ -6,8 +6,8 @@ FlatPack ships a light theme by default and supports dark or custom theme varian
 
 FlatPack theme behavior is split into two layers:
 
-- **CSS defaults** - `:root {}` in `flat_pack/variables.css` provides the default light palette.
-- **Theme variants** - selectors such as `[data-theme="dark"]`, `[data-theme="ocean"]`, and `[data-theme="rounded"]` override those variables.
+- **CSS defaults** - `:root {}` in `flat_pack/variables.css` provides the default light palette, including `--brand-hue` / `--brand-chroma` and component aliases that map once to semantic tokens.
+- **Theme variants** - selectors such as `[data-theme="dark"]`, `[data-theme="ocean"]`, and `[data-theme="rounded"]` override only tokens that differ from `:root`. Component aliases inherit unless you override them.
 - **Optional controller support** - the `flat-pack--theme` Stimulus controller can switch between `system`, `light`, `dark`, and custom variants while persisting the choice in `localStorage` under `flatpack-theme`.
 
 ## How It Works
@@ -56,16 +56,16 @@ Override FlatPack variables in your application stylesheet after the FlatPack li
 }
 ```
 
-You can define additional custom themes the same way:
+You can define additional custom themes the same way. Prefer brand primitives when you only need a recolor:
 
 ```css
 [data-theme="forest"] {
-  --color-primary: oklch(0.58 0.18 155);
-  --surface-background-color: oklch(0.98 0.01 150);
+  --brand-hue: 155;
+  --brand-chroma: 0.18;
 }
 ```
 
-For a complete copy-pasteable selector with the full current FlatPack variable set, use the [Custom Theming Guide](custom_theming.md).
+Override semantic tokens (`--color-primary`, `--surface-*`) only when a named theme should diverge from the brand kit. For a complete copy-pasteable selector with the full current FlatPack variable set, use the [Custom Theming Guide](custom_theming.md).
 
 ## Testing Themes
 

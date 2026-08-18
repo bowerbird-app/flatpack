@@ -64,21 +64,21 @@ The FlatPack gem is loaded from the checked-in vendor directory:
 gem "flat_pack", path: "vendor/flat_pack"
 ```
 
-### 2. CSS Variables Import
+### 2. Stylesheet load order
 
-The dummy app builds its Tailwind bundle into `app/assets/builds/application.css` and loads FlatPack variables via `stylesheet_link_tag` in the layout:
+The dummy app loads gem CSS first, then the compiled host Tailwind bundle last (`layouts/_flat_pack_stylesheets.html.erb`):
 
-```css
-@import "tailwindcss";
-
-/* Tailwind build-only customizations live in application.tailwind.css */
+```erb
+<%= stylesheet_link_tag "flat_pack/variables", "data-turbo-track": "reload" %>
+<%= stylesheet_link_tag "flat_pack/application", "data-turbo-track": "reload" %>
+<%= stylesheet_link_tag "flat_pack/rich_text", "data-turbo-track": "reload" %>
+<%= stylesheet_link_tag "flat_pack/content_editor", "data-turbo-track": "reload" %>
+<%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
 ```
 
-For production apps, you can also use the import approach (requires proper asset path configuration):
+Tokens come from `flat_pack/variables`. Do not `@import "flat_pack/variables.css"` in a Propshaft-served stylesheet (fingerprinted filenames 404). Do not fork tokens as `--color-fp-*` in the Tailwind entry.
 
-```css
-@import "flat_pack/variables.css";
-```
+Host overrides (for example `[data-theme="sunrise"] { --brand-hue: 35; }`) live in `app/assets/stylesheets/application.tailwind.css` and win because `application` loads last.
 
 ### 3. Tailwind Configuration
 
@@ -111,6 +111,8 @@ The dummy app includes several demo pages:
 - **Home/Demo** (`/`): Overview of available components
 - **Buttons** (`/demo/buttons`): Button component examples
 - **Tables** (`/demo/tables`): Table component examples
+- **Themes** (`/themes`): Live `@theme` token catalog (brand → semantic → component aliases)
+- **Theme demos** (`/themes/demos/:theme`): Light (`:root` dump) plus override-only named themes
 
 ## Development
 

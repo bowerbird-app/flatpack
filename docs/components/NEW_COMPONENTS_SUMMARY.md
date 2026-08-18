@@ -353,7 +353,7 @@ Drag and drop reordering with keyboard fallback.
 1. **Import Map:** ApexCharts is automatically configured in `config/importmap.rb`
 2. **Pagy:** The `pagy` gem is already in gemspec, include `Pagy::Backend` in controllers
 3. **Stimulus:** All controllers auto-register via the existing importmap configuration
-4. **Dark Mode:** All components respect system dark mode preference through CSS variables
+4. **Dark Mode:** All components follow `data-theme` variants through CSS variables (optional system mode maps to light/`dark`)
 
 ## Next Steps (Optional Enhancements)
 

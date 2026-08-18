@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Streamlined `variables.css`: component tokens map to semantic tokens once on `:root`; named themes (`dark`, `ocean`, `rounded`) only declare overrides (~2.3k → ~1.1k lines).
 - Install Tailwind scaffold now only injects `@source` for FlatPack components. Host apps no longer get a parallel `--color-fp-*` token fork.
+- Dummy `/themes` pages and markdown (README, install, theming, architecture) now describe the brand → semantic → component-alias hierarchy instead of copying a host `@theme` fork.
 - Notification unread badges use `--color-danger-*` tokens instead of `bg-red-600`.
 - Bumped the gem version to `0.1.132`.
 
