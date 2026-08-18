@@ -24,6 +24,17 @@ class DemoCatalogTest < ActiveSupport::TestCase
     assert_equal "/demo/accordion", accordion[:url]
   end
 
+  test "search ranks form titles ahead of formatting descriptions" do
+    titles = DemoCatalog.search("form").map { |item| item[:title] }
+
+    assert titles.any? { |title| title.downcase.include?("form") }
+    refute_equal "Tables", titles.first
+    assert titles.first.downcase.start_with?("form") || titles.first.downcase.include?("form")
+    refute_includes titles.first(3), "Tables"
+    refute_includes titles.first(3), "Tables: Basic"
+    refute_includes titles, "Local Time"
+  end
+
   test "sections drive sidebar groups for buttons and charts" do
     interactive = DemoCatalog.sections.find { |section| section[:title] == "Interactive" }
     buttons = interactive[:entries].find { |entry| entry[:type] == :group && entry[:title] == "Buttons" }

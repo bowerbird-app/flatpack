@@ -47,11 +47,38 @@ export default class extends Controller {
   filterLocalItems(query) {
     const normalizedQuery = query.toLowerCase()
 
-    return this.itemsValue.filter((item) => {
-      const title = String(item.title || item.label || "").toLowerCase()
-      const description = String(item.description || "").toLowerCase()
-      return title.includes(normalizedQuery) || description.includes(normalizedQuery)
-    }).slice(0, 10)
+    return this.itemsValue
+      .map((item) => ({item, score: this.scoreItem(item, normalizedQuery)}))
+      .filter(({score}) => score > 0)
+      .sort((left, right) => {
+        if (right.score !== left.score) return right.score - left.score
+        const leftTitle = String(left.item.title || left.item.label || "")
+        const rightTitle = String(right.item.title || right.item.label || "")
+        return leftTitle.localeCompare(rightTitle)
+      })
+      .slice(0, 10)
+      .map(({item}) => item)
+  }
+
+  scoreItem(item, query) {
+    const title = String(item.title || item.label || "").toLowerCase()
+    const description = String(item.description || "").toLowerCase()
+    const titleWords = this.searchWords(title)
+    const descriptionWords = this.searchWords(description)
+
+    if (title === query) return 100
+    if (title.startsWith(query)) return 90
+    if (title.includes(query)) return 80
+    if (titleWords.some((word) => word.startsWith(query))) return 70
+    if (description === query || description.startsWith(query)) return 40
+    if (query.includes(" ") && description.includes(query)) return 30
+    if (descriptionWords.some((word) => word === query || word === `${query}s`)) return 20
+
+    return 0
+  }
+
+  searchWords(text) {
+    return text.split(/[^a-z0-9]+/).filter(Boolean)
   }
 
   open() {

@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Dummy top-nav search filters the demo catalog in the browser instead of waiting on `/demo/search_results` for every keystroke.
+- Dummy top-nav search ranks title matches above description matches, so "form" prefers Forms over Tables ("formatting").
 - Reorganized long dummy demo pages into focused routes:
   - Collapse and Accordion are separate pages
   - Buttons family split into Buttons, Links, Pills, Segmented, Groups, and Dropdowns
