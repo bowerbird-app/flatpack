@@ -12,7 +12,7 @@ module FlatPack
       test "creates a data-theme brand override stylesheet" do
         Dir.mktmpdir("flatpack-theme-generator") do |tmpdir|
           destination = Pathname.new(tmpdir)
-          generator = ThemeGenerator.new(["Sunrise"], {hue: 35, chroma: 0.2}, destination_root: destination.to_s)
+          generator = ThemeGenerator.new(["Sunrise"], {hue: 35, chroma: 0.2, lightness: 0.6}, destination_root: destination.to_s)
           generator.destination_root = destination.to_s
 
           capture_io { generator.invoke_all }
@@ -23,6 +23,7 @@ module FlatPack
           assert_includes content, '[data-theme="sunrise"]'
           assert_includes content, "--brand-hue: 35"
           assert_includes content, "--brand-chroma: 0.2"
+          assert_includes content, "--brand-lightness: 0.6"
         end
       end
 

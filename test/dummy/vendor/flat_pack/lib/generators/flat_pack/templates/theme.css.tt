@@ -1,17 +1,19 @@
 /* FlatPack brand theme: <%= theme_slug %>
  *
- * Change --brand-hue / --brand-chroma to recolor the app.
- * Component tokens (--button-*, --sidebar-*, …) inherit from semantic tokens
- * defined in flat_pack/variables — you usually do not need to override them.
+ * Change --brand-hue / --brand-chroma / --brand-lightness to recolor primary.
+ * Lightness applies to --color-primary only (hover is 0.10 darker).
+ * For an exact hex, set --color-primary / --color-primary-hover instead.
+ * Component tokens inherit from semantic tokens — you usually do not override them.
  *
  * Load this stylesheet AFTER flat_pack/variables.
  */
 <%= selector %> {
   --brand-hue: <%= brand_hue %>;
   --brand-chroma: <%= brand_chroma %>;
+  --brand-lightness: <%= brand_lightness %>;
 
   /* Optional semantic overrides — uncomment to fine-tune */
-  /* --color-primary: oklch(0.52 var(--brand-chroma) var(--brand-hue)); */
-  /* --color-primary-hover: oklch(0.42 calc(var(--brand-chroma) - 0.02) var(--brand-hue)); */
+  /* --color-primary: oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue)); */
+  /* --color-primary-hover: oklch(calc(var(--brand-lightness) - 0.10) calc(var(--brand-chroma) - 0.02) var(--brand-hue)); */
   /* --surface-page-background-color: oklch(0.99 0.01 var(--brand-hue)); */
 }

@@ -19,6 +19,11 @@ module FlatPack
         default: 0.18,
         desc: "Brand chroma used by --brand-chroma"
 
+      class_option :lightness,
+        type: :numeric,
+        default: 0.52,
+        desc: "Brand lightness used by --brand-lightness (primary only)"
+
       class_option :as_root,
         type: :boolean,
         default: false,
@@ -41,7 +46,7 @@ module FlatPack
           say "  Or use the flat-pack--theme Stimulus controller.", :cyan
         end
         say "\nTweaking color later:", :cyan
-        say "  Change --brand-hue / --brand-chroma in #{destination}", :cyan
+        say "  Change --brand-hue / --brand-chroma / --brand-lightness in #{destination}", :cyan
         say "  Component tokens inherit from semantic tokens automatically.", :cyan
       end
 
@@ -57,6 +62,10 @@ module FlatPack
 
       def brand_chroma
         options[:chroma].to_f
+      end
+
+      def brand_lightness
+        options[:lightness].to_f
       end
 
       def selector

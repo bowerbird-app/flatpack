@@ -5,7 +5,7 @@ FlatPack uses CSS variables for theming, allowing you to customize the appearanc
 ## Token hierarchy
 
 ```text
-Brand primitives (--brand-hue, --brand-chroma)
+Brand primitives (--brand-hue, --brand-chroma, --brand-lightness)
     ↓
 Semantic tokens (--color-*, --surface-*, --radius-*, --shadow-*, --duration-*)
     ↓
@@ -21,7 +21,7 @@ If you want a complete copy-pasteable custom theme with every current FlatPack v
 ## Fastest path: change the brand color
 
 ```bash
-bin/rails generate flat_pack:theme Sunrise --hue=35 --chroma=0.2
+bin/rails generate flat_pack:theme Sunrise --hue=35 --chroma=0.2 --lightness=0.52
 ```
 
 That writes `app/assets/stylesheets/flat_pack_theme_sunrise.css`. Load it after `flat_pack/variables`, then set `<html data-theme="sunrise">` (or use the `flat-pack--theme` controller).
@@ -32,10 +32,20 @@ Or override primitives directly:
 :root {
   --brand-hue: 160;
   --brand-chroma: 0.18;
+  --brand-lightness: 0.52;
 }
 ```
 
-`--color-primary`, surfaces, and component aliases that reference them all follow.
+`--color-primary` is `oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue))`. Hover is 0.10 darker. Surfaces pick up `--brand-hue` only; they keep their own lightness.
+
+For an exact brand hex, set the semantic tokens instead:
+
+```css
+:root {
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+}
+```
 
 ## Overview
 
@@ -55,6 +65,7 @@ FlatPack variables are loaded via `stylesheet_link_tag` in your layout (added by
 :root {
   --brand-hue: 270;
   --brand-chroma: 0.22;
+  --brand-lightness: 0.52;
   /* Optional fine-tuning */
   --color-primary-text: oklch(1 0 0);
 }
@@ -68,6 +79,7 @@ For a named host-app variant such as `[data-theme="sunrise"]`, see the theme gen
 ```css
 --brand-hue
 --brand-chroma
+--brand-lightness
 ```
 
 ### Semantic Colors
@@ -161,7 +173,7 @@ Use stack gap tokens on parent layout containers (for example, form stacks) to c
 
 ## Component Variable Usage
 
-Component tokens such as `--button-primary-background-color` map to semantic tokens (`var(--color-primary)`). You normally change `--brand-hue` or `--color-primary` instead of editing component tokens.
+Component tokens such as `--button-primary-background-color` map to semantic tokens (`var(--color-primary)`). You normally change `--brand-hue` / `--brand-lightness` or `--color-primary` instead of editing component tokens.
 
 ### Buttons
 - Colors: `--color-default-*`, `--color-primary-*`, `--color-secondary-*`, `--color-ghost-*`, `--color-success-*`, `--color-warning-*`

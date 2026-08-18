@@ -35,8 +35,9 @@ Define theme configuration in CSS. FlatPack's inventory lives in `flat_pack/vari
 @theme {
   --brand-hue: 250;
   --brand-chroma: 0.26;
+  --brand-lightness: 0.52;
 
-  --color-primary: oklch(0.52 var(--brand-chroma) var(--brand-hue));
+  --color-primary: oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue));
   --radius-md: 0.375rem;
 }
 ```
@@ -60,7 +61,8 @@ FlatPack defines CSS variables in `app/assets/stylesheets/flat_pack/variables.cs
 @theme {
   --brand-hue: 250;
   --brand-chroma: 0.26;
-  --color-primary: oklch(0.52 var(--brand-chroma) var(--brand-hue));
+  --brand-lightness: 0.52;
+  --color-primary: oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue));
   --button-primary-background-color: var(--color-primary);
 }
 
@@ -182,6 +184,7 @@ Override brand primitives in a host stylesheet loaded **after** the gem tags:
 :root {
   --brand-hue: 270;
   --brand-chroma: 0.22;
+  --brand-lightness: 0.52;
 }
 ```
 
@@ -292,6 +295,7 @@ FlatPack CSS variables are loaded in the layout via `stylesheet_link_tag`. To ov
 :root {
   --brand-hue: 270;
   --brand-chroma: 0.22;
+  --brand-lightness: 0.52;
 }
 ```
 

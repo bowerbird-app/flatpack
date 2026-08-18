@@ -76,7 +76,7 @@ bin/rake flat_pack:verify_install
 bin/rails generate flat_pack:theme Sunrise --hue=35 --chroma=0.2
 ```
 
-Creates `app/assets/stylesheets/flat_pack_theme_sunrise.css` with `--brand-hue` / `--brand-chroma`. Load it after FlatPack variables and set `data-theme="sunrise"` on `<html>`. See [Theming](theming.md).
+Creates `app/assets/stylesheets/flat_pack_theme_sunrise.css` with `--brand-hue` / `--brand-chroma` / `--brand-lightness`. Load it after FlatPack variables and set `data-theme="sunrise"` on `<html>`. See [Theming](theming.md).
 
 ### 3.2 Optional: Generate a Sidebar Layout Shell
 
@@ -179,7 +179,7 @@ The `rails generate flat_pack:install` command now **automatically configures Ta
 > **Why `stylesheet_link_tag` and not `@import`?** Propshaft fingerprints asset filenames (e.g. `flat_pack/variables-17d9435e.css`). A bare CSS `@import "flat_pack/variables.css"` in a static stylesheet would send the browser looking for an un-digested URL that Propshaft never serves, resulting in a 404. `stylesheet_link_tag` asks Propshaft for the correct digested path at request time.
 
 `flat_pack/variables.css` contains the complete FlatPack theming system:
-- Brand primitives (`--brand-hue`, `--brand-chroma`) plus semantic and component tokens in `@theme {}`
+- Brand primitives (`--brand-hue`, `--brand-chroma`, `--brand-lightness`) plus semantic and component tokens in `@theme {}`
 - `:root {}` wiring (component aliases map to semantic tokens once)
 - Slim `[data-theme]` override blocks for `dark`, `ocean`, and `rounded`
 
@@ -189,7 +189,7 @@ The `rails generate flat_pack:install` command now **automatically configures Ta
 /* Scan FlatPack ViewComponents so Tailwind emits their utility classes.
  * Design tokens live in flat_pack/variables (loaded via stylesheet_link_tag).
  * Override brand primitives in host CSS instead of redefining --color-* here:
- *   :root { --brand-hue: 160; --brand-chroma: 0.18; }
+ *   :root { --brand-hue: 160; --brand-chroma: 0.18; --brand-lightness: 0.52; }
  */
 @source "../path/to/flat_pack/app/components";
 ```
@@ -249,7 +249,7 @@ bin/rails generate flat_pack:theme Sunrise --hue=35
 or in host CSS loaded after FlatPack:
 
 ```css
-:root { --brand-hue: 160; --brand-chroma: 0.18; }
+:root { --brand-hue: 160; --brand-chroma: 0.18; --brand-lightness: 0.52; }
 ```
 
 **Light mode is the default.** The `:root {}` block in `variables.css` establishes the light palette without requiring any attribute. No `data-theme` attribute is needed to get the light theme — it is applied automatically.
@@ -686,7 +686,7 @@ If the install generator didn't automatically configure Tailwind CSS 4:
 2. **Ensure FlatPack variables are loaded from the gem stylesheet**, not re-declared in the host Tailwind file:
    - Layout includes `stylesheet_link_tag "flat_pack/variables"`
    - Host Tailwind file has `@source` for components and does **not** define `--color-fp-*`
-   - Recolor with `--brand-hue` / `--brand-chroma` (see [Theming](theming.md))
+   - Recolor with `--brand-hue` / `--brand-chroma` / `--brand-lightness` (see [Theming](theming.md))
 
 3. **Rebuild Tailwind CSS:**
    ```bash
@@ -726,7 +726,7 @@ Check all blocks:
 
 ```css
 --button-primary-background-color: var(--color-primary);   /* OK — component alias → semantic */
---color-primary: oklch(0.52 var(--brand-chroma) var(--brand-hue)); /* OK — semantic → primitives */
+--color-primary: oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue)); /* OK — semantic → primitives */
 ```
 
 **Fix:**

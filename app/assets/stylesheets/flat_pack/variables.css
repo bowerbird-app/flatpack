@@ -1,7 +1,7 @@
 /* FlatPack CSS Variables - Tailwind v4 Native Theming
  *
  * Token hierarchy:
- *   1. Brand primitives (--brand-hue, --brand-chroma) — change these to recolor the app
+ *   1. Brand primitives (--brand-hue, --brand-chroma, --brand-lightness) — change these to recolor primary
  *   2. Semantic tokens (--color-*, --surface-*, --radius-*, --shadow-*, --duration-*)
  *   3. Component tokens (--button-*, --sidebar-*, …) — defined once; prefer var(--semantic)
  *
@@ -13,8 +13,9 @@
 @theme {
   --brand-hue: 250;
   --brand-chroma: 0.26;
-  --color-primary: oklch(0.52 var(--brand-chroma) var(--brand-hue));
-  --color-primary-hover: oklch(0.42 calc(var(--brand-chroma) - 0.02) var(--brand-hue));
+  --brand-lightness: 0.52;
+  --color-primary: oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue));
+  --color-primary-hover: oklch(calc(var(--brand-lightness) - 0.10) calc(var(--brand-chroma) - 0.02) var(--brand-hue));
   --color-primary-text: oklch(1.0 0 0);
   --color-default: var(--surface-background-color);
   --color-default-hover: var(--surface-muted-background-color);
@@ -505,8 +506,9 @@ input.flat-pack-input[type="search"]::-ms-reveal {
 :root {
   --brand-hue: 250;
   --brand-chroma: 0.26;
-  --color-primary: oklch(0.52 var(--brand-chroma) var(--brand-hue));
-  --color-primary-hover: oklch(0.42 calc(var(--brand-chroma) - 0.02) var(--brand-hue));
+  --brand-lightness: 0.52;
+  --color-primary: oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue));
+  --color-primary-hover: oklch(calc(var(--brand-lightness) - 0.10) calc(var(--brand-chroma) - 0.02) var(--brand-hue));
   --color-primary-text: oklch(1.0 0 0);
   --color-default: var(--surface-background-color);
   --color-default-hover: var(--surface-muted-background-color);
