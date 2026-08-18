@@ -41,8 +41,10 @@ This will:
 
 3. **Build Tailwind CSS:**
   ```bash
-  bundle exec tailwindcss -i app/assets/tailwind/application.css -o app/assets/builds/application.css
+  bundle exec tailwindcss -i app/assets/stylesheets/application.css -o app/assets/builds/application.css
   ```
+
+  `application.css` re-exports `application.tailwind.css` (tokens stay in `flat_pack/variables`; no `--color-fp-*` fork).
 
 4. **Start the server:**
    ```bash
@@ -177,6 +179,7 @@ See [../../docs/deployment_digitalocean.md](../../docs/deployment_digitalocean.m
 test/dummy/
 ├── app/
 │   ├── assets/
+│   │   ├── stylesheets/application.css            # CI/build entry (imports application.tailwind.css)
 │   │   ├── stylesheets/application.tailwind.css
 │   │   └── tailwind/application.css
 │   ├── controllers/pages_controller.rb
