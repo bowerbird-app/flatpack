@@ -127,11 +127,10 @@
 
           <% nav.center do %>
             <%= render FlatPack::Search::Component.new(
-              search_url: demo_search_results_path,
+              items: DemoCatalog.searchable_items,
               placeholder: "Search demo pages...",
               no_results_text: "No demo pages found",
               min_characters: 1,
-              debounce: 150,
               class: "max-w-xl"
             ) %>
           <% end %>

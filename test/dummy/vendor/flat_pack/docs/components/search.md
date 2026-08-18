@@ -1,7 +1,7 @@
 # Search
 
 ## Purpose
-Render a search input with optional live-result dropdown backed by a JSON endpoint.
+Render a search input with optional live-result dropdown backed by local items or a JSON endpoint.
 
 ## When to use
 Use Search where users need quick keyword filtering in top nav or content surfaces.
@@ -16,10 +16,11 @@ Use Search where users need quick keyword filtering in top nav or content surfac
 | `placeholder` | String | `"Search..."` | No | Input placeholder text. |
 | `name` | String | `"q"` | No | Input `name` and query param key used for live search requests. |
 | `value` | String | `nil` | No | Initial input value. |
-| `search_url` | String | `nil` | No | Enables live search when present. URL is sanitized (safe protocols + relative URLs). |
+| `search_url` | String | `nil` | No | Enables remote live search when present. URL is sanitized (safe protocols + relative URLs). Ignored when `items` is present. |
+| `items` | Array | `[]` | No | Local results to filter in the browser. Each item is `{ title:, description:, url: }`. Prefer this for static catalogs. |
 | `max_width` | Symbol | `:md` | No | Wrapper max width. Allowed: `:none`, `:md`, `:lg`, `:xl`. |
-| `min_characters` | Integer | `2` | No | Minimum trimmed query length before fetch is triggered. |
-| `debounce` | Integer | `250` | No | Debounce delay in milliseconds for live requests. |
+| `min_characters` | Integer | `2` | No | Minimum trimmed query length before results are shown. |
+| `debounce` | Integer | `250` | No | Debounce delay in milliseconds for remote requests. Not used for local `items`. |
 | `no_results_text` | String | `"No results found"` | No | Empty-state text shown in dropdown when no results match. |
 | `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into the wrapper/input (`class`, `id`, `data`, `aria`). |
 
@@ -30,6 +31,17 @@ None.
 None.
 
 ## Example
+
+```erb
+<%= render FlatPack::Search::Component.new(
+  items: [
+    {title: "Buttons", description: "Button variants", url: "/demo/buttons"}
+  ],
+  placeholder: "Search components..."
+) %>
+```
+
+Remote live search still works when you need a server query:
 
 ```erb
 <%= render FlatPack::Search::Component.new(
@@ -55,7 +67,7 @@ Expected live-search response shape:
 The controller also accepts a top-level JSON array instead of `{ "results": [...] }`.
 
 ## Accessibility
-When `search_url` is present, the input includes `aria-haspopup="listbox"` and toggles `aria-expanded` as the dropdown opens/closes. `Escape` closes the dropdown.
+When live search is enabled (`items` or `search_url`), the input includes `aria-haspopup="listbox"` and toggles `aria-expanded` as the dropdown opens/closes. `Escape` closes the dropdown.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).

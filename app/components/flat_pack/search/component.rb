@@ -15,6 +15,7 @@ module FlatPack
         name: "q",
         value: nil,
         search_url: nil,
+        items: nil,
         max_width: :md,
         min_characters: 2,
         debounce: 250,
@@ -26,6 +27,7 @@ module FlatPack
         @name = name
         @value = value
         @search_url = search_url.present? ? FlatPack::AttributeSanitizer.sanitize_url(search_url) : nil
+        @items = normalize_items(items)
         @max_width = max_width.to_sym
         @min_characters = min_characters
         @debounce = debounce
@@ -90,7 +92,8 @@ module FlatPack
             flat_pack__search_url_value: @search_url,
             flat_pack__search_param_value: @name,
             flat_pack__search_min_characters_value: @min_characters,
-            flat_pack__search_debounce_value: @debounce
+            flat_pack__search_debounce_value: @debounce,
+            flat_pack__search_items_value: @items
           )
         end
 
@@ -230,7 +233,23 @@ module FlatPack
       end
 
       def live_search?
-        @search_url.present?
+        @search_url.present? || @items.any?
+      end
+
+      def normalize_items(items)
+        Array(items).filter_map do |item|
+          next unless item.respond_to?(:to_h)
+
+          hash = item.to_h
+          title = hash[:title] || hash["title"]
+          next if title.blank?
+
+          {
+            title: title.to_s,
+            description: (hash[:description] || hash["description"]).to_s.presence,
+            url: hash[:url] || hash["url"]
+          }.compact
+        end
       end
 
       def validate_search_url!(original_url)
