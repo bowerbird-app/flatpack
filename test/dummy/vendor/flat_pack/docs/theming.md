@@ -47,6 +47,21 @@ For an exact brand hex, set the semantic tokens instead:
 }
 ```
 
+## Shared names with a host Tailwind app
+
+FlatPack does **not** rename `--color-primary` to `--fp-color-primary`. That name is the public override API: host CSS loaded after `flat_pack/variables` wins, so one brand color can drive both the app and FlatPack.
+
+Do **not** put FlatPack tokens back into the Tailwind entry. A second `--color-primary` (or `--color-fp-*`) inside `@theme` is what used to clash and circular-map.
+
+| Situation | What to do |
+|---|---|
+| Host has no `--color-primary` | Nothing. FlatPack defines it. |
+| Host wants the same primary as FlatPack | Set `--color-primary` in the host stylesheet (last). That is an override, not a clash. |
+| Host needs a different primary than FlatPack | Keep the host color as `--my-app-primary` (or similar). Leave `--color-primary` for FlatPack, or set it only if you intend FlatPack to match. |
+| Host already uses `--color-primary` for something else | Rename the **host** token. Do not rename FlatPack's. |
+
+`--brand-hue` / `--brand-chroma` / `--brand-lightness` are FlatPack-only and do not overlap Tailwind defaults. `--radius-md` and `--shadow-md` use the same names as Tailwind utilities; FlatPack's defaults match Tailwind's (`0.375rem` for `--radius-md`).
+
 ## Overview
 
 FlatPack's theming system is built on:

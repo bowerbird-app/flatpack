@@ -188,7 +188,8 @@ The `rails generate flat_pack:install` command now **automatically configures Ta
 ```css
 /* Scan FlatPack ViewComponents so Tailwind emits their utility classes.
  * Design tokens live in flat_pack/variables (loaded via stylesheet_link_tag).
- * Override brand primitives in host CSS instead of redefining --color-* here:
+ * Do not redefine --color-primary here. Host CSS loaded last wins; if the app
+ * needs a separate primary, use --my-app-primary. See docs/theming.md.
  *   :root { --brand-hue: 160; --brand-chroma: 0.18; --brand-lightness: 0.52; }
  */
 @source "../path/to/flat_pack/app/components";
@@ -687,6 +688,7 @@ If the install generator didn't automatically configure Tailwind CSS 4:
    - Layout includes `stylesheet_link_tag "flat_pack/variables"`
    - Host Tailwind file has `@source` for components and does **not** define `--color-fp-*`
    - Recolor with `--brand-hue` / `--brand-chroma` / `--brand-lightness` (see [Theming](theming.md))
+   - If the host already has `--color-primary` and FlatPack must stay independent, keep the host color as `--my-app-primary` ([shared names](theming.md#shared-names-with-a-host-tailwind-app))
 
 3. **Rebuild Tailwind CSS:**
    ```bash
