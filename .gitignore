@@ -69,3 +69,7 @@ yarn-debug.log*
 .bundle
 .bundle-user
 coverage
+buttons-demo.png
+themes-demo.png
+console-errors.png
+verification-report.md
