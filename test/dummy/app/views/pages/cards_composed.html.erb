@@ -1,0 +1,502 @@
+<%# Controller: no instance variables required — stat_cards and other data are inline. %>
+
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Composed Card Examples",
+  subtitle: "Product, stat, profile, pricing, themed, and list card layouts."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :card %>
+
+  <!-- Product Card Example -->
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Product Card Example", anchor_link: true, subtitle: "Examples for Product Card Example.") %>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+      <%= render FlatPack::Card::Component.new(style: :default) do |card| %>
+        <% card.media(aspect_ratio: "4/3") do %>
+          <div class="w-full h-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center text-white text-xl font-bold">
+            Product
+          </div>
+        <% end %>
+        <% card.body do %>
+          <h3 class="text-lg font-semibold mb-2">Premium Widget</h3>
+          <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">High-quality widget with advanced features and premium support.</p>
+          <div class="text-2xl font-bold text-green-600">$99.99</div>
+        <% end %>
+        <% card.footer do %>
+          <%= render FlatPack::Button::Component.new(
+            text: "Add to Cart",
+            style: :primary,
+            class: "w-full"
+          ) %>
+        <% end %>
+      <% end %>
+
+      <%= render FlatPack::Card::Component.new(style: :default) do |card| %>
+        <% card.media(aspect_ratio: "4/3") do %>
+          <div class="w-full h-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center text-white text-xl font-bold">
+            Product
+          </div>
+        <% end %>
+        <% card.body do %>
+          <h3 class="text-lg font-semibold mb-2">Standard Widget</h3>
+          <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">Reliable widget with essential features for everyday use.</p>
+          <div class="text-2xl font-bold text-green-600">$49.99</div>
+        <% end %>
+        <% card.footer do %>
+          <%= render FlatPack::Button::Component.new(
+            text: "Add to Cart",
+            style: :primary,
+            class: "w-full"
+          ) %>
+        <% end %>
+      <% end %>
+
+      <%= render FlatPack::Card::Component.new(style: :default) do |card| %>
+        <% card.media(aspect_ratio: "4/3") do %>
+          <div class="w-full h-full bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center text-white text-xl font-bold">
+            Product
+          </div>
+        <% end %>
+        <% card.body do %>
+          <h3 class="text-lg font-semibold mb-2">Basic Widget</h3>
+          <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">Simple widget perfect for getting started with basic needs.</p>
+          <div class="text-2xl font-bold text-green-600">$29.99</div>
+        <% end %>
+        <% card.footer do %>
+          <%= render FlatPack::Button::Component.new(
+            text: "Add to Cart",
+            style: :primary,
+            class: "w-full"
+          ) %>
+        <% end %>
+      <% end %>
+    </div>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Card::Component.new(style: :default) do |card| %&gt;
+          &lt;% card.media(aspect_ratio: "4/3") do %&gt;
+            <div class="w-full h-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center text-white text-xl font-bold">
+              Product
+            </div>
+          &lt;% end %&gt;
+          &lt;% card.body do %&gt;
+            <h3 class="text-lg font-semibold mb-2">Premium Widget</h3>
+            <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">High-quality widget with advanced features and premium support.</p>
+            <div class="text-2xl font-bold text-green-600">$99.99</div>
+          &lt;% end %&gt;
+          &lt;% card.footer do %&gt;
+            &lt;%= render FlatPack::Button::Component.new(
+              text: "Add to Cart",
+              style: :primary,
+              class: "w-full"
+            ) %&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
+  </section>
+
+  <!-- Stat Cards -->
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Stat Cards", anchor_link: true, subtitle: "Examples for Stat Cards.") %>
+    <%
+      stat_cards = [
+        { icon: "users",     label: "Total Users",      value: "2,543",  trend: "+12%", up: true  },
+        { icon: "dashboard", label: "Active Sessions",  value: "1,234",  trend: "+8%",  up: true  },
+        { icon: "dashboard", label: "Revenue",          value: "$45.2K", trend: "+23%", up: true  },
+        { icon: "monitor",   label: "Uptime",           value: "98.5%",  trend: "-0.5%", up: false }
+      ]
+    %>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+      <% stat_cards.each do |stat| %>
+        <%= render FlatPack::Card::Component.new(style: :default, class: "overflow-hidden") do |card| %>
+          <% card.body do %>
+            <div class="flex items-center gap-4">
+              <div class="shrink-0 w-12 h-12 rounded-xl bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] flex items-center justify-center">
+                <%= render FlatPack::Shared::IconComponent.new(name: stat[:icon], size: :lg, class: "text-[var(--surface-muted-content-color)]") %>
+              </div>
+              <div class="flex flex-col">
+                <span class="text-xs font-medium text-[var(--surface-muted-content-color)] uppercase tracking-wide"><%= stat[:label] %></span>
+                <div class="flex items-center gap-1.5 mt-0.5">
+                  <span class="text-2xl font-bold text-[var(--surface-content-color)]"><%= stat[:value] %></span>
+                  <span class="text-xs font-medium" style="color: <%= stat[:up] ? "var(--color-success-background-color)" : "var(--color-danger-background-color)" %>"><%= stat[:trend] %></span>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+    <%= render FlatPack::CodeBlock::Component.new(
+      language: "erb",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Card::Component.new(style: :default) do |card| %&gt;
+          &lt;% card.body do %&gt;
+            &lt;div class="flex items-center gap-4"&gt;
+              &lt;div class="shrink-0 w-12 h-12 rounded-xl bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] flex items-center justify-center"&gt;
+                &lt;%= render FlatPack::Shared::IconComponent.new(name: "users", size: :lg, class: "text-[var(--surface-muted-content-color)]") %&gt;
+              &lt;/div&gt;
+              &lt;div class="flex flex-col"&gt;
+                &lt;span class="text-xs font-medium text-[var(--surface-muted-content-color)] uppercase tracking-wide"&gt;Total Users&lt;/span&gt;
+                &lt;div class="flex items-center gap-1.5 mt-0.5"&gt;
+                  &lt;span class="text-2xl font-bold text-[var(--surface-content-color)]"&gt;2,543&lt;/span&gt;
+                  &lt;span class="text-xs font-medium" style="color: var(--color-success-background-color)"&gt;+12%&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
+  </section>
+
+  <!-- Profile Card -->
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Profile Card Example", anchor_link: true, subtitle: "Examples for Profile Card Example.") %>
+    <div class="max-w-sm mb-4">
+      <%= render FlatPack::Card::Component.new(style: :default) do |card| %>
+        <% card.body do %>
+          <div class="flex items-center space-x-4 mb-4">
+            <%= render FlatPack::Avatar::Component.new(name: "John Doe", initials: "JD", size: :xl) %>
+            <div>
+              <h3 class="text-lg font-semibold">John Doe</h3>
+              <p class="text-sm text-[var(--surface-muted-content-color)]">Senior Developer</p>
+            </div>
+          </div>
+          <p class="text-sm text-[var(--surface-muted-content-color)]">
+            Passionate about building great user experiences and scalable applications.
+          </p>
+        <% end %>
+        <% card.footer(divider: true) do %>
+          <div class="flex justify-around text-center">
+            <div>
+              <div class="text-xl font-bold">1,234</div>
+              <div class="text-xs text-[var(--surface-muted-content-color)]">Followers</div>
+            </div>
+            <div>
+              <div class="text-xl font-bold">567</div>
+              <div class="text-xs text-[var(--surface-muted-content-color)]">Following</div>
+            </div>
+            <div>
+              <div class="text-xl font-bold">89</div>
+              <div class="text-xs text-[var(--surface-muted-content-color)]">Posts</div>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Card::Component.new(style: :default) do |card| %&gt;
+          &lt;% card.body do %&gt;
+            <div class="flex items-center space-x-4 mb-4">
+              &lt;%= render FlatPack::Avatar::Component.new(name: &quot;John Doe&quot;, initials: &quot;JD&quot;, size: :xl) %&gt;
+              <div>
+                <h3 class="text-lg font-semibold">John Doe</h3>
+                <p class="text-sm text-[var(--surface-muted-content-color)]">Senior Developer</p>
+              </div>
+            </div>
+            <p class="text-sm text-[var(--surface-muted-content-color)]">
+              Passionate about building great user experiences and scalable applications.
+            </p>
+          &lt;% end %&gt;
+          &lt;% card.footer(divider: true) do %&gt;
+            <div class="flex justify-around text-center">
+              <div>
+                <div class="text-xl font-bold">1,234</div>
+                <div class="text-xs text-[var(--surface-muted-content-color)]">Followers</div>
+              </div>
+              <div>
+                <div class="text-xl font-bold">567</div>
+                <div class="text-xs text-[var(--surface-muted-content-color)]">Following</div>
+              </div>
+              <div>
+                <div class="text-xl font-bold">89</div>
+                <div class="text-xs text-[var(--surface-muted-content-color)]">Posts</div>
+              </div>
+            </div>
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
+  </section>
+
+  <!-- Pricing Cards -->
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Pricing Cards", anchor_link: true, subtitle: "Examples for Pricing Cards.") %>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+      <%= render FlatPack::Card::Component.new(style: :default) do |card| %>
+        <% card.header do %>
+          <div class="text-center">
+            <h3 class="text-xl font-bold mb-2">Basic</h3>
+            <div class="text-3xl font-bold">$9<span class="text-sm text-[var(--surface-muted-content-color)]">/mo</span></div>
+          </div>
+        <% end %>
+        <% card.body do %>
+          <%= render FlatPack::List::Component.new(spacing: :dense, class: "text-sm") do %>
+            <%= render FlatPack::List::Item.new(leading: "✓", class: "py-0 px-0 items-center") do %>
+              10 projects
+            <% end %>
+            <%= render FlatPack::List::Item.new(leading: "✓", class: "py-0 px-0 items-center") do %>
+              Basic support
+            <% end %>
+            <%= render FlatPack::List::Item.new(leading: "✓", class: "py-0 px-0 items-center") do %>
+              1GB storage
+            <% end %>
+          <% end %>
+        <% end %>
+        <% card.footer do %>
+          <%= render FlatPack::Button::Component.new(
+            text: "Get Started",
+            style: :secondary,
+            class: "w-full"
+          ) %>
+        <% end %>
+      <% end %>
+
+      <%= render FlatPack::Card::Component.new(style: :default, hover: :subtle, class: "border-[var(--color-primary)]") do |card| %>
+        <% card.header do %>
+          <div class="text-center">
+            <div class="inline-block px-2 py-1 text-xs font-semibold bg-primary text-white rounded mb-2">POPULAR</div>
+            <h3 class="text-xl font-bold mb-2">Pro</h3>
+            <div class="text-3xl font-bold">$29<span class="text-sm text-[var(--surface-muted-content-color)]">/mo</span></div>
+          </div>
+        <% end %>
+        <% card.body do %>
+          <%= render FlatPack::List::Component.new(spacing: :dense, class: "text-sm") do %>
+            <%= render FlatPack::List::Item.new(leading: "✓", class: "py-0 px-0 items-center") do %>
+              Unlimited projects
+            <% end %>
+            <%= render FlatPack::List::Item.new(leading: "✓", class: "py-0 px-0 items-center") do %>
+              Priority support
+            <% end %>
+            <%= render FlatPack::List::Item.new(leading: "✓", class: "py-0 px-0 items-center") do %>
+              50GB storage
+            <% end %>
+          <% end %>
+        <% end %>
+        <% card.footer do %>
+          <%= render FlatPack::Button::Component.new(
+            text: "Get Started",
+            style: :primary,
+            class: "w-full"
+          ) %>
+        <% end %>
+      <% end %>
+
+      <%= render FlatPack::Card::Component.new(style: :default, hover: :subtle) do |card| %>
+        <% card.header do %>
+          <div class="text-center">
+            <h3 class="text-xl font-bold mb-2">Enterprise</h3>
+            <div class="text-3xl font-bold">$99<span class="text-sm text-[var(--surface-muted-content-color)]">/mo</span></div>
+          </div>
+        <% end %>
+        <% card.body do %>
+          <%= render FlatPack::List::Component.new(spacing: :dense, class: "text-sm") do %>
+            <%= render FlatPack::List::Item.new(leading: "✓", class: "py-0 px-0 items-center") do %>
+              Unlimited everything
+            <% end %>
+            <%= render FlatPack::List::Item.new(leading: "✓", class: "py-0 px-0 items-center") do %>
+              24/7 support
+            <% end %>
+            <%= render FlatPack::List::Item.new(leading: "✓", class: "py-0 px-0 items-center") do %>
+              Unlimited storage
+            <% end %>
+          <% end %>
+        <% end %>
+        <% card.footer do %>
+          <%= render FlatPack::Button::Component.new(
+            text: "Contact Sales",
+            style: :secondary,
+            class: "w-full"
+          ) %>
+        <% end %>
+      <% end %>
+    </div>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Card::Component.new(style: :default, hover: :subtle) do |card| %&gt;
+          &lt;% card.header do %&gt;
+            <div class="text-center">
+              <h3 class="text-xl font-bold mb-2">Basic</h3>
+              <div class="text-3xl font-bold">$9<span class="text-sm text-[var(--surface-muted-content-color)]">/mo</span></div>
+            </div>
+          &lt;% end %&gt;
+          &lt;% card.body do %&gt;
+            &lt;%= render FlatPack::List::Component.new(spacing: :dense, class: &quot;text-sm&quot;) do %&gt;
+              &lt;%= render FlatPack::List::Item.new(leading: &quot;✓&quot;, class: &quot;py-0 px-0 items-center&quot;) do %&gt;
+                10 projects
+              &lt;% end %&gt;
+              &lt;%= render FlatPack::List::Item.new(leading: &quot;✓&quot;, class: &quot;py-0 px-0 items-center&quot;) do %&gt;
+                Basic support
+              &lt;% end %&gt;
+              &lt;%= render FlatPack::List::Item.new(leading: &quot;✓&quot;, class: &quot;py-0 px-0 items-center&quot;) do %&gt;
+                1GB storage
+              &lt;% end %&gt;
+            &lt;% end %&gt;
+          &lt;% end %&gt;
+          &lt;% card.footer do %&gt;
+            &lt;%= render FlatPack::Button::Component.new(
+              text: "Get Started",
+              style: :secondary,
+              class: "w-full"
+            ) %&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
+  </section>
+
+  <!-- Themed Cards -->
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Themed Cards", anchor_link: true, subtitle: "Card-local palette overrides for standout layouts without changing neighboring cards.") %>
+    <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 mb-4">
+      <%= render FlatPack::Card::Component.new(
+        style: :elevated,
+        theme: {
+          background: "#163300",
+          text: "#9FE870",
+          muted_text: "#9FE870",
+          primary: "#9FE870",
+          primary_hover: "#9FE870",
+          primary_text: "#163300"
+        },
+        class: "shadow-xl"
+      ) do |card| %>
+        <% card.header(divider: false) do %>
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.25em] opacity-80">Wise-style promo</p>
+              <h3 class="mt-3 text-2xl font-semibold">Spend abroad with local rates</h3>
+            </div>
+            <span class="rounded-full bg-white/15 px-3 py-1 text-xs font-medium">Live</span>
+          </div>
+        <% end %>
+        <% card.body do %>
+          <div class="space-y-4">
+            <p class="max-w-md text-sm text-[var(--surface-muted-content-color)]">This card overrides only its own background, text, muted text, and primary tokens. The CTA button and any nested accents inherit the local palette automatically.</p>
+            <div class="rounded-2xl bg-white/10 p-4">
+              <p class="text-xs uppercase tracking-[0.2em] text-[var(--surface-muted-content-color)]">Available to spend</p>
+              <p class="mt-2 text-3xl font-semibold">$4,280.14</p>
+            </div>
+          </div>
+        <% end %>
+        <% card.footer(divider: false) do %>
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p class="text-sm text-[var(--surface-muted-content-color)]">Partial theme hashes also work. Omitted values fall back to the default card tokens.</p>
+            <%= render FlatPack::Button::Component.new(text: "Add money", style: :primary) %>
+          </div>
+        <% end %>
+      <% end %>
+
+      <%= render FlatPack::Card::Component.new(style: :elevated) do |card| %>
+        <% card.header do %>
+          <h3 class="text-xl font-semibold">Default neighboring card</h3>
+        <% end %>
+        <% card.body do %>
+          <div class="space-y-3">
+            <p class="text-sm text-[var(--surface-muted-content-color)]">This card stays on the standard FlatPack palette to show that the themed card does not leak its overrides into the surrounding layout.</p>
+            <%= render FlatPack::Button::Component.new(text: "Standard action", style: :primary) %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Card::Component.new(
+          style: :elevated,
+          theme: {
+            background: &quot;#163300&quot;,
+            text: &quot;#9FE870&quot;,
+            muted_text: &quot;#9FE870&quot;,
+            primary: &quot;#9FE870&quot;,
+            primary_hover: &quot;#9FE870&quot;,
+            primary_text: &quot;#163300&quot;
+          }
+        ) do |card| %&gt;
+          &lt;% card.body do %&gt;
+            <p class="text-sm text-[var(--surface-muted-content-color)]">Only this card gets the override.</p>
+            &lt;%= render FlatPack::Button::Component.new(text: "Add money", style: :primary) %&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
+  </section>
+
+  <!-- List Cards -->
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "List Cards (Horizontal)", anchor_link: true, subtitle: "Examples for List Cards (Horizontal).") %>
+    <div class="space-y-2 mb-4">
+      <%= render FlatPack::Card::Component.new(
+        style: :list,
+        padding: :sm
+      ) do |card| %>
+        <% card.body do %>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <%= render FlatPack::Avatar::Component.new(name: "Alice", initials: "A", size: :md) %>
+              <div>
+                <p class="font-medium">Alice sent you a message</p>
+                <p class="text-sm text-[var(--surface-muted-content-color)]">2 minutes ago</p>
+              </div>
+            </div>
+            <span class="text-xs text-[var(--surface-muted-content-color)]">10:30 AM</span>
+          </div>
+        <% end %>
+      <% end %>
+
+      <%= render FlatPack::Card::Component.new(
+        style: :list,
+        padding: :sm
+      ) do |card| %>
+        <% card.body do %>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <%= render FlatPack::Avatar::Component.new(name: "Bob", initials: "B", size: :md) %>
+              <div>
+                <p class="font-medium">Bob commented on your post</p>
+                <p class="text-sm text-[var(--surface-muted-content-color)]">1 hour ago</p>
+              </div>
+            </div>
+            <span class="text-xs text-[var(--surface-muted-content-color)]">9:15 AM</span>
+          </div>
+        <% end %>
+      <% end %>
+
+      <%= render FlatPack::Card::Component.new(
+        style: :list,
+        padding: :sm
+      ) do |card| %>
+        <% card.body do %>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <%= render FlatPack::Avatar::Component.new(name: "Charlie", initials: "C", size: :md) %>
+              <div>
+                <p class="font-medium">Charlie mentioned you in a comment</p>
+                <p class="text-sm text-[var(--surface-muted-content-color)]">3 hours ago</p>
+              </div>
+            </div>
+            <span class="text-xs text-[var(--surface-muted-content-color)]">7:45 AM</span>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Card::Component.new(style: :list, padding: :sm) do |card| %&gt;
+          &lt;% card.body do %&gt;
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-3">
+                &lt;%= render FlatPack::Avatar::Component.new(name: "Alice", initials: "A", size: :md) %&gt;
+                <div>
+                  <p class="font-medium">Alice sent you a message</p>
+                  <p class="text-sm text-[var(--surface-muted-content-color)]">2 minutes ago</p>
+                </div>
+              </div>
+              <span class="text-xs text-[var(--surface-muted-content-color)]">10:30 AM</span>
+            </div>
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
+  </section>

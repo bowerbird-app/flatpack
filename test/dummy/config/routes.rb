@@ -19,6 +19,11 @@ Rails.application.routes.draw do
   get "themes/demos/:theme", to: "themes#demo", as: :theme_demo,
     constraints: {theme: /system|light|dark|ocean|rounded/}
   get "demo/buttons", to: "pages#buttons"
+  get "demo/links", to: "pages#links"
+  get "demo/buttons/pills", to: "pages#buttons_pills"
+  get "demo/buttons/segmented", to: "pages#buttons_segmented"
+  get "demo/buttons/groups", to: "pages#buttons_groups"
+  get "demo/buttons/dropdowns", to: "pages#buttons_dropdowns"
   get "demo/forms", to: "pages#forms"
   get "demo/forms/text_input", to: "pages#forms_text_input"
   get "demo/forms/password_input", to: "pages#forms_password_input"
@@ -47,13 +52,17 @@ Rails.application.routes.draw do
   get "demo/tables/draggable", to: "pages#tables_draggable"
   patch "demo/tables/reorder", to: "pages#tables_reorder"
   match "demo/list/reorder", to: "pages#list_reorder", via: [:patch, :put]
-  get "demo/inputs", to: "pages#inputs"
+  get "demo/inputs", to: redirect("/demo/forms")
   get "demo/badges", to: "pages#badges"
   get "demo/chips", to: "pages#chips"
+  get "demo/chip_groups", to: "pages#chip_groups"
   match "demo/chips/add_callback", to: "pages#chip_add_callback", via: [:get, :post]
   match "demo/chips/remove_callback", to: "pages#chip_remove_callback", via: [:get, :post]
   get "demo/alerts", to: "pages#alerts"
   get "demo/cards", to: "pages#cards"
+  get "demo/cards/styles", to: "pages#cards_styles"
+  get "demo/cards/media", to: "pages#cards_media"
+  get "demo/cards/composed", to: "pages#cards_composed"
   get "demo/breadcrumbs", to: "pages#breadcrumbs"
   get "demo/navbar", to: "pages#navbar"
   get "demo/search", to: "pages#search"
@@ -94,10 +103,14 @@ Rails.application.routes.draw do
   get "demo/grid/movable_cards", to: "pages#grid_movable_cards"
   get "demo/pagination", to: "pages#pagination"
   get "demo/charts", to: "pages#charts"
+  get "demo/charts/types", to: "pages#charts_types"
+  get "demo/charts/composition", to: "pages#charts_composition"
+  get "demo/charts/setup", to: "pages#charts_setup"
   get "demo/charts/default_filter", to: "pages#charts_default_filter"
   get "demo/modal_filter", to: "pages#modal_filter"
   get "demo/code_blocks", to: "pages#code_blocks"
   get "demo/avatars", to: "pages#avatars"
+  get "demo/avatar_groups", to: "pages#avatar_groups"
   get "demo/comments", to: "pages#comments"
 
   get "demo/chat/demo", to: "pages#chat_demo"
@@ -141,6 +154,7 @@ Rails.application.routes.draw do
   # New components
   get "demo/progress", to: "pages#progress"
   get "demo/collapse", to: "pages#collapse"
+  get "demo/accordion", to: "pages#accordion"
   get "demo/pagination_infinite", to: "pages#pagination_infinite"
   get "demo/range_input", to: "pages#range_input"
   get "demo/skeletons", to: "pages#skeletons"

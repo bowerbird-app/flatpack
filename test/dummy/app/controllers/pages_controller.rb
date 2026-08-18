@@ -36,11 +36,13 @@ class PagesController < ApplicationController
   }.freeze
 
   DEMO_THEME_TOKEN_MAPPINGS = [
-    {action: /\Abuttons\z/, title: "Buttons", patterns: [/\A--button-/]},
+    {action: /\Abuttons(_.*)?\z/, title: "Buttons", patterns: [/\A--button-/]},
+    {action: /\Alinks\z/, title: "Links", patterns: [/\A--button-/]},
     {action: /\Aalerts\z/, title: "Alerts", patterns: [/\A--alert-/]},
     {action: /\Abadges\z/, title: "Badges", patterns: [/\A--badge-/]},
     {action: /\Achips\z/, title: "Chips", patterns: [/\A--chip-/]},
-    {action: /\Acards\z/, title: "Cards", patterns: [/\A--card-/]},
+    {action: /\Achip_groups\z/, title: "Chip Groups", patterns: [/\A--chip-/]},
+    {action: /\Acards(_.*)?\z/, title: "Cards", patterns: [/\A--card-/]},
     {action: /\Abreadcrumbs\z/, title: "Breadcrumbs", patterns: [/\A--breadcrumb-/]},
     {action: /\Anavbar\z/, title: "Top Nav", patterns: [/\A--top-nav-/]},
     {action: /\Asidebar(_.*)?\z/, title: "Sidebar", patterns: [/\A--sidebar-/]},
@@ -53,13 +55,16 @@ class PagesController < ApplicationController
     {action: /\Acode_blocks\z/, title: "Code Blocks", patterns: [/\A--code-block-/]},
     {action: /\Acarousel\z/, title: "Carousel", patterns: [/\A--carousel-/]},
     {action: /\Aavatars\z/, title: "Avatars", patterns: [/\A--avatar-/]},
+    {action: /\Aavatar_groups\z/, title: "Avatar Groups", patterns: [/\A--avatar-/]},
     {action: /\Acomments\z/, title: "Comments", patterns: [/\A--comments-/]},
     {action: /\Achat(_.*)?\z/, title: "Chat", patterns: [/\A--chat-/]},
     {action: /\Atables(_.*)?\z/, title: "Table", patterns: [/\A--table-/]},
-    {action: /\A(forms(_.*)?|inputs|range_input)\z/, title: "Form Controls", patterns: [/\A--form-control-/]},
+    {action: /\A(forms(_.*)?|range_input)\z/, title: "Form Controls", patterns: [/\A--form-control-/]},
     {action: /\Aforms_switch\z/, title: "Form Controls & Switch", patterns: [/\A--form-control-/, /\A--switch-/]},
     {action: /\Aforms_checkbox\z/, title: "Form Controls & Checkbox", patterns: [/\A--form-control-/, /\A--checkbox-/]},
     {action: /\Acollapse\z/, title: "Collapse", patterns: [/\A--collapse-/]},
+    {action: /\Aaccordion\z/, title: "Accordion", patterns: [/\A--accordion-/]},
+    {action: /\Acharts(_.*)?\z/, title: "Charts", patterns: [/\A--chart-/]},
     {action: /\Askeletons\z/, title: "Skeleton", patterns: [/\A--skeleton-/]},
     {action: /\Atimeline\z/, title: "Timeline", patterns: [/\A--timeline-/]},
     {action: /\Alist\z/, title: "List", patterns: [/\A--list-item-/]},
@@ -72,7 +77,7 @@ class PagesController < ApplicationController
 
   # Actions with dynamic data that must not be fully cached
   UNCACHED_ACTIONS = %i[
-    picker search_results picker_results pagination_infinite charts charts_default_filter
+    picker search_results picker_results pagination_infinite charts_composition charts_default_filter
     modal_filter
     comments admin chat_demo chips chip_add_callback chip_remove_callback
     tables_basic tables_sortable local_time
@@ -87,6 +92,21 @@ class PagesController < ApplicationController
   end
 
   def buttons
+  end
+
+  def links
+  end
+
+  def buttons_pills
+  end
+
+  def buttons_segmented
+  end
+
+  def buttons_groups
+  end
+
+  def buttons_dropdowns
   end
 
   def tables_basic
@@ -201,13 +221,13 @@ class PagesController < ApplicationController
     @admin_pagy, @admin_users = pagy_array(@admin_users, items: 10)
   end
 
-  def inputs
-  end
-
   def badges
   end
 
   def chips
+  end
+
+  def chip_groups
   end
 
   def chip_add_callback
@@ -466,6 +486,15 @@ class PagesController < ApplicationController
   def cards
   end
 
+  def cards_styles
+  end
+
+  def cards_media
+  end
+
+  def cards_composed
+  end
+
   def breadcrumbs
   end
 
@@ -557,145 +586,16 @@ class PagesController < ApplicationController
   end
 
   def charts
-    chart_filter_sets = {
-      "day" => {
-        categories: %w[Mon Tue Wed Thu Fri Sat Sun],
-        users_data: [42, 58, 50, 73, 88, 95, 90],
-        baseline_data: [36, 49, 44, 64, 79, 87, 84],
-        subtitle: "Day view"
-      },
-      "week" => {
-        categories: %w[W1 W2 W3 W4 W5 W6 W7 W8],
-        users_data: [210, 245, 278, 301, 330, 360, 390, 420],
-        baseline_data: [198, 226, 253, 281, 305, 331, 357, 388],
-        subtitle: "Week view"
-      },
-      "month" => {
-        categories: %w[Jan Feb Mar Apr May Jun Jul Aug],
-        users_data: [320, 410, 460, 520, 610, 680, 760, 830],
-        baseline_data: [305, 380, 433, 491, 567, 634, 711, 780],
-        subtitle: "Month view"
-      },
-      "year" => {
-        categories: %w[2019 2020 2021 2022 2023 2024 2025 2026],
-        users_data: [1200, 1360, 1490, 1640, 1800, 1970, 2150, 2360],
-        baseline_data: [1110, 1265, 1388, 1535, 1674, 1840, 2006, 2192],
-        subtitle: "Year view"
-      }
-    }
+  end
 
-    requested_period = params[:period].to_s
-    @chart_filter_period = chart_filter_sets.key?(requested_period) ? requested_period : "day"
-    @chart_filter_compare = params[:compare] == "1"
+  def charts_types
+  end
 
-    selected_set = chart_filter_sets.fetch(@chart_filter_period)
-    @chart_filter_categories = selected_set.fetch(:categories)
-    @chart_filter_series = [{name: "Users", data: selected_set.fetch(:users_data)}]
-    @chart_filter_subtitle = selected_set.fetch(:subtitle)
+  def charts_composition
+    load_charts_composition_demo!
+  end
 
-    if @chart_filter_compare
-      @chart_filter_series << {name: "Baseline", data: selected_set.fetch(:baseline_data)}
-      @chart_filter_subtitle = "#{@chart_filter_subtitle} + baseline"
-    end
-
-    chart_1_sets = {
-      "day" => {
-        categories: %w[Mon Tue Wed Thu Fri Sat Sun],
-        series: [{name: "Signups", data: [18, 22, 27, 31, 34, 30, 28]}],
-        subtitle: "Chart 1 (day)"
-      },
-      "month" => {
-        categories: %w[Jan Feb Mar Apr May Jun Jul Aug],
-        series: [{name: "Signups", data: [96, 112, 124, 140, 152, 167, 181, 195]}],
-        subtitle: "Chart 1 (month)"
-      }
-    }
-
-    chart_2_sets = {
-      "week" => {
-        categories: %w[W1 W2 W3 W4 W5 W6],
-        series: [{name: "Revenue", data: [320, 348, 361, 389, 410, 438]}],
-        subtitle: "Chart 2 (week)"
-      },
-      "month" => {
-        categories: %w[Jan Feb Mar Apr May Jun Jul Aug],
-        series: [{name: "Revenue", data: [1180, 1260, 1355, 1472, 1568, 1641, 1733, 1820]}],
-        subtitle: "Chart 2 (month)"
-      },
-      "year" => {
-        categories: %w[2019 2020 2021 2022 2023 2024],
-        series: [{name: "Revenue", data: [12_400, 13_050, 13_980, 15_110, 16_420, 17_360]}],
-        subtitle: "Chart 2 (year)"
-      }
-    }
-
-    requested_chart_1_period = params[:chart_1_period].to_s
-    requested_chart_2_period = params[:chart_2_period].to_s
-
-    @chart_multi_chart_1_period = chart_1_sets.key?(requested_chart_1_period) ? requested_chart_1_period : "day"
-    @chart_multi_chart_2_period = chart_2_sets.key?(requested_chart_2_period) ? requested_chart_2_period : "week"
-
-    selected_chart_1_set = chart_1_sets.fetch(@chart_multi_chart_1_period)
-    selected_chart_2_set = chart_2_sets.fetch(@chart_multi_chart_2_period)
-
-    @chart_multi_chart_1_categories = selected_chart_1_set.fetch(:categories)
-    @chart_multi_chart_1_series = selected_chart_1_set.fetch(:series)
-    @chart_multi_chart_1_subtitle = selected_chart_1_set.fetch(:subtitle)
-
-    @chart_multi_chart_2_categories = selected_chart_2_set.fetch(:categories)
-    @chart_multi_chart_2_series = selected_chart_2_set.fetch(:series)
-    @chart_multi_chart_2_subtitle = selected_chart_2_set.fetch(:subtitle)
-
-    @chart_multi_chart_3_categories = %w[Q1 Q2 Q3 Q4]
-    @chart_multi_chart_3_series = [{name: "NPS", data: [41, 45, 47, 50]}]
-
-    @sales_data = [
-      {name: "Jan", value: 30},
-      {name: "Feb", value: 40},
-      {name: "Mar", value: 45},
-      {name: "Apr", value: 50},
-      {name: "May", value: 49},
-      {name: "Jun", value: 60}
-    ]
-
-    @chart_repo_activity_rows = [
-      {
-        name: "flat-pack",
-        description: "Design-system engine",
-        language: "Ruby",
-        commits_7d: 34,
-        prs_open: 5,
-        trend_label: "+14%",
-        trend_up: true,
-        activity: [2, 3, 1, 4, 6, 5, 7, 4, 6, 8, 9, 7, 10, 11],
-        review_load: [3, 5, 4, 7, 6, 8, 5, 6, 9, 7, 8, 10, 9, 11],
-        queue_mix: [8, 5, 3, 6]
-      },
-      {
-        name: "theme-tokens",
-        description: "Theme token playground",
-        language: "TypeScript",
-        commits_7d: 18,
-        prs_open: 2,
-        trend_label: "+6%",
-        trend_up: true,
-        activity: [1, 2, 2, 3, 4, 3, 5, 4, 5, 6, 5, 7, 6, 8],
-        review_load: [2, 3, 2, 4, 5, 4, 6, 5, 4, 7, 5, 6, 5, 7],
-        queue_mix: [5, 4, 2, 3]
-      },
-      {
-        name: "docs-site",
-        description: "Component docs and examples",
-        language: "Markdown",
-        commits_7d: 11,
-        prs_open: 1,
-        trend_label: "-4%",
-        trend_up: false,
-        activity: [4, 5, 4, 4, 3, 4, 3, 2, 3, 3, 2, 2, 2, 1],
-        review_load: [6, 5, 7, 6, 5, 4, 6, 5, 4, 3, 4, 3, 2, 3],
-        queue_mix: [3, 6, 4, 2]
-      }
-    ]
+  def charts_setup
   end
 
   def charts_default_filter
@@ -713,6 +613,9 @@ class PagesController < ApplicationController
   end
 
   def avatars
+  end
+
+  def avatar_groups
   end
 
   def comments
@@ -835,6 +738,9 @@ class PagesController < ApplicationController
   end
 
   def collapse
+  end
+
+  def accordion
   end
 
   def pagination_infinite
@@ -1658,110 +1564,150 @@ class PagesController < ApplicationController
     DemoTableRow.insert_all(rows_to_insert, unique_by: :index_demo_table_rows_on_list_key_and_position)
   end
 
-  def searchable_items
-    [
-      {title: "Overview", description: "FlatPack component library home", url: demo_path},
-      {title: "Theme Variables", description: "Theme token values and CSS variable reference", url: themes_path},
-      {title: "System theme", description: "System color scheme demo", url: theme_demo_path(theme: "system")},
-      {title: "Light theme", description: "Light color scheme demo", url: theme_demo_path(theme: "light")},
-      {title: "Dark theme", description: "Dark color scheme demo", url: theme_demo_path(theme: "dark")},
-      {title: "Ocean theme", description: "Ocean color scheme demo", url: theme_demo_path(theme: "ocean")},
-      {title: "Rounded theme", description: "Rounded theme demo", url: theme_demo_path(theme: "rounded")},
-      {title: "Buttons", description: "Button variants and dropdown examples", url: demo_buttons_path},
-      {title: "Forms", description: "Form submit patterns with HTTP methods", url: demo_forms_path},
-      {title: "Text Input", description: "Single-line text input examples", url: demo_forms_text_input_path},
-      {title: "Password Input", description: "Masked text input with visibility toggle", url: demo_forms_password_input_path},
-      {title: "Email Input", description: "Email-specific input examples", url: demo_forms_email_input_path},
-      {title: "Phone Input", description: "Telephone input examples", url: demo_forms_phone_input_path},
-      {title: "Search Input", description: "Search field with helper affordances", url: demo_forms_search_input_path},
-      {title: "URL Input", description: "URL input examples", url: demo_forms_url_input_path},
-      {title: "Text Area", description: "Multiline text input examples", url: demo_forms_text_area_path},
-      {title: "Number Input", description: "Numeric input with constraints", url: demo_forms_number_input_path},
-      {title: "Date Input", description: "Date picker input examples", url: demo_forms_date_input_path},
-      {title: "Date Time Input", description: "Datetime-local input examples", url: demo_forms_date_time_input_path},
-      {title: "Time Input", description: "Native time input examples", url: demo_forms_time_input_path},
-      {title: "File Input", description: "File upload input examples", url: demo_forms_file_input_path},
-      {title: "Checkbox", description: "Checkbox input examples", url: demo_forms_checkbox_path},
-      {title: "Radio Group", description: "Single-choice radio group examples", url: demo_forms_radio_group_path},
-      {title: "Select", description: "Dropdown select input examples", url: demo_forms_select_path},
-      {title: "Nested Multiselect", description: "Parent and child checkbox multiselect examples", url: demo_forms_nested_multiselect_path},
-      {title: "Switch", description: "Toggle switch input examples", url: demo_forms_switch_path},
-      {title: "Range Input", description: "Slider input with live value", url: demo_range_input_path},
-      {title: "Combined Form", description: "Full form with multiple input types", url: demo_forms_combined_path},
-      {title: "Tables", description: "Basic table examples with formatting and actions", url: demo_tables_basic_path},
-      {title: "Tables: Basic", description: "Basic table examples with formatting and actions", url: demo_tables_basic_path},
-      {title: "Tables: Empty", description: "Empty state table rendering with no rows", url: demo_tables_empty_path},
-      {title: "Tables: Sortable", description: "Sortable columns with Turbo frame updates", url: demo_tables_sortable_path},
-      {title: "Tables: Draggable", description: "Drag-and-drop row reordering with persistence", url: demo_tables_draggable_path},
-      {title: "Cards", description: "Composed card layouts", url: demo_cards_path},
-      {title: "Alerts", description: "Status and feedback messages", url: demo_alerts_path},
-      {title: "Badges", description: "Label and status indicators", url: demo_badges_path},
-      {title: "Chips", description: "Compact filter and tag components", url: demo_chips_path},
-      {title: "Breadcrumbs", description: "Hierarchical navigation trails", url: demo_breadcrumbs_path},
-      {title: "Top Nav", description: "Header layout with left, center, and right slots", url: demo_navbar_path},
-      {title: "Search", description: "Reusable search component with live results", url: demo_search_path},
-      {title: "Picker", description: "Reusable file and image picker for any workflow", url: demo_picker_path},
-      {title: "Sidebar Layout", description: "Sidebar layout shell with left/right positioning", url: demo_sidebar_layout_path},
-      {title: "Sidebar Basic", description: "Basic sidebar with header, items, and footer", url: demo_sidebar_basic_path},
-      {title: "Sidebar Header", description: "Header configurations for sidebar branding and actions", url: demo_sidebar_header_path},
-      {title: "Sidebar Footer", description: "Footer patterns for status, metadata, and account actions", url: demo_sidebar_footer_path},
-      {title: "Sidebar with Badges", description: "Sidebar navigation items with badges", url: demo_sidebar_badges_path},
-      {title: "Sidebar Grouped", description: "Sidebar navigation with grouped items", url: demo_sidebar_grouped_path},
-      {title: "Sidebar Collapsible", description: "Sidebar groups that expand and collapse", url: demo_sidebar_collapsible_path},
-      {title: "Sidebar Collapsed", description: "Icon-only collapsed sidebar pattern", url: demo_sidebar_collapsed_path},
-      {title: "Sidebar Complete", description: "Full-featured sidebar composition", url: demo_sidebar_complete_path},
-      {title: "Sidebar Section Title", description: "Category labels that group sidebar navigation items", url: demo_sidebar_section_title_path},
-      {title: "Email Button", description: "Email-safe CTA button component", url: demo_email_button_path},
-      {title: "Email Card", description: "Email-safe table-based content wrapper", url: demo_email_card_path},
-      {title: "Email Footer Links", description: "Email-safe footer links list component", url: demo_email_footer_links_path},
-      {title: "Email Template Example", description: "Composed transactional email example built from FlatPack email components", url: demo_email_template_example_path},
-      {title: "Modals", description: "Dialog overlays with focus trap", url: demo_modals_path},
-      {title: "Popovers", description: "Click-triggered floating content", url: demo_popovers_path},
-      {title: "Tooltips", description: "Hover/focus tooltips", url: demo_tooltips_path},
-      {title: "Tabs", description: "Underlined tabs with keyboard navigation", url: demo_tabs_path},
-      {title: "Pills", description: "Pill-style tabs with shared accessibility behavior", url: demo_tabs_pills_path},
-      {title: "Stacked Pills", description: "Vertical pill-style tabs with two-column layout on larger screens", url: demo_tabs_stacked_pills_path},
-      {title: "Toasts", description: "Auto-dismissing notifications", url: demo_toasts_path},
-      {title: "Page Title", description: "Page title with optional subtitle", url: demo_page_header_path},
-      {title: "Quote", description: "Blockquote and citation text examples", url: demo_text_quote_path},
-      {title: "Empty State", description: "User-friendly empty states", url: demo_empty_state_path},
-      {title: "Grid", description: "Responsive grid layouts", url: demo_grid_path},
-      {title: "Hero", description: "Landing-page hero sections with 7 layout variants", url: pages_hero_path},
-      {title: "Grid: Two Columns", description: "Two-column layout with one card in each column", url: demo_grid_two_columns_path},
-      {title: "Grid: Movable Cards", description: "Draggable card grid with persisted ordering", url: demo_grid_movable_cards_path},
-      {title: "Pagination", description: "Page navigation with Pagy", url: demo_pagination_path},
-      {title: "Infinite Scroll", description: "Infinite scrolling pagination patterns", url: demo_pagination_infinite_path},
-      {title: "Charts", description: "Data visualization with ApexCharts", url: demo_charts_path},
-      {title: "Charts: Default Filter", description: "Date range and optional status filter for chart controls", url: demo_charts_default_filter_path},
-      {title: "Modal Filter", description: "Modal-only filter content with dedicated Filter trigger flow", url: demo_modal_filter_path},
-      {title: "Code Blocks", description: "Reusable snippets for demo pages", url: demo_code_blocks_path},
-      {title: "Avatars", description: "Avatar and avatar group examples", url: demo_avatars_path},
-      {title: "Comments", description: "Comments threads and reply composer patterns", url: demo_comments_path},
-      {title: "Chat Demo", description: "End-to-end chat demo experience", url: demo_chat_demo_path},
-      {title: "Chat Layout", description: "Two-panel chat layout examples", url: demo_chat_layout_path},
-      {title: "Chat Panel", description: "Chat panel container patterns", url: demo_chat_panel_path},
-      {title: "Chat Message List", description: "Chat message list patterns", url: demo_chat_message_list_path},
-      {title: "Chat Message Group", description: "Grouped chat message patterns", url: demo_chat_message_group_path},
-      {title: "Chat Sent Message", description: "Outgoing message examples", url: demo_chat_sent_message_path},
-      {title: "Chat Received Message", description: "Incoming message examples", url: demo_chat_received_message_path},
-      {title: "Chat File Message", description: "File attachment message examples", url: demo_chat_file_message_path},
-      {title: "Chat Images", description: "Single and multi-image chat message examples with carousel lightbox", url: demo_chat_images_path},
-      {title: "Chat System Message", description: "System message examples", url: demo_chat_system_message_path},
-      {title: "Chat Attachment", description: "Attachment component examples", url: demo_chat_attachment_path},
-      {title: "Chat Date Divider", description: "Date divider component examples", url: demo_chat_date_divider_path},
-      {title: "Chat Typing Indicator", description: "Typing indicator component examples", url: demo_chat_typing_indicator_path},
-      {title: "Chat Composer", description: "Composer input and action patterns", url: demo_chat_composer_path},
-      {title: "Carousel", description: "FlatPack carousel demo with mixed media and navigation controls", url: demo_carousel_path},
-      {title: "Progress", description: "Progress indicators and loading states", url: demo_progress_path},
-      {title: "Collapse", description: "Expandable and collapsible content patterns", url: demo_collapse_path},
-      {title: "Skeletons", description: "Skeleton loading placeholders", url: demo_skeletons_path},
-      {title: "List", description: "List component demos and selectable rows", url: demo_list_path},
-      {title: "Tree", description: "Folder tree views for folder structures and hierarchical lists", url: demo_tree_path},
-      {title: "Timeline", description: "Chronological timeline layouts", url: demo_timeline_path},
-      {title: "Timestamp", description: "Relative timestamps with hover tooltip absolute time", url: demo_timestamp_path},
-      {title: "Mobile", description: "Mobile demo index", url: mobile_path},
-      {title: "Bottom Nav", description: "Mobile bottom navigation demo", url: mobile_bottom_nav_path}
+  def load_charts_composition_demo!
+    chart_filter_sets = {
+      "day" => {
+        categories: %w[Mon Tue Wed Thu Fri Sat Sun],
+        users_data: [42, 58, 50, 73, 88, 95, 90],
+        baseline_data: [36, 49, 44, 64, 79, 87, 84],
+        subtitle: "Day view"
+      },
+      "week" => {
+        categories: %w[W1 W2 W3 W4 W5 W6 W7 W8],
+        users_data: [210, 245, 278, 301, 330, 360, 390, 420],
+        baseline_data: [198, 226, 253, 281, 305, 331, 357, 388],
+        subtitle: "Week view"
+      },
+      "month" => {
+        categories: %w[Jan Feb Mar Apr May Jun Jul Aug],
+        users_data: [320, 410, 460, 520, 610, 680, 760, 830],
+        baseline_data: [305, 380, 433, 491, 567, 634, 711, 780],
+        subtitle: "Month view"
+      },
+      "year" => {
+        categories: %w[2019 2020 2021 2022 2023 2024 2025 2026],
+        users_data: [1200, 1360, 1490, 1640, 1800, 1970, 2150, 2360],
+        baseline_data: [1110, 1265, 1388, 1535, 1674, 1840, 2006, 2192],
+        subtitle: "Year view"
+      }
+    }
+
+    requested_period = params[:period].to_s
+    @chart_filter_period = chart_filter_sets.key?(requested_period) ? requested_period : "day"
+    @chart_filter_compare = params[:compare] == "1"
+
+    selected_set = chart_filter_sets.fetch(@chart_filter_period)
+    @chart_filter_categories = selected_set.fetch(:categories)
+    @chart_filter_series = [{name: "Users", data: selected_set.fetch(:users_data)}]
+    @chart_filter_subtitle = selected_set.fetch(:subtitle)
+
+    if @chart_filter_compare
+      @chart_filter_series << {name: "Baseline", data: selected_set.fetch(:baseline_data)}
+      @chart_filter_subtitle = "#{@chart_filter_subtitle} + baseline"
+    end
+
+    chart_1_sets = {
+      "day" => {
+        categories: %w[Mon Tue Wed Thu Fri Sat Sun],
+        series: [{name: "Signups", data: [18, 22, 27, 31, 34, 30, 28]}],
+        subtitle: "Chart 1 (day)"
+      },
+      "month" => {
+        categories: %w[Jan Feb Mar Apr May Jun Jul Aug],
+        series: [{name: "Signups", data: [96, 112, 124, 140, 152, 167, 181, 195]}],
+        subtitle: "Chart 1 (month)"
+      }
+    }
+
+    chart_2_sets = {
+      "week" => {
+        categories: %w[W1 W2 W3 W4 W5 W6],
+        series: [{name: "Revenue", data: [320, 348, 361, 389, 410, 438]}],
+        subtitle: "Chart 2 (week)"
+      },
+      "month" => {
+        categories: %w[Jan Feb Mar Apr May Jun Jul Aug],
+        series: [{name: "Revenue", data: [1180, 1260, 1355, 1472, 1568, 1641, 1733, 1820]}],
+        subtitle: "Chart 2 (month)"
+      },
+      "year" => {
+        categories: %w[2019 2020 2021 2022 2023 2024],
+        series: [{name: "Revenue", data: [12_400, 13_050, 13_980, 15_110, 16_420, 17_360]}],
+        subtitle: "Chart 2 (year)"
+      }
+    }
+
+    requested_chart_1_period = params[:chart_1_period].to_s
+    requested_chart_2_period = params[:chart_2_period].to_s
+
+    @chart_multi_chart_1_period = chart_1_sets.key?(requested_chart_1_period) ? requested_chart_1_period : "day"
+    @chart_multi_chart_2_period = chart_2_sets.key?(requested_chart_2_period) ? requested_chart_2_period : "week"
+
+    selected_chart_1_set = chart_1_sets.fetch(@chart_multi_chart_1_period)
+    selected_chart_2_set = chart_2_sets.fetch(@chart_multi_chart_2_period)
+
+    @chart_multi_chart_1_categories = selected_chart_1_set.fetch(:categories)
+    @chart_multi_chart_1_series = selected_chart_1_set.fetch(:series)
+    @chart_multi_chart_1_subtitle = selected_chart_1_set.fetch(:subtitle)
+
+    @chart_multi_chart_2_categories = selected_chart_2_set.fetch(:categories)
+    @chart_multi_chart_2_series = selected_chart_2_set.fetch(:series)
+    @chart_multi_chart_2_subtitle = selected_chart_2_set.fetch(:subtitle)
+
+    @chart_multi_chart_3_categories = %w[Q1 Q2 Q3 Q4]
+    @chart_multi_chart_3_series = [{name: "NPS", data: [41, 45, 47, 50]}]
+
+    @sales_data = [
+      {name: "Jan", value: 30},
+      {name: "Feb", value: 40},
+      {name: "Mar", value: 45},
+      {name: "Apr", value: 50},
+      {name: "May", value: 49},
+      {name: "Jun", value: 60}
     ]
+
+    @chart_repo_activity_rows = [
+      {
+        name: "flat-pack",
+        description: "Design-system engine",
+        language: "Ruby",
+        commits_7d: 34,
+        prs_open: 5,
+        trend_label: "+14%",
+        trend_up: true,
+        activity: [2, 3, 1, 4, 6, 5, 7, 4, 6, 8, 9, 7, 10, 11],
+        review_load: [3, 5, 4, 7, 6, 8, 5, 6, 9, 7, 8, 10, 9, 11],
+        queue_mix: [8, 5, 3, 6]
+      },
+      {
+        name: "theme-tokens",
+        description: "Theme token playground",
+        language: "TypeScript",
+        commits_7d: 18,
+        prs_open: 2,
+        trend_label: "+6%",
+        trend_up: true,
+        activity: [1, 2, 2, 3, 4, 3, 5, 4, 5, 6, 5, 7, 6, 8],
+        review_load: [2, 3, 2, 4, 5, 4, 6, 5, 4, 7, 5, 6, 5, 7],
+        queue_mix: [5, 4, 2, 3]
+      },
+      {
+        name: "docs-site",
+        description: "Component docs and examples",
+        language: "Markdown",
+        commits_7d: 11,
+        prs_open: 1,
+        trend_label: "-4%",
+        trend_up: false,
+        activity: [4, 5, 4, 4, 3, 4, 3, 2, 3, 3, 2, 2, 2, 1],
+        review_load: [6, 5, 7, 6, 5, 4, 6, 5, 4, 3, 4, 3, 2, 3],
+        queue_mix: [3, 6, 4, 2]
+      }
+    ]
+  end
+
+  def searchable_items
+    DemoCatalog.searchable_items
   end
 
   def load_table_demo_data

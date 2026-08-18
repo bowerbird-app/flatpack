@@ -1,0 +1,152 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Pill Buttons",
+  subtitle: "Reusable pill-style links for segmented navigation and filters."
+) %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Pill Buttons", anchor_link: true, subtitle: "Reusable pill-style links for segmented navigation and filters.") %>
+
+  <div class="mt-8">
+    <h3 class="text-lg font-semibold text-(--surface-content-color) mb-2">Same-page anchors without a reload</h3>
+    <p class="text-(--surface-muted-content-color) mb-4">
+      When each pill points to a hash on the current page, a small Stimulus controller can keep the selected state in sync while the browser handles the scroll.
+    </p>
+
+    <%= render FlatPack::Button::Pill::Component.new(
+      class: "mb-4",
+      data: {
+        controller: "pill-buttons-demo",
+        "pill-buttons-demo-active-classes-value": FlatPack::Button::Pill::Component::ITEM_ACTIVE_CLASSES,
+        "pill-buttons-demo-inactive-classes-value": FlatPack::Button::Pill::Component::ITEM_INACTIVE_CLASSES
+      },
+      items: [
+        {
+          text: "Account",
+          href: "#pill-anchor-account",
+          active: true,
+          id: "pill-anchor-account-link",
+          data: {
+            "pill-buttons-demo-target": "pill",
+            action: "pill-buttons-demo#activate"
+          }
+        },
+        {
+          text: "Billing",
+          href: "#pill-anchor-billing",
+          id: "pill-anchor-billing-link",
+          data: {
+            "pill-buttons-demo-target": "pill",
+            action: "pill-buttons-demo#activate"
+          }
+        },
+        {
+          text: "Team Members",
+          href: "#pill-anchor-members",
+          id: "pill-anchor-members-link",
+          data: {
+            "pill-buttons-demo-target": "pill",
+            action: "pill-buttons-demo#activate"
+          }
+        }
+      ]
+    ) %>
+
+    <div class="space-y-4 mb-4">
+      <%= render FlatPack::Card::Component.new(id: "pill-anchor-account", style: :flat, padding: :lg, class: "scroll-mt-24") do %>
+        <h4 class="text-lg font-semibold mb-2">Account Preferences</h4>
+        <p class="text-(--surface-content-color)">
+          Pills are useful when you want segmented-control styling while keeping tab semantics and keyboard support.
+        </p>
+      <% end %>
+
+      <%= render FlatPack::Card::Component.new(id: "pill-anchor-billing", style: :flat, padding: :lg, class: "scroll-mt-24") do %>
+        <h4 class="text-lg font-semibold mb-2">Billing Settings</h4>
+        <p class="text-(--surface-content-color)">
+          Same-page anchors work well for settings pages where the active pill should follow the section without forcing a full-page navigation.
+        </p>
+      <% end %>
+
+      <%= render FlatPack::Card::Component.new(id: "pill-anchor-members", style: :flat, padding: :lg, class: "scroll-mt-24") do %>
+        <h4 class="text-lg font-semibold mb-2">Team Members</h4>
+        <p class="text-(--surface-content-color)">
+          Reuse the same active and inactive pill classes so the visual treatment stays aligned with the tabs pills variant.
+        </p>
+      <% end %>
+    </div>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      snippets: [
+        {
+          label: "ERB",
+          language: "erb",
+          code: CGI.unescapeHTML(<<~'CODE')
+            &lt;%= render FlatPack::Button::Pill::Component.new(
+              data: {
+                controller: "pill-buttons-demo",
+                "pill-buttons-demo-active-classes-value": FlatPack::Button::Pill::Component::ITEM_ACTIVE_CLASSES,
+                "pill-buttons-demo-inactive-classes-value": FlatPack::Button::Pill::Component::ITEM_INACTIVE_CLASSES
+              },
+              items: [
+                {
+                  text: "Account",
+                  href: "#pill-anchor-account",
+                  active: true,
+                  data: {
+                    "pill-buttons-demo-target": "pill",
+                    action: "pill-buttons-demo#activate"
+                  }
+                },
+                {
+                  text: "Billing",
+                  href: "#pill-anchor-billing",
+                  data: {
+                    "pill-buttons-demo-target": "pill",
+                    action: "pill-buttons-demo#activate"
+                  }
+                }
+              ]
+            ) %&gt;
+          CODE
+        }
+      ]
+    ) %>
+  </div>
+
+  <div class="mt-8">
+    <h3 class="text-lg font-semibold text-(--surface-content-color) mb-2">Direct-link example</h3>
+    <p class="text-(--surface-muted-content-color) mb-4">
+      You can also send a pill straight to the matching tab route by appending the panel hash, such as <code>/demo/tabs/pills#account</code>.
+    </p>
+
+    <%= render FlatPack::Button::Pill::Component.new(
+      class: "mb-4",
+      items: [
+        {text: "Account tab", href: "#{demo_tabs_pills_path}#account", active: true, id: "pill-tabs-account-link"},
+        {text: "Billing tab", href: "#{demo_tabs_pills_path}#billing"},
+        {text: "Team Members tab", href: "#{demo_tabs_pills_path}#members"}
+      ]
+    ) %>
+
+    <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg, class: "mb-4") do %>
+      <h4 class="text-lg font-semibold mb-2">Account Preferences</h4>
+      <p class="text-(--surface-content-color) mb-2">
+        Pills are useful when you want segmented-control styling while keeping tab semantics and keyboard support.
+      </p>
+      <p class="text-(--surface-muted-content-color)">
+        This copies the default <code>/demo/tabs/pills#account</code> panel so the button demo shows the linked destination alongside the deep-link pattern.
+      </p>
+    <% end %>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Button::Pill::Component.new(
+          items: [
+            {text: "Account tab", href: "#{demo_tabs_pills_path}#account", active: true},
+            {text: "Billing tab", href: "#{demo_tabs_pills_path}#billing"},
+            {text: "Team Members tab", href: "#{demo_tabs_pills_path}#members"}
+          ]
+        ) %&gt;
+      CODE
+    ) %>
+  </div>
+</section>

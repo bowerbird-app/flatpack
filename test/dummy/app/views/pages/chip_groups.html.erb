@@ -1,0 +1,66 @@
+<div class="max-w-6xl mx-auto p-6">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Chip Groups",
+    subtitle: "Consistent spacing and wrapping for collections of chips."
+  ) %>
+
+  <p class="text-[var(--surface-muted-content-color)] mb-6">
+    API reference for the Chip Group component is not yet available in the component method table.
+  </p>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "ChipGroup - Wrapping Chips", anchor_link: true, subtitle: "Examples for ChipGroup - Wrapping Chips.") %>
+    <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">
+      ChipGroup provides consistent spacing and wrapping for collections of chips.
+    </p>
+    <%= render FlatPack::ChipGroup::Component.new(class: "mb-4") do %>
+      <%= render FlatPack::Chip::Component.new(text: "Ruby", style: :danger) %>
+      <%= render FlatPack::Chip::Component.new(text: "Rails", style: :danger) %>
+      <%= render FlatPack::Chip::Component.new(text: "JavaScript", style: :warning) %>
+      <%= render FlatPack::Chip::Component.new(text: "React", style: :info) %>
+      <%= render FlatPack::Chip::Component.new(text: "TypeScript", style: :info) %>
+      <%= render FlatPack::Chip::Component.new(text: "Node.js", style: :success) %>
+      <%= render FlatPack::Chip::Component.new(text: "Python", style: :info) %>
+      <%= render FlatPack::Chip::Component.new(text: "Go", style: :info) %>
+      <%= render FlatPack::Chip::Component.new(text: "Rust", style: :danger) %>
+    <% end %>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::ChipGroup::Component.new do %&gt;
+          &lt;%= render FlatPack::Chip::Component.new(text: "Ruby", style: :danger) %&gt;
+          &lt;%= render FlatPack::Chip::Component.new(text: "Rails", style: :danger) %&gt;
+          &lt;%= render FlatPack::Chip::Component.new(text: "JavaScript", style: :warning) %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
+  </section>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "ChipGroup - No Wrapping", anchor_link: true, subtitle: "Examples for ChipGroup - No Wrapping.") %>
+    <div class="overflow-x-auto mb-4">
+      <%= render FlatPack::ChipGroup::Component.new(wrap: false) do %>
+        <%= render FlatPack::Chip::Component.new(text: "Ruby", style: :danger) %>
+        <%= render FlatPack::Chip::Component.new(text: "Rails", style: :danger) %>
+        <%= render FlatPack::Chip::Component.new(text: "JavaScript", style: :warning) %>
+        <%= render FlatPack::Chip::Component.new(text: "React", style: :info) %>
+        <%= render FlatPack::Chip::Component.new(text: "TypeScript", style: :info) %>
+      <% end %>
+    </div>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::ChipGroup::Component.new(wrap: false) do %&gt;
+          &lt;%= render FlatPack::Chip::Component.new(text: "Ruby", style: :danger) %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
+  </section>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Related", anchor_link: true) %>
+    <p class="text-sm text-[var(--surface-muted-content-color)]">
+      <%= render FlatPack::Link::Component.new(href: demo_chips_path) do %>
+        Chips
+      <% end %>
+    </p>
+  </section>
+</div>

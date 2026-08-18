@@ -1,0 +1,348 @@
+<%# Controller: no instance variables required — all chart data is inline. %>
+
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Chart Types",
+  subtitle: "Examples for each supported ApexCharts and geo chart type."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :chart %>
+
+<%
+  erb_open = "<" + "%"
+  erb_output_open = "<" + "%="
+  erb_tag_close = "%" + ">"
+%>
+
+<!-- Basic Line Chart -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Line Chart", anchor_link: true, subtitle: "Examples for Line Chart.") %>
+  <%= render FlatPack::Chart::Component.new(
+    type: :line,
+    series: [{
+      name: "Sales",
+      data: [30, 40, 45, 50, 49, 60, 70, 91, 125, 150, 180, 200]
+    }],
+    title: "Monthly Sales",
+    height: 300
+  ) %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Chart::Component.new(
+        type: :line,
+        series: [{
+          name: "Sales",
+          data: [30, 40, 45, 50, 49, 60, 70, 91, 125, 150, 180, 200]
+        }],
+        title: "Monthly Sales",
+        height: 300
+      ) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<!-- Column Chart -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Column Chart", anchor_link: true, subtitle: "Examples for vertical columns.") %>
+  <%= render FlatPack::Chart::Component.new(
+    type: :column,
+    series: [{
+      name: "Revenue",
+      data: [44, 55, 57, 56, 61, 58, 63, 60, 66, 71, 89, 95]
+    }],
+    title: "Quarterly Revenue",
+    subtitle: "In thousands",
+    height: 300
+  ) %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Chart::Component.new(
+        type: :column,
+        series: [{
+          name: "Revenue",
+          data: [44, 55, 57, 56, 61, 58, 63, 60, 66, 71, 89, 95]
+        }],
+        title: "Quarterly Revenue",
+        subtitle: "In thousands",
+        height: 300
+      ) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<!-- Stacked Column Chart -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Stacked Column Chart", anchor_link: true, subtitle: "Examples for stacked vertical columns.") %>
+  <%= render FlatPack::Chart::Component.new(
+    type: :stacked_column,
+    series: [
+      {name: "Desktop", data: [45, 40, 50]},
+      {name: "Mobile", data: [35, 42, 30]},
+      {name: "Tablet", data: [20, 18, 20]}
+    ],
+    title: "Traffic by Device",
+    subtitle: "Monthly sessions",
+    height: 300,
+    options: {
+      xaxis: {
+        categories: ["Jan", "Feb", "Mar"]
+      }
+    }
+  ) %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Chart::Component.new(
+        type: :stacked_column,
+        series: [
+          {name: "Desktop", data: [45, 40, 50]},
+          {name: "Mobile", data: [35, 42, 30]},
+          {name: "Tablet", data: [20, 18, 20]}
+        ],
+        title: "Traffic by Device",
+        subtitle: "Monthly sessions",
+        height: 300,
+        options: {
+          xaxis: {
+            categories: ["Jan", "Feb", "Mar"]
+          }
+        }
+      ) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<!-- Bar Chart -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Bar Chart", anchor_link: true, subtitle: "Examples for horizontal bars.") %>
+  <%= render FlatPack::Chart::Component.new(
+    type: :bar,
+    series: [{
+      name: "Tickets",
+      data: [84, 72, 65, 48, 39]
+    }],
+    title: "Support Queue by Team",
+    subtitle: "Open tickets",
+    height: 300,
+    options: {
+      xaxis: {
+        categories: ["API", "Billing", "Onboarding", "Integrations", "Security"]
+      }
+    }
+  ) %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Chart::Component.new(
+        type: :bar,
+        series: [{
+          name: "Tickets",
+          data: [84, 72, 65, 48, 39]
+        }],
+        title: "Support Queue by Team",
+        subtitle: "Open tickets",
+        height: 300,
+        options: {
+          xaxis: {
+            categories: ["API", "Billing", "Onboarding", "Integrations", "Security"]
+          }
+        }
+      ) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<!-- Stacked Bar Chart -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Stacked Bar Chart", anchor_link: true, subtitle: "Examples for stacked horizontal bars.") %>
+  <%= render FlatPack::Chart::Component.new(
+    type: :stacked_bar,
+    series: [
+      {name: "Product A", data: [30, 40, 35]},
+      {name: "Product B", data: [45, 35, 50]},
+      {name: "Product C", data: [25, 30, 20]}
+    ],
+    title: "Quarterly Product Mix",
+    subtitle: "Units sold",
+    height: 300,
+    options: {
+      xaxis: {
+        categories: ["Q1", "Q2", "Q3"]
+      }
+    }
+  ) %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Chart::Component.new(
+        type: :stacked_bar,
+        series: [
+          {name: "Product A", data: [30, 40, 35]},
+          {name: "Product B", data: [45, 35, 50]},
+          {name: "Product C", data: [25, 30, 20]}
+        ],
+        title: "Quarterly Product Mix",
+        subtitle: "Units sold",
+        height: 300,
+        options: {
+          xaxis: {
+            categories: ["Q1", "Q2", "Q3"]
+          }
+        }
+      ) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<!-- Area Chart -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Area Chart", anchor_link: true, subtitle: "Examples for Area Chart.") %>
+  <%= render FlatPack::Chart::Component.new(
+    type: :area,
+    series: [
+      {name: "Series 1", data: [31, 40, 28, 51, 42, 109, 100]},
+      {name: "Series 2", data: [11, 32, 45, 32, 34, 52, 41]}
+    ],
+    title: "Multi-Series Area Chart",
+    height: 300
+  ) %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Chart::Component.new(
+        type: :area,
+        series: [
+          {name: "Series 1", data: [31, 40, 28, 51, 42, 109, 100]},
+          {name: "Series 2", data: [11, 32, 45, 32, 34, 52, 41]}
+        ],
+        title: "Multi-Series Area Chart",
+        height: 300
+      ) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<!-- Donut Chart -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Donut Chart", anchor_link: true, subtitle: "Examples for Donut Chart.") %>
+  <%= render FlatPack::Chart::Component.new(
+    type: :donut,
+    series: [44, 55, 41, 17, 15],
+    title: "Distribution",
+    height: 350,
+    options: {
+      labels: ['Apple', 'Orange', 'Banana', 'Mango', 'Grape']
+    }
+  ) %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Chart::Component.new(
+        type: :donut,
+        series: [44, 55, 41, 17, 15],
+        title: "Distribution",
+        height: 350,
+        options: {
+          labels: ["Apple", "Orange", "Banana", "Mango", "Grape"]
+        }
+      ) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<!-- Gauge Chart -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Gauge Chart", anchor_link: true, subtitle: "Rounded gauge with primary shaded fill.") %>
+  <%= render FlatPack::Chart::Component.new(
+    type: :gauge,
+    series: [67],
+    title: "SLA Compliance",
+    subtitle: "Current period",
+    height: 360,
+    options: {
+      labels: ["SLA"]
+    }
+  ) %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Chart::Component.new(
+        type: :gauge,
+        series: [67],
+        title: "SLA Compliance",
+        subtitle: "Current period",
+        height: 360,
+        options: {
+          labels: ["SLA"]
+        }
+      ) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<!-- Geo Chart -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Geo Chart", anchor_link: true, subtitle: "Region map example for geographic metrics.") %>
+  <%= render FlatPack::Chart::Component.new(
+    type: :geochart,
+    series: [{
+      name: "Active accounts",
+      data: [
+        {region: "United States", value: 225},
+        {region: "Canada", value: 82},
+        {region: "Brazil", value: 64},
+        {region: "United Kingdom", value: 118},
+        {region: "Germany", value: 96},
+        {region: "India", value: 142},
+        {region: "Japan", value: 74},
+        {region: "Australia", value: 58}
+      ]
+    }],
+    title: "Active Accounts by Country",
+    subtitle: "Current month",
+    height: 380
+  ) %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Chart::Component.new(
+        type: :geochart,
+        series: [{
+          name: "Active accounts",
+          data: [
+            {region: "United States", value: 225},
+            {region: "Canada", value: 82},
+            {region: "Brazil", value: 64},
+            {region: "United Kingdom", value: 118},
+            {region: "Germany", value: 96},
+            {region: "India", value: 142},
+            {region: "Japan", value: 74},
+            {region: "Australia", value: 58}
+          ]
+        }],
+        title: "Active Accounts by Country",
+        subtitle: "Current month",
+        height: 380
+      ) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
