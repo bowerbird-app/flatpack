@@ -133,7 +133,7 @@ Tell Tailwind to scan FlatPack components:
 
 The `@source` comment tells Tailwind CSS 4 where to find utility classes.
 
-> **Note:** FlatPack CSS variables are loaded via `stylesheet_link_tag` in the layout, not via `@import` inside the Tailwind build file. The install generator adds `@source` for component scanning only. Tokens stay in `flat_pack/variables`; Propshaft serves those stylesheets from digested URLs. Load the host stylesheet after the gem tags so `--brand-hue` overrides apply.
+> **Note:** FlatPack CSS variables are loaded via `stylesheet_link_tag` in the layout, not via `@import` inside the Tailwind build file. The install generator adds `@source` for component scanning only. Tokens stay in `flat_pack/variables`; Propshaft serves those stylesheets from digested URLs. Load the host stylesheet after the gem tags so `--brand-hue` / `--brand-chroma` / `--brand-lightness` overrides apply.
 
 ### Path Resolution
 

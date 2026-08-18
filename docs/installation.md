@@ -73,7 +73,7 @@ bin/rake flat_pack:verify_install
 ### 3.1 Optional: Generate a brand theme override
 
 ```bash
-bin/rails generate flat_pack:theme Sunrise --hue=35 --chroma=0.2
+bin/rails generate flat_pack:theme Sunrise --hue=35 --chroma=0.2 --lightness=0.52
 ```
 
 Creates `app/assets/stylesheets/flat_pack_theme_sunrise.css` with `--brand-hue` / `--brand-chroma` / `--brand-lightness`. Load it after FlatPack variables and set `data-theme="sunrise"` on `<html>`. See [Theming](theming.md).
@@ -243,7 +243,7 @@ The imported `variables.css` contains:
 To recolor without copying the full token list:
 
 ```bash
-bin/rails generate flat_pack:theme Sunrise --hue=35
+bin/rails generate flat_pack:theme Sunrise --hue=35 --chroma=0.2 --lightness=0.52
 ```
 
 or in host CSS loaded after FlatPack:
@@ -907,7 +907,7 @@ The installation process for FlatPack is fully automated. Quick checklist:
 - ✨ `stylesheet_link_tag "flat_pack/variables"`, `flat_pack/application`, and `flat_pack/rich_text` in the application layout
 - ✨ `@source` directive in your Tailwind file so Tailwind scans FlatPack components
 - ✨ Tokens from `flat_pack/variables` (no host `--color-fp-*` fork)
-- ✨ Optional `rails g flat_pack:theme NAME --hue=…` for brand overrides
+- ✨ Optional `rails g flat_pack:theme NAME --hue=… --chroma=… --lightness=…` for brand overrides
 - ✨ Heroicons importmap pin (`flat_pack/heroicons`) for the Icon component
 - ✨ Optional app-wide FlatPack settings via `config/initializers/flat_pack.rb`, including `config.default_icon_variant = :outline`
 - ✨ Stimulus lazy-loading for all FlatPack controllers via importmap

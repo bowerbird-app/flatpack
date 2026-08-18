@@ -92,7 +92,7 @@ The engine integrates via:
    <%= stylesheet_link_tag "flat_pack/rich_text", "data-turbo-track": "reload" %>
    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
    ```
-   Load the host stylesheet last so `--brand-hue` / named-theme overrides win.
+   Load the host stylesheet last so brand primitives / named-theme overrides win.
 
 2. **Component Rendering**
    ```erb

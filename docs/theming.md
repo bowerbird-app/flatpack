@@ -173,7 +173,7 @@ Use stack gap tokens on parent layout containers (for example, form stacks) to c
 
 ## Component Variable Usage
 
-Component tokens such as `--button-primary-background-color` map to semantic tokens (`var(--color-primary)`). You normally change `--brand-hue` / `--brand-lightness` or `--color-primary` instead of editing component tokens.
+Component tokens such as `--button-primary-background-color` map to semantic tokens (`var(--color-primary)`). You normally change `--brand-hue` / `--brand-chroma` / `--brand-lightness` or `--color-primary` instead of editing component tokens.
 
 ### Buttons
 - Colors: `--color-default-*`, `--color-primary-*`, `--color-secondary-*`, `--color-ghost-*`, `--color-success-*`, `--color-warning-*`
