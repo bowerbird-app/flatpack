@@ -414,7 +414,7 @@ bin/rubocop
 
 FlatPack follows these principles:
 
-1. **Variables over configuration** - Customize via CSS variables (`--brand-hue` first)
+1. **Variables over configuration** - Customize via CSS variables (`--brand-hue` / `--brand-chroma` / `--brand-lightness`, or `--color-primary` for an exact hex)
 2. **Theme variants over hardcoded palettes** - Default light theme plus `data-theme` overrides when needed
 3. **Composition over inheritance** - Build complex UIs from simple parts
 4. **Zero-config installation** - Works immediately

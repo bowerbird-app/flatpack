@@ -30,7 +30,7 @@
     ],
     "optional_commands": [
       "bin/rails generate flat_pack:layout --type=sidebar",
-      "bin/rails generate flat_pack:theme BrandName --hue=160"
+      "bin/rails generate flat_pack:theme BrandName --hue=160 --chroma=0.18 --lightness=0.52"
     ],
     "verification_command": "bin/rake flat_pack:verify_install",
     "contract_command": "bin/rake flat_pack:contract"

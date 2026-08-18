@@ -25,7 +25,7 @@
       </p>
       <p class="text-sm text-[var(--surface-muted-content-color)]">
         Recolor primary with brand primitives (or
-        <code class="font-mono text-xs">rails g flat_pack:theme Sunrise --hue=35 --lightness=0.52</code>).
+        <code class="font-mono text-xs">rails g flat_pack:theme Sunrise --hue=35 --chroma=0.2 --lightness=0.52</code>).
         Lightness applies to <code class="font-mono text-xs">--color-primary</code> only. For an exact hex, set
         <code class="font-mono text-xs">--color-primary</code> directly. Named themes should override
         brand/semantic tokens — component aliases inherit from <code class="font-mono text-xs">:root</code>.
@@ -46,7 +46,7 @@
         This catalog lists the <code class="font-mono text-xs">@theme</code> inventory from
         <code class="font-mono text-xs">flat_pack/variables.css</code>. Values that start with
         <code class="font-mono text-xs">var(</code> are aliases — change the referenced semantic token
-        (or <code class="font-mono text-xs">--brand-hue</code>) instead of editing the alias.
+        (or <code class="font-mono text-xs">--brand-hue</code> / <code class="font-mono text-xs">--brand-chroma</code> / <code class="font-mono text-xs">--brand-lightness</code>) instead of editing the alias.
       </p>
       <p class="text-xs text-[var(--surface-muted-content-color)]">
         Tip: utilities such as <code class="font-mono">bg-primary</code> come from semantic

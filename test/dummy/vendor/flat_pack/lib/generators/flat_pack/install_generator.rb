@@ -402,7 +402,7 @@ module FlatPack
         say "\n2. Verify the install:"
         say "   bin/rake flat_pack:verify_install"
         say "\n3. Optional — scaffold a brand theme override:"
-        say "   bin/rails generate flat_pack:theme BrandName --hue=160"
+        say "   bin/rails generate flat_pack:theme BrandName --hue=160 --chroma=0.18 --lightness=0.52"
         say "\n4. Restart your Rails server and render a component:"
         say "   <%= render FlatPack::Button::Component.new("
         say "     label: 'Click me',"

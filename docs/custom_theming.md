@@ -17,23 +17,27 @@ FlatPack's theming surface has three layers:
 For most apps, generate a brand kit instead of copying every variable:
 
 ```bash
-bin/rails generate flat_pack:theme sunrise --hue=35
+bin/rails generate flat_pack:theme sunrise --hue=35 --chroma=0.2 --lightness=0.52
 ```
 
 That means a custom host-app theme is usually just brand/semantic overrides:
 
 ```css
 [data-theme="sunrise"] {
-  --color-primary: oklch(0.68 0.19 35);
+  --brand-hue: 35;
+  --brand-chroma: 0.19;
+  --brand-lightness: 0.52;
   --surface-background-color: oklch(0.99 0.01 80);
 }
 ```
+
+For an exact primary hex, set `--color-primary` / `--color-primary-hover` instead of the brand primitives.
 
 Any non-`light` theme value applied to `<html data-theme="...">` will activate the matching selector.
 
 ## Fastest Path
 
-1. Prefer `bin/rails generate flat_pack:theme NAME --hue=…` (or a `:root { --brand-hue }` override) when you only need a recolor.
+1. Prefer `bin/rails generate flat_pack:theme NAME --hue=… --chroma=… --lightness=…` (or a `:root { --brand-hue; --brand-chroma; --brand-lightness }` override) when you only need a recolor.
 2. If you need a named theme with extra semantic/surface tweaks, create or open a host stylesheet that loads **after** the FlatPack tags.
 3. Start from brand/semantic overrides. Copy the complete starter block below only when you need a full fork.
 4. Rename `[data-theme="your-theme-name"]` to your own theme name.
@@ -542,10 +546,10 @@ One limitation remains: the controller's built-in label helper only knows the sh
 The source of truth remains `app/assets/stylesheets/flat_pack/variables.css` in the FlatPack gem or repository.
 
 - `@theme {}` contains the token inventory used by Tailwind utilities.
-- `:root {}` contains the default light palette.
-- `[data-theme="dark"]`, `[data-theme="ocean"]`, and `[data-theme="rounded"]` are complete variant examples you can also copy and rename.
+- `:root {}` contains the default light palette and component aliases.
+- `[data-theme="dark"]`, `[data-theme="ocean"]`, and `[data-theme="rounded"]` are **override-only** — they list tokens that differ from `:root`. Component aliases inherit.
 
-When FlatPack adds a new token family, update your host-app theme by copying the new variable from the canonical file into your custom selector.
+When FlatPack adds a new **semantic** token, copy it into your host theme if you need a different value. Component aliases that are `var(--semantic)` do not need to be re-copied.
 
 ## Practical Editing Order
 

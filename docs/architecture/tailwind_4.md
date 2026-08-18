@@ -356,7 +356,7 @@ FlatPack's CSS is minimal:
    <%= stylesheet_link_tag "flat_pack/application", "data-turbo-track": "reload" %>
    <%= stylesheet_link_tag "flat_pack/rich_text", "data-turbo-track": "reload" %>
    ```
-   FlatPack variables are loaded via `stylesheet_link_tag`, not `@import`. Override `--brand-hue` / `--brand-chroma` (or semantic tokens) in your own stylesheet loaded after these tags.
+   FlatPack variables are loaded via `stylesheet_link_tag`, not `@import`. Override `--brand-hue` / `--brand-chroma` / `--brand-lightness` (or `--color-primary` for an exact hex) in your own stylesheet loaded after these tags.
 
 2. **Inspect computed styles:**
    DevTools → Computed → Filter "color-primary"
