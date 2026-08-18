@@ -17,7 +17,10 @@ Use Code Block in docs, demos, and admin pages where users need copy/readable co
 | `title` | String | derived | no | Header title. Defaults to `Code Example` or `Code Examples`. |
 | `snippets` | Array<Hash> | `nil` | conditional | Tabbed snippets. Each hash supports `code`, `label`, `language`. |
 | `separated` | Boolean | `true` | no | Adds top margin separation (`mt-4`) when true. |
+| `wrap` | Boolean | `false` | no | Soft-wraps long lines (`whitespace-pre-wrap break-words`) instead of scrolling them horizontally. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for outer wrapper. |
+
+Long lines scroll horizontally by default (`overflow-x-auto whitespace-pre`) so identifiers are never broken mid-token on narrow viewports. Set `wrap: true` to restore soft wrapping.
 
 ## Slots
 None.

@@ -23,6 +23,7 @@ Use Table for datasets that need consistent headers, rows, formatting, and optio
 | `tbody_class` | String | `nil` | No | Extra class merged into `<tbody>`. |
 | `tbody_data` | Hash | `nil` | No | Data attributes applied to `<tbody>`. |
 | `draggable_rows` | Boolean | `false` | No | Adds `flat-pack--table-sortable` controller and draggable row data hooks. |
+| `min_width` | Symbol/String/nil | `:md` | No | Minimum table width so narrow viewports scroll the wrapper instead of squashing columns. Accepts `:none`, `:sm` (30rem), `:md` (40rem), `:lg` (48rem), or a Tailwind `min-w-*` class String. |
 | `reorder` | Hash | `nil` | No | Optional hash override for reorder settings (`url`, `resource`, `strategy`, `scope`, `version`, `row_id`). |
 | `reorder_url` | String | `nil` | No | PATCH endpoint used by sortable controller to persist order. |
 | `reorder_resource` | String | inferred | No | Resource key sent in reorder payload (defaults from sample row class/table name when possible). |

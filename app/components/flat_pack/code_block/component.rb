@@ -23,13 +23,14 @@ module FlatPack
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-[var(--code-block-background-color)]" "border" "border-[var(--code-block-border-color)]" "rounded-lg" "whitespace-pre-wrap" "break-words" "font-mono" "text-sm" "text-[var(--code-block-code-color)]" "text-[var(--code-block-title-color)]"
+      # "bg-[var(--code-block-background-color)]" "border" "border-[var(--code-block-border-color)]" "rounded-lg" "whitespace-pre" "whitespace-pre-wrap" "break-words" "overflow-x-auto" "font-mono" "text-sm" "text-[var(--code-block-code-color)]" "text-[var(--code-block-title-color)]"
       # "flex" "gap-1" "px-4" "pt-4" "pb-2" "px-5" "pb-5" "p-4" "rounded-full" "text-[var(--code-block-tab-color)]" "hover:text-[var(--code-block-tab-hover-color)]" "bg-[var(--code-block-tab-active-background-color)]" "text-[var(--code-block-tab-active-color)]"
-      def initialize(code: nil, language: nil, title: nil, snippets: nil, separated: true, **system_arguments)
+      def initialize(code: nil, language: nil, title: nil, snippets: nil, separated: true, wrap: false, **system_arguments)
         super(**system_arguments)
         @snippets = normalize_snippets(code: code, language: language, snippets: snippets)
         @title = title.presence || default_title
         @separated = separated
+        @wrap = wrap
         @default_tab = 0
         @component_id = "code-block-#{object_id}"
       end
@@ -138,8 +139,12 @@ module FlatPack
         )
       end
 
+      # Scrolling horizontally keeps identifiers intact on narrow viewports;
+      # soft wrapping used to break them mid-token (for example `pa-` / `gy:`).
       def pre_classes
-        "whitespace-pre-wrap break-words"
+        return "whitespace-pre-wrap break-words" if @wrap
+
+        "overflow-x-auto whitespace-pre"
       end
 
       def code_classes_for(language)

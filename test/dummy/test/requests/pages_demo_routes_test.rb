@@ -597,7 +597,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_includes response.body, ">value</td>"
-    assert_includes response.body, ">variant</td>"
+    assert_includes response.body, ">style</td>"
     assert_includes response.body, ">size</td>"
     assert_includes response.body, "show_label: true"
     assert_includes response.body, "Theme Tokens"
