@@ -6,7 +6,7 @@ This document provides the exact terminal commands and configuration steps neede
 
 FlatPack is a modern Rails UI Component Library built with ViewComponent, Tailwind CSS, and Hotwire. It provides type-safe, testable components with dark mode support and accessibility features. Supports Rails 7.1 and above.
 
-**Current Version:** 0.1.131 (Updated August 18, 2026)
+**Current Version:** 0.1.132 (Updated August 18, 2026)
 
 ## AI-first installation entrypoint
 
@@ -64,14 +64,21 @@ bin/rake flat_pack:verify_install
 ```
 
 **What the generator does:**
-- Adds `stylesheet_link_tag "flat_pack/variables"` and `stylesheet_link_tag "flat_pack/rich_text"` to your `app/views/layouts/application.html.erb` — this lets Propshaft serve the FlatPack CSS files at their correct digested URLs, loading the **complete** FlatPack variable set: all component design tokens in `@theme {}` and the full light-mode palette in `:root {}`
-- **Automatically configures Tailwind CSS 4** by detecting your Tailwind CSS file and injecting the necessary `@source` directive and utility `@theme` block
-- Avoids self-referential Tailwind token mappings such as `--radius-md: var(--radius-md)` in the generated scaffold, preventing invalid shared radius, transition, and focus-ring values
+- Adds `stylesheet_link_tag "flat_pack/variables"`, `stylesheet_link_tag "flat_pack/application"`, and `stylesheet_link_tag "flat_pack/rich_text"` to your `app/views/layouts/application.html.erb` — Propshaft serves the FlatPack CSS at digested URLs. `variables` holds the full token hierarchy (brand → semantic → component); `application` holds component helper classes.
+- **Automatically configures Tailwind CSS 4** by detecting your Tailwind CSS file and injecting an `@source` directive for FlatPack components (tokens are **not** re-declared in the host Tailwind file)
 - **Configures importmap** to load FlatPack Stimulus controllers and the Heroicons JS module
 - **Configures Stimulus** to lazy load FlatPack controllers on first use
-- Shows next steps for using components
+- Shows next steps for theming (`flat_pack:theme`) and verification
 
-### 3.1 Optional: Generate a Sidebar Layout Shell
+### 3.1 Optional: Generate a brand theme override
+
+```bash
+bin/rails generate flat_pack:theme Sunrise --hue=35 --chroma=0.2
+```
+
+Creates `app/assets/stylesheets/flat_pack_theme_sunrise.css` with `--brand-hue` / `--brand-chroma`. Load it after FlatPack variables and set `data-theme="sunrise"` on `<html>`. See [Theming](theming.md).
+
+### 3.2 Optional: Generate a Sidebar Layout Shell
 
 FlatPack also provides a layout generator for creating a starter application shell based on `SidebarLayout` + `TopNav`:
 
@@ -101,7 +108,7 @@ rails generate flat_pack:layout \
 
 After generation, set the layout in your controller (for example `ApplicationController`) and update the generated sidebar/top-nav partials to match your app routes and actions.
 
-### 3.2 Optional: Create `config/initializers/flat_pack.rb`
+### 3.3 Optional: Create `config/initializers/flat_pack.rb`
 
 FlatPack works out of the box without a Ruby initializer, but app-wide settings such as the default Heroicons variant belong in `config/initializers/flat_pack.rb`:
 

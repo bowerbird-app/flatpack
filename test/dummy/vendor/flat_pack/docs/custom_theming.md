@@ -10,11 +10,17 @@ Use this guide when you want a complete starting point instead of hand-picking a
 
 FlatPack's theming surface has three layers:
 
-- `@theme {}` in `flat_pack/variables.css` defines the shared Tailwind token inventory.
-- `:root {}` in the same file defines the default light palette.
-- `[data-theme="..."]` selectors override those variables for named variants such as `dark`, `ocean`, and `rounded`.
+- `@theme {}` in `flat_pack/variables.css` defines the shared Tailwind token inventory (including `--brand-hue` / `--brand-chroma`).
+- `:root {}` in the same file defines the default light palette **and** component token wiring (`--button-primary-*` → `var(--color-primary)`, etc.).
+- `[data-theme="..."]` selectors override **only** tokens that differ from `:root` (semantic / intentional exceptions). Component aliases inherit.
 
-That means a custom host-app theme is just another named selector:
+For most apps, generate a brand kit instead of copying every variable:
+
+```bash
+bin/rails generate flat_pack:theme sunrise --hue=35
+```
+
+That means a custom host-app theme is usually just brand/semantic overrides:
 
 ```css
 [data-theme="sunrise"] {

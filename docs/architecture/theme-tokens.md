@@ -16,6 +16,8 @@ app/assets/stylesheets/flat_pack/variables.css  →  @theme { … }
 
 All `--token-name: value;` declarations inside the `@theme` block are read and built into rows with `variable` and `default_value` fields.
 
+Named theme overrides live in slim `[data-theme]` blocks (only tokens that differ from `:root`). Component aliases that are pure `var(--semantic)` references are defined once on `:root` / `@theme` and are not re-copied per theme.
+
 ### Controller Mapping
 
 `PagesController` defines a `DEMO_THEME_TOKEN_MAPPINGS` constant that connects page action names to token families:

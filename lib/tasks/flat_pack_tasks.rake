@@ -29,6 +29,24 @@ namespace :flat_pack do
     abort "FlatPack installation verification failed. Run `bin/rails generate flat_pack:install` and compare your app with the AI install contract."
   end
 
+  desc "Verify FlatPack CSS token references are defined"
+  task audit_tokens: :environment do
+    result = FlatPack::TokenAuditor.new.call
+
+    puts "FlatPack token audit"
+    puts "Defined: #{result.defined.size}"
+    puts "Referenced: #{result.referenced.size}"
+
+    if result.success?
+      puts "PASS: every referenced token is defined in variables.css"
+      next
+    end
+
+    puts "FAIL: missing token definitions:"
+    result.missing.each { |token| puts "  #{token}" }
+    abort "FlatPack token audit failed."
+  end
+
   desc "Display FlatPack information"
   task :info do
     puts "FlatPack UI Component Library"
