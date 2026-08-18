@@ -15,17 +15,20 @@
     <div class="p-4 border border-[var(--surface-border-color)] rounded-lg bg-[var(--surface-background-color)] space-y-3">
       <p class="text-sm text-[var(--surface-muted-content-color)]">
         FlatPack tokens have three layers:
-        <code class="font-mono text-xs">--brand-hue</code> / <code class="font-mono text-xs">--brand-chroma</code>
-        (primitives), semantic tokens such as <code class="font-mono text-xs">--color-primary</code> and
+        <code class="font-mono text-xs">--brand-hue</code> /
+        <code class="font-mono text-xs">--brand-chroma</code> /
+        <code class="font-mono text-xs">--brand-lightness</code>
+        (OKLCH primitives for primary), semantic tokens such as <code class="font-mono text-xs">--color-primary</code> and
         <code class="font-mono text-xs">--surface-content-color</code>, then component aliases such as
         <code class="font-mono text-xs">--button-primary-background-color</code> which map once to
         <code class="font-mono text-xs">var(--color-primary)</code>.
       </p>
       <p class="text-sm text-[var(--surface-muted-content-color)]">
-        Recolor the app by changing brand primitives (or
-        <code class="font-mono text-xs">rails g flat_pack:theme Sunrise --hue=35</code>).
-        Named themes under <code class="font-mono text-xs">[data-theme="…"]</code> should override
-        brand/semantic tokens only — component aliases inherit from <code class="font-mono text-xs">:root</code>.
+        Recolor primary with brand primitives (or
+        <code class="font-mono text-xs">rails g flat_pack:theme Sunrise --hue=35 --lightness=0.52</code>).
+        Lightness applies to <code class="font-mono text-xs">--color-primary</code> only. For an exact hex, set
+        <code class="font-mono text-xs">--color-primary</code> directly. Named themes should override
+        brand/semantic tokens — component aliases inherit from <code class="font-mono text-xs">:root</code>.
       </p>
     </div>
   </div>

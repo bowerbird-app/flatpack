@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.132] - 2026-08-18
 
 ### Added
-- Added brand primitives `--brand-hue` and `--brand-chroma` so recoloring the library starts from two tokens.
+- Added brand primitives `--brand-hue`, `--brand-chroma`, and `--brand-lightness` so recoloring primary starts from the OKLCH triad. Hover is `calc(var(--brand-lightness) - 0.10)`. Exact hex still overrides `--color-primary`.
 - Added `rails generate flat_pack:theme NAME` to scaffold a host-app brand override stylesheet.
 - Added `bin/rake flat_pack:audit_tokens` and `FlatPack::TokenAuditor` to fail when referenced CSS variables are missing from `variables.css`.
 - Added `--surface-subtle-background-color` and `--transition-*` aliases for `--duration-*`.
@@ -37,7 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Upgrade notes
 - **Re-run `bin/rails generate flat_pack:install`** (or manually add `stylesheet_link_tag "flat_pack/application"` and refresh the Tailwind `@source`). Then run `bin/rails tailwindcss:build` and `bin/rake flat_pack:verify_install`.
-- **Remove host-app `--color-fp-*` / `:root` remaps** that the old install scaffold injected into your Tailwind entry. Tokens load from `flat_pack/variables`. Override with `--brand-hue` / `--brand-chroma` or `rails g flat_pack:theme …`.
+- **Remove host-app `--color-fp-*` / `:root` remaps** that the old install scaffold injected into your Tailwind entry. Tokens load from `flat_pack/variables`. Override with `--brand-hue` / `--brand-chroma` / `--brand-lightness` or `rails g flat_pack:theme …`. For an exact brand hex, set `--color-primary` / `--color-primary-hover`.
 - **Custom themes:** prefer overriding brand/semantic tokens only. Re-copying the full component token list is no longer required for color changes.
 - TipTap pins created by an older install may still say `2.11.5`. Update `TIPTAP_VERSION` in `config/importmap.rb` to `FlatPack::Tiptap::VERSION` (`2.27.2`) or re-run install.
 

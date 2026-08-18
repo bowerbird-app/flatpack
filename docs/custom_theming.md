@@ -10,7 +10,7 @@ Use this guide when you want a complete starting point instead of hand-picking a
 
 FlatPack's theming surface has three layers:
 
-- `@theme {}` in `flat_pack/variables.css` defines the shared Tailwind token inventory (including `--brand-hue` / `--brand-chroma`).
+- `@theme {}` in `flat_pack/variables.css` defines the shared Tailwind token inventory (including `--brand-hue` / `--brand-chroma` / `--brand-lightness`).
 - `:root {}` in the same file defines the default light palette **and** component token wiring (`--button-primary-*` → `var(--color-primary)`, etc.).
 - `[data-theme="..."]` selectors override **only** tokens that differ from `:root` (semantic / intentional exceptions). Component aliases inherit.
 

@@ -107,6 +107,7 @@ Tokens live in `flat_pack/variables.css`. Recolor from brand primitives after th
 :root {
   --brand-hue: 270;
   --brand-chroma: 0.22;
+  --brand-lightness: 0.52;
 }
 ```
 

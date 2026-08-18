@@ -1,6 +1,6 @@
 /* Scan FlatPack ViewComponents so Tailwind emits their utility classes.
  * Design tokens live in flat_pack/variables (loaded via stylesheet_link_tag).
  * Do not redefine --color-* here — override brand primitives in your app CSS instead:
- *   :root { --brand-hue: 160; --brand-chroma: 0.18; }
+ *   :root { --brand-hue: 160; --brand-chroma: 0.18; --brand-lightness: 0.52; }
  */
 @source "<%= source_path %>";

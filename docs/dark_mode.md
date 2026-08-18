@@ -6,7 +6,7 @@ FlatPack ships a light theme by default and supports dark or custom theme varian
 
 FlatPack theme behavior is split into two layers:
 
-- **CSS defaults** - `:root {}` in `flat_pack/variables.css` provides the default light palette, including `--brand-hue` / `--brand-chroma` and component aliases that map once to semantic tokens.
+- **CSS defaults** - `:root {}` in `flat_pack/variables.css` provides the default light palette, including `--brand-hue` / `--brand-chroma` / `--brand-lightness` and component aliases that map once to semantic tokens.
 - **Theme variants** - selectors such as `[data-theme="dark"]`, `[data-theme="ocean"]`, and `[data-theme="rounded"]` override only tokens that differ from `:root`. Component aliases inherit unless you override them.
 - **Optional controller support** - the `flat-pack--theme` Stimulus controller can switch between `system`, `light`, `dark`, and custom variants while persisting the choice in `localStorage` under `flatpack-theme`.
 
@@ -62,6 +62,7 @@ You can define additional custom themes the same way. Prefer brand primitives wh
 [data-theme="forest"] {
   --brand-hue: 155;
   --brand-chroma: 0.18;
+  --brand-lightness: 0.52;
 }
 ```
 

@@ -13,7 +13,7 @@ module FlatPack
     test "brand primitives and transition aliases are defined" do
       css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css").read
 
-      %w[--brand-hue --brand-chroma --surface-subtle-background-color --transition-fast --transition-base --transition-slow].each do |token|
+      %w[--brand-hue --brand-chroma --brand-lightness --surface-subtle-background-color --transition-fast --transition-base --transition-slow].each do |token|
         assert_includes css, "#{token}:", "expected #{token} in variables.css"
       end
     end

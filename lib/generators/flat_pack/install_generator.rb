@@ -279,7 +279,7 @@ module FlatPack
         say "\nDo not redefine FlatPack color tokens in the host Tailwind file."
         say "Load tokens via stylesheet_link_tag \"flat_pack/variables\" and override"
         say "brand primitives in your app CSS:\n"
-        say "  :root { --brand-hue: 160; --brand-chroma: 0.18; }"
+        say "  :root { --brand-hue: 160; --brand-chroma: 0.18; --brand-lightness: 0.52; }"
         say "\nFor complete configuration, see: docs/installation.md", :cyan
         say "=" * 70, :cyan
       end

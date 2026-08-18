@@ -203,6 +203,7 @@ Via CSS variables in the host application (after `flat_pack/variables`):
 :root {
   --brand-hue: 270;
   --brand-chroma: 0.22;
+  --brand-lightness: 0.52;
 }
 ```
 
