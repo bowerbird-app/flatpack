@@ -100,18 +100,17 @@ end
 
 ## CSS Variables
 
-FlatPack uses Tailwind CSS 4's `@theme` directive to define CSS variables:
+Tokens live in `flat_pack/variables.css`. Recolor from brand primitives after that stylesheet loads:
 
 ```css
-/* Override in your application.css */
-@theme {
-  --color-primary: oklch(0.62 0.22 250);
-  --color-primary-hover: oklch(0.52 0.26 250);
-  /* ... more variables */
+/* Override in a host stylesheet loaded after flat_pack/variables */
+:root {
+  --brand-hue: 270;
+  --brand-chroma: 0.22;
 }
 ```
 
-See [Theming Guide](theming.md) for complete customization options.
+Semantic tokens (`--color-primary`, surfaces) and component aliases (`--button-primary-*`) inherit from those primitives. See [Theming Guide](theming.md).
 
 ## Component Philosophy
 

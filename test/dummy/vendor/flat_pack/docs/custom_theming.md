@@ -33,10 +33,10 @@ Any non-`light` theme value applied to `<html data-theme="...">` will activate t
 
 ## Fastest Path
 
-1. Create or open your host app stylesheet that loads after the FlatPack stylesheet tags.
-2. Copy the complete starter block below.
-3. Rename `[data-theme="your-theme-name"]` to your own theme name.
-4. Change the values you care about first, then adjust component-specific tokens as needed.
+1. Prefer `bin/rails generate flat_pack:theme NAME --hue=…` (or a `:root { --brand-hue }` override) when you only need a recolor.
+2. If you need a named theme with extra semantic/surface tweaks, create or open a host stylesheet that loads **after** the FlatPack tags.
+3. Start from brand/semantic overrides. Copy the complete starter block below only when you need a full fork.
+4. Rename `[data-theme="your-theme-name"]` to your own theme name.
 5. Apply the theme by setting `data-theme="your-theme-name"` on `<html>`.
 
 Example:

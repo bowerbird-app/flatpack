@@ -56,7 +56,9 @@ Load FlatPack stylesheets in your application layout:
 ```erb
 <%# app/views/layouts/application.html.erb %>
 <%= stylesheet_link_tag "flat_pack/variables", "data-turbo-track": "reload" %>
+<%= stylesheet_link_tag "flat_pack/application", "data-turbo-track": "reload" %>
 <%= stylesheet_link_tag "flat_pack/rich_text", "data-turbo-track": "reload" %>
+<%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
 ```
 
 Propshaft resolves the correct digested path for each file. Using `stylesheet_link_tag` (not `@import`) is required because Propshaft fingerprints asset filenames — a bare CSS `@import "flat_pack/variables.css"` in a statically-served stylesheet would request an un-digested URL that Propshaft does not serve.
@@ -131,7 +133,7 @@ Tell Tailwind to scan FlatPack components:
 
 The `@source` comment tells Tailwind CSS 4 where to find utility classes.
 
-> **Note:** FlatPack CSS variables are loaded via `stylesheet_link_tag` in the layout, not via `@import` inside the Tailwind build file. The install generator updates the host Tailwind file with `@source` and token mappings, while Propshaft serves the FlatPack stylesheets from digested URLs.
+> **Note:** FlatPack CSS variables are loaded via `stylesheet_link_tag` in the layout, not via `@import` inside the Tailwind build file. The install generator adds `@source` for component scanning only. Tokens stay in `flat_pack/variables`; Propshaft serves those stylesheets from digested URLs. Load the host stylesheet after the gem tags so `--brand-hue` overrides apply.
 
 ### Path Resolution
 
@@ -213,6 +215,8 @@ If assets aren't loading:
    ```erb
    <%# Correct — lets Propshaft resolve the digested URL %>
    <%= stylesheet_link_tag "flat_pack/variables", "data-turbo-track": "reload" %>
+   <%= stylesheet_link_tag "flat_pack/application", "data-turbo-track": "reload" %>
+   <%= stylesheet_link_tag "flat_pack/rich_text", "data-turbo-track": "reload" %>
    ```
    Avoid `@import "flat_pack/variables.css"` in a Propshaft-served stylesheet — Propshaft only serves files at their fingerprinted URLs.
 

@@ -2,6 +2,66 @@
 
 require "pathname"
 
+module FlatPack
+  # Ensures every CSS custom property referenced in the gem is defined in variables.css.
+  class TokenAuditor
+    REFERENCE_PATTERN = /
+      var\(\s*(--[A-Za-z0-9-]+)
+      |
+      (?:bg|text|border|ring|fill|stroke|from|to|via|accent|caret|outline|shadow|decoration)-\(\s*(--[A-Za-z0-9-]+)\s*\)
+    /x
+
+    RUNTIME_TOKENS = %w[
+      --flatpack-modal-body-height
+      --flatpack-picker-items-height
+      --spacing
+    ].freeze
+
+    Result = Struct.new(:defined, :referenced, :missing, keyword_init: true) do
+      def success?
+        missing.empty?
+      end
+    end
+
+    def initialize(engine_root: FlatPack::Engine.root)
+      @engine_root = Pathname.new(engine_root)
+    end
+
+    def call
+      defined = defined_tokens
+      referenced = referenced_tokens - RUNTIME_TOKENS
+      missing = (referenced - defined).sort
+
+      Result.new(defined: defined, referenced: referenced, missing: missing)
+    end
+
+    private
+
+    attr_reader :engine_root
+
+    def defined_tokens
+      css = engine_root.join("app/assets/stylesheets/flat_pack/variables.css").read
+      css.scan(/--[A-Za-z0-9-]+(?=\s*:)/).uniq
+    end
+
+    def referenced_tokens
+      tokens = []
+
+      scan_globs.each do |path|
+        next if path.to_s.end_with?("flat_pack/variables.css")
+
+        path.read.scan(REFERENCE_PATTERN) do |var_match, utility_match|
+          token = var_match || utility_match
+          next if token.end_with?("-")
+          next if token.include?("*")
+
+          tokens << token
+        end
+      end
+
+      tokens.uniq
+    end
+
     def scan_globs
       patterns = [
         "app/components/**/*.{rb,erb}",
