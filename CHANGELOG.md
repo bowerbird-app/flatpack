@@ -31,6 +31,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Legacy `/demo/inputs` now redirects to `/demo/forms`
 - Bumped the gem version to `0.1.133`.
 
+### Fixed
+- Search icon sits optically in the middle of the field (the glass handle was making it look low).
+
 ### Upgrade notes
 - For static search lists, pass `items:` (`[{ title:, description:, url: }, ...]`) to `FlatPack::Search::Component`. Remote `search_url` still works when results must come from the server.
 
