@@ -117,11 +117,15 @@ module FlatPack
       def icon_wrapper_classes
         classes(
           "absolute",
+          "inset-y-0",
           "left-3",
-          "top-1/2",
-          "-translate-y-1/2",
+          "flex",
+          "items-center",
+          "leading-none",
           "pointer-events-none",
-          "text-[var(--search-icon-color)]"
+          "text-[var(--search-icon-color)]",
+          "[&>svg]:block",
+          "[&>svg]:-translate-y-0.5"
         )
       end
 

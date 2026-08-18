@@ -4787,6 +4787,17 @@
       border-right-width: 1px;
     }
   }
+  .\[\&\>svg\]\:block {
+    &>svg {
+      display: block;
+    }
+  }
+  .\[\&\>svg\]\:-translate-y-0\.5 {
+    &>svg {
+      --tw-translate-y: calc(var(--spacing) * -0.5);
+      translate: var(--tw-translate-x) var(--tw-translate-y);
+    }
+  }
   .\[\&\>svg\]\:rotate-180 {
     &>svg {
       rotate: 180deg;

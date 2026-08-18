@@ -26,6 +26,7 @@ module FlatPack
         render_inline(Component.new)
 
         assert_selector "svg[data-flat-pack--icon-name-value='magnifying-glass']"
+        assert_includes CGI.unescapeHTML(rendered_content), "[&>svg]:-translate-y-0.5"
       end
 
       def test_merges_custom_classes
