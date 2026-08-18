@@ -1,0 +1,4 @@
+/* CI and some local commands compile this file to app/assets/builds/application.css.
+ * Real Tailwind config lives in application.tailwind.css.
+ */
+@import "./application.tailwind.css";
