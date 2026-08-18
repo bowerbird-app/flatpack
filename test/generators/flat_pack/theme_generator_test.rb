@@ -12,7 +12,7 @@ module FlatPack
       test "creates a data-theme brand override stylesheet" do
         Dir.mktmpdir("flatpack-theme-generator") do |tmpdir|
           destination = Pathname.new(tmpdir)
-          generator = ThemeGenerator.new(["Sunrise"], { hue: 35, chroma: 0.2 }, destination_root: destination.to_s)
+          generator = ThemeGenerator.new(["Sunrise"], {hue: 35, chroma: 0.2}, destination_root: destination.to_s)
           generator.destination_root = destination.to_s
 
           capture_io { generator.invoke_all }
@@ -29,7 +29,7 @@ module FlatPack
       test "supports :root brand overrides" do
         Dir.mktmpdir("flatpack-theme-generator") do |tmpdir|
           destination = Pathname.new(tmpdir)
-          generator = ThemeGenerator.new(["Acme"], { hue: 200, chroma: 0.15, as_root: true }, destination_root: destination.to_s)
+          generator = ThemeGenerator.new(["Acme"], {hue: 200, chroma: 0.15, as_root: true}, destination_root: destination.to_s)
           generator.destination_root = destination.to_s
 
           capture_io { generator.invoke_all }
