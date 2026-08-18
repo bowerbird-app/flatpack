@@ -13,6 +13,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.132] - 2026-08-18
+
+### Added
+- Added brand primitives `--brand-hue` and `--brand-chroma` so recoloring the library starts from two tokens.
+- Added `rails generate flat_pack:theme NAME` to scaffold a host-app brand override stylesheet.
+- Added `bin/rake flat_pack:audit_tokens` and `FlatPack::TokenAuditor` to fail when referenced CSS variables are missing from `variables.css`.
+- Added `--surface-subtle-background-color` and `--transition-*` aliases for `--duration-*`.
+- Install generator now links `flat_pack/application` alongside `variables` and `rich_text`.
+- Added `FlatPack::Tiptap::VERSION` as the single TipTap pin source for the gem importmap and install generator.
+- Added `scripts/regenerate_theme_tokens.py` to rebuild slim theme override blocks from a full token source.
+
+### Changed
+- Streamlined `variables.css`: component tokens map to semantic tokens once on `:root`; named themes (`dark`, `ocean`, `rounded`) only declare overrides (~2.3k → ~1.1k lines).
+- Install Tailwind scaffold now only injects `@source` for FlatPack components. Host apps no longer get a parallel `--color-fp-*` token fork.
+- Notification unread badges use `--color-danger-*` tokens instead of `bg-red-600`.
+- Bumped the gem version to `0.1.132`.
+
+### Fixed
+- TipTap CDN pins from the install generator no longer drift from the gem importmap version.
+- Missing subtle-surface and transition token aliases used by components/docs.
+
+### Upgrade notes
+- **Re-run `bin/rails generate flat_pack:install`** (or manually add `stylesheet_link_tag "flat_pack/application"` and refresh the Tailwind `@source`). Then run `bin/rails tailwindcss:build` and `bin/rake flat_pack:verify_install`.
+- **Remove host-app `--color-fp-*` / `:root` remaps** that the old install scaffold injected into your Tailwind entry. Tokens load from `flat_pack/variables`. Override with `--brand-hue` / `--brand-chroma` or `rails g flat_pack:theme …`.
+- **Custom themes:** prefer overriding brand/semantic tokens only. Re-copying the full component token list is no longer required for color changes.
+- TipTap pins created by an older install may still say `2.11.5`. Update `TIPTAP_VERSION` in `config/importmap.rb` to `FlatPack::Tiptap::VERSION` (`2.27.2`) or re-run install.
+
 ## [0.1.131] - 2026-08-18
 
 ### Added

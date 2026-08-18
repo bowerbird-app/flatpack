@@ -22,6 +22,7 @@ module FlatPack
 
           content = layout.read
           assert_equal 1, content.scan('stylesheet_link_tag "flat_pack/variables"').length
+          assert_equal 1, content.scan('stylesheet_link_tag "flat_pack/application"').length
           assert_equal 1, content.scan('stylesheet_link_tag "flat_pack/rich_text"').length
         end
       end
@@ -31,6 +32,7 @@ module FlatPack
           generator = build_generator
           output = capture_io { generator.add_stylesheet_import }.first
           assert_includes output, "flat_pack/variables"
+          assert_includes output, "flat_pack/application"
           assert_includes output, "flat_pack/rich_text"
         end
       end

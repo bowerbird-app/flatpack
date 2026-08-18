@@ -2,44 +2,75 @@
 
 FlatPack uses CSS variables for theming, allowing you to customize the appearance without modifying component code.
 
-If you want a complete copy-pasteable custom theme with every current FlatPack variable, use the [Custom Theming Guide](custom_theming.md).
+## Token hierarchy
+
+```text
+Brand primitives (--brand-hue, --brand-chroma)
+    ↓
+Semantic tokens (--color-*, --surface-*, --radius-*, --shadow-*, --duration-*)
+    ↓
+Component tokens (--button-*, --sidebar-*, …) — defined once as var(--semantic)
+    ↓
+Components / Stimulus
+```
+
+Named themes (`[data-theme="dark"]`, `ocean`, `rounded`, or your own) should override **brand/semantic** tokens. Component tokens inherit automatically.
+
+If you want a complete copy-pasteable custom theme with every current FlatPack variable, use the [Custom Theming Guide](custom_theming.md). Prefer the brand-kit path below for most apps.
+
+## Fastest path: change the brand color
+
+```bash
+bin/rails generate flat_pack:theme Sunrise --hue=35 --chroma=0.2
+```
+
+That writes `app/assets/stylesheets/flat_pack_theme_sunrise.css`. Load it after `flat_pack/variables`, then set `<html data-theme="sunrise">` (or use the `flat-pack--theme` controller).
+
+Or override primitives directly:
+
+```css
+:root {
+  --brand-hue: 160;
+  --brand-chroma: 0.18;
+}
+```
+
+`--color-primary`, surfaces, and component aliases that reference them all follow.
 
 ## Overview
 
 FlatPack's theming system is built on:
-- Tailwind CSS 4's `@theme` directive
+- Tailwind CSS 4's `@theme` directive (token inventory for utilities)
 - CSS custom properties (variables)
 - OKLCH color space for perceptual uniformity
-- Default `:root` variables plus optional `data-theme` variant overrides
+- Default `:root` wiring plus slim `data-theme` overrides
 
 ## Basic Customization
 
-FlatPack variables are loaded automatically via `stylesheet_link_tag` in your layout (added by the install generator). To override them, add a `:root` block to your `application.css`:
+FlatPack variables are loaded via `stylesheet_link_tag` in your layout (added by the install generator). Prefer brand primitives; override semantics only when needed:
 
 ```css
 /* app/assets/stylesheets/application.css */
 
-/* Your custom theme */
 :root {
-  --color-primary: oklch(0.55 0.25 270); /* Purple */
-  --color-primary-hover: oklch(0.45 0.28 270);
+  --brand-hue: 270;
+  --brand-chroma: 0.22;
+  /* Optional fine-tuning */
+  --color-primary-text: oklch(1 0 0);
 }
 ```
 
-For a named host-app variant such as `[data-theme="sunrise"]`, including a complete starter template you can rename, see the [Custom Theming Guide](custom_theming.md).
+For a named host-app variant such as `[data-theme="sunrise"]`, see the theme generator or the [Custom Theming Guide](custom_theming.md).
 
 ## Available Variables
 
-### Color Variables
-
-#### Brand Colors
+### Brand primitives
 ```css
---color-brand-50 through --color-brand-950
+--brand-hue
+--brand-chroma
 ```
 
-A complete scale of brand colors from lightest to darkest.
-
-#### Semantic Colors
+### Semantic Colors
 ```css
 --color-default
 --color-default-hover
@@ -73,11 +104,10 @@ A complete scale of brand colors from lightest to darkest.
 --color-danger-text-color
 --color-danger-border-color
 
-Default mapping: danger uses Tailwind red (`red-600` for base and `red-700` for hover).
-
 --surface-background-color
 --surface-page-background-color
 --surface-content-color
+--surface-subtle-background-color
 
 --surface-muted-background-color
 --surface-muted-content-color
@@ -117,25 +147,32 @@ Use stack gap tokens on parent layout containers (for example, form stacks) to c
 --shadow-lg
 ```
 
-### Transitions
+### Durations / transitions
 ```css
---transition-fast: 150ms
---transition-base: 200ms
---transition-slow: 300ms
+--duration-fast: 150ms
+--duration-base: 200ms
+--duration-slow: 300ms
+
+/* Aliases — prefer --duration-* in new code */
+--transition-fast: var(--duration-fast)
+--transition-base: var(--duration-base)
+--transition-slow: var(--duration-slow)
 ```
 
 ## Component Variable Usage
+
+Component tokens such as `--button-primary-background-color` map to semantic tokens (`var(--color-primary)`). You normally change `--brand-hue` or `--color-primary` instead of editing component tokens.
 
 ### Buttons
 - Colors: `--color-default-*`, `--color-primary-*`, `--color-secondary-*`, `--color-ghost-*`, `--color-success-*`, `--color-warning-*`
 - Radius: `--radius-md`
 - Shadow: `--shadow-sm`
-- Transition: `--transition-base`
+- Duration: `--duration-base`
 
 ### Input Components (Text, Email, Password, Phone, Search, URL, TextArea)
 - Colors: `--surface-content-color`, `--surface-background-color`, `--surface-muted-content-color`, `--surface-border-color`, `--color-ring`, `--color-warning-border`
 - Radius: `--radius-md`
-- Transition: `--transition-base`
+- Duration: `--duration-base`
 
 ### Checkbox
 - Colors: `--surface-background-color`, `--surface-border-color`, `--color-primary`, `--color-ring`
@@ -148,158 +185,15 @@ Use stack gap tokens on parent layout containers (for example, form stacks) to c
 - Dot size: `8px` by `8px`
 - Position: top-right (`top: 0`, `right: 0`) with `z-index: 999999999`
 - Color token: `--color-danger-background-color`
-- Example: `<svg class="fp-red-dot ...">...</svg>`
 
-### Table
-- Colors: `--surface-border-color`, `--surface-muted-background-color`
-- Radius: `--radius-lg`
-- Transition: `--transition-fast`
+## Dark mode and named themes
 
-### Button Group & Segmented Buttons
-- Inherits from button variables
-- Shadow: `--shadow-sm`
-- Radius: `--radius-md`
+See [Dark Mode](dark_mode.md). Built-in variants (`dark`, `ocean`, `rounded`) only override tokens that differ from `:root`. Component aliases stay on `:root` and inherit.
 
-## Complete Theme Example
+## Auditing tokens
 
-```css
-@theme {
-  /* Brand Colors - Custom Purple Theme */
-  --color-brand-500: oklch(0.65 0.25 270);
-  --color-brand-600: oklch(0.55 0.25 270);
-  --color-brand-700: oklch(0.45 0.28 270);
-  
-  /* Semantic Colors */
-  --color-primary: var(--color-brand-600);
-  --color-primary-hover: var(--color-brand-700);
-  
-  /* Custom border radius for rounded look */
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  
-  /* Faster transitions */
-  --transition-base: 150ms;
-}
+```bash
+bin/rake flat_pack:audit_tokens
 ```
 
-## Theme Variants
-
-FlatPack ships a default light palette and can be customized per variant by overriding variables under `data-theme` selectors:
-
-```css
-[data-theme="dark"] {
-  --color-primary: oklch(0.65 0.25 270);
-  --color-primary-hover: oklch(0.75 0.22 270);
-  /* Adjust other colors for the dark variant */
-}
-```
-
-If you use the optional theme controller, `system` mode maps the current OS preference to either the default light palette or `data-theme="dark"`.
-
-See the [Custom Theming Guide](custom_theming.md) for a complete starter block and the [Dark Mode Guide](dark_mode.md) for runtime switching details.
-
-## Using OKLCH Colors
-
-FlatPack uses OKLCH color space for better perceptual uniformity:
-
-```
-oklch(L C H)
-  L = Lightness (0-1)
-  C = Chroma (0-0.4)
-  H = Hue (0-360)
-```
-
-### Examples:
-```css
-/* Blue */
-oklch(0.62 0.22 250)
-
-/* Green */
-oklch(0.62 0.22 150)
-
-/* Red */
-oklch(0.62 0.22 30)
-
-/* Purple */
-oklch(0.62 0.22 300)
-```
-
-### Benefits:
-- Perceptually uniform lightness
-- Consistent chroma across hues
-- Better than HSL for theming
-- Wider color gamut
-
-## Theme Presets
-
-### Corporate Theme
-```css
-@theme {
-  --color-primary: oklch(0.45 0.15 230); /* Navy blue */
-  --color-secondary: oklch(0.85 0.05 230);
-  --radius-md: 0.25rem; /* Sharp corners */
-}
-```
-
-### Playful Theme
-```css
-@theme {
-  --color-primary: oklch(0.65 0.30 330); /* Hot pink */
-  --color-secondary: oklch(0.75 0.25 60); /* Yellow */
-  --radius-md: 0.75rem; /* Very rounded */
-}
-```
-
-### Minimal Theme
-```css
-@theme {
-  --color-primary: oklch(0.20 0.02 250); /* Near black */
-  --color-secondary: oklch(0.95 0.01 250); /* Near white */
-  --radius-md: 0rem; /* No rounding */
-}
-```
-
-## Component-Specific Customization
-
-Some components can be customized via the `class` system argument:
-
-```erb
-<%= render FlatPack::Button::Component.new(
-  text: "Custom",
-  class: "!bg-gradient-to-r from-purple-500 to-pink-500"
-) %>
-```
-
-The `!` prefix ensures your classes override component defaults (via TailwindMerge).
-
-## Best Practices
-
-1. **Define variables, don't override classes** - Use CSS variables instead of overriding Tailwind classes
-2. **Test in both light and dark mode** - Ensure your theme works in both
-3. **Maintain contrast ratios** - Ensure accessibility (WCAG AA: 4.5:1 for text)
-4. **Use the full color scale** - Define all brand colors (50-950) for consistency
-5. **Keep semantic colors semantic** - Don't use `--color-primary` for errors
-
-## Tools
-
-- [OKLCH Color Picker](https://oklch.com/)
-- [Contrast Checker](https://webaim.org/resources/contrastchecker/)
-- [Color Scale Generator](https://uicolors.app/create)
-
-## Troubleshooting
-
-### Colors not applying
-- Ensure your `application.css` is linked in the layout **after** the FlatPack stylesheet link tags so overrides take precedence
-- Restart your Rails server
-- Clear your browser cache
-
-### Dark mode not working
-- Check whether `<html>` has the expected `data-theme` value
-- If you use the theme controller, inspect `localStorage.getItem("flatpack-theme")`
-- See [Dark Mode Guide](dark_mode.md)
-
-## Next Steps
-
-- [Dark Mode Guide](dark_mode.md)
-- [Component Documentation](components/)
-- [Architecture: Tailwind 4](architecture/tailwind_4.md)
+Fails if any `var(--*)` / Tailwind `bg-(--*)` reference in the gem is missing from `variables.css`.

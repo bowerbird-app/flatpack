@@ -2,6 +2,7 @@
 
 require "rails/generators/base"
 require "pathname"
+require "fileutils"
 
 module FlatPack
   module Generators
@@ -15,20 +16,21 @@ module FlatPack
 
         if File.exist?(layout_path)
           layout_content = File.read(layout_path)
-          vars_tag = '<%= stylesheet_link_tag "flat_pack/variables", "data-turbo-track": "reload" %>'
-          rich_tag = '<%= stylesheet_link_tag "flat_pack/rich_text", "data-turbo-track": "reload" %>'
+          stylesheet_tags = [
+            '<%= stylesheet_link_tag "flat_pack/variables", "data-turbo-track": "reload" %>',
+            '<%= stylesheet_link_tag "flat_pack/application", "data-turbo-track": "reload" %>',
+            '<%= stylesheet_link_tag "flat_pack/rich_text", "data-turbo-track": "reload" %>'
+          ]
 
           added = false
 
-          unless layout_content.include?("flat_pack/variables")
-            inject_into_file layout_path, "    #{vars_tag}\n", before: "</head>"
-            say "✓ Added flat_pack/variables stylesheet link to application layout", :green
-            added = true
-          end
+          stylesheet_tags.each do |tag|
+            asset_name = tag[/flat_pack\/[a-z_]+/]
+            next if layout_content.include?(asset_name)
 
-          unless layout_content.include?("flat_pack/rich_text")
-            inject_into_file layout_path, "    #{rich_tag}\n", before: "</head>"
-            say "✓ Added flat_pack/rich_text stylesheet link to application layout", :green
+            inject_into_file layout_path, "    #{tag}\n", before: "</head>"
+            say "✓ Added #{asset_name} stylesheet link to application layout", :green
+            layout_content = File.read(layout_path)
             added = true
           end
 
@@ -37,6 +39,7 @@ module FlatPack
           say "✗ Could not find app/views/layouts/application.html.erb", :red
           say "  Please manually add to your layout's <head>:", :yellow
           say '    <%= stylesheet_link_tag "flat_pack/variables", "data-turbo-track": "reload" %>', :cyan
+          say '    <%= stylesheet_link_tag "flat_pack/application", "data-turbo-track": "reload" %>', :cyan
           say '    <%= stylesheet_link_tag "flat_pack/rich_text", "data-turbo-track": "reload" %>', :cyan
         end
       end
@@ -205,9 +208,9 @@ module FlatPack
 
           say "\n✓ Configured Tailwind CSS 4 for FlatPack", :green
           say "  - Added @source directive: #{relative_path}", :green
-          say "  - Added @theme block with FlatPack design tokens", :green
-          say "  - Added :root mappings for component compatibility", :green
+          say "  - Tokens load from flat_pack/variables (no host-app --color-fp-* fork)", :green
           say "\n  File updated: #{tailwind_file.relative_path_from(Rails.root)}", :cyan
+          write_tailwind_source_helper
         else
           say "\n✗ Could not find @import \"tailwindcss\" in #{tailwind_file.relative_path_from(Rails.root)}", :red
           show_manual_tailwind_instructions
@@ -215,30 +218,44 @@ module FlatPack
       end
 
       def get_gem_path
-        # Try using Bundler to get the gem path
+        if defined?(FlatPack::Engine)
+          return FlatPack::Engine.root.join("app/components")
+        end
+
         begin
           gem_spec = Gem::Specification.find_by_name("flat_pack")
           return Pathname.new(gem_spec.gem_dir).join("app/components")
         rescue Gem::MissingSpecError
-          # Gem not found in standard location, try bundler
           begin
             require "bundler"
-            bundle_path = Bundler.bundle_path
-
-            # Look for the gem in bundler's path
-            flat_pack_dirs = Dir.glob(bundle_path.join("**/flat_pack-*").to_s)
-
-            if flat_pack_dirs.any?
-              # Get the first match (should only be one)
-              gem_dir = Pathname.new(flat_pack_dirs.first)
-              return gem_dir.join("app/components")
-            end
+            flat_pack_dirs = Dir.glob(Bundler.bundle_path.join("**/flat_pack-*").to_s)
+            return Pathname.new(flat_pack_dirs.first).join("app/components") if flat_pack_dirs.any?
           rescue => e
             say "  Debug: Error finding gem path: #{e.message}", :red if ENV["DEBUG"]
           end
         end
 
         nil
+      end
+
+      # Writes a tiny rake note file hosts can use to refresh @source after gem path changes.
+      def write_tailwind_source_helper
+        helper_path = Rails.root.join("lib/tasks/flat_pack_tailwind.rake")
+        return if helper_path.exist?
+
+        FileUtils.mkdir_p(helper_path.dirname)
+        helper_path.write(<<~RUBY)
+          # frozen_string_literal: true
+
+          namespace :flat_pack do
+            desc "Print the FlatPack components path for Tailwind @source"
+            task tailwind_source: :environment do
+              puts FlatPack::Engine.root.join("app/components")
+            end
+          end
+        RUBY
+
+        say "✓ Added lib/tasks/flat_pack_tailwind.rake (prints Engine.root components path)", :green
       end
 
       def calculate_relative_path(from_file, to_path)
@@ -255,20 +272,14 @@ module FlatPack
         say "\n" + "=" * 70, :cyan
         say "Manual Tailwind CSS 4 Configuration Required", :yellow
         say "=" * 70, :cyan
-        say "\nTo enable Tailwind CSS 4 to scan FlatPack components:"
-        say "\n1. Find your FlatPack gem path:"
-        say "   bundle show flat_pack\n"
-        say "\n2. Add this configuration to your Tailwind CSS file"
-        say "   (typically app/assets/stylesheets/application.tailwind.css):\n"
-        say '   @source "../path/to/flat_pack/app/components";'
-        say "\n   @theme {"
-        say "     --color-fp-primary: oklch(0.52 0.26 250);"
-        say "     /* ... other FlatPack design tokens ... */"
-        say "   }"
-        say "\n   :root {"
-        say "     --color-primary: var(--color-fp-primary);"
-        say "     /* ... other mappings ... */"
-        say "   }\n"
+        say "\nAdd an @source pointing at FlatPack components:"
+        say "\n  bin/rails -e 'puts FlatPack::Engine.root.join(\"app/components\")'"
+        say "\nThen in your Tailwind CSS entry (application.tailwind.css):\n"
+        say '  @source "/absolute/or/relative/path/to/flat_pack/app/components";'
+        say "\nDo not redefine FlatPack color tokens in the host Tailwind file."
+        say "Load tokens via stylesheet_link_tag \"flat_pack/variables\" and override"
+        say "brand primitives in your app CSS:\n"
+        say "  :root { --brand-hue: 160; --brand-chroma: 0.18; }"
         say "\nFor complete configuration, see: docs/installation.md", :cyan
         say "=" * 70, :cyan
       end
@@ -290,8 +301,6 @@ module FlatPack
 
       # ── TipTap importmap helpers ───────────────────────────────────────────
 
-      TIPTAP_VERSION = "2.11.5"
-
       # CDN pins for all open-source TipTap packages used by FlatPack.
       # All packages are pinned from esm.sh at a consistent version so that
       # shared ProseMirror state is deduplicated via the browser module cache.
@@ -299,7 +308,7 @@ module FlatPack
       # Framework-specific wrappers (@tiptap-ui/react, @tiptap-ui/vue) are NOT
       # included — FlatPack uses the vanilla JS core extensions directly.
       def tiptap_cdn_pins_config
-        v = TIPTAP_VERSION
+        v = FlatPack::Tiptap::VERSION
         <<~RUBY
 
           # ── TipTap Rich Text Editor (built-in FlatPack support) ─────────────────
@@ -388,12 +397,13 @@ module FlatPack
         say "\n" + "=" * 70, :cyan
         say "Next Steps", :green
         say "=" * 70, :cyan
-        say "\n1. Restart your Rails server"
-        say "2. Rebuild Tailwind CSS (if needed):"
+        say "\n1. Rebuild Tailwind CSS (required):"
         say "   bin/rails tailwindcss:build"
-        say "\n3. Verify JavaScript controllers are working:"
-        say "   Check browser console for any controller loading errors"
-        say "\n4. Test FlatPack components in your views:"
+        say "\n2. Verify the install:"
+        say "   bin/rake flat_pack:verify_install"
+        say "\n3. Optional — scaffold a brand theme override:"
+        say "   bin/rails generate flat_pack:theme BrandName --hue=160"
+        say "\n4. Restart your Rails server and render a component:"
         say "   <%= render FlatPack::Button::Component.new("
         say "     label: 'Click me',"
         say "     scheme: :primary"

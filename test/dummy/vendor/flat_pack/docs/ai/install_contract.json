@@ -3,7 +3,7 @@
   "updated_at": "2026-08-18",
   "gem": {
     "name": "flat_pack",
-    "version": "0.1.131"
+    "version": "0.1.132"
   },
   "compatibility": {
     "ruby": ">= 3.2.0",
@@ -29,7 +29,8 @@
       "bin/rails generate flat_pack:install"
     ],
     "optional_commands": [
-      "bin/rails generate flat_pack:layout --type=sidebar"
+      "bin/rails generate flat_pack:layout --type=sidebar",
+      "bin/rails generate flat_pack:theme BrandName --hue=160"
     ],
     "verification_command": "bin/rake flat_pack:verify_install",
     "contract_command": "bin/rake flat_pack:contract"
@@ -43,6 +44,7 @@
         "description": "Application layout loads FlatPack stylesheets",
         "matches": [
           "stylesheet_link_tag \"flat_pack/variables\"",
+          "stylesheet_link_tag \"flat_pack/application\"",
           "stylesheet_link_tag \"flat_pack/rich_text\""
         ],
         "success_message": "Verified FlatPack stylesheet tags in app/views/layouts/application.html.erb"
@@ -80,12 +82,10 @@
           "app/assets/stylesheets/application.css",
           "app/assets/tailwind/application.css"
         ],
-        "description": "Tailwind CSS 4 scans FlatPack components and loads FlatPack design tokens",
+        "description": "Tailwind CSS 4 scans FlatPack components (tokens come from flat_pack/variables)",
         "matches": [
           "@source",
-          "app/components",
-          "--color-fp-primary",
-          "--color-primary: var(--color-fp-primary);"
+          "app/components"
         ],
         "success_message": "Verified FlatPack Tailwind CSS 4 wiring"
       }

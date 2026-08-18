@@ -32,8 +32,8 @@ pin "apexcharts", to: "https://cdn.jsdelivr.net/npm/apexcharts@3.45.1/dist/apexc
 # React/Vue wrappers are not applicable to a Rails + Stimulus integration.
 
 # Version must match what esm.sh resolves for internal ^range imports.
-# To find the correct value: curl -s 'https://esm.sh/@tiptap/core@^2.x.x' | head -1
-TIPTAP_VERSION = "2.27.2" unless defined?(TIPTAP_VERSION)
+# Single source: FlatPack::Tiptap::VERSION
+TIPTAP_VERSION = FlatPack::Tiptap::VERSION unless defined?(TIPTAP_VERSION)
 
 # Core
 pin "@tiptap/core", to: "https://esm.sh/@tiptap/core@#{TIPTAP_VERSION}"

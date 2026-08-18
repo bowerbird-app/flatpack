@@ -271,7 +271,7 @@ module FlatPack
         content_tag(
           :span,
           rollup_counter_text(count),
-          class: "fp-rollup-counter-badge absolute -right-1 -top-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-semibold leading-none text-white ring-2 ring-[var(--surface-background-color)]",
+          class: "fp-rollup-counter-badge absolute -right-1 -top-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--color-danger-background-color)] px-1 text-[10px] font-semibold leading-none text-[var(--color-danger-text-color)] ring-2 ring-[var(--surface-background-color)]",
           aria: {hidden: "true"}
         )
       end
@@ -385,8 +385,8 @@ module FlatPack
         merge_class_names(
           "absolute -right-1 -top-1",
           "inline-flex h-5 min-w-5 items-center justify-center",
-          "rounded-full bg-red-600 px-1",
-          "text-xs font-semibold leading-none text-white",
+          "rounded-full bg-[var(--color-danger-background-color)] px-1",
+          "text-xs font-semibold leading-none text-[var(--color-danger-text-color)]",
           "ring-2 ring-[var(--surface-background-color)]"
         )
       end

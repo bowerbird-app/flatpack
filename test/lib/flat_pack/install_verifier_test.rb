@@ -17,6 +17,7 @@ module FlatPack
           <html>
             <head>
               <%= stylesheet_link_tag "flat_pack/variables", "data-turbo-track": "reload" %>
+              <%= stylesheet_link_tag "flat_pack/application", "data-turbo-track": "reload" %>
               <%= stylesheet_link_tag "flat_pack/rich_text", "data-turbo-track": "reload" %>
             </head>
           </html>
@@ -36,15 +37,7 @@ module FlatPack
         write_file(root, "app/assets/stylesheets/application.tailwind.css", <<~CSS)
           @import "tailwindcss";
 
-          @source "../../../bundle/ruby/3.2.0/gems/flat_pack-0.1.23/app/components";
-
-          @theme {
-            --color-fp-primary: oklch(0.52 0.26 250);
-          }
-
-          :root {
-            --color-primary: var(--color-fp-primary);
-          }
+          @source "../../../bundle/ruby/3.2.0/gems/flat_pack-0.1.132/app/components";
         CSS
 
         result = FlatPack::InstallVerifier.new(rails_root: root, contract: @contract).call
