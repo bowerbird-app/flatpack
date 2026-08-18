@@ -1,0 +1,569 @@
+<%#
+  Controller: charts_composition action needs the same filter ivars as pages#charts:
+  @chart_filter_period, @chart_filter_compare, @chart_filter_series,
+  @chart_filter_subtitle, @chart_filter_categories
+  (from chart_filter_sets + params[:period] and params[:compare])
+%>
+
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Chart Composition",
+  subtitle: "Slots, filter controls, layouts, and card-free chart patterns."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :chart %>
+
+<%
+  erb_open = "<" + "%"
+  erb_output_open = "<" + "%="
+  erb_tag_close = "%" + ">"
+%>
+
+<!-- Chart with Slot -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Chart with Slot", anchor_link: true, subtitle: "Examples for Chart with Slot.") %>
+  <%= render FlatPack::Chart::Component.new(
+    type: :line,
+    series: [{name: "Users", data: [10, 25, 42, 68, 95, 130, 178, 220]}],
+    title: "User Growth",
+    subtitle: "Last 8 months",
+    height: 300
+  ) do |chart| %>
+    <% chart.top_right_slot do %>
+      <%= render FlatPack::Button::Component.new(text: "Export", style: :ghost, size: :sm) %>
+      <%= render FlatPack::Button::Component.new(text: "Share", style: :secondary, size: :sm) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Chart::Component.new(
+        type: :line,
+        series: [{name: "Users", data: [10, 25, 42, 68, 95, 130, 178, 220]}],
+        title: "User Growth",
+        subtitle: "Last 8 months",
+        height: 300
+      ) do |chart| #{erb_tag_close}
+        #{erb_output_open} chart.top_right_slot do #{erb_tag_close}
+          #{erb_output_open} render FlatPack::Button::Component.new(text: "Export", style: :ghost, size: :sm) #{erb_tag_close}
+          #{erb_output_open} render FlatPack::Button::Component.new(text: "Share", style: :secondary, size: :sm) #{erb_tag_close}
+        #{erb_open} end #{erb_tag_close}
+      #{erb_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<!-- Chart with Generic Filter Controls -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Chart with Generic Filter Controls", anchor_link: true, subtitle: "Examples for Chart with Generic Filter Controls.") %>
+  <p class="text-(--surface-muted-content-color) mb-4">
+    Use <code>FlatPack::ChartButtons::Component</code> as a sibling control surface for any chart filter UI.
+  </p>
+
+  <%= turbo_frame_tag "chart-period-filter" do %>
+    <% compare_value = @chart_filter_compare ? "1" : "0" %>
+
+    <%= render FlatPack::ChartButtons::Component.new(turbo_frame: "chart-period-filter") do |controls| %>
+      <% controls.button(
+        text: "Day",
+        href: demo_charts_composition_path(period: "day", compare: compare_value),
+        selected: @chart_filter_period == "day"
+      ) %>
+
+      <% controls.button(
+        text: "Month",
+        href: demo_charts_composition_path(period: "month", compare: compare_value),
+        selected: @chart_filter_period == "month"
+      ) %>
+
+      <% controls.dropdown(
+        text: "Range",
+        style: :ghost,
+        options: [
+          {text: "Day", url: demo_charts_composition_path(period: "day", compare: compare_value), selected: @chart_filter_period == "day"},
+          {text: "Week", url: demo_charts_composition_path(period: "week", compare: compare_value), selected: @chart_filter_period == "week"},
+          {text: "Month", url: demo_charts_composition_path(period: "month", compare: compare_value), selected: @chart_filter_period == "month"},
+          {text: "Year", url: demo_charts_composition_path(period: "year", compare: compare_value), selected: @chart_filter_period == "year"}
+        ]
+      ) %>
+
+      <% controls.checkbox(
+        name: "compare",
+        label: "Compare baseline",
+        checked: @chart_filter_compare,
+        url: demo_charts_composition_path(period: @chart_filter_period)
+      ) %>
+
+      <% controls.control do %>
+        <%= render FlatPack::Button::Component.new(
+          text: "Reset",
+          style: :ghost,
+          size: :sm,
+          href: demo_charts_composition_path(period: "day", compare: "0"),
+          data: {
+            turbo_frame: "chart-period-filter",
+            turbo_prefetch: false
+          }
+        ) %>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::Chart::Component.new(
+      type: :line,
+      series: @chart_filter_series,
+      title: "User Activity",
+      subtitle: @chart_filter_subtitle,
+      height: 300,
+      options: {
+        xaxis: {
+          categories: @chart_filter_categories
+        }
+      }
+    ) %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_open}%
+        period = %w[day week month year].include?(params[:period]) ? params[:period] : "day"
+        compare = params[:compare] == "1"
+
+        filter_sets = {
+          "day" => {categories: %w[Mon Tue Wed Thu Fri Sat Sun], users: [42, 58, 50, 73, 88, 95, 90], baseline: [36, 49, 44, 64, 79, 87, 84]},
+          "week" => {categories: %w[W1 W2 W3 W4 W5 W6 W7 W8], users: [210, 245, 278, 301, 330, 360, 390, 420], baseline: [198, 226, 253, 281, 305, 331, 357, 388]},
+          "month" => {categories: %w[Jan Feb Mar Apr May Jun Jul Aug], users: [320, 410, 460, 520, 610, 680, 760, 830], baseline: [305, 380, 433, 491, 567, 634, 711, 780]},
+          "year" => {categories: %w[2019 2020 2021 2022 2023 2024 2025 2026], users: [1200, 1360, 1490, 1640, 1800, 1970, 2150, 2360], baseline: [1110, 1265, 1388, 1535, 1674, 1840, 2006, 2192]}
+        }
+
+        selected = filter_sets.fetch(period)
+        categories = selected[:categories]
+        series = [{name: "Users", data: selected[:users]}]
+        series << {name: "Baseline", data: selected[:baseline]} if compare
+
+        compare_value = compare ? "1" : "0"
+        subtitle = period.capitalize + " view"
+        subtitle += " + baseline" if compare
+      %#{erb_tag_close}
+
+      #{erb_output_open} turbo_frame_tag "chart-period-filter" do #{erb_tag_close}
+        #{erb_output_open} render FlatPack::ChartButtons::Component.new(turbo_frame: "chart-period-filter") do |controls| #{erb_tag_close}
+          #{erb_open}% controls.button(text: "Day", href: demo_charts_composition_path(period: "day", compare: compare_value), selected: period == "day") %#{erb_tag_close}
+          #{erb_open}% controls.dropdown(text: "Range", options: [
+            {text: "Day", url: demo_charts_composition_path(period: "day", compare: compare_value), selected: period == "day"},
+            {text: "Week", url: demo_charts_composition_path(period: "week", compare: compare_value), selected: period == "week"},
+            {text: "Month", url: demo_charts_composition_path(period: "month", compare: compare_value), selected: period == "month"},
+            {text: "Year", url: demo_charts_composition_path(period: "year", compare: compare_value), selected: period == "year"}
+          ]) %#{erb_tag_close}
+          #{erb_open}% controls.checkbox(name: "compare", label: "Compare baseline", checked: compare, url: demo_charts_composition_path(period: period)) %#{erb_tag_close}
+        #{erb_open} end #{erb_tag_close}
+
+        #{erb_output_open} render FlatPack::Chart::Component.new(
+          type: :line,
+          series: series,
+          title: "User Activity",
+          subtitle: subtitle,
+          height: 300,
+          options: {xaxis: {categories: categories}}
+        ) #{erb_tag_close}
+      #{erb_open} end #{erb_tag_close}
+    CODE
+  ) %>
+
+  <div class="mb-8 rounded-md border border-(--surface-border-color) bg-(--surface-muted-background-color) p-4">
+    <h3 class="text-base font-semibold text-(--surface-content-color)">Default Chart Filter Component</h3>
+    <p class="mt-1 text-sm text-(--surface-muted-content-color)">
+      This demo moved to a dedicated page under Charts in the sidebar.
+    </p>
+    <div class="mt-3">
+      <%= render FlatPack::Button::Component.new(
+        text: "Open Default Chart Filter Demo",
+        style: :secondary,
+        size: :sm,
+        href: demo_charts_default_filter_path
+      ) %>
+    </div>
+  </div>
+</section>
+
+<!-- Chart without Card -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Chart without Card Wrapper", anchor_link: true, subtitle: "Examples for Chart without Card Wrapper.") %>
+  <p class="text-(--surface-muted-content-color) mb-4">
+    Set <code>card: false</code> to render the chart without a card wrapper.
+  </p>
+  <%= render FlatPack::Chart::Component.new(
+    type: :column,
+    series: [{name: "Traffic", data: [12, 19, 3, 5, 2, 3]}],
+    card: false,
+    height: 250
+  ) %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Chart::Component.new(
+        type: :column,
+        series: [{name: "Traffic", data: [12, 19, 3, 5, 2, 3]}],
+        card: false,
+        height: 250
+      ) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<!-- Mini Charts in Table Column -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Mini Chart in Table Row",
+    anchor_link: true,
+    subtitle: "Render sparkline activity charts in a table column for repository-like rows."
+  ) %>
+  <p class="text-(--surface-muted-content-color) mb-4">
+    This pattern mirrors repository activity rows by combining <code>FlatPack::Table::Component</code> and
+    compact <code>FlatPack::Chart::Component</code> instances with <code>card: false</code>.
+  </p>
+
+  <%= render FlatPack::Table::Component.new(data: @chart_repo_activity_rows) do |table| %>
+    <% table.column(title: "Repository", html: ->(row) {
+      content_tag(:div, class: "min-w-[220px]") do
+        safe_join([
+          content_tag(:div, row[:name], class: "font-medium text-[var(--surface-content-color)]"),
+          content_tag(:div, row[:description], class: "text-xs text-(--surface-muted-content-color) mt-1"),
+          content_tag(:div, class: "mt-2") do
+            render FlatPack::Badge::Component.new(text: row[:language], style: :default, size: :sm)
+          end
+        ])
+      end
+    }) %>
+
+    <% table.column(title: "Commits (7d)", html: ->(row) {
+      content_tag(:span, row[:commits_7d], class: "font-medium")
+    }) %>
+
+    <% table.column(title: "Activity", html: ->(row) {
+      color = "var(--color-primary)"
+      content_tag(:div, class: "w-[104px] min-w-[104px]") do
+        render FlatPack::Chart::Component.new(
+          type: :area,
+          series: [{name: "Commits", data: row[:activity]}],
+          card: false,
+          height: 56,
+          class: "w-full",
+          options: {
+            chart: {
+              sparkline: {enabled: true}
+            },
+            colors: [color],
+            stroke: {
+              curve: "smooth",
+              width: 2
+            },
+            fill: {
+              type: "gradient",
+              gradient: {
+                shade: "light",
+                shadeIntensity: 0,
+                inverseColors: false,
+                gradientToColors: [color],
+                opacityFrom: 0.45,
+                opacityTo: 0.05,
+                stops: [0, 90, 100]
+              }
+            },
+            markers: {
+              size: 0
+            },
+            tooltip: {
+              enabled: false
+            },
+            grid: {
+              show: false
+            },
+            xaxis: {
+              labels: {show: false},
+              axisBorder: {show: false},
+              axisTicks: {show: false}
+            },
+            yaxis: {
+              show: false
+            }
+          }
+        )
+      end
+    }) %>
+
+    <% table.column(title: "Review Load", html: ->(row) {
+      color = "var(--color-primary)"
+      content_tag(:div, class: "w-[104px] min-w-[104px]") do
+        render FlatPack::Chart::Component.new(
+          type: :column,
+          series: [{name: "Review Load", data: row[:review_load]}],
+          card: false,
+          height: 56,
+          class: "w-full",
+          options: {
+            chart: {
+              sparkline: {enabled: true}
+            },
+            colors: [color],
+            plotOptions: {
+              bar: {
+                columnWidth: "55%",
+                borderRadius: 3
+              }
+            },
+            tooltip: {
+              enabled: false
+            },
+            grid: {
+              show: false
+            },
+            xaxis: {
+              labels: {show: false},
+              axisBorder: {show: false},
+              axisTicks: {show: false}
+            },
+            yaxis: {
+              show: false
+            }
+          }
+        )
+      end
+    }) %>
+
+    <% table.column(title: "Queue Mix", html: ->(row) {
+      color = "var(--color-primary)"
+      content_tag(:div, class: "w-[120px] min-w-[120px]") do
+        render FlatPack::Chart::Component.new(
+          type: :bar,
+          series: [{name: "Queue Mix", data: row[:queue_mix]}],
+          card: false,
+          height: 56,
+          class: "w-full",
+          options: {
+            chart: {
+              sparkline: {enabled: true}
+            },
+            colors: [color],
+            plotOptions: {
+              bar: {
+                barHeight: "55%",
+                borderRadius: 3
+              }
+            },
+            tooltip: {
+              enabled: false
+            },
+            grid: {
+              show: false
+            },
+            xaxis: {
+              labels: {show: false},
+              axisBorder: {show: false},
+              axisTicks: {show: false}
+            },
+            yaxis: {
+              show: false
+            }
+          }
+        )
+      end
+    }) %>
+
+    <% table.column(title: "Open PRs", html: ->(row) { row[:prs_open] }) %>
+
+    <% table.column(title: "Trend", html: ->(row) {
+      trend_class = row[:trend_up] ? "text-green-700" : "text-red-700"
+      content_tag(:span, row[:trend_label], class: "font-medium #{trend_class}")
+    }) %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_open}%
+        rows = [
+          {name: "flat-pack", language: "Ruby", commits_7d: 34, prs_open: 5, trend_label: "+14%", trend_up: true, activity: [2, 3, 1, 4, 6, 5, 7], review_load: [3, 5, 4, 7, 6, 8, 5], queue_mix: [8, 5, 3, 6]},
+          {name: "docs-site", language: "Markdown", commits_7d: 11, prs_open: 1, trend_label: "-4%", trend_up: false, activity: [4, 5, 4, 4, 3, 2, 1], review_load: [6, 5, 7, 6, 5, 4, 3], queue_mix: [3, 6, 4, 2]}
+        ]
+      %#{erb_tag_close}
+
+      #{erb_output_open} render FlatPack::Table::Component.new(data: rows) do |table| #{erb_tag_close}
+        #{erb_open}% table.column(title: "Repository", html: ->(row) { row[:name] }) %#{erb_tag_close}
+        #{erb_open}% table.column(title: "Commits (7d)", html: ->(row) { row[:commits_7d] }) %#{erb_tag_close}
+        #{erb_open}% table.column(title: "Activity", html: ->(row) {
+          color = "var(--color-primary)"
+          render FlatPack::Chart::Component.new(
+            type: :area,
+            series: [{name: "Commits", data: row[:activity]}],
+            card: false,
+            height: 56,
+            options: {
+              chart: {sparkline: {enabled: true}},
+              colors: [color],
+              stroke: {curve: "smooth", width: 2},
+              fill: {
+                type: "gradient",
+                gradient: {
+                  shade: "light",
+                  shadeIntensity: 0,
+                  inverseColors: false,
+                  gradientToColors: [color],
+                  opacityFrom: 0.45,
+                  opacityTo: 0.05,
+                  stops: [0, 90, 100]
+                }
+              },
+              markers: {size: 0},
+              tooltip: {enabled: false},
+              grid: {show: false},
+              xaxis: {labels: {show: false}, axisBorder: {show: false}, axisTicks: {show: false}},
+              yaxis: {show: false}
+            }
+          )
+        }) %#{erb_tag_close}
+        #{erb_open}% table.column(title: "Review Load", html: ->(row) {
+          color = "var(--color-primary)"
+          render FlatPack::Chart::Component.new(
+            type: :column,
+            series: [{name: "Review Load", data: row[:review_load]}],
+            card: false,
+            height: 56,
+            options: {
+              chart: {sparkline: {enabled: true}},
+              colors: [color],
+              plotOptions: {bar: {columnWidth: "55%", borderRadius: 3}},
+              tooltip: {enabled: false},
+              grid: {show: false},
+              xaxis: {labels: {show: false}, axisBorder: {show: false}, axisTicks: {show: false}},
+              yaxis: {show: false}
+            }
+          )
+        }) %#{erb_tag_close}
+        #{erb_open}% table.column(title: "Queue Mix", html: ->(row) {
+          color = "var(--color-primary)"
+          render FlatPack::Chart::Component.new(
+            type: :bar,
+            series: [{name: "Queue Mix", data: row[:queue_mix]}],
+            card: false,
+            height: 56,
+            options: {
+              chart: {sparkline: {enabled: true}},
+              colors: [color],
+              plotOptions: {bar: {barHeight: "55%", borderRadius: 3}},
+              tooltip: {enabled: false},
+              grid: {show: false},
+              xaxis: {labels: {show: false}, axisBorder: {show: false}, axisTicks: {show: false}},
+              yaxis: {show: false}
+            }
+          )
+        }) %#{erb_tag_close}
+        #{erb_open}% table.column(title: "Open PRs", html: ->(row) { row[:prs_open] }) %#{erb_tag_close}
+        #{erb_open}% table.column(title: "Trend", html: ->(row) { row[:trend_label] }) %#{erb_tag_close}
+      #{erb_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<!-- Multiple Charts in Grid -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Multiple Charts in Grid", anchor_link: true, subtitle: "Examples for Multiple Charts in Grid.") %>
+  <%= render FlatPack::Grid::Component.new(cols: 2) do %>
+    <%= render FlatPack::Chart::Component.new(
+      type: :line,
+      series: [{name: "Visits", data: [30, 40, 35, 50, 49, 60, 70, 91]}],
+      title: "Website Visits",
+      height: 250
+    ) %>
+    
+    <%= render FlatPack::Chart::Component.new(
+      type: :column,
+      series: [{name: "Conversions", data: [5, 8, 6, 10, 9, 12, 15, 18]}],
+      title: "Conversions",
+      height: 250
+    ) %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Grid::Component.new(cols: 2) do #{erb_tag_close}
+        #{erb_output_open} render FlatPack::Chart::Component.new(
+          type: :line,
+          series: [{name: "Visits", data: [30, 40, 35, 50, 49, 60, 70, 91]}],
+          title: "Website Visits",
+          height: 250
+        ) #{erb_tag_close}
+
+        #{erb_output_open} render FlatPack::Chart::Component.new(
+          type: :column,
+          series: [{name: "Conversions", data: [5, 8, 6, 10, 9, 12, 15, 18]}],
+          title: "Conversions",
+          height: 250
+        ) #{erb_tag_close}
+      #{erb_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<!-- Chart with Footer -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Chart with Footer", anchor_link: true, subtitle: "Examples for Chart with Footer.") %>
+  <%= render FlatPack::Chart::Component.new(
+    type: :area,
+    series: [{name: "Revenue", data: [10, 20, 15, 30, 25, 40, 35, 50]}],
+    title: "Revenue Trend",
+    height: 300
+  ) do |chart| %>
+    <% chart.footer do %>
+      <div class="flex items-center justify-between text-sm">
+        <div class="flex items-center gap-4">
+          <div>
+            <span class="text-(--surface-muted-content-color)">Total:</span>
+            <span class="font-semibold ml-1">$225K</span>
+          </div>
+          <div>
+            <span class="text-(--surface-muted-content-color)">Avg:</span>
+            <span class="font-semibold ml-1">$28.1K</span>
+          </div>
+        </div>
+        <span class="text-green-600 font-semibold">+12.5% vs last period</span>
+      </div>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Chart::Component.new(
+        type: :area,
+        series: [{name: "Revenue", data: [10, 20, 15, 30, 25, 40, 35, 50]}],
+        title: "Revenue Trend",
+        height: 300
+      ) do |chart| #{erb_tag_close}
+        #{erb_output_open} chart.footer do #{erb_tag_close}
+          <div class="flex items-center justify-between text-sm">
+            <div class="flex items-center gap-4">
+              <div>
+                <span class="text-(--surface-muted-content-color)">Total:</span>
+                <span class="font-semibold ml-1">$225K</span>
+              </div>
+              <div>
+                <span class="text-(--surface-muted-content-color)">Avg:</span>
+                <span class="font-semibold ml-1">$28.1K</span>
+              </div>
+            </div>
+            <span class="text-green-600 font-semibold">+12.5% vs last period</span>
+          </div>
+        #{erb_open} end #{erb_tag_close}
+      #{erb_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>

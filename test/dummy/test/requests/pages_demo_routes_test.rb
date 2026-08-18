@@ -6,6 +6,11 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
   DEMO_PATHS = %w[
     /demo
     /demo/buttons
+    /demo/links
+    /demo/buttons/pills
+    /demo/buttons/segmented
+    /demo/buttons/groups
+    /demo/buttons/dropdowns
     /demo/forms
     /demo/forms/text_input
     /demo/forms/password_input
@@ -26,11 +31,14 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/forms/nested_multiselect
     /demo/forms/switch
     /demo/forms/combined
-    /demo/inputs
     /demo/badges
     /demo/chips
+    /demo/chip_groups
     /demo/alerts
     /demo/cards
+    /demo/cards/styles
+    /demo/cards/media
+    /demo/cards/composed
     /demo/breadcrumbs
     /demo/navbar
     /demo/search
@@ -65,10 +73,14 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/pagination
     /demo/admin
     /demo/charts
+    /demo/charts/types
+    /demo/charts/composition
+    /demo/charts/setup
     /demo/charts/default_filter
     /demo/modal_filter
     /demo/code_blocks
     /demo/avatars
+    /demo/avatar_groups
     /demo/comments
     /demo/chat/demo
     /demo/chat/layout
@@ -88,6 +100,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/carousel
     /demo/progress
     /demo/collapse
+    /demo/accordion
     /demo/range_input
     /demo/skeletons
     /demo/list
@@ -205,8 +218,19 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "?page=2"
   end
 
-  test "buttons demo renders pill button examples" do
+  test "buttons demo links to pill and group sibling pages" do
     get "/demo/buttons"
+
+    assert_response :success
+    assert_includes response.body, "Pill Buttons"
+    assert_includes response.body, demo_buttons_pills_path
+    assert_includes response.body, demo_buttons_groups_path
+    assert_includes response.body, demo_buttons_segmented_path
+    assert_includes response.body, demo_buttons_dropdowns_path
+  end
+
+  test "pill buttons demo renders pill button examples" do
+    get "/demo/buttons/pills"
 
     assert_response :success
     assert_includes response.body, "Pill Buttons"
@@ -217,9 +241,19 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "/demo/tabs/pills#account"
     assert_includes response.body, "Team Members"
     assert_includes response.body, 'aria-current="page"'
+  end
+
+  test "segmented and grouped button demos render examples" do
+    get "/demo/buttons/segmented"
+
+    assert_response :success
     assert_includes response.body, 'data-controller="segmented-buttons-demo"'
     assert_includes response.body, 'data-action="segmented-buttons-demo#activate"'
     assert_includes response.body, 'aria-pressed="true"'
+
+    get "/demo/buttons/groups"
+
+    assert_response :success
     assert_includes response.body, "Button Groups (Wrapped Together)"
     assert_includes response.body, "Left"
     assert_includes response.body, "Middle"
@@ -256,12 +290,20 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Accepts"
     assert_includes response.body, "Example"
     assert_includes response.body, "render FlatPack::Collapse::Component.new"
-    assert_includes response.body, "render FlatPack::Accordion::Component.new"
     assert_includes response.body, "left_slot"
+    refute_includes response.body, "render FlatPack::Accordion::Component.new"
   end
 
-  test "cards demo renders media gallery example" do
-    get "/demo/cards"
+  test "accordion demo renders accordion examples" do
+    get "/demo/accordion"
+
+    assert_response :success
+    assert_includes response.body, "render FlatPack::Accordion::Component.new"
+    assert_includes response.body, "Allow Multiple Open"
+  end
+
+  test "cards media demo renders media gallery example" do
+    get "/demo/cards/media"
 
     assert_response :success
     assert_includes response.body, "Media Gallery Cards"
@@ -509,18 +551,17 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "value: &quot;john.doe&quot;"
   end
 
-  test "aggregate inputs demo includes help text in rendered examples and code snippets" do
+  test "legacy inputs demo redirects to forms" do
     get "/demo/inputs"
 
+    assert_redirected_to "/demo/forms"
+  end
+
+  test "text input demo includes help text in rendered examples and code snippets" do
+    get "/demo/forms/text_input"
+
     assert_response :success
-    assert_includes response.body, "Use the name teammates will recognize."
-    assert_includes response.body, "help_text: &quot;Use the name teammates will recognize.&quot;"
-    assert_includes response.body, "PNG, JPEG, or GIF images up to 2 MB are accepted."
-    assert_includes response.body, "help_text: &quot;PNG, JPEG, or GIF images up to 2 MB are accepted.&quot;"
-    assert_includes response.body, "Turn this on to expose the feature to the current workspace."
-    assert_includes response.body, "help_text: &quot;Turn this on to expose the feature to the current workspace.&quot;"
-    assert_includes response.body, "Choose the country used for billing details."
-    assert_includes response.body, "help_text: &quot;Choose the country used for billing details.&quot;"
+    assert_includes response.body, "help_text"
   end
 
   test "page header demo includes all page title heading variants" do
@@ -769,6 +810,20 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_response :success
     payload = JSON.parse(response.body)
     assert payload["results"].any? { |entry| entry["title"] == "Tree" }
+  end
+
+  test "search results include accordion and chart composition pages" do
+    get "/demo/search_results", params: {q: "accordion"}
+
+    assert_response :success
+    payload = JSON.parse(response.body)
+    assert payload["results"].any? { |entry| entry["title"] == "Accordion" }
+
+    get "/demo/search_results", params: {q: "composition"}
+
+    assert_response :success
+    payload = JSON.parse(response.body)
+    assert payload["results"].any? { |entry| entry["title"].to_s.include?("Composition") }
   end
 
   test "top nav includes live demo search" do

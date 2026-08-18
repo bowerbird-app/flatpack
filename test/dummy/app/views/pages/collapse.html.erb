@@ -1,9 +1,9 @@
 <%= render FlatPack::PageTitle::Component.new(
-  title: "Collapse & Accordion Components",
+  title: "Collapse",
   subtitle: "Expandable content sections with smooth animations and accessible controls."
 ) %>
 
-<%= render "pages/component_method_variables_table", components: [:collapse, :accordion] %>
+<%= render "pages/component_method_variables_table", component: :collapse %>
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Collapse Component", anchor_link: true) %>
@@ -88,100 +88,12 @@
 </section>
 
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Accordion Component", anchor_link: true, subtitle: "Single open at a time (default behavior)") %>
-  
-  <%= render FlatPack::Accordion::Component.new do |accordion| %>
-    <% accordion.item(
-      id: "faq1",
-      title: "What browsers are supported?",
-      left_slot: render(FlatPack::Shared::IconComponent.new(name: "computer-desktop", size: :sm, class: "text-[var(--accordion-trigger-text-color)]"))
-    ) do %>
-      <p>FlatPack components work in all modern browsers including Chrome, Firefox, Safari, and Edge. We follow progressive enhancement principles, so components degrade gracefully in older browsers.</p>
-    <% end %>
-    
-    <% accordion.item(id: "faq2", title: "Is it accessible?") do %>
-      <p>Yes! All components follow WCAG 2.1 AA guidelines and include proper ARIA attributes, keyboard navigation, and screen reader support. Accessibility is a core feature, not an afterthought.</p>
-    <% end %>
-    
-    <% accordion.item(id: "faq3", title: "Can I customize the styling?") do %>
-      <p>Absolutely. All components accept custom CSS classes via the <code>class</code> parameter. You can override default styles with your own CSS or use Tailwind utility classes for quick customizations.</p>
-    <% end %>
-    
-    <% accordion.item(id: "faq4", title: "How do I report bugs?") do %>
-      <p>Please open an issue on our GitHub repository with a detailed description of the problem, including steps to reproduce, expected behavior, and your environment details.</p>
-    <% end %>
-  <% end %>
-
-  <%= render FlatPack::CodeBlock::Component.new(
-    code: CGI.unescapeHTML(<<~'CODE'),
-      &lt;%= render FlatPack::Accordion::Component.new do |accordion| %&gt;
-        &lt;% accordion.item(id: &quot;faq1&quot;, title: &quot;What browsers are supported?&quot;) do %&gt;
-          &lt;p&gt;FlatPack components work in all modern browsers including Chrome, Firefox, Safari, and Edge. We follow progressive enhancement principles, so components degrade gracefully in older browsers.&lt;/p&gt;
-        &lt;% end %&gt;
-        
-        &lt;% accordion.item(id: &quot;faq2&quot;, title: &quot;Is it accessible?&quot;) do %&gt;
-          &lt;p&gt;Yes! All components follow WCAG 2.1 AA guidelines and include proper ARIA attributes, keyboard navigation, and screen reader support. Accessibility is a core feature, not an afterthought.&lt;/p&gt;
-        &lt;% end %&gt;
-        
-        &lt;% accordion.item(id: &quot;faq3&quot;, title: &quot;Can I customize the styling?&quot;) do %&gt;
-          &lt;p&gt;Absolutely. All components accept custom CSS classes via the &lt;code&gt;class&lt;/code&gt; parameter. You can override default styles with your own CSS or use Tailwind utility classes for quick customizations.&lt;/p&gt;
-        &lt;% end %&gt;
-        
-        &lt;% accordion.item(id: &quot;faq4&quot;, title: &quot;How do I report bugs?&quot;) do %&gt;
-          &lt;p&gt;Please open an issue on our GitHub repository with a detailed description of the problem, including steps to reproduce, expected behavior, and your environment details.&lt;/p&gt;
-        &lt;% end %&gt;
-      &lt;% end %&gt;
-    CODE
-    language: "erb",
-    title: "Accordion Component"
-  ) %>
-</section>
-
-<section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Allow Multiple Open", anchor_link: true) %>
-  
-  <%= render FlatPack::Accordion::Component.new(allow_multiple: true) do |accordion| %>
-    <% accordion.item(id: "feature1", title: "Authentication", open: true) do %>
-      <p>Built-in support for Devise, JWT tokens, and custom authentication strategies. Includes password strength indicators and secure session management.</p>
-    <% end %>
-    
-    <% accordion.item(id: "feature2", title: "Form Components", open: true) do %>
-      <p>Comprehensive form inputs with validation states, help text, and error messages. Includes text inputs, selects, checkboxes, radio buttons, file uploads, and more.</p>
-    <% end %>
-    
-    <% accordion.item(id: "feature3", title: "Data Display") do %>
-      <p>Tables with sorting, filtering, and pagination. Charts with ApexCharts integration. Cards, badges, avatars, and other display components.</p>
-    <% end %>
-  <% end %>
-
-  <%= render FlatPack::CodeBlock::Component.new(
-    code: CGI.unescapeHTML(<<~'CODE'),
-      &lt;%= render FlatPack::Accordion::Component.new(allow_multiple: true) do |accordion| %&gt;
-        &lt;% accordion.item(id: &quot;feature1&quot;, title: &quot;Authentication&quot;, open: true) do %&gt;
-          &lt;p&gt;Built-in support for Devise, JWT tokens, and custom authentication strategies. Includes password strength indicators and secure session management.&lt;/p&gt;
-        &lt;% end %&gt;
-        
-        &lt;% accordion.item(id: &quot;feature2&quot;, title: &quot;Form Components&quot;, open: true) do %&gt;
-          &lt;p&gt;Comprehensive form inputs with validation states, help text, and error messages. Includes text inputs, selects, checkboxes, radio buttons, file uploads, and more.&lt;/p&gt;
-        &lt;% end %&gt;
-        
-        &lt;% accordion.item(id: &quot;feature3&quot;, title: &quot;Data Display&quot;) do %&gt;
-          &lt;p&gt;Tables with sorting, filtering, and pagination. Charts with ApexCharts integration. Cards, badges, avatars, and other display components.&lt;/p&gt;
-        &lt;% end %&gt;
-      &lt;% end %&gt;
-    CODE
-    language: "erb",
-    title: "Allow Multiple Open"
-  ) %>
-</section>
-
-<section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Keyboard Navigation", anchor_link: true) %>
   
   <div class="p-6 bg-blue-50 border border-blue-200 rounded-lg">
     <p class="font-medium mb-2">Try these keyboard shortcuts:</p>
     <%= render FlatPack::List::Component.new(spacing: :dense, class: "text-sm") do %>
-      <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><kbd class="px-2 py-1 bg-white border rounded">Tab</kbd> - Navigate between collapse/accordion items<% end %>
+      <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><kbd class="px-2 py-1 bg-white border rounded">Tab</kbd> - Navigate between collapse items<% end %>
       <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><kbd class="px-2 py-1 bg-white border rounded">Space</kbd> or <kbd class="px-2 py-1 bg-white border rounded">Enter</kbd> - Toggle open/closed<% end %>
       <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><kbd class="px-2 py-1 bg-white border rounded">Escape</kbd> - Close focused item (if open)<% end %>
     <% end %>

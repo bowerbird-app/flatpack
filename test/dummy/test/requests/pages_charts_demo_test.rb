@@ -3,8 +3,8 @@
 require "test_helper"
 
 class PagesChartsDemoTest < ActionDispatch::IntegrationTest
-  test "charts page renders mini chart table row example" do
-    get demo_charts_path
+  test "charts composition page renders mini chart table row example" do
+    get demo_charts_composition_path
 
     assert_response :success
     assert_includes response.body, "Mini Chart in Table Row"
@@ -18,8 +18,8 @@ class PagesChartsDemoTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "barHeight"
   end
 
-  test "charts page renders geochart example" do
-    get demo_charts_path
+  test "charts types page renders geochart example" do
+    get demo_charts_types_path
 
     assert_response :success
     assert_includes response.body, "Geo Chart"
@@ -28,8 +28,8 @@ class PagesChartsDemoTest < ActionDispatch::IntegrationTest
     assert_includes response.body, ":geochart"
   end
 
-  test "charts page renders stacked chart examples after matching base charts" do
-    get demo_charts_path
+  test "charts types page renders stacked chart examples after matching base charts" do
+    get demo_charts_types_path
 
     assert_response :success
     assert_includes response.body, "Stacked Column Chart"

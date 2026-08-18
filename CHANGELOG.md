@@ -8,8 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Dummy demo catalog (`DemoCatalog`) now drives sidebar navigation and top-nav search from one source.
 
 ### Changed
+- Reorganized long dummy demo pages into focused routes:
+  - Collapse and Accordion are separate pages
+  - Buttons family split into Buttons, Links, Pills, Segmented, Groups, and Dropdowns
+  - Charts split into Overview, Types, Composition, and Setup
+  - Cards split into Overview, Styles, Media, and Composed
+  - Avatar Groups and Chip Groups have their own pages
+- Legacy `/demo/inputs` now redirects to `/demo/forms`
 
 ### Fixed
 
