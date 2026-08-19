@@ -2310,7 +2310,10 @@ class PagesController < ApplicationController
   end
 
   def page_template_cache_version
-    template_files = Dir[Rails.root.join("app/views/layouts/**/*")].concat(Dir[Rails.root.join("app/views/pages/**/*")]).sort
+    template_files = Dir[Rails.root.join("app/views/layouts/**/*")]
+      .concat(Dir[Rails.root.join("app/views/pages/**/*")])
+      .concat(Dir[Rails.root.join("app/views/shared/**/*")])
+      .sort
     template_versions = template_files.filter_map do |path|
       next unless File.file?(path)
 
