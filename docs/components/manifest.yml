@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-07-17
+updated_at: 2026-08-19
 
 format_reference: docs/components/DOC_FORMAT.md
 human_index: docs/components/README.md
@@ -36,6 +36,55 @@ components:
     doc: docs/components/badge.md
     primary_class: FlatPack::Badge::Component
     status: documented
+
+  - key: billing
+    title: Billing (guidance)
+    doc: docs/components/billing.md
+    primary_class: FlatPack::Billing
+    related_classes:
+      - FlatPack::Billing::PlanSummary::Component
+      - FlatPack::Billing::PlanPicker::Component
+      - FlatPack::Billing::UsageMeter::Component
+      - FlatPack::Billing::PaymentMethod::Component
+      - FlatPack::Billing::InvoiceList::Component
+      - FlatPack::Billing::StatusAlert::Component
+    status: planned
+
+  - key: billing_plan_summary
+    title: Billing Plan Summary
+    doc: docs/components/billing-plan-summary.md
+    primary_class: FlatPack::Billing::PlanSummary::Component
+    status: planned
+
+  - key: billing_plan_picker
+    title: Billing Plan Picker
+    doc: docs/components/billing-plan-picker.md
+    primary_class: FlatPack::Billing::PlanPicker::Component
+    status: planned
+
+  - key: billing_usage_meter
+    title: Billing Usage Meter
+    doc: docs/components/billing-usage-meter.md
+    primary_class: FlatPack::Billing::UsageMeter::Component
+    status: planned
+
+  - key: billing_payment_method
+    title: Billing Payment Method
+    doc: docs/components/billing-payment-method.md
+    primary_class: FlatPack::Billing::PaymentMethod::Component
+    status: planned
+
+  - key: billing_invoice_list
+    title: Billing Invoice List
+    doc: docs/components/billing-invoice-list.md
+    primary_class: FlatPack::Billing::InvoiceList::Component
+    status: planned
+
+  - key: billing_status_alert
+    title: Billing Status Alert
+    doc: docs/components/billing-status-alert.md
+    primary_class: FlatPack::Billing::StatusAlert::Component
+    status: planned
 
   - key: bottom_nav
     title: Bottom Nav

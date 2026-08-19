@@ -16,6 +16,13 @@ alert | FlatPack::Alert::Component | docs/components/alert.md
 avatar | FlatPack::Avatar::Component | docs/components/avatar.md
 avatar_group | FlatPack::AvatarGroup::Component | docs/components/avatar-group.md
 badge | FlatPack::Badge::Component | docs/components/badge.md
+billing | FlatPack::Billing | docs/components/billing.md
+billing_plan_summary | FlatPack::Billing::PlanSummary::Component | docs/components/billing-plan-summary.md
+billing_plan_picker | FlatPack::Billing::PlanPicker::Component | docs/components/billing-plan-picker.md
+billing_usage_meter | FlatPack::Billing::UsageMeter::Component | docs/components/billing-usage-meter.md
+billing_payment_method | FlatPack::Billing::PaymentMethod::Component | docs/components/billing-payment-method.md
+billing_invoice_list | FlatPack::Billing::InvoiceList::Component | docs/components/billing-invoice-list.md
+billing_status_alert | FlatPack::Billing::StatusAlert::Component | docs/components/billing-status-alert.md
 bottom_nav | FlatPack::BottomNav::Component | docs/components/bottom-nav.md
 breadcrumb | FlatPack::Breadcrumb::Component | docs/components/breadcrumb.md
 button | FlatPack::Button::Component | docs/components/button.md
@@ -89,3 +96,4 @@ new_components_summary | FlatPack::Grid::Component | docs/components/NEW_COMPONE
 
 - For related classes, aliases, and status metadata, use `docs/components/manifest.yml`.
 - Every component doc should follow `docs/components/DOC_FORMAT.md`.
+- Billing entries (`billing*`) are **planned guidance** only: API shape and composition are documented; Ruby components, demos, and tests are deferred. See `docs/components/billing.md`.
