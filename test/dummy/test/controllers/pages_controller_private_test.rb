@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require "fileutils"
 
 class PagesControllerPrivateTest < ActiveSupport::TestCase
   test "query-driven tables demos are uncached" do
@@ -72,6 +73,25 @@ class PagesControllerPrivateTest < ActiveSupport::TestCase
 
     refute_equal old_key, new_key
     assert_includes new_key, request.path
+  end
+
+  test "page_template_cache_version includes shared view partials" do
+    controller = PagesController.new
+    version = controller.send(:page_template_cache_version)
+
+    refute_nil version
+    refute_empty version
+
+    related = Rails.root.join("app/views/shared/_related_demos.html.erb")
+    assert File.file?(related)
+
+    stamp = File.mtime(related)
+    FileUtils.touch(related, mtime: stamp + 1)
+    begin
+      refute_equal version, controller.send(:page_template_cache_version)
+    ensure
+      FileUtils.touch(related, mtime: stamp)
+    end
   end
 
   private

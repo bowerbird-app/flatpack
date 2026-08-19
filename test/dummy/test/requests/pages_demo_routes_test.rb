@@ -236,6 +236,18 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, demo_buttons_dropdowns_path
   end
 
+  test "buttons related demos render after theme tokens" do
+    get "/demo/buttons"
+
+    assert_response :success
+    theme_at = response.body.index("id=\"theme-tokens\"")
+    related_at = response.body.index("id=\"related-demos\"")
+
+    assert theme_at, "expected Theme Tokens section"
+    assert related_at, "expected Related demos section"
+    assert_operator related_at, :>, theme_at
+  end
+
   test "billing demo links to sibling billing pages" do
     get "/demo/billing"
 

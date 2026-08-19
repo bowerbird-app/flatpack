@@ -203,6 +203,8 @@
               <%= render "pages/theme_token_reference", title: @demo_theme_token_title, rows: @demo_theme_token_rows %>
             <% end %>
 
+            <%= yield :related_demos if content_for?(:related_demos) %>
+
           </div>
         </main>
       <% end %>
