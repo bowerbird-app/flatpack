@@ -89,5 +89,5 @@ None at the picker root. Card emphasis:
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
-- Composes `Grid`, `Card`, `List`, `Badge`, and `Button`.
+- Composes `Grid`, `Card`, feature list markup, `Badge`, and `Button`.
 - See family guidance: [billing.md](billing.md).
