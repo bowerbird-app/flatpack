@@ -19,6 +19,7 @@ Use Progress when users need a visual indicator of completion for uploads, tasks
 | `size` | Symbol | `:md` | No | Bar height. Allowed: `:sm`, `:md`, `:lg`, `:xl`. |
 | `label` | String or nil | `nil` | No | Optional visible label text and default `aria-label` source. |
 | `show_label` | Boolean | `false` | No | When true and `label` is nil, renders computed percentage text. |
+| `label_visible` | Boolean | `true` | No | When false, suppresses the visible label while keeping `label` as the `aria-label`. Use when a surrounding component already shows the name. |
 | `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into outer wrapper. |
 
 ## Slots

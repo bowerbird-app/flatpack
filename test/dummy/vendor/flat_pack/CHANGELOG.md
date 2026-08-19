@@ -19,9 +19,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Presentational `FlatPack::Billing::*` components: Plan Summary, Plan Picker, Usage Meter, Payment Method, Invoice List, and Status Alert.
 - Dummy demo family under `/demo/billing` with expandable sidebar group and top-nav search entries.
 - Billing component docs and method/variables tables for the dummy demos.
+- `FlatPack::Progress::Component` accepts `label_visible:` to keep `label` as the `aria-label` while hiding the visible line, for use inside components that already show the name.
 
 ### Changed
 - Bumped the gem version to `0.1.134`.
+- `/demo/billing` uses anchor-linked sections and the shared Related demos block instead of a component tab switcher, matching the buttons demo layout.
+
+### Fixed
+- Usage Meter no longer prints its label twice above the progress bar.
 
 ### Upgrade notes
 - No host app changes required. Compose the new billing components with host-supplied display strings and `href`s; FlatPack still does not collect card numbers or call payment providers.

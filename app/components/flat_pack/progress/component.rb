@@ -30,6 +30,7 @@ module FlatPack
         size: :md,
         label: nil,
         show_label: false,
+        label_visible: true,
         **system_arguments
       )
         super(**system_arguments)
@@ -39,6 +40,7 @@ module FlatPack
         @size = size.to_sym
         @label = label
         @show_label = show_label
+        @label_visible = label_visible
 
         validate_value!
         validate_max!
@@ -58,6 +60,7 @@ module FlatPack
       private
 
       def render_label
+        return unless @label_visible
         return unless @show_label || @label
 
         label_text = @label || "#{percentage.to_i}%"

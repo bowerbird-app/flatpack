@@ -3,16 +3,6 @@
   subtitle: "Presentational billing surfaces for plans, usage, payment methods, and invoices."
 ) %>
 
-<%= render "pages/component_method_variables_table",
-  components: [
-    :billing_plan_summary,
-    :billing_plan_picker,
-    :billing_usage_meter,
-    :billing_payment_method,
-    :billing_invoice_list,
-    :billing_status_alert
-  ] %>
-
 <%= render "shared/related_demos",
   subtitle: "Sibling billing-family components live on their own pages.",
   links: [
@@ -24,6 +14,7 @@
     {text: "Status Alert", href: demo_billing_status_alert_path}
   ] %>
 
+<!-- Overview Composition -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Overview Composition",
@@ -94,4 +85,106 @@
     language: "erb",
     title: "Overview Composition"
   ) %>
+</section>
+
+<!-- Plan Summary -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Plan Summary",
+    anchor_link: true,
+    subtitle: "Current plan with status badge and actions."
+  ) %>
+  <div class="mb-4 max-w-xl">
+    <%= render FlatPack::Billing::PlanSummary::Component.new(
+      plan_name: "Pro",
+      price_text: "$29 / month",
+      status: :active,
+      renews_on: "Renews 1 Sep 2026"
+    ) do |summary| %>
+      <% summary.actions do %>
+        <%= render FlatPack::Button::Component.new(text: "Change plan", href: demo_billing_plan_picker_path, style: :secondary) %>
+      <% end %>
+    <% end %>
+  </div>
+  <%= render FlatPack::Button::Component.new(text: "Full Plan Summary demo", href: demo_billing_plan_summary_path, style: :secondary, size: :sm) %>
+</section>
+
+<!-- Plan Picker -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Plan Picker",
+    anchor_link: true,
+    subtitle: "Compare plans with current and popular markers."
+  ) %>
+  <div class="mb-4">
+    <%= render FlatPack::Billing::PlanPicker::Component.new(
+      items: [
+        {name: "Basic", price_text: "$9 / month", features: ["3 seats", "Email support"], href: "#choose-basic", cta_text: "Choose Basic"},
+        {name: "Pro", price_text: "$29 / month", features: ["10 seats", "Priority support"], href: "#current-pro", cta_text: "Current plan", current: true, highlighted: true},
+        {name: "Enterprise", price_text: "Contact us", features: ["Unlimited seats"], href: "#contact-sales", cta_text: "Contact sales"}
+      ]
+    ) %>
+  </div>
+  <%= render FlatPack::Button::Component.new(text: "Full Plan Picker demo", href: demo_billing_plan_picker_path, style: :secondary, size: :sm) %>
+</section>
+
+<!-- Usage Meter -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Usage Meter",
+    anchor_link: true,
+    subtitle: "Usage against a limit, or unlimited when no limit is set."
+  ) %>
+  <div class="space-y-6 mb-4 max-w-xl">
+    <%= render FlatPack::Billing::UsageMeter::Component.new(label: "Seats", used: 4, limit: 10, unit: "seats") %>
+    <%= render FlatPack::Billing::UsageMeter::Component.new(label: "Storage", used: 12, limit: 10, unit: "GB") %>
+  </div>
+  <%= render FlatPack::Button::Component.new(text: "Full Usage Meter demo", href: demo_billing_usage_meter_path, style: :secondary, size: :sm) %>
+</section>
+
+<!-- Payment Method -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Payment Method",
+    anchor_link: true,
+    subtitle: "Card on file, or an empty state when none is saved."
+  ) %>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+    <%= render FlatPack::Billing::PaymentMethod::Component.new(brand: "Visa", last4: "4242", expires_text: "09/28") %>
+    <%= render FlatPack::Billing::PaymentMethod::Component.new %>
+  </div>
+  <%= render FlatPack::Button::Component.new(text: "Full Payment Method demo", href: demo_billing_payment_method_path, style: :secondary, size: :sm) %>
+</section>
+
+<!-- Invoice List -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Invoice List",
+    anchor_link: true,
+    subtitle: "Invoice history with status badges and download actions."
+  ) %>
+  <div class="mb-4">
+    <%= render FlatPack::Billing::InvoiceList::Component.new(
+      items: [
+        {date: "1 Aug 2026", amount: "$29.00", status: :paid, href: "#invoice-1"},
+        {date: "1 Jul 2026", amount: "$29.00", status: :open, href: "#invoice-2"},
+        {date: "1 Jun 2026", amount: "$29.00", status: :failed, href: "#invoice-3"}
+      ]
+    ) %>
+  </div>
+  <%= render FlatPack::Button::Component.new(text: "Full Invoice List demo", href: demo_billing_invoice_list_path, style: :secondary, size: :sm) %>
+</section>
+
+<!-- Status Alert -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Status Alert",
+    anchor_link: true,
+    subtitle: "Past due, trial ending, payment failed, and canceled defaults."
+  ) %>
+  <div class="space-y-4 mb-4 max-w-2xl">
+    <%= render FlatPack::Billing::StatusAlert::Component.new(status: :past_due) %>
+    <%= render FlatPack::Billing::StatusAlert::Component.new(status: :payment_failed) %>
+  </div>
+  <%= render FlatPack::Button::Component.new(text: "Full Status Alert demo", href: demo_billing_status_alert_path, style: :secondary, size: :sm) %>
 </section>

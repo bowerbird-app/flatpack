@@ -73,7 +73,8 @@ module FlatPack
             max: @limit,
             style: progress_style,
             size: :md,
-            label: @label
+            label: @label,
+            label_visible: false
           )
         end
 
