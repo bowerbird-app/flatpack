@@ -12,12 +12,6 @@
 
 <%= render "pages/component_method_variables_table", component: :chart %>
 
-<%= render "shared/related_demos",
-  links: [
-    {text: "Overview", href: demo_charts_path},
-    {text: "Types", href: demo_charts_types_path},
-    {text: "Setup", href: demo_charts_setup_path}
-  ] %>
 
 <%
   erb_open = "<" + "%"
@@ -574,3 +568,10 @@
     CODE
   ) %>
 </section>
+
+<%= render "shared/related_demos",
+  links: [
+    {text: "Overview", href: demo_charts_path},
+    {text: "Types", href: demo_charts_types_path},
+    {text: "Setup", href: demo_charts_setup_path}
+  ] %>

@@ -6,8 +6,6 @@
 
   <%= render "pages/component_method_variables_table", component: :avatar %>
 
-  <%= render "shared/related_demos",
-    links: [{text: "Avatar Groups", href: demo_avatar_groups_path}] %>
 
   <%
     erb_output_open = "<" + "%="
@@ -347,4 +345,7 @@
       ]
     ) %>
   </section>
+
+<%= render "shared/related_demos",
+    links: [{text: "Avatar Groups", href: demo_avatar_groups_path}] %>
 </div>

@@ -5,15 +5,6 @@
 
 <%= render "pages/component_method_variables_table", component: :billing_plan_picker %>
 
-<%= render "shared/related_demos",
-  links: [
-    {text: "Billing", href: demo_billing_path},
-    {text: "Plan Summary", href: demo_billing_plan_summary_path},
-    {text: "Usage Meter", href: demo_billing_usage_meter_path},
-    {text: "Payment Method", href: demo_billing_payment_method_path},
-    {text: "Invoice List", href: demo_billing_invoice_list_path},
-    {text: "Status Alert", href: demo_billing_status_alert_path}
-  ] %>
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Plan Choices", anchor_link: true, subtitle: "Highlight one popular plan and mark the current plan.") %>
@@ -63,3 +54,13 @@
     title: "Plan Choices"
   ) %>
 </section>
+
+<%= render "shared/related_demos",
+  links: [
+    {text: "Billing", href: demo_billing_path},
+    {text: "Plan Summary", href: demo_billing_plan_summary_path},
+    {text: "Usage Meter", href: demo_billing_usage_meter_path},
+    {text: "Payment Method", href: demo_billing_payment_method_path},
+    {text: "Invoice List", href: demo_billing_invoice_list_path},
+    {text: "Status Alert", href: demo_billing_status_alert_path}
+  ] %>
