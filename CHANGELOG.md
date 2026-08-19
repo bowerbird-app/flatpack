@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Bumped the gem version to `0.1.134`.
 - `/demo/billing` uses anchor-linked sections and the shared Related demos block instead of a component tab switcher, matching the buttons demo layout.
+- Dummy demo pages that use the shared Related demos partial now render that block at the bottom of the page (after all component examples).
 
 ### Fixed
 - Usage Meter no longer prints its label twice above the progress bar.

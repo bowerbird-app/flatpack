@@ -3,16 +3,6 @@
   subtitle: "Presentational billing surfaces for plans, usage, payment methods, and invoices."
 ) %>
 
-<%= render "shared/related_demos",
-  subtitle: "Sibling billing-family components live on their own pages.",
-  links: [
-    {text: "Plan Summary", href: demo_billing_plan_summary_path},
-    {text: "Plan Picker", href: demo_billing_plan_picker_path},
-    {text: "Usage Meter", href: demo_billing_usage_meter_path},
-    {text: "Payment Method", href: demo_billing_payment_method_path},
-    {text: "Invoice List", href: demo_billing_invoice_list_path},
-    {text: "Status Alert", href: demo_billing_status_alert_path}
-  ] %>
 
 <!-- Overview Composition -->
 <section class="mb-12">
@@ -188,3 +178,14 @@
   </div>
   <%= render FlatPack::Button::Component.new(text: "Full Status Alert demo", href: demo_billing_status_alert_path, style: :secondary, size: :sm) %>
 </section>
+
+<%= render "shared/related_demos",
+  subtitle: "Sibling billing-family components live on their own pages.",
+  links: [
+    {text: "Plan Summary", href: demo_billing_plan_summary_path},
+    {text: "Plan Picker", href: demo_billing_plan_picker_path},
+    {text: "Usage Meter", href: demo_billing_usage_meter_path},
+    {text: "Payment Method", href: demo_billing_payment_method_path},
+    {text: "Invoice List", href: demo_billing_invoice_list_path},
+    {text: "Status Alert", href: demo_billing_status_alert_path}
+  ] %>

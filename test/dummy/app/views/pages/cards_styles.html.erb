@@ -7,12 +7,6 @@
 
 <%= render "pages/component_method_variables_table", component: :card %>
 
-<%= render "shared/related_demos",
-  links: [
-    {text: "Overview", href: demo_cards_path},
-    {text: "Media", href: demo_cards_media_path},
-    {text: "Composed", href: demo_cards_composed_path}
-  ] %>
 
   <!-- Card Styles -->
   <section class="mb-12">
@@ -270,3 +264,10 @@
       CODE
     ) %>
   </section>
+
+<%= render "shared/related_demos",
+  links: [
+    {text: "Overview", href: demo_cards_path},
+    {text: "Media", href: demo_cards_media_path},
+    {text: "Composed", href: demo_cards_composed_path}
+  ] %>

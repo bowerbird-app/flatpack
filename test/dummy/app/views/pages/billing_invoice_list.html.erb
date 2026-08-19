@@ -5,15 +5,6 @@
 
 <%= render "pages/component_method_variables_table", component: :billing_invoice_list %>
 
-<%= render "shared/related_demos",
-  links: [
-    {text: "Billing", href: demo_billing_path},
-    {text: "Plan Summary", href: demo_billing_plan_summary_path},
-    {text: "Plan Picker", href: demo_billing_plan_picker_path},
-    {text: "Usage Meter", href: demo_billing_usage_meter_path},
-    {text: "Payment Method", href: demo_billing_payment_method_path},
-    {text: "Status Alert", href: demo_billing_status_alert_path}
-  ] %>
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Invoice History", anchor_link: true, subtitle: "Fixture invoices with paid, open, and failed statuses.") %>
@@ -47,3 +38,13 @@
     <%= render FlatPack::Billing::InvoiceList::Component.new(items: []) %>
   </div>
 </section>
+
+<%= render "shared/related_demos",
+  links: [
+    {text: "Billing", href: demo_billing_path},
+    {text: "Plan Summary", href: demo_billing_plan_summary_path},
+    {text: "Plan Picker", href: demo_billing_plan_picker_path},
+    {text: "Usage Meter", href: demo_billing_usage_meter_path},
+    {text: "Payment Method", href: demo_billing_payment_method_path},
+    {text: "Status Alert", href: demo_billing_status_alert_path}
+  ] %>
