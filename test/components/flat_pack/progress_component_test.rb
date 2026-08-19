@@ -24,6 +24,13 @@ module FlatPack
         assert_includes page.native.to_html, "bg-primary"
       end
 
+      def test_label_visible_false_keeps_accessible_name_without_visible_text
+        render_inline(Component.new(value: 50, label: "Seats", label_visible: false))
+
+        assert_selector "[role='progressbar'][aria-label='Seats']"
+        assert_no_text "Seats"
+      end
+
       def test_renders_success_variant
         render_inline(Component.new(value: 50, style: :success))
 
