@@ -5,16 +5,15 @@
 
   <%= render "pages/component_method_variables_table", component: :button %>
 
-  <section class="mb-12">
-    <%= render FlatPack::SectionTitle::Component.new(title: "Related demos", anchor_link: true, subtitle: "Sibling button-family components live on their own pages.") %>
-    <div class="flex flex-wrap gap-3">
-      <%= render FlatPack::Button::Component.new(text: "Links", style: :secondary, size: :sm, href: demo_links_path) %>
-      <%= render FlatPack::Button::Component.new(text: "Pill Buttons", style: :secondary, size: :sm, href: demo_buttons_pills_path) %>
-      <%= render FlatPack::Button::Component.new(text: "Segmented", style: :secondary, size: :sm, href: demo_buttons_segmented_path) %>
-      <%= render FlatPack::Button::Component.new(text: "Button Groups", style: :secondary, size: :sm, href: demo_buttons_groups_path) %>
-      <%= render FlatPack::Button::Component.new(text: "Dropdowns", style: :secondary, size: :sm, href: demo_buttons_dropdowns_path) %>
-    </div>
-  </section>
+  <%= render "shared/related_demos",
+    subtitle: "Sibling button-family components live on their own pages.",
+    links: [
+      {text: "Links", href: demo_links_path},
+      {text: "Pill Buttons", href: demo_buttons_pills_path},
+      {text: "Segmented", href: demo_buttons_segmented_path},
+      {text: "Button Groups", href: demo_buttons_groups_path},
+      {text: "Dropdowns", href: demo_buttons_dropdowns_path}
+    ] %>
 
   <!-- Basic Buttons -->
   <section class="mb-12">

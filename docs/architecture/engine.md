@@ -227,6 +227,8 @@ FlatPack::Table::Column::Component
 FlatPack::Shared::IconComponent
 ```
 
+`IconComponent` renders SVGs as `block shrink-0`. Magnifying-glass icons get a 2px optical lift via `OPTICAL_NUDGES` so they sit evenly next to text and in search fields.
+
 Database tables would be prefixed (if any):
 ```ruby
 flat_pack_error_logs

@@ -229,6 +229,16 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, demo_buttons_dropdowns_path
   end
 
+  test "collapse and accordion demos link to each other" do
+    get "/demo/collapse"
+    assert_response :success
+    assert_includes response.body, demo_accordion_path
+
+    get "/demo/accordion"
+    assert_response :success
+    assert_includes response.body, demo_collapse_path
+  end
+
   test "pill buttons demo renders pill button examples" do
     get "/demo/buttons/pills"
 
@@ -665,11 +675,23 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, ">name</td>"
     assert_includes response.body, ">value</td>"
     assert_includes response.body, ">search_url</td>"
+    assert_includes response.body, ">items</td>"
     assert_includes response.body, ">max_width</td>"
     assert_includes response.body, ">min_characters</td>"
     assert_includes response.body, ">debounce</td>"
     assert_includes response.body, ">no_results_text</td>"
     assert_includes response.body, "**system_arguments"
+  end
+
+  test "search demo shows local catalog before remote JSON" do
+    get "/demo/search"
+
+    assert_response :success
+    assert_includes response.body, "Local catalog"
+    assert_includes response.body, "data-flat-pack--search-items-value"
+    assert_includes response.body, "Try form, accordion, or chart..."
+    assert_includes response.body, "Remote JSON"
+    assert_includes response.body, "data-flat-pack--search-url-value=\"/demo/search_results\""
   end
 
   test "select demo uses overflow-visible card for searchable dropdowns" do

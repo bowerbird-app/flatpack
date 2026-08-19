@@ -1,0 +1,9 @@
+<% subtitle = local_assigns.fetch(:subtitle, "More of this family, on their own pages.") %>
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Related demos", anchor_link: true, subtitle: subtitle) %>
+  <div class="flex flex-wrap gap-3">
+    <% links.each do |link| %>
+      <%= render FlatPack::Button::Component.new(text: link[:text], style: :secondary, size: :sm, href: link[:href]) %>
+    <% end %>
+  </div>
+</section>

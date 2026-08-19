@@ -7,6 +7,13 @@
 
 <%= render "pages/component_method_variables_table", component: :chart %>
 
+<%= render "shared/related_demos",
+  links: [
+    {text: "Overview", href: demo_charts_path},
+    {text: "Composition", href: demo_charts_composition_path},
+    {text: "Setup", href: demo_charts_setup_path}
+  ] %>
+
 <%
   erb_open = "<" + "%"
   erb_output_open = "<" + "%="

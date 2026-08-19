@@ -3,9 +3,18 @@
   subtitle: "Text links with built-in URL validation and security features."
 ) %>
 
-<p class="text-[var(--surface-muted-content-color)] mb-12">
+<p class="text-[var(--surface-muted-content-color)] mb-6">
   API reference for the Link component is not yet available in the component method table.
 </p>
+
+<%= render "shared/related_demos",
+  links: [
+    {text: "Buttons", href: demo_buttons_path},
+    {text: "Pill Buttons", href: demo_buttons_pills_path},
+    {text: "Segmented", href: demo_buttons_segmented_path},
+    {text: "Button Groups", href: demo_buttons_groups_path},
+    {text: "Dropdowns", href: demo_buttons_dropdowns_path}
+  ] %>
 
 <!-- Link Component -->
 <section class="mb-12">

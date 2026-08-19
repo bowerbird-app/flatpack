@@ -113,7 +113,12 @@
     <%= render FlatPack::TopNav::Component.new(class: "relative rounded-lg border border-[var(--surface-border-color)]") do |nav| %>
       <% nav.center do %>
         <%= render FlatPack::Search::Component.new(
-          placeholder: "Search workspace..."
+          items: [
+            {title: "Buttons", description: "Button styles", url: demo_buttons_path},
+            {title: "Forms", description: "Form inputs", url: demo_forms_path}
+          ],
+          placeholder: "Search workspace...",
+          min_characters: 1
         ) %>
       <% end %>
 
@@ -127,7 +132,12 @@
       &lt;%= render FlatPack::TopNav::Component.new do |nav| %&gt;
         &lt;% nav.center do %&gt;
           &lt;%= render FlatPack::Search::Component.new(
-            placeholder: "Search workspace..."
+            items: [
+              {title: "Buttons", description: "Button styles", url: demo_buttons_path},
+              {title: "Forms", description: "Form inputs", url: demo_forms_path}
+            ],
+            placeholder: "Search workspace...",
+            min_characters: 1
           ) %&gt;
         &lt;% end %&gt;
       
@@ -152,7 +162,12 @@
 
       <% nav.center do %>
         <%= render FlatPack::Search::Component.new(
-          placeholder: "Search reports..."
+          items: [
+            {title: "Buttons", description: "Button styles", url: demo_buttons_path},
+            {title: "Forms", description: "Form inputs", url: demo_forms_path}
+          ],
+          placeholder: "Search reports...",
+          min_characters: 1
         ) %>
       <% end %>
     <% end %>
@@ -166,7 +181,12 @@
 
         &lt;% nav.center do %&gt;
           &lt;%= render FlatPack::Search::Component.new(
-            placeholder: "Search reports..."
+            items: [
+              {title: "Buttons", description: "Button styles", url: demo_buttons_path},
+              {title: "Forms", description: "Form inputs", url: demo_forms_path}
+            ],
+            placeholder: "Search reports...",
+            min_characters: 1
           ) %&gt;
         &lt;% end %&gt;
       &lt;% end %&gt;
