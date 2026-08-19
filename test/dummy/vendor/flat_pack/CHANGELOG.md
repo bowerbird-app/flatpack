@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Billing component family guidance docs (`docs/components/billing*.md`): planned presentational APIs for plan summary, plan picker, usage meter, payment method, invoice list, and status alert.
+- Billing param conventions in `docs/components/PARAMS.md` (`items`, `price_text`, `status`, empty-state names, PCI non-goals).
 
 ### Changed
 
