@@ -33,9 +33,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Search icon sits optically in the middle of the field (the glass handle was making it look low).
+- Icons render as `block` so they no longer pick up a text-baseline gap.
+- Magnifying-glass icons are optically nudged on `IconComponent`, so Search, Picker, and buttons share the same alignment.
 
 ### Upgrade notes
 - For static search lists, pass `items:` (`[{ title:, description:, url: }, ...]`) to `FlatPack::Search::Component`. Remote `search_url` still works when results must come from the server.
+- `FlatPack::Shared::IconComponent` now uses `block` instead of `inline-block`. If an icon was sitting in inline text without a flex parent, wrap the row in `inline-flex items-center`.
+- To optically align another handle-heavy Heroicon, add its canonical name to `IconComponent::OPTICAL_NUDGES` instead of component CSS.
 
 ## [0.1.132] - 2026-08-18
 
