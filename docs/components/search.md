@@ -72,3 +72,4 @@ When live search is enabled (`items` or `search_url`), the input includes `aria-
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
 - Live search behavior requires Stimulus controller `flat-pack--search`.
+- The search icon is aligned by `FlatPack::Shared::IconComponent` (block SVG; magnifying-glass is optically nudged). Add other handle-heavy icons to `IconComponent::OPTICAL_NUDGES` instead of Search CSS.

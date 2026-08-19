@@ -845,6 +845,8 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_match(/data-controller="[^"]*flat-pack--search[^"]*"/, response.body)
     assert_includes response.body, "data-flat-pack--search-items-value"
     assert_includes response.body, "Accordion"
+    assert_includes response.body, "data-flat-pack--icon-name-value=\"magnifying-glass\""
+    assert_includes response.body, "-translate-y-0.5"
     refute_includes response.body, "data-flat-pack--search-url-value=\"/demo/search_results\""
   end
 

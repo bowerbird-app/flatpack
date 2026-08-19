@@ -121,11 +121,8 @@ module FlatPack
           "left-3",
           "flex",
           "items-center",
-          "leading-none",
           "pointer-events-none",
-          "text-[var(--search-icon-color)]",
-          "[&>svg]:block",
-          "[&>svg]:-translate-y-0.5"
+          "text-[var(--search-icon-color)]"
         )
       end
 

@@ -1043,6 +1043,10 @@
     --tw-translate-x: 100%;
     translate: var(--tw-translate-x) var(--tw-translate-y);
   }
+  .-translate-y-0\.5 {
+    --tw-translate-y: calc(var(--spacing) * -0.5);
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
   .-translate-y-1 {
     --tw-translate-y: calc(var(--spacing) * -1);
     translate: var(--tw-translate-x) var(--tw-translate-y);
@@ -4785,17 +4789,6 @@
     &>*:last-child {
       border-right-style: var(--tw-border-style);
       border-right-width: 1px;
-    }
-  }
-  .\[\&\>svg\]\:block {
-    &>svg {
-      display: block;
-    }
-  }
-  .\[\&\>svg\]\:-translate-y-0\.5 {
-    &>svg {
-      --tw-translate-y: calc(var(--spacing) * -0.5);
-      translate: var(--tw-translate-x) var(--tw-translate-y);
     }
   }
   .\[\&\>svg\]\:rotate-180 {

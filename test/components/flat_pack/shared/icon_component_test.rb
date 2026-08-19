@@ -94,6 +94,31 @@ module FlatPack
         assert_selector "svg.w-4.h-4"
       end
 
+      def test_renders_as_block_to_avoid_baseline_gap
+        render_inline(IconComponent.new(name: :chevron_down))
+
+        assert_selector "svg.block.shrink-0"
+        refute_includes rendered_content, "inline-block"
+      end
+
+      def test_magnifying_glass_gets_optical_nudge
+        render_inline(IconComponent.new(name: :search))
+
+        assert_includes CGI.unescapeHTML(rendered_content), "-translate-y-0.5"
+      end
+
+      def test_search_alias_gets_the_same_optical_nudge
+        render_inline(IconComponent.new(name: "magnifying-glass-plus"))
+
+        assert_includes CGI.unescapeHTML(rendered_content), "-translate-y-0.5"
+      end
+
+      def test_symmetric_icons_are_not_nudged
+        render_inline(IconComponent.new(name: :chevron_down))
+
+        refute_includes rendered_content, "translate-y-0.5"
+      end
+
       def test_lg_size
         render_inline(IconComponent.new(name: :search, size: :lg))
         assert_selector "svg.w-6.h-6"

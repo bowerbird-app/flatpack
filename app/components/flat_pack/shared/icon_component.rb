@@ -6,11 +6,20 @@ module FlatPack
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "w-4" "h-4" "w-5" "h-5" "w-6" "h-6" "w-8" "h-8"
+      # "block" "shrink-0" "-translate-y-0.5"
       SIZES = {
         sm: "w-4 h-4",
         md: "w-5 h-5",
         lg: "w-6 h-6",
         xl: "w-8 h-8"
+      }.freeze
+
+      # Artwork that sits low in the 24×24 viewBox (diagonal handle, etc.).
+      # Nudge is optical, not layout — add a name here instead of per-component CSS.
+      OPTICAL_NUDGES = {
+        "magnifying-glass" => "-translate-y-0.5",
+        "magnifying-glass-plus" => "-translate-y-0.5",
+        "magnifying-glass-minus" => "-translate-y-0.5"
       }.freeze
 
       VIEWBOXES = {
@@ -93,7 +102,11 @@ module FlatPack
       end
 
       def icon_classes
-        classes("inline-block", size_classes)
+        classes("block", "shrink-0", size_classes, optical_nudge_class)
+      end
+
+      def optical_nudge_class
+        OPTICAL_NUDGES[heroicon_name]
       end
 
       def size_classes
