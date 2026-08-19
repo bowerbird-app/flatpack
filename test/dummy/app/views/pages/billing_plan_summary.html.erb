@@ -1,0 +1,61 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Plan Summary",
+  subtitle: "Current plan card with status badge, renewal copy, and host-supplied actions."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :billing_plan_summary %>
+
+<%= render "shared/related_demos",
+  links: [
+    {text: "Billing", href: demo_billing_path},
+    {text: "Plan Picker", href: demo_billing_plan_picker_path},
+    {text: "Usage Meter", href: demo_billing_usage_meter_path},
+    {text: "Payment Method", href: demo_billing_payment_method_path},
+    {text: "Invoice List", href: demo_billing_invoice_list_path},
+    {text: "Status Alert", href: demo_billing_status_alert_path}
+  ] %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Active Plan", anchor_link: true, subtitle: "Active status with renewal copy and secondary actions.") %>
+  <div class="mb-4 max-w-xl">
+    <%= render FlatPack::Billing::PlanSummary::Component.new(
+      plan_name: "Pro",
+      price_text: "$29 / month",
+      status: :active,
+      renews_on: "Renews 1 Sep 2026",
+      description: "Includes 10 seats and priority support."
+    ) do |summary| %>
+      <% summary.actions do %>
+        <%= render FlatPack::Button::Component.new(text: "Change plan", href: demo_billing_plan_picker_path, style: :secondary) %>
+        <%= render FlatPack::Button::Component.new(text: "Manage billing", href: demo_billing_payment_method_path, style: :default) %>
+      <% end %>
+    <% end %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Billing::PlanSummary::Component.new(
+        plan_name: "Pro",
+        price_text: "$29 / month",
+        status: :active,
+        renews_on: "Renews 1 Sep 2026",
+        description: "Includes 10 seats and priority support."
+      ) do |summary| %&gt;
+        &lt;% summary.actions do %&gt;
+          &lt;%= render FlatPack::Button::Component.new(text: "Change plan", href: "/billing/plans", style: :secondary) %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    language: "erb",
+    title: "Active Plan"
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Status Variants", anchor_link: true, subtitle: "Trialing, past due, canceled, and incomplete badges.") %>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+    <%= render FlatPack::Billing::PlanSummary::Component.new(plan_name: "Pro", price_text: "$29 / month", status: :trialing, trial_ends_on: "Trial ends 1 Sep 2026") %>
+    <%= render FlatPack::Billing::PlanSummary::Component.new(plan_name: "Pro", price_text: "$29 / month", status: :past_due, renews_on: "Payment failed on 1 Aug 2026") %>
+    <%= render FlatPack::Billing::PlanSummary::Component.new(plan_name: "Basic", price_text: "$9 / month", status: :canceled, renews_on: "Ended 15 Jul 2026") %>
+    <%= render FlatPack::Billing::PlanSummary::Component.new(plan_name: "Enterprise", price_text: "Contact sales", status: :incomplete, description: "Finish setup to activate.") %>
+  </div>
+</section>

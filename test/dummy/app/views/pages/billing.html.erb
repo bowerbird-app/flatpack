@@ -1,0 +1,97 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Billing Components",
+  subtitle: "Presentational billing surfaces for plans, usage, payment methods, and invoices."
+) %>
+
+<%= render "pages/component_method_variables_table",
+  components: [
+    :billing_plan_summary,
+    :billing_plan_picker,
+    :billing_usage_meter,
+    :billing_payment_method,
+    :billing_invoice_list,
+    :billing_status_alert
+  ] %>
+
+<%= render "shared/related_demos",
+  subtitle: "Sibling billing-family components live on their own pages.",
+  links: [
+    {text: "Plan Summary", href: demo_billing_plan_summary_path},
+    {text: "Plan Picker", href: demo_billing_plan_picker_path},
+    {text: "Usage Meter", href: demo_billing_usage_meter_path},
+    {text: "Payment Method", href: demo_billing_payment_method_path},
+    {text: "Invoice List", href: demo_billing_invoice_list_path},
+    {text: "Status Alert", href: demo_billing_status_alert_path}
+  ] %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Overview Composition",
+    anchor_link: true,
+    subtitle: "Compose the family under a page header with fixture data only."
+  ) %>
+
+  <div class="space-y-4 mb-4">
+    <%= render FlatPack::Billing::StatusAlert::Component.new(status: :trial_ending) do |alert| %>
+      <% alert.actions do %>
+        <%= render FlatPack::Button::Component.new(text: "Add payment method", href: demo_billing_payment_method_path, style: :secondary, size: :sm) %>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::Billing::PlanSummary::Component.new(
+      plan_name: "Pro",
+      price_text: "$29 / month",
+      status: :trialing,
+      trial_ends_on: "Trial ends 1 Sep 2026",
+      description: "Includes 10 seats and priority support."
+    ) do |summary| %>
+      <% summary.actions do %>
+        <%= render FlatPack::Button::Component.new(text: "Change plan", href: demo_billing_plan_picker_path, style: :secondary) %>
+        <%= render FlatPack::Button::Component.new(text: "Manage billing", href: demo_billing_payment_method_path, style: :default) %>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::Billing::UsageMeter::Component.new(
+      label: "Seats",
+      used: 8,
+      limit: 10,
+      unit: "seats",
+      description: "Resets on your billing date."
+    ) %>
+
+    <%= render FlatPack::Billing::PaymentMethod::Component.new(
+      brand: "Visa",
+      last4: "4242",
+      expires_text: "09/28"
+    ) do |method| %>
+      <% method.actions do %>
+        <%= render FlatPack::Button::Component.new(text: "Update card", href: demo_billing_payment_method_path, style: :secondary) %>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::Billing::InvoiceList::Component.new(
+      items: [
+        {date: "1 Aug 2026", amount: "$29.00", status: :paid, href: "#invoice-1"},
+        {date: "1 Jul 2026", amount: "$29.00", status: :paid, href: "#invoice-2"},
+        {date: "1 Jun 2026", amount: "$29.00", status: :failed, href: "#invoice-3"}
+      ]
+    ) %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Billing::PlanSummary::Component.new(
+        plan_name: "Pro",
+        price_text: "$29 / month",
+        status: :trialing,
+        trial_ends_on: "Trial ends 1 Sep 2026"
+      ) do |summary| %&gt;
+        &lt;% summary.actions do %&gt;
+          &lt;%= render FlatPack::Button::Component.new(text: "Change plan", href: "/billing/plans", style: :secondary) %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    language: "erb",
+    title: "Overview Composition"
+  ) %>
+</section>

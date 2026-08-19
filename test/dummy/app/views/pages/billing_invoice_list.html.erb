@@ -1,0 +1,49 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Invoice List",
+  subtitle: "Invoice history table with status badges, download actions, and an empty state."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :billing_invoice_list %>
+
+<%= render "shared/related_demos",
+  links: [
+    {text: "Billing", href: demo_billing_path},
+    {text: "Plan Summary", href: demo_billing_plan_summary_path},
+    {text: "Plan Picker", href: demo_billing_plan_picker_path},
+    {text: "Usage Meter", href: demo_billing_usage_meter_path},
+    {text: "Payment Method", href: demo_billing_payment_method_path},
+    {text: "Status Alert", href: demo_billing_status_alert_path}
+  ] %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Invoice History", anchor_link: true, subtitle: "Fixture invoices with paid, open, and failed statuses.") %>
+  <div class="mb-4">
+    <%= render FlatPack::Billing::InvoiceList::Component.new(
+      items: [
+        {date: "1 Aug 2026", amount: "$29.00", status: :paid, href: "#invoice-1"},
+        {date: "1 Jul 2026", amount: "$29.00", status: :open, href: "#invoice-2"},
+        {date: "1 Jun 2026", amount: "$29.00", status: :failed, href: "#invoice-3"},
+        {date: "1 May 2026", amount: "$0.00", status: :void, href: "#invoice-4"}
+      ]
+    ) %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Billing::InvoiceList::Component.new(
+        items: [
+          {date: "1 Aug 2026", amount: "$29.00", status: :paid, href: "/billing/invoices/1"},
+          {date: "1 Jul 2026", amount: "$29.00", status: :paid, href: "/billing/invoices/2"}
+        ]
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Invoice History"
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Empty State", anchor_link: true, subtitle: "Shown when items is empty.") %>
+  <div class="mb-4">
+    <%= render FlatPack::Billing::InvoiceList::Component.new(items: []) %>
+  </div>
+</section>

@@ -1,0 +1,64 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Usage Meter",
+  subtitle: "Show usage against a plan limit, or unlimited when no limit is set."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :billing_usage_meter %>
+
+<%= render "shared/related_demos",
+  links: [
+    {text: "Billing", href: demo_billing_path},
+    {text: "Plan Summary", href: demo_billing_plan_summary_path},
+    {text: "Plan Picker", href: demo_billing_plan_picker_path},
+    {text: "Payment Method", href: demo_billing_payment_method_path},
+    {text: "Invoice List", href: demo_billing_invoice_list_path},
+    {text: "Status Alert", href: demo_billing_status_alert_path}
+  ] %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Within Limit", anchor_link: true, subtitle: "Default progress style under 80% usage.") %>
+  <div class="mb-4 max-w-xl">
+    <%= render FlatPack::Billing::UsageMeter::Component.new(
+      label: "Seats",
+      used: 4,
+      limit: 10,
+      unit: "seats",
+      description: "Resets on your billing date.",
+      tooltip_text: "Seats are counted for active members on this workspace."
+    ) %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Billing::UsageMeter::Component.new(
+        label: "Seats",
+        used: 4,
+        limit: 10,
+        unit: "seats",
+        description: "Resets on your billing date."
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Within Limit"
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Near Limit and Over", anchor_link: true, subtitle: "Warning near the limit and danger at or over the limit.") %>
+  <div class="space-y-6 mb-4 max-w-xl">
+    <%= render FlatPack::Billing::UsageMeter::Component.new(label: "API calls", used: 8500, limit: 10000, unit: "calls") %>
+    <%= render FlatPack::Billing::UsageMeter::Component.new(label: "Storage", used: 12, limit: 10, unit: "GB") %>
+  </div>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Unlimited", anchor_link: true, subtitle: "When limit is nil, hide the progress bar and show unlimited copy.") %>
+  <div class="mb-4 max-w-xl">
+    <%= render FlatPack::Billing::UsageMeter::Component.new(
+      label: "Storage",
+      used: 2.4,
+      limit: nil,
+      unit: "GB",
+      description: "Unlimited on Enterprise."
+    ) %>
+  </div>
+</section>

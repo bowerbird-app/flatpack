@@ -9,6 +9,8 @@ class DemoCatalogTest < ActiveSupport::TestCase
     assert_includes titles, "Accordion"
     assert_includes titles, "Links"
     assert_includes titles, "Pill Buttons"
+    assert_includes titles, "Plan Summary"
+    assert_includes titles, "Invoice List"
     assert_includes titles, "Charts: Types"
     assert_includes titles, "Cards: Media"
     assert_includes titles, "Avatar Groups"
@@ -40,6 +42,10 @@ class DemoCatalogTest < ActiveSupport::TestCase
     buttons = interactive[:entries].find { |entry| entry[:type] == :group && entry[:title] == "Buttons" }
 
     assert_equal 6, buttons[:children].length
+
+    billing = interactive[:entries].find { |entry| entry[:type] == :group && entry[:title] == "Billing" }
+    assert_equal 7, billing[:children].length
+    assert_includes billing[:children].map { |child| child[:path] }, "/demo/billing/plan_summary"
 
     data_display = DemoCatalog.sections.find { |section| section[:title] == "Data Display" }
     charts = data_display[:entries].find { |entry| entry[:type] == :group && entry[:title] == "Charts" }

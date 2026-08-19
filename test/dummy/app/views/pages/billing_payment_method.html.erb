@@ -1,0 +1,60 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Payment Method",
+  subtitle: "Show brand, last four, and expiry — or an empty state with Add/Update actions."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :billing_payment_method %>
+
+<%= render "shared/related_demos",
+  links: [
+    {text: "Billing", href: demo_billing_path},
+    {text: "Plan Summary", href: demo_billing_plan_summary_path},
+    {text: "Plan Picker", href: demo_billing_plan_picker_path},
+    {text: "Usage Meter", href: demo_billing_usage_meter_path},
+    {text: "Invoice List", href: demo_billing_invoice_list_path},
+    {text: "Status Alert", href: demo_billing_status_alert_path}
+  ] %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Card On File", anchor_link: true, subtitle: "Filled payment method with an Update card action.") %>
+  <div class="mb-4 max-w-xl">
+    <%= render FlatPack::Billing::PaymentMethod::Component.new(
+      brand: "Visa",
+      last4: "4242",
+      expires_text: "09/28"
+    ) do |method| %>
+      <% method.actions do %>
+        <%= render FlatPack::Button::Component.new(text: "Update card", href: "#update-card", style: :secondary) %>
+      <% end %>
+    <% end %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Billing::PaymentMethod::Component.new(
+        brand: "Visa",
+        last4: "4242",
+        expires_text: "09/28"
+      ) do |method| %&gt;
+        &lt;% method.actions do %&gt;
+          &lt;%= render FlatPack::Button::Component.new(text: "Update card", href: "/billing/payment-method", style: :secondary) %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    language: "erb",
+    title: "Card On File"
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Empty State", anchor_link: true, subtitle: "No brand/last4 triggers the empty state.") %>
+  <div class="mb-4 max-w-xl">
+    <%= render FlatPack::Billing::PaymentMethod::Component.new(
+      empty_title: "No card on file",
+      empty_description: "Add a card to continue after your trial."
+    ) do |method| %>
+      <% method.actions do %>
+        <%= render FlatPack::Button::Component.new(text: "Add payment method", href: "#add-card", style: :primary) %>
+      <% end %>
+    <% end %>
+  </div>
+</section>

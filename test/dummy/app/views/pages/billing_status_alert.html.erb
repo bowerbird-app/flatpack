@@ -1,0 +1,58 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Status Alert",
+  subtitle: "Thin billing alert wrapper with past-due, trial, payment-failed, and canceled defaults."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :billing_status_alert %>
+
+<%= render "shared/related_demos",
+  links: [
+    {text: "Billing", href: demo_billing_path},
+    {text: "Plan Summary", href: demo_billing_plan_summary_path},
+    {text: "Plan Picker", href: demo_billing_plan_picker_path},
+    {text: "Usage Meter", href: demo_billing_usage_meter_path},
+    {text: "Payment Method", href: demo_billing_payment_method_path},
+    {text: "Invoice List", href: demo_billing_invoice_list_path}
+  ] %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Past Due", anchor_link: true, subtitle: "Warning style with an Update card action.") %>
+  <div class="mb-4 max-w-2xl">
+    <%= render FlatPack::Billing::StatusAlert::Component.new(status: :past_due) do |alert| %>
+      <% alert.actions do %>
+        <%= render FlatPack::Button::Component.new(text: "Update card", href: demo_billing_payment_method_path, style: :secondary, size: :sm) %>
+      <% end %>
+    <% end %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Billing::StatusAlert::Component.new(status: :past_due) do |alert| %&gt;
+        &lt;% alert.actions do %&gt;
+          &lt;%= render FlatPack::Button::Component.new(text: "Update card", href: "/billing/payment-method", style: :secondary, size: :sm) %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    language: "erb",
+    title: "Past Due"
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Status Defaults", anchor_link: true, subtitle: "Trial ending, payment failed, and canceled defaults.") %>
+  <div class="space-y-4 mb-4 max-w-2xl">
+    <%= render FlatPack::Billing::StatusAlert::Component.new(status: :trial_ending) %>
+    <%= render FlatPack::Billing::StatusAlert::Component.new(status: :payment_failed) %>
+    <%= render FlatPack::Billing::StatusAlert::Component.new(status: :canceled) %>
+  </div>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Custom Copy", anchor_link: true, subtitle: "Override title and description without a status shortcut.") %>
+  <div class="mb-4 max-w-2xl">
+    <%= render FlatPack::Billing::StatusAlert::Component.new(
+      style: :warning,
+      title: "Usage limit reached",
+      description: "You’ve used all seats on this plan. Remove a member or change plan."
+    ) %>
+  </div>
+</section>

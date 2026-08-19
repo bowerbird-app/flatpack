@@ -7,11 +7,11 @@ Render a responsive grid of plan cards so a host can offer plan choices with fea
 Use Plan Picker when the user is selecting or comparing plans. Use Plan Summary for the currently active plan on an overview.
 
 ## Status
-**Guidance only.** Not implemented yet. Intended class: `FlatPack::Billing::PlanPicker::Component`.
+**Implemented.** Intended class: `FlatPack::Billing::PlanPicker::Component`.
 
 ## Class
 - Primary: `FlatPack::Billing::PlanPicker::Component`
-- Related classes: `FlatPack::Grid::Component`, `FlatPack::Card::Component`, `FlatPack::List::Component`, `FlatPack::Badge::Component`, `FlatPack::Button::Component`
+- Related classes: `FlatPack::Grid::Component`, `FlatPack::Card::Component`, `FlatPack::Badge::Component`, `FlatPack::Button::Component`, `FlatPack::Shared::IconComponent`
 
 ## Props
 | name | type | default | required | description |

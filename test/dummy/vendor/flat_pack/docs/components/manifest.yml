@@ -48,43 +48,43 @@ components:
       - FlatPack::Billing::PaymentMethod::Component
       - FlatPack::Billing::InvoiceList::Component
       - FlatPack::Billing::StatusAlert::Component
-    status: planned
+    status: documented
 
   - key: billing_plan_summary
     title: Billing Plan Summary
     doc: docs/components/billing-plan-summary.md
     primary_class: FlatPack::Billing::PlanSummary::Component
-    status: planned
+    status: documented
 
   - key: billing_plan_picker
     title: Billing Plan Picker
     doc: docs/components/billing-plan-picker.md
     primary_class: FlatPack::Billing::PlanPicker::Component
-    status: planned
+    status: documented
 
   - key: billing_usage_meter
     title: Billing Usage Meter
     doc: docs/components/billing-usage-meter.md
     primary_class: FlatPack::Billing::UsageMeter::Component
-    status: planned
+    status: documented
 
   - key: billing_payment_method
     title: Billing Payment Method
     doc: docs/components/billing-payment-method.md
     primary_class: FlatPack::Billing::PaymentMethod::Component
-    status: planned
+    status: documented
 
   - key: billing_invoice_list
     title: Billing Invoice List
     doc: docs/components/billing-invoice-list.md
     primary_class: FlatPack::Billing::InvoiceList::Component
-    status: planned
+    status: documented
 
   - key: billing_status_alert
     title: Billing Status Alert
     doc: docs/components/billing-status-alert.md
     primary_class: FlatPack::Billing::StatusAlert::Component
-    status: planned
+    status: documented
 
   - key: bottom_nav
     title: Bottom Nav

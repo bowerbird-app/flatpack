@@ -7,7 +7,7 @@ Show the on-file payment method (brand, last four, expiry) or an empty state wit
 Use Payment Method on a billing overview to display how the workspace pays. Do not use it to collect full card numbers or CVC.
 
 ## Status
-**Guidance only.** Not implemented yet. Intended class: `FlatPack::Billing::PaymentMethod::Component`.
+**Implemented.** Intended class: `FlatPack::Billing::PaymentMethod::Component`.
 
 ## Class
 - Primary: `FlatPack::Billing::PaymentMethod::Component`
