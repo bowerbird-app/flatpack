@@ -96,4 +96,4 @@ new_components_summary | FlatPack::Grid::Component | docs/components/NEW_COMPONE
 
 - For related classes, aliases, and status metadata, use `docs/components/manifest.yml`.
 - Every component doc should follow `docs/components/DOC_FORMAT.md`.
-- Billing entries (`billing*`) are **planned guidance** only: API shape and composition are documented; Ruby components, demos, and tests are deferred. See `docs/components/billing.md`.
+- Billing entries (`billing*`) are documented and demoed under `/demo/billing`. See `docs/components/billing.md`.

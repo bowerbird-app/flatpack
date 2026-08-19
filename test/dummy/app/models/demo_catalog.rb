@@ -43,6 +43,20 @@ class DemoCatalog
             {title: "Dropdowns", path: "/demo/buttons/dropdowns", description: "Button dropdown menus and positions", icon: :chevron_down}
           ]
         },
+        {
+          type: :group,
+          title: "Billing",
+          icon: :credit_card,
+          children: [
+            {title: "Billing", path: "/demo/billing", description: "Billing component family overview", icon: :credit_card},
+            {title: "Plan Summary", path: "/demo/billing/plan_summary", description: "Current plan card with status and actions", icon: :box},
+            {title: "Plan Picker", path: "/demo/billing/plan_picker", description: "Compare and select plans", icon: :square},
+            {title: "Usage Meter", path: "/demo/billing/usage_meter", description: "Usage against plan limits", icon: :dashboard},
+            {title: "Payment Method", path: "/demo/billing/payment_method", description: "Saved card display and empty state", icon: :credit_card},
+            {title: "Invoice List", path: "/demo/billing/invoice_list", description: "Invoice history table with status badges", icon: :table},
+            {title: "Status Alert", path: "/demo/billing/status_alert", description: "Past-due and billing status alerts", icon: :alert}
+          ]
+        },
         {type: :item, title: "Modals", path: "/demo/modals", description: "Dialog overlays with focus trap", icon: :box},
         {type: :item, title: "Popovers", path: "/demo/popovers", description: "Click-triggered floating content", icon: :question},
         {type: :item, title: "Tooltips", path: "/demo/tooltips", description: "Hover/focus tooltips", icon: :question},

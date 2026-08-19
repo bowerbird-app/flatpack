@@ -11,6 +11,13 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/buttons/segmented
     /demo/buttons/groups
     /demo/buttons/dropdowns
+    /demo/billing
+    /demo/billing/plan_summary
+    /demo/billing/plan_picker
+    /demo/billing/usage_meter
+    /demo/billing/payment_method
+    /demo/billing/invoice_list
+    /demo/billing/status_alert
     /demo/forms
     /demo/forms/text_input
     /demo/forms/password_input
@@ -227,6 +234,31 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, demo_buttons_groups_path
     assert_includes response.body, demo_buttons_segmented_path
     assert_includes response.body, demo_buttons_dropdowns_path
+  end
+
+  test "billing demo links to sibling billing pages" do
+    get "/demo/billing"
+
+    assert_response :success
+    assert_includes response.body, "Billing Components"
+    assert_includes response.body, demo_billing_plan_summary_path
+    assert_includes response.body, demo_billing_plan_picker_path
+    assert_includes response.body, demo_billing_usage_meter_path
+    assert_includes response.body, demo_billing_payment_method_path
+    assert_includes response.body, demo_billing_invoice_list_path
+    assert_includes response.body, demo_billing_status_alert_path
+    assert_includes response.body, "Plan Summary"
+    assert_includes response.body, "Visa"
+  end
+
+  test "billing plan summary demo renders status variants" do
+    get "/demo/billing/plan_summary"
+
+    assert_response :success
+    assert_includes response.body, "Plan Summary"
+    assert_includes response.body, demo_billing_path
+    assert_includes response.body, "Active"
+    assert_includes response.body, "Past due"
   end
 
   test "collapse and accordion demos link to each other" do

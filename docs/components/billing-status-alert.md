@@ -7,7 +7,7 @@ Show billing-state feedback (past due, trial ending, payment failed) with consis
 Use Status Alert above plan/payment sections when the workspace needs immediate billing attention. Prefer plain `FlatPack::Alert::Component` when you only need a one-off message without billing status defaults.
 
 ## Status
-**Guidance only.** Not implemented yet. Intended class: `FlatPack::Billing::StatusAlert::Component`. Keep this wrapper thin; default copy is the main value over raw `Alert`.
+**Implemented.** Intended class: `FlatPack::Billing::StatusAlert::Component`. Keep this wrapper thin; default copy is the main value over raw `Alert`.
 
 ## Class
 - Primary: `FlatPack::Billing::StatusAlert::Component`

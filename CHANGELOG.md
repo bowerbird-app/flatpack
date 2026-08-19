@@ -8,12 +8,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Billing component family guidance docs (`docs/components/billing*.md`): planned presentational APIs for plan summary, plan picker, usage meter, payment method, invoice list, and status alert.
-- Billing param conventions in `docs/components/PARAMS.md` (`items`, `price_text`, `status`, empty-state names, PCI non-goals).
 
 ### Changed
 
 ### Fixed
+
+## [0.1.134] - 2026-08-19
+
+### Added
+- Presentational `FlatPack::Billing::*` components: Plan Summary, Plan Picker, Usage Meter, Payment Method, Invoice List, and Status Alert.
+- Dummy demo family under `/demo/billing` with expandable sidebar group and top-nav search entries.
+- Billing component docs and method/variables tables for the dummy demos.
+
+### Changed
+- Bumped the gem version to `0.1.134`.
+
+### Upgrade notes
+- No host app changes required. Compose the new billing components with host-supplied display strings and `href`s; FlatPack still does not collect card numbers or call payment providers.
 
 ## [0.1.133] - 2026-08-18
 

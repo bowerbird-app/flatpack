@@ -7,7 +7,7 @@ Show the workspace’s current plan name, price, status, and renewal or trial ti
 Use Plan Summary as the primary “current plan” card on a billing overview. Prefer Plan Picker when the user is choosing among plans.
 
 ## Status
-**Guidance only.** Not implemented yet. Intended class: `FlatPack::Billing::PlanSummary::Component`.
+**Implemented.** Intended class: `FlatPack::Billing::PlanSummary::Component`.
 
 ## Class
 - Primary: `FlatPack::Billing::PlanSummary::Component`

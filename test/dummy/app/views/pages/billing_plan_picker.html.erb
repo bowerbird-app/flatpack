@@ -1,0 +1,65 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Plan Picker",
+  subtitle: "Compare plans with feature lists, current/popular markers, and one CTA per card."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :billing_plan_picker %>
+
+<%= render "shared/related_demos",
+  links: [
+    {text: "Billing", href: demo_billing_path},
+    {text: "Plan Summary", href: demo_billing_plan_summary_path},
+    {text: "Usage Meter", href: demo_billing_usage_meter_path},
+    {text: "Payment Method", href: demo_billing_payment_method_path},
+    {text: "Invoice List", href: demo_billing_invoice_list_path},
+    {text: "Status Alert", href: demo_billing_status_alert_path}
+  ] %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Plan Choices", anchor_link: true, subtitle: "Highlight one popular plan and mark the current plan.") %>
+  <div class="mb-4">
+    <%= render FlatPack::Billing::PlanPicker::Component.new(
+      items: [
+        {
+          name: "Basic",
+          price_text: "$9 / month",
+          description: "For small teams getting started.",
+          features: ["3 seats", "Email support"],
+          href: "#choose-basic",
+          cta_text: "Choose Basic"
+        },
+        {
+          name: "Pro",
+          price_text: "$29 / month",
+          description: "For growing workspaces.",
+          features: ["10 seats", "Priority support", "Usage insights"],
+          href: "#current-pro",
+          cta_text: "Current plan",
+          current: true,
+          highlighted: true
+        },
+        {
+          name: "Enterprise",
+          price_text: "Contact us",
+          description: "Custom limits and support.",
+          features: ["Unlimited seats", "Dedicated support"],
+          href: "#contact-sales",
+          cta_text: "Contact sales"
+        }
+      ]
+    ) %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Billing::PlanPicker::Component.new(
+        items: [
+          {name: "Basic", price_text: "$9 / month", features: ["3 seats"], href: "/billing/plans/basic"},
+          {name: "Pro", price_text: "$29 / month", features: ["10 seats"], href: "/billing/plans/pro", current: true, highlighted: true, cta_text: "Current plan"},
+          {name: "Enterprise", price_text: "Contact us", features: ["Unlimited seats"], href: "/billing/contact", cta_text: "Contact sales"}
+        ]
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Plan Choices"
+  ) %>
+</section>

@@ -109,6 +109,27 @@ class PagesController < ApplicationController
   def buttons_dropdowns
   end
 
+  def billing
+  end
+
+  def billing_plan_summary
+  end
+
+  def billing_plan_picker
+  end
+
+  def billing_usage_meter
+  end
+
+  def billing_payment_method
+  end
+
+  def billing_invoice_list
+  end
+
+  def billing_status_alert
+  end
+
   def tables_basic
   end
 

@@ -40,6 +40,78 @@
         { variable: "size", accepts: ":xs, :sm, :md, :lg", example: "size: :xs" }
       ]
     },
+    billing_plan_summary: {
+      label: "Billing Plan Summary",
+      method_call: "render FlatPack::Billing::PlanSummary::Component.new(plan_name: \"Pro\", price_text: \"$29 / month\", status: :active)",
+      variables: [
+        { variable: "plan_name", accepts: "String (required)", example: "plan_name: \"Pro\"" },
+        { variable: "price_text", accepts: "String or nil", example: "price_text: \"$29 / month\"" },
+        { variable: "status", accepts: ":active, :trialing, :past_due, :canceled, :incomplete", example: "status: :active" },
+        { variable: "renews_on", accepts: "String or nil", example: "renews_on: \"Renews 1 Sep 2026\"" },
+        { variable: "trial_ends_on", accepts: "String or nil", example: "trial_ends_on: \"Trial ends 1 Sep 2026\"" },
+        { variable: "description", accepts: "String or nil", example: "description: \"Includes 10 seats\"" },
+        { variable: "actions", accepts: "slot", example: "summary.actions { ... }" },
+        { variable: "footer", accepts: "slot", example: "summary.footer { ... }" }
+      ]
+    },
+    billing_plan_picker: {
+      label: "Billing Plan Picker",
+      method_call: "render FlatPack::Billing::PlanPicker::Component.new(items: [{name: \"Pro\", price_text: \"$29 / month\", href: \"/plans/pro\"}])",
+      variables: [
+        { variable: "items", accepts: "Array of plan hashes (required keys: name)", example: "items: [{name: \"Pro\", price_text: \"$29 / month\", features: [\"10 seats\"], href: \"/plans/pro\", current: true, highlighted: true}]" },
+        { variable: "footer", accepts: "slot", example: "picker.footer { ... }" }
+      ]
+    },
+    billing_usage_meter: {
+      label: "Billing Usage Meter",
+      method_call: "render FlatPack::Billing::UsageMeter::Component.new(label: \"Seats\", used: 8, limit: 10, unit: \"seats\")",
+      variables: [
+        { variable: "label", accepts: "String (required)", example: "label: \"Seats\"" },
+        { variable: "used", accepts: "Numeric (required, >= 0)", example: "used: 8" },
+        { variable: "limit", accepts: "Numeric or nil", example: "limit: 10" },
+        { variable: "unit", accepts: "String or nil", example: "unit: \"seats\"" },
+        { variable: "description", accepts: "String or nil", example: "description: \"Resets on your billing date.\"" },
+        { variable: "tooltip_text", accepts: "String or nil", example: "tooltip_text: \"Counted for active members\"" }
+      ]
+    },
+    billing_payment_method: {
+      label: "Billing Payment Method",
+      method_call: "render FlatPack::Billing::PaymentMethod::Component.new(brand: \"Visa\", last4: \"4242\", expires_text: \"09/28\")",
+      variables: [
+        { variable: "brand", accepts: "String or nil", example: "brand: \"Visa\"" },
+        { variable: "last4", accepts: "String or nil", example: "last4: \"4242\"" },
+        { variable: "expires_text", accepts: "String or nil", example: "expires_text: \"09/28\"" },
+        { variable: "expires_on", accepts: "String or nil", example: "expires_on: \"09/28\"" },
+        { variable: "title", accepts: "String", example: "title: \"Payment method\"" },
+        { variable: "empty_title", accepts: "String", example: "empty_title: \"No card on file\"" },
+        { variable: "empty_description", accepts: "String", example: "empty_description: \"Add a payment method...\"" },
+        { variable: "actions", accepts: "slot", example: "method.actions { ... }" }
+      ]
+    },
+    billing_invoice_list: {
+      label: "Billing Invoice List",
+      method_call: "render FlatPack::Billing::InvoiceList::Component.new(items: [{date: \"1 Aug 2026\", amount: \"$29.00\", status: :paid}])",
+      variables: [
+        { variable: "items", accepts: "Array of invoice hashes", example: "items: [{date: \"1 Aug 2026\", amount: \"$29.00\", status: :paid, href: \"/invoices/1\"}]" },
+        { variable: "title", accepts: "String", example: "title: \"Invoices\"" },
+        { variable: "empty_title", accepts: "String", example: "empty_title: \"No invoices yet\"" },
+        { variable: "empty_description", accepts: "String", example: "empty_description: \"They’ll show up here...\"" },
+        { variable: "pagy", accepts: "Pagy object or nil", example: "pagy: @pagy" },
+        { variable: "actions", accepts: "slot", example: "list.actions { ... }" }
+      ]
+    },
+    billing_status_alert: {
+      label: "Billing Status Alert",
+      method_call: "render FlatPack::Billing::StatusAlert::Component.new(status: :past_due)",
+      variables: [
+        { variable: "status", accepts: ":past_due, :trial_ending, :payment_failed, :canceled or nil", example: "status: :past_due" },
+        { variable: "style", accepts: ":info, :success, :warning, :danger or nil", example: "style: :warning" },
+        { variable: "title", accepts: "String or nil", example: "title: \"Past due\"" },
+        { variable: "description", accepts: "String or nil", example: "description: \"Update your payment method...\"" },
+        { variable: "dismissible", accepts: "true, false", example: "dismissible: true" },
+        { variable: "actions", accepts: "slot", example: "alert.actions { ... }" }
+      ]
+    },
     breadcrumb: {
       label: "Breadcrumb",
       method_call: "render FlatPack::Breadcrumb::Component.new(separator: :chevron, show_home: true, max_items: 4) do |breadcrumb| ... end",

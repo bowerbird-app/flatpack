@@ -7,7 +7,7 @@ Render a table of invoices with status badges, optional row actions, pagination,
 Use Invoice List for invoice history on a billing overview. FlatPack does not download files; the host supplies view/download `href`s.
 
 ## Status
-**Guidance only.** Not implemented yet. Intended class: `FlatPack::Billing::InvoiceList::Component`.
+**Implemented.** Intended class: `FlatPack::Billing::InvoiceList::Component`.
 
 ## Class
 - Primary: `FlatPack::Billing::InvoiceList::Component`

@@ -7,7 +7,7 @@ Show usage versus a plan limit with a progress bar and optional helper copy.
 Use Usage Meter for seat counts, storage, API calls, or other metered entitlements on a billing overview.
 
 ## Status
-**Guidance only.** Not implemented yet. Intended class: `FlatPack::Billing::UsageMeter::Component`.
+**Implemented.** Intended class: `FlatPack::Billing::UsageMeter::Component`.
 
 ## Class
 - Primary: `FlatPack::Billing::UsageMeter::Component`

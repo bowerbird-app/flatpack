@@ -1,4 +1,4 @@
-# Billing (guidance)
+# Billing
 
 ## Purpose
 Define the presentational FlatPack billing component family so hosts can render plan, usage, payment, and invoice UI without payment-provider logic in FlatPack.
@@ -9,7 +9,7 @@ Use these components when a host (or a billing addon) already owns plans, invoic
 Do **not** use this family to collect raw card numbers, run checkout, or mount a full billing settings app inside FlatPack.
 
 ## Status
-**Guidance only.** Ruby components, dummy demos, tests, and a gem version bump are deferred. Class names below are the intended public API when implemented.
+**Implemented.** Presentational components ship under `FlatPack::Billing::*` with fixture-only dummy demos.
 
 ## Class
 - Family namespace: `FlatPack::Billing`
@@ -100,7 +100,7 @@ Default copy stays short and plain: “Change plan”, “Update card”, “No 
 | Component | Builds on |
 |---|---|
 | Plan summary | `Card`, `Badge`, `Button` (via slots) |
-| Plan picker | `Grid`, `Card`, `List`, `Badge`, `Button` |
+| Plan picker | `Grid`, `Card`, `Badge`, `Button`, feature list markup |
 | Usage meter | `Progress`, `Tooltip` (optional) |
 | Payment method | `Card`, `EmptyState`, `Button` (via slots) |
 | Invoice list | `Table`, `Badge`, `Pagination`, `EmptyState`, `Button::Dropdown` |
@@ -116,12 +116,6 @@ Default copy stays short and plain: “Change plan”, “Update card”, “No 
 - Existing primitives listed in the composition map.
 - Host supplies formatted dates, amounts, and action `href`s.
 
-## Implementation deferred
+## Dummy demos
 
-When implementing later:
-
-1. Add Ruby under `app/components/flat_pack/billing/…`
-2. Keep each doc in sync and flip manifest `status` from `planned` to `documented`
-3. Add fixture-only dummy demos (no live billing)
-4. Add Minitest for props, empty states, status badges, and slots
-5. Bump the gem version and add CHANGELOG / upgrade notes
+Fixture-only pages under `/demo/billing` and sibling routes. No live payment providers.
