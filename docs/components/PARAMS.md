@@ -19,8 +19,22 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Extra CSS | `class` | System argument. Do not add `class_name` |
 | Action button copy | `*_label` | Confirm, close, submit, cancel, and reset strings |
 | Empty-state copy | `empty_text` or `empty_title` / `empty_description` | Single-line empty copy vs title-plus-body empty states |
-| List of records | `items` | Search catalogs, pickers, avatar groups, and other collections already in the page |
+| List of records | `items` | Search catalogs, pickers, avatar groups, billing plan/invoice rows, and other collections already in the page |
 | Open / closed start state | `open` | Whether a collapse, group, or layout starts expanded |
+| Host-formatted money | `price_text` / `amount` | Display-only plan prices and invoice amounts; FlatPack does not format currency |
+| Host-formatted date copy | `renews_on`, `trial_ends_on`, `expires_text` | Billing renewal, trial, and card expiry strings the host already formatted |
+| Subscription / invoice state | `status` | Billing enums such as `:active`, `:past_due`, `:paid`; map to Badge/Alert `style` in the component |
+
+## Billing namespace notes
+
+Planned family docs live under `docs/components/billing*.md`. When implementing `FlatPack::Billing::*`:
+
+- Prefer `items` for plan picker and invoice collections (do not invent `plans` or `invoices` as prop names).
+- Prefer `href` for Change plan, Update card, and invoice Download/View navigation.
+- Prefer `empty_title` / `empty_description` for payment-method and invoice empty states.
+- Prefer `price_text` and `amount` as preformatted strings; do not add a `currency` formatter in FlatPack.
+- Prefer `cta_text` for plan-picker button copy (action label pattern via `*_text` / `text`).
+- Keep PCI out of FlatPack: never add props for full PAN, CVC, or Elements mount points.
 
 ## Do not mix
 
@@ -29,3 +43,4 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 - Do not use `label` for the visible string of a compact control. Use `text`.
 - Do not use `position` for overlay placement. Use `placement`.
 - Keep `type` only for native HTML control types such as button `type: "submit"`.
+- Do not use `plans` or `invoices` as collection prop names when `items` already covers the concept.
