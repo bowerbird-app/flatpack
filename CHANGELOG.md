@@ -18,10 +18,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - `FlatPack::Search::Component` accepts `items:` for instant client-side filtering of static catalogs.
 - Dummy demo catalog (`DemoCatalog`) now drives sidebar navigation and top-nav search from one source.
+- Dummy `/demo/search` now shows local `items:` first, then remote `search_url`.
 
 ### Changed
 - Dummy top-nav search filters the demo catalog in the browser instead of waiting on `/demo/search_results` for every keystroke.
 - Dummy top-nav search ranks title matches above description matches, so "form" prefers Forms over Tables ("formatting").
+- Dummy search, top-nav, and split-family demo pages document the current catalog and related routes.
 - Reorganized long dummy demo pages into focused routes:
   - Collapse and Accordion are separate pages
   - Buttons family split into Buttons, Links, Pills, Segmented, Groups, and Dropdowns

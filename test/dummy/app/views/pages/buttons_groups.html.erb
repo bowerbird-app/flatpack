@@ -3,6 +3,15 @@
   subtitle: "Visually connected button groups with shared borders."
 ) %>
 
+<%= render "shared/related_demos",
+  links: [
+    {text: "Buttons", href: demo_buttons_path},
+    {text: "Links", href: demo_links_path},
+    {text: "Pill Buttons", href: demo_buttons_pills_path},
+    {text: "Segmented", href: demo_buttons_segmented_path},
+    {text: "Dropdowns", href: demo_buttons_dropdowns_path}
+  ] %>
+
 <!-- Button Groups (Wrapped) -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Button Groups (Wrapped Together)", anchor_link: true, subtitle: "Examples for Button Groups (Wrapped Together).") %>

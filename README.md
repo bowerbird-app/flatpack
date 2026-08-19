@@ -204,6 +204,15 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
   placeholder: "Search..."
 ) %>
 
+# Live search from a static list (preferred for catalogs)
+<%= render FlatPack::Search::Component.new(
+  items: [
+    {title: "Buttons", description: "Button styles", url: "/demo/buttons"},
+    {title: "Forms", description: "Form inputs", url: "/demo/forms"}
+  ],
+  placeholder: "Search components..."
+) %>
+
 # Live search dropdown (JSON endpoint)
 <%= render FlatPack::Search::Component.new(
   search_url: search_results_path,
@@ -305,7 +314,7 @@ For hierarchical parent/child checkbox selection, see the `flat-pack--nested-mul
 - **Carousel** - Interactive slide carousel with controls, autoplay, and lightbox
 - **Chips** - Chip + ChipGroup for tag-like selection UI
 - **RangeInput** - Slider control for bounded numeric values
-- **Search** - Search input with live-result dropdown backed by a JSON endpoint
+- **Search** - Search field with a live-result dropdown from a local `items:` list or a JSON endpoint
 
 ### Feedback & Notifications
 - **Alert** - Prominent notifications (success, error, warning, info)

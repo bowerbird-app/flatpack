@@ -5,6 +5,9 @@
 
 <%= render "pages/component_method_variables_table", component: :collapse %>
 
+<%= render "shared/related_demos",
+  links: [{text: "Accordion", href: demo_accordion_path}] %>
+
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Collapse Component", anchor_link: true) %>
   

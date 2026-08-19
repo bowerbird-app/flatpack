@@ -7,6 +7,13 @@
 
 <%= render "pages/component_method_variables_table", component: :card %>
 
+<%= render "shared/related_demos",
+  links: [
+    {text: "Overview", href: demo_cards_path},
+    {text: "Styles", href: demo_cards_styles_path},
+    {text: "Composed", href: demo_cards_composed_path}
+  ] %>
+
   <!-- Media Gallery Cards -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Media Gallery Cards", anchor_link: true, subtitle: "A compact file-browser style card grid for image-heavy layouts.") %>

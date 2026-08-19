@@ -42,7 +42,10 @@ Defaults keep branding and the sidebar toggle visible: `left` is `always_display
 
   <%# Collapses into the chevron menu on mobile %>
   <% nav.center do %>
-    <%= render FlatPack::Search::Component.new(placeholder: "Search...") %>
+    <%= render FlatPack::Search::Component.new(
+      items: [{title: "Buttons", description: "Button styles", url: "/demo/buttons"}],
+      placeholder: "Search..."
+    ) %>
   <% end %>
 
   <%# Stays in the bar at every viewport width %>
@@ -86,6 +89,7 @@ None.
 
   <% nav.center do %>
     <%= render FlatPack::Search::Component.new(
+      items: [{title: "Buttons", description: "Button styles", url: "/demo/buttons"}],
       placeholder: "Search..."
     ) %>
   <% end %>

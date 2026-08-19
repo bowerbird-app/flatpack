@@ -1,13 +1,42 @@
 <%= render FlatPack::PageTitle::Component.new(
   title: "Search Component",
-  subtitle: "Reusable search input for top navs, headers, and page-level filtering."
+  subtitle: "Drop a search field in the top bar, or anywhere else you need a quick find."
 ) %>
 <%= render "pages/component_method_variables_table", component: :search %>
 
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Default", anchor_link: true, subtitle: "Examples for Default.") %>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Local catalog", anchor_link: true, subtitle: "Filter a list in the browser. Titles beat descriptions, so form finds Forms first.") %>
   <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">
-    Use the standalone Search component anywhere, including outside TopNav.
+    Pass <code>items:</code> when the list is already in the page. The dummy top nav uses this with <code>DemoCatalog.searchable_items</code>. Try typing <strong>form</strong>.
+  </p>
+
+  <div class="rounded-lg border border-[var(--surface-border-color)] p-6 bg-[var(--surface-background-color)] mb-4">
+    <%= render FlatPack::Search::Component.new(
+      items: DemoCatalog.searchable_items,
+      placeholder: "Try form, accordion, or chart...",
+      min_characters: 1,
+      no_results_text: "No demo pages found"
+    ) %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Search::Component.new(
+        items: [
+          {title: "Forms", description: "Inputs and submit patterns", url: "/demo/forms"},
+          {title: "Tables: Basic", description: "Row formatting and filters", url: "/demo/tables/basic"}
+        ],
+        placeholder: "Search demo pages...",
+        min_characters: 1
+      ) %&gt;
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Remote JSON", anchor_link: true, subtitle: "Ask the server when results have to come from a query.") %>
+  <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">
+    Use a <code>search_url</code> when the list is not static. Ignored if you also pass <code>items:</code>.
   </p>
 
   <div class="rounded-lg border border-[var(--surface-border-color)] p-6 bg-[var(--surface-background-color)] mb-4">
@@ -28,17 +57,17 @@
 </section>
 
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Theme Tokens", anchor_link: true, subtitle: "Dedicated --search-* tokens for styling the Search component.") %>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Theme Tokens", anchor_link: true, subtitle: "Dedicated --search-* tokens for the icon, field, and results.") %>
   <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">
-    Search now exposes dedicated theme tokens for the icon, input, dropdown, and result items.
-    Override these per theme or per container to customize search without changing component markup.
+    Override these per theme or per container. The magnifying-glass alignment lives on the icon, not on this field.
   </p>
 
   <div class="rounded-lg border border-[var(--surface-border-color)] p-6 bg-[var(--surface-background-color)] mb-4">
     <div class="max-w-lg" style="--search-input-background-color: color-mix(in oklab, var(--color-primary) 8%, var(--surface-background-color)); --search-input-border-color: var(--color-primary); --search-input-focus-ring-color: var(--color-primary); --search-dropdown-border-color: var(--color-primary); --search-result-hover-background-color: color-mix(in oklab, var(--color-primary) 10%, var(--surface-background-color)); --search-icon-color: var(--color-primary);">
       <%= render FlatPack::Search::Component.new(
-        search_url: demo_search_results_path,
+        items: DemoCatalog.searchable_items,
         placeholder: "Search with token overrides...",
+        min_characters: 1,
         no_results_text: "No tokenized matches"
       ) %>
     </div>
@@ -67,13 +96,14 @@
 </section>
 
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Custom Name and Value", anchor_link: true, subtitle: "Examples for Custom Name and Value.") %>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Custom Name and Value", anchor_link: true, subtitle: "Start with a value, and name the field something other than q.") %>
   <div class="rounded-lg border border-[var(--surface-border-color)] p-6 bg-[var(--surface-background-color)] mb-4">
     <%= render FlatPack::Search::Component.new(
       name: "query",
       value: "flatpack",
-      search_url: demo_search_results_path,
+      items: DemoCatalog.searchable_items,
       placeholder: "Search components...",
+      min_characters: 1,
       no_results_text: "No matching components",
       class: "max-w-lg"
     ) %>
@@ -84,7 +114,7 @@
       &lt;%= render FlatPack::Search::Component.new(
         name: "query",
         value: "flatpack",
-        search_url: demo_search_results_path,
+        items: [{title: "Search", description: "Live search field", url: "/demo/search"}],
         placeholder: "Search components...",
         no_results_text: "No matching components",
         class: "max-w-lg"

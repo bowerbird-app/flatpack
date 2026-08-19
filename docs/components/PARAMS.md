@@ -19,6 +19,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Extra CSS | `class` | System argument. Do not add `class_name` |
 | Action button copy | `*_label` | Confirm, close, submit, cancel, and reset strings |
 | Empty-state copy | `empty_text` or `empty_title` / `empty_description` | Single-line empty copy vs title-plus-body empty states |
+| List of records | `items` | Search catalogs, pickers, avatar groups, and other collections already in the page |
 | Open / closed start state | `open` | Whether a collapse, group, or layout starts expanded |
 
 ## Do not mix

@@ -108,11 +108,23 @@ mount FlatPack::Engine => "/flat_pack"
 
 ## Demo Pages
 
-The dummy app includes several demo pages:
+Sidebar links and the top-nav search field both read from `app/models/demo_catalog.rb`, so they stay in sync.
+
+Long component families are split across focused routes:
+
+- Buttons: `/demo/buttons`, `/demo/links`, `/demo/buttons/pills`, `/demo/buttons/segmented`, `/demo/buttons/groups`, `/demo/buttons/dropdowns`
+- Charts: `/demo/charts`, `/demo/charts/types`, `/demo/charts/composition`, `/demo/charts/setup`
+- Cards: `/demo/cards`, `/demo/cards/styles`, `/demo/cards/media`, `/demo/cards/composed`
+- Collapse and Accordion are separate pages
+- Avatar Groups and Chip Groups have their own pages
+- Legacy `/demo/inputs` redirects to `/demo/forms`
+
+Top-nav search filters `DemoCatalog.searchable_items` in the browser (`items:` on `FlatPack::Search::Component`). Title matches rank above description matches.
+
+Other useful pages:
 
 - **Home/Demo** (`/`): Overview of available components
-- **Buttons** (`/demo/buttons`): Button component examples
-- **Tables** (`/demo/tables`): Table component examples
+- **Search** (`/demo/search`): Local catalog and remote JSON examples
 - **Themes** (`/themes`): Live `@theme` token catalog (brand → semantic → component aliases)
 - **Theme demos** (`/themes/demos/:theme`): Light (`:root` dump) plus override-only named themes
 
@@ -183,8 +195,13 @@ test/dummy/
 │   │   ├── stylesheets/application.tailwind.css
 │   │   └── tailwind/application.css
 │   ├── controllers/pages_controller.rb
+│   ├── models/demo_catalog.rb         # Sidebar + top-nav search catalog
 │   ├── javascript/controllers/
-│   └── views/pages/
+│   └── views/
+│       ├── pages/
+│       └── shared/
+│           ├── _demo_sidebar.html.erb
+│           └── _related_demos.html.erb
 ├── config/
 │   ├── importmap.rb
 │   └── routes.rb

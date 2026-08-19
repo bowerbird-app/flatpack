@@ -6,6 +6,9 @@
 
   <%= render "pages/component_method_variables_table", component: :avatar %>
 
+  <%= render "shared/related_demos",
+    links: [{text: "Avatar Groups", href: demo_avatar_groups_path}] %>
+
   <%
     erb_output_open = "<" + "%="
     erb_tag_close = "%" + ">"
@@ -343,14 +346,5 @@
         }
       ]
     ) %>
-  </section>
-
-  <section class="mb-12">
-    <%= render FlatPack::SectionTitle::Component.new(title: "Related", anchor_link: true) %>
-    <p class="text-sm text-[var(--surface-muted-content-color)]">
-      <%= render FlatPack::Link::Component.new(href: demo_avatar_groups_path) do %>
-        Avatar Groups
-      <% end %>
-    </p>
   </section>
 </div>

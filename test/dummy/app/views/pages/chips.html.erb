@@ -10,6 +10,9 @@
 
   <%= render "pages/component_method_variables_table", component: :chip %>
 
+  <%= render "shared/related_demos",
+    links: [{text: "Chip Groups", href: demo_chip_groups_path}] %>
+
   <!-- Basic Chips -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Basic Chips", anchor_link: true, subtitle: "Examples for Basic Chips.") %>
@@ -472,14 +475,5 @@
     language: "erb",
     title: "Complete Example - Tag Input"
   ) %>
-  </section>
-
-  <section class="mb-12">
-    <%= render FlatPack::SectionTitle::Component.new(title: "Related", anchor_link: true) %>
-    <p class="text-sm text-[var(--surface-muted-content-color)]">
-      <%= render FlatPack::Link::Component.new(href: demo_chip_groups_path) do %>
-        Chip Groups
-      <% end %>
-    </p>
   </section>
 </div>
