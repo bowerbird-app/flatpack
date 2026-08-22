@@ -16,7 +16,7 @@ app/assets/stylesheets/flat_pack/variables.css  →  @theme { … }
 
 All `--token-name: value;` declarations inside the `@theme` block are read and built into rows with `variable` and `default_value` fields.
 
-Named theme overrides live in slim `[data-theme]` blocks (only tokens that differ from `:root`). Component aliases that are pure `var(--semantic)` references are defined once on `:root` / `@theme` and are not re-copied per theme.
+Named theme overrides live in slim `[data-theme]` blocks (tokens that differ from `:root`). Primary-wired component aliases (`--button-primary-*` and the other tokens that pointed at `--color-primary` on `:root`) are re-assigned on named themes so they re-read that theme's primary. Those aliases otherwise inherit as the already-resolved default (`oklch(0.52 0.26 250)`).
 
 ### Controller Mapping
 

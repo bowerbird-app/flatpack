@@ -24,6 +24,8 @@ module FlatPack
           assert_includes content, "--brand-hue: 35"
           assert_includes content, "--brand-chroma: 0.2"
           assert_includes content, "--brand-lightness: 0.6"
+          assert_includes content, "--button-primary-background-color: var(--color-primary)"
+          assert_includes content, "--tabs-pill-active-background-color: var(--color-primary)"
         end
       end
 
@@ -38,7 +40,8 @@ module FlatPack
           content = destination.join("app/assets/stylesheets/flat_pack_theme_acme.css").read
           assert_includes content, ":root {"
           assert_includes content, "--brand-hue: 200"
-          refute_includes content, "data-theme"
+          refute_includes content, '[data-theme="'
+          refute_includes content, "--button-primary-background-color:"
         end
       end
     end

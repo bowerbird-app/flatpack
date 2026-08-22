@@ -14,7 +14,7 @@ Component tokens (--button-*, --sidebar-*, …) — defined once as var(--semant
 Components / Stimulus
 ```
 
-Named themes (`[data-theme="dark"]`, `ocean`, `rounded`, or your own) should override **brand/semantic** tokens. Component tokens inherit automatically.
+Named themes (`[data-theme="dark"]`, `ocean`, `rounded`, or your own) should override **brand/semantic** tokens. Built-in named themes also re-assign primary-wired component aliases (`--button-primary-*`, tabs pills, sidebar actives, switch tracks, and the other tokens that were wired to `--color-primary` on `:root`). Those aliases inherit from `:root` as the already-resolved default primary (`oklch(0.52 0.26 250)`), so a theme on `html` or `body` would otherwise leave buttons blue. The theme generator writes the same rebind for host `[data-theme]` kits.
 
 If you want a complete copy-pasteable custom theme with every current FlatPack variable, use the [Custom Theming Guide](custom_theming.md). Prefer the brand-kit path below for most apps.
 
@@ -188,7 +188,7 @@ Use stack gap tokens on parent layout containers (for example, form stacks) to c
 
 ## Component Variable Usage
 
-Component tokens such as `--button-primary-background-color` map to semantic tokens (`var(--color-primary)`). You normally change `--brand-hue` / `--brand-chroma` / `--brand-lightness` or `--color-primary` instead of editing component tokens.
+Component tokens such as `--button-primary-background-color` map to semantic tokens (`var(--color-primary)`). You normally change `--brand-hue` / `--brand-chroma` / `--brand-lightness` or `--color-primary` instead of editing component tokens. On a `[data-theme]` selector those primary-wired aliases must be re-assigned (built-in themes and the theme generator already do this) so they do not keep the resolved `:root` primary.
 
 ### Buttons
 - Colors: `--color-default-*`, `--color-primary-*`, `--color-secondary-*`, `--color-ghost-*`, `--color-success-*`, `--color-warning-*`
@@ -215,7 +215,7 @@ Component tokens such as `--button-primary-background-color` map to semantic tok
 
 ## Dark mode and named themes
 
-See [Dark Mode](dark_mode.md). Built-in variants (`dark`, `ocean`, `rounded`) only override tokens that differ from `:root`. Component aliases stay on `:root` and inherit.
+See [Dark Mode](dark_mode.md). Built-in variants (`dark`, `ocean`, `rounded`) override tokens that differ from `:root`, then rebind primary-wired component aliases so buttons and other primary surfaces follow that theme's `--color-primary`.
 
 ## Auditing tokens
 

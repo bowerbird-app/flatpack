@@ -18,6 +18,8 @@ Rails.application.routes.draw do
   get "themes", to: "themes#index"
   get "themes/demos/:theme", to: "themes#demo", as: :theme_demo,
     constraints: {theme: /system|light|dark|ocean|rounded/}
+  get "themes/previews/:theme", to: "themes#preview", as: :theme_preview,
+    constraints: {theme: /dark|ocean|rounded/}
   get "demo/buttons", to: "pages#buttons"
   get "demo/links", to: "pages#links"
   get "demo/buttons/pills", to: "pages#buttons_pills"

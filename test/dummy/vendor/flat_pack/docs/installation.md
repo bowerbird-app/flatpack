@@ -181,7 +181,7 @@ The `rails generate flat_pack:install` command now **automatically configures Ta
 `flat_pack/variables.css` contains the complete FlatPack theming system:
 - Brand primitives (`--brand-hue`, `--brand-chroma`, `--brand-lightness`) plus semantic and component tokens in `@theme {}`
 - `:root {}` wiring (component aliases map to semantic tokens once)
-- Slim `[data-theme]` override blocks for `dark`, `ocean`, and `rounded`
+- Slim `[data-theme]` override blocks for `dark`, `ocean`, and `rounded`, plus a shared primary-wired alias rebind
 
 **2. In your Tailwind CSS file** (e.g., `app/assets/stylesheets/application.tailwind.css`) — component scanning only:
 
@@ -238,8 +238,9 @@ If the generator cannot automatically detect your Tailwind CSS 4 file, it will d
 The imported `variables.css` contains:
 - `@theme {}` — token inventory (brand primitives, semantics, component aliases)
 - `:root {}` — the **light theme palette** plus once-defined component wiring
-- `[data-theme="dark"] {}` — dark overrides only (component aliases inherit)
-- `[data-theme="ocean"] {}` and `[data-theme="rounded"] {}` — additional theme variants (overrides only)
+- `[data-theme="dark"] {}` — dark semantic / exception overrides
+- `[data-theme="ocean"] {}` and `[data-theme="rounded"] {}` — additional theme variants
+- A shared `[data-theme="dark"], [data-theme="ocean"], [data-theme="rounded"]` block that rebinds primary-wired component aliases (`--button-primary-*`, tabs pills, sidebar actives, switch tracks, and the rest) so they re-read that theme's `--color-primary`
 
 To recolor without copying the full token list:
 

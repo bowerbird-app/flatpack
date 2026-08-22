@@ -11,7 +11,7 @@
   <div class="space-y-6">
     <%= render FlatPack::SectionTitle::Component.new(
       title: "Variables Used By This Theme",
-      subtitle: (@demo_theme == "light") ? "Full :root wiring from flat_pack/variables.css (semantic tokens plus component aliases)." : "Override-only dump from [data-theme]. Component aliases inherit from :root unless listed here.",
+      subtitle: (@demo_theme == "light") ? "Full :root wiring from flat_pack/variables.css (semantic tokens plus component aliases)." : "Semantic overrides from [data-theme], plus the shared primary-wired alias rebind so buttons follow this theme.",
       anchor_link: true
     ) %>
 

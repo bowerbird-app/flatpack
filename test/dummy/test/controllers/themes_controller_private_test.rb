@@ -40,6 +40,16 @@ class ThemesControllerPrivateTest < ActiveSupport::TestCase
     assert_includes code, "--color-primary"
   end
 
+  test "theme_variables_code includes the primary-token rebind for rounded" do
+    controller = ThemesController.new
+
+    code = controller.send(:theme_variables_code, "rounded")
+
+    assert_includes code, "--color-primary: oklch(0.3211 0 0)"
+    assert_includes code, "--button-primary-background-color: var(--color-primary)"
+    assert_includes code, "[data-theme=\"dark\"],"
+  end
+
   test "variable_section_label classifies blur and unknown variables" do
     controller = ThemesController.new
 

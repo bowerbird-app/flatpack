@@ -18,13 +18,23 @@ module FlatPack
       end
     end
 
-    test "named themes only override tokens (do not redeclare full button alias sets)" do
+    test "named themes rebind primary-wired component tokens" do
       css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css").read
-      dark_block = css[/\[data-theme="dark"\]\s*\{(.*?)\}/m, 1]
+      rebind_block = css[%r{\[data-theme="dark"\],\s*\[data-theme="ocean"\],\s*\[data-theme="rounded"\]\s*\{(.*?)\}}m, 1]
 
-      refute_nil dark_block
-      refute_includes dark_block, "--button-primary-background-color"
-      assert_includes css, "overrides only"
+      refute_nil rebind_block, "expected a shared named-theme primary-token rebind block"
+
+      {
+        "--button-primary-background-color" => "var(--color-primary)",
+        "--button-primary-hover-background-color" => "var(--color-primary-hover)",
+        "--button-primary-text-color" => "var(--color-primary-text)",
+        "--button-primary-border-color" => "var(--color-primary)",
+        "--tabs-pill-active-background-color" => "var(--color-primary)",
+        "--sidebar-item-active-background-color" => "var(--color-primary)",
+        "--switch-track-checked-background-color" => "var(--color-primary)"
+      }.each do |token, value|
+        assert_includes rebind_block, "#{token}: #{value}", "expected #{token} rebound to #{value}"
+      end
     end
   end
 end

@@ -3,7 +3,11 @@
  * Change --brand-hue / --brand-chroma / --brand-lightness to recolor primary.
  * Lightness applies to --color-primary only (hover is 0.10 darker).
  * For an exact hex, set --color-primary / --color-primary-hover instead.
- * Component tokens inherit from semantic tokens — you usually do not override them.
+ *
+ * Named [data-theme] kits must re-assign primary-wired component tokens.
+ * :root aliases inherit as the already-resolved default primary, so buttons
+ * stay hue 250 unless these aliases re-read this theme's --color-primary.
+ * :root brand overrides do not need this rebind.
  *
  * Load this stylesheet AFTER flat_pack/variables.
  */
@@ -16,4 +20,52 @@
   /* --color-primary: oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue)); */
   /* --color-primary-hover: oklch(calc(var(--brand-lightness) - 0.10) calc(var(--brand-chroma) - 0.02) var(--brand-hue)); */
   /* --surface-page-background-color: oklch(0.99 0.01 var(--brand-hue)); */
+<% unless as_root_theme? -%>
+
+  --button-primary-background-color: var(--color-primary);
+  --button-primary-hover-background-color: var(--color-primary-hover);
+  --button-primary-text-color: var(--color-primary-text);
+  --button-primary-border-color: var(--color-primary);
+  --timeline-marker-default-background-color: var(--color-primary);
+  --switch-track-checked-background-color: var(--color-primary);
+  --tabs-pill-active-background-color: var(--color-primary);
+  --tabs-pill-active-border-color: var(--color-primary);
+  --tabs-pill-active-text-color: var(--color-primary-text);
+  --card-hover-strong-border-color: var(--color-primary);
+  --sidebar-item-active-background-color: var(--color-primary);
+  --sidebar-item-active-text-color: var(--color-primary-text);
+  --sidebar-item-active-icon-color: var(--color-primary-text);
+  --badge-primary-background-color: var(--color-primary);
+  --badge-primary-text-color: var(--color-primary-text);
+  --badge-primary-border-color: var(--color-primary);
+  --sidebar-header-badge-background-color: var(--badge-primary-background-color);
+  --sidebar-header-badge-text-color: var(--badge-primary-text-color);
+  --chat-message-outgoing-background-color: var(--color-primary);
+  --chat-message-outgoing-text-color: var(--color-primary-text);
+  --chat-send-button-background-color: var(--color-primary);
+  --chat-send-button-hover-background-color: var(--color-primary-hover);
+  --chat-send-button-text-color: var(--color-primary-text);
+  --comments-composer-submit-background-color: var(--color-primary);
+  --comments-composer-submit-hover-background-color: color-mix(in oklab, var(--color-primary) 90%, black);
+  --comments-composer-submit-text-color: var(--color-primary-text);
+  --comments-replies-toggle-color: var(--color-primary);
+  --comments-replies-toggle-hover-color: var(--color-primary-hover);
+  --toast-info-background-color: var(--color-primary);
+  --toast-info-border-color: var(--toast-info-background-color);
+  --toast-info-text-color: var(--color-primary-text);
+  --toast-info-icon-color: var(--color-primary-text);
+  --top-nav-item-active-background-color: var(--color-primary);
+  --top-nav-item-active-text-color: var(--color-primary-text);
+  --top-nav-item-active-icon-color: var(--color-primary-text);
+  --search-input-focus-ring-color: var(--color-primary);
+  --collapse-focus-ring-color: var(--color-ring);
+  --accordion-focus-ring-color: var(--color-ring);
+  --switch-focus-ring-color: var(--color-ring);
+  --chat-input-focus-ring-color: var(--color-ring);
+  --chat-send-button-focus-ring-color: var(--color-ring);
+  --comments-composer-focus-ring-color: var(--color-ring);
+  --comments-composer-focus-border-color: var(--color-ring);
+  --button-focus-ring-color: var(--color-ring);
+  --alert-dismiss-button-focus-ring-color: var(--color-ring);
+<% end -%>
 }

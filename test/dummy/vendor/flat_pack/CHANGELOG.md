@@ -27,11 +27,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - A current plan with no CTA still renders the card footer. An empty spacer reserves the same min-height as a Button so tiles stay on one rhythm.
 - `FlatPack::Billing::PlanSummary::Component` now renders the `footer` slot inside the card footer. `card.footer { footer }` was resolving to the Card slot and leaving the region empty.
+- Named themes (`dark`, `ocean`, `rounded`) rebind primary-wired component tokens (`--button-primary-*`, tabs pills, sidebar actives, switch tracks, and the other aliases that pointed at `--color-primary` on `:root`). Those aliases inherited the already-resolved default primary (`oklch(0.52 0.26 250)`), so `html`/`body[data-theme="rounded"]` left primary buttons blue.
 
 ### Upgrade notes
 - Hosts that want a current plan with no choose button should pass `cta: false` on that item. The card footer stays; do not omit `Card#footer` in a host helper.
 - Default behaviour is unchanged: omit `cta` and the picker still renders a full-width button (`"Current plan"` when `current: true`, otherwise `"Get started"`).
 - Hosts that set `summary.footer` (for example Cancel plan) now get that content in the card footer. No caller change is required.
+- No host CSS change is required for built-in themes. Reload `flat_pack/variables` so primary buttons follow the active `data-theme`. Host `[data-theme]` kits should re-assign `--button-primary-*` (and the other primary-wired aliases) to `var(--color-primary)`; `rails generate flat_pack:theme` writes that rebind. `:root` brand overrides do not need it.
 
 ## [0.1.134] - 2026-08-19
 

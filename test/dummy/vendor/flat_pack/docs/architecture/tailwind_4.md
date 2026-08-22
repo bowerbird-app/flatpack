@@ -71,9 +71,15 @@ FlatPack defines CSS variables in `app/assets/stylesheets/flat_pack/variables.cs
   --button-primary-background-color: var(--color-primary);
 }
 
-/* Named themes override brand/semantic tokens only */
+/* Named themes override brand/semantic tokens, then rebind primary-wired aliases */
 [data-theme="dark"] {
   --color-primary: oklch(0.70 0.20 250);
+}
+
+[data-theme="dark"],
+[data-theme="ocean"],
+[data-theme="rounded"] {
+  --button-primary-background-color: var(--color-primary);
 }
 ```
 

@@ -12,7 +12,7 @@ FlatPack's theming surface has three layers:
 
 - `@theme {}` in `flat_pack/variables.css` defines the shared Tailwind token inventory (including `--brand-hue` / `--brand-chroma` / `--brand-lightness`).
 - `:root {}` in the same file defines the default light palette **and** component token wiring (`--button-primary-*` → `var(--color-primary)`, etc.).
-- `[data-theme="..."]` selectors override **only** tokens that differ from `:root` (semantic / intentional exceptions). Component aliases inherit.
+- `[data-theme="..."]` selectors override tokens that differ from `:root` (semantic / intentional exceptions). Primary-wired component aliases must be re-assigned on the same selector; `:root` aliases inherit as the already-resolved default primary.
 
 For most apps, generate a brand kit instead of copying every variable:
 
@@ -28,8 +28,14 @@ That means a custom host-app theme is usually just brand/semantic overrides:
   --brand-chroma: 0.19;
   --brand-lightness: 0.52;
   --surface-background-color: oklch(0.99 0.01 80);
+  --button-primary-background-color: var(--color-primary);
+  --button-primary-hover-background-color: var(--color-primary-hover);
+  --button-primary-text-color: var(--color-primary-text);
+  --button-primary-border-color: var(--color-primary);
 }
 ```
+
+`bin/rails generate flat_pack:theme` writes the full primary-wired rebind (buttons, tabs pills, sidebar actives, switch tracks, and the rest). A `:root` brand override does not need it.
 
 For an exact primary hex, set `--color-primary` / `--color-primary-hover` instead of the brand primitives.
 
@@ -547,9 +553,9 @@ The source of truth remains `app/assets/stylesheets/flat_pack/variables.css` in 
 
 - `@theme {}` contains the token inventory used by Tailwind utilities.
 - `:root {}` contains the default light palette and component aliases.
-- `[data-theme="dark"]`, `[data-theme="ocean"]`, and `[data-theme="rounded"]` are **override-only** — they list tokens that differ from `:root`. Component aliases inherit.
+- `[data-theme="dark"]`, `[data-theme="ocean"]`, and `[data-theme="rounded"]` list tokens that differ from `:root`, then rebind primary-wired component aliases so they follow that theme's `--color-primary`.
 
-When FlatPack adds a new **semantic** token, copy it into your host theme if you need a different value. Component aliases that are `var(--semantic)` do not need to be re-copied.
+When FlatPack adds a new **semantic** token, copy it into your host theme if you need a different value. When you add a `[data-theme]` kit (or generate one), keep the primary-wired alias rebind so buttons do not stay on the default hue.
 
 ## Practical Editing Order
 

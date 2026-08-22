@@ -67,6 +67,14 @@ class ThemesController < ApplicationController
     @theme_variables_code = theme_variables_code(@demo_theme)
   end
 
+  def preview
+    @preview_theme = params[:theme]
+
+    return head :not_found unless %w[dark ocean rounded].include?(@preview_theme)
+
+    render layout: "theme_preview"
+  end
+
   private
 
   def theme_variables_code(theme)
@@ -90,7 +98,18 @@ class ThemesController < ApplicationController
     end
 
     selector = THEME_SELECTORS.fetch(theme)
-    extract_selector_block(css, selector)
+    block = extract_selector_block(css, selector)
+    return block if theme == "light"
+
+    rebind = extract_named_theme_rebind_block(css)
+    return block if rebind.blank?
+
+    <<~CODE
+      #{block}
+
+      /* Primary-wired aliases rebind so buttons follow this theme's --color-primary */
+      #{rebind}
+    CODE
   end
 
   def build_theme_token_groups
@@ -160,6 +179,18 @@ class ThemesController < ApplicationController
     return "Color value" if default_value.include?("oklch(") || default_value.include?("rgb(") || default_value.include?("color-mix(")
 
     "Theme token value"
+  end
+
+  def extract_named_theme_rebind_block(css)
+    match = css.match(%r{\[data-theme="dark"\],\s*\[data-theme="ocean"\],\s*\[data-theme="rounded"\]\s*\{(?<body>.*?)^\}}m)
+    return if match.blank?
+
+    <<~CSS
+      [data-theme="dark"],
+      [data-theme="ocean"],
+      [data-theme="rounded"] {
+      #{format_variables_with_sections(match[:body])}}
+    CSS
   end
 
   def extract_selector_block(css, selector)

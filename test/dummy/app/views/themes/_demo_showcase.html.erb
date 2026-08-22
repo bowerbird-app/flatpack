@@ -24,6 +24,22 @@
   </div>
 
   <div class="space-y-2">
+    <h3 class="text-lg font-medium text-[var(--surface-content-color)]">Buttons</h3>
+    <div class="flex flex-wrap gap-3">
+      <%= render FlatPack::Button::Component.new(
+        text: "Primary",
+        style: :primary,
+        data: {flat_pack_preview: "theme-primary-button"}
+      ) %>
+      <%= render FlatPack::Button::Component.new(text: "Secondary", style: :secondary) %>
+    </div>
+    <p class="text-xs text-[var(--surface-muted-content-color)]">
+      Primary uses <code class="font-mono">--button-primary-background-color</code>, which named themes rebind to
+      <code class="font-mono">var(--color-primary)</code>.
+    </p>
+  </div>
+
+  <div class="space-y-2">
     <h3 class="text-lg font-medium text-[var(--surface-content-color)]">Primary and Secondary</h3>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div class="space-y-2">

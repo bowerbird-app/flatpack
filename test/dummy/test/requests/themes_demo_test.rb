@@ -36,6 +36,14 @@ class ThemesDemoTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
+  test "rounded theme preview page loads with html and body data-theme" do
+    get theme_preview_path(theme: "rounded")
+
+    assert_response :success
+    assert_includes response.body, 'data-theme="rounded"'
+    assert_includes response.body, 'data-flat-pack-preview="theme-primary-button"'
+  end
+
   test "system theme includes explanatory system header" do
     get theme_demo_path(theme: "system")
 

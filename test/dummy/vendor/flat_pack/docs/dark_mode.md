@@ -7,7 +7,7 @@ FlatPack ships a light theme by default and supports dark or custom theme varian
 FlatPack theme behavior is split into two layers:
 
 - **CSS defaults** - `:root {}` in `flat_pack/variables.css` provides the default light palette, including `--brand-hue` / `--brand-chroma` / `--brand-lightness` and component aliases that map once to semantic tokens.
-- **Theme variants** - selectors such as `[data-theme="dark"]`, `[data-theme="ocean"]`, and `[data-theme="rounded"]` override only tokens that differ from `:root`. Component aliases inherit unless you override them.
+- **Theme variants** - selectors such as `[data-theme="dark"]`, `[data-theme="ocean"]`, and `[data-theme="rounded"]` override tokens that differ from `:root`. Primary-wired component aliases (`--button-primary-*` and the other tokens that pointed at `--color-primary` on `:root`) are re-assigned on those selectors so they re-read the theme primary. Without that rebind, `html`/`body[data-theme]` keeps the default blue button token.
 - **Optional controller support** - the `flat-pack--theme` Stimulus controller can switch between `system`, `light`, `dark`, and custom variants while persisting the choice in `localStorage` under `flatpack-theme`.
 
 ## How It Works
@@ -63,8 +63,14 @@ You can define additional custom themes the same way. Prefer brand primitives wh
   --brand-hue: 155;
   --brand-chroma: 0.18;
   --brand-lightness: 0.52;
+  --button-primary-background-color: var(--color-primary);
+  --button-primary-hover-background-color: var(--color-primary-hover);
+  --button-primary-text-color: var(--color-primary-text);
+  --button-primary-border-color: var(--color-primary);
 }
 ```
+
+Prefer `bin/rails generate flat_pack:theme` for a host kit — it writes the full primary-wired rebind. A `:root` brand override does not need those alias lines.
 
 Override semantic tokens (`--color-primary`, `--surface-*`) only when a named theme should diverge from the brand kit. For a complete copy-pasteable selector with the full current FlatPack variable set, use the [Custom Theming Guide](custom_theming.md).
 
