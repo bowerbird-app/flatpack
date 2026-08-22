@@ -15,6 +15,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.135] - 2026-08-22
+
+### Added
+- `FlatPack::Billing::PlanPicker::Component` items accept `cta: false` (or `cta_text: false`) to omit the choose button.
+
+### Changed
+- Bumped the gem version to `0.1.135`.
+- Plan Picker dummy demo documents a current plan with no choose button.
+
+### Fixed
+- A current plan with no CTA still renders the card footer. An empty spacer reserves the same min-height as a Button so tiles stay on one rhythm.
+
+### Upgrade notes
+- Hosts that want a current plan with no choose button should pass `cta: false` on that item. The card footer stays; do not omit `Card#footer` in a host helper.
+- Default behaviour is unchanged: omit `cta` and the picker still renders a full-width button (`"Current plan"` when `current: true`, otherwise `"Get started"`).
+
 ## [0.1.134] - 2026-08-19
 
 ### Added

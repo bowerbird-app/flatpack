@@ -28,7 +28,8 @@ Use Plan Picker when the user is selecting or comparing plans. Use Plan Summary 
 | `description` | String | no | Short supporting line under the name. |
 | `features` | Array of String | no | Feature bullets rendered with `List`. |
 | `href` | String | no | CTA navigation target. Required for a clickable CTA unless the host overrides `footer`. |
-| `cta_text` | String | `"Get started"` | Button `text` for the default CTA. Use current-plan copy such as `"Current plan"` when `current: true`. |
+| `cta` | Boolean | `true` | Set `cta: false` to omit the choose button. The card footer still renders so tile height stays on the same rhythm as siblings. |
+| `cta_text` | String or `false` | `"Get started"` | Button `text` for the default CTA. Defaults to `"Current plan"` when `current: true`. Pass `cta_text: false` as an equivalent way to omit the button. |
 | `current` | Boolean | `false` | Marks this plan as the workspace’s current plan. |
 | `highlighted` | Boolean | `false` | Visual emphasis (popular / recommended). Prefer one highlighted plan. |
 
@@ -37,7 +38,8 @@ Rules:
 - Prefer `items` for the collection param name.
 - Use `href` for CTA navigation; do not use `url`.
 - FlatPack does not run checkout. The CTA only navigates via `href`.
-- When `current: true`, default CTA should be disabled or secondary with `cta_text: "Current plan"` (host may still supply an `href` for manage/change).
+- When `current: true` and the CTA is shown, the button is secondary with default `cta_text: "Current plan"` (host may still supply an `href` for manage/change).
+- When `cta: false` (or `cta_text: false`), do not drop the card footer. An empty footer spacer reserves the same min-height as a Button.
 
 ## Slots
 | name | type | required | description |
@@ -49,7 +51,8 @@ Rules:
 None at the picker root. Card emphasis:
 
 - `highlighted: true` → primary border / “Popular” badge
-- `current: true` → “Current” badge; muted or secondary CTA
+- `current: true` → “Current” badge; secondary “Current plan” CTA when `cta` is shown
+- `cta: false` → no choose button; footer spacer keeps the card on the same rhythm
 
 ## Example
 ```erb
@@ -66,10 +69,8 @@ None at the picker root. Card emphasis:
       name: "Pro",
       price_text: "$29 / month",
       features: ["10 seats", "Priority support", "Usage insights"],
-      href: "/billing/plans/pro",
-      cta_text: "Current plan",
       current: true,
-      highlighted: true
+      cta: false
     },
     {
       name: "Enterprise",
@@ -83,7 +84,7 @@ None at the picker root. Card emphasis:
 ```
 
 ## Accessibility
-- Each plan card exposes a clear heading (`name`) and a single primary action.
+- Each plan card exposes a clear heading (`name`). When a CTA is shown it is the card’s single primary action.
 - “Current” and “Popular” badges include text, not color alone.
 - Feature lists use semantic list markup via `FlatPack::List::Component`.
 

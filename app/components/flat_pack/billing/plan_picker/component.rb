@@ -54,7 +54,7 @@ module FlatPack
             end
 
             card.footer(divider: true) do
-              render_plan_cta(item)
+              render_plan_footer(item)
             end
           end
         end
@@ -111,6 +111,12 @@ module FlatPack
           end
         end
 
+        def render_plan_footer(item)
+          return render_cta_spacer unless item[:cta]
+
+          render_plan_cta(item)
+        end
+
         def render_plan_cta(item)
           style = item[:current] ? :secondary : :primary
           kwargs = {
@@ -121,6 +127,22 @@ module FlatPack
           kwargs[:href] = item[:href] if item[:href].present?
 
           render FlatPack::Button::Component.new(**kwargs)
+        end
+
+        # Reserve the same vertical band as a default Button (`text-sm` line-height,
+        # `py-[var(--button-padding-y-md)]`, plus the 1px border on each side).
+        # Tailwind CSS scanning requires this class as a string literal.
+        # "min-h-[calc(1.25rem+2*var(--button-padding-y-md)+2px)]"
+        def render_cta_spacer
+          content_tag(:div, nil, **cta_spacer_attributes)
+        end
+
+        def cta_spacer_attributes
+          {
+            class: "w-full min-h-[calc(1.25rem+2*var(--button-padding-y-md)+2px)]",
+            aria: {hidden: true},
+            data: {"flat-pack-plan-picker": "cta-spacer"}
+          }
         end
 
         def render_footer_row
@@ -136,16 +158,34 @@ module FlatPack
           normalized = hash.transform_keys(&:to_sym)
           raise ArgumentError, "plan item name is required" if normalized[:name].blank?
 
+          show_cta = show_cta?(normalized)
+
           {
             name: normalized[:name],
             price_text: normalized[:price_text],
             description: normalized[:description],
             features: Array(normalized[:features]),
             href: sanitize_plan_href(normalized[:href]),
-            cta_text: normalized[:cta_text].presence || (normalized[:current] ? "Current plan" : "Get started"),
+            cta: show_cta,
+            cta_text: show_cta ? default_cta_text(normalized) : nil,
             current: !!normalized[:current],
             highlighted: !!normalized[:highlighted]
           }
+        end
+
+        def show_cta?(normalized)
+          return cast_boolean(normalized[:cta]) if normalized.key?(:cta)
+          return false if normalized[:cta_text] == false
+
+          true
+        end
+
+        def default_cta_text(normalized)
+          normalized[:cta_text].presence || (normalized[:current] ? "Current plan" : "Get started")
+        end
+
+        def cast_boolean(value)
+          ActiveModel::Type::Boolean.new.cast(value)
         end
 
         def sanitize_plan_href(url)

@@ -1,6 +1,6 @@
 <%= render FlatPack::PageTitle::Component.new(
   title: "Plan Picker",
-  subtitle: "Compare plans with feature lists, current/popular markers, and one CTA per card."
+  subtitle: "Compare plans with feature lists, current/popular markers, and a choose button — or a reserved footer when the current plan has no CTA."
 ) %>
 
 <%= render "pages/component_method_variables_table", component: :billing_plan_picker %>
@@ -52,6 +52,51 @@
     CODE
     language: "erb",
     title: "Plan Choices"
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Current plan without a choose button", anchor_link: true, subtitle: "Pass cta: false so the current tile keeps a footer spacer and stays on the same rhythm as siblings.") %>
+  <div class="mb-4">
+    <%= render FlatPack::Billing::PlanPicker::Component.new(
+      items: [
+        {
+          name: "Free plan",
+          price_text: "$0/mo",
+          features: ["Community support", "Core features", "1 workspace"],
+          href: "#choose-free",
+          cta_text: "Choose this plan"
+        },
+        {
+          name: "Monthly plan",
+          price_text: "$1/mo",
+          features: ["Everything in Free"],
+          href: "#choose-monthly",
+          cta_text: "Choose this plan",
+          highlighted: true
+        },
+        {
+          name: "Monthly plan",
+          price_text: "$49/mo",
+          features: ["Priority support", "Usage insights", "Custom limits"],
+          current: true,
+          cta: false
+        }
+      ]
+    ) %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Billing::PlanPicker::Component.new(
+        items: [
+          {name: "Free plan", price_text: "$0/mo", features: ["Community support"], href: "/plans/free", cta_text: "Choose this plan"},
+          {name: "Monthly plan", price_text: "$1/mo", features: ["Everything in Free"], href: "/plans/monthly", cta_text: "Choose this plan", highlighted: true},
+          {name: "Monthly plan", price_text: "$49/mo", features: ["Priority support"], current: true, cta: false}
+        ]
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Current plan without a choose button"
   ) %>
 </section>
 

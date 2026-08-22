@@ -110,7 +110,7 @@
     <%= render FlatPack::Billing::PlanPicker::Component.new(
       items: [
         {name: "Basic", price_text: "$9 / month", features: ["3 seats", "Email support"], href: "#choose-basic", cta_text: "Choose Basic"},
-        {name: "Pro", price_text: "$29 / month", features: ["10 seats", "Priority support"], href: "#current-pro", cta_text: "Current plan", current: true, highlighted: true},
+        {name: "Pro", price_text: "$29 / month", features: ["10 seats", "Priority support"], current: true, cta: false},
         {name: "Enterprise", price_text: "Contact us", features: ["Unlimited seats"], href: "#contact-sales", cta_text: "Contact sales"}
       ]
     ) %>

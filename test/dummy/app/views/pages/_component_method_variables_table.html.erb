@@ -58,7 +58,7 @@
       label: "Billing Plan Picker",
       method_call: "render FlatPack::Billing::PlanPicker::Component.new(items: [{name: \"Pro\", price_text: \"$29 / month\", href: \"/plans/pro\"}])",
       variables: [
-        { variable: "items", accepts: "Array of plan hashes (required keys: name)", example: "items: [{name: \"Pro\", price_text: \"$29 / month\", features: [\"10 seats\"], href: \"/plans/pro\", current: true, highlighted: true}]" },
+        { variable: "items", accepts: "Array of plan hashes (required keys: name)", example: "items: [{name: \"Pro\", price_text: \"$29 / month\", features: [\"10 seats\"], current: true, cta: false}]" },
         { variable: "footer", accepts: "slot", example: "picker.footer { ... }" }
       ]
     },
