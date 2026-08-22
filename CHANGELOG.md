@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - `FlatPack::Billing::PlanPicker::Component` items accept `cta: false` (or `cta_text: false`) to omit the choose button.
+- `FlatPack::Billing::PlanSummary::Component` accepts `status: nil` or `false` to omit the status badge. The heading is then just `plan_name`.
 
 ### Changed
 - Bumped the gem version to `0.1.135`.
@@ -34,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Hosts that want a current plan with no choose button should pass `cta: false` on that item. The card footer stays; do not omit `Card#footer` in a host helper.
 - Default behaviour is unchanged: omit `cta` and the picker still renders a full-width button (`"Current plan"` when `current: true`, otherwise `"Get started"`).
 - Hosts that set `summary.footer` (for example Cancel plan) now get that content in the card footer. No caller change is required.
+- Hosts that want a current plan with no status badge should pass `status: nil` (or `false`). Omit `status` and the card still shows the Active badge. Named statuses are unchanged.
 - No host CSS change is required for built-in themes. Reload `flat_pack/variables` so primary buttons follow the active `data-theme`, and so `rounded` buttons (including PageNav back) pick up `--radius-md`. Host `[data-theme]` kits should re-assign `--button-primary-*` (and the other primary-wired aliases) to `var(--color-primary)`; `rails generate flat_pack:theme` writes that rebind. If a host kit changes `--radius-md`, also re-assign `--button-border-radius: var(--radius-md)` and the other `--radius-md` aliases. `:root` brand overrides do not need it.
 
 ## [0.1.134] - 2026-08-19

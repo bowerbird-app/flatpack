@@ -62,6 +62,31 @@ module FlatPack
           assert_raises(ArgumentError) { Component.new(plan_name: "") }
         end
 
+        def test_status_nil_renders_plan_name_without_status_badge
+          render_inline(Component.new(
+            plan_name: "Pro",
+            price_text: "$29 / month",
+            status: nil,
+            renews_on: "Renews 1 Sep 2026"
+          ))
+
+          assert_selector "h3", text: "Pro"
+          assert_text "$29 / month"
+          assert_no_text "Active"
+          assert_no_text "Trial"
+          assert_no_text "Past due"
+          assert_no_text "Canceled"
+          assert_no_text "Incomplete"
+          assert_no_selector "span", text: /\A(Active|Trial|Past due|Canceled|Incomplete)\z/
+        end
+
+        def test_status_false_omits_badge_without_raising
+          render_inline(Component.new(plan_name: "Pro", status: false))
+
+          assert_selector "h3", text: "Pro"
+          assert_no_text "Active"
+        end
+
         def test_rejects_invalid_status
           assert_raises(ArgumentError) { Component.new(plan_name: "Pro", status: :bogus) }
         end

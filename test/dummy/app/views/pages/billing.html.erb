@@ -88,13 +88,13 @@
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Plan Summary",
     anchor_link: true,
-    subtitle: "Current plan with status badge and actions."
+    subtitle: "Current plan. Status is optional — omit the badge when the page already implies it."
   ) %>
   <div class="mb-4 max-w-xl">
     <%= render FlatPack::Billing::PlanSummary::Component.new(
       plan_name: "Pro",
       price_text: "$29 / month",
-      status: :active,
+      status: nil,
       renews_on: "Renews 1 Sep 2026"
     ) do |summary| %>
       <% summary.actions do %>
