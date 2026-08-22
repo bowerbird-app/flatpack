@@ -754,9 +754,6 @@
   .min-h-\[560px\] {
     min-height: 560px;
   }
-  .min-h-\[calc\(1\.25rem\+2\*var\(--button-padding-y-md\)\+2px\)\] {
-    min-height: calc(1.25rem + 2 * var(--button-padding-y-md) + 2px);
-  }
   .min-h-\[calc\(100vh-10rem\)\] {
     min-height: calc(100vh - 10rem);
   }
