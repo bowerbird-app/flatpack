@@ -49,12 +49,9 @@ module FlatPack
                 render_plan_heading(item),
                 render_plan_price(item),
                 render_plan_description(item),
-                render_plan_features(item)
+                render_plan_features(item),
+                render_plan_cta(item)
               ].compact)
-            end
-
-            card.footer(divider: true) do
-              render_plan_footer(item)
             end
           end
         end
@@ -69,16 +66,9 @@ module FlatPack
         end
 
         def render_plan_badges(item)
-          badges = []
-          if item[:highlighted]
-            badges << render(FlatPack::Badge::Component.new(text: "Popular", style: :primary, size: :sm))
-          end
-          if item[:current]
-            badges << render(FlatPack::Badge::Component.new(text: "Current", style: :success, size: :sm))
-          end
-          return nil if badges.empty?
+          return nil unless item[:highlighted]
 
-          content_tag(:div, class: "flex flex-wrap gap-1") { safe_join(badges) }
+          render(FlatPack::Badge::Component.new(text: "Popular", style: :primary, size: :sm))
         end
 
         def render_plan_price(item)
@@ -111,38 +101,28 @@ module FlatPack
           end
         end
 
-        def render_plan_footer(item)
-          return render_cta_spacer unless item[:cta]
+        def render_plan_cta(item)
+          return nil unless item[:cta]
 
-          render_plan_cta(item)
+          content_tag(:div, class: "mt-4") do
+            render FlatPack::Button::Component.new(**plan_cta_arguments(item))
+          end
         end
 
-        def render_plan_cta(item)
-          style = item[:current] ? :secondary : :primary
+        def plan_cta_arguments(item)
           kwargs = {
             text: item[:cta_text],
-            style: style,
+            style: item[:current] ? :secondary : :primary,
             class: "w-full"
           }
-          kwargs[:href] = item[:href] if item[:href].present?
 
-          render FlatPack::Button::Component.new(**kwargs)
-        end
+          if item[:current]
+            kwargs[:disabled] = true
+          elsif item[:href].present?
+            kwargs[:href] = item[:href]
+          end
 
-        # Reserve the same vertical band as a default Button (`text-sm` line-height,
-        # `py-[var(--button-padding-y-md)]`, plus the 1px border on each side).
-        # Tailwind CSS scanning requires this class as a string literal.
-        # "min-h-[calc(1.25rem+2*var(--button-padding-y-md)+2px)]"
-        def render_cta_spacer
-          content_tag(:div, nil, **cta_spacer_attributes)
-        end
-
-        def cta_spacer_attributes
-          {
-            class: "w-full min-h-[calc(1.25rem+2*var(--button-padding-y-md)+2px)]",
-            aria: {hidden: true},
-            data: {"flat-pack-plan-picker": "cta-spacer"}
-          }
+          kwargs
         end
 
         def render_footer_row
@@ -181,7 +161,7 @@ module FlatPack
         end
 
         def default_cta_text(normalized)
-          normalized[:cta_text].presence || (normalized[:current] ? "Current plan" : "Get started")
+          normalized[:cta_text].presence || (normalized[:current] ? "Current" : "Choose plan")
         end
 
         def cast_boolean(value)

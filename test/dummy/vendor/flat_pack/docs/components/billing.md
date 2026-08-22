@@ -95,7 +95,7 @@ Follow [PARAMS.md](PARAMS.md):
 | Section / empty headings | `title`, `empty_title` | Empty states and alert titles |
 | Supporting copy | `description`, `empty_description`, `subtitle` | Helper text under meters and empty states |
 | Collections | `items` | Plan picker plans and invoice rows |
-| Plan picker CTA | `cta`, `cta_text` | `cta: false` omits the choose button and keeps the card footer; `cta_text` is the button copy |
+| Plan picker CTA | `cta`, `cta_text` | Body button after features. Default `"Choose plan"`; current plans default to a disabled `"Current"` button. `cta: false` omits the button |
 
 Default copy stays short and plain: “Change plan”, “Update card”, “No invoices yet”.
 
