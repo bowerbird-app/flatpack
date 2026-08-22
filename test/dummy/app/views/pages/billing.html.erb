@@ -30,6 +30,9 @@
         <%= render FlatPack::Button::Component.new(text: "Change plan", href: demo_billing_plan_picker_path, style: :secondary) %>
         <%= render FlatPack::Button::Component.new(text: "Manage billing", href: demo_billing_payment_method_path, style: :default) %>
       <% end %>
+      <% summary.footer do %>
+        <%= render FlatPack::Button::Component.new(text: "Cancel plan", href: "#cancel-plan", style: :secondary) %>
+      <% end %>
     <% end %>
 
     <%= render FlatPack::Billing::UsageMeter::Component.new(
@@ -70,6 +73,9 @@
         &lt;% summary.actions do %&gt;
           &lt;%= render FlatPack::Button::Component.new(text: "Change plan", href: "/billing/plans", style: :secondary) %&gt;
         &lt;% end %&gt;
+        &lt;% summary.footer do %&gt;
+          &lt;%= render FlatPack::Button::Component.new(text: "Cancel plan", href: "/billing/cancel", style: :secondary) %&gt;
+        &lt;% end %&gt;
       &lt;% end %&gt;
     CODE
     language: "erb",
@@ -82,17 +88,20 @@
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Plan Summary",
     anchor_link: true,
-    subtitle: "Current plan with status badge and actions."
+    subtitle: "Current plan. Status is optional — omit the badge when the page already implies it."
   ) %>
   <div class="mb-4 max-w-xl">
     <%= render FlatPack::Billing::PlanSummary::Component.new(
       plan_name: "Pro",
       price_text: "$29 / month",
-      status: :active,
+      status: nil,
       renews_on: "Renews 1 Sep 2026"
     ) do |summary| %>
       <% summary.actions do %>
         <%= render FlatPack::Button::Component.new(text: "Change plan", href: demo_billing_plan_picker_path, style: :secondary) %>
+      <% end %>
+      <% summary.footer do %>
+        <%= render FlatPack::Button::Component.new(text: "Cancel plan", href: "#cancel-plan", style: :secondary) %>
       <% end %>
     <% end %>
   </div>
@@ -110,7 +119,7 @@
     <%= render FlatPack::Billing::PlanPicker::Component.new(
       items: [
         {name: "Basic", price_text: "$9 / month", features: ["3 seats", "Email support"], href: "#choose-basic", cta_text: "Choose Basic"},
-        {name: "Pro", price_text: "$29 / month", features: ["10 seats", "Priority support"], href: "#current-pro", cta_text: "Current plan", current: true, highlighted: true},
+        {name: "Pro", price_text: "$29 / month", features: ["10 seats", "Priority support"], current: true},
         {name: "Enterprise", price_text: "Contact us", features: ["Unlimited seats"], href: "#contact-sales", cta_text: "Contact sales"}
       ]
     ) %>

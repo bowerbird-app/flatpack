@@ -30,7 +30,7 @@ module FlatPack
           super(**system_arguments)
           @plan_name = plan_name
           @price_text = price_text
-          @status = status.to_sym
+          @status = omitted_status?(status) ? nil : status.to_sym
           @renews_on = renews_on
           @trial_ends_on = trial_ends_on
           @description = description
@@ -64,11 +64,7 @@ module FlatPack
                 ].compact)
               end
 
-              if footer?
-                card.footer do
-                  footer
-                end
-              end
+              render_card_footer(card)
             end
           end
         end
@@ -76,9 +72,12 @@ module FlatPack
         private
 
         def render_heading_row
+          heading = content_tag(:h3, @plan_name, class: "text-lg font-semibold text-[var(--surface-content-color)]")
+          return content_tag(:div, heading, class: "mb-2") unless show_status_badge?
+
           content_tag(:div, class: "flex items-start justify-between gap-3 mb-2") do
             safe_join([
-              content_tag(:h3, @plan_name, class: "text-lg font-semibold text-[var(--surface-content-color)]"),
+              heading,
               render(FlatPack::Badge::Component.new(
                 text: status_config.fetch(:text),
                 style: status_config.fetch(:style),
@@ -121,6 +120,26 @@ module FlatPack
           content_tag(:div, actions, class: "flex flex-wrap gap-2 mt-2")
         end
 
+        # Capture the PlanSummary footer slot before entering Card#footer.
+        # Inside that block `footer` resolves to the Card slot, so
+        # `card.footer { footer }` would render an empty footer.
+        def render_card_footer(card)
+          return unless footer?
+
+          footer_content = footer.to_s
+          card.footer do
+            footer_content.html_safe
+          end
+        end
+
+        def show_status_badge?
+          !@status.nil?
+        end
+
+        def omitted_status?(status)
+          status.nil? || status == false
+        end
+
         def status_config
           STATUSES.fetch(@status)
         end
@@ -132,6 +151,7 @@ module FlatPack
         end
 
         def validate_status!
+          return unless show_status_badge?
           return if STATUSES.key?(@status)
 
           raise ArgumentError, "Invalid status: #{@status.inspect}. Must be one of: #{STATUSES.keys.join(", ")}"

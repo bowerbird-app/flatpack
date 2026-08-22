@@ -46,7 +46,7 @@
       variables: [
         { variable: "plan_name", accepts: "String (required)", example: "plan_name: \"Pro\"" },
         { variable: "price_text", accepts: "String or nil", example: "price_text: \"$29 / month\"" },
-        { variable: "status", accepts: ":active, :trialing, :past_due, :canceled, :incomplete", example: "status: :active" },
+        { variable: "status", accepts: ":active, :trialing, :past_due, :canceled, :incomplete, nil, or false", example: "status: nil" },
         { variable: "renews_on", accepts: "String or nil", example: "renews_on: \"Renews 1 Sep 2026\"" },
         { variable: "trial_ends_on", accepts: "String or nil", example: "trial_ends_on: \"Trial ends 1 Sep 2026\"" },
         { variable: "description", accepts: "String or nil", example: "description: \"Includes 10 seats\"" },
@@ -58,7 +58,7 @@
       label: "Billing Plan Picker",
       method_call: "render FlatPack::Billing::PlanPicker::Component.new(items: [{name: \"Pro\", price_text: \"$29 / month\", href: \"/plans/pro\"}])",
       variables: [
-        { variable: "items", accepts: "Array of plan hashes (required keys: name)", example: "items: [{name: \"Pro\", price_text: \"$29 / month\", features: [\"10 seats\"], href: \"/plans/pro\", current: true, highlighted: true}]" },
+        { variable: "items", accepts: "Array of plan hashes (required keys: name)", example: "items: [{name: \"Pro\", price_text: \"$29 / month\", features: [\"10 seats\"], current: true}]" },
         { variable: "footer", accepts: "slot", example: "picker.footer { ... }" }
       ]
     },

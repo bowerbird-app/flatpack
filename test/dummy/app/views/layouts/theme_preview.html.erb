@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="<%= @preview_theme %>">
+  <head>
+    <title>FlatPack <%= @preview_theme.to_s.titleize %> theme preview</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= render "layouts/flat_pack_stylesheets" %>
+  </head>
+  <body data-theme="<%= @preview_theme %>" class="p-8 bg-[var(--surface-page-background-color)]">
+    <%= yield %>
+  </body>
+</html>

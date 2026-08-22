@@ -15,6 +15,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.135] - 2026-08-22
+
+### Added
+- `FlatPack::Billing::PlanPicker::Component` items accept `cta: false` (or `cta_text: false`) to omit the body button.
+- `FlatPack::Billing::PlanSummary::Component` accepts `status: nil` or `false` to omit the status badge. The heading is then just `plan_name`.
+
+### Changed
+- Bumped the gem version to `0.1.135`.
+- Plan Picker choose/current actions render in the card body after features. Tiles no longer render a per-plan card footer or empty CTA spacer.
+- Default choose label is `"Choose plan"`. A current plan defaults to a disabled `"Current"` button in that same slot (not a green Current badge). Popular/highlighted badges are unchanged.
+- Plan Picker dummy demo shows default Choose plan / Current buttons.
+
+### Fixed
+- `FlatPack::Billing::PlanSummary::Component` now renders the `footer` slot inside the card footer. `card.footer { footer }` was resolving to the Card slot and leaving the region empty.
+- Named themes (`dark`, `ocean`, `rounded`) rebind primary-wired component tokens (`--button-primary-*`, tabs pills, sidebar actives, switch tracks, and the other aliases that pointed at `--color-primary` on `:root`). Those aliases inherited the already-resolved default primary (`oklch(0.52 0.26 250)`), so `html`/`body[data-theme="rounded"]` left primary buttons blue.
+- `rounded` rebinds `--radius-md` aliases (`--button-border-radius`, alert, toast, accordion, popover, collapse, chat composer, avatar square). Those aliases inherited the resolved `:root` radius (`0.375rem` / 6px), so PageNav back stayed square under `data-theme="rounded"`.
+
+### Upgrade notes
+- Plan Picker tiles no longer have a card footer. Move any host CSS that targeted the footer CTA or `cta-spacer` to the body button.
+- Default button copy is now `"Choose plan"` (was `"Get started"` / `"Choose this plan"`). Current plans render a disabled `"Current"` button and drop the green Current badge. `href` is ignored on current items.
+- `current: true` still shows a button. Pass `cta: false` only when a host wants no button on that tile.
+- Hosts that set `summary.footer` (for example Cancel plan) now get that content in the card footer. No caller change is required.
+- Hosts that want a current plan with no status badge should pass `status: nil` (or `false`). Omit `status` and the card still shows the Active badge. Named statuses are unchanged.
+- No host CSS change is required for built-in themes. Reload `flat_pack/variables` so primary buttons follow the active `data-theme`, and so `rounded` buttons (including PageNav back) pick up `--radius-md`. Host `[data-theme]` kits should re-assign `--button-primary-*` (and the other primary-wired aliases) to `var(--color-primary)`; `rails generate flat_pack:theme` writes that rebind. If a host kit changes `--radius-md`, also re-assign `--button-border-radius: var(--radius-md)` and the other `--radius-md` aliases. `:root` brand overrides do not need it.
+
 ## [0.1.134] - 2026-08-19
 
 ### Added

@@ -48,6 +48,9 @@ None. Do not add a monolithic `FlatPack::Billing::Component` that owns an entire
   <% summary.actions do %>
     <%= render FlatPack::Button::Component.new(text: "Change plan", href: "/billing/plans", style: :secondary) %>
   <% end %>
+  <% summary.footer do %>
+    <%= render FlatPack::Button::Component.new(text: "Cancel plan", href: "/billing/cancel", style: :secondary) %>
+  <% end %>
 <% end %>
 
 <%= render FlatPack::Billing::UsageMeter::Component.new(
@@ -92,6 +95,7 @@ Follow [PARAMS.md](PARAMS.md):
 | Section / empty headings | `title`, `empty_title` | Empty states and alert titles |
 | Supporting copy | `description`, `empty_description`, `subtitle` | Helper text under meters and empty states |
 | Collections | `items` | Plan picker plans and invoice rows |
+| Plan picker CTA | `cta`, `cta_text` | Body button after features. Default `"Choose plan"`; current plans default to a disabled `"Current"` button. `cta: false` omits the button |
 
 Default copy stays short and plain: “Change plan”, “Update card”, “No invoices yet”.
 

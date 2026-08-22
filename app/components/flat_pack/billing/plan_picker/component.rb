@@ -49,12 +49,9 @@ module FlatPack
                 render_plan_heading(item),
                 render_plan_price(item),
                 render_plan_description(item),
-                render_plan_features(item)
+                render_plan_features(item),
+                render_plan_cta(item)
               ].compact)
-            end
-
-            card.footer(divider: true) do
-              render_plan_cta(item)
             end
           end
         end
@@ -69,16 +66,9 @@ module FlatPack
         end
 
         def render_plan_badges(item)
-          badges = []
-          if item[:highlighted]
-            badges << render(FlatPack::Badge::Component.new(text: "Popular", style: :primary, size: :sm))
-          end
-          if item[:current]
-            badges << render(FlatPack::Badge::Component.new(text: "Current", style: :success, size: :sm))
-          end
-          return nil if badges.empty?
+          return nil unless item[:highlighted]
 
-          content_tag(:div, class: "flex flex-wrap gap-1") { safe_join(badges) }
+          render(FlatPack::Badge::Component.new(text: "Popular", style: :primary, size: :sm))
         end
 
         def render_plan_price(item)
@@ -112,15 +102,27 @@ module FlatPack
         end
 
         def render_plan_cta(item)
-          style = item[:current] ? :secondary : :primary
+          return nil unless item[:cta]
+
+          content_tag(:div, class: "mt-4") do
+            render FlatPack::Button::Component.new(**plan_cta_arguments(item))
+          end
+        end
+
+        def plan_cta_arguments(item)
           kwargs = {
             text: item[:cta_text],
-            style: style,
+            style: item[:current] ? :secondary : :primary,
             class: "w-full"
           }
-          kwargs[:href] = item[:href] if item[:href].present?
 
-          render FlatPack::Button::Component.new(**kwargs)
+          if item[:current]
+            kwargs[:disabled] = true
+          elsif item[:href].present?
+            kwargs[:href] = item[:href]
+          end
+
+          kwargs
         end
 
         def render_footer_row
@@ -136,16 +138,34 @@ module FlatPack
           normalized = hash.transform_keys(&:to_sym)
           raise ArgumentError, "plan item name is required" if normalized[:name].blank?
 
+          show_cta = show_cta?(normalized)
+
           {
             name: normalized[:name],
             price_text: normalized[:price_text],
             description: normalized[:description],
             features: Array(normalized[:features]),
             href: sanitize_plan_href(normalized[:href]),
-            cta_text: normalized[:cta_text].presence || (normalized[:current] ? "Current plan" : "Get started"),
+            cta: show_cta,
+            cta_text: show_cta ? default_cta_text(normalized) : nil,
             current: !!normalized[:current],
             highlighted: !!normalized[:highlighted]
           }
+        end
+
+        def show_cta?(normalized)
+          return cast_boolean(normalized[:cta]) if normalized.key?(:cta)
+          return false if normalized[:cta_text] == false
+
+          true
+        end
+
+        def default_cta_text(normalized)
+          normalized[:cta_text].presence || (normalized[:current] ? "Current" : "Choose plan")
+        end
+
+        def cast_boolean(value)
+          ActiveModel::Type::Boolean.new.cast(value)
         end
 
         def sanitize_plan_href(url)

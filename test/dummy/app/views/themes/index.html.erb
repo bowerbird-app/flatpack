@@ -8,7 +8,7 @@
   <div class="space-y-6">
     <%= render FlatPack::SectionTitle::Component.new(
       title: "How Theming Works",
-      subtitle: "Brand primitives drive semantic tokens; component tokens inherit automatically.",
+      subtitle: "Brand primitives drive semantic tokens. Named themes rebind primary-wired component tokens.",
       anchor_link: true
     ) %>
 
@@ -27,8 +27,10 @@
         Recolor primary with brand primitives (or
         <code class="font-mono text-xs">rails g flat_pack:theme Sunrise --hue=35 --chroma=0.2 --lightness=0.52</code>).
         Lightness applies to <code class="font-mono text-xs">--color-primary</code> only. For an exact hex, set
-        <code class="font-mono text-xs">--color-primary</code> directly. Named themes should override
-        brand/semantic tokens — component aliases inherit from <code class="font-mono text-xs">:root</code>.
+        <code class="font-mono text-xs">--color-primary</code> directly. Named themes override brand/semantic tokens
+        and re-assign primary-wired aliases such as
+        <code class="font-mono text-xs">--button-primary-background-color</code> so they re-read that theme's
+        <code class="font-mono text-xs">--color-primary</code>.
       </p>
     </div>
   </div>

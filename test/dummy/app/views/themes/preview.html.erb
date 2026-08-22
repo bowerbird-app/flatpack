@@ -1,0 +1,14 @@
+<div class="space-y-6">
+  <p class="text-sm text-[var(--surface-muted-content-color)]">
+    Primary button and Page Nav back under <code class="font-mono">html</code> and <code class="font-mono">body</code>
+    <code class="font-mono">data-theme="<%= @preview_theme %>"</code>.
+  </p>
+  <%= render FlatPack::Button::Component.new(
+    text: "Primary",
+    style: :primary,
+    data: {flat_pack_preview: "theme-primary-button"}
+  ) %>
+  <div data-flat-pack-preview="theme-page-nav">
+    <%= render FlatPack::PageNav::Component.new %>
+  </div>
+</div>

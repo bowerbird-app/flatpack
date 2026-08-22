@@ -1,6 +1,6 @@
 <%= render FlatPack::PageTitle::Component.new(
   title: "Plan Summary",
-  subtitle: "Current plan card with status badge, renewal copy, and host-supplied actions."
+  subtitle: "Current plan card with optional status badge, renewal copy, and host-supplied actions."
 ) %>
 
 <%= render "pages/component_method_variables_table", component: :billing_plan_summary %>
@@ -20,6 +20,9 @@
         <%= render FlatPack::Button::Component.new(text: "Change plan", href: demo_billing_plan_picker_path, style: :secondary) %>
         <%= render FlatPack::Button::Component.new(text: "Manage billing", href: demo_billing_payment_method_path, style: :default) %>
       <% end %>
+      <% summary.footer do %>
+        <%= render FlatPack::Button::Component.new(text: "Cancel plan", href: "#cancel-plan", style: :secondary) %>
+      <% end %>
     <% end %>
   </div>
   <%= render FlatPack::CodeBlock::Component.new(
@@ -34,10 +37,54 @@
         &lt;% summary.actions do %&gt;
           &lt;%= render FlatPack::Button::Component.new(text: "Change plan", href: "/billing/plans", style: :secondary) %&gt;
         &lt;% end %&gt;
+        &lt;% summary.footer do %&gt;
+          &lt;%= render FlatPack::Button::Component.new(text: "Cancel plan", href: "/billing/cancel", style: :secondary) %&gt;
+        &lt;% end %&gt;
       &lt;% end %&gt;
     CODE
     language: "erb",
     title: "Active Plan"
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Current plan without a status badge",
+    anchor_link: true,
+    subtitle: "Pass status: nil when the page already implies this is the current plan."
+  ) %>
+  <div class="mb-4 max-w-xl">
+    <%= render FlatPack::Billing::PlanSummary::Component.new(
+      plan_name: "Pro",
+      price_text: "$29 / month",
+      status: nil,
+      renews_on: "Renews 1 Sep 2026",
+      description: "Includes 10 seats and priority support."
+    ) do |summary| %>
+      <% summary.actions do %>
+        <%= render FlatPack::Button::Component.new(text: "Change plan", href: demo_billing_plan_picker_path, style: :secondary) %>
+        <%= render FlatPack::Button::Component.new(text: "Manage billing", href: demo_billing_payment_method_path, style: :default) %>
+      <% end %>
+      <% summary.footer do %>
+        <%= render FlatPack::Button::Component.new(text: "Cancel plan", href: "#cancel-plan", style: :secondary) %>
+      <% end %>
+    <% end %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Billing::PlanSummary::Component.new(
+        plan_name: "Pro",
+        price_text: "$29 / month",
+        status: nil,
+        renews_on: "Renews 1 Sep 2026"
+      ) do |summary| %&gt;
+        &lt;% summary.actions do %&gt;
+          &lt;%= render FlatPack::Button::Component.new(text: "Change plan", href: "/billing/plans", style: :secondary) %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    language: "erb",
+    title: "No status badge"
   ) %>
 </section>
 

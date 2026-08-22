@@ -1,13 +1,13 @@
 <%= render FlatPack::PageTitle::Component.new(
   title: "Plan Picker",
-  subtitle: "Compare plans with feature lists, current/popular markers, and one CTA per card."
+  subtitle: "Compare plans with feature lists, a Popular badge, and a body button on every tile — Choose plan, or a disabled Current button."
 ) %>
 
 <%= render "pages/component_method_variables_table", component: :billing_plan_picker %>
 
 
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Plan Choices", anchor_link: true, subtitle: "Highlight one popular plan and mark the current plan.") %>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Plan Choices", anchor_link: true, subtitle: "Highlight one popular plan and mark the current plan with a disabled button.") %>
   <div class="mb-4">
     <%= render FlatPack::Billing::PlanPicker::Component.new(
       items: [
@@ -24,8 +24,6 @@
           price_text: "$29 / month",
           description: "For growing workspaces.",
           features: ["10 seats", "Priority support", "Usage insights"],
-          href: "#current-pro",
-          cta_text: "Current plan",
           current: true,
           highlighted: true
         },
@@ -44,14 +42,56 @@
     code: CGI.unescapeHTML(<<~'CODE'),
       &lt;%= render FlatPack::Billing::PlanPicker::Component.new(
         items: [
-          {name: "Basic", price_text: "$9 / month", features: ["3 seats"], href: "/billing/plans/basic"},
-          {name: "Pro", price_text: "$29 / month", features: ["10 seats"], href: "/billing/plans/pro", current: true, highlighted: true, cta_text: "Current plan"},
+          {name: "Basic", price_text: "$9 / month", features: ["3 seats"], href: "/billing/plans/basic", cta_text: "Choose Basic"},
+          {name: "Pro", price_text: "$29 / month", features: ["10 seats"], current: true, highlighted: true},
           {name: "Enterprise", price_text: "Contact us", features: ["Unlimited seats"], href: "/billing/contact", cta_text: "Contact sales"}
         ]
       ) %&gt;
     CODE
     language: "erb",
     title: "Plan Choices"
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Default choose and current buttons", anchor_link: true, subtitle: "Omit cta_text to get Choose plan on other tiles and a disabled Current button on the current plan.") %>
+  <div class="mb-4">
+    <%= render FlatPack::Billing::PlanPicker::Component.new(
+      items: [
+        {
+          name: "Free plan",
+          price_text: "$0/mo",
+          features: ["Community support", "Core features", "1 workspace"],
+          href: "#choose-free"
+        },
+        {
+          name: "Monthly plan",
+          price_text: "$1/mo",
+          features: ["Everything in Free"],
+          href: "#choose-monthly",
+          highlighted: true
+        },
+        {
+          name: "Monthly plan",
+          price_text: "$49/mo",
+          features: ["Priority support", "Usage insights", "Custom limits"],
+          current: true
+        }
+      ]
+    ) %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Billing::PlanPicker::Component.new(
+        items: [
+          {name: "Free plan", price_text: "$0/mo", features: ["Community support"], href: "/plans/free"},
+          {name: "Monthly plan", price_text: "$1/mo", features: ["Everything in Free"], href: "/plans/monthly", highlighted: true},
+          {name: "Monthly plan", price_text: "$49/mo", features: ["Priority support"], current: true}
+        ]
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Default choose and current buttons"
   ) %>
 </section>
 

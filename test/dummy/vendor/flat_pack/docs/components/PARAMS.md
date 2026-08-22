@@ -33,7 +33,8 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 - Prefer `href` for Change plan, Update card, and invoice Download/View navigation.
 - Prefer `empty_title` / `empty_description` for payment-method and invoice empty states.
 - Prefer `price_text` and `amount` as preformatted strings; do not add a `currency` formatter in FlatPack.
-- Prefer `cta_text` for plan-picker button copy (action label pattern via `*_text` / `text`).
+- Prefer `cta_text` for plan-picker button copy (action label pattern via `*_text` / `text`). Default choose copy is `"Choose plan"`; current plans default to `"Current"`.
+- Prefer `cta: false` to omit a plan-picker body button. Current plans still render a disabled Current button unless the host sets `cta: false`. `cta_text: false` is an equivalent omit.
 - Keep PCI out of FlatPack: never add props for full PAN, CVC, or Elements mount points.
 
 ## Do not mix

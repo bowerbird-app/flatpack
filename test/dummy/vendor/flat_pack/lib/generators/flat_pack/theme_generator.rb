@@ -47,10 +47,18 @@ module FlatPack
         end
         say "\nTweaking color later:", :cyan
         say "  Change --brand-hue / --brand-chroma / --brand-lightness in #{destination}", :cyan
-        say "  Component tokens inherit from semantic tokens automatically.", :cyan
+        if options[:as_root]
+          say "  :root brand overrides update component aliases declared on :root.", :cyan
+        else
+          say "  Primary-wired component tokens are re-assigned so buttons follow this theme.", :cyan
+        end
       end
 
       private
+
+      def as_root_theme?
+        options[:as_root]
+      end
 
       def theme_slug
         name.to_s.strip.downcase.gsub(/[^a-z0-9]+/, "-").gsub(/\A-|-\z/, "")
