@@ -26,10 +26,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - A current plan with no CTA still renders the card footer. An empty spacer reserves the same min-height as a Button so tiles stay on one rhythm.
+- `FlatPack::Billing::PlanSummary::Component` now renders the `footer` slot inside the card footer. `card.footer { footer }` was resolving to the Card slot and leaving the region empty.
 
 ### Upgrade notes
 - Hosts that want a current plan with no choose button should pass `cta: false` on that item. The card footer stays; do not omit `Card#footer` in a host helper.
 - Default behaviour is unchanged: omit `cta` and the picker still renders a full-width button (`"Current plan"` when `current: true`, otherwise `"Get started"`).
+- Hosts that set `summary.footer` (for example Cancel plan) now get that content in the card footer. No caller change is required.
 
 ## [0.1.134] - 2026-08-19
 

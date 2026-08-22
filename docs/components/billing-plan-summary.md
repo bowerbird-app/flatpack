@@ -38,7 +38,7 @@ Use Plan Summary as the primary “current plan” card on a billing overview. P
 | name | type | required | description |
 |---|---|---|---|
 | `actions` | slot | no | Primary action row (Change plan, Manage billing). Host renders `Button` with `href`. |
-| `footer` | slot | no | Optional footer region below the body. |
+| `footer` | slot | no | Optional card footer below the body. Hosts put secondary actions such as Cancel plan here. Actions stay in the body. |
 
 ## Variants
 None. Visual container uses `FlatPack::Card::Component` with `style: :default` (implementation detail).
@@ -62,6 +62,13 @@ None. Visual container uses `FlatPack::Card::Component` with `style: :default` (
       text: "Manage billing",
       href: "/billing/portal",
       style: :default
+    ) %>
+  <% end %>
+  <% summary.footer do %>
+    <%= render FlatPack::Button::Component.new(
+      text: "Cancel plan",
+      href: "/billing/cancel",
+      style: :secondary
     ) %>
   <% end %>
 <% end %>

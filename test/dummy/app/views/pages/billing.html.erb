@@ -30,6 +30,9 @@
         <%= render FlatPack::Button::Component.new(text: "Change plan", href: demo_billing_plan_picker_path, style: :secondary) %>
         <%= render FlatPack::Button::Component.new(text: "Manage billing", href: demo_billing_payment_method_path, style: :default) %>
       <% end %>
+      <% summary.footer do %>
+        <%= render FlatPack::Button::Component.new(text: "Cancel plan", href: "#cancel-plan", style: :secondary) %>
+      <% end %>
     <% end %>
 
     <%= render FlatPack::Billing::UsageMeter::Component.new(
@@ -70,6 +73,9 @@
         &lt;% summary.actions do %&gt;
           &lt;%= render FlatPack::Button::Component.new(text: "Change plan", href: "/billing/plans", style: :secondary) %&gt;
         &lt;% end %&gt;
+        &lt;% summary.footer do %&gt;
+          &lt;%= render FlatPack::Button::Component.new(text: "Cancel plan", href: "/billing/cancel", style: :secondary) %&gt;
+        &lt;% end %&gt;
       &lt;% end %&gt;
     CODE
     language: "erb",
@@ -93,6 +99,9 @@
     ) do |summary| %>
       <% summary.actions do %>
         <%= render FlatPack::Button::Component.new(text: "Change plan", href: demo_billing_plan_picker_path, style: :secondary) %>
+      <% end %>
+      <% summary.footer do %>
+        <%= render FlatPack::Button::Component.new(text: "Cancel plan", href: "#cancel-plan", style: :secondary) %>
       <% end %>
     <% end %>
   </div>

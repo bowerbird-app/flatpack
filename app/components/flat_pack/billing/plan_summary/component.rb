@@ -64,11 +64,7 @@ module FlatPack
                 ].compact)
               end
 
-              if footer?
-                card.footer do
-                  footer
-                end
-              end
+              render_card_footer(card)
             end
           end
         end
@@ -119,6 +115,18 @@ module FlatPack
           return nil unless actions?
 
           content_tag(:div, actions, class: "flex flex-wrap gap-2 mt-2")
+        end
+
+        # Capture the PlanSummary footer slot before entering Card#footer.
+        # Inside that block `footer` resolves to the Card slot, so
+        # `card.footer { footer }` would render an empty footer.
+        def render_card_footer(card)
+          return unless footer?
+
+          footer_content = footer.to_s
+          card.footer do
+            footer_content.html_safe
+          end
         end
 
         def status_config

@@ -48,6 +48,9 @@ None. Do not add a monolithic `FlatPack::Billing::Component` that owns an entire
   <% summary.actions do %>
     <%= render FlatPack::Button::Component.new(text: "Change plan", href: "/billing/plans", style: :secondary) %>
   <% end %>
+  <% summary.footer do %>
+    <%= render FlatPack::Button::Component.new(text: "Cancel plan", href: "/billing/cancel", style: :secondary) %>
+  <% end %>
 <% end %>
 
 <%= render FlatPack::Billing::UsageMeter::Component.new(

@@ -41,6 +41,23 @@ module FlatPack
           assert_text "Change plan"
         end
 
+        def test_renders_footer_slot_inside_card_footer
+          render_inline(Component.new(plan_name: "Pro")) do |summary|
+            summary.actions { "Change plan" }
+            summary.footer { '<button type="button">Cancel plan</button>'.html_safe }
+          end
+
+          assert_text "Change plan"
+          assert_selector "button", text: "Cancel plan"
+          html = page.native.to_html
+          assert_includes html, "border-t"
+          body_html, footer_html = html.split("border-t", 2)
+          assert_includes body_html, "Change plan"
+          refute_includes body_html, "Cancel plan"
+          assert_includes footer_html, "Cancel plan"
+          refute_includes footer_html, "Change plan"
+        end
+
         def test_requires_plan_name
           assert_raises(ArgumentError) { Component.new(plan_name: "") }
         end
