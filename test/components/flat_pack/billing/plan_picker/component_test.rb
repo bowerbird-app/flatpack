@@ -67,7 +67,7 @@ module FlatPack
           assert_text "Popular"
           assert_no_text "Current"
           assert_selector "a[href='/plans/monthly']", text: "Choose this plan"
-          assert_includes page.native.to_html, "border-[var(--color-primary)]"
+          assert_includes page.native.to_html, "bg-[var(--badge-primary-background-color)]"
           assert_includes page.native.to_html, "bg-[var(--button-primary-background-color)]"
         end
 
