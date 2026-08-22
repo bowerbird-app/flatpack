@@ -553,7 +553,7 @@ The source of truth remains `app/assets/stylesheets/flat_pack/variables.css` in 
 
 - `@theme {}` contains the token inventory used by Tailwind utilities.
 - `:root {}` contains the default light palette and component aliases.
-- `[data-theme="dark"]`, `[data-theme="ocean"]`, and `[data-theme="rounded"]` list tokens that differ from `:root`, then rebind primary-wired component aliases so they follow that theme's `--color-primary`.
+- `[data-theme="dark"]`, `[data-theme="ocean"]`, and `[data-theme="rounded"]` list tokens that differ from `:root`, then rebind primary-wired component aliases so they follow that theme's `--color-primary`. `rounded` also rebinds `--radius-md` aliases such as `--button-border-radius`.
 
 When FlatPack adds a new **semantic** token, copy it into your host theme if you need a different value. When you add a `[data-theme]` kit (or generate one), keep the primary-wired alias rebind so buttons do not stay on the default hue.
 

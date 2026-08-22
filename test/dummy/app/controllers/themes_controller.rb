@@ -102,14 +102,19 @@ class ThemesController < ApplicationController
     return block if theme == "light"
 
     rebind = extract_named_theme_rebind_block(css)
-    return block if rebind.blank?
+    radius_rebind = (theme == "rounded") ? extract_rounded_radius_rebind_block(css) : nil
+    return block if rebind.blank? && radius_rebind.blank?
 
-    <<~CODE
-      #{block}
-
-      /* Primary-wired aliases rebind so buttons follow this theme's --color-primary */
-      #{rebind}
-    CODE
+    parts = [block]
+    if rebind.present?
+      parts << "/* Primary-wired aliases rebind so buttons follow this theme's --color-primary */"
+      parts << rebind
+    end
+    if radius_rebind.present?
+      parts << "/* Radius aliases rebind so buttons follow this theme's --radius-md */"
+      parts << radius_rebind
+    end
+    parts.join("\n")
   end
 
   def build_theme_token_groups
@@ -179,6 +184,16 @@ class ThemesController < ApplicationController
     return "Color value" if default_value.include?("oklch(") || default_value.include?("rgb(") || default_value.include?("color-mix(")
 
     "Theme token value"
+  end
+
+  def extract_rounded_radius_rebind_block(css)
+    match = css.match(%r{\[data-theme="rounded"\]\s*\{\n(?<body>.*?--button-border-radius: var\(--radius-md\);.*?)^\}}m)
+    return if match.blank?
+
+    <<~CSS
+      [data-theme="rounded"] {
+      #{format_variables_with_sections(match[:body])}}
+    CSS
   end
 
   def extract_named_theme_rebind_block(css)

@@ -42,6 +42,8 @@ class ThemesDemoTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, 'data-theme="rounded"'
     assert_includes response.body, 'data-flat-pack-preview="theme-primary-button"'
+    assert_includes response.body, 'data-flat-pack-preview="theme-page-nav"'
+    assert_includes response.body, "flat-pack--page-nav#back"
   end
 
   test "system theme includes explanatory system header" do

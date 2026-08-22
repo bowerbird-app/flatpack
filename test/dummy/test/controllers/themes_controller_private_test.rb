@@ -47,6 +47,7 @@ class ThemesControllerPrivateTest < ActiveSupport::TestCase
 
     assert_includes code, "--color-primary: oklch(0.3211 0 0)"
     assert_includes code, "--button-primary-background-color: var(--color-primary)"
+    assert_includes code, "--button-border-radius: var(--radius-md)"
     assert_includes code, "[data-theme=\"dark\"],"
   end
 

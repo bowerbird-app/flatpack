@@ -10,6 +10,9 @@ class RoundedThemePrimaryButtonPreviewTest < ActionDispatch::IntegrationTest
     assert_includes response.body, 'data-theme="rounded"'
     assert_includes response.body, 'data-flat-pack-preview="theme-primary-button"'
     assert_includes response.body, "bg-[var(--button-primary-background-color)]"
+    assert_includes response.body, 'data-flat-pack-preview="theme-page-nav"'
+    assert_includes response.body, "rounded-[var(--button-border-radius)]"
+    assert_includes response.body, "flat-pack--page-nav#back"
     assert_match(/<html[^>]*data-theme="rounded"/, response.body)
     assert_match(/<body[^>]*data-theme="rounded"/, response.body)
   end
@@ -20,6 +23,7 @@ class RoundedThemePrimaryButtonPreviewTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, 'data-flat-pack-preview="theme-primary-button"'
     assert_includes response.body, "--button-primary-background-color: var(--color-primary)"
+    assert_includes response.body, "--button-border-radius: var(--radius-md)"
     assert_includes response.body, "--color-primary: oklch(0.3211 0 0)"
   end
 end

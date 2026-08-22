@@ -241,6 +241,7 @@ The imported `variables.css` contains:
 - `[data-theme="dark"] {}` — dark semantic / exception overrides
 - `[data-theme="ocean"] {}` and `[data-theme="rounded"] {}` — additional theme variants
 - A shared `[data-theme="dark"], [data-theme="ocean"], [data-theme="rounded"]` block that rebinds primary-wired component aliases (`--button-primary-*`, tabs pills, sidebar actives, switch tracks, and the rest) so they re-read that theme's `--color-primary`
+- A `[data-theme="rounded"]` radius-alias rebind (`--button-border-radius` and the other `--radius-md` aliases) so PageNav back and buttons follow 1rem instead of the resolved `:root` 0.375rem
 
 To recolor without copying the full token list:
 

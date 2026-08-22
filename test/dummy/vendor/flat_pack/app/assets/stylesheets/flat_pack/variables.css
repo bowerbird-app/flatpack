@@ -11,6 +11,8 @@
  * Primary-wired component aliases are re-assigned on named themes so they re-read
  * that theme's --color-primary. :root aliases inherit as the already-resolved default
  * (oklch 0.52 0.26 250), so theme-on-html/body would otherwise leave buttons blue.
+ * Rounded also re-assigns --radius-md aliases (--button-border-radius and the rest)
+ * so icon-only buttons follow 1rem instead of the resolved :root 0.375rem.
  */
 
 @theme {
@@ -1185,5 +1187,26 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --comments-composer-focus-border-color: var(--color-ring);
   --button-focus-ring-color: var(--color-ring);
   --alert-dismiss-button-focus-ring-color: var(--color-ring);
+}
+
+/*
+ * Rounded changes --radius-md (and sm/lg/xl). :root aliases such as
+ * --button-border-radius: var(--radius-md) inherit as the already-resolved
+ * default 0.375rem / 6px. Re-declare them so PageNav back and other buttons
+ * pick up 1rem when data-theme=rounded is on html or body.
+ * dark / ocean do not change radius tokens.
+ */
+[data-theme="rounded"] {
+  --button-border-radius: var(--radius-md);
+  --alert-border-radius: var(--radius-md);
+  --toast-border-radius: var(--radius-md);
+  --accordion-border-radius: var(--radius-md);
+  --popover-radius: var(--radius-md);
+  --collapse-border-radius: var(--radius-md);
+  --chat-composer-radius: var(--radius-md);
+  --avatar-radius-square: var(--radius-md);
+  --tooltip-radius: var(--radius-sm);
+  --alert-dismiss-button-radius: var(--radius-sm);
+  --avatar-radius-rounded: var(--radius-xl);
 }
 

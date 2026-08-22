@@ -7,7 +7,7 @@ FlatPack ships a light theme by default and supports dark or custom theme varian
 FlatPack theme behavior is split into two layers:
 
 - **CSS defaults** - `:root {}` in `flat_pack/variables.css` provides the default light palette, including `--brand-hue` / `--brand-chroma` / `--brand-lightness` and component aliases that map once to semantic tokens.
-- **Theme variants** - selectors such as `[data-theme="dark"]`, `[data-theme="ocean"]`, and `[data-theme="rounded"]` override tokens that differ from `:root`. Primary-wired component aliases (`--button-primary-*` and the other tokens that pointed at `--color-primary` on `:root`) are re-assigned on those selectors so they re-read the theme primary. Without that rebind, `html`/`body[data-theme]` keeps the default blue button token.
+- **Theme variants** - selectors such as `[data-theme="dark"]`, `[data-theme="ocean"]`, and `[data-theme="rounded"]` override tokens that differ from `:root`. Primary-wired component aliases (`--button-primary-*` and the other tokens that pointed at `--color-primary` on `:root`) are re-assigned on those selectors so they re-read the theme primary. Without that rebind, `html`/`body[data-theme]` keeps the default blue button token. `rounded` also rebinds `--radius-md` aliases (`--button-border-radius` and the rest) so buttons follow 1rem instead of the resolved `:root` 0.375rem.
 - **Optional controller support** - the `flat-pack--theme` Stimulus controller can switch between `system`, `light`, `dark`, and custom variants while persisting the choice in `localStorage` under `flatpack-theme`.
 
 ## How It Works

@@ -12,6 +12,9 @@ class ThemePrimaryButtonPreviewTest < ActionDispatch::IntegrationTest
     assert_includes response.body, 'data-theme="rounded"'
     assert_includes response.body, 'data-flat-pack-preview="theme-primary-button"'
     assert_includes response.body, "bg-[var(--button-primary-background-color)]"
+    assert_includes response.body, 'data-flat-pack-preview="theme-page-nav"'
+    assert_includes response.body, "flat-pack--page-nav#back"
+    assert_includes response.body, "rounded-[var(--button-border-radius)]"
   end
 
   test "unknown theme preview is not found" do

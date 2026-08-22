@@ -32,5 +32,30 @@ module FlatPack
         assert_includes rebind_block, "#{token}: var(--color-primary)"
       end
     end
+
+    test "rounded theme rebinds radius-md component aliases" do
+      css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css").read
+      rounded_blocks = css.scan(%r{\[data-theme="rounded"\]\s*\{(.*?)\}}m).flatten
+      radius_rebind = rounded_blocks.find { |block| block.include?("--button-border-radius: var(--radius-md)") }
+
+      refute_nil radius_rebind, "expected [data-theme=rounded] to rebind --button-border-radius"
+      assert_includes css, "--radius-md: 1rem"
+
+      %w[
+        --button-border-radius
+        --alert-border-radius
+        --toast-border-radius
+        --accordion-border-radius
+        --popover-radius
+        --collapse-border-radius
+        --chat-composer-radius
+        --avatar-radius-square
+      ].each do |token|
+        assert_includes radius_rebind, "#{token}: var(--radius-md)"
+      end
+
+      dark_ocean_radius = css[%r{\[data-theme="dark"\]\s*\{(.*?)\}}m, 1].to_s + css[%r{\[data-theme="ocean"\]\s*\{(.*?)\}}m, 1].to_s
+      refute_includes dark_ocean_radius, "--radius-md:"
+    end
   end
 end

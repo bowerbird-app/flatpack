@@ -54,3 +54,43 @@ test('rounded theme preview primary button is charcoal, not default hue 250', as
 
   await assertPrimaryButtonIsCharcoal(page, button, 'body-only data-theme=rounded')
 })
+
+function isRoundedMdRadius(value) {
+  const normalized = String(value || '').trim().toLowerCase()
+  if (normalized === '1rem' || normalized === '16px') return true
+  const pixels = normalized.match(/^(\d+(?:\.\d+)?)px$/)
+  if (pixels) {
+    const size = Number(pixels[1])
+    return size >= 15 && size <= 17
+  }
+  return false
+}
+
+test('rounded theme PageNav back uses 1rem radius, not :root 6px', async ({ page }) => {
+  await page.goto('http://127.0.0.1:3000/themes/previews/rounded', { waitUntil: 'networkidle' })
+
+  await page.evaluate(() => {
+    document.documentElement.removeAttribute('data-theme')
+    document.body.setAttribute('data-theme', 'rounded')
+  })
+
+  const back = page.locator('[data-flat-pack-preview="theme-page-nav"] [data-action="click->flat-pack--page-nav#back"]')
+  await expect(back).toBeVisible()
+
+  const measured = await back.evaluate((element) => {
+    const style = getComputedStyle(element)
+    return {
+      width: style.width,
+      height: style.height,
+      radius: style.borderRadius,
+      token: getComputedStyle(document.body).getPropertyValue('--button-border-radius').trim(),
+      radiusMd: getComputedStyle(document.body).getPropertyValue('--radius-md').trim()
+    }
+  })
+
+  expect(measured.radiusMd).toBe('1rem')
+  expect(measured.token).toBe('1rem')
+  expect(measured.radius).not.toBe('6px')
+  expect(measured.radius).not.toBe('0.375rem')
+  expect(isRoundedMdRadius(measured.radius), `PageNav back radius should be 1rem, got ${JSON.stringify(measured)}`).toBeTruthy()
+})

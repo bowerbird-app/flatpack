@@ -14,7 +14,7 @@ Component tokens (--button-*, --sidebar-*, …) — defined once as var(--semant
 Components / Stimulus
 ```
 
-Named themes (`[data-theme="dark"]`, `ocean`, `rounded`, or your own) should override **brand/semantic** tokens. Built-in named themes also re-assign primary-wired component aliases (`--button-primary-*`, tabs pills, sidebar actives, switch tracks, and the other tokens that were wired to `--color-primary` on `:root`). Those aliases inherit from `:root` as the already-resolved default primary (`oklch(0.52 0.26 250)`), so a theme on `html` or `body` would otherwise leave buttons blue. The theme generator writes the same rebind for host `[data-theme]` kits.
+Named themes (`[data-theme="dark"]`, `ocean`, `rounded`, or your own) should override **brand/semantic** tokens. Built-in named themes also re-assign primary-wired component aliases (`--button-primary-*`, tabs pills, sidebar actives, switch tracks, and the other tokens that were wired to `--color-primary` on `:root`). Those aliases inherit from `:root` as the already-resolved default primary (`oklch(0.52 0.26 250)`), so a theme on `html` or `body` would otherwise leave buttons blue. `rounded` also rebinds `--radius-md` aliases (`--button-border-radius`, alert, toast, accordion, popover, collapse, chat composer, avatar square) so PageNav back and other buttons follow 1rem instead of the resolved `:root` 0.375rem. The theme generator writes the primary rebind for host `[data-theme]` kits.
 
 If you want a complete copy-pasteable custom theme with every current FlatPack variable, use the [Custom Theming Guide](custom_theming.md). Prefer the brand-kit path below for most apps.
 
