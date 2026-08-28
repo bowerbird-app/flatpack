@@ -219,7 +219,7 @@ class DemoCatalog
         {type: :item, title: "Badges", path: "/demo/badges", description: "Label and status indicators", icon: :dashboard},
         {type: :item, title: "Chips", path: "/demo/chips", description: "Compact filter and tag components", icon: :dashboard},
         {type: :item, title: "Chip Groups", path: "/demo/chip_groups", description: "Wrapping and non-wrapping chip collections", icon: :dashboard},
-        {type: :item, title: "Color Swatches", path: "/demo/color_swatches", description: "Named colour circles with native colour picker", icon: :dashboard}
+        {type: :item, title: "Color Swatches", path: "/demo/color_swatches", description: "Named colour circles with a FlatPack popover colour selector", icon: :dashboard}
       ]
     },
     {
