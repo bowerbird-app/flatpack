@@ -52,7 +52,6 @@ Rails.application.routes.draw do
   get "demo/forms/select/options", to: "pages#forms_select_options"
   get "demo/forms/nested_multiselect", to: "pages#forms_nested_multiselect"
   get "demo/forms/switch", to: "pages#forms_switch"
-  get "demo/forms/color_swatch", to: "pages#forms_color_swatch"
   get "demo/forms/combined", to: "pages#forms_combined"
   get "demo/tables/basic", to: "pages#tables_basic"
   get "demo/tables/empty", to: "pages#tables_empty"
@@ -63,6 +62,7 @@ Rails.application.routes.draw do
   get "demo/inputs", to: redirect("/demo/forms")
   get "demo/badges", to: "pages#badges"
   get "demo/chips", to: "pages#chips"
+  get "demo/color_swatches", to: "pages#color_swatches"
   get "demo/chip_groups", to: "pages#chip_groups"
   match "demo/chips/add_callback", to: "pages#chip_add_callback", via: [:get, :post]
   match "demo/chips/remove_callback", to: "pages#chip_remove_callback", via: [:get, :post]

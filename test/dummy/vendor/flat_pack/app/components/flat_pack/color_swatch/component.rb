@@ -5,47 +5,40 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "h-6" "w-6" "h-8" "w-8" "h-10" "w-10" "h-12" "w-12" "h-16" "w-16"
+      # "h-6" "w-6" "h-8" "w-8" "h-10" "w-10" "h-12" "w-12"
       SIZES = {
         xs: "h-6 w-6",
         sm: "h-8 w-8",
         md: "h-10 w-10",
-        lg: "h-12 w-12",
-        xl: "h-16 w-16"
+        lg: "h-12 w-12"
       }.freeze
 
-      SIZE_FALLBACKS = {
-        xs: "width: 1.5rem; height: 1.5rem",
-        sm: "width: 2rem; height: 2rem",
-        md: "width: 2.5rem; height: 2.5rem",
-        lg: "width: 3rem; height: 3rem",
-        xl: "width: 4rem; height: 4rem"
-      }.freeze
-
-      DEFAULT_VALUE = "#000000"
+      DEFAULT_COLOR = "#000000"
 
       def initialize(
-        text:,
-        value: DEFAULT_VALUE,
-        name: nil,
-        selected: false,
+        color:,
         size: :md,
+        selected: false,
+        name: nil,
+        value: nil,
+        text: nil,
         disabled: false,
         show_tooltip: true,
         tooltip_placement: :top,
         **system_arguments
       )
         super(**system_arguments)
-        @text = text
-        @value = normalize_value(value)
-        @name = name.presence
-        @selected = ActiveModel::Type::Boolean.new.cast(selected)
+        @color = normalize_color(color)
         @size = size.to_sym
+        @selected = ActiveModel::Type::Boolean.new.cast(selected)
+        @name = name.presence
+        @value = normalize_input_value(value)
+        @text = text.presence
         @disabled = ActiveModel::Type::Boolean.new.cast(disabled)
         @show_tooltip = ActiveModel::Type::Boolean.new.cast(show_tooltip)
         @tooltip_placement = tooltip_placement.to_sym
 
-        validate_text!
+        validate_color!
         validate_size!
         validate_tooltip_placement!
       end
@@ -137,9 +130,18 @@ module FlatPack
 
       def swatch_face_style
         [
-          SIZE_FALLBACKS.fetch(@size),
-          "background-color: #{@value}"
-        ].join("; ")
+          size_fallback_style,
+          "background-color: #{@color}"
+        ].compact.join("; ")
+      end
+
+      def size_fallback_style
+        case @size
+        when :xs then "width: 1.5rem; height: 1.5rem"
+        when :sm then "width: 2rem; height: 2rem"
+        when :md then "width: 2.5rem; height: 2.5rem"
+        when :lg then "width: 3rem; height: 3rem"
+        end
       end
 
       def render_color_input
@@ -153,7 +155,7 @@ module FlatPack
           value: input_value,
           disabled: @disabled,
           class: "absolute inset-0 h-full w-full cursor-pointer opacity-0 disabled:cursor-not-allowed",
-          aria: {label: @text},
+          aria: {label: accessible_name},
           data: {
             flat_pack__color_swatch_target: "input",
             action: "input->flat-pack--color-swatch#update change->flat-pack--color-swatch#update"
@@ -165,7 +167,7 @@ module FlatPack
       end
 
       def render_selected_label
-        return unless @selected
+        return unless @selected && @text.present?
 
         content_tag(
           :span,
@@ -182,19 +184,33 @@ module FlatPack
         @show_tooltip && @text.present?
       end
 
+      def accessible_name
+        @text.presence || "Color"
+      end
+
       def input_id
         @input_id ||= @system_arguments[:id].presence || "flat_pack_color_swatch_#{SecureRandom.hex(4)}"
       end
 
       def input_value
-        return @value if FlatPack::AttributeSanitizer::CSS_HEX_COLOR_PATTERN.match?(@value)
+        candidate = @value.presence || @color
+        return candidate if FlatPack::AttributeSanitizer::CSS_HEX_COLOR_PATTERN.match?(candidate)
 
-        DEFAULT_VALUE
+        DEFAULT_COLOR
       end
 
-      def normalize_value(value)
+      def normalize_color(color)
+        sanitized = FlatPack::AttributeSanitizer.sanitize_css_color(color)
+        raise ArgumentError, "color is required" if sanitized.nil?
+
+        expand_hex(sanitized)
+      end
+
+      def normalize_input_value(value)
+        return nil if value.nil? || value.to_s.strip.empty?
+
         sanitized = FlatPack::AttributeSanitizer.sanitize_css_color(value)
-        return DEFAULT_VALUE if sanitized.nil?
+        return nil if sanitized.nil?
 
         expand_hex(sanitized)
       end
@@ -206,8 +222,8 @@ module FlatPack
         "##{digits.chars.map { |digit| digit * 2 }.join}"
       end
 
-      def validate_text!
-        raise ArgumentError, "text is required" if @text.nil? || @text.to_s.strip.empty?
+      def validate_color!
+        raise ArgumentError, "color is required" if @color.nil? || @color.to_s.strip.empty?
       end
 
       def validate_size!

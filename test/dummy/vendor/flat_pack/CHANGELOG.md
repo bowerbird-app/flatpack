@@ -8,19 +8,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- `FlatPack::ColorSwatch::Component` — circular named colour control with tooltip, selected caption, native `<input type="color">`, and Avatar-scale sizes (`:xs`–`:xl`).
-- Dummy demo at `/demo/forms/color_swatch` with a named swatch row (Background / Text / Accent).
+
+### Changed
+
+### Fixed
+
+## [0.1.136] - 2026-08-28
+
+### Added
+- `FlatPack::ColorSwatch::Component` — circular named colour control with `color:`, optional `text:` tooltip/selected caption, native `<input type="color">`, and Avatar-scale sizes (`:xs`–`:lg`).
+- Dummy demo at `/demo/color_swatches` (Feedback catalog) with a ChipGroup row of named swatches (Background / Text / Accent).
 - Color Swatch docs, method/variables table, and `--color-swatch-*` theme tokens.
 
 ### Changed
 - Bumped the gem version to `0.1.136`.
 
-### Fixed
-
 ### Upgrade notes
-- No host app changes required. Compose `FlatPack::ColorSwatch::Component` with `text:`, `value:`, optional form `name:`, and `selected:` for the live swatch in a row. Prefer `#rrggbb` hex for the native picker.
+- No host app changes required. Compose `FlatPack::ColorSwatch::Component` with required `color:`, optional form `name:`, optional `text:` for tooltip/selected caption, and `selected:` for the live swatch in a row. Prefer `#rrggbb` hex for the native picker. Hosts arrange rows with `ChipGroup` or `Grid`.
 
-## [0.1.135]
+## [0.1.135] - 2026-08-28
 
 ### Added
 - `FlatPack::Avatar::Component` accepts `size: :"2xl"` (`h-24 w-24`, 6rem) for larger profile photos on edit pages.

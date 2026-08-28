@@ -42,6 +42,7 @@ class PagesController < ApplicationController
     {action: /\Abadges\z/, title: "Badges", patterns: [/\A--badge-/]},
     {action: /\Achips\z/, title: "Chips", patterns: [/\A--chip-/]},
     {action: /\Achip_groups\z/, title: "Chip Groups", patterns: [/\A--chip-/]},
+    {action: /\Acolor_swatches\z/, title: "Color Swatches", patterns: [/\A--color-swatch-/]},
     {action: /\Acards(_.*)?\z/, title: "Cards", patterns: [/\A--card-/]},
     {action: /\Abreadcrumbs\z/, title: "Breadcrumbs", patterns: [/\A--breadcrumb-/]},
     {action: /\Anavbar\z/, title: "Top Nav", patterns: [/\A--top-nav-/]},
@@ -56,7 +57,6 @@ class PagesController < ApplicationController
     {action: /\Acarousel\z/, title: "Carousel", patterns: [/\A--carousel-/]},
     {action: /\Aavatars\z/, title: "Avatars", patterns: [/\A--avatar-/]},
     {action: /\Aavatar_groups\z/, title: "Avatar Groups", patterns: [/\A--avatar-/]},
-    {action: /\Aforms_color_swatch\z/, title: "Color Swatch", patterns: [/\A--color-swatch-/]},
     {action: /\Acomments\z/, title: "Comments", patterns: [/\A--comments-/]},
     {action: /\Achat(_.*)?\z/, title: "Chat", patterns: [/\A--chat-/]},
     {action: /\Atables(_.*)?\z/, title: "Table", patterns: [/\A--table-/]},
@@ -252,6 +252,9 @@ class PagesController < ApplicationController
   def chip_groups
   end
 
+  def color_swatches
+  end
+
   def chip_add_callback
     if ActiveModel::Type::Boolean.new.cast(params[:fail])
       render json: {
@@ -387,9 +390,6 @@ class PagesController < ApplicationController
   end
 
   def forms_switch
-  end
-
-  def forms_color_swatch
   end
 
   def forms_combined

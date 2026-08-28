@@ -103,7 +103,6 @@ class DemoCatalog
             {title: "Nested Multiselect", path: "/demo/forms/nested_multiselect", description: "Parent and child checkbox multiselect examples", icon: :square},
             {title: "Picker", path: "/demo/picker", description: "Reusable file and image picker for any workflow", icon: :image},
             {title: "Switch", path: "/demo/forms/switch", description: "Toggle switch input examples", icon: :settings},
-            {title: "Color Swatch", path: "/demo/forms/color_swatch", description: "Named colour circles with native colour picker", icon: :settings},
             {title: "Range Input", path: "/demo/range_input", description: "Slider input with live value", icon: :settings},
             {title: "Combined Form", path: "/demo/forms/combined", description: "Full form with multiple input types", icon: :edit_3}
           ]
@@ -219,7 +218,8 @@ class DemoCatalog
         {type: :item, title: "Alerts", path: "/demo/alerts", description: "Status and feedback messages", icon: :alert},
         {type: :item, title: "Badges", path: "/demo/badges", description: "Label and status indicators", icon: :dashboard},
         {type: :item, title: "Chips", path: "/demo/chips", description: "Compact filter and tag components", icon: :dashboard},
-        {type: :item, title: "Chip Groups", path: "/demo/chip_groups", description: "Wrapping and non-wrapping chip collections", icon: :dashboard}
+        {type: :item, title: "Chip Groups", path: "/demo/chip_groups", description: "Wrapping and non-wrapping chip collections", icon: :dashboard},
+        {type: :item, title: "Color Swatches", path: "/demo/color_swatches", description: "Named colour circles with native colour picker", icon: :dashboard}
       ]
     },
     {

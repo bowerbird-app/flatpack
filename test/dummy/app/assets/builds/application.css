@@ -1223,9 +1223,6 @@
   .gap-\[var\(--color-swatch-gap\)\] {
     gap: var(--color-swatch-gap);
   }
-  .gap-\[var\(--stack-gap-md\)\] {
-    gap: var(--stack-gap-md);
-  }
   .space-y-\(--stack-gap-lg\) {
     :where(& > :not(:last-child)) {
       --tw-space-y-reverse: 0;
