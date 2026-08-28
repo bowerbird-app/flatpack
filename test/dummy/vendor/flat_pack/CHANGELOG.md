@@ -8,9 +8,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- `FlatPack::ColorSwatch::Component` — circular named colour control with tooltip, selected caption, native `<input type="color">`, and Avatar-scale sizes (`:xs`–`:xl`).
+- Dummy demo at `/demo/forms/color_swatch` with a named swatch row (Background / Text / Accent).
+- Color Swatch docs, method/variables table, and `--color-swatch-*` theme tokens.
+
+### Changed
+- Bumped the gem version to `0.1.136`.
+
+### Fixed
+
+### Upgrade notes
+- No host app changes required. Compose `FlatPack::ColorSwatch::Component` with `text:`, `value:`, optional form `name:`, and `selected:` for the live swatch in a row. Prefer `#rrggbb` hex for the native picker.
+
+## [0.1.135]
+
+### Added
 - `FlatPack::Avatar::Component` accepts `size: :"2xl"` (`h-24 w-24`, 6rem) for larger profile photos on edit pages.
 
 ### Changed
+- Dummy demo pages that use the shared Related demos partial now render that block at the bottom of the page (after component examples and Theme Tokens).
+- Dummy full-page cache keys also track `app/views/shared/**` so Related demos partial edits bust cached HTML.
 
 ### Fixed
 

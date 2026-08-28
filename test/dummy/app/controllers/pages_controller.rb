@@ -56,6 +56,7 @@ class PagesController < ApplicationController
     {action: /\Acarousel\z/, title: "Carousel", patterns: [/\A--carousel-/]},
     {action: /\Aavatars\z/, title: "Avatars", patterns: [/\A--avatar-/]},
     {action: /\Aavatar_groups\z/, title: "Avatar Groups", patterns: [/\A--avatar-/]},
+    {action: /\Aforms_color_swatch\z/, title: "Color Swatch", patterns: [/\A--color-swatch-/]},
     {action: /\Acomments\z/, title: "Comments", patterns: [/\A--comments-/]},
     {action: /\Achat(_.*)?\z/, title: "Chat", patterns: [/\A--chat-/]},
     {action: /\Atables(_.*)?\z/, title: "Table", patterns: [/\A--table-/]},
@@ -386,6 +387,9 @@ class PagesController < ApplicationController
   end
 
   def forms_switch
+  end
+
+  def forms_color_swatch
   end
 
   def forms_combined

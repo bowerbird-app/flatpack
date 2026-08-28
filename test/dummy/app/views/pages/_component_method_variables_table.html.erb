@@ -432,6 +432,21 @@
         { variable: "removable", accepts: "true, false", example: "removable: true" }
       ]
     },
+    color_swatch: {
+      label: "Color Swatch",
+      method_call: "render FlatPack::ColorSwatch::Component.new(text: \"Background\", value: \"#f8f9fa\", name: \"theme[background]\", selected: true, size: :lg)",
+      variables: [
+        { variable: "text", accepts: "String (required)", example: "text: \"Background\"" },
+        { variable: "value", accepts: "CSS colour string", example: "value: \"#f8f9fa\"" },
+        { variable: "name", accepts: "String or nil", example: "name: \"theme[background]\"" },
+        { variable: "selected", accepts: "true, false", example: "selected: true" },
+        { variable: "size", accepts: ":xs, :sm, :md, :lg, :xl", example: "size: :lg" },
+        { variable: "disabled", accepts: "true, false", example: "disabled: true" },
+        { variable: "show_tooltip", accepts: "true, false", example: "show_tooltip: false" },
+        { variable: "tooltip_placement", accepts: ":top, :right, :bottom, :left", example: "tooltip_placement: :top" },
+        { variable: "**system_arguments", accepts: "Hash", example: "id: \"background-swatch\", data: { testid: \"color-swatch\" }" }
+      ]
+    },
     code_block: {
       label: "Code Block",
       method_call: "render FlatPack::CodeBlock::Component.new(title: \"ERB\", language: \"erb\", code: \"...\")",

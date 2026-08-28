@@ -37,6 +37,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/forms/select
     /demo/forms/nested_multiselect
     /demo/forms/switch
+    /demo/forms/color_swatch
     /demo/forms/combined
     /demo/badges
     /demo/chips
