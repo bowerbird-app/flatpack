@@ -919,9 +919,6 @@
   .max-w-\[calc\(100vw-2rem\)\] {
     max-width: calc(100vw - 2rem);
   }
-  .max-w-\[var\(--color-swatch-label-max-width\)\] {
-    max-width: var(--color-swatch-label-max-width);
-  }
   .max-w-\[var\(--tooltip-max-width\)\] {
     max-width: var(--tooltip-max-width);
   }
@@ -1219,9 +1216,6 @@
   }
   .gap-\[var\(--chip-group-gap\)\] {
     gap: var(--chip-group-gap);
-  }
-  .gap-\[var\(--color-swatch-gap\)\] {
-    gap: var(--color-swatch-gap);
   }
   .gap-\[var\(--stack-gap-md\)\] {
     gap: var(--stack-gap-md);
@@ -2933,9 +2927,6 @@
   }
   .text-\[var\(--color-success-text\)\] {
     color: var(--color-success-text);
-  }
-  .text-\[var\(--color-swatch-label-color\)\] {
-    color: var(--color-swatch-label-color);
   }
   .text-\[var\(--color-warning\)\] {
     color: var(--color-warning);

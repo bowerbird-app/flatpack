@@ -45,10 +45,7 @@ module FlatPack
 
       def call
         content_tag(:div, **root_attributes) do
-          safe_join([
-            render_control_with_tooltip,
-            render_selected_label
-          ].compact)
+          render_control_with_tooltip
         end
       end
 
@@ -65,10 +62,7 @@ module FlatPack
       end
 
       def root_classes
-        classes(
-          "relative inline-flex flex-col items-center",
-          "gap-[var(--color-swatch-gap)]"
-        )
+        "relative inline-flex items-center"
       end
 
       def render_control_with_tooltip
@@ -162,20 +156,6 @@ module FlatPack
         attrs[:name] = @name if @name
 
         attrs
-      end
-
-      def render_selected_label
-        return unless @selected && @text.present?
-
-        content_tag(
-          :span,
-          @text,
-          class: classes(
-            "text-xs font-medium text-center leading-tight",
-            "text-[var(--color-swatch-label-color)]",
-            "max-w-[var(--color-swatch-label-max-width)]"
-          )
-        )
       end
 
       def render_tooltip?

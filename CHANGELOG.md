@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.136] - 2026-08-28
 
 ### Added
-- `FlatPack::ColorSwatch::Component` — circular named colour control with `color:`, optional `text:` tooltip/selected caption, native `<input type="color">` on circle click (no intermediate panel), and Avatar-scale sizes (`:xs`–`:lg`).
+- `FlatPack::ColorSwatch::Component` — circular named colour control with `color:`, optional `text:` tooltip, optional `selected:` ring, native `<input type="color">` on circle click (no intermediate panel), and Avatar-scale sizes (`:xs`–`:lg`).
 - Dummy demo at `/demo/color_swatches` (Feedback catalog) with a flex row of named swatches (Background / Text / Accent). Click a circle to open the OS/browser colour dialog.
 - Color Swatch docs, method/variables table, and `--color-swatch-*` theme tokens.
 
@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bumped the gem version to `0.1.136`.
 
 ### Upgrade notes
-- No host app changes required. Compose `FlatPack::ColorSwatch::Component` with required `color:`, optional form `name:`, optional `text:` for tooltip/selected caption, and `selected:` for the live swatch in a row. Prefer `#rrggbb` hex for the native picker. Arrange rows with flex + kit gap tokens — do not wrap swatches in `ChipGroup`.
+- No host app changes required. Compose `FlatPack::ColorSwatch::Component` with required `color:`, optional form `name:`, optional `text:` for tooltip/accessible name, and `selected:` for the live ring in a row. Prefer `#rrggbb` hex for the native picker. Arrange rows with flex + kit gap tokens — do not wrap swatches in `ChipGroup`.
 
 ## [0.1.135] - 2026-08-28
 

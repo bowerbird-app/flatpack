@@ -15,10 +15,10 @@ Use Color Swatch in theme editors and brand settings. Compose several swatches i
 |---|---|---|---|---|
 | `color` | String | none | yes | Current colour (American spelling). Prefer `#rrggbb` hex for the native picker; CSS colours and `var(--token)` are accepted for display. Invalid values raise `ArgumentError`. |
 | `size` | Symbol | `:md` | no | Circle size: `:xs`, `:sm`, `:md`, `:lg`; invalid values raise `ArgumentError`. |
-| `selected` | Boolean | `false` | no | When true and `text` is present, shows a selected ring and renders `text` under the circle (touch-friendly; does not rely on hover). |
+| `selected` | Boolean | `false` | no | When true, shows a selected ring on the circle. |
 | `name` | String | `nil` | no | Optional form field name for the native colour input. |
 | `value` | String | `nil` | no | Optional native input value override. Defaults to `color` when it is a hex colour; otherwise falls back to `#000000` for the picker. |
-| `text` | String | `nil` | no | Human label used as tooltip copy, accessible name, and the visible caption when `selected` is true. |
+| `text` | String | `nil` | no | Human label used as tooltip copy and accessible name. |
 | `disabled` | Boolean | `false` | no | Disables the native colour input. |
 | `show_tooltip` | Boolean | `true` | no | Wraps the circle in `FlatPack::Tooltip::Component` when `text` is present. |
 | `tooltip_placement` | Symbol | `:top` | no | Tooltip placement: `:top`, `:right`, `:bottom`, `:left`. |
@@ -29,7 +29,7 @@ None.
 
 ## Variants
 - Sizes: `:xs`, `:sm`, `:md`, `:lg`.
-- Selected vs idle: selected shows ring + caption when `text` is present.
+- Selected vs idle: selected shows a ring on the circle.
 - Click the circle to open the native `<input type="color">` dialog directly — no intermediate panel.
 
 ## Example
@@ -59,7 +59,6 @@ None.
 
 ## Accessibility
 - The control is a native `input[type="color"]` covering the circle, with `aria-label` from `text` (or `"Color"`).
-- Selected state keeps the name visible without hover so touch users can see which swatch is live.
 - Tooltip content uses `role="tooltip"` via `FlatPack::Tooltip::Component` when `text` is present.
 
 ## Dependencies

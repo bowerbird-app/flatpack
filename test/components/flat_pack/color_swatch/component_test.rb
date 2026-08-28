@@ -47,14 +47,15 @@ module FlatPack
         refute_selector "input[name]"
       end
 
-      def test_renders_selected_label_when_text_present
+      def test_renders_selected_ring_without_caption
         render_inline(Component.new(color: "#f8f9fa", text: "Background", selected: true))
 
-        assert_selector "[data-selected='true']", text: "Background"
+        assert_selector "[data-selected='true']"
         assert_includes page.native.to_html, "ring-[var(--color-swatch-selected-ring-color)]"
+        refute_selector "span.text-xs", text: "Background"
       end
 
-      def test_hides_label_when_not_selected
+      def test_marks_unselected_without_caption
         render_inline(Component.new(color: "#f8f9fa", text: "Background", selected: false))
 
         assert_selector "[data-selected='false']"
