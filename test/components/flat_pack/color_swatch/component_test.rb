@@ -9,7 +9,7 @@ module FlatPack
         render_inline(Component.new(color: "#ffffff", text: "Background"))
 
         assert_selector "[data-controller='flat-pack--color-swatch']"
-        assert_selector "button[aria-label='Background'][aria-haspopup='dialog']"
+        assert_selector "input[type='color'][aria-label='Background']"
         assert_includes page.native.to_html, "background-color: #ffffff"
       end
 
@@ -25,14 +25,14 @@ module FlatPack
         end
       end
 
-      def test_opens_picker_via_flatpack_popover
+      def test_uses_native_color_input_without_popover
         render_inline(Component.new(color: "#333333", text: "Accent"))
 
-        assert_selector "[data-controller='flat-pack--popover']"
-        assert_selector "[data-flat-pack--color-swatch-target='panel']"
-        assert_selector "label", text: "Choose colour"
         assert_selector "input[type='color'][value='#333333']"
-        assert_selector "[data-flat-pack--color-swatch-target='hex']", text: "#333333"
+        refute_selector "[data-controller='flat-pack--popover']"
+        refute_selector "[data-flat-pack--color-swatch-target='panel']"
+        refute_selector "[data-flat-pack--color-swatch-target='hex']"
+        refute_text "Choose colour"
       end
 
       def test_renders_form_name_when_provided
@@ -72,7 +72,7 @@ module FlatPack
         render_inline(Component.new(color: "#333333"))
 
         refute_selector "[data-controller='flat-pack--tooltip']"
-        assert_selector "button[aria-label='Color']"
+        assert_selector "input[type='color'][aria-label='Color']"
       end
 
       def test_can_disable_tooltip
@@ -81,10 +81,10 @@ module FlatPack
         refute_selector "[data-controller='flat-pack--tooltip']"
       end
 
-      def test_omits_popover_when_disabled
+      def test_disables_native_input_when_disabled
         render_inline(Component.new(color: "#333333", text: "Accent", disabled: true))
 
-        assert_selector "button[disabled]"
+        assert_selector "input[type='color'][disabled]"
         refute_selector "[data-controller='flat-pack--popover']"
       end
 
@@ -120,29 +120,28 @@ module FlatPack
 
         assert_includes page.native.to_html, "background-color: var(--color-primary)"
         assert_selector "input[type='color'][value='#123456']"
-        assert_selector "[data-flat-pack--color-swatch-target='hex']", text: "#123456"
       end
 
       def test_applies_stimulus_targets_and_actions
         render_inline(Component.new(color: "#123456", text: "Accent"))
 
         assert_selector "[data-flat-pack--color-swatch-target='swatch']"
-        assert_selector "[data-flat-pack--color-swatch-target='preview']"
         assert_selector "[data-flat-pack--color-swatch-target='input']"
         assert_selector "input[data-action*='flat-pack--color-swatch#update']"
+        refute_selector "[data-flat-pack--color-swatch-target='preview']"
       end
 
-      def test_wires_popover_to_trigger_id
+      def test_uses_id_for_input
         render_inline(Component.new(color: "#123456", text: "Accent", id: "accent-swatch"))
 
-        assert_selector "button#accent-swatch_trigger"
-        assert_selector "[data-flat-pack--popover-trigger-id-value='accent-swatch_trigger']"
+        assert_selector "input#accent-swatch[type='color']"
       end
 
       def test_applies_size_fallback_style_for_lg
         render_inline(Component.new(color: "#123456", size: :lg))
 
-        assert_selector "span[style*='width: 3rem'][style*='height: 3rem']"
+        assert_includes page.native.to_html, "width: 3rem"
+        assert_includes page.native.to_html, "height: 3rem"
       end
     end
   end

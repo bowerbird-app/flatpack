@@ -1,6 +1,6 @@
 <%= render FlatPack::PageTitle::Component.new(
   title: "Color Swatches",
-  subtitle: "Named colour circles with tooltips, selected captions, and a FlatPack popover colour selector."
+  subtitle: "Named colour circles with tooltips, selected captions, and a native colour picker on click."
 ) %>
 
 <%= render "pages/component_method_variables_table", component: :color_swatch %>
@@ -14,7 +14,7 @@
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Named swatch row",
     anchor_link: true,
-    subtitle: "Compose several ColorSwatches in a flex row. Click a circle to open the FlatPack colour selector. The selected swatch keeps its name under the circle for touch."
+    subtitle: "Compose several ColorSwatches in a flex row. Click a circle to open the native colour picker. The selected swatch keeps its name under the circle for touch."
   ) %>
 
   <%= render FlatPack::Card::Component.new do |card| %>
@@ -96,7 +96,6 @@
 </section>
 
 <%= render "shared/related_demos", links: [
-  {text: "Popovers", href: "/demo/popovers"},
   {text: "Tooltips", href: "/demo/tooltips"},
   {text: "Badges", href: "/demo/badges"},
   {text: "Rounded theme", href: "/themes/demos/rounded"}

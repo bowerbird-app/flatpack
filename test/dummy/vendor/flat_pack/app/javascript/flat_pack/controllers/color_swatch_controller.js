@@ -2,7 +2,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["input", "swatch", "preview", "hex"]
+  static targets = ["input", "swatch"]
 
   connect() {
     this.update()
@@ -16,14 +16,6 @@ export default class extends Controller {
 
     if (this.hasSwatchTarget) {
       this.swatchTarget.style.backgroundColor = value
-    }
-
-    if (this.hasPreviewTarget) {
-      this.previewTarget.style.backgroundColor = value
-    }
-
-    if (this.hasHexTarget) {
-      this.hexTarget.textContent = value.toUpperCase()
     }
 
     this.element.dispatchEvent(

@@ -422,8 +422,6 @@
   --color-swatch-label-max-width: 4.5rem;
   --color-swatch-gap: 0.375rem;
   --color-swatch-shadow: var(--shadow-sm);
-  --color-swatch-picker-gap: var(--stack-gap-sm);
-  --color-swatch-picker-min-width: 12rem;
   --top-nav-background-color: var(--surface-background-color);
   --top-nav-border-color: transparent;
   --top-nav-item-text-color: var(--surface-muted-content-color);
@@ -906,8 +904,6 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --color-swatch-label-max-width: 4.5rem;
   --color-swatch-gap: 0.375rem;
   --color-swatch-shadow: var(--shadow-sm);
-  --color-swatch-picker-gap: var(--stack-gap-sm);
-  --color-swatch-picker-min-width: 12rem;
   --top-nav-background-color: var(--surface-background-color);
   --top-nav-border-color: transparent;
   --top-nav-item-text-color: var(--surface-muted-content-color);

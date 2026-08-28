@@ -25,7 +25,6 @@ module FlatPack
         disabled: false,
         show_tooltip: true,
         tooltip_placement: :top,
-        picker_placement: :bottom,
         **system_arguments
       )
         super(**system_arguments)
@@ -38,20 +37,17 @@ module FlatPack
         @disabled = ActiveModel::Type::Boolean.new.cast(disabled)
         @show_tooltip = ActiveModel::Type::Boolean.new.cast(show_tooltip)
         @tooltip_placement = tooltip_placement.to_sym
-        @picker_placement = picker_placement.to_sym
 
         validate_color!
         validate_size!
         validate_tooltip_placement!
-        validate_picker_placement!
       end
 
       def call
         content_tag(:div, **root_attributes) do
           safe_join([
-            render_trigger_with_tooltip,
-            render_selected_label,
-            render_picker_popover
+            render_control_with_tooltip,
+            render_selected_label
           ].compact)
         end
       end
@@ -75,37 +71,35 @@ module FlatPack
         )
       end
 
-      def render_trigger_with_tooltip
-        trigger = render_trigger_button
+      def render_control_with_tooltip
+        control = render_control
 
-        return trigger unless render_tooltip?
+        return control unless render_tooltip?
 
         FlatPack::Tooltip::Component.new(text: @text, placement: @tooltip_placement).render_in(view_context) do
-          trigger
+          control
         end
       end
 
-      def render_trigger_button
-        content_tag(:button, **trigger_attributes) do
-          render_swatch_face
+      def render_control
+        content_tag(:div, **control_attributes) do
+          safe_join([
+            tag.input(**input_attributes),
+            render_swatch_face
+          ])
         end
       end
 
-      def trigger_attributes
+      def control_attributes
         {
-          type: "button",
-          id: trigger_id,
-          disabled: @disabled,
           class: classes(
             "relative inline-flex shrink-0 items-center justify-center",
             "rounded-[var(--color-swatch-radius)]",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-swatch-selected-ring-color)]",
+            "focus-within:outline-none focus-within:ring-2 focus-within:ring-inset focus-within:ring-[var(--color-swatch-selected-ring-color)]",
+            SIZES.fetch(@size),
             @disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"
           ),
-          aria: {
-            label: accessible_name,
-            haspopup: "dialog"
-          }
+          style: size_fallback_style
         }
       end
 
@@ -122,11 +116,10 @@ module FlatPack
 
       def swatch_face_classes
         classes(
-          "block rounded-[var(--color-swatch-radius)]",
+          "pointer-events-none absolute inset-0 block",
+          "rounded-[var(--color-swatch-radius)]",
           "border border-[var(--color-swatch-border-color)]",
           "shadow-[var(--color-swatch-shadow)]",
-          "pointer-events-none",
-          SIZES.fetch(@size),
           selected_ring_classes
         )
       end
@@ -138,10 +131,7 @@ module FlatPack
       end
 
       def swatch_face_style
-        [
-          size_fallback_style,
-          "background-color: #{@color}"
-        ].compact.join("; ")
+        "background-color: #{@color}"
       end
 
       def size_fallback_style
@@ -153,103 +143,17 @@ module FlatPack
         end
       end
 
-      def render_picker_popover
-        return if @disabled
-
-        FlatPack::Popover::Component.new(
-          trigger_id: trigger_id,
-          placement: @picker_placement
-        ).render_in(view_context) do |popover|
-          popover.content do
-            render_picker_panel
-          end
-        end
-      end
-
-      def render_picker_panel
-        content_tag(
-          :div,
-          class: classes(
-            "flex flex-col",
-            "gap-[var(--color-swatch-picker-gap)]",
-            "min-w-[var(--color-swatch-picker-min-width)]"
-          ),
-          data: {flat_pack__color_swatch_target: "panel"}
-        ) do
-          safe_join([
-            render_picker_heading,
-            render_picker_preview_row,
-            render_picker_input
-          ].compact)
-        end
-      end
-
-      def render_picker_heading
-        return unless @text.present?
-
-        content_tag(
-          :p,
-          @text,
-          class: "text-sm font-medium text-[var(--popover-text-color)]"
-        )
-      end
-
-      def render_picker_preview_row
-        content_tag(:div, class: "flex items-center gap-[var(--stack-gap-sm)]") do
-          safe_join([
-            content_tag(
-              :span,
-              nil,
-              class: classes(
-                "block h-10 w-10 shrink-0",
-                "rounded-[var(--color-swatch-radius)]",
-                "border border-[var(--color-swatch-border-color)]",
-                "shadow-[var(--color-swatch-shadow)]"
-              ),
-              style: "background-color: #{@color}",
-              aria: {hidden: true},
-              data: {flat_pack__color_swatch_target: "preview"}
-            ),
-            content_tag(
-              :span,
-              display_hex,
-              class: classes(
-                "text-sm font-mono",
-                "text-[var(--surface-muted-content-color)]"
-              ),
-              data: {flat_pack__color_swatch_target: "hex"}
-            )
-          ])
-        end
-      end
-
-      def render_picker_input
-        content_tag(:div, class: "flex flex-col gap-1.5") do
-          safe_join([
-            content_tag(
-              :label,
-              "Choose colour",
-              for: input_id,
-              class: "text-xs font-medium text-[var(--surface-muted-content-color)]"
-            ),
-            tag.input(**input_attributes)
-          ])
-        end
-      end
-
       def input_attributes
         attrs = {
           type: "color",
           id: input_id,
           value: input_value,
+          disabled: @disabled,
           class: classes(
-            "block w-full h-10 cursor-pointer",
-            "rounded-[var(--radius-md)]",
-            "border border-[var(--surface-border-color)]",
-            "bg-[var(--surface-background-color)]",
-            "p-1"
+            "absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0",
+            @disabled ? "pointer-events-none" : nil
           ),
-          aria: {label: "#{accessible_name} colour"},
+          aria: {label: accessible_name},
           data: {
             flat_pack__color_swatch_target: "input",
             action: "input->flat-pack--color-swatch#update change->flat-pack--color-swatch#update"
@@ -280,14 +184,6 @@ module FlatPack
 
       def accessible_name
         @text.presence || "Color"
-      end
-
-      def display_hex
-        input_value.upcase
-      end
-
-      def trigger_id
-        @trigger_id ||= "#{input_id}_trigger"
       end
 
       def input_id
@@ -338,12 +234,6 @@ module FlatPack
         return if FlatPack::Tooltip::Component::PLACEMENTS.key?(@tooltip_placement)
 
         raise ArgumentError, "Invalid tooltip_placement: #{@tooltip_placement}. Must be one of: #{FlatPack::Tooltip::Component::PLACEMENTS.keys.join(", ")}"
-      end
-
-      def validate_picker_placement!
-        return if FlatPack::Popover::Component::PLACEMENTS.key?(@picker_placement)
-
-        raise ArgumentError, "Invalid picker_placement: #{@picker_placement}. Must be one of: #{FlatPack::Popover::Component::PLACEMENTS.keys.join(", ")}"
       end
     end
   end
