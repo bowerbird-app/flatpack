@@ -16,7 +16,7 @@ Use Avatar in navigation, lists, comments, and profile surfaces where a compact 
 | `alt` | String | `name` or `"Avatar"` | no | `img` alt text. |
 | `name` | String | `nil` | no | Name used for initials fallback and default alt text. |
 | `initials` | String | `nil` | no | Explicit initials fallback text. |
-| `size` | Symbol | `:md` | no | Size: `:xs`, `:sm`, `:md`, `:lg`, `:xl`; invalid values raise `ArgumentError`. |
+| `size` | Symbol | `:md` | no | Size: `:xs`, `:sm`, `:md`, `:lg`, `:xl`, `:"2xl"`; invalid values raise `ArgumentError`. |
 | `shape` | Symbol | `:circle` | no | Shape: `:circle`, `:rounded`, `:square`; invalid values raise `ArgumentError`. |
 | `status` | Symbol | `nil` | no | Status dot: `:online`, `:offline`, `:busy`, `:away`; invalid values raise `ArgumentError`. |
 | `href` | String | `nil` | no | When present, renders as a link (`<a>`); otherwise renders as `<span>`. |
@@ -28,7 +28,7 @@ Use Avatar in navigation, lists, comments, and profile surfaces where a compact 
 None.
 
 ## Variants
-- Sizes: `:xs`, `:sm`, `:md`, `:lg`, `:xl`.
+- Sizes: `:xs`, `:sm`, `:md`, `:lg`, `:xl`, `:"2xl"`.
 - Shapes: `:circle`, `:rounded`, `:square`.
 - Status: `:online`, `:offline`, `:busy`, `:away`.
 
