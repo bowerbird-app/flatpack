@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- `FlatPack::Avatar::Component` accepts `size: :"2xl"` (`h-24 w-24`, 6rem) for larger profile photos on edit pages.
 
 ### Changed
 

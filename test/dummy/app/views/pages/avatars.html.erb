@@ -47,7 +47,7 @@
     <%= render FlatPack::SectionTitle::Component.new(
       title: "Sizes",
       anchor_link: true,
-      subtitle: "Avatar sizes from xs through xl, with md as the default."
+      subtitle: "Avatar sizes from xs through 2xl, with md as the default. Compare xl (4rem) and 2xl (6rem) at the end."
     ) %>
     <div class="flex items-end gap-4 mb-4">
       <%= render FlatPack::Avatar::Component.new(name: "John Doe", size: :xs) %>
@@ -55,6 +55,7 @@
       <%= render FlatPack::Avatar::Component.new(name: "John Doe", size: :md) %>
       <%= render FlatPack::Avatar::Component.new(name: "John Doe", size: :lg) %>
       <%= render FlatPack::Avatar::Component.new(name: "John Doe", size: :xl) %>
+      <%= render FlatPack::Avatar::Component.new(name: "John Doe", size: :"2xl") %>
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       title: "Avatar Sizes (ERB)",
@@ -92,6 +93,13 @@
           language: "erb",
           code: <<~CODE
             #{erb_output_open} render FlatPack::Avatar::Component.new(name: "John Doe", size: :xl) #{erb_tag_close}
+          CODE
+        },
+        {
+          label: "2XL",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::Avatar::Component.new(name: "John Doe", size: :"2xl") #{erb_tag_close}
           CODE
         }
       ]

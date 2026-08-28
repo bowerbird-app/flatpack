@@ -5,13 +5,14 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "h-6" "w-6" "text-[10px]" "h-8" "w-8" "text-xs" "h-10" "w-10" "text-sm" "h-12" "w-12" "text-base" "h-16" "w-16" "text-lg"
+      # "h-6" "w-6" "text-[10px]" "h-8" "w-8" "text-xs" "h-10" "w-10" "text-sm" "h-12" "w-12" "text-base" "h-16" "w-16" "text-lg" "h-24" "w-24" "text-xl" "h-5" "w-5"
       SIZES = {
         xs: "h-6 w-6 text-[10px]",
         sm: "h-8 w-8 text-xs",
         md: "h-10 w-10 text-sm",
         lg: "h-12 w-12 text-base",
-        xl: "h-16 w-16 text-lg"
+        xl: "h-16 w-16 text-lg",
+        "2xl": "h-24 w-24 text-xl"
       }.freeze
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
@@ -128,6 +129,7 @@ module FlatPack
         when :md then "width: 2.5rem; height: 2.5rem"
         when :lg then "width: 3rem; height: 3rem"
         when :xl then "width: 4rem; height: 4rem"
+        when :"2xl" then "width: 6rem; height: 6rem"
         end
       end
 
@@ -179,6 +181,7 @@ module FlatPack
         when :md then "h-2.5 w-2.5"
         when :lg then "h-3 w-3"
         when :xl then "h-4 w-4"
+        when :"2xl" then "h-5 w-5"
         end
 
         classes(

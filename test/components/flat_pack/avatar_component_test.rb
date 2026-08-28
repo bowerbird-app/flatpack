@@ -104,6 +104,18 @@ module FlatPack
         assert_selector "span[style*='width: 3rem'][style*='height: 3rem']"
       end
 
+      def test_applies_size_fallback_style_for_2xl
+        render_inline(Component.new(name: "Test", size: :"2xl"))
+
+        assert_selector "span[style*='width: 6rem'][style*='height: 6rem']"
+      end
+
+      def test_accepts_2xl_size_as_string
+        render_inline(Component.new(name: "Test", size: "2xl"))
+
+        assert_includes page.native.to_html, "h-24"
+      end
+
       def test_raises_error_for_invalid_size
         assert_raises(ArgumentError) do
           Component.new(name: "Test", size: :invalid)
