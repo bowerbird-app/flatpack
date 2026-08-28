@@ -997,6 +997,9 @@
   .min-w-\[var\(--chat-composer-control-height\)\] {
     min-width: var(--chat-composer-control-height);
   }
+  .min-w-\[var\(--color-swatch-picker-min-width\)\] {
+    min-width: var(--color-swatch-picker-min-width);
+  }
   .flex-1 {
     flex: 1;
   }
@@ -1222,6 +1225,15 @@
   }
   .gap-\[var\(--color-swatch-gap\)\] {
     gap: var(--color-swatch-gap);
+  }
+  .gap-\[var\(--color-swatch-picker-gap\)\] {
+    gap: var(--color-swatch-picker-gap);
+  }
+  .gap-\[var\(--stack-gap-md\)\] {
+    gap: var(--stack-gap-md);
+  }
+  .gap-\[var\(--stack-gap-sm\)\] {
+    gap: var(--stack-gap-sm);
   }
   .space-y-\(--stack-gap-lg\) {
     :where(& > :not(:last-child)) {
@@ -4127,6 +4139,11 @@
   .focus-visible\:ring-\[var\(--color-primary\)\] {
     &:focus-visible {
       --tw-ring-color: var(--color-primary);
+    }
+  }
+  .focus-visible\:ring-\[var\(--color-swatch-selected-ring-color\)\] {
+    &:focus-visible {
+      --tw-ring-color: var(--color-swatch-selected-ring-color);
     }
   }
   .focus-visible\:ring-offset-2 {

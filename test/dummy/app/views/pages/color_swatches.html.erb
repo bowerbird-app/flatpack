@@ -1,6 +1,6 @@
 <%= render FlatPack::PageTitle::Component.new(
   title: "Color Swatches",
-  subtitle: "Named colour circles with tooltips, selected captions, and the native colour picker."
+  subtitle: "Named colour circles with tooltips, selected captions, and a FlatPack popover colour selector."
 ) %>
 
 <%= render "pages/component_method_variables_table", component: :color_swatch %>
@@ -14,12 +14,12 @@
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Named swatch row",
     anchor_link: true,
-    subtitle: "Compose several swatches with ChipGroup. The selected swatch shows its name under the circle so touch users can see which colour is live."
+    subtitle: "Compose several ColorSwatches in a flex row. Click a circle to open the FlatPack colour selector. The selected swatch keeps its name under the circle for touch."
   ) %>
 
   <%= render FlatPack::Card::Component.new do |card| %>
     <% card.body do %>
-      <%= render FlatPack::ChipGroup::Component.new(class: "items-start") do %>
+      <div class="flex flex-wrap items-start gap-[var(--stack-gap-md)]">
         <%= render FlatPack::ColorSwatch::Component.new(
           color: "#f8f9fa",
           text: "Background",
@@ -39,7 +39,7 @@
           name: "theme[accent]",
           size: :lg
         ) %>
-      <% end %>
+      </div>
     <% end %>
   <% end %>
 
@@ -47,7 +47,7 @@
     title: "Named swatch row (ERB)",
     language: "erb",
     code: <<~CODE
-      #{erb_output_open} render FlatPack::ChipGroup::Component.new(class: "items-start") do #{erb_tag_close}
+      <div class="flex flex-wrap items-start gap-[var(--stack-gap-md)]">
         #{erb_output_open} render FlatPack::ColorSwatch::Component.new(
           color: "#f8f9fa",
           text: "Background",
@@ -67,7 +67,7 @@
           name: "theme[accent]",
           size: :lg
         ) #{erb_tag_close}
-      #{erb_output_open} end #{erb_tag_close}
+      </div>
     CODE
   ) %>
 </section>
@@ -79,12 +79,12 @@
     subtitle: "Circle sizes reuse the Avatar scale tokens from xs through lg."
   ) %>
 
-  <%= render FlatPack::ChipGroup::Component.new(class: "items-end mb-4") do %>
+  <div class="flex flex-wrap items-end gap-[var(--stack-gap-md)] mb-4">
     <%= render FlatPack::ColorSwatch::Component.new(color: "#e5e5e5", text: "XS", size: :xs, selected: true) %>
     <%= render FlatPack::ColorSwatch::Component.new(color: "#d1d5db", text: "SM", size: :sm, selected: true) %>
     <%= render FlatPack::ColorSwatch::Component.new(color: "#9ca3af", text: "MD", size: :md, selected: true) %>
     <%= render FlatPack::ColorSwatch::Component.new(color: "#333333", text: "LG", size: :lg, selected: true) %>
-  <% end %>
+  </div>
 
   <%= render FlatPack::CodeBlock::Component.new(
     title: "Sizes (ERB)",
@@ -96,9 +96,8 @@
 </section>
 
 <%= render "shared/related_demos", links: [
+  {text: "Popovers", href: "/demo/popovers"},
+  {text: "Tooltips", href: "/demo/tooltips"},
   {text: "Badges", href: "/demo/badges"},
-  {text: "Chips", href: "/demo/chips"},
-  {text: "Chip Groups", href: "/demo/chip_groups"},
-  {text: "Rounded theme", href: "/themes/demos/rounded"},
-  {text: "Tooltips", href: "/demo/tooltips"}
+  {text: "Rounded theme", href: "/themes/demos/rounded"}
 ] %>

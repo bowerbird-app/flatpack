@@ -2,18 +2,29 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["input", "swatch"]
+  static targets = ["input", "swatch", "preview", "hex"]
 
   connect() {
     this.update()
   }
 
   update() {
-    if (!this.hasInputTarget || !this.hasSwatchTarget) return
+    if (!this.hasInputTarget) return
 
     const value = this.inputTarget.value
     this.inputTarget.setAttribute("value", value)
-    this.swatchTarget.style.backgroundColor = value
+
+    if (this.hasSwatchTarget) {
+      this.swatchTarget.style.backgroundColor = value
+    }
+
+    if (this.hasPreviewTarget) {
+      this.previewTarget.style.backgroundColor = value
+    }
+
+    if (this.hasHexTarget) {
+      this.hexTarget.textContent = value.toUpperCase()
+    }
 
     this.element.dispatchEvent(
       new CustomEvent("color-swatch:change", {
