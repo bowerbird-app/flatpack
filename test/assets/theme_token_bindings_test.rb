@@ -26,8 +26,8 @@ module FlatPack
     test "donut chart tooltips bind to tooltip/surface tokens instead of frozen white" do
       css = application_css
 
-      assert_includes css, 'background: var(--tooltip-background-color, var(--surface-background-color)) !important;'
-      assert_includes css, 'color: var(--tooltip-text-color, var(--surface-content-color)) !important;'
+      assert_includes css, "background: var(--tooltip-background-color, var(--surface-background-color)) !important;"
+      assert_includes css, "color: var(--tooltip-text-color, var(--surface-content-color)) !important;"
       refute_match(/\[data-flat-pack--chart-type-value="donut"\][^{]*\{[^}]*background:\s*#fff/m, css)
       refute_includes css, "background: #fff !important;"
     end
