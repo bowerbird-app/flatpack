@@ -6,10 +6,15 @@ module FlatPack
       ALIGNMENTS = %i[left center right].freeze
       STYLE_VALUES = %i[primary secondary].freeze
 
+      # Email clients need a hex for bgcolor / first-paint. Resolve from the default
+      # theme primary (oklch(0.3211 0 0) charcoal ≈ #333333). Themed browsers use
+      # --button-primary-* → --color-primary and ignore this fallback.
+      PRIMARY_FALLBACK_HEX = "#333333"
+
       STYLES = {
         primary: {
-          background: "#2563eb",
-          border: "#2563eb",
+          background: PRIMARY_FALLBACK_HEX,
+          border: PRIMARY_FALLBACK_HEX,
           color: "#ffffff"
         },
         secondary: {
@@ -108,13 +113,21 @@ module FlatPack
       def theme_background_override
         return unless %i[primary secondary].include?(@style)
 
-        "background-color:var(--button-#{@style}-background-color, #{STYLES.fetch(@style).fetch(:background)})"
+        if @style == :primary
+          "background-color:var(--button-primary-background-color, var(--color-primary, #{PRIMARY_FALLBACK_HEX}))"
+        else
+          "background-color:var(--button-#{@style}-background-color, #{STYLES.fetch(@style).fetch(:background)})"
+        end
       end
 
       def theme_border_override
         return unless %i[primary secondary].include?(@style)
 
-        "border:1px solid var(--button-#{@style}-border-color, #{STYLES.fetch(@style).fetch(:border)})"
+        if @style == :primary
+          "border:1px solid var(--button-primary-border-color, var(--color-primary, #{PRIMARY_FALLBACK_HEX}))"
+        else
+          "border:1px solid var(--button-#{@style}-border-color, #{STYLES.fetch(@style).fetch(:border)})"
+        end
       end
 
       def theme_text_color_override

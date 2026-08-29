@@ -15,11 +15,13 @@ module FlatPack
         render_inline(Component.new(href: "https://example.com", text: "Primary", style: :primary))
 
         html = page.native.to_html
-        assert_includes html, "background-color:#2563eb"
+        assert_includes html, "background-color:#333333"
+        assert_includes html, 'bgcolor="#333333"'
         assert_includes html, "color:#ffffff"
-        assert_includes html, "background-color:var(--button-primary-background-color, #2563eb)"
-        assert_includes html, "border:1px solid var(--button-primary-border-color, #2563eb)"
+        assert_includes html, "background-color:var(--button-primary-background-color, var(--color-primary, #333333))"
+        assert_includes html, "border:1px solid var(--button-primary-border-color, var(--color-primary, #333333))"
         assert_includes html, "color:var(--button-primary-text-color, #ffffff)"
+        refute_includes html, "#2563eb"
       end
 
       def test_renders_secondary_variant_styles

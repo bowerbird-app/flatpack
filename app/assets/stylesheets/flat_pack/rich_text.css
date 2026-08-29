@@ -25,7 +25,7 @@
 
   .flat-pack-richtext-wrapper.flat-pack-richtext--focused .flat-pack-richtext-editor {
     outline: none;
-    box-shadow: 0 0 0 2px inset var(--color-ring, oklch(0.52 0.26 250));
+    box-shadow: 0 0 0 2px inset var(--color-ring);
     border-color: transparent;
   }
 
@@ -348,7 +348,7 @@
   }
 
   .flat-pack-richtext-editor .ProseMirror .selectedCell::after {
-    background: oklch(0.52 0.26 250 / 0.15);
+    background: color-mix(in oklab, var(--color-primary) 15%, transparent);
     content: "";
     display: block;
     left: 0;
@@ -400,7 +400,7 @@
 
   /* Focus ring for focused nodes (Focus extension, full preset) */
   .flat-pack-richtext-focus {
-    outline: 2px solid oklch(0.52 0.26 250 / 0.4);
+    outline: 2px solid color-mix(in oklab, var(--color-ring) 40%, transparent);
     outline-offset: 2px;
     border-radius: var(--radius-sm, 0.25rem);
   }
@@ -532,7 +532,7 @@
 
   .flat-pack-rt-link-input:focus {
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 2px oklch(0.52 0.26 250 / 0.15);
+    box-shadow: 0 0 0 2px color-mix(in oklab, var(--color-primary) 15%, transparent);
   }
 
   .flat-pack-rt-link-apply-btn {
