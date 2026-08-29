@@ -220,7 +220,7 @@ class DemoCatalog
         {type: :item, title: "Chips", path: "/demo/chips", description: "Compact filter and tag components", icon: :dashboard},
         {type: :item, title: "Chip Groups", path: "/demo/chip_groups", description: "Wrapping and non-wrapping chip collections", icon: :dashboard},
         {type: :item, title: "Color Swatches", path: "/demo/color_swatches", description: "Named colour circles that open the native colour picker", icon: :dashboard},
-        {type: :item, title: "Font Swatches", path: "/demo/font_swatches", description: "Circular font sample that opens a native select", icon: :type}
+        {type: :item, title: "Font Swatches", path: "/demo/font_swatches", description: "Circular font sample that opens a FlatPack Popover menu", icon: :type}
       ]
     },
     {

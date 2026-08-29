@@ -1187,6 +1187,9 @@
   .gap-0 {
     gap: calc(var(--spacing) * 0);
   }
+  .gap-0\.5 {
+    gap: calc(var(--spacing) * 0.5);
+  }
   .gap-1 {
     gap: calc(var(--spacing) * 1);
   }
@@ -2274,6 +2277,9 @@
   }
   .\!p-0 {
     padding: calc(var(--spacing) * 0) !important;
+  }
+  .\!p-1 {
+    padding: calc(var(--spacing) * 1) !important;
   }
   .p-0 {
     padding: calc(var(--spacing) * 0);
@@ -3642,11 +3648,6 @@
       --tw-ring-color: var(--comments-composer-focus-ring-color);
     }
   }
-  .focus-within\:ring-\[var\(--font-swatch-selected-ring-color\)\] {
-    &:focus-within {
-      --tw-ring-color: var(--font-swatch-selected-ring-color);
-    }
-  }
   .focus-within\:outline-none {
     &:focus-within {
       --tw-outline-style: none;
@@ -4065,6 +4066,11 @@
       background-color: var(--search-result-hover-background-color);
     }
   }
+  .focus\:bg-\[var\(--surface-muted-background-color\)\] {
+    &:focus {
+      background-color: var(--surface-muted-background-color);
+    }
+  }
   .focus\:ring-0 {
     &:focus {
       --tw-ring-shadow: var(--tw-ring-inset,) 0 0 0 calc(0px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
@@ -4096,6 +4102,11 @@
   .focus\:ring-\[var\(--color-primary\)\] {
     &:focus {
       --tw-ring-color: var(--color-primary);
+    }
+  }
+  .focus\:ring-\[var\(--font-swatch-selected-ring-color\)\] {
+    &:focus {
+      --tw-ring-color: var(--font-swatch-selected-ring-color);
     }
   }
   .focus\:ring-\[var\(--search-input-focus-ring-color\)\] {
@@ -4239,6 +4250,11 @@
   .has-\[\:checked\]\:ring-offset-white {
     &:has(*:is(:checked)) {
       --tw-ring-offset-color: var(--color-white);
+    }
+  }
+  .aria-selected\:bg-\[var\(--surface-muted-background-color\)\] {
+    &[aria-selected="true"] {
+      background-color: var(--surface-muted-background-color);
     }
   }
   .data-\[results-count\=\'0\'\]\:hidden {
@@ -4771,6 +4787,21 @@
   .\[\&\:\:-webkit-scrollbar\]\:hidden {
     &::-webkit-scrollbar {
       display: none;
+    }
+  }
+  .\[\&\:has\(\[aria-expanded\=true\]\)_\[role\=tooltip\]\]\:pointer-events-none {
+    &:has([aria-expanded=true]) [role=tooltip] {
+      pointer-events: none;
+    }
+  }
+  .\[\&\:has\(\[aria-expanded\=true\]\)_\[role\=tooltip\]\]\:hidden {
+    &:has([aria-expanded=true]) [role=tooltip] {
+      display: none;
+    }
+  }
+  .\[\&\:has\(\[aria-expanded\=true\]\)_\[role\=tooltip\]\]\:\!opacity-0 {
+    &:has([aria-expanded=true]) [role=tooltip] {
+      opacity: 0% !important;
     }
   }
   .\[\&\>\*\]\:rounded-none {

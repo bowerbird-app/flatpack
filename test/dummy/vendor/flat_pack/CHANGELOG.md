@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.138] - 2026-08-29
 
 ### Added
-- `FlatPack::FontSwatch::Component` — circular font sample control with `font:`, host-provided `options:`, optional `text:` tooltip, optional `selected:` ring, native `<select>` on circle click (no Popover / “Choose font” panel), and ColorSwatch-scale sizes (`:xs`–`:lg`).
+- `FlatPack::FontSwatch::Component` — circular font sample control with `font:`, host-provided `options:`, optional `text:` tooltip, optional `selected:` ring, ColorSwatch-scale sizes (`:xs`–`:lg`), and a FlatPack Popover menu on circle click (not a native `<select>`, not `FlatPack::Picker`). Each menu row shows `Aa` + the font name in that face; choosing a row updates a hidden input for form save.
 - Dummy demo at `/demo/font_swatches` (Feedback catalog) with a FontSwatch and a composed ColorSwatch + FontSwatch row. Demo fonts are a small generic set (ui-sans-serif, ui-serif, ui-monospace, Georgia) — hosts pass their own option list.
 - Font Swatch docs, method/variables table, and `--font-swatch-*` theme tokens (including dark/ocean via semantic `var()` references).
 - `AttributeSanitizer.sanitize_css_font_family` for safe font-family style interpolation.
@@ -25,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bumped the gem version to `0.1.138`.
 
 ### Upgrade notes
-- No host app changes required. Compose `FlatPack::FontSwatch::Component` with required `font:` and `options:` (`[[label, value], …]`), optional form `name:`, optional `text:` for tooltip/accessible name (defaults to the selected option label), and `selected:` for the live ring in a row. Arrange rows with flex + kit gap tokens — do not wrap swatches in `ChipGroup` or `FlatPack::Popover`.
+- No host app changes required. Compose `FlatPack::FontSwatch::Component` with required `font:` and `options:` (`[[label, value], …]`), optional form `name:` (hidden input), optional `text:` for tooltip/accessible name (defaults to the selected option label), and `selected:` for the live ring in a row. Arrange rows with flex + kit gap tokens — do not wrap swatches in `ChipGroup`, and do not wrap FontSwatch in another Popover (it composes Popover internally).
 
 ## [0.1.137] - 2026-08-29
 

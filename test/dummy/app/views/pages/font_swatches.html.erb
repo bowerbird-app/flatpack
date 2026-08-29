@@ -1,6 +1,6 @@
 <%= render FlatPack::PageTitle::Component.new(
   title: "Font Swatches",
-  subtitle: "Circular font sample with a tooltip name and a native select on click — sibling to Color Swatch."
+  subtitle: "Circular font sample with a tooltip name and a FlatPack Popover menu on click — sibling to Color Swatch."
 ) %>
 
 <%= render "pages/component_method_variables_table", component: :font_swatch %>
@@ -20,7 +20,7 @@
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Font swatch",
     anchor_link: true,
-    subtitle: "Hover for the font name; click the circle to open the native select. The face shows Aa in the selected font — no under-circle label."
+    subtitle: "Hover for the font name; click the circle to open the Popover menu. Each option shows Aa in that face — no under-circle label."
   ) %>
 
   <%= render FlatPack::Card::Component.new do |card| %>
@@ -32,7 +32,8 @@
           text: "Sans",
           name: "theme[font]",
           selected: true,
-          size: :lg
+          size: :lg,
+          id: "demo-font-swatch"
         ) %>
       </div>
     <% end %>
@@ -63,7 +64,7 @@
   <%= render FlatPack::SectionTitle::Component.new(
     title: "With Color Swatches",
     anchor_link: true,
-    subtitle: "Compose ColorSwatch and FontSwatch in one flex row — same circle sizes and tooltip-only names."
+    subtitle: "Compose ColorSwatch and FontSwatch in one flex row — same circle sizes and tooltip-only names. ColorSwatch keeps the native colour picker; FontSwatch uses Popover."
   ) %>
 
   <%= render FlatPack::Card::Component.new do |card| %>
@@ -92,7 +93,7 @@
           font: "Georgia, serif",
           options: demo_font_options,
           text: "Georgia",
-          name: "theme[font]",
+          name: "theme[font_row]",
           size: :lg
         ) %>
       </div>
@@ -154,6 +155,6 @@
 
 <%= render "shared/related_demos", links: [
   {text: "Color Swatches", href: "/demo/color_swatches"},
-  {text: "Tooltips", href: "/demo/tooltips"},
-  {text: "Rounded theme", href: "/themes/demos/rounded"}
+  {text: "Popovers", href: "/demo/popovers"},
+  {text: "Tooltips", href: "/demo/tooltips"}
 ] %>

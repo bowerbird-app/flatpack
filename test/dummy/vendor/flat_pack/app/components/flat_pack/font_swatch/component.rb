@@ -7,6 +7,8 @@ module FlatPack
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "h-6" "w-6" "h-8" "w-8" "h-10" "w-10" "h-12" "w-12"
       # "text-[10px]" "text-xs" "text-sm" "text-base"
+      # "min-w-[12rem]" "hover:bg-[var(--surface-muted-background-color)]"
+      # "aria-selected:bg-[var(--surface-muted-background-color)]"
       SIZES = {
         xs: "h-6 w-6",
         sm: "h-8 w-8",
@@ -54,7 +56,11 @@ module FlatPack
 
       def call
         content_tag(:div, **root_attributes) do
-          render_control_with_tooltip
+          safe_join([
+            render_trigger_with_tooltip,
+            render_hidden_input,
+            (@disabled ? nil : render_menu_popover)
+          ].compact)
         end
       end
 
@@ -71,38 +77,51 @@ module FlatPack
       end
 
       def root_classes
-        "relative inline-flex items-center"
+        # Hide the closed-circle tooltip while the Popover menu is open (aria-expanded on the trigger).
+        # Tailwind scan literals — DO NOT REMOVE:
+        # "[&:has([aria-expanded=true])_[role=tooltip]]:hidden"
+        # "[&:has([aria-expanded=true])_[role=tooltip]]:!opacity-0"
+        # "[&:has([aria-expanded=true])_[role=tooltip]]:pointer-events-none"
+        classes(
+          "relative inline-flex items-center",
+          "[&:has([aria-expanded=true])_[role=tooltip]]:hidden",
+          "[&:has([aria-expanded=true])_[role=tooltip]]:!opacity-0",
+          "[&:has([aria-expanded=true])_[role=tooltip]]:pointer-events-none"
+        )
       end
 
-      def render_control_with_tooltip
-        control = render_control
+      def render_trigger_with_tooltip
+        trigger = render_trigger
 
-        return control unless render_tooltip?
+        return trigger unless render_tooltip?
 
         FlatPack::Tooltip::Component.new(text: tooltip_text, placement: @tooltip_placement).render_in(view_context) do
-          control
+          trigger
         end
       end
 
-      def render_control
-        content_tag(:div, **control_attributes) do
-          safe_join([
-            content_tag(:select, safe_join(select_options_markup), **select_attributes),
-            render_swatch_face
-          ])
+      def render_trigger
+        content_tag(:button, **trigger_attributes) do
+          render_swatch_face
         end
       end
 
-      def control_attributes
+      def trigger_attributes
         {
+          type: "button",
+          id: trigger_id,
+          disabled: @disabled,
           class: classes(
             "relative inline-flex shrink-0 items-center justify-center",
             "rounded-[var(--font-swatch-radius)]",
-            "focus-within:outline-none focus-within:ring-2 focus-within:ring-inset focus-within:ring-[var(--font-swatch-selected-ring-color)]",
+            "border-0 bg-transparent p-0",
+            "focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[var(--font-swatch-selected-ring-color)]",
             SIZES.fetch(@size),
             @disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"
           ),
-          style: size_fallback_style
+          style: size_fallback_style,
+          aria: {label: accessible_name},
+          data: {flat_pack__font_swatch_target: "trigger"}
         }
       end
 
@@ -150,33 +169,74 @@ module FlatPack
         end
       end
 
-      def select_attributes
+      def render_hidden_input
         attrs = {
-          id: select_id,
+          type: "hidden",
+          value: @font,
           disabled: @disabled,
-          class: classes(
-            "absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0",
-            @disabled ? "pointer-events-none" : nil
-          ),
-          aria: {label: accessible_name},
-          data: {
-            flat_pack__font_swatch_target: "select",
-            action: "change->flat-pack--font-swatch#update"
-          }
+          data: {flat_pack__font_swatch_target: "input"}
         }
         attrs[:name] = @name if @name
 
-        attrs
+        tag.input(**attrs)
       end
 
-      def select_options_markup
-        @options.map do |option|
-          tag.option(
-            option[:label],
-            value: option[:value],
-            selected: option[:value] == @font
-          )
+      def render_menu_popover
+        FlatPack::Popover::Component.new(
+          trigger_id: trigger_id,
+          placement: :bottom,
+          class: "min-w-[12rem] !p-1"
+        ).render_in(view_context) do |popover|
+          popover.content do
+            content_tag(
+              :div,
+              safe_join(@options.map { |option| render_option_row(option) }),
+              class: "flex flex-col gap-0.5",
+              role: "listbox",
+              aria: {label: accessible_name},
+              data: {flat_pack__font_swatch_target: "menu"}
+            )
+          end
         end
+      end
+
+      def render_option_row(option)
+        selected = option[:value] == @font
+
+        content_tag(
+          :button,
+          type: "button",
+          role: "option",
+          class: option_row_classes,
+          style: "font-family: #{option[:value]}",
+          aria: {selected: selected.to_s},
+          data: {
+            action: "click->flat-pack--font-swatch#select",
+            flat_pack__font_swatch_target: "option",
+            value: option[:value],
+            label: option[:label]
+          }
+        ) do
+          safe_join([
+            content_tag(
+              :span,
+              SAMPLE_TEXT,
+              class: "inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[var(--font-swatch-border-color)] bg-[var(--font-swatch-background-color)] text-sm font-medium leading-none text-[var(--font-swatch-text-color)] shadow-[var(--font-swatch-shadow)]",
+              aria: {hidden: true}
+            ),
+            content_tag(:span, option[:label], class: "truncate")
+          ])
+        end
+      end
+
+      def option_row_classes
+        classes(
+          "flex w-full items-center gap-3 rounded-[var(--radius-sm)] px-2 py-1.5 text-left text-sm",
+          "text-[var(--popover-text-color)]",
+          "hover:bg-[var(--surface-muted-background-color)]",
+          "focus:outline-none focus:bg-[var(--surface-muted-background-color)]",
+          "aria-selected:bg-[var(--surface-muted-background-color)]"
+        )
       end
 
       def render_tooltip?
@@ -196,8 +256,8 @@ module FlatPack
         match&.fetch(:label)
       end
 
-      def select_id
-        @select_id ||= @system_arguments[:id].presence || "flat_pack_font_swatch_#{SecureRandom.hex(4)}"
+      def trigger_id
+        @trigger_id ||= @system_arguments[:id].presence || "flat_pack_font_swatch_#{SecureRandom.hex(4)}"
       end
 
       def normalize_font(font)

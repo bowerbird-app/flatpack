@@ -16,7 +16,7 @@ module FlatPack
         render_inline(Component.new(font: "ui-sans-serif", options: DEMO_OPTIONS, text: "Sans"))
 
         assert_selector "[data-controller='flat-pack--font-swatch']"
-        assert_selector "select[aria-label='Sans']"
+        assert_selector "button[aria-label='Sans']"
         assert_includes page.native.to_html, "font-family: ui-sans-serif"
         assert_text "Aa"
       end
@@ -45,25 +45,38 @@ module FlatPack
         end
       end
 
-      def test_uses_native_select_without_popover
+      def test_uses_popover_menu_without_native_select
         render_inline(Component.new(font: "ui-serif", options: DEMO_OPTIONS, text: "Serif"))
 
-        assert_selector "select option[value='ui-serif'][selected]"
-        refute_selector "[data-controller='flat-pack--popover']"
-        refute_selector "[data-flat-pack--font-swatch-target='panel']"
+        assert_selector "[data-controller='flat-pack--popover']"
+        assert_selector "[data-flat-pack--font-swatch-target='menu']"
+        assert_selector "button[role='option'][data-value='ui-serif'][aria-selected='true']"
+        refute_selector "select"
         refute_text "Choose font"
       end
 
-      def test_renders_form_name_when_provided
+      def test_renders_option_rows_in_their_font_faces
+        render_inline(Component.new(font: "ui-sans-serif", options: DEMO_OPTIONS, text: "Sans"))
+
+        assert_includes page.native.to_html, "font-family: ui-serif"
+        assert_includes page.native.to_html, "font-family: ui-monospace"
+        assert_includes page.native.to_html, "font-family: Georgia, serif"
+        assert_selector "button[role='option']", text: "Serif"
+        assert_selector "button[role='option']", text: "Mono"
+        assert_selector "button[role='option']", text: "Georgia"
+      end
+
+      def test_renders_form_name_on_hidden_input_when_provided
         render_inline(Component.new(font: "ui-sans-serif", options: DEMO_OPTIONS, name: "appearance[font]", text: "Font"))
 
-        assert_selector "select[name='appearance[font]']"
+        assert_selector "input[type='hidden'][name='appearance[font]'][value='ui-sans-serif']", visible: :hidden
       end
 
       def test_omits_form_name_when_absent
         render_inline(Component.new(font: "ui-sans-serif", options: DEMO_OPTIONS, text: "Font"))
 
-        refute_selector "select[name]"
+        assert_selector "input[type='hidden'][value='ui-sans-serif']", visible: :hidden
+        refute_selector "input[name]", visible: :hidden
       end
 
       def test_renders_selected_ring_without_caption
@@ -92,7 +105,7 @@ module FlatPack
         render_inline(Component.new(font: "ui-serif", options: DEMO_OPTIONS))
 
         assert_selector "[role='tooltip']", text: "Serif"
-        assert_selector "select[aria-label='Serif']"
+        assert_selector "button[aria-label='Serif']"
       end
 
       def test_can_disable_tooltip
@@ -101,10 +114,11 @@ module FlatPack
         refute_selector "[data-controller='flat-pack--tooltip']"
       end
 
-      def test_disables_native_select_when_disabled
+      def test_disables_trigger_and_omits_popover_when_disabled
         render_inline(Component.new(font: "ui-sans-serif", options: DEMO_OPTIONS, text: "Sans", disabled: true))
 
-        assert_selector "select[disabled]"
+        assert_selector "button[disabled]"
+        assert_selector "input[type='hidden'][disabled]", visible: :hidden
         refute_selector "[data-controller='flat-pack--popover']"
       end
 
@@ -129,7 +143,7 @@ module FlatPack
           text: "Georgia"
         ))
 
-        assert_selector "select option[value='Georgia, serif'][selected]"
+        assert_selector "button[role='option'][data-value='Georgia, serif'][aria-selected='true']"
         assert_includes page.native.to_html, "font-family: Georgia, serif"
       end
 
@@ -138,22 +152,25 @@ module FlatPack
         render_inline(Component.new(font: "var(--font-body)", options: options, text: "Body"))
 
         assert_includes page.native.to_html, "font-family: var(--font-body)"
-        assert_selector "select option[value='var(--font-body)'][selected]"
+        assert_selector "button[role='option'][data-value='var(--font-body)'][aria-selected='true']"
       end
 
       def test_applies_stimulus_targets_and_actions
         render_inline(Component.new(font: "ui-sans-serif", options: DEMO_OPTIONS, text: "Sans"))
 
         assert_selector "[data-flat-pack--font-swatch-target='swatch']"
-        assert_selector "[data-flat-pack--font-swatch-target='select']"
-        assert_selector "select[data-action*='flat-pack--font-swatch#update']"
-        refute_selector "[data-flat-pack--font-swatch-target='panel']"
+        assert_selector "[data-flat-pack--font-swatch-target='trigger']"
+        assert_selector "[data-flat-pack--font-swatch-target='input']", visible: :hidden
+        assert_selector "[data-flat-pack--font-swatch-target='menu']", visible: :all
+        assert_selector "button[data-action*='flat-pack--font-swatch#select']", visible: :all
+        refute_selector "select"
       end
 
-      def test_uses_id_for_select
+      def test_uses_id_for_trigger
         render_inline(Component.new(font: "ui-sans-serif", options: DEMO_OPTIONS, text: "Sans", id: "heading-font"))
 
-        assert_selector "select#heading-font"
+        assert_selector "button#heading-font"
+        assert_selector "[data-flat-pack--popover-trigger-id-value='heading-font']"
       end
 
       def test_merges_extra_data_on_root
