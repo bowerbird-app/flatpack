@@ -1,0 +1,102 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Color Swatches",
+  subtitle: "Named colour circles with tooltips and a native colour picker on click."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :color_swatch %>
+
+<%
+  erb_output_open = "<" + "%="
+  erb_tag_close = "%" + ">"
+%>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Named swatch row",
+    anchor_link: true,
+    subtitle: "Compose several ColorSwatches in a flex row. Hover for the colour name; click a circle to open the native colour picker."
+  ) %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <div class="flex flex-wrap items-start gap-[var(--stack-gap-md)]">
+        <%= render FlatPack::ColorSwatch::Component.new(
+          color: "#f8f9fa",
+          text: "Background",
+          name: "theme[background]",
+          selected: true,
+          size: :lg
+        ) %>
+        <%= render FlatPack::ColorSwatch::Component.new(
+          color: "#333333",
+          text: "Text",
+          name: "theme[text]",
+          size: :lg
+        ) %>
+        <%= render FlatPack::ColorSwatch::Component.new(
+          color: "#321100",
+          text: "Accent",
+          name: "theme[accent]",
+          size: :lg
+        ) %>
+      </div>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "Named swatch row (ERB)",
+    language: "erb",
+    code: <<~CODE
+      <div class="flex flex-wrap items-start gap-[var(--stack-gap-md)]">
+        #{erb_output_open} render FlatPack::ColorSwatch::Component.new(
+          color: "#f8f9fa",
+          text: "Background",
+          name: "theme[background]",
+          selected: true,
+          size: :lg
+        ) #{erb_tag_close}
+        #{erb_output_open} render FlatPack::ColorSwatch::Component.new(
+          color: "#333333",
+          text: "Text",
+          name: "theme[text]",
+          size: :lg
+        ) #{erb_tag_close}
+        #{erb_output_open} render FlatPack::ColorSwatch::Component.new(
+          color: "#321100",
+          text: "Accent",
+          name: "theme[accent]",
+          size: :lg
+        ) #{erb_tag_close}
+      </div>
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Sizes",
+    anchor_link: true,
+    subtitle: "Circle sizes reuse the Avatar scale tokens from xs through lg."
+  ) %>
+
+  <div class="flex flex-wrap items-end gap-[var(--stack-gap-md)] mb-4">
+    <%= render FlatPack::ColorSwatch::Component.new(color: "#e5e5e5", text: "XS", size: :xs, selected: true) %>
+    <%= render FlatPack::ColorSwatch::Component.new(color: "#d1d5db", text: "SM", size: :sm, selected: true) %>
+    <%= render FlatPack::ColorSwatch::Component.new(color: "#9ca3af", text: "MD", size: :md, selected: true) %>
+    <%= render FlatPack::ColorSwatch::Component.new(color: "#333333", text: "LG", size: :lg, selected: true) %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "Sizes (ERB)",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::ColorSwatch::Component.new(color: "#9ca3af", text: "MD", size: :md, selected: true) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<%= render "shared/related_demos", links: [
+  {text: "Tooltips", href: "/demo/tooltips"},
+  {text: "Badges", href: "/demo/badges"},
+  {text: "Rounded theme", href: "/themes/demos/rounded"}
+] %>

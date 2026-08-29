@@ -41,6 +41,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/badges
     /demo/chips
     /demo/chip_groups
+    /demo/color_swatches
     /demo/alerts
     /demo/cards
     /demo/cards/styles

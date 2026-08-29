@@ -62,6 +62,7 @@ Rails.application.routes.draw do
   get "demo/inputs", to: redirect("/demo/forms")
   get "demo/badges", to: "pages#badges"
   get "demo/chips", to: "pages#chips"
+  get "demo/color_swatches", to: "pages#color_swatches"
   get "demo/chip_groups", to: "pages#chip_groups"
   match "demo/chips/add_callback", to: "pages#chip_add_callback", via: [:get, :post]
   match "demo/chips/remove_callback", to: "pages#chip_remove_callback", via: [:get, :post]

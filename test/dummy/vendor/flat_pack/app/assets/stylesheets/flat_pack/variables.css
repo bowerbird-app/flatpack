@@ -414,6 +414,11 @@
   --avatar-group-overlap-md: -0.5rem;
   --avatar-group-overlap-lg: -0.75rem;
   --avatar-group-ring-color: var(--surface-border-color);
+  --color-swatch-radius: 9999px;
+  --color-swatch-border-color: var(--surface-border-color);
+  --color-swatch-selected-ring-color: var(--color-ring);
+  --color-swatch-ring-offset-color: var(--surface-background-color);
+  --color-swatch-shadow: var(--shadow-sm);
   --top-nav-background-color: var(--surface-background-color);
   --top-nav-border-color: transparent;
   --top-nav-item-text-color: var(--surface-muted-content-color);
@@ -888,6 +893,11 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --avatar-group-overlap-md: -0.5rem;
   --avatar-group-overlap-lg: -0.75rem;
   --avatar-group-ring-color: var(--surface-background-color);
+  --color-swatch-radius: 9999px;
+  --color-swatch-border-color: var(--surface-border-color);
+  --color-swatch-selected-ring-color: var(--color-ring);
+  --color-swatch-ring-offset-color: var(--surface-background-color);
+  --color-swatch-shadow: var(--shadow-sm);
   --top-nav-background-color: var(--surface-background-color);
   --top-nav-border-color: transparent;
   --top-nav-item-text-color: var(--surface-muted-content-color);

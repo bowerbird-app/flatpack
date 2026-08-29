@@ -181,6 +181,12 @@ components:
       - FlatPack::ChipGroup::Component
     status: documented
 
+  - key: color_swatch
+    title: Color Swatch
+    doc: docs/components/color-swatch.md
+    primary_class: FlatPack::ColorSwatch::Component
+    status: documented
+
   - key: code_block
     title: Code Block
     doc: docs/components/code-block.md
