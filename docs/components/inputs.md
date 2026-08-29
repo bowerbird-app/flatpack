@@ -9,6 +9,7 @@ Use these components when you need FlatPack-styled form controls with consistent
 ## Class
 - Primary: `FlatPack::TextInput::Component`
 - Related classes: `FlatPack::PasswordInput::Component`, `FlatPack::EmailInput::Component`, `FlatPack::PhoneInput::Component`, `FlatPack::SearchInput::Component`, `FlatPack::TextArea::Component`, `FlatPack::UrlInput::Component`, `FlatPack::NumberInput::Component`, `FlatPack::DateInput::Component`, `FlatPack::DateRangeInput::Component`, `FlatPack::DateTimeInput::Component`, `FlatPack::TimeInput::Component`, `FlatPack::FileInput::Component`, `FlatPack::Checkbox::Component`, `FlatPack::RadioGroup::Component`, `FlatPack::Select::Component`, `FlatPack::Switch::Component`
+- Internal (not a host-facing API): text-like inputs and Select compose `FlatPack::FormField::Component` for the shared label / help_text / error wrapper, and `FlatPack::FormField::ControlStyles` for the box class list that uses `--form-control-padding`. Keep rendering the public input components above — do not switch hosts to FormField.
 - Related Stimulus controller: `flat-pack--nested-multiselect` for legacy hierarchical checkbox groups that submit hidden inputs.
 - Related docs: [Range Input](range-input.md) (`FlatPack::RangeInput::Component`), [Color Swatch](color-swatch.md) (`FlatPack::ColorSwatch::Component`), [Font Swatch](font-swatch.md) (`FlatPack::FontSwatch::Component`)
 

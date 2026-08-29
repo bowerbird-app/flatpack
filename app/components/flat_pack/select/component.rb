@@ -3,6 +3,8 @@
 module FlatPack
   module Select
     class Component < FlatPack::BaseComponent
+      include FlatPack::FormField::ControlStyles
+
       SEARCH_MODES = %i[local remote].freeze
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
@@ -54,23 +56,18 @@ module FlatPack
       end
 
       def call
-        content_tag(:div, class: wrapper_classes) do
-          safe_join([
-            render_label,
-            render_select_wrapper,
-            render_help_text,
-            render_error
-          ].compact)
+        render FlatPack::FormField::Component.new(
+          label: @label,
+          error: @error,
+          help_text: @help_text,
+          field_id: select_id,
+          class: wrapper_classes
+        ) do |field|
+          field.with_control { render_select_wrapper }
         end
       end
 
       private
-
-      def render_label
-        return unless @label
-
-        label_tag(select_id, @label, class: label_classes)
-      end
 
       def render_select_wrapper
         if @searchable || nested_options?
@@ -372,12 +369,6 @@ module FlatPack
         end
       end
 
-      def render_error
-        return unless @error
-
-        content_tag(:p, @error, class: error_classes, id: error_id)
-      end
-
       def select_attributes
         attrs = {
           name: select_name,
@@ -399,61 +390,25 @@ module FlatPack
         "flat-pack-select-wrapper"
       end
 
-      def label_classes
-        classes(
-          "block text-sm font-medium text-[var(--surface-content-color)] mb-1.5"
+      def select_classes
+        form_control_classes(
+          error: @error,
+          custom_class: @custom_class,
+          control_class: "flat-pack-select",
+          appearance_none: true,
+          placeholder: false,
+          extra: ["pr-10"]
         )
       end
 
-      def select_classes
-        base_classes = [
-          "flat-pack-select",
-          "w-full",
-          "rounded-md",
-          "border",
-          "appearance-none",
-          "bg-[var(--surface-background-color)]",
-          "text-[var(--surface-content-color)]",
-          "px-[var(--form-control-padding)] py-[var(--form-control-padding)]",
-          "pr-10",
-          "text-sm",
-          "transition-colors duration-base",
-          "focus:outline-none focus:ring-2 focus:ring-inset focus:ring-ring focus:border-transparent",
-          "disabled:opacity-50 disabled:cursor-not-allowed"
-        ]
-
-        base_classes << if @error
-          "border-[var(--color-warning)]"
-        else
-          "border-[var(--surface-border-color)]"
-        end
-
-        classes(*base_classes, @custom_class)
-      end
-
       def trigger_classes
-        base_classes = [
-          "flat-pack-select-trigger",
-          "relative w-full",
-          "rounded-md",
-          "border",
-          "bg-[var(--surface-background-color)]",
-          "text-[var(--surface-content-color)]",
-          "px-[var(--form-control-padding)] py-[var(--form-control-padding)]",
-          "pr-10",
-          "text-sm text-left",
-          "transition-colors duration-base",
-          "focus:outline-none focus:ring-2 focus:ring-inset focus:ring-ring focus:border-transparent",
-          "disabled:opacity-50 disabled:cursor-not-allowed"
-        ]
-
-        base_classes << if @error
-          "border-[var(--color-warning)]"
-        else
-          "border-[var(--surface-border-color)]"
-        end
-
-        classes(*base_classes, @custom_class)
+        form_control_classes(
+          error: @error,
+          custom_class: @custom_class,
+          control_class: "flat-pack-select-trigger",
+          placeholder: false,
+          extra: ["relative", "pr-10", "text-left"]
+        )
       end
 
       def dropdown_classes
@@ -506,10 +461,6 @@ module FlatPack
         end
 
         base.join(" ")
-      end
-
-      def error_classes
-        "mt-1 text-sm text-[var(--color-warning)]"
       end
 
       def select_id
