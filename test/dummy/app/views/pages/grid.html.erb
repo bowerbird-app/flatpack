@@ -1,9 +1,45 @@
 <%= render FlatPack::PageTitle::Component.new(
   title: "Grid Component",
-  subtitle: "Mobile-first responsive grid with flexible column configurations."
+  subtitle: "Mobile-first responsive grid with flexible column configurations, page justification, and optional max width."
 ) %>
 
 <%= render "pages/component_method_variables_table", component: :grid %>
+
+<!-- Centered form stack (auth width) -->
+<section class="mb-12" id="centered-form-stack" data-theme="rounded">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Centered form stack",
+    anchor_link: true,
+    subtitle: "cols: 1 + justify: :center + max: :sm centers a form/card-width column on the page — no Card required. align: :center is items-center, not page centering."
+  ) %>
+  <p class="text-[var(--surface-muted-content-color)] mb-4">
+    Same width language as Modal <code class="text-sm">size: :sm</code> (<code class="text-sm">max-w-sm</code>). Prefer this over misusing <code class="text-sm">cols: 2</code> as a width cap.
+  </p>
+  <%= render FlatPack::Grid::Component.new(cols: 1, justify: :center, max: :sm, gap: :md) do %>
+    <%= render FlatPack::EmailInput::Component.new(
+      name: "email",
+      label: "Email",
+      placeholder: "you@example.com"
+    ) %>
+    <%= render FlatPack::PasswordInput::Component.new(
+      name: "password",
+      label: "Password",
+      placeholder: "Enter your password"
+    ) %>
+    <%= render FlatPack::Button::Component.new(text: "Sign in", style: :primary, class: "w-full") %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Grid::Component.new(cols: 1, justify: :center, max: :sm) do %&gt;
+        &lt;%= render FlatPack::EmailInput::Component.new(name: "email", label: "Email") %&gt;
+        &lt;%= render FlatPack::PasswordInput::Component.new(name: "password", label: "Password") %&gt;
+        &lt;%= render FlatPack::Button::Component.new(text: "Sign in", style: :primary, class: "w-full") %&gt;
+      &lt;% end %&gt;
+    CODE
+    class: "mt-4"
+  ) %>
+</section>
 
 <!-- Basic Grid -->
 <section class="mb-12">
@@ -204,6 +240,7 @@
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Flexible Columns:</strong> Support for 1, 2, 3, 4, 6, or 12 columns<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Consistent Gaps:</strong> Small, medium, and large gap options<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Auto-Stretch:</strong> Items stretch to fill height by default<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Page justify:</strong> <code class="text-sm">justify: :center</code> centers the grid box; pair with <code class="text-sm">max: :sm</code> for auth stacks<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>CSS Grid:</strong> Modern CSS grid implementation<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Composable:</strong> Works great with Card and other components<% end %>
   <% end %>

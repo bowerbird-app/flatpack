@@ -8,6 +8,7 @@ module FlatPack
       # "grid-cols-1" "grid-cols-2" "grid-cols-3" "grid-cols-4" "grid-cols-6" "grid-cols-12"
       # "md:grid-cols-2" "md:grid-cols-3" "md:grid-cols-4" "md:grid-cols-6"
       # "gap-2" "gap-4" "gap-6" "items-start" "items-center" "items-stretch"
+      # "mx-auto" "max-w-sm" "w-full"
       COLS = {
         1 => "grid-cols-1",
         2 => "grid-cols-1 md:grid-cols-2",
@@ -30,20 +31,38 @@ module FlatPack
         stretch: "items-stretch"
       }.freeze
 
+      # Places the grid box on the page. align: is items-* (within cells);
+      # justify: centers the whole grid when paired with max: (e.g. auth forms).
+      JUSTIFIES = {
+        start: nil,
+        center: "mx-auto"
+      }.freeze
+
+      # Same width language as Modal size: :sm → max-w-sm (form/card column).
+      MAXES = {
+        sm: "max-w-sm w-full"
+      }.freeze
+
       def initialize(
         cols: :auto,
         gap: :md,
         align: :stretch,
+        justify: :start,
+        max: nil,
         **system_arguments
       )
         super(**system_arguments)
         @cols = cols.is_a?(Symbol) ? cols : cols.to_i
         @gap = gap.to_sym
         @align = align.to_sym
+        @justify = justify.to_sym
+        @max = max.nil? ? nil : max.to_sym
 
         validate_cols!
         validate_gap!
         validate_align!
+        validate_justify!
+        validate_max!
       end
 
       def call
@@ -63,7 +82,9 @@ module FlatPack
           "grid",
           cols_classes,
           gap_classes,
-          align_classes
+          align_classes,
+          justify_classes,
+          max_classes
         )
       end
 
@@ -79,6 +100,16 @@ module FlatPack
         ALIGNS.fetch(@align)
       end
 
+      def justify_classes
+        JUSTIFIES.fetch(@justify)
+      end
+
+      def max_classes
+        return if @max.nil?
+
+        MAXES.fetch(@max)
+      end
+
       def validate_cols!
         return if COLS.key?(@cols)
         raise ArgumentError, "Invalid cols: #{@cols}. Must be one of: #{COLS.keys.join(", ")}"
@@ -92,6 +123,16 @@ module FlatPack
       def validate_align!
         return if ALIGNS.key?(@align)
         raise ArgumentError, "Invalid align: #{@align}. Must be one of: #{ALIGNS.keys.join(", ")}"
+      end
+
+      def validate_justify!
+        return if JUSTIFIES.key?(@justify)
+        raise ArgumentError, "Invalid justify: #{@justify}. Must be one of: #{JUSTIFIES.keys.join(", ")}"
+      end
+
+      def validate_max!
+        return if @max.nil? || MAXES.key?(@max)
+        raise ArgumentError, "Invalid max: #{@max}. Must be one of: #{MAXES.keys.join(", ")}, or nil"
       end
     end
   end

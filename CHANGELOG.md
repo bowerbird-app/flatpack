@@ -13,6 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.144] - 2026-08-29
+
+### Added
+- `FlatPack::Grid::Component` — `justify: :start | :center` (default `:start`) places the grid box on the page (`:center` → `mx-auto`). `max: :sm | nil` (default `nil`) caps width with the same size language as Modal `size: :sm` (`max-w-sm w-full`). Auth composition: `cols: 1, justify: :center, max: :sm` centers a form/card-width column without wrapping in Card or misusing `cols: 2` / `align: :center`.
+- Grid demo section (Rounded) showing a plain centered form stack — no Card required.
+- Grid docs, method/variables table entries for `justify` and `max`.
+
+### Changed
+- Bumped the gem version to `0.1.144` (`0.1.143` reserved by open leftover-blues PR #167).
+
+### Upgrade notes
+- No host app changes required for existing card grids (`cols` / `gap` / `align` unchanged). For login/signup after dropping Card, compose `<%= render FlatPack::Grid::Component.new(cols: 1, justify: :center, max: :sm) do %>…<% end %>`. Do not use `cols: 2` as a width cap or `align: :center` for page centering (`align` is `items-*` only).
+
 ## [0.1.142] - 2026-08-29
 
 ### Added

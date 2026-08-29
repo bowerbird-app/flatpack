@@ -659,11 +659,13 @@
     },
     grid: {
       label: "Grid",
-      method_call: "render FlatPack::Grid::Component.new(cols: :auto, gap: :md) do ... end",
+      method_call: "render FlatPack::Grid::Component.new(cols: :auto, gap: :md, justify: :start, max: nil) do ... end",
       variables: [
         { variable: "cols", accepts: ":auto, Integer", example: "cols: 3" },
         { variable: "gap", accepts: ":none, :xs, :sm, :md, :lg, :xl", example: "gap: :lg" },
-        { variable: "align", accepts: ":start, :center, :end, :stretch", example: "align: :stretch" }
+        { variable: "align", accepts: ":start, :center, :end, :stretch", example: "align: :stretch" },
+        { variable: "justify", accepts: ":start, :center", example: "justify: :center" },
+        { variable: "max", accepts: ":sm, nil", example: "max: :sm" }
       ]
     },
     hero: {

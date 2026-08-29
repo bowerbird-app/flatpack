@@ -101,6 +101,73 @@ module FlatPack
         end
       end
 
+      def test_defaults_justify_to_start_without_mx_auto
+        render_inline(Component.new) do
+          "Content"
+        end
+
+        assert_selector "div.grid"
+        refute_selector "div.mx-auto"
+      end
+
+      def test_renders_justify_center_with_mx_auto
+        render_inline(Component.new(justify: :center)) do
+          "Content"
+        end
+
+        assert_selector "div.mx-auto"
+      end
+
+      def test_defaults_max_to_nil_without_max_width
+        render_inline(Component.new) do
+          "Content"
+        end
+
+        refute_selector "div.max-w-sm"
+      end
+
+      def test_renders_max_sm_with_max_w_sm
+        render_inline(Component.new(max: :sm)) do
+          "Content"
+        end
+
+        assert_selector "div.max-w-sm"
+        assert_selector "div.w-full"
+      end
+
+      def test_auth_composition_centers_narrow_column
+        render_inline(Component.new(cols: 1, justify: :center, max: :sm)) do
+          "Sign in"
+        end
+
+        assert_selector "div.grid.grid-cols-1.max-w-sm.w-full.mx-auto"
+        assert_text "Sign in"
+      end
+
+      def test_raises_error_for_invalid_justify
+        assert_raises(ArgumentError) do
+          Component.new(justify: :invalid)
+        end
+      end
+
+      def test_raises_error_for_invalid_max
+        assert_raises(ArgumentError) do
+          Component.new(max: :invalid)
+        end
+      end
+
+      def test_existing_cols_gap_align_unchanged_with_new_defaults
+        render_inline(Component.new(cols: 2, gap: :lg, align: :start)) do
+          "Card collection"
+        end
+
+        assert_selector "div.grid-cols-1.md\\:grid-cols-2"
+        assert_selector "div.gap-6"
+        assert_selector "div.items-start"
+        refute_selector "div.mx-auto"
+        refute_selector "div.max-w-sm"
+      end
+
       def test_accepts_custom_classes
         render_inline(Component.new(class: "custom-class")) do
           "Content"
