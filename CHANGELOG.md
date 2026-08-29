@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-## [0.1.142] - 2026-08-29
+## [0.1.143] - 2026-08-29
 
 ### Fixed
 - Bound leftover hardcoded blues / frozen chart chrome to existing theme tokens so they recolor with the active theme (default charcoal / rounded):
@@ -23,10 +23,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Geochart legend/tooltip `textStyle` hexes (`#334155` / `#111827`) left as map-specific Google Charts ink (not the same frozen-chrome class).
 
 ### Changed
-- Bumped the gem version to `0.1.142`.
+- Bumped the gem version to `0.1.143`.
 
 ### Upgrade notes
 - No host app API changes. After upgrading, rebuild / reload FlatPack stylesheets so email primary buttons, rich-text rings, and donut tooltips pick up theme tokens. Hosts that depended on the old EmailButton blue hex (`#2563eb`) when CSS variables are absent will now see charcoal (`#333333`); override `--button-primary-background-color` / `--color-primary` (or pass themed email CSS) for a custom brand color.
+
+## [0.1.142] - 2026-08-29
+
+### Added
+- `FlatPack::Divider::Component` — full-width horizontal rule with optional muted centered `label` (for example `"Or"` between password submit and Continue with Google). Omit or blank `label` for a plain rule. Uses `--surface-border-color` and `--surface-muted-content-color` only.
+- Dummy demo at `/demo/divider` (`data-theme="rounded"`) showing a plain rule, a labeled rule, and a login/register-style composition.
+- Divider docs, method/variables table, and component index entries.
+
+### Changed
+- Bumped the gem version to `0.1.142`.
+
+### Upgrade notes
+- No host app changes required. Compose with `<%= render FlatPack::Divider::Component.new(label: "Or") %>` or without `label` for a plain rule. Prefer this over ad-hoc borders or `Chat::DateDivider` outside chat lists.
 
 ## [0.1.141] - 2026-08-29
 

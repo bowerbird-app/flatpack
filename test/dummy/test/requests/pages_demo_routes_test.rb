@@ -44,6 +44,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/color_swatches
     /demo/font_swatches
     /demo/overflow_row
+    /demo/divider
     /demo/alerts
     /demo/cards
     /demo/cards/styles

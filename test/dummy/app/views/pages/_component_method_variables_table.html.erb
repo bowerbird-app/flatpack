@@ -473,6 +473,14 @@
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"max-w-md\", id: \"theme-swatches\"" }
       ]
     },
+    divider: {
+      label: "Divider",
+      method_call: "render FlatPack::Divider::Component.new(label: \"Or\")",
+      variables: [
+        { variable: "label", accepts: "String or nil", example: "label: \"Or\"" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"my-4\", id: \"auth-divider\"" }
+      ]
+    },
     code_block: {
       label: "Code Block",
       method_call: "render FlatPack::CodeBlock::Component.new(title: \"ERB\", language: \"erb\", code: \"...\")",

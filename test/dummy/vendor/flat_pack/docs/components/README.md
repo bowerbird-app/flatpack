@@ -37,6 +37,7 @@ chips | FlatPack::Chip::Component | docs/components/chips.md
 color_swatch | FlatPack::ColorSwatch::Component | docs/components/color-swatch.md
 font_swatch | FlatPack::FontSwatch::Component | docs/components/font-swatch.md
 overflow_row | FlatPack::OverflowRow::Component | docs/components/overflow-row.md
+divider | FlatPack::Divider::Component | docs/components/divider.md
 code_block | FlatPack::CodeBlock::Component | docs/components/code-block.md
 collapse | FlatPack::Collapse::Component | docs/components/collapse.md
 content_editor | FlatPack::ContentEditor::Component | docs/components/content-editor.md

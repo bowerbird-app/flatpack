@@ -204,6 +204,15 @@ components:
       - FlatPack::Grid::Component
     status: documented
 
+  - key: divider
+    title: Divider
+    doc: docs/components/divider.md
+    primary_class: FlatPack::Divider::Component
+    related_classes:
+      - FlatPack::Chat::DateDivider::Component
+      - FlatPack::Sidebar::Divider::Component
+    status: documented
+
   - key: code_block
     title: Code Block
     doc: docs/components/code-block.md

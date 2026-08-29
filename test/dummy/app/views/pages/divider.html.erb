@@ -1,0 +1,89 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Divider",
+  subtitle: "Full-width horizontal rule with an optional muted label centered on the line — for stacked auth actions and similar layouts."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :divider %>
+
+<%
+  erb_output_open = "<" + "%="
+  erb_tag_close = "%" + ">"
+%>
+
+<section class="mb-12" id="plain" data-theme="rounded">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Plain rule",
+    anchor_link: true,
+    subtitle: "No label — a single horizontal border using the surface border token."
+  ) %>
+
+  <div class="mt-6 max-w-sm rounded-lg border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-6">
+    <p class="mb-4 text-sm text-[var(--surface-content-color)]">Content above</p>
+    <%= render FlatPack::Divider::Component.new %>
+    <p class="mt-4 text-sm text-[var(--surface-content-color)]">Content below</p>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    class: "mt-4",
+    code: CGI.unescapeHTML(<<~CODE)
+      #{erb_output_open} render FlatPack::Divider::Component.new #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12" id="labeled" data-theme="rounded">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Labeled rule",
+    anchor_link: true,
+    subtitle: "Optional label centered on the line with muted surface text."
+  ) %>
+
+  <div class="mt-6 max-w-sm rounded-lg border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-6">
+    <%= render FlatPack::Divider::Component.new(label: "Or") %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    class: "mt-4",
+    code: CGI.unescapeHTML(<<~CODE)
+      #{erb_output_open} render FlatPack::Divider::Component.new(label: "Or") #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12" id="auth-stack" data-theme="rounded">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Auth stack composition",
+    anchor_link: true,
+    subtitle: "Compose between password submit and Continue with Google — no LoginForm special case."
+  ) %>
+
+  <div class="mt-6 max-w-sm rounded-lg border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-6">
+    <%= render FlatPack::PasswordInput::Component.new(
+      name: "password",
+      label: "Password",
+      placeholder: "Enter your password"
+    ) %>
+    <div class="mt-4">
+      <%= render FlatPack::Button::Component.new(text: "Sign in", style: :primary, class: "w-full") %>
+    </div>
+    <div class="my-4">
+      <%= render FlatPack::Divider::Component.new(label: "Or") %>
+    </div>
+    <%= render FlatPack::Button::Component.new(text: "Continue with Google", style: :secondary, class: "w-full") %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    class: "mt-4",
+    code: CGI.unescapeHTML(<<~CODE)
+      #{erb_output_open} render FlatPack::Button::Component.new(text: "Sign in", style: :primary, class: "w-full") #{erb_tag_close}
+      #{erb_output_open} render FlatPack::Divider::Component.new(label: "Or", class: "my-4") #{erb_tag_close}
+      #{erb_output_open} render FlatPack::Button::Component.new(text: "Continue with Google", style: :secondary, class: "w-full") #{erb_tag_close}
+    CODE
+  ) %>
+</section>
