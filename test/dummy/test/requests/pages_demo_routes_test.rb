@@ -43,6 +43,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/chip_groups
     /demo/color_swatches
     /demo/font_swatches
+    /demo/overflow_row
     /demo/alerts
     /demo/cards
     /demo/cards/styles

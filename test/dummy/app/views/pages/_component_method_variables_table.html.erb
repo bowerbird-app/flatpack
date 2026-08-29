@@ -464,6 +464,15 @@
         { variable: "**system_arguments", accepts: "Hash", example: "id: \"heading-font\", data: { default_font: \"ui-sans-serif\" }" }
       ]
     },
+    overflow_row: {
+      label: "Overflow Row",
+      method_call: "render FlatPack::OverflowRow::Component.new(gap: :md) do ... end",
+      variables: [
+        { variable: "gap", accepts: ":sm, :md, :lg", example: "gap: :md" },
+        { variable: "content", accepts: "block", example: "do ... end" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"max-w-md\", id: \"theme-swatches\"" }
+      ]
+    },
     code_block: {
       label: "Code Block",
       method_call: "render FlatPack::CodeBlock::Component.new(title: \"ERB\", language: \"erb\", code: \"...\")",

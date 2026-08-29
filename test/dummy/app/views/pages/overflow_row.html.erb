@@ -1,0 +1,141 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Overflow Row",
+  subtitle: "One horizontal row of same-size items. Scrolls sideways only when they do not fit, with a soft trailing fade while more remains to the right."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :overflow_row %>
+
+<%
+  erb_output_open = "<" + "%="
+  erb_tag_close = "%" + ">"
+  demo_font_options = [
+    ["Sans", "ui-sans-serif"],
+    ["Serif", "ui-serif"],
+    ["Mono", "ui-monospace"],
+    ["Georgia", "Georgia, serif"]
+  ]
+  short_colors = [
+    ["#f8f9fa", "Background"],
+    ["#333333", "Text"],
+    ["#2563eb", "Accent"]
+  ]
+  long_colors = [
+    ["#f8f9fa", "Background"],
+    ["#111827", "Ink"],
+    ["#64748b", "Muted"],
+    ["#2563eb", "Accent"],
+    ["#e5e7eb", "Border"],
+    ["#fef3c7", "Highlight"],
+    ["#0f766e", "Teal"],
+    ["#be123c", "Rose"],
+    ["#7c3aed", "Violet"],
+    ["#ea580c", "Orange"],
+    ["#ffffff", "White"],
+    ["#1e293b", "Slate"],
+    ["#f43f5e", "Pink"],
+    ["#14b8a6", "Mint"],
+    ["#a855f7", "Purple"],
+    ["#84cc16", "Lime"],
+    ["#0ea5e9", "Sky"],
+    ["#78716c", "Stone"]
+  ]
+%>
+
+<section class="mb-12" id="fits" data-theme="rounded">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Fits without scrolling",
+    anchor_link: true,
+    subtitle: "A short row of ColorSwatches and one FontSwatch. No fade and no scroll chrome when everything fits."
+  ) %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <div id="overflow-row-fits" class="max-w-xl">
+        <%= render FlatPack::OverflowRow::Component.new(gap: :md) do %>
+          <% short_colors.each_with_index do |(color, label), index| %>
+            <%= render FlatPack::ColorSwatch::Component.new(
+              color: color,
+              text: label,
+              name: "overflow_fits[#{label.downcase}]",
+              selected: index.zero?,
+              size: :lg
+            ) %>
+          <% end %>
+          <%= render FlatPack::FontSwatch::Component.new(
+            font: "Georgia, serif",
+            options: demo_font_options,
+            text: "Georgia",
+            name: "overflow_fits[font]",
+            size: :lg
+          ) %>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "Fits without scrolling (ERB)",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::OverflowRow::Component.new(gap: :md) do #{erb_tag_close}
+        #{erb_output_open} render FlatPack::ColorSwatch::Component.new(color: "#f8f9fa", text: "Background", selected: true, size: :lg) #{erb_tag_close}
+        #{erb_output_open} render FlatPack::ColorSwatch::Component.new(color: "#333333", text: "Text", size: :lg) #{erb_tag_close}
+        #{erb_output_open} render FlatPack::FontSwatch::Component.new(
+          font: "Georgia, serif",
+          options: [["Sans", "ui-sans-serif"], ["Georgia", "Georgia, serif"]],
+          text: "Georgia",
+          size: :lg
+        ) #{erb_tag_close}
+      #{erb_output_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12" id="overflow" data-theme="rounded">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Overflow with fade",
+    anchor_link: true,
+    subtitle: "This example is locked to 14rem wide so the long swatch row must scroll. Soft fade on the trailing edge while more remains; fade clears at the end."
+  ) %>
+
+  <%# Fixed width + min-w-0 so grid/flex min-content cannot expand the track past the cap. %>
+  <div id="overflow-row-overflow" class="w-[14rem] max-w-[14rem] min-w-0">
+    <%= render FlatPack::OverflowRow::Component.new(gap: :md, class: "w-full min-w-0") do %>
+      <% long_colors.each_with_index do |(color, label), index| %>
+        <%= render FlatPack::ColorSwatch::Component.new(
+          color: color,
+          text: label,
+          name: "overflow_long[#{label.downcase}]",
+          selected: index.zero?,
+          size: :lg
+        ) %>
+      <% end %>
+      <%= render FlatPack::FontSwatch::Component.new(
+        font: "ui-sans-serif",
+        options: demo_font_options,
+        text: "Sans",
+        name: "overflow_long[font]",
+        size: :lg
+      ) %>
+    <% end %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "Overflow row (ERB)",
+    language: "erb",
+    code: <<~CODE
+      <div class="w-[14rem] min-w-0">
+        #{erb_output_open} render FlatPack::OverflowRow::Component.new(gap: :md) do #{erb_tag_close}
+          #{erb_output_open}# Compose ColorSwatch / FontSwatch children… #{erb_tag_close}
+        #{erb_output_open} end #{erb_tag_close}
+      </div>
+    CODE
+  ) %>
+</section>
+
+<%= render "shared/related_demos", links: [
+  {text: "Color Swatches", href: "/demo/color_swatches"},
+  {text: "Font Swatches", href: "/demo/font_swatches"},
+  {text: "Grid", href: "/demo/grid"},
+  {text: "Chip Groups", href: "/demo/chip_groups"}
+] %>

@@ -155,6 +155,8 @@ For a named host-app variant such as `[data-theme="sunrise"]`, see the theme gen
 --stack-gap-sm: 0.5rem
 --stack-gap-md: 1rem
 --stack-gap-lg: 1.5rem
+--overflow-row-gap: var(--stack-gap-md)
+--overflow-row-fade-size: 2rem
 ```
 
 Use stack gap tokens on parent layout containers (for example, form stacks) to control spacing between components.

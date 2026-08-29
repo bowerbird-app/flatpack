@@ -55,6 +55,22 @@
     height: 0;
   }
 
+  /* Soft trailing fade when OverflowRow can scroll further right. */
+  [data-controller~="flat-pack--overflow-row"][data-can-scroll-end="true"] .fp-overflow-row-scroller {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      #000 0%,
+      #000 calc(100% - var(--overflow-row-fade-size)),
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to right,
+      #000 0%,
+      #000 calc(100% - var(--overflow-row-fade-size)),
+      transparent 100%
+    );
+  }
+
   /* Danger dot overlay for SVG icons. */
   svg.fp-red-dot {
     overflow: visible;

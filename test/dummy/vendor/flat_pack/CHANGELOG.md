@@ -13,6 +13,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.141] - 2026-08-29
+
+### Added
+- `FlatPack::OverflowRow::Component` — one horizontal row for same-size items (for example ColorSwatch + FontSwatch). Never wraps; when children overflow it scrolls sideways with a hidden scrollbar, a soft trailing fade while more content remains to the right, and a natural peek of the next item. Optional `gap:` (`:sm` / `:md` / `:lg`) maps to stack gap tokens.
+- Dummy demo at `/demo/overflow_row` (`data-theme="rounded"`) with a short fitting row and a long overflowing row.
+- Overflow Row docs, method/variables table, and `--overflow-row-gap` / `--overflow-row-fade-size` theme tokens.
+- Stimulus controller `flat-pack--overflow-row` toggles `data-can-scroll-end` for the fade.
+
+### Changed
+- Bumped the gem version to `0.1.141`.
+
+### Upgrade notes
+- No host app changes required. Compose children inside `FlatPack::OverflowRow::Component.new(gap: :md)` instead of `flex-wrap` when you want one row that scrolls only on overflow. Theme the fade length with `--overflow-row-fade-size` and the default gap with `--overflow-row-gap`.
+
 ## [0.1.140] - 2026-08-29
 
 ### Changed

@@ -64,6 +64,7 @@ Rails.application.routes.draw do
   get "demo/chips", to: "pages#chips"
   get "demo/color_swatches", to: "pages#color_swatches"
   get "demo/font_swatches", to: "pages#font_swatches"
+  get "demo/overflow_row", to: "pages#overflow_row"
   get "demo/chip_groups", to: "pages#chip_groups"
   match "demo/chips/add_callback", to: "pages#chip_add_callback", via: [:get, :post]
   match "demo/chips/remove_callback", to: "pages#chip_remove_callback", via: [:get, :post]
