@@ -395,6 +395,8 @@ module FlatPack
         content + tiptap_cdn_pins_config
       end
 
+      public
+
       def show_next_steps
         say "\n" + "=" * 70, :cyan
         say "Next Steps", :green
@@ -407,8 +409,8 @@ module FlatPack
         say "   bin/rails generate flat_pack:theme BrandName --hue=160 --chroma=0.18 --lightness=0.52"
         say "\n4. Restart your Rails server and render a component:"
         say "   <%= render FlatPack::Button::Component.new("
-        say "     label: 'Click me',"
-        say "     scheme: :primary"
+        say "     text: 'Click me',"
+        say "     style: :primary"
         say "   ) %>\n"
         say "\nDocumentation: docs/", :cyan
         say "=" * 70, :cyan

@@ -13,6 +13,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.140] - 2026-08-29
+
+### Changed
+- Internal DRY for form-control chrome: TextInput, EmailInput, PhoneInput, UrlInput, NumberInput, PasswordInput, SearchInput, TextArea, Select, DateInput, TimeInput, and DateTimeInput now compose a shared internal `FlatPack::FormField::Component` for the label / help_text / error wrapper stack, and share box classes via `FlatPack::FormField::ControlStyles` (still using `--form-control-padding` and related tokens). Hosts keep calling the same public input components with the same kwargs — no new public FormField API to adopt.
+- Bumped the gem version to `0.1.140`.
+
+### Upgrade notes
+- No host app changes required. Public initialize kwargs and rendered chrome are unchanged; this is an internal refactor only.
+
 ## [0.1.139] - 2026-08-29
 
 ### Fixed

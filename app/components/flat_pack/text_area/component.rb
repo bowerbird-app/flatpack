@@ -3,6 +3,8 @@
 module FlatPack
   module TextArea
     class Component < FlatPack::BaseComponent
+      include FlatPack::FormField::ControlStyles
+
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "text-[var(--color-warning)]" "border-[var(--color-warning)]"
@@ -55,23 +57,20 @@ module FlatPack
       end
 
       def call
-        content_tag(:div, **wrapper_attributes) do
+        render FlatPack::FormField::Component.new(
+          label: @label,
+          error: @error,
+          help_text: @help_text,
+          field_id: field_id,
+          help_text_class: help_text_classes,
+          **wrapper_attributes
+        ) do |field|
           if @rich_text
-            safe_join([
-              render_label,
-              render_rich_text_editor_surface,
-              render_help_text,
-              render_rich_text_character_count,
-              render_error
-            ].compact)
+            field.with_control { render_rich_text_editor_surface }
+            field.with_after_help { render_rich_text_character_count } if rich_text_character_count?
           else
-            safe_join([
-              render_label,
-              render_textarea,
-              render_help_text,
-              render_character_count,
-              render_error
-            ].compact)
+            field.with_control { render_textarea }
+            field.with_after_help { render_character_count } if @character_count
           end
         end
       end
@@ -79,12 +78,6 @@ module FlatPack
       private
 
       # ── Shared helpers used in both modes ────────────────────────────────────
-
-      def render_label
-        return unless @label
-
-        label_tag(field_id, @label, class: label_classes)
-      end
 
       def render_textarea
         return content_tag(:textarea, @value, **textarea_attributes) unless @quick_copy
@@ -118,12 +111,6 @@ module FlatPack
         attrs[:aria][:invalid] = "true" if @error
 
         merge_attributes(**apply_default_validation(attrs.compact, error_id: error_id, has_error: @error.present?))
-      end
-
-      def render_error
-        return unless @error
-
-        content_tag(:p, @error, class: error_classes, id: error_id)
       end
 
       def render_copy_button
@@ -308,40 +295,15 @@ module FlatPack
         ].join(" ")
       end
 
-      def label_classes
-        classes("block text-sm font-medium text-[var(--surface-content-color)] mb-1.5")
-      end
-
       def textarea_classes
-        base_classes = [
-          "flat-pack-input",
-          "w-full",
-          "rounded-md",
-          "border",
-          "bg-[var(--surface-background-color)]",
-          "text-[var(--surface-content-color)]",
-          "px-[var(--form-control-padding)] py-[var(--form-control-padding)]",
-          "text-sm",
-          "transition-colors duration-base",
-          "placeholder:text-[var(--surface-muted-content-color)]",
-          "focus:outline-none focus:ring-2 focus:ring-inset focus:ring-ring focus:border-transparent",
-          "disabled:opacity-50 disabled:cursor-not-allowed",
-          "resize-none"
-        ]
-
-        base_classes << "pr-10" if @quick_copy
-
-        base_classes << if @error
-          "border-[var(--color-warning)]"
-        else
-          "border-[var(--surface-border-color)]"
-        end
-
-        classes(*base_classes, @custom_class)
-      end
-
-      def error_classes
-        "mt-1 text-sm text-[var(--color-warning)]"
+        form_control_classes(
+          error: @error,
+          custom_class: @custom_class,
+          extra: [
+            "resize-none",
+            (@quick_copy ? "pr-10" : nil)
+          ].compact
+        )
       end
 
       def character_count_classes
@@ -350,6 +312,10 @@ module FlatPack
 
       def help_text_classes
         "text-xs text-[var(--surface-muted-content-color)]"
+      end
+
+      def rich_text_character_count?
+        @character_count || @rich_text_options.options[:character_count]
       end
 
       def quick_copy_wrapper_classes
