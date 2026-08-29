@@ -210,7 +210,8 @@ class DemoCatalog
           ]
         },
         {type: :item, title: "Empty State", path: "/demo/empty_state", description: "User-friendly empty states", icon: :folder},
-        {type: :item, title: "Overflow Row", path: "/demo/overflow_row", description: "One-row layout that scrolls sideways when items do not fit", icon: :chevron_right}
+        {type: :item, title: "Overflow Row", path: "/demo/overflow_row", description: "One-row layout that scrolls sideways when items do not fit", icon: :chevron_right},
+        {type: :item, title: "Divider", path: "/demo/divider", description: "Horizontal rule with optional centered label for stacked auth actions", icon: :minus}
       ]
     },
     {

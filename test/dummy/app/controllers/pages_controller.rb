@@ -263,6 +263,9 @@ class PagesController < ApplicationController
   def overflow_row
   end
 
+  def divider
+  end
+
   def chip_add_callback
     if ActiveModel::Type::Boolean.new.cast(params[:fail])
       render json: {
