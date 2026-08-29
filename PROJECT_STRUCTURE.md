@@ -6,7 +6,7 @@ This document summarizes the current FlatPack repository layout and the files th
 
 **FlatPack** is a Rails engine that ships ViewComponent-based UI components, Tailwind CSS 4 token styling, Propshaft-served assets, and importmap-friendly JavaScript.
 
-**Version:** 0.1.137
+**Version:** 0.1.138
 **License:** MIT  
 **Ruby:** 3.2+  
 **Supported host apps:** Rails 7.1+  
@@ -43,6 +43,7 @@ flat_pack/
 │   │   ├── code_block/
 │   │   ├── collapse/
 │   │   ├── color_swatch/
+│   │   ├── font_swatch/
 │   │   ├── comments/
 │   │   ├── content_editor/
 │   │   ├── date_input/

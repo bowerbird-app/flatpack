@@ -420,6 +420,13 @@
   --color-swatch-selected-ring-color: var(--color-ring);
   --color-swatch-ring-offset-color: var(--surface-background-color);
   --color-swatch-shadow: var(--shadow-sm);
+  --font-swatch-radius: 9999px;
+  --font-swatch-border-color: var(--surface-border-color);
+  --font-swatch-selected-ring-color: var(--color-ring);
+  --font-swatch-ring-offset-color: var(--surface-background-color);
+  --font-swatch-shadow: var(--shadow-sm);
+  --font-swatch-background-color: var(--surface-background-color);
+  --font-swatch-text-color: var(--surface-content-color);
   --top-nav-background-color: transparent;
   --top-nav-border-color: transparent;
   --top-nav-item-text-color: var(--surface-muted-content-color);
@@ -900,6 +907,13 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --color-swatch-selected-ring-color: var(--color-ring);
   --color-swatch-ring-offset-color: var(--surface-background-color);
   --color-swatch-shadow: var(--shadow-sm);
+  --font-swatch-radius: 9999px;
+  --font-swatch-border-color: var(--surface-border-color);
+  --font-swatch-selected-ring-color: var(--color-ring);
+  --font-swatch-ring-offset-color: var(--surface-background-color);
+  --font-swatch-shadow: var(--shadow-sm);
+  --font-swatch-background-color: var(--surface-background-color);
+  --font-swatch-text-color: var(--surface-content-color);
   --top-nav-background-color: transparent;
   --top-nav-border-color: transparent;
   --top-nav-item-text-color: var(--surface-muted-content-color);

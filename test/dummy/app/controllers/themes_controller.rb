@@ -4,6 +4,7 @@ class ThemesController < ApplicationController
   THEME_TOKEN_GROUPS = {
     "Brand primitives" => [/\A--brand-/],
     "Color Swatch" => [/\A--color-swatch-/],
+    "Font Swatch" => [/\A--font-swatch-/],
     "Core Colors and Surfaces" => [/\A--(color-|surface-|gradient-)/],
     "Badges" => [/\A--badge-/],
     "Buttons" => [/\A--button-/],
@@ -254,6 +255,8 @@ class ThemesController < ApplicationController
       "Avatars"
     when /\A--color-swatch-/
       "Color Swatch"
+    when /\A--font-swatch-/
+      "Font Swatch"
     when /\A--top-nav-/
       "Top nav"
     when /\A--search-/

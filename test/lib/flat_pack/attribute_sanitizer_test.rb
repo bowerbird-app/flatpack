@@ -160,6 +160,19 @@ module FlatPack
       assert_nil AttributeSanitizer.sanitize_css_color("expression(alert('xss'))")
     end
 
+    test "sanitize_css_font_family allows supported font stacks" do
+      assert_equal "ui-sans-serif", AttributeSanitizer.sanitize_css_font_family("ui-sans-serif")
+      assert_equal "Georgia, serif", AttributeSanitizer.sanitize_css_font_family("Georgia, serif")
+      assert_equal '"Comic Sans MS", cursive', AttributeSanitizer.sanitize_css_font_family('"Comic Sans MS", cursive')
+      assert_equal "var(--font-body)", AttributeSanitizer.sanitize_css_font_family("var(--font-body)")
+    end
+
+    test "sanitize_css_font_family rejects unsafe values" do
+      assert_nil AttributeSanitizer.sanitize_css_font_family("ui-sans-serif; background: url(javascript:alert('xss'))")
+      assert_nil AttributeSanitizer.sanitize_css_font_family("expression(alert('xss'))")
+      assert_nil AttributeSanitizer.sanitize_css_font_family("url(https://evil.example/font.woff)")
+    end
+
     test "validate_href! returns sanitized href for safe URLs" do
       url = "https://example.com"
       assert_equal url, AttributeSanitizer.validate_href!(url)

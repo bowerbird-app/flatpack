@@ -448,6 +448,22 @@
         { variable: "**system_arguments", accepts: "Hash", example: "id: \"background-swatch\", data: { testid: \"color-swatch\" }" }
       ]
     },
+    font_swatch: {
+      label: "Font Swatch",
+      method_call: "render FlatPack::FontSwatch::Component.new(font: \"ui-sans-serif\", options: [[\"Sans\", \"ui-sans-serif\"], [\"Serif\", \"ui-serif\"]], name: \"appearance[font]\", text: \"Sans\", size: :lg)",
+      variables: [
+        { variable: "font", accepts: "String CSS font-family (required)", example: "font: \"ui-sans-serif\"" },
+        { variable: "options", accepts: "Array of [label, value] or {label:, value:} (required)", example: "options: [[\"Sans\", \"ui-sans-serif\"]]" },
+        { variable: "size", accepts: ":xs, :sm, :md, :lg", example: "size: :lg" },
+        { variable: "selected", accepts: "true, false", example: "selected: true" },
+        { variable: "name", accepts: "String or nil (hidden input)", example: "name: \"appearance[font]\"" },
+        { variable: "text", accepts: "String or nil (tooltip; defaults to selected label)", example: "text: \"Sans\"" },
+        { variable: "disabled", accepts: "true, false", example: "disabled: true" },
+        { variable: "show_tooltip", accepts: "true, false", example: "show_tooltip: false" },
+        { variable: "tooltip_placement", accepts: ":top, :right, :bottom, :left", example: "tooltip_placement: :top" },
+        { variable: "**system_arguments", accepts: "Hash", example: "id: \"heading-font\", data: { default_font: \"ui-sans-serif\" }" }
+      ]
+    },
     code_block: {
       label: "Code Block",
       method_call: "render FlatPack::CodeBlock::Component.new(title: \"ERB\", language: \"erb\", code: \"...\")",

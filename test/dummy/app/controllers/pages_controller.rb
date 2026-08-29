@@ -43,6 +43,7 @@ class PagesController < ApplicationController
     {action: /\Achips\z/, title: "Chips", patterns: [/\A--chip-/]},
     {action: /\Achip_groups\z/, title: "Chip Groups", patterns: [/\A--chip-/]},
     {action: /\Acolor_swatches\z/, title: "Color Swatches", patterns: [/\A--color-swatch-/]},
+    {action: /\Afont_swatches\z/, title: "Font Swatches", patterns: [/\A--font-swatch-/]},
     {action: /\Acards(_.*)?\z/, title: "Cards", patterns: [/\A--card-/]},
     {action: /\Abreadcrumbs\z/, title: "Breadcrumbs", patterns: [/\A--breadcrumb-/]},
     {action: /\Anavbar\z/, title: "Top Nav", patterns: [/\A--top-nav-/]},
@@ -253,6 +254,9 @@ class PagesController < ApplicationController
   end
 
   def color_swatches
+  end
+
+  def font_swatches
   end
 
   def chip_add_callback
