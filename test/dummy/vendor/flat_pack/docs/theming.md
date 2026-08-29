@@ -24,7 +24,7 @@ If you want a complete copy-pasteable custom theme with every current FlatPack v
 bin/rails generate flat_pack:theme Sunrise --hue=35 --chroma=0.2 --lightness=0.52
 ```
 
-That writes `app/assets/stylesheets/flat_pack_theme_sunrise.css`. Load it after `flat_pack/variables`, then set `<html data-theme="sunrise">` (or use the `flat-pack--theme` controller).
+That writes `app/assets/stylesheets/flat_pack_theme_sunrise.css`. Load it after `flat_pack/variables`, then set `<html data-theme="sunrise">` (or use the `flat-pack--theme` controller). Pass `--as_root` to write brand overrides on `:root` instead, so no `data-theme` attribute is needed.
 
 Or override primitives directly:
 
@@ -155,6 +155,8 @@ For a named host-app variant such as `[data-theme="sunrise"]`, see the theme gen
 --stack-gap-sm: 0.5rem
 --stack-gap-md: 1rem
 --stack-gap-lg: 1.5rem
+--overflow-row-gap: var(--stack-gap-md)
+--overflow-row-fade-size: 2rem
 ```
 
 Use stack gap tokens on parent layout containers (for example, form stacks) to control spacing between components.

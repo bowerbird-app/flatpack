@@ -38,7 +38,7 @@ Any non-`light` theme value applied to `<html data-theme="...">` will activate t
 
 ## Fastest Path
 
-1. Prefer `bin/rails generate flat_pack:theme NAME --hue=… --chroma=… --lightness=…` (or a `:root { --brand-hue; --brand-chroma; --brand-lightness }` override) when you only need a recolor.
+1. Prefer `bin/rails generate flat_pack:theme NAME --hue=… --chroma=… --lightness=…` (or a `:root { --brand-hue; --brand-chroma; --brand-lightness }` override) when you only need a recolor. Pass `--as_root` to write brand overrides on `:root` so no `data-theme` attribute is needed.
 2. If you need a named theme with extra semantic/surface tweaks, create or open a host stylesheet that loads **after** the FlatPack tags.
 3. Start from brand/semantic overrides. Copy the complete starter block below only when you need a full fork.
 4. Rename `[data-theme="your-theme-name"]` to your own theme name.
@@ -474,6 +474,8 @@ This block is a full-token override starter (historically based on the earlier p
   --stack-gap-sm: 0.5rem;
   --stack-gap-md: 1rem;
   --stack-gap-lg: 1.5rem;
+  --overflow-row-gap: var(--stack-gap-md);
+  --overflow-row-fade-size: 2rem;
   --form-control-padding: 0.75rem;
   --table-padding: 0.75rem;
   --table-background-color: var(--surface-background-color);

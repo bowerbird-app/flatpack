@@ -474,6 +474,8 @@ This block is a full-token override starter (historically based on the earlier p
   --stack-gap-sm: 0.5rem;
   --stack-gap-md: 1rem;
   --stack-gap-lg: 1.5rem;
+  --overflow-row-gap: var(--stack-gap-md);
+  --overflow-row-fade-size: 2rem;
   --form-control-padding: 0.75rem;
   --table-padding: 0.75rem;
   --table-background-color: var(--surface-background-color);

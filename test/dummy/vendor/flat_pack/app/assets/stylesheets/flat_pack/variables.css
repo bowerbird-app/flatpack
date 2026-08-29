@@ -427,6 +427,8 @@
   --font-swatch-shadow: var(--shadow-sm);
   --font-swatch-background-color: var(--surface-background-color);
   --font-swatch-text-color: var(--surface-content-color);
+  --overflow-row-gap: var(--stack-gap-md);
+  --overflow-row-fade-size: 2rem;
   --top-nav-background-color: transparent;
   --top-nav-border-color: transparent;
   --top-nav-item-text-color: var(--surface-muted-content-color);
@@ -914,6 +916,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --font-swatch-shadow: var(--shadow-sm);
   --font-swatch-background-color: var(--surface-background-color);
   --font-swatch-text-color: var(--surface-content-color);
+  --overflow-row-gap: var(--stack-gap-md);
+  --overflow-row-fade-size: 2rem;
   --top-nav-background-color: transparent;
   --top-nav-border-color: transparent;
   --top-nav-item-text-color: var(--surface-muted-content-color);

@@ -1220,6 +1220,9 @@
   .gap-\[var\(--chip-group-gap\)\] {
     gap: var(--chip-group-gap);
   }
+  .gap-\[var\(--overflow-row-gap\)\] {
+    gap: var(--overflow-row-gap);
+  }
   .gap-\[var\(--stack-gap-md\)\] {
     gap: var(--stack-gap-md);
   }
@@ -1426,8 +1429,14 @@
   .overflow-y-auto {
     overflow-y: auto;
   }
+  .overflow-y-hidden {
+    overflow-y: hidden;
+  }
   .overscroll-none {
     overscroll-behavior: none;
+  }
+  .overscroll-x-contain {
+    overscroll-behavior-x: contain;
   }
   .overscroll-y-contain {
     overscroll-behavior-y: contain;

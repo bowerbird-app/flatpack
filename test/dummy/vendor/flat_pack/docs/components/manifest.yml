@@ -193,6 +193,17 @@ components:
     primary_class: FlatPack::FontSwatch::Component
     status: documented
 
+  - key: overflow_row
+    title: Overflow Row
+    doc: docs/components/overflow-row.md
+    primary_class: FlatPack::OverflowRow::Component
+    related_classes:
+      - FlatPack::ColorSwatch::Component
+      - FlatPack::FontSwatch::Component
+      - FlatPack::ChipGroup::Component
+      - FlatPack::Grid::Component
+    status: documented
+
   - key: code_block
     title: Code Block
     doc: docs/components/code-block.md
