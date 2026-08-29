@@ -6,7 +6,7 @@ This document provides the exact terminal commands and configuration steps neede
 
 FlatPack is a modern Rails UI Component Library built with ViewComponent, Tailwind CSS, and Hotwire. It provides type-safe, testable components with dark mode support and accessibility features. Supports Rails 7.1 and above.
 
-**Version:** see `FlatPack::VERSION` in `lib/flat_pack/version.rb`, or `docs/ai/install_contract.json` (`gem.version`) for the machine-readable install contract.
+**Current Version:** 0.1.134 (Updated August 19, 2026)
 
 ## AI-first installation entrypoint
 
@@ -77,8 +77,6 @@ bin/rails generate flat_pack:theme Sunrise --hue=35 --chroma=0.2 --lightness=0.5
 ```
 
 Creates `app/assets/stylesheets/flat_pack_theme_sunrise.css` with `--brand-hue` / `--brand-chroma` / `--brand-lightness`. Load it after FlatPack variables and set `data-theme="sunrise"` on `<html>`. See [Theming](theming.md).
-
-Pass `--as_root` to write brand overrides on `:root` instead of `[data-theme="…"]`, so no `data-theme` attribute is needed.
 
 ### 3.2 Optional: Generate a Sidebar Layout Shell
 

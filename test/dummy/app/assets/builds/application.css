@@ -901,6 +901,9 @@
   .max-w-6xl {
     max-width: var(--container-6xl);
   }
+  .max-w-\[16rem\] {
+    max-width: 16rem;
+  }
   .max-w-\[32ch\] {
     max-width: 32ch;
   }

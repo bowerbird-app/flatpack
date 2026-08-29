@@ -89,32 +89,36 @@
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Overflow with fade",
     anchor_link: true,
-    subtitle: "Enough circles to overflow on a normal desktop. Scroll sideways with trackpad or touch — the trailing fade softens the edge and clears when you reach the end."
+    subtitle: "Cap the row so about six large circles cannot fit. Scroll sideways with trackpad or touch — the trailing fade softens the edge and clears when you reach the end."
   ) %>
 
-  <%= render FlatPack::Card::Component.new do |card| %>
-    <% card.body do %>
-      <div id="overflow-row-overflow" class="max-w-md">
-        <%= render FlatPack::OverflowRow::Component.new(gap: :md) do %>
-          <% long_colors.each_with_index do |(color, label), index| %>
-            <%= render FlatPack::ColorSwatch::Component.new(
-              color: color,
-              text: label,
-              name: "overflow_long[#{label.downcase}]",
-              selected: index.zero?,
-              size: :lg
-            ) %>
-          <% end %>
-          <%= render FlatPack::FontSwatch::Component.new(
-            font: "ui-sans-serif",
-            options: demo_font_options,
-            text: "Sans",
-            name: "overflow_long[font]",
-            size: :lg
-          ) %>
+  <%= render FlatPack::Grid::Component.new(cols: 2, gap: :lg) do %>
+    <div class="max-w-[16rem]">
+      <%= render FlatPack::Card::Component.new do |card| %>
+        <% card.body do %>
+          <div id="overflow-row-overflow">
+            <%= render FlatPack::OverflowRow::Component.new(gap: :md) do %>
+              <% long_colors.each_with_index do |(color, label), index| %>
+                <%= render FlatPack::ColorSwatch::Component.new(
+                  color: color,
+                  text: label,
+                  name: "overflow_long[#{label.downcase}]",
+                  selected: index.zero?,
+                  size: :lg
+                ) %>
+              <% end %>
+              <%= render FlatPack::FontSwatch::Component.new(
+                font: "ui-sans-serif",
+                options: demo_font_options,
+                text: "Sans",
+                name: "overflow_long[font]",
+                size: :lg
+              ) %>
+            <% end %>
+          </div>
         <% end %>
-      </div>
-    <% end %>
+      <% end %>
+    </div>
   <% end %>
 
   <%= render FlatPack::CodeBlock::Component.new(

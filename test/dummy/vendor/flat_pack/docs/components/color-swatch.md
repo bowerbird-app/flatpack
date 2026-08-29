@@ -4,11 +4,11 @@
 Render a circular colour control that shows a colour, optionally names it in a tooltip, and opens the native browser colour picker on click.
 
 ## When to use
-Use Color Swatch in theme editors and brand settings. Compose several swatches in `FlatPack::OverflowRow::Component` when the row should stay on one line and scroll when it overflows. A plain flex row with `--stack-gap-*` is fine when wrapping is acceptable. Do not wrap swatches in `ChipGroup` — that component is for chips.
+Use Color Swatch in theme editors and brand settings. Compose several swatches in a flex row with kit gap tokens when you need a named palette (for example Background, Text, Accent). Do not wrap swatches in `ChipGroup` — that component is for chips.
 
 ## Class
 - Primary: `FlatPack::ColorSwatch::Component`
-- Related classes: `FlatPack::Tooltip::Component`, `FlatPack::OverflowRow::Component`
+- Related classes: `FlatPack::Tooltip::Component`
 
 ## Props
 | name | type | default | required | description |
@@ -34,7 +34,7 @@ None.
 
 ## Example
 ```erb
-<%= render FlatPack::OverflowRow::Component.new(gap: :md) do %>
+<div class="flex flex-wrap items-start gap-[var(--stack-gap-md)]">
   <%= render FlatPack::ColorSwatch::Component.new(
     color: "#f8f9fa",
     text: "Background",
@@ -54,7 +54,7 @@ None.
     name: "theme[accent]",
     size: :lg
   ) %>
-<% end %>
+</div>
 ```
 
 ## Accessibility

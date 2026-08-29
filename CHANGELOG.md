@@ -22,7 +22,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Stimulus controller `flat-pack--overflow-row` toggles `data-can-scroll-end` for the fade.
 
 ### Changed
-- Color Swatch and Font Swatch docs recommend composing rows with Overflow Row when a single scrolling line is preferred over wrap.
 - Bumped the gem version to `0.1.140`.
 
 ### Upgrade notes

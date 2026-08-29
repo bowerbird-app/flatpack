@@ -4,11 +4,11 @@
 Render a circular font control that shows a two-letter sample in the selected face, names the font in a tooltip, and opens a FlatPack Popover menu of host-provided fonts on click.
 
 ## When to use
-Use Font Swatch in theme editors and brand settings alongside Color Swatch. Compose several swatches in `FlatPack::OverflowRow::Component` when the row should stay on one line and scroll when it overflows. Do not wrap swatches in `ChipGroup` — that component is for chips. Do not wrap Font Swatch in another Popover — it already composes `FlatPack::Popover::Component` for the menu. Do not use `FlatPack::Picker` for this job.
+Use Font Swatch in theme editors and brand settings alongside Color Swatch. Compose several swatches in a flex row with kit gap tokens when you need a named palette (for example Background, Text, Accent, Font). Do not wrap swatches in `ChipGroup` — that component is for chips. Do not wrap Font Swatch in another Popover — it already composes `FlatPack::Popover::Component` for the menu. Do not use `FlatPack::Picker` for this job.
 
 ## Class
 - Primary: `FlatPack::FontSwatch::Component`
-- Related classes: `FlatPack::Tooltip::Component`, `FlatPack::Popover::Component`, `FlatPack::ColorSwatch::Component`, `FlatPack::OverflowRow::Component`
+- Related classes: `FlatPack::Tooltip::Component`, `FlatPack::Popover::Component`, `FlatPack::ColorSwatch::Component`
 
 ## Props
 | name | type | default | required | description |
@@ -27,7 +27,7 @@ Use Font Swatch in theme editors and brand settings alongside Color Swatch. Comp
 ## Tokens
 | token | purpose |
 |---|---|
-| `--font-swatch-radius` | Circle radius (default matches Color Swatch). |
+| `--font-swatch-radius` | Circle radius (kit default matches Color Swatch). |
 | `--font-swatch-border-color` | Face / option sample border. |
 | `--font-swatch-selected-ring-color` | Selected / focus ring colour. |
 | `--font-swatch-ring-offset-color` | Selected ring offset fill. |
@@ -47,7 +47,7 @@ None.
 
 ## Example
 ```erb
-<%= render FlatPack::OverflowRow::Component.new(gap: :md) do %>
+<div class="flex flex-wrap items-start gap-[var(--stack-gap-md)]">
   <%= render FlatPack::ColorSwatch::Component.new(
     color: "#f8f9fa",
     text: "Background",
@@ -67,7 +67,7 @@ None.
     text: "Sans",
     size: :lg
   ) %>
-<% end %>
+</div>
 ```
 
 ## Accessibility
