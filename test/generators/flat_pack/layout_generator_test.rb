@@ -19,7 +19,16 @@ module FlatPack
       test "generates default sidebar layout files" do
         run_generator
 
-        assert_file "app/views/layouts/flat_pack_sidebar.html.erb"
+        assert_file "app/views/layouts/flat_pack_sidebar.html.erb" do |content|
+          assert_predicate content.strip, :present?
+          assert_includes content, "FlatPack::SidebarLayout::Component"
+          assert_includes content, 'data-theme="rounded"'
+          assert_includes content, 'stylesheet_link_tag "flat_pack/variables"'
+          assert_includes content, 'stylesheet_link_tag "flat_pack/application"'
+          assert_includes content, 'stylesheet_link_tag "flat_pack/rich_text"'
+          assert_includes content, 'render "layouts/flat_pack/sidebar"'
+          assert_includes content, 'render "layouts/flat_pack/top_nav"'
+        end
         assert_file "app/views/layouts/flat_pack/_sidebar.html.erb" do |content|
           assert_includes content, "FlatPack::Sidebar::Component"
           assert_includes content, "FlatPack::Sidebar::Item::Component"
