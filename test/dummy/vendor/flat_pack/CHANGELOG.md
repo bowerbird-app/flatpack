@@ -13,6 +13,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.143] - 2026-08-29
+
+### Fixed
+- Bound leftover hardcoded blues / frozen chart chrome to existing theme tokens so they recolor with the active theme (default charcoal / rounded):
+  - `EmailButton` primary fallback hex is now `#333333` (resolved from default `--color-primary`) with `var(--button-primary-*, var(--color-primary, …))` overrides — no `#2563eb` path.
+  - Rich text focus / selection / link-input chrome uses `var(--color-ring)` / `var(--color-primary)` (and `color-mix` with those tokens) with no blue `oklch(0.52 0.26 250…)` fallbacks.
+  - Donut ApexCharts tooltips use `--tooltip-background-color` / `--tooltip-text-color` (falling through to `--surface-background-color` / `--surface-content-color`) instead of frozen `#fff`.
+- Geochart legend/tooltip `textStyle` hexes (`#334155` / `#111827`) left as map-specific Google Charts ink (not the same frozen-chrome class).
+
+### Changed
+- Bumped the gem version to `0.1.143`.
+
+### Upgrade notes
+- No host app API changes. After upgrading, rebuild / reload FlatPack stylesheets so email primary buttons, rich-text rings, and donut tooltips pick up theme tokens. Hosts that depended on the old EmailButton blue hex (`#2563eb`) when CSS variables are absent will now see charcoal (`#333333`); override `--button-primary-background-color` / `--color-primary` (or pass themed email CSS) for a custom brand color.
+
 ## [0.1.142] - 2026-08-29
 
 ### Added
