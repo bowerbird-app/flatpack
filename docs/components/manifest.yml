@@ -187,6 +187,12 @@ components:
     primary_class: FlatPack::ColorSwatch::Component
     status: documented
 
+  - key: font_swatch
+    title: Font Swatch
+    doc: docs/components/font-swatch.md
+    primary_class: FlatPack::FontSwatch::Component
+    status: documented
+
   - key: code_block
     title: Code Block
     doc: docs/components/code-block.md

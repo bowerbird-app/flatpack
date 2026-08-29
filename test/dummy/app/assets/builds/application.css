@@ -1492,6 +1492,9 @@
   .rounded-\[var\(--comments-inline-input-radius\)\] {
     border-radius: var(--comments-inline-input-radius);
   }
+  .rounded-\[var\(--font-swatch-radius\)\] {
+    border-radius: var(--font-swatch-radius);
+  }
   .rounded-\[var\(--popover-radius\)\] {
     border-radius: var(--popover-radius);
   }
@@ -1721,6 +1724,9 @@
   }
   .border-\[var\(--comments-replies-border-color\)\] {
     border-color: var(--comments-replies-border-color);
+  }
+  .border-\[var\(--font-swatch-border-color\)\] {
+    border-color: var(--font-swatch-border-color);
   }
   .border-\[var\(--modal-border-color\)\] {
     border-color: var(--modal-border-color);
@@ -2009,6 +2015,9 @@
   }
   .bg-\[var\(--comments-item-system-background-color\)\] {
     background-color: var(--comments-item-system-background-color);
+  }
+  .bg-\[var\(--font-swatch-background-color\)\] {
+    background-color: var(--font-swatch-background-color);
   }
   .bg-\[var\(--list-item-active-background-color\)\] {
     background-color: var(--list-item-active-background-color);
@@ -2973,6 +2982,9 @@
   .text-\[var\(--comments-thread-title-color\)\] {
     color: var(--comments-thread-title-color);
   }
+  .text-\[var\(--font-swatch-text-color\)\] {
+    color: var(--font-swatch-text-color);
+  }
   .text-\[var\(--modal-body-color\)\] {
     color: var(--modal-body-color);
   }
@@ -3202,6 +3214,10 @@
     --tw-shadow: var(--color-swatch-shadow);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
+  .shadow-\[var\(--font-swatch-shadow\)\] {
+    --tw-shadow: var(--font-swatch-shadow);
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
   .shadow-\[var\(--popover-shadow\)\] {
     --tw-shadow: var(--popover-shadow);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
@@ -3276,6 +3292,9 @@
   .ring-\[var\(--color-swatch-selected-ring-color\)\] {
     --tw-ring-color: var(--color-swatch-selected-ring-color);
   }
+  .ring-\[var\(--font-swatch-selected-ring-color\)\] {
+    --tw-ring-color: var(--font-swatch-selected-ring-color);
+  }
   .ring-\[var\(--surface-background-color\)\] {
     --tw-ring-color: var(--surface-background-color);
   }
@@ -3297,6 +3316,9 @@
   }
   .ring-offset-\[var\(--color-swatch-ring-offset-color\)\] {
     --tw-ring-offset-color: var(--color-swatch-ring-offset-color);
+  }
+  .ring-offset-\[var\(--font-swatch-ring-offset-color\)\] {
+    --tw-ring-offset-color: var(--font-swatch-ring-offset-color);
   }
   .outline {
     outline-style: var(--tw-outline-style);
@@ -3618,6 +3640,11 @@
   .focus-within\:ring-\[var\(--comments-composer-focus-ring-color\)\] {
     &:focus-within {
       --tw-ring-color: var(--comments-composer-focus-ring-color);
+    }
+  }
+  .focus-within\:ring-\[var\(--font-swatch-selected-ring-color\)\] {
+    &:focus-within {
+      --tw-ring-color: var(--font-swatch-selected-ring-color);
     }
   }
   .focus-within\:outline-none {

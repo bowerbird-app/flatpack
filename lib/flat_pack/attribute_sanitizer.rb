@@ -15,6 +15,20 @@ module FlatPack
     CSS_COLOR_VAR_PATTERN = /\Avar\(--[a-z0-9-]+\)\z/i
     CSS_HEX_COLOR_PATTERN = /\A#(?:[\da-f]{3}|[\da-f]{4}|[\da-f]{6}|[\da-f]{8})\z/i
 
+    # Safe CSS font-family values for style interpolation (no url()/expression/; injection).
+    CSS_FONT_FAMILY_TOKEN = /
+      (?:
+        var\(--[a-z0-9-]+\)
+        |
+        "[a-z0-9][a-z0-9\s._-]*"
+        |
+        '[a-z0-9][a-z0-9\s._-]*'
+        |
+        [a-z0-9][a-z0-9_-]*
+      )
+    /ix
+    CSS_FONT_FAMILY_PATTERN = /\A#{CSS_FONT_FAMILY_TOKEN.source}(?:\s*,\s*#{CSS_FONT_FAMILY_TOKEN.source})*\z/ix
+
     # List of dangerous HTML attributes that should be filtered out
     DANGEROUS_ATTRIBUTES = %w[
       onclick onload onerror onmouseover onmouseout onmousemove
@@ -101,6 +115,23 @@ module FlatPack
         return color if CSS_COLOR_VAR_PATTERN.match?(color)
         return color if CSS_COLOR_FUNCTION_PATTERN.match?(color)
         return color if CSS_COLOR_KEYWORDS.include?(color.downcase)
+
+        nil
+      end
+
+      # Validates CSS font-family values that are safe to interpolate into a style
+      # attribute. Accepts generic families, unquoted/quoted family names, CSS
+      # variables, and comma-separated stacks.
+      #
+      # @param value [String] The CSS font-family token to validate
+      # @return [String, nil] The sanitized font-family value if valid, nil otherwise
+      def sanitize_css_font_family(value)
+        return nil if value.nil?
+
+        font = value.to_s.strip
+        return nil if font.empty?
+
+        return font if CSS_FONT_FAMILY_PATTERN.match?(font)
 
         nil
       end

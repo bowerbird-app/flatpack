@@ -35,6 +35,7 @@ chart_buttons | FlatPack::ChartButtons::Component | docs/components/chart-button
 chat | FlatPack::Chat::Panel::Component | docs/components/chat.md
 chips | FlatPack::Chip::Component | docs/components/chips.md
 color_swatch | FlatPack::ColorSwatch::Component | docs/components/color-swatch.md
+font_swatch | FlatPack::FontSwatch::Component | docs/components/font-swatch.md
 code_block | FlatPack::CodeBlock::Component | docs/components/code-block.md
 collapse | FlatPack::Collapse::Component | docs/components/collapse.md
 content_editor | FlatPack::ContentEditor::Component | docs/components/content-editor.md
