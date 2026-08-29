@@ -20,10 +20,10 @@ module FlatPack
       renders_one :after_help
 
       def initialize(
+        field_id:,
         label: nil,
         error: nil,
         help_text: nil,
-        field_id:,
         help_text_class: DEFAULT_HELP_TEXT_CLASS,
         **system_arguments
       )
