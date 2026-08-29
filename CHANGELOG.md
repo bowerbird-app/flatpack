@@ -13,6 +13,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.139] - 2026-08-29
+
+### Fixed
+- `rails generate flat_pack:layout` now writes a real host shell layout (`sidebar_layout.html.erb.tt` was empty). The scaffold composes `SidebarLayout` with the generated sidebar/top-nav partials, sets `data-theme="rounded"`, and includes the FlatPack stylesheet tags plus importmap.
+- Install generator Next Steps Button example uses `text:` / `style:` (not the dead `label:` / `scheme:` API).
+- Install generator `show_next_steps` is public again so Next Steps actually print after `flat_pack:install` (it was unreachable under `private`).
+
+### Changed
+- `docs/installation.md` no longer hardcodes a `Current Version:` stamp; readers are pointed at `FlatPack::VERSION` / `lib/flat_pack/version.rb` and `docs/ai/install_contract.json`.
+- Documented `--as_root` on `flat_pack:theme` in installation and theming docs (writes brand overrides on `:root` so no `data-theme` is required).
+- Bumped the gem version to `0.1.139`.
+
+### Upgrade notes
+- No host app changes required for existing installs. Re-run `bin/rails generate flat_pack:layout` if you previously generated an empty layout file, or replace that layout with the new scaffold contents from the generator template.
+
 ## [0.1.138] - 2026-08-29
 
 ### Added

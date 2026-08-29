@@ -109,6 +109,16 @@ module FlatPack
         end
       end
 
+      test "show_next_steps Button example uses text and style" do
+        generator = build_generator
+        output = capture_io { generator.show_next_steps }.first
+
+        assert_includes output, "text:"
+        assert_includes output, "style:"
+        refute_includes output, "label:"
+        refute_includes output, "scheme:"
+      end
+
       test "ensure_lazy_stimulus_loader_import merges into existing import" do
         generator = build_generator
         content = 'import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading"\n'
