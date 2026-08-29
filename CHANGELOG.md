@@ -13,6 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.137] - 2026-08-29
+
+### Changed
+- Kit default theme is now the former `rounded` look: charcoal/monochrome primaries, larger radii, softer shadows. Hosts with no `data-theme` get charcoal primary buttons instead of the previous purple-blue brand (`--brand-hue: 250`).
+- `[data-theme="rounded"]` remains as an explicit alias of that default (same semantic values).
+- `[data-theme="dark"]` and `[data-theme="ocean"]` are unchanged override themes.
+- Bumped the gem version to `0.1.137`.
+
+### Upgrade notes
+- If you relied on the previous purple-blue default without setting `data-theme`, primary CTAs and kit surfaces will now look like today's `rounded` theme. No action needed if you already set `data-theme="rounded"` (Recording Studio style) — the look stays the same.
+- To keep a purple-blue (or any other) brand on `:root`, override `--brand-hue` / `--brand-chroma` / `--brand-lightness` and/or `--color-primary` / `--color-primary-hover` in a host stylesheet loaded after `flat_pack/variables`, or generate a named theme with `bin/rails generate flat_pack:theme …`.
+- Named themes (`dark`, `ocean`, custom) continue to work via `data-theme`.
+
 ## [0.1.136] - 2026-08-28
 
 ### Added

@@ -237,9 +237,10 @@ If the generator cannot automatically detect your Tailwind CSS 4 file, it will d
 
 The imported `variables.css` contains:
 - `@theme {}` — token inventory (brand primitives, semantics, component aliases)
-- `:root {}` — the **light theme palette** plus once-defined component wiring
+- `:root {}` — the **default (rounded / charcoal) palette** plus once-defined component wiring
 - `[data-theme="dark"] {}` — dark overrides only (component aliases inherit)
-- `[data-theme="ocean"] {}` and `[data-theme="rounded"] {}` — additional theme variants (overrides only)
+- `[data-theme="ocean"] {}` — ocean variant (overrides only)
+- `[data-theme="rounded"] {}` — alias of the default (same look; safe for hosts that already set the attribute)
 
 To recolor without copying the full token list:
 
@@ -253,7 +254,7 @@ or in host CSS loaded after FlatPack:
 :root { --brand-hue: 160; --brand-chroma: 0.18; --brand-lightness: 0.52; }
 ```
 
-**Light mode is the default.** The `:root {}` block in `variables.css` establishes the light palette without requiring any attribute. No `data-theme` attribute is needed to get the light theme — it is applied automatically.
+**Rounded / charcoal is the default.** The `:root {}` block in `variables.css` establishes that palette without requiring any attribute. No `data-theme` attribute is needed — it is applied automatically. `[data-theme="rounded"]` is an explicit alias of the same look.
 
 To **explicitly force light mode** regardless of any ThemeController state or stored preferences (useful if you are not using the theme switcher), add `data-theme="light"` to your HTML root element in your layout:
 
@@ -914,7 +915,7 @@ The installation process for FlatPack is fully automated. Quick checklist:
 - ✨ Optional app-wide FlatPack settings via `config/initializers/flat_pack.rb`, including `config.default_icon_variant = :outline`
 - ✨ Stimulus lazy-loading for all FlatPack controllers via importmap
 
-**Light theme is the default.** No `data-theme` attribute is required. The `:root {}` block in `variables.css` activates the light palette automatically. Supported themes: `light` (default), `dark`, `ocean`, `rounded` — set via `data-theme` on `<html>`.
+**Rounded / charcoal is the default.** No `data-theme` attribute is required. The `:root {}` block in `variables.css` activates that palette automatically. Supported themes: `light` / `rounded` (default alias), `dark`, `ocean` — set via `data-theme` on `<html>`.
 
 No manual path finding, no manual copying of CSS variables, no manual configuration — just run the generator and rebuild CSS.
 

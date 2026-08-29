@@ -14,7 +14,7 @@ Component tokens (--button-*, --sidebar-*, …) — defined once as var(--semant
 Components / Stimulus
 ```
 
-Named themes (`[data-theme="dark"]`, `ocean`, `rounded`, or your own) should override **brand/semantic** tokens. Component tokens inherit automatically.
+The kit default (no `data-theme`) is the rounded / charcoal palette. Named themes (`[data-theme="dark"]`, `ocean`, `rounded`, or your own) should override **brand/semantic** tokens. `[data-theme="rounded"]` is an alias of the default. Component tokens inherit automatically.
 
 If you want a complete copy-pasteable custom theme with every current FlatPack variable, use the [Custom Theming Guide](custom_theming.md). Prefer the brand-kit path below for most apps.
 
@@ -60,7 +60,7 @@ Do **not** put FlatPack tokens back into the Tailwind entry. A second `--color-p
 | Host needs a different primary than FlatPack | Keep the host color as `--my-app-primary` (or similar). Leave `--color-primary` for FlatPack, or set it only if you intend FlatPack to match. |
 | Host already uses `--color-primary` for something else | Rename the **host** token. Do not rename FlatPack's. |
 
-`--brand-hue` / `--brand-chroma` / `--brand-lightness` are FlatPack-only and do not overlap Tailwind defaults. `--radius-md` and `--shadow-md` use the same names as Tailwind utilities; FlatPack's defaults match Tailwind's (`0.375rem` for `--radius-md`).
+`--brand-hue` / `--brand-chroma` / `--brand-lightness` are FlatPack-only and do not overlap Tailwind defaults. `--radius-md` and `--shadow-md` use the same names as Tailwind utilities; FlatPack's default radii are the larger rounded scale (`1rem` for `--radius-md`).
 
 ## Overview
 
@@ -161,10 +161,10 @@ Use stack gap tokens on parent layout containers (for example, form stacks) to c
 
 ### Border Radius
 ```css
---radius-sm: 0.25rem
---radius-md: 0.375rem
---radius-lg: 0.5rem
---radius-xl: 0.75rem
+--radius-sm: 0.75rem
+--radius-md: 1rem
+--radius-lg: 1.5rem
+--radius-xl: 2rem
 ```
 
 ### Shadows
@@ -215,7 +215,7 @@ Component tokens such as `--button-primary-background-color` map to semantic tok
 
 ## Dark mode and named themes
 
-See [Dark Mode](dark_mode.md). Built-in variants (`dark`, `ocean`, `rounded`) only override tokens that differ from `:root`. Component aliases stay on `:root` and inherit.
+See [Dark Mode](dark_mode.md). Built-in variants (`dark`, `ocean`) only override tokens that differ from `:root`. `rounded` is an alias of the default. Component aliases stay on `:root` and inherit.
 
 ## Auditing tokens
 

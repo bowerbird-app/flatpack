@@ -92,7 +92,7 @@ end
 ## Design Principles
 
 1. **Variables over configuration** - Customize via CSS variables, not Ruby config
-2. **Theme variants over one-off overrides** - Light is the default palette, with `data-theme` variants and optional system-mode JS
+2. **Theme variants over one-off overrides** - Rounded / charcoal is the default palette, with `data-theme` variants and optional system-mode JS
 3. **Composition over inheritance** - Build complex UIs from simple components
 4. **Zero-config installation** - Works out of the box
 5. **UI-only responsibility** - No business logic, no ActiveRecord assumptions

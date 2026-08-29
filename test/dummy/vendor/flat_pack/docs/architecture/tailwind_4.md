@@ -33,12 +33,12 @@ Define theme configuration in CSS. FlatPack's inventory lives in `flat_pack/vari
 
 ```css
 @theme {
-  --brand-hue: 250;
-  --brand-chroma: 0.26;
-  --brand-lightness: 0.52;
+  --brand-hue: 0;
+  --brand-chroma: 0;
+  --brand-lightness: 0.3211;
 
-  --color-primary: oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue));
-  --radius-md: 0.375rem;
+  --color-primary: oklch(0.3211 0 0);
+  --radius-md: 1rem;
 }
 ```
 
@@ -59,15 +59,15 @@ FlatPack defines CSS variables in `app/assets/stylesheets/flat_pack/variables.cs
 
 ```css
 @theme {
-  --brand-hue: 250;
-  --brand-chroma: 0.26;
-  --brand-lightness: 0.52;
-  --color-primary: oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue));
+  --brand-hue: 0;
+  --brand-chroma: 0;
+  --brand-lightness: 0.3211;
+  --color-primary: oklch(0.3211 0 0);
   --button-primary-background-color: var(--color-primary);
 }
 
 :root {
-  /* Light palette + the same component aliases as @theme */
+  /* Default rounded / charcoal palette + the same component aliases as @theme */
   --button-primary-background-color: var(--color-primary);
 }
 
@@ -261,7 +261,7 @@ Fallbacks not needed as these are modern browsers.
 
 ### Default Light Palette + Theme Variants
 
-FlatPack defines the default light palette in `:root` and layers additional variants on top with selectors such as `[data-theme="dark"]`.
+FlatPack defines the default rounded / charcoal palette in `:root` and layers additional variants on top with selectors such as `[data-theme="dark"]`. `[data-theme="rounded"]` is an alias of the default.
 
 ```css
 :root {
@@ -277,7 +277,7 @@ This keeps Tailwind token generation CSS-first while allowing the host app to ch
 
 ### Optional System Mode
 
-When the host app uses FlatPack's optional `flat-pack--theme` controller, `system` mode evaluates `prefers-color-scheme` and then switches between the default light palette and `data-theme="dark"`.
+When the host app uses FlatPack's optional `flat-pack--theme` controller, `system` mode evaluates `prefers-color-scheme` and then switches between the default rounded / charcoal palette and `data-theme="dark"`.
 
 ### Why Not Depend on `dark:` Utilities?
 
