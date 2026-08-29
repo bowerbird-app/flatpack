@@ -1,18 +1,18 @@
 # Dark Mode Guide
 
-FlatPack ships a light theme by default and supports dark or custom theme variants through CSS variables and `data-theme` selectors.
+FlatPack ships a rounded / charcoal light palette by default and supports dark or custom theme variants through CSS variables and `data-theme` selectors.
 
 ## Overview
 
 FlatPack theme behavior is split into two layers:
 
-- **CSS defaults** - `:root {}` in `flat_pack/variables.css` provides the default light palette, including `--brand-hue` / `--brand-chroma` / `--brand-lightness` and component aliases that map once to semantic tokens.
-- **Theme variants** - selectors such as `[data-theme="dark"]`, `[data-theme="ocean"]`, and `[data-theme="rounded"]` override only tokens that differ from `:root`. Component aliases inherit unless you override them.
+- **CSS defaults** - `:root {}` in `flat_pack/variables.css` provides the default rounded / charcoal palette, including `--brand-hue` / `--brand-chroma` / `--brand-lightness` and component aliases that map once to semantic tokens.
+- **Theme variants** - selectors such as `[data-theme="dark"]` and `[data-theme="ocean"]` override only tokens that differ from `:root`. `[data-theme="rounded"]` is an explicit alias of the default. Component aliases inherit unless you override them.
 - **Optional controller support** - the `flat-pack--theme` Stimulus controller can switch between `system`, `light`, `dark`, and custom variants while persisting the choice in `localStorage` under `flatpack-theme`.
 
 ## How It Works
 
-If no theme attribute is present, FlatPack stays on the default light palette.
+If no theme attribute is present, FlatPack stays on the default rounded / charcoal palette.
 
 ```html
 <html lang="en">
@@ -26,16 +26,16 @@ To force a built-in variant, set `data-theme` on the root element:
 
 Supported built-in values documented by the install guide are:
 
-- `light` - same as omitting the attribute
+- `light` - same as omitting the attribute (default rounded / charcoal)
 - `dark`
 - `ocean`
-- `rounded`
+- `rounded` - alias of the default (same look with or without the attribute)
 
 ## System Mode
 
 When you use the optional `flat-pack--theme` controller, selecting `system` checks `prefers-color-scheme: dark` and then either:
 
-- removes `data-theme` for the light palette, or
+- removes `data-theme` for the default rounded / charcoal palette, or
 - sets `data-theme="dark"` when the OS prefers dark mode
 
 That controller also keeps `dark` and `light` classes in sync on `<html>` for legacy selectors.

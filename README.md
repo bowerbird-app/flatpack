@@ -6,7 +6,7 @@ A modern Rails UI Component Library built with ViewComponent, Tailwind CSS, and 
 
 - 🎨 **ViewComponent-based** - Type-safe, testable components
 - 🌈 **Tailwind CSS** - Modern utility-first CSS with CSS variables
-- 🌙 **Themes** - Light by default, with dark and custom `data-theme` variants
+- 🌙 **Themes** - Rounded / charcoal by default, with dark, ocean, and custom `data-theme` variants
 - ♿ **Accessible** - WCAG AA compliant, keyboard-friendly
 - 🚀 **Zero Config** - Works out of the box with tailwindcss-rails gem
 - ✨ **Automated Setup** - Install generator automatically configures Tailwind CSS 4
