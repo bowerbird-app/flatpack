@@ -56,7 +56,7 @@ module FlatPack
         @gap = gap.to_sym
         @align = align.to_sym
         @justify = justify.to_sym
-        @max = max.nil? ? nil : max.to_sym
+        @max = max&.to_sym
 
         validate_cols!
         validate_gap!
