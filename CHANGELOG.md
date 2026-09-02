@@ -13,6 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.144] - 2026-09-02
+
+### Added
+- `FlatPack::Avatar::Component` accepts optional `icon:` (same Heroicons name as Button). When there is no `src` and no initials, that icon renders instead of the person glyph. Omit `icon:` to keep today's person fallback. Image and initials still win.
+- Dummy `/demo/avatars` Fallback Types shows a photo-icon empty on circle and square (`data-theme="rounded"`), next to the unchanged person glyph.
+- Cloud Agent Build hook `.cursor/fetch-skills.sh` plus `.cursor/environment.json`. Fetched skills and plugin rules stay gitignored.
+
+### Changed
+- Bumped the gem version to `0.1.144`.
+
+### Upgrade notes
+- No host app changes required. To show a site mark instead of a person on an empty avatar, pass `icon: "photo"` (or another existing Heroicon name). Users profile empty initials are unchanged if the host still passes `name` or `initials`.
+
 ## [0.1.143] - 2026-08-29
 
 ### Fixed

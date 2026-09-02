@@ -31,6 +31,44 @@ module FlatPack
         render_inline(Component.new)
 
         assert_selector "svg"
+        refute_selector "[data-controller='flat-pack--icon']"
+      end
+
+      def test_renders_named_icon_when_empty
+        render_inline(Component.new(icon: "photo"))
+
+        assert_selector "[data-controller='flat-pack--icon']"
+        assert_selector "[data-flat-pack--icon-name-value='photo']"
+        refute_selector "img"
+      end
+
+      def test_renders_image_alias_as_photo_icon
+        render_inline(Component.new(icon: :image))
+
+        assert_selector "[data-flat-pack--icon-name-value='photo']"
+      end
+
+      def test_image_src_wins_over_icon
+        render_inline(Component.new(src: "https://example.com/avatar.jpg", alt: "User", icon: "photo"))
+
+        assert_selector "img[src='https://example.com/avatar.jpg']"
+        refute_selector "[data-controller='flat-pack--icon']"
+      end
+
+      def test_initials_win_over_icon
+        render_inline(Component.new(name: "Jane Doe", icon: "photo"))
+
+        assert_selector "span", text: "JD"
+        refute_selector "[data-controller='flat-pack--icon']"
+      end
+
+      def test_named_icon_works_for_square_and_circle
+        %i[circle square].each do |shape|
+          render_inline(Component.new(icon: "photo", shape: shape, size: :lg))
+
+          assert_selector "[data-controller='flat-pack--icon']"
+          assert_includes page.native.to_html, Component::SHAPES.fetch(shape)
+        end
       end
 
       def test_renders_avatar_sizes
