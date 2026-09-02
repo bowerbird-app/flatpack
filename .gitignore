@@ -52,6 +52,12 @@
 # Ignore VS Code files
 /.vscode
 
+# Cursor Cloud Agent skills and plugin rules fetched at Build time by
+# .cursor/fetch-skills.sh. Keep fetch-skills.sh and environment.json tracked;
+# never vendor SKILL.md or *.mdc.
+.cursor/skills/
+.cursor/rules/
+
 # Ignore macOS files
 .DS_Store
 
