@@ -39,6 +39,7 @@ module FlatPack
         alt: nil,
         name: nil,
         initials: nil,
+        icon: nil,
         size: :md,
         shape: :circle,
         status: nil,
@@ -54,6 +55,7 @@ module FlatPack
         @alt = alt || name || "Avatar"
         @name = name
         @initials = initials
+        @icon = icon
         @size = size.to_sym
         @shape = shape.to_sym
         @status = status&.to_sym
@@ -117,6 +119,8 @@ module FlatPack
           render_image
         elsif computed_initials.present?
           render_initials
+        elsif @icon.present?
+          render_named_icon
         else
           render_generic_icon
         end
@@ -152,8 +156,13 @@ module FlatPack
           class: "inline-flex h-full w-full items-center justify-center uppercase font-semibold leading-none")
       end
 
+      def render_named_icon
+        content_tag(:span, class: "inline-flex h-3/5 w-3/5 items-center justify-center opacity-50") do
+          render FlatPack::Shared::IconComponent.new(name: @icon, size: :md, style: "width: 100%; height: 100%")
+        end
+      end
+
       def render_generic_icon
-        # Generic user icon SVG
         content_tag(:svg,
           xmlns: "http://www.w3.org/2000/svg",
           viewBox: "0 0 24 24",

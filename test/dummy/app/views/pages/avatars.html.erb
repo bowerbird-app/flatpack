@@ -295,11 +295,11 @@
     ) %>
   </section>
 
-  <section class="mb-12">
+  <section class="mb-12" id="fallback-types" data-theme="rounded">
     <%= render FlatPack::SectionTitle::Component.new(
       title: "Fallback Types",
       anchor_link: true,
-      subtitle: "Fallback priority is image, then initials from name/alt, then generic icon."
+      subtitle: "Priority is image, then initials, then an icon you pass, then the person glyph."
     ) %>
     <div class="flex items-center gap-4 mb-4">
       <%= render FlatPack::Avatar::Component.new(
@@ -317,6 +317,16 @@
       ) %>
       <%= render FlatPack::Avatar::Component.new(
         size: :lg
+      ) %>
+      <%= render FlatPack::Avatar::Component.new(
+        icon: "photo",
+        size: :lg,
+        shape: :circle
+      ) %>
+      <%= render FlatPack::Avatar::Component.new(
+        icon: "photo",
+        size: :lg,
+        shape: :square
       ) %>
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
@@ -344,10 +354,24 @@
           CODE
         },
         {
-          label: "Generic Icon",
+          label: "Person",
           language: "erb",
           code: <<~CODE
             #{erb_output_open} render FlatPack::Avatar::Component.new(size: :lg) #{erb_tag_close}
+          CODE
+        },
+        {
+          label: "Photo circle",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::Avatar::Component.new(icon: "photo", size: :lg, shape: :circle) #{erb_tag_close}
+          CODE
+        },
+        {
+          label: "Photo square",
+          language: "erb",
+          code: <<~CODE
+            #{erb_output_open} render FlatPack::Avatar::Component.new(icon: "photo", size: :lg, shape: :square) #{erb_tag_close}
           CODE
         }
       ]
