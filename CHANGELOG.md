@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Cloud Agents load tracked [pstack](https://github.com/cursor/plugins/tree/main/pstack/skills) skills from `.cursor/skills/`. The Build-time `.cursor/fetch-skills.sh` hook that pulled Recording Studio skills is gone. `.cursor/environment.json` `install` is a no-op. See [Cursor Cloud Agent skills](docs/cursor-skills.md). After merge, rebuild the Cloud Agent environment Draft off the new commit.
+
 ### Fixed
 
 ## [0.1.144] - 2026-09-02
