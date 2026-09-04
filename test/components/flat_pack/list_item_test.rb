@@ -49,10 +49,11 @@ module FlatPack
         assert_includes page.native.to_html, "flex items-start"
       end
 
-      def test_includes_padding
+      def test_includes_padding_and_corner_radius
         render_inline(Item.new) { "Content" }
 
-        assert_includes page.native.to_html, "py-2 px-3"
+        assert_includes page.native.to_html, "py-3 px-4"
+        assert_includes page.native.to_html, "rounded-[var(--radius-sm)]"
       end
 
       def test_merges_custom_classes

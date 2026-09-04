@@ -16,6 +16,7 @@ Use Avatar in navigation, lists, comments, and profile surfaces where a compact 
 | `alt` | String | `name` or `"Avatar"` | no | `img` alt text. |
 | `name` | String | `nil` | no | Name used for initials fallback and default alt text. |
 | `initials` | String | `nil` | no | Explicit initials fallback text. |
+| `icon` | String, Symbol, nil | `nil` | no | Heroicons v2 name rendered when there is no `src` and no initials, e.g. `"photo"`. Same `icon:` API as Button. Omit to keep the person glyph. |
 | `size` | Symbol | `:md` | no | Size: `:xs`, `:sm`, `:md`, `:lg`, `:xl`, `:"2xl"`; invalid values raise `ArgumentError`. |
 | `shape` | Symbol | `:circle` | no | Shape: `:circle`, `:rounded`, `:square`; invalid values raise `ArgumentError`. |
 | `status` | Symbol | `nil` | no | Status dot: `:online`, `:offline`, `:busy`, `:away`; invalid values raise `ArgumentError`. |
@@ -53,9 +54,17 @@ Disable the automatic tooltip when the avatar is already labelled by nearby cont
 ) %>
 ```
 
+```erb
+<%= render FlatPack::Avatar::Component.new(
+  icon: "photo",
+  size: :md,
+  shape: :square
+) %>
+```
+
 ## Accessibility
 - Provide `alt` for image avatars; if omitted, component falls back to `name` then `"Avatar"`.
-- Initials are computed from `name` or `alt`; icon fallback is used when neither is available.
+- Initials are computed from `name` or `alt`. When those are absent, `icon:` renders that Heroicon. When `icon:` is omitted too, a person glyph is used.
 - Status indicator is decorative and rendered with `aria-hidden="true"`.
 
 ## Dependencies

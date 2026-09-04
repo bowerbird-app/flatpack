@@ -3,10 +3,13 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["sidebar", "panel"]
+  static values = {
+    breakpoint: { type: Number, default: 640 }
+  }
 
   connect() {
     this.mobileView = "sidebar"
-    this.mediaQuery = window.matchMedia("(min-width: 768px)")
+    this.mediaQuery = window.matchMedia(`(min-width: ${this.breakpointValue}px)`)
     this.handleViewportChange = () => this.#syncViewport()
 
     if (this.mediaQuery.addEventListener) {
@@ -31,7 +34,7 @@ export default class extends Controller {
   }
 
   openPanel(event) {
-    if (this.#isDesktop()) {
+    if (this.#isSplit()) {
       return
     }
 
@@ -72,7 +75,7 @@ export default class extends Controller {
       return
     }
 
-    if (this.#isDesktop()) {
+    if (this.#isSplit()) {
       this.sidebarTarget.classList.remove("hidden")
       this.panelTarget.classList.remove("hidden")
       this.panelTarget.classList.add("flex")
@@ -83,7 +86,7 @@ export default class extends Controller {
     }
   }
 
-  #isDesktop() {
+  #isSplit() {
     return this.mediaQuery?.matches
   }
 

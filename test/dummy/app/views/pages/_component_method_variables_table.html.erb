@@ -411,6 +411,8 @@
       method_call: "render FlatPack::Chat::Layout::Component.new(variant: :split) do |layout| ... end",
       variables: [
         { variable: "variant", accepts: ":single, :split", example: "variant: :split" },
+        { variable: "split_breakpoint", accepts: ":sm, :md, :lg", example: "split_breakpoint: :lg" },
+        { variable: "sidebar_width", accepts: "CSS grid track", example: "sidebar_width: \"minmax(12rem, 30%)\"" },
         { variable: "sidebar", accepts: "slot block", example: "layout.sidebar { ... }" },
         { variable: "panel", accepts: "slot block", example: "layout.panel { ... }" }
       ]

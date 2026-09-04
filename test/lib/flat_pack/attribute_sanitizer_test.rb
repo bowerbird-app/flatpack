@@ -173,6 +173,27 @@ module FlatPack
       assert_nil AttributeSanitizer.sanitize_css_font_family("url(https://evil.example/font.woff)")
     end
 
+    test "sanitize_css_grid_track allows supported track sizes" do
+      assert_equal "16rem", AttributeSanitizer.sanitize_css_grid_track("16rem")
+      assert_equal "280px", AttributeSanitizer.sanitize_css_grid_track("280px")
+      assert_equal "auto", AttributeSanitizer.sanitize_css_grid_track("auto")
+      assert_equal "max-content", AttributeSanitizer.sanitize_css_grid_track("max-content")
+      assert_equal "var(--chat-sidebar-width)", AttributeSanitizer.sanitize_css_grid_track("var(--chat-sidebar-width)")
+      assert_equal "minmax(0, 16rem)", AttributeSanitizer.sanitize_css_grid_track("minmax(0, 16rem)")
+      assert_equal "minmax(12rem, 30%)", AttributeSanitizer.sanitize_css_grid_track("minmax(12rem, 30%)")
+      assert_equal "clamp(12rem, 25%, 20rem)", AttributeSanitizer.sanitize_css_grid_track("clamp(12rem, 25%, 20rem)")
+      assert_equal "fit-content(20rem)", AttributeSanitizer.sanitize_css_grid_track("fit-content(20rem)")
+    end
+
+    test "sanitize_css_grid_track rejects unsafe or unsupported values" do
+      assert_nil AttributeSanitizer.sanitize_css_grid_track(nil)
+      assert_nil AttributeSanitizer.sanitize_css_grid_track("")
+      assert_nil AttributeSanitizer.sanitize_css_grid_track("16rem; background: url(https://evil.example/x.png)")
+      assert_nil AttributeSanitizer.sanitize_css_grid_track("expression(alert('xss'))")
+      assert_nil AttributeSanitizer.sanitize_css_grid_track("16rem 1fr")
+      assert_nil AttributeSanitizer.sanitize_css_grid_track("repeat(2, 1fr)")
+    end
+
     test "validate_href! returns sanitized href for safe URLs" do
       url = "https://example.com"
       assert_equal url, AttributeSanitizer.validate_href!(url)
