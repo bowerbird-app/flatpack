@@ -1,0 +1,14 @@
+---
+description: Verify web UI in the running dummy demo before calling the work done
+alwaysApply: true
+---
+
+When you change Flatpack UI (a ViewComponent, layout, styling, routing, client state, or rendered data), verify in the browser before you call it done.
+
+Open the dummy app. Use the changed feature the way a person would: click, type, submit, navigate. A screenshot of a render is not verification. Confirm the behavior.
+
+Point the browser at the dummy demo for the component you changed (`/demo/...` in test/dummy). Capture before and after of that demo. Check every page and route that shares the state, data, or components you touched. Hunt regressions. Cover empty, error, and flag variants, not only the happy path. If layout changed, check desktop and mobile.
+
+If something is wrong, fix it and verify again. If you have no browser tools, use the closest substitute (tests, curl, render scripts) and say what you could not verify.
+
+After UI work, screenshot the running dummy demo, not desktop chrome. Confirm CSS and JS actually loaded. Tailwind and Flatpack often are not rebuilt. Broken CSS means you are not done. Give a copy-able direct link to each screenshot as a fallback.

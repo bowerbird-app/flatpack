@@ -1,0 +1,8 @@
+---
+description: Keep repo docs a usable picture of how the system works
+alwaysApply: true
+---
+
+When you work in a repo, update the docs that explain how it works.
+
+Write for the next person. Keep the docs a usable picture of the system. Do not turn them into a recap of this PR.
