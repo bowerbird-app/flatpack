@@ -1,0 +1,6 @@
+ts	phase	decision	why	evidence	result
+2026-09-04T04:06:39Z	harness	map Tailwind radius names onto kit --radius-* tokens via a remapper and auditor	smallest change that stops colliding with Tailwind scale names without inventing a new radius API	lib/flat_pack/radius_language.rb	open
+2026-09-04T04:11:56Z	baseline	captured dummy demo screenshots before rewriting radius classes	need a visual baseline so we can tell if the token mapping jumps the theme	/opt/cursor/artifacts/radius-before	27 pngs light dark ocean
+2026-09-04T04:16:38Z	rewrite	rewrote 48 kit files from Tailwind radius scale names to rounded-[var(--radius-*)]	preserve computed size, stop colliding names, auditor encodes the contract	scripts/rewrite_radius_language.rb	48 files, remapper idempotent 0
+2026-09-04T04:16:38Z	verify	before/after dummy screenshots match on radius	19 of 27 pngs byte-identical, remaining under 0.001 percent channel abs from capture noise	/opt/cursor/artifacts/radius-after	theme not broken
+2026-09-04T04:19:22Z	tests	rails test 2257 runs 0 failures and rubocop clean	prove the remapper and auditor against the real suite, not a proxy	bundle exec rails test, bundle exec rubocop	2257 runs, 0 failures, 393 files 0 offenses

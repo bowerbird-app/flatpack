@@ -110,7 +110,7 @@ module FlatPack
           render_inline(Component.new)
 
           assert_selector ".flat-pack-comments-composer-input"
-          assert_includes page.native.to_html, "rounded-xl"
+          assert_includes page.native.to_html, "rounded-[var(--radius-xl)]"
         end
 
         def test_adds_bubble_only_hook_class_for_bubble_menu_variant

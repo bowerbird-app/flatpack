@@ -91,7 +91,7 @@ module FlatPack
 
       def container_attributes
         attrs = merge_attributes(
-          class: "overflow-x-auto rounded-lg border border-[var(--table-border-color)]"
+          class: "overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--table-border-color)]"
         )
 
         attrs[:data] ||= {}

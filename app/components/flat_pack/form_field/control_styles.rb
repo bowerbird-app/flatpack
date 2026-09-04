@@ -24,7 +24,7 @@ module FlatPack
         base_classes = [
           control_class,
           "w-full",
-          "rounded-md",
+          "rounded-[var(--radius-md)]",
           "border",
           ("appearance-none" if appearance_none),
           "bg-[var(--surface-background-color)]",

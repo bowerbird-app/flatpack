@@ -412,18 +412,18 @@ module FlatPack
       end
 
       def dropdown_classes
-        "absolute z-10 mt-1 w-full hidden rounded-md border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] shadow-lg"
+        "absolute z-10 mt-1 w-full hidden rounded-[var(--radius-md)] border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] shadow-lg"
       end
 
       def search_input_classes
-        "w-full px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-sm border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] text-[var(--surface-content-color)] focus:outline-none focus:ring-1 focus:ring-inset focus:ring-ring"
+        "w-full px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-[var(--radius-sm)] border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] text-[var(--surface-content-color)] focus:outline-none focus:ring-1 focus:ring-inset focus:ring-ring"
       end
 
       def custom_option_classes(selected, disabled)
         base = [
           "px-[var(--form-control-padding)] py-[var(--form-control-padding)]",
           "text-sm",
-          "rounded-sm",
+          "rounded-[var(--radius-sm)]",
           "transition-colors duration-base"
         ]
 

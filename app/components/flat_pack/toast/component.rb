@@ -185,7 +185,7 @@ module FlatPack
         classes(
           "flex-shrink-0",
           "transition-colors",
-          "rounded-sm",
+          "rounded-[var(--radius-sm)]",
           "p-1",
           "focus-visible:outline-none",
           "focus-visible:ring-2 focus-visible:ring-inset",

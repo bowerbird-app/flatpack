@@ -13,6 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.146] - 2026-09-04
+
+### Changed
+- Kit components and Stimulus controllers now use `rounded-[var(--radius-*)]` instead of Tailwind radius scale names (`rounded-md`, `rounded-lg`, `rounded-xl`, `rounded-2xl`). The four kit tokens stay `--radius-sm` (`0.75rem`), `--radius-md` (`1rem`), `--radius-lg` (`1.5rem`), `--radius-xl` (`2rem`). `rounded-2xl` maps to `--radius-md` (both `1rem`). Pills keep `rounded-full`. Segmented groups keep `rounded-none`.
+- Rich text and content editor CSS fallbacks now use the kit radius values (`1rem` / `0.75rem`) instead of Tailwind's `0.375rem` / `0.25rem`.
+- Added `FlatPack::RadiusLanguageAuditor`, `bin/rake flat_pack:audit_radius_language`, and `ruby scripts/rewrite_radius_language.rb`.
+- Bumped the gem version to `0.1.146`.
+
+### Upgrade notes
+- No host app API changes. Hosts that pass `class: "rounded-xl"` (or another Tailwind radius class) as an override still work. Rebuild host Tailwind so the new `rounded-[var(--radius-*)]` utilities are generated. If a host copied kit class names such as `rounded-lg` into its own markup, those classes are unchanged; only the gem's components moved to tokenized classes. Visual size should match the previous kit because `:root` `--radius-*` already overrode Tailwind's scale in most hosts.
+
 ## [0.1.145] - 2026-09-04
 
 ### Added

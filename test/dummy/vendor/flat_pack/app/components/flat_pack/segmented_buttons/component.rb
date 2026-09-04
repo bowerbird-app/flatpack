@@ -35,11 +35,11 @@ module FlatPack
       def group_classes
         classes(
           "inline-flex",
-          "rounded-md",
+          "rounded-[var(--radius-md)]",
           "shadow-sm",
           "[&>*]:rounded-none",
-          "[&>*:first-child]:rounded-l-md",
-          "[&>*:last-child]:rounded-r-md",
+          "[&>*:first-child]:rounded-l-[var(--radius-md)]",
+          "[&>*:last-child]:rounded-r-[var(--radius-md)]",
           "[&>*]:border-r-0",
           "[&>*:last-child]:border-r",
           "[&>*]:shadow-none"

@@ -40,7 +40,7 @@
     background-color: var(--surface-muted-background-color);
     border: 1px solid var(--surface-border-color);
     border-bottom: none;
-    border-radius: calc(var(--radius-md, 0.375rem) - 1px) calc(var(--radius-md, 0.375rem) - 1px) 0 0;
+    border-radius: calc(var(--radius-md, 1rem) - 1px) calc(var(--radius-md, 1rem) - 1px) 0 0;
     min-height: 2.25rem;
   }
 
@@ -52,7 +52,7 @@
     min-width: 1.75rem;
     height: 1.75rem;
     border: 1px solid transparent;
-    border-radius: var(--radius-sm, 0.25rem);
+    border-radius: var(--radius-sm, 0.75rem);
     background: transparent;
     color: var(--surface-content-color);
     cursor: pointer;
@@ -99,14 +99,14 @@
   .flat-pack-richtext-editor {
     background-color: var(--surface-background-color);
     border: 1px solid var(--surface-border-color);
-    border-radius: 0 0 calc(var(--radius-md, 0.375rem) - 1px) calc(var(--radius-md, 0.375rem) - 1px);
+    border-radius: 0 0 calc(var(--radius-md, 1rem) - 1px) calc(var(--radius-md, 1rem) - 1px);
     transition: border-color 0.15s;
     overflow: hidden;
   }
 
   /* When there is no toolbar, round all corners */
   .flat-pack-richtext-wrapper:not(:has(.flat-pack-richtext-toolbar)) .flat-pack-richtext-editor {
-    border-radius: calc(var(--radius-md, 0.375rem) - 1px);
+    border-radius: calc(var(--radius-md, 1rem) - 1px);
   }
 
   /* Bubble-only comments composer mode removes editor chrome and inner padding */
@@ -129,7 +129,7 @@
   }
 
   .flat-pack-comments-composer-input .flat-pack-richtext-toolbar {
-    border-radius: calc(var(--radius-md, 0.375rem) - 1px);
+    border-radius: calc(var(--radius-md, 1rem) - 1px);
     border: 1px solid var(--surface-border-color);
     margin-bottom: 0.5rem;
   }
@@ -235,7 +235,7 @@
   .flat-pack-richtext-editor .ProseMirror code {
     background-color: var(--surface-muted-background-color);
     border: 1px solid var(--surface-border-color);
-    border-radius: var(--radius-sm, 0.25rem);
+    border-radius: var(--radius-sm, 0.75rem);
     padding: 0.1em 0.35em;
     font-size: 0.8125em;
     font-family: ui-monospace, "Cascadia Code", Menlo, monospace;
@@ -245,7 +245,7 @@
   .flat-pack-richtext-editor .ProseMirror pre {
     background-color: var(--surface-muted-background-color);
     border: 1px solid var(--surface-border-color);
-    border-radius: var(--radius-md, 0.375rem);
+    border-radius: var(--radius-md, 1rem);
     padding: 0.875rem 1rem;
     overflow-x: auto;
     font-size: 0.8125rem;
@@ -293,7 +293,7 @@
   .flat-pack-richtext-editor .ProseMirror img {
     max-width: 100%;
     height: auto;
-    border-radius: var(--radius-md, 0.375rem);
+    border-radius: var(--radius-md, 1rem);
     display: block;
     margin: 0.5rem 0;
   }
@@ -381,7 +381,7 @@
   /* Mention */
   .flat-pack-richtext-mention {
     background-color: var(--color-secondary);
-    border-radius: var(--radius-sm, 0.25rem);
+    border-radius: var(--radius-sm, 0.75rem);
     color: var(--surface-content-color);
     font-weight: 600;
     padding: 0.05em 0.3em;
@@ -402,13 +402,13 @@
   .flat-pack-richtext-focus {
     outline: 2px solid color-mix(in oklab, var(--color-ring) 40%, transparent);
     outline-offset: 2px;
-    border-radius: var(--radius-sm, 0.25rem);
+    border-radius: var(--radius-sm, 0.75rem);
   }
 
   /* Details/Summary */
   .flat-pack-richtext-editor .ProseMirror details {
     border: 1px solid var(--surface-border-color);
-    border-radius: var(--radius-md, 0.375rem);
+    border-radius: var(--radius-md, 1rem);
     padding: 0.5rem 0.75rem;
     margin-bottom: 0.75em;
   }
@@ -429,7 +429,7 @@
     padding: 4px 6px;
     background-color: var(--surface-background-color);
     border: 1px solid var(--surface-border-color);
-    border-radius: var(--radius-md, 0.375rem);
+    border-radius: var(--radius-md, 1rem);
     box-shadow: 0 4px 12px oklch(0 0 0 / 0.12), 0 1px 4px oklch(0 0 0 / 0.08);
     z-index: 50;
   }
@@ -442,7 +442,7 @@
     min-width: 1.625rem;
     height: 1.625rem;
     border: 1px solid transparent;
-    border-radius: var(--radius-sm, 0.25rem);
+    border-radius: var(--radius-sm, 0.75rem);
     background: transparent;
     color: var(--surface-content-color);
     cursor: pointer;
@@ -479,7 +479,7 @@
     padding: 4px;
     background-color: var(--surface-background-color);
     border: 1px solid var(--surface-border-color);
-    border-radius: var(--radius-md, 0.375rem);
+    border-radius: var(--radius-md, 1rem);
     box-shadow: 0 4px 12px oklch(0 0 0 / 0.12);
     z-index: 40;
     min-width: 10rem;
@@ -490,7 +490,7 @@
     text-align: left;
     background: transparent;
     border: none;
-    border-radius: var(--radius-sm, 0.25rem);
+    border-radius: var(--radius-sm, 0.75rem);
     color: var(--surface-content-color);
     font-size: 0.8125rem;
     cursor: pointer;
@@ -512,7 +512,7 @@
     padding: 6px 8px;
     background-color: var(--surface-background-color);
     border: 1px solid var(--surface-border-color);
-    border-radius: var(--radius-md, 0.375rem);
+    border-radius: var(--radius-md, 1rem);
     box-shadow: 0 4px 16px oklch(0 0 0 / 0.14), 0 1px 4px oklch(0 0 0 / 0.08);
     min-width: 20rem;
   }
@@ -523,7 +523,7 @@
     font-size: 0.8125rem;
     line-height: 1.4;
     border: 1px solid var(--surface-border-color);
-    border-radius: var(--radius-sm, 0.25rem);
+    border-radius: var(--radius-sm, 0.75rem);
     background-color: var(--surface-background-color);
     color: var(--surface-content-color);
     outline: none;
@@ -544,7 +544,7 @@
     color: var(--color-primary-text, #fff);
     background-color: var(--color-primary);
     border: 1px solid var(--color-primary);
-    border-radius: var(--radius-sm, 0.25rem);
+    border-radius: var(--radius-sm, 0.75rem);
     cursor: pointer;
     white-space: nowrap;
     transition: background-color 0.1s, border-color 0.1s;
@@ -564,7 +564,7 @@
     color: var(--surface-content-color);
     background-color: transparent;
     border: 1px solid var(--surface-border-color);
-    border-radius: var(--radius-sm, 0.25rem);
+    border-radius: var(--radius-sm, 0.75rem);
     cursor: pointer;
     white-space: nowrap;
     transition: background-color 0.1s;

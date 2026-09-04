@@ -644,12 +644,12 @@ export default class extends Controller {
     const selected = this.selectedValues.has(item.value)
     const disabled = item.disabled === true
     const optionClasses = disabled
-      ? "px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-sm transition-colors duration-base opacity-50 cursor-not-allowed text-[var(--surface-muted-content-color)]"
+      ? "px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-[var(--radius-sm)] transition-colors duration-base opacity-50 cursor-not-allowed text-[var(--surface-muted-content-color)]"
       : selected
       ? (this.multipleValue
-        ? "px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-sm transition-colors duration-base hover:bg-[var(--surface-muted-background-color)] cursor-pointer text-[var(--surface-content-color)]"
-        : "px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-sm transition-colors duration-base bg-[var(--color-primary)] text-white cursor-pointer")
-      : "px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-sm transition-colors duration-base hover:bg-[var(--surface-muted-background-color)] cursor-pointer text-[var(--surface-content-color)]"
+        ? "px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-[var(--radius-sm)] transition-colors duration-base hover:bg-[var(--surface-muted-background-color)] cursor-pointer text-[var(--surface-content-color)]"
+        : "px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-[var(--radius-sm)] transition-colors duration-base bg-[var(--color-primary)] text-white cursor-pointer")
+      : "px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-[var(--radius-sm)] transition-colors duration-base hover:bg-[var(--surface-muted-background-color)] cursor-pointer text-[var(--surface-content-color)]"
 
     return `<div role="option" class="${optionClasses}" data-action="click->flat-pack--select#selectOption" data-value="${value}" data-label="${label}" data-disabled="${disabled}" aria-selected="${selected}">${label}</div>`
   }

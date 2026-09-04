@@ -170,7 +170,7 @@ module FlatPack
 
         def textarea_shell_classes
           classes(
-            "flat-pack-comments-composer-input relative overflow-hidden rounded-xl border border-[var(--comments-composer-border-color)] bg-[var(--comments-composer-background-color)] shadow-sm transition-all duration-base",
+            "flat-pack-comments-composer-input relative overflow-hidden rounded-[var(--radius-xl)] border border-[var(--comments-composer-border-color)] bg-[var(--comments-composer-background-color)] shadow-sm transition-all duration-base",
             "focus-within:border-[var(--comments-composer-focus-border-color)] focus-within:ring-2 focus-within:ring-inset focus-within:ring-[var(--comments-composer-focus-ring-color)]",
             rich_text_with_toolbar? ? "flat-pack-comments-richtext--has-toolbar" : nil,
             bubble_only_rich_text? ? "flat-pack-comments-richtext--bubble-only" : nil,
@@ -191,7 +191,7 @@ module FlatPack
 
           content_tag(:button,
             type: "submit",
-            class: "absolute bottom-4 right-4 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--comments-composer-submit-background-color)] text-[var(--comments-composer-submit-text-color)] shadow-lg transition-colors duration-base hover:bg-[var(--comments-composer-submit-hover-background-color)]",
+            class: "absolute bottom-4 right-4 inline-flex h-10 w-10 items-center justify-center rounded-[var(--radius-xl)] bg-[var(--comments-composer-submit-background-color)] text-[var(--comments-composer-submit-text-color)] shadow-lg transition-colors duration-base hover:bg-[var(--comments-composer-submit-hover-background-color)]",
             disabled: @disabled,
             form: @form,
             "aria-label": @submit_label) do

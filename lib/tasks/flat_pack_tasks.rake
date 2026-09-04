@@ -47,6 +47,24 @@ namespace :flat_pack do
     abort "FlatPack token audit failed."
   end
 
+  desc "Verify FlatPack kit classes use radius tokens instead of Tailwind scale names"
+  task audit_radius_language: :environment do
+    result = FlatPack::RadiusLanguageAuditor.new.call
+
+    puts "FlatPack radius language audit"
+
+    if result.success?
+      puts "PASS: kit components and javascript use rounded-[var(--radius-*)]"
+      next
+    end
+
+    puts "FAIL: leftover Tailwind radius scale utilities:"
+    result.violations.each do |violation|
+      puts "  #{violation.path}: #{violation.utilities.join(", ")}"
+    end
+    abort "FlatPack radius language audit failed."
+  end
+
   desc "Display FlatPack information"
   task :info do
     puts "FlatPack UI Component Library"

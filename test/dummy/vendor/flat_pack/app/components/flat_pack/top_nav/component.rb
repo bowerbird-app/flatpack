@@ -23,7 +23,7 @@ module FlatPack
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "hidden" "relative" "shrink-0" "items-center" "ml-auto" "absolute" "right-0" "top-full" "z-20" "mt-2" "flex-col" "items-stretch" "gap-3" "p-3" "shadow-lg" "rounded-lg"
+      # "hidden" "relative" "shrink-0" "items-center" "ml-auto" "absolute" "right-0" "top-full" "z-20" "mt-2" "flex-col" "items-stretch" "gap-3" "p-3" "shadow-lg" "rounded-[var(--radius-lg)]"
       # "bg-[var(--surface-background-color)]" "border-[var(--surface-border-color)]" "w-[min(20rem,calc(100vw-2rem))]"
       # The Stimulus controller adds this class to the toggle while the menu is open.
       # It lives here so host apps that only scan `app/components` still build it:
@@ -167,7 +167,7 @@ module FlatPack
           "absolute right-0 top-full z-20 mt-2",
           "w-[min(20rem,calc(100vw-2rem))]",
           "flex flex-col items-stretch gap-3",
-          "rounded-lg border border-[var(--surface-border-color)]",
+          "rounded-[var(--radius-lg)] border border-[var(--surface-border-color)]",
           "bg-[var(--surface-background-color)] p-3 shadow-lg"
         ].join(" ")
       end

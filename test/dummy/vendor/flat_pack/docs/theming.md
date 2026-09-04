@@ -60,7 +60,7 @@ Do **not** put FlatPack tokens back into the Tailwind entry. A second `--color-p
 | Host needs a different primary than FlatPack | Keep the host color as `--my-app-primary` (or similar). Leave `--color-primary` for FlatPack, or set it only if you intend FlatPack to match. |
 | Host already uses `--color-primary` for something else | Rename the **host** token. Do not rename FlatPack's. |
 
-`--brand-hue` / `--brand-chroma` / `--brand-lightness` are FlatPack-only and do not overlap Tailwind defaults. `--radius-md` and `--shadow-md` use the same names as Tailwind utilities; FlatPack's default radii are the larger rounded scale (`1rem` for `--radius-md`).
+`--brand-hue` / `--brand-chroma` / `--brand-lightness` are FlatPack-only and do not overlap Tailwind defaults. `--radius-md` and `--shadow-md` use the same names as Tailwind utilities. FlatPack's default radii are the larger rounded scale (`1rem` for `--radius-md`). Kit class names use `rounded-[var(--radius-*)]` so they do not collide with Tailwind's `rounded-md` scale.
 
 ## Overview
 
@@ -169,6 +169,10 @@ Use stack gap tokens on parent layout containers (for example, form stacks) to c
 --radius-xl: 2rem
 ```
 
+Kit surfaces use `rounded-[var(--radius-sm)]` through `rounded-[var(--radius-xl)]`, or a component alias such as `--button-border-radius`. Do not use Tailwind's `rounded-sm` / `rounded-md` / `rounded-lg` / `rounded-xl` / `rounded-2xl` in kit components. Those names share `--radius-*` with FlatPack and hide which scale is in play. Keep `rounded-full` for pills and avatars, and `rounded-none` for segmented groups. Host apps may still pass a Tailwind radius class as an override (`class: "rounded-xl"`). `bin/rake flat_pack:audit_radius_language` fails if a kit file adds a scale name back. Re-run `ruby scripts/rewrite_radius_language.rb` to map leftovers.
+
+`--chip-border-radius` (`0.5rem`) and `--checkbox-radius` (`0.125rem`) stay as named component tokens off the four-step scale.
+
 ### Shadows
 ```css
 --shadow-sm
@@ -223,6 +227,7 @@ See [Dark Mode](dark_mode.md). Built-in variants (`dark`, `ocean`) only override
 
 ```bash
 bin/rake flat_pack:audit_tokens
+bin/rake flat_pack:audit_radius_language
 ```
 
-Fails if any `var(--*)` / Tailwind `bg-(--*)` reference in the gem is missing from `variables.css`.
+`audit_tokens` fails if any `var(--*)` / Tailwind `bg-(--*)` reference in the gem is missing from `variables.css`. `audit_radius_language` fails if kit Ruby or JavaScript still uses Tailwind radius scale names (`rounded-md`, `rounded-lg`, and the rest) instead of `rounded-[var(--radius-*)]`.

@@ -8,6 +8,8 @@ require "flat_pack/install_verifier"
 require "flat_pack/rich_text_sanitizer"
 require "flat_pack/tiptap"
 require "flat_pack/token_auditor"
+require "flat_pack/radius_language"
+require "flat_pack/radius_language_auditor"
 
 module FlatPack
   HEROICON_VARIANTS = %i[outline solid mini micro].freeze

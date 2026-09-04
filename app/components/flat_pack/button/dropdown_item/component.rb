@@ -91,7 +91,7 @@ module FlatPack
             "px-2 py-1.5",
             "text-sm",
             "text-left",
-            "rounded-sm",
+            "rounded-[var(--radius-sm)]",
             "transition-colors duration-base",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
           ]

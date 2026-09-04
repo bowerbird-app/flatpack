@@ -181,7 +181,7 @@ module FlatPack
 
       def card_classes
         classes(
-          "rounded-lg",
+          "rounded-[var(--radius-lg)]",
           overflow_class,
           "h-full",
           "flex",

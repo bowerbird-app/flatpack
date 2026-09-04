@@ -78,7 +78,7 @@ module FlatPack
             "h-full",
             "min-h-0",
             "border border-[var(--chat-border-color)]",
-            "rounded-lg",
+            "rounded-[var(--radius-lg)]",
             "overflow-hidden",
             "bg-[var(--chat-background-color)]",
             VARIANTS.fetch(@variant)

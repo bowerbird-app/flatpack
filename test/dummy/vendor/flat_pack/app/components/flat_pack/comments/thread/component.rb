@@ -16,7 +16,7 @@ module FlatPack
 
         # Tailwind CSS scanning requires these classes to be present as string literals.
         # DO NOT REMOVE - These duplicates ensure CSS generation:
-        # "space-y-10" "space-y-6" "rounded-xl" "bg-[var(--surface-background-color)]"
+        # "space-y-10" "space-y-6" "rounded-[var(--radius-xl)]" "bg-[var(--surface-background-color)]"
         VARIANTS = {
           default: "space-y-10",
           compact: "space-y-6"
@@ -85,7 +85,7 @@ module FlatPack
 
         def thread_classes
           classes(
-            "w-full max-w-3xl rounded-xl bg-[var(--surface-background-color)] p-10 shadow-2xl"
+            "w-full max-w-3xl rounded-[var(--radius-xl)] bg-[var(--surface-background-color)] p-10 shadow-2xl"
           )
         end
 

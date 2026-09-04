@@ -160,7 +160,7 @@ module FlatPack
         series = [{name: "Sales", data: [10, 20, 30]}]
         render_inline(Component.new(series: series))
 
-        assert_selector "div.rounded-lg"
+        assert_includes page.native.to_html, "rounded-[var(--radius-lg)]"
       end
 
       def test_renders_chart_without_card

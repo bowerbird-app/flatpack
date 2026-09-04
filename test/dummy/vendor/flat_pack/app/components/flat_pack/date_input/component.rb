@@ -251,7 +251,7 @@ module FlatPack
           "z-50",
           "w-auto",
           "overflow-hidden",
-          "rounded-lg",
+          "rounded-[var(--radius-lg)]",
           "border",
           "border-[var(--surface-border-color)]",
           "bg-[var(--surface-background-color)]",
@@ -287,7 +287,7 @@ module FlatPack
       end
 
       def picker_nav_button_classes
-        "rounded-md border border-[var(--surface-border-color)] px-2 py-1 text-xs text-[var(--surface-content-color)] transition-colors duration-base hover:bg-[var(--surface-subtle-background-color)] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-ring"
+        "rounded-[var(--radius-md)] border border-[var(--surface-border-color)] px-2 py-1 text-xs text-[var(--surface-content-color)] transition-colors duration-base hover:bg-[var(--surface-subtle-background-color)] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-ring"
       end
 
       def picker_trigger_classes

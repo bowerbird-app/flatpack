@@ -479,7 +479,7 @@ export default class extends Controller {
         "justify-center",
         "text-center",
         "leading-none",
-        "rounded-md",
+        "rounded-[var(--radius-md)]",
         "text-sm",
         "transition-colors",
         "duration-base",
@@ -497,9 +497,9 @@ export default class extends Controller {
         )
 
         if (isRangeStart && !isRangeEnd) {
-          classes.push("rounded-r-none", "rounded-l-md")
+          classes.push("rounded-r-none", "rounded-l-[var(--radius-md)]")
         } else if (isRangeEnd && !isRangeStart) {
-          classes.push("rounded-l-none", "rounded-r-md")
+          classes.push("rounded-l-none", "rounded-r-[var(--radius-md)]")
         }
       } else if (inRange) {
         classes.push(

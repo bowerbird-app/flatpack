@@ -412,7 +412,7 @@ module FlatPack
                   )
                 end
               end,
-              content_tag(:figure, class: "inline-flex max-w-full flex-col overflow-hidden rounded-xl border border-[var(--modal-border-color)] bg-[var(--modal-surface-color)]") do
+              content_tag(:figure, class: "inline-flex max-w-full flex-col overflow-hidden rounded-[var(--radius-xl)] border border-[var(--modal-border-color)] bg-[var(--modal-surface-color)]") do
                 safe_join([
                   tag.img(
                     src: "",
@@ -465,7 +465,7 @@ module FlatPack
       def render_thumb(slide, index)
         content_tag(:button,
           type: "button",
-          class: "h-16 w-16 shrink-0 cursor-pointer overflow-hidden rounded-md border border-[var(--carousel-thumb-border-color)] transition-opacity hover:opacity-100 hover:ring-2 hover:ring-inset hover:ring-primary",
+          class: "h-16 w-16 shrink-0 cursor-pointer overflow-hidden rounded-[var(--radius-md)] border border-[var(--carousel-thumb-border-color)] transition-opacity hover:opacity-100 hover:ring-2 hover:ring-inset hover:ring-primary",
           aria: {
             label: "Show slide #{index + 1}",
             current: (index == @initial_index).to_s
@@ -496,7 +496,7 @@ module FlatPack
       def render_overlay_caption
         content_tag(:div,
           "",
-          class: "absolute inset-x-3 bottom-12 z-20 rounded-md bg-[var(--carousel-caption-overlay-background-color)] px-3 py-2 text-sm text-[var(--carousel-caption-overlay-text-color)]",
+          class: "absolute inset-x-3 bottom-12 z-20 rounded-[var(--radius-md)] bg-[var(--carousel-caption-overlay-background-color)] px-3 py-2 text-sm text-[var(--carousel-caption-overlay-text-color)]",
           data: {flat_pack__carousel_target: "caption"})
       end
 
@@ -539,7 +539,7 @@ module FlatPack
         return logo_slider_viewport_classes if @variant == :logo_slider
 
         classes(
-          "flat-pack-carousel__viewport group relative overflow-hidden rounded-lg border border-[var(--carousel-viewport-border-color)] bg-[var(--carousel-viewport-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
+          "flat-pack-carousel__viewport group relative overflow-hidden rounded-[var(--radius-lg)] border border-[var(--carousel-viewport-border-color)] bg-[var(--carousel-viewport-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
           @touch_swipe ? "cursor-grab select-none" : nil
         )
       end

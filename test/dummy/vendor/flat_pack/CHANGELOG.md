@@ -13,6 +13,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.146] - 2026-09-04
+
+### Changed
+- Kit components and Stimulus controllers now use `rounded-[var(--radius-*)]` instead of Tailwind radius scale names (`rounded-md`, `rounded-lg`, `rounded-xl`, `rounded-2xl`). The four kit tokens stay `--radius-sm` (`0.75rem`), `--radius-md` (`1rem`), `--radius-lg` (`1.5rem`), `--radius-xl` (`2rem`). `rounded-2xl` maps to `--radius-md` (both `1rem`). Pills keep `rounded-full`. Segmented groups keep `rounded-none`.
+- Rich text and content editor CSS fallbacks now use the kit radius values (`1rem` / `0.75rem`) instead of Tailwind's `0.375rem` / `0.25rem`.
+- Added `FlatPack::RadiusLanguageAuditor`, `bin/rake flat_pack:audit_radius_language`, and `ruby scripts/rewrite_radius_language.rb`.
+- Bumped the gem version to `0.1.146`.
+
+### Upgrade notes
+- No host app API changes. Hosts that pass `class: "rounded-xl"` (or another Tailwind radius class) as an override still work. Rebuild host Tailwind so the new `rounded-[var(--radius-*)]` utilities are generated. If a host copied kit class names such as `rounded-lg` into its own markup, those classes are unchanged; only the gem's components moved to tokenized classes. Visual size should match the previous kit because `:root` `--radius-*` already overrode Tailwind's scale in most hosts.
+
+## [0.1.145] - 2026-09-04
+
+### Added
+- Tracked [pstack](https://github.com/cursor/plugins/tree/main/pstack/skills) under `.cursor/skills/` for Cloud Agents.
+- Tracked Flatpack craft skills: third-party `frontend-design`, `design-dna`, `make-interfaces-feel-better`, `motion-design`, `review-animations`, `visual-qa-testing`, `web-design-guidelines`, plus `flatpack-design` and `flatpack-micro-interactions`. `flatpack-design` decides what lands. Design DNA `visual_effects` and Framer/GSAP/Lottie stay muzzled. See [Cursor Cloud Agent skills](docs/cursor-skills.md).
+
+### Changed
+- Removed the Build-time `.cursor/fetch-skills.sh` hook that pulled Recording Studio skills. `.cursor/environment.json` `install` is a no-op. `.cursor/skills/` is tracked. `.cursor/rules/` stays gitignored.
+- Bumped the gem version to `0.1.145`.
+
+### Upgrade notes
+- No host app API changes. Product UI is unchanged. After merge, rebuild the Cloud Agent environment Draft off `v0.1.145` so checkout skills load. A snapshot taken while skills were gitignored will not see them.
+
+## [0.1.144] - 2026-09-02
+
+### Added
+- `FlatPack::Avatar::Component` accepts optional `icon:` (same Heroicons name as Button). When there is no `src` and no initials, that icon renders instead of the person glyph. Omit `icon:` to keep today's person fallback. Image and initials still win.
+- Dummy `/demo/avatars` Fallback Types shows a photo-icon empty on circle and square (`data-theme="rounded"`), next to the unchanged person glyph.
+- Cloud Agent Build hook `.cursor/fetch-skills.sh` plus `.cursor/environment.json`. Fetched skills and plugin rules stay gitignored.
+
+### Changed
+- Bumped the gem version to `0.1.144`.
+
+### Upgrade notes
+- No host app changes required. To show a site mark instead of a person on an empty avatar, pass `icon: "photo"` (or another existing Heroicon name). Users profile empty initials are unchanged if the host still passes `name` or `initials`.
+
 ## [0.1.143] - 2026-08-29
 
 ### Fixed

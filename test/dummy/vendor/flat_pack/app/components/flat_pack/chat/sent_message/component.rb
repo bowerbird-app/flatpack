@@ -73,7 +73,7 @@ module FlatPack
         def render_revealable_message
           content_tag(
             :div,
-            class: "relative w-full overflow-hidden rounded-2xl",
+            class: "relative w-full overflow-hidden rounded-[var(--radius-md)]",
             data: {
               controller: "flat-pack--chat-message-actions",
               style: :danger,
@@ -211,7 +211,7 @@ module FlatPack
           classes(
             "relative",
             "px-4 py-2",
-            "rounded-2xl",
+            "rounded-[var(--radius-md)]",
             "max-w-[75%] sm:max-w-[500px]",
             "shadow-sm",
             "bg-[var(--chat-message-outgoing-background-color)] text-[var(--chat-message-outgoing-text-color)]",
