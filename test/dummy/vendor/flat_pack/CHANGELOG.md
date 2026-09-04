@@ -13,6 +13,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.146] - 2026-09-04
+
+### Added
+- `FlatPack::Chat::Layout::Component` accepts `split_breakpoint:` (`:sm`, `:md`, `:lg`) to choose the width where a `:split` layout stops stacking, and `sidebar_width:` to size the sidebar column with any single CSS grid track (length, keyword, CSS variable, `minmax()`, `clamp()`, `fit-content()`).
+- `FlatPack::AttributeSanitizer.sanitize_css_grid_track` validates a grid track before it is interpolated into a style attribute.
+- Dummy `/demo/chat/layout` gained a "Sizing the split" section showing `split_breakpoint: :lg` with `sidebar_width: "minmax(12rem, 30%)"`.
+
+### Changed
+- `Chat::Layout` `:split` is now fluid instead of a fixed `280px` sidebar from `md`. Columns are `minmax(0, 16rem)` plus `minmax(0, 1fr)`, both carry `min-w-0`, and the split starts at `sm` (640px). A half-width or tiled desktop window (roughly 720–960px) stays a scaled two-column desk with a readable thread and an unclipped composer, rather than squeezing against the clipped root or collapsing to list-only.
+- `chat_layout_controller.js` reads a `breakpoint` value instead of hardcoding `768px`, so the stacked list-then-panel behaviour switches at the same width as the CSS.
+- A `:single` layout with a sidebar slot keeps its bottom divider at every width instead of flipping to a right divider at `md`, which never matched the stacked single column.
+- Bumped the gem version to `0.1.146`.
+
+### Upgrade notes
+- No changes required for hosts that render `Chat::Layout` with defaults; the split simply scales instead of collapsing. Recording Studio Messages desks in the core default layout do not need to fork the grid.
+- To keep the old stacking point, pass `split_breakpoint: :md`. There is no way to restore the fixed `280px` track, because it is what broke half-width windows; use `sidebar_width: "16rem"` if you want a fixed sidebar back.
+- Drop host `style:` overrides that only existed to widen the old track, such as `style: "grid-template-columns: minmax(0, 320px) minmax(0, 1fr);"`, and pass `sidebar_width: "minmax(0, 20rem)"` instead. `Chat::Layout` now owns `grid-template-columns` and appends any `style:` you pass after its own declaration.
+
+## [0.1.145] - 2026-09-04
+
+### Added
+- Tracked [pstack](https://github.com/cursor/plugins/tree/main/pstack/skills) under `.cursor/skills/` for Cloud Agents.
+- Tracked Flatpack craft skills: third-party `frontend-design`, `design-dna`, `make-interfaces-feel-better`, `motion-design`, `review-animations`, `visual-qa-testing`, `web-design-guidelines`, plus `flatpack-design` and `flatpack-micro-interactions`. `flatpack-design` decides what lands. Design DNA `visual_effects` and Framer/GSAP/Lottie stay muzzled. See [Cursor Cloud Agent skills](docs/cursor-skills.md).
+
+### Changed
+- Removed the Build-time `.cursor/fetch-skills.sh` hook that pulled Recording Studio skills. `.cursor/environment.json` `install` is a no-op. `.cursor/skills/` is tracked. `.cursor/rules/` stays gitignored.
+- Bumped the gem version to `0.1.145`.
+
+### Upgrade notes
+- No host app API changes. Product UI is unchanged. After merge, rebuild the Cloud Agent environment Draft off `v0.1.145` so checkout skills load. A snapshot taken while skills were gitignored will not see them.
+
+## [0.1.144] - 2026-09-02
+
+### Added
+- `FlatPack::Avatar::Component` accepts optional `icon:` (same Heroicons name as Button). When there is no `src` and no initials, that icon renders instead of the person glyph. Omit `icon:` to keep today's person fallback. Image and initials still win.
+- Dummy `/demo/avatars` Fallback Types shows a photo-icon empty on circle and square (`data-theme="rounded"`), next to the unchanged person glyph.
+- Cloud Agent Build hook `.cursor/fetch-skills.sh` plus `.cursor/environment.json`. Fetched skills and plugin rules stay gitignored.
+
+### Changed
+- Bumped the gem version to `0.1.144`.
+
+### Upgrade notes
+- No host app changes required. To show a site mark instead of a person on an empty avatar, pass `icon: "photo"` (or another existing Heroicon name). Users profile empty initials are unchanged if the host still passes `name` or `initials`.
+
 ## [0.1.143] - 2026-08-29
 
 ### Fixed

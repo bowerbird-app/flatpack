@@ -98,4 +98,67 @@
       CODE
     ) %>
   </section>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Sizing the split",
+      anchor_link: true,
+      subtitle: "The sidebar track is fluid, so a half-width window keeps both columns. Widen the stacking point with split_breakpoint."
+    ) %>
+
+    <div class="mb-4 mt-6 h-[560px] overflow-hidden rounded-lg bg-(--surface-background-color)">
+      <%= render FlatPack::Chat::Layout::Component.new(
+        variant: :split,
+        split_breakpoint: :lg,
+        sidebar_width: "minmax(12rem, 30%)"
+      ) do |layout| %>
+        <% layout.sidebar do %>
+          <div class="p-4">
+            <h3 class="mb-3 text-sm font-semibold text-(--surface-content-color)">Conversations</h3>
+            <div class="space-y-2">
+              <button type="button" class="block w-full rounded-lg bg-(--surface-muted-background-color) px-3 py-2 text-left text-sm">Product Launch</button>
+              <button type="button" class="block w-full rounded-lg px-3 py-2 text-left text-sm text-(--surface-muted-content-color)">Support Team</button>
+            </div>
+          </div>
+        <% end %>
+
+        <% layout.panel do %>
+          <%= render FlatPack::Chat::Panel::Component.new do |panel| %>
+            <% panel.header do %>
+              <div class="p-4 text-sm font-semibold">Product Launch</div>
+            <% end %>
+            <% panel.messages do %>
+              <div class="flex-1 p-4 text-sm text-(--surface-muted-content-color)">
+                This split stacks below 1024px and gives the sidebar 30% of the width, never less than 12rem.
+              </div>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      title: "ERB",
+      language: "erb",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Chat::Layout::Component.new(
+          variant: :split,
+          split_breakpoint: :lg,
+          sidebar_width: "minmax(12rem, 30%)"
+        ) do |layout| %&gt;
+          &lt;% layout.sidebar do %&gt;
+            &lt;div class="p-4"&gt;Conversations&lt;/div&gt;
+          &lt;% end %&gt;
+
+          &lt;% layout.panel do %&gt;
+            &lt;%= render FlatPack::Chat::Panel::Component.new do |panel| %&gt;
+              &lt;% panel.messages do %&gt;
+                &lt;div class="flex-1 p-4 text-sm"&gt;Thread content sits here.&lt;/div&gt;
+              &lt;% end %&gt;
+            &lt;% end %&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
+  </section>
 </div>
