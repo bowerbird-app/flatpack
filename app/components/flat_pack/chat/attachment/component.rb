@@ -4,9 +4,6 @@ module FlatPack
   module Chat
     module Attachment
       class Component < FlatPack::BaseComponent
-        # Tailwind CSS scanning requires these classes to be present as string literals.
-        # DO NOT REMOVE - These duplicates ensure CSS generation:
-        # "border" "border-[var(--chat-attachment-border-color)]" "rounded-[var(--radius-lg)]" "p-3" "bg-[var(--chat-attachment-background-color)]"
         TYPES = {
           file: "file",
           image: "image"

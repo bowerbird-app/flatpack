@@ -3,9 +3,6 @@
 module FlatPack
   module Skeleton
     class Component < FlatPack::BaseComponent
-      # Tailwind CSS scanning requires these classes to be present as string literals.
-      # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "h-4" "h-6" "h-8" "h-10" "h-12" "w-full" "w-3/4" "w-1/2" "w-1/4" "rounded" "rounded-[var(--radius-md)]" "rounded-[var(--radius-lg)]" "rounded-full"
       VARIANTS = {
         text: "h-4 w-full rounded",
         title: "h-8 w-3/4 rounded",

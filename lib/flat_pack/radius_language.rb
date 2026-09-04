@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 module FlatPack
-  # Maps Tailwind radius scale names onto FlatPack --radius-* tokens.
-  # Kit surfaces use rounded-[var(--radius-*)], not rounded-md, because the
-  # names collide and the kit scale is larger than Tailwind's defaults.
   module RadiusLanguage
     SCALE = {
       "sm" => "--radius-sm",

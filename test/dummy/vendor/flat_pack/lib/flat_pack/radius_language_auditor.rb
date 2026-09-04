@@ -4,8 +4,6 @@ require "pathname"
 require "flat_pack/radius_language"
 
 module FlatPack
-  # Fails when kit Ruby/JS still uses Tailwind radius scale utilities
-  # (rounded-md, rounded-lg, …) instead of rounded-[var(--radius-*)].
   class RadiusLanguageAuditor
     SCAN_GLOBS = [
       "app/components/**/*.{rb,erb}",

@@ -14,9 +14,6 @@ module FlatPack
         undef_method :with_comment, :with_comment_content
         undef_method :with_footer, :with_footer_content
 
-        # Tailwind CSS scanning requires these classes to be present as string literals.
-        # DO NOT REMOVE - These duplicates ensure CSS generation:
-        # "space-y-10" "space-y-6" "rounded-[var(--radius-xl)]" "bg-[var(--surface-background-color)]"
         VARIANTS = {
           default: "space-y-10",
           compact: "space-y-6"
