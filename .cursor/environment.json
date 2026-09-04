@@ -1,4 +1,4 @@
 {
   "name": "flatpack",
-  "install": "bash .cursor/fetch-skills.sh"
+  "install": "true"
 }
