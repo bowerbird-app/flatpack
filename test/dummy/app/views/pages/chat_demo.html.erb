@@ -13,8 +13,9 @@
 
     <%= render FlatPack::Chat::Layout::Component.new(
       variant: :split,
+      sidebar_width: "clamp(14rem, 34%, 20rem)",
       class: "mb-4 mt-6 overflow-hidden rounded-lg border",
-      style: "height: 620px; border-color: var(--surface-border-color); background-color: var(--surface-background-color); grid-template-columns: minmax(0, 320px) minmax(0, 1fr);"
+      style: "height: 620px; border-color: var(--surface-border-color); background-color: var(--surface-background-color);"
     ) do |layout| %>
       <% layout.sidebar do %>
         <div id="chat-groups" class="p-3">

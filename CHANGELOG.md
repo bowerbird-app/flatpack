@@ -13,18 +13,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-## [0.1.148] - 2026-09-04
+## [0.1.149] - 2026-09-04
 
 ### Changed
 - Under `prefers-reduced-motion: reduce`, `--duration-fast`, `--duration-base`, `--duration-slow`, and `--skeleton-shimmer-duration` collapse to `0ms`. Overlay Stimulus controllers share `controllers/flat_pack/reduced_motion` so hide delays match those tokens.
 - Modal, toast, alert, chip, badge, and dropdown skip scale and slide when motion is reduced. Toast and alert remove immediately. Button loading spinner uses `motion-reduce:animate-none`. Carousel autoplay already skipped.
-- Bumped the gem version to `0.1.148`.
+- Bumped the gem version to `0.1.149`.
 
 ### Fixed
 - `--duration-fast`, `--duration-base`, and `--duration-slow` are defined on `:root` (150ms / 200ms / 300ms), not only inside `@theme`. `var(--duration-*)` and the reduced-motion helper now resolve when `flat_pack/variables` is loaded as a normal stylesheet.
 
 ### Upgrade notes
 - No host app API changes. Rebuild host Tailwind so `duration-[var(--duration-*)]` and `motion-reduce:*` utilities are generated. Colour hovers that still use Tailwind's built-in `duration-200` keep a short fade. Kit surfaces that move now follow `--duration-*`.
+
+## [0.1.148] - 2026-09-04
+
+### Added
+- `FlatPack::Chat::Layout::Component` accepts `split_breakpoint:` (`:sm`, `:md`, `:lg`) to choose the width where a `:split` layout stops stacking, and `sidebar_width:` to size the sidebar column with any single CSS grid track (length, keyword, CSS variable, `minmax()`, `clamp()`, `fit-content()`).
+- `FlatPack::AttributeSanitizer.sanitize_css_grid_track` validates a grid track before it is interpolated into a style attribute.
+- Dummy `/demo/chat/layout` gained a "Sizing the split" section showing `split_breakpoint: :lg` with `sidebar_width: "minmax(12rem, 30%)"`.
+
+### Changed
+- `Chat::Layout` `:split` is now fluid instead of a fixed `280px` sidebar from `md`. Columns are `clamp(12rem, 30%, 16rem)` plus `minmax(0, 1fr)`, both carry `min-w-0`, and the split starts at `sm` (640px). A half-width or tiled desktop window (roughly 720–960px) stays a scaled two-column desk with a readable thread and an unclipped composer, rather than squeezing against the clipped root or collapsing to list-only. The sidebar is proportional so it yields on a narrow desk, which a plain `16rem` track does not: it holds its width and makes the thread absorb every reduction.
+- `chat_layout_controller.js` reads a `breakpoint` value instead of hardcoding `768px`, so the stacked list-then-panel behaviour switches at the same width as the CSS.
+- A `:single` layout with a sidebar slot keeps its bottom divider at every width instead of flipping to a right divider at `md`, which never matched the stacked single column.
+- `Chat::InboxRow` inherits `List::Item` padding of `py-3 px-4` (12px / 16px), up from `py-2 px-3`. Every chat inbox that uses `InboxRow` picks this up, including `/demo/chat/demo`. Other `List::Item` rows use the same padding.
+- `List::Item` rows, including `Chat::InboxRow`, now use `rounded-[var(--radius-sm)]` so the hover and active highlight has a small corner radius instead of a square block.
+
+### Upgrade notes
+- No changes required for hosts that render `Chat::Layout` with defaults; the split simply scales instead of collapsing. Recording Studio Messages desks in the core default layout do not need to fork the grid.
+- To keep the old stacking point, pass `split_breakpoint: :md`. There is no way to restore the fixed `280px` track, because it is what broke half-width windows; pass `sidebar_width: "16rem"` if you want a fixed sidebar back, and expect the thread to absorb every reduction when the desk is narrow.
+- `List::Item` padding is now `py-3 px-4`. Chat inbox rows and any other `List::Item` grow by 4px on each side. No host code change is required.
 
 ## [0.1.147] - 2026-09-04
 

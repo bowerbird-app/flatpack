@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static values = {
-    activeClass: {type: String, default: "bg-[var(--list-item-active-background-color)]"}
+    activeClass: {type: String, default: "rounded-[var(--radius-sm)] bg-[var(--list-item-active-background-color)]"}
   }
 
   activate(event) {

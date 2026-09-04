@@ -29,6 +29,31 @@ module FlatPack
     /ix
     CSS_FONT_FAMILY_PATTERN = /\A#{CSS_FONT_FAMILY_TOKEN.source}(?:\s*,\s*#{CSS_FONT_FAMILY_TOKEN.source})*\z/ix
 
+    # Safe CSS grid track values for style interpolation, so a caller can size a
+    # column without opening the style attribute to arbitrary declarations.
+    CSS_GRID_TRACK_LENGTH = /
+      (?:
+        [+-]?\d+(?:\.\d+)?(?:px|rem|em|ch|ex|vw|vh|vmin|vmax|%|fr)?
+        |
+        auto|min-content|max-content
+        |
+        var\(--[a-z0-9-]+\)
+      )
+    /ix
+    CSS_GRID_TRACK_PATTERN = /
+      \A
+      (?:
+        #{CSS_GRID_TRACK_LENGTH.source}
+        |
+        minmax\(\s*#{CSS_GRID_TRACK_LENGTH.source}\s*,\s*#{CSS_GRID_TRACK_LENGTH.source}\s*\)
+        |
+        clamp\(\s*#{CSS_GRID_TRACK_LENGTH.source}\s*,\s*#{CSS_GRID_TRACK_LENGTH.source}\s*,\s*#{CSS_GRID_TRACK_LENGTH.source}\s*\)
+        |
+        fit-content\(\s*#{CSS_GRID_TRACK_LENGTH.source}\s*\)
+      )
+      \z
+    /ix
+
     # List of dangerous HTML attributes that should be filtered out
     DANGEROUS_ATTRIBUTES = %w[
       onclick onload onerror onmouseover onmouseout onmousemove
@@ -132,6 +157,23 @@ module FlatPack
         return nil if font.empty?
 
         return font if CSS_FONT_FAMILY_PATTERN.match?(font)
+
+        nil
+      end
+
+      # Validates a single CSS grid track that is safe to interpolate into a
+      # style attribute. Accepts lengths, keywords, CSS variables, and the
+      # minmax/clamp/fit-content sizing functions.
+      #
+      # @param value [String] The CSS grid track to validate
+      # @return [String, nil] The sanitized track if valid, nil otherwise
+      def sanitize_css_grid_track(value)
+        return nil if value.nil?
+
+        track = value.to_s.strip
+        return nil if track.empty?
+
+        return track if CSS_GRID_TRACK_PATTERN.match?(track)
 
         nil
       end

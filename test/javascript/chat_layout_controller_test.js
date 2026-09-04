@@ -38,7 +38,7 @@ function buildClassList(initialClasses = []) {
   }
 }
 
-function buildController({ desktop = false, legacyMediaQuery = false } = {}) {
+function buildController({ desktop = false, legacyMediaQuery = false, breakpoint = 640 } = {}) {
   const listeners = []
   const mediaQuery = {
     matches: desktop,
@@ -76,9 +76,10 @@ function buildController({ desktop = false, legacyMediaQuery = false } = {}) {
     }
   }
 
+  const mediaQueries = []
   const window = {
     matchMedia(query) {
-      assert.equal(query, '(min-width: 768px)')
+      mediaQueries.push(query)
       return mediaQuery
     },
     requestAnimationFrame(callback) {
@@ -88,13 +89,37 @@ function buildController({ desktop = false, legacyMediaQuery = false } = {}) {
 
   const ChatLayoutController = loadChatLayoutController({ window })
   const controller = new ChatLayoutController()
+  controller.breakpointValue = breakpoint
   controller.sidebarTarget = sidebar
   controller.panelTarget = panel
   controller.hasSidebarTarget = true
   controller.hasPanelTarget = true
 
-  return { controller, listeners, mediaQuery, messages, panel, sidebar, sidebarTrigger }
+  return { controller, listeners, mediaQueries, mediaQuery, messages, panel, sidebar, sidebarTrigger }
 }
+
+test('declares a stimulus default for the split breakpoint', () => {
+  const ChatLayoutController = loadChatLayoutController()
+
+  assert.equal(ChatLayoutController.values.breakpoint.type.name, 'Number')
+  assert.equal(ChatLayoutController.values.breakpoint.default, 640)
+})
+
+test('connect watches the default split breakpoint', () => {
+  const { controller, mediaQueries } = buildController()
+
+  controller.connect()
+
+  assert.deepEqual(mediaQueries, ['(min-width: 640px)'])
+})
+
+test('connect watches the breakpoint value the component passes in', () => {
+  const { controller, mediaQueries } = buildController({ breakpoint: 1024 })
+
+  controller.connect()
+
+  assert.deepEqual(mediaQueries, ['(min-width: 1024px)'])
+})
 
 test('connect defaults mobile split layouts to the sidebar view', () => {
   const { controller, panel, sidebar } = buildController()
