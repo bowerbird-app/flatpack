@@ -141,6 +141,15 @@ module FlatPack
 
         refute_selector "input[onclick]"
       end
+
+      def test_thumb_and_track_use_standard_easing
+        render_inline(Component.new(name: "notifications"))
+
+        html = page.native.to_html
+        assert_includes html, "ease-[var(--easing-standard)]"
+        assert_includes html, "duration-[var(--duration-base)]"
+        refute_includes html, "ease-in-out"
+      end
     end
   end
 end

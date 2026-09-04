@@ -81,6 +81,7 @@ Use `menu_item` and `menu_divider` as the slot builders (without a `with_` prefi
 - For icon-only triggers, pass a descriptive `aria-label` via `trigger_attributes`.
 - Menu uses `role="menu"`; items use `role="menuitem"`; divider uses `role="separator"`.
 - Keyboard behavior supports `Escape`, arrow navigation, `Home`, and `End`.
+- Menu origin follows placement. Enter/exit uses `--duration-base` with `--easing-enter` / `--easing-exit` and scale-95, not scale-0. A close in flight can reverse.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).

@@ -104,7 +104,7 @@ module FlatPack
       end
 
       def bar_fill_classes
-        "h-full #{STYLES.fetch(@style)} transition-[width] duration-[var(--duration-slow)] ease-in-out rounded-full"
+        "h-full #{STYLES.fetch(@style)} transition-[width] duration-[var(--duration-slow)] ease-[var(--easing-standard)] rounded-full"
       end
 
       def percentage

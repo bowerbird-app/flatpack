@@ -7,7 +7,7 @@ FlatPack uses CSS variables for theming, allowing you to customize the appearanc
 ```text
 Brand primitives (--brand-hue, --brand-chroma, --brand-lightness)
     ↓
-Semantic tokens (--color-*, --surface-*, --radius-*, --shadow-*, --duration-*)
+Semantic tokens (--color-*, --surface-*, --radius-*, --shadow-*, --duration-*, --easing-*)
     ↓
 Component tokens (--button-*, --sidebar-*, …) — defined once as var(--semantic)
     ↓
@@ -215,6 +215,17 @@ Kit CSS defines `.fp-hit-target` and `.fp-hit-target-inline`. Hosts get those cl
 
 `--duration-*` are set on `:root`, not only inside `@theme`. Hosts load `flat_pack/variables` as a normal stylesheet, and browsers skip `@theme`. Under `prefers-reduced-motion: reduce`, `--duration-fast`, `--duration-base`, `--duration-slow`, and `--skeleton-shimmer-duration` become `0ms`. Overlay controllers read those tokens through `controllers/flat_pack/reduced_motion` so hide delays match. Spatial motion (scale, slide, fan) is skipped; colour and opacity may still change. Tailwind's built-in `duration-200` / `duration-300` utilities are not the kit lever. Kit surfaces that move should use `duration-[var(--duration-fast)]`, `duration-[var(--duration-base)]`, or `duration-[var(--duration-slow)]`.
 
+### Easing
+```css
+--easing-standard: cubic-bezier(0.2, 0, 0, 1)  /* in-place: hover, toggle, width */
+--easing-enter: cubic-bezier(0.05, 0.7, 0.1, 1)  /* decelerate: overlay enter */
+--easing-exit: cubic-bezier(0.3, 0, 1, 1)  /* accelerate: overlay exit */
+```
+
+`--easing-*` are set on `:root` as well as `@theme`, for the same reason as durations. Kit overlays use `ease-[var(--easing-enter)]` / `ease-[var(--easing-exit)]`, or `motionTransition()` in Stimulus. In-place motion (switch, progress, sidebar) uses `--easing-standard`. There is no bounce: charcoal / rounded is Corporate/Premium, not Playful.
+
+Use `--easing-enter` for modal, toast, dropdown, popover, and tooltip entrance. Use `--easing-exit` for their leave. Modal and toast enter on `--duration-slow` and exit on `--duration-base`. Popover and tooltip stay on `--duration-base` both ways, with a few pixels of offset from the trigger. Form invalid is colour only; do not shake the field.
+
 ## Component Variable Usage
 
 Component tokens such as `--button-primary-background-color` map to semantic tokens (`var(--color-primary)`). You normally change `--brand-hue` / `--brand-chroma` / `--brand-lightness` or `--color-primary` instead of editing component tokens.
@@ -224,11 +235,13 @@ Component tokens such as `--button-primary-background-color` map to semantic tok
 - Radius: `--radius-md`
 - Shadow: `--button-shadow`, `--button-shadow-hover`, `--button-shadow-active`
 - Duration: `--duration-fast` for colour, border, and shadow
+- Easing: `--easing-standard`
 
 ### Input Components (Text, Email, Password, Phone, Search, URL, TextArea)
 - Colors: `--surface-content-color`, `--surface-background-color`, `--surface-muted-content-color`, `--surface-border-color`, `--color-ring`, `--color-error` (invalid chrome; aliases `--color-danger-background-color`)
 - Radius: `--radius-md`
 - Duration: `--duration-base`
+- Easing: `--easing-standard` (invalid chrome is colour only; no shake)
 
 ### Checkbox
 - Colors: `--surface-background-color`, `--surface-border-color`, `--color-primary`, `--color-ring`

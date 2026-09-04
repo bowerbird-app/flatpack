@@ -1,6 +1,6 @@
 // FlatPack Toast Stimulus Controller
 import { Controller } from "@hotwired/stimulus"
-import { prefersReducedMotion, motionDuration } from "controllers/flat_pack/reduced_motion"
+import { prefersReducedMotion, motionDuration, motionTransition } from "controllers/flat_pack/reduced_motion"
 
 export default class extends Controller {
   static values = {
@@ -37,7 +37,10 @@ export default class extends Controller {
     this.element.offsetHeight
 
     requestAnimationFrame(() => {
-      this.element.style.transition = "transform var(--duration-slow), opacity var(--duration-slow)"
+      this.element.style.transition = motionTransition(
+        ["transform", "opacity"],
+        { duration: "slow", easing: "enter" }
+      )
       this.element.style.transform = "translateX(0)"
       this.element.style.opacity = "1"
     })
@@ -55,7 +58,10 @@ export default class extends Controller {
       return
     }
 
-    this.element.style.transition = "transform var(--duration-base), opacity var(--duration-base)"
+    this.element.style.transition = motionTransition(
+      ["transform", "opacity"],
+      { duration: "base", easing: "exit" }
+    )
     this.element.style.transform = "translateX(100%)"
     this.element.style.opacity = "0"
 

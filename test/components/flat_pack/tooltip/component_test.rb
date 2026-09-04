@@ -91,6 +91,17 @@ module FlatPack
         assert_selector "div.hidden"
       end
 
+      def test_tooltip_uses_enter_easing_and_transform_transition
+        render_inline(Component.new(text: "Tip")) do
+          "Trigger"
+        end
+
+        html = page.native.to_html
+        assert_includes html, "transition-[opacity,transform]"
+        assert_includes html, "ease-[var(--easing-enter)]"
+        assert_includes html, "duration-[var(--duration-base)]"
+      end
+
       def test_raises_error_for_invalid_placement
         assert_raises(ArgumentError) do
           Component.new(text: "Tip", placement: :invalid)

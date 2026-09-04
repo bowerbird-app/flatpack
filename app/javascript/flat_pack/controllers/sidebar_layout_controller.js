@@ -13,8 +13,8 @@ export default class extends Controller {
     this.collapsed = false
     this.mobileOpen = false
     this.isMobile = window.innerWidth < 768
-    this.transitionDuration = "300ms"
-    this.transitionEasing = "cubic-bezier(0.4, 0, 0.2, 1)"
+    this.transitionDuration = "var(--duration-slow)"
+    this.transitionEasing = "var(--easing-standard)"
     this.lastAnchorPath = null
     this.lastAnchorOffset = null
 

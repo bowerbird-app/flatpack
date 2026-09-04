@@ -8,7 +8,7 @@ function loadReducedMotion(matchMedia) {
   const filePath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'controllers', 'reduced_motion.js')
   const source = fs.readFileSync(filePath, 'utf8')
   const transformedSource = source.replaceAll('export function ', 'function ') + `
-module.exports = { prefersReducedMotion, motionDuration }
+module.exports = { prefersReducedMotion, motionDuration, motionTransition, overlayOrigin, overlayEnterOffset }
 `
 
   const context = {
@@ -52,4 +52,30 @@ test('motionDuration is 0 when motion is reduced', () => {
   assert.equal(motionDuration('fast'), 0)
   assert.equal(motionDuration('base'), 0)
   assert.equal(motionDuration('slow'), 0)
+})
+
+test('motionTransition builds duration and easing custom properties', () => {
+  const { motionTransition } = loadReducedMotion(media(false))
+
+  assert.equal(
+    motionTransition('opacity', { duration: 'slow', easing: 'enter' }),
+    'opacity var(--duration-slow) var(--easing-enter)'
+  )
+  assert.equal(
+    motionTransition(['opacity', 'transform'], { duration: 'base', easing: 'exit' }),
+    'opacity var(--duration-base) var(--easing-exit), transform var(--duration-base) var(--easing-exit)'
+  )
+})
+
+test('overlay origin and enter offset follow placement', () => {
+  const { overlayOrigin, overlayEnterOffset } = loadReducedMotion(media(false))
+
+  assert.equal(overlayOrigin('top'), 'bottom center')
+  assert.equal(overlayOrigin('bottom'), 'top center')
+  assert.equal(overlayOrigin('left'), 'right center')
+  assert.equal(overlayOrigin('right'), 'left center')
+  assert.equal(overlayEnterOffset('top'), 'translateY(4px)')
+  assert.equal(overlayEnterOffset('bottom'), 'translateY(-4px)')
+  assert.equal(overlayEnterOffset('left'), 'translateX(4px)')
+  assert.equal(overlayEnterOffset('right'), 'translateX(-4px)')
 })

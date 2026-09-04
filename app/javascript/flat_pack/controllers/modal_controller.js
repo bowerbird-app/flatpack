@@ -1,6 +1,6 @@
 // FlatPack Modal Stimulus Controller
 import { Controller } from "@hotwired/stimulus"
-import { prefersReducedMotion, motionDuration } from "controllers/flat_pack/reduced_motion"
+import { prefersReducedMotion, motionDuration, motionTransition } from "controllers/flat_pack/reduced_motion"
 
 export default class extends Controller {
   static targets = ["dialog"]
@@ -11,6 +11,8 @@ export default class extends Controller {
 
   connect() {
     this.previousActiveElement = null
+    this.hideTimeout = null
+    this.closing = false
     this.handleDocumentTriggerClick = this.handleDocumentTriggerClick.bind(this)
     document.addEventListener("click", this.handleDocumentTriggerClick)
 
@@ -21,6 +23,7 @@ export default class extends Controller {
 
   disconnect() {
     document.removeEventListener("click", this.handleDocumentTriggerClick)
+    this.clearHideTimeout()
 
     // Restore scroll if modal was open when disconnected
     if (this.element.classList.contains("flex")) {
@@ -29,26 +32,25 @@ export default class extends Controller {
     }
   }
 
-  // Open modal
+  // Open modal. Interruptible: a close in flight reverses from the current frame.
   open() {
-    if (!this.element.classList.contains("hidden")) return
+    const wasClosing = this.closing
+    this.clearHideTimeout()
+    this.closing = false
 
-    // Store the currently focused element
+    if (!this.element.classList.contains("hidden") && !wasClosing) return
+
     if (!this.previousActiveElement) {
       this.previousActiveElement = document.activeElement
     }
 
-    // Prevent body scroll
     this.preventBodyScroll()
-
-    // Show modal with fade-in animation
     this.element.classList.remove("hidden")
     this.element.classList.add("flex")
     this.element.setAttribute("aria-hidden", "false")
-
-    // Trigger reflow for transition
     this.element.offsetHeight
 
+    this.applyEnterMotion()
     this.element.style.opacity = "1"
 
     requestAnimationFrame(() => {
@@ -58,14 +60,16 @@ export default class extends Controller {
       this.dialogTarget.style.transform = prefersReducedMotion() ? "none" : "scale(1)"
     })
 
-    // Focus first focusable element or dialog itself
     setTimeout(() => this.trapFocus(), 100)
   }
 
-  // Close modal
+  // Close modal. Exit is shorter than enter and uses the accelerate easing.
   close() {
-    if (this.element.classList.contains("hidden")) return
+    if (this.element.classList.contains("hidden") || this.closing) return
 
+    this.closing = true
+    this.clearHideTimeout()
+    this.applyExitMotion()
     this.element.style.opacity = "0"
     this.restoreBodyScroll()
 
@@ -76,17 +80,18 @@ export default class extends Controller {
       }
     }
 
-    setTimeout(() => {
+    this.hideTimeout = setTimeout(() => {
+      this.hideTimeout = null
+      this.closing = false
       this.element.classList.remove("flex")
       this.element.classList.add("hidden")
       this.element.setAttribute("aria-hidden", "true")
       this.restoreFocus()
-    }, motionDuration("slow"))
+    }, motionDuration("base"))
   }
 
-  // Toggle modal state
   toggle() {
-    if (this.element.classList.contains("hidden")) {
+    if (this.element.classList.contains("hidden") || this.closing) {
       this.open()
     } else {
       this.close()
@@ -104,27 +109,22 @@ export default class extends Controller {
     this.open()
   }
 
-  // Handle backdrop click
   clickBackdrop(event) {
     if (!this.closeOnBackdropValue) return
-    
-    // Only close if clicking directly on backdrop, not bubbled from dialog
+
     if (event.target === event.currentTarget) {
       this.close()
     }
   }
 
-  // Prevent body scroll when modal is open
   preventBodyScroll() {
     this.originalOverflow = document.body.style.overflow
     this.originalPaddingRight = document.body.style.paddingRight
     const lockCount = Number(document.body.dataset.flatPackModalLockCount || "0")
-    
+
     if (lockCount === 0) {
-      // Get scrollbar width
       const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
 
-      // Add padding to prevent layout shift
       if (scrollbarWidth > 0) {
         document.body.style.paddingRight = `${scrollbarWidth}px`
       }
@@ -135,7 +135,6 @@ export default class extends Controller {
     document.body.dataset.flatPackModalLockCount = String(lockCount + 1)
   }
 
-  // Restore body scroll
   restoreBodyScroll() {
     const lockCount = Number(document.body.dataset.flatPackModalLockCount || "0")
 
@@ -159,7 +158,6 @@ export default class extends Controller {
     }
   }
 
-  // Restore focus to previous element
   restoreFocus() {
     if (this.previousActiveElement && typeof this.previousActiveElement.focus === "function") {
       this.previousActiveElement.focus()
@@ -167,7 +165,6 @@ export default class extends Controller {
     }
   }
 
-  // Focus trap - focus first focusable element
   trapFocus() {
     if (!this.hasDialogTarget) return
 
@@ -182,11 +179,9 @@ export default class extends Controller {
     }
   }
 
-  // Handle keyboard navigation within modal (basic focus trap)
   handleKeydown(event) {
     if (!this.hasDialogTarget) return
-    
-    // Tab key for focus management
+
     if (event.key === "Tab") {
       const focusableElements = Array.from(
         this.dialogTarget.querySelectorAll(
@@ -199,16 +194,40 @@ export default class extends Controller {
       const firstElement = focusableElements[0]
       const lastElement = focusableElements[focusableElements.length - 1]
 
-      // Shift + Tab on first element - wrap to last
       if (event.shiftKey && document.activeElement === firstElement) {
         event.preventDefault()
         lastElement.focus()
-      }
-      // Tab on last element - wrap to first
-      else if (!event.shiftKey && document.activeElement === lastElement) {
+      } else if (!event.shiftKey && document.activeElement === lastElement) {
         event.preventDefault()
         firstElement.focus()
       }
     }
+  }
+
+  applyEnterMotion() {
+    this.element.style.transition = motionTransition("opacity", { duration: "slow", easing: "enter" })
+    if (!this.hasDialogTarget) return
+
+    this.dialogTarget.style.transition = motionTransition(
+      ["opacity", "transform"],
+      { duration: "slow", easing: "enter" }
+    )
+  }
+
+  applyExitMotion() {
+    this.element.style.transition = motionTransition("opacity", { duration: "base", easing: "exit" })
+    if (!this.hasDialogTarget) return
+
+    this.dialogTarget.style.transition = motionTransition(
+      ["opacity", "transform"],
+      { duration: "base", easing: "exit" }
+    )
+  }
+
+  clearHideTimeout() {
+    if (!this.hideTimeout) return
+
+    clearTimeout(this.hideTimeout)
+    this.hideTimeout = null
   }
 }

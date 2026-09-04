@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-import { motionDuration } from "controllers/flat_pack/reduced_motion"
+import { motionDuration, motionTransition } from "controllers/flat_pack/reduced_motion"
 
 export default class extends Controller {
   static targets = ["panel", "button", "chevron"]
@@ -159,11 +159,11 @@ export default class extends Controller {
 
   enableTransitions() {
     if (this.hasPanelTarget) {
-      this.panelTarget.style.transition = "max-height var(--duration-base)"
+      this.panelTarget.style.transition = motionTransition("max-height", { duration: "base", easing: "standard" })
     }
 
     if (this.hasChevronTarget) {
-      this.chevronTarget.style.transition = "transform var(--duration-base)"
+      this.chevronTarget.style.transition = motionTransition("transform", { duration: "base", easing: "standard" })
     }
   }
 }

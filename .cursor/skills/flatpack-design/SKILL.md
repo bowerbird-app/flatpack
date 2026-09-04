@@ -37,7 +37,7 @@ Forbid implementing DNA `visual_effects` (WebGL, particles, shaders, Canvas, scr
 
 Advise timing, easing, and choreography only. Implement with Flatpack CSS and token transitions. Do not default to Framer, GSAP, or Lottie.
 
-Today the kit has `--duration-fast` (150ms), `--duration-base` (200ms), `--duration-slow` (300ms), and `--transition-*` aliases. Prefer `--duration-*` in new code. Add easing tokens in a Flatpack PR if the kit needs them. Do not sprinkle keyframes in a host app.
+Today the kit has `--duration-fast` (150ms), `--duration-base` (200ms), `--duration-slow` (300ms), `--easing-standard` / `--easing-enter` / `--easing-exit`, and `--transition-*` aliases. Prefer `--duration-*` and `--easing-*` in new code. Do not sprinkle keyframes in a host app.
 
 ## Taste bar
 

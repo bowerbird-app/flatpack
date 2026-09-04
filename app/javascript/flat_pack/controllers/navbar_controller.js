@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-import { motionDuration } from "controllers/flat_pack/reduced_motion"
+import { motionDuration, motionTransition } from "controllers/flat_pack/reduced_motion"
 
 export default class extends Controller {
   static targets = [
@@ -209,23 +209,23 @@ export default class extends Controller {
     
     // Fade in
     requestAnimationFrame(() => {
-      this.overlay.style.transition = "opacity 300ms"
+      this.overlay.style.transition = motionTransition("opacity", { duration: "slow", easing: "enter" })
       this.overlay.style.opacity = "1"
     })
   }
 
   removeOverlay() {
     if (!this.overlay) return
-    
-    // Fade out
+
+    this.overlay.style.transition = motionTransition("opacity", { duration: "base", easing: "exit" })
     this.overlay.style.opacity = "0"
-    
+
     setTimeout(() => {
       if (this.overlay && this.overlay.parentNode) {
         this.overlay.parentNode.removeChild(this.overlay)
       }
       this.overlay = null
-    }, motionDuration("slow"))
+    }, motionDuration("base"))
   }
 
   saveState() {

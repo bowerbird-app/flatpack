@@ -1,6 +1,6 @@
 // FlatPack Table Stimulus Controller
 import { Controller } from "@hotwired/stimulus"
-import { prefersReducedMotion, motionDuration } from "controllers/flat_pack/reduced_motion"
+import { prefersReducedMotion, motionDuration, motionTransition } from "controllers/flat_pack/reduced_motion"
 
 export default class extends Controller {
   static targets = ["row", "selectAll", "checkbox"]
@@ -68,7 +68,10 @@ export default class extends Controller {
 
     row.style.height = `${height}px`
     row.style.overflow = "hidden"
-    row.style.transition = "height var(--duration-slow), opacity var(--duration-slow)"
+    row.style.transition = motionTransition(
+      ["height", "opacity"],
+      { duration: "slow", easing: "exit" }
+    )
 
     row.offsetHeight
 

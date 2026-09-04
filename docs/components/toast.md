@@ -38,6 +38,7 @@ None.
 - Uses `role="status"` with polite live-region settings.
 - Dismiss button includes `aria-label="Dismiss"` when shown.
 - Under `prefers-reduced-motion: reduce`, the toast does not slide from off-screen and is removed immediately on dismiss.
+- Enter slides from the stack edge on `--duration-slow` / `--easing-enter`. Exit uses `--duration-base` / `--easing-exit`.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
