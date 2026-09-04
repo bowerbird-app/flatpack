@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Tracked Flatpack craft skills under `.cursor/skills/`: third-party `frontend-design`, `design-dna`, `make-interfaces-feel-better`, `motion-design`, `review-animations`, `visual-qa-testing`, `web-design-guidelines`, plus `flatpack-design` and `flatpack-micro-interactions`. `flatpack-design` decides what lands. Design DNA `visual_effects` and Framer/GSAP/Lottie stay muzzled. See [Cursor Cloud Agent skills](docs/cursor-skills.md).
+
 ### Changed
 
 - Cloud Agents load tracked [pstack](https://github.com/cursor/plugins/tree/main/pstack/skills) skills from `.cursor/skills/`. The Build-time `.cursor/fetch-skills.sh` hook that pulled Recording Studio skills is gone. `.cursor/environment.json` `install` is a no-op. See [Cursor Cloud Agent skills](docs/cursor-skills.md). After merge, rebuild the Cloud Agent environment Draft off the new commit.
