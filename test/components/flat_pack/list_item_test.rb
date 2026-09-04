@@ -52,7 +52,7 @@ module FlatPack
       def test_includes_padding
         render_inline(Item.new) { "Content" }
 
-        assert_includes page.native.to_html, "py-2 px-3"
+        assert_includes page.native.to_html, "py-3 px-4"
       end
 
       def test_merges_custom_classes

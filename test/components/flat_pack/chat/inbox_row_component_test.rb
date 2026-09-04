@@ -6,6 +6,15 @@ module FlatPack
   module Chat
     module InboxRow
       class ComponentTest < ViewComponent::TestCase
+        def test_uses_the_roomier_list_item_padding
+          render_inline(Component.new(chat_group_name: "Design Team"))
+
+          item = page.find("li[role='listitem']", visible: :all)
+
+          assert_includes item[:class], "py-3"
+          assert_includes item[:class], "px-4"
+        end
+
         def test_renders_chat_group_name_and_preview
           render_inline(Component.new(
             chat_group_name: "Design Team",

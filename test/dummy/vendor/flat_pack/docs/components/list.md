@@ -37,7 +37,7 @@ Use List when grouped items need consistent spacing and optional active-item sel
 | `hover` | Boolean | `false` | no | Enables hover background styling. |
 | `active` | Boolean | `false` | no | Applies active item background styling. |
 | `link_arguments` | Hash | `{}` | no | Extra attributes merged into internal link when `href` is present. |
-| `**system_arguments` | Hash | `{}` | no | HTML attributes for `<li>`. |
+| `**system_arguments` | Hash | `{}` | no | HTML attributes for `<li>`. Default padding is `py-3 px-4`. |
 
 ## Slots
 None.

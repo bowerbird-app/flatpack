@@ -87,7 +87,7 @@ module FlatPack
       def item_classes
         classes(
           "flex items-start",
-          "py-2 px-3",
+          "py-3 px-4",
           "text-[var(--surface-content-color)]",
           ("transition-colors hover:bg-[var(--list-item-hover-background-color)]" if @hover),
           ("bg-[var(--list-item-active-background-color)]" if @active)
