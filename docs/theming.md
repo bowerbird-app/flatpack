@@ -194,7 +194,7 @@ Kit surfaces use `rounded-[var(--radius-sm)]` through `rounded-[var(--radius-xl)
 --transition-slow: var(--duration-slow)
 ```
 
-Under `prefers-reduced-motion: reduce`, `--duration-fast`, `--duration-base`, `--duration-slow`, and `--skeleton-shimmer-duration` become `0ms`. Overlay controllers read those tokens through `controllers/flat_pack/reduced_motion` so hide delays match. Spatial motion (scale, slide, fan) is skipped; colour and opacity may still change. Tailwind's built-in `duration-200` / `duration-300` utilities are not the kit lever. Kit surfaces that move should use `duration-[var(--duration-fast)]`, `duration-[var(--duration-base)]`, or `duration-[var(--duration-slow)]`.
+`--duration-*` are set on `:root`, not only inside `@theme`. Hosts load `flat_pack/variables` as a normal stylesheet, and browsers skip `@theme`. Under `prefers-reduced-motion: reduce`, `--duration-fast`, `--duration-base`, `--duration-slow`, and `--skeleton-shimmer-duration` become `0ms`. Overlay controllers read those tokens through `controllers/flat_pack/reduced_motion` so hide delays match. Spatial motion (scale, slide, fan) is skipped; colour and opacity may still change. Tailwind's built-in `duration-200` / `duration-300` utilities are not the kit lever. Kit surfaces that move should use `duration-[var(--duration-fast)]`, `duration-[var(--duration-base)]`, or `duration-[var(--duration-slow)]`.
 
 ## Component Variable Usage
 

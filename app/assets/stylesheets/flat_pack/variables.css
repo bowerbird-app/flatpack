@@ -982,6 +982,9 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --radius-md: 1rem;
   --radius-lg: 1.5rem;
   --radius-xl: 2rem;
+  --duration-fast: 150ms;
+  --duration-base: 200ms;
+  --duration-slow: 300ms;
   --transition-fast: var(--duration-fast);
   --transition-base: var(--duration-base);
   --transition-slow: var(--duration-slow);

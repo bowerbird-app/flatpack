@@ -13,6 +13,16 @@ module FlatPack
       end
     end
 
+    test "duration tokens are concrete times on :root so browsers can resolve them" do
+      css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css").read
+      root_block = css[/^:root \{.*?^\}/m]
+
+      refute_nil root_block, "expected a :root block in variables.css"
+      assert_match(/--duration-fast:\s*150ms/, root_block)
+      assert_match(/--duration-base:\s*200ms/, root_block)
+      assert_match(/--duration-slow:\s*300ms/, root_block)
+    end
+
     test "stimulus overlays import the reduced motion helper" do
       helper = "controllers/flat_pack/reduced_motion"
       controllers = %w[
