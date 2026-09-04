@@ -99,7 +99,7 @@ module FlatPack
           "border-[var(--sidebar-border-color)]",
           "transition-none",
           "md:transition-all",
-          "duration-300",
+          "duration-slow",
           "w-64"
         )
       end

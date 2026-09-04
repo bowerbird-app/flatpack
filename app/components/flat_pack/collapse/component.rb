@@ -60,7 +60,7 @@ module FlatPack
       def render_icon
         content_tag(:svg,
           xmlns: "http://www.w3.org/2000/svg",
-          class: "w-5 h-5 transition-transform duration-200 text-[var(--collapse-icon-color)]",
+          class: "w-5 h-5 transition-transform duration-base text-[var(--collapse-icon-color)]",
           fill: "none",
           viewBox: "0 0 24 24",
           stroke: "currentColor",

@@ -200,6 +200,18 @@ module FlatPack
         end
       end
 
+      def test_dialog_uses_duration_tokens_and_reduced_motion_scale
+        render_inline(Component.new(id: "my-modal")) do |component|
+          component.body { "Modal content" }
+        end
+
+        html = page.native.to_html
+        assert_includes html, "duration-slow"
+        assert_includes html, "motion-reduce:scale-100"
+        refute_includes html, "duration-300"
+        refute_includes html, "transition-all"
+      end
+
       def test_raises_error_when_non_auto_body_height_missing
         assert_raises(ArgumentError) do
           Component.new(id: "my-modal", body_height_mode: :fixed)

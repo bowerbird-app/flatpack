@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { prefersReducedMotion } from "controllers/flat_pack/reduced_motion"
 
 const FAN_X_OFFSETS = [0, 10, 24]
 const FAN_Y_OFFSETS = [0, 6, 14]
@@ -26,6 +27,8 @@ export default class extends Controller {
   }
 
   fanOut() {
+    if (this.reducedMotion) return
+
     this.cardTargets
       .slice()
       .sort((left, right) => this.cardIndex(left) - this.cardIndex(right))
@@ -123,6 +126,6 @@ export default class extends Controller {
   }
 
   prefersReducedMotion() {
-    return window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    return prefersReducedMotion()
   }
 }

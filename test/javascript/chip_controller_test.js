@@ -17,6 +17,10 @@ function loadChipController(overrides = {}) {
   const source = fs.readFileSync(filePath, 'utf8')
   const transformedSource = source
     .replace('import { Controller } from "@hotwired/stimulus"', 'class Controller {}')
+    .replace(
+      'import { prefersReducedMotion, motionDuration } from "controllers/flat_pack/reduced_motion"',
+      'function prefersReducedMotion() { return Boolean(globalThis.matchMedia?.("(prefers-reduced-motion: reduce)").matches) }\nfunction motionDuration(token) { return prefersReducedMotion() ? 0 : (token === "slow" ? 300 : 200) }'
+    )
     .replace('export default class extends Controller', 'class ChipController extends Controller') + '\nmodule.exports = ChipController\n'
 
   const context = {

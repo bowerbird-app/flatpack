@@ -450,7 +450,7 @@ module FlatPack
         render FlatPack::Shared::IconComponent.new(
           name: "chevron-down",
           size: :sm,
-          class: "ml-1 transition-transform duration-200",
+          class: "ml-1 transition-transform duration-base",
           data: {"flat-pack--notification-rollup-target": "icon"}
         )
       end

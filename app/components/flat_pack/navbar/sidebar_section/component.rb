@@ -92,7 +92,7 @@ module FlatPack
 
         def chevron_classes
           classes(
-            "transition-transform duration-200",
+            "transition-transform duration-base",
             @collapsed ? "" : "rotate-180"
           )
         end

@@ -1,5 +1,6 @@
 // FlatPack Table Stimulus Controller
 import { Controller } from "@hotwired/stimulus"
+import { prefersReducedMotion, motionDuration } from "controllers/flat_pack/reduced_motion"
 
 export default class extends Controller {
   static targets = ["row", "selectAll", "checkbox"]
@@ -58,34 +59,26 @@ export default class extends Controller {
     const row = event.currentTarget.closest("tr")
     if (!row) return
 
-    // Check for prefers-reduced-motion
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-
-    if (prefersReducedMotion) {
-      // Skip animation
+    if (prefersReducedMotion()) {
       row.style.display = "none"
-    } else {
-      // Get current height
-      const height = row.offsetHeight
-      
-      // Set explicit height for animation
-      row.style.height = `${height}px`
-      row.style.overflow = "hidden"
-      row.style.transition = "height 0.3s ease-out, opacity 0.3s ease-out"
-      
-      // Trigger reflow
-      row.offsetHeight
-      
-      // Animate out
-      requestAnimationFrame(() => {
-        row.style.height = "0"
-        row.style.opacity = "0"
-      })
-      
-      // Hide after animation
-      setTimeout(() => {
-        row.style.display = "none"
-      }, 300)
+      return
     }
+
+    const height = row.offsetHeight
+
+    row.style.height = `${height}px`
+    row.style.overflow = "hidden"
+    row.style.transition = "height var(--duration-slow), opacity var(--duration-slow)"
+
+    row.offsetHeight
+
+    requestAnimationFrame(() => {
+      row.style.height = "0"
+      row.style.opacity = "0"
+    })
+
+    setTimeout(() => {
+      row.style.display = "none"
+    }, motionDuration("slow"))
   }
 }

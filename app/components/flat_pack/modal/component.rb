@@ -110,7 +110,7 @@ module FlatPack
           "bg-[var(--modal-backdrop-color)]",
           "backdrop-blur-[var(--modal-backdrop-blur)]",
           "transition-opacity",
-          "duration-300"
+          "duration-slow"
         )
       end
 
@@ -172,9 +172,10 @@ module FlatPack
           "border",
           "border-[var(--modal-border-color)]",
           "transform",
-          "transition-all",
-          "duration-300",
+          "transition-[opacity,transform]",
+          "duration-slow",
           "scale-95",
+          "motion-reduce:scale-100",
           "opacity-0"
         )
       end

@@ -194,6 +194,8 @@ Kit surfaces use `rounded-[var(--radius-sm)]` through `rounded-[var(--radius-xl)
 --transition-slow: var(--duration-slow)
 ```
 
+Under `prefers-reduced-motion: reduce`, `--duration-fast`, `--duration-base`, `--duration-slow`, and `--skeleton-shimmer-duration` become `0ms`. Overlay controllers read those tokens through `controllers/flat_pack/reduced_motion` so hide delays match. Spatial motion (scale, slide, fan) is skipped; colour and opacity may still change. Tailwind's built-in `duration-200` / `duration-300` utilities are not the kit lever. Kit surfaces that move should use `duration-fast`, `duration-base`, or `duration-slow`.
+
 ## Component Variable Usage
 
 Component tokens such as `--button-primary-background-color` map to semantic tokens (`var(--color-primary)`). You normally change `--brand-hue` / `--brand-chroma` / `--brand-lightness` or `--color-primary` instead of editing component tokens.

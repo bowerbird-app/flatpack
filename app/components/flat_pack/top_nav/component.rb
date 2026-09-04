@@ -140,7 +140,7 @@ module FlatPack
             "flat-pack--top-nav-target": "toggle",
             action: "click->flat-pack--top-nav#toggle"
           },
-          class: "border-0 shadow-none text-[var(--top-nav-item-icon-color)] hover:bg-[var(--top-nav-item-hover-background-color)] hover:text-[var(--top-nav-item-hover-text-color)] transition-colors [&>svg]:transition-transform [&>svg]:duration-200"
+          class: "border-0 shadow-none text-[var(--top-nav-item-icon-color)] hover:bg-[var(--top-nav-item-hover-background-color)] hover:text-[var(--top-nav-item-hover-text-color)] transition-colors [&>svg]:transition-transform [&>svg]:duration-base"
         )
       end
 

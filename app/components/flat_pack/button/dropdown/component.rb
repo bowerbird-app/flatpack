@@ -117,7 +117,7 @@ module FlatPack
 
         def chevron_icon
           content_tag(:svg,
-            class: "h-4 w-4 transition-transform duration-200",
+            class: "h-4 w-4 transition-transform duration-base",
             data: {flat_pack__button_dropdown_target: "chevron"},
             xmlns: "http://www.w3.org/2000/svg",
             viewBox: "0 0 24 24",
@@ -152,8 +152,8 @@ module FlatPack
             "bg-[var(--surface-background-color)]",
             "p-1",
             "shadow-lg",
-            "opacity-0 scale-95 hidden",
-            "transition-[opacity,transform] duration-200"
+            "opacity-0 scale-95 motion-reduce:scale-100 hidden",
+            "transition-[opacity,transform] duration-base"
           )
         end
 

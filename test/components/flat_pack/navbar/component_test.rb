@@ -110,7 +110,7 @@ module FlatPack
           end
         end
 
-        assert_selector "aside.transition-transform.duration-300"
+        assert_selector "aside.transition-transform.duration-slow"
       end
 
       def test_sidebar_slides_from_left

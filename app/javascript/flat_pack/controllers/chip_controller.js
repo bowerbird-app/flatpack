@@ -1,5 +1,6 @@
 // FlatPack Chip Stimulus Controller
 import { Controller } from "@hotwired/stimulus"
+import { prefersReducedMotion, motionDuration } from "controllers/flat_pack/reduced_motion"
 
 export default class extends Controller {
   static targets = ["chip"]
@@ -55,11 +56,7 @@ export default class extends Controller {
   }
 
   animateRemoval() {
-    this.chipTarget.style.transition = "opacity 200ms ease-out, transform 200ms ease-out"
-    this.chipTarget.style.opacity = "0"
-    this.chipTarget.style.transform = "scale(0.8)"
-
-    setTimeout(() => {
+    const finish = () => {
       const event = new CustomEvent("chip:removed", {
         bubbles: true,
         detail: {
@@ -69,7 +66,18 @@ export default class extends Controller {
       })
       this.element.dispatchEvent(event)
       this.element.remove()
-    }, 200)
+    }
+
+    if (prefersReducedMotion()) {
+      finish()
+      return
+    }
+
+    this.chipTarget.style.transition = "opacity var(--duration-base), transform var(--duration-base)"
+    this.chipTarget.style.opacity = "0"
+    this.chipTarget.style.transform = "scale(0.8)"
+
+    setTimeout(finish, motionDuration("base"))
   }
 
   async performRemoveRequest() {

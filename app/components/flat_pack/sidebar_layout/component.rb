@@ -163,7 +163,7 @@ module FlatPack
           "min-h-0",
           "transition-transform",
           "md:transition-all",
-          "duration-300",
+          "duration-slow",
           "ease-in-out",
           "transform-gpu",
           "will-change-transform",
@@ -217,7 +217,7 @@ module FlatPack
       end
 
       def backdrop_classes
-        "fixed inset-0 bg-black/50 z-40 md:hidden opacity-0 pointer-events-none transition-opacity duration-300"
+        "fixed inset-0 bg-black/50 z-40 md:hidden opacity-0 pointer-events-none transition-opacity duration-slow"
       end
 
       def validate_side!

@@ -404,7 +404,7 @@
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Backdrop Click:</strong> Click outside the modal to close (configurable)<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Scroll Prevention:</strong> Prevents page scrolling while modal is open<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Accessibility:</strong> Full ARIA support with role="dialog" and aria-modal="true"<% end %>
-    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Animations:</strong> Smooth fade and scale transitions (respects prefers-reduced-motion)<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Animations:</strong> Fade and scale on open and close. Under Reduce Motion, fade only and no close delay.<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Turbo Compatible:</strong> Works seamlessly with Turbo navigation<% end %>
   <% end %>
 </section>

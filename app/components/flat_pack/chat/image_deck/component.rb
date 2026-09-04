@@ -117,7 +117,7 @@ module FlatPack
             ("border border-[var(--chat-attachment-border-color)]" if @bordered),
             "bg-[var(--surface-background-color)]",
             "shadow-md",
-            "transition-transform duration-200 ease-out",
+            "transition-transform duration-base ease-out",
             "will-change-transform"
           )
         end

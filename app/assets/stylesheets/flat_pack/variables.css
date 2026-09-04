@@ -1159,3 +1159,13 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --top-nav-item-active-background-color: #333;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  :root,
+  html {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+    --duration-slow: 0ms;
+    --skeleton-shimmer-duration: 0ms;
+  }
+}
+
