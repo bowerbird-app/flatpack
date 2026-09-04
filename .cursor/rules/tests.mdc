@@ -13,4 +13,4 @@ Aim for high coverage as a working bar. About 94% is the team convention, not a 
 
 UI work still needs `verify-ui` browser checks and screenshots. Tests do not replace that.
 
-Upgrade and behavior changes still need the upgrade tests called out in `gem-version-and-release.mdc`.
+Upgrade and behavior changes still need the upgrade tests called out in `rules/gem-version-and-release.mdc`.
