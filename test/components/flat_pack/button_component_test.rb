@@ -179,10 +179,32 @@ module FlatPack
       end
 
       def test_renders_icon_only_button
-        render_inline(Component.new(icon: "search", icon_only: true))
+        render_inline(Component.new(icon: "search", icon_only: true, aria: {label: "Search"}))
 
-        assert_selector "button"
+        assert_selector "button[aria-label='Search']"
         refute_selector "button span"
+        assert_includes page.native.to_html, "fp-hit-target"
+      end
+
+      def test_icon_only_text_becomes_aria_label_and_is_not_visible
+        render_inline(Component.new(icon: "search", icon_only: true, text: "Search"))
+
+        assert_selector "button[aria-label='Search']"
+        refute_selector "button span", text: "Search"
+      end
+
+      def test_icon_only_keeps_host_aria_label
+        render_inline(Component.new(icon: "search", icon_only: true, text: "Find", aria: {label: "Open search", pressed: true}))
+
+        assert_selector "button[aria-label='Open search'][aria-pressed='true']"
+        refute_selector "button[aria-label='Find']"
+      end
+
+      def test_icon_only_without_accessible_name_raises
+        error = assert_raises(ArgumentError) do
+          Component.new(icon: "search", icon_only: true)
+        end
+        assert_match(/accessible name/, error.message)
       end
 
       def test_renders_button_with_icon_and_label
@@ -201,9 +223,9 @@ module FlatPack
       end
 
       def test_renders_loading_icon_only_button
-        render_inline(Component.new(icon: "search", icon_only: true, loading: true))
+        render_inline(Component.new(icon: "search", icon_only: true, loading: true, aria: {label: "Search"}))
 
-        assert_selector "button[disabled]"
+        assert_selector "button[disabled][aria-label='Search'][aria-busy='true']"
         assert_includes page.native.to_html, "animate-spin"
         assert_includes page.native.to_html, "motion-reduce:animate-none"
         refute_selector "button", text: "Loading"
@@ -354,7 +376,11 @@ module FlatPack
       def test_primary_button_uses_scheme_shadow_token_class
         render_inline(Component.new(text: "Primary", style: :primary))
 
-        assert_includes page.native.to_html, "shadow-[var(--button-shadow)]"
+        html = page.native.to_html
+        assert_includes html, "shadow-[var(--button-shadow)]"
+        assert_includes html, "hover:shadow-[var(--button-shadow-hover)]"
+        assert_includes html, "active:shadow-[var(--button-shadow-active)]"
+        assert_includes html, "duration-[var(--duration-fast)]"
       end
 
       def test_secondary_button_does_not_include_scheme_shadow_class

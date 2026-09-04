@@ -104,27 +104,27 @@ function buildController() {
   return { controller, element, errorNode, nodeClasses, document }
 }
 
-test('showError uses the semantic warning token classes', () => {
+test('showError uses the semantic error token classes', () => {
   const { controller, element, errorNode, nodeClasses, document } = buildController()
 
   controller.showError('Username is invalid')
 
-  assert.equal(element.classList.classes.has('border-[var(--color-warning)]'), true)
-  assert.equal(element.style.borderColor, 'var(--color-warning)')
+  assert.equal(element.classList.classes.has('border-[var(--color-error)]'), true)
+  assert.equal(element.style.borderColor, 'var(--color-error)')
   assert.equal(element.attributes['aria-invalid'], 'true')
   assert.equal(element.attributes['aria-describedby'], 'help-text username_error')
   assert.equal(errorNode.textContent, 'Username is invalid')
-  assert.equal(errorNode.className, 'mt-1 text-sm text-[var(--color-warning)] hidden')
+  assert.equal(errorNode.className, 'mt-1 text-sm text-[var(--color-error)] hidden')
   assert.equal(nodeClasses.has('hidden'), false)
 })
 
-test('clearError removes the semantic warning token classes', () => {
+test('clearError removes the semantic error token classes', () => {
   const { controller, element, errorNode, nodeClasses, document } = buildController()
 
   controller.showError('Username is invalid')
   controller.clearError()
 
-  assert.equal(element.classList.classes.has('border-[var(--color-warning)]'), false)
+  assert.equal(element.classList.classes.has('border-[var(--color-error)]'), false)
   assert.equal(element.style.borderColor, 'rgb(1, 2, 3)')
   assert.equal(element.attributes['aria-invalid'], undefined)
   assert.equal(element.attributes['aria-describedby'], 'help-text')

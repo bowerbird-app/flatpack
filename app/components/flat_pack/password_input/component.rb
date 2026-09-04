@@ -7,7 +7,7 @@ module FlatPack
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "text-[var(--color-warning)]" "border-[var(--color-warning)]"
+      # "text-[var(--color-error)]" "border-[var(--color-error)]"
 
       def initialize(
         name:,

@@ -6,8 +6,8 @@ FlatPack ships a rounded / charcoal light palette by default and supports dark o
 
 FlatPack theme behavior is split into two layers:
 
-- **CSS defaults** - `:root {}` in `flat_pack/variables.css` provides the default rounded / charcoal palette, including `--brand-hue` / `--brand-chroma` / `--brand-lightness` and component aliases that map once to semantic tokens.
-- **Theme variants** - selectors such as `[data-theme="dark"]` and `[data-theme="ocean"]` override only tokens that differ from `:root`. `[data-theme="rounded"]` is an explicit alias of the default. Component aliases inherit unless you override them.
+- **CSS defaults** - `:root {}` in `flat_pack/variables.css` provides the default rounded / charcoal palette, including `--brand-hue` / `--brand-chroma` / `--brand-lightness` and component aliases that map once to semantic tokens. `:root` also sets `color-scheme: light`.
+- **Theme variants** - selectors such as `[data-theme="dark"]` and `[data-theme="ocean"]` override only tokens that differ from `:root`. `[data-theme="dark"]` sets `color-scheme: dark` and uses slightly lifted shadows (a faint white hairline plus the usual drop) so cards read against near-black surfaces. `[data-theme="rounded"]` is an explicit alias of the default. Component aliases inherit unless you override them.
 - **Optional controller support** - the `flat-pack--theme` Stimulus controller can switch between `system`, `light`, `dark`, and custom variants while persisting the choice in `localStorage` under `flatpack-theme`.
 
 ## How It Works

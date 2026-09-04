@@ -107,10 +107,10 @@ module FlatPack
         assert_includes html, "border-[var(--surface-border-color)]"
       end
 
-      def test_error_uses_warning_border_token
+      def test_error_uses_error_border_token
         render_inline(Probe.new(error: true))
 
-        assert_includes page.native.to_html, "border-[var(--color-warning)]"
+        assert_includes page.native.to_html, "border-[var(--color-error)]"
       end
     end
 

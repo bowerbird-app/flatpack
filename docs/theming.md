@@ -130,6 +130,8 @@ For a named host-app variant such as `[data-theme="sunrise"]`, see the theme gen
 --color-danger-hover-background-color
 --color-danger-text-color
 --color-danger-border-color
+--color-error
+--color-error-border
 
 --surface-background-color
 --surface-page-background-color
@@ -180,7 +182,24 @@ Kit surfaces use `rounded-[var(--radius-sm)]` through `rounded-[var(--radius-xl)
 --shadow-sm
 --shadow-md
 --shadow-lg
+--shadow-button
+--shadow-button-active
 ```
+
+`--button-shadow` is the rest elevation. `--button-shadow-hover` aliases `--shadow-button`. `--button-shadow-active` aliases `--shadow-button-active`. Ghost and secondary stay unshadowed at rest.
+
+Dark theme (`[data-theme="dark"]`) adds a faint white hairline to `--shadow-sm` / `--shadow-md` / `--shadow-lg` so cards lift on near-black surfaces.
+
+### Hit targets
+```css
+--hit-target-min: 2.75rem   /* 44px — icon-only buttons, modal close, alert/toast dismiss */
+--hit-target-inline-min: 1.5rem  /* 24px — chip and badge remove */
+```
+
+Kit CSS defines `.fp-hit-target` and `.fp-hit-target-inline`. Hosts get those classes from `flat_pack/application` without a Tailwind rebuild.
+
+### Color scheme
+`:root` sets `color-scheme: light`. `[data-theme="dark"]` sets `color-scheme: dark` so native controls, scrollbars, and form chrome match the theme.
 
 ### Durations / transitions
 ```css
@@ -203,11 +222,11 @@ Component tokens such as `--button-primary-background-color` map to semantic tok
 ### Buttons
 - Colors: `--color-default-*`, `--color-primary-*`, `--color-secondary-*`, `--color-ghost-*`, `--color-success-*`, `--color-warning-*`
 - Radius: `--radius-md`
-- Shadow: `--shadow-sm`
-- Duration: `--duration-base`
+- Shadow: `--button-shadow`, `--button-shadow-hover`, `--button-shadow-active`
+- Duration: `--duration-fast` for colour, border, and shadow
 
 ### Input Components (Text, Email, Password, Phone, Search, URL, TextArea)
-- Colors: `--surface-content-color`, `--surface-background-color`, `--surface-muted-content-color`, `--surface-border-color`, `--color-ring`, `--color-warning-border`
+- Colors: `--surface-content-color`, `--surface-background-color`, `--surface-muted-content-color`, `--surface-border-color`, `--color-ring`, `--color-error` (invalid chrome; aliases `--color-danger-background-color`)
 - Radius: `--radius-md`
 - Duration: `--duration-base`
 

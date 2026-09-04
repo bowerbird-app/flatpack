@@ -233,22 +233,23 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Icon Only Buttons", anchor_link: true, subtitle: "Examples for Icon Only Buttons.") %>
     <div class="flex items-center gap-3 mb-4 overflow-x-auto pb-2 md:overflow-visible md:pb-0">
-      <%= render FlatPack::Button::Component.new(icon: "search", icon_only: true, style: :primary, size: :sm) %>
-      <%= render FlatPack::Button::Component.new(icon: "search", icon_only: true, style: :primary, size: :md) %>
-      <%= render FlatPack::Button::Component.new(icon: "search", icon_only: true, style: :primary, size: :lg) %>
+      <%= render FlatPack::Button::Component.new(icon: "search", icon_only: true, style: :primary, size: :sm, aria: { label: "Search" }) %>
+      <%= render FlatPack::Button::Component.new(icon: "search", icon_only: true, style: :primary, size: :md, aria: { label: "Search" }) %>
+      <%= render FlatPack::Button::Component.new(icon: "search", icon_only: true, style: :primary, size: :lg, aria: { label: "Search" }) %>
     </div>
     <div class="flex items-center gap-3 mb-4 overflow-x-auto pb-2 md:overflow-visible md:pb-0">
-      <%= render FlatPack::Button::Component.new(icon: "settings", icon_only: true, style: :secondary) %>
-      <%= render FlatPack::Button::Component.new(icon: "trash", icon_only: true, style: :ghost) %>
-      <%= render FlatPack::Button::Component.new(icon: "check", icon_only: true, style: :success) %>
-      <%= render FlatPack::Button::Component.new(icon: "alert", icon_only: true, style: :warning) %>
+      <%= render FlatPack::Button::Component.new(icon: "settings", icon_only: true, style: :secondary, aria: { label: "Settings" }) %>
+      <%= render FlatPack::Button::Component.new(icon: "trash", icon_only: true, style: :ghost, aria: { label: "Delete" }) %>
+      <%= render FlatPack::Button::Component.new(icon: "check", icon_only: true, style: :success, aria: { label: "Done" }) %>
+      <%= render FlatPack::Button::Component.new(icon: "alert", icon_only: true, style: :warning, aria: { label: "Warning" }) %>
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE')
         &lt;%= render FlatPack::Button::Component.new(
           icon: "search",
           icon_only: true,
-          style: :primary
+          style: :primary,
+          aria: { label: "Search" }
         ) %&gt;
       CODE
     ) %>
@@ -260,7 +261,7 @@
     <div class="flex gap-3 mb-4 overflow-x-auto pb-2 md:overflow-visible md:pb-0">
       <%= render FlatPack::Button::Component.new(text: "Saving", loading: true, style: :primary) %>
       <%= render FlatPack::Button::Component.new(text: "Processing", loading: true, style: :secondary) %>
-      <%= render FlatPack::Button::Component.new(icon: "upload", icon_only: true, loading: true, style: :success) %>
+      <%= render FlatPack::Button::Component.new(icon: "upload", icon_only: true, loading: true, style: :success, aria: { label: "Upload" }) %>
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE')
@@ -275,7 +276,8 @@
           icon: "upload",
           icon_only: true,
           loading: true,
-          style: :success
+          style: :success,
+          aria: { label: "Upload" }
         ) %&gt;
       CODE
     ) %>

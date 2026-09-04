@@ -111,7 +111,10 @@
 	}
 
 	.shadow-button:hover,
-	.shadow-button:focus,
+	.shadow-button:focus {
+		box-shadow: var(--button-shadow-hover);
+	}
+
 	.shadow-button:active {
 		box-shadow: var(--button-shadow-active);
 	}

@@ -622,7 +622,7 @@ Always sanitize HTML output before rendering it back to users:
 
 ## Accessibility
 - Label-to-control association is provided when `label` is passed (`for`/`id` linkage).
-- Error state adds `aria-invalid` and `aria-describedby` for controls that receive `error`.
+- Error state adds `aria-invalid` and `aria-describedby` for controls that receive `error`. Invalid borders and helper text use `--color-error` (danger red), not `--color-warning`. Character-count thresholds still use `--color-warning-border`.
 - Native controls are used for checkbox/radio/select/input/textarea semantics.
 - `SearchInput` keeps a single clear control by using the component clear button and suppressing browser-native search clear icons.
 - Searchable select trigger exposes `aria-haspopup` and toggles `aria-expanded`.

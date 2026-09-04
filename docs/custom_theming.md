@@ -96,6 +96,8 @@ This block is a full-token override starter (historically based on the earlier p
   --color-danger-hover-background-color: oklch(50.5% 0.213 27.518);
   --color-danger-text-color: oklch(1.0 0 0);
   --color-danger-border-color: var(--color-danger-background-color);
+  --color-error: var(--color-danger-background-color);
+  --color-error-border: var(--color-danger-border-color);
   --color-info-border: var(--surface-border-color);
 
   --surface-background-color: oklch(1.0 0 0);
@@ -170,7 +172,7 @@ This block is a full-token override starter (historically based on the earlier p
   --switch-label-color: var(--surface-content-color);
   --switch-thumb-background-color: var(--surface-background-color);
   --switch-thumb-shadow: var(--shadow-sm);
-  --switch-error-color: var(--color-warning);
+  --switch-error-color: var(--color-error);
   --skeleton-background-color: var(--surface-muted-background-color);
   --skeleton-shimmer-highlight-color: rgb(255 255 255 / 0.45);
   --skeleton-shimmer-duration: 1.35s;
@@ -373,6 +375,10 @@ This block is a full-token override starter (historically based on the earlier p
   --button-focus-ring-offset-color: var(--surface-background-color);
   --button-disabled-opacity: 0.5;
   --button-shadow: var(--shadow-sm);
+  --button-shadow-hover: var(--shadow-button);
+  --button-shadow-active: var(--shadow-button-active);
+  --hit-target-min: 2.75rem;
+  --hit-target-inline-min: 1.5rem;
   --button-padding-x-sm: 0.75rem;
   --button-padding-y-sm: 0.375rem;
   --button-padding-x-md: 1rem;
