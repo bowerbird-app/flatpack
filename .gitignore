@@ -52,9 +52,9 @@
 # Ignore VS Code files
 /.vscode
 
-# Cursor Cloud Agent plugin rules generated at runtime (for example by
-# setup-pstack). Project skills live in tracked .cursor/skills/.
-.cursor/rules/
+# Cursor Cloud Agent skills and rules live in tracked .cursor/skills/ and
+# .cursor/rules/. setup-pstack writes ~/.cursor/rules/pstack-models.mdc (home),
+# not this project pack.
 
 # Ignore macOS files
 .DS_Store

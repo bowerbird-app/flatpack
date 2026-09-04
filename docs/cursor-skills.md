@@ -1,6 +1,6 @@
-# Cursor Cloud Agent skills
+# Cursor Cloud Agent skills and rules
 
-Flatpack Cloud Agents load project skills from the git checkout.
+Flatpack Cloud Agents load project skills and rules from the git checkout.
 
 ## What is tracked
 
@@ -10,17 +10,35 @@ Flatpack Cloud Agents load project skills from the git checkout.
 2. Third-party craft skills copied from public raw URLs: `frontend-design`, `design-dna`, `make-interfaces-feel-better`, `motion-design`, `review-animations`, `visual-qa-testing`, `web-design-guidelines`.
 3. Flatpack-owned skills: `flatpack-design` (boss of what lands) and `flatpack-micro-interactions` (kit motion patterns).
 
-This repo does not use Recording Studio skills. Do not add `recording-studio-*`. Do not fetch `RecordingStudio_cursor_plugin`. Do not add `micro-interactions`, `interaction-design`, or `ui-ux-pro-max`.
+`.cursor/rules/` holds eight Flatpack-owned `.mdc` files. Cloud Agents load them from the checkout. There is no Recording Studio plugin fetch.
 
-`.cursor/rules/` stays gitignored. Do not invent a Flatpack rules pack. `setup-pstack` may write a local rule when someone runs it.
+Always-applied:
+
+- `gem-version-and-release.mdc`
+- `ci-and-review.mdc`
+- `secrets.mdc`
+- `docs.mdc`
+- `parameters.mdc`
+- `verify-ui.mdc`
+
+Glob-scoped:
+
+- `flatpack-ui.mdc`
+- `user-facing-copy.mdc`
+
+`verify-ui`, `flatpack-ui`, and `user-facing-copy` are Flatpack rewrites (dummy demos, library components, `flatpack-design`, `flatpack-micro-interactions`). The other five match the shared gem-repo pack, including the `parameters.mdc` cross-ref to `gem-version-and-release.mdc`.
+
+This repo does not use Recording Studio skills. Do not add `recording-studio-*`. Do not fetch `RecordingStudio_cursor_plugin`. Do not add `recording-studio.mdc` or `flatpack-is-the-system.mdc`. Do not add `micro-interactions`, `interaction-design`, or `ui-ux-pro-max`.
+
+`setup-pstack` may write `~/.cursor/rules/pstack-models.mdc` in the home directory. That file is not part of this project pack.
 
 The gemspec does not package `.cursor/`. Host apps that install the gem do not receive these files. Cloud Agents that clone this repository do.
 
 ## How agents pick them up
 
-`.cursor/environment.json` names the environment `flatpack`. `install` is a no-op (`true`). Skills are already in the tree, so Build does not download a pack.
+`.cursor/environment.json` names the environment `flatpack`. `install` is a no-op (`true`). Skills and rules are already in the tree, so Build does not download a pack.
 
-After this layout merges, rebuild the Cloud Agent environment Draft off that commit. A snapshot taken while skills were gitignored will not see them.
+After this layout merges, rebuild the Cloud Agent environment Draft off that commit. A snapshot taken while skills or rules were gitignored will not see them.
 
 ## Working sequence
 

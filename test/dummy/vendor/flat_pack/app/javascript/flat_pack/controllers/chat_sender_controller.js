@@ -328,7 +328,7 @@ export default class extends Controller {
     if (payload.body || fileAttachments.length > 0) {
       const bubble = document.createElement("div")
       bubble.dataset.flatPackChatSenderBubble = ""
-      bubble.className = "relative px-4 py-2 rounded-2xl max-w-[75%] sm:max-w-[500px] shadow-sm bg-[var(--chat-message-outgoing-background-color)] text-[var(--chat-message-outgoing-text-color)] opacity-60"
+      bubble.className = "relative px-4 py-2 rounded-[var(--radius-md)] max-w-[75%] sm:max-w-[500px] shadow-sm bg-[var(--chat-message-outgoing-background-color)] text-[var(--chat-message-outgoing-text-color)] opacity-60"
 
       if (payload.body) {
         const bodyNode = document.createElement("div")
@@ -447,7 +447,7 @@ export default class extends Controller {
     }
 
     const wrapper = document.createElement("div")
-    wrapper.className = "inline-flex w-fit max-w-full items-center gap-3 border border-[var(--chat-attachment-border-color)] rounded-lg bg-[var(--chat-attachment-background-color)] p-3"
+    wrapper.className = "inline-flex w-fit max-w-full items-center gap-3 border border-[var(--chat-attachment-border-color)] rounded-[var(--radius-lg)] bg-[var(--chat-attachment-background-color)] p-3"
 
     const icon = document.createElement("div")
     icon.className = "flex-shrink-0"
@@ -475,7 +475,7 @@ export default class extends Controller {
 
   #buildImageAttachmentNode(attachment) {
     const frame = document.createElement("div")
-    frame.className = "rounded-lg overflow-hidden max-w-sm w-full border border-[var(--chat-attachment-border-color)]"
+    frame.className = "rounded-[var(--radius-lg)] overflow-hidden max-w-sm w-full border border-[var(--chat-attachment-border-color)]"
 
     const image = document.createElement("img")
     image.src = attachment.thumbnailUrl

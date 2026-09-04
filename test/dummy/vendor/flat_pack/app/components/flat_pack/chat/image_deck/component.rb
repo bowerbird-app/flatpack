@@ -113,7 +113,7 @@ module FlatPack
 
         def card_classes
           classes(
-            "absolute top-0 overflow-hidden rounded-2xl",
+            "absolute top-0 overflow-hidden rounded-[var(--radius-md)]",
             ("border border-[var(--chat-attachment-border-color)]" if @bordered),
             "bg-[var(--surface-background-color)]",
             "shadow-md",

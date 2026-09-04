@@ -1,0 +1,19 @@
+---
+description: Use Flatpack ViewComponents for dummy demos and library components
+globs: "**/*.{erb,html,css,js}"
+alwaysApply: false
+---
+
+This repo is Flatpack. These rules apply to dummy demos and library components.
+
+Search https://flatpack.bowerbird.io/ and this repo before you write custom CSS or markup. Compose existing ViewComponents. Do not rebuild buttons, forms, alerts, cards, modals, or nav.
+
+Semantic layout markup is fine when Flatpack has no structure for that part of the page.
+
+If you need a piece Flatpack does not have, ask whether to add it here. Do not invent custom UI in silence.
+
+Do not rewrite unrelated legacy UI just because you opened the file. When you touch a legacy element, migrate that element if the change is local and safe.
+
+Use the core default layout. Dummy default is `html data-theme="rounded"` plus core `UsesDefaultLayout`. One primary action per page.
+
+Which component and what lands: `flatpack-design`. Motion patterns: `flatpack-micro-interactions`. Do not restate those skills here.

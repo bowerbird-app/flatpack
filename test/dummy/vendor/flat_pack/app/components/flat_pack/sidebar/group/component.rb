@@ -138,7 +138,7 @@ module FlatPack
             "hover:bg-[var(--sidebar-item-hover-background-color)]",
             "hover:text-[var(--sidebar-item-hover-text-color)]",
             "transition-colors",
-            "rounded-lg",
+            "rounded-[var(--radius-lg)]",
             "mx-2",
             "w-[calc(100%-1rem)]"
           )

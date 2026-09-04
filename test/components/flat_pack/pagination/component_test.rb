@@ -135,7 +135,7 @@ module FlatPack
 
         html = page.native.to_html
         assert_includes html, "min-w-[2.75rem]"
-        assert_includes html, "rounded-sm"
+        assert_includes html, "rounded-[var(--radius-sm)]"
       end
 
       def test_disabled_buttons_have_correct_styles

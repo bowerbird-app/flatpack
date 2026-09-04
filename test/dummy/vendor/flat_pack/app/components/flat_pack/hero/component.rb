@@ -187,7 +187,7 @@ module FlatPack
               ].compact)
             end,
             (content_tag(:div, render_actions_block(extra_classes: "justify-center"), class: "mt-10 flex justify-center") if slot?),
-            (@image_url ? content_tag(:div, class: "mt-16 max-w-5xl mx-auto rounded-xl shadow-2xl overflow-hidden") {
+            (@image_url ? content_tag(:div, class: "mt-16 max-w-5xl mx-auto rounded-[var(--radius-xl)] shadow-2xl overflow-hidden") {
               image_tag(@image_url, alt: @image_alt, class: "w-full object-cover")
             } : nil)
           ].compact)
@@ -222,7 +222,7 @@ module FlatPack
               ].compact)
             end,
             content_tag(:div, class: "lg:hidden mt-12") do
-              @image_url ? image_tag(@image_url, alt: @image_alt, class: "w-full rounded-xl object-cover") : "".html_safe
+              @image_url ? image_tag(@image_url, alt: @image_alt, class: "w-full rounded-[var(--radius-xl)] object-cover") : "".html_safe
             end
           ])
         end
@@ -234,7 +234,7 @@ module FlatPack
             content_tag(:div, render_text_block, class: "px-16"),
             content_tag(:div, class: "grid grid-cols-2 gap-4 pr-16") do
               safe_join(@tiles.first(4).map { |tile|
-                tile[:url] ? image_tag(tile[:url], alt: tile[:alt].to_s, class: "rounded-lg object-cover aspect-square w-full") : "".html_safe
+                tile[:url] ? image_tag(tile[:url], alt: tile[:alt].to_s, class: "rounded-[var(--radius-lg)] object-cover aspect-square w-full") : "".html_safe
               })
             end
           ])
@@ -247,7 +247,7 @@ module FlatPack
             safe_join([
               content_tag(:div, render_text_block, class: ""),
               content_tag(:div, class: "relative mt-12 lg:mt-0") do
-                @image_url ? image_tag(@image_url, alt: @image_alt, class: "w-full rounded-xl shadow-2xl object-cover lg:-mr-24") : "".html_safe
+                @image_url ? image_tag(@image_url, alt: @image_alt, class: "w-full rounded-[var(--radius-xl)] shadow-2xl object-cover lg:-mr-24") : "".html_safe
               end
             ])
           end

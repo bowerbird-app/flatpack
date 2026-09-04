@@ -277,7 +277,7 @@ module FlatPack
           "md:inset-auto",
           "md:max-w-none",
           "md:overflow-hidden",
-          "md:rounded-lg",
+          "md:rounded-[var(--radius-lg)]",
           "md:border",
           "md:border-[var(--surface-border-color)]",
           "bg-[var(--surface-background-color)]",
@@ -358,7 +358,7 @@ module FlatPack
         base_classes = [
           "flat-pack-input",
           "w-full",
-          "rounded-md",
+          "rounded-[var(--radius-md)]",
           "border",
           "bg-[var(--surface-background-color)]",
           "text-[var(--surface-content-color)]",

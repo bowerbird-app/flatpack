@@ -124,7 +124,7 @@ module FlatPack
             rows: 1,
             autogrow: true,
             submit_on_enter: true,
-            class: "min-h-[var(--chat-composer-control-height)] rounded-lg border-[var(--chat-input-border-color)] bg-[var(--chat-input-background-color)] px-4 py-[var(--chat-composer-control-padding-y)] text-sm leading-5 text-[var(--chat-input-text-color)] placeholder:text-[var(--chat-input-placeholder-color)] focus:ring-inset focus:ring-[var(--chat-input-focus-ring-color)] max-h-32"
+            class: "min-h-[var(--chat-composer-control-height)] rounded-[var(--radius-lg)] border-[var(--chat-input-border-color)] bg-[var(--chat-input-background-color)] px-4 py-[var(--chat-composer-control-padding-y)] text-sm leading-5 text-[var(--chat-input-text-color)] placeholder:text-[var(--chat-input-placeholder-color)] focus:ring-inset focus:ring-[var(--chat-input-focus-ring-color)] max-h-32"
           )
         end
 

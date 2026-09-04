@@ -76,7 +76,7 @@ module FlatPack
           classes(
             "relative",
             "px-4 py-3",
-            "rounded-2xl",
+            "rounded-[var(--radius-md)]",
             "bg-[var(--chat-typing-background-color)]",
             "shadow-sm"
           )

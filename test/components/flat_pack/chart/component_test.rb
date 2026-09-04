@@ -160,7 +160,11 @@ module FlatPack
         series = [{name: "Sales", data: [10, 20, 30]}]
         render_inline(Component.new(series: series))
 
-        assert_selector "div.rounded-lg"
+        card = page.native.css("div").find { |node|
+          node["class"].to_s.split.include?("rounded-[var(--radius-lg)]")
+        }
+
+        assert card, "expected a div with rounded-[var(--radius-lg)]"
       end
 
       def test_renders_chart_without_card

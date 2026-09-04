@@ -46,7 +46,7 @@ The component index is the complete human-readable inventory. The manifest is th
 - [Engine Architecture](architecture/engine.md)
 - [Asset Pipeline](architecture/assets.md)
 - [Tailwind CSS 4 Integration](architecture/tailwind_4.md)
-- [Cursor Cloud Agent skills](cursor-skills.md)
+- [Cursor Cloud Agent skills and rules](cursor-skills.md)
 
 ## Quick Start
 

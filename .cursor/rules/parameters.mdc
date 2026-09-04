@@ -1,0 +1,10 @@
+---
+description: Name parameters in everyday language and reuse established public names
+alwaysApply: true
+---
+
+Name parameters in everyday language. Short, but not cryptic. No computer-speak, needless abbreviations, or vague names (`data`, `info`, `obj`, `payload`, `value`, `params`) unless that is the real domain word.
+
+Before you mint a name, search nearby code, routes, schemas, and APIs. Reuse the established name. Do not add a second parameter that overlaps the first. If it must differ, make the distinction obvious in the name.
+
+Do not silently rename public API, persisted, or URL parameters. A public name change is an upgrade-notes change (`rules/gem-version-and-release.mdc`), not a compatibility alias.

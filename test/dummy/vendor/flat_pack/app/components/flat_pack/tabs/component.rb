@@ -6,7 +6,7 @@ module FlatPack
       VARIANTS = {
         underline: {
           tab_list: "flex gap-1 border-b border-[var(--surface-border-color)]",
-          tab_base: "px-4 py-2 text-sm font-medium rounded-t-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring focus-visible:ring-offset-2",
+          tab_base: "px-4 py-2 text-sm font-medium rounded-t-[var(--radius-md)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring focus-visible:ring-offset-2",
           active: "bg-[var(--surface-background-color)] text-primary border-b-2 border-primary -mb-px",
           inactive: "text-[var(--surface-muted-content-color)] hover:text-[var(--surface-content-color)] hover:bg-[var(--surface-muted-background-color)]"
         },

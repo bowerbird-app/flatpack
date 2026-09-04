@@ -10,11 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
-- `List::Item` rows, including `Chat::InboxRow`, now use `rounded-[var(--radius-sm)]` so the hover and active highlight has a small corner radius instead of a square block.
 
 ### Fixed
 
-## [0.1.147] - 2026-09-04
+## [0.1.148] - 2026-09-04
 
 ### Added
 - `FlatPack::Chat::Layout::Component` accepts `split_breakpoint:` (`:sm`, `:md`, `:lg`) to choose the width where a `:split` layout stops stacking, and `sidebar_width:` to size the sidebar column with any single CSS grid track (length, keyword, CSS variable, `minmax()`, `clamp()`, `fit-content()`).
@@ -26,11 +25,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `chat_layout_controller.js` reads a `breakpoint` value instead of hardcoding `768px`, so the stacked list-then-panel behaviour switches at the same width as the CSS.
 - A `:single` layout with a sidebar slot keeps its bottom divider at every width instead of flipping to a right divider at `md`, which never matched the stacked single column.
 - `Chat::InboxRow` inherits `List::Item` padding of `py-3 px-4` (12px / 16px), up from `py-2 px-3`. Every chat inbox that uses `InboxRow` picks this up, including `/demo/chat/demo`. Other `List::Item` rows use the same padding.
+- `List::Item` rows, including `Chat::InboxRow`, now use `rounded-[var(--radius-sm)]` so the hover and active highlight has a small corner radius instead of a square block.
 
 ### Upgrade notes
 - No changes required for hosts that render `Chat::Layout` with defaults; the split simply scales instead of collapsing. Recording Studio Messages desks in the core default layout do not need to fork the grid.
 - To keep the old stacking point, pass `split_breakpoint: :md`. There is no way to restore the fixed `280px` track, because it is what broke half-width windows; pass `sidebar_width: "16rem"` if you want a fixed sidebar back, and expect the thread to absorb every reduction when the desk is narrow.
 - `List::Item` padding is now `py-3 px-4`. Chat inbox rows and any other `List::Item` grow by 4px on each side. No host code change is required.
+
+## [0.1.147] - 2026-09-04
+
+### Added
+- Tracked Cursor rules pack under `.cursor/rules/` for Cloud Agents (eight `.mdc` files). Cloud Agents load them from the checkout. See [Cursor Cloud Agent skills and rules](docs/cursor-skills.md).
+
+### Changed
+- `.cursor/rules/` is no longer gitignored.
+- Bumped the gem version to `0.1.147`.
+
+### Upgrade notes
+- No host app API changes. Product UI is unchanged. After merge, rebuild the Cloud Agent environment Draft off `v0.1.147` so checkout rules load. A snapshot taken while rules were gitignored will not see them.
+
+## [0.1.146] - 2026-09-04
+
+### Changed
+- Kit components and Stimulus controllers now use `rounded-[var(--radius-*)]` instead of Tailwind radius scale names (`rounded-md`, `rounded-lg`, `rounded-xl`, `rounded-2xl`). The four kit tokens stay `--radius-sm` (`0.75rem`), `--radius-md` (`1rem`), `--radius-lg` (`1.5rem`), `--radius-xl` (`2rem`). `rounded-2xl` maps to `--radius-md` (both `1rem`). Pills keep `rounded-full`. Segmented groups keep `rounded-none`.
+- Rich text and content editor CSS fallbacks now use the kit radius values (`1rem` / `0.75rem`) instead of Tailwind's `0.375rem` / `0.25rem`.
+- Added `FlatPack::RadiusLanguageAuditor`, `bin/rake flat_pack:audit_radius_language`, and `ruby scripts/rewrite_radius_language.rb`.
+- Bumped the gem version to `0.1.146`.
+
+### Upgrade notes
+- No host app API changes. Rebuild host Tailwind so the new `rounded-[var(--radius-*)]` utilities are generated. If a host copied kit class names such as `rounded-lg` into its own markup, those classes are unchanged. For `sm` / `md` / `lg` / `xl`, both the old and new class names resolve to `var(--radius-*)`, so computed size matches unless a host overrode Tailwind's `--radius-2xl` independently of `--radius-md`. Chat bubbles that used `rounded-2xl` now read `--radius-md`.
+- `Button` still skips its default radius when you pass a `rounded-*` class. Card and most other components last-win the kit token, so `class: "rounded-xl"` does not override them. That last-wins behavior is unchanged.
 
 ## [0.1.145] - 2026-09-04
 

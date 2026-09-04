@@ -95,7 +95,7 @@ module FlatPack
           elements = [
             content_tag(:div, class: "flex justify-center text-sm/6 text-[var(--surface-muted-content-color)]") do
               safe_join([
-                content_tag(:button, type: "button", class: "relative cursor-pointer rounded-md bg-transparent font-semibold text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary hover:text-primary/80", data: {action: "flat-pack--file-input#clickInput"}) do
+                content_tag(:button, type: "button", class: "relative cursor-pointer rounded-[var(--radius-md)] bg-transparent font-semibold text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary hover:text-primary/80", data: {action: "flat-pack--file-input#clickInput"}) do
                   content_tag(:span, "Upload a file")
                 end,
                 content_tag(:p, " or drag and drop", class: "pl-1")
@@ -201,7 +201,7 @@ module FlatPack
           "mt-2",
           "flex justify-center",
           "w-full",
-          "rounded-lg",
+          "rounded-[var(--radius-lg)]",
           "border border-dashed",
           "bg-[var(--surface-background-color)]",
           "px-6 py-10",
