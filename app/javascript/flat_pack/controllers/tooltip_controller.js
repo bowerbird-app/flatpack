@@ -1,5 +1,14 @@
 // FlatPack Tooltip Stimulus Controller
 import { Controller } from "@hotwired/stimulus"
+import {
+  prefersReducedMotion,
+  motionDuration,
+  motionTransition,
+  overlayOrigin,
+  overlayEnterOffset
+} from "controllers/flat_pack/reduced_motion"
+
+const SHOW_DELAY_MS = 200
 
 export default class extends Controller {
   static targets = ["tooltip"]
@@ -11,47 +20,75 @@ export default class extends Controller {
   connect() {
     this.showTimeout = null
     this.hideTimeout = null
+    this.resolvedPlacement = this.placementValue
   }
 
   disconnect() {
     this.clearTimeouts()
   }
 
-  // Show tooltip on mouseenter or focus
-  show(event) {
+  show() {
     if (!this.shouldShowTooltip()) return
 
     this.clearTimeouts()
-    
-    // Small delay before showing
-    this.showTimeout = setTimeout(() => {
-      if (!this.hasTooltipTarget) return
 
-      this.tooltipTarget.classList.remove("hidden")
-      this.position()
-      
-      // Trigger opacity transition
-      requestAnimationFrame(() => {
-        this.tooltipTarget.style.opacity = "1"
-      })
-    }, 200)
+    const alreadyVisible = this.hasTooltipTarget && !this.tooltipTarget.classList.contains("hidden")
+    const delay = alreadyVisible ? 0 : SHOW_DELAY_MS
+
+    this.showTimeout = setTimeout(() => {
+      this.reveal()
+    }, delay)
   }
 
-  // Hide tooltip on mouseleave or blur
-  hide(event) {
+  hide() {
     this.clearTimeouts()
-    
+
     if (!this.hasTooltipTarget) return
 
+    this.tooltipTarget.style.transition = motionTransition(
+      ["opacity", "transform"],
+      { duration: "base", easing: "exit" }
+    )
     this.tooltipTarget.style.opacity = "0"
-    
-    // Hide after transition
+    this.tooltipTarget.style.transform = prefersReducedMotion() ? "none" : overlayEnterOffset(this.resolvedPlacement)
+
     this.hideTimeout = setTimeout(() => {
       this.tooltipTarget.classList.add("hidden")
-    }, 200)
+      this.hideTimeout = null
+    }, motionDuration("base"))
   }
 
-  // Position tooltip based on placement value
+  reveal() {
+    if (!this.hasTooltipTarget) return
+
+    const wasHidden = this.tooltipTarget.classList.contains("hidden")
+    this.tooltipTarget.classList.remove("hidden")
+
+    if (wasHidden) {
+      this.tooltipTarget.style.transition = "none"
+      this.tooltipTarget.style.opacity = "0"
+      this.tooltipTarget.style.transform = "none"
+      this.position()
+      this.tooltipTarget.style.transformOrigin = overlayOrigin(this.resolvedPlacement)
+      this.tooltipTarget.offsetHeight
+
+      if (!prefersReducedMotion()) {
+        this.tooltipTarget.style.transform = overlayEnterOffset(this.resolvedPlacement)
+        this.tooltipTarget.offsetHeight
+      }
+    }
+
+    this.tooltipTarget.style.transition = motionTransition(
+      ["opacity", "transform"],
+      { duration: "base", easing: "enter" }
+    )
+
+    requestAnimationFrame(() => {
+      this.tooltipTarget.style.opacity = "1"
+      this.tooltipTarget.style.transform = "none"
+    })
+  }
+
   position() {
     if (!this.hasTooltipTarget) return
 
@@ -59,7 +96,6 @@ export default class extends Controller {
     const trigger = this.element
     const placement = this.placementValue
 
-    // Reset positioning
     tooltip.style.position = "fixed"
     tooltip.style.top = ""
     tooltip.style.left = ""
@@ -69,22 +105,23 @@ export default class extends Controller {
     tooltip.style.marginRight = ""
     tooltip.style.marginBottom = ""
     tooltip.style.marginLeft = ""
-    tooltip.style.transform = ""
 
-    // Get dimensions
     const triggerRect = trigger.getBoundingClientRect()
     const tooltipRect = tooltip.getBoundingClientRect()
-    const spacing = 8 // Gap between trigger and tooltip
+    const spacing = 8
     const viewportPadding = 8
     let top
     let left
+    let resolved = placement
 
     switch (placement) {
       case "top":
         if (triggerRect.top - tooltipRect.height - spacing >= viewportPadding) {
           top = triggerRect.top - tooltipRect.height - spacing
+          resolved = "top"
         } else {
           top = triggerRect.bottom + spacing
+          resolved = "bottom"
         }
         left = triggerRect.left + (triggerRect.width / 2) - (tooltipRect.width / 2)
         break
@@ -92,8 +129,10 @@ export default class extends Controller {
       case "bottom":
         if (triggerRect.bottom + spacing + tooltipRect.height <= window.innerHeight - viewportPadding) {
           top = triggerRect.bottom + spacing
+          resolved = "bottom"
         } else {
           top = triggerRect.top - tooltipRect.height - spacing
+          resolved = "top"
         }
         left = triggerRect.left + (triggerRect.width / 2) - (tooltipRect.width / 2)
         break
@@ -101,27 +140,30 @@ export default class extends Controller {
       case "left":
         top = triggerRect.top + (triggerRect.height / 2) - (tooltipRect.height / 2)
         left = triggerRect.left - tooltipRect.width - spacing
+        resolved = "left"
         break
 
       case "right":
         top = triggerRect.top + (triggerRect.height / 2) - (tooltipRect.height / 2)
         left = triggerRect.right + spacing
+        resolved = "right"
         break
 
       default:
         top = triggerRect.top - tooltipRect.height - spacing
         left = triggerRect.left + (triggerRect.width / 2) - (tooltipRect.width / 2)
+        resolved = "top"
         break
     }
 
+    this.resolvedPlacement = resolved
     tooltip.style.top = `${top}px`
     tooltip.style.left = `${left}px`
+    tooltip.style.transformOrigin = overlayOrigin(resolved)
 
-    // Clamp to viewport
-    this.clampToViewport(placement, triggerRect, spacing)
+    this.clampToViewport(resolved, triggerRect, spacing)
   }
 
-  // Ensure tooltip stays within viewport
   clampToViewport(placement, triggerRect, spacing) {
     if (!this.hasTooltipTarget) return
 
@@ -134,14 +176,12 @@ export default class extends Controller {
     let adjustLeft = 0
     let adjustTop = 0
 
-    // Check horizontal bounds
     if (rect.left < padding) {
       adjustLeft = padding - rect.left
     } else if (rect.right > viewportWidth - padding) {
       adjustLeft = (viewportWidth - padding) - rect.right
     }
 
-    // Check vertical bounds
     if (rect.top < padding) {
       adjustTop = padding - rect.top
     } else if (rect.bottom > viewportHeight - padding) {
@@ -190,11 +230,9 @@ export default class extends Controller {
   shouldShowTooltip() {
     if (!this.collapsedOnlyValue) return true
 
-    // Sidebar item labels: hide when expanded (sr-only removed), show when collapsed
     const label = this.element.querySelector("span.flex-1")
     if (label) return label.classList.contains("sr-only")
 
-    // Other elements (e.g. section titles): check sidebar ancestor collapsed state
     const sidebar = this.element.closest("[data-flat-pack-sidebar-collapsed]")
     if (sidebar) return sidebar.dataset.flatPackSidebarCollapsed === "true"
 

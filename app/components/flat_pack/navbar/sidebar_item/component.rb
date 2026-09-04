@@ -80,7 +80,7 @@ module FlatPack
             "flex items-center gap-3",
             "w-full px-3 py-2 rounded-[var(--radius-md)]",
             "text-sm font-medium",
-            "transition-colors duration-200",
+            "transition-colors duration-[var(--duration-base)] ease-[var(--easing-standard)]",
             "hover:bg-[var(--surface-muted-background-color)]",
             active_classes
           )

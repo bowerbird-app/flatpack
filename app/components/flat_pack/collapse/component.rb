@@ -60,7 +60,7 @@ module FlatPack
       def render_icon
         content_tag(:svg,
           xmlns: "http://www.w3.org/2000/svg",
-          class: "w-5 h-5 transition-transform duration-[var(--duration-base)] text-[var(--collapse-icon-color)]",
+          class: "w-5 h-5 transition-transform duration-[var(--duration-base)] ease-[var(--easing-standard)] text-[var(--collapse-icon-color)]",
           fill: "none",
           viewBox: "0 0 24 24",
           stroke: "currentColor",
@@ -150,7 +150,7 @@ module FlatPack
       def content_attributes
         {
           id: content_id,
-          class: "overflow-hidden transition-all duration-[var(--collapse-transition-duration)] ease-in-out bg-[var(--collapse-content-background-color)]",
+          class: "overflow-hidden transition-[max-height] duration-[var(--collapse-transition-duration)] ease-[var(--easing-standard)] bg-[var(--collapse-content-background-color)]",
           data: {"flat-pack--collapse-target": "content"},
           hidden: !@open
         }

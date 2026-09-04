@@ -146,8 +146,9 @@ module FlatPack
             "break-words",
             "pointer-events-none",
             "opacity-0",
-            "transition-opacity",
-            "duration-[var(--duration-base)]"
+            "transition-[opacity,transform]",
+            "duration-[var(--duration-base)]",
+            "ease-[var(--easing-enter)]"
           )
         end
 

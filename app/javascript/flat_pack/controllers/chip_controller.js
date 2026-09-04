@@ -1,6 +1,6 @@
 // FlatPack Chip Stimulus Controller
 import { Controller } from "@hotwired/stimulus"
-import { prefersReducedMotion, motionDuration } from "controllers/flat_pack/reduced_motion"
+import { prefersReducedMotion, motionDuration, motionTransition } from "controllers/flat_pack/reduced_motion"
 
 export default class extends Controller {
   static targets = ["chip"]
@@ -73,7 +73,10 @@ export default class extends Controller {
       return
     }
 
-    this.chipTarget.style.transition = "opacity var(--duration-base), transform var(--duration-base)"
+    this.chipTarget.style.transition = motionTransition(
+      ["opacity", "transform"],
+      { duration: "base", easing: "exit" }
+    )
     this.chipTarget.style.opacity = "0"
     this.chipTarget.style.transform = "scale(0.8)"
 

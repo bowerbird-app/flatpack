@@ -162,9 +162,9 @@ module FlatPack
           "md:self-start",
           "min-h-0",
           "transition-transform",
-          "md:transition-all",
+          "md:transition-[width,transform]",
           "duration-[var(--duration-slow)]",
-          "ease-in-out",
+          "ease-[var(--easing-standard)]",
           "transform-gpu",
           "will-change-transform",
           # Desktop styles
@@ -217,7 +217,7 @@ module FlatPack
       end
 
       def backdrop_classes
-        "fixed inset-0 bg-black/50 z-40 md:hidden opacity-0 pointer-events-none transition-opacity duration-[var(--duration-slow)]"
+        "fixed inset-0 bg-black/50 z-40 md:hidden opacity-0 pointer-events-none transition-opacity duration-[var(--duration-slow)] ease-[var(--easing-enter)]"
       end
 
       def validate_side!

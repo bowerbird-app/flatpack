@@ -111,7 +111,8 @@ module FlatPack
           layout.sidebar { "Sidebar" }
         end
 
-        assert_includes page.native.to_html, "md:transition-all"
+        assert_includes page.native.to_html, "md:transition-[width,transform]"
+        assert_includes page.native.to_html, "ease-[var(--easing-standard)]"
       end
 
       def test_sidebar_column_uses_mobile_only_high_z_index

@@ -41,6 +41,7 @@ Use Popover for contextual content such as menus, hints, and quick actions ancho
 ## Accessibility
 - Popover content wrapper is initialized hidden (`aria-hidden="true"`).
 - Ensure trigger is keyboard-focusable and has accessible labeling.
+- Open/close uses `--duration-base` with `--easing-enter` / `--easing-exit`, a few pixels of offset, and origin from the trigger. A close in flight can reverse.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).

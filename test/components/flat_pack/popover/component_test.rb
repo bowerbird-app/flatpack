@@ -70,6 +70,18 @@ module FlatPack
         assert_selector "div[aria-hidden='true']"
       end
 
+      def test_popover_uses_enter_easing_and_transform_transition
+        render_inline(Component.new(trigger_id: "trigger")) do |component|
+          component.content { "Content" }
+        end
+
+        html = page.native.to_html
+        assert_includes html, "transition-[opacity,transform]"
+        assert_includes html, "ease-[var(--easing-enter)]"
+        assert_includes html, "duration-[var(--duration-base)]"
+        assert_includes html, "opacity-0"
+      end
+
       def test_raises_error_when_trigger_id_missing
         assert_raises(ArgumentError) do
           Component.new(trigger_id: nil)

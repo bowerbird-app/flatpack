@@ -57,7 +57,7 @@ Use this order on Flatpack UI work:
 
 **Design DNA.** Extract measurable system into Flatpack tokens and themes: colour, type, space, radius, elevation, motion duration and easing. Do not implement DNA `visual_effects` (WebGL, particles, shaders, Canvas, scroll theatres, cursor trails) unless Nic explicitly asks for a Flatpack-owned effect later.
 
-**Motion.** Advise timing, easing, and choreography. Implement with Flatpack CSS and `--duration-*` tokens. Do not default to Framer, GSAP, or Lottie.
+**Motion.** Advise timing, easing, and choreography. Implement with Flatpack CSS, `--duration-*`, and `--easing-*` tokens. Do not default to Framer, GSAP, or Lottie.
 
 ## Refreshing pstack
 

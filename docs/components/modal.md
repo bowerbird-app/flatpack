@@ -50,7 +50,7 @@ Use Modal for confirmation flows, forms, and detailed contextual content that sh
 - Renders `role="dialog"`, `aria-modal="true"`, and `aria-labelledby` bound to the header id.
 - Escape/backdrop close controls are configurable.
 - Ensure trigger and focus-management behavior are implemented in the modal controller usage flow.
-- Under `prefers-reduced-motion: reduce`, the dialog fades without scale and closes without a 300ms wait.
+- Under `prefers-reduced-motion: reduce`, the dialog fades without scale. Enter uses `--duration-slow` / `--easing-enter`; exit uses `--duration-base` / `--easing-exit`. A close in flight can reverse.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).

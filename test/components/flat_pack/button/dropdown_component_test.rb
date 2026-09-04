@@ -32,6 +32,7 @@ module FlatPack
         assert_selector "div[role='menu'].opacity-0"
         assert_selector "div[role='menu'].scale-95"
         assert_includes page.native.to_html, "transition-[opacity,transform]"
+        assert_includes page.native.to_html, "ease-[var(--easing-enter)]"
       end
 
       # Style variants

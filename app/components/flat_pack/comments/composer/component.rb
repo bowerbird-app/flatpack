@@ -170,7 +170,7 @@ module FlatPack
 
         def textarea_shell_classes
           classes(
-            "flat-pack-comments-composer-input relative overflow-hidden rounded-[var(--radius-xl)] border border-[var(--comments-composer-border-color)] bg-[var(--comments-composer-background-color)] shadow-sm transition-all duration-base",
+            "flat-pack-comments-composer-input relative overflow-hidden rounded-[var(--radius-xl)] border border-[var(--comments-composer-border-color)] bg-[var(--comments-composer-background-color)] shadow-sm transition-[border-color,box-shadow] duration-[var(--duration-base)] ease-[var(--easing-standard)]",
             "focus-within:border-[var(--comments-composer-focus-border-color)] focus-within:ring-2 focus-within:ring-inset focus-within:ring-[var(--comments-composer-focus-ring-color)]",
             rich_text_with_toolbar? ? "flat-pack-comments-richtext--has-toolbar" : nil,
             bubble_only_rich_text? ? "flat-pack-comments-richtext--bubble-only" : nil,

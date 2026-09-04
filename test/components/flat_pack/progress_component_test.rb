@@ -127,6 +127,15 @@ module FlatPack
 
         assert_selector "[aria-label='File upload']"
       end
+
+      def test_bar_uses_standard_easing
+        render_inline(Component.new(value: 50))
+
+        html = page.native.to_html
+        assert_includes html, "transition-[width]"
+        assert_includes html, "ease-[var(--easing-standard)]"
+        refute_includes html, "ease-in-out"
+      end
     end
   end
 end

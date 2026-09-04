@@ -22,9 +22,12 @@ Existing:
 - `--duration-fast` 150ms. Hover, colour, icon rotate.
 - `--duration-base` 200ms. Press, toggle, tooltip, form invalid.
 - `--duration-slow` 300ms. Modal, drawer, toast, list insert/remove, skeleton-to-content.
+- `--easing-standard` `cubic-bezier(0.2, 0, 0, 1)`. In-place motion.
+- `--easing-enter` `cubic-bezier(0.05, 0.7, 0.1, 1)`. Overlay entrance (decelerate).
+- `--easing-exit` `cubic-bezier(0.3, 0, 1, 1)`. Overlay exit (accelerate). No bounce.
 - `--transition-fast` / `--transition-base` / `--transition-slow` alias `--duration-*`. Prefer `--duration-*` in new code.
 
-If easing needs a name, add `--easing-standard`, `--easing-enter`, `--easing-exit` on the theme in a Flatpack PR. Map enter to decelerate, exit to accelerate, in-place to standard. Until those tokens exist, use CSS transitions on the component, still keyed to `--duration-*`.
+Use `ease-[var(--easing-*)]` in ViewComponents and `motionTransition()` in Stimulus. Do not hardcode `ease-in-out` or a one-off cubic-bezier.
 
 Every pattern below has a `prefers-reduced-motion: reduce` branch: duration 0 or a colour/opacity cut with no transform.
 

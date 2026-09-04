@@ -98,8 +98,9 @@ module FlatPack
           side_border_class,
           "border-[var(--sidebar-border-color)]",
           "transition-none",
-          "md:transition-all",
+          "md:transition-[width]",
           "duration-[var(--duration-slow)]",
+          "ease-[var(--easing-standard)]",
           "w-64"
         )
       end

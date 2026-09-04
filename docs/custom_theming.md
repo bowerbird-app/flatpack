@@ -176,6 +176,9 @@ This block is a full-token override starter (historically based on the earlier p
   --skeleton-background-color: var(--surface-muted-background-color);
   --skeleton-shimmer-highlight-color: rgb(255 255 255 / 0.45);
   --skeleton-shimmer-duration: 1.35s;
+  --easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --easing-enter: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --easing-exit: cubic-bezier(0.3, 0, 1, 1);
   --code-block-background-color: var(--surface-muted-background-color);
   --code-block-border-color: var(--surface-border-color);
   --code-block-title-color: var(--surface-muted-content-color);
