@@ -66,15 +66,13 @@
                 icon_only: true,
                 style: :ghost,
                 size: :sm,
-                href: "#chat-search"
-              ) %>
+                href: "#chat-search", aria: { label: "Search" }) %>
               <%= render FlatPack::Button::Component.new(
                 icon: "dots",
                 icon_only: true,
                 style: :ghost,
                 size: :sm,
-                href: "#chat-menu"
-              ) %>
+                href: "#chat-menu", aria: { label: "More" }) %>
             <% end %>
           <% end %>
         <% end %>
@@ -241,7 +239,7 @@
               group_max: 4
               ) do |header| %&gt;
                 &lt;% header.right do %&gt;
-                  &lt;%= render FlatPack::Button::Component.new(icon: "search", icon_only: true, style: :ghost, size: :sm) %&gt;
+                  &lt;%= render FlatPack::Button::Component.new(icon: "search", icon_only: true, style: :ghost, size: :sm, aria: { label: "Search" }) %&gt;
                 &lt;% end %&gt;
               &lt;% end %&gt;
             &lt;% end %&gt;

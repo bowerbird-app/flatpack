@@ -4,13 +4,13 @@ module FlatPack
   module Button
     class Component < FlatPack::BaseComponent
       SCHEMES = {
-        default: "bg-[var(--button-default-background-color)] hover:bg-[var(--button-default-hover-background-color)] text-[var(--button-default-text-color)] border border-[var(--button-default-border-color)] shadow-[var(--button-shadow)]",
-        primary: "bg-[var(--button-primary-background-color)] hover:bg-[var(--button-primary-hover-background-color)] text-[var(--button-primary-text-color)] border border-[var(--button-primary-border-color)] shadow-[var(--button-shadow)]",
+        default: "bg-[var(--button-default-background-color)] hover:bg-[var(--button-default-hover-background-color)] text-[var(--button-default-text-color)] border border-[var(--button-default-border-color)] shadow-[var(--button-shadow)] hover:shadow-[var(--button-shadow-hover)] active:shadow-[var(--button-shadow-active)]",
+        primary: "bg-[var(--button-primary-background-color)] hover:bg-[var(--button-primary-hover-background-color)] text-[var(--button-primary-text-color)] border border-[var(--button-primary-border-color)] shadow-[var(--button-shadow)] hover:shadow-[var(--button-shadow-hover)] active:shadow-[var(--button-shadow-active)]",
         secondary: "bg-[var(--button-secondary-background-color)] hover:bg-[var(--button-secondary-hover-background-color)] text-[var(--button-secondary-text-color)] border border-[var(--button-secondary-border-color)]",
         ghost: "bg-[var(--button-ghost-background-color)] hover:bg-[var(--button-ghost-hover-background-color)] text-[var(--button-ghost-text-color)] border border-[var(--button-ghost-border-color)]",
-        success: "bg-[var(--button-success-background-color)] hover:bg-[var(--button-success-hover-background-color)] text-[var(--button-success-text-color)] border border-[var(--button-success-border-color)] shadow-[var(--button-shadow)]",
-        warning: "bg-[var(--button-warning-background-color)] hover:bg-[var(--button-warning-hover-background-color)] text-[var(--button-warning-text-color)] border border-[var(--button-warning-border-color)] shadow-[var(--button-shadow)]",
-        danger: "bg-[var(--button-danger-background-color)] hover:bg-[var(--button-danger-hover-background-color)] text-[var(--button-danger-text-color)] border border-[var(--button-danger-border-color)] shadow-[var(--button-shadow)]"
+        success: "bg-[var(--button-success-background-color)] hover:bg-[var(--button-success-hover-background-color)] text-[var(--button-success-text-color)] border border-[var(--button-success-border-color)] shadow-[var(--button-shadow)] hover:shadow-[var(--button-shadow-hover)] active:shadow-[var(--button-shadow-active)]",
+        warning: "bg-[var(--button-warning-background-color)] hover:bg-[var(--button-warning-hover-background-color)] text-[var(--button-warning-text-color)] border border-[var(--button-warning-border-color)] shadow-[var(--button-shadow)] hover:shadow-[var(--button-shadow-hover)] active:shadow-[var(--button-shadow-active)]",
+        danger: "bg-[var(--button-danger-background-color)] hover:bg-[var(--button-danger-hover-background-color)] text-[var(--button-danger-text-color)] border border-[var(--button-danger-border-color)] shadow-[var(--button-shadow)] hover:shadow-[var(--button-shadow-hover)] active:shadow-[var(--button-shadow-active)]"
       }.freeze
 
       SIZES = {
@@ -92,7 +92,7 @@ module FlatPack
           content << content_tag(:span, "Loading") unless @icon_only
         else
           content << render_icon if @icon
-          content << content_tag(:span, @text) if @text
+          content << content_tag(:span, @text) if @text && !@icon_only
         end
 
         safe_join(content)
@@ -123,24 +123,31 @@ module FlatPack
         @icon_only ? nil : size_classes
       end
 
-      def link_attributes
-        attrs = {
-          class: button_classes,
-          method: @method,
-          target: @target
-        }
-        # Add rel="noopener noreferrer" for security when opening in new tab
-        attrs[:rel] = "noopener noreferrer" if @target == "_blank"
-        merge_attributes(**attrs).compact
-      end
-
       def button_attributes
         attrs = {
           type: @type,
           class: button_classes
         }
         attrs[:disabled] = true if @loading
+        aria = {}
+        aria[:label] = derived_icon_only_label if derived_icon_only_label.present?
+        aria[:busy] = "true" if @loading
+        attrs[:aria] = aria if aria.any?
         merge_attributes(**attrs)
+      end
+
+      def link_attributes
+        attrs = {
+          class: button_classes,
+          method: @method,
+          target: @target
+        }
+        attrs[:rel] = "noopener noreferrer" if @target == "_blank"
+        aria = {}
+        aria[:label] = derived_icon_only_label if derived_icon_only_label.present?
+        aria[:busy] = "true" if @loading
+        attrs[:aria] = aria if aria.any?
+        merge_attributes(**attrs).compact
       end
 
       def button_classes
@@ -149,7 +156,7 @@ module FlatPack
           default_radius_class,
           "font-medium",
           "cursor-pointer",
-          "transition-colors duration-base",
+          "transition-[color,background-color,border-color,box-shadow] duration-[var(--duration-fast)]",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--button-focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--button-focus-ring-offset-color)]",
           "disabled:pointer-events-none disabled:opacity-[var(--button-disabled-opacity)]",
           conditional_size_classes,
@@ -175,7 +182,7 @@ module FlatPack
       def icon_only_classes
         return unless @icon_only
 
-        ICON_ONLY_SIZES.fetch(@size)
+        "#{ICON_ONLY_SIZES.fetch(@size)} fp-hit-target"
       end
 
       def style_classes
@@ -197,15 +204,31 @@ module FlatPack
       end
 
       def validate_content!
-        # Valid scenarios:
-        # 1. Has text (with or without icon)
-        # 2. Has icon
         has_text = @text.present?
         has_icon = @icon.present?
-        is_valid = has_text || has_icon
-        return if is_valid
+        unless has_text || has_icon
+          raise ArgumentError, "Button must have either a text prop or an icon prop"
+        end
 
-        raise ArgumentError, "Button must have either a text prop or an icon prop"
+        return unless @icon_only
+        return if icon_only_accessible_name.present?
+
+        raise ArgumentError, "Icon-only buttons need an accessible name. Pass text: or aria: { label: \"Search\" }."
+      end
+
+      def icon_only_accessible_name
+        explicit_aria_label.presence || @text.presence
+      end
+
+      def explicit_aria_label
+        aria_attributes[:label].presence || aria_attributes["label"].presence
+      end
+
+      def derived_icon_only_label
+        return unless @icon_only
+        return if explicit_aria_label.present?
+
+        @text.presence
       end
 
       def validate_href!(original_url)

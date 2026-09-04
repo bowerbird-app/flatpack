@@ -60,9 +60,9 @@
         <div class="flex items-center justify-between">
           <div class="text-xs text-[var(--surface-muted-content-color)]">Updated 2h ago</div>
           <div class="flex gap-2">
-            <%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, style: :ghost, size: :sm, href: "#grid-card-notifications") %>
-            <%= render FlatPack::Button::Component.new(icon: "calendar", icon_only: true, style: :ghost, size: :sm, href: "#grid-card-schedule") %>
-            <%= render FlatPack::Button::Component.new(icon: "dots", icon_only: true, style: :ghost, size: :sm, href: "#grid-card-menu") %>
+            <%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, style: :ghost, size: :sm, href: "#grid-card-notifications", aria: { label: "Notifications" }) %>
+            <%= render FlatPack::Button::Component.new(icon: "calendar", icon_only: true, style: :ghost, size: :sm, href: "#grid-card-schedule", aria: { label: "Schedule" }) %>
+            <%= render FlatPack::Button::Component.new(icon: "dots", icon_only: true, style: :ghost, size: :sm, href: "#grid-card-menu", aria: { label: "More" }) %>
           </div>
         </div>
       <% end %>
@@ -82,9 +82,9 @@
           <div class="flex items-center justify-between">
             <div class="text-xs text-[var(--surface-muted-content-color)]">Updated 2h ago</div>
             <div class="flex gap-2">
-              &lt;%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, style: :ghost, size: :sm, href: "#grid-card-notifications") %&gt;
-              &lt;%= render FlatPack::Button::Component.new(icon: "calendar", icon_only: true, style: :ghost, size: :sm, href: "#grid-card-schedule") %&gt;
-              &lt;%= render FlatPack::Button::Component.new(icon: "dots", icon_only: true, style: :ghost, size: :sm, href: "#grid-card-menu") %&gt;
+              &lt;%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, style: :ghost, size: :sm, href: "#grid-card-notifications", aria: { label: "Notifications" }) %&gt;
+              &lt;%= render FlatPack::Button::Component.new(icon: "calendar", icon_only: true, style: :ghost, size: :sm, href: "#grid-card-schedule", aria: { label: "Schedule" }) %&gt;
+              &lt;%= render FlatPack::Button::Component.new(icon: "dots", icon_only: true, style: :ghost, size: :sm, href: "#grid-card-menu", aria: { label: "More" }) %&gt;
             </div>
           </div>
         &lt;% end %&gt;

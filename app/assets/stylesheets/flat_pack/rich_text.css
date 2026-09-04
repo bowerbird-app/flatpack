@@ -134,9 +134,9 @@
     margin-bottom: 0.5rem;
   }
 
-  /* Error state border is set inline by Ruby; mirror focus ring to warning */
+  /* Error state border is set inline by Ruby; mirror focus ring to error */
   .flat-pack-richtext--error.flat-pack-richtext-wrapper.flat-pack-richtext--focused .flat-pack-richtext-editor {
-    box-shadow: 0 0 0 2px inset var(--color-warning-border);
+    box-shadow: 0 0 0 2px inset var(--color-error-border);
     border-color: transparent;
   }
 

@@ -68,7 +68,7 @@ module FlatPack
         render_inline(Component.new(name: "website", error: "Invalid"))
 
         html = page.native.to_html
-        assert_includes html, "border-[var(--color-warning)]"
+        assert_includes html, "border-[var(--color-error)]"
       end
 
       def test_sanitizes_javascript_url

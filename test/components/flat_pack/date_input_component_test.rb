@@ -90,7 +90,7 @@ module FlatPack
 
         # Check that destructive border color is applied
         html = page.native.to_html
-        assert_includes html, "border-[var(--color-warning)]"
+        assert_includes html, "border-[var(--color-error)]"
       end
 
       def test_renders_with_custom_class

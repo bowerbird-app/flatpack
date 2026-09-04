@@ -13,6 +13,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.150] - 2026-09-04
+
+### Added
+- `--color-error` and `--color-error-border` alias danger red. Invalid form chrome (borders, helper text, JS validation, rich-text error focus) uses those tokens. Chip, alert, and button **warning** styles stay amber.
+- `--hit-target-min` (`2.75rem` / 44px) and `--hit-target-inline-min` (`1.5rem` / 24px), plus kit classes `.fp-hit-target` and `.fp-hit-target-inline`. Icon-only buttons, modal close, and alert/toast dismiss use 44px. Chip and badge remove use 24px so chips do not grow to 44px.
+- `:root { color-scheme: light; }` and `[data-theme="dark"] { color-scheme: dark; }` so native controls follow the theme.
+
+### Changed
+- Icon-only `Button` requires `text:` (used as `aria-label`, not shown) or `aria: { label: "…" }`. Missing a name raises `ArgumentError`. Loading icon-only keeps the name and sets `aria-busy="true"`.
+- Button schemes that already have a rest shadow now use `--button-shadow-hover` (`--shadow-button`) and `--button-shadow-active` (`--shadow-button-active`) on hover and press. Ghost and secondary stay unshadowed at rest. Colour, border, and shadow transitions use `--duration-fast`.
+- Dark `--shadow-sm` / `--shadow-md` / `--shadow-lg` add a faint white hairline so elevation reads on near-black.
+- `--switch-error-color` now aliases `--color-error` instead of `--color-warning`.
+- Bumped the gem version to `0.1.150`.
+
+### Upgrade notes
+- Icon-only `FlatPack::Button::Component` without `text:` or `aria: { label: }` now raises. Pass a name. `text:` on an icon-only button is the accessible name and is not rendered as visible copy.
+- Invalid form borders and messages are danger red (`--color-error`), not warning amber. Override `--color-error` if you need a different invalid colour. Warning chips, alerts, and buttons are unchanged.
+- Rebuild host Tailwind so `hover:shadow-[var(--button-shadow-hover)]`, `active:shadow-[var(--button-shadow-active)]`, and `duration-[var(--duration-fast)]` are generated. `.fp-hit-target` / `.fp-hit-target-inline` come from kit `flat_pack/application` CSS and do not need a Tailwind rebuild.
+
 ## [0.1.149] - 2026-09-04
 
 ### Changed

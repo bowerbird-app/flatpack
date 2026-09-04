@@ -8,12 +8,12 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "text-[var(--color-warning)]" "border-[var(--color-warning)]"
+      # "text-[var(--color-error)]" "border-[var(--color-error)]"
       # "text-[var(--surface-content-color)]" "text-[var(--surface-muted-content-color)]"
 
       DEFAULT_WRAPPER_CLASS = "flat-pack-input-wrapper"
       DEFAULT_LABEL_CLASS = "block text-sm font-medium text-[var(--surface-content-color)] mb-1.5"
-      DEFAULT_ERROR_CLASS = "mt-1 text-sm text-[var(--color-warning)]"
+      DEFAULT_ERROR_CLASS = "mt-1 text-sm text-[var(--color-error)]"
       DEFAULT_HELP_TEXT_CLASS = "mt-1 text-xs text-[var(--surface-muted-content-color)]"
 
       renders_one :control

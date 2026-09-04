@@ -147,7 +147,7 @@
     },
     page_nav: {
       label: "Page Nav",
-      method_call: "render FlatPack::PageNav::Component.new(anchor_href: demo_path, anchor_tooltip: \"Close\") { |component| component.right_slot { render FlatPack::Button::Component.new(icon: \"plus\", icon_only: true, href: demo_forms_path) } }",
+      method_call: "render FlatPack::PageNav::Component.new(anchor_href: demo_path, anchor_tooltip: \"Close\") { |component| component.right_slot { render FlatPack::Button::Component.new(icon: \"plus\", icon_only: true, href: demo_forms_path, aria: { label: \"Action\" }) } }",
       variables: [
         { variable: "back_icon", accepts: "String", example: "back_icon: \"chevron-left\"" },
         { variable: "back_tooltip", accepts: "String or nil", example: "back_tooltip: \"Go back\"" },
@@ -163,7 +163,7 @@
         { variable: "anchor_label", accepts: "String", example: "anchor_label: \"Close\" # deprecated" },
         { variable: "anchor_style", accepts: ":default, :primary, :secondary, :ghost, :success, :warning, :danger", example: "anchor_style: :secondary" },
         { variable: "anchor_size", accepts: ":sm, :md, :lg", example: "anchor_size: :md" },
-        { variable: "right_slot", accepts: "slot block", example: "component.right_slot { render FlatPack::Button::Component.new(icon: \"plus\", icon_only: true, href: demo_forms_path) }" },
+        { variable: "right_slot", accepts: "slot block", example: "component.right_slot { render FlatPack::Button::Component.new(icon: \"plus\", icon_only: true, href: demo_forms_path, aria: { label: \"Action\" }) }" },
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"mb-4\", data: { testid: \"page-nav\" }" }
       ]
     },

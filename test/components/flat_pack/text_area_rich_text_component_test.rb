@@ -138,13 +138,13 @@ module FlatPack
 
       def test_rich_text_mode_error_class_on_editor_container
         render_inline(Component.new(name: "body", rich_text: true, error: "Required"))
-        assert_selector "div.flat-pack-richtext-editor[class~='border-[var(--color-warning)]']"
+        assert_selector "div.flat-pack-richtext-editor[class~='border-[var(--color-error)]']"
       end
 
       def test_rich_text_mode_no_error_uses_border_class
         render_inline(Component.new(name: "body", rich_text: true))
         assert_selector "div.flat-pack-richtext-editor"
-        refute_selector "div.flat-pack-richtext-editor[class~='border-[var(--color-warning)]']"
+        refute_selector "div.flat-pack-richtext-editor[class~='border-[var(--color-error)]']"
       end
 
       # ── Stimulus controller data attributes ────────────────────────────────

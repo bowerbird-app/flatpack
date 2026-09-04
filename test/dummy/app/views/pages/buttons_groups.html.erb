@@ -28,9 +28,9 @@
         segmented_buttons_demo_inactive_classes_value: FlatPack::Button::Component::SCHEMES[:secondary]
       }
     ) do |group| %>
-      <% group.button(FlatPack::Button::Component.new(icon: "align-left", icon_only: true, style: :primary, aria: { pressed: true }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" })) %>
-      <% group.button(FlatPack::Button::Component.new(icon: "align-center", icon_only: true, style: :secondary, aria: { pressed: false }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" })) %>
-      <% group.button(FlatPack::Button::Component.new(icon: "align-right", icon_only: true, style: :secondary, aria: { pressed: false }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" })) %>
+      <% group.button(FlatPack::Button::Component.new(icon: "align-left", icon_only: true, style: :primary, aria: { pressed: true, label: "Align left" }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" })) %>
+      <% group.button(FlatPack::Button::Component.new(icon: "align-center", icon_only: true, style: :secondary, aria: { pressed: false, label: "Align centre" }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" })) %>
+      <% group.button(FlatPack::Button::Component.new(icon: "align-right", icon_only: true, style: :secondary, aria: { pressed: false, label: "Align right" }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" })) %>
     <% end %>
   </div>
   <%= render FlatPack::CodeBlock::Component.new(

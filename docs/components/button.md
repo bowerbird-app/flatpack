@@ -13,14 +13,14 @@ Use this for primary and secondary actions in forms, toolbars, dialogs, and list
 ## Props
 | name | type | default | required | description |
 | --- | --- | --- | --- | --- |
-| `text` | String, nil | `nil` | no | Visible label text. Required unless `icon` is provided. |
+| `text` | String, nil | `nil` | no | Visible label text. Required unless `icon` is provided. On `icon_only` buttons, `text` is the accessible name (`aria-label`) and is not shown. |
 | `style` | Symbol | `:default` | no | One of `:default`, `:primary`, `:secondary`, `:ghost`, `:success`, `:warning`, `:danger`. |
 | `size` | Symbol | `:md` | no | One of `:sm`, `:md`, `:lg`. |
 | `href` | String, nil | `nil` | no | When present, renders an `<a>` via `link_to`; otherwise a `<button>`. |
 | `method` | Symbol, nil | `nil` | no | Link method passed to `link_to` (for non-GET link actions). |
 | `target` | String, nil | `nil` | no | Link target, for example `"_blank"`. |
 | `icon` | String, nil | `nil` | no | Heroicons v2 name rendered before text (or alone with `icon_only`), e.g. `"magnifying-glass"`, `"plus"`, `"trash"`. Legacy shorthand aliases are supported for backward compatibility. |
-| `icon_only` | Boolean | `false` | no | Uses compact icon-only padding and hides text/spinner label. |
+| `icon_only` | Boolean | `false` | no | Uses compact icon-only padding, a 44px hit target (`.fp-hit-target`), and hides visible text. Requires `text:` or `aria: { label: "…" }`. |
 | `loading` | Boolean | `false` | no | Disables button and shows spinner; text becomes `Loading` when not icon-only. |
 | `type` | String | `"button"` | no | Native button type for button mode: `button`, `submit`, `reset`. |
 | `**system_arguments` | Hash | `{}` | no | Forwarded HTML attributes/classes/data/aria. |
@@ -64,8 +64,17 @@ Use `FlatPack::Button::Pill::Component` when you need the rounded pills styling 
 ) %>
 ```
 
+```erb
+<%= render FlatPack::Button::Component.new(
+  icon: "magnifying-glass",
+  icon_only: true,
+  aria: { label: "Search" }
+) %>
+```
+
 ## Accessibility
-- For icon-only buttons, provide an accessible name, for example `aria: { label: "Open settings" }`.
+- Icon-only buttons must have an accessible name: `text:` (used as `aria-label`, not shown) or `aria: { label: "Open settings" }`. Missing a name raises `ArgumentError`.
+- Loading icon-only buttons keep that name and set `aria-busy="true"`.
 - Focus ring styles are applied by default for keyboard navigation.
 - In loading state, the button is disabled to prevent duplicate actions. The spinner uses `motion-reduce:animate-none`.
 

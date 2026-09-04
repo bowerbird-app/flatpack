@@ -187,6 +187,7 @@ module FlatPack
           "transition-colors",
           "rounded-[var(--radius-sm)]",
           "p-1",
+          "fp-hit-target",
           "focus-visible:outline-none",
           "focus-visible:ring-2 focus-visible:ring-inset",
           "focus-visible:ring-ring",
