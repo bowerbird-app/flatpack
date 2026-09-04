@@ -1,0 +1,14 @@
+---
+description: Bump a gem version once per branch and ship upgrade notes instead of shims
+alwaysApply: true
+---
+
+On a gem repo, if you are not on the default branch, bump the gem version once for the whole branch.
+
+Fetch the remote default branch before you pick the number. Your version must be strictly greater than default. Never reuse a version that already shipped, and never go backwards.
+
+Do not bump again on the same branch unless that version already merged or default caught up. Recheck after you rebase or merge default, and again right before you commit.
+
+Write release notes for what changed. If implementation, config, public API, dependencies, or behavior changed, add short upgrade notes. Prefer clean code over compatibility shims: ship the notes, the upgrade code, and tests that the upgrade worked.
+
+A GitHub Release on the version tag is how a bump ships. Do not tag from a still-open version PR.
