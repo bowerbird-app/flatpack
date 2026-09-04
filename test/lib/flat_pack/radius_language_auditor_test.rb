@@ -29,7 +29,22 @@ module FlatPack
       end
     end
 
-    test "kit components and javascript do not use Tailwind radius scale names" do
+    test "reports leftover utilities in CSS including old fallbacks" do
+      Dir.mktmpdir do |dir|
+        FileUtils.mkdir_p(File.join(dir, "app/assets/stylesheets"))
+        File.write(
+          File.join(dir, "app/assets/stylesheets/example.css"),
+          "div { border-radius: var(--radius-sm, 0.25rem); } .x { @apply rounded-4xl; }"
+        )
+
+        result = RadiusLanguageAuditor.new(engine_root: dir).call
+
+        refute_predicate result, :success?
+        assert_equal ["rounded-4xl", "var(--radius-sm, 0.25rem)"].sort, result.violations.first.utilities.sort
+      end
+    end
+
+    test "kit components, javascript, and stylesheets do not use Tailwind radius scale names" do
       result = RadiusLanguageAuditor.new.call
 
       assert_predicate result, :success?, lambda {

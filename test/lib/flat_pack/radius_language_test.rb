@@ -34,10 +34,21 @@ module FlatPack
         RadiusLanguage.rewrite(source)
     end
 
-    test "is idempotent" do
-      source = "hover:rounded-md rounded-2xl"
+    test "is idempotent including CSS fallbacks" do
+      source = "hover:rounded-md rounded-2xl border-radius: var(--radius-md, 0.375rem);"
 
       assert_equal RadiusLanguage.rewrite(source), RadiusLanguage.rewrite(RadiusLanguage.rewrite(source))
+    end
+
+    test "does not rewrite unmapped Tailwind extras" do
+      assert_equal "rounded-xs rounded-4xl", RadiusLanguage.rewrite("rounded-xs rounded-4xl")
+    end
+
+    test "detects unmapped Tailwind extras and leftover fallbacks" do
+      source = %(class: "rounded-xs" border-radius: var(--radius-md, 0.375rem);)
+
+      assert_includes RadiusLanguage.utilities_in(source), "rounded-xs"
+      assert_includes RadiusLanguage.utilities_in(source), "var(--radius-md, 0.375rem)"
     end
   end
 end

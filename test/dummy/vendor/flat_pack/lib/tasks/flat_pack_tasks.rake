@@ -54,7 +54,7 @@ namespace :flat_pack do
     puts "FlatPack radius language audit"
 
     if result.success?
-      puts "PASS: kit components and javascript use rounded-[var(--radius-*)]"
+      puts "PASS: kit components, javascript, and CSS use rounded-[var(--radius-*)]"
       next
     end
 

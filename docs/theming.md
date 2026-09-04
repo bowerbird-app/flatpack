@@ -169,7 +169,9 @@ Use stack gap tokens on parent layout containers (for example, form stacks) to c
 --radius-xl: 2rem
 ```
 
-Kit surfaces use `rounded-[var(--radius-sm)]` through `rounded-[var(--radius-xl)]`, or a component alias such as `--button-border-radius`. Do not use Tailwind's `rounded-sm` / `rounded-md` / `rounded-lg` / `rounded-xl` / `rounded-2xl` in kit components. Those names share `--radius-*` with FlatPack and hide which scale is in play. Keep `rounded-full` for pills and avatars, and `rounded-none` for segmented groups. Host apps may still pass a Tailwind radius class as an override (`class: "rounded-xl"`). `bin/rake flat_pack:audit_radius_language` fails if a kit file adds a scale name back. Re-run `ruby scripts/rewrite_radius_language.rb` to map leftovers.
+Kit surfaces use `rounded-[var(--radius-sm)]` through `rounded-[var(--radius-xl)]`, or a component alias such as `--button-border-radius`. Do not use Tailwind's `rounded-sm` / `rounded-md` / `rounded-lg` / `rounded-xl` / `rounded-2xl` in kit components. Those names share `--radius-*` with FlatPack and hide which scale is in play. Keep `rounded-full` for pills and avatars, and `rounded-none` for segmented groups.
+
+`Button` already skips its default radius when the host passes a `rounded-*` class. Other components merge with last-wins, so a host `class: "rounded-xl"` on Card does not replace the kit token. Kit maintainers run `bin/rake flat_pack:audit_radius_language` from this repo. That task audits the gem, not host markup. Remap leftovers with `ruby scripts/rewrite_radius_language.rb` in a checkout of this repository. The gem package does not ship `scripts/`.
 
 `--chip-border-radius` (`0.5rem`) and `--checkbox-radius` (`0.125rem`) stay as named component tokens off the four-step scale.
 
@@ -230,4 +232,4 @@ bin/rake flat_pack:audit_tokens
 bin/rake flat_pack:audit_radius_language
 ```
 
-`audit_tokens` fails if any `var(--*)` / Tailwind `bg-(--*)` reference in the gem is missing from `variables.css`. `audit_radius_language` fails if kit Ruby or JavaScript still uses Tailwind radius scale names (`rounded-md`, `rounded-lg`, and the rest) instead of `rounded-[var(--radius-*)]`.
+`audit_tokens` fails if any `var(--*)` / Tailwind `bg-(--*)` reference in the gem is missing from `variables.css`. `audit_radius_language` fails if kit Ruby, JavaScript, or gem CSS still uses Tailwind radius scale names (`rounded-md`, `rounded-lg`, and the rest) or the old Tailwind radius fallbacks. It audits `FlatPack::Engine.root`, not a host app.

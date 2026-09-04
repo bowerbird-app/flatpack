@@ -11,18 +11,9 @@ module FlatPack
       "3xl" => "--radius-lg"
     }.freeze
 
+    DETECT_SCALES = (SCALE.keys + %w[xs 4xl]).freeze
     SIDES = %w[ss se ee es tl tr bl br t b l r s e].freeze
-
-    SCALE_ALTERNATION = SCALE.keys.sort_by { |key| -key.length }.map { |key| Regexp.escape(key) }.join("|")
     SIDE_ALTERNATION = SIDES.map { |side| Regexp.escape(side) }.join("|")
-
-    UTILITY_PATTERN = /
-      (?<![A-Za-z0-9_-])
-      rounded
-      (?:-(?:#{SIDE_ALTERNATION}))?
-      -(?:#{SCALE_ALTERNATION})
-      (?![A-Za-z0-9_-])
-    /x
 
     CSS_FALLBACKS = {
       "var(--radius-md, 0.375rem)" => "var(--radius-md, 1rem)",
@@ -32,12 +23,12 @@ module FlatPack
     module_function
 
     def rewrite(source)
-      rewritten = source.gsub(UTILITY_PATTERN) { |match| replace_utility(match) }
+      rewritten = source.gsub(utility_pattern(SCALE.keys)) { |match| replace_utility(match) }
       CSS_FALLBACKS.reduce(rewritten) { |text, (from, to)| text.gsub(from, to) }
     end
 
     def utilities_in(source)
-      source.scan(UTILITY_PATTERN)
+      source.scan(utility_pattern(DETECT_SCALES)) + CSS_FALLBACKS.keys.filter { |legacy| source.include?(legacy) }
     end
 
     def replace_utility(match)
@@ -46,6 +37,17 @@ module FlatPack
       token = SCALE.fetch(scale)
       prefix = rest.delete_suffix(scale)
       "rounded-#{prefix}[var(#{token})]"
+    end
+
+    def utility_pattern(keys)
+      scale_alternation = keys.sort_by { |key| -key.length }.map { |key| Regexp.escape(key) }.join("|")
+      /
+        (?<![A-Za-z0-9_-])
+        rounded
+        (?:-(?:#{SIDE_ALTERNATION}))?
+        -(?:#{scale_alternation})
+        (?![A-Za-z0-9_-])
+      /x
     end
   end
 end

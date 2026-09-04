@@ -22,7 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bumped the gem version to `0.1.146`.
 
 ### Upgrade notes
-- No host app API changes. Hosts that pass `class: "rounded-xl"` (or another Tailwind radius class) as an override still work. Rebuild host Tailwind so the new `rounded-[var(--radius-*)]` utilities are generated. If a host copied kit class names such as `rounded-lg` into its own markup, those classes are unchanged; only the gem's components moved to tokenized classes. Visual size should match the previous kit because `:root` `--radius-*` already overrode Tailwind's scale in most hosts.
+- No host app API changes. Rebuild host Tailwind so the new `rounded-[var(--radius-*)]` utilities are generated. If a host copied kit class names such as `rounded-lg` into its own markup, those classes are unchanged. For `sm` / `md` / `lg` / `xl`, both the old and new class names resolve to `var(--radius-*)`, so computed size matches unless a host overrode Tailwind's `--radius-2xl` independently of `--radius-md`. Chat bubbles that used `rounded-2xl` now read `--radius-md`.
+- `Button` still skips its default radius when you pass a `rounded-*` class. Card and most other components last-win the kit token, so `class: "rounded-xl"` does not override them. That last-wins behavior is unchanged.
 
 ## [0.1.145] - 2026-09-04
 

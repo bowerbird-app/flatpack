@@ -7,7 +7,8 @@ module FlatPack
   class RadiusLanguageAuditor
     SCAN_GLOBS = [
       "app/components/**/*.{rb,erb}",
-      "app/javascript/**/*.{js,ts}"
+      "app/javascript/**/*.{js,ts}",
+      "app/assets/stylesheets/**/*.css"
     ].freeze
 
     Violation = Struct.new(:path, :utilities, keyword_init: true)
