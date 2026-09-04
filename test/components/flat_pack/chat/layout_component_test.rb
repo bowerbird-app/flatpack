@@ -18,7 +18,7 @@ module FlatPack
           layout = page.find("div[data-testid='chat-layout']", visible: :all)
 
           assert_includes layout[:class], "sm:grid"
-          assert_equal "grid-template-columns: minmax(0, 16rem) minmax(0, 1fr)", layout[:style]
+          assert_equal "grid-template-columns: clamp(12rem, 30%, 16rem) minmax(0, 1fr)", layout[:style]
         end
 
         def test_single_variant_has_no_grid_columns
@@ -43,7 +43,7 @@ module FlatPack
 
           layout = page.find("div[data-testid='chat-layout']", visible: :all)
 
-          assert_equal "grid-template-columns: minmax(0, 16rem) minmax(0, 1fr); height: 620px", layout[:style]
+          assert_equal "grid-template-columns: clamp(12rem, 30%, 16rem) minmax(0, 1fr); height: 620px", layout[:style]
         end
 
         def test_columns_can_shrink_inside_the_clipped_root

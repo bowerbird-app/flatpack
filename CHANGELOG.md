@@ -21,15 +21,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dummy `/demo/chat/layout` gained a "Sizing the split" section showing `split_breakpoint: :lg` with `sidebar_width: "minmax(12rem, 30%)"`.
 
 ### Changed
-- `Chat::Layout` `:split` is now fluid instead of a fixed `280px` sidebar from `md`. Columns are `minmax(0, 16rem)` plus `minmax(0, 1fr)`, both carry `min-w-0`, and the split starts at `sm` (640px). A half-width or tiled desktop window (roughly 720–960px) stays a scaled two-column desk with a readable thread and an unclipped composer, rather than squeezing against the clipped root or collapsing to list-only.
+- `Chat::Layout` `:split` is now fluid instead of a fixed `280px` sidebar from `md`. Columns are `clamp(12rem, 30%, 16rem)` plus `minmax(0, 1fr)`, both carry `min-w-0`, and the split starts at `sm` (640px). A half-width or tiled desktop window (roughly 720–960px) stays a scaled two-column desk with a readable thread and an unclipped composer, rather than squeezing against the clipped root or collapsing to list-only. The sidebar is proportional so it yields on a narrow desk, which a plain `16rem` track does not: it holds its width and makes the thread absorb every reduction.
 - `chat_layout_controller.js` reads a `breakpoint` value instead of hardcoding `768px`, so the stacked list-then-panel behaviour switches at the same width as the CSS.
 - A `:single` layout with a sidebar slot keeps its bottom divider at every width instead of flipping to a right divider at `md`, which never matched the stacked single column.
 - Bumped the gem version to `0.1.146`.
 
 ### Upgrade notes
 - No changes required for hosts that render `Chat::Layout` with defaults; the split simply scales instead of collapsing. Recording Studio Messages desks in the core default layout do not need to fork the grid.
-- To keep the old stacking point, pass `split_breakpoint: :md`. There is no way to restore the fixed `280px` track, because it is what broke half-width windows; use `sidebar_width: "16rem"` if you want a fixed sidebar back.
-- Drop host `style:` overrides that only existed to widen the old track, such as `style: "grid-template-columns: minmax(0, 320px) minmax(0, 1fr);"`, and pass `sidebar_width: "minmax(0, 20rem)"` instead. `Chat::Layout` now owns `grid-template-columns` and appends any `style:` you pass after its own declaration.
+- To keep the old stacking point, pass `split_breakpoint: :md`. There is no way to restore the fixed `280px` track, because it is what broke half-width windows; pass `sidebar_width: "16rem"` if you want a fixed sidebar back, and expect the thread to absorb every reduction when the desk is narrow.
+- Drop host `style:` overrides that only existed to widen the old track, such as `style: "grid-template-columns: minmax(0, 320px) minmax(0, 1fr);"`, and pass `sidebar_width: "clamp(14rem, 34%, 20rem)"` instead. `Chat::Layout` now owns `grid-template-columns` and appends any `style:` you pass after its own declaration.
 
 ## [0.1.145] - 2026-09-04
 

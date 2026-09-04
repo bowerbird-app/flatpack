@@ -42,7 +42,11 @@ module FlatPack
           }
         }.freeze
 
-        DEFAULT_SIDEBAR_WIDTH = "minmax(0, 16rem)"
+        # A capped proportional track. A plain 16rem sidebar holds its width and
+        # makes the thread absorb every reduction, which is the squeeze a fixed
+        # 280px caused. 30% keeps the thread the larger column on a narrow desk,
+        # and the cap stops the list sprawling on a wide one.
+        DEFAULT_SIDEBAR_WIDTH = "clamp(12rem, 30%, 16rem)"
         PANEL_TRACK = "minmax(0, 1fr)"
 
         def initialize(

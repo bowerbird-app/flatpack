@@ -18,7 +18,7 @@ Core container props:
 |---|---|---|---|---|
 | `FlatPack::Chat::Layout::Component#variant` | Symbol | `:single` | no | Layout mode: `:single`, `:split`; invalid values raise `ArgumentError`. |
 | `FlatPack::Chat::Layout::Component#split_breakpoint` | Symbol | `:sm` | no | Width at which `:split` stops stacking and becomes two columns: `:sm` (640px), `:md` (768px), `:lg` (1024px); invalid values raise `ArgumentError`. |
-| `FlatPack::Chat::Layout::Component#sidebar_width` | String | `"minmax(0, 16rem)"` | no | CSS grid track for the sidebar column. Accepts a length, `auto`, `min-content`, `max-content`, a CSS variable, or `minmax()` / `clamp()` / `fit-content()`; anything else raises `ArgumentError`. |
+| `FlatPack::Chat::Layout::Component#sidebar_width` | String | `"clamp(12rem, 30%, 16rem)"` | no | CSS grid track for the sidebar column. Accepts a length, `auto`, `min-content`, `max-content`, a CSS variable, or `minmax()` / `clamp()` / `fit-content()`; anything else raises `ArgumentError`. |
 | `FlatPack::Chat::Panel::Component` | n/a | n/a | n/a | Slot-only container (no custom props). |
 
 High-use interaction props:
@@ -140,7 +140,7 @@ Required props are validated; enums are validated with descriptive `ArgumentErro
 - **Smart scrolling** — Auto-scrolls to bottom; shows a jump button when scrolled up.
 - **Avatar integration** — Seamless use of `FlatPack::Avatar::Component` and `FlatPack::AvatarGroup::Component`.
 - **Attachments** — File attachments with icons, image attachments with thumbnails, download/view links.
-- **Fluid split** — `:split` sizes its columns as `sidebar_width` plus `minmax(0, 1fr)`, and both columns carry `min-w-0`, so a half-width or tiled desktop window keeps a readable thread and an unclipped composer instead of squeezing them against the clipped root. Below `split_breakpoint` the same layout stacks into list-then-panel.
+- **Fluid split** — `:split` sizes its columns as `sidebar_width` plus `minmax(0, 1fr)`, and both columns carry `min-w-0`, so a half-width or tiled desktop window keeps a readable thread and an unclipped composer instead of squeezing them against the clipped root. Below `split_breakpoint` the same layout stacks into list-then-panel. The default sidebar track is proportional and capped, so the list yields as the desk narrows; a fixed track such as `sidebar_width: "16rem"` instead holds its width and makes the thread absorb every reduction.
 
 ### Integration Points
 

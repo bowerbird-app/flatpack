@@ -13,7 +13,7 @@
 
     <%= render FlatPack::Chat::Layout::Component.new(
       variant: :split,
-      sidebar_width: "minmax(0, 20rem)",
+      sidebar_width: "clamp(14rem, 34%, 20rem)",
       class: "mb-4 mt-6 overflow-hidden rounded-lg border",
       style: "height: 620px; border-color: var(--surface-border-color); background-color: var(--surface-background-color);"
     ) do |layout| %>
