@@ -207,7 +207,7 @@ module FlatPack
         toggle = page.native.at_css("[data-flat-pack--top-nav-target='toggle']")
 
         assert_includes toggle["class"], "[&>svg]:transition-transform"
-        assert_includes toggle["class"], "[&>svg]:duration-base"
+        assert_includes toggle["class"], "[&>svg]:duration-[var(--duration-base)]"
         refute_includes toggle["class"], "[&>svg]:rotate-180"
 
         assert_selector "header[data-flat-pack--top-nav-toggle-open-class='[&>svg]:rotate-180']"

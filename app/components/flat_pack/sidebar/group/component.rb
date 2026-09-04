@@ -178,7 +178,7 @@ module FlatPack
           classes(
             "flex-shrink-0",
             "transition-transform",
-            "duration-base",
+            "duration-[var(--duration-base)]",
             ("hidden" if @collapsed)
           )
         end
@@ -226,7 +226,7 @@ module FlatPack
             "pointer-events-none",
             "opacity-0",
             "transition-opacity",
-            "duration-base"
+            "duration-[var(--duration-base)]"
           )
         end
 

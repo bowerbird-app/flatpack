@@ -3392,6 +3392,11 @@
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
     transition-duration: var(--tw-duration, var(--default-transition-duration));
   }
+  .transition-\[width\] {
+    transition-property: width;
+    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+    transition-duration: var(--tw-duration, var(--default-transition-duration));
+  }
   .transition-all {
     transition-property: all;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
@@ -3423,10 +3428,6 @@
     --tw-duration: 200ms;
     transition-duration: 200ms;
   }
-  .duration-300 {
-    --tw-duration: 300ms;
-    transition-duration: 300ms;
-  }
   .duration-\[var\(--accordion-transition-duration\)\] {
     --tw-duration: var(--accordion-transition-duration);
     transition-duration: var(--accordion-transition-duration);
@@ -3434,6 +3435,14 @@
   .duration-\[var\(--collapse-transition-duration\)\] {
     --tw-duration: var(--collapse-transition-duration);
     transition-duration: var(--collapse-transition-duration);
+  }
+  .duration-\[var\(--duration-base\)\] {
+    --tw-duration: var(--duration-base);
+    transition-duration: var(--duration-base);
+  }
+  .duration-\[var\(--duration-slow\)\] {
+    --tw-duration: var(--duration-slow);
+    transition-duration: var(--duration-slow);
   }
   .ease-in-out {
     --tw-ease: var(--ease-in-out);
@@ -4283,6 +4292,14 @@
       display: none;
     }
   }
+  .motion-reduce\:scale-100 {
+    @media (prefers-reduced-motion: reduce) {
+      --tw-scale-x: 100%;
+      --tw-scale-y: 100%;
+      --tw-scale-z: 100%;
+      scale: var(--tw-scale-x) var(--tw-scale-y);
+    }
+  }
   .motion-reduce\:animate-none {
     @media (prefers-reduced-motion: reduce) {
       animation: none;
@@ -4872,10 +4889,10 @@
       transition-duration: var(--tw-duration, var(--default-transition-duration));
     }
   }
-  .\[\&\>svg\]\:duration-200 {
+  .\[\&\>svg\]\:duration-\[var\(--duration-base\)\] {
     &>svg {
-      --tw-duration: 200ms;
-      transition-duration: 200ms;
+      --tw-duration: var(--duration-base);
+      transition-duration: var(--duration-base);
     }
   }
 }

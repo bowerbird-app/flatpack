@@ -206,7 +206,7 @@ module FlatPack
         end
 
         html = page.native.to_html
-        assert_includes html, "duration-slow"
+        assert_includes html, "duration-[var(--duration-slow)]"
         assert_includes html, "motion-reduce:scale-100"
         refute_includes html, "duration-300"
         refute_includes html, "transition-all"

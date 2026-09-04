@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bumped the gem version to `0.1.147`.
 
 ### Upgrade notes
-- No host app API changes. Rebuild host Tailwind if you need the new `duration-slow` / `duration-base` / `motion-reduce:*` utilities. Colour hovers that still use Tailwind's built-in `duration-200` keep a short fade. Kit surfaces that move now follow `--duration-*`.
+- No host app API changes. Rebuild host Tailwind so `duration-[var(--duration-*)]` and `motion-reduce:*` utilities are generated. Colour hovers that still use Tailwind's built-in `duration-200` keep a short fade. Kit surfaces that move now follow `--duration-*`.
 
 ## [0.1.146] - 2026-09-04
 

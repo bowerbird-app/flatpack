@@ -72,7 +72,7 @@ module FlatPack
             "border-r border-[var(--sidebar-border-color)]",
             "shadow-lg md:shadow-none",
             "-translate-x-full md:translate-x-0",
-            "transition-transform duration-slow"
+            "transition-transform duration-[var(--duration-slow)]"
           )
         end
 
@@ -119,7 +119,7 @@ module FlatPack
             "stroke-width": "2",
             "stroke-linecap": "round",
             "stroke-linejoin": "round",
-            class: "transition-transform duration-base",
+            class: "transition-transform duration-[var(--duration-base)]",
             data: {flat_pack__navbar_target: "toggleIcon"}
           }
         end

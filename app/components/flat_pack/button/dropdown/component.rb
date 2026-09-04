@@ -97,7 +97,7 @@ module FlatPack
             "rounded-[var(--radius-md)]",
             "font-medium",
             "cursor-pointer",
-            "transition-colors duration-base",
+            "transition-colors duration-[var(--duration-base)]",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring focus-visible:ring-offset-2",
             "disabled:pointer-events-none disabled:opacity-50"
           ]
@@ -117,7 +117,7 @@ module FlatPack
 
         def chevron_icon
           content_tag(:svg,
-            class: "h-4 w-4 transition-transform duration-base",
+            class: "h-4 w-4 transition-transform duration-[var(--duration-base)]",
             data: {flat_pack__button_dropdown_target: "chevron"},
             xmlns: "http://www.w3.org/2000/svg",
             viewBox: "0 0 24 24",
@@ -153,7 +153,7 @@ module FlatPack
             "p-1",
             "shadow-lg",
             "opacity-0 scale-95 motion-reduce:scale-100 hidden",
-            "transition-[opacity,transform] duration-base"
+            "transition-[opacity,transform] duration-[var(--duration-base)]"
           )
         end
 
