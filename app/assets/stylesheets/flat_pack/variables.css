@@ -982,6 +982,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --radius-md: 1rem;
   --radius-lg: 1.5rem;
   --radius-xl: 2rem;
+  /* Concrete times on :root. Browsers skip @theme when this file is a normal stylesheet. */
   --duration-fast: 150ms;
   --duration-base: 200ms;
   --duration-slow: 300ms;
