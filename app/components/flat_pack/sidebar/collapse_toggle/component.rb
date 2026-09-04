@@ -75,7 +75,7 @@ module FlatPack
           classes(
             "flex-shrink-0",
             "transition-transform",
-            "duration-300",
+            "duration-[var(--duration-slow)]",
             (@collapsed ? "rotate-180" : "")
           )
         end

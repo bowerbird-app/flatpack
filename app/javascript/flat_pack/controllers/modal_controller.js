@@ -1,5 +1,6 @@
 // FlatPack Modal Stimulus Controller
 import { Controller } from "@hotwired/stimulus"
+import { prefersReducedMotion, motionDuration } from "controllers/flat_pack/reduced_motion"
 
 export default class extends Controller {
   static targets = ["dialog"]
@@ -48,15 +49,13 @@ export default class extends Controller {
     // Trigger reflow for transition
     this.element.offsetHeight
 
-    // Fade in backdrop
     this.element.style.opacity = "1"
 
-    // Scale in dialog
     requestAnimationFrame(() => {
-      if (this.hasDialogTarget) {
-        this.dialogTarget.style.opacity = "1"
-        this.dialogTarget.style.transform = "scale(1)"
-      }
+      if (!this.hasDialogTarget) return
+
+      this.dialogTarget.style.opacity = "1"
+      this.dialogTarget.style.transform = prefersReducedMotion() ? "none" : "scale(1)"
     })
 
     // Focus first focusable element or dialog itself
@@ -67,26 +66,22 @@ export default class extends Controller {
   close() {
     if (this.element.classList.contains("hidden")) return
 
-    // Fade out animations
     this.element.style.opacity = "0"
-
-    // Restore body scroll immediately so page scrolling is never left locked
     this.restoreBodyScroll()
-    
+
     if (this.hasDialogTarget) {
       this.dialogTarget.style.opacity = "0"
-      this.dialogTarget.style.transform = "scale(0.95)"
+      if (!prefersReducedMotion()) {
+        this.dialogTarget.style.transform = "scale(0.95)"
+      }
     }
 
-    // Wait for animation to complete before hiding
     setTimeout(() => {
       this.element.classList.remove("flex")
       this.element.classList.add("hidden")
       this.element.setAttribute("aria-hidden", "true")
-
-      // Restore focus to previous element
       this.restoreFocus()
-    }, 300) // Match CSS transition duration
+    }, motionDuration("slow"))
   }
 
   // Toggle modal state

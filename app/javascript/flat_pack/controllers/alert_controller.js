@@ -1,26 +1,29 @@
 // FlatPack Alert Stimulus Controller
 import { Controller } from "@hotwired/stimulus"
+import { prefersReducedMotion, motionDuration } from "controllers/flat_pack/reduced_motion"
 
 export default class extends Controller {
   static targets = ["alert"]
 
   dismiss() {
-    // Fade out animation
-    this.alertTarget.style.transition = "opacity 300ms ease-out, transform 300ms ease-out"
-    this.alertTarget.style.opacity = "0"
-    this.alertTarget.style.transform = "translateY(-10px)"
-
-    // Remove from DOM after animation
-    setTimeout(() => {
-      // Emit custom event
+    const finish = () => {
       const event = new CustomEvent("alert:dismissed", {
         bubbles: true,
         detail: { element: this.alertTarget }
       })
       this.element.dispatchEvent(event)
-
-      // Remove element
       this.element.remove()
-    }, 300)
+    }
+
+    if (prefersReducedMotion()) {
+      finish()
+      return
+    }
+
+    this.alertTarget.style.transition = "opacity var(--duration-slow), transform var(--duration-slow)"
+    this.alertTarget.style.opacity = "0"
+    this.alertTarget.style.transform = "translateY(-10px)"
+
+    setTimeout(finish, motionDuration("slow"))
   }
 }

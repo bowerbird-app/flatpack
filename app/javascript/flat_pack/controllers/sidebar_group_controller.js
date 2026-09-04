@@ -1,6 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-
-const ANIMATION_DURATION = 200
+import { motionDuration } from "controllers/flat_pack/reduced_motion"
 
 export default class extends Controller {
   static targets = ["panel", "button", "chevron"]
@@ -58,7 +57,7 @@ export default class extends Controller {
         if (this.isOpen) {
           panel.style.maxHeight = "none"
         }
-      }, ANIMATION_DURATION)
+      }, motionDuration("base"))
     }
   }
 
@@ -160,11 +159,11 @@ export default class extends Controller {
 
   enableTransitions() {
     if (this.hasPanelTarget) {
-      this.panelTarget.style.transition = `max-height ${ANIMATION_DURATION}ms ease-in-out`
+      this.panelTarget.style.transition = "max-height var(--duration-base)"
     }
 
     if (this.hasChevronTarget) {
-      this.chevronTarget.style.transition = `transform ${ANIMATION_DURATION}ms ease-in-out`
+      this.chevronTarget.style.transition = "transform var(--duration-base)"
     }
   }
 }

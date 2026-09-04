@@ -512,7 +512,7 @@ module FlatPack
           "relative h-full w-full overflow-hidden"
         else
           classes(
-            "flex h-full w-full transition-transform duration-300 ease-out",
+            "flex h-full w-full transition-transform duration-[var(--duration-slow)] ease-out",
             (@variant == :logo_slider) ? "items-center" : nil
           )
         end
@@ -524,7 +524,7 @@ module FlatPack
         end
 
         base = "h-full w-full shrink-0"
-        return "absolute inset-0 transition-opacity duration-300 #{base}" if @transition == :fade
+        return "absolute inset-0 transition-opacity duration-[var(--duration-slow)] #{base}" if @transition == :fade
 
         base
       end

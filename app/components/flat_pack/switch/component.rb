@@ -113,7 +113,7 @@ module FlatPack
       def track_classes
         classes(
           "pointer-events-none",
-          "rounded-full transition-colors duration-200",
+          "rounded-full transition-colors duration-[var(--duration-base)]",
           SIZES.fetch(@size),
           "peer-checked:bg-[var(--switch-track-checked-background-color)]",
           "peer-focus-visible:ring-2 peer-focus-visible:ring-inset peer-focus-visible:ring-[var(--switch-focus-ring-color)] peer-focus-visible:ring-offset-2",
@@ -134,7 +134,7 @@ module FlatPack
           "pointer-events-none",
           "absolute left-0.5 top-0",
           "rounded-full bg-[var(--switch-thumb-background-color)] shadow-[var(--switch-thumb-shadow)]",
-          "transition-transform duration-200",
+          "transition-transform duration-[var(--duration-base)]",
           "translate-y-0.5",
           size_config[:width],
           size_config[:height],

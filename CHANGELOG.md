@@ -13,6 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.149] - 2026-09-04
+
+### Changed
+- Under `prefers-reduced-motion: reduce`, `--duration-fast`, `--duration-base`, `--duration-slow`, and `--skeleton-shimmer-duration` collapse to `0ms`. Overlay Stimulus controllers share `controllers/flat_pack/reduced_motion` so hide delays match those tokens.
+- Modal, toast, alert, chip, badge, and dropdown skip scale and slide when motion is reduced. Toast and alert remove immediately. Button loading spinner uses `motion-reduce:animate-none`. Carousel autoplay already skipped.
+- Bumped the gem version to `0.1.149`.
+
+### Fixed
+- `--duration-fast`, `--duration-base`, and `--duration-slow` are defined on `:root` (150ms / 200ms / 300ms), not only inside `@theme`. `var(--duration-*)` and the reduced-motion helper now resolve when `flat_pack/variables` is loaded as a normal stylesheet.
+
+### Upgrade notes
+- No host app API changes. Rebuild host Tailwind so `duration-[var(--duration-*)]` and `motion-reduce:*` utilities are generated. Colour hovers that still use Tailwind's built-in `duration-200` keep a short fade. Kit surfaces that move now follow `--duration-*`.
+
 ## [0.1.148] - 2026-09-04
 
 ### Added

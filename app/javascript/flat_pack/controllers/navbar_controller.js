@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { motionDuration } from "controllers/flat_pack/reduced_motion"
 
 export default class extends Controller {
   static targets = [
@@ -103,7 +104,7 @@ export default class extends Controller {
       if (!this.mobileOpen && this.isMobile) {
         this.sidebarTarget.classList.add("hidden")
       }
-    }, 300)
+    }, motionDuration("slow"))
     
     // Remove overlay
     this.removeOverlay()
@@ -224,7 +225,7 @@ export default class extends Controller {
         this.overlay.parentNode.removeChild(this.overlay)
       }
       this.overlay = null
-    }, 300)
+    }, motionDuration("slow"))
   }
 
   saveState() {

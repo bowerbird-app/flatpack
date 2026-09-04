@@ -70,7 +70,7 @@ module FlatPack
 
         def render_desktop_toggle
           content_tag(:button, type: "button", class: desktop_toggle_classes, data: desktop_toggle_data_attributes, aria: desktop_toggle_aria_attributes) do
-            content_tag(:span, class: "flex-shrink-0 transition-transform duration-300", data: chevron_data_attributes) do
+            content_tag(:span, class: "flex-shrink-0 transition-transform duration-[var(--duration-slow)]", data: chevron_data_attributes) do
               render FlatPack::Shared::IconComponent.new(name: :chevron_left, size: :md)
             end
           end

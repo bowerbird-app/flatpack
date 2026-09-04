@@ -147,7 +147,7 @@ module FlatPack
             "pointer-events-none",
             "opacity-0",
             "transition-opacity",
-            "duration-200"
+            "duration-[var(--duration-base)]"
           )
         end
 

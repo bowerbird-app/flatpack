@@ -67,7 +67,7 @@ Use `FlatPack::Button::Pill::Component` when you need the rounded pills styling 
 ## Accessibility
 - For icon-only buttons, provide an accessible name, for example `aria: { label: "Open settings" }`.
 - Focus ring styles are applied by default for keyboard navigation.
-- In loading state, the button is disabled to prevent duplicate actions.
+- In loading state, the button is disabled to prevent duplicate actions. The spinner uses `motion-reduce:animate-none`.
 
 ## Dependencies
 - `FlatPack::Shared::IconComponent` for icon and spinner sizing.

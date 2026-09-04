@@ -982,6 +982,10 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --radius-md: 1rem;
   --radius-lg: 1.5rem;
   --radius-xl: 2rem;
+  /* Concrete times on :root. Browsers skip @theme when this file is a normal stylesheet. */
+  --duration-fast: 150ms;
+  --duration-base: 200ms;
+  --duration-slow: 300ms;
   --transition-fast: var(--duration-fast);
   --transition-base: var(--duration-base);
   --transition-slow: var(--duration-slow);
@@ -1157,5 +1161,15 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --top-nav-background-color: transparent;
   --top-nav-item-hover-background-color: #f7f7f7;
   --top-nav-item-active-background-color: #333;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root,
+  html {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+    --duration-slow: 0ms;
+    --skeleton-shimmer-duration: 0ms;
+  }
 }
 
