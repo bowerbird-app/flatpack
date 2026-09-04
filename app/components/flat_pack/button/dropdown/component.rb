@@ -94,7 +94,7 @@ module FlatPack
           # Use the same classes as Button component would use
           base_classes = [
             "inline-flex items-center justify-center gap-2",
-            "rounded-md",
+            "rounded-[var(--radius-md)]",
             "font-medium",
             "cursor-pointer",
             "transition-colors duration-base",
@@ -147,7 +147,7 @@ module FlatPack
             "fixed z-50",
             "min-w-[12rem]",
             "overflow-auto",
-            "rounded-md",
+            "rounded-[var(--radius-md)]",
             "border border-[var(--surface-border-color)]",
             "bg-[var(--surface-background-color)]",
             "p-1",

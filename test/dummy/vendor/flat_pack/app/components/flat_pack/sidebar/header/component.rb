@@ -59,7 +59,7 @@ module FlatPack
         end
 
         def sidebar_version_badge_classes
-          "ml-2 inline-flex items-center rounded-md border px-2 py-0.5 text-[10px] leading-none font-medium bg-[var(--badge-default-background-color)] text-[var(--badge-default-text-color)] border-[var(--badge-default-border-color)]"
+          "ml-2 inline-flex items-center rounded-[var(--radius-md)] border px-2 py-0.5 text-[10px] leading-none font-medium bg-[var(--badge-default-background-color)] text-[var(--badge-default-text-color)] border-[var(--badge-default-border-color)]"
         end
 
         def render_collapsed_toggle
@@ -77,15 +77,15 @@ module FlatPack
         end
 
         def brand_badge_classes
-          "w-8 h-8 rounded-lg flex items-center justify-center font-bold bg-[var(--sidebar-header-badge-background-color)] text-[var(--sidebar-header-badge-text-color)]"
+          "w-8 h-8 rounded-[var(--radius-lg)] flex items-center justify-center font-bold bg-[var(--sidebar-header-badge-background-color)] text-[var(--sidebar-header-badge-text-color)]"
         end
 
         def collapsed_toggle_classes
-          "hidden items-center justify-center p-2 rounded-lg text-[var(--sidebar-header-icon-color)] hover:bg-[var(--sidebar-header-icon-hover-background-color)] hover:text-[var(--sidebar-header-icon-hover-color)] transition-colors"
+          "hidden items-center justify-center p-2 rounded-[var(--radius-lg)] text-[var(--sidebar-header-icon-color)] hover:bg-[var(--sidebar-header-icon-hover-background-color)] hover:text-[var(--sidebar-header-icon-hover-color)] transition-colors"
         end
 
         def desktop_toggle_classes
-          "hidden ml-auto p-2 rounded-lg text-[var(--sidebar-header-icon-color)] hover:bg-[var(--sidebar-header-icon-hover-background-color)] hover:text-[var(--sidebar-header-icon-hover-color)] transition-colors"
+          "hidden ml-auto p-2 rounded-[var(--radius-lg)] text-[var(--sidebar-header-icon-color)] hover:bg-[var(--sidebar-header-icon-hover-background-color)] hover:text-[var(--sidebar-header-icon-hover-color)] transition-colors"
         end
 
         def brand_data_attributes

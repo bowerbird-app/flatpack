@@ -94,7 +94,7 @@ module FlatPack
         def toggle_button_attributes
           {
             type: "button",
-            class: "flex items-center gap-2 w-full px-3 py-2 rounded-md text-[var(--sidebar-item-text-color)] hover:bg-[var(--sidebar-item-hover-background-color)] hover:text-[var(--sidebar-item-hover-text-color)] transition-colors",
+            class: "flex items-center gap-2 w-full px-3 py-2 rounded-[var(--radius-md)] text-[var(--sidebar-item-text-color)] hover:bg-[var(--sidebar-item-hover-background-color)] hover:text-[var(--sidebar-item-hover-text-color)] transition-colors",
             data: {
               action: "click->flat-pack--navbar#toggle",
               flat_pack__navbar_target: "toggleButton"

@@ -16,7 +16,7 @@ export default class extends Controller {
 
   render() {
     const container = document.createElement("div")
-    container.className = "space-y-3 rounded-lg border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-4 text-[var(--surface-content-color)]"
+    container.className = "space-y-3 rounded-[var(--radius-lg)] border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-4 text-[var(--surface-content-color)]"
 
     this.normalizedOptions().forEach((parent) => {
       container.appendChild(this.renderParent(parent))
@@ -72,7 +72,7 @@ export default class extends Controller {
 
   renderCheckboxRow({ id, label, checked, indeterminate = false, classes, onChange, dataset }) {
     const labelElement = document.createElement("label")
-    labelElement.className = `flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 transition-colors hover:bg-[var(--surface-muted-background-color)] ${classes}`
+    labelElement.className = `flex cursor-pointer items-center gap-2 rounded-[var(--radius-md)] px-2 py-1.5 transition-colors hover:bg-[var(--surface-muted-background-color)] ${classes}`
     labelElement.htmlFor = this.checkboxId(id)
 
     const checkbox = document.createElement("input")

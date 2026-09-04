@@ -86,7 +86,7 @@ module FlatPack
             "text-sm",
             "font-medium",
             "transition-colors",
-            "rounded-lg",
+            "rounded-[var(--radius-lg)]",
             "mx-2",
             state_classes
           )

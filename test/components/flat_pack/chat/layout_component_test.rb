@@ -89,7 +89,7 @@ module FlatPack
 
           assert_includes layout[:class], "border"
           assert_includes layout[:class], "border-[var(--chat-border-color)]"
-          assert_includes layout[:class], "rounded-lg"
+          assert_includes layout[:class], "rounded-[var(--radius-lg)]"
           assert_includes layout[:class], "overflow-hidden"
         end
       end

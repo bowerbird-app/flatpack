@@ -136,7 +136,7 @@ module FlatPack
             content_tag(:div, **items_region_attributes) do
               safe_join([
                 content_tag(:div, "", class: "space-y-2", data: {flat_pack__picker_target: "results"}),
-                content_tag(:div, @empty_text, class: "hidden h-full min-h-32 items-center justify-center rounded-md border border-dashed border-(--surface-border-color) p-4 text-center text-sm text-(--surface-muted-content-color)", data: {flat_pack__picker_target: "emptyState"})
+                content_tag(:div, @empty_text, class: "hidden h-full min-h-32 items-center justify-center rounded-[var(--radius-md)] border border-dashed border-(--surface-border-color) p-4 text-center text-sm text-(--surface-muted-content-color)", data: {flat_pack__picker_target: "emptyState"})
               ])
             end,
             render_actions
@@ -296,7 +296,7 @@ module FlatPack
           "p-4",
           "sm:p-6",
           "bg-[var(--modal-surface-color)]",
-          "rounded-lg",
+          "rounded-[var(--radius-lg)]",
           "shadow-lg",
           "border",
           "border-[var(--modal-border-color)]"

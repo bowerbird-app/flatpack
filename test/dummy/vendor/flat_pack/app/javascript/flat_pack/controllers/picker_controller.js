@@ -291,7 +291,7 @@ export default class extends Controller {
 
     return `
       <div class="flat-pack-checkbox-wrapper">
-        <label class="flex cursor-pointer items-start gap-3 rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-3 transition-colors duration-base hover:bg-(--list-item-hover-background-color)">
+        <label class="flex cursor-pointer items-start gap-3 rounded-[var(--radius-md)] border border-(--surface-border-color) bg-(--surface-background-color) p-3 transition-colors duration-base hover:bg-(--list-item-hover-background-color)">
           <input
             type="${controlType}"
             name="${controlName}"
@@ -328,7 +328,7 @@ export default class extends Controller {
     }
 
     return `
-      <span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-(--surface-subtle-background-color) text-(--surface-muted-content-color)">
+      <span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-md)] bg-(--surface-subtle-background-color) text-(--surface-muted-content-color)">
         <svg
           class="h-5 w-5"
           viewBox="0 0 24 24"
@@ -388,7 +388,7 @@ export default class extends Controller {
     const isPressed = this.selectedIds.has(String(item.id)) ? "true" : "false"
 
     const preview = kind === "image" && thumbnailUrl
-      ? `<img src="${thumbnailUrl}" alt="${label} preview" class="h-28 w-full rounded-md object-cover" loading="lazy">`
+      ? `<img src="${thumbnailUrl}" alt="${label} preview" class="h-28 w-full rounded-[var(--radius-md)] object-cover" loading="lazy">`
       : this.#gridFallbackPreviewMarkup(kind, item)
 
     const badgeMarkup = badge
@@ -438,14 +438,14 @@ export default class extends Controller {
       const meta = this.#escapeHtml(this.#metaText(item))
 
       return `
-        <span class="flex h-28 w-full flex-col justify-center rounded-md bg-(--surface-subtle-background-color) px-4 text-left">
+        <span class="flex h-28 w-full flex-col justify-center rounded-[var(--radius-md)] bg-(--surface-subtle-background-color) px-4 text-left">
           <span class="truncate text-sm font-medium text-(--surface-content-color)">${label}</span>
           <span class="mt-1 truncate text-xs text-(--surface-muted-content-color)">${meta}</span>
         </span>
       `
     }
 
-    return `<span class="inline-flex h-28 w-full items-center justify-center rounded-md bg-(--surface-subtle-background-color) text-sm text-(--surface-muted-content-color)">${this.#kindPreviewToken(kind, item)}</span>`
+    return `<span class="inline-flex h-28 w-full items-center justify-center rounded-[var(--radius-md)] bg-(--surface-subtle-background-color) text-sm text-(--surface-muted-content-color)">${this.#kindPreviewToken(kind, item)}</span>`
   }
 
   #resultsContainerClass() {
