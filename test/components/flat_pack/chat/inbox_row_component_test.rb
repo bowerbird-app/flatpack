@@ -13,6 +13,7 @@ module FlatPack
 
           assert_includes item[:class], "py-3"
           assert_includes item[:class], "px-4"
+          assert_includes item[:class], "rounded-[var(--radius-sm)]"
         end
 
         def test_renders_chat_group_name_and_preview

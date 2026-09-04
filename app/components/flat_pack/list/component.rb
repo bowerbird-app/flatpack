@@ -50,7 +50,7 @@ module FlatPack
           attrs[:data] ||= {}
           attrs[:data][:controller] = merge_space_tokens(attrs[:data][:controller], "flat-pack--list-selectable")
           attrs[:data][:action] = merge_space_tokens(attrs[:data][:action], "click->flat-pack--list-selectable#activate")
-          attrs[:data][:flat_pack__list_selectable_active_class_value] = "bg-[var(--list-item-active-background-color)]"
+          attrs[:data][:flat_pack__list_selectable_active_class_value] = "rounded-[var(--radius-sm)] bg-[var(--list-item-active-background-color)]"
         end
 
         merge_attributes(**attrs)

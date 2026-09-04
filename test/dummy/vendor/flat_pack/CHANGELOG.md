@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+- `List::Item` rows, including `Chat::InboxRow`, now use `rounded-[var(--radius-sm)]` so the hover and active highlight has a small corner radius instead of a square block.
 
 ### Fixed
 
