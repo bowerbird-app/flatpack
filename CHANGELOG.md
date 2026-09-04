@@ -13,6 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.147] - 2026-09-04
+
+### Added
+- Tracked Cursor rules pack under `.cursor/rules/` for Cloud Agents (eight `.mdc` files). Cloud Agents load them from the checkout. See [Cursor Cloud Agent skills and rules](docs/cursor-skills.md).
+
+### Changed
+- `.cursor/rules/` is no longer gitignored.
+- Bumped the gem version to `0.1.147`.
+
+### Upgrade notes
+- No host app API changes. Product UI is unchanged. After merge, rebuild the Cloud Agent environment Draft off `v0.1.147` so checkout rules load. A snapshot taken while rules were gitignored will not see them.
+
 ## [0.1.146] - 2026-09-04
 
 ### Changed

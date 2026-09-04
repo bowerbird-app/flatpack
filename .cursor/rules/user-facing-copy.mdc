@@ -1,0 +1,9 @@
+---
+description: Keep product copy fun, short, and free of jargon
+globs: "**/*.{erb,html,md}"
+alwaysApply: false
+---
+
+Labels people see on dummy demos, docs, and component-facing copy stay short, fun, and obvious. Use a tooltip only when a newcomer would not get the visible text.
+
+No AI-speak. Do not fill the screen.
