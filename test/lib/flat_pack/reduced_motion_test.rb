@@ -89,7 +89,11 @@ module FlatPack
 
       controllers.each do |name|
         source = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers", name).read
-        assert_match(/--easing-(enter|exit|standard)/, source, "#{name} should use a named --easing-* token")
+        assert_match(
+          /easing:\s*"(enter|exit|standard)"|--easing-(enter|exit|standard)/,
+          source,
+          "#{name} should use a named easing token"
+        )
         refute_match(/cubic-bezier\(/, source, "#{name} should not hardcode a cubic-bezier")
         refute_includes source, "ease-in-out", "#{name} should not hardcode ease-in-out"
       end
