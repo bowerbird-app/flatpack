@@ -1,0 +1,16 @@
+---
+description: Add tests for behavior changes in the same PR
+alwaysApply: true
+---
+
+Behavior changes need tests in the same PR. Do not call the work done without them.
+
+Flatpack has a gem suite under `test/` and dummy suite(s) under `test/dummy/` (and `test/dummy-rails-7/` when that suite exists). Cover what the change can break. Run the suites CI runs before you call the work done.
+
+Prefer meaningful coverage of the changed behavior. Cover the happy path, the failure path, and edge cases. Prefer unit tests for POROs and helpers. Prefer thin integration or system coverage for ViewComponents and dummy wiring.
+
+Aim for high coverage as a working bar. About 94% is the team convention, not a hard law. If coverage drops on the changed area, add tests. Never delete, stub out, or bypass production code to inflate coverage.
+
+UI work still needs `verify-ui` browser checks and screenshots. Tests do not replace that.
+
+Upgrade and behavior changes still need the upgrade tests called out in `rules/gem-version-and-release.mdc`.

@@ -13,6 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.151] - 2026-09-04
+
+### Added
+- Tracked `tests.mdc` under `.cursor/rules/` so Cloud Agents add tests for behavior changes. See [Cursor Cloud Agent skills and rules](docs/cursor-skills.md).
+
+### Changed
+- Bumped the gem version to `0.1.151`.
+
+### Upgrade notes
+- No host app API changes. Product UI is unchanged. After merge, rebuild the Cloud Agent environment Draft so checkout rules include `tests.mdc`.
+
 ## [0.1.150] - 2026-09-04
 
 ### Added

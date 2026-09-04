@@ -5,4 +5,6 @@ alwaysApply: true
 
 After every push on a pull request, wait for GitHub checks. Read review comments from people and bots (Bugbot, Copilot, and the rest). Fix failures and outstanding feedback, push, and repeat.
 
+Green CI includes the new or updated tests for the change.
+
 You are not done until checks are green and review issues are resolved, or the user explicitly defers them.
