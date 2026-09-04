@@ -5,7 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.151] - 2026-09-04
+## [Unreleased]
+
+### Added
+
+### Changed
+
+### Fixed
+
+## [0.1.152] - 2026-09-04
 
 ### Added
 - `--easing-standard` (`cubic-bezier(0.2, 0, 0, 1)`), `--easing-enter` (`cubic-bezier(0.05, 0.7, 0.1, 1)`), and `--easing-exit` (`cubic-bezier(0.3, 0, 1, 1)`). In-place motion uses standard, overlays enter with decelerate, and overlays exit with accelerate. No bounce.
@@ -15,11 +23,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Modal, toast, dropdown, popover, and tooltip enter/exit are interruptible CSS transitions. Modal and toast enter on `--duration-slow` / `--easing-enter` and exit on `--duration-base` / `--easing-exit`. Popover and tooltip fade plus a 4px offset from the trigger, with origin from placement.
 - Switch, progress, accordion, collapse, sidebar, and leftover JS transitions (alert, chip, badge, table, navbar overlay) use the named easings instead of `ease-in-out` or a hardcoded cubic-bezier.
 - Form invalid chrome is still border and helper colour only. The kit does not shake fields.
-- Bumped the gem version to `0.1.151`.
+- Bumped the gem version to `0.1.152`.
 
 ### Upgrade notes
 - No host app API changes. Overlay enter/exit timing: modal exit is now `--duration-base` (faster than enter). Toast already had that split.
 - Rebuild host Tailwind so `ease-[var(--easing-*)]` utilities are generated. Kit CSS variables apply as soon as `flat_pack/variables` loads.
+
+## [0.1.151] - 2026-09-04
+
+### Added
+- Tracked `tests.mdc` under `.cursor/rules/` so Cloud Agents add tests for behavior changes. See [Cursor Cloud Agent skills and rules](docs/cursor-skills.md).
+
+### Changed
+- Bumped the gem version to `0.1.151`.
+
+### Upgrade notes
+- No host app API changes. Product UI is unchanged. After merge, rebuild the Cloud Agent environment Draft so checkout rules include `tests.mdc`.
 
 ## [0.1.150] - 2026-09-04
 
