@@ -9,13 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Tracked Flatpack craft skills under `.cursor/skills/`: third-party `frontend-design`, `design-dna`, `make-interfaces-feel-better`, `motion-design`, `review-animations`, `visual-qa-testing`, `web-design-guidelines`, plus `flatpack-design` and `flatpack-micro-interactions`. `flatpack-design` decides what lands. Design DNA `visual_effects` and Framer/GSAP/Lottie stay muzzled. See [Cursor Cloud Agent skills](docs/cursor-skills.md).
-
 ### Changed
 
-- Cloud Agents load tracked [pstack](https://github.com/cursor/plugins/tree/main/pstack/skills) skills from `.cursor/skills/`. The Build-time `.cursor/fetch-skills.sh` hook that pulled Recording Studio skills is gone. `.cursor/environment.json` `install` is a no-op. See [Cursor Cloud Agent skills](docs/cursor-skills.md). After merge, rebuild the Cloud Agent environment Draft off the new commit.
-
 ### Fixed
+
+## [0.1.145] - 2026-09-04
+
+### Added
+- Tracked [pstack](https://github.com/cursor/plugins/tree/main/pstack/skills) under `.cursor/skills/` for Cloud Agents.
+- Tracked Flatpack craft skills: third-party `frontend-design`, `design-dna`, `make-interfaces-feel-better`, `motion-design`, `review-animations`, `visual-qa-testing`, `web-design-guidelines`, plus `flatpack-design` and `flatpack-micro-interactions`. `flatpack-design` decides what lands. Design DNA `visual_effects` and Framer/GSAP/Lottie stay muzzled. See [Cursor Cloud Agent skills](docs/cursor-skills.md).
+
+### Changed
+- Removed the Build-time `.cursor/fetch-skills.sh` hook that pulled Recording Studio skills. `.cursor/environment.json` `install` is a no-op. `.cursor/skills/` is tracked. `.cursor/rules/` stays gitignored.
+- Bumped the gem version to `0.1.145`.
+
+### Upgrade notes
+- No host app API changes. Product UI is unchanged. After merge, rebuild the Cloud Agent environment Draft off `v0.1.145` so checkout skills load. A snapshot taken while skills were gitignored will not see them.
 
 ## [0.1.144] - 2026-09-02
 
