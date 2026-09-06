@@ -4,7 +4,7 @@
 Render a sticky top navigation bar with composable left, center, and right content regions.
 
 ## When to use
-Use TopNav in app shells for page context, global actions, and optional search or controls.
+Use TopNav in app shells for page context, global actions, and optional search or controls. Pair it with `SidebarLayout` and `Sidebar`. Dummy `/demo/navbar` is this component.
 
 ## Class
 - Primary: `FlatPack::TopNav::Component`

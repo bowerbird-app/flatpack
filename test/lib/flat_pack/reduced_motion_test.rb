@@ -47,7 +47,6 @@ module FlatPack
         table_controller.js
         accordion_controller.js
         collapse_controller.js
-        navbar_controller.js
         carousel_controller.js
         chat_image_deck_controller.js
         sidebar_group_controller.js
@@ -84,7 +83,6 @@ module FlatPack
         table_controller.js
         sidebar_group_controller.js
         sidebar_layout_controller.js
-        navbar_controller.js
       ]
 
       controllers.each do |name|

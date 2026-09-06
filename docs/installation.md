@@ -428,7 +428,6 @@ import GridSortableController     from "${controllersDir}/grid_sortable_controll
 import IconController             from "${controllersDir}/icon_controller.js";
 import ListSelectableController   from "${controllersDir}/list_selectable_controller.js";
 import ModalController            from "${controllersDir}/modal_controller.js";
-import NavbarController           from "${controllersDir}/navbar_controller.js";
 import NestedMultiselectController from "${controllersDir}/nested_multiselect_controller.js";
 import PaginationInfiniteController from "${controllersDir}/pagination_infinite_controller.js";
 import PasswordInputController    from "${controllersDir}/password_input_controller.js";
@@ -475,7 +474,6 @@ application.register("flat-pack--grid-sortable",       GridSortableController);
 application.register("flat-pack--icon",                IconController);
 application.register("flat-pack--list-selectable",     ListSelectableController);
 application.register("flat-pack--modal",               ModalController);
-application.register("flat-pack--navbar",              NavbarController);
 application.register("flat-pack--nested-multiselect",  NestedMultiselectController);
 application.register("flat-pack--pagination-infinite", PaginationInfiniteController);
 application.register("flat-pack--password-input",      PasswordInputController);
