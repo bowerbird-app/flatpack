@@ -10,6 +10,13 @@
 	--color-warning: var(--color-warning-border);
 }
 
+@layer base {
+	html {
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+}
+
 @layer components {
 	/* Sidebar layout: width driven by CSS via data attribute set before first
 	 * paint by the inline FOUC-prevention script. JS toggles this attribute

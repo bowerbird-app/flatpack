@@ -369,6 +369,17 @@ module FlatPack
         assert_selector "tr[data-flat-pack--table-sortable-target='row'][data-id='1']"
         assert_selector "tr[data-flat-pack--table-sortable-target='row'][data-id='2']"
       end
+
+      def test_headers_are_sentence_case_not_all_caps
+        render_inline(Component.new(data: @users)) do |component|
+          component.column(title: "Name", html: ->(user) { user.name })
+        end
+
+        html = page.native.to_html
+        refute_includes html, "uppercase"
+        refute_includes html, "tracking-wider"
+        assert_selector "th", text: "Name"
+      end
     end
   end
 end

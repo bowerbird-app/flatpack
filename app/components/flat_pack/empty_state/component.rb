@@ -114,13 +114,13 @@ module FlatPack
       end
 
       def render_title
-        content_tag(:h3, @title, class: "text-lg font-semibold text-[var(--surface-content-color)] mb-2")
+        content_tag(:h3, @title, class: "text-lg font-semibold text-[var(--surface-content-color)] mb-2 fp-text-balance")
       end
 
       def render_description
         return nil unless @description
 
-        content_tag(:p, @description, class: "text-sm text-[var(--surface-muted-content-color)] max-w-md mb-6")
+        content_tag(:p, @description, class: "text-sm text-[var(--surface-muted-content-color)] max-w-md mb-6 fp-text-pretty")
       end
 
       def render_actions

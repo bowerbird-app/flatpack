@@ -7,7 +7,7 @@ FlatPack uses CSS variables for theming, allowing you to customize the appearanc
 ```text
 Brand primitives (--brand-hue, --brand-chroma, --brand-lightness)
     ↓
-Semantic tokens (--color-*, --surface-*, --radius-*, --shadow-*, --duration-*, --easing-*)
+Semantic tokens (--color-*, --surface-*, --radius-*, --shadow-*, --font-*, --text-*, --duration-*, --easing-*)
     ↓
 Component tokens (--button-*, --sidebar-*, …) — defined once as var(--semantic)
     ↓
@@ -200,6 +200,32 @@ Kit CSS defines `.fp-hit-target` and `.fp-hit-target-inline`. Hosts get those cl
 
 ### Color scheme
 `:root` sets `color-scheme: light`. `[data-theme="dark"]` sets `color-scheme: dark` so native controls, scrollbars, and form chrome match the theme.
+
+### Typography
+```css
+--font-sans: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"
+--font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace
+
+--text-xs: 0.75rem
+--text-sm: 0.875rem
+--text-base: 1rem
+--text-lg: 1.125rem
+--text-xl: 1.25rem
+--text-2xl: 1.5rem
+--text-3xl: 1.875rem
+--text-4xl: 2.25rem
+--text-5xl: 3rem
+
+--leading-tight: 1.25
+--leading-snug: 1.375
+--leading-normal: 1.5
+```
+
+`--font-*` and `--text-*` are set on `:root` as well as `@theme`, for the same reason as durations. `:root` also sets `font-family: var(--font-sans)` and antialiased smoothing. Hosts override `--font-sans` with a brand face. There is no kit webfont.
+
+`--page-title-h1-size` through `--page-title-h6-size` alias `--text-4xl` down to `--text-base`.
+
+Kit CSS defines `.fp-tabular-nums` (`font-variant-numeric: tabular-nums`), `.fp-text-balance`, and `.fp-text-pretty`. Use tabular nums on live numbers (pagination, meters, timestamps, chart axes). Use balance on titles. Use pretty on short supporting copy. Labels are sentence case — do not force `uppercase tracking-widest` on taglines, table headers, or section titles. Avatar initials may stay `uppercase`.
 
 ### Durations / transitions
 ```css

@@ -136,6 +136,12 @@ module FlatPack
         assert_includes html, "ease-[var(--easing-standard)]"
         refute_includes html, "ease-in-out"
       end
+
+      def test_percentage_label_uses_tabular_nums
+        render_inline(Component.new(value: 75, show_label: true))
+
+        assert_includes page.native.to_html, "fp-tabular-nums"
+      end
     end
   end
 end

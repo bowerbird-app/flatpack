@@ -135,6 +135,12 @@ module FlatPack
         assert_selector "time.flat-pack-timestamp.text-green-600.text-xs"
       end
 
+      def test_uses_tabular_nums
+        render_inline(Component.new(timestamp: Time.zone.parse("2026-06-10 09:30:00")))
+
+        assert_includes page.native.to_html, "fp-tabular-nums"
+      end
+
       def test_raises_error_for_invalid_tooltip_placement
         assert_raises(ArgumentError) do
           Component.new(timestamp: Time.zone.now, tooltip_placement: :invalid)

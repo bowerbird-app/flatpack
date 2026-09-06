@@ -318,6 +318,7 @@ module FlatPack
         end
 
         assert_selector "[data-flat-pack--navbar-target='sectionTitle']"
+        refute_includes page.native.to_html, "uppercase"
       end
 
       def test_sidebar_section_collapsible_behavior

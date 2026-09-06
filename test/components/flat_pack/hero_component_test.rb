@@ -147,6 +147,24 @@ module FlatPack
         assert_not_respond_to component, :with_actions_slot
         assert_not_respond_to component, :with_badge_slot
       end
+
+      def test_tagline_is_sentence_case_not_tracked_out_caps
+        render_inline(Component.new(
+          variant: :centered,
+          tagline: "Introducing FlatPack",
+          headline: "Build the desk",
+          description: "A product kit, not a landing template."
+        ))
+
+        html = page.native.to_html
+        refute_includes html, "uppercase"
+        refute_includes html, "tracking-widest"
+        refute_includes html, "lg:text-6xl"
+        assert_includes html, "fp-text-balance"
+        assert_includes html, "fp-text-pretty"
+        assert_includes html, "--text-4xl"
+        assert_selector "p", text: "Introducing FlatPack"
+      end
     end
   end
 end

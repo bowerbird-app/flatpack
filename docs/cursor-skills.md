@@ -60,6 +60,8 @@ Use this order on Flatpack UI work:
 
 **Motion.** Advise timing, easing, and choreography. Implement with Flatpack CSS, `--duration-*`, and `--easing-*` tokens. Do not default to Framer, GSAP, or Lottie.
 
+**Type.** Use `--font-sans` / `--text-*`. Labels are sentence case. Tabular nums on live numbers. Do not add tracked-out ALL-CAPS eyebrows.
+
 ## Refreshing pstack
 
 Copy from the public pstack tree. Use the GitHub contents API and raw file URLs. Do not clone.

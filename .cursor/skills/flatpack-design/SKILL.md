@@ -29,7 +29,7 @@ Output is Flatpack components, tokens, themes, and presets. Not ad-hoc markup. N
 
 ## Design DNA muzzle
 
-Allow extract of the measurable system into Flatpack tokens and themes: colour, type, space, radius, elevation, motion duration and easing.
+Allow extract of the measurable system into Flatpack tokens and themes: colour, type (`--font-*`, `--text-*`), space, radius, elevation, motion duration and easing.
 
 Forbid implementing DNA `visual_effects` (WebGL, particles, shaders, Canvas, scroll theatres, cursor trails) unless Nic explicitly asks for a Flatpack-owned effect later.
 
@@ -37,7 +37,7 @@ Forbid implementing DNA `visual_effects` (WebGL, particles, shaders, Canvas, scr
 
 Advise timing, easing, and choreography only. Implement with Flatpack CSS and token transitions. Do not default to Framer, GSAP, or Lottie.
 
-Today the kit has `--duration-fast` (150ms), `--duration-base` (200ms), `--duration-slow` (300ms), `--easing-standard` / `--easing-enter` / `--easing-exit`, and `--transition-*` aliases. Prefer `--duration-*` and `--easing-*` in new code. Do not sprinkle keyframes in a host app.
+Today the kit has `--font-sans` / `--font-mono`, `--text-xs` through `--text-5xl`, `--duration-fast` (150ms), `--duration-base` (200ms), `--duration-slow` (300ms), `--easing-standard` / `--easing-enter` / `--easing-exit`, and `--transition-*` aliases. Prefer those tokens in new code. Do not sprinkle keyframes in a host app.
 
 ## Taste bar
 

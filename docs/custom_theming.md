@@ -179,6 +179,20 @@ This block is a full-token override starter (historically based on the earlier p
   --easing-standard: cubic-bezier(0.2, 0, 0, 1);
   --easing-enter: cubic-bezier(0.05, 0.7, 0.1, 1);
   --easing-exit: cubic-bezier(0.3, 0, 1, 1);
+  --font-sans: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
   --code-block-background-color: var(--surface-muted-background-color);
   --code-block-border-color: var(--surface-border-color);
   --code-block-title-color: var(--surface-muted-content-color);
@@ -508,12 +522,12 @@ This block is a full-token override starter (historically based on the earlier p
   --chip-padding-x-lg: 1rem;
   --chip-padding-y-lg: 0.375rem;
 
-  --page-title-h1-size: 2.25rem;
-  --page-title-h2-size: 1.875rem;
-  --page-title-h3-size: 1.5rem;
-  --page-title-h4-size: 1.25rem;
-  --page-title-h5-size: 1.125rem;
-  --page-title-h6-size: 1rem;
+  --page-title-h1-size: var(--text-4xl);
+  --page-title-h2-size: var(--text-3xl);
+  --page-title-h3-size: var(--text-2xl);
+  --page-title-h4-size: var(--text-xl);
+  --page-title-h5-size: var(--text-lg);
+  --page-title-h6-size: var(--text-base);
 
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
