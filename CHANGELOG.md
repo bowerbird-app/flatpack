@@ -13,6 +13,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.154] - 2026-09-06
+
+### Changed
+- One application shell: `SidebarLayout` + `Sidebar` + `TopNav`. `FlatPack::Navbar::Component` and `Navbar::Sidebar` / `Navbar::TopNav` / `flat-pack--navbar` are removed.
+- Dummy `/demo/navbar` is still the Top Nav slot demo. Dummy chrome was already `SidebarLayout`.
+- Bumped the gem version to `0.1.154`.
+
+### Upgrade notes
+- If you render `FlatPack::Navbar::Component`, switch to `SidebarLayout` and compose `Sidebar` and `TopNav` into its slots. Remove any `application.register("flat-pack--navbar", …)` pin; collapse and mobile drawer live on `flat-pack--sidebar-layout`.
+- No visual change for hosts that already use `SidebarLayout` (the layout generator and dummy).
+
+```erb
+<%= render FlatPack::SidebarLayout::Component.new(storage_key: "app-sidebar") do |layout| %>
+  <% layout.sidebar do %>
+    <%= render FlatPack::Sidebar::Component.new do |sidebar| %>
+      <% sidebar.items do %>
+        <%= render FlatPack::Sidebar::Item::Component.new(text: "Dashboard", href: "/", icon: :home, active: true) %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% layout.top_nav do %>
+    <%= render FlatPack::TopNav::Component.new do |nav| %>
+      <% nav.left { "Dashboard" } %>
+    <% end %>
+  <% end %>
+
+  <% layout.main do %>
+    <%= yield %>
+  <% end %>
+<% end %>
+```
+
 ## [0.1.153] - 2026-09-06
 
 ### Added

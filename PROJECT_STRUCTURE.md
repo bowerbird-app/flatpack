@@ -6,7 +6,7 @@ This document summarizes the current FlatPack repository layout and the files th
 
 **FlatPack** is a Rails engine that ships ViewComponent-based UI components, Tailwind CSS 4 token styling, Propshaft-served assets, and importmap-friendly JavaScript.
 
-**Version:** 0.1.153
+**Version:** 0.1.154
 **License:** MIT  
 **Ruby:** 3.2+  
 **Supported host apps:** Rails 7.1+  
@@ -64,7 +64,6 @@ flat_pack/
 │   │   ├── list/
 │   │   ├── modal/
 │   │   ├── modal_filter/
-│   │   ├── navbar/
 │   │   ├── notification/
 │   │   ├── number_input/
 │   │   ├── page_header/
@@ -135,7 +134,6 @@ flat_pack/
 │       │   ├── list_orderable_controller.js
 │       │   ├── list_selectable_controller.js
 │       │   ├── modal_controller.js
-│       │   ├── navbar_controller.js
 │       │   ├── nested_multiselect_controller.js
 │       │   ├── notification_rollup_controller.js
 │       │   ├── page_nav_controller.js

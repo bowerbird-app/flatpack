@@ -374,12 +374,6 @@ components:
     primary_class: FlatPack::ModalFilter::Component
     status: documented
 
-  - key: navbar
-    title: Navbar
-    doc: docs/components/navbar.md
-    primary_class: FlatPack::Navbar::Component
-    status: documented
-
   - key: notification
     title: Notification
     doc: docs/components/notification.md

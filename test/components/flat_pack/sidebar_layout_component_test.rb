@@ -166,6 +166,17 @@ module FlatPack
         render_inline(Component.new(data: {testid: "layout"}))
         assert_selector "div[data-testid='layout']"
       end
+
+      def test_shell_does_not_register_legacy_navbar_controller
+        render_inline(Component.new) do |layout|
+          layout.sidebar { "Sidebar" }
+          layout.top_nav { "TopNav" }
+          layout.main { "Main" }
+        end
+
+        assert_selector "[data-controller='flat-pack--sidebar-layout']"
+        refute_selector "[data-controller='flat-pack--navbar']"
+      end
     end
   end
 end

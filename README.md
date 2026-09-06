@@ -276,7 +276,6 @@ For hierarchical parent/child checkbox selection, see the `flat-pack--nested-mul
 
 ### Navigation
 - **Breadcrumb** - Navigation trail showing current location in site hierarchy
-- **Navbar** - Sidebar-first navigation system with collapsible sidebar and responsive top bar
 - **Sidebar** - Composable sidebar with header, items, and footer regions
 - **SidebarGroup** - Collapsible group of sidebar items with persisted state
 - **TopNav** - Sticky top navigation bar with composable left, center, and right regions
