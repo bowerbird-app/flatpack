@@ -26,8 +26,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Upgrade notes
 - No host app API changes. Kit CSS variables apply as soon as `flat_pack/variables` loads.
-- If host Tailwind preflight loads after kit CSS and resets `html` / `--font-sans`, set `--font-sans` to the kit stack (or your brand face) in the host stylesheet. `.fp-tabular-nums` / `.fp-text-balance` / `.fp-text-pretty` come from kit `flat_pack/application` and do not need a Tailwind rebuild.
+- If host Tailwind loads after kit CSS, re-set `--font-sans` on unlayered `:root` (not `@theme`) so Tailwind’s `ui-sans-serif` stack does not win. `.fp-tabular-nums` / `.fp-text-balance` / `.fp-text-pretty` come from kit `flat_pack/application` and do not need a Tailwind rebuild.
 - Rebuild host Tailwind if you want `text-[length:var(--text-4xl)]` utilities generated for any host markup. Kit components that need those sizes already emit the class.
+
+### Fixed
+- Bump `rubyzip` to `3.6.0` (CVE-2026-85396).
 
 ## [0.1.152] - 2026-09-04
 
