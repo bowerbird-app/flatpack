@@ -236,7 +236,7 @@ module FlatPack
             # directly to this slot.
             header.to_s.html_safe
           else
-            content_tag(:h2, @title, class: "text-lg font-semibold text-[var(--modal-title-color)]")
+            content_tag(:h2, @title, class: "text-lg font-semibold text-[var(--modal-title-color)] fp-text-balance")
           end
         end
       end

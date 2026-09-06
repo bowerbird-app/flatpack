@@ -9,7 +9,7 @@ module FlatPack
         render_inline(Component.new(title: "Dashboard"))
 
         assert_selector "h1", text: "Dashboard"
-        assert_selector "h1.text-4xl", text: "Dashboard"
+        assert_includes page.native.to_html, "--text-4xl"
       end
 
       def test_renders_page_header_with_subtitle
@@ -31,7 +31,7 @@ module FlatPack
           large_subtitle: true
         ))
 
-        assert_selector "p[style*='font-size: var(--page-title-h1-size, 2.25rem)']", text: "Welcome back"
+        assert_selector "p[style*='font-size: var(--page-title-h1-size)']", text: "Welcome back"
         assert_selector "p[style*='font-weight: bold']", text: "Welcome back"
         assert_selector "p[style*='margin-top: 0']", text: "Welcome back"
         assert_no_selector "p.text-lg"

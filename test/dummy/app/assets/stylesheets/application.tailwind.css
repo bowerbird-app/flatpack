@@ -10,6 +10,20 @@
 	--color-warning: var(--color-warning-border);
 }
 
+/* Unlayered so this beats Tailwind @layer theme --font-sans (ui-sans-serif). */
+:root {
+	--font-sans: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+	--font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+@layer base {
+	html {
+		font-family: var(--font-sans);
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+}
+
 @layer components {
 	/* Sidebar layout: width driven by CSS via data attribute set before first
 	 * paint by the inline FOUC-prevention script. JS toggles this attribute

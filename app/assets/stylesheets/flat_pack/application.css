@@ -18,6 +18,18 @@
     min-height: var(--hit-target-inline-min);
   }
 
+  .fp-tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .fp-text-balance {
+    text-wrap: balance;
+  }
+
+  .fp-text-pretty {
+    text-wrap: pretty;
+  }
+
   .shadow-button {
     box-shadow: var(--button-shadow);
   }
@@ -96,6 +108,13 @@
       #000 calc(100% - var(--overflow-row-fade-size)),
       transparent 100%
     );
+  }
+
+  [data-controller~="flat-pack--chart"] .apexcharts-xaxis-label,
+  [data-controller~="flat-pack--chart"] .apexcharts-yaxis-label,
+  [data-controller~="flat-pack--chart"] .apexcharts-datalabel,
+  [data-controller~="flat-pack--chart"] .apexcharts-tooltip-text-y-value {
+    font-variant-numeric: tabular-nums;
   }
 
   /* Danger dot overlay for SVG icons. */

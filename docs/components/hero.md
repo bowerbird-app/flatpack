@@ -21,7 +21,7 @@ Do not use for smaller in-page promotional banners; use `FlatPack::Alert::Compon
 | name | type | default | required | description |
 |---|---|---|---|---|
 | `variant` | Symbol | `:centered` | no | Layout variant. One of: `:centered`, `:centered_image`, `:screenshot`, `:split_image`, `:angled_image`, `:image_tiles`, `:offset_image`. Invalid values raise `ArgumentError`. |
-| `tagline` | String | `nil` | no | Small uppercase label rendered above the headline. |
+| `tagline` | String | `nil` | no | Small sentence-case label rendered above the headline. |
 | `headline` | String | `nil` | no | Primary `<h1>` text. |
 | `description` | String | `nil` | no | Supporting paragraph below the headline. |
 | `image_url` | String | `nil` | no | Main image URL. Used by `screenshot`, `split_image`, `angled_image`, `offset_image`. Sanitized via `FlatPack::AttributeSanitizer.sanitize_url`. |

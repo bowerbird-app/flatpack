@@ -64,7 +64,7 @@ module FlatPack
         return unless @show_label || @label
 
         label_text = @label || "#{percentage.to_i}%"
-        content_tag(:div, label_text, class: "text-sm font-medium text-[var(--surface-content-color)] mb-1")
+        content_tag(:div, label_text, class: "text-sm font-medium text-[var(--surface-content-color)] mb-1 fp-tabular-nums")
       end
 
       def render_progress_bar

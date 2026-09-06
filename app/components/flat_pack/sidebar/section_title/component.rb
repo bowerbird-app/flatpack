@@ -56,8 +56,6 @@ module FlatPack
           classes(
             "text-xs",
             "font-semibold",
-            "uppercase",
-            "tracking-wider",
             "text-[var(--sidebar-item-text-color)]",
             "opacity-50",
             "truncate",

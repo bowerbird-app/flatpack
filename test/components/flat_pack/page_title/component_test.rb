@@ -9,6 +9,7 @@ module FlatPack
         render_inline(Component.new(title: "Dashboard"))
 
         assert_selector "h1", text: "Dashboard"
+        assert_includes page.native.to_html, "fp-text-balance"
       end
 
       def test_renders_supported_heading_variants

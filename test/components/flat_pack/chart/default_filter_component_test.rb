@@ -14,7 +14,7 @@ module FlatPack
         assert_selector "input[type='hidden'][name='start_date']", visible: :all
         assert_selector "input[type='hidden'][name='end_date']", visible: :all
         assert_includes rendered_content, "w-[220px]"
-        assert_selector "label", text: "Date Range"
+        assert_selector "label", text: "Date range"
         assert_selector "select[name='status']"
         assert_selector "label", text: "Status"
         assert_selector "select[name='status'] option[selected][value='']", text: "All"
@@ -30,7 +30,7 @@ module FlatPack
         assert_selector "input[type='hidden'][name='start_date']", visible: :all
         assert_selector "input[type='hidden'][name='end_date']", visible: :all
         assert_selector "select[name='status']"
-        assert_no_selector "label", text: "Date Range"
+        assert_no_selector "label", text: "Date range"
         assert_no_selector "label", text: "Status"
       end
 

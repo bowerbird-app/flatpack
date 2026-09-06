@@ -20,6 +20,7 @@ module FlatPack
         end
 
         assert_selector "h2", text: "Confirm Action"
+        assert_includes page.native.to_html, "fp-text-balance"
         assert_selector ".flat-pack-modal__header button[aria-label='Close']"
         assert_no_selector ".flat-pack-modal__close"
       end

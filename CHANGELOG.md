@@ -13,6 +13,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.153] - 2026-09-06
+
+### Added
+- `--font-sans` and `--font-mono`, plus a type scale (`--text-xs` through `--text-5xl`) and `--leading-tight` / `--leading-snug` / `--leading-normal`. Page title sizes alias the scale (`--page-title-h1-size` is `--text-4xl`).
+- Kit classes `.fp-tabular-nums`, `.fp-text-balance`, and `.fp-text-pretty` on `flat_pack/application`, so hosts do not need a Tailwind rebuild for wrapping or lining up numbers.
+
+### Changed
+- `:root` sets `font-family: var(--font-sans)` and antialiased smoothing. Labels that were tracked-out ALL-CAPS (hero tagline, table headers, sidebar and navbar sections, date picker headings, card stats) are sentence case.
+- Hero headlines use `--text-4xl` / `--text-5xl` and `fp-text-balance` instead of `lg:text-6xl` landing-page type. Pagination, progress meters, timestamps, card stats, and chart axes use tabular numbers.
+- Bumped the gem version to `0.1.153`.
+
+### Upgrade notes
+- No host app API changes. Kit CSS variables apply as soon as `flat_pack/variables` loads.
+- If host Tailwind loads after kit CSS, re-set `--font-sans` on unlayered `:root` (not `@theme`) so Tailwind’s `ui-sans-serif` stack does not win. `.fp-tabular-nums` / `.fp-text-balance` / `.fp-text-pretty` come from kit `flat_pack/application` and do not need a Tailwind rebuild.
+- Rebuild host Tailwind if you want `text-[length:var(--text-4xl)]` utilities generated for any host markup. Kit components that need those sizes already emit the class.
+
+### Fixed
+- Bump `rubyzip` to `3.6.0` (CVE-2026-85396).
+
 ## [0.1.152] - 2026-09-04
 
 ### Added

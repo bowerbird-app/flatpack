@@ -139,8 +139,10 @@ module FlatPack
       def test_renders_pick_in_calendar_as_last_list_action
         render_inline(Component.new(start_name: "period_start", end_name: "period_end"))
 
-        assert_selector "button[data-flat-pack-date-picker-command='show-calendar']", text: "Pick in Calendar", visible: :all
-        assert_selector "button[data-flat-pack-date-picker-command='show-ranges']", text: "Back to Date Range", visible: :all
+        assert_selector "button[data-flat-pack-date-picker-command='show-calendar']", text: "Pick in calendar", visible: :all
+        assert_selector "button[data-flat-pack-date-picker-command='show-ranges']", text: "Back to date range", visible: :all
+        assert_selector "p", text: "Date range", visible: :all
+        refute_includes page.native.to_html, "uppercase"
       end
 
       def test_renders_shared_cancel_and_apply_actions

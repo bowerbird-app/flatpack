@@ -52,11 +52,11 @@ module FlatPack
           assert_includes page.native.to_html, "text-[var(--sidebar-item-text-color)]"
         end
 
-        def test_applies_uppercase_typography_classes
+        def test_applies_sentence_case_typography_classes
           render_inline(Component.new(title: "Getting Started"))
 
-          assert_includes page.native.to_html, "uppercase"
-          assert_includes page.native.to_html, "tracking-wider"
+          refute_includes page.native.to_html, "uppercase"
+          refute_includes page.native.to_html, "tracking-wider"
           assert_includes page.native.to_html, "font-semibold"
           assert_includes page.native.to_html, "text-xs"
         end

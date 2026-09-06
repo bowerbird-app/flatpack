@@ -57,7 +57,7 @@ module FlatPack
         def title_button_attributes
           {
             type: "button",
-            class: "flex items-center gap-2 w-full px-3 py-2 mb-2 text-xs font-semibold uppercase tracking-wider text-[var(--surface-muted-content-color)] hover:text-[var(--surface-content-color)] transition-colors",
+            class: "flex items-center gap-2 w-full px-3 py-2 mb-2 text-xs font-semibold text-[var(--surface-muted-content-color)] hover:text-[var(--surface-content-color)] transition-colors",
             data: {
               action: "click->flat-pack--sidebar#toggleSection",
               flat_pack__navbar_target: "sectionTitle"
@@ -66,7 +66,7 @@ module FlatPack
         end
 
         def title_classes
-          "px-3 py-2 mb-2 text-xs font-semibold uppercase tracking-wider text-[var(--surface-muted-content-color)]"
+          "px-3 py-2 mb-2 text-xs font-semibold text-[var(--surface-muted-content-color)]"
         end
 
         def chevron_icon

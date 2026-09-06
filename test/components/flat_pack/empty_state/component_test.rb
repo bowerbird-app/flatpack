@@ -9,6 +9,7 @@ module FlatPack
         render_inline(Component.new(title: "No results found"))
 
         assert_selector "h3", text: "No results found"
+        assert_includes page.native.to_html, "fp-text-balance"
       end
 
       def test_renders_empty_state_with_description

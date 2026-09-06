@@ -118,6 +118,8 @@ module FlatPack
         assert_selector "div[data-controller~='flat-pack--flatpack-date-picker']"
         assert_selector "input[type='hidden'][name='birth_date']", visible: :all
         assert_selector "input[type='text'][readonly][role='button']"
+        assert_selector "p", text: "Quick select"
+        refute_includes page.native.to_html, "uppercase"
       end
 
       def test_renders_hidden_single_field_for_custom_picker

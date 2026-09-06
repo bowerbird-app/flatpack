@@ -54,6 +54,14 @@ module FlatPack
         assert_selector "a[href='?page=3'][data-turbo-frame='pagination_table']"
         assert_no_selector "a[data-turbo-action='replace']"
       end
+
+      def test_page_numbers_use_tabular_nums
+        pagy = MockPagy.new(page: 2, pages: 5, prev: 1, next_page: 3, series: [1, 2, 3])
+
+        render_inline(Component.new(pagy: pagy))
+
+        assert_includes page.native.to_html, "fp-tabular-nums"
+      end
     end
   end
 end

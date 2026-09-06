@@ -176,7 +176,7 @@ module FlatPack
       end
 
       def page_button_classes(active: false, disabled: false)
-        base = "inline-flex items-center justify-center #{button_size_classes} text-sm font-medium rounded-[var(--radius-sm)] transition-colors"
+        base = "inline-flex items-center justify-center #{button_size_classes} text-sm font-medium rounded-[var(--radius-sm)] transition-colors fp-tabular-nums"
 
         if disabled
           "#{base} text-[var(--surface-muted-content-color)] cursor-not-allowed opacity-50"

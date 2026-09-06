@@ -106,7 +106,7 @@ module FlatPack
           end_name: @end_date_name,
           start_value: @start_date_value,
           end_value: @end_date_value,
-          label: (hide_labels ? nil : "Date Range"),
+          label: (hide_labels ? nil : "Date range"),
           class: "w-[220px]"
         )
       end
