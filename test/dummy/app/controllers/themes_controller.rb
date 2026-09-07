@@ -53,9 +53,10 @@ class ThemesController < ApplicationController
   THEME_SELECTORS = {
     "light" => ":root",
     "dark" => "[data-theme=\"dark\"]",
-    "ocean" => "[data-theme=\"ocean\"]",
-    "rounded" => "[data-theme=\"rounded\"]"
+    "ocean" => "[data-theme=\"ocean\"]"
   }.freeze
+
+  helper_method :theme_demo_variables_subtitle
 
   def index
     @theme_token_groups = build_theme_token_groups
@@ -71,6 +72,17 @@ class ThemesController < ApplicationController
   end
 
   private
+
+  def theme_demo_variables_subtitle(theme)
+    case theme
+    when "light"
+      "Full :root wiring from flat_pack/variables.css (semantic tokens plus component aliases)."
+    when "rounded"
+      "Rounded is a no-op alias of :root. Hosts may keep data-theme=\"rounded\"; this dump is the default palette."
+    else
+      "Override-only dump from [data-theme]. Component aliases inherit from :root unless listed here."
+    end
+  end
 
   def theme_variables_code(theme)
     css = cached_theme_variables_css
@@ -92,6 +104,17 @@ class ThemesController < ApplicationController
       CODE
     end
 
+    if theme == "rounded"
+      return <<~CODE
+        /*
+         * Rounded is the kit default. data-theme="rounded" is a no-op alias of :root
+         * so hosts can keep the attribute without restating the palette.
+         */
+
+        #{extract_selector_block(css, THEME_SELECTORS.fetch("light"))}
+      CODE
+    end
+
     selector = THEME_SELECTORS.fetch(theme)
     extract_selector_block(css, selector)
   end
@@ -109,7 +132,7 @@ class ThemesController < ApplicationController
 
       groups << {
         title: title,
-        subtitle: "#{rows.size} token#{"s" unless rows.size == 1} in @theme",
+        subtitle: "#{rows.size} token#{"s" unless rows.size == 1} on :root",
         rows: rows
       }
     end
@@ -117,7 +140,7 @@ class ThemesController < ApplicationController
 
   def extract_theme_tokens
     css = cached_theme_variables_css
-    block = css[/@theme\s*\{(?<body>.*?)^\}/m, :body]
+    block = css[/^:root \{(?<body>.*?)^\}/m, :body]
     return [] if block.blank?
 
     block.lines.filter_map do |line|

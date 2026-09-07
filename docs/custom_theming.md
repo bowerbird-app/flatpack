@@ -10,9 +10,9 @@ Use this guide when you want a complete starting point instead of hand-picking a
 
 FlatPack's theming surface has three layers:
 
-- `@theme {}` in `flat_pack/variables.css` defines the shared Tailwind token inventory (including `--brand-hue` / `--brand-chroma` / `--brand-lightness`).
-- `:root {}` in the same file defines the default rounded / charcoal palette **and** component token wiring (`--button-primary-*` → `var(--color-primary)`, etc.).
-- `[data-theme="rounded"]` is an explicit alias of that default.
+- `@theme inline {}` in `flat_pack/variables.css` registers the Tailwind token inventory (including `--brand-hue` / `--brand-chroma` / `--brand-lightness`) without copying values.
+- `:root {}` in the same file is the single source of concrete values: the default rounded / charcoal palette **and** component token wiring (`--button-primary-*` → `var(--color-primary)`, etc.).
+- `[data-theme="rounded"]` is an empty alias of that default.
 - `[data-theme="..."]` selectors override **only** tokens that differ from `:root` (semantic / intentional exceptions). Component aliases inherit.
 
 For most apps, generate a brand kit instead of copying every variable:
@@ -571,9 +571,9 @@ One limitation remains: the controller's built-in label helper only knows the sh
 
 The source of truth remains `app/assets/stylesheets/flat_pack/variables.css` in the FlatPack gem or repository.
 
-- `@theme {}` contains the token inventory used by Tailwind utilities.
+- `@theme inline {}` contains the token names used by Tailwind utilities. Values are not stored there.
 - `:root {}` contains the default rounded / charcoal palette and component aliases.
-- `[data-theme="dark"]` and `[data-theme="ocean"]` are **override-only** — they list tokens that differ from `:root`. `[data-theme="rounded"]` is an alias of the default. Component aliases inherit.
+- `[data-theme="dark"]` and `[data-theme="ocean"]` are **override-only** — they list tokens that differ from `:root`. `[data-theme="rounded"]` is an empty alias of the default. Component aliases inherit.
 
 When FlatPack adds a new **semantic** token, copy it into your host theme if you need a different value. Component aliases that are `var(--semantic)` do not need to be re-copied.
 

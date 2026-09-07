@@ -42,4 +42,12 @@ class ThemesDemoTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, "System theme tracks the OS preference"
   end
+
+  test "rounded theme demo explains the alias and shows :root values" do
+    get theme_demo_path(theme: "rounded")
+
+    assert_response :success
+    assert_includes response.body, "no-op alias of :root"
+    assert_includes response.body, "--color-primary"
+  end
 end

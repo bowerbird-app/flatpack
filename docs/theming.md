@@ -14,7 +14,7 @@ Component tokens (--button-*, --sidebar-*, …) — defined once as var(--semant
 Components / Stimulus
 ```
 
-The kit default (no `data-theme`) is the rounded / charcoal palette. Named themes (`[data-theme="dark"]`, `ocean`, `rounded`, or your own) should override **brand/semantic** tokens. `[data-theme="rounded"]` is an alias of the default. Component tokens inherit automatically.
+The kit default (no `data-theme`) is the rounded / charcoal palette. Named themes (`[data-theme="dark"]`, `ocean`, or your own) should override **brand/semantic** tokens. `[data-theme="rounded"]` is an empty alias of the default. Component tokens inherit automatically.
 
 If you want a complete copy-pasteable custom theme with every current FlatPack variable, use the [Custom Theming Guide](custom_theming.md). Prefer the brand-kit path below for most apps.
 
@@ -51,7 +51,7 @@ For an exact brand hex, set the semantic tokens instead:
 
 FlatPack does **not** rename `--color-primary` to `--fp-color-primary`. That name is the public override API: host CSS loaded after `flat_pack/variables` wins, so one brand color can drive both the app and FlatPack.
 
-Do **not** put FlatPack tokens back into the Tailwind entry. A second `--color-primary` (or `--color-fp-*`) inside `@theme` is what used to clash and circular-map.
+Do **not** put FlatPack tokens back into the Tailwind entry. A second `--color-primary` (or `--color-fp-*`) inside a host `@theme` is what used to clash and circular-map. The kit registers names with `@theme inline` and keeps concrete values on `:root`.
 
 | Situation | What to do |
 |---|---|
@@ -66,7 +66,7 @@ Do **not** put FlatPack tokens back into the Tailwind entry. A second `--color-p
 ## Overview
 
 FlatPack's theming system is built on:
-- Tailwind CSS 4's `@theme` directive (token inventory for utilities)
+- Tailwind CSS 4's `@theme inline` directive (token names for utilities; values stay on `:root`)
 - CSS custom properties (variables)
 - OKLCH color space for perceptual uniformity
 - Default `:root` wiring plus slim `data-theme` overrides
@@ -222,7 +222,7 @@ Kit CSS defines `.fp-hit-target` and `.fp-hit-target-inline`. Hosts get those cl
 --leading-normal: 1.5
 ```
 
-`--font-*` and `--text-*` are set on `:root` as well as `@theme`, for the same reason as durations. `:root` also sets `font-family: var(--font-sans)` and antialiased smoothing. Hosts override `--font-sans` with a brand face. There is no kit webfont. If host Tailwind loads last, re-set `--font-sans` on unlayered `:root` in the host stylesheet — Tailwind’s `@layer theme` stack otherwise replaces the kit one.
+`--font-*` and `--text-*` are set on `:root` (not only inside `@theme`). `:root` also sets `font-family: var(--font-sans)` and antialiased smoothing. Hosts override `--font-sans` with a brand face. There is no kit webfont. If host Tailwind loads last, re-set `--font-sans` on unlayered `:root` in the host stylesheet — Tailwind’s `@layer theme` stack otherwise replaces the kit one.
 
 `--page-title-h1-size` through `--page-title-h6-size` alias `--text-4xl` down to `--text-base`.
 
@@ -240,7 +240,7 @@ Kit CSS defines `.fp-tabular-nums` (`font-variant-numeric: tabular-nums`), `.fp-
 --transition-slow: var(--duration-slow)
 ```
 
-`--duration-*` are set on `:root`, not only inside `@theme`. Hosts load `flat_pack/variables` as a normal stylesheet, and browsers skip `@theme`. Under `prefers-reduced-motion: reduce`, `--duration-fast`, `--duration-base`, `--duration-slow`, and `--skeleton-shimmer-duration` become `0ms`. Overlay controllers read those tokens through `controllers/flat_pack/reduced_motion` so hide delays match. Spatial motion (scale, slide, fan) is skipped; colour and opacity may still change. Tailwind's built-in `duration-200` / `duration-300` utilities are not the kit lever. Kit surfaces that move should use `duration-[var(--duration-fast)]`, `duration-[var(--duration-base)]`, or `duration-[var(--duration-slow)]`.
+`--duration-*` are set on `:root`. Hosts load `flat_pack/variables` as a normal stylesheet, and browsers skip `@theme`. `@theme inline` only registers the names for Tailwind. Under `prefers-reduced-motion: reduce`, `--duration-fast`, `--duration-base`, `--duration-slow`, and `--skeleton-shimmer-duration` become `0ms`. Overlay controllers read those tokens through `controllers/flat_pack/reduced_motion` so hide delays match. Spatial motion (scale, slide, fan) is skipped; colour and opacity may still change. Tailwind's built-in `duration-200` / `duration-300` utilities are not the kit lever. Kit surfaces that move should use `duration-[var(--duration-fast)]`, `duration-[var(--duration-base)]`, or `duration-[var(--duration-slow)]`.
 
 ### Easing
 ```css
@@ -249,7 +249,7 @@ Kit CSS defines `.fp-tabular-nums` (`font-variant-numeric: tabular-nums`), `.fp-
 --easing-exit: cubic-bezier(0.3, 0, 1, 1)  /* accelerate: overlay exit */
 ```
 
-`--easing-*` are set on `:root` as well as `@theme`, for the same reason as durations. Kit overlays use `ease-[var(--easing-enter)]` / `ease-[var(--easing-exit)]`, or `motionTransition()` in Stimulus. In-place motion (switch, progress, sidebar) uses `--easing-standard`. There is no bounce: charcoal / rounded is Corporate/Premium, not Playful.
+`--easing-*` are set on `:root`, for the same reason as durations. Kit overlays use `ease-[var(--easing-enter)]` / `ease-[var(--easing-exit)]`, or `motionTransition()` in Stimulus. In-place motion (switch, progress, sidebar) uses `--easing-standard`. There is no bounce: charcoal / rounded is Corporate/Premium, not Playful.
 
 Use `--easing-enter` for modal, toast, dropdown, popover, and tooltip entrance. Use `--easing-exit` for their leave. Modal and toast enter on `--duration-slow` and exit on `--duration-base`. Popover and tooltip stay on `--duration-base` both ways, with a few pixels of offset from the trigger. Form invalid is colour only; do not shake the field.
 

@@ -40,6 +40,29 @@ class ThemesControllerPrivateTest < ActiveSupport::TestCase
     assert_includes code, "--color-primary"
   end
 
+  test "theme_variables_code treats rounded as a :root alias" do
+    controller = ThemesController.new
+
+    code = controller.send(:theme_variables_code, "rounded")
+
+    assert_includes code, "no-op alias of :root"
+    assert_includes code, ":root"
+    assert_includes code, "--color-primary"
+    assert_match(/--color-primary:\s*oklch\(/, code)
+    refute_match(/\[data-theme="rounded"\]/, code)
+  end
+
+  test "extract_theme_tokens reads concrete values from :root" do
+    controller = ThemesController.new
+
+    tokens = controller.send(:extract_theme_tokens)
+    primary = tokens.find { |token| token.fetch(:variable) == "--color-primary" }
+
+    refute_nil primary
+    assert_match(/\Aoklch\(/, primary.fetch(:default_value))
+    refute_equal "var(--color-primary)", primary.fetch(:default_value)
+  end
+
   test "variable_section_label classifies blur and unknown variables" do
     controller = ThemesController.new
 

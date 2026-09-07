@@ -13,6 +13,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.155] - 2026-09-06
+
+### Changed
+- Token values live once on `:root`. `@theme inline` registers the same names for Tailwind utilities without re-emitting hex/oklch (no second copy of the palette).
+- `[data-theme="rounded"]` is a no-op alias of the default. It no longer restates charcoal colours, radii, or shadows.
+- Carousel chrome tokens and extra-small button padding that previously existed only inside `@theme` now resolve on `:root`.
+- Dummy `/themes` token tables read `:root`, not `@theme`.
+- Bumped the gem version to `0.1.155`.
+
+### Upgrade notes
+- No host app API changes. `data-theme="rounded"` still looks like the default; you can keep or drop the attribute.
+- Do not copy `@theme inline { --color-primary: var(--color-primary); }` onto `:root`. That pattern is Tailwind inventory only. Concrete values stay on `:root`. A `:root` (or `[data-theme]`) line of `--token: var(--token)` is still a circular map and will blank the token.
+- Rebuild host Tailwind only if you `@import` `flat_pack/variables` into the Tailwind entry. Hosts that load it with `stylesheet_link_tag` already skip `@theme`; browsers keep reading `:root`.
+
 ## [0.1.154] - 2026-09-06
 
 ### Changed
