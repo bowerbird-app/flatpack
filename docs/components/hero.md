@@ -27,7 +27,7 @@ Do not use for smaller in-page promotional banners; use `FlatPack::Alert::Compon
 | `image_url` | String | `nil` | no | Main image URL. Used by `screenshot`, `split_image`, `angled_image`, `offset_image`. Sanitized via `FlatPack::AttributeSanitizer.sanitize_url`. |
 | `image_alt` | String | `""` | no | Alt text for the main image. Pass `""` for decorative images. |
 | `background_image_url` | String | `nil` | no | Background image URL for `centered_image`. Sanitized. Applied via `style` attribute only after sanitization. |
-| `background` | String | `nil` | no | CSS background value applied to the root `<section>`. Accepts any valid CSS — solid colors (`#1e293b`), gradients (`linear-gradient(135deg, #667eea, #764ba2)`), CSS variables (`var(--surface-page-background-color)`). Any `url()` expressions are stripped before rendering. |
+| `background` | String | `nil` | no | CSS background on the root `<section>`. Prefer a surface token (`var(--surface-muted-background-color)`) or omit it. Hosts may pass a gradient if their named theme defines one. Any `url()` expressions are stripped. |
 | `tiles` | Array | `[]` | no | Array of `{ url:, alt: }` hashes for `image_tiles` (2–4 items shown). Each `url` is sanitized individually. |
 | `**system_arguments` | Hash | `{}` | no | Additional HTML attributes forwarded to the root `<section>` element. |
 

@@ -8,8 +8,7 @@
   headline: "Let the image break the grid.",
   description: "On large screens the image extends slightly beyond the container edge via a negative margin, creating a sense of depth and energy.",
   image_url: "/images/hero-packhelp.png",
-  image_alt: "Packhelp packaging",
-  background: "linear-gradient(135deg, #fefce8 0%, #fef9c3 50%, #fef08a 100%)"
+  image_alt: "Packhelp packaging"
 ) do |hero|
   hero.slot do
     concat render(FlatPack::Button::Component.new(text: "Start now", style: :primary, href: "#"))

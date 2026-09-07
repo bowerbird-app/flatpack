@@ -4,7 +4,7 @@
 Render a flexible content container with optional structured header, body, footer, and media sections.
 
 ## When to use
-Use Card to group related content in a consistent surface with optional hover and clickable behavior.
+Use Card to group related content in a consistent surface with optional hover and clickable behavior. Keep labels in sentence case. Do not use tracked-out ALL-CAPS eyebrows or decorative gradient washes unless a host theme asks for them.
 
 ## Class
 - Primary: `FlatPack::Card::Component`

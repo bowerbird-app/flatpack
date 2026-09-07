@@ -681,7 +681,7 @@
         { variable: "image_url", accepts: "String or nil (sanitized)", example: "image_url: \"https://example.com/product.jpg\"" },
         { variable: "image_alt", accepts: "String", example: "image_alt: \"Product screenshot\"" },
         { variable: "background_image_url", accepts: "String or nil (sanitized)", example: "background_image_url: \"https://example.com/bg.jpg\"" },
-        { variable: "background", accepts: "CSS color, gradient, or nil", example: "background: \"linear-gradient(135deg, #667eea, #764ba2)\"" },
+        { variable: "background", accepts: "CSS color or nil", example: "background: \"var(--surface-muted-background-color)\"" },
         { variable: "tiles", accepts: "Array of { url:, alt: } hashes (up to 4)", example: "tiles: [{ url: \"https://...\", alt: \"Feature 1\" }]" },
         { variable: "slot", accepts: "slot block", example: "hero.slot { concat render(FlatPack::Button::Component.new(text: \"Start\", style: :primary, href: \"#\")) }" },
         { variable: "badge", accepts: "slot block", example: "hero.badge { render FlatPack::Badge::Component.new(text: \"New\", style: :success) }" },
