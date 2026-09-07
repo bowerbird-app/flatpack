@@ -99,26 +99,6 @@
 		height: 0;
 	}
 
-	.fp-gradient-1 {
-		background-image: var(--gradient-1);
-	}
-
-	.fp-gradient-2 {
-		background-image: var(--gradient-2);
-	}
-
-	.fp-gradient-3 {
-		background-image: var(--gradient-3);
-	}
-
-	.fp-gradient-4 {
-		background-image: var(--gradient-4);
-	}
-
-	.fp-theme-demo-gradient {
-		min-height: 6rem;
-	}
-
 	.fp-theme-demo-box {
 		min-height: 5rem;
 		padding: 0.75rem;

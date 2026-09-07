@@ -6,7 +6,7 @@ class ThemesController < ApplicationController
     "Color Swatch" => [/\A--color-swatch-/],
     "Font Swatch" => [/\A--font-swatch-/],
     "Overflow Row" => [/\A--overflow-row-/],
-    "Core Colors and Surfaces" => [/\A--(color-|surface-|gradient-)/],
+    "Core Colors and Surfaces" => [/\A--(color-|surface-)/],
     "Badges" => [/\A--badge-/],
     "Buttons" => [/\A--button-/],
     "Alerts" => [/\A--alert-/],
@@ -182,7 +182,6 @@ class ThemesController < ApplicationController
 
   def default_value_description(default_value)
     return "References another token via var()" if default_value.start_with?("var(")
-    return "Gradient token value" if default_value.start_with?("linear-gradient(")
     return "Color value" if default_value.include?("oklch(") || default_value.include?("rgb(") || default_value.include?("color-mix(")
 
     "Theme token value"
@@ -237,7 +236,7 @@ class ThemesController < ApplicationController
       "Brand primitives"
     when /\A--color-ring\z/
       "Focus"
-    when /\A--(color-|gradient-|surface-)/
+    when /\A--(color-|surface-)/
       "Core colors and surfaces"
     when /\A--code-block-/
       "Code block"

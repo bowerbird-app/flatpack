@@ -187,7 +187,7 @@ class DemoCatalog
     {
       title: "Layout",
       entries: [
-        {type: :item, title: "Hero", path: "/pages/hero", description: "Landing-page hero sections with layout variants", icon: :rectangle_group},
+        {type: :item, title: "Hero", path: "/pages/hero", description: "Landing-page heroes on the page surface, not a gradient wash", icon: :rectangle_group},
         {
           type: :group,
           title: "Cards",

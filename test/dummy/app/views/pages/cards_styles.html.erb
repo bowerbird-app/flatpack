@@ -106,7 +106,7 @@
     <div class="max-w-sm mb-4">
       <%= render FlatPack::Card::Component.new(style: :default, hover: :subtle) do |card| %>
         <% card.media(aspect_ratio: "16/9") do %>
-          <div class="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-2xl font-bold">
+          <div class="w-full h-full bg-[var(--surface-muted-background-color)] text-[var(--surface-muted-content-color)] flex items-center justify-center text-2xl font-semibold">
             Media Slot
           </div>
         <% end %>
@@ -129,7 +129,7 @@
       code: CGI.unescapeHTML(<<~'CODE')
         &lt;%= render FlatPack::Card::Component.new(style: :default) do |card| %&gt;
           &lt;% card.media(aspect_ratio: "16/9") do %&gt;
-            <div class="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-2xl font-bold">
+            <div class="w-full h-full bg-[var(--surface-muted-background-color)] text-[var(--surface-muted-content-color)] flex items-center justify-center text-2xl font-semibold">
               Media Slot
             </div>
           &lt;% end %&gt;

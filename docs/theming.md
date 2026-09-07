@@ -145,20 +145,17 @@ For a named host-app variant such as `[data-theme="sunrise"]`, see the theme gen
 --surface-border-color
 --surface-border-hover-color
 
---gradient-1
---gradient-2
---gradient-3
---gradient-4
-
 --color-ring
 ```
+
+The kit does not ship `--gradient-1` … `--gradient-4` or `.fp-gradient-*`. Named host themes may define those tokens if they want a decorative wash. Heroes and cards stay on surface tokens unless the host asks.
 
 ### Icons
 ```css
 --icon-stroke-width: 1.5
 ```
 
-Outline Heroicons follow `--icon-stroke-width`. Solid, mini, and micro variants are fills and ignore it. TipTap bold/italic/underline/strike stay `2.5` so the 14px glyphs still read. Button spinner rings stay `4`. Empty-state 48px illustrations keep their own paths.
+Outline Heroicons follow `--icon-stroke-width`. Solid, mini, and micro variants are fills and ignore it. TipTap bold/italic/underline/strike stay `2.5` so the 14px glyphs still read. Button spinner rings stay `4`. Empty-state optional icons use `IconComponent`.
 
 `IconComponent` optically nudges handle-heavy artwork (`magnifying-glass`, `paper-airplane`, `pencil`, `pencil-square`, `arrow-up-tray`, `arrow-down-tray`) with `-translate-y-0.5`. Add names to `OPTICAL_NUDGES` instead of per-component CSS.
 

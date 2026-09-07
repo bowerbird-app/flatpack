@@ -194,7 +194,7 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
       <%= render FlatPack::Card::Component.new(style: :default) do |card| %>
         <% card.media(aspect_ratio: "16/9") do %>
-          <div class="w-full h-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold">
+          <div class="w-full h-full bg-[var(--surface-muted-background-color)] text-[var(--surface-muted-content-color)] flex items-center justify-center font-bold">
             16:9 Aspect Ratio
           </div>
         <% end %>
@@ -205,7 +205,7 @@
 
       <%= render FlatPack::Card::Component.new(style: :default) do |card| %>
         <% card.media(aspect_ratio: "4/3") do %>
-          <div class="w-full h-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-bold">
+          <div class="w-full h-full bg-[var(--surface-muted-background-color)] text-[var(--surface-muted-content-color)] flex items-center justify-center font-bold">
             4:3 Aspect Ratio
           </div>
         <% end %>
@@ -216,7 +216,7 @@
 
       <%= render FlatPack::Card::Component.new(style: :default) do |card| %>
         <% card.media(aspect_ratio: "1/1") do %>
-          <div class="w-full h-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white font-bold">
+          <div class="w-full h-full bg-[var(--surface-muted-background-color)] text-[var(--surface-muted-content-color)] flex items-center justify-center font-bold">
             1:1 Square
           </div>
         <% end %>
@@ -229,7 +229,7 @@
       code: CGI.unescapeHTML(<<~'CODE')
         &lt;%= render FlatPack::Card::Component.new(style: :default) do |card| %&gt;
           &lt;% card.media(aspect_ratio: "16/9") do %&gt;
-            <div class="w-full h-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold">
+            <div class="w-full h-full bg-[var(--surface-muted-background-color)] text-[var(--surface-muted-content-color)] flex items-center justify-center font-bold">
               16:9 Aspect Ratio
             </div>
           &lt;% end %&gt;

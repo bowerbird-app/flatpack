@@ -13,6 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.161] - 2026-09-07
+
+### Changed
+- Kit themes no longer ship decorative `--gradient-1` … `--gradient-4` or `.fp-gradient-*`. Named host themes may still define those tokens if they want a wash.
+- Dummy heroes sit on the page surface instead of pastel hex gradients. Dummy cards use surface-muted media placeholders, sentence-case stat labels, and a `Popular` badge instead of tracked-out ALL-CAPS eyebrows.
+- Bumped the gem version to `0.1.161`.
+
+### Upgrade notes
+- If a host used `var(--gradient-1)` through `var(--gradient-4)` or `.fp-gradient-*`, copy those tokens onto a named `[data-theme]` (see `docs/custom_theming.md`) or replace the wash with a surface token.
+- Hero `background:` still accepts a CSS value. Prefer omitting it or passing `var(--surface-muted-background-color)`.
+- Rebuild host Tailwind only if you `@import` `flat_pack/application` or copied the dummy `.fp-gradient-*` helpers.
+
 ## [0.1.160] - 2026-09-07
 
 ### Changed

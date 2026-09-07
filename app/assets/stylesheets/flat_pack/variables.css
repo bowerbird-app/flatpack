@@ -23,10 +23,6 @@
   --color-default-hover: var(--color-default-hover);
   --color-default-text: var(--color-default-text);
   --color-default-border: var(--color-default-border);
-  --gradient-1: var(--gradient-1);
-  --gradient-2: var(--gradient-2);
-  --gradient-3: var(--gradient-3);
-  --gradient-4: var(--gradient-4);
   --color-secondary: var(--color-secondary);
   --color-secondary-hover: var(--color-secondary-hover);
   --color-secondary-text: var(--color-secondary-text);
@@ -558,10 +554,6 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --color-default-hover: var(--surface-muted-background-color);
   --color-default-text: var(--surface-content-color);
   --color-default-border: var(--surface-border-color);
-  --gradient-1: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  --gradient-2: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-  --gradient-3: linear-gradient(145deg, #dcfce7 0%, #bbf7d0 100%);
-  --gradient-4: linear-gradient(145deg, #ede9fe 0%, #ddd6fe 100%);
   --color-secondary: #f5f5f5;
   --color-secondary-hover: #ebebeb;
   --color-secondary-text: #333;
@@ -1087,10 +1079,6 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --color-primary: oklch(0.62 0.22 250);
   --color-primary-hover: oklch(0.72 0.15 250);
   --color-primary-text: oklch(0.15 0.01 250);
-  --gradient-1: linear-gradient(135deg, oklch(0.24 0.03 250) 0%, oklch(0.18 0.02 250) 100%);
-  --gradient-2: linear-gradient(135deg, oklch(0.26 0.03 220) 0%, oklch(0.19 0.03 210) 100%);
-  --gradient-3: linear-gradient(145deg, oklch(0.26 0.03 160) 0%, oklch(0.19 0.02 170) 100%);
-  --gradient-4: linear-gradient(145deg, oklch(0.28 0.04 70) 0%, oklch(0.20 0.03 55) 100%);
   --color-secondary: oklch(0.20 0.02 250);
   --color-secondary-hover: oklch(0.25 0.03 250);
   --color-secondary-text: oklch(0.90 0.01 250);
@@ -1136,10 +1124,6 @@ input.flat-pack-input[type="search"]::-ms-reveal {
 [data-theme="ocean"] {
   --color-primary: oklch(0.52 0.15 220);
   --color-primary-hover: oklch(0.42 0.18 220);
-  --gradient-1: linear-gradient(135deg, oklch(0.97 0.03 220) 0%, oklch(0.90 0.09 230) 100%);
-  --gradient-2: linear-gradient(135deg, oklch(0.96 0.03 200) 0%, oklch(0.89 0.09 185) 100%);
-  --gradient-3: linear-gradient(145deg, oklch(0.97 0.03 180) 0%, oklch(0.90 0.08 160) 100%);
-  --gradient-4: linear-gradient(145deg, oklch(0.97 0.02 250) 0%, oklch(0.90 0.08 270) 100%);
   --color-secondary: oklch(0.92 0.02 220);
   --color-secondary-hover: oklch(0.87 0.03 220);
   --color-secondary-text: oklch(0.25 0.02 220);

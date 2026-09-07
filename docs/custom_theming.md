@@ -54,6 +54,8 @@ Example:
 
 This block is a full-token override starter (historically based on the earlier purple-blue palette). Rename the selector, paste it into your app stylesheet, and edit values in place. For the shipped default look, leave `:root` alone or set `data-theme="rounded"` (an alias of the default).
 
+Do not copy decorative `--gradient-*` tokens unless this theme actually needs a wash. The kit default has none.
+
 <details>
 <summary>Show complete custom-theme template</summary>
 
@@ -67,11 +69,6 @@ This block is a full-token override starter (historically based on the earlier p
   --color-default-hover: var(--surface-muted-background-color);
   --color-default-text: var(--surface-content-color);
   --color-default-border: var(--surface-border-color);
-
-  --gradient-1: linear-gradient(135deg, oklch(0.98 0.02 250) 0%, oklch(0.92 0.06 250) 100%);
-  --gradient-2: linear-gradient(135deg, oklch(0.97 0.02 220) 0%, oklch(0.90 0.08 200) 100%);
-  --gradient-3: linear-gradient(145deg, oklch(0.98 0.02 150) 0%, oklch(0.92 0.07 170) 100%);
-  --gradient-4: linear-gradient(145deg, oklch(0.98 0.02 40) 0%, oklch(0.93 0.08 70) 100%);
 
   --color-secondary: oklch(0.95 0.01 250);
   --color-secondary-hover: oklch(0.90 0.02 250);

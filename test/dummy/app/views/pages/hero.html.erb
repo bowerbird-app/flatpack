@@ -9,7 +9,7 @@
 
   <!-- Centered -->
   <section class="mb-12">
-    <%= render FlatPack::SectionTitle::Component.new(title: "Centered", anchor_link: true, subtitle: "Centered text and slots. Supports background colours and gradients.") %>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Centered", anchor_link: true, subtitle: "Centered text and slots. Leave the page surface; pass background only if a host theme asks for a wash.") %>
     <div class="mb-4 flex justify-end">
       <%= render FlatPack::Button::Component.new(text: "View full-page demo", style: :secondary, href: pages_hero_centered_path, target: "_blank") %>
     </div>
@@ -17,8 +17,7 @@
       variant: :centered,
       tagline: "Introducing FlatPack",
       headline: "Build beautiful interfaces faster.",
-      description: "A Rails ViewComponent library with Tailwind CSS and no runtime JavaScript dependencies.",
-      background: "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f0fdf4 100%)"
+      description: "A Rails ViewComponent library with Tailwind CSS and no runtime JavaScript dependencies."
     ) do |hero|
       hero.badge { render FlatPack::Badge::Component.new(text: "New", style: :success) }
       hero.slot do
@@ -34,8 +33,7 @@
           variant: :centered,
           tagline: "Introducing FlatPack",
           headline: "Build beautiful interfaces faster.",
-          description: "A Rails ViewComponent library with Tailwind CSS.",
-          background: "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f0fdf4 100%)"
+          description: "A Rails ViewComponent library with Tailwind CSS."
         ) do |hero|
           hero.badge { render FlatPack::Badge::Component.new(text: "New", style: :success) }
           hero.slot do
@@ -135,8 +133,7 @@
       headline: "Text on the left, imagery on the right.",
       description: "A classic two-column layout that stacks gracefully on smaller screens. Great for product launches.",
       image_url: "/images/hero-packhelp.png",
-      image_alt: "Packhelp packaging",
-      background: "#f8fafc"
+      image_alt: "Packhelp packaging"
     ) do |hero|
       hero.badge { render FlatPack::Badge::Component.new(text: "v2.0") }
       hero.slot do
@@ -154,8 +151,7 @@
           headline: "Text on the left, imagery on the right.",
           description: "Stacks gracefully on smaller screens.",
           image_url: "https://example.com/product.jpg",
-          image_alt: "Product image",
-          background: "#f8fafc"
+          image_alt: "Product image"
         ) do |hero|
           hero.badge { render FlatPack::Badge::Component.new(text: "v2.0") }
           hero.slot do
@@ -216,7 +212,6 @@
       tagline: "Versatile & composable",
       headline: "Show off multiple visuals in one hero.",
       description: "A 2x2 grid of square images sits beside your copy, giving a rich product feel without a single screenshot.",
-      background: "linear-gradient(to bottom right, #fdf4ff, #faf5ff)",
       tiles: [
         {url: "/images/hero-stool.jpg", alt: "DIY flat-pack stool"},
         {url: "/images/hero-packhelp.png", alt: "Packhelp packaging"},
@@ -238,7 +233,6 @@
           tagline: "Versatile & composable",
           headline: "Show off multiple visuals in one hero.",
           description: "A 2x2 grid of square images beside your copy.",
-          background: "linear-gradient(to bottom right, #fdf4ff, #faf5ff)",
           tiles: [
             { url: "https://example.com/1.jpg", alt: "Feature one" },
             { url: "https://example.com/2.jpg", alt: "Feature two" },
@@ -267,8 +261,7 @@
       headline: "Let the image break the grid.",
       description: "On large screens the image extends slightly beyond the container edge via a negative margin, creating a sense of depth and energy.",
       image_url: "/images/hero-packhelp.png",
-      image_alt: "Packhelp packaging",
-      background: "linear-gradient(135deg, #fefce8 0%, #fef9c3 50%, #fef08a 100%)"
+      image_alt: "Packhelp packaging"
     ) do |hero|
       hero.slot do
         concat render(FlatPack::Button::Component.new(text: "Start now", style: :primary, href: "#"))

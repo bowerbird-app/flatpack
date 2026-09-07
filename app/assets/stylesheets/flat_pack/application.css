@@ -162,23 +162,6 @@
     border-color: var(--card-hover-strong-border-color);
   }
 
-  /* Decorative gradient helpers mapped to theme tokens */
-  .fp-gradient-1 {
-    background-image: var(--gradient-1);
-  }
-
-  .fp-gradient-2 {
-    background-image: var(--gradient-2);
-  }
-
-  .fp-gradient-3 {
-    background-image: var(--gradient-3);
-  }
-
-  .fp-gradient-4 {
-    background-image: var(--gradient-4);
-  }
-
   .fp-scrollbar-hidden {
     scrollbar-width: none;
     -ms-overflow-style: none;
