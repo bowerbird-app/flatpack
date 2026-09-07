@@ -45,6 +45,7 @@ module FlatPack
 
       def render_item_content
         safe_join([
+          content_tag(:span, "", class: "flat-pack-list-item-marker", aria: {hidden: true}),
           render_icon,
           render_leading,
           # SECURITY: Content is marked html_safe because it's expected to contain

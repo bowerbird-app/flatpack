@@ -74,6 +74,7 @@ module FlatPack
         "--top-nav-item-hover-background-color" => "var(--surface-muted-background-color)",
         "--list-item-hover-background-color" => "var(--surface-muted-background-color)",
         "--list-item-active-background-color" => "var(--surface-muted-background-color)",
+        "--list-marker-color" => "var(--surface-muted-content-color)",
         "--chat-message-incoming-background-color" => "var(--surface-muted-background-color)",
         "--chat-message-incoming-text-color" => "var(--surface-content-color)",
         "--chat-message-incoming-meta-color" => "var(--surface-muted-content-color)",

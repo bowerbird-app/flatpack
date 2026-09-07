@@ -1,7 +1,7 @@
 # List
 
 ## Purpose
-Render semantic ordered or unordered lists with optional spacing, divider, selectable behavior, and drag-to-reorder support.
+Render semantic ordered or unordered lists with optional spacing, divider, selectable behavior, and drag-to-reorder support. Ordered lists show decimal markers (`1.`, `2.`, …) through a kit marker slot. Unordered lists stay unmarked.
 
 ## When to use
 Use List when grouped items need consistent spacing and optional active-item selection handling.
@@ -15,7 +15,7 @@ Use List when grouped items need consistent spacing and optional active-item sel
 
 | name | type | default | required | description |
 |---|---|---|---|---|
-| `ordered` | Boolean | `false` | no | Renders `<ol>` when true, otherwise `<ul>`. |
+| `ordered` | Boolean | `false` | no | Renders `<ol>` when true, otherwise `<ul>`. Ordered lists show decimal markers via a kit slot. |
 | `spacing` | Symbol | `:comfortable` | no | Vertical spacing preset; `:dense` uses tighter spacing, other values use comfortable spacing. |
 | `divider` | Boolean | `false` | no | Adds row separators using `divide-y`. |
 | `selectable` | Boolean | `false` | no | Enables active-item behavior via `flat-pack--list-selectable`. |
@@ -43,16 +43,25 @@ Use List when grouped items need consistent spacing and optional active-item sel
 None.
 
 ## Variants
-- Ordered vs unordered (`ordered: true/false`).
+- Ordered vs unordered (`ordered: true/false`). Ordered lists number each item. Unordered lists do not.
 - Spacing variants via `spacing`.
 - Selectable behavior via `selectable: true`.
 - Orderable behavior via `orderable: true` and `orderable_url:`.
+
+Ordered markers use `--list-marker-color`, `--list-marker-min-width`, and `--list-marker-gap`.
 
 ## Example
 ```erb
 <%= render FlatPack::List::Component.new(ordered: false, selectable: true, divider: true) do %>
   <%= render FlatPack::List::Item.new(icon: :check, href: "/tasks/1") { "First task" } %>
   <%= render FlatPack::List::Item.new(icon: :clock, href: "/tasks/2") { "Second task" } %>
+<% end %>
+```
+
+```erb
+<%= render FlatPack::List::Component.new(ordered: true) do %>
+  <%= render FlatPack::List::Item.new(icon: :sun) { "Heat the pan" } %>
+  <%= render FlatPack::List::Item.new(icon: :star) { "Crack two eggs" } %>
 <% end %>
 ```
 
@@ -84,6 +93,7 @@ moving_recording_id=2b6f8d0d-3c1b-4ec0-9ed0-7a5d8d3b4e11&target_position=2
 ## Accessibility
 - List renders semantic `<ul>`/`<ol>` with `role="list"`.
 - Items render `<li role="listitem">`.
+- The marker slot is `aria-hidden`. Screen readers use the `<ol>` semantics.
 - Selectable mode sets `aria-current="page"` on active links.
 - Orderable mode expects stable item IDs so the controller can persist the dragged item's UUID and destination position.
 - Orderable mode can customize the request parameter names with `param_uuid_name` and `param_target_position_name`.

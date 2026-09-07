@@ -195,6 +195,33 @@
 
 }
 
+ol.flat-pack-list {
+  counter-reset: flat-pack-list-item;
+  list-style: none;
+}
+
+ol.flat-pack-list > li {
+  counter-increment: flat-pack-list-item;
+}
+
+.flat-pack-list-item-marker {
+  display: none;
+}
+
+ol.flat-pack-list > li .flat-pack-list-item-marker {
+  display: inline-flex;
+  flex-shrink: 0;
+  min-width: var(--list-marker-min-width);
+  margin-inline-end: var(--list-marker-gap);
+  color: var(--list-marker-color);
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
+
+ol.flat-pack-list > li .flat-pack-list-item-marker::before {
+  content: counter(flat-pack-list-item) ".";
+}
+
 @keyframes fp-skeleton-shimmer {
   to {
     transform: translateX(180%);

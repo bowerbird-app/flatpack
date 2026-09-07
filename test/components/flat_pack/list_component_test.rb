@@ -8,13 +8,15 @@ module FlatPack
       def test_renders_unordered_list_by_default
         render_inline(Component.new) { "content" }
 
-        assert_selector "ul[role='list']"
+        assert_selector "ul.flat-pack-list[role='list']"
+        refute_selector "ol"
       end
 
       def test_renders_ordered_list_when_ordered
         render_inline(Component.new(ordered: true)) { "content" }
 
-        assert_selector "ol[role='list']"
+        assert_selector "ol.flat-pack-list[role='list']"
+        refute_selector "ul"
       end
 
       def test_renders_list_items
@@ -84,6 +86,56 @@ module FlatPack
 
         assert_selector "ul[data-controller='flat-pack--list-orderable flat-pack--list-selectable']"
         assert_selector "ul[data-action='click->flat-pack--list-selectable#activate']"
+      end
+
+      def test_ordered_list_wrapping_items_renders_markers
+        render_inline(Component.new(ordered: true)) { rendered_items("First", "Second") }
+
+        assert_selector "ol.flat-pack-list > li .flat-pack-list-item-marker", count: 2
+        assert_selector "ol.flat-pack-list > li .flat-pack-list-item-marker[aria-hidden='true']", count: 2
+        assert_text "First"
+        assert_text "Second"
+      end
+
+      def test_unordered_list_wrapping_items_keeps_marker_slots
+        render_inline(Component.new) { rendered_items("First", "Second") }
+
+        assert_selector "ul.flat-pack-list > li .flat-pack-list-item-marker", count: 2
+        refute_selector "ol"
+      end
+
+      def test_marker_css_is_unlayered
+        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+        layer_end = layered_components_end_index(css)
+
+        assert_includes css, "counter-reset: flat-pack-list-item"
+        assert_includes css, "ol.flat-pack-list"
+        assert_operator css.index("ol.flat-pack-list"), :>, layer_end
+      end
+
+      private
+
+      def rendered_items(*labels)
+        labels.map { |label|
+          Item.new.with_content(label).render_in(vc_test_controller.view_context)
+        }.join.html_safe
+      end
+
+      def layered_components_end_index(css)
+        start = css.index("@layer components")
+        raise "missing @layer components" unless start
+
+        open_at = css.index("{", start)
+        depth = 0
+        css.each_char.with_index do |char, index|
+          next if index < open_at
+
+          depth += 1 if char == "{"
+          depth -= 1 if char == "}"
+          return index if depth.zero? && index > open_at
+        end
+
+        raise "unclosed @layer components"
       end
     end
   end
