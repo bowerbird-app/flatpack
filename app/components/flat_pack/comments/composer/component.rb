@@ -196,18 +196,7 @@ module FlatPack
             form: @form,
             "aria-label": @submit_label) do
             safe_join([
-              content_tag(:svg,
-                xmlns: "http://www.w3.org/2000/svg",
-                fill: "none",
-                viewBox: "0 0 24 24",
-                stroke: "currentColor",
-                class: "h-5 w-5 rotate-90") do
-                content_tag(:path, nil,
-                  "stroke-linecap": "round",
-                  "stroke-linejoin": "round",
-                  "stroke-width": "2",
-                  d: "M12 19l9 2-9-18-9 18 9-2zm0 0v-8")
-              end,
+              render(FlatPack::Shared::IconComponent.new(name: "paper-airplane", size: :md, class: "rotate-90")),
               content_tag(:span, @submit_label, class: "sr-only")
             ])
           end

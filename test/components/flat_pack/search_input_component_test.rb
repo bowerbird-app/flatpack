@@ -73,8 +73,7 @@ module FlatPack
       def test_renders_x_icon
         render_inline(Component.new(name: "query"))
 
-        html = page.native.to_html
-        assert_includes html, "lucide-x"
+        assert_selector "svg[data-flat-pack--icon-name-value='x-mark']"
       end
 
       def test_input_has_padding_for_clear_button

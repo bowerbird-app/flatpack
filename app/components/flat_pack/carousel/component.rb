@@ -397,20 +397,7 @@ module FlatPack
                 class: "absolute right-2 top-2 z-10 cursor-pointer rounded-full bg-[var(--modal-surface-color)] p-2 text-[var(--modal-close-icon-color)] shadow-sm transition hover:text-[var(--modal-close-icon-hover-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring sm:right-4 sm:top-4",
                 aria: {label: "Close lightbox"},
                 data: {action: "click->flat-pack--carousel#closeLightbox"}) do
-                content_tag(:svg,
-                  class: "h-5 w-5 pointer-events-none",
-                  xmlns: "http://www.w3.org/2000/svg",
-                  fill: "none",
-                  viewBox: "0 0 24 24",
-                  stroke: "currentColor",
-                  aria: {hidden: true}) do
-                  tag.path(
-                    "stroke-linecap": "round",
-                    "stroke-linejoin": "round",
-                    "stroke-width": "1.8",
-                    d: "M6 18 18 6M6 6l12 12"
-                  )
-                end
+                render FlatPack::Shared::IconComponent.new(name: "x-mark", size: :md, class: "pointer-events-none")
               end,
               content_tag(:figure, class: "inline-flex max-w-full flex-col overflow-hidden rounded-[var(--radius-xl)] border border-[var(--modal-border-color)] bg-[var(--modal-surface-color)]") do
                 safe_join([

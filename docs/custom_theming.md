@@ -493,6 +493,7 @@ This block is a full-token override starter (historically based on the earlier p
   --search-result-divider-color: var(--surface-border-color);
 
   --color-ring: oklch(0.52 0.26 250);
+  --icon-stroke-width: 1.5;
 
   --stack-gap-sm: 0.5rem;
   --stack-gap-md: 1rem;
@@ -581,7 +582,7 @@ When FlatPack adds a new **semantic** token, copy it into your host theme if you
 
 If you do not want to retune hundreds of variables at once, start with these groups first:
 
-1. Core surface and text tokens: `--surface-*`, `--color-primary*`, `--color-secondary*`, `--color-default*`, `--color-ring`
+1. Core surface and text tokens: `--surface-*`, `--color-primary*`, `--color-secondary*`, `--color-default*`, `--color-ring`, `--icon-stroke-width`
 2. Global feel tokens: `--radius-*`, `--shadow-*`, `--stack-gap-*`
 3. High-visibility component tokens: `--button-*`, `--card-*`, `--modal-*`, `--sidebar-*`, `--top-nav-*`
 4. Lower-frequency component tokens only when those components appear in your app

@@ -71,12 +71,12 @@ module FlatPack
 
     # Extract data attributes
     def data_attributes
-      @system_arguments.fetch(:data, {})
+      @system_arguments[:data] || {}
     end
 
     # Extract aria attributes
     def aria_attributes
-      @system_arguments.fetch(:aria, {})
+      @system_arguments[:aria] || {}
     end
 
     # Get all system arguments except class, data, aria

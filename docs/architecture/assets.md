@@ -108,8 +108,11 @@ FlatPack icons are rendered entirely client-side via the `flat-pack--icon` Stimu
 This means:
 - No server-side SVG sprite partial is required in the host layout.
 - Icons support `:outline`, `:solid`, `:mini`, and `:micro` variants.
+- Outline stroke is `--icon-stroke-width` (default `1.5`, the Heroicons outline weight). The Stimulus controller writes the same token; kit CSS reapplies it on `svg[data-controller~="flat-pack--icon"][stroke]` so solid/mini/micro fills are not thickened after they drop the `stroke` attribute.
 - Host apps can set a global default with `FlatPack.configure { |config| config.default_icon_variant = :outline }`.
 - Icon names follow [Heroicons v2](https://heroicons.com) canonical names (e.g. `magnifying-glass`, `cog-6-tooth`, `exclamation-triangle`). A set of legacy shorthand aliases (e.g. `search`, `settings`, `alert`) are mapped internally for backward compatibility.
+- Handle-heavy artwork (`magnifying-glass`, `paper-airplane`, `pencil`, `pencil-square`, `arrow-up-tray`, `arrow-down-tray`) gets `-translate-y-0.5` via `IconComponent::OPTICAL_NUDGES`. Add names there instead of per-component CSS.
+- Names that include `-left` or `-right` as a travel or alignment direction get `fp-icon-directional` and flip in `[dir="rtl"]` with CSS `scale` (so a translate nudge still applies). Chat-bubble tails (`chat-bubble-left*`) are excluded. Vertical chevrons, checks, and media playback do not flip.
 
 ## Tailwind CSS 4 Integration
 

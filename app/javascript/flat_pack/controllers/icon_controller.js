@@ -5,7 +5,7 @@ const VARIANT_ATTRS = {
   outline: {
     fill: "none",
     stroke: "currentColor",
-    "stroke-width": "1.5",
+    "stroke-width": "var(--icon-stroke-width, 1.5)",
   },
   solid: {
     fill: "currentColor",

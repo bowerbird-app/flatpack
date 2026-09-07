@@ -57,20 +57,7 @@ module FlatPack
             type: "button",
             class: "inline-flex items-center gap-2 text-sm font-bold text-[var(--comments-replies-toggle-color)] transition-colors duration-base hover:text-[var(--comments-replies-toggle-hover-color)]") do
             safe_join([
-              # Chevron down icon
-              content_tag(:svg,
-                xmlns: "http://www.w3.org/2000/svg",
-                fill: "none",
-                viewBox: "0 0 24 24",
-                stroke: "currentColor",
-                class: "h-4 w-4") do
-                content_tag(:path,
-                  nil,
-                  "stroke-linecap": "round",
-                  "stroke-linejoin": "round",
-                  "stroke-width": "3",
-                  d: "M19 9l-7 7-7-7")
-              end,
+              render(FlatPack::Shared::IconComponent.new(name: "chevron-down", size: :sm)),
               content_tag(:span, @collapsed_label)
             ])
           end

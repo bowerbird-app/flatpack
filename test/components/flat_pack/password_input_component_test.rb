@@ -60,18 +60,14 @@ module FlatPack
       def test_renders_eye_icons
         render_inline(Component.new(name: "password"))
 
-        # Should have both eye and eye-off icons
-        html = page.native.to_html
-        assert_includes html, "lucide-eye"
-        assert_includes html, "lucide-eye-off"
+        assert_selector "svg[data-flat-pack--icon-name-value='eye']"
+        assert_selector "svg[data-flat-pack--icon-name-value='eye-slash']"
       end
 
       def test_eye_off_icon_initially_hidden
         render_inline(Component.new(name: "password"))
 
-        # Eye-off icon should have hidden class initially
-        html = page.native.to_html
-        assert_match(/lucide-eye-off.*hidden/, html)
+        assert_selector "svg[data-flat-pack--icon-name-value='eye-slash'].hidden"
       end
 
       def test_renders_disabled_input

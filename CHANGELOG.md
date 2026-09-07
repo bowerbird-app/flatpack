@@ -13,6 +13,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.158] - 2026-09-07
+
+### Changed
+- Outline icons use `--icon-stroke-width` (Heroicons `1.5`) instead of leftover Lucide `2` / `1.8` / `3`. TipTap bold/italic/underline/strike stay `2.5`. Button spinner rings stay `4`.
+- `IconComponent` optically nudges `paper-airplane`, `pencil`, `pencil-square`, `arrow-up-tray`, and `arrow-down-tray` the same way as magnifying-glass (`-translate-y-0.5`). Caller classes such as `hidden` win over `block`, so password reveal still hides the slash icon.
+- Left/right travel and alignment glyphs get `fp-icon-directional` and flip in `[dir="rtl"]` with CSS `scale` so optical translate nudges still apply. Vertical chevrons, checks, media playback, and chat-bubble tails do not flip.
+- Pagination, modal close, toast dismiss, search clear, password reveal, accordion/collapse/select/dropdown chevrons, carousel lightbox close, and comment composer/replies use `IconComponent` instead of inline Lucide SVGs.
+- Bumped the gem version to `0.1.158`.
+
+### Upgrade notes
+- No host app API changes. Icon names are the same.
+- Hosts can set `--icon-stroke-width` on `:root` to thicken or thin outline icons. Default is `1.5`. Do not put `--icon-stroke-width: var(--icon-stroke-width)` on `:root`.
+- `fp-icon-directional` lives in kit CSS. Rebuild host Tailwind only if you `@import` `flat_pack/application` into the Tailwind entry.
+
 ## [0.1.157] - 2026-09-07
 
 ### Changed

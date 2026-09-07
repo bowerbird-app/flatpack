@@ -7,7 +7,7 @@ FlatPack uses CSS variables for theming, allowing you to customize the appearanc
 ```text
 Brand primitives (--brand-hue, --brand-chroma, --brand-lightness)
     ↓
-Semantic tokens (--color-*, --surface-*, --radius-*, --shadow-*, --font-*, --text-*, --duration-*, --easing-*)
+    Semantic tokens (--color-*, --surface-*, --radius-*, --shadow-*, --font-*, --text-*, --duration-*, --easing-*, --icon-*)
     ↓
 Component tokens (--button-*, --sidebar-*, …) — defined once as var(--semantic)
     ↓
@@ -152,6 +152,17 @@ For a named host-app variant such as `[data-theme="sunrise"]`, see the theme gen
 
 --color-ring
 ```
+
+### Icons
+```css
+--icon-stroke-width: 1.5
+```
+
+Outline Heroicons follow `--icon-stroke-width`. Solid, mini, and micro variants are fills and ignore it. TipTap bold/italic/underline/strike stay `2.5` so the 14px glyphs still read. Button spinner rings stay `4`. Empty-state 48px illustrations keep their own paths.
+
+`IconComponent` optically nudges handle-heavy artwork (`magnifying-glass`, `paper-airplane`, `pencil`, `pencil-square`, `arrow-up-tray`, `arrow-down-tray`) with `-translate-y-0.5`. Add names to `OPTICAL_NUDGES` instead of per-component CSS.
+
+Left/right travel and alignment glyphs get `.fp-icon-directional`. In `[dir="rtl"]` they flip with CSS `scale: -1 1` so a translate nudge still applies. Vertical chevrons, checks, media playback, and chat-bubble tails do not flip.
 
 ### Spacing Variables
 ```css

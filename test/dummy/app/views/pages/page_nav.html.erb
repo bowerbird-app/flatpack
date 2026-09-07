@@ -18,6 +18,26 @@
 </section>
 
 <section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Right-to-left", anchor_link: true, subtitle: "Back chevrons flip in RTL so they still point toward the start of the reading direction.") %>
+  <div class="mb-4" dir="rtl">
+    <%= render FlatPack::PageNav::Component.new(
+      anchor_href: demo_path,
+      anchor_tooltip: "Close"
+    ) %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;div dir="rtl"&gt;
+        &lt;%= render FlatPack::PageNav::Component.new(
+          anchor_href: demo_path,
+          anchor_tooltip: "Close"
+        ) %&gt;
+      &lt;/div&gt;
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "With Anchor Action", anchor_link: true, subtitle: "Right-side icon appears only when anchor_url is provided.") %>
   <div class="mb-4">
     <%= render FlatPack::PageNav::Component.new(
