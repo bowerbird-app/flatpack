@@ -168,6 +168,17 @@ module FlatPack
         refute_includes figure_classes, "max-w-6xl"
       end
 
+      def test_lightbox_overlay_uses_overlay_pad
+        render_inline(Component.new(slides: lightbox_slides))
+
+        lightbox = page.find("[data-flat-pack--carousel-target='lightbox']", visible: :all)
+        classes = lightbox[:class].split
+
+        assert_includes classes, "fp-overlay-pad"
+        refute_includes classes, "p-4"
+        refute_includes classes, "sm:p-6"
+      end
+
       def test_hides_controls_and_counter_for_single_slide_but_keeps_lightbox_toggle
         render_inline(Component.new(slides: single_lightbox_slide))
 

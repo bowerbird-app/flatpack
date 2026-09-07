@@ -136,7 +136,7 @@ module FlatPack
       end
 
       def dialog_wrapper_classes
-        "relative flex w-full min-h-screen items-start sm:items-center justify-center p-4 sm:p-6"
+        "relative flex w-full min-h-screen items-start sm:items-center justify-center fp-overlay-pad"
       end
 
       def dialog_attributes

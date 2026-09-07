@@ -120,6 +120,7 @@ export default class extends Controller {
   preventBodyScroll() {
     this.originalOverflow = document.body.style.overflow
     this.originalPaddingRight = document.body.style.paddingRight
+    this.originalOverscrollBehavior = document.body.style.overscrollBehavior
     const lockCount = Number(document.body.dataset.flatPackModalLockCount || "0")
 
     if (lockCount === 0) {
@@ -130,6 +131,7 @@ export default class extends Controller {
       }
 
       document.body.style.overflow = "hidden"
+      document.body.style.overscrollBehavior = "none"
     }
 
     document.body.dataset.flatPackModalLockCount = String(lockCount + 1)
@@ -155,6 +157,12 @@ export default class extends Controller {
       document.body.style.paddingRight = this.originalPaddingRight
     } else {
       document.body.style.removeProperty("padding-right")
+    }
+
+    if (this.originalOverscrollBehavior !== undefined) {
+      document.body.style.overscrollBehavior = this.originalOverscrollBehavior
+    } else {
+      document.body.style.removeProperty("overscroll-behavior")
     }
   }
 

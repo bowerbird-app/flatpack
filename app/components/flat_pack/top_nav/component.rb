@@ -168,8 +168,7 @@ module FlatPack
 
       def header_attributes
         attrs = merge_attributes(
-          class: header_classes,
-          style: header_style
+          class: header_classes
         )
 
         return attrs unless @mobile_menu
@@ -186,20 +185,14 @@ module FlatPack
         attrs
       end
 
-      def header_style
-        existing_style = @system_arguments[:style]
-        [existing_style, "height: 72px"].compact.join("; ")
-      end
-
       def header_classes
         classes(
+          "fp-top-nav",
           "sticky",
           "top-0",
           "z-10",
           "bg-[var(--top-nav-background-color)]",
-          "backdrop-blur-lg",
-          "px-4",
-          "py-0"
+          "backdrop-blur-lg"
         )
       end
 

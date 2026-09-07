@@ -13,6 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.159] - 2026-09-07
+
+### Changed
+- Overlay scroll stays in the overlay: modal backdrop/body and carousel lightbox use `overscroll-behavior: contain`. Opening a modal also sets `overscroll-behavior: none` on `document.body` with the same lock count as overflow.
+- Kit buttons, pill items, bottom-nav items, and `.fp-hit-target` / `.fp-hit-target-inline` use `touch-action: manipulation`.
+- Fixed chrome respects safe-area insets. TopNav is `72px` plus `safe-area-inset-top`. Toast region sits below that bar and inset-right. Modal and carousel lightbox use `.fp-overlay-pad`. The mobile sidebar drawer pads the notch edges. Bottom nav already used `safe-area-inset-bottom`.
+- Dummy layouts and the sidebar layout generator set `viewport-fit=cover` so `env(safe-area-inset-*)` is non-zero on notched devices.
+- Bumped the gem version to `0.1.159`.
+
+### Upgrade notes
+- Add `viewport-fit=cover` to the host viewport meta (`width=device-width,initial-scale=1,viewport-fit=cover`). Without it, inset env() values stay `0`. Copy from `docs/installation.md` or re-run `rails generate flat_pack:layout`.
+- No component API changes. Rebuild host Tailwind only if you `@import` `flat_pack/application` into the Tailwind entry. Hosts that load kit CSS with `stylesheet_link_tag` pick up the new classes without a rebuild.
+
 ## [0.1.158] - 2026-09-07
 
 ### Changed

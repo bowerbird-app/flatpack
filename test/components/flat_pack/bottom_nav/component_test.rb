@@ -13,6 +13,8 @@ module FlatPack
 
         assert_selector "nav[aria-label='Bottom navigation']"
         assert_selector "a", count: 2
+        assert_includes page.native.to_html, "fp-bottom-nav"
+        assert_includes page.native.to_html, "fp-touch-manipulation"
       end
 
       def test_allows_custom_aria_label_via_system_arguments

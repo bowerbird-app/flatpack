@@ -47,6 +47,7 @@ module FlatPack
           "border-t",
           "border-[var(--bottom-nav-border-color)]",
           "bg-[var(--bottom-nav-background-color)]",
+          "fp-bottom-nav",
           "pb-[env(safe-area-inset-bottom)]"
         )
       end

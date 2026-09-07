@@ -20,6 +20,7 @@ module FlatPack
           assert_selector "a#overview-pill[href='/demo/buttons'][aria-current='page']", text: "Overview"
           assert_includes page.native.to_html, "bg-[var(--tabs-pill-active-background-color)]"
           assert_includes page.native.to_html, "shadow-[var(--tabs-pill-active-shadow)]"
+          assert_includes page.native.to_html, "fp-touch-manipulation"
         end
 
         def test_renders_inactive_pill_item_classes

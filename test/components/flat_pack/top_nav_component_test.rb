@@ -8,6 +8,8 @@ module FlatPack
       def test_renders_basic_top_nav
         render_inline(Component.new)
         assert_selector "header"
+        assert_includes page.native.to_html, "fp-top-nav"
+        refute_includes page.native.to_html, "height: 72px"
       end
 
       def test_renders_left_slot

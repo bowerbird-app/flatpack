@@ -110,6 +110,14 @@ rails generate flat_pack:layout \
 
 After generation, set the layout in your controller (for example `ApplicationController`) and update the generated sidebar/top-nav partials to match your app routes and actions.
 
+The generated layout includes `viewport-fit=cover` on the viewport meta tag. Fixed chrome (TopNav, toast region, overlays, bottom nav, mobile sidebar drawer) uses `env(safe-area-inset-*)`, which stays `0` without that flag:
+
+```html
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+```
+
+Existing hosts should add `viewport-fit=cover` to their layout `<head>`. Dummy layouts already include it.
+
 ### 3.3 Optional: Create `config/initializers/flat_pack.rb`
 
 FlatPack works out of the box without a Ruby initializer, but app-wide settings such as the default Heroicons variant belong in `config/initializers/flat_pack.rb`:

@@ -155,6 +155,8 @@ Runtime events emitted by the carousel:
 - `carousel:play`
 - `carousel:pause`
 
+Image lightbox uses `.fp-overlay-pad` and `overscroll-behavior: contain` so the overlay clears notches and does not chain scroll into the page. Hosts need `viewport-fit=cover` for insets to apply. See [Installation](../installation.md). Carousel swipe still uses `touch-action: pan-y` on the viewport when `touch_swipe` is enabled.
+
 ## Accessibility
 - Viewport uses `role="region"` with configurable `aria-label`.
 - Controls and indicators include explicit labels.
