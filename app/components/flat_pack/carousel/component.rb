@@ -382,7 +382,7 @@ module FlatPack
 
       def render_lightbox_overlay
         content_tag(:div,
-          class: "fixed inset-0 z-50 hidden bg-[var(--modal-backdrop-color)] backdrop-blur-[var(--modal-backdrop-blur)] p-4 sm:p-6",
+          class: "fixed inset-0 z-50 hidden bg-[var(--modal-backdrop-color)] backdrop-blur-[var(--modal-backdrop-blur)] fp-overlay-pad",
           tabindex: -1,
           role: "dialog",
           aria: {modal: true, hidden: "true", label: "Image lightbox"},

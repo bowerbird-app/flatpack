@@ -28,6 +28,8 @@ Use TopNav in app shells for page context, global actions, and optional search o
 
 TopNav always renders all three wrappers (`left`, `center`, `right`) even if one slot is blank or uninitialized. This keeps horizontal alignment stable across pages and states.
 
+The bar is `.fp-top-nav`: `72px` of content height plus `env(safe-area-inset-top)`, with left/right padding at least `1rem` and never less than the side insets. Hosts need `viewport-fit=cover` for those insets to apply. See [Installation](../installation.md).
+
 ## Mobile chevron menu
 
 Below `mobile_breakpoint`, collapsible slot content moves into a menu at the right end of the bar, opened by a chevron-down toggle. Content is relocated rather than duplicated, so ids, event listeners, and Stimulus controllers inside slot content keep working. Above the breakpoint the content returns to its original position.

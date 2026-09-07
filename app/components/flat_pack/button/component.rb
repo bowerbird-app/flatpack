@@ -159,6 +159,7 @@ module FlatPack
           "transition-[color,background-color,border-color,box-shadow] duration-[var(--duration-fast)]",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--button-focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--button-focus-ring-offset-color)]",
           "disabled:pointer-events-none disabled:opacity-[var(--button-disabled-opacity)]",
+          "fp-touch-manipulation",
           conditional_size_classes,
           style_classes,
           icon_only_classes

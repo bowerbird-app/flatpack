@@ -16,9 +16,12 @@ module FlatPack
       end
 
       def test_renders_with_right_sidebar
-        render_inline(Component.new(side: :right))
+        render_inline(Component.new(side: :right)) do |layout|
+          layout.sidebar { "Sidebar" }
+        end
         assert_includes page.native.to_html, "grid-cols-[1fr_auto]"
         assert_selector "div[data-flat-pack--sidebar-layout-side-value='right']"
+        assert_includes page.native.to_html, 'data-mobile-drawer-side="right"'
       end
 
       def test_validates_side_parameter
@@ -104,6 +107,8 @@ module FlatPack
           layout.sidebar { "Sidebar" }
         end
         assert_selector "div[data-flat-pack--sidebar-layout-target='sidebar']"
+        assert_includes page.native.to_html, "fp-sidebar-drawer"
+        assert_includes page.native.to_html, 'data-mobile-drawer-side="left"'
       end
 
       def test_sidebar_column_has_desktop_transition

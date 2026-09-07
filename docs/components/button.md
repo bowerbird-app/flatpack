@@ -72,6 +72,9 @@ Use `FlatPack::Button::Pill::Component` when you need the rounded pills styling 
 ) %>
 ```
 
+## Touch
+Buttons, links rendered as buttons, and pill items include `.fp-touch-manipulation` (`touch-action: manipulation`) so taps are not delayed by double-tap zoom. Icon-only controls also get that from `.fp-hit-target`. Kit CSS does not set a host-wide `button {}` rule.
+
 ## Accessibility
 - Icon-only buttons must have an accessible name: `text:` (used as `aria-label`, not shown) or `aria: { label: "Open settings" }`. Missing a name raises `ArgumentError`.
 - Loading icon-only buttons keep that name and set `aria-busy="true"`.

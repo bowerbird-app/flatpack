@@ -11,11 +11,76 @@
   .fp-hit-target {
     min-width: var(--hit-target-min);
     min-height: var(--hit-target-min);
+    touch-action: manipulation;
   }
 
   .fp-hit-target-inline {
     min-width: var(--hit-target-inline-min);
     min-height: var(--hit-target-inline-min);
+    touch-action: manipulation;
+  }
+
+  .fp-touch-manipulation {
+    touch-action: manipulation;
+  }
+
+  /* Keep overlay scroll from chaining into the page underneath. */
+  [data-controller~="flat-pack--modal"],
+  [data-flat-pack--carousel-target="lightbox"],
+  .flat-pack-modal__body {
+    overscroll-behavior: contain;
+  }
+
+  /* Overlay inset padding: existing 1rem / 1.5rem pad, never less than the notch. */
+  .fp-overlay-pad {
+    padding-top: max(1rem, env(safe-area-inset-top, 0px));
+    padding-right: max(1rem, env(safe-area-inset-right, 0px));
+    padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+    padding-left: max(1rem, env(safe-area-inset-left, 0px));
+  }
+
+  @media (min-width: 640px) {
+    .fp-overlay-pad {
+      padding-top: max(1.5rem, env(safe-area-inset-top, 0px));
+      padding-right: max(1.5rem, env(safe-area-inset-right, 0px));
+      padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 0px));
+      padding-left: max(1.5rem, env(safe-area-inset-left, 0px));
+    }
+  }
+
+  /* 72px bar below the notch. Border-box so padding-top does not add extra height. */
+  .fp-top-nav {
+    box-sizing: border-box;
+    height: calc(72px + env(safe-area-inset-top, 0px));
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-right: max(1rem, env(safe-area-inset-right, 0px));
+    padding-bottom: 0;
+    padding-left: max(1rem, env(safe-area-inset-left, 0px));
+  }
+
+  .fp-toast-region {
+    top: calc(72px + env(safe-area-inset-top, 0px) + calc(var(--spacing) * 4));
+    right: calc(env(safe-area-inset-right, 0px) + calc(var(--spacing) * 4));
+  }
+
+  .fp-bottom-nav {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  /* Mobile drawer only. Desktop sidebar sits in the grid, not under the notch. */
+  @media (max-width: 767px) {
+    .fp-sidebar-drawer {
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    .fp-sidebar-drawer[data-mobile-drawer-side="left"] {
+      padding-left: env(safe-area-inset-left, 0px);
+    }
+
+    .fp-sidebar-drawer[data-mobile-drawer-side="right"] {
+      padding-right: env(safe-area-inset-right, 0px);
+    }
   }
 
   .fp-tabular-nums {

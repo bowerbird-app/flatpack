@@ -177,6 +177,7 @@ module FlatPack
           "md:w-auto",
           "z-50",
           "md:z-auto",
+          "fp-sidebar-drawer",
           ((@side == :left) ? "left-0" : "right-0"),
           ((@side == :left) ? "-translate-x-full" : "translate-x-full"),
           "md:translate-x-0"
@@ -199,7 +200,8 @@ module FlatPack
 
       def sidebar_column_data
         {
-          "flat-pack--sidebar-layout-target": "sidebar"
+          "flat-pack--sidebar-layout-target": "sidebar",
+          "mobile-drawer-side": @side.to_s
         }
       end
 

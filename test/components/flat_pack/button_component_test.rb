@@ -186,6 +186,12 @@ module FlatPack
         assert_includes page.native.to_html, "fp-hit-target"
       end
 
+      def test_applies_touch_manipulation
+        render_inline(Component.new(text: "Save"))
+
+        assert_includes page.native.to_html, "fp-touch-manipulation"
+      end
+
       def test_icon_only_text_becomes_aria_label_and_is_not_visible
         render_inline(Component.new(icon: "search", icon_only: true, text: "Search"))
 
