@@ -760,6 +760,21 @@
         { variable: "**system_arguments", accepts: "Hash", example: "id: \"country-select\", class: \"w-full\", data: { testid: \"country-select\" }" }
       ]
     },
+    combobox: {
+      label: "Combobox",
+      method_call: "render FlatPack::Combobox::Component.new(name: \"city\", label: \"City\", options: [\"Melbourne\", \"Sydney\"], value: \"Melbourne\")",
+      variables: [
+        { variable: "name", accepts: "String (required)", example: "name: \"city\"" },
+        { variable: "options", accepts: "Array<String> or Array<Hash> with value: and label:", example: "options: [{ value: \"mel\", label: \"Melbourne\" }]" },
+        { variable: "value", accepts: "String or nil", example: "value: \"mel\"" },
+        { variable: "label", accepts: "String or nil", example: "label: \"City\"" },
+        { variable: "placeholder", accepts: "String", example: "placeholder: \"Search cities\"" },
+        { variable: "disabled", accepts: "true, false", example: "disabled: true" },
+        { variable: "required", accepts: "true, false", example: "required: true" },
+        { variable: "empty_text", accepts: "String", example: "empty_text: \"No matches\"" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"max-w-md\"" }
+      ]
+    },
       nested_multiselect: {
         label: "Nested Multiselect",
         method_call: "render tag.div(data: { controller: \"flat-pack--nested-multiselect\", \"flat-pack--nested-multiselect-options-value\": nested_multiselect_options.to_json, \"flat-pack--nested-multiselect-selected-value\": [\"australia\", \"victoria\"].to_json, \"flat-pack--nested-multiselect-input-name-value\": \"locations[]\" })",
@@ -831,6 +846,65 @@
         { variable: "id", accepts: "String (required)", example: "id: \"edit-profile-modal\"" },
         { variable: "size", accepts: ":sm, :md, :lg, :xl, :\"2xl\"", example: "size: :lg" },
         { variable: "close_on_escape", accepts: "true, false", example: "close_on_escape: true" }
+      ]
+    },
+    drawer: {
+      label: "Drawer",
+      method_call: "render FlatPack::Drawer::Component.new(id: \"filters-drawer\", title: \"Filters\", side: :right) do |drawer| ... end",
+      variables: [
+        { variable: "id", accepts: "String (required)", example: "id: \"filters-drawer\"" },
+        { variable: "title", accepts: "String or nil", example: "title: \"Filters\"" },
+        { variable: "side", accepts: ":left, :right, :bottom", example: "side: :right" },
+        { variable: "size", accepts: ":sm, :md, :lg", example: "size: :md" },
+        { variable: "close_on_backdrop", accepts: "true, false", example: "close_on_backdrop: true" },
+        { variable: "close_on_escape", accepts: "true, false", example: "close_on_escape: true" },
+        { variable: "header", accepts: "slot block", example: "drawer.header { \"Filters\" }" },
+        { variable: "body", accepts: "slot block", example: "drawer.body { \"Filter fields\" }" },
+        { variable: "footer", accepts: "slot block", example: "drawer.footer { render FlatPack::Button::Component.new(text: \"Apply\") }" }
+      ]
+    },
+    command_palette: {
+      label: "Command palette",
+      method_call: "render FlatPack::CommandPalette::Component.new(id: \"commands\", items: [{ label: \"Go to settings\", href: settings_path, group: \"Pages\" }])",
+      variables: [
+        { variable: "id", accepts: "String (required)", example: "id: \"commands\"" },
+        { variable: "items", accepts: "Array<Hash> with label: required; optional href:, icon:, hint:, group:", example: "items: [{ label: \"Open filters\", href: filters_path, icon: \"magnifying-glass\", group: \"Go to\" }]" },
+        { variable: "placeholder", accepts: "String", example: "placeholder: \"Search commands\"" },
+        { variable: "empty_text", accepts: "String", example: "empty_text: \"No matching commands\"" },
+        { variable: "shortcut", accepts: "true, false", example: "shortcut: true" }
+      ]
+    },
+    kbd: {
+      label: "Keyboard",
+      method_call: "render FlatPack::Kbd::Component.new(keys: [\"Cmd\", \"K\"])",
+      variables: [
+        { variable: "keys", accepts: "Array<String> (required)", example: "keys: [\"Ctrl\", \"Shift\", \"P\"]" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"ml-2\"" }
+      ]
+    },
+    skip_link: {
+      label: "Skip link",
+      method_call: "render FlatPack::SkipLink::Component.new(href: \"#main\", text: \"Skip to content\")",
+      variables: [
+        { variable: "href", accepts: "String fragment such as #main", example: "href: \"#main\"" },
+        { variable: "text", accepts: "String", example: "text: \"Skip to content\"" }
+      ]
+    },
+    stepper: {
+      label: "Stepper",
+      method_call: "render FlatPack::Stepper::Component.new(steps: [\"Details\", \"Review\", \"Done\"], current_step: 2)",
+      variables: [
+        { variable: "steps", accepts: "Array<String> or Array<Hash> with label:; optional description:, href:", example: "steps: [{ label: \"Details\", description: \"Name and email\" }]" },
+        { variable: "current_step", accepts: "Integer, 1-based", example: "current_step: 2" },
+        { variable: "orientation", accepts: ":horizontal, :vertical", example: "orientation: :vertical" }
+      ]
+    },
+    spinner: {
+      label: "Spinner",
+      method_call: "render FlatPack::Spinner::Component.new(size: :md, label: \"Loading\")",
+      variables: [
+        { variable: "size", accepts: ":sm, :md, :lg, :xl", example: "size: :md" },
+        { variable: "label", accepts: "String or nil", example: "label: \"Loading\"" }
       ]
     },
     top_nav: {

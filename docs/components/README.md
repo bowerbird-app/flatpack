@@ -38,8 +38,11 @@ color_swatch | FlatPack::ColorSwatch::Component | docs/components/color-swatch.m
 font_swatch | FlatPack::FontSwatch::Component | docs/components/font-swatch.md
 overflow_row | FlatPack::OverflowRow::Component | docs/components/overflow-row.md
 divider | FlatPack::Divider::Component | docs/components/divider.md
+drawer | FlatPack::Drawer::Component | docs/components/drawer.md
 code_block | FlatPack::CodeBlock::Component | docs/components/code-block.md
 collapse | FlatPack::Collapse::Component | docs/components/collapse.md
+combobox | FlatPack::Combobox::Component | docs/components/combobox.md
+command_palette | FlatPack::CommandPalette::Component | docs/components/command-palette.md
 content_editor | FlatPack::ContentEditor::Component | docs/components/content-editor.md
 comments_composer | FlatPack::Comments::Composer::Component | docs/components/comments-composer.md
 comments_inline_input | FlatPack::Comments::InlineInput::Component | docs/components/comments-inline-input.md
@@ -54,6 +57,7 @@ email_template_example | FlatPack::EmailTemplateExample::Component | docs/compon
 grid | FlatPack::Grid::Component | docs/components/grid.md
 hero | FlatPack::Hero::Component | docs/components/hero.md
 inputs | FlatPack::TextInput::Component | docs/components/inputs.md
+kbd | FlatPack::Kbd::Component | docs/components/kbd.md
 date_input | FlatPack::DateInput::Component | docs/components/inputs.md
 date_range_input | FlatPack::DateRangeInput::Component | docs/components/date-range-input.md
 date_time_input | FlatPack::DateTimeInput::Component | docs/components/inputs.md
@@ -80,9 +84,12 @@ sidebar | FlatPack::Sidebar::Component | docs/components/sidebar.md
 sidebar_section_title | FlatPack::Sidebar::SectionTitle::Component | docs/components/sidebar-section-title.md
 sidebar_group | FlatPack::Sidebar::Group::Component | docs/components/sidebar_group.md
 sidebar_layout | FlatPack::SidebarLayout::Component | docs/components/sidebar_layout.md
+skip_link | FlatPack::SkipLink::Component | docs/components/skip-link.md
 skeleton | FlatPack::Skeleton::Component | docs/components/skeleton.md
+spinner | FlatPack::Spinner::Component | docs/components/spinner.md
 sortable_tables | FlatPack::Table::Component | docs/components/sortable-tables.md
 sortable_tables_examples | FlatPack::Table::Component | docs/components/sortable-tables-examples.md
+stepper | FlatPack::Stepper::Component | docs/components/stepper.md
 table | FlatPack::Table::Component | docs/components/table.md
 tabs | FlatPack::Tabs::Component | docs/components/tabs.md
 timeline | FlatPack::Timeline::Component | docs/components/timeline.md

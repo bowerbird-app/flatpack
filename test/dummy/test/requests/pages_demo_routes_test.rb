@@ -35,6 +35,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/forms/checkbox
     /demo/forms/radio_group
     /demo/forms/select
+    /demo/forms/combobox
     /demo/forms/nested_multiselect
     /demo/forms/switch
     /demo/forms/combined
@@ -68,6 +69,12 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/email/footer_links
     /demo/email/template_example
     /demo/modals
+    /demo/drawer
+    /demo/command_palette
+    /demo/kbd
+    /demo/skip_link
+    /demo/stepper
+    /demo/spinner
     /demo/popovers
     /demo/tooltips
     /demo/tabs
@@ -255,6 +262,9 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_includes response.body, "viewport-fit=cover"
+    assert_includes response.body, "Skip to content"
+    assert_includes response.body, 'id="main"'
+    assert_includes response.body, "demo-command-palette"
   end
 
   test "buttons related demos render after theme tokens" do

@@ -73,6 +73,7 @@
   </head>
 
   <body class="m-0 h-full overflow-hidden overscroll-none bg-[var(--surface-page-background-color)] text-[var(--surface-content-color)]" data-controller="dark-mode">
+    <%= render FlatPack::SkipLink::Component.new(href: "#main") %>
     <%= render "layouts/icon_sprite" %>
 
     <% sidebar_side = params[:side].in?(%w[left right]) ? params[:side].to_sym : :left %>
@@ -188,7 +189,7 @@
       <% end %>
 
       <% layout.main do %>
-        <main class="p-4 sm:p-8 bg-[var(--surface-page-background-color)] text-[var(--surface-content-color)]">
+        <main id="main" tabindex="-1" class="p-4 sm:p-8 bg-[var(--surface-page-background-color)] text-[var(--surface-content-color)]">
           <div class="max-w-4xl mx-auto pb-24">
             <% if notice.present? %>
               <%= render FlatPack::Alert::Component.new(description: notice, style: :success, dismissible: true, class: "mb-4") %>
@@ -209,5 +210,14 @@
         </main>
       <% end %>
     <% end %>
+
+    <%= render FlatPack::CommandPalette::Component.new(
+      id: "demo-command-palette",
+      items: DemoCatalog.searchable_items.map { |item|
+        {label: item[:title], href: item[:url], group: "Pages"}
+      },
+      placeholder: "Search demo pages",
+      empty_text: "No matching pages"
+    ) %>
   </body>
 </html>

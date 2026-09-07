@@ -6,7 +6,7 @@ This document summarizes the current FlatPack repository layout and the files th
 
 **FlatPack** is a Rails engine that ships ViewComponent-based UI components, Tailwind CSS 4 token styling, Propshaft-served assets, and importmap-friendly JavaScript.
 
-**Version:** 0.1.164
+**Version:** 0.1.165
 **License:** MIT  
 **Ruby:** 3.2+  
 **Supported host apps:** Rails 7.1+  
@@ -42,6 +42,8 @@ flat_pack/
 │   │   ├── chip_group/
 │   │   ├── code_block/
 │   │   ├── collapse/
+│   │   ├── combobox/
+│   │   ├── command_palette/
 │   │   ├── color_swatch/
 │   │   ├── font_swatch/
 │   │   ├── overflow_row/
@@ -50,6 +52,8 @@ flat_pack/
 │   │   ├── date_input/
 │   │   ├── date_range_input/
 │   │   ├── date_time_input/
+│   │   ├── divider/
+│   │   ├── drawer/
 │   │   ├── dot/
 │   │   ├── email_button/
 │   │   ├── email_card/
@@ -60,6 +64,7 @@ flat_pack/
 │   │   ├── file_input/
 │   │   ├── grid/
 │   │   ├── hero/
+│   │   ├── kbd/
 │   │   ├── link/
 │   │   ├── list/
 │   │   ├── modal/
@@ -87,7 +92,10 @@ flat_pack/
 │   │   ├── shared/
 │   │   ├── sidebar/
 │   │   ├── sidebar_layout/
+│   │   ├── skip_link/
 │   │   ├── skeleton/
+│   │   ├── spinner/
+│   │   ├── stepper/
 │   │   ├── switch/
 │   │   ├── table/
 │   │   ├── tabs/
@@ -124,8 +132,11 @@ flat_pack/
 │       │   ├── chip_tag_input_controller.js
 │       │   ├── code_block_tabs_controller.js
 │       │   ├── collapse_controller.js
+│       │   ├── combobox_controller.js
+│       │   ├── command_palette_controller.js
 │       │   ├── content_editor_controller.js
 │       │   ├── date_input_controller.js
+│       │   ├── drawer_controller.js
 │       │   ├── file_input_controller.js
 │       │   ├── flatpack_date_picker_controller.js
 │       │   ├── form_validation_controller.js

@@ -22,6 +22,10 @@ class ThemesController < ApplicationController
     "Timeline" => [/\A--timeline-/],
     "Tabs" => [/\A--tabs-/],
     "Modals" => [/\A--modal-/],
+    "Drawer" => [/\A--drawer-/],
+    "Keyboard" => [/\A--kbd-/],
+    "Skip link" => [/\A--skip-link-/],
+    "Stepper" => [/\A--stepper-/],
     "Popovers" => [/\A--popover-/],
     "Tooltips" => [/\A--tooltip-/],
     "Switch" => [/\A--switch-/],
@@ -252,6 +256,14 @@ class ThemesController < ApplicationController
       "Bottom nav"
     when /\A--modal-/
       "Modal"
+    when /\A--drawer-/
+      "Drawer"
+    when /\A--kbd-/
+      "Keyboard"
+    when /\A--skip-link-/
+      "Skip link"
+    when /\A--stepper-/
+      "Stepper"
     when /\A--popover-/
       "Popover"
     when /\A--tooltip-/

@@ -13,6 +13,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.165] - 2026-09-07
+
+### Added
+- Kit primitives: Drawer (edge panel), Combobox (searchable single choice), Command palette (Cmd/Ctrl+K), Stepper, Kbd, Skip link, and Spinner.
+- Dummy demos at `/demo/drawer`, `/demo/forms/combobox`, `/demo/command_palette`, `/demo/stepper`, `/demo/kbd`, `/demo/skip_link`, and `/demo/spinner`. Dummy layouts skip to `#main` and open a page palette with Cmd/Ctrl+K.
+- Bumped the gem version to `0.1.165`.
+
+### Changed
+- Button loading renders `FlatPack::Spinner::Component` instead of an inline SVG.
+
+### Upgrade notes
+- Render `FlatPack::SkipLink::Component` first in `<body>` and put `id="main" tabindex="-1"` on `<main>` (the layout generator does this). Without `#main`, the default skip href has nowhere to land.
+- Open a drawer with `data-drawer-id` matching the drawer `id:`. Open a command palette with `data-command-palette-id`. If two palettes sit on one page, set `shortcut: false` on all but one.
+- Drawer tokens alias Modal. Hosts that override `--modal-*` get matching drawers. Optional `--kbd-*`, `--skip-link-*`, and `--stepper-*` tokens alias surfaces and brand colours.
+- Rebuild host Tailwind only if you `@import` `flat_pack/application` into the Tailwind entry. Hosts that load kit CSS with `stylesheet_link_tag` pick up `.fp-skip-link` and overlay contain without a rebuild.
+
 ## [0.1.164] - 2026-09-07
 
 ### Changed

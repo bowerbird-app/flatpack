@@ -1,0 +1,57 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Combobox",
+  subtitle: "A searchable single choice. Type to filter, then pick a value for the form."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :combobox %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Filter and select", anchor_link: true) %>
+
+  <div class="space-y-6 max-w-md p-6 bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] rounded-[var(--radius-lg)]">
+    <%= render FlatPack::Combobox::Component.new(
+      name: "city",
+      label: "City",
+      placeholder: "Search cities",
+      value: "melbourne",
+      options: [
+        {value: "melbourne", label: "Melbourne"},
+        {value: "sydney", label: "Sydney"},
+        {value: "brisbane", label: "Brisbane"},
+        {value: "perth", label: "Perth"},
+        {value: "adelaide", label: "Adelaide"}
+      ]
+    ) %>
+
+    <%= render FlatPack::Combobox::Component.new(
+      name: "country",
+      label: "Country",
+      options: ["Australia", "Canada", "United Kingdom", "United States"],
+      placeholder: "Search countries"
+    ) %>
+
+    <%= render FlatPack::Combobox::Component.new(
+      name: "plan",
+      label: "Plan (disabled)",
+      options: ["Starter", "Team"],
+      value: "Team",
+      disabled: true
+    ) %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Combobox::Component.new(
+        name: "city",
+        label: "City",
+        value: "melbourne",
+        options: [
+          {value: "melbourne", label: "Melbourne"},
+          {value: "sydney", label: "Sydney"}
+        ]
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Combobox"
+  ) %>
+</section>

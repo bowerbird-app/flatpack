@@ -50,6 +50,12 @@ class PagesController < ApplicationController
     {action: /\Anavbar\z/, title: "Top Nav", patterns: [/\A--top-nav-/]},
     {action: /\Asidebar(_.*)?\z/, title: "Sidebar", patterns: [/\A--sidebar-/]},
     {action: /\Amodals\z/, title: "Modals", patterns: [/\A--modal-/]},
+    {action: /\Adrawer\z/, title: "Drawer", patterns: [/\A--drawer-/]},
+    {action: /\Acommand_palette\z/, title: "Command palette", patterns: [/\A--modal-/, /\A--kbd-/]},
+    {action: /\Akbd\z/, title: "Keyboard", patterns: [/\A--kbd-/]},
+    {action: /\Askip_link\z/, title: "Skip link", patterns: [/\A--skip-link-/]},
+    {action: /\Astepper\z/, title: "Stepper", patterns: [/\A--stepper-/]},
+    {action: /\Aspinner\z/, title: "Spinner", patterns: []},
     {action: /\Apopovers\z/, title: "Popovers", patterns: [/\A--popover-/]},
     {action: /\Atooltips\z/, title: "Tooltips", patterns: [/\A--tooltip-/]},
     {action: /\Atabs(_.*)?\z/, title: "Tabs", patterns: [/\A--tabs-/]},
@@ -375,6 +381,9 @@ class PagesController < ApplicationController
   def forms_select
   end
 
+  def forms_combobox
+  end
+
   def forms_select_options
     query = params[:q].to_s.strip.downcase
 
@@ -533,6 +542,24 @@ class PagesController < ApplicationController
   end
 
   def modals
+  end
+
+  def drawer
+  end
+
+  def command_palette
+  end
+
+  def kbd
+  end
+
+  def skip_link
+  end
+
+  def stepper
+  end
+
+  def spinner
   end
 
   def popovers

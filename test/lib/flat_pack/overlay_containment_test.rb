@@ -20,8 +20,23 @@ module FlatPack
       assert_includes css, "env(safe-area-inset-bottom, 0px)"
       assert_includes css, "env(safe-area-inset-left, 0px)"
       assert_includes css, "[data-controller~=\"flat-pack--modal\"]"
+      assert_includes css, "[data-controller~=\"flat-pack--drawer\"]"
+      assert_includes css, "[data-controller~=\"flat-pack--command-palette\"]"
+      assert_includes css, ".fp-drawer-body"
+      assert_includes css, ".fp-skip-link"
       assert_includes css, "[data-flat-pack--carousel-target=\"lightbox\"]"
       assert_includes css, ".flat-pack-modal__body"
+    end
+
+    test "drawer and command palette animate Tailwind v4 translate and scale" do
+      drawer = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/drawer_controller.js").read
+      palette = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/command_palette_controller.js").read
+
+      assert_includes drawer, "style.translate"
+      assert_includes drawer, "closedTranslate"
+      refute_includes drawer, "style.transform"
+      assert_includes palette, "style.scale"
+      refute_includes palette, "style.transform"
     end
 
     test "modal body lock also sets overscroll-behavior none" do
