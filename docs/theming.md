@@ -59,7 +59,7 @@ Do **not** put FlatPack tokens back into the Tailwind entry. A second `--color-p
 | Host wants the same primary as FlatPack | Set `--color-primary` in the host stylesheet (last). That is an override, not a clash. |
 | Host needs a different primary than FlatPack | Keep the host color as `--my-app-primary` (or similar). Leave `--color-primary` for FlatPack, or set it only if you intend FlatPack to match. |
 | Host already uses `--color-primary` for something else | Rename the **host** token. Do not rename FlatPack's. |
-| Host Tailwind loads after kit CSS | Tailwind `@layer theme` sets `--font-sans` to `ui-sans-serif`. Re-set `--font-sans` (and `--font-mono`) on unlayered `:root` in the host stylesheet so the kit stack or a brand face wins. Putting it in `@theme` does not replace Tailwind’s default face. |
+| Host Tailwind loads after kit CSS | Tailwind `@layer theme` sets `--font-sans` to `ui-sans-serif` and `--radius-md` to `0.375rem`. Re-set `--font-sans` / `--font-mono` and `--radius-sm` / `--radius-md` / `--radius-lg` / `--radius-xl` on unlayered `:root` in the host stylesheet so the kit face and kit radii win. Putting them in `@theme` does not replace Tailwind’s defaults. `var(--radius-md, 1rem)` in kit CSS only applies when the token is unset. |
 
 `--brand-hue` / `--brand-chroma` / `--brand-lightness` are FlatPack-only and do not overlap Tailwind defaults. `--radius-md` and `--shadow-md` use the same names as Tailwind utilities. FlatPack's default radii are the larger rounded scale (`1rem` for `--radius-md`). Kit class names use `rounded-[var(--radius-*)]` so they do not collide with Tailwind's `rounded-md` scale.
 
@@ -172,7 +172,18 @@ Use stack gap tokens on parent layout containers (for example, form stacks) to c
 --radius-xl: 2rem
 ```
 
-Kit surfaces use `rounded-[var(--radius-sm)]` through `rounded-[var(--radius-xl)]`, or a component alias such as `--button-border-radius`. Do not use Tailwind's `rounded-sm` / `rounded-md` / `rounded-lg` / `rounded-xl` / `rounded-2xl` in kit components. Those names share `--radius-*` with FlatPack and hide which scale is in play. Keep `rounded-full` for pills and avatars, and `rounded-none` for segmented groups.
+Kit surfaces use `rounded-[var(--radius-sm)]` through `rounded-[var(--radius-xl)]`, or a component alias such as `--button-border-radius`. Rich text and content editor CSS use `var(--radius-md, 1rem)` / `var(--radius-sm, 0.75rem)` so toolbar and bubble chrome match those tokens. Do not use Tailwind's `rounded-sm` / `rounded-md` / `rounded-lg` / `rounded-xl` / `rounded-2xl` in kit components. Those names share `--radius-*` with FlatPack and hide which scale is in play. Keep `rounded-full` for pills and avatars, and `rounded-none` for segmented groups.
+
+If host Tailwind loads after `flat_pack/variables`, re-set the four kit radii on unlayered `:root` (same block as `--font-sans`):
+
+```css
+:root {
+  --radius-sm: 0.75rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 2rem;
+}
+```
 
 `Button` already skips its default radius when the host passes a `rounded-*` class. Other components merge with last-wins, so a host `class: "rounded-xl"` on Card does not replace the kit token. Kit maintainers run `bin/rake flat_pack:audit_radius_language` from this repo. That task audits the gem, not host markup. Remap leftovers with `ruby scripts/rewrite_radius_language.rb` in a checkout of this repository. The gem package does not ship `scripts/`.
 
@@ -222,7 +233,7 @@ Kit CSS defines `.fp-hit-target` and `.fp-hit-target-inline`. Hosts get those cl
 --leading-normal: 1.5
 ```
 
-`--font-*` and `--text-*` are set on `:root` (not only inside `@theme`). `:root` also sets `font-family: var(--font-sans)` and antialiased smoothing. Hosts override `--font-sans` with a brand face. There is no kit webfont. If host Tailwind loads last, re-set `--font-sans` on unlayered `:root` in the host stylesheet — Tailwind’s `@layer theme` stack otherwise replaces the kit one.
+`--font-*` and `--text-*` are set on `:root` (not only inside `@theme`). `:root` also sets `font-family: var(--font-sans)` and antialiased smoothing. Hosts override `--font-sans` with a brand face. There is no kit webfont. If host Tailwind loads last, re-set `--font-sans` and the kit `--radius-*` values on unlayered `:root` in the host stylesheet — Tailwind’s `@layer theme` stack otherwise replaces the kit face and the kit radii (rich-text chrome follows `--radius-md`).
 
 `--page-title-h1-size` through `--page-title-h6-size` alias `--text-4xl` down to `--text-base`.
 

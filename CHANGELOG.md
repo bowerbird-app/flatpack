@@ -13,6 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.157] - 2026-09-07
+
+### Changed
+- Host Tailwind `@layer theme` still emits `--radius-md: 0.375rem` (and the rest of Tailwind's scale). Dummy and the install generator now re-set the kit radii on unlayered `:root` (`--radius-sm: 0.75rem`, `--radius-md: 1rem`, `--radius-lg: 1.5rem`, `--radius-xl: 2rem`) so rich-text chrome and `rounded-[var(--radius-*)]` surfaces keep the kit scale when host CSS loads last.
+- Rich text and content editor CSS already fall back to those kit values when the token is unset. The fallback does not apply when Tailwind writes `0.375rem` onto `--radius-md`; the unlayered `:root` re-set is what makes the computed token match.
+- Bumped the gem version to `0.1.157`.
+
+### Upgrade notes
+- Rebuild host Tailwind after you add the `:root` radii (or re-run `rails generate flat_pack:install` on a new app). Existing hosts that already have a FlatPack `@source` are not rewritten — copy the unlayered `:root` block from `docs/theming.md` next to any `--font-sans` re-set you already have.
+- Do not put `--radius-md: var(--radius-md)` on `:root`. Concrete kit values only.
+- Padding tokens such as `--button-padding-y-sm: 0.375rem` are not radius. Leave them.
+
 ## [0.1.156] - 2026-09-07
 
 ### Changed

@@ -12,6 +12,10 @@ module FlatPack
       FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
     end
 
+    def content_editor_css
+      FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/content_editor.css").read
+    end
+
     test "rich text focus and selection chrome use ring/primary tokens without blue oklch fallbacks" do
       css = rich_text_css
 
@@ -30,6 +34,15 @@ module FlatPack
       assert_includes css, "color: var(--tooltip-text-color, var(--surface-content-color)) !important;"
       refute_match(/\[data-flat-pack--chart-type-value="donut"\][^{]*\{[^}]*background:\s*#fff/m, css)
       refute_includes css, "background: #fff !important;"
+    end
+
+    test "rich text and content editor radius fallbacks match the kit scale" do
+      [rich_text_css, content_editor_css].each do |css|
+        assert_includes css, "var(--radius-md, 1rem)"
+        assert_includes css, "var(--radius-sm, 0.75rem)"
+        refute_includes css, "var(--radius-md, 0.375rem)"
+        refute_includes css, "var(--radius-sm, 0.25rem)"
+      end
     end
   end
 end

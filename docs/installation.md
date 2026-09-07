@@ -195,6 +195,14 @@ The `rails generate flat_pack:install` command now **automatically configures Ta
  *   :root { --brand-hue: 160; --brand-chroma: 0.18; --brand-lightness: 0.52; }
  */
 @source "../path/to/flat_pack/app/components";
+
+/* Unlayered so this beats Tailwind @layer theme --radius-md: 0.375rem. */
+:root {
+  --radius-sm: 0.75rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 2rem;
+}
 ```
 
 **After the generator runs:**
@@ -744,7 +752,7 @@ Check these host blocks:
    ```
 5. Verify the compiled output (`app/assets/builds/application.css`) resolves each previously-broken variable to a concrete value, not another `var()`:
    ```
-   GOOD: --radius-md:.375rem;
+   GOOD: --radius-md:1rem;
    BAD:  --radius-md:var(--radius-md);
    ```
 

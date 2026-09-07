@@ -63,6 +63,8 @@ Load FlatPack stylesheets in your application layout:
 
 Propshaft resolves the correct digested path for each file. Using `stylesheet_link_tag` (not `@import`) is required because Propshaft fingerprints asset filenames — a bare CSS `@import "flat_pack/variables.css"` in a statically-served stylesheet would request an un-digested URL that Propshaft does not serve.
 
+Host Tailwind usually loads last. `@layer theme` writes `--radius-md: 0.375rem` and `--font-sans: ui-sans-serif`. Re-set kit radii and the kit face on unlayered `:root` in the host stylesheet so rich-text chrome and kit surfaces keep the kit scale. See [Theming](../theming.md).
+
 ## JavaScript
 
 ### Structure
