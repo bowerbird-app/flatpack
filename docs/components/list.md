@@ -68,6 +68,8 @@ None.
 <% end %>
 ```
 
+Persist runs only when `orderable_url` is set. Drop still reorders the list in the page if you omit the URL.
+
 The orderable controller sends a form-encoded payload shaped like:
 
 ```text
