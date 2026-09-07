@@ -453,8 +453,8 @@ This block is a full-token override starter (historically based on the earlier p
   --toast-danger-border-color: var(--toast-danger-background-color);
   --toast-danger-text-color: var(--alert-danger-text-color);
   --toast-danger-icon-color: var(--alert-danger-icon-color);
-  --avatar-background-color: #e5e7eb;
-  --avatar-text-color: #1f2937;
+  --avatar-background-color: var(--surface-muted-background-color);
+  --avatar-text-color: var(--surface-content-color);
   --avatar-link-hover-opacity: 0.8;
   --avatar-radius-circle: 9999px;
   --avatar-radius-rounded: var(--radius-xl);
