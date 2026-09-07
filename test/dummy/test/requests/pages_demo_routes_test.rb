@@ -141,6 +141,16 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "list:error"
   end
 
+  test "list demo renders ordered marker slots and icon steps" do
+    get "/demo/list"
+
+    assert_response :success
+    assert_includes response.body, "flat-pack-list"
+    assert_includes response.body, "flat-pack-list-item-marker"
+    assert_includes response.body, "Ordered with icons"
+    assert_includes response.body, "Heat the pan"
+  end
+
   test "tables draggable demo renders event listener example" do
     get "/demo/tables/draggable"
 

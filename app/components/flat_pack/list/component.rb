@@ -71,6 +71,7 @@ module FlatPack
 
       def list_classes
         classes(
+          "flat-pack-list",
           (@spacing == :dense) ? "space-y-1" : "space-y-3",
           ("divide-y divide-[var(--surface-border-color)]" if @divider)
         )

@@ -13,6 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.163] - 2026-09-07
+
+### Fixed
+- Ordered lists show decimal markers (`1.`, `2.`, …) in a kit marker slot on each item. Unordered lists stay unmarked.
+
+### Changed
+- Bumped the gem version to `0.1.163`.
+
+### Upgrade notes
+- No API change. `ordered: true` still renders `<ol>`.
+- Rebuild host Tailwind only if you `@import` `flat_pack/application`. Markers are kit CSS classes, not Tailwind utilities.
+
 ## [0.1.162] - 2026-09-07
 
 ### Fixed

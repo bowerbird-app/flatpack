@@ -246,6 +246,9 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --sidebar-item-hover-background-color: oklch(0.96 0.01 250);
   --list-item-hover-background-color: oklch(0.95 0.01 250);
   --list-item-active-background-color: oklch(0.93 0.01 250);
+  --list-marker-color: var(--surface-muted-content-color);
+  --list-marker-min-width: 1.5rem;
+  --list-marker-gap: 0.5rem;
   --sidebar-item-hover-text-color: oklch(0.20 0.01 250);
   --sidebar-item-active-background-color: oklch(0.52 0.26 250);
   --sidebar-item-active-text-color: oklch(1.0 0 0);
