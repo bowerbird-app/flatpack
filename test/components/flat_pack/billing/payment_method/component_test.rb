@@ -23,6 +23,8 @@ module FlatPack
 
           assert_text "No card on file"
           assert_text "Add payment method"
+          assert_includes page.native.to_html, "fp-empty-state"
+          assert_no_selector "svg"
         end
       end
     end

@@ -20,7 +20,7 @@ Use Pagination for index/list pages that need explicit page navigation, or as a 
 | `turbo_frame` | String | `nil` | no | Adds `data-turbo-frame` to generated page links. |
 | `infinite_url` | String | `nil` | no | Explicit URL used when `mode: :infinite`. |
 | `has_more` | Boolean | `true` | no | `:infinite` mode guard for whether more content exists. |
-| `loading_text` | String | `"Loading more..."` | no | `:infinite` mode loading text. |
+| `loading_text` | String | `"Loading more…"` | no | `:infinite` mode loading text. |
 | `loading_variant` | Symbol | `:table` | no | Forwarded loading style to `PaginationInfinite` (`:table`, `:table_rows`, `:cards`, or `:inline`). |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for wrapper. |
 

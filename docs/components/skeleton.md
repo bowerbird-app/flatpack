@@ -34,7 +34,7 @@ None.
 ```
 
 ## Accessibility
-- Renders `role="status"` with `aria-busy="true"` and `aria-label="Loading..."`.
+- Renders `role="status"` with `aria-busy="true"` and `aria-label="Loading…"`.
 - Shimmer animation respects reduced-motion preferences via CSS utility classes. `--skeleton-shimmer-duration` is `0ms` when the OS asks to reduce motion.
 
 ## Dependencies

@@ -1,54 +1,33 @@
 <%= render FlatPack::PageTitle::Component.new(
   title: "Empty State Component",
-  subtitle: "User-friendly empty states with optional icons and custom graphics."
+  subtitle: "An empty screen is an invitation to act, not a picture of an empty box."
 ) %>
 
 <%= render "pages/component_method_variables_table", component: :empty_state %>
 
-<!-- Basic Empty State -->
+<!-- Canonical: title, what to do, action -->
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Basic Empty State", anchor_link: true, subtitle: "Examples for Basic Empty State.") %>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Start from an action", anchor_link: true, subtitle: "Title, a short next step, and a button. The icon is optional.") %>
   <div class="border border-[var(--surface-border-color)] rounded-lg p-8">
     <%= render FlatPack::EmptyState::Component.new(
-      title: "No messages",
-      description: "You don't have any messages yet. Start a conversation to see it here."
-    ) %>
-  </div>
-  
-  <%= render FlatPack::CodeBlock::Component.new(
-    code: CGI.unescapeHTML(<<~'CODE'),
-      &lt;%= render FlatPack::EmptyState::Component.new(
-        title: "No messages",
-          description: "You don't have any messages yet."
-      ) %&gt;
-    CODE
-    class: "mt-4"
-  ) %>
-</section>
-
-<!-- Empty State with Slot -->
-<section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Empty State with Slot", anchor_link: true, subtitle: "Examples for Empty State with Slot.") %>
-  <div class="border border-[var(--surface-border-color)] rounded-lg p-8">
-    <%= render FlatPack::EmptyState::Component.new(
-      title: "No projects found",
-      description: "Get started by creating your first project. Projects help you organize your work."
+      title: "No projects yet",
+      description: "Create a project to group work in one place."
     ) do |empty| %>
       <% empty.slot do %>
-        <%= render FlatPack::Button::Component.new(text: "Create Project", style: :primary) %>
-        <%= render FlatPack::Button::Component.new(text: "Import Project", style: :secondary) %>
+        <%= render FlatPack::Button::Component.new(text: "Create project", style: :primary) %>
+        <%= render FlatPack::Button::Component.new(text: "Import a project", style: :secondary) %>
       <% end %>
     <% end %>
   </div>
-  
+
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE'),
       &lt;%= render FlatPack::EmptyState::Component.new(
-        title: "No projects found",
-        description: "Get started by creating your first project."
+        title: "No projects yet",
+        description: "Create a project to group work in one place."
       ) do |empty| %&gt;
         &lt;% empty.slot do %&gt;
-          &lt;%= render FlatPack::Button::Component.new(text: "Create Project", style: :primary) %&gt;
+          &lt;%= render FlatPack::Button::Component.new(text: "Create project", style: :primary) %&gt;
         &lt;% end %&gt;
       &lt;% end %&gt;
     CODE
@@ -56,54 +35,91 @@
   ) %>
 </section>
 
-<!-- Empty State with Icons -->
-<section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Icons", anchor_link: true, subtitle: "Examples for Icons.") %>
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-    <div class="border border-[var(--surface-border-color)] rounded-lg p-8">
+<!-- Empty then content -->
+<section class="mb-12" data-controller="empty-state-demo">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Empty then content", anchor_link: true, subtitle: "When the first item arrives, fade the empty panel out and the content in. Hosts add fp-content-enter to the replacement.") %>
+  <div class="flex flex-wrap gap-3 mb-4">
+    <%= render FlatPack::Button::Component.new(
+      text: "Show empty",
+      style: :secondary,
+      data: {action: "click->empty-state-demo#showEmpty"}
+    ) %>
+    <%= render FlatPack::Button::Component.new(
+      text: "Show content",
+      style: :primary,
+      data: {action: "click->empty-state-demo#showContent"}
+    ) %>
+  </div>
+  <div class="border border-[var(--surface-border-color)] rounded-lg p-8 min-h-[16rem]">
+    <div data-empty-state-demo-target="empty">
       <%= render FlatPack::EmptyState::Component.new(
-        title: "Inbox empty",
-        description: "All caught up! No new messages.",
-        icon: :inbox
-      ) %>
+        title: "No messages yet",
+        description: "Start a conversation. New threads show up here."
+      ) do |empty| %>
+        <% empty.slot do %>
+          <%= render FlatPack::Button::Component.new(
+            text: "Write a message",
+            style: :primary,
+            data: {action: "click->empty-state-demo#showContent"}
+          ) %>
+        <% end %>
+      <% end %>
     </div>
-    
+    <div class="fp-content-enter space-y-3" data-empty-state-demo-target="content" hidden>
+      <%= render FlatPack::List::Component.new do %>
+        <%= render FlatPack::List::Item.new do %>
+          <span class="font-medium">Jordan</span>
+          <span class="text-sm text-[var(--surface-muted-content-color)]"> Kickoff notes are in the shared folder.</span>
+        <% end %>
+        <%= render FlatPack::List::Item.new do %>
+          <span class="font-medium">Sam</span>
+          <span class="text-sm text-[var(--surface-muted-content-color)]"> Ship checklist is ready for review.</span>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<!-- Optional quiet icon -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Optional icon", anchor_link: true, subtitle: "A small kit icon can label the context. It is not the empty state.") %>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <div class="border border-[var(--surface-border-color)] rounded-lg p-8">
       <%= render FlatPack::EmptyState::Component.new(
-        title: "No results",
-        description: "Try adjusting your search or filters.",
-        icon: :search
-      ) %>
+        title: "Inbox is clear",
+        description: "New messages land here. Write one when you are ready.",
+        icon: :inbox
+      ) do |empty| %>
+        <% empty.slot do %>
+          <%= render FlatPack::Button::Component.new(text: "Write a message", style: :primary) %>
+        <% end %>
+      <% end %>
     </div>
 
     <div class="border border-[var(--surface-border-color)] rounded-lg p-8">
       <%= render FlatPack::EmptyState::Component.new(
-        title: "No files uploaded",
-        description: "Upload files to get started.",
-        icon: :upload
-      ) %>
+        title: "No matches",
+        description: "Try a different name or clear the filters.",
+        icon: :search
+      ) do |empty| %>
+        <% empty.slot do %>
+          <%= render FlatPack::Button::Component.new(text: "Clear filters", style: :secondary) %>
+        <% end %>
+      <% end %>
     </div>
   </div>
-  
+
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE'),
       &lt;%= render FlatPack::EmptyState::Component.new(
-        title: "Inbox empty",
-        description: "All caught up!",
-        icon: :inbox
-      ) %&gt;
-      
-      &lt;%= render FlatPack::EmptyState::Component.new(
-        title: "No results",
-        description: "Try adjusting your search.",
+        title: "No matches",
+        description: "Try a different name or clear the filters.",
         icon: :search
-      ) %&gt;
-      
-      &lt;%= render FlatPack::EmptyState::Component.new(
-        title: "No files uploaded",
-        description: "Upload files to get started.",
-        icon: :upload
-      ) %&gt;
+      ) do |empty| %&gt;
+        &lt;% empty.slot do %&gt;
+          &lt;%= render FlatPack::Button::Component.new(text: "Clear filters", style: :secondary) %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
     CODE
     class: "mt-4"
   ) %>
@@ -111,113 +127,49 @@
 
 <!-- Empty State in Tables -->
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Empty State in Table", anchor_link: true, subtitle: "Examples for Empty State in Table.") %>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Empty table", anchor_link: true, subtitle: "Tables keep a single line of copy in the body. Use EmptyState above the table when the next step needs a button.") %>
   <%= render FlatPack::Table::Component.new(data: []) do |table| %>
     <% table.column(title: "Name", html: ->(row) { row.name }) %>
     <% table.column(title: "Email", html: ->(row) { row.email }) %>
     <% table.column(title: "Status", html: ->(row) { row.status }) %>
   <% end %>
-  
-  <%= render FlatPack::CodeBlock::Component.new(
-    code: CGI.unescapeHTML(<<~'CODE'),
-      &lt;%= render FlatPack::Table::Component.new(data: []) do |table| %&gt;
-        <!-- Table automatically shows empty state when data is empty -->
-      &lt;% end %&gt;
-    CODE
-    class: "mt-4"
-  ) %>
 </section>
 
 <!-- Empty State in Cards -->
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Empty State in Card", anchor_link: true, subtitle: "Examples for Empty State in Card.") %>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Inside a card", anchor_link: true, subtitle: "Same pattern in a card body: what is missing, then the action.") %>
   <%= render FlatPack::Card::Component.new(style: :outlined) do |card| %>
     <% card.header do %>
-      <h3 class="text-lg font-semibold">Recent Activity</h3>
+      <h3 class="text-lg font-semibold">Recent activity</h3>
     <% end %>
     <% card.body do %>
       <%= render FlatPack::EmptyState::Component.new(
-        title: "No activity yet",
-        description: "Your recent activity will appear here.",
-        icon: :inbox
-      ) %>
+        title: "Nothing here yet",
+        description: "Activity shows up after the first event."
+      ) do |empty| %>
+        <% empty.slot do %>
+          <%= render FlatPack::Button::Component.new(text: "Record an event", style: :primary, size: :sm) %>
+        <% end %>
+      <% end %>
     <% end %>
   <% end %>
-
-  <%= render FlatPack::CodeBlock::Component.new(
-    code: CGI.unescapeHTML(<<~'CODE'),
-      &lt;%= render FlatPack::Card::Component.new(style: :outlined) do |card| %&gt;
-        &lt;% card.header do %&gt;
-          &lt;h3 class=&quot;text-lg font-semibold&quot;&gt;Recent Activity&lt;/h3&gt;
-        &lt;% end %&gt;
-        &lt;% card.body do %&gt;
-          &lt;%= render FlatPack::EmptyState::Component.new(
-            title: &quot;No activity yet&quot;,
-            description: &quot;Your recent activity will appear here.&quot;,
-            icon: :inbox
-          ) %&gt;
-        &lt;% end %&gt;
-      &lt;% end %&gt;
-    CODE
-    language: "erb",
-    title: "Empty State in Card"
-  ) %>
 </section>
 
-<!-- Empty State with Custom Graphic -->
+<!-- Custom graphic still available, not the default -->
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Empty State with Custom Graphic", anchor_link: true, subtitle: "Examples for Empty State with Custom Graphic.") %>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Custom graphic", anchor_link: true, subtitle: "The graphic slot is there when a host needs a brand mark. Keep it small and still lead with the action.") %>
   <div class="border border-[var(--surface-border-color)] rounded-lg p-8">
     <%= render FlatPack::EmptyState::Component.new(
-      title: "No data available",
-      description: "Upload a CSV file or connect a data source to get started."
+      title: "No files yet",
+      description: "Upload a CSV or connect a source to fill this list."
     ) do |empty| %>
       <% empty.graphic do %>
-        <div class="w-32 h-32 rounded-full bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center mb-6">
-          <%= render FlatPack::Shared::IconComponent.new(name: :upload, size: :lg, class: "text-blue-600") %>
-        </div>
+        <%= render FlatPack::Shared::IconComponent.new(name: :arrow_up_tray, size: :lg, class: "text-[var(--surface-muted-content-color)]") %>
       <% end %>
       <% empty.slot do %>
         <%= render FlatPack::Button::Component.new(text: "Upload CSV", style: :primary) %>
-        <%= render FlatPack::Button::Component.new(text: "Connect Source", style: :secondary) %>
+        <%= render FlatPack::Button::Component.new(text: "Connect a source", style: :secondary) %>
       <% end %>
     <% end %>
   </div>
-
-  <%= render FlatPack::CodeBlock::Component.new(
-    code: CGI.unescapeHTML(<<~'CODE'),
-      &lt;div class=&quot;border border-[var(--surface-border-color)] rounded-lg p-8&quot;&gt;
-        &lt;%= render FlatPack::EmptyState::Component.new(
-          title: &quot;No data available&quot;,
-          description: &quot;Upload a CSV file or connect a data source to get started.&quot;
-        ) do |empty| %&gt;
-          &lt;% empty.graphic do %&gt;
-            &lt;div class=&quot;w-32 h-32 rounded-full bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center mb-6&quot;&gt;
-              &lt;%= render FlatPack::Shared::IconComponent.new(name: :upload, size: :lg, class: &quot;text-blue-600&quot;) %&gt;
-            &lt;/div&gt;
-          &lt;% end %&gt;
-          &lt;% empty.slot do %&gt;
-            &lt;%= render FlatPack::Button::Component.new(text: &quot;Upload CSV&quot;, style: :primary) %&gt;
-            &lt;%= render FlatPack::Button::Component.new(text: &quot;Connect Source&quot;, style: :secondary) %&gt;
-          &lt;% end %&gt;
-        &lt;% end %&gt;
-      &lt;/div&gt;
-    CODE
-    language: "erb",
-    title: "Empty State with Custom Graphic"
-  ) %>
-</section>
-
-<!-- Features -->
-<section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Examples for Features.") %>
-  <%= render FlatPack::List::Component.new(spacing: :dense, class: "text-[var(--surface-content-color)]") do %>
-    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Built-in Icons:</strong> Inbox and search icons included<% end %>
-    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Optional Icon:</strong> Pass <code>icon: :inbox</code>, <code>icon: :search</code>, or any icon name when needed<% end %>
-    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Custom Graphics:</strong> Slot for custom illustrations or icons<% end %>
-    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Action Buttons:</strong> Add primary and secondary CTAs<% end %>
-    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Centered Layout:</strong> Visually balanced and centered<% end %>
-    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Flexible Content:</strong> Title, description, and slot content<% end %>
-    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Responsive:</strong> Adapts to container width<% end %>
-  <% end %>
 </section>

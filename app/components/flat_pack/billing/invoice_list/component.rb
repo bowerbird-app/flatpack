@@ -88,8 +88,7 @@ module FlatPack
         def render_empty
           render FlatPack::EmptyState::Component.new(
             title: @empty_title,
-            description: @empty_description,
-            icon: :inbox
+            description: @empty_description
           )
         end
 

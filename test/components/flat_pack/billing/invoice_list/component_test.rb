@@ -23,6 +23,8 @@ module FlatPack
           render_inline(Component.new(items: []))
 
           assert_text "No invoices yet"
+          assert_includes page.native.to_html, "fp-empty-state"
+          assert_no_selector "svg"
         end
 
         def test_requires_invoice_fields
