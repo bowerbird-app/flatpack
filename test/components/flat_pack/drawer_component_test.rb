@@ -26,6 +26,17 @@ module FlatPack
         assert_match(/Invalid side/, error.message)
       end
 
+      def test_panel_transitions_translate
+        render_inline(Component.new(id: "filters-drawer", title: "Filters", side: :left)) do |drawer|
+          drawer.body { "Narrow the list." }
+        end
+
+        html = page.native.to_html
+
+        assert_includes html, "transition-[opacity,translate]"
+        assert_includes html, "-translate-x-full"
+      end
+
       def test_blank_id_raises
         error = assert_raises(ArgumentError) { Component.new(id: "") }
 

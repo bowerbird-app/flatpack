@@ -87,7 +87,7 @@ module FlatPack
           "border border-[var(--modal-border-color)]",
           "bg-[var(--modal-surface-color)] shadow-lg",
           "opacity-0 scale-95 motion-reduce:scale-100",
-          "transition-[opacity,transform] duration-[var(--duration-slow)] ease-[var(--easing-enter)]"
+          "transition-[opacity,scale] duration-[var(--duration-slow)] ease-[var(--easing-enter)]"
         ].join(" ")
       end
 

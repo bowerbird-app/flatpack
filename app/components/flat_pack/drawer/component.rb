@@ -132,7 +132,7 @@ module FlatPack
           "bg-[var(--drawer-surface-color)]",
           "border-[var(--drawer-border-color)]",
           "shadow-lg",
-          "transition-[opacity,transform] duration-[var(--duration-slow)] ease-[var(--easing-enter)]",
+          "transition-[opacity,translate] duration-[var(--duration-slow)] ease-[var(--easing-enter)]",
           "opacity-0",
           side_classes,
           size_classes

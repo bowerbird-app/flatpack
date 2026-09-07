@@ -52,7 +52,7 @@ Use `drawer.header` / `drawer.body` / `drawer.footer`. There is no `with_` prefi
 - Focus moves into the panel; Tab cycles inside; close restores the trigger.
 - Body scroll lock shares the same count key as Modal (`flatPackModalLockCount`).
 - Overlay and `.fp-drawer-body` use `overscroll-behavior: contain`. The panel uses `.fp-overlay-pad`.
-- Enter uses `--duration-slow` / `--easing-enter`; exit uses `--duration-base` / `--easing-exit`. Reduced motion fades without a slide.
+- Enter uses `--duration-slow` / `--easing-enter`; exit uses `--duration-base` / `--easing-exit`. Reduced motion fades without a slide. Motion writes the Tailwind v4 `translate` property (not `transform`).
 
 ## Dependencies
 - Stimulus controller: `flat-pack--drawer`.

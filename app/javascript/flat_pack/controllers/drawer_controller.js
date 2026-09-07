@@ -48,7 +48,7 @@ export default class extends Controller {
     requestAnimationFrame(() => {
       if (!this.hasPanelTarget) return
       this.panelTarget.style.opacity = "1"
-      this.panelTarget.style.transform = prefersReducedMotion() ? "none" : "none"
+      this.panelTarget.style.translate = "0"
     })
 
     setTimeout(() => this.trapFocus(), 100)
@@ -65,7 +65,7 @@ export default class extends Controller {
 
     if (this.hasPanelTarget && !prefersReducedMotion()) {
       this.panelTarget.style.opacity = "0"
-      this.panelTarget.style.transform = this.closedTransform()
+      this.panelTarget.style.translate = this.closedTranslate()
     } else if (this.hasPanelTarget) {
       this.panelTarget.style.opacity = "0"
     }
@@ -112,14 +112,14 @@ export default class extends Controller {
     }
   }
 
-  closedTransform() {
+  closedTranslate() {
     switch (this.sideValue) {
       case "left":
-        return "translateX(-100%)"
+        return "-100% 0"
       case "bottom":
-        return "translateY(100%)"
+        return "0 100%"
       default:
-        return "translateX(100%)"
+        return "100% 0"
     }
   }
 
@@ -175,13 +175,13 @@ export default class extends Controller {
   applyEnterMotion() {
     this.element.style.transition = motionTransition("opacity", { duration: "slow", easing: "enter" })
     if (!this.hasPanelTarget) return
-    this.panelTarget.style.transition = motionTransition(["opacity", "transform"], { duration: "slow", easing: "enter" })
+    this.panelTarget.style.transition = motionTransition(["opacity", "translate"], { duration: "slow", easing: "enter" })
   }
 
   applyExitMotion() {
     this.element.style.transition = motionTransition("opacity", { duration: "base", easing: "exit" })
     if (!this.hasPanelTarget) return
-    this.panelTarget.style.transition = motionTransition(["opacity", "transform"], { duration: "base", easing: "exit" })
+    this.panelTarget.style.transition = motionTransition(["opacity", "translate"], { duration: "base", easing: "exit" })
   }
 
   clearHideTimeout() {

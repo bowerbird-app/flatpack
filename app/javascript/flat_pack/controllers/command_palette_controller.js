@@ -48,7 +48,7 @@ export default class extends Controller {
     requestAnimationFrame(() => {
       if (!this.hasDialogTarget) return
       this.dialogTarget.style.opacity = "1"
-      this.dialogTarget.style.transform = prefersReducedMotion() ? "none" : "scale(1)"
+      this.dialogTarget.style.scale = prefersReducedMotion() ? "none" : "1"
     })
 
     this.filter()
@@ -65,7 +65,7 @@ export default class extends Controller {
     this.restoreBodyScroll()
     if (this.hasDialogTarget) {
       this.dialogTarget.style.opacity = "0"
-      if (!prefersReducedMotion()) this.dialogTarget.style.transform = "scale(0.95)"
+      if (!prefersReducedMotion()) this.dialogTarget.style.scale = "0.95"
     }
 
     this.hideTimeout = setTimeout(() => {
@@ -217,13 +217,13 @@ export default class extends Controller {
   applyEnterMotion() {
     this.element.style.transition = motionTransition("opacity", { duration: "slow", easing: "enter" })
     if (!this.hasDialogTarget) return
-    this.dialogTarget.style.transition = motionTransition(["opacity", "transform"], { duration: "slow", easing: "enter" })
+    this.dialogTarget.style.transition = motionTransition(["opacity", "scale"], { duration: "slow", easing: "enter" })
   }
 
   applyExitMotion() {
     this.element.style.transition = motionTransition("opacity", { duration: "base", easing: "exit" })
     if (!this.hasDialogTarget) return
-    this.dialogTarget.style.transition = motionTransition(["opacity", "transform"], { duration: "base", easing: "exit" })
+    this.dialogTarget.style.transition = motionTransition(["opacity", "scale"], { duration: "base", easing: "exit" })
   }
 
   clearHideTimeout() {

@@ -44,7 +44,7 @@ None.
 - Arrow keys move the highlighted row. Enter activates it. Escape closes.
 - Focus is trapped while open. Body scroll lock shares Modal’s count key.
 - Overlay uses `.fp-overlay-pad` and `overscroll-behavior: contain`.
-- Enter uses `--duration-slow` / `--easing-enter`; exit uses `--duration-base` / `--easing-exit`. Reduced motion fades without scale.
+- Enter uses `--duration-slow` / `--easing-enter`; exit uses `--duration-base` / `--easing-exit`. Reduced motion fades without scale. Motion writes the Tailwind v4 `scale` property (not `transform`).
 
 ## Dependencies
 - Stimulus controller: `flat-pack--command-palette`.

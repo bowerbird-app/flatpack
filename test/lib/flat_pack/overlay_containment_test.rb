@@ -28,6 +28,17 @@ module FlatPack
       assert_includes css, ".flat-pack-modal__body"
     end
 
+    test "drawer and command palette animate Tailwind v4 translate and scale" do
+      drawer = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/drawer_controller.js").read
+      palette = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/command_palette_controller.js").read
+
+      assert_includes drawer, "style.translate"
+      assert_includes drawer, "closedTranslate"
+      refute_includes drawer, "style.transform"
+      assert_includes palette, "style.scale"
+      refute_includes palette, "style.transform"
+    end
+
     test "modal body lock also sets overscroll-behavior none" do
       js = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/modal_controller.js").read
 
