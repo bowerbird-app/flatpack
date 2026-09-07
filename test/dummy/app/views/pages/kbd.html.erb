@@ -1,0 +1,37 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Keyboard",
+  subtitle: "Show shortcut sequences as keycaps."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :kbd %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Sequences", anchor_link: true) %>
+
+  <div class="space-y-4 p-6 bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] rounded-[var(--radius-lg)]">
+    <p class="flex flex-wrap items-center gap-2 text-sm">
+      Open commands
+      <%= render FlatPack::Kbd::Component.new(keys: ["Cmd", "K"]) %>
+    </p>
+    <p class="flex flex-wrap items-center gap-2 text-sm">
+      Command palette on Windows
+      <%= render FlatPack::Kbd::Component.new(keys: ["Ctrl", "K"]) %>
+    </p>
+    <p class="flex flex-wrap items-center gap-2 text-sm">
+      Command menu
+      <%= render FlatPack::Kbd::Component.new(keys: ["Ctrl", "Shift", "P"]) %>
+    </p>
+    <p class="flex flex-wrap items-center gap-2 text-sm">
+      Close
+      <%= render FlatPack::Kbd::Component.new(keys: ["Esc"]) %>
+    </p>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Kbd::Component.new(keys: ["Cmd", "K"]) %&gt;
+    CODE
+    language: "erb",
+    title: "Keyboard"
+  ) %>
+</section>

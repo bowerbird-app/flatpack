@@ -58,6 +58,8 @@ class DemoCatalog
           ]
         },
         {type: :item, title: "Modals", path: "/demo/modals", description: "Dialog overlays with focus trap", icon: :box},
+        {type: :item, title: "Drawers", path: "/demo/drawer", description: "Edge panels for filters and details", icon: :menu},
+        {type: :item, title: "Command palette", path: "/demo/command_palette", description: "Searchable command overlay, also Cmd+K", icon: :search},
         {type: :item, title: "Popovers", path: "/demo/popovers", description: "Click-triggered floating content", icon: :question},
         {type: :item, title: "Tooltips", path: "/demo/tooltips", description: "Hover/focus tooltips", icon: :question},
         {
@@ -100,6 +102,7 @@ class DemoCatalog
             {title: "Checkbox", path: "/demo/forms/checkbox", description: "Checkbox input examples", icon: :square},
             {title: "Radio Group", path: "/demo/forms/radio_group", description: "Single-choice radio group examples", icon: :square},
             {title: "Select", path: "/demo/forms/select", description: "Dropdown select input examples", icon: :chevron_down},
+            {title: "Combobox", path: "/demo/forms/combobox", description: "Searchable single-choice field with a typed filter", icon: :search},
             {title: "Nested Multiselect", path: "/demo/forms/nested_multiselect", description: "Parent and child checkbox multiselect examples", icon: :square},
             {title: "Picker", path: "/demo/picker", description: "Reusable file and image picker for any workflow", icon: :image},
             {title: "Switch", path: "/demo/forms/switch", description: "Toggle switch input examples", icon: :settings},
@@ -211,6 +214,7 @@ class DemoCatalog
         },
         {type: :item, title: "Empty State", path: "/demo/empty_state", description: "Empty screens that invite the next action", icon: :folder},
         {type: :item, title: "Overflow Row", path: "/demo/overflow_row", description: "One-row layout that scrolls sideways when items do not fit", icon: :chevron_right},
+        {type: :item, title: "Stepper", path: "/demo/stepper", description: "Horizontal and vertical progress through named steps", icon: :chevron_right},
         {type: :item, title: "Divider", path: "/demo/divider", description: "Horizontal rule with optional centered label for stacked auth actions", icon: :minus}
       ]
     },
@@ -218,6 +222,8 @@ class DemoCatalog
       title: "Feedback",
       entries: [
         {type: :item, title: "Alerts", path: "/demo/alerts", description: "Status and feedback messages", icon: :alert},
+        {type: :item, title: "Spinner", path: "/demo/spinner", description: "Loading spinner for buttons and inline waits", icon: :dashboard},
+        {type: :item, title: "Keyboard", path: "/demo/kbd", description: "Keyboard shortcut keycaps", icon: :type},
         {type: :item, title: "Badges", path: "/demo/badges", description: "Label and status indicators", icon: :dashboard},
         {type: :item, title: "Chips", path: "/demo/chips", description: "Compact filter and tag components", icon: :dashboard},
         {type: :item, title: "Chip Groups", path: "/demo/chip_groups", description: "Wrapping and non-wrapping chip collections", icon: :dashboard},
@@ -229,6 +235,7 @@ class DemoCatalog
       title: "Navigation",
       entries: [
         {type: :item, title: "Breadcrumbs", path: "/demo/breadcrumbs", description: "Hierarchical navigation trails", icon: :chevron_right},
+        {type: :item, title: "Skip link", path: "/demo/skip_link", description: "Keyboard skip to the main content", icon: :chevron_right},
         {type: :item, title: "Page Nav", path: "/demo/page_nav", description: "Back, close, and page action navigation bar", icon: :chevron_left},
         {type: :item, title: "Top Nav", path: "/demo/navbar", description: "Header layout with left, center, and right slots", icon: :monitor},
         {type: :item, title: "Search", path: "/demo/search", description: "Reusable search component with live results", icon: :search},

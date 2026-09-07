@@ -1,0 +1,76 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Drawer",
+  subtitle: "Edge panels for filters, details, and short actions. Not the sidebar layout."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :drawer %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Open from an edge", anchor_link: true, subtitle: "Left, right, and bottom. Triggers use data-drawer-id.") %>
+
+  <div class="flex flex-wrap gap-3 mb-4">
+    <%= render FlatPack::Button::Component.new(
+      text: "Open filters",
+      style: :primary,
+      data: { "drawer-id": "filters-drawer" }
+    ) %>
+    <%= render FlatPack::Button::Component.new(
+      text: "Open details",
+      style: :secondary,
+      data: { "drawer-id": "details-drawer" }
+    ) %>
+    <%= render FlatPack::Button::Component.new(
+      text: "Share",
+      style: :secondary,
+      data: { "drawer-id": "share-drawer" }
+    ) %>
+  </div>
+
+  <%= render FlatPack::Drawer::Component.new(id: "filters-drawer", title: "Filters", side: :left, size: :sm) do |drawer| %>
+    <% drawer.body do %>
+      <p class="mb-3">Narrow the list without leaving the page.</p>
+      <%= render FlatPack::Checkbox::Component.new(name: "status_open", label: "Open", checked: true) %>
+      <%= render FlatPack::Checkbox::Component.new(name: "status_done", label: "Done") %>
+    <% end %>
+    <% drawer.footer do %>
+      <%= render FlatPack::Button::Component.new(text: "Close", style: :secondary, data: { action: "click->flat-pack--drawer#close" }) %>
+      <%= render FlatPack::Button::Component.new(text: "Apply", style: :primary, data: { action: "click->flat-pack--drawer#close" }) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::Drawer::Component.new(id: "details-drawer", title: "Invoice", side: :right, size: :md) do |drawer| %>
+    <% drawer.body do %>
+      <p class="mb-2"><strong>INV-1042</strong></p>
+      <p>Due 12 Sep. Paid by card ending 4242.</p>
+    <% end %>
+    <% drawer.footer do %>
+      <%= render FlatPack::Button::Component.new(text: "Close", style: :secondary, data: { action: "click->flat-pack--drawer#close" }) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::Drawer::Component.new(id: "share-drawer", title: "Share", side: :bottom, size: :sm) do |drawer| %>
+    <% drawer.body do %>
+      <p>Send a link to this page. Escape and the backdrop also close the panel.</p>
+    <% end %>
+    <% drawer.footer do %>
+      <%= render FlatPack::Button::Component.new(text: "Copy link", style: :primary, data: { action: "click->flat-pack--drawer#close" }) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Button::Component.new(
+        text: "Open filters",
+        data: { "drawer-id": "filters-drawer" }
+      ) %&gt;
+
+      &lt;%= render FlatPack::Drawer::Component.new(id: "filters-drawer", title: "Filters", side: :left) do |drawer| %&gt;
+        &lt;% drawer.body do %&gt;
+          &lt;p&gt;Narrow the list without leaving the page.&lt;/p&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    language: "erb",
+    title: "Drawer trigger"
+  ) %>
+</section>

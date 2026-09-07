@@ -1,0 +1,35 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Skip link",
+  subtitle: "The first Tab on this site focuses Skip to content, then Enter jumps to the main region."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :skip_link %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "In the layout", anchor_link: true) %>
+
+  <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">
+    Dummy layouts render a skip link as the first thing in the body, and mark
+    <code class="font-mono">#main</code> on the main landmark. Reload this page, then Tab from the address bar.
+  </p>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::SkipLink::Component.new(href: "#main") %&gt;
+      &lt;main id="main" tabindex="-1"&gt;
+        &lt;%= yield %&gt;
+      &lt;/main&gt;
+    CODE
+    language: "erb",
+    title: "Skip link in a layout"
+  ) %>
+</section>
+
+<section class="mb-12" id="skip-demo-target" tabindex="-1">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Local example", anchor_link: true) %>
+
+  <p class="mb-4">
+    <%= render FlatPack::SkipLink::Component.new(href: "#skip-demo-target", text: "Skip to this section", class: "static translate-y-0") %>
+  </p>
+  <p class="text-sm text-[var(--surface-muted-content-color)]">This copy is the skip target for the local example.</p>
+</section>

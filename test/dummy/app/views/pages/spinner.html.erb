@@ -1,0 +1,36 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Spinner",
+  subtitle: "A loading mark for buttons and inline waits. Buttons reuse this with no accessible name of their own."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :spinner %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Sizes", anchor_link: true) %>
+
+  <div class="flex flex-wrap items-center gap-6 p-6 bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] rounded-[var(--radius-lg)] text-[var(--surface-content-color)]">
+    <%= render FlatPack::Spinner::Component.new(size: :sm, label: "Loading") %>
+    <%= render FlatPack::Spinner::Component.new(size: :md, label: "Loading") %>
+    <%= render FlatPack::Spinner::Component.new(size: :lg, label: "Loading") %>
+    <%= render FlatPack::Spinner::Component.new(size: :xl, label: "Loading") %>
+    <%= render FlatPack::Spinner::Component.new(size: :md, label: nil) %>
+  </div>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "On a button", anchor_link: true) %>
+
+  <div class="flex flex-wrap gap-3">
+    <%= render FlatPack::Button::Component.new(text: "Save", loading: true, style: :primary) %>
+    <%= render FlatPack::Button::Component.new(icon: "magnifying-glass", icon_only: true, loading: true, aria: {label: "Search"}) %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Spinner::Component.new(size: :md, label: "Loading") %&gt;
+      &lt;%= render FlatPack::Button::Component.new(text: "Save", loading: true) %&gt;
+    CODE
+    language: "erb",
+    title: "Spinner"
+  ) %>
+</section>

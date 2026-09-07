@@ -4,7 +4,7 @@
 Display layered dialog content with managed focus/keyboard/backdrop behavior.
 
 ## When to use
-Use Modal for confirmation flows, forms, and detailed contextual content that should temporarily block page interaction.
+Use Modal for confirmation flows, forms, and detailed contextual content that should temporarily block page interaction. Use [Drawer](drawer.md) when the extra content should slide in from an edge instead of centering.
 
 ## Class
 - Primary: `FlatPack::Modal::Component`

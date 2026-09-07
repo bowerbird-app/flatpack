@@ -223,6 +223,24 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --modal-body-color: var(--surface-content-color);
   --modal-close-icon-color: var(--surface-muted-content-color);
   --modal-close-icon-hover-color: var(--surface-content-color);
+  --drawer-backdrop-color: var(--modal-backdrop-color);
+  --drawer-surface-color: var(--modal-surface-color);
+  --drawer-border-color: var(--modal-border-color);
+  --drawer-title-color: var(--modal-title-color);
+  --drawer-body-color: var(--modal-body-color);
+  --drawer-close-icon-color: var(--modal-close-icon-color);
+  --drawer-close-icon-hover-color: var(--modal-close-icon-hover-color);
+  --kbd-background-color: var(--surface-muted-background-color);
+  --kbd-border-color: var(--surface-border-color);
+  --kbd-text-color: var(--surface-content-color);
+  --kbd-muted-color: var(--surface-muted-content-color);
+  --skip-link-background-color: var(--surface-content-color);
+  --skip-link-text-color: var(--surface-background-color);
+  --stepper-current-color: var(--color-primary);
+  --stepper-complete-color: var(--color-success-background-color);
+  --stepper-upcoming-color: var(--surface-border-color);
+  --stepper-label-color: var(--surface-content-color);
+  --stepper-muted-color: var(--surface-muted-content-color);
   --popover-background-color: var(--surface-background-color);
   --popover-border-color: var(--surface-border-color);
   --popover-text-color: var(--surface-content-color);
@@ -537,6 +555,8 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --shadow-button-active: 0 0 8px 4px rgba(0, 0, 0, 0.15);
 
   --modal-backdrop-blur: 4px;
+  --drawer-backdrop-blur: var(--modal-backdrop-blur);
+  --kbd-shadow: 0 1px 0 var(--surface-border-color);
 }
 ```
 

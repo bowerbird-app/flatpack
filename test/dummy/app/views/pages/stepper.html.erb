@@ -1,0 +1,48 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Stepper",
+  subtitle: "Show where someone is in a short sequence. The host moves current_step; this is not a wizard controller."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :stepper %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Horizontal", anchor_link: true) %>
+
+  <%= render FlatPack::Stepper::Component.new(
+    current_step: 2,
+    steps: [
+      {label: "Details", description: "Name and contact"},
+      {label: "Review", description: "Check the summary"},
+      {label: "Pay", description: "Confirm the charge"},
+      {label: "Done", description: "Receipt sent"}
+    ]
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Vertical", anchor_link: true) %>
+
+  <div class="max-w-md">
+    <%= render FlatPack::Stepper::Component.new(
+      orientation: :vertical,
+      current_step: 3,
+      steps: [
+        {label: "Account", description: "Email and password", href: "/demo/forms"},
+        {label: "Profile", description: "Display name"},
+        {label: "Workspace", description: "Invite people"},
+        {label: "Finish", description: "You are in"}
+      ]
+    ) %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Stepper::Component.new(
+        current_step: 2,
+        steps: ["Details", "Review", "Pay", "Done"]
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Stepper"
+  ) %>
+</section>

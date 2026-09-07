@@ -50,6 +50,7 @@ Rails.application.routes.draw do
   get "demo/forms/radio_group", to: "pages#forms_radio_group"
   get "demo/forms/select", to: "pages#forms_select"
   get "demo/forms/select/options", to: "pages#forms_select_options"
+  get "demo/forms/combobox", to: "pages#forms_combobox"
   get "demo/forms/nested_multiselect", to: "pages#forms_nested_multiselect"
   get "demo/forms/switch", to: "pages#forms_switch"
   get "demo/forms/combined", to: "pages#forms_combined"
@@ -98,6 +99,12 @@ Rails.application.routes.draw do
 
   # New component demos
   get "demo/modals", to: "pages#modals"
+  get "demo/drawer", to: "pages#drawer"
+  get "demo/command_palette", to: "pages#command_palette"
+  get "demo/kbd", to: "pages#kbd"
+  get "demo/skip_link", to: "pages#skip_link"
+  get "demo/stepper", to: "pages#stepper"
+  get "demo/spinner", to: "pages#spinner"
   get "demo/popovers", to: "pages#popovers"
   get "demo/tooltips", to: "pages#tooltips"
   get "demo/tabs", to: "pages#tabs"

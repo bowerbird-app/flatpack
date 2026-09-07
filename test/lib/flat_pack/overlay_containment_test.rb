@@ -20,6 +20,10 @@ module FlatPack
       assert_includes css, "env(safe-area-inset-bottom, 0px)"
       assert_includes css, "env(safe-area-inset-left, 0px)"
       assert_includes css, "[data-controller~=\"flat-pack--modal\"]"
+      assert_includes css, "[data-controller~=\"flat-pack--drawer\"]"
+      assert_includes css, "[data-controller~=\"flat-pack--command-palette\"]"
+      assert_includes css, ".fp-drawer-body"
+      assert_includes css, ".fp-skip-link"
       assert_includes css, "[data-flat-pack--carousel-target=\"lightbox\"]"
       assert_includes css, ".flat-pack-modal__body"
     end

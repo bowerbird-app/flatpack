@@ -26,9 +26,25 @@
 
   /* Keep overlay scroll from chaining into the page underneath. */
   [data-controller~="flat-pack--modal"],
+  [data-controller~="flat-pack--drawer"],
+  [data-controller~="flat-pack--command-palette"],
   [data-flat-pack--carousel-target="lightbox"],
-  .flat-pack-modal__body {
+  .flat-pack-modal__body,
+  .fp-drawer-body {
     overscroll-behavior: contain;
+  }
+
+  /* Tailwind: .fp-skip-link */
+  .fp-skip-link {
+    position: fixed;
+    z-index: 100;
+    top: 1rem;
+    left: 1rem;
+    transform: translateY(-150%);
+  }
+
+  .fp-skip-link:focus-visible {
+    transform: none;
   }
 
   /* Overlay inset padding: existing 1rem / 1.5rem pad, never less than the notch. */
@@ -123,6 +139,21 @@
         opacity: 1;
         transform: none;
       }
+    }
+
+    .fp-skip-link {
+      transform: none;
+      clip: rect(0, 0, 0, 0);
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+    }
+
+    .fp-skip-link:focus-visible {
+      clip: auto;
+      width: auto;
+      height: auto;
+      overflow: visible;
     }
   }
 

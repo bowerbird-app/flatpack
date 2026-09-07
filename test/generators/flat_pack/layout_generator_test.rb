@@ -27,6 +27,8 @@ module FlatPack
           assert_includes content, 'stylesheet_link_tag "flat_pack/application"'
           assert_includes content, 'stylesheet_link_tag "flat_pack/rich_text"'
           assert_includes content, "viewport-fit=cover"
+          assert_includes content, "FlatPack::SkipLink::Component"
+          assert_includes content, 'id="main"'
           assert_includes content, 'render "layouts/flat_pack/sidebar"'
           assert_includes content, 'render "layouts/flat_pack/top_nav"'
         end

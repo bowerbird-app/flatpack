@@ -118,6 +118,8 @@ The generated layout includes `viewport-fit=cover` on the viewport meta tag. Fix
 
 Existing hosts should add `viewport-fit=cover` to their layout `<head>`. Dummy layouts already include it.
 
+The layout generator also renders `FlatPack::SkipLink::Component` as the first node in `<body>` and marks `<main id="main" tabindex="-1">`. Keyboard users Tab to **Skip to content**, then jump past the sidebar and top nav. Existing hosts can copy that pair from `docs/components/skip-link.md`.
+
 ### 3.3 Optional: Create `config/initializers/flat_pack.rb`
 
 FlatPack works out of the box without a Ruby initializer, but app-wide settings such as the default Heroicons variant belong in `config/initializers/flat_pack.rb`:

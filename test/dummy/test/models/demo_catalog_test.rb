@@ -7,6 +7,13 @@ class DemoCatalogTest < ActiveSupport::TestCase
     titles = DemoCatalog.searchable_items.map { |item| item[:title] }
 
     assert_includes titles, "Accordion"
+    assert_includes titles, "Combobox"
+    assert_includes titles, "Command palette"
+    assert_includes titles, "Drawers"
+    assert_includes titles, "Keyboard"
+    assert_includes titles, "Skip link"
+    assert_includes titles, "Spinner"
+    assert_includes titles, "Stepper"
     assert_includes titles, "Links"
     assert_includes titles, "Pill Buttons"
     assert_includes titles, "Plan Summary"

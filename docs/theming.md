@@ -270,7 +270,36 @@ Kit CSS defines `.fp-tabular-nums` (`font-variant-numeric: tabular-nums`), `.fp-
 
 `--easing-*` are set on `:root`, for the same reason as durations. Kit overlays use `ease-[var(--easing-enter)]` / `ease-[var(--easing-exit)]`, or `motionTransition()` in Stimulus. In-place motion (switch, progress, sidebar) uses `--easing-standard`. There is no bounce: charcoal / rounded is Corporate/Premium, not Playful.
 
-Use `--easing-enter` for modal, toast, dropdown, popover, and tooltip entrance. Use `--easing-exit` for their leave. Modal and toast enter on `--duration-slow` and exit on `--duration-base`. Popover and tooltip stay on `--duration-base` both ways, with a few pixels of offset from the trigger. Form invalid is colour only; do not shake the field.
+Use `--easing-enter` for modal, drawer, command palette, toast, dropdown, popover, and tooltip entrance. Use `--easing-exit` for their leave. Modal, drawer, and command palette enter on `--duration-slow` and exit on `--duration-base`. Popover and tooltip stay on `--duration-base` both ways, with a few pixels of offset from the trigger. Form invalid is colour only; do not shake the field.
+
+### Overlay and chrome
+```css
+--drawer-backdrop-color
+--drawer-surface-color
+--drawer-border-color
+--drawer-title-color
+--drawer-body-color
+--drawer-close-icon-color
+--drawer-close-icon-hover-color
+--drawer-backdrop-blur
+
+--kbd-background-color
+--kbd-border-color
+--kbd-text-color
+--kbd-muted-color
+--kbd-shadow
+
+--skip-link-background-color
+--skip-link-text-color
+
+--stepper-current-color
+--stepper-complete-color
+--stepper-upcoming-color
+--stepper-label-color
+--stepper-muted-color
+```
+
+Drawer tokens alias Modal. Keyboard, skip link, and stepper tokens alias surface and brand colours so named themes inherit.
 
 ## Component Variable Usage
 

@@ -1,0 +1,55 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Command palette",
+  subtitle: "Search pages and actions. This app also opens a palette with Cmd+K or Ctrl+K."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :command_palette %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Open, filter, choose", anchor_link: true, subtitle: "This example has no global shortcut so it does not fight Cmd+K.") %>
+
+  <div class="mb-4">
+    <%= render FlatPack::Button::Component.new(
+      text: "Open commands",
+      style: :primary,
+      data: { "command-palette-id": "demo-page-commands" }
+    ) %>
+  </div>
+
+  <p class="text-sm text-[var(--surface-muted-content-color)] mb-6">
+    Type to filter. Arrow keys move. Enter opens the highlighted row.
+    The site-wide palette uses <%= render FlatPack::Kbd::Component.new(keys: ["Cmd", "K"]) %>
+    or <%= render FlatPack::Kbd::Component.new(keys: ["Ctrl", "K"]) %>.
+  </p>
+
+  <%= render FlatPack::CommandPalette::Component.new(
+    id: "demo-page-commands",
+    shortcut: false,
+    placeholder: "Search commands",
+    items: [
+      {label: "Filters drawer", href: "/demo/drawer", icon: "magnifying-glass", group: "Go to", hint: ["G", "F"]},
+      {label: "Theme variables", href: "/themes", icon: "cog", group: "Go to"},
+      {label: "Tables", href: "/demo/tables/basic", icon: "table", group: "Go to"},
+      {label: "Copy last command", icon: "document", group: "Actions"}
+    ]
+  ) %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Button::Component.new(
+        text: "Open commands",
+        data: { "command-palette-id": "demo-page-commands" }
+      ) %&gt;
+
+      &lt;%= render FlatPack::CommandPalette::Component.new(
+        id: "demo-page-commands",
+        shortcut: false,
+        items: [
+          {label: "Theme variables", href: themes_path, icon: "cog", group: "Go to"}
+        ]
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Command palette"
+  ) %>
+</section>

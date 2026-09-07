@@ -79,8 +79,9 @@ Buttons, links rendered as buttons, and pill items include `.fp-touch-manipulati
 - Icon-only buttons must have an accessible name: `text:` (used as `aria-label`, not shown) or `aria: { label: "Open settings" }`. Missing a name raises `ArgumentError`.
 - Loading icon-only buttons keep that name and set `aria-busy="true"`.
 - Focus ring styles are applied by default for keyboard navigation.
-- In loading state, the button is disabled to prevent duplicate actions. The spinner uses `motion-reduce:animate-none`.
+- In loading state, the button is disabled to prevent duplicate actions. The spinner is `FlatPack::Spinner::Component` with `label: nil` (decorative) plus `motion-reduce:animate-none`.
 
 ## Dependencies
+- `FlatPack::Spinner::Component` for the loading mark.
 - `FlatPack::Shared::IconComponent` for icon and spinner sizing.
 - `FlatPack::AttributeSanitizer` for URL sanitization and protocol allowlisting (`http`, `https`, `mailto`, `tel`, relative URLs).
