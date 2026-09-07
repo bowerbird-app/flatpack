@@ -9,6 +9,7 @@ module FlatPack
         render_inline(Item.new) { "Item content" }
 
         assert_selector "li[role='listitem']"
+        assert_selector "span.flat-pack-list-item-marker[aria-hidden='true']"
         assert_text "Item content"
       end
 
@@ -47,6 +48,7 @@ module FlatPack
         render_inline(Item.new) { "Content" }
 
         assert_includes page.native.to_html, "flex items-start"
+        assert_selector "li.flex.items-start > span.flat-pack-list-item-marker"
       end
 
       def test_includes_padding_and_corner_radius
@@ -72,6 +74,7 @@ module FlatPack
         render_inline(Item.new(href: "/demo/list")) { "Content" }
 
         assert_selector "li a[href='/demo/list']", text: "Content"
+        assert_selector "li a.flat-pack-list-item-link > span.flat-pack-list-item-marker[aria-hidden='true']:first-child"
         assert_includes page.native.to_html, "flat-pack-list-item-link"
         assert_includes page.native.to_html, "focus-visible:ring-inset"
       end
@@ -99,6 +102,14 @@ module FlatPack
         assert_raises ArgumentError do
           Item.new(href: "javascript:alert('xss')")
         end
+      end
+
+      def test_marker_does_not_replace_icon_or_content
+        render_inline(Item.new(icon: :check)) { "Content" }
+
+        assert_selector "span.flat-pack-list-item-marker[aria-hidden='true']"
+        assert_selector "span svg[data-controller='flat-pack--icon'][data-flat-pack--icon-name-value='check']"
+        assert_selector "div.min-w-0.flex-1", text: "Content"
       end
     end
   end

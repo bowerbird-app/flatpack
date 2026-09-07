@@ -70,7 +70,7 @@ class PagesController < ApplicationController
     {action: /\Acharts(_.*)?\z/, title: "Charts", patterns: [/\A--chart-/]},
     {action: /\Askeletons\z/, title: "Skeleton", patterns: [/\A--skeleton-/]},
     {action: /\Atimeline\z/, title: "Timeline", patterns: [/\A--timeline-/]},
-    {action: /\Alist\z/, title: "List", patterns: [/\A--list-item-/]},
+    {action: /\Alist\z/, title: "List", patterns: [/\A--list-item-/, /\A--list-marker-/]},
     {action: /\Anotification\z/, title: "Notification", patterns: [/\A--popover-/, /\A--list-item-/]},
     {action: /\Atree\z/, title: "Tree", patterns: []}
   ].freeze

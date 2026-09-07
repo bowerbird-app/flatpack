@@ -195,6 +195,9 @@
   --sidebar-item-hover-background-color: var(--sidebar-item-hover-background-color);
   --list-item-hover-background-color: var(--list-item-hover-background-color);
   --list-item-active-background-color: var(--list-item-active-background-color);
+  --list-marker-color: var(--list-marker-color);
+  --list-marker-min-width: var(--list-marker-min-width);
+  --list-marker-gap: var(--list-marker-gap);
   --sidebar-item-hover-text-color: var(--sidebar-item-hover-text-color);
   --sidebar-item-active-background-color: var(--sidebar-item-active-background-color);
   --sidebar-item-active-text-color: var(--sidebar-item-active-text-color);
@@ -726,6 +729,9 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --sidebar-item-hover-background-color: var(--surface-muted-background-color);
   --list-item-hover-background-color: var(--surface-muted-background-color);
   --list-item-active-background-color: var(--surface-muted-background-color);
+  --list-marker-color: var(--surface-muted-content-color);
+  --list-marker-min-width: 1.5rem;
+  --list-marker-gap: 0.5rem;
   --sidebar-item-hover-text-color: var(--surface-content-color);
   --sidebar-item-active-background-color: #333;
   --sidebar-item-active-text-color: var(--color-primary-text);

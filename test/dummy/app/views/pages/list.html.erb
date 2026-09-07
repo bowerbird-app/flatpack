@@ -109,6 +109,51 @@
 </section>
 
 <section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Ordered with icons", anchor_link: true) %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <%= render FlatPack::List::Component.new(ordered: true) do %>
+        <%= render FlatPack::List::Item.new(icon: :sun) do %>
+          Heat the pan
+        <% end %>
+        <%= render FlatPack::List::Item.new(icon: :star) do %>
+          Crack two eggs
+        <% end %>
+        <%= render FlatPack::List::Item.new(icon: :play) do %>
+          Flip once
+        <% end %>
+        <%= render FlatPack::List::Item.new(icon: :check) do %>
+          Plate it
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    class: "mt-6",
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::List::Component.new(ordered: true) do %&gt;
+        &lt;%= render FlatPack::List::Item.new(icon: :sun) do %&gt;
+          Heat the pan
+        &lt;% end %&gt;
+        &lt;%= render FlatPack::List::Item.new(icon: :star) do %&gt;
+          Crack two eggs
+        &lt;% end %&gt;
+        &lt;%= render FlatPack::List::Item.new(icon: :play) do %&gt;
+          Flip once
+        &lt;% end %&gt;
+        &lt;%= render FlatPack::List::Item.new(icon: :check) do %&gt;
+          Plate it
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    title: "Ordered with icons",
+    separated: false
+  ) %>
+</section>
+
+<section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "With Icons", anchor_link: true) %>
   
   <%= render FlatPack::Card::Component.new do |card| %>
