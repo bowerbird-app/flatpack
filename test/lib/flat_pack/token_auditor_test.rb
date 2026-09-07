@@ -26,5 +26,13 @@ module FlatPack
       refute_includes dark_block, "--button-primary-background-color"
       assert_includes css, "overrides only"
     end
+
+    test "rounded theme block does not copy the default palette" do
+      css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css").read
+      rounded_block = css[/\[data-theme="rounded"\]\s*\{(.*?)\}/m, 1]
+
+      refute_nil rounded_block
+      refute_includes rounded_block, "--color-primary"
+    end
   end
 end

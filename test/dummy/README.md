@@ -125,8 +125,8 @@ Other useful pages:
 
 - **Home/Demo** (`/`): Overview of available components
 - **Search** (`/demo/search`): Local catalog and remote JSON examples
-- **Themes** (`/themes`): Live `@theme` token catalog (brand → semantic → component aliases)
-- **Theme demos** (`/themes/demos/:theme`): Light (`:root` dump) plus override-only named themes
+- **Themes** (`/themes`): Live `:root` token catalog (brand → semantic → component aliases)
+- **Theme demos** (`/themes/demos/:theme`): Light (`:root` dump), rounded (alias of `:root`), plus override-only dark/ocean
 
 ## Development
 

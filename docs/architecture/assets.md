@@ -116,7 +116,7 @@ This means:
 Tailwind CSS 4 uses a CSS-first configuration model:
 
 1. **No `tailwind.config.js`** - Configuration via CSS
-2. **`@theme` directive** - Define variables in CSS
+2. **`@theme` / `@theme inline` directive** - Register theme names in CSS. FlatPack uses `@theme inline` plus concrete `:root` values.
 3. **`@source` comments** - Specify content paths
 
 ### Configuring Content Sources
