@@ -95,6 +95,37 @@
     text-wrap: pretty;
   }
 
+  /* Empty state and the content that replaces it fade in on --duration-slow.
+   * Hosts add .fp-content-enter to the panel that takes the empty state's place.
+   */
+  .fp-empty-state,
+  .fp-content-enter {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity var(--duration-slow) var(--easing-enter),
+      transform var(--duration-slow) var(--easing-enter);
+
+    @starting-style {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fp-empty-state,
+    .fp-content-enter {
+      transition: none;
+      transform: none;
+      opacity: 1;
+
+      @starting-style {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  }
+
   .shadow-button {
     box-shadow: var(--button-shadow);
   }

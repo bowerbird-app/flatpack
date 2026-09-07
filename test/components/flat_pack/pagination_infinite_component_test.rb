@@ -49,6 +49,13 @@ module FlatPack
         assert_selector "[data-flat-pack--pagination-infinite-target='loading']", visible: false
       end
 
+      def test_default_inline_loading_text_uses_ellipsis
+        render_inline(Component.new(url: "/items?page=2", loading_variant: :inline))
+
+        assert_includes page.native.to_html, "Loading more…"
+        refute_includes page.native.to_html, "Loading more..."
+      end
+
       def test_does_not_render_when_has_more_false
         result = render_inline(Component.new(url: "/items?page=2", has_more: false))
 

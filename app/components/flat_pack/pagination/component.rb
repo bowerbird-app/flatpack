@@ -20,7 +20,7 @@ module FlatPack
         turbo_frame: nil,
         infinite_url: nil,
         has_more: true,
-        loading_text: "Loading more...",
+        loading_text: "Loading more…",
         loading_variant: :table,
         **system_arguments
       )

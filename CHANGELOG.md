@@ -13,6 +13,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.160] - 2026-09-07
+
+### Changed
+- Loading copy uses a typographic ellipsis: skeleton `aria-label` is `Loading…`, infinite pagination skeletons match, and the default `loading_text` is `Loading more…` on both Pagination and PaginationInfinite.
+- EmptyState is an invitation to act. Leftover inbox/search illustration SVGs are gone; optional `icon:` uses `IconComponent` at `lg`. The root is `.fp-empty-state` and fades in on `--duration-slow` / `--easing-enter`. Hosts add `.fp-content-enter` to the panel that replaces it.
+- Billing invoice empty and payment-method empty no longer lead with an inbox picture. Payment method empty puts its actions in the EmptyState slot.
+- Dummy `/demo/empty_state` shows action-first examples and an empty→content toggle. Dummy skeleton list heading is `Loading…`.
+- Bumped the gem version to `0.1.160`.
+
+### Upgrade notes
+- No component API changes. `icon: :inbox` and `icon: :search` still work; they render kit icons instead of inline SVGs.
+- If a host depended on the old 48px illustration, pass `graphic` or drop the icon and keep the button.
+- When content replaces an empty panel, add `fp-content-enter` to the incoming node. Rebuild host Tailwind only if you `@import` `flat_pack/application`.
+
 ## [0.1.159] - 2026-09-07
 
 ### Changed

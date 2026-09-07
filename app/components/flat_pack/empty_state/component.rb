@@ -12,23 +12,6 @@ module FlatPack
       undef_method :with_actions, :with_actions_content,
         :with_graphic, :with_graphic_content
 
-      # Icon constants with hardcoded SVG for performance
-      # SECURITY: These SVG strings are developer-controlled constants, not user input.
-      # They are marked html_safe because they contain intentional HTML markup that
-      # should be rendered as-is, not escaped.
-      ICONS = {
-        inbox: <<~SVG.html_safe,
-          <svg class="w-12 h-12 text-[var(--surface-muted-content-color)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-          </svg>
-        SVG
-        search: <<~SVG.html_safe
-          <svg class="w-12 h-12 text-[var(--surface-muted-content-color)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-        SVG
-      }.freeze
-
       def initialize(
         title:,
         description: nil,
@@ -86,6 +69,7 @@ module FlatPack
 
       def container_classes
         classes(
+          "fp-empty-state",
           "flex",
           "flex-col",
           "items-center",
@@ -97,18 +81,16 @@ module FlatPack
       end
 
       def render_graphic
-        return graphic if graphic?
+        return content_tag(:div, graphic, class: "mb-3") if graphic?
         return nil if @icon.nil?
 
-        content_tag(:div, graphic_content, class: "mb-4")
+        content_tag(:div, graphic_content, class: "mb-3")
       end
 
       def graphic_content
-        return ICONS.fetch(@icon) if ICONS.key?(@icon)
-
         render FlatPack::Shared::IconComponent.new(
           name: @icon,
-          size: :xl,
+          size: :lg,
           class: "text-[var(--surface-muted-content-color)]"
         )
       end
@@ -126,7 +108,11 @@ module FlatPack
       def render_actions
         return nil unless slot?
 
-        content_tag(:div, slot, class: "flex gap-3 flex-wrap justify-center")
+        content_tag(:div, slot, class: action_classes)
+      end
+
+      def action_classes
+        ["flex gap-3 flex-wrap justify-center", ("mt-4" unless @description)].compact.join(" ")
       end
 
       def validate_title!

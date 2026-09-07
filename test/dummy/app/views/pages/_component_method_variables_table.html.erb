@@ -627,11 +627,11 @@
     },
     empty_state: {
       label: "Empty State",
-      method_call: "render FlatPack::EmptyState::Component.new(title: \"No results\", description: \"Try another filter\")",
+      method_call: "render FlatPack::EmptyState::Component.new(title: \"No projects yet\", description: \"Create a project to get started.\")",
       variables: [
         { variable: "title", accepts: "String (required)", example: "title: \"No projects yet\"" },
-        { variable: "description", accepts: "String or nil", example: "description: \"Create your first project to get started.\"" },
-        { variable: "icon", accepts: "Symbol/String or nil", example: "icon: :inbox" }
+        { variable: "description", accepts: "String or nil", example: "description: \"Create a project to group work in one place.\"" },
+        { variable: "icon", accepts: "Symbol/String or nil", example: "icon: :search" }
       ]
     },
     form_input: {

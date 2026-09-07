@@ -101,7 +101,7 @@ module FlatPack
       def test_includes_aria_label
         render_inline(Component.new)
 
-        assert_selector "[aria-label='Loading...']"
+        assert_selector "[aria-label='Loading…']"
       end
     end
   end
