@@ -35,8 +35,8 @@ module FlatPack
       js = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/toasts_region_controller.js").read
 
       assert_includes js, "fp-toast-region"
-      refute_includes js, 'container.style.top'
-      refute_includes js, 'container.style.right'
+      refute_includes js, "container.style.top"
+      refute_includes js, "container.style.right"
     end
 
     test "layout generator and dummy layouts set viewport-fit cover" do
