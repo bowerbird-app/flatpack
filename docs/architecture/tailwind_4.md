@@ -37,7 +37,10 @@ Define theme configuration in CSS. FlatPack's inventory lives in `flat_pack/vari
 }
 
 :root {
-  --color-primary: oklch(0.3211 0 0);
+  --brand-hue: 0;
+  --brand-chroma: 0;
+  --brand-lightness: 0.3211;
+  --color-primary: oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue));
 }
 ```
 
@@ -67,7 +70,11 @@ FlatPack defines CSS variables in `app/assets/stylesheets/flat_pack/variables.cs
 
 :root {
   /* Default rounded / charcoal palette + component aliases (the values browsers use) */
-  --color-primary: oklch(0.3211 0 0);
+  --brand-hue: 0;
+  --brand-chroma: 0;
+  --brand-lightness: 0.3211;
+  --color-primary: oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue));
+  --color-primary-hover: oklch(calc(var(--brand-lightness) - 0.10) var(--brand-chroma) var(--brand-hue));
   --button-primary-background-color: var(--color-primary);
 }
 
@@ -299,7 +306,7 @@ FlatPack CSS variables are loaded in the layout via `stylesheet_link_tag`. To ov
 }
 ```
 
-`--color-primary`, surfaces, and component aliases that reference them all follow. Override a semantic token only when you need a one-off exception.
+`--color-primary` and component aliases that reference it follow. Surfaces stay independent unless you override `--surface-*`. Override a semantic token only when you need a one-off exception.
 
 ### Add New Variables
 

@@ -13,6 +13,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.166] - 2026-09-07
+
+### Fixed
+- `:root` `--color-primary` / `--color-primary-hover` now follow `--brand-hue` / `--brand-chroma` / `--brand-lightness`. Hosts that only set the brand knobs recolor primary buttons and other `--color-primary` consumers.
+- Theme generator output is brand knobs only. `:root` already maps those knobs to primary; hosts no longer uncomment a formula that subtracted chroma (invalid at charcoal chroma `0`).
+
+### Changed
+- Dummy Sunrise sets `--brand-lightness: 0.52` so the theme picker demo shows a warm primary instead of leftover charcoal.
+- Bumped the gem version to `0.1.166`.
+
+### Upgrade notes
+- Hosts that already set `--color-primary` / `--color-primary-hover` are unchanged. Hosts that only set `--brand-*` will now recolor primary.
+- Default charcoal is unchanged: chroma `0` / lightness `0.3211` still resolves near `oklch(0.3211 0 0)`. Hover is `oklch(calc(var(--brand-lightness) - 0.10) …)` instead of `#1f1f1f`.
+- Named kit themes (`dark`, `ocean`) still override `--color-primary` with literals.
+- Rebuild host Tailwind only if you `@import` `flat_pack/application`. Hosts that load kit CSS with `stylesheet_link_tag` pick this up on reload.
+
 ## [0.1.165] - 2026-09-07
 
 ### Added

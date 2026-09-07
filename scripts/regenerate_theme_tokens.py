@@ -57,7 +57,7 @@ EXPLICIT_REMAPS = {
 BRAND_INSERT = [("--brand-hue", "250"), ("--brand-chroma", "0.26"), ("--brand-lightness", "0.52")]
 BRAND_OVERRIDES = {
     "--color-primary": "oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue))",
-    "--color-primary-hover": "oklch(calc(var(--brand-lightness) - 0.10) calc(var(--brand-chroma) - 0.02) var(--brand-hue))",
+    "--color-primary-hover": "oklch(calc(var(--brand-lightness) - 0.10) var(--brand-chroma) var(--brand-hue))",
     "--color-ring": "var(--color-primary)",
     "--surface-content-color": "oklch(0.20 0.01 var(--brand-hue))",
     "--surface-muted-background-color": "oklch(0.96 0.01 var(--brand-hue))",

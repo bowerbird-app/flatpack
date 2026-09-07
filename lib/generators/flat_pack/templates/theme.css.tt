@@ -1,8 +1,9 @@
 /* FlatPack brand theme: <%= theme_slug %>
  *
  * Change --brand-hue / --brand-chroma / --brand-lightness to recolor primary.
- * Lightness applies to --color-primary only (hover is 0.10 darker).
+ * :root maps those knobs to --color-primary (hover is 0.10 darker on lightness only).
  * For an exact hex, set --color-primary / --color-primary-hover instead.
+ * Surfaces stay independent unless you override --surface-*.
  * Component tokens inherit from semantic tokens — you usually do not override them.
  *
  * Load this stylesheet AFTER flat_pack/variables.
@@ -11,9 +12,4 @@
   --brand-hue: <%= brand_hue %>;
   --brand-chroma: <%= brand_chroma %>;
   --brand-lightness: <%= brand_lightness %>;
-
-  /* Optional semantic overrides — uncomment to fine-tune */
-  /* --color-primary: oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue)); */
-  /* --color-primary-hover: oklch(calc(var(--brand-lightness) - 0.10) calc(var(--brand-chroma) - 0.02) var(--brand-hue)); */
-  /* --surface-page-background-color: oklch(0.99 0.01 var(--brand-hue)); */
 }

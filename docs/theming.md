@@ -36,7 +36,7 @@ Or override primitives directly:
 }
 ```
 
-`--color-primary` is `oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue))`. Hover is 0.10 darker. Surfaces pick up `--brand-hue` only; they keep their own lightness.
+`--color-primary` is `oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue))`. Hover subtracts `0.10` from lightness only, so charcoal chroma `0` stays valid. Surfaces keep their own colors unless you override `--surface-*`.
 
 For an exact brand hex, set the semantic tokens instead:
 

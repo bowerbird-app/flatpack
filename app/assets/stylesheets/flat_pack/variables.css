@@ -570,8 +570,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --brand-hue: 0;
   --brand-chroma: 0;
   --brand-lightness: 0.3211;
-  --color-primary: oklch(0.3211 0 0);
-  --color-primary-hover: #1f1f1f;
+  --color-primary: oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue));
+  --color-primary-hover: oklch(calc(var(--brand-lightness) - 0.10) var(--brand-chroma) var(--brand-hue));
   --color-primary-text: #fff;
   --color-default: var(--surface-background-color);
   --color-default-hover: var(--surface-muted-background-color);
