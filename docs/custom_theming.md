@@ -476,7 +476,7 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --top-nav-item-active-icon-color: oklch(1.0 0 0);
 
   --search-icon-color: var(--surface-muted-content-color);
-  --search-input-background-color: var(--surface-muted-background-color);
+  --search-input-background-color: var(--surface-background-color);
   --search-input-border-color: transparent;
   --search-input-text-color: var(--surface-content-color);
   --search-input-placeholder-color: var(--surface-muted-content-color);
