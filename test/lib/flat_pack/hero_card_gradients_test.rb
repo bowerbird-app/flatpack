@@ -35,7 +35,9 @@ module FlatPack
 
       assert_operator hero_pages.size, :>=, 4
       hero_pages.each do |path|
-        refute_includes File.read(path), "linear-gradient", path
+        contents = File.read(path)
+        refute_includes contents, "linear-gradient", path
+        refute_match(/background:\s*"#[0-9a-fA-F]{3,8}"/, contents, path)
       end
       refute_includes composed, "bg-gradient-to-br"
       refute_includes media, "bg-gradient-to-br"
