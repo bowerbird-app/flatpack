@@ -109,7 +109,7 @@ test('drop reorders a list item and sends its UUID plus position', async () => {
   controller.orderableMethodValue = 'PATCH'
   controller.paramUuidNameValue = 'moving_recording_id'
   controller.paramTargetPositionNameValue = 'target_position'
-  controller.hasOrderablePathValue = true
+  controller.hasOrderableUrlValue = true
   controller.hasParamUuidNameValue = true
   controller.hasParamTargetPositionNameValue = true
   controller.connect()
@@ -186,7 +186,7 @@ test('custom param names are rendered into the request body', async () => {
   controller.orderableMethodValue = 'PATCH'
   controller.paramUuidNameValue = 'moving_recording_id'
   controller.paramTargetPositionNameValue = 'target_position'
-  controller.hasOrderablePathValue = true
+  controller.hasOrderableUrlValue = true
   controller.connect()
 
   controller.draggedItem = items[1]
@@ -195,6 +195,65 @@ test('custom param names are rendered into the request body', async () => {
   await controller.handleDrop({currentTarget: items[0], stopPropagation() {}})
 
   assert.equal(fetchCalls[0].options.body, 'moving_recording_id=uuid-2&target_position=1')
+})
+
+test('drop reorders without persisting when orderableUrl is unset', async () => {
+  const fetchCalls = []
+  const items = [buildItem('uuid-1'), buildItem('uuid-2')]
+
+  const controller = new (loadController({
+    fetch: async (url, options) => {
+      fetchCalls.push({url, options})
+      return {
+        ok: true,
+        json: async () => ({ok: true})
+      }
+    },
+    document: {
+      querySelector(selector) {
+        if (selector === "meta[name='csrf-token']") return {content: 'csrf-token'}
+        return null
+      }
+    }
+  }))()
+
+  const element = {
+    querySelectorAll() {
+      return parent.children
+    },
+    dispatchEvent() {}
+  }
+
+  const parent = {
+    children: items,
+    insertBefore(node, referenceNode) {
+      const fromIndex = this.children.indexOf(node)
+      if (fromIndex !== -1) this.children.splice(fromIndex, 1)
+
+      const referenceIndex = referenceNode ? this.children.indexOf(referenceNode) : -1
+      if (referenceIndex === -1) {
+        this.children.push(node)
+      } else {
+        this.children.splice(referenceIndex, 0, node)
+      }
+    }
+  }
+
+  items.forEach((item) => {
+    item.parentNode = parent
+  })
+
+  controller.element = element
+  controller.hasOrderableUrlValue = false
+  controller.connect()
+
+  controller.draggedItem = items[1]
+  controller.dragOverItem = items[0]
+
+  await controller.handleDrop({currentTarget: items[0], stopPropagation() {}})
+
+  assert.equal(parent.children.map((item) => item.id).join(','), 'uuid-2,uuid-1')
+  assert.equal(fetchCalls.length, 0)
 })
 
 test('drag highlight applies and removes an inset ring', () => {
