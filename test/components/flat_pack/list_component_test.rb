@@ -113,6 +113,24 @@ module FlatPack
         assert_operator css.index("ol.flat-pack-list"), :>, layer_end
       end
 
+      def test_marker_css_targets_only_direct_item_slots
+        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+
+        assert_includes css, "ol.flat-pack-list > li > .flat-pack-list-item-marker"
+        assert_includes css, "ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-marker"
+        refute_includes css, "ol.flat-pack-list > li .flat-pack-list-item-marker {"
+        refute_includes css, "ol.flat-pack-list > li .flat-pack-list-item-marker::before"
+      end
+
+      def test_nested_unordered_list_keeps_hidden_marker_slots
+        nested = Component.new.with_content(rendered_items("Nested")).render_in(vc_test_controller.view_context)
+        outer_item = Item.new.with_content(nested).render_in(vc_test_controller.view_context)
+        render_inline(Component.new(ordered: true)) { outer_item }
+
+        assert_selector "ol.flat-pack-list > li > span.flat-pack-list-item-marker", count: 1
+        assert_selector "ol.flat-pack-list ul.flat-pack-list > li > span.flat-pack-list-item-marker", count: 1
+      end
+
       private
 
       def rendered_items(*labels)

@@ -348,7 +348,8 @@ ol.flat-pack-list > li {
   display: none;
 }
 
-ol.flat-pack-list > li .flat-pack-list-item-marker {
+ol.flat-pack-list > li > .flat-pack-list-item-marker,
+ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-marker {
   display: inline-flex;
   flex-shrink: 0;
   min-width: var(--list-marker-min-width);
@@ -358,7 +359,8 @@ ol.flat-pack-list > li .flat-pack-list-item-marker {
   user-select: none;
 }
 
-ol.flat-pack-list > li .flat-pack-list-item-marker::before {
+ol.flat-pack-list > li > .flat-pack-list-item-marker::before,
+ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-marker::before {
   content: counter(flat-pack-list-item) ".";
 }
 
