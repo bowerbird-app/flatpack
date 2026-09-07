@@ -168,7 +168,7 @@ export default class extends Controller {
   }
 
   async saveOrder() {
-    if (!this.hasOrderablePathValue || !this.draggedItem) return
+    if (!this.hasOrderableUrlValue || !this.draggedItem) return
 
     if (this.pendingSave) {
       this.needsSave = true

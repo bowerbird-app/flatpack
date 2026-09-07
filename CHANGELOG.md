@@ -13,6 +13,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.162] - 2026-09-07
+
+### Fixed
+- List drag-reorder persist runs when `orderable_url` is set. `saveOrder` now checks `hasOrderableUrlValue`, the Stimulus flag for `orderableUrl`, instead of leftover `hasOrderablePathValue`.
+- Bumped the gem version to `0.1.162`.
+
+### Upgrade notes
+- No API change. Hosts that already pass `orderable_url:` need no code change. If drag-reorder stopped saving after the 0.1.124 param rename, upgrade this gem.
+
 ## [0.1.161] - 2026-09-07
 
 ### Changed
