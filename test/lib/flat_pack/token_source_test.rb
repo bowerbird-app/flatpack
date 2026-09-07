@@ -62,6 +62,37 @@ module FlatPack
       assert_includes ocean_block, "--color-primary"
     end
 
+    test "chrome greys alias surface tokens so named themes inherit" do
+      root_block = @css[/^:root \{.*?^\}/m]
+
+      {
+        "--tabs-pill-inactive-text-color" => "var(--surface-muted-content-color)",
+        "--tabs-pill-inactive-hover-background-color" => "var(--surface-muted-background-color)",
+        "--tabs-pill-inactive-hover-text-color" => "var(--surface-content-color)",
+        "--sidebar-item-hover-background-color" => "var(--surface-muted-background-color)",
+        "--top-nav-item-hover-background-color" => "var(--surface-muted-background-color)",
+        "--list-item-hover-background-color" => "var(--surface-muted-background-color)",
+        "--list-item-active-background-color" => "var(--surface-muted-background-color)",
+        "--chat-message-incoming-background-color" => "var(--surface-muted-background-color)",
+        "--chat-message-incoming-text-color" => "var(--surface-content-color)",
+        "--chat-message-incoming-meta-color" => "var(--surface-muted-content-color)",
+        "--avatar-background-color" => "var(--surface-muted-background-color)",
+        "--avatar-text-color" => "var(--surface-content-color)"
+      }.each do |token, value|
+        assert_match(/#{Regexp.escape(token)}:\s*#{Regexp.escape(value)}/, root_block)
+      end
+
+      %w[#4b5563 #dfe5ec #f7f7f7 #e5e7eb #ececec #e6e6e6 #1f2937].each do |hex|
+        refute_includes root_block, hex
+      end
+
+      dark_block = @css[/\[data-theme="dark"\]\s*\{(.*?)\}/m, 1]
+      refute_includes dark_block, "--tabs-pill-inactive-text-color"
+      refute_includes dark_block, "--sidebar-item-hover-background-color"
+      refute_includes dark_block, "--chat-message-incoming-background-color"
+      refute_includes dark_block, "--avatar-background-color"
+    end
+
     private
 
     def token_names(block)

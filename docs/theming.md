@@ -257,6 +257,8 @@ Use `--easing-enter` for modal, toast, dropdown, popover, and tooltip entrance. 
 
 Component tokens such as `--button-primary-background-color` map to semantic tokens (`var(--color-primary)`). You normally change `--brand-hue` / `--brand-chroma` / `--brand-lightness` or `--color-primary` instead of editing component tokens.
 
+Tabs, chat incoming bubbles, sidebar/top-nav hover, list hover, and avatar fallbacks alias `--surface-muted-*` / `--surface-content-color`. Named themes inherit those greys from the surface tokens; do not freeze Tailwind slate hexes on the component tokens.
+
 ### Buttons
 - Colors: `--color-default-*`, `--color-primary-*`, `--color-secondary-*`, `--color-ghost-*`, `--color-success-*`, `--color-warning-*`
 - Radius: `--radius-md`

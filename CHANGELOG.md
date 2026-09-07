@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.156] - 2026-09-07
+
+### Changed
+- Tabs, chat incoming bubbles, sidebar and top-nav hover, list hover, and avatar fallbacks alias `--surface-muted-*` / `--surface-content-color` instead of light-theme grey hexes (`#4b5563`, `#dfe5ec`, `#f7f7f7`, `#e5e7eb`). Dark and ocean inherit those greys from the surface tokens.
+- Bumped the gem version to `0.1.156`.
+
+### Upgrade notes
+- No host app API changes. Component token names are the same.
+- If a host overrode `--tabs-pill-inactive-*`, `--chat-message-incoming-*`, `--sidebar-item-hover-background-color`, `--top-nav-item-hover-background-color`, `--list-item-*-background-color`, or `--avatar-background-color` / `--avatar-text-color` with a hex to match the old kit greys, drop those overrides and let the surface tokens drive them — or keep the hex if you want that frozen colour.
+
 ## [0.1.155] - 2026-09-06
 
 ### Changed
