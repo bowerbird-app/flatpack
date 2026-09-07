@@ -278,7 +278,7 @@ The popup renders as side-by-side quick ranges + calendar on larger screens and 
 
 ## Rich Text Mode
 
-When `rich_text: true` is set on `FlatPack::TextArea::Component`, the native `<textarea>` is replaced with a fully featured [TipTap](https://tiptap.dev) editor. The editor is rendered server-side as empty containers and bootstrapped by the `flat-pack--tiptap` Stimulus controller at runtime.
+When `rich_text: true` is set on `FlatPack::TextArea::Component`, the native `<textarea>` is replaced with a fully featured [TipTap](https://tiptap.dev) editor. The editor is rendered server-side as empty containers and bootstrapped by the `flat-pack--tiptap` Stimulus controller at runtime. Toolbar, bubble, and editor chrome use kit `--radius-md` / `--radius-sm` (with `1rem` / `0.75rem` fallbacks). If host Tailwind loads last, re-set those radii on unlayered `:root` so Tailwind’s `0.375rem` default does not show up as tight editor corners. See [Theming](../theming.md).
 
 `FlatPack::Comments::Composer::Component` and `FlatPack::Comments::InlineInput::Component` both forward `rich_text` and `rich_text_options` directly to this same `TextArea` API, so the toolbar, bubble menu, and preset behavior documented below also apply to those comments components.
 

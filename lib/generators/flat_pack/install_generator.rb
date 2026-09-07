@@ -210,6 +210,7 @@ module FlatPack
           say "  - Added @source directive: #{relative_path}", :green
           say "  - Tokens load from flat_pack/variables (no host-app --color-fp-* fork)", :green
           say "  - Shared names such as --color-primary / --radius-md follow host CSS when it loads last", :green
+          say "  - Re-set kit --radius-* on unlayered :root so Tailwind's 0.375rem default does not win", :green
           say "  - Keep a host-only name (e.g. --my-app-primary) if FlatPack must not reuse --color-primary", :green
           say "\n  File updated: #{tailwind_file.relative_path_from(Rails.root)}", :cyan
           write_tailwind_source_helper
@@ -282,6 +283,9 @@ module FlatPack
         say "Load tokens via stylesheet_link_tag \"flat_pack/variables\" and override"
         say "brand primitives in your app CSS:\n"
         say "  :root { --brand-hue: 160; --brand-chroma: 0.18; --brand-lightness: 0.52; }"
+        say "\nRe-set kit radii on unlayered :root so Tailwind @layer theme does not"
+        say "keep --radius-md at 0.375rem (rich-text chrome follows that token):\n"
+        say "  :root { --radius-sm: 0.75rem; --radius-md: 1rem; --radius-lg: 1.5rem; --radius-xl: 2rem; }"
         say "\nFor complete configuration, see: docs/installation.md", :cyan
         say "=" * 70, :cyan
       end

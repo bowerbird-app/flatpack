@@ -10,10 +10,18 @@
 	--color-warning: var(--color-warning-border);
 }
 
-/* Unlayered so this beats Tailwind @layer theme --font-sans (ui-sans-serif). */
+/* Unlayered so this beats Tailwind @layer theme --font-sans (ui-sans-serif)
+ * and --radius-* (0.25 / 0.375 / 0.5 / 0.75rem). Putting these in @theme
+ * does not replace Tailwind's defaults. var(--radius-md, 1rem) fallbacks
+ * in kit CSS only apply when the token is unset.
+ */
 :root {
 	--font-sans: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
 	--font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+	--radius-sm: 0.75rem;
+	--radius-md: 1rem;
+	--radius-lg: 1.5rem;
+	--radius-xl: 2rem;
 }
 
 @layer base {
