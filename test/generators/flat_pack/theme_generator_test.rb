@@ -24,6 +24,10 @@ module FlatPack
           assert_includes content, "--brand-hue: 35"
           assert_includes content, "--brand-chroma: 0.2"
           assert_includes content, "--brand-lightness: 0.6"
+          assert_includes content, ":root maps those knobs to --color-primary"
+          refute_match(/^\s*--color-primary:/, content)
+          refute_includes content, "uncomment"
+          refute_includes content, "calc(var(--brand-chroma) - 0.02)"
         end
       end
 

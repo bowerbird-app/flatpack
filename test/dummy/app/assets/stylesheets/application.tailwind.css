@@ -171,6 +171,7 @@
 [data-theme="sunrise"] {
 	--brand-hue: 35;
 	--brand-chroma: 0.19;
+	--brand-lightness: 0.52;
 	--surface-background-color: oklch(0.99 0.01 80);
 	--surface-page-background-color: oklch(0.98 0.01 85);
 	--surface-muted-background-color: oklch(0.95 0.02 70);

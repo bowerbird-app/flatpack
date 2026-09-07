@@ -37,6 +37,32 @@ module FlatPack
       end
     end
 
+    test ":root --color-primary follows brand primitives" do
+      root_block = @css[/^:root \{.*?^\}/m]
+
+      refute_nil root_block, "expected a :root block in variables.css"
+      assert_match(
+        /--color-primary:\s*oklch\(var\(--brand-lightness\)\s+var\(--brand-chroma\)\s+var\(--brand-hue\)\);/,
+        root_block
+      )
+      assert_match(
+        /--color-primary-hover:\s*oklch\(calc\(var\(--brand-lightness\) - 0\.10\)\s+var\(--brand-chroma\)\s+var\(--brand-hue\)\);/,
+        root_block
+      )
+      refute_match(/--color-primary:\s*oklch\(0\.3211 0 0\);/, root_block)
+      refute_includes root_block, "calc(var(--brand-chroma) - 0.02)"
+    end
+
+    test "dummy sunrise theme sets brand lightness so primary recolors" do
+      css = Rails.root.join("app/assets/stylesheets/application.tailwind.css").read
+      sunrise = css[/\[data-theme="sunrise"\]\s*\{[^}]*--brand-hue:[^}]*\}/m]
+
+      refute_nil sunrise, "expected a [data-theme=\"sunrise\"] block"
+      assert_includes sunrise, "--brand-hue: 35"
+      assert_includes sunrise, "--brand-chroma: 0.19"
+      assert_includes sunrise, "--brand-lightness: 0.52"
+    end
+
     test "@theme inline names match :root custom properties" do
       theme_names = token_names(@css[/@theme inline \{.*?^\}/m])
       root_names = token_names(@css[/^:root \{.*?^\}/m])
