@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-## [0.1.165] - 2026-09-08
+## [0.1.165] - 2026-09-07
 
 ### Added
 - Kit primitives: Drawer (edge panel), Combobox (searchable single choice), Command palette (Cmd/Ctrl+K), Stepper, Kbd, Skip link, and Spinner.
