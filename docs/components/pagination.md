@@ -50,3 +50,4 @@ None.
 - FlatPack install generator setup (`rails generate flat_pack:install`).
 - Pagy integration in standard mode.
 - Uses `FlatPack::PaginationInfinite::Component` when `mode: :infinite`.
+- Prev/next use `chevron-left` / `chevron-right` via `IconComponent`. Those glyphs flip in `[dir="rtl"]`.

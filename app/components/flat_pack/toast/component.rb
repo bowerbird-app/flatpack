@@ -170,14 +170,7 @@ module FlatPack
           class: dismiss_button_classes,
           aria: {label: "Dismiss"},
           data: {action: "flat-pack--toast#dismiss"}) do
-          content_tag(:svg, class: "w-4 h-4", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor") do
-            tag.path(
-              "stroke-linecap": "round",
-              "stroke-linejoin": "round",
-              "stroke-width": "2",
-              d: "M6 18L18 6M6 6l12 12"
-            )
-          end
+          render FlatPack::Shared::IconComponent.new(name: "x-mark", size: :sm)
         end
       end
 

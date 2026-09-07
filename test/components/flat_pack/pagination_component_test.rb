@@ -22,8 +22,8 @@ module FlatPack
 
         render_inline(Component.new(pagy: pagy))
 
-        assert_selector "a[href='?page=1'][aria-label='Previous page'] svg"
-        assert_selector "a[href='?page=3'][aria-label='Next page'] svg"
+        assert_selector "a[href='?page=1'][aria-label='Previous page'] svg.fp-icon-directional[data-flat-pack--icon-name-value='chevron-left']"
+        assert_selector "a[href='?page=3'][aria-label='Next page'] svg.fp-icon-directional[data-flat-pack--icon-name-value='chevron-right']"
       end
 
       def test_renders_infinite_mode

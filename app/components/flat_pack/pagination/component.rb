@@ -241,25 +241,11 @@ module FlatPack
       end
 
       def previous_icon
-        content_tag(:svg, class: "w-4 h-4", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor") do
-          tag.path(
-            "stroke-linecap": "round",
-            "stroke-linejoin": "round",
-            "stroke-width": "2",
-            d: "M15 19l-7-7 7-7"
-          )
-        end
+        render FlatPack::Shared::IconComponent.new(name: "chevron-left", size: :sm)
       end
 
       def next_icon
-        content_tag(:svg, class: "w-4 h-4", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor") do
-          tag.path(
-            "stroke-linecap": "round",
-            "stroke-linejoin": "round",
-            "stroke-width": "2",
-            d: "M9 5l7 7-7 7"
-          )
-        end
+        render FlatPack::Shared::IconComponent.new(name: "chevron-right", size: :sm)
       end
 
       def validate_pagy!

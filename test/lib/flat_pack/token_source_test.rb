@@ -30,6 +30,7 @@ module FlatPack
       assert_match(/--easing-standard:\s*cubic-bezier/, root_block)
       assert_match(/--button-padding-x-xs:\s*0\.5rem/, root_block)
       assert_match(/--carousel-caption-below-text-color:\s*var\(--surface-muted-content-color\)/, root_block)
+      assert_match(/--icon-stroke-width:\s*1\.5/, root_block)
 
       root_block.scan(/^\s*(--[a-z0-9-]+)\s*:\s*(.+);$/).each do |name, value|
         refute_equal "var(#{name})", value, "#{name} on :root must not be a circular self-reference"

@@ -459,6 +459,7 @@
   --search-result-hover-background-color: var(--search-result-hover-background-color);
   --search-result-divider-color: var(--search-result-divider-color);
   --color-ring: var(--color-ring);
+  --icon-stroke-width: var(--icon-stroke-width);
   --radius-sm: var(--radius-sm);
   --radius-md: var(--radius-md);
   --radius-lg: var(--radius-lg);
@@ -1044,6 +1045,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --shadow-button: 0 8px 18px -8px rgb(0 0 0 / 0.22);
   --shadow-button-active: 0 4px 10px -6px rgb(0 0 0 / 0.28);
   --modal-backdrop-blur: 4px;
+  --icon-stroke-width: 1.5;
   --radius-sm: 0.75rem;
   --radius-md: 1rem;
   --radius-lg: 1.5rem;

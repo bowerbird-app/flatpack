@@ -27,6 +27,12 @@ module FlatPack
         assert_selector "svg[aria-hidden='true']"
       end
 
+      def test_outline_stroke_width_uses_the_icon_token
+        render_inline(IconComponent.new(name: :search))
+
+        assert_includes rendered_content, 'stroke-width="var(--icon-stroke-width, 1.5)"'
+      end
+
       # --- Stimulus controller wiring ------------------------------------------
 
       def test_has_icon_stimulus_controller
@@ -119,6 +125,49 @@ module FlatPack
         refute_includes rendered_content, "translate-y-0.5"
       end
 
+      def test_handle_heavy_icons_get_the_same_optical_nudge
+        %w[paper-airplane pencil pencil-square arrow-up-tray arrow-down-tray].each do |name|
+          render_inline(IconComponent.new(name: name))
+
+          assert_includes CGI.unescapeHTML(rendered_content), "-translate-y-0.5", name
+        end
+      end
+
+      def test_send_alias_gets_the_paper_airplane_nudge
+        render_inline(IconComponent.new(name: :send))
+
+        assert_includes CGI.unescapeHTML(rendered_content), "-translate-y-0.5"
+        assert_selector "svg[data-flat-pack--icon-name-value='paper-airplane']"
+      end
+
+      def test_left_right_travel_icons_are_directional
+        render_inline(IconComponent.new(name: "chevron-left"))
+        assert_selector "svg.fp-icon-directional[data-flat-pack--icon-name-value='chevron-left']"
+
+        render_inline(IconComponent.new(name: "arrow-right"))
+        assert_selector "svg.fp-icon-directional[data-flat-pack--icon-name-value='arrow-right']"
+      end
+
+      def test_alignment_icons_are_directional
+        render_inline(IconComponent.new(name: "align-left"))
+        assert_selector "svg.fp-icon-directional[data-flat-pack--icon-name-value='bars-3-bottom-left']"
+      end
+
+      def test_vertical_chevrons_and_marks_are_not_directional
+        %w[chevron-down chevron-up x-mark check].each do |name|
+          render_inline(IconComponent.new(name: name))
+
+          refute_includes rendered_content, "fp-icon-directional", name
+        end
+      end
+
+      def test_chat_bubble_tails_are_not_directional
+        render_inline(IconComponent.new(name: :chat))
+
+        assert_selector "svg[data-flat-pack--icon-name-value='chat-bubble-left-ellipsis']"
+        refute_includes rendered_content, "fp-icon-directional"
+      end
+
       def test_lg_size
         render_inline(IconComponent.new(name: :search, size: :lg))
         assert_selector "svg.w-6.h-6"
@@ -168,9 +217,22 @@ module FlatPack
         assert_selector "svg.text-red-500"
       end
 
+      def test_hidden_class_wins_over_block
+        render_inline(IconComponent.new(name: "eye-slash", class: "hidden"))
+
+        assert_selector "svg.hidden"
+        class_attr = page.find("svg")[:class].to_s
+        refute_match(/(?:^|\s)block(?:\s|$)/, class_attr)
+      end
+
       def test_accepts_data_attributes
         render_inline(IconComponent.new(name: :search, data: {testid: "my-icon"}))
         assert_selector "svg[data-testid='my-icon']"
+      end
+
+      def test_nil_data_does_not_raise
+        render_inline(IconComponent.new(name: :search, data: nil))
+        assert_selector "svg[data-controller='flat-pack--icon']"
       end
 
       def test_accepts_fp_red_dot_utility_class

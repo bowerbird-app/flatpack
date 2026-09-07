@@ -117,6 +117,21 @@
     font-variant-numeric: tabular-nums;
   }
 
+  /* Outline icons follow --icon-stroke-width (Heroicons 1.5). Solid/mini/micro
+   * drop the stroke attribute in icon_controller, so this does not thicken fills.
+   */
+  svg[data-controller~="flat-pack--icon"][stroke] {
+    stroke-width: var(--icon-stroke-width, 1.5);
+  }
+
+  /* Mirror travel/alignment glyphs in RTL. Uses the CSS scale property so
+   * optical translate nudges on transform still apply. Do not flip vertical
+   * chevrons, checks, or chat-bubble tails (those stay via IconComponent).
+   */
+  [dir="rtl"] .fp-icon-directional {
+    scale: -1 1;
+  }
+
   /* Danger dot overlay for SVG icons. */
   svg.fp-red-dot {
     overflow: visible;
