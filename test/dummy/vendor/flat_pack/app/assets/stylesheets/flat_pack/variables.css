@@ -934,7 +934,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --top-nav-item-active-text-color: var(--color-primary-text);
   --top-nav-item-active-icon-color: var(--color-primary-text);
   --search-icon-color: var(--surface-muted-content-color);
-  --search-input-background-color: var(--surface-muted-background-color);
+  --search-input-background-color: var(--surface-background-color);
   --search-input-border-color: var(--surface-border-hover-color);
   --search-input-text-color: var(--surface-content-color);
   --search-input-placeholder-color: var(--surface-muted-content-color);

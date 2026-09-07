@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.164] - 2026-09-07
+
+### Changed
+- Default Search idle fill (`--search-input-background-color`) now aliases `--surface-background-color` instead of `--surface-muted-background-color`.
+- Bumped the gem version to `0.1.164`.
+
+### Upgrade notes
+- Hosts that override `--search-input-background-color` are unchanged. Hosts that relied on the muted grey default will see a surface fill after upgrade.
+- Rebuild host Tailwind only if you `@import` `flat_pack/application`. SearchInput and form controls are unchanged.
+
 ## [0.1.163] - 2026-09-07
 
 ### Fixed

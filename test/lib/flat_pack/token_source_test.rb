@@ -79,7 +79,8 @@ module FlatPack
         "--chat-message-incoming-text-color" => "var(--surface-content-color)",
         "--chat-message-incoming-meta-color" => "var(--surface-muted-content-color)",
         "--avatar-background-color" => "var(--surface-muted-background-color)",
-        "--avatar-text-color" => "var(--surface-content-color)"
+        "--avatar-text-color" => "var(--surface-content-color)",
+        "--search-input-background-color" => "var(--surface-background-color)"
       }.each do |token, value|
         assert_match(/#{Regexp.escape(token)}:\s*#{Regexp.escape(value)}/, root_block)
       end
