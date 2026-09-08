@@ -445,7 +445,7 @@
 }
 
 .fp-range-input:hover:not(:disabled) {
-  --range-thumb-shadow: var(--shadow-md);
+  --range-thumb-shadow: var(--shadow-lg);
 }
 
 .fp-range-input::-webkit-slider-runnable-track {
