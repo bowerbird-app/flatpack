@@ -30,6 +30,11 @@ module FlatPack
       assert_match(/--easing-standard:\s*cubic-bezier/, root_block)
       assert_match(/--button-padding-x-xs:\s*0\.5rem/, root_block)
       assert_match(/--carousel-caption-below-text-color:\s*var\(--surface-muted-content-color\)/, root_block)
+      assert_match(/--hero-overlay-background-color:\s*rgb\(0 0 0 \/ 0\.6\)/, root_block)
+      assert_match(/--carousel-media-background-color:\s*oklch\(0 0 0\)/, root_block)
+      assert_match(/--carousel-lightbox-image-background-color:\s*rgb\(0 0 0 \/ 0\.2\)/, root_block)
+      assert_match(/--badge-remove-hover-background-color:\s*var\(--chip-remove-hover-background-color\)/, root_block)
+      assert_match(/--picker-badge-background-color:\s*rgb\(0 0 0 \/ 0\.55\)/, root_block)
       assert_match(/--icon-stroke-width:\s*1\.5/, root_block)
 
       root_block.scan(/^\s*(--[a-z0-9-]+)\s*:\s*(.+);$/).each do |name, value|

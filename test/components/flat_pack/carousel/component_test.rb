@@ -86,8 +86,8 @@ module FlatPack
         indicators = footer.find("button[data-flat-pack--carousel-target='indicator']", match: :first, visible: :all)
 
         assert_includes counter[:class], "justify-self-end"
-        assert_includes counter[:class], "bg-[rgba(0,0,0,0.5)]"
-        assert_includes counter[:class], "text-white"
+        assert_includes counter[:class], "bg-[var(--carousel-counter-background-color)]"
+        assert_includes counter[:class], "text-[var(--carousel-counter-text-color)]"
         assert_includes indicators.find(:xpath, "ancestor::div[1]")[:class], "rounded-full"
       end
 
@@ -101,9 +101,9 @@ module FlatPack
         assert_includes control_classes, "aspect-square"
         assert_includes control_classes, "flex"
         assert_includes control_classes, "cursor-pointer"
-        assert_includes control_classes, "bg-[rgba(0,0,0,0.5)]"
-        assert_includes control_classes, "hover:bg-[rgba(0,0,0,0.75)]"
-        assert_includes control_classes, "text-white"
+        assert_includes control_classes, "bg-[var(--carousel-control-background-color)]"
+        assert_includes control_classes, "hover:bg-[var(--carousel-control-hover-background-color)]"
+        assert_includes control_classes, "text-[var(--carousel-control-text-color)]"
         assert_selector "button[data-action='click->flat-pack--carousel#prev'] svg[data-flat-pack--icon-name-value='chevron-left']", visible: :all
         assert_selector "button[data-action='click->flat-pack--carousel#next'] svg[data-flat-pack--icon-name-value='chevron-right']", visible: :all
         assert_selector "button[data-action='click->flat-pack--carousel#prev'] svg.pointer-events-none", visible: :all
@@ -142,9 +142,9 @@ module FlatPack
         lightbox_toggle = page.find("button[data-flat-pack--carousel-target='lightboxToggle'][data-action='click->flat-pack--carousel#openLightbox']", visible: :all)
 
         assert_includes lightbox_toggle[:class], "top-3"
-        assert_includes lightbox_toggle[:class], "bg-[rgba(0,0,0,0.5)]"
-        assert_includes lightbox_toggle[:class], "hover:bg-[rgba(0,0,0,0.75)]"
-        assert_includes lightbox_toggle[:class], "text-white"
+        assert_includes lightbox_toggle[:class], "bg-[var(--carousel-control-background-color)]"
+        assert_includes lightbox_toggle[:class], "hover:bg-[var(--carousel-control-hover-background-color)]"
+        assert_includes lightbox_toggle[:class], "text-[var(--carousel-control-text-color)]"
         refute_includes lightbox_toggle[:class], "top-12"
         assert_selector "button[data-flat-pack--carousel-target='lightboxToggle'] svg[data-flat-pack--icon-name-value='arrows-pointing-out']", visible: :all
       end
@@ -161,6 +161,7 @@ module FlatPack
         assert_includes image_classes, "h-auto"
         assert_includes image_classes, "max-w-[90vw]"
         assert_includes image_classes, "max-h-[90vh]"
+        assert_includes image_classes, "bg-[var(--carousel-lightbox-image-background-color)]"
         refute_includes image_classes, "w-full"
         assert_includes figure_classes, "inline-flex"
         assert_includes figure_classes, "max-w-full"
@@ -391,10 +392,11 @@ module FlatPack
         assert_includes rendered_content, "<img src=\"https://images.example.com/poster.jpg\""
         assert_includes rendered_content, "class=\"absolute inset-0 h-full w-full object-cover pointer-events-none\""
         assert_includes rendered_content, "aria-hidden=\"true\""
-        assert_selector "video.absolute.inset-0.z-10.block.h-full.w-full.bg-black.object-contain", visible: :all
+        video = page.find("video", visible: :all)
+        assert_includes video[:class], "bg-[var(--carousel-media-background-color)]"
+        assert_includes video[:class], "object-contain"
         assert_selector "video source[src='https://videos.example.com/two.mp4'][type='video/mp4']", visible: :all
 
-        video = page.find("video.absolute.inset-0.z-10.block.h-full.w-full.bg-black.object-contain", visible: :all)
         assert_nil video[:poster]
         assert_equal "width: 100%; height: 100%; object-fit: contain;", video[:style]
       end

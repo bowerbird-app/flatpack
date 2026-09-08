@@ -46,6 +46,7 @@ None.
 ## Accessibility
 - Badge text is always visible so color is not the only status signal.
 - Removable mode uses a button with `aria-label="Remove"`.
+- Remove-button hover uses `--badge-remove-hover-background-color`, which aliases `--chip-remove-hover-background-color`.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).

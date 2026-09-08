@@ -24,7 +24,7 @@
       Standard form submission using POST method for creating new resources.
     </p>
     
-    <%= form_with url: demo_forms_create_path, method: :post, local: true, class: "space-y-4 p-6 border border-[var(--surface-border-color)] rounded-lg bg-[var(--color-card)]" do |f| %>
+    <%= form_with url: demo_forms_create_path, method: :post, local: true, class: "space-y-4 p-6 border border-[var(--surface-border-color)] rounded-lg bg-[var(--card-background-color)]" do |f| %>
       <div>
         <%= render FlatPack::TextInput::Component.new(
           label: "Name",
@@ -96,7 +96,7 @@
       Update form using PATCH method for modifying existing resources.
     </p>
     
-    <%= form_with url: demo_forms_update_path, method: :patch, local: true, class: "space-y-4 p-6 border border-[var(--surface-border-color)] rounded-lg bg-[var(--color-card)]" do |f| %>
+    <%= form_with url: demo_forms_update_path, method: :patch, local: true, class: "space-y-4 p-6 border border-[var(--surface-border-color)] rounded-lg bg-[var(--card-background-color)]" do |f| %>
       <div>
         <%= render FlatPack::TextInput::Component.new(
           label: "Name",
@@ -189,7 +189,7 @@
       Update form using PUT method as an alternative to PATCH.
     </p>
     
-    <%= form_with url: demo_forms_update_path, method: :put, local: true, class: "space-y-4 p-6 border border-[var(--surface-border-color)] rounded-lg bg-[var(--color-card)]" do |f| %>
+    <%= form_with url: demo_forms_update_path, method: :put, local: true, class: "space-y-4 p-6 border border-[var(--surface-border-color)] rounded-lg bg-[var(--card-background-color)]" do |f| %>
       <div>
         <%= render FlatPack::TextInput::Component.new(
           label: "Username",
@@ -256,7 +256,7 @@
       Deletion form using DELETE method. Typically used with confirmation dialogs.
     </p>
     
-    <%= form_with url: demo_forms_destroy_path, method: :delete, local: true, class: "space-y-4 p-6 border border-[var(--surface-border-color)] rounded-lg bg-[var(--color-card)]" do |f| %>
+    <%= form_with url: demo_forms_destroy_path, method: :delete, local: true, class: "space-y-4 p-6 border border-[var(--surface-border-color)] rounded-lg bg-[var(--card-background-color)]" do |f| %>
       <div class="p-4 bg-[var(--color-warning-background-color)]/10 border border-[var(--color-warning-border)] rounded">
         <p class="text-sm font-medium mb-2">⚠️ Warning</p>
         <p class="text-sm text-[var(--surface-muted-content-color)]">
@@ -315,7 +315,7 @@
       Different styles and sizes of submit buttons within forms.
     </p>
     
-    <%= form_with url: demo_forms_create_path, method: :post, local: true, class: "space-y-6 p-6 border border-[var(--surface-border-color)] rounded-lg bg-[var(--color-card)]" do |f| %>
+    <%= form_with url: demo_forms_create_path, method: :post, local: true, class: "space-y-6 p-6 border border-[var(--surface-border-color)] rounded-lg bg-[var(--card-background-color)]" do |f| %>
       <div>
         <h3 class="font-semibold mb-3">Different Styles</h3>
         <div class="flex flex-wrap gap-2">
@@ -437,7 +437,7 @@
       Forms can have multiple submit buttons with different actions.
     </p>
     
-    <%= form_with url: demo_forms_create_path, method: :post, local: true, class: "space-y-4 p-6 border border-[var(--surface-border-color)] rounded-lg bg-[var(--color-card)]" do |f| %>
+    <%= form_with url: demo_forms_create_path, method: :post, local: true, class: "space-y-4 p-6 border border-[var(--surface-border-color)] rounded-lg bg-[var(--card-background-color)]" do |f| %>
       <div>
         <%= render FlatPack::TextInput::Component.new(
           label: "Content",
@@ -500,7 +500,7 @@
       Understanding the difference between button types: submit, button, and reset.
     </p>
     
-    <%= form_with url: demo_forms_create_path, method: :post, local: true, class: "space-y-4 p-6 border border-[var(--surface-border-color)] rounded-lg bg-[var(--color-card)]" do |f| %>
+    <%= form_with url: demo_forms_create_path, method: :post, local: true, class: "space-y-4 p-6 border border-[var(--surface-border-color)] rounded-lg bg-[var(--card-background-color)]" do |f| %>
       <div>
         <%= render FlatPack::TextInput::Component.new(
           label: "Example Input",
