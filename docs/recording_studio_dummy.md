@@ -80,3 +80,20 @@ bin/rails server
 ```
 
 Database defaults: Postgres on localhost, user/password `postgres`/`postgres`, DBs `flatpack_dummy_development` and `flatpack_dummy_test`.
+
+## Tunnel (ChatGPT / external MCP)
+
+Development allows `*.trycloudflare.com` and assumes SSL behind the proxy so OAuth discovery stays on `https://`.
+
+```bash
+cd test/dummy
+bin/rails server
+cloudflared tunnel --url http://127.0.0.1:3000
+```
+
+Use the printed `https://….trycloudflare.com` URL:
+
+- MCP: `https://….trycloudflare.com/recording_studio_mcp`
+- Discovery: `https://….trycloudflare.com/.well-known/oauth-authorization-server`
+
+Register the ChatGPT redirect on the OauthClient (`https://chatgpt.com/connector_platform_oauth_redirect`, or the exact URL ChatGPT shows). This stack does not do DCR — use a pre-registered public client.

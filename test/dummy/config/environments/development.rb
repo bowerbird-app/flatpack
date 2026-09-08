@@ -56,6 +56,12 @@ Rails.application.configure do
   # Allow GitHub Codespaces hosts
   config.hosts << /.*\.app\.github\.dev/
 
+  # Cloudflare quick tunnels (cloudflared tunnel --url)
+  config.hosts << /.*\.trycloudflare\.com/
+
+  # Trust Cloudflare / reverse-proxy HTTPS so OAuth discovery issuer URLs stay https://
+  config.assume_ssl = true
+
   # Devise requires default_url_options in development
   config.action_mailer.default_url_options = {host: "localhost", port: 3000}
 
