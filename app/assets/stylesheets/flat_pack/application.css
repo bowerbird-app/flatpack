@@ -417,6 +417,119 @@
 
 }
 
+/* Unlayered so appearance:none beats the UA range chrome. Pseudo-elements for
+ * WebKit and Firefox cannot share a rule: the whole block is dropped if one
+ * engine does not understand the other selector.
+ */
+.fp-range-input {
+  --range-progress: 0%;
+  appearance: none;
+  -webkit-appearance: none;
+  display: block;
+  width: 100%;
+  height: var(--hit-target-min);
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.fp-range-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.fp-range-input:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+}
+
+.fp-range-input:hover:not(:disabled) {
+  --range-thumb-shadow: var(--shadow-md);
+}
+
+.fp-range-input::-webkit-slider-runnable-track {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: var(--range-track-height);
+  border: 0;
+  border-radius: 9999px;
+  background-color: var(--range-track-color);
+  background-image: linear-gradient(var(--range-fill-color), var(--range-fill-color));
+  background-repeat: no-repeat;
+  background-size: var(--range-progress) 100%;
+  background-position: left center;
+}
+
+[dir="rtl"] .fp-range-input::-webkit-slider-runnable-track {
+  background-position: right center;
+}
+
+.fp-range-input::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: var(--range-thumb-size);
+  height: var(--range-thumb-size);
+  margin-top: calc((var(--range-track-height) - var(--range-thumb-size)) / 2);
+  border: 2px solid var(--range-thumb-border-color);
+  border-radius: 9999px;
+  background: var(--range-thumb-color);
+  box-shadow: var(--range-thumb-shadow);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--easing-standard),
+    border-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard);
+}
+
+.fp-range-input:disabled::-webkit-slider-thumb {
+  cursor: not-allowed;
+}
+
+.fp-range-input::-moz-range-track {
+  height: var(--range-track-height);
+  border: 0;
+  border-radius: 9999px;
+  background: var(--range-track-color);
+}
+
+.fp-range-input::-moz-range-progress {
+  height: var(--range-track-height);
+  border: 0;
+  border-radius: 9999px;
+  background: var(--range-fill-color);
+}
+
+.fp-range-input::-moz-range-thumb {
+  appearance: none;
+  width: var(--range-thumb-size);
+  height: var(--range-thumb-size);
+  border: 2px solid var(--range-thumb-border-color);
+  border-radius: 9999px;
+  background: var(--range-thumb-color);
+  box-shadow: var(--range-thumb-shadow);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--easing-standard),
+    border-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard);
+}
+
+.fp-range-input:disabled::-moz-range-thumb {
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fp-range-input::-webkit-slider-thumb {
+    transition: none;
+  }
+
+  .fp-range-input::-moz-range-thumb {
+    transition: none;
+  }
+}
+
 ol.flat-pack-list {
   counter-reset: flat-pack-list-item;
   list-style: none;

@@ -27,6 +27,7 @@ class ThemesController < ApplicationController
     "Skip link" => [/\A--skip-link-/],
     "Stepper" => [/\A--stepper-/],
     "Progress" => [/\A--progress-/],
+    "Range Input" => [/\A--range-/],
     "Popovers" => [/\A--popover-/],
     "Tooltips" => [/\A--tooltip-/],
     "Switch" => [/\A--switch-/],
@@ -267,6 +268,8 @@ class ThemesController < ApplicationController
       "Stepper"
     when /\A--progress-/
       "Progress"
+    when /\A--range-/
+      "Range input"
     when /\A--popover-/
       "Popover"
     when /\A--tooltip-/

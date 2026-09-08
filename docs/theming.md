@@ -307,6 +307,14 @@ Use `--easing-enter` for modal, drawer, command palette, toast, dropdown, popove
 --progress-success-fill-color
 --progress-warning-fill-color
 --progress-danger-fill-color
+
+--range-track-color
+--range-fill-color
+--range-thumb-color
+--range-thumb-border-color
+--range-thumb-shadow
+--range-thumb-size
+--range-track-height
 ```
 
 Drawer tokens alias Modal. Keyboard, skip link, and stepper tokens alias surface and brand colours so named themes inherit. Hero overlay, carousel media/controls, picker grid badges, and badge remove-hover are themeable instead of hardcoded black/white Tailwind utilities.
@@ -315,7 +323,7 @@ Drawer tokens alias Modal. Keyboard, skip link, and stepper tokens alias surface
 
 Component tokens such as `--button-primary-background-color` map to semantic tokens (`var(--color-primary)`). You normally change `--brand-hue` / `--brand-chroma` / `--brand-lightness` or `--color-primary` instead of editing component tokens.
 
-Alert and toast success/warning/danger wash the status fill into the surface (`color-mix` at 18%) and keep chroma on the icon and border. Info toasts alias the quiet info alert, not `--color-primary`. Buttons, badges, chips, and progress keep the filled `--color-success-*` / `--color-warning-*` / `--color-danger-*` paints. Progress reads those fills through `--progress-*-fill-color` and `.fp-progress-fill`, not Tailwind `bg-primary`.
+Alert and toast success/warning/danger wash the status fill into the surface (`color-mix` at 18%) and keep chroma on the icon and border. Info toasts alias the quiet info alert, not `--color-primary`. Buttons, badges, chips, and progress keep the filled `--color-success-*` / `--color-warning-*` / `--color-danger-*` paints. Progress reads those fills through `--progress-*-fill-color` and `.fp-progress-fill`, not Tailwind `bg-primary`. Range input paints the native slider through `.fp-range-input` and `--range-*` tokens, not `accent-color`.
 
 Tabs, chat incoming bubbles, sidebar/top-nav hover, list hover, and avatar fallbacks alias `--surface-muted-*` / `--surface-content-color`. Named themes inherit those greys from the surface tokens; do not freeze Tailwind slate hexes on the component tokens.
 
@@ -331,6 +339,12 @@ Tabs, chat incoming bubbles, sidebar/top-nav hover, list hover, and avatar fallb
 - Radius: `--radius-md`
 - Duration: `--duration-base`
 - Easing: `--easing-standard` (invalid chrome is colour only; no shake)
+
+### Range Input
+- Kit class: `.fp-range-input`
+- Track / fill / thumb: `--range-track-color`, `--range-fill-color`, `--range-thumb-color`, `--range-thumb-border-color`, `--range-thumb-shadow`
+- Size: `--range-track-height`, `--range-thumb-size` (hit target is `--hit-target-min`)
+- Runtime fill: `--range-progress` on the input (percentage). Not a theme token.
 
 ### Checkbox
 - Colors: `--surface-background-color`, `--surface-border-color`, `--color-primary`, `--color-ring`
