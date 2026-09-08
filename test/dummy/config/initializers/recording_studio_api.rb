@@ -18,7 +18,7 @@ end
 
 RecordingStudioApi.register_recordable_type_api(
   "Workspace",
-  serializer: ->(recordable, **) { { name: recordable.name } },
+  serializer: ->(recordable, **) { {name: recordable.name} },
   output_keys: %i[name],
   writable_attributes: %i[name],
   operations: %i[index show create update],
@@ -27,7 +27,7 @@ RecordingStudioApi.register_recordable_type_api(
 
 RecordingStudioApi.register_recordable_type_api(
   "Folder",
-  serializer: ->(recordable, **) { { name: recordable.name } },
+  serializer: ->(recordable, **) { {name: recordable.name} },
   output_keys: %i[name],
   writable_attributes: %i[name],
   operations: %i[index show create update]
@@ -35,7 +35,7 @@ RecordingStudioApi.register_recordable_type_api(
 
 RecordingStudioApi.register_recordable_type_api(
   "Page",
-  serializer: ->(recordable, **) { { title: recordable.title } },
+  serializer: ->(recordable, **) { {title: recordable.title} },
   output_keys: %i[title],
   writable_attributes: %i[title],
   operations: %i[index show create update]
@@ -45,7 +45,7 @@ module Dummy
   class PingWorkspace
     def self.call(context)
       context.access_grant.authorize!(recording: context.recording, role: :view)
-      { json: { ok: true, id: context.recording.id } }
+      {json: {ok: true, id: context.recording.id}}
     end
   end
 end
@@ -58,7 +58,7 @@ RecordingStudioApi.register_capability_action(
   required_role: :view,
   input_contract: {
     fields: {
-      style: { type: :string, required: false, enum: %w[quiet loud] }
+      style: {type: :string, required: false, enum: %w[quiet loud]}
     }
   },
   handler: Dummy::PingWorkspace

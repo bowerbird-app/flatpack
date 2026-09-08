@@ -46,7 +46,7 @@ def internal_route?(path)
   routes.any? do |route_set|
     route_set.recognize_path(path, method: :get)
     true
-  rescue StandardError
+  rescue
     false
   end
 end
