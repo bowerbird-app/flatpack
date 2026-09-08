@@ -56,6 +56,7 @@ class PagesController < ApplicationController
     {action: /\Akbd\z/, title: "Keyboard", patterns: [/\A--kbd-/]},
     {action: /\Askip_link\z/, title: "Skip link", patterns: [/\A--skip-link-/]},
     {action: /\Astepper\z/, title: "Stepper", patterns: [/\A--stepper-/]},
+    {action: /\Aprogress\z/, title: "Progress", patterns: [/\A--progress-/]},
     {action: /\Aspinner\z/, title: "Spinner", patterns: []},
     {action: /\Apopovers\z/, title: "Popovers", patterns: [/\A--popover-/]},
     {action: /\Atooltips\z/, title: "Tooltips", patterns: [/\A--tooltip-/]},

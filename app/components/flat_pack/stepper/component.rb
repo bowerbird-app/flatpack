@@ -84,16 +84,8 @@ module FlatPack
         end
       end
 
-      def marker_classes(status)
-        base = "relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border"
-        case status
-        when :complete
-          "#{base} border-[var(--stepper-complete-color)] bg-[var(--stepper-complete-color)] text-[var(--color-success-text)]"
-        when :current
-          "#{base} border-[var(--stepper-current-color)] bg-[var(--stepper-current-color)] text-[var(--color-primary-text)]"
-        else
-          "#{base} border-[var(--stepper-upcoming-color)] bg-[var(--surface-background-color)] text-[var(--stepper-muted-color)]"
-        end
+      def marker_classes(_status)
+        "fp-stepper-marker relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border"
       end
 
       def render_copy(step, status)

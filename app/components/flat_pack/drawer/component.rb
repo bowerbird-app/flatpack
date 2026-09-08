@@ -31,7 +31,7 @@ module FlatPack
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "max-w-sm" "max-w-md" "max-w-lg" "max-h-[70vh]" "max-h-[85vh]" "h-[90vh]"
+      # "max-w-sm" "max-w-md" "max-w-lg" "max-h-[70vh]" "max-h-[85vh]" "h-[90vh]" "z-[70]"
       SIDES = %i[left right bottom].freeze
       SIZES = %i[sm md lg].freeze
 
@@ -92,7 +92,7 @@ module FlatPack
 
       def root_classes
         classes(
-          "fixed inset-0 z-50 hidden",
+          "fixed inset-0 z-[70] hidden",
           "fp-drawer-backdrop",
           "bg-[var(--drawer-backdrop-color)]",
           "backdrop-blur-[var(--drawer-backdrop-blur)]",

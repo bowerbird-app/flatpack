@@ -13,7 +13,8 @@ module FlatPack
         html = page.native.to_html
 
         assert_includes html, "data-controller=\"flat-pack--drawer\""
-        assert_includes html, "fp-overlay-pad"
+        assert_includes html, "z-[70]"
+        refute_includes html, "fixed inset-0 z-50 hidden"
         assert_includes html, "fp-drawer-body"
         assert_selector "[role='dialog'][aria-modal='true']"
         assert_selector "h2", text: "Filters"

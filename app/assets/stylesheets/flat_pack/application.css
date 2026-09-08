@@ -120,6 +120,40 @@
     font-variant-numeric: tabular-nums;
   }
 
+  .fp-progress-fill {
+    background-color: var(--progress-fill-color);
+  }
+
+  .fp-progress-fill--success {
+    background-color: var(--progress-success-fill-color);
+  }
+
+  .fp-progress-fill--warning {
+    background-color: var(--progress-warning-fill-color);
+  }
+
+  .fp-progress-fill--danger {
+    background-color: var(--progress-danger-fill-color);
+  }
+
+  .fp-stepper-marker {
+    border-color: var(--stepper-upcoming-color);
+    background-color: var(--surface-background-color);
+    color: var(--stepper-muted-color);
+  }
+
+  li[data-status="complete"] > .fp-stepper-marker {
+    border-color: var(--stepper-complete-color);
+    background-color: var(--stepper-complete-color);
+    color: var(--stepper-complete-text-color);
+  }
+
+  li[data-status="current"] > .fp-stepper-marker {
+    border-color: var(--stepper-current-color);
+    background-color: var(--stepper-current-color);
+    color: var(--color-primary-text);
+  }
+
   .fp-text-balance {
     text-wrap: balance;
   }
@@ -410,6 +444,23 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-marke
 ol.flat-pack-list > li > .flat-pack-list-item-marker::before,
 ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-marker::before {
   content: counter(flat-pack-list-item) ".";
+}
+
+.flat-pack-list-item-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  color: var(--surface-content-color);
+}
+
+.flat-pack-list-item-icon svg {
+  display: block;
+  flex-shrink: 0;
+}
+
+ol.flat-pack-list > li > .flat-pack-list-item-icon,
+ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon {
+  display: inline-flex;
 }
 
 @keyframes fp-skeleton-shimmer {
