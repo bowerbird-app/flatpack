@@ -151,12 +151,11 @@ test('close restores the overlay to the slot marker', () => {
   assert.equal(slots[0].removed, true)
 })
 
-test('disconnect during a move does not restore the overlay', () => {
+test('disconnect while the overlay is on the body leaves it there', () => {
   const { controller, element, body } = buildController()
 
   controller.connect()
   controller.open()
-  controller.moving = true
   controller.disconnect()
 
   assert.equal(element.parentElement, body)

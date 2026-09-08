@@ -27,6 +27,10 @@ export default class extends Controller {
   disconnect() {
     document.removeEventListener("click", this.handleDocumentTriggerClick)
     this.clearHideTimeout()
+    if (this.element.parentElement === document.body) {
+      if (!this.element.classList.contains("hidden")) this.restoreBodyScroll()
+      return
+    }
     if (this.moving) return
     if (!this.element.classList.contains("hidden")) {
       this.restoreBodyScroll()
