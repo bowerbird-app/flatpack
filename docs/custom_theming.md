@@ -450,11 +450,12 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --toast-border-radius: var(--radius-md);
   --toast-padding: 1rem;
   --toast-shadow: var(--shadow-lg);
-  --toast-dismiss-text-color: currentColor;
-  --toast-dismiss-hover-text-color: currentColor;
-  --toast-danger-dismiss-background-color: color-mix(in oklab, var(--toast-danger-text-color) 16%, transparent);
-  --toast-danger-dismiss-hover-background-color: color-mix(in oklab, var(--toast-danger-text-color) 24%, transparent);
-  --toast-danger-dismiss-text-color: var(--toast-danger-text-color);
+  --toast-dismiss-text-color: var(--surface-muted-content-color);
+  --toast-dismiss-hover-text-color: var(--surface-content-color);
+  --toast-dismiss-hover-background-color: color-mix(in oklab, currentColor 8%, transparent);
+  --toast-danger-dismiss-background-color: transparent;
+  --toast-danger-dismiss-hover-background-color: var(--toast-dismiss-hover-background-color);
+  --toast-danger-dismiss-text-color: var(--toast-dismiss-text-color);
   --toast-info-background-color: var(--alert-info-background-color);
   --toast-info-border-color: var(--alert-info-border-color);
   --toast-info-text-color: var(--alert-info-text-color);

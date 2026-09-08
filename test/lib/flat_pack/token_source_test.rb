@@ -149,6 +149,18 @@ module FlatPack
 
       refute_match(/--alert-success-background-color:\s*var\(--color-success-background-color\)/, root_block)
       refute_match(/--toast-info-background-color:\s*var\(--color-primary\)/, root_block)
+      assert_match(
+        /--toast-dismiss-text-color:\s*var\(--surface-muted-content-color\)/,
+        root_block
+      )
+      assert_match(
+        /--toast-dismiss-hover-background-color:\s*color-mix\(in oklab, currentColor 8%, transparent\)/,
+        root_block
+      )
+      refute_match(
+        /--toast-danger-dismiss-background-color:\s*color-mix\(in oklab, var\(--toast-danger-text-color\)/,
+        root_block
+      )
     end
 
     private

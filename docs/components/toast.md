@@ -1,7 +1,7 @@
 # Toast
 
 ## Purpose
-Show transient status notifications with optional auto-dismiss and manual dismissal. Styles match Alert: tinted surfaces, not filled status paints. Info uses the quiet info alert tokens, not `--color-primary`.
+Show transient status notifications with optional auto-dismiss and manual dismissal. Styles match Alert: tinted surfaces, not filled status paints. Info uses the quiet info alert tokens, not `--color-primary`. The close control is a centered ghost X on every style.
 
 ## When to use
 Use Toast for non-blocking feedback such as success confirmations, warnings, and lightweight errors.
