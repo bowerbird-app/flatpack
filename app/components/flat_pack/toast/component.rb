@@ -9,7 +9,7 @@ module FlatPack
       # "border-[var(--toast-success-border-color)]" "bg-[var(--toast-success-background-color)]" "text-[var(--toast-success-text-color)]" "text-[var(--toast-success-icon-color)]"
       # "border-[var(--toast-warning-border-color)]" "bg-[var(--toast-warning-background-color)]" "text-[var(--toast-warning-text-color)]" "text-[var(--toast-warning-icon-color)]"
       # "border-[var(--toast-danger-border-color)]" "bg-[var(--toast-danger-background-color)]" "text-[var(--toast-danger-text-color)]" "text-[var(--toast-danger-icon-color)]"
-      # "text-[var(--toast-dismiss-text-color)]" "hover:text-[var(--toast-dismiss-hover-text-color)]" "hover:bg-[var(--toast-dismiss-hover-background-color)]"
+      # "text-[var(--toast-dismiss-text-color)]" "hover:text-[var(--toast-dismiss-hover-text-color)]" "hover:bg-[var(--toast-dismiss-hover-background-color)]" "pointer-events-auto"
       STYLES = {
         info: {
           border: "border-[var(--toast-info-border-color)]",
@@ -84,7 +84,8 @@ module FlatPack
         type_styles = STYLES.fetch(@style)
         classes(
           "flex",
-          "items-start",
+          "items-center",
+          "pointer-events-auto",
           "gap-3",
           "p-[var(--toast-padding)]",
           "rounded-[var(--toast-border-radius)]",
@@ -184,8 +185,8 @@ module FlatPack
           "cursor-pointer",
           "transition-colors",
           "rounded-[var(--radius-sm)]",
-          "p-1",
-          "fp-hit-target",
+          "p-1.5",
+          "fp-hit-slop",
           "text-[var(--toast-dismiss-text-color)]",
           "hover:text-[var(--toast-dismiss-hover-text-color)]",
           "hover:bg-[var(--toast-dismiss-hover-background-color)]",

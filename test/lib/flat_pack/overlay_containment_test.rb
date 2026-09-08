@@ -9,6 +9,8 @@ module FlatPack
 
       assert_includes css, "touch-action: manipulation"
       assert_includes css, ".fp-touch-manipulation"
+      assert_includes css, ".fp-hit-slop"
+      assert_includes css, ".fp-hit-slop::after"
       assert_includes css, ".fp-overlay-pad"
       assert_includes css, ".fp-top-nav"
       assert_includes css, ".fp-toast-region"

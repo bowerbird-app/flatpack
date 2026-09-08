@@ -21,14 +21,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bumped the gem version to `0.1.167`.
 
 ### Fixed
-- Toast close is a centered ghost control on every style. The danger close no longer sits in a 44px filled chip left over from the solid-red toast.
+- Toast close is a compact centered ghost X on every style. The danger close no longer sits in a filled chip. `.fp-hit-slop` keeps the 44px hit without growing the painted box to 44px.
 
 ### Upgrade notes
 - Buttons, badges, chips, and progress still use the filled `--color-success-*` / `--color-warning-*` / `--color-danger-*` paints.
 - Hosts that already set `--alert-*` / `--toast-*` are unchanged. Hosts that wanted filled alerts must set those component tokens back to the semantic fills.
 - Named kit themes inherit the washes from `:root` because they still override the semantic fills, not `--alert-*`.
 - `--toast-danger-dismiss-*` now alias the shared `--toast-dismiss-*` tokens. Hosts that painted a danger-only close chip should set `--toast-dismiss-text-color` / `--toast-dismiss-hover-background-color` instead.
-- Rebuild host Tailwind only if you `@import` `flat_pack/application`. Hosts that load kit CSS with `stylesheet_link_tag` pick this up on reload.
+- Toast close uses `.fp-hit-slop` instead of `.fp-hit-target`. Hosts that load kit CSS with `stylesheet_link_tag` pick the slop class up on reload. Rebuild host Tailwind if the toast component classes are scanned into the host sheet.
+- Rebuild host Tailwind only if you `@import` `flat_pack/application`.
 
 ## [0.1.166] - 2026-09-07
 
