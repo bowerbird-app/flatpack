@@ -42,7 +42,7 @@ Gated (sign in or bearer token):
 
 Users owns auth screens (`recording_studio_user_auth_for :users`). OTP is off in the dummy initializer for a simpler password demo.
 
-After sign-in or sign-up, the host sends people to `/studio` (not the public demo root). From there: Admin, Registered apps, profile, or back to `/demo`.
+After sign-in or sign-up, the host sends people to `/studio` (not the public demo root). From there: Admin, Registered apps, or back to `/demo`.
 
 Seed accounts after `bin/rails db:seed`:
 
