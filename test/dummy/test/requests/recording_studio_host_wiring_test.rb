@@ -51,6 +51,7 @@ class RecordingStudioHostWiringTest < ActionDispatch::IntegrationTest
     def controller.main_app
       Rails.application.routes.url_helpers
     end
+
     def controller.stored_location_for(_resource)
       nil
     end
