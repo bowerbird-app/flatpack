@@ -216,6 +216,28 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --card-hover-strong-border-color: var(--color-primary);
   --card-hover-strong-shadow: var(--shadow-md);
   --card-hover-strong-shadow-dark: var(--shadow-lg);
+  --hero-overlay-background-color: rgb(0 0 0 / 0.6);
+  --hero-overlay-text-color: oklch(1.0 0 0);
+  --hero-overlay-muted-text-color: rgb(255 255 255 / 0.8);
+  --carousel-viewport-background-color: var(--surface-muted-background-color);
+  --carousel-viewport-border-color: var(--surface-border-color);
+  --carousel-chevron-background-color: rgb(31 41 55 / 0.68);
+  --carousel-control-background-color: rgb(0 0 0 / 0.6);
+  --carousel-control-hover-background-color: rgb(0 0 0 / 0.8);
+  --carousel-control-text-color: oklch(1.0 0 0);
+  --carousel-counter-background-color: rgb(0 0 0 / 0.6);
+  --carousel-counter-text-color: oklch(1.0 0 0);
+  --carousel-indicator-track-background-color: rgb(0 0 0 / 0.5);
+  --carousel-indicator-background-color: rgb(255 255 255 / 0.5);
+  --carousel-indicator-active-background-color: rgb(255 255 255);
+  --carousel-thumb-border-color: var(--surface-border-color);
+  --carousel-thumb-placeholder-background-color: var(--surface-muted-background-color);
+  --carousel-thumb-placeholder-text-color: var(--surface-muted-content-color);
+  --carousel-caption-overlay-background-color: rgb(0 0 0 / 0.6);
+  --carousel-caption-overlay-text-color: oklch(1.0 0 0);
+  --carousel-caption-below-text-color: var(--surface-muted-content-color);
+  --carousel-media-background-color: oklch(0 0 0);
+  --carousel-lightbox-image-background-color: rgb(0 0 0 / 0.2);
   --modal-backdrop-color: rgb(0 0 0 / 0.5);
   --modal-surface-color: var(--surface-background-color);
   --modal-border-color: var(--surface-border-color);
@@ -300,6 +322,7 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --badge-info-background-color: var(--surface-background-color);
   --badge-info-text-color: var(--surface-content-color);
   --badge-info-border-color: var(--color-info-border);
+  --badge-remove-hover-background-color: var(--chip-remove-hover-background-color);
   --sidebar-header-badge-background-color: var(--badge-primary-background-color);
   --sidebar-header-badge-text-color: var(--badge-primary-text-color);
   --chat-background-color: var(--surface-background-color);
@@ -540,6 +563,10 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --chip-padding-y-md: 0.25rem;
   --chip-padding-x-lg: 1rem;
   --chip-padding-y-lg: 0.375rem;
+  --picker-badge-background-color: rgb(0 0 0 / 0.55);
+  --picker-badge-text-color: oklch(1.0 0 0);
+  --picker-selection-idle-background-color: rgb(0 0 0 / 0.3);
+  --picker-selection-idle-ring-color: rgb(0 0 0 / 0.2);
 
   --page-title-h1-size: var(--text-4xl);
   --page-title-h2-size: var(--text-3xl);

@@ -219,7 +219,7 @@ module FlatPack
       end
 
       def backdrop_classes
-        "fixed inset-0 bg-black/50 z-40 md:hidden opacity-0 pointer-events-none transition-opacity duration-[var(--duration-slow)] ease-[var(--easing-enter)]"
+        "fixed inset-0 bg-[var(--drawer-backdrop-color)] z-40 md:hidden opacity-0 pointer-events-none transition-opacity duration-[var(--duration-slow)] ease-[var(--easing-enter)]"
       end
 
       def validate_side!
