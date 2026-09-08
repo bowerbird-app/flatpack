@@ -6,15 +6,15 @@ module FlatPack
       class Component < ViewComponent::Base
         # Tailwind CSS scanning requires these classes to be present as string literals.
         # DO NOT REMOVE - These duplicates ensure CSS generation:
-        # "text-4xl" "font-bold" "mb-2" "text-sm" "uppercase" "tracking-wide" "text-[var(--surface-muted-content-color)]" "mt-2" "text-green-600" "text-red-600" "text-center"
+        # "text-4xl" "font-bold" "mb-2" "text-sm" "text-[var(--surface-muted-content-color)]" "mt-2" "text-[var(--color-success-background-color)]" "text-[var(--color-danger-background-color)]" "text-center" "fp-tabular-nums"
         TREND_DIRECTIONS = {
           up: {
             icon: "↑",
-            class: "text-green-600"
+            class: "text-[var(--color-success-background-color)]"
           },
           down: {
             icon: "↓",
-            class: "text-red-600"
+            class: "text-[var(--color-danger-background-color)]"
           }
         }.freeze
 
@@ -33,7 +33,7 @@ module FlatPack
           content_tag(:div, class: container_classes, **@system_arguments) do
             safe_join([
               content_tag(:div, @value, class: value_classes),
-              content_tag(:div, @label, class: "text-sm text-[var(--surface-muted-content-color)] uppercase tracking-wide"),
+              content_tag(:div, @label, class: "text-sm text-[var(--surface-muted-content-color)]"),
               content_tag(:div, class: trend_classes) do
                 "#{trend_icon} #{@trend}"
               end
@@ -48,7 +48,7 @@ module FlatPack
         end
 
         def value_classes
-          ["text-4xl", "font-bold", "mb-2", @value_class].compact.join(" ")
+          ["text-4xl", "font-bold", "mb-2", "fp-tabular-nums", @value_class].compact.join(" ")
         end
 
         def trend_classes

@@ -64,6 +64,7 @@ module FlatPack
             "py-[var(--bottom-nav-item-padding-y)]",
             "text-xs",
             "font-medium",
+            "fp-touch-manipulation",
             "transition-colors",
             state_classes
           )

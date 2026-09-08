@@ -1,7 +1,7 @@
 # Alert
 
 ## Purpose
-Render inline status messages for informational, success, warning, or danger feedback.
+Render inline status messages for informational, success, warning, or danger feedback. Success, warning, and danger use a tinted surface with a coloured icon and border; they do not fill like status buttons.
 
 ## When to use
 Use Alert when users need immediate contextual feedback near form content or page state.

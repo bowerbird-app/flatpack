@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { prefersReducedMotion } from "controllers/flat_pack/reduced_motion"
 
 export default class extends Controller {
   static targets = ["viewport", "frame", "slide", "indicator", "thumb", "caption", "counter", "lightboxToggle", "lightbox", "lightboxImage", "lightboxCaption"]
@@ -703,7 +704,7 @@ export default class extends Controller {
   }
 
   #prefersReducedMotion() {
-    return Boolean(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)
+    return prefersReducedMotion()
   }
 
   #isRtl() {

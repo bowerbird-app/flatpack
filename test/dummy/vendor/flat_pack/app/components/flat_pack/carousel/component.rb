@@ -252,7 +252,7 @@ module FlatPack
                 aria: {hidden: true}
               ) : nil),
               content_tag(:video,
-                class: "absolute inset-0 z-10 block h-full w-full bg-black object-contain",
+                class: "absolute inset-0 z-10 block h-full w-full bg-[var(--carousel-media-background-color)] object-contain",
                 style: "width: 100%; height: 100%; object-fit: contain;",
                 controls: slide[:controls],
                 muted: slide[:muted],
@@ -300,7 +300,7 @@ module FlatPack
 
         content_tag(:button,
           type: "button",
-          class: "absolute top-1/2 z-20 flex w-10 -translate-y-1/2 cursor-pointer aspect-square items-center justify-center rounded-full bg-[rgba(0,0,0,0.5)] text-white transition hover:bg-[rgba(0,0,0,0.75)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring #{controls_visibility_classes} #{classes}",
+          class: "absolute top-1/2 z-20 flex w-10 -translate-y-1/2 cursor-pointer aspect-square items-center justify-center rounded-full bg-[var(--carousel-control-background-color)] text-[var(--carousel-control-text-color)] transition hover:bg-[var(--carousel-control-hover-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring #{controls_visibility_classes} #{classes}",
           aria: {label: label},
           data: {action: "click->flat-pack--carousel##{direction}"}) do
           render FlatPack::Shared::IconComponent.new(name: icon_name, size: :md, class: "pointer-events-none")
@@ -362,7 +362,7 @@ module FlatPack
       def render_counter
         content_tag(:div,
           "",
-          class: "justify-self-end rounded-full bg-[rgba(0,0,0,0.5)] px-2 py-1 text-xs font-medium text-white",
+          class: "justify-self-end rounded-full bg-[var(--carousel-counter-background-color)] px-2 py-1 text-xs font-medium text-[var(--carousel-counter-text-color)]",
           data: {flat_pack__carousel_target: "counter"})
       end
 
@@ -370,7 +370,7 @@ module FlatPack
         content_tag(:button,
           type: "button",
           hidden: !lightbox_available_for_index?(@initial_index),
-          class: "absolute right-3 top-3 z-20 flex aspect-square flex-nowrap items-center justify-center cursor-pointer rounded-full bg-[rgba(0,0,0,0.5)] p-2 text-white transition hover:bg-[rgba(0,0,0,0.75)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
+          class: "absolute right-3 top-3 z-20 flex aspect-square flex-nowrap items-center justify-center cursor-pointer rounded-full bg-[var(--carousel-control-background-color)] p-2 text-[var(--carousel-control-text-color)] transition hover:bg-[var(--carousel-control-hover-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
           aria: {label: "Expand image"},
           data: {
             flat_pack__carousel_target: "lightboxToggle",
@@ -382,7 +382,7 @@ module FlatPack
 
       def render_lightbox_overlay
         content_tag(:div,
-          class: "fixed inset-0 z-50 hidden bg-[var(--modal-backdrop-color)] backdrop-blur-[var(--modal-backdrop-blur)] p-4 sm:p-6",
+          class: "fixed inset-0 z-50 hidden bg-[var(--modal-backdrop-color)] backdrop-blur-[var(--modal-backdrop-blur)] fp-overlay-pad",
           tabindex: -1,
           role: "dialog",
           aria: {modal: true, hidden: "true", label: "Image lightbox"},
@@ -397,27 +397,14 @@ module FlatPack
                 class: "absolute right-2 top-2 z-10 cursor-pointer rounded-full bg-[var(--modal-surface-color)] p-2 text-[var(--modal-close-icon-color)] shadow-sm transition hover:text-[var(--modal-close-icon-hover-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring sm:right-4 sm:top-4",
                 aria: {label: "Close lightbox"},
                 data: {action: "click->flat-pack--carousel#closeLightbox"}) do
-                content_tag(:svg,
-                  class: "h-5 w-5 pointer-events-none",
-                  xmlns: "http://www.w3.org/2000/svg",
-                  fill: "none",
-                  viewBox: "0 0 24 24",
-                  stroke: "currentColor",
-                  aria: {hidden: true}) do
-                  tag.path(
-                    "stroke-linecap": "round",
-                    "stroke-linejoin": "round",
-                    "stroke-width": "1.8",
-                    d: "M6 18 18 6M6 6l12 12"
-                  )
-                end
+                render FlatPack::Shared::IconComponent.new(name: "x-mark", size: :md, class: "pointer-events-none")
               end,
               content_tag(:figure, class: "inline-flex max-w-full flex-col overflow-hidden rounded-[var(--radius-xl)] border border-[var(--modal-border-color)] bg-[var(--modal-surface-color)]") do
                 safe_join([
                   tag.img(
                     src: "",
                     alt: "",
-                    class: "h-auto max-h-[90vh] w-auto max-w-[90vw] object-contain bg-black/20",
+                    class: "h-auto max-h-[90vh] w-auto max-w-[90vw] object-contain bg-[var(--carousel-lightbox-image-background-color)]",
                     draggable: false,
                     data: {flat_pack__carousel_target: "lightboxImage"}
                   ),
@@ -512,7 +499,7 @@ module FlatPack
           "relative h-full w-full overflow-hidden"
         else
           classes(
-            "flex h-full w-full transition-transform duration-300 ease-out",
+            "flex h-full w-full transition-transform duration-[var(--duration-slow)] ease-out",
             (@variant == :logo_slider) ? "items-center" : nil
           )
         end
@@ -524,7 +511,7 @@ module FlatPack
         end
 
         base = "h-full w-full shrink-0"
-        return "absolute inset-0 transition-opacity duration-300 #{base}" if @transition == :fade
+        return "absolute inset-0 transition-opacity duration-[var(--duration-slow)] #{base}" if @transition == :fade
 
         base
       end

@@ -72,5 +72,5 @@ Use Content Editor when you need lightweight inline editing of an HTML body fiel
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
 - Requires Stimulus controller `flat-pack--content-editor`.
-- Requires stylesheet `flat_pack/content_editor.css` (imported automatically via `flat_pack/application.css`).
+- Requires stylesheet `flat_pack/content_editor.css` (also bundled from `flat_pack/application.css`). Editor chrome uses kit `--radius-md` / `--radius-sm`. If host Tailwind loads last, re-set those radii on unlayered `:root` — see [Theming](../theming.md).
 - Image upload variant requires a server-side endpoint that accepts a `file` multipart field and returns `{ "url": "..." }` JSON.

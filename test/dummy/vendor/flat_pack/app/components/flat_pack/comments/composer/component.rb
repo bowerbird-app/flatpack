@@ -170,7 +170,7 @@ module FlatPack
 
         def textarea_shell_classes
           classes(
-            "flat-pack-comments-composer-input relative overflow-hidden rounded-[var(--radius-xl)] border border-[var(--comments-composer-border-color)] bg-[var(--comments-composer-background-color)] shadow-sm transition-all duration-base",
+            "flat-pack-comments-composer-input relative overflow-hidden rounded-[var(--radius-xl)] border border-[var(--comments-composer-border-color)] bg-[var(--comments-composer-background-color)] shadow-sm transition-[border-color,box-shadow] duration-[var(--duration-base)] ease-[var(--easing-standard)]",
             "focus-within:border-[var(--comments-composer-focus-border-color)] focus-within:ring-2 focus-within:ring-inset focus-within:ring-[var(--comments-composer-focus-ring-color)]",
             rich_text_with_toolbar? ? "flat-pack-comments-richtext--has-toolbar" : nil,
             bubble_only_rich_text? ? "flat-pack-comments-richtext--bubble-only" : nil,
@@ -196,18 +196,7 @@ module FlatPack
             form: @form,
             "aria-label": @submit_label) do
             safe_join([
-              content_tag(:svg,
-                xmlns: "http://www.w3.org/2000/svg",
-                fill: "none",
-                viewBox: "0 0 24 24",
-                stroke: "currentColor",
-                class: "h-5 w-5 rotate-90") do
-                content_tag(:path, nil,
-                  "stroke-linecap": "round",
-                  "stroke-linejoin": "round",
-                  "stroke-width": "2",
-                  d: "M12 19l9 2-9-18-9 18 9-2zm0 0v-8")
-              end,
+              render(FlatPack::Shared::IconComponent.new(name: "paper-airplane", size: :md, class: "rotate-90")),
               content_tag(:span, @submit_label, class: "sr-only")
             ])
           end

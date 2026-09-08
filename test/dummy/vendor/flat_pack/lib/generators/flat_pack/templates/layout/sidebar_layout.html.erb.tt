@@ -2,7 +2,7 @@
 <html class="h-full" data-theme="rounded">
   <head>
     <title>Your App</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
     <%%= csrf_meta_tags %>
     <%%= csp_meta_tag %>
 
@@ -13,6 +13,7 @@
   </head>
 
   <body class="h-full">
+    <%%= render FlatPack::SkipLink::Component.new(href: "#main") %>
     <%%= render FlatPack::SidebarLayout::Component.new(
       side: :<%= sidebar_side %>,
       storage_key: "<%= options[:storage_key] %>"
@@ -26,7 +27,7 @@
       <%% end %>
 
       <%% layout.main do %>
-        <div class="p-6">
+        <main id="main" tabindex="-1" class="p-6">
           <%% if notice.present? %>
             <%%= render FlatPack::Alert::Component.new(
               description: notice,
@@ -45,7 +46,7 @@
           <%% end %>
 
           <%%= yield %>
-        </div>
+        </main>
       <%% end %>
     <%% end %>
   </body>

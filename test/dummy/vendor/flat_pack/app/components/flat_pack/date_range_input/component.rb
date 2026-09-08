@@ -5,7 +5,7 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "text-[var(--color-warning)]" "border-[var(--color-warning)]"
+      # "text-[var(--color-error)]" "border-[var(--color-error)]"
 
       def initialize(
         start_name:,
@@ -123,7 +123,7 @@ module FlatPack
       def render_picker_quick_ranges
         content_tag(:div, class: picker_ranges_section_classes, data: {"flat-pack--flatpack-date-picker-target": "listView"}) do
           safe_join([
-            content_tag(:p, "Date Range", class: "text-xs font-semibold uppercase tracking-wide text-[var(--surface-muted-content-color)]"),
+            content_tag(:p, "Date range", class: "text-xs font-semibold text-[var(--surface-muted-content-color)]"),
             content_tag(:div, class: "mt-2 space-y-1") do
               safe_join(
                 quick_range_presets.map { |preset| render_quick_range_button(preset) } +
@@ -153,7 +153,7 @@ module FlatPack
           safe_join([
             content_tag(:div, class: "mb-3 md:hidden") do
               render(FlatPack::Button::Component.new(
-                text: "Back to Date Range",
+                text: "Back to date range",
                 style: :ghost,
                 size: :sm,
                 type: "button",
@@ -191,7 +191,7 @@ module FlatPack
 
       def render_open_calendar_button
         render(FlatPack::Button::Component.new(
-          text: "Pick in Calendar",
+          text: "Pick in calendar",
           style: :ghost,
           size: :sm,
           type: "button",
@@ -371,7 +371,7 @@ module FlatPack
         ]
 
         base_classes << if @error
-          "border-[var(--color-warning)]"
+          "border-[var(--color-error)]"
         else
           "border-[var(--surface-border-color)]"
         end
@@ -380,7 +380,7 @@ module FlatPack
       end
 
       def error_classes
-        "mt-1 text-sm text-[var(--color-warning)]"
+        "mt-1 text-sm text-[var(--color-error)]"
       end
 
       def input_id

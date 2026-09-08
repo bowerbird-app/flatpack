@@ -74,9 +74,7 @@ export default class extends Controller {
 
   buildContainer() {
     const container = document.createElement("div")
-    container.className = "fixed z-[60] flex flex-col gap-3 pointer-events-none"
-    container.style.top = "calc(72px + calc(var(--spacing) * 4))"
-    container.style.right = "calc(var(--spacing) * 4)"
+    container.className = "fixed z-[60] flex flex-col gap-3 pointer-events-none fp-toast-region"
     container.setAttribute("aria-live", "polite")
     container.setAttribute("aria-atomic", "false")
     document.body.appendChild(container)

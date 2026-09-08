@@ -4,7 +4,7 @@
 Display layered dialog content with managed focus/keyboard/backdrop behavior.
 
 ## When to use
-Use Modal for confirmation flows, forms, and detailed contextual content that should temporarily block page interaction.
+Use Modal for confirmation flows, forms, and detailed contextual content that should temporarily block page interaction. Use [Drawer](drawer.md) when the extra content should slide in from an edge instead of centering.
 
 ## Class
 - Primary: `FlatPack::Modal::Component`
@@ -46,10 +46,16 @@ Use Modal for confirmation flows, forms, and detailed contextual content that sh
 <% end %>
 ```
 
+## Overlay scroll and insets
+The backdrop and `.flat-pack-modal__body` use `overscroll-behavior: contain` so a fling inside the dialog does not scroll the page underneath. Opening a modal also sets `overscroll-behavior: none` on `document.body` (same lock count as the overflow lock).
+
+The dialog wrapper uses `.fp-overlay-pad` so padding is at least `1rem` (`1.5rem` from the `sm` breakpoint) and never less than the device safe-area insets. Hosts need `viewport-fit=cover` on the viewport meta for those insets to be non-zero. See [Installation](../installation.md).
+
 ## Accessibility
 - Renders `role="dialog"`, `aria-modal="true"`, and `aria-labelledby` bound to the header id.
 - Escape/backdrop close controls are configurable.
 - Ensure trigger and focus-management behavior are implemented in the modal controller usage flow.
+- Under `prefers-reduced-motion: reduce`, the dialog fades without scale. Enter uses `--duration-slow` / `--easing-enter`; exit uses `--duration-base` / `--easing-exit`. A close in flight can reverse.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).

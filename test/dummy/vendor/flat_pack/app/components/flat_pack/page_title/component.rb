@@ -89,7 +89,7 @@ module FlatPack
       end
 
       def title_classes
-        classes = ["font-bold", "leading-tight"]
+        classes = ["font-bold", "leading-tight", "fp-text-balance"]
         classes << "text-[var(--surface-content-color)]" unless @title_color
         classes.join(" ")
       end
@@ -112,7 +112,7 @@ module FlatPack
 
       def subtitle_classes
         classes = []
-        classes << "mt-2 text-lg" unless @large_subtitle
+        classes << "mt-2 text-lg fp-text-pretty" unless @large_subtitle
         classes << "text-[var(--surface-muted-content-color)]" unless @subtitle_color
         classes.join(" ").presence
       end

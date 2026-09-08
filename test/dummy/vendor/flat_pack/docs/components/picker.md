@@ -383,6 +383,8 @@ Selected items preserve the optional display fields (`title`, `icon`, `descripti
 - When `auto_confirm: true` and `modal: true`, the picker closes programmatically after dispatching `flat-pack:picker:confirm`.
 - When `auto_confirm: true` and `modal: false`, the picker confirms immediately and stays visible inline.
 
+Grid item badges use `--picker-badge-*`. Idle selection rings use `--picker-selection-idle-*`. Selected rings stay on `--color-primary`.
+
 ## Accessibility
 Picker content uses native form controls (`input[type=radio|checkbox]`) for list selection and button semantics for grid selection (`aria-pressed`). Search input includes an accessible label (`"Search available assets"`).
 

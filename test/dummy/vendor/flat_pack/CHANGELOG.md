@@ -13,6 +13,312 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.169] - 2026-09-08
+
+### Fixed
+- Refreshed `test/dummy/vendor/flat_pack` and both dummy lockfiles so App Platform frozen Bundler (`BUNDLE_DEPLOYMENT=1`) no longer fails on a path-gem / gemspec version skew.
+- Documented the frozen-install verify step for DigitalOcean dummy deploys.
+
+### Changed
+- Bumped the gem version to `0.1.169`.
+
+### Upgrade notes
+- No API change. Hosts on path or Rubygems installs are unaffected. Anyone deploying `test/dummy` via App Platform should keep the vendored snapshot and lockfiles aligned after engine changes (`bin/refresh_flat_pack_vendor` + `bundle lock`).
+
+## [0.1.168] - 2026-09-08
+
+### Changed
+- Alert and toast success, warning, and danger use a status wash (`color-mix` of the fill into the surface) with coloured icon and border. Body text uses `--surface-content-color`.
+- Info toasts alias the quiet info alert instead of filling with `--color-primary`.
+- Bumped the gem version to `0.1.168`.
+
+### Fixed
+- Toast close is a compact centered ghost X on every style. The danger close no longer sits in a filled chip. `.fp-hit-slop` keeps the 44px hit without growing the painted box to 44px.
+
+### Upgrade notes
+- Buttons, badges, chips, and progress still use the filled `--color-success-*` / `--color-warning-*` / `--color-danger-*` paints.
+- Hosts that already set `--alert-*` / `--toast-*` are unchanged. Hosts that wanted filled alerts must set those component tokens back to the semantic fills.
+- Named kit themes inherit the washes from `:root` because they still override the semantic fills, not `--alert-*`.
+- `--toast-danger-dismiss-*` now alias the shared `--toast-dismiss-*` tokens. Hosts that painted a danger-only close chip should set `--toast-dismiss-text-color` / `--toast-dismiss-hover-background-color` instead.
+- Toast close uses `.fp-hit-slop` instead of `.fp-hit-target`. Hosts that load kit CSS with `stylesheet_link_tag` pick the slop class up on reload. Rebuild host Tailwind if the toast component classes are scanned into the host sheet.
+- Rebuild host Tailwind only if you `@import` `flat_pack/application`.
+
+## [0.1.167] - 2026-09-08
+
+### Changed
+- Overlay chrome that used Tailwind black/white utilities now follows tokens: hero (`--hero-overlay-*`), carousel controls/media/lightbox (`--carousel-control-*`, `--carousel-counter-*`, `--carousel-media-background-color`, `--carousel-lightbox-image-background-color`), badge remove hover (`--badge-remove-hover-background-color`), sidebar mobile drawer (`--drawer-backdrop-color`), and picker grid badges/idle rings (`--picker-badge-*`, `--picker-selection-idle-*`).
+- Card stat up/down trends use `--color-success-background-color` / `--color-danger-background-color`.
+- Dummy forms use `--card-background-color` instead of the missing `--color-card`. Dummy prices, chart deltas, the green link, and popover Delete use semantic success/danger tokens.
+- Bumped the gem version to `0.1.167`.
+
+### Upgrade notes
+- No API change. Hosts that already override the overlay tokens listed above keep those values. Hosts that relied on hardcoded Tailwind `bg-black/60`, `text-green-600`, and similar utilities now follow the theme.
+- Carousel prev/next, counter, and lightbox toggle fill follow `--carousel-control-*` / `--carousel-counter-*` (`rgb(0 0 0 / 0.6)` idle, `0.8` hover) instead of hardcoded `rgba(0,0,0,0.5)` / `0.75`.
+- Rebuild host Tailwind if you `@import` `flat_pack/application`. Hosts that load kit CSS with `stylesheet_link_tag` pick this up on reload.
+
+## [0.1.166] - 2026-09-07
+
+### Fixed
+- `:root` `--color-primary` / `--color-primary-hover` now follow `--brand-hue` / `--brand-chroma` / `--brand-lightness`. Hosts that only set the brand knobs recolor primary buttons and other `--color-primary` consumers.
+- Theme generator output is brand knobs only. `:root` already maps those knobs to primary; hosts no longer uncomment a formula that subtracted chroma (invalid at charcoal chroma `0`).
+
+### Changed
+- Dummy Sunrise sets `--brand-lightness: 0.52` so the theme picker demo shows a warm primary instead of leftover charcoal.
+- Bumped the gem version to `0.1.166`.
+
+### Upgrade notes
+- Hosts that already set `--color-primary` / `--color-primary-hover` are unchanged. Hosts that only set `--brand-*` will now recolor primary.
+- Default charcoal is unchanged: chroma `0` / lightness `0.3211` still resolves near `oklch(0.3211 0 0)`. Hover is `oklch(calc(var(--brand-lightness) - 0.10) …)` instead of `#1f1f1f`.
+- Named kit themes (`dark`, `ocean`) still override `--color-primary` with literals.
+- Rebuild host Tailwind only if you `@import` `flat_pack/application`. Hosts that load kit CSS with `stylesheet_link_tag` pick this up on reload.
+
+## [0.1.165] - 2026-09-07
+
+### Added
+- Kit primitives: Drawer (edge panel), Combobox (searchable single choice), Command palette (Cmd/Ctrl+K), Stepper, Kbd, Skip link, and Spinner.
+- Dummy demos at `/demo/drawer`, `/demo/forms/combobox`, `/demo/command_palette`, `/demo/stepper`, `/demo/kbd`, `/demo/skip_link`, and `/demo/spinner`. Dummy layouts skip to `#main` and open a page palette with Cmd/Ctrl+K.
+- Bumped the gem version to `0.1.165`.
+
+### Changed
+- Button loading renders `FlatPack::Spinner::Component` instead of an inline SVG.
+
+### Upgrade notes
+- Render `FlatPack::SkipLink::Component` first in `<body>` and put `id="main" tabindex="-1"` on `<main>` (the layout generator does this). Without `#main`, the default skip href has nowhere to land.
+- Open a drawer with `data-drawer-id` matching the drawer `id:`. Open a command palette with `data-command-palette-id`. If two palettes sit on one page, set `shortcut: false` on all but one.
+- Drawer tokens alias Modal. Hosts that override `--modal-*` get matching drawers. Optional `--kbd-*`, `--skip-link-*`, and `--stepper-*` tokens alias surfaces and brand colours.
+- Rebuild host Tailwind only if you `@import` `flat_pack/application` into the Tailwind entry. Hosts that load kit CSS with `stylesheet_link_tag` pick up `.fp-skip-link` and overlay contain without a rebuild.
+
+## [0.1.164] - 2026-09-07
+
+### Changed
+- Default Search idle fill (`--search-input-background-color`) now aliases `--surface-background-color` instead of `--surface-muted-background-color`.
+- Bumped the gem version to `0.1.164`.
+
+### Upgrade notes
+- Hosts that override `--search-input-background-color` are unchanged. Hosts that relied on the muted grey default will see a surface fill after upgrade.
+- Rebuild host Tailwind only if you `@import` `flat_pack/application`. SearchInput and form controls are unchanged.
+
+## [0.1.163] - 2026-09-07
+
+### Fixed
+- Ordered lists show decimal markers (`1.`, `2.`, …) in a kit marker slot on each item. Unordered lists stay unmarked.
+
+### Changed
+- Bumped the gem version to `0.1.163`.
+
+### Upgrade notes
+- No API change. `ordered: true` still renders `<ol>`.
+- Rebuild host Tailwind only if you `@import` `flat_pack/application`. Markers are kit CSS classes, not Tailwind utilities.
+
+## [0.1.162] - 2026-09-07
+
+### Fixed
+- List drag-reorder persist runs when `orderable_url` is set. `saveOrder` now checks `hasOrderableUrlValue`, the Stimulus flag for `orderableUrl`, instead of leftover `hasOrderablePathValue`.
+- Bumped the gem version to `0.1.162`.
+
+### Upgrade notes
+- No API change. Hosts that already pass `orderable_url:` need no code change. If drag-reorder stopped saving after the 0.1.124 param rename, upgrade this gem.
+
+## [0.1.161] - 2026-09-07
+
+### Changed
+- Kit themes no longer ship decorative `--gradient-1` … `--gradient-4` or `.fp-gradient-*`. Named host themes may still define those tokens if they want a wash.
+- Dummy heroes sit on the page surface instead of pastel hex gradients. Dummy cards use surface-muted media placeholders, sentence-case stat labels, and a `Popular` badge instead of tracked-out ALL-CAPS eyebrows.
+- Bumped the gem version to `0.1.161`.
+
+### Upgrade notes
+- If a host used `var(--gradient-1)` through `var(--gradient-4)` or `.fp-gradient-*`, copy those tokens onto a named `[data-theme]` (see `docs/custom_theming.md`) or replace the wash with a surface token.
+- Hero `background:` still accepts a CSS value. Prefer omitting it or passing `var(--surface-muted-background-color)`.
+- Rebuild host Tailwind only if you `@import` `flat_pack/application` or copied the dummy `.fp-gradient-*` helpers.
+
+## [0.1.160] - 2026-09-07
+
+### Changed
+- Loading copy uses a typographic ellipsis: skeleton `aria-label` is `Loading…`, infinite pagination skeletons match, and the default `loading_text` is `Loading more…` on both Pagination and PaginationInfinite.
+- EmptyState is an invitation to act. Leftover inbox/search illustration SVGs are gone; optional `icon:` uses `IconComponent` at `lg`. The root is `.fp-empty-state` and fades in on `--duration-slow` / `--easing-enter`. Hosts add `.fp-content-enter` to the panel that replaces it.
+- Billing invoice empty and payment-method empty no longer lead with an inbox picture. Payment method empty puts its actions in the EmptyState slot.
+- Dummy `/demo/empty_state` shows action-first examples and an empty→content toggle. Dummy skeleton list heading is `Loading…`.
+- Bumped the gem version to `0.1.160`.
+
+### Upgrade notes
+- No component API changes. `icon: :inbox` and `icon: :search` still work; they render kit icons instead of inline SVGs.
+- If a host depended on the old 48px illustration, pass `graphic` or drop the icon and keep the button.
+- When content replaces an empty panel, add `fp-content-enter` to the incoming node. Rebuild host Tailwind only if you `@import` `flat_pack/application`.
+
+## [0.1.159] - 2026-09-07
+
+### Changed
+- Overlay scroll stays in the overlay: modal backdrop/body and carousel lightbox use `overscroll-behavior: contain`. Opening a modal also sets `overscroll-behavior: none` on `document.body` with the same lock count as overflow.
+- Kit buttons, pill items, bottom-nav items, and `.fp-hit-target` / `.fp-hit-target-inline` use `touch-action: manipulation`.
+- Fixed chrome respects safe-area insets. TopNav is `72px` plus `safe-area-inset-top`. Toast region sits below that bar and inset-right. Modal and carousel lightbox use `.fp-overlay-pad`. The mobile sidebar drawer pads the notch edges. Bottom nav already used `safe-area-inset-bottom`.
+- Dummy layouts and the sidebar layout generator set `viewport-fit=cover` so `env(safe-area-inset-*)` is non-zero on notched devices.
+- Bumped the gem version to `0.1.159`.
+
+### Upgrade notes
+- Add `viewport-fit=cover` to the host viewport meta (`width=device-width,initial-scale=1,viewport-fit=cover`). Without it, inset env() values stay `0`. Copy from `docs/installation.md` or re-run `rails generate flat_pack:layout`.
+- No component API changes. Rebuild host Tailwind only if you `@import` `flat_pack/application` into the Tailwind entry. Hosts that load kit CSS with `stylesheet_link_tag` pick up the new classes without a rebuild.
+
+## [0.1.158] - 2026-09-07
+
+### Changed
+- Outline icons use `--icon-stroke-width` (Heroicons `1.5`) instead of leftover Lucide `2` / `1.8` / `3`. TipTap bold/italic/underline/strike stay `2.5`. Button spinner rings stay `4`.
+- `IconComponent` optically nudges `paper-airplane`, `pencil`, `pencil-square`, `arrow-up-tray`, and `arrow-down-tray` the same way as magnifying-glass (`-translate-y-0.5`). Caller classes such as `hidden` win over `block`, so password reveal still hides the slash icon.
+- Left/right travel and alignment glyphs get `fp-icon-directional` and flip in `[dir="rtl"]` with CSS `scale` so optical translate nudges still apply. Vertical chevrons, checks, media playback, and chat-bubble tails do not flip.
+- Pagination, modal close, toast dismiss, search clear, password reveal, accordion/collapse/select/dropdown chevrons, carousel lightbox close, and comment composer/replies use `IconComponent` instead of inline Lucide SVGs.
+- Bumped the gem version to `0.1.158`.
+
+### Upgrade notes
+- No host app API changes. Icon names are the same.
+- Hosts can set `--icon-stroke-width` on `:root` to thicken or thin outline icons. Default is `1.5`. Do not put `--icon-stroke-width: var(--icon-stroke-width)` on `:root`.
+- `fp-icon-directional` lives in kit CSS. Rebuild host Tailwind only if you `@import` `flat_pack/application` into the Tailwind entry.
+
+## [0.1.157] - 2026-09-07
+
+### Changed
+- Host Tailwind `@layer theme` still emits `--radius-md: 0.375rem` (and the rest of Tailwind's scale). Dummy and the install generator now re-set the kit radii on unlayered `:root` (`--radius-sm: 0.75rem`, `--radius-md: 1rem`, `--radius-lg: 1.5rem`, `--radius-xl: 2rem`) so rich-text chrome and `rounded-[var(--radius-*)]` surfaces keep the kit scale when host CSS loads last.
+- Rich text and content editor CSS already fall back to those kit values when the token is unset. The fallback does not apply when Tailwind writes `0.375rem` onto `--radius-md`; the unlayered `:root` re-set is what makes the computed token match.
+- Bumped the gem version to `0.1.157`.
+
+### Upgrade notes
+- Rebuild host Tailwind after you add the `:root` radii (or re-run `rails generate flat_pack:install` on a new app). Existing hosts that already have a FlatPack `@source` are not rewritten — copy the unlayered `:root` block from `docs/theming.md` next to any `--font-sans` re-set you already have.
+- Do not put `--radius-md: var(--radius-md)` on `:root`. Concrete kit values only.
+- Padding tokens such as `--button-padding-y-sm: 0.375rem` are not radius. Leave them.
+
+## [0.1.156] - 2026-09-07
+
+### Changed
+- Tabs, chat incoming bubbles, sidebar and top-nav hover, list hover, and avatar fallbacks alias `--surface-muted-*` / `--surface-content-color` instead of light-theme grey hexes (`#4b5563`, `#dfe5ec`, `#f7f7f7`, `#e5e7eb`). Dark and ocean inherit those greys from the surface tokens.
+- Bumped the gem version to `0.1.156`.
+
+### Upgrade notes
+- No host app API changes. Component token names are the same.
+- If a host overrode `--tabs-pill-inactive-*`, `--chat-message-incoming-*`, `--sidebar-item-hover-background-color`, `--top-nav-item-hover-background-color`, `--list-item-*-background-color`, or `--avatar-background-color` / `--avatar-text-color` with a hex to match the old kit greys, drop those overrides and let the surface tokens drive them — or keep the hex if you want that frozen colour.
+
+## [0.1.155] - 2026-09-06
+
+### Changed
+- Token values live once on `:root`. `@theme inline` registers the same names for Tailwind utilities without re-emitting hex/oklch (no second copy of the palette).
+- `[data-theme="rounded"]` is a no-op alias of the default. It no longer restates charcoal colours, radii, or shadows.
+- Carousel chrome tokens and extra-small button padding that previously existed only inside `@theme` now resolve on `:root`.
+- Dummy `/themes` token tables read `:root`, not `@theme`.
+- Bumped the gem version to `0.1.155`.
+
+### Upgrade notes
+- No host app API changes. `data-theme="rounded"` still looks like the default; you can keep or drop the attribute.
+- Do not copy `@theme inline { --color-primary: var(--color-primary); }` onto `:root`. That pattern is Tailwind inventory only. Concrete values stay on `:root`. A `:root` (or `[data-theme]`) line of `--token: var(--token)` is still a circular map and will blank the token.
+- Rebuild host Tailwind only if you `@import` `flat_pack/variables` into the Tailwind entry. Hosts that load it with `stylesheet_link_tag` already skip `@theme`; browsers keep reading `:root`.
+
+## [0.1.154] - 2026-09-06
+
+### Changed
+- One application shell: `SidebarLayout` + `Sidebar` + `TopNav`. `FlatPack::Navbar::Component` and `Navbar::Sidebar` / `Navbar::TopNav` / `flat-pack--navbar` are removed.
+- Dummy `/demo/navbar` is still the Top Nav slot demo. Dummy chrome was already `SidebarLayout`.
+- Bumped the gem version to `0.1.154`.
+
+### Upgrade notes
+- If you render `FlatPack::Navbar::Component`, switch to `SidebarLayout` and compose `Sidebar` and `TopNav` into its slots. Remove any `application.register("flat-pack--navbar", …)` pin; collapse and mobile drawer live on `flat-pack--sidebar-layout`.
+- No visual change for hosts that already use `SidebarLayout` (the layout generator and dummy).
+
+```erb
+<%= render FlatPack::SidebarLayout::Component.new(storage_key: "app-sidebar") do |layout| %>
+  <% layout.sidebar do %>
+    <%= render FlatPack::Sidebar::Component.new do |sidebar| %>
+      <% sidebar.items do %>
+        <%= render FlatPack::Sidebar::Item::Component.new(text: "Dashboard", href: "/", icon: :home, active: true) %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% layout.top_nav do %>
+    <%= render FlatPack::TopNav::Component.new do |nav| %>
+      <% nav.left { "Dashboard" } %>
+    <% end %>
+  <% end %>
+
+  <% layout.main do %>
+    <%= yield %>
+  <% end %>
+<% end %>
+```
+
+## [0.1.153] - 2026-09-06
+
+### Added
+- `--font-sans` and `--font-mono`, plus a type scale (`--text-xs` through `--text-5xl`) and `--leading-tight` / `--leading-snug` / `--leading-normal`. Page title sizes alias the scale (`--page-title-h1-size` is `--text-4xl`).
+- Kit classes `.fp-tabular-nums`, `.fp-text-balance`, and `.fp-text-pretty` on `flat_pack/application`, so hosts do not need a Tailwind rebuild for wrapping or lining up numbers.
+
+### Changed
+- `:root` sets `font-family: var(--font-sans)` and antialiased smoothing. Labels that were tracked-out ALL-CAPS (hero tagline, table headers, sidebar and navbar sections, date picker headings, card stats) are sentence case.
+- Hero headlines use `--text-4xl` / `--text-5xl` and `fp-text-balance` instead of `lg:text-6xl` landing-page type. Pagination, progress meters, timestamps, card stats, and chart axes use tabular numbers.
+- Bumped the gem version to `0.1.153`.
+
+### Upgrade notes
+- No host app API changes. Kit CSS variables apply as soon as `flat_pack/variables` loads.
+- If host Tailwind loads after kit CSS, re-set `--font-sans` on unlayered `:root` (not `@theme`) so Tailwind’s `ui-sans-serif` stack does not win. `.fp-tabular-nums` / `.fp-text-balance` / `.fp-text-pretty` come from kit `flat_pack/application` and do not need a Tailwind rebuild.
+- Rebuild host Tailwind if you want `text-[length:var(--text-4xl)]` utilities generated for any host markup. Kit components that need those sizes already emit the class.
+
+### Fixed
+- Bump `rubyzip` to `3.6.0` (CVE-2026-85396).
+
+## [0.1.152] - 2026-09-04
+
+### Added
+- `--easing-standard` (`cubic-bezier(0.2, 0, 0, 1)`), `--easing-enter` (`cubic-bezier(0.05, 0.7, 0.1, 1)`), and `--easing-exit` (`cubic-bezier(0.3, 0, 1, 1)`). In-place motion uses standard, overlays enter with decelerate, and overlays exit with accelerate. No bounce.
+- `motionTransition()`, `overlayOrigin()`, and `overlayEnterOffset()` on `controllers/flat_pack/reduced_motion` so Stimulus transitions share those tokens.
+
+### Changed
+- Modal, toast, dropdown, popover, and tooltip enter/exit are interruptible CSS transitions. Modal and toast enter on `--duration-slow` / `--easing-enter` and exit on `--duration-base` / `--easing-exit`. Popover and tooltip fade plus a 4px offset from the trigger, with origin from placement.
+- Switch, progress, accordion, collapse, sidebar, and leftover JS transitions (alert, chip, badge, table, navbar overlay) use the named easings instead of `ease-in-out` or a hardcoded cubic-bezier.
+- Form invalid chrome is still border and helper colour only. The kit does not shake fields.
+- Bumped the gem version to `0.1.152`.
+
+### Upgrade notes
+- No host app API changes. Overlay enter/exit timing: modal exit is now `--duration-base` (faster than enter). Toast already had that split.
+- Rebuild host Tailwind so `ease-[var(--easing-*)]` utilities are generated. Kit CSS variables apply as soon as `flat_pack/variables` loads.
+
+## [0.1.151] - 2026-09-04
+
+### Added
+- Tracked `tests.mdc` under `.cursor/rules/` so Cloud Agents add tests for behavior changes. See [Cursor Cloud Agent skills and rules](docs/cursor-skills.md).
+
+### Changed
+- Bumped the gem version to `0.1.151`.
+
+### Upgrade notes
+- No host app API changes. Product UI is unchanged. After merge, rebuild the Cloud Agent environment Draft so checkout rules include `tests.mdc`.
+
+## [0.1.150] - 2026-09-04
+
+### Added
+- `--color-error` and `--color-error-border` alias danger red. Invalid form chrome (borders, helper text, JS validation, rich-text error focus) uses those tokens. Chip, alert, and button **warning** styles stay amber.
+- `--hit-target-min` (`2.75rem` / 44px) and `--hit-target-inline-min` (`1.5rem` / 24px), plus kit classes `.fp-hit-target` and `.fp-hit-target-inline`. Icon-only buttons, modal close, and alert/toast dismiss use 44px. Chip and badge remove use 24px so chips do not grow to 44px.
+- `:root { color-scheme: light; }` and `[data-theme="dark"] { color-scheme: dark; }` so native controls follow the theme.
+
+### Changed
+- Icon-only `Button` requires `text:` (used as `aria-label`, not shown) or `aria: { label: "…" }`. Missing a name raises `ArgumentError`. Loading icon-only keeps the name and sets `aria-busy="true"`.
+- Button schemes that already have a rest shadow now use `--button-shadow-hover` (`--shadow-button`) and `--button-shadow-active` (`--shadow-button-active`) on hover and press. Ghost and secondary stay unshadowed at rest. Colour, border, and shadow transitions use `--duration-fast`.
+- Dark `--shadow-sm` / `--shadow-md` / `--shadow-lg` add a faint white hairline so elevation reads on near-black.
+- `--switch-error-color` now aliases `--color-error` instead of `--color-warning`.
+- Bumped the gem version to `0.1.150`.
+
+### Upgrade notes
+- Icon-only `FlatPack::Button::Component` without `text:` or `aria: { label: }` now raises. Pass a name. `text:` on an icon-only button is the accessible name and is not rendered as visible copy.
+- Invalid form borders and messages are danger red (`--color-error`), not warning amber. Override `--color-error` if you need a different invalid colour. Warning chips, alerts, and buttons are unchanged.
+- Rebuild host Tailwind so `hover:shadow-[var(--button-shadow-hover)]`, `active:shadow-[var(--button-shadow-active)]`, and `duration-[var(--duration-fast)]` are generated. `.fp-hit-target` / `.fp-hit-target-inline` come from kit `flat_pack/application` CSS and do not need a Tailwind rebuild.
+
+## [0.1.149] - 2026-09-04
+
+### Changed
+- Under `prefers-reduced-motion: reduce`, `--duration-fast`, `--duration-base`, `--duration-slow`, and `--skeleton-shimmer-duration` collapse to `0ms`. Overlay Stimulus controllers share `controllers/flat_pack/reduced_motion` so hide delays match those tokens.
+- Modal, toast, alert, chip, badge, and dropdown skip scale and slide when motion is reduced. Toast and alert remove immediately. Button loading spinner uses `motion-reduce:animate-none`. Carousel autoplay already skipped.
+- Bumped the gem version to `0.1.149`.
+
+### Fixed
+- `--duration-fast`, `--duration-base`, and `--duration-slow` are defined on `:root` (150ms / 200ms / 300ms), not only inside `@theme`. `var(--duration-*)` and the reduced-motion helper now resolve when `flat_pack/variables` is loaded as a normal stylesheet.
+
+### Upgrade notes
+- No host app API changes. Rebuild host Tailwind so `duration-[var(--duration-*)]` and `motion-reduce:*` utilities are generated. Colour hovers that still use Tailwind's built-in `duration-200` keep a short fade. Kit surfaces that move now follow `--duration-*`.
+
 ## [0.1.148] - 2026-09-04
 
 ### Added

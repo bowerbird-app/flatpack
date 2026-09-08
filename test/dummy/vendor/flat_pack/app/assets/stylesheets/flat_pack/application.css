@@ -7,7 +7,190 @@
 @layer components {
   /* FlatPack components use Tailwind utilities and CSS variables */
   /* All styling is done via Tailwind classes in component templates */
-  
+
+  .fp-hit-target {
+    min-width: var(--hit-target-min);
+    min-height: var(--hit-target-min);
+    touch-action: manipulation;
+  }
+
+  .fp-hit-target-inline {
+    min-width: var(--hit-target-inline-min);
+    min-height: var(--hit-target-inline-min);
+    touch-action: manipulation;
+  }
+
+  /* Compact control that stays icon-sized. The pseudo expands the hit to --hit-target-min. */
+  .fp-hit-slop {
+    position: relative;
+    background-color: transparent;
+    touch-action: manipulation;
+  }
+
+  .fp-hit-slop::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: var(--hit-target-min);
+    height: var(--hit-target-min);
+    transform: translate(-50%, -50%);
+  }
+
+  .fp-touch-manipulation {
+    touch-action: manipulation;
+  }
+
+  /* Keep overlay scroll from chaining into the page underneath. */
+  [data-controller~="flat-pack--modal"],
+  [data-controller~="flat-pack--drawer"],
+  [data-controller~="flat-pack--command-palette"],
+  [data-flat-pack--carousel-target="lightbox"],
+  .flat-pack-modal__body,
+  .fp-drawer-body {
+    overscroll-behavior: contain;
+  }
+
+  /* Tailwind: .fp-skip-link */
+  .fp-skip-link {
+    position: fixed;
+    z-index: 100;
+    top: 1rem;
+    left: 1rem;
+    transform: translateY(-150%);
+  }
+
+  .fp-skip-link:focus-visible {
+    transform: none;
+  }
+
+  /* Overlay inset padding: existing 1rem / 1.5rem pad, never less than the notch. */
+  .fp-overlay-pad {
+    padding-top: max(1rem, env(safe-area-inset-top, 0px));
+    padding-right: max(1rem, env(safe-area-inset-right, 0px));
+    padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+    padding-left: max(1rem, env(safe-area-inset-left, 0px));
+  }
+
+  @media (min-width: 640px) {
+    .fp-overlay-pad {
+      padding-top: max(1.5rem, env(safe-area-inset-top, 0px));
+      padding-right: max(1.5rem, env(safe-area-inset-right, 0px));
+      padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 0px));
+      padding-left: max(1.5rem, env(safe-area-inset-left, 0px));
+    }
+  }
+
+  /* 72px bar below the notch. Border-box so padding-top does not add extra height. */
+  .fp-top-nav {
+    box-sizing: border-box;
+    height: calc(72px + env(safe-area-inset-top, 0px));
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-right: max(1rem, env(safe-area-inset-right, 0px));
+    padding-bottom: 0;
+    padding-left: max(1rem, env(safe-area-inset-left, 0px));
+  }
+
+  .fp-toast-region {
+    top: calc(72px + env(safe-area-inset-top, 0px) + calc(var(--spacing) * 4));
+    right: calc(env(safe-area-inset-right, 0px) + calc(var(--spacing) * 4));
+  }
+
+  .fp-bottom-nav {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  /* Mobile drawer only. Desktop sidebar sits in the grid, not under the notch. */
+  @media (max-width: 767px) {
+    .fp-sidebar-drawer {
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    .fp-sidebar-drawer[data-mobile-drawer-side="left"] {
+      padding-left: env(safe-area-inset-left, 0px);
+    }
+
+    .fp-sidebar-drawer[data-mobile-drawer-side="right"] {
+      padding-right: env(safe-area-inset-right, 0px);
+    }
+  }
+
+  .fp-tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .fp-text-balance {
+    text-wrap: balance;
+  }
+
+  .fp-text-pretty {
+    text-wrap: pretty;
+  }
+
+  /* Empty state and the content that replaces it fade in on --duration-slow.
+   * Hosts add .fp-content-enter to the panel that takes the empty state's place.
+   */
+  .fp-empty-state,
+  .fp-content-enter {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity var(--duration-slow) var(--easing-enter),
+      transform var(--duration-slow) var(--easing-enter);
+
+    @starting-style {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fp-empty-state,
+    .fp-content-enter {
+      transition: none;
+      transform: none;
+      opacity: 1;
+
+      @starting-style {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    .fp-skip-link {
+      transform: none;
+      clip: rect(0, 0, 0, 0);
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+    }
+
+    .fp-skip-link:focus-visible {
+      clip: auto;
+      width: auto;
+      height: auto;
+      overflow: visible;
+    }
+  }
+
+  .shadow-button {
+    box-shadow: var(--button-shadow);
+  }
+
+  .shadow-button:hover,
+  .shadow-button:focus {
+    box-shadow: var(--button-shadow-hover);
+  }
+
+  .shadow-button:active {
+    box-shadow: var(--button-shadow-active);
+  }
+
+  .shadow-button:disabled {
+    box-shadow: none;
+  }
+
   .fp-card-hover-subtle {
     transition: background-color var(--transition-fast);
     cursor: pointer;
@@ -25,23 +208,6 @@
   .fp-card-hover-strong:hover {
     box-shadow: var(--card-hover-strong-shadow);
     border-color: var(--card-hover-strong-border-color);
-  }
-
-  /* Decorative gradient helpers mapped to theme tokens */
-  .fp-gradient-1 {
-    background-image: var(--gradient-1);
-  }
-
-  .fp-gradient-2 {
-    background-image: var(--gradient-2);
-  }
-
-  .fp-gradient-3 {
-    background-image: var(--gradient-3);
-  }
-
-  .fp-gradient-4 {
-    background-image: var(--gradient-4);
   }
 
   .fp-scrollbar-hidden {
@@ -69,6 +235,28 @@
       #000 calc(100% - var(--overflow-row-fade-size)),
       transparent 100%
     );
+  }
+
+  [data-controller~="flat-pack--chart"] .apexcharts-xaxis-label,
+  [data-controller~="flat-pack--chart"] .apexcharts-yaxis-label,
+  [data-controller~="flat-pack--chart"] .apexcharts-datalabel,
+  [data-controller~="flat-pack--chart"] .apexcharts-tooltip-text-y-value {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Outline icons follow --icon-stroke-width (Heroicons 1.5). Solid/mini/micro
+   * drop the stroke attribute in icon_controller, so this does not thicken fills.
+   */
+  svg[data-controller~="flat-pack--icon"][stroke] {
+    stroke-width: var(--icon-stroke-width, 1.5);
+  }
+
+  /* Mirror travel/alignment glyphs in RTL. Uses the CSS scale property so
+   * optical translate nudges on transform still apply. Do not flip vertical
+   * chevrons, checks, or chat-bubble tails (those stay via IconComponent).
+   */
+  [dir="rtl"] .fp-icon-directional {
+    scale: -1 1;
   }
 
   /* Danger dot overlay for SVG icons. */

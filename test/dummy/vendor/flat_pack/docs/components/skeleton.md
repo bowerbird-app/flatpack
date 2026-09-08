@@ -34,8 +34,8 @@ None.
 ```
 
 ## Accessibility
-- Renders `role="status"` with `aria-busy="true"` and `aria-label="Loading..."`.
-- Shimmer animation respects reduced-motion preferences via CSS utility classes.
+- Renders `role="status"` with `aria-busy="true"` and `aria-label="Loading…"`.
+- Shimmer animation respects reduced-motion preferences via CSS utility classes. `--skeleton-shimmer-duration` is `0ms` when the OS asks to reduce motion.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).

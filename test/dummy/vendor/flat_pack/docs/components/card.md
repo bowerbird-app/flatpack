@@ -4,7 +4,7 @@
 Render a flexible content container with optional structured header, body, footer, and media sections.
 
 ## When to use
-Use Card to group related content in a consistent surface with optional hover and clickable behavior.
+Use Card to group related content in a consistent surface with optional hover and clickable behavior. Keep labels in sentence case. Do not use tracked-out ALL-CAPS eyebrows or decorative gradient washes unless a host theme asks for them.
 
 ## Class
 - Primary: `FlatPack::Card::Component`
@@ -108,6 +108,7 @@ Slot props:
 - Uses semantic container elements (`div` or `a` when clickable).
 - Clickable cards become a single focusable link target.
 - Keep nested interactive controls out of fully clickable cards to avoid conflicting focus targets.
+- `FlatPack::Card::Stat::Component` paints up/down trend copy with `--color-success-background-color` / `--color-danger-background-color`, not a Tailwind green or red.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).

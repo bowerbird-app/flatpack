@@ -7,7 +7,7 @@ module FlatPack
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "text-[var(--color-warning)]" "border-[var(--color-warning)]"
+      # "text-[var(--color-error)]" "border-[var(--color-error)]"
 
       def initialize(
         name:,
@@ -78,45 +78,20 @@ module FlatPack
       end
 
       def render_eye_icon
-        content_tag(:svg,
-          xmlns: "http://www.w3.org/2000/svg",
-          width: "16",
-          height: "16",
-          viewBox: "0 0 24 24",
-          fill: "none",
-          stroke: "currentColor",
-          "stroke-width": "2",
-          "stroke-linecap": "round",
-          "stroke-linejoin": "round",
-          class: "lucide lucide-eye",
-          data: {flat_pack__password_input_target: "eyeIcon"}) do
-          safe_join([
-            tag.path(d: "M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"),
-            tag.circle(cx: "12", cy: "12", r: "3")
-          ])
-        end
+        render FlatPack::Shared::IconComponent.new(
+          name: "eye",
+          size: :sm,
+          data: {flat_pack__password_input_target: "eyeIcon"}
+        )
       end
 
       def render_eye_off_icon
-        content_tag(:svg,
-          xmlns: "http://www.w3.org/2000/svg",
-          width: "16",
-          height: "16",
-          viewBox: "0 0 24 24",
-          fill: "none",
-          stroke: "currentColor",
-          "stroke-width": "2",
-          "stroke-linecap": "round",
-          "stroke-linejoin": "round",
-          class: "lucide lucide-eye-off hidden",
-          data: {flat_pack__password_input_target: "eyeOffIcon"}) do
-          safe_join([
-            tag.path(d: "M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"),
-            tag.path(d: "M14.084 14.158a3 3 0 0 1-4.242-4.242"),
-            tag.path(d: "M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"),
-            tag.path(d: "m2 2 20 20")
-          ])
-        end
+        render FlatPack::Shared::IconComponent.new(
+          name: "eye-slash",
+          size: :sm,
+          class: "hidden",
+          data: {flat_pack__password_input_target: "eyeOffIcon"}
+        )
       end
 
       def input_attributes

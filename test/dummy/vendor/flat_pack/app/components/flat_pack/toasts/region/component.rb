@@ -17,8 +17,7 @@ module FlatPack
         def container_attributes
           merge_attributes(
             aria: {live: "polite", atomic: "false"},
-            class: container_classes,
-            style: "top: calc(72px + calc(var(--spacing) * 4)); right: calc(var(--spacing) * 4);"
+            class: container_classes
           )
         end
 
@@ -29,7 +28,8 @@ module FlatPack
             "flex",
             "flex-col",
             "gap-3",
-            "pointer-events-none"
+            "pointer-events-none",
+            "fp-toast-region"
           )
         end
       end

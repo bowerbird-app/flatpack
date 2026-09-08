@@ -29,16 +29,18 @@ module.exports = {
 
 ### `@theme` Directive
 
-Define theme configuration in CSS. FlatPack's inventory lives in `flat_pack/variables.css`:
+Define theme configuration in CSS. FlatPack's inventory lives in `flat_pack/variables.css` as `@theme inline` (names only). Concrete values live on `:root` so a `stylesheet_link_tag` host still resolves tokens:
 
 ```css
-@theme {
+@theme inline {
+  --color-primary: var(--color-primary);
+}
+
+:root {
   --brand-hue: 0;
   --brand-chroma: 0;
   --brand-lightness: 0.3211;
-
-  --color-primary: oklch(0.3211 0 0);
-  --radius-md: 1rem;
+  --color-primary: oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue));
 }
 ```
 
@@ -58,16 +60,21 @@ Tell Tailwind where to find utility classes:
 FlatPack defines CSS variables in `app/assets/stylesheets/flat_pack/variables.css`:
 
 ```css
-@theme {
-  --brand-hue: 0;
-  --brand-chroma: 0;
-  --brand-lightness: 0.3211;
-  --color-primary: oklch(0.3211 0 0);
-  --button-primary-background-color: var(--color-primary);
+@theme inline {
+  --brand-hue: var(--brand-hue);
+  --brand-chroma: var(--brand-chroma);
+  --brand-lightness: var(--brand-lightness);
+  --color-primary: var(--color-primary);
+  --button-primary-background-color: var(--button-primary-background-color);
 }
 
 :root {
-  /* Default rounded / charcoal palette + the same component aliases as @theme */
+  /* Default rounded / charcoal palette + component aliases (the values browsers use) */
+  --brand-hue: 0;
+  --brand-chroma: 0;
+  --brand-lightness: 0.3211;
+  --color-primary: oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue));
+  --color-primary-hover: oklch(calc(var(--brand-lightness) - 0.10) var(--brand-chroma) var(--brand-hue));
   --button-primary-background-color: var(--color-primary);
 }
 
@@ -261,7 +268,7 @@ Fallbacks not needed as these are modern browsers.
 
 ### Default Light Palette + Theme Variants
 
-FlatPack defines the default rounded / charcoal palette in `:root` and layers additional variants on top with selectors such as `[data-theme="dark"]`. `[data-theme="rounded"]` is an alias of the default.
+FlatPack defines the default rounded / charcoal palette in `:root` and layers additional variants on top with selectors such as `[data-theme="dark"]`. `[data-theme="rounded"]` is an empty alias of the default.
 
 ```css
 :root {
@@ -299,7 +306,7 @@ FlatPack CSS variables are loaded in the layout via `stylesheet_link_tag`. To ov
 }
 ```
 
-`--color-primary`, surfaces, and component aliases that reference them all follow. Override a semantic token only when you need a one-off exception.
+`--color-primary` and component aliases that reference it follow. Surfaces stay independent unless you override `--surface-*`. Override a semantic token only when you need a one-off exception.
 
 ### Add New Variables
 

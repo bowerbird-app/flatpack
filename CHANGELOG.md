@@ -13,17 +13,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-## [0.1.169] - 2026-09-08
+## [0.1.170] - 2026-09-08
 
 ### Fixed
 - Dismissible Alert binds Stimulus identifier `flat-pack--alert` so the close button matches the registered controller. The unprefixed `alert` identifier never connected.
 
 ### Changed
-- Bumped the gem version to `0.1.169`.
+- Bumped the gem version to `0.1.170`.
 
 ### Upgrade notes
 - Hosts that copy Alert markup must switch `data-controller="alert"`, `data-alert-target="alert"`, and `alert#dismiss` to `flat-pack--alert`, `data-flat-pack--alert-target="alert"`, and `flat-pack--alert#dismiss`. Component renders pick this up on gem upgrade.
 - The custom event name `alert:dismissed` is unchanged.
+
+## [0.1.169] - 2026-09-08
+
+### Fixed
+- Refreshed `test/dummy/vendor/flat_pack` and both dummy lockfiles so App Platform frozen Bundler (`BUNDLE_DEPLOYMENT=1`) no longer fails on a path-gem / gemspec version skew.
+- Documented the frozen-install verify step for DigitalOcean dummy deploys.
+
+### Changed
+- Bumped the gem version to `0.1.169`.
+
+### Upgrade notes
+- No API change. Hosts on path or Rubygems installs are unaffected. Anyone deploying `test/dummy` via App Platform should keep the vendored snapshot and lockfiles aligned after engine changes (`bin/refresh_flat_pack_vendor` + `bundle lock`).
 
 ## [0.1.168] - 2026-09-08
 

@@ -124,7 +124,7 @@ module FlatPack
 
         content_tag(:button,
           type: "button",
-          class: "ml-1 inline-flex items-center justify-center rounded-full hover:bg-[var(--chip-remove-hover-background-color)]",
+          class: "ml-1 inline-flex items-center justify-center rounded-full fp-hit-target-inline hover:bg-[var(--chip-remove-hover-background-color)]",
           "aria-label": "Remove",
           data: {action: "click->flat-pack--chip#remove"}) do
           # X icon (close)

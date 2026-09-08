@@ -10,9 +10,9 @@ Use this guide when you want a complete starting point instead of hand-picking a
 
 FlatPack's theming surface has three layers:
 
-- `@theme {}` in `flat_pack/variables.css` defines the shared Tailwind token inventory (including `--brand-hue` / `--brand-chroma` / `--brand-lightness`).
-- `:root {}` in the same file defines the default rounded / charcoal palette **and** component token wiring (`--button-primary-*` → `var(--color-primary)`, etc.).
-- `[data-theme="rounded"]` is an explicit alias of that default.
+- `@theme inline {}` in `flat_pack/variables.css` registers the Tailwind token inventory (including `--brand-hue` / `--brand-chroma` / `--brand-lightness`) without copying values.
+- `:root {}` in the same file is the single source of concrete values: the default rounded / charcoal palette **and** component token wiring (`--button-primary-*` → `var(--color-primary)`, etc.).
+- `[data-theme="rounded"]` is an empty alias of that default.
 - `[data-theme="..."]` selectors override **only** tokens that differ from `:root` (semantic / intentional exceptions). Component aliases inherit.
 
 For most apps, generate a brand kit instead of copying every variable:
@@ -54,6 +54,8 @@ Example:
 
 This block is a full-token override starter (historically based on the earlier purple-blue palette). Rename the selector, paste it into your app stylesheet, and edit values in place. For the shipped default look, leave `:root` alone or set `data-theme="rounded"` (an alias of the default).
 
+Do not copy decorative `--gradient-*` tokens unless this theme actually needs a wash. The kit default has none.
+
 <details>
 <summary>Show complete custom-theme template</summary>
 
@@ -67,11 +69,6 @@ This block is a full-token override starter (historically based on the earlier p
   --color-default-hover: var(--surface-muted-background-color);
   --color-default-text: var(--surface-content-color);
   --color-default-border: var(--surface-border-color);
-
-  --gradient-1: linear-gradient(135deg, oklch(0.98 0.02 250) 0%, oklch(0.92 0.06 250) 100%);
-  --gradient-2: linear-gradient(135deg, oklch(0.97 0.02 220) 0%, oklch(0.90 0.08 200) 100%);
-  --gradient-3: linear-gradient(145deg, oklch(0.98 0.02 150) 0%, oklch(0.92 0.07 170) 100%);
-  --gradient-4: linear-gradient(145deg, oklch(0.98 0.02 40) 0%, oklch(0.93 0.08 70) 100%);
 
   --color-secondary: oklch(0.95 0.01 250);
   --color-secondary-hover: oklch(0.90 0.02 250);
@@ -96,6 +93,8 @@ This block is a full-token override starter (historically based on the earlier p
   --color-danger-hover-background-color: oklch(50.5% 0.213 27.518);
   --color-danger-text-color: oklch(1.0 0 0);
   --color-danger-border-color: var(--color-danger-background-color);
+  --color-error: var(--color-danger-background-color);
+  --color-error-border: var(--color-danger-border-color);
   --color-info-border: var(--surface-border-color);
 
   --surface-background-color: oklch(1.0 0 0);
@@ -170,10 +169,27 @@ This block is a full-token override starter (historically based on the earlier p
   --switch-label-color: var(--surface-content-color);
   --switch-thumb-background-color: var(--surface-background-color);
   --switch-thumb-shadow: var(--shadow-sm);
-  --switch-error-color: var(--color-warning);
+  --switch-error-color: var(--color-error);
   --skeleton-background-color: var(--surface-muted-background-color);
   --skeleton-shimmer-highlight-color: rgb(255 255 255 / 0.45);
   --skeleton-shimmer-duration: 1.35s;
+  --easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --easing-enter: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --easing-exit: cubic-bezier(0.3, 0, 1, 1);
+  --font-sans: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
   --code-block-background-color: var(--surface-muted-background-color);
   --code-block-border-color: var(--surface-border-color);
   --code-block-title-color: var(--surface-muted-content-color);
@@ -200,6 +216,28 @@ This block is a full-token override starter (historically based on the earlier p
   --card-hover-strong-border-color: var(--color-primary);
   --card-hover-strong-shadow: var(--shadow-md);
   --card-hover-strong-shadow-dark: var(--shadow-lg);
+  --hero-overlay-background-color: rgb(0 0 0 / 0.6);
+  --hero-overlay-text-color: oklch(1.0 0 0);
+  --hero-overlay-muted-text-color: rgb(255 255 255 / 0.8);
+  --carousel-viewport-background-color: var(--surface-muted-background-color);
+  --carousel-viewport-border-color: var(--surface-border-color);
+  --carousel-chevron-background-color: rgb(31 41 55 / 0.68);
+  --carousel-control-background-color: rgb(0 0 0 / 0.6);
+  --carousel-control-hover-background-color: rgb(0 0 0 / 0.8);
+  --carousel-control-text-color: oklch(1.0 0 0);
+  --carousel-counter-background-color: rgb(0 0 0 / 0.6);
+  --carousel-counter-text-color: oklch(1.0 0 0);
+  --carousel-indicator-track-background-color: rgb(0 0 0 / 0.5);
+  --carousel-indicator-background-color: rgb(255 255 255 / 0.5);
+  --carousel-indicator-active-background-color: rgb(255 255 255);
+  --carousel-thumb-border-color: var(--surface-border-color);
+  --carousel-thumb-placeholder-background-color: var(--surface-muted-background-color);
+  --carousel-thumb-placeholder-text-color: var(--surface-muted-content-color);
+  --carousel-caption-overlay-background-color: rgb(0 0 0 / 0.6);
+  --carousel-caption-overlay-text-color: oklch(1.0 0 0);
+  --carousel-caption-below-text-color: var(--surface-muted-content-color);
+  --carousel-media-background-color: oklch(0 0 0);
+  --carousel-lightbox-image-background-color: rgb(0 0 0 / 0.2);
   --modal-backdrop-color: rgb(0 0 0 / 0.5);
   --modal-surface-color: var(--surface-background-color);
   --modal-border-color: var(--surface-border-color);
@@ -207,6 +245,24 @@ This block is a full-token override starter (historically based on the earlier p
   --modal-body-color: var(--surface-content-color);
   --modal-close-icon-color: var(--surface-muted-content-color);
   --modal-close-icon-hover-color: var(--surface-content-color);
+  --drawer-backdrop-color: var(--modal-backdrop-color);
+  --drawer-surface-color: var(--modal-surface-color);
+  --drawer-border-color: var(--modal-border-color);
+  --drawer-title-color: var(--modal-title-color);
+  --drawer-body-color: var(--modal-body-color);
+  --drawer-close-icon-color: var(--modal-close-icon-color);
+  --drawer-close-icon-hover-color: var(--modal-close-icon-hover-color);
+  --kbd-background-color: var(--surface-muted-background-color);
+  --kbd-border-color: var(--surface-border-color);
+  --kbd-text-color: var(--surface-content-color);
+  --kbd-muted-color: var(--surface-muted-content-color);
+  --skip-link-background-color: var(--surface-content-color);
+  --skip-link-text-color: var(--surface-background-color);
+  --stepper-current-color: var(--color-primary);
+  --stepper-complete-color: var(--color-success-background-color);
+  --stepper-upcoming-color: var(--surface-border-color);
+  --stepper-label-color: var(--surface-content-color);
+  --stepper-muted-color: var(--surface-muted-content-color);
   --popover-background-color: var(--surface-background-color);
   --popover-border-color: var(--surface-border-color);
   --popover-text-color: var(--surface-content-color);
@@ -230,6 +286,9 @@ This block is a full-token override starter (historically based on the earlier p
   --sidebar-item-hover-background-color: oklch(0.96 0.01 250);
   --list-item-hover-background-color: oklch(0.95 0.01 250);
   --list-item-active-background-color: oklch(0.93 0.01 250);
+  --list-marker-color: var(--surface-muted-content-color);
+  --list-marker-min-width: 1.5rem;
+  --list-marker-gap: 0.5rem;
   --sidebar-item-hover-text-color: oklch(0.20 0.01 250);
   --sidebar-item-active-background-color: oklch(0.52 0.26 250);
   --sidebar-item-active-text-color: oklch(1.0 0 0);
@@ -263,6 +322,7 @@ This block is a full-token override starter (historically based on the earlier p
   --badge-info-background-color: var(--surface-background-color);
   --badge-info-text-color: var(--surface-content-color);
   --badge-info-border-color: var(--color-info-border);
+  --badge-remove-hover-background-color: var(--chip-remove-hover-background-color);
   --sidebar-header-badge-background-color: var(--badge-primary-background-color);
   --sidebar-header-badge-text-color: var(--badge-primary-text-color);
   --chat-background-color: var(--surface-background-color);
@@ -373,6 +433,10 @@ This block is a full-token override starter (historically based on the earlier p
   --button-focus-ring-offset-color: var(--surface-background-color);
   --button-disabled-opacity: 0.5;
   --button-shadow: var(--shadow-sm);
+  --button-shadow-hover: var(--shadow-button);
+  --button-shadow-active: var(--shadow-button-active);
+  --hit-target-min: 2.75rem;
+  --hit-target-inline-min: 1.5rem;
   --button-padding-x-sm: 0.75rem;
   --button-padding-y-sm: 0.375rem;
   --button-padding-x-md: 1rem;
@@ -394,44 +458,45 @@ This block is a full-token override starter (historically based on the earlier p
   --alert-info-border-color: var(--color-info-border);
   --alert-info-text-color: var(--surface-content-color);
   --alert-info-icon-color: var(--surface-muted-content-color);
-  --alert-success-background-color: var(--color-success-background-color);
-  --alert-success-border-color: var(--color-success-border);
-  --alert-success-text-color: var(--color-success-text);
-  --alert-success-icon-color: var(--color-success-text);
-  --alert-warning-background-color: var(--color-warning-background-color);
-  --alert-warning-border-color: var(--color-warning-border);
-  --alert-warning-text-color: var(--color-warning-text);
-  --alert-warning-icon-color: var(--color-warning-text);
-  --alert-danger-background-color: var(--color-danger-background-color);
-  --alert-danger-border-color: var(--color-danger-border-color);
-  --alert-danger-text-color: var(--color-danger-text-color);
-  --alert-danger-icon-color: var(--color-danger-text-color);
+  --alert-success-background-color: color-mix(in oklab, var(--color-success-background-color) 18%, var(--surface-background-color));
+  --alert-success-border-color: color-mix(in oklab, var(--color-success-background-color) 42%, var(--surface-border-color));
+  --alert-success-text-color: var(--surface-content-color);
+  --alert-success-icon-color: color-mix(in oklab, var(--color-success-background-color) 78%, black);
+  --alert-warning-background-color: color-mix(in oklab, var(--color-warning-background-color) 18%, var(--surface-background-color));
+  --alert-warning-border-color: color-mix(in oklab, var(--color-warning-background-color) 42%, var(--surface-border-color));
+  --alert-warning-text-color: var(--surface-content-color);
+  --alert-warning-icon-color: color-mix(in oklab, var(--color-warning-background-color) 78%, black);
+  --alert-danger-background-color: color-mix(in oklab, var(--color-danger-background-color) 18%, var(--surface-background-color));
+  --alert-danger-border-color: color-mix(in oklab, var(--color-danger-background-color) 42%, var(--surface-border-color));
+  --alert-danger-text-color: var(--surface-content-color);
+  --alert-danger-icon-color: color-mix(in oklab, var(--color-danger-background-color) 78%, black);
   --toast-border-radius: var(--radius-md);
   --toast-padding: 1rem;
   --toast-shadow: var(--shadow-lg);
-  --toast-dismiss-text-color: currentColor;
-  --toast-dismiss-hover-text-color: currentColor;
-  --toast-danger-dismiss-background-color: color-mix(in oklab, var(--toast-danger-text-color) 16%, transparent);
-  --toast-danger-dismiss-hover-background-color: color-mix(in oklab, var(--toast-danger-text-color) 24%, transparent);
-  --toast-danger-dismiss-text-color: var(--toast-danger-text-color);
-  --toast-info-background-color: var(--color-primary);
-  --toast-info-border-color: var(--toast-info-background-color);
-  --toast-info-text-color: var(--color-primary-text);
-  --toast-info-icon-color: var(--color-primary-text);
+  --toast-dismiss-text-color: var(--surface-muted-content-color);
+  --toast-dismiss-hover-text-color: var(--surface-content-color);
+  --toast-dismiss-hover-background-color: color-mix(in oklab, currentColor 8%, transparent);
+  --toast-danger-dismiss-background-color: transparent;
+  --toast-danger-dismiss-hover-background-color: var(--toast-dismiss-hover-background-color);
+  --toast-danger-dismiss-text-color: var(--toast-dismiss-text-color);
+  --toast-info-background-color: var(--alert-info-background-color);
+  --toast-info-border-color: var(--alert-info-border-color);
+  --toast-info-text-color: var(--alert-info-text-color);
+  --toast-info-icon-color: var(--alert-info-icon-color);
   --toast-success-background-color: var(--alert-success-background-color);
-  --toast-success-border-color: var(--toast-success-background-color);
+  --toast-success-border-color: var(--alert-success-border-color);
   --toast-success-text-color: var(--alert-success-text-color);
   --toast-success-icon-color: var(--alert-success-icon-color);
   --toast-warning-background-color: var(--alert-warning-background-color);
-  --toast-warning-border-color: var(--toast-warning-background-color);
+  --toast-warning-border-color: var(--alert-warning-border-color);
   --toast-warning-text-color: var(--alert-warning-text-color);
   --toast-warning-icon-color: var(--alert-warning-icon-color);
   --toast-danger-background-color: var(--alert-danger-background-color);
-  --toast-danger-border-color: var(--toast-danger-background-color);
+  --toast-danger-border-color: var(--alert-danger-border-color);
   --toast-danger-text-color: var(--alert-danger-text-color);
   --toast-danger-icon-color: var(--alert-danger-icon-color);
-  --avatar-background-color: #e5e7eb;
-  --avatar-text-color: #1f2937;
+  --avatar-background-color: var(--surface-muted-background-color);
+  --avatar-text-color: var(--surface-content-color);
   --avatar-link-hover-opacity: 0.8;
   --avatar-radius-circle: 9999px;
   --avatar-radius-rounded: var(--radius-xl);
@@ -456,7 +521,7 @@ This block is a full-token override starter (historically based on the earlier p
   --top-nav-item-active-icon-color: oklch(1.0 0 0);
 
   --search-icon-color: var(--surface-muted-content-color);
-  --search-input-background-color: var(--surface-muted-background-color);
+  --search-input-background-color: var(--surface-background-color);
   --search-input-border-color: transparent;
   --search-input-text-color: var(--surface-content-color);
   --search-input-placeholder-color: var(--surface-muted-content-color);
@@ -470,6 +535,7 @@ This block is a full-token override starter (historically based on the earlier p
   --search-result-divider-color: var(--surface-border-color);
 
   --color-ring: oklch(0.52 0.26 250);
+  --icon-stroke-width: 1.5;
 
   --stack-gap-sm: 0.5rem;
   --stack-gap-md: 1rem;
@@ -498,13 +564,17 @@ This block is a full-token override starter (historically based on the earlier p
   --chip-padding-y-md: 0.25rem;
   --chip-padding-x-lg: 1rem;
   --chip-padding-y-lg: 0.375rem;
+  --picker-badge-background-color: rgb(0 0 0 / 0.55);
+  --picker-badge-text-color: oklch(1.0 0 0);
+  --picker-selection-idle-background-color: rgb(0 0 0 / 0.3);
+  --picker-selection-idle-ring-color: rgb(0 0 0 / 0.2);
 
-  --page-title-h1-size: 2.25rem;
-  --page-title-h2-size: 1.875rem;
-  --page-title-h3-size: 1.5rem;
-  --page-title-h4-size: 1.25rem;
-  --page-title-h5-size: 1.125rem;
-  --page-title-h6-size: 1rem;
+  --page-title-h1-size: var(--text-4xl);
+  --page-title-h2-size: var(--text-3xl);
+  --page-title-h3-size: var(--text-2xl);
+  --page-title-h4-size: var(--text-xl);
+  --page-title-h5-size: var(--text-lg);
+  --page-title-h6-size: var(--text-base);
 
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
@@ -513,6 +583,8 @@ This block is a full-token override starter (historically based on the earlier p
   --shadow-button-active: 0 0 8px 4px rgba(0, 0, 0, 0.15);
 
   --modal-backdrop-blur: 4px;
+  --drawer-backdrop-blur: var(--modal-backdrop-blur);
+  --kbd-shadow: 0 1px 0 var(--surface-border-color);
 }
 ```
 
@@ -548,9 +620,9 @@ One limitation remains: the controller's built-in label helper only knows the sh
 
 The source of truth remains `app/assets/stylesheets/flat_pack/variables.css` in the FlatPack gem or repository.
 
-- `@theme {}` contains the token inventory used by Tailwind utilities.
+- `@theme inline {}` contains the token names used by Tailwind utilities. Values are not stored there.
 - `:root {}` contains the default rounded / charcoal palette and component aliases.
-- `[data-theme="dark"]` and `[data-theme="ocean"]` are **override-only** — they list tokens that differ from `:root`. `[data-theme="rounded"]` is an alias of the default. Component aliases inherit.
+- `[data-theme="dark"]` and `[data-theme="ocean"]` are **override-only** — they list tokens that differ from `:root`. `[data-theme="rounded"]` is an empty alias of the default. Component aliases inherit.
 
 When FlatPack adds a new **semantic** token, copy it into your host theme if you need a different value. Component aliases that are `var(--semantic)` do not need to be re-copied.
 
@@ -558,7 +630,7 @@ When FlatPack adds a new **semantic** token, copy it into your host theme if you
 
 If you do not want to retune hundreds of variables at once, start with these groups first:
 
-1. Core surface and text tokens: `--surface-*`, `--color-primary*`, `--color-secondary*`, `--color-default*`, `--color-ring`
+1. Core surface and text tokens: `--surface-*`, `--color-primary*`, `--color-secondary*`, `--color-default*`, `--color-ring`, `--icon-stroke-width`
 2. Global feel tokens: `--radius-*`, `--shadow-*`, `--stack-gap-*`
 3. High-visibility component tokens: `--button-*`, `--card-*`, `--modal-*`, `--sidebar-*`, `--top-nav-*`
 4. Lower-frequency component tokens only when those components appear in your app

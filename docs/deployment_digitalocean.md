@@ -55,6 +55,18 @@ BUNDLE_GEMFILE=Gemfile.app_platform bundle lock
 
 Commit the updated `vendor/flat_pack` snapshot, `Gemfile.lock`, and `Gemfile.app_platform.lock` along with the app or engine change.
 
+App Platform runs Bundler in deployment/frozen mode. Before you push, confirm the vendored gemspec matches both lockfiles and that a frozen install does not rewrite them:
+
+```bash
+cd test/dummy
+BUNDLE_WITHOUT=development:test BUNDLE_DEPLOYMENT=1 bundle install
+# second run should be a no-op
+BUNDLE_WITHOUT=development:test BUNDLE_DEPLOYMENT=1 bundle install
+git diff --exit-code Gemfile.lock Gemfile.app_platform.lock
+```
+
+If frozen install fails with a path-gem / gemspec mismatch, the vendored snapshot and lockfiles are out of sync — refresh again rather than disabling frozen mode in the app spec.
+
 ## Commands used by the checked-in app spec
 
 Web build command:
