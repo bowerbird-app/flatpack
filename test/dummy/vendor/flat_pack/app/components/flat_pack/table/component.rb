@@ -234,7 +234,7 @@ module FlatPack
       end
 
       def header_cell_classes
-        "px-[var(--table-padding)] py-[var(--table-padding)] text-left text-xs font-medium text-[var(--table-header-text-color)] uppercase tracking-wider"
+        "px-[var(--table-padding)] py-[var(--table-padding)] text-left text-xs font-medium text-[var(--table-header-text-color)]"
       end
 
       def body_cell_classes

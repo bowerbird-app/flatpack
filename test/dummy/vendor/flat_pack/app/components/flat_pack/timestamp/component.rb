@@ -58,7 +58,7 @@ module FlatPack
       end
 
       def timestamp_classes(*base_classes)
-        TailwindMerge::Merger.new.merge([*base_classes, "mb-0", @extra_class].compact.join(" "))
+        TailwindMerge::Merger.new.merge([*base_classes, "mb-0", "fp-tabular-nums", @extra_class].compact.join(" "))
       end
 
       def relative_timestamp_label

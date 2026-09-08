@@ -1,5 +1,6 @@
 // FlatPack Accordion Stimulus Controller
 import { Controller } from "@hotwired/stimulus"
+import { motionDuration } from "controllers/flat_pack/reduced_motion"
 
 export default class extends Controller {
   static targets = ["trigger", "content", "icon"]
@@ -59,7 +60,7 @@ export default class extends Controller {
         content.style.maxHeight = "0px"
         setTimeout(() => {
           content.hidden = true
-        }, 300)
+        }, motionDuration("slow"))
       } else {
         content.style.maxHeight = "0px"
         content.hidden = true

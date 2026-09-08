@@ -10,9 +10,9 @@ Use this guide when you want a complete starting point instead of hand-picking a
 
 FlatPack's theming surface has three layers:
 
-- `@theme {}` in `flat_pack/variables.css` defines the shared Tailwind token inventory (including `--brand-hue` / `--brand-chroma` / `--brand-lightness`).
-- `:root {}` in the same file defines the default rounded / charcoal palette **and** component token wiring (`--button-primary-*` → `var(--color-primary)`, etc.).
-- `[data-theme="rounded"]` is an explicit alias of that default.
+- `@theme inline {}` in `flat_pack/variables.css` registers the Tailwind token inventory (including `--brand-hue` / `--brand-chroma` / `--brand-lightness`) without copying values.
+- `:root {}` in the same file is the single source of concrete values: the default rounded / charcoal palette **and** component token wiring (`--button-primary-*` → `var(--color-primary)`, etc.).
+- `[data-theme="rounded"]` is an empty alias of that default.
 - `[data-theme="..."]` selectors override **only** tokens that differ from `:root` (semantic / intentional exceptions). Component aliases inherit.
 
 For most apps, generate a brand kit instead of copying every variable:
@@ -54,6 +54,8 @@ Example:
 
 This block is a full-token override starter (historically based on the earlier purple-blue palette). Rename the selector, paste it into your app stylesheet, and edit values in place. For the shipped default look, leave `:root` alone or set `data-theme="rounded"` (an alias of the default).
 
+Do not copy decorative `--gradient-*` tokens unless this theme actually needs a wash. The kit default has none.
+
 <details>
 <summary>Show complete custom-theme template</summary>
 
@@ -67,11 +69,6 @@ This block is a full-token override starter (historically based on the earlier p
   --color-default-hover: var(--surface-muted-background-color);
   --color-default-text: var(--surface-content-color);
   --color-default-border: var(--surface-border-color);
-
-  --gradient-1: linear-gradient(135deg, oklch(0.98 0.02 250) 0%, oklch(0.92 0.06 250) 100%);
-  --gradient-2: linear-gradient(135deg, oklch(0.97 0.02 220) 0%, oklch(0.90 0.08 200) 100%);
-  --gradient-3: linear-gradient(145deg, oklch(0.98 0.02 150) 0%, oklch(0.92 0.07 170) 100%);
-  --gradient-4: linear-gradient(145deg, oklch(0.98 0.02 40) 0%, oklch(0.93 0.08 70) 100%);
 
   --color-secondary: oklch(0.95 0.01 250);
   --color-secondary-hover: oklch(0.90 0.02 250);
@@ -96,6 +93,8 @@ This block is a full-token override starter (historically based on the earlier p
   --color-danger-hover-background-color: oklch(50.5% 0.213 27.518);
   --color-danger-text-color: oklch(1.0 0 0);
   --color-danger-border-color: var(--color-danger-background-color);
+  --color-error: var(--color-danger-background-color);
+  --color-error-border: var(--color-danger-border-color);
   --color-info-border: var(--surface-border-color);
 
   --surface-background-color: oklch(1.0 0 0);
@@ -170,10 +169,27 @@ This block is a full-token override starter (historically based on the earlier p
   --switch-label-color: var(--surface-content-color);
   --switch-thumb-background-color: var(--surface-background-color);
   --switch-thumb-shadow: var(--shadow-sm);
-  --switch-error-color: var(--color-warning);
+  --switch-error-color: var(--color-error);
   --skeleton-background-color: var(--surface-muted-background-color);
   --skeleton-shimmer-highlight-color: rgb(255 255 255 / 0.45);
   --skeleton-shimmer-duration: 1.35s;
+  --easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --easing-enter: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --easing-exit: cubic-bezier(0.3, 0, 1, 1);
+  --font-sans: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
   --code-block-background-color: var(--surface-muted-background-color);
   --code-block-border-color: var(--surface-border-color);
   --code-block-title-color: var(--surface-muted-content-color);
@@ -207,6 +223,24 @@ This block is a full-token override starter (historically based on the earlier p
   --modal-body-color: var(--surface-content-color);
   --modal-close-icon-color: var(--surface-muted-content-color);
   --modal-close-icon-hover-color: var(--surface-content-color);
+  --drawer-backdrop-color: var(--modal-backdrop-color);
+  --drawer-surface-color: var(--modal-surface-color);
+  --drawer-border-color: var(--modal-border-color);
+  --drawer-title-color: var(--modal-title-color);
+  --drawer-body-color: var(--modal-body-color);
+  --drawer-close-icon-color: var(--modal-close-icon-color);
+  --drawer-close-icon-hover-color: var(--modal-close-icon-hover-color);
+  --kbd-background-color: var(--surface-muted-background-color);
+  --kbd-border-color: var(--surface-border-color);
+  --kbd-text-color: var(--surface-content-color);
+  --kbd-muted-color: var(--surface-muted-content-color);
+  --skip-link-background-color: var(--surface-content-color);
+  --skip-link-text-color: var(--surface-background-color);
+  --stepper-current-color: var(--color-primary);
+  --stepper-complete-color: var(--color-success-background-color);
+  --stepper-upcoming-color: var(--surface-border-color);
+  --stepper-label-color: var(--surface-content-color);
+  --stepper-muted-color: var(--surface-muted-content-color);
   --popover-background-color: var(--surface-background-color);
   --popover-border-color: var(--surface-border-color);
   --popover-text-color: var(--surface-content-color);
@@ -230,6 +264,9 @@ This block is a full-token override starter (historically based on the earlier p
   --sidebar-item-hover-background-color: oklch(0.96 0.01 250);
   --list-item-hover-background-color: oklch(0.95 0.01 250);
   --list-item-active-background-color: oklch(0.93 0.01 250);
+  --list-marker-color: var(--surface-muted-content-color);
+  --list-marker-min-width: 1.5rem;
+  --list-marker-gap: 0.5rem;
   --sidebar-item-hover-text-color: oklch(0.20 0.01 250);
   --sidebar-item-active-background-color: oklch(0.52 0.26 250);
   --sidebar-item-active-text-color: oklch(1.0 0 0);
@@ -373,6 +410,10 @@ This block is a full-token override starter (historically based on the earlier p
   --button-focus-ring-offset-color: var(--surface-background-color);
   --button-disabled-opacity: 0.5;
   --button-shadow: var(--shadow-sm);
+  --button-shadow-hover: var(--shadow-button);
+  --button-shadow-active: var(--shadow-button-active);
+  --hit-target-min: 2.75rem;
+  --hit-target-inline-min: 1.5rem;
   --button-padding-x-sm: 0.75rem;
   --button-padding-y-sm: 0.375rem;
   --button-padding-x-md: 1rem;
@@ -430,8 +471,8 @@ This block is a full-token override starter (historically based on the earlier p
   --toast-danger-border-color: var(--toast-danger-background-color);
   --toast-danger-text-color: var(--alert-danger-text-color);
   --toast-danger-icon-color: var(--alert-danger-icon-color);
-  --avatar-background-color: #e5e7eb;
-  --avatar-text-color: #1f2937;
+  --avatar-background-color: var(--surface-muted-background-color);
+  --avatar-text-color: var(--surface-content-color);
   --avatar-link-hover-opacity: 0.8;
   --avatar-radius-circle: 9999px;
   --avatar-radius-rounded: var(--radius-xl);
@@ -456,7 +497,7 @@ This block is a full-token override starter (historically based on the earlier p
   --top-nav-item-active-icon-color: oklch(1.0 0 0);
 
   --search-icon-color: var(--surface-muted-content-color);
-  --search-input-background-color: var(--surface-muted-background-color);
+  --search-input-background-color: var(--surface-background-color);
   --search-input-border-color: transparent;
   --search-input-text-color: var(--surface-content-color);
   --search-input-placeholder-color: var(--surface-muted-content-color);
@@ -470,6 +511,7 @@ This block is a full-token override starter (historically based on the earlier p
   --search-result-divider-color: var(--surface-border-color);
 
   --color-ring: oklch(0.52 0.26 250);
+  --icon-stroke-width: 1.5;
 
   --stack-gap-sm: 0.5rem;
   --stack-gap-md: 1rem;
@@ -499,12 +541,12 @@ This block is a full-token override starter (historically based on the earlier p
   --chip-padding-x-lg: 1rem;
   --chip-padding-y-lg: 0.375rem;
 
-  --page-title-h1-size: 2.25rem;
-  --page-title-h2-size: 1.875rem;
-  --page-title-h3-size: 1.5rem;
-  --page-title-h4-size: 1.25rem;
-  --page-title-h5-size: 1.125rem;
-  --page-title-h6-size: 1rem;
+  --page-title-h1-size: var(--text-4xl);
+  --page-title-h2-size: var(--text-3xl);
+  --page-title-h3-size: var(--text-2xl);
+  --page-title-h4-size: var(--text-xl);
+  --page-title-h5-size: var(--text-lg);
+  --page-title-h6-size: var(--text-base);
 
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
@@ -513,6 +555,8 @@ This block is a full-token override starter (historically based on the earlier p
   --shadow-button-active: 0 0 8px 4px rgba(0, 0, 0, 0.15);
 
   --modal-backdrop-blur: 4px;
+  --drawer-backdrop-blur: var(--modal-backdrop-blur);
+  --kbd-shadow: 0 1px 0 var(--surface-border-color);
 }
 ```
 
@@ -548,9 +592,9 @@ One limitation remains: the controller's built-in label helper only knows the sh
 
 The source of truth remains `app/assets/stylesheets/flat_pack/variables.css` in the FlatPack gem or repository.
 
-- `@theme {}` contains the token inventory used by Tailwind utilities.
+- `@theme inline {}` contains the token names used by Tailwind utilities. Values are not stored there.
 - `:root {}` contains the default rounded / charcoal palette and component aliases.
-- `[data-theme="dark"]` and `[data-theme="ocean"]` are **override-only** — they list tokens that differ from `:root`. `[data-theme="rounded"]` is an alias of the default. Component aliases inherit.
+- `[data-theme="dark"]` and `[data-theme="ocean"]` are **override-only** — they list tokens that differ from `:root`. `[data-theme="rounded"]` is an empty alias of the default. Component aliases inherit.
 
 When FlatPack adds a new **semantic** token, copy it into your host theme if you need a different value. Component aliases that are `var(--semantic)` do not need to be re-copied.
 
@@ -558,7 +602,7 @@ When FlatPack adds a new **semantic** token, copy it into your host theme if you
 
 If you do not want to retune hundreds of variables at once, start with these groups first:
 
-1. Core surface and text tokens: `--surface-*`, `--color-primary*`, `--color-secondary*`, `--color-default*`, `--color-ring`
+1. Core surface and text tokens: `--surface-*`, `--color-primary*`, `--color-secondary*`, `--color-default*`, `--color-ring`, `--icon-stroke-width`
 2. Global feel tokens: `--radius-*`, `--shadow-*`, `--stack-gap-*`
 3. High-visibility component tokens: `--button-*`, `--card-*`, `--modal-*`, `--sidebar-*`, `--top-nav-*`
 4. Lower-frequency component tokens only when those components appear in your app

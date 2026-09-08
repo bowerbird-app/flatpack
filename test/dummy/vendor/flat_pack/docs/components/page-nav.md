@@ -105,3 +105,4 @@ Deprecated props continue to work as fallback values. When both old and new prop
 - `FlatPack::Button::Component` for icon-only button rendering and URL sanitization.
 - `FlatPack::Tooltip::Component` for optional action tooltips.
 - `flat-pack--page-nav` Stimulus controller for browser history back behavior.
+- Default back / secondary icons are `chevron-left`. `IconComponent` marks those as directional so they flip in `[dir="rtl"]`.

@@ -227,7 +227,7 @@ FlatPack::Table::Column::Component
 FlatPack::Shared::IconComponent
 ```
 
-`IconComponent` renders SVGs as `block shrink-0`. Magnifying-glass icons get a 2px optical lift via `OPTICAL_NUDGES` so they sit evenly next to text and in search fields.
+`IconComponent` renders SVGs as `block shrink-0`. Outline stroke is `--icon-stroke-width` (Heroicons `1.5`). Handle-heavy names in `OPTICAL_NUDGES` get a 2px optical lift so they sit evenly next to text. Left/right travel glyphs get `fp-icon-directional` and flip in RTL; chat-bubble tails stay put.
 
 Database tables would be prefixed (if any):
 ```ruby

@@ -4,10 +4,11 @@
 Compose sidebar, top navigation, and main content into a full-height application shell.
 
 ## When to use
-Use Sidebar Layout for pages that need persistent sidebar navigation with responsive desktop/mobile behavior.
+Use Sidebar Layout as the application chrome: persistent sidebar, optional top bar, and main content. Dummy and `bin/rails generate flat_pack:layout` use this family. There is no second Navbar shell.
 
 ## Class
 - Primary: `FlatPack::SidebarLayout::Component`
+- Compose with: `FlatPack::Sidebar::Component`, `FlatPack::TopNav::Component`
 
 ## Props
 
@@ -57,6 +58,10 @@ Use Sidebar Layout for pages that need persistent sidebar navigation with respon
   <% end %>
 <% end %>
 ```
+
+`FlatPack::Navbar::Component` (and `Navbar::Sidebar`, `Navbar::TopNav`) is removed. Hosts that still render it should switch to the composition above. Stimulus is `flat-pack--sidebar-layout` plus `flat-pack--sidebar` / `flat-pack--top-nav` as needed. Dummy `/demo/navbar` remains the Top Nav slot demo.
+
+The mobile drawer (below the `md` breakpoint) is `.fp-sidebar-drawer` with `data-mobile-drawer-side`. It pads `env(safe-area-inset-*)` on the top, bottom, and opening edge so the panel clears the notch. Desktop sidebar is in the grid and does not add that pad. TopNav lives in the main column, so drawer padding does not double-pad the bar. Hosts need `viewport-fit=cover` for insets to apply. See [Installation](../installation.md).
 
 ## Accessibility
 Mobile drawer backdrop uses `aria-hidden` and supports Escape to close via controller behavior. Focus is moved to sidebar on open and returned to the previous control on close.

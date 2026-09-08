@@ -35,6 +35,7 @@ Use Tooltip for brief explanatory text tied to controls or compact UI affordance
 - Tooltip body uses `role="tooltip"`.
 - Show/hide is driven by hover and focus events from the trigger wrapper.
 - Tooltip does not enforce a cursor style on the trigger; choose cursor classes in your trigger markup when needed.
+- Hover delay before show stays 200ms. Motion itself is `--duration-base` with `--easing-enter` / `--easing-exit`, a few pixels of offset, and origin from placement.
 
 ## Advanced: collapsed-only tooltips
 

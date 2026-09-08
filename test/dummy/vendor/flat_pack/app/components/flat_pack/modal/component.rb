@@ -110,7 +110,8 @@ module FlatPack
           "bg-[var(--modal-backdrop-color)]",
           "backdrop-blur-[var(--modal-backdrop-blur)]",
           "transition-opacity",
-          "duration-300"
+          "duration-[var(--duration-slow)]",
+          "ease-[var(--easing-enter)]"
         )
       end
 
@@ -135,7 +136,7 @@ module FlatPack
       end
 
       def dialog_wrapper_classes
-        "relative flex w-full min-h-screen items-start sm:items-center justify-center p-4 sm:p-6"
+        "relative flex w-full min-h-screen items-start sm:items-center justify-center fp-overlay-pad"
       end
 
       def dialog_attributes
@@ -172,9 +173,11 @@ module FlatPack
           "border",
           "border-[var(--modal-border-color)]",
           "transform",
-          "transition-all",
-          "duration-300",
+          "transition-[opacity,transform]",
+          "duration-[var(--duration-slow)]",
+          "ease-[var(--easing-enter)]",
           "scale-95",
+          "motion-reduce:scale-100",
           "opacity-0"
         )
       end
@@ -194,7 +197,7 @@ module FlatPack
       end
 
       def close_button_classes
-        "shrink-0 cursor-pointer text-[var(--modal-close-icon-color)] hover:text-[var(--modal-close-icon-hover-color)] transition-colors rounded-[var(--radius-sm)] p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+        "shrink-0 cursor-pointer text-[var(--modal-close-icon-color)] hover:text-[var(--modal-close-icon-hover-color)] transition-colors rounded-[var(--radius-sm)] p-1 fp-hit-target focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
       end
 
       def render_header_section
@@ -213,14 +216,7 @@ module FlatPack
       end
 
       def close_icon
-        content_tag(:svg, class: "w-5 h-5", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor") do
-          tag.path(
-            "stroke-linecap": "round",
-            "stroke-linejoin": "round",
-            "stroke-width": "2",
-            d: "M6 18L18 6M6 6l12 12"
-          )
-        end
+        render FlatPack::Shared::IconComponent.new(name: "x-mark", size: :md)
       end
 
       def render_header_content
@@ -233,7 +229,7 @@ module FlatPack
             # directly to this slot.
             header.to_s.html_safe
           else
-            content_tag(:h2, @title, class: "text-lg font-semibold text-[var(--modal-title-color)]")
+            content_tag(:h2, @title, class: "text-lg font-semibold text-[var(--modal-title-color)] fp-text-balance")
           end
         end
       end

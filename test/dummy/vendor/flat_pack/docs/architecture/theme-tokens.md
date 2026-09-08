@@ -11,12 +11,12 @@ Token value changes in the central theme source are automatically reflected on a
 Tokens are extracted from:
 
 ```
-app/assets/stylesheets/flat_pack/variables.css  →  @theme { … }
+app/assets/stylesheets/flat_pack/variables.css  →  :root { … }
 ```
 
-All `--token-name: value;` declarations inside the `@theme` block are read and built into rows with `variable` and `default_value` fields.
+All `--token-name: value;` declarations inside the `:root` block are read and built into rows with `variable` and `default_value` fields. `@theme inline` only lists the same names as `var(--token)` so Tailwind can emit utilities; dummy tables do not use that block for displayed values.
 
-Named theme overrides live in slim `[data-theme]` blocks (only tokens that differ from `:root`). Component aliases that are pure `var(--semantic)` references are defined once on `:root` / `@theme` and are not re-copied per theme.
+Named theme overrides live in slim `[data-theme]` blocks (only tokens that differ from `:root`). `[data-theme="rounded"]` is empty. Component aliases that are pure `var(--semantic)` references are defined once on `:root` and are not re-copied per theme.
 
 ### Controller Mapping
 
@@ -73,5 +73,5 @@ Open `test/dummy/app/controllers/pages_controller.rb` and add to `DEMO_THEME_TOK
 If the token section does not appear on a demo page:
 
 1. Confirm the page action name matches an entry in `DEMO_THEME_TOKEN_MAPPINGS`.
-2. Confirm matching tokens exist inside `@theme { … }` in `variables.css`.
+2. Confirm matching tokens exist inside `:root { … }` in `variables.css`.
 3. Confirm the page is rendered through the standard dummy app layout.

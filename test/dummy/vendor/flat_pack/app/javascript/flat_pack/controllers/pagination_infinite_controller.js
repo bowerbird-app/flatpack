@@ -397,7 +397,7 @@ export default class extends Controller {
         skeleton.className = skeletonBase
         skeleton.style.width = widths[columnIndex % widths.length]
         skeleton.setAttribute("aria-busy", "true")
-        skeleton.setAttribute("aria-label", "Loading...")
+        skeleton.setAttribute("aria-label", "Loading…")
         skeleton.setAttribute("role", "status")
 
         cell.appendChild(skeleton)
@@ -442,10 +442,10 @@ export default class extends Controller {
       placeholder.className = "border border-[var(--surface-border-color)] rounded-[var(--radius-lg)] p-4 space-y-3"
       const skeletonBase = "relative overflow-hidden bg-[var(--surface-muted-background-color)] before:pointer-events-none before:absolute before:inset-0 before:content-[''] before:bg-[linear-gradient(110deg,transparent_20%,rgb(255_255_255_/_0.45)_45%,transparent_70%)] before:translate-x-[-100%] before:animate-[fp-skeleton-shimmer_1.35s_linear_infinite] motion-reduce:before:animate-none"
       placeholder.innerHTML = [
-        `<div class="${skeletonBase} w-full rounded-[var(--radius-lg)] h-[120px]" aria-busy="true" aria-label="Loading..." role="status"></div>`,
-        `<div class="${skeletonBase} h-8 rounded w-[60%]" aria-busy="true" aria-label="Loading..." role="status"></div>`,
-        `<div class="${skeletonBase} h-4 rounded w-[90%]" aria-busy="true" aria-label="Loading..." role="status"></div>`,
-        `<div class="${skeletonBase} h-4 rounded w-[75%]" aria-busy="true" aria-label="Loading..." role="status"></div>`
+        `<div class="${skeletonBase} w-full rounded-[var(--radius-lg)] h-[120px]" aria-busy="true" aria-label="Loading…" role="status"></div>`,
+        `<div class="${skeletonBase} h-8 rounded w-[60%]" aria-busy="true" aria-label="Loading…" role="status"></div>`,
+        `<div class="${skeletonBase} h-4 rounded w-[90%]" aria-busy="true" aria-label="Loading…" role="status"></div>`,
+        `<div class="${skeletonBase} h-4 rounded w-[75%]" aria-busy="true" aria-label="Loading…" role="status"></div>`
       ].join("")
 
       currentContent.appendChild(placeholder)

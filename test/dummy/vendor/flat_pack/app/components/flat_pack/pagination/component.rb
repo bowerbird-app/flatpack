@@ -20,7 +20,7 @@ module FlatPack
         turbo_frame: nil,
         infinite_url: nil,
         has_more: true,
-        loading_text: "Loading more...",
+        loading_text: "Loading more…",
         loading_variant: :table,
         **system_arguments
       )
@@ -176,7 +176,7 @@ module FlatPack
       end
 
       def page_button_classes(active: false, disabled: false)
-        base = "inline-flex items-center justify-center #{button_size_classes} text-sm font-medium rounded-[var(--radius-sm)] transition-colors"
+        base = "inline-flex items-center justify-center #{button_size_classes} text-sm font-medium rounded-[var(--radius-sm)] transition-colors fp-tabular-nums"
 
         if disabled
           "#{base} text-[var(--surface-muted-content-color)] cursor-not-allowed opacity-50"
@@ -241,25 +241,11 @@ module FlatPack
       end
 
       def previous_icon
-        content_tag(:svg, class: "w-4 h-4", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor") do
-          tag.path(
-            "stroke-linecap": "round",
-            "stroke-linejoin": "round",
-            "stroke-width": "2",
-            d: "M15 19l-7-7 7-7"
-          )
-        end
+        render FlatPack::Shared::IconComponent.new(name: "chevron-left", size: :sm)
       end
 
       def next_icon
-        content_tag(:svg, class: "w-4 h-4", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor") do
-          tag.path(
-            "stroke-linecap": "round",
-            "stroke-linejoin": "round",
-            "stroke-width": "2",
-            d: "M9 5l7 7-7 7"
-          )
-        end
+        render FlatPack::Shared::IconComponent.new(name: "chevron-right", size: :sm)
       end
 
       def validate_pagy!

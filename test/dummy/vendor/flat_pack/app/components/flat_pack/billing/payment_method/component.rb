@@ -63,14 +63,13 @@ module FlatPack
         end
 
         def render_empty_body
-          safe_join([
-            render(FlatPack::EmptyState::Component.new(
-              title: @empty_title,
-              description: @empty_description,
-              icon: :inbox
-            )),
-            render_actions_row
-          ].compact)
+          action_html = actions? ? actions.to_s : nil
+          render(FlatPack::EmptyState::Component.new(
+            title: @empty_title,
+            description: @empty_description
+          )) do |empty|
+            empty.slot { action_html.html_safe } if action_html.present?
+          end
         end
 
         def render_actions_row

@@ -68,7 +68,7 @@ module FlatPack
 
         content_tag(:button,
           type: "button",
-          class: "ml-1 inline-flex items-center justify-center rounded-full hover:bg-black/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-offset-2 focus:ring-ring",
+          class: "ml-1 inline-flex items-center justify-center rounded-full fp-hit-target-inline hover:bg-black/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-offset-2 focus:ring-ring",
           "aria-label": "Remove",
           data: {action: "click->flat-pack--badge#remove"}) do
           # X icon (close)

@@ -7,7 +7,7 @@ module FlatPack
     module ControlStyles
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "text-[var(--color-warning)]" "border-[var(--color-warning)]"
+      # "text-[var(--color-error)]" "border-[var(--color-error)]"
       # "px-[var(--form-control-padding)]" "py-[var(--form-control-padding)]"
       # "bg-[var(--surface-background-color)]" "text-[var(--surface-content-color)]"
       # "border-[var(--surface-border-color)]" "placeholder:text-[var(--surface-muted-content-color)]"
@@ -39,7 +39,7 @@ module FlatPack
         ].compact
 
         base_classes << if error
-          "border-[var(--color-warning)]"
+          "border-[var(--color-error)]"
         else
           "border-[var(--surface-border-color)]"
         end

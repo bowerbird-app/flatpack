@@ -1,4 +1,11 @@
 import { Controller } from "@hotwired/stimulus"
+import {
+  prefersReducedMotion,
+  motionDuration,
+  motionTransition,
+  overlayOrigin,
+  overlayEnterOffset
+} from "controllers/flat_pack/reduced_motion"
 
 export default class extends Controller {
   static values = {
@@ -10,6 +17,8 @@ export default class extends Controller {
     this.spacing = 12
     this.viewportPadding = 8
     this.isOpen = false
+    this.hideTimeout = null
+    this.resolvedPlacement = this.placementValue
 
     this.handleTriggerClick = this.handleTriggerClick.bind(this)
     this.handleDocumentClick = this.handleDocumentClick.bind(this)
@@ -20,6 +29,7 @@ export default class extends Controller {
   }
 
   disconnect() {
+    this.clearHideTimeout()
     this.removeTriggerListener()
     this.removeListeners()
   }
@@ -55,20 +65,58 @@ export default class extends Controller {
   open() {
     if (!this.trigger) return
 
+    const wasClosing = Boolean(this.hideTimeout)
+    this.clearHideTimeout()
     this.isOpen = true
+    this.trigger.setAttribute("aria-expanded", "true")
     this.element.classList.remove("hidden")
     this.element.setAttribute("aria-hidden", "false")
-    this.position()
-    this.trigger.setAttribute("aria-expanded", "true")
+
+    if (!wasClosing) {
+      this.element.style.transition = "none"
+      this.element.style.opacity = "0"
+      this.element.style.transform = "none"
+      this.position()
+      this.element.style.transformOrigin = overlayOrigin(this.resolvedPlacement)
+      this.element.offsetHeight
+
+      if (!prefersReducedMotion()) {
+        this.element.style.transform = overlayEnterOffset(this.resolvedPlacement)
+        this.element.offsetHeight
+      }
+    }
+
+    this.element.style.transition = motionTransition(
+      ["opacity", "transform"],
+      { duration: "base", easing: "enter" }
+    )
+
+    requestAnimationFrame(() => {
+      this.element.style.opacity = "1"
+      this.element.style.transform = "none"
+    })
+
     this.addListeners()
   }
 
   close() {
     this.isOpen = false
     this.removeListeners()
-    this.element.classList.add("hidden")
-    this.element.setAttribute("aria-hidden", "true")
     this.trigger?.setAttribute("aria-expanded", "false")
+    this.clearHideTimeout()
+
+    this.element.style.transition = motionTransition(
+      ["opacity", "transform"],
+      { duration: "base", easing: "exit" }
+    )
+    this.element.style.opacity = "0"
+    this.element.style.transform = prefersReducedMotion() ? "none" : overlayEnterOffset(this.resolvedPlacement)
+
+    this.hideTimeout = setTimeout(() => {
+      this.hideTimeout = null
+      this.element.classList.add("hidden")
+      this.element.setAttribute("aria-hidden", "true")
+    }, motionDuration("base"))
   }
 
   handleDocumentClick(event) {
@@ -115,8 +163,8 @@ export default class extends Controller {
     const triggerRect = this.trigger.getBoundingClientRect()
     const popoverRect = this.element.getBoundingClientRect()
 
-    const placement = this.resolvePlacement(this.placementValue, triggerRect, popoverRect)
-    const { top, left } = this.computePosition(placement, triggerRect, popoverRect)
+    this.resolvedPlacement = this.resolvePlacement(this.placementValue, triggerRect, popoverRect)
+    const { top, left } = this.computePosition(this.resolvedPlacement, triggerRect, popoverRect)
 
     const clampedTop = Math.min(
       Math.max(top, this.viewportPadding),
@@ -131,6 +179,7 @@ export default class extends Controller {
     this.element.style.position = "fixed"
     this.element.style.top = `${clampedTop}px`
     this.element.style.left = `${clampedLeft}px`
+    this.element.style.transformOrigin = overlayOrigin(this.resolvedPlacement)
   }
 
   resolvePlacement(placement, triggerRect, popoverRect) {
@@ -185,5 +234,12 @@ export default class extends Controller {
     }
 
     this.trigger?.setAttribute("aria-controls", this.element.id)
+  }
+
+  clearHideTimeout() {
+    if (!this.hideTimeout) return
+
+    clearTimeout(this.hideTimeout)
+    this.hideTimeout = null
   }
 }
