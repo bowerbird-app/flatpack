@@ -61,6 +61,18 @@ BUNDLE_GEMFILE=Gemfile.app_platform bundle lock
 
 Commit the updated `vendor/flat_pack` snapshot, `Gemfile.lock`, and `Gemfile.app_platform.lock` along with the app or engine change.
 
+App Platform runs Bundler in deployment/frozen mode. Before you push, confirm the vendored gemspec matches both lockfiles and that a frozen install does not rewrite them:
+
+```bash
+cd test/dummy
+BUNDLE_WITHOUT=development:test BUNDLE_DEPLOYMENT=1 bundle install
+# second run should be a no-op
+BUNDLE_WITHOUT=development:test BUNDLE_DEPLOYMENT=1 bundle install
+git diff --exit-code Gemfile.lock Gemfile.app_platform.lock
+```
+
+If frozen install fails with a path-gem / gemspec mismatch, the vendored snapshot and lockfiles are out of sync — refresh again rather than disabling frozen mode in the app spec.
+
 ## Commands used by the checked-in app spec
 
 Web build command:
@@ -82,9 +94,10 @@ The checked-in app spec also sets:
 
 ## Production notes
 
-- The dummy app keeps both Postgres and Active Storage on local disk by default. App Platform filesystems are ephemeral, so the production database and uploads do not persist across rebuilds unless you move them to external services.
-- For the default Postgres deployment path, keep the demo on a single web service. A separate worker or one-off console does not share the same local Postgres file with the web process.
-- If you need Sidekiq or multiple services, move the dummy app to a shared external database first and then set `ACTIVE_JOB_QUEUE_ADAPTER=sidekiq` plus `REDIS_URL`.
+- Use managed Postgres via `DATABASE_URL`. Do not rely on a SQLite file in the app container.
+- Active Storage defaults to local disk, which is ephemeral on App Platform. Uploads do not persist across rebuilds unless you move them to Spaces or another external store.
+- Keep the demo on a single web service unless Postgres and Redis are shared external services.
+- If you need Sidekiq or multiple services, set `ACTIVE_JOB_QUEUE_ADAPTER=sidekiq` plus `REDIS_URL` against the managed Redis cluster.
 - If you want persistent uploads, add a production storage service backed by DigitalOcean Spaces and switch `ACTIVE_STORAGE_SERVICE` to that service name.
 - The checked-in app spec disables `deploy_on_push` by default. Enable it if you want every push to `main` to roll out automatically.
 - If the deploy starts failing after FlatPack engine changes, refresh `vendor/flat_pack` and regenerate the dummy app lockfiles so the vendored dependency stays aligned with the code you want App Platform to use.

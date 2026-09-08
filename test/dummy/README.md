@@ -201,6 +201,8 @@ cd test/dummy
 bin/refresh_flat_pack_vendor
 bundle lock
 BUNDLE_GEMFILE=Gemfile.app_platform bundle lock
+BUNDLE_WITHOUT=development:test BUNDLE_DEPLOYMENT=1 bundle install
+git diff --exit-code Gemfile.lock Gemfile.app_platform.lock
 ```
 
 See [../../docs/deployment_digitalocean.md](../../docs/deployment_digitalocean.md) for the full setup flow.
