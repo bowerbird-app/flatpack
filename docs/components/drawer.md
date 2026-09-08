@@ -53,7 +53,7 @@ Use `drawer.header` / `drawer.body` / `drawer.footer`. There is no `with_` prefi
 - Body scroll lock shares the same count key as Modal (`flatPackModalLockCount`).
 - Overlay and `.fp-drawer-body` use `overscroll-behavior: contain`. The panel uses `.fp-overlay-pad`.
 - Enter uses `--duration-slow` / `--easing-enter`; exit uses `--duration-base` / `--easing-exit`. Reduced motion fades without a slide. Motion writes the Tailwind v4 `translate` property (not `transform`).
-- Opening moves the overlay onto `document.body` so `z-[70]` can sit above `SidebarLayout` (`z-50`). Close and disconnect put it back.
+- Opening moves the overlay onto `document.body` so `z-[70]` can sit above `SidebarLayout` (`z-50`). A hidden `data-fp-drawer-slot` marker holds the original place so Stimulus reconnect after the move does not put the overlay back under the sidebar. Close (and a real disconnect) restore it.
 
 ## Dependencies
 - Stimulus controller: `flat-pack--drawer`.

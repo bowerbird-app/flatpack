@@ -42,6 +42,7 @@ module FlatPack
       assert_includes drawer, "document.body.appendChild"
       assert_includes drawer, "ensureInBody"
       assert_includes drawer, "restorePosition"
+      assert_includes drawer, "data-fp-drawer-slot"
       refute_includes drawer, "style.transform"
       assert_includes palette, "style.scale"
       refute_includes palette, "style.transform"

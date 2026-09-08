@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.172] - 2026-09-08
 
 ### Fixed
-- Drawer overlays move onto `document.body` while open and sit at `z-[70]`, so a left drawer no longer paints under `SidebarLayout`.
+- Drawer overlays move onto `document.body` while open and sit at `z-[70]`, so a left drawer no longer paints under `SidebarLayout`. A slot marker holds the original place so Stimulus disconnect-on-move does not put the overlay back.
 - Progress fill paint lives in kit CSS (`.fp-progress-fill` and `--progress-fill-color`), so the default bar is no longer missing `.bg-primary`.
 - Stepper completed markers use `.fp-stepper-marker` and `--stepper-complete-text-color`, so checks stay visible when the Tailwind arbitrary fill class is not in the host sheet.
 - Ordered list rows with `icon:` keep both the decimal marker and a content-coloured `.flat-pack-list-item-icon`.

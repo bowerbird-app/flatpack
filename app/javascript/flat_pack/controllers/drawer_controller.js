@@ -12,18 +12,22 @@ export default class extends Controller {
   }
 
   connect() {
-    this.previousActiveElement = null
-    this.hideTimeout = null
-    this.closing = false
-    this.originalParent = this.element.parentNode
-    this.originalNextSibling = this.element.nextSibling
-    this.handleDocumentTriggerClick = this.handleDocumentTriggerClick.bind(this)
+    if (this.element.parentElement !== document.body) {
+      this.previousActiveElement = null
+      this.hideTimeout = null
+      this.closing = false
+    }
+    if (!this.handleDocumentTriggerClickBound) {
+      this.handleDocumentTriggerClick = this.handleDocumentTriggerClick.bind(this)
+      this.handleDocumentTriggerClickBound = true
+    }
     document.addEventListener("click", this.handleDocumentTriggerClick)
   }
 
   disconnect() {
     document.removeEventListener("click", this.handleDocumentTriggerClick)
     this.clearHideTimeout()
+    if (this.moving) return
     if (!this.element.classList.contains("hidden")) {
       this.restoreBodyScroll()
       this.restoreFocus()
@@ -87,18 +91,26 @@ export default class extends Controller {
   ensureInBody() {
     if (this.element.parentElement === document.body) return
 
+    const slot = document.createElement("span")
+    slot.hidden = true
+    slot.setAttribute("data-fp-drawer-slot", this.element.id)
+    this.element.parentNode.insertBefore(slot, this.element)
+    this.moving = true
     document.body.appendChild(this.element)
+    this.moving = false
   }
 
   restorePosition() {
-    if (!this.originalParent || this.element.parentElement === this.originalParent) return
-    if (this.originalParent.isConnected === false) return
+    if (this.element.parentElement !== document.body) return
 
-    if (this.originalNextSibling?.parentNode === this.originalParent) {
-      this.originalParent.insertBefore(this.element, this.originalNextSibling)
-    } else {
-      this.originalParent.appendChild(this.element)
-    }
+    const slotId = (typeof CSS !== "undefined" && CSS.escape) ? CSS.escape(this.element.id) : this.element.id
+    const slot = document.querySelector(`[data-fp-drawer-slot="${slotId}"]`)
+    if (!slot?.parentNode) return
+
+    this.moving = true
+    slot.parentNode.insertBefore(this.element, slot)
+    slot.remove()
+    this.moving = false
   }
 
   handleDocumentTriggerClick(event) {

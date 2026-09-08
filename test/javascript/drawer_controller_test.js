@@ -20,6 +20,7 @@ function loadDrawerController(documentStub) {
     exports: {},
     document: documentStub,
     window: { innerWidth: 800 },
+    CSS: { escape(value) { return value } },
     requestAnimationFrame(callback) { callback() },
     setTimeout(callback) { callback(); return 0 },
     clearTimeout() {}
@@ -40,17 +41,18 @@ function classListStub(initial = ['hidden']) {
 }
 
 function buildController() {
+  const slots = []
   const originalParent = {
     name: 'original',
     insertBefore(node, sibling) {
       node.parentElement = this
       node.parentNode = this
-      this.inserted = { method: 'insertBefore', sibling }
+      this.inserted = { method: 'insertBefore', node, sibling }
     },
     appendChild(node) {
       node.parentElement = this
       node.parentNode = this
-      this.inserted = { method: 'appendChild' }
+      this.inserted = { method: 'appendChild', node }
     }
   }
 
@@ -65,13 +67,35 @@ function buildController() {
     }
   }
 
-  const nextSibling = { id: 'next', parentNode: originalParent }
   const documentStub = {
     body,
     activeElement: null,
     documentElement: { clientWidth: 800 },
     addEventListener() {},
-    removeEventListener() {}
+    removeEventListener() {},
+    createElement(tag) {
+      const node = {
+        tagName: tag.toUpperCase(),
+        hidden: false,
+        attributes: {},
+        parentNode: null,
+        parentElement: null,
+        setAttribute(name, value) { this.attributes[name] = value },
+        getAttribute(name) { return this.attributes[name] },
+        remove() {
+          this.removed = true
+          this.parentNode = null
+          this.parentElement = null
+        }
+      }
+      if (tag === 'span') slots.push(node)
+      return node
+    },
+    querySelector(selector) {
+      const match = selector.match(/data-fp-drawer-slot="([^"]+)"/)
+      if (!match) return null
+      return slots.find((slot) => slot.attributes['data-fp-drawer-slot'] === match[1] && !slot.removed) || null
+    }
   }
 
   const DrawerController = loadDrawerController(documentStub)
@@ -80,7 +104,7 @@ function buildController() {
     classList: classListStub(['hidden']),
     parentElement: originalParent,
     parentNode: originalParent,
-    nextSibling,
+    nextSibling: { id: 'next' },
     style: {},
     offsetHeight: 0,
     setAttribute() {}
@@ -100,37 +124,40 @@ function buildController() {
     sideValue: 'left'
   })
 
-  return { controller, element, body, originalParent, nextSibling }
+  return { controller, element, body, originalParent, slots, documentStub }
 }
 
-test('open moves the overlay onto document.body', () => {
-  const { controller, element, body } = buildController()
+test('open moves the overlay onto document.body and leaves a slot marker', () => {
+  const { controller, element, body, originalParent, slots } = buildController()
 
   controller.connect()
   controller.open()
 
   assert.equal(element.parentElement, body)
   assert.equal(body.appended, element)
+  assert.equal(slots[0].attributes['data-fp-drawer-slot'], 'filters-drawer')
+  assert.equal(originalParent.inserted.node, slots[0])
 })
 
-test('close restores the overlay to its original parent', () => {
-  const { controller, element, originalParent, nextSibling } = buildController()
+test('close restores the overlay to the slot marker', () => {
+  const { controller, element, originalParent, slots } = buildController()
 
   controller.connect()
   controller.open()
   controller.close()
 
   assert.equal(element.parentElement, originalParent)
-  assert.equal(originalParent.inserted.method, 'insertBefore')
-  assert.equal(originalParent.inserted.sibling, nextSibling)
+  assert.equal(originalParent.inserted.sibling, slots[0])
+  assert.equal(slots[0].removed, true)
 })
 
-test('disconnect restores the overlay if it is still on the body', () => {
-  const { controller, element, originalParent } = buildController()
+test('disconnect during a move does not restore the overlay', () => {
+  const { controller, element, body } = buildController()
 
   controller.connect()
   controller.open()
+  controller.moving = true
   controller.disconnect()
 
-  assert.equal(element.parentElement, originalParent)
+  assert.equal(element.parentElement, body)
 })
