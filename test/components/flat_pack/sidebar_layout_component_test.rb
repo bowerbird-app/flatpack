@@ -76,6 +76,7 @@ module FlatPack
       def test_renders_backdrop
         render_inline(Component.new)
         assert_selector "div[data-flat-pack--sidebar-layout-target='backdrop']"
+        assert_includes page.native.to_html, "bg-[var(--drawer-backdrop-color)]"
       end
 
       def test_renders_all_slots

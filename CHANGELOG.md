@@ -13,6 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.167] - 2026-09-08
+
+### Changed
+- Overlay chrome that used Tailwind black/white utilities now follows tokens: hero (`--hero-overlay-*`), carousel controls/media/lightbox (`--carousel-control-*`, `--carousel-counter-*`, `--carousel-media-background-color`, `--carousel-lightbox-image-background-color`), badge remove hover (`--badge-remove-hover-background-color`), sidebar mobile drawer (`--drawer-backdrop-color`), and picker grid badges/idle rings (`--picker-badge-*`, `--picker-selection-idle-*`).
+- Card stat up/down trends use `--color-success-background-color` / `--color-danger-background-color`.
+- Dummy forms use `--card-background-color` instead of the missing `--color-card`. Dummy prices, chart deltas, the green link, and popover Delete use semantic success/danger tokens.
+- Bumped the gem version to `0.1.167`.
+
+### Upgrade notes
+- No API change. Hosts that already override the overlay tokens listed above keep those values. Hosts that relied on hardcoded Tailwind `bg-black/60`, `text-green-600`, and similar utilities now follow the theme.
+- Carousel prev/next, counter, and lightbox toggle fill follow `--carousel-control-*` / `--carousel-counter-*` (`rgb(0 0 0 / 0.6)` idle, `0.8` hover) instead of hardcoded `rgba(0,0,0,0.5)` / `0.75`.
+- Rebuild host Tailwind if you `@import` `flat_pack/application`. Hosts that load kit CSS with `stylesheet_link_tag` pick this up on reload.
+
 ## [0.1.166] - 2026-09-07
 
 ### Fixed

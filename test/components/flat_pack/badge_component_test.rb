@@ -110,6 +110,7 @@ module FlatPack
         assert_selector "span", text: "Tag"
         assert_selector "button[type='button'][aria-label='Remove']"
         assert_selector "button svg"
+        assert_includes page.native.to_html, "hover:bg-[var(--badge-remove-hover-background-color)]"
       end
 
       def test_renders_non_removable_badge_by_default

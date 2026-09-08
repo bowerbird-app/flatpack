@@ -502,7 +502,7 @@ module FlatPack
           trend_direction: :up
         ))
 
-        assert_includes page.native.to_html, "text-green-600"
+        assert_includes page.native.to_html, "text-[var(--color-success-background-color)]"
       end
 
       def test_stat_component_uses_down_trend_style
@@ -513,7 +513,7 @@ module FlatPack
           trend_direction: :down
         ))
 
-        assert_includes page.native.to_html, "text-red-600"
+        assert_includes page.native.to_html, "text-[var(--color-danger-background-color)]"
         assert_text "↓ 1.2%"
       end
 

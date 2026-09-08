@@ -148,6 +148,9 @@
   --card-hover-strong-border-color: var(--card-hover-strong-border-color);
   --card-hover-strong-shadow: var(--card-hover-strong-shadow);
   --card-hover-strong-shadow-dark: var(--card-hover-strong-shadow-dark);
+  --hero-overlay-background-color: var(--hero-overlay-background-color);
+  --hero-overlay-text-color: var(--hero-overlay-text-color);
+  --hero-overlay-muted-text-color: var(--hero-overlay-muted-text-color);
   --carousel-viewport-background-color: var(--carousel-viewport-background-color);
   --carousel-viewport-border-color: var(--carousel-viewport-border-color);
   --carousel-chevron-background-color: var(--carousel-chevron-background-color);
@@ -165,6 +168,8 @@
   --carousel-caption-overlay-background-color: var(--carousel-caption-overlay-background-color);
   --carousel-caption-overlay-text-color: var(--carousel-caption-overlay-text-color);
   --carousel-caption-below-text-color: var(--carousel-caption-below-text-color);
+  --carousel-media-background-color: var(--carousel-media-background-color);
+  --carousel-lightbox-image-background-color: var(--carousel-lightbox-image-background-color);
   --modal-backdrop-color: var(--modal-backdrop-color);
   --modal-surface-color: var(--modal-surface-color);
   --modal-border-color: var(--modal-border-color);
@@ -249,6 +254,7 @@
   --badge-info-background-color: var(--badge-info-background-color);
   --badge-info-text-color: var(--badge-info-text-color);
   --badge-info-border-color: var(--badge-info-border-color);
+  --badge-remove-hover-background-color: var(--badge-remove-hover-background-color);
   --sidebar-header-badge-background-color: var(--sidebar-header-badge-background-color);
   --sidebar-header-badge-text-color: var(--sidebar-header-badge-text-color);
   --chat-background-color: var(--chat-background-color);
@@ -506,6 +512,10 @@
   --chip-padding-y-md: var(--chip-padding-y-md);
   --chip-padding-x-lg: var(--chip-padding-x-lg);
   --chip-padding-y-lg: var(--chip-padding-y-lg);
+  --picker-badge-background-color: var(--picker-badge-background-color);
+  --picker-badge-text-color: var(--picker-badge-text-color);
+  --picker-selection-idle-background-color: var(--picker-selection-idle-background-color);
+  --picker-selection-idle-ring-color: var(--picker-selection-idle-ring-color);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
   --text-xs: var(--text-xs);
@@ -702,6 +712,9 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --card-hover-strong-border-color: var(--color-primary);
   --card-hover-strong-shadow: var(--shadow-md);
   --card-hover-strong-shadow-dark: var(--shadow-lg);
+  --hero-overlay-background-color: rgb(0 0 0 / 0.6);
+  --hero-overlay-text-color: oklch(1.0 0 0);
+  --hero-overlay-muted-text-color: rgb(255 255 255 / 0.8);
   --carousel-chevron-background-color: rgb(31 41 55 / 0.68);
   --carousel-viewport-background-color: var(--surface-muted-background-color);
   --carousel-viewport-border-color: var(--surface-border-color);
@@ -719,6 +732,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --carousel-caption-overlay-background-color: rgb(0 0 0 / 0.6);
   --carousel-caption-overlay-text-color: oklch(1.0 0 0);
   --carousel-caption-below-text-color: var(--surface-muted-content-color);
+  --carousel-media-background-color: oklch(0 0 0);
+  --carousel-lightbox-image-background-color: rgb(0 0 0 / 0.2);
   --modal-backdrop-color: rgb(0 0 0 / 0.5);
   --modal-surface-color: var(--surface-background-color);
   --modal-border-color: var(--surface-border-color);
@@ -803,6 +818,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --badge-info-background-color: var(--surface-background-color);
   --badge-info-text-color: var(--surface-content-color);
   --badge-info-border-color: var(--color-info-border);
+  --badge-remove-hover-background-color: var(--chip-remove-hover-background-color);
   --sidebar-header-badge-background-color: var(--badge-primary-background-color);
   --sidebar-header-badge-text-color: var(--badge-primary-text-color);
   --chat-background-color: var(--surface-background-color);
@@ -1055,6 +1071,10 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --chip-padding-y-md: 0.25rem;
   --chip-padding-x-lg: 1rem;
   --chip-padding-y-lg: 0.375rem;
+  --picker-badge-background-color: rgb(0 0 0 / 0.55);
+  --picker-badge-text-color: oklch(1.0 0 0);
+  --picker-selection-idle-background-color: rgb(0 0 0 / 0.3);
+  --picker-selection-idle-ring-color: rgb(0 0 0 / 0.2);
   --font-sans: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
   --text-xs: 0.75rem;
