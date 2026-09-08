@@ -13,6 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.167] - 2026-09-07
+
+### Changed
+- Alert and toast success, warning, and danger use a status wash (`color-mix` of the fill into the surface) with coloured icon and border. Body text uses `--surface-content-color`.
+- Info toasts alias the quiet info alert instead of filling with `--color-primary`.
+- Bumped the gem version to `0.1.167`.
+
+### Upgrade notes
+- Buttons, badges, chips, and progress still use the filled `--color-success-*` / `--color-warning-*` / `--color-danger-*` paints.
+- Hosts that already set `--alert-*` / `--toast-*` are unchanged. Hosts that wanted filled alerts must set those component tokens back to the semantic fills.
+- Named kit themes inherit the washes from `:root` because they still override the semantic fills, not `--alert-*`.
+- Rebuild host Tailwind only if you `@import` `flat_pack/application`. Hosts that load kit CSS with `stylesheet_link_tag` pick this up on reload.
+
 ## [0.1.166] - 2026-09-07
 
 ### Fixed
