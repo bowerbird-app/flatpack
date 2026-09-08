@@ -83,7 +83,11 @@ module FlatPack
           "text-[var(--popover-text-color)]",
           "rounded-[var(--popover-radius)]",
           "shadow-[var(--popover-shadow)]",
-          "p-[var(--popover-padding)]"
+          "p-[var(--popover-padding)]",
+          "opacity-0",
+          "transition-[opacity,transform]",
+          "duration-[var(--duration-base)]",
+          "ease-[var(--easing-enter)]"
         )
       end
 

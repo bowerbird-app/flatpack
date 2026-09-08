@@ -21,13 +21,13 @@ Do not use for smaller in-page promotional banners; use `FlatPack::Alert::Compon
 | name | type | default | required | description |
 |---|---|---|---|---|
 | `variant` | Symbol | `:centered` | no | Layout variant. One of: `:centered`, `:centered_image`, `:screenshot`, `:split_image`, `:angled_image`, `:image_tiles`, `:offset_image`. Invalid values raise `ArgumentError`. |
-| `tagline` | String | `nil` | no | Small uppercase label rendered above the headline. |
+| `tagline` | String | `nil` | no | Small sentence-case label rendered above the headline. |
 | `headline` | String | `nil` | no | Primary `<h1>` text. |
 | `description` | String | `nil` | no | Supporting paragraph below the headline. |
 | `image_url` | String | `nil` | no | Main image URL. Used by `screenshot`, `split_image`, `angled_image`, `offset_image`. Sanitized via `FlatPack::AttributeSanitizer.sanitize_url`. |
 | `image_alt` | String | `""` | no | Alt text for the main image. Pass `""` for decorative images. |
 | `background_image_url` | String | `nil` | no | Background image URL for `centered_image`. Sanitized. Applied via `style` attribute only after sanitization. |
-| `background` | String | `nil` | no | CSS background value applied to the root `<section>`. Accepts any valid CSS — solid colors (`#1e293b`), gradients (`linear-gradient(135deg, #667eea, #764ba2)`), CSS variables (`var(--surface-page-background-color)`). Any `url()` expressions are stripped before rendering. |
+| `background` | String | `nil` | no | CSS background on the root `<section>`. Prefer a surface token (`var(--surface-muted-background-color)`) or omit it. Hosts may pass a gradient if their named theme defines one. Any `url()` expressions are stripped. |
 | `tiles` | Array | `[]` | no | Array of `{ url:, alt: }` hashes for `image_tiles` (2–4 items shown). Each `url` is sanitized individually. |
 | `**system_arguments` | Hash | `{}` | no | Additional HTML attributes forwarded to the root `<section>` element. |
 
@@ -54,7 +54,7 @@ end %>
 | value | description |
 |---|---|
 | `:centered` | Centered text and actions, no image. |
-| `:centered_image` | Centered text over a full-bleed background image with a `bg-black/60` overlay. |
+| `:centered_image` | Centered text over a full-bleed background image with a `--hero-overlay-background-color` wash (default `rgb(0 0 0 / 0.6)`). |
 | `:screenshot` | Centered text above a large constrained app screenshot. |
 | `:split_image` | Two-column grid: text left, image right. Stacks on mobile. |
 | `:angled_image` | Text left, image right with a diagonal polygon clip. Image replaced by a stacked image on mobile. |
@@ -116,7 +116,7 @@ end %>
 - Pass `image_alt: ""` for purely decorative images. This renders an empty `alt` attribute, which instructs screen readers to skip the image.
 - The background image in `centered_image` is applied via CSS (`background-image` inline style) and carries no `alt` text, making it presentational by default.
 - Buttons and links inside the `slot` area must have descriptive labels. Avoid generic labels like "Click here".
-- Ensure sufficient colour contrast between overlay text and the background for `centered_image`. The built-in `bg-black/60` overlay meets WCAG AA for white text in most cases, but verify with your specific image.
+- Ensure sufficient colour contrast between overlay text and the background for `centered_image`. Default `--hero-overlay-*` tokens (`rgb(0 0 0 / 0.6)` over white type) meet WCAG AA in most cases; verify with your image and theme.
 
 ## Dependencies
 

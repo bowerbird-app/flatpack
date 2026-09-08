@@ -84,7 +84,7 @@ module FlatPack
               end,
               content_tag(
                 :div,
-                class: "relative z-10 w-full transform transition-transform duration-200 ease-out cursor-pointer",
+                class: "relative z-10 w-full transform transition-transform duration-[var(--duration-base)] ease-out cursor-pointer",
                 data: {
                   flat_pack__chat_message_actions_target: "surface",
                   action: "click->flat-pack--chat-message-actions#toggle keydown->flat-pack--chat-message-actions#toggleByKey"

@@ -29,6 +29,9 @@ None.
 <% end %>
 ```
 
+## Placement
+The region is `.fp-toast-region`: fixed below the TopNav bar (`72px` plus `safe-area-inset-top`) and inset from the right by `safe-area-inset-right` plus one spacing unit. A fallback container created by `flat-pack--toasts-region` uses the same class. Hosts need `viewport-fit=cover` for those insets to apply. See [Installation](../installation.md).
+
 ## Accessibility
 - Configures an ARIA live region (`aria-live="polite"`, `aria-atomic="false"`).
 - Keep toast message text concise for screen-reader announcements.

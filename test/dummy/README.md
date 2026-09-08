@@ -1,6 +1,6 @@
 # FlatPack Dummy Application
 
-This is a Rails 8 application that demonstrates the FlatPack component library.
+This is a Rails 8 application that demonstrates the FlatPack component library and hosts a thin Recording Studio API + OAuth + MCP stack for integration demos.
 
 ## Purpose
 
@@ -8,10 +8,19 @@ This dummy app serves as:
 - A testing environment for the FlatPack gem during development
 - A demo/showcase of FlatPack components
 - Reference implementation showing how to integrate FlatPack into a Rails app
+- A host wiring demo for Recording Studio Users, Admin, API, OAuth Connect, and MCP (see `docs/recording_studio_dummy.md`)
 
 ## Setup
 
 The dummy app is configured to use the checked-in FlatPack snapshot at `vendor/flat_pack`.
+
+**Requirements:** Ruby `>= 3.3`, Postgres, and Redis.
+
+Default Postgres:
+
+- host `localhost`, user/password `postgres`/`postgres`
+- development DB `flatpack_dummy_development`
+- test DB `flatpack_dummy_test`
 
 ### Quick Setup
 
@@ -36,7 +45,7 @@ This will:
 
 2. **Setup the database:**
    ```bash
-   bin/rails db:create db:migrate
+   bin/rails db:prepare db:seed
    ```
 
 3. **Build Tailwind CSS:**
@@ -53,6 +62,8 @@ This will:
 
 5. **Visit the app:**
    Open http://localhost:3000 in your browser
+
+Public FlatPack demos stay at `/demo` without login. Sign in at `/users/sign_in` with `admin@admin.com` / `Password` for Admin, OAuth, and MCP demos.
 
 ## FlatPack Integration
 

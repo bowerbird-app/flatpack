@@ -5,9 +5,9 @@ This guide deploys the Rails demo app in `test/dummy` to DigitalOcean App Platfo
 ## What is already wired in this repository
 
 - `test/dummy/config/puma.rb` starts the web process on the port App Platform provides.
-- `test/dummy/config/database.yml` keeps production on SQLite, writing to `storage/production.sqlite3` inside the app filesystem.
+- `test/dummy/config/database.yml` uses Postgres. Production prefers `DATABASE_URL` (App Platform managed database).
 - `test/dummy/config/environments/production.rb` serves precompiled assets, enables SSL, and defaults Active Job to `async` unless you explicitly opt into another adapter.
-- `test/dummy/.do/app.yaml` defines a single web service for the default SQLite deployment path on App Platform.
+- `test/dummy/.do/app.yaml` defines the web service and expects a Postgres database plus Redis.
 - `test/dummy/Gemfile` and `test/dummy/Gemfile.lock` are deploy-safe and point at `test/dummy/vendor/flat_pack`.
 - `test/dummy/Gemfile.app_platform` and `test/dummy/Gemfile.app_platform.lock` mirror the same vendored source for manual deploy-specific Bundler use.
 - `test/dummy/bin/refresh_flat_pack_vendor` refreshes that vendored FlatPack snapshot from the repository root.
@@ -15,6 +15,8 @@ This guide deploys the Rails demo app in `test/dummy` to DigitalOcean App Platfo
 ## Recommended DigitalOcean resources
 
 - One App Platform app
+- One managed Postgres database (`DATABASE_URL`)
+- One managed Redis cluster (`REDIS_URL`) when Action Cable / Sidekiq need it
 - One custom domain if you want a stable public URL
 
 ## Required application secrets
@@ -22,21 +24,25 @@ This guide deploys the Rails demo app in `test/dummy` to DigitalOcean App Platfo
 Set these in App Platform before the first successful deploy:
 
 - `SECRET_KEY_BASE`: required
+- `DATABASE_URL`: required (managed Postgres connection URL)
 - `RAILS_SERVE_STATIC_FILES=1`: required so Rails serves Propshaft assets
 - `RAILS_FORCE_SSL=true`: recommended
 - `ACTIVE_STORAGE_SERVICE=local`: default for the demo app unless you add Spaces-backed storage
-- `ACTIVE_JOB_QUEUE_ADAPTER=async`: recommended default for the SQLite deployment path
+- `ACTIVE_JOB_QUEUE_ADAPTER=async`: recommended default unless you run Sidekiq workers
+- `REDIS_URL`: required when Action Cable or Sidekiq use Redis
 - `RAILS_MASTER_KEY`: optional unless you rely on encrypted credentials
 
 ## App Platform setup
 
-1. Create a managed Redis cluster.
+1. Create a managed Postgres database and a managed Redis cluster.
 2. Create an App Platform app from this GitHub repository.
 3. Point the app at `test/dummy/.do/app.yaml`, or mirror that file in the App Platform UI.
 4. Keep the service source directory set to `test/dummy` so App Platform uses the dummy app's default deploy-safe `Gemfile`.
-5. Replace the placeholder secret values from the app spec with your real `SECRET_KEY_BASE` value.
-6. Deploy the web service.
-7. Verify `https://your-app.example.com/up` returns healthy before checking demo pages.
+5. Bind the managed database so `DATABASE_URL` is injected, and set Redis as `REDIS_URL`.
+6. Replace the placeholder secret values from the app spec with your real `SECRET_KEY_BASE` value.
+7. Deploy the web service.
+8. Verify `https://your-app.example.com/up` returns healthy before checking demo pages.
+9. Public FlatPack demos stay at `/demo`. Recording Studio Admin / OAuth / MCP need a seeded admin user (`bin/rails db:seed`).
 
 ## Vendored FlatPack setup
 
@@ -76,8 +82,8 @@ The checked-in app spec also sets:
 
 ## Production notes
 
-- The dummy app keeps both SQLite and Active Storage on local disk by default. App Platform filesystems are ephemeral, so the production database and uploads do not persist across rebuilds unless you move them to external services.
-- For the default SQLite deployment path, keep the demo on a single web service. A separate worker or one-off console does not share the same local SQLite file with the web process.
+- The dummy app keeps both Postgres and Active Storage on local disk by default. App Platform filesystems are ephemeral, so the production database and uploads do not persist across rebuilds unless you move them to external services.
+- For the default Postgres deployment path, keep the demo on a single web service. A separate worker or one-off console does not share the same local Postgres file with the web process.
 - If you need Sidekiq or multiple services, move the dummy app to a shared external database first and then set `ACTIVE_JOB_QUEUE_ADAPTER=sidekiq` plus `REDIS_URL`.
 - If you want persistent uploads, add a production storage service backed by DigitalOcean Spaces and switch `ACTIVE_STORAGE_SERVICE` to that service name.
 - The checked-in app spec disables `deploy_on_push` by default. Enable it if you want every push to `main` to roll out automatically.

@@ -13,6 +13,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.169] - 2026-09-08
+
+### Added
+- Dummy app hosts Recording Studio API, OAuth Connect, MCP, Admin, and Users on Postgres.
+- Docs for dummy Recording Studio wiring (`docs/recording_studio_dummy.md`).
+
+### Changed
+- Dummy `database.yml` uses Postgres (`flatpack_dummy_development` / `flatpack_dummy_test`).
+- Public `/demo` stays open; Admin, OAuth, API, and MCP stay authenticated.
+- Bumped the gem version to `0.1.169`.
+
+### Upgrade notes
+- The deployable dummy app now requires Postgres and Redis. Set `DATABASE_URL` (or `DB_*`) on App Platform.
+- Recording Studio host gems need Ruby `>= 3.3`. FlatPack itself still supports Ruby `>= 3.2`.
+- Run `cd test/dummy && bundle install && bin/rails db:prepare db:seed` after pulling.
+
 ## [0.1.168] - 2026-09-08
 
 ### Changed

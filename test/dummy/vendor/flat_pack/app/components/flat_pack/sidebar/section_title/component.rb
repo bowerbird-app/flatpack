@@ -56,8 +56,6 @@ module FlatPack
           classes(
             "text-xs",
             "font-semibold",
-            "uppercase",
-            "tracking-wider",
             "text-[var(--sidebar-item-text-color)]",
             "opacity-50",
             "truncate",
@@ -102,8 +100,9 @@ module FlatPack
             "break-words",
             "pointer-events-none",
             "opacity-0",
-            "transition-opacity",
-            "duration-200"
+            "transition-[opacity,transform]",
+            "duration-[var(--duration-base)]",
+            "ease-[var(--easing-enter)]"
           )
         end
       end

@@ -6,7 +6,7 @@ module FlatPack
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "w-4" "h-4" "w-5" "h-5" "w-6" "h-6" "w-8" "h-8"
-      # "block" "shrink-0" "-translate-y-0.5"
+      # "block" "shrink-0" "-translate-y-0.5" "fp-icon-directional"
       SIZES = {
         sm: "w-4 h-4",
         md: "w-5 h-5",
@@ -14,13 +14,27 @@ module FlatPack
         xl: "w-8 h-8"
       }.freeze
 
-      # Artwork that sits low in the 24×24 viewBox (diagonal handle, etc.).
+      # Artwork that sits low in the 24×24 viewBox (diagonal handle, tray, nib).
       # Nudge is optical, not layout — add a name here instead of per-component CSS.
       OPTICAL_NUDGES = {
         "magnifying-glass" => "-translate-y-0.5",
         "magnifying-glass-plus" => "-translate-y-0.5",
-        "magnifying-glass-minus" => "-translate-y-0.5"
+        "magnifying-glass-minus" => "-translate-y-0.5",
+        "paper-airplane" => "-translate-y-0.5",
+        "pencil" => "-translate-y-0.5",
+        "pencil-square" => "-translate-y-0.5",
+        "arrow-up-tray" => "-translate-y-0.5",
+        "arrow-down-tray" => "-translate-y-0.5"
       }.freeze
+
+      # Chat bubbles keep their tail. Left/right in those names is the tail, not travel.
+      DIRECTIONAL_EXCEPTIONS = %w[
+        chat-bubble-left
+        chat-bubble-left-ellipsis
+        chat-bubble-left-right
+        chat-bubble-oval-left
+        chat-bubble-oval-left-ellipsis
+      ].freeze
 
       VIEWBOXES = {
         outline: "0 0 24 24",
@@ -91,7 +105,7 @@ module FlatPack
           viewBox: VIEWBOXES.fetch(@variant),
           fill: "none",
           stroke: "currentColor",
-          "stroke-width": "1.5",
+          "stroke-width": "var(--icon-stroke-width, 1.5)",
           aria: {hidden: "true"},
           data: {
             controller: "flat-pack--icon",
@@ -102,11 +116,28 @@ module FlatPack
       end
 
       def icon_classes
-        classes("block", "shrink-0", size_classes, optical_nudge_class)
+        user_class = @system_arguments.delete(:class)
+        merger = TailwindMerge::Merger.new
+        merger.merge(
+          ["block", "shrink-0", size_classes, optical_nudge_class, directional_class, user_class]
+            .compact
+            .join(" ")
+        )
       end
 
       def optical_nudge_class
         OPTICAL_NUDGES[heroicon_name]
+      end
+
+      def directional_class
+        "fp-icon-directional" if directional?
+      end
+
+      def directional?
+        name = heroicon_name
+        return false if DIRECTIONAL_EXCEPTIONS.include?(name)
+
+        name.match?(/-(left|right)(?:-|\z)/)
       end
 
       def size_classes

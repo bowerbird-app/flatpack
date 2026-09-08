@@ -41,7 +41,7 @@ module FlatPack
       end
 
       def title_classes
-        classes = ["text-4xl", "font-bold", "leading-tight"]
+        classes = ["text-[length:var(--text-4xl)]", "font-bold", "leading-tight", "fp-text-balance"]
         classes << "text-[var(--surface-content-color)]" unless @title_color
         classes.join(" ")
       end
@@ -54,7 +54,7 @@ module FlatPack
 
       def subtitle_classes
         classes = []
-        classes << "mt-2 text-lg" unless @large_subtitle
+        classes << "mt-2 text-lg fp-text-pretty" unless @large_subtitle
         classes << "text-[var(--surface-muted-content-color)]" unless @subtitle_color
         classes.join(" ").presence
       end
@@ -62,7 +62,7 @@ module FlatPack
       def subtitle_style
         style_rules = []
         if @large_subtitle
-          style_rules << "font-size: var(--page-title-h1-size, 2.25rem)"
+          style_rules << "font-size: var(--page-title-h1-size)"
           style_rules << "font-weight: bold"
           style_rules << "margin-top: 0"
         end

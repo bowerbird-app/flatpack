@@ -9,7 +9,7 @@ module FlatPack
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "text-[var(--color-warning)]" "border-[var(--color-warning)]"
+      # "text-[var(--color-error)]" "border-[var(--color-error)]"
 
       def initialize(
         name:,
@@ -349,23 +349,15 @@ module FlatPack
       end
 
       def render_chevron_icon(include_target: true)
-        icon_data = include_target ? {flat_pack__select_target: "chevron"} : nil
+        icon_args = {
+          name: "chevron-down",
+          size: :sm,
+          class: "text-[var(--surface-muted-content-color)]"
+        }
+        icon_args[:data] = {flat_pack__select_target: "chevron"} if include_target
 
         content_tag(:span, class: "absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none") do
-          content_tag(:svg,
-            xmlns: "http://www.w3.org/2000/svg",
-            width: "16",
-            height: "16",
-            viewBox: "0 0 24 24",
-            fill: "none",
-            stroke: "currentColor",
-            "stroke-width": "2",
-            "stroke-linecap": "round",
-            "stroke-linejoin": "round",
-            class: "lucide lucide-chevron-down text-[var(--surface-muted-content-color)]",
-            data: icon_data) do
-            tag.path(d: "m6 9 6 6 6-6")
-          end
+          render FlatPack::Shared::IconComponent.new(**icon_args)
         end
       end
 

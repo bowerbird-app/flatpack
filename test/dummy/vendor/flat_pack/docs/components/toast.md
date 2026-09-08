@@ -1,7 +1,7 @@
 # Toast
 
 ## Purpose
-Show transient status notifications with optional auto-dismiss and manual dismissal.
+Show transient status notifications with optional auto-dismiss and manual dismissal. Styles match Alert: tinted surfaces, not filled status paints. Info uses the quiet info alert tokens, not `--color-primary`. The close control is a compact centered ghost X on every style: icon-sized paint, 44px hit via `.fp-hit-slop`, not a 44px filled chip.
 
 ## When to use
 Use Toast for non-blocking feedback such as success confirmations, warnings, and lightweight errors.
@@ -37,6 +37,8 @@ None.
 ## Accessibility
 - Uses `role="status"` with polite live-region settings.
 - Dismiss button includes `aria-label="Dismiss"` when shown.
+- Under `prefers-reduced-motion: reduce`, the toast does not slide from off-screen and is removed immediately on dismiss.
+- Enter slides from the stack edge on `--duration-slow` / `--easing-enter`. Exit uses `--duration-base` / `--easing-exit`.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).

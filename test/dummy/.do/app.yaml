@@ -35,6 +35,14 @@ services:
       - key: ACTIVE_JOB_QUEUE_ADAPTER
         scope: RUN_TIME
         value: async
+      - key: DATABASE_URL
+        scope: RUN_TIME
+        type: SECRET
+        value: REPLACE_WITH_MANAGED_POSTGRES_URL
+      - key: REDIS_URL
+        scope: RUN_TIME
+        type: SECRET
+        value: REPLACE_WITH_MANAGED_REDIS_URL
       - key: SECRET_KEY_BASE
         scope: RUN_TIME
         type: SECRET
