@@ -97,6 +97,28 @@ module FlatPack
       end
     end
 
+    test "kit markup does not use Tailwind numeric durations that skip token collapse" do
+      leftovers = Dir[FlatPack::Engine.root.join("app/{components,javascript,assets}/**/*.{rb,js,css,erb}")].filter_map do |path|
+        source = File.read(path)
+        next unless source.match?(/\bduration-(150|200|300)\b/)
+
+        path.delete_prefix("#{FlatPack::Engine.root}/")
+      end
+
+      assert_empty leftovers, "numeric duration leftover: #{leftovers.join(", ")}"
+    end
+
+    test "kit markup does not scale up on hover" do
+      leftovers = Dir[FlatPack::Engine.root.join("app/{components,javascript,assets}/**/*.{rb,js,css,erb}")].filter_map do |path|
+        source = File.read(path)
+        next unless source.include?("hover:scale-")
+
+        path.delete_prefix("#{FlatPack::Engine.root}/")
+      end
+
+      assert_empty leftovers, "hover scale leftover: #{leftovers.join(", ")}"
+    end
+
     test "kit forms do not shake on invalid" do
       leftovers = Dir[FlatPack::Engine.root.join("app/{components,javascript,assets}/**/*.{rb,js,css}")].filter_map do |path|
         source = File.read(path)

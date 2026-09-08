@@ -53,6 +53,8 @@ module FlatPack
         render_inline(Component.new(items: items))
 
         assert_includes page.native.to_html, "hover:!opacity-100"
+        refute_includes page.native.to_html, "hover:scale-110"
+        refute_includes page.native.to_html, "transition-transform"
       end
 
       def test_renders_with_overlap_styles
