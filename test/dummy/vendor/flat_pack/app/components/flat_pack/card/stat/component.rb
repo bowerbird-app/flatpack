@@ -6,15 +6,15 @@ module FlatPack
       class Component < ViewComponent::Base
         # Tailwind CSS scanning requires these classes to be present as string literals.
         # DO NOT REMOVE - These duplicates ensure CSS generation:
-        # "text-4xl" "font-bold" "mb-2" "text-sm" "text-[var(--surface-muted-content-color)]" "mt-2" "text-green-600" "text-red-600" "text-center" "fp-tabular-nums"
+        # "text-4xl" "font-bold" "mb-2" "text-sm" "text-[var(--surface-muted-content-color)]" "mt-2" "text-[var(--color-success-background-color)]" "text-[var(--color-danger-background-color)]" "text-center" "fp-tabular-nums"
         TREND_DIRECTIONS = {
           up: {
             icon: "↑",
-            class: "text-green-600"
+            class: "text-[var(--color-success-background-color)]"
           },
           down: {
             icon: "↓",
-            class: "text-red-600"
+            class: "text-[var(--color-danger-background-color)]"
           }
         }.freeze
 

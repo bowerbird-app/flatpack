@@ -54,7 +54,7 @@ end %>
 | value | description |
 |---|---|
 | `:centered` | Centered text and actions, no image. |
-| `:centered_image` | Centered text over a full-bleed background image with a `bg-black/60` overlay. |
+| `:centered_image` | Centered text over a full-bleed background image with a `--hero-overlay-background-color` wash (default `rgb(0 0 0 / 0.6)`). |
 | `:screenshot` | Centered text above a large constrained app screenshot. |
 | `:split_image` | Two-column grid: text left, image right. Stacks on mobile. |
 | `:angled_image` | Text left, image right with a diagonal polygon clip. Image replaced by a stacked image on mobile. |
@@ -116,7 +116,7 @@ end %>
 - Pass `image_alt: ""` for purely decorative images. This renders an empty `alt` attribute, which instructs screen readers to skip the image.
 - The background image in `centered_image` is applied via CSS (`background-image` inline style) and carries no `alt` text, making it presentational by default.
 - Buttons and links inside the `slot` area must have descriptive labels. Avoid generic labels like "Click here".
-- Ensure sufficient colour contrast between overlay text and the background for `centered_image`. The built-in `bg-black/60` overlay meets WCAG AA for white text in most cases, but verify with your specific image.
+- Ensure sufficient colour contrast between overlay text and the background for `centered_image`. Default `--hero-overlay-*` tokens (`rgb(0 0 0 / 0.6)` over white type) meet WCAG AA in most cases; verify with your image and theme.
 
 ## Dependencies
 

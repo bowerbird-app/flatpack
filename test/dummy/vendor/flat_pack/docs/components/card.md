@@ -108,6 +108,7 @@ Slot props:
 - Uses semantic container elements (`div` or `a` when clickable).
 - Clickable cards become a single focusable link target.
 - Keep nested interactive controls out of fully clickable cards to avoid conflicting focus targets.
+- `FlatPack::Card::Stat::Component` paints up/down trend copy with `--color-success-background-color` / `--color-danger-background-color`, not a Tailwind green or red.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).

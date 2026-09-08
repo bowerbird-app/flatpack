@@ -274,6 +274,10 @@ Use `--easing-enter` for modal, drawer, command palette, toast, dropdown, popove
 
 ### Overlay and chrome
 ```css
+--hero-overlay-background-color
+--hero-overlay-text-color
+--hero-overlay-muted-text-color
+
 --drawer-backdrop-color
 --drawer-surface-color
 --drawer-border-color
@@ -299,7 +303,7 @@ Use `--easing-enter` for modal, drawer, command palette, toast, dropdown, popove
 --stepper-muted-color
 ```
 
-Drawer tokens alias Modal. Keyboard, skip link, and stepper tokens alias surface and brand colours so named themes inherit.
+Drawer tokens alias Modal. Keyboard, skip link, and stepper tokens alias surface and brand colours so named themes inherit. Hero overlay, carousel media/controls, picker grid badges, and badge remove-hover are themeable instead of hardcoded black/white Tailwind utilities.
 
 ## Component Variable Usage
 
@@ -331,6 +335,13 @@ Tabs, chat incoming bubbles, sidebar/top-nav hover, list hover, and avatar fallb
 - Dot size: `8px` by `8px`
 - Position: top-right (`top: 0`, `right: 0`) with `z-index: 999999999`
 - Color token: `--color-danger-background-color`
+
+### Hero, carousel, picker, badge
+- Hero `centered_image` overlay: `--hero-overlay-background-color`, `--hero-overlay-text-color`, `--hero-overlay-muted-text-color`
+- Carousel chrome: `--carousel-control-*`, `--carousel-counter-*`, `--carousel-media-background-color`, `--carousel-lightbox-image-background-color`
+- Picker grid: `--picker-badge-*`, `--picker-selection-idle-*`
+- Badge remove hover: `--badge-remove-hover-background-color` (aliases `--chip-remove-hover-background-color`)
+- Card stat trends: `--color-success-background-color`, `--color-danger-background-color`
 
 ## Dark mode and named themes
 
