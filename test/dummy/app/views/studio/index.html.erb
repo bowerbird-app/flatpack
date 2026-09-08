@@ -9,17 +9,12 @@
 
   <div class="flex flex-wrap gap-3">
     <%= render FlatPack::Button::Component.new(
-      text: "Admin",
-      href: "/admin",
+      text: "Registered apps",
+      href: "/admin/sections/oauth_apps",
       style: :primary
     ) %>
     <%= render FlatPack::Button::Component.new(
-      text: "Registered apps",
-      href: "/admin/sections/oauth_apps",
-      style: :secondary
-    ) %>
-    <%= render FlatPack::Button::Component.new(
-      text: "Component demos",
+      text: "Demo",
       href: "/demo",
       style: :ghost
     ) %>
