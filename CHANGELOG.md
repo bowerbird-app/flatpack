@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `/studio` **Registered apps** switches the current root to Admin and opens `/admin/screens/oauth_clients`, so the button no longer lands on a blank `403`.
 - Dummy development allows Cloudflare quick-tunnel hosts (`*.trycloudflare.com`) and assumes SSL behind the proxy so OAuth issuer URLs stay `https://`.
 - OAuth Connect authorize layout disables Turbo so Authorize can full-page redirect to ChatGPT (avoids CORS/`Failed to fetch` on the callback).
+- Dummy Registered apps table includes **Edit** so staff can change an app's name and redirect URLs without recreating the client.
 
 ### Upgrade notes
 - After pulling, restart the dummy app so `recording_studio_root_switchable` picks up Admin in `available_roots`. Prefer **Registered apps** from `/studio` for the OauthClient list; other Admin URLs still need the Admin root selected.

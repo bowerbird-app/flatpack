@@ -96,6 +96,6 @@ Use the printed `https://….trycloudflare.com` URL:
 - MCP: `https://….trycloudflare.com/recording_studio_mcp`
 - Discovery: `https://….trycloudflare.com/.well-known/oauth-authorization-server`
 
-Register the ChatGPT redirect on the OauthClient (`https://chatgpt.com/connector_platform_oauth_redirect`, or the exact URL ChatGPT shows). This stack does not do DCR — use a pre-registered public client.
+Register the ChatGPT redirect on the OauthClient (`https://chatgpt.com/connector_platform_oauth_redirect`, or the exact URL ChatGPT shows). This stack does not do DCR — use a pre-registered public client. From Registered apps, use the row **Edit** action to change redirect URLs on an existing app.
 
 Connect authorize screens turn Turbo off so Authorize can full-page redirect to the client callback. If Authorize looks stuck with a CORS/`Failed to fetch` error in the console, hard-refresh the authorize page (or restart Connect from ChatGPT) after that host fix.

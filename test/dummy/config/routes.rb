@@ -19,6 +19,11 @@ Rails.application.routes.draw do
     mount RecordingStudioAccessible::Engine, at: "/admin/access", as: :recording_studio_admin_access
     mount RecordingStudioApi::Engine, at: "/recording_studio_api"
     mount RecordingStudioOauth::Engine, at: "/recording_studio_oauth"
+    RecordingStudioOauth::Engine.routes.draw do
+      namespace :admin do
+        resources :oauth_clients, only: %i[edit update]
+      end
+    end
     mount RecordingStudioMcp::Engine, at: "/recording_studio_mcp"
     mount RecordingStudioAttachable::Engine, at: "/recording_studio_attachable"
     mount RecordingStudioSiteSettings::Engine, at: "/recording_studio_site_settings"

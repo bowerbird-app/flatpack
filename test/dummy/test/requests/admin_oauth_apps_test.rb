@@ -86,6 +86,59 @@ class AdminOauthAppsTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "New app"
   end
 
+  test "registered apps table offers Edit for active clients" do
+    switch_to_root!(@admin_root_recording)
+    client = RecordingStudioOauth::OauthClient.find_by!(name: "Seed MCP App")
+
+    get "/admin/screens/oauth_clients/table", params: {
+      anchor_url: "http://www.example.com/admin/screens/oauth_clients"
+    }
+
+    assert_response :success
+    assert_includes response.body, "Edit"
+    assert_includes response.body, "/recording_studio_oauth/admin/oauth_clients/#{client.id}/edit"
+  end
+
+  test "edit updates name and redirect URLs" do
+    switch_to_root!(@admin_root_recording)
+    client = RecordingStudioOauth::OauthClient.find_by!(name: "Seed MCP App")
+
+    get "/recording_studio_oauth/admin/oauth_clients/#{client.id}/edit"
+    assert_response :success
+    assert_includes response.body, "Redirect URLs"
+    refute_includes response.body, 'name="oauth_client[secret]"'
+
+    patch "/recording_studio_oauth/admin/oauth_clients/#{client.id}", params: {
+      oauth_client: {
+        name: "Seed MCP App",
+        redirect_uris: "https://chatgpt.com/connector/oauth/test\nhttps://example.com/callback"
+      }
+    }
+
+    assert_redirected_to "/admin/screens/oauth_clients"
+    client.reload
+    assert_equal [
+      "https://chatgpt.com/connector/oauth/test",
+      "https://example.com/callback"
+    ], client.redirect_uris
+  end
+
+  test "edit rejects invalid redirect URLs" do
+    switch_to_root!(@admin_root_recording)
+    client = RecordingStudioOauth::OauthClient.find_by!(name: "Seed MCP App")
+    original = client.redirect_uris.dup
+
+    patch "/recording_studio_oauth/admin/oauth_clients/#{client.id}", params: {
+      oauth_client: {
+        name: "Seed MCP App",
+        redirect_uris: "https://example.com/callback#fragment"
+      }
+    }
+
+    assert_response :unprocessable_entity
+    assert_equal original, client.reload.redirect_uris
+  end
+
   private
 
   def grant_or_bootstrap_access!(recording:, actor:, role:)

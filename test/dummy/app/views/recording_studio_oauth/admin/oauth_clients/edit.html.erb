@@ -1,0 +1,51 @@
+<% recording_studio_page_nav(
+     title: "Edit app",
+     page_nav_back_url: oauth_clients_admin_screen_path,
+     page_nav_anchor_url: oauth_clients_admin_screen_path
+   ) %>
+
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Edit app",
+  subtitle: "Change the name people see, or the redirect URLs.",
+  variant: :h1
+) %>
+
+<%= form_with url: admin_oauth_client_path(@oauth_client), method: :patch, class: "space-y-6" do %>
+  <% if @oauth_client.errors[:base].any? %>
+    <%= render FlatPack::Alert::Component.new(
+      description: @oauth_client.errors[:base].to_sentence,
+      style: :danger
+    ) %>
+  <% end %>
+
+  <%= render FlatPack::TextInput::Component.new(
+    name: "oauth_client[name]",
+    label: "Name",
+    value: @oauth_client.name,
+    required: true,
+    error: @oauth_client.errors[:name].to_sentence.presence
+  ) %>
+
+  <%= render FlatPack::TextArea::Component.new(
+    name: "oauth_client[redirect_uris]",
+    label: "Redirect URLs",
+    value: Array(@oauth_client.redirect_uris).join("\n"),
+    rows: 4,
+    required: true,
+    help_text: "One http or https address per line, like https://example.com/callback.",
+    error: @oauth_client.errors[:redirect_uris].to_sentence.presence
+  ) %>
+
+  <%= render FlatPack::TextInput::Component.new(
+    name: "oauth_client_id_readonly",
+    label: "Client id",
+    value: @oauth_client.client_id,
+    quick_copy: true
+  ) %>
+
+  <%= render FlatPack::Button::Component.new(
+    text: "Save",
+    style: :primary,
+    type: "submit"
+  ) %>
+<% end %>
