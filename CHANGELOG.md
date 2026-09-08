@@ -13,21 +13,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-## [0.1.171] - 2026-09-08
+## [0.1.172] - 2026-09-08
 
 ### Added
 - Dummy app hosts Recording Studio API, OAuth Connect, MCP, Admin, and Users on Postgres.
+- Signed-in host home at `/studio` (post-login landing) with links into Admin and account.
 - Docs for dummy Recording Studio wiring (`docs/recording_studio_dummy.md`).
 
 ### Changed
 - Dummy `database.yml` uses Postgres (`flatpack_dummy_development` / `flatpack_dummy_test`).
 - Public `/demo` stays open; Admin, OAuth, API, and MCP stay authenticated.
-- Bumped the gem version to `0.1.171`.
+- After Users sign-in / sign-up, redirect into `/studio` instead of the public demo root.
+- Bumped the gem version to `0.1.172`.
 
 ### Upgrade notes
 - The deployable dummy app now requires Postgres and Redis. Set `DATABASE_URL` (or `DB_*`) on App Platform.
 - Recording Studio host gems need Ruby `>= 3.3`. FlatPack itself still supports Ruby `>= 3.2`.
 - Run `cd test/dummy && bundle install && bin/rails db:prepare db:seed` after pulling.
+
+## [0.1.171] - 2026-09-08
+
+### Fixed
+- Modal Tab now cycles inside the dialog. The trap is wired as `keydown.tab->flat-pack--modal#handleKeydown`, and the dialog is `tabindex="-1"` so it can take focus when nothing else inside is focusable.
+- Select selected options use `--color-primary-text` instead of Tailwind `text-white`.
+- Picker selection rings and dots on media use `--picker-selection-indicator-*` instead of `border-white` / `bg-white`.
+
+### Changed
+- Dummy sample copy drops kit jargon (ViewComponent, Stimulus, records/slots) from hero, collapse, chat, picker, page nav, and related demos.
+- Bumped the gem version to `0.1.171`.
+
+### Upgrade notes
+- Modal Tab wrapping starts working on gem upgrade. Hosts that copy Modal markup should add `keydown.tab->flat-pack--modal#handleKeydown` and `tabindex="-1"` on the dialog.
+- Select selected-option text follows `--color-primary-text` (dark on ocean). Rebuild host Tailwind if you `@import` `flat_pack/application`.
+- Picker indicator tokens default to `--picker-badge-text-color`. Hosts that already override that keep the same paint.
+- Dummy demo wording is host-app copy only.
 
 ## [0.1.170] - 2026-09-08
 

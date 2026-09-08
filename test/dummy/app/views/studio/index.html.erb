@@ -1,0 +1,40 @@
+<% recording_studio_page_nav(title: "Studio") if defined?(recording_studio_page_nav) %>
+
+<div class="flex w-full flex-col gap-6">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "You're in",
+    subtitle: "Admin, Connect, API, and MCP live here. The component catalog stays at /demo.",
+    variant: :h1
+  ) %>
+
+  <div class="flex flex-wrap gap-3">
+    <%= render FlatPack::Button::Component.new(
+      text: "Admin",
+      href: "/admin",
+      style: :primary
+    ) %>
+    <%= render FlatPack::Button::Component.new(
+      text: "Registered apps",
+      href: "/admin/sections/oauth_apps",
+      style: :secondary
+    ) %>
+    <% if defined?(recording_studio_users) %>
+      <%= render FlatPack::Button::Component.new(
+        text: "My profile",
+        href: recording_studio_users.profile_path,
+        style: :ghost
+      ) %>
+    <% end %>
+    <%= render FlatPack::Button::Component.new(
+      text: "Component demos",
+      href: "/demo",
+      style: :ghost
+    ) %>
+  </div>
+
+  <%= render FlatPack::Alert::Component.new(
+    title: "MCP endpoint",
+    description: "After Connect, point a client at /recording_studio_mcp with the Bearer token from the API token URL.",
+    style: :info
+  ) %>
+</div>

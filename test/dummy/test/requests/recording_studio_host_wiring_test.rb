@@ -36,4 +36,25 @@ class RecordingStudioHostWiringTest < ActionDispatch::IntegrationTest
     get "/admin"
     assert_response :redirect
   end
+
+  test "studio requires authentication" do
+    skip "Recording Studio Users not in this bundle" unless defined?(RecordingStudioUser)
+
+    get "/studio"
+    assert_response :redirect
+  end
+
+  test "users auth after sign in path is studio" do
+    skip "Recording Studio Users not in this bundle" unless defined?(RecordingStudioUser)
+
+    controller = RecordingStudioUser::Auth::SessionsController.new
+    def controller.main_app
+      Rails.application.routes.url_helpers
+    end
+    def controller.stored_location_for(_resource)
+      nil
+    end
+
+    assert_equal "/studio", controller.after_sign_in_path_for(User.new)
+  end
 end

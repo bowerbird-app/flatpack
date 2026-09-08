@@ -9,7 +9,7 @@ module FlatPack
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "text-[var(--color-error)]" "border-[var(--color-error)]"
+      # "text-[var(--color-error)]" "border-[var(--color-error)]" "text-[var(--color-primary-text)]"
 
       def initialize(
         name:,
@@ -425,7 +425,7 @@ module FlatPack
           if @multiple
             "hover:bg-[var(--surface-muted-background-color)] cursor-pointer text-[var(--surface-content-color)]"
           else
-            "bg-[var(--color-primary)] text-white cursor-pointer"
+            "bg-[var(--color-primary)] text-[var(--color-primary-text)] cursor-pointer"
           end
         else
           "hover:bg-[var(--surface-muted-background-color)] cursor-pointer text-[var(--surface-content-color)]"

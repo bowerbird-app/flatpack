@@ -41,7 +41,7 @@ None (items are added through the `item` builder method, which now supports opti
     left_slot: render(FlatPack::Shared::IconComponent.new(name: "question-mark-circle", size: :sm)),
     open: true
   ) do %>
-    <p>FlatPack is a ViewComponent library for Rails.</p>
+    <p>A UI kit for Rails apps that follows your theme.</p>
   <% end %>
 
   <% accordion.item(id: "faq-2", title: "How do I install it?") do %>

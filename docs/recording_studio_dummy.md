@@ -30,6 +30,7 @@ Open without login:
 Gated (sign in or bearer token):
 
 - `/users/*` profile screens after login; `/users/sign_in` and `/users/sign_up` stay public via Users auth controllers
+- `/studio` (signed-in host home)
 - `/admin` (Admin root + OauthClient registry)
 - `/recording_studio_oauth` Connect
 - `/recording_studio_api` resource server
@@ -40,6 +41,8 @@ Gated (sign in or bearer token):
 ## Signup and login
 
 Users owns auth screens (`recording_studio_user_auth_for :users`). OTP is off in the dummy initializer for a simpler password demo.
+
+After sign-in or sign-up, the host sends people to `/studio` (not the public demo root). From there: Admin, Registered apps, profile, or back to `/demo`.
 
 Seed accounts after `bin/rails db:seed`:
 

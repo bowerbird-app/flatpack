@@ -568,6 +568,8 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --picker-badge-text-color: oklch(1.0 0 0);
   --picker-selection-idle-background-color: rgb(0 0 0 / 0.3);
   --picker-selection-idle-ring-color: rgb(0 0 0 / 0.2);
+  --picker-selection-indicator-border-color: var(--picker-badge-text-color);
+  --picker-selection-indicator-fill-color: var(--picker-badge-text-color);
 
   --page-title-h1-size: var(--text-4xl);
   --page-title-h2-size: var(--text-3xl);

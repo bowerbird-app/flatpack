@@ -364,10 +364,10 @@ export default class extends Controller {
 
     return `
       <span
-        class="pointer-events-none absolute z-10 inline-flex h-5 w-5 items-center justify-center rounded-full border-2 border-white text-white ring-1 ${this.#escapeHtml(positionClasses)} ${indicatorClasses}"
+        class="pointer-events-none absolute z-10 inline-flex h-5 w-5 items-center justify-center rounded-full border-2 border-[var(--picker-selection-indicator-border-color)] text-[var(--picker-selection-indicator-fill-color)] ring-1 ${this.#escapeHtml(positionClasses)} ${indicatorClasses}"
         data-picker-selection-indicator
       >
-        <span class="h-1.5 w-1.5 rounded-full bg-white ${isSelected ? "opacity-100" : "opacity-0"}"></span>
+        <span class="h-1.5 w-1.5 rounded-full bg-[var(--picker-selection-indicator-fill-color)] ${isSelected ? "opacity-100" : "opacity-0"}"></span>
       </span>
     `
   }
@@ -403,8 +403,8 @@ export default class extends Controller {
           data-item-id="${itemId}"
           data-action="click->flat-pack--picker#selectGridItem"
         >
-        <span class="pointer-events-none absolute bottom-3 right-3 z-10 inline-flex h-5 w-5 items-center justify-center rounded-full border-2 border-white text-white ring-1 ${indicatorClasses}">
-          <span class="h-1.5 w-1.5 rounded-full bg-white ${isChecked ? "opacity-100" : "opacity-0"}"></span>
+        <span class="pointer-events-none absolute bottom-3 right-3 z-10 inline-flex h-5 w-5 items-center justify-center rounded-full border-2 border-[var(--picker-selection-indicator-border-color)] text-[var(--picker-selection-indicator-fill-color)] ring-1 ${indicatorClasses}">
+          <span class="h-1.5 w-1.5 rounded-full bg-[var(--picker-selection-indicator-fill-color)] ${isChecked ? "opacity-100" : "opacity-0"}"></span>
         </span>
         ${badgeMarkup}
         ${preview}
