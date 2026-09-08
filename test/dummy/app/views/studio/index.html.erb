@@ -1,9 +1,9 @@
-<% recording_studio_page_nav(title: "Studio") if defined?(recording_studio_page_nav) %>
+<% recording_studio_page_nav(title: "Connected Apps") if defined?(recording_studio_page_nav) %>
 
 <div class="flex w-full flex-col gap-6">
   <%= render FlatPack::PageTitle::Component.new(
-    title: "You're in",
-    subtitle: "Apps you Connect show up here. Register new ones from the admin list.",
+    title: "Connected Apps",
+    subtitle: "These apps have their own access. Remove one to shut it off.",
     variant: :h1
   ) %>
 
@@ -21,12 +21,6 @@
   </div>
 
   <% if defined?(RecordingStudioOauth) %>
-    <%= render FlatPack::PageTitle::Component.new(
-      title: "Connected apps",
-      subtitle: "These apps have their own access. Remove one to shut it off.",
-      variant: :h2
-    ) %>
-
     <% if @authorizations.present? %>
       <%= render FlatPack::List::Component.new(divider: true) do %>
         <% @authorizations.each do |authorization| %>
