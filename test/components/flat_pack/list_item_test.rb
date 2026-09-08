@@ -28,8 +28,9 @@ module FlatPack
       def test_icon_has_proper_styling
         render_inline(Item.new(icon: :check)) { "Content" }
 
+        assert_includes page.native.to_html, "flat-pack-list-item-icon"
         assert_includes page.native.to_html, "flex-shrink-0"
-        assert_includes page.native.to_html, "text-[var(--surface-muted-content-color)]"
+        refute_includes page.native.to_html, "text-[var(--surface-muted-content-color)]"
       end
 
       def test_named_icons_do_not_use_legacy_sprite_markup
@@ -108,7 +109,7 @@ module FlatPack
         render_inline(Item.new(icon: :check)) { "Content" }
 
         assert_selector "span.flat-pack-list-item-marker[aria-hidden='true']"
-        assert_selector "span svg[data-controller='flat-pack--icon'][data-flat-pack--icon-name-value='check']"
+        assert_selector "span.flat-pack-list-item-icon svg[data-controller='flat-pack--icon'][data-flat-pack--icon-name-value='check']"
         assert_selector "div.min-w-0.flex-1", text: "Content"
       end
     end

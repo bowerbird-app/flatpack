@@ -15,6 +15,8 @@ export default class extends Controller {
     this.previousActiveElement = null
     this.hideTimeout = null
     this.closing = false
+    this.originalParent = this.element.parentNode
+    this.originalNextSibling = this.element.nextSibling
     this.handleDocumentTriggerClick = this.handleDocumentTriggerClick.bind(this)
     document.addEventListener("click", this.handleDocumentTriggerClick)
   }
@@ -26,6 +28,7 @@ export default class extends Controller {
       this.restoreBodyScroll()
       this.restoreFocus()
     }
+    this.restorePosition()
   }
 
   open() {
@@ -38,6 +41,7 @@ export default class extends Controller {
       this.previousActiveElement = document.activeElement
     }
 
+    this.ensureInBody()
     this.preventBodyScroll()
     this.element.classList.remove("hidden")
     this.element.setAttribute("aria-hidden", "false")
@@ -75,8 +79,26 @@ export default class extends Controller {
       this.closing = false
       this.element.classList.add("hidden")
       this.element.setAttribute("aria-hidden", "true")
+      this.restorePosition()
       this.restoreFocus()
     }, motionDuration("base"))
+  }
+
+  ensureInBody() {
+    if (this.element.parentElement === document.body) return
+
+    document.body.appendChild(this.element)
+  }
+
+  restorePosition() {
+    if (!this.originalParent || this.element.parentElement === this.originalParent) return
+    if (this.originalParent.isConnected === false) return
+
+    if (this.originalNextSibling?.parentNode === this.originalParent) {
+      this.originalParent.insertBefore(this.element, this.originalNextSibling)
+    } else {
+      this.originalParent.appendChild(this.element)
+    }
   }
 
   handleDocumentTriggerClick(event) {

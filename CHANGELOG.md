@@ -13,6 +13,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.172] - 2026-09-08
+
+### Fixed
+- Drawer overlays move onto `document.body` while open and sit at `z-[70]`, so a left drawer no longer paints under `SidebarLayout`.
+- Progress fill paint lives in kit CSS (`.fp-progress-fill` and `--progress-fill-color`), so the default bar is no longer missing `.bg-primary`.
+- Stepper completed markers use `.fp-stepper-marker` and `--stepper-complete-text-color`, so checks stay visible when the Tailwind arbitrary fill class is not in the host sheet.
+- Ordered list rows with `icon:` keep both the decimal marker and a content-coloured `.flat-pack-list-item-icon`.
+- Chat inbox unread counts use the primary badge, tabular nums, and no `overflow-hidden` clip. The dummy inbox label is sentence-case **Inbox**.
+
+### Changed
+- Bumped the gem version to `0.1.172`.
+
+### Upgrade notes
+- Drawer markup stays in place until open. While open, the overlay is a child of `document.body` and returns to its original parent on close. Hosts must not assume the original parent while the panel is visible.
+- Progress fill is `.fp-progress-fill` / `--progress-fill-color` (and `--success` / `--warning` / `--danger` modifiers), not `bg-primary`. Rebuild host Tailwind only if you `@import` `flat_pack/application`; `stylesheet_link_tag` hosts pick the kit class up on reload.
+- Stepper complete/current/upcoming paint is kit CSS. Hosts that copied the old Tailwind fill classes can drop them. Override `--stepper-complete-text-color` if the check should not follow `--color-success-text`.
+- Chat inbox unread badges use `:primary` instead of `:info`. Rows no longer set `overflow-hidden`.
+
 ## [0.1.171] - 2026-09-08
 
 ### Fixed

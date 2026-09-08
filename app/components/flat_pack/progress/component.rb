@@ -3,14 +3,11 @@
 module FlatPack
   module Progress
     class Component < FlatPack::BaseComponent
-      # Tailwind CSS scanning requires these classes to be present as string literals.
-      # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-primary" "bg-(--color-success-background-color)" "bg-(--color-warning-background-color)" "bg-(--color-danger-background-color)"
       STYLES = {
-        default: "bg-primary",
-        success: "bg-(--color-success-background-color)",
-        warning: "bg-(--color-warning-background-color)",
-        danger: "bg-(--color-danger-background-color)"
+        default: "fp-progress-fill",
+        success: "fp-progress-fill fp-progress-fill--success",
+        warning: "fp-progress-fill fp-progress-fill--warning",
+        danger: "fp-progress-fill fp-progress-fill--danger"
       }.freeze
 
       # Tailwind CSS scanning requires these classes to be present as string literals.

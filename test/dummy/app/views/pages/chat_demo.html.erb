@@ -18,9 +18,9 @@
       style: "height: 620px; border-color: var(--surface-border-color); background-color: var(--surface-background-color);"
     ) do |layout| %>
       <% layout.sidebar do %>
-        <div id="chat-groups" class="p-3">
-          <p class="px-3 pb-2 text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">
-            Chat Groups Inbox
+        <div id="chat-groups" class="px-2 py-3">
+          <p class="px-2 pb-2 text-xs font-semibold text-(--surface-muted-content-color)">
+            Inbox
           </p>
 
           <%= render FlatPack::List::Component.new(spacing: :dense, divider: false, selectable: true) do %>

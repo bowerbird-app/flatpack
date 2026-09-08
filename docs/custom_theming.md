@@ -263,6 +263,11 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --stepper-upcoming-color: var(--surface-border-color);
   --stepper-label-color: var(--surface-content-color);
   --stepper-muted-color: var(--surface-muted-content-color);
+  --stepper-complete-text-color: var(--color-success-text);
+  --progress-fill-color: var(--color-primary);
+  --progress-success-fill-color: var(--color-success-background-color);
+  --progress-warning-fill-color: var(--color-warning-background-color);
+  --progress-danger-fill-color: var(--color-danger-background-color);
   --popover-background-color: var(--surface-background-color);
   --popover-border-color: var(--surface-border-color);
   --popover-text-color: var(--surface-content-color);

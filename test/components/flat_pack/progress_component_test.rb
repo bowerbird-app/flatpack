@@ -21,7 +21,8 @@ module FlatPack
       def test_renders_default_variant
         render_inline(Component.new(value: 50))
 
-        assert_includes page.native.to_html, "bg-primary"
+        assert_includes page.native.to_html, "fp-progress-fill"
+        refute_includes page.native.to_html, "bg-primary"
       end
 
       def test_label_visible_false_keeps_accessible_name_without_visible_text
@@ -34,19 +35,19 @@ module FlatPack
       def test_renders_success_variant
         render_inline(Component.new(value: 50, style: :success))
 
-        assert_includes page.native.to_html, "bg-(--color-success-background-color)"
+        assert_includes page.native.to_html, "fp-progress-fill--success"
       end
 
       def test_renders_warning_variant
         render_inline(Component.new(value: 50, style: :warning))
 
-        assert_includes page.native.to_html, "bg-(--color-warning-background-color)"
+        assert_includes page.native.to_html, "fp-progress-fill--warning"
       end
 
       def test_renders_danger_variant
         render_inline(Component.new(value: 50, style: :danger))
 
-        assert_includes page.native.to_html, "bg-(--color-danger-background-color)"
+        assert_includes page.native.to_html, "fp-progress-fill--danger"
       end
 
       def test_renders_small_size

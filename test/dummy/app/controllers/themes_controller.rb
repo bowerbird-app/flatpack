@@ -26,6 +26,7 @@ class ThemesController < ApplicationController
     "Keyboard" => [/\A--kbd-/],
     "Skip link" => [/\A--skip-link-/],
     "Stepper" => [/\A--stepper-/],
+    "Progress" => [/\A--progress-/],
     "Popovers" => [/\A--popover-/],
     "Tooltips" => [/\A--tooltip-/],
     "Switch" => [/\A--switch-/],
@@ -264,6 +265,8 @@ class ThemesController < ApplicationController
       "Skip link"
     when /\A--stepper-/
       "Stepper"
+    when /\A--progress-/
+      "Progress"
     when /\A--popover-/
       "Popover"
     when /\A--tooltip-/

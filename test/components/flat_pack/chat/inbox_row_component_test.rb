@@ -14,6 +14,7 @@ module FlatPack
           assert_includes item[:class], "py-3"
           assert_includes item[:class], "px-4"
           assert_includes item[:class], "rounded-[var(--radius-sm)]"
+          refute_includes item[:class], "overflow-hidden"
         end
 
         def test_renders_chat_group_name_and_preview
@@ -33,6 +34,9 @@ module FlatPack
           render_inline(Component.new(chat_group_name: "Design Team", unread_count: 4))
 
           assert_text "4"
+          html = page.native.to_html
+          assert_includes html, "fp-tabular-nums"
+          assert_includes html, "bg-[var(--badge-primary-background-color)]"
         end
 
         def test_hides_unread_badge_when_zero
