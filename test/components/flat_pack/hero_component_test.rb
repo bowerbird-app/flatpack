@@ -22,6 +22,7 @@ module FlatPack
         render_inline(Component.new(
           variant: :centered_image,
           headline: "Hero with background",
+          description: "Overlay copy on the image.",
           background_image_url: "https://placehold.co/1600x800"
         ))
 
