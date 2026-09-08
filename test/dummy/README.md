@@ -63,7 +63,7 @@ This will:
 5. **Visit the app:**
    Open http://localhost:3000 in your browser
 
-Public FlatPack demos stay at `/demo` without login. Sign in at `/users/sign_in` with `admin@admin.com` / `Password` for Admin, OAuth, and MCP demos.
+Public FlatPack demos stay at `/demo` without login. Sign in at `/users/sign_in` with `admin@admin.com` / `Password` for Admin, OAuth, and MCP demos. Switch the root switcher to **Admin** before opening `/admin` (a workspace root yields a blank `403`).
 
 ## FlatPack Integration
 
