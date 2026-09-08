@@ -7,7 +7,7 @@ module FlatPack
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "text-[var(--color-warning)]" "border-[var(--color-warning)]"
+      # "text-[var(--color-error)]" "border-[var(--color-error)]"
 
       def initialize(
         name:,
@@ -75,22 +75,7 @@ module FlatPack
       end
 
       def render_x_icon
-        content_tag(:svg,
-          xmlns: "http://www.w3.org/2000/svg",
-          width: "16",
-          height: "16",
-          viewBox: "0 0 24 24",
-          fill: "none",
-          stroke: "currentColor",
-          "stroke-width": "2",
-          "stroke-linecap": "round",
-          "stroke-linejoin": "round",
-          class: "lucide lucide-x") do
-          safe_join([
-            tag.path(d: "M18 6 6 18"),
-            tag.path(d: "m6 6 12 12")
-          ])
-        end
+        render FlatPack::Shared::IconComponent.new(name: "x-mark", size: :sm)
       end
 
       def input_attributes

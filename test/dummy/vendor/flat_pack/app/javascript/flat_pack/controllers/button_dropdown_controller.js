@@ -1,7 +1,7 @@
 // FlatPack Button Dropdown Stimulus Controller
 import { Controller } from "@hotwired/stimulus"
+import { prefersReducedMotion, motionDuration, motionTransition } from "controllers/flat_pack/reduced_motion"
 
-const CLOSE_ANIMATION_DURATION = 200
 const MENU_OFFSET = 8
 const VIEWPORT_PADDING = 8
 
@@ -59,10 +59,13 @@ export default class extends Controller {
     this.menuElement.classList.remove("hidden")
     this.menuElement.setAttribute("aria-hidden", "false")
     this.positionMenu()
-    
-    // Trigger reflow to ensure animation works
+
     this.menuElement.offsetHeight
-    
+    this.menuElement.style.transition = motionTransition(
+      ["opacity", "transform"],
+      { duration: "base", easing: "enter" }
+    )
+
     this.menuElement.classList.remove("opacity-0", "scale-95")
     this.menuElement.classList.add("opacity-100", "scale-100")
     
@@ -88,8 +91,15 @@ export default class extends Controller {
     this.triggerTarget.setAttribute("aria-expanded", "false")
     
     // Hide menu with animation
+    this.menuElement.style.transition = motionTransition(
+      ["opacity", "transform"],
+      { duration: "base", easing: "exit" }
+    )
     this.menuElement.classList.remove("opacity-100", "scale-100")
-    this.menuElement.classList.add("opacity-0", "scale-95")
+    this.menuElement.classList.add("opacity-0")
+    if (!prefersReducedMotion()) {
+      this.menuElement.classList.add("scale-95")
+    }
     
     // Rotate chevron back
     if (this.hasChevronTarget) {
@@ -101,7 +111,7 @@ export default class extends Controller {
       this.menuElement.classList.add("hidden")
       this.menuElement.setAttribute("aria-hidden", "true")
       this.restoreMenu()
-    }, CLOSE_ANIMATION_DURATION)
+    }, motionDuration("base"))
     
     // Return focus to trigger
     if (returnFocus) {

@@ -15,7 +15,7 @@ Use Pagination Infinite when table/card/list results should append or prepend in
 | `url` | String | `nil` | yes | Endpoint used for incremental fetches. |
 | `page` | Integer | `1` | no | Current page number; must be greater than zero. |
 | `has_more` | Boolean | `true` | no | When false, component renders nothing. |
-| `loading_text` | String | `"Loading more..."` | no | Text used by inline loading variant. |
+| `loading_text` | String | `"Loading more…"` | no | Text used by inline loading variant. |
 | `loading_variant` | Symbol | `:table` | no | Loading placeholder style: `:table`, `:table_rows`, `:cards`, `:inline`. |
 | `insert_mode` | Symbol | `:append` | no | Content insertion mode: `:append`, `:prepend`. |
 | `observe_root_selector` | String | `nil` | no | Optional custom `IntersectionObserver` root selector. |

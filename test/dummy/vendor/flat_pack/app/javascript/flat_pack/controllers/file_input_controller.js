@@ -143,7 +143,7 @@ export default class extends Controller {
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path")
     path.setAttribute("stroke-linecap", "round")
     path.setAttribute("stroke-linejoin", "round")
-    path.setAttribute("stroke-width", "2")
+    path.setAttribute("stroke-width", "1.5")
     path.setAttribute("d", "M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z")
 
     icon.appendChild(path)
@@ -156,7 +156,7 @@ export default class extends Controller {
     button.className = "text-[var(--surface-muted-content-color)] hover:text-[var(--color-warning-border)] transition-colors"
     button.innerHTML = `
       <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12" />
       </svg>
     `
     button.addEventListener("click", () => this.removeFile(index))

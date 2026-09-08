@@ -110,6 +110,16 @@ rails generate flat_pack:layout \
 
 After generation, set the layout in your controller (for example `ApplicationController`) and update the generated sidebar/top-nav partials to match your app routes and actions.
 
+The generated layout includes `viewport-fit=cover` on the viewport meta tag. Fixed chrome (TopNav, toast region, overlays, bottom nav, mobile sidebar drawer) uses `env(safe-area-inset-*)`, which stays `0` without that flag:
+
+```html
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+```
+
+Existing hosts should add `viewport-fit=cover` to their layout `<head>`. Dummy layouts already include it.
+
+The layout generator also renders `FlatPack::SkipLink::Component` as the first node in `<body>` and marks `<main id="main" tabindex="-1">`. Keyboard users Tab to **Skip to content**, then jump past the sidebar and top nav. Existing hosts can copy that pair from `docs/components/skip-link.md`.
+
 ### 3.3 Optional: Create `config/initializers/flat_pack.rb`
 
 FlatPack works out of the box without a Ruby initializer, but app-wide settings such as the default Heroicons variant belong in `config/initializers/flat_pack.rb`:
@@ -181,9 +191,9 @@ The `rails generate flat_pack:install` command now **automatically configures Ta
 > **Why `stylesheet_link_tag` and not `@import`?** Propshaft fingerprints asset filenames (e.g. `flat_pack/variables-17d9435e.css`). A bare CSS `@import "flat_pack/variables.css"` in a static stylesheet would send the browser looking for an un-digested URL that Propshaft never serves, resulting in a 404. `stylesheet_link_tag` asks Propshaft for the correct digested path at request time.
 
 `flat_pack/variables.css` contains the complete FlatPack theming system:
-- Brand primitives (`--brand-hue`, `--brand-chroma`, `--brand-lightness`) plus semantic and component tokens in `@theme {}`
-- `:root {}` wiring (component aliases map to semantic tokens once)
-- Slim `[data-theme]` override blocks for `dark`, `ocean`, and `rounded`
+- Brand primitives (`--brand-hue`, `--brand-chroma`, `--brand-lightness`) plus semantic and component tokens on `:root {}`
+- `@theme inline {}` inventory so Tailwind can emit utilities without copying those values
+- Slim `[data-theme]` override blocks for `dark` and `ocean`. `[data-theme="rounded"]` is a no-op alias of the default.
 
 **2. In your Tailwind CSS file** (e.g., `app/assets/stylesheets/application.tailwind.css`) — component scanning only:
 
@@ -195,6 +205,14 @@ The `rails generate flat_pack:install` command now **automatically configures Ta
  *   :root { --brand-hue: 160; --brand-chroma: 0.18; --brand-lightness: 0.52; }
  */
 @source "../path/to/flat_pack/app/components";
+
+/* Unlayered so this beats Tailwind @layer theme --radius-md: 0.375rem. */
+:root {
+  --radius-sm: 0.75rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 2rem;
+}
 ```
 
 **After the generator runs:**
@@ -238,11 +256,11 @@ If the generator cannot automatically detect your Tailwind CSS 4 file, it will d
 **Variables are loaded automatically.** The `rails generate flat_pack:install` command adds `stylesheet_link_tag "flat_pack/variables"`, `stylesheet_link_tag "flat_pack/application"`, and `stylesheet_link_tag "flat_pack/rich_text"` to your application layout. Propshaft resolves the correct digested file URLs at request time, so the complete FlatPack variable system loads without any manual copying.
 
 The imported `variables.css` contains:
-- `@theme {}` — token inventory (brand primitives, semantics, component aliases)
-- `:root {}` — the **default (rounded / charcoal) palette** plus once-defined component wiring
+- `:root {}` — the **default (rounded / charcoal) palette** plus once-defined component wiring (the values browsers actually use)
+- `@theme inline {}` — token names for Tailwind utilities (`--color-primary: var(--color-primary)`). Tailwind does not re-emit these onto `:root`
 - `[data-theme="dark"] {}` — dark overrides only (component aliases inherit)
 - `[data-theme="ocean"] {}` — ocean variant (overrides only)
-- `[data-theme="rounded"] {}` — alias of the default (same look; safe for hosts that already set the attribute)
+- `[data-theme="rounded"] {}` — empty alias of the default (same look; safe for hosts that already set the attribute)
 
 To recolor without copying the full token list:
 
@@ -256,7 +274,7 @@ or in host CSS loaded after FlatPack:
 :root { --brand-hue: 160; --brand-chroma: 0.18; --brand-lightness: 0.52; }
 ```
 
-**Rounded / charcoal is the default.** The `:root {}` block in `variables.css` establishes that palette without requiring any attribute. No `data-theme` attribute is needed — it is applied automatically. `[data-theme="rounded"]` is an explicit alias of the same look.
+**Rounded / charcoal is the default.** The `:root {}` block in `variables.css` establishes that palette without requiring any attribute. No `data-theme` attribute is needed. `[data-theme="rounded"]` is an empty alias of the same look.
 
 To **explicitly force light mode** regardless of any ThemeController state or stored preferences (useful if you are not using the theme switcher), add `data-theme="light"` to your HTML root element in your layout:
 
@@ -428,7 +446,6 @@ import GridSortableController     from "${controllersDir}/grid_sortable_controll
 import IconController             from "${controllersDir}/icon_controller.js";
 import ListSelectableController   from "${controllersDir}/list_selectable_controller.js";
 import ModalController            from "${controllersDir}/modal_controller.js";
-import NavbarController           from "${controllersDir}/navbar_controller.js";
 import NestedMultiselectController from "${controllersDir}/nested_multiselect_controller.js";
 import PaginationInfiniteController from "${controllersDir}/pagination_infinite_controller.js";
 import PasswordInputController    from "${controllersDir}/password_input_controller.js";
@@ -475,7 +492,6 @@ application.register("flat-pack--grid-sortable",       GridSortableController);
 application.register("flat-pack--icon",                IconController);
 application.register("flat-pack--list-selectable",     ListSelectableController);
 application.register("flat-pack--modal",               ModalController);
-application.register("flat-pack--navbar",              NavbarController);
 application.register("flat-pack--nested-multiselect",  NestedMultiselectController);
 application.register("flat-pack--pagination-infinite", PaginationInfiniteController);
 application.register("flat-pack--password-input",      PasswordInputController);
@@ -704,20 +720,21 @@ If the install generator didn't automatically configure Tailwind CSS 4:
 
 **Symptom:** Components render without expected styles — border radius, focus rings, transitions, or colors are missing — even after a successful Tailwind build. No build errors appear.
 
-**Root cause:** In Tailwind CSS 4, variables defined in `@theme` are automatically emitted into `:root` with their concrete values. If you also have a manual `:root` (or `[data-theme="..."]`) block that maps the same variable name back to itself — e.g. `--radius-md: var(--radius-md)` — CSS treats this as a circular reference and resolves the variable to the guaranteed-invalid value. Any component depending on that variable silently receives no value.
+**Root cause:** In Tailwind CSS 4, a normal `@theme { --radius-md: 1rem; }` block is emitted onto `:root`. If you also write `--radius-md: var(--radius-md)` on `:root` (or `[data-theme]`), CSS treats that as a circular reference and the token becomes invalid.
 
-**Detection:** Audit every CSS block in your `application.css` (and your Tailwind config file) with this regex, which matches any line where the same variable name appears on both sides of the assignment:
+FlatPack avoids that by using `@theme inline` for the inventory (`--radius-md: var(--radius-md)`) and putting the concrete `1rem` only on `:root`. Browsers skip `@theme` when `flat_pack/variables` is a `stylesheet_link_tag`. The `--token: var(--token)` lines in `@theme inline` are Tailwind registrations, not runtime assignments.
+
+**Detection:** Audit `:root`, `[data-theme]`, and `@layer base` in host CSS with this regex (do **not** flag `@theme inline` in `flat_pack/variables`):
 
 ```
 --([a-zA-Z][\w-]*):\s*var\(--\1\)
 ```
 
-Check all blocks:
+Check these host blocks:
 - `:root { ... }`
 - `[data-theme="dark"] { ... }`
 - `[data-theme="..."] { ... }` (any theme variant)
 - `@layer base { ... }`
-- Any other selector block
 
 **Examples of circular (invalid) references — remove these:**
 
@@ -745,7 +762,7 @@ Check all blocks:
    ```
 5. Verify the compiled output (`app/assets/builds/application.css`) resolves each previously-broken variable to a concrete value, not another `var()`:
    ```
-   GOOD: --radius-md:.375rem;
+   GOOD: --radius-md:1rem;
    BAD:  --radius-md:var(--radius-md);
    ```
 

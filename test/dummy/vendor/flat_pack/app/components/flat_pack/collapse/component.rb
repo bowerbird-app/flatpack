@@ -58,20 +58,12 @@ module FlatPack
       end
 
       def render_icon
-        content_tag(:svg,
-          xmlns: "http://www.w3.org/2000/svg",
-          class: "w-5 h-5 transition-transform duration-200 text-[var(--collapse-icon-color)]",
-          fill: "none",
-          viewBox: "0 0 24 24",
-          stroke: "currentColor",
-          data: {"flat-pack--collapse-target": "icon"}) do
-          tag.path(
-            "stroke-linecap": "round",
-            "stroke-linejoin": "round",
-            "stroke-width": "2",
-            d: "M19 9l-7 7-7-7"
-          )
-        end
+        render FlatPack::Shared::IconComponent.new(
+          name: "chevron-down",
+          size: :md,
+          class: "transition-transform duration-[var(--duration-base)] ease-[var(--easing-standard)] text-[var(--collapse-icon-color)]",
+          data: {"flat-pack--collapse-target": "icon"}
+        )
       end
 
       def render_content
@@ -150,7 +142,7 @@ module FlatPack
       def content_attributes
         {
           id: content_id,
-          class: "overflow-hidden transition-all duration-[var(--collapse-transition-duration)] ease-in-out bg-[var(--collapse-content-background-color)]",
+          class: "overflow-hidden transition-[max-height] duration-[var(--collapse-transition-duration)] ease-[var(--easing-standard)] bg-[var(--collapse-content-background-color)]",
           data: {"flat-pack--collapse-target": "content"},
           hidden: !@open
         }

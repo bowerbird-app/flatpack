@@ -63,6 +63,8 @@ Load FlatPack stylesheets in your application layout:
 
 Propshaft resolves the correct digested path for each file. Using `stylesheet_link_tag` (not `@import`) is required because Propshaft fingerprints asset filenames — a bare CSS `@import "flat_pack/variables.css"` in a statically-served stylesheet would request an un-digested URL that Propshaft does not serve.
 
+Host Tailwind usually loads last. `@layer theme` writes `--radius-md: 0.375rem` and `--font-sans: ui-sans-serif`. Re-set kit radii and the kit face on unlayered `:root` in the host stylesheet so rich-text chrome and kit surfaces keep the kit scale. See [Theming](../theming.md).
+
 ## JavaScript
 
 ### Structure
@@ -106,8 +108,11 @@ FlatPack icons are rendered entirely client-side via the `flat-pack--icon` Stimu
 This means:
 - No server-side SVG sprite partial is required in the host layout.
 - Icons support `:outline`, `:solid`, `:mini`, and `:micro` variants.
+- Outline stroke is `--icon-stroke-width` (default `1.5`, the Heroicons outline weight). The Stimulus controller writes the same token; kit CSS reapplies it on `svg[data-controller~="flat-pack--icon"][stroke]` so solid/mini/micro fills are not thickened after they drop the `stroke` attribute.
 - Host apps can set a global default with `FlatPack.configure { |config| config.default_icon_variant = :outline }`.
 - Icon names follow [Heroicons v2](https://heroicons.com) canonical names (e.g. `magnifying-glass`, `cog-6-tooth`, `exclamation-triangle`). A set of legacy shorthand aliases (e.g. `search`, `settings`, `alert`) are mapped internally for backward compatibility.
+- Handle-heavy artwork (`magnifying-glass`, `paper-airplane`, `pencil`, `pencil-square`, `arrow-up-tray`, `arrow-down-tray`) gets `-translate-y-0.5` via `IconComponent::OPTICAL_NUDGES`. Add names there instead of per-component CSS.
+- Names that include `-left` or `-right` as a travel or alignment direction get `fp-icon-directional` and flip in `[dir="rtl"]` with CSS `scale` (so a translate nudge still applies). Chat-bubble tails (`chat-bubble-left*`) are excluded. Vertical chevrons, checks, and media playback do not flip.
 
 ## Tailwind CSS 4 Integration
 
@@ -116,7 +121,7 @@ This means:
 Tailwind CSS 4 uses a CSS-first configuration model:
 
 1. **No `tailwind.config.js`** - Configuration via CSS
-2. **`@theme` directive** - Define variables in CSS
+2. **`@theme` / `@theme inline` directive** - Register theme names in CSS. FlatPack uses `@theme inline` plus concrete `:root` values.
 3. **`@source` comments** - Specify content paths
 
 ### Configuring Content Sources

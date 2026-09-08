@@ -7,7 +7,7 @@ module FlatPack
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "text-[var(--color-warning)]" "border-[var(--color-warning)]"
+      # "text-[var(--color-error)]" "border-[var(--color-error)]"
 
       def initialize(
         name:,
@@ -137,7 +137,7 @@ module FlatPack
       def render_picker_quick_ranges
         content_tag(:div, class: picker_ranges_section_classes) do
           safe_join([
-            content_tag(:p, "Quick Select", class: "text-xs font-semibold uppercase tracking-wide text-[var(--surface-muted-content-color)]"),
+            content_tag(:p, "Quick select", class: "text-xs font-semibold text-[var(--surface-muted-content-color)]"),
             content_tag(:div, class: "mt-2 space-y-1") do
               safe_join(quick_range_presets.map { |preset| render_quick_range_button(preset) })
             end

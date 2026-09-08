@@ -64,7 +64,7 @@ module FlatPack
         return unless @show_label || @label
 
         label_text = @label || "#{percentage.to_i}%"
-        content_tag(:div, label_text, class: "text-sm font-medium text-[var(--surface-content-color)] mb-1")
+        content_tag(:div, label_text, class: "text-sm font-medium text-[var(--surface-content-color)] mb-1 fp-tabular-nums")
       end
 
       def render_progress_bar
@@ -104,7 +104,7 @@ module FlatPack
       end
 
       def bar_fill_classes
-        "h-full #{STYLES.fetch(@style)} transition-all duration-300 ease-in-out rounded-full"
+        "h-full #{STYLES.fetch(@style)} transition-[width] duration-[var(--duration-slow)] ease-[var(--easing-standard)] rounded-full"
       end
 
       def percentage

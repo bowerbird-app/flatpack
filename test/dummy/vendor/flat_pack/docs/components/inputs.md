@@ -8,10 +8,10 @@ Use these components when you need FlatPack-styled form controls with consistent
 
 ## Class
 - Primary: `FlatPack::TextInput::Component`
-- Related classes: `FlatPack::PasswordInput::Component`, `FlatPack::EmailInput::Component`, `FlatPack::PhoneInput::Component`, `FlatPack::SearchInput::Component`, `FlatPack::TextArea::Component`, `FlatPack::UrlInput::Component`, `FlatPack::NumberInput::Component`, `FlatPack::DateInput::Component`, `FlatPack::DateRangeInput::Component`, `FlatPack::DateTimeInput::Component`, `FlatPack::TimeInput::Component`, `FlatPack::FileInput::Component`, `FlatPack::Checkbox::Component`, `FlatPack::RadioGroup::Component`, `FlatPack::Select::Component`, `FlatPack::Switch::Component`
+- Related classes: `FlatPack::PasswordInput::Component`, `FlatPack::EmailInput::Component`, `FlatPack::PhoneInput::Component`, `FlatPack::SearchInput::Component`, `FlatPack::TextArea::Component`, `FlatPack::UrlInput::Component`, `FlatPack::NumberInput::Component`, `FlatPack::DateInput::Component`, `FlatPack::DateRangeInput::Component`, `FlatPack::DateTimeInput::Component`, `FlatPack::TimeInput::Component`, `FlatPack::FileInput::Component`, `FlatPack::Checkbox::Component`, `FlatPack::RadioGroup::Component`, `FlatPack::Select::Component`, `FlatPack::Combobox::Component`, `FlatPack::Switch::Component`
 - Internal (not a host-facing API): text-like inputs and Select compose `FlatPack::FormField::Component` for the shared label / help_text / error wrapper, and `FlatPack::FormField::ControlStyles` for the box class list that uses `--form-control-padding`. Keep rendering the public input components above — do not switch hosts to FormField.
 - Related Stimulus controller: `flat-pack--nested-multiselect` for legacy hierarchical checkbox groups that submit hidden inputs.
-- Related docs: [Range Input](range-input.md) (`FlatPack::RangeInput::Component`), [Color Swatch](color-swatch.md) (`FlatPack::ColorSwatch::Component`), [Font Swatch](font-swatch.md) (`FlatPack::FontSwatch::Component`)
+- Related docs: [Range Input](range-input.md) (`FlatPack::RangeInput::Component`), [Combobox](combobox.md) (`FlatPack::Combobox::Component`), [Color Swatch](color-swatch.md) (`FlatPack::ColorSwatch::Component`), [Font Swatch](font-swatch.md) (`FlatPack::FontSwatch::Component`)
 
 ## Props
 Common props used across most input components:
@@ -278,7 +278,7 @@ The popup renders as side-by-side quick ranges + calendar on larger screens and 
 
 ## Rich Text Mode
 
-When `rich_text: true` is set on `FlatPack::TextArea::Component`, the native `<textarea>` is replaced with a fully featured [TipTap](https://tiptap.dev) editor. The editor is rendered server-side as empty containers and bootstrapped by the `flat-pack--tiptap` Stimulus controller at runtime.
+When `rich_text: true` is set on `FlatPack::TextArea::Component`, the native `<textarea>` is replaced with a fully featured [TipTap](https://tiptap.dev) editor. The editor is rendered server-side as empty containers and bootstrapped by the `flat-pack--tiptap` Stimulus controller at runtime. Toolbar, bubble, and editor chrome use kit `--radius-md` / `--radius-sm` (with `1rem` / `0.75rem` fallbacks). If host Tailwind loads last, re-set those radii on unlayered `:root` so Tailwind’s `0.375rem` default does not show up as tight editor corners. See [Theming](../theming.md).
 
 `FlatPack::Comments::Composer::Component` and `FlatPack::Comments::InlineInput::Component` both forward `rich_text` and `rich_text_options` directly to this same `TextArea` API, so the toolbar, bubble menu, and preset behavior documented below also apply to those comments components.
 
@@ -622,7 +622,7 @@ Always sanitize HTML output before rendering it back to users:
 
 ## Accessibility
 - Label-to-control association is provided when `label` is passed (`for`/`id` linkage).
-- Error state adds `aria-invalid` and `aria-describedby` for controls that receive `error`.
+- Error state adds `aria-invalid` and `aria-describedby` for controls that receive `error`. Invalid borders and helper text use `--color-error` (danger red), not `--color-warning`. Character-count thresholds still use `--color-warning-border`.
 - Native controls are used for checkbox/radio/select/input/textarea semantics.
 - `SearchInput` keeps a single clear control by using the component clear button and suppressing browser-native search clear icons.
 - Searchable select trigger exposes `aria-haspopup` and toggles `aria-expanded`.

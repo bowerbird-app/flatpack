@@ -213,6 +213,12 @@ components:
       - FlatPack::Sidebar::Divider::Component
     status: documented
 
+  - key: drawer
+    title: Drawer
+    doc: docs/components/drawer.md
+    primary_class: FlatPack::Drawer::Component
+    status: documented
+
   - key: code_block
     title: Code Block
     doc: docs/components/code-block.md
@@ -223,6 +229,18 @@ components:
     title: Collapse
     doc: docs/components/collapse.md
     primary_class: FlatPack::Collapse::Component
+    status: documented
+
+  - key: combobox
+    title: Combobox
+    doc: docs/components/combobox.md
+    primary_class: FlatPack::Combobox::Component
+    status: documented
+
+  - key: command_palette
+    title: Command Palette
+    doc: docs/components/command-palette.md
+    primary_class: FlatPack::CommandPalette::Component
     status: documented
 
   - key: content_editor
@@ -323,7 +341,14 @@ components:
       - FlatPack::Checkbox::Component
       - FlatPack::RadioGroup::Component
       - FlatPack::Select::Component
+      - FlatPack::Combobox::Component
       - FlatPack::Switch::Component
+    status: documented
+
+  - key: kbd
+    title: Keyboard
+    doc: docs/components/kbd.md
+    primary_class: FlatPack::Kbd::Component
     status: documented
 
   - key: date_range_input
@@ -372,12 +397,6 @@ components:
     title: Modal Filter
     doc: docs/components/modal-filter.md
     primary_class: FlatPack::ModalFilter::Component
-    status: documented
-
-  - key: navbar
-    title: Navbar
-    doc: docs/components/navbar.md
-    primary_class: FlatPack::Navbar::Component
     status: documented
 
   - key: notification
@@ -454,6 +473,12 @@ components:
     primary_class: FlatPack::Search::Component
     status: documented
 
+  - key: skip_link
+    title: Skip Link
+    doc: docs/components/skip-link.md
+    primary_class: FlatPack::SkipLink::Component
+    status: documented
+
   - key: section_title
     title: Section Title
     doc: docs/components/section-title.md
@@ -500,6 +525,18 @@ components:
     title: Skeleton
     doc: docs/components/skeleton.md
     primary_class: FlatPack::Skeleton::Component
+    status: documented
+
+  - key: spinner
+    title: Spinner
+    doc: docs/components/spinner.md
+    primary_class: FlatPack::Spinner::Component
+    status: documented
+
+  - key: stepper
+    title: Stepper
+    doc: docs/components/stepper.md
+    primary_class: FlatPack::Stepper::Component
     status: documented
 
   - key: sortable_tables

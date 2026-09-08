@@ -112,7 +112,7 @@ Tokens live in `flat_pack/variables.css`. Recolor from brand primitives after th
 }
 ```
 
-`--color-primary` is `oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue))`. Surfaces pick up hue only. For an exact hex, set `--color-primary` instead. See [Theming Guide](theming.md).
+`--color-primary` is `oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue))`. Hover subtracts `0.10` from lightness only. Surfaces keep their own colors unless you override `--surface-*`. For an exact hex, set `--color-primary` instead. See [Theming Guide](theming.md).
 
 ## Component Philosophy
 

@@ -10,7 +10,7 @@ Flatpack Cloud Agents load project skills and rules from the git checkout.
 2. Third-party craft skills copied from public raw URLs: `frontend-design`, `design-dna`, `make-interfaces-feel-better`, `motion-design`, `review-animations`, `visual-qa-testing`, `web-design-guidelines`.
 3. Flatpack-owned skills: `flatpack-design` (boss of what lands) and `flatpack-micro-interactions` (kit motion patterns).
 
-`.cursor/rules/` holds eight Flatpack-owned `.mdc` files. Cloud Agents load them from the checkout. There is no Recording Studio plugin fetch.
+`.cursor/rules/` holds nine Flatpack-owned `.mdc` files. Cloud Agents load them from the checkout. There is no Recording Studio plugin fetch.
 
 Always-applied:
 
@@ -20,13 +20,14 @@ Always-applied:
 - `docs.mdc`
 - `parameters.mdc`
 - `verify-ui.mdc`
+- `tests.mdc`
 
 Glob-scoped:
 
 - `flatpack-ui.mdc`
 - `user-facing-copy.mdc`
 
-`verify-ui`, `flatpack-ui`, and `user-facing-copy` are Flatpack rewrites (dummy demos, library components, `flatpack-design`, `flatpack-micro-interactions`). The other five match the shared gem-repo pack, including the `parameters.mdc` cross-ref to `gem-version-and-release.mdc`.
+`verify-ui`, `flatpack-ui`, and `user-facing-copy` are Flatpack rewrites (dummy demos, library components, `flatpack-design`, `flatpack-micro-interactions`). `tests.mdc` is a Flatpack-owned always-applied rule like `verify-ui`. It is not part of the five shared gem-repo pack copies. The other five match the shared gem-repo pack, including the `parameters.mdc` cross-ref to `gem-version-and-release.mdc`.
 
 This repo does not use Recording Studio skills. Do not add `recording-studio-*`. Do not fetch `RecordingStudio_cursor_plugin`. Do not add `recording-studio.mdc` or `flatpack-is-the-system.mdc`. Do not add `micro-interactions`, `interaction-design`, or `ui-ux-pro-max`.
 
@@ -57,7 +58,9 @@ Use this order on Flatpack UI work:
 
 **Design DNA.** Extract measurable system into Flatpack tokens and themes: colour, type, space, radius, elevation, motion duration and easing. Do not implement DNA `visual_effects` (WebGL, particles, shaders, Canvas, scroll theatres, cursor trails) unless Nic explicitly asks for a Flatpack-owned effect later.
 
-**Motion.** Advise timing, easing, and choreography. Implement with Flatpack CSS and `--duration-*` tokens. Do not default to Framer, GSAP, or Lottie.
+**Motion.** Advise timing, easing, and choreography. Implement with Flatpack CSS, `--duration-*`, and `--easing-*` tokens. Do not default to Framer, GSAP, or Lottie.
+
+**Type.** Use `--font-sans` / `--text-*`. Labels are sentence case. Tabular nums on live numbers. Do not add tracked-out ALL-CAPS eyebrows.
 
 ## Refreshing pstack
 

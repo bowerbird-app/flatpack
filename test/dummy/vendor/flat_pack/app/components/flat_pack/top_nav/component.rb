@@ -140,7 +140,7 @@ module FlatPack
             "flat-pack--top-nav-target": "toggle",
             action: "click->flat-pack--top-nav#toggle"
           },
-          class: "border-0 shadow-none text-[var(--top-nav-item-icon-color)] hover:bg-[var(--top-nav-item-hover-background-color)] hover:text-[var(--top-nav-item-hover-text-color)] transition-colors [&>svg]:transition-transform [&>svg]:duration-200"
+          class: "border-0 shadow-none text-[var(--top-nav-item-icon-color)] hover:bg-[var(--top-nav-item-hover-background-color)] hover:text-[var(--top-nav-item-hover-text-color)] transition-colors [&>svg]:transition-transform [&>svg]:duration-[var(--duration-base)]"
         )
       end
 
@@ -168,8 +168,7 @@ module FlatPack
 
       def header_attributes
         attrs = merge_attributes(
-          class: header_classes,
-          style: header_style
+          class: header_classes
         )
 
         return attrs unless @mobile_menu
@@ -186,20 +185,14 @@ module FlatPack
         attrs
       end
 
-      def header_style
-        existing_style = @system_arguments[:style]
-        [existing_style, "height: 72px"].compact.join("; ")
-      end
-
       def header_classes
         classes(
+          "fp-top-nav",
           "sticky",
           "top-0",
           "z-10",
           "bg-[var(--top-nav-background-color)]",
-          "backdrop-blur-lg",
-          "px-4",
-          "py-0"
+          "backdrop-blur-lg"
         )
       end
 

@@ -43,6 +43,8 @@ None.
 <% end %>
 ```
 
+The bar is `position: fixed` at the bottom with `.fp-bottom-nav` and `pb-[env(safe-area-inset-bottom)]` so items sit above the home indicator. Items include `.fp-touch-manipulation`. Hosts need `viewport-fit=cover` for the inset to apply. See [Installation](../installation.md).
+
 ## Accessibility
 - Renders semantic `<nav>` with `aria-label="Bottom navigation"`.
 - Active item sets `aria-current="page"`.

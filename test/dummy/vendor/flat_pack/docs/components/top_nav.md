@@ -4,7 +4,7 @@
 Render a sticky top navigation bar with composable left, center, and right content regions.
 
 ## When to use
-Use TopNav in app shells for page context, global actions, and optional search or controls.
+Use TopNav in app shells for page context, global actions, and optional search or controls. Pair it with `SidebarLayout` and `Sidebar`. Dummy `/demo/navbar` is this component.
 
 ## Class
 - Primary: `FlatPack::TopNav::Component`
@@ -27,6 +27,8 @@ Use TopNav in app shells for page context, global actions, and optional search o
 | `right` | block slot | No | Right-aligned content wrapper (`h-full flex items-center gap-2`). Accepts `always_display:` (default `false`). |
 
 TopNav always renders all three wrappers (`left`, `center`, `right`) even if one slot is blank or uninitialized. This keeps horizontal alignment stable across pages and states.
+
+The bar is `.fp-top-nav`: `72px` of content height plus `env(safe-area-inset-top)`, with left/right padding at least `1rem` and never less than the side insets. Hosts need `viewport-fit=cover` for those insets to apply. See [Installation](../installation.md).
 
 ## Mobile chevron menu
 

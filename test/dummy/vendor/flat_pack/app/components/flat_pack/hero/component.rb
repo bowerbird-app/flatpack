@@ -104,21 +104,21 @@ module FlatPack
         return nil unless @tagline.present?
 
         content_tag(:p, @tagline,
-          class: "text-sm font-semibold uppercase tracking-widest text-[var(--surface-muted-content-color)]")
+          class: "text-sm font-medium text-[var(--surface-muted-content-color)]")
       end
 
       def render_headline
         return nil unless @headline.present?
 
         content_tag(:h1, @headline,
-          class: "mt-2 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--surface-content-color)]")
+          class: "mt-2 text-[length:var(--text-4xl)] sm:text-[length:var(--text-5xl)] font-semibold tracking-tight text-[var(--surface-content-color)] fp-text-balance")
       end
 
       def render_description
         return nil unless @description.present?
 
         content_tag(:p, @description,
-          class: "mt-6 text-lg sm:text-xl text-[var(--surface-muted-content-color)]")
+          class: "mt-6 text-lg text-[var(--surface-muted-content-color)] fp-text-pretty")
       end
 
       def render_actions_block(extra_classes: "")
@@ -165,9 +165,9 @@ module FlatPack
                 render_badge_content,
                 render_tagline,
                 content_tag_if(@headline, :h1, @headline,
-                  class: "mt-2 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white"),
+                  class: "mt-2 text-[length:var(--text-4xl)] sm:text-[length:var(--text-5xl)] font-semibold tracking-tight text-white fp-text-balance"),
                 content_tag_if(@description, :p, @description,
-                  class: "mt-6 text-lg sm:text-xl text-white/80"),
+                  class: "mt-6 text-lg text-white/80 fp-text-pretty"),
                 render_actions_block(extra_classes: "justify-center")
               ].compact)
             end
