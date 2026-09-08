@@ -127,6 +127,47 @@ module FlatPack
       refute_includes dark_block, "--avatar-background-color"
     end
 
+    test "alerts and toasts wash status colour instead of filling like buttons" do
+      root_block = @css[/^:root \{.*?^\}/m]
+
+      refute_nil root_block, "expected a :root block in variables.css"
+
+      {
+        "--alert-success-background-color" => "color-mix(in oklab, var(--color-success-background-color) 18%, var(--surface-background-color))",
+        "--alert-success-border-color" => "color-mix(in oklab, var(--color-success-background-color) 42%, var(--surface-border-color))",
+        "--alert-success-text-color" => "var(--surface-content-color)",
+        "--alert-success-icon-color" => "color-mix(in oklab, var(--color-success-background-color) 78%, black)",
+        "--alert-warning-background-color" => "color-mix(in oklab, var(--color-warning-background-color) 18%, var(--surface-background-color))",
+        "--alert-warning-text-color" => "var(--surface-content-color)",
+        "--alert-danger-background-color" => "color-mix(in oklab, var(--color-danger-background-color) 18%, var(--surface-background-color))",
+        "--alert-danger-text-color" => "var(--surface-content-color)",
+        "--toast-info-background-color" => "var(--alert-info-background-color)",
+        "--toast-info-border-color" => "var(--alert-info-border-color)",
+        "--toast-info-text-color" => "var(--alert-info-text-color)",
+        "--toast-info-icon-color" => "var(--alert-info-icon-color)",
+        "--toast-success-border-color" => "var(--alert-success-border-color)",
+        "--button-success-background-color" => "var(--color-success-background-color)",
+        "--badge-success-background-color" => "var(--color-success-background-color)"
+      }.each do |token, value|
+        assert_match(/#{Regexp.escape(token)}:\s*#{Regexp.escape(value)}/, root_block)
+      end
+
+      refute_match(/--alert-success-background-color:\s*var\(--color-success-background-color\)/, root_block)
+      refute_match(/--toast-info-background-color:\s*var\(--color-primary\)/, root_block)
+      assert_match(
+        /--toast-dismiss-text-color:\s*var\(--surface-muted-content-color\)/,
+        root_block
+      )
+      assert_match(
+        /--toast-dismiss-hover-background-color:\s*color-mix\(in oklab, currentColor 8%, transparent\)/,
+        root_block
+      )
+      refute_match(
+        /--toast-danger-dismiss-background-color:\s*color-mix\(in oklab, var\(--toast-danger-text-color\)/,
+        root_block
+      )
+    end
+
     private
 
     def token_names(block)
