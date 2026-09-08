@@ -20,6 +20,23 @@
     touch-action: manipulation;
   }
 
+  /* Compact control that stays icon-sized. The pseudo expands the hit to --hit-target-min. */
+  .fp-hit-slop {
+    position: relative;
+    background-color: transparent;
+    touch-action: manipulation;
+  }
+
+  .fp-hit-slop::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: var(--hit-target-min);
+    height: var(--hit-target-min);
+    transform: translate(-50%, -50%);
+  }
+
   .fp-touch-manipulation {
     touch-action: manipulation;
   }
