@@ -15,7 +15,7 @@
       title: "What is FlatPack?",
       left_slot: render(FlatPack::Shared::IconComponent.new(name: "question-mark-circle", size: :sm, class: "text-[var(--collapse-icon-color)]"))
     ) do %>
-      <p>FlatPack is a comprehensive ViewComponent library for Ruby on Rails that provides production-ready UI components with built-in accessibility, responsive design, and thoughtful defaults.</p>
+      <p>Need a hand getting started? This section covers layouts, colour, and the patterns teams use most.</p>
     <% end %>
 
     <%= render FlatPack::Collapse::Component.new(id: "collapse2", title: "How do I get started?", open: true) do %>
@@ -51,7 +51,7 @@
     code: CGI.unescapeHTML(<<~'CODE'),
       &lt;div class=&quot;space-y-4&quot;&gt;
         &lt;%= render FlatPack::Collapse::Component.new(id: &quot;collapse1&quot;, title: &quot;What is FlatPack?&quot;) do %&gt;
-          &lt;p&gt;FlatPack is a comprehensive ViewComponent library for Ruby on Rails that provides production-ready UI components with built-in accessibility, responsive design, and thoughtful defaults.&lt;/p&gt;
+          &lt;p&gt;Need a hand getting started? This section covers layouts, colour, and the patterns teams use most.&lt;/p&gt;
         &lt;% end %&gt;
     
         &lt;%= render FlatPack::Collapse::Component.new(id: &quot;collapse2&quot;, title: &quot;How do I get started?&quot;, open: true) do %&gt;

@@ -174,42 +174,53 @@ export default class extends Controller {
   }
 
   trapFocus() {
-    if (!this.hasDialogTarget) return
+    const focusable = this.focusableElements()
 
-    const focusableElements = this.dialogTarget.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    )
-
-    if (focusableElements.length > 0) {
-      focusableElements[0].focus()
-    } else {
+    if (focusable.length > 0) {
+      focusable[0].focus()
+    } else if (this.hasDialogTarget) {
       this.dialogTarget.focus()
     }
   }
 
   handleKeydown(event) {
+    if (event.key !== "Tab") return
     if (!this.hasDialogTarget) return
+    if (this.element.classList.contains("hidden")) return
 
-    if (event.key === "Tab") {
-      const focusableElements = Array.from(
-        this.dialogTarget.querySelectorAll(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        )
-      )
+    const focusable = this.focusableElements()
+    if (focusable.length === 0) {
+      event.preventDefault()
+      this.dialogTarget.focus()
+      return
+    }
 
-      if (focusableElements.length === 0) return
+    const firstElement = focusable[0]
+    const lastElement = focusable[focusable.length - 1]
+    const active = document.activeElement
+    const activeInside = this.dialogTarget.contains(active)
 
-      const firstElement = focusableElements[0]
-      const lastElement = focusableElements[focusableElements.length - 1]
-
-      if (event.shiftKey && document.activeElement === firstElement) {
+    if (event.shiftKey) {
+      if (!activeInside || active === firstElement) {
         event.preventDefault()
         lastElement.focus()
-      } else if (!event.shiftKey && document.activeElement === lastElement) {
-        event.preventDefault()
-        firstElement.focus()
       }
+    } else if (!activeInside || active === lastElement) {
+      event.preventDefault()
+      firstElement.focus()
     }
+  }
+
+  focusableElements() {
+    if (!this.hasDialogTarget) return []
+
+    return Array.from(this.dialogTarget.querySelectorAll(
+      'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )).filter((element) => {
+      if (element.disabled) return false
+      if (element.getAttribute("aria-hidden") === "true") return false
+      return element.tabIndex >= 0
+    })
   }
 
   applyEnterMotion() {

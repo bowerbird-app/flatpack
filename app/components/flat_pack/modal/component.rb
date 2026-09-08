@@ -95,7 +95,7 @@ module FlatPack
       end
 
       def action_attributes
-        actions = []
+        actions = ["keydown.tab->flat-pack--modal#handleKeydown"]
         actions << "keydown.esc->flat-pack--modal#close" if @close_on_escape
         actions.join(" ")
       end
@@ -148,7 +148,8 @@ module FlatPack
           class: dialog_classes,
           data: {
             "flat-pack--modal-target": "dialog"
-          }
+          },
+          tabindex: -1
         }
 
         attributes[:aria][:labelledby] = header_id if header_section?

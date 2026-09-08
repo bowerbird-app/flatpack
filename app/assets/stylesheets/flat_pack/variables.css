@@ -517,6 +517,8 @@
   --picker-badge-text-color: var(--picker-badge-text-color);
   --picker-selection-idle-background-color: var(--picker-selection-idle-background-color);
   --picker-selection-idle-ring-color: var(--picker-selection-idle-ring-color);
+  --picker-selection-indicator-border-color: var(--picker-selection-indicator-border-color);
+  --picker-selection-indicator-fill-color: var(--picker-selection-indicator-fill-color);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
   --text-xs: var(--text-xs);
@@ -1078,6 +1080,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --picker-badge-text-color: oklch(1.0 0 0);
   --picker-selection-idle-background-color: rgb(0 0 0 / 0.3);
   --picker-selection-idle-ring-color: rgb(0 0 0 / 0.2);
+  --picker-selection-indicator-border-color: var(--picker-badge-text-color);
+  --picker-selection-indicator-fill-color: var(--picker-badge-text-color);
   --font-sans: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
   --text-xs: 0.75rem;

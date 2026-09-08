@@ -1,7 +1,7 @@
 <div class="container mx-auto max-w-5xl p-4" data-controller="picker-demo" data-action="flat-pack:picker:confirm@document->picker-demo#handleConfirm">
   <%= render FlatPack::PageTitle::Component.new(
     title: "Picker",
-    subtitle: "Reusable image/file/record picker that lets each consumer decide what to do with selections."
+    subtitle: "Choose images, files, or folders, then let each screen decide what happens next."
   ) %>
 
   <section class="mb-12">
@@ -17,14 +17,14 @@
         <div class="space-y-3 text-sm text-(--surface-content-color)">
           <p>
             The picker needs an <code>id</code> and an <code>items</code> array. For each item, <code>name</code> is required.
-            In list mode, each row is rendered through four display slots: leading media or icon, title, description, and right text.
+            In list mode, each row shows leading media or an icon, a title, a description, and trailing text.
           </p>
           <ul class="list-disc space-y-1 pl-5 text-(--surface-muted-content-color)">
             <li><code>title</code> renders the primary row text and falls back to <code>label</code> or <code>name</code>.</li>
             <li><code>kind</code> should be <code>"image"</code>, <code>"file"</code>, or <code>"record"</code>.</li>
-            <li><code>thumbnail_url</code> fills the leading media slot, while <code>icon</code> fills the leading icon slot when no thumbnail is present.</li>
+            <li><code>thumbnail_url</code> fills the leading media, while <code>icon</code> fills the leading icon when no thumbnail is present.</li>
             <li><code>description</code> renders the text below the title. When omitted, the picker falls back to <code>path</code> or file metadata.</li>
-            <li><code>right_text</code> fills the trailing text slot and falls back to <code>meta</code> or <code>badge</code>.</li>
+            <li><code>right_text</code> fills the trailing text and falls back to <code>meta</code> or <code>badge</code>.</li>
             <li><code>payload</code> is returned in the confirm event so your app can store signed IDs or other references.</li>
           </ul>
         </div>
@@ -50,17 +50,17 @@
 
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(
-      title: "Records",
+      title: "Folders",
       anchor: "record-picker",
       anchor_link: true,
-      subtitle: "Use the picker to select folders or other application records without forcing them into file semantics."
+      subtitle: "Pick a folder without treating it as a file."
     ) %>
 
     <%= render FlatPack::Card::Component.new(class: "mt-6") do |card| %>
       <% card.body do %>
         <div class="space-y-4">
           <p class="text-sm text-(--surface-muted-content-color)">
-            This example treats folders as records. It keeps the single-select auto-confirm flow, while the row itself is filled by the picker display slots instead of record-specific rendering branches.
+            This example treats folders as folders. Single-select confirms immediately, and each row still shows media, title, description, and trailing text.
           </p>
 
           <div class="flex flex-wrap gap-2">

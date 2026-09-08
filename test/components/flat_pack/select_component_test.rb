@@ -240,7 +240,8 @@ module FlatPack
         selected_option_classes = page.find("div[role='option'][data-value='rails']")[:class]
 
         assert_includes selected_option_classes, "bg-[var(--color-primary)]"
-        assert_includes selected_option_classes, "text-white"
+        assert_includes selected_option_classes, "text-[var(--color-primary-text)]"
+        refute_includes selected_option_classes, "text-white"
       end
 
       def test_searchable_multiple_chip_has_remove_action
