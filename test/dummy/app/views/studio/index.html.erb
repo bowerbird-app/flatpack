@@ -18,13 +18,6 @@
       href: "/admin/sections/oauth_apps",
       style: :secondary
     ) %>
-    <% if defined?(recording_studio_users) %>
-      <%= render FlatPack::Button::Component.new(
-        text: "My profile",
-        href: recording_studio_users.profile_path,
-        style: :ghost
-      ) %>
-    <% end %>
     <%= render FlatPack::Button::Component.new(
       text: "Component demos",
       href: "/demo",
