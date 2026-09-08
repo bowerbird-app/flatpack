@@ -212,11 +212,11 @@ Dark theme (`[data-theme="dark"]`) adds a faint white hairline to `--shadow-sm` 
 
 ### Hit targets
 ```css
---hit-target-min: 2.75rem   /* 44px — icon-only buttons, modal close, alert/toast dismiss */
+--hit-target-min: 2.75rem   /* 44px — icon-only buttons, modal close, alert dismiss */
 --hit-target-inline-min: 1.5rem  /* 24px — chip and badge remove */
 ```
 
-Kit CSS defines `.fp-hit-target` and `.fp-hit-target-inline`. Hosts get those classes from `flat_pack/application` without a Tailwind rebuild.
+Kit CSS defines `.fp-hit-target`, `.fp-hit-target-inline`, and `.fp-hit-slop`. `.fp-hit-target` grows the painted box to 44px. `.fp-hit-slop` keeps the control icon-sized and expands the hit with a pseudo-element — toast close uses that so the X is not a 44px empty square. Hosts get those classes from `flat_pack/application` without a Tailwind rebuild.
 
 ### Color scheme
 `:root` sets `color-scheme: light`. `[data-theme="dark"]` sets `color-scheme: dark` so native controls, scrollbars, and form chrome match the theme.
@@ -308,6 +308,8 @@ Drawer tokens alias Modal. Keyboard, skip link, and stepper tokens alias surface
 ## Component Variable Usage
 
 Component tokens such as `--button-primary-background-color` map to semantic tokens (`var(--color-primary)`). You normally change `--brand-hue` / `--brand-chroma` / `--brand-lightness` or `--color-primary` instead of editing component tokens.
+
+Alert and toast success/warning/danger wash the status fill into the surface (`color-mix` at 18%) and keep chroma on the icon and border. Info toasts alias the quiet info alert, not `--color-primary`. Buttons, badges, chips, and progress keep the filled `--color-success-*` / `--color-warning-*` / `--color-danger-*` paints.
 
 Tabs, chat incoming bubbles, sidebar/top-nav hover, list hover, and avatar fallbacks alias `--surface-muted-*` / `--surface-content-color`. Named themes inherit those greys from the surface tokens; do not freeze Tailwind slate hexes on the component tokens.
 
