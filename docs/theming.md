@@ -341,7 +341,7 @@ Tabs, chat incoming bubbles, sidebar/top-nav hover, list hover, and avatar fallb
 ### Hero, carousel, picker, badge
 - Hero `centered_image` overlay: `--hero-overlay-background-color`, `--hero-overlay-text-color`, `--hero-overlay-muted-text-color`
 - Carousel chrome: `--carousel-control-*`, `--carousel-counter-*`, `--carousel-media-background-color`, `--carousel-lightbox-image-background-color`
-- Picker grid: `--picker-badge-*`, `--picker-selection-idle-*`
+- Picker grid: `--picker-badge-*`, `--picker-selection-idle-*`, `--picker-selection-indicator-*`
 - Badge remove hover: `--badge-remove-hover-background-color` (aliases `--chip-remove-hover-background-color`)
 - Card stat trends: `--color-success-background-color`, `--color-danger-background-color`
 

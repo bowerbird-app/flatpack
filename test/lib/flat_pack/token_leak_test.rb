@@ -15,7 +15,10 @@ module FlatPack
       /bg-black(?:\/|\b)/,
       /hover:bg-black/,
       /bg-\[rgba\(0,\s*0,\s*0/,
-      /ring-black\//
+      /ring-black\//,
+      /text-white/,
+      /\bborder-white\b/,
+      /\bbg-white\b/
     ].freeze
 
     test "kit Ruby and JavaScript do not hardcode Tailwind palette overlays" do
@@ -42,6 +45,10 @@ module FlatPack
       assert_includes js, "--picker-badge-text-color"
       assert_includes js, "--picker-selection-idle-background-color"
       assert_includes js, "--picker-selection-idle-ring-color"
+      assert_includes js, "--picker-selection-indicator-border-color"
+      assert_includes js, "--picker-selection-indicator-fill-color"
+      refute_includes js, "border-white"
+      refute_includes js, "bg-white"
     end
   end
 end

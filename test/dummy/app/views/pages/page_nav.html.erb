@@ -1,6 +1,6 @@
 <%= render FlatPack::PageTitle::Component.new(
   title: "Page Nav Component",
-  subtitle: "Compact icon-only page navigation with browser back, optional anchor links, tooltips, and optional right slot action."
+  subtitle: "Compact icon-only page navigation with browser back, optional close control, tooltips, and an optional trailing action."
 ) %>
 
 <%= render "pages/component_method_variables_table", component: :page_nav %>
@@ -80,7 +80,7 @@
 </section>
 
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "With Anchor and Right Slot", anchor_link: true, subtitle: "Line divider fills available space and custom right_slot content drives add flow.") %>
+  <%= render FlatPack::SectionTitle::Component.new(title: "With a close control and a trailing action", anchor_link: true, subtitle: "The divider fills the space between the close control and a trailing add action.") %>
   <div class="mb-4">
     <%= render FlatPack::PageNav::Component.new(
       anchor_href: demo_path,
@@ -120,7 +120,7 @@
 </section>
 
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "With Right Slot Dropdown", anchor_link: true, subtitle: "Use right_slot with a dropdown trigger when multiple actions belong in the nav." ) %>
+  <%= render FlatPack::SectionTitle::Component.new(title: "With a trailing dropdown", anchor_link: true, subtitle: "Put a dropdown in the trailing action when more than one action belongs in the nav.") %>
   <div class="mb-4">
     <%= render FlatPack::PageNav::Component.new(
       anchor_href: demo_path,
