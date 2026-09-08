@@ -32,7 +32,7 @@
     value: Array(@oauth_client.redirect_uris).join("\n"),
     rows: 4,
     required: true,
-    help_text: "One http or https address per line, like https://example.com/callback.",
+    help_text: "Where the app may send people after they Connect. Paste every callback URL the app shows (ChatGPT, Claude, and so on), one https address per line. It must match exactly — no # fragments.",
     error: @oauth_client.errors[:redirect_uris].to_sentence.presence
   ) %>
 
@@ -40,7 +40,8 @@
     name: "oauth_client_id_readonly",
     label: "Client id",
     value: @oauth_client.client_id,
-    quick_copy: true
+    quick_copy: true,
+    help_text: "Give this to the app when it asks for a client id. It never changes. Copy it; you cannot edit it here."
   ) %>
 
   <%= render FlatPack::Button::Component.new(
