@@ -22,11 +22,16 @@ module FlatPack
         render_inline(Component.new(
           variant: :centered_image,
           headline: "Hero with background",
+          description: "Overlay copy on the image.",
           background_image_url: "https://placehold.co/1600x800"
         ))
 
         assert_selector "[style*='background-image']"
         assert_selector "h1", text: "Hero with background"
+        html = page.native.to_html
+        assert_includes html, "bg-[var(--hero-overlay-background-color)]"
+        assert_includes html, "text-[var(--hero-overlay-text-color)]"
+        assert_includes html, "text-[var(--hero-overlay-muted-text-color)]"
       end
 
       # 3. Renders :screenshot and output includes <img> with correct alt text

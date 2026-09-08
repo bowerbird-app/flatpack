@@ -159,15 +159,15 @@ module FlatPack
             content_tag(:div, nil,
               class: "absolute inset-0 bg-cover bg-center",
               style: @background_image_url ? "background-image: url('#{@background_image_url}')" : nil),
-            content_tag(:div, nil, class: "absolute inset-0 bg-black/60"),
-            content_tag(:div, class: "relative z-10 text-center text-white px-6 py-24") do
+            content_tag(:div, nil, class: "absolute inset-0 bg-[var(--hero-overlay-background-color)]"),
+            content_tag(:div, class: "relative z-10 text-center text-[var(--hero-overlay-text-color)] px-6 py-24") do
               safe_join([
                 render_badge_content,
                 render_tagline,
                 content_tag_if(@headline, :h1, @headline,
-                  class: "mt-2 text-[length:var(--text-4xl)] sm:text-[length:var(--text-5xl)] font-semibold tracking-tight text-white fp-text-balance"),
+                  class: "mt-2 text-[length:var(--text-4xl)] sm:text-[length:var(--text-5xl)] font-semibold tracking-tight text-[var(--hero-overlay-text-color)] fp-text-balance"),
                 content_tag_if(@description, :p, @description,
-                  class: "mt-6 text-lg text-white/80 fp-text-pretty"),
+                  class: "mt-6 text-lg text-[var(--hero-overlay-muted-text-color)] fp-text-pretty"),
                 render_actions_block(extra_classes: "justify-center")
               ].compact)
             end

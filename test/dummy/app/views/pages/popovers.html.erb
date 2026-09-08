@@ -245,7 +245,7 @@
           <%= render FlatPack::Button::Component.new(text: "Duplicate", href: "#", style: :ghost, size: :sm, class: "w-full justify-start") %>
           <%= render FlatPack::Button::Component.new(text: "Archive", href: "#", style: :ghost, size: :sm, class: "w-full justify-start") %>
           <div class="border-t border-[var(--surface-border-color)] my-2"></div>
-          <%= render FlatPack::Button::Component.new(text: "Delete", href: "#", style: :ghost, size: :sm, class: "w-full justify-start text-red-600") %>
+          <%= render FlatPack::Button::Component.new(text: "Delete", href: "#", style: :ghost, size: :sm, class: "w-full justify-start text-[var(--color-danger-background-color)]") %>
         </div>
       <% end %>
     <% end %>
@@ -268,7 +268,7 @@
                 Archive
               &lt;/a&gt;
               &lt;div class=&quot;border-t border-[var(--surface-border-color)] my-2&quot;&gt;&lt;/div&gt;
-              &lt;a href=&quot;#&quot; class=&quot;block px-4 py-2 text-sm text-red-600 hover:bg-[var(--surface-muted-background-color)] transition-colors&quot;&gt;
+              &lt;a href=&quot;#&quot; class=&quot;block px-4 py-2 text-sm text-[var(--color-danger-background-color)] hover:bg-[var(--surface-muted-background-color)] transition-colors&quot;&gt;
                 Delete
               &lt;/a&gt;
             &lt;/div&gt;

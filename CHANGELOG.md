@@ -13,12 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-## [0.1.167] - 2026-09-07
+## [0.1.168] - 2026-09-08
 
 ### Changed
 - Alert and toast success, warning, and danger use a status wash (`color-mix` of the fill into the surface) with coloured icon and border. Body text uses `--surface-content-color`.
 - Info toasts alias the quiet info alert instead of filling with `--color-primary`.
-- Bumped the gem version to `0.1.167`.
+- Bumped the gem version to `0.1.168`.
 
 ### Fixed
 - Toast close is a compact centered ghost X on every style. The danger close no longer sits in a filled chip. `.fp-hit-slop` keeps the 44px hit without growing the painted box to 44px.
@@ -30,6 +30,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `--toast-danger-dismiss-*` now alias the shared `--toast-dismiss-*` tokens. Hosts that painted a danger-only close chip should set `--toast-dismiss-text-color` / `--toast-dismiss-hover-background-color` instead.
 - Toast close uses `.fp-hit-slop` instead of `.fp-hit-target`. Hosts that load kit CSS with `stylesheet_link_tag` pick the slop class up on reload. Rebuild host Tailwind if the toast component classes are scanned into the host sheet.
 - Rebuild host Tailwind only if you `@import` `flat_pack/application`.
+
+## [0.1.167] - 2026-09-08
+
+### Changed
+- Overlay chrome that used Tailwind black/white utilities now follows tokens: hero (`--hero-overlay-*`), carousel controls/media/lightbox (`--carousel-control-*`, `--carousel-counter-*`, `--carousel-media-background-color`, `--carousel-lightbox-image-background-color`), badge remove hover (`--badge-remove-hover-background-color`), sidebar mobile drawer (`--drawer-backdrop-color`), and picker grid badges/idle rings (`--picker-badge-*`, `--picker-selection-idle-*`).
+- Card stat up/down trends use `--color-success-background-color` / `--color-danger-background-color`.
+- Dummy forms use `--card-background-color` instead of the missing `--color-card`. Dummy prices, chart deltas, the green link, and popover Delete use semantic success/danger tokens.
+- Bumped the gem version to `0.1.167`.
+
+### Upgrade notes
+- No API change. Hosts that already override the overlay tokens listed above keep those values. Hosts that relied on hardcoded Tailwind `bg-black/60`, `text-green-600`, and similar utilities now follow the theme.
+- Carousel prev/next, counter, and lightbox toggle fill follow `--carousel-control-*` / `--carousel-counter-*` (`rgb(0 0 0 / 0.6)` idle, `0.8` hover) instead of hardcoded `rgba(0,0,0,0.5)` / `0.75`.
+- Rebuild host Tailwind if you `@import` `flat_pack/application`. Hosts that load kit CSS with `stylesheet_link_tag` pick this up on reload.
 
 ## [0.1.166] - 2026-09-07
 

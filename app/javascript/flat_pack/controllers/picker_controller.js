@@ -392,7 +392,7 @@ export default class extends Controller {
       : this.#gridFallbackPreviewMarkup(kind, item)
 
     const badgeMarkup = badge
-      ? `<span class="pointer-events-none absolute left-3 top-3 z-10 inline-flex items-center rounded-full bg-black/55 px-2 py-1 text-[11px] font-medium text-white">${badge}</span>`
+      ? `<span class="pointer-events-none absolute left-3 top-3 z-10 inline-flex items-center rounded-full bg-[var(--picker-badge-background-color)] px-2 py-1 text-[11px] font-medium text-[var(--picker-badge-text-color)]">${badge}</span>`
       : ""
 
     return `
@@ -425,7 +425,7 @@ export default class extends Controller {
   #selectionIndicatorClasses(isSelected) {
     return isSelected
       ? "bg-(--color-primary) ring-(--color-primary)"
-      : "bg-black/30 ring-black/20"
+      : "bg-[var(--picker-selection-idle-background-color)] ring-[var(--picker-selection-idle-ring-color)]"
   }
 
   #listFallbackPreviewMarkup(kind, item) {

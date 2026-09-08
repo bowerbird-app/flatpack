@@ -252,7 +252,7 @@ module FlatPack
                 aria: {hidden: true}
               ) : nil),
               content_tag(:video,
-                class: "absolute inset-0 z-10 block h-full w-full bg-black object-contain",
+                class: "absolute inset-0 z-10 block h-full w-full bg-[var(--carousel-media-background-color)] object-contain",
                 style: "width: 100%; height: 100%; object-fit: contain;",
                 controls: slide[:controls],
                 muted: slide[:muted],
@@ -300,7 +300,7 @@ module FlatPack
 
         content_tag(:button,
           type: "button",
-          class: "absolute top-1/2 z-20 flex w-10 -translate-y-1/2 cursor-pointer aspect-square items-center justify-center rounded-full bg-[rgba(0,0,0,0.5)] text-white transition hover:bg-[rgba(0,0,0,0.75)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring #{controls_visibility_classes} #{classes}",
+          class: "absolute top-1/2 z-20 flex w-10 -translate-y-1/2 cursor-pointer aspect-square items-center justify-center rounded-full bg-[var(--carousel-control-background-color)] text-[var(--carousel-control-text-color)] transition hover:bg-[var(--carousel-control-hover-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring #{controls_visibility_classes} #{classes}",
           aria: {label: label},
           data: {action: "click->flat-pack--carousel##{direction}"}) do
           render FlatPack::Shared::IconComponent.new(name: icon_name, size: :md, class: "pointer-events-none")
@@ -362,7 +362,7 @@ module FlatPack
       def render_counter
         content_tag(:div,
           "",
-          class: "justify-self-end rounded-full bg-[rgba(0,0,0,0.5)] px-2 py-1 text-xs font-medium text-white",
+          class: "justify-self-end rounded-full bg-[var(--carousel-counter-background-color)] px-2 py-1 text-xs font-medium text-[var(--carousel-counter-text-color)]",
           data: {flat_pack__carousel_target: "counter"})
       end
 
@@ -370,7 +370,7 @@ module FlatPack
         content_tag(:button,
           type: "button",
           hidden: !lightbox_available_for_index?(@initial_index),
-          class: "absolute right-3 top-3 z-20 flex aspect-square flex-nowrap items-center justify-center cursor-pointer rounded-full bg-[rgba(0,0,0,0.5)] p-2 text-white transition hover:bg-[rgba(0,0,0,0.75)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
+          class: "absolute right-3 top-3 z-20 flex aspect-square flex-nowrap items-center justify-center cursor-pointer rounded-full bg-[var(--carousel-control-background-color)] p-2 text-[var(--carousel-control-text-color)] transition hover:bg-[var(--carousel-control-hover-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
           aria: {label: "Expand image"},
           data: {
             flat_pack__carousel_target: "lightboxToggle",
@@ -404,7 +404,7 @@ module FlatPack
                   tag.img(
                     src: "",
                     alt: "",
-                    class: "h-auto max-h-[90vh] w-auto max-w-[90vw] object-contain bg-black/20",
+                    class: "h-auto max-h-[90vh] w-auto max-w-[90vw] object-contain bg-[var(--carousel-lightbox-image-background-color)]",
                     draggable: false,
                     data: {flat_pack__carousel_target: "lightboxImage"}
                   ),
