@@ -13,6 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.169] - 2026-09-08
+
+### Fixed
+- Dismissible Alert binds Stimulus identifier `flat-pack--alert` so the close button matches the registered controller. The unprefixed `alert` identifier never connected.
+
+### Changed
+- Bumped the gem version to `0.1.169`.
+
+### Upgrade notes
+- Hosts that copy Alert markup must switch `data-controller="alert"`, `data-alert-target="alert"`, and `alert#dismiss` to `flat-pack--alert`, `data-flat-pack--alert-target="alert"`, and `flat-pack--alert#dismiss`. Component renders pick this up on gem upgrade.
+- The custom event name `alert:dismissed` is unchanged.
+
 ## [0.1.168] - 2026-09-08
 
 ### Changed

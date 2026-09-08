@@ -112,19 +112,23 @@ module FlatPack
         render_inline(Component.new(title: "Dismissible", dismissible: true))
 
         assert_selector "button[aria-label='Dismiss']"
-        assert_selector "button[data-action='alert#dismiss']"
+        assert_selector "button[data-action='flat-pack--alert#dismiss']"
+        refute_selector "button[data-action='alert#dismiss']"
       end
 
       def test_dismissible_alert_has_controller_data
         render_inline(Component.new(title: "Dismissible", dismissible: true))
 
-        assert_selector "div[data-controller='alert']"
-        assert_selector "div[data-alert-target='alert']"
+        assert_selector "div[data-controller='flat-pack--alert']"
+        assert_selector "div[data-flat-pack--alert-target='alert']"
+        refute_selector "div[data-controller='alert']"
+        refute_selector "div[data-alert-target='alert']"
       end
 
       def test_non_dismissible_alert_has_no_controller_data
         render_inline(Component.new(title: "Not Dismissible"))
 
+        refute_selector "div[data-controller='flat-pack--alert']"
         refute_selector "div[data-controller='alert']"
       end
 
