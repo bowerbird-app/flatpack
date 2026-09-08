@@ -14,6 +14,7 @@ module FlatPack
     RUNTIME_TOKENS = %w[
       --flatpack-modal-body-height
       --flatpack-picker-items-height
+      --range-progress
       --spacing
     ].freeze
 

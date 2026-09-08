@@ -5,10 +5,26 @@ require "test_helper"
 module FlatPack
   module RangeInput
     class ComponentTest < ViewComponent::TestCase
-      def test_renders_range_input
-        render_inline(Component.new(name: "volume"))
+      def test_uses_kit_range_input_class
+        render_inline(Component.new(name: "volume", value: 50))
 
-        assert_selector "input[type='range']"
+        html = page.native.to_html
+
+        assert_selector "input.fp-range-input[type='range']"
+        assert_includes html, "--range-progress: 50.0%"
+        refute_includes html, "accent-[var(--color-primary)]"
+      end
+
+      def test_sets_range_progress_from_custom_min_and_max
+        render_inline(Component.new(name: "temperature", min: -20, max: 40, value: 20))
+
+        assert_includes page.native.to_html, "--range-progress: 66.6667%"
+      end
+
+      def test_sets_range_progress_at_minimum
+        render_inline(Component.new(name: "volume", min: 0, max: 100, value: 0))
+
+        assert_includes page.native.to_html, "--range-progress: 0.0%"
       end
 
       def test_renders_with_name

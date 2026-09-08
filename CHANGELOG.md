@@ -13,6 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.173] - 2026-09-08
+
+### Fixed
+- Range input paints track, fill, and thumb in kit CSS (`.fp-range-input` and `--range-*` tokens) so the native slider no longer falls back to OS `accent-color` chrome.
+
+### Changed
+- Bumped the gem version to `0.1.173`.
+
+### Upgrade notes
+- Range fill/thumb follow `--range-track-color`, `--range-fill-color`, `--range-thumb-color`, `--range-thumb-border-color`, `--range-thumb-shadow`, `--range-thumb-size`, and `--range-track-height`, not Tailwind `accent-[var(--color-primary)]`. The input still is `<input type="range">`. `--range-progress` is a runtime percent on the input, not a theme token. Rebuild host Tailwind only if you `@import` `flat_pack/application`; `stylesheet_link_tag` hosts pick the kit class up on reload.
+
 ## [0.1.172] - 2026-09-08
 
 ### Fixed

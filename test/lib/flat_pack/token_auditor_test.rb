@@ -10,6 +10,10 @@ module FlatPack
       assert_predicate result, :success?, -> { "Missing tokens: #{result.missing.join(", ")}" }
     end
 
+    test "runtime fill percent is not a theme token" do
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--range-progress"
+    end
+
     test "brand primitives and transition aliases are defined" do
       css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css").read
 
