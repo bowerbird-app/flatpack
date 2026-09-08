@@ -7,11 +7,25 @@
   ) %>
 
   <div class="flex flex-wrap gap-3">
-    <%= render FlatPack::Button::Component.new(
-      text: "Registered apps",
-      href: "/admin/sections/oauth_apps",
-      style: :primary
-    ) %>
+    <% if @admin_root_recording && defined?(RecordingStudioRootSwitchable) %>
+      <%= form_with url: recording_studio_root_switchable.root_switch_path(scope: "all_workspaces"),
+            method: :patch,
+            class: "inline" do %>
+        <%= hidden_field_tag "root_switch[root_recording_id]", @admin_root_recording.id %>
+        <%= hidden_field_tag "root_switch[return_to]", @registered_apps_path %>
+        <%= render FlatPack::Button::Component.new(
+          text: "Registered apps",
+          style: :primary,
+          type: "submit"
+        ) %>
+      <% end %>
+    <% elsif @registered_apps_path.present? %>
+      <%= render FlatPack::Button::Component.new(
+        text: "Registered apps",
+        href: @registered_apps_path,
+        style: :primary
+      ) %>
+    <% end %>
     <%= render FlatPack::Button::Component.new(
       text: "Demo",
       href: "/demo",

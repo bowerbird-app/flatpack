@@ -17,9 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Dummy root switcher includes the Admin root so staff can open `/admin` and `/admin/sections/oauth_apps`. With a workspace selected, Admin still returns an empty `403` by design.
+- `/studio` **Registered apps** switches the current root to Admin and opens `/admin/screens/oauth_clients`, so the button no longer lands on a blank `403`.
 
 ### Upgrade notes
-- After pulling, restart the dummy app so `recording_studio_root_switchable` picks up Admin in `available_roots`. Switch to Admin before opening staff admin.
+- After pulling, restart the dummy app so `recording_studio_root_switchable` picks up Admin in `available_roots`. Prefer **Registered apps** from `/studio` for the OauthClient list; other Admin URLs still need the Admin root selected.
 
 ## [0.1.172] - 2026-09-08
 

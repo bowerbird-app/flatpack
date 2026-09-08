@@ -63,6 +63,29 @@ class AdminOauthAppsTest < ActionDispatch::IntegrationTest
     assert_includes response.body, @workspace_root.recordable.name
   end
 
+  test "studio Registered apps switches to Admin and opens oauth clients" do
+    get "/studio"
+
+    assert_response :success
+    assert_includes response.body, "Registered apps"
+    assert_includes response.body, @admin_root_recording.id.to_s
+    assert_includes response.body, StudioController::REGISTERED_APPS_PATH
+
+    patch recording_studio_root_switchable.root_switch_path(scope: "all_workspaces"), params: {
+      root_switch: {
+        root_recording_id: @admin_root_recording.id,
+        return_to: StudioController::REGISTERED_APPS_PATH
+      }
+    }
+
+    assert_redirected_to StudioController::REGISTERED_APPS_PATH
+    follow_redirect!
+
+    assert_response :success
+    assert_includes response.body, "Registered apps"
+    assert_includes response.body, "New app"
+  end
+
   private
 
   def grant_or_bootstrap_access!(recording:, actor:, role:)

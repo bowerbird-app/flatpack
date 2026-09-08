@@ -36,7 +36,7 @@ Gated (sign in or bearer token):
 - `/recording_studio_api` resource server
 - `/recording_studio_mcp` MCP endpoint
 
-Staff Admin requires the current root to be **Admin**. The root switcher (`all_workspaces`) lists Studio Workspace, Docs Workspace, and Admin. Open Admin while a workspace is selected and Admin returns an empty `403` (`head :forbidden`) — that looks like a blank page. Switch to Admin first, then open `/admin` or `/admin/sections/oauth_apps`.
+Staff Admin requires the current root to be **Admin**. The root switcher (`all_workspaces`) lists Studio Workspace, Docs Workspace, and Admin. Hitting `/admin` (or an admin screen) while a workspace is selected returns an empty `403` (`head :forbidden`) — that looks like a blank page. From `/studio`, **Registered apps** switches the current root to Admin and opens `/admin/screens/oauth_clients`. Use the root switcher for other Admin entry points.
 
 `ApplicationController` skips `authenticate_user!` for the public catalog and keeps the FlatPack `application` layout there. Authenticated Recording Studio screens use `recording_studio/default_layout`.
 
@@ -44,7 +44,7 @@ Staff Admin requires the current root to be **Admin**. The root switcher (`all_w
 
 Users owns auth screens (`recording_studio_user_auth_for :users`). OTP is off in the dummy initializer for a simpler password demo.
 
-After sign-in or sign-up, the host sends people to `/studio` (not the public demo root). That page lists **Connected apps** for the signed-in user (empty until someone Connects). From there: Registered apps (admin), or back to `/demo`. The full Connected apps screen also lives at `/recording_studio_oauth/connected_apps`.
+After sign-in or sign-up, the host sends people to `/studio` (not the public demo root). That page lists **Connected apps** for the signed-in user (empty until someone Connects). From there: Registered apps (switches to Admin, then the OauthClient list), or back to `/demo`. The full Connected apps screen also lives at `/recording_studio_oauth/connected_apps`.
 
 Seed accounts after `bin/rails db:seed`:
 
@@ -54,13 +54,12 @@ Seed accounts after `bin/rails db:seed`:
 ## OAuth Connect (Slack-style)
 
 1. Sign in as `admin@admin.com`.
-2. Switch the current root to **Admin**.
-3. Open Admin (`/admin`) and open **Registered apps**.
-4. Create or use the seeded public client **Seed MCP App**.
-5. Start Connect at the OAuth engine authorize URL with that `client_id`, a registered redirect URI, and PKCE S256.
-6. Pick a workspace Access row (Studio starts Connected; Docs starts as Reconnect).
-7. Exchange the code at `/recording_studio_api/oauth/token` (token endpoint stays on the API mount).
-8. Call MCP at `/recording_studio_mcp` with `Authorization: Bearer <access_token>`.
+2. From `/studio`, open **Registered apps** (or switch the root switcher to Admin and open `/admin`).
+3. Create or use the seeded public client **Seed MCP App**.
+4. Start Connect at the OAuth engine authorize URL with that `client_id`, a registered redirect URI, and PKCE S256.
+5. Pick a workspace Access row (Studio starts Connected; Docs starts as Reconnect).
+6. Exchange the code at `/recording_studio_api/oauth/token` (token endpoint stays on the API mount).
+7. Call MCP at `/recording_studio_mcp` with `Authorization: Bearer <access_token>`.
 
 Discovery aliases:
 

@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 
 class StudioController < ApplicationController
+  REGISTERED_APPS_PATH = "/admin/screens/oauth_clients"
+
   def index
+    @admin_root_recording = admin_root_recording
+    @registered_apps_path = REGISTERED_APPS_PATH
+
     return unless defined?(RecordingStudioOauth)
 
     @authorizations = RecordingStudioOauth::OauthAuthorization
@@ -13,6 +18,15 @@ class StudioController < ApplicationController
   helper_method :connected_app_status
 
   private
+
+  def admin_root_recording
+    return unless defined?(AdminRoot) && defined?(RecordingStudio)
+
+    admin_root = AdminRoot.find_by(name: "Admin")
+    return unless admin_root
+
+    RecordingStudio.root_recording_for(admin_root)
+  end
 
   def connected_app_status(authorization)
     workspace = authorization.workspace_recording&.recordable

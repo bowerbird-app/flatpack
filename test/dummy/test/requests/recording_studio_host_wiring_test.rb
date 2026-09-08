@@ -72,5 +72,7 @@ class RecordingStudioHostWiringTest < ActionDispatch::IntegrationTest
     get "/studio"
     assert_response :success
     assert_match(/Nothing connected yet/, response.body)
+    assert_match(/Registered apps/, response.body)
+    assert_match(%r{/admin/screens/oauth_clients}, response.body)
   end
 end
