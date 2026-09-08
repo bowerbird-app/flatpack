@@ -42,7 +42,7 @@ Gated (sign in or bearer token):
 
 Users owns auth screens (`recording_studio_user_auth_for :users`). OTP is off in the dummy initializer for a simpler password demo.
 
-After sign-in or sign-up, the host sends people to `/studio` (not the public demo root). From there: Registered apps, or back to `/demo`.
+After sign-in or sign-up, the host sends people to `/studio` (not the public demo root). That page lists **Connected apps** for the signed-in user (empty until someone Connects). From there: Registered apps (admin), or back to `/demo`. The full Connected apps screen also lives at `/recording_studio_oauth/connected_apps`.
 
 Seed accounts after `bin/rails db:seed`:
 

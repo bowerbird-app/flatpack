@@ -3,7 +3,7 @@
 <div class="flex w-full flex-col gap-6">
   <%= render FlatPack::PageTitle::Component.new(
     title: "You're in",
-    subtitle: "Admin, Connect, API, and MCP live here. The component catalog stays at /demo.",
+    subtitle: "Apps you Connect show up here. Register new ones from the admin list.",
     variant: :h1
   ) %>
 
@@ -20,9 +20,43 @@
     ) %>
   </div>
 
-  <%= render FlatPack::Alert::Component.new(
-    title: "MCP endpoint",
-    description: "After Connect, point a client at /recording_studio_mcp with the Bearer token from the API token URL.",
-    style: :info
-  ) %>
+  <% if defined?(RecordingStudioOauth) %>
+    <%= render FlatPack::PageTitle::Component.new(
+      title: "Connected apps",
+      subtitle: "These apps have their own access. Remove one to shut it off.",
+      variant: :h2
+    ) %>
+
+    <% if @authorizations.present? %>
+      <%= render FlatPack::List::Component.new(divider: true) do %>
+        <% @authorizations.each do |authorization| %>
+          <% remove_button = nil %>
+          <% if authorization.revoked_at.nil? %>
+            <% remove_button = capture do %>
+              <%= form_with url: recording_studio_oauth.connected_app_path(authorization), method: :delete do %>
+                <%= render FlatPack::Button::Component.new(
+                  text: "Remove access",
+                  style: :danger,
+                  size: :sm,
+                  type: "submit"
+                ) %>
+              <% end %>
+            <% end %>
+          <% end %>
+          <%= render FlatPack::List::Item.new(trailing: remove_button) do %>
+            <p class="font-medium"><%= authorization.oauth_client.name %></p>
+            <p class="text-sm text-[var(--surface-muted-content-color)]">
+              <%= connected_app_status(authorization) %>
+            </p>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% else %>
+      <%= render FlatPack::EmptyState::Component.new(
+        title: "Nothing connected yet",
+        description: "When you Connect an app to a workspace, it shows up here.",
+        icon: :inbox
+      ) %>
+    <% end %>
+  <% end %>
 </div>

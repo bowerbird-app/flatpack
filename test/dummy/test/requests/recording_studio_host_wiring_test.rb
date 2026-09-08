@@ -3,6 +3,7 @@
 require "test_helper"
 
 class RecordingStudioHostWiringTest < ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers if defined?(Devise::Test::IntegrationHelpers)
   test "public demo stays open without login" do
     get "/demo/buttons"
     assert_response :success
@@ -57,5 +58,19 @@ class RecordingStudioHostWiringTest < ActionDispatch::IntegrationTest
     end
 
     assert_equal "/studio", controller.after_sign_in_path_for(User.new)
+  end
+
+  test "studio shows connected apps empty state when signed in" do
+    skip "Recording Studio OAuth not in this bundle" unless defined?(RecordingStudioOauth)
+
+    user = User.find_or_create_by!(email: "studio-empty@example.com") do |record|
+      record.password = "Password123!"
+      record.password_confirmation = "Password123!"
+    end
+    sign_in user
+
+    get "/studio"
+    assert_response :success
+    assert_match(/Nothing connected yet/, response.body)
   end
 end
