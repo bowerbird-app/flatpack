@@ -25,7 +25,7 @@ module DummyOauthClientEditActions
 
   def edit
     @oauth_client = RecordingStudioOauth::OauthClient.find(params[:id])
-    return head :forbidden if @oauth_client.revoked?
+    head :forbidden if @oauth_client.revoked?
   end
 
   def update
