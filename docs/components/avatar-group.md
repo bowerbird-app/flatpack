@@ -45,6 +45,7 @@ None.
 ## Notes
 - `max` applies to visible member avatars, not the overall rendered circle count.
 - Components such as `FlatPack::Chat::InboxRow::Component` may pass a smaller `max` value when they need the overflow avatar to fit inside a stricter overall display cap.
+- Hover raises the member (`hover:!z-[999]` / `focus-within:!z-[999]`) and keeps full opacity (`hover:!opacity-100`). Members do not scale on hover; a scale-up shifts the stack.
 
 ## Accessibility
 - Individual avatars inherit avatar accessibility behavior (image `alt`, initials fallback).

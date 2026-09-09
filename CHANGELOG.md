@@ -13,6 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.174] - 2026-09-08
+
+### Fixed
+- Avatar Group hover no longer scales members (`hover:scale-110`). Hover still lifts z-index and keeps full opacity so stacked faces stay readable.
+- Chat sent and received reveal trays use `duration-[var(--duration-fast)]` instead of Tailwind `duration-150`, so `prefers-reduced-motion` token collapse applies.
+
+### Changed
+- Bumped the gem version to `0.1.174`.
+
+### Upgrade notes
+- Hosts that copied Avatar Group `hover:scale-110` / `transition-transform` should drop them. Keep `hover:!opacity-100` and the wrapper `hover:!z-[999]`.
+- Hosts that copied chat reveal-tray `duration-150` should switch to `duration-[var(--duration-fast)]`. Rebuild host Tailwind if you `@import` kit sources and need the arbitrary duration class generated.
+
 ## [0.1.173] - 2026-09-08
 
 ### Fixed

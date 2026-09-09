@@ -13,6 +13,77 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.174] - 2026-09-08
+
+### Fixed
+- Avatar Group hover no longer scales members (`hover:scale-110`). Hover still lifts z-index and keeps full opacity so stacked faces stay readable.
+- Chat sent and received reveal trays use `duration-[var(--duration-fast)]` instead of Tailwind `duration-150`, so `prefers-reduced-motion` token collapse applies.
+
+### Changed
+- Bumped the gem version to `0.1.174`.
+
+### Upgrade notes
+- Hosts that copied Avatar Group `hover:scale-110` / `transition-transform` should drop them. Keep `hover:!opacity-100` and the wrapper `hover:!z-[999]`.
+- Hosts that copied chat reveal-tray `duration-150` should switch to `duration-[var(--duration-fast)]`. Rebuild host Tailwind if you `@import` kit sources and need the arbitrary duration class generated.
+
+## [0.1.173] - 2026-09-08
+
+### Fixed
+- Range input paints track, fill, and thumb in kit CSS (`.fp-range-input` and `--range-*` tokens) so the native slider no longer falls back to OS `accent-color` chrome.
+
+### Changed
+- Bumped the gem version to `0.1.173`.
+
+### Upgrade notes
+- Range fill/thumb follow `--range-track-color`, `--range-fill-color`, `--range-thumb-color`, `--range-thumb-border-color`, `--range-thumb-shadow`, `--range-thumb-size`, and `--range-track-height`, not Tailwind `accent-[var(--color-primary)]`. The input still is `<input type="range">`. `--range-progress` is a runtime percent on the input, not a theme token. Rebuild host Tailwind only if you `@import` `flat_pack/application`; `stylesheet_link_tag` hosts pick the kit class up on reload.
+
+## [0.1.172] - 2026-09-08
+
+### Fixed
+- Drawer overlays move onto `document.body` while open and sit at `z-[70]`, so a left drawer no longer paints under `SidebarLayout`. A slot marker holds the original place so Stimulus disconnect-on-move does not put the overlay back.
+- Progress fill paint lives in kit CSS (`.fp-progress-fill` and `--progress-fill-color`), so the default bar is no longer missing `.bg-primary`.
+- Stepper completed markers use `.fp-stepper-marker` and `--stepper-complete-text-color`, so checks stay visible when the Tailwind arbitrary fill class is not in the host sheet.
+- Ordered list rows with `icon:` keep both the decimal marker and a content-coloured `.flat-pack-list-item-icon`.
+- Chat inbox unread counts use the primary badge, tabular nums, and no `overflow-hidden` clip. The dummy inbox label is sentence-case **Inbox**.
+
+### Changed
+- Bumped the gem version to `0.1.172`.
+
+### Upgrade notes
+- Drawer markup stays in place until open. While open, the overlay is a child of `document.body` and returns to its original parent on close. Hosts must not assume the original parent while the panel is visible.
+- Progress fill is `.fp-progress-fill` / `--progress-fill-color` (and `--success` / `--warning` / `--danger` modifiers), not `bg-primary`. Rebuild host Tailwind only if you `@import` `flat_pack/application`; `stylesheet_link_tag` hosts pick the kit class up on reload.
+- Stepper complete/current/upcoming paint is kit CSS. Hosts that copied the old Tailwind fill classes can drop them. Override `--stepper-complete-text-color` if the check should not follow `--color-success-text`.
+- Chat inbox unread badges use `:primary` instead of `:info`. Rows no longer set `overflow-hidden`.
+
+## [0.1.171] - 2026-09-08
+
+### Fixed
+- Modal Tab now cycles inside the dialog. The trap is wired as `keydown.tab->flat-pack--modal#handleKeydown`, and the dialog is `tabindex="-1"` so it can take focus when nothing else inside is focusable.
+- Select selected options use `--color-primary-text` instead of Tailwind `text-white`.
+- Picker selection rings and dots on media use `--picker-selection-indicator-*` instead of `border-white` / `bg-white`.
+
+### Changed
+- Dummy sample copy drops kit jargon (ViewComponent, Stimulus, records/slots) from hero, collapse, chat, picker, page nav, and related demos.
+- Bumped the gem version to `0.1.171`.
+
+### Upgrade notes
+- Modal Tab wrapping starts working on gem upgrade. Hosts that copy Modal markup should add `keydown.tab->flat-pack--modal#handleKeydown` and `tabindex="-1"` on the dialog.
+- Select selected-option text follows `--color-primary-text` (dark on ocean). Rebuild host Tailwind if you `@import` `flat_pack/application`.
+- Picker indicator tokens default to `--picker-badge-text-color`. Hosts that already override that keep the same paint.
+- Dummy demo wording is host-app copy only.
+
+## [0.1.170] - 2026-09-08
+
+### Fixed
+- Dismissible Alert binds Stimulus identifier `flat-pack--alert` so the close button matches the registered controller. The unprefixed `alert` identifier never connected.
+
+### Changed
+- Bumped the gem version to `0.1.170`.
+
+### Upgrade notes
+- Hosts that copy Alert markup must switch `data-controller="alert"`, `data-alert-target="alert"`, and `alert#dismiss` to `flat-pack--alert`, `data-flat-pack--alert-target="alert"`, and `flat-pack--alert#dismiss`. Component renders pick this up on gem upgrade.
+- The custom event name `alert:dismissed` is unchanged.
+
 ## [0.1.169] - 2026-09-08
 
 ### Fixed

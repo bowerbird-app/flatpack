@@ -43,7 +43,7 @@ A shared partial renders the token table section when `@demo_theme_token_rows` i
 
 ## What Requires Manual Updates
 
-- Adding a **new token family** (e.g. `--carousel-*`) requires a new entry in `DEMO_THEME_TOKEN_MAPPINGS`.
+- Adding a **new token family** (e.g. `--range-*`) requires a new entry in `DEMO_THEME_TOKEN_MAPPINGS`.
 - Adding a **new demo page** that should show token references requires a matching action pattern in the mapping.
 
 ## Adding a New Mapping Entry

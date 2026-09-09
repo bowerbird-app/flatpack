@@ -41,6 +41,8 @@ High-use interaction props:
 | `FlatPack::Chat::SendButton::Component#loading` | Boolean | `false` | no | Shows sending/loading state. |
 | `FlatPack::Chat::Attachment::Component#name` | String | `nil` | yes | Attachment label; blank raises `ArgumentError`. |
 | `FlatPack::Chat::Attachment::Component#type` | Symbol | `:file` | no | Attachment type: `:file`, `:image`; invalid values raise `ArgumentError`. |
+| `FlatPack::Chat::InboxRow::Component#chat_group_name` | String | none | yes | Conversation name. |
+| `FlatPack::Chat::InboxRow::Component#unread_count` | Integer | `0` | no | Unread count. Positive values render a primary badge with tabular nums. Rows do not clip trailing chrome (`overflow-hidden` is not set). |
 
 ## Slots
 - `Layout`: `sidebar`, `panel`.
@@ -86,6 +88,7 @@ High-use interaction props:
 - Message list jump button includes explicit `aria-label`.
 - Date dividers render `role="separator"` with labels.
 - Outgoing/incoming reveal-actions surfaces are keyboard focusable (`role="button"`, `tabindex="0"`).
+- Reveal trays fade with `transition-opacity duration-[var(--duration-fast)]` so `prefers-reduced-motion` token collapse applies. Do not use Tailwind `duration-150` on those trays.
 - Send button sets contextual `aria-label` (`"Send message"` / `"Sending..."`).
 
 ## Dependencies
@@ -140,7 +143,7 @@ Required props are validated; enums are validated with descriptive `ArgumentErro
 - **Smart scrolling** — Auto-scrolls to bottom; shows a jump button when scrolled up.
 - **Avatar integration** — Seamless use of `FlatPack::Avatar::Component` and `FlatPack::AvatarGroup::Component`.
 - **Attachments** — File attachments with icons, image attachments with thumbnails, download/view links.
-- **Fluid split** — `:split` sizes its columns as `sidebar_width` plus `minmax(0, 1fr)`, and both columns carry `min-w-0`, so a half-width or tiled desktop window keeps a readable thread and an unclipped composer instead of squeezing them against the clipped root. Below `split_breakpoint` the same layout stacks into list-then-panel. The default sidebar track is proportional and capped, so the list yields as the desk narrows; a fixed track such as `sidebar_width: "16rem"` instead holds its width and makes the thread absorb every reduction.
+- **Inbox rows** — Name, preview, time, and unread count. Unread uses the primary badge. The row does not clip the count against its corner radius.
 
 ### Integration Points
 

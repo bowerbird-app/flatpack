@@ -54,6 +54,7 @@ The dialog wrapper uses `.fp-overlay-pad` so padding is at least `1rem` (`1.5rem
 ## Accessibility
 - Renders `role="dialog"`, `aria-modal="true"`, and `aria-labelledby` bound to the header id.
 - Escape/backdrop close controls are configurable.
+- Tab cycles inside the dialog. The trap is wired as `keydown.tab->flat-pack--modal#handleKeydown` even when Escape close is off. The dialog itself is `tabindex="-1"` so it can take focus when nothing else inside is focusable.
 - Ensure trigger and focus-management behavior are implemented in the modal controller usage flow.
 - Under `prefers-reduced-motion: reduce`, the dialog fades without scale. Enter uses `--duration-slow` / `--easing-enter`; exit uses `--duration-base` / `--easing-exit`. A close in flight can reverse.
 

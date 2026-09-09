@@ -68,7 +68,7 @@ end %>
   variant: :centered,
   tagline: "Introducing FlatPack",
   headline: "Build beautiful interfaces faster.",
-  description: "A Rails ViewComponent library with Tailwind CSS."
+  description: "A UI kit for Rails apps that follows your theme."
 ) do |hero|
   hero.slot do
     concat render(FlatPack::Button::Component.new(text: "Get started", style: :primary, href: "/docs"))
