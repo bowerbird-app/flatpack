@@ -4,17 +4,20 @@ const fs = require('node:fs')
 const path = require('node:path')
 const vm = require('node:vm')
 
-function loadReducedMotion(matchMedia) {
+function loadReducedMotion(matchMedia, extras = {}) {
   const filePath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'controllers', 'reduced_motion.js')
   const source = fs.readFileSync(filePath, 'utf8')
   const transformedSource = source.replaceAll('export function ', 'function ') + `
-module.exports = { prefersReducedMotion, motionDuration, motionTransition, overlayOrigin, overlayEnterOffset }
+module.exports = { prefersReducedMotion, motionDuration, motionTransition, overlayOrigin, overlayEnterOffset, playOverlayEnter, playOverlayExit }
 `
 
   const context = {
     module: { exports: {} },
     exports: {},
-    matchMedia
+    matchMedia,
+    requestAnimationFrame: extras.requestAnimationFrame || ((callback) => callback()),
+    setTimeout: extras.setTimeout || ((callback) => { callback(); return 1 }),
+    document: extras.document
   }
 
   vm.runInNewContext(transformedSource, context, { filename: filePath })
@@ -78,4 +81,121 @@ test('overlay origin and enter offset follow placement', () => {
   assert.equal(overlayEnterOffset('bottom'), 'translateY(-4px)')
   assert.equal(overlayEnterOffset('left'), 'translateX(4px)')
   assert.equal(overlayEnterOffset('right'), 'translateX(-4px)')
+})
+
+function overlayElement() {
+  const classes = new Set(['hidden'])
+
+  return {
+    classList: {
+      add(name) { classes.add(name) },
+      remove(name) { classes.delete(name) },
+      contains(name) { return classes.has(name) }
+    },
+    style: {},
+    offsetHeight: 1
+  }
+}
+
+test('playOverlayEnter unhides and fades in from the trigger offset', () => {
+  const frames = []
+  const { playOverlayEnter } = loadReducedMotion(media(false), {
+    requestAnimationFrame: (callback) => frames.push(callback)
+  })
+  const element = overlayElement()
+
+  playOverlayEnter(element, { placement: 'bottom' })
+
+  assert.equal(element.classList.contains('hidden'), false)
+  assert.equal(element.style.opacity, '0')
+  assert.equal(element.style.transform, 'translateY(-4px)')
+  assert.match(element.style.transition, /--duration-base/)
+  assert.match(element.style.transition, /--easing-enter/)
+
+  frames.forEach((callback) => callback())
+
+  assert.equal(element.style.opacity, '1')
+  assert.equal(element.style.transform, 'none')
+})
+
+test('playOverlayEnter skips the spatial offset when motion is reduced', () => {
+  const { playOverlayEnter } = loadReducedMotion(media(true))
+  const element = overlayElement()
+
+  playOverlayEnter(element, { placement: 'bottom' })
+
+  assert.equal(element.style.transform, 'none')
+})
+
+test('playOverlayEnter runs beforeAnimate and keeps in-flight styles when interrupting', () => {
+  const frames = []
+  const { playOverlayEnter } = loadReducedMotion(media(false), {
+    requestAnimationFrame: (callback) => frames.push(callback)
+  })
+  const element = overlayElement()
+  element.classList.remove('hidden')
+  element.style.opacity = '0.4'
+  element.style.transform = 'translateY(-2px)'
+  let beforeCalls = 0
+
+  playOverlayEnter(element, {
+    placement: 'bottom',
+    interrupt: true,
+    beforeAnimate: () => { beforeCalls += 1 }
+  })
+
+  assert.equal(beforeCalls, 1)
+  assert.equal(element.style.opacity, '0.4')
+  assert.equal(element.style.transform, 'translateY(-2px)')
+
+  frames.forEach((callback) => callback())
+
+  assert.equal(element.style.opacity, '1')
+  assert.equal(element.style.transform, 'none')
+})
+
+test('playOverlayExit fades out then hides after the token duration', () => {
+  let delayed = null
+  const { playOverlayExit } = loadReducedMotion(media(false), {
+    setTimeout: (callback, ms) => {
+      delayed = { callback, ms }
+      return 7
+    }
+  })
+  const element = overlayElement()
+  element.classList.remove('hidden')
+  let hiddenCalls = 0
+
+  const timeoutId = playOverlayExit(element, {
+    placement: 'bottom',
+    onHidden: () => { hiddenCalls += 1 }
+  })
+
+  assert.equal(timeoutId, 7)
+  assert.equal(delayed.ms, 200)
+  assert.equal(element.style.opacity, '0')
+  assert.equal(element.style.transform, 'translateY(-4px)')
+  assert.equal(element.classList.contains('hidden'), false)
+
+  delayed.callback()
+
+  assert.equal(element.classList.contains('hidden'), true)
+  assert.equal(hiddenCalls, 1)
+})
+
+test('playOverlayExit hides on the next turn when motion is reduced', () => {
+  let delayed = null
+  const { playOverlayExit } = loadReducedMotion(media(true), {
+    setTimeout: (callback, ms) => {
+      delayed = { callback, ms }
+      return 1
+    }
+  })
+  const element = overlayElement()
+  element.classList.remove('hidden')
+
+  playOverlayExit(element, { placement: 'bottom' })
+
+  assert.equal(delayed.ms, 0)
+  assert.equal(element.style.transform, 'none')
 })
