@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Dummy root switcher includes the Admin root so staff can open `/admin` and `/admin/sections/oauth_apps`. With a workspace selected, Admin still returns an empty `403` by design.
 - `/studio` **Registered apps** switches the current root to Admin and opens `/admin/screens/oauth_clients`, so the button no longer lands on a blank `403`.
-- Dummy development allows Cloudflare quick-tunnel hosts (`*.trycloudflare.com`) and assumes SSL behind the proxy so OAuth issuer URLs stay `https://`.
+- Dummy development allows Cloudflare quick-tunnel hosts (`*.trycloudflare.com`). Do not set blanket `assume_ssl` in development — it broke local `http://127.0.0.1` sign-in redirects; tunnels still get `https://` via `X-Forwarded-Proto`.
 - OAuth Connect authorize layout disables Turbo so Authorize can full-page redirect to ChatGPT (avoids CORS/`Failed to fetch` on the callback).
 - Dummy Registered apps table includes **Edit** so staff can change an app's name and redirect URLs without recreating the client.
 

@@ -83,7 +83,7 @@ Database defaults: Postgres on localhost, user/password `postgres`/`postgres`, D
 
 ## Tunnel (ChatGPT / external MCP)
 
-Development allows `*.trycloudflare.com` and assumes SSL behind the proxy so OAuth discovery stays on `https://`.
+Development allows `*.trycloudflare.com`. Cloudflare sends `X-Forwarded-Proto: https`, so OAuth discovery stays on `https://` through the tunnel. Do not turn on blanket `assume_ssl` in development — that forces `https://127.0.0.1` and breaks local sign-in.
 
 ```bash
 cd test/dummy
