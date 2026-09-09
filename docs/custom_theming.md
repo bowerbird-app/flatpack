@@ -538,6 +538,12 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --search-input-text-color: var(--surface-content-color);
   --search-input-placeholder-color: var(--surface-muted-content-color);
   --search-input-focus-ring-color: var(--color-primary);
+  --search-padding-y-sm: 0.375rem;
+  --search-padding-y-md: 0.5rem;
+  --search-padding-y-lg: 0.75rem;
+  --search-padding-inline-sm: 2rem;
+  --search-padding-inline-md: 2.5rem;
+  --search-padding-inline-lg: 3rem;
   --search-dropdown-background-color: var(--surface-background-color);
   --search-dropdown-border-color: var(--surface-border-color);
   --search-dropdown-muted-text-color: var(--surface-muted-content-color);

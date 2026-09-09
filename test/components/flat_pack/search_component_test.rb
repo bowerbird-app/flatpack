@@ -70,6 +70,58 @@ module FlatPack
           Component.new(search_url: "javascript:alert('xss')")
         end
       end
+
+      def test_default_size_is_md
+        render_inline(Component.new)
+
+        html = page.native.to_html
+        assert_includes html, "py-[var(--search-padding-y-md)]"
+        assert_includes html, "pl-[var(--search-padding-inline-md)]"
+        assert_includes html, "pr-[var(--search-padding-inline-md)]"
+        assert_includes html, "text-sm"
+        assert_selector "span.left-3"
+        assert_selector "button.right-3"
+        assert_selector "svg.w-4.h-4"
+      end
+
+      def test_renders_small_size
+        render_inline(Component.new(size: :sm))
+
+        html = page.native.to_html
+        assert_includes html, "py-[var(--search-padding-y-sm)]"
+        assert_includes html, "pl-[var(--search-padding-inline-sm)]"
+        assert_includes html, "pr-[var(--search-padding-inline-sm)]"
+        assert_includes html, "text-xs"
+        assert_selector "span.left-2"
+        assert_selector "button.right-2"
+        assert_selector "svg.w-4.h-4"
+      end
+
+      def test_renders_large_size
+        render_inline(Component.new(size: :lg))
+
+        html = page.native.to_html
+        assert_includes html, "py-[var(--search-padding-y-lg)]"
+        assert_includes html, "pl-[var(--search-padding-inline-lg)]"
+        assert_includes html, "pr-[var(--search-padding-inline-lg)]"
+        assert_includes html, "text-base"
+        assert_selector "span.left-4"
+        assert_selector "button.right-4"
+        assert_selector "svg.w-5.h-5"
+      end
+
+      def test_raises_error_for_invalid_size
+        assert_raises(ArgumentError) do
+          Component.new(size: :xl)
+        end
+      end
+
+      def test_search_result_rows_use_roomy_padding
+        controller = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/search_controller.js").read
+
+        assert_includes controller, 'link.className = "block px-4 py-4 '
+        refute_includes controller, 'link.className = "block px-3 py-2 '
+      end
     end
   end
 end
