@@ -176,5 +176,28 @@ module FlatPack
       assert_includes css, ".fp-password-toggle-icons"
       assert_match(/opacity\s+var\(--duration-fast\)\s+var\(--easing-standard\)/, css)
     end
+
+    test "buttons press with a one-pixel translate and kit colour easing" do
+      button = FlatPack::Engine.root.join("app/components/flat_pack/button/component.rb").read
+      css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+
+      assert_includes button, "fp-button"
+      assert_includes button, "ease-[var(--easing-standard)]"
+      refute_includes button, "active:scale"
+      assert_match(/\.fp-button:active[^{]*\{[^}]*translateY\(1px\)/m, css)
+      assert_match(/\.fp-button-flat:active[^{]*\{[^}]*inset/m, css)
+    end
+
+    test "alert chip and badge collapse height instead of scaling out" do
+      helper = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/reduced_motion.js").read
+      %w[alert_controller.js chip_controller.js badge_controller.js].each do |name|
+        source = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers", name).read
+        assert_includes source, "playCollapseExit", "#{name} should collapse on exit"
+        refute_includes source, 'scale(0.8)', "#{name} should not scale out"
+        refute_includes source, "translateY(-10px)", "#{name} should not lift out of flow"
+      end
+
+      assert_includes helper, "export function playCollapseExit"
+    end
   end
 end

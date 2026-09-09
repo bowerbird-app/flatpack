@@ -383,16 +383,33 @@ module FlatPack
         render_inline(Component.new(text: "Primary", style: :primary))
 
         html = page.native.to_html
+        assert_includes html, "fp-button"
         assert_includes html, "shadow-[var(--button-shadow)]"
         assert_includes html, "hover:shadow-[var(--button-shadow-hover)]"
         assert_includes html, "active:shadow-[var(--button-shadow-active)]"
+        assert_includes html, "ease-[var(--easing-standard)]"
         assert_includes html, "duration-[var(--duration-fast)]"
+        refute_includes html, "active:scale"
       end
 
       def test_secondary_button_does_not_include_scheme_shadow_class
         render_inline(Component.new(text: "Secondary", style: :secondary))
 
-        refute_includes page.native.to_html, "shadow-[var(--button-shadow)]"
+        html = page.native.to_html
+        assert_includes html, "fp-button"
+        assert_includes html, "fp-button-flat"
+        refute_includes html, "shadow-[var(--button-shadow)]"
+        refute_includes html, "active:scale"
+      end
+
+      def test_ghost_button_uses_flat_press_class
+        render_inline(Component.new(text: "Ghost", style: :ghost))
+
+        html = page.native.to_html
+        assert_includes html, "fp-button"
+        assert_includes html, "fp-button-flat"
+        refute_includes html, "shadow-[var(--button-shadow)]"
+        refute_includes html, "active:scale"
       end
     end
   end

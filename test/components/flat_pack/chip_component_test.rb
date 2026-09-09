@@ -310,6 +310,15 @@ module FlatPack
           Component.new(text: "Invalid", removable: true, remove_params: ["ruby"])
         end
       end
+
+      def test_colour_transition_uses_kit_duration_and_easing
+        render_inline(Component.new(text: "Ruby"))
+
+        html = page.native.to_html
+        assert_includes html, "duration-[var(--duration-fast)]"
+        assert_includes html, "ease-[var(--easing-standard)]"
+        refute_match(/\bduration-base\b/, html)
+      end
     end
   end
 end
