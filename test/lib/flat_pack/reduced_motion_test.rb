@@ -193,7 +193,7 @@ module FlatPack
       %w[alert_controller.js chip_controller.js badge_controller.js].each do |name|
         source = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers", name).read
         assert_includes source, "playCollapseExit", "#{name} should collapse on exit"
-        refute_includes source, 'scale(0.8)', "#{name} should not scale out"
+        refute_includes source, "scale(0.8)", "#{name} should not scale out"
         refute_includes source, "translateY(-10px)", "#{name} should not lift out of flow"
       end
 
