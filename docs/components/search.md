@@ -19,6 +19,7 @@ Use Search where users need quick keyword filtering in top nav or content surfac
 | `search_url` | String | `nil` | No | Enables remote live search when present. URL is sanitized (safe protocols + relative URLs). Ignored when `items` is present. |
 | `items` | Array | `[]` | No | Local results to filter in the browser. Each item is `{ title:, description:, url: }`. Prefer this for static catalogs. Title matches rank above description matches, and description matches whole tokens (`form` matches Forms, not "formatting"). |
 | `max_width` | Symbol | `:md` | No | Wrapper max width. Allowed: `:none`, `:md`, `:lg`, `:xl`. |
+| `size` | Symbol | `:md` | No | Field size. Allowed: `:sm`, `:md`, `:lg`. `:md` matches the previous default height and type. |
 | `min_characters` | Integer | `2` | No | Minimum trimmed query length before results are shown. |
 | `debounce` | Integer | `250` | No | Debounce delay in milliseconds for remote requests. Not used for local `items`. |
 | `no_results_text` | String | `"No results found"` | No | Empty-state text shown in dropdown when no results match. |
@@ -28,7 +29,7 @@ Use Search where users need quick keyword filtering in top nav or content surfac
 None.
 
 ## Variants
-None.
+- Sizes: `:sm`, `:md` (default), `:lg`
 
 ## Example
 
@@ -37,7 +38,8 @@ None.
   items: [
     {title: "Buttons", description: "Button variants", url: "/demo/buttons"}
   ],
-  placeholder: "Search components..."
+  placeholder: "Search components...",
+  size: :lg
 ) %>
 ```
 

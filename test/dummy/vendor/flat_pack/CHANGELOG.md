@@ -13,6 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.175] - 2026-09-09
+
+### Added
+- Search `size:` prop with `:sm`, `:md` (default), and `:lg`. Medium keeps the previous field height and type. Padding uses `--search-padding-y-*` and `--search-padding-inline-*` tokens so themes can tune each size.
+
+### Changed
+- Bumped the gem version to `0.1.175`.
+
+### Upgrade notes
+- Existing Search calls keep the medium look with no changes. Pass `size: :sm` or `size: :lg` when you want a smaller or larger field. Hosts that hard-coded `py-2` / `pl-10` / `pr-10` / `text-sm` on Search markup should switch to the size prop or the new padding tokens. Rebuild host Tailwind if you `@import` kit sources and need the new arbitrary padding classes generated.
+
 ## [0.1.174] - 2026-09-08
 
 ### Fixed
