@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Avatar Group hover no longer scales members (`hover:scale-110`). Hover still lifts z-index and keeps full opacity so stacked faces stay readable.
 - Avatar Group initials and overflow (`+N`) circles sit on the same row as photos. Slots are `flex items-center leading-none`, and avatar images are `display: block`.
 - Chat sent and received reveal trays use `duration-[var(--duration-fast)]` instead of Tailwind `duration-150`, so `prefers-reduced-motion` token collapse applies.
+- Searchable Select, Combobox, and the FlatPack date picker open and close like Popover: opacity plus a 4px offset on `--duration-base` / `--easing-enter` / `--easing-exit`. They share `playOverlayEnter` / `playOverlayExit`. The helper cancels an in-flight hide on the same element. Reduced motion skips the offset and hides on the next turn.
 
 ### Changed
 - Bumped the gem version to `0.1.174`.
@@ -27,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Hosts that copied Avatar Group `hover:scale-110` / `transition-transform` should drop them. Keep `hover:!opacity-100` and the wrapper `hover:!z-[999]`.
 - Hosts that copied Avatar Group slots as `relative` only should use `relative flex items-center leading-none`. Put `leading-none` after size/`text-*` classes so Tailwind Merge keeps it. Avatar `<img>` should be `block`.
 - Hosts that copied chat reveal-tray `duration-150` should switch to `duration-[var(--duration-fast)]`. Rebuild host Tailwind if you `@import` kit sources and need the arbitrary duration class generated.
+- Hosts that snap `hidden` on searchable Select, Combobox, or date picker panels should use `playOverlayEnter` / `playOverlayExit` from `controllers/flat_pack/reduced_motion`. The helper owns the hide timeout; do not keep a parallel `hideTimeout` on the controller. Hide is delayed by `--duration-base` (0ms under reduced motion). Date picker still sets `display: none` after the exit finishes because the panel also uses `md:flex`.
 
 ## [0.1.173] - 2026-09-08
 

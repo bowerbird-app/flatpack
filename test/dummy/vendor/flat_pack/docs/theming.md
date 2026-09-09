@@ -270,7 +270,7 @@ Kit CSS defines `.fp-tabular-nums` (`font-variant-numeric: tabular-nums`), `.fp-
 
 `--easing-*` are set on `:root`, for the same reason as durations. Kit overlays use `ease-[var(--easing-enter)]` / `ease-[var(--easing-exit)]`, or `motionTransition()` in Stimulus. In-place motion (switch, progress, sidebar) uses `--easing-standard`. There is no bounce: charcoal / rounded is Corporate/Premium, not Playful.
 
-Use `--easing-enter` for modal, drawer, command palette, toast, dropdown, popover, and tooltip entrance. Use `--easing-exit` for their leave. Modal, drawer, and command palette enter on `--duration-slow` and exit on `--duration-base`. Popover and tooltip stay on `--duration-base` both ways, with a few pixels of offset from the trigger. Form invalid is colour only; do not shake the field.
+Use `--easing-enter` for modal, drawer, command palette, toast, dropdown, popover, and tooltip entrance. Use `--easing-exit` for their leave. Modal, drawer, and command palette enter on `--duration-slow` and exit on `--duration-base`. Popover, tooltip, searchable Select, Combobox, and the FlatPack date picker stay on `--duration-base` both ways, with a few pixels of offset from the trigger. Those form panels share `playOverlayEnter` / `playOverlayExit` in `controllers/flat_pack/reduced_motion`, so a close in flight can reverse and `hidden` is applied after the exit duration. Form invalid is colour only; do not shake the field.
 
 ### Overlay and chrome
 ```css

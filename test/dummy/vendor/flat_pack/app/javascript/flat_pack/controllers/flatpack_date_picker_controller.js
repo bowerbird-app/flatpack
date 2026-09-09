@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { playOverlayEnter, playOverlayExit, cancelOverlayHide } from "controllers/flat_pack/reduced_motion"
 
 export default class extends Controller {
   static targets = [
@@ -53,7 +54,6 @@ export default class extends Controller {
     this.handleEscape = this.handleEscape.bind(this)
     this.handleReposition = this.handleReposition.bind(this)
 
-    // Keep the panel definitively hidden on load even when responsive display classes are present.
     if (this.panelElement) {
       this.panelElement.style.display = "none"
       this.panelElement.setAttribute("aria-hidden", "true")
@@ -65,7 +65,7 @@ export default class extends Controller {
   }
 
   disconnect() {
-    this.close()
+    this.snapPanelClosed()
     this.restorePanelParent()
     this.removeGlobalListeners()
   }
@@ -96,19 +96,23 @@ export default class extends Controller {
     this.setPanelInteractivity(true)
     this.isOpen = true
     this.panelElement.style.display = ""
-    this.panelElement.classList.remove("hidden")
     this.panelElement.setAttribute("aria-hidden", "false")
     this.triggerTarget?.setAttribute("aria-expanded", "true")
     this.draft = { ...this.committed }
     this.draftPresetKey = this.committedPresetKey
     this.viewMode = this.defaultViewMode()
-    this.render()
-    this.positionPanel()
+    playOverlayEnter(this.panelElement, {
+      placement: "bottom",
+      beforeAnimate: () => {
+        this.render()
+        this.positionPanel()
+      }
+    })
     this.addGlobalListeners()
   }
 
   close() {
-    if (!this.panelElement) {
+    if (!this.panelElement || !this.isOpen) {
       return
     }
 
@@ -117,13 +121,34 @@ export default class extends Controller {
     }
 
     this.isOpen = false
+    this.triggerTarget?.setAttribute("aria-expanded", "false")
+    this.removeGlobalListeners()
+    playOverlayExit(this.panelElement, {
+      placement: "bottom",
+      onHidden: () => {
+        this.panelElement.style.display = "none"
+        this.panelElement.setAttribute("aria-hidden", "true")
+        this.setPanelInteractivity(false)
+        this.restorePanelParent()
+      }
+    })
+  }
+
+  snapPanelClosed() {
+    cancelOverlayHide(this.panelElement)
+    this.isOpen = false
+    if (!this.panelElement) {
+      return
+    }
+
     this.panelElement.classList.add("hidden")
     this.panelElement.style.display = "none"
+    this.panelElement.style.opacity = ""
+    this.panelElement.style.transform = ""
+    this.panelElement.style.transition = ""
     this.panelElement.setAttribute("aria-hidden", "true")
     this.triggerTarget?.setAttribute("aria-expanded", "false")
     this.setPanelInteractivity(false)
-    this.removeGlobalListeners()
-    this.restorePanelParent()
   }
 
   setPanelInteractivity(isOpen) {

@@ -45,7 +45,9 @@ None.
 - The visible field is `role="combobox"` with `aria-controls` pointing at a `role="listbox"`.
 - Arrow keys move `aria-activedescendant`. Enter chooses. Escape closes.
 - Typing filters labels. A value that no longer matches the typed text is cleared until a row is chosen.
+- Open/close uses `--duration-base` with `--easing-enter` / `--easing-exit`, a few pixels of offset, and origin from the field. A close in flight can reverse. Under `prefers-reduced-motion`, the list fades without the offset.
 
 ## Dependencies
 - Stimulus controller: `flat-pack--combobox`.
+- Overlay motion: `playOverlayEnter` / `playOverlayExit` from `controllers/flat_pack/reduced_motion`.
 - Surface tokens for the field and list (`--surface-*`, `--list-item-*`, `--form-control-padding`).

@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { playOverlayEnter, playOverlayExit, cancelOverlayHide } from "controllers/flat_pack/reduced_motion"
 
 export default class extends Controller {
   static targets = ["input", "value", "list", "option", "empty"]
@@ -12,23 +13,25 @@ export default class extends Controller {
   }
 
   disconnect() {
+    cancelOverlayHide(this.listTarget)
     document.removeEventListener("mousedown", this.handleOutside)
   }
 
   open() {
     if (this.openList) return
     this.openList = true
-    this.listTarget.classList.remove("hidden")
     this.inputTarget.setAttribute("aria-expanded", "true")
+    playOverlayEnter(this.listTarget, { placement: "bottom" })
     this.applyFilter()
   }
 
   close() {
+    if (!this.openList) return
     this.openList = false
-    this.listTarget.classList.add("hidden")
     this.inputTarget.setAttribute("aria-expanded", "false")
     this.activeIndex = -1
     this.clearActive()
+    playOverlayExit(this.listTarget, { placement: "bottom" })
   }
 
   filter() {
