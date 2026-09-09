@@ -56,6 +56,50 @@ export function overlayEnterOffset(placement) {
   }
 }
 
+export function playOverlayEnter(element, { placement = "bottom", interrupt = false, beforeAnimate } = {}) {
+  element.classList.remove("hidden")
+
+  if (!interrupt) {
+    element.style.transition = "none"
+    element.style.opacity = "0"
+    element.style.transform = "none"
+    beforeAnimate?.()
+    element.style.transformOrigin = overlayOrigin(placement)
+    void element.offsetHeight
+
+    if (!prefersReducedMotion()) {
+      element.style.transform = overlayEnterOffset(placement)
+      void element.offsetHeight
+    }
+  } else {
+    beforeAnimate?.()
+  }
+
+  element.style.transition = motionTransition(
+    ["opacity", "transform"],
+    { duration: "base", easing: "enter" }
+  )
+
+  requestAnimationFrame(() => {
+    element.style.opacity = "1"
+    element.style.transform = "none"
+  })
+}
+
+export function playOverlayExit(element, { placement = "bottom", onHidden } = {}) {
+  element.style.transition = motionTransition(
+    ["opacity", "transform"],
+    { duration: "base", easing: "exit" }
+  )
+  element.style.opacity = "0"
+  element.style.transform = prefersReducedMotion() ? "none" : overlayEnterOffset(placement)
+
+  return globalThis.setTimeout(() => {
+    element.classList.add("hidden")
+    onHidden?.()
+  }, motionDuration("base"))
+}
+
 function readDurationToken(token) {
   const fallback = DURATION_MS[token] ?? DURATION_MS.slow
 

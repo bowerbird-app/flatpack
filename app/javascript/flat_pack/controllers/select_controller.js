@@ -1,5 +1,6 @@
 // FlatPack Select Stimulus Controller
 import { Controller } from "@hotwired/stimulus"
+import { playOverlayEnter, playOverlayExit } from "controllers/flat_pack/reduced_motion"
 
 export default class extends Controller {
   static targets = ["trigger", "dropdown", "hiddenInput", "hiddenInputs", "searchInput", "optionsList", "chevron", "chip", "placeholder", "chipsContainer", "searchStatus", "searchHint", "loadingState", "emptyState", "nestedCheckbox"]
@@ -25,6 +26,8 @@ export default class extends Controller {
     this.abortController = null
     this.syncSelectedState()
     this.setSearchState(this.searchModeValue === "remote" ? "hint" : "idle")
+    this.isOpen = false
+    this.hideTimeout = null
 
     // Close dropdown when clicking outside
     this.handleOutsideClick = this.handleOutsideClick.bind(this)
@@ -32,6 +35,7 @@ export default class extends Controller {
   }
 
   disconnect() {
+    this.clearHideTimeout()
     document.removeEventListener("click", this.handleOutsideClick)
 
     if (this.debounceTimer) {
@@ -46,10 +50,8 @@ export default class extends Controller {
   toggle(event) {
     event.preventDefault()
     event.stopPropagation()
-    
-    const isOpen = !this.dropdownTarget.classList.contains("hidden")
-    
-    if (isOpen) {
+
+    if (this.isOpen) {
       this.close()
     } else {
       this.open()
@@ -57,10 +59,13 @@ export default class extends Controller {
   }
 
   open() {
-    this.dropdownTarget.classList.remove("hidden")
+    const interrupt = Boolean(this.hideTimeout)
+    this.clearHideTimeout()
+    this.isOpen = true
     this.triggerTarget.setAttribute("aria-expanded", "true")
     this.chevronTarget.style.transform = "rotate(180deg)"
-    
+    playOverlayEnter(this.dropdownTarget, { placement: "bottom", interrupt })
+
     // Focus search input if searchable
     if (this.searchableValue && this.hasSearchInputTarget) {
       this.searchInputTarget.focus()
@@ -72,10 +77,19 @@ export default class extends Controller {
   }
 
   close() {
-    this.dropdownTarget.classList.add("hidden")
+    if (!this.isOpen) {
+      return
+    }
+
+    this.isOpen = false
     this.triggerTarget.setAttribute("aria-expanded", "false")
     this.chevronTarget.style.transform = "rotate(0deg)"
-    
+    this.clearHideTimeout()
+    this.hideTimeout = playOverlayExit(this.dropdownTarget, {
+      placement: "bottom",
+      onHidden: () => { this.hideTimeout = null }
+    })
+
     // Clear search input if exists
     if (this.hasSearchInputTarget) {
       this.searchInputTarget.value = ""
@@ -91,6 +105,13 @@ export default class extends Controller {
     if (!this.element.contains(event.target)) {
       this.close()
     }
+  }
+
+  clearHideTimeout() {
+    if (!this.hideTimeout) return
+
+    clearTimeout(this.hideTimeout)
+    this.hideTimeout = null
   }
 
   selectOption(event) {

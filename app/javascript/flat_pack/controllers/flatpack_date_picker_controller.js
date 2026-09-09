@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { playOverlayEnter, playOverlayExit } from "controllers/flat_pack/reduced_motion"
 
 export default class extends Controller {
   static targets = [
@@ -39,6 +40,7 @@ export default class extends Controller {
     this.draftPresetKey = this.committedPresetKey
 
     this.isOpen = false
+    this.hideTimeout = null
     this.panelElement = this.hasPanelTarget ? this.panelTarget : document.getElementById(this.panelIdValue)
     this.monthLabelElement = this.hasMonthLabelTarget ? this.monthLabelTarget : this.panelElement?.querySelector('[data-flat-pack--flatpack-date-picker-target="monthLabel"]')
     this.calendarGridElement = this.hasCalendarGridTarget ? this.calendarGridTarget : this.panelElement?.querySelector('[data-flat-pack--flatpack-date-picker-target="calendarGrid"]')
@@ -65,7 +67,7 @@ export default class extends Controller {
   }
 
   disconnect() {
-    this.close()
+    this.snapPanelClosed()
     this.restorePanelParent()
     this.removeGlobalListeners()
   }
@@ -94,21 +96,28 @@ export default class extends Controller {
 
     this.mountPanelToBody()
     this.setPanelInteractivity(true)
+    const interrupt = Boolean(this.hideTimeout)
+    this.clearHideTimeout()
     this.isOpen = true
     this.panelElement.style.display = ""
-    this.panelElement.classList.remove("hidden")
     this.panelElement.setAttribute("aria-hidden", "false")
     this.triggerTarget?.setAttribute("aria-expanded", "true")
     this.draft = { ...this.committed }
     this.draftPresetKey = this.committedPresetKey
     this.viewMode = this.defaultViewMode()
-    this.render()
-    this.positionPanel()
+    playOverlayEnter(this.panelElement, {
+      placement: "bottom",
+      interrupt,
+      beforeAnimate: () => {
+        this.render()
+        this.positionPanel()
+      }
+    })
     this.addGlobalListeners()
   }
 
   close() {
-    if (!this.panelElement) {
+    if (!this.panelElement || !this.isOpen) {
       return
     }
 
@@ -117,13 +126,43 @@ export default class extends Controller {
     }
 
     this.isOpen = false
+    this.triggerTarget?.setAttribute("aria-expanded", "false")
+    this.removeGlobalListeners()
+    this.clearHideTimeout()
+    this.hideTimeout = playOverlayExit(this.panelElement, {
+      placement: "bottom",
+      onHidden: () => {
+        this.hideTimeout = null
+        this.panelElement.style.display = "none"
+        this.panelElement.setAttribute("aria-hidden", "true")
+        this.setPanelInteractivity(false)
+        this.restorePanelParent()
+      }
+    })
+  }
+
+  snapPanelClosed() {
+    this.clearHideTimeout()
+    this.isOpen = false
+    if (!this.panelElement) {
+      return
+    }
+
     this.panelElement.classList.add("hidden")
     this.panelElement.style.display = "none"
+    this.panelElement.style.opacity = ""
+    this.panelElement.style.transform = ""
+    this.panelElement.style.transition = ""
     this.panelElement.setAttribute("aria-hidden", "true")
     this.triggerTarget?.setAttribute("aria-expanded", "false")
     this.setPanelInteractivity(false)
-    this.removeGlobalListeners()
-    this.restorePanelParent()
+  }
+
+  clearHideTimeout() {
+    if (!this.hideTimeout) return
+
+    clearTimeout(this.hideTimeout)
+    this.hideTimeout = null
   }
 
   setPanelInteractivity(isOpen) {
