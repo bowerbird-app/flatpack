@@ -13,6 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.175] - 2026-09-09
+
+### Fixed
+- Spinner keeps a loading signal under `prefers-reduced-motion`. `.fp-spinner` spins by default and opacity-pulses when motion is reduced, instead of `motion-reduce:animate-none` which froze the mark.
+- Password show/hide icons crossfade on `--duration-fast` / `--easing-standard` in a fixed 1rem box. The control uses `aria-pressed` and “Show password” / “Hide password”. Reduced motion snaps because the duration tokens collapse to `0ms`.
+
+### Changed
+- Bumped the gem version to `0.1.175`.
+
+### Upgrade notes
+- Spinner class is `.fp-spinner`, not Tailwind `animate-spin motion-reduce:animate-none`. Hosts that copied those utilities should switch to the kit class. Pulse duration is 1.2s and is not `--duration-*`, so it does not collapse to `0ms`.
+- Password toggle no longer uses `hidden` on the unused eye icon. Keep both icons in `.fp-password-toggle-icons` and drive visibility with `aria-pressed`. Hide waits are not involved; opacity follows `--duration-fast`.
+
 ## [0.1.174] - 2026-09-08
 
 ### Fixed
