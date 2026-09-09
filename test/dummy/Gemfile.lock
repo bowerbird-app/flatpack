@@ -8,8 +8,8 @@ GIT
 
 GIT
   remote: https://github.com/bowerbird-app/RecordingStudio_MCP.git
-  revision: ad7cabc1b5c7333d145a6802c1f7a5d23791074d
-  branch: cursor/mcp-endpoint-tools-c4da
+  revision: d8ac4f5ab432f2d415b226e391f4c34215b83ef4
+  tag: v0.3.0
   specs:
     recording_studio_mcp (0.3.0)
       rails (~> 8.1.0)

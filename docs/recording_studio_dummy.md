@@ -76,7 +76,7 @@ Host-only. These routes live in the dummy initializer and are stripped from the 
 
 The public named API registers **only** these endpoints — not Workspace, Folder, Page, or `ping`. The public API would otherwise mirror every host recordable type; the dummy prepends a registry-only rule so HTTP, OpenAPI, and MCP share an empty type list.
 
-For ChatGPT testing, the dummy temporarily pins `recording_studio_mcp` to branch `cursor/mcp-endpoint-tools-c4da` (MCP PR #4 / pre-tag `0.3.0`). That build advertises one MCP tool per `register_endpoint` and omits tree tools when the type list is empty. Revert to a tagged MCP gem when `v0.3.0` ships. Keep `recording_studio_api` at `v0.5.4`.
+The dummy pins `recording_studio_mcp` to tag `v0.3.0`. That build advertises one MCP tool per `register_endpoint` and omits tree tools when the type list is empty. Keep `recording_studio_api` at `v0.5.4`.
 
 - `GET /recording_studio_api/api/v1/flatpack/components`
 - `GET /recording_studio_api/api/v1/flatpack/components/:name`
