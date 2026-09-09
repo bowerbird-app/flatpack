@@ -70,6 +70,17 @@ Discovery aliases:
 
 Host models: `Workspace`, `Folder`, `Page`, `AdminRoot`, plus Users `People` / `Profile` and Site Settings / Attachable types. See `config/initializers/recording_studio.rb`.
 
+## FlatPack component catalog API
+
+Host-only. These routes live in the dummy initializer and are stripped from the vendored gem snapshot.
+
+- `GET /recording_studio_api/api/v1/flatpack/components`
+- `GET /recording_studio_api/api/v1/flatpack/components/:name`
+
+Send a Bearer token. The gem builds the JSON with `FlatPack::ComponentCatalog.list` and `.show(name)`. The dummy maps an unknown name to `RecordingStudioApi::NotFoundError` (404). There is no catalog recordable and no Accessible check on a fake recording.
+
+Name accepts `Button::Component`, `Button--Component`, or a `FlatPack::` prefix. MCP can wrap these later. The dummy does not add MCP tools for them.
+
 ## Local setup
 
 ```bash

@@ -63,3 +63,24 @@ RecordingStudioApi.register_capability_action(
   },
   handler: Dummy::PingWorkspace
 )
+
+RecordingStudioApi.register_endpoint(
+  :flatpack_components,
+  http_verb: :get,
+  path: "flatpack/components",
+  handler: ->(_context) { FlatPack::ComponentCatalog.list },
+  openapi: {summary: "List public FlatPack components", description: "Skinny catalog of public FlatPack ViewComponents."}
+)
+
+RecordingStudioApi.register_endpoint(
+  :flatpack_component,
+  http_verb: :get,
+  path: "flatpack/components/:name",
+  handler: ->(context) {
+    payload = FlatPack::ComponentCatalog.show(context.params[:name])
+    raise RecordingStudioApi::NotFoundError, "Unknown component" if payload.nil?
+
+    payload
+  },
+  openapi: {summary: "Show a FlatPack component", description: "One public component plus initialize parameters."}
+)
