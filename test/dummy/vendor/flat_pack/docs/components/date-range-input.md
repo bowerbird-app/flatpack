@@ -53,7 +53,9 @@ None.
 - Selecting a quick preset (for example `Last week`) shows that preset label in the trigger field after Apply.
 - Calendar ranges display a quick preset label when the chosen start/end exactly match a preset; otherwise they display as `YYYY-MM-DD to YYYY-MM-DD`.
 - On first render, if `start_value` and `end_value` match a known quick preset range for today, the trigger displays that preset label.
+- Open/close uses `--duration-base` with `--easing-enter` / `--easing-exit` and a few pixels of offset from the trigger, the same helper as Popover. A close in flight can reverse. The panel stays `display: none` while closed because it also uses `md:flex`.
 
 ## Dependencies
 - Stimulus controller: `app/javascript/flat_pack/controllers/flatpack_date_picker_controller.js`.
+- Overlay motion: `playOverlayEnter` / `playOverlayExit` from `controllers/flat_pack/reduced_motion`.
 - Uses `FlatPack::Button::Component` for preset, calendar navigation, and action controls.

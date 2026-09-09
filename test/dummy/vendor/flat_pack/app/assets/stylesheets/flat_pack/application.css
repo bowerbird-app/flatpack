@@ -120,6 +120,40 @@
     font-variant-numeric: tabular-nums;
   }
 
+  .fp-progress-fill {
+    background-color: var(--progress-fill-color);
+  }
+
+  .fp-progress-fill--success {
+    background-color: var(--progress-success-fill-color);
+  }
+
+  .fp-progress-fill--warning {
+    background-color: var(--progress-warning-fill-color);
+  }
+
+  .fp-progress-fill--danger {
+    background-color: var(--progress-danger-fill-color);
+  }
+
+  .fp-stepper-marker {
+    border-color: var(--stepper-upcoming-color);
+    background-color: var(--surface-background-color);
+    color: var(--stepper-muted-color);
+  }
+
+  li[data-status="complete"] > .fp-stepper-marker {
+    border-color: var(--stepper-complete-color);
+    background-color: var(--stepper-complete-color);
+    color: var(--stepper-complete-text-color);
+  }
+
+  li[data-status="current"] > .fp-stepper-marker {
+    border-color: var(--stepper-current-color);
+    background-color: var(--stepper-current-color);
+    color: var(--color-primary-text);
+  }
+
   .fp-text-balance {
     text-wrap: balance;
   }
@@ -383,6 +417,119 @@
 
 }
 
+/* Unlayered so appearance:none beats the UA range chrome. Pseudo-elements for
+ * WebKit and Firefox cannot share a rule: the whole block is dropped if one
+ * engine does not understand the other selector.
+ */
+.fp-range-input {
+  --range-progress: 0%;
+  appearance: none;
+  -webkit-appearance: none;
+  display: block;
+  width: 100%;
+  height: var(--hit-target-min);
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.fp-range-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.fp-range-input:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+}
+
+.fp-range-input:hover:not(:disabled) {
+  --range-thumb-shadow: var(--shadow-lg);
+}
+
+.fp-range-input::-webkit-slider-runnable-track {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: var(--range-track-height);
+  border: 0;
+  border-radius: 9999px;
+  background-color: var(--range-track-color);
+  background-image: linear-gradient(var(--range-fill-color), var(--range-fill-color));
+  background-repeat: no-repeat;
+  background-size: var(--range-progress) 100%;
+  background-position: left center;
+}
+
+[dir="rtl"] .fp-range-input::-webkit-slider-runnable-track {
+  background-position: right center;
+}
+
+.fp-range-input::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: var(--range-thumb-size);
+  height: var(--range-thumb-size);
+  margin-top: calc((var(--range-track-height) - var(--range-thumb-size)) / 2);
+  border: 2px solid var(--range-thumb-border-color);
+  border-radius: 9999px;
+  background: var(--range-thumb-color);
+  box-shadow: var(--range-thumb-shadow);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--easing-standard),
+    border-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard);
+}
+
+.fp-range-input:disabled::-webkit-slider-thumb {
+  cursor: not-allowed;
+}
+
+.fp-range-input::-moz-range-track {
+  height: var(--range-track-height);
+  border: 0;
+  border-radius: 9999px;
+  background: var(--range-track-color);
+}
+
+.fp-range-input::-moz-range-progress {
+  height: var(--range-track-height);
+  border: 0;
+  border-radius: 9999px;
+  background: var(--range-fill-color);
+}
+
+.fp-range-input::-moz-range-thumb {
+  appearance: none;
+  width: var(--range-thumb-size);
+  height: var(--range-thumb-size);
+  border: 2px solid var(--range-thumb-border-color);
+  border-radius: 9999px;
+  background: var(--range-thumb-color);
+  box-shadow: var(--range-thumb-shadow);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--easing-standard),
+    border-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard);
+}
+
+.fp-range-input:disabled::-moz-range-thumb {
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fp-range-input::-webkit-slider-thumb {
+    transition: none;
+  }
+
+  .fp-range-input::-moz-range-thumb {
+    transition: none;
+  }
+}
+
 ol.flat-pack-list {
   counter-reset: flat-pack-list-item;
   list-style: none;
@@ -410,6 +557,23 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-marke
 ol.flat-pack-list > li > .flat-pack-list-item-marker::before,
 ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-marker::before {
   content: counter(flat-pack-list-item) ".";
+}
+
+.flat-pack-list-item-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  color: var(--surface-content-color);
+}
+
+.flat-pack-list-item-icon svg {
+  display: block;
+  flex-shrink: 0;
+}
+
+ol.flat-pack-list > li > .flat-pack-list-item-icon,
+ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon {
+  display: inline-flex;
 }
 
 @keyframes fp-skeleton-shimmer {

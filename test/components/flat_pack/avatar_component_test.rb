@@ -12,6 +12,14 @@ module FlatPack
         assert_selector "img[alt='User Avatar']"
         assert_selector "img[loading='lazy']"
         assert_selector "img[decoding='async']"
+        assert_includes page.native.to_html, "block h-full w-full object-cover"
+      end
+
+      def test_wrapper_collapses_line_height_so_initials_match_image_height
+        render_inline(Component.new(name: "Jane Doe"))
+
+        wrapper = page.find("span.aspect-square")
+        assert_includes wrapper[:class].split, "leading-none"
       end
 
       def test_renders_avatar_with_initials_from_name

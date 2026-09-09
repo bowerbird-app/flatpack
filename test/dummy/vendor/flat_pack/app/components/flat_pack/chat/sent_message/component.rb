@@ -85,7 +85,7 @@ module FlatPack
             safe_join([
               content_tag(
                 :div,
-                class: "absolute inset-y-0 right-0 z-0 pr-2 flex items-center gap-2 opacity-0 pointer-events-none transition-opacity duration-150",
+                class: "absolute inset-y-0 right-0 z-0 pr-2 flex items-center gap-2 opacity-0 pointer-events-none transition-opacity duration-[var(--duration-fast)]",
                 data: {flat_pack__chat_message_actions_target: "tray"}
               ) do
                 content_tag(:div, class: "flex items-center gap-2 whitespace-nowrap pl-4") do

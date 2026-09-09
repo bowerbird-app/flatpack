@@ -88,6 +88,7 @@ High-use interaction props:
 - Message list jump button includes explicit `aria-label`.
 - Date dividers render `role="separator"` with labels.
 - Outgoing/incoming reveal-actions surfaces are keyboard focusable (`role="button"`, `tabindex="0"`).
+- Reveal trays fade with `transition-opacity duration-[var(--duration-fast)]` so `prefers-reduced-motion` token collapse applies. Do not use Tailwind `duration-150` on those trays.
 - Send button sets contextual `aria-label` (`"Send message"` / `"Sending..."`).
 
 ## Dependencies

@@ -29,10 +29,10 @@ None.
 
 | style | description |
 |---------|-------------|
-| `style: :default` | Primary fill color (`bg-primary`). |
-| `style: :success` | Success fill color (`bg-success-background-color`). |
-| `style: :warning` | Warning fill color (`bg-warning-background-color`). |
-| `style: :danger` | Danger fill color (`bg-danger-background-color`). |
+| `style: :default` | Primary fill (`.fp-progress-fill`, `--progress-fill-color`). |
+| `style: :success` | Success fill (`.fp-progress-fill--success`). |
+| `style: :warning` | Warning fill (`.fp-progress-fill--warning`). |
+| `style: :danger` | Danger fill (`.fp-progress-fill--danger`). |
 
 ## Example
 
@@ -50,3 +50,4 @@ The inner track uses `role="progressbar"` with `aria-valuenow`, `aria-valuemin`,
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
+- Kit CSS: `.fp-progress-fill` and `--progress-fill-color`, `--progress-success-fill-color`, `--progress-warning-fill-color`, `--progress-danger-fill-color`. The default fill does not use Tailwind `bg-primary`.

@@ -259,7 +259,7 @@ Kit CSS defines `.fp-tabular-nums` (`font-variant-numeric: tabular-nums`), `.fp-
 --transition-slow: var(--duration-slow)
 ```
 
-`--duration-*` are set on `:root`. Hosts load `flat_pack/variables` as a normal stylesheet, and browsers skip `@theme`. `@theme inline` only registers the names for Tailwind. Under `prefers-reduced-motion: reduce`, `--duration-fast`, `--duration-base`, `--duration-slow`, and `--skeleton-shimmer-duration` become `0ms`. Overlay controllers read those tokens through `controllers/flat_pack/reduced_motion` so hide delays match. Spatial motion (scale, slide, fan) is skipped; colour and opacity may still change. Tailwind's built-in `duration-200` / `duration-300` utilities are not the kit lever. Kit surfaces that move should use `duration-[var(--duration-fast)]`, `duration-[var(--duration-base)]`, or `duration-[var(--duration-slow)]`.
+`--duration-*` are set on `:root`. Hosts load `flat_pack/variables` as a normal stylesheet, and browsers skip `@theme`. `@theme inline` only registers the names for Tailwind. Under `prefers-reduced-motion: reduce`, `--duration-fast`, `--duration-base`, `--duration-slow`, and `--skeleton-shimmer-duration` become `0ms`. Overlay controllers read those tokens through `controllers/flat_pack/reduced_motion` so hide delays match. Spatial motion (scale, slide, fan) is skipped; colour and opacity may still change. Tailwind's built-in `duration-150` / `duration-200` / `duration-300` utilities are not the kit lever; they skip token collapse. Kit surfaces that move should use `duration-[var(--duration-fast)]`, `duration-[var(--duration-base)]`, or `duration-[var(--duration-slow)]`. Do not use `hover:scale-*` on stacked chrome such as Avatar Group.
 
 ### Easing
 ```css
@@ -270,7 +270,7 @@ Kit CSS defines `.fp-tabular-nums` (`font-variant-numeric: tabular-nums`), `.fp-
 
 `--easing-*` are set on `:root`, for the same reason as durations. Kit overlays use `ease-[var(--easing-enter)]` / `ease-[var(--easing-exit)]`, or `motionTransition()` in Stimulus. In-place motion (switch, progress, sidebar) uses `--easing-standard`. There is no bounce: charcoal / rounded is Corporate/Premium, not Playful.
 
-Use `--easing-enter` for modal, drawer, command palette, toast, dropdown, popover, and tooltip entrance. Use `--easing-exit` for their leave. Modal, drawer, and command palette enter on `--duration-slow` and exit on `--duration-base`. Popover and tooltip stay on `--duration-base` both ways, with a few pixels of offset from the trigger. Form invalid is colour only; do not shake the field.
+Use `--easing-enter` for modal, drawer, command palette, toast, dropdown, popover, and tooltip entrance. Use `--easing-exit` for their leave. Modal, drawer, and command palette enter on `--duration-slow` and exit on `--duration-base`. Popover, tooltip, searchable Select, Combobox, and the FlatPack date picker stay on `--duration-base` both ways, with a few pixels of offset from the trigger. Those form panels share `playOverlayEnter` / `playOverlayExit` in `controllers/flat_pack/reduced_motion`, so a close in flight can reverse and `hidden` is applied after the exit duration. Form invalid is colour only; do not shake the field.
 
 ### Overlay and chrome
 ```css
@@ -298,9 +298,23 @@ Use `--easing-enter` for modal, drawer, command palette, toast, dropdown, popove
 
 --stepper-current-color
 --stepper-complete-color
+--stepper-complete-text-color
 --stepper-upcoming-color
 --stepper-label-color
 --stepper-muted-color
+
+--progress-fill-color
+--progress-success-fill-color
+--progress-warning-fill-color
+--progress-danger-fill-color
+
+--range-track-color
+--range-fill-color
+--range-thumb-color
+--range-thumb-border-color
+--range-thumb-shadow
+--range-thumb-size
+--range-track-height
 ```
 
 Drawer tokens alias Modal. Keyboard, skip link, and stepper tokens alias surface and brand colours so named themes inherit. Hero overlay, carousel media/controls, picker grid badges, and badge remove-hover are themeable instead of hardcoded black/white Tailwind utilities.
@@ -309,7 +323,7 @@ Drawer tokens alias Modal. Keyboard, skip link, and stepper tokens alias surface
 
 Component tokens such as `--button-primary-background-color` map to semantic tokens (`var(--color-primary)`). You normally change `--brand-hue` / `--brand-chroma` / `--brand-lightness` or `--color-primary` instead of editing component tokens.
 
-Alert and toast success/warning/danger wash the status fill into the surface (`color-mix` at 18%) and keep chroma on the icon and border. Info toasts alias the quiet info alert, not `--color-primary`. Buttons, badges, chips, and progress keep the filled `--color-success-*` / `--color-warning-*` / `--color-danger-*` paints.
+Alert and toast success/warning/danger wash the status fill into the surface (`color-mix` at 18%) and keep chroma on the icon and border. Info toasts alias the quiet info alert, not `--color-primary`. Buttons, badges, chips, and progress keep the filled `--color-success-*` / `--color-warning-*` / `--color-danger-*` paints. Progress reads those fills through `--progress-*-fill-color` and `.fp-progress-fill`, not Tailwind `bg-primary`. Range input paints the native slider through `.fp-range-input` and `--range-*` tokens, not `accent-color`.
 
 Tabs, chat incoming bubbles, sidebar/top-nav hover, list hover, and avatar fallbacks alias `--surface-muted-*` / `--surface-content-color`. Named themes inherit those greys from the surface tokens; do not freeze Tailwind slate hexes on the component tokens.
 
@@ -326,6 +340,12 @@ Tabs, chat incoming bubbles, sidebar/top-nav hover, list hover, and avatar fallb
 - Duration: `--duration-base`
 - Easing: `--easing-standard` (invalid chrome is colour only; no shake)
 
+### Range Input
+- Kit class: `.fp-range-input`
+- Track / fill / thumb: `--range-track-color`, `--range-fill-color`, `--range-thumb-color`, `--range-thumb-border-color`, `--range-thumb-shadow`
+- Size: `--range-track-height`, `--range-thumb-size` (hit target is `--hit-target-min`)
+- Runtime fill: `--range-progress` on the input (percentage). Not a theme token.
+
 ### Checkbox
 - Colors: `--surface-background-color`, `--surface-border-color`, `--color-primary`, `--color-ring`
 - Size: `--checkbox-size`
@@ -341,7 +361,7 @@ Tabs, chat incoming bubbles, sidebar/top-nav hover, list hover, and avatar fallb
 ### Hero, carousel, picker, badge
 - Hero `centered_image` overlay: `--hero-overlay-background-color`, `--hero-overlay-text-color`, `--hero-overlay-muted-text-color`
 - Carousel chrome: `--carousel-control-*`, `--carousel-counter-*`, `--carousel-media-background-color`, `--carousel-lightbox-image-background-color`
-- Picker grid: `--picker-badge-*`, `--picker-selection-idle-*`
+- Picker grid: `--picker-badge-*`, `--picker-selection-idle-*`, `--picker-selection-indicator-*`
 - Badge remove hover: `--badge-remove-hover-background-color` (aliases `--chip-remove-hover-background-color`)
 - Card stat trends: `--color-success-background-color`, `--color-danger-background-color`
 

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require "open3"
 
 module FlatPack
   class ReducedMotionTest < ActiveSupport::TestCase
@@ -50,12 +51,35 @@ module FlatPack
         carousel_controller.js
         chat_image_deck_controller.js
         sidebar_group_controller.js
+        select_controller.js
+        combobox_controller.js
+        flatpack_date_picker_controller.js
       ]
 
       controllers.each do |name|
         source = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers", name).read
         assert_includes source, helper, "#{name} should import #{helper}"
       end
+    end
+
+    test "select combobox and date picker play overlay enter and exit" do
+      {
+        "select_controller.js" => /this\.dropdownTarget\.classList\.(add|remove)\(["']hidden["']\)/,
+        "combobox_controller.js" => /this\.listTarget\.classList\.(add|remove)\(["']hidden["']\)/,
+        "flatpack_date_picker_controller.js" => /this\.panelElement\.classList\.remove\(["']hidden["']\)/
+      }.each do |name, snap_hidden|
+        source = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers", name).read
+        assert_includes source, "playOverlayEnter", "#{name} should play overlay enter"
+        assert_includes source, "playOverlayExit", "#{name} should play overlay exit"
+        refute_match snap_hidden, source, "#{name} should not snap hidden on the overlay panel"
+      end
+    end
+
+    test "node tests cover overlay enter and exit helpers" do
+      test_file = FlatPack::Engine.root.join("test/javascript/reduced_motion_test.js")
+      stdout, status = Open3.capture2e("node", "--test", test_file.to_s)
+
+      assert status.success?, stdout
     end
 
     test "kit javascript does not copy prefers-reduced-motion matchMedia besides the helper" do
@@ -95,6 +119,28 @@ module FlatPack
         refute_match(/cubic-bezier\(/, source, "#{name} should not hardcode a cubic-bezier")
         refute_includes source, "ease-in-out", "#{name} should not hardcode ease-in-out"
       end
+    end
+
+    test "kit markup does not use Tailwind numeric durations that skip token collapse" do
+      leftovers = Dir[FlatPack::Engine.root.join("app/{components,javascript,assets}/**/*.{rb,js,css,erb}")].filter_map do |path|
+        source = File.read(path)
+        next unless source.match?(/\bduration-(150|200|300)\b/)
+
+        path.delete_prefix("#{FlatPack::Engine.root}/")
+      end
+
+      assert_empty leftovers, "numeric duration leftover: #{leftovers.join(", ")}"
+    end
+
+    test "kit markup does not scale up on hover" do
+      leftovers = Dir[FlatPack::Engine.root.join("app/{components,javascript,assets}/**/*.{rb,js,css,erb}")].filter_map do |path|
+        source = File.read(path)
+        next unless source.include?("hover:scale-")
+
+        path.delete_prefix("#{FlatPack::Engine.root}/")
+      end
+
+      assert_empty leftovers, "hover scale leftover: #{leftovers.join(", ")}"
     end
 
     test "kit forms do not shake on invalid" do

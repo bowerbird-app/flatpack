@@ -1,5 +1,5 @@
-// FlatPack Select Stimulus Controller
 import { Controller } from "@hotwired/stimulus"
+import { playOverlayEnter, playOverlayExit, cancelOverlayHide } from "controllers/flat_pack/reduced_motion"
 
 export default class extends Controller {
   static targets = ["trigger", "dropdown", "hiddenInput", "hiddenInputs", "searchInput", "optionsList", "chevron", "chip", "placeholder", "chipsContainer", "searchStatus", "searchHint", "loadingState", "emptyState", "nestedCheckbox"]
@@ -25,13 +25,14 @@ export default class extends Controller {
     this.abortController = null
     this.syncSelectedState()
     this.setSearchState(this.searchModeValue === "remote" ? "hint" : "idle")
+    this.isOpen = false
 
-    // Close dropdown when clicking outside
     this.handleOutsideClick = this.handleOutsideClick.bind(this)
     document.addEventListener("click", this.handleOutsideClick)
   }
 
   disconnect() {
+    cancelOverlayHide(this.dropdownTarget)
     document.removeEventListener("click", this.handleOutsideClick)
 
     if (this.debounceTimer) {
@@ -46,10 +47,8 @@ export default class extends Controller {
   toggle(event) {
     event.preventDefault()
     event.stopPropagation()
-    
-    const isOpen = !this.dropdownTarget.classList.contains("hidden")
-    
-    if (isOpen) {
+
+    if (this.isOpen) {
       this.close()
     } else {
       this.open()
@@ -57,11 +56,11 @@ export default class extends Controller {
   }
 
   open() {
-    this.dropdownTarget.classList.remove("hidden")
+    this.isOpen = true
     this.triggerTarget.setAttribute("aria-expanded", "true")
     this.chevronTarget.style.transform = "rotate(180deg)"
-    
-    // Focus search input if searchable
+    playOverlayEnter(this.dropdownTarget, { placement: "bottom" })
+
     if (this.searchableValue && this.hasSearchInputTarget) {
       this.searchInputTarget.focus()
     }
@@ -72,11 +71,15 @@ export default class extends Controller {
   }
 
   close() {
-    this.dropdownTarget.classList.add("hidden")
+    if (!this.isOpen) {
+      return
+    }
+
+    this.isOpen = false
     this.triggerTarget.setAttribute("aria-expanded", "false")
     this.chevronTarget.style.transform = "rotate(0deg)"
-    
-    // Clear search input if exists
+    playOverlayExit(this.dropdownTarget, { placement: "bottom" })
+
     if (this.hasSearchInputTarget) {
       this.searchInputTarget.value = ""
       this.showAllOptions()
@@ -339,14 +342,14 @@ export default class extends Controller {
 
       if (isSelected) {
         if (this.multipleValue) {
-          option.classList.remove("bg-[var(--color-primary)]", "text-white")
+          option.classList.remove("bg-[var(--color-primary)]", "text-[var(--color-primary-text)]")
           option.classList.add("hover:bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]")
         } else {
-          option.classList.add("bg-[var(--color-primary)]", "text-white")
+          option.classList.add("bg-[var(--color-primary)]", "text-[var(--color-primary-text)]")
           option.classList.remove("hover:bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]")
         }
       } else {
-        option.classList.remove("bg-[var(--color-primary)]", "text-white")
+        option.classList.remove("bg-[var(--color-primary)]", "text-[var(--color-primary-text)]")
         option.classList.add("hover:bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]")
       }
     })
@@ -372,17 +375,17 @@ export default class extends Controller {
 
       if (checked) {
         if (this.multipleValue) {
-          option.classList.remove("bg-[var(--color-primary)]", "text-white", "bg-[var(--surface-muted-background-color)]")
+          option.classList.remove("bg-[var(--color-primary)]", "text-[var(--color-primary-text)]", "bg-[var(--surface-muted-background-color)]")
           option.classList.add("hover:bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]")
         } else {
-          option.classList.add("bg-[var(--color-primary)]", "text-white")
+          option.classList.add("bg-[var(--color-primary)]", "text-[var(--color-primary-text)]")
           option.classList.remove("hover:bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]", "bg-[var(--surface-muted-background-color)]")
         }
       } else if (indeterminate) {
         option.classList.add("bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]")
-        option.classList.remove("bg-[var(--color-primary)]", "text-white")
+        option.classList.remove("bg-[var(--color-primary)]", "text-[var(--color-primary-text)]")
       } else {
-        option.classList.remove("bg-[var(--color-primary)]", "text-white", "bg-[var(--surface-muted-background-color)]")
+        option.classList.remove("bg-[var(--color-primary)]", "text-[var(--color-primary-text)]", "bg-[var(--surface-muted-background-color)]")
         option.classList.add("hover:bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]")
       }
     })
@@ -648,7 +651,7 @@ export default class extends Controller {
       : selected
       ? (this.multipleValue
         ? "px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-[var(--radius-sm)] transition-colors duration-base hover:bg-[var(--surface-muted-background-color)] cursor-pointer text-[var(--surface-content-color)]"
-        : "px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-[var(--radius-sm)] transition-colors duration-base bg-[var(--color-primary)] text-white cursor-pointer")
+        : "px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-[var(--radius-sm)] transition-colors duration-base bg-[var(--color-primary)] text-[var(--color-primary-text)] cursor-pointer")
       : "px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-[var(--radius-sm)] transition-colors duration-base hover:bg-[var(--surface-muted-background-color)] cursor-pointer text-[var(--surface-content-color)]"
 
     return `<div role="option" class="${optionClasses}" data-action="click->flat-pack--select#selectOption" data-value="${value}" data-label="${label}" data-disabled="${disabled}" aria-selected="${selected}">${label}</div>`

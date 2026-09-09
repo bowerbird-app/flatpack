@@ -110,7 +110,8 @@ module FlatPack
           "bg-[var(--avatar-background-color)] text-[var(--avatar-text-color)]",
           "font-medium select-none aspect-square",
           SIZES.fetch(@size),
-          SHAPES.fetch(@shape)
+          SHAPES.fetch(@shape),
+          "leading-none"
         )
       end
 
@@ -145,7 +146,7 @@ module FlatPack
           loading: "lazy",
           decoding: "async",
           class: classes(
-            "h-full w-full object-cover",
+            "block h-full w-full object-cover",
             SHAPES.fetch(@shape)
           ))
       end

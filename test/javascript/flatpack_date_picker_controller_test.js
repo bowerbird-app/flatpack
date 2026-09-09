@@ -9,11 +9,29 @@ function loadController(overrides = {}) {
   const source = fs.readFileSync(filePath, 'utf8')
   const transformedSource = source
     .replace('import { Controller } from "@hotwired/stimulus"', 'class Controller {}')
+    .replace(
+      'import { playOverlayEnter, playOverlayExit, cancelOverlayHide } from "controllers/flat_pack/reduced_motion"',
+      `function playOverlayEnter(element, options = {}) { element.classList.remove("hidden"); options.beforeAnimate?.() }
+function playOverlayExit(element, options = {}) { element.classList.add("hidden"); options.onHidden?.(); return 0 }
+function cancelOverlayHide() {}`
+    )
     .replace('export default class extends Controller', 'class FlatpackDatePickerController extends Controller') + '\nmodule.exports = FlatpackDatePickerController\n'
 
   const context = {
     module: { exports: {} },
     exports: {},
+    document: {
+      activeElement: null,
+      addEventListener() {},
+      removeEventListener() {},
+      body: { appendChild() {} }
+    },
+    window: {
+      addEventListener() {},
+      removeEventListener() {},
+      matchMedia: () => ({ matches: false })
+    },
+    clearTimeout() {},
     ...overrides
   }
 
@@ -110,4 +128,70 @@ test('computePresetRange returns rolling 4-week range for last_4_weeks', () => {
 
   assert.equal(range.start.getTime(), new Date(2026, 4, 22).getTime())
   assert.equal(range.end.getTime(), new Date(2026, 5, 18).getTime())
+})
+
+function overlayPanel() {
+  const classes = new Set(['hidden'])
+
+  return {
+    classList: {
+      add(name) { classes.add(name) },
+      remove(name) { classes.delete(name) },
+      contains(name) { return classes.has(name) }
+    },
+    style: { display: 'none' },
+    attributes: {},
+    setAttribute(name, value) { this.attributes[name] = String(value) },
+    contains() { return false }
+  }
+}
+
+function pickerWithPanel() {
+  const controller = buildController()
+  controller.panelElement = overlayPanel()
+  controller.mountPanelToBody = () => {}
+  controller.setPanelInteractivity = () => {}
+  controller.addGlobalListeners = () => {}
+  controller.removeGlobalListeners = () => {}
+  controller.render = () => {}
+  controller.positionPanel = () => {}
+  controller.restorePanelParent = () => {}
+  controller.defaultViewMode = () => 'calendar'
+  controller.committed = {}
+  controller.triggerTarget = {
+    value: '',
+    attributes: {},
+    setAttribute(name, value) { this.attributes[name] = String(value) },
+    focus() {}
+  }
+
+  return controller
+}
+
+test('open unhides the panel and close hides it after overlay exit', () => {
+  const controller = pickerWithPanel()
+
+  controller.open()
+
+  assert.equal(controller.panelElement.classList.contains('hidden'), false)
+  assert.equal(controller.panelElement.style.display, '')
+  assert.equal(controller.panelElement.attributes['aria-hidden'], 'false')
+  assert.equal(controller.isOpen, true)
+
+  controller.close()
+
+  assert.equal(controller.panelElement.classList.contains('hidden'), true)
+  assert.equal(controller.panelElement.style.display, 'none')
+  assert.equal(controller.panelElement.attributes['aria-hidden'], 'true')
+  assert.equal(controller.isOpen, false)
+})
+
+test('close is a no-op when the panel is already closed', () => {
+  const controller = pickerWithPanel()
+
+  controller.close()
+
+  assert.equal(controller.panelElement.classList.contains('hidden'), true)
+  assert.equal(controller.panelElement.style.display, 'none')
+  assert.equal(controller.isOpen, false)
 })
