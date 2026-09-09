@@ -115,6 +115,13 @@ module FlatPack
           Component.new(size: :xl)
         end
       end
+
+      def test_search_result_rows_use_roomy_padding
+        controller = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/search_controller.js").read
+
+        assert_includes controller, 'link.className = "block px-4 py-4 '
+        refute_includes controller, 'link.className = "block px-3 py-2 '
+      end
     end
   end
 end
