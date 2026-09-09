@@ -9,8 +9,10 @@ module FlatPack
         render_inline(Component.new)
 
         assert_selector "svg[role='status'][aria-label='Loading']"
-        assert_includes page.native.to_html, "animate-spin"
-        assert_includes page.native.to_html, "motion-reduce:animate-none"
+        html = page.native.to_html
+        assert_includes html, "fp-spinner"
+        refute_includes html, "animate-spin"
+        refute_includes html, "motion-reduce:animate-none"
       end
 
       def test_decorative_spinner_hides_from_assistive_tech

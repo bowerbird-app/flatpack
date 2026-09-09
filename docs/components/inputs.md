@@ -625,6 +625,7 @@ Always sanitize HTML output before rendering it back to users:
 - Error state adds `aria-invalid` and `aria-describedby` for controls that receive `error`. Invalid borders and helper text use `--color-error` (danger red), not `--color-warning`. Character-count thresholds still use `--color-warning-border`.
 - Native controls are used for checkbox/radio/select/input/textarea semantics.
 - `SearchInput` keeps a single clear control by using the component clear button and suppressing browser-native search clear icons.
+- Password show/hide is `aria-pressed` with “Show password” / “Hide password”. The two icons crossfade on `--duration-fast` in a fixed box; they do not snap `hidden`.
 - Searchable select trigger exposes `aria-haspopup` and toggles `aria-expanded`.
 - Searchable Select, Combobox, and the FlatPack date picker open and close like Popover: opacity plus a few pixels of offset on `--duration-base`. Stimulus uses `playOverlayEnter` / `playOverlayExit`, so `hidden` is applied after the exit duration.
 - `flat-pack--nested-multiselect` uses native checkbox semantics and applies the browser indeterminate state to partially selected parents.

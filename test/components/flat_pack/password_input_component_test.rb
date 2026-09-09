@@ -40,7 +40,7 @@ module FlatPack
       def test_renders_toggle_button
         render_inline(Component.new(name: "password"))
 
-        assert_selector "button[type='button'][aria-label='Toggle password visibility']"
+        assert_selector "button[type='button'][aria-label='Show password'][aria-pressed='false']"
       end
 
       def test_has_stimulus_controller
@@ -64,10 +64,13 @@ module FlatPack
         assert_selector "svg[data-flat-pack--icon-name-value='eye-slash']"
       end
 
-      def test_eye_off_icon_initially_hidden
+      def test_eye_icons_stack_for_crossfade
         render_inline(Component.new(name: "password"))
 
-        assert_selector "svg[data-flat-pack--icon-name-value='eye-slash'].hidden"
+        assert_selector "button.fp-password-toggle .fp-password-toggle-icons"
+        assert_selector "svg[data-flat-pack--icon-name-value='eye']"
+        assert_selector "svg[data-flat-pack--icon-name-value='eye-slash']"
+        refute_selector "svg[data-flat-pack--icon-name-value='eye-slash'].hidden"
       end
 
       def test_renders_disabled_input

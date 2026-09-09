@@ -153,5 +153,28 @@ module FlatPack
 
       assert_empty leftovers, "form shake leftover: #{leftovers.join(", ")}"
     end
+
+    test "spinner pulses under reduced motion instead of freezing" do
+      css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+      spinner = FlatPack::Engine.root.join("app/components/flat_pack/spinner/component.rb").read
+
+      assert_includes spinner, "fp-spinner"
+      refute_includes spinner, "motion-reduce:animate-none"
+      refute_includes spinner, "animate-spin"
+      assert_includes css, "@keyframes fp-spinner-spin"
+      assert_includes css, "@keyframes fp-spinner-pulse"
+      assert_match(/prefers-reduced-motion:\s*reduce[\s\S]*fp-spinner-pulse/m, css)
+    end
+
+    test "password toggle does not snap hidden on the eye icons" do
+      component = FlatPack::Engine.root.join("app/components/flat_pack/password_input/component.rb").read
+      controller = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/password_input_controller.js").read
+      css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+
+      refute_includes component, 'class: "hidden"'
+      refute_match(/eye(Off)?IconTarget\.classList/, controller)
+      assert_includes css, ".fp-password-toggle-icons"
+      assert_match(/opacity\s+var\(--duration-fast\)\s+var\(--easing-standard\)/, css)
+    end
   end
 end

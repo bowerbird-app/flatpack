@@ -1097,9 +1097,6 @@
   .animate-bounce {
     animation: var(--animate-bounce);
   }
-  .animate-spin {
-    animation: var(--animate-spin);
-  }
   .cursor-grab {
     cursor: grab;
   }

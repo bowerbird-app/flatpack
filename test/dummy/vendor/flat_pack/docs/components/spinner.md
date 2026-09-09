@@ -36,7 +36,7 @@ Button loading reuses the decorative spinner:
 
 ## Accessibility
 - A labelled spinner is a live status. A `label: nil` spinner is hidden from assistive tech; the parent must name the wait (Button does this with `Loading` / `aria-busy`).
-- Spinning uses `animate-spin` and `motion-reduce:animate-none`.
+- Spinning uses `.fp-spinner`. Default is a 1s rotate. Under `prefers-reduced-motion`, the mark opacity-pulses (no transform) so loading stays visible. Pulse duration is not `--duration-*`, so it does not collapse to `0ms`.
 
 ## Dependencies
 - `FlatPack::Shared::IconComponent::SIZES` for the size scale.

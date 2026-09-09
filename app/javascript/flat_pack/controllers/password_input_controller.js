@@ -1,4 +1,3 @@
-// FlatPack Password Input Stimulus Controller
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
@@ -6,20 +5,10 @@ export default class extends Controller {
 
   toggle(event) {
     event.preventDefault()
-    
-    const input = this.inputTarget
-    const isPassword = input.type === "password"
-    
-    // Toggle input type
-    input.type = isPassword ? "text" : "password"
-    
-    // Toggle icon visibility
-    if (isPassword) {
-      this.eyeIconTarget.classList.add("hidden")
-      this.eyeOffIconTarget.classList.remove("hidden")
-    } else {
-      this.eyeIconTarget.classList.remove("hidden")
-      this.eyeOffIconTarget.classList.add("hidden")
-    }
+
+    const showing = this.inputTarget.type === "password"
+    this.inputTarget.type = showing ? "text" : "password"
+    this.toggleTarget.setAttribute("aria-pressed", showing ? "true" : "false")
+    this.toggleTarget.setAttribute("aria-label", showing ? "Hide password" : "Show password")
   }
 }
