@@ -13,6 +13,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.178] - 2026-09-09
+
+### Added
+- `FlatPack::ComponentCatalog` lists public ViewComponents and shows initialize parameters. Hosts can serve those hashes from Recording Studio API `register_endpoint` without a fake recordable.
+
+### Changed
+- Dummy `recording_studio_api` pin is `v0.5.4` so named endpoints are available.
+- Bumped the gem version to `0.1.178`.
+
+### Upgrade notes
+- Call `FlatPack::ComponentCatalog.list` and `.show(name)` from a host initializer. The gem does not mount HTTP routes.
+- Dummy and other hosts that want `GET flatpack/components` need `recording_studio_api` `0.5.4` or newer, then register the two endpoints. Bearer auth still applies. Unknown names should raise `RecordingStudioApi::NotFoundError`.
+- `docs/components/manifest.yml` stays the docs and AI reading order. The running inventory is the catalog methods (and the dummy HTTP routes that wrap them).
+
 ## [0.1.173] - 2026-09-08
 
 ### Fixed
