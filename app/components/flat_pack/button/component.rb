@@ -147,7 +147,9 @@ module FlatPack
           default_radius_class,
           "font-medium",
           "cursor-pointer",
-          "transition-[color,background-color,border-color,box-shadow] duration-[var(--duration-fast)]",
+          "fp-button",
+          flat_press_class,
+          "transition-[color,background-color,border-color,box-shadow,transform] duration-[var(--duration-fast)] ease-[var(--easing-standard)]",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--button-focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--button-focus-ring-offset-color)]",
           "disabled:pointer-events-none disabled:opacity-[var(--button-disabled-opacity)]",
           "fp-touch-manipulation",
@@ -175,6 +177,12 @@ module FlatPack
         return unless @icon_only
 
         "#{ICON_ONLY_SIZES.fetch(@size)} fp-hit-target"
+      end
+
+      def flat_press_class
+        return unless @style == :ghost || @style == :secondary
+
+        "fp-button-flat"
       end
 
       def style_classes

@@ -79,7 +79,8 @@ Buttons, links rendered as buttons, and pill items include `.fp-touch-manipulati
 - Icon-only buttons must have an accessible name: `text:` (used as `aria-label`, not shown) or `aria: { label: "Open settings" }`. Missing a name raises `ArgumentError`.
 - Loading icon-only buttons keep that name and set `aria-busy="true"`.
 - Focus ring styles are applied by default for keyboard navigation.
-- In loading state, the button is disabled to prevent duplicate actions. The spinner is `FlatPack::Spinner::Component` with `label: nil` (decorative) plus `motion-reduce:animate-none`.
+- In loading state, the button is disabled to prevent duplicate actions. The spinner is `FlatPack::Spinner::Component` with `label: nil` (decorative).
+- Colour, border, and shadow ease on `--duration-fast` / `--easing-standard`. Press is a 1px `translateY` on `.fp-button`, not a scale. Ghost and secondary also use `.fp-button-flat` for an inset shadow on press.
 
 ## Dependencies
 - `FlatPack::Spinner::Component` for the loading mark.

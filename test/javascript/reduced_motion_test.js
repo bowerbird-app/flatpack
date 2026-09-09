@@ -8,7 +8,7 @@ function loadReducedMotion(matchMedia, extras = {}) {
   const filePath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'controllers', 'reduced_motion.js')
   const source = fs.readFileSync(filePath, 'utf8')
   const transformedSource = source.replaceAll('export function ', 'function ') + `
-module.exports = { prefersReducedMotion, motionDuration, motionTransition, overlayOrigin, overlayEnterOffset, playOverlayEnter, playOverlayExit, cancelOverlayHide }
+module.exports = { prefersReducedMotion, motionDuration, motionTransition, overlayOrigin, overlayEnterOffset, playOverlayEnter, playOverlayExit, cancelOverlayHide, ...(typeof playCollapseExit === "function" ? { playCollapseExit } : {}) }
 `
 
   const context = {
@@ -260,4 +260,81 @@ test('playOverlayExit hides on the next turn when motion is reduced', () => {
 
   assert.equal(delayed.ms, 0)
   assert.equal(element.style.transform, 'none')
+})
+
+function collapseElement({ height = 40, width = 96 } = {}) {
+  return {
+    style: {},
+    offsetHeight: height,
+    offsetWidth: width
+  }
+}
+
+test('playCollapseExit collapses both axes then calls onHidden', () => {
+  let delayed = null
+  const { playCollapseExit } = loadReducedMotion(media(false), {
+    setTimeout: (callback, ms) => {
+      delayed = { callback, ms }
+      return 3
+    }
+  })
+  const element = collapseElement()
+  let hiddenCalls = 0
+
+  playCollapseExit(element, {
+    axis: "both",
+    onHidden: () => { hiddenCalls += 1 }
+  })
+
+  assert.equal(element.style.overflow, "hidden")
+  assert.equal(element.style.opacity, "0")
+  assert.equal(element.style.height, "0px")
+  assert.equal(element.style.width, "0px")
+  assert.match(element.style.transition, /--duration-slow/)
+  assert.match(element.style.transition, /--easing-exit/)
+  assert.equal(delayed.ms, 300)
+  assert.equal(hiddenCalls, 0)
+
+  delayed.callback()
+
+  assert.equal(hiddenCalls, 1)
+})
+
+test('playCollapseExit on the block axis leaves width alone', () => {
+  let delayed = null
+  const { playCollapseExit } = loadReducedMotion(media(false), {
+    setTimeout: (callback, ms) => {
+      delayed = { callback, ms }
+      return 5
+    }
+  })
+  const element = collapseElement()
+
+  playCollapseExit(element, { axis: "block" })
+
+  assert.equal(element.style.height, "0px")
+  assert.equal(element.style.width, undefined)
+  assert.equal(element.style.transform, undefined)
+  assert.equal(delayed.ms, 300)
+})
+
+test('playCollapseExit skips measuring when motion is reduced', () => {
+  let delayed = null
+  const { playCollapseExit } = loadReducedMotion(media(true), {
+    setTimeout: (callback, ms) => {
+      delayed = { callback, ms }
+      return 1
+    }
+  })
+  const element = collapseElement()
+  let hiddenCalls = 0
+
+  playCollapseExit(element, {
+    onHidden: () => { hiddenCalls += 1 }
+  })
+
+  assert.equal(delayed.ms, 0)
+  assert.equal(element.style.height, undefined)
+  delayed.callback()
+  assert.equal(hiddenCalls, 1)
 })

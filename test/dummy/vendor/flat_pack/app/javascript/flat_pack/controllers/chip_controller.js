@@ -1,6 +1,6 @@
 // FlatPack Chip Stimulus Controller
 import { Controller } from "@hotwired/stimulus"
-import { prefersReducedMotion, motionDuration, motionTransition } from "controllers/flat_pack/reduced_motion"
+import { playCollapseExit } from "controllers/flat_pack/reduced_motion"
 
 export default class extends Controller {
   static targets = ["chip"]
@@ -68,19 +68,7 @@ export default class extends Controller {
       this.element.remove()
     }
 
-    if (prefersReducedMotion()) {
-      finish()
-      return
-    }
-
-    this.chipTarget.style.transition = motionTransition(
-      ["opacity", "transform"],
-      { duration: "base", easing: "exit" }
-    )
-    this.chipTarget.style.opacity = "0"
-    this.chipTarget.style.transform = "scale(0.8)"
-
-    setTimeout(finish, motionDuration("base"))
+    playCollapseExit(this.chipTarget, { axis: "both", onHidden: finish })
   }
 
   async performRemoveRequest() {
