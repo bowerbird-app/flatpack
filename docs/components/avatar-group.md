@@ -46,6 +46,7 @@ None.
 - `max` applies to visible member avatars, not the overall rendered circle count.
 - Components such as `FlatPack::Chat::InboxRow::Component` may pass a smaller `max` value when they need the overflow avatar to fit inside a stricter overall display cap.
 - Hover raises the member (`hover:!z-[999]` / `focus-within:!z-[999]`) and keeps full opacity (`hover:!opacity-100`). Members do not scale on hover; a scale-up shifts the stack.
+- Member and overflow slots are `flex items-center leading-none` so initials and `+N` circles sit on the same row as photos. The group itself is `inline-flex`. Photo avatars paint the image as `block` so it does not sit on the text baseline. Avatar `leading-none` comes after size classes so Tailwind Merge keeps it.
 
 ## Accessibility
 - Individual avatars inherit avatar accessibility behavior (image `alt`, initials fallback).

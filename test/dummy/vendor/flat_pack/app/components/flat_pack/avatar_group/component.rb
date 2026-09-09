@@ -52,7 +52,19 @@ module FlatPack
       end
 
       def group_classes
-        classes("flex items-center", OVERLAP_CLASSES.fetch(@overlap))
+        classes("inline-flex items-center", OVERLAP_CLASSES.fetch(@overlap))
+      end
+
+      def member_slot_classes
+        classes(slot_classes, "focus-within:!z-[999]")
+      end
+
+      def overflow_slot_classes
+        slot_classes
+      end
+
+      def slot_classes
+        "relative flex items-center leading-none hover:!z-[999]"
       end
 
       def render_avatars
@@ -76,7 +88,7 @@ module FlatPack
         styles << "margin-left: #{overlap_margin}" if index.positive?
 
         content_tag(:div,
-          class: "relative hover:!z-[999] focus-within:!z-[999]",
+          class: member_slot_classes,
           style: styles.join("; ")) do
           render_avatar_content(avatar_attrs)
         end
@@ -105,7 +117,7 @@ module FlatPack
 
       def render_overflow
         content_tag(:div,
-          class: "relative hover:!z-[999]",
+          class: overflow_slot_classes,
           style: overflow_styles) do
           render_overflow_content
         end

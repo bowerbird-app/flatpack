@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Avatar Group hover no longer scales members (`hover:scale-110`). Hover still lifts z-index and keeps full opacity so stacked faces stay readable.
+- Avatar Group initials and overflow (`+N`) circles sit on the same row as photos. Slots are `flex items-center leading-none`, and avatar images are `display: block`.
 - Chat sent and received reveal trays use `duration-[var(--duration-fast)]` instead of Tailwind `duration-150`, so `prefers-reduced-motion` token collapse applies.
 
 ### Changed
@@ -24,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Upgrade notes
 - Hosts that copied Avatar Group `hover:scale-110` / `transition-transform` should drop them. Keep `hover:!opacity-100` and the wrapper `hover:!z-[999]`.
+- Hosts that copied Avatar Group slots as `relative` only should use `relative flex items-center leading-none`. Put `leading-none` after size/`text-*` classes so Tailwind Merge keeps it. Avatar `<img>` should be `block`.
 - Hosts that copied chat reveal-tray `duration-150` should switch to `duration-[var(--duration-fast)]`. Rebuild host Tailwind if you `@import` kit sources and need the arbitrary duration class generated.
 
 ## [0.1.173] - 2026-09-08
