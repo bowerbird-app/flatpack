@@ -5,6 +5,7 @@ const DURATION_MS = {
   slow: 300
 }
 const OVERLAY_OFFSET_PX = 4
+const overlayHideTimeouts = new WeakMap()
 
 export function prefersReducedMotion() {
   return Boolean(globalThis.matchMedia?.(QUERY).matches)
@@ -56,10 +57,22 @@ export function overlayEnterOffset(placement) {
   }
 }
 
+export function cancelOverlayHide(element) {
+  if (!element) return false
+
+  const timeoutId = overlayHideTimeouts.get(element)
+  if (timeoutId == null) return false
+
+  globalThis.clearTimeout(timeoutId)
+  overlayHideTimeouts.delete(element)
+  return true
+}
+
 export function playOverlayEnter(element, { placement = "bottom", interrupt = false, beforeAnimate } = {}) {
+  const resume = interrupt || cancelOverlayHide(element)
   element.classList.remove("hidden")
 
-  if (!interrupt) {
+  if (!resume) {
     element.style.transition = "none"
     element.style.opacity = "0"
     element.style.transform = "none"
@@ -87,6 +100,7 @@ export function playOverlayEnter(element, { placement = "bottom", interrupt = fa
 }
 
 export function playOverlayExit(element, { placement = "bottom", onHidden } = {}) {
+  cancelOverlayHide(element)
   element.style.transition = motionTransition(
     ["opacity", "transform"],
     { duration: "base", easing: "exit" }
@@ -94,10 +108,13 @@ export function playOverlayExit(element, { placement = "bottom", onHidden } = {}
   element.style.opacity = "0"
   element.style.transform = prefersReducedMotion() ? "none" : overlayEnterOffset(placement)
 
-  return globalThis.setTimeout(() => {
+  const timeoutId = globalThis.setTimeout(() => {
+    overlayHideTimeouts.delete(element)
     element.classList.add("hidden")
     onHidden?.()
   }, motionDuration("base"))
+  overlayHideTimeouts.set(element, timeoutId)
+  return timeoutId
 }
 
 function readDurationToken(token) {

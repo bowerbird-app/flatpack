@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-import { playOverlayEnter, playOverlayExit } from "controllers/flat_pack/reduced_motion"
+import { playOverlayEnter, playOverlayExit, cancelOverlayHide } from "controllers/flat_pack/reduced_motion"
 
 export default class extends Controller {
   static targets = ["trigger", "dropdown", "hiddenInput", "hiddenInputs", "searchInput", "optionsList", "chevron", "chip", "placeholder", "chipsContainer", "searchStatus", "searchHint", "loadingState", "emptyState", "nestedCheckbox"]
@@ -26,14 +26,13 @@ export default class extends Controller {
     this.syncSelectedState()
     this.setSearchState(this.searchModeValue === "remote" ? "hint" : "idle")
     this.isOpen = false
-    this.hideTimeout = null
 
     this.handleOutsideClick = this.handleOutsideClick.bind(this)
     document.addEventListener("click", this.handleOutsideClick)
   }
 
   disconnect() {
-    this.clearHideTimeout()
+    cancelOverlayHide(this.dropdownTarget)
     document.removeEventListener("click", this.handleOutsideClick)
 
     if (this.debounceTimer) {
@@ -57,12 +56,10 @@ export default class extends Controller {
   }
 
   open() {
-    const interrupt = Boolean(this.hideTimeout)
-    this.clearHideTimeout()
     this.isOpen = true
     this.triggerTarget.setAttribute("aria-expanded", "true")
     this.chevronTarget.style.transform = "rotate(180deg)"
-    playOverlayEnter(this.dropdownTarget, { placement: "bottom", interrupt })
+    playOverlayEnter(this.dropdownTarget, { placement: "bottom" })
 
     if (this.searchableValue && this.hasSearchInputTarget) {
       this.searchInputTarget.focus()
@@ -81,11 +78,7 @@ export default class extends Controller {
     this.isOpen = false
     this.triggerTarget.setAttribute("aria-expanded", "false")
     this.chevronTarget.style.transform = "rotate(0deg)"
-    this.clearHideTimeout()
-    this.hideTimeout = playOverlayExit(this.dropdownTarget, {
-      placement: "bottom",
-      onHidden: () => { this.hideTimeout = null }
-    })
+    playOverlayExit(this.dropdownTarget, { placement: "bottom" })
 
     if (this.hasSearchInputTarget) {
       this.searchInputTarget.value = ""
@@ -101,13 +94,6 @@ export default class extends Controller {
     if (!this.element.contains(event.target)) {
       this.close()
     }
-  }
-
-  clearHideTimeout() {
-    if (!this.hideTimeout) return
-
-    clearTimeout(this.hideTimeout)
-    this.hideTimeout = null
   }
 
   selectOption(event) {

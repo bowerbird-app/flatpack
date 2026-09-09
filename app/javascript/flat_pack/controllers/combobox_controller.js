@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-import { playOverlayEnter, playOverlayExit } from "controllers/flat_pack/reduced_motion"
+import { playOverlayEnter, playOverlayExit, cancelOverlayHide } from "controllers/flat_pack/reduced_motion"
 
 export default class extends Controller {
   static targets = ["input", "value", "list", "option", "empty"]
@@ -8,23 +8,20 @@ export default class extends Controller {
   connect() {
     this.openList = false
     this.activeIndex = -1
-    this.hideTimeout = null
     this.handleOutside = this.handleOutside.bind(this)
     document.addEventListener("mousedown", this.handleOutside)
   }
 
   disconnect() {
-    this.clearHideTimeout()
+    cancelOverlayHide(this.listTarget)
     document.removeEventListener("mousedown", this.handleOutside)
   }
 
   open() {
     if (this.openList) return
-    const interrupt = Boolean(this.hideTimeout)
-    this.clearHideTimeout()
     this.openList = true
     this.inputTarget.setAttribute("aria-expanded", "true")
-    playOverlayEnter(this.listTarget, { placement: "bottom", interrupt })
+    playOverlayEnter(this.listTarget, { placement: "bottom" })
     this.applyFilter()
   }
 
@@ -34,11 +31,7 @@ export default class extends Controller {
     this.inputTarget.setAttribute("aria-expanded", "false")
     this.activeIndex = -1
     this.clearActive()
-    this.clearHideTimeout()
-    this.hideTimeout = playOverlayExit(this.listTarget, {
-      placement: "bottom",
-      onHidden: () => { this.hideTimeout = null }
-    })
+    playOverlayExit(this.listTarget, { placement: "bottom" })
   }
 
   filter() {
@@ -136,12 +129,5 @@ export default class extends Controller {
       option.classList.remove("bg-[var(--list-item-hover-background-color)]")
     })
     this.inputTarget.removeAttribute("aria-activedescendant")
-  }
-
-  clearHideTimeout() {
-    if (!this.hideTimeout) return
-
-    clearTimeout(this.hideTimeout)
-    this.hideTimeout = null
   }
 }

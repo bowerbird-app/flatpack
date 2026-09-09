@@ -69,9 +69,10 @@ function loadController() {
   const transformedSource = source
     .replace('import { Controller } from "@hotwired/stimulus"', 'class Controller {}')
     .replace(
-      'import { playOverlayEnter, playOverlayExit } from "controllers/flat_pack/reduced_motion"',
+      'import { playOverlayEnter, playOverlayExit, cancelOverlayHide } from "controllers/flat_pack/reduced_motion"',
       `function playOverlayEnter(element) { element.classList.remove("hidden") }
-function playOverlayExit(element, options = {}) { element.classList.add("hidden"); options.onHidden?.(); return 0 }`
+function playOverlayExit(element, options = {}) { element.classList.add("hidden"); options.onHidden?.(); return 0 }
+function cancelOverlayHide() {}`
     )
     .replace('export default class extends Controller', 'class ComboboxController extends Controller') + '\nmodule.exports = ComboboxController\n'
 

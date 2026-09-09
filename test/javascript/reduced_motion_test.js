@@ -8,7 +8,7 @@ function loadReducedMotion(matchMedia, extras = {}) {
   const filePath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'controllers', 'reduced_motion.js')
   const source = fs.readFileSync(filePath, 'utf8')
   const transformedSource = source.replaceAll('export function ', 'function ') + `
-module.exports = { prefersReducedMotion, motionDuration, motionTransition, overlayOrigin, overlayEnterOffset, playOverlayEnter, playOverlayExit }
+module.exports = { prefersReducedMotion, motionDuration, motionTransition, overlayOrigin, overlayEnterOffset, playOverlayEnter, playOverlayExit, cancelOverlayHide }
 `
 
   const context = {
@@ -17,6 +17,8 @@ module.exports = { prefersReducedMotion, motionDuration, motionTransition, overl
     matchMedia,
     requestAnimationFrame: extras.requestAnimationFrame || ((callback) => callback()),
     setTimeout: extras.setTimeout || ((callback) => { callback(); return 1 }),
+    clearTimeout: extras.clearTimeout || (() => {}),
+    WeakMap,
     document: extras.document
   }
 
@@ -152,6 +154,66 @@ test('playOverlayEnter runs beforeAnimate and keeps in-flight styles when interr
 
   assert.equal(element.style.opacity, '1')
   assert.equal(element.style.transform, 'none')
+})
+
+test('playOverlayEnter resumes when a hide is still in flight', () => {
+  let delayed = null
+  const frames = []
+  const { playOverlayEnter, playOverlayExit } = loadReducedMotion(media(false), {
+    requestAnimationFrame: (callback) => frames.push(callback),
+    setTimeout: (callback, ms) => {
+      delayed = { callback, ms }
+      return 9
+    },
+    clearTimeout: () => { delayed = null }
+  })
+  const element = overlayElement()
+  element.classList.remove('hidden')
+  let hiddenCalls = 0
+
+  playOverlayExit(element, {
+    placement: 'bottom',
+    onHidden: () => { hiddenCalls += 1 }
+  })
+
+  assert.equal(element.style.opacity, '0')
+  assert.equal(delayed.ms, 200)
+
+  playOverlayEnter(element, { placement: 'bottom' })
+
+  assert.equal(delayed, null)
+  assert.equal(element.classList.contains('hidden'), false)
+  assert.equal(element.style.opacity, '0')
+
+  frames.forEach((callback) => callback())
+
+  assert.equal(element.style.opacity, '1')
+  assert.equal(hiddenCalls, 0)
+})
+
+test('cancelOverlayHide prevents a pending hide', () => {
+  let delayed = null
+  const { playOverlayExit, cancelOverlayHide } = loadReducedMotion(media(false), {
+    setTimeout: (callback, ms) => {
+      delayed = { callback, ms }
+      return 4
+    },
+    clearTimeout: () => { delayed = null }
+  })
+  const element = overlayElement()
+  element.classList.remove('hidden')
+  let hiddenCalls = 0
+
+  playOverlayExit(element, {
+    placement: 'bottom',
+    onHidden: () => { hiddenCalls += 1 }
+  })
+
+  assert.equal(cancelOverlayHide(element), true)
+  assert.equal(delayed, null)
+  assert.equal(element.classList.contains('hidden'), false)
+  assert.equal(hiddenCalls, 0)
+  assert.equal(cancelOverlayHide(element), false)
 })
 
 test('playOverlayExit fades out then hides after the token duration', () => {

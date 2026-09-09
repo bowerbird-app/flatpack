@@ -10,9 +10,10 @@ function loadController(overrides = {}) {
   const transformedSource = source
     .replace('import { Controller } from "@hotwired/stimulus"', 'class Controller {}')
     .replace(
-      'import { playOverlayEnter, playOverlayExit } from "controllers/flat_pack/reduced_motion"',
+      'import { playOverlayEnter, playOverlayExit, cancelOverlayHide } from "controllers/flat_pack/reduced_motion"',
       `function playOverlayEnter(element, options = {}) { element.classList.remove("hidden"); options.beforeAnimate?.() }
-function playOverlayExit(element, options = {}) { element.classList.add("hidden"); options.onHidden?.(); return 0 }`
+function playOverlayExit(element, options = {}) { element.classList.add("hidden"); options.onHidden?.(); return 0 }
+function cancelOverlayHide() {}`
     )
     .replace('export default class extends Controller', 'class FlatpackDatePickerController extends Controller') + '\nmodule.exports = FlatpackDatePickerController\n'
 
@@ -157,7 +158,6 @@ function pickerWithPanel() {
   controller.restorePanelParent = () => {}
   controller.defaultViewMode = () => 'calendar'
   controller.committed = {}
-  controller.hideTimeout = null
   controller.triggerTarget = {
     value: '',
     attributes: {},
