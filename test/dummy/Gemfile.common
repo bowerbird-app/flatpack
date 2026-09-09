@@ -18,7 +18,8 @@ gem "recording_studio_site_settings", github: "bowerbird-app/RecordingStudio_sit
 gem "recording_studio_admin", github: "bowerbird-app/RecordingStudio_admin", tag: "v2.0.2"
 gem "recording_studio_api", github: "bowerbird-app/RecordingStudio_api", tag: "v0.5.4"
 gem "recording_studio_oauth", github: "bowerbird-app/RecordingStudio_Oauth", tag: "v0.1.0"
-gem "recording_studio_mcp", github: "bowerbird-app/RecordingStudio_MCP", tag: "v0.1.0"
+# Temporary test pin until RecordingStudio_MCP v0.3.0 is tagged (MCP PR #4).
+gem "recording_studio_mcp", github: "bowerbird-app/RecordingStudio_MCP", branch: "cursor/mcp-endpoint-tools-c4da"
 gem "recording_studio_root_switchable", github: "bowerbird-app/RecordingStudio_root_switchable", tag: "v0.5.1"
 
 # Asset pipeline and frontend

@@ -80,6 +80,20 @@ class FlatpackComponentsApiTest < ActionDispatch::IntegrationTest
     assert_empty RecordingStudioApi.api_recordable_types(api: "public")
   end
 
+  test "MCP tool surface lists catalog endpoints without tree tools" do
+    skip "Recording Studio MCP tools not in this bundle" unless defined?(RecordingStudioMcp::ToolSurface)
+
+    surface = RecordingStudioMcp::ToolSurface.for(api: "public")
+    names = surface.tool_names
+
+    assert surface.endpoints_enabled?
+    refute surface.tree_enabled?
+    assert_includes names, "flatpack_components"
+    assert_includes names, "flatpack_component"
+    refute_includes names, "list"
+    refute_includes names, "describe"
+  end
+
   test "OpenAPI lists the catalog under Endpoints and omits tree resources" do
     document = RecordingStudioApi::Services::OpenapiDocument.call
     paths = document.fetch(:paths)

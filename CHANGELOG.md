@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Dummy `recording_studio_api` pin is `v0.5.4` so named endpoints are available.
 - Dummy OpenAPI title is **FlatPack Component Catalog**; only the two catalog `register_endpoint` routes are exposed.
+- Dummy temporarily pins `recording_studio_mcp` to branch `cursor/mcp-endpoint-tools-c4da` (pre-tag `0.3.0`) so ChatGPT can exercise endpoint tools before MCP PR #4 merges. Switch back to a tagged release when `v0.3.0` ships.
 - Bumped the gem version to `0.1.178`.
 
 ### Upgrade notes
