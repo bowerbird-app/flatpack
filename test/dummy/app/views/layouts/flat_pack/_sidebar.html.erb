@@ -30,21 +30,19 @@
         active: request.path.start_with?("/admin")
       ) %>
 
+      <%= render FlatPack::Sidebar::Item::Component.new(
+        text: "Recording tree",
+        href: studio_recording_tree_path,
+        icon: :folder,
+        active: request.path == studio_recording_tree_path
+      ) %>
+
       <% if defined?(RecordingStudioOauth) %>
         <%= render FlatPack::Sidebar::Item::Component.new(
           text: "OAuth connected apps",
           href: recording_studio_oauth.connected_apps_path,
           icon: :inbox,
           active: request.path.start_with?(recording_studio_oauth.connected_apps_path)
-        ) %>
-      <% end %>
-
-      <% if defined?(RecordingStudioUser) && user_signed_in? %>
-        <%= render FlatPack::Sidebar::Item::Component.new(
-          text: "My profile",
-          href: recording_studio_users.profile_path,
-          icon: :user,
-          active: request.path.start_with?(recording_studio_users.profile_path)
         ) %>
       <% end %>
     </nav>

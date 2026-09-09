@@ -40,6 +40,7 @@ Rails.application.routes.draw do
     recording_studio_admin_for :admin, at: "/admin", root_section: :root
 
     get "studio", to: "studio#index", as: :studio
+    get "studio/recording_tree", to: "recording_trees#index", as: :studio_recording_tree
   else
     # Root gem suite boots dummy without the Recording Studio host gems.
     devise_for :users
