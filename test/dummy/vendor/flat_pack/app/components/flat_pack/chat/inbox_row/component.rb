@@ -52,8 +52,7 @@ module FlatPack
             href: @href,
             hover: @hover,
             active: @active,
-            link_arguments: link_arguments,
-            class: "overflow-hidden"
+            link_arguments: link_arguments
           }.merge(@system_arguments)
         end
 
@@ -71,7 +70,7 @@ module FlatPack
         end
 
         def trailing_content
-          content_tag(:div, class: "min-w-13 flex flex-col items-end gap-1") do
+          content_tag(:div, class: "min-w-13 shrink-0 flex flex-col items-end gap-1 ps-1") do
             safe_join([
               content_tag(:span, time_label, class: "text-xs text-(--surface-muted-content-color)"),
               unread_badge
@@ -82,7 +81,7 @@ module FlatPack
         def unread_badge
           return unless @unread_count.positive?
 
-          render FlatPack::Badge::Component.new(text: @unread_count.to_s, style: :info, size: :sm)
+          render FlatPack::Badge::Component.new(text: @unread_count.to_s, style: :primary, size: :sm, class: "fp-tabular-nums")
         end
 
         def time_label

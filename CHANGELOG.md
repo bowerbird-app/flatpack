@@ -16,7 +16,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.178] - 2026-09-09
 
 ### Added
+- Dummy app hosts Recording Studio API, OAuth Connect, MCP, Admin, and Users on Postgres.
+- Signed-in host home at `/studio` with Connected apps and Registered apps entry points.
+- Docs for dummy Recording Studio wiring (`docs/recording_studio_dummy.md`).
 - `FlatPack::ComponentCatalog` lists public ViewComponents and shows initialize parameters. Hosts can serve those hashes from Recording Studio API `register_endpoint` without a fake recordable.
+
+### Fixed
+- Dummy root switcher includes the Admin root so staff can open Admin screens.
+- `/studio` **Registered apps** switches the current root to Admin and opens `/admin/screens/oauth_clients`.
 
 ### Changed
 - Dummy `recording_studio_api` pin is `v0.5.4` so named endpoints are available.
@@ -27,35 +34,91 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dummy and other hosts that want `GET flatpack/components` need `recording_studio_api` `0.5.4` or newer, then register the two endpoints. Bearer auth still applies. Unknown names should raise `RecordingStudioApi::NotFoundError`.
 - `docs/components/manifest.yml` stays the docs and AI reading order. The running inventory is the catalog methods (and the dummy HTTP routes that wrap them).
 
+## [0.1.177] - 2026-09-09
+
+### Fixed
+- Ghost and secondary buttons press with a 1px translate and an inset shadow. All buttons ease colour, border, shadow, and that press on `--duration-fast` / `--easing-standard`. The hit target does not scale.
+- Alert dismiss, chip remove, and badge remove collapse height (chips and badges also collapse width) on `--duration-slow` / `--easing-exit`, so neighbours slide in instead of jumping after a scale-out. Reduced motion snaps.
+
+### Changed
+- Bumped the gem version to `0.1.177`.
+
+### Upgrade notes
+- Buttons use `.fp-button`. Ghost and secondary also use `.fp-button-flat` for the inset press. Hosts that copied button colour transitions without `ease-[var(--easing-standard)]` should add it. Do not add `active:scale-*`.
+- Chip and badge colour uses `duration-[var(--duration-fast)] ease-[var(--easing-standard)]`, not Tailwind `duration-base`.
+- Alert, chip, and badge controllers call `playCollapseExit` from `controllers/flat_pack/reduced_motion`. Hide waits are `--duration-slow` (0ms under reduced motion). Do not keep a parallel scale-out.
+
+## [0.1.176] - 2026-09-09
+
+### Fixed
+- Spinner keeps a loading signal under `prefers-reduced-motion`. `.fp-spinner` spins by default and opacity-pulses when motion is reduced, instead of `motion-reduce:animate-none` which froze the mark.
+- Password show/hide icons crossfade on `--duration-fast` / `--easing-standard` in a fixed 1rem box. The control uses `aria-pressed` and “Show password” / “Hide password”. Reduced motion snaps because the duration tokens collapse to `0ms`.
+
+### Changed
+- Bumped the gem version to `0.1.176`.
+
+### Upgrade notes
+- Spinner class is `.fp-spinner`, not Tailwind `animate-spin motion-reduce:animate-none`. Hosts that copied those utilities should switch to the kit class. Pulse duration is 1.2s and is not `--duration-*`, so it does not collapse to `0ms`.
+- Password toggle no longer uses `hidden` on the unused eye icon. Keep both icons in `.fp-password-toggle-icons` and drive visibility with `aria-pressed`. Hide waits are not involved; opacity follows `--duration-fast`.
+
+## [0.1.175] - 2026-09-09
+
+### Added
+- Search `size:` prop with `:sm`, `:md` (default), and `:lg`. Medium keeps the previous field height and type. Padding uses `--search-padding-y-*` and `--search-padding-inline-*` tokens so themes can tune each size.
+
+### Changed
+- Search result rows use `px-4 py-4` instead of `px-3 py-2`.
+- Bumped the gem version to `0.1.175`.
+
+### Upgrade notes
+- Existing Search calls keep the medium look with no changes. Pass `size: :sm` or `size: :lg` when you want a smaller or larger field. Hosts that hard-coded `py-2` / `pl-10` / `pr-10` / `text-sm` on Search markup should switch to the size prop or the new padding tokens. Rebuild host Tailwind if you `@import` kit sources and need the new arbitrary padding classes generated.
+- Hosts that copied Search result link classes should switch from `px-3 py-2` to `px-4 py-4`.
+
+## [0.1.174] - 2026-09-08
+
+### Fixed
+- Avatar Group hover no longer scales members (`hover:scale-110`). Hover still lifts z-index and keeps full opacity so stacked faces stay readable.
+- Avatar Group initials and overflow (`+N`) circles sit on the same row as photos. Slots are `flex items-center leading-none`, and avatar images are `display: block`.
+- Chat sent and received reveal trays use `duration-[var(--duration-fast)]` instead of Tailwind `duration-150`, so `prefers-reduced-motion` token collapse applies.
+- Searchable Select, Combobox, and the FlatPack date picker open and close like Popover: opacity plus a 4px offset on `--duration-base` / `--easing-enter` / `--easing-exit`. They share `playOverlayEnter` / `playOverlayExit`. The helper cancels an in-flight hide on the same element. Reduced motion skips the offset and hides on the next turn.
+
+### Changed
+- Bumped the gem version to `0.1.174`.
+
+### Upgrade notes
+- Hosts that copied Avatar Group `hover:scale-110` / `transition-transform` should drop them. Keep `hover:!opacity-100` and the wrapper `hover:!z-[999]`.
+- Hosts that copied Avatar Group slots as `relative` only should use `relative flex items-center leading-none`. Put `leading-none` after size/`text-*` classes so Tailwind Merge keeps it. Avatar `<img>` should be `block`.
+- Hosts that copied chat reveal-tray `duration-150` should switch to `duration-[var(--duration-fast)]`. Rebuild host Tailwind if you `@import` kit sources and need the arbitrary duration class generated.
+- Hosts that snap `hidden` on searchable Select, Combobox, or date picker panels should use `playOverlayEnter` / `playOverlayExit` from `controllers/flat_pack/reduced_motion`. The helper owns the hide timeout; do not keep a parallel `hideTimeout` on the controller. Hide is delayed by `--duration-base` (0ms under reduced motion). Date picker still sets `display: none` after the exit finishes because the panel also uses `md:flex`.
+
 ## [0.1.173] - 2026-09-08
 
 ### Fixed
-- Dummy root switcher includes the Admin root so staff can open `/admin` and `/admin/sections/oauth_apps`. With a workspace selected, Admin still returns an empty `403` by design.
-- `/studio` **Registered apps** switches the current root to Admin and opens `/admin/screens/oauth_clients`, so the button no longer lands on a blank `403`.
-- Dummy development allows Cloudflare quick-tunnel hosts (`*.trycloudflare.com`). Do not set blanket `assume_ssl` in development — it broke local `http://127.0.0.1` sign-in redirects; tunnels still get `https://` via `X-Forwarded-Proto`.
-- OAuth Connect authorize layout disables Turbo so Authorize can full-page redirect to ChatGPT (avoids CORS/`Failed to fetch` on the callback).
-- Dummy Registered apps table includes **Edit** so staff can change an app's name and redirect URLs without recreating the client.
+- Range input paints track, fill, and thumb in kit CSS (`.fp-range-input` and `--range-*` tokens) so the native slider no longer falls back to OS `accent-color` chrome.
+
+### Changed
+- Bumped the gem version to `0.1.173`.
 
 ### Upgrade notes
-- After pulling, restart the dummy app so `recording_studio_root_switchable` picks up Admin in `available_roots`. Prefer **Registered apps** from `/studio` for the OauthClient list; other Admin URLs still need the Admin root selected.
+- Range fill/thumb follow `--range-track-color`, `--range-fill-color`, `--range-thumb-color`, `--range-thumb-border-color`, `--range-thumb-shadow`, `--range-thumb-size`, and `--range-track-height`, not Tailwind `accent-[var(--color-primary)]`. The input still is `<input type="range">`. `--range-progress` is a runtime percent on the input, not a theme token. Rebuild host Tailwind only if you `@import` `flat_pack/application`; `stylesheet_link_tag` hosts pick the kit class up on reload.
 
 ## [0.1.172] - 2026-09-08
 
-### Added
-- Dummy app hosts Recording Studio API, OAuth Connect, MCP, Admin, and Users on Postgres.
-- Signed-in host home at `/studio` (post-login landing) with links into Admin and account.
-- Docs for dummy Recording Studio wiring (`docs/recording_studio_dummy.md`).
+### Fixed
+- Drawer overlays move onto `document.body` while open and sit at `z-[70]`, so a left drawer no longer paints under `SidebarLayout`. A slot marker holds the original place so Stimulus disconnect-on-move does not put the overlay back.
+- Progress fill paint lives in kit CSS (`.fp-progress-fill` and `--progress-fill-color`), so the default bar is no longer missing `.bg-primary`.
+- Stepper completed markers use `.fp-stepper-marker` and `--stepper-complete-text-color`, so checks stay visible when the Tailwind arbitrary fill class is not in the host sheet.
+- Ordered list rows with `icon:` keep both the decimal marker and a content-coloured `.flat-pack-list-item-icon`.
+- Chat inbox unread counts use the primary badge, tabular nums, and no `overflow-hidden` clip. The dummy inbox label is sentence-case **Inbox**.
 
 ### Changed
-- Dummy `database.yml` uses Postgres (`flatpack_dummy_development` / `flatpack_dummy_test`).
-- Public `/demo` stays open; Admin, OAuth, API, and MCP stay authenticated.
-- After Users sign-in / sign-up, redirect into `/studio` instead of the public demo root.
 - Bumped the gem version to `0.1.172`.
 
 ### Upgrade notes
-- The deployable dummy app now requires Postgres and Redis. Set `DATABASE_URL` (or `DB_*`) on App Platform.
-- Recording Studio host gems need Ruby `>= 3.3`. FlatPack itself still supports Ruby `>= 3.2`.
-- Run `cd test/dummy && bundle install && bin/rails db:prepare db:seed` after pulling.
+- Drawer markup stays in place until open. While open, the overlay is a child of `document.body` and returns to its original parent on close. Hosts must not assume the original parent while the panel is visible.
+- Progress fill is `.fp-progress-fill` / `--progress-fill-color` (and `--success` / `--warning` / `--danger` modifiers), not `bg-primary`. Rebuild host Tailwind only if you `@import` `flat_pack/application`; `stylesheet_link_tag` hosts pick the kit class up on reload.
+- Stepper complete/current/upcoming paint is kit CSS. Hosts that copied the old Tailwind fill classes can drop them. Override `--stepper-complete-text-color` if the check should not follow `--color-success-text`.
+- Chat inbox unread badges use `:primary` instead of `:info`. Rows no longer set `overflow-hidden`.
 
 ## [0.1.171] - 2026-09-08
 

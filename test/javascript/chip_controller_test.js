@@ -18,8 +18,8 @@ function loadChipController(overrides = {}) {
   const transformedSource = source
     .replace('import { Controller } from "@hotwired/stimulus"', 'class Controller {}')
     .replace(
-      'import { prefersReducedMotion, motionDuration } from "controllers/flat_pack/reduced_motion"',
-      'function prefersReducedMotion() { return Boolean(globalThis.matchMedia?.("(prefers-reduced-motion: reduce)").matches) }\nfunction motionDuration(token) { return prefersReducedMotion() ? 0 : (token === "slow" ? 300 : 200) }'
+      'import { playCollapseExit } from "controllers/flat_pack/reduced_motion"',
+      'function playCollapseExit(element, { onHidden } = {}) { onHidden?.() }'
     )
     .replace('export default class extends Controller', 'class ChipController extends Controller') + '\nmodule.exports = ChipController\n'
 

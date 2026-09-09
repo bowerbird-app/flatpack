@@ -44,7 +44,7 @@ module FlatPack
 
       def spinner_classes
         classes(
-          "animate-spin motion-reduce:animate-none",
+          "fp-spinner",
           SIZES.fetch(@size)
         )
       end

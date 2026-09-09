@@ -30,7 +30,7 @@ Use List when grouped items need consistent spacing and optional active-item sel
 
 | name | type | default | required | description |
 |---|---|---|---|---|
-| `icon` | Symbol/String | `nil` | no | Leading icon; string values starting with `<svg` render inline SVG. |
+| `icon` | Symbol/String | `nil` | no | Leading icon in `.flat-pack-list-item-icon` (content colour). String values starting with `<svg` render inline SVG. Ordered lists show the decimal marker and this icon together. |
 | `leading` | String | `nil` | no | Custom leading content text. |
 | `trailing` | String | `nil` | no | Trailing content text. |
 | `href` | String | `nil` | no | Optional link URL. Sanitized and validated; unsafe URLs raise `ArgumentError`. |
@@ -48,7 +48,7 @@ None.
 - Selectable behavior via `selectable: true`.
 - Orderable behavior via `orderable: true` and `orderable_url:`.
 
-Ordered markers use `--list-marker-color`, `--list-marker-min-width`, and `--list-marker-gap`.
+Ordered markers use `--list-marker-color`, `--list-marker-min-width`, and `--list-marker-gap`. Leading icons use `--surface-content-color` via `.flat-pack-list-item-icon` so they stay visible next to the number.
 
 ## Example
 ```erb

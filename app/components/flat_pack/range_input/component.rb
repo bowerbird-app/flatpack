@@ -95,6 +95,7 @@ module FlatPack
           step: @step,
           disabled: @disabled,
           class: input_classes,
+          style: "--range-progress: #{range_progress_percent.round(4)}%",
           data: {
             "flat-pack--range-input-target": "input",
             action: "input->flat-pack--range-input#update change->flat-pack--range-input#update"
@@ -112,7 +113,14 @@ module FlatPack
       end
 
       def input_classes
-        "w-full h-2 bg-[var(--surface-muted-background-color)] rounded-full appearance-none cursor-pointer accent-[var(--color-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        "fp-range-input"
+      end
+
+      def range_progress_percent
+        span = @max.to_f - @min.to_f
+        return 0.0 if span <= 0
+
+        (((@value.to_f - @min.to_f) / span) * 100).clamp(0.0, 100.0)
       end
 
       def validate_name!

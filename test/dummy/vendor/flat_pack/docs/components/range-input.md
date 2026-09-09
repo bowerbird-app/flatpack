@@ -50,6 +50,12 @@ None.
 - Links `help_text` with `aria-describedby` when present.
 - Supports keyboard slider behavior provided by the browser.
 
+## Styling
+- Kit class: `.fp-range-input` (unlayered so `appearance: none` beats the browser chrome).
+- Tokens: `--range-track-color`, `--range-fill-color`, `--range-thumb-color`, `--range-thumb-border-color`, `--range-thumb-shadow`, `--range-thumb-size`, `--range-track-height`.
+- Fill percent is the runtime custom property `--range-progress` on the input (server-rendered from `value` / `min` / `max`, then kept in sync by Stimulus). Not a theme token.
+- The control stays a native range. Dual-handle filters are a separate pattern, not this component.
+
 ## Dependencies
 - Core install: `rails generate flat_pack:install`
-- Stimulus: `flat-pack--range-input` for live value display updates and `range-input:change` custom events
+- Stimulus: `flat-pack--range-input` for live value display, `--range-progress` fill, and `range-input:change` custom events

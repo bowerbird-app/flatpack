@@ -93,7 +93,7 @@ module FlatPack
         classes(
           "inline-flex items-center gap-1",
           "rounded-full font-medium",
-          "transition-colors duration-base",
+          "transition-[color,background-color,border-color] duration-[var(--duration-fast)] ease-[var(--easing-standard)]",
           VARIANTS.fetch(@style),
           SIZES.fetch(@size)
         )

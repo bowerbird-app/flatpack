@@ -44,6 +44,18 @@ module FlatPack
         assert_selector "a[href='/users']"
       end
 
+      def test_member_and_overflow_slots_are_flex_so_initials_share_the_photo_row
+        items = (1..4).map { |i| {name: "User #{i}", src: "https://example.com/#{i}.jpg"} }
+        render_inline(Component.new(items: items, max: 3))
+
+        html = page.native.to_html
+        slot = "relative flex items-center leading-none hover:!z-[999]"
+
+        assert_includes html, "inline-flex items-center"
+        assert_equal 4, html.scan(slot).size
+        assert_includes html, "focus-within:!z-[999]"
+      end
+
       def test_linked_avatars_keep_full_opacity_on_hover
         items = [
           {name: "User 1", href: "/users/1"},
@@ -53,6 +65,8 @@ module FlatPack
         render_inline(Component.new(items: items))
 
         assert_includes page.native.to_html, "hover:!opacity-100"
+        refute_includes page.native.to_html, "hover:scale-110"
+        refute_includes page.native.to_html, "transition-transform"
       end
 
       def test_renders_with_overlap_styles

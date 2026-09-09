@@ -21,6 +21,8 @@ module FlatPack
           end
 
           assert_includes rendered_content, "flat-pack--chat-message-actions"
+          assert_includes rendered_content, "duration-[var(--duration-fast)]"
+          refute_includes rendered_content, "duration-150"
           assert_text "Edit"
           assert_text "Delete"
         end

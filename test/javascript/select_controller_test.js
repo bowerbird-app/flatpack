@@ -133,6 +133,12 @@ function loadController() {
   const source = fs.readFileSync(filePath, 'utf8')
   const transformedSource = source
     .replace('import { Controller } from "@hotwired/stimulus"', 'class Controller {}')
+    .replace(
+      'import { playOverlayEnter, playOverlayExit, cancelOverlayHide } from "controllers/flat_pack/reduced_motion"',
+      `function playOverlayEnter(element) { element.classList.remove("hidden") }
+function playOverlayExit(element, options = {}) { element.classList.add("hidden"); options.onHidden?.(); return 0 }
+function cancelOverlayHide() {}`
+    )
     .replace('export default class extends Controller', 'class SelectController extends Controller') + '\nmodule.exports = SelectController\n'
 
   const context = {
@@ -150,6 +156,7 @@ function loadController() {
         return String(value)
       }
     },
+    clearTimeout() {},
     Event: class {
       constructor(type, options = {}) {
         this.type = type
@@ -358,4 +365,31 @@ test('flat multiselect selected rows do not use highlighted selected classes', (
   assert.equal(selectedOption.classList.contains('bg-[var(--color-primary)]'), false)
   assert.equal(selectedOption.classList.contains('text-white'), false)
   assert.equal(selectedOption.classList.contains('text-[var(--surface-content-color)]'), true)
+})
+
+test('open unhides the dropdown and close hides it after overlay exit', () => {
+  const controller = buildController()
+  controller.dropdownTarget.classList.add('hidden')
+
+  controller.open()
+
+  assert.equal(controller.dropdownTarget.classList.contains('hidden'), false)
+  assert.equal(controller.triggerTarget.attributes['aria-expanded'], 'true')
+  assert.equal(controller.isOpen, true)
+
+  controller.close()
+
+  assert.equal(controller.dropdownTarget.classList.contains('hidden'), true)
+  assert.equal(controller.triggerTarget.attributes['aria-expanded'], 'false')
+  assert.equal(controller.isOpen, false)
+})
+
+test('close is a no-op when the dropdown is already closed', () => {
+  const controller = buildController()
+  controller.dropdownTarget.classList.add('hidden')
+
+  controller.close()
+
+  assert.equal(controller.dropdownTarget.classList.contains('hidden'), true)
+  assert.equal(controller.isOpen, false)
 })

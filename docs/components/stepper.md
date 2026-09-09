@@ -42,4 +42,5 @@ None.
 
 ## Dependencies
 - `FlatPack::Shared::IconComponent` for completed checks.
-- Tokens: `--stepper-current-color`, `--stepper-complete-color`, `--stepper-upcoming-color`, `--stepper-label-color`, `--stepper-muted-color`.
+- Tokens: `--stepper-current-color`, `--stepper-complete-color`, `--stepper-complete-text-color`, `--stepper-upcoming-color`, `--stepper-label-color`, `--stepper-muted-color`.
+- Kit CSS: `.fp-stepper-marker` paints complete, current, and upcoming from those tokens so the check stays visible without a scanned Tailwind fill class.

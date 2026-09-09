@@ -38,6 +38,19 @@ module FlatPack
 
         assert_match(/at least two labels/, error.message)
       end
+
+      def test_markers_use_kit_paint_class
+        render_inline(Component.new(steps: ["Details", "Review", "Done"], current_step: 2))
+
+        html = page.native.to_html
+
+        assert_includes html, "fp-stepper-marker"
+        refute_includes html, "bg-[var(--stepper-complete-color)]"
+        refute_includes html, "text-[var(--color-success-text)]"
+        assert_selector "li[data-status='complete'] > span.fp-stepper-marker"
+        assert_selector "li[data-status='current'] > span.fp-stepper-marker"
+        assert_selector "li[data-status='upcoming'] > span.fp-stepper-marker"
+      end
     end
   end
 end

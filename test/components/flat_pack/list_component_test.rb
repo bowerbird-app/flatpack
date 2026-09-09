@@ -131,6 +131,17 @@ module FlatPack
         assert_selector "ol.flat-pack-list ul.flat-pack-list > li > span.flat-pack-list-item-marker", count: 1
       end
 
+      def test_ordered_list_keeps_icons_beside_markers
+        first = Item.new(icon: :sun).with_content("Heat the pan").render_in(vc_test_controller.view_context)
+        second = Item.new(icon: :star).with_content("Crack two eggs").render_in(vc_test_controller.view_context)
+        render_inline(Component.new(ordered: true)) { [first, second].join.html_safe }
+
+        assert_selector "ol.flat-pack-list > li > span.flat-pack-list-item-marker", count: 2
+        assert_selector "ol.flat-pack-list > li > span.flat-pack-list-item-icon", count: 2
+        assert_selector "span.flat-pack-list-item-icon svg[data-flat-pack--icon-name-value='sun']"
+        assert_selector "span.flat-pack-list-item-icon svg[data-flat-pack--icon-name-value='star']"
+      end
+
       private
 
       def rendered_items(*labels)
