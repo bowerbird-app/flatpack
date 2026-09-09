@@ -13,18 +13,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-## [0.1.175] - 2026-09-09
+## [0.1.176] - 2026-09-09
 
 ### Fixed
 - Spinner keeps a loading signal under `prefers-reduced-motion`. `.fp-spinner` spins by default and opacity-pulses when motion is reduced, instead of `motion-reduce:animate-none` which froze the mark.
 - Password show/hide icons crossfade on `--duration-fast` / `--easing-standard` in a fixed 1rem box. The control uses `aria-pressed` and “Show password” / “Hide password”. Reduced motion snaps because the duration tokens collapse to `0ms`.
 
 ### Changed
-- Bumped the gem version to `0.1.175`.
+- Bumped the gem version to `0.1.176`.
 
 ### Upgrade notes
 - Spinner class is `.fp-spinner`, not Tailwind `animate-spin motion-reduce:animate-none`. Hosts that copied those utilities should switch to the kit class. Pulse duration is 1.2s and is not `--duration-*`, so it does not collapse to `0ms`.
 - Password toggle no longer uses `hidden` on the unused eye icon. Keep both icons in `.fp-password-toggle-icons` and drive visibility with `aria-pressed`. Hide waits are not involved; opacity follows `--duration-fast`.
+
+## [0.1.175] - 2026-09-09
+
+### Added
+- Search `size:` prop with `:sm`, `:md` (default), and `:lg`. Medium keeps the previous field height and type. Padding uses `--search-padding-y-*` and `--search-padding-inline-*` tokens so themes can tune each size.
+
+### Changed
+- Search result rows use `px-4 py-4` instead of `px-3 py-2`.
+- Bumped the gem version to `0.1.175`.
+
+### Upgrade notes
+- Existing Search calls keep the medium look with no changes. Pass `size: :sm` or `size: :lg` when you want a smaller or larger field. Hosts that hard-coded `py-2` / `pl-10` / `pr-10` / `text-sm` on Search markup should switch to the size prop or the new padding tokens. Rebuild host Tailwind if you `@import` kit sources and need the new arbitrary padding classes generated.
+- Hosts that copied Search result link classes should switch from `px-3 py-2` to `px-4 py-4`.
 
 ## [0.1.174] - 2026-09-08
 

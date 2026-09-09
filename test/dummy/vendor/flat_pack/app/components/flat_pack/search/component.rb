@@ -10,6 +10,36 @@ module FlatPack
         xl: "max-w-xl"
       }.freeze
 
+      # Tailwind CSS scanning requires these classes to be present as string literals.
+      # DO NOT REMOVE - These duplicates ensure CSS generation:
+      # "py-[var(--search-padding-y-sm)]" "pl-[var(--search-padding-inline-sm)]" "pr-[var(--search-padding-inline-sm)]" "text-xs"
+      # "py-[var(--search-padding-y-md)]" "pl-[var(--search-padding-inline-md)]" "pr-[var(--search-padding-inline-md)]" "text-sm"
+      # "py-[var(--search-padding-y-lg)]" "pl-[var(--search-padding-inline-lg)]" "pr-[var(--search-padding-inline-lg)]" "text-base"
+      # "left-2" "left-3" "left-4" "right-2" "right-3" "right-4"
+      SIZES = {
+        sm: "py-[var(--search-padding-y-sm)] pl-[var(--search-padding-inline-sm)] pr-[var(--search-padding-inline-sm)] text-xs",
+        md: "py-[var(--search-padding-y-md)] pl-[var(--search-padding-inline-md)] pr-[var(--search-padding-inline-md)] text-sm",
+        lg: "py-[var(--search-padding-y-lg)] pl-[var(--search-padding-inline-lg)] pr-[var(--search-padding-inline-lg)] text-base"
+      }.freeze
+
+      ICON_SIZES = {
+        sm: :sm,
+        md: :sm,
+        lg: :md
+      }.freeze
+
+      ICON_INSET_CLASSES = {
+        sm: "left-2",
+        md: "left-3",
+        lg: "left-4"
+      }.freeze
+
+      CLEAR_INSET_CLASSES = {
+        sm: "right-2",
+        md: "right-3",
+        lg: "right-4"
+      }.freeze
+
       def initialize(
         placeholder: "Search...",
         name: "q",
@@ -17,6 +47,7 @@ module FlatPack
         search_url: nil,
         items: nil,
         max_width: :md,
+        size: :md,
         min_characters: 2,
         debounce: 250,
         no_results_text: "No results found",
@@ -29,12 +60,14 @@ module FlatPack
         @search_url = search_url.present? ? FlatPack::AttributeSanitizer.sanitize_url(search_url) : nil
         @items = normalize_items(items)
         @max_width = max_width.to_sym
+        @size = size.to_sym
         @min_characters = min_characters
         @debounce = debounce
         @no_results_text = no_results_text
 
         validate_search_url!(search_url) if search_url.present?
         validate_max_width!
+        validate_size!
       end
 
       def call
@@ -54,7 +87,7 @@ module FlatPack
         content_tag(:span, class: icon_wrapper_classes) do
           render FlatPack::Shared::IconComponent.new(
             name: :search,
-            size: :sm
+            size: icon_size
           )
         end
       end
@@ -74,7 +107,7 @@ module FlatPack
           aria: {label: "Clear search"}) do
           render FlatPack::Shared::IconComponent.new(
             name: "x-mark",
-            size: :sm
+            size: icon_size
           )
         end
       end
@@ -118,7 +151,7 @@ module FlatPack
         classes(
           "absolute",
           "inset-y-0",
-          "left-3",
+          ICON_INSET_CLASSES.fetch(@size),
           "flex",
           "items-center",
           "pointer-events-none",
@@ -154,10 +187,7 @@ module FlatPack
       def input_classes
         classes(
           "w-full",
-          "pl-10",
-          "pr-10",
-          "py-2",
-          "text-sm",
+          size_classes,
           "bg-[var(--search-input-background-color)]",
           "text-[var(--search-input-text-color)]",
           "border",
@@ -172,10 +202,18 @@ module FlatPack
         )
       end
 
+      def size_classes
+        SIZES.fetch(@size)
+      end
+
+      def icon_size
+        ICON_SIZES.fetch(@size)
+      end
+
       def clear_button_classes
         classes(
           "absolute",
-          "right-3",
+          CLEAR_INSET_CLASSES.fetch(@size),
           "top-1/2",
           "-translate-y-1/2",
           "h-full",
@@ -265,6 +303,12 @@ module FlatPack
         return if MAX_WIDTH_CLASSES.key?(@max_width)
 
         raise ArgumentError, "Invalid max_width: #{@max_width}. Must be one of: #{MAX_WIDTH_CLASSES.keys.join(", ")}."
+      end
+
+      def validate_size!
+        return if SIZES.key?(@size)
+
+        raise ArgumentError, "Invalid size: #{@size}. Must be one of: #{SIZES.keys.join(", ")}."
       end
     end
   end

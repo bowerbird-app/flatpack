@@ -5,6 +5,50 @@
 <%= render "pages/component_method_variables_table", component: :search %>
 
 <section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Sizes", anchor_link: true, subtitle: "Small, medium (default), and large. Pick the size that matches nearby controls.") %>
+  <div class="rounded-lg border border-[var(--surface-border-color)] p-6 bg-[var(--surface-background-color)] mb-4 space-y-4">
+    <div>
+      <p class="text-xs text-[var(--surface-muted-content-color)] mb-2">Small</p>
+      <%= render FlatPack::Search::Component.new(
+        items: DemoCatalog.searchable_items,
+        placeholder: "Small search...",
+        size: :sm,
+        min_characters: 1,
+        no_results_text: "No demo pages found"
+      ) %>
+    </div>
+    <div>
+      <p class="text-xs text-[var(--surface-muted-content-color)] mb-2">Medium (default)</p>
+      <%= render FlatPack::Search::Component.new(
+        items: DemoCatalog.searchable_items,
+        placeholder: "Medium search...",
+        size: :md,
+        min_characters: 1,
+        no_results_text: "No demo pages found"
+      ) %>
+    </div>
+    <div>
+      <p class="text-xs text-[var(--surface-muted-content-color)] mb-2">Large</p>
+      <%= render FlatPack::Search::Component.new(
+        items: DemoCatalog.searchable_items,
+        placeholder: "Large search...",
+        size: :lg,
+        min_characters: 1,
+        no_results_text: "No demo pages found"
+      ) %>
+    </div>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Search::Component.new(placeholder: "Small search...", size: :sm) %&gt;
+      &lt;%= render FlatPack::Search::Component.new(placeholder: "Medium search...", size: :md) %&gt;
+      &lt;%= render FlatPack::Search::Component.new(placeholder: "Large search...", size: :lg) %&gt;
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Local catalog", anchor_link: true, subtitle: "Filter a list in the browser. Titles beat descriptions, so form finds Forms first.") %>
   <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">
     Pass <code>items:</code> when the list is already in the page. The dummy top nav uses this with <code>DemoCatalog.searchable_items</code>. Try typing <strong>form</strong>.
@@ -83,6 +127,12 @@
         --search-input-text-color: var(--surface-content-color);
         --search-input-placeholder-color: var(--surface-muted-content-color);
         --search-input-focus-ring-color: var(--color-primary);
+        --search-padding-y-sm: 0.375rem;
+        --search-padding-y-md: 0.5rem;
+        --search-padding-y-lg: 0.75rem;
+        --search-padding-inline-sm: 2rem;
+        --search-padding-inline-md: 2.5rem;
+        --search-padding-inline-lg: 3rem;
         --search-dropdown-background-color: var(--surface-background-color);
         --search-dropdown-border-color: var(--surface-border-color);
         --search-dropdown-muted-text-color: var(--surface-muted-content-color);
