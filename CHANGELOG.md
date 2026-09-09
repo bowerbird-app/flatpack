@@ -24,15 +24,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Dummy root switcher includes the Admin root so staff can open Admin screens.
 - `/studio` **Registered apps** switches the current root to Admin and opens `/admin/screens/oauth_clients`.
+- Dummy public API no longer registers Workspace, Folder, Page, or `ping`, so MCP/ChatGPT stop treating the demo tree as FlatPack resources.
+- Dummy forces the public API’s recordable list to the (empty) registry so HTTP and OpenAPI match MCP.
 
 ### Changed
 - Dummy `recording_studio_api` pin is `v0.5.4` so named endpoints are available.
+- Dummy OpenAPI title is **FlatPack Component Catalog**; only the two catalog `register_endpoint` routes are exposed.
 - Bumped the gem version to `0.1.178`.
 
 ### Upgrade notes
 - Call `FlatPack::ComponentCatalog.list` and `.show(name)` from a host initializer. The gem does not mount HTTP routes.
 - Dummy and other hosts that want `GET flatpack/components` need `recording_studio_api` `0.5.4` or newer, then register the two endpoints. Bearer auth still applies. Unknown names should raise `RecordingStudioApi::NotFoundError`.
 - `docs/components/manifest.yml` stays the docs and AI reading order. The running inventory is the catalog methods (and the dummy HTTP routes that wrap them).
+- On this dummy, do not re-add `register_recordable_type_api` for Workspace/Folder/Page if the goal is a catalog-only MCP type enum. Tree models stay for Admin and OAuth roots only.
 
 ## [0.1.177] - 2026-09-09
 

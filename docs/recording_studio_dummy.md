@@ -74,12 +74,16 @@ Host models: `Workspace`, `Folder`, `Page`, `AdminRoot`, plus Users `People` / `
 
 Host-only. These routes live in the dummy initializer and are stripped from the vendored gem snapshot.
 
+The public named API registers **only** these endpoints — not Workspace, Folder, Page, or `ping`. The public API would otherwise mirror every host recordable type; the dummy prepends a registry-only rule so HTTP, OpenAPI, and MCP share an empty type list. Catalog access is the Bearer HTTP routes below (and OpenAPI under `/recording_studio_api`).
+
+MCP tools (`list` / `describe` / …) still only wrap registered recordable types. With none registered, `tools/list` keeps those tool names but the `type` enum is empty — reconnect ChatGPT after deploy so it drops Workspace / Folder / Page. Catalog MCP tools are not wired yet; call the HTTP routes with a Bearer token.
+
 - `GET /recording_studio_api/api/v1/flatpack/components`
 - `GET /recording_studio_api/api/v1/flatpack/components/:name`
 
 Send a Bearer token. The gem builds the JSON with `FlatPack::ComponentCatalog.list` and `.show(name)`. The dummy maps an unknown name to `RecordingStudioApi::NotFoundError` (404). There is no catalog recordable and no Accessible check on a fake recording.
 
-Name accepts `Button::Component`, `Button--Component`, or a `FlatPack::` prefix. MCP can wrap these later. The dummy does not add MCP tools for them.
+Name accepts `Button::Component`, `Button--Component`, or a `FlatPack::` prefix. `Workspace` / `Folder` / `Page` remain host models for Admin, OAuth Connect roots, and the root switcher — they are not API resources on this dummy.
 
 ## Local setup
 

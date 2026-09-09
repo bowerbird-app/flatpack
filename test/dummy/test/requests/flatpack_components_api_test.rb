@@ -16,8 +16,6 @@ class FlatpackComponentsApiTest < ActionDispatch::IntegrationTest
     workspace = Workspace.find_or_create_by!(name: "Catalog API Workspace")
     @workspace_root = RecordingStudio.root_recording_for(workspace)
     @access = grant_or_bootstrap_access!(recording: @workspace_root, actor: @user, role: :admin)
-    @page_title = "Catalog Getting Started"
-    ensure_page!(title: @page_title, root_recording: @workspace_root)
     @access_token = issue_catalog_access_token
   end
 
@@ -62,20 +60,37 @@ class FlatpackComponentsApiTest < ActionDispatch::IntegrationTest
     assert_equal "not_found", JSON.parse(response.body).dig("error", "code")
   end
 
-  test "pages index still lists workspace pages" do
-    get "/recording_studio_api/api/v1/pages", headers: authorization_headers
+  test "tree recordable routes are not registered" do
+    get "/recording_studio_api/api/v1/workspaces", headers: authorization_headers
+    assert_response :not_found
 
-    assert_response :success
-    titles = JSON.parse(response.body).fetch("records").map { |row| row["title"] }
-    assert_includes titles, @page_title
+    get "/recording_studio_api/api/v1/folders", headers: authorization_headers
+    assert_response :not_found
+
+    get "/recording_studio_api/api/v1/pages", headers: authorization_headers
+    assert_response :not_found
   end
 
-  test "OpenAPI lists the catalog under Endpoints" do
+  test "MCP type catalog has no Workspace Folder or Page" do
+    skip "Recording Studio MCP not in this bundle" unless defined?(RecordingStudioMcp)
+
+    catalog = RecordingStudioMcp::Catalog.new(api: "public")
+
+    assert_empty catalog.type_names
+    assert_empty RecordingStudioApi.api_recordable_types(api: "public")
+  end
+
+  test "OpenAPI lists the catalog under Endpoints and omits tree resources" do
     document = RecordingStudioApi::Services::OpenapiDocument.call
-    list = document.fetch(:paths).fetch("/recording_studio_api/api/v1/flatpack/components").fetch("get")
+    paths = document.fetch(:paths)
+    list = paths.fetch("/recording_studio_api/api/v1/flatpack/components").fetch("get")
 
     assert_equal ["Endpoints"], list.fetch(:tags)
-    assert document.fetch(:paths).key?("/recording_studio_api/api/v1/flatpack/components/{name}")
+    assert paths.key?("/recording_studio_api/api/v1/flatpack/components/{name}")
+    refute paths.key?("/recording_studio_api/api/v1/workspaces")
+    refute paths.key?("/recording_studio_api/api/v1/folders")
+    refute paths.key?("/recording_studio_api/api/v1/pages")
+    assert_equal "FlatPack Component Catalog", document.fetch(:info).fetch(:title)
   end
 
   private
@@ -100,28 +115,6 @@ class FlatpackComponentsApiTest < ActionDispatch::IntegrationTest
     raise token.error unless token.success?
 
     token.value.fetch(:access_token)
-  end
-
-  def ensure_page!(title:, root_recording:)
-    page = Page.find_or_create_by!(title: title)
-    existing = RecordingStudio::Recording.find_by(recordable: page, root_recording: root_recording, trashed_at: nil)
-    return existing if existing.present?
-
-    folder = Folder.find_or_create_by!(name: "Catalog API Folder")
-    folder_recording = RecordingStudio::Recording.find_by(recordable: folder, root_recording: root_recording, trashed_at: nil) ||
-      RecordingStudio.record!(
-        action: "created",
-        recordable: folder,
-        root_recording: root_recording,
-        parent_recording: root_recording
-      ).recording
-
-    RecordingStudio.record!(
-      action: "created",
-      recordable: page,
-      root_recording: root_recording,
-      parent_recording: folder_recording
-    ).recording
   end
 
   def grant_or_bootstrap_access!(recording:, actor:, role:)

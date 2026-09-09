@@ -3,8 +3,8 @@
 return unless defined?(RecordingStudioApi)
 
 RecordingStudioApi.configure do |config|
-  config.openapi_title = "Recording Studio API"
-  config.openapi_description = "Resource server for Recording Studio. MCP calls the same actions."
+  config.openapi_title = "FlatPack Component Catalog"
+  config.openapi_description = "Bearer JSON for public FlatPack ViewComponents. No Workspace, Folder, or Page tree API."
   config.documentation_enabled = true
   config.documentation_access = :public
   config.layout_name = "recording_studio/default_layout"
@@ -16,53 +16,41 @@ RecordingStudioApi.configure do |config|
   config.api_management_authorization_required = false if config.respond_to?(:api_management_authorization_required=)
 end
 
-RecordingStudioApi.register_recordable_type_api(
-  "Workspace",
-  serializer: ->(recordable, **) { {name: recordable.name} },
-  output_keys: %i[name],
-  writable_attributes: %i[name],
-  operations: %i[index show create update],
-  capability_actions: %i[ping]
-)
-
-RecordingStudioApi.register_recordable_type_api(
-  "Folder",
-  serializer: ->(recordable, **) { {name: recordable.name} },
-  output_keys: %i[name],
-  writable_attributes: %i[name],
-  operations: %i[index show create update]
-)
-
-RecordingStudioApi.register_recordable_type_api(
-  "Page",
-  serializer: ->(recordable, **) { {title: recordable.title} },
-  output_keys: %i[title],
-  writable_attributes: %i[title],
-  operations: %i[index show create update]
-)
-
+# Public API normally mirrors every RecordingStudio.recordable_type. This host is
+# catalog-only: force the public resource list to the recordable registry (empty)
+# plus register_endpoint routes. Access-point checks stay capability-based so
+# Workspace can still host OAuth / API client credentials.
 module Dummy
-  class PingWorkspace
-    def self.call(context)
-      context.access_grant.authorize!(recording: context.recording, role: :view)
-      {json: {ok: true, id: context.recording.id}}
+  module PublicApiRegistryOnly
+    def api_recordable_types(api: :public)
+      definition = configuration.fetch_api(api)
+      return definition.recordable_registry.to_h.keys.map(&:to_s) if definition.equal?(configuration.public_api)
+
+      super
+    end
+
+    def api_access_point_recordable_types(api: :public)
+      definition = configuration.fetch_api(api)
+      return super unless definition.equal?(configuration.public_api)
+      return [] unless defined?(RecordingStudio) && RecordingStudio.respond_to?(:configuration)
+
+      Array(RecordingStudio.configuration.recordable_types).map(&:to_s).uniq.select do |recordable_type|
+        api_access_point_recordable_type?(recordable_type, api: api)
+      end
+    end
+
+    def api_access_point_recordable_type?(recordable_type, api: :public)
+      type_name = recordable_type.to_s
+      return false if type_name.blank?
+      return false unless defined?(RecordingStudio) && RecordingStudio.respond_to?(:capability_enabled?)
+
+      RecordingStudio.capability_enabled?(:accessible, for: type_name) &&
+        RecordingStudio.capability_enabled?(:api_access_point, for: type_name)
     end
   end
 end
 
-RecordingStudioApi.register_capability_action(
-  :ping,
-  capability: :accessible,
-  version: "1.0.0",
-  http_verb: :post,
-  required_role: :view,
-  input_contract: {
-    fields: {
-      style: {type: :string, required: false, enum: %w[quiet loud]}
-    }
-  },
-  handler: Dummy::PingWorkspace
-)
+RecordingStudioApi.singleton_class.prepend(Dummy::PublicApiRegistryOnly)
 
 RecordingStudioApi.register_endpoint(
   :flatpack_components,
