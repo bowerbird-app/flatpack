@@ -13,6 +13,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.177] - 2026-09-09
+
+### Fixed
+- Ghost and secondary buttons press with a 1px translate and an inset shadow. All buttons ease colour, border, shadow, and that press on `--duration-fast` / `--easing-standard`. The hit target does not scale.
+- Alert dismiss, chip remove, and badge remove collapse height (chips and badges also collapse width) on `--duration-slow` / `--easing-exit`, so neighbours slide in instead of jumping after a scale-out. Reduced motion snaps.
+
+### Changed
+- Bumped the gem version to `0.1.177`.
+
+### Upgrade notes
+- Buttons use `.fp-button`. Ghost and secondary also use `.fp-button-flat` for the inset press. Hosts that copied button colour transitions without `ease-[var(--easing-standard)]` should add it. Do not add `active:scale-*`.
+- Chip and badge colour uses `duration-[var(--duration-fast)] ease-[var(--easing-standard)]`, not Tailwind `duration-base`.
+- Alert, chip, and badge controllers call `playCollapseExit` from `controllers/flat_pack/reduced_motion`. Hide waits are `--duration-slow` (0ms under reduced motion). Do not keep a parallel scale-out.
+
 ## [0.1.176] - 2026-09-09
 
 ### Fixed
