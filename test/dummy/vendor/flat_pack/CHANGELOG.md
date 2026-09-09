@@ -13,6 +13,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.178] - 2026-09-09
+
+### Added
+- `FlatPack::ComponentCatalog` lists public ViewComponents and shows initialize parameters. Hosts can serve those hashes from Recording Studio API `register_endpoint` without a fake recordable.
+
+### Changed
+- Dummy `recording_studio_api` pin is `v0.5.4` so named endpoints are available.
+- Bumped the gem version to `0.1.178`.
+
+### Upgrade notes
+- Call `FlatPack::ComponentCatalog.list` and `.show(name)` from a host initializer. The gem does not mount HTTP routes.
+- Dummy and other hosts that want `GET flatpack/components` need `recording_studio_api` `0.5.4` or newer, then register the two endpoints. Bearer auth still applies. Unknown names should raise `RecordingStudioApi::NotFoundError`.
+- `docs/components/manifest.yml` stays the docs and AI reading order. The running inventory is the catalog methods (and the dummy HTTP routes that wrap them).
+
+## [0.1.173] - 2026-09-08
+
+### Fixed
+- Dummy root switcher includes the Admin root so staff can open `/admin` and `/admin/sections/oauth_apps`. With a workspace selected, Admin still returns an empty `403` by design.
+- `/studio` **Registered apps** switches the current root to Admin and opens `/admin/screens/oauth_clients`, so the button no longer lands on a blank `403`.
+- Dummy development allows Cloudflare quick-tunnel hosts (`*.trycloudflare.com`). Do not set blanket `assume_ssl` in development — it broke local `http://127.0.0.1` sign-in redirects; tunnels still get `https://` via `X-Forwarded-Proto`.
+- OAuth Connect authorize layout disables Turbo so Authorize can full-page redirect to ChatGPT (avoids CORS/`Failed to fetch` on the callback).
+- Dummy Registered apps table includes **Edit** so staff can change an app's name and redirect URLs without recreating the client.
+
+### Upgrade notes
+- After pulling, restart the dummy app so `recording_studio_root_switchable` picks up Admin in `available_roots`. Prefer **Registered apps** from `/studio` for the OauthClient list; other Admin URLs still need the Admin root selected.
+
 ## [0.1.172] - 2026-09-08
 
 ### Added
