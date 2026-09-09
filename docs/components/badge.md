@@ -51,3 +51,4 @@ None.
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
 - Removable mode attaches Stimulus controller `flat-pack--badge`.
+- Remove collapses width, height, and opacity on `--duration-slow` / `--easing-exit` via `playCollapseExit`. Reduced motion snaps. Colour hover uses `--duration-fast` / `--easing-standard`.
