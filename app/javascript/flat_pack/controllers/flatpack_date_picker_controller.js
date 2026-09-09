@@ -55,7 +55,6 @@ export default class extends Controller {
     this.handleEscape = this.handleEscape.bind(this)
     this.handleReposition = this.handleReposition.bind(this)
 
-    // Keep the panel definitively hidden on load even when responsive display classes are present.
     if (this.panelElement) {
       this.panelElement.style.display = "none"
       this.panelElement.setAttribute("aria-hidden", "true")

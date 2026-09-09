@@ -1,4 +1,3 @@
-// FlatPack Select Stimulus Controller
 import { Controller } from "@hotwired/stimulus"
 import { playOverlayEnter, playOverlayExit } from "controllers/flat_pack/reduced_motion"
 
@@ -29,7 +28,6 @@ export default class extends Controller {
     this.isOpen = false
     this.hideTimeout = null
 
-    // Close dropdown when clicking outside
     this.handleOutsideClick = this.handleOutsideClick.bind(this)
     document.addEventListener("click", this.handleOutsideClick)
   }
@@ -66,7 +64,6 @@ export default class extends Controller {
     this.chevronTarget.style.transform = "rotate(180deg)"
     playOverlayEnter(this.dropdownTarget, { placement: "bottom", interrupt })
 
-    // Focus search input if searchable
     if (this.searchableValue && this.hasSearchInputTarget) {
       this.searchInputTarget.focus()
     }
@@ -90,7 +87,6 @@ export default class extends Controller {
       onHidden: () => { this.hideTimeout = null }
     })
 
-    // Clear search input if exists
     if (this.hasSearchInputTarget) {
       this.searchInputTarget.value = ""
       this.showAllOptions()
