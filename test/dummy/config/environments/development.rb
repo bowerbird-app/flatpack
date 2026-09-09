@@ -59,8 +59,9 @@ Rails.application.configure do
   # Cloudflare quick tunnels (cloudflared tunnel --url)
   config.hosts << /.*\.trycloudflare\.com/
 
-  # Trust Cloudflare / reverse-proxy HTTPS so OAuth discovery issuer URLs stay https://
-  config.assume_ssl = true
+  # Do NOT set assume_ssl here — it forces https://127.0.0.1 redirects and breaks
+  # local http:// sign-in (Puma is plain HTTP). Cloudflare sets X-Forwarded-Proto:
+  # https, which Rails already uses for request.ssl? / OAuth issuer URLs.
 
   # Devise requires default_url_options in development
   config.action_mailer.default_url_options = {host: "localhost", port: 3000}
