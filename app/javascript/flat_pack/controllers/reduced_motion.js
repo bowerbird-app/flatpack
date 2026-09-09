@@ -117,6 +117,55 @@ export function playOverlayExit(element, { placement = "bottom", onHidden } = {}
   return timeoutId
 }
 
+export function playCollapseExit(element, { axis = "both", onHidden } = {}) {
+  cancelOverlayHide(element)
+
+  if (prefersReducedMotion()) {
+    const timeoutId = globalThis.setTimeout(() => {
+      overlayHideTimeouts.delete(element)
+      onHidden?.()
+    }, 0)
+    overlayHideTimeouts.set(element, timeoutId)
+    return timeoutId
+  }
+
+  const collapseInline = axis !== "block"
+  element.style.overflow = "hidden"
+  element.style.boxSizing = "border-box"
+  element.style.height = `${element.offsetHeight}px`
+  if (collapseInline) {
+    element.style.width = `${element.offsetWidth}px`
+  }
+  void element.offsetHeight
+
+  const properties = ["opacity", "height", "margin-top", "margin-bottom", "padding-top", "padding-bottom"]
+  if (collapseInline) {
+    properties.push("width", "margin-left", "margin-right", "padding-left", "padding-right")
+  }
+
+  element.style.transition = motionTransition(properties, { duration: "slow", easing: "exit" })
+  element.style.opacity = "0"
+  element.style.height = "0px"
+  element.style.marginTop = "0"
+  element.style.marginBottom = "0"
+  element.style.paddingTop = "0"
+  element.style.paddingBottom = "0"
+  if (collapseInline) {
+    element.style.width = "0px"
+    element.style.marginLeft = "0"
+    element.style.marginRight = "0"
+    element.style.paddingLeft = "0"
+    element.style.paddingRight = "0"
+  }
+
+  const timeoutId = globalThis.setTimeout(() => {
+    overlayHideTimeouts.delete(element)
+    onHidden?.()
+  }, motionDuration("slow"))
+  overlayHideTimeouts.set(element, timeoutId)
+  return timeoutId
+}
+
 function readDurationToken(token) {
   const fallback = DURATION_MS[token] ?? DURATION_MS.slow
 

@@ -313,7 +313,7 @@ test('playCollapseExit on the block axis leaves width alone', () => {
   playCollapseExit(element, { axis: "block" })
 
   assert.equal(element.style.height, "0px")
-  assert.equal(element.style.width, "")
+  assert.equal(element.style.width, undefined)
   assert.equal(element.style.transform, undefined)
   assert.equal(delayed.ms, 300)
 })

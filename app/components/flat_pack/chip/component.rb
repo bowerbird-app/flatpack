@@ -171,7 +171,7 @@ module FlatPack
           "inline-flex items-center gap-1.5",
           "rounded-[var(--chip-border-radius)] font-medium",
           "border",
-          "transition-colors duration-base",
+          "transition-[color,background-color,border-color] duration-[var(--duration-fast)] ease-[var(--easing-standard)]",
           STYLES.fetch(@style),
           SIZES.fetch(@size),
           disabled_classes,
