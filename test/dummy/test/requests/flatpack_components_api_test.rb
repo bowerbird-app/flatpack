@@ -81,7 +81,7 @@ class FlatpackComponentsApiTest < ActionDispatch::IntegrationTest
   end
 
   test "MCP tool surface lists catalog endpoints without tree tools" do
-    skip "Recording Studio MCP tools not in this bundle" unless defined?(RecordingStudioMcp::ToolSurface)
+    skip "Recording Studio MCP not in this bundle" unless defined?(RecordingStudioMcp)
 
     surface = RecordingStudioMcp::ToolSurface.for(api: "public")
     names = surface.tool_names
