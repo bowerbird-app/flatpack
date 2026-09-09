@@ -38,13 +38,13 @@ Gated (sign in or bearer token):
 
 Staff Admin requires the current root to be **Admin**. The root switcher (`all_workspaces`) lists Studio Workspace, Docs Workspace, and Admin. Hitting `/admin` (or an admin screen) while a workspace is selected returns an empty `403` (`head :forbidden`) — that looks like a blank page. From `/studio`, **Registered apps** switches the current root to Admin and opens `/admin/screens/oauth_clients`. Use the root switcher for other Admin entry points.
 
-`ApplicationController` skips `authenticate_user!` for the public catalog and keeps the FlatPack `application` layout there. Authenticated Recording Studio screens use `recording_studio/default_layout`.
+`ApplicationController` skips `authenticate_user!` for the public catalog and keeps the FlatPack `application` layout there (component demo chrome). Signed-in host home at `/studio` uses the Recording Studio dummy shell `flat_pack_sidebar` (left sidebar + top nav with root switcher), matching Admin / Users gem dummies. Admin, OAuth Connect, API, and other product mounts stay on `recording_studio/default_layout` (PageNav, no host sidebar).
 
 ## Signup and login
 
 Users owns auth screens (`recording_studio_user_auth_for :users`). OTP is off in the dummy initializer for a simpler password demo.
 
-After sign-in or sign-up, the host sends people to `/studio` (not the public demo root). That page lists **Connected apps** for the signed-in user (empty until someone Connects). From there: Registered apps (switches to Admin, then the OauthClient list), or back to `/demo`. The full Connected apps screen also lives at `/recording_studio_oauth/connected_apps`.
+After sign-in or sign-up, the host sends people to `/studio` (not the public demo root). That page lists **Connected apps** for the signed-in user (empty until someone Connects). The host sidebar links Connected apps, component demos, Registered apps, OAuth connected apps, and profile. From the page: Registered apps switches to Admin and opens the OauthClient list. The full Connected apps screen also lives at `/recording_studio_oauth/connected_apps`.
 
 Seed accounts after `bin/rails db:seed`:
 

@@ -405,6 +405,9 @@
   .m-0 {
     margin: calc(var(--spacing) * 0);
   }
+  .mx-0 {
+    margin-inline: calc(var(--spacing) * 0);
+  }
   .mx-2 {
     margin-inline: calc(var(--spacing) * 2);
   }
@@ -774,6 +777,9 @@
   }
   .min-h-\[var\(--timeline-line-min-height\)\] {
     min-height: var(--timeline-line-min-height);
+  }
+  .min-h-dvh {
+    min-height: 100dvh;
   }
   .min-h-full {
     min-height: 100%;
@@ -1870,6 +1876,9 @@
   }
   .bg-\(--surface-muted-background-color\) {
     background-color: var(--surface-muted-background-color);
+  }
+  .bg-\(--surface-page-background-color\) {
+    background-color: var(--surface-page-background-color);
   }
   .bg-\(--surface-subtle-background-color\) {
     background-color: var(--surface-subtle-background-color);

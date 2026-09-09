@@ -75,4 +75,24 @@ class RecordingStudioHostWiringTest < ActionDispatch::IntegrationTest
     assert_match(/Registered apps/, response.body)
     assert_match(%r{/admin/screens/oauth_clients}, response.body)
   end
+
+  test "studio uses the Recording Studio host sidebar shell" do
+    skip "Recording Studio Users not in this bundle" unless defined?(RecordingStudioUser)
+
+    user = User.find_or_create_by!(email: "studio-sidebar@example.com") do |record|
+      record.password = "Password123!"
+      record.password_confirmation = "Password123!"
+    end
+    sign_in user
+
+    get "/studio"
+    assert_response :success
+    assert_match(/aria-label="Main navigation"/, response.body)
+    assert_match(/Connected apps/, response.body)
+    assert_match(/Component demos/, response.body)
+    assert_match(/flatpack-dummy-studio-shell/, response.body)
+    assert_match(/data-controller="flat-pack--sidebar-layout"/, response.body)
+    refute_match(/FlatPack Demo Components/, response.body)
+    refute_match(/Search demo pages/, response.body)
+  end
 end

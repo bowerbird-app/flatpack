@@ -63,7 +63,7 @@ This will:
 5. **Visit the app:**
    Open http://localhost:3000 in your browser
 
-Public FlatPack demos stay at `/demo` without login. Sign in at `/users/sign_in` with `admin@admin.com` / `Password` for Admin, OAuth, and MCP demos. From `/studio`, **Registered apps** switches to the Admin root and opens the OauthClient list. Opening `/admin` while a workspace root is selected still yields a blank `403` — use the root switcher or the studio button.
+Public FlatPack demos stay at `/demo` without login. Sign in at `/users/sign_in` with `admin@admin.com` / `Password` for Admin, OAuth, and MCP demos. Signed-in `/studio` uses the Recording Studio host sidebar shell (`flat_pack_sidebar`). From `/studio`, **Registered apps** switches to the Admin root and opens the OauthClient list. Opening `/admin` while a workspace root is selected still yields a blank `403` — use the root switcher or the studio button.
 
 ## FlatPack Integration
 

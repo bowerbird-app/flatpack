@@ -1,0 +1,73 @@
+<%= render FlatPack::Sidebar::Component.new(side: sidebar_side) do |sidebar| %>
+  <% sidebar.header do %>
+    <%= render FlatPack::Sidebar::Header::Component.new(
+      brand_abbr: "RS",
+      title: "FlatPack",
+      subtitle: "Recording Studio"
+    ) %>
+  <% end %>
+
+  <% sidebar.items do %>
+    <nav class="py-4 space-y-1" aria-label="Main navigation">
+      <%= render FlatPack::Sidebar::Item::Component.new(
+        text: "Connected apps",
+        href: "/studio",
+        icon: :link,
+        active: request.path == "/studio"
+      ) %>
+
+      <%= render FlatPack::Sidebar::Item::Component.new(
+        text: "Component demos",
+        href: "/demo",
+        icon: :box,
+        active: request.path.start_with?("/demo")
+      ) %>
+
+      <%= render FlatPack::Sidebar::Item::Component.new(
+        text: "Registered apps",
+        href: StudioController::REGISTERED_APPS_PATH,
+        icon: :key,
+        active: request.path.start_with?("/admin")
+      ) %>
+
+      <% if defined?(RecordingStudioOauth) %>
+        <%= render FlatPack::Sidebar::Item::Component.new(
+          text: "OAuth connected apps",
+          href: recording_studio_oauth.connected_apps_path,
+          icon: :inbox,
+          active: request.path.start_with?(recording_studio_oauth.connected_apps_path)
+        ) %>
+      <% end %>
+
+      <% if defined?(RecordingStudioUser) && user_signed_in? %>
+        <%= render FlatPack::Sidebar::Item::Component.new(
+          text: "My profile",
+          href: recording_studio_users.profile_path,
+          icon: :user,
+          active: request.path.start_with?(recording_studio_users.profile_path)
+        ) %>
+      <% end %>
+    </nav>
+  <% end %>
+
+  <% sidebar.footer do %>
+    <%= render FlatPack::Sidebar::Footer::Component.new(class: "text-sm text-[var(--surface-muted-content-color)]") do %>
+      <% if user_signed_in? %>
+        <%= render FlatPack::Sidebar::Item::Component.new(
+          text: "Sign out",
+          href: destroy_user_session_path,
+          icon: :lock,
+          class: "mx-0",
+          data: {turbo_method: :delete}
+        ) %>
+      <% else %>
+        <%= render FlatPack::Sidebar::Item::Component.new(
+          text: "Sign in",
+          href: new_user_session_path,
+          icon: :lock,
+          class: "mx-0"
+        ) %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

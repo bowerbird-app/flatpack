@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Dummy app hosts Recording Studio API, OAuth Connect, MCP, Admin, and Users on Postgres.
 - Signed-in host home at `/studio` with Connected apps and Registered apps entry points.
+- Dummy `/studio` uses the Recording Studio host `flat_pack_sidebar` shell (same pattern as Admin / Users gem dummies), not the FlatPack component-catalog chrome.
 - Docs for dummy Recording Studio wiring (`docs/recording_studio_dummy.md`).
 - `FlatPack::ComponentCatalog` lists public ViewComponents and shows initialize parameters. Hosts can serve those hashes from Recording Studio API `register_endpoint` without a fake recordable.
 
