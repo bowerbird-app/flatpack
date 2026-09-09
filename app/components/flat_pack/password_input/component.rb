@@ -69,11 +69,13 @@ module FlatPack
             action: "flat-pack--password-input#toggle",
             flat_pack__password_input_target: "toggle"
           },
-          aria: {label: "Toggle password visibility"}) do
-          safe_join([
-            render_eye_icon,
-            render_eye_off_icon
-          ])
+          aria: {label: "Show password", pressed: false}) do
+          content_tag(:span, class: "fp-password-toggle-icons") do
+            safe_join([
+              render_eye_icon,
+              render_eye_off_icon
+            ])
+          end
         end
       end
 
@@ -89,7 +91,6 @@ module FlatPack
         render FlatPack::Shared::IconComponent.new(
           name: "eye-slash",
           size: :sm,
-          class: "hidden",
           data: {flat_pack__password_input_target: "eyeOffIcon"}
         )
       end
@@ -129,7 +130,7 @@ module FlatPack
       end
 
       def toggle_button_classes
-        "absolute right-3 top-1/2 -translate-y-1/2 text-[var(--surface-muted-content-color)] hover:text-[var(--surface-content-color)] transition-colors"
+        "fp-password-toggle absolute right-3 top-1/2 -translate-y-1/2 text-[var(--surface-muted-content-color)] hover:text-[var(--surface-content-color)] transition-colors"
       end
 
       def input_id

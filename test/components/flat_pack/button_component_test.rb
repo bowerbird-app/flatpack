@@ -349,8 +349,8 @@ module FlatPack
       def test_submit_button_with_loading_state
         render_inline(Component.new(text: "Submitting", type: "submit", loading: true))
         assert_selector "button[type='submit'][disabled]"
-        assert_includes page.native.to_html, "animate-spin"
-        assert_includes page.native.to_html, "motion-reduce:animate-none"
+        assert_includes page.native.to_html, "fp-spinner"
+        refute_includes page.native.to_html, "motion-reduce:animate-none"
         assert_selector "button", text: "Loading"
       end
 
