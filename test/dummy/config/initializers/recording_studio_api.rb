@@ -1,5 +1,15 @@
 # frozen_string_literal: true
 
+module Dummy
+  FLATPACK_COMPOSE_WORKFLOW = <<~TEXT.squish.freeze
+    This host is a FlatPack component catalog, not a recordings tree.
+    Call flatpack_components to list, then flatpack_component with name for full params, before writing any screen ERB.
+    Build UI only with public catalog FlatPack::…::Component. Do not use custom HTML, Tailwind utility dumps, or invented component names.
+    Honor required params, types, and enums from the detail payload.
+    Prefer composing via the APIs and slots the detail payload describes, for example Card body or header when present. Do not invent a second design system.
+  TEXT
+end
+
 return unless defined?(RecordingStudioApi)
 
 RecordingStudioApi.configure do |config|
@@ -57,7 +67,10 @@ RecordingStudioApi.register_endpoint(
   http_verb: :get,
   path: "flatpack/components",
   handler: ->(_context) { FlatPack::ComponentCatalog.list },
-  openapi: {summary: "List public FlatPack components", description: "Skinny catalog of public FlatPack ViewComponents."}
+  openapi: {
+    summary: "List public FlatPack components",
+    description: "Skinny public catalog listing. #{Dummy::FLATPACK_COMPOSE_WORKFLOW}"
+  }
 )
 
 RecordingStudioApi.register_endpoint(
@@ -70,5 +83,8 @@ RecordingStudioApi.register_endpoint(
 
     payload
   },
-  openapi: {summary: "Show a FlatPack component", description: "One public component plus initialize parameters."}
+  openapi: {
+    summary: "Show a FlatPack component",
+    description: "One public component plus initialize parameters. #{Dummy::FLATPACK_COMPOSE_WORKFLOW}"
+  }
 )

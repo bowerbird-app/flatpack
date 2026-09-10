@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dummy `recording_studio_api` pin is `v0.5.4` so named endpoints are available.
 - Dummy OpenAPI title is **FlatPack Component Catalog**; only the two catalog `register_endpoint` routes are exposed.
 - Dummy pins `recording_studio_mcp` to tag `v0.3.1` (endpoint tools; empty type list omits tree tools; `instructions_suffix` guides ChatGPT screen building from the FlatPack catalog).
+- Dummy catalog OpenAPI descriptions carry the FlatPack compose workflow so ChatGPT Connect can quote how to build screens.
 - Bumped the gem version to `0.1.178`.
 
 ### Upgrade notes
