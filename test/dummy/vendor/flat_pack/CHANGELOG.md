@@ -1,1 +1,1 @@
-@file:///tmp/exact_changelog.md
+@/tmp/exact_changelog.md

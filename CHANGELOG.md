@@ -1,1 +1,1 @@
-file:///home/ubuntu/.cursor/projects/workspace/agent-tools/exact_changelog.md
+@/tmp/exact_changelog.md
