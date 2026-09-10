@@ -116,6 +116,30 @@ module FlatPack
       assert_equal FlatPack::Pagination::Component::MODES.keys.map(&:to_s), mode.fetch(:enum)
     end
 
+    test "show Card maps registered *_slot names to public ERB methods" do
+      payload = FlatPack::ComponentCatalog.show("Card::Component")
+      slots = payload.fetch(:slots)
+
+      assert_equal(
+        [
+          {name: "body", collection: false},
+          {name: "footer", collection: false},
+          {name: "header", collection: false},
+          {name: "media", collection: false}
+        ],
+        slots
+      )
+      refute(slots.any? { |slot| slot.fetch(:name).end_with?("_slot") })
+    end
+
+    test "show Button and Avatar advertise an empty slots array" do
+      button = FlatPack::ComponentCatalog.show("Button::Component")
+      avatar = FlatPack::ComponentCatalog.show("Avatar::Component")
+
+      assert_equal [], button.fetch(:slots)
+      assert_equal [], avatar.fetch(:slots)
+    end
+
     test "show returns nil for unknown names and accepts URL aliases" do
       assert_nil FlatPack::ComponentCatalog.show("nope")
 
