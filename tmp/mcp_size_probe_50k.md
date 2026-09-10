@@ -1,1 +1,1 @@
-file:///tmp/cl_content_only.txt
+__FROM_FILE__/tmp/probe_50k_content.txt
