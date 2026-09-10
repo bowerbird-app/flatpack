@@ -136,12 +136,14 @@ class RecordingStudioHostWiringTest < ActionDispatch::IntegrationTest
         raise bootstrap.error if bootstrap.failure?
       end
     end
-    RecordingStudioAccessible.grant_access(
-      recording: folder_recording,
-      actor: user,
-      role: :edit,
-      manager_actor: user
-    ) unless RecordingStudioAccessible.access_recordings_for_actor(recording: folder_recording, actor: user).any?
+    unless RecordingStudioAccessible.access_recordings_for_actor(recording: folder_recording, actor: user).any?
+      RecordingStudioAccessible.grant_access(
+        recording: folder_recording,
+        actor: user,
+        role: :edit,
+        manager_actor: user
+      )
+    end
 
     sign_in user
 
