@@ -1,1 +1,1 @@
-PLACEHOLDER
+/home/ubuntu/.cursor/projects/workspace/agent-tools/changelog-restore-content.txt
