@@ -1,5 +1,3 @@
-<% recording_studio_page_nav(title: "Connected Apps") if defined?(recording_studio_page_nav) %>
-
 <div class="flex w-full flex-col gap-6">
   <%= render FlatPack::PageTitle::Component.new(
     title: "Connected Apps",
@@ -26,11 +24,6 @@
         style: :primary
       ) %>
     <% end %>
-    <%= render FlatPack::Button::Component.new(
-      text: "Demo",
-      href: "/demo",
-      style: :ghost
-    ) %>
   </div>
 
   <% if defined?(RecordingStudioOauth) %>

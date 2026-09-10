@@ -3,6 +3,10 @@
 class StudioController < ApplicationController
   REGISTERED_APPS_PATH = "/admin/screens/oauth_clients"
 
+  # Host home uses the same FlatPack sidebar shell as other RS gem dummies.
+  # Admin / OAuth / API product screens stay on recording_studio/default_layout.
+  layout "flat_pack_sidebar"
+
   def index
     @admin_root_recording = admin_root_recording
     @registered_apps_path = REGISTERED_APPS_PATH

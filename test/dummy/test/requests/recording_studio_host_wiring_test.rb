@@ -75,4 +75,85 @@ class RecordingStudioHostWiringTest < ActionDispatch::IntegrationTest
     assert_match(/Registered apps/, response.body)
     assert_match(%r{/admin/screens/oauth_clients}, response.body)
   end
+
+  test "studio uses the Recording Studio host sidebar shell" do
+    skip "Recording Studio Users not in this bundle" unless defined?(RecordingStudioUser)
+
+    user = User.find_or_create_by!(email: "studio-sidebar@example.com") do |record|
+      record.password = "Password123!"
+      record.password_confirmation = "Password123!"
+    end
+    sign_in user
+
+    get "/studio"
+    assert_response :success
+    assert_match(/aria-label="Main navigation"/, response.body)
+    assert_match(/Connected apps/, response.body)
+    assert_match(/Component demos/, response.body)
+    assert_match(/Recording tree/, response.body)
+    assert_match(%r{href="/studio/recording_tree"}, response.body)
+    assert_match(/flatpack-dummy-studio-shell/, response.body)
+    assert_match(/data-controller="flat-pack--sidebar-layout"/, response.body)
+    refute_match(/My profile/, response.body)
+    refute_match(/FlatPack Demo Components/, response.body)
+    refute_match(/Search demo pages/, response.body)
+  end
+
+  test "recording tree shows access grants and viewer roles" do
+    skip "Recording Studio Accessible not in this bundle" unless defined?(RecordingStudioAccessible)
+
+    user = User.find_or_create_by!(email: "recording-tree@example.com") do |record|
+      record.password = "Password123!"
+      record.password_confirmation = "Password123!"
+    end
+
+    workspace = Workspace.find_or_create_by!(name: "Recording Tree Workspace")
+    root = RecordingStudio.root_recording_for(workspace)
+    folder = Folder.find_or_create_by!(name: "Tree Folder")
+    folder_recording = RecordingStudio::Recording.find_by(
+      root_recording: root,
+      parent_recording: root,
+      recordable: folder,
+      trashed_at: nil
+    ) || RecordingStudio.record!(
+      action: "created",
+      recordable: folder,
+      root_recording: root,
+      parent_recording: root
+    ).recording
+
+    Current.actor = user
+    access = RecordingStudioAccessible.access_recordings_for_actor(recording: root, actor: user).first
+    if access.blank?
+      result = RecordingStudioAccessible.grant_access(
+        recording: root,
+        actor: user,
+        role: :admin,
+        manager_actor: user
+      )
+      if result.failure?
+        bootstrap = RecordingStudioAccessible.bootstrap_owner_access!(recording: root, actor: user)
+        raise bootstrap.error if bootstrap.failure?
+      end
+    end
+    RecordingStudioAccessible.grant_access(
+      recording: folder_recording,
+      actor: user,
+      role: :edit,
+      manager_actor: user
+    ) unless RecordingStudioAccessible.access_recordings_for_actor(recording: folder_recording, actor: user).any?
+
+    sign_in user
+
+    get studio_recording_tree_path
+    assert_response :success
+    assert_match(/Recording tree/, response.body)
+    assert_match(/Recording Tree Workspace/, response.body)
+    assert_match(/Access:/, response.body)
+    assert_match(/recording-tree@example.com/, response.body)
+    assert_match(/your role:/, response.body)
+    assert_match(/flatpack-dummy-studio-shell/, response.body)
+  ensure
+    Current.actor = nil if defined?(Current)
+  end
 end
