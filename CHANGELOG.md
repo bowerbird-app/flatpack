@@ -1,1 +1,1 @@
-PLACEHOLDER_REPLACE_WITH_FILE
+file:///home/ubuntu/.cursor/projects/workspace/agent-tools/exact_changelog.md
