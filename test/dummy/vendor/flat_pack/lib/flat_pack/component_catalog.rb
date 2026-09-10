@@ -104,7 +104,10 @@ module FlatPack
         entry = find_entry(name)
         return if entry.nil?
 
-        entry.slice(*SKINNY_KEYS).merge(parameters: parameters_for(entry[:class_object]))
+        entry.slice(*SKINNY_KEYS).merge(
+          parameters: parameters_for(entry[:class_object]),
+          slots: slots_for(entry[:class_object])
+        )
       end
 
       def reset!
@@ -256,6 +259,29 @@ module FlatPack
           row = row.merge(enum: enums[row[:name]]) if enums[row[:name]]
           row.merge(type: type_for(row))
         }
+      end
+
+      def slots_for(klass)
+        return [] unless klass.respond_to?(:registered_slots)
+
+        klass.registered_slots.map { |registry_name, config|
+          {
+            name: public_slot_name(klass, registry_name),
+            collection: config.fetch(:collection, false)
+          }
+        }.sort_by { |row| row[:name] }
+      end
+
+      # Prefer the public ERB method when FlatPack wraps a `*_slot` registry name
+      # (Card: body_slot → body). Keep the registry name when that is the API.
+      def public_slot_name(klass, registry_name)
+        name = registry_name.to_s
+        return name unless name.end_with?("_slot")
+
+        candidate = name.delete_suffix("_slot")
+        return candidate if klass.instance_methods(false).include?(candidate.to_sym)
+
+        name
       end
 
       def enums_for(klass, kwarg_names)
