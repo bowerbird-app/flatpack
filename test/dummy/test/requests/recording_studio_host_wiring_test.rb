@@ -60,6 +60,55 @@ class RecordingStudioHostWiringTest < ActionDispatch::IntegrationTest
     assert_equal "/studio", controller.after_sign_in_path_for(User.new)
   end
 
+  test "users auth after sign in ignores stored admin location" do
+    skip "Recording Studio Users not in this bundle" unless defined?(RecordingStudioUser)
+
+    controller = RecordingStudioUser::Auth::SessionsController.new
+    def controller.main_app
+      Rails.application.routes.url_helpers
+    end
+
+    def controller.stored_location_for(_resource)
+      "/admin/screens/oauth_clients"
+    end
+
+    assert_equal "/studio", controller.after_sign_in_path_for(User.new)
+  end
+
+  test "password sign in form disables turbo" do
+    skip "Recording Studio Users not in this bundle" unless defined?(RecordingStudioUser)
+
+    get "/users/sign_in"
+    assert_response :success
+    assert_match(/data-turbo="false"|data-turbo='false'/, response.body)
+
+    post "/users/sign_in", params: {user: {email: "admin@admin.com"}}
+    follow_redirect!
+    assert_response :success
+    assert_match(/data-turbo="false"|data-turbo='false'/, response.body)
+  end
+
+  test "password sign in with stored admin location lands on studio" do
+    skip "Recording Studio Users not in this bundle" unless defined?(RecordingStudioUser)
+
+    user = User.find_or_create_by!(email: "signin-admin-bounce@example.com") do |record|
+      record.password = "Password123!"
+      record.password_confirmation = "Password123!"
+    end
+
+    get "/admin"
+    assert_response :redirect
+
+    post "/users/sign_in", params: {user: {email: user.email}}
+    assert_response :redirect
+    follow_redirect!
+    assert_response :success
+
+    post "/users/sign_in/password",
+      params: {user: {email: user.email, password: "Password123!"}}
+    assert_redirected_to "/studio"
+  end
+
   test "studio shows connected apps empty state when signed in" do
     skip "Recording Studio OAuth not in this bundle" unless defined?(RecordingStudioOauth)
 

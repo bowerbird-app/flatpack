@@ -44,7 +44,7 @@ Staff Admin requires the current root to be **Admin**. The root switcher (`all_w
 
 Users owns auth screens (`recording_studio_user_auth_for :users`). OTP is off in the dummy initializer for a simpler password demo.
 
-After sign-in or sign-up, the host sends people to `/studio` (not the public demo root). That page lists **Connected apps** for the signed-in user (empty until someone Connects). The host sidebar links Connected apps, component demos, Registered apps, Recording tree, and OAuth connected apps. `/studio/recording_tree` is an unfiltered diagnostic of every recording (including Access grants) with the signed-in actor’s role on content nodes. From Connected apps: Registered apps switches to Admin and opens the OauthClient list. The full Connected apps screen also lives at `/recording_studio_oauth/connected_apps`.
+After sign-in or sign-up, the host sends people to `/studio` (not the public demo root). A stored return-to under `/admin` is ignored — Admin 403s until the current root is switched to Admin, and that bounce made the password step look like a failed login. Sign-in forms turn Turbo off so a second submit cannot hit a rotated session CSRF token. `/studio` lists **Connected apps** for the signed-in user (empty until someone Connects). The host sidebar links Connected apps, component demos, Registered apps, Recording tree, and OAuth connected apps. `/studio/recording_tree` is an unfiltered diagnostic of every recording (including Access grants) with the signed-in actor’s role on content nodes. From Connected apps: Registered apps switches to Admin and opens the OauthClient list. The full Connected apps screen also lives at `/recording_studio_oauth/connected_apps`.
 
 Seed accounts after `bin/rails db:seed`:
 

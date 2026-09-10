@@ -1,0 +1,38 @@
+<%= render layout: "recording_studio_user/auth/shell", locals: { title: RecordingStudioUser.config.login_title } do %>
+  <% if flash[:notice].present? %>
+    <%= render FlatPack::Alert::Component.new(title: flash[:notice], style: :info) %>
+  <% end %>
+
+  <% if flash[:alert].present? %>
+    <%= render FlatPack::Alert::Component.new(title: flash[:alert], style: :danger) %>
+  <% end %>
+
+  <%= form_with scope: :user, url: auth_sign_in_path, method: :post, data: {turbo: false} do %>
+    <div class="space-y-4">
+      <%= render FlatPack::EmailInput::Component.new(
+        name: "user[email]",
+        placeholder: "you@company.com",
+        required: true,
+        autocomplete: "email",
+        aria: { label: "Email" }
+      ) %>
+
+      <%= render FlatPack::Button::Component.new(
+        text: "Continue with email",
+        style: :primary,
+        size: :md,
+        type: "submit",
+        class: "w-full"
+      ) %>
+    </div>
+  <% end %>
+
+  <p class="text-center text-sm text-[var(--surface-muted-content-color)]">
+    Don't have an account?
+    <%= render FlatPack::Link::Component.new(href: auth_sign_up_path) do %>
+      Sign up
+    <% end %>
+  </p>
+
+  <%= render "recording_studio_user/omniauth/continue_with_providers" %>
+<% end %>

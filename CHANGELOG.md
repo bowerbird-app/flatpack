@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `/studio` **Registered apps** switches the current root to Admin and opens `/admin/screens/oauth_clients`.
 - Dummy public API no longer registers Workspace, Folder, Page, or `ping`, so MCP/ChatGPT stop treating the demo tree as FlatPack resources.
 - Dummy forces the public API’s recordable list to the (empty) registry so HTTP and OpenAPI match MCP.
+- Password sign-in no longer resumes a stored `/admin` return path (Admin 403’d and looked like a failed login); sign-in forms disable Turbo to avoid a follow-up CSRF bounce to the email step.
 
 ### Changed
 - Dummy `recording_studio_api` pin is `v0.5.4` so named endpoints are available.
