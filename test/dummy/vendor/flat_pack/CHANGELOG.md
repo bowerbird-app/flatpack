@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dummy `/studio/recording_tree` diagnostic lists every recording (including Access) so hosts can check grants.
 - Docs for dummy Recording Studio wiring (`docs/recording_studio_dummy.md`).
 - `FlatPack::ComponentCatalog` lists public ViewComponents and shows initialize parameters. Hosts can serve those hashes from Recording Studio API `register_endpoint` without a fake recordable.
+- Catalog `list` meta includes `gem_version` and a `publicity` object (`scope: "public"` plus short `excludes` rule strings). Enum bindings cover placements, shapes, orientations, modes, and related option constants.
 
 ### Fixed
 - Dummy root switcher includes the Admin root so staff can open Admin screens.

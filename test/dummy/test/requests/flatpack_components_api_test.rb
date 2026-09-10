@@ -29,8 +29,15 @@ class FlatpackComponentsApiTest < ActionDispatch::IntegrationTest
     assert_response :success
     payload = JSON.parse(response.body)
     records = payload.fetch("records")
+    meta = payload.fetch("meta")
 
-    assert_equal records.size, payload.fetch("meta").fetch("count")
+    assert_equal records.size, meta.fetch("count")
+    assert_equal FlatPack::VERSION, meta.fetch("gem_version")
+    assert_equal "public", meta.fetch("publicity").fetch("scope")
+    excludes = meta.fetch("publicity").fetch("excludes")
+    assert_includes excludes, "FlatPack::BaseComponent"
+    assert_includes excludes, "FlatPack::Shared::*"
+    assert_includes excludes, "FlatPack::FormField::Component"
     assert(records.any? { |row| row.fetch("name") == "Button::Component" })
     records.each do |row|
       assert_equal %w[name class description category], row.keys

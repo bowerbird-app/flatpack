@@ -83,6 +83,8 @@ The dummy pins `recording_studio_mcp` to tag `v0.3.1`. That build advertises one
 
 Send a Bearer token. The gem builds the JSON with `FlatPack::ComponentCatalog.list` and `.show(name)`. The dummy maps an unknown name to `RecordingStudioApi::NotFoundError` (404). There is no catalog recordable and no Accessible check on a fake recording.
 
+`list` returns skinny records plus `meta`: `count`, `gem_version` (`FlatPack::VERSION`), and `publicity` (`scope: "public"` with short `excludes` rule strings from the publicity table — not excluded class names). `show` returns the same skinny keys plus `parameters`.
+
 Name accepts `Button::Component`, `Button--Component`, or a `FlatPack::` prefix. `Workspace` / `Folder` / `Page` remain host models for Admin, OAuth Connect roots, and the root switcher — they are not API resources on this dummy.
 
 ## Local setup

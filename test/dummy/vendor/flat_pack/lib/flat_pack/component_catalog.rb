@@ -20,11 +20,11 @@ module FlatPack
     ].freeze
 
     PUBLICITY_RULES = [
-      {name: :base, if: ->(row) { row[:class] == "FlatPack::BaseComponent" }, keep: false},
-      {name: :shared, if: ->(row) { row[:class].start_with?("FlatPack::Shared::") }, keep: false},
-      {name: :form_field, if: ->(row) { row[:class] == "FlatPack::FormField::Component" }, keep: false},
-      {name: :not_a_class, if: ->(row) { !row[:class_object].is_a?(Class) }, keep: false},
-      {name: :not_component, if: ->(row) { !(row[:class_object] < FlatPack::BaseComponent) }, keep: false},
+      {name: :base, if: ->(row) { row[:class] == "FlatPack::BaseComponent" }, keep: false, summary: "FlatPack::BaseComponent"},
+      {name: :shared, if: ->(row) { row[:class].start_with?("FlatPack::Shared::") }, keep: false, summary: "FlatPack::Shared::*"},
+      {name: :form_field, if: ->(row) { row[:class] == "FlatPack::FormField::Component" }, keep: false, summary: "FlatPack::FormField::Component"},
+      {name: :not_a_class, if: ->(row) { !row[:class_object].is_a?(Class) }, keep: false, summary: "non-classes"},
+      {name: :not_component, if: ->(row) { !(row[:class_object] < FlatPack::BaseComponent) }, keep: false, summary: "classes that do not inherit FlatPack::BaseComponent"},
       {name: :public, if: ->(_row) { true }, keep: true}
     ].freeze
 
@@ -36,7 +36,23 @@ module FlatPack
       {constant: :TYPES, kwargs: %i[type]},
       {constant: :ALIGNMENTS, kwargs: %i[alignment]},
       {constant: :DIRECTIONS, kwargs: %i[direction]},
-      {constant: :STATES, kwargs: %i[state]}
+      {constant: :STATES, kwargs: %i[state]},
+      {constant: :PLACEMENTS, kwargs: %i[placement]},
+      {constant: :SHAPES, kwargs: %i[shape]},
+      {constant: :ORIENTATIONS, kwargs: %i[orientation]},
+      {constant: :MODES, kwargs: %i[mode]},
+      {constant: :STATUSES, kwargs: %i[status]},
+      {constant: :GAPS, kwargs: %i[gap]},
+      {constant: :COLS, kwargs: %i[cols]},
+      {constant: :ALIGNS, kwargs: %i[align]},
+      {constant: :SEPARATORS, kwargs: %i[separator]},
+      {constant: :PADDINGS, kwargs: %i[padding]},
+      {constant: :HOVERS, kwargs: %i[hover]},
+      {constant: :TREND_DIRECTIONS, kwargs: %i[trend_direction]},
+      {constant: :OVERLAPS, kwargs: %i[overlap]},
+      {constant: :LOADING_VARIANTS, kwargs: %i[loading_variant]},
+      {constant: :INSERT_MODES, kwargs: %i[insert_mode]},
+      {constant: :AVATAR_MODES, kwargs: %i[avatar_mode]}
     ].freeze
 
     DOC_KEYS = {
@@ -71,7 +87,17 @@ module FlatPack
     class << self
       def list
         records = entries.map { |entry| entry.slice(*SKINNY_KEYS) }
-        {records: records, meta: {count: records.size}}
+        {
+          records: records,
+          meta: {
+            count: records.size,
+            gem_version: FlatPack::VERSION,
+            publicity: {
+              scope: "public",
+              excludes: publicity_excludes
+            }
+          }
+        }
       end
 
       def show(name)
@@ -139,6 +165,14 @@ module FlatPack
       def public?(row)
         rule = PUBLICITY_RULES.find { |candidate| candidate[:if].call(row) }
         rule.fetch(:keep)
+      end
+
+      def publicity_excludes
+        PUBLICITY_RULES.filter_map { |rule|
+          next if rule.fetch(:keep)
+
+          rule.fetch(:summary)
+        }
       end
 
       def category_for(class_name)

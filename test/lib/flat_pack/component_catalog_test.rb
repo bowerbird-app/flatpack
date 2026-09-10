@@ -34,8 +34,17 @@ module FlatPack
     test "list rows are skinny and meta.count matches records" do
       payload = FlatPack::ComponentCatalog.list
       records = payload.fetch(:records)
+      meta = payload.fetch(:meta)
 
-      assert_equal records.size, payload.fetch(:meta).fetch(:count)
+      assert_equal records.size, meta.fetch(:count)
+      assert_equal FlatPack::VERSION, meta.fetch(:gem_version)
+      assert_equal "public", meta.fetch(:publicity).fetch(:scope)
+      excludes = meta.fetch(:publicity).fetch(:excludes)
+      assert_includes excludes, "FlatPack::BaseComponent"
+      assert_includes excludes, "FlatPack::Shared::*"
+      assert_includes excludes, "FlatPack::FormField::Component"
+      assert_includes excludes, "non-classes"
+      assert_includes excludes, "classes that do not inherit FlatPack::BaseComponent"
       records.each do |row|
         assert_equal %i[name class description category], row.keys
         refute row.key?(:parameters)
@@ -77,6 +86,34 @@ module FlatPack
 
       assert_equal FlatPack::Tabs::Component::VARIANTS.keys.map(&:to_s), variant.fetch(:enum)
       refute payload.fetch(:parameters).any? { |parameter| parameter.fetch(:name) == "style" }
+    end
+
+    test "show Avatar binds SHAPES to shape" do
+      payload = FlatPack::ComponentCatalog.show("Avatar::Component")
+      shape = parameter_named(payload, "shape")
+
+      assert_equal FlatPack::Avatar::Component::SHAPES.keys.map(&:to_s), shape.fetch(:enum)
+    end
+
+    test "show Tooltip binds PLACEMENTS to placement" do
+      payload = FlatPack::ComponentCatalog.show("Tooltip::Component")
+      placement = parameter_named(payload, "placement")
+
+      assert_equal FlatPack::Tooltip::Component::PLACEMENTS.keys.map(&:to_s), placement.fetch(:enum)
+    end
+
+    test "show Stepper binds ORIENTATIONS to orientation" do
+      payload = FlatPack::ComponentCatalog.show("Stepper::Component")
+      orientation = parameter_named(payload, "orientation")
+
+      assert_equal FlatPack::Stepper::Component::ORIENTATIONS.map(&:to_s), orientation.fetch(:enum)
+    end
+
+    test "show Pagination binds MODES to mode" do
+      payload = FlatPack::ComponentCatalog.show("Pagination::Component")
+      mode = parameter_named(payload, "mode")
+
+      assert_equal FlatPack::Pagination::Component::MODES.keys.map(&:to_s), mode.fetch(:enum)
     end
 
     test "show returns nil for unknown names and accepts URL aliases" do
