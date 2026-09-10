@@ -13,6 +13,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.179] - 2026-09-10
+
+### Changed
+- Bumped the gem version to `0.1.179` so live hosts (ChatGPT catalog `meta.gem_version`) can confirm the slots tip. Catalog `show` slots auto-discovery shipped in `0.1.178`; this bump is the deploy signal only.
+
+### Upgrade notes
+- Redeploy / reconnect against a host on `0.1.179` to see `meta.gem_version` update. Slot payloads are unchanged from `0.1.178`.
+
 ## [0.1.178] - 2026-09-09
 
 ### Added
