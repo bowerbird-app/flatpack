@@ -1,1 +1,1 @@
-@/tmp/exact_changelog.md
+PLACEHOLDER_REPLACE_WITH_FILE
