@@ -1,1 +1,1 @@
-PLACEHOLDER_WILL_REPLACE
+file:///tmp/cl_content_only.txt
