@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Dummy app hosts Recording Studio API, OAuth Connect, MCP, Admin, and Users on Postgres.
 - Signed-in host home at `/studio` with Connected apps and Registered apps entry points.
+- Dummy `/studio` uses the Recording Studio host `flat_pack_sidebar` shell (same pattern as Admin / Users gem dummies), not the FlatPack component-catalog chrome.
+- Dummy `/studio/recording_tree` diagnostic lists every recording (including Access) so hosts can check grants.
 - Docs for dummy Recording Studio wiring (`docs/recording_studio_dummy.md`).
 - `FlatPack::ComponentCatalog` lists public ViewComponents and shows initialize parameters. Hosts can serve those hashes from Recording Studio API `register_endpoint` without a fake recordable.
 
@@ -30,7 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Dummy `recording_studio_api` pin is `v0.5.4` so named endpoints are available.
 - Dummy OpenAPI title is **FlatPack Component Catalog**; only the two catalog `register_endpoint` routes are exposed.
-- Dummy pins `recording_studio_mcp` to tag `v0.3.0` (endpoint tools; empty type list omits tree tools).
+- Dummy pins `recording_studio_mcp` to tag `v0.3.1` (endpoint tools; empty type list omits tree tools; `instructions_suffix` guides ChatGPT screen building from the FlatPack catalog).
 - Bumped the gem version to `0.1.178`.
 
 ### Upgrade notes

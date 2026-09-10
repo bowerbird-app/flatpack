@@ -94,6 +94,23 @@ class FlatpackComponentsApiTest < ActionDispatch::IntegrationTest
     refute_includes names, "describe"
   end
 
+  test "MCP pin and instructions_suffix guide FlatPack screen building" do
+    skip "Recording Studio MCP not in this bundle" unless defined?(RecordingStudioMcp)
+
+    assert_equal "0.3.1", RecordingStudioMcp::VERSION
+    assert_equal "0.3.1", Gem.loaded_specs.fetch("recording_studio_mcp").version.to_s
+
+    suffix = RecordingStudioMcp.configuration.instructions_suffix
+    suffix_text = suffix.respond_to?(:call) ? suffix.call : suffix.to_s
+
+    assert_includes suffix_text, "FlatPack"
+    assert_includes suffix_text, "flatpack_components"
+    assert_includes suffix_text, "flatpack_component"
+
+    instructions = RecordingStudioMcp::Instructions.text
+    assert_includes instructions, suffix_text
+  end
+
   test "OpenAPI lists the catalog under Endpoints and omits tree resources" do
     document = RecordingStudioApi::Services::OpenapiDocument.call
     paths = document.fetch(:paths)

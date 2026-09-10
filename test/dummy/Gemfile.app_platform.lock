@@ -8,10 +8,10 @@ GIT
 
 GIT
   remote: https://github.com/bowerbird-app/RecordingStudio_MCP.git
-  revision: d8ac4f5ab432f2d415b226e391f4c34215b83ef4
-  tag: v0.3.0
+  revision: 21ad3a48ac88ea8bb199a3911a05b36114675af6
+  tag: v0.3.1
   specs:
-    recording_studio_mcp (0.3.0)
+    recording_studio_mcp (0.3.1)
       rails (~> 8.1.0)
       recording_studio (~> 4.2)
       recording_studio_api (~> 0.5.4)
@@ -684,7 +684,7 @@ CHECKSUMS
   recording_studio_admin (2.0.2)
   recording_studio_api (0.5.4)
   recording_studio_attachable (0.5.1)
-  recording_studio_mcp (0.3.0)
+  recording_studio_mcp (0.3.1)
   recording_studio_oauth (0.1.0)
   recording_studio_root_switchable (0.5.1)
   recording_studio_site_settings (0.1.0)
