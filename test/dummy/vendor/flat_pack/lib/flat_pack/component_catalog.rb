@@ -111,7 +111,7 @@ module FlatPack
         entry.slice(*SKINNY_KEYS).merge(
           parameters: parameters_for(entry[:class_object]),
           slots: slots_for(entry[:class_object]),
-          examples: DocExamples.for(entry[:class_object], doc_path_for(entry[:relative_path]))
+          examples: DocExamples.for(entry[:class_object], entry[:doc_path])
         )
       end
 
@@ -149,13 +149,14 @@ module FlatPack
         class_name = klass.name
         return if class_name.blank?
 
+        doc_path = doc_path_for(relative)
         {
           name: class_name.delete_prefix("FlatPack::"),
           class: class_name,
-          description: description_for(klass, relative),
+          description: description_for(klass, doc_path),
           category: category_for(class_name),
           class_object: klass,
-          relative_path: relative
+          doc_path: doc_path
         }
       end
 
@@ -189,16 +190,15 @@ module FlatPack
         class_name.delete_prefix("FlatPack::").split("::").first
       end
 
-      def description_for(klass, relative)
+      def description_for(klass, doc_path)
         if klass.respond_to?(:catalog_description)
           text = klass.catalog_description
           return text if text.present?
         end
 
-        path = doc_path_for(relative)
-        return MISSING_DESCRIPTION if path.nil?
+        return MISSING_DESCRIPTION if doc_path.nil?
 
-        first_paragraph_from_markdown(path)
+        first_paragraph_from_markdown(doc_path)
       end
 
       def doc_path_for(relative)
@@ -257,7 +257,7 @@ module FlatPack
           next unless kind == :keyreq || kind == :key || kind == :keyrest
 
           {
-            name: ((kind == :keyrest && pname == :system_arguments) ? "system_arguments" : pname.to_s),
+            name: pname.to_s,
             required: kind == :keyreq
           }
         }
