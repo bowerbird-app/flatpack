@@ -7,6 +7,7 @@ module Dummy
     Build UI only with public catalog FlatPack::…::Component. Do not use custom HTML, Tailwind utility dumps, or invented component names.
     Honor required params, types, enums, and known defaults from the detail payload.
     Prefer composing via the APIs and slots the detail payload describes, for example Card body or header when present. Do not invent a second design system.
+    Show may include examples copied from component docs. Host helpers may appear as written.
   TEXT
 end
 

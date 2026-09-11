@@ -48,6 +48,7 @@ module FlatPack
       records.each do |row|
         assert_equal %i[name class description category], row.keys
         refute row.key?(:parameters)
+        refute row.key?(:examples)
       end
     end
 
@@ -175,6 +176,69 @@ module FlatPack
 
       assert_equal [], button.fetch(:slots)
       assert_equal [], avatar.fetch(:slots)
+    end
+
+    test "show Button includes erb examples from the first Example section" do
+      examples = FlatPack::ComponentCatalog.show("Button::Component").fetch(:examples)
+
+      assert_operator examples.size, :>=, 1
+      examples.each do |example|
+        assert_equal %i[erb], example.keys
+        assert_includes example.fetch(:erb), "FlatPack::Button::Component"
+      end
+      assert(
+        examples.any? { |example| example.fetch(:erb).include?("Delete") || example.fetch(:erb).include?("magnifying-glass") }
+      )
+    end
+
+    test "show Button Pill has no examples because its snippet sits outside Example" do
+      payload = FlatPack::ComponentCatalog.show("Button::Pill::Component")
+
+      assert_equal [], payload.fetch(:examples)
+    end
+
+    test "show Alert includes at least one example that names the class" do
+      examples = FlatPack::ComponentCatalog.show("Alert::Component").fetch(:examples)
+
+      assert_operator examples.size, :>=, 1
+      assert_equal %i[erb], examples.first.keys
+      assert_includes examples.first.fetch(:erb), "FlatPack::Alert::Component"
+    end
+
+    test "show Checkbox has no examples when it shares inputs.md without a named fence" do
+      payload = FlatPack::ComponentCatalog.show("Checkbox::Component")
+
+      assert_equal [], payload.fetch(:examples)
+    end
+
+    test "reset! clears the doc examples cache" do
+      Dir.mktmpdir do |dir|
+        path = File.join(dir, "snippet.md")
+        File.write(path, <<~MD)
+          ## Example
+          ```erb
+          <%= render FlatPack::Button::Component.new(text: "Cached") %>
+          ```
+        MD
+
+        examples = FlatPack::ComponentCatalog.const_get(:DocExamples)
+        first = examples.for(FlatPack::Button::Component, path)
+        File.write(path, <<~MD)
+          ## Example
+          ```erb
+          <%= render FlatPack::Button::Component.new(text: "Fresh") %>
+          ```
+        MD
+        cached = examples.for(FlatPack::Button::Component, path)
+
+        assert_includes first.first.fetch(:erb), "Cached"
+        assert_includes cached.first.fetch(:erb), "Cached"
+
+        FlatPack::ComponentCatalog.reset!
+        fresh = examples.for(FlatPack::Button::Component, path)
+
+        assert_includes fresh.first.fetch(:erb), "Fresh"
+      end
     end
 
     test "show returns nil for unknown names and accepts URL aliases" do

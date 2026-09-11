@@ -44,7 +44,7 @@ class FlatpackComponentsApiTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test "authenticated show Button includes parameters and empty slots" do
+  test "authenticated show Button includes parameters, empty slots, and examples" do
     get "/recording_studio_api/api/v1/flatpack/components/Button--Component", headers: authorization_headers
 
     assert_response :success
@@ -61,6 +61,12 @@ class FlatpackComponentsApiTest < ActionDispatch::IntegrationTest
     assert_nil text.fetch("default")
     refute system_arguments.key?("default")
     assert_equal [], payload.fetch("slots")
+    examples = payload.fetch("examples")
+    assert_operator examples.size, :>=, 1
+    examples.each do |example|
+      assert_equal %w[erb], example.keys
+      assert_includes example.fetch("erb"), "FlatPack::Button::Component"
+    end
   end
 
   test "authenticated show Card includes public slot names" do
@@ -231,6 +237,9 @@ class FlatpackComponentsApiTest < ActionDispatch::IntegrationTest
     assert_includes haystack, "required params"
     assert_includes haystack, "enums"
     assert_includes lowered, "do not invent a second design system"
+    assert_includes haystack, "examples"
+    assert_includes haystack, "component docs"
+    assert_includes haystack, "Host helpers"
   end
 
   def grant_or_bootstrap_access!(recording:, actor:, role:)
