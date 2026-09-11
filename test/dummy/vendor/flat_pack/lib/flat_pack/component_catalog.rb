@@ -3,9 +3,12 @@
 require "cgi"
 require "pathname"
 require_relative "component_catalog/initialize_kwarg_defaults"
+require_relative "component_catalog/doc_examples"
 
 module FlatPack
   module ComponentCatalog
+    private_constant :DocExamples
+
     COMPONENT_ROOT = -> { FlatPack::Engine.root.join("app/components/flat_pack") }
 
     SKINNY_KEYS = %i[name class description category].freeze
@@ -107,13 +110,15 @@ module FlatPack
 
         entry.slice(*SKINNY_KEYS).merge(
           parameters: parameters_for(entry[:class_object]),
-          slots: slots_for(entry[:class_object])
+          slots: slots_for(entry[:class_object]),
+          examples: DocExamples.for(entry[:class_object], doc_path_for(entry[:relative_path]))
         )
       end
 
       def reset!
         @entries = nil
         InitializeKwargDefaults.reset!
+        DocExamples.reset!
       end
 
       def entries
@@ -190,20 +195,20 @@ module FlatPack
           return text if text.present?
         end
 
-        family = relative.split("/").first
-        doc_key = DOC_KEYS.fetch(family, family)
-        paragraph_from_docs(doc_key) || MISSING_DESCRIPTION
+        path = doc_path_for(relative)
+        return MISSING_DESCRIPTION if path.nil?
+
+        first_paragraph_from_markdown(path)
       end
 
-      def paragraph_from_docs(doc_key)
+      def doc_path_for(relative)
+        family = relative.split("/").first
+        doc_key = DOC_KEYS.fetch(family, family)
         dash_key = doc_key.tr("_", "-")
-        path = [
+        [
           FlatPack::Engine.root.join("docs/components/#{doc_key}.md"),
           FlatPack::Engine.root.join("docs/components/#{dash_key}.md")
         ].find { |candidate| File.exist?(candidate) }
-        return if path.nil?
-
-        first_paragraph_from_markdown(path)
       end
 
       def first_paragraph_from_markdown(path)
