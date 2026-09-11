@@ -13,6 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.180] - 2026-09-11
+
+### Added
+- ComponentCatalog `show` parameters include `default` when `initialize` has a JSON-safe literal kwarg (`nil`, bool, string, number, symbol as string). The key is omitted when the default is unknown (required, keyrest, constant, call, unreadable source).
+
+### Changed
+- Bumped the gem version to `0.1.180`.
+
+### Upgrade notes
+- `show` parameters may include `default` when that kwarg default is a known JSON-safe literal. Treat a missing `default` key as unknown, not as `nil`. An explicit `default: null` means the source wrote `kwarg: nil`. Clients that assumed a fixed parameter key list should treat `default` as optional. Redeploy / reconnect so `meta.gem_version` shows `0.1.180`.
+
 ## [0.1.179] - 2026-09-10
 
 ### Changed
