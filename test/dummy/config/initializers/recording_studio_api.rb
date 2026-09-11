@@ -5,7 +5,7 @@ module Dummy
     This host is a FlatPack component catalog, not a recordings tree.
     Call flatpack_components to list, then flatpack_component with name for full params, before writing any screen ERB.
     Build UI only with public catalog FlatPack::…::Component. Do not use custom HTML, Tailwind utility dumps, or invented component names.
-    Honor required params, types, and enums from the detail payload.
+    Honor required params, types, enums, and known defaults from the detail payload.
     Prefer composing via the APIs and slots the detail payload describes, for example Card body or header when present. Do not invent a second design system.
   TEXT
 end

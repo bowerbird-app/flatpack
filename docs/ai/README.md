@@ -33,7 +33,7 @@ bin/rake flat_pack:verify_install
 - `docs/components/DOC_FORMAT.md`: normalized component doc structure
 - `docs/installation.md`: human-readable installation guide
 
-The running inventory is `FlatPack::ComponentCatalog` (HTTP `GET /recording_studio_api/api/v1/flatpack/components` on a host that registers those endpoints, including this dummy). `manifest.yml` is not the runtime catalog.
+The running inventory is `FlatPack::ComponentCatalog` (HTTP `GET /recording_studio_api/api/v1/flatpack/components` on a host that registers those endpoints, including this dummy). `manifest.yml` is not the runtime catalog. `list` is skinny records plus `meta`. `show(name)` adds `parameters` and `slots`. A parameter may include `default` when the `initialize` kwarg is a JSON-safe literal. The key is omitted when that default is unknown.
 
 ## Notes
 
