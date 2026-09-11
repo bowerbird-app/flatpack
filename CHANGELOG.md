@@ -13,6 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.181] - 2026-09-11
+
+### Added
+- ComponentCatalog `show` includes `examples` (`[{erb:}, ...]`, possibly empty) copied from `erb` and `ruby` fences in the first `## Example` section of the component doc. Each fence is indexed under every `FlatPack::…` class named in its body.
+
+### Changed
+- Bumped the gem version to `0.1.181`.
+
+### Upgrade notes
+- `show` always includes `examples`. An empty array means the doc has no `## Example` fence that names that class. Host helpers in copied ERB stay as written. `list` rows do not include `examples`. Redeploy / reconnect so `meta.gem_version` shows `0.1.181`.
+
 ## [0.1.180] - 2026-09-11
 
 ### Added
