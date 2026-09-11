@@ -51,7 +51,15 @@ class FlatpackComponentsApiTest < ActionDispatch::IntegrationTest
     payload = JSON.parse(response.body)
 
     assert_equal "Button::Component", payload.fetch("name")
-    assert(payload.fetch("parameters").any? { |parameter| parameter.fetch("name") == "style" })
+    style = payload.fetch("parameters").find { |parameter| parameter.fetch("name") == "style" }
+    text = payload.fetch("parameters").find { |parameter| parameter.fetch("name") == "text" }
+    system_arguments = payload.fetch("parameters").find { |parameter| parameter.fetch("name") == "system_arguments" }
+
+    assert style
+    assert_equal "default", style.fetch("default")
+    assert text.key?("default")
+    assert_nil text.fetch("default")
+    refute system_arguments.key?("default")
     assert_equal [], payload.fetch("slots")
   end
 

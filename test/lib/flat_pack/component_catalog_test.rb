@@ -68,6 +68,43 @@ module FlatPack
       refute(payload.fetch(:parameters).any? { |parameter| parameter.fetch(:name) =~ /icon_only_size/i })
     end
 
+    test "show Button includes JSON-safe initialize literal defaults" do
+      payload = FlatPack::ComponentCatalog.show("Button::Component")
+      style = parameter_named(payload, "style")
+      size = parameter_named(payload, "size")
+      icon_only = parameter_named(payload, "icon_only")
+      text = parameter_named(payload, "text")
+      system_arguments = parameter_named(payload, "system_arguments")
+
+      assert_equal "default", style.fetch(:default)
+      assert_equal "md", size.fetch(:default)
+      assert_equal false, icon_only.fetch(:default)
+      assert_nil text.fetch(:default)
+      assert text.key?(:default)
+      refute system_arguments.key?(:default)
+    end
+
+    test "show EmailCard omits constant-backed defaults and keeps literal align" do
+      payload = FlatPack::ComponentCatalog.show("EmailCard::Component")
+      max_width = parameter_named(payload, "max_width")
+      padding = parameter_named(payload, "padding")
+      align = parameter_named(payload, "align")
+
+      refute max_width.key?(:default)
+      refute padding.key?(:default)
+      assert_equal "center", align.fetch(:default)
+    end
+
+    test "show does not invent defaults for required kwargs" do
+      payload = FlatPack::ComponentCatalog.show("Button::Pill::Component")
+      items = parameter_named(payload, "items")
+      system_arguments = parameter_named(payload, "system_arguments")
+
+      assert items.fetch(:required)
+      refute items.key?(:default)
+      refute system_arguments.key?(:default)
+    end
+
     test "show Alert binds VARIANTS to style" do
       payload = FlatPack::ComponentCatalog.show("Alert::Component")
       style = parameter_named(payload, "style")

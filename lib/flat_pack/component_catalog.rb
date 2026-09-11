@@ -2,6 +2,7 @@
 
 require "cgi"
 require "pathname"
+require_relative "component_catalog/initialize_kwarg_defaults"
 
 module FlatPack
   module ComponentCatalog
@@ -112,6 +113,7 @@ module FlatPack
 
       def reset!
         @entries = nil
+        InitializeKwargDefaults.reset!
       end
 
       def entries
@@ -255,8 +257,10 @@ module FlatPack
           }
         }
         enums = enums_for(klass, kwargs.map { |row| row[:name] })
+        defaults = InitializeKwargDefaults.literal_defaults(klass)
         kwargs.map { |row|
           row = row.merge(enum: enums[row[:name]]) if enums[row[:name]]
+          row = row.merge(default: defaults[row[:name]]) if defaults.key?(row[:name])
           row.merge(type: type_for(row))
         }
       end
