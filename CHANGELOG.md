@@ -13,6 +13,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.181] - 2026-09-11
+
+### Added
+- ComponentCatalog `show` includes `examples` (`[{erb:}, ...]`, possibly empty) copied from `erb` and `ruby` fences in the first `## Example` section of the component doc. Each fence is indexed under every `FlatPack::…` class named in its body.
+
+### Changed
+- Bumped the gem version to `0.1.181`.
+
+### Upgrade notes
+- `show` always includes `examples`. An empty array means the doc has no `## Example` fence that names that class. Host helpers in copied ERB stay as written. `list` rows do not include `examples`. Redeploy / reconnect so `meta.gem_version` shows `0.1.181`.
+
+## [0.1.180] - 2026-09-11
+
+### Added
+- ComponentCatalog `show` parameters include `default` when `initialize` has a JSON-safe literal kwarg (`nil`, bool, string, number, symbol as string). The key is omitted when the default is unknown (required, keyrest, constant, call, unreadable source).
+
+### Changed
+- Bumped the gem version to `0.1.180`.
+
+### Upgrade notes
+- `show` parameters may include `default` when that kwarg default is a known JSON-safe literal. Treat a missing `default` key as unknown, not as `nil`. An explicit `default: null` means the source wrote `kwarg: nil`. Clients that assumed a fixed parameter key list should treat `default` as optional. Redeploy / reconnect so `meta.gem_version` shows `0.1.180`.
+
+## [0.1.179] - 2026-09-10
+
+### Changed
+- Bumped the gem version to `0.1.179` so live hosts (ChatGPT catalog `meta.gem_version`) can confirm the slots tip. Catalog `show` slots auto-discovery shipped in `0.1.178`; this bump is the deploy signal only.
+
+### Upgrade notes
+- Redeploy / reconnect against a host on `0.1.179` to see `meta.gem_version` update. Slot payloads are unchanged from `0.1.178`.
+
+## [0.1.178] - 2026-09-09
+
+### Added
+- ComponentCatalog `show` includes ViewComponent slots (`renders_one` / `renders_many`) with public ERB names (`body_slot` → `body`).
+- Catalog list meta: `gem_version` + publicity excludes; richer enums.
+- Dummy MCP: pin `recording_studio_mcp` v0.3.1; FlatPack compose workflow in OpenAPI / `instructions_suffix`.
+
+### Changed
+- Bumped the gem version to `0.1.178`.
+
+### Upgrade notes
+- Call `FlatPack::ComponentCatalog.list` and `.show(name)` from a host initializer. `show` includes `slots` (`[{name:, collection:}, ...]` or `[]`). The gem does not mount HTTP routes.
+
 ## [0.1.177] - 2026-09-09
 
 ### Fixed

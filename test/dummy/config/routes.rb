@@ -1,7 +1,51 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  devise_for :users, controllers: {sessions: "users/sessions"}
+  if defined?(RecordingStudioUser)
+    # OmniAuth callbacks only when credentials configure providers (Users adds
+    # :omniauthable in that case). Password auth works without OmniAuth.
+    devise_for :users,
+      skip: %i[sessions registrations passwords],
+      controllers: {
+        confirmations: "recording_studio_user/auth/confirmations"
+      }
+
+    recording_studio_user_auth_for :users
+
+    # RecordingStudio engine is data/API-focused and has no browser root route.
+    get "/recording_studio", to: redirect("/"), as: nil
+    mount RecordingStudio::Engine, at: "/recording_studio"
+    mount RecordingStudioAccessible::Engine, at: "/recording_studio_accessible"
+    mount RecordingStudioAccessible::Engine, at: "/admin/access", as: :recording_studio_admin_access
+    mount RecordingStudioApi::Engine, at: "/recording_studio_api"
+    mount RecordingStudioOauth::Engine, at: "/recording_studio_oauth"
+    RecordingStudioOauth::Engine.routes.draw do
+      namespace :admin do
+        resources :oauth_clients, only: %i[edit update]
+      end
+    end
+    mount RecordingStudioMcp::Engine, at: "/recording_studio_mcp"
+    mount RecordingStudioAttachable::Engine, at: "/recording_studio_attachable"
+    mount RecordingStudioSiteSettings::Engine, at: "/recording_studio_site_settings"
+    mount RecordingStudioRootSwitchable::Engine, at: "/recording_studio_root_switchable"
+    mount RecordingStudioUser::Engine => RecordingStudioUser.config.mount_path, :as => :recording_studio_users
+
+    get "/.well-known/oauth-authorization-server",
+      to: "recording_studio_oauth/oauth_discoveries#authorization_server",
+      defaults: {api_key: "public"}
+    get "/.well-known/oauth-protected-resource",
+      to: "recording_studio_oauth/oauth_discoveries#protected_resource",
+      defaults: {api_key: "public"}
+
+    recording_studio_admin_for :admin, at: "/admin", root_section: :root
+
+    get "studio", to: "studio#index", as: :studio
+    get "studio/recording_tree", to: "recording_trees#index", as: :studio_recording_tree
+  else
+    # Root gem suite boots dummy without the Recording Studio host gems.
+    devise_for :users
+  end
+
   # Mount the FlatPack engine
   mount FlatPack::Engine => "/flat_pack"
 

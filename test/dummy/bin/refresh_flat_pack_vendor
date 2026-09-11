@@ -34,4 +34,10 @@ copy_entries.each do |entry|
   end
 end
 
+# Host-only docs stay in the repo docs tree; do not ship them in the vendor snapshot.
+host_only_docs = [
+  File.join(vendor_root, "docs/recording_studio_dummy.md")
+]
+host_only_docs.each { |path| FileUtils.rm_f(path) }
+
 puts "Refreshed vendored FlatPack at #{vendor_root}"

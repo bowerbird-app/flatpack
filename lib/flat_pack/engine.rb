@@ -32,6 +32,10 @@ module FlatPack
   class Engine < ::Rails::Engine
     isolate_namespace FlatPack
 
+    config.to_prepare do
+      FlatPack::ComponentCatalog.reset!
+    end
+
     # Configure autoload paths for components
     config.autoload_paths << root.join("app/components")
 

@@ -1,0 +1,62 @@
+<div class="flex w-full flex-col gap-6">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Connected Apps",
+    variant: :h1
+  ) %>
+
+  <div class="flex flex-wrap gap-3">
+    <% if @admin_root_recording && defined?(RecordingStudioRootSwitchable) %>
+      <%= form_with url: recording_studio_root_switchable.root_switch_path(scope: "all_workspaces"),
+            method: :patch,
+            class: "inline" do %>
+        <%= hidden_field_tag "root_switch[root_recording_id]", @admin_root_recording.id %>
+        <%= hidden_field_tag "root_switch[return_to]", @registered_apps_path %>
+        <%= render FlatPack::Button::Component.new(
+          text: "Registered apps",
+          style: :primary,
+          type: "submit"
+        ) %>
+      <% end %>
+    <% elsif @registered_apps_path.present? %>
+      <%= render FlatPack::Button::Component.new(
+        text: "Registered apps",
+        href: @registered_apps_path,
+        style: :primary
+      ) %>
+    <% end %>
+  </div>
+
+  <% if defined?(RecordingStudioOauth) %>
+    <% if @authorizations.present? %>
+      <%= render FlatPack::List::Component.new(divider: true) do %>
+        <% @authorizations.each do |authorization| %>
+          <% remove_button = nil %>
+          <% if authorization.revoked_at.nil? %>
+            <% remove_button = capture do %>
+              <%= form_with url: recording_studio_oauth.connected_app_path(authorization), method: :delete do %>
+                <%= render FlatPack::Button::Component.new(
+                  text: "Remove access",
+                  style: :danger,
+                  size: :sm,
+                  type: "submit"
+                ) %>
+              <% end %>
+            <% end %>
+          <% end %>
+          <%= render FlatPack::List::Item.new(trailing: remove_button) do %>
+            <p class="font-medium"><%= authorization.oauth_client.name %></p>
+            <p class="text-sm text-[var(--surface-muted-content-color)]">
+              <%= connected_app_status(authorization) %>
+            </p>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% else %>
+      <%= render FlatPack::EmptyState::Component.new(
+        title: "Nothing connected yet",
+        description: "When you Connect an app to a workspace, it shows up here.",
+        icon: :inbox
+      ) %>
+    <% end %>
+  <% end %>
+</div>
