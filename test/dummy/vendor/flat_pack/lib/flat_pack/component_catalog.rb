@@ -281,8 +281,6 @@ module FlatPack
         }.sort_by { |row| row[:name] }
       end
 
-      # Prefer the public ERB method when FlatPack wraps a `*_slot` registry name
-      # (Card: body_slot → body). Keep the registry name when that is the API.
       def public_slot_name(klass, registry_name)
         name = registry_name.to_s
         return name unless name.end_with?("_slot")
