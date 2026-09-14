@@ -19,15 +19,17 @@ Pinned in `test/dummy/Gemfile.common`:
 
 Recording Studio host gems need Ruby `>= 3.3`.
 
-The public catalog does not need Postgres. `/`, `/demo`, and the other open demo paths render with the database down. Login, `/studio`, Admin, MCP, and OAuth still need Postgres. Start Redis when Action Cable or Sidekiq use it.
+The public catalog does not need Postgres for `/`, `/demo`, themes, heroes, mobile demos, `/flat_pack`, `/up`, and assets. Those requests skip Recording Studio root resolution, so they do not call `Workspace.order`. Login, `/studio`, Admin, MCP, and OAuth still need Postgres. A few interactive demos under `/demo/*` (articles, comments, tables, chat) still read or write rows when you hit them. Start Redis when Action Cable or Sidekiq use it.
 
 ## Public catalog vs gated host paths
 
-Open without login. These paths do not query Postgres:
+Open without login. These paths skip root resolution and do not need Postgres for the catalog chrome:
 
-- `/`, `/demo`, `/demo/*`
+- `/`, `/demo`
 - `/themes`, `/pages/hero*`, `/mobile*`
 - `/flat_pack`, `/up`, static assets
+
+Other `/demo/*` pages stay open without login. Most are static. Demos that touch `DemoTableRow`, `DemoComment`, `Article`, or chat tables still need Postgres when you open those specific routes.
 
 Gated (sign in or bearer token):
 
