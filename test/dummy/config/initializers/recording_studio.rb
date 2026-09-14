@@ -1,0 +1,22 @@
+# frozen_string_literal: true
+
+return unless defined?(RecordingStudio)
+
+RecordingStudio.configure do |config|
+  config.recordable_types = [
+    "Workspace",
+    "Folder",
+    "Page",
+    "AdminRoot",
+    "RecordingStudioUser::People",
+    "RecordingStudioUser::Profile",
+    "RecordingStudioSiteSettings::SiteSetting",
+    "RecordingStudioAttachable::Attachment"
+  ]
+  config.require_recordable_declarations = true
+  config.app_name = "FlatPack" if config.respond_to?(:app_name=)
+  config.actor = -> { Current.actor }
+  config.event_notifications_enabled = true
+  config.idempotency_mode = :return_existing
+  config.recordable_dup_strategy = :dup
+end

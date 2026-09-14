@@ -57,3 +57,12 @@ pin "@tiptap/extension-mathematics", to: "https://esm.sh/@tiptap/extension-mathe
 pin "@tiptap/extension-emoji", to: "https://esm.sh/@tiptap/extension-emoji@#{TIPTAP_VERSION}"
 pin "@tiptap/extension-invisible-characters", to: "https://esm.sh/@tiptap/extension-invisible-characters@#{TIPTAP_VERSION}"
 pin "@tiptap/extension-table-of-contents", to: "https://esm.sh/@tiptap/extension-table-of-contents@#{TIPTAP_VERSION}"
+
+# Importmap instance_evals this file inside Importmap::Map, so engine constants
+# must be looked up from the top-level namespace.
+if defined?(::RecordingStudioAdmin::Engine)
+  pin_all_from ::RecordingStudioAdmin::Engine.root.join("app/javascript/recording_studio_admin/controllers"),
+    under: "controllers/recording_studio_admin",
+    to: "recording_studio_admin/controllers",
+    preload: false
+end

@@ -1,0 +1,24 @@
+<div class="mx-auto flex w-full max-w-5xl flex-col gap-6">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Recording tree",
+    subtitle: "All #{@recording_count} recordings, including Access grants. Meta shows your role on content nodes.",
+    variant: :h1
+  ) %>
+
+  <% if @root_recordings.any? %>
+    <%= render FlatPack::Tree::Component.new(compact: true) do |tree| %>
+      <% build_recording_tree_nodes(
+           tree,
+           @root_recordings,
+           @recording_children,
+           viewer_roles_by_recording_id: @viewer_roles_by_recording_id
+         ) %>
+    <% end %>
+  <% else %>
+    <%= render FlatPack::EmptyState::Component.new(
+      title: "No recordings yet",
+      description: "Seed the dummy app to populate the recording tree.",
+      icon: :folder
+    ) %>
+  <% end %>
+</div>
