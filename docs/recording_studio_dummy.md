@@ -17,11 +17,13 @@ Pinned in `test/dummy/Gemfile.common`:
 - `recording_studio_mcp`
 - `recording_studio_root_switchable`
 
-Recording Studio host gems need Ruby `>= 3.3`. Postgres and Redis must be running.
+Recording Studio host gems need Ruby `>= 3.3`.
+
+The public catalog does not need Postgres. `/`, `/demo`, and the other open demo paths render with the database down. Login, `/studio`, Admin, MCP, and OAuth still need Postgres. Start Redis when Action Cable or Sidekiq use it.
 
 ## Public catalog vs gated host paths
 
-Open without login:
+Open without login. These paths do not query Postgres:
 
 - `/`, `/demo`, `/demo/*`
 - `/themes`, `/pages/hero*`, `/mobile*`
@@ -38,7 +40,7 @@ Gated (sign in or bearer token):
 
 Staff Admin requires the current root to be **Admin**. The root switcher (`all_workspaces`) lists Studio Workspace, Docs Workspace, and Admin. Hitting `/admin` (or an admin screen) while a workspace is selected returns an empty `403` (`head :forbidden`) — that looks like a blank page. From `/studio`, **Registered apps** switches the current root to Admin and opens `/admin/screens/oauth_clients`. Use the root switcher for other Admin entry points.
 
-`ApplicationController` skips `authenticate_user!` for the public catalog and keeps the FlatPack `application` layout there (component demo chrome). Signed-in host home at `/studio` uses the Recording Studio dummy shell `flat_pack_sidebar` (left sidebar + top nav with root switcher), matching Admin / Users gem dummies. Admin, OAuth Connect, API, and other product mounts stay on `recording_studio/default_layout` (PageNav, no host sidebar).
+`ApplicationController` skips `authenticate_user!` for the public catalog and calls `skip_recording_studio_root_resolution` so those pages do not resolve a current root. It keeps the FlatPack `application` layout there (component demo chrome). Signed-in host home at `/studio` uses the Recording Studio dummy shell `flat_pack_sidebar` (left sidebar + top nav with root switcher), matching Admin / Users gem dummies. Admin, OAuth Connect, API, and other product mounts stay on `recording_studio/default_layout` (PageNav, no host sidebar).
 
 ## Signup and login
 

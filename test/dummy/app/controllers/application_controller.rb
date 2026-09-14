@@ -3,6 +3,7 @@
 class ApplicationController < ActionController::Base
   if defined?(RecordingStudio::RootSwitchable::ControllerSupport)
     include RecordingStudio::RootSwitchable::ControllerSupport
+    skip_recording_studio_root_resolution if: :public_catalog_request?
   end
 
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.

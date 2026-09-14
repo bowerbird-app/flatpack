@@ -147,7 +147,7 @@ jobs:
           DB_PASSWORD: postgres
           DB_HOST: localhost
           DB_NAME: flatpack_dummy_test
-        run: bundle exec rails test test/requests/recording_studio_host_wiring_test.rb
+        run: bundle exec rails test test/requests/recording_studio_host_wiring_test.rb test/requests/public_catalog_without_db_test.rb
 
   dummy-app-rails-7:
     name: Dummy App Tests (Rails 7)
