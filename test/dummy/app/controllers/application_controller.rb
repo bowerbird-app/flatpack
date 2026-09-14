@@ -3,6 +3,8 @@
 class ApplicationController < ActionController::Base
   if defined?(RecordingStudio::RootSwitchable::ControllerSupport)
     include RecordingStudio::RootSwitchable::ControllerSupport
+
+    # Catalog-only deploys have no Postgres; root resolution would Workspace.order.
     skip_recording_studio_root_resolution if: :public_catalog_request?
   end
 
