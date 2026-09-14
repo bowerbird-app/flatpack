@@ -67,7 +67,7 @@ Seed accounts after `bin/rails db:seed`:
 
 ### Discovery
 
-The host keeps the auth-server alias and draws origin protected-resource URLs with `RecordingStudioOauth::ProtectedResourceRegistry.draw_origin_well_known(self)` in `config/routes.rb`. Oauth 0.2.0 owns that registry. MCP `/recording_studio_mcp` is one entry. API `/recording_studio_api/api` is another. Do not add a second host discovery controller.
+The host keeps the auth-server alias and draws origin protected-resource URLs with `RecordingStudioOauth::ProtectedResourceRegistry.draw_origin_well_known(self)` in `config/routes.rb`. That Oauth 0.2.0 registry maps MCP `/recording_studio_mcp` and API `/recording_studio_api/api`.
 
 - `/.well-known/oauth-authorization-server` (auth-server alias)
 - `/.well-known/oauth-protected-resource/recording_studio_mcp` (MCP metadata). `resource` is `{origin}/recording_studio_mcp`.
