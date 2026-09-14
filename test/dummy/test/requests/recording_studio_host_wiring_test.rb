@@ -58,6 +58,31 @@ class RecordingStudioHostWiringTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
+  test "root authorize redirects to oauth authorize with the full query string" do
+    skip "Recording Studio OAuth not in this bundle" unless defined?(RecordingStudioOauth)
+
+    query = {
+      "client_id" => "cursor-mcp",
+      "response_type" => "code",
+      "redirect_uri" => "cursor://callback",
+      "code_challenge" => "challenge",
+      "code_challenge_method" => "S256",
+      "resource" => "http://www.example.com/recording_studio_mcp",
+      "state" => "cursor-state"
+    }
+
+    get "/authorize", params: query
+
+    assert_response :redirect
+    assert_equal 302, response.status
+    location = URI.parse(response.headers.fetch("Location"))
+    assert_equal "/recording_studio_oauth/oauth/authorize", location.path
+    forwarded = Rack::Utils.parse_query(location.query)
+    query.each do |key, value|
+      assert_equal value, forwarded.fetch(key), "expected #{key} to pass through"
+    end
+  end
+
   test "users sign in page loads" do
     skip "Recording Studio Users not in this bundle" unless defined?(RecordingStudioUser)
 

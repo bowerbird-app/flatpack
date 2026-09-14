@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Dummy pins `recording_studio_oauth` v0.2.0 and `recording_studio_mcp` v0.3.2. The host draws origin well-known with `RecordingStudioOauth::ProtectedResourceRegistry.draw_origin_well_known`. Cursor resource identity is `/recording_studio_mcp`. Unsuffixed `/.well-known/oauth-protected-resource` is 404. ChatGPT and API keep using `/recording_studio_oauth/.well-known/oauth-protected-resource`.
+- Dummy `GET /authorize` redirects to `/recording_studio_oauth/oauth/authorize` and keeps the query string (Cursor MCP OAuth tunnel quirk).
 
 ### Fixed
 

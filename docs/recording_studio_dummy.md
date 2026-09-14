@@ -75,7 +75,7 @@ The host keeps the auth-server alias and draws origin protected-resource URLs wi
 - `/recording_studio_oauth/.well-known/oauth-protected-resource` (engine-mounted API metadata for ChatGPT and API clients)
 - `/.well-known/oauth-protected-resource` (unsuffixed origin) is 404 by default
 
-Cursor resource identity is the MCP URL (`…/recording_studio_mcp`), not API `/recording_studio_api/api`.
+Cursor resource identity is the MCP URL (`…/recording_studio_mcp`), not API `/recording_studio_api/api`. Cursor may open `GET /authorize` on the tunnel origin; the dummy 302s that path to `/recording_studio_oauth/oauth/authorize` with the query string intact.
 
 ## Recordables
 

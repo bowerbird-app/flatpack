@@ -35,6 +35,13 @@ Rails.application.routes.draw do
       defaults: {api_key: "public"}
     RecordingStudioOauth::ProtectedResourceRegistry.draw_origin_well_known(self)
 
+    # Cursor MCP OAuth sometimes opens /authorize on the tunnel origin.
+    get "/authorize", to: redirect(status: 302) { |_path_params, request|
+      target = "/recording_studio_oauth/oauth/authorize"
+      query = request.query_string
+      query.empty? ? target : "#{target}?#{query}"
+    }
+
     recording_studio_admin_for :admin, at: "/admin", root_section: :root
 
     get "studio", to: "studio#index", as: :studio
