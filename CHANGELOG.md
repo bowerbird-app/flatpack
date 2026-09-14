@@ -13,6 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.182] - 2026-09-14
+
+### Fixed
+- Dummy `ApplicationController` skips Recording Studio root resolution on public catalog requests. Anonymous `/` and `/demo` no longer query `Workspace` and no longer 500 when Postgres is down.
+
+### Changed
+- Bumped the gem version to `0.1.182`.
+
+### Upgrade notes
+- If a host includes `RecordingStudio::RootSwitchable::ControllerSupport` on the same controller as the public catalog, call `skip_recording_studio_root_resolution if: :public_catalog_request?` or the host's equivalent predicate. The dummy already does this. Redeploy so `meta.gem_version` shows `0.1.182`.
+
 ## [0.1.181] - 2026-09-11
 
 ### Added
