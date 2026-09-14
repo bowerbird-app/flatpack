@@ -22,6 +22,40 @@ class RecordingStudioHostWiringTest < ActionDispatch::IntegrationTest
       headers: {"Content-Type" => "application/json", "Accept" => "application/json"}
 
     assert_response :unauthorized
+    www = response.headers["WWW-Authenticate"].to_s
+    assert_includes www, 'resource_metadata="'
+    assert_includes www, "/.well-known/oauth-protected-resource/recording_studio_mcp"
+    refute_includes www, 'resource_metadata="http://www.example.com/.well-known/oauth-protected-resource"'
+    refute_match(%r{resource_metadata="[^"]*recording_studio_api}, www)
+  end
+
+  test "mcp origin well-known metadata uses the mcp mount" do
+    skip "Recording Studio MCP not in this bundle" unless defined?(RecordingStudioMcp)
+
+    get "/.well-known/oauth-protected-resource/recording_studio_mcp"
+
+    assert_response :success
+    body = JSON.parse(response.body)
+    assert_equal "#{request.base_url}/recording_studio_mcp", body.fetch("resource")
+    refute_includes body.fetch("resource"), "recording_studio_api"
+  end
+
+  test "oauth engine protected resource still advertises the api identity" do
+    skip "Recording Studio OAuth not in this bundle" unless defined?(RecordingStudioOauth)
+
+    get "/recording_studio_oauth/.well-known/oauth-protected-resource"
+
+    assert_response :success
+    body = JSON.parse(response.body)
+    assert_equal "#{request.base_url}/recording_studio_api/api", body.fetch("resource")
+  end
+
+  test "origin unsuffixed protected resource is not found" do
+    skip "Recording Studio OAuth not in this bundle" unless defined?(RecordingStudioOauth)
+
+    get "/.well-known/oauth-protected-resource"
+
+    assert_response :not_found
   end
 
   test "users sign in page loads" do
