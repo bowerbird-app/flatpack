@@ -12,9 +12,9 @@ Pinned in `test/dummy/Gemfile.common`:
 - `recording_studio_attachable`
 - `recording_studio_site_settings`
 - `recording_studio_admin`
-- `recording_studio_api`
-- `recording_studio_oauth`
-- `recording_studio_mcp`
+- `recording_studio_api` (`v0.5.4`)
+- `recording_studio_oauth` (`v0.2.0`)
+- `recording_studio_mcp` (`v0.3.2`)
 - `recording_studio_root_switchable`
 
 Recording Studio host gems need Ruby `>= 3.3`.
@@ -65,10 +65,17 @@ Seed accounts after `bin/rails db:seed`:
 6. Exchange the code at `/recording_studio_api/oauth/token` (token endpoint stays on the API mount).
 7. Call MCP at `/recording_studio_mcp` with `Authorization: Bearer <access_token>`.
 
-Discovery aliases:
+### Discovery
 
-- `/.well-known/oauth-authorization-server`
-- `/.well-known/oauth-protected-resource`
+The host keeps the auth-server alias and draws origin protected-resource URLs with `RecordingStudioOauth::ProtectedResourceRegistry.draw_origin_well_known(self)` in `config/routes.rb`. That Oauth 0.2.0 registry maps MCP `/recording_studio_mcp` and API `/recording_studio_api/api`.
+
+- `/.well-known/oauth-authorization-server` (auth-server alias)
+- `/.well-known/oauth-protected-resource/recording_studio_mcp` (MCP metadata). `resource` is `{origin}/recording_studio_mcp`.
+- `/.well-known/oauth-protected-resource/recording_studio_api/api` (API metadata)
+- `/recording_studio_oauth/.well-known/oauth-protected-resource` (engine-mounted API metadata for ChatGPT and API clients)
+- `/.well-known/oauth-protected-resource` (unsuffixed origin) is 404 by default
+
+Cursor resource identity is the MCP URL (`…/recording_studio_mcp`), not API `/recording_studio_api/api`. Cursor may open `GET /authorize` on the tunnel origin; the dummy 302s that path to `/recording_studio_oauth/oauth/authorize` with the query string intact.
 
 ## Recordables
 
@@ -80,7 +87,7 @@ Host-only. These routes live in the dummy initializer and are stripped from the 
 
 The public named API registers **only** these endpoints — not Workspace, Folder, Page, or `ping`. The public API would otherwise mirror every host recordable type; the dummy prepends a registry-only rule so HTTP, OpenAPI, and MCP share an empty type list.
 
-The dummy pins `recording_studio_mcp` to tag `v0.3.1`. That build advertises one MCP tool per `register_endpoint` and omits tree tools when the type list is empty. ChatGPT Connect ignores MCP `initialize.instructions` and `instructions_suffix`. The compose workflow lives in the two catalog endpoints' OpenAPI `description` fields. Those fields become the MCP tool descriptions. The MCP initializer sets `instructions_suffix` to the same `Dummy::FLATPACK_COMPOSE_WORKFLOW` string for clients that do read initialize instructions. Keep `recording_studio_api` at `v0.5.4`.
+The dummy pins `recording_studio_oauth` to tag `v0.2.0` and `recording_studio_mcp` to tag `v0.3.2`. MCP advertises one tool per `register_endpoint` and omits tree tools when the type list is empty. Default `oauth_protected_resource_path` is `/.well-known/oauth-protected-resource/recording_studio_mcp`. The dummy does not override that path. ChatGPT Connect ignores MCP `initialize.instructions` and `instructions_suffix`. The compose workflow lives in the two catalog endpoints' OpenAPI `description` fields. Those fields become the MCP tool descriptions. The MCP initializer sets `instructions_suffix` to the same `Dummy::FLATPACK_COMPOSE_WORKFLOW` string for clients that do read initialize instructions. Keep `recording_studio_api` at `v0.5.4`.
 
 - `GET /recording_studio_api/api/v1/flatpack/components`
 - `GET /recording_studio_api/api/v1/flatpack/components/:name`
@@ -115,7 +122,9 @@ cloudflared tunnel --url http://127.0.0.1:3000
 Use the printed `https://….trycloudflare.com` URL:
 
 - MCP: `https://….trycloudflare.com/recording_studio_mcp`
-- Discovery: `https://….trycloudflare.com/.well-known/oauth-authorization-server`
+- Auth-server discovery: `https://….trycloudflare.com/.well-known/oauth-authorization-server`
+- MCP protected-resource metadata: `https://….trycloudflare.com/.well-known/oauth-protected-resource/recording_studio_mcp`
+- ChatGPT / API protected-resource metadata: `https://….trycloudflare.com/recording_studio_oauth/.well-known/oauth-protected-resource`
 
 Register the ChatGPT redirect on the OauthClient (`https://chatgpt.com/connector_platform_oauth_redirect`, or the exact URL ChatGPT shows). This stack does not do DCR — use a pre-registered public client. From Registered apps, use the row **Edit** action to change redirect URLs on an existing app.
 

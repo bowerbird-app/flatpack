@@ -22,6 +22,65 @@ class RecordingStudioHostWiringTest < ActionDispatch::IntegrationTest
       headers: {"Content-Type" => "application/json", "Accept" => "application/json"}
 
     assert_response :unauthorized
+    www = response.headers["WWW-Authenticate"].to_s
+    assert_includes www, 'resource_metadata="'
+    assert_includes www, "/.well-known/oauth-protected-resource/recording_studio_mcp"
+    refute_includes www, 'resource_metadata="http://www.example.com/.well-known/oauth-protected-resource"'
+    refute_match(%r{resource_metadata="[^"]*recording_studio_api}, www)
+  end
+
+  test "mcp origin well-known metadata uses the mcp mount" do
+    skip "Recording Studio MCP not in this bundle" unless defined?(RecordingStudioMcp)
+
+    get "/.well-known/oauth-protected-resource/recording_studio_mcp"
+
+    assert_response :success
+    body = JSON.parse(response.body)
+    assert_equal "#{request.base_url}/recording_studio_mcp", body.fetch("resource")
+    refute_includes body.fetch("resource"), "recording_studio_api"
+  end
+
+  test "oauth engine protected resource still advertises the api identity" do
+    skip "Recording Studio OAuth not in this bundle" unless defined?(RecordingStudioOauth)
+
+    get "/recording_studio_oauth/.well-known/oauth-protected-resource"
+
+    assert_response :success
+    body = JSON.parse(response.body)
+    assert_equal "#{request.base_url}/recording_studio_api/api", body.fetch("resource")
+  end
+
+  test "origin unsuffixed protected resource is not found" do
+    skip "Recording Studio OAuth not in this bundle" unless defined?(RecordingStudioOauth)
+
+    get "/.well-known/oauth-protected-resource"
+
+    assert_response :not_found
+  end
+
+  test "root authorize redirects to oauth authorize with the full query string" do
+    skip "Recording Studio OAuth not in this bundle" unless defined?(RecordingStudioOauth)
+
+    query = {
+      "client_id" => "cursor-mcp",
+      "response_type" => "code",
+      "redirect_uri" => "cursor://callback",
+      "code_challenge" => "challenge",
+      "code_challenge_method" => "S256",
+      "resource" => "http://www.example.com/recording_studio_mcp",
+      "state" => "cursor-state"
+    }
+
+    get "/authorize", params: query
+
+    assert_response :redirect
+    assert_equal 302, response.status
+    location = URI.parse(response.headers.fetch("Location"))
+    assert_equal "/recording_studio_oauth/oauth/authorize", location.path
+    forwarded = Rack::Utils.parse_query(location.query)
+    query.each do |key, value|
+      assert_equal value, forwarded.fetch(key), "expected #{key} to pass through"
+    end
   end
 
   test "users sign in page loads" do

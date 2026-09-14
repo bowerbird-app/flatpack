@@ -8,21 +8,21 @@ GIT
 
 GIT
   remote: https://github.com/bowerbird-app/RecordingStudio_MCP.git
-  revision: 21ad3a48ac88ea8bb199a3911a05b36114675af6
-  tag: v0.3.1
+  revision: a0feebf5189b1946d9815bf16b294c4a893eb601
+  tag: v0.3.2
   specs:
-    recording_studio_mcp (0.3.1)
+    recording_studio_mcp (0.3.2)
       rails (~> 8.1.0)
       recording_studio (~> 4.2)
       recording_studio_api (~> 0.5.4)
-      recording_studio_oauth (~> 0.1)
+      recording_studio_oauth (>= 0.2.0)
 
 GIT
   remote: https://github.com/bowerbird-app/RecordingStudio_Oauth.git
-  revision: a9e3ff582c9cbd40c3760a41f1dcb9f95f8ae3ff
-  tag: v0.1.0
+  revision: 406b0ba4708607ffe6fce337d25a2440b6d74d3d
+  tag: v0.2.0
   specs:
-    recording_studio_oauth (0.1.0)
+    recording_studio_oauth (0.2.0)
       flat_pack (~> 0.1.144)
       rails (~> 8.1.0)
       recording_studio (~> 4.2)
@@ -567,4 +567,4 @@ DEPENDENCIES
   web-console
 
 BUNDLED WITH
-  4.0.10
+   4.0.10
