@@ -141,7 +141,11 @@ class RecordingStudioHostWiringTest < ActionDispatch::IntegrationTest
     }
 
     assert_equal 307, response.status
-    assert_equal "/recording_studio_api/oauth/token", response.headers.fetch("Location")
+    location = response.headers.fetch("Location")
+    parsed = URI.parse(location)
+    assert_equal "/recording_studio_api/oauth/token", parsed.path
+    assert_nil parsed.query
+    refute_includes location, "?"
   end
 
   test "users sign in page loads" do
