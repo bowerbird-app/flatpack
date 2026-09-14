@@ -83,6 +83,67 @@ class RecordingStudioHostWiringTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "root token redirects to api token with the full query string" do
+    skip "Recording Studio OAuth not in this bundle" unless defined?(RecordingStudioOauth)
+
+    query = {"state" => "cursor-state"}
+    body = {
+      "grant_type" => "authorization_code",
+      "code" => "auth-code",
+      "code_verifier" => "verifier",
+      "redirect_uri" => "cursor://callback",
+      "resource" => "http://www.example.com/recording_studio_mcp",
+      "client_id" => "cursor-mcp"
+    }
+
+    post "/token?#{query.to_query}", params: body
+
+    assert_response :redirect
+    assert_equal 307, response.status
+    location = URI.parse(response.headers.fetch("Location"))
+    assert_equal "/recording_studio_api/oauth/token", location.path
+    forwarded = Rack::Utils.parse_query(location.query)
+    query.each do |key, value|
+      assert_equal value, forwarded.fetch(key), "expected #{key} to pass through"
+    end
+  end
+
+  test "root revoke redirects to api revoke with the full query string" do
+    skip "Recording Studio OAuth not in this bundle" unless defined?(RecordingStudioOauth)
+
+    query = {"state" => "cursor-state"}
+    body = {
+      "token" => "access-token",
+      "client_id" => "cursor-mcp"
+    }
+
+    post "/revoke?#{query.to_query}", params: body
+
+    assert_response :redirect
+    assert_equal 307, response.status
+    location = URI.parse(response.headers.fetch("Location"))
+    assert_equal "/recording_studio_api/oauth/revoke", location.path
+    forwarded = Rack::Utils.parse_query(location.query)
+    query.each do |key, value|
+      assert_equal value, forwarded.fetch(key), "expected #{key} to pass through"
+    end
+  end
+
+  test "root token redirect omits question mark when the query string is empty" do
+    skip "Recording Studio OAuth not in this bundle" unless defined?(RecordingStudioOauth)
+
+    post "/token", params: {
+      "grant_type" => "authorization_code",
+      "code" => "auth-code",
+      "code_verifier" => "verifier",
+      "redirect_uri" => "cursor://callback",
+      "client_id" => "cursor-mcp"
+    }
+
+    assert_equal 307, response.status
+    assert_equal "/recording_studio_api/oauth/token", response.headers.fetch("Location")
+  end
+
   test "users sign in page loads" do
     skip "Recording Studio Users not in this bundle" unless defined?(RecordingStudioUser)
 
