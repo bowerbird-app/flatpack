@@ -20,13 +20,14 @@ class PublicCatalogWithoutDbTest < ActionDispatch::IntegrationTest
   end
 
   def with_database_unavailable
+    db_config = ActiveRecord::Base.connection_db_config
     ActiveRecord::Base.connection_handler.clear_active_connections!
     ActiveRecord::Base.connection_pool.disconnect!
     ActiveRecord::Base.connection_pool.extend(RefuseDatabase)
     yield
   ensure
-    ActiveRecord::Base.connection_handler.clear_all_connections!
-    ActiveRecord::Base.establish_connection(:test)
+    ActiveRecord::Base.remove_connection
+    ActiveRecord::Base.establish_connection(db_config)
   end
 
   test "GET / succeeds when Postgres is unavailable" do
