@@ -105,12 +105,25 @@ module FlatPack
         assert_includes html, "px-[var(--form-control-padding)]"
         assert_includes html, "py-[var(--form-control-padding)]"
         assert_includes html, "border-[var(--surface-border-color)]"
+        assert_selector "div.flat-pack-input.border[class~='border-[var(--surface-border-color)]']"
       end
 
       def test_error_uses_error_border_token
         render_inline(Probe.new(error: true))
 
-        assert_includes page.native.to_html, "border-[var(--color-error)]"
+        assert_selector "div.border[class~='border-[var(--color-error)]']"
+      end
+
+      def test_form_control_border_classes_match_plain_and_rich_text_chrome
+        probe = Probe.new
+        assert_equal(
+          ["border", "border-[var(--surface-border-color)]"],
+          probe.form_control_border_classes(error: false)
+        )
+        assert_equal(
+          ["border", "border-[var(--color-error)]"],
+          probe.form_control_border_classes(error: true)
+        )
       end
     end
 

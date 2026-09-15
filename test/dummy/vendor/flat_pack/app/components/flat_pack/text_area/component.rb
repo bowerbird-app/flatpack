@@ -289,10 +289,10 @@ module FlatPack
       end
 
       def rich_text_editor_container_classes
-        [
+        classes(
           "flat-pack-richtext-editor",
-          @error ? "border-[var(--color-error)]" : "border-[var(--surface-border-color)]"
-        ].join(" ")
+          *form_control_border_classes(error: @error)
+        )
       end
 
       def textarea_classes

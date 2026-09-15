@@ -98,6 +98,8 @@
 
   .flat-pack-richtext-editor {
     background-color: var(--surface-background-color);
+    /* Width/color also come from FormField::ControlStyles#form_control_border_classes
+       so host Tailwind preflight (often loaded last) cannot zero the field chrome. */
     border: 1px solid var(--surface-border-color);
     border-radius: 0 0 calc(var(--radius-md, 1rem) - 1px) calc(var(--radius-md, 1rem) - 1px);
     transition: border-color 0.15s;
