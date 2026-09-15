@@ -675,6 +675,7 @@
       method_call: "render FlatPack::Hero::Component.new(variant: :centered, headline: \"Title\") do |hero| ... end",
       variables: [
         { variable: "variant", accepts: ":centered, :centered_image, :screenshot, :split_image, :angled_image, :image_tiles, :offset_image", example: "variant: :split_image" },
+        { variable: "align", accepts: ":left, :center", example: "align: :left" },
         { variable: "tagline", accepts: "String or nil", example: "tagline: \"Introducing FlatPack\"" },
         { variable: "headline", accepts: "String or nil", example: "headline: \"Build beautiful interfaces faster.\"" },
         { variable: "description", accepts: "String or nil", example: "description: \"A UI kit for Rails apps that follows your theme.\"" },

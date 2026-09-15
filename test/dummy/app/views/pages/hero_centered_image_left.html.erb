@@ -1,0 +1,18 @@
+<div class="fixed top-4 right-4 z-50">
+  <%= render FlatPack::Button::Component.new(text: "← Back to Hero", style: :secondary, href: pages_hero_path) %>
+</div>
+
+<%= render FlatPack::Hero::Component.new(
+  variant: :centered_image,
+  align: :left,
+  class: "h-svh",
+  tagline: "North coast kiln",
+  headline: "Fire the next glaze at dawn.",
+  description: "Copy sits on the still, not across the whole frame. Buttons follow the headline.",
+  background_image_url: "/images/hero-stool.jpg"
+) do |hero|
+  hero.slot do
+    concat render(FlatPack::Button::Component.new(text: "Book a firing", style: :primary, href: "#"))
+    concat render(FlatPack::Button::Component.new(text: "See the kiln log", style: :secondary, href: "#"))
+  end
+end %>

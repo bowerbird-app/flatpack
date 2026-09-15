@@ -12,6 +12,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Dummy pins `recording_studio_oauth` v0.2.0 and `recording_studio_mcp` v0.3.2. The host draws origin well-known with `RecordingStudioOauth::ProtectedResourceRegistry.draw_origin_well_known`. Cursor resource identity is `/recording_studio_mcp`. Unsuffixed `/.well-known/oauth-protected-resource` is 404. ChatGPT and API keep using `/recording_studio_oauth/.well-known/oauth-protected-resource`.
 - Dummy `GET /authorize` redirects to `/recording_studio_oauth/oauth/authorize` and keeps the query string (Cursor MCP OAuth tunnel quirk).
+
+### Fixed
+
+## [0.1.184] - 2026-09-15
+
+### Added
+- `FlatPack::Hero::Component` accepts `align: :left` or `:center` (default `:center`). On `:centered_image`, `:left` docks tagline, headline, body, and CTAs to the start of the photo and keeps them vertically centered. `:centered` and `:screenshot` follow the same copy alignment. Split and column variants ignore `align`. Invalid values raise `ArgumentError`.
+- `FlatPack::Hero::Component` accepts `on: :dark` or `:light` (default `:dark`) on `:centered_image`. `:dark` is light type on a dark wash. `:light` is dark type on a light wash. Invalid values raise `ArgumentError`.
+- Overlay tokens `--hero-overlay-left-background`, `--hero-overlay-button-*`, and `--hero-overlay-on-light-*`. `:centered_image` paints `.fp-hero-overlay` so primary and secondary buttons invert on the photo. `on: :light` remaps those tokens to the on-light set.
+
+### Changed
+- Bumped the gem version to `0.1.184`.
+- `:centered_image` tagline uses `--hero-overlay-muted-text-color` instead of page muted gray.
+- `:left` on `:centered_image` uses a larger start inset (`lg:ps-16` plus safe-area) and a left-to-clear wash. Overlay copy padding is `py-16`.
+- Dummy full-page `:centered_image` demos pass `class: "h-svh"`. The component default stays `min-h-[560px]` so catalog embeds do not grow with the viewport.
+- Overlay `:centered_image` headline uses `leading-tight`. Overlay body uses `text-2xl`. Left overlay headline uses `fp-text-pretty` so the body shares the copy-column rag. Center overlay headline keeps `fp-text-balance`. Page-surface variants keep `text-lg` body.
+
+### Upgrade notes
+- New optional `align:` on `FlatPack::Hero::Component`. Omit it or pass `:center` to keep centered copy. Pass `align: :left` on `:centered`, `:centered_image`, or `:screenshot` for left-docked copy. `:right` is not valid. Split layouts do not change.
+- New optional `on:` on `:centered_image`. Omit it or pass `:dark` for light type on a dark wash. Pass `on: :light` for dark type on a light wash. For one photo that is neither, set `--hero-overlay-*` on that section (`style:` or a wrapper class). `style` merges with `background:`.
+- `:centered_image` overlay copy and CTAs now follow overlay tokens. Tagline is light, not page `--surface-muted-content-color`. Primary buttons on that variant render light-on-dark. Overlay headline leading is tight. Overlay body is `text-2xl`. Hosts that already passed inverted button styles or overlay type classes should drop those overrides. Landing pages that want a viewport-tall still pass `class: "h-svh"`. Redeploy so `meta.gem_version` shows `0.1.184`.
+
+## [0.1.183] - 2026-09-15
+
+### Changed
 - Bumped the gem version to `0.1.183`.
 
 ### Fixed

@@ -275,8 +275,29 @@ Use `--easing-enter` for modal, drawer, command palette, toast, dropdown, popove
 ### Overlay and chrome
 ```css
 --hero-overlay-background-color
+--hero-overlay-left-background
 --hero-overlay-text-color
 --hero-overlay-muted-text-color
+--hero-overlay-button-primary-background-color
+--hero-overlay-button-primary-hover-background-color
+--hero-overlay-button-primary-text-color
+--hero-overlay-button-primary-border-color
+--hero-overlay-button-secondary-background-color
+--hero-overlay-button-secondary-hover-background-color
+--hero-overlay-button-secondary-text-color
+--hero-overlay-button-secondary-border-color
+--hero-overlay-on-light-background-color
+--hero-overlay-on-light-left-background
+--hero-overlay-on-light-text-color
+--hero-overlay-on-light-muted-text-color
+--hero-overlay-on-light-button-primary-background-color
+--hero-overlay-on-light-button-primary-hover-background-color
+--hero-overlay-on-light-button-primary-text-color
+--hero-overlay-on-light-button-primary-border-color
+--hero-overlay-on-light-button-secondary-background-color
+--hero-overlay-on-light-button-secondary-hover-background-color
+--hero-overlay-on-light-button-secondary-text-color
+--hero-overlay-on-light-button-secondary-border-color
 
 --drawer-backdrop-color
 --drawer-surface-color
@@ -359,7 +380,7 @@ Tabs, chat incoming bubbles, sidebar/top-nav hover, list hover, and avatar fallb
 - Color token: `--color-danger-background-color`
 
 ### Hero, carousel, picker, badge
-- Hero `centered_image` overlay: `--hero-overlay-background-color`, `--hero-overlay-text-color`, `--hero-overlay-muted-text-color`
+- Hero `centered_image` overlay: `--hero-overlay-background-color`, `--hero-overlay-left-background`, `--hero-overlay-text-color`, `--hero-overlay-muted-text-color`, `--hero-overlay-button-*`. `on: :light` remaps those to `--hero-overlay-on-light-*`.
 - Carousel chrome: `--carousel-control-*`, `--carousel-counter-*`, `--carousel-media-background-color`, `--carousel-lightbox-image-background-color`
 - Picker grid: `--picker-badge-*`, `--picker-selection-idle-*`, `--picker-selection-indicator-*`
 - Badge remove hover: `--badge-remove-hover-background-color` (aliases `--chip-remove-hover-background-color`)

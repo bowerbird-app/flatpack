@@ -29,6 +29,7 @@ module FlatPack
         assert_selector "[style*='background-image']"
         assert_selector "h1", text: "Hero with background"
         html = page.native.to_html
+        assert_includes html, "fp-hero-overlay"
         assert_includes html, "bg-[var(--hero-overlay-background-color)]"
         assert_includes html, "text-[var(--hero-overlay-text-color)]"
         assert_includes html, "text-[var(--hero-overlay-muted-text-color)]"
@@ -165,10 +166,215 @@ module FlatPack
         refute_includes html, "uppercase"
         refute_includes html, "tracking-widest"
         refute_includes html, "lg:text-6xl"
+        refute_includes html, "leading-tight"
+        refute_includes html, "text-2xl"
+        assert_includes html, "text-lg"
         assert_includes html, "fp-text-balance"
         assert_includes html, "fp-text-pretty"
         assert_includes html, "--text-4xl"
         assert_selector "p", text: "Introducing FlatPack"
+      end
+
+      def test_centered_image_overlay_tagline_uses_overlay_muted_color
+        render_inline(Component.new(
+          variant: :centered_image,
+          tagline: "North coast kiln",
+          headline: "Hero with background",
+          background_image_url: "https://placehold.co/1600x800"
+        ))
+
+        html = page.native.to_html
+        assert_includes html, "text-[var(--hero-overlay-muted-text-color)]"
+        refute_match(/text-sm font-medium text-\[var\(--surface-muted-content-color\)\]/, html)
+      end
+
+      def test_centered_image_defaults_to_centered_copy
+        render_inline(Component.new(
+          variant: :centered_image,
+          headline: "Hero with background",
+          description: "Overlay copy on the image.",
+          background_image_url: "https://placehold.co/1600x800"
+        )) do |c|
+          c.slot { "Start" }
+        end
+
+        html = page.native.to_html
+        assert_includes html, "flex items-center justify-center"
+        assert_includes html, "text-center"
+        assert_includes html, "leading-tight"
+        assert_includes html, "text-2xl"
+        assert_match(/<h1[^>]*fp-text-balance/, html)
+        assert_match(/<p[^>]*text-2xl[^>]*fp-text-pretty/, html)
+        refute_includes html, "text-left"
+        refute_includes html, "justify-start"
+        refute_includes html, "max-w-2xl"
+        refute_includes html, "fp-hero-overlay-on-light"
+        assert_includes html, "justify-center"
+      end
+
+      def test_centered_image_left_docks_copy_and_keeps_vertical_center
+        render_inline(Component.new(
+          variant: :centered_image,
+          align: :left,
+          headline: "Hero with background",
+          description: "Overlay copy on the image.",
+          background_image_url: "https://placehold.co/1600x800"
+        )) do |c|
+          c.slot { "Start" }
+        end
+
+        html = page.native.to_html
+        assert_includes html, "flex items-center justify-start"
+        assert_includes html, "text-left"
+        assert_includes html, "max-w-2xl"
+        assert_includes html, "lg:ps-16"
+        assert_includes html, "justify-start"
+        assert_includes html, "hero-overlay-left-background"
+        assert_includes html, "leading-tight"
+        assert_includes html, "text-2xl"
+        assert_match(/<h1[^>]*fp-text-pretty/, html)
+        refute_match(/<h1[^>]*fp-text-balance/, html)
+        assert_match(/<p[^>]*text-2xl[^>]*fp-text-pretty/, html)
+        refute_includes html, "bg-[var(--hero-overlay-background-color)]"
+        refute_match(/relative z-10 text-center/, html)
+        refute_includes html, "flex items-center justify-center"
+      end
+
+      def test_omitted_align_matches_explicit_center_on_centered_image
+        omitted = render_inline(Component.new(
+          variant: :centered_image,
+          headline: "Same copy"
+        )).to_html
+
+        explicit = render_inline(Component.new(
+          variant: :centered_image,
+          align: :center,
+          headline: "Same copy"
+        )).to_html
+
+        assert_equal omitted, explicit
+      end
+
+      def test_centered_image_on_light_paints_light_overlay
+        render_inline(Component.new(
+          variant: :centered_image,
+          on: :light,
+          headline: "Hero with background",
+          background_image_url: "https://placehold.co/1600x800"
+        )) do |c|
+          c.slot { "Start" }
+        end
+
+        html = page.native.to_html
+        assert_includes html, "fp-hero-overlay-on-light"
+        assert_includes html, "fp-hero-overlay"
+      end
+
+      def test_omitted_on_matches_explicit_dark_on_centered_image
+        omitted = render_inline(Component.new(
+          variant: :centered_image,
+          headline: "Same copy"
+        )).to_html
+
+        explicit = render_inline(Component.new(
+          variant: :centered_image,
+          on: :dark,
+          headline: "Same copy"
+        )).to_html
+
+        assert_equal omitted, explicit
+      end
+
+      def test_raises_argument_error_for_unknown_on
+        error = assert_raises(ArgumentError) do
+          Component.new(variant: :centered_image, on: :sunset)
+        end
+
+        assert_includes error.message, "Invalid on: sunset"
+        assert_includes error.message, "dark"
+        assert_includes error.message, "light"
+      end
+
+      def test_host_style_tokens_merge_with_background
+        render_inline(Component.new(
+          variant: :centered,
+          headline: "Tinted",
+          background: "var(--surface-muted-background-color)",
+          style: "--hero-overlay-text-color: oklch(0.2 0.05 80)"
+        ))
+
+        html = page.native.to_html
+        assert_includes html, "--hero-overlay-text-color: oklch(0.2 0.05 80)"
+        assert_includes html, "background: var(--surface-muted-background-color)"
+      end
+
+      def test_raises_argument_error_for_unknown_align
+        error = assert_raises(ArgumentError) do
+          Component.new(variant: :centered_image, align: :right)
+        end
+
+        assert_includes error.message, "Invalid align: right"
+        assert_includes error.message, "left"
+        assert_includes error.message, "center"
+      end
+
+      def test_split_image_ignores_align
+        render_inline(Component.new(
+          variant: :split_image,
+          align: :center,
+          headline: "Split layout"
+        ))
+
+        html = page.native.to_html
+        assert_selector ".lg\\:grid-cols-2"
+        refute_includes html, "text-center"
+      end
+
+      def test_split_image_ignores_on
+        render_inline(Component.new(
+          variant: :split_image,
+          on: :light,
+          headline: "Split layout"
+        ))
+
+        html = page.native.to_html
+        refute_includes html, "fp-hero-overlay-on-light"
+        refute_includes html, "fp-hero-overlay"
+      end
+
+      def test_centered_left_aligns_copy_and_actions
+        render_inline(Component.new(
+          variant: :centered,
+          align: :left,
+          headline: "Left copy"
+        )) do |c|
+          c.slot { "Start" }
+        end
+
+        html = page.native.to_html
+        assert_includes html, "text-left"
+        assert_includes html, "mr-auto"
+        assert_includes html, "justify-start"
+        refute_includes html, "text-center"
+      end
+
+      def test_screenshot_left_aligns_copy_and_keeps_image_centered
+        render_inline(Component.new(
+          variant: :screenshot,
+          align: :left,
+          headline: "App Screenshot",
+          image_url: "https://placehold.co/1200x700",
+          image_alt: "Application dashboard"
+        )) do |c|
+          c.slot { "Start" }
+        end
+
+        html = page.native.to_html
+        assert_includes html, "text-left"
+        assert_includes html, "mr-auto"
+        assert_includes html, "justify-start"
+        assert_includes html, "max-w-5xl mx-auto"
+        refute_match(/max-w-2xl mx-auto text-center/, html)
       end
     end
   end

@@ -878,6 +878,14 @@ class PagesController < ApplicationController
     render layout: "fullpage"
   end
 
+  def hero_centered_image_left
+    render layout: "fullpage"
+  end
+
+  def hero_centered_image_on_light
+    render layout: "fullpage"
+  end
+
   def hero_screenshot
     render layout: "fullpage"
   end

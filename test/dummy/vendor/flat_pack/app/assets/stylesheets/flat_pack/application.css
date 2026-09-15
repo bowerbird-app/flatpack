@@ -630,6 +630,37 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   opacity: 1;
 }
 
+.fp-hero-overlay {
+  --button-primary-background-color: var(--hero-overlay-button-primary-background-color);
+  --button-primary-hover-background-color: var(--hero-overlay-button-primary-hover-background-color);
+  --button-primary-text-color: var(--hero-overlay-button-primary-text-color);
+  --button-primary-border-color: var(--hero-overlay-button-primary-border-color);
+  --button-secondary-background-color: var(--hero-overlay-button-secondary-background-color);
+  --button-secondary-hover-background-color: var(--hero-overlay-button-secondary-hover-background-color);
+  --button-secondary-text-color: var(--hero-overlay-button-secondary-text-color);
+  --button-secondary-border-color: var(--hero-overlay-button-secondary-border-color);
+  --button-default-background-color: var(--hero-overlay-button-primary-background-color);
+  --button-default-hover-background-color: var(--hero-overlay-button-primary-hover-background-color);
+  --button-default-text-color: var(--hero-overlay-button-primary-text-color);
+  --button-default-border-color: var(--hero-overlay-button-primary-border-color);
+  --button-focus-ring-offset-color: transparent;
+}
+
+.fp-hero-overlay-on-light {
+  --hero-overlay-background-color: var(--hero-overlay-on-light-background-color);
+  --hero-overlay-left-background: var(--hero-overlay-on-light-left-background);
+  --hero-overlay-text-color: var(--hero-overlay-on-light-text-color);
+  --hero-overlay-muted-text-color: var(--hero-overlay-on-light-muted-text-color);
+  --hero-overlay-button-primary-background-color: var(--hero-overlay-on-light-button-primary-background-color);
+  --hero-overlay-button-primary-hover-background-color: var(--hero-overlay-on-light-button-primary-hover-background-color);
+  --hero-overlay-button-primary-text-color: var(--hero-overlay-on-light-button-primary-text-color);
+  --hero-overlay-button-primary-border-color: var(--hero-overlay-on-light-button-primary-border-color);
+  --hero-overlay-button-secondary-background-color: var(--hero-overlay-on-light-button-secondary-background-color);
+  --hero-overlay-button-secondary-hover-background-color: var(--hero-overlay-on-light-button-secondary-hover-background-color);
+  --hero-overlay-button-secondary-text-color: var(--hero-overlay-on-light-button-secondary-text-color);
+  --hero-overlay-button-secondary-border-color: var(--hero-overlay-on-light-button-secondary-border-color);
+}
+
 .fp-button:active:not(:disabled) {
   transform: translateY(1px);
 }

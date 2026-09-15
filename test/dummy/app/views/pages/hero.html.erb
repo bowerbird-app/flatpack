@@ -51,6 +51,7 @@
     <div class="mb-4 flex justify-end">
       <%= render FlatPack::Button::Component.new(text: "View full-page demo", style: :secondary, href: pages_hero_centered_image_path, target: "_blank") %>
     </div>
+    <div class="xl:-mx-16 2xl:-mx-24">
     <%= render FlatPack::Hero::Component.new(
       variant: :centered_image,
       tagline: "Built for teams",
@@ -63,6 +64,7 @@
         concat render(FlatPack::Button::Component.new(text: "Watch demo", style: :secondary, href: "#"))
       end
     end %>
+    </div>
     <%= render FlatPack::CodeBlock::Component.new(
       class: "mt-4",
       language: "erb",
@@ -77,6 +79,90 @@
           hero.slot do
             concat render(FlatPack::Button::Component.new(text: "Start for free", style: :primary, href: "#"))
             concat render(FlatPack::Button::Component.new(text: "Watch demo", style: :secondary, href: "#"))
+          end
+        end %&gt;
+      CODE
+    ) %>
+  </section>
+
+  <!-- Centered Image, left -->
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Centered Image, left", anchor_link: true, subtitle: "Same full-bleed photo. Copy hugs the left.") %>
+    <div class="mb-4 flex justify-end">
+      <%= render FlatPack::Button::Component.new(text: "View full-page demo", style: :secondary, href: pages_hero_centered_image_left_path, target: "_blank") %>
+    </div>
+    <div class="xl:-mx-16 2xl:-mx-24">
+    <%= render FlatPack::Hero::Component.new(
+      variant: :centered_image,
+      align: :left,
+      tagline: "North coast kiln",
+      headline: "Fire the next glaze at dawn.",
+      description: "Copy sits on the still, not across the whole frame. Buttons follow the headline.",
+      background_image_url: "/images/hero-stool.jpg"
+    ) do |hero|
+      hero.slot do
+        concat render(FlatPack::Button::Component.new(text: "Book a firing", style: :primary, href: "#"))
+        concat render(FlatPack::Button::Component.new(text: "See the kiln log", style: :secondary, href: "#"))
+      end
+    end %>
+    </div>
+    <%= render FlatPack::CodeBlock::Component.new(
+      class: "mt-4",
+      language: "erb",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Hero::Component.new(
+          variant: :centered_image,
+          align: :left,
+          tagline: "North coast kiln",
+          headline: "Fire the next glaze at dawn.",
+          description: "Copy sits on the still, not across the whole frame.",
+          background_image_url: "https://example.com/hero-bg.jpg"
+        ) do |hero|
+          hero.slot do
+            concat render(FlatPack::Button::Component.new(text: "Book a firing", style: :primary, href: "#"))
+            concat render(FlatPack::Button::Component.new(text: "See the kiln log", style: :secondary, href: "#"))
+          end
+        end %&gt;
+      CODE
+    ) %>
+  </section>
+
+  <!-- Centered Image, on light -->
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Centered Image, on light", anchor_link: true, subtitle: "Same still. Dark type on a light wash when the photo is pale.") %>
+    <div class="mb-4 flex justify-end">
+      <%= render FlatPack::Button::Component.new(text: "View full-page demo", style: :secondary, href: pages_hero_centered_image_on_light_path, target: "_blank") %>
+    </div>
+    <div class="xl:-mx-16 2xl:-mx-24">
+    <%= render FlatPack::Hero::Component.new(
+      variant: :centered_image,
+      on: :light,
+      tagline: "Daylight firing",
+      headline: "Fire the next glaze at dawn.",
+      description: "Dark type on a light wash. Buttons follow the still, not the page theme.",
+      background_image_url: "/images/hero-stool.jpg"
+    ) do |hero|
+      hero.slot do
+        concat render(FlatPack::Button::Component.new(text: "Book a firing", style: :primary, href: "#"))
+        concat render(FlatPack::Button::Component.new(text: "See the kiln log", style: :secondary, href: "#"))
+      end
+    end %>
+    </div>
+    <%= render FlatPack::CodeBlock::Component.new(
+      class: "mt-4",
+      language: "erb",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Hero::Component.new(
+          variant: :centered_image,
+          on: :light,
+          tagline: "Daylight firing",
+          headline: "Fire the next glaze at dawn.",
+          description: "Dark type on a light wash.",
+          background_image_url: "https://example.com/hero-bg.jpg"
+        ) do |hero|
+          hero.slot do
+            concat render(FlatPack::Button::Component.new(text: "Book a firing", style: :primary, href: "#"))
+            concat render(FlatPack::Button::Component.new(text: "See the kiln log", style: :secondary, href: "#"))
           end
         end %&gt;
       CODE

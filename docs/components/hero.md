@@ -21,6 +21,8 @@ Do not use for smaller in-page promotional banners; use `FlatPack::Alert::Compon
 | name | type | default | required | description |
 |---|---|---|---|---|
 | `variant` | Symbol | `:centered` | no | Layout variant. One of: `:centered`, `:centered_image`, `:screenshot`, `:split_image`, `:angled_image`, `:image_tiles`, `:offset_image`. Invalid values raise `ArgumentError`. |
+| `align` | Symbol | `:center` | no | Overlay copy and CTA alignment. One of: `:center`, `:left`. Overlay variants (`:centered`, `:centered_image`, `:screenshot`) apply it. Column variants (`:split_image`, `:angled_image`, `:image_tiles`, `:offset_image`) validate it and keep their markup. Invalid values raise `ArgumentError`. |
+| `on` | Symbol | `:dark` | no | Overlay contrast on `:centered_image`. `:dark` is light type on a dark wash (default). `:light` is dark type on a light wash. Other variants validate it and keep their markup. Invalid values raise `ArgumentError`. Hosts can still set `--hero-overlay-*` on the section for one photo. |
 | `tagline` | String | `nil` | no | Small sentence-case label rendered above the headline. |
 | `headline` | String | `nil` | no | Primary `<h1>` text. |
 | `description` | String | `nil` | no | Supporting paragraph below the headline. |
@@ -53,9 +55,9 @@ end %>
 
 | value | description |
 |---|---|
-| `:centered` | Centered text and actions, no image. |
-| `:centered_image` | Centered text over a full-bleed background image with a `--hero-overlay-background-color` wash (default `rgb(0 0 0 / 0.6)`). |
-| `:screenshot` | Centered text above a large constrained app screenshot. |
+| `:centered` | Centered text and actions, no image. Pass `align: :left` to dock the copy column to the start. |
+| `:centered_image` | Full-bleed background image with a `--hero-overlay-background-color` wash (default `rgb(0 0 0 / 0.6)`). Tagline, body, and CTAs use overlay tokens so copy stays readable on the photo. Primary and secondary buttons invert on the overlay. Overlay headline uses `leading-tight`. Overlay body uses `text-2xl`. Default copy is centered, and that headline keeps `fp-text-balance`. `align: :left` docks copy with a larger start inset, a left-to-clear `--hero-overlay-left-background` wash, and vertical centering. Left overlay headline uses `fp-text-pretty` so the body shares the same rag. `on: :light` switches to `--hero-overlay-on-light-*` (dark type on a light wash). Landing pages can pass `class: "h-svh"` to fill the viewport. The catalog embed keeps `min-h-[560px]`. Page-surface variants keep `text-lg` body. |
+| `:screenshot` | Centered text above a large constrained app screenshot. Pass `align: :left` to dock the copy. The screenshot stays centered. |
 | `:split_image` | Two-column grid: text left, image right. Stacks on mobile. |
 | `:angled_image` | Text left, image right with a diagonal polygon clip. Image replaced by a stacked image on mobile. |
 | `:image_tiles` | Text left, 2×2 image tile grid right. Stacks on mobile. |
@@ -73,6 +75,40 @@ end %>
   hero.slot do
     concat render(FlatPack::Button::Component.new(text: "Get started", style: :primary, href: "/docs"))
     concat render(FlatPack::Button::Component.new(text: "Learn more", style: :ghost, href: "/about"))
+  end
+end %>
+```
+
+### Centered image, left
+
+```erb
+<%= render FlatPack::Hero::Component.new(
+  variant: :centered_image,
+  align: :left,
+  tagline: "Built for teams",
+  headline: "Ship features your users love.",
+  description: "Full-bleed background image with a dark overlay.",
+  background_image_url: "https://example.com/hero-bg.jpg"
+) do |hero|
+  hero.slot do
+    concat render(FlatPack::Button::Component.new(text: "Start for free", style: :primary, href: "#"))
+  end
+end %>
+```
+
+### Centered image, on a light photo
+
+```erb
+<%= render FlatPack::Hero::Component.new(
+  variant: :centered_image,
+  on: :light,
+  tagline: "Daylight firing",
+  headline: "Ship features your users love.",
+  description: "Dark type on a light wash when the still is pale.",
+  background_image_url: "https://example.com/hero-bg.jpg"
+) do |hero|
+  hero.slot do
+    concat render(FlatPack::Button::Component.new(text: "Start for free", style: :primary, href: "#"))
   end
 end %>
 ```
@@ -116,7 +152,8 @@ end %>
 - Pass `image_alt: ""` for purely decorative images. This renders an empty `alt` attribute, which instructs screen readers to skip the image.
 - The background image in `centered_image` is applied via CSS (`background-image` inline style) and carries no `alt` text, making it presentational by default.
 - Buttons and links inside the `slot` area must have descriptive labels. Avoid generic labels like "Click here".
-- Ensure sufficient colour contrast between overlay text and the background for `centered_image`. Default `--hero-overlay-*` tokens (`rgb(0 0 0 / 0.6)` over white type) meet WCAG AA in most cases; verify with your image and theme.
+- Ensure sufficient colour contrast between overlay text and the background for `centered_image`. Tagline and body use `--hero-overlay-muted-text-color`. Headline uses `--hero-overlay-text-color`. Default `--hero-overlay-*` tokens meet WCAG AA in most cases; verify with your image and theme.
+- Overlay CTAs inherit inverted button tokens from `.fp-hero-overlay`. Keep using `style: :primary` / `:secondary` in the slot. Do not restyle buttons with host classes. `on: :light` remaps those overlay tokens to `--hero-overlay-on-light-*`. For one photo that is neither, set `--hero-overlay-*` on the section.
 
 ## Dependencies
 
