@@ -96,6 +96,14 @@ module FlatPack
       assert_equal "center", align.fetch(:default)
     end
 
+    test "show Hero binds ALIGNS to align with a center default" do
+      payload = FlatPack::ComponentCatalog.show("Hero::Component")
+      align = parameter_named(payload, "align")
+
+      assert_equal FlatPack::Hero::Component::ALIGNS.keys.map(&:to_s), align.fetch(:enum)
+      assert_equal "center", align.fetch(:default)
+    end
+
     test "show does not invent defaults for required kwargs" do
       payload = FlatPack::ComponentCatalog.show("Button::Pill::Component")
       items = parameter_named(payload, "items")

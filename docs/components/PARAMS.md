@@ -15,6 +15,8 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Section heading | `title` | Headings on pages, modals, cards, empty states, and sidebar groups |
 | Supporting copy | `description` or `subtitle` | `description` for body explainer text; `subtitle` for a heading companion |
 | Overlay position | `placement` | Tooltips, popovers, dropdowns, and notification menus |
+| Content / cluster alignment | `align` | Hero overlay copy (`:left` / `:center`) and Email (`:left` / `:center` / `:right`). Email-compatible values. |
+| Grid item alignment | `align` | Grid `items-*` presets: `:start`, `:center`, `:stretch`. Same param name as content `align`, different enum. |
 | Scale | `size` | `:sm`, `:md`, `:lg`, and other size tokens |
 | Extra CSS | `class` | System argument. Do not add `class_name` |
 | Action button copy | `*_label` | Confirm, close, submit, cancel, and reset strings |
@@ -44,3 +46,4 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 - Do not use `position` for overlay placement. Use `placement`.
 - Keep `type` only for native HTML control types such as button `type: "submit"`.
 - Do not use `plans` or `invoices` as collection prop names when `items` already covers the concept.
+- Do not pass Grid's `:start` or `:stretch` to Hero or Email `align`. Hero accepts `:left` and `:center`. Email also accepts `:right`.

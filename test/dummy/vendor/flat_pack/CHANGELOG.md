@@ -10,8 +10,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+- Dummy pins `recording_studio_oauth` v0.2.0 and `recording_studio_mcp` v0.3.2. The host draws origin well-known with `RecordingStudioOauth::ProtectedResourceRegistry.draw_origin_well_known`. Cursor resource identity is `/recording_studio_mcp`. Unsuffixed `/.well-known/oauth-protected-resource` is 404. ChatGPT and API keep using `/recording_studio_oauth/.well-known/oauth-protected-resource`.
+- Dummy `GET /authorize` redirects to `/recording_studio_oauth/oauth/authorize` and keeps the query string (Cursor MCP OAuth tunnel quirk).
 
 ### Fixed
+
+## [0.1.183] - 2026-09-15
+
+### Added
+- `FlatPack::Hero::Component` accepts `align: :left` or `:center` (default `:center`). On `:centered_image`, `:left` docks tagline, headline, body, and CTAs to the start of the photo and keeps them vertically centered. `:centered` and `:screenshot` follow the same copy alignment. Split and column variants ignore `align`. Invalid values raise `ArgumentError`.
+
+### Changed
+- Bumped the gem version to `0.1.183`.
+
+### Upgrade notes
+- New optional `align:` on `FlatPack::Hero::Component`. Omit it or pass `:center` to keep today's markup. Pass `align: :left` on `:centered`, `:centered_image`, or `:screenshot` for left-docked copy. `:right` is not valid. Split layouts do not change. Redeploy so `meta.gem_version` shows `0.1.183`.
 
 ## [0.1.182] - 2026-09-14
 

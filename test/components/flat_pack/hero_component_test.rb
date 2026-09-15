@@ -170,6 +170,117 @@ module FlatPack
         assert_includes html, "--text-4xl"
         assert_selector "p", text: "Introducing FlatPack"
       end
+
+      def test_centered_image_defaults_to_centered_copy
+        render_inline(Component.new(
+          variant: :centered_image,
+          headline: "Hero with background",
+          description: "Overlay copy on the image.",
+          background_image_url: "https://placehold.co/1600x800"
+        )) do |c|
+          c.slot { "Start" }
+        end
+
+        html = page.native.to_html
+        assert_includes html, "flex items-center justify-center"
+        assert_includes html, "text-center"
+        refute_includes html, "text-left"
+        refute_includes html, "justify-start"
+        refute_includes html, "max-w-2xl"
+        assert_includes html, "justify-center"
+      end
+
+      def test_centered_image_left_docks_copy_and_keeps_vertical_center
+        render_inline(Component.new(
+          variant: :centered_image,
+          align: :left,
+          headline: "Hero with background",
+          description: "Overlay copy on the image.",
+          background_image_url: "https://placehold.co/1600x800"
+        )) do |c|
+          c.slot { "Start" }
+        end
+
+        html = page.native.to_html
+        assert_includes html, "flex items-center justify-start"
+        assert_includes html, "text-left"
+        assert_includes html, "max-w-2xl"
+        assert_includes html, "justify-start"
+        refute_match(/relative z-10 text-center/, html)
+        refute_includes html, "flex items-center justify-center"
+      end
+
+      def test_omitted_align_matches_explicit_center_on_centered_image
+        omitted = render_inline(Component.new(
+          variant: :centered_image,
+          headline: "Same copy"
+        )).to_html
+
+        explicit = render_inline(Component.new(
+          variant: :centered_image,
+          align: :center,
+          headline: "Same copy"
+        )).to_html
+
+        assert_equal omitted, explicit
+      end
+
+      def test_raises_argument_error_for_unknown_align
+        error = assert_raises(ArgumentError) do
+          Component.new(variant: :centered_image, align: :right)
+        end
+
+        assert_includes error.message, "Invalid align: right"
+        assert_includes error.message, "left"
+        assert_includes error.message, "center"
+      end
+
+      def test_split_image_ignores_align
+        render_inline(Component.new(
+          variant: :split_image,
+          align: :center,
+          headline: "Split layout"
+        ))
+
+        html = page.native.to_html
+        assert_selector ".lg\\:grid-cols-2"
+        refute_includes html, "text-center"
+      end
+
+      def test_centered_left_aligns_copy_and_actions
+        render_inline(Component.new(
+          variant: :centered,
+          align: :left,
+          headline: "Left copy"
+        )) do |c|
+          c.slot { "Start" }
+        end
+
+        html = page.native.to_html
+        assert_includes html, "text-left"
+        assert_includes html, "mr-auto"
+        assert_includes html, "justify-start"
+        refute_includes html, "text-center"
+      end
+
+      def test_screenshot_left_aligns_copy_and_keeps_image_centered
+        render_inline(Component.new(
+          variant: :screenshot,
+          align: :left,
+          headline: "App Screenshot",
+          image_url: "https://placehold.co/1200x700",
+          image_alt: "Application dashboard"
+        )) do |c|
+          c.slot { "Start" }
+        end
+
+        html = page.native.to_html
+        assert_includes html, "text-left"
+        assert_includes html, "mr-auto"
+        assert_includes html, "justify-start"
+        assert_includes html, "max-w-5xl mx-auto"
+        refute_match(/max-w-2xl mx-auto text-center/, html)
+      end
     end
   end
 end

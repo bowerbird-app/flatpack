@@ -69,6 +69,7 @@ Rails.application.routes.draw do
   get "pages/hero"
   get "pages/hero/centered", to: "pages#hero_centered"
   get "pages/hero/centered_image", to: "pages#hero_centered_image"
+  get "pages/hero/centered_image_left", to: "pages#hero_centered_image_left"
   get "pages/hero/screenshot", to: "pages#hero_screenshot"
   get "pages/hero/split_image", to: "pages#hero_split_image"
   get "pages/hero/angled_image", to: "pages#hero_angled_image"

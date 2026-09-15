@@ -13,6 +13,14 @@ module FlatPack
         offset_image
       ].freeze
 
+      # Tailwind CSS scanning requires these classes to be present as string literals.
+      # DO NOT REMOVE - These duplicates ensure CSS generation:
+      # "text-left" "text-center" "justify-start" "justify-center"
+      ALIGNS = {
+        left: {text: "text-left", actions: "justify-start", canvas: "justify-start"},
+        center: {text: "text-center", actions: "justify-center", canvas: "justify-center"}
+      }.freeze
+
       renders_one :actions_slot
       renders_one :badge_slot
 
@@ -42,6 +50,7 @@ module FlatPack
 
       def initialize(
         variant: :centered,
+        align: :center,
         tagline: nil,
         headline: nil,
         description: nil,
@@ -54,6 +63,7 @@ module FlatPack
       )
         super(**system_arguments)
         @variant = variant.to_sym
+        @align = align.to_sym
         @tagline = tagline
         @headline = headline
         @description = description
@@ -64,6 +74,7 @@ module FlatPack
         @tiles = Array(tiles).map { |t| t.merge(url: FlatPack::AttributeSanitizer.sanitize_url(t[:url])) }
 
         validate_variant!
+        validate_align!
       end
 
       def call
@@ -76,6 +87,25 @@ module FlatPack
         return if VARIANTS.include?(@variant)
 
         raise ArgumentError, "Invalid variant: #{@variant}. Must be one of: #{VARIANTS.join(", ")}"
+      end
+
+      def validate_align!
+        return if ALIGNS.key?(@align)
+
+        raise ArgumentError, "Invalid align: #{@align}. Must be one of: #{ALIGNS.keys.join(", ")}"
+      end
+
+      def align_row
+        ALIGNS.fetch(@align)
+      end
+
+      def overlay_inner_margin_class
+        (@align == :left) ? "mr-auto" : "mx-auto"
+      end
+
+      def centered_image_copy_class
+        extra = (@align == :left) ? "max-w-2xl w-full" : nil
+        ["relative z-10", align_row[:text], "text-[var(--hero-overlay-text-color)] px-6 py-24", extra].compact.join(" ")
       end
 
       # Strip url() functions to prevent CSS-based URL injection.
@@ -140,27 +170,27 @@ module FlatPack
       # ─── variant renderers ───────────────────────────────────────────────────
 
       def render_centered
-        content_tag(:section, **merge_attributes(class: "w-full px-6 py-24 text-center", style: background_style)) do
-          content_tag(:div, class: "max-w-4xl mx-auto") do
+        content_tag(:section, **merge_attributes(class: "w-full px-6 py-24 #{align_row[:text]}", style: background_style)) do
+          content_tag(:div, class: "max-w-4xl #{overlay_inner_margin_class}") do
             safe_join([
               render_badge_content,
               render_tagline,
               render_headline,
               render_description,
-              render_actions_block(extra_classes: "justify-center")
+              render_actions_block(extra_classes: align_row[:actions])
             ].compact)
           end
         end
       end
 
       def render_centered_image
-        content_tag(:section, **merge_attributes(class: "relative overflow-hidden min-h-[560px] flex items-center justify-center", style: background_style)) do
+        content_tag(:section, **merge_attributes(class: "relative overflow-hidden min-h-[560px] flex items-center #{align_row[:canvas]}", style: background_style)) do
           safe_join([
             content_tag(:div, nil,
               class: "absolute inset-0 bg-cover bg-center",
               style: @background_image_url ? "background-image: url('#{@background_image_url}')" : nil),
             content_tag(:div, nil, class: "absolute inset-0 bg-[var(--hero-overlay-background-color)]"),
-            content_tag(:div, class: "relative z-10 text-center text-[var(--hero-overlay-text-color)] px-6 py-24") do
+            content_tag(:div, class: centered_image_copy_class) do
               safe_join([
                 render_badge_content,
                 render_tagline,
@@ -168,7 +198,7 @@ module FlatPack
                   class: "mt-2 text-[length:var(--text-4xl)] sm:text-[length:var(--text-5xl)] font-semibold tracking-tight text-[var(--hero-overlay-text-color)] fp-text-balance"),
                 content_tag_if(@description, :p, @description,
                   class: "mt-6 text-lg text-[var(--hero-overlay-muted-text-color)] fp-text-pretty"),
-                render_actions_block(extra_classes: "justify-center")
+                render_actions_block(extra_classes: align_row[:actions])
               ].compact)
             end
           ].compact)
@@ -178,7 +208,7 @@ module FlatPack
       def render_screenshot
         content_tag(:section, **merge_attributes(class: "px-6 py-24", style: background_style)) do
           safe_join([
-            content_tag(:div, class: "max-w-2xl mx-auto text-center") do
+            content_tag(:div, class: "max-w-2xl #{overlay_inner_margin_class} #{align_row[:text]}") do
               safe_join([
                 render_badge_content,
                 render_tagline,
@@ -186,7 +216,7 @@ module FlatPack
                 render_description
               ].compact)
             end,
-            (content_tag(:div, render_actions_block(extra_classes: "justify-center"), class: "mt-10 flex justify-center") if slot?),
+            (content_tag(:div, render_actions_block(extra_classes: align_row[:actions]), class: "mt-10 flex #{align_row[:actions]}") if slot?),
             (@image_url ? content_tag(:div, class: "mt-16 max-w-5xl mx-auto rounded-[var(--radius-xl)] shadow-2xl overflow-hidden") {
               image_tag(@image_url, alt: @image_alt, class: "w-full object-cover")
             } : nil)

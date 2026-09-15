@@ -15,6 +15,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.183] - 2026-09-15
+
+### Added
+- `FlatPack::Hero::Component` accepts `align: :left` or `:center` (default `:center`). On `:centered_image`, `:left` docks tagline, headline, body, and CTAs to the start of the photo and keeps them vertically centered. `:centered` and `:screenshot` follow the same copy alignment. Split and column variants ignore `align`. Invalid values raise `ArgumentError`.
+
+### Changed
+- Bumped the gem version to `0.1.183`.
+
+### Upgrade notes
+- New optional `align:` on `FlatPack::Hero::Component`. Omit it or pass `:center` to keep today's markup. Pass `align: :left` on `:centered`, `:centered_image`, or `:screenshot` for left-docked copy. `:right` is not valid. Split layouts do not change. Redeploy so `meta.gem_version` shows `0.1.183`.
+
 ## [0.1.182] - 2026-09-14
 
 ### Fixed

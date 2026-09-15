@@ -21,6 +21,7 @@ Do not use for smaller in-page promotional banners; use `FlatPack::Alert::Compon
 | name | type | default | required | description |
 |---|---|---|---|---|
 | `variant` | Symbol | `:centered` | no | Layout variant. One of: `:centered`, `:centered_image`, `:screenshot`, `:split_image`, `:angled_image`, `:image_tiles`, `:offset_image`. Invalid values raise `ArgumentError`. |
+| `align` | Symbol | `:center` | no | Overlay copy and CTA alignment. One of: `:center`, `:left`. Overlay variants (`:centered`, `:centered_image`, `:screenshot`) apply it. Column variants (`:split_image`, `:angled_image`, `:image_tiles`, `:offset_image`) validate it and keep their markup. Invalid values raise `ArgumentError`. |
 | `tagline` | String | `nil` | no | Small sentence-case label rendered above the headline. |
 | `headline` | String | `nil` | no | Primary `<h1>` text. |
 | `description` | String | `nil` | no | Supporting paragraph below the headline. |
@@ -53,9 +54,9 @@ end %>
 
 | value | description |
 |---|---|
-| `:centered` | Centered text and actions, no image. |
-| `:centered_image` | Centered text over a full-bleed background image with a `--hero-overlay-background-color` wash (default `rgb(0 0 0 / 0.6)`). |
-| `:screenshot` | Centered text above a large constrained app screenshot. |
+| `:centered` | Centered text and actions, no image. Pass `align: :left` to dock the copy column to the start. |
+| `:centered_image` | Full-bleed background image with a `--hero-overlay-background-color` wash (default `rgb(0 0 0 / 0.6)`). Default copy is centered. `align: :left` docks copy to the start of the photo and keeps it vertically centered. |
+| `:screenshot` | Centered text above a large constrained app screenshot. Pass `align: :left` to dock the copy. The screenshot stays centered. |
 | `:split_image` | Two-column grid: text left, image right. Stacks on mobile. |
 | `:angled_image` | Text left, image right with a diagonal polygon clip. Image replaced by a stacked image on mobile. |
 | `:image_tiles` | Text left, 2×2 image tile grid right. Stacks on mobile. |
@@ -73,6 +74,23 @@ end %>
   hero.slot do
     concat render(FlatPack::Button::Component.new(text: "Get started", style: :primary, href: "/docs"))
     concat render(FlatPack::Button::Component.new(text: "Learn more", style: :ghost, href: "/about"))
+  end
+end %>
+```
+
+### Centered image, left
+
+```erb
+<%= render FlatPack::Hero::Component.new(
+  variant: :centered_image,
+  align: :left,
+  tagline: "Built for teams",
+  headline: "Ship features your users love.",
+  description: "Full-bleed background image with a dark overlay.",
+  background_image_url: "https://example.com/hero-bg.jpg"
+) do |hero|
+  hero.slot do
+    concat render(FlatPack::Button::Component.new(text: "Start for free", style: :primary, href: "#"))
   end
 end %>
 ```
