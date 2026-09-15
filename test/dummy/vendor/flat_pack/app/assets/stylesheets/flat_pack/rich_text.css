@@ -98,6 +98,8 @@
 
   .flat-pack-richtext-editor {
     background-color: var(--surface-background-color);
+    /* Width/color also come from FormField::ControlStyles#form_control_border_classes
+       so host Tailwind preflight (often loaded last) cannot zero the field chrome. */
     border: 1px solid var(--surface-border-color);
     border-radius: 0 0 calc(var(--radius-md, 1rem) - 1px) calc(var(--radius-md, 1rem) - 1px);
     transition: border-color 0.15s;
@@ -126,6 +128,7 @@
   .flat-pack-comments-composer-input .flat-pack-richtext-editor {
     border: none !important;
     box-shadow: none !important;
+    padding: 0 !important;
   }
 
   .flat-pack-comments-composer-input .flat-pack-richtext-toolbar {
@@ -176,7 +179,9 @@
   /* ── ProseMirror core styles ──────────────────────────────────────────────── */
 
   .flat-pack-richtext-editor .ProseMirror {
-    padding: var(--form-control-padding, 0.625rem) var(--form-control-padding, 0.625rem);
+    /* Inset also comes from FormField::ControlStyles#form_control_padding_classes
+       on the editor box so host Tailwind preflight cannot zero the field padding. */
+    padding: var(--form-control-padding, 0.875rem);
     min-height: 8rem;
     max-height: 60vh;
     overflow-y: auto;

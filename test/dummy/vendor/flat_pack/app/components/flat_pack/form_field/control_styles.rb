@@ -10,8 +10,24 @@ module FlatPack
       # "text-[var(--color-error)]" "border-[var(--color-error)]"
       # "px-[var(--form-control-padding)]" "py-[var(--form-control-padding)]"
       # "bg-[var(--surface-background-color)]" "text-[var(--surface-content-color)]"
-      # "border-[var(--surface-border-color)]" "placeholder:text-[var(--surface-muted-content-color)]"
+      # "border" "border-[var(--surface-border-color)]" "placeholder:text-[var(--surface-muted-content-color)]"
       # "focus:ring-ring" "focus:border-transparent" "appearance-none"
+
+      # Width + color utilities that survive host Tailwind preflight when it
+      # loads after kit CSS. Color-only `border-[…]` is not enough.
+      def form_control_border_classes(error:)
+        [
+          "border",
+          (error ? "border-[var(--color-error)]" : "border-[var(--surface-border-color)]")
+        ]
+      end
+
+      def form_control_padding_classes
+        [
+          "px-[var(--form-control-padding)]",
+          "py-[var(--form-control-padding)]"
+        ]
+      end
 
       def form_control_classes(
         error:,
@@ -25,11 +41,11 @@ module FlatPack
           control_class,
           "w-full",
           "rounded-[var(--radius-md)]",
-          "border",
+          *form_control_border_classes(error: error),
           ("appearance-none" if appearance_none),
           "bg-[var(--surface-background-color)]",
           "text-[var(--surface-content-color)]",
-          "px-[var(--form-control-padding)] py-[var(--form-control-padding)]",
+          *form_control_padding_classes,
           "text-sm",
           "transition-colors duration-base",
           ("placeholder:text-[var(--surface-muted-content-color)]" if placeholder),
@@ -37,12 +53,6 @@ module FlatPack
           "disabled:opacity-50 disabled:cursor-not-allowed",
           *Array(extra)
         ].compact
-
-        base_classes << if error
-          "border-[var(--color-error)]"
-        else
-          "border-[var(--surface-border-color)]"
-        end
 
         classes(*base_classes, custom_class)
       end

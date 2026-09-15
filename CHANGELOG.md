@@ -12,8 +12,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Dummy pins `recording_studio_oauth` v0.2.0 and `recording_studio_mcp` v0.3.2. The host draws origin well-known with `RecordingStudioOauth::ProtectedResourceRegistry.draw_origin_well_known`. Cursor resource identity is `/recording_studio_mcp`. Unsuffixed `/.well-known/oauth-protected-resource` is 404. ChatGPT and API keep using `/recording_studio_oauth/.well-known/oauth-protected-resource`.
 - Dummy `GET /authorize` redirects to `/recording_studio_oauth/oauth/authorize` and keeps the query string (Cursor MCP OAuth tunnel quirk).
+- Bumped the gem version to `0.1.183`.
 
 ### Fixed
+- `FlatPack::TextArea` rich text uses the same `form_control_border_classes` and `form_control_padding_classes` as the plain textarea (`border` width plus `--surface-border-color` / `--color-error`, and `--form-control-padding`). Host Tailwind preflight no longer leaves the TipTap surface borderless or flush next to a normal field.
+
+### Upgrade notes
+- No API change. Upgrade the gem so `meta.gem_version` shows `0.1.183`. Rich-text `TextArea` (including `:minimal`) picks up the shared field border automatically. Comment composers that strip editor chrome with `.flat-pack-comments-composer-input` / `--bubble-only` still win.
 
 ## [0.1.182] - 2026-09-14
 
