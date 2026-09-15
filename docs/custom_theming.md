@@ -228,6 +228,18 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --hero-overlay-button-secondary-hover-background-color: rgb(255 255 255 / 0.12);
   --hero-overlay-button-secondary-text-color: oklch(1 0 0);
   --hero-overlay-button-secondary-border-color: rgb(255 255 255 / 0.55);
+  --hero-overlay-on-light-background-color: rgb(255 255 255 / 0.62);
+  --hero-overlay-on-light-left-background: linear-gradient(to right, rgb(255 255 255 / 0.88) 0%, rgb(255 255 255 / 0.62) 38%, rgb(255 255 255 / 0.28) 68%, rgb(255 255 255 / 0.08) 100%);
+  --hero-overlay-on-light-text-color: oklch(0.22 0 0);
+  --hero-overlay-on-light-muted-text-color: rgb(34 34 34 / 0.82);
+  --hero-overlay-on-light-button-primary-background-color: oklch(0.22 0 0);
+  --hero-overlay-on-light-button-primary-hover-background-color: oklch(0.28 0 0);
+  --hero-overlay-on-light-button-primary-text-color: oklch(1 0 0);
+  --hero-overlay-on-light-button-primary-border-color: oklch(0.22 0 0);
+  --hero-overlay-on-light-button-secondary-background-color: transparent;
+  --hero-overlay-on-light-button-secondary-hover-background-color: rgb(0 0 0 / 0.08);
+  --hero-overlay-on-light-button-secondary-text-color: oklch(0.22 0 0);
+  --hero-overlay-on-light-button-secondary-border-color: rgb(0 0 0 / 0.35);
   --carousel-viewport-background-color: var(--surface-muted-background-color);
   --carousel-viewport-border-color: var(--surface-border-color);
   --carousel-chevron-background-color: rgb(31 41 55 / 0.68);

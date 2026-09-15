@@ -17,6 +17,7 @@ module FlatPack
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "text-left" "text-center" "justify-start" "justify-center"
       # "ps-[max(2rem,env(safe-area-inset-left))]" "sm:ps-10" "lg:ps-16" "pe-6" "py-16" "px-6" "leading-tight" "text-2xl"
+      # "fp-hero-overlay-on-light"
       ALIGNS = {
         left: {
           text: "text-left",
@@ -30,6 +31,11 @@ module FlatPack
           canvas: "justify-center",
           overlay_copy: "px-6 py-16"
         }
+      }.freeze
+
+      ONS = {
+        dark: {overlay: ""},
+        light: {overlay: "fp-hero-overlay-on-light"}
       }.freeze
 
       renders_one :actions_slot
@@ -62,6 +68,7 @@ module FlatPack
       def initialize(
         variant: :centered,
         align: :center,
+        on: :dark,
         tagline: nil,
         headline: nil,
         description: nil,
@@ -75,6 +82,7 @@ module FlatPack
         super(**system_arguments)
         @variant = variant.to_sym
         @align = align.to_sym
+        @on = on.to_sym
         @tagline = tagline
         @headline = headline
         @description = description
@@ -86,6 +94,7 @@ module FlatPack
 
         validate_variant!
         validate_align!
+        validate_on!
       end
 
       def call
@@ -106,8 +115,30 @@ module FlatPack
         raise ArgumentError, "Invalid align: #{@align}. Must be one of: #{ALIGNS.keys.join(", ")}"
       end
 
+      def validate_on!
+        return if ONS.key?(@on)
+
+        raise ArgumentError, "Invalid on: #{@on}. Must be one of: #{ONS.keys.join(", ")}"
+      end
+
       def align_row
         ALIGNS.fetch(@align)
+      end
+
+      def on_row
+        ONS.fetch(@on)
+      end
+
+      def combined_style
+        [html_attributes[:style], background_style].compact_blank.join("; ").presence
+      end
+
+      def overlay_section_class
+        [
+          "fp-hero-overlay relative overflow-hidden min-h-[560px] flex items-center",
+          align_row[:canvas],
+          on_row[:overlay]
+        ].compact_blank.join(" ")
       end
 
       def overlay_inner_margin_class
@@ -212,7 +243,7 @@ module FlatPack
       # ─── variant renderers ───────────────────────────────────────────────────
 
       def render_centered
-        content_tag(:section, **merge_attributes(class: "w-full px-6 py-24 #{align_row[:text]}", style: background_style)) do
+        content_tag(:section, **merge_attributes(class: "w-full px-6 py-24 #{align_row[:text]}", style: combined_style)) do
           content_tag(:div, class: "max-w-4xl #{overlay_inner_margin_class}") do
             safe_join([
               render_badge_content,
@@ -226,7 +257,7 @@ module FlatPack
       end
 
       def render_centered_image
-        content_tag(:section, **merge_attributes(class: "fp-hero-overlay relative overflow-hidden min-h-[560px] flex items-center #{align_row[:canvas]}", style: background_style)) do
+        content_tag(:section, **merge_attributes(class: overlay_section_class, style: combined_style)) do
           safe_join([
             content_tag(:div, nil,
               class: "absolute inset-0 bg-cover bg-center",
@@ -246,7 +277,7 @@ module FlatPack
       end
 
       def render_screenshot
-        content_tag(:section, **merge_attributes(class: "px-6 py-24", style: background_style)) do
+        content_tag(:section, **merge_attributes(class: "px-6 py-24", style: combined_style)) do
           safe_join([
             content_tag(:div, class: "max-w-2xl #{overlay_inner_margin_class} #{align_row[:text]}") do
               safe_join([
@@ -265,7 +296,7 @@ module FlatPack
       end
 
       def render_split_image
-        content_tag(:section, **merge_attributes(class: "grid lg:grid-cols-2 min-h-[540px]", style: background_style)) do
+        content_tag(:section, **merge_attributes(class: "grid lg:grid-cols-2 min-h-[540px]", style: combined_style)) do
           safe_join([
             content_tag(:div, class: "flex flex-col justify-center px-16 py-24 lg:pr-16") do
               render_text_block
@@ -278,7 +309,7 @@ module FlatPack
       end
 
       def render_angled_image
-        content_tag(:section, **merge_attributes(class: "relative overflow-hidden py-24", style: background_style)) do
+        content_tag(:section, **merge_attributes(class: "relative overflow-hidden py-24", style: combined_style)) do
           safe_join([
             content_tag(:div, class: "lg:grid lg:grid-cols-2 items-center px-16") do
               content_tag(:div, render_text_block, class: "")
@@ -299,7 +330,7 @@ module FlatPack
       end
 
       def render_image_tiles
-        content_tag(:section, **merge_attributes(class: "grid lg:grid-cols-2 gap-16 items-center py-24", style: background_style)) do
+        content_tag(:section, **merge_attributes(class: "grid lg:grid-cols-2 gap-16 items-center py-24", style: combined_style)) do
           safe_join([
             content_tag(:div, render_text_block, class: "px-16"),
             content_tag(:div, class: "grid grid-cols-2 gap-4 pr-16") do
@@ -312,7 +343,7 @@ module FlatPack
       end
 
       def render_offset_image
-        content_tag(:section, **merge_attributes(class: "overflow-hidden py-24", style: background_style)) do
+        content_tag(:section, **merge_attributes(class: "overflow-hidden py-24", style: combined_style)) do
           content_tag(:div, class: "lg:grid lg:grid-cols-2 gap-16 items-start px-16") do
             safe_join([
               content_tag(:div, render_text_block, class: ""),

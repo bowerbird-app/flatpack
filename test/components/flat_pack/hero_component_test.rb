@@ -208,6 +208,7 @@ module FlatPack
         refute_includes html, "text-left"
         refute_includes html, "justify-start"
         refute_includes html, "max-w-2xl"
+        refute_includes html, "fp-hero-overlay-on-light"
         assert_includes html, "justify-center"
       end
 
@@ -254,6 +255,59 @@ module FlatPack
         assert_equal omitted, explicit
       end
 
+      def test_centered_image_on_light_paints_light_overlay
+        render_inline(Component.new(
+          variant: :centered_image,
+          on: :light,
+          headline: "Hero with background",
+          background_image_url: "https://placehold.co/1600x800"
+        )) do |c|
+          c.slot { "Start" }
+        end
+
+        html = page.native.to_html
+        assert_includes html, "fp-hero-overlay-on-light"
+        assert_includes html, "fp-hero-overlay"
+      end
+
+      def test_omitted_on_matches_explicit_dark_on_centered_image
+        omitted = render_inline(Component.new(
+          variant: :centered_image,
+          headline: "Same copy"
+        )).to_html
+
+        explicit = render_inline(Component.new(
+          variant: :centered_image,
+          on: :dark,
+          headline: "Same copy"
+        )).to_html
+
+        assert_equal omitted, explicit
+      end
+
+      def test_raises_argument_error_for_unknown_on
+        error = assert_raises(ArgumentError) do
+          Component.new(variant: :centered_image, on: :sunset)
+        end
+
+        assert_includes error.message, "Invalid on: sunset"
+        assert_includes error.message, "dark"
+        assert_includes error.message, "light"
+      end
+
+      def test_host_style_tokens_merge_with_background
+        render_inline(Component.new(
+          variant: :centered,
+          headline: "Tinted",
+          background: "var(--surface-muted-background-color)",
+          style: "--hero-overlay-text-color: oklch(0.2 0.05 80)"
+        ))
+
+        html = page.native.to_html
+        assert_includes html, "--hero-overlay-text-color: oklch(0.2 0.05 80)"
+        assert_includes html, "background: var(--surface-muted-background-color)"
+      end
+
       def test_raises_argument_error_for_unknown_align
         error = assert_raises(ArgumentError) do
           Component.new(variant: :centered_image, align: :right)
@@ -274,6 +328,18 @@ module FlatPack
         html = page.native.to_html
         assert_selector ".lg\\:grid-cols-2"
         refute_includes html, "text-center"
+      end
+
+      def test_split_image_ignores_on
+        render_inline(Component.new(
+          variant: :split_image,
+          on: :light,
+          headline: "Split layout"
+        ))
+
+        html = page.native.to_html
+        refute_includes html, "fp-hero-overlay-on-light"
+        refute_includes html, "fp-hero-overlay"
       end
 
       def test_centered_left_aligns_copy_and_actions

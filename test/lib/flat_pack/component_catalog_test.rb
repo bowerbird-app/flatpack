@@ -104,6 +104,14 @@ module FlatPack
       assert_equal "center", align.fetch(:default)
     end
 
+    test "show Hero binds ONS to on with a dark default" do
+      payload = FlatPack::ComponentCatalog.show("Hero::Component")
+      on = parameter_named(payload, "on")
+
+      assert_equal FlatPack::Hero::Component::ONS.keys.map(&:to_s), on.fetch(:enum)
+      assert_equal "dark", on.fetch(:default)
+    end
+
     test "show does not invent defaults for required kwargs" do
       payload = FlatPack::ComponentCatalog.show("Button::Pill::Component")
       items = parameter_named(payload, "items")
