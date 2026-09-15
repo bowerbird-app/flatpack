@@ -150,6 +150,8 @@ module FlatPack
         assert_includes html, "flat-pack-richtext-editor"
         assert_includes html, "border-[var(--surface-border-color)]"
         assert_match(/flat-pack-richtext-editor[^"]*\bborder\b/, html)
+        assert_includes html, "px-[var(--form-control-padding)]"
+        assert_includes html, "py-[var(--form-control-padding)]"
         refute_includes html, "border-[var(--color-error)]"
       end
 

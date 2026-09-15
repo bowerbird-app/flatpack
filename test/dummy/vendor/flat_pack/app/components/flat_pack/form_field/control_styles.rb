@@ -22,6 +22,13 @@ module FlatPack
         ]
       end
 
+      def form_control_padding_classes
+        [
+          "px-[var(--form-control-padding)]",
+          "py-[var(--form-control-padding)]"
+        ]
+      end
+
       def form_control_classes(
         error:,
         custom_class: nil,
@@ -38,7 +45,7 @@ module FlatPack
           ("appearance-none" if appearance_none),
           "bg-[var(--surface-background-color)]",
           "text-[var(--surface-content-color)]",
-          "px-[var(--form-control-padding)] py-[var(--form-control-padding)]",
+          *form_control_padding_classes,
           "text-sm",
           "transition-colors duration-base",
           ("placeholder:text-[var(--surface-muted-content-color)]" if placeholder),

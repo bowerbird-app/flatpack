@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bumped the gem version to `0.1.183`.
 
 ### Fixed
-- `FlatPack::TextArea` rich text uses the same `form_control_border_classes` as the plain textarea (`border` width plus `--surface-border-color` / `--color-error`). Host Tailwind preflight no longer leaves the TipTap surface borderless next to a normal field.
+- `FlatPack::TextArea` rich text uses the same `form_control_border_classes` and `form_control_padding_classes` as the plain textarea (`border` width plus `--surface-border-color` / `--color-error`, and `--form-control-padding`). Host Tailwind preflight no longer leaves the TipTap surface borderless or flush next to a normal field.
 
 ### Upgrade notes
 - No API change. Upgrade the gem so `meta.gem_version` shows `0.1.183`. Rich-text `TextArea` (including `:minimal`) picks up the shared field border automatically. Comment composers that strip editor chrome with `.flat-pack-comments-composer-input` / `--bubble-only` still win.

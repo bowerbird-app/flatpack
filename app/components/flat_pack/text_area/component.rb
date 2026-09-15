@@ -291,7 +291,8 @@ module FlatPack
       def rich_text_editor_container_classes
         classes(
           "flat-pack-richtext-editor",
-          *form_control_border_classes(error: @error)
+          *form_control_border_classes(error: @error),
+          *form_control_padding_classes
         )
       end
 

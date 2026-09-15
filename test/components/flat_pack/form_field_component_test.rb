@@ -126,6 +126,10 @@ module FlatPack
           ["border", "border-[var(--color-error)]"],
           probe.form_control_border_classes(error: true)
         )
+        assert_equal(
+          ["px-[var(--form-control-padding)]", "py-[var(--form-control-padding)]"],
+          probe.form_control_padding_classes
+        )
       end
     end
 

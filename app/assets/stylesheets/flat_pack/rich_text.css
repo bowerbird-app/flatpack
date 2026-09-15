@@ -128,6 +128,7 @@
   .flat-pack-comments-composer-input .flat-pack-richtext-editor {
     border: none !important;
     box-shadow: none !important;
+    padding: 0 !important;
   }
 
   .flat-pack-comments-composer-input .flat-pack-richtext-toolbar {
@@ -178,7 +179,9 @@
   /* ── ProseMirror core styles ──────────────────────────────────────────────── */
 
   .flat-pack-richtext-editor .ProseMirror {
-    padding: var(--form-control-padding, 0.625rem) var(--form-control-padding, 0.625rem);
+    /* Inset also comes from FormField::ControlStyles#form_control_padding_classes
+       on the editor box so host Tailwind preflight cannot zero the field padding. */
+    padding: var(--form-control-padding, 0.875rem);
     min-height: 8rem;
     max-height: 60vh;
     overflow-y: auto;
