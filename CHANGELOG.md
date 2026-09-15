@@ -15,14 +15,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-## [0.1.183] - 2026-09-15
+## [0.1.184] - 2026-09-15
 
 ### Added
 - `FlatPack::Hero::Component` accepts `align: :left` or `:center` (default `:center`). On `:centered_image`, `:left` docks tagline, headline, body, and CTAs to the start of the photo and keeps them vertically centered. `:centered` and `:screenshot` follow the same copy alignment. Split and column variants ignore `align`. Invalid values raise `ArgumentError`.
 - Overlay tokens `--hero-overlay-left-background` and `--hero-overlay-button-*`. `:centered_image` paints `.fp-hero-overlay` so primary and secondary buttons invert on the photo.
 
 ### Changed
-- Bumped the gem version to `0.1.183`.
+- Bumped the gem version to `0.1.184`.
 - `:centered_image` tagline uses `--hero-overlay-muted-text-color` instead of page muted gray.
 - `:left` on `:centered_image` uses a larger start inset (`lg:ps-16` plus safe-area) and a left-to-clear wash. Overlay copy padding is `py-16`.
 - Dummy full-page `:centered_image` demos pass `class: "h-svh"`. The component default stays `min-h-[560px]` so catalog embeds do not grow with the viewport.
@@ -30,7 +30,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Upgrade notes
 - New optional `align:` on `FlatPack::Hero::Component`. Omit it or pass `:center` to keep centered copy. Pass `align: :left` on `:centered`, `:centered_image`, or `:screenshot` for left-docked copy. `:right` is not valid. Split layouts do not change.
-- `:centered_image` overlay copy and CTAs now follow overlay tokens. Tagline is light, not page `--surface-muted-content-color`. Primary buttons on that variant render light-on-dark. Overlay headline leading is tight. Overlay body is `text-2xl`. Hosts that already passed inverted button styles or overlay type classes should drop those overrides. Landing pages that want a viewport-tall still pass `class: "h-svh"`. Redeploy so `meta.gem_version` shows `0.1.183`.
+- `:centered_image` overlay copy and CTAs now follow overlay tokens. Tagline is light, not page `--surface-muted-content-color`. Primary buttons on that variant render light-on-dark. Overlay headline leading is tight. Overlay body is `text-2xl`. Hosts that already passed inverted button styles or overlay type classes should drop those overrides. Landing pages that want a viewport-tall still pass `class: "h-svh"`. Redeploy so `meta.gem_version` shows `0.1.184`.
+
+## [0.1.183] - 2026-09-15
+
+### Changed
+- Bumped the gem version to `0.1.183`.
+
+### Fixed
+- `FlatPack::TextArea` rich text uses the same `form_control_border_classes` and `form_control_padding_classes` as the plain textarea (`border` width plus `--surface-border-color` / `--color-error`, and `--form-control-padding`). Host Tailwind preflight no longer leaves the TipTap surface borderless or flush next to a normal field.
+
+### Upgrade notes
+- No API change. Upgrade the gem so `meta.gem_version` shows `0.1.183`. Rich-text `TextArea` (including `:minimal`) picks up the shared field border automatically. Comment composers that strip editor chrome with `.flat-pack-comments-composer-input` / `--bubble-only` still win.
 
 ## [0.1.182] - 2026-09-14
 
