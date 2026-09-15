@@ -166,6 +166,9 @@ module FlatPack
         refute_includes html, "uppercase"
         refute_includes html, "tracking-widest"
         refute_includes html, "lg:text-6xl"
+        refute_includes html, "leading-tight"
+        refute_includes html, "text-2xl"
+        assert_includes html, "text-lg"
         assert_includes html, "fp-text-balance"
         assert_includes html, "fp-text-pretty"
         assert_includes html, "--text-4xl"
@@ -198,6 +201,10 @@ module FlatPack
         html = page.native.to_html
         assert_includes html, "flex items-center justify-center"
         assert_includes html, "text-center"
+        assert_includes html, "leading-tight"
+        assert_includes html, "text-2xl"
+        assert_match(/<h1[^>]*fp-text-balance/, html)
+        assert_match(/<p[^>]*text-2xl[^>]*fp-text-pretty/, html)
         refute_includes html, "text-left"
         refute_includes html, "justify-start"
         refute_includes html, "max-w-2xl"
@@ -222,6 +229,11 @@ module FlatPack
         assert_includes html, "lg:ps-16"
         assert_includes html, "justify-start"
         assert_includes html, "hero-overlay-left-background"
+        assert_includes html, "leading-tight"
+        assert_includes html, "text-2xl"
+        assert_match(/<h1[^>]*fp-text-pretty/, html)
+        refute_match(/<h1[^>]*fp-text-balance/, html)
+        assert_match(/<p[^>]*text-2xl[^>]*fp-text-pretty/, html)
         refute_includes html, "bg-[var(--hero-overlay-background-color)]"
         refute_match(/relative z-10 text-center/, html)
         refute_includes html, "flex items-center justify-center"

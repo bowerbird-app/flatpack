@@ -16,7 +16,7 @@ module FlatPack
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "text-left" "text-center" "justify-start" "justify-center"
-      # "ps-[max(2rem,env(safe-area-inset-left))]" "sm:ps-10" "lg:ps-16" "pe-6" "py-16" "px-6"
+      # "ps-[max(2rem,env(safe-area-inset-left))]" "sm:ps-10" "lg:ps-16" "pe-6" "py-16" "px-6" "leading-tight" "text-2xl"
       ALIGNS = {
         left: {
           text: "text-left",
@@ -123,6 +123,18 @@ module FlatPack
         ].join(" ")
       end
 
+      def overlay_headline_class
+        wrap = (@align == :left) ? "fp-text-pretty" : "fp-text-balance"
+        [
+          "mt-2 text-[length:var(--text-4xl)] sm:text-[length:var(--text-5xl)] font-semibold tracking-tight leading-tight text-[var(--hero-overlay-text-color)]",
+          wrap
+        ].join(" ")
+      end
+
+      def overlay_description_class
+        "mt-6 text-2xl text-[var(--hero-overlay-muted-text-color)] fp-text-pretty"
+      end
+
       def overlay_wash
         if @align == :left
           content_tag(:div, nil, class: "absolute inset-0", style: "background: var(--hero-overlay-left-background)")
@@ -224,10 +236,8 @@ module FlatPack
               safe_join([
                 render_badge_content,
                 render_overlay_tagline,
-                content_tag_if(@headline, :h1, @headline,
-                  class: "mt-2 text-[length:var(--text-4xl)] sm:text-[length:var(--text-5xl)] font-semibold tracking-tight text-[var(--hero-overlay-text-color)] fp-text-balance"),
-                content_tag_if(@description, :p, @description,
-                  class: "mt-6 text-lg text-[var(--hero-overlay-muted-text-color)] fp-text-pretty"),
+                content_tag_if(@headline, :h1, @headline, class: overlay_headline_class),
+                content_tag_if(@description, :p, @description, class: overlay_description_class),
                 render_actions_block(extra_classes: align_row[:actions])
               ].compact)
             end
