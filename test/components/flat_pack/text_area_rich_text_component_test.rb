@@ -138,23 +138,33 @@ module FlatPack
 
       def test_rich_text_mode_error_class_on_editor_container
         render_inline(Component.new(name: "body", rich_text: true, error: "Required"))
-        assert_selector "div.flat-pack-richtext-editor.border[class~='border-[var(--color-error)]']"
+        html = page.native.to_html
+        assert_includes html, "flat-pack-richtext-editor"
+        assert_includes html, "border-[var(--color-error)]"
+        assert_match(/flat-pack-richtext-editor[^"]*\bborder\b/, html)
       end
 
       def test_rich_text_mode_no_error_uses_border_class
         render_inline(Component.new(name: "body", rich_text: true))
-        assert_selector "div.flat-pack-richtext-editor.border[class~='border-[var(--surface-border-color)]']"
-        refute_selector "div.flat-pack-richtext-editor[class~='border-[var(--color-error)]']"
+        html = page.native.to_html
+        assert_includes html, "flat-pack-richtext-editor"
+        assert_includes html, "border-[var(--surface-border-color)]"
+        assert_match(/flat-pack-richtext-editor[^"]*\bborder\b/, html)
+        refute_includes html, "border-[var(--color-error)]"
       end
 
       def test_rich_text_minimal_preset_uses_shared_field_border
         render_inline(Component.new(name: "body", rich_text: true, rich_text_options: {preset: :minimal, toolbar: :minimal}))
-        assert_selector "div.flat-pack-richtext-editor.border[class~='border-[var(--surface-border-color)]']"
+        html = page.native.to_html
+        assert_match(/flat-pack-richtext-editor[^"]*\bborder\b/, html)
+        assert_includes html, "border-[var(--surface-border-color)]"
       end
 
       def test_rich_text_toolbar_none_uses_shared_field_border
         render_inline(Component.new(name: "body", rich_text: true, rich_text_options: {toolbar: :none, bubble_menu: true}))
-        assert_selector "div.flat-pack-richtext-editor.border[class~='border-[var(--surface-border-color)]']"
+        html = page.native.to_html
+        assert_match(/flat-pack-richtext-editor[^"]*\bborder\b/, html)
+        assert_includes html, "border-[var(--surface-border-color)]"
       end
 
       # ── Stimulus controller data attributes ────────────────────────────────

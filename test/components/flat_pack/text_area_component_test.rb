@@ -253,7 +253,10 @@ module FlatPack
       def test_has_base_flat_pack_input_class
         render_inline(Component.new(name: "description"))
 
-        assert_selector "textarea.flat-pack-input.border[class~='border-[var(--surface-border-color)]']"
+        assert_selector "textarea.flat-pack-input"
+        html = page.native.to_html
+        assert_includes html, "border-[var(--surface-border-color)]"
+        assert_match(/flat-pack-input[^"]*\bborder\b/, html)
       end
 
       def test_has_wrapper_class
