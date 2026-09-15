@@ -55,7 +55,7 @@ end %>
 | value | description |
 |---|---|
 | `:centered` | Centered text and actions, no image. Pass `align: :left` to dock the copy column to the start. |
-| `:centered_image` | Full-bleed background image with a `--hero-overlay-background-color` wash (default `rgb(0 0 0 / 0.6)`). Default copy is centered. `align: :left` docks copy to the start of the photo and keeps it vertically centered. |
+| `:centered_image` | Full-bleed background image with a `--hero-overlay-background-color` wash (default `rgb(0 0 0 / 0.6)`). Tagline, body, and CTAs use overlay tokens so copy stays readable on the photo. Primary and secondary buttons invert on the overlay. Default copy is centered. `align: :left` docks copy with a larger start inset, a left-to-clear `--hero-overlay-left-background` wash, and vertical centering. Landing pages can pass `class: "h-svh"` to fill the viewport. The catalog embed keeps `min-h-[560px]`. |
 | `:screenshot` | Centered text above a large constrained app screenshot. Pass `align: :left` to dock the copy. The screenshot stays centered. |
 | `:split_image` | Two-column grid: text left, image right. Stacks on mobile. |
 | `:angled_image` | Text left, image right with a diagonal polygon clip. Image replaced by a stacked image on mobile. |
@@ -134,7 +134,8 @@ end %>
 - Pass `image_alt: ""` for purely decorative images. This renders an empty `alt` attribute, which instructs screen readers to skip the image.
 - The background image in `centered_image` is applied via CSS (`background-image` inline style) and carries no `alt` text, making it presentational by default.
 - Buttons and links inside the `slot` area must have descriptive labels. Avoid generic labels like "Click here".
-- Ensure sufficient colour contrast between overlay text and the background for `centered_image`. Default `--hero-overlay-*` tokens (`rgb(0 0 0 / 0.6)` over white type) meet WCAG AA in most cases; verify with your image and theme.
+- Ensure sufficient colour contrast between overlay text and the background for `centered_image`. Tagline and body use `--hero-overlay-muted-text-color`. Headline uses `--hero-overlay-text-color`. Default `--hero-overlay-*` tokens meet WCAG AA in most cases; verify with your image and theme.
+- Overlay CTAs inherit inverted button tokens from `.fp-hero-overlay`. Keep using `style: :primary` / `:secondary` in the slot. Do not restyle buttons with host classes.
 
 ## Dependencies
 

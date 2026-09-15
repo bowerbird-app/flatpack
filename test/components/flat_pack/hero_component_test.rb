@@ -29,6 +29,7 @@ module FlatPack
         assert_selector "[style*='background-image']"
         assert_selector "h1", text: "Hero with background"
         html = page.native.to_html
+        assert_includes html, "fp-hero-overlay"
         assert_includes html, "bg-[var(--hero-overlay-background-color)]"
         assert_includes html, "text-[var(--hero-overlay-text-color)]"
         assert_includes html, "text-[var(--hero-overlay-muted-text-color)]"
@@ -171,6 +172,19 @@ module FlatPack
         assert_selector "p", text: "Introducing FlatPack"
       end
 
+      def test_centered_image_overlay_tagline_uses_overlay_muted_color
+        render_inline(Component.new(
+          variant: :centered_image,
+          tagline: "North coast kiln",
+          headline: "Hero with background",
+          background_image_url: "https://placehold.co/1600x800"
+        ))
+
+        html = page.native.to_html
+        assert_includes html, "text-[var(--hero-overlay-muted-text-color)]"
+        refute_match(/text-sm font-medium text-\[var\(--surface-muted-content-color\)\]/, html)
+      end
+
       def test_centered_image_defaults_to_centered_copy
         render_inline(Component.new(
           variant: :centered_image,
@@ -205,7 +219,10 @@ module FlatPack
         assert_includes html, "flex items-center justify-start"
         assert_includes html, "text-left"
         assert_includes html, "max-w-2xl"
+        assert_includes html, "lg:ps-16"
         assert_includes html, "justify-start"
+        assert_includes html, "hero-overlay-left-background"
+        refute_includes html, "bg-[var(--hero-overlay-background-color)]"
         refute_match(/relative z-10 text-center/, html)
         refute_includes html, "flex items-center justify-center"
       end

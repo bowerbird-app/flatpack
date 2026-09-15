@@ -51,6 +51,7 @@
     <div class="mb-4 flex justify-end">
       <%= render FlatPack::Button::Component.new(text: "View full-page demo", style: :secondary, href: pages_hero_centered_image_path, target: "_blank") %>
     </div>
+    <div class="xl:-mx-16 2xl:-mx-24">
     <%= render FlatPack::Hero::Component.new(
       variant: :centered_image,
       tagline: "Built for teams",
@@ -63,6 +64,7 @@
         concat render(FlatPack::Button::Component.new(text: "Watch demo", style: :secondary, href: "#"))
       end
     end %>
+    </div>
     <%= render FlatPack::CodeBlock::Component.new(
       class: "mt-4",
       language: "erb",
@@ -89,6 +91,7 @@
     <div class="mb-4 flex justify-end">
       <%= render FlatPack::Button::Component.new(text: "View full-page demo", style: :secondary, href: pages_hero_centered_image_left_path, target: "_blank") %>
     </div>
+    <div class="xl:-mx-16 2xl:-mx-24">
     <%= render FlatPack::Hero::Component.new(
       variant: :centered_image,
       align: :left,
@@ -102,6 +105,7 @@
         concat render(FlatPack::Button::Component.new(text: "See the kiln log", style: :secondary, href: "#"))
       end
     end %>
+    </div>
     <%= render FlatPack::CodeBlock::Component.new(
       class: "mt-4",
       language: "erb",

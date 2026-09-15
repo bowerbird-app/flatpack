@@ -19,12 +19,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - `FlatPack::Hero::Component` accepts `align: :left` or `:center` (default `:center`). On `:centered_image`, `:left` docks tagline, headline, body, and CTAs to the start of the photo and keeps them vertically centered. `:centered` and `:screenshot` follow the same copy alignment. Split and column variants ignore `align`. Invalid values raise `ArgumentError`.
+- Overlay tokens `--hero-overlay-left-background` and `--hero-overlay-button-*`. `:centered_image` paints `.fp-hero-overlay` so primary and secondary buttons invert on the photo.
 
 ### Changed
 - Bumped the gem version to `0.1.183`.
+- `:centered_image` tagline uses `--hero-overlay-muted-text-color` instead of page muted gray.
+- `:left` on `:centered_image` uses a larger start inset (`lg:ps-16` plus safe-area) and a left-to-clear wash. Overlay copy padding is `py-16`.
+- Dummy full-page `:centered_image` demos pass `class: "h-svh"`. The component default stays `min-h-[560px]` so catalog embeds do not grow with the viewport.
 
 ### Upgrade notes
-- New optional `align:` on `FlatPack::Hero::Component`. Omit it or pass `:center` to keep today's markup. Pass `align: :left` on `:centered`, `:centered_image`, or `:screenshot` for left-docked copy. `:right` is not valid. Split layouts do not change. Redeploy so `meta.gem_version` shows `0.1.183`.
+- New optional `align:` on `FlatPack::Hero::Component`. Omit it or pass `:center` to keep centered copy. Pass `align: :left` on `:centered`, `:centered_image`, or `:screenshot` for left-docked copy. `:right` is not valid. Split layouts do not change.
+- `:centered_image` overlay copy and CTAs now follow overlay tokens. Tagline is light, not page `--surface-muted-content-color`. Primary buttons on that variant render light-on-dark. Hosts that already passed inverted button styles should drop those overrides. Landing pages that want a viewport-tall still pass `class: "h-svh"`. Redeploy so `meta.gem_version` shows `0.1.183`.
 
 ## [0.1.182] - 2026-09-14
 

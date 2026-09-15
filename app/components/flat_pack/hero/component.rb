@@ -16,9 +16,20 @@ module FlatPack
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "text-left" "text-center" "justify-start" "justify-center"
+      # "ps-[max(2rem,env(safe-area-inset-left))]" "sm:ps-10" "lg:ps-16" "pe-6" "py-16" "px-6"
       ALIGNS = {
-        left: {text: "text-left", actions: "justify-start", canvas: "justify-start"},
-        center: {text: "text-center", actions: "justify-center", canvas: "justify-center"}
+        left: {
+          text: "text-left",
+          actions: "justify-start",
+          canvas: "justify-start",
+          overlay_copy: "ps-[max(2rem,env(safe-area-inset-left))] pe-6 py-16 sm:ps-10 lg:ps-16 max-w-2xl w-full"
+        },
+        center: {
+          text: "text-center",
+          actions: "justify-center",
+          canvas: "justify-center",
+          overlay_copy: "px-6 py-16"
+        }
       }.freeze
 
       renders_one :actions_slot
@@ -104,8 +115,27 @@ module FlatPack
       end
 
       def centered_image_copy_class
-        extra = (@align == :left) ? "max-w-2xl w-full" : nil
-        ["relative z-10", align_row[:text], "text-[var(--hero-overlay-text-color)] px-6 py-24", extra].compact.join(" ")
+        [
+          "relative z-10",
+          align_row[:text],
+          "text-[var(--hero-overlay-text-color)]",
+          align_row[:overlay_copy]
+        ].join(" ")
+      end
+
+      def overlay_wash
+        if @align == :left
+          content_tag(:div, nil, class: "absolute inset-0", style: "background: var(--hero-overlay-left-background)")
+        else
+          content_tag(:div, nil, class: "absolute inset-0 bg-[var(--hero-overlay-background-color)]")
+        end
+      end
+
+      def render_overlay_tagline
+        return nil unless @tagline.present?
+
+        content_tag(:p, @tagline,
+          class: "text-sm font-medium text-[var(--hero-overlay-muted-text-color)]")
       end
 
       # Strip url() functions to prevent CSS-based URL injection.
@@ -184,16 +214,16 @@ module FlatPack
       end
 
       def render_centered_image
-        content_tag(:section, **merge_attributes(class: "relative overflow-hidden min-h-[560px] flex items-center #{align_row[:canvas]}", style: background_style)) do
+        content_tag(:section, **merge_attributes(class: "fp-hero-overlay relative overflow-hidden min-h-[560px] flex items-center #{align_row[:canvas]}", style: background_style)) do
           safe_join([
             content_tag(:div, nil,
               class: "absolute inset-0 bg-cover bg-center",
               style: @background_image_url ? "background-image: url('#{@background_image_url}')" : nil),
-            content_tag(:div, nil, class: "absolute inset-0 bg-[var(--hero-overlay-background-color)]"),
+            overlay_wash,
             content_tag(:div, class: centered_image_copy_class) do
               safe_join([
                 render_badge_content,
-                render_tagline,
+                render_overlay_tagline,
                 content_tag_if(@headline, :h1, @headline,
                   class: "mt-2 text-[length:var(--text-4xl)] sm:text-[length:var(--text-5xl)] font-semibold tracking-tight text-[var(--hero-overlay-text-color)] fp-text-balance"),
                 content_tag_if(@description, :p, @description,

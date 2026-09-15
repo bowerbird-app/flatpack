@@ -217,8 +217,17 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --card-hover-strong-shadow: var(--shadow-md);
   --card-hover-strong-shadow-dark: var(--shadow-lg);
   --hero-overlay-background-color: rgb(0 0 0 / 0.6);
+  --hero-overlay-left-background: linear-gradient(to right, rgb(0 0 0 / 0.78) 0%, rgb(0 0 0 / 0.52) 38%, rgb(0 0 0 / 0.22) 68%, rgb(0 0 0 / 0.08) 100%);
   --hero-overlay-text-color: oklch(1.0 0 0);
   --hero-overlay-muted-text-color: rgb(255 255 255 / 0.8);
+  --hero-overlay-button-primary-background-color: oklch(1 0 0);
+  --hero-overlay-button-primary-hover-background-color: oklch(0.96 0 0);
+  --hero-overlay-button-primary-text-color: oklch(0.22 0 0);
+  --hero-overlay-button-primary-border-color: oklch(1 0 0);
+  --hero-overlay-button-secondary-background-color: transparent;
+  --hero-overlay-button-secondary-hover-background-color: rgb(255 255 255 / 0.12);
+  --hero-overlay-button-secondary-text-color: oklch(1 0 0);
+  --hero-overlay-button-secondary-border-color: rgb(255 255 255 / 0.55);
   --carousel-viewport-background-color: var(--surface-muted-background-color);
   --carousel-viewport-border-color: var(--surface-border-color);
   --carousel-chevron-background-color: rgb(31 41 55 / 0.68);
