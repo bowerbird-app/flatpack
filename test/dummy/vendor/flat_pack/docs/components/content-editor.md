@@ -74,5 +74,5 @@ Use Content Editor when you need lightweight inline editing of an HTML body fiel
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
 - Requires Stimulus controller `flat-pack--content-editor`.
-- Requires stylesheet `flat_pack/content_editor.css` (also bundled from `flat_pack/application.css`). Editor chrome uses kit `--radius-md` / `--radius-sm`. If host Tailwind loads last, re-set those radii on unlayered `:root` — see [Theming](../theming.md). At a 16px html root, body/`p`/`h5`/`h6` compute to 18px, `h4` to 20.25px, `h3` to 22.5px, `h2` to 27px, and body `h1` to 33.75px.
+- Requires stylesheet `flat_pack/content_editor.css` (also bundled from `flat_pack/application.css`). Editor chrome uses kit `--radius-md` / `--radius-sm`. If host Tailwind loads last, re-set those radii on unlayered `:root` — see [Theming](../theming.md). Article `font-size` is unlayered so Preflight `h1`–`h6 { font-size: inherit }` cannot flatten it. At a 16px html root, body/`p`/`h5`/`h6` compute to 18px, `h4` to 20.25px, `h3` to 22.5px, `h2` to 27px, and body `h1` to 33.75px.
 - Image upload variant requires a server-side endpoint that accepts a `file` multipart field and returns `{ "url": "..." }` JSON.

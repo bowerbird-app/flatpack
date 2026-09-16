@@ -47,10 +47,10 @@ module FlatPack
 
     test "content editor article body is 1.125rem with em headings" do
       css = content_editor_css
-      content_block = css[/\.flat-pack-content-editor-content \{[^}]+\}/m]
 
-      refute_nil content_block, "expected .flat-pack-content-editor-content rule"
-      assert_includes content_block, "font-size: 1.125rem;"
+      assert_includes css, "Unlayered type scale."
+      content_roots = css.scan(/\.flat-pack-content-editor-content \{[^}]+\}/m)
+      assert content_roots.any? { |block| block.include?("font-size: 1.125rem;") }
 
       paragraph_block = css[/\.flat-pack-content-editor-content p \{[^}]+\}/m]
       refute_nil paragraph_block, "expected .flat-pack-content-editor-content p rule"
@@ -68,10 +68,9 @@ module FlatPack
         refute_match(/rem/, declaration, "heading size should use em, got: #{declaration}")
       end
 
-      pre_block = css[/\.flat-pack-content-editor-content pre \{[^}]+\}/m]
-      refute_nil pre_block, "expected .flat-pack-content-editor-content pre rule"
-      assert_includes pre_block, "font-size: 0.8125em;"
-      refute_match(/0\.8125rem/, pre_block)
+      pre_blocks = css.scan(/\.flat-pack-content-editor-content pre \{[^}]+\}/m)
+      assert pre_blocks.any? { |block| block.include?("font-size: 0.8125em;") }
+      refute_match(/\.flat-pack-content-editor-content pre \{[^}]*0\.8125rem/, css)
     end
 
     test "form rich text keeps a compact ProseMirror root" do
