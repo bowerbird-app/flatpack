@@ -617,14 +617,14 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --page-title-h5-size: var(--text-lg);
   --page-title-h6-size: var(--text-base);
   --content-kicker-size: var(--text-base);
-  --content-p-size: var(--text-lg);
+  --content-p-size: var(--text-base);
   --content-lead-size: var(--text-xl);
-  --content-h1-size: var(--text-5xl);
-  --content-h2-size: var(--text-4xl);
-  --content-h3-size: var(--text-3xl);
-  --content-h4-size: var(--text-2xl);
-  --content-h5-size: var(--text-xl);
-  --content-h6-size: var(--text-lg);
+  --content-h1-size: var(--text-4xl);
+  --content-h2-size: var(--text-2xl);
+  --content-h3-size: var(--text-xl);
+  --content-h4-size: var(--text-lg);
+  --content-h5-size: var(--text-base);
+  --content-h6-size: var(--text-base);
 
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);

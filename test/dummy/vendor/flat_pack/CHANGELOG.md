@@ -18,13 +18,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.185] - 2026-09-16
 
 ### Added
-- `FlatPack::Content::Component` wraps long-form HTML in `.fp-content`. Paragraphs are 18px (`--content-p-size` → `--text-lg`). Headings, lead, kicker, lists, quotes, and links scale from that size. Optional classes: `.fp-content-kicker`, `.fp-content-lead`. Dummy `/demo/text/content` uses the wrapper and documents the API like other kit pages. Content type CSS is unlayered so host Tailwind preflight cannot inherit heading size.
+- `FlatPack::Content::Component` renders a `div.fp-content`. Bare `p`, `h1`–`h6`, lists, quotes, links, and images take the same type and spacing as the main Content demo (kicker, `text-4xl` / `sm:text-5xl` title, `text-xl` lead, `text-base/7` body, `space-y-8` stack). Optional `.fp-content-kicker` and `.fp-content-lead` force those roles. Dummy `/demo/text/content` wraps the article and documents the API.
 
 ### Changed
 - Bumped the gem version to `0.1.185`.
 
 ### Upgrade notes
-- Wrap article HTML in `render FlatPack::Content::Component.new do |content| ... end`. Drop per-element `text-base` / `text-xl` size classes inside the wrapper so the reading scale wins. Redeploy so `meta.gem_version` shows `0.1.185`.
+- Wrap CMS or article HTML in `render FlatPack::Content::Component.new do |content| ... end`. Leave the tags bare — do not add per-element size classes. Redeploy so `meta.gem_version` shows `0.1.185`.
 
 ## [0.1.184] - 2026-09-15
 
