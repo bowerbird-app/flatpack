@@ -22,6 +22,15 @@ module FlatPack
       assert_match(/--text-5xl:\s*3rem/, root_block)
       assert_match(/--page-title-h1-size:\s*var\(--text-4xl\)/, root_block)
       assert_match(/--page-title-h6-size:\s*var\(--text-base\)/, root_block)
+      assert_match(/--content-p-size:\s*var\(--text-lg\)/, root_block)
+      assert_match(/--content-kicker-size:\s*var\(--text-lg\)/, root_block)
+      assert_match(/--content-lead-size:\s*var\(--text-2xl\)/, root_block)
+      assert_match(/--content-h1-size:\s*var\(--text-5xl\)/, root_block)
+      assert_match(/--content-h2-size:\s*var\(--text-3xl\)/, root_block)
+      assert_match(/--content-h3-size:\s*var\(--text-2xl\)/, root_block)
+      assert_match(/--content-h4-size:\s*var\(--text-xl\)/, root_block)
+      assert_match(/--content-h5-size:\s*var\(--text-lg\)/, root_block)
+      assert_match(/--content-h6-size:\s*var\(--text-lg\)/, root_block)
     end
 
     test "root applies the kit face and antialiased smoothing" do
@@ -42,6 +51,11 @@ module FlatPack
       assert_includes css, "text-wrap: balance"
       assert_includes css, ".fp-text-pretty"
       assert_includes css, "text-wrap: pretty"
+      assert_includes css, ".fp-content"
+      assert_includes css, "font-size: var(--content-p-size, var(--text-lg, 1.125rem))"
+      assert_includes css, "font-size: var(--content-h1-size, var(--text-5xl, 3rem))"
+      refute_match(/@media \(min-width: 640px\) \{\s*\.fp-content h1/, css)
+      assert_includes css, "/* Long-form reading type. Unlayered so Tailwind preflight cannot collapse"
     end
 
     test "kit components do not force all-caps tracked-out labels" do

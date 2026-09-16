@@ -669,9 +669,14 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, ">Content</h1>"
     assert_includes response.body, ">A Mastered Workflow</h1>"
-    assert_includes response.body, "text-(--color-primary)"
+    assert_includes response.body, "fp-content"
     assert_includes response.body, "One-Click Distribution."
     assert_includes response.body, "No Publisher? No Problem."
+    refute_includes response.body, "class=\"mt-2 text-4xl"
+    assert_includes response.body, "Body is 18px."
+    assert_includes response.body, ">content</td>"
+    assert_includes response.body, ">h1 / p / ul</td>"
+    assert_includes response.body, "**system_arguments"
   end
 
   test "range input demo variable table includes full option set" do

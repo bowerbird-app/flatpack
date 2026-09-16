@@ -15,6 +15,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.185] - 2026-09-16
+
+### Added
+- `FlatPack::Content::Component` renders a `div.fp-content`. Bare `p`, `h1`–`h6`, lists, quotes, links, and images take the kit reading scale (kicker and body `--text-lg` / 18px, lead `--text-2xl`, title `--text-5xl`, then `--text-3xl` down to `--text-lg`). Optional `.fp-content-kicker` and `.fp-content-lead` force those roles. Dummy `/demo/text/content` wraps the article and documents the API.
+
+### Changed
+- Bumped the gem version to `0.1.185`.
+
+### Upgrade notes
+- Wrap CMS or article HTML in `render FlatPack::Content::Component.new do |content| ... end`. Leave the tags bare. Body is `--text-lg` (18px). Do not add per-element size classes. Redeploy so `meta.gem_version` shows `0.1.185`.
+
 ## [0.1.184] - 2026-09-15
 
 ### Added
