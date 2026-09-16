@@ -2401,6 +2401,7 @@ class PagesController < ApplicationController
     stylesheet_versions = %w[
       application.css
       flat_pack/variables.css
+      flat_pack/application.css
       flat_pack/rich_text.css
       flat_pack/content_editor.css
     ].map do |logical_path|

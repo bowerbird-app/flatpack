@@ -39,4 +39,4 @@ None. Optional descendant classes:
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
 - Theme tokens: `--content-p-size` (18px via `--text-lg`), `--content-lead-size`, `--content-h1-size` through `--content-h6-size`, `--content-kicker-size`.
-- Styles ship in `flat_pack/application.css` on `.fp-content`.
+- Styles ship unlayered in `flat_pack/application.css` on `.fp-content` so host Tailwind preflight cannot inherit heading size.

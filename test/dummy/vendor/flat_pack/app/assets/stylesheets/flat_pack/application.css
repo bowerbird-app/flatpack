@@ -162,158 +162,6 @@
     text-wrap: pretty;
   }
 
-  /* Long-form reading type. Body is 18px (--text-lg). Scoped so UI chrome stays 16px. */
-  .fp-content {
-    color: var(--surface-muted-content-color);
-    font-size: var(--content-p-size);
-    line-height: 1.7;
-  }
-
-  .fp-content :where(h1, h2, h3, h4, h5, h6) {
-    color: var(--surface-content-color);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: var(--leading-tight);
-    text-wrap: balance;
-  }
-
-  .fp-content h1 {
-    font-size: var(--content-h2-size);
-    font-weight: 600;
-  }
-
-  @media (min-width: 640px) {
-    .fp-content h1 {
-      font-size: var(--content-h1-size);
-    }
-  }
-
-  .fp-content h2 { font-size: var(--content-h2-size); }
-  .fp-content h3 { font-size: var(--content-h3-size); }
-  .fp-content h4 { font-size: var(--content-h4-size); }
-  .fp-content h5 { font-size: var(--content-h5-size); }
-  .fp-content h6 { font-size: var(--content-h6-size); }
-
-  .fp-content p,
-  .fp-content li {
-    text-wrap: pretty;
-  }
-
-  .fp-content p {
-    font-size: var(--content-p-size);
-    margin-top: 1.25em;
-  }
-
-  .fp-content .fp-content-kicker {
-    color: var(--color-primary);
-    font-size: var(--content-kicker-size);
-    font-weight: 600;
-    letter-spacing: 0;
-    line-height: var(--leading-snug);
-    margin-top: 0;
-    text-transform: none;
-  }
-
-  .fp-content .fp-content-kicker + :where(h1, h2, h3) {
-    margin-top: 0.35em;
-  }
-
-  .fp-content .fp-content-lead {
-    font-size: var(--content-lead-size);
-    line-height: 1.6;
-    margin-top: 1.25em;
-  }
-
-  .fp-content :where(h1, h2, h3, h4, h5, h6) + p {
-    margin-top: 0.85em;
-  }
-
-  .fp-content :where(h2, h3, h4, h5, h6) {
-    margin-top: 1.75em;
-  }
-
-  .fp-content > :first-child {
-    margin-top: 0;
-  }
-
-  .fp-content ul[role="list"] {
-    margin-top: 1.5em;
-  }
-
-  .fp-content a {
-    color: var(--color-primary);
-    text-decoration: underline;
-    text-underline-offset: 0.15em;
-  }
-
-  .fp-content strong {
-    color: var(--surface-content-color);
-    font-weight: 600;
-  }
-
-  .fp-content ul:not([role="list"]) {
-    list-style-type: disc;
-    margin-top: 1.25em;
-    padding-left: 1.35em;
-  }
-
-  .fp-content ol:not([role="list"]) {
-    list-style-type: decimal;
-    margin-top: 1.25em;
-    padding-left: 1.35em;
-  }
-
-  .fp-content li + li {
-    margin-top: 0.5em;
-  }
-
-  .fp-content blockquote {
-    border-left: var(--quote-border-width) solid var(--quote-border-color);
-    color: var(--quote-text-color);
-    font-style: italic;
-    margin-top: 1.5em;
-    padding-left: var(--quote-padding-left);
-  }
-
-  .fp-content hr {
-    border: 0;
-    border-top: 1px solid var(--surface-border-color);
-    margin: 2em 0;
-  }
-
-  .fp-content code {
-    background-color: var(--surface-muted-background-color);
-    border: 1px solid var(--surface-border-color);
-    border-radius: var(--radius-sm, 0.75rem);
-    font-family: var(--font-mono);
-    font-size: 0.875em;
-    padding: 0.1em 0.35em;
-  }
-
-  .fp-content pre {
-    background-color: var(--surface-muted-background-color);
-    border: 1px solid var(--surface-border-color);
-    border-radius: var(--radius-md, 1rem);
-    font-size: var(--text-sm);
-    margin-top: 1.25em;
-    overflow-x: auto;
-    padding: 0.875rem 1rem;
-  }
-
-  .fp-content pre code {
-    background: none;
-    border: 0;
-    padding: 0;
-  }
-
-  .fp-content img {
-    border-radius: var(--radius-md, 1rem);
-    display: block;
-    height: auto;
-    margin-top: 1.5em;
-    max-width: 100%;
-  }
-
   /* Empty state and the content that replaces it fade in on --duration-slow.
    * Hosts add .fp-content-enter to the panel that takes the empty state's place.
    */
@@ -820,4 +668,160 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 .fp-button-flat:active:not(:disabled) {
   box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.08);
 }
+
+/* Unlayered so host Tailwind preflight (`h1 { font-size: inherit }` in @layer base)
+ * cannot collapse article headings. Kit @layer components is declared before the
+ * host Tailwind layer order, so base would otherwise win.
+ */
+.fp-content {
+  color: var(--surface-muted-content-color);
+  font-size: var(--content-p-size);
+  line-height: 1.7;
+}
+
+.fp-content :where(h1, h2, h3, h4, h5, h6) {
+  color: var(--surface-content-color);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: var(--leading-tight);
+  text-wrap: balance;
+}
+
+.fp-content h1 {
+  font-size: var(--content-h2-size);
+  font-weight: 600;
+}
+
+@media (min-width: 640px) {
+  .fp-content h1 {
+    font-size: var(--content-h1-size);
+  }
+}
+
+.fp-content h2 { font-size: var(--content-h2-size); }
+.fp-content h3 { font-size: var(--content-h3-size); }
+.fp-content h4 { font-size: var(--content-h4-size); }
+.fp-content h5 { font-size: var(--content-h5-size); }
+.fp-content h6 { font-size: var(--content-h6-size); }
+
+.fp-content p,
+.fp-content li {
+  text-wrap: pretty;
+}
+
+.fp-content p {
+  font-size: var(--content-p-size);
+  margin-top: 1.25em;
+}
+
+.fp-content .fp-content-kicker {
+  color: var(--color-primary);
+  font-size: var(--content-kicker-size);
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: var(--leading-snug);
+  margin-top: 0;
+  text-transform: none;
+}
+
+.fp-content .fp-content-kicker + :where(h1, h2, h3) {
+  margin-top: 0.35em;
+}
+
+.fp-content .fp-content-lead {
+  font-size: var(--content-lead-size);
+  line-height: 1.6;
+  margin-top: 1.25em;
+}
+
+.fp-content :where(h1, h2, h3, h4, h5, h6) + p {
+  margin-top: 0.85em;
+}
+
+.fp-content :where(h2, h3, h4, h5, h6) {
+  margin-top: 1.75em;
+}
+
+.fp-content > :first-child {
+  margin-top: 0;
+}
+
+.fp-content ul[role="list"] {
+  margin-top: 1.5em;
+}
+
+.fp-content a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.fp-content strong {
+  color: var(--surface-content-color);
+  font-weight: 600;
+}
+
+.fp-content ul:not([role="list"]) {
+  list-style-type: disc;
+  margin-top: 1.25em;
+  padding-left: 1.35em;
+}
+
+.fp-content ol:not([role="list"]) {
+  list-style-type: decimal;
+  margin-top: 1.25em;
+  padding-left: 1.35em;
+}
+
+.fp-content li + li {
+  margin-top: 0.5em;
+}
+
+.fp-content blockquote {
+  border-left: var(--quote-border-width) solid var(--quote-border-color);
+  color: var(--quote-text-color);
+  font-style: italic;
+  margin-top: 1.5em;
+  padding-left: var(--quote-padding-left);
+}
+
+.fp-content hr {
+  border: 0;
+  border-top: 1px solid var(--surface-border-color);
+  margin: 2em 0;
+}
+
+.fp-content code {
+  background-color: var(--surface-muted-background-color);
+  border: 1px solid var(--surface-border-color);
+  border-radius: var(--radius-sm, 0.75rem);
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  padding: 0.1em 0.35em;
+}
+
+.fp-content pre {
+  background-color: var(--surface-muted-background-color);
+  border: 1px solid var(--surface-border-color);
+  border-radius: var(--radius-md, 1rem);
+  font-size: var(--text-sm);
+  margin-top: 1.25em;
+  overflow-x: auto;
+  padding: 0.875rem 1rem;
+}
+
+.fp-content pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+.fp-content img {
+  border-radius: var(--radius-md, 1rem);
+  display: block;
+  height: auto;
+  margin-top: 1.5em;
+  max-width: 100%;
+}
+
 

@@ -47,6 +47,7 @@ module FlatPack
       assert_includes css, "text-wrap: pretty"
       assert_includes css, ".fp-content"
       assert_includes css, "font-size: var(--content-p-size)"
+      assert_includes css, "Unlayered so host Tailwind preflight"
     end
 
     test "kit components do not force all-caps tracked-out labels" do
