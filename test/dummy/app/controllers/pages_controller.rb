@@ -596,6 +596,9 @@ class PagesController < ApplicationController
   def text_quote
   end
 
+  def content_editor
+  end
+
   def empty_state
   end
 

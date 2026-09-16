@@ -287,7 +287,8 @@ class DemoCatalog
             {title: "Composer", search_title: "Chat Composer", path: "/demo/chat/composer", description: "Composer input and action patterns", icon: :edit_3}
           ]
         },
-        {type: :item, title: "Articles", path: "/demo/articles", description: "Articles CRUD demo with rich text", icon: :edit_3}
+        {type: :item, title: "Articles", path: "/demo/articles", description: "Articles CRUD demo with rich text", icon: :edit_3},
+        {type: :item, title: "Content Editor", path: "/demo/content-editor", description: "Article body type at 18px", icon: :edit_3}
       ]
     }
   ].freeze

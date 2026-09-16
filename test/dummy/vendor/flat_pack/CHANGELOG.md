@@ -15,6 +15,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.185] - 2026-09-16
+
+### Changed
+- Bumped the gem version to `0.1.185`.
+- Content Editor article body (`.flat-pack-content-editor-content`) is `1.125rem` (18px at a 16px html root). Headings keep the same ratios in `em` so they follow that content root. `pre` uses `0.8125em` so code blocks scale with the article. `PageTitle` / `--page-title-h1-size` and form RichText (`.ProseMirror` at `0.875rem`) are unchanged.
+
+### Upgrade notes
+- Pin Flatpack `0.1.185`. Published Help/wiki HTML that uses `.flat-pack-content-editor-content` becomes 18px body type; do not add a host article `font-size`. Page chrome titles stay kit size. Form rich-text fields stay compact. Redeploy so `meta.gem_version` shows `0.1.185`.
+
 ## [0.1.184] - 2026-09-15
 
 ### Added

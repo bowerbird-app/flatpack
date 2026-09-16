@@ -85,6 +85,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/page_nav
     /demo/text/content
     /demo/text/quote
+    /demo/content-editor
     /demo/empty_state
     /demo/grid
     /demo/grid/movable_cards
@@ -672,6 +673,19 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "text-(--color-primary)"
     assert_includes response.body, "One-Click Distribution."
     assert_includes response.body, "No Publisher? No Problem."
+  end
+
+  test "content editor demo renders article body with p h2 and h3" do
+    get "/demo/content-editor"
+
+    assert_response :success
+    assert_select ".flat-pack-content-editor-content h2", text: "Section heading", count: 2
+    assert_select ".flat-pack-content-editor-content h3", text: "Subheading", count: 2
+    assert_select ".flat-pack-content-editor-content p", minimum: 2
+    assert_select "[data-flat-pack--content-editor-target='displayContent'].flat-pack-content-editor-content"
+    assert_select "[data-published-article].flat-pack-content-editor-content"
+    assert_select "h1", text: "Content Editor"
+    assert_includes response.body, "--page-title-h1-size"
   end
 
   test "range input demo variable table includes full option set" do

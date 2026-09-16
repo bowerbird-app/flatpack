@@ -1,0 +1,37 @@
+<div class="max-w-3xl mx-auto p-8">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Content Editor",
+    subtitle: "Article body at 18px. Page title stays kit chrome."
+  ) %>
+
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Edit",
+    subtitle: "Same class as published HTML. Click Edit to check the type stays put.",
+    anchor_link: true
+  ) %>
+
+  <div class="mt-6">
+    <%= render FlatPack::ContentEditor::Component.new(
+      update_url: "/demo/content-editor",
+      toolbar: true
+    ) do %>
+      <h2>Section heading</h2>
+      <p>Body copy should read at eighteen pixels when the html root is sixteen. Headings scale from that content root.</p>
+      <h3>Subheading</h3>
+      <p>Edit and display share <code>flat-pack-content-editor-content</code>.</p>
+    <% end %>
+  </div>
+
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Published",
+    subtitle: "Same wrapper, no editor chrome.",
+    anchor_link: true
+  ) %>
+
+  <div class="flat-pack-content-editor-content mt-6" data-published-article>
+    <h2>Section heading</h2>
+    <p>Body copy should read at eighteen pixels when the html root is sixteen. Headings scale from that content root.</p>
+    <h3>Subheading</h3>
+    <p>Hosts pin Flatpack. Do not add a local article font-size.</p>
+  </div>
+</div>

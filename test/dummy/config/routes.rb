@@ -177,6 +177,7 @@ Rails.application.routes.draw do
   get "demo/page_nav", to: "pages#page_nav"
   get "demo/text/content", to: "pages#text_content"
   get "demo/text/quote", to: "pages#text_quote"
+  get "demo/content-editor", to: "pages#content_editor"
   get "demo/empty_state", to: "pages#empty_state"
   get "demo/grid", to: "pages#grid"
   get "demo/grid/two_columns", to: "pages#grid_two_columns"

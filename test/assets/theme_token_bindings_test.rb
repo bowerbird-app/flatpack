@@ -44,5 +44,45 @@ module FlatPack
         refute_includes css, "var(--radius-sm, 0.25rem)"
       end
     end
+
+    test "content editor article body is 1.125rem with em headings" do
+      css = content_editor_css
+      content_block = css[/\.flat-pack-content-editor-content \{[^}]+\}/m]
+
+      refute_nil content_block, "expected .flat-pack-content-editor-content rule"
+      assert_includes content_block, "font-size: 1.125rem;"
+
+      paragraph_block = css[/\.flat-pack-content-editor-content p \{[^}]+\}/m]
+      refute_nil paragraph_block, "expected .flat-pack-content-editor-content p rule"
+      refute_match(/font-size/, paragraph_block)
+
+      assert_includes css, ".flat-pack-content-editor-content h1 { font-size: 1.875em; }"
+      assert_includes css, ".flat-pack-content-editor-content h2 { font-size: 1.5em; }"
+      assert_includes css, ".flat-pack-content-editor-content h3 { font-size: 1.25em; }"
+      assert_includes css, ".flat-pack-content-editor-content h4 { font-size: 1.125em; }"
+      assert_includes css, ".flat-pack-content-editor-content h6 { font-size: 1em; }"
+
+      heading_sizes = css.scan(/\.flat-pack-content-editor-content h[1-6][^{]*\{[^}]*font-size:\s*[^;]+/)
+      assert_predicate heading_sizes, :any?
+      heading_sizes.each do |declaration|
+        refute_match(/rem/, declaration, "heading size should use em, got: #{declaration}")
+      end
+
+      pre_block = css[/\.flat-pack-content-editor-content pre \{[^}]+\}/m]
+      refute_nil pre_block, "expected .flat-pack-content-editor-content pre rule"
+      assert_includes pre_block, "font-size: 0.8125em;"
+      refute_match(/0\.8125rem/, pre_block)
+    end
+
+    test "form rich text keeps a compact ProseMirror root" do
+      css = rich_text_css
+      prose_block = css.scan(/\.flat-pack-richtext-editor \.ProseMirror \{[^}]+\}/m).find { |block|
+        block.include?("min-height: 8rem;")
+      }
+
+      refute_nil prose_block, "expected the form ProseMirror content root rule"
+      assert_includes prose_block, "font-size: 0.875rem;"
+      refute_includes prose_block, "font-size: 1.125rem;"
+    end
   end
 end

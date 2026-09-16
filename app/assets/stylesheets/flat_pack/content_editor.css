@@ -10,10 +10,12 @@
   }
 
   /* ── Content region typography ─────────────────────────────────────────── */
-  /* Restores browser defaults stripped by Tailwind Preflight and adds          */
-  /* visual consistency with the TipTap rich-text editor surface.               */
+  /* Restores browser defaults stripped by Tailwind Preflight.                  */
+  /* Body is 1.125rem (18px at a 16px html root). Headings and pre use em so   */
+  /* they follow this content root, not the page chrome.                        */
 
   .flat-pack-content-editor-content {
+    font-size: 1.125rem; /* 18px at a 16px root */
     line-height: 1.6;
     color: var(--surface-content-color);
     word-wrap: break-word;
@@ -37,12 +39,12 @@
     margin-bottom: 0.5em;
   }
 
-  .flat-pack-content-editor-content h1 { font-size: 1.875rem; }
-  .flat-pack-content-editor-content h2 { font-size: 1.5rem; }
-  .flat-pack-content-editor-content h3 { font-size: 1.25rem; }
-  .flat-pack-content-editor-content h4 { font-size: 1.125rem; }
+  .flat-pack-content-editor-content h1 { font-size: 1.875em; }
+  .flat-pack-content-editor-content h2 { font-size: 1.5em; }
+  .flat-pack-content-editor-content h3 { font-size: 1.25em; }
+  .flat-pack-content-editor-content h4 { font-size: 1.125em; }
   .flat-pack-content-editor-content h5,
-  .flat-pack-content-editor-content h6 { font-size: 1rem; }
+  .flat-pack-content-editor-content h6 { font-size: 1em; }
 
   .flat-pack-content-editor-content p {
     margin-bottom: 0.75em;
@@ -108,7 +110,7 @@
     border-radius: var(--radius-md, 1rem);
     padding: 0.875rem 1rem;
     overflow-x: auto;
-    font-size: 0.8125rem;
+    font-size: 0.8125em;
     margin-bottom: 0.75em;
   }
 

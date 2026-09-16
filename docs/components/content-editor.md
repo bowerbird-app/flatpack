@@ -3,6 +3,8 @@
 ## Purpose
 In-place rich-text editor that lets users edit HTML content directly on the page and save it via a PATCH request — no full page reload required.
 
+Display and edit share `.flat-pack-content-editor-content`. That wrapper is the article body root: `font-size: 1.125rem` (18px at a 16px html root). Headings and `pre` use `em` so they follow it. Do not set `font-size` on `p`. Page titles stay kit chrome (`PageTitle` / `--page-title-h1-size`); this class is article body only.
+
 ## When to use
 Use Content Editor when you need lightweight inline editing of an HTML body field on a show/detail page (e.g. wiki pages, articles, CMS content blocks). Prefer it over embedding a full form when the primary intent is reading with occasional edit.
 
@@ -72,5 +74,5 @@ Use Content Editor when you need lightweight inline editing of an HTML body fiel
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
 - Requires Stimulus controller `flat-pack--content-editor`.
-- Requires stylesheet `flat_pack/content_editor.css` (also bundled from `flat_pack/application.css`). Editor chrome uses kit `--radius-md` / `--radius-sm`. If host Tailwind loads last, re-set those radii on unlayered `:root` — see [Theming](../theming.md).
+- Requires stylesheet `flat_pack/content_editor.css` (also bundled from `flat_pack/application.css`). Editor chrome uses kit `--radius-md` / `--radius-sm`. If host Tailwind loads last, re-set those radii on unlayered `:root` — see [Theming](../theming.md). At a 16px html root, body/`p`/`h5`/`h6` compute to 18px, `h4` to 20.25px, `h3` to 22.5px, `h2` to 27px, and body `h1` to 33.75px.
 - Image upload variant requires a server-side endpoint that accepts a `file` multipart field and returns `{ "url": "..." }` JSON.

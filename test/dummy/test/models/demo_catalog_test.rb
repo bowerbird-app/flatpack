@@ -25,6 +25,7 @@ class DemoCatalogTest < ActiveSupport::TestCase
     assert_includes titles, "Date Range Input"
     assert_includes titles, "Page Nav"
     assert_includes titles, "Articles"
+    assert_includes titles, "Content Editor"
   end
 
   test "searchable item urls are absolute demo paths" do
