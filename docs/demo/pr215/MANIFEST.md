@@ -1,25 +1,17 @@
-# PR #215 stills — Content component
+# Dummy stills — Content demo (main vs this branch)
 
-Captured from the live dummy app. Before is `main` at `50e6a1a9`. After is the PR branch (see git HEAD). Viewport 1440×1100 (themes 1440×900). Kit CSS loaded via `flat_pack/variables` + `flat_pack/application`.
+Captured from live dummy apps. Before is `main` at `50e6a1a9` (gem `0.1.184`). After is this branch (gem `0.1.185`). Kit CSS loaded. Light theme.
 
-## Primary route: `/demo/text/content`
+Viewport **1440×1100** for `/demo/text/content`. Viewport **1440×900** for `/themes`.
 
-The route exists on both branches. Main ships unwrapped Tailwind-sized HTML. The PR wraps the same article in `div.fp-content` so bare `p` / `h1` / `ul` take that scale.
+| File | Branch | Route | Caption |
+|---|---|---|---|
+| `before-text-content.png` | main | `/demo/text/content` | Page from the Content title. Tailwind classes on each tag. No `.fp-content`. |
+| `after-text-content.png` | this branch | `/demo/text/content` | Same viewport from the Content title. Param table plus the article start inside `FlatPack::Content::Component`. |
+| `before-text-content-article.png` | main | `/demo/text/content` | Same viewport, scrolled to the long-form card (`Publish Faster` / `A Mastered Workflow`). |
+| `after-text-content-article.png` | this branch | `/demo/text/content` | Same viewport, scrolled to the long-form card. Bare tags in `.fp-content`. Type and spacing match main. |
+| `after-text-content-lists.png` | this branch | `/demo/text/content` | Lists and quote section (new on this branch). No main equivalent. |
+| `before-themes.png` | main | `/themes#comments` | Token groups at Comments. No Content group. |
+| `after-themes.png` | this branch | `/themes#content` | Content tokens (`--content-p-size` → `var(--text-base)`, `--content-h1-size` → `var(--text-4xl)`). |
 
-| File | Branch | Caption |
-|---|---|---|
-| `before-content-demo.png` | main | Dummy `/demo/text/content` on main. Per-element type classes (`text-base`, `text-xl`, `sm:text-5xl`). No `.fp-content`. Gem `0.1.184`. |
-| `after-content-demo.png` | PR | Same article on the PR, wrapped in `FlatPack::Content::Component`. Bare tags. Display `h1` is 48px, lead 20px, body 16px / 1.75, kicker 16px semibold. Spacing matches main (`mt-2` title, `mt-6` lead, `mt-10` into the body stack). |
-| `after-content-lists.png` | PR | Same route, lower page: bare `ul` + `blockquote`. **Before is N/A** on main. |
-
-## Other changed demo: `/themes`
-
-| File | Branch | Caption |
-|---|---|---|
-| `before-themes.png` | main | `/themes` on main. No Content token section. |
-| `after-themes.png` | PR | `/themes#content`. Content tokens: `--content-p-size` → `var(--text-base)`, `--content-h1-size` → `var(--text-4xl)`, `--content-h2-size` → `var(--text-2xl)`. |
-
-## Notes
-
-- Styles are unlayered `.fp-content p`, `.fp-content h1`, and the other tags so WYSIWYG HTML does not need extra classes.
-- First `p` before a heading is the kicker. First `p` after `h1` is the lead.
+Copies also live under `/opt/cursor/artifacts/pr215/`.
