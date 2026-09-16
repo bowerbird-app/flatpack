@@ -39,6 +39,6 @@ host_only_docs = [
   File.join(vendor_root, "docs/recording_studio_dummy.md")
 ]
 host_only_docs.each { |path| FileUtils.rm_f(path) }
-FileUtils.rm_rf(File.join(vendor_root, "docs/demo"))
+FileUtils.rm_rf(File.join(vendor_root, "docs/demo/pr215"))
 
 puts "Refreshed vendored FlatPack at #{vendor_root}"
