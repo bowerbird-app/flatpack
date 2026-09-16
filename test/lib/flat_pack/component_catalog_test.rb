@@ -16,6 +16,7 @@ module FlatPack
       names = listed_names
 
       assert_includes names, "Button::Component"
+      assert_includes names, "Content::Component"
       assert_includes names, "List::Item"
       assert_includes names, "Timeline::Item"
       assert_includes names, "ChartButtons::ButtonComponent"
@@ -219,6 +220,14 @@ module FlatPack
       assert_operator examples.size, :>=, 1
       assert_equal %i[erb], examples.first.keys
       assert_includes examples.first.fetch(:erb), "FlatPack::Alert::Component"
+    end
+
+    test "show Content includes a block wrapper example" do
+      examples = FlatPack::ComponentCatalog.show("Content::Component").fetch(:examples)
+
+      assert_operator examples.size, :>=, 1
+      assert_includes examples.first.fetch(:erb), "FlatPack::Content::Component"
+      assert_includes examples.first.fetch(:erb), "do |content|"
     end
 
     test "show Checkbox has no examples when it shares inputs.md without a named fence" do

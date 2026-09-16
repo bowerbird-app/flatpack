@@ -22,6 +22,9 @@ module FlatPack
       assert_match(/--text-5xl:\s*3rem/, root_block)
       assert_match(/--page-title-h1-size:\s*var\(--text-4xl\)/, root_block)
       assert_match(/--page-title-h6-size:\s*var\(--text-base\)/, root_block)
+      assert_match(/--content-p-size:\s*var\(--text-lg\)/, root_block)
+      assert_match(/--content-h1-size:\s*var\(--text-5xl\)/, root_block)
+      assert_match(/--content-h6-size:\s*var\(--text-lg\)/, root_block)
     end
 
     test "root applies the kit face and antialiased smoothing" do
@@ -42,6 +45,8 @@ module FlatPack
       assert_includes css, "text-wrap: balance"
       assert_includes css, ".fp-text-pretty"
       assert_includes css, "text-wrap: pretty"
+      assert_includes css, ".fp-content"
+      assert_includes css, "font-size: var(--content-p-size)"
     end
 
     test "kit components do not force all-caps tracked-out labels" do

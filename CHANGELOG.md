@@ -15,6 +15,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.185] - 2026-09-16
+
+### Added
+- `FlatPack::Content::Component` wraps long-form HTML in `.fp-content`. Paragraphs are 18px (`--content-p-size` → `--text-lg`). Headings, lead, kicker, lists, quotes, and links scale from that size. Optional classes: `.fp-content-kicker`, `.fp-content-lead`. Dummy `/demo/text/content` uses the wrapper and documents the API like other kit pages.
+
+### Changed
+- Bumped the gem version to `0.1.185`.
+
+### Upgrade notes
+- Wrap article HTML in `render FlatPack::Content::Component.new do |content| ... end`. Drop per-element `text-base` / `text-xl` size classes inside the wrapper so the reading scale wins. Redeploy so `meta.gem_version` shows `0.1.185`.
+
 ## [0.1.184] - 2026-09-15
 
 ### Added

@@ -930,6 +930,16 @@
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"mb-8\", id: \"settings-title\"" }
       ]
     },
+    content: {
+      label: "Content",
+      method_call: "render FlatPack::Content::Component.new do |content| ... end",
+      variables: [
+        { variable: "content", accepts: "block HTML (required)", example: "do |content| tag.p(\"Body copy\") end" },
+        { variable: ".fp-content-kicker", accepts: "optional class on a p", example: "tag.p(\"Publish faster\", class: \"fp-content-kicker\")" },
+        { variable: ".fp-content-lead", accepts: "optional class on a p", example: "tag.p(\"Intro sentence.\", class: \"fp-content-lead\")" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"max-w-4xl\", id: \"article-body\"" }
+      ]
+    },
     quote: {
       label: "Quote",
       method_call: "render FlatPack::Quote::Component.new(text: \"Good design is as little design as possible.\", cite: \"Dieter Rams\")",

@@ -62,6 +62,7 @@ class PagesController < ApplicationController
     {action: /\Atooltips\z/, title: "Tooltips", patterns: [/\A--tooltip-/]},
     {action: /\Atabs(_.*)?\z/, title: "Tabs", patterns: [/\A--tabs-/]},
     {action: /\Atoasts\z/, title: "Toasts", patterns: [/\A--toast-/]},
+    {action: /\Atext_content\z/, title: "Content", patterns: [/\A--content-/]},
     {action: /\Atext_quote\z/, title: "Quote", patterns: [/\A--quote-/]},
     {action: /\Acode_blocks\z/, title: "Code Blocks", patterns: [/\A--code-block-/]},
     {action: /\Acarousel\z/, title: "Carousel", patterns: [/\A--carousel-/]},

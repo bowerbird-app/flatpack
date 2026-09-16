@@ -18,6 +18,7 @@ class ThemesController < ApplicationController
     "Bottom Nav" => [/\A--bottom-nav-/],
     "Code Blocks" => [/\A--code-block-/],
     "Comments" => [/\A--comments-/],
+    "Content" => [/\A--content-/],
     "Quote" => [/\A--quote-/],
     "Timeline" => [/\A--timeline-/],
     "Tabs" => [/\A--tabs-/],
@@ -282,6 +283,8 @@ class ThemesController < ApplicationController
       "Chat"
     when /\A--comments-/
       "Comments"
+    when /\A--content-/
+      "Content"
     when /\A--quote-/
       "Quote"
     when /\A--timeline-/
