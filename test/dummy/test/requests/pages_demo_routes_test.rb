@@ -673,7 +673,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "One-Click Distribution."
     assert_includes response.body, "No Publisher? No Problem."
     refute_includes response.body, "class=\"mt-2 text-4xl"
-    assert_includes response.body, "FlatPack::Content::Component.new"
+    assert_includes response.body, "Body is 18px."
     assert_includes response.body, ">content</td>"
     assert_includes response.body, ">h1 / p / ul</td>"
     assert_includes response.body, "**system_arguments"

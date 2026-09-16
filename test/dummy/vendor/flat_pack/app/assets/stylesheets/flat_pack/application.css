@@ -419,7 +419,7 @@
 
 /* Long-form reading type. Unlayered so Tailwind preflight cannot collapse
  * headings to inherit. Bare CMS HTML (h1, p, ul) picks up the same scale as
- * the main Content demo: kicker, display title, lead, then body at 16px / 1.75
+ * the main Content demo: kicker, display title, lead, then body at 18px / 1.75
  * with 2rem stack and 2.5rem after the lead.
  */
 .fp-content {
@@ -435,44 +435,38 @@
 }
 
 .fp-content h1 {
-  font-size: var(--content-h1-size, var(--text-4xl, 2.25rem));
+  font-size: var(--content-h1-size, var(--text-5xl, 3rem));
   font-weight: 600;
   margin-top: 0.5rem;
 }
 
-@media (min-width: 640px) {
-  .fp-content h1 {
-    font-size: var(--text-5xl, 3rem);
-  }
-}
-
 .fp-content h2 {
-  font-size: var(--content-h2-size, var(--text-2xl, 1.5rem));
+  font-size: var(--content-h2-size, var(--text-3xl, 1.875rem));
   font-weight: 700;
   margin-top: 2rem;
 }
 
 .fp-content h3 {
-  font-size: var(--content-h3-size, var(--text-xl, 1.25rem));
+  font-size: var(--content-h3-size, var(--text-2xl, 1.5rem));
   font-weight: 700;
   margin-top: 2rem;
 }
 
 .fp-content h4 {
-  font-size: var(--content-h4-size, var(--text-lg, 1.125rem));
+  font-size: var(--content-h4-size, var(--text-xl, 1.25rem));
   font-weight: 700;
   margin-top: 2rem;
 }
 
 .fp-content h5,
 .fp-content h6 {
-  font-size: var(--content-h5-size, var(--text-base, 1rem));
+  font-size: var(--content-h5-size, var(--text-lg, 1.125rem));
   font-weight: 700;
   margin-top: 2rem;
 }
 
 .fp-content h6 {
-  font-size: var(--content-h6-size, var(--text-base, 1rem));
+  font-size: var(--content-h6-size, var(--text-lg, 1.125rem));
 }
 
 .fp-content p,
@@ -481,7 +475,7 @@
 }
 
 .fp-content p {
-  font-size: var(--content-p-size, var(--text-base, 1rem));
+  font-size: var(--content-p-size, var(--text-lg, 1.125rem));
   line-height: 1.75;
   margin-top: 2rem;
 }
@@ -489,7 +483,7 @@
 .fp-content > p:first-child:has(+ :is(h1, h2, h3)),
 .fp-content .fp-content-kicker {
   color: var(--color-primary);
-  font-size: var(--content-kicker-size, var(--text-base, 1rem));
+  font-size: var(--content-kicker-size, var(--text-lg, 1.125rem));
   font-weight: 600;
   line-height: 1.75;
   margin-top: 0;
@@ -497,7 +491,7 @@
 
 .fp-content h1 + p,
 .fp-content .fp-content-lead {
-  font-size: var(--content-lead-size, var(--text-xl, 1.25rem));
+  font-size: var(--content-lead-size, var(--text-2xl, 1.5rem));
   line-height: 2;
   margin-top: 1.5rem;
 }

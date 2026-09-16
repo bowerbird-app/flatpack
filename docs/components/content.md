@@ -1,7 +1,7 @@
 # Content
 
 ## Purpose
-Wrap long-form HTML in a `div.fp-content` so bare `h1`, `p`, `ul`, and the rest pick up the kit reading scale. Same sizes and spacing as the main Content demo: kicker, display title, lead, then body at 16px / 1.75.
+Wrap long-form HTML in a `div.fp-content` so bare `h1`, `p`, `ul`, and the rest pick up the kit reading scale. Same sizes and spacing as the main Content demo: kicker, display title, lead, then body at 18px / 1.75.
 
 ## When to use
 Use Content for marketing copy, editorial sections, docs, and CMS / WYSIWYG HTML. Drop the HTML in as-is. Do not use it for UI chrome, forms, or tables. Prefer `FlatPack::ContentEditor::Component` when the same region must be edited in place.
@@ -38,5 +38,5 @@ None. Descendant selectors style bare tags. Optional classes if you want to forc
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
-- Theme tokens: `--content-p-size` (`--text-base`), `--content-lead-size`, `--content-h1-size` (`--text-4xl`, 3rem from `640px`), `--content-h2-size` through `--content-h6-size`, `--content-kicker-size`.
+- Theme tokens: `--content-p-size` (`--text-lg`, 1.125rem / 18px), `--content-kicker-size` (`--text-lg`), `--content-lead-size` (`--text-2xl`), `--content-h1-size` (`--text-5xl`, 3rem), `--content-h2-size` (`--text-3xl`) through `--content-h6-size` (`--text-lg`).
 - Styles ship unlayered in `flat_pack/application.css` on `.fp-content p`, `.fp-content h1`, and the other tags.
