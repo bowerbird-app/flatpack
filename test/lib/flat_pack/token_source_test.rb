@@ -44,6 +44,8 @@ module FlatPack
       assert_match(/--badge-remove-hover-background-color:\s*var\(--chip-remove-hover-background-color\)/, root_block)
       assert_match(/--picker-badge-background-color:\s*rgb\(0 0 0 \/ 0\.55\)/, root_block)
       assert_match(/--icon-stroke-width:\s*1\.5/, root_block)
+      assert_match(/--surface-border-color:\s*#d1d5db/, root_block)
+      assert_match(/--sidebar-border-color:\s*var\(--surface-border-color\)/, root_block)
 
       root_block.scan(/^\s*(--[a-z0-9-]+)\s*:\s*(.+);$/).each do |name, value|
         refute_equal "var(#{name})", value, "#{name} on :root must not be a circular self-reference"
@@ -90,6 +92,16 @@ module FlatPack
       refute_includes rounded_block, "--color-primary"
       refute_includes rounded_block, "--radius-md"
       refute_includes rounded_block, "--shadow-sm"
+      custom_properties = rounded_block.scan(/^\s*--[a-z0-9-]+\s*:/)
+      assert_empty custom_properties, "[data-theme=rounded] must not assign custom properties; :root already holds the palette"
+    end
+
+    test "named theme blocks do not circular-map tokens" do
+      @css.scan(/\[data-theme="([^"]+)"\]\s*\{(.*?)\}/m).each do |theme, body|
+        body.scan(/^\s*(--[a-z0-9-]+)\s*:\s*(.+);$/).each do |name, value|
+          refute_equal "var(#{name})", value.strip, "[data-theme=#{theme}] #{name} must not be a circular self-reference"
+        end
+      end
     end
 
     test "dark and ocean stay override-only" do

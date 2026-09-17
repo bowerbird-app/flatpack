@@ -15,6 +15,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.187] - 2026-09-17
+
+### Fixed
+- `[data-theme="rounded"]` stays an empty alias of `:root`. Tests reject `--token: var(--token)` in named theme blocks. A self-map on `html[data-theme="rounded"]` blanks the token because that element is `:root`. Sidebar `border-r` then falls back to `currentColor` (hard black).
+
+### Changed
+- Bumped the gem version to `0.1.187`.
+
+### Upgrade notes
+- No API change. If host CSS still assigns `--sidebar-border-color: var(--sidebar-border-color)` (or any `--token: var(--token)`) under `[data-theme="rounded"]`, delete those lines. `@theme inline` self-maps are Tailwind inventory only. Do not copy them onto a theme selector. Redeploy so `meta.gem_version` shows `0.1.187`.
+
 ## [0.1.186] - 2026-09-17
 
 ### Added
