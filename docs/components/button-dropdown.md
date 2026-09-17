@@ -15,7 +15,7 @@ Use Button Dropdown when multiple related actions should be grouped behind a sin
 | name | type | default | required | description |
 |---|---|---|---|---|
 | `text` | String | `nil` | yes | Trigger label text. |
-| `style` | Symbol | `:default` | no | Trigger style. Delegates to `FlatPack::Button::Component` schemes (for example `:default`, `:primary`, `:secondary`, `:ghost`, `:success`, `:warning`). |
+| `style` | Symbol | `:default` | no | Trigger style. Built-in button styles plus any name registered with `FlatPack::Button.register_style`. Invalid values raise `ArgumentError`. |
 | `size` | Symbol | `:md` | no | Trigger size. Delegates to `FlatPack::Button::Component` sizes (for example `:sm`, `:md`, `:lg`). |
 | `icon` | String/Symbol | `nil` | no | Optional leading icon in the trigger. |
 | `show_chevron` | Boolean | `true` | no | Shows the dropdown chevron icon when true. |
@@ -48,7 +48,7 @@ Use `menu_item` and `menu_divider` as the slot builders (without a `with_` prefi
 
 ## Variants
 - Position variants: `:bottom_right`, `:bottom_left`, `:top_right`, `:top_left`.
-- Trigger visual variants come from button `style` and `size` props.
+- Trigger visual variants come from button `style` and `size` props, including host-registered button styles.
 
 ## Example
 ```erb

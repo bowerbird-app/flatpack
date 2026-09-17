@@ -95,6 +95,8 @@ Follow [PARAMS.md](PARAMS.md):
 
 Default copy stays short and plain: “Change plan”, “Update card”, “No invoices yet”.
 
+Provider checkout or portal buttons belong in the host or a billing gem. Register a button style and paint `--fp-button-*` locally. Do not recolour `--color-primary` for one action. See [Button](button.md).
+
 ## Composition map
 
 | Component | Builds on |

@@ -89,6 +89,9 @@ FlatPack.configure do |config|
   config.default_theme = :light
   config.default_icon_variant = :outline
 end
+
+# Optional: a host or gem colourway that does not change the theme.
+# FlatPack::Button.register_style(:partner, press: :raised)
 ```
 
 ## Design Principles

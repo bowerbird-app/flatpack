@@ -2,6 +2,7 @@
 
 require "flat_pack/version"
 require "flat_pack/engine"
+require "flat_pack/button/style_registry"
 require "flat_pack/component_catalog"
 require "flat_pack/attribute_sanitizer"
 require "flat_pack/install_contract"

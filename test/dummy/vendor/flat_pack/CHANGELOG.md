@@ -15,6 +15,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.189] - 2026-09-17
+
+### Added
+- Hosts and gems can register extra button styles with `FlatPack::Button.register_style(:name, press: :raised)` or `press: :flat`. The button sets `data-fp-style` and paints through local `--fp-button-*` tokens. Built-in styles still map those tokens from `--button-primary-*` and the other scheme tokens, so themes and hero overlays keep working. Vendor colours stay in host or gem CSS. Dummy `/demo/buttons` shows a `:partner` colourway that does not change `--color-primary`.
+
+### Changed
+- Bumped the gem version to `0.1.189`.
+- Button colour and raised shadows live in kit CSS on `.fp-button` / `.fp-button-raised`, not per-style Tailwind background and shadow classes. `FlatPack::Button::Component::SCHEMES` is now the built-in style list (name → press), not a Tailwind class map. Dropdown triggers use the same paint surface.
+
+### Upgrade notes
+- Built-in `style:` values are unchanged. Recolouring one billing or partner button is a registered style plus host CSS, not a theme token change.
+- Do not add `:stripe` (or any vendor name) by patching FlatPack. Register the name in the host or billing gem and set `--fp-button-background`, `--fp-button-hover-background`, `--fp-button-text`, and `--fp-button-border` on `.fp-button[data-fp-style="…"]` after `flat_pack/application`.
+- Markup no longer includes `bg-[var(--button-primary-background-color)]` and the other scheme class strings. Selectors should use `.fp-button[data-fp-style="primary"]` or the `--button-primary-*` tokens. `--button-primary-*` still drive built-in primary paint.
+- `SCHEMES` values are now `:raised` or `:flat`. Do not read them as CSS class strings.
+- Redeploy so `meta.gem_version` shows `0.1.189`.
+
 ## [0.1.188] - 2026-09-17
 
 ### Added

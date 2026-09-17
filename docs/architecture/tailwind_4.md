@@ -86,16 +86,17 @@ FlatPack defines CSS variables in `app/assets/stylesheets/flat_pack/variables.cs
 
 ### Component Classes
 
-Components use CSS variables via Tailwind utilities:
+Most components use CSS variables via Tailwind utilities:
 
 ```ruby
-# app/components/flat_pack/button/component.rb
 SCHEMES = {
   primary: "bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-[var(--color-primary-text)]"
 }
 ```
 
 The `[var(--color-primary)]` syntax allows Tailwind to use CSS variables as values.
+
+Button colour is kit CSS instead. `.fp-button[data-fp-style]` assigns local `--fp-button-*` paint tokens. Built-in styles map those from `--button-primary-*` and the other scheme tokens. Hosts register extra names with `FlatPack::Button.register_style` and paint the same tokens in host CSS. Do not add per-style Tailwind `bg-[var(--button-…)]` classes for a new colourway — Tailwind will not scan dynamically registered names.
 
 ### Safelist Comments for Ruby Constants
 
