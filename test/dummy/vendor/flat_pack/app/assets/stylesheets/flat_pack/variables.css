@@ -10,8 +10,6 @@
  * :root is the single source of concrete values (browsers skip @theme when this file is a stylesheet).
  * [data-theme="…"] overrides only tokens that differ from :root.
  * [data-theme="rounded"] is a no-op alias of the default so hosts can keep the attribute.
- * html[data-theme="rounded"] is the same element as :root. A `--token: var(--token)`
- * line there blanks the token. Sidebar border-r then falls back to currentColor.
  */
 
 @theme inline {
@@ -1336,10 +1334,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --top-nav-background-color: oklch(0.97 0.01 220);
 }
 
-/* Rounded theme — no-op alias of :root. Hosts may keep data-theme="rounded".
- * Leave this rule empty. Do not assign --token: var(--token). That self-map
- * wins over :root on the same html element and invalidates the computed value.
- */
+/* Rounded theme — no-op alias of :root. Hosts may keep data-theme="rounded". */
 [data-theme="rounded"] {
 }
 
