@@ -31,6 +31,8 @@ module FlatPack
       assert_match(/--content-h4-size:\s*var\(--text-xl\)/, root_block)
       assert_match(/--content-h5-size:\s*var\(--text-lg\)/, root_block)
       assert_match(/--content-h6-size:\s*var\(--text-lg\)/, root_block)
+      assert_match(/--hero-headline-size:\s*var\(--text-5xl\)/, root_block)
+      assert_match(/--hero-description-size:\s*var\(--text-xl\)/, root_block)
     end
 
     test "root applies the kit face and antialiased smoothing" do

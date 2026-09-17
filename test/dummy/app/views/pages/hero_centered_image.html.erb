@@ -1,17 +1,15 @@
-<div class="fixed top-4 left-4 z-50">
-  <%= render FlatPack::Button::Component.new(text: "← Back to Hero", style: :secondary, href: pages_hero_path) %>
-</div>
-
-<%= render FlatPack::Hero::Component.new(
-  variant: :centered_image,
-  class: "h-svh",
-  tagline: "Built for teams",
-  headline: "Ship features your users love.",
-  description: "Full-bleed background image with a dark overlay keeps text readable at any resolution.",
-  background_image_url: "/images/hero-stool.jpg"
-) do |hero|
-  hero.slot do
-    concat render(FlatPack::Button::Component.new(text: "Start for free", style: :primary, href: "#"))
-    concat render(FlatPack::Button::Component.new(text: "Watch demo", style: :secondary, href: "#"))
-  end
-end %>
+<%= render layout: "pages/hero_landing_chrome" do %>
+  <%= render FlatPack::Hero::Component.new(
+    variant: :centered_image,
+    style: "--hero-overlay-min-height: 100dvh",
+    tagline: "Built for teams",
+    headline: "Ship features your users love.",
+    description: "Full-bleed background image with a dark overlay keeps text readable at any resolution.",
+    background_image_url: "/images/hero-stool.jpg"
+  ) do |hero|
+    hero.slot do
+      concat render(FlatPack::Button::Component.new(text: "Start for free", style: :primary, href: "#"))
+      concat render(FlatPack::Button::Component.new(text: "Watch demo", style: :secondary, href: "#"))
+    end
+  end %>
+<% end %>

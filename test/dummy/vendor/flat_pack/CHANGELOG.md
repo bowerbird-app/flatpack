@@ -15,6 +15,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.186] - 2026-09-17
+
+### Added
+- `--hero-headline-size` (default `--text-5xl`) so a theme can make the hero larger than product `5xl` without adding `--text-6xl` or `--text-7xl`.
+- `--hero-description-size` (default `--text-xl`) for page-surface hero body. Overlay body on `:centered_image` stays `--text-2xl`.
+- `--hero-overlay-min-height` (default `560px`) and `--hero-overlay-copy-padding-top` on `.fp-hero-overlay`. Landing pages set `--hero-overlay-min-height: 100dvh` instead of wrapping the section.
+- `--top-nav-backdrop-blur` (default `16px`) and `--top-nav-height` (`72px`). TopNav frosts after the page has scrolled.
+
+### Changed
+- Bumped the gem version to `0.1.186`.
+- `:centered_image` copy sits high in the frame (`items-start`) below a typical sticky TopNav. It is no longer vertically centered on the photo.
+- Hero headlines use `--hero-headline-size` at the `sm:` step. Page-surface descriptions drop the hardcoded `text-lg` class.
+- TopNav no longer always applies `backdrop-blur-lg`. At rest the blur is 0. The `flat-pack--top-nav` controller always attaches, including when `mobile_menu: false`, and listens to the window plus the nearest overflow pane.
+
+### Upgrade notes
+- Overlay heroes place copy below the TopNav. Hosts that relied on dead-center copy on `:centered_image` will see it sit higher.
+- Page-surface hero body is `--text-xl` (`--hero-description-size`). `--text-lg` itself is unchanged.
+- Fill the first viewport with `style: "--hero-overlay-min-height: 100dvh"` on the hero. Do not wrap the section, and do not pass a competing `min-h-*` utility. Catalog embeds keep `560px`.
+- TopNav frost is scroll-gated. Hosts do not attach a window scroll listener. `--top-nav-background-color` is still the fill; there is no second TopNav variant. Redeploy so `meta.gem_version` shows `0.1.186`.
+
 ## [0.1.185] - 2026-09-16
 
 ### Added

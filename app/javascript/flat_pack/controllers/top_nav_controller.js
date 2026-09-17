@@ -1,9 +1,10 @@
 import { Controller } from "@hotwired/stimulus"
 
 // Moves collapsible top nav content into a right-aligned chevron menu on narrow
-// viewports. Nodes are relocated rather than duplicated so ids, event listeners
-// and Stimulus controllers inside slot content keep working, and a comment
-// placeholder records where each node has to return to on wider viewports.
+// viewports, and frosts the bar after the page has scrolled. Nodes are relocated
+// rather than duplicated so ids, event listeners and Stimulus controllers inside
+// slot content keep working, and a comment placeholder records where each node
+// has to return to on wider viewports.
 export default class extends Controller {
   static targets = ["section", "menu", "toggle", "panel"]
   static classes = ["toggleOpen"]
@@ -14,6 +15,15 @@ export default class extends Controller {
   connect() {
     this.movedNodes = []
     this.menuOpen = false
+    this.boundHandleScroll = this.handleScroll.bind(this)
+    this.scrollports = this.collectScrollports()
+
+    this.scrollports.forEach((port) => {
+      port.addEventListener("scroll", this.boundHandleScroll, {passive: true})
+    })
+    this.updateScrolled()
+
+    if (!this.hasMenuWiring) return
 
     this.mediaQuery = window.matchMedia(`(max-width: ${this.breakpointValue - 1}px)`)
     this.handleMediaChange = this.handleMediaChange.bind(this)
@@ -33,6 +43,13 @@ export default class extends Controller {
   }
 
   disconnect() {
+    this.scrollports?.forEach((port) => {
+      port.removeEventListener("scroll", this.boundHandleScroll)
+    })
+    this.scrollports = []
+
+    if (!this.hasMenuWiring) return
+
     if (this.mediaQuery) {
       if (this.mediaQuery.removeEventListener) {
         this.mediaQuery.removeEventListener("change", this.handleMediaChange)
@@ -50,8 +67,55 @@ export default class extends Controller {
     this.restoreCollapsedNodes()
   }
 
+  get hasMenuWiring() {
+    return this.hasPanelTarget
+  }
+
   get isNarrowViewport() {
     return this.mediaQuery ? this.mediaQuery.matches : false
+  }
+
+  collectScrollports() {
+    const ports = new Set()
+    ports.add(window)
+
+    const sibling = this.element.nextElementSibling
+    if (this.isScrollable(sibling)) ports.add(sibling)
+
+    let node = this.element.parentElement
+    while (node && node !== document.body && node !== document.documentElement) {
+      if (this.isScrollable(node)) ports.add(node)
+      node = node.parentElement
+    }
+
+    return Array.from(ports)
+  }
+
+  isScrollable(node) {
+    if (!node || node.nodeType !== 1) return false
+
+    const style = window.getComputedStyle(node)
+    const overflowY = style.overflowY
+
+    return overflowY === "auto" || overflowY === "scroll" || overflowY === "overlay"
+  }
+
+  handleScroll() {
+    this.updateScrolled()
+  }
+
+  pageHasScrolled() {
+    return this.scrollports.some((port) => {
+      if (port === window) {
+        return (window.scrollY || document.documentElement.scrollTop || 0) > 0
+      }
+
+      return (port.scrollTop || 0) > 0
+    })
+  }
+
+  updateScrolled() {
+    this.element.dataset.scrolled = this.pageHasScrolled() ? "true" : "false"
   }
 
   handleMediaChange() {
