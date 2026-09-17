@@ -397,6 +397,10 @@
   --button-danger-hover-background-color: var(--button-danger-hover-background-color);
   --button-danger-text-color: var(--button-danger-text-color);
   --button-danger-border-color: var(--button-danger-border-color);
+  --fp-button-background: var(--fp-button-background);
+  --fp-button-hover-background: var(--fp-button-hover-background);
+  --fp-button-text: var(--fp-button-text);
+  --fp-button-border: var(--fp-button-border);
   --button-border-radius: var(--button-border-radius);
   --button-focus-ring-color: var(--button-focus-ring-color);
   --button-focus-ring-offset-color: var(--button-focus-ring-offset-color);
@@ -1018,6 +1022,10 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --button-danger-hover-background-color: var(--color-danger-hover-background-color);
   --button-danger-text-color: var(--color-danger-text-color);
   --button-danger-border-color: var(--color-danger-border-color);
+  --fp-button-background: var(--button-default-background-color);
+  --fp-button-hover-background: var(--button-default-hover-background-color);
+  --fp-button-text: var(--button-default-text-color);
+  --fp-button-border: var(--button-default-border-color);
   --button-border-radius: var(--radius-md);
   --button-focus-ring-color: var(--color-ring);
   --button-focus-ring-offset-color: var(--surface-background-color);

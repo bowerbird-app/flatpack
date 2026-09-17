@@ -178,3 +178,11 @@
 	--surface-border-color: oklch(0.85 0.03 55);
 	--surface-content-color: oklch(0.32 0.04 35);
 }
+
+/* Host-registered button colourway. Does not change --color-primary. */
+.fp-button[data-fp-style="partner"] {
+	--fp-button-background: #635bff;
+	--fp-button-hover-background: #0a2540;
+	--fp-button-text: #ffffff;
+	--fp-button-border: #635bff;
+}

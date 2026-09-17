@@ -853,6 +853,77 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   --hero-overlay-button-secondary-border-color: var(--hero-overlay-on-light-button-secondary-border-color);
 }
 
+.fp-button {
+  background-color: var(--fp-button-background);
+  color: var(--fp-button-text);
+  border-color: var(--fp-button-border);
+}
+
+.fp-button:hover:not(:disabled) {
+  background-color: var(--fp-button-hover-background);
+}
+
+.fp-button[data-fp-style="default"] {
+  --fp-button-background: var(--button-default-background-color);
+  --fp-button-hover-background: var(--button-default-hover-background-color);
+  --fp-button-text: var(--button-default-text-color);
+  --fp-button-border: var(--button-default-border-color);
+}
+
+.fp-button[data-fp-style="primary"] {
+  --fp-button-background: var(--button-primary-background-color);
+  --fp-button-hover-background: var(--button-primary-hover-background-color);
+  --fp-button-text: var(--button-primary-text-color);
+  --fp-button-border: var(--button-primary-border-color);
+}
+
+.fp-button[data-fp-style="secondary"] {
+  --fp-button-background: var(--button-secondary-background-color);
+  --fp-button-hover-background: var(--button-secondary-hover-background-color);
+  --fp-button-text: var(--button-secondary-text-color);
+  --fp-button-border: var(--button-secondary-border-color);
+}
+
+.fp-button[data-fp-style="ghost"] {
+  --fp-button-background: var(--button-ghost-background-color);
+  --fp-button-hover-background: var(--button-ghost-hover-background-color);
+  --fp-button-text: var(--button-ghost-text-color);
+  --fp-button-border: var(--button-ghost-border-color);
+}
+
+.fp-button[data-fp-style="success"] {
+  --fp-button-background: var(--button-success-background-color);
+  --fp-button-hover-background: var(--button-success-hover-background-color);
+  --fp-button-text: var(--button-success-text-color);
+  --fp-button-border: var(--button-success-border-color);
+}
+
+.fp-button[data-fp-style="warning"] {
+  --fp-button-background: var(--button-warning-background-color);
+  --fp-button-hover-background: var(--button-warning-hover-background-color);
+  --fp-button-text: var(--button-warning-text-color);
+  --fp-button-border: var(--button-warning-border-color);
+}
+
+.fp-button[data-fp-style="danger"] {
+  --fp-button-background: var(--button-danger-background-color);
+  --fp-button-hover-background: var(--button-danger-hover-background-color);
+  --fp-button-text: var(--button-danger-text-color);
+  --fp-button-border: var(--button-danger-border-color);
+}
+
+.fp-button-raised {
+  box-shadow: var(--button-shadow);
+}
+
+.fp-button-raised:hover:not(:disabled) {
+  box-shadow: var(--button-shadow-hover);
+}
+
+.fp-button-raised:active:not(:disabled) {
+  box-shadow: var(--button-shadow-active);
+}
+
 .fp-button:active:not(:disabled) {
   transform: translateY(1px);
 }

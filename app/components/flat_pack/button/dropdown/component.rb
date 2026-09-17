@@ -42,6 +42,7 @@ module FlatPack
           @max_height = max_height
           @trigger_attributes = sanitize_args(trigger_attributes)
 
+          validate_style!
           validate_placement!
         end
 
@@ -85,25 +86,28 @@ module FlatPack
             ),
             data: extract_nested_attributes(attrs, :data).merge(
               flat_pack__button_dropdown_target: "trigger",
-              action: "click->flat-pack--button-dropdown#toggle"
+              action: "click->flat-pack--button-dropdown#toggle",
+              fp_style: @style.to_s
             )
           }.merge(attrs).compact
         end
 
         def button_classes
-          # Use the same classes as Button component would use
           base_classes = [
             "inline-flex items-center justify-center gap-2",
-            "rounded-[var(--radius-md)]",
+            "rounded-[var(--button-border-radius)]",
             "font-medium",
             "cursor-pointer",
-            "transition-colors duration-[var(--duration-base)]",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring focus-visible:ring-offset-2",
-            "disabled:pointer-events-none disabled:opacity-50"
+            "fp-button",
+            FlatPack::Button::StyleRegistry.press_class(@style),
+            "border",
+            "transition-[color,background-color,border-color,box-shadow,transform] duration-[var(--duration-fast)] ease-[var(--easing-standard)]",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--button-focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--button-focus-ring-offset-color)]",
+            "disabled:pointer-events-none disabled:opacity-[var(--button-disabled-opacity)]",
+            "fp-touch-manipulation"
           ]
 
           base_classes << FlatPack::Button::Component::SIZES.fetch(@size)
-          base_classes << FlatPack::Button::Component::SCHEMES.fetch(@style)
           base_classes.join(" ")
         end
 
@@ -149,6 +153,12 @@ module FlatPack
             "opacity-0 scale-95 motion-reduce:scale-100 hidden",
             "transition-[opacity,transform] duration-[var(--duration-base)] ease-[var(--easing-enter)]"
           )
+        end
+
+        def validate_style!
+          return if FlatPack::Button::StyleRegistry.known?(@style)
+
+          raise ArgumentError, FlatPack::Button::StyleRegistry.invalid_style_message(@style)
         end
 
         def validate_placement!

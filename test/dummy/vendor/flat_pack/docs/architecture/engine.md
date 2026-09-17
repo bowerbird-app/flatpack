@@ -195,6 +195,27 @@ FlatPack.configure do |config|
 end
 ```
 
+### Button style registration
+
+Built-in button styles stay kit-owned. A host or gem adds a named colourway without changing `--color-primary`:
+
+```ruby
+FlatPack::Button.register_style(:partner, press: :raised)
+```
+
+Then paint it in host CSS loaded after `flat_pack/application`:
+
+```css
+.fp-button[data-fp-style="partner"] {
+  --fp-button-background: #635bff;
+  --fp-button-hover-background: #0a2540;
+  --fp-button-text: #ffffff;
+  --fp-button-border: #635bff;
+}
+```
+
+See [Button](../components/button.md).
+
 ### Component-level Configuration
 
 Via CSS variables in the host application (after `flat_pack/variables`):

@@ -64,6 +64,8 @@ module FlatPack
       size = parameter_named(payload, "size")
 
       assert_equal FlatPack::Button::Component::SCHEMES.keys.map(&:to_s), style.fetch(:enum)
+      refute_includes style.fetch(:enum), "spec_partner"
+      refute_includes style.fetch(:enum), "partner"
       assert_equal "string", style.fetch(:type)
       assert_equal false, style.fetch(:required)
       assert_equal FlatPack::Button::Component::SIZES.keys.map(&:to_s), size.fetch(:enum)

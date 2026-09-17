@@ -51,7 +51,6 @@
     --text-4xl: 2.25rem;
     --text-4xl--line-height: calc(2.5 / 2.25);
     --text-5xl: 3rem;
-    --text-5xl--line-height: 1;
     --font-weight-medium: 500;
     --font-weight-semibold: 600;
     --font-weight-bold: 700;
@@ -72,7 +71,6 @@
     --ease-out: cubic-bezier(0, 0, 0.2, 1);
     --animate-bounce: bounce 1s infinite;
     --blur-sm: 8px;
-    --blur-lg: 16px;
     --default-transition-duration: 150ms;
     --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     --default-font-family: var(--font-sans);
@@ -1706,26 +1704,8 @@
   .border-\[var\(--bottom-nav-border-color\)\] {
     border-color: var(--bottom-nav-border-color);
   }
-  .border-\[var\(--button-danger-border-color\)\] {
-    border-color: var(--button-danger-border-color);
-  }
-  .border-\[var\(--button-default-border-color\)\] {
-    border-color: var(--button-default-border-color);
-  }
-  .border-\[var\(--button-ghost-border-color\)\] {
-    border-color: var(--button-ghost-border-color);
-  }
-  .border-\[var\(--button-primary-border-color\)\] {
-    border-color: var(--button-primary-border-color);
-  }
   .border-\[var\(--button-secondary-border-color\)\] {
     border-color: var(--button-secondary-border-color);
-  }
-  .border-\[var\(--button-success-border-color\)\] {
-    border-color: var(--button-success-border-color);
-  }
-  .border-\[var\(--button-warning-border-color\)\] {
-    border-color: var(--button-warning-border-color);
   }
   .border-\[var\(--card-border-color\)\] {
     border-color: var(--card-border-color);
@@ -1946,14 +1926,8 @@
   .bg-\[var\(--bottom-nav-background-color\)\] {
     background-color: var(--bottom-nav-background-color);
   }
-  .bg-\[var\(--button-danger-background-color\)\] {
-    background-color: var(--button-danger-background-color);
-  }
   .bg-\[var\(--button-default-background-color\)\] {
     background-color: var(--button-default-background-color);
-  }
-  .bg-\[var\(--button-ghost-background-color\)\] {
-    background-color: var(--button-ghost-background-color);
   }
   .bg-\[var\(--button-primary-background-color\)\] {
     background-color: var(--button-primary-background-color);
@@ -1966,12 +1940,6 @@
   }
   .bg-\[var\(--button-secondary-background-color\)\] {
     background-color: var(--button-secondary-background-color);
-  }
-  .bg-\[var\(--button-success-background-color\)\] {
-    background-color: var(--button-success-background-color);
-  }
-  .bg-\[var\(--button-warning-background-color\)\] {
-    background-color: var(--button-warning-background-color);
   }
   .bg-\[var\(--card-background-color\)\] {
     background-color: var(--card-background-color);
@@ -2892,26 +2860,14 @@
   .text-\[var\(--breadcrumb-separator-color\)\] {
     color: var(--breadcrumb-separator-color);
   }
-  .text-\[var\(--button-danger-text-color\)\] {
-    color: var(--button-danger-text-color);
-  }
   .text-\[var\(--button-default-text-color\)\] {
     color: var(--button-default-text-color);
-  }
-  .text-\[var\(--button-ghost-text-color\)\] {
-    color: var(--button-ghost-text-color);
   }
   .text-\[var\(--button-primary-text-color\)\] {
     color: var(--button-primary-text-color);
   }
   .text-\[var\(--button-secondary-text-color\)\] {
     color: var(--button-secondary-text-color);
-  }
-  .text-\[var\(--button-success-text-color\)\] {
-    color: var(--button-success-text-color);
-  }
-  .text-\[var\(--button-warning-text-color\)\] {
-    color: var(--button-warning-text-color);
   }
   .text-\[var\(--carousel-caption-below-text-color\)\] {
     color: var(--carousel-caption-below-text-color);
@@ -3306,10 +3262,6 @@
   }
   .shadow-2xl {
     --tw-shadow: 0 25px 50px -12px var(--tw-shadow-color, rgb(0 0 0 / 0.25));
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-  }
-  .shadow-\[var\(--button-shadow\)\] {
-    --tw-shadow: var(--button-shadow);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
   .shadow-\[var\(--color-swatch-shadow\)\] {
@@ -3841,24 +3793,10 @@
       }
     }
   }
-  .hover\:bg-\[var\(--button-danger-hover-background-color\)\] {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--button-danger-hover-background-color);
-      }
-    }
-  }
   .hover\:bg-\[var\(--button-default-hover-background-color\)\] {
     &:hover {
       @media (hover: hover) {
         background-color: var(--button-default-hover-background-color);
-      }
-    }
-  }
-  .hover\:bg-\[var\(--button-ghost-hover-background-color\)\] {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--button-ghost-hover-background-color);
       }
     }
   }
@@ -3873,20 +3811,6 @@
     &:hover {
       @media (hover: hover) {
         background-color: var(--button-secondary-hover-background-color);
-      }
-    }
-  }
-  .hover\:bg-\[var\(--button-success-hover-background-color\)\] {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--button-success-hover-background-color);
-      }
-    }
-  }
-  .hover\:bg-\[var\(--button-warning-hover-background-color\)\] {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--button-warning-hover-background-color);
       }
     }
   }
@@ -4177,14 +4101,6 @@
       }
     }
   }
-  .hover\:shadow-\[var\(--button-shadow-hover\)\] {
-    &:hover {
-      @media (hover: hover) {
-        --tw-shadow: var(--button-shadow-hover);
-        box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-      }
-    }
-  }
   .hover\:ring-2 {
     &:hover {
       @media (hover: hover) {
@@ -4362,12 +4278,6 @@
   .active\:cursor-grabbing {
     &:active {
       cursor: grabbing;
-    }
-  }
-  .active\:shadow-\[var\(--button-shadow-active\)\] {
-    &:active {
-      --tw-shadow: var(--button-shadow-active);
-      box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     }
   }
   .disabled\:pointer-events-none {
@@ -5217,6 +5127,12 @@
   --surface-muted-background-color: oklch(0.95 0.02 70);
   --surface-border-color: oklch(0.85 0.03 55);
   --surface-content-color: oklch(0.32 0.04 35);
+}
+.fp-button[data-fp-style="partner"] {
+  --fp-button-background: #635bff;
+  --fp-button-hover-background: #0a2540;
+  --fp-button-text: #ffffff;
+  --fp-button-border: #635bff;
 }
 @property --tw-translate-x {
   syntax: "*";
