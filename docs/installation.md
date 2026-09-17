@@ -260,7 +260,7 @@ The imported `variables.css` contains:
 - `@theme inline {}` — token names for Tailwind utilities (`--color-primary: var(--color-primary)`). Tailwind does not re-emit these onto `:root`
 - `[data-theme="dark"] {}` — dark overrides only (component aliases inherit)
 - `[data-theme="ocean"] {}` — ocean variant (overrides only)
-- `[data-theme="rounded"] {}` — empty alias of the default (same look; safe for hosts that already set the attribute)
+- `[data-theme="rounded"] {}` — empty alias of the default (same look; safe for hosts that already set the attribute). Leave it empty. A `--token: var(--token)` assignment there is the same element as `:root` and blanks the token.
 
 To recolor without copying the full token list:
 
@@ -742,6 +742,7 @@ Check these host blocks:
 --foo: var(--foo);                    /* CIRCULAR — remove */
 --color-ring: var(--color-ring);      /* CIRCULAR — remove */
 --radius-md: var(--radius-md);        /* CIRCULAR — remove */
+--sidebar-border-color: var(--sidebar-border-color); /* CIRCULAR — remove. html[data-theme=rounded] is :root. */
 ```
 
 **Examples of valid cross-mappings — keep these:**

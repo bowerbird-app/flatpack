@@ -37,6 +37,7 @@ module FlatPack
 
       refute_nil rounded_block
       refute_includes rounded_block, "--color-primary"
+      assert_empty rounded_block.scan(/^\s*--[a-z0-9-]+\s*:/)
     end
   end
 end
