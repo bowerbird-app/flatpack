@@ -119,9 +119,13 @@ module FlatPack
         assert_includes page.native.to_html, "top-0"
       end
 
-      def test_has_backdrop_blur
+      def test_has_backdrop_blur_token_not_utility
         render_inline(Component.new)
-        assert_includes page.native.to_html, "backdrop-blur"
+        html = page.native.to_html
+
+        assert_includes html, "fp-top-nav"
+        refute_includes html, "backdrop-blur"
+        assert_includes html, "data-scrolled=\"false\""
       end
 
       def test_has_no_border
@@ -221,7 +225,8 @@ module FlatPack
         end
 
         refute_selector "[data-flat-pack--top-nav-target='menu']", visible: :all
-        refute_includes page.native.to_html, "flat-pack--top-nav"
+        refute_includes page.native.to_html, "flat-pack--top-nav-target"
+        assert_selector "header[data-controller~='flat-pack--top-nav']"
         assert_text "Search"
       end
 

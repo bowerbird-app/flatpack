@@ -240,6 +240,8 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --hero-overlay-on-light-button-secondary-hover-background-color: rgb(0 0 0 / 0.08);
   --hero-overlay-on-light-button-secondary-text-color: oklch(0.22 0 0);
   --hero-overlay-on-light-button-secondary-border-color: rgb(0 0 0 / 0.35);
+  --hero-overlay-min-height: 560px;
+  --hero-overlay-copy-padding-top: calc(var(--top-nav-height) + env(safe-area-inset-top, 0px) + 2rem);
   --carousel-viewport-background-color: var(--surface-muted-background-color);
   --carousel-viewport-border-color: var(--surface-border-color);
   --carousel-chevron-background-color: rgb(31 41 55 / 0.68);
@@ -552,6 +554,8 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --top-nav-item-active-background-color: oklch(0.52 0.26 250);
   --top-nav-item-active-text-color: oklch(1.0 0 0);
   --top-nav-item-active-icon-color: oklch(1.0 0 0);
+  --top-nav-height: 72px;
+  --top-nav-backdrop-blur: 16px;
 
   --search-icon-color: var(--surface-muted-content-color);
   --search-input-background-color: var(--surface-background-color);
@@ -625,6 +629,8 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --content-h4-size: var(--text-xl);
   --content-h5-size: var(--text-lg);
   --content-h6-size: var(--text-lg);
+  --hero-headline-size: var(--text-5xl);
+  --hero-description-size: var(--text-xl);
 
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);

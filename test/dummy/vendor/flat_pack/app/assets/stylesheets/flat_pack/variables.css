@@ -172,6 +172,8 @@
   --hero-overlay-on-light-button-secondary-hover-background-color: var(--hero-overlay-on-light-button-secondary-hover-background-color);
   --hero-overlay-on-light-button-secondary-text-color: var(--hero-overlay-on-light-button-secondary-text-color);
   --hero-overlay-on-light-button-secondary-border-color: var(--hero-overlay-on-light-button-secondary-border-color);
+  --hero-overlay-min-height: var(--hero-overlay-min-height);
+  --hero-overlay-copy-padding-top: var(--hero-overlay-copy-padding-top);
   --carousel-viewport-background-color: var(--carousel-viewport-background-color);
   --carousel-viewport-border-color: var(--carousel-viewport-border-color);
   --carousel-chevron-background-color: var(--carousel-chevron-background-color);
@@ -502,6 +504,8 @@
   --top-nav-item-active-background-color: var(--top-nav-item-active-background-color);
   --top-nav-item-active-text-color: var(--top-nav-item-active-text-color);
   --top-nav-item-active-icon-color: var(--top-nav-item-active-icon-color);
+  --top-nav-height: var(--top-nav-height);
+  --top-nav-backdrop-blur: var(--top-nav-backdrop-blur);
   --search-icon-color: var(--search-icon-color);
   --search-input-background-color: var(--search-input-background-color);
   --search-input-border-color: var(--search-input-border-color);
@@ -587,6 +591,8 @@
   --content-h4-size: var(--content-h4-size);
   --content-h5-size: var(--content-h5-size);
   --content-h6-size: var(--content-h6-size);
+  --hero-headline-size: var(--hero-headline-size);
+  --hero-description-size: var(--hero-description-size);
   --shadow-sm: var(--shadow-sm);
   --shadow-md: var(--shadow-md);
   --shadow-lg: var(--shadow-lg);
@@ -787,6 +793,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --hero-overlay-on-light-button-secondary-hover-background-color: rgb(0 0 0 / 0.08);
   --hero-overlay-on-light-button-secondary-text-color: oklch(0.22 0 0);
   --hero-overlay-on-light-button-secondary-border-color: rgb(0 0 0 / 0.35);
+  --hero-overlay-min-height: 560px;
+  --hero-overlay-copy-padding-top: calc(var(--top-nav-height) + env(safe-area-inset-top, 0px) + 2rem);
   --carousel-chevron-background-color: rgb(31 41 55 / 0.68);
   --carousel-viewport-background-color: var(--surface-muted-background-color);
   --carousel-viewport-border-color: var(--surface-border-color);
@@ -1118,6 +1126,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --top-nav-item-active-background-color: #333;
   --top-nav-item-active-text-color: var(--color-primary-text);
   --top-nav-item-active-icon-color: var(--color-primary-text);
+  --top-nav-height: 72px;
+  --top-nav-backdrop-blur: 16px;
   --search-icon-color: var(--surface-muted-content-color);
   --search-input-background-color: var(--surface-background-color);
   --search-input-border-color: var(--surface-border-hover-color);
@@ -1198,6 +1208,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --content-h4-size: var(--text-xl);
   --content-h5-size: var(--text-lg);
   --content-h6-size: var(--text-lg);
+  --hero-headline-size: var(--text-5xl);
+  --hero-description-size: var(--text-xl);
   --shadow-sm: 0 2px 6px -2px rgb(0 0 0 / 0.08);
   --shadow-md: 0 8px 18px -6px rgb(0 0 0 / 0.14);
   --shadow-lg: 0 18px 30px -10px rgb(0 0 0 / 0.18);

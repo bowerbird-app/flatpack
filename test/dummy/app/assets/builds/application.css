@@ -384,6 +384,12 @@
   .z-\[100\] {
     z-index: 100;
   }
+  .col-start-1 {
+    grid-column-start: 1;
+  }
+  .row-start-1 {
+    grid-row-start: 1;
+  }
   .container {
     width: 100%;
     @media (width >= 40rem) {
@@ -703,9 +709,6 @@
   .h-screen {
     height: 100vh;
   }
-  .h-svh {
-    height: 100svh;
-  }
   .max-h-0 {
     max-height: calc(var(--spacing) * 0);
   }
@@ -768,9 +771,6 @@
   }
   .min-h-\[540px\] {
     min-height: 540px;
-  }
-  .min-h-\[560px\] {
-    min-height: 560px;
   }
   .min-h-\[calc\(100vh-10rem\)\] {
     min-height: calc(100vh - 10rem);
@@ -2491,9 +2491,6 @@
   .py-12 {
     padding-block: calc(var(--spacing) * 12);
   }
-  .py-16 {
-    padding-block: calc(var(--spacing) * 16);
-  }
   .py-24 {
     padding-block: calc(var(--spacing) * 24);
   }
@@ -2614,6 +2611,9 @@
   .pb-8 {
     padding-bottom: calc(var(--spacing) * 8);
   }
+  .pb-16 {
+    padding-bottom: calc(var(--spacing) * 16);
+  }
   .pb-24 {
     padding-bottom: calc(var(--spacing) * 24);
   }
@@ -2690,10 +2690,6 @@
     font-size: var(--text-base);
     line-height: var(--tw-leading, var(--text-base--line-height));
   }
-  .text-base\/7 {
-    font-size: var(--text-base);
-    line-height: calc(var(--spacing) * 7);
-  }
   .text-lg {
     font-size: var(--text-lg);
     line-height: var(--tw-leading, var(--text-lg--line-height));
@@ -2710,10 +2706,6 @@
     font-size: var(--text-xl);
     line-height: var(--tw-leading, var(--text-xl--line-height));
   }
-  .text-xl\/8 {
-    font-size: var(--text-xl);
-    line-height: calc(var(--spacing) * 8);
-  }
   .text-xs {
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
@@ -2727,6 +2719,12 @@
   }
   .text-\[11px\] {
     font-size: 11px;
+  }
+  .text-\[length\:var\(--hero-description-size\)\] {
+    font-size: var(--hero-description-size);
+  }
+  .text-\[length\:var\(--text-2xl\)\] {
+    font-size: var(--text-2xl);
   }
   .text-\[length\:var\(--text-4xl\)\] {
     font-size: var(--text-4xl);
@@ -2776,9 +2774,6 @@
   .tracking-wide {
     --tw-tracking: var(--tracking-wide);
     letter-spacing: var(--tracking-wide);
-  }
-  .text-pretty {
-    text-wrap: pretty;
   }
   .break-words {
     overflow-wrap: break-word;
@@ -3236,6 +3231,9 @@
   .text-\[var\(--top-nav-item-icon-color\)\] {
     color: var(--top-nav-item-icon-color);
   }
+  .text-\[var\(--top-nav-item-text-color\)\] {
+    color: var(--top-nav-item-text-color);
+  }
   .text-blue-600 {
     color: var(--color-blue-600);
   }
@@ -3447,11 +3445,6 @@
   }
   .backdrop-blur-\[var\(--modal-backdrop-blur\)\] {
     --tw-backdrop-blur: blur(var(--modal-backdrop-blur));
-    -webkit-backdrop-filter: var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
-    backdrop-filter: var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
-  }
-  .backdrop-blur-lg {
-    --tw-backdrop-blur: blur(var(--blur-lg));
     -webkit-backdrop-filter: var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
     backdrop-filter: var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
   }
@@ -4569,15 +4562,9 @@
       padding-inline-start: calc(var(--spacing) * 10);
     }
   }
-  .sm\:text-5xl {
+  .sm\:text-\[length\:var\(--hero-headline-size\)\] {
     @media (width >= 40rem) {
-      font-size: var(--text-5xl);
-      line-height: var(--tw-leading, var(--text-5xl--line-height));
-    }
-  }
-  .sm\:text-\[length\:var\(--text-5xl\)\] {
-    @media (width >= 40rem) {
-      font-size: var(--text-5xl);
+      font-size: var(--hero-headline-size);
     }
   }
   .md\:pointer-events-none {
@@ -4883,11 +4870,6 @@
   .lg\:min-h-full {
     @media (width >= 64rem) {
       min-height: 100%;
-    }
-  }
-  .lg\:max-w-none {
-    @media (width >= 64rem) {
-      max-width: none;
     }
   }
   .lg\:basis-1\/5 {

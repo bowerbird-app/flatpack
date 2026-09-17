@@ -12,6 +12,7 @@ class ThemesController < ApplicationController
     "Alerts" => [/\A--alert-/],
     "Toasts" => [/\A--toast-/],
     "Cards" => [/\A--card-/],
+    "Hero" => [/\A--hero-/],
     "Accordion" => [/\A--accordion-/],
     "Collapse" => [/\A--collapse-/],
     "Breadcrumbs" => [/\A--breadcrumb-/],
@@ -249,6 +250,8 @@ class ThemesController < ApplicationController
       "Code block"
     when /\A--card-/
       "Cards"
+    when /\A--hero-/
+      "Hero"
     when /\A--accordion-/
       "Accordion"
     when /\A--collapse-/

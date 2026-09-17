@@ -28,7 +28,9 @@ Use TopNav in app shells for page context, global actions, and optional search o
 
 TopNav always renders all three wrappers (`left`, `center`, `right`) even if one slot is blank or uninitialized. This keeps horizontal alignment stable across pages and states.
 
-The bar is `.fp-top-nav`: `72px` of content height plus `env(safe-area-inset-top)`, with left/right padding at least `1rem` and never less than the side insets. Hosts need `viewport-fit=cover` for those insets to apply. See [Installation](../installation.md).
+The bar is `.fp-top-nav`: `--top-nav-height` (`72px`) of content height plus `env(safe-area-inset-top)`, with left/right padding at least `1rem` and never less than the side insets. Hosts need `viewport-fit=cover` for those insets to apply. See [Installation](../installation.md).
+
+At rest the bar does not frost the page (`backdrop-filter: blur(0)`). After the page has scrolled, it uses `--top-nav-backdrop-blur` (default `16px`, same pattern as `--modal-backdrop-blur`). `--top-nav-background-color` stays the fill; do not add a second TopNav variant. The `flat-pack--top-nav` Stimulus controller sets `data-scrolled` and listens to the window plus the nearest overflow pane (including SidebarLayout’s main column). Hosts do not attach a window scroll listener. The controller stays on when `mobile_menu: false`.
 
 ## Mobile chevron menu
 
@@ -153,5 +155,5 @@ The chevron toggle is a labelled button with `aria-expanded` and `aria-controls`
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
-- `flat-pack--top-nav` Stimulus controller (shipped with the engine importmap) for the mobile chevron menu.
+- `flat-pack--top-nav` Stimulus controller (shipped with the engine importmap) for the mobile chevron menu and scroll frost.
 - Optional companion components commonly used inside slots: `FlatPack::Search::Component`, `FlatPack::SidebarLayout::Component`.

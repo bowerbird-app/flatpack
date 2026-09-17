@@ -24,8 +24,8 @@ Do not use for smaller in-page promotional banners; use `FlatPack::Alert::Compon
 | `align` | Symbol | `:center` | no | Overlay copy and CTA alignment. One of: `:center`, `:left`. Overlay variants (`:centered`, `:centered_image`, `:screenshot`) apply it. Column variants (`:split_image`, `:angled_image`, `:image_tiles`, `:offset_image`) validate it and keep their markup. Invalid values raise `ArgumentError`. |
 | `on` | Symbol | `:dark` | no | Overlay contrast on `:centered_image`. `:dark` is light type on a dark wash (default). `:light` is dark type on a light wash. Other variants validate it and keep their markup. Invalid values raise `ArgumentError`. Hosts can still set `--hero-overlay-*` on the section for one photo. |
 | `tagline` | String | `nil` | no | Small sentence-case label rendered above the headline. |
-| `headline` | String | `nil` | no | Primary `<h1>` text. |
-| `description` | String | `nil` | no | Supporting paragraph below the headline. |
+| `headline` | String | `nil` | no | Primary `<h1>` text. Size is `--text-4xl` then `sm:` `--hero-headline-size` (default `--text-5xl`). |
+| `description` | String | `nil` | no | Supporting paragraph below the headline. Page-surface variants use `--hero-description-size` (default `--text-xl`). Overlay body on `:centered_image` stays `--text-2xl`. |
 | `image_url` | String | `nil` | no | Main image URL. Used by `screenshot`, `split_image`, `angled_image`, `offset_image`. Sanitized via `FlatPack::AttributeSanitizer.sanitize_url`. |
 | `image_alt` | String | `""` | no | Alt text for the main image. Pass `""` for decorative images. |
 | `background_image_url` | String | `nil` | no | Background image URL for `centered_image`. Sanitized. Applied via `style` attribute only after sanitization. |
@@ -56,7 +56,7 @@ end %>
 | value | description |
 |---|---|
 | `:centered` | Centered text and actions, no image. Pass `align: :left` to dock the copy column to the start. |
-| `:centered_image` | Full-bleed background image with a `--hero-overlay-background-color` wash (default `rgb(0 0 0 / 0.6)`). Tagline, body, and CTAs use overlay tokens so copy stays readable on the photo. Primary and secondary buttons invert on the overlay. Overlay headline uses `leading-tight`. Overlay body uses `text-2xl`. Default copy is centered, and that headline keeps `fp-text-balance`. `align: :left` docks copy with a larger start inset, a left-to-clear `--hero-overlay-left-background` wash, and vertical centering. Left overlay headline uses `fp-text-pretty` so the body shares the same rag. `on: :light` switches to `--hero-overlay-on-light-*` (dark type on a light wash). Landing pages can pass `class: "h-svh"` to fill the viewport. The catalog embed keeps `min-h-[560px]`. Page-surface variants keep `text-lg` body. |
+| `:centered_image` | Full-bleed background image with a `--hero-overlay-background-color` wash (default `rgb(0 0 0 / 0.6)`). Tagline, body, and CTAs use overlay tokens so copy stays readable on the photo. Primary and secondary buttons invert on the overlay. Overlay headline uses `leading-tight`. Overlay body uses `--text-2xl`. Default copy is centered, and that headline keeps `fp-text-balance`. Copy sits high in the frame (`items-start`) with `--hero-overlay-copy-padding-top` so it clears a typical sticky TopNav. `align: :left` docks copy with a larger start inset and a left-to-clear `--hero-overlay-left-background` wash. Left overlay headline uses `fp-text-pretty` so the body shares the same rag. `on: :light` switches to `--hero-overlay-on-light-*` (dark type on a light wash). Default min-height is `--hero-overlay-min-height` (`560px`) so catalog embeds stay compact. Landing pages set `--hero-overlay-min-height: 100dvh` on the section. Page-surface variants use `--hero-description-size` (`--text-xl`). |
 | `:screenshot` | Centered text above a large constrained app screenshot. Pass `align: :left` to dock the copy. The screenshot stays centered. |
 | `:split_image` | Two-column grid: text left, image right. Stacks on mobile. |
 | `:angled_image` | Text left, image right with a diagonal polygon clip. Image replaced by a stacked image on mobile. |
@@ -85,6 +85,7 @@ end %>
 <%= render FlatPack::Hero::Component.new(
   variant: :centered_image,
   align: :left,
+  style: "--hero-overlay-min-height: 100dvh",
   tagline: "Built for teams",
   headline: "Ship features your users love.",
   description: "Full-bleed background image with a dark overlay.",

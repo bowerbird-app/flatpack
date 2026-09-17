@@ -167,8 +167,9 @@ module FlatPack
         refute_includes html, "tracking-widest"
         refute_includes html, "lg:text-6xl"
         refute_includes html, "leading-tight"
-        refute_includes html, "text-2xl"
-        assert_includes html, "text-lg"
+        refute_includes html, "text-lg"
+        assert_includes html, "--hero-description-size"
+        assert_includes html, "--hero-headline-size"
         assert_includes html, "fp-text-balance"
         assert_includes html, "fp-text-pretty"
         assert_includes html, "--text-4xl"
@@ -199,12 +200,15 @@ module FlatPack
         end
 
         html = page.native.to_html
-        assert_includes html, "flex items-center justify-center"
+        assert_includes html, "flex items-start justify-center"
         assert_includes html, "text-center"
         assert_includes html, "leading-tight"
-        assert_includes html, "text-2xl"
+        assert_includes html, "--text-2xl"
+        assert_includes html, "fp-hero-overlay"
+        refute_includes html, "min-h-[560px]"
+        refute_includes html, "flex items-center"
         assert_match(/<h1[^>]*fp-text-balance/, html)
-        assert_match(/<p[^>]*text-2xl[^>]*fp-text-pretty/, html)
+        assert_match(/<p[^>]*--text-2xl[^>]*fp-text-pretty/, html)
         refute_includes html, "text-left"
         refute_includes html, "justify-start"
         refute_includes html, "max-w-2xl"
@@ -212,7 +216,7 @@ module FlatPack
         assert_includes html, "justify-center"
       end
 
-      def test_centered_image_left_docks_copy_and_keeps_vertical_center
+      def test_centered_image_left_docks_copy_below_the_nav
         render_inline(Component.new(
           variant: :centered_image,
           align: :left,
@@ -224,20 +228,21 @@ module FlatPack
         end
 
         html = page.native.to_html
-        assert_includes html, "flex items-center justify-start"
+        assert_includes html, "flex items-start justify-start"
         assert_includes html, "text-left"
         assert_includes html, "max-w-2xl"
         assert_includes html, "lg:ps-16"
         assert_includes html, "justify-start"
         assert_includes html, "hero-overlay-left-background"
         assert_includes html, "leading-tight"
-        assert_includes html, "text-2xl"
+        assert_includes html, "--text-2xl"
         assert_match(/<h1[^>]*fp-text-pretty/, html)
         refute_match(/<h1[^>]*fp-text-balance/, html)
-        assert_match(/<p[^>]*text-2xl[^>]*fp-text-pretty/, html)
+        assert_match(/<p[^>]*--text-2xl[^>]*fp-text-pretty/, html)
         refute_includes html, "bg-[var(--hero-overlay-background-color)]"
         refute_match(/relative z-10 text-center/, html)
-        refute_includes html, "flex items-center justify-center"
+        refute_includes html, "flex items-center"
+        refute_includes html, "flex items-start justify-center"
       end
 
       def test_omitted_align_matches_explicit_center_on_centered_image
@@ -306,6 +311,18 @@ module FlatPack
         html = page.native.to_html
         assert_includes html, "--hero-overlay-text-color: oklch(0.2 0.05 80)"
         assert_includes html, "background: var(--surface-muted-background-color)"
+      end
+
+      def test_centered_image_accepts_viewport_min_height_token
+        render_inline(Component.new(
+          variant: :centered_image,
+          headline: "Fill the first viewport",
+          style: "--hero-overlay-min-height: 100dvh"
+        ))
+
+        html = page.native.to_html
+        assert_includes html, "--hero-overlay-min-height: 100dvh"
+        refute_includes html, "min-h-[560px]"
       end
 
       def test_raises_argument_error_for_unknown_align

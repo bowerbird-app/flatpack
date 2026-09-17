@@ -1,0 +1,28 @@
+<div class="grid">
+  <div class="col-start-1 row-start-1 z-20">
+    <%= render FlatPack::TopNav::Component.new do |nav| %>
+      <% nav.left(always_display: true) do %>
+        <%= render FlatPack::Button::Component.new(text: "← Back to Hero", style: :secondary, href: pages_hero_path) %>
+      <% end %>
+      <% nav.right(always_display: true) do %>
+        <span class="text-sm font-medium text-[var(--top-nav-item-text-color)]">FlatPack</span>
+      <% end %>
+    <% end %>
+  </div>
+  <div class="col-start-1 row-start-1">
+    <%= yield %>
+  </div>
+</div>
+
+<section class="px-6 py-24 max-w-3xl mx-auto">
+  <h2 class="text-[length:var(--text-2xl)] font-semibold text-[var(--surface-content-color)] fp-text-balance">After the still</h2>
+  <p class="mt-4 text-[length:var(--hero-description-size)] text-[var(--surface-muted-content-color)] fp-text-pretty">
+    Scroll to frost the top bar. Copy on the photo sits below the bar, not in the middle of the frame.
+  </p>
+  <p class="mt-4 text-[length:var(--hero-description-size)] text-[var(--surface-muted-content-color)] fp-text-pretty">
+    The kiln log, glaze recipes, and firing notes live further down the page. Keep going until the bar picks up the frost.
+  </p>
+  <p class="mt-4 text-[length:var(--hero-description-size)] text-[var(--surface-muted-content-color)] fp-text-pretty">
+    Hosts fill the first viewport with <code>--hero-overlay-min-height: 100dvh</code> on the hero. The catalog embed keeps the 560px floor.
+  </p>
+</section>

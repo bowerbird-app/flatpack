@@ -15,21 +15,23 @@ module FlatPack
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "text-left" "text-center" "justify-start" "justify-center"
-      # "ps-[max(2rem,env(safe-area-inset-left))]" "sm:ps-10" "lg:ps-16" "pe-6" "py-16" "px-6" "leading-tight" "text-2xl"
+      # "text-left" "text-center" "justify-start" "justify-center" "items-start"
+      # "ps-[max(2rem,env(safe-area-inset-left))]" "sm:ps-10" "lg:ps-16" "pe-6" "pb-16" "px-6" "leading-tight"
+      # "text-[length:var(--text-4xl)]" "sm:text-[length:var(--hero-headline-size)]"
+      # "text-[length:var(--hero-description-size)]" "text-[length:var(--text-2xl)]"
       # "fp-hero-overlay-on-light"
       ALIGNS = {
         left: {
           text: "text-left",
           actions: "justify-start",
           canvas: "justify-start",
-          overlay_copy: "ps-[max(2rem,env(safe-area-inset-left))] pe-6 py-16 sm:ps-10 lg:ps-16 max-w-2xl w-full"
+          overlay_copy: "ps-[max(2rem,env(safe-area-inset-left))] pe-6 pb-16 sm:ps-10 lg:ps-16 max-w-2xl w-full"
         },
         center: {
           text: "text-center",
           actions: "justify-center",
           canvas: "justify-center",
-          overlay_copy: "px-6 py-16"
+          overlay_copy: "px-6 pb-16"
         }
       }.freeze
 
@@ -135,7 +137,7 @@ module FlatPack
 
       def overlay_section_class
         [
-          "fp-hero-overlay relative overflow-hidden min-h-[560px] flex items-center",
+          "fp-hero-overlay relative overflow-hidden flex items-start",
           align_row[:canvas],
           on_row[:overlay]
         ].compact_blank.join(" ")
@@ -157,13 +159,13 @@ module FlatPack
       def overlay_headline_class
         wrap = (@align == :left) ? "fp-text-pretty" : "fp-text-balance"
         [
-          "mt-2 text-[length:var(--text-4xl)] sm:text-[length:var(--text-5xl)] font-semibold tracking-tight leading-tight text-[var(--hero-overlay-text-color)]",
+          "mt-2 text-[length:var(--text-4xl)] sm:text-[length:var(--hero-headline-size)] font-semibold tracking-tight leading-tight text-[var(--hero-overlay-text-color)]",
           wrap
         ].join(" ")
       end
 
       def overlay_description_class
-        "mt-6 text-2xl text-[var(--hero-overlay-muted-text-color)] fp-text-pretty"
+        "mt-6 text-[length:var(--text-2xl)] text-[var(--hero-overlay-muted-text-color)] fp-text-pretty"
       end
 
       def overlay_wash
@@ -214,14 +216,14 @@ module FlatPack
         return nil unless @headline.present?
 
         content_tag(:h1, @headline,
-          class: "mt-2 text-[length:var(--text-4xl)] sm:text-[length:var(--text-5xl)] font-semibold tracking-tight text-[var(--surface-content-color)] fp-text-balance")
+          class: "mt-2 text-[length:var(--text-4xl)] sm:text-[length:var(--hero-headline-size)] font-semibold tracking-tight text-[var(--surface-content-color)] fp-text-balance")
       end
 
       def render_description
         return nil unless @description.present?
 
         content_tag(:p, @description,
-          class: "mt-6 text-lg text-[var(--surface-muted-content-color)] fp-text-pretty")
+          class: "mt-6 text-[length:var(--hero-description-size)] text-[var(--surface-muted-content-color)] fp-text-pretty")
       end
 
       def render_actions_block(extra_classes: "")

@@ -243,7 +243,7 @@ Kit CSS defines `.fp-hit-target`, `.fp-hit-target-inline`, and `.fp-hit-slop`. `
 
 `--font-*` and `--text-*` are set on `:root` (not only inside `@theme`). `:root` also sets `font-family: var(--font-sans)` and antialiased smoothing. Hosts override `--font-sans` with a brand face. There is no kit webfont. If host Tailwind loads last, re-set `--font-sans` and the kit `--radius-*` values on unlayered `:root` in the host stylesheet — Tailwind’s `@layer theme` stack otherwise replaces the kit face and the kit radii (rich-text chrome follows `--radius-md`).
 
-`--page-title-h1-size` through `--page-title-h6-size` alias `--text-4xl` down to `--text-base`. `--content-p-size` and `--content-kicker-size` are `--text-lg` (1.125rem / 18px). `--content-lead-size` is `--text-2xl`. `--content-h1-size` is `--text-5xl` (3rem). `--content-h2-size` is `--text-3xl`. `--content-h3-size` through `--content-h6-size` step down the same kit scale to `--text-lg`. Bare tags inside `.fp-content` pick these up.
+`--page-title-h1-size` through `--page-title-h6-size` alias `--text-4xl` down to `--text-base`. `--content-p-size` and `--content-kicker-size` are `--text-lg` (1.125rem / 18px). `--content-lead-size` is `--text-2xl`. `--content-h1-size` is `--text-5xl` (3rem). `--content-h2-size` is `--text-3xl`. `--content-h3-size` through `--content-h6-size` step down the same kit scale to `--text-lg`. Bare tags inside `.fp-content` pick these up. Hero headlines use `--text-4xl` then `sm:` `--hero-headline-size` (default `--text-5xl`). Page-surface hero body uses `--hero-description-size` (default `--text-xl`). Do not add `--text-6xl` or `--text-7xl`; a theme that wants a larger hero sets `--hero-headline-size` to a rem.
 
 Kit CSS defines `.fp-tabular-nums` (`font-variant-numeric: tabular-nums`), `.fp-text-balance`, and `.fp-text-pretty`. Use tabular nums on live numbers (pagination, meters, timestamps, chart axes). Use balance on titles. Use pretty on short supporting copy. Labels are sentence case — do not force `uppercase tracking-widest` on taglines, table headers, or section titles. Avatar initials may stay `uppercase`.
 
@@ -298,6 +298,10 @@ Use `--easing-enter` for modal, drawer, command palette, toast, dropdown, popove
 --hero-overlay-on-light-button-secondary-hover-background-color
 --hero-overlay-on-light-button-secondary-text-color
 --hero-overlay-on-light-button-secondary-border-color
+--hero-overlay-min-height
+--hero-overlay-copy-padding-top
+--hero-headline-size
+--hero-description-size
 
 --drawer-backdrop-color
 --drawer-surface-color
@@ -307,6 +311,10 @@ Use `--easing-enter` for modal, drawer, command palette, toast, dropdown, popove
 --drawer-close-icon-color
 --drawer-close-icon-hover-color
 --drawer-backdrop-blur
+
+--top-nav-height
+--top-nav-backdrop-blur
+--top-nav-background-color
 
 --kbd-background-color
 --kbd-border-color
@@ -380,7 +388,8 @@ Tabs, chat incoming bubbles, sidebar/top-nav hover, list hover, and avatar fallb
 - Color token: `--color-danger-background-color`
 
 ### Hero, carousel, picker, badge
-- Hero `centered_image` overlay: `--hero-overlay-background-color`, `--hero-overlay-left-background`, `--hero-overlay-text-color`, `--hero-overlay-muted-text-color`, `--hero-overlay-button-*`. `on: :light` remaps those to `--hero-overlay-on-light-*`.
+- Hero `centered_image` overlay: `--hero-overlay-background-color`, `--hero-overlay-left-background`, `--hero-overlay-text-color`, `--hero-overlay-muted-text-color`, `--hero-overlay-button-*`. `on: :light` remaps those to `--hero-overlay-on-light-*`. Min-height is `--hero-overlay-min-height` (`560px`; set `100dvh` to fill the first viewport). Copy sits below a typical TopNav via `--hero-overlay-copy-padding-top`.
+- TopNav frost: `--top-nav-backdrop-blur` (applied after scroll). Height is `--top-nav-height` (`72px`).
 - Carousel chrome: `--carousel-control-*`, `--carousel-counter-*`, `--carousel-media-background-color`, `--carousel-lightbox-image-background-color`
 - Picker grid: `--picker-badge-*`, `--picker-selection-idle-*`, `--picker-selection-indicator-*`
 - Badge remove hover: `--badge-remove-hover-background-color` (aliases `--chip-remove-hover-background-color`)
