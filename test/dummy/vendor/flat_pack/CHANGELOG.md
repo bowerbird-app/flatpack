@@ -15,6 +15,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.188] - 2026-09-17
+
+### Added
+- `FlatPack::Sidebar::Header::Component` accepts `show_version:` (Boolean, default `true`). `true` renders `v{FlatPack::VERSION}` beside the title. `false` omits the badge span.
+
+### Changed
+- Bumped the gem version to `0.1.188`.
+
+### Upgrade notes
+- Omit `show_version:` or pass `true` to keep the kit version badge.
+- Product hosts pass `false`. The span is not rendered.
+- Redeploy so `meta.gem_version` shows `0.1.188`.
+
 ## [0.1.187] - 2026-09-17
 
 ### Fixed

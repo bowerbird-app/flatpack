@@ -59,6 +59,21 @@ module FlatPack
           assert_no_text "Workspace"
           assert_selector "[data-flat-pack--sidebar-layout-target='headerLabel'] > div", count: 1
         end
+
+        def test_hides_version_badge_when_show_version_false
+          render_inline(Component.new(show_version: false))
+
+          assert_text "FlatPack"
+          assert_no_text "v#{FlatPack::VERSION}"
+          assert_no_selector "[data-flat-pack--sidebar-layout-target='headerLabel'] > span"
+        end
+
+        def test_shows_version_badge_when_show_version_true
+          render_inline(Component.new(show_version: true))
+
+          assert_text "v#{FlatPack::VERSION}"
+          assert_selector "[data-flat-pack--sidebar-layout-target='headerLabel'] > span", count: 1
+        end
       end
     end
   end

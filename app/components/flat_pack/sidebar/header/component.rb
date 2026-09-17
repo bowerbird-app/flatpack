@@ -9,6 +9,7 @@ module FlatPack
           title: "FlatPack",
           subtitle: nil,
           collapsible: true,
+          show_version: true,
           **system_arguments
         )
           super(**system_arguments)
@@ -16,6 +17,7 @@ module FlatPack
           @title = title
           @subtitle = subtitle
           @collapsible = collapsible
+          @show_version = show_version
         end
 
         def call
@@ -47,8 +49,8 @@ module FlatPack
               content_tag(:div, class: "flex items-center h-8", data: header_label_data_attributes) do
                 safe_join([
                   content_tag(:div, @title, class: "font-semibold text-sm text-[var(--sidebar-header-text-color)]"),
-                  content_tag(:span, sidebar_version_label, class: sidebar_version_badge_classes)
-                ])
+                  (@show_version ? content_tag(:span, sidebar_version_label, class: sidebar_version_badge_classes) : nil)
+                ].compact)
               end
             ].compact)
           end

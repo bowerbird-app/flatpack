@@ -32,6 +32,17 @@ Primary component (`FlatPack::Sidebar::Component`):
 | `collapsed` | Boolean | `false` | No | Renders the item in icon-only mode: applies compact padding (`px-1`) and centered alignment (`justify-center`). Used for static collapsed demos; the `flat-pack--sidebar-layout` controller applies the same classes dynamically during collapse. |
 | `badge` | String or nil | `nil` | No | Optional badge value rendered beside the label. |
 
+`FlatPack::Sidebar::Header::Component`:
+
+| name | type | default | required | description |
+|------|------|---------|----------|-------------|
+| `brand_abbr` | String or nil | `"FP"` | No | Initials in the square badge. Blank or `nil` omits the badge. |
+| `title` | String | `"FlatPack"` | No | Title text beside the badge. |
+| `subtitle` | String or nil | `nil` | No | Accepted. Not rendered. |
+| `collapsible` | Boolean | `true` | No | Shows the collapse toggle buttons when `true`. |
+| `show_version` | Boolean | `true` | No | Default `true` renders `v{FlatPack::VERSION}` beside the title. `false` omits the badge span. Product hosts pass `false` so the kit version badge does not ship. |
+| `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into the header wrapper. |
+
 ## Slots
 
 | name | type | required | description |
@@ -46,6 +57,8 @@ Primary component (`FlatPack::Sidebar::Component`):
 |---------|-------------|
 | `side: :left` | Renders right border (`border-r`). |
 | `side: :right` | Renders left border (`border-l`). |
+| Header `show_version: true` | Default. Renders `v{FlatPack::VERSION}` beside the title. |
+| Header `show_version: false` | Omits the version badge span. |
 
 ## Example
 
@@ -75,6 +88,16 @@ Primary component (`FlatPack::Sidebar::Component`):
     <% end %>
   <% end %>
 <% end %>
+```
+
+A product host that should not ship the kit version badge:
+
+```erb
+<%= render FlatPack::Sidebar::Header::Component.new(
+  brand_abbr: "AC",
+  title: "Acme",
+  show_version: false
+) %>
 ```
 
 ## Accessibility
