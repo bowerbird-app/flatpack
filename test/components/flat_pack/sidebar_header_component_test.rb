@@ -13,7 +13,7 @@ module FlatPack
           assert_text "FlatPack"
           assert_text "v#{FlatPack::VERSION}"
           assert_no_text "Workspace"
-          assert_selector "div.relative.shrink-0"
+          assert_selector "div.shrink-0"
           assert_selector "div.flex.items-center.gap-3"
           assert_selector "[data-flat-pack--sidebar-layout-target='headerBrand']"
           assert_selector "[data-flat-pack--sidebar-layout-target='headerLabel']"

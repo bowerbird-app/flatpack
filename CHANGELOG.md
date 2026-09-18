@@ -18,12 +18,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.191] - 2026-09-18
 
 ### Changed
-- Desktop sidebar collapse and expand is one motion: rail width eases on `--duration-slow` while labels fade on `--duration-fast`. Icons stay left-aligned. The brand mark stays put. Labels are not pulled out of layout until the width transition ends.
+- Desktop sidebar collapse and expand is one motion: rail width eases on `--duration-slow` while labels fade on `--duration-fast`. Labels stay in layout until the width transition ends, then the existing icon-only rest state applies (hamburger, hidden brand mark, compact-centered icons).
 - Bumped the gem version to `0.1.191`.
 
 ### Upgrade notes
 - No host markup change. Upgrade the gem so `meta.gem_version` shows `0.1.191`.
-- Live collapse is CSS on `data-flat-pack-sidebar-collapsed`. Do not copy the old controller behaviour of `sr-only` + `justify-center` at click time; that is what made the rail jolt.
+- Closed rest state is still hamburger + 4rem icon rail. Do not hide the menu icon behind the brand mark.
+- Live collapse is CSS on `data-flat-pack-sidebar-collapsed`. Do not `sr-only` labels or `justify-center` icons at click time; wait for the width transition to end.
 - Static demos can still pass `collapsed: true` on Item / Section Title / Group for a server-rendered icon-only snapshot.
 - `prefers-reduced-motion: reduce` snaps width and opacity (duration tokens are `0ms`).
 

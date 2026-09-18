@@ -12,15 +12,16 @@ module FlatPack
       assert status.success?, stdout
     end
 
-    test "kit CSS fades sidebar labels instead of recentering icons" do
+    test "kit CSS fades sidebar labels without overlaying the hamburger" do
       css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
       controller = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/sidebar_layout_controller.js").read
 
       assert_includes css, ".fp-sidebar-label"
       assert_match(/opacity\s+var\(--duration-fast\)\s+var\(--easing-standard\)/, css)
       assert_includes css, "[data-flat-pack-sidebar-collapsed=\"true\"] .fp-sidebar-label"
+      assert_includes css, "overflow-x: clip"
+      refute_includes css, "[data-flat-pack--sidebar-layout-target=\"collapsedToggle\"] svg"
       refute_includes controller, "delayContentReveal"
-      refute_includes controller, "justify-center"
       refute_includes controller, "setDesktopExpandedContentVisible"
     end
   end

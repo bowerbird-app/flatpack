@@ -68,11 +68,9 @@ Mobile drawer backdrop uses `aria-hidden` and supports Escape to close via contr
 
 ## Collapsed (icon-only) mode
 
-Desktop collapse is one motion: the rail width eases `16rem` → `4rem` on `--duration-slow` / `--easing-standard` while labels, group chevrons, the header title, and footer fade on `--duration-fast`. Icons stay left-aligned. Labels stay in layout during the motion and are clipped by `overflow-x: hidden`. The controller does not `sr-only` labels, `justify-center` icons, or `hidden` the brand mark at click time.
+Desktop collapse is one motion: the rail width eases `16rem` → `4rem` on `--duration-slow` / `--easing-standard` while labels fade on `--duration-fast`. Item padding eases to `px-1` with the width so the active pill shrinks with the rail. Labels stay in layout during the motion and are clipped on the item (`overflow-x: clip`), not on the rail (that extra `overflow-x: hidden` put a scrollbar on the column).
 
-After the width transition ends, labels are marked `sr-only` so collapsed tooltips work. Expanding reverses that first, then eases the rail open so text can fade in as there is room. `prefers-reduced-motion: reduce` snaps to the end state (duration tokens are `0ms`).
-
-The brand mark stays visible. The collapsed header control is an invisible hit target over the mark (`aria-label="Open sidebar"`).
+The closed rest state is unchanged from before this motion work: hamburger (`aria-label="Open sidebar"`), brand mark hidden, icons compact-centered, 4rem rail. The controller waits until the width transition ends before `sr-only` and `justify-center`. Expanding restores that chrome first, then eases the rail open. `prefers-reduced-motion: reduce` snaps to the end state (duration tokens are `0ms`).
 
 This is applied to:
 - Every element with `data-flat-pack-sidebar-item="true"` (`Sidebar::Item::Component` links and `Sidebar::Group::Component` header buttons).

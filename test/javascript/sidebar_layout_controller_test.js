@@ -42,8 +42,8 @@ function classListStub(initial = []) {
   const names = new Set(initial)
   return {
     contains(name) { return names.has(name) },
-    add(name) { names.add(name) },
-    remove(name) { names.delete(name) },
+    add(...added) { added.forEach((name) => names.add(name)) },
+    remove(...removed) { removed.forEach((name) => names.delete(name)) },
     toggle(name, force) {
       if (force === true) names.add(name)
       else if (force === false) names.delete(name)
@@ -59,6 +59,12 @@ function buildDesktopController({ prefersReduced = false, duration = 300 } = {})
     classList: classListStub([]),
     dataset: {}
   }
+  const item = {
+    classList: classListStub(['px-4'])
+  }
+  const brand = {
+    classList: classListStub([])
+  }
   const aside = {
     style: {},
     dataset: {},
@@ -73,9 +79,10 @@ function buildDesktopController({ prefersReduced = false, duration = 300 } = {})
     dataset: {},
     querySelector(selector) { return selector === 'aside' ? aside : null },
     querySelectorAll(selector) {
-      if (String(selector).includes('fp-sidebar-label') || String(selector).includes('span.flex-1')) {
-        return [label]
-      }
+      const value = String(selector)
+      if (value.includes('headerBrand')) return [brand]
+      if (value.includes('fp-sidebar-label') || value.includes('span.flex-1')) return [label]
+      if (value.includes('flat-pack-sidebar-item')) return [item]
       return []
     },
     addEventListener(type, fn) { listeners.push({ target: 'sidebar', type, fn }) },
@@ -109,47 +116,69 @@ function buildDesktopController({ prefersReduced = false, duration = 300 } = {})
     currentScrollContainer() { return null }
   })
 
-  return { controller, label, aside, sidebarTarget, desktopToggleTarget, collapsedToggleTarget, timeouts, listeners }
+  return { controller, label, item, brand, aside, sidebarTarget, desktopToggleTarget, collapsedToggleTarget, timeouts, listeners }
 }
 
+test('collapse shows the hamburger and hides the brand mark at click time', () => {
+  const { controller, brand, collapsedToggleTarget, desktopToggleTarget } = buildDesktopController()
+
+  controller.toggleDesktop()
+
+  assert.equal(brand.classList.contains('hidden'), true)
+  assert.equal(collapsedToggleTarget.classList.contains('hidden'), false)
+  assert.equal(collapsedToggleTarget.classList.contains('flex'), true)
+  assert.equal(desktopToggleTarget.classList.contains('hidden'), true)
+})
+
 test('collapse does not sr-only labels or center icons at click time', () => {
-  const { controller, label, sidebarTarget, timeouts } = buildDesktopController()
+  const { controller, label, item, sidebarTarget, timeouts } = buildDesktopController()
 
   controller.toggleDesktop()
 
   assert.equal(sidebarTarget.dataset.flatPackSidebarCollapsed, 'true')
   assert.equal(label.classList.contains('sr-only'), false)
   assert.equal(label.dataset.flatPackSidebarRestHidden, undefined)
+  assert.equal(item.classList.contains('justify-center'), false)
+  assert.equal(item.classList.contains('px-4'), true)
   assert.ok(timeouts.length > 0)
 })
 
-test('collapse rest state sr-onlys labels after the width transition', () => {
-  const { controller, label, timeouts } = buildDesktopController()
+test('collapse rest state compact-centers icons after the width transition', () => {
+  const { controller, label, item, timeouts } = buildDesktopController()
 
   controller.toggleDesktop()
   timeouts[0].callback()
 
   assert.equal(label.classList.contains('sr-only'), true)
   assert.equal(label.dataset.flatPackSidebarRestHidden, 'true')
+  assert.equal(item.classList.contains('justify-center'), true)
+  assert.equal(item.classList.contains('px-1'), true)
+  assert.equal(item.classList.contains('px-4'), false)
 })
 
 test('expand restores labels before the rail opens', () => {
-  const { controller, label, sidebarTarget } = buildDesktopController({ prefersReduced: true, duration: 0 })
+  const { controller, label, item, brand, sidebarTarget, collapsedToggleTarget } = buildDesktopController({ prefersReduced: true, duration: 0 })
 
   controller.toggleDesktop()
   assert.equal(label.classList.contains('sr-only'), true)
+  assert.equal(item.classList.contains('justify-center'), true)
 
   controller.toggleDesktop()
   assert.equal(sidebarTarget.dataset.flatPackSidebarCollapsed, 'false')
   assert.equal(label.classList.contains('sr-only'), false)
+  assert.equal(item.classList.contains('justify-center'), false)
+  assert.equal(item.classList.contains('px-4'), true)
+  assert.equal(brand.classList.contains('hidden'), false)
+  assert.equal(collapsedToggleTarget.classList.contains('hidden'), true)
 })
 
 test('reduced motion applies rest state immediately', () => {
-  const { controller, label, timeouts } = buildDesktopController({ prefersReduced: true, duration: 0 })
+  const { controller, label, item, timeouts } = buildDesktopController({ prefersReduced: true, duration: 0 })
 
   controller.toggleDesktop()
 
   assert.equal(label.classList.contains('sr-only'), true)
+  assert.equal(item.classList.contains('justify-center'), true)
   assert.equal(timeouts.length, 0)
 })
 
@@ -160,7 +189,6 @@ test('controller source no longer reflows labels at click time', () => {
   )
 
   assert.equal(source.includes('delayContentReveal'), false)
-  assert.equal(source.includes('justify-center'), false)
   assert.equal(source.includes('setDesktopExpandedContentVisible'), false)
   assert.equal(/setTimeout\(\s*\(\)\s*=>\s*\{[\s\S]*?\},\s*300\s*\)/.test(source), false)
 })

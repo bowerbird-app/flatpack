@@ -29,7 +29,7 @@ Primary component (`FlatPack::Sidebar::Component`):
 | `href` | String | — | Yes | Link destination URL. |
 | `icon` | Symbol or nil | `nil` | No | Heroicons v2 icon name. |
 | `active` | Boolean | `false` | No | Marks the item as the current page (`aria-current="page"`). |
-| `collapsed` | Boolean | `false` | No | Renders the item in icon-only mode: applies compact padding (`px-1`) and centered alignment (`justify-center`). Used for static collapsed demos. Live collapse is CSS on `data-flat-pack-sidebar-collapsed` and does not re-center icons mid-animation. |
+| `collapsed` | Boolean | `false` | No | Renders the item in icon-only mode: applies compact padding (`px-1`) and centered alignment (`justify-center`). Used for static collapsed demos. Live collapse fades labels with the rail width, then applies this compact rest state after the width transition ends. |
 | `badge` | String or nil | `nil` | No | Optional badge value rendered beside the label. |
 
 `FlatPack::Sidebar::Header::Component`:

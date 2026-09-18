@@ -114,6 +114,8 @@ export default class extends Controller {
 
     if (opening) {
       this.clearCollapsedRestState()
+    } else {
+      this.applyCollapsedHeaderChrome()
     }
 
     this.applyDesktopState({ immediate: prefersReducedMotion() })
@@ -252,6 +254,8 @@ export default class extends Controller {
       return
     }
 
+    this.applyCollapsedHeaderChrome()
+
     if (immediate) {
       this.applyCollapsedRestState()
       return
@@ -298,6 +302,13 @@ export default class extends Controller {
     }
   }
 
+  applyCollapsedHeaderChrome() {
+    this.headerBrandNodes().forEach((brand) => {
+      brand.classList.add("hidden")
+    })
+    this.setCollapsedToggleButtons(true)
+  }
+
   applyCollapsedRestState() {
     this.labelNodes().forEach((label) => {
       if (!label.classList.contains("sr-only")) {
@@ -305,7 +316,34 @@ export default class extends Controller {
         label.dataset.flatPackSidebarRestHidden = "true"
       }
     })
-    this.setCollapsedToggleButtons(true)
+
+    this.itemNodes().forEach((item) => {
+      item.classList.remove("px-4")
+      item.classList.add("px-1", "justify-center")
+    })
+
+    this.sectionTitleNodes().forEach((title) => {
+      title.classList.remove("px-4")
+      title.classList.add("px-1")
+    })
+
+    this.groupPanelNodes().forEach((panel) => {
+      panel.classList.remove("pl-[var(--sidebar-group-item-indent)]")
+    })
+
+    this.groupChevronNodes().forEach((chevron) => {
+      chevron.classList.add("hidden")
+    })
+
+    this.footerNodes().forEach((footer) => {
+      footer.classList.add("hidden")
+    })
+
+    this.headerRowNodes().forEach((row) => {
+      row.classList.add("justify-center")
+    })
+
+    this.applyCollapsedHeaderChrome()
   }
 
   clearCollapsedRestState() {
@@ -315,6 +353,37 @@ export default class extends Controller {
         delete label.dataset.flatPackSidebarRestHidden
       }
     })
+
+    this.itemNodes().forEach((item) => {
+      item.classList.remove("px-1", "justify-center")
+      item.classList.add("px-4")
+    })
+
+    this.sectionTitleNodes().forEach((title) => {
+      title.classList.remove("px-1")
+      title.classList.add("px-4")
+    })
+
+    this.groupPanelNodes().forEach((panel) => {
+      panel.classList.add("pl-[var(--sidebar-group-item-indent)]")
+    })
+
+    this.groupChevronNodes().forEach((chevron) => {
+      chevron.classList.remove("hidden")
+    })
+
+    this.footerNodes().forEach((footer) => {
+      footer.classList.remove("hidden")
+    })
+
+    this.headerRowNodes().forEach((row) => {
+      row.classList.remove("justify-center")
+    })
+
+    this.headerBrandNodes().forEach((brand) => {
+      brand.classList.remove("hidden")
+    })
+
     this.setCollapsedToggleButtons(false)
   }
 
@@ -336,6 +405,34 @@ export default class extends Controller {
 
   labelNodes() {
     return this.sidebarTarget.querySelectorAll(".fp-sidebar-label, a > span.flex-1, button > span.flex-1, [data-flat-pack--sidebar-layout-target='headerLabel']")
+  }
+
+  itemNodes() {
+    return this.sidebarTarget.querySelectorAll('[data-flat-pack-sidebar-item="true"]')
+  }
+
+  sectionTitleNodes() {
+    return this.sidebarTarget.querySelectorAll('[data-flat-pack-sidebar-section-title="true"]')
+  }
+
+  groupPanelNodes() {
+    return this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-group-target="panel"]')
+  }
+
+  groupChevronNodes() {
+    return this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-group-target="chevron"]')
+  }
+
+  footerNodes() {
+    return this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-layout-target="footer"]')
+  }
+
+  headerRowNodes() {
+    return this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-layout-target="headerRow"]')
+  }
+
+  headerBrandNodes() {
+    return this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-layout-target="headerBrand"]')
   }
 
   updateCollapsedScrollContainerState() {

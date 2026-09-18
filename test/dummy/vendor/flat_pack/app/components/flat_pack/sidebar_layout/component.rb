@@ -161,7 +161,6 @@ module FlatPack
           "md:h-screen",
           "md:self-start",
           "min-h-0",
-          "overflow-x-hidden",
           "transition-transform",
           "md:transition-[width,transform]",
           "duration-[var(--duration-slow)]",

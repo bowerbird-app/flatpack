@@ -119,7 +119,7 @@ module FlatPack
 
         assert_includes page.native.to_html, "md:transition-[width,transform]"
         assert_includes page.native.to_html, "ease-[var(--easing-standard)]"
-        assert_includes page.native.to_html, "overflow-x-hidden"
+        refute_includes page.native.to_html, "overflow-x-hidden"
       end
 
       def test_sidebar_column_uses_mobile_only_high_z_index

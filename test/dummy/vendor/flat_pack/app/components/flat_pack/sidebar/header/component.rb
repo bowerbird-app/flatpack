@@ -199,7 +199,6 @@ module FlatPack
 
         def header_classes
           classes(
-            "relative",
             "shrink-0",
             "p-4",
             "bg-[var(--sidebar-header-background-color)]"
