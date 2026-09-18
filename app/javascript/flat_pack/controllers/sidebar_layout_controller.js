@@ -59,19 +59,9 @@ export default class extends Controller {
     this.element.addEventListener("click", this.handleSidebarLinkClick, true)
     this.bindScrollPersistenceListener()
 
-    // If this page was pre-restored during turbo:before-render, do not re-apply.
-    const preRestored = this.currentScrollContainer()?.dataset?.flatPackScrollPreRestored === "true"
-    if (!preRestored) {
-      // Restore on direct page loads/non-Turbo navigations.
-      const hasPersistedScrollState = !!this.readScrollState()
-      if (hasPersistedScrollState) {
-        this.restoreScrollPosition()
-      }
-    } else {
-      delete this.currentScrollContainer().dataset.flatPackScrollPreRestored
-    }
-
-    this.scrollActiveItemIntoView()
+    // Groups apply open state after this parent controller connects. Wait until
+    // that height is in so a long list can restore the real scrollTop.
+    this.scheduleScrollRestore()
   }
 
   disconnect() {
@@ -404,11 +394,23 @@ export default class extends Controller {
   }
 
   labelNodes() {
-    return this.sidebarTarget.querySelectorAll(".fp-sidebar-label, a > span.flex-1, button > span.flex-1, [data-flat-pack--sidebar-layout-target='headerLabel']")
+    const nodes = this.sidebarTarget.querySelectorAll(
+      ".fp-sidebar-label, a > span.flex-1, button > span.flex-1, [data-flat-pack--sidebar-layout-target='headerLabel']"
+    )
+
+    return Array.from(nodes).filter((node) => !this.isSectionTitleLabel(node))
+  }
+
+  isSectionTitleLabel(node) {
+    return !!node.closest?.('[data-flat-pack-sidebar-section-title="true"]')
   }
 
   itemNodes() {
     return this.sidebarTarget.querySelectorAll('[data-flat-pack-sidebar-item="true"]')
+  }
+
+  navItemNodes() {
+    return this.sidebarTarget.querySelectorAll('a[data-flat-pack-sidebar-item="true"]')
   }
 
   sectionTitleNodes() {
@@ -506,9 +508,28 @@ export default class extends Controller {
   }
 
   handleTurboLoad() {
-    // Dummy activateSidebarNav() runs on turbo:load and sets aria-current="page".
-    // Keep the rail where it was; only nudge if that item is now out of view.
-    this.scrollActiveItemIntoView()
+    const scrollContainer = this.currentScrollContainer()
+    if (scrollContainer?.dataset?.flatPackScrollPreRestored === "true") {
+      delete scrollContainer.dataset.flatPackScrollPreRestored
+    }
+
+    this.scheduleScrollRestore()
+  }
+
+  scheduleScrollRestore() {
+    const restore = () => {
+      this.restoreScrollPosition({correctWithAnchor: true})
+      this.scrollActiveItemIntoView()
+    }
+
+    if (typeof requestAnimationFrame !== "function") {
+      restore()
+      return
+    }
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(restore)
+    })
   }
 
   handleTurboBeforeRender(event) {
@@ -528,12 +549,82 @@ export default class extends Controller {
     const link = event.target.closest("a[href]")
     if (!link || !this.sidebarTarget.contains(link)) return
 
+    if (this.isPrimarySidebarNavClick(event, link)) {
+      this.markItemCurrent(link)
+    }
+
     const scrollContainer = this.currentScrollContainer()
     if (!scrollContainer) return
 
     this.lastAnchorPath = this.normalizePath(link.href)
     this.lastAnchorOffset = link.getBoundingClientRect().top - scrollContainer.getBoundingClientRect().top
     this.persistScrollState()
+  }
+
+  isPrimarySidebarNavClick(event, link) {
+    if (event.defaultPrevented) return false
+    if (event.button && event.button !== 0) return false
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return false
+    if (link.target && link.target !== "_self") return false
+
+    return link.matches('a[data-flat-pack-sidebar-item="true"]')
+  }
+
+  markItemCurrent(link) {
+    this.navItemNodes().forEach((item) => {
+      if (item === link) {
+        this.applyItemCurrent(item)
+      } else {
+        this.clearItemCurrent(item)
+      }
+    })
+  }
+
+  applyItemCurrent(item) {
+    item.classList.remove(...this.inactiveItemClasses())
+    item.classList.add(...this.activeItemClasses())
+    item.setAttribute("aria-current", "page")
+
+    const iconEl = item.querySelector('[data-flat-pack-sidebar-item-icon="true"]')
+    if (!iconEl) return
+
+    iconEl.classList.remove(this.inactiveIconClass())
+    iconEl.classList.add(this.activeIconClass())
+  }
+
+  clearItemCurrent(item) {
+    item.classList.remove(...this.activeItemClasses())
+    item.classList.add(...this.inactiveItemClasses())
+    item.removeAttribute("aria-current")
+
+    const iconEl = item.querySelector('[data-flat-pack-sidebar-item-icon="true"]')
+    if (!iconEl) return
+
+    iconEl.classList.remove(this.activeIconClass())
+    iconEl.classList.add(this.inactiveIconClass())
+  }
+
+  activeItemClasses() {
+    return [
+      "bg-[var(--sidebar-item-active-background-color)]",
+      "text-[var(--sidebar-item-active-text-color)]"
+    ]
+  }
+
+  inactiveItemClasses() {
+    return [
+      "text-[var(--sidebar-item-text-color)]",
+      "hover:bg-[var(--sidebar-item-hover-background-color)]",
+      "hover:text-[var(--sidebar-item-hover-text-color)]"
+    ]
+  }
+
+  activeIconClass() {
+    return "text-[var(--sidebar-item-active-icon-color)]"
+  }
+
+  inactiveIconClass() {
+    return "text-[var(--sidebar-item-icon-color)]"
   }
 
   handleSidebarScroll() {

@@ -24,6 +24,9 @@ module FlatPack
       refute_includes controller, "delayContentReveal"
       refute_includes controller, "setDesktopExpandedContentVisible"
       refute_includes controller, "Align active navigation item to the top"
+      assert_includes controller, "scheduleScrollRestore"
+      assert_includes controller, "markItemCurrent"
+      assert_includes controller, "isSectionTitleLabel"
     end
   end
 end

@@ -62,7 +62,15 @@ function buildDesktopController({ prefersReduced = false, duration = 300 } = {})
   const listeners = []
   const label = {
     classList: classListStub([]),
-    dataset: {}
+    dataset: {},
+    closest() { return null }
+  }
+  const sectionLabel = {
+    classList: classListStub([]),
+    dataset: {},
+    closest(selector) {
+      return String(selector).includes('flat-pack-sidebar-section-title') ? { dataset: {} } : null
+    }
   }
   const item = {
     classList: classListStub(['px-4'])
@@ -86,7 +94,8 @@ function buildDesktopController({ prefersReduced = false, duration = 300 } = {})
     querySelectorAll(selector) {
       const value = String(selector)
       if (value.includes('headerBrand')) return [brand]
-      if (value.includes('fp-sidebar-label') || value.includes('span.flex-1')) return [label]
+      if (value.includes('fp-sidebar-label') || value.includes('span.flex-1')) return [label, sectionLabel]
+      if (value.includes('flat-pack-sidebar-item="true"]') && value.startsWith('a')) return [item]
       if (value.includes('flat-pack-sidebar-item')) return [item]
       return []
     },
@@ -121,7 +130,7 @@ function buildDesktopController({ prefersReduced = false, duration = 300 } = {})
     currentScrollContainer() { return null }
   })
 
-  return { controller, label, item, brand, aside, sidebarTarget, desktopToggleTarget, collapsedToggleTarget, timeouts, listeners }
+  return { controller, label, sectionLabel, item, brand, aside, sidebarTarget, desktopToggleTarget, collapsedToggleTarget, timeouts, listeners }
 }
 
 test('collapse shows the hamburger and hides the brand mark at click time', () => {
@@ -256,4 +265,148 @@ test('current item in the middle is not pinned to the top', () => {
 
   assert.equal(scrollContainer.scrollTop, 80)
   assert.notEqual(scrollContainer.scrollTop, 80 + (250 - 100))
+})
+
+test('collapse rest state does not sr-only section titles', () => {
+  const { controller, label, sectionLabel, timeouts } = buildDesktopController()
+
+  controller.toggleDesktop()
+  timeouts[0].callback()
+
+  assert.equal(label.classList.contains('sr-only'), true)
+  assert.equal(sectionLabel.classList.contains('sr-only'), false)
+})
+
+function navLinkStub({ current = false } = {}) {
+  const icon = {
+    classList: classListStub([
+      current ? 'text-[var(--sidebar-item-active-icon-color)]' : 'text-[var(--sidebar-item-icon-color)]'
+    ])
+  }
+  const classes = current
+    ? [
+      'bg-[var(--sidebar-item-active-background-color)]',
+      'text-[var(--sidebar-item-active-text-color)]'
+    ]
+    : [
+      'text-[var(--sidebar-item-text-color)]',
+      'hover:bg-[var(--sidebar-item-hover-background-color)]',
+      'hover:text-[var(--sidebar-item-hover-text-color)]'
+    ]
+  const attrs = {}
+  if (current) attrs['aria-current'] = 'page'
+
+  return {
+    classList: classListStub(classes),
+    href: '/demo/cards',
+    target: '',
+    setAttribute(name, value) { attrs[name] = value },
+    removeAttribute(name) { delete attrs[name] },
+    getAttribute(name) { return attrs[name] },
+    matches(selector) { return String(selector).includes('sidebar-item') },
+    querySelector(selector) {
+      return String(selector).includes('sidebar-item-icon') ? icon : null
+    },
+    getBoundingClientRect() { return rect(220, 260) },
+    icon
+  }
+}
+
+test('clicking a sidebar item marks it current before the page renders', () => {
+  const { controller, sidebarTarget } = buildDesktopController()
+  const previous = navLinkStub({ current: true })
+  const next = navLinkStub({ current: false })
+  const scrollContainer = {
+    scrollTop: 40,
+    getBoundingClientRect() { return rect(100, 500) }
+  }
+
+  sidebarTarget.contains = () => true
+  const originalQuery = sidebarTarget.querySelectorAll.bind(sidebarTarget)
+  sidebarTarget.querySelectorAll = (selector) => {
+    const value = String(selector)
+    if (value.startsWith('a[') && value.includes('sidebar-item')) return [previous, next]
+    return originalQuery(selector)
+  }
+
+  controller.hasScrollContainerTarget = true
+  controller.scrollContainerTarget = scrollContainer
+  controller.currentScrollContainer = () => scrollContainer
+  controller.hasStorageKeyValue = true
+  controller.storageKeyValue = 'test-shell'
+  controller.hasSideValue = true
+  controller.sideValue = 'left'
+  controller.normalizePath = () => '/demo/cards'
+
+  controller.handleSidebarLinkClick({
+    target: { closest() { return next } },
+    defaultPrevented: false,
+    button: 0,
+    metaKey: false,
+    ctrlKey: false,
+    shiftKey: false,
+    altKey: false
+  })
+
+  assert.equal(next.getAttribute('aria-current'), 'page')
+  assert.equal(previous.getAttribute('aria-current'), undefined)
+  assert.equal(next.classList.contains('bg-[var(--sidebar-item-active-background-color)]'), true)
+  assert.equal(previous.classList.contains('bg-[var(--sidebar-item-active-background-color)]'), false)
+  assert.equal(next.icon.classList.contains('text-[var(--sidebar-item-active-icon-color)]'), true)
+  assert.equal(previous.icon.classList.contains('text-[var(--sidebar-item-icon-color)]'), true)
+})
+
+test('modifier-click does not mark a sidebar item current', () => {
+  const { controller, sidebarTarget } = buildDesktopController()
+  const next = navLinkStub({ current: false })
+  sidebarTarget.contains = () => true
+
+  controller.handleSidebarLinkClick({
+    target: { closest() { return next } },
+    defaultPrevented: false,
+    button: 0,
+    metaKey: true,
+    ctrlKey: false,
+    shiftKey: false,
+    altKey: false
+  })
+
+  assert.equal(next.getAttribute('aria-current'), undefined)
+  assert.equal(next.classList.contains('bg-[var(--sidebar-item-active-background-color)]'), false)
+})
+
+test('turbo load restores persisted scroll after groups apply', () => {
+  const { controller } = buildDesktopController()
+  const scrollContainer = {
+    scrollTop: 0,
+    dataset: { flatPackScrollPreRestored: 'true' },
+    getBoundingClientRect() { return rect(100, 500) }
+  }
+
+  controller.hasScrollContainerTarget = true
+  controller.scrollContainerTarget = scrollContainer
+  controller.currentScrollContainer = () => scrollContainer
+  controller.hasStorageKeyValue = true
+  controller.storageKeyValue = 'test-shell'
+  controller.hasSideValue = true
+  controller.sideValue = 'left'
+  controller.element = { querySelector() { return null } }
+  controller.writeScrollState({ scrollTop: 640, anchorPath: null, anchorOffset: null })
+
+  controller.handleTurboLoad()
+
+  assert.equal(scrollContainer.scrollTop, 640)
+  assert.equal(scrollContainer.dataset.flatPackScrollPreRestored, undefined)
+})
+
+test('controller source restores scroll after groups and skips section-title sr-only', () => {
+  const source = fs.readFileSync(
+    path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'controllers', 'sidebar_layout_controller.js'),
+    'utf8'
+  )
+
+  assert.equal(source.includes('scheduleScrollRestore'), true)
+  assert.equal(source.includes('markItemCurrent'), true)
+  assert.equal(source.includes('isSectionTitleLabel'), true)
+  assert.equal(source.includes('this.scrollActiveItemIntoView()'), true)
 })
