@@ -36,7 +36,8 @@ Primary component (`FlatPack::Sidebar::Component`):
 
 | name | type | default | required | description |
 |------|------|---------|----------|-------------|
-| `brand_abbr` | String or nil | `"FP"` | No | Initials in the square badge. Blank or `nil` omits the badge. |
+| `logo` | String or nil | `nil` | No | Image URL for the badge slot. A present URL renders the mark and omits `brand_abbr`. Blank keeps the initials path. |
+| `brand_abbr` | String or nil | `"FP"` | No | Initials in the square badge. Blank or `nil` omits the badge. Omitted when `logo:` is present. |
 | `title` | String | `"FlatPack"` | No | Title text beside the badge. |
 | `subtitle` | String or nil | `nil` | No | Accepted. Not rendered. |
 | `collapsible` | Boolean | `true` | No | Shows the collapse toggle buttons when `true`. |
@@ -59,6 +60,7 @@ Primary component (`FlatPack::Sidebar::Component`):
 | `side: :right` | Renders left border (`border-l`). |
 | Header `show_version: true` | Default. Renders `v{FlatPack::VERSION}` beside the title. |
 | Header `show_version: false` | Omits the version badge span. |
+| Header `logo:` present | Square mark in the badge slot. Title, collapse toggles, and `show_version` stay. |
 
 ## Example
 
@@ -100,8 +102,21 @@ A product host that should not ship the kit version badge:
 ) %>
 ```
 
+Pass `logo:` as a URL when the host has a square mark. Header shows that mark and omits `brand_abbr`. Blank `logo:` keeps initials. The default `content` block still replaces the whole header.
+
+```erb
+<%= render FlatPack::Sidebar::Header::Component.new(
+  logo: url_for(current_site.logo),
+  brand_abbr: "AC",
+  title: "Acme",
+  show_version: false
+) %>
+```
+
 ## Accessibility
 `FlatPack::Sidebar::Item::Component` sets `aria-current="page"` for active links and sets `aria-label` when rendered in collapsed mode.
+
+A Header `logo:` mark is decorative when `title` is present (`alt=""`, `aria-hidden`). The title names the brand.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).

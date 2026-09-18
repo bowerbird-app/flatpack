@@ -15,6 +15,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.190] - 2026-09-18
+
+### Added
+- `FlatPack::Sidebar::Header::Component` accepts `logo:` (URL string, default `nil`). A present URL renders a square mark in the existing `w-8 h-8` badge via `Avatar` size `:sm` and omits `brand_abbr`. Title, collapse toggles, and `show_version` stay. Blank, `nil`, or an unsafe URL keeps the initials path. The default `content` block still replaces the whole header row.
+
+### Changed
+- Bumped the gem version to `0.1.190`.
+
+### Upgrade notes
+- Omit `logo:` to keep the initials badge.
+- Product hosts pass a square image URL, for example `logo: url_for(site.logo)`, and keep `brand_abbr:` as the fallback. Header shows the mark, not both.
+- Do not put a wide wordmark in `logo:`. The slot stays 32×32.
+- Do not use the Header `content` block for a mark. That block still wipes title, toggles, and version.
+- Redeploy so `meta.gem_version` shows `0.1.190`.
+
 ## [0.1.189] - 2026-09-17
 
 ### Added

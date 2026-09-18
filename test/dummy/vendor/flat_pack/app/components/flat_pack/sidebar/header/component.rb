@@ -4,7 +4,39 @@ module FlatPack
   module Sidebar
     module Header
       class Component < FlatPack::BaseComponent
+        class Badge
+          attr_reader :kind, :value
+
+          def self.resolve(logo:, brand_abbr:)
+            url = normalize_logo(logo)
+            return new(:logo, url) if url
+            return new(:abbr, brand_abbr) if brand_abbr.present?
+
+            new(:empty, nil)
+          end
+
+          def self.normalize_logo(logo)
+            return nil if logo.nil?
+            unless logo.is_a?(String)
+              raise ArgumentError, "logo: must be a URL string"
+            end
+            return nil if logo.blank?
+
+            FlatPack::AttributeSanitizer.sanitize_url(logo)
+          end
+          private_class_method :normalize_logo
+
+          def initialize(kind, value)
+            @kind = kind
+            @value = value
+          end
+
+          private_class_method :new
+        end
+        private_constant :Badge
+
         def initialize(
+          logo: nil,
           brand_abbr: "FP",
           title: "FlatPack",
           subtitle: nil,
@@ -13,11 +45,11 @@ module FlatPack
           **system_arguments
         )
           super(**system_arguments)
-          @brand_abbr = brand_abbr
           @title = title
           @subtitle = subtitle
           @collapsible = collapsible
           @show_version = show_version
+          @badge = Badge.resolve(logo: logo, brand_abbr: brand_abbr)
         end
 
         def call
@@ -45,7 +77,7 @@ module FlatPack
         def render_brand
           content_tag(:div, class: "flex items-center gap-3", data: brand_data_attributes) do
             safe_join([
-              (@brand_abbr.present? ? content_tag(:div, @brand_abbr, class: brand_badge_classes) : nil),
+              render_badge,
               content_tag(:div, class: "flex items-center h-8", data: header_label_data_attributes) do
                 safe_join([
                   content_tag(:div, @title, class: "font-semibold text-sm text-[var(--sidebar-header-text-color)]"),
@@ -54,6 +86,29 @@ module FlatPack
               end
             ].compact)
           end
+        end
+
+        def render_badge
+          case @badge.kind
+          when :logo then render_logo_badge
+          when :abbr then render_abbr_badge
+          when :empty then nil
+          end
+        end
+
+        def render_logo_badge
+          render FlatPack::Avatar::Component.new(
+            src: @badge.value,
+            alt: "",
+            size: :sm,
+            shape: :circle,
+            show_tooltip: false,
+            aria: (@title.present? ? {hidden: true} : {})
+          )
+        end
+
+        def render_abbr_badge
+          content_tag(:div, @badge.value, class: brand_badge_classes)
         end
 
         def sidebar_version_label
