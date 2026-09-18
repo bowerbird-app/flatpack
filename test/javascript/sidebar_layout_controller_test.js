@@ -16,6 +16,7 @@ function loadSidebarLayoutController({ prefersReduced = false, duration = 300, e
     .replace('export default class extends Controller', 'class SidebarLayoutController extends Controller') + '\nmodule.exports = SidebarLayoutController\n'
 
   const timeouts = []
+  const memory = new Map()
   const context = {
     module: { exports: {} },
     exports: {},
@@ -23,6 +24,10 @@ function loadSidebarLayoutController({ prefersReduced = false, duration = 300, e
     document: extras.document || {
       addEventListener() {},
       removeEventListener() {}
+    },
+    sessionStorage: {
+      getItem(key) { return memory.has(key) ? memory.get(key) : null },
+      setItem(key, value) { memory.set(key, String(value)) }
     },
     setTimeout(callback, ms) {
       timeouts.push({ callback, ms })
@@ -191,4 +196,64 @@ test('controller source no longer reflows labels at click time', () => {
   assert.equal(source.includes('delayContentReveal'), false)
   assert.equal(source.includes('setDesktopExpandedContentVisible'), false)
   assert.equal(/setTimeout\(\s*\(\)\s*=>\s*\{[\s\S]*?\},\s*300\s*\)/.test(source), false)
+})
+
+function rect(top, bottom) {
+  return { top, bottom, left: 0, right: 64, height: bottom - top, width: 64 }
+}
+
+function buildScrollController({ itemTop, itemBottom, scrollTop = 80 } = {}) {
+  const { controller, sidebarTarget } = buildDesktopController()
+  const scrollContainer = {
+    scrollTop,
+    getBoundingClientRect() { return rect(100, 500) }
+  }
+  const activeItem = {
+    getBoundingClientRect() { return rect(itemTop, itemBottom) }
+  }
+
+  controller.hasScrollContainerTarget = true
+  controller.scrollContainerTarget = scrollContainer
+  controller.currentScrollContainer = () => scrollContainer
+  controller.element = {
+    querySelector(selector) {
+      if (String(selector).includes('aria-current="page"')) return activeItem
+      return sidebarTarget.querySelector(selector)
+    }
+  }
+
+  return { controller, scrollContainer, activeItem }
+}
+
+test('visible current item does not move the sidebar scroll', () => {
+  const { controller, scrollContainer } = buildScrollController({ itemTop: 220, itemBottom: 260, scrollTop: 80 })
+
+  controller.scrollActiveItemIntoView()
+
+  assert.equal(scrollContainer.scrollTop, 80)
+})
+
+test('current item above the rail nudges just enough to show it', () => {
+  const { controller, scrollContainer } = buildScrollController({ itemTop: 40, itemBottom: 80, scrollTop: 80 })
+
+  controller.scrollActiveItemIntoView()
+
+  assert.equal(scrollContainer.scrollTop, 20)
+})
+
+test('current item below the rail nudges just enough to show it', () => {
+  const { controller, scrollContainer } = buildScrollController({ itemTop: 520, itemBottom: 560, scrollTop: 80 })
+
+  controller.scrollActiveItemIntoView()
+
+  assert.equal(scrollContainer.scrollTop, 140)
+})
+
+test('current item in the middle is not pinned to the top', () => {
+  const { controller, scrollContainer } = buildScrollController({ itemTop: 250, itemBottom: 290, scrollTop: 80 })
+
+  controller.scrollActiveItemIntoView()
+
+  assert.equal(scrollContainer.scrollTop, 80)
+  assert.notEqual(scrollContainer.scrollTop, 80 + (250 - 100))
 })

@@ -23,6 +23,7 @@ module FlatPack
       refute_includes css, "[data-flat-pack--sidebar-layout-target=\"collapsedToggle\"] svg"
       refute_includes controller, "delayContentReveal"
       refute_includes controller, "setDesktopExpandedContentVisible"
+      refute_includes controller, "Align active navigation item to the top"
     end
   end
 end

@@ -79,6 +79,9 @@ This is applied to:
 
 For static/non-interactive collapsed demos (without the layout controller) pass `collapsed: true` to `Sidebar::Item::Component` and `Sidebar::SectionTitle::Component` to render compact icon-only markup server-side.
 
+## Scroll
+The rail keeps its place. Turbo visits restore the last `scrollTop` (and the clicked item's offset) from `sessionStorage`. Refresh does the same on connect. The current item is not pinned to the top. If it is fully in view, the list does not move. If it is clipped or off-screen, the controller nudges just enough to show it.
+
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
 - Responsive drawer/collapse interactions require Stimulus controller `flat-pack--sidebar-layout`.

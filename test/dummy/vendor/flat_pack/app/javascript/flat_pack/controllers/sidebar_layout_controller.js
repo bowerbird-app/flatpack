@@ -506,9 +506,8 @@ export default class extends Controller {
   }
 
   handleTurboLoad() {
-    // activateSidebarNav() in the layout runs on turbo:load and sets aria-current="page".
-    // Calling scrollActiveItemIntoView() here (after that listener) ensures the sidebar
-    // is scrolled to the active item on every navigation and direct page load.
+    // Dummy activateSidebarNav() runs on turbo:load and sets aria-current="page".
+    // Keep the rail where it was; only nudge if that item is now out of view.
     this.scrollActiveItemIntoView()
   }
 
@@ -669,10 +668,16 @@ export default class extends Controller {
     if (!activeItem) return
 
     requestAnimationFrame(() => {
-      // Align active navigation item to the top edge of the scroll container.
       const containerRect = scrollContainer.getBoundingClientRect()
       const itemRect = activeItem.getBoundingClientRect()
-      scrollContainer.scrollTop += itemRect.top - containerRect.top
+
+      if (itemRect.top >= containerRect.top && itemRect.bottom <= containerRect.bottom) return
+
+      if (itemRect.top < containerRect.top) {
+        scrollContainer.scrollTop += itemRect.top - containerRect.top
+      } else if (itemRect.bottom > containerRect.bottom) {
+        scrollContainer.scrollTop += itemRect.bottom - containerRect.bottom
+      }
 
       this.persistScrollState()
     })
