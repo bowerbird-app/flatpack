@@ -78,7 +78,7 @@ module FlatPack
           content_tag(:div, class: "flex items-center gap-3", data: brand_data_attributes) do
             safe_join([
               render_badge,
-              content_tag(:div, class: "flex items-center h-8", data: header_label_data_attributes) do
+              content_tag(:div, class: "flex items-center h-8 fp-sidebar-label", data: header_label_data_attributes) do
                 safe_join([
                   content_tag(:div, @title, class: "font-semibold text-sm text-[var(--sidebar-header-text-color)]"),
                   (@show_version ? content_tag(:span, sidebar_version_label, class: sidebar_version_badge_classes) : nil)

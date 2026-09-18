@@ -408,6 +408,56 @@
     [data-flat-pack-sidebar-collapsed="false"] > aside {
       width: 16rem !important;
     }
+
+    .fp-sidebar-label {
+      white-space: nowrap;
+      min-width: 0;
+      opacity: 1;
+      transition: opacity var(--duration-fast) var(--easing-standard);
+    }
+
+    [data-flat-pack-sidebar-collapsed="true"] .fp-sidebar-label {
+      opacity: 0 !important;
+    }
+
+    [data-flat-pack-sidebar-item="true"],
+    [data-flat-pack-sidebar-section-title="true"] {
+      transition: padding-left var(--duration-slow) var(--easing-standard), padding-right var(--duration-slow) var(--easing-standard);
+    }
+
+    [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"],
+    [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-section-title="true"] {
+      padding-left: 0.25rem;
+      padding-right: 0.25rem;
+      overflow-x: clip;
+    }
+
+    [data-flat-pack--sidebar-group-target="chevron"],
+    [data-flat-pack--sidebar-layout-target="desktopToggle"] {
+      transition: opacity var(--duration-fast) var(--easing-standard), transform var(--duration-slow) var(--easing-standard);
+    }
+
+    [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack--sidebar-group-target="chevron"],
+    [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack--sidebar-layout-target="desktopToggle"] {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack--sidebar-group-target="panel"] {
+      padding-left: 0;
+      transition: padding-left var(--duration-slow) var(--easing-standard);
+    }
+
+    [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack--sidebar-layout-target="footer"] {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--duration-fast) var(--easing-standard);
+    }
+
+    [data-flat-pack-sidebar-collapsed="false"] [data-flat-pack--sidebar-layout-target="footer"] {
+      opacity: 1;
+      transition: opacity var(--duration-fast) var(--easing-standard);
+    }
   }
 
   [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack--sidebar-layout-target="scrollContainer"] {
