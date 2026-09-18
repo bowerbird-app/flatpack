@@ -10,6 +10,7 @@ module FlatPack
           render_inline(Component.new(title: "Getting Started"))
 
           assert_selector "p", text: "Getting Started"
+          assert_selector "p.fp-sidebar-label", text: "Getting Started"
         end
 
         def test_renders_with_expanded_padding_by_default

@@ -68,17 +68,18 @@ Mobile drawer backdrop uses `aria-hidden` and supports Escape to close via contr
 
 ## Collapsed (icon-only) mode
 
-When the sidebar is collapsed the `flat-pack--sidebar-layout` controller applies compact, centered styles to all sidebar items, group buttons, and section titles:
+Desktop collapse is one motion: the rail width eases `16rem` → `4rem` on `--duration-slow` / `--easing-standard` while labels, group chevrons, the header title, and footer fade on `--duration-fast`. Icons stay left-aligned. Labels stay in layout during the motion and are clipped by `overflow-x: hidden`. The controller does not `sr-only` labels, `justify-center` icons, or `hidden` the brand mark at click time.
 
-- `px-4` → `px-1` (reduces horizontal padding to `0.25rem`)
-- `justify-center` added (centers the icon within the row)
-- Labels and group chevrons are visually hidden (`sr-only` / `hidden`)
+After the width transition ends, labels are marked `sr-only` so collapsed tooltips work. Expanding reverses that first, then eases the rail open so text can fade in as there is room. `prefers-reduced-motion: reduce` snaps to the end state (duration tokens are `0ms`).
+
+The brand mark stays visible. The collapsed header control is an invisible hit target over the mark (`aria-label="Open sidebar"`).
 
 This is applied to:
 - Every element with `data-flat-pack-sidebar-item="true"` (`Sidebar::Item::Component` links and `Sidebar::Group::Component` header buttons).
-- Every element with `data-flat-pack-sidebar-section-title="true"` (`Sidebar::SectionTitle::Component` labels) — the px-4/px-1 padding is toggled and a tooltip shows the full label text on hover.
+- Every `.fp-sidebar-label` (item text, group titles, header title, section titles).
+- Every element with `data-flat-pack-sidebar-section-title="true"` — a tooltip shows the full label on hover once the rail is at rest.
 
-For static/non-interactive collapsed demos (without the layout controller) pass `collapsed: true` to `Sidebar::Item::Component` and `Sidebar::SectionTitle::Component` to render the same compact styles server-side.
+For static/non-interactive collapsed demos (without the layout controller) pass `collapsed: true` to `Sidebar::Item::Component` and `Sidebar::SectionTitle::Component` to render compact icon-only markup server-side.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).

@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { prefersReducedMotion, motionDuration } from "controllers/flat_pack/reduced_motion"
 
 export default class extends Controller {
   static targets = ["sidebar", "backdrop", "desktopToggle", "collapsedToggle", "mobileToggle", "headerLabel", "headerBrand", "headerRow", "footer", "scrollContainer"]
@@ -10,6 +11,7 @@ export default class extends Controller {
 
   connect() {
     this.desktopRevealTimeout = null
+    this.desktopTransitionHandler = null
     this.collapsed = false
     this.mobileOpen = false
     this.isMobile = window.innerWidth < 768
@@ -32,7 +34,7 @@ export default class extends Controller {
     if (!this.isMobile) {
       this.sidebarTarget.style.pointerEvents = ""
       this.applySidebarPresentationMode()
-      this.applyDesktopState()
+      this.applyDesktopState({ immediate: true })
     } else {
       this.applySidebarPresentationMode()
       this.sidebarTarget.style.pointerEvents = "none"
@@ -99,7 +101,7 @@ export default class extends Controller {
         // Switched to desktop - apply saved state
         this.applySidebarPresentationMode()
         this.sidebarTarget.style.pointerEvents = ""
-        this.applyDesktopState()
+        this.applyDesktopState({ immediate: true })
       }
     }
   }
@@ -109,7 +111,12 @@ export default class extends Controller {
 
     const opening = this.collapsed
     this.collapsed = !this.collapsed
-    this.applyDesktopState({ delayContentReveal: opening })
+
+    if (opening) {
+      this.clearCollapsedRestState()
+    }
+
+    this.applyDesktopState({ immediate: prefersReducedMotion() })
     this.saveDesktopState()
   }
 
@@ -214,7 +221,7 @@ export default class extends Controller {
     }
   }
 
-  applyDesktopState({ delayContentReveal = false } = {}) {
+  applyDesktopState({ immediate = false } = {}) {
     if (this.isMobile) return
 
     // Width is driven by CSS via the data-flat-pack-sidebar-collapsed attribute
@@ -230,37 +237,7 @@ export default class extends Controller {
       if (sidebarContent) sidebarContent.style.width = "16rem"
     }
 
-    // Update desktop toggle if exists
-    if (this.hasDesktopToggleTarget) {
-      this.desktopToggleTarget.setAttribute("aria-expanded", !this.collapsed)
-      if (this.collapsed) {
-        this.desktopToggleTarget.classList.add("hidden")
-      } else {
-        this.desktopToggleTarget.classList.remove("hidden")
-      }
-      
-      // Update chevron rotation
-      const chevron = this.desktopToggleTarget.querySelector('[data-flat-pack--sidebar-layout-target="chevron"]')
-      if (chevron) {
-        if (this.collapsed) {
-          chevron.style.transform = "rotate(180deg)"
-        } else {
-          chevron.style.transform = "rotate(0deg)"
-        }
-      }
-    }
-
-    // Update collapsed-state toggle visibility
-    if (this.hasCollapsedToggleTarget) {
-      this.collapsedToggleTarget.setAttribute("aria-expanded", this.collapsed ? "false" : "true")
-      if (this.collapsed) {
-        this.collapsedToggleTarget.classList.remove("hidden")
-        this.collapsedToggleTarget.classList.add("flex")
-      } else {
-        this.collapsedToggleTarget.classList.add("hidden")
-        this.collapsedToggleTarget.classList.remove("flex")
-      }
-    }
+    this.syncToggleAria()
 
     this.sidebarTarget.dataset.flatPackSidebarCollapsed = this.collapsed ? "true" : "false"
     if (sidebarContent) {
@@ -268,119 +245,97 @@ export default class extends Controller {
     }
 
     this.updateCollapsedScrollContainerState()
-
     this.clearDesktopRevealTimeout()
 
-    if (this.collapsed) {
-      this.setDesktopExpandedContentVisible(false)
+    if (!this.collapsed) {
+      this.clearCollapsedRestState()
       return
     }
 
-    if (delayContentReveal) {
-      this.setDesktopExpandedContentVisible(false)
-      this.desktopRevealTimeout = setTimeout(() => {
-        if (!this.isMobile && !this.collapsed) {
-          this.setDesktopExpandedContentVisible(true)
-        }
-      }, 300)
+    if (immediate) {
+      this.applyCollapsedRestState()
       return
     }
 
-    this.setDesktopExpandedContentVisible(true)
+    this.scheduleCollapsedRestState()
   }
 
-  setDesktopExpandedContentVisible(visible) {
-    const headerBrands = this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-layout-target="headerBrand"]')
-    headerBrands.forEach(brand => {
-      if (visible) {
-        brand.classList.remove("hidden")
-      } else {
-        brand.classList.add("hidden")
+  syncToggleAria() {
+    if (this.hasDesktopToggleTarget) {
+      this.desktopToggleTarget.setAttribute("aria-expanded", this.collapsed ? "false" : "true")
+      const chevron = this.desktopToggleTarget.querySelector('[data-flat-pack--sidebar-layout-target="chevron"]')
+      if (chevron) {
+        chevron.style.transform = this.collapsed ? "rotate(180deg)" : "rotate(0deg)"
       }
-    })
+    }
 
-    // Only toggle text label spans (avoid containers like .flex-1 overflow-y-auto)
-    const labels = this.sidebarTarget.querySelectorAll("a > span.flex-1, button > span.flex-1")
-    labels.forEach(label => {
-      if (visible) {
-        label.classList.remove("sr-only")
-      } else if (!label.classList.contains("sr-only")) {
+    if (this.hasCollapsedToggleTarget) {
+      this.collapsedToggleTarget.setAttribute("aria-expanded", this.collapsed ? "false" : "true")
+    }
+  }
+
+  scheduleCollapsedRestState() {
+    const sidebarContent = this.sidebarTarget.querySelector("aside")
+    const onEnd = (event) => {
+      if (event.propertyName && event.propertyName !== "width") return
+      if (event.target !== this.sidebarTarget && event.target !== sidebarContent) return
+      this.finishCollapsedRest()
+    }
+
+    this.desktopTransitionHandler = onEnd
+    this.sidebarTarget.addEventListener("transitionend", onEnd)
+    if (sidebarContent) sidebarContent.addEventListener("transitionend", onEnd)
+
+    this.desktopRevealTimeout = setTimeout(() => {
+      this.finishCollapsedRest()
+    }, motionDuration("slow") + 50)
+  }
+
+  finishCollapsedRest() {
+    this.clearDesktopRevealTimeout()
+    if (this.collapsed && !this.isMobile) {
+      this.applyCollapsedRestState()
+    }
+  }
+
+  applyCollapsedRestState() {
+    this.labelNodes().forEach((label) => {
+      if (!label.classList.contains("sr-only")) {
         label.classList.add("sr-only")
+        label.dataset.flatPackSidebarRestHidden = "true"
       }
     })
+    this.setCollapsedToggleButtons(true)
+  }
 
-    const headerLabels = this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-layout-target="headerLabel"]')
-    headerLabels.forEach(label => {
-      if (visible) {
+  clearCollapsedRestState() {
+    this.labelNodes().forEach((label) => {
+      if (label.dataset.flatPackSidebarRestHidden === "true") {
         label.classList.remove("sr-only")
-      } else {
-        label.classList.add("sr-only")
+        delete label.dataset.flatPackSidebarRestHidden
       }
     })
+    this.setCollapsedToggleButtons(false)
+  }
 
-    const footers = this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-layout-target="footer"]')
-    footers.forEach(footer => {
-      if (visible) {
-        footer.classList.remove("hidden")
-      } else {
-        footer.classList.add("hidden")
-      }
-    })
+  setCollapsedToggleButtons(collapsed) {
+    if (this.hasDesktopToggleTarget) {
+      this.desktopToggleTarget.classList.toggle("hidden", collapsed)
+    }
 
-    // Group items are rendered with indent for expanded mode.
-    // Remove that indent in collapsed mode so icons align with top-level items.
-    const groupPanels = this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-group-target="panel"]')
-    groupPanels.forEach(panel => {
-      if (visible) {
-        panel.classList.add("pl-[var(--sidebar-group-item-indent)]")
+    if (this.hasCollapsedToggleTarget) {
+      if (collapsed) {
+        this.collapsedToggleTarget.classList.remove("hidden")
+        this.collapsedToggleTarget.classList.add("flex")
       } else {
-        panel.classList.remove("pl-[var(--sidebar-group-item-indent)]")
+        this.collapsedToggleTarget.classList.add("hidden")
+        this.collapsedToggleTarget.classList.remove("flex")
       }
-    })
+    }
+  }
 
-    // Hide group chevrons when collapsed so only icons remain visible.
-    const groupChevrons = this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-group-target="chevron"]')
-    groupChevrons.forEach(chevron => {
-      if (visible) {
-        chevron.classList.remove("hidden")
-      } else {
-        chevron.classList.add("hidden")
-      }
-    })
-
-    // Adjust item link/button padding and alignment for collapsed (icon-only) mode.
-    const sidebarItemLinks = this.sidebarTarget.querySelectorAll('[data-flat-pack-sidebar-item="true"]')
-    sidebarItemLinks.forEach(item => {
-      if (visible) {
-        item.classList.remove("px-1", "justify-center")
-        item.classList.add("px-4")
-      } else {
-        item.classList.remove("px-4")
-        item.classList.add("px-1", "justify-center")
-      }
-    })
-
-    // Center the header row content when collapsed (icon-only mode).
-    const headerRows = this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-layout-target="headerRow"]')
-    headerRows.forEach(row => {
-      if (visible) {
-        row.classList.remove("justify-center")
-      } else {
-        row.classList.add("justify-center")
-      }
-    })
-
-    // Adjust section title padding for collapsed (icon-only) mode.
-    const sectionTitles = this.sidebarTarget.querySelectorAll('[data-flat-pack-sidebar-section-title="true"]')
-    sectionTitles.forEach(title => {
-      if (visible) {
-        title.classList.remove("px-1")
-        title.classList.add("px-4")
-      } else {
-        title.classList.remove("px-4")
-        title.classList.add("px-1")
-      }
-    })
+  labelNodes() {
+    return this.sidebarTarget.querySelectorAll(".fp-sidebar-label, a > span.flex-1, button > span.flex-1, [data-flat-pack--sidebar-layout-target='headerLabel']")
   }
 
   updateCollapsedScrollContainerState() {
@@ -394,6 +349,15 @@ export default class extends Controller {
     if (this.desktopRevealTimeout) {
       clearTimeout(this.desktopRevealTimeout)
       this.desktopRevealTimeout = null
+    }
+
+    if (this.desktopTransitionHandler && this.hasSidebarTarget) {
+      this.sidebarTarget.removeEventListener("transitionend", this.desktopTransitionHandler)
+      const sidebarContent = this.sidebarTarget.querySelector("aside")
+      if (sidebarContent) {
+        sidebarContent.removeEventListener("transitionend", this.desktopTransitionHandler)
+      }
+      this.desktopTransitionHandler = null
     }
   }
 

@@ -170,6 +170,7 @@ module FlatPack
           classes(
             "flex-1",
             "text-left",
+            "fp-sidebar-label",
             ("sr-only" if @collapsed)
           )
         end

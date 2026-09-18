@@ -184,6 +184,7 @@ module FlatPack
         def text_classes
           classes(
             "flex-1",
+            "fp-sidebar-label",
             ("sr-only" if @collapsed)
           )
         end

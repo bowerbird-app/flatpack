@@ -14,6 +14,7 @@ module FlatPack
         def test_renders_header_button
           render_inline(Component.new(title: "More"))
           assert_selector "button", text: "More"
+          assert_selector "span.fp-sidebar-label", text: "More"
         end
 
         def test_renders_with_icon

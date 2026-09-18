@@ -53,6 +53,16 @@
 		[data-flat-pack-sidebar-collapsed="false"] > aside {
 			width: 16rem !important;
 		}
+
+		[data-flat-pack-sidebar-collapsed="true"],
+		[data-flat-pack-sidebar-collapsed="false"] {
+			overflow-x: hidden;
+		}
+
+		[data-flat-pack-sidebar-collapsed="true"] > aside,
+		[data-flat-pack-sidebar-collapsed="false"] > aside {
+			overflow-x: hidden;
+		}
 	}
 
 	.fp-scrollbar-hidden {
