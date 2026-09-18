@@ -102,6 +102,62 @@
 </section>
 
 <section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Square mark", anchor_link: true) %>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="rounded-lg overflow-hidden h-80">
+      <%= render FlatPack::Sidebar::Component.new(class: "border border-[var(--surface-border-color)] rounded-lg") do |sidebar| %>
+        <% sidebar.header do %>
+          <%= render FlatPack::Sidebar::Header::Component.new(
+            logo: image_path("sidebar_brand_mark.svg"),
+            brand_abbr: "AC",
+            title: "Acme",
+            show_version: false,
+            collapsible: false
+          ) %>
+        <% end %>
+
+        <% sidebar.items do %>
+          <nav class="py-4 space-y-1">
+            <%= render FlatPack::Sidebar::Item::Component.new(text: "Dashboard", href: "#", icon: :home, active: true) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(text: "Orders", href: "#", icon: :box) %>
+            <%= render FlatPack::Sidebar::Item::Component.new(text: "Customers", href: "#", icon: :user) %>
+          </nav>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;div class=&quot;rounded-lg overflow-hidden h-80&quot;&gt;
+        &lt;%= render FlatPack::Sidebar::Component.new(class: &quot;border border-[var(--surface-border-color)] rounded-lg&quot;) do |sidebar| %&gt;
+          &lt;% sidebar.header do %&gt;
+            &lt;%= render FlatPack::Sidebar::Header::Component.new(
+              logo: image_path(&quot;sidebar_brand_mark.svg&quot;),
+              brand_abbr: &quot;AC&quot;,
+              title: &quot;Acme&quot;,
+              show_version: false,
+              collapsible: false
+            ) %&gt;
+          &lt;% end %&gt;
+  
+          &lt;% sidebar.items do %&gt;
+            &lt;nav class=&quot;py-4 space-y-1&quot;&gt;
+              &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Dashboard&quot;, href: &quot;#&quot;, icon: :home, active: true) %&gt;
+              &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Orders&quot;, href: &quot;#&quot;, icon: :box) %&gt;
+              &lt;%= render FlatPack::Sidebar::Item::Component.new(text: &quot;Customers&quot;, href: &quot;#&quot;, icon: :user) %&gt;
+            &lt;/nav&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      &lt;/div&gt;
+    CODE
+    language: "erb",
+    title: "Square mark"
+  ) %>
+</section>
+
+<section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Without the version badge", anchor_link: true) %>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
