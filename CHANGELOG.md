@@ -26,13 +26,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Clicking a sidebar item marks it current immediately (active paint and `aria-current`) instead of waiting for the next page render.
 - Long-menu scroll is restored after sidebar groups apply their open state, so Turbo visits no longer snap a scrolled rail back to the top.
 - Collapsed rest state no longer `sr-only`s section titles, so title space stays in flow and item/icon row height does not jump.
+- Closing the sidebar no longer restyles icons when the width transition ends. Labels shrink and icons ease to center on `--duration-slow`, so the rail does not shudder into a second pose.
 
 ### Upgrade notes
 - No host markup change. Upgrade the gem so `meta.gem_version` shows `0.1.191`.
 - Closed rest state is still hamburger + 4rem icon rail. Do not hide the menu icon behind the brand mark.
 - Live collapse is CSS on `data-flat-pack-sidebar-collapsed`. Do not `sr-only` labels or `justify-center` icons at click time; wait for the width transition to end.
 - Do not scroll the current sidebar item to the top on load. Restore the last rail position; only move if that item is out of view.
-- Restore sidebar scroll after groups have applied open state. Do not `sr-only` section titles in the collapsed rest state; fade them and leave the block in flow.
+- Restore sidebar scroll after groups have applied open state. Do not `sr-only` section titles in the collapsed state; fade them and leave the block in flow.
+- Do not restyle sidebar icons when the width transition ends. Center them with the width ease.
 - Clicking a sidebar item should mark it current in the kit. Dummy chrome also clears previous items on `turbo:load`.
 - Static demos can still pass `collapsed: true` on Item / Section Title / Group for a server-rendered icon-only snapshot.
 - `prefers-reduced-motion: reduce` snaps width and opacity (duration tokens are `0ms`).

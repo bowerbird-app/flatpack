@@ -4,14 +4,14 @@ const fs = require('node:fs')
 const path = require('node:path')
 const vm = require('node:vm')
 
-function loadSidebarLayoutController({ prefersReduced = false, duration = 300, extras = {} } = {}) {
+function loadSidebarLayoutController({ prefersReduced = false, extras = {} } = {}) {
   const filePath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'controllers', 'sidebar_layout_controller.js')
   const source = fs.readFileSync(filePath, 'utf8')
   const transformedSource = source
     .replace('import { Controller } from "@hotwired/stimulus"', 'class Controller {}')
     .replace(
-      'import { prefersReducedMotion, motionDuration } from "controllers/flat_pack/reduced_motion"',
-      `function prefersReducedMotion() { return ${prefersReduced ? 'true' : 'false'} }\nfunction motionDuration() { return ${duration} }`
+      'import { prefersReducedMotion } from "controllers/flat_pack/reduced_motion"',
+      `function prefersReducedMotion() { return ${prefersReduced ? 'true' : 'false'} }`
     )
     .replace('export default class extends Controller', 'class SidebarLayoutController extends Controller') + '\nmodule.exports = SidebarLayoutController\n'
 
@@ -154,45 +154,42 @@ test('collapse does not sr-only labels or center icons at click time', () => {
   assert.equal(label.dataset.flatPackSidebarRestHidden, undefined)
   assert.equal(item.classList.contains('justify-center'), false)
   assert.equal(item.classList.contains('px-4'), true)
-  assert.ok(timeouts.length > 0)
+  assert.equal(timeouts.length, 0)
 })
 
-test('collapse rest state compact-centers icons after the width transition', () => {
+test('width end does not restyle icons or labels', () => {
   const { controller, label, item, timeouts } = buildDesktopController()
 
   controller.toggleDesktop()
-  timeouts[0].callback()
 
-  assert.equal(label.classList.contains('sr-only'), true)
-  assert.equal(label.dataset.flatPackSidebarRestHidden, 'true')
-  assert.equal(item.classList.contains('justify-center'), true)
-  assert.equal(item.classList.contains('px-1'), true)
-  assert.equal(item.classList.contains('px-4'), false)
+  assert.equal(timeouts.length, 0)
+  assert.equal(label.classList.contains('sr-only'), false)
+  assert.equal(item.classList.contains('justify-center'), false)
+  assert.equal(item.classList.contains('px-4'), true)
 })
 
-test('expand restores labels before the rail opens', () => {
+test('expand restores the brand before the rail opens', () => {
   const { controller, label, item, brand, sidebarTarget, collapsedToggleTarget } = buildDesktopController({ prefersReduced: true, duration: 0 })
 
   controller.toggleDesktop()
-  assert.equal(label.classList.contains('sr-only'), true)
-  assert.equal(item.classList.contains('justify-center'), true)
+  assert.equal(label.classList.contains('sr-only'), false)
+  assert.equal(item.classList.contains('justify-center'), false)
 
   controller.toggleDesktop()
   assert.equal(sidebarTarget.dataset.flatPackSidebarCollapsed, 'false')
   assert.equal(label.classList.contains('sr-only'), false)
   assert.equal(item.classList.contains('justify-center'), false)
-  assert.equal(item.classList.contains('px-4'), true)
   assert.equal(brand.classList.contains('hidden'), false)
   assert.equal(collapsedToggleTarget.classList.contains('hidden'), true)
 })
 
-test('reduced motion applies rest state immediately', () => {
+test('reduced motion does not schedule a layout restyle', () => {
   const { controller, label, item, timeouts } = buildDesktopController({ prefersReduced: true, duration: 0 })
 
   controller.toggleDesktop()
 
-  assert.equal(label.classList.contains('sr-only'), true)
-  assert.equal(item.classList.contains('justify-center'), true)
+  assert.equal(label.classList.contains('sr-only'), false)
+  assert.equal(item.classList.contains('justify-center'), false)
   assert.equal(timeouts.length, 0)
 })
 
@@ -267,13 +264,12 @@ test('current item in the middle is not pinned to the top', () => {
   assert.notEqual(scrollContainer.scrollTop, 80 + (250 - 100))
 })
 
-test('collapse rest state does not sr-only section titles', () => {
-  const { controller, label, sectionLabel, timeouts } = buildDesktopController()
+test('collapse does not sr-only section titles', () => {
+  const { controller, label, sectionLabel } = buildDesktopController()
 
   controller.toggleDesktop()
-  timeouts[0].callback()
 
-  assert.equal(label.classList.contains('sr-only'), true)
+  assert.equal(label.classList.contains('sr-only'), false)
   assert.equal(sectionLabel.classList.contains('sr-only'), false)
 })
 

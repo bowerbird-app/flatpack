@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-import { prefersReducedMotion, motionDuration } from "controllers/flat_pack/reduced_motion"
+import { prefersReducedMotion } from "controllers/flat_pack/reduced_motion"
 
 export default class extends Controller {
   static targets = ["sidebar", "backdrop", "desktopToggle", "collapsedToggle", "mobileToggle", "headerLabel", "headerBrand", "headerRow", "footer", "scrollContainer"]
@@ -10,8 +10,6 @@ export default class extends Controller {
   }
 
   connect() {
-    this.desktopRevealTimeout = null
-    this.desktopTransitionHandler = null
     this.collapsed = false
     this.mobileOpen = false
     this.isMobile = window.innerWidth < 768
@@ -65,7 +63,6 @@ export default class extends Controller {
   }
 
   disconnect() {
-    this.clearDesktopRevealTimeout()
     window.removeEventListener("resize", this.handleResize)
     document.removeEventListener("turbo:before-cache", this.handleTurboBeforeCache)
     document.removeEventListener("turbo:before-render", this.handleTurboBeforeRender)
@@ -213,7 +210,7 @@ export default class extends Controller {
     }
   }
 
-  applyDesktopState({ immediate = false } = {}) {
+  applyDesktopState() {
     if (this.isMobile) return
 
     // Width is driven by CSS via the data-flat-pack-sidebar-collapsed attribute
@@ -237,7 +234,6 @@ export default class extends Controller {
     }
 
     this.updateCollapsedScrollContainerState()
-    this.clearDesktopRevealTimeout()
 
     if (!this.collapsed) {
       this.clearCollapsedRestState()
@@ -245,13 +241,6 @@ export default class extends Controller {
     }
 
     this.applyCollapsedHeaderChrome()
-
-    if (immediate) {
-      this.applyCollapsedRestState()
-      return
-    }
-
-    this.scheduleCollapsedRestState()
   }
 
   syncToggleAria() {
@@ -268,72 +257,11 @@ export default class extends Controller {
     }
   }
 
-  scheduleCollapsedRestState() {
-    const sidebarContent = this.sidebarTarget.querySelector("aside")
-    const onEnd = (event) => {
-      if (event.propertyName && event.propertyName !== "width") return
-      if (event.target !== this.sidebarTarget && event.target !== sidebarContent) return
-      this.finishCollapsedRest()
-    }
-
-    this.desktopTransitionHandler = onEnd
-    this.sidebarTarget.addEventListener("transitionend", onEnd)
-    if (sidebarContent) sidebarContent.addEventListener("transitionend", onEnd)
-
-    this.desktopRevealTimeout = setTimeout(() => {
-      this.finishCollapsedRest()
-    }, motionDuration("slow") + 50)
-  }
-
-  finishCollapsedRest() {
-    this.clearDesktopRevealTimeout()
-    if (this.collapsed && !this.isMobile) {
-      this.applyCollapsedRestState()
-    }
-  }
-
   applyCollapsedHeaderChrome() {
     this.headerBrandNodes().forEach((brand) => {
       brand.classList.add("hidden")
     })
     this.setCollapsedToggleButtons(true)
-  }
-
-  applyCollapsedRestState() {
-    this.labelNodes().forEach((label) => {
-      if (!label.classList.contains("sr-only")) {
-        label.classList.add("sr-only")
-        label.dataset.flatPackSidebarRestHidden = "true"
-      }
-    })
-
-    this.itemNodes().forEach((item) => {
-      item.classList.remove("px-4")
-      item.classList.add("px-1", "justify-center")
-    })
-
-    this.sectionTitleNodes().forEach((title) => {
-      title.classList.remove("px-4")
-      title.classList.add("px-1")
-    })
-
-    this.groupPanelNodes().forEach((panel) => {
-      panel.classList.remove("pl-[var(--sidebar-group-item-indent)]")
-    })
-
-    this.groupChevronNodes().forEach((chevron) => {
-      chevron.classList.add("hidden")
-    })
-
-    this.footerNodes().forEach((footer) => {
-      footer.classList.add("hidden")
-    })
-
-    this.headerRowNodes().forEach((row) => {
-      row.classList.add("justify-center")
-    })
-
-    this.applyCollapsedHeaderChrome()
   }
 
   clearCollapsedRestState() {
@@ -442,22 +370,6 @@ export default class extends Controller {
     if (!scrollContainer) return
 
     scrollContainer.classList.toggle("fp-scrollbar-hidden", this.collapsed)
-  }
-
-  clearDesktopRevealTimeout() {
-    if (this.desktopRevealTimeout) {
-      clearTimeout(this.desktopRevealTimeout)
-      this.desktopRevealTimeout = null
-    }
-
-    if (this.desktopTransitionHandler && this.hasSidebarTarget) {
-      this.sidebarTarget.removeEventListener("transitionend", this.desktopTransitionHandler)
-      const sidebarContent = this.sidebarTarget.querySelector("aside")
-      if (sidebarContent) {
-        sidebarContent.removeEventListener("transitionend", this.desktopTransitionHandler)
-      }
-      this.desktopTransitionHandler = null
-    }
   }
 
   applySidebarPresentationMode() {

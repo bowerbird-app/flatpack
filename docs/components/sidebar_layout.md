@@ -68,13 +68,13 @@ Mobile drawer backdrop uses `aria-hidden` and supports Escape to close via contr
 
 ## Collapsed (icon-only) mode
 
-Desktop collapse is one motion: the rail width eases `16rem` → `4rem` on `--duration-slow` / `--easing-standard` while labels fade on `--duration-fast`. Item padding eases to `px-1` with the width so the active pill shrinks with the rail. Labels stay in layout during the motion and are clipped on the item (`overflow-x: clip`), not on the rail (that extra `overflow-x: hidden` put a scrollbar on the column).
+Desktop collapse is one motion: the rail width eases `16rem` → `4rem` on `--duration-slow` / `--easing-standard` while labels fade on `--duration-fast` and shrink to zero width on `--duration-slow`. Icons ease to the center of the rail on that same width curve (`margin-left`). Item padding and gap ease with the width. Nothing restyles the row when the width transition ends, so the close does not shudder.
 
-The closed rest state is unchanged from before this motion work: hamburger (`aria-label="Open sidebar"`), brand mark hidden, icons compact-centered, 4rem rail. The controller waits until the width transition ends before `sr-only` and `justify-center`. Expanding restores that chrome first, then eases the rail open. `prefers-reduced-motion: reduce` snaps to the end state (duration tokens are `0ms`).
+The closed look is the hamburger (`aria-label="Open sidebar"`), hidden brand mark, centered icons, and a 4rem rail. Expanding restores the brand and hamburger first, then eases the rail open. `prefers-reduced-motion: reduce` snaps to the end state (duration tokens are `0ms`).
 
 This is applied to:
 - Every element with `data-flat-pack-sidebar-item="true"` (`Sidebar::Item::Component` links and `Sidebar::Group::Component` header buttons).
-- Item, group, and header `.fp-sidebar-label` text. Section titles keep the same class so they fade with the rail, but they are not `sr-only`'d — the title block stays in flow so item/icon row height does not jump.
+- Item, group, and header `.fp-sidebar-label` text shrinks with the rail. Section titles fade and keep their block height so item/icon row height does not jump.
 - Every element with `data-flat-pack-sidebar-section-title="true"` — a tooltip shows the full label on hover once the rail is at rest.
 
 For static/non-interactive collapsed demos (without the layout controller) pass `collapsed: true` to `Sidebar::Item::Component` and `Sidebar::SectionTitle::Component` to render compact icon-only markup server-side.
