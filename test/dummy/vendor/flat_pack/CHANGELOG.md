@@ -15,6 +15,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.192] - 2026-09-22
+
+### Changed
+- The default rounded sidebar matches the page. `--sidebar-background-color` is `var(--surface-page-background-color)` (`#f8f9fa`). The header follows that token. Dark and ocean keep their own sidebar fills.
+- Bumped the gem version to `0.1.192`.
+
+### Upgrade notes
+- Hosts that want the previous white rail set `--sidebar-background-color: oklch(1 0 0)` after FlatPack CSS. Do not put that assignment on `[data-theme="rounded"]`. That block stays empty.
+- Dark and ocean sidebar colors are unchanged.
+- Redeploy so `meta.gem_version` shows `0.1.192`.
+
 ## [0.1.191] - 2026-09-18
 
 ### Changed

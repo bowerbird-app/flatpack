@@ -46,6 +46,8 @@ module FlatPack
       assert_match(/--icon-stroke-width:\s*1\.5/, root_block)
       assert_match(/--surface-border-color:\s*#d1d5db/, root_block)
       assert_match(/--sidebar-border-color:\s*var\(--surface-border-color\)/, root_block)
+      assert_match(/--sidebar-background-color:\s*var\(--surface-page-background-color\)/, root_block)
+      refute_match(/--sidebar-background-color:\s*oklch\(1\.0 0 0\)/, root_block)
       assert_match(/--fp-button-background:\s*var\(--button-default-background-color\)/, root_block)
 
       root_block.scan(/^\s*(--[a-z0-9-]+)\s*:\s*(.+);$/).each do |name, value|
@@ -113,6 +115,8 @@ module FlatPack
       refute_includes ocean_block, "--button-primary-background-color"
       assert_includes dark_block, "--color-primary"
       assert_includes ocean_block, "--color-primary"
+      assert_match(/--sidebar-background-color:\s*oklch\(0\.17 0\.01 250\)/, dark_block)
+      assert_match(/--sidebar-background-color:\s*oklch\(0\.96 0\.02 220\)/, ocean_block)
     end
 
     test "chrome greys alias surface tokens so named themes inherit" do
