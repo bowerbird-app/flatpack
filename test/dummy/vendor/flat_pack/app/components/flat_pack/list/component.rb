@@ -73,7 +73,7 @@ module FlatPack
         classes(
           "flat-pack-list",
           (@spacing == :dense) ? "space-y-1" : "space-y-3",
-          ("divide-y divide-[var(--surface-border-color)]" if @divider)
+          ("flat-pack-list-divided" if @divider)
         )
       end
 

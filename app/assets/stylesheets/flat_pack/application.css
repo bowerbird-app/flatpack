@@ -825,6 +825,23 @@ ol.flat-pack-list {
   list-style: none;
 }
 
+/* Row radius must not bend the separator. A 1px rule stays square on every theme. */
+.flat-pack-list.flat-pack-list-divided > li + li {
+  position: relative;
+}
+
+.flat-pack-list.flat-pack-list-divided > li + li::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background-color: var(--surface-border-color);
+  border-radius: 0;
+  pointer-events: none;
+}
+
 ol.flat-pack-list > li {
   counter-increment: flat-pack-list-item;
 }

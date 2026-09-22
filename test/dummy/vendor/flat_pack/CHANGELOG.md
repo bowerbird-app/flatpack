@@ -15,6 +15,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.193] - 2026-09-22
+
+### Fixed
+- List `divider: true` draws a straight 1px rule. The row's `--radius-sm` no longer bends the ends on the rounded theme.
+
+### Changed
+- Bumped the gem version to `0.1.193`.
+
+### Upgrade notes
+- Divided lists no longer use `divide-y`. The separator is `.flat-pack-list-divided > li + li::before`, with `border-radius: 0`.
+- Do not put the row radius on that rule. Redeploy so `meta.gem_version` shows `0.1.193`.
+
 ## [0.1.192] - 2026-09-22
 
 ### Changed

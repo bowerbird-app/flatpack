@@ -48,6 +48,25 @@ module FlatPack
         assert_selector "[data-testid='my-list']"
       end
 
+      def test_divider_uses_a_straight_rule
+        render_inline(Component.new(divider: true)) { "content" }
+
+        assert_selector "ul.flat-pack-list.flat-pack-list-divided"
+        refute_includes page.native.to_html, "divide-y"
+      end
+
+      def test_divider_rule_css_stays_square_and_unlayered
+        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+        layer_end = layered_components_end_index(css)
+        rule = css[/^\.flat-pack-list\.flat-pack-list-divided > li \+ li::before \{.*?\n\}/m]
+
+        refute_nil rule
+        assert_operator css.index(rule), :>, layer_end
+        assert_includes rule, "height: 1px;"
+        assert_includes rule, "background-color: var(--surface-border-color);"
+        assert_includes rule, "border-radius: 0;"
+      end
+
       def test_renders_dense_spacing
         render_inline(Component.new(spacing: :dense)) { "content" }
         assert_includes page.native.to_html, "space-y-1"
