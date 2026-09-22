@@ -15,6 +15,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.194] - 2026-09-22
+
+### Fixed
+- Checkbox, RadioGroup, and Picker list checkboxes use theme CSS vars for checked paint (`accent-[var(--color-primary)]`, `checked:bg-[var(--color-primary)]`, `checked:border-[var(--color-primary)]`, `checked:text-[var(--color-primary-text)]`) instead of bare Tailwind `*-primary` utilities that stayed blue across themes.
+
+### Changed
+- Bumped the gem version to `0.1.194`.
+
+### Upgrade notes
+- Rebuild host Tailwind (or reload kit CSS) so the new arbitrary-value classes are generated. `stylesheet_link_tag` hosts that already ship FlatPack CSS pick the class strings up on reload after the gem upgrade.
+- Checked checkboxes and radios follow `--color-primary` / `--color-primary-text` per theme. Do not rely on Tailwind's default `primary` palette for these controls.
+- Redeploy so `meta.gem_version` shows `0.1.194`.
+
 ## [0.1.193] - 2026-09-22
 
 ### Fixed

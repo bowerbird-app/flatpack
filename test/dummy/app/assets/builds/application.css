@@ -1417,11 +1417,6 @@
       border-color: var(--card-border-color);
     }
   }
-  .divide-\[var\(--surface-border-color\)\] {
-    :where(& > :not(:last-child)) {
-      border-color: var(--surface-border-color);
-    }
-  }
   .divide-\[var\(--table-row-divider-color\)\] {
     :where(& > :not(:last-child)) {
       border-color: var(--table-row-divider-color);
@@ -3712,6 +3707,21 @@
   .last\:pb-0 {
     &:last-child {
       padding-bottom: calc(var(--spacing) * 0);
+    }
+  }
+  .checked\:border-\[var\(--color-primary\)\] {
+    &:checked {
+      border-color: var(--color-primary);
+    }
+  }
+  .checked\:bg-\[var\(--color-primary\)\] {
+    &:checked {
+      background-color: var(--color-primary);
+    }
+  }
+  .checked\:text-\[var\(--color-primary-text\)\] {
+    &:checked {
+      color: var(--color-primary-text);
     }
   }
   .focus-within\:\!z-\[999\] {
