@@ -3,6 +3,8 @@
 ## Purpose
 Provide a composable sidebar container with optional header, items area, and footer regions.
 
+The shell fill is `--sidebar-background-color`. On the default rounded palette that token is the page background, so the rail matches the page. The header fill is `--sidebar-header-background-color`, which aliases the sidebar token. Dark and ocean set their own sidebar fill.
+
 ## When to use
 Use Sidebar in application shells that need persistent navigation and grouped links.
 

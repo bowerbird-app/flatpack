@@ -870,7 +870,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --tooltip-radius: var(--radius-sm);
   --tooltip-font-size: 0.875rem;
   --tooltip-max-width: 20rem;
-  --sidebar-background-color: oklch(1.0 0 0);
+  --sidebar-background-color: var(--surface-page-background-color);
   --sidebar-border-color: var(--surface-border-color);
   --sidebar-divider-color: var(--surface-border-color);
   --sidebar-item-text-color: var(--surface-muted-content-color);
