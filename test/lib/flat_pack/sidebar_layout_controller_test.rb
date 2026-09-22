@@ -12,6 +12,13 @@ module FlatPack
       assert status.success?, stdout
     end
 
+    test "collapsed icon tooltips follow the rail instead of sr-only" do
+      test_file = FlatPack::Engine.root.join("test/javascript/tooltip_controller_test.js")
+      stdout, status = Open3.capture2e("node", "--test", test_file.to_s)
+
+      assert status.success?, stdout
+    end
+
     test "kit CSS fades sidebar labels without overlaying the hamburger" do
       css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
       controller = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/sidebar_layout_controller.js").read

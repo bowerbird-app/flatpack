@@ -75,7 +75,7 @@ The closed look is the hamburger (`aria-label="Open sidebar"`), hidden brand mar
 This is applied to:
 - Every element with `data-flat-pack-sidebar-item="true"` (`Sidebar::Item::Component` links and `Sidebar::Group::Component` header buttons).
 - Item, group, and header `.fp-sidebar-label` text shrinks with the rail. Section titles fade and keep their block height so item/icon row height does not jump.
-- Every element with `data-flat-pack-sidebar-section-title="true"` — a tooltip shows the full label on hover once the rail is at rest.
+- Every element with `data-flat-pack-sidebar-section-title="true"`, and each icon row — a tooltip shows the full label on hover while `data-flat-pack-sidebar-collapsed` is `true`. The tip does not wait for an `sr-only` label.
 
 For static/non-interactive collapsed demos (without the layout controller) pass `collapsed: true` to `Sidebar::Item::Component` and `Sidebar::SectionTitle::Component` to render compact icon-only markup server-side.
 
