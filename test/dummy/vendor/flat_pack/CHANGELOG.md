@@ -15,6 +15,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.195] - 2026-09-22
+
+### Fixed
+- Top nav side padding stays at least `1rem`. `.fp-top-nav` is unlayered, so host Tailwind preflight (`* { padding: 0 }` in `@layer base`) no longer wipes it when Flatpack CSS is linked first.
+
+### Changed
+- Bumped the gem version to `0.1.195`.
+
+### Upgrade notes
+- No host markup change. The bar inset is `max(1rem, env(safe-area-inset-*))` on each side.
+- Do not move `.fp-top-nav` back into `@layer components`. Redeploy so `meta.gem_version` shows `0.1.195`.
+
 ## [0.1.194] - 2026-09-22
 
 ### Fixed
