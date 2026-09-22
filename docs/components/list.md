@@ -17,7 +17,7 @@ Use List when grouped items need consistent spacing and optional active-item sel
 |---|---|---|---|---|
 | `ordered` | Boolean | `false` | no | Renders `<ol>` when true, otherwise `<ul>`. Ordered lists show decimal markers via a kit slot. |
 | `spacing` | Symbol | `:comfortable` | no | Vertical spacing preset; `:dense` uses tighter spacing, other values use comfortable spacing. |
-| `divider` | Boolean | `false` | no | Adds row separators using `divide-y`. |
+| `divider` | Boolean | `false` | no | Adds a straight 1px rule between rows. The rule does not follow the row's corner radius. |
 | `selectable` | Boolean | `false` | no | Enables active-item behavior via `flat-pack--list-selectable`. |
 | `orderable` | Boolean | `false` | no | Enables drag-and-drop reordering via `flat-pack--list-orderable`. |
 | `orderable_url` | String | `nil` | no | PATCH/PUT endpoint used to persist the new item position after drop. |
@@ -49,6 +49,8 @@ None.
 - Orderable behavior via `orderable: true` and `orderable_url:`.
 
 Ordered markers use `--list-marker-color`, `--list-marker-min-width`, and `--list-marker-gap`. Leading icons use `--surface-content-color` via `.flat-pack-list-item-icon` so they stay visible next to the number.
+
+`divider: true` draws `.flat-pack-list-divided` rules with `border-radius: 0`. Rows may still use `--radius-sm`. That radius must not bend the rule.
 
 ## Example
 ```erb
