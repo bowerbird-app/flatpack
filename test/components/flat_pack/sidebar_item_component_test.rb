@@ -10,6 +10,7 @@ module FlatPack
           render_inline(Component.new(text: "Dashboard", href: "/demo"))
 
           assert_selector "a[href='/demo']", text: "Dashboard"
+          assert_selector "span.fp-sidebar-label", text: "Dashboard"
         end
 
         def test_renders_active_state_with_aria_current

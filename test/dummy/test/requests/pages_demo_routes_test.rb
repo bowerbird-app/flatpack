@@ -354,6 +354,16 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "plus"
   end
 
+  test "demo shell keeps sidebar current item and scroll across visits" do
+    get "/demo/sidebar/collapsible"
+
+    assert_response :success
+    assert_includes response.body, 'id="dummy-demo-sidebar"'
+    assert_includes response.body, "data-turbo-permanent"
+    assert_includes response.body, "function clearSidebarNav()"
+    assert_includes response.body, "link.removeAttribute('aria-current')"
+  end
+
   test "comments demo renders rich text composer examples" do
     get "/demo/comments"
 

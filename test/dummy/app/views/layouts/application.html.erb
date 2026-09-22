@@ -10,19 +10,50 @@
     <%= javascript_importmap_tags %>
     <script>
       // Activate the sidebar nav item matching the current URL.
-      // Runs on every Turbo navigation (turbo:load). Registered once here in
-      // <head> so Turbo Drive does not re-register it on subsequent navigations.
+      // The kit marks the clicked item current immediately. This pass runs on
+      // turbo:load so command-palette / address-bar visits still light the
+      // matching item, and so a remounted rail (all items inactive in the
+      // cached shell) is corrected after navigation. Registered once in
+      // <head> so Turbo Drive does not re-register it.
       (function () {
+        var inactiveLinkClasses = [
+          'text-[var(--sidebar-item-text-color)]',
+          'hover:bg-[var(--sidebar-item-hover-background-color)]',
+          'hover:text-[var(--sidebar-item-hover-text-color)]'
+        ];
+        var activeLinkClasses = [
+          'bg-[var(--sidebar-item-active-background-color)]',
+          'text-[var(--sidebar-item-active-text-color)]'
+        ];
+        var inactiveIconClass = 'text-[var(--sidebar-item-icon-color)]';
+        var activeIconClass = 'text-[var(--sidebar-item-active-icon-color)]';
+
+        function navItems() {
+          return document.querySelectorAll('a[data-flat-pack-sidebar-item="true"]');
+        }
+
+        function clearSidebarNav() {
+          navItems().forEach(function (link) {
+            link.classList.remove.apply(link.classList, activeLinkClasses);
+            link.classList.add.apply(link.classList, inactiveLinkClasses);
+            link.removeAttribute('aria-current');
+
+            var iconEl = link.querySelector('[data-flat-pack-sidebar-item-icon="true"]');
+            if (!iconEl) return;
+
+            iconEl.classList.remove(activeIconClass);
+            iconEl.classList.add(inactiveIconClass);
+          });
+        }
+
         function activateSidebarNav() {
           var path = window.location.pathname;
-
-          // Find the item whose stripped href is the longest prefix of (or exact
-          // match to) the current pathname — this avoids false positives from
-          // short paths like "/demo" matching every "/demo/*" page.
           var bestLink = null;
           var bestLen  = 0;
 
-          document.querySelectorAll('[data-flat-pack-sidebar-item="true"]').forEach(function (link) {
+          // Longest href prefix of the current path, so "/demo" does not
+          // match every "/demo/*" page.
+          navItems().forEach(function (link) {
             var href = link.getAttribute('href');
             if (!href) return;
             var hrefPath = href.split('?')[0].split('#')[0];
@@ -34,30 +65,19 @@
             }
           });
 
+          clearSidebarNav();
           if (!bestLink) return;
 
-          // Swap inactive → active CSS classes on the link element
-          bestLink.classList.remove(
-            'text-[var(--sidebar-item-text-color)]',
-            'hover:bg-[var(--sidebar-item-hover-background-color)]',
-            'hover:text-[var(--sidebar-item-hover-text-color)]'
-          );
-          bestLink.classList.add(
-            'bg-[var(--sidebar-item-active-background-color)]',
-            'text-[var(--sidebar-item-active-text-color)]'
-          );
+          bestLink.classList.remove.apply(bestLink.classList, inactiveLinkClasses);
+          bestLink.classList.add.apply(bestLink.classList, activeLinkClasses);
           bestLink.setAttribute('aria-current', 'page');
 
-          // Swap inactive → active CSS class on the icon wrapper
           var iconEl = bestLink.querySelector('[data-flat-pack-sidebar-item-icon="true"]');
           if (iconEl) {
-            iconEl.classList.remove('text-[var(--sidebar-item-icon-color)]');
-            iconEl.classList.add('text-[var(--sidebar-item-active-icon-color)]');
+            iconEl.classList.remove(inactiveIconClass);
+            iconEl.classList.add(activeIconClass);
           }
 
-          // Open the nearest parent sidebar group if it is currently collapsed.
-          // Clicking the toggle button also persists open state to localStorage,
-          // so subsequent visits to pages in the same group stay open.
           var groupEl = bestLink.closest('[data-controller*="flat-pack--sidebar-group"]');
           if (groupEl) {
             var btn = groupEl.querySelector('[data-flat-pack--sidebar-group-target="button"]');
@@ -82,7 +102,8 @@
       storage_key: "flatpack-dummy-shell"
     ) do |layout| %>
       <% layout.sidebar do %>
-        <% cache ["dummy/sidebar-shell-v4", FlatPack::VERSION, sidebar_side, user_signed_in?] do %>
+        <div id="dummy-demo-sidebar" data-turbo-permanent class="h-full min-h-0">
+        <% cache ["dummy/sidebar-shell-v5", FlatPack::VERSION, sidebar_side, user_signed_in?] do %>
           <%= render FlatPack::Sidebar::Component.new(side: sidebar_side) do |sidebar| %>
           <% sidebar.header do %>
             <%= render FlatPack::Sidebar::Header::Component.new(
@@ -106,6 +127,7 @@
 
           <% end %>
         <% end %>
+        </div>
       <% end %>
 
       <% layout.top_nav do %>

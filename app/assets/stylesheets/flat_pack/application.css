@@ -408,6 +408,107 @@
     [data-flat-pack-sidebar-collapsed="false"] > aside {
       width: 16rem !important;
     }
+
+    .fp-sidebar-label {
+      white-space: nowrap;
+      min-width: 0;
+      overflow: hidden;
+      opacity: 1;
+      max-width: 20rem;
+      transition:
+        opacity var(--duration-fast) var(--easing-standard),
+        max-width var(--duration-slow) var(--easing-standard),
+        flex-grow var(--duration-slow) var(--easing-standard);
+    }
+
+    [data-flat-pack-sidebar-collapsed="true"] .fp-sidebar-label {
+      opacity: 0 !important;
+      max-width: 0 !important;
+      flex-grow: 0 !important;
+    }
+
+    /* Section titles fade, but their block stays in flow so row height does not jump. */
+    [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-section-title="true"] .fp-sidebar-label {
+      max-width: 20rem !important;
+      flex-grow: 1 !important;
+    }
+
+    [data-flat-pack-sidebar-item="true"],
+    [data-flat-pack-sidebar-section-title="true"] {
+      transition-property: padding-left, padding-right, gap !important;
+      transition-duration: var(--duration-slow) !important;
+      transition-timing-function: var(--easing-standard) !important;
+    }
+
+    /* !important beats Tailwind px-4 / gap-3, which live in the utilities layer. */
+    [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"],
+    [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-section-title="true"] {
+      padding-left: 0.25rem !important;
+      padding-right: 0.25rem !important;
+      gap: 0 !important;
+      overflow-x: clip;
+    }
+
+    /*
+      Center the icon in the collapsed row with a length, not a percentage.
+      A percentage margin on a flex item is cyclic and computes to 0, so the
+      active pill stayed heavier on the left. Centering the whole row pulls the
+      icon sideways while the label is still wide. 4rem rail, 1px side border,
+      mx-2, 1.25rem icon, 0.25rem padding.
+    */
+    [data-flat-pack-sidebar-item="true"] > [data-flat-pack-sidebar-item-icon="true"],
+    [data-flat-pack-sidebar-item="true"] > span.flex-shrink-0:first-child {
+      margin-left: 0;
+      transition: margin-left var(--duration-slow) var(--easing-standard);
+    }
+
+    [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"] > [data-flat-pack-sidebar-item-icon="true"],
+    [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"] > span.flex-shrink-0:first-child {
+      margin-left: calc((4rem - 1px - (var(--spacing) * 4) - 1.25rem) / 2 - 0.25rem) !important;
+    }
+
+    [data-flat-pack--sidebar-group-target="chevron"] {
+      max-width: 1.25rem;
+      overflow: hidden;
+      transition:
+        opacity var(--duration-fast) var(--easing-standard),
+        transform var(--duration-slow) var(--easing-standard),
+        max-width var(--duration-slow) var(--easing-standard);
+    }
+
+    [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack--sidebar-group-target="chevron"] {
+      opacity: 0;
+      max-width: 0;
+      pointer-events: none;
+    }
+
+    [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"] > span:not(.fp-sidebar-label):not([data-flat-pack-sidebar-item-icon="true"]):not(.flex-shrink-0) {
+      max-width: 0;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      border-width: 0;
+      opacity: 0;
+    }
+
+    /* !important beats the group's pl-[var(--sidebar-group-item-indent)] utility, so nested rows are the same width as top-level rows and the shared icon margin stays centered. */
+    [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack--sidebar-group-target="panel"] {
+      padding-left: 0 !important;
+      transition: padding-left var(--duration-slow) var(--easing-standard);
+    }
+
+    [data-flat-pack--sidebar-layout-target="footer"] {
+      transition: opacity var(--duration-fast) var(--easing-standard);
+    }
+
+    [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack--sidebar-layout-target="footer"] {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    [data-flat-pack-sidebar-collapsed="false"] [data-flat-pack--sidebar-layout-target="footer"] {
+      opacity: 1;
+    }
   }
 
   [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack--sidebar-layout-target="scrollContainer"] {
