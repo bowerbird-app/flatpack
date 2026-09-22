@@ -81,34 +81,6 @@
     }
   }
 
-  /* 72px bar below the notch. Border-box so padding-top does not add extra height. */
-  .fp-top-nav {
-    box-sizing: border-box;
-    height: calc(var(--top-nav-height) + env(safe-area-inset-top, 0px));
-    padding-top: env(safe-area-inset-top, 0px);
-    padding-right: max(1rem, env(safe-area-inset-right, 0px));
-    padding-bottom: 0;
-    padding-left: max(1rem, env(safe-area-inset-left, 0px));
-    -webkit-backdrop-filter: blur(0);
-    backdrop-filter: blur(0);
-    transition-property: backdrop-filter, -webkit-backdrop-filter;
-    transition-duration: var(--duration-fast);
-    transition-timing-function: var(--easing-standard);
-  }
-
-  .fp-top-nav[data-scrolled="true"] {
-    -webkit-backdrop-filter: blur(var(--top-nav-backdrop-blur));
-    backdrop-filter: blur(var(--top-nav-backdrop-blur));
-  }
-
-  @media (prefers-reduced-transparency: reduce) {
-    .fp-top-nav,
-    .fp-top-nav[data-scrolled="true"] {
-      -webkit-backdrop-filter: none;
-      backdrop-filter: none;
-    }
-  }
-
   .fp-toast-region {
     top: calc(var(--top-nav-height) + env(safe-area-inset-top, 0px) + calc(var(--spacing) * 4));
     right: calc(env(safe-area-inset-right, 0px) + calc(var(--spacing) * 4));
@@ -534,6 +506,38 @@
     }
   }
 
+}
+
+/* Unlayered so host Tailwind preflight cannot zero the side inset.
+ * Flatpack CSS is linked first, which creates @layer components before the
+ * host sheet orders @layer base after it. Preflight's * { padding: 0 } then
+ * beats any padding still inside @layer components.
+ */
+.fp-top-nav {
+  box-sizing: border-box;
+  height: calc(var(--top-nav-height) + env(safe-area-inset-top, 0px));
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-right: max(1rem, env(safe-area-inset-right, 0px));
+  padding-bottom: 0;
+  padding-left: max(1rem, env(safe-area-inset-left, 0px));
+  -webkit-backdrop-filter: blur(0);
+  backdrop-filter: blur(0);
+  transition-property: backdrop-filter, -webkit-backdrop-filter;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--easing-standard);
+}
+
+.fp-top-nav[data-scrolled="true"] {
+  -webkit-backdrop-filter: blur(var(--top-nav-backdrop-blur));
+  backdrop-filter: blur(var(--top-nav-backdrop-blur));
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .fp-top-nav,
+  .fp-top-nav[data-scrolled="true"] {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
 }
 
 /* Long-form reading type. Unlayered so Tailwind preflight cannot collapse

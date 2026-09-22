@@ -13,6 +13,7 @@ module FlatPack
       assert_includes css, ".fp-hit-slop::after"
       assert_includes css, ".fp-overlay-pad"
       assert_includes css, ".fp-top-nav"
+      assert_top_nav_padding_is_unlayered(css)
       assert_includes css, "--top-nav-height"
       assert_includes css, "--top-nav-backdrop-blur"
       assert_includes css, "[data-scrolled=\"true\"]"
@@ -41,6 +42,33 @@ module FlatPack
       assert_includes css, ".fp-skip-link"
       assert_includes css, "[data-flat-pack--carousel-target=\"lightbox\"]"
       assert_includes css, ".flat-pack-modal__body"
+    end
+
+    def assert_top_nav_padding_is_unlayered(css)
+      layer_end = layered_components_end_index(css)
+      rule_at = css.index(/^\.fp-top-nav \{/)
+
+      refute_nil rule_at
+      assert_operator rule_at, :>, layer_end
+      assert_includes css[rule_at, 500], "padding-left: max(1rem, env(safe-area-inset-left, 0px));"
+      assert_includes css[rule_at, 500], "padding-right: max(1rem, env(safe-area-inset-right, 0px));"
+    end
+
+    def layered_components_end_index(css)
+      start = css.index("@layer components")
+      raise "missing @layer components" unless start
+
+      open_at = css.index("{", start)
+      depth = 0
+      css.each_char.with_index do |char, index|
+        next if index < open_at
+
+        depth += 1 if char == "{"
+        depth -= 1 if char == "}"
+        return index if depth.zero?
+      end
+
+      raise "unclosed @layer components"
     end
 
     test "drawer and command palette animate Tailwind v4 translate and scale" do
