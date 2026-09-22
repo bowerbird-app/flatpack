@@ -440,14 +440,22 @@
       transition-timing-function: var(--easing-standard) !important;
     }
 
+    /* !important beats Tailwind px-4 / gap-3, which live in the utilities layer. */
     [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"],
     [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-section-title="true"] {
-      padding-left: 0.25rem;
-      padding-right: 0.25rem;
-      gap: 0;
+      padding-left: 0.25rem !important;
+      padding-right: 0.25rem !important;
+      gap: 0 !important;
       overflow-x: clip;
     }
 
+    /*
+      Center the icon in the collapsed row with a length, not a percentage.
+      A percentage margin on a flex item is cyclic and computes to 0, so the
+      active pill stayed heavier on the left. Centering the whole row pulls the
+      icon sideways while the label is still wide. 4rem rail, 1px side border,
+      mx-2, 1.25rem icon, 0.25rem padding.
+    */
     [data-flat-pack-sidebar-item="true"] > [data-flat-pack-sidebar-item-icon="true"],
     [data-flat-pack-sidebar-item="true"] > span.flex-shrink-0:first-child {
       margin-left: 0;
@@ -456,11 +464,10 @@
 
     [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"] > [data-flat-pack-sidebar-item-icon="true"],
     [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"] > span.flex-shrink-0:first-child {
-      margin-left: calc((100% - 1.25rem) / 2);
+      margin-left: calc((4rem - 1px - (var(--spacing) * 4) - 1.25rem) / 2 - 0.25rem) !important;
     }
 
-    [data-flat-pack--sidebar-group-target="chevron"],
-    [data-flat-pack--sidebar-layout-target="desktopToggle"] {
+    [data-flat-pack--sidebar-group-target="chevron"] {
       max-width: 1.25rem;
       overflow: hidden;
       transition:
@@ -469,8 +476,7 @@
         max-width var(--duration-slow) var(--easing-standard);
     }
 
-    [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack--sidebar-group-target="chevron"],
-    [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack--sidebar-layout-target="desktopToggle"] {
+    [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack--sidebar-group-target="chevron"] {
       opacity: 0;
       max-width: 0;
       pointer-events: none;
@@ -485,8 +491,9 @@
       opacity: 0;
     }
 
+    /* !important beats the group's pl-[var(--sidebar-group-item-indent)] utility, so nested rows are the same width as top-level rows and the shared icon margin stays centered. */
     [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack--sidebar-group-target="panel"] {
-      padding-left: 0;
+      padding-left: 0 !important;
       transition: padding-left var(--duration-slow) var(--easing-standard);
     }
 
