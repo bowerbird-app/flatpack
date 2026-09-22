@@ -378,11 +378,12 @@ Tabs, chat incoming bubbles, sidebar/top-nav hover, list hover, and avatar fallb
 - Size: `--range-track-height`, `--range-thumb-size` (hit target is `--hit-target-min`)
 - Runtime fill: `--range-progress` on the input (percentage). Not a theme token.
 
-### Checkbox
-- Colors: `--surface-background-color`, `--surface-border-color`, `--color-primary`, `--color-ring`
-- Size: `--checkbox-size`
-- Radius: `--checkbox-radius`
-- Label spacing: `--checkbox-label-gap`
+### Checkbox / Radio
+- Colors: `--surface-background-color`, `--surface-border-color`, `--color-primary`, `--color-primary-text`, `--color-ring`
+- Checked fill and accent use Tailwind arbitrary values of those tokens (`accent-[var(--color-primary)]`, `checked:bg-[var(--color-primary)]`, `checked:border-[var(--color-primary)]`, `checked:text-[var(--color-primary-text)]`), not bare `*-primary` utilities
+- Size: `--checkbox-size` (checkbox); radios stay `h-4 w-4`
+- Radius: `--checkbox-radius` (checkbox); radios stay `rounded-full`
+- Label spacing: `--checkbox-label-gap` (checkbox)
 
 ### SVG Status Dot Utility
 - Utility class: `fp-red-dot` (apply on an `svg` element)
