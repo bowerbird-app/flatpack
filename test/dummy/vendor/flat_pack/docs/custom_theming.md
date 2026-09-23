@@ -315,6 +315,10 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --tooltip-font-size: 0.875rem;
   --tooltip-max-width: 20rem;
   --sidebar-background-color: var(--surface-page-background-color);
+  --sidebar-float-inset: 1rem;
+  --sidebar-float-background-color: #fff;
+  --sidebar-float-shadow: var(--shadow-md);
+  --sidebar-float-radius: var(--radius-lg);
   --sidebar-border-color: oklch(0.89 0.01 250);
   --sidebar-divider-color: oklch(0.89 0.01 250);
   --sidebar-item-text-color: oklch(0.45 0.01 250);

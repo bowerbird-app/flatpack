@@ -13,7 +13,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-## [0.1.196] - 2026-09-23
+## [0.1.197] - 2026-09-23
+
+### Added
+- `FlatPack::SidebarLayout::Component` accepts `floating:` (`false` by default). On desktop the rail insets by `--sidebar-float-inset` on the top, bottom, and outer edge, and paints `--sidebar-float-background-color` with a full border and `--sidebar-float-shadow`. The rounded palette rounds it with `--sidebar-float-radius`. Other named themes stay square. Below the `md` breakpoint the drawer stays flush.
+- Dummy chrome reads `?floating=1` to show the detached rail.
+
+### Changed
+- Bumped the gem version to `0.1.197`.
+
+### Upgrade notes
+- No host change required. Omit `floating:` to keep the flush rail.
+- Pass `floating: true` to detach the desktop sidebar. Tune `--sidebar-float-inset`, `--sidebar-float-background-color`, `--sidebar-float-shadow`, and `--sidebar-float-radius`. Radius follows the rounded palette. A named theme other than `rounded` stays square.
+- Dark theme sets `--sidebar-float-background-color` to a lifted surface. Do not assign these tokens on `[data-theme="rounded"]`.
+- Redeploy so `meta.gem_version` shows `0.1.197`.
 
 ### Added
 - Bare `size:` (`:sm` / `:md` / `:lg`, default `:md`) on Checkbox, RadioGroup, SegmentedButtons, Button::Pill, Tabs, Skeleton, EmptyState, Toast, Alert, and Accordion. Invalid sizes raise `ArgumentError`.

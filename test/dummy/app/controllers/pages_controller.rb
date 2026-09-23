@@ -2347,7 +2347,19 @@ class PagesController < ApplicationController
   end
 
   def page_cache_key
-    "dummy/full-page/#{request.path}:#{page_cache_version}"
+    "dummy/full-page/#{request.path}#{shell_cache_suffix}:#{page_cache_version}"
+  end
+
+  # The shell reads side and floating from the query. The path alone would
+  # serve a flush rail for ?floating=1.
+  def shell_cache_suffix
+    return "" unless request.respond_to?(:query_string)
+
+    parts = []
+    side = params[:side].to_s
+    parts << "side-#{side}" if %w[left right].include?(side)
+    parts << "floating" if %w[1 true].include?(params[:floating].to_s)
+    parts.empty? ? "" : ":#{parts.join(":")}"
   end
 
   def page_cache_version
