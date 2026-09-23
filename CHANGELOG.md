@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Fixed
+
+## [0.1.196] - 2026-09-23
+
+### Added
 - Bare `size:` (`:sm` / `:md` / `:lg`, default `:md`) on Checkbox, RadioGroup, SegmentedButtons, Button::Pill, Tabs, Skeleton, EmptyState, Toast, Alert, and Accordion. Invalid sizes raise `ArgumentError`.
 - Checkbox and RadioGroup share `FlatPack::Shared::ControlSize` (`--checkbox-size`: sm `1rem`, md `1.25rem`, lg `1.5rem`). Button::Pill and Tabs share `FlatPack::Shared::PadTextSizes` (Button padding/text tokens).
 - SegmentedButtons group `size:` forwards into each `button(...)` unless that call already passes `size:`.
@@ -21,8 +29,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - No host call-site changes required. Defaults preserve prior appearance except RadioGroup `:md`, which is intentionally larger (matches Checkbox).
 - Pass `size: :sm` on RadioGroup to keep the previous `1rem` control size.
 - Rebuild host Tailwind (or reload kit CSS) if new arbitrary-value class strings need generation. Redeploy so `meta.gem_version` shows `0.1.196`.
-
-### Fixed
 
 ## [0.1.195] - 2026-09-22
 
