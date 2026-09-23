@@ -114,6 +114,39 @@ module FlatPack
         assert_includes html, "h-[var(--checkbox-size)]"
         assert_includes html, "w-[var(--checkbox-size)]"
         assert_includes html, "rounded-[var(--checkbox-radius)]"
+        assert_includes html, "--checkbox-size: 1.25rem"
+      end
+
+      def test_renders_small_size
+        render_inline(Component.new(name: "agree", size: :sm))
+
+        assert_includes page.native.to_html, "--checkbox-size: 1rem"
+      end
+
+      def test_renders_medium_size
+        render_inline(Component.new(name: "agree", size: :md))
+
+        assert_includes page.native.to_html, "--checkbox-size: 1.25rem"
+      end
+
+      def test_renders_large_size
+        render_inline(Component.new(name: "agree", size: :lg))
+
+        assert_includes page.native.to_html, "--checkbox-size: 1.5rem"
+      end
+
+      def test_default_size_is_medium
+        render_inline(Component.new(name: "agree"))
+
+        assert_includes page.native.to_html, "--checkbox-size: 1.25rem"
+      end
+
+      def test_raises_error_for_invalid_size
+        error = assert_raises(ArgumentError) do
+          Component.new(name: "agree", size: :xl)
+        end
+
+        assert_includes error.message, "Invalid size"
       end
 
       def test_uses_theme_primary_css_var_classes

@@ -116,6 +116,40 @@ module FlatPack
 
         assert_selector "div.custom-class"
       end
+
+      def test_default_size_is_medium
+        render_inline(Component.new(title: "Nothing here", description: "Try again later."))
+
+        html = page.native.to_html
+        assert_includes html, "py-12"
+        assert_includes html, "text-lg"
+        assert_includes html, "text-sm"
+      end
+
+      def test_renders_small_size
+        render_inline(Component.new(title: "Nothing here", size: :sm))
+
+        html = page.native.to_html
+        assert_includes html, "py-8"
+        assert_includes html, "text-base"
+      end
+
+      def test_renders_large_size
+        render_inline(Component.new(title: "Nothing here", description: "Try again later.", size: :lg))
+
+        html = page.native.to_html
+        assert_includes html, "py-16"
+        assert_includes html, "text-xl"
+        assert_includes html, "text-base"
+      end
+
+      def test_raises_error_for_invalid_size
+        error = assert_raises(ArgumentError) do
+          Component.new(title: "Nothing here", size: :xl)
+        end
+
+        assert_includes error.message, "Invalid size"
+      end
     end
   end
 end

@@ -16,6 +16,7 @@ Use Skeleton when data is pending and layout stability should be preserved.
 | `width` | String | `nil` | no | Custom CSS width value (for example `"240px"`, `"75%"`). |
 | `height` | String | `nil` | no | Custom CSS height value. |
 | `shimmer` | Boolean | `true` | no | Enables shimmer animation when true. |
+| `size` | Symbol | `:md` | no | Density on top of variant heights: `:sm`, `:md`, `:lg`. `:md` matches the previous look. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for skeleton element. |
 
 ## Slots

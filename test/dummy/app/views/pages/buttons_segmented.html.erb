@@ -52,6 +52,47 @@
   ) %>
 </section>
 
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Sizes", anchor_link: true, subtitle: "Group size: forwards into each button. Pass size: on a button to override.") %>
+  <div class="space-y-4 mb-4">
+    <div>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Small</p>
+      <%= render FlatPack::SegmentedButtons::Component.new(size: :sm) do |group| %>
+        <% group.button(text: "Day", selected: true) %>
+        <% group.button(text: "Week") %>
+        <% group.button(text: "Month") %>
+      <% end %>
+    </div>
+    <div>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Medium (default)</p>
+      <%= render FlatPack::SegmentedButtons::Component.new(size: :md) do |group| %>
+        <% group.button(text: "Day", selected: true) %>
+        <% group.button(text: "Week") %>
+        <% group.button(text: "Month") %>
+      <% end %>
+    </div>
+    <div>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Large</p>
+      <%= render FlatPack::SegmentedButtons::Component.new(size: :lg) do |group| %>
+        <% group.button(text: "Day", selected: true) %>
+        <% group.button(text: "Week") %>
+        <% group.button(text: "Month") %>
+      <% end %>
+    </div>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::SegmentedButtons::Component.new(size: :sm) do |group| %&gt;
+        &lt;% group.button(text: &quot;Day&quot;, selected: true) %&gt;
+        &lt;% group.button(text: &quot;Week&quot;) %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
+</section>
+
 <%= render "shared/related_demos",
   links: [
     {text: "Buttons", href: demo_buttons_path},

@@ -118,6 +118,44 @@ module FlatPack
 
         assert_selector ".custom-class"
       end
+
+      def test_default_size_is_medium
+        render_inline(Component.new) do |accordion|
+          accordion.item(id: "item1", title: "Item") { "Content" }
+        end
+
+        html = page.native.to_html
+        assert_includes html, "--accordion-trigger-padding: 1rem"
+        assert_includes html, "--accordion-content-padding: 1rem"
+      end
+
+      def test_renders_small_size
+        render_inline(Component.new(size: :sm)) do |accordion|
+          accordion.item(id: "item1", title: "Item") { "Content" }
+        end
+
+        html = page.native.to_html
+        assert_includes html, "--accordion-trigger-padding: 0.75rem"
+        assert_includes html, "text-sm"
+      end
+
+      def test_renders_large_size
+        render_inline(Component.new(size: :lg)) do |accordion|
+          accordion.item(id: "item1", title: "Item") { "Content" }
+        end
+
+        html = page.native.to_html
+        assert_includes html, "--accordion-trigger-padding: 1.25rem"
+        assert_includes html, "text-lg"
+      end
+
+      def test_raises_error_for_invalid_size
+        error = assert_raises(ArgumentError) do
+          Component.new(size: :xl)
+        end
+
+        assert_includes error.message, "Invalid size"
+      end
     end
   end
 end

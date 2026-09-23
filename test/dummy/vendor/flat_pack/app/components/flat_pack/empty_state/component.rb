@@ -12,19 +12,51 @@ module FlatPack
       undef_method :with_actions, :with_actions_content,
         :with_graphic, :with_graphic_content
 
+      # Density for padding, title, and description. md matches the previous hard-coded look.
+      # "py-8" "py-12" "py-16" "px-3" "px-4" "px-6" "text-base" "text-lg" "text-xl" "text-xs" "text-sm" "mb-1" "mb-2" "mb-3" "mb-4" "mb-6" "mb-8"
+      SIZES = {
+        sm: {
+          container: "py-8 px-3",
+          graphic_margin: "mb-2",
+          title: "text-base font-semibold text-[var(--surface-content-color)] mb-1 fp-text-balance",
+          description: "text-xs text-[var(--surface-muted-content-color)] max-w-md mb-4 fp-text-pretty",
+          icon: :md,
+          action_gap: "gap-2"
+        },
+        md: {
+          container: "py-12 px-4",
+          graphic_margin: "mb-3",
+          title: "text-lg font-semibold text-[var(--surface-content-color)] mb-2 fp-text-balance",
+          description: "text-sm text-[var(--surface-muted-content-color)] max-w-md mb-6 fp-text-pretty",
+          icon: :lg,
+          action_gap: "gap-3"
+        },
+        lg: {
+          container: "py-16 px-6",
+          graphic_margin: "mb-4",
+          title: "text-xl font-semibold text-[var(--surface-content-color)] mb-3 fp-text-balance",
+          description: "text-base text-[var(--surface-muted-content-color)] max-w-md mb-8 fp-text-pretty",
+          icon: :xl,
+          action_gap: "gap-4"
+        }
+      }.freeze
+
       def initialize(
         title:,
         description: nil,
         icon: nil,
+        size: :md,
         **system_arguments
       )
         super(**system_arguments)
         @title = title
         @description = description
         @icon = normalize_icon(icon)
+        @size = size.to_sym
 
         validate_title!
         validate_icon!
+        validate_size!
       end
 
       def call
@@ -61,6 +93,10 @@ module FlatPack
 
       private
 
+      def size_config
+        SIZES.fetch(@size)
+      end
+
       def container_attributes
         merge_attributes(
           class: container_classes
@@ -75,34 +111,33 @@ module FlatPack
           "items-center",
           "justify-center",
           "text-center",
-          "py-12",
-          "px-4"
+          size_config.fetch(:container)
         )
       end
 
       def render_graphic
-        return content_tag(:div, graphic, class: "mb-3") if graphic?
+        return content_tag(:div, graphic, class: size_config.fetch(:graphic_margin)) if graphic?
         return nil if @icon.nil?
 
-        content_tag(:div, graphic_content, class: "mb-3")
+        content_tag(:div, graphic_content, class: size_config.fetch(:graphic_margin))
       end
 
       def graphic_content
         render FlatPack::Shared::IconComponent.new(
           name: @icon,
-          size: :lg,
+          size: size_config.fetch(:icon),
           class: "text-[var(--surface-muted-content-color)]"
         )
       end
 
       def render_title
-        content_tag(:h3, @title, class: "text-lg font-semibold text-[var(--surface-content-color)] mb-2 fp-text-balance")
+        content_tag(:h3, @title, class: size_config.fetch(:title))
       end
 
       def render_description
         return nil unless @description
 
-        content_tag(:p, @description, class: "text-sm text-[var(--surface-muted-content-color)] max-w-md mb-6 fp-text-pretty")
+        content_tag(:p, @description, class: size_config.fetch(:description))
       end
 
       def render_actions
@@ -112,7 +147,11 @@ module FlatPack
       end
 
       def action_classes
-        ["flex gap-3 flex-wrap justify-center", ("mt-4" unless @description)].compact.join(" ")
+        [
+          "flex flex-wrap justify-center",
+          size_config.fetch(:action_gap),
+          ("mt-4" unless @description)
+        ].compact.join(" ")
       end
 
       def validate_title!
@@ -124,6 +163,11 @@ module FlatPack
         return if @icon.nil?
         return if @icon.is_a?(Symbol)
         raise ArgumentError, "Invalid icon: #{@icon.inspect}. Must be a symbol or string."
+      end
+
+      def validate_size!
+        return if SIZES.key?(@size)
+        raise ArgumentError, "Invalid size: #{@size}. Must be one of: #{SIZES.keys.join(", ")}"
       end
 
       def normalize_icon(icon)

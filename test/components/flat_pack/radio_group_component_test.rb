@@ -195,6 +195,36 @@ module FlatPack
         assert_selector "input[required]", count: 2
         assert_selector "input.custom-class"
       end
+
+      def test_uses_shared_checkbox_size_css_var
+        render_inline(Component.new(name: "color", options: ["Red", "Blue"]))
+
+        html = page.native.to_html
+        assert_includes html, "h-[var(--checkbox-size)]"
+        assert_includes html, "w-[var(--checkbox-size)]"
+        assert_includes html, "--checkbox-size: 1.25rem"
+        refute_includes html, "h-4 w-4"
+      end
+
+      def test_renders_small_size
+        render_inline(Component.new(name: "color", options: ["Red"], size: :sm))
+
+        assert_includes page.native.to_html, "--checkbox-size: 1rem"
+      end
+
+      def test_renders_large_size
+        render_inline(Component.new(name: "color", options: ["Red"], size: :lg))
+
+        assert_includes page.native.to_html, "--checkbox-size: 1.5rem"
+      end
+
+      def test_raises_error_for_invalid_size
+        error = assert_raises(ArgumentError) do
+          Component.new(name: "color", options: ["Red"], size: :xl)
+        end
+
+        assert_includes error.message, "Invalid size"
+      end
     end
   end
 end

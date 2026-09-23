@@ -152,6 +152,56 @@
   </div>
 </section>
 
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Sizes", anchor_link: true, subtitle: "sm, md (default), and lg change padding and text only.") %>
+  <div class="space-y-4 mb-4">
+    <div>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Small</p>
+      <%= render FlatPack::Button::Pill::Component.new(
+        size: :sm,
+        items: [
+          {text: "Overview", href: "#", active: true},
+          {text: "Details", href: "#"},
+          {text: "Settings", href: "#"}
+        ]
+      ) %>
+    </div>
+    <div>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Medium (default)</p>
+      <%= render FlatPack::Button::Pill::Component.new(
+        size: :md,
+        items: [
+          {text: "Overview", href: "#", active: true},
+          {text: "Details", href: "#"},
+          {text: "Settings", href: "#"}
+        ]
+      ) %>
+    </div>
+    <div>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Large</p>
+      <%= render FlatPack::Button::Pill::Component.new(
+        size: :lg,
+        items: [
+          {text: "Overview", href: "#", active: true},
+          {text: "Details", href: "#"},
+          {text: "Settings", href: "#"}
+        ]
+      ) %>
+    </div>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Button::Pill::Component.new(
+        size: :sm,
+        items: [
+          {text: &quot;Overview&quot;, href: &quot;#&quot;, active: true},
+          {text: &quot;Details&quot;, href: &quot;#&quot;}
+        ]
+      ) %&gt;
+    CODE
+  ) %>
+</section>
+
 <%= render "shared/related_demos",
   links: [
     {text: "Buttons", href: demo_buttons_path},

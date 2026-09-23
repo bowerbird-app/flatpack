@@ -74,6 +74,7 @@ Use `FlatPack::Button::Pill::Component` when you need the rounded pills styling 
 | name | type | default | required | description |
 | --- | --- | --- | --- | --- |
 | `items` | Array<Hash> | none | yes | One or more pill definitions. Each item requires `text` and `href`, and may include `id`, `active`, `target`, `class`, `data`, and `aria`. |
+| `size` | Symbol | `:md` | no | Padding/text density: `:sm`, `:md`, `:lg` (shared with Tabs via Button size tokens). |
 | `**system_arguments` | Hash | `{}` | no | Forwarded HTML attributes/classes/data/aria for the outer group wrapper. |
 
 ```erb

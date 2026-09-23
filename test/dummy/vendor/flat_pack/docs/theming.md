@@ -381,7 +381,7 @@ Tabs, chat incoming bubbles, sidebar/top-nav hover, list hover, and avatar fallb
 ### Checkbox / Radio
 - Colors: `--surface-background-color`, `--surface-border-color`, `--color-primary`, `--color-primary-text`, `--color-ring`
 - Checked fill and accent use Tailwind arbitrary values of those tokens (`accent-[var(--color-primary)]`, `checked:bg-[var(--color-primary)]`, `checked:border-[var(--color-primary)]`, `checked:text-[var(--color-primary-text)]`), not bare `*-primary` utilities
-- Size: `--checkbox-size` (checkbox); radios stay `h-4 w-4`
+- Size: `--checkbox-size` (Checkbox and RadioGroup; `size:` sets sm `1rem` / md `1.25rem` / lg `1.5rem`)
 - Radius: `--checkbox-radius` (checkbox); radios stay `rounded-full`
 - Label spacing: `--checkbox-label-gap` (checkbox)
 

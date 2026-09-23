@@ -40,12 +40,39 @@ module FlatPack
         }
       }.freeze
 
+      # Density for padding, title, and description. md matches --alert-padding 1rem.
+      # "gap-2" "gap-3" "gap-4" "text-sm" "text-base" "text-lg" "text-xs"
+      SIZES = {
+        sm: {
+          padding: "0.75rem",
+          gap: "gap-2",
+          title: "font-semibold text-sm text-[var(--alert-title-color)]",
+          description: "text-xs text-[var(--alert-description-color)]",
+          icon: :sm
+        },
+        md: {
+          padding: "1rem",
+          gap: "gap-3",
+          title: "font-semibold text-[var(--alert-title-color)]",
+          description: "text-sm text-[var(--alert-description-color)]",
+          icon: :md
+        },
+        lg: {
+          padding: "1.25rem",
+          gap: "gap-4",
+          title: "font-semibold text-lg text-[var(--alert-title-color)]",
+          description: "text-base text-[var(--alert-description-color)]",
+          icon: :lg
+        }
+      }.freeze
+
       def initialize(
         title: nil,
         description: nil,
         style: :info,
         dismissible: false,
         icon: true,
+        size: :md,
         **system_arguments
       )
         super(**system_arguments)
@@ -54,8 +81,10 @@ module FlatPack
         @style = style.to_sym
         @dismissible = dismissible
         @show_icon = icon
+        @size = size.to_sym
 
         validate_style!
+        validate_size!
       end
 
       def call
@@ -69,8 +98,12 @@ module FlatPack
 
       private
 
+      def size_config
+        SIZES.fetch(@size)
+      end
+
       def render_content_area
-        content_tag(:div, class: "flex items-center gap-3") do
+        content_tag(:div, class: "flex items-center #{size_config.fetch(:gap)}") do
           safe_join([
             render_icon,
             render_text_content
@@ -83,7 +116,7 @@ module FlatPack
 
         icon_name = style_config[:icon]
         content_tag(:div, class: classes("flex-shrink-0", style_config[:icon_color])) do
-          render(FlatPack::Shared::IconComponent.new(name: icon_name, size: :md))
+          render(FlatPack::Shared::IconComponent.new(name: icon_name, size: size_config.fetch(:icon)))
         end
       end
 
@@ -103,13 +136,13 @@ module FlatPack
       def render_title
         return unless @title
 
-        content_tag(:h3, @title, class: "font-semibold text-[var(--alert-title-color)]")
+        content_tag(:h3, @title, class: size_config.fetch(:title))
       end
 
       def render_description
         return unless @description
 
-        content_tag(:p, @description, class: "text-sm text-[var(--alert-description-color)]")
+        content_tag(:p, @description, class: size_config.fetch(:description))
       end
 
       def render_dismiss_button
@@ -130,15 +163,25 @@ module FlatPack
       def alert_attributes
         attrs = {
           class: alert_classes,
-          role: "alert"
+          role: "alert",
+          style: padding_style
         }
         attrs[:data] = {controller: "flat-pack--alert", flat_pack__alert_target: "alert"} if @dismissible
         merge_attributes(**attrs)
       end
 
+      def padding_style
+        declaration = "--alert-padding: #{size_config.fetch(:padding)}"
+        existing = @system_arguments[:style] || @system_arguments["style"]
+        return declaration unless existing.present?
+
+        "#{existing.to_s.rstrip.sub(/;+\z/, "")}; #{declaration}"
+      end
+
       def alert_classes
         classes(
-          "relative flex items-center gap-3",
+          "relative flex items-center",
+          size_config.fetch(:gap),
           "rounded-[var(--alert-border-radius)]",
           "p-[var(--alert-padding)]",
           style_config[:border],
@@ -154,6 +197,11 @@ module FlatPack
       def validate_style!
         return if VARIANTS.key?(@style)
         raise ArgumentError, "Invalid style: #{@style}. Must be one of: #{VARIANTS.keys.join(", ")}"
+      end
+
+      def validate_size!
+        return if SIZES.key?(@size)
+        raise ArgumentError, "Invalid size: #{@size}. Must be one of: #{SIZES.keys.join(", ")}"
       end
     end
   end
