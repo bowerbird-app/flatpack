@@ -7,6 +7,8 @@ module FlatPack
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "text-[var(--color-error)]" "h-[var(--checkbox-size)]" "w-[var(--checkbox-size)]" "rounded-[var(--checkbox-radius)]" "focus:rounded-[var(--checkbox-radius)]" "ml-[var(--checkbox-label-gap)]"
 
+      SIZES = FlatPack::Shared::ControlSize::SIZES
+
       def initialize(
         name:,
         value: "1",
@@ -16,6 +18,7 @@ module FlatPack
         required: false,
         error: nil,
         help_text: nil,
+        size: :md,
         **system_arguments
       )
         @custom_class = system_arguments[:class]
@@ -28,6 +31,7 @@ module FlatPack
         @required = required
         @error = error
         @help_text = normalize_help_text!(help_text)
+        @size = FlatPack::Shared::ControlSize.normalize!(size)
 
         validate_name!
       end
@@ -78,7 +82,8 @@ module FlatPack
           checked: @checked,
           disabled: @disabled,
           required: @required,
-          class: input_classes
+          class: input_classes,
+          style: size_style
         }
 
         describedby = describedby_tokens((help_text_id if @help_text), (error_id if @error))
@@ -86,6 +91,14 @@ module FlatPack
         attrs[:aria][:invalid] = "true" if @error
 
         merge_attributes(**apply_default_validation(attrs.compact, error_id: error_id, has_error: @error.present?))
+      end
+
+      def size_style
+        declaration = FlatPack::Shared::ControlSize.css_var_declaration(@size)
+        existing = @system_arguments[:style] || @system_arguments["style"]
+        return declaration unless existing.present?
+
+        "#{existing.to_s.rstrip.sub(/;+\z/, "")}; #{declaration}"
       end
 
       def wrapper_classes

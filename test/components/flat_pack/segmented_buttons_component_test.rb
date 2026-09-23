@@ -31,6 +31,43 @@ module FlatPack
 
         refute component.respond_to?(:with_button, true)
       end
+
+      def test_group_size_forwards_to_buttons
+        render_inline(Component.new(size: :sm)) do |group|
+          group.button(text: "Day", selected: true)
+          group.button(text: "Week")
+        end
+
+        html = page.native.to_html
+        assert_includes html, FlatPack::Button::Component::SIZES.fetch(:sm)
+      end
+
+      def test_default_group_size_is_medium
+        render_inline(Component.new) do |group|
+          group.button(text: "Day", selected: true)
+        end
+
+        assert_includes page.native.to_html, FlatPack::Button::Component::SIZES.fetch(:md)
+      end
+
+      def test_button_size_overrides_group_size
+        render_inline(Component.new(size: :sm)) do |group|
+          group.button(text: "Day", selected: true, size: :lg)
+          group.button(text: "Week")
+        end
+
+        html = page.native.to_html
+        assert_includes html, FlatPack::Button::Component::SIZES.fetch(:lg)
+        assert_includes html, FlatPack::Button::Component::SIZES.fetch(:sm)
+      end
+
+      def test_raises_error_for_invalid_size
+        error = assert_raises(ArgumentError) do
+          Component.new(size: :xl)
+        end
+
+        assert_includes error.message, "Invalid size"
+      end
     end
   end
 end

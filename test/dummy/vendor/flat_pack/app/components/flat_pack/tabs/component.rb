@@ -3,22 +3,25 @@
 module FlatPack
   module Tabs
     class Component < FlatPack::BaseComponent
+      SIZES = FlatPack::Shared::PadTextSizes::SIZES
+
+      # tab_base omits padding/text — those come from SIZES (size:).
       VARIANTS = {
         underline: {
           tab_list: "flex gap-1 border-b border-[var(--surface-border-color)]",
-          tab_base: "px-4 py-2 text-sm font-medium rounded-t-[var(--radius-md)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring focus-visible:ring-offset-2",
+          tab_base: "font-medium rounded-t-[var(--radius-md)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring focus-visible:ring-offset-2",
           active: "bg-[var(--surface-background-color)] text-primary border-b-2 border-primary -mb-px",
           inactive: "text-[var(--surface-muted-content-color)] hover:text-[var(--surface-content-color)] hover:bg-[var(--surface-muted-background-color)]"
         },
         pills: {
           tab_list: "inline-flex gap-1 [border-radius:var(--tabs-pill-corner-radius)] p-1",
-          tab_base: "border border-transparent px-4 py-2 text-sm font-medium [border-radius:var(--tabs-pill-corner-radius)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring focus-visible:ring-offset-2",
+          tab_base: "border border-transparent font-medium [border-radius:var(--tabs-pill-corner-radius)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring focus-visible:ring-offset-2",
           active: "border-[var(--tabs-pill-active-border-color)] bg-[var(--tabs-pill-active-background-color)] text-[var(--tabs-pill-active-text-color)] shadow-[var(--tabs-pill-active-shadow)]",
           inactive: "border-transparent text-[var(--tabs-pill-inactive-text-color)] hover:text-[var(--tabs-pill-inactive-hover-text-color)] hover:bg-[var(--tabs-pill-inactive-hover-background-color)]"
         },
         stacked: {
           tab_list: "flex flex-col gap-1 [border-radius:1.5rem] p-2 bg-[var(--tabs-stacked-pill-list-background-color)] border border-[var(--tabs-pill-list-border-color)]",
-          tab_base: "w-full [border-radius:var(--tabs-pill-corner-radius)] px-3 py-2 text-left text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring focus-visible:ring-offset-2",
+          tab_base: "w-full [border-radius:var(--tabs-pill-corner-radius)] text-left font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring focus-visible:ring-offset-2",
           active: "border border-[var(--tabs-pill-active-border-color)] bg-[var(--tabs-pill-active-background-color)] text-[var(--tabs-pill-active-text-color)] shadow-[var(--tabs-pill-active-shadow)]",
           inactive: "border border-transparent text-[var(--tabs-pill-inactive-text-color)] hover:text-[var(--tabs-pill-inactive-hover-text-color)] hover:bg-[var(--tabs-pill-inactive-hover-background-color)]"
         }
@@ -27,11 +30,13 @@ module FlatPack
       def initialize(
         default_tab: 0,
         variant: :underline,
+        size: :md,
         **system_arguments
       )
         super(**system_arguments)
         @default_tab = default_tab
         @variant = variant.to_sym
+        @size = FlatPack::Shared::PadTextSizes.normalize!(size)
         @tabs = []
         @panels = []
 
@@ -140,6 +145,7 @@ module FlatPack
 
       def tab_classes(is_active)
         [
+          FlatPack::Shared::PadTextSizes.classes_for(@size),
           variant_classes.fetch(:tab_base),
           is_active ? active_tab_classes : inactive_tab_classes
         ].join(" ")

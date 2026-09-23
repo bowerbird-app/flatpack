@@ -58,7 +58,7 @@ Component-specific props:
 | `search_endpoint` | String | `nil` | no | Required when `search_mode: :remote`; URL used to fetch Select options. |
 | `search_param` | String | `"q"` | no | Query string parameter name used for remote Select requests. |
 | `min_search_length` | Integer | `2` | no | Minimum query length before remote Select requests are triggered. |
-| `size` | Symbol | `:md` | no | Switch size: `:sm`, `:md`, `:lg` (`Switch`). |
+| `size` | Symbol | `:md` | no | Control density: `:sm`, `:md`, `:lg` for `Switch`, `Checkbox`, and `RadioGroup` (Checkbox/Radio share `--checkbox-size`). |
 
 ## Slots
 None.

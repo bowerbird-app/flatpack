@@ -196,6 +196,39 @@ module FlatPack
         assert_selector "div[role='alert']"
         assert_text "Slot content only"
       end
+
+      def test_default_size_is_medium
+        render_inline(Component.new(title: "Heads up"))
+
+        html = page.native.to_html
+        assert_includes html, "--alert-padding: 1rem"
+        assert_includes html, "gap-3"
+      end
+
+      def test_renders_small_size
+        render_inline(Component.new(title: "Heads up", size: :sm))
+
+        html = page.native.to_html
+        assert_includes html, "--alert-padding: 0.75rem"
+        assert_includes html, "text-sm"
+      end
+
+      def test_renders_large_size
+        render_inline(Component.new(title: "Heads up", description: "More detail", size: :lg))
+
+        html = page.native.to_html
+        assert_includes html, "--alert-padding: 1.25rem"
+        assert_includes html, "text-lg"
+        assert_includes html, "text-base"
+      end
+
+      def test_raises_error_for_invalid_size
+        error = assert_raises(ArgumentError) do
+          Component.new(title: "Heads up", size: :xl)
+        end
+
+        assert_includes error.message, "Invalid size"
+      end
     end
   end
 end

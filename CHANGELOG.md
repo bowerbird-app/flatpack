@@ -8,10 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Bare `size:` (`:sm` / `:md` / `:lg`, default `:md`) on Checkbox, RadioGroup, SegmentedButtons, Button::Pill, Tabs, Skeleton, EmptyState, Toast, Alert, and Accordion. Invalid sizes raise `ArgumentError`.
+- Checkbox and RadioGroup share `FlatPack::Shared::ControlSize` (`--checkbox-size`: sm `1rem`, md `1.25rem`, lg `1.5rem`). Button::Pill and Tabs share `FlatPack::Shared::PadTextSizes` (Button padding/text tokens).
+- SegmentedButtons group `size:` forwards into each `button(...)` unless that call already passes `size:`.
+- Dummy demos show sm/md/lg for every component that gained `size:`.
 
 ### Changed
-- Dummy pins `recording_studio_oauth` v0.2.0 and `recording_studio_mcp` v0.3.2. The host draws origin well-known with `RecordingStudioOauth::ProtectedResourceRegistry.draw_origin_well_known`. Cursor resource identity is `/recording_studio_mcp`. Unsuffixed `/.well-known/oauth-protected-resource` is 404. ChatGPT and API keep using `/recording_studio_oauth/.well-known/oauth-protected-resource`.
-- Dummy `GET /authorize` redirects to `/recording_studio_oauth/oauth/authorize` and keeps the query string (Cursor MCP OAuth tunnel quirk).
+- RadioGroup default (`:md`) uses the Checkbox size map (`1.25rem`) instead of hardcoded `h-4 w-4` (`1rem`), so radios grow at the default size.
+- Bumped the gem version to `0.1.196`.
+
+### Upgrade notes
+- No host call-site changes required. Defaults preserve prior appearance except RadioGroup `:md`, which is intentionally larger (matches Checkbox).
+- Pass `size: :sm` on RadioGroup to keep the previous `1rem` control size.
+- Rebuild host Tailwind (or reload kit CSS) if new arbitrary-value class strings need generation. Redeploy so `meta.gem_version` shows `0.1.196`.
 
 ### Fixed
 

@@ -71,6 +71,38 @@ module FlatPack
         error = assert_raises(ArgumentError) { Component.new(variant: :unknown) }
         assert_includes error.message, "Invalid variant"
       end
+
+      def test_default_size_is_medium
+        render_inline(Component.new) do |tabs|
+          tabs.tab(id: "first", label: "First")
+          tabs.panel(id: "first") { "First panel" }
+        end
+
+        assert_includes page.first("button[role='tab']")[:class], FlatPack::Shared::PadTextSizes.classes_for(:md)
+      end
+
+      def test_renders_small_size
+        render_inline(Component.new(size: :sm)) do |tabs|
+          tabs.tab(id: "first", label: "First")
+          tabs.panel(id: "first") { "First panel" }
+        end
+
+        assert_includes page.first("button[role='tab']")[:class], FlatPack::Shared::PadTextSizes.classes_for(:sm)
+      end
+
+      def test_renders_large_size
+        render_inline(Component.new(size: :lg)) do |tabs|
+          tabs.tab(id: "first", label: "First")
+          tabs.panel(id: "first") { "First panel" }
+        end
+
+        assert_includes page.first("button[role='tab']")[:class], FlatPack::Shared::PadTextSizes.classes_for(:lg)
+      end
+
+      def test_raises_error_for_invalid_size
+        error = assert_raises(ArgumentError) { Component.new(size: :xl) }
+        assert_includes error.message, "Invalid size"
+      end
     end
   end
 end

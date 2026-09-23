@@ -356,6 +356,30 @@
   ) %>
   </section>
 
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Sizes", anchor_link: true, subtitle: "Density for padding, title, and description.") %>
+    <div class="space-y-4 mb-4">
+      <%= render FlatPack::Alert::Component.new(
+        title: "Small alert",
+        description: "Tighter padding and text.",
+        style: :info,
+        size: :sm
+      ) %>
+      <%= render FlatPack::Alert::Component.new(
+        title: "Medium alert (default)",
+        description: "Matches today’s padding.",
+        style: :success,
+        size: :md
+      ) %>
+      <%= render FlatPack::Alert::Component.new(
+        title: "Large alert",
+        description: "Roomier padding and type.",
+        style: :warning,
+        size: :lg
+      ) %>
+    </div>
+  </section>
+
   <!-- Documentation Link -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Documentation", anchor_link: true, subtitle: "Examples for Documentation.") %>

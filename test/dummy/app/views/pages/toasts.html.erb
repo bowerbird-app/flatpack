@@ -172,6 +172,15 @@
   <% end %>
 </section>
 
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Sizes", anchor_link: true, subtitle: "Static samples of sm/md/lg density. Live toasts still use the region templates.") %>
+  <div class="space-y-4 mb-4 max-w-md">
+    <%= render FlatPack::Toast::Component.new(text: "Small toast", style: :info, size: :sm, timeout: 0, dismissible: false) %>
+    <%= render FlatPack::Toast::Component.new(text: "Medium toast (default)", style: :success, size: :md, timeout: 0, dismissible: false) %>
+    <%= render FlatPack::Toast::Component.new(text: "Large toast", style: :warning, size: :lg, timeout: 0, dismissible: false) %>
+  </div>
+</section>
+
 <!-- Turbo Stream Example -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Turbo Stream Integration", anchor_link: true, subtitle: "Examples for Turbo Stream Integration.") %>

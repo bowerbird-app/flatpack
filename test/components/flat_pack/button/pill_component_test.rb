@@ -69,6 +69,32 @@ module FlatPack
 
           assert_match(/Unsafe URL detected/, error.message)
         end
+
+        def test_default_size_is_medium
+          render_inline(Component.new(items: [{text: "Overview", href: "/demo/buttons"}]))
+
+          assert_includes page.native.to_html, FlatPack::Shared::PadTextSizes.classes_for(:md)
+        end
+
+        def test_renders_small_size
+          render_inline(Component.new(size: :sm, items: [{text: "Overview", href: "/demo/buttons"}]))
+
+          assert_includes page.native.to_html, FlatPack::Shared::PadTextSizes.classes_for(:sm)
+        end
+
+        def test_renders_large_size
+          render_inline(Component.new(size: :lg, items: [{text: "Overview", href: "/demo/buttons"}]))
+
+          assert_includes page.native.to_html, FlatPack::Shared::PadTextSizes.classes_for(:lg)
+        end
+
+        def test_raises_error_for_invalid_size
+          error = assert_raises(ArgumentError) do
+            Component.new(size: :xl, items: [{text: "Overview", href: "/demo/buttons"}])
+          end
+
+          assert_includes error.message, "Invalid size"
+        end
       end
     end
   end

@@ -5,7 +5,9 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "text-[var(--color-error)]"
+      # "text-[var(--color-error)]" "h-[var(--checkbox-size)]" "w-[var(--checkbox-size)]"
+
+      SIZES = FlatPack::Shared::ControlSize::SIZES
 
       def initialize(
         name:,
@@ -16,6 +18,7 @@ module FlatPack
         required: false,
         error: nil,
         help_text: nil,
+        size: :md,
         **system_arguments
       )
         @custom_class = system_arguments[:class]
@@ -29,6 +32,7 @@ module FlatPack
         @required = required
         @error = error
         @help_text = normalize_help_text!(help_text)
+        @size = FlatPack::Shared::ControlSize.normalize!(size)
 
         validate_name!
         validate_options!
@@ -88,7 +92,8 @@ module FlatPack
           checked: checked,
           disabled: option_disabled,
           required: @required,
-          class: radio_classes
+          class: radio_classes,
+          style: size_style
         }
 
         describedby = describedby_tokens((help_text_id if @help_text), (error_id if @error))
@@ -96,6 +101,14 @@ module FlatPack
         attrs[:aria][:invalid] = "true" if @error
 
         apply_default_validation(attrs.compact, error_id: error_id, has_error: @error.present?)
+      end
+
+      def size_style
+        declaration = FlatPack::Shared::ControlSize.css_var_declaration(@size)
+        existing = @system_arguments[:style] || @system_arguments["style"]
+        return declaration unless existing.present?
+
+        "#{existing.to_s.rstrip.sub(/;+\z/, "")}; #{declaration}"
       end
 
       def wrapper_classes
@@ -118,7 +131,7 @@ module FlatPack
       def radio_classes
         base_classes = [
           "flat-pack-radio",
-          "h-4 w-4",
+          "h-[var(--checkbox-size)] w-[var(--checkbox-size)]",
           "rounded-full",
           "border",
           "bg-[var(--surface-background-color)]",

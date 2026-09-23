@@ -54,3 +54,43 @@
     title: "Radio Group Examples"
   ) %>
 </section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Sizes", anchor_link: true, subtitle: "Same sm/md/lg map as Checkbox. md matches Checkbox (1.25rem), so radios grow vs the old h-4.") %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body(class: "space-y-[var(--stack-gap-lg)]") do %>
+      <%= render FlatPack::RadioGroup::Component.new(
+        name: "size_demo_sm",
+        options: ["One", "Two"],
+        label: "Small",
+        size: :sm,
+        value: "One"
+      ) %>
+      <%= render FlatPack::RadioGroup::Component.new(
+        name: "size_demo_md",
+        options: ["One", "Two"],
+        label: "Medium (default)",
+        size: :md,
+        value: "One"
+      ) %>
+      <%= render FlatPack::RadioGroup::Component.new(
+        name: "size_demo_lg",
+        options: ["One", "Two"],
+        label: "Large",
+        size: :lg,
+        value: "One"
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::RadioGroup::Component.new(name: &quot;plan&quot;, options: [&quot;One&quot;, &quot;Two&quot;], size: :sm) %&gt;
+      &lt;%= render FlatPack::RadioGroup::Component.new(name: &quot;plan&quot;, options: [&quot;One&quot;, &quot;Two&quot;], size: :md) %&gt;
+      &lt;%= render FlatPack::RadioGroup::Component.new(name: &quot;plan&quot;, options: [&quot;One&quot;, &quot;Two&quot;], size: :lg) %&gt;
+    CODE
+    language: "erb",
+    title: "Sizes"
+  ) %>
+</section>
