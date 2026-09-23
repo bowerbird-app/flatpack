@@ -174,6 +174,38 @@ module FlatPack
         assert_selector "div[data-testid='layout']"
       end
 
+      def test_flush_sidebar_is_the_default
+        render_inline(Component.new) do |layout|
+          layout.sidebar { "Sidebar" }
+        end
+
+        refute_includes page.native.to_html, "data-flat-pack-sidebar-floating"
+      end
+
+      def test_floating_sidebar_marks_the_column
+        render_inline(Component.new(floating: true, side: :right)) do |layout|
+          layout.sidebar { "Sidebar" }
+        end
+
+        assert_selector "div[data-flat-pack-sidebar-floating='true'][data-mobile-drawer-side='right']"
+      end
+
+      def test_floating_false_matches_the_flush_rail
+        render_inline(Component.new(floating: false)) do |layout|
+          layout.sidebar { "Sidebar" }
+        end
+
+        refute_includes page.native.to_html, "data-flat-pack-sidebar-floating"
+      end
+
+      def test_floating_rejects_non_boolean
+        error = assert_raises(ArgumentError) do
+          Component.new(floating: "yes")
+        end
+
+        assert_includes error.message, "floating must be true or false"
+      end
+
       def test_shell_does_not_register_legacy_navbar_controller
         render_inline(Component.new) do |layout|
           layout.sidebar { "Sidebar" }

@@ -481,6 +481,48 @@
     [data-flat-pack-sidebar-collapsed="false"] [data-flat-pack--sidebar-layout-target="footer"] {
       opacity: 1;
     }
+
+    /*
+      Floating rail. Inset lives on the column so the grid track grows with it
+      and the width transition stays on the 16rem / 4rem box. Mobile drawer
+      rules stay outside this breakpoint.
+    */
+    [data-flat-pack-sidebar-floating="true"] {
+      margin-top: var(--sidebar-float-inset) !important;
+      margin-bottom: var(--sidebar-float-inset) !important;
+      height: calc(100vh - (var(--sidebar-float-inset) * 2)) !important;
+    }
+
+    [data-flat-pack-sidebar-floating="true"][data-mobile-drawer-side="left"] {
+      margin-left: var(--sidebar-float-inset) !important;
+    }
+
+    [data-flat-pack-sidebar-floating="true"][data-mobile-drawer-side="right"] {
+      margin-right: var(--sidebar-float-inset) !important;
+    }
+
+    /* Descendant, not a direct child: hosts may wrap the aside (dummy does). */
+    [data-flat-pack-sidebar-floating="true"] aside {
+      --sidebar-background-color: var(--sidebar-float-background-color);
+      --sidebar-header-background-color: var(--sidebar-float-background-color);
+      border-style: solid !important;
+      border-width: 1px !important;
+      border-color: var(--sidebar-border-color) !important;
+      border-radius: var(--sidebar-float-radius);
+      box-shadow: var(--sidebar-float-shadow);
+    }
+
+    /* Rounded palette is the default and the empty data-theme="rounded" alias.
+       Other named themes keep a square floating rail. */
+    html[data-theme]:not([data-theme="rounded"]) [data-flat-pack-sidebar-floating="true"] aside {
+      border-radius: 0 !important;
+    }
+
+    /* Full border is 2px, so the collapsed icon formula uses 2px instead of 1px. */
+    [data-flat-pack-sidebar-floating="true"][data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"] > [data-flat-pack-sidebar-item-icon="true"],
+    [data-flat-pack-sidebar-floating="true"][data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"] > span.flex-shrink-0:first-child {
+      margin-left: calc((4rem - 2px - (var(--spacing) * 4) - 1.25rem) / 2 - 0.25rem) !important;
+    }
   }
 
   [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack--sidebar-layout-target="scrollContainer"] {

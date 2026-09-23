@@ -75,6 +75,26 @@ class PagesControllerPrivateTest < ActiveSupport::TestCase
     assert_includes new_key, request.path
   end
 
+  test "page_cache_key separates the floating shell from the flush rail" do
+    controller = PagesController.new
+    request = OpenStruct.new(path: "/demo/sidebar/collapsible", query_string: "")
+    controller.define_singleton_method(:request) { request }
+    controller.define_singleton_method(:page_template_cache_version) { "templates" }
+    controller.define_singleton_method(:component_cache_version) { "components" }
+    controller.define_singleton_method(:layout_stylesheet_cache_version) { "styles" }
+    controller.define_singleton_method(:importmap_cache_version) { "importmap" }
+    controller.define_singleton_method(:params) { ActionController::Parameters.new({}) }
+
+    flush_key = controller.send(:page_cache_key)
+
+    controller.define_singleton_method(:params) { ActionController::Parameters.new(floating: "1") }
+    floating_key = controller.send(:page_cache_key)
+
+    refute_equal flush_key, floating_key
+    assert_includes floating_key, "floating"
+    assert_includes flush_key, request.path
+  end
+
   test "page_template_cache_version includes shared view partials" do
     controller = PagesController.new
     version = controller.send(:page_template_cache_version)

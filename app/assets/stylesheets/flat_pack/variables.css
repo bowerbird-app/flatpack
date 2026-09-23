@@ -246,6 +246,10 @@
   --tooltip-max-width: var(--tooltip-max-width);
   --tooltip-radius: var(--tooltip-radius);
   --sidebar-background-color: var(--sidebar-background-color);
+  --sidebar-float-inset: var(--sidebar-float-inset);
+  --sidebar-float-background-color: var(--sidebar-float-background-color);
+  --sidebar-float-shadow: var(--sidebar-float-shadow);
+  --sidebar-float-radius: var(--sidebar-float-radius);
   --sidebar-border-color: var(--sidebar-border-color);
   --sidebar-divider-color: var(--sidebar-divider-color);
   --sidebar-item-text-color: var(--sidebar-item-text-color);
@@ -871,6 +875,10 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --tooltip-font-size: 0.875rem;
   --tooltip-max-width: 20rem;
   --sidebar-background-color: var(--surface-page-background-color);
+  --sidebar-float-inset: 1rem;
+  --sidebar-float-background-color: #fff;
+  --sidebar-float-shadow: var(--shadow-md);
+  --sidebar-float-radius: var(--radius-lg);
   --sidebar-border-color: var(--surface-border-color);
   --sidebar-divider-color: var(--surface-border-color);
   --sidebar-item-text-color: var(--surface-muted-content-color);
@@ -1306,6 +1314,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --shadow-button-active: 0 0 8px 4px rgba(142, 142, 142, 0.15);
   --modal-backdrop-blur: 3px;
   --sidebar-background-color: oklch(0.17 0.01 250);
+  --sidebar-float-background-color: oklch(0.22 0.02 250);
   --top-nav-background-color: oklch(0.18 0.01 250);
 }
 
