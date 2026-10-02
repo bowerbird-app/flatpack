@@ -829,6 +829,12 @@ ol.flat-pack-list {
   list-style: none;
 }
 
+/* List rows use parent gap for spacing — no margin-bottom on items. */
+.flat-pack-list > li[role="listitem"] {
+  margin-bottom: 0;
+  margin-block-end: 0;
+}
+
 /* Pointer reorder: free-float drag, soft lift, radial spotlight. */
 .flat-pack-list--orderable > li[role="listitem"] {
   position: relative;

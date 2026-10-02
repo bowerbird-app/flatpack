@@ -33,7 +33,18 @@ module FlatPack
       def test_includes_spacing_classes
         render_inline(Component.new) { "content" }
 
-        assert_includes page.native.to_html, "space-y-3"
+        html = page.native.to_html
+        assert_includes html, "flex flex-col"
+        assert_includes html, "gap-3"
+        refute_includes html, "space-y-3"
+      end
+
+      def test_list_item_css_clears_bottom_margin
+        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+
+        assert_includes css, ".flat-pack-list > li[role=\"listitem\"]"
+        assert_match(/\.flat-pack-list > li\[role="listitem"\] \{[^}]*margin-bottom:\s*0/m, css)
+        assert_match(/\.flat-pack-list > li\[role="listitem"\] \{[^}]*margin-block-end:\s*0/m, css)
       end
 
       def test_merges_custom_classes
@@ -69,7 +80,9 @@ module FlatPack
 
       def test_renders_dense_spacing
         render_inline(Component.new(spacing: :dense)) { "content" }
-        assert_includes page.native.to_html, "space-y-1"
+        html = page.native.to_html
+        assert_includes html, "gap-1"
+        refute_includes html, "space-y-1"
       end
 
       def test_enables_selectable_behavior_when_requested
