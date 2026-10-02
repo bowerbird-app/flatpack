@@ -177,6 +177,8 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --easing-standard: cubic-bezier(0.2, 0, 0, 1);
   --easing-enter: cubic-bezier(0.05, 0.7, 0.1, 1);
   --easing-exit: cubic-bezier(0.3, 0, 1, 1);
+  --easing-spring: cubic-bezier(0.34, 1.25, 0.64, 1); /* list/layout only */
+  --easing-spring-snappy: cubic-bezier(0.22, 1.35, 0.36, 1); /* list/layout only */
   --font-sans: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
   --text-xs: 0.75rem;

@@ -13,6 +13,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.197] - 2026-10-02
+
+### Added
+- List orderable spring tokens `--easing-spring` and `--easing-spring-snappy` for list/layout reorder only. Overlay enter/exit stay bounce-free.
+- Orderable list drag chrome: soft elevation shadow and radial spotlight via `--fp-list-drag-x` / `--fp-list-drag-y`.
+
+### Changed
+- List `orderable:` uses pointer-driven reorder with FLIP sibling springs and a snappy drop settle instead of HTML5 drag-and-drop (`opacity-70` ghost + primary ring). Ruby API, save payload, and `list:reordered` / `list:saved` / `list:error` detail shapes are unchanged.
+- Orderable lists add `.flat-pack-list--orderable`. Under `prefers-reduced-motion: reduce`, drag still works and DOM order still updates; springs snap.
+- List spacing uses `flex flex-col` + `gap-3` / `gap-1` instead of `space-y-*`, so rows keep `margin-bottom: 0` (no Tailwind `margin-block-end` from `space-y`). Orderable + divided lists omit gap so the divider spacing stays even.
+- Bumped the gem version to `0.1.197`.
+
+### Upgrade notes
+- No host call-site changes. Keep passing `orderable:` / `orderable_url:` / method / param names as before.
+- List roots now use `flex flex-col gap-*` instead of `space-y-*`. Rebuild host Tailwind so `gap-1` / `gap-3` utilities exist if you rely on class scanning.
+- Rebuild host Tailwind (or reload kit CSS) so spring tokens and orderable drag classes apply. Do not use `--easing-spring*` on overlays.
+- Redeploy so `meta.gem_version` shows `0.1.197`.
+
 ## [0.1.196] - 2026-09-23
 
 ### Added

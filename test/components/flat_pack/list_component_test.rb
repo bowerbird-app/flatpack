@@ -33,7 +33,18 @@ module FlatPack
       def test_includes_spacing_classes
         render_inline(Component.new) { "content" }
 
-        assert_includes page.native.to_html, "space-y-3"
+        html = page.native.to_html
+        assert_includes html, "flex flex-col"
+        assert_includes html, "gap-3"
+        refute_includes html, "space-y-3"
+      end
+
+      def test_list_item_css_clears_bottom_margin
+        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+
+        assert_includes css, ".flat-pack-list > li[role=\"listitem\"]"
+        assert_match(/\.flat-pack-list > li\[role="listitem"\] \{[^}]*margin-bottom:\s*0/m, css)
+        assert_match(/\.flat-pack-list > li\[role="listitem"\] \{[^}]*margin-block-end:\s*0/m, css)
       end
 
       def test_merges_custom_classes
@@ -69,7 +80,9 @@ module FlatPack
 
       def test_renders_dense_spacing
         render_inline(Component.new(spacing: :dense)) { "content" }
-        assert_includes page.native.to_html, "space-y-1"
+        html = page.native.to_html
+        assert_includes html, "gap-1"
+        refute_includes html, "space-y-1"
       end
 
       def test_enables_selectable_behavior_when_requested
@@ -87,11 +100,24 @@ module FlatPack
           param_target_position_name: "target_position"
         )) { "content" }
 
-        assert_selector "ul[data-controller='flat-pack--list-orderable']"
+        assert_selector "ul.flat-pack-list--orderable[data-controller='flat-pack--list-orderable']"
         assert_selector "ul[data-flat-pack--list-orderable-orderable-url-value='/demo/list/reorder']"
         assert_selector "ul[data-flat-pack--list-orderable-orderable-method-value='PATCH']"
         assert_selector "ul[data-flat-pack--list-orderable-param-uuid-name-value='moving_recording_id']"
         assert_selector "ul[data-flat-pack--list-orderable-param-target-position-name-value='target_position']"
+      end
+
+      def test_orderable_divided_list_skips_gap
+        render_inline(Component.new(
+          orderable: true,
+          divider: true,
+          orderable_url: "/demo/list/reorder"
+        )) { "content" }
+
+        html = page.native.to_html
+        assert_selector "ul.flat-pack-list--orderable.flat-pack-list-divided"
+        refute_includes html, "gap-3"
+        refute_includes html, "gap-1"
       end
 
       def test_combines_selectable_and_orderable_controllers

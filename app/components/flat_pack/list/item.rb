@@ -89,7 +89,7 @@ module FlatPack
         classes(
           "flex items-start",
           "rounded-[var(--radius-sm)]",
-          "py-3 px-4",
+          "py-4 px-4",
           "text-[var(--surface-content-color)]",
           ("transition-colors hover:bg-[var(--list-item-hover-background-color)]" if @hover),
           ("bg-[var(--list-item-active-background-color)]" if @active)

@@ -268,11 +268,13 @@ Kit CSS defines `.fp-tabular-nums` (`font-variant-numeric: tabular-nums`), `.fp-
 --easing-standard: cubic-bezier(0.2, 0, 0, 1)  /* in-place: hover, toggle, width */
 --easing-enter: cubic-bezier(0.05, 0.7, 0.1, 1)  /* decelerate: overlay enter */
 --easing-exit: cubic-bezier(0.3, 0, 1, 1)  /* accelerate: overlay exit */
+--easing-spring: cubic-bezier(0.34, 1.25, 0.64, 1)  /* list/layout sibling FLIP only */
+--easing-spring-snappy: cubic-bezier(0.22, 1.35, 0.36, 1)  /* list/layout drop settle only */
 ```
 
-`--easing-*` are set on `:root`, for the same reason as durations. Kit overlays use `ease-[var(--easing-enter)]` / `ease-[var(--easing-exit)]`, or `motionTransition()` in Stimulus. In-place motion (switch, progress, sidebar) uses `--easing-standard`. There is no bounce: charcoal / rounded is Corporate/Premium, not Playful.
+`--easing-*` are set on `:root`, for the same reason as durations. Kit overlays use `ease-[var(--easing-enter)]` / `ease-[var(--easing-exit)]`, or `motionTransition()` in Stimulus. In-place motion (switch, progress, sidebar) uses `--easing-standard`. Overlay enter/exit stay bounce-free. `--easing-spring` and `--easing-spring-snappy` are the exception for list (and future layout) reorder settle — do not use them on modals, drawers, toasts, popovers, or tooltips.
 
-Use `--easing-enter` for modal, drawer, command palette, toast, dropdown, popover, and tooltip entrance. Use `--easing-exit` for their leave. Modal, drawer, and command palette enter on `--duration-slow` and exit on `--duration-base`. Popover, tooltip, searchable Select, Combobox, and the FlatPack date picker stay on `--duration-base` both ways, with a few pixels of offset from the trigger. Those form panels share `playOverlayEnter` / `playOverlayExit` in `controllers/flat_pack/reduced_motion`, so a close in flight can reverse and `hidden` is applied after the exit duration. Form invalid is colour only; do not shake the field.
+Use `--easing-enter` for modal, drawer, command palette, toast, dropdown, popover, and tooltip entrance. Use `--easing-exit` for their leave. Modal, drawer, and command palette enter on `--duration-slow` and exit on `--duration-base`. Popover, tooltip, searchable Select, Combobox, and the FlatPack date picker stay on `--duration-base` both ways, with a few pixels of offset from the trigger. Those form panels share `playOverlayEnter` / `playOverlayExit` in `controllers/flat_pack/reduced_motion`, so a close in flight can reverse and `hidden` is applied after the exit duration. Form invalid is colour only; do not shake the field. List orderable sibling shifts use `--easing-spring`; drop settle uses `--easing-spring-snappy`. Under reduced motion, list reorder snaps with no spring.
 
 ### Overlay and chrome
 ```css
