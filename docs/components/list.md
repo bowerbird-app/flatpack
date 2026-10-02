@@ -16,7 +16,7 @@ Use List when grouped items need consistent spacing and optional active-item sel
 | name | type | default | required | description |
 |---|---|---|---|---|
 | `ordered` | Boolean | `false` | no | Renders `<ol>` when true, otherwise `<ul>`. Ordered lists show decimal markers via a kit slot. |
-| `spacing` | Symbol | `:comfortable` | no | Vertical spacing preset via column `gap` (`gap-3` comfortable, `gap-1` dense). Rows do not use bottom margin. |
+| `spacing` | Symbol | `:comfortable` | no | Vertical spacing via column `gap` (`gap-3` / `gap-1`). Rows keep no bottom margin. Skipped when `orderable` and `divider` are both on so the rule stays even. |
 | `divider` | Boolean | `false` | no | Adds a straight 1px rule between rows. The rule does not follow the row's corner radius. |
 | `selectable` | Boolean | `false` | no | Enables active-item behavior via `flat-pack--list-selectable`. |
 | `orderable` | Boolean | `false` | no | Enables pointer-driven reordering via `flat-pack--list-orderable`. |

@@ -107,6 +107,19 @@ module FlatPack
         assert_selector "ul[data-flat-pack--list-orderable-param-target-position-name-value='target_position']"
       end
 
+      def test_orderable_divided_list_skips_gap
+        render_inline(Component.new(
+          orderable: true,
+          divider: true,
+          orderable_url: "/demo/list/reorder"
+        )) { "content" }
+
+        html = page.native.to_html
+        assert_selector "ul.flat-pack-list--orderable.flat-pack-list-divided"
+        refute_includes html, "gap-3"
+        refute_includes html, "gap-1"
+      end
+
       def test_combines_selectable_and_orderable_controllers
         render_inline(Component.new(
           selectable: true,
