@@ -1,4 +1,18 @@
 import { Controller } from "@hotwired/stimulus"
+import { prefersReducedMotion } from "controllers/flat_pack/reduced_motion"
+
+const DRAG_THRESHOLD_PX = 4
+const SETTLE_MS = 300
+const SIBLING_FLIP_MS = 280
+const HANDLE_CLASS = "flat-pack-list-item-drag-handle"
+const PLACEHOLDER_CLASS = "flat-pack-list-reorder-placeholder"
+const DRAGGING_CLASS = "is-dragging"
+const REORDERING_CLASS = "is-reordering"
+const HANDLE_MARKUP = `
+  <svg viewBox="0 0 16 16" width="14" height="14" fill="none" aria-hidden="true" focusable="false">
+    <path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>
+`.trim()
 
 export default class extends Controller {
   static values = {
@@ -10,32 +24,51 @@ export default class extends Controller {
 
   connect() {
     this.draggedItem = null
-    this.dragOverItem = null
+    this.placeholder = null
     this.pendingSave = false
     this.needsSave = false
+    this.pointerId = null
+    this.startX = 0
+    this.startY = 0
+    this.originX = 0
+    this.originY = 0
+    this.itemWidth = 0
+    this.itemHeight = 0
+    this.dragging = false
+    this.dragActivated = false
+    this.settleTimer = null
     this.boundHandlers = new Map()
+    this.boundWindowPointerMove = this.handleWindowPointerMove.bind(this)
+    this.boundWindowPointerUp = this.handleWindowPointerUp.bind(this)
+    this.boundWindowPointerCancel = this.handleWindowPointerUp.bind(this)
     this.setupDraggableItems()
   }
 
   disconnect() {
+    this.cancelActiveDrag()
     this.removeDragListeners()
   }
 
   setupDraggableItems() {
     this.listItems().forEach((item) => {
-      item.setAttribute("draggable", "true")
+      this.ensureDragHandle(item)
       this.bindDragListeners(item)
     })
   }
 
+  ensureDragHandle(item) {
+    if (item.querySelector(`.${HANDLE_CLASS}`)) return
+
+    const handle = document.createElement("span")
+    handle.className = HANDLE_CLASS
+    handle.setAttribute("aria-hidden", "true")
+    handle.innerHTML = HANDLE_MARKUP
+    item.prepend(handle)
+  }
+
   bindDragListeners(item) {
     const handlers = {
-      dragstart: this.handleDragStart.bind(this),
-      dragend: this.handleDragEnd.bind(this),
-      dragover: this.handleDragOver.bind(this),
-      drop: this.handleDrop.bind(this),
-      dragenter: this.handleDragEnter.bind(this),
-      dragleave: this.handleDragLeave.bind(this)
+      pointerdown: this.handlePointerDown.bind(this)
     }
 
     this.boundHandlers.set(item, handlers)
@@ -54,88 +87,364 @@ export default class extends Controller {
           item.removeEventListener(eventName, handler)
         })
       }
-
-      item.removeAttribute("draggable")
     })
 
     this.boundHandlers.clear()
+    this.teardownWindowListeners()
   }
 
-  handleDragStart(event) {
-    this.draggedItem = event.currentTarget
+  handlePointerDown(event) {
+    if (event.button != null && event.button !== 0) return
+    if (this.dragging) return
+    if (this.isInteractiveTarget(event.target)) return
 
-    if (this.draggedItem) {
-      this.draggedItem.classList.add("opacity-70")
-    }
+    const item = event.currentTarget
+    if (!item || !this.listItems().includes(item)) return
 
-    event.dataTransfer.effectAllowed = "move"
-    event.dataTransfer.setData("text/plain", this.itemIdentifier(this.draggedItem) || "")
+    this.draggedItem = item
+    this.pointerId = event.pointerId
+    this.startX = event.clientX
+    this.startY = event.clientY
+    this.dragActivated = false
+    this.dragging = true
+
+    window.addEventListener("pointermove", this.boundWindowPointerMove)
+    window.addEventListener("pointerup", this.boundWindowPointerUp)
+    window.addEventListener("pointercancel", this.boundWindowPointerCancel)
   }
 
-  handleDragEnd() {
-    if (this.draggedItem) {
-      this.draggedItem.classList.remove("opacity-70")
+  handleWindowPointerMove(event) {
+    if (!this.dragging || event.pointerId !== this.pointerId) return
+
+    if (!this.dragActivated) {
+      const dx = event.clientX - this.startX
+      const dy = event.clientY - this.startY
+      if (Math.hypot(dx, dy) < DRAG_THRESHOLD_PX) return
+
+      this.activateDrag(event)
     }
 
-    this.listItems().forEach((item) => {
-      item.classList.remove("ring-2", "ring-inset", "ring-[var(--color-primary)]")
+    event.preventDefault()
+    this.updateDragPosition(event.clientX, event.clientY)
+    this.updateSpotlight(event.clientX, event.clientY)
+    this.updatePlaceholderForPointer(event.clientY)
+  }
+
+  async handleWindowPointerUp(event) {
+    if (!this.dragging || (event.pointerId != null && event.pointerId !== this.pointerId)) return
+
+    this.teardownWindowListeners()
+
+    if (!this.dragActivated) {
+      this.resetDragState()
+      return
+    }
+
+    event.preventDefault()
+    await this.finishDrag()
+  }
+
+  activateDrag(event) {
+    const item = this.draggedItem
+    if (!item) return
+
+    this.dragActivated = true
+    const rect = item.getBoundingClientRect()
+    this.originX = rect.left
+    this.originY = rect.top
+    this.itemWidth = rect.width
+    this.itemHeight = rect.height
+    this.startX = event.clientX
+    this.startY = event.clientY
+
+    this.placeholder = this.createPlaceholder(item)
+    item.parentNode.insertBefore(this.placeholder, item)
+
+    this.element.classList.add(REORDERING_CLASS)
+    item.classList.add(DRAGGING_CLASS)
+    item.style.touchAction = "none"
+    item.style.width = `${this.itemWidth}px`
+    item.style.height = `${this.itemHeight}px`
+    item.style.position = "fixed"
+    item.style.left = `${this.originX}px`
+    item.style.top = `${this.originY}px`
+    item.style.zIndex = "40"
+    item.style.margin = "0"
+    item.style.pointerEvents = "none"
+    item.style.userSelect = "none"
+    item.style.willChange = "transform, box-shadow"
+
+    try {
+      item.setPointerCapture?.(this.pointerId)
+    } catch (_error) {
+      // Pointer may already be released on some browsers.
+    }
+
+    this.updateDragPosition(event.clientX, event.clientY)
+    this.updateSpotlight(event.clientX, event.clientY)
+  }
+
+  updateDragPosition(clientX, clientY) {
+    const item = this.draggedItem
+    if (!item) return
+
+    const dx = clientX - this.startX
+    const dy = clientY - this.startY
+    item.style.transform = `translate3d(${dx}px, ${dy}px, 0)`
+  }
+
+  updateSpotlight(clientX, clientY) {
+    const item = this.draggedItem
+    if (!item) return
+
+    const rect = item.getBoundingClientRect()
+    const x = ((clientX - rect.left) / Math.max(rect.width, 1)) * 100
+    const y = ((clientY - rect.top) / Math.max(rect.height, 1)) * 100
+    item.style.setProperty("--fp-list-drag-x", `${clamp(x, 0, 100)}%`)
+    item.style.setProperty("--fp-list-drag-y", `${clamp(y, 0, 100)}%`)
+  }
+
+  updatePlaceholderForPointer(clientY) {
+    if (!this.placeholder || !this.placeholder.parentNode) return
+
+    const items = this.listItems().filter((item) => item !== this.draggedItem)
+    let insertBeforeNode = null
+
+    for (const item of items) {
+      const rect = item.getBoundingClientRect()
+      const midpoint = rect.top + rect.height / 2
+      if (clientY < midpoint) {
+        insertBeforeNode = item
+        break
+      }
+    }
+
+    const target = insertBeforeNode || null
+    const currentNext = this.placeholder.nextElementSibling === this.draggedItem
+      ? this.placeholder.nextElementSibling?.nextElementSibling
+      : this.placeholder.nextElementSibling
+
+    if (target === currentNext) return
+    if (target == null && this.placeholder.parentNode.lastElementChild === this.placeholder) return
+    if (target && target.previousElementSibling === this.placeholder) return
+
+    this.movePlaceholder(target)
+  }
+
+  movePlaceholder(beforeNode) {
+    const parent = this.placeholder?.parentNode
+    if (!parent) return
+
+    const siblings = this.listItems().filter((item) => item !== this.draggedItem)
+    const firstRects = prefersReducedMotion()
+      ? null
+      : new Map(siblings.map((item) => [item, item.getBoundingClientRect()]))
+
+    if (beforeNode) {
+      parent.insertBefore(this.placeholder, beforeNode)
+    } else {
+      parent.appendChild(this.placeholder)
+    }
+
+    if (!firstRects) return
+
+    this.playSiblingFlip(siblings, firstRects)
+  }
+
+  playSiblingFlip(siblings, firstRects) {
+    siblings.forEach((item) => {
+      const first = firstRects.get(item)
+      if (!first) return
+
+      const last = item.getBoundingClientRect()
+      const dx = first.left - last.left
+      const dy = first.top - last.top
+      if (dx === 0 && dy === 0) return
+
+      item.style.transition = "none"
+      item.style.transform = `translate3d(${dx}px, ${dy}px, 0)`
+      void item.offsetHeight
+      item.style.transition = `transform var(--duration-slow) var(--easing-spring)`
+      item.style.transform = "translate3d(0, 0, 0)"
+
+      window.setTimeout(() => {
+        if (item.classList.contains(DRAGGING_CLASS)) return
+        item.style.transition = ""
+        item.style.transform = ""
+      }, SIBLING_FLIP_MS)
     })
-
-    this.draggedItem = null
-    this.dragOverItem = null
   }
 
-  handleDragOver(event) {
-    if (event.preventDefault) {
-      event.preventDefault()
+  async finishDrag() {
+    const item = this.draggedItem
+    if (!item || !this.placeholder) {
+      this.resetDragState()
+      return
     }
 
-    event.dataTransfer.dropEffect = "move"
-    return false
-  }
+    const originIndex = this.originIndexAmongItems(item)
+    const targetIndex = this.placeholderIndex()
+    await this.settleDraggedItem()
+    this.commitPlaceholder(item)
+    this.clearDragStyles(item)
 
-  handleDragEnter(event) {
-    const item = event.currentTarget
-
-    if (item !== this.draggedItem) {
-      this.dragOverItem = item
-      item.classList.add("ring-2", "ring-inset", "ring-[var(--color-primary)]")
-    }
-  }
-
-  handleDragLeave(event) {
-    const item = event.currentTarget
-    item.classList.remove("ring-2", "ring-inset", "ring-[var(--color-primary)]")
-  }
-
-  async handleDrop(event) {
-    if (event.stopPropagation) {
-      event.stopPropagation()
-    }
-
-    const dropTarget = this.dragOverItem || event.currentTarget
-
-    if (this.draggedItem && this.draggedItem !== dropTarget && dropTarget) {
-      this.reorderDom(dropTarget)
+    if (originIndex !== targetIndex) {
       this.emitReorderEvent()
       await this.saveOrder()
     }
 
-    return false
+    this.resetDragState()
   }
 
+  originIndexAmongItems(item) {
+    return this.listItems().indexOf(item)
+  }
+
+  placeholderIndex() {
+    if (!this.placeholder?.parentNode) return 0
+
+    return Array.from(this.placeholder.parentNode.children)
+      .filter((node) => node === this.placeholder || (node.matches?.("li[role='listitem']") && node !== this.draggedItem))
+      .indexOf(this.placeholder)
+  }
+
+  settleDraggedItem() {
+    const item = this.draggedItem
+    const placeholder = this.placeholder
+    if (!item || !placeholder) return Promise.resolve()
+
+    if (prefersReducedMotion()) {
+      return Promise.resolve()
+    }
+
+    const target = placeholder.getBoundingClientRect()
+    const current = item.getBoundingClientRect()
+    const dx = target.left - current.left
+    const dy = target.top - current.top
+
+    if (dx === 0 && dy === 0) return Promise.resolve()
+
+    const existing = item.style.transform || "translate3d(0px, 0px, 0)"
+    const match = existing.match(/translate3d\(([-\d.]+)px,\s*([-\d.]+)px/)
+    const fromX = match ? Number.parseFloat(match[1]) : 0
+    const fromY = match ? Number.parseFloat(match[2]) : 0
+
+    item.style.transition = `transform var(--duration-slow) var(--easing-spring-snappy), box-shadow var(--duration-fast) var(--easing-standard)`
+    item.style.transform = `translate3d(${fromX + dx}px, ${fromY + dy}px, 0)`
+
+    return new Promise((resolve) => {
+      this.settleTimer = window.setTimeout(() => {
+        this.settleTimer = null
+        resolve()
+      }, SETTLE_MS)
+    })
+  }
+
+  commitPlaceholder(item) {
+    if (!this.placeholder?.parentNode || !item) return
+
+    this.placeholder.parentNode.insertBefore(item, this.placeholder)
+    this.placeholder.remove()
+    this.placeholder = null
+  }
+
+  clearDragStyles(item) {
+    if (!item) return
+
+    item.classList.remove(DRAGGING_CLASS)
+    item.style.touchAction = ""
+    item.style.width = ""
+    item.style.height = ""
+    item.style.position = ""
+    item.style.left = ""
+    item.style.top = ""
+    item.style.zIndex = ""
+    item.style.margin = ""
+    item.style.pointerEvents = ""
+    item.style.userSelect = ""
+    item.style.willChange = ""
+    item.style.transform = ""
+    item.style.transition = ""
+    item.style.removeProperty("--fp-list-drag-x")
+    item.style.removeProperty("--fp-list-drag-y")
+  }
+
+  cancelActiveDrag() {
+    if (this.settleTimer) {
+      window.clearTimeout(this.settleTimer)
+      this.settleTimer = null
+    }
+
+    this.teardownWindowListeners()
+
+    if (this.placeholder) {
+      if (this.draggedItem && this.placeholder.parentNode) {
+        this.placeholder.parentNode.insertBefore(this.draggedItem, this.placeholder)
+      }
+      this.placeholder.remove()
+      this.placeholder = null
+    }
+
+    if (this.draggedItem) {
+      this.clearDragStyles(this.draggedItem)
+    }
+
+    this.resetDragState()
+  }
+
+  resetDragState() {
+    this.element.classList.remove(REORDERING_CLASS)
+    this.listItems().forEach((item) => {
+      if (!item.classList.contains(DRAGGING_CLASS)) {
+        item.style.transition = ""
+        item.style.transform = ""
+      }
+    })
+
+    this.draggedItem = null
+    this.placeholder = null
+    this.pointerId = null
+    this.dragging = false
+    this.dragActivated = false
+  }
+
+  teardownWindowListeners() {
+    window.removeEventListener("pointermove", this.boundWindowPointerMove)
+    window.removeEventListener("pointerup", this.boundWindowPointerUp)
+    window.removeEventListener("pointercancel", this.boundWindowPointerCancel)
+  }
+
+  createPlaceholder(item) {
+    const placeholder = document.createElement("li")
+    placeholder.className = PLACEHOLDER_CLASS
+    placeholder.setAttribute("aria-hidden", "true")
+    placeholder.style.height = `${item.getBoundingClientRect().height}px`
+    return placeholder
+  }
+
+  // Testable DOM reorder used by unit tests and as a reduced-motion hard path helper.
   reorderDom(dropTarget) {
     const parent = this.draggedItem?.parentNode
-    if (!parent || !this.draggedItem) return
+    if (!parent || !this.draggedItem || !dropTarget) return
 
     const draggedIndex = Array.from(parent.children).indexOf(this.draggedItem)
     const dropIndex = Array.from(parent.children).indexOf(dropTarget)
+
+    if (draggedIndex < 0 || dropIndex < 0) return
 
     if (draggedIndex < dropIndex) {
       parent.insertBefore(this.draggedItem, dropTarget.nextSibling)
     } else {
       parent.insertBefore(this.draggedItem, dropTarget)
     }
+  }
+
+  async commitReorderTo(dropTarget) {
+    if (!this.draggedItem || !dropTarget || this.draggedItem === dropTarget) return
+
+    this.reorderDom(dropTarget)
+    this.emitReorderEvent()
+    await this.saveOrder()
   }
 
   emitReorderEvent() {
@@ -165,6 +474,14 @@ export default class extends Controller {
 
   listItems() {
     return Array.from(this.element.querySelectorAll("li[role='listitem']"))
+  }
+
+  isInteractiveTarget(target) {
+    if (!(target instanceof Element)) return false
+
+    return Boolean(
+      target.closest("a, button, input, select, textarea, label, [contenteditable='true'], [data-no-reorder]")
+    )
   }
 
   async saveOrder() {
@@ -225,4 +542,8 @@ export default class extends Controller {
   get csrfToken() {
     return document.querySelector("meta[name='csrf-token']")?.content || ""
   }
+}
+
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value))
 }

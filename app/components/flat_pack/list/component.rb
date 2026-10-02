@@ -72,6 +72,7 @@ module FlatPack
       def list_classes
         classes(
           "flat-pack-list",
+          ("flat-pack-list--orderable" if @orderable),
           (@spacing == :dense) ? "space-y-1" : "space-y-3",
           ("flat-pack-list-divided" if @divider)
         )

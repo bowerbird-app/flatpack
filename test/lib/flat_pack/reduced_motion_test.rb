@@ -32,6 +32,8 @@ module FlatPack
       assert_match(/--easing-standard:\s*cubic-bezier\(0\.2, 0, 0, 1\)/, root_block)
       assert_match(/--easing-enter:\s*cubic-bezier\(0\.05, 0\.7, 0\.1, 1\)/, root_block)
       assert_match(/--easing-exit:\s*cubic-bezier\(0\.3, 0, 1, 1\)/, root_block)
+      assert_match(/--easing-spring:\s*cubic-bezier/, root_block)
+      assert_match(/--easing-spring-snappy:\s*cubic-bezier/, root_block)
     end
 
     test "stimulus overlays import the reduced motion helper" do
@@ -55,6 +57,7 @@ module FlatPack
         select_controller.js
         combobox_controller.js
         flatpack_date_picker_controller.js
+        list_orderable_controller.js
       ]
 
       controllers.each do |name|

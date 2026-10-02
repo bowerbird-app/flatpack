@@ -87,7 +87,7 @@ module FlatPack
           param_target_position_name: "target_position"
         )) { "content" }
 
-        assert_selector "ul[data-controller='flat-pack--list-orderable']"
+        assert_selector "ul.flat-pack-list--orderable[data-controller='flat-pack--list-orderable']"
         assert_selector "ul[data-flat-pack--list-orderable-orderable-url-value='/demo/list/reorder']"
         assert_selector "ul[data-flat-pack--list-orderable-orderable-method-value='PATCH']"
         assert_selector "ul[data-flat-pack--list-orderable-param-uuid-name-value='moving_recording_id']"

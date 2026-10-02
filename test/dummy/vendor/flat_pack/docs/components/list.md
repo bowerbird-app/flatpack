@@ -19,7 +19,7 @@ Use List when grouped items need consistent spacing and optional active-item sel
 | `spacing` | Symbol | `:comfortable` | no | Vertical spacing preset; `:dense` uses tighter spacing, other values use comfortable spacing. |
 | `divider` | Boolean | `false` | no | Adds a straight 1px rule between rows. The rule does not follow the row's corner radius. |
 | `selectable` | Boolean | `false` | no | Enables active-item behavior via `flat-pack--list-selectable`. |
-| `orderable` | Boolean | `false` | no | Enables drag-and-drop reordering via `flat-pack--list-orderable`. |
+| `orderable` | Boolean | `false` | no | Enables pointer-driven reordering via `flat-pack--list-orderable`. |
 | `orderable_url` | String | `nil` | no | PATCH/PUT endpoint used to persist the new item position after drop. |
 | `orderable_method` | String/Symbol | `:patch` | no | Request method sent by the orderable controller. |
 | `param_uuid_name` | String | `"id"` | no | Form field name used for the dragged item UUID in orderable requests. |
@@ -51,6 +51,19 @@ None.
 Ordered markers use `--list-marker-color`, `--list-marker-min-width`, and `--list-marker-gap`. Leading icons use `--surface-content-color` via `.flat-pack-list-item-icon` so they stay visible next to the number.
 
 `divider: true` draws `.flat-pack-list-divided` rules with `border-radius: 0`. Rows may still use `--radius-sm`. That radius must not bend the rule.
+
+## Orderable motion
+Orderable lists use pointer-driven reorder (not HTML5 drag-and-drop). Press and drag a row:
+
+- The row free-floats with the pointer at full opacity (no ghost fade).
+- A soft elevation shadow and a radial spotlight track the pointer (`--fp-list-drag-x` / `--fp-list-drag-y`).
+- A hamburger handle fades in on the dragged row for the duration of the drag.
+- Siblings spring aside with FLIP using `--easing-spring` (list/layout only).
+- Release settles with `--easing-spring-snappy`, then persists if `orderable_url` is set.
+
+Under `prefers-reduced-motion: reduce`, drag still works and the DOM order still updates, but sibling FLIP and settle snaps are instant. Overlay easings stay bounce-free; spring tokens are a list/layout exception.
+
+The root adds `.flat-pack-list--orderable` when `orderable: true`.
 
 ## Example
 ```erb
@@ -99,6 +112,8 @@ moving_recording_id=2b6f8d0d-3c1b-4ec0-9ed0-7a5d8d3b4e11&target_position=2
 - Selectable mode sets `aria-current="page"` on active links.
 - Orderable mode expects stable item IDs so the controller can persist the dragged item's UUID and destination position.
 - Orderable mode can customize the request parameter names with `param_uuid_name` and `param_target_position_name`.
+- Links, buttons, and form controls inside a row do not start a reorder drag.
+- The drag handle is decorative (`aria-hidden`) and appears only while dragging.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).

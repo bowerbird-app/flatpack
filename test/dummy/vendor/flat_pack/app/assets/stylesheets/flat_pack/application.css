@@ -829,6 +829,85 @@ ol.flat-pack-list {
   list-style: none;
 }
 
+/* Pointer reorder: free-float drag, soft lift, handle fade, radial spotlight. */
+.flat-pack-list--orderable > li[role="listitem"] {
+  position: relative;
+  cursor: grab;
+}
+
+.flat-pack-list--orderable.is-reordering {
+  user-select: none;
+}
+
+.flat-pack-list--orderable.is-reordering > li[role="listitem"].is-dragging {
+  cursor: grabbing;
+  touch-action: none;
+  overflow: hidden;
+  background-color: var(--surface-background-color);
+  box-shadow: 0 12px 28px -10px rgb(0 0 0 / 0.18), 0 4px 10px -6px rgb(0 0 0 / 0.1);
+  transition: box-shadow var(--duration-fast) var(--easing-standard);
+}
+
+.flat-pack-list.flat-pack-list-divided.is-reordering > li[role="listitem"].is-dragging::before {
+  display: none;
+}
+
+.flat-pack-list--orderable > li[role="listitem"].is-dragging::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(
+    circle 7rem at var(--fp-list-drag-x, 50%) var(--fp-list-drag-y, 50%),
+    rgb(255 255 255 / 0.42),
+    transparent 70%
+  );
+}
+
+.flat-pack-list-item-drag-handle {
+  position: absolute;
+  left: 0.55rem;
+  top: 50%;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  color: var(--surface-muted-content-color);
+  opacity: 0;
+  transform: translateY(-50%);
+  pointer-events: none;
+  transition: opacity var(--duration-fast) var(--easing-standard);
+}
+
+.flat-pack-list--orderable > li[role="listitem"].is-dragging > .flat-pack-list-item-drag-handle {
+  opacity: 1;
+}
+
+.flat-pack-list-reorder-placeholder {
+  display: list-item;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flat-pack-list--orderable > li[role="listitem"].is-dragging {
+    transition: none;
+  }
+
+  .flat-pack-list-item-drag-handle {
+    transition: none;
+  }
+}
+
 /* Row radius must not bend the separator. A 1px rule stays square on every theme. */
 .flat-pack-list.flat-pack-list-divided > li + li {
   position: relative;

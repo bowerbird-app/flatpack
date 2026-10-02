@@ -25,6 +25,7 @@ Existing:
 - `--easing-standard` `cubic-bezier(0.2, 0, 0, 1)`. In-place motion.
 - `--easing-enter` `cubic-bezier(0.05, 0.7, 0.1, 1)`. Overlay entrance (decelerate).
 - `--easing-exit` `cubic-bezier(0.3, 0, 1, 1)`. Overlay exit (accelerate). No bounce.
+- `--easing-spring` / `--easing-spring-snappy`. List/layout reorder only (sibling FLIP + drop settle). Do not use on overlays.
 - `--transition-fast` / `--transition-base` / `--transition-slow` alias `--duration-*`. Prefer `--duration-*` in new code.
 
 Use `ease-[var(--easing-*)]` in ViewComponents and `motionTransition()` in Stimulus. Do not hardcode `ease-in-out` or a one-off cubic-bezier.
@@ -56,6 +57,8 @@ Implement these on the Flatpack component, not in the host.
 **Form validation.** Border and help text colour on `--duration-base`. Do not shake the field.
 
 **List insert / remove.** Height plus opacity on `--duration-slow`. Reduced motion: snap.
+
+**List orderable reorder.** Pointer drag (not HTML5 DnD). Free-float row, soft shadow, radial spotlight, handle fade-in. Sibling FLIP on `--easing-spring`; drop settle on `--easing-spring-snappy`. Reduced motion: functional drag with instant settle.
 
 **Skeleton to content.** Crossfade on `--duration-slow`. Stop `--skeleton-shimmer-duration` when content is in. Reduced motion: no shimmer, static skeleton then snap.
 
