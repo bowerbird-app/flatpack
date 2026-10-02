@@ -57,7 +57,6 @@ Orderable lists use pointer-driven reorder (not HTML5 drag-and-drop). Press and 
 
 - The row free-floats with the pointer at full opacity (no ghost fade).
 - A soft elevation shadow and a radial spotlight track the pointer (`--fp-list-drag-x` / `--fp-list-drag-y`).
-- A hamburger handle fades in on the dragged row for the duration of the drag.
 - Siblings spring aside with FLIP using `--easing-spring` (list/layout only).
 - Release settles with `--easing-spring-snappy`, then persists if `orderable_url` is set.
 
@@ -113,7 +112,6 @@ moving_recording_id=2b6f8d0d-3c1b-4ec0-9ed0-7a5d8d3b4e11&target_position=2
 - Orderable mode expects stable item IDs so the controller can persist the dragged item's UUID and destination position.
 - Orderable mode can customize the request parameter names with `param_uuid_name` and `param_target_position_name`.
 - Links, buttons, and form controls inside a row do not start a reorder drag.
-- The drag handle is decorative (`aria-hidden`) and appears only while dragging.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).

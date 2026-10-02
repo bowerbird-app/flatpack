@@ -4,15 +4,9 @@ import { prefersReducedMotion } from "controllers/flat_pack/reduced_motion"
 const DRAG_THRESHOLD_PX = 4
 const SETTLE_MS = 300
 const SIBLING_FLIP_MS = 280
-const HANDLE_CLASS = "flat-pack-list-item-drag-handle"
 const PLACEHOLDER_CLASS = "flat-pack-list-reorder-placeholder"
 const DRAGGING_CLASS = "is-dragging"
 const REORDERING_CLASS = "is-reordering"
-const HANDLE_MARKUP = `
-  <svg viewBox="0 0 16 16" width="14" height="14" fill="none" aria-hidden="true" focusable="false">
-    <path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-  </svg>
-`.trim()
 
 export default class extends Controller {
   static values = {
@@ -51,19 +45,8 @@ export default class extends Controller {
 
   setupDraggableItems() {
     this.listItems().forEach((item) => {
-      this.ensureDragHandle(item)
       this.bindDragListeners(item)
     })
-  }
-
-  ensureDragHandle(item) {
-    if (item.querySelector(`.${HANDLE_CLASS}`)) return
-
-    const handle = document.createElement("span")
-    handle.className = HANDLE_CLASS
-    handle.setAttribute("aria-hidden", "true")
-    handle.innerHTML = HANDLE_MARKUP
-    item.prepend(handle)
   }
 
   bindDragListeners(item) {

@@ -829,7 +829,7 @@ ol.flat-pack-list {
   list-style: none;
 }
 
-/* Pointer reorder: free-float drag, soft lift, handle fade, radial spotlight. */
+/* Pointer reorder: free-float drag, soft lift, radial spotlight. */
 .flat-pack-list--orderable > li[role="listitem"] {
   position: relative;
   cursor: grab;
@@ -865,27 +865,6 @@ ol.flat-pack-list {
   );
 }
 
-.flat-pack-list-item-drag-handle {
-  position: absolute;
-  left: 0.55rem;
-  top: 50%;
-  z-index: 1;
-  display: inline-flex;
-  align-items: center;
-  width: 1rem;
-  height: 1rem;
-  margin: 0;
-  color: var(--surface-muted-content-color);
-  opacity: 0;
-  transform: translateY(-50%);
-  pointer-events: none;
-  transition: opacity var(--duration-fast) var(--easing-standard);
-}
-
-.flat-pack-list--orderable > li[role="listitem"].is-dragging > .flat-pack-list-item-drag-handle {
-  opacity: 1;
-}
-
 .flat-pack-list-reorder-placeholder {
   display: list-item;
   list-style: none;
@@ -899,10 +878,6 @@ ol.flat-pack-list {
 
 @media (prefers-reduced-motion: reduce) {
   .flat-pack-list--orderable > li[role="listitem"].is-dragging {
-    transition: none;
-  }
-
-  .flat-pack-list-item-drag-handle {
     transition: none;
   }
 }

@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - List orderable spring tokens `--easing-spring` and `--easing-spring-snappy` for list/layout reorder only. Overlay enter/exit stay bounce-free.
-- Orderable list drag chrome: soft elevation shadow, radial spotlight via `--fp-list-drag-x` / `--fp-list-drag-y`, and a hamburger handle that fades in while dragging.
+- Orderable list drag chrome: soft elevation shadow and radial spotlight via `--fp-list-drag-x` / `--fp-list-drag-y`.
 
 ### Changed
 - List `orderable:` uses pointer-driven reorder with FLIP sibling springs and a snappy drop settle instead of HTML5 drag-and-drop (`opacity-70` ghost + primary ring). Ruby API, save payload, and `list:reordered` / `list:saved` / `list:error` detail shapes are unchanged.
