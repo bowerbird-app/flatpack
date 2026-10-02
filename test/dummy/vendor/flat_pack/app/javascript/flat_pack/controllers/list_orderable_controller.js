@@ -109,7 +109,6 @@ export default class extends Controller {
 
     event.preventDefault()
     this.updateDragPosition(event.clientX, event.clientY)
-    this.updateSpotlight(event.clientX, event.clientY)
     this.updatePlaceholderForPointer(event.clientY)
   }
 
@@ -164,7 +163,6 @@ export default class extends Controller {
     }
 
     this.updateDragPosition(event.clientX, event.clientY)
-    this.updateSpotlight(event.clientX, event.clientY)
   }
 
   updateDragPosition(clientX, clientY) {
@@ -174,17 +172,6 @@ export default class extends Controller {
     const dx = clientX - this.startX
     const dy = clientY - this.startY
     item.style.transform = `translate3d(${dx}px, ${dy}px, 0)`
-  }
-
-  updateSpotlight(clientX, clientY) {
-    const item = this.draggedItem
-    if (!item) return
-
-    const rect = item.getBoundingClientRect()
-    const x = ((clientX - rect.left) / Math.max(rect.width, 1)) * 100
-    const y = ((clientY - rect.top) / Math.max(rect.height, 1)) * 100
-    item.style.setProperty("--fp-list-drag-x", `${clamp(x, 0, 100)}%`)
-    item.style.setProperty("--fp-list-drag-y", `${clamp(y, 0, 100)}%`)
   }
 
   updatePlaceholderForPointer(clientY) {
@@ -348,8 +335,6 @@ export default class extends Controller {
     item.style.willChange = ""
     item.style.transform = ""
     item.style.transition = ""
-    item.style.removeProperty("--fp-list-drag-x")
-    item.style.removeProperty("--fp-list-drag-y")
   }
 
   cancelActiveDrag() {
@@ -525,8 +510,4 @@ export default class extends Controller {
   get csrfToken() {
     return document.querySelector("meta[name='csrf-token']")?.content || ""
   }
-}
-
-function clamp(value, min, max) {
-  return Math.min(max, Math.max(min, value))
 }
