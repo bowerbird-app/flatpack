@@ -58,7 +58,7 @@ Implement these on the Flatpack component, not in the host.
 
 **List insert / remove.** Height plus opacity on `--duration-slow`. Reduced motion: snap.
 
-**List orderable reorder.** Pointer drag (not HTML5 DnD). Free-float row, soft shadow, radial spotlight. Sibling FLIP on `--easing-spring`; drop settle on `--easing-spring-snappy`. Reduced motion: functional drag with instant settle.
+**List orderable reorder.** Pointer drag (not HTML5 DnD). Free-float row, soft shadow. Sibling FLIP on `--easing-spring`; drop settle on `--easing-spring-snappy`. Reduced motion: functional drag with instant settle.
 
 **Skeleton to content.** Crossfade on `--duration-slow`. Stop `--skeleton-shimmer-duration` when content is in. Reduced motion: no shimmer, static skeleton then snap.
 

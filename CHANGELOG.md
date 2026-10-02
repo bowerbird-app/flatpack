@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.198] - 2026-10-02
+
+### Changed
+- Orderable list drag no longer paints a radial spotlight / circle-of-light under the pointer. Soft elevation shadow, pointer drag, FLIP springs, and reduced-motion settle are unchanged. Removed `--fp-list-drag-x` / `--fp-list-drag-y`.
+- Bumped the gem version to `0.1.198`.
+
+### Upgrade notes
+- No host call-site changes. Rebuild host CSS (or reload kit CSS) so the spotlight `::after` rule is gone.
+- Redeploy so `meta.gem_version` shows `0.1.198`.
+
 ## [0.1.197] - 2026-10-02
 
 ### Added

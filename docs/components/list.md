@@ -56,7 +56,7 @@ Ordered markers use `--list-marker-color`, `--list-marker-min-width`, and `--lis
 Orderable lists use pointer-driven reorder (not HTML5 drag-and-drop). Press and drag a row:
 
 - The row free-floats with the pointer at full opacity (no ghost fade).
-- A soft elevation shadow and a radial spotlight track the pointer (`--fp-list-drag-x` / `--fp-list-drag-y`).
+- A soft elevation shadow lifts the dragged row.
 - Siblings spring aside with FLIP using `--easing-spring` (list/layout only).
 - Release settles with `--easing-spring-snappy`, then persists if `orderable_url` is set.
 
