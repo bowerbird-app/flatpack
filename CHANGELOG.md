@@ -13,6 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.202] - 2026-10-07
+
+### Changed
+- `FlatPack::SegmentedButtons::Component` accepts `style:` and defaults to `:primary`. The selected button uses that Button style. Unselected buttons stay `:secondary`.
+- Unknown style names raise the same `ArgumentError` as `Button`. Passing `style:` on a segment raises `ArgumentError`.
+- Bumped the gem version to `0.1.202`.
+
+### Upgrade notes
+- `style:` defaults to `:primary`. Unselected segments stay `:secondary`.
+- Reload is not required for the Ruby API.
+- A host that toggles selection in JavaScript must set `data-fp-style`, not swap colour classes.
+
 ## [0.1.201] - 2026-10-07
 
 ### Changed
