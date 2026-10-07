@@ -36,6 +36,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/forms/radio_group
     /demo/forms/select
     /demo/forms/combobox
+    /demo/collection_editor
     /demo/forms/nested_multiselect
     /demo/forms/switch
     /demo/forms/combined

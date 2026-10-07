@@ -72,6 +72,62 @@
   </div>
 
 
+  <div id="collection-editor" class="space-y-6">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Collection Editor",
+      subtitle: "Title, description, handle, row, and drop indicator follow the collection editor tokens.",
+      anchor_link: true
+    ) %>
+    <p class="text-sm text-[var(--surface-muted-content-color)]">
+      The sample below overrides <code>--collection-editor-title-color</code> and
+      <code>--collection-editor-border-color</code> with the danger color. The full collaborators form, picker, and reorder demo is on
+      <a class="underline" href="/demo/collection_editor#theme">Collection Editor</a>.
+    </p>
+    <style>
+      .collection-editor-token-override {
+        --collection-editor-title-color: var(--color-danger-background-color);
+        --collection-editor-border-color: var(--color-danger-background-color);
+        --collection-editor-handle-color: var(--color-danger-background-color);
+        --collection-editor-drop-indicator-color: var(--color-danger-background-color);
+      }
+    </style>
+    <div class="collection-editor-token-override">
+      <%= form_with url: "/demo/collection_editor", method: :get, data: {turbo: false} do |form| %>
+        <%= render FlatPack::CollectionEditor::Component.new(
+          title: "Collaborators",
+          add_label: "Add collaborator",
+          headers: ["Person", "Role"],
+          orderable: true,
+          empty_text: "No collaborators yet"
+        ) do |editor| %>
+          <% form.fields_for :project_people, @collection_editor_preview, child_index: "preview" do |row_form| %>
+            <% editor.with_row(form: row_form, association_name: :person_id) do |row| %>
+              <% row.with_entity(
+                form: row_form,
+                association_name: :person_id,
+                title: "Alice Chen",
+                description: "alice@example.com",
+                label: "Person",
+                search_placeholder: "Search people",
+                edit_label: "Edit person",
+                edit_url_template: "/demo/collection_editor/people/:id/edit"
+              ) %>
+              <% row.with_field do %>
+                <%= render FlatPack::Select::Component.new(
+                  name: row_form.field_name(:role),
+                  id: row_form.field_id(:role),
+                  label: "Role",
+                  options: ["Designer", "Photographer", "Producer"],
+                  value: "Designer"
+                ) %>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
   <div class="space-y-6">
     <%= render FlatPack::SectionTitle::Component.new(
       title: "Theme Demos",

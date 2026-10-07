@@ -1,0 +1,42 @@
+<%= form_with model: project, url: demo_collection_editor_project_path(project), method: :patch, class: "space-y-4" do |form| %>
+  <%= render FlatPack::TextInput::Component.new(
+    name: form.field_name(:name),
+    id: form.field_id(:name),
+    label: "Project",
+    value: project.name,
+    error: project.errors.full_messages_for(:name).to_sentence.presence
+  ) %>
+
+  <%= render FlatPack::CollectionEditor::Component.new(
+    title: title,
+    add_label: "Add collaborator",
+    empty_text: "No collaborators yet",
+    headers: ["Person", "Role"],
+    orderable: true,
+    orderable_url: demo_reorder_collection_editor_path(project),
+    param_uuid_name: "moving_recording_id",
+    param_target_position_name: "target_position"
+  ) do |editor| %>
+    <% project.project_people.each do |membership| %>
+      <% form.fields_for :project_people, membership, child_index: (membership.persisted? ? membership.id : membership.object_id) do |row_form| %>
+        <% editor.with_row(form: row_form, association_name: :person_id) do |row| %>
+          <%= render "demo/collection_editors/fields", row: row, row_form: row_form %>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <% editor.with_template do %>
+      <% form.fields_for :project_people, DemoProjectPerson.new, child_index: "NEW_RECORD" do |row_form| %>
+        <%= render FlatPack::CollectionEditor::Row::Component.new(
+          form: row_form,
+          association_name: :person_id,
+          index_token: "NEW_RECORD"
+        ) do |row| %>
+          <%= render "demo/collection_editors/fields", row: row, row_form: row_form %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::Button::Component.new(text: "Save collaborators", type: "submit", style: :primary) %>
+<% end %>

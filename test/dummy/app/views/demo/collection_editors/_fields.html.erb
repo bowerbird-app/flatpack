@@ -1,0 +1,46 @@
+<% object = row_form.object %>
+<% person = object.respond_to?(:person) ? object.person : nil %>
+<% title = local_assigns.key?(:title) ? local_assigns[:title] : person&.name %>
+<% description = local_assigns.key?(:description) ? local_assigns[:description] : person&.email %>
+<% person_error = object.errors.full_messages_for(:person).to_sentence.presence || object.errors.full_messages_for(:person_id).to_sentence.presence %>
+<% role_error = object.errors.full_messages_for(:role).to_sentence.presence %>
+<% row.with_entity(
+  form: row_form,
+  association_name: :person_id,
+  title: title,
+  description: description,
+  label: "Person",
+  search_url: demo_collection_editor_people_path,
+  create_url: demo_collection_editor_people_path,
+  create_label: "Create",
+  search_placeholder: "Search people",
+  empty_text: "No matches",
+  edit_url_template: "/demo/collection_editor/people/:id/edit",
+  edit_label: "Edit person",
+  change_label: "Change",
+  error: person_error
+) do %>
+  <%= render FlatPack::TextInput::Component.new(
+    name: "name",
+    label: "Name",
+    form: "collection-editor-unattached",
+    data: {create_field: "name", fill_from_query: "true"}
+  ) %>
+  <%= render FlatPack::EmailInput::Component.new(
+    name: "email",
+    label: "Email",
+    form: "collection-editor-unattached",
+    data: {create_field: "email"}
+  ) %>
+<% end %>
+<% row.with_field do %>
+  <%= render FlatPack::Select::Component.new(
+    name: row_form.field_name(:role),
+    id: row_form.field_id(:role),
+    label: "Role",
+    options: DemoProjectPerson::ROLES,
+    value: object.role,
+    placeholder: "Role",
+    error: role_error
+  ) %>
+<% end %>
