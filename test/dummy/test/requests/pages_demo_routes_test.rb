@@ -39,6 +39,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/forms/nested_multiselect
     /demo/forms/switch
     /demo/forms/combined
+    /demo/forms/unsaved_changes
     /demo/badges
     /demo/chips
     /demo/chip_groups
@@ -131,6 +132,17 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /mobile
     /mobile/bottom_nav
   ].freeze
+
+  test "unsaved changes demo wires the form controller and a default save button" do
+    get "/demo/forms/unsaved_changes"
+
+    assert_response :success
+    assert_includes response.body, 'data-controller="flat-pack--unsaved-changes"'
+    assert_includes response.body, 'data-flat-pack--unsaved-changes-target="submit"'
+    assert_includes response.body, 'data-fp-style="default"'
+    assert_includes response.body, "Save changes"
+    assert_includes response.body, "Edit any field to see the Save button become primary."
+  end
 
   test "demo pages respond successfully" do
     DEMO_PATHS.each do |path|

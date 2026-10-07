@@ -107,7 +107,8 @@ class DemoCatalog
             {title: "Picker", path: "/demo/picker", description: "Reusable file and image picker for any workflow", icon: :image},
             {title: "Switch", path: "/demo/forms/switch", description: "Toggle switch input examples", icon: :settings},
             {title: "Range Input", path: "/demo/range_input", description: "Slider input with live value", icon: :settings},
-            {title: "Combined Form", path: "/demo/forms/combined", description: "Full form with multiple input types", icon: :edit_3}
+            {title: "Combined Form", path: "/demo/forms/combined", description: "Full form with multiple input types", icon: :edit_3},
+            {title: "Unsaved changes", path: "/demo/forms/unsaved_changes", description: "Save button turns primary when a form has unsaved changes", icon: :edit_3}
           ]
         }
       ]

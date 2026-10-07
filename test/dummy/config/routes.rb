@@ -116,6 +116,8 @@ Rails.application.routes.draw do
   get "demo/forms/nested_multiselect", to: "pages#forms_nested_multiselect"
   get "demo/forms/switch", to: "pages#forms_switch"
   get "demo/forms/combined", to: "pages#forms_combined"
+  get "demo/forms/unsaved_changes", to: "pages#forms_unsaved_changes"
+  post "demo/forms/unsaved_changes", to: "pages#forms_unsaved_changes_save"
   get "demo/tables/basic", to: "pages#tables_basic"
   get "demo/tables/empty", to: "pages#tables_empty"
   get "demo/tables/sortable", to: "pages#tables_sortable"

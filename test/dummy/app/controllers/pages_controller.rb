@@ -95,6 +95,7 @@ class PagesController < ApplicationController
     modal_filter
     comments admin chat_demo chips chip_add_callback chip_remove_callback
     tables_basic tables_sortable local_time
+    forms_unsaved_changes
   ].freeze
 
   before_action :serve_from_page_cache, except: UNCACHED_ACTIONS
@@ -418,6 +419,14 @@ class PagesController < ApplicationController
   end
 
   def forms_combined
+  end
+
+  def forms_unsaved_changes
+  end
+
+  def forms_unsaved_changes_save
+    flash[:notice] = "Changes saved."
+    redirect_to demo_forms_unsaved_changes_path
   end
 
   def forms_create
