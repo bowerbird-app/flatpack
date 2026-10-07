@@ -245,9 +245,17 @@ export default class extends Controller {
     if (opts.readonly || this.disabledValue) return
 
     const format = opts.format || "html"
-    hiddenFieldEl.value = format === "html"
+    const next = format === "html"
       ? editor.getHTML()
       : JSON.stringify(editor.getJSON())
+    const changed = hiddenFieldEl.value !== next
+    hiddenFieldEl.value = next
+
+    if (this._hiddenFieldReady && changed) {
+      hiddenFieldEl.dispatchEvent(new Event("input", { bubbles: true }))
+    }
+
+    this._hiddenFieldReady = true
   }
 
   #updateCharacterCount(editor, opts) {
