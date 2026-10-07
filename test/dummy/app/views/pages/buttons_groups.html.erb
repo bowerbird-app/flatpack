@@ -11,8 +11,10 @@
     <%= render FlatPack::ButtonGroup::Component.new(
       data: {
         controller: "segmented-buttons-demo",
-        segmented_buttons_demo_active_classes_value: FlatPack::Button::Component::SCHEMES[:primary],
-        segmented_buttons_demo_inactive_classes_value: FlatPack::Button::Component::SCHEMES[:secondary]
+        segmented_buttons_demo_active_style_value: "primary",
+        segmented_buttons_demo_inactive_style_value: "secondary",
+        segmented_buttons_demo_active_press_class_value: FlatPack::Button::StyleRegistry.press_class(:primary),
+        segmented_buttons_demo_inactive_press_class_value: FlatPack::Button::StyleRegistry.press_class(:secondary)
       }
     ) do |group| %>
       <% group.button(FlatPack::Button::Component.new(text: "Left", style: :primary, aria: { pressed: true }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" })) %>
@@ -24,8 +26,10 @@
     <%= render FlatPack::ButtonGroup::Component.new(
       data: {
         controller: "segmented-buttons-demo",
-        segmented_buttons_demo_active_classes_value: FlatPack::Button::Component::SCHEMES[:primary],
-        segmented_buttons_demo_inactive_classes_value: FlatPack::Button::Component::SCHEMES[:secondary]
+        segmented_buttons_demo_active_style_value: "primary",
+        segmented_buttons_demo_inactive_style_value: "secondary",
+        segmented_buttons_demo_active_press_class_value: FlatPack::Button::StyleRegistry.press_class(:primary),
+        segmented_buttons_demo_inactive_press_class_value: FlatPack::Button::StyleRegistry.press_class(:secondary)
       }
     ) do |group| %>
       <% group.button(FlatPack::Button::Component.new(icon: "align-left", icon_only: true, style: :primary, aria: { pressed: true, label: "Align left" }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" })) %>
@@ -38,8 +42,10 @@
       &lt;%= render FlatPack::ButtonGroup::Component.new(
         data: {
           controller: "segmented-buttons-demo",
-          segmented_buttons_demo_active_classes_value: FlatPack::Button::Component::SCHEMES[:primary],
-          segmented_buttons_demo_inactive_classes_value: FlatPack::Button::Component::SCHEMES[:secondary]
+          segmented_buttons_demo_active_style_value: "primary",
+          segmented_buttons_demo_inactive_style_value: "secondary",
+          segmented_buttons_demo_active_press_class_value: FlatPack::Button::StyleRegistry.press_class(:primary),
+          segmented_buttons_demo_inactive_press_class_value: FlatPack::Button::StyleRegistry.press_class(:secondary)
         }
       ) do |group| %&gt;
         &lt;% group.button(FlatPack::Button::Component.new(text: "Left", style: :primary, aria: { pressed: true }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" })) %&gt;
