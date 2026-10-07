@@ -362,7 +362,7 @@ Tabs, chat incoming bubbles, sidebar/top-nav hover, list hover, and avatar fallb
 
 ### Buttons
 - Colors: `--color-default-*`, `--color-primary-*`, `--color-secondary-*`, `--color-ghost-*`, `--color-success-*`, `--color-warning-*`
-- Local paint: `--fp-button-background`, `--fp-button-hover-background`, `--fp-button-text`, `--fp-button-border`. Built-in `data-fp-style` values map these from `--button-primary-*` and the other scheme tokens. A host-registered style sets the paint tokens on `.fp-button[data-fp-style="…"]` and does not change the theme. See [Button](components/button.md).
+- Local paint: `--fp-button-background`, `--fp-button-hover-background`, `--fp-button-text`, `--fp-button-border`. Built-in `data-fp-style` values map these from `--button-primary-*` and the other scheme tokens. Slot assignment is `[data-fp-style]`. `.fp-button` is still the chrome. A host-registered style sets the paint tokens on `[data-fp-style="…"]` and does not change the theme. See [Button](components/button.md).
 - Radius: `--radius-md`
 - Shadow: `--button-shadow`, `--button-shadow-hover`, `--button-shadow-active`
 - Duration: `--duration-fast` for colour, border, and shadow
