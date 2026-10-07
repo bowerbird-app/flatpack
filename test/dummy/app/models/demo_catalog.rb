@@ -100,6 +100,7 @@ class DemoCatalog
             {title: "Time Input", path: "/demo/forms/time_input", description: "Native time input examples", icon: :calendar},
             {title: "File Input", path: "/demo/forms/file_input", description: "File upload input examples", icon: :box},
             {title: "Checkbox", path: "/demo/forms/checkbox", description: "Checkbox input examples", icon: :square},
+            {title: "Fieldset", path: "/demo/forms/fieldset", description: "Name a group of related fields", icon: :square},
             {title: "Radio Group", path: "/demo/forms/radio_group", description: "Single-choice radio group examples", icon: :square},
             {title: "Select", path: "/demo/forms/select", description: "Dropdown select input examples", icon: :chevron_down},
             {title: "Combobox", path: "/demo/forms/combobox", description: "Searchable single-choice field with a typed filter", icon: :search},

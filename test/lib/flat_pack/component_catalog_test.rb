@@ -16,6 +16,7 @@ module FlatPack
       names = listed_names
 
       assert_includes names, "Button::Component"
+      assert_includes names, "Fieldset::Component"
       assert_includes names, "Content::Component"
       assert_includes names, "List::Item"
       assert_includes names, "Timeline::Item"

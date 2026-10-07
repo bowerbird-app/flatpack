@@ -380,6 +380,9 @@ class PagesController < ApplicationController
   def forms_checkbox
   end
 
+  def forms_fieldset
+  end
+
   def forms_radio_group
   end
 

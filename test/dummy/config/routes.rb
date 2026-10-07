@@ -109,6 +109,7 @@ Rails.application.routes.draw do
   get "demo/forms/time_input", to: "pages#forms_time_input"
   get "demo/forms/file_input", to: "pages#forms_file_input"
   get "demo/forms/checkbox", to: "pages#forms_checkbox"
+  get "demo/forms/fieldset", to: "pages#forms_fieldset"
   get "demo/forms/radio_group", to: "pages#forms_radio_group"
   get "demo/forms/select", to: "pages#forms_select"
   get "demo/forms/select/options", to: "pages#forms_select_options"

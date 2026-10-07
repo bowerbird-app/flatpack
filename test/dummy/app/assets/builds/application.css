@@ -388,6 +388,12 @@
   .row-start-1 {
     grid-row-start: 1;
   }
+  .float-left {
+    float: left;
+  }
+  .clear-both {
+    clear: both;
+  }
   .container {
     width: 100%;
     @media (width >= 40rem) {

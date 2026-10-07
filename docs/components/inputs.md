@@ -11,7 +11,7 @@ Use these components when you need FlatPack-styled form controls with consistent
 - Related classes: `FlatPack::PasswordInput::Component`, `FlatPack::EmailInput::Component`, `FlatPack::PhoneInput::Component`, `FlatPack::SearchInput::Component`, `FlatPack::TextArea::Component`, `FlatPack::UrlInput::Component`, `FlatPack::NumberInput::Component`, `FlatPack::DateInput::Component`, `FlatPack::DateRangeInput::Component`, `FlatPack::DateTimeInput::Component`, `FlatPack::TimeInput::Component`, `FlatPack::FileInput::Component`, `FlatPack::Checkbox::Component`, `FlatPack::RadioGroup::Component`, `FlatPack::Select::Component`, `FlatPack::Combobox::Component`, `FlatPack::Switch::Component`
 - Internal (not a host-facing API): text-like inputs and Select compose `FlatPack::FormField::Component` for the shared label / help_text / error wrapper, and `FlatPack::FormField::ControlStyles` for the box class list that uses `--form-control-padding`. Keep rendering the public input components above — do not switch hosts to FormField.
 - Related Stimulus controller: `flat-pack--nested-multiselect` for legacy hierarchical checkbox groups that submit hidden inputs.
-- Related docs: [Range Input](range-input.md) (`FlatPack::RangeInput::Component`), [Combobox](combobox.md) (`FlatPack::Combobox::Component`), [Color Swatch](color-swatch.md) (`FlatPack::ColorSwatch::Component`), [Font Swatch](font-swatch.md) (`FlatPack::FontSwatch::Component`)
+- Related docs: [Fieldset](fieldset.md) (`FlatPack::Fieldset::Component`) for a titled group of controls, [Range Input](range-input.md) (`FlatPack::RangeInput::Component`), [Combobox](combobox.md) (`FlatPack::Combobox::Component`), [Color Swatch](color-swatch.md) (`FlatPack::ColorSwatch::Component`), [Font Swatch](font-swatch.md) (`FlatPack::FontSwatch::Component`)
 
 ## Props
 Common props used across most input components:
@@ -620,6 +620,9 @@ Always sanitize HTML output before rendering it back to users:
 ```
 
 `FlatPack::RichTextSanitizer` strips all tags and attributes not on its allowlist. `<img src="...">` tags rendered by TipTap are preserved.
+
+## Grouping fields
+Use [Fieldset](fieldset.md) when several controls share one name, such as an address or a set of preferences. The title is a `<legend>` inside a `<fieldset>`. Each control keeps its own `label`. `SectionTitle` stays a document heading.
 
 ## Accessibility
 - Label-to-control association is provided when `label` is passed (`for`/`id` linkage).

@@ -13,6 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.200] - 2026-10-07
+
+### Added
+- `FlatPack::Fieldset::Component` names a cluster of form controls. `title:` is the legend. Optional `description:`, `error:`, and `disabled:` cover the hint, the group message, and a native disabled group. The block is the fields. Demo: `/demo/forms/fieldset`.
+
+### Changed
+- Bumped the gem version to `0.1.200`.
+
+### Upgrade notes
+- Additive. Keep calling the same input components. Wrap a cluster in `FlatPack::Fieldset::Component` when that cluster needs a name.
+- Rebuild host Tailwind so the fieldset utilities (`float-left`, `clear-both`, `min-w-0`, `border-0`) are generated if the host scans component files.
+- Redeploy so `meta.gem_version` shows `0.1.200`.
+
 ## [0.1.199] - 2026-10-07
 
 ### Changed
