@@ -53,6 +53,7 @@ module FlatPack
       def section_attributes
         attrs = {
           class: section_classes,
+          style: section_style,
           data: {
             controller: merge_space_tokens(data_attributes[:controller] || data_attributes["controller"], "flat-pack--collection-editor"),
             flat_pack__collection_editor_template_index_value: @template_index
@@ -60,6 +61,23 @@ module FlatPack
         }
         attrs[:aria] = {labelledby: @title_id} if @title.present?
         merge_attributes(**attrs)
+      end
+
+      def section_style
+        columns = "--collection-editor-columns: #{column_template}"
+        host = @system_arguments[:style]
+        return columns if host.blank?
+
+        "#{host.to_s.sub(/;\s*\z/, "")}; #{columns}"
+      end
+
+      def column_template
+        content_count = @headers.present? ? @headers.length : 2
+        parts = []
+        parts << "auto" if @orderable
+        content_count.times { |index| parts << (index.zero? ? "minmax(0, 1.4fr)" : "minmax(8rem, 1fr)") }
+        parts << "auto"
+        parts.join(" ")
       end
 
       def section_classes
@@ -85,13 +103,11 @@ module FlatPack
       def render_headers
         return if @headers.blank?
 
-        content_tag(:div, class: "flat-pack-collection-editor-header", aria: {hidden: "true"}) do
-          safe_join([
-            content_tag(:span, ""),
-            safe_join(@headers.map { |header| content_tag(:span, header) }),
-            content_tag(:span, "")
-          ])
-        end
+        cells = []
+        cells << content_tag(:span, "") if @orderable
+        cells.concat(@headers.map { |header| content_tag(:span, header) })
+        cells << content_tag(:span, "")
+        content_tag(:div, safe_join(cells), class: "flat-pack-collection-editor-header", aria: {hidden: "true"})
       end
 
       def render_list

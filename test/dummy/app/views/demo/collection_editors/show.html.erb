@@ -90,19 +90,22 @@
 
     <div class="collection-editor-state-sample">
       <p class="text-sm text-[var(--surface-muted-content-color)]">Dragging and insertion indicator</p>
-      <div class="flat-pack-collection-editor flat-pack-collection-editor--orderable">
+      <div class="flat-pack-collection-editor flat-pack-collection-editor--orderable" style="--collection-editor-columns: auto minmax(0, 1.4fr) minmax(8rem, 1fr) auto">
         <div class="flat-pack-collection-editor-card">
           <ul class="flat-pack-list flat-pack-list--orderable flat-pack-collection-editor-rows is-reordering">
             <li class="flat-pack-list-reorder-placeholder is-visible" role="presentation"></li>
             <li class="flat-pack-collection-editor-row is-dragging is-lifted" role="listitem">
               <button type="button" class="flat-pack-collection-editor-handle" aria-label="Reorder Alice Chen">Drag</button>
               <div class="flat-pack-collection-editor-entity">
-                <p class="flat-pack-collection-editor-title">Alice Chen</p>
-                <p class="flat-pack-collection-editor-description">alice@example.com</p>
+                <div class="flat-pack-collection-editor-summary">
+                  <p class="flat-pack-collection-editor-title">Alice Chen</p>
+                  <p class="flat-pack-collection-editor-description">alice@example.com</p>
+                </div>
               </div>
               <div class="flat-pack-collection-editor-fields">
-                <p class="text-sm">Designer</p>
+                <p class="text-sm" style="padding: var(--form-control-padding)">Designer</p>
               </div>
+              <div class="flat-pack-collection-editor-actions"></div>
             </li>
           </ul>
         </div>

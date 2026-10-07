@@ -726,7 +726,7 @@
         { variable: "title", accepts: "String or nil", example: "title: \"Collaborators\"" },
         { variable: "add_label", accepts: "String", example: "add_label: \"Collaborator\"" },
         { variable: "empty_text", accepts: "String", example: "empty_text: \"No collaborators yet\"" },
-        { variable: "headers", accepts: "Array of String or nil", example: "headers: [\"Person\", \"Role\"]" },
+        { variable: "headers", accepts: "Array of String or nil. One label per content cell: entity, then each field.", example: "headers: [\"Person\", \"Role\"]" },
         { variable: "orderable", accepts: "true, false", example: "orderable: true" },
         { variable: "orderable_url", accepts: "String or nil", example: "orderable_url: demo_reorder_collection_editor_path(project)" },
         { variable: "orderable_method", accepts: ":patch, :put", example: "orderable_method: :patch" },
@@ -748,7 +748,7 @@
         { variable: "persisted", accepts: "true, false, or nil", example: "persisted: membership.persisted?" },
         { variable: "index_token", accepts: "String", example: "index_token: \"NEW_RECORD\"" },
         { variable: "entity", accepts: "slot", example: "row.with_entity(form: row_form, association_name: :person_id, title: person.name)" },
-        { variable: "field", accepts: "slot", example: "row.with_field { render select }" },
+        { variable: "field", accepts: "slot. One cell per block. Pass chrome: :cell on the input.", example: "row.with_field { render select }" },
         { variable: "action", accepts: "slot", example: "row.with_action { link_to \"Edit person\", edit_person_path(person) }" }
       ]
     },
@@ -794,6 +794,7 @@
         { variable: "quick_copy", accepts: "true, false", example: "quick_copy: true" },
         { variable: "min_characters", accepts: "Integer or nil", example: "min_characters: 20" },
         { variable: "max_characters", accepts: "Integer or nil", example: "max_characters: 60" },
+        { variable: "chrome", accepts: ":field, :cell", example: "chrome: :cell" },
         { variable: "**system_arguments", accepts: "Hash", example: "id: \"email\", class: \"w-full\", data: { testid: \"email-input\" }" }
       ]
     },
@@ -817,6 +818,7 @@
         { variable: "disabled", accepts: "true, false", example: "disabled: true" },
         { variable: "required", accepts: "true, false", example: "required: true" },
         { variable: "error", accepts: "String or nil", example: "error: \"Please select at least one option\"" },
+        { variable: "chrome", accepts: ":field, :cell", example: "chrome: :cell" },
         { variable: "**system_arguments", accepts: "Hash", example: "id: \"country-select\", class: \"w-full\", data: { testid: \"country-select\" }" }
       ]
     },
@@ -860,6 +862,7 @@
         { variable: "min", accepts: "String, Date, Time, DateTime, nil", example: "min: \"2026-01-01\"" },
         { variable: "max", accepts: "String, Date, Time, DateTime, nil", example: "max: \"2026-12-31\"" },
         { variable: "picker", accepts: ":native, :flatpack_date_picker", example: "picker: :flatpack_date_picker" },
+        { variable: "chrome", accepts: ":field, :cell", example: "chrome: :cell" },
         { variable: "**system_arguments", accepts: "Hash", example: "id: \"reporting-period\", class: \"w-full\", data: { testid: \"date-input\" }" }
       ]
     },
@@ -896,6 +899,7 @@
         { variable: "error", accepts: "String or nil", example: "error: \"Start date and time is required\"" },
         { variable: "min", accepts: "String, Time, DateTime, Date, nil", example: "min: \"2026-01-01T09:00\"" },
         { variable: "max", accepts: "String, Time, DateTime, Date, nil", example: "max: \"2026-12-31T17:00\"" },
+        { variable: "chrome", accepts: ":field, :cell", example: "chrome: :cell" },
         { variable: "**system_arguments", accepts: "Hash", example: "id: \"starts-at\", class: \"w-full\", data: { testid: \"date-time-input\" }" }
       ]
     },

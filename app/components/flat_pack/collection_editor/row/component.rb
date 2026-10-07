@@ -117,9 +117,9 @@ module FlatPack
         def render_fields
           return if fields.blank?
 
-          content_tag(:div, class: "flat-pack-collection-editor-fields") do
-            safe_join(fields)
-          end
+          safe_join(fields.map { |field|
+            content_tag(:div, class: "flat-pack-collection-editor-fields") { field.to_s }
+          })
         end
 
         def render_actions

@@ -134,8 +134,48 @@ module FlatPack
         assert_includes css, "var(--collection-editor-drop-indicator-color)"
         assert_includes css, "@media (min-width: 40rem)"
         assert_includes css, ".flat-pack-collection-editor-row[hidden]"
-        assert_includes css, "grid-template-areas:\n    \"handle entity\""
+        assert_includes css, "--collection-editor-columns"
+        assert_includes css, "grid-template-columns: subgrid"
+        assert_includes css, "border-inline-end: 1px solid var(--collection-editor-border-color)"
+        assert_includes css, "inset 0 0 0 2px var(--color-ring)"
+        assert_includes css, "inset 0 0 0 2px var(--color-error)"
+        refute_includes css, "justify-content: center"
         assert_includes variables, "--collection-editor-row-hover-background-color: var(--list-item-hover-background-color);"
+      end
+
+      def test_each_field_is_its_own_cell_and_headers_line_up
+        membership = Record.new(id: 12, person_id: 4, role: "Designer", name: "Alice Chen")
+        row_form = builder("project[project_people_attributes][12]", membership)
+
+        render_inline(Component.new(headers: ["Person", "Role", "Note"], orderable: true, style: "color: red")) do |editor|
+          editor.with_row(form: row_form) do |row|
+            row.with_entity(form: row_form, association_name: :person_id, title: "Alice Chen")
+            row.with_field { row_form.text_field(:role) }
+            row.with_field { row_form.text_field(:name) }
+          end
+        end
+
+        assert_selector ".flat-pack-collection-editor-fields", count: 2
+        header = page.find(".flat-pack-collection-editor-header", visible: :all)
+        assert_equal ["", "Person", "Role", "Note", ""], header.all("span", visible: :all).map { |span| span.text }
+        assert_includes page.native.to_html, "color: red; --collection-editor-columns: auto minmax(0, 1.4fr) minmax(8rem, 1fr) minmax(8rem, 1fr) auto"
+      end
+
+      def test_headers_omit_the_handle_gutter_when_the_list_is_not_orderable
+        membership = Record.new(id: 12, person_id: 4, role: "Designer", name: "Alice Chen")
+        row_form = builder("project[project_people_attributes][12]", membership)
+
+        render_inline(Component.new(headers: ["Person", "Role"])) do |editor|
+          editor.with_row(form: row_form, data: {orderable: false}) do |row|
+            row.with_entity(form: row_form, association_name: :person_id, title: "Alice Chen")
+            row.with_field { row_form.text_field(:role) }
+          end
+        end
+
+        header = page.find(".flat-pack-collection-editor-header", visible: :all)
+        assert_equal ["Person", "Role", ""], header.all("span", visible: :all).map { |span| span.text }
+        assert_no_selector ".flat-pack-collection-editor-handle"
+        assert_includes page.native.to_html, "--collection-editor-columns: minmax(0, 1.4fr) minmax(8rem, 1fr) auto"
       end
 
       private

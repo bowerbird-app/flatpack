@@ -138,7 +138,6 @@ module FlatPack
           content_tag(:div, class: "flat-pack-collection-editor-panel", data: {collection_editor_panel: "true"}, hidden: !@open) do
             safe_join([
               render_search,
-              content_tag(:div, "", id: @list_id, class: "flat-pack-collection-editor-results", role: "listbox", data: {collection_editor_results: "true"}),
               content_tag(:p, @empty_text, class: "flat-pack-collection-editor-no-results", data: {collection_editor_no_results: "true"}, hidden: true),
               content_tag(:p, @search_error_text, class: "flat-pack-collection-editor-search-error", role: "alert", data: {collection_editor_search_error: "true"}, hidden: true),
               render_create_button,
@@ -170,7 +169,8 @@ module FlatPack
                   collection_editor_search: "true",
                   action: "input->flat-pack--collection-editor#search keydown->flat-pack--collection-editor#searchKeydown focus->flat-pack--collection-editor#openPicker"
                 }
-              )
+              ),
+              content_tag(:div, "", id: @list_id, class: "flat-pack-collection-editor-results", role: "listbox", data: {collection_editor_results: "true"})
             ])
           end
         end

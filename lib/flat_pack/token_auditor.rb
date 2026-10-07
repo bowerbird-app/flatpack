@@ -12,6 +12,7 @@ module FlatPack
     /x
 
     RUNTIME_TOKENS = %w[
+      --collection-editor-columns
       --flatpack-modal-body-height
       --flatpack-picker-items-height
       --range-progress

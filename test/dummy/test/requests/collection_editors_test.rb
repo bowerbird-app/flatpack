@@ -20,6 +20,8 @@ class CollectionEditorsTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Producer"
     assert_includes response.body, ">Collaborator<"
     refute_includes response.body, "Add collaborator"
+    assert_match(/class="[^"]*\bflat-pack-select\b[^"]*\bborder-0\b/, response.body)
+    assert_match(/name="name"[^>]*border-\[var\(--surface-border-color\)\]|border-\[var\(--surface-border-color\)\][^>]*name="name"/, response.body)
     assert_includes response.body, "No collaborators yet"
     assert_includes response.body, "Edit person"
     assert_includes response.body, "Reorder Alice Chen"

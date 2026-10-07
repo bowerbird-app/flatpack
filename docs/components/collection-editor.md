@@ -6,7 +6,7 @@ Edit an ordered collection of related records inside a normal Rails form. Each r
 ## When to use
 Use Collection Editor for collaborators, team members, related companies, locations, or any repeated join. The host owns the models, the search endpoint, and authorization. FlatPack owns the row chrome, the picker, add and remove, and the reorder gesture.
 
-Do not use it as a spreadsheet. Do not use it to edit the saved record and the relationship in the same fields. Name and email belong to the person. Role belongs to the join.
+Each cell edits one value. The row is not a calculated spreadsheet. Do not use it to edit the saved record and the relationship in the same fields. Name and email belong to the person. Role belongs to the join.
 
 ## Class
 - Primary: `FlatPack::CollectionEditor::Component`
@@ -20,7 +20,7 @@ Do not use it as a spreadsheet. Do not use it to edit the saved record and the r
 | `title` | String | `nil` | no | Heading above the bordered list. |
 | `add_label` | String | `"Add"` | no | Add button text. The button also shows a plus icon and is only as wide as that label. |
 | `empty_text` | String | `"Nothing here yet"` | no | Copy shown when every row is gone. |
-| `headers` | Array | `nil` | no | Desktop column labels for the entity and the relationship fields. The handle and the remove control stay unlabeled. |
+| `headers` | Array | `nil` | no | One desktop label per content cell: the entity, then each field, in that order. The handle and the remove control stay unlabeled. Without headers the desktop grid still reserves two content columns. |
 | `orderable` | Boolean | `false` | no | Shows a drag handle and mounts `flat-pack--list-orderable`. |
 | `orderable_url` | String | `nil` | no | PATCH endpoint for a persisted row. Same contract as List. |
 | `orderable_method` | String/Symbol | `:patch` | no | Request method for the reorder request. |
@@ -72,7 +72,7 @@ Do not use it as a spreadsheet. Do not use it to edit the saved record and the r
 | `row` | `Row::Component` | no | One join row. Call `with_row` inside the component block. |
 | `template` | slot | no | HTML cloned for a new row. Put one unsaved row here and use `template_index` in its `fields_for` child index. |
 | `entity` | `Entity::Component` | no | Selected record, on the row. |
-| `field` | slot | no | Relationship fields. Render normal FlatPack inputs here. |
+| `field` | slot | no | One relationship field. Each block is its own cell. Render a normal FlatPack input and pass `chrome: :cell`. |
 | `action` | slot | no | Extra row actions, before remove. |
 | `content` on the entity | slot | no | Fields posted to `create_url`. Give each input `data-create-field` and `form="collection-editor-unattached"` so the parent form does not submit them. |
 
@@ -117,7 +117,8 @@ Do not use it as a spreadsheet. Do not use it to edit the saved record and the r
               label: "Role",
               options: ["Designer", "Photographer", "Producer"],
               value: row_form.object.role,
-              error: row_form.object.errors.full_messages_for(:role).to_sentence.presence
+              error: row_form.object.errors.full_messages_for(:role).to_sentence.presence,
+              chrome: :cell
             ) %>
           <% end %>
         <% end %>
@@ -143,7 +144,8 @@ Do not use it as a spreadsheet. Do not use it to edit the saved record and the r
             <%= render FlatPack::Select::Component.new(
               name: row_form.field_name(:role),
               label: "Role",
-              options: ["Designer", "Photographer", "Producer"]
+              options: ["Designer", "Photographer", "Producer"],
+              chrome: :cell
             ) %>
           <% end %>
         <% end %>
@@ -171,7 +173,9 @@ The dummy reorder route also has the project id in the path. The row id therefor
 
 Rendered field errors stay on the FlatPack input passed in the field slot. The row also takes the `is-invalid` class when the join object has errors, and the entity `error` argument prints the association message. A failed parent save re-renders the nested attributes, including rows added in the browser, as long as the controller assigns the invalid parent back to the form.
 
-Desktop rows are a handle, the person summary, the role, and remove. Below 40rem the summary, the role, and the actions stack. Column headers hide. Field labels remain.
+Desktop rows are a grid. `--collection-editor-border-color` draws the lines. The handle, the person, each relationship field, and remove are separate cells. Pass `chrome: :cell` on Text input, Select, Search input, and the other controls that share that box. The control drops its border, radius, and background. Padding stays inside the cell. Focus and an invalid value draw an inset ring on the cell. The message stays under the value. The person search uses that same cell treatment. Name and email inside Create stay bordered. Below 40rem the person, each field, and the actions stack. Column headers hide. Field labels show again. The page does not scroll sideways.
+
+`headers` lines up with those content cells. A second `with_field` needs a third header. The section sets `--collection-editor-columns` from that count so the header and the rows share one grid. That property is runtime layout, not a theme token. `--collection-editor-row-padding` pads the empty state. Cell text uses `--form-control-padding`.
 
 Tokens alias the surface, list, and primary tokens. Override them on a parent to recolor this component without a new theme.
 
