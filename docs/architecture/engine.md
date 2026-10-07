@@ -126,6 +126,12 @@ end
 
 Registers FlatPack's JavaScript modules.
 
+### Locales
+
+Rails loads `config/locales/flatpack.en.yml` from the engine. That file is English only, under `flatpack.*`. Hosts override keys in their own `config/locales` files. The gem does not ship other languages.
+
+`flat_pack.copy_helper` includes `FlatPack::CopyHelper` so layouts can set `data-fp-copy` from `flat_pack_copy_data`.
+
 ## Design Patterns
 
 ### System Arguments

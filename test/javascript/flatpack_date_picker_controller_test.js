@@ -9,6 +9,7 @@ function loadController(overrides = {}) {
   const source = fs.readFileSync(filePath, 'utf8')
   const transformedSource = source
     .replace('import { Controller } from "@hotwired/stimulus"', 'class Controller {}')
+    .replace('import { flatPackCopy } from "flat_pack/copy"', 'function flatPackCopy(key) { return ({ "date_picker.summary": "Select a date from calendar or use a quick range preset." })[key] || key }')
     .replace(
       'import { playOverlayEnter, playOverlayExit, cancelOverlayHide } from "controllers/flat_pack/reduced_motion"',
       `function playOverlayEnter(element, options = {}) { element.classList.remove("hidden"); options.beforeAnimate?.() }

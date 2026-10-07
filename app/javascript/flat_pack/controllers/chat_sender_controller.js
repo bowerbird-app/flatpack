@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { flatPackCopy } from "flat_pack/copy"
 
 export default class extends Controller {
   static targets = ["fileInput", "pickerCheckbox"]
@@ -288,7 +289,7 @@ export default class extends Controller {
     record.className = "transition-[margin] duration-base"
     record.dataset.flatPackChatSenderTempId = `${Date.now()}-${Math.floor(Math.random() * 10_000)}`
     record.dataset.flatPackChatRecord = "true"
-    record.dataset.flatPackChatRecordSender = "You"
+    record.dataset.flatPackChatRecordSender = flatPackCopy("chat.you")
     record.dataset.flatPackChatRecordDirection = "outgoing"
 
     const group = document.createElement("div")
@@ -458,7 +459,7 @@ export default class extends Controller {
 
     const name = document.createElement("div")
     name.className = "text-sm font-medium text-[var(--chat-attachment-text-color)] truncate max-w-[32ch]"
-    name.textContent = attachment.name || "Attachment"
+    name.textContent = attachment.name || flatPackCopy("chat.attachment")
 
     body.append(name)
 
@@ -479,7 +480,7 @@ export default class extends Controller {
 
     const image = document.createElement("img")
     image.src = attachment.thumbnailUrl
-    image.alt = attachment.name || "Attachment"
+    image.alt = attachment.name || flatPackCopy("chat.attachment")
     image.loading = "lazy"
     image.className = "w-full h-full object-cover"
     frame.append(image)
@@ -531,7 +532,7 @@ export default class extends Controller {
   #buildMetaStateIndicator(state) {
     switch (state) {
       case "sending":
-        return this.#buildTextMetaNode("Sending...")
+        return this.#buildTextMetaNode(flatPackCopy("chat.sending"))
       case "failed":
         return this.#buildFailedMetaNode()
       case "read":
@@ -568,7 +569,7 @@ export default class extends Controller {
     const node = document.createElement("span")
     node.className = "text-xs text-[var(--chat-message-failed-color)] flex items-center gap-1"
     node.append(this.#buildMetaIcon("M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z", "h-3 w-3", true))
-    node.append(document.createTextNode("Failed"))
+    node.append(document.createTextNode(flatPackCopy("chat.failed")))
     return node
   }
 

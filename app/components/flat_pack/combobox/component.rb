@@ -8,10 +8,10 @@ module FlatPack
         options:,
         value: nil,
         label: nil,
-        placeholder: "Search",
+        placeholder: FlatPack::Copy::OMITTED,
         disabled: false,
         required: false,
-        empty_text: "No matches",
+        empty_text: FlatPack::Copy::OMITTED,
         **system_arguments
       )
         super(**system_arguments)
@@ -19,10 +19,10 @@ module FlatPack
         @options = normalize_options(options)
         @value = value.to_s.presence
         @label = label
-        @placeholder = placeholder
+        @placeholder = fp_text(placeholder, "combobox.placeholder")
         @disabled = disabled
         @required = required
-        @empty_text = empty_text
+        @empty_text = fp_text(empty_text, "combobox.empty")
         @list_id = "fp-combobox-#{SecureRandom.hex(4)}"
         validate_name!
         validate_options!

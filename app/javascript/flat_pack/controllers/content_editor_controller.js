@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { flatPackCopy } from "flat_pack/copy"
 
 export default class extends Controller {
   static targets = ["editBtn", "saveBtn", "cancelBtn", "displayContent", "balloonToolbar", "imageInput"]
@@ -61,7 +62,7 @@ export default class extends Controller {
 
     if (!response.ok) {
       const err = await response.json().catch(() => ({}))
-      alert(err.error || "Image upload failed.")
+      alert(err.error || flatPackCopy("content_editor.image_upload_failed"))
       return
     }
 
@@ -89,14 +90,14 @@ export default class extends Controller {
         const img = this.#selectedImage
         const existingAnchor = img.closest("a")
         if (existingAnchor) {
-          const url = prompt("Edit URL (leave blank to remove):", existingAnchor.href)
+          const url = prompt(flatPackCopy("content_editor.edit_url"), existingAnchor.href)
           if (url === "") {
             existingAnchor.replaceWith(img)
           } else if (url !== null) {
             existingAnchor.href = url
           }
         } else {
-          const url = prompt("Enter URL:", "https://")
+          const url = prompt(flatPackCopy("content_editor.enter_url"), "https://")
           if (url) {
             const a = document.createElement("a")
             a.href = url
@@ -109,11 +110,11 @@ export default class extends Controller {
       // Text selection — use execCommand
       const anchor = document.getSelection()?.anchorNode?.parentElement?.closest("a")
       if (anchor) {
-        const url = prompt("Edit URL (leave blank to remove):", anchor.href)
+        const url = prompt(flatPackCopy("content_editor.edit_url"), anchor.href)
         if (url === "") document.execCommand("unlink", false, null)
         else if (url !== null) document.execCommand("createLink", false, url)
       } else {
-        const url = prompt("Enter URL:", "https://")
+        const url = prompt(flatPackCopy("content_editor.enter_url"), "https://")
         if (url) document.execCommand("createLink", false, url)
       }
     } else {
@@ -145,7 +146,7 @@ export default class extends Controller {
     if (response.ok) {
       this.disableEditing()
     } else {
-      alert("Save failed. Please try again.")
+      alert(flatPackCopy("content_editor.save_failed"))
     }
   }
 

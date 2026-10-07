@@ -55,6 +55,10 @@ Rails.application.routes.draw do
 
     recording_studio_admin_for :admin, at: "/admin", root_section: :root
 
+    if defined?(RecordingStudioInternationalization)
+      mount RecordingStudioInternationalization::Engine, at: "/recording_studio_internationalization"
+    end
+
     get "studio", to: "studio#index", as: :studio
     get "studio/recording_tree", to: "recording_trees#index", as: :studio_recording_tree
   else

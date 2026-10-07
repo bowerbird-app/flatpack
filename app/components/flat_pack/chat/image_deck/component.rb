@@ -163,13 +163,13 @@ module FlatPack
           Array(images).filter_map do |image|
             if image.is_a?(Hash)
               {
-                name: image[:name] || image["name"] || "Image",
+                name: image[:name] || image["name"] || fp_t("chat.image"),
                 thumbnail_url: image[:thumbnail_url] || image["thumbnail_url"],
                 href: image[:href] || image["href"]
               }
             else
               {
-                name: image.respond_to?(:name) ? image.name : "Image",
+                name: image.respond_to?(:name) ? image.name : fp_t("chat.image"),
                 thumbnail_url: image.respond_to?(:thumbnail_url) ? image.thumbnail_url : nil,
                 href: nil
               }

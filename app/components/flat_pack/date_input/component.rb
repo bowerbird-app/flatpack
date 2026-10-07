@@ -137,7 +137,7 @@ module FlatPack
       def render_picker_quick_ranges
         content_tag(:div, class: picker_ranges_section_classes) do
           safe_join([
-            content_tag(:p, "Quick select", class: "text-xs font-semibold text-[var(--surface-muted-content-color)]"),
+            content_tag(:p, fp_t("date.quick_select"), class: "text-xs font-semibold text-[var(--surface-muted-content-color)]"),
             content_tag(:div, class: "mt-2 space-y-1") do
               safe_join(quick_range_presets.map { |preset| render_quick_range_button(preset) })
             end
@@ -165,7 +165,7 @@ module FlatPack
             content_tag(:div, class: "flex items-center justify-between gap-2") do
               safe_join([
                 render(FlatPack::Button::Component.new(
-                  text: "Prev",
+                  text: fp_t("date.previous"),
                   style: :ghost,
                   size: :sm,
                   type: "button",
@@ -173,7 +173,7 @@ module FlatPack
                 )),
                 content_tag(:p, "", class: "text-sm font-semibold text-[var(--surface-content-color)]", data: {"flat-pack--flatpack-date-picker-target": "monthLabel"}),
                 render(FlatPack::Button::Component.new(
-                  text: "Next",
+                  text: fp_t("date.next"),
                   style: :ghost,
                   size: :sm,
                   type: "button",
@@ -182,21 +182,21 @@ module FlatPack
               ])
             end,
             content_tag(:div, class: "mt-3 grid grid-cols-7 gap-1 text-center text-xs font-medium text-[var(--surface-muted-content-color)]") do
-              safe_join(%w[Mo Tu We Th Fr Sa Su].map { |day| content_tag(:span, day) })
+              safe_join(weekday_labels.map { |day| content_tag(:span, day) })
             end,
             content_tag(:div, "", class: "mt-2 grid grid-cols-7 justify-items-center gap-x-0 gap-y-1", data: {"flat-pack--flatpack-date-picker-target": "calendarGrid"}),
             content_tag(:p, "", class: "mt-3 text-xs text-[var(--surface-muted-content-color)]", data: {"flat-pack--flatpack-date-picker-target": "summary"}),
             content_tag(:div, class: "mt-4 flex items-center justify-end gap-2") do
               safe_join([
                 render(FlatPack::Button::Component.new(
-                  text: "Cancel",
+                  text: fp_t("date.cancel"),
                   style: :ghost,
                   size: :sm,
                   type: "button",
                   data: {"flat-pack-date-picker-command": "cancel"}
                 )),
                 render(FlatPack::Button::Component.new(
-                  text: "Apply",
+                  text: fp_t("date.apply"),
                   style: :primary,
                   size: :sm,
                   type: "button",
@@ -344,7 +344,11 @@ module FlatPack
       end
 
       def default_picker_placeholder
-        "Select date"
+        fp_t("date.select")
+      end
+
+      def weekday_labels
+        %w[mo tu we th fr sa su].map { |day| fp_t("date.weekday_#{day}") }
       end
 
       def initial_display_value
@@ -352,18 +356,10 @@ module FlatPack
       end
 
       def quick_range_presets
-        [
-          {key: "today", label: "Today"},
-          {key: "yesterday", label: "Yesterday"},
-          {key: "last_3_days", label: "Last 3 days"},
-          {key: "this_week", label: "This week"},
-          {key: "last_week", label: "Last week"},
-          {key: "last_4_weeks", label: "Last 4 weeks"},
-          {key: "this_month", label: "This month"},
-          {key: "last_month", label: "Last month"},
-          {key: "this_year", label: "This year"},
-          {key: "last_year", label: "Last year"}
-        ]
+        %w[
+          today yesterday last_3_days this_week last_week last_4_weeks
+          this_month last_month this_year last_year
+        ].map { |key| {key: key, label: fp_t("date.#{key}")} }
       end
 
       # Convert Date objects to YYYY-MM-DD format string

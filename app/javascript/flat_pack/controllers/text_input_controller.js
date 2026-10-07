@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { flatPackCopy } from "flat_pack/copy"
 
 export default class extends Controller {
   static targets = ["input", "count", "copyButton"]
@@ -22,8 +23,8 @@ export default class extends Controller {
     const aboveMax = hasMax && count > this.maxCharactersValue
 
     this.countTarget.textContent = hasMax
-      ? `${count}/${this.maxCharactersValue} characters`
-      : `${count} characters`
+      ? flatPackCopy("text.characters_with_limit", {count, limit: this.maxCharactersValue})
+      : flatPackCopy("text.characters", {count})
 
     this.countTarget.classList.toggle("text-[var(--color-warning-border)]", belowMin || aboveMax)
     this.countTarget.classList.toggle("text-[var(--surface-muted-content-color)]", !(belowMin || aboveMax))
@@ -46,17 +47,17 @@ export default class extends Controller {
     const value = this.inputTarget.value || ""
 
     if (!value.length) {
-      this.dispatchToast("warning", "Nothing to copy")
+      this.dispatchToast("warning", flatPackCopy("clipboard.nothing"))
       return
     }
 
     const copied = await this.writeText(value)
     if (copied) {
-      this.dispatchToast("success", "Copied to clipboard")
+      this.dispatchToast("success", flatPackCopy("clipboard.copied"))
       return
     }
 
-    this.dispatchToast("danger", "Unable to copy")
+    this.dispatchToast("danger", flatPackCopy("clipboard.unable"))
   }
 
   async writeText(text) {

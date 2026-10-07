@@ -120,7 +120,7 @@ module FlatPack
         def render_default_center
           render FlatPack::TextArea::Component.new(
             name: "message[body]",
-            placeholder: "Type a message...",
+            placeholder: fp_t("chat.placeholder"),
             rows: 1,
             autogrow: true,
             submit_on_enter: true,
@@ -143,7 +143,7 @@ module FlatPack
             style: :primary,
             size: :md,
             type: "submit",
-            aria: {label: "Send message"},
+            aria: {label: fp_t("chat.send")},
             class: "min-h-[var(--chat-composer-control-height)] min-w-[var(--chat-composer-control-height)] shrink-0 border-transparent bg-[var(--chat-send-button-background-color)] text-[var(--chat-send-button-text-color)] hover:bg-[var(--chat-send-button-hover-background-color)] focus-visible:ring-inset focus-visible:ring-[var(--chat-send-button-focus-ring-color)]"
           )
         end

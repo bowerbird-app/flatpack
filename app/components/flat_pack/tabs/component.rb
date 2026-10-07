@@ -196,7 +196,7 @@ module FlatPack
 
       def tab_list_aria_attributes
         {
-          label: "Tabs",
+          label: fp_t("tabs.label"),
           orientation: tab_orientation
         }
       end

@@ -62,7 +62,7 @@ module FlatPack
         touch_swipe: true,
         show_captions: true,
         caption_mode: :below,
-        aria_label: DEFAULT_ARIA_LABEL,
+        aria_label: FlatPack::Copy::OMITTED,
         **system_arguments
       )
         super(**system_arguments)
@@ -104,7 +104,7 @@ module FlatPack
         @touch_swipe = !!touch_swipe
         @show_captions = !!show_captions
         @caption_mode = caption_mode.to_sym
-        @aria_label = aria_label.presence || DEFAULT_ARIA_LABEL
+        @aria_label = fp_text(aria_label.equal?(FlatPack::Copy::OMITTED) ? FlatPack::Copy::OMITTED : (aria_label.presence || FlatPack::Copy::OMITTED), "carousel.label")
         @initial_index = normalize_initial_index(initial_index)
 
         validate_configuration!
@@ -222,7 +222,7 @@ module FlatPack
           },
           aria: {
             hidden: aria_hidden.to_s,
-            label: "Slide #{index + 1} of #{@slides.length}"
+            label: fp_t("carousel.slide", current: index + 1, total: @slides.length)
           }) do
           render_slide_content(slide)
         end
@@ -295,7 +295,7 @@ module FlatPack
       end
 
       def control_button(direction:, classes:)
-        label = (direction == :prev) ? "Previous slide" : "Next slide"
+        label = (direction == :prev) ? fp_t("carousel.previous") : fp_t("carousel.next")
         icon_name = (direction == :prev) ? :chevron_left : :chevron_right
 
         content_tag(:button,
@@ -371,7 +371,7 @@ module FlatPack
           type: "button",
           hidden: !lightbox_available_for_index?(@initial_index),
           class: "absolute right-3 top-3 z-20 flex aspect-square flex-nowrap items-center justify-center cursor-pointer rounded-full bg-[var(--carousel-control-background-color)] p-2 text-[var(--carousel-control-text-color)] transition hover:bg-[var(--carousel-control-hover-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
-          aria: {label: "Expand image"},
+          aria: {label: fp_t("carousel.expand_image")},
           data: {
             flat_pack__carousel_target: "lightboxToggle",
             action: "click->flat-pack--carousel#openLightbox"
@@ -385,7 +385,7 @@ module FlatPack
           class: "fixed inset-0 z-50 hidden bg-[var(--modal-backdrop-color)] backdrop-blur-[var(--modal-backdrop-blur)] fp-overlay-pad",
           tabindex: -1,
           role: "dialog",
-          aria: {modal: true, hidden: "true", label: "Image lightbox"},
+          aria: {modal: true, hidden: "true", label: fp_t("carousel.lightbox")},
           data: {
             flat_pack__carousel_target: "lightbox",
             action: "click->flat-pack--carousel#closeLightbox keydown.esc->flat-pack--carousel#closeLightbox"
@@ -395,7 +395,7 @@ module FlatPack
               content_tag(:button,
                 type: "button",
                 class: "absolute right-2 top-2 z-10 cursor-pointer rounded-full bg-[var(--modal-surface-color)] p-2 text-[var(--modal-close-icon-color)] shadow-sm transition hover:text-[var(--modal-close-icon-hover-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring sm:right-4 sm:top-4",
-                aria: {label: "Close lightbox"},
+                aria: {label: fp_t("carousel.close_lightbox")},
                 data: {action: "click->flat-pack--carousel#closeLightbox"}) do
                 render FlatPack::Shared::IconComponent.new(name: "x-mark", size: :md, class: "pointer-events-none")
               end,
@@ -433,7 +433,7 @@ module FlatPack
           type: "button",
           class: "h-2.5 w-2.5 cursor-pointer rounded-full bg-[var(--carousel-indicator-background-color)] transition",
           aria: {
-            label: "Go to slide #{index + 1}",
+            label: fp_t("carousel.go_to_slide", number: index + 1),
             current: (index == @initial_index).to_s
           },
           data: {
@@ -454,7 +454,7 @@ module FlatPack
           type: "button",
           class: "h-16 w-16 shrink-0 cursor-pointer overflow-hidden rounded-[var(--radius-md)] border border-[var(--carousel-thumb-border-color)] transition-opacity hover:opacity-100 hover:ring-2 hover:ring-inset hover:ring-primary",
           aria: {
-            label: "Show slide #{index + 1}",
+            label: fp_t("carousel.show_slide", number: index + 1),
             current: (index == @initial_index).to_s
           },
           data: {
@@ -470,9 +470,9 @@ module FlatPack
         thumb_src = slide[:thumb_src].presence || slide[:src]
 
         if slide[:type] == :image && thumb_src.present?
-          tag.img(src: thumb_src, alt: "Thumbnail #{index + 1}", class: "h-full w-full object-cover", loading: "lazy", draggable: false)
+          tag.img(src: thumb_src, alt: fp_t("carousel.thumbnail", number: index + 1), class: "h-full w-full object-cover", loading: "lazy", draggable: false)
         elsif slide[:type] == :video && slide[:poster].present?
-          tag.img(src: slide[:poster], alt: "Video thumbnail #{index + 1}", class: "h-full w-full object-cover", loading: "lazy", draggable: false)
+          tag.img(src: slide[:poster], alt: fp_t("carousel.video_thumbnail", number: index + 1), class: "h-full w-full object-cover", loading: "lazy", draggable: false)
         else
           content_tag(:span,
             (index + 1).to_s,
@@ -577,7 +577,7 @@ module FlatPack
           {
             type: :image,
             src: src,
-            alt: payload[:alt].presence || "Slide #{index + 1}",
+            alt: payload[:alt].presence || fp_t("carousel.slide_fallback", number: index + 1),
             thumb_src: FlatPack::AttributeSanitizer.sanitize_url(payload[:thumb_src] || payload[:thumb]),
             lightbox: normalize_lightbox(payload[:lightbox], default: true),
             caption: caption

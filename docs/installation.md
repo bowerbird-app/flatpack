@@ -280,7 +280,7 @@ To **explicitly force light mode** regardless of any ThemeController state or st
 
 ```erb
 <%# app/views/layouts/application.html.erb %>
-<html data-theme="light" lang="<%= I18n.locale %>">
+<html data-theme="light" lang="<%= I18n.locale %>" <%= tag.attributes(data: flat_pack_copy_data) %>>
 ```
 
 > **Note:** When `data-theme` is absent or set to `"light"`, the `:root {}` light palette from `variables.css` is active. The FlatPack `ThemeController` stores user preference in `localStorage` under the key `flatpack-theme` and sets `data-theme` on `document.documentElement` accordingly. If you add `data-theme="light"` to the static HTML, JavaScript will override it once the controller connects — remove the static attribute if you want the ThemeController to manage theme state.
