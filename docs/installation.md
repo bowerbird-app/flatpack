@@ -468,6 +468,7 @@ import TiptapController           from "${controllersDir}/tiptap_controller.js";
 import ToastController            from "${controllersDir}/toast_controller.js";
 import ToastsRegionController     from "${controllersDir}/toasts_region_controller.js";
 import TooltipController          from "${controllersDir}/tooltip_controller.js";
+import UnsavedChangesController   from "${controllersDir}/unsaved_changes_controller.js";
 
 const application = Application.start();
 application.register("flat-pack--accordion",           AccordionController);
@@ -514,6 +515,7 @@ application.register("flat-pack--tiptap",              TiptapController);
 application.register("flat-pack--toast",               ToastController);
 application.register("flat-pack--toasts-region",       ToastsRegionController);
 application.register("flat-pack--tooltip",             TooltipController);
+application.register("flat-pack--unsaved-changes",     UnsavedChangesController);
 `.trim()
 
 const tmpDir = path.join(__dirname, "../tmp")

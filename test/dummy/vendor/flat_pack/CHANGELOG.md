@@ -13,6 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.200] - 2026-10-07
+
+### Added
+- A form can show unsaved changes on its save button. Add `flat-pack--unsaved-changes` to the form and mark each save button with the `submit` target. The button keeps `data-fp-style="default"` while the fields match the saved baseline, and switches to `data-fp-style="primary"` when they differ. Restoring every field, or resetting the form, returns the button to default.
+- TipTap writes its hidden field and then dispatches `input` after the editor is ready. A combobox choice dispatches `change` on the hidden field. Form listeners can see those edits.
+- Bumped the gem version to `0.1.200`.
+
+### Upgrade notes
+- Importmap apps load `unsaved_changes_controller.js` from the existing controllers pin. No new register call.
+- Bundled apps that copy the esbuild list in `docs/installation.md` add `UnsavedChangesController` and `application.register("flat-pack--unsaved-changes", UnsavedChangesController)`.
+- No existing button changes on its own. A form opts in by adding the controller.
+- Forms that already use `flat-pack--auto-submit` now submit when a rich text field changes or a combobox choice is made. They did not before.
+
 ## [0.1.199] - 2026-10-07
 
 ### Changed
