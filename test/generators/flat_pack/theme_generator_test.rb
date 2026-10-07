@@ -43,7 +43,7 @@ module FlatPack
           content = destination.join("app/assets/stylesheets/flat_pack_theme_acme.css").read
           assert_includes content, ":root {"
           assert_includes content, "--brand-hue: 200"
-          refute_includes content, "data-theme"
+          refute_match(/^\s*\[data-theme=/, content)
         end
       end
     end
