@@ -315,6 +315,12 @@ components:
     primary_class: FlatPack::EmailTemplateExample::Component
     status: documented
 
+  - key: fieldset
+    title: Fieldset
+    doc: docs/components/fieldset.md
+    primary_class: FlatPack::Fieldset::Component
+    status: documented
+
   - key: grid
     title: Grid
     doc: docs/components/grid.md

@@ -33,6 +33,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/forms/time_input
     /demo/forms/file_input
     /demo/forms/checkbox
+    /demo/forms/fieldset
     /demo/forms/radio_group
     /demo/forms/select
     /demo/forms/combobox
@@ -137,6 +138,17 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
       get path
       assert_response :success, "Expected #{path} to return success"
     end
+  end
+
+  test "fieldset demo names a group of fields" do
+    get "/demo/forms/fieldset"
+
+    assert_response :success
+    assert_includes response.body, "<fieldset"
+    assert_includes response.body, "<legend"
+    assert_includes response.body, "Shipping address"
+    assert_includes response.body, "Where should we send this order?"
+    assert_includes response.body, "Add a street."
   end
 
   test "list demo renders orderable event listener example" do
