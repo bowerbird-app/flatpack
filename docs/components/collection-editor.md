@@ -17,8 +17,8 @@ Do not use it as a spreadsheet. Do not use it to edit the saved record and the r
 
 | name | type | default | required | description |
 |---|---|---|---|---|
-| `title` | String | `nil` | no | Heading above the rows. |
-| `add_label` | String | `"Add"` | no | Add button text. |
+| `title` | String | `nil` | no | Heading above the bordered list. |
+| `add_label` | String | `"Add"` | no | Add button text. The button also shows a plus icon and is only as wide as that label. |
 | `empty_text` | String | `"Nothing here yet"` | no | Copy shown when every row is gone. |
 | `headers` | Array | `nil` | no | Desktop column labels for the entity and the relationship fields. The handle and the remove control stay unlabeled. |
 | `orderable` | Boolean | `false` | no | Shows a drag handle and mounts `flat-pack--list-orderable`. |
@@ -86,7 +86,7 @@ Do not use it as a spreadsheet. Do not use it to edit the saved record and the r
 <%= form_with model: @project do |form| %>
   <%= render FlatPack::CollectionEditor::Component.new(
     title: "Collaborators",
-    add_label: "Add collaborator",
+    add_label: "Collaborator",
     empty_text: "No collaborators yet",
     headers: ["Person", "Role"],
     orderable: true,
@@ -153,7 +153,9 @@ Do not use it as a spreadsheet. Do not use it to edit the saved record and the r
 <% end %>
 ```
 
-The template repeats the entity picker and the role field. `Add collaborator` clones it and replaces `NEW_RECORD` inside `name`, `id`, `for`, `data-id`, and the aria attributes that point at those ids. Text in the row is left as written. Rails 8 strong parameters keep nested attribute keys that are integers, so the index is numeric rather than a prefixed token. Rails accepts that index in `project_people_attributes`.
+The heading and the add button sit outside the bordered list. The list, the column headers, and the empty state stay in that card. The add button is only as wide as its label. The plus icon stays on the button, so the dummy collaborators examples read "+ Collaborator".
+
+The template repeats the entity picker and the role field. The add button clones it and replaces `NEW_RECORD` inside `name`, `id`, `for`, `data-id`, and the aria attributes that point at those ids. Text in the row is left as written. Rails 8 strong parameters keep nested attribute keys that are integers, so the index is numeric rather than a prefixed token. Rails accepts that index in `project_people_attributes`.
 
 Selecting a person writes `person_id`. It does not turn the name or email into editable join fields. `Edit person` goes to the person form. Saving that form changes the shared person. Role stays on `ProjectPerson`.
 

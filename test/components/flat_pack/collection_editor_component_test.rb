@@ -40,7 +40,11 @@ module FlatPack
           end
         end
 
-        assert_selector "section.flat-pack-collection-editor h2", text: "Collaborators"
+        assert_selector "section.flat-pack-collection-editor > h2", text: "Collaborators"
+        assert_selector "section.flat-pack-collection-editor > .flat-pack-collection-editor-add", text: "Add collaborator"
+        assert_selector ".flat-pack-collection-editor-card [data-flat-pack--collection-editor-target='list']"
+        assert_no_selector ".flat-pack-collection-editor-card h2"
+        assert_no_selector ".flat-pack-collection-editor-card [data-flat-pack--collection-editor-target='addButton']"
         assert_selector ".flat-pack-collection-editor-header", text: "Person"
         assert_selector ".flat-pack-collection-editor-header", text: "Role"
         assert_selector ".flat-pack-collection-editor-title", text: "Alice Chen"

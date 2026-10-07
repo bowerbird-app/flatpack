@@ -1142,10 +1142,20 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+}
+
+.flat-pack-collection-editor-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
   background-color: var(--collection-editor-background-color);
   border: 1px solid var(--collection-editor-border-color);
   border-radius: var(--collection-editor-radius);
   padding: var(--collection-editor-row-padding);
+}
+
+.flat-pack-collection-editor-add {
+  align-self: flex-start;
 }
 
 .flat-pack-collection-editor-heading {

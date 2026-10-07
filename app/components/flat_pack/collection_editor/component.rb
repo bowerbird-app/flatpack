@@ -40,9 +40,7 @@ module FlatPack
         content_tag(:section, **section_attributes) do
           safe_join([
             render_title,
-            render_headers,
-            render_list,
-            render_empty,
+            render_card,
             render_template,
             render_add,
             render_status
@@ -76,6 +74,12 @@ module FlatPack
         return if @title.blank?
 
         content_tag(:h2, @title, id: @title_id, class: "flat-pack-collection-editor-heading")
+      end
+
+      def render_card
+        content_tag(:div, class: "flat-pack-collection-editor-card") do
+          safe_join([render_headers, render_list, render_empty].compact)
+        end
       end
 
       def render_headers
@@ -148,17 +152,19 @@ module FlatPack
       end
 
       def render_add
-        render FlatPack::Button::Component.new(
-          text: @add_label,
-          icon: "plus",
-          style: :secondary,
-          size: :sm,
-          type: "button",
-          data: {
-            flat_pack__collection_editor_target: "addButton",
-            action: "click->flat-pack--collection-editor#add"
-          }
-        )
+        content_tag(:div, class: "flat-pack-collection-editor-add") do
+          render FlatPack::Button::Component.new(
+            text: @add_label,
+            icon: "plus",
+            style: :secondary,
+            size: :sm,
+            type: "button",
+            data: {
+              flat_pack__collection_editor_target: "addButton",
+              action: "click->flat-pack--collection-editor#add"
+            }
+          )
+        end
       end
 
       def visible_rows?

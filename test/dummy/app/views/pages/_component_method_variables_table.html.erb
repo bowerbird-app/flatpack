@@ -721,10 +721,10 @@
     },
     collection_editor: {
       label: "Collection Editor",
-      method_call: "render FlatPack::CollectionEditor::Component.new(title: \"Collaborators\", add_label: \"Add collaborator\", orderable: true) do |editor| ... end",
+      method_call: "render FlatPack::CollectionEditor::Component.new(title: \"Collaborators\", add_label: \"Collaborator\", orderable: true) do |editor| ... end",
       variables: [
         { variable: "title", accepts: "String or nil", example: "title: \"Collaborators\"" },
-        { variable: "add_label", accepts: "String", example: "add_label: \"Add collaborator\"" },
+        { variable: "add_label", accepts: "String", example: "add_label: \"Collaborator\"" },
         { variable: "empty_text", accepts: "String", example: "empty_text: \"No collaborators yet\"" },
         { variable: "headers", accepts: "Array of String or nil", example: "headers: [\"Person\", \"Role\"]" },
         { variable: "orderable", accepts: "true, false", example: "orderable: true" },

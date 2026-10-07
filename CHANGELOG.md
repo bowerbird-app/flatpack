@@ -19,11 +19,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `FlatPack::CollectionEditor::Component` edits an ordered collection of related records inside a Rails form. A row shows the selected record (`title` and optional `description`) and leaves relationship fields to the host. Add clones a `fields_for` template and replaces the child-index token in identifier attributes. Remove sets `_destroy` on a saved row and drops an unsaved row. The entity picker searches, selects, or creates a record and writes its id onto the join. Enter selects the highlighted result, or the only result. Several matches do not create a record. A failed search stays in the picker. Edit of the saved record stays a host action. Moves are announced in a polite status.
 - List orderable accepts `handle_selector`. Arrow keys on that handle move the row. A row with `data-orderable-unsaved="true"` does not PATCH. A saved row's `target_position` ignores unsaved rows. Rows marked `data-collection-editor-destroyed` stay out of the order.
 - Collection editor tokens alias surface, list, and primary colors. See `docs/components/collection-editor.md`.
-- Dummy `/demo/collection_editor` is a Project collaborators form. Person name and email stay on the person. Role and order stay on the join. Reorder posts `moving_recording_id` and `target_position` to `Ordering::ReorderService`.
+- Dummy `/demo/collection_editor` is a Project collaborators form. Person name and email stay on the person. Role and order stay on the join. Reorder posts `moving_recording_id` and `target_position` to `Ordering::ReorderService`. The collaborators examples label the add button `Collaborator`. The plus icon stays, so the button reads "+ Collaborator".
 - Bumped the gem version to `0.1.203`.
 
+### Changed
+- The collection editor heading and add button sit outside the bordered list. The list frame is `.flat-pack-collection-editor-card`. The add button is only as wide as its label.
+
 ### Upgrade notes
-- No existing component changes its markup. `orderable:` on List still drags the whole row when `handle_selector` is omitted.
+- The collection editor border, background, and padding now live on `.flat-pack-collection-editor-card`. The heading and the add button are outside that card. Host CSS that painted the border on `.flat-pack-collection-editor` should move to the card class.
+- `orderable:` on List still drags the whole row when `handle_selector` is omitted.
 - Importmap apps load `collection_editor_controller.js` from the existing controllers pin.
 - Bundled apps that copy the esbuild list in `docs/installation.md` add `CollectionEditorController` and `application.register("flat-pack--collection-editor", CollectionEditorController)`.
 - New nested child indexes must be integers. Rails 8 `permit` drops any other nested-attribute key. The template placeholder `NEW_RECORD` is replaced in `name`, `id`, `for`, `data-id`, and the aria attributes that point at those ids. Text in the row is left as written.
