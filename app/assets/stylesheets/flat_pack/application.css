@@ -1203,7 +1203,6 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   grid-area: handle;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   min-width: var(--hit-target-min);
   min-height: var(--hit-target-min);
   padding: 0;
@@ -1212,6 +1211,10 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   color: var(--collection-editor-handle-color);
   cursor: grab;
   touch-action: none;
+}
+
+.flat-pack-collection-editor-handle > * {
+  margin-inline: auto;
 }
 
 .flat-pack-collection-editor-handle:active {

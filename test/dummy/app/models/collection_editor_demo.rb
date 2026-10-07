@@ -66,12 +66,12 @@ class CollectionEditorDemo
 
       if values["id"].present?
         row = existing[values["id"].to_s]
-        ordered << row if row
       else
         row = fresh[cursor]
         cursor += 1
-        ordered << row if row
       end
+
+      ordered << row if row
     end
 
     ordered.each_with_index do |row, index|
