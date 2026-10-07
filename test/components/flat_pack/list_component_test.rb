@@ -149,6 +149,22 @@ module FlatPack
         refute_selector "ol"
       end
 
+      def test_orderable_slot_is_a_visible_landing_mark
+        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+        placeholder_rule = css[/\.flat-pack-list-reorder-placeholder \{[^}]+\}/]
+
+        refute_nil placeholder_rule
+        assert_includes placeholder_rule, "background-color: var(--list-item-hover-background-color)"
+        assert_includes placeholder_rule, "border-radius: var(--radius-sm)"
+        refute_includes placeholder_rule, "visibility: hidden"
+        assert_includes css, "box-shadow: var(--shadow-lg)"
+        assert_includes css, ".is-pressing"
+        assert_includes css, "scale: 0.98"
+        assert_includes css, "scale: 1.02"
+        assert_includes css, ".flat-pack-list-reorder-placeholder.is-visible"
+        assert_includes css, "color: var(--surface-muted-content-color)"
+      end
+
       def test_marker_css_is_unlayered
         css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
         layer_end = layered_components_end_index(css)

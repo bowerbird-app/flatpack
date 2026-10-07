@@ -13,6 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.199] - 2026-10-07
+
+### Changed
+- Orderable list drag now presses the row (`scale: 0.98`), lifts it with `--shadow-lg` (`scale: 1.02`), and shows a visible landing slot filled with `--list-item-hover-background-color`. Sibling text eases to `--surface-muted-content-color`. Drop settle clears drag styles on `transitionend`.
+- Bumped the gem version to `0.1.199`.
+
+### Upgrade notes
+- No host call-site changes. `orderable:` still pointer-drags and saves the same payload.
+- Reload kit CSS and JavaScript so the landing slot, press, and lift apply. The placeholder is no longer `visibility: hidden`.
+- Under `prefers-reduced-motion: reduce`, the slot stays and the lift scale does not run.
+- Redeploy so `meta.gem_version` shows `0.1.199`.
+
 ## [0.1.198] - 2026-10-02
 
 ### Changed
