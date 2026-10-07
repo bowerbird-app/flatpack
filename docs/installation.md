@@ -326,6 +326,9 @@ pin_all_from FlatPack::Engine.root.join("app/javascript/flat_pack/tiptap"),
 # Local/relative time enhancer for <time class="local-time">
 pin "flat_pack/local_time", to: "flat_pack/local_time.js", preload: false
 
+# Kit copy for Stimulus (pairs with data-fp-copy on <html>)
+pin "flat_pack/copy", to: "flat_pack/copy.js", preload: false
+
 # Heroicons icon banks — used by FlatPack::Icon::Component
 pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false
 ```
@@ -370,6 +373,7 @@ If you need to manually configure JavaScript:
                 to: "flat_pack/tiptap",
                 preload: false
    pin "flat_pack/local_time", to: "flat_pack/local_time.js", preload: false
+   pin "flat_pack/copy", to: "flat_pack/copy.js", preload: false
    pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false
    ```
 

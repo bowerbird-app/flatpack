@@ -51,7 +51,7 @@ module FlatPack
           # Use provided turbo_frame or default to "sortable_table"
           frame_id = turbo_frame || "sortable_table"
 
-          FlatPack::Tooltip::Component.new(text: fp_t("table.sort"), placement: :top).render_in(render_context) do
+          FlatPack::Tooltip::Component.new(text: FlatPack::Copy.t("table.sort"), placement: :top).render_in(render_context) do
             tag.a(href: sort_url, data: {turbo_frame: frame_id}, class: "group inline-flex items-center gap-1 hover:text-[var(--table-sort-link-hover-color)] transition-colors") do
               safe_join([
                 @title,
