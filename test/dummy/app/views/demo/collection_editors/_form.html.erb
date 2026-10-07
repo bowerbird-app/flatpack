@@ -19,7 +19,7 @@
   ) do |editor| %>
     <% project.project_people.each do |membership| %>
       <% form.fields_for :project_people, membership, child_index: (membership.persisted? ? membership.id : membership.object_id) do |row_form| %>
-        <% editor.with_row(form: row_form, association_name: :person_id) do |row| %>
+        <% editor.with_row(form: row_form) do |row| %>
           <%= render "demo/collection_editors/fields", row: row, row_form: row_form %>
         <% end %>
       <% end %>
@@ -29,7 +29,6 @@
       <% form.fields_for :project_people, DemoProjectPerson.new, child_index: "NEW_RECORD" do |row_form| %>
         <%= render FlatPack::CollectionEditor::Row::Component.new(
           form: row_form,
-          association_name: :person_id,
           index_token: "NEW_RECORD"
         ) do |row| %>
           <%= render "demo/collection_editors/fields", row: row, row_form: row_form %>

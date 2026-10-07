@@ -20,7 +20,8 @@ function loadController(overrides = {}) {
     CustomEvent,
     window: {
       setTimeout(callback) { callback(); return 0 },
-      clearTimeout() {}
+      clearTimeout() {},
+      location: {origin: "http://example.test"}
     },
     document: {
       createElement() { return buildNode("div") },
@@ -58,6 +59,7 @@ function buildNode(tag = "div") {
     _html: "",
     setAttribute(name, value) { this.attrs[name] = String(value) },
     getAttribute(name) { return this.attrs[name] },
+    removeAttribute(name) { delete this.attrs[name] },
     append(...nodes) {
       nodes.forEach((child) => {
         if (child.parentNode) {
@@ -189,6 +191,9 @@ function buildRow({id = "", persisted = false} = {}) {
   const noResults = buildNode("p")
   mark(noResults, "data-collection-editor-no-results")
   noResults.hidden = true
+  const searchError = buildNode("p")
+  mark(searchError, "data-collection-editor-search-error")
+  searchError.hidden = true
   const error = buildNode("p")
   mark(error, "data-collection-editor-create-error")
   error.hidden = true
@@ -208,7 +213,7 @@ function buildRow({id = "", persisted = false} = {}) {
 
   fields.append(name, email)
   summary.append(title, description, edit, change)
-  panel.append(search, results, noResults, error, label, fields)
+  panel.append(search, results, noResults, searchError, error, label, fields)
   row.append(association, destroy, panel, summary, remove, handle)
   return row
 }
@@ -369,4 +374,133 @@ test("create success writes the new person id and summary onto the join row", as
   assert.equal(row.querySelector("[data-collection-editor-panel]").hidden, true)
   assert.equal(row.events[0].type, "collection-editor:selected")
   assert.equal(row.events[0].detail.id, "42")
+})
+
+test("enter with several matches does not select or open create", async () => {
+  const controller = harness()
+  const row = buildRow()
+  row.dataset.createUrl = "/people"
+  controller.listTarget.append(row)
+  row.dataset.items = JSON.stringify([
+    {id: "4", title: "Alice Chen", description: "alice@example.com"},
+    {id: "5", title: "Alice Chen-Smith", description: "alice@studio.example"}
+  ])
+
+  await controller.runSearch(row, "alice")
+  controller.searchKeydown({
+    key: "Enter",
+    preventDefault() {},
+    target: row.querySelector("[data-collection-editor-search]")
+  })
+
+  assert.equal(row.querySelectorAll("[data-collection-editor-results] [role='option']").length, 2)
+  assert.equal(row.querySelector("[data-collection-editor-association]").value, "")
+  assert.equal(row.querySelector("[data-collection-editor-create-fields]").hidden, true)
+})
+
+test("enter with no matches opens create", async () => {
+  const controller = harness()
+  const row = buildRow()
+  row.dataset.createUrl = "/people"
+  controller.listTarget.append(row)
+
+  await controller.runSearch(row, "morgan")
+  controller.searchKeydown({
+    key: "Enter",
+    preventDefault() {},
+    target: row.querySelector("[data-collection-editor-search]")
+  })
+
+  assert.equal(row.querySelector("[data-collection-editor-association]").value, "")
+  assert.equal(row.querySelector("[data-collection-editor-no-results]").hidden, false)
+  assert.equal(row.querySelector("[data-collection-editor-create-fields]").hidden, false)
+})
+
+test("arrow keys point the combobox at the active result", async () => {
+  const controller = harness()
+  const row = buildRow()
+  controller.listTarget.append(row)
+  row.dataset.items = JSON.stringify([
+    {id: "4", title: "Alice Chen", description: "alice@example.com"},
+    {id: "5", title: "Alice Chen-Smith", description: "alice@studio.example"}
+  ])
+
+  await controller.runSearch(row, "alice")
+  const input = row.querySelector("[data-collection-editor-search]")
+  controller.searchKeydown({
+    key: "ArrowDown",
+    preventDefault() {},
+    target: input
+  })
+
+  const options = row.querySelectorAll("[data-collection-editor-results] [role='option']")
+  assert.equal(input.attrs["aria-activedescendant"], options[0].id)
+  assert.equal(options[0].attrs["aria-selected"], "true")
+  assert.equal(options[1].attrs["aria-selected"], "false")
+})
+
+test("search failure shows its own message", async () => {
+  const controller = harness(async () => {
+    throw new Error("offline")
+  })
+  const row = buildRow()
+  row.dataset.searchUrl = "/people?q=alice"
+  controller.listTarget.append(row)
+
+  await controller.runSearch(row, "alice")
+
+  assert.equal(row.querySelector("[data-collection-editor-search-error]").hidden, false)
+  assert.equal(row.querySelector("[data-collection-editor-no-results]").hidden, true)
+  assert.equal(row.querySelector("[data-collection-editor-association]").value, "")
+})
+
+test("create ignores a second submit while the first is in flight", async () => {
+  let release
+  const calls = []
+  const controller = harness((url, options) => {
+    calls.push({url, options})
+    return new Promise((resolve) => {
+      release = () => resolve({
+        ok: true,
+        json: async () => ({ok: true, item: {id: "42", title: "Morgan Patel", description: "morgan@example.com"}})
+      })
+    })
+  })
+  const row = buildRow()
+  row.dataset.createUrl = "/people"
+  controller.listTarget.append(row)
+
+  const first = controller.create({preventDefault() {}, target: row})
+  await controller.create({preventDefault() {}, target: row})
+  assert.equal(calls.length, 1)
+  release()
+  await first
+  assert.equal(row.querySelector("[data-collection-editor-association]").value, "42")
+})
+
+test("template index replacement leaves visible text alone", () => {
+  const controller = harness()
+  const html = '<label for="role_NEW_RECORD">Role</label><input name="project[project_people_attributes][NEW_RECORD][role]" id="role_NEW_RECORD" value="NEW_RECORD"><p>Code NEW_RECORD</p>'
+  const replaced = controller.replaceTemplateIndex(html, "NEW_RECORD", "42")
+
+  assert.match(replaced, /name="project\[project_people_attributes\]\[42\]\[role\]"/)
+  assert.match(replaced, /id="role_42"/)
+  assert.match(replaced, /for="role_42"/)
+  assert.match(replaced, /value="NEW_RECORD"/)
+  assert.match(replaced, /<p>Code NEW_RECORD<\/p>/)
+})
+
+test("reorder announcement names the row and the position", () => {
+  const controller = harness()
+  const status = buildNode("p")
+  controller.statusTarget = status
+  controller.hasStatusTarget = true
+  const row = buildRow({id: "12"})
+  row.dataset.id = "12"
+  row.querySelector("[data-collection-editor-title]").textContent = "Alice Chen"
+  controller.listTarget.append(row)
+
+  controller.announceReorder({detail: {id: "12", position: 2}})
+
+  assert.equal(status.textContent, "Moved Alice Chen to position 2")
 })

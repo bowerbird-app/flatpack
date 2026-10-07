@@ -92,7 +92,7 @@ The root adds `.flat-pack-list--orderable` when `orderable: true`.
 <% end %>
 ```
 
-Persist runs only when `orderable_url` is set. Drop still reorders the list in the page if you omit the URL. A row with `data-orderable-unsaved="true"` also stays in the page and does not send the reorder request. Pass `handle_selector:` when only a drag handle should start the move. Arrow Up and Arrow Down on that handle move the row. New rows added after connect are bound automatically.
+Persist runs only when `orderable_url` is set. Drop still reorders the list in the page if you omit the URL. A row with `data-orderable-unsaved="true"` also stays in the page and does not send the reorder request. `target_position` counts the other saved rows and leaves unsaved rows out of that number. `list:reordered` still reports the visual position. Pass `handle_selector:` when only a drag handle should start the move. Arrow Up and Arrow Down on that handle move the row. New rows added after connect are bound automatically.
 
 The orderable controller sends a form-encoded payload shaped like:
 

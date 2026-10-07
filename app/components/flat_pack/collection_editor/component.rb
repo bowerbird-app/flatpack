@@ -44,7 +44,8 @@ module FlatPack
             render_list,
             render_empty,
             render_template,
-            render_add
+            render_add,
+            render_status
           ].compact)
         end
       end
@@ -133,6 +134,17 @@ module FlatPack
         return unless template?
 
         content_tag(:template, template.to_s.html_safe, data: {flat_pack__collection_editor_target: "template"})
+      end
+
+      def render_status
+        content_tag(
+          :p,
+          "",
+          class: "flat-pack-collection-editor-sr",
+          role: "status",
+          aria: {live: "polite"},
+          data: {flat_pack__collection_editor_target: "status"}
+        )
       end
 
       def render_add

@@ -1303,6 +1303,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 .flat-pack-collection-editor-summary[hidden],
 .flat-pack-collection-editor-no-results[hidden],
 .flat-pack-collection-editor-create-error[hidden],
+.flat-pack-collection-editor-search-error[hidden],
 .flat-pack-collection-editor-empty[hidden] {
   display: none;
 }
@@ -1365,7 +1366,8 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 }
 
 .flat-pack-collection-editor-error,
-.flat-pack-collection-editor-create-error {
+.flat-pack-collection-editor-create-error,
+.flat-pack-collection-editor-search-error {
   margin: 0;
   color: var(--color-error);
   font-size: 0.8125rem;

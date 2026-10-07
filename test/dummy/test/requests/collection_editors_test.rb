@@ -141,6 +141,26 @@ class CollectionEditorsTest < ActionDispatch::IntegrationTest
     assert_not project.project_people.exists?(person: person)
   end
 
+  test "adding a person who is already a collaborator keeps the row and the person" do
+    project = CollectionEditorDemo.launch
+    person = DemoPerson.find_by!(email: "alice@example.com")
+
+    assert_no_difference "DemoProjectPerson.count" do
+      patch demo_collection_editor_project_path(project), params: {
+        demo_project: {
+          name: project.name,
+          project_people_attributes: membership_attributes(project).merge(
+            "987654323" => {person_id: person.id, role: "Editor"}
+          )
+        }
+      }
+    end
+
+    assert_response :unprocessable_entity
+    assert_includes response.body, "already a collaborator"
+    assert_equal 1, project.project_people.where(person: person).count
+  end
+
   test "editing a person does not change the relationship role" do
     person = DemoPerson.find_by!(email: "alice@example.com")
 

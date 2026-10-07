@@ -101,7 +101,7 @@
           empty_text: "No collaborators yet"
         ) do |editor| %>
           <% form.fields_for :project_people, @collection_editor_preview, child_index: "preview" do |row_form| %>
-            <% editor.with_row(form: row_form, association_name: :person_id) do |row| %>
+            <% editor.with_row(form: row_form) do |row| %>
               <% row.with_entity(
                 form: row_form,
                 association_name: :person_id,

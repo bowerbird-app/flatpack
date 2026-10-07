@@ -496,6 +496,16 @@ export default class extends Controller {
     return this.listItems().indexOf(item) + 1
   }
 
+  persistedPosition(item) {
+    if (!item) return null
+
+    const saved = this.listItems().filter((row) => row.dataset?.orderableUnsaved !== "true")
+    const index = saved.indexOf(item)
+    if (index < 0) return null
+
+    return index + 1
+  }
+
   itemIdentifier(item) {
     return item?.dataset?.id || item?.id || null
   }
@@ -564,9 +574,15 @@ export default class extends Controller {
     this.pendingSave = true
 
     const item = this.draggedItem
+    const position = this.persistedPosition(item)
+    if (!position) {
+      this.pendingSave = false
+      return
+    }
+
     const payload = new URLSearchParams()
     payload.set(this.paramUuidNameValue || "id", this.itemIdentifier(item) || "")
-    payload.set(this.paramTargetPositionNameValue || "position", this.currentPosition(item)?.toString() || "")
+    payload.set(this.paramTargetPositionNameValue || "position", position.toString())
 
     try {
       const response = await fetch(this.orderableUrlValue, {

@@ -21,6 +21,7 @@ module FlatPack
           create_label: "Create",
           search_placeholder: "Search",
           empty_text: "No matches",
+          search_error_text: "Search failed",
           items: nil,
           edit_url_template: nil,
           edit_label: "Edit",
@@ -43,6 +44,7 @@ module FlatPack
           @create_label = create_label.to_s.presence || "Create"
           @search_placeholder = search_placeholder.to_s
           @empty_text = empty_text.to_s.presence || "No matches"
+          @search_error_text = search_error_text.to_s.presence || "Search failed"
           @items = items
           @edit_url_template = sanitize_endpoint(edit_url_template)
           @edit_label = edit_label.to_s.presence || "Edit"
@@ -138,6 +140,7 @@ module FlatPack
               render_search,
               content_tag(:div, "", id: @list_id, class: "flat-pack-collection-editor-results", role: "listbox", data: {collection_editor_results: "true"}),
               content_tag(:p, @empty_text, class: "flat-pack-collection-editor-no-results", data: {collection_editor_no_results: "true"}, hidden: true),
+              content_tag(:p, @search_error_text, class: "flat-pack-collection-editor-search-error", role: "alert", data: {collection_editor_search_error: "true"}, hidden: true),
               render_create_button,
               render_create_fields,
               content_tag(:p, "", class: "flat-pack-collection-editor-create-error", role: "alert", data: {collection_editor_create_error: "true"}, hidden: true)
@@ -148,7 +151,7 @@ module FlatPack
         def render_search
           content_tag(:div, class: "flat-pack-collection-editor-search") do
             safe_join([
-              content_tag(:label, @search_placeholder, for: @search_id, class: "flat-pack-collection-editor-sr"),
+              content_tag(:label, @label, for: @search_id, class: "flat-pack-collection-editor-sr"),
               tag.input(
                 id: @search_id,
                 type: "search",

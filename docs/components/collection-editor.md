@@ -34,7 +34,6 @@ Do not use it as a spreadsheet. Do not use it to edit the saved record and the r
 | name | type | default | required | description |
 |---|---|---|---|---|
 | `form` | FormBuilder | none | yes | Nested `fields_for` builder for the join record. |
-| `association_name` | Symbol/String | none | yes | Join attribute that stores the selected record id, such as `:person_id`. |
 | `remove_label` | String | `nil` | no | Accessible name for remove. Defaults to `Remove` plus the entity title. |
 | `record_id` | String | `nil` | no | Id sent by the reorder request. Defaults to the join record id. |
 | `persisted` | Boolean | `nil` | no | Forces the persisted or unsaved remove behavior. |
@@ -50,7 +49,7 @@ Do not use it as a spreadsheet. Do not use it to edit the saved record and the r
 | `title` | String | `nil` | no | Primary text for the selected record, such as the person name. |
 | `description` | String | `nil` | no | Secondary text, such as the email. |
 | `value` | String | `nil` | no | Selected id. Omit it to use the form object. |
-| `label` | String | `"Record"` | no | Accessible name for the search field. |
+| `label` | String | `"Record"` | no | Accessible name for the search field. The placeholder stays visible text. |
 | `search_url` | String | `nil` | no | GET endpoint. Response shape matches Select remote search, with an optional description. |
 | `search_param` | String | `"q"` | no | Query parameter name. |
 | `min_search_length` | Integer | `1` | no | Characters required before results are shown. |
@@ -58,6 +57,7 @@ Do not use it as a spreadsheet. Do not use it to edit the saved record and the r
 | `create_label` | String | `"Create"` | no | Create button text. |
 | `search_placeholder` | String | `"Search"` | no | Search field placeholder. |
 | `empty_text` | String | `"No matches"` | no | Copy when a query has no results. |
+| `search_error_text` | String | `"Search failed"` | no | Copy when the search request fails. |
 | `items` | Array | `nil` | no | Local results used when `search_url` is omitted. Each item is `{ id:, title:, description: }`. `value` and `label` are also accepted. |
 | `edit_url_template` | String | `nil` | no | Separate edit URL. `:id` is replaced with the selected record id. |
 | `edit_label` | String | `"Edit"` | no | Text for the edit link. |
@@ -96,7 +96,7 @@ Do not use it as a spreadsheet. Do not use it to edit the saved record and the r
   ) do |editor| %>
     <% @project.project_people.each do |membership| %>
       <% form.fields_for :project_people, membership, child_index: membership.id do |row_form| %>
-        <% editor.with_row(form: row_form, association_name: :person_id) do |row| %>
+        <% editor.with_row(form: row_form) do |row| %>
           <% row.with_entity(
             form: row_form,
             association_name: :person_id,
@@ -126,26 +126,46 @@ Do not use it as a spreadsheet. Do not use it to edit the saved record and the r
 
     <% editor.with_template do %>
       <% form.fields_for :project_people, ProjectPerson.new, child_index: "NEW_RECORD" do |row_form| %>
-        <%= render FlatPack::CollectionEditor::Row::Component.new(form: row_form, association_name: :person_id) %>
+        <%= render FlatPack::CollectionEditor::Row::Component.new(form: row_form, index_token: "NEW_RECORD") do |row| %>
+          <% row.with_entity(
+            form: row_form,
+            association_name: :person_id,
+            search_url: search_people_path,
+            create_url: people_path,
+            search_placeholder: "Search people",
+            edit_url_template: "/people/:id/edit",
+            edit_label: "Edit person"
+          ) do %>
+            <%= render FlatPack::TextInput::Component.new(name: "name", label: "Name", form: "collection-editor-unattached", data: { create_field: "name", fill_from_query: "true" }) %>
+            <%= render FlatPack::EmailInput::Component.new(name: "email", label: "Email", form: "collection-editor-unattached", data: { create_field: "email" }) %>
+          <% end %>
+          <% row.with_field do %>
+            <%= render FlatPack::Select::Component.new(
+              name: row_form.field_name(:role),
+              label: "Role",
+              options: ["Designer", "Photographer", "Producer"]
+            ) %>
+          <% end %>
+        <% end %>
       <% end %>
     <% end %>
   <% end %>
 <% end %>
 ```
 
-The template row in a real form repeats the same entity and role fields as the saved rows. `Add collaborator` clones that template and replaces `NEW_RECORD` with a unique number. Rails 8 strong parameters keep nested attribute keys that are integers, so the index is numeric rather than a prefixed token. Rails accepts that index in `project_people_attributes`.
+The template repeats the entity picker and the role field. `Add collaborator` clones it and replaces `NEW_RECORD` inside `name`, `id`, `for`, `data-id`, and the aria attributes that point at those ids. Text in the row is left as written. Rails 8 strong parameters keep nested attribute keys that are integers, so the index is numeric rather than a prefixed token. Rails accepts that index in `project_people_attributes`.
 
 Selecting a person writes `person_id`. It does not turn the name or email into editable join fields. `Edit person` goes to the person form. Saving that form changes the shared person. Role stays on `ProjectPerson`.
 
 Remove hides a saved row and submits `_destroy=1`. The person record stays. An unsaved row is dropped from the document and is not submitted.
 
-Search `GET search_url?q=` returns `{ "items": [{ "id": "4", "title": "Alice Chen", "description": "alice@example.com" }] }`. `value` and `label` are accepted too. Create `POST create_url` with the `data-create-field` inputs and the query. Success is `{ "ok": true, "item": { "id", "title", "description" } }`. Failure is `{ "ok": false, "errors": ["Email can't be blank"] }` with status 422. The picker stays open and the join row does not receive an id.
+Search `GET search_url?q=` returns `{ "items": [{ "id": "4", "title": "Alice Chen", "description": "alice@example.com" }] }`. `value` and `label` are accepted too. Enter selects the highlighted result, or the only result. Several results stay on screen and do not create a record. No results offers create. A failed request shows `search_error_text` and leaves the join id empty. Create `POST create_url` with the `data-create-field` inputs and the query. A second submit while that request is in flight is ignored. Success is `{ "ok": true, "item": { "id", "title", "description" } }`. Failure is `{ "ok": false, "errors": ["Email can't be blank"] }` with status 422. The picker stays open and the join row does not receive an id.
 
-Reorder uses the existing List orderable request. FlatPack does not add a position column. A persisted row sends `moving_recording_id` and `target_position` when those parameter names are set. The host persists that move with Recording Studio Orderable, or with whatever ordering API already owns the collection. The dummy app translates this payload through `Ordering::ReorderService`. An unsaved row is marked `data-orderable-unsaved="true"`, so the move stays in the form and no request is sent. Submit the parent form in DOM order and assign order on the host when the join records are created.
+Reorder uses the existing List orderable request. FlatPack does not add a position column. A persisted row sends `moving_recording_id` and `target_position` when those parameter names are set. That position counts saved rows only, so an unsaved row on screen does not shift the saved destination. `list:reordered` still reports the visual position. The host persists the saved move with Recording Studio Orderable, or with whatever ordering API already owns the collection. The dummy app translates this payload through `Ordering::ReorderService`. An unsaved row is marked `data-orderable-unsaved="true"`, so its own move stays in the form and no request is sent. Submit the parent form in DOM order and assign order on the host when the join records are created.
 
 The dummy reorder route also has the project id in the path. The row id therefore uses `moving_recording_id`, not `id`, so the path id and the row id stay distinct. Use the same split when a host route already consumes `id`.
 
-`list:reordered` fires after the DOM move. `list:saved` fires when the endpoint returns `{ "ok": true }`. `list:error` fires when the save fails.
+`list:reordered` fires after the DOM move. The collection editor writes that move into a polite status. `list:saved` fires when the endpoint returns `{ "ok": true }`. `list:error` fires when the save fails.
 
 Rendered field errors stay on the FlatPack input passed in the field slot. The row also takes the `is-invalid` class when the join object has errors, and the entity `error` argument prints the association message. A failed parent save re-renders the nested attributes, including rows added in the browser, as long as the controller assigns the invalid parent back to the form.
 
@@ -167,7 +187,8 @@ Dragged rows and the landing slot still use the List orderable styles. The landi
 ## Accessibility
 - The handle is a button named `Reorder` plus the record title. Arrow Up and Arrow Down move the row when ordering is on.
 - Remove is an icon button named `Remove` plus the record title.
-- Search is a combobox. Results are a listbox. Each option exposes the title and the description as text.
+- Search is a combobox named by `label`. Results are a listbox. Each option exposes the title and the description as text. Arrow keys set `aria-activedescendant` on the search field.
+- A polite status announces the row title and visual position after a move.
 - The association id and `_destroy` are hidden inputs.
 - Adding a row focuses its search field. Removing a row focuses the add button.
 - A blank row keeps the picker open so keyboard users can search before the parent form is submitted.

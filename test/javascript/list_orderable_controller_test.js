@@ -532,6 +532,34 @@ test('unsaved rows reorder in the DOM and do not send a request', async () => {
   assert.equal(fetchCalls.length, 0)
 })
 
+test('saved reorder position ignores unsaved rows', async () => {
+  const fetchCalls = []
+  const items = [buildItem('new-row'), buildItem('13'), buildItem('12')]
+  const parent = buildParent(items)
+  items.forEach((item) => { item.parentNode = parent })
+  items[0].dataset.orderableUnsaved = 'true'
+
+  const controller = new (loadController({
+    fetch: async (url, options) => {
+      fetchCalls.push({url, options})
+      return {ok: true, json: async () => ({ok: true})}
+    }
+  }))()
+  controller.element = buildElement(parent)
+  controller.orderableUrlValue = '/demo/collection_editor/1/reorder'
+  controller.hasOrderableUrlValue = true
+  controller.paramUuidNameValue = 'moving_recording_id'
+  controller.paramTargetPositionNameValue = 'target_position'
+  controller.connect()
+
+  controller.draggedItem = items[1]
+  await controller.saveOrder()
+
+  assert.equal(fetchCalls.length, 1)
+  assert.equal(fetchCalls[0].options.body, 'moving_recording_id=13&target_position=1')
+  assert.equal(controller.currentPosition(items[1]), 2)
+})
+
 test('destroyed collection rows are left out of the order', () => {
   const items = [buildItem('uuid-1'), buildItem('uuid-2'), buildItem('uuid-3')]
   const parent = buildParent(items)

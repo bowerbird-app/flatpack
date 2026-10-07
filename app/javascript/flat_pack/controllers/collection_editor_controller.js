@@ -1,19 +1,22 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["list", "template", "empty", "addButton"]
+  static targets = ["list", "template", "empty", "addButton", "status"]
   static values = {
     templateIndex: {type: String, default: "NEW_RECORD"}
   }
 
   connect() {
     this.onDocumentClick = this.closeOnOutside.bind(this)
+    this.onReordered = this.announceReorder.bind(this)
     document.addEventListener("click", this.onDocumentClick)
+    this.element.addEventListener("list:reordered", this.onReordered)
     this.refreshEmpty()
   }
 
   disconnect() {
     document.removeEventListener("click", this.onDocumentClick)
+    this.element.removeEventListener("list:reordered", this.onReordered)
   }
 
   add(event) {
@@ -21,7 +24,7 @@ export default class extends Controller {
     if (!this.hasTemplateTarget || !this.hasListTarget) return
 
     const index = this.uniqueIndex()
-    const html = this.templateTarget.innerHTML.replaceAll(this.templateIndexValue, index)
+    const html = this.replaceTemplateIndex(this.templateTarget.innerHTML, this.templateIndexValue, index)
     const holder = document.createElement("div")
     holder.innerHTML = html.trim()
     const row = holder.querySelector("[data-collection-editor-row]")
@@ -80,6 +83,8 @@ export default class extends Controller {
     const options = this.options(row)
     if (event.key === "ArrowDown" || event.key === "ArrowUp") {
       event.preventDefault()
+      if (options.length === 0) return
+
       const delta = event.key === "ArrowDown" ? 1 : -1
       const next = (row._activeIndex ?? -1) + delta
       this.setActive(row, Math.max(0, Math.min(options.length - 1, next)))
@@ -97,8 +102,7 @@ export default class extends Controller {
         this.applySelection(row, options[0].dataset)
         return
       }
-      this.promptCreate(event)
-      return
+      if (options.length === 0 && this.searchMissed(row)) this.promptCreate(event)
     }
 
     if (event.key === "Escape") {
@@ -131,8 +135,9 @@ export default class extends Controller {
   async create(event) {
     event.preventDefault()
     const row = this.rowFrom(event)
-    if (!row || !row.dataset.createUrl) return
+    if (!row || !row.dataset.createUrl || row.dataset.creating === "true") return
 
+    row.dataset.creating = "true"
     const body = new URLSearchParams()
     const query = row.querySelector("[data-collection-editor-search]")?.value || ""
     body.set(row.dataset.searchParam || "q", query)
@@ -165,6 +170,8 @@ export default class extends Controller {
       this.applySelection(row, item)
     } catch (_error) {
       this.showCreateError(row, ["Could not create the record"])
+    } finally {
+      delete row.dataset.creating
     }
   }
 
@@ -173,6 +180,7 @@ export default class extends Controller {
     if (query.trim().length < minimum) {
       this.renderResults(row, [])
       this.toggleNoResults(row, false)
+      this.toggleSearchError(row, false)
       return
     }
 
@@ -185,6 +193,7 @@ export default class extends Controller {
       })
       this.renderResults(row, matches)
       this.toggleNoResults(row, matches.length === 0)
+      this.toggleSearchError(row, false)
       return
     }
 
@@ -204,10 +213,12 @@ export default class extends Controller {
       const items = this.normalizeItems(payload)
       this.renderResults(row, items)
       this.toggleNoResults(row, items.length === 0)
+      this.toggleSearchError(row, false)
     } catch (error) {
       if (error?.name === "AbortError") return
       this.renderResults(row, [])
-      this.toggleNoResults(row, true)
+      this.toggleNoResults(row, false)
+      this.toggleSearchError(row, true)
     }
   }
 
@@ -217,6 +228,7 @@ export default class extends Controller {
 
     list.replaceChildren()
     row._activeIndex = -1
+    row.querySelector("[data-collection-editor-search]")?.removeAttribute("aria-activedescendant")
     items.forEach((item) => list.append(this.optionElement(row, item)))
   }
 
@@ -225,6 +237,9 @@ export default class extends Controller {
     option.type = "button"
     option.className = "flat-pack-collection-editor-option"
     option.setAttribute("role", "option")
+    const list = row.querySelector("[data-collection-editor-results]")
+    row._optionSerial = (row._optionSerial || 0) + 1
+    option.id = `${list?.id || "collection-editor-option"}-${row._optionSerial}`
     option.dataset.id = item.id
     option.dataset.title = item.title
     option.dataset.description = item.description || ""
@@ -397,11 +412,52 @@ export default class extends Controller {
 
   setActive(row, index) {
     const options = this.options(row)
+    const input = row.querySelector("[data-collection-editor-search]")
     row._activeIndex = index
     options.forEach((option, optionIndex) => {
-      option.setAttribute("aria-selected", optionIndex === index ? "true" : "false")
+      const selected = optionIndex === index
+      option.setAttribute("aria-selected", selected ? "true" : "false")
+      if (selected && input && option.id) input.setAttribute("aria-activedescendant", option.id)
     })
+    if ((index < 0 || !options[index]) && input) input.removeAttribute("aria-activedescendant")
     options[index]?.scrollIntoView?.({block: "nearest"})
+  }
+
+  announceReorder(event) {
+    if (!this.hasStatusTarget) return
+
+    const position = event.detail?.position
+    if (!position) return
+
+    const row = this.rowForId(event.detail?.id)
+    const title = row?.querySelector("[data-collection-editor-title]")?.textContent?.trim()
+    this.statusTarget.textContent = title ? `Moved ${title} to position ${position}` : `Moved row to position ${position}`
+  }
+
+  rowForId(id) {
+    if (!this.hasListTarget || id == null || id === "") return null
+
+    return Array.from(this.listTarget.querySelectorAll("[data-collection-editor-row]")).find((row) => row.dataset.id === String(id)) || null
+  }
+
+  replaceTemplateIndex(html, token, index) {
+    if (!token) return html
+
+    const pattern = /(\s(?:name|id|for|data-id|aria-controls|aria-labelledby|aria-describedby|aria-activedescendant)\s*=\s*)(["'])([\s\S]*?)\2/gi
+    return html.replace(pattern, (match, prefix, quote, value) => {
+      if (!value.includes(token)) return match
+      return `${prefix}${quote}${value.split(token).join(index)}${quote}`
+    })
+  }
+
+  searchMissed(row) {
+    const node = row.querySelector("[data-collection-editor-no-results]")
+    return Boolean(node && !node.hidden)
+  }
+
+  toggleSearchError(row, show) {
+    const node = row.querySelector("[data-collection-editor-search-error]")
+    if (node) node.hidden = !show
   }
 
   uniqueIndex() {

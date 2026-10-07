@@ -10,7 +10,6 @@ module FlatPack
 
         def initialize(
           form:,
-          association_name:,
           remove_label: nil,
           record_id: nil,
           persisted: nil,
@@ -19,7 +18,6 @@ module FlatPack
         )
           super(**system_arguments)
           @form = form
-          @association_name = association_name
           @remove_label = remove_label
           @record_id = record_id
           @persisted = persisted

@@ -24,7 +24,7 @@ module FlatPack
         row_form = builder("project[project_people_attributes][12]", membership)
 
         render_inline(Component.new(title: "Collaborators", add_label: "Add collaborator", headers: ["Person", "Role"], orderable: true, orderable_url: "/reorder", param_uuid_name: "moving_recording_id", param_target_position_name: "target_position")) do |editor|
-          editor.with_row(form: row_form, association_name: :person_id) do |row|
+          editor.with_row(form: row_form) do |row|
             row.with_entity(
               form: row_form,
               association_name: :person_id,
@@ -58,6 +58,9 @@ module FlatPack
         assert_selector "button[aria-label='Reorder Alice Chen']"
         assert_selector "button[aria-label='Remove Alice Chen']"
         assert_selector "[role='combobox'][aria-controls]", visible: :all
+        assert_selector "label.flat-pack-collection-editor-sr", text: "Person", visible: :all
+        assert_selector "[data-collection-editor-search-error]", text: "Search failed", visible: :all
+        assert_selector "[data-flat-pack--collection-editor-target='status'][aria-live='polite']", visible: :all
         assert_no_selector ".flat-pack-collection-editor-empty"
       end
 
@@ -67,7 +70,7 @@ module FlatPack
         view = vc_test_controller.view_context
 
         render_inline(Component.new(empty_text: "No collaborators yet", template_index: "NEW_RECORD")) do |editor|
-          row = Row::Component.new(form: row_form, association_name: :person_id, index_token: "NEW_RECORD")
+          row = Row::Component.new(form: row_form, index_token: "NEW_RECORD")
           row.with_entity(
             form: row_form,
             association_name: :person_id,
@@ -77,6 +80,7 @@ module FlatPack
           ) do
             view.tag.input(type: "text", data: {create_field: "name", fill_from_query: "true"}, form: "collection-editor-unattached")
           end
+          row.with_field { row_form.text_field(:role) }
           editor.with_template { view.render(row) }
         end
 
@@ -87,6 +91,7 @@ module FlatPack
         assert_selector "[data-flat-pack--collection-editor-target='empty']", text: "No collaborators yet", visible: :all
         html = rendered_content
         assert_includes html, "project[project_people_attributes][NEW_RECORD][person_id]"
+        assert_includes html, "project[project_people_attributes][NEW_RECORD][role]"
         assert_includes html, "data-orderable-unsaved=\"true\""
         refute_includes html, "name=\"project[project_people_attributes][NEW_RECORD][_destroy]\""
         assert_includes html, "data-items="
@@ -100,7 +105,7 @@ module FlatPack
         row_form = builder("project[project_people_attributes][3]", membership)
 
         render_inline(Component.new) do |editor|
-          editor.with_row(form: row_form, association_name: :person_id) do |row|
+          editor.with_row(form: row_form) do |row|
             row.with_entity(
               form: row_form,
               association_name: :person_id,
