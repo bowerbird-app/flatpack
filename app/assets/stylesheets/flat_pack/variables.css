@@ -756,9 +756,9 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --code-block-tab-active-background-color: var(--surface-border-color);
   --code-block-tab-active-color: var(--surface-muted-content-color);
   --tabs-pill-corner-radius: 9999px;
-  --tabs-pill-active-background-color: var(--color-primary);
-  --tabs-pill-active-border-color: var(--color-primary);
-  --tabs-pill-active-text-color: var(--color-primary-text);
+  --tabs-pill-active-background-color: var(--button-primary-background-color);
+  --tabs-pill-active-border-color: var(--button-primary-border-color);
+  --tabs-pill-active-text-color: var(--button-primary-text-color);
   --tabs-stacked-pill-list-background-color: var(--surface-muted-background-color);
   --tabs-pill-list-border-color: var(--surface-border-color);
   --tabs-pill-active-shadow: var(--shadow-md);

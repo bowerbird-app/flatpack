@@ -142,7 +142,9 @@ module FlatPack
       variant = parameter_named(payload, "variant")
 
       assert_equal FlatPack::Tabs::Component::VARIANTS.keys.map(&:to_s), variant.fetch(:enum)
-      refute payload.fetch(:parameters).any? { |parameter| parameter.fetch(:name) == "style" }
+
+      style = parameter_named(payload, "style")
+      assert_equal %w[default primary secondary ghost success warning danger], style.fetch(:enum)
     end
 
     test "show Avatar binds SHAPES to shape" do
