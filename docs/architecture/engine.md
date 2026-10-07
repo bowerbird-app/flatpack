@@ -203,10 +203,10 @@ Built-in button styles stay kit-owned. A host or gem adds a named colourway with
 FlatPack::Button.register_style(:partner, press: :raised)
 ```
 
-Then paint it in host CSS loaded after `flat_pack/application`:
+Then paint it in host CSS loaded after `flat_pack/application`. Slot assignment is `[data-fp-style]`. `.fp-button` is still the chrome.
 
 ```css
-.fp-button[data-fp-style="partner"] {
+[data-fp-style="partner"] {
   --fp-button-background: #635bff;
   --fp-button-hover-background: #0a2540;
   --fp-button-text: #ffffff;

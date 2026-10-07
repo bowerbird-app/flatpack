@@ -14,7 +14,7 @@ FlatPack's theming surface has three layers:
 - `:root {}` in the same file is the single source of concrete values: the default rounded / charcoal palette **and** component token wiring (`--button-primary-*` → `var(--color-primary)`, etc.).
 - `[data-theme="rounded"]` is an empty alias of that default.
 - `[data-theme="..."]` selectors override **only** tokens that differ from `:root` (semantic / intentional exceptions). Component aliases inherit.
-- `--fp-button-*` are per-button paint tokens. Do not copy them onto a named theme. A host or gem registers a button style and paints those tokens on `.fp-button[data-fp-style]`. See [Button](components/button.md).
+- `--fp-button-*` are per-button paint tokens. Do not copy them onto a named theme. A host or gem registers a button style and paints those tokens on `[data-fp-style]`. `.fp-button` is still the chrome. See [Button](components/button.md).
 
 For most apps, generate a brand kit instead of copying every variable:
 
@@ -202,9 +202,9 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --code-block-tab-active-background-color: var(--surface-border-color);
   --code-block-tab-active-color: var(--surface-muted-content-color);
   --tabs-pill-corner-radius: 9999px;
-  --tabs-pill-active-background-color: var(--color-primary);
-  --tabs-pill-active-border-color: var(--color-primary);
-  --tabs-pill-active-text-color: var(--color-primary-text);
+  --tabs-pill-active-background-color: var(--button-primary-background-color);
+  --tabs-pill-active-border-color: var(--button-primary-border-color);
+  --tabs-pill-active-text-color: var(--button-primary-text-color);
   --tabs-pill-active-shadow: var(--shadow-md);
   --tabs-pill-inactive-text-color: var(--surface-muted-content-color);
   --tabs-pill-inactive-hover-background-color: var(--surface-muted-background-color);

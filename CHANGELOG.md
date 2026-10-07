@@ -13,6 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.201] - 2026-10-07
+
+### Changed
+- `style:` on pill tabs, stacked tabs, and `Button::Pill` defaults to `:primary`. Omitted calls stay on the pill tokens.
+- Active pill colour for other built-in styles comes from the button slots.
+- Bumped the gem version to `0.1.201`.
+
+### Upgrade notes
+- Hosts that set `--fp-button-*` only on `.fp-button[data-fp-style="name"]` should use `[data-fp-style="name"]` if that colourway should also paint pills. Built-in styles need no host CSS change.
+- `style:` on Tabs is no longer an HTML style attribute. Pass a button style name. A CSS string in that keyword raises `ArgumentError`.
+- Host overrides of `--tabs-pill-active-*` still win for the default primary pills.
+- Reload kit CSS.
+
 ## [0.1.200] - 2026-10-07
 
 ### Added

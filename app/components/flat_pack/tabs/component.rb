@@ -4,8 +4,8 @@ module FlatPack
   module Tabs
     class Component < FlatPack::BaseComponent
       SIZES = FlatPack::Shared::PadTextSizes::SIZES
+      STYLES = FlatPack::Button::StyleRegistry::BUILT_IN
 
-      # tab_base omits padding/text — those come from SIZES (size:).
       VARIANTS = {
         underline: {
           tab_list: "flex gap-1 border-b border-[var(--surface-border-color)]",
@@ -16,14 +16,14 @@ module FlatPack
         pills: {
           tab_list: "inline-flex gap-1 [border-radius:var(--tabs-pill-corner-radius)] p-1",
           tab_base: "border border-transparent font-medium [border-radius:var(--tabs-pill-corner-radius)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring focus-visible:ring-offset-2",
-          active: "border-[var(--tabs-pill-active-border-color)] bg-[var(--tabs-pill-active-background-color)] text-[var(--tabs-pill-active-text-color)] shadow-[var(--tabs-pill-active-shadow)]",
-          inactive: "border-transparent text-[var(--tabs-pill-inactive-text-color)] hover:text-[var(--tabs-pill-inactive-hover-text-color)] hover:bg-[var(--tabs-pill-inactive-hover-background-color)]"
+          active: FlatPack::Button::PillStyle::ACTIVE_CLASSES,
+          inactive: FlatPack::Button::PillStyle::INACTIVE_CLASSES
         },
         stacked: {
           tab_list: "flex flex-col gap-1 [border-radius:1.5rem] p-2 bg-[var(--tabs-stacked-pill-list-background-color)] border border-[var(--tabs-pill-list-border-color)]",
           tab_base: "w-full [border-radius:var(--tabs-pill-corner-radius)] text-left font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring focus-visible:ring-offset-2",
-          active: "border border-[var(--tabs-pill-active-border-color)] bg-[var(--tabs-pill-active-background-color)] text-[var(--tabs-pill-active-text-color)] shadow-[var(--tabs-pill-active-shadow)]",
-          inactive: "border border-transparent text-[var(--tabs-pill-inactive-text-color)] hover:text-[var(--tabs-pill-inactive-hover-text-color)] hover:bg-[var(--tabs-pill-inactive-hover-background-color)]"
+          active: "border #{FlatPack::Button::PillStyle::ACTIVE_CLASSES}",
+          inactive: "border #{FlatPack::Button::PillStyle::INACTIVE_CLASSES}"
         }
       }.freeze
 
@@ -31,12 +31,14 @@ module FlatPack
         default_tab: 0,
         variant: :underline,
         size: :md,
+        style: FlatPack::Button::PillStyle::DEFAULT,
         **system_arguments
       )
         super(**system_arguments)
         @default_tab = default_tab
         @variant = variant.to_sym
         @size = FlatPack::Shared::PadTextSizes.normalize!(size)
+        @pill_style = FlatPack::Button::PillStyle.resolve(style)
         @tabs = []
         @panels = []
 
@@ -81,10 +83,7 @@ module FlatPack
       end
 
       def render_tab_list
-        content_tag(:div,
-          role: "tablist",
-          aria: tab_list_aria_attributes,
-          class: tab_list_classes) do
+        content_tag(:div, **tab_list_attributes) do
           safe_join(@tabs.map.with_index { |tab, index| render_tab(tab, index) })
         end
       end
@@ -141,6 +140,24 @@ module FlatPack
 
       def tab_list_classes
         variant_classes.fetch(:tab_list)
+      end
+
+      def tab_list_attributes
+        attributes = {
+          role: "tablist",
+          aria: tab_list_aria_attributes,
+          class: tab_list_classes
+        }
+        return attributes unless pill_list?
+
+        attributes.merge(
+          class: "#{tab_list_classes} #{@pill_style.group_class}",
+          data: {fp_style: @pill_style.name.to_s}
+        )
+      end
+
+      def pill_list?
+        @variant == :pills || @variant == :stacked
       end
 
       def tab_classes(is_active)

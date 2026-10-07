@@ -191,7 +191,7 @@ module FlatPack
       assert_match(/\.fp-button:active[^{]*\{[^}]*translateY\(1px\)/m, css)
       assert_match(/\.fp-button-flat:active[^{]*\{[^}]*inset/m, css)
       assert_match(/\.fp-button-raised[^{]*\{[^}]*var\(--button-shadow\)/m, css)
-      assert_includes css, ".fp-button[data-fp-style=\"primary\"]"
+      assert_includes css, "[data-fp-style=\"primary\"]"
     end
 
     test "alert chip and badge collapse height instead of scaling out" do

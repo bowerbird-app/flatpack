@@ -193,6 +193,20 @@ module FlatPack
       )
     end
 
+    test "active pill colours alias the primary button tokens" do
+      root_block = @css[/^:root \{.*?^\}/m]
+
+      assert_match(/--tabs-pill-active-background-color:\s*var\(--button-primary-background-color\)/, root_block)
+      assert_match(/--tabs-pill-active-border-color:\s*var\(--button-primary-border-color\)/, root_block)
+      assert_match(/--tabs-pill-active-text-color:\s*var\(--button-primary-text-color\)/, root_block)
+
+      application = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+      assert_includes application, ".fp-pill-button-slots {"
+      assert_includes application, "--tabs-pill-active-background-color: var(--fp-button-background);"
+      refute_includes application, ":not([data-fp-style=\"primary\"])"
+      refute_includes application, "--tabs-pill-default-background-color"
+    end
+
     private
 
     def token_names(block)
