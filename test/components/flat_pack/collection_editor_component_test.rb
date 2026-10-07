@@ -60,7 +60,9 @@ module FlatPack
         assert_selector "[data-flat-pack--list-orderable-param-uuid-name-value='moving_recording_id']"
         assert_selector "[data-flat-pack--list-orderable-param-target-position-name-value='target_position']"
         assert_selector "button[aria-label='Reorder Alice Chen']"
-        assert_selector "button[aria-label='Remove Alice Chen']"
+        assert_selector "button[aria-label='Remove Alice Chen'][data-fp-style='ghost']"
+        assert_selector "button[aria-label='Remove Alice Chen'] [data-flat-pack--icon-name-value='trash']"
+        assert_no_selector "button[aria-label='Remove Alice Chen'][data-fp-style='danger']"
         assert_selector "[role='combobox'][aria-controls]", visible: :all
         assert_selector "label.flat-pack-collection-editor-sr", text: "Person", visible: :all
         assert_selector "[data-collection-editor-search-error]", text: "Search failed", visible: :all

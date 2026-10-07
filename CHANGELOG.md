@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - The collection editor heading and add button sit outside the bordered list. The list frame is `.flat-pack-collection-editor-card`. The add button is only as wide as its label.
 - Collection editor rows are a grid of cells. Each `with_field` block is its own column. Text input, Select, and the other controls that share `FormField::ControlStyles` accept `chrome: :cell` and drop their own border, radius, and background. Focus and errors draw an inset ring on the cell. The person search uses the same cell treatment. Create fields stay bordered.
+- Collection editor remove is a ghost button with a trash icon. It was a danger button with an X.
 
 ### Upgrade notes
 - The collection editor border, background, and padding now live on `.flat-pack-collection-editor-card`. The heading and the add button are outside that card. Host CSS that painted the border on `.flat-pack-collection-editor` should move to the card class.

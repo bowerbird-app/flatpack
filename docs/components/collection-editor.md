@@ -194,7 +194,7 @@ Dragged rows and the landing slot still use the List orderable styles. The landi
 
 ## Accessibility
 - The handle is a button named `Reorder` plus the record title. Arrow Up and Arrow Down move the row when ordering is on.
-- Remove is an icon button named `Remove` plus the record title.
+- Remove is a ghost icon button with a trash icon, named `Remove` plus the record title.
 - Search is a combobox named by `label`. Results are a listbox. Each option exposes the title and the description as text. Arrow keys set `aria-activedescendant` on the search field.
 - A polite status announces the row title and visual position after a move.
 - The association id and `_destroy` are hidden inputs.

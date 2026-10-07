@@ -134,9 +134,9 @@ module FlatPack
         def render_remove
           render FlatPack::Button::Component.new(
             type: "button",
-            style: :danger,
+            style: :ghost,
             size: :sm,
-            icon: "x-mark",
+            icon: "trash",
             icon_only: true,
             aria: {label: remove_label},
             data: {
