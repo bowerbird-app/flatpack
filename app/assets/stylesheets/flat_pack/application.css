@@ -1248,6 +1248,8 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 
 .flat-pack-collection-editor-entity {
   position: relative;
+  display: grid;
+  align-items: center;
   grid-column: 2;
   grid-row: 1;
   min-width: 0;
@@ -1280,8 +1282,20 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 }
 
 .flat-pack-collection-editor-fields {
+  display: flex;
+  align-items: center;
   padding: 0;
   transition: box-shadow var(--duration-fast) var(--easing-standard);
+}
+
+.flat-pack-collection-editor-fields > .flat-pack-input-wrapper {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+}
+
+.flat-pack-collection-editor-fields :is(input, select, textarea, .flat-pack-select-trigger) {
+  padding-block: 0;
 }
 
 .flat-pack-collection-editor-fields label {
@@ -1299,7 +1313,8 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   align-items: center;
   gap: 0.5rem;
   justify-content: flex-end;
-  padding: var(--form-control-padding);
+  padding-block: 0;
+  padding-inline: var(--form-control-padding);
 }
 
 .flat-pack-collection-editor-entity:has(.flat-pack-collection-editor-search-input:focus),
@@ -1386,7 +1401,8 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   background-color: transparent;
   box-shadow: none;
   color: var(--surface-content-color);
-  padding: var(--form-control-padding);
+  padding-block: 0;
+  padding-inline: var(--form-control-padding);
   font-size: 0.875rem;
   appearance: none;
 }

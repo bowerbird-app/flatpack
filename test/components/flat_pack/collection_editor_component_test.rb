@@ -141,6 +141,8 @@ module FlatPack
         assert_includes css, "border-inline-end: 1px solid var(--collection-editor-border-color)"
         assert_includes css, "inset 0 0 0 2px var(--color-ring)"
         assert_includes css, "inset 0 0 0 2px var(--color-error)"
+        assert_includes css, ".flat-pack-collection-editor-fields :is(input, select, textarea, .flat-pack-select-trigger)"
+        assert_includes css, "padding-block: 0"
         refute_includes css, "justify-content: center"
         assert_includes variables, "--collection-editor-row-hover-background-color: var(--list-item-hover-background-color);"
       end
