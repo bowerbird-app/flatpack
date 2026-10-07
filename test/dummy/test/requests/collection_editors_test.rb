@@ -36,6 +36,22 @@ class CollectionEditorsTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "target_position"
     assert_includes response.body, "collection-editor-token-override"
     assert_includes response.body, "--collection-editor-title-color"
+    assert_includes response.body, "Text fields"
+    assert_includes response.body, "Single-line text in each cell."
+    assert_includes response.body, ">Line<"
+    assert_includes response.body, "No lines yet"
+    assert_includes response.body, "Cold open"
+    assert_includes response.body, "Studio wide"
+    assert_includes response.body, "Hold two seconds"
+    assert_includes response.body, "Host close-up"
+    assert_includes response.body, "Name lower third"
+    assert_includes response.body, "End card"
+    assert_includes response.body, "Fade out"
+    assert_includes response.body, "Remove Cold open"
+    assert_includes response.body, 'name="lines[1][item]"'
+    assert_includes response.body, 'name="lines[2][detail]"'
+    assert_includes response.body, 'name="lines[3][note]"'
+    assert_match(/name="lines\[1\]\[item\]"[^>]*\bborder-0\b|\bborder-0\b[^>]*name="lines\[1\]\[item\]"/, response.body)
     refute_includes response.body, "Alice Chen-Smith"
 
     get "/themes"

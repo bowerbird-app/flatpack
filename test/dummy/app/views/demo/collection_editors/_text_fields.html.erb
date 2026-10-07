@@ -1,0 +1,29 @@
+<%= form_with url: demo_collection_editor_path, method: :get, data: {turbo: false} do |form| %>
+  <%= render FlatPack::CollectionEditor::Component.new(
+    title: "Lines",
+    add_label: "Line",
+    empty_text: "No lines yet",
+    headers: ["Item", "Detail", "Note"],
+    orderable: true
+  ) do |editor| %>
+    <% @text_lines.each_with_index do |line, index| %>
+      <% form.fields_for :lines, line, child_index: index + 1 do |row_form| %>
+        <% editor.with_row(form: row_form, remove_label: "Remove #{line.item}") do |row| %>
+          <%= render "demo/collection_editors/text_line", row: row, row_form: row_form, index: index + 1 %>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <% editor.with_template do %>
+      <% form.fields_for :lines, CollectionEditorTextLine.new, child_index: "NEW_RECORD" do |row_form| %>
+        <%= render FlatPack::CollectionEditor::Row::Component.new(
+          form: row_form,
+          index_token: "NEW_RECORD",
+          persisted: false
+        ) do |row| %>
+          <%= render "demo/collection_editors/text_line", row: row, row_form: row_form, index: "NEW_RECORD" %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

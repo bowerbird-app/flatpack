@@ -77,6 +77,11 @@ module Demo
     def load_previews
       @collection_preview = CollectionEditorPreview.new(id: 1, person_id: 1, role: "Designer")
       @collection_blank = CollectionEditorPreview.new
+      @text_lines = [
+        CollectionEditorTextLine.new(item: "Cold open", detail: "Studio wide", note: "Hold two seconds"),
+        CollectionEditorTextLine.new(item: "Interview", detail: "Host close-up", note: "Name lower third"),
+        CollectionEditorTextLine.new(item: "End card", detail: "Logo", note: "Fade out")
+      ]
     end
 
     def project_params

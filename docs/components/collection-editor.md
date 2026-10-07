@@ -20,7 +20,7 @@ Each cell edits one value. The row is not a calculated spreadsheet. Do not use i
 | `title` | String | `nil` | no | Heading above the bordered list. |
 | `add_label` | String | `"Add"` | no | Add button text. The button also shows a plus icon and is only as wide as that label. |
 | `empty_text` | String | `"Nothing here yet"` | no | Copy shown when every row is gone. |
-| `headers` | Array | `nil` | no | One desktop label per content cell: the entity, then each field, in that order. The handle and the remove control stay unlabeled. Without headers the desktop grid still reserves two content columns. |
+| `headers` | Array | `nil` | no | One desktop label per content cell. With an entity, that cell comes first, then each field. A row of only fields uses one header per field. The handle and the remove control stay unlabeled. Without headers the desktop grid still reserves two content columns. |
 | `orderable` | Boolean | `false` | no | Shows a drag handle and mounts `flat-pack--list-orderable`. |
 | `orderable_url` | String | `nil` | no | PATCH endpoint for a persisted row. Same contract as List. |
 | `orderable_method` | String/Symbol | `:patch` | no | Request method for the reorder request. |
@@ -174,6 +174,8 @@ The dummy reorder route also has the project id in the path. The row id therefor
 Rendered field errors stay on the FlatPack input passed in the field slot. The row also takes the `is-invalid` class when the join object has errors, and the entity `error` argument prints the association message. A failed parent save re-renders the nested attributes, including rows added in the browser, as long as the controller assigns the invalid parent back to the form.
 
 Desktop rows are a grid. `--collection-editor-border-color` draws the lines. The handle, the person, each relationship field, and remove are separate cells. Pass `chrome: :cell` on Text input, Select, Search input, and the other controls that share that box. The control drops its border, radius, and background. Padding stays inside the cell. Focus and an invalid value draw an inset ring on the cell. The message stays under the value. The person search uses that same cell treatment. Name and email inside Create stay bordered. Below 40rem the person, each field, and the actions stack. Column headers hide. Field labels show again. The page does not scroll sideways.
+
+A row can skip the entity and hold only fields. The dummy Text fields section does that with three single-line text inputs, each passed `chrome: :cell`. There is no person picker and no dropdown. Those rows are unsaved, so a drag stays on the page.
 
 `headers` lines up with those content cells. A second `with_field` needs a third header. The section sets `--collection-editor-columns` from that count so the header and the rows share one grid. That property is runtime layout, not a theme token. `--collection-editor-row-padding` pads the empty state. Cell text uses `--form-control-padding`.
 

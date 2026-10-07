@@ -25,6 +25,21 @@
 
 <section class="mb-12 space-y-4">
   <%= render FlatPack::SectionTitle::Component.new(
+    title: "Text fields",
+    subtitle: "Single-line text in each cell. No person picker and no dropdown.",
+    anchor_link: true
+  ) %>
+  <p class="text-sm text-[var(--surface-muted-content-color)]">
+    Item, detail, and note are text inputs with cell chrome.
+    The value sits in the cell.
+    The control has no border of its own.
+    These rows are unsaved, so dragging them stays on the page.
+  </p>
+  <%= render "demo/collection_editors/text_fields" %>
+</section>
+
+<section class="mb-12 space-y-4">
+  <%= render FlatPack::SectionTitle::Component.new(
     title: "Empty collection",
     subtitle: "A project with no collaborators yet.",
     anchor_link: true
