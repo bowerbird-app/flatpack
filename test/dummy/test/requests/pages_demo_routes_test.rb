@@ -347,6 +347,17 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, 'data-controller="segmented-buttons-demo"'
     assert_includes response.body, 'data-action="segmented-buttons-demo#activate"'
     assert_includes response.body, 'aria-pressed="true"'
+    assert_includes response.body, "The selected button uses the primary colour."
+    assert_includes response.body, "The selected button matches a default button."
+    assert_includes response.body, 'data-fp-style="primary"'
+    assert_includes response.body, 'data-fp-style="default"'
+    assert_includes response.body, 'data-fp-style="secondary"'
+    assert_includes response.body, 'data-segmented-buttons-demo-active-style-value="primary"'
+    assert_includes response.body, 'data-segmented-buttons-demo-active-style-value="default"'
+    assert_includes response.body, 'data-segmented-buttons-demo-inactive-style-value="secondary"'
+    assert_includes response.body, 'data-segmented-buttons-demo-active-press-class-value="fp-button-raised"'
+    assert_includes response.body, 'data-segmented-buttons-demo-inactive-press-class-value="fp-button-flat"'
+    refute_includes response.body, "active-classes-value"
 
     get "/demo/buttons/groups"
 
@@ -354,6 +365,12 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Button Groups (Wrapped Together)"
     assert_includes response.body, "Left"
     assert_includes response.body, "Middle"
+    assert_includes response.body, 'data-fp-style="primary"'
+    assert_includes response.body, 'data-fp-style="secondary"'
+    assert_includes response.body, 'data-segmented-buttons-demo-active-style-value="primary"'
+    assert_includes response.body, 'data-segmented-buttons-demo-active-press-class-value="fp-button-raised"'
+    assert_includes response.body, 'data-segmented-buttons-demo-inactive-press-class-value="fp-button-flat"'
+    refute_includes response.body, "active-classes-value"
   end
 
   test "page nav demo renders icon-only navigation" do

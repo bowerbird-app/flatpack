@@ -16,14 +16,70 @@ module FlatPack
         assert_selector "button", count: 3
       end
 
-      def test_selected_button_uses_primary_scheme
+      def test_omitted_style_uses_primary_on_the_selected_button
         render_inline(Component.new) do |group|
-          group.button(text: "Selected", selected: true)
-          group.button(text: "Not Selected")
+          group.button(text: "Day", selected: true)
+          group.button(text: "Week")
         end
 
-        # The selected button should have primary styling
-        assert_selector "button", count: 2
+        assert_selector "button[data-fp-style='primary']", text: "Day"
+        assert_selector "button[data-fp-style='secondary']", text: "Week"
+      end
+
+      def test_primary_style_uses_primary_on_the_selected_button
+        render_inline(Component.new(style: :primary)) do |group|
+          group.button(text: "Day", selected: true)
+          group.button(text: "Week")
+        end
+
+        assert_selector "button[data-fp-style='primary']", text: "Day"
+        assert_selector "button[data-fp-style='secondary']", text: "Week"
+      end
+
+      def test_default_style_uses_default_on_the_selected_button
+        render_inline(Component.new(style: :default)) do |group|
+          group.button(text: "List")
+          group.button(text: "Grid", selected: true)
+        end
+
+        assert_selector "button[data-fp-style='default']", text: "Grid"
+        assert_selector "button[data-fp-style='secondary']", text: "List"
+      end
+
+      def test_danger_style_uses_danger_on_the_selected_button
+        render_inline(Component.new(style: :danger)) do |group|
+          group.button(text: "Delete", selected: true)
+          group.button(text: "Keep")
+        end
+
+        assert_selector "button[data-fp-style='danger']", text: "Delete"
+        assert_selector "button[data-fp-style='secondary']", text: "Keep"
+      end
+
+      def test_unknown_style_raises_the_button_registry_message
+        error = assert_raises(ArgumentError) do
+          Component.new(style: :nope)
+        end
+
+        assert_equal FlatPack::Button::StyleRegistry.invalid_style_message(:nope), error.message
+      end
+
+      def test_css_string_style_raises_the_button_registry_message
+        error = assert_raises(ArgumentError) do
+          Component.new(style: "color: red")
+        end
+
+        assert_equal FlatPack::Button::StyleRegistry.invalid_style_message(:"color: red"), error.message
+      end
+
+      def test_segment_style_raises
+        error = assert_raises(ArgumentError) do
+          render_inline(Component.new) do |group|
+            group.button(text: "Day", selected: true, style: :ghost)
+          end
+        end
+
+        assert_equal "Pass style: to SegmentedButtons, not to a segment.", error.message
       end
 
       def test_does_not_expose_with_button_helper
