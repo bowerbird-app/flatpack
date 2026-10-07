@@ -1,0 +1,94 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Unsaved changes",
+  subtitle: "The save button turns primary when a field no longer matches its saved value."
+) %>
+
+<p class="mb-6 text-[var(--surface-muted-content-color)]">
+  Edit any field to see the Save button become primary.
+</p>
+
+<%= render FlatPack::Card::Component.new do |card| %>
+  <% card.body(class: "space-y-[var(--stack-gap-md)]") do %>
+    <%= form_with url: demo_forms_unsaved_changes_path, method: :post,
+          class: "space-y-4",
+          data: { controller: "flat-pack--unsaved-changes" } do %>
+      <%= render FlatPack::TextInput::Component.new(
+        label: "Name",
+        name: "profile[name]",
+        value: "Ada Lovelace",
+        help_text: "Shown on the profile."
+      ) %>
+
+      <%= render FlatPack::TextArea::Component.new(
+        label: "Description",
+        name: "profile[description]",
+        value: "Writes the notes.",
+        rows: 4,
+        autogrow: false
+      ) %>
+
+      <%= render FlatPack::Select::Component.new(
+        label: "Category",
+        name: "profile[category]",
+        value: "people",
+        options: [
+          ["People", "people"],
+          ["Places", "places"],
+          ["Things", "things"]
+        ]
+      ) %>
+
+      <%= render FlatPack::Checkbox::Component.new(
+        label: "Enabled",
+        name: "profile[enabled]",
+        value: "1",
+        checked: true
+      ) %>
+
+      <%= render FlatPack::TextArea::Component.new(
+        label: "Notes",
+        name: "profile[notes]",
+        value: "<p>A short note.</p>",
+        help_text: "Formatted text is part of the same comparison.",
+        rich_text: true,
+        rich_text_options: { preset: :minimal, toolbar: :minimal }
+      ) %>
+
+      <div class="flex gap-2">
+        <%= render FlatPack::Button::Component.new(
+          text: "Save changes",
+          type: "submit",
+          style: :default,
+          data: { "flat-pack--unsaved-changes-target": "submit" }
+        ) %>
+        <%= render FlatPack::Button::Component.new(
+          text: "Reset",
+          type: "reset",
+          style: :secondary
+        ) %>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>
+
+<div class="mt-8">
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= form_with model: @profile,
+            data: { controller: "flat-pack--unsaved-changes" } do |form| %&gt;
+        &lt;%= form.text_field :name %&gt;
+
+        &lt;%= render FlatPack::Button::Component.new(
+          text: "Save changes",
+          type: "submit",
+          style: :default,
+          data: {
+            "flat-pack--unsaved-changes-target": "submit"
+          }
+        ) %&gt;
+      &lt;% end %&gt;
+    CODE
+    language: "erb",
+    title: "Attach the controller to the form"
+  ) %>
+</div>

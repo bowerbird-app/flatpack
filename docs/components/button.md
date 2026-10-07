@@ -116,6 +116,9 @@ Buttons, links rendered as buttons, and pill items include `.fp-touch-manipulati
 - In loading state, the button is disabled to prevent duplicate actions. The spinner is `FlatPack::Spinner::Component` with `label: nil` (decorative).
 - Colour, border, and shadow ease on `--duration-fast` / `--easing-standard`. Press is a 1px `translateY` on `.fp-button`, not a scale. Raised styles use `.fp-button-raised`. Ghost, secondary, and `press: :flat` use `.fp-button-flat` for an inset shadow on press. Colour paint is kit CSS on `.fp-button[data-fp-style]`, not per-style Tailwind background classes.
 
+## Unsaved changes
+A save button can switch between `:default` and `:primary` while the form is edited. The form controller owns that state. The button stays a normal button and only its `data-fp-style` changes. See [Unsaved changes](../behaviours/unsaved-changes.md).
+
 ## Dependencies
 - `FlatPack::Spinner::Component` for the loading mark.
 - `FlatPack::Shared::IconComponent` for icon and spinner sizing.
