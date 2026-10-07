@@ -72,7 +72,6 @@
     <%= form_with url: demo_collection_editor_path, method: :get, data: {turbo: false} do |form| %>
       <%= render FlatPack::CollectionEditor::Component.new(
         title: "Selected person",
-        add_label: "Collaborator",
         headers: ["Person", "Role"],
         orderable: true
       ) do |editor| %>
@@ -86,14 +85,12 @@
 
     <%= render FlatPack::CollectionEditor::Component.new(
       title: "Empty state",
-      add_label: "Collaborator",
       empty_text: "No collaborators yet"
     ) %>
 
     <%= form_with url: demo_collection_editor_path, method: :get, data: {turbo: false} do |form| %>
       <%= render FlatPack::CollectionEditor::Component.new(
-        title: "Picker open",
-        add_label: "Collaborator"
+        title: "Picker open"
       ) do |editor| %>
         <% form.fields_for :project_people, @collection_blank, child_index: "blank" do |row_form| %>
           <% editor.with_row(form: row_form) do |row| %>

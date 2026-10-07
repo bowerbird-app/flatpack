@@ -95,7 +95,6 @@
       <%= form_with url: "/demo/collection_editor", method: :get, data: {turbo: false} do |form| %>
         <%= render FlatPack::CollectionEditor::Component.new(
           title: "Collaborators",
-          add_label: "Collaborator",
           headers: ["Person", "Role"],
           orderable: true,
           empty_text: "No collaborators yet"

@@ -41,10 +41,10 @@ module FlatPack
         end
 
         assert_selector "section.flat-pack-collection-editor > h2", text: "Collaborators"
-        assert_selector "section.flat-pack-collection-editor > .flat-pack-collection-editor-add", text: "Add collaborator"
+        assert_selector ".flat-pack-collection-editor-card .flat-pack-collection-editor-add button[data-fp-style='ghost']", text: "Add collaborator"
         assert_selector ".flat-pack-collection-editor-card [data-flat-pack--collection-editor-target='list']"
         assert_no_selector ".flat-pack-collection-editor-card h2"
-        assert_no_selector ".flat-pack-collection-editor-card [data-flat-pack--collection-editor-target='addButton']"
+        assert_no_selector "section.flat-pack-collection-editor > .flat-pack-collection-editor-add"
         assert_selector ".flat-pack-collection-editor-header", text: "Person"
         assert_selector ".flat-pack-collection-editor-header", text: "Role"
         assert_selector ".flat-pack-collection-editor-title", text: "Alice Chen"
@@ -92,7 +92,7 @@ module FlatPack
 
         assert_text "No collaborators yet"
         assert_selector "template[data-flat-pack--collection-editor-target='template']", visible: :all
-        assert_selector "[data-flat-pack--collection-editor-target='addButton']", text: "Add"
+        assert_selector ".flat-pack-collection-editor-card [data-flat-pack--collection-editor-target='addButton']", text: "Row"
         assert_selector "[data-flat-pack--collection-editor-target='list']", visible: :all
         assert_selector "[data-flat-pack--collection-editor-target='empty']", text: "No collaborators yet", visible: :all
         html = rendered_content

@@ -18,7 +18,8 @@ class CollectionEditorsTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Designer"
     assert_includes response.body, "Photographer"
     assert_includes response.body, "Producer"
-    assert_includes response.body, ">Collaborator<"
+    assert_includes response.body, ">Row<"
+    refute_includes response.body, ">Collaborator<"
     refute_includes response.body, "Add collaborator"
     assert_match(/class="[^"]*\bflat-pack-select\b[^"]*\bborder-0\b/, response.body)
     assert_match(/name="name"[^>]*border-\[var\(--surface-border-color\)\]|border-\[var\(--surface-border-color\)\][^>]*name="name"/, response.body)
@@ -38,7 +39,7 @@ class CollectionEditorsTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "--collection-editor-title-color"
     assert_includes response.body, "Text fields"
     assert_includes response.body, "Single-line text in each cell."
-    assert_includes response.body, ">Line<"
+    refute_includes response.body, ">Line<"
     assert_includes response.body, "No lines yet"
     assert_includes response.body, "Cold open"
     assert_includes response.body, "Studio wide"

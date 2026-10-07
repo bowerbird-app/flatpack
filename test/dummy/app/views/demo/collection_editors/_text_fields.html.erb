@@ -1,7 +1,6 @@
 <%= form_with url: demo_collection_editor_path, method: :get, data: {turbo: false} do |form| %>
   <%= render FlatPack::CollectionEditor::Component.new(
     title: "Lines",
-    add_label: "Line",
     empty_text: "No lines yet",
     headers: ["Item", "Detail", "Note"],
     orderable: true

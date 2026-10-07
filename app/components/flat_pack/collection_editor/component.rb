@@ -10,7 +10,7 @@ module FlatPack
 
       def initialize(
         title: nil,
-        add_label: "Add",
+        add_label: "Row",
         empty_text: "Nothing here yet",
         headers: nil,
         orderable: false,
@@ -23,7 +23,7 @@ module FlatPack
       )
         super(**system_arguments)
         @title = title.to_s.presence
-        @add_label = add_label.to_s.presence || "Add"
+        @add_label = add_label.to_s.presence || "Row"
         @empty_text = empty_text.to_s.presence || "Nothing here yet"
         @headers = Array(headers).map { |header| header.to_s }.presence
         @orderable = orderable
@@ -42,7 +42,6 @@ module FlatPack
             render_title,
             render_card,
             render_template,
-            render_add,
             render_status
           ].compact)
         end
@@ -96,7 +95,7 @@ module FlatPack
 
       def render_card
         content_tag(:div, class: "flat-pack-collection-editor-card") do
-          safe_join([render_headers, render_list, render_empty].compact)
+          safe_join([render_headers, render_list, render_empty, render_add].compact)
         end
       end
 
@@ -172,7 +171,7 @@ module FlatPack
           render FlatPack::Button::Component.new(
             text: @add_label,
             icon: "plus",
-            style: :secondary,
+            style: :ghost,
             size: :sm,
             type: "button",
             data: {

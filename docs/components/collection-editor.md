@@ -18,7 +18,7 @@ Each cell edits one value. The row is not a calculated spreadsheet. Do not use i
 | name | type | default | required | description |
 |---|---|---|---|---|
 | `title` | String | `nil` | no | Heading above the bordered list. |
-| `add_label` | String | `"Add"` | no | Add button text. The button also shows a plus icon and is only as wide as that label. |
+| `add_label` | String | `"Row"` | no | Label on the full-width ghost row at the bottom of the table. The plus icon stays, so the default reads "+ Row". |
 | `empty_text` | String | `"Nothing here yet"` | no | Copy shown when every row is gone. |
 | `headers` | Array | `nil` | no | One desktop label per content cell. With an entity, that cell comes first, then each field. A row of only fields uses one header per field. The handle and the remove control stay unlabeled. Without headers the desktop grid still reserves two content columns. |
 | `orderable` | Boolean | `false` | no | Shows a drag handle and mounts `flat-pack--list-orderable`. |
@@ -86,7 +86,6 @@ Each cell edits one value. The row is not a calculated spreadsheet. Do not use i
 <%= form_with model: @project do |form| %>
   <%= render FlatPack::CollectionEditor::Component.new(
     title: "Collaborators",
-    add_label: "Collaborator",
     empty_text: "No collaborators yet",
     headers: ["Person", "Role"],
     orderable: true,
@@ -155,7 +154,7 @@ Each cell edits one value. The row is not a calculated spreadsheet. Do not use i
 <% end %>
 ```
 
-The heading and the add button sit outside the bordered list. The list, the column headers, and the empty state stay in that card. The add button is only as wide as its label. The plus icon stays on the button, so the dummy collaborators examples read "+ Collaborator".
+The heading sits outside the bordered list. The list, the column headers, the empty state, and the add row stay in that card. The add row is a full-width ghost button at the bottom of the table. The plus icon stays, and the default label is "Row", so it reads "+ Row".
 
 The template repeats the entity picker and the role field. The add button clones it and replaces `NEW_RECORD` inside `name`, `id`, `for`, `data-id`, and the aria attributes that point at those ids. Text in the row is left as written. Rails 8 strong parameters keep nested attribute keys that are integers, so the index is numeric rather than a prefixed token. Rails accepts that index in `project_people_attributes`.
 

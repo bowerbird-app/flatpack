@@ -1160,7 +1160,15 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 }
 
 .flat-pack-collection-editor-add {
-  align-self: flex-start;
+  border-top: 1px solid var(--collection-editor-border-color);
+}
+
+.flat-pack-collection-editor-add .fp-button {
+  width: 100%;
+  justify-content: flex-start;
+  border-radius: 0;
+  min-height: var(--hit-target-min);
+  padding-inline-start: var(--form-control-padding);
 }
 
 .flat-pack-collection-editor-heading {
@@ -1520,8 +1528,13 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   }
 
   .flat-pack-collection-editor-empty,
+  .flat-pack-collection-editor-add,
   .flat-pack-collection-editor .flat-pack-list-reorder-placeholder {
     grid-column: 1 / -1;
+  }
+
+  .flat-pack-collection-editor--orderable .flat-pack-collection-editor-add .fp-button {
+    padding-inline-start: calc(var(--hit-target-min) + var(--form-control-padding));
   }
 
   .flat-pack-collection-editor .flat-pack-collection-editor-row > .flat-pack-collection-editor-handle,
