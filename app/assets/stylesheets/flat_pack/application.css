@@ -835,22 +835,35 @@ ol.flat-pack-list {
   margin-block-end: 0;
 }
 
-/* Pointer reorder: free-float drag, soft lift. */
+/* Pointer reorder: press, lift, visible slot, spring settle. */
 .flat-pack-list--orderable > li[role="listitem"] {
   position: relative;
   cursor: grab;
+  transition: scale var(--duration-fast) var(--easing-standard), color var(--duration-fast) var(--easing-standard);
+}
+
+.flat-pack-list--orderable > li[role="listitem"].is-pressing {
+  cursor: grabbing;
+  scale: 0.98;
 }
 
 .flat-pack-list--orderable.is-reordering {
   user-select: none;
 }
 
+.flat-pack-list--orderable.is-reordering > li[role="listitem"]:not(.is-dragging) {
+  color: var(--surface-muted-content-color);
+}
+
 .flat-pack-list--orderable.is-reordering > li[role="listitem"].is-dragging {
   cursor: grabbing;
   touch-action: none;
+}
+
+.flat-pack-list--orderable.is-reordering > li[role="listitem"].is-lifted {
   background-color: var(--surface-background-color);
-  box-shadow: 0 12px 28px -10px rgb(0 0 0 / 0.18), 0 4px 10px -6px rgb(0 0 0 / 0.1);
-  transition: box-shadow var(--duration-fast) var(--easing-standard);
+  box-shadow: var(--shadow-lg);
+  scale: 1.02;
 }
 
 .flat-pack-list.flat-pack-list-divided.is-reordering > li[role="listitem"].is-dragging::before {
@@ -863,14 +876,34 @@ ol.flat-pack-list {
   margin: 0;
   padding: 0;
   border: 0;
-  background: transparent;
+  border-radius: var(--radius-sm);
+  background-color: var(--list-item-hover-background-color);
   pointer-events: none;
-  visibility: hidden;
+  opacity: 0;
+}
+
+.flat-pack-list-reorder-placeholder.is-visible {
+  opacity: 1;
+  transition: opacity var(--duration-fast) var(--easing-standard);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .flat-pack-list--orderable > li[role="listitem"].is-dragging {
+  .flat-pack-list--orderable > li[role="listitem"],
+  .flat-pack-list--orderable > li[role="listitem"].is-pressing,
+  .flat-pack-list--orderable.is-reordering > li[role="listitem"].is-dragging,
+  .flat-pack-list--orderable.is-reordering > li[role="listitem"].is-lifted,
+  .flat-pack-list-reorder-placeholder,
+  .flat-pack-list-reorder-placeholder.is-visible {
     transition: none;
+  }
+
+  .flat-pack-list--orderable > li[role="listitem"].is-pressing,
+  .flat-pack-list--orderable.is-reordering > li[role="listitem"].is-lifted {
+    scale: none;
+  }
+
+  .flat-pack-list-reorder-placeholder {
+    opacity: 1;
   }
 }
 

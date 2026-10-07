@@ -34,13 +34,19 @@ function loadController(overrides = {}, { prefersReducedMotion = false } = {}) {
       addEventListener() {},
       removeEventListener() {},
       setTimeout(callback) { callback(); return 0 },
-      clearTimeout() {}
+      clearTimeout() {},
+      requestAnimationFrame(callback) { callback(); return 0 }
     },
     document: {
       createElement(tagName) {
+        const classNames = new Set()
         return {
           tagName,
           className: '',
+          classList: {
+            add(...tokens) { tokens.forEach((token) => classNames.add(token)) },
+            contains(token) { return classNames.has(token) }
+          },
           style: {
             setProperty() {},
             removeProperty() {}
@@ -53,7 +59,8 @@ function loadController(overrides = {}, { prefersReducedMotion = false } = {}) {
               if (index !== -1) this.parentNode.children.splice(index, 1)
               this.parentNode = null
             }
-          }
+          },
+          get classNames() { return classNames }
         }
       },
       querySelector(selector) {
@@ -299,6 +306,153 @@ test('reduced motion skips sibling FLIP transforms', () => {
   assert.equal(items[2].style.transform, '')
 })
 
+function pressEvent(item, pointerId = 1) {
+  return {
+    button: 0,
+    pointerId,
+    clientX: 4,
+    clientY: 8,
+    target: {},
+    currentTarget: item
+  }
+}
+
+test('pointerdown presses the row and release before drag clears it', () => {
+  const items = [buildItem('uuid-1')]
+  const parent = buildParent(items)
+  items.forEach((item) => { item.parentNode = parent })
+
+  const controller = new (loadController())()
+  controller.element = buildElement(parent)
+  controller.connect()
+
+  items[0].listeners.pointerdown(pressEvent(items[0]))
+
+  assert.equal(items[0].classNames.has('is-pressing'), true)
+  assert.equal(controller.layoutWidth, 100)
+  assert.equal(controller.layoutHeight, 40)
+
+  controller.handleWindowPointerUp({pointerId: 1})
+
+  assert.equal(items[0].classNames.has('is-pressing'), false)
+  assert.equal(controller.dragging, false)
+})
+
+test('reduced motion skips the press scale class', () => {
+  const items = [buildItem('uuid-1')]
+  const parent = buildParent(items)
+  items.forEach((item) => { item.parentNode = parent })
+
+  const controller = new (loadController({}, {prefersReducedMotion: true}))()
+  controller.element = buildElement(parent)
+  controller.connect()
+
+  items[0].listeners.pointerdown(pressEvent(items[0]))
+
+  assert.equal(items[0].classNames.has('is-pressing'), false)
+})
+
+test('activateDrag lifts the row and reveals the landing slot', () => {
+  const items = [buildItem('uuid-1'), buildItem('uuid-2')]
+  const parent = buildParent(items)
+  items.forEach((item) => { item.parentNode = parent })
+
+  const controller = new (loadController())()
+  controller.element = buildElement(parent)
+  controller.connect()
+  controller.draggedItem = items[0]
+  controller.pointerId = 1
+  controller.layoutLeft = 10
+  controller.layoutTop = 20
+  controller.layoutWidth = 120
+  controller.layoutHeight = 48
+  const row = items[0]
+  row.classList.add('is-pressing')
+
+  controller.activateDrag({clientX: 18, clientY: 36})
+
+  assert.equal(row.classNames.has('is-pressing'), false)
+  assert.equal(row.classNames.has('is-lifted'), true)
+  assert.equal(row.classNames.has('is-dragging'), true)
+  assert.equal(row.style.left, '10px')
+  assert.equal(row.style.top, '20px')
+  assert.equal(row.style.width, '120px')
+  assert.equal(row.style.transform, 'translate3d(0px, 0px, 0)')
+  assert.match(row.style.transition, /scale var\(--duration-fast\)/)
+  assert.equal(controller.placeholder.style.height, '48px')
+  assert.equal(controller.placeholder.classNames.has('is-visible'), true)
+  assert.equal(controller.element.classNames.has('is-reordering'), true)
+})
+
+test('reduced motion lift skips the scale transition', () => {
+  const items = [buildItem('uuid-1')]
+  const parent = buildParent(items)
+  items.forEach((item) => { item.parentNode = parent })
+
+  const controller = new (loadController({}, {prefersReducedMotion: true}))()
+  controller.element = buildElement(parent)
+  controller.connect()
+  controller.draggedItem = items[0]
+  controller.pointerId = 1
+  controller.layoutLeft = 0
+  controller.layoutTop = 0
+  controller.layoutWidth = 100
+  controller.layoutHeight = 40
+
+  const row = items[0]
+  controller.activateDrag({clientX: 8, clientY: 12})
+
+  assert.equal(row.classNames.has('is-lifted'), true)
+  assert.equal(row.style.transition, '')
+})
+
+test('settle lands on the slot and drops the lift', async () => {
+  const items = [buildItem('uuid-1')]
+  const parent = buildParent(items)
+  items[0].parentNode = parent
+  items[0].style.transform = 'translate3d(0px, 40px, 0)'
+  items[0].classList.add('is-lifted')
+
+  const controller = new (loadController())()
+  controller.element = buildElement(parent)
+  controller.draggedItem = items[0]
+  controller.originX = 0
+  controller.originY = 0
+  controller.placeholder = {
+    getBoundingClientRect() {
+      return {left: 0, top: 0, width: 100, height: 40}
+    }
+  }
+
+  await controller.settleDraggedItem()
+
+  assert.equal(items[0].classNames.has('is-lifted'), false)
+  assert.equal(items[0].style.scale, '1')
+  assert.equal(items[0].style.transform, 'translate3d(0px, 0px, 0)')
+  assert.match(items[0].style.transition, /--easing-spring-snappy/)
+})
+
+test('reduced motion settle does not scale the row', async () => {
+  const items = [buildItem('uuid-1')]
+  const parent = buildParent(items)
+  items[0].parentNode = parent
+  items[0].classList.add('is-lifted')
+
+  const controller = new (loadController({}, {prefersReducedMotion: true}))()
+  controller.element = buildElement(parent)
+  controller.draggedItem = items[0]
+  controller.placeholder = {
+    getBoundingClientRect() {
+      return {left: 0, top: 80, width: 100, height: 40}
+    }
+  }
+
+  await controller.settleDraggedItem()
+
+  assert.equal(items[0].style.scale, undefined)
+  assert.equal(items[0].classNames.has('is-lifted'), true)
+})
+
 test('controller source uses spring tokens and reduced motion helper', () => {
   const filePath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'controllers', 'list_orderable_controller.js')
   const source = fs.readFileSync(filePath, 'utf8')
@@ -307,6 +461,10 @@ test('controller source uses spring tokens and reduced motion helper', () => {
   assert.match(source, /--easing-spring/)
   assert.match(source, /--easing-spring-snappy/)
   assert.match(source, /touchAction/)
+  assert.match(source, /transitionend/)
+  assert.match(source, /is-lifted/)
+  assert.match(source, /is-pressing/)
+  assert.match(source, /is-visible/)
   assert.doesNotMatch(source, /--fp-list-drag-x/)
   assert.doesNotMatch(source, /--fp-list-drag-y/)
   assert.doesNotMatch(source, /updateSpotlight/)

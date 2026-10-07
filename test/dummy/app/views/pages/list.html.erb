@@ -375,10 +375,10 @@
 </section>
 
 <section class="mb-12" id="orderable-list">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Orderable List", anchor_link: true, subtitle: "Drag a row — it floats, siblings spring aside, then the order saves.") %>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Orderable List", anchor_link: true, subtitle: "Drag a row into the slot. It lifts, then settles.") %>
 
   <p class="text-(--surface-muted-content-color) mb-4">
-    Pointer drag with a soft lift and spring settle. Release sends a PATCH with the item UUID and its new 1-based position. Reduced motion keeps drag, snaps the settle.
+    Press a row and a gray slot shows where it will land. Release sends a PATCH with the item UUID and its new 1-based position. Reduced motion keeps the drag and the slot, and skips the lift and spring.
   </p>
 
   <%= render FlatPack::Card::Component.new do |card| %>

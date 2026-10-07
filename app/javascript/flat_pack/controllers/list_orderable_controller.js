@@ -5,8 +5,13 @@ const DRAG_THRESHOLD_PX = 4
 const SETTLE_MS = 300
 const SIBLING_FLIP_MS = 280
 const PLACEHOLDER_CLASS = "flat-pack-list-reorder-placeholder"
+const PLACEHOLDER_VISIBLE_CLASS = "is-visible"
 const DRAGGING_CLASS = "is-dragging"
+const PRESS_CLASS = "is-pressing"
+const LIFT_CLASS = "is-lifted"
 const REORDERING_CLASS = "is-reordering"
+const DRAG_TRANSITION = "box-shadow var(--duration-fast) var(--easing-standard), scale var(--duration-fast) var(--easing-standard)"
+const SETTLE_TRANSITION = "transform var(--duration-slow) var(--easing-spring-snappy), box-shadow var(--duration-slow) var(--easing-standard), scale var(--duration-slow) var(--easing-spring-snappy)"
 
 export default class extends Controller {
   static values = {
@@ -28,6 +33,10 @@ export default class extends Controller {
     this.originY = 0
     this.itemWidth = 0
     this.itemHeight = 0
+    this.layoutLeft = 0
+    this.layoutTop = 0
+    this.layoutWidth = 0
+    this.layoutHeight = 0
     this.dragging = false
     this.dragActivated = false
     this.settleTimer = null
@@ -84,12 +93,20 @@ export default class extends Controller {
     const item = event.currentTarget
     if (!item || !this.listItems().includes(item)) return
 
+    const rect = item.getBoundingClientRect()
+    this.layoutLeft = rect.left
+    this.layoutTop = rect.top
+    this.layoutWidth = rect.width
+    this.layoutHeight = rect.height
+
     this.draggedItem = item
     this.pointerId = event.pointerId
     this.startX = event.clientX
     this.startY = event.clientY
     this.dragActivated = false
     this.dragging = true
+
+    if (!prefersReducedMotion()) item.classList.add(PRESS_CLASS)
 
     window.addEventListener("pointermove", this.boundWindowPointerMove)
     window.addEventListener("pointerup", this.boundWindowPointerUp)
@@ -118,6 +135,7 @@ export default class extends Controller {
     this.teardownWindowListeners()
 
     if (!this.dragActivated) {
+      this.draggedItem?.classList.remove(PRESS_CLASS)
       this.resetDragState()
       return
     }
@@ -131,19 +149,22 @@ export default class extends Controller {
     if (!item) return
 
     this.dragActivated = true
-    const rect = item.getBoundingClientRect()
-    this.originX = rect.left
-    this.originY = rect.top
-    this.itemWidth = rect.width
-    this.itemHeight = rect.height
+    this.originX = this.layoutLeft
+    this.originY = this.layoutTop
+    this.itemWidth = this.layoutWidth
+    this.itemHeight = this.layoutHeight
     this.startX = event.clientX
     this.startY = event.clientY
 
     this.placeholder = this.createPlaceholder(item)
     item.parentNode.insertBefore(this.placeholder, item)
+    this.revealPlaceholder()
 
     this.element.classList.add(REORDERING_CLASS)
+    item.classList.remove(PRESS_CLASS)
     item.classList.add(DRAGGING_CLASS)
+    item.classList.add(LIFT_CLASS)
+    if (!prefersReducedMotion()) item.style.transition = DRAG_TRANSITION
     item.style.touchAction = "none"
     item.style.width = `${this.itemWidth}px`
     item.style.height = `${this.itemHeight}px`
@@ -154,7 +175,7 @@ export default class extends Controller {
     item.style.margin = "0"
     item.style.pointerEvents = "none"
     item.style.userSelect = "none"
-    item.style.willChange = "transform, box-shadow"
+    item.style.willChange = "transform, box-shadow, scale"
 
     try {
       item.setPointerCapture?.(this.pointerId)
@@ -234,7 +255,7 @@ export default class extends Controller {
       item.style.transition = "none"
       item.style.transform = `translate3d(${dx}px, ${dy}px, 0)`
       void item.offsetHeight
-      item.style.transition = `transform var(--duration-slow) var(--easing-spring)`
+      item.style.transition = "transform var(--duration-slow) var(--easing-spring), color var(--duration-fast) var(--easing-standard)"
       item.style.transform = "translate3d(0, 0, 0)"
 
       window.setTimeout(() => {
@@ -288,25 +309,40 @@ export default class extends Controller {
     }
 
     const target = placeholder.getBoundingClientRect()
-    const current = item.getBoundingClientRect()
-    const dx = target.left - current.left
-    const dy = target.top - current.top
-
-    if (dx === 0 && dy === 0) return Promise.resolve()
-
     const existing = item.style.transform || "translate3d(0px, 0px, 0)"
     const match = existing.match(/translate3d\(([-\d.]+)px,\s*([-\d.]+)px/)
     const fromX = match ? Number.parseFloat(match[1]) : 0
     const fromY = match ? Number.parseFloat(match[2]) : 0
+    const dx = target.left - (this.originX + fromX)
+    const dy = target.top - (this.originY + fromY)
+    const transformChanges = dx !== 0 || dy !== 0
 
-    item.style.transition = `transform var(--duration-slow) var(--easing-spring-snappy), box-shadow var(--duration-fast) var(--easing-standard)`
+    item.style.transition = SETTLE_TRANSITION
     item.style.transform = `translate3d(${fromX + dx}px, ${fromY + dy}px, 0)`
+    item.style.scale = "1"
+    item.classList.remove(LIFT_CLASS)
 
     return new Promise((resolve) => {
-      this.settleTimer = window.setTimeout(() => {
-        this.settleTimer = null
+      let settled = false
+      const finish = () => {
+        if (settled) return
+        settled = true
+        item.removeEventListener("transitionend", onEnd)
+        if (this.settleTimer) {
+          window.clearTimeout(this.settleTimer)
+          this.settleTimer = null
+        }
         resolve()
-      }, SETTLE_MS)
+      }
+      const onEnd = (event) => {
+        if (event.target !== item) return
+        const watched = transformChanges ? "transform" : "scale"
+        if (event.propertyName !== watched) return
+        finish()
+      }
+
+      item.addEventListener("transitionend", onEnd)
+      this.settleTimer = window.setTimeout(finish, SETTLE_MS + 80)
     })
   }
 
@@ -322,6 +358,8 @@ export default class extends Controller {
     if (!item) return
 
     item.classList.remove(DRAGGING_CLASS)
+    item.classList.remove(PRESS_CLASS)
+    item.classList.remove(LIFT_CLASS)
     item.style.touchAction = ""
     item.style.width = ""
     item.style.height = ""
@@ -335,6 +373,7 @@ export default class extends Controller {
     item.style.willChange = ""
     item.style.transform = ""
     item.style.transition = ""
+    item.style.scale = ""
   }
 
   cancelActiveDrag() {
@@ -382,11 +421,24 @@ export default class extends Controller {
     window.removeEventListener("pointercancel", this.boundWindowPointerCancel)
   }
 
+  revealPlaceholder() {
+    const placeholder = this.placeholder
+    if (!placeholder) return
+
+    const show = () => placeholder.classList?.add(PLACEHOLDER_VISIBLE_CLASS)
+    if (typeof window.requestAnimationFrame === "function") {
+      window.requestAnimationFrame(show)
+    } else {
+      show()
+    }
+  }
+
   createPlaceholder(item) {
     const placeholder = document.createElement("li")
     placeholder.className = PLACEHOLDER_CLASS
     placeholder.setAttribute("aria-hidden", "true")
-    placeholder.style.height = `${item.getBoundingClientRect().height}px`
+    const height = this.layoutHeight || item.offsetHeight || item.getBoundingClientRect().height
+    placeholder.style.height = `${height}px`
     return placeholder
   }
 

@@ -55,12 +55,12 @@ Ordered markers use `--list-marker-color`, `--list-marker-min-width`, and `--lis
 ## Orderable motion
 Orderable lists use pointer-driven reorder (not HTML5 drag-and-drop). Press and drag a row:
 
-- The row free-floats with the pointer at full opacity (no ghost fade).
-- A soft elevation shadow lifts the dragged row.
-- Siblings spring aside with FLIP using `--easing-spring` (list/layout only).
-- Release settles with `--easing-spring-snappy`, then persists if `orderable_url` is set.
+- Press scales the row to `0.98` on `--duration-fast`. Past a 4px move it lifts to `1.02` with `--shadow-lg` and follows the pointer at full opacity (no ghost fade, no drag lag).
+- A landing slot, `.flat-pack-list-reorder-placeholder`, keeps the row height and fills with `--list-item-hover-background-color`. It fades in on `--duration-fast`. On a divided list the slot sits between the straight rules.
+- Other rows ease their text to `--surface-muted-content-color` and spring aside with FLIP using `--easing-spring` (list/layout only).
+- Release travels onto the slot with `--easing-spring-snappy`. Scale and shadow return to rest in that same motion. Drag styles clear on `transitionend`, then the order persists if `orderable_url` is set.
 
-Under `prefers-reduced-motion: reduce`, drag still works and the DOM order still updates, but sibling FLIP and settle snaps are instant. Overlay easings stay bounce-free; spring tokens are a list/layout exception.
+Under `prefers-reduced-motion: reduce`, drag still works, the slot stays visible, and the DOM order still updates. Press scale, lift scale, shadow travel, and sibling FLIP do not run. Overlay easings stay bounce-free; spring tokens are a list/layout exception.
 
 The root adds `.flat-pack-list--orderable` when `orderable: true`.
 
