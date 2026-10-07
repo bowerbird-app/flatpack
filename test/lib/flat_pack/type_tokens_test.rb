@@ -6,9 +6,9 @@ module FlatPack
   class TypeTokensTest < ActiveSupport::TestCase
     test "font and type scale tokens are concrete on :root so browsers can resolve them" do
       css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css").read
-      root_block = css[/^:root \{.*?^\}/m]
+      root_block = css[/^:root(?:,\s*\[data-theme\])?\s*\{.*?^\}/m]
 
-      refute_nil root_block, "expected a :root block in variables.css"
+      refute_nil root_block, "expected a :root, [data-theme] block in variables.css"
       assert_match(/--font-sans:\s*system-ui/, root_block)
       assert_match(/--font-mono:\s*ui-monospace/, root_block)
       assert_match(/--text-xs:\s*0\.75rem/, root_block)
@@ -37,7 +37,7 @@ module FlatPack
 
     test "root applies the kit face and antialiased smoothing" do
       css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css").read
-      root_block = css[/^:root \{.*?^\}/m]
+      root_block = css[/^:root(?:,\s*\[data-theme\])?\s*\{.*?^\}/m]
 
       assert_match(/font-family:\s*var\(--font-sans\)/, root_block)
       assert_includes root_block, "-webkit-font-smoothing: antialiased"

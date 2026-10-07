@@ -21,9 +21,7 @@ module FlatPack
     end
 
     test ":root holds concrete values and does not circular-map tokens" do
-      root_block = @css[/^:root \{.*?^\}/m]
-
-      refute_nil root_block, "expected a :root block in variables.css"
+      refute_nil root_block, "expected a :root, [data-theme] block in variables.css"
       assert_match(/--color-primary:\s*oklch\(/, root_block)
       assert_match(/--font-sans:\s*system-ui/, root_block)
       assert_match(/--duration-fast:\s*150ms/, root_block)
@@ -56,9 +54,7 @@ module FlatPack
     end
 
     test ":root --color-primary follows brand primitives" do
-      root_block = @css[/^:root \{.*?^\}/m]
-
-      refute_nil root_block, "expected a :root block in variables.css"
+      refute_nil root_block, "expected a :root, [data-theme] block in variables.css"
       assert_match(
         /--color-primary:\s*oklch\(var\(--brand-lightness\)\s+var\(--brand-chroma\)\s+var\(--brand-hue\)\);/,
         root_block
@@ -83,7 +79,7 @@ module FlatPack
 
     test "@theme inline names match :root custom properties" do
       theme_names = token_names(@css[/@theme inline \{.*?^\}/m])
-      root_names = token_names(@css[/^:root \{.*?^\}/m])
+      root_names = token_names(root_block)
 
       assert_equal root_names, theme_names
     end
@@ -120,7 +116,6 @@ module FlatPack
     end
 
     test "chrome greys alias surface tokens so named themes inherit" do
-      root_block = @css[/^:root \{.*?^\}/m]
 
       {
         "--tabs-pill-inactive-text-color" => "var(--surface-muted-content-color)",
@@ -153,9 +148,7 @@ module FlatPack
     end
 
     test "alerts and toasts wash status colour instead of filling like buttons" do
-      root_block = @css[/^:root \{.*?^\}/m]
-
-      refute_nil root_block, "expected a :root block in variables.css"
+      refute_nil root_block, "expected a :root, [data-theme] block in variables.css"
 
       {
         "--alert-success-background-color" => "color-mix(in oklab, var(--color-success-background-color) 18%, var(--surface-background-color))",
@@ -194,7 +187,6 @@ module FlatPack
     end
 
     test "active pill colours alias the primary button tokens" do
-      root_block = @css[/^:root \{.*?^\}/m]
 
       assert_match(/--tabs-pill-active-background-color:\s*var\(--button-primary-background-color\)/, root_block)
       assert_match(/--tabs-pill-active-border-color:\s*var\(--button-primary-border-color\)/, root_block)
@@ -207,10 +199,49 @@ module FlatPack
       refute_includes application, "--tabs-pill-default-background-color"
     end
 
+    test "focus ring and active nav fills follow --color-primary" do
+      {
+        "--color-ring" => "var(--color-primary)",
+        "--sidebar-item-active-background-color" => "var(--color-primary)",
+        "--top-nav-item-active-background-color" => "var(--color-primary)",
+        "--sidebar-item-active-text-color" => "var(--color-primary-text)",
+        "--sidebar-item-active-icon-color" => "var(--color-primary-text)",
+        "--top-nav-item-active-text-color" => "var(--color-primary-text)",
+        "--top-nav-item-active-icon-color" => "var(--color-primary-text)"
+      }.each do |token, value|
+        assert_match(/#{Regexp.escape(token)}:\s*#{Regexp.escape(value)}/, root_block)
+      end
+
+      refute_match(/--color-ring:\s*#333/, root_block)
+      refute_match(/--sidebar-item-active-background-color:\s*#333/, root_block)
+      refute_match(/--top-nav-item-active-background-color:\s*#333/, root_block)
+    end
+
+    test "default palette re-declares on [data-theme] so descendant themes re-resolve" do
+      assert_match(/^:root,\s*\[data-theme\]\s*\{/, @css)
+    end
+
+    test "dark and ocean do not freeze --color-ring; they follow --color-primary" do
+      dark_block = @css[/\[data-theme="dark"\]\s*\{(.*?)\}/m, 1]
+      ocean_block = @css[/\[data-theme="ocean"\]\s*\{(.*?)\}/m, 1]
+
+      refute_includes dark_block, "--color-ring"
+      refute_includes ocean_block, "--color-ring"
+    end
+
+    test "bottom nav bar stays a surface, not a brand fill" do
+      assert_match(/--bottom-nav-background-color:\s*#2f2f2f/, root_block)
+      refute_match(/--bottom-nav-background-color:\s*var\(--color-primary\)/, root_block)
+    end
+
     private
 
     def token_names(block)
       block.to_s.scan(/^\s*(--[a-z0-9-]+)\s*:/).flatten.sort
+    end
+
+    def root_block
+      @css[/^:root(?:,\s*\[data-theme\])?\s*\{.*?^\}/m]
     end
   end
 end

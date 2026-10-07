@@ -13,6 +13,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.203] - 2026-10-07
+
+### Changed
+- Focus rings (`--color-ring`) and active sidebar / top-nav fills now follow `--color-primary`. Matching text and icons stay on `--color-primary-text`.
+- Default palette wiring is declared on `:root, [data-theme]` so a named theme on `<body>` (or another descendant) re-resolves derived tokens.
+- Dark and ocean no longer freeze `--color-ring`; they follow `--color-primary` (same colour they already set).
+- The bottom nav bar stays a surface (`#2f2f2f` by default), not a brand fill.
+- Bumped the gem version to `0.1.203`.
+
+### Upgrade notes
+- Reload kit CSS.
+- Hosts that overrode `--color-ring`, `--sidebar-item-active-background-color`, or `--top-nav-item-active-background-color` to match charcoal can drop those overrides. Keep them only if those chrome pieces should stay independent of primary.
+- `data-theme` on `<body>` now re-resolves component aliases. Prefer `<html>` when you can; either placement works.
+- Dark and ocean ring / active nav colours now track `--color-primary`. Override those tokens only if they should diverge.
+- Redeploy so `meta.gem_version` shows `0.1.203`.
+
 ## [0.1.202] - 2026-10-07
 
 ### Changed
