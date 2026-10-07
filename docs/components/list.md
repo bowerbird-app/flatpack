@@ -24,6 +24,7 @@ Use List when grouped items need consistent spacing and optional active-item sel
 | `orderable_method` | String/Symbol | `:patch` | no | Request method sent by the orderable controller. |
 | `param_uuid_name` | String | `"id"` | no | Form field name used for the dragged item UUID in orderable requests. |
 | `param_target_position_name` | String | `"position"` | no | Form field name used for the destination position in orderable requests. |
+| `handle_selector` | String | `nil` | no | CSS selector for the only element that can start a drag or keyboard move. Omit it to keep the whole row draggable, except links, buttons, and fields. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for list element. |
 
 `FlatPack::List::Item`:
@@ -91,7 +92,7 @@ The root adds `.flat-pack-list--orderable` when `orderable: true`.
 <% end %>
 ```
 
-Persist runs only when `orderable_url` is set. Drop still reorders the list in the page if you omit the URL.
+Persist runs only when `orderable_url` is set. Drop still reorders the list in the page if you omit the URL. A row with `data-orderable-unsaved="true"` also stays in the page and does not send the reorder request. Pass `handle_selector:` when only a drag handle should start the move. Arrow Up and Arrow Down on that handle move the row. New rows added after connect are bound automatically.
 
 The orderable controller sends a form-encoded payload shaped like:
 

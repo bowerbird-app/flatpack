@@ -327,6 +327,16 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --list-marker-color: var(--surface-muted-content-color);
   --list-marker-min-width: 1.5rem;
   --list-marker-gap: 0.5rem;
+  --collection-editor-background-color: var(--surface-background-color);
+  --collection-editor-border-color: var(--surface-border-color);
+  --collection-editor-radius: var(--radius-md);
+  --collection-editor-row-background-color: transparent;
+  --collection-editor-row-hover-background-color: var(--list-item-hover-background-color);
+  --collection-editor-row-padding: 0.75rem;
+  --collection-editor-title-color: var(--surface-content-color);
+  --collection-editor-description-color: var(--surface-muted-content-color);
+  --collection-editor-handle-color: var(--surface-muted-content-color);
+  --collection-editor-drop-indicator-color: var(--color-primary);
   --sidebar-item-hover-text-color: oklch(0.20 0.01 250);
   --sidebar-item-active-background-color: oklch(0.52 0.26 250);
   --sidebar-item-active-text-color: oklch(1.0 0 0);

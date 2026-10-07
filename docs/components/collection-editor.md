@@ -1,0 +1,179 @@
+# Collection Editor
+
+## Purpose
+Edit an ordered collection of related records inside a normal Rails form. Each row shows one saved record and the fields that belong to the relationship. The row stays compact. Display many. Edit one.
+
+## When to use
+Use Collection Editor for collaborators, team members, related companies, locations, or any repeated join. The host owns the models, the search endpoint, and authorization. FlatPack owns the row chrome, the picker, add and remove, and the reorder gesture.
+
+Do not use it as a spreadsheet. Do not use it to edit the saved record and the relationship in the same fields. Name and email belong to the person. Role belongs to the join.
+
+## Class
+- Primary: `FlatPack::CollectionEditor::Component`
+- Related classes: `FlatPack::CollectionEditor::Row::Component`, `FlatPack::CollectionEditor::Entity::Component`
+
+## Props
+`FlatPack::CollectionEditor::Component`:
+
+| name | type | default | required | description |
+|---|---|---|---|---|
+| `title` | String | `nil` | no | Heading above the rows. |
+| `add_label` | String | `"Add"` | no | Add button text. |
+| `empty_text` | String | `"Nothing here yet"` | no | Copy shown when every row is gone. |
+| `headers` | Array | `nil` | no | Desktop column labels for the entity and the relationship fields. The handle and the remove control stay unlabeled. |
+| `orderable` | Boolean | `false` | no | Shows a drag handle and mounts `flat-pack--list-orderable`. |
+| `orderable_url` | String | `nil` | no | PATCH endpoint for a persisted row. Same contract as List. |
+| `orderable_method` | String/Symbol | `:patch` | no | Request method for the reorder request. |
+| `param_uuid_name` | String | `"id"` | no | Parameter name for the moved row id. |
+| `param_target_position_name` | String | `"position"` | no | Parameter name for the 1-based destination. |
+| `template_index` | String | `"NEW_RECORD"` | no | Placeholder swapped for a unique child index when a row is added. |
+| `**system_arguments` | Hash | `{}` | no | HTML attributes for the section. |
+
+`FlatPack::CollectionEditor::Row::Component`:
+
+| name | type | default | required | description |
+|---|---|---|---|---|
+| `form` | FormBuilder | none | yes | Nested `fields_for` builder for the join record. |
+| `association_name` | Symbol/String | none | yes | Join attribute that stores the selected record id, such as `:person_id`. |
+| `remove_label` | String | `nil` | no | Accessible name for remove. Defaults to `Remove` plus the entity title. |
+| `record_id` | String | `nil` | no | Id sent by the reorder request. Defaults to the join record id. |
+| `persisted` | Boolean | `nil` | no | Forces the persisted or unsaved remove behavior. |
+| `index_token` | String | `"NEW_RECORD"` | no | `data-id` used on an unsaved row so the template index can be replaced. |
+| `**system_arguments` | Hash | `{}` | no | HTML attributes for the row. |
+
+`FlatPack::CollectionEditor::Entity::Component`:
+
+| name | type | default | required | description |
+|---|---|---|---|---|
+| `form` | FormBuilder | none | yes | Same nested builder as the row. |
+| `association_name` | Symbol/String | none | yes | Hidden field that receives the selected record id. |
+| `title` | String | `nil` | no | Primary text for the selected record, such as the person name. |
+| `description` | String | `nil` | no | Secondary text, such as the email. |
+| `value` | String | `nil` | no | Selected id. Omit it to use the form object. |
+| `label` | String | `"Record"` | no | Accessible name for the search field. |
+| `search_url` | String | `nil` | no | GET endpoint. Response shape matches Select remote search, with an optional description. |
+| `search_param` | String | `"q"` | no | Query parameter name. |
+| `min_search_length` | Integer | `1` | no | Characters required before results are shown. |
+| `create_url` | String | `nil` | no | POST endpoint for a new record. Omit it to hide create. |
+| `create_label` | String | `"Create"` | no | Create button text. |
+| `search_placeholder` | String | `"Search"` | no | Search field placeholder. |
+| `empty_text` | String | `"No matches"` | no | Copy when a query has no results. |
+| `items` | Array | `nil` | no | Local results used when `search_url` is omitted. Each item is `{ id:, title:, description: }`. `value` and `label` are also accepted. |
+| `edit_url_template` | String | `nil` | no | Separate edit URL. `:id` is replaced with the selected record id. |
+| `edit_label` | String | `"Edit"` | no | Text for the edit link. |
+| `change_label` | String | `"Change"` | no | Text for the control that reopens search. |
+| `error` | String | `nil` | no | Association error under the summary. |
+| `open` | Boolean | `false` | no | Starts with the picker open. A row with no title also starts open. |
+| `**system_arguments` | Hash | `{}` | no | HTML attributes for the entity cell. |
+
+## Slots
+| name | type | required | description |
+|---|---|---|---|
+| `row` | `Row::Component` | no | One join row. Call `with_row` inside the component block. |
+| `template` | slot | no | HTML cloned for a new row. Put one unsaved row here and use `template_index` in its `fields_for` child index. |
+| `entity` | `Entity::Component` | no | Selected record, on the row. |
+| `field` | slot | no | Relationship fields. Render normal FlatPack inputs here. |
+| `action` | slot | no | Extra row actions, before remove. |
+| `content` on the entity | slot | no | Fields posted to `create_url`. Give each input `data-create-field` and `form="collection-editor-unattached"` so the parent form does not submit them. |
+
+## Variants
+- Orderable rows use the List reorder controller. Without `orderable: true` the handle is hidden.
+- A persisted row sets `_destroy` to `1` and hides. An unsaved row is removed from the page.
+- Search uses `search_url` when it is present, otherwise `items`.
+
+## Example
+```erb
+<%= form_with model: @project do |form| %>
+  <%= render FlatPack::CollectionEditor::Component.new(
+    title: "Collaborators",
+    add_label: "Add collaborator",
+    empty_text: "No collaborators yet",
+    headers: ["Person", "Role"],
+    orderable: true,
+    orderable_url: reorder_project_people_path(@project),
+    param_uuid_name: "moving_recording_id",
+    param_target_position_name: "target_position"
+  ) do |editor| %>
+    <% @project.project_people.each do |membership| %>
+      <% form.fields_for :project_people, membership, child_index: membership.id do |row_form| %>
+        <% editor.with_row(form: row_form, association_name: :person_id) do |row| %>
+          <% row.with_entity(
+            form: row_form,
+            association_name: :person_id,
+            title: membership.person.name,
+            description: membership.person.email,
+            search_url: search_people_path,
+            create_url: people_path,
+            search_placeholder: "Search people",
+            edit_url_template: "/people/:id/edit",
+            edit_label: "Edit person"
+          ) do %>
+            <%= render FlatPack::TextInput::Component.new(name: "name", label: "Name", form: "collection-editor-unattached", data: { create_field: "name", fill_from_query: "true" }) %>
+            <%= render FlatPack::EmailInput::Component.new(name: "email", label: "Email", form: "collection-editor-unattached", data: { create_field: "email" }) %>
+          <% end %>
+          <% row.with_field do %>
+            <%= render FlatPack::Select::Component.new(
+              name: row_form.field_name(:role),
+              label: "Role",
+              options: ["Designer", "Photographer", "Producer"],
+              value: row_form.object.role,
+              error: row_form.object.errors.full_messages_for(:role).to_sentence.presence
+            ) %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <% editor.with_template do %>
+      <% form.fields_for :project_people, ProjectPerson.new, child_index: "NEW_RECORD" do |row_form| %>
+        <%= render FlatPack::CollectionEditor::Row::Component.new(form: row_form, association_name: :person_id) %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+```
+
+The template row in a real form repeats the same entity and role fields as the saved rows. `Add collaborator` clones that template and replaces `NEW_RECORD` with a unique number. Rails 8 strong parameters keep nested attribute keys that are integers, so the index is numeric rather than a prefixed token. Rails accepts that index in `project_people_attributes`.
+
+Selecting a person writes `person_id`. It does not turn the name or email into editable join fields. `Edit person` goes to the person form. Saving that form changes the shared person. Role stays on `ProjectPerson`.
+
+Remove hides a saved row and submits `_destroy=1`. The person record stays. An unsaved row is dropped from the document and is not submitted.
+
+Search `GET search_url?q=` returns `{ "items": [{ "id": "4", "title": "Alice Chen", "description": "alice@example.com" }] }`. `value` and `label` are accepted too. Create `POST create_url` with the `data-create-field` inputs and the query. Success is `{ "ok": true, "item": { "id", "title", "description" } }`. Failure is `{ "ok": false, "errors": ["Email can't be blank"] }` with status 422. The picker stays open and the join row does not receive an id.
+
+Reorder uses the existing List orderable request. FlatPack does not add a position column. A persisted row sends `moving_recording_id` and `target_position` when those parameter names are set. The host persists that move with Recording Studio Orderable, or with whatever ordering API already owns the collection. The dummy app translates this payload through `Ordering::ReorderService`. An unsaved row is marked `data-orderable-unsaved="true"`, so the move stays in the form and no request is sent. Submit the parent form in DOM order and assign order on the host when the join records are created.
+
+The dummy reorder route also has the project id in the path. The row id therefore uses `moving_recording_id`, not `id`, so the path id and the row id stay distinct. Use the same split when a host route already consumes `id`.
+
+`list:reordered` fires after the DOM move. `list:saved` fires when the endpoint returns `{ "ok": true }`. `list:error` fires when the save fails.
+
+Rendered field errors stay on the FlatPack input passed in the field slot. The row also takes the `is-invalid` class when the join object has errors, and the entity `error` argument prints the association message. A failed parent save re-renders the nested attributes, including rows added in the browser, as long as the controller assigns the invalid parent back to the form.
+
+Desktop rows are a handle, the person summary, the role, and remove. Below 40rem the summary, the role, and the actions stack. Column headers hide. Field labels remain.
+
+Tokens alias the surface, list, and primary tokens. Override them on a parent to recolor this component without a new theme.
+
+```css
+.collaborators {
+  --collection-editor-title-color: var(--color-primary);
+  --collection-editor-description-color: var(--surface-muted-content-color);
+  --collection-editor-row-hover-background-color: var(--list-item-hover-background-color);
+  --collection-editor-drop-indicator-color: var(--color-primary);
+}
+```
+
+Dragged rows and the landing slot still use the List orderable styles. The landing slot also draws `--collection-editor-drop-indicator-color`.
+
+## Accessibility
+- The handle is a button named `Reorder` plus the record title. Arrow Up and Arrow Down move the row when ordering is on.
+- Remove is an icon button named `Remove` plus the record title.
+- Search is a combobox. Results are a listbox. Each option exposes the title and the description as text.
+- The association id and `_destroy` are hidden inputs.
+- Adding a row focuses its search field. Removing a row focuses the add button.
+- A blank row keeps the picker open so keyboard users can search before the parent form is submitted.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+- Stimulus controllers `flat-pack--collection-editor` and, when `orderable: true`, `flat-pack--list-orderable`.
+- A host search endpoint and, if create is enabled, a host create endpoint.
+- Recording Studio Orderable, or the host's existing reorder endpoint, for persisted order. FlatPack only sends the List reorder request.
