@@ -13,6 +13,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.203] - 2026-10-07
+
+### Added
+- `FlatPack::CollectionEditor::Component` edits an ordered collection of related records inside a Rails form. A row shows the selected record (`title` and optional `description`) and leaves relationship fields to the host. Add clones a `fields_for` template. Remove sets `_destroy` on a saved row and drops an unsaved row. The entity picker searches, selects, or creates a record and writes its id onto the join. Edit of the saved record stays a host action.
+- List orderable accepts `handle_selector`. Arrow keys on that handle move the row. A row with `data-orderable-unsaved="true"` does not PATCH. Rows marked `data-collection-editor-destroyed` stay out of the order.
+- Collection editor tokens alias surface, list, and primary colors. See `docs/components/collection-editor.md`.
+- Dummy `/demo/collection_editor` is a Project collaborators form. Person name and email stay on the person. Role and order stay on the join. Reorder posts `moving_recording_id` and `target_position` to `Ordering::ReorderService`.
+- Bumped the gem version to `0.1.203`.
+
+### Upgrade notes
+- No existing component changes its markup. `orderable:` on List still drags the whole row when `handle_selector` is omitted.
+- Importmap apps load `collection_editor_controller.js` from the existing controllers pin.
+- Bundled apps that copy the esbuild list in `docs/installation.md` add `CollectionEditorController` and `application.register("flat-pack--collection-editor", CollectionEditorController)`.
+- New nested child indexes must be integers. Rails 8 `permit` drops any other nested-attribute key. The template placeholder `NEW_RECORD` is replaced before submit.
+- FlatPack does not store order. A host that already uses Recording Studio Orderable keeps that API. Pass its URL and parameter names to the collection editor.
+- Reload kit CSS and JavaScript.
+
 ## [0.1.202] - 2026-10-07
 
 ### Changed
