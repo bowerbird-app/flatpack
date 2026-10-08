@@ -381,7 +381,7 @@ module FlatPack
       end
 
       def wrapper_classes
-        "flat-pack-select-wrapper"
+        "flat-pack-input-wrapper flat-pack-select-wrapper"
       end
 
       def select_classes
