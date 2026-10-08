@@ -68,6 +68,7 @@ module FlatPack
               association_field,
               render_summary,
               render_panel,
+              render_create_modal,
               render_error
             ].compact)
           end
@@ -76,9 +77,12 @@ module FlatPack
         private
 
         def entity_attributes
+          data = {results_id: @list_id}
+          data[:create_modal_id] = create_modal_id if creatable?
+
           merge_attributes(
             class: "flat-pack-collection-editor-entity",
-            data: {results_id: @list_id}
+            data: data
           )
         end
 
@@ -142,10 +146,8 @@ module FlatPack
             safe_join([
               render_search,
               content_tag(:p, @empty_text, class: "flat-pack-collection-editor-no-results", data: {collection_editor_no_results: "true"}, hidden: true),
-              content_tag(:p, @search_error_text, class: "flat-pack-collection-editor-search-error", role: "alert", data: {collection_editor_search_error: "true"}, hidden: true),
-              render_create_fields,
-              content_tag(:p, "", class: "flat-pack-collection-editor-create-error", role: "alert", data: {collection_editor_create_error: "true"}, hidden: true)
-            ].compact)
+              content_tag(:p, @search_error_text, class: "flat-pack-collection-editor-search-error", role: "alert", data: {collection_editor_search_error: "true"}, hidden: true)
+            ])
           end
         end
 
@@ -177,19 +179,56 @@ module FlatPack
           end
         end
 
-        def render_create_fields
-          return unless content?
+        def creatable?
+          content? && @create_url.present?
+        end
 
-          content_tag(:div, class: "flat-pack-collection-editor-create-fields", data: {collection_editor_create_fields: "true"}, hidden: true) do
+        def create_modal_id
+          "fp-collection-editor-#{@form.field_id(@association_name)}-create"
+        end
+
+        def create_modal_title
+          "New #{@label}"
+        end
+
+        def render_create_modal
+          return unless creatable?
+
+          render FlatPack::Modal::Component.new(
+            id: create_modal_id,
+            title: create_modal_title,
+            size: :sm,
+            data: {collection_editor_create_modal: "true"}
+          ) do |modal|
+            modal.body { render_create_body }
+            modal.footer { render_create_footer }
+          end
+        end
+
+        def render_create_body
+          content_tag(:div, class: "flat-pack-collection-editor-create-fields", data: {collection_editor_create_fields: "true"}) do
             safe_join([
               content,
-              button_tag(
-                type: "button",
-                class: "flat-pack-collection-editor-create-submit",
-                data: {action: "click->flat-pack--collection-editor#create"}
-              ) { @create_label }
+              content_tag(:p, "", class: "flat-pack-collection-editor-create-error", role: "alert", data: {collection_editor_create_error: "true"}, hidden: true)
             ])
           end
+        end
+
+        def render_create_footer
+          safe_join([
+            render(FlatPack::Button::Component.new(
+              text: "Cancel",
+              style: :secondary,
+              type: "button",
+              data: {action: "click->flat-pack--modal#close"}
+            )),
+            render(FlatPack::Button::Component.new(
+              text: @create_label,
+              style: :primary,
+              type: "button",
+              data: {collection_editor_create_submit: "true"}
+            ))
+          ])
         end
 
         def render_error

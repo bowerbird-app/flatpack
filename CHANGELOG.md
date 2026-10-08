@@ -29,20 +29,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A single-line collection editor cell is one line. Vertical field padding no longer stacks on the 44px remove control, so the value lines up with the trash icon.
 - The collection editor add control is a full-width ghost row at the bottom of the table. The default label is `Row`, and the plus icon stays, so it reads "+ Row".
 - Select's field wrapper includes `flat-pack-input-wrapper` as well as `flat-pack-select-wrapper`, so a role select fills its collection editor cell.
-- A selected collection editor record is an info chip showing the name. The chip remove control drops the row. Search results open in a menu. "+ New" is at the bottom of that menu when the query has no matches.
+- A selected collection editor record is an info chip showing the name. The chip remove control drops the row. Search results open in a menu. "+ New" is at the bottom of that menu when the query has no matches, and it opens the create form in a modal. The search cell stays one line. Cancel, Escape, and the backdrop leave the row unselected. Validation errors stay in the modal.
 
 ### Fixed
 - `FlatPack::Chip::Component` renders a custom `remove_button`. That control replaces the default remove button.
+- A modal click on the dimmed area reaches the backdrop. The dialog wrapper no longer sits on top of that click.
 
 ### Upgrade notes
-- The collection editor border, background, and padding now live on `.flat-pack-collection-editor-card`. The heading is outside that card. The add control is the last row inside it. Host CSS that painted the border on `.flat-pack-collection-editor` should move to the card class. `add_label` defaults to `Row`. Select's wrapper now includes `flat-pack-input-wrapper` alongside `flat-pack-select-wrapper`. The entity summary is an info chip. `edit_url_template`, `edit_label`, and `change_label` are accepted and no longer rendered. Create starts from "+ New" in the search menu.
+- The collection editor border, background, and padding now live on `.flat-pack-collection-editor-card`. The heading is outside that card. The add control is the last row inside it. Host CSS that painted the border on `.flat-pack-collection-editor` should move to the card class. `add_label` defaults to `Row`. Select's wrapper now includes `flat-pack-input-wrapper` alongside `flat-pack-select-wrapper`. The entity summary is an info chip. `edit_url_template`, `edit_label`, and `change_label` are accepted and no longer rendered. Create starts from "+ New" in the search menu and opens a modal titled `New {label}`. `create_label` is that modal's submit button. Host CSS that targeted `.flat-pack-collection-editor-create-fields` inside the cell should target the modal body.
 - Card padding and the gap between cells are gone. Cells draw the lines with `--collection-editor-border-color`. `--collection-editor-row-padding` pads the empty state. Pass one header per content cell (the entity, then each field). The section sets `--collection-editor-columns` from that count. It is not a theme token. `chrome:` defaults to `:field`, so a normal form keeps its bordered controls. Pass `chrome: :cell` on a control inside a collection editor cell. Host CSS that targeted a single `.flat-pack-collection-editor-fields` wrapper should expect one cell per field. Inside the editor, those controls keep horizontal `--form-control-padding` and use no vertical padding. A row of single-line fields is the height of the remove button.
 - `orderable:` on List still drags the whole row when `handle_selector` is omitted.
 - Importmap apps load `collection_editor_controller.js` from the existing controllers pin.
 - Bundled apps that copy the esbuild list in `docs/installation.md` add `CollectionEditorController` and `application.register("flat-pack--collection-editor", CollectionEditorController)`.
-- New nested child indexes must be integers. Rails 8 `permit` drops any other nested-attribute key. The template placeholder `NEW_RECORD` is replaced in `name`, `id`, `for`, `data-id`, `data-results-id`, and the aria attributes that point at those ids. Text in the row is left as written.
+- New nested child indexes must be integers. Rails 8 `permit` drops any other nested-attribute key. The template placeholder `NEW_RECORD` is replaced in `name`, `id`, `for`, `data-id`, `data-results-id`, `data-create-modal-id`, and the aria attributes that point at those ids. Text in the row is left as written.
 - FlatPack does not store order. A host that already uses Recording Studio Orderable keeps that API. Pass its URL and parameter names to the collection editor.
-- Reload kit CSS and JavaScript.
+- Reload kit CSS and JavaScript. Modal backdrop clicks pass through the dialog wrapper.
 - Redeploy so `meta.gem_version` shows `0.1.204`.
 
 ## [0.1.203] - 2026-10-07

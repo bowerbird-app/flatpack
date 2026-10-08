@@ -1506,6 +1506,19 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   padding: 0 var(--form-control-padding) var(--form-control-padding);
 }
 
+.flat-pack-modal__body .flat-pack-collection-editor-create-fields,
+.flat-pack-modal__body .flat-pack-collection-editor-create-error {
+  padding: 0;
+}
+
+.flat-pack-modal__body .flat-pack-collection-editor-create-fields {
+  gap: 0.75rem;
+}
+
+.flat-pack-modal__body .flat-pack-collection-editor-create-error {
+  margin-top: 0.75rem;
+}
+
 .flat-pack-collection-editor-error,
 .flat-pack-collection-editor-create-error,
 .flat-pack-collection-editor-search-error,

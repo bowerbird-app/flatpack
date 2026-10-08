@@ -42,8 +42,10 @@ function mark(node, attribute) {
 }
 
 function buildNode(tag = "div") {
+  const classes = new Set()
   const node = {
     tag,
+    id: "",
     hidden: false,
     value: "",
     textContent: "",
@@ -57,9 +59,32 @@ function buildNode(tag = "div") {
     events: [],
     focused: false,
     _html: "",
-    setAttribute(name, value) { this.attrs[name] = String(value) },
+    classList: {
+      add(...names) { names.forEach((name) => classes.add(name)) },
+      remove(...names) { names.forEach((name) => classes.delete(name)) },
+      contains(name) { return classes.has(name) },
+      toggle(name, force) {
+        const has = classes.has(name)
+        const should = force === undefined ? !has : Boolean(force)
+        if (should) classes.add(name)
+        else classes.delete(name)
+        return should
+      }
+    },
+    setAttribute(name, value) {
+      this.attrs[name] = String(value)
+      if (name === "id") this.id = String(value)
+    },
     getAttribute(name) { return this.attrs[name] },
     removeAttribute(name) { delete this.attrs[name] },
+    contains(other) {
+      let current = other
+      while (current) {
+        if (current === this) return true
+        current = current.parentNode
+      }
+      return false
+    },
     append(...nodes) {
       nodes.forEach((child) => {
         if (child.parentNode) {
@@ -69,6 +94,10 @@ function buildNode(tag = "div") {
         child.parentNode = this
         this.children.push(child)
       })
+    },
+    appendChild(child) {
+      this.append(child)
+      return child
     },
     replaceChildren() { this.children = [] },
     focus() { this.focused = true },
@@ -97,6 +126,10 @@ function buildNode(tag = "div") {
     scrollIntoView() {}
   }
 
+  Object.defineProperty(node, "parentElement", {
+    get() { return node.parentNode }
+  })
+
   Object.defineProperty(node, "innerHTML", {
     get() { return node._html },
     set(html) {
@@ -118,6 +151,16 @@ function matches(node, selector) {
   const base = selector.replace(":not([hidden])", "")
   if (hiddenClause && node.hidden) return false
   if (base === "[role='option']" || base === '[role="option"]') return node.attrs.role === "option"
+  const equals = base.match(/^\[([^\]=]+)=["']([^"']*)["']\]$/)
+  if (equals) {
+    const [, name, value] = equals
+    if (node.attrs[name] === value) return true
+    if (name.startsWith("data-")) {
+      const key = name.slice(5).replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())
+      return node.dataset[key] === value
+    }
+    return false
+  }
   const attribute = base.match(/^\[([^\]=]+)\]$/)
   if (!attribute) return false
   return node.markers.has(attribute[1])
@@ -218,16 +261,34 @@ function buildRow({id = "", persisted = false} = {}) {
   return row
 }
 
+function findById(node, id) {
+  if (!node) return null
+  if (node.id === id || node.attrs?.id === id) return node
+
+  for (const child of node.children || []) {
+    const found = findById(child, id)
+    if (found) return found
+  }
+
+  return null
+}
+
 function harness(fetch) {
+  const page = {
+    createElement() { return buildNode("div") },
+    querySelector(selector) {
+      if (selector === "meta[name='csrf-token']") return {content: "csrf-token"}
+      return null
+    },
+    getElementById(id) {
+      return findById(page.body, id)
+    },
+    body: null
+  }
+  page.body = buildNode("body")
   const Controller = loadController({
     fetch,
-    document: {
-      createElement() { return buildNode("div") },
-      querySelector(selector) {
-        if (selector === "meta[name='csrf-token']") return {content: "csrf-token"}
-        return null
-      }
-    }
+    document: page
   })
   const controller = new Controller()
   const element = buildNode("section")
@@ -326,6 +387,111 @@ test("prompt create opens the fields and hides the prompt", () => {
   assert.equal(row.querySelector("[data-collection-editor-create-fields]").hidden, false)
   assert.equal(prompt.hidden, true)
   assert.equal(row.querySelector("[data-fill-from-query]").value, "Morgan Patel")
+})
+
+test("prompt create opens the modal instead of the cell", () => {
+  const controller = harness()
+  const row = buildRow()
+  const fields = row.querySelector("[data-collection-editor-create-fields]")
+  const error = row.querySelector("[data-collection-editor-create-error]")
+  const modal = buildNode("div")
+  mark(modal, "data-collection-editor-create-modal")
+  modal.id = "create-modal"
+  modal.classList.add("hidden")
+  modal.append(fields, error)
+  const entity = buildNode("div")
+  mark(entity, "data-create-modal-id")
+  entity.setAttribute("data-create-modal-id", "create-modal")
+  row.append(entity, modal)
+  controller.listTarget.append(row)
+  row.querySelector("[data-collection-editor-search]").value = "Morgan Patel"
+
+  controller.promptCreate({preventDefault() {}, target: row.querySelector("[data-collection-editor-search]")})
+
+  assert.equal(modal.parentNode.tag, "body")
+  assert.equal(modal.classList.contains("hidden"), false)
+  assert.equal(modal.classList.contains("flex"), true)
+  assert.equal(fields.hidden, true)
+  assert.equal(fields.querySelector("[data-fill-from-query]").value, "Morgan Patel")
+  assert.equal(fields.querySelector("[data-create-field]").focused, true)
+  assert.equal(row.contains(modal), false)
+})
+
+function attachCreateModal(row, id = "create-modal") {
+  const fields = row.querySelector("[data-collection-editor-create-fields]")
+  const error = row.querySelector("[data-collection-editor-create-error]")
+  const modal = buildNode("div")
+  mark(modal, "data-collection-editor-create-modal")
+  modal.id = id
+  modal.classList.add("hidden")
+  modal.append(fields, error)
+  const entity = buildNode("div")
+  mark(entity, "data-create-modal-id")
+  entity.setAttribute("data-create-modal-id", id)
+  const submit = buildNode("button")
+  mark(submit, "data-collection-editor-create-submit")
+  modal.append(submit)
+  row.append(entity, modal)
+  return {modal, fields, error, submit, entity}
+}
+
+test("create failure stays in the modal and does not set the association id", async () => {
+  const controller = harness(async () => {
+    return {ok: false, json: async () => ({ok: false, errors: ["Email can't be blank"]})}
+  })
+  const row = buildRow()
+  row.dataset.createUrl = "/people"
+  const {modal, error} = attachCreateModal(row)
+  controller.listTarget.append(row)
+  controller.promptCreate({preventDefault() {}, target: row})
+
+  await controller.create({preventDefault() {}, target: modal.querySelector("[data-collection-editor-create-submit]")})
+
+  assert.equal(row.querySelector("[data-collection-editor-association]").value, "")
+  assert.equal(error.hidden, false)
+  assert.match(error.textContent, /Email can't be blank/)
+  assert.equal(modal.classList.contains("flex"), true)
+  assert.equal(modal.classList.contains("hidden"), false)
+  assert.equal(modal.parentNode.tag, "body")
+})
+
+test("create success closes the modal and restores it to the row", async () => {
+  const controller = harness(async () => {
+    return {
+      ok: true,
+      json: async () => ({ok: true, item: {id: "42", title: "Morgan Patel", description: "morgan@example.com"}})
+    }
+  })
+  const row = buildRow()
+  row.dataset.createUrl = "/people"
+  const {modal, fields, submit} = attachCreateModal(row)
+  controller.listTarget.append(row)
+  const inputs = fields.querySelectorAll("[data-create-field]")
+  inputs[0].value = "Morgan Patel"
+  inputs[1].value = "morgan@example.com"
+  controller.promptCreate({preventDefault() {}, target: row})
+
+  await controller.submitCreate({preventDefault() {}, target: submit})
+
+  assert.equal(row.querySelector("[data-collection-editor-association]").value, "42")
+  assert.equal(row.querySelector("[data-collection-editor-title]").textContent, "Morgan Patel")
+  assert.equal(modal.classList.contains("hidden"), true)
+  assert.equal(modal.classList.contains("flex"), false)
+  assert.equal(row.contains(modal), true)
+})
+
+test("removing a row discards its portaled modal", () => {
+  const controller = harness()
+  const row = buildRow()
+  const {modal} = attachCreateModal(row)
+  controller.listTarget.append(row)
+  controller.promptCreate({preventDefault() {}, target: row})
+  assert.equal(modal.parentNode.tag, "body")
+
+  controller.remove({preventDefault() {}, target: row})
+
+  assert.equal(modal.parentNode, null)
+  assert.equal(controller.listTarget.children.includes(row), false)
 })
 
 test("create failure stays in the picker and does not set the association id", async () => {
@@ -483,13 +649,14 @@ test("create ignores a second submit while the first is in flight", async () => 
 
 test("template index replacement leaves visible text alone", () => {
   const controller = harness()
-  const html = '<label for="role_NEW_RECORD">Role</label><input name="project[project_people_attributes][NEW_RECORD][role]" id="role_NEW_RECORD" value="NEW_RECORD"><div data-results-id="fp-collection-editor-demo_project_project_people_attributes_NEW_RECORD_person_id-results"></div><p>Code NEW_RECORD</p>'
+  const html = '<label for="role_NEW_RECORD">Role</label><input name="project[project_people_attributes][NEW_RECORD][role]" id="role_NEW_RECORD" value="NEW_RECORD"><div data-results-id="fp-collection-editor-demo_project_project_people_attributes_NEW_RECORD_person_id-results" data-create-modal-id="fp-collection-editor-demo_project_project_people_attributes_NEW_RECORD_person_id-create"></div><p>Code NEW_RECORD</p>'
   const replaced = controller.replaceTemplateIndex(html, "NEW_RECORD", "42")
 
   assert.match(replaced, /name="project\[project_people_attributes\]\[42\]\[role\]"/)
   assert.match(replaced, /id="role_42"/)
   assert.match(replaced, /for="role_42"/)
   assert.match(replaced, /data-results-id="fp-collection-editor-demo_project_project_people_attributes_42_person_id-results"/)
+  assert.match(replaced, /data-create-modal-id="fp-collection-editor-demo_project_project_people_attributes_42_person_id-create"/)
   assert.match(replaced, /value="NEW_RECORD"/)
   assert.match(replaced, /<p>Code NEW_RECORD<\/p>/)
 })

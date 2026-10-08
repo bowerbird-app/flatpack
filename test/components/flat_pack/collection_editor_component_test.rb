@@ -67,6 +67,7 @@ module FlatPack
         assert_selector "button[aria-label='Remove Alice Chen'] [data-flat-pack--icon-name-value='trash']"
         assert_no_selector "button[aria-label='Remove Alice Chen'][data-fp-style='danger']"
         assert_selector "[role='combobox'][aria-controls]", visible: :all
+        assert_no_selector "[data-collection-editor-create-modal]", visible: :all
         assert_selector "label.flat-pack-collection-editor-sr", text: "Person", visible: :all
         assert_selector "[data-collection-editor-search-error]", text: "Search failed", visible: :all
         assert_selector "[data-flat-pack--collection-editor-target='status'][aria-live='polite']", visible: :all
@@ -105,6 +106,16 @@ module FlatPack
         refute_includes html, "name=\"project[project_people_attributes][NEW_RECORD][_destroy]\""
         assert_includes html, "data-items="
         assert_includes html, "Priya Shah"
+        assert_includes html, 'data-controller="flat-pack--modal"'
+        assert_includes html, 'data-collection-editor-create-modal="true"'
+        assert_includes html, 'data-collection-editor-create-submit="true"'
+        assert_includes html, 'data-create-modal-id="fp-collection-editor-'
+        assert_includes html, "NEW_RECORD"
+        assert_includes html, "-create"
+        assert_includes html, "New Record"
+        assert_includes html, "max-w-sm"
+        assert_includes html, 'role="dialog"'
+        assert_includes html, ">Cancel</span>"
       end
 
       def test_invalid_row_keeps_the_compact_error_treatment
@@ -146,6 +157,7 @@ module FlatPack
         assert_includes css, "inset 0 0 0 2px var(--color-error)"
         assert_includes css, ".flat-pack-collection-editor-fields :is(input, select, textarea, .flat-pack-select-trigger)"
         assert_includes css, "padding-block: 0"
+        assert_includes css, ".flat-pack-modal__body .flat-pack-collection-editor-create-fields"
         refute_includes css, "justify-content: center"
         assert_includes variables, "--collection-editor-row-hover-background-color: var(--list-item-hover-background-color);"
       end

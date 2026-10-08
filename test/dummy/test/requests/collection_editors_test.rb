@@ -30,6 +30,11 @@ class CollectionEditorsTest < ActionDispatch::IntegrationTest
     refute_includes response.body, "flat-pack-collection-editor-edit"
     refute_includes response.body, "flat-pack-collection-editor-change"
     refute_includes response.body, "flat-pack-collection-editor-create\""
+    assert_includes response.body, "New Person"
+    assert_includes response.body, 'role="dialog"'
+    assert_includes response.body, 'data-collection-editor-create-modal="true"'
+    assert_includes response.body, 'data-collection-editor-create-submit="true"'
+    assert_includes response.body, "max-w-sm"
     assert_includes response.body, "Reorder Alice Chen"
     assert_includes response.body, "Remove Alice Chen"
     assert_includes response.body, "demo_project[project_people_attributes]"

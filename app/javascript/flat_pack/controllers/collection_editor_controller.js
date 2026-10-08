@@ -8,9 +8,11 @@ export default class extends Controller {
 
   connect() {
     this.onDocumentClick = this.closeOnOutside.bind(this)
+    this.onCreateClick = this.submitCreate.bind(this)
     this.onReordered = this.announceReorder.bind(this)
     this.onPosition = () => this.repositionOpenResults()
     document.addEventListener("click", this.onDocumentClick)
+    document.addEventListener("click", this.onCreateClick)
     document.addEventListener("scroll", this.onPosition, true)
     window.addEventListener("resize", this.onPosition)
     this.element.addEventListener("list:reordered", this.onReordered)
@@ -19,10 +21,14 @@ export default class extends Controller {
 
   disconnect() {
     document.removeEventListener("click", this.onDocumentClick)
+    document.removeEventListener("click", this.onCreateClick)
     document.removeEventListener("scroll", this.onPosition, true)
     window.removeEventListener("resize", this.onPosition)
     this.element.removeEventListener("list:reordered", this.onReordered)
-    this.element.querySelectorAll("[data-collection-editor-row]").forEach((row) => this.restoreResults(row))
+    this.element.querySelectorAll("[data-collection-editor-row]").forEach((row) => {
+      this.restoreResults(row)
+      this.restoreModal(this.createModal(row))
+    })
   }
 
   add(event) {
@@ -46,6 +52,8 @@ export default class extends Controller {
     event.preventDefault()
     const row = this.rowFrom(event)
     if (!row) return
+
+    this.discardCreateModal(row)
 
     if (row.dataset.persisted === "true") {
       const field = row.querySelector("[data-collection-editor-destroy]")
@@ -121,21 +129,40 @@ export default class extends Controller {
     const row = this.rowFrom(event)
     if (!row) return
 
-    const fields = row.querySelector("[data-collection-editor-create-fields]")
+    const fields = this.createScope(row).querySelector("[data-collection-editor-create-fields]")
     const query = row.querySelector("[data-collection-editor-search]")?.value || ""
     if (!fields || !fields.querySelector("[data-create-field]")) {
       this.create(event)
       return
     }
 
-    fields.hidden = false
     const prompt = row.querySelector("[data-collection-editor-create-button]")
     if (prompt) prompt.hidden = true
     this.hideResults(row)
+    this.clearCreateError(row)
     fields.querySelectorAll("[data-fill-from-query]").forEach((input) => {
       if (!input.value) input.value = query
     })
+
+    if (this.openCreateModal(row)) {
+      window.setTimeout(() => {
+        this.createScope(row).querySelector("[data-create-field]")?.focus()
+      }, 150)
+      return
+    }
+
+    fields.hidden = false
     fields.querySelector("[data-create-field]")?.focus()
+  }
+
+  submitCreate(event) {
+    const button = event.target?.closest?.("[data-collection-editor-create-submit]")
+    if (!button) return
+
+    const row = this.rowFrom(event)
+    if (!row || !this.element.contains(row)) return
+
+    return this.create(event)
   }
 
   async create(event) {
@@ -147,7 +174,7 @@ export default class extends Controller {
     const body = new URLSearchParams()
     const query = row.querySelector("[data-collection-editor-search]")?.value || ""
     body.set(row.dataset.searchParam || "q", query)
-    row.querySelectorAll("[data-create-field]").forEach((input) => {
+    this.createScope(row).querySelectorAll("[data-create-field]").forEach((input) => {
       const key = input.dataset.createField
       if (key) body.set(key, input.value)
     })
@@ -334,6 +361,7 @@ export default class extends Controller {
     if (handle && title) handle.setAttribute("aria-label", `Reorder ${title}`)
 
     this.clearCreateError(row)
+    this.closeCreateModal(row)
     this.closePanel(row, {force: true})
     chipRemove?.focus()
 
@@ -381,17 +409,18 @@ export default class extends Controller {
   }
 
   showCreateError(row, messages) {
-    const node = row.querySelector("[data-collection-editor-create-error]")
+    this.openCreateModal(row)
+    const node = this.createScope(row).querySelector("[data-collection-editor-create-error]")
     if (!node) return
 
     node.hidden = false
     node.textContent = messages.filter(Boolean).join(". ")
-    const fields = row.querySelector("[data-collection-editor-create-fields]")
-    if (fields) fields.hidden = false
+    const fields = this.createScope(row).querySelector("[data-collection-editor-create-fields]")
+    if (fields && !this.createModal(row)) fields.hidden = false
   }
 
   clearCreateError(row) {
-    const node = row.querySelector("[data-collection-editor-create-error]")
+    const node = this.createScope(row).querySelector("[data-collection-editor-create-error]")
     if (!node) return
 
     node.hidden = true
@@ -522,11 +551,91 @@ export default class extends Controller {
     const row = target?.closest?.("[data-collection-editor-row]")
     if (row) return row
 
+    const modal = target?.closest?.("[data-collection-editor-create-modal]")
+    if (modal?.id && this.element) {
+      const entity = this.element.querySelector(`[data-create-modal-id="${modal.id}"]`)
+      const owner = entity?.closest?.("[data-collection-editor-row]")
+      if (owner) return owner
+    }
+
     const list = target?.closest?.("[data-collection-editor-results]")
     if (!list?.id || !this.element) return null
 
     const entity = this.element.querySelector(`[data-results-id="${list.id}"]`)
     return entity?.closest?.("[data-collection-editor-row]") || null
+  }
+
+  createScope(row) {
+    return this.createModal(row) || row
+  }
+
+  createModal(row) {
+    if (!row) return null
+
+    const nested = row.querySelector("[data-collection-editor-create-modal]")
+    if (nested) return nested
+
+    const marker = row.querySelector("[data-create-modal-id]")
+    const id = marker?.getAttribute?.("data-create-modal-id")
+    if (!id || typeof document.getElementById !== "function") return null
+
+    return document.getElementById(id)
+  }
+
+  openCreateModal(row) {
+    const modal = this.createModal(row)
+    if (!modal) return false
+
+    const portaled = this.placeModal(modal)
+    const open = () => this.showCreateModal(modal)
+    if (portaled) window.setTimeout(open, 0)
+    else open()
+    return true
+  }
+
+  showCreateModal(modal) {
+    const controller = this.application?.getControllerForElementAndIdentifier?.(modal, "flat-pack--modal")
+    if (controller?.open) {
+      controller.open()
+      return
+    }
+
+    modal.classList?.remove("hidden")
+    modal.classList?.add("flex")
+    modal.setAttribute?.("aria-hidden", "false")
+  }
+
+  closeCreateModal(row) {
+    const modal = this.createModal(row)
+    if (!modal) return
+
+    const controller = this.application?.getControllerForElementAndIdentifier?.(modal, "flat-pack--modal")
+    if (controller?.close) controller.close()
+    else {
+      modal.classList?.remove("flex")
+      modal.classList?.add("hidden")
+      modal.setAttribute?.("aria-hidden", "true")
+    }
+
+    window.setTimeout(() => this.restoreModal(modal), 250)
+  }
+
+  placeModal(modal) {
+    if (!document.body || modal.parentElement === document.body) return false
+
+    modal._modalHome = modal.parentElement
+    document.body.appendChild(modal)
+    return true
+  }
+
+  restoreModal(modal) {
+    if (!modal?._modalHome || !document.body || modal.parentElement !== document.body) return
+
+    modal._modalHome.appendChild(modal)
+  }
+
+  discardCreateModal(row) {
+    this.createModal(row)?.remove()
   }
 
   setActive(row, index) {
@@ -562,7 +671,7 @@ export default class extends Controller {
   replaceTemplateIndex(html, token, index) {
     if (!token) return html
 
-    const pattern = /(\s(?:name|id|for|data-id|data-results-id|aria-controls|aria-labelledby|aria-describedby|aria-activedescendant)\s*=\s*)(["'])([\s\S]*?)\2/gi
+    const pattern = /(\s(?:name|id|for|data-id|data-results-id|data-create-modal-id|aria-controls|aria-labelledby|aria-describedby|aria-activedescendant)\s*=\s*)(["'])([\s\S]*?)\2/gi
     return html.replace(pattern, (match, prefix, quote, value) => {
       if (!value.includes(token)) return match
       return `${prefix}${quote}${value.split(token).join(index)}${quote}`

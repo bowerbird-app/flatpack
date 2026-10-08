@@ -49,7 +49,7 @@ Use Modal for confirmation flows, forms, and detailed contextual content that sh
 ## Overlay scroll and insets
 The backdrop and `.flat-pack-modal__body` use `overscroll-behavior: contain` so a fling inside the dialog does not scroll the page underneath. Opening a modal also sets `overscroll-behavior: none` on `document.body` (same lock count as the overflow lock).
 
-The dialog wrapper uses `.fp-overlay-pad` so padding is at least `1rem` (`1.5rem` from the `sm` breakpoint) and never less than the device safe-area insets. Hosts need `viewport-fit=cover` on the viewport meta for those insets to be non-zero. See [Installation](../installation.md).
+The dialog wrapper uses `.fp-overlay-pad` so padding is at least `1rem` (`1.5rem` from the `sm` breakpoint) and never less than the device safe-area insets. The wrapper ignores pointer events, and the dialog accepts them, so a click on the dimmed area reaches the backdrop. Hosts need `viewport-fit=cover` on the viewport meta for those insets to be non-zero. See [Installation](../installation.md).
 
 ## Accessibility
 - Renders `role="dialog"`, `aria-modal="true"`, and `aria-labelledby` bound to the header id.
