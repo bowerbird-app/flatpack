@@ -13,6 +13,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.209] - 2026-10-08
+
+### Changed
+- Below 40rem a collection editor row is a card. The drag handle, the person or the first field, and remove share the top line. Later fields stack under that line. The same handle still drags the whole row.
+- Bumped the gem version to `0.1.209`.
+
+### Upgrade notes
+- Reload kit CSS. Wide screens keep the table. Redeploy so `meta.gem_version` shows `0.1.209`.
+
 ## [0.1.208] - 2026-10-08
 
 ### Added
