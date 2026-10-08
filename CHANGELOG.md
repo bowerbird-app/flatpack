@@ -13,14 +13,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-## [0.1.203] - 2026-10-07
+## [0.1.204] - 2026-10-08
 
 ### Added
-- `FlatPack::CollectionEditor::Component` edits an ordered collection of related records inside a Rails form. A row shows the selected record (`title` and optional `description`) and leaves relationship fields to the host. Add clones a `fields_for` template and replaces the child-index token in identifier attributes. Remove sets `_destroy` on a saved row and drops an unsaved row. The entity picker searches, selects, or creates a record and writes its id onto the join. Enter selects the highlighted result, or the only result. Several matches do not create a record. A failed search stays in the picker. Edit of the saved record stays a host action. Moves are announced in a polite status.
+- `FlatPack::CollectionEditor::Component` edits an ordered collection of related records inside a Rails form. A row shows the selected record as an info chip and leaves relationship fields to the host. Add clones a `fields_for` template and replaces the child-index token in identifier attributes. Remove sets `_destroy` on a saved row and drops an unsaved row. The entity picker searches, selects, or creates a record and writes its id onto the join. Enter selects the highlighted result, or the only result. Several matches stay in the menu and do not create a record. No matches shows "+ New" when create is configured. A failed search stays in the picker. Moves are announced in a polite status.
 - List orderable accepts `handle_selector`. Arrow keys on that handle move the row. A row with `data-orderable-unsaved="true"` does not PATCH. A saved row's `target_position` ignores unsaved rows. Rows marked `data-collection-editor-destroyed` stay out of the order.
 - Collection editor tokens alias surface, list, and primary colors. See `docs/components/collection-editor.md`.
 - Dummy `/demo/collection_editor` is a Project collaborators form. Person name and email stay on the person. Role and order stay on the join. Reorder posts `moving_recording_id` and `target_position` to `Ordering::ReorderService`. A second section, Text fields, shows three single-line text inputs per row with `chrome: :cell` and no person picker or dropdown.
-- Bumped the gem version to `0.1.203`.
+- Bumped the gem version to `0.1.204`.
 
 ### Changed
 - The collection editor heading sits outside the bordered list. The list frame is `.flat-pack-collection-editor-card`.
@@ -43,6 +43,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New nested child indexes must be integers. Rails 8 `permit` drops any other nested-attribute key. The template placeholder `NEW_RECORD` is replaced in `name`, `id`, `for`, `data-id`, and the aria attributes that point at those ids. Text in the row is left as written.
 - FlatPack does not store order. A host that already uses Recording Studio Orderable keeps that API. Pass its URL and parameter names to the collection editor.
 - Reload kit CSS and JavaScript.
+- Redeploy so `meta.gem_version` shows `0.1.204`.
+
+## [0.1.203] - 2026-10-07
+
+### Changed
+- Focus rings (`--color-ring`) and active sidebar / top-nav fills now follow `--color-primary`. Matching text and icons stay on `--color-primary-text`.
+- Default palette wiring is declared on `:root, [data-theme]` so a named theme on `<body>` (or another descendant) re-resolves derived tokens.
+- Dark and ocean no longer freeze `--color-ring`; they follow `--color-primary` (same colour they already set).
+- The bottom nav bar stays a surface (`#2f2f2f` by default), not a brand fill.
+- Bumped the gem version to `0.1.203`.
+
+### Upgrade notes
+- Reload kit CSS.
+- Hosts that overrode `--color-ring`, `--sidebar-item-active-background-color`, or `--top-nav-item-active-background-color` to match charcoal can drop those overrides. Keep them only if those chrome pieces should stay independent of primary.
+- `data-theme` on `<body>` now re-resolves component aliases. Prefer `<html>` when you can; either placement works.
+- Dark and ocean ring / active nav colours now track `--color-primary`. Override those tokens only if they should diverge.
+- Redeploy so `meta.gem_version` shows `0.1.203`.
 
 ## [0.1.202] - 2026-10-07
 

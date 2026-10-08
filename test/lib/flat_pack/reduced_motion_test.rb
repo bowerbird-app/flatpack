@@ -16,9 +16,9 @@ module FlatPack
 
     test "duration tokens are concrete times on :root so browsers can resolve them" do
       css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css").read
-      root_block = css[/^:root \{.*?^\}/m]
+      root_block = css[/^:root(?:,\s*\[data-theme\])?\s*\{.*?^\}/m]
 
-      refute_nil root_block, "expected a :root block in variables.css"
+      refute_nil root_block, "expected a :root, [data-theme] block in variables.css"
       assert_match(/--duration-fast:\s*150ms/, root_block)
       assert_match(/--duration-base:\s*200ms/, root_block)
       assert_match(/--duration-slow:\s*300ms/, root_block)
@@ -26,9 +26,9 @@ module FlatPack
 
     test "easing tokens are concrete curves on :root so browsers can resolve them" do
       css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css").read
-      root_block = css[/^:root \{.*?^\}/m]
+      root_block = css[/^:root(?:,\s*\[data-theme\])?\s*\{.*?^\}/m]
 
-      refute_nil root_block, "expected a :root block in variables.css"
+      refute_nil root_block, "expected a :root, [data-theme] block in variables.css"
       assert_match(/--easing-standard:\s*cubic-bezier\(0\.2, 0, 0, 1\)/, root_block)
       assert_match(/--easing-enter:\s*cubic-bezier\(0\.05, 0\.7, 0\.1, 1\)/, root_block)
       assert_match(/--easing-exit:\s*cubic-bezier\(0\.3, 0, 1, 1\)/, root_block)

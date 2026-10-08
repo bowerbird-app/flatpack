@@ -14,7 +14,7 @@ Component tokens (--button-*, --sidebar-*, …) — defined once as var(--semant
 Components / Stimulus
 ```
 
-The kit default (no `data-theme`) is the rounded / charcoal palette. Named themes (`[data-theme="dark"]`, `ocean`, or your own) should override **brand/semantic** tokens. `[data-theme="rounded"]` is an empty alias of the default. Component tokens inherit automatically. Do not copy `@theme inline` self-maps (`--token: var(--token)`) onto that selector. `html[data-theme="rounded"]` is `:root`, so those lines blank the token and sidebar `border-r` falls back to `currentColor`.
+The kit default (no `data-theme`) is the rounded / charcoal palette. Named themes (`[data-theme="dark"]`, `ocean`, or your own) should override **brand/semantic** tokens. `[data-theme="rounded"]` is an empty alias of the default. Component tokens are declared on `:root, [data-theme]` as `var(--semantic)`, so they re-resolve when a host puts `data-theme` on `<body>` or another descendant — not only on `<html>`. Do not copy `@theme inline` self-maps (`--token: var(--token)`) onto that selector. `html[data-theme="rounded"]` is `:root`, so those lines blank the token and sidebar `border-r` falls back to `currentColor`.
 
 On that default, `--sidebar-background-color` is `var(--surface-page-background-color)`, so the rail matches the page. `--sidebar-header-background-color` aliases the sidebar token, so the header follows. Dark and ocean set their own sidebar fill. A host that wants a white rail sets `--sidebar-background-color` after FlatPack CSS. Do not assign it on `[data-theme="rounded"]`.
 
@@ -39,6 +39,14 @@ Or override primitives directly:
 ```
 
 `--color-primary` is `oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue))`. Hover subtracts `0.10` from lightness only, so charcoal chroma `0` stays valid. Surfaces keep their own colors unless you override `--surface-*`.
+
+These follow `--color-primary` (and `--color-primary-text` for text or icons on that fill). You do not set them on a named theme unless you want them to diverge:
+
+- `--color-ring` — focus rings
+- `--sidebar-item-active-background-color` / `--top-nav-item-active-background-color` — selected nav fills
+- `--button-primary-*`, `--badge-primary-*`, `--tabs-pill-active-*`, `--progress-fill-color`, `--range-fill-color`, `--switch-track-checked-background-color`, `--stepper-current-color`, outgoing chat, and other primary-filled controls
+
+The bottom nav bar (`--bottom-nav-background-color`) is a dark surface, not a brand fill. Dark and ocean set their own bar colours. Active bottom-nav *items* use `--bottom-nav-item-active-color` (contrast on that bar), not `--color-primary`.
 
 For an exact brand hex, set the semantic tokens instead:
 
@@ -354,7 +362,7 @@ Drawer tokens alias Modal. Keyboard, skip link, and stepper tokens alias surface
 
 ## Component Variable Usage
 
-Component tokens such as `--button-primary-background-color` map to semantic tokens (`var(--color-primary)`). You normally change `--brand-hue` / `--brand-chroma` / `--brand-lightness` or `--color-primary` instead of editing component tokens.
+Component tokens such as `--button-primary-background-color` map to semantic tokens (`var(--color-primary)`). `--color-ring` and the active sidebar / top-nav fills do the same. You normally change `--brand-hue` / `--brand-chroma` / `--brand-lightness` or `--color-primary` instead of editing those component tokens.
 
 Alert and toast success/warning/danger wash the status fill into the surface (`color-mix` at 18%) and keep chroma on the icon and border. Info toasts alias the quiet info alert, not `--color-primary`. Buttons, badges, chips, and progress keep the filled `--color-success-*` / `--color-warning-*` / `--color-danger-*` paints. Progress reads those fills through `--progress-*-fill-color` and `.fp-progress-fill`, not Tailwind `bg-primary`. Range input paints the native slider through `.fp-range-input` and `--range-*` tokens, not `accent-color`.
 
@@ -405,7 +413,11 @@ Collection Editor aliases the same surface and list tokens. `--collection-editor
 
 ## Dark mode and named themes
 
-See [Dark Mode](dark_mode.md). Built-in variants (`dark`, `ocean`) only override tokens that differ from `:root`. `rounded` is an alias of the default. Component aliases stay on `:root` and inherit.
+See [Dark Mode](dark_mode.md). Built-in variants (`dark`, `ocean`) only override tokens that differ from the default palette. `rounded` is an alias of the default. Component aliases are declared on `:root, [data-theme]` and re-resolve against that element's semantic tokens.
+
+`var()` inside a custom property is computed on the element that declares it. If the kit only declared `--button-primary-background-color: var(--color-primary)` on `:root`, a host that sets `--color-primary` on `<body data-theme="…">` would keep the already-resolved `:root` value. Declaring the same wiring on `[data-theme]` is the generic fix. Prefer `data-theme` on `<html>` when you can; either placement works.
+
+Dark and ocean set `--color-primary` directly. Their focus rings and active nav fills follow that primary. They do not restate `--color-ring`.
 
 ## Auditing tokens
 

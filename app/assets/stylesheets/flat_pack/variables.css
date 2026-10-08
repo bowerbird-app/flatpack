@@ -7,8 +7,11 @@
  *
  * @theme inline registers Tailwind utility names without emitting values (avoids duplicating :root
  *   and the circular `--x: var(--x)` trap when Tailwind also emits @theme onto :root).
- * :root is the single source of concrete values (browsers skip @theme when this file is a stylesheet).
- * [data-theme="…"] overrides only tokens that differ from :root.
+ * :root, [data-theme] is the single source of concrete values (browsers skip @theme when this
+ *   file is a stylesheet). Declaring the wiring on [data-theme] as well re-resolves derived
+ *   tokens (var(--color-primary), etc.) when a host puts data-theme on <body> or another
+ *   descendant — var() inside a custom property is computed on the element that declares it.
+ * [data-theme="…"] named blocks override only tokens that differ from the default palette.
  * [data-theme="rounded"] is a no-op alias of the default so hosts can keep the attribute.
  */
 
@@ -644,8 +647,10 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   height: 0;
 }
 
-/* Default palette (rounded / charcoal) — full semantic + component wiring */
-:root {
+/* Default palette (rounded / charcoal) — full semantic + component wiring.
+ * [data-theme] repeats the wiring so a named theme on a descendant re-resolves aliases.
+ */
+:root, [data-theme] {
   color-scheme: light;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -904,7 +909,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --collection-editor-handle-color: var(--surface-muted-content-color);
   --collection-editor-drop-indicator-color: var(--color-primary);
   --sidebar-item-hover-text-color: var(--surface-content-color);
-  --sidebar-item-active-background-color: #333;
+  --sidebar-item-active-background-color: var(--color-primary);
   --sidebar-item-active-text-color: var(--color-primary-text);
   --sidebar-item-active-icon-color: var(--color-primary-text);
   --sidebar-group-item-indent: 1rem;
@@ -1153,7 +1158,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --top-nav-item-icon-color: var(--surface-muted-content-color);
   --top-nav-item-hover-background-color: var(--surface-muted-background-color);
   --top-nav-item-hover-text-color: var(--surface-content-color);
-  --top-nav-item-active-background-color: #333;
+  --top-nav-item-active-background-color: var(--color-primary);
   --top-nav-item-active-text-color: var(--color-primary-text);
   --top-nav-item-active-icon-color: var(--color-primary-text);
   --top-nav-height: 72px;
@@ -1177,7 +1182,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --search-result-description-color: var(--surface-muted-content-color);
   --search-result-hover-background-color: var(--surface-muted-background-color);
   --search-result-divider-color: var(--surface-border-color);
-  --color-ring: #333;
+  --color-ring: var(--color-primary);
   --stack-gap-sm: 0.5rem;
   --stack-gap-md: 1rem;
   --stack-gap-lg: 1.5rem;
@@ -1287,7 +1292,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   color: var(--surface-content-color) !important;
 }
 
-/* Dark theme — overrides only (inherits component aliases from :root) */
+/* Dark theme — overrides only. Component aliases re-resolve from :root, [data-theme]. */
 [data-theme="dark"] {
   color-scheme: dark;
   --color-primary: oklch(0.62 0.22 250);
@@ -1322,7 +1327,6 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --modal-backdrop-color: rgb(0 0 0 / 0.65);
   --list-item-hover-background-color: oklch(0.26 0.02 250);
   --list-item-active-background-color: oklch(0.30 0.03 250);
-  --color-ring: oklch(0.62 0.22 250);
   --chip-remove-hover-background-color: rgb(255 255 255 / 0.16);
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.55), 0 0 0 1px rgb(255 255 255 / 0.06);
   --shadow-md: 0 10px 24px -8px rgb(0 0 0 / 0.65), 0 0 0 1px rgb(255 255 255 / 0.08);
@@ -1361,7 +1365,6 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --list-item-active-background-color: oklch(0.88 0.04 220);
   --sidebar-group-item-indent: 0.875rem;
   --avatar-status-ring-color: var(--surface-background-color);
-  --color-ring: oklch(0.52 0.15 220);
   --modal-backdrop-blur: 5px;
   --sidebar-background-color: oklch(0.96 0.02 220);
   --top-nav-background-color: oklch(0.97 0.01 220);

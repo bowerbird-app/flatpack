@@ -256,9 +256,9 @@ If the generator cannot automatically detect your Tailwind CSS 4 file, it will d
 **Variables are loaded automatically.** The `rails generate flat_pack:install` command adds `stylesheet_link_tag "flat_pack/variables"`, `stylesheet_link_tag "flat_pack/application"`, and `stylesheet_link_tag "flat_pack/rich_text"` to your application layout. Propshaft resolves the correct digested file URLs at request time, so the complete FlatPack variable system loads without any manual copying.
 
 The imported `variables.css` contains:
-- `:root {}` — the **default (rounded / charcoal) palette** plus once-defined component wiring (the values browsers actually use)
+- `:root, [data-theme] {}` — the **default (rounded / charcoal) palette** plus once-defined component wiring (the values browsers actually use). `[data-theme]` repeats the wiring so a named theme on `<body>` re-resolves aliases
 - `@theme inline {}` — token names for Tailwind utilities (`--color-primary: var(--color-primary)`). Tailwind does not re-emit these onto `:root`
-- `[data-theme="dark"] {}` — dark overrides only (component aliases inherit)
+- `[data-theme="dark"] {}` — dark overrides only. Focus rings and active nav fills follow `--color-primary`
 - `[data-theme="ocean"] {}` — ocean variant (overrides only)
 - `[data-theme="rounded"] {}` — empty alias of the default (same look; safe for hosts that already set the attribute). Leave it empty. A `--token: var(--token)` assignment there is the same element as `:root` and blanks the token.
 
