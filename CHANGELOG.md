@@ -21,6 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Bumped the gem version to `0.1.210`.
 
+### Fixed
+- A blank `subtitle` (`""` or whitespace) no longer renders an empty `<p class="mt-1 …">`. Only a present subtitle gets a paragraph, so an empty optional field or blank translation does not add a gap.
+
 ### Upgrade notes
 - Existing SectionTitle calls are unchanged. Pass `size:`, `spacing:`, and `level:` only when you want a smaller heading, tighter or no wrapper margin, or a different heading tag.
 - Caller `class: "mb-2"` still cannot override the default `my-8`. Use `spacing: :none` when the caller should own the margin.

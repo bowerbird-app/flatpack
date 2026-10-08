@@ -25,6 +25,37 @@ module FlatPack
         assert_selector "p.text-base", text: "Latest metrics and progress"
       end
 
+      def test_does_not_render_subtitle_when_nil
+        render_inline(Component.new(title: "Overview", subtitle: nil))
+
+        assert_selector "h2", text: "Overview"
+        refute_selector "p"
+      end
+
+      def test_does_not_render_subtitle_when_empty
+        render_inline(Component.new(title: "Overview", subtitle: ""))
+
+        assert_selector "h2", text: "Overview"
+        refute_selector "p"
+      end
+
+      def test_does_not_render_subtitle_when_whitespace
+        render_inline(Component.new(title: "Overview", subtitle: "   "))
+
+        assert_selector "h2", text: "Overview"
+        refute_selector "p"
+      end
+
+      def test_blank_subtitle_matches_omitted_subtitle
+        render_inline(Component.new(title: "Overview"))
+        omitted = page.native.to_html
+
+        ["", "   "].each do |subtitle|
+          render_inline(Component.new(title: "Overview", subtitle: subtitle))
+          assert_equal omitted, page.native.to_html
+        end
+      end
+
       def test_renders_anchor_link_when_enabled
         render_inline(Component.new(title: "Overview", anchor_link: true))
 

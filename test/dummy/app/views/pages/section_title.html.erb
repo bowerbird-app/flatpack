@@ -34,6 +34,34 @@
   ) %>
 </section>
 
+<section class="mb-12" id="blank-subtitle">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Blank subtitle", anchor_link: true, subtitle: "Omitted, empty, and whitespace-only subtitles take no space. Only a present string gets a paragraph.") %>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">No subtitle</p>
+      <div class="rounded-lg border border-dashed border-[var(--surface-border-color)] px-4">
+        <%= render FlatPack::SectionTitle::Component.new(title: "Members", spacing: :none) %>
+        <p class="text-sm text-[var(--surface-muted-content-color)] pb-4">Content under the title.</p>
+      </div>
+    </div>
+    <div>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">subtitle: ""</p>
+      <div class="rounded-lg border border-dashed border-[var(--surface-border-color)] px-4">
+        <%= render FlatPack::SectionTitle::Component.new(title: "Members", subtitle: "", spacing: :none) %>
+        <p class="text-sm text-[var(--surface-muted-content-color)] pb-4">Content under the title.</p>
+      </div>
+    </div>
+    <div>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">With subtitle</p>
+      <div class="rounded-lg border border-dashed border-[var(--surface-border-color)] px-4">
+        <%= render FlatPack::SectionTitle::Component.new(title: "Members", subtitle: "Who can access this workspace", spacing: :none) %>
+        <p class="text-sm text-[var(--surface-muted-content-color)] pb-4">Content under the title.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Sizes", anchor_link: true, subtitle: "Type scale for the heading, subtitle, and copy-link icon. These cards use spacing: :none so the type is the only change.") %>
 

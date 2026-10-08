@@ -131,7 +131,7 @@ module FlatPack
       end
 
       def render_subtitle
-        return nil unless @subtitle
+        return nil unless @subtitle.present?
 
         content_tag(:p, @subtitle, class: size_config.fetch(:subtitle))
       end

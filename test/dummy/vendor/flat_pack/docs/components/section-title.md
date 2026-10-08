@@ -13,7 +13,7 @@ Use Section Title for document-style pages where subsections need deep-linkable 
 | name | type | default | required | description |
 |---|---|---|---|---|
 | `title` | String | `nil` | yes | Section heading text. |
-| `subtitle` | String | `nil` | no | Supporting copy below the heading. |
+| `subtitle` | String | `nil` | no | Supporting copy below the heading. Blank or whitespace-only values render nothing. |
 | `anchor_link` | Boolean | `false` | no | Enables hover/focus copy-link affordance and anchor id generation. |
 | `anchor_id` | String | `nil` | no | Explicit anchor id when `anchor_link` is enabled; falls back to wrapper id or parameterized title. |
 | `size` | Symbol | `:lg` | no | Type scale for the heading, subtitle, and copy-link icon: `:lg`, `:md`, `:sm`. `:lg` is today's `text-2xl` heading and `text-base` subtitle. |
