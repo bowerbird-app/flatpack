@@ -6,7 +6,7 @@ module FlatPack
       class Component < FlatPack::BaseComponent
         attr_reader :search_url, :search_param, :min_search_length, :create_url,
           :create_label, :empty_text, :edit_url_template, :edit_label, :change_label,
-          :title, :description
+          :update_url, :update_label, :title, :description
 
         def initialize(
           form:,
@@ -25,8 +25,10 @@ module FlatPack
           search_error_text: "Search failed",
           items: nil,
           edit_url_template: nil,
-          edit_label: "Edit",
+          edit_label: nil,
           change_label: "Change",
+          update_url: nil,
+          update_label: nil,
           error: nil,
           open: false,
           **system_arguments
@@ -48,8 +50,10 @@ module FlatPack
           @search_error_text = search_error_text.to_s.presence || "Search failed"
           @items = items
           @edit_url_template = sanitize_endpoint(edit_url_template)
-          @edit_label = edit_label.to_s.presence || "Edit"
+          @edit_label = edit_label.to_s.presence || FlatPack::Copy.t("common.edit")
           @change_label = change_label.to_s.presence || "Change"
+          @update_url = update_endpoint(update_url)
+          @update_label = update_label.to_s.presence || FlatPack::Copy.t("common.save")
           @error = error.to_s.presence
           @open = open || @title.blank?
           @list_id = "fp-collection-editor-#{form.field_id(association_name)}-results"
@@ -78,7 +82,7 @@ module FlatPack
 
         def entity_attributes
           data = {results_id: @list_id}
-          data[:create_modal_id] = create_modal_id if creatable?
+          data[:create_modal_id] = create_modal_id if dialog?
 
           merge_attributes(
             class: "flat-pack-collection-editor-entity",
@@ -108,8 +112,27 @@ module FlatPack
             value: current_value
           ) do |chip|
             chip.remove_button { render_chip_remove }
-            content_tag(:span, @title, data: {collection_editor_title: "true"})
+            render_chip_name
           end
+        end
+
+        def render_chip_name
+          title = content_tag(:span, @title, data: {collection_editor_title: "true"})
+          return title unless editable?
+
+          button_tag(
+            type: "button",
+            class: "flat-pack-collection-editor-name",
+            aria: {label: chip_edit_label},
+            data: {
+              collection_editor_edit: "true",
+              action: "click->flat-pack--collection-editor#edit"
+            }
+          ) { title }
+        end
+
+        def chip_edit_label
+          @title.present? ? "#{@edit_label} #{@title}" : @edit_label
         end
 
         def render_chip_remove
@@ -183,26 +206,55 @@ module FlatPack
           content? && @create_url.present?
         end
 
+        public
+
+        def editable?
+          content? && @update_url.present?
+        end
+
+        def dialog?
+          content? && (@create_url.present? || @update_url.present?)
+        end
+
+        def create_title
+          FlatPack::Copy.t("collection_editor.new_record", label: @label)
+        end
+
+        def edit_title
+          FlatPack::Copy.t("collection_editor.edit_record", label: @label)
+        end
+
+        private
+
         def create_modal_id
           "fp-collection-editor-#{@form.field_id(@association_name)}-create"
         end
 
         def create_modal_title
-          "New #{@label}"
+          create_title
         end
 
         def render_create_modal
-          return unless creatable?
+          return unless dialog?
 
           render FlatPack::Modal::Component.new(
             id: create_modal_id,
-            title: create_modal_title,
             size: :sm,
             data: {collection_editor_create_modal: "true"}
           ) do |modal|
+            modal.header { render_dialog_title }
             modal.body { render_create_body }
             modal.footer { render_create_footer }
           end
+        end
+
+        def render_dialog_title
+          content_tag(
+            :h2,
+            create_modal_title,
+            class: "text-lg font-semibold text-[var(--modal-title-color)] fp-text-balance",
+            data: {collection_editor_modal_title: "true"}
+          )
         end
 
         def render_create_body
@@ -239,6 +291,13 @@ module FlatPack
 
         def sanitize_endpoint(url)
           FlatPack::AttributeSanitizer.sanitize_url(url)
+        end
+
+        def update_endpoint(url)
+          sanitized = sanitize_endpoint(url)
+          return if sanitized.blank? || !sanitized.include?(":id")
+
+          sanitized
         end
       end
     end

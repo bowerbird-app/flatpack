@@ -45,13 +45,27 @@ module Demo
       end
     end
 
+    def show_person
+      person = DemoPerson.find(params[:id])
+      render json: {item: CollectionEditorDemo.item(person), fields: person_fields(person)}
+    end
+
     def edit_person
       @person = DemoPerson.find(params[:id])
     end
 
     def update_person
       @person = DemoPerson.find(params[:id])
-      if @person.update(params.require(:demo_person).permit(:name, :email))
+      attributes = json_person? ? params.permit(:name, :email) : params.require(:demo_person).permit(:name, :email)
+      saved = @person.update(attributes)
+
+      if json_person?
+        if saved
+          render json: {ok: true, item: CollectionEditorDemo.item(@person)}
+        else
+          render json: {ok: false, errors: @person.errors.full_messages}, status: :unprocessable_entity
+        end
+      elsif saved
         redirect_to demo_collection_editor_path, notice: "Person saved. The project role was not changed."
       else
         render :edit_person, status: :unprocessable_entity
@@ -86,6 +100,14 @@ module Demo
 
     def project_params
       params.require(:demo_project).permit(:name, project_people_attributes: [:id, :person_id, :role, :_destroy])
+    end
+
+    def json_person?
+      request.format.json?
+    end
+
+    def person_fields(person)
+      {name: person.name, email: person.email}
     end
   end
 end

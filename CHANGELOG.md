@@ -13,6 +13,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.207] - 2026-10-08
+
+### Added
+- The collection editor chip name edits the selected record when `update_url` includes an `:id` token. The name is a button. Remove stays its own button. Edit loads the record with GET and saves it with PATCH through the same modal used for create. The person id stays on the row. Other chips with that id update too. Join fields such as role stay on the row until the parent form is saved.
+
+### Changed
+- Bumped the gem version to `0.1.207`.
+
+### Upgrade notes
+- Pass `update_url: "/people/:id"` and keep the entity fields marked `data-create-field`. GET returns `{ "item": { "id", "title", "description" }, "fields": { "name": "Alice Chen" } }`. PATCH accepts those same fields and returns `{ "ok": true, "item": { "id", "title", "description" } }`.
+- `edit_label` defaults to the kit string for Edit. `update_label` defaults to Save. The modal titles use `flatpack.collection_editor.new_record` and `flatpack.collection_editor.edit_record`.
+- Omit `update_url` and the chip name stays plain text.
+- Reload kit CSS and JavaScript.
+- Redeploy so `meta.gem_version` shows `0.1.207`.
+
 ## [0.1.206] - 2026-10-08
 
 ### Added

@@ -9,6 +9,10 @@ function loadController(overrides = {}) {
   const source = fs.readFileSync(filePath, "utf8")
   const transformed = source
     .replace('import { Controller } from "@hotwired/stimulus"', "class Controller {}")
+    .replace(
+      'import { flatPackCopy } from "flat_pack/copy"',
+      "const flatPackCopy = (key) => ({'collection_editor.create_failed': 'Could not create the record', 'collection_editor.load_failed': 'Could not load the record', 'collection_editor.save_failed': 'Could not save the record'})[key] || key"
+    )
     .replace("export default class extends Controller", "class CollectionEditorController extends Controller") + "\nmodule.exports = CollectionEditorController\n"
 
   const context = {
@@ -150,6 +154,7 @@ function matches(node, selector) {
   const hiddenClause = selector.includes(":not([hidden])")
   const base = selector.replace(":not([hidden])", "")
   if (hiddenClause && node.hidden) return false
+  if (base === node.tag) return true
   if (base === "[role='option']" || base === '[role="option"]') return node.attrs.role === "option"
   const equals = base.match(/^\[([^\]=]+)=["']([^"']*)["']\]$/)
   if (equals) {
@@ -478,6 +483,178 @@ test("create success closes the modal and restores it to the row", async () => {
   assert.equal(modal.classList.contains("hidden"), true)
   assert.equal(modal.classList.contains("flex"), false)
   assert.equal(row.contains(modal), true)
+})
+
+test("edit loads the person and save patches every chip with that id", async () => {
+  const calls = []
+  const controller = harness(async (url, options = {}) => {
+    calls.push({url, method: options.method, body: options.body})
+    if (options.method === "GET") {
+      return {
+        ok: true,
+        json: async () => ({
+          item: {id: "4", title: "Alice Chen", description: "alice@example.com"},
+          fields: {name: "Alice Chen", email: "alice@example.com"}
+        })
+      }
+    }
+    return {
+      ok: true,
+      json: async () => ({ok: true, item: {id: "4", title: "Alice Chen-Smith", description: "alice@studio.example"}})
+    }
+  })
+  const row = buildRow({id: "12", persisted: true})
+  const other = buildRow({id: "13", persisted: true})
+  row.dataset.updateUrl = "/people/:id"
+  row.dataset.editTitle = "Edit Person"
+  row.dataset.createTitle = "New Person"
+  row.dataset.editLabel = "Edit"
+  row.dataset.updateLabel = "Save"
+  other.dataset.editLabel = "Edit"
+  row.querySelector("[data-collection-editor-association]").value = "4"
+  other.querySelector("[data-collection-editor-association]").value = "4"
+  other.querySelector("[data-collection-editor-title]").textContent = "Alice Chen"
+  const role = buildNode("select")
+  role.value = "Designer"
+  row.append(role)
+  const {modal, submit} = attachCreateModal(row)
+  const heading = buildNode("h2")
+  mark(heading, "data-collection-editor-modal-title")
+  heading.textContent = "New Person"
+  const submitLabel = buildNode("span")
+  submitLabel.textContent = "Create"
+  submit.append(submitLabel)
+  modal.append(heading)
+  controller.listTarget.append(row, other)
+
+  await controller.edit({preventDefault() {}, target: row.querySelector("[data-collection-editor-edit]")})
+
+  assert.equal(calls[0].method, "GET")
+  assert.equal(calls[0].url, "/people/4")
+  const inputs = modal.querySelectorAll("[data-create-field]")
+  assert.equal(inputs[0].value, "Alice Chen")
+  assert.equal(inputs[1].value, "alice@example.com")
+  assert.equal(heading.textContent, "Edit Person")
+  assert.equal(submitLabel.textContent, "Save")
+  assert.equal(modal.classList.contains("flex"), true)
+  assert.equal(role.value, "Designer")
+
+  inputs[0].value = "Alice Chen-Smith"
+  inputs[1].value = "alice@studio.example"
+  await controller.submitCreate({preventDefault() {}, target: submit})
+
+  assert.equal(calls[1].method, "PATCH")
+  assert.equal(calls[1].url, "/people/4")
+  assert.match(calls[1].body, /name=Alice\+Chen-Smith/)
+  assert.match(calls[1].body, /email=alice%40studio\.example/)
+  assert.doesNotMatch(calls[1].body, /(^|&)q=/)
+  assert.equal(row.querySelector("[data-collection-editor-association]").value, "4")
+  assert.equal(row.querySelector("[data-collection-editor-title]").textContent, "Alice Chen-Smith")
+  assert.equal(other.querySelector("[data-collection-editor-title]").textContent, "Alice Chen-Smith")
+  assert.equal(row.querySelector("[data-collection-editor-edit]").attrs["aria-label"], "Edit Alice Chen-Smith")
+  assert.equal(other.querySelector("[data-collection-editor-edit]").attrs["aria-label"], "Edit Alice Chen-Smith")
+  assert.equal(role.value, "Designer")
+  assert.equal(row.events.some((event) => event.type === "collection-editor:updated"), true)
+  assert.equal(row.events.some((event) => event.type === "collection-editor:selected"), false)
+  assert.equal(modal.classList.contains("hidden"), true)
+})
+
+test("edit save keeps the modal open when the person is invalid", async () => {
+  const calls = []
+  const controller = harness(async (url, options = {}) => {
+    calls.push({url, method: options.method})
+    if (options.method === "GET") {
+      return {ok: true, json: async () => ({fields: {name: "Alice Chen", email: "alice@example.com"}})}
+    }
+    return {ok: false, json: async () => ({ok: false, errors: ["Email is invalid"]})}
+  })
+  const row = buildRow({id: "12", persisted: true})
+  row.dataset.updateUrl = "/people/:id"
+  row.dataset.editTitle = "Edit Person"
+  row.querySelector("[data-collection-editor-association]").value = "4"
+  row.querySelector("[data-collection-editor-title]").textContent = "Alice Chen"
+  const {modal, error} = attachCreateModal(row)
+  controller.listTarget.append(row)
+
+  await controller.edit({preventDefault() {}, target: row})
+  await controller.update({preventDefault() {}, target: modal})
+
+  assert.equal(calls.map((call) => call.method).join(","), "GET,PATCH")
+  assert.equal(row.querySelector("[data-collection-editor-association]").value, "4")
+  assert.equal(row.querySelector("[data-collection-editor-title]").textContent, "Alice Chen")
+  assert.equal(error.hidden, false)
+  assert.match(error.textContent, /Email is invalid/)
+  assert.equal(modal.classList.contains("flex"), true)
+})
+
+test("opening create after edit drops the loaded person and ignores a late load", async () => {
+  let release
+  const pending = new Promise((resolve) => {
+    release = resolve
+  })
+  const calls = []
+  const controller = harness((url, options = {}) => {
+    calls.push(options.method || "GET")
+    return pending
+  })
+  const row = buildRow({id: "12", persisted: true})
+  row.dataset.updateUrl = "/people/:id"
+  row.dataset.editTitle = "Edit Person"
+  row.dataset.createTitle = "New Person"
+  row.dataset.createLabel = "Create"
+  row.querySelector("[data-collection-editor-association]").value = "4"
+  row.querySelector("[data-collection-editor-search]").value = "Morgan Patel"
+  const {modal, fields} = attachCreateModal(row)
+  const heading = buildNode("h2")
+  mark(heading, "data-collection-editor-modal-title")
+  heading.textContent = "New Person"
+  const submitLabel = buildNode("span")
+  submitLabel.textContent = "Create"
+  const submit = modal.querySelector("[data-collection-editor-create-submit]")
+  submit.append(submitLabel)
+  modal.append(heading)
+  controller.listTarget.append(row)
+
+  const editPromise = controller.edit({preventDefault() {}, target: row})
+  assert.equal(submit.disabled, true)
+  controller.promptCreate({preventDefault() {}, target: row})
+  release({
+    ok: true,
+    json: async () => ({fields: {name: "Alice Chen", email: "alice@example.com"}})
+  })
+  await editPromise
+
+  const inputs = fields.querySelectorAll("[data-create-field]")
+  assert.equal(inputs[0].value, "Morgan Patel")
+  assert.equal(inputs[1].value, "")
+  assert.equal(heading.textContent, "New Person")
+  assert.equal(submitLabel.textContent, "Create")
+  assert.equal(submit.disabled, false)
+  assert.equal(row.dataset.editorMode, "create")
+  assert.deepEqual(calls, ["GET"])
+  assert.equal(modal.classList.contains("flex"), true)
+})
+
+test("edit stays in the modal when the person cannot be loaded", async () => {
+  const calls = []
+  const controller = harness(async (url, options = {}) => {
+    calls.push(options.method)
+    return {ok: false, json: async () => ({ok: false, errors: ["Not found"]})}
+  })
+  const row = buildRow({id: "12", persisted: true})
+  row.dataset.updateUrl = "/people/:id"
+  row.querySelector("[data-collection-editor-association]").value = "4"
+  const {modal, error} = attachCreateModal(row)
+  controller.listTarget.append(row)
+
+  await controller.edit({preventDefault() {}, target: row})
+  await controller.submitCreate({preventDefault() {}, target: modal})
+
+  assert.deepEqual(calls, ["GET"])
+  assert.equal(error.hidden, false)
+  assert.match(error.textContent, /Not found/)
+  assert.equal(modal.classList.contains("flex"), true)
+  assert.equal(modal.querySelector("[data-create-field]").value, "")
 })
 
 test("removing a row discards its portaled modal", () => {

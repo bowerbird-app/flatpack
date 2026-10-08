@@ -52,6 +52,12 @@ fr:
       apply: Appliquer
     chip:
       remove: Retirer
+    collection_editor:
+      new_record: Nouveau %{label}
+      edit_record: Modifier %{label}
+      create_failed: Impossible de créer l'enregistrement
+      load_failed: Impossible de charger l'enregistrement
+      save_failed: Impossible d'enregistrer l'enregistrement
     code_block:
       snippets: Extraits de code
       snippet: Extrait

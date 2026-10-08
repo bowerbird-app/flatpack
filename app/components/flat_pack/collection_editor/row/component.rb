@@ -79,8 +79,13 @@ module FlatPack
             min_search_length: entity.min_search_length,
             create_url: entity.create_url,
             create_label: entity.create_label,
+            create_title: (entity.create_title if entity.create_url.present? || entity.update_url.present?),
             empty_text: entity.empty_text,
             edit_url_template: entity.edit_url_template,
+            update_url: entity.update_url,
+            edit_title: (entity.edit_title if entity.update_url.present?),
+            edit_label: (entity.edit_label if entity.update_url.present?),
+            update_label: (entity.update_label if entity.update_url.present?),
             items: entity.items_json
           }.compact
         end

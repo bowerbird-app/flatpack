@@ -37,6 +37,9 @@ class CollectionEditorsTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "max-w-sm"
     assert_includes response.body, "Reorder Alice Chen"
     assert_includes response.body, "Remove Alice Chen"
+    assert_includes response.body, "Edit Alice Chen"
+    assert_includes response.body, 'data-update-url="/demo/collection_editor/people/:id"'
+    assert_includes response.body, "Edit Person"
     assert_includes response.body, "demo_project[project_people_attributes]"
     assert_includes response.body, "[person_id]"
     assert_includes response.body, "[role]"
@@ -109,6 +112,52 @@ class CollectionEditorsTest < ActionDispatch::IntegrationTest
     assert_equal "morgan@example.com", item.fetch("description")
     assert DemoPerson.exists?(id: item.fetch("id"), email: "morgan@example.com")
     assert_not DemoProjectPerson.exists?(person_id: item.fetch("id"))
+  end
+
+  test "show person returns the fields for the edit modal" do
+    person = DemoPerson.find_by!(email: "alice@example.com")
+
+    get demo_collection_editor_person_path(person), as: :json
+
+    assert_response :success
+    assert_equal person.id.to_s, json.dig("item", "id")
+    assert_equal "Alice Chen", json.dig("fields", "name")
+    assert_equal "alice@example.com", json.dig("fields", "email")
+  end
+
+  test "update person returns the new summary and keeps the role" do
+    project = CollectionEditorDemo.launch
+    membership = membership_for(project, "alice@example.com")
+    person = membership.person
+
+    patch demo_collection_editor_person_path(person), params: {name: "Alice Chen-Smith", email: "alice@example.com"}, as: :json
+
+    assert_response :success
+    assert_equal true, json.fetch("ok")
+    assert_equal "Alice Chen-Smith", json.dig("item", "title")
+    assert_equal "alice@example.com", person.reload.email
+    assert_equal "Alice Chen-Smith", person.name
+    assert_equal "alice@studio.example", DemoPerson.find_by!(name: "Alice Chen-Smith", email: "alice@studio.example").email
+    assert_equal "Designer", membership.reload.role
+  end
+
+  test "update person returns validation errors" do
+    person = DemoPerson.find_by!(email: "alice@example.com")
+
+    patch demo_collection_editor_person_path(person), params: {name: "Alice Chen", email: "not-an-email"}, as: :json
+
+    assert_response :unprocessable_entity
+    assert_equal false, json.fetch("ok")
+    assert json.fetch("errors").any? { |message| message.include?("Email") }
+    assert_equal "alice@example.com", person.reload.email
+  end
+
+  test "html person update still redirects" do
+    person = DemoPerson.find_by!(email: "alice@example.com")
+
+    patch demo_collection_editor_person_path(person), params: {demo_person: {name: person.name, email: person.email}}
+
+    assert_redirected_to demo_collection_editor_path
   end
 
   test "removing a row destroys the relationship and keeps the person" do
