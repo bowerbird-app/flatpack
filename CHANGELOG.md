@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Kit chrome copy lives under `flatpack.*`. The gem ships English only, in `config/locales/flatpack.en.yml`. Hosts add their own locale files (for example `config/locales/flatpack.fr.yml`) and own the language list.
 - Components read omitted string props from I18n. An explicit prop, including `nil`, still wins.
 - JavaScript copy uses `data-fp-copy` on `<html>` (`flat_pack_copy_data`) with English fallbacks in `flat_pack/copy.js`.
-- The Rails 8 dummy app demonstrates locale switching with `recording_studio_internationalization` and a host `flatpack.fr.yml` that covers every gem English key.
+- The Rails 8 dummy app demonstrates locale switching with `recording_studio_internationalization`, a host `flatpack.fr.yml` that covers every gem English key, and a language selector in the catalog top nav (left of the theme control).
 
 ### Changed
 - Bumped the gem version to `0.1.203`.
