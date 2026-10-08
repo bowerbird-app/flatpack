@@ -238,6 +238,55 @@
   ) %>
 </section>
 
+<!-- HTML cards with thumbs -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Card thumbs", anchor_link: true, subtitle: "Give a card its own picture, or leave it blank.") %>
+  <style>
+    .card-thumbs [data-flat-pack--carousel-target='viewport'] {
+      aspect-ratio: auto !important;
+      height: auto !important;
+    }
+  </style>
+  <div class="mb-4">
+    <%= render FlatPack::Carousel::Component.new(
+      slides: @carousel_card_slides,
+      show_thumbs: true,
+      thumbs_position: :bottom,
+      thumbs_alignment: :start,
+      show_controls: true,
+      show_indicators: false,
+      show_captions: true,
+      caption_mode: :below,
+      items_per_view_desktop: 3,
+      items_per_view_tablet: 2,
+      items_per_view_mobile: 1,
+      class: "card-thumbs",
+      style: "--carousel-viewport-border-color: transparent; --carousel-viewport-background-color: transparent;",
+      aria_label: "Cards with picture thumbs"
+    ) %>
+  </div>
+  <p class="mb-3 text-sm text-(--surface-muted-content-color)">
+    Pass a picture with the card. The last card has none, so its thumb is the slide number. The row behind the cards is clear.
+  </p>
+  <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">Code Example</p>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Carousel::Component.new(
+        slides: [
+          {type: :html, html: quiet_desk_card, thumb_src: "/images/desk.jpg", caption: "Quiet desk"},
+          {type: :html, html: workshop_card, thumb: "/images/workshop.jpg", caption: "Workshop"},
+          {type: :html, html: plain_card, caption: "No picture"}
+        ],
+        show_thumbs: true,
+        items_per_view_desktop: 3,
+        items_per_view_tablet: 2,
+        items_per_view_mobile: 1,
+        style: "--carousel-viewport-background-color: transparent; --carousel-viewport-border-color: transparent;"
+      ) %&gt;
+    CODE
+  ) %>
+</section>
+
 <!-- Carousel with Thumbnails and Autoplay -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Carousel with Thumbnails and Autoplay", anchor_link: true, subtitle: "Examples for Carousel with Thumbnails and Autoplay.") %>

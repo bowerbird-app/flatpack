@@ -467,17 +467,38 @@ module FlatPack
       end
 
       def thumb_markup(slide, index)
-        thumb_src = slide[:thumb_src].presence || slide[:src]
+        source = thumb_image_source(slide)
+        return numbered_thumb(index) if source.blank?
 
-        if slide[:type] == :image && thumb_src.present?
-          tag.img(src: thumb_src, alt: "Thumbnail #{index + 1}", class: "h-full w-full object-cover", loading: "lazy", draggable: false)
-        elsif slide[:type] == :video && slide[:poster].present?
-          tag.img(src: slide[:poster], alt: "Video thumbnail #{index + 1}", class: "h-full w-full object-cover", loading: "lazy", draggable: false)
+        tag.img(
+          src: source,
+          alt: thumb_alt(slide, index),
+          class: "h-full w-full object-cover",
+          loading: "lazy",
+          draggable: false
+        )
+      end
+
+      def thumb_image_source(slide)
+        case slide[:type]
+        when :image
+          slide[:thumb_src].presence || slide[:src]
+        when :video
+          slide[:poster]
         else
-          content_tag(:span,
-            (index + 1).to_s,
-            class: "flex h-full w-full items-center justify-center bg-[var(--carousel-thumb-placeholder-background-color)] text-xs font-medium text-[var(--carousel-thumb-placeholder-text-color)]")
+          slide[:thumb_src]
         end
+      end
+
+      def thumb_alt(slide, index)
+        label = (slide[:type] == :video) ? "Video thumbnail" : "Thumbnail"
+        "#{label} #{index + 1}"
+      end
+
+      def numbered_thumb(index)
+        content_tag(:span,
+          (index + 1).to_s,
+          class: "flex h-full w-full items-center justify-center bg-[var(--carousel-thumb-placeholder-background-color)] text-xs font-medium text-[var(--carousel-thumb-placeholder-text-color)]")
       end
 
       def render_overlay_caption
@@ -578,7 +599,7 @@ module FlatPack
             type: :image,
             src: src,
             alt: payload[:alt].presence || "Slide #{index + 1}",
-            thumb_src: FlatPack::AttributeSanitizer.sanitize_url(payload[:thumb_src] || payload[:thumb]),
+            thumb_src: sanitize_thumb_src(payload),
             lightbox: normalize_lightbox(payload[:lightbox], default: true),
             caption: caption
           }
@@ -604,6 +625,7 @@ module FlatPack
           {
             type: :html,
             html: sanitize_html(raw_html),
+            thumb_src: sanitize_thumb_src(payload),
             lightbox: normalize_lightbox(payload[:lightbox], default: false),
             caption: caption
           }
@@ -620,6 +642,10 @@ module FlatPack
         return false if @variant == :logo_slider
 
         slide[:type] == :image && slide[:lightbox] && slide[:src].present?
+      end
+
+      def sanitize_thumb_src(payload)
+        FlatPack::AttributeSanitizer.sanitize_url(payload[:thumb_src] || payload[:thumb])
       end
 
       # Strip url() functions to prevent CSS-based URL injection.

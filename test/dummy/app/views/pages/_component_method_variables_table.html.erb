@@ -270,8 +270,8 @@
       slides_hash_options: [
         { key: "type", applies_to: "image, video, html", accepts: ":image, :video, :html", default: "inferred", example: "type: :image" },
         { key: "src", applies_to: "image, video", accepts: "String URL", default: "required", example: "src: \"https://...\"" },
-        { key: "thumb_src", applies_to: "image", accepts: "String URL", default: "nil", example: "thumb_src: \"https://...\"" },
-        { key: "thumb", applies_to: "image", accepts: "String URL", default: "nil", example: "thumb: \"https://...\"" },
+        { key: "thumb_src", applies_to: "image, html", accepts: "String URL", default: "nil", example: "thumb_src: \"https://...\"" },
+        { key: "thumb", applies_to: "image, html", accepts: "String URL", default: "nil", example: "thumb: \"https://...\"" },
         { key: "alt", applies_to: "image", accepts: "String", default: "\"Slide n\"", example: "alt: \"Preview\"" },
         { key: "caption", applies_to: "image, video, html", accepts: "String", default: "\"\"", example: "caption: \"Analytics dashboard concept\"" },
         { key: "lightbox", applies_to: "image, video, html", accepts: "true, false", default: "image: true, others: false", example: "lightbox: false" },

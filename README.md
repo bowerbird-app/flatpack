@@ -157,7 +157,7 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
 |---|---|---|---|
 | `type` | image, video, html | `:image`, `:video`, `:html` | inferred |
 | `src` | image, video | String URL | required |
-| `thumb_src` / `thumb` | image | String URL | `nil` |
+| `thumb_src` / `thumb` | image, html | String URL | `nil` |
 | `alt` | image | String | `"Slide n"` |
 | `caption` | image, video, html | String | `""` |
 | `lightbox` | image, video, html | `true`, `false` | image: `true`, others: `false` |

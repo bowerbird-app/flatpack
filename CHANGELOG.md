@@ -13,6 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.204] - 2026-10-08
+
+### Added
+- HTML carousel slides accept `thumb_src` or `thumb`. With `show_thumbs: true`, that URL is the thumbnail. A missing or rejected URL keeps the numbered placeholder.
+- Bumped the gem version to `0.1.204`.
+
+### Upgrade notes
+- No call-site changes are required. Image thumbs still prefer `thumb_src`, then `src`. Video thumbs still use `poster`.
+- An HTML slide that already passed `thumb` or `thumb_src` will now show that picture. Those keys were ignored before.
+- This is a Ruby render change. Reload the app so the new carousel code is loaded.
+
 ## [0.1.203] - 2026-10-07
 
 ### Changed
