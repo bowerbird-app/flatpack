@@ -41,7 +41,9 @@ module FlatPack
 
     initializer "flat_pack.copy_helper" do
       ActiveSupport.on_load(:action_controller) do
-        helper FlatPack::CopyHelper
+        # ActionController::API has no `helper`. Views still get CopyHelper
+        # from the action_view load hook.
+        helper FlatPack::CopyHelper if respond_to?(:helper)
       end
 
       ActiveSupport.on_load(:action_view) do
