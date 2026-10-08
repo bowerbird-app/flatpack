@@ -5,7 +5,8 @@ module FlatPack
     module Entity
       class Component < FlatPack::BaseComponent
         attr_reader :search_url, :search_param, :min_search_length, :create_url,
-          :create_label, :empty_text, :edit_url_template, :title, :description
+          :create_label, :empty_text, :edit_url_template, :edit_label, :change_label,
+          :title, :description
 
         def initialize(
           form:,
@@ -75,7 +76,10 @@ module FlatPack
         private
 
         def entity_attributes
-          merge_attributes(class: "flat-pack-collection-editor-entity")
+          merge_attributes(
+            class: "flat-pack-collection-editor-entity",
+            data: {results_id: @list_id}
+          )
         end
 
         def association_field
@@ -87,30 +91,41 @@ module FlatPack
         def render_summary
           content_tag(:div, class: "flat-pack-collection-editor-summary", data: {collection_editor_summary: "true"}, hidden: @title.blank?) do
             safe_join([
-              content_tag(:p, @title, class: "flat-pack-collection-editor-title", data: {collection_editor_title: "true"}),
-              (@description.present? ? content_tag(:p, @description, class: "flat-pack-collection-editor-description", data: {collection_editor_description: "true"}) : content_tag(:p, "", class: "flat-pack-collection-editor-description", data: {collection_editor_description: "true"}, hidden: true)),
-              render_edit_link,
-              render_change_button
-            ].compact)
+              render_chip,
+              content_tag(:p, @description.to_s, class: "flat-pack-collection-editor-description", data: {collection_editor_description: "true"}, hidden: true)
+            ])
           end
         end
 
-        def render_edit_link
-          return if @edit_url_template.blank?
-
-          link_to(
-            @edit_label,
-            edit_href || "#",
-            class: "flat-pack-collection-editor-edit",
-            data: {collection_editor_edit: "true"},
-            hidden: edit_href.blank?
-          )
+        def render_chip
+          render FlatPack::Chip::Component.new(
+            style: :info,
+            removable: true,
+            value: current_value
+          ) do |chip|
+            chip.remove_button { render_chip_remove }
+            content_tag(:span, @title, data: {collection_editor_title: "true"})
+          end
         end
 
-        def edit_href
-          return if @edit_url_template.blank? || current_value.blank?
+        def render_chip_remove
+          button_tag(
+            type: "button",
+            class: "ml-1 inline-flex items-center justify-center rounded-full fp-hit-target-inline hover:bg-[var(--chip-remove-hover-background-color)]",
+            aria: {label: chip_remove_label},
+            data: {
+              collection_editor_chip_remove: "true",
+              action: "click->flat-pack--collection-editor#remove"
+            }
+          ) do
+            content_tag(:svg, xmlns: "http://www.w3.org/2000/svg", class: "h-3 w-3", viewBox: "0 0 20 20", fill: "currentColor", aria: {hidden: "true"}) do
+              content_tag(:path, nil, "fill-rule": "evenodd", d: "M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z", "clip-rule": "evenodd")
+            end
+          end
+        end
 
-          @edit_url_template.gsub(":id", ERB::Util.url_encode(current_value.to_s))
+        def chip_remove_label
+          @title.present? ? "Remove #{@title}" : "Remove"
         end
 
         def current_value
@@ -122,25 +137,12 @@ module FlatPack
           object.public_send(@association_name).presence
         end
 
-        def render_change_button
-          button_tag(
-            type: "button",
-            class: "flat-pack-collection-editor-change",
-            data: {
-              collection_editor_change: "true",
-              action: "click->flat-pack--collection-editor#openPicker"
-            },
-            hidden: @title.blank?
-          ) { @change_label }
-        end
-
         def render_panel
           content_tag(:div, class: "flat-pack-collection-editor-panel", data: {collection_editor_panel: "true"}, hidden: !@open) do
             safe_join([
               render_search,
               content_tag(:p, @empty_text, class: "flat-pack-collection-editor-no-results", data: {collection_editor_no_results: "true"}, hidden: true),
               content_tag(:p, @search_error_text, class: "flat-pack-collection-editor-search-error", role: "alert", data: {collection_editor_search_error: "true"}, hidden: true),
-              render_create_button,
               render_create_fields,
               content_tag(:p, "", class: "flat-pack-collection-editor-create-error", role: "alert", data: {collection_editor_create_error: "true"}, hidden: true)
             ].compact)
@@ -172,21 +174,6 @@ module FlatPack
               ),
               content_tag(:div, "", id: @list_id, class: "flat-pack-collection-editor-results", role: "listbox", data: {collection_editor_results: "true"})
             ])
-          end
-        end
-
-        def render_create_button
-          return if @create_url.blank?
-
-          button_tag(
-            type: "button",
-            class: "flat-pack-collection-editor-create",
-            data: {
-              collection_editor_create_button: "true",
-              action: "click->flat-pack--collection-editor#promptCreate"
-            }
-          ) do
-            content_tag(:span, @create_label, data: {collection_editor_create_label: "true"})
           end
         end
 

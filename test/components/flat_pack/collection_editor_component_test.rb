@@ -47,10 +47,13 @@ module FlatPack
         assert_no_selector "section.flat-pack-collection-editor > .flat-pack-collection-editor-add"
         assert_selector ".flat-pack-collection-editor-header", text: "Person"
         assert_selector ".flat-pack-collection-editor-header", text: "Role"
-        assert_selector ".flat-pack-collection-editor-title", text: "Alice Chen"
-        assert_selector ".flat-pack-collection-editor-description", text: "alice@example.com"
-        assert_selector "a", text: "Edit person"
-        assert_selector "a[href='/people/4/edit']"
+        assert_selector "[data-collection-editor-title]", text: "Alice Chen"
+        assert_selector ".flat-pack-collection-editor-summary [data-controller='flat-pack--chip']", text: "Alice Chen"
+        assert_includes rendered_content, "bg-[var(--color-secondary)]"
+        assert_selector "[data-collection-editor-chip-remove][aria-label='Remove Alice Chen']"
+        assert_no_selector ".flat-pack-collection-editor-edit"
+        assert_no_selector ".flat-pack-collection-editor-change"
+        assert_no_selector ".flat-pack-collection-editor-description", text: "alice@example.com"
         assert_selector "input[name='project[project_people_attributes][12][person_id]'][value='4']", visible: :all
         assert_selector "input[name='project[project_people_attributes][12][id]'][value='12']", visible: :all
         assert_selector "input[name='project[project_people_attributes][12][_destroy]'][value='0']", visible: :all

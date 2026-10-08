@@ -13,9 +13,10 @@
   ) %>
   <p class="text-sm text-[var(--surface-muted-content-color)]">
     Search selects a saved person and stores <code>person_id</code> on the join.
+    The selected name is an info chip.
+    The chip remove control drops the relationship and leaves the person in place.
     Role edits only this relationship.
-    Edit person opens the person form.
-    Remove drops the relationship and leaves the person in place.
+    A search with no matches offers <code>+ New</code> in the menu.
     Drag a saved row to send <code>moving_recording_id</code> and <code>target_position</code>.
     That position counts saved rows only.
     The demo saves that move with <code>Ordering::ReorderService</code>.
@@ -110,8 +111,7 @@
               <button type="button" class="flat-pack-collection-editor-handle" aria-label="Reorder Alice Chen">Drag</button>
               <div class="flat-pack-collection-editor-entity">
                 <div class="flat-pack-collection-editor-summary">
-                  <p class="flat-pack-collection-editor-title">Alice Chen</p>
-                  <p class="flat-pack-collection-editor-description">alice@example.com</p>
+                  <span class="inline-flex items-center gap-1.5 rounded-[var(--chip-border-radius)] border bg-[var(--color-secondary)] px-[var(--chip-padding-x-md)] py-[var(--button-padding-y-md)] text-sm font-medium text-[var(--color-secondary-text)]">Alice Chen</span>
                 </div>
               </div>
               <div class="flat-pack-collection-editor-fields">

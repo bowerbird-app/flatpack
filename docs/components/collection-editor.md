@@ -47,21 +47,21 @@ Each cell edits one value. The row is not a calculated spreadsheet. Do not use i
 | `form` | FormBuilder | none | yes | Same nested builder as the row. |
 | `association_name` | Symbol/String | none | yes | Hidden field that receives the selected record id. |
 | `title` | String | `nil` | no | Primary text for the selected record, such as the person name. |
-| `description` | String | `nil` | no | Secondary text, such as the email. |
+| `description` | String | `nil` | no | Secondary text, such as the email. Search results can show it. The selected record does not. |
 | `value` | String | `nil` | no | Selected id. Omit it to use the form object. |
 | `label` | String | `"Record"` | no | Accessible name for the search field. The placeholder stays visible text. |
 | `search_url` | String | `nil` | no | GET endpoint. Response shape matches Select remote search, with an optional description. |
 | `search_param` | String | `"q"` | no | Query parameter name. |
 | `min_search_length` | Integer | `1` | no | Characters required before results are shown. |
 | `create_url` | String | `nil` | no | POST endpoint for a new record. Omit it to hide create. |
-| `create_label` | String | `"Create"` | no | Create button text. |
+| `create_label` | String | `"Create"` | no | Submit label on the create fields. The menu item that opens those fields reads "+ New". |
 | `search_placeholder` | String | `"Search"` | no | Search field placeholder. |
 | `empty_text` | String | `"No matches"` | no | Copy when a query has no results. |
 | `search_error_text` | String | `"Search failed"` | no | Copy when the search request fails. |
 | `items` | Array | `nil` | no | Local results used when `search_url` is omitted. Each item is `{ id:, title:, description: }`. `value` and `label` are also accepted. |
-| `edit_url_template` | String | `nil` | no | Separate edit URL. `:id` is replaced with the selected record id. |
-| `edit_label` | String | `"Edit"` | no | Text for the edit link. |
-| `change_label` | String | `"Change"` | no | Text for the control that reopens search. |
+| `edit_url_template` | String | `nil` | no | Accepted and not rendered. Put a record edit link in a row action when the host still needs one. |
+| `edit_label` | String | `"Edit"` | no | Accepted and not rendered. |
+| `change_label` | String | `"Change"` | no | Accepted and not rendered. The chip remove control drops the row. |
 | `error` | String | `nil` | no | Association error under the summary. |
 | `open` | Boolean | `false` | no | Starts with the picker open. A row with no title also starts open. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for the entity cell. |
@@ -103,9 +103,7 @@ Each cell edits one value. The row is not a calculated spreadsheet. Do not use i
             description: membership.person.email,
             search_url: search_people_path,
             create_url: people_path,
-            search_placeholder: "Search people",
-            edit_url_template: "/people/:id/edit",
-            edit_label: "Edit person"
+            search_placeholder: "Search people"
           ) do %>
             <%= render FlatPack::TextInput::Component.new(name: "name", label: "Name", form: "collection-editor-unattached", data: { create_field: "name", fill_from_query: "true" }) %>
             <%= render FlatPack::EmailInput::Component.new(name: "email", label: "Email", form: "collection-editor-unattached", data: { create_field: "email" }) %>
@@ -132,9 +130,7 @@ Each cell edits one value. The row is not a calculated spreadsheet. Do not use i
             association_name: :person_id,
             search_url: search_people_path,
             create_url: people_path,
-            search_placeholder: "Search people",
-            edit_url_template: "/people/:id/edit",
-            edit_label: "Edit person"
+            search_placeholder: "Search people"
           ) do %>
             <%= render FlatPack::TextInput::Component.new(name: "name", label: "Name", form: "collection-editor-unattached", data: { create_field: "name", fill_from_query: "true" }) %>
             <%= render FlatPack::EmailInput::Component.new(name: "email", label: "Email", form: "collection-editor-unattached", data: { create_field: "email" }) %>
@@ -158,11 +154,11 @@ The heading sits outside the bordered list. The list, the column headers, the em
 
 The template repeats the entity picker and the role field. The add button clones it and replaces `NEW_RECORD` inside `name`, `id`, `for`, `data-id`, and the aria attributes that point at those ids. Text in the row is left as written. Rails 8 strong parameters keep nested attribute keys that are integers, so the index is numeric rather than a prefixed token. Rails accepts that index in `project_people_attributes`.
 
-Selecting a person writes `person_id`. It does not turn the name or email into editable join fields. `Edit person` goes to the person form. Saving that form changes the shared person. Role stays on `ProjectPerson`.
+Selecting a person writes `person_id` and shows the name as an info chip. The email stays off the chip. The chip remove control drops the row. A saved row sets `_destroy`. An unsaved row leaves the document. The person record stays. Role stays on `ProjectPerson` until that row is removed.
 
 Remove hides a saved row and submits `_destroy=1`. The person record stays. An unsaved row is dropped from the document and is not submitted.
 
-Search `GET search_url?q=` returns `{ "items": [{ "id": "4", "title": "Alice Chen", "description": "alice@example.com" }] }`. `value` and `label` are accepted too. Enter selects the highlighted result, or the only result. Several results stay on screen and do not create a record. No results offers create. A failed request shows `search_error_text` and leaves the join id empty. Create `POST create_url` with the `data-create-field` inputs and the query. A second submit while that request is in flight is ignored. Success is `{ "ok": true, "item": { "id", "title", "description" } }`. Failure is `{ "ok": false, "errors": ["Email can't be blank"] }` with status 422. The picker stays open and the join row does not receive an id.
+Search `GET search_url?q=` returns `{ "items": [{ "id": "4", "title": "Alice Chen", "description": "alice@example.com" }] }`. `value` and `label` are accepted too. Enter selects the highlighted result, or the only result. Several results stay in the menu and do not create a record. No results shows "+ New" at the bottom of the menu. A failed request shows `search_error_text` and leaves the join id empty. Create `POST create_url` with the `data-create-field` inputs and the query. A second submit while that request is in flight is ignored. Success is `{ "ok": true, "item": { "id", "title", "description" } }`. Failure is `{ "ok": false, "errors": ["Email can't be blank"] }` with status 422. The picker stays open and the join row does not receive an id.
 
 Reorder uses the existing List orderable request. FlatPack does not add a position column. A persisted row sends `moving_recording_id` and `target_position` when those parameter names are set. That position counts saved rows only, so an unsaved row on screen does not shift the saved destination. `list:reordered` still reports the visual position. The host persists the saved move with Recording Studio Orderable, or with whatever ordering API already owns the collection. The dummy app translates this payload through `Ordering::ReorderService`. An unsaved row is marked `data-orderable-unsaved="true"`, so its own move stays in the form and no request is sent. Submit the parent form in DOM order and assign order on the host when the join records are created.
 
@@ -172,7 +168,7 @@ The dummy reorder route also has the project id in the path. The row id therefor
 
 Rendered field errors stay on the FlatPack input passed in the field slot. The row also takes the `is-invalid` class when the join object has errors, and the entity `error` argument prints the association message. A failed parent save re-renders the nested attributes, including rows added in the browser, as long as the controller assigns the invalid parent back to the form.
 
-Desktop rows are a grid. `--collection-editor-border-color` draws the lines. The handle, the person, each relationship field, and remove are separate cells. Pass `chrome: :cell` on Text input, Select, Search input, and the other controls that share that box. The control drops its border, radius, and background. Select keeps `flat-pack-select-wrapper` and also uses `flat-pack-input-wrapper`, so the control fills the cell. A single-line cell keeps horizontal `--form-control-padding` and drops the vertical field padding, so the row is the 44px remove control and the value lines up with the trash icon. A person cell with a title and description is taller. The role and the remove control stay centered in that row. An error under the value makes that row taller. Focus and an invalid value draw an inset ring on the cell. The person search uses that same cell treatment. Name and email inside Create stay bordered. Below 40rem the person, each field, and the actions stack. Column headers hide. Field labels show again. The page does not scroll sideways.
+Desktop rows are a grid. `--collection-editor-border-color` draws the lines. The handle, the person, each relationship field, and remove are separate cells. The selected record is a removable info chip. Search results open in a menu under the field, using the popover surface, border, radius, and shadow. A query with no matches shows "+ New" at the bottom of that menu when `create_url` is set. "+ New" opens the create fields in the cell. Pass `chrome: :cell` on Text input, Select, Search input, and the other controls that share that box. The control drops its border, radius, and background. Select keeps `flat-pack-select-wrapper` and also uses `flat-pack-input-wrapper`, so the control fills the cell. A single-line cell keeps horizontal `--form-control-padding` and drops the vertical field padding, so the row is the 44px remove control and the value lines up with the trash icon. The person chip sits in that same row. The role and the remove control stay centered. An error under the value makes that row taller. Focus and an invalid value draw an inset ring on the cell. The person search uses that same cell treatment. Name and email inside Create stay bordered. Below 40rem the person, each field, and the actions stack. Column headers hide. Field labels show again. The page does not scroll sideways.
 
 A row can skip the entity and hold only fields. The dummy Text fields section does that with three single-line text inputs, each passed `chrome: :cell`. There is no person picker and no dropdown. Those rows are unsaved, so a drag stays on the page.
 

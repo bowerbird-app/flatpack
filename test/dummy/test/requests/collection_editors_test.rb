@@ -25,7 +25,11 @@ class CollectionEditorsTest < ActionDispatch::IntegrationTest
     assert_match(/class="[^"]*\bflat-pack-input-wrapper\b[^"]*\bflat-pack-select-wrapper\b/, response.body)
     assert_match(/name="name"[^>]*border-\[var\(--surface-border-color\)\]|border-\[var\(--surface-border-color\)\][^>]*name="name"/, response.body)
     assert_includes response.body, "No collaborators yet"
-    assert_includes response.body, "Edit person"
+    assert_includes response.body, "bg-[var(--color-secondary)]"
+    assert_includes response.body, "data-collection-editor-chip-remove"
+    refute_includes response.body, "flat-pack-collection-editor-edit"
+    refute_includes response.body, "flat-pack-collection-editor-change"
+    refute_includes response.body, "flat-pack-collection-editor-create\""
     assert_includes response.body, "Reorder Alice Chen"
     assert_includes response.body, "Remove Alice Chen"
     assert_includes response.body, "demo_project[project_people_attributes]"

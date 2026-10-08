@@ -307,8 +307,8 @@ test("local search selects a person and keeps the role field independent", async
   assert.equal(row.querySelector("[data-collection-editor-association]").value, "4")
   assert.equal(row.querySelector("[data-collection-editor-title]").textContent, "Alice Chen")
   assert.equal(row.querySelector("[data-collection-editor-description]").textContent, "alice@example.com")
+  assert.equal(row.querySelector("[data-collection-editor-description]").hidden, true)
   assert.equal(row.querySelector("[data-collection-editor-panel]").hidden, true)
-  assert.equal(row.querySelector("[data-collection-editor-edit]").href, "/people/4/edit")
   assert.equal(row.querySelector("[data-collection-editor-remove]").attrs["aria-label"], "Remove Alice Chen")
 })
 
@@ -405,6 +405,9 @@ test("enter with no matches opens create", async () => {
   controller.listTarget.append(row)
 
   await controller.runSearch(row, "morgan")
+  assert.equal(row.querySelector("[data-collection-editor-results] [role='option']").textContent, "+ New")
+  assert.equal(row.querySelectorAll("[data-collection-editor-results] [role='option']").length, 1)
+
   controller.searchKeydown({
     key: "Enter",
     preventDefault() {},

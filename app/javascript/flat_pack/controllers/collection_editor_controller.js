@@ -9,14 +9,20 @@ export default class extends Controller {
   connect() {
     this.onDocumentClick = this.closeOnOutside.bind(this)
     this.onReordered = this.announceReorder.bind(this)
+    this.onPosition = () => this.repositionOpenResults()
     document.addEventListener("click", this.onDocumentClick)
+    document.addEventListener("scroll", this.onPosition, true)
+    window.addEventListener("resize", this.onPosition)
     this.element.addEventListener("list:reordered", this.onReordered)
     this.refreshEmpty()
   }
 
   disconnect() {
     document.removeEventListener("click", this.onDocumentClick)
+    document.removeEventListener("scroll", this.onPosition, true)
+    window.removeEventListener("resize", this.onPosition)
     this.element.removeEventListener("list:reordered", this.onReordered)
+    this.element.querySelectorAll("[data-collection-editor-row]").forEach((row) => this.restoreResults(row))
   }
 
   add(event) {
@@ -71,7 +77,6 @@ export default class extends Controller {
     if (!row) return
 
     const query = event.currentTarget.value || ""
-    this.updateCreateLabel(row, query)
     window.clearTimeout(row._searchTimer)
     row._searchTimer = window.setTimeout(() => this.runSearch(row, query), 250)
   }
@@ -95,11 +100,11 @@ export default class extends Controller {
       event.preventDefault()
       const active = options[row._activeIndex]
       if (active) {
-        this.applySelection(row, active.dataset)
+        this.chooseOption(row, active, event)
         return
       }
       if (options.length === 1) {
-        this.applySelection(row, options[0].dataset)
+        this.chooseOption(row, options[0], event)
         return
       }
       if (options.length === 0 && this.searchMissed(row)) this.promptCreate(event)
@@ -126,6 +131,7 @@ export default class extends Controller {
     fields.hidden = false
     const prompt = row.querySelector("[data-collection-editor-create-button]")
     if (prompt) prompt.hidden = true
+    this.hideResults(row)
     fields.querySelectorAll("[data-fill-from-query]").forEach((input) => {
       if (!input.value) input.value = query
     })
@@ -191,7 +197,7 @@ export default class extends Controller {
       const matches = this.localItems(row).filter((item) => {
         return `${item.title} ${item.description}`.toLowerCase().includes(needle)
       })
-      this.renderResults(row, matches)
+      this.renderResults(row, matches, {query})
       this.toggleNoResults(row, matches.length === 0)
       this.toggleSearchError(row, false)
       return
@@ -211,7 +217,7 @@ export default class extends Controller {
       })
       const payload = await response.json()
       const items = this.normalizeItems(payload)
-      this.renderResults(row, items)
+      this.renderResults(row, items, {query})
       this.toggleNoResults(row, items.length === 0)
       this.toggleSearchError(row, false)
     } catch (error) {
@@ -222,14 +228,22 @@ export default class extends Controller {
     }
   }
 
-  renderResults(row, items) {
-    const list = row.querySelector("[data-collection-editor-results]")
+  renderResults(row, items, {query} = {}) {
+    const list = this.resultsList(row)
     if (!list) return
 
     list.replaceChildren()
     row._activeIndex = -1
     row.querySelector("[data-collection-editor-search]")?.removeAttribute("aria-activedescendant")
     items.forEach((item) => list.append(this.optionElement(row, item)))
+    if (items.length === 0 && this.queryReady(row, query)) {
+      const empty = document.createElement("p")
+      empty.className = "flat-pack-collection-editor-menu-empty"
+      empty.textContent = row.dataset.emptyText || "No matches"
+      list.append(empty)
+      if (row.dataset.createUrl) list.append(this.createOption(row))
+    }
+    this.placeResults(row)
   }
 
   optionElement(row, item) {
@@ -264,6 +278,31 @@ export default class extends Controller {
     return option
   }
 
+  createOption(row) {
+    const option = document.createElement("button")
+    option.type = "button"
+    option.className = "flat-pack-collection-editor-create-option"
+    option.setAttribute("role", "option")
+    option.dataset.createOption = "true"
+    option.textContent = "+ New"
+    const list = this.resultsList(row)
+    row._optionSerial = (row._optionSerial || 0) + 1
+    option.id = `${list?.id || "collection-editor-option"}-${row._optionSerial}`
+    option.addEventListener("click", (event) => {
+      event.preventDefault()
+      this.promptCreate(event)
+    })
+    return option
+  }
+
+  chooseOption(row, option, event) {
+    if (option.dataset.createOption === "true") {
+      this.promptCreate(event)
+      return
+    }
+    this.applySelection(row, option.dataset)
+  }
+
   applySelection(row, item) {
     const id = item.id || item.value || ""
     const title = item.title || item.label || ""
@@ -280,27 +319,21 @@ export default class extends Controller {
     const descriptionNode = row.querySelector("[data-collection-editor-description]")
     if (descriptionNode) {
       descriptionNode.textContent = description
-      descriptionNode.hidden = description.length === 0
+      descriptionNode.hidden = true
     }
-
-    const edit = row.querySelector("[data-collection-editor-edit]")
-    if (edit && row.dataset.editUrlTemplate && id) {
-      edit.href = row.dataset.editUrlTemplate.replace(":id", encodeURIComponent(id))
-      edit.hidden = false
-    }
-
-    const change = row.querySelector("[data-collection-editor-change]")
-    if (change) change.hidden = false
 
     const remove = row.querySelector("[data-collection-editor-remove]")
     if (remove && title) remove.setAttribute("aria-label", `Remove ${title}`)
+
+    const chipRemove = row.querySelector("[data-collection-editor-chip-remove]")
+    if (chipRemove && title) chipRemove.setAttribute("aria-label", `Remove ${title}`)
 
     const handle = row.querySelector("[data-collection-editor-handle]")
     if (handle && title) handle.setAttribute("aria-label", `Reorder ${title}`)
 
     this.clearCreateError(row)
     this.closePanel(row, {force: true})
-    change?.focus()
+    chipRemove?.focus()
 
     row.dispatchEvent(new CustomEvent("collection-editor:selected", {
       bubbles: true,
@@ -311,7 +344,7 @@ export default class extends Controller {
   showPanel(row) {
     const panel = row.querySelector("[data-collection-editor-panel]")
     if (panel) panel.hidden = false
-    row.querySelector("[data-collection-editor-search]")?.setAttribute("aria-expanded", "true")
+    this.placeResults(row)
   }
 
   closePanel(row, {force = false} = {}) {
@@ -320,14 +353,16 @@ export default class extends Controller {
 
     const panel = row.querySelector("[data-collection-editor-panel]")
     if (panel) panel.hidden = true
-    row.querySelector("[data-collection-editor-search]")?.setAttribute("aria-expanded", "false")
+    this.hideResults(row)
   }
 
   closeOnOutside(event) {
     this.element.querySelectorAll("[data-collection-editor-panel]").forEach((panel) => {
       if (panel.hidden) return
       const row = panel.closest("[data-collection-editor-row]")
-      if (row && !row.contains(event.target)) this.closePanel(row)
+      const list = row ? this.resultsList(row) : null
+      if (row?.contains(event.target) || list?.contains(event.target)) return
+      if (row) this.closePanel(row)
     })
   }
 
@@ -336,14 +371,6 @@ export default class extends Controller {
 
     const visible = this.element.querySelectorAll("[data-collection-editor-row]:not([hidden])")
     this.emptyTarget.hidden = visible.length > 0
-  }
-
-  updateCreateLabel(row, query) {
-    const label = row.querySelector("[data-collection-editor-create-label]")
-    if (!label) return
-
-    const fallback = row.dataset.createLabel || "Create"
-    label.textContent = query.trim() ? `Create "${query.trim()}"` : fallback
   }
 
   toggleNoResults(row, show) {
@@ -407,7 +434,97 @@ export default class extends Controller {
   }
 
   options(row) {
-    return Array.from(row.querySelectorAll("[data-collection-editor-results] [role='option']"))
+    const list = this.resultsList(row)
+    if (!list) return []
+
+    return Array.from(list.querySelectorAll("[role='option']"))
+  }
+
+  resultsList(row) {
+    if (row._resultsList) return row._resultsList
+
+    row._resultsList = row.querySelector("[data-collection-editor-results]")
+    return row._resultsList
+  }
+
+  queryReady(row, query) {
+    const typed = query ?? row.querySelector("[data-collection-editor-search]")?.value ?? ""
+    const minimum = Number(row.dataset.minSearchLength || "1")
+    return typed.trim().length >= minimum
+  }
+
+  placeResults(row) {
+    const list = this.resultsList(row)
+    const input = row.querySelector("[data-collection-editor-search]")
+    const panel = row.querySelector("[data-collection-editor-panel]")
+    if (!list || !input) return
+
+    const count = list.childElementCount ?? list.children?.length ?? 0
+    if (count === 0 || panel?.hidden) {
+      list.classList?.remove("is-open")
+      this.restoreResults(row)
+      if (panel?.hidden) input.setAttribute("aria-expanded", "false")
+      return
+    }
+
+    if (document.body && list.parentElement !== document.body) {
+      row._resultsHome = list.parentElement
+      document.body.appendChild(list)
+    }
+
+    const rect = input.getBoundingClientRect()
+    const width = Math.max(rect.width, 192)
+    list.classList.add("is-open")
+    list.style.width = `${width}px`
+    list.style.left = `${rect.left}px`
+    list.style.top = `${rect.bottom + 4}px`
+    const menuRect = list.getBoundingClientRect()
+    if (menuRect.bottom > window.innerHeight - 8) {
+      list.style.top = `${Math.max(8, rect.top - menuRect.height - 4)}px`
+    }
+    input.setAttribute("aria-expanded", "true")
+  }
+
+  hideResults(row) {
+    const list = this.resultsList(row)
+    if (list) {
+      list.replaceChildren()
+      list.classList?.remove("is-open")
+      if (list.style) {
+        list.style.top = ""
+        list.style.left = ""
+        list.style.width = ""
+      }
+    }
+    this.restoreResults(row)
+    row.querySelector("[data-collection-editor-search]")?.setAttribute("aria-expanded", "false")
+  }
+
+  restoreResults(row) {
+    const list = row._resultsList
+    if (!list || !row._resultsHome || list.parentElement === row._resultsHome) return
+
+    row._resultsHome.appendChild(list)
+  }
+
+  repositionOpenResults() {
+    this.element.querySelectorAll("[data-collection-editor-row]").forEach((row) => {
+      const list = row._resultsList
+      if (!list?.classList.contains("is-open")) return
+      this.placeResults(row)
+    })
+  }
+
+  rowFrom(event) {
+    const target = event.target?.closest ? event.target : event.currentTarget
+    const row = target?.closest?.("[data-collection-editor-row]")
+    if (row) return row
+
+    const list = target?.closest?.("[data-collection-editor-results]")
+    if (!list?.id || !this.element) return null
+
+    const entity = this.element.querySelector(`[data-results-id="${list.id}"]`)
+    return entity?.closest?.("[data-collection-editor-row]") || null
   }
 
   setActive(row, index) {
@@ -464,11 +581,6 @@ export default class extends Controller {
     const time = Date.now().toString()
     const salt = Math.floor(Math.random() * 1000).toString().padStart(3, "0")
     return `${time}${salt}`
-  }
-
-  rowFrom(event) {
-    const target = event.target?.closest ? event.target : event.currentTarget
-    return target?.closest?.("[data-collection-editor-row]") || null
   }
 
   get csrfToken() {

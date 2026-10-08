@@ -771,9 +771,9 @@
         { variable: "empty_text", accepts: "String", example: "empty_text: \"No matches\"" },
         { variable: "search_error_text", accepts: "String", example: "search_error_text: \"Search failed\"" },
         { variable: "items", accepts: "Array or nil", example: "items: [{ id: 4, title: \"Alice Chen\", description: \"alice@example.com\" }]" },
-        { variable: "edit_url_template", accepts: "String or nil", example: "edit_url_template: \"/people/:id/edit\"" },
-        { variable: "edit_label", accepts: "String", example: "edit_label: \"Edit person\"" },
-        { variable: "change_label", accepts: "String", example: "change_label: \"Change\"" },
+        { variable: "edit_url_template", accepts: "String or nil. Accepted and not rendered.", example: "edit_url_template: \"/people/:id/edit\"" },
+        { variable: "edit_label", accepts: "String. Accepted and not rendered.", example: "edit_label: \"Edit\"" },
+        { variable: "change_label", accepts: "String. Accepted and not rendered.", example: "change_label: \"Change\"" },
         { variable: "error", accepts: "String or nil", example: "error: \"Person must exist\"" },
         { variable: "open", accepts: "true, false", example: "open: true" }
       ]
