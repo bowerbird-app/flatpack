@@ -125,7 +125,7 @@ module FlatPack
             action: "click->flat-pack--text-area#copyFromButton",
             flat_pack__text_area_target: "copyButton"
           },
-          aria: {label: "Copy textarea value"}
+          aria: {label: fp_t("text.copy_textarea")}
         ) do
           render FlatPack::Shared::IconComponent.new(name: "clipboard-document", size: :sm)
         end
@@ -171,7 +171,7 @@ module FlatPack
           class: "flat-pack-richtext-toolbar",
           role: "toolbar",
           data: {flat_pack__tiptap_target: "toolbar"},
-          aria: {label: "Formatting toolbar"}
+          aria: {label: fp_t("text.formatting_toolbar")}
         )
       end
 
@@ -216,7 +216,7 @@ module FlatPack
 
         content_tag(
           :p,
-          "0 characters",
+          fp_t("text.characters", count: 0),
           id: character_count_id,
           class: character_count_classes,
           data: {flat_pack__tiptap_target: "characterCount"}
@@ -378,9 +378,9 @@ module FlatPack
         count = (@value || "").to_s.length
 
         if @max_characters
-          "#{count}/#{@max_characters} characters"
+          fp_t("text.characters_with_limit", count: count, limit: @max_characters)
         else
-          "#{count} characters"
+          fp_t("text.characters", count: count)
         end
       end
 

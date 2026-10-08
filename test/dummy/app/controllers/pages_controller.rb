@@ -2403,7 +2403,7 @@ class PagesController < ApplicationController
   end
 
   def page_cache_key
-    "dummy/full-page/#{request.path}:#{page_cache_version}"
+    "dummy/full-page/#{request.path}:#{I18n.locale}:#{page_cache_version}"
   end
 
   def page_cache_version

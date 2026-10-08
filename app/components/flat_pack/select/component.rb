@@ -16,7 +16,7 @@ module FlatPack
         options:,
         value: nil,
         label: nil,
-        placeholder: "Select an option",
+        placeholder: FlatPack::Copy::OMITTED,
         disabled: false,
         required: false,
         searchable: false,
@@ -38,7 +38,7 @@ module FlatPack
         @options = normalize_options(options)
         @value = value
         @label = label
-        @placeholder = placeholder
+        @placeholder = fp_text(placeholder, "select.placeholder")
         @disabled = disabled
         @required = required
         @searchable = searchable
@@ -204,7 +204,7 @@ module FlatPack
             class: "inline-flex items-center justify-center cursor-pointer rounded-full",
             role: "button",
             tabindex: "0",
-            aria: {label: "Remove #{option[:label]}"},
+            aria: {label: fp_t("select.remove", label: option[:label])},
             data: {
               action: "click->flat-pack--select#removeChip keydown->flat-pack--select#removeChipKeydown",
               value: option[:value]
@@ -243,7 +243,7 @@ module FlatPack
           tag.input(
             type: "text",
             class: search_input_classes,
-            placeholder: "Search...",
+            placeholder: fp_t("select.search"),
             data: {
               action: "input->flat-pack--select#search",
               flat_pack__select_target: "searchInput"
@@ -274,9 +274,9 @@ module FlatPack
           class: "hidden px-3 py-2 text-sm text-[var(--surface-muted-content-color)]",
           data: {flat_pack__select_target: "searchStatus"}) do
           safe_join([
-            content_tag(:p, "Type at least #{@min_search_length} characters to search", class: "hidden", data: {flat_pack__select_target: "searchHint"}),
-            content_tag(:p, "Searching...", class: "hidden", data: {flat_pack__select_target: "loadingState"}),
-            content_tag(:p, "No options found", class: "hidden", data: {flat_pack__select_target: "emptyState"})
+            content_tag(:p, fp_t("select.type_to_search", count: @min_search_length), class: "hidden", data: {flat_pack__select_target: "searchHint"}),
+            content_tag(:p, fp_t("select.searching"), class: "hidden", data: {flat_pack__select_target: "loadingState"}),
+            content_tag(:p, fp_t("select.empty"), class: "hidden", data: {flat_pack__select_target: "emptyState"})
           ])
         end
       end

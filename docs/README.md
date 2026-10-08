@@ -21,6 +21,7 @@ bin/rake flat_pack:verify_install
 - [Installation Guide](installation.md)
 - [DigitalOcean Deployment for the Dummy App](deployment_digitalocean.md)
 - [Recording Studio on the Dummy App](recording_studio_dummy.md)
+- [Kit copy and host languages](i18n.md)
 - [AI Entry Point](ai/README.md)
 - [AI Install Contract](ai/install_contract.json)
 - [Quick Start](#quick-start)

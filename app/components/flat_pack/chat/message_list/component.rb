@@ -12,7 +12,7 @@ module FlatPack
           history_cursor_selector: "[data-pagination-cursor]",
           history_cursor_param: "before_id",
           history_limit_param: "limit",
-          history_loading_text: "Loading older messages...",
+          history_loading_text: FlatPack::Copy::OMITTED,
           **system_arguments
         )
           super(**system_arguments)
@@ -23,7 +23,7 @@ module FlatPack
           @history_cursor_selector = history_cursor_selector
           @history_cursor_param = history_cursor_param
           @history_limit_param = history_limit_param
-          @history_loading_text = history_loading_text
+          @history_loading_text = fp_text(history_loading_text, "chat.loading_older")
         end
 
         def call
@@ -81,7 +81,7 @@ module FlatPack
                     d: "M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z",
                     "clip-rule": "evenodd")
                 end,
-                content_tag(:span, "Jump to latest")
+                content_tag(:span, fp_t("chat.jump_to_latest"))
               ])
             end
           end
@@ -146,7 +146,7 @@ module FlatPack
             data: {
               action: "click->flat-pack--chat-scroll#jump"
             },
-            "aria-label": "Jump to latest message"
+            "aria-label": fp_t("chat.jump_to_latest_message")
           }
         end
 

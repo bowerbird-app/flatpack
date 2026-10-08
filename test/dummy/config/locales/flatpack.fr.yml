@@ -1,0 +1,371 @@
+fr:
+  flatpack:
+    common:
+      close: Fermer
+      dismiss: Ignorer
+      remove: Retirer
+      cancel: Annuler
+      apply: Appliquer
+      loading: Chargement
+      search: Rechercher
+      previous: Préc.
+      next: Suiv.
+      back: Retour
+      edit: Modifier
+      save: Enregistrer
+      delete: Supprimer
+      reset: Réinitialiser
+    alert:
+      dismiss: Ignorer
+    avatar:
+      alt: Avatar
+    badge:
+      remove: Retirer
+    bottom_nav:
+      label: Navigation du bas
+    breadcrumb:
+      label: Fil d’Ariane
+      back: Retour
+      home: Accueil
+    button:
+      loading: Chargement
+    carousel:
+      label: Carrousel
+      slide: Diapositive %{current} sur %{total}
+      previous: Diapositive précédente
+      next: Diapositive suivante
+      expand_image: Agrandir l’image
+      lightbox: Visionneuse d’image
+      close_lightbox: Fermer la visionneuse
+      go_to_slide: Aller à la diapositive %{number}
+      show_slide: Afficher la diapositive %{number}
+      thumbnail: Vignette %{number}
+      video_thumbnail: Vignette vidéo %{number}
+      slide_fallback: Diapositive %{number}
+    chart:
+      region: Région
+      value: Valeur
+      all: Tous
+      date_range: Période
+      status: Statut
+    chart_buttons:
+      apply: Appliquer
+    chip:
+      remove: Retirer
+    code_block:
+      snippets: Extraits de code
+      snippet: Extrait
+      examples: Exemples de code
+      example: Exemple de code
+    color_swatch:
+      fallback: Couleur
+    combobox:
+      placeholder: Rechercher
+      empty: Aucun résultat
+    command_palette:
+      placeholder: Rechercher des commandes
+      empty: Aucune commande correspondante
+      group: Commandes
+      label: Palette de commandes
+    comments:
+      placeholder: Écrire un commentaire...
+      submit: Commenter
+      cancel: Annuler
+      you: Vous
+      title: Commentaires
+      empty_title: Aucun commentaire pour l’instant
+      empty_description: Soyez le premier à partager votre avis.
+      locked: Verrouillé
+      show_replies: Afficher les réponses
+      system: Système
+      edited: ' (modifié)'
+      deleted: Ce commentaire a été supprimé.
+    content_editor:
+      edit: Modifier
+      save: Enregistrer
+      cancel: Annuler
+      bold: Gras
+      italic: Italique
+      underline: Souligné
+      strikethrough: Barré
+      clear_formatting: Effacer la mise en forme
+      heading_1: Titre 1
+      heading_2: Titre 2
+      heading_3: Titre 3
+      bullet_list: Liste à puces
+      ordered_list: Liste numérotée
+      blockquote: Citation
+      insert_link: Insérer / modifier un lien
+      insert_image: Insérer une image
+      image_upload_failed: Échec du téléversement de l’image.
+      edit_url: 'Modifier l’URL (laisser vide pour retirer) :'
+      enter_url: 'Saisir l’URL :'
+      save_failed: Échec de l’enregistrement. Réessayez.
+    date:
+      select: Choisir une date
+      select_range: Choisir une période
+      range: Période
+      quick_select: Sélection rapide
+      previous: Préc.
+      next: Suiv.
+      cancel: Annuler
+      apply: Appliquer
+      back_to_range: Retour à la période
+      pick_in_calendar: Choisir dans le calendrier
+      today: Aujourd’hui
+      yesterday: Hier
+      last_3_days: 3 derniers jours
+      this_week: Cette semaine
+      last_week: La semaine dernière
+      last_4_weeks: 4 dernières semaines
+      this_month: Ce mois-ci
+      last_month: Le mois dernier
+      this_year: Cette année
+      last_year: L’année dernière
+      weekday_mo: Lu
+      weekday_tu: Ma
+      weekday_we: Me
+      weekday_th: Je
+      weekday_fr: Ve
+      weekday_sa: Sa
+      weekday_su: Di
+    date_picker:
+      summary: Choisissez une date dans le calendrier ou un intervalle rapide.
+    drawer:
+      close: Fermer
+    file_input:
+      upload: Téléverser un fichier
+      or_drag: ' ou glisser-déposer'
+      max_size: 'Taille max. : %{size}'
+      size_exceeded: Le fichier « %{name} » dépasse la taille maximale de %{size}
+      size_bytes: '%{count}o'
+      size_kilobytes: '%{count}Ko'
+      size_megabytes: '%{count}Mo'
+    font_swatch:
+      fallback: Police
+    form:
+      please_select: Veuillez sélectionner une option.
+      invalid_selection: Sélection invalide.
+      invalid_value: Valeur invalide.
+    modal:
+      close: Fermer
+    modal_filter:
+      trigger: Filtrer
+      title: Filtres
+      apply: Appliquer
+      reset: Réinitialiser
+    notification:
+      bell: Notifications
+      empty: Aucune notification récente
+      fallback: Notification
+      see_all: Voir toutes les notifications
+      overflow: 9+
+    page_nav:
+      back: Retour
+      close: Fermer
+      previous: Page précédente
+      label: Navigation de page
+    pagination:
+      loading_more: Chargement…
+      label: Pagination
+      previous: Page précédente
+      next: Page suivante
+      page: Page %{number}
+      error_loading: Erreur de chargement. Réessayez.
+      loading: Chargement…
+    password:
+      show: Afficher le mot de passe
+      hide: Masquer le mot de passe
+    picker:
+      title: Sélectionner des fichiers
+      confirm: Utiliser la sélection
+      close: Fermer
+      search_placeholder: Rechercher des fichiers...
+      empty: Aucun fichier trouvé
+      search_label: Rechercher parmi les fichiers disponibles
+      untitled: Sans titre
+    progress:
+      label: Progression
+      percent: '%{count} %'
+    search:
+      placeholder: Rechercher...
+      no_results: Aucun résultat
+      clear: Effacer la recherche
+      searching: Recherche...
+      result_fallback: Résultat
+    search_input:
+      clear: Effacer la recherche
+    section_title:
+      copy_link: Copier le lien
+      copy_link_to: Copier le lien vers %{title}
+    select:
+      placeholder: Sélectionner une option
+      search: Rechercher...
+      remove: Retirer %{label}
+      type_to_search: Saisissez au moins %{count} caractères pour rechercher
+      searching: Recherche...
+      empty: Aucune option trouvée
+    sidebar:
+      expand: Développer la barre latérale
+      collapse: Réduire la barre latérale
+      open: Ouvrir la barre latérale
+      title: FlatPack
+    skeleton:
+      loading: Chargement…
+    skip_link:
+      text: Aller au contenu
+    spinner:
+      loading: Chargement
+    stepper:
+      progress: Progression
+    tabs:
+      label: Onglets
+    table:
+      empty: Aucune donnée
+      sort: Trier
+    text:
+      copy_input: Copier la valeur du champ
+      copy_textarea: Copier le contenu de la zone de texte
+      characters: '%{count} caractères'
+      characters_with_limit: '%{count}/%{limit} caractères'
+      formatting_toolbar: Barre de mise en forme
+    timestamp:
+      fallback: '-'
+      in: Dans %{distance}
+      ago: il y a %{distance}
+      just_now: À l’instant
+      a_min_ago: il y a 1 min
+      minutes_ago: il y a %{count} minutes
+      hours_ago: il y a %{count} heures
+      yesterday: Hier
+      days_ago: il y a %{count} jours
+      weeks_ago: il y a %{count} semaines
+      months_ago: il y a %{count} mois
+      short_a_min_ago: il y a 1 min
+      short_min_ago: il y a %{count} min
+      short_hr_ago: il y a %{count} h
+      short_yesterday: il y a 1 j
+      short_d_ago: il y a %{count} j
+      short_wk_ago: il y a %{count} sem.
+      short_mo_ago: il y a %{count} mois
+    toast:
+      dismiss: Ignorer
+    top_nav:
+      more: Plus d’éléments de navigation
+    rich_text:
+      placeholder: Commencez à écrire…
+      anonymous: Anonyme
+      insert_content: Insérer du contenu
+      bold: Gras
+      italic: Italique
+      underline: Souligné
+      strikethrough: Barré
+      inline_code: Code en ligne
+      highlight: Surligner
+      heading_1: Titre 1
+      heading_2: Titre 2
+      heading_3: Titre 3
+      bullet_list: Liste à puces
+      numbered_list: Liste numérotée
+      task_list: Liste de tâches
+      blockquote: Citation
+      align_left: Aligner à gauche
+      align_center: Centrer
+      align_right: Aligner à droite
+      insert_link: Insérer/modifier un lien
+      link: Lien
+      insert_image: Insérer une image
+      insert_table: Insérer un tableau
+      undo: Annuler
+      redo: Rétablir
+      link_placeholder: https://
+      apply: Appliquer
+      remove: Retirer
+      image_placeholder: URL de l’image (https://...)
+      insert: Insérer
+      upload_from_computer: Téléverser depuis l’ordinateur
+      uploading: Téléversement…
+      upload_failed: Échec du téléversement
+      upload_failed_connection: Échec du téléversement — vérifiez la connexion
+      enter_link_url: 'Saisir l’URL du lien :'
+      text_formatting: Mise en forme du texte
+      or_upload: — ou téléverser un fichier —
+      upload_image_file: Téléverser un fichier image
+    chat:
+      placeholder: Écrire un message...
+      send: Envoyer le message
+      back: Retour
+      back_to_conversations: Retour aux conversations
+      loading_older: Chargement des messages plus anciens...
+      jump_to_latest: Aller au plus récent
+      jump_to_latest_message: Aller au message le plus récent
+      sending: Envoi...
+      failed: Échec
+      edit: Modifier
+      delete: Supprimer
+      typing: Quelqu’un est en train d’écrire
+      outgoing_images: Images du message envoyé
+      incoming_images: Images du message reçu
+      image: Image
+      you: Vous
+      attachment: Pièce jointe
+    billing:
+      status_alert:
+        past_due:
+          title: Impayé
+          description: Mettez à jour votre moyen de paiement pour conserver le forfait
+            de cet espace.
+        trial_ending:
+          title: Fin d’essai proche
+          description: Ajoutez un moyen de paiement avant la fin de l’essai pour éviter
+            une interruption.
+        payment_failed:
+          title: Paiement échoué
+          description: Le dernier paiement n’est pas passé. Essayez une autre carte
+            ou contactez votre banque.
+        canceled:
+          title: Forfait annulé
+          description: Cet espace n’est plus sur un forfait payant.
+      plan_picker:
+        popular: Populaire
+        current: Actuel
+        current_plan: Forfait actuel
+        get_started: Commencer
+      plan_summary:
+        active: Actif
+        trial: Essai
+        past_due: Impayé
+        canceled: Annulé
+        incomplete: Incomplet
+      invoice_list:
+        title: Factures
+        empty_title: Aucune facture pour l’instant
+        empty_description: Elles apparaîtront ici après votre premier paiement.
+        paid: Payée
+        open: Ouverte
+        failed: Échouée
+        void: Annulée
+        date: Date
+        amount: Montant
+        status: Statut
+        actions: Actions
+        download: Télécharger
+      payment_method:
+        title: Moyen de paiement
+        empty_title: Aucune carte enregistrée
+        empty_description: Ajoutez un moyen de paiement pour tenir la facturation
+          à jour.
+        expires: Expire le %{date}
+      usage_meter:
+        unlimited: '%{used} · Illimité'
+        of: '%{used} sur %{limit}'
+    clipboard:
+      nothing: Rien à copier
+      copied: Copié dans le presse-papiers
+      unable: Impossible de copier
+    theme:
+      system: Système
+      light: Clair
+      dark: Sombre
+      ocean: Océan
+      rounded: Arrondi

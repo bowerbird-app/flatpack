@@ -4938,6 +4938,11 @@
       height: 100%;
     }
   }
+  .\[\&_\.flat-pack-input-wrapper\]\:mb-0 {
+    & .flat-pack-input-wrapper {
+      margin-bottom: calc(var(--spacing) * 0);
+    }
+  }
   .\[\&_\.flat-pack-input-wrapper\]\:flex {
     & .flat-pack-input-wrapper {
       display: flex;
@@ -4953,6 +4958,40 @@
       align-items: stretch;
     }
   }
+  .\[\&_\.flat-pack-select\]\:min-h-8 {
+    & .flat-pack-select {
+      min-height: calc(var(--spacing) * 8);
+    }
+  }
+  .\[\&_\.flat-pack-select\]\:min-w-28 {
+    & .flat-pack-select {
+      min-width: calc(var(--spacing) * 28);
+    }
+  }
+  .\[\&_\.flat-pack-select\]\:py-1 {
+    & .flat-pack-select {
+      padding-block: calc(var(--spacing) * 1);
+    }
+  }
+  .\[\&_\.flat-pack-select\]\:text-sm {
+    & .flat-pack-select {
+      font-size: var(--text-sm);
+      line-height: var(--tw-leading, var(--text-sm--line-height));
+    }
+  }
+  .\[\&_button\]\:sr-only {
+    & button {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+      border-width: 0;
+    }
+  }
   .\[\&_button\]\:min-h-\[var\(--chat-composer-control-height\)\] {
     & button {
       min-height: var(--chat-composer-control-height);
@@ -4961,6 +5000,19 @@
   .\[\&_button\]\:min-w-\[var\(--chat-composer-control-height\)\] {
     & button {
       min-width: var(--chat-composer-control-height);
+    }
+  }
+  .\[\&_label\]\:sr-only {
+    & label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+      border-width: 0;
     }
   }
   .\[\&\:\:-webkit-scrollbar\]\:hidden {
@@ -5160,7 +5212,7 @@
   --surface-border-color: oklch(0.85 0.03 55);
   --surface-content-color: oklch(0.32 0.04 35);
 }
-.fp-button[data-fp-style="partner"] {
+[data-fp-style="partner"] {
   --fp-button-background: #635bff;
   --fp-button-hover-background: #0a2540;
   --fp-button-text: #ffffff;

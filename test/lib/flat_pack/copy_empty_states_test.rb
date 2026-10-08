@@ -1,22 +1,24 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require "yaml"
 
 module FlatPack
   class CopyEmptyStatesTest < ActiveSupport::TestCase
     test "skeleton and infinite pagination use a typographic ellipsis for loading copy" do
-      skeleton = FlatPack::Engine.root.join("app/components/flat_pack/skeleton/component.rb").read
-      pagination = FlatPack::Engine.root.join("app/components/flat_pack/pagination_infinite/component.rb").read
-      numbered = FlatPack::Engine.root.join("app/components/flat_pack/pagination/component.rb").read
+      locales = YAML.safe_load_file(FlatPack::Engine.root.join("config/locales/flatpack.en.yml"))
+      skeleton = locales.dig("en", "flatpack", "skeleton", "loading")
+      loading_more = locales.dig("en", "flatpack", "pagination", "loading_more")
+      loading = locales.dig("en", "flatpack", "pagination", "loading")
       infinite_js = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/pagination_infinite_controller.js").read
 
-      assert_includes skeleton, '"Loading…"'
-      refute_includes skeleton, '"Loading..."'
-      assert_includes pagination, '"Loading more…"'
-      refute_includes pagination, '"Loading more..."'
-      assert_includes numbered, '"Loading more…"'
-      refute_includes numbered, '"Loading more..."'
-      assert_includes infinite_js, '"Loading…"'
+      assert_equal "Loading…", skeleton
+      refute_includes skeleton, "..."
+      assert_equal "Loading more…", loading_more
+      refute_includes loading_more, "..."
+      assert_equal "Loading…", loading
+      refute_includes loading, "..."
+      assert_includes infinite_js, 'flatPackCopy("pagination.loading")'
       refute_includes infinite_js, '"Loading..."'
     end
 

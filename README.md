@@ -14,6 +14,7 @@ A modern Rails UI Component Library built with ViewComponent, Tailwind CSS, and 
 - 🔧 **Customizable** - Theme via CSS variables
 - 🧩 **Composable** - Build complex UIs from simple components
 - 📝 **Rich Text** - Built-in TipTap editor via `rich_text: true` on `TextArea`
+- 🌐 **English kit copy** - Defaults under `flatpack.*`; hosts provide other languages
 
 ## Installation
 
@@ -61,6 +62,8 @@ rails generate flat_pack:layout --type=sidebar --side=right --layout_name=admin
 ```
 
 See the [Installation Guide](docs/installation.md) for detailed setup instructions.
+
+Kit chrome defaults are English under `flatpack.*`. Hosts add other languages in their own locale files. See [Kit copy and host languages](docs/i18n.md).
 
 If you want to deploy the dummy Rails app in `test/dummy`, use the [DigitalOcean deployment guide](docs/deployment_digitalocean.md). That guide is for the demo app only, not a requirement for FlatPack host applications.
 

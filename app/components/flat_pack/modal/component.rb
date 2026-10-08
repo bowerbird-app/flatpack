@@ -192,7 +192,7 @@ module FlatPack
         content_tag(:button,
           type: "button",
           class: close_button_classes,
-          aria: {label: "Close"},
+          aria: {label: fp_t("modal.close")},
           data: {action: "flat-pack--modal#close"}) do
           close_icon
         end

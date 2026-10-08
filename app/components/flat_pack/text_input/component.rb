@@ -81,7 +81,7 @@ module FlatPack
             action: "click->flat-pack--text-input#copyFromButton",
             flat_pack__text_input_target: "copyButton"
           },
-          aria: {label: "Copy input value"}
+          aria: {label: fp_t("text.copy_input")}
         ) do
           render FlatPack::Shared::IconComponent.new(name: "clipboard-document", size: :sm)
         end
@@ -207,9 +207,9 @@ module FlatPack
         count = (@value || "").to_s.length
 
         if @max_characters
-          "#{count}/#{@max_characters} characters"
+          fp_t("text.characters_with_limit", count: count, limit: @max_characters)
         else
-          "#{count} characters"
+          fp_t("text.characters", count: count)
         end
       end
 

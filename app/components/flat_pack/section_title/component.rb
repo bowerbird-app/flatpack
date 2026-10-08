@@ -68,7 +68,7 @@ module FlatPack
       def render_anchor_link
         return nil unless @anchor_link
 
-        render FlatPack::Tooltip::Component.new(text: "Copy link", placement: :top) do
+        render FlatPack::Tooltip::Component.new(text: fp_t("section_title.copy_link"), placement: :top) do
           content_tag(:a,
             href: "##{anchor_id}",
             class: "shrink-0 transition-opacity text-[var(--surface-muted-content-color)] hover:text-[var(--surface-content-color)]",
@@ -78,7 +78,7 @@ module FlatPack
               action: "click->flat-pack--section-title-anchor#copy"
             },
             aria: {
-              label: "Copy link to #{@title}"
+              label: fp_t("section_title.copy_link_to", title: @title)
             }) do
             render FlatPack::Shared::IconComponent.new(name: :link, size: :sm)
           end
