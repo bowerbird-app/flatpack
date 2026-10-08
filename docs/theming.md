@@ -38,7 +38,7 @@ Or override primitives directly:
 }
 ```
 
-`--color-primary` is `oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue))`. Hover subtracts `0.10` from lightness only, so charcoal chroma `0` stays valid. Surfaces keep their own colors unless you override `--surface-*`.
+`--color-primary` is `oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue))`. Hover follows `--color-primary` and subtracts `0.10` from lightness (`oklch(from var(--color-primary) calc(l - 0.1) c h)`), so an exact hex still darkens on hover. Browsers without relative colour syntax keep the brand-knob fallback. Charcoal chroma `0` stays valid. Surfaces keep their own colors unless you override `--surface-*`. `--color-primary-text` stays `#fff` unless you override it.
 
 These follow `--color-primary` (and `--color-primary-text` for text or icons on that fill). You do not set them on a named theme unless you want them to diverge:
 
@@ -48,12 +48,11 @@ These follow `--color-primary` (and `--color-primary-text` for text or icons on 
 
 The bottom nav bar (`--bottom-nav-background-color`) is a dark surface, not a brand fill. Dark and ocean set their own bar colours. Active bottom-nav *items* use `--bottom-nav-item-active-color` (contrast on that bar), not `--color-primary`.
 
-For an exact brand hex, set the semantic tokens instead:
+For an exact brand hex, set `--color-primary`. Hover derives from it; set `--color-primary-hover` only when it should not be `l - 0.10`:
 
 ```css
 :root {
   --color-primary: #2563eb;
-  --color-primary-hover: #1d4ed8;
 }
 ```
 
@@ -155,6 +154,9 @@ For a named host-app variant such as `[data-theme="sunrise"]`, see the theme gen
 --surface-border-color
 --surface-border-hover-color
 
+--overlay-backdrop-color
+--overlay-scrim-color
+
 --color-ring
 ```
 
@@ -218,7 +220,7 @@ If host Tailwind loads after `flat_pack/variables`, re-set the four kit radii on
 
 `--button-shadow` is the rest elevation. `--button-shadow-hover` aliases `--shadow-button`. `--button-shadow-active` aliases `--shadow-button-active`. Ghost and secondary stay unshadowed at rest.
 
-Dark theme (`[data-theme="dark"]`) adds a faint white hairline to `--shadow-sm` / `--shadow-md` / `--shadow-lg` so cards lift on near-black surfaces.
+Dark theme (`[data-theme="dark"]`) adds a faint white hairline to `--shadow-sm` / `--shadow-md` / `--shadow-lg` so cards lift on near-black surfaces. Brand dark themes that want the same lift set those shadow tokens; they are not derived from `--surface-*`. Overlay dimming is `--overlay-backdrop-color`; on-media chrome (carousel chevrons) is `--overlay-scrim-color`.
 
 ### Hit targets
 ```css

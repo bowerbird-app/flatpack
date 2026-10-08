@@ -292,8 +292,7 @@ To **customize the theme**, override CSS variables in your own stylesheet:
 
 /* Override FlatPack defaults (loaded via stylesheet_link_tag in the layout) */
 :root {
-  --color-primary: oklch(0.55 0.22 160);        /* teal primary */
-  --color-primary-hover: oklch(0.45 0.22 160);
+  --color-primary: oklch(0.55 0.22 160);        /* teal primary; hover follows */
   --surface-background-color: oklch(1.0 0 0);   /* white background */
   --surface-content-color: oklch(0.20 0.01 250); /* dark text */
 }

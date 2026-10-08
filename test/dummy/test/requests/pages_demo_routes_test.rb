@@ -5,6 +5,8 @@ require "test_helper"
 class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
   DEMO_PATHS = %w[
     /demo
+    /demo/brand_theme
+    /demo/brand_theme/dark
     /demo/buttons
     /demo/links
     /demo/buttons/pills

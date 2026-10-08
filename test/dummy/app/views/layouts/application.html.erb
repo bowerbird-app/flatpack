@@ -92,7 +92,7 @@
     </script>
   </head>
 
-  <body class="m-0 h-full overflow-hidden overscroll-none bg-[var(--surface-page-background-color)] text-[var(--surface-content-color)]" data-controller="dark-mode">
+  <body class="m-0 h-full overflow-hidden overscroll-none bg-[var(--surface-page-background-color)] text-[var(--surface-content-color)]" data-controller="dark-mode"<% if @body_theme.present? %> data-theme="<%= @body_theme %>"<% end %>>
     <%= render FlatPack::SkipLink::Component.new(href: "#main") %>
     <%= render "layouts/icon_sprite" %>
 
@@ -161,10 +161,16 @@
           <% nav.right do %>
             <div
               class="ml-auto flex items-center gap-3"
+              <% unless @body_theme.present? %>
               data-controller="flat-pack--theme"
               data-flat-pack--theme-themes-value='[{"value":"system","label":"<%= j I18n.t("flatpack.theme.system") %>"},{"value":"light","label":"<%= j I18n.t("flatpack.theme.light") %>"},{"value":"dark","label":"<%= j I18n.t("flatpack.theme.dark") %>"},{"value":"ocean","label":"<%= j I18n.t("flatpack.theme.ocean") %>"},{"value":"rounded","label":"<%= j I18n.t("flatpack.theme.rounded") %>"},{"value":"sunrise","label":"Sunrise"}]'
+              <% end %>
             >
               <%= render "layouts/flat_pack/language_selector" %>
+              <% if @body_theme.present? %>
+                <%= render FlatPack::Button::Component.new(text: "Theme", style: :ghost, size: :sm) %>
+                <%= render FlatPack::Button::Component.new(text: "Sign out", style: :ghost, size: :sm) %>
+              <% else %>
               <%= render FlatPack::Button::Dropdown::Component.new(
                 text: "Theme",
                 style: :ghost,
@@ -196,6 +202,7 @@
                   text: "Sunrise",
                   data: { action: "click->flat-pack--theme#switch click->flat-pack--button-dropdown#toggle", theme_value: "sunrise", theme_label: "Sunrise" }
                 ) %>
+              <% end %>
               <% end %>
 
             <%= render FlatPack::Button::Component.new(

@@ -74,7 +74,7 @@ FlatPack defines CSS variables in `app/assets/stylesheets/flat_pack/variables.cs
   --brand-chroma: 0;
   --brand-lightness: 0.3211;
   --color-primary: oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue));
-  --color-primary-hover: oklch(calc(var(--brand-lightness) - 0.10) var(--brand-chroma) var(--brand-hue));
+  --color-primary-hover: oklch(from var(--color-primary) calc(l - 0.1) c h); /* @supports; brand-knob fallback otherwise */
   --button-primary-background-color: var(--color-primary);
 }
 
