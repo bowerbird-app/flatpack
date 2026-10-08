@@ -24,7 +24,7 @@ function loadController(overrides = {}) {
       location: {origin: "http://example.test"}
     },
     document: {
-      createElement() { return buildNode("div") },
+      createElement(tag) { return buildNode(tag || "div") },
       querySelector(selector) {
         if (selector === "meta[name='csrf-token']") return {content: "csrf-token"}
         return null
@@ -275,7 +275,7 @@ function findById(node, id) {
 
 function harness(fetch) {
   const page = {
-    createElement() { return buildNode("div") },
+    createElement(tag) { return buildNode(tag || "div") },
     querySelector(selector) {
       if (selector === "meta[name='csrf-token']") return {content: "csrf-token"}
       return null
@@ -571,8 +571,14 @@ test("enter with no matches opens create", async () => {
   controller.listTarget.append(row)
 
   await controller.runSearch(row, "morgan")
-  assert.equal(row.querySelector("[data-collection-editor-results] [role='option']").textContent, "+ New")
-  assert.equal(row.querySelectorAll("[data-collection-editor-results] [role='option']").length, 1)
+  const list = row.querySelector("[data-collection-editor-results]")
+  const rule = list.children.find((child) => child.className === "flat-pack-collection-editor-menu-rule")
+  const option = list.querySelector("[role='option']")
+  assert.equal(rule.tag, "hr")
+  assert.equal(rule.attrs.role, undefined)
+  assert.ok(list.children.indexOf(rule) < list.children.indexOf(option))
+  assert.equal(option.textContent, "+ New")
+  assert.equal(list.querySelectorAll("[role='option']").length, 1)
 
   controller.searchKeydown({
     key: "Enter",

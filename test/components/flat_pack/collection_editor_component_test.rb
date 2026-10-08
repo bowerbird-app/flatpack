@@ -158,6 +158,9 @@ module FlatPack
         assert_includes css, ".flat-pack-collection-editor-fields :is(input, select, textarea, .flat-pack-select-trigger)"
         assert_includes css, "padding-block: 0"
         assert_includes css, ".flat-pack-modal__body .flat-pack-collection-editor-create-fields"
+        assert_includes css, ".flat-pack-collection-editor-menu-rule"
+        assert_includes css, "margin: 0.25rem -0.25rem;"
+        refute_includes css, ".flat-pack-collection-editor-menu-empty + .flat-pack-collection-editor-create-option"
         refute_includes css, "justify-content: center"
         assert_includes variables, "--collection-editor-row-hover-background-color: var(--list-item-hover-background-color);"
       end
