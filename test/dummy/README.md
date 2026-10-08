@@ -126,7 +126,7 @@ The FlatPack engine is mounted in `config/routes.rb`:
 mount FlatPack::Engine => "/flat_pack"
 ```
 
-The dummy also mounts `RecordingStudioInternationalization` so the catalog can switch English/French. The language selector sits in the top nav, immediately left of the theme control. Kit French lives only in `config/locales/flatpack.fr.yml` — the FlatPack gem ships English only.
+The dummy also mounts `RecordingStudioInternationalization` so the catalog can switch English/French. The language selector sits in the top nav, immediately left of the theme control. Full-page catalog cache keys include the locale. Kit French lives only in `config/locales/flatpack.fr.yml` — the FlatPack gem ships English only.
 
 ## Demo Pages
 

@@ -13,6 +13,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.204] - 2026-10-08
+
+### Added
+- Kit chrome copy lives under `flatpack.*`. The gem ships English only, in `config/locales/flatpack.en.yml`. Hosts add their own locale files (for example `config/locales/flatpack.fr.yml`) and own the language list.
+- Components read omitted string props from I18n. An explicit prop, including `nil`, still wins.
+- JavaScript copy uses `data-fp-copy` on `<html>` (`flat_pack_copy_data`) with English fallbacks in `flat_pack/copy.js`.
+- The Rails 8 dummy app demonstrates locale switching with `recording_studio_internationalization`, a host `flatpack.fr.yml` that covers every gem English key, and a language selector in the catalog top nav (left of the theme control). Catalog full-page HTML cache keys include the current locale.
+
+### Changed
+- Bumped the gem version to `0.1.204`.
+
+### Upgrade notes
+- Put `<%= tag.attributes(data: flat_pack_copy_data) %>` (and `lang="<%= I18n.locale %>"`) on the host `<html>` tag so Stimulus copy follows the current locale.
+- Pin `flat_pack/copy` if you rerun `rails generate flat_pack:install`.
+- Do not expect a French (or other) locale file from the gem. Copy `config/locales/flatpack.en.yml` into the host app as `flatpack.<locale>.yml` and translate it. `RecordingStudio_Internationalization` is optional and stays a host dependency.
+- Dummy-rails-7 does not use the internationalization gem.
+
 ## [0.1.203] - 2026-10-07
 
 ### Changed
