@@ -62,6 +62,8 @@ module FlatPack
         touch_swipe: true,
         show_captions: true,
         caption_mode: :below,
+        show_border: true,
+        show_background: true,
         aria_label: DEFAULT_ARIA_LABEL,
         **system_arguments
       )
@@ -104,6 +106,8 @@ module FlatPack
         @touch_swipe = !!touch_swipe
         @show_captions = !!show_captions
         @caption_mode = caption_mode.to_sym
+        @show_border = !!show_border
+        @show_background = !!show_background
         @aria_label = aria_label.presence || DEFAULT_ARIA_LABEL
         @initial_index = normalize_initial_index(initial_index)
 
@@ -547,7 +551,9 @@ module FlatPack
         return logo_slider_viewport_classes if @variant == :logo_slider
 
         classes(
-          "flat-pack-carousel__viewport group relative overflow-hidden rounded-[var(--radius-lg)] border border-[var(--carousel-viewport-border-color)] bg-[var(--carousel-viewport-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
+          "flat-pack-carousel__viewport group relative overflow-hidden rounded-[var(--radius-lg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
+          @show_border ? "border border-[var(--carousel-viewport-border-color)]" : "border-0",
+          @show_background ? "bg-[var(--carousel-viewport-background-color)]" : "bg-transparent",
           @touch_swipe ? "cursor-grab select-none" : nil
         )
       end

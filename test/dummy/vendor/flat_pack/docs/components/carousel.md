@@ -38,6 +38,8 @@ Use Carousel when users need to browse a sequence of visual or rich-content slid
 | `logo_opacity` | Float | `1.0` | no | Opacity for logo images in logo-slider mode (`0.0..1.0`). |
 | `logo_wrapper_background` | String | `nil` | no | Reserved for compatibility (sanitized input); current logo-slider rendering keeps wrapper/viewport transparent. |
 | `aspect_ratio` | String | `"16/9"` | no | CSS aspect ratio (`"16/9"` format). |
+| `show_border` | Boolean | `true` | no | Draw the viewport border. `:logo_slider` stays borderless. |
+| `show_background` | Boolean | `true` | no | Fill the viewport. `:logo_slider` stays transparent. |
 | `responsive` | Boolean | `true` | no | Keep container responsive width behavior. |
 | `touch_swipe` | Boolean | `true` | no | Enable pointer swipe navigation. |
 | `show_captions` | Boolean | `true` | no | Render active slide captions. |
@@ -58,7 +60,10 @@ None.
 - Default count targets: desktop `5`, tablet `3`, mobile `3`.
 - Logo-slider mode only renders image slides (video/html slide payloads are ignored).
 - Fade transition is not supported in logo-slider mode.
-- Wrapper and viewport use no extra margin/padding and remain transparent in logo-slider mode.
+- Wrapper and viewport use no extra margin/padding and remain transparent in logo-slider mode. `show_border` and `show_background` do not change that.
+
+## Viewport chrome
+The default viewport draws a border and a muted fill. `show_border: false` replaces the border with `border-0`. `show_background: false` replaces the fill with `bg-transparent`. Leave a flag on and its token still paints it: `--carousel-viewport-border-color` and `--carousel-viewport-background-color`. A host `style:` that sets those tokens to `transparent` still works while the classes stay on.
 
 ## Side Preview Notes
 - Applies only to `variant: :default` with `transition: :slide`.
@@ -112,7 +117,9 @@ The dummy app consolidates carousel behavior (basic, autoplay, thumbnails, trans
   show_controls: true,
   show_indicators: true,
   show_captions: true,
-  caption_mode: :below
+  caption_mode: :below,
+  show_border: false,
+  show_background: false
 ) %>
 ```
 

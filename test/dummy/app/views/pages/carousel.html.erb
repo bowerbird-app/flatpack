@@ -132,7 +132,8 @@
       items_per_view_tablet: 1,
       items_per_view_mobile: 1,
       class: "charts-side-preview",
-      style: "--carousel-viewport-border-color: transparent; --carousel-viewport-background-color: transparent;",
+      show_border: false,
+      show_background: false,
       aria_label: "Charts side preview carousel"
     ) %>
   </div>
@@ -151,7 +152,9 @@
         side_preview: true,
         items_per_view_desktop: 3,
         items_per_view_tablet: 1,
-        items_per_view_mobile: 1
+        items_per_view_mobile: 1,
+        show_border: false,
+        show_background: false
       ) %&gt;
     CODE
   ) %>
@@ -261,7 +264,8 @@
       items_per_view_tablet: 2,
       items_per_view_mobile: 1,
       class: "card-thumbs",
-      style: "--carousel-viewport-border-color: transparent; --carousel-viewport-background-color: transparent;",
+      show_border: false,
+      show_background: false,
       aria_label: "Cards with picture thumbs"
     ) %>
   </div>
@@ -281,7 +285,8 @@
         items_per_view_desktop: 3,
         items_per_view_tablet: 2,
         items_per_view_mobile: 1,
-        style: "--carousel-viewport-background-color: transparent; --carousel-viewport-border-color: transparent;"
+        show_border: false,
+        show_background: false
       ) %&gt;
     CODE
   ) %>

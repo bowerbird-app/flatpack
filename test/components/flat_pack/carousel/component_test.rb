@@ -345,6 +345,64 @@ module FlatPack
         refute_includes viewport[:style], "touch-action: pan-y"
       end
 
+      def test_viewport_keeps_border_and_background_by_default
+        render_inline(Component.new(slides: sample_slides))
+
+        viewport = page.find("div[data-flat-pack--carousel-target='viewport']")
+        assert_includes viewport[:class], "border-[var(--carousel-viewport-border-color)]"
+        assert_includes viewport[:class], "bg-[var(--carousel-viewport-background-color)]"
+        refute_includes viewport[:class], "border-0"
+        refute_includes viewport[:class], "bg-transparent"
+      end
+
+      def test_hides_viewport_border_when_show_border_is_false
+        render_inline(Component.new(slides: sample_slides, show_border: false))
+
+        viewport = page.find("div[data-flat-pack--carousel-target='viewport']")
+        assert_includes viewport[:class], "border-0"
+        refute_includes viewport[:class], "border-[var(--carousel-viewport-border-color)]"
+        assert_includes viewport[:class], "bg-[var(--carousel-viewport-background-color)]"
+        refute_includes viewport[:class], "bg-transparent"
+      end
+
+      def test_hides_viewport_background_when_show_background_is_false
+        render_inline(Component.new(slides: sample_slides, show_background: false))
+
+        viewport = page.find("div[data-flat-pack--carousel-target='viewport']")
+        assert_includes viewport[:class], "bg-transparent"
+        refute_includes viewport[:class], "bg-[var(--carousel-viewport-background-color)]"
+        assert_includes viewport[:class], "border-[var(--carousel-viewport-border-color)]"
+        refute_includes viewport[:class], "border-0"
+      end
+
+      def test_hides_viewport_border_and_background_together
+        render_inline(Component.new(slides: sample_slides, show_border: false, show_background: false))
+
+        viewport = page.find("div[data-flat-pack--carousel-target='viewport']")
+        assert_includes viewport[:class], "border-0"
+        assert_includes viewport[:class], "bg-transparent"
+        refute_includes viewport[:class], "border-[var(--carousel-viewport-border-color)]"
+        refute_includes viewport[:class], "bg-[var(--carousel-viewport-background-color)]"
+      end
+
+      def test_logo_slider_stays_borderless_and_transparent
+        render_inline(
+          Component.new(
+            slides: [{type: :image, src: "https://images.example.com/a.svg", alt: "A"}],
+            variant: :logo_slider,
+            show_border: true,
+            show_background: true
+          )
+        )
+
+        viewport = page.find("div[data-flat-pack--carousel-target='viewport']")
+        assert_includes viewport[:class], "border-0"
+        assert_includes viewport[:class], "bg-transparent"
+        assert_includes viewport[:style], "background: transparent"
+        refute_includes viewport[:class], "border-[var(--carousel-viewport-border-color)]"
+        refute_includes viewport[:class], "bg-[var(--carousel-viewport-background-color)]"
+      end
+
       def test_renders_thumbs_when_enabled
         render_inline(Component.new(slides: sample_slides, show_thumbs: true))
 

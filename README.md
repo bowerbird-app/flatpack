@@ -151,6 +151,8 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
 ) %>
 ```
 
+Pass `show_border: false` and `show_background: false` when the viewport border and fill should stay off. Both default to on. `:logo_slider` stays clear either way.
+
 `slides` hash options:
 
 | Key | Applies To | Accepts | Default |
