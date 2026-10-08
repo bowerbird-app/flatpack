@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.207] - 2026-10-08
 
 ### Added
-- The collection editor chip name edits the selected record when `update_url` includes an `:id` token. The name is a button. Remove stays its own button. Edit loads the record with GET and saves it with PATCH through the same modal used for create. The person id stays on the row. Other chips with that id update too. Join fields such as role stay on the row until the parent form is saved.
+- The collection editor chip name edits the selected record when `update_url` includes an `:id` token. The name is a button whose hit target fills the chip, so a click on the pill opens edit. Remove stays its own button. Edit loads the record with GET and saves it with PATCH through the same modal used for create. The person id stays on the row. Other chips with that id update too. Join fields such as role stay on the row until the parent form is saved.
 
 ### Changed
 - Bumped the gem version to `0.1.207`.

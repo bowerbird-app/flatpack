@@ -109,7 +109,8 @@ module FlatPack
           render FlatPack::Chip::Component.new(
             style: :info,
             removable: true,
-            value: current_value
+            value: current_value,
+            class: "flat-pack-collection-editor-chip"
           ) do |chip|
             chip.remove_button { render_chip_remove }
             render_chip_name

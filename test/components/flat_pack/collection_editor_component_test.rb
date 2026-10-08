@@ -97,8 +97,8 @@ module FlatPack
           end
         end
 
-        assert_selector "button.flat-pack-collection-editor-name[data-collection-editor-edit][aria-label='Edit Alice Chen']", text: "Alice Chen"
-        assert_selector "[data-collection-editor-chip-remove][aria-label='Remove Alice Chen']"
+        assert_selector ".flat-pack-collection-editor-chip > button.flat-pack-collection-editor-name[data-collection-editor-edit][aria-label='Edit Alice Chen']", text: "Alice Chen"
+        assert_selector ".flat-pack-collection-editor-chip > [data-collection-editor-chip-remove][aria-label='Remove Alice Chen']"
         assert_selector "[data-update-url='/people/:id']"
         assert_selector "[data-edit-title='Edit Person']"
         assert_selector "[data-create-title='New Person']"
@@ -212,6 +212,9 @@ module FlatPack
         assert_includes css, "border-inline-end: 1px solid var(--collection-editor-border-color)"
         assert_includes css, "inset 0 0 0 2px var(--color-ring)"
         assert_includes css, "inset 0 0 0 2px var(--color-error)"
+        assert_includes css, ".flat-pack-collection-editor-name::before"
+        assert_includes css, "inset: -1px;"
+        assert_includes css, ".flat-pack-collection-editor-chip [data-collection-editor-chip-remove]"
         assert_includes css, ".flat-pack-collection-editor-fields :is(input, select, textarea, .flat-pack-select-trigger)"
         assert_includes css, "padding-block: 0"
         assert_includes css, ".flat-pack-modal__body .flat-pack-collection-editor-create-fields"
