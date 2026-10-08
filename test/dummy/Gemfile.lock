@@ -7,6 +7,15 @@ GIT
       rails (>= 8.1.0)
 
 GIT
+  remote: https://github.com/bowerbird-app/RecordingStudio_Internationalization.git
+  revision: 554ddebae26e9a6ecfbf9e7f17ac2e2c66359613
+  tag: v0.1.2
+  specs:
+    recording_studio_internationalization (0.1.2)
+      rails (~> 8.1.0)
+      recording_studio (~> 4.2)
+
+GIT
   remote: https://github.com/bowerbird-app/RecordingStudio_MCP.git
   revision: a0feebf5189b1946d9815bf16b294c4a893eb601
   tag: v0.3.2
@@ -33,10 +42,10 @@ GIT
 
 GIT
   remote: https://github.com/bowerbird-app/RecordingStudio_accessible.git
-  revision: bdff3ee3ace5cf3bfe33ba40476c1522cf1b6d61
-  tag: v0.9.1
+  revision: 8e2cde65984727c3197891671fed0dc270349e9e
+  tag: v0.11.2
   specs:
-    recording_studio_accessible (0.9.1)
+    recording_studio_accessible (0.11.0)
       rails (~> 8.1.0)
       recording_studio (~> 4.2)
 
@@ -63,11 +72,11 @@ GIT
 
 GIT
   remote: https://github.com/bowerbird-app/RecordingStudio_attachable.git
-  revision: 7945b22e0151d901daf6a242c54cfac4703148fb
-  tag: v0.5.1
+  revision: aaac9177a0c286d75c61a5840984c4629aa03a31
+  tag: v0.7.4
   specs:
-    recording_studio_attachable (0.5.1)
-      flat_pack (>= 0.1.135)
+    recording_studio_attachable (0.7.3)
+      flat_pack (>= 0.1.198)
       rails (~> 8.1.0)
       recording_studio (~> 4.2)
 
@@ -97,10 +106,10 @@ GIT
 
 GIT
   remote: https://github.com/bowerbird-app/RecordingStudio_users.git
-  revision: 62401500d19ae43d91c591d8071de7105952abf8
-  tag: v0.11.0
+  revision: 211bdc2456b6dfa36d7a94ae5942e421b023bbb1
+  tag: v0.15.0
   specs:
-    recording_studio_user (0.11.0)
+    recording_studio_user (0.15.0)
       devise (~> 5.0)
       flat_pack (>= 0.1.144)
       omniauth (~> 2.1)
@@ -109,12 +118,12 @@ GIT
       omniauth-instagram-api (~> 0.1)
       omniauth-linkedin-openid (~> 1.0)
       omniauth-microsoft_graph (~> 2.0)
-      omniauth-rails_csrf_protection (~> 1.0)
+      omniauth-rails_csrf_protection (~> 2.0)
       rails (~> 8.1.0)
       recording_studio (~> 4.2)
-      recording_studio_accessible (~> 0.8)
+      recording_studio_accessible (~> 0.11)
       recording_studio_admin (~> 2.0)
-      recording_studio_attachable (~> 0.5.0)
+      recording_studio_attachable (~> 0.7)
 
 PATH
   remote: vendor/flat_pack
@@ -371,7 +380,7 @@ GEM
     omniauth-oauth2 (1.8.0)
       oauth2 (>= 1.4, < 3)
       omniauth (~> 2.0)
-    omniauth-rails_csrf_protection (1.0.2)
+    omniauth-rails_csrf_protection (2.0.1)
       actionpack (>= 4.2)
       omniauth (~> 2.0)
     orm_adapter (0.5.0)
@@ -552,6 +561,7 @@ DEPENDENCIES
   recording_studio_admin!
   recording_studio_api!
   recording_studio_attachable!
+  recording_studio_internationalization!
   recording_studio_mcp!
   recording_studio_oauth!
   recording_studio_root_switchable!
