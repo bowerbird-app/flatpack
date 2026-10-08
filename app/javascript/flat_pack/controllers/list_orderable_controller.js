@@ -18,7 +18,8 @@ export default class extends Controller {
     orderableUrl: String,
     orderableMethod: {type: String, default: "PATCH"},
     paramUuidName: {type: String, default: "id"},
-    paramTargetPositionName: {type: String, default: "position"}
+    paramTargetPositionName: {type: String, default: "position"},
+    handleSelector: {type: String, default: ""}
   }
 
   connect() {
@@ -45,9 +46,11 @@ export default class extends Controller {
     this.boundWindowPointerUp = this.handleWindowPointerUp.bind(this)
     this.boundWindowPointerCancel = this.handleWindowPointerUp.bind(this)
     this.setupDraggableItems()
+    this.observeItems()
   }
 
   disconnect() {
+    this.itemObserver?.disconnect()
     this.cancelActiveDrag()
     this.removeDragListeners()
   }
@@ -60,7 +63,8 @@ export default class extends Controller {
 
   bindDragListeners(item) {
     const handlers = {
-      pointerdown: this.handlePointerDown.bind(this)
+      pointerdown: this.handlePointerDown.bind(this),
+      keydown: this.handleKeyDown.bind(this)
     }
 
     this.boundHandlers.set(item, handlers)
@@ -88,7 +92,11 @@ export default class extends Controller {
   handlePointerDown(event) {
     if (event.button != null && event.button !== 0) return
     if (this.dragging) return
-    if (this.isInteractiveTarget(event.target)) return
+    if (this.handleSelectorValue) {
+      if (!(event.target instanceof Element) || !event.target.closest(this.handleSelectorValue)) return
+    } else if (this.isInteractiveTarget(event.target)) {
+      return
+    }
 
     const item = event.currentTarget
     if (!item || !this.listItems().includes(item)) return
@@ -488,12 +496,62 @@ export default class extends Controller {
     return this.listItems().indexOf(item) + 1
   }
 
+  persistedPosition(item) {
+    if (!item) return null
+
+    const saved = this.listItems().filter((row) => row.dataset?.orderableUnsaved !== "true")
+    const index = saved.indexOf(item)
+    if (index < 0) return null
+
+    return index + 1
+  }
+
   itemIdentifier(item) {
     return item?.dataset?.id || item?.id || null
   }
 
   listItems() {
     return Array.from(this.element.querySelectorAll("li[role='listitem']"))
+      .filter((item) => item?.dataset?.collectionEditorDestroyed !== "true")
+  }
+
+  observeItems() {
+    if (typeof MutationObserver !== "function") return
+
+    this.itemObserver = new MutationObserver(() => {
+      this.listItems().forEach((item) => {
+        if (!this.boundHandlers.has(item)) this.bindDragListeners(item)
+      })
+    })
+    this.itemObserver.observe(this.element, {childList: true})
+  }
+
+  handleKeyDown(event) {
+    if (!this.handleSelectorValue) return
+    if (!(event.target instanceof Element) || !event.target.closest(this.handleSelectorValue)) return
+    if (event.key !== "ArrowUp" && event.key !== "ArrowDown") return
+
+    event.preventDefault()
+    this.nudge(event.currentTarget, event.key === "ArrowUp" ? -1 : 1)
+  }
+
+  async nudge(item, delta) {
+    const items = this.listItems()
+    const index = items.indexOf(item)
+    const target = index + delta
+    if (index < 0 || target < 0 || target >= items.length) return
+
+    const sibling = items[target]
+    if (delta < 0) {
+      item.parentNode.insertBefore(item, sibling)
+    } else {
+      item.parentNode.insertBefore(item, sibling.nextSibling)
+    }
+
+    this.draggedItem = item
+    this.emitReorderEvent()
+    await this.saveOrder()
+    if (!this.dragging) this.draggedItem = null
   }
 
   isInteractiveTarget(target) {
@@ -506,6 +564,7 @@ export default class extends Controller {
 
   async saveOrder() {
     if (!this.hasOrderableUrlValue || !this.draggedItem) return
+    if (this.draggedItem.dataset?.orderableUnsaved === "true") return
 
     if (this.pendingSave) {
       this.needsSave = true
@@ -515,9 +574,15 @@ export default class extends Controller {
     this.pendingSave = true
 
     const item = this.draggedItem
+    const position = this.persistedPosition(item)
+    if (!position) {
+      this.pendingSave = false
+      return
+    }
+
     const payload = new URLSearchParams()
     payload.set(this.paramUuidNameValue || "id", this.itemIdentifier(item) || "")
-    payload.set(this.paramTargetPositionNameValue || "position", this.currentPosition(item)?.toString() || "")
+    payload.set(this.paramTargetPositionNameValue || "position", position.toString())
 
     try {
       const response = await fetch(this.orderableUrlValue, {

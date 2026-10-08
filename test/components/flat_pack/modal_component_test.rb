@@ -12,7 +12,8 @@ module FlatPack
 
         html = page.native.to_html
 
-        assert_includes html, "fp-overlay-pad"
+        assert_includes html, "fp-overlay-pad pointer-events-none"
+        assert_includes html, "pointer-events-auto"
         assert_selector "[data-controller='flat-pack--modal'][data-action*='keydown.tab->flat-pack--modal#handleKeydown']"
         assert_selector "[data-flat-pack--modal-target='dialog'][tabindex='-1'][role='dialog']"
         assert_includes html, "overflow-y-auto"

@@ -187,6 +187,18 @@ module FlatPack
         assert_selector "button svg"
       end
 
+      def test_custom_remove_button_replaces_the_default
+        render_inline(Component.new(text: "Alice Chen", style: :info, removable: true)) do |chip|
+          chip.remove_button do
+            %(<button type="button" aria-label="Remove Alice Chen" data-collection-editor-chip-remove="true">x</button>).html_safe
+          end
+        end
+
+        assert_selector "button[type='button'][aria-label='Remove Alice Chen'][data-collection-editor-chip-remove]"
+        assert_no_selector "button[aria-label='Remove']"
+        assert_selector "span.bg-\\[var\\(--color-secondary\\)\\]", text: "Alice Chen"
+      end
+
       def test_removable_with_value
         render_inline(Component.new(text: "Tag", removable: true, value: "ruby"))
 
