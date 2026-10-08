@@ -1,0 +1,129 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Collection Editor",
+  subtitle: "Edit an ordered collection of related records inside a Rails form."
+) %>
+
+<%= render "pages/component_method_variables_table", components: [:collection_editor, :collection_editor_row, :collection_editor_entity] %>
+
+<section class="mb-12 space-y-4">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Project collaborators",
+    subtitle: "Person name and email belong to the person. Role and order belong to the relationship.",
+    anchor_link: true
+  ) %>
+  <p class="text-sm text-[var(--surface-muted-content-color)]">
+    Search selects a saved person and stores <code>person_id</code> on the join.
+    The selected name is an info chip.
+    The chip remove control drops the relationship and leaves the person in place.
+    Role edits only this relationship.
+    A search with no matches offers <code>+ New</code> in the menu.
+    That opens a modal for the new person.
+    The row stays a search field.
+    Drag a saved row to send <code>moving_recording_id</code> and <code>target_position</code>.
+    That position counts saved rows only.
+    The demo saves that move with <code>Ordering::ReorderService</code>.
+  </p>
+  <%= render "demo/collection_editors/form", project: @project, title: "Collaborators" %>
+</section>
+
+<section class="mb-12 space-y-4">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Text fields",
+    subtitle: "Single-line text in each cell. No person picker and no dropdown.",
+    anchor_link: true
+  ) %>
+  <p class="text-sm text-[var(--surface-muted-content-color)]">
+    Item, detail, and note are text inputs with cell chrome.
+    The value sits in the cell.
+    The control has no border of its own.
+    These rows are unsaved, so dragging them stays on the page.
+  </p>
+  <%= render "demo/collection_editors/text_fields" %>
+</section>
+
+<section class="mb-12 space-y-4">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Empty collection",
+    subtitle: "A project with no collaborators yet.",
+    anchor_link: true
+  ) %>
+  <%= render "demo/collection_editors/form", project: @empty_project, title: "Collaborators" %>
+</section>
+
+<section id="theme" class="mb-12 space-y-6">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Theme sample",
+    subtitle: "These rows use the collection editor tokens. The override block recolors the title, border, and handle with the danger color, and the drop indicator stays on that same token.",
+    anchor_link: true
+  ) %>
+
+  <style>
+    .collection-editor-token-override {
+      --collection-editor-title-color: var(--color-danger-background-color);
+      --collection-editor-border-color: var(--color-danger-background-color);
+      --collection-editor-handle-color: var(--color-danger-background-color);
+      --collection-editor-row-background-color: var(--surface-muted-background-color);
+      --collection-editor-drop-indicator-color: var(--color-danger-background-color);
+    }
+
+    .collection-editor-state-sample .flat-pack-list-reorder-placeholder {
+      min-height: 0.75rem;
+    }
+  </style>
+
+  <div class="collection-editor-token-override space-y-6">
+    <%= form_with url: demo_collection_editor_path, method: :get, data: {turbo: false} do |form| %>
+      <%= render FlatPack::CollectionEditor::Component.new(
+        title: "Selected person",
+        headers: ["Person", "Role"],
+        orderable: true
+      ) do |editor| %>
+        <% form.fields_for :project_people, @collection_preview, child_index: "preview" do |row_form| %>
+          <% editor.with_row(form: row_form) do |row| %>
+            <%= render "demo/collection_editors/fields", row: row, row_form: row_form, title: "Alice Chen", description: "alice@example.com" %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::CollectionEditor::Component.new(
+      title: "Empty state",
+      empty_text: "No collaborators yet"
+    ) %>
+
+    <%= form_with url: demo_collection_editor_path, method: :get, data: {turbo: false} do |form| %>
+      <%= render FlatPack::CollectionEditor::Component.new(
+        title: "Picker open"
+      ) do |editor| %>
+        <% form.fields_for :project_people, @collection_blank, child_index: "blank" do |row_form| %>
+          <% editor.with_row(form: row_form) do |row| %>
+            <%= render "demo/collection_editors/fields", row: row, row_form: row_form, title: nil, description: nil %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <div class="collection-editor-state-sample">
+      <p class="text-sm text-[var(--surface-muted-content-color)]">Dragging and insertion indicator</p>
+      <div class="flat-pack-collection-editor flat-pack-collection-editor--orderable" style="--collection-editor-columns: auto minmax(0, 1.4fr) minmax(8rem, 1fr) auto">
+        <div class="flat-pack-collection-editor-card">
+          <ul class="flat-pack-list flat-pack-list--orderable flat-pack-collection-editor-rows is-reordering">
+            <li class="flat-pack-list-reorder-placeholder is-visible" role="presentation"></li>
+            <li class="flat-pack-collection-editor-row is-dragging is-lifted" role="listitem">
+              <button type="button" class="flat-pack-collection-editor-handle" aria-label="Reorder Alice Chen">Drag</button>
+              <div class="flat-pack-collection-editor-entity">
+                <div class="flat-pack-collection-editor-summary">
+                  <span class="inline-flex items-center gap-1.5 rounded-[var(--chip-border-radius)] border bg-[var(--color-secondary)] px-[var(--chip-padding-x-md)] py-[var(--button-padding-y-md)] text-sm font-medium text-[var(--color-secondary-text)]">Alice Chen</span>
+                </div>
+              </div>
+              <div class="flat-pack-collection-editor-fields">
+                <p class="text-sm" style="padding: var(--form-control-padding)">Designer</p>
+              </div>
+              <div class="flat-pack-collection-editor-actions"></div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -148,7 +148,7 @@ module FlatPack
       def test_has_wrapper_class
         render_inline(Component.new(name: "color", options: ["Red"]))
 
-        assert_selector "div.flat-pack-select-wrapper"
+        assert_selector "div.flat-pack-input-wrapper.flat-pack-select-wrapper"
       end
 
       def test_renders_searchable_custom_select

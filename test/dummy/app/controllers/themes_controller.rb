@@ -47,6 +47,7 @@ class ThemesController < ApplicationController
     "Shadows" => [/\A--shadow-/],
     "Motion" => [/\A--(duration-|transition-)/],
     "Backdrop Effects" => [/\A--blur-/],
+    "Collection Editor" => [/\A--collection-editor-/],
     "Other" => [/.*/]
   }.freeze
 
@@ -68,6 +69,7 @@ class ThemesController < ApplicationController
 
   def index
     @theme_token_groups = build_theme_token_groups
+    @collection_editor_preview = CollectionEditorPreview.new(id: 1, person_id: 1, role: "Designer")
   end
 
   def demo

@@ -155,6 +155,17 @@ module FlatPack
         refute_includes html, "border-[var(--color-error)]"
       end
 
+      def test_rich_text_cell_chrome_drops_the_editor_border
+        render_inline(Component.new(name: "body", rich_text: true, chrome: :cell, error: "Required"))
+
+        html = page.native.to_html
+        assert_includes html, "flat-pack-richtext-editor--cell"
+        assert_includes html, "border-0"
+        assert_includes html, "px-[var(--form-control-padding)]"
+        refute_includes html, "border-[var(--surface-border-color)]"
+        refute_includes html, "border-[var(--color-error)]"
+      end
+
       def test_rich_text_minimal_preset_uses_shared_field_border
         render_inline(Component.new(name: "body", rich_text: true, rich_text_options: {preset: :minimal, toolbar: :minimal}))
         html = page.native.to_html
