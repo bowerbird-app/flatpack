@@ -28,7 +28,11 @@
         <code class="font-mono text-xs">rails g flat_pack:theme Sunrise --hue=35 --chroma=0.2 --lightness=0.52</code>).
         Lightness applies to <code class="font-mono text-xs">--color-primary</code> only. For an exact hex, set
         <code class="font-mono text-xs">--color-primary</code> directly. Named themes should override
-        brand/semantic tokens — component aliases inherit from <code class="font-mono text-xs">:root</code>.
+        brand/semantic tokens — focus rings and active nav fills follow
+        <code class="font-mono text-xs">--color-primary</code>. Component aliases are declared on
+        <code class="font-mono text-xs">:root, [data-theme]</code> so they re-resolve when
+        <code class="font-mono text-xs">data-theme</code> is on <code class="font-mono text-xs">body</code>
+        or another descendant.
       </p>
     </div>
   </div>

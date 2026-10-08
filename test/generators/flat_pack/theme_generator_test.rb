@@ -24,7 +24,8 @@ module FlatPack
           assert_includes content, "--brand-hue: 35"
           assert_includes content, "--brand-chroma: 0.2"
           assert_includes content, "--brand-lightness: 0.6"
-          assert_includes content, ":root maps those knobs to --color-primary"
+          assert_includes content, ":root, [data-theme] maps those knobs to --color-primary"
+          assert_includes content, "Focus rings and active sidebar / top-nav fills follow --color-primary."
           refute_match(/^\s*--color-primary:/, content)
           refute_includes content, "uncomment"
           refute_includes content, "calc(var(--brand-chroma) - 0.02)"
@@ -42,7 +43,7 @@ module FlatPack
           content = destination.join("app/assets/stylesheets/flat_pack_theme_acme.css").read
           assert_includes content, ":root {"
           assert_includes content, "--brand-hue: 200"
-          refute_includes content, "data-theme"
+          refute_match(/^\s*\[data-theme=/, content)
         end
       end
     end

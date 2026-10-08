@@ -36,7 +36,7 @@ class ThemesControllerPrivateTest < ActiveSupport::TestCase
 
     code = controller.send(:theme_variables_code, "light")
 
-    assert_includes code, ":root"
+    assert_includes code, ":root, [data-theme]"
     assert_includes code, "--color-primary"
   end
 
@@ -46,7 +46,7 @@ class ThemesControllerPrivateTest < ActiveSupport::TestCase
     code = controller.send(:theme_variables_code, "rounded")
 
     assert_includes code, "no-op alias of :root"
-    assert_includes code, ":root"
+    assert_includes code, ":root, [data-theme]"
     assert_includes code, "--color-primary"
     assert_match(/--color-primary:\s*oklch\(/, code)
     refute_match(/\[data-theme="rounded"\]/, code)
@@ -61,6 +61,10 @@ class ThemesControllerPrivateTest < ActiveSupport::TestCase
     refute_nil primary
     assert_match(/\Aoklch\(/, primary.fetch(:default_value))
     refute_equal "var(--color-primary)", primary.fetch(:default_value)
+
+    ring = tokens.find { |token| token.fetch(:variable) == "--color-ring" }
+    refute_nil ring
+    assert_equal "var(--color-primary)", ring.fetch(:default_value)
   end
 
   test "variable_section_label classifies blur and unknown variables" do

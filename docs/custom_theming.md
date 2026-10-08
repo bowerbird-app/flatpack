@@ -2,7 +2,7 @@
 
 FlatPack uses inset rings for selected, active, drag, and focus-visible states. Keep focus-ring color tokens sufficiently distinct from their component backgrounds so the indicator remains accessible inside overflow-clipped containers.
 
-FlatPack ships with a default rounded / charcoal palette in `:root` and additional named variants under `data-theme` selectors. You can add your own named theme by defining a new selector such as `[data-theme="sunrise"]` in your host app stylesheet and overriding the same variables FlatPack already uses.
+FlatPack ships with a default rounded / charcoal palette on `:root, [data-theme]` and additional named variants under `data-theme` selectors. You can add your own named theme by defining a new selector such as `[data-theme="sunrise"]` in your host app stylesheet and overriding the same variables FlatPack already uses.
 
 Use this guide when you want a complete starting point instead of hand-picking a few overrides.
 
@@ -11,9 +11,9 @@ Use this guide when you want a complete starting point instead of hand-picking a
 FlatPack's theming surface has three layers:
 
 - `@theme inline {}` in `flat_pack/variables.css` registers the Tailwind token inventory (including `--brand-hue` / `--brand-chroma` / `--brand-lightness`) without copying values.
-- `:root {}` in the same file is the single source of concrete values: the default rounded / charcoal palette **and** component token wiring (`--button-primary-*` → `var(--color-primary)`, etc.).
+- `:root, [data-theme] {}` in the same file is the single source of concrete values: the default rounded / charcoal palette **and** component token wiring (`--button-primary-*` → `var(--color-primary)`, etc.). Repeating the wiring on `[data-theme]` re-resolves those aliases when `data-theme` is on `<body>` or another descendant, not only on `<html>`.
 - `[data-theme="rounded"]` is an empty alias of that default.
-- `[data-theme="..."]` selectors override **only** tokens that differ from `:root` (semantic / intentional exceptions). Component aliases inherit.
+- `[data-theme="..."]` selectors override **only** tokens that differ from the default (semantic / intentional exceptions). Component aliases re-resolve.
 - `--fp-button-*` are per-button paint tokens. Do not copy them onto a named theme. A host or gem registers a button style and paints those tokens on `[data-fp-style]`. `.fp-button` is still the chrome. See [Button](components/button.md).
 
 For most apps, generate a brand kit instead of copying every variable:
@@ -33,9 +33,9 @@ That means a custom host-app theme is usually just brand/semantic overrides:
 }
 ```
 
-For an exact primary hex, set `--color-primary` / `--color-primary-hover` instead of the brand primitives.
+For an exact primary hex, set `--color-primary` / `--color-primary-hover` instead of the brand primitives. Focus rings (`--color-ring`) and active sidebar / top-nav fills follow `--color-primary`. Text and icons on those fills follow `--color-primary-text`. The bottom nav bar is a surface (`--bottom-nav-background-color`); leave it unless you want a different chrome colour.
 
-Any non-`light` theme value applied to `<html data-theme="...">` will activate the matching selector.
+Any non-`light` theme value applied to `<html data-theme="...">` (or `<body data-theme="...">`) will activate the matching selector.
 
 ## Fastest Path
 
@@ -43,7 +43,7 @@ Any non-`light` theme value applied to `<html data-theme="...">` will activate t
 2. If you need a named theme with extra semantic/surface tweaks, create or open a host stylesheet that loads **after** the FlatPack tags.
 3. Start from brand/semantic overrides. Copy the complete starter block below only when you need a full fork.
 4. Rename `[data-theme="your-theme-name"]` to your own theme name.
-5. Apply the theme by setting `data-theme="your-theme-name"` on `<html>`.
+5. Apply the theme by setting `data-theme="your-theme-name"` on `<html>` (preferred) or `<body>`. Derived tokens re-resolve in either place.
 
 Example:
 
@@ -328,9 +328,9 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --list-marker-min-width: 1.5rem;
   --list-marker-gap: 0.5rem;
   --sidebar-item-hover-text-color: oklch(0.20 0.01 250);
-  --sidebar-item-active-background-color: oklch(0.52 0.26 250);
-  --sidebar-item-active-text-color: oklch(1.0 0 0);
-  --sidebar-item-active-icon-color: oklch(1.0 0 0);
+  --sidebar-item-active-background-color: var(--color-primary);
+  --sidebar-item-active-text-color: var(--color-primary-text);
+  --sidebar-item-active-icon-color: var(--color-primary-text);
   --sidebar-group-item-indent: 0.75rem;
   --sidebar-footer-text-color: oklch(0.45 0.01 250);
   --sidebar-header-background-color: var(--sidebar-background-color);
@@ -554,9 +554,9 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --top-nav-item-icon-color: oklch(0.45 0.01 250);
   --top-nav-item-hover-background-color: oklch(0.96 0.01 250);
   --top-nav-item-hover-text-color: oklch(0.20 0.01 250);
-  --top-nav-item-active-background-color: oklch(0.52 0.26 250);
-  --top-nav-item-active-text-color: oklch(1.0 0 0);
-  --top-nav-item-active-icon-color: oklch(1.0 0 0);
+  --top-nav-item-active-background-color: var(--color-primary);
+  --top-nav-item-active-text-color: var(--color-primary-text);
+  --top-nav-item-active-icon-color: var(--color-primary-text);
   --top-nav-height: 72px;
   --top-nav-backdrop-blur: 16px;
 
@@ -580,7 +580,7 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --search-result-hover-background-color: var(--surface-muted-background-color);
   --search-result-divider-color: var(--surface-border-color);
 
-  --color-ring: oklch(0.52 0.26 250);
+  --color-ring: var(--color-primary);
   --icon-stroke-width: 1.5;
 
   --stack-gap-sm: 0.5rem;
@@ -680,16 +680,16 @@ One limitation remains: the controller's built-in label helper only knows the sh
 The source of truth remains `app/assets/stylesheets/flat_pack/variables.css` in the FlatPack gem or repository.
 
 - `@theme inline {}` contains the token names used by Tailwind utilities. Values are not stored there.
-- `:root {}` contains the default rounded / charcoal palette and component aliases.
-- `[data-theme="dark"]` and `[data-theme="ocean"]` are **override-only** — they list tokens that differ from `:root`. `[data-theme="rounded"]` is an empty alias of the default. Component aliases inherit.
+- `:root, [data-theme] {}` contains the default rounded / charcoal palette and component aliases.
+- `[data-theme="dark"]` and `[data-theme="ocean"]` are **override-only** — they list tokens that differ from the default. `[data-theme="rounded"]` is an empty alias of the default. Component aliases re-resolve on `[data-theme]`.
 
-When FlatPack adds a new **semantic** token, copy it into your host theme if you need a different value. Component aliases that are `var(--semantic)` do not need to be re-copied.
+When FlatPack adds a new **semantic** token, copy it into your host theme if you need a different value. Component aliases that are `var(--semantic)` do not need to be re-copied. `--color-ring`, `--sidebar-item-active-background-color`, and `--top-nav-item-active-background-color` follow `--color-primary`; you only set them when they should diverge.
 
 ## Practical Editing Order
 
 If you do not want to retune hundreds of variables at once, start with these groups first:
 
-1. Core surface and text tokens: `--surface-*`, `--color-primary*`, `--color-secondary*`, `--color-default*`, `--color-ring`, `--icon-stroke-width`
+1. Core surface and text tokens: `--surface-*`, `--color-primary*` (ring and active nav follow), `--color-secondary*`, `--color-default*`, `--icon-stroke-width`
 2. Global feel tokens: `--radius-*`, `--shadow-*`, `--stack-gap-*`
 3. High-visibility component tokens: `--button-*`, `--card-*`, `--modal-*`, `--sidebar-*`, `--top-nav-*`
 4. Lower-frequency component tokens only when those components appear in your app

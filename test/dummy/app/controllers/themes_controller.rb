@@ -59,7 +59,7 @@ class ThemesController < ApplicationController
   }.freeze
 
   THEME_SELECTORS = {
-    "light" => ":root",
+    "light" => ":root, [data-theme]",
     "dark" => "[data-theme=\"dark\"]",
     "ocean" => "[data-theme=\"ocean\"]"
   }.freeze
@@ -84,11 +84,11 @@ class ThemesController < ApplicationController
   def theme_demo_variables_subtitle(theme)
     case theme
     when "light"
-      "Full :root wiring from flat_pack/variables.css (semantic tokens plus component aliases)."
+      "Full :root, [data-theme] wiring from flat_pack/variables.css (semantic tokens plus component aliases)."
     when "rounded"
       "Rounded is a no-op alias of :root. Hosts may keep data-theme=\"rounded\"; this dump is the default palette."
     else
-      "Override-only dump from [data-theme]. Component aliases inherit from :root unless listed here."
+      "Override-only dump from [data-theme]. Component aliases re-resolve from the default wiring unless listed here."
     end
   end
 
@@ -148,7 +148,7 @@ class ThemesController < ApplicationController
 
   def extract_theme_tokens
     css = cached_theme_variables_css
-    block = css[/^:root \{(?<body>.*?)^\}/m, :body]
+    block = css[/^:root(?:,\s*\[data-theme\])?\s*\{(?<body>.*?)^\}/m, :body]
     return [] if block.blank?
 
     block.lines.filter_map do |line|
