@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.206] - 2026-10-08
+
+### Fixed
+- The line above "+ New" in the collection editor search menu is its own rule. The ends are square. The "+ New" button keeps its rounded hover.
+- Bumped the gem version to `0.1.206`.
+
+### Upgrade notes
+- Reload kit CSS and JavaScript.
+- Redeploy so `meta.gem_version` shows `0.1.206`.
+
 ## [0.1.205] - 2026-10-08
 
 ### Added

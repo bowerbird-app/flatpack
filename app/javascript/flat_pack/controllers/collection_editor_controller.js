@@ -268,7 +268,7 @@ export default class extends Controller {
       empty.className = "flat-pack-collection-editor-menu-empty"
       empty.textContent = row.dataset.emptyText || "No matches"
       list.append(empty)
-      if (row.dataset.createUrl) list.append(this.createOption(row))
+      if (row.dataset.createUrl) list.append(this.menuRule(), this.createOption(row))
     }
     this.placeResults(row)
   }
@@ -304,6 +304,12 @@ export default class extends Controller {
     })
 
     return option
+  }
+
+  menuRule() {
+    const rule = document.createElement("hr")
+    rule.className = "flat-pack-collection-editor-menu-rule"
+    return rule
   }
 
   createOption(row) {
