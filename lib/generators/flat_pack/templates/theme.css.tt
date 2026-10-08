@@ -1,10 +1,11 @@
 /* FlatPack brand theme: <%= theme_slug %>
  *
  * Change --brand-hue / --brand-chroma / --brand-lightness to recolor primary.
- * :root maps those knobs to --color-primary (hover is 0.10 darker on lightness only).
+ * :root, [data-theme] maps those knobs to --color-primary (hover is 0.10 darker on lightness only).
+ * Focus rings and active sidebar / top-nav fills follow --color-primary.
  * For an exact hex, set --color-primary / --color-primary-hover instead.
  * Surfaces stay independent unless you override --surface-*.
- * Component tokens inherit from semantic tokens — you usually do not override them.
+ * Component tokens re-resolve from semantic tokens — you usually do not override them.
  *
  * Load this stylesheet AFTER flat_pack/variables.
  */
