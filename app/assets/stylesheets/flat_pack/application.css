@@ -1275,6 +1275,47 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   padding: 0.25rem var(--form-control-padding);
 }
 
+.flat-pack-collection-editor-chip {
+  position: relative;
+}
+
+/* The name button is only as wide as the glyphs. This target fills the chip.
+   Keep the button position static so the chip is the containing block.
+   The remove control is painted above the target. */
+.flat-pack-collection-editor-name {
+  position: static;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  text-align: left;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+
+.flat-pack-collection-editor-name::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+}
+
+.flat-pack-collection-editor-chip [data-collection-editor-chip-remove] {
+  position: relative;
+  z-index: 1;
+}
+
+.flat-pack-collection-editor-name:hover {
+  text-decoration: underline;
+}
+
+.flat-pack-collection-editor-name:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+}
+
 .flat-pack-collection-editor-title,
 .flat-pack-collection-editor-description {
   flex: 1 0 100%;

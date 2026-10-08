@@ -52,6 +52,12 @@ en:
       apply: Apply
     chip:
       remove: Remove
+    collection_editor:
+      new_record: New %{label}
+      edit_record: Edit %{label}
+      create_failed: Could not create the record
+      load_failed: Could not load the record
+      save_failed: Could not save the record
     code_block:
       snippets: Code snippets
       snippet: Snippet

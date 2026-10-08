@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { flatPackCopy } from "flat_pack/copy"
 
 export default class extends Controller {
   static targets = ["list", "template", "empty", "addButton", "status"]
@@ -139,7 +140,11 @@ export default class extends Controller {
     const prompt = row.querySelector("[data-collection-editor-create-button]")
     if (prompt) prompt.hidden = true
     this.hideResults(row)
+    this.invalidateEdit(row)
     this.clearCreateError(row)
+    this.clearFields(row)
+    this.prepareDialog(row, "create")
+    row.dataset.editorState = "ready"
     fields.querySelectorAll("[data-fill-from-query]").forEach((input) => {
       if (!input.value) input.value = query
     })
@@ -162,7 +167,91 @@ export default class extends Controller {
     const row = this.rowFrom(event)
     if (!row || !this.element.contains(row)) return
 
+    if (row.dataset.editorMode === "edit") return this.update(event)
     return this.create(event)
+  }
+
+  async edit(event) {
+    event.preventDefault()
+    const row = this.rowFrom(event)
+    if (!row?.dataset.updateUrl || row.dataset.editorState === "loading") return
+
+    const id = row.querySelector("[data-collection-editor-association]")?.value
+    if (!id) return
+
+    const request = this.invalidateEdit(row)
+    this.prepareDialog(row, "edit")
+    this.clearFields(row)
+    this.clearCreateError(row)
+    row.dataset.editorState = "loading"
+    if (!this.openCreateModal(row)) {
+      delete row.dataset.editorState
+      return
+    }
+
+    try {
+      const response = await fetch(this.recordUrl(row, id), {
+        method: "GET",
+        headers: {Accept: "application/json"},
+        credentials: "same-origin"
+      })
+      const payload = await response.json()
+      if (!this.editStillCurrent(row, request)) return
+
+      const fields = payload?.fields
+      if (!response.ok || !fields || typeof fields !== "object" || Array.isArray(fields)) {
+        this.showCreateError(row, this.errorMessages(payload, flatPackCopy("collection_editor.load_failed")))
+        row.dataset.editorState = "error"
+        return
+      }
+
+      this.fillFields(row, fields)
+      row.dataset.editorState = "ready"
+      this.setSubmitEnabled(row, true)
+      window.setTimeout(() => {
+        this.createScope(row).querySelector("[data-create-field]")?.focus()
+      }, 150)
+    } catch (_error) {
+      if (!this.editStillCurrent(row, request)) return
+      this.showCreateError(row, [flatPackCopy("collection_editor.load_failed")])
+      row.dataset.editorState = "error"
+    }
+  }
+
+  async update(event) {
+    event.preventDefault()
+    const row = this.rowFrom(event)
+    const id = row?.querySelector("[data-collection-editor-association]")?.value
+    if (!row || !row.dataset.updateUrl || !id || row.dataset.editorState !== "ready" || row.dataset.creating === "true") return
+
+    row.dataset.creating = "true"
+    this.clearCreateError(row)
+
+    try {
+      const response = await fetch(this.recordUrl(row, id), {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+          "X-CSRF-Token": this.csrfToken,
+          Accept: "application/json"
+        },
+        body: this.fieldBody(row).toString(),
+        credentials: "same-origin"
+      })
+      const payload = await response.json()
+      const item = this.normalizeItem(payload?.item)
+
+      if (!response.ok || payload?.ok === false || !item) {
+        this.showCreateError(row, this.errorMessages(payload, flatPackCopy("collection_editor.save_failed")))
+        return
+      }
+
+      this.applyUpdate(row, item)
+    } catch (_error) {
+      this.showCreateError(row, [flatPackCopy("collection_editor.save_failed")])
+    } finally {
+      delete row.dataset.creating
+    }
   }
 
   async create(event) {
@@ -171,13 +260,7 @@ export default class extends Controller {
     if (!row || !row.dataset.createUrl || row.dataset.creating === "true") return
 
     row.dataset.creating = "true"
-    const body = new URLSearchParams()
-    const query = row.querySelector("[data-collection-editor-search]")?.value || ""
-    body.set(row.dataset.searchParam || "q", query)
-    this.createScope(row).querySelectorAll("[data-create-field]").forEach((input) => {
-      const key = input.dataset.createField
-      if (key) body.set(key, input.value)
-    })
+    const body = this.fieldBody(row, {query: true})
 
     this.clearCreateError(row)
 
@@ -202,7 +285,7 @@ export default class extends Controller {
 
       this.applySelection(row, item)
     } catch (_error) {
-      this.showCreateError(row, ["Could not create the record"])
+      this.showCreateError(row, [flatPackCopy("collection_editor.create_failed")])
     } finally {
       delete row.dataset.creating
     }
@@ -339,6 +422,41 @@ export default class extends Controller {
     const association = row.querySelector("[data-collection-editor-association]")
     if (association) association.value = id
 
+    this.writeSummary(row, {title, description})
+    this.clearCreateError(row)
+    this.closeCreateModal(row)
+    this.closePanel(row, {force: true})
+    row.querySelector("[data-collection-editor-chip-remove]")?.focus()
+
+    row.dispatchEvent(new CustomEvent("collection-editor:selected", {
+      bubbles: true,
+      detail: {id, title, description}
+    }))
+  }
+
+  applyUpdate(row, item) {
+    const id = row.querySelector("[data-collection-editor-association]")?.value || item.id
+    const title = item.title || ""
+    const description = item.description || ""
+
+    this.element.querySelectorAll("[data-collection-editor-row]").forEach((match) => {
+      const association = match.querySelector("[data-collection-editor-association]")
+      if (!association || association.value !== String(id)) return
+      this.writeSummary(match, {title, description})
+    })
+
+    this.clearCreateError(row)
+    this.closeCreateModal(row)
+    row.querySelector("[data-collection-editor-chip-remove]")?.focus()
+    row.dispatchEvent(new CustomEvent("collection-editor:updated", {
+      bubbles: true,
+      detail: {id: String(id), title, description}
+    }))
+  }
+
+  writeSummary(row, item) {
+    const title = item.title || ""
+    const description = item.description || ""
     const summary = row.querySelector("[data-collection-editor-summary]")
     if (summary) summary.hidden = false
 
@@ -357,18 +475,11 @@ export default class extends Controller {
     const chipRemove = row.querySelector("[data-collection-editor-chip-remove]")
     if (chipRemove && title) chipRemove.setAttribute("aria-label", `Remove ${title}`)
 
+    const edit = row.querySelector("[data-collection-editor-edit]")
+    if (edit && title) edit.setAttribute("aria-label", `${row.dataset.editLabel || "Edit"} ${title}`)
+
     const handle = row.querySelector("[data-collection-editor-handle]")
     if (handle && title) handle.setAttribute("aria-label", `Reorder ${title}`)
-
-    this.clearCreateError(row)
-    this.closeCreateModal(row)
-    this.closePanel(row, {force: true})
-    chipRemove?.focus()
-
-    row.dispatchEvent(new CustomEvent("collection-editor:selected", {
-      bubbles: true,
-      detail: {id, title, description}
-    }))
   }
 
   showPanel(row) {
@@ -427,13 +538,78 @@ export default class extends Controller {
     node.textContent = ""
   }
 
-  errorMessages(payload) {
+  errorMessages(payload, fallback = flatPackCopy("collection_editor.create_failed")) {
     if (Array.isArray(payload?.errors)) return payload.errors.map(String)
     if (payload?.errors && typeof payload.errors === "object") {
       return Object.entries(payload.errors).flatMap(([_key, messages]) => [].concat(messages).map(String))
     }
     if (payload?.error) return [String(payload.error)]
-    return ["Could not create the record"]
+    return [fallback]
+  }
+
+  fieldBody(row, {query = false} = {}) {
+    const body = new URLSearchParams()
+    if (query) {
+      const typed = row.querySelector("[data-collection-editor-search]")?.value || ""
+      body.set(row.dataset.searchParam || "q", typed)
+    }
+    this.createScope(row).querySelectorAll("[data-create-field]").forEach((input) => {
+      const key = input.dataset.createField
+      if (key) body.set(key, input.value)
+    })
+    return body
+  }
+
+  clearFields(row) {
+    this.createScope(row).querySelectorAll("[data-create-field]").forEach((input) => {
+      input.value = ""
+    })
+  }
+
+  fillFields(row, fields) {
+    this.createScope(row).querySelectorAll("[data-create-field]").forEach((input) => {
+      const key = input.dataset.createField
+      if (!key || !Object.prototype.hasOwnProperty.call(fields, key)) return
+      input.value = fields[key] == null ? "" : String(fields[key])
+    })
+  }
+
+  recordUrl(row, id) {
+    return String(row.dataset.updateUrl || "").replace(":id", encodeURIComponent(id))
+  }
+
+  prepareDialog(row, mode) {
+    row.dataset.editorMode = mode
+    const modal = this.createModal(row)
+    if (!modal) return
+
+    const title = modal.querySelector("[data-collection-editor-modal-title]")
+    const submit = modal.querySelector("[data-collection-editor-create-submit]")
+    const label = submit?.querySelector("span")
+    if (mode === "edit") {
+      if (title) title.textContent = row.dataset.editTitle || "Edit"
+      if (label) label.textContent = row.dataset.updateLabel || "Save"
+      if (submit) submit.disabled = true
+      return
+    }
+
+    if (title) title.textContent = row.dataset.createTitle || "New"
+    if (label) label.textContent = row.dataset.createLabel || "Create"
+    if (submit) submit.disabled = false
+  }
+
+  invalidateEdit(row) {
+    row._editRequest = (row._editRequest || 0) + 1
+    return row._editRequest
+  }
+
+  editStillCurrent(row, request) {
+    return row._editRequest === request && row.dataset.editorMode === "edit"
+  }
+
+  setSubmitEnabled(row, enabled) {
+    const submit = this.createModal(row)?.querySelector("[data-collection-editor-create-submit]")
+    if (submit) submit.disabled = !enabled
   }
 
   localItems(row) {

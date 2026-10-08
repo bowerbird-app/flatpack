@@ -228,6 +228,7 @@ Rails.application.routes.draw do
     get "collection_editor/people", to: "collection_editors#search_people", as: :collection_editor_people
     post "collection_editor/people", to: "collection_editors#create_person"
     get "collection_editor/people/:id/edit", to: "collection_editors#edit_person", as: :edit_collection_editor_person
+    get "collection_editor/people/:id", to: "collection_editors#show_person"
     patch "collection_editor/people/:id", to: "collection_editors#update_person", as: :collection_editor_person
     patch "collection_editor/:id/reorder", to: "collection_editors#reorder", as: :reorder_collection_editor
     patch "collection_editor/:id", to: "collection_editors#update", as: :collection_editor_project

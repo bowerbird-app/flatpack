@@ -72,6 +72,63 @@ module FlatPack
         assert_selector "[data-collection-editor-search-error]", text: "Search failed", visible: :all
         assert_selector "[data-flat-pack--collection-editor-target='status'][aria-live='polite']", visible: :all
         assert_no_selector ".flat-pack-collection-editor-empty"
+        assert_no_selector "[data-collection-editor-edit]"
+      end
+
+      def test_update_url_turns_the_chip_name_into_an_edit_button
+        membership = Record.new(id: 12, person_id: 4, role: "Designer", name: "Alice Chen")
+        row_form = builder("project[project_people_attributes][12]", membership)
+        view = vc_test_controller.view_context
+
+        render_inline(Component.new) do |editor|
+          editor.with_row(form: row_form) do |row|
+            row.with_entity(
+              form: row_form,
+              association_name: :person_id,
+              title: "Alice Chen",
+              label: "Person",
+              create_url: "/people",
+              update_url: "/people/:id",
+              edit_label: "Edit",
+              update_label: "Save"
+            ) do
+              view.tag.input(type: "text", data: {create_field: "name"}, form: "collection-editor-unattached")
+            end
+          end
+        end
+
+        assert_selector ".flat-pack-collection-editor-chip > button.flat-pack-collection-editor-name[data-collection-editor-edit][aria-label='Edit Alice Chen']", text: "Alice Chen"
+        assert_selector ".flat-pack-collection-editor-chip > [data-collection-editor-chip-remove][aria-label='Remove Alice Chen']"
+        assert_selector "[data-update-url='/people/:id']"
+        assert_selector "[data-edit-title='Edit Person']"
+        assert_selector "[data-create-title='New Person']"
+        assert_selector "[data-update-label='Save']"
+        assert_selector "[data-collection-editor-modal-title]", text: "New Person"
+        assert_no_selector "a.flat-pack-collection-editor-name"
+      end
+
+      def test_update_url_without_an_id_token_is_ignored
+        membership = Record.new(id: 12, person_id: 4, name: "Alice Chen")
+        row_form = builder("project[project_people_attributes][12]", membership)
+        view = vc_test_controller.view_context
+
+        render_inline(Component.new) do |editor|
+          editor.with_row(form: row_form) do |row|
+            row.with_entity(
+              form: row_form,
+              association_name: :person_id,
+              title: "Alice Chen",
+              update_url: "/people",
+              create_url: "/people"
+            ) do
+              view.tag.input(type: "text", data: {create_field: "name"}, form: "collection-editor-unattached")
+            end
+          end
+        end
+
+        assert_selector "[data-collection-editor-title]", text: "Alice Chen"
+        assert_no_selector "[data-collection-editor-edit]"
+        assert_no_selector "[data-update-url]"
       end
 
       def test_empty_state_and_new_row_template_use_a_stable_child_index
@@ -155,6 +212,9 @@ module FlatPack
         assert_includes css, "border-inline-end: 1px solid var(--collection-editor-border-color)"
         assert_includes css, "inset 0 0 0 2px var(--color-ring)"
         assert_includes css, "inset 0 0 0 2px var(--color-error)"
+        assert_includes css, ".flat-pack-collection-editor-name::before"
+        assert_includes css, "inset: -1px;"
+        assert_includes css, ".flat-pack-collection-editor-chip [data-collection-editor-chip-remove]"
         assert_includes css, ".flat-pack-collection-editor-fields :is(input, select, textarea, .flat-pack-select-trigger)"
         assert_includes css, "padding-block: 0"
         assert_includes css, ".flat-pack-modal__body .flat-pack-collection-editor-create-fields"

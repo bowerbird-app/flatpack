@@ -12,6 +12,9 @@ module FlatPack
       password.show
       password.hide
       chip.remove
+      collection_editor.create_failed
+      collection_editor.load_failed
+      collection_editor.save_failed
       select.remove
       search.result_fallback
       picker.untitled
