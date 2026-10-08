@@ -116,7 +116,6 @@ module FlatPack
     end
 
     test "chrome greys alias surface tokens so named themes inherit" do
-
       {
         "--tabs-pill-inactive-text-color" => "var(--surface-muted-content-color)",
         "--tabs-pill-inactive-hover-background-color" => "var(--surface-muted-background-color)",
@@ -187,7 +186,6 @@ module FlatPack
     end
 
     test "active pill colours alias the primary button tokens" do
-
       assert_match(/--tabs-pill-active-background-color:\s*var\(--button-primary-background-color\)/, root_block)
       assert_match(/--tabs-pill-active-border-color:\s*var\(--button-primary-border-color\)/, root_block)
       assert_match(/--tabs-pill-active-text-color:\s*var\(--button-primary-text-color\)/, root_block)
