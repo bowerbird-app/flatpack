@@ -1202,6 +1202,12 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   border-bottom: 1px solid var(--collection-editor-border-color);
 }
 
+/* Narrow layout is one card. The handle, the identity, and remove share the
+   top line. Later fields use the full width under that line. */
+.flat-pack-collection-editor-row {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+}
+
 .flat-pack-collection-editor-rows > .flat-pack-collection-editor-row:last-child {
   border-bottom: 0;
 }
@@ -1251,7 +1257,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 }
 
 .flat-pack-collection-editor--orderable .flat-pack-collection-editor-handle {
-  border-inline-end: 1px solid var(--collection-editor-border-color);
+  align-self: center;
 }
 
 .flat-pack-collection-editor-entity {
@@ -1265,7 +1271,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 }
 
 .flat-pack-collection-editor:not(.flat-pack-collection-editor--orderable) .flat-pack-collection-editor-entity {
-  grid-column: 1 / -1;
+  grid-column: 1 / 3;
 }
 
 .flat-pack-collection-editor-summary {
@@ -1321,11 +1327,26 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   flex: 1 0 100%;
 }
 
-.flat-pack-collection-editor-fields,
-.flat-pack-collection-editor-actions {
-  grid-column: 1 / -1;
+.flat-pack-collection-editor-fields {
+  grid-column: 2 / -1;
   min-width: 0;
-  border-top: 1px solid var(--collection-editor-border-color);
+  border-top: 0;
+}
+
+.flat-pack-collection-editor-actions {
+  grid-column: 3;
+  grid-row: 1;
+  align-self: center;
+  min-width: var(--hit-target-min);
+  border-top: 0;
+  border-inline-start: 0;
+}
+
+/* No person chip: the first field sits between the handle and remove. */
+.flat-pack-collection-editor-row:not(:has(.flat-pack-collection-editor-entity)) > .flat-pack-collection-editor-fields:first-of-type {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
 }
 
 .flat-pack-collection-editor-fields {
@@ -1361,7 +1382,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   gap: 0.5rem;
   justify-content: flex-end;
   padding-block: 0;
-  padding-inline: var(--form-control-padding);
+  padding-inline: 0;
 }
 
 .flat-pack-collection-editor-entity:has(.flat-pack-collection-editor-search-input:focus),
@@ -1602,6 +1623,73 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   }
 }
 
+/* The narrow row is a list, not a table. Lines between the handle, the name,
+   and remove belong to the wide layout only. */
+@media (max-width: 39.999rem) {
+  .flat-pack-collection-editor-row {
+    padding-block: 0.25rem 0.75rem;
+  }
+
+  .flat-pack-collection-editor-entity {
+    align-self: center;
+  }
+
+  .flat-pack-collection-editor-row:not(:has(.flat-pack-collection-editor-entity)) > .flat-pack-collection-editor-handle,
+  .flat-pack-collection-editor-row:not(:has(.flat-pack-collection-editor-entity)) > .flat-pack-collection-editor-actions {
+    align-self: start;
+    margin-top: 0.25rem;
+  }
+
+  .flat-pack-collection-editor-fields {
+    padding: 0 var(--form-control-padding) 0.75rem;
+  }
+
+  .flat-pack-collection-editor-fields + .flat-pack-collection-editor-fields {
+    margin-top: 0.125rem;
+  }
+
+  /* Cell chrome has no box of its own. On a phone the table lines are gone,
+     so the relationship control keeps a normal field border. Horizontal
+     padding stays on the control classes, including the select chevron inset. */
+  .flat-pack-collection-editor-fields :is(input:not([type="hidden"]):not([data-flat-pack--select-target="searchInput"]), select, textarea, .flat-pack-select-trigger) {
+    border: 1px solid var(--surface-border-color);
+    border-radius: var(--radius-md);
+    background-color: var(--surface-background-color);
+    padding-block: 0.5rem;
+    transition:
+      border-color var(--duration-fast) var(--easing-standard),
+      box-shadow var(--duration-fast) var(--easing-standard);
+  }
+
+  .flat-pack-collection-editor-fields:focus-within,
+  .flat-pack-collection-editor-fields:has([aria-invalid="true"]),
+  .flat-pack-collection-editor-fields:has([aria-invalid="true"]):focus-within {
+    box-shadow: none;
+  }
+
+  .flat-pack-collection-editor-fields :is(input:not([type="hidden"]):not([data-flat-pack--select-target="searchInput"]), select, textarea, .flat-pack-select-trigger):focus {
+    outline: none;
+    border-color: transparent;
+    box-shadow: inset 0 0 0 2px var(--color-ring);
+  }
+
+  .flat-pack-collection-editor-fields :is(input:not([type="hidden"]):not([data-flat-pack--select-target="searchInput"]), select, textarea, .flat-pack-select-trigger)[aria-invalid="true"],
+  .flat-pack-collection-editor-fields :is(input:not([type="hidden"]):not([data-flat-pack--select-target="searchInput"]), select, textarea, .flat-pack-select-trigger)[aria-invalid="true"]:focus {
+    border-color: var(--color-error);
+    box-shadow: inset 0 0 0 2px var(--color-error);
+  }
+
+  .flat-pack-collection-editor-chip [data-collection-editor-chip-remove] {
+    display: none;
+  }
+}
+
+@media (max-width: 39.999rem) and (prefers-reduced-motion: reduce) {
+  .flat-pack-collection-editor-fields :is(input:not([type="hidden"]):not([data-flat-pack--select-target="searchInput"]), select, textarea, .flat-pack-select-trigger) {
+    transition: none;
+  }
+}
+
 @media (min-width: 40rem) {
   .flat-pack-collection-editor-card {
     display: grid;
@@ -1626,10 +1714,28 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
     padding-inline-start: calc(var(--hit-target-min) + var(--form-control-padding));
   }
 
+  .flat-pack-collection-editor-row {
+    padding-block: 0;
+  }
+
+  .flat-pack-collection-editor--orderable .flat-pack-collection-editor-handle {
+    align-self: stretch;
+    border-inline-end: 1px solid var(--collection-editor-border-color);
+  }
+
+  .flat-pack-collection-editor-fields {
+    padding: 0;
+  }
+
+  .flat-pack-collection-editor-fields + .flat-pack-collection-editor-fields {
+    margin-top: 0;
+  }
+
   .flat-pack-collection-editor .flat-pack-collection-editor-row > .flat-pack-collection-editor-handle,
   .flat-pack-collection-editor .flat-pack-collection-editor-row > .flat-pack-collection-editor-entity,
   .flat-pack-collection-editor .flat-pack-collection-editor-row > .flat-pack-collection-editor-fields,
-  .flat-pack-collection-editor .flat-pack-collection-editor-row > .flat-pack-collection-editor-actions {
+  .flat-pack-collection-editor .flat-pack-collection-editor-row > .flat-pack-collection-editor-actions,
+  .flat-pack-collection-editor-row:not(:has(.flat-pack-collection-editor-entity)) > .flat-pack-collection-editor-fields:first-of-type {
     grid-column: auto;
     grid-row: auto;
   }
@@ -1637,6 +1743,12 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   .flat-pack-collection-editor-fields,
   .flat-pack-collection-editor-actions {
     border-top: 0;
+  }
+
+  .flat-pack-collection-editor-actions {
+    border-inline-start: 0;
+    padding-inline: var(--form-control-padding);
+    min-width: 0;
   }
 
   .flat-pack-collection-editor-row > .flat-pack-collection-editor-entity,

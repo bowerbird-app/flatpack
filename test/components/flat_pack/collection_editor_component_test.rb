@@ -206,6 +206,11 @@ module FlatPack
         assert_includes css, "var(--collection-editor-description-color)"
         assert_includes css, "var(--collection-editor-drop-indicator-color)"
         assert_includes css, "@media (min-width: 40rem)"
+        assert_includes css, "grid-template-columns: auto minmax(0, 1fr) auto"
+        assert_includes css, "@media (max-width: 39.999rem)"
+        assert_includes css, ".flat-pack-collection-editor-actions {\n  grid-column: 3;\n  grid-row: 1;"
+        assert_includes css, "border-inline-start: 0;"
+        assert_includes css, ".flat-pack-collection-editor-row:not(:has(.flat-pack-collection-editor-entity)) > .flat-pack-collection-editor-fields:first-of-type"
         assert_includes css, ".flat-pack-collection-editor-row[hidden]"
         assert_includes css, "--collection-editor-columns"
         assert_includes css, "grid-template-columns: subgrid"
@@ -219,6 +224,19 @@ module FlatPack
         assert_includes css, "padding-block: 0"
         assert_includes css, ".flat-pack-modal__body .flat-pack-collection-editor-create-fields"
         refute_includes css, "justify-content: center"
+
+        narrow = css[css.index("@media (max-width: 39.999rem)")...css.index("@media (min-width: 40rem)")]
+        assert_includes narrow, "border: 1px solid var(--surface-border-color);"
+        assert_includes narrow, "border-radius: var(--radius-md);"
+        assert_includes narrow, "background-color: var(--surface-background-color);"
+        assert_includes narrow, "box-shadow: none;"
+        assert_includes narrow, "inset 0 0 0 2px var(--color-ring);"
+        assert_includes narrow, "inset 0 0 0 2px var(--color-error);"
+        assert_includes narrow, "padding-block: 0.5rem;"
+
+        wide = css[css.index("@media (min-width: 40rem)")..]
+        refute_includes wide, "border: 1px solid var(--surface-border-color);"
+        refute_includes wide, "background-color: var(--surface-background-color);"
         assert_includes variables, "--collection-editor-row-hover-background-color: var(--list-item-hover-background-color);"
       end
 
