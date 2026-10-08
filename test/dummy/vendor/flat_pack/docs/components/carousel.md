@@ -76,7 +76,7 @@ The dummy app consolidates carousel behavior (basic, autoplay, thumbnails, trans
   slides: [
     {type: :image, src: "https://images.example.com/hero.jpg", alt: "Hero", caption: "Hero image", lightbox: true},
     {type: :video, src: "https://videos.example.com/teaser.mp4", poster: "https://images.example.com/poster.jpg", caption: "Teaser"},
-    {type: :html, html: "<div class='p-6'><h3>Release Notes</h3><p>Shipped this week.</p></div>", caption: "Custom card"}
+    {type: :html, html: "<div class='p-6'><h3>Release Notes</h3><p>Shipped this week.</p></div>", thumb_src: "https://images.example.com/notes.jpg", caption: "Custom card"}
   ],
   show_thumbs: true,
   autoplay: true,
@@ -122,8 +122,8 @@ The dummy app consolidates carousel behavior (basic, autoplay, thumbnails, trans
 | `type` | image, video, html | `:image`, `:video`, `:html` | inferred | Optional if inferable from payload. |
 | `src` | image, video | String URL | required | Required for image/video slides. |
 | `url` | image | String URL | `nil` | Optional click-through URL. In `:logo_slider` mode, wraps the logo image in a link that opens in a new tab. |
-| `thumb_src` | image | String URL | `nil` | Thumbnail source for `show_thumbs`. |
-| `thumb` | image | String URL | `nil` | Alias for `thumb_src`. |
+| `thumb_src` | image, html | String URL | `nil` | Thumbnail for `show_thumbs`. Image slides fall back to `src`. HTML slides without a usable URL show the slide number. |
+| `thumb` | image, html | String URL | `nil` | Alias for `thumb_src`. |
 | `alt` | image | String | `"Slide n"` | Falls back to slide index label. |
 | `caption` | image, video, html | String | `""` | Used by caption rendering modes. |
 | `lightbox` | image, video, html | `true`, `false` | image: `true`, others: `false` | Only image slides can actually open lightbox. |
@@ -133,6 +133,8 @@ The dummy app consolidates carousel behavior (basic, autoplay, thumbnails, trans
 | `video_loop` | video | `true`, `false` | `false` | Passed to `<video loop>`. |
 | `playsinline` | video | `true`, `false` | `true` | Passed to `<video playsinline>`. |
 | `html` | html | String HTML | required for `:html` | HTML content is sanitized before render. |
+
+HTML slides use the same `thumb_src` and `thumb` keys as images. A safe URL (`http`, `https`, or a relative path) becomes the thumbnail. Leave it off, or pass a rejected URL, and the thumb stays the slide number. Video thumbnails still come from `poster`.
 
 ## JS API (owl-style)
 The Stimulus controller exposes methods both as component actions and as an imperative API:
