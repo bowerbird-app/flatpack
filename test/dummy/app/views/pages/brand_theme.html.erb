@@ -1,0 +1,67 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Brand on body",
+  subtitle: "This page sets data-theme on body, not html. Only semantic surface and primary tokens are defined."
+) %>
+
+<p class="text-sm text-[var(--surface-muted-content-color)] mb-6">
+  <%= @body_theme == "featured-in-dark" ? "Dark" : "Light" %>
+  kit:
+  <code class="font-mono text-xs">body[data-theme="<%= @body_theme %>"]</code>.
+  Ghost labels, secondary buttons, list hover, and primary hover must follow those tokens.
+</p>
+
+<div class="flex flex-wrap gap-3 mb-8">
+  <% if @body_theme == "featured-in-dark" %>
+    <%= render FlatPack::Button::Component.new(text: "Light brand", href: "/demo/brand_theme", style: :secondary, size: :sm) %>
+  <% else %>
+    <%= render FlatPack::Button::Component.new(text: "Dark brand", href: "/demo/brand_theme/dark", style: :secondary, size: :sm) %>
+  <% end %>
+</div>
+
+<section class="mb-10" id="buttons">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Buttons", anchor_link: true, subtitle: "Primary hover must match the brand fill, not charcoal.") %>
+  <div class="flex flex-wrap gap-3">
+    <%= render FlatPack::Button::Component.new(text: "Primary", style: :primary) %>
+    <%= render FlatPack::Button::Component.new(text: "Secondary", style: :secondary) %>
+    <%= render FlatPack::Button::Component.new(text: "Ghost", style: :ghost) %>
+    <%= render FlatPack::Button::Component.new(text: "Theme", style: :ghost) %>
+    <%= render FlatPack::Button::Component.new(text: "Sign out", style: :ghost) %>
+  </div>
+</section>
+
+<section class="mb-10" id="switch">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Switch", anchor_link: true) %>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body(class: "space-y-[var(--stack-gap-md)]") do %>
+      <%= render FlatPack::Switch::Component.new(name: "brand_feature", label: "Show in listings", checked: true) %>
+      <%= render FlatPack::Switch::Component.new(name: "brand_quiet", label: "Quiet hours") %>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-10" id="chips">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Chips", anchor_link: true, subtitle: "Remove hover follows content colour, not a frozen black overlay.") %>
+  <div class="flex flex-wrap gap-3">
+    <%= render FlatPack::Chip::Component.new(text: "Editorial", removable: true) %>
+    <%= render FlatPack::Chip::Component.new(text: "Featured", style: :primary, removable: true) %>
+  </div>
+</section>
+
+<section class="mb-10" id="list">
+  <%= render FlatPack::SectionTitle::Component.new(title: "List", anchor_link: true) %>
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <%= render FlatPack::List::Component.new do %>
+        <%= render FlatPack::List::Item.new do %>
+          Cover story
+        <% end %>
+        <%= render FlatPack::List::Item.new do %>
+          Studio diary
+        <% end %>
+        <%= render FlatPack::List::Item.new do %>
+          Press kit
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+</section>

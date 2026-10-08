@@ -2,8 +2,9 @@
  *
  * Token hierarchy:
  *   1. Brand primitives (--brand-hue, --brand-chroma, --brand-lightness) — change these to recolor primary
- *   2. Semantic tokens (--color-*, --surface-*, --radius-*, --shadow-*, --font-*, --text-*, --duration-*, --easing-*)
+ *   2. Semantic tokens (--color-*, --surface-*, --overlay-*, --radius-*, --shadow-*, --font-*, --text-*, --duration-*, --easing-*)
  *   3. Component tokens (--button-*, --sidebar-*, …) — defined once; prefer var(--semantic)
+ *      --color-primary-hover follows --color-primary (relative colour; brand-knob fallback)
  *
  * @theme inline registers Tailwind utility names without emitting values (avoids duplicating :root
  *   and the circular `--x: var(--x)` trap when Tailwind also emits @theme onto :root).
@@ -56,6 +57,8 @@
   --surface-muted-content-color: var(--surface-muted-content-color);
   --surface-border-color: var(--surface-border-color);
   --surface-border-hover-color: var(--surface-border-hover-color);
+  --overlay-backdrop-color: var(--overlay-backdrop-color);
+  --overlay-scrim-color: var(--overlay-scrim-color);
   --checkbox-size: var(--checkbox-size);
   --checkbox-radius: var(--checkbox-radius);
   --checkbox-label-gap: var(--checkbox-label-gap);
@@ -659,18 +662,19 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --brand-chroma: 0;
   --brand-lightness: 0.3211;
   --color-primary: oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue));
+  /* Fallback when `oklch(from …)` is unsupported. Same charcoal look via brand knobs. */
   --color-primary-hover: oklch(calc(var(--brand-lightness) - 0.10) var(--brand-chroma) var(--brand-hue));
   --color-primary-text: #fff;
   --color-default: var(--surface-background-color);
   --color-default-hover: var(--surface-muted-background-color);
   --color-default-text: var(--surface-content-color);
   --color-default-border: var(--surface-border-color);
-  --color-secondary: #f5f5f5;
-  --color-secondary-hover: #ebebeb;
-  --color-secondary-text: #333;
+  --color-secondary: color-mix(in oklab, var(--surface-muted-background-color) 18%, var(--surface-background-color));
+  --color-secondary-hover: color-mix(in oklab, var(--surface-muted-background-color) 70%, var(--surface-background-color));
+  --color-secondary-text: var(--surface-content-color);
   --color-ghost: transparent;
-  --color-ghost-hover: #f2f2f2;
-  --color-ghost-text: #333;
+  --color-ghost-hover: color-mix(in oklab, var(--surface-muted-background-color) 35%, var(--surface-background-color));
+  --color-ghost-text: var(--surface-content-color);
   --color-success-background-color: oklch(0.72 0.17 152);
   --color-success-hover-background-color: oklch(0.66 0.17 152);
   --color-success-text: #fff;
@@ -695,6 +699,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --surface-muted-content-color: #666;
   --surface-border-color: #d1d5db;
   --surface-border-hover-color: #d1d5db;
+  --overlay-backdrop-color: rgb(0 0 0 / 0.5);
+  --overlay-scrim-color: rgb(31 41 55 / 0.68);
   --checkbox-size: 1.25rem;
   --checkbox-radius: 0.125rem;
   --checkbox-label-gap: 0.75rem;
@@ -816,7 +822,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --hero-overlay-on-light-button-secondary-border-color: rgb(0 0 0 / 0.35);
   --hero-overlay-min-height: 560px;
   --hero-overlay-copy-padding-top: calc(var(--top-nav-height) + env(safe-area-inset-top, 0px) + 2rem);
-  --carousel-chevron-background-color: rgb(31 41 55 / 0.68);
+  --carousel-chevron-background-color: var(--overlay-scrim-color);
   --carousel-viewport-background-color: var(--surface-muted-background-color);
   --carousel-viewport-border-color: var(--surface-border-color);
   --carousel-control-background-color: rgb(0 0 0 / 0.6);
@@ -835,7 +841,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --carousel-caption-below-text-color: var(--surface-muted-content-color);
   --carousel-media-background-color: oklch(0 0 0);
   --carousel-lightbox-image-background-color: rgb(0 0 0 / 0.2);
-  --modal-backdrop-color: rgb(0 0 0 / 0.5);
+  --modal-backdrop-color: var(--overlay-backdrop-color);
   --modal-surface-color: var(--surface-background-color);
   --modal-border-color: var(--surface-border-color);
   --modal-title-color: var(--surface-content-color);
@@ -1199,7 +1205,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --table-cell-muted-text-color: var(--surface-muted-content-color);
   --table-empty-state-text-color: var(--surface-muted-content-color);
   --table-sort-link-hover-color: var(--surface-content-color);
-  --chip-remove-hover-background-color: rgb(0 0 0 / 0.1);
+  --chip-remove-hover-background-color: color-mix(in oklab, var(--surface-content-color) 10%, transparent);
   --chip-border-radius: 0.5rem;
   --chip-group-gap: 0.5rem;
   --chip-padding-x-sm: 0.5rem;
@@ -1273,6 +1279,20 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --transition-slow: var(--duration-slow);
 }
 
+/* Hover follows --color-primary itself so a host that sets an exact hex (not
+ * --brand-*) still gets a darker shade. Relative color syntax is the match for
+ * `l - 0.10`; color-mix() cannot keep that delta across lightness values.
+ * Tailwind never sees this value — @theme inline only self-maps the name, and
+ * this file is a stylesheet, not a Tailwind entry. Named themes that set
+ * --color-primary-hover (dark, ocean) still win: they are equally specific and
+ * come later.
+ */
+@supports (color: oklch(from red calc(l - 0.1) c h)) {
+  :root, [data-theme] {
+    --color-primary-hover: oklch(from var(--color-primary) calc(l - 0.1) c h);
+  }
+}
+
 /* ApexCharts tooltips can be rendered outside chart containers and keep
  * a built-in .apexcharts-theme-light style. Force them to use app surface tokens.
  */
@@ -1292,17 +1312,16 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   color: var(--surface-content-color) !important;
 }
 
-/* Dark theme — overrides only. Component aliases re-resolve from :root, [data-theme]. */
+/* Dark theme — semantic overrides only. Component aliases re-resolve from :root, [data-theme].
+ * Hover is a lift (not l - 0.10), so it stays explicit. Shadows change recipe (white hairline),
+ * not just colour. Bottom nav and top-nav fill are inverted chrome with no surface equivalent.
+ * Modal blur stays a dark-only exception (3px vs 4px light).
+ */
 [data-theme="dark"] {
   color-scheme: dark;
   --color-primary: oklch(0.62 0.22 250);
   --color-primary-hover: oklch(0.72 0.15 250);
   --color-primary-text: oklch(0.15 0.01 250);
-  --color-secondary: oklch(0.20 0.02 250);
-  --color-secondary-hover: oklch(0.25 0.03 250);
-  --color-secondary-text: oklch(0.90 0.01 250);
-  --color-ghost-hover: oklch(0.22 0.02 250);
-  --color-ghost-text: oklch(0.85 0.01 250);
   --color-success-background-color: oklch(67% .194 149.214);
   --color-success-hover-background-color: oklch(72% .194 149.214);
   --color-success-text: oklch(0.15 0.01 250);
@@ -1316,18 +1335,13 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --surface-muted-content-color: oklch(0.65 0.01 250);
   --surface-border-color: oklch(0.30 0.02 250);
   --surface-border-hover-color: oklch(0.40 0.03 250);
-  --carousel-chevron-background-color: rgb(15 20 36 / 0.72);
+  --overlay-backdrop-color: rgb(0 0 0 / 0.65);
+  --overlay-scrim-color: rgb(15 20 36 / 0.72);
   --bottom-nav-background-color: oklch(0.11 0.01 250);
   --bottom-nav-border-color: oklch(0.29 0.02 250);
   --bottom-nav-item-active-color: var(--color-primary-hover);
   --bottom-nav-item-color: oklch(0.76 0.01 250);
   --bottom-nav-item-hover-color: oklch(0.96 0.01 250);
-  --switch-track-background-color: color-mix(in oklab, oklch(0.38 0.05 249.96) 92%, black);
-  --comments-inline-input-radius: 9999px;
-  --modal-backdrop-color: rgb(0 0 0 / 0.65);
-  --list-item-hover-background-color: oklch(0.26 0.02 250);
-  --list-item-active-background-color: oklch(0.30 0.03 250);
-  --chip-remove-hover-background-color: rgb(255 255 255 / 0.16);
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.55), 0 0 0 1px rgb(255 255 255 / 0.06);
   --shadow-md: 0 10px 24px -8px rgb(0 0 0 / 0.65), 0 0 0 1px rgb(255 255 255 / 0.08);
   --shadow-lg: 0 22px 40px -12px rgb(0 0 0 / 0.72), 0 0 0 1px rgb(255 255 255 / 0.1);
@@ -1354,13 +1368,13 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --surface-muted-content-color: oklch(0.45 0.02 220);
   --surface-border-color: oklch(0.87 0.02 220);
   --surface-border-hover-color: oklch(0.80 0.03 220);
-  --carousel-chevron-background-color: rgb(14 79 128 / 0.72);
+  --overlay-scrim-color: rgb(14 79 128 / 0.72);
   --bottom-nav-background-color: oklch(0.30 0.07 235);
   --bottom-nav-border-color: oklch(0.43 0.08 230);
   --bottom-nav-item-active-color: oklch(0.95 0.03 220);
   --bottom-nav-item-color: oklch(0.81 0.04 220);
   --bottom-nav-item-hover-color: oklch(0.99 0.01 220);
-  --modal-backdrop-color: rgb(3 24 47 / 0.45);
+  --overlay-backdrop-color: rgb(3 24 47 / 0.45);
   --list-item-hover-background-color: oklch(0.92 0.03 220);
   --list-item-active-background-color: oklch(0.88 0.04 220);
   --sidebar-group-item-indent: 0.875rem;

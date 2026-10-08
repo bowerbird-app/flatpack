@@ -13,6 +13,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.207] - 2026-10-08
+
+### Added
+- `--overlay-backdrop-color` (modal/drawer dim) and `--overlay-scrim-color` (on-media chrome such as carousel chevrons). Dark and ocean set these instead of the component tokens.
+
+### Changed
+- `--color-primary-hover` follows `--color-primary` with CSS relative colour syntax (`oklch(from var(--color-primary) calc(l - 0.1) c h)`). Browsers without that syntax keep the existing brand-knob fallback (`l - 0.10` on `--brand-*`). Setting `--brand-*` still recolors primary and hover. `--color-primary-text` stays `#fff` unless a theme overrides it.
+- Secondary, ghost, chip-remove hover, and modal/carousel overlay paints derive from semantic surface/content/overlay tokens on `:root, [data-theme]`. `[data-theme="dark"]` no longer restates those component colours. It still sets `--color-primary-hover` (a lift, not `l - 0.10`), hairline shadows, inverted bottom-nav / top-nav / sidebar fills, and `--modal-backdrop-blur: 3px`.
+- Bumped the gem version to `0.1.207`.
+
+### Upgrade notes
+- A named brand theme that sets an exact `--color-primary` no longer needs `--color-primary-hover` unless hover should diverge (for example dark themes that lighten on hover).
+- A brand dark theme can set `color-scheme: dark` plus `--surface-*` and `--color-primary*` and inherit ghost/secondary/list/chip/switch colours. Optional: `--overlay-backdrop-color`, `--overlay-scrim-color`, `--shadow-*`, `--bottom-nav-*`, `--top-nav-background-color`, `--sidebar-background-color`.
+- Component token names are unchanged. Reload kit CSS. Redeploy so `meta.gem_version` shows `0.1.207`.
+
 ## [0.1.206] - 2026-10-08
 
 ### Added
