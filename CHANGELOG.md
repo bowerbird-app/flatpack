@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-## [0.1.204] - 2026-10-08
+## [0.1.206] - 2026-10-08
 
 ### Added
 - Kit chrome copy lives under `flatpack.*`. The gem ships English only, in `config/locales/flatpack.en.yml`. Hosts add their own locale files (for example `config/locales/flatpack.fr.yml`) and own the language list.
@@ -22,13 +22,61 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The Rails 8 dummy app demonstrates locale switching with `recording_studio_internationalization`, a host `flatpack.fr.yml` that covers every gem English key, and a language selector in the catalog top nav (left of the theme control). Catalog full-page HTML cache keys include the current locale.
 
 ### Changed
-- Bumped the gem version to `0.1.204`.
+- Bumped the gem version to `0.1.206`.
 
 ### Upgrade notes
 - Put `<%= tag.attributes(data: flat_pack_copy_data) %>` (and `lang="<%= I18n.locale %>"`) on the host `<html>` tag so Stimulus copy follows the current locale.
 - Pin `flat_pack/copy` if you rerun `rails generate flat_pack:install`.
 - Do not expect a French (or other) locale file from the gem. Copy `config/locales/flatpack.en.yml` into the host app as `flatpack.<locale>.yml` and translate it. `RecordingStudio_Internationalization` is optional and stays a host dependency.
 - Dummy-rails-7 does not use the internationalization gem.
+- Redeploy so `meta.gem_version` shows `0.1.206`.
+
+## [0.1.205] - 2026-10-08
+
+### Added
+- HTML carousel slides accept `thumb_src` or `thumb`. With `show_thumbs: true`, that URL is the thumbnail. A missing or rejected URL keeps the numbered placeholder.
+- `FlatPack::Carousel::Component` accepts `show_border` and `show_background`. Both default to `true`. Pass `false` to drop the viewport border, the viewport fill, or both. `:logo_slider` stays borderless and transparent.
+- Bumped the gem version to `0.1.205`.
+
+### Upgrade notes
+- No call-site changes are required. Image thumbs still prefer `thumb_src`, then `src`. Video thumbs still use `poster`.
+- An HTML slide that already passed `thumb` or `thumb_src` will now show that picture. Those keys were ignored before.
+- Existing carousels keep the viewport border and fill. Pass `show_border: false` or `show_background: false` to turn a piece off. `--carousel-viewport-border-color` and `--carousel-viewport-background-color` still paint the pieces that stay on.
+- This is a Ruby render change. Reload the app so the new carousel code is loaded.
+- Redeploy so `meta.gem_version` shows `0.1.205`.
+
+## [0.1.204] - 2026-10-08
+
+### Added
+- `FlatPack::CollectionEditor::Component` edits an ordered collection of related records inside a Rails form. A row shows the selected record as an info chip and leaves relationship fields to the host. Add clones a `fields_for` template and replaces the child-index token in identifier attributes. Remove sets `_destroy` on a saved row and drops an unsaved row. The entity picker searches, selects, or creates a record and writes its id onto the join. Enter selects the highlighted result, or the only result. Several matches stay in the menu and do not create a record. No matches shows "+ New" when create is configured. A failed search stays in the picker. Moves are announced in a polite status.
+- List orderable accepts `handle_selector`. Arrow keys on that handle move the row. A row with `data-orderable-unsaved="true"` does not PATCH. A saved row's `target_position` ignores unsaved rows. Rows marked `data-collection-editor-destroyed` stay out of the order.
+- Collection editor tokens alias surface, list, and primary colors. See `docs/components/collection-editor.md`.
+- Dummy `/demo/collection_editor` is a Project collaborators form. Person name and email stay on the person. Role and order stay on the join. Reorder posts `moving_recording_id` and `target_position` to `Ordering::ReorderService`. A second section, Text fields, shows three single-line text inputs per row with `chrome: :cell` and no person picker or dropdown.
+- Bumped the gem version to `0.1.204`.
+
+### Changed
+- The collection editor heading sits outside the bordered list. The list frame is `.flat-pack-collection-editor-card`.
+- Collection editor rows are a grid of cells. Each `with_field` block is its own column. Text input, Select, and the other controls that share `FormField::ControlStyles` accept `chrome: :cell` and drop their own border, radius, and background. Focus and errors draw an inset ring on the cell. The person search uses the same cell treatment. Create fields stay bordered.
+- Collection editor remove is a ghost button with a trash icon. It was a danger button with an X.
+- A single-line collection editor cell is one line. Vertical field padding no longer stacks on the 44px remove control, so the value lines up with the trash icon.
+- The collection editor add control is a full-width ghost row at the bottom of the table. The default label is `Row`, and the plus icon stays, so it reads "+ Row".
+- Select's field wrapper includes `flat-pack-input-wrapper` as well as `flat-pack-select-wrapper`, so a role select fills its collection editor cell.
+- A selected collection editor record is an info chip showing the name. The chip remove control drops the row. Search results open in a menu. "+ New" is at the bottom of that menu when the query has no matches, and it opens the create form in a modal. The search cell stays one line. Cancel, Escape, and the backdrop leave the row unselected. Validation errors stay in the modal.
+
+### Fixed
+- `FlatPack::Chip::Component` renders a custom `remove_button`. That control replaces the default remove button.
+- A modal click on the dimmed area reaches the backdrop. The dialog wrapper no longer sits on top of that click.
+
+### Upgrade notes
+- The collection editor border, background, and padding now live on `.flat-pack-collection-editor-card`. The heading is outside that card. The add control is the last row inside it. Host CSS that painted the border on `.flat-pack-collection-editor` should move to the card class. `add_label` defaults to `Row`. Select's wrapper now includes `flat-pack-input-wrapper` alongside `flat-pack-select-wrapper`. The entity summary is an info chip. `edit_url_template`, `edit_label`, and `change_label` are accepted and no longer rendered. Create starts from "+ New" in the search menu and opens a modal titled `New {label}`. `create_label` is that modal's submit button. Host CSS that targeted `.flat-pack-collection-editor-create-fields` inside the cell should target the modal body.
+- Card padding and the gap between cells are gone. Cells draw the lines with `--collection-editor-border-color`. `--collection-editor-row-padding` pads the empty state. Pass one header per content cell (the entity, then each field). The section sets `--collection-editor-columns` from that count. It is not a theme token. `chrome:` defaults to `:field`, so a normal form keeps its bordered controls. Pass `chrome: :cell` on a control inside a collection editor cell. Host CSS that targeted a single `.flat-pack-collection-editor-fields` wrapper should expect one cell per field. Inside the editor, those controls keep horizontal `--form-control-padding` and use no vertical padding. A row of single-line fields is the height of the remove button.
+- `orderable:` on List still drags the whole row when `handle_selector` is omitted.
+- Importmap apps load `collection_editor_controller.js` from the existing controllers pin.
+- Bundled apps that copy the esbuild list in `docs/installation.md` add `CollectionEditorController` and `application.register("flat-pack--collection-editor", CollectionEditorController)`.
+- New nested child indexes must be integers. Rails 8 `permit` drops any other nested-attribute key. The template placeholder `NEW_RECORD` is replaced in `name`, `id`, `for`, `data-id`, `data-results-id`, `data-create-modal-id`, and the aria attributes that point at those ids. Text in the row is left as written.
+- FlatPack does not store order. A host that already uses Recording Studio Orderable keeps that API. Pass its URL and parameter names to the collection editor.
+- Reload kit CSS and JavaScript. Modal backdrop clicks pass through the dialog wrapper.
+- Redeploy so `meta.gem_version` shows `0.1.204`.
 
 ## [0.1.203] - 2026-10-07
 

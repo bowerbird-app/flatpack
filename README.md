@@ -154,13 +154,15 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
 ) %>
 ```
 
+Pass `show_border: false` and `show_background: false` when the viewport border and fill should stay off. Both default to on. `:logo_slider` stays clear either way.
+
 `slides` hash options:
 
 | Key | Applies To | Accepts | Default |
 |---|---|---|---|
 | `type` | image, video, html | `:image`, `:video`, `:html` | inferred |
 | `src` | image, video | String URL | required |
-| `thumb_src` / `thumb` | image | String URL | `nil` |
+| `thumb_src` / `thumb` | image, html | String URL | `nil` |
 | `alt` | image | String | `"Slide n"` |
 | `caption` | image, video, html | String | `""` |
 | `lightbox` | image, video, html | `true`, `false` | image: `true`, others: `false` |

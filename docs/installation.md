@@ -442,6 +442,7 @@ import ChatSenderController       from "${controllersDir}/chat_sender_controller
 import ChipController             from "${controllersDir}/chip_controller.js";
 import CodeBlockTabsController    from "${controllersDir}/code_block_tabs_controller.js";
 import CollapseController         from "${controllersDir}/collapse_controller.js";
+import CollectionEditorController from "${controllersDir}/collection_editor_controller.js";
 import ContentEditorController    from "${controllersDir}/content_editor_controller.js";
 import DateInputController        from "${controllersDir}/date_input_controller.js";
 import FileInputController        from "${controllersDir}/file_input_controller.js";
@@ -489,6 +490,7 @@ application.register("flat-pack--chat-sender",         ChatSenderController);
 application.register("flat-pack--chip",                ChipController);
 application.register("flat-pack--code-block-tabs",     CodeBlockTabsController);
 application.register("flat-pack--collapse",            CollapseController);
+application.register("flat-pack--collection-editor",   CollectionEditorController);
 application.register("flat-pack--content-editor",      ContentEditorController);
 application.register("flat-pack--date-input",          DateInputController);
 application.register("flat-pack--file-input",          FileInputController);

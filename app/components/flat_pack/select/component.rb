@@ -27,8 +27,10 @@ module FlatPack
         multiple: false,
         error: nil,
         help_text: nil,
+        chrome: :field,
         **system_arguments
       )
+        assign_control_chrome!(chrome)
         @custom_class = system_arguments[:class]
         super(**system_arguments)
         @name = name
@@ -379,7 +381,7 @@ module FlatPack
       end
 
       def wrapper_classes
-        "flat-pack-select-wrapper"
+        "flat-pack-input-wrapper flat-pack-select-wrapper"
       end
 
       def select_classes

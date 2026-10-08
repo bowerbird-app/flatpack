@@ -73,7 +73,9 @@ function loadController(overrides = {}, { prefersReducedMotion = false } = {}) {
 
   vm.runInNewContext(transformedSource, context, {filename: filePath})
 
-  return context.module.exports
+  const Controller = context.module.exports
+  Controller.Element = context.Element
+  return Controller
 }
 
 function buildItem(id) {
@@ -451,6 +453,148 @@ test('reduced motion settle does not scale the row', async () => {
 
   assert.equal(items[0].style.scale, undefined)
   assert.equal(items[0].classNames.has('is-lifted'), true)
+})
+
+function handleNode(Controller, selector) {
+  const node = Object.create(Controller.Element.prototype)
+  node.closest = (candidate) => candidate === selector ? node : null
+  return node
+}
+
+test('handle selector ignores pointerdown outside the handle', () => {
+  const Controller = loadController()
+  const items = [buildItem('uuid-1'), buildItem('uuid-2')]
+  const parent = buildParent(items)
+  items.forEach((item) => { item.parentNode = parent })
+  const controller = new Controller()
+  controller.element = buildElement(parent)
+  controller.handleSelectorValue = '[data-collection-editor-handle]'
+  controller.connect()
+
+  controller.handlePointerDown({
+    button: 0,
+    pointerId: 1,
+    clientX: 1,
+    clientY: 1,
+    target: handleNode(Controller, 'input'),
+    currentTarget: items[0]
+  })
+
+  assert.equal(controller.dragging, false)
+})
+
+test('handle selector starts a drag from the handle', () => {
+  const Controller = loadController()
+  const items = [buildItem('uuid-1')]
+  const parent = buildParent(items)
+  items[0].parentNode = parent
+  const controller = new Controller()
+  controller.element = buildElement(parent)
+  controller.handleSelectorValue = '[data-collection-editor-handle]'
+  controller.connect()
+
+  controller.handlePointerDown({
+    button: 0,
+    pointerId: 1,
+    clientX: 1,
+    clientY: 1,
+    target: handleNode(Controller, '[data-collection-editor-handle]'),
+    currentTarget: items[0]
+  })
+
+  assert.equal(controller.dragging, true)
+})
+
+test('unsaved rows reorder in the DOM and do not send a request', async () => {
+  const fetchCalls = []
+  const items = [buildItem('uuid-1'), buildItem('new_row')]
+  const parent = buildParent(items)
+  items.forEach((item) => { item.parentNode = parent })
+  items[1].dataset.orderableUnsaved = 'true'
+
+  const controller = new (loadController({
+    fetch: async (url, options) => {
+      fetchCalls.push({url, options})
+      return {ok: true, json: async () => ({ok: true})}
+    }
+  }))()
+  controller.element = buildElement(parent)
+  controller.orderableUrlValue = '/demo/collection_editor/1/reorder'
+  controller.hasOrderableUrlValue = true
+  controller.paramUuidNameValue = 'moving_recording_id'
+  controller.paramTargetPositionNameValue = 'target_position'
+  controller.connect()
+
+  controller.draggedItem = items[1]
+  await controller.commitReorderTo(items[0])
+
+  assert.equal(parent.children.map((item) => item.id).join(','), 'new_row,uuid-1')
+  assert.equal(fetchCalls.length, 0)
+})
+
+test('saved reorder position ignores unsaved rows', async () => {
+  const fetchCalls = []
+  const items = [buildItem('new-row'), buildItem('13'), buildItem('12')]
+  const parent = buildParent(items)
+  items.forEach((item) => { item.parentNode = parent })
+  items[0].dataset.orderableUnsaved = 'true'
+
+  const controller = new (loadController({
+    fetch: async (url, options) => {
+      fetchCalls.push({url, options})
+      return {ok: true, json: async () => ({ok: true})}
+    }
+  }))()
+  controller.element = buildElement(parent)
+  controller.orderableUrlValue = '/demo/collection_editor/1/reorder'
+  controller.hasOrderableUrlValue = true
+  controller.paramUuidNameValue = 'moving_recording_id'
+  controller.paramTargetPositionNameValue = 'target_position'
+  controller.connect()
+
+  controller.draggedItem = items[1]
+  await controller.saveOrder()
+
+  assert.equal(fetchCalls.length, 1)
+  assert.equal(fetchCalls[0].options.body, 'moving_recording_id=13&target_position=1')
+  assert.equal(controller.currentPosition(items[1]), 2)
+})
+
+test('destroyed collection rows are left out of the order', () => {
+  const items = [buildItem('uuid-1'), buildItem('uuid-2'), buildItem('uuid-3')]
+  const parent = buildParent(items)
+  items.forEach((item) => { item.parentNode = parent })
+  items[1].dataset.collectionEditorDestroyed = 'true'
+  const controller = new (loadController())()
+  controller.element = buildElement(parent)
+
+  assert.equal(controller.listItems().map((item) => String(item.id)).join(","), "uuid-1,uuid-3")
+})
+
+test('arrow keys on the handle move a row', async () => {
+  const items = [buildItem('uuid-1'), buildItem('uuid-2'), buildItem('uuid-3')]
+  const parent = buildParent(items)
+  items.forEach((item) => { item.parentNode = parent })
+  const Controller = loadController()
+  const controller = new Controller()
+  controller.element = buildElement(parent)
+  controller.handleSelectorValue = '[data-collection-editor-handle]'
+  controller.hasOrderableUrlValue = false
+  controller.connect()
+
+  items[0].nextSibling = items[1]
+  items[1].nextSibling = items[2]
+  items[2].nextSibling = null
+  const event = {
+    key: 'ArrowDown',
+    target: handleNode(Controller, '[data-collection-editor-handle]'),
+    currentTarget: items[0],
+    preventDefault() { this.defaultPrevented = true }
+  }
+  await controller.handleKeyDown(event)
+
+  assert.equal(event.defaultPrevented, true)
+  assert.equal(parent.children.map((item) => item.id).join(','), 'uuid-2,uuid-1,uuid-3')
 })
 
 test('controller source uses spring tokens and reduced motion helper', () => {

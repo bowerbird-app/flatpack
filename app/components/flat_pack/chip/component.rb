@@ -120,7 +120,9 @@ module FlatPack
 
       def render_remove_button_content
         return unless @removable
-        return if remove_button.present?
+
+        custom = remove_button
+        return custom if custom.present?
 
         content_tag(:button,
           type: "button",

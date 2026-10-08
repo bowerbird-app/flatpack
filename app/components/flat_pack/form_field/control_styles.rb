@@ -12,6 +12,20 @@ module FlatPack
       # "bg-[var(--surface-background-color)]" "text-[var(--surface-content-color)]"
       # "border" "border-[var(--surface-border-color)]" "placeholder:text-[var(--surface-muted-content-color)]"
       # "focus:ring-ring" "focus:border-transparent" "appearance-none"
+      # "border-0" "bg-transparent" "rounded-none" "focus:outline-none" "focus:ring-0"
+
+      CHROMES = %i[field cell].freeze
+
+      def assign_control_chrome!(chrome)
+        name = (chrome.presence || :field).to_s.to_sym
+        raise ArgumentError, "chrome must be :field or :cell" unless CHROMES.include?(name)
+
+        @control_chrome = name
+      end
+
+      def cell_chrome?
+        @control_chrome == :cell
+      end
 
       # Width + color utilities that survive host Tailwind preflight when it
       # loads after kit CSS. Color-only `border-[…]` is not enough.
@@ -37,7 +51,28 @@ module FlatPack
         placeholder: true,
         appearance_none: false
       )
-        base_classes = [
+        base_classes = if cell_chrome?
+          cell_control_classes(
+            control_class: control_class,
+            extra: extra,
+            placeholder: placeholder,
+            appearance_none: appearance_none
+          )
+        else
+          field_control_classes(
+            error: error,
+            control_class: control_class,
+            extra: extra,
+            placeholder: placeholder,
+            appearance_none: appearance_none
+          )
+        end
+
+        classes(*base_classes, custom_class)
+      end
+
+      def field_control_classes(error:, control_class:, extra:, placeholder:, appearance_none:)
+        [
           control_class,
           "w-full",
           "rounded-[var(--radius-md)]",
@@ -53,8 +88,25 @@ module FlatPack
           "disabled:opacity-50 disabled:cursor-not-allowed",
           *Array(extra)
         ].compact
+      end
 
-        classes(*base_classes, custom_class)
+      def cell_control_classes(control_class:, extra:, placeholder:, appearance_none:)
+        [
+          control_class,
+          "w-full",
+          "border-0",
+          "rounded-none",
+          ("appearance-none" if appearance_none),
+          "bg-transparent",
+          "text-[var(--surface-content-color)]",
+          *form_control_padding_classes,
+          "text-sm",
+          "transition-colors duration-base",
+          ("placeholder:text-[var(--surface-muted-content-color)]" if placeholder),
+          "focus:outline-none focus:ring-0",
+          "disabled:opacity-50 disabled:cursor-not-allowed",
+          *Array(extra)
+        ].compact
       end
     end
   end

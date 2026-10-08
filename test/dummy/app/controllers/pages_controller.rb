@@ -799,13 +799,15 @@ class PagesController < ApplicationController
     @carousel_single_slide = carousel_demo_single_slide
     @carousel_chart_slides = carousel_demo_chart_slides
     @carousel_logo_slider_slides = carousel_demo_logo_slider_slides
+    @carousel_card_slides = carousel_demo_card_slides
     @carousel_notes = [
       "Uses FlatPack::Carousel::Component with image, video, and component-rendered HTML slides.",
       "Demonstrates autoplay, loop, indicators, controls, and thumbnail navigation.",
       "Image slides enable lightbox by default and can opt out per slide with lightbox: false.",
       "Uses secure defaults for rich content and supports keyboard plus touch interactions.",
       "Includes logo-slider variant with multi-item responsive layout (5 desktop / 3 tablet / 3 mobile).",
-      "Includes a side-preview chart carousel demo showing 3.25 slides on desktop and 1.25 slides on mobile/tablet."
+      "Includes a side-preview chart carousel demo showing 3.25 slides on desktop and 1.25 slides on mobile/tablet.",
+      "HTML cards can pass thumb_src or thumb. Without a usable picture, the thumb shows the slide number."
     ]
   end
 
@@ -2179,6 +2181,51 @@ class PagesController < ApplicationController
       locals: {chart_component: chart_component},
       layout: false
     )
+  end
+
+  def carousel_demo_card_slides
+    [
+      carousel_card_slide(
+        title: "Quiet desk",
+        body: "A calm spot for the next pass.",
+        thumb_src: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=320&h=320&fit=crop"
+      ),
+      carousel_card_slide(
+        title: "Workshop",
+        body: "Notes from the planning table.",
+        thumb: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=320&h=320&fit=crop"
+      ),
+      carousel_card_slide(
+        title: "Night shift",
+        body: "The late window, still lit.",
+        thumb_src: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=320&h=320&fit=crop"
+      ),
+      carousel_card_slide(
+        title: "No picture",
+        body: "This thumb shows its number."
+      )
+    ]
+  end
+
+  def carousel_card_slide(title:, body:, thumb_src: nil, thumb: nil)
+    {
+      type: :html,
+      caption: title,
+      thumb_src: thumb_src,
+      thumb: thumb,
+      html: ApplicationController.render(
+        inline: <<~ERB,
+          <%= render FlatPack::Card::Component.new(style: :elevated) do |card| %>
+            <% card.body do %>
+              <h3 class="text-base font-semibold text-(--surface-content-color)"><%= title %></h3>
+              <p class="mt-2 text-sm text-(--surface-muted-content-color)"><%= body %></p>
+            <% end %>
+          <% end %>
+        ERB
+        locals: {title: title, body: body},
+        layout: false
+      )
+    }.compact
   end
 
   def carousel_demo_logo_slider_slides

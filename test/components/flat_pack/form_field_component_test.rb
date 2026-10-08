@@ -86,7 +86,8 @@ module FlatPack
       class Probe < FlatPack::BaseComponent
         include FlatPack::FormField::ControlStyles
 
-        def initialize(error: false, custom_class: nil, **kwargs)
+        def initialize(error: false, custom_class: nil, chrome: :field, **kwargs)
+          assign_control_chrome!(chrome)
           @error = error
           @custom_class = custom_class
           super(**kwargs)
@@ -130,6 +131,60 @@ module FlatPack
           ["px-[var(--form-control-padding)]", "py-[var(--form-control-padding)]"],
           probe.form_control_padding_classes
         )
+      end
+
+      def test_cell_chrome_drops_the_control_border_and_keeps_padding
+        render_inline(Probe.new(chrome: :cell, error: true))
+
+        html = page.native.to_html
+        assert_includes html, "border-0"
+        assert_includes html, "bg-transparent"
+        assert_includes html, "rounded-none"
+        assert_includes html, "focus:ring-0"
+        assert_includes html, "px-[var(--form-control-padding)]"
+        assert_includes html, "py-[var(--form-control-padding)]"
+        refute_includes html, "border-[var(--surface-border-color)]"
+        refute_includes html, "border-[var(--color-error)]"
+        refute_includes html, "focus:ring-2"
+        refute_includes html, "chrome="
+      end
+
+      def test_unknown_chrome_raises
+        error = assert_raises(ArgumentError) { Probe.new(chrome: :grid) }
+        assert_match(/chrome must be :field or :cell/, error.message)
+      end
+
+      def test_text_input_cell_chrome_is_not_an_attribute
+        render_inline(FlatPack::TextInput::Component.new(name: "role", label: "Role", chrome: :cell))
+
+        input = page.find("input")
+        assert_includes input[:class], "border-0"
+        assert_includes input[:class], "bg-transparent"
+        refute_includes input[:class], "border-[var(--surface-border-color)]"
+        refute_includes page.native.to_html, "chrome="
+      end
+
+      def test_select_cell_chrome_leaves_the_menu_bordered
+        render_inline(FlatPack::Select::Component.new(
+          name: "role",
+          label: "Role",
+          options: ["Designer"],
+          searchable: true,
+          chrome: :cell
+        ))
+
+        trigger = page.find("button.flat-pack-select-trigger")
+        assert_includes trigger[:class], "border-0"
+        refute_includes trigger[:class], "border-[var(--surface-border-color)]"
+        assert_includes page.native.to_html, "border border-[var(--surface-border-color)]"
+      end
+
+      def test_default_text_input_keeps_the_field_border
+        render_inline(FlatPack::TextInput::Component.new(name: "role", label: "Role"))
+
+        input = page.find("input")
+        assert_includes input[:class], "border-[var(--surface-border-color)]"
+        refute_includes input[:class], "border-0"
       end
     end
 

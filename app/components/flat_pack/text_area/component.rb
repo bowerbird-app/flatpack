@@ -27,8 +27,10 @@ module FlatPack
         max_characters: nil,
         rich_text: false,
         rich_text_options: {},
+        chrome: :field,
         **system_arguments
       )
+        assign_control_chrome!(chrome)
         @custom_class = system_arguments[:class]
         super(**system_arguments)
         @name = name
@@ -289,6 +291,17 @@ module FlatPack
       end
 
       def rich_text_editor_container_classes
+        if cell_chrome?
+          return classes(
+            "flat-pack-richtext-editor",
+            "flat-pack-richtext-editor--cell",
+            "border-0",
+            "bg-transparent",
+            "rounded-none",
+            *form_control_padding_classes
+          )
+        end
+
         classes(
           "flat-pack-richtext-editor",
           *form_control_border_classes(error: @error),
