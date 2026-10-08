@@ -16,7 +16,7 @@ Pinned in `test/dummy/Gemfile.common`:
 - `recording_studio_oauth` (`v0.2.0`)
 - `recording_studio_mcp` (`v0.3.2`)
 - `recording_studio_root_switchable`
-- `recording_studio_internationalization` (`v0.1.2`) — dummy-only; FlatPack does not depend on it. The catalog top nav renders `recording_studio_language_selector` immediately left of the theme control.
+- `recording_studio_internationalization` (`v0.1.2`) — dummy-only; FlatPack does not depend on it. The catalog top nav renders `recording_studio_language_selector` immediately left of the theme control. Catalog full-page HTML cache keys include the current locale.
 
 Recording Studio host gems need Ruby `>= 3.3`.
 
