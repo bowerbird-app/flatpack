@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.209] - 2026-10-08
 
 ### Changed
-- Below 40rem a collection editor row drops the table lines. The drag handle, the name, and remove sit on one line. Relationship fields sit underneath, lined up with the name. The chip's own remove control hides, so the row remove is the only one. A row with no person keeps its first field on that top line. The same handle still drags the whole row.
+- Below 40rem a collection editor row drops the table lines. The drag handle, the name, and remove sit on one line. Relationship fields sit underneath, lined up with the name, and use a normal bordered control. Focus and an invalid value ring that control. The chip's own remove control hides, so the row remove is the only one. A row with no person keeps its first field on that top line. The same handle still drags the whole row. Wide screens keep the table.
 - Bumped the gem version to `0.1.209`.
 
 ### Upgrade notes

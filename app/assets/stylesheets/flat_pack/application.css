@@ -1641,19 +1641,52 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   }
 
   .flat-pack-collection-editor-fields {
-    padding: 0 var(--form-control-padding) 0.25rem 0.25rem;
+    padding: 0 var(--form-control-padding) 0.75rem;
   }
 
   .flat-pack-collection-editor-fields + .flat-pack-collection-editor-fields {
     margin-top: 0.125rem;
   }
 
-  .flat-pack-collection-editor-fields :is(input, select, textarea, .flat-pack-select-trigger) {
-    padding-block: 0.25rem;
+  /* Cell chrome has no box of its own. On a phone the table lines are gone,
+     so the relationship control keeps a normal field border. Horizontal
+     padding stays on the control classes, including the select chevron inset. */
+  .flat-pack-collection-editor-fields :is(input:not([type="hidden"]):not([data-flat-pack--select-target="searchInput"]), select, textarea, .flat-pack-select-trigger) {
+    border: 1px solid var(--surface-border-color);
+    border-radius: var(--radius-md);
+    background-color: var(--surface-background-color);
+    padding-block: 0.5rem;
+    transition:
+      border-color var(--duration-fast) var(--easing-standard),
+      box-shadow var(--duration-fast) var(--easing-standard);
+  }
+
+  .flat-pack-collection-editor-fields:focus-within,
+  .flat-pack-collection-editor-fields:has([aria-invalid="true"]),
+  .flat-pack-collection-editor-fields:has([aria-invalid="true"]):focus-within {
+    box-shadow: none;
+  }
+
+  .flat-pack-collection-editor-fields :is(input:not([type="hidden"]):not([data-flat-pack--select-target="searchInput"]), select, textarea, .flat-pack-select-trigger):focus {
+    outline: none;
+    border-color: transparent;
+    box-shadow: inset 0 0 0 2px var(--color-ring);
+  }
+
+  .flat-pack-collection-editor-fields :is(input:not([type="hidden"]):not([data-flat-pack--select-target="searchInput"]), select, textarea, .flat-pack-select-trigger)[aria-invalid="true"],
+  .flat-pack-collection-editor-fields :is(input:not([type="hidden"]):not([data-flat-pack--select-target="searchInput"]), select, textarea, .flat-pack-select-trigger)[aria-invalid="true"]:focus {
+    border-color: var(--color-error);
+    box-shadow: inset 0 0 0 2px var(--color-error);
   }
 
   .flat-pack-collection-editor-chip [data-collection-editor-chip-remove] {
     display: none;
+  }
+}
+
+@media (max-width: 39.999rem) and (prefers-reduced-motion: reduce) {
+  .flat-pack-collection-editor-fields :is(input:not([type="hidden"]):not([data-flat-pack--select-target="searchInput"]), select, textarea, .flat-pack-select-trigger) {
+    transition: none;
   }
 }
 
