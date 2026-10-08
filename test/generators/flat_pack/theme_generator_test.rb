@@ -24,7 +24,7 @@ module FlatPack
           assert_includes content, "--brand-hue: 35"
           assert_includes content, "--brand-chroma: 0.2"
           assert_includes content, "--brand-lightness: 0.6"
-          assert_includes content, ":root, [data-theme] maps those knobs to --color-primary"
+          assert_includes content, ":root, [data-theme] maps those knobs to --color-primary. Hover follows --color-primary"
           assert_includes content, "Focus rings and active sidebar / top-nav fills follow --color-primary."
           refute_match(/^\s*--color-primary:/, content)
           refute_includes content, "uncomment"

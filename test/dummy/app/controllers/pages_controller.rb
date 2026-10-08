@@ -106,6 +106,10 @@ class PagesController < ApplicationController
     @component_index = cached_component_index
   end
 
+  def brand_theme
+    @body_theme = (params[:tone] == "dark") ? "featured-in-dark" : "featured-in"
+  end
+
   def buttons
   end
 

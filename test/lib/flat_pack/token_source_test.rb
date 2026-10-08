@@ -67,6 +67,26 @@ module FlatPack
       refute_includes root_block, "calc(var(--brand-chroma) - 0.02)"
     end
 
+    test "primary hover derives from --color-primary with a brand-knob fallback" do
+      refute_nil root_block, "expected a :root, [data-theme] block in variables.css"
+      assert_match(
+        /--color-primary-hover:\s*oklch\(calc\(var\(--brand-lightness\) - 0\.10\)\s+var\(--brand-chroma\)\s+var\(--brand-hue\)\);/,
+        root_block
+      )
+      refute_match(
+        /--color-primary-hover:\s*oklch\(from var\(--color-primary\)/,
+        root_block
+      )
+
+      supports_block = @css[/@supports \(color: oklch\(from red calc\(l - 0\.1\) c h\)\)\s*\{.*?^\}/m]
+      refute_nil supports_block, "expected an @supports relative-color block for --color-primary-hover"
+      assert_match(
+        /--color-primary-hover:\s*oklch\(from var\(--color-primary\) calc\(l - 0\.1\) c h\);/,
+        supports_block
+      )
+      refute_includes supports_block, "color-mix("
+    end
+
     test "dummy sunrise theme sets brand lightness so primary recolors" do
       css = Rails.root.join("app/assets/stylesheets/application.tailwind.css").read
       sunrise = css[/\[data-theme="sunrise"\]\s*\{[^}]*--brand-hue:[^}]*\}/m]
@@ -75,6 +95,24 @@ module FlatPack
       assert_includes sunrise, "--brand-hue: 35"
       assert_includes sunrise, "--brand-chroma: 0.19"
       assert_includes sunrise, "--brand-lightness: 0.52"
+    end
+
+    test "dummy featured-in themes set only semantic tokens" do
+      css = Rails.root.join("app/assets/stylesheets/application.tailwind.css").read
+      light = css[/\[data-theme="featured-in"\]\s*\{([^}]*--color-primary:[^}]*)\}/m, 1]
+      dark = css[/\[data-theme="featured-in-dark"\]\s*\{([^}]*--color-primary:[^}]*)\}/m, 1]
+
+      refute_nil light, "expected a [data-theme=\"featured-in\"] block with --color-primary"
+      refute_nil dark, "expected a [data-theme=\"featured-in-dark\"] block with --color-primary"
+      assert_includes light, "--color-primary:"
+      refute_includes light, "--color-primary-hover"
+      refute_includes light, "--color-ghost-text"
+      refute_includes light, "--button-"
+      assert_includes dark, "--surface-content-color"
+      refute_includes dark, "--color-primary-hover"
+      refute_includes dark, "--color-ghost-text"
+      refute_includes dark, "--button-"
+      refute_includes dark, "--list-item-hover-background-color"
     end
 
     test "@theme inline names match :root custom properties" do
@@ -113,6 +151,57 @@ module FlatPack
       assert_includes ocean_block, "--color-primary"
       assert_match(/--sidebar-background-color:\s*oklch\(0\.17 0\.01 250\)/, dark_block)
       assert_match(/--sidebar-background-color:\s*oklch\(0\.96 0\.02 220\)/, ocean_block)
+    end
+
+    test "secondary ghost chip and overlay paints derive from semantic tokens" do
+      {
+        "--color-secondary" => "color-mix(in oklab, var(--surface-muted-background-color) 18%, var(--surface-background-color))",
+        "--color-secondary-hover" => "color-mix(in oklab, var(--surface-muted-background-color) 70%, var(--surface-background-color))",
+        "--color-secondary-text" => "var(--surface-content-color)",
+        "--color-ghost-hover" => "color-mix(in oklab, var(--surface-muted-background-color) 35%, var(--surface-background-color))",
+        "--color-ghost-text" => "var(--surface-content-color)",
+        "--chip-remove-hover-background-color" => "color-mix(in oklab, var(--surface-content-color) 10%, transparent)",
+        "--modal-backdrop-color" => "var(--overlay-backdrop-color)",
+        "--carousel-chevron-background-color" => "var(--overlay-scrim-color)",
+        "--overlay-backdrop-color" => "rgb(0 0 0 / 0.5)",
+        "--overlay-scrim-color" => "rgb(31 41 55 / 0.68)"
+      }.each do |token, value|
+        assert_match(/#{Regexp.escape(token)}:\s*#{Regexp.escape(value)}/, root_block)
+      end
+
+      refute_match(/--color-ghost-text:\s*#333/, root_block)
+      refute_match(/--color-secondary:\s*#f5f5f5/, root_block)
+      refute_match(/--chip-remove-hover-background-color:\s*rgb\(0 0 0 \/ 0\.1\)/, root_block)
+    end
+
+    test "dark block no longer restates derived component colours" do
+      dark_block = @css[/\[data-theme="dark"\]\s*\{(.*?)\}/m, 1]
+
+      %w[
+        --color-secondary
+        --color-secondary-hover
+        --color-secondary-text
+        --color-ghost-hover
+        --color-ghost-text
+        --carousel-chevron-background-color
+        --switch-track-background-color
+        --comments-inline-input-radius
+        --modal-backdrop-color
+        --list-item-hover-background-color
+        --list-item-active-background-color
+        --chip-remove-hover-background-color
+      ].each do |token|
+        refute_includes dark_block, "#{token}:", "dark should not override #{token}; it should follow :root wiring"
+      end
+
+      assert_match(/--modal-backdrop-blur:\s*3px/, dark_block)
+      assert_match(/--overlay-backdrop-color:\s*rgb\(0 0 0 \/ 0\.65\)/, dark_block)
+      assert_match(/--overlay-scrim-color:\s*rgb\(15 20 36 \/ 0\.72\)/, dark_block)
+      assert_includes dark_block, "--color-primary-hover"
+      assert_includes dark_block, "--shadow-sm"
+      assert_includes dark_block, "--bottom-nav-background-color"
+      assert_includes dark_block, "--top-nav-background-color"
+      assert_includes dark_block, "--sidebar-background-color"
     end
 
     test "chrome greys alias surface tokens so named themes inherit" do

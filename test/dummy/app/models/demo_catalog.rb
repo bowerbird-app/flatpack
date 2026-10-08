@@ -22,7 +22,8 @@ class DemoCatalog
             {title: "Light theme", path: "/themes/demos/light", description: "Light color scheme demo", icon: :monitor},
             {title: "Dark theme", path: "/themes/demos/dark", description: "Dark color scheme demo", icon: :monitor},
             {title: "Ocean theme", path: "/themes/demos/ocean", description: "Ocean color scheme demo", icon: :monitor},
-            {title: "Rounded theme", path: "/themes/demos/rounded", description: "Rounded theme demo", icon: :monitor}
+            {title: "Rounded theme", path: "/themes/demos/rounded", description: "Rounded theme demo", icon: :monitor},
+            {title: "Brand on body", path: "/demo/brand_theme/dark", description: "Semantic-only brand dark theme on body", icon: :monitor}
           ]
         }
       ]

@@ -66,7 +66,11 @@ You can define additional custom themes the same way. Prefer brand primitives wh
 }
 ```
 
-Override semantic tokens (`--color-primary`, `--surface-*`) only when a named theme should diverge from the brand kit. For a complete copy-pasteable selector with the full current FlatPack variable set, use the [Custom Theming Guide](custom_theming.md).
+Override semantic tokens (`--color-primary`, `--surface-*`) only when a named theme should diverge from the brand kit.
+
+A brand dark theme does not copy `[data-theme="dark"]`. Set `color-scheme: dark` and the surface / primary tokens; ghost buttons, secondary, list hover, chip remove, and switch track follow those semantics. Optional extras: `--overlay-backdrop-color`, `--overlay-scrim-color`, `--shadow-*`, `--bottom-nav-*`, `--top-nav-background-color`, `--sidebar-background-color`. See [Custom Theming](custom_theming.md#minimal-brand-themes) for the minimal token list and a `[data-theme="featured-in-dark"]` example. `data-theme` on `<body>` works because component aliases are declared on `:root, [data-theme]`.
+
+For a complete copy-pasteable selector with the full current FlatPack variable set, use the [Custom Theming Guide](custom_theming.md).
 
 ## Testing Themes
 

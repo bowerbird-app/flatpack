@@ -5199,7 +5199,7 @@
     transform: translateX(180%);
   }
 }
-:root, [data-theme="light"], [data-theme="dark"], [data-theme="ocean"], [data-theme="rounded"], [data-theme="sunrise"] {
+:root, [data-theme="light"], [data-theme="dark"], [data-theme="ocean"], [data-theme="rounded"], [data-theme="sunrise"], [data-theme="featured-in"], [data-theme="featured-in-dark"] {
   --sidebar-header-border-color: transparent;
 }
 [data-theme="sunrise"] {
@@ -5211,6 +5211,27 @@
   --surface-muted-background-color: oklch(0.95 0.02 70);
   --surface-border-color: oklch(0.85 0.03 55);
   --surface-content-color: oklch(0.32 0.04 35);
+}
+[data-theme="featured-in"] {
+  --color-primary: #c41e6a;
+  --color-primary-text: #fff;
+  --surface-page-background-color: oklch(0.98 0.01 350);
+  --surface-background-color: oklch(0.99 0.005 350);
+  --surface-muted-background-color: oklch(0.94 0.02 350);
+  --surface-border-color: oklch(0.86 0.03 350);
+  --surface-content-color: oklch(0.22 0.04 350);
+  --surface-muted-content-color: oklch(0.45 0.03 350);
+}
+[data-theme="featured-in-dark"] {
+  color-scheme: dark;
+  --color-primary: oklch(0.72 0.18 350);
+  --color-primary-text: oklch(0.18 0.04 350);
+  --surface-page-background-color: oklch(0.16 0.02 350);
+  --surface-background-color: oklch(0.18 0.02 350);
+  --surface-muted-background-color: oklch(0.24 0.03 350);
+  --surface-border-color: oklch(0.32 0.03 350);
+  --surface-content-color: oklch(0.94 0.01 350);
+  --surface-muted-content-color: oklch(0.72 0.02 350);
 }
 [data-fp-style="partner"] {
   --fp-button-background: #635bff;

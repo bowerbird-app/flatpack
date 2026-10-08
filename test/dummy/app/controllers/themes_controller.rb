@@ -46,6 +46,7 @@ class ThemesController < ApplicationController
     "Radii" => [/\A--radius-/],
     "Shadows" => [/\A--shadow-/],
     "Motion" => [/\A--(duration-|transition-)/],
+    "Overlay" => [/\A--overlay-/],
     "Backdrop Effects" => [/\A--blur-/],
     "Collection Editor" => [/\A--collection-editor-/],
     "Other" => [/.*/]
