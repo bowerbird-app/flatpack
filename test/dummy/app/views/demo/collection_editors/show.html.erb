@@ -3,7 +3,7 @@
   subtitle: "Edit an ordered collection of related records inside a Rails form."
 ) %>
 
-<%= render "pages/component_method_variables_table", components: [:collection_editor, :collection_editor_row, :collection_editor_entity] %>
+<%= render "pages/component_method_variables_table", components: [:collection_editor, :collection_editor_row, :collection_editor_entity, :collection_editor_image] %>
 
 <section class="mb-12 space-y-4">
   <%= render FlatPack::SectionTitle::Component.new(
@@ -26,6 +26,26 @@
     The demo saves that move with <code>Ordering::ReorderService</code>.
   </p>
   <%= render "demo/collection_editors/form", project: @project, title: "Collaborators" %>
+</section>
+
+<section class="mb-12 space-y-4">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Gallery",
+    subtitle: "The row joins a library image. Caption and credit belong to this use.",
+    anchor_link: true
+  ) %>
+  <p class="text-sm text-[var(--surface-muted-content-color)]">
+    An empty thumbnail opens the library.
+    Choosing an image stores its id on the join and shows the thumbnail.
+    The file stays in the library.
+    Choosing an image that is already on this page focuses that row.
+    The thumbnail opens the library record.
+    Name and alt text save on that record.
+    Caption, credit, and order save with the gallery.
+    + New creates a library image, then joins it.
+    Remove drops the join and leaves the image in the library.
+  </p>
+  <%= render "demo/collection_editors/gallery", project: @project %>
 </section>
 
 <section class="mb-12 space-y-4">

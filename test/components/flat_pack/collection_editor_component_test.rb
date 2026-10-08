@@ -10,8 +10,11 @@ module FlatPack
 
       attribute :id
       attribute :person_id
+      attribute :image_id
       attribute :role
       attribute :name
+      attribute :caption
+      attribute :credit
 
       def persisted?
         id.present?
@@ -218,6 +221,8 @@ module FlatPack
         assert_includes css, "inset 0 0 0 2px var(--color-ring)"
         assert_includes css, "inset 0 0 0 2px var(--color-error)"
         assert_includes css, ".flat-pack-collection-editor-name::before"
+        assert_includes css, ".flat-pack-collection-editor-library"
+        assert_includes css, ".flat-pack-collection-editor-image-choose"
         assert_includes css, "inset: -1px;"
         assert_includes css, ".flat-pack-collection-editor-chip [data-collection-editor-chip-remove]"
         assert_includes css, ".flat-pack-collection-editor-fields :is(input, select, textarea, .flat-pack-select-trigger)"
@@ -276,6 +281,62 @@ module FlatPack
       end
 
       private
+
+      def test_image_cell_joins_a_library_image
+        join = Record.new(id: 3, image_id: 9, caption: "Opening still", credit: "Ada Lorne")
+        row_form = builder("project[gallery_images_attributes][3]", join)
+        thumbnail = "data:image/svg+xml,north"
+
+        render_inline(Component.new(title: "Gallery", add_label: "Image", headers: ["Image", "Caption", "Credit"], orderable: true)) do |editor|
+          editor.with_row(form: row_form) do |row|
+            row.with_image(
+              form: row_form,
+              association_name: :image_id,
+              title: "North window",
+              thumbnail_url: thumbnail,
+              label: "Image",
+              search_url: "/images",
+              create_url: "/images",
+              update_url: "/images/:id",
+              empty_text: "No images"
+            ) { "name" }
+            row.with_field { row_form.text_field(:caption) }
+            row.with_field { row_form.text_field(:credit) }
+          end
+        end
+
+        assert_selector "button[aria-label='Edit North window'][data-collection-editor-image-choose]"
+        assert_selector "img[src='#{thumbnail}'][alt='']"
+        assert_selector "[data-collection-editor-image-preview]:not([hidden])", visible: :all
+        assert_selector "[data-collection-editor-image-placeholder][hidden]", visible: :all
+        assert_selector "[data-collection-editor-title]", text: "North window", visible: :all
+        assert_selector "input[name='project[gallery_images_attributes][3][image_id]'][value='9']", visible: :all
+        assert_selector "[data-search-url='/images']"
+        assert_selector "[data-update-url='/images/:id']"
+        assert_includes rendered_content, 'data-collection-editor-library-modal="true"'
+        assert_includes rendered_content, 'data-collection-editor-library="true"'
+        assert_includes rendered_content, "max-w-2xl"
+        assert_includes rendered_content, "New Image"
+        assert_includes rendered_content, "+ New"
+        assert_no_selector ".flat-pack-collection-editor-edit"
+        assert_no_selector ".flat-pack-collection-editor-change"
+      end
+
+      def test_empty_image_cell_is_a_choose_button
+        join = Record.new
+        row_form = builder("project[gallery_images_attributes][NEW_RECORD]", join)
+
+        render_inline(Component.new) do |editor|
+          editor.with_row(form: row_form) do |row|
+            row.with_image(form: row_form, association_name: :image_id, search_url: "/images")
+          end
+        end
+
+        assert_selector "button[aria-label='Choose image'][data-collection-editor-image-choose]"
+        assert_selector "[data-collection-editor-image-preview][hidden]", visible: :all
+        assert_no_selector "[data-update-url]"
+        assert_no_selector ".flat-pack-collection-editor-edit"
+      end
 
       def builder(object_name, object)
         ActionView::Helpers::FormBuilder.new(object_name, object, vc_test_controller.view_context, {})

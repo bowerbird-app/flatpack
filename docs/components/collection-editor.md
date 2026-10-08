@@ -10,7 +10,7 @@ Each cell edits one value. The row is not a calculated spreadsheet. Do not use i
 
 ## Class
 - Primary: `FlatPack::CollectionEditor::Component`
-- Related classes: `FlatPack::CollectionEditor::Row::Component`, `FlatPack::CollectionEditor::Entity::Component`
+- Related classes: `FlatPack::CollectionEditor::Row::Component`, `FlatPack::CollectionEditor::Entity::Component`, `FlatPack::CollectionEditor::Image::Component`
 
 ## Props
 `FlatPack::CollectionEditor::Component`:
@@ -68,15 +68,44 @@ Each cell edits one value. The row is not a calculated spreadsheet. Do not use i
 | `open` | Boolean | `false` | no | Starts with the picker open. A row with no title also starts open. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for the entity cell. |
 
+`FlatPack::CollectionEditor::Image::Component`:
+
+| name | type | default | required | description |
+|---|---|---|---|---|
+| `form` | FormBuilder | none | yes | Same nested builder as the row. |
+| `association_name` | Symbol/String | none | yes | Hidden field that receives the library image id. |
+| `title` | String | `nil` | no | Library record title, such as the image name. |
+| `thumbnail_url` | String | `nil` | no | Preview for the joined image. Omit it to show the choose button. |
+| `alt` | String | `nil` | no | Accepted for the host. The button name carries the title, so the preview image stays unnamed. |
+| `value` | String | `nil` | no | Selected id. Omit it to use the form object. |
+| `label` | String | `"Image"` | no | Library record label. Modal titles read "New Image" and "Edit Image". |
+| `search_url` | String | `nil` | no | GET endpoint for the library. An empty query lists the catalog. Items may include `thumbnail_url`. |
+| `search_param` | String | `"q"` | no | Query parameter name. |
+| `min_search_length` | Integer | `0` | no | Stored on the row for the shared search contract. The library lists matches for a blank query. |
+| `create_url` | String | `nil` | no | POST endpoint for a new library image. Omit it to hide "+ New". |
+| `create_label` | String | `"Create"` | no | Submit label in the library-record modal. |
+| `choose_label` | String | `"Choose image"` | no | Accessible name of an empty thumbnail, and the library modal title. |
+| `empty_text` | String | `"No images"` | no | Copy when the library has no matches. |
+| `search_error_text` | String | `"Search failed"` | no | Copy when the library request fails. |
+| `items` | Array | `nil` | no | Local library used when `search_url` is omitted. Each item is `{ id:, title:, thumbnail_url: }`. |
+| `edit_url_template` | String | `nil` | no | Accepted and not rendered. |
+| `update_url` | String | `nil` | no | GET and PATCH endpoint for the library image. Include an `:id` token. Omit it and the thumbnail stays a choose button. |
+| `update_label` | String | `"Save"` | no | Submit label while the modal is editing the library image. |
+| `edit_label` | String | `"Edit"` | no | Accessible name prefix for a filled thumbnail when `update_url` is set. |
+| `error` | String | `nil` | no | Association error under the thumbnail. |
+| `**system_arguments` | Hash | `{}` | no | HTML attributes for the image cell. |
+
 ## Slots
 | name | type | required | description |
 |---|---|---|---|
 | `row` | `Row::Component` | no | One join row. Call `with_row` inside the component block. |
 | `template` | slot | no | HTML cloned for a new row. Put one unsaved row here and use `template_index` in its `fields_for` child index. |
 | `entity` | `Entity::Component` | no | Selected record, on the row. |
+| `image` | `Image::Component` | no | Library image joined to the row. One image or one entity per row. |
 | `field` | slot | no | One relationship field. Each block is its own cell. Render a normal FlatPack input and pass `chrome: :cell`. |
 | `action` | slot | no | Extra row actions, before remove. |
 | `content` on the entity | slot | no | Fields for the record modal. Create posts them to `create_url`. Edit loads and patches them through `update_url`. Give each input `data-create-field` and `form="collection-editor-unattached"` so the parent form does not submit them. Mark the input that should receive the search text with `data-fill-from-query`. |
+| `content` on the image | slot | no | Fields for the library-record modal. Same `data-create-field` contract as the entity. Caption and credit for this use of the image stay in `field` slots. |
 
 ## Variants
 - Orderable rows use the List reorder controller. Without `orderable: true` the handle is hidden.
@@ -156,7 +185,7 @@ Each cell edits one value. The row is not a calculated spreadsheet. Do not use i
 
 The heading sits outside the bordered list. The list, the column headers, the empty state, and the add row stay in that card. The add row is a full-width ghost button at the bottom of the table. The plus icon stays, and the default label is "Row", so it reads "+ Row".
 
-The template repeats the entity picker and the role field. The add button clones it and replaces `NEW_RECORD` inside `name`, `id`, `for`, `data-id`, `data-results-id`, `data-create-modal-id`, and the aria attributes that point at those ids. Text in the row is left as written. Rails 8 strong parameters keep nested attribute keys that are integers, so the index is numeric rather than a prefixed token. Rails accepts that index in `project_people_attributes`.
+The template repeats the entity picker and the role field. The add button clones it and replaces `NEW_RECORD` inside `name`, `id`, `for`, `data-id`, `data-results-id`, `data-create-modal-id`, `data-library-modal-id`, and the aria attributes that point at those ids. Text in the row is left as written. Rails 8 strong parameters keep nested attribute keys that are integers, so the index is numeric rather than a prefixed token. Rails accepts that index in `project_people_attributes`.
 
 Selecting a person writes `person_id` and shows the name as an info chip. The email stays off the chip. The chip remove control drops the row. A saved row sets `_destroy`. An unsaved row leaves the document. The person record stays. Role stays on `ProjectPerson` until that row is removed.
 
@@ -175,6 +204,28 @@ The dummy reorder route also has the project id in the path. The row id therefor
 Rendered field errors stay on the FlatPack input passed in the field slot. The row also takes the `is-invalid` class when the join object has errors, and the entity `error` argument prints the association message. A failed parent save re-renders the nested attributes, including rows added in the browser, as long as the controller assigns the invalid parent back to the form.
 
 Desktop rows are a grid. `--collection-editor-border-color` draws the lines. The handle, the person, each relationship field, and remove are separate cells. The selected record is a removable info chip. With `update_url`, a click on that chip, except the remove control, opens the same modal to edit the record. Search results open in a menu under the field, using the popover surface, border, radius, and shadow. A query with no matches shows "+ New" at the bottom of that menu when `create_url` is set. "+ New" opens a small modal titled from the entity label, such as "New Person". The dialog is portaled to the page so the card does not clip it. The search cell stays one line. Pass `chrome: :cell` on Text input, Select, Search input, and the other controls that share that box. The control drops its border, radius, and background. Select keeps `flat-pack-select-wrapper` and also uses `flat-pack-input-wrapper`, so the control fills the cell. A single-line cell keeps horizontal `--form-control-padding` and drops the vertical field padding, so the row is the 44px remove control and the value lines up with the trash icon. The person chip sits in that same row. The role and the remove control stay centered. An error under the value makes that row taller. Focus and an invalid value draw an inset ring on the cell. The person search uses that same cell treatment. Name and email inside Create stay bordered. Below 40rem the table lines go away. Each row reads as one person: the drag handle, the name, and remove on a single line, and the relationship fields underneath, lined up with the name. Those fields use a normal control: a border, the field radius, and the surface background. Focus and an invalid value draw the ring on that control, not around the label. The chip's own remove control hides there, so the row remove is the only one. A row with no person keeps its first field on that top line, with the same bordered control. Column headers hide. Field labels show. The same handle still drags the whole row. Wide screens keep the table and the cell chrome. The page does not scroll sideways.
+
+A row can join a library image instead of a person. `with_image` renders a thumbnail in the identity cell and a hidden field for the image id. An empty cell opens a library modal. Choosing an image writes that id onto the row and shows `thumbnail_url`. Choosing an image that another visible row already joins focuses that row and leaves the current row unchanged. `+ New` creates a library image through `create_url`, then joins it. With `update_url`, a click on the thumbnail loads and patches the library record. Name and alt text belong to that record. Caption, credit, and order belong to the join and stay in `field` slots until the parent form is saved. The row remove drops the join and leaves the image in the library. On a phone the thumbnail sits on the top line, between the handle and remove.
+
+```erb
+<% row.with_image(
+  form: row_form,
+  association_name: :image_id,
+  title: join.image.name,
+  thumbnail_url: join.image.thumbnail_url,
+  search_url: search_images_path,
+  create_url: images_path,
+  update_url: "/images/:id"
+) do %>
+  <%= render FlatPack::TextInput::Component.new(name: "name", label: "Name", form: "collection-editor-unattached", data: { create_field: "name", fill_from_query: "true" }) %>
+  <%= render FlatPack::TextInput::Component.new(name: "alt_text", label: "Alt text", form: "collection-editor-unattached", data: { create_field: "alt_text" }) %>
+<% end %>
+<% row.with_field do %>
+  <%= render FlatPack::TextInput::Component.new(name: row_form.field_name(:caption), label: "Caption", value: row_form.object.caption, chrome: :cell) %>
+<% end %>
+```
+
+Search `GET search_url` with a blank query lists the library. Each item is `{ "id", "title", "description", "thumbnail_url" }`. `+ New` copies the library search into inputs marked `data-fill-from-query` and opens the record modal. Create and update use the same item shape, including `thumbnail_url`, so every row joined to that image keeps its picture. A polite status says the image is already on the page when a second row tries to join it. Adding an image row opens the library. Adding a person row still focuses search.
 
 A row can skip the entity and hold only fields. The dummy Text fields section does that with three single-line text inputs, each passed `chrome: :cell`. There is no person picker and no dropdown. Below 40rem those inputs use the same bordered control as the other relationship fields. Those rows are unsaved, so a drag stays on the page.
 
@@ -196,12 +247,13 @@ Dragged rows and the landing slot still use the List orderable styles. The landi
 ## Accessibility
 - The handle is a button named `Reorder` plus the record title. Arrow Up and Arrow Down move the row when ordering is on.
 - With `update_url`, the chip name is a button named `edit_label` plus the record title. The hit target is the whole chip. Remove stays a separate button. Below 40rem the chip's own remove control is hidden, and the row remove is the only one.
+- An empty image cell is a button named `choose_label`. A filled thumbnail with `update_url` is a button named `edit_label` plus the image title. The row remove stays a separate button.
 - Remove is a ghost icon button with a trash icon, named `Remove` plus the record title.
 - Search is a combobox named by `label`. Results are a listbox. Each option exposes the title and the description as text. Arrow keys set `aria-activedescendant` on the search field.
 - A polite status announces the row title and visual position after a move.
 - The association id and `_destroy` are hidden inputs.
-- Adding a row focuses its search field. Removing a row focuses the add button.
-- A blank row keeps the picker open so keyboard users can search before the parent form is submitted.
+- Adding a person row focuses its search field. Adding an image row opens the library and focuses its search. Removing a row focuses the add button.
+- A blank person row keeps the picker open so keyboard users can search before the parent form is submitted. A blank image row stays a choose button until the library opens.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).

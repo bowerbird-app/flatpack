@@ -13,6 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.210] - 2026-10-08
+
+### Added
+- A collection editor row can join a library image. The identity cell is a thumbnail. An empty cell opens a library modal and stores the chosen image id on the row. Choosing an image that is already joined focuses that row. Caption and the other cells stay on the join. With `update_url`, the thumbnail edits the library record. `+ New` creates a library image, then joins it.
+
+### Changed
+- Bumped the gem version to `0.1.210`.
+
+### Upgrade notes
+- Call `with_image` with `search_url` for the library and `thumbnail_url` for the current join. Include `:id` in `update_url` when the thumbnail should edit the library record. Search items accept `thumbnail_url`.
+- Reload kit CSS and JavaScript. Redeploy so `meta.gem_version` shows `0.1.210`.
+
 ## [0.1.209] - 2026-10-08
 
 ### Changed

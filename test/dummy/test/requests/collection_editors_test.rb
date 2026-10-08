@@ -286,6 +286,106 @@ class CollectionEditorsTest < ActionDispatch::IntegrationTest
     assert_equal before, project.project_people.order(:position, :id).pluck(:id)
   end
 
+  test "gallery joins a library image and leaves the file in the library" do
+    project = CollectionEditorDemo.launch
+
+    get demo_collection_editor_path
+
+    assert_response :success
+    assert_includes response.body, "North window"
+    assert_includes response.body, "Opening still"
+    assert_includes response.body, "On the bench"
+    assert_includes response.body, "Ada Lorne"
+    assert_includes response.body, "Jules Park"
+    assert_includes response.body, "Choose image"
+    assert_includes response.body, 'data-collection-editor-image="true"'
+    assert_includes response.body, 'data-search-url="/demo/collection_editor/images"'
+    assert_includes response.body, 'data-update-url="/demo/collection_editor/images/:id"'
+    assert_includes response.body, "[image_id]"
+    assert_includes response.body, "[caption]"
+    assert_includes response.body, "[credit]"
+    assert_includes response.body, 'data-collection-editor-library-modal="true"'
+    assert_includes response.body, "Save gallery"
+    assert_includes response.body, "Edit North window"
+
+    get demo_collection_editor_images_path, params: {q: "lens"}, as: :json
+
+    assert_response :success
+    lens_item = json.fetch("items").find { |item| item.fetch("title") == "Lens" }
+    assert lens_item.fetch("thumbnail_url").start_with?("data:image/svg+xml")
+
+    assert_difference -> { DemoImage.count }, 1 do
+      post demo_collection_editor_images_path, params: {name: "Gate", alt_text: "The front gate"}, as: :json
+    end
+    assert_response :success
+    created = json.fetch("item")
+    assert_equal "Gate", created.fetch("title")
+    assert created.fetch("thumbnail_url").present?
+
+    post demo_collection_editor_images_path, params: {name: "", alt_text: ""}, as: :json
+    assert_response :unprocessable_entity
+
+    image = DemoImage.find(created.fetch("id"))
+    get demo_collection_editor_image_path(image), as: :json
+    assert_response :success
+    assert_equal "Gate", json.dig("fields", "name")
+    assert_equal "The front gate", json.dig("fields", "alt_text")
+
+    patch demo_collection_editor_image_path(image), params: {name: "Front gate", alt_text: "The front gate"}, as: :json
+    assert_response :success
+    assert_equal "Front gate", json.dig("item", "title")
+    assert json.dig("item", "thumbnail_url").present?
+    assert_equal "Front gate", image.reload.name
+
+    lens = DemoImage.find_by!(name: "Lens")
+    attributes = gallery_attributes(project)
+    attributes["99"] = {image_id: lens.id, caption: "Spare lens", credit: "Jules Park"}
+
+    assert_difference -> { DemoProjectImage.where(project_id: project.id).count }, 1 do
+      patch demo_collection_editor_gallery_path(project), params: {demo_project: {gallery_images_attributes: attributes}}
+    end
+    assert_redirected_to demo_collection_editor_path
+    join = project.gallery_images.find_by!(image: lens)
+    assert_equal "Spare lens", join.caption
+    assert_equal "Jules Park", join.credit
+    assert_equal 4, join.position
+    assert DemoImage.exists?(lens.id)
+
+    slate = project.gallery_images.joins(:image).find_by!(demo_images: {name: "Slate"})
+    slate_image_id = slate.image_id
+    removed = gallery_attributes(project)
+    removed[slate.id.to_s] = {id: slate.id, image_id: slate.image_id, caption: slate.caption, credit: slate.credit, _destroy: "1"}
+    patch demo_collection_editor_gallery_path(project), params: {demo_project: {gallery_images_attributes: removed}}
+    assert_redirected_to demo_collection_editor_path
+    assert_not DemoProjectImage.exists?(slate.id)
+    assert DemoImage.exists?(slate_image_id)
+
+    north = DemoImage.find_by!(name: "North window")
+    duplicate = gallery_attributes(project)
+    duplicate["100"] = {image_id: north.id, caption: "Again", credit: "Ada Lorne"}
+    assert_no_difference -> { DemoProjectImage.where(project_id: project.id).count } do
+      patch demo_collection_editor_gallery_path(project), params: {demo_project: {gallery_images_attributes: duplicate}}
+    end
+    assert_response :unprocessable_entity
+    assert_includes response.body, "already on this page"
+  end
+
+  test "gallery reorder uses moving_recording_id and target_position" do
+    project = CollectionEditorDemo.launch
+    moving = project.gallery_images.joins(:image).find_by!(demo_images: {name: "Slate"})
+
+    patch demo_reorder_collection_editor_gallery_path(project), params: {
+      moving_recording_id: moving.id,
+      target_position: 1
+    }, as: :json
+
+    assert_response :success
+    assert_equal true, json.fetch("ok")
+    names = project.gallery_images.reload.order(:position, :id).map { |row| row.image.name }
+    assert_equal ["Slate", "North window", "Reel can"], names
+    assert_equal [1, 2, 3], project.gallery_images.order(:position, :id).pluck(:position)
+  end
+
   private
 
   def json
@@ -294,6 +394,18 @@ class CollectionEditorsTest < ActionDispatch::IntegrationTest
 
   def membership_for(project, email)
     project.project_people.joins(:person).find_by!(demo_people: {email: email})
+  end
+
+  def gallery_attributes(project)
+    project.gallery_images.reload.order(:position, :id).each_with_object({}) do |join, attributes|
+      attributes[join.id.to_s] = {
+        id: join.id,
+        image_id: join.image_id,
+        caption: join.caption,
+        credit: join.credit,
+        _destroy: "0"
+      }
+    end
   end
 
   def membership_attributes(project)

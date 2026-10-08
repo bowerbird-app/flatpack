@@ -750,6 +750,7 @@
         { variable: "persisted", accepts: "true, false, or nil", example: "persisted: membership.persisted?" },
         { variable: "index_token", accepts: "String", example: "index_token: \"NEW_RECORD\"" },
         { variable: "entity", accepts: "slot", example: "row.with_entity(form: row_form, association_name: :person_id, title: person.name)" },
+        { variable: "image", accepts: "slot", example: "row.with_image(form: row_form, association_name: :image_id, title: image.name, thumbnail_url: image.thumbnail_url)" },
         { variable: "field", accepts: "slot. One cell per block. Pass chrome: :cell on the input.", example: "row.with_field { render select }" },
         { variable: "action", accepts: "slot", example: "row.with_action { link_to \"Edit person\", edit_person_path(person) }" }
       ]
@@ -780,6 +781,33 @@
         { variable: "change_label", accepts: "String. Accepted and not rendered.", example: "change_label: \"Change\"" },
         { variable: "error", accepts: "String or nil", example: "error: \"Person must exist\"" },
         { variable: "open", accepts: "true, false", example: "open: true" }
+      ]
+    },
+    collection_editor_image: {
+      label: "Collection Editor Image",
+      method_call: "row.with_image(form: row_form, association_name: :image_id, title: \"North window\", thumbnail_url: image.thumbnail_url)",
+      variables: [
+        { variable: "form", accepts: "FormBuilder (required)", example: "form: row_form" },
+        { variable: "association_name", accepts: "Symbol or String (required)", example: "association_name: :image_id" },
+        { variable: "title", accepts: "String or nil", example: "title: image.name" },
+        { variable: "thumbnail_url", accepts: "String or nil", example: "thumbnail_url: image.thumbnail_url" },
+        { variable: "alt", accepts: "String or nil. Accepted. The button name carries the title.", example: "alt: image.alt_text" },
+        { variable: "value", accepts: "String or nil", example: "value: image.id" },
+        { variable: "label", accepts: "String", example: "label: \"Image\"" },
+        { variable: "search_url", accepts: "String or nil", example: "search_url: demo_collection_editor_images_path" },
+        { variable: "search_param", accepts: "String", example: "search_param: \"q\"" },
+        { variable: "min_search_length", accepts: "Integer", example: "min_search_length: 0" },
+        { variable: "create_url", accepts: "String or nil", example: "create_url: demo_collection_editor_images_path" },
+        { variable: "create_label", accepts: "String. Modal submit label. The library button is + New.", example: "create_label: \"Create\"" },
+        { variable: "choose_label", accepts: "String", example: "choose_label: \"Choose image\"" },
+        { variable: "update_url", accepts: "String or nil. GET and PATCH URL with an :id token.", example: "update_url: \"/images/:id\"" },
+        { variable: "update_label", accepts: "String. Submit label while editing.", example: "update_label: \"Save\"" },
+        { variable: "empty_text", accepts: "String", example: "empty_text: \"No images\"" },
+        { variable: "search_error_text", accepts: "String", example: "search_error_text: \"Search failed\"" },
+        { variable: "items", accepts: "Array or nil", example: "items: [{ id: 4, title: \"North window\", thumbnail_url: \"/north.svg\" }]" },
+        { variable: "edit_url_template", accepts: "String or nil. Accepted and not rendered.", example: "edit_url_template: \"/images/:id/edit\"" },
+        { variable: "edit_label", accepts: "String. Accessible name prefix for a filled thumbnail when update_url is set.", example: "edit_label: \"Edit\"" },
+        { variable: "error", accepts: "String or nil", example: "error: \"Image must be chosen\"" }
       ]
     },
     text_input: {

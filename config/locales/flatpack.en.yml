@@ -55,6 +55,8 @@ en:
     collection_editor:
       new_record: New %{label}
       edit_record: Edit %{label}
+      choose_image: Choose image
+      already_joined: This image is already on this page
       create_failed: Could not create the record
       load_failed: Could not load the record
       save_failed: Could not save the record

@@ -1,0 +1,33 @@
+<%= form_with model: project, url: demo_collection_editor_gallery_path(project), method: :patch, class: "space-y-4" do |form| %>
+  <%= render FlatPack::CollectionEditor::Component.new(
+    title: "Gallery",
+    add_label: "Image",
+    empty_text: "No images yet",
+    headers: ["Image", "Caption", "Credit"],
+    orderable: true,
+    orderable_url: demo_reorder_collection_editor_gallery_path(project),
+    param_uuid_name: "moving_recording_id",
+    param_target_position_name: "target_position"
+  ) do |editor| %>
+    <% project.gallery_images.each do |join| %>
+      <% form.fields_for :gallery_images, join, child_index: (join.persisted? ? join.id : join.object_id) do |row_form| %>
+        <% editor.with_row(form: row_form) do |row| %>
+          <%= render "demo/collection_editors/gallery_fields", row: row, row_form: row_form %>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <% editor.with_template do %>
+      <% form.fields_for :gallery_images, DemoProjectImage.new, child_index: "NEW_RECORD" do |row_form| %>
+        <%= render FlatPack::CollectionEditor::Row::Component.new(
+          form: row_form,
+          index_token: "NEW_RECORD"
+        ) do |row| %>
+          <%= render "demo/collection_editors/gallery_fields", row: row, row_form: row_form %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::Button::Component.new(text: "Save gallery", type: "submit", style: :primary) %>
+<% end %>
