@@ -55,6 +55,10 @@ Rails.application.routes.draw do
 
     recording_studio_admin_for :admin, at: "/admin", root_section: :root
 
+    if defined?(RecordingStudioInternationalization)
+      mount RecordingStudioInternationalization::Engine, at: "/recording_studio_internationalization"
+    end
+
     get "studio", to: "studio#index", as: :studio
     get "studio/recording_tree", to: "recording_trees#index", as: :studio_recording_tree
   else
@@ -69,6 +73,8 @@ Rails.application.routes.draw do
   get "pages/hero"
   get "pages/hero/centered", to: "pages#hero_centered"
   get "pages/hero/centered_image", to: "pages#hero_centered_image"
+  get "pages/hero/centered_image_left", to: "pages#hero_centered_image_left"
+  get "pages/hero/centered_image_on_light", to: "pages#hero_centered_image_on_light"
   get "pages/hero/screenshot", to: "pages#hero_screenshot"
   get "pages/hero/split_image", to: "pages#hero_split_image"
   get "pages/hero/angled_image", to: "pages#hero_angled_image"
@@ -78,6 +84,8 @@ Rails.application.routes.draw do
   get "themes", to: "themes#index"
   get "themes/demos/:theme", to: "themes#demo", as: :theme_demo,
     constraints: {theme: /system|light|dark|ocean|rounded/}
+  get "demo/brand_theme", to: "pages#brand_theme"
+  get "demo/brand_theme/:tone", to: "pages#brand_theme", constraints: {tone: /dark/}, as: :brand_theme_dark
   get "demo/buttons", to: "pages#buttons"
   get "demo/links", to: "pages#links"
   get "demo/buttons/pills", to: "pages#buttons_pills"
@@ -114,6 +122,8 @@ Rails.application.routes.draw do
   get "demo/forms/nested_multiselect", to: "pages#forms_nested_multiselect"
   get "demo/forms/switch", to: "pages#forms_switch"
   get "demo/forms/combined", to: "pages#forms_combined"
+  get "demo/forms/unsaved_changes", to: "pages#forms_unsaved_changes"
+  post "demo/forms/unsaved_changes", to: "pages#forms_unsaved_changes_save"
   get "demo/tables/basic", to: "pages#tables_basic"
   get "demo/tables/empty", to: "pages#tables_empty"
   get "demo/tables/sortable", to: "pages#tables_sortable"
@@ -214,6 +224,14 @@ Rails.application.routes.draw do
   get "demo/carousel", to: "pages#carousel"
 
   namespace :demo do
+    get "collection_editor", to: "collection_editors#show", as: :collection_editor
+    get "collection_editor/people", to: "collection_editors#search_people", as: :collection_editor_people
+    post "collection_editor/people", to: "collection_editors#create_person"
+    get "collection_editor/people/:id/edit", to: "collection_editors#edit_person", as: :edit_collection_editor_person
+    patch "collection_editor/people/:id", to: "collection_editors#update_person", as: :collection_editor_person
+    patch "collection_editor/:id/reorder", to: "collection_editors#reorder", as: :reorder_collection_editor
+    patch "collection_editor/:id", to: "collection_editors#update", as: :collection_editor_project
+
     resources :comments, only: [:create] do
       post :replies, on: :member
     end

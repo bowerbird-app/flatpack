@@ -14,6 +14,7 @@ Use Tabs when content can be split into a small number of peer sections in the s
 |---|---|---|---|---|
 | `default_tab` | Integer | `0` | no | Zero-based index of initially active tab/panel. |
 | `variant` | Symbol | `:underline` | no | Visual style: `:underline`, `:pills`, `:stacked`. |
+| `size` | Symbol | `:md` | no | Padding/text density: `:sm`, `:md`, `:lg` (shared with Button::Pill; invalid values raise). |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for root wrapper. |
 
 ## Slots

@@ -7,7 +7,29 @@ const vm = require('node:vm')
 function loadLocalTime() {
   const filePath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'local_time.js')
   const source = fs.readFileSync(filePath, 'utf8')
-  const transformedSource = source.replaceAll('export function ', 'function ') + `
+  const transformedSource = source
+    .replace('import { flatPackCopy } from "flat_pack/copy"', `function flatPackCopy(key, vars = {}) {
+      const templates = {
+        "timestamp.just_now": "Just now",
+        "timestamp.a_min_ago": "a min ago",
+        "timestamp.minutes_ago": "%{count} minutes ago",
+        "timestamp.hours_ago": "%{count} hours ago",
+        "timestamp.yesterday": "Yesterday",
+        "timestamp.days_ago": "%{count} days ago",
+        "timestamp.weeks_ago": "%{count} weeks ago",
+        "timestamp.months_ago": "%{count} months ago",
+        "timestamp.short_a_min_ago": "a min ago",
+        "timestamp.short_min_ago": "%{count} min ago",
+        "timestamp.short_hr_ago": "%{count}hr ago",
+        "timestamp.short_yesterday": "1d ago",
+        "timestamp.short_d_ago": "%{count}d ago",
+        "timestamp.short_wk_ago": "%{count}wk ago",
+        "timestamp.short_mo_ago": "%{count}mo ago"
+      }
+      const template = templates[key] || key
+      return String(template).replace(/%\\{(\\w+)\\}/g, (_, name) => vars[name] == null ? "" : String(vars[name]))
+    }`)
+    .replaceAll('export function ', 'function ') + `
 module.exports = {
   initLocalTimes,
   updateLocalTimeElement,

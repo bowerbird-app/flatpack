@@ -28,7 +28,7 @@
     ) do |summary| %>
       <% summary.actions do %>
         <%= render FlatPack::Button::Component.new(text: "Change plan", href: demo_billing_plan_picker_path, style: :secondary) %>
-        <%= render FlatPack::Button::Component.new(text: "Manage billing", href: demo_billing_payment_method_path, style: :default) %>
+        <%= render FlatPack::Button::Component.new(text: "Manage billing", href: demo_billing_payment_method_path, style: :partner) %>
       <% end %>
     <% end %>
 

@@ -3,15 +3,7 @@
 module FlatPack
   module Button
     class Component < FlatPack::BaseComponent
-      SCHEMES = {
-        default: "bg-[var(--button-default-background-color)] hover:bg-[var(--button-default-hover-background-color)] text-[var(--button-default-text-color)] border border-[var(--button-default-border-color)] shadow-[var(--button-shadow)] hover:shadow-[var(--button-shadow-hover)] active:shadow-[var(--button-shadow-active)]",
-        primary: "bg-[var(--button-primary-background-color)] hover:bg-[var(--button-primary-hover-background-color)] text-[var(--button-primary-text-color)] border border-[var(--button-primary-border-color)] shadow-[var(--button-shadow)] hover:shadow-[var(--button-shadow-hover)] active:shadow-[var(--button-shadow-active)]",
-        secondary: "bg-[var(--button-secondary-background-color)] hover:bg-[var(--button-secondary-hover-background-color)] text-[var(--button-secondary-text-color)] border border-[var(--button-secondary-border-color)]",
-        ghost: "bg-[var(--button-ghost-background-color)] hover:bg-[var(--button-ghost-hover-background-color)] text-[var(--button-ghost-text-color)] border border-[var(--button-ghost-border-color)]",
-        success: "bg-[var(--button-success-background-color)] hover:bg-[var(--button-success-hover-background-color)] text-[var(--button-success-text-color)] border border-[var(--button-success-border-color)] shadow-[var(--button-shadow)] hover:shadow-[var(--button-shadow-hover)] active:shadow-[var(--button-shadow-active)]",
-        warning: "bg-[var(--button-warning-background-color)] hover:bg-[var(--button-warning-hover-background-color)] text-[var(--button-warning-text-color)] border border-[var(--button-warning-border-color)] shadow-[var(--button-shadow)] hover:shadow-[var(--button-shadow-hover)] active:shadow-[var(--button-shadow-active)]",
-        danger: "bg-[var(--button-danger-background-color)] hover:bg-[var(--button-danger-hover-background-color)] text-[var(--button-danger-text-color)] border border-[var(--button-danger-border-color)] shadow-[var(--button-shadow)] hover:shadow-[var(--button-shadow-hover)] active:shadow-[var(--button-shadow-active)]"
-      }.freeze
+      SCHEMES = StyleRegistry::BUILT_IN.transform_values { |config| config.fetch(:press) }.freeze
 
       SIZES = {
         sm: "px-[var(--button-padding-x-sm)] py-[var(--button-padding-y-sm)] text-xs",
@@ -117,7 +109,8 @@ module FlatPack
       def button_attributes
         attrs = {
           type: @type,
-          class: button_classes
+          class: button_classes,
+          data: style_data
         }
         attrs[:disabled] = true if @loading
         aria = {}
@@ -131,7 +124,8 @@ module FlatPack
         attrs = {
           class: button_classes,
           method: @method,
-          target: @target
+          target: @target,
+          data: style_data
         }
         attrs[:rel] = "noopener noreferrer" if @target == "_blank"
         aria = {}
@@ -148,13 +142,13 @@ module FlatPack
           "font-medium",
           "cursor-pointer",
           "fp-button",
-          flat_press_class,
+          press_class,
+          "border",
           "transition-[color,background-color,border-color,box-shadow,transform] duration-[var(--duration-fast)] ease-[var(--easing-standard)]",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--button-focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--button-focus-ring-offset-color)]",
           "disabled:pointer-events-none disabled:opacity-[var(--button-disabled-opacity)]",
           "fp-touch-manipulation",
           conditional_size_classes,
-          style_classes,
           icon_only_classes
         )
       end
@@ -179,14 +173,12 @@ module FlatPack
         "#{ICON_ONLY_SIZES.fetch(@size)} fp-hit-target"
       end
 
-      def flat_press_class
-        return unless @style == :ghost || @style == :secondary
-
-        "fp-button-flat"
+      def press_class
+        StyleRegistry.press_class(@style)
       end
 
-      def style_classes
-        SCHEMES.fetch(@style)
+      def style_data
+        {fp_style: @style.to_s}
       end
 
       def size_classes
@@ -194,8 +186,9 @@ module FlatPack
       end
 
       def validate_style!
-        return if SCHEMES.key?(@style)
-        raise ArgumentError, "Invalid style: #{@style}. Must be one of: #{SCHEMES.keys.join(", ")}"
+        return if StyleRegistry.known?(@style)
+
+        raise ArgumentError, StyleRegistry.invalid_style_message(@style)
       end
 
       def validate_size!

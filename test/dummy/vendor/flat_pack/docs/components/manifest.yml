@@ -243,6 +243,12 @@ components:
     primary_class: FlatPack::CommandPalette::Component
     status: documented
 
+  - key: content
+    title: Content
+    doc: docs/components/content.md
+    primary_class: FlatPack::Content::Component
+    status: documented
+
   - key: content_editor
     title: Content Editor
     doc: docs/components/content-editor.md

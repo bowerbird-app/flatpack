@@ -64,3 +64,40 @@
     title: "Checkbox Examples"
   ) %>
 </section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Sizes", anchor_link: true, subtitle: "sm, md (default), and lg share the Checkbox size map.") %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body(class: "space-y-[var(--stack-gap-md)]") do %>
+      <%= render FlatPack::Checkbox::Component.new(
+        name: "size_sm",
+        label: "Small",
+        size: :sm,
+        checked: true
+      ) %>
+      <%= render FlatPack::Checkbox::Component.new(
+        name: "size_md",
+        label: "Medium (default)",
+        size: :md,
+        checked: true
+      ) %>
+      <%= render FlatPack::Checkbox::Component.new(
+        name: "size_lg",
+        label: "Large",
+        size: :lg,
+        checked: true
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Checkbox::Component.new(name: &quot;size_sm&quot;, label: &quot;Small&quot;, size: :sm) %&gt;
+      &lt;%= render FlatPack::Checkbox::Component.new(name: &quot;size_md&quot;, label: &quot;Medium&quot;, size: :md) %&gt;
+      &lt;%= render FlatPack::Checkbox::Component.new(name: &quot;size_lg&quot;, label: &quot;Large&quot;, size: :lg) %&gt;
+    CODE
+    language: "erb",
+    title: "Sizes"
+  ) %>
+</section>

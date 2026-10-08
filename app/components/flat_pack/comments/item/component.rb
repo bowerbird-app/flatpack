@@ -149,7 +149,7 @@ module FlatPack
 
         def render_system_badge
           content_tag(:span,
-            "System",
+            fp_t("comments.system"),
             class: "ml-2 inline-flex items-center rounded-full border border-[var(--badge-info-border-color)] bg-[var(--badge-info-background-color)] px-2 py-0.5 text-[10px] font-medium text-[var(--badge-info-text-color)]")
         end
 
@@ -170,7 +170,7 @@ module FlatPack
         end
 
         def render_edited_indicator
-          content_tag(:span, " (edited)", class: "italic")
+          content_tag(:span, fp_t("comments.edited"), class: "italic")
         end
 
         def render_body
@@ -185,7 +185,7 @@ module FlatPack
 
         def render_deleted_message
           content_tag(:div, class: "text-sm italic text-[var(--comments-item-deleted-text-color)]") do
-            "This comment has been deleted."
+            fp_t("comments.deleted")
           end
         end
 

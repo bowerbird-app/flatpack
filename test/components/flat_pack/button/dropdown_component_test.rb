@@ -40,35 +40,54 @@ module FlatPack
         render_inline(Dropdown::Component.new(text: "Actions", style: :primary))
 
         assert_selector "button"
-        assert_includes page.native.to_html, "bg-[var(--button-primary-background-color)]"
+        assert_includes page.native.to_html, "data-fp-style=\"primary\""
+        assert_includes page.native.to_html, "fp-button"
       end
 
       def test_renders_secondary_style
         render_inline(Dropdown::Component.new(text: "Actions", style: :secondary))
 
         assert_selector "button"
-        assert_includes page.native.to_html, "bg-[var(--button-secondary-background-color)]"
+        assert_includes page.native.to_html, "data-fp-style=\"secondary\""
       end
 
       def test_renders_ghost_style
         render_inline(Dropdown::Component.new(text: "Actions", style: :ghost))
 
         assert_selector "button"
-        assert_includes page.native.to_html, "bg-[var(--button-ghost-background-color)]"
+        assert_includes page.native.to_html, "data-fp-style=\"ghost\""
       end
 
       def test_renders_success_style
         render_inline(Dropdown::Component.new(text: "Actions", style: :success))
 
         assert_selector "button"
-        assert_includes page.native.to_html, "bg-[var(--button-success-background-color)]"
+        assert_includes page.native.to_html, "data-fp-style=\"success\""
       end
 
       def test_renders_warning_style
         render_inline(Dropdown::Component.new(text: "Actions", style: :warning))
 
         assert_selector "button"
-        assert_includes page.native.to_html, "bg-[var(--button-warning-background-color)]"
+        assert_includes page.native.to_html, "data-fp-style=\"warning\""
+      end
+
+      def test_renders_registered_style
+        FlatPack::Button.register_style(:spec_partner, press: :raised)
+        render_inline(Dropdown::Component.new(text: "Actions", style: :spec_partner))
+
+        assert_includes page.native.to_html, "data-fp-style=\"spec_partner\""
+        assert_includes page.native.to_html, "fp-button-raised"
+      ensure
+        FlatPack::Button.unregister_style(:spec_partner)
+      end
+
+      def test_raises_error_for_invalid_style
+        error = assert_raises(ArgumentError) do
+          Dropdown::Component.new(text: "Actions", style: :not_a_style)
+        end
+
+        assert_match(/Invalid style/, error.message)
       end
 
       # Size variants

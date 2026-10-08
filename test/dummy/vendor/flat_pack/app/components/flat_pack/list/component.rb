@@ -72,9 +72,16 @@ module FlatPack
       def list_classes
         classes(
           "flat-pack-list",
-          (@spacing == :dense) ? "space-y-1" : "space-y-3",
-          ("divide-y divide-[var(--surface-border-color)]" if @divider)
+          "flex flex-col",
+          ("flat-pack-list--orderable" if @orderable),
+          # Orderable + divided lists skip gap — gap fights the divider and looks uneven while dragging.
+          (spacing_gap_class unless @orderable && @divider),
+          ("flat-pack-list-divided" if @divider)
         )
+      end
+
+      def spacing_gap_class
+        (@spacing == :dense) ? "gap-1" : "gap-3"
       end
 
       def merge_space_tokens(left_value, right_value)

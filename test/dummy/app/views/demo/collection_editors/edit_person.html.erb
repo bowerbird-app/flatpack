@@ -1,0 +1,32 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Edit person",
+  subtitle: "This form changes the shared person. It does not change the project role."
+) %>
+
+<section class="max-w-lg space-y-4">
+  <p class="text-sm text-[var(--surface-muted-content-color)]">
+    Name and email belong to the person. Every project that uses this person will show the saved name and email.
+    Role stays on the project relationship.
+  </p>
+
+  <%= form_with model: @person, url: demo_collection_editor_person_path(@person), method: :patch, class: "space-y-4" do |form| %>
+    <%= render FlatPack::TextInput::Component.new(
+      name: form.field_name(:name),
+      id: form.field_id(:name),
+      label: "Name",
+      value: @person.name,
+      error: @person.errors.full_messages_for(:name).to_sentence.presence
+    ) %>
+    <%= render FlatPack::EmailInput::Component.new(
+      name: form.field_name(:email),
+      id: form.field_id(:email),
+      label: "Email",
+      value: @person.email,
+      error: @person.errors.full_messages_for(:email).to_sentence.presence
+    ) %>
+    <div class="flex gap-2">
+      <%= render FlatPack::Button::Component.new(text: "Save person", type: "submit", style: :primary) %>
+      <%= render FlatPack::Button::Component.new(text: "Back to collaborators", href: demo_collection_editor_path, style: :secondary) %>
+    </div>
+  <% end %>
+</section>

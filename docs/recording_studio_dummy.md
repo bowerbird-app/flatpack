@@ -16,6 +16,7 @@ Pinned in `test/dummy/Gemfile.common`:
 - `recording_studio_oauth` (`v0.2.0`)
 - `recording_studio_mcp` (`v0.3.2`)
 - `recording_studio_root_switchable`
+- `recording_studio_internationalization` (`v0.1.2`) — dummy-only; FlatPack does not depend on it. The catalog top nav renders `recording_studio_language_selector` immediately left of the theme control. Catalog full-page HTML cache keys include the current locale.
 
 Recording Studio host gems need Ruby `>= 3.3`.
 
@@ -27,7 +28,7 @@ Open without login. These paths skip root resolution and do not need Postgres fo
 
 - `/`, `/demo`
 - `/themes`, `/pages/hero*`, `/mobile*`
-- `/flat_pack`, `/up`, static assets
+- `/flat_pack`, `/up`, `/recording_studio_internationalization`, static assets
 
 Other `/demo/*` pages stay open without login. Most are static. Demos that touch `DemoTableRow`, `DemoComment`, `Article`, or chat tables still need Postgres when you open those specific routes.
 

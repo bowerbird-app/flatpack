@@ -386,7 +386,7 @@ Selected items preserve the optional display fields (`title`, `icon`, `descripti
 Grid item badges use `--picker-badge-*`. Idle selection rings use `--picker-selection-idle-*`. The light ring and inner dot on media use `--picker-selection-indicator-*`. Selected rings stay on `--color-primary`.
 
 ## Accessibility
-Picker content uses native form controls (`input[type=radio|checkbox]`) for list selection and button semantics for grid selection (`aria-pressed`). Search input includes an accessible label (`"Search available assets"`).
+Picker content uses native form controls (`input[type=radio|checkbox]`) for list selection and button semantics for grid selection (`aria-pressed`). Multiple-mode list checkboxes use the same theme primary CSS vars as `Checkbox::Component` (`accent-[var(--color-primary)]`, `checked:bg-[var(--color-primary)]`, `checked:border-[var(--color-primary)]`, `checked:text-[var(--color-primary-text)]`). Search input includes an accessible label (`"Search available assets"`).
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).

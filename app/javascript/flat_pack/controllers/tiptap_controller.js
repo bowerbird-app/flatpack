@@ -35,6 +35,7 @@ import { buildToolbar,
          updateToolbarState }    from "flat_pack/tiptap/toolbar"
 import { buildBubbleMenu,
          refreshBubbleMenuState } from "flat_pack/tiptap/bubble_menu"
+import { flatPackCopy } from "flat_pack/copy"
 
 export default class extends Controller {
   static targets = [
@@ -103,7 +104,7 @@ export default class extends Controller {
     const opts = this.optionsValue
 
     // Resolve effective placeholder: component-level prop takes precedence
-    const placeholder = this.placeholderValue || opts.placeholder || "Start writing…"
+    const placeholder = this.placeholderValue || opts.placeholder || flatPackCopy("rich_text.placeholder")
 
     // Snapshot DOM element references NOW — before TipTap's BubbleMenu/FloatingMenu
     // extensions run their onCreate hooks, which use Tippy.js to teleport those
@@ -245,9 +246,17 @@ export default class extends Controller {
     if (opts.readonly || this.disabledValue) return
 
     const format = opts.format || "html"
-    hiddenFieldEl.value = format === "html"
+    const next = format === "html"
       ? editor.getHTML()
       : JSON.stringify(editor.getJSON())
+    const changed = hiddenFieldEl.value !== next
+    hiddenFieldEl.value = next
+
+    if (this._hiddenFieldReady && changed) {
+      hiddenFieldEl.dispatchEvent(new Event("input", { bubbles: true }))
+    }
+
+    this._hiddenFieldReady = true
   }
 
   #updateCharacterCount(editor, opts) {
@@ -264,8 +273,8 @@ export default class extends Controller {
     const limit = opts.max_characters || null
 
     charCountEl.textContent = limit
-      ? `${count}/${limit} characters`
-      : `${count} characters`
+      ? flatPackCopy("text.characters_with_limit", {count, limit})
+      : flatPackCopy("text.characters", {count})
 
     const belowMin = opts.min_characters && count < opts.min_characters
     const aboveMax = limit && count > limit
@@ -312,14 +321,14 @@ export default class extends Controller {
     if (!el || el.childElementCount > 0) return
 
     el.setAttribute("role", "menu")
-    el.setAttribute("aria-label", "Insert content")
+    el.setAttribute("aria-label", flatPackCopy("rich_text.insert_content"))
 
     const actions = [
-      { label: "Heading 1",    fn: () => editor.chain().focus().setHeading({ level: 1 }).run() },
-      { label: "Heading 2",    fn: () => editor.chain().focus().setHeading({ level: 2 }).run() },
-      { label: "Bullet list",  fn: () => editor.chain().focus().toggleBulletList().run() },
-      { label: "Ordered list", fn: () => editor.chain().focus().toggleOrderedList().run() },
-      { label: "Blockquote",   fn: () => editor.chain().focus().toggleBlockquote().run() },
+      { label: flatPackCopy("rich_text.heading_1"),    fn: () => editor.chain().focus().setHeading({ level: 1 }).run() },
+      { label: flatPackCopy("rich_text.heading_2"),    fn: () => editor.chain().focus().setHeading({ level: 2 }).run() },
+      { label: flatPackCopy("rich_text.bullet_list"),  fn: () => editor.chain().focus().toggleBulletList().run() },
+      { label: flatPackCopy("rich_text.numbered_list"), fn: () => editor.chain().focus().toggleOrderedList().run() },
+      { label: flatPackCopy("rich_text.blockquote"),   fn: () => editor.chain().focus().toggleBlockquote().run() },
     ]
 
     actions.forEach(({ label, fn }) => {

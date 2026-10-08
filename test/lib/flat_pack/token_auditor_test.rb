@@ -12,6 +12,7 @@ module FlatPack
 
     test "runtime fill percent is not a theme token" do
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--range-progress"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--collection-editor-columns"
     end
 
     test "brand primitives and transition aliases are defined" do
@@ -37,6 +38,7 @@ module FlatPack
 
       refute_nil rounded_block
       refute_includes rounded_block, "--color-primary"
+      assert_empty rounded_block.scan(/^\s*--[a-z0-9-]+\s*:/)
     end
   end
 end

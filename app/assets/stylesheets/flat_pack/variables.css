@@ -2,13 +2,17 @@
  *
  * Token hierarchy:
  *   1. Brand primitives (--brand-hue, --brand-chroma, --brand-lightness) — change these to recolor primary
- *   2. Semantic tokens (--color-*, --surface-*, --radius-*, --shadow-*, --font-*, --text-*, --duration-*, --easing-*)
+ *   2. Semantic tokens (--color-*, --surface-*, --overlay-*, --radius-*, --shadow-*, --font-*, --text-*, --duration-*, --easing-*)
  *   3. Component tokens (--button-*, --sidebar-*, …) — defined once; prefer var(--semantic)
+ *      --color-primary-hover follows --color-primary (relative colour; brand-knob fallback)
  *
  * @theme inline registers Tailwind utility names without emitting values (avoids duplicating :root
  *   and the circular `--x: var(--x)` trap when Tailwind also emits @theme onto :root).
- * :root is the single source of concrete values (browsers skip @theme when this file is a stylesheet).
- * [data-theme="…"] overrides only tokens that differ from :root.
+ * :root, [data-theme] is the single source of concrete values (browsers skip @theme when this
+ *   file is a stylesheet). Declaring the wiring on [data-theme] as well re-resolves derived
+ *   tokens (var(--color-primary), etc.) when a host puts data-theme on <body> or another
+ *   descendant — var() inside a custom property is computed on the element that declares it.
+ * [data-theme="…"] named blocks override only tokens that differ from the default palette.
  * [data-theme="rounded"] is a no-op alias of the default so hosts can keep the attribute.
  */
 
@@ -53,6 +57,8 @@
   --surface-muted-content-color: var(--surface-muted-content-color);
   --surface-border-color: var(--surface-border-color);
   --surface-border-hover-color: var(--surface-border-hover-color);
+  --overlay-backdrop-color: var(--overlay-backdrop-color);
+  --overlay-scrim-color: var(--overlay-scrim-color);
   --checkbox-size: var(--checkbox-size);
   --checkbox-radius: var(--checkbox-radius);
   --checkbox-label-gap: var(--checkbox-label-gap);
@@ -149,8 +155,31 @@
   --card-hover-strong-shadow: var(--card-hover-strong-shadow);
   --card-hover-strong-shadow-dark: var(--card-hover-strong-shadow-dark);
   --hero-overlay-background-color: var(--hero-overlay-background-color);
+  --hero-overlay-left-background: var(--hero-overlay-left-background);
   --hero-overlay-text-color: var(--hero-overlay-text-color);
   --hero-overlay-muted-text-color: var(--hero-overlay-muted-text-color);
+  --hero-overlay-button-primary-background-color: var(--hero-overlay-button-primary-background-color);
+  --hero-overlay-button-primary-hover-background-color: var(--hero-overlay-button-primary-hover-background-color);
+  --hero-overlay-button-primary-text-color: var(--hero-overlay-button-primary-text-color);
+  --hero-overlay-button-primary-border-color: var(--hero-overlay-button-primary-border-color);
+  --hero-overlay-button-secondary-background-color: var(--hero-overlay-button-secondary-background-color);
+  --hero-overlay-button-secondary-hover-background-color: var(--hero-overlay-button-secondary-hover-background-color);
+  --hero-overlay-button-secondary-text-color: var(--hero-overlay-button-secondary-text-color);
+  --hero-overlay-button-secondary-border-color: var(--hero-overlay-button-secondary-border-color);
+  --hero-overlay-on-light-background-color: var(--hero-overlay-on-light-background-color);
+  --hero-overlay-on-light-left-background: var(--hero-overlay-on-light-left-background);
+  --hero-overlay-on-light-text-color: var(--hero-overlay-on-light-text-color);
+  --hero-overlay-on-light-muted-text-color: var(--hero-overlay-on-light-muted-text-color);
+  --hero-overlay-on-light-button-primary-background-color: var(--hero-overlay-on-light-button-primary-background-color);
+  --hero-overlay-on-light-button-primary-hover-background-color: var(--hero-overlay-on-light-button-primary-hover-background-color);
+  --hero-overlay-on-light-button-primary-text-color: var(--hero-overlay-on-light-button-primary-text-color);
+  --hero-overlay-on-light-button-primary-border-color: var(--hero-overlay-on-light-button-primary-border-color);
+  --hero-overlay-on-light-button-secondary-background-color: var(--hero-overlay-on-light-button-secondary-background-color);
+  --hero-overlay-on-light-button-secondary-hover-background-color: var(--hero-overlay-on-light-button-secondary-hover-background-color);
+  --hero-overlay-on-light-button-secondary-text-color: var(--hero-overlay-on-light-button-secondary-text-color);
+  --hero-overlay-on-light-button-secondary-border-color: var(--hero-overlay-on-light-button-secondary-border-color);
+  --hero-overlay-min-height: var(--hero-overlay-min-height);
+  --hero-overlay-copy-padding-top: var(--hero-overlay-copy-padding-top);
   --carousel-viewport-background-color: var(--carousel-viewport-background-color);
   --carousel-viewport-border-color: var(--carousel-viewport-border-color);
   --carousel-chevron-background-color: var(--carousel-chevron-background-color);
@@ -233,6 +262,16 @@
   --list-marker-color: var(--list-marker-color);
   --list-marker-min-width: var(--list-marker-min-width);
   --list-marker-gap: var(--list-marker-gap);
+  --collection-editor-background-color: var(--collection-editor-background-color);
+  --collection-editor-border-color: var(--collection-editor-border-color);
+  --collection-editor-radius: var(--collection-editor-radius);
+  --collection-editor-row-background-color: var(--collection-editor-row-background-color);
+  --collection-editor-row-hover-background-color: var(--collection-editor-row-hover-background-color);
+  --collection-editor-row-padding: var(--collection-editor-row-padding);
+  --collection-editor-title-color: var(--collection-editor-title-color);
+  --collection-editor-description-color: var(--collection-editor-description-color);
+  --collection-editor-handle-color: var(--collection-editor-handle-color);
+  --collection-editor-drop-indicator-color: var(--collection-editor-drop-indicator-color);
   --sidebar-item-hover-text-color: var(--sidebar-item-hover-text-color);
   --sidebar-item-active-background-color: var(--sidebar-item-active-background-color);
   --sidebar-item-active-text-color: var(--sidebar-item-active-text-color);
@@ -374,6 +413,10 @@
   --button-danger-hover-background-color: var(--button-danger-hover-background-color);
   --button-danger-text-color: var(--button-danger-text-color);
   --button-danger-border-color: var(--button-danger-border-color);
+  --fp-button-background: var(--fp-button-background);
+  --fp-button-hover-background: var(--fp-button-hover-background);
+  --fp-button-text: var(--fp-button-text);
+  --fp-button-border: var(--fp-button-border);
   --button-border-radius: var(--button-border-radius);
   --button-focus-ring-color: var(--button-focus-ring-color);
   --button-focus-ring-offset-color: var(--button-focus-ring-offset-color);
@@ -481,6 +524,8 @@
   --top-nav-item-active-background-color: var(--top-nav-item-active-background-color);
   --top-nav-item-active-text-color: var(--top-nav-item-active-text-color);
   --top-nav-item-active-icon-color: var(--top-nav-item-active-icon-color);
+  --top-nav-height: var(--top-nav-height);
+  --top-nav-backdrop-blur: var(--top-nav-backdrop-blur);
   --search-icon-color: var(--search-icon-color);
   --search-input-background-color: var(--search-input-background-color);
   --search-input-border-color: var(--search-input-border-color);
@@ -557,6 +602,17 @@
   --page-title-h4-size: var(--page-title-h4-size);
   --page-title-h5-size: var(--page-title-h5-size);
   --page-title-h6-size: var(--page-title-h6-size);
+  --content-kicker-size: var(--content-kicker-size);
+  --content-p-size: var(--content-p-size);
+  --content-lead-size: var(--content-lead-size);
+  --content-h1-size: var(--content-h1-size);
+  --content-h2-size: var(--content-h2-size);
+  --content-h3-size: var(--content-h3-size);
+  --content-h4-size: var(--content-h4-size);
+  --content-h5-size: var(--content-h5-size);
+  --content-h6-size: var(--content-h6-size);
+  --hero-headline-size: var(--hero-headline-size);
+  --hero-description-size: var(--hero-description-size);
   --shadow-sm: var(--shadow-sm);
   --shadow-md: var(--shadow-md);
   --shadow-lg: var(--shadow-lg);
@@ -571,6 +627,8 @@
   --easing-standard: var(--easing-standard);
   --easing-enter: var(--easing-enter);
   --easing-exit: var(--easing-exit);
+  --easing-spring: var(--easing-spring);
+  --easing-spring-snappy: var(--easing-spring-snappy);
   --transition-slow: var(--transition-slow);
   --transition-base: var(--transition-base);
   --transition-fast: var(--transition-fast);
@@ -592,8 +650,10 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   height: 0;
 }
 
-/* Default palette (rounded / charcoal) — full semantic + component wiring */
-:root {
+/* Default palette (rounded / charcoal) — full semantic + component wiring.
+ * [data-theme] repeats the wiring so a named theme on a descendant re-resolves aliases.
+ */
+:root, [data-theme] {
   color-scheme: light;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -602,18 +662,19 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --brand-chroma: 0;
   --brand-lightness: 0.3211;
   --color-primary: oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue));
+  /* Fallback when `oklch(from …)` is unsupported. Same charcoal look via brand knobs. */
   --color-primary-hover: oklch(calc(var(--brand-lightness) - 0.10) var(--brand-chroma) var(--brand-hue));
   --color-primary-text: #fff;
   --color-default: var(--surface-background-color);
   --color-default-hover: var(--surface-muted-background-color);
   --color-default-text: var(--surface-content-color);
   --color-default-border: var(--surface-border-color);
-  --color-secondary: #f5f5f5;
-  --color-secondary-hover: #ebebeb;
-  --color-secondary-text: #333;
+  --color-secondary: color-mix(in oklab, var(--surface-muted-background-color) 18%, var(--surface-background-color));
+  --color-secondary-hover: color-mix(in oklab, var(--surface-muted-background-color) 70%, var(--surface-background-color));
+  --color-secondary-text: var(--surface-content-color);
   --color-ghost: transparent;
-  --color-ghost-hover: #f2f2f2;
-  --color-ghost-text: #333;
+  --color-ghost-hover: color-mix(in oklab, var(--surface-muted-background-color) 35%, var(--surface-background-color));
+  --color-ghost-text: var(--surface-content-color);
   --color-success-background-color: oklch(0.72 0.17 152);
   --color-success-hover-background-color: oklch(0.66 0.17 152);
   --color-success-text: #fff;
@@ -638,6 +699,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --surface-muted-content-color: #666;
   --surface-border-color: #d1d5db;
   --surface-border-hover-color: #d1d5db;
+  --overlay-backdrop-color: rgb(0 0 0 / 0.5);
+  --overlay-scrim-color: rgb(31 41 55 / 0.68);
   --checkbox-size: 1.25rem;
   --checkbox-radius: 0.125rem;
   --checkbox-label-gap: 0.75rem;
@@ -714,9 +777,9 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --code-block-tab-active-background-color: var(--surface-border-color);
   --code-block-tab-active-color: var(--surface-muted-content-color);
   --tabs-pill-corner-radius: 9999px;
-  --tabs-pill-active-background-color: var(--color-primary);
-  --tabs-pill-active-border-color: var(--color-primary);
-  --tabs-pill-active-text-color: var(--color-primary-text);
+  --tabs-pill-active-background-color: var(--button-primary-background-color);
+  --tabs-pill-active-border-color: var(--button-primary-border-color);
+  --tabs-pill-active-text-color: var(--button-primary-text-color);
   --tabs-stacked-pill-list-background-color: var(--surface-muted-background-color);
   --tabs-pill-list-border-color: var(--surface-border-color);
   --tabs-pill-active-shadow: var(--shadow-md);
@@ -734,9 +797,32 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --card-hover-strong-shadow: var(--shadow-md);
   --card-hover-strong-shadow-dark: var(--shadow-lg);
   --hero-overlay-background-color: rgb(0 0 0 / 0.6);
+  --hero-overlay-left-background: linear-gradient(to right, rgb(0 0 0 / 0.78) 0%, rgb(0 0 0 / 0.52) 38%, rgb(0 0 0 / 0.22) 68%, rgb(0 0 0 / 0.08) 100%);
   --hero-overlay-text-color: oklch(1.0 0 0);
   --hero-overlay-muted-text-color: rgb(255 255 255 / 0.8);
-  --carousel-chevron-background-color: rgb(31 41 55 / 0.68);
+  --hero-overlay-button-primary-background-color: oklch(1 0 0);
+  --hero-overlay-button-primary-hover-background-color: oklch(0.96 0 0);
+  --hero-overlay-button-primary-text-color: oklch(0.22 0 0);
+  --hero-overlay-button-primary-border-color: oklch(1 0 0);
+  --hero-overlay-button-secondary-background-color: transparent;
+  --hero-overlay-button-secondary-hover-background-color: rgb(255 255 255 / 0.12);
+  --hero-overlay-button-secondary-text-color: oklch(1 0 0);
+  --hero-overlay-button-secondary-border-color: rgb(255 255 255 / 0.55);
+  --hero-overlay-on-light-background-color: rgb(255 255 255 / 0.62);
+  --hero-overlay-on-light-left-background: linear-gradient(to right, rgb(255 255 255 / 0.88) 0%, rgb(255 255 255 / 0.62) 38%, rgb(255 255 255 / 0.28) 68%, rgb(255 255 255 / 0.08) 100%);
+  --hero-overlay-on-light-text-color: oklch(0.22 0 0);
+  --hero-overlay-on-light-muted-text-color: rgb(34 34 34 / 0.82);
+  --hero-overlay-on-light-button-primary-background-color: oklch(0.22 0 0);
+  --hero-overlay-on-light-button-primary-hover-background-color: oklch(0.28 0 0);
+  --hero-overlay-on-light-button-primary-text-color: oklch(1 0 0);
+  --hero-overlay-on-light-button-primary-border-color: oklch(0.22 0 0);
+  --hero-overlay-on-light-button-secondary-background-color: transparent;
+  --hero-overlay-on-light-button-secondary-hover-background-color: rgb(0 0 0 / 0.08);
+  --hero-overlay-on-light-button-secondary-text-color: oklch(0.22 0 0);
+  --hero-overlay-on-light-button-secondary-border-color: rgb(0 0 0 / 0.35);
+  --hero-overlay-min-height: 560px;
+  --hero-overlay-copy-padding-top: calc(var(--top-nav-height) + env(safe-area-inset-top, 0px) + 2rem);
+  --carousel-chevron-background-color: var(--overlay-scrim-color);
   --carousel-viewport-background-color: var(--surface-muted-background-color);
   --carousel-viewport-border-color: var(--surface-border-color);
   --carousel-control-background-color: rgb(0 0 0 / 0.6);
@@ -755,7 +841,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --carousel-caption-below-text-color: var(--surface-muted-content-color);
   --carousel-media-background-color: oklch(0 0 0);
   --carousel-lightbox-image-background-color: rgb(0 0 0 / 0.2);
-  --modal-backdrop-color: rgb(0 0 0 / 0.5);
+  --modal-backdrop-color: var(--overlay-backdrop-color);
   --modal-surface-color: var(--surface-background-color);
   --modal-border-color: var(--surface-border-color);
   --modal-title-color: var(--surface-content-color);
@@ -807,7 +893,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --tooltip-radius: var(--radius-sm);
   --tooltip-font-size: 0.875rem;
   --tooltip-max-width: 20rem;
-  --sidebar-background-color: oklch(1.0 0 0);
+  --sidebar-background-color: var(--surface-page-background-color);
   --sidebar-border-color: var(--surface-border-color);
   --sidebar-divider-color: var(--surface-border-color);
   --sidebar-item-text-color: var(--surface-muted-content-color);
@@ -818,8 +904,18 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --list-marker-color: var(--surface-muted-content-color);
   --list-marker-min-width: 1.5rem;
   --list-marker-gap: 0.5rem;
+  --collection-editor-background-color: var(--surface-background-color);
+  --collection-editor-border-color: var(--surface-border-color);
+  --collection-editor-radius: var(--radius-md);
+  --collection-editor-row-background-color: transparent;
+  --collection-editor-row-hover-background-color: var(--list-item-hover-background-color);
+  --collection-editor-row-padding: 0.75rem;
+  --collection-editor-title-color: var(--surface-content-color);
+  --collection-editor-description-color: var(--surface-muted-content-color);
+  --collection-editor-handle-color: var(--surface-muted-content-color);
+  --collection-editor-drop-indicator-color: var(--color-primary);
   --sidebar-item-hover-text-color: var(--surface-content-color);
-  --sidebar-item-active-background-color: #333;
+  --sidebar-item-active-background-color: var(--color-primary);
   --sidebar-item-active-text-color: var(--color-primary-text);
   --sidebar-item-active-icon-color: var(--color-primary-text);
   --sidebar-group-item-indent: 1rem;
@@ -959,6 +1055,10 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --button-danger-hover-background-color: var(--color-danger-hover-background-color);
   --button-danger-text-color: var(--color-danger-text-color);
   --button-danger-border-color: var(--color-danger-border-color);
+  --fp-button-background: var(--button-default-background-color);
+  --fp-button-hover-background: var(--button-default-hover-background-color);
+  --fp-button-text: var(--button-default-text-color);
+  --fp-button-border: var(--button-default-border-color);
   --button-border-radius: var(--radius-md);
   --button-focus-ring-color: var(--color-ring);
   --button-focus-ring-offset-color: var(--surface-background-color);
@@ -1064,9 +1164,11 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --top-nav-item-icon-color: var(--surface-muted-content-color);
   --top-nav-item-hover-background-color: var(--surface-muted-background-color);
   --top-nav-item-hover-text-color: var(--surface-content-color);
-  --top-nav-item-active-background-color: #333;
+  --top-nav-item-active-background-color: var(--color-primary);
   --top-nav-item-active-text-color: var(--color-primary-text);
   --top-nav-item-active-icon-color: var(--color-primary-text);
+  --top-nav-height: 72px;
+  --top-nav-backdrop-blur: 16px;
   --search-icon-color: var(--surface-muted-content-color);
   --search-input-background-color: var(--surface-background-color);
   --search-input-border-color: var(--surface-border-hover-color);
@@ -1086,7 +1188,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --search-result-description-color: var(--surface-muted-content-color);
   --search-result-hover-background-color: var(--surface-muted-background-color);
   --search-result-divider-color: var(--surface-border-color);
-  --color-ring: #333;
+  --color-ring: var(--color-primary);
   --stack-gap-sm: 0.5rem;
   --stack-gap-md: 1rem;
   --stack-gap-lg: 1.5rem;
@@ -1103,7 +1205,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --table-cell-muted-text-color: var(--surface-muted-content-color);
   --table-empty-state-text-color: var(--surface-muted-content-color);
   --table-sort-link-hover-color: var(--surface-content-color);
-  --chip-remove-hover-background-color: rgb(0 0 0 / 0.1);
+  --chip-remove-hover-background-color: color-mix(in oklab, var(--surface-content-color) 10%, transparent);
   --chip-border-radius: 0.5rem;
   --chip-group-gap: 0.5rem;
   --chip-padding-x-sm: 0.5rem;
@@ -1138,6 +1240,17 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --page-title-h4-size: var(--text-xl);
   --page-title-h5-size: var(--text-lg);
   --page-title-h6-size: var(--text-base);
+  --content-kicker-size: var(--text-lg);
+  --content-p-size: var(--text-lg);
+  --content-lead-size: var(--text-2xl);
+  --content-h1-size: var(--text-5xl);
+  --content-h2-size: var(--text-3xl);
+  --content-h3-size: var(--text-2xl);
+  --content-h4-size: var(--text-xl);
+  --content-h5-size: var(--text-lg);
+  --content-h6-size: var(--text-lg);
+  --hero-headline-size: var(--text-5xl);
+  --hero-description-size: var(--text-xl);
   --shadow-sm: 0 2px 6px -2px rgb(0 0 0 / 0.08);
   --shadow-md: 0 8px 18px -6px rgb(0 0 0 / 0.14);
   --shadow-lg: 0 18px 30px -10px rgb(0 0 0 / 0.18);
@@ -1158,9 +1271,26 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --easing-standard: cubic-bezier(0.2, 0, 0, 1);
   --easing-enter: cubic-bezier(0.05, 0.7, 0.1, 1);
   --easing-exit: cubic-bezier(0.3, 0, 1, 1);
+  /* List / layout only — overlays stay on enter/exit with no bounce. */
+  --easing-spring: cubic-bezier(0.34, 1.25, 0.64, 1);
+  --easing-spring-snappy: cubic-bezier(0.22, 1.35, 0.36, 1);
   --transition-fast: var(--duration-fast);
   --transition-base: var(--duration-base);
   --transition-slow: var(--duration-slow);
+}
+
+/* Hover follows --color-primary itself so a host that sets an exact hex (not
+ * --brand-*) still gets a darker shade. Relative color syntax is the match for
+ * `l - 0.10`; color-mix() cannot keep that delta across lightness values.
+ * Tailwind never sees this value — @theme inline only self-maps the name, and
+ * this file is a stylesheet, not a Tailwind entry. Named themes that set
+ * --color-primary-hover (dark, ocean) still win: they are equally specific and
+ * come later.
+ */
+@supports (color: oklch(from red calc(l - 0.1) c h)) {
+  :root, [data-theme] {
+    --color-primary-hover: oklch(from var(--color-primary) calc(l - 0.1) c h);
+  }
 }
 
 /* ApexCharts tooltips can be rendered outside chart containers and keep
@@ -1182,17 +1312,16 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   color: var(--surface-content-color) !important;
 }
 
-/* Dark theme — overrides only (inherits component aliases from :root) */
+/* Dark theme — semantic overrides only. Component aliases re-resolve from :root, [data-theme].
+ * Hover is a lift (not l - 0.10), so it stays explicit. Shadows change recipe (white hairline),
+ * not just colour. Bottom nav and top-nav fill are inverted chrome with no surface equivalent.
+ * Modal blur stays a dark-only exception (3px vs 4px light).
+ */
 [data-theme="dark"] {
   color-scheme: dark;
   --color-primary: oklch(0.62 0.22 250);
   --color-primary-hover: oklch(0.72 0.15 250);
   --color-primary-text: oklch(0.15 0.01 250);
-  --color-secondary: oklch(0.20 0.02 250);
-  --color-secondary-hover: oklch(0.25 0.03 250);
-  --color-secondary-text: oklch(0.90 0.01 250);
-  --color-ghost-hover: oklch(0.22 0.02 250);
-  --color-ghost-text: oklch(0.85 0.01 250);
   --color-success-background-color: oklch(67% .194 149.214);
   --color-success-hover-background-color: oklch(72% .194 149.214);
   --color-success-text: oklch(0.15 0.01 250);
@@ -1206,19 +1335,13 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --surface-muted-content-color: oklch(0.65 0.01 250);
   --surface-border-color: oklch(0.30 0.02 250);
   --surface-border-hover-color: oklch(0.40 0.03 250);
-  --carousel-chevron-background-color: rgb(15 20 36 / 0.72);
+  --overlay-backdrop-color: rgb(0 0 0 / 0.65);
+  --overlay-scrim-color: rgb(15 20 36 / 0.72);
   --bottom-nav-background-color: oklch(0.11 0.01 250);
   --bottom-nav-border-color: oklch(0.29 0.02 250);
   --bottom-nav-item-active-color: var(--color-primary-hover);
   --bottom-nav-item-color: oklch(0.76 0.01 250);
   --bottom-nav-item-hover-color: oklch(0.96 0.01 250);
-  --switch-track-background-color: color-mix(in oklab, oklch(0.38 0.05 249.96) 92%, black);
-  --comments-inline-input-radius: 9999px;
-  --modal-backdrop-color: rgb(0 0 0 / 0.65);
-  --list-item-hover-background-color: oklch(0.26 0.02 250);
-  --list-item-active-background-color: oklch(0.30 0.03 250);
-  --color-ring: oklch(0.62 0.22 250);
-  --chip-remove-hover-background-color: rgb(255 255 255 / 0.16);
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.55), 0 0 0 1px rgb(255 255 255 / 0.06);
   --shadow-md: 0 10px 24px -8px rgb(0 0 0 / 0.65), 0 0 0 1px rgb(255 255 255 / 0.08);
   --shadow-lg: 0 22px 40px -12px rgb(0 0 0 / 0.72), 0 0 0 1px rgb(255 255 255 / 0.1);
@@ -1245,18 +1368,17 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --surface-muted-content-color: oklch(0.45 0.02 220);
   --surface-border-color: oklch(0.87 0.02 220);
   --surface-border-hover-color: oklch(0.80 0.03 220);
-  --carousel-chevron-background-color: rgb(14 79 128 / 0.72);
+  --overlay-scrim-color: rgb(14 79 128 / 0.72);
   --bottom-nav-background-color: oklch(0.30 0.07 235);
   --bottom-nav-border-color: oklch(0.43 0.08 230);
   --bottom-nav-item-active-color: oklch(0.95 0.03 220);
   --bottom-nav-item-color: oklch(0.81 0.04 220);
   --bottom-nav-item-hover-color: oklch(0.99 0.01 220);
-  --modal-backdrop-color: rgb(3 24 47 / 0.45);
+  --overlay-backdrop-color: rgb(3 24 47 / 0.45);
   --list-item-hover-background-color: oklch(0.92 0.03 220);
   --list-item-active-background-color: oklch(0.88 0.04 220);
   --sidebar-group-item-indent: 0.875rem;
   --avatar-status-ring-color: var(--surface-background-color);
-  --color-ring: oklch(0.52 0.15 220);
   --modal-backdrop-blur: 5px;
   --sidebar-background-color: oklch(0.96 0.02 220);
   --top-nav-background-color: oklch(0.97 0.01 220);

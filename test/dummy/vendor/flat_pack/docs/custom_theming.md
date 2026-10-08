@@ -14,6 +14,7 @@ FlatPack's theming surface has three layers:
 - `:root {}` in the same file is the single source of concrete values: the default rounded / charcoal palette **and** component token wiring (`--button-primary-*` → `var(--color-primary)`, etc.).
 - `[data-theme="rounded"]` is an empty alias of that default.
 - `[data-theme="..."]` selectors override **only** tokens that differ from `:root` (semantic / intentional exceptions). Component aliases inherit.
+- `--fp-button-*` are per-button paint tokens. Do not copy them onto a named theme. A host or gem registers a button style and paints those tokens on `.fp-button[data-fp-style]`. See [Button](components/button.md).
 
 For most apps, generate a brand kit instead of copying every variable:
 
@@ -176,6 +177,8 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --easing-standard: cubic-bezier(0.2, 0, 0, 1);
   --easing-enter: cubic-bezier(0.05, 0.7, 0.1, 1);
   --easing-exit: cubic-bezier(0.3, 0, 1, 1);
+  --easing-spring: cubic-bezier(0.34, 1.25, 0.64, 1); /* list/layout only */
+  --easing-spring-snappy: cubic-bezier(0.22, 1.35, 0.36, 1); /* list/layout only */
   --font-sans: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
   --text-xs: 0.75rem;
@@ -217,8 +220,31 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --card-hover-strong-shadow: var(--shadow-md);
   --card-hover-strong-shadow-dark: var(--shadow-lg);
   --hero-overlay-background-color: rgb(0 0 0 / 0.6);
+  --hero-overlay-left-background: linear-gradient(to right, rgb(0 0 0 / 0.78) 0%, rgb(0 0 0 / 0.52) 38%, rgb(0 0 0 / 0.22) 68%, rgb(0 0 0 / 0.08) 100%);
   --hero-overlay-text-color: oklch(1.0 0 0);
   --hero-overlay-muted-text-color: rgb(255 255 255 / 0.8);
+  --hero-overlay-button-primary-background-color: oklch(1 0 0);
+  --hero-overlay-button-primary-hover-background-color: oklch(0.96 0 0);
+  --hero-overlay-button-primary-text-color: oklch(0.22 0 0);
+  --hero-overlay-button-primary-border-color: oklch(1 0 0);
+  --hero-overlay-button-secondary-background-color: transparent;
+  --hero-overlay-button-secondary-hover-background-color: rgb(255 255 255 / 0.12);
+  --hero-overlay-button-secondary-text-color: oklch(1 0 0);
+  --hero-overlay-button-secondary-border-color: rgb(255 255 255 / 0.55);
+  --hero-overlay-on-light-background-color: rgb(255 255 255 / 0.62);
+  --hero-overlay-on-light-left-background: linear-gradient(to right, rgb(255 255 255 / 0.88) 0%, rgb(255 255 255 / 0.62) 38%, rgb(255 255 255 / 0.28) 68%, rgb(255 255 255 / 0.08) 100%);
+  --hero-overlay-on-light-text-color: oklch(0.22 0 0);
+  --hero-overlay-on-light-muted-text-color: rgb(34 34 34 / 0.82);
+  --hero-overlay-on-light-button-primary-background-color: oklch(0.22 0 0);
+  --hero-overlay-on-light-button-primary-hover-background-color: oklch(0.28 0 0);
+  --hero-overlay-on-light-button-primary-text-color: oklch(1 0 0);
+  --hero-overlay-on-light-button-primary-border-color: oklch(0.22 0 0);
+  --hero-overlay-on-light-button-secondary-background-color: transparent;
+  --hero-overlay-on-light-button-secondary-hover-background-color: rgb(0 0 0 / 0.08);
+  --hero-overlay-on-light-button-secondary-text-color: oklch(0.22 0 0);
+  --hero-overlay-on-light-button-secondary-border-color: rgb(0 0 0 / 0.35);
+  --hero-overlay-min-height: 560px;
+  --hero-overlay-copy-padding-top: calc(var(--top-nav-height) + env(safe-area-inset-top, 0px) + 2rem);
   --carousel-viewport-background-color: var(--surface-muted-background-color);
   --carousel-viewport-border-color: var(--surface-border-color);
   --carousel-chevron-background-color: rgb(31 41 55 / 0.68);
@@ -290,7 +316,7 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --tooltip-radius: var(--radius-sm);
   --tooltip-font-size: 0.875rem;
   --tooltip-max-width: 20rem;
-  --sidebar-background-color: oklch(1.0 0 0);
+  --sidebar-background-color: var(--surface-page-background-color);
   --sidebar-border-color: oklch(0.89 0.01 250);
   --sidebar-divider-color: oklch(0.89 0.01 250);
   --sidebar-item-text-color: oklch(0.45 0.01 250);
@@ -531,6 +557,8 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --top-nav-item-active-background-color: oklch(0.52 0.26 250);
   --top-nav-item-active-text-color: oklch(1.0 0 0);
   --top-nav-item-active-icon-color: oklch(1.0 0 0);
+  --top-nav-height: 72px;
+  --top-nav-backdrop-blur: 16px;
 
   --search-icon-color: var(--surface-muted-content-color);
   --search-input-background-color: var(--surface-background-color);
@@ -595,6 +623,17 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --page-title-h4-size: var(--text-xl);
   --page-title-h5-size: var(--text-lg);
   --page-title-h6-size: var(--text-base);
+  --content-kicker-size: var(--text-lg);
+  --content-p-size: var(--text-lg);
+  --content-lead-size: var(--text-2xl);
+  --content-h1-size: var(--text-5xl);
+  --content-h2-size: var(--text-3xl);
+  --content-h3-size: var(--text-2xl);
+  --content-h4-size: var(--text-xl);
+  --content-h5-size: var(--text-lg);
+  --content-h6-size: var(--text-lg);
+  --hero-headline-size: var(--text-5xl);
+  --hero-description-size: var(--text-xl);
 
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);

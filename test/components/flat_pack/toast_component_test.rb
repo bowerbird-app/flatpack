@@ -30,6 +30,39 @@ module FlatPack
         refute_includes html, "bg-[var(--toast-danger-dismiss-background-color)]"
         refute_includes html, "text-[var(--toast-danger-dismiss-text-color)]"
       end
+
+      def test_default_size_is_medium
+        render_inline(Component.new(text: "Saved"))
+
+        html = page.native.to_html
+        assert_includes html, "--toast-padding: 1rem"
+        assert_includes html, "text-sm"
+        assert_includes html, "gap-3"
+      end
+
+      def test_renders_small_size
+        render_inline(Component.new(text: "Saved", size: :sm))
+
+        html = page.native.to_html
+        assert_includes html, "--toast-padding: 0.75rem"
+        assert_includes html, "text-xs"
+      end
+
+      def test_renders_large_size
+        render_inline(Component.new(text: "Saved", size: :lg))
+
+        html = page.native.to_html
+        assert_includes html, "--toast-padding: 1.25rem"
+        assert_includes html, "text-base"
+      end
+
+      def test_raises_error_for_invalid_size
+        error = assert_raises(ArgumentError) do
+          Component.new(text: "Saved", size: :xl)
+        end
+
+        assert_includes error.message, "Invalid size"
+      end
     end
   end
 end

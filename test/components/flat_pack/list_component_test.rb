@@ -33,7 +33,18 @@ module FlatPack
       def test_includes_spacing_classes
         render_inline(Component.new) { "content" }
 
-        assert_includes page.native.to_html, "space-y-3"
+        html = page.native.to_html
+        assert_includes html, "flex flex-col"
+        assert_includes html, "gap-3"
+        refute_includes html, "space-y-3"
+      end
+
+      def test_list_item_css_clears_bottom_margin
+        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+
+        assert_includes css, ".flat-pack-list > li[role=\"listitem\"]"
+        assert_match(/\.flat-pack-list > li\[role="listitem"\] \{[^}]*margin-bottom:\s*0/m, css)
+        assert_match(/\.flat-pack-list > li\[role="listitem"\] \{[^}]*margin-block-end:\s*0/m, css)
       end
 
       def test_merges_custom_classes
@@ -48,9 +59,30 @@ module FlatPack
         assert_selector "[data-testid='my-list']"
       end
 
+      def test_divider_uses_a_straight_rule
+        render_inline(Component.new(divider: true)) { "content" }
+
+        assert_selector "ul.flat-pack-list.flat-pack-list-divided"
+        refute_includes page.native.to_html, "divide-y"
+      end
+
+      def test_divider_rule_css_stays_square_and_unlayered
+        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+        layer_end = layered_components_end_index(css)
+        rule = css[/^\.flat-pack-list\.flat-pack-list-divided > li \+ li::before \{.*?\n\}/m]
+
+        refute_nil rule
+        assert_operator css.index(rule), :>, layer_end
+        assert_includes rule, "height: 1px;"
+        assert_includes rule, "background-color: var(--surface-border-color);"
+        assert_includes rule, "border-radius: 0;"
+      end
+
       def test_renders_dense_spacing
         render_inline(Component.new(spacing: :dense)) { "content" }
-        assert_includes page.native.to_html, "space-y-1"
+        html = page.native.to_html
+        assert_includes html, "gap-1"
+        refute_includes html, "space-y-1"
       end
 
       def test_enables_selectable_behavior_when_requested
@@ -68,11 +100,24 @@ module FlatPack
           param_target_position_name: "target_position"
         )) { "content" }
 
-        assert_selector "ul[data-controller='flat-pack--list-orderable']"
+        assert_selector "ul.flat-pack-list--orderable[data-controller='flat-pack--list-orderable']"
         assert_selector "ul[data-flat-pack--list-orderable-orderable-url-value='/demo/list/reorder']"
         assert_selector "ul[data-flat-pack--list-orderable-orderable-method-value='PATCH']"
         assert_selector "ul[data-flat-pack--list-orderable-param-uuid-name-value='moving_recording_id']"
         assert_selector "ul[data-flat-pack--list-orderable-param-target-position-name-value='target_position']"
+      end
+
+      def test_orderable_divided_list_skips_gap
+        render_inline(Component.new(
+          orderable: true,
+          divider: true,
+          orderable_url: "/demo/list/reorder"
+        )) { "content" }
+
+        html = page.native.to_html
+        assert_selector "ul.flat-pack-list--orderable.flat-pack-list-divided"
+        refute_includes html, "gap-3"
+        refute_includes html, "gap-1"
       end
 
       def test_combines_selectable_and_orderable_controllers
@@ -102,6 +147,22 @@ module FlatPack
 
         assert_selector "ul.flat-pack-list > li .flat-pack-list-item-marker", count: 2
         refute_selector "ol"
+      end
+
+      def test_orderable_slot_is_a_visible_landing_mark
+        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+        placeholder_rule = css[/\.flat-pack-list-reorder-placeholder \{[^}]+\}/]
+
+        refute_nil placeholder_rule
+        assert_includes placeholder_rule, "background-color: var(--list-item-hover-background-color)"
+        assert_includes placeholder_rule, "border-radius: var(--radius-sm)"
+        refute_includes placeholder_rule, "visibility: hidden"
+        assert_includes css, "box-shadow: var(--shadow-lg)"
+        assert_includes css, ".is-pressing"
+        assert_includes css, "scale: 0.98"
+        assert_includes css, "scale: 1.02"
+        assert_includes css, ".flat-pack-list-reorder-placeholder.is-visible"
+        assert_includes css, "color: var(--surface-muted-content-color)"
       end
 
       def test_marker_css_is_unlayered

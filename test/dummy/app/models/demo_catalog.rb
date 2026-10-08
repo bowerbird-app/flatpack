@@ -22,7 +22,8 @@ class DemoCatalog
             {title: "Light theme", path: "/themes/demos/light", description: "Light color scheme demo", icon: :monitor},
             {title: "Dark theme", path: "/themes/demos/dark", description: "Dark color scheme demo", icon: :monitor},
             {title: "Ocean theme", path: "/themes/demos/ocean", description: "Ocean color scheme demo", icon: :monitor},
-            {title: "Rounded theme", path: "/themes/demos/rounded", description: "Rounded theme demo", icon: :monitor}
+            {title: "Rounded theme", path: "/themes/demos/rounded", description: "Rounded theme demo", icon: :monitor},
+            {title: "Brand on body", path: "/demo/brand_theme/dark", description: "Semantic-only brand dark theme on body", icon: :monitor}
           ]
         }
       ]
@@ -103,11 +104,13 @@ class DemoCatalog
             {title: "Radio Group", path: "/demo/forms/radio_group", description: "Single-choice radio group examples", icon: :square},
             {title: "Select", path: "/demo/forms/select", description: "Dropdown select input examples", icon: :chevron_down},
             {title: "Combobox", path: "/demo/forms/combobox", description: "Searchable single-choice field with a typed filter", icon: :search},
+            {title: "Collection Editor", path: "/demo/collection_editor", description: "Ordered related records with a person picker and join fields", icon: :users},
             {title: "Nested Multiselect", path: "/demo/forms/nested_multiselect", description: "Parent and child checkbox multiselect examples", icon: :square},
             {title: "Picker", path: "/demo/picker", description: "Reusable file and image picker for any workflow", icon: :image},
             {title: "Switch", path: "/demo/forms/switch", description: "Toggle switch input examples", icon: :settings},
             {title: "Range Input", path: "/demo/range_input", description: "Slider input with live value", icon: :settings},
-            {title: "Combined Form", path: "/demo/forms/combined", description: "Full form with multiple input types", icon: :edit_3}
+            {title: "Combined Form", path: "/demo/forms/combined", description: "Full form with multiple input types", icon: :edit_3},
+            {title: "Unsaved changes", path: "/demo/forms/unsaved_changes", description: "Save button turns primary when a form has unsaved changes", icon: :edit_3}
           ]
         }
       ]
@@ -208,7 +211,7 @@ class DemoCatalog
           icon: :align_left,
           children: [
             {title: "Page Title", path: "/demo/page_header", description: "Page title with optional subtitle", icon: :type},
-            {title: "Content", path: "/demo/text/content", description: "Body content text patterns", icon: :align_left},
+            {title: "Content", path: "/demo/text/content", description: "Article type for CMS HTML", icon: :align_left},
             {title: "Quote", path: "/demo/text/quote", description: "Blockquote and citation text examples", icon: :message_circle}
           ]
         },

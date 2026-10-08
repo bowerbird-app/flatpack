@@ -13,6 +13,7 @@ Use Segmented Buttons for small mutually-related action sets such as view mode o
 ## Props
 | name | type | default | required | description |
 |---|---|---|---|---|
+| `size` | Symbol | `:md` | no | Forwards into each `button(...)` unless that call already passes `size:`. Uses Button sizes (`:sm`, `:md`, `:lg`). |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for group wrapper. |
 
 ## Slots

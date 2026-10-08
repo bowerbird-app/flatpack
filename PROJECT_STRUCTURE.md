@@ -48,6 +48,7 @@ flat_pack/
 │   │   ├── font_swatch/
 │   │   ├── overflow_row/
 │   │   ├── comments/
+│   │   ├── content/
 │   │   ├── content_editor/
 │   │   ├── date_input/
 │   │   ├── date_range_input/
@@ -132,6 +133,7 @@ flat_pack/
 │       │   ├── chip_tag_input_controller.js
 │       │   ├── code_block_tabs_controller.js
 │       │   ├── collapse_controller.js
+│       │   ├── collection_editor_controller.js
 │       │   ├── combobox_controller.js
 │       │   ├── command_palette_controller.js
 │       │   ├── content_editor_controller.js

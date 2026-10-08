@@ -14,6 +14,7 @@ Use Accordion when related content should be progressively disclosed in stacked 
 |---|---|---|---|---|
 | `allow_multiple` | Boolean | `false` | no | Allows more than one item to stay open. |
 | `single_open` | Boolean | `nil` | no | Alternate switch for one-open mode. When provided, overrides `allow_multiple` (`allow_multiple = !single_open`). |
+| `size` | Symbol | `:md` | no | Density for trigger/content padding and title text: `:sm`, `:md`, `:lg`. `:md` matches 1rem padding. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for accordion container. |
 
 `item(...)` builder args:

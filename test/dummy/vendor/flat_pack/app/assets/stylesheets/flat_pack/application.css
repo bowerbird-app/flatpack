@@ -81,18 +81,8 @@
     }
   }
 
-  /* 72px bar below the notch. Border-box so padding-top does not add extra height. */
-  .fp-top-nav {
-    box-sizing: border-box;
-    height: calc(72px + env(safe-area-inset-top, 0px));
-    padding-top: env(safe-area-inset-top, 0px);
-    padding-right: max(1rem, env(safe-area-inset-right, 0px));
-    padding-bottom: 0;
-    padding-left: max(1rem, env(safe-area-inset-left, 0px));
-  }
-
   .fp-toast-region {
-    top: calc(72px + env(safe-area-inset-top, 0px) + calc(var(--spacing) * 4));
+    top: calc(var(--top-nav-height) + env(safe-area-inset-top, 0px) + calc(var(--spacing) * 4));
     right: calc(env(safe-area-inset-right, 0px) + calc(var(--spacing) * 4));
   }
 
@@ -390,6 +380,107 @@
     [data-flat-pack-sidebar-collapsed="false"] > aside {
       width: 16rem !important;
     }
+
+    .fp-sidebar-label {
+      white-space: nowrap;
+      min-width: 0;
+      overflow: hidden;
+      opacity: 1;
+      max-width: 20rem;
+      transition:
+        opacity var(--duration-fast) var(--easing-standard),
+        max-width var(--duration-slow) var(--easing-standard),
+        flex-grow var(--duration-slow) var(--easing-standard);
+    }
+
+    [data-flat-pack-sidebar-collapsed="true"] .fp-sidebar-label {
+      opacity: 0 !important;
+      max-width: 0 !important;
+      flex-grow: 0 !important;
+    }
+
+    /* Section titles fade, but their block stays in flow so row height does not jump. */
+    [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-section-title="true"] .fp-sidebar-label {
+      max-width: 20rem !important;
+      flex-grow: 1 !important;
+    }
+
+    [data-flat-pack-sidebar-item="true"],
+    [data-flat-pack-sidebar-section-title="true"] {
+      transition-property: padding-left, padding-right, gap !important;
+      transition-duration: var(--duration-slow) !important;
+      transition-timing-function: var(--easing-standard) !important;
+    }
+
+    /* !important beats Tailwind px-4 / gap-3, which live in the utilities layer. */
+    [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"],
+    [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-section-title="true"] {
+      padding-left: 0.25rem !important;
+      padding-right: 0.25rem !important;
+      gap: 0 !important;
+      overflow-x: clip;
+    }
+
+    /*
+      Center the icon in the collapsed row with a length, not a percentage.
+      A percentage margin on a flex item is cyclic and computes to 0, so the
+      active pill stayed heavier on the left. Centering the whole row pulls the
+      icon sideways while the label is still wide. 4rem rail, 1px side border,
+      mx-2, 1.25rem icon, 0.25rem padding.
+    */
+    [data-flat-pack-sidebar-item="true"] > [data-flat-pack-sidebar-item-icon="true"],
+    [data-flat-pack-sidebar-item="true"] > span.flex-shrink-0:first-child {
+      margin-left: 0;
+      transition: margin-left var(--duration-slow) var(--easing-standard);
+    }
+
+    [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"] > [data-flat-pack-sidebar-item-icon="true"],
+    [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"] > span.flex-shrink-0:first-child {
+      margin-left: calc((4rem - 1px - (var(--spacing) * 4) - 1.25rem) / 2 - 0.25rem) !important;
+    }
+
+    [data-flat-pack--sidebar-group-target="chevron"] {
+      max-width: 1.25rem;
+      overflow: hidden;
+      transition:
+        opacity var(--duration-fast) var(--easing-standard),
+        transform var(--duration-slow) var(--easing-standard),
+        max-width var(--duration-slow) var(--easing-standard);
+    }
+
+    [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack--sidebar-group-target="chevron"] {
+      opacity: 0;
+      max-width: 0;
+      pointer-events: none;
+    }
+
+    [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"] > span:not(.fp-sidebar-label):not([data-flat-pack-sidebar-item-icon="true"]):not(.flex-shrink-0) {
+      max-width: 0;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      border-width: 0;
+      opacity: 0;
+    }
+
+    /* !important beats the group's pl-[var(--sidebar-group-item-indent)] utility, so nested rows are the same width as top-level rows and the shared icon margin stays centered. */
+    [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack--sidebar-group-target="panel"] {
+      padding-left: 0 !important;
+      transition: padding-left var(--duration-slow) var(--easing-standard);
+    }
+
+    [data-flat-pack--sidebar-layout-target="footer"] {
+      transition: opacity var(--duration-fast) var(--easing-standard);
+    }
+
+    [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack--sidebar-layout-target="footer"] {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    [data-flat-pack-sidebar-collapsed="false"] [data-flat-pack--sidebar-layout-target="footer"] {
+      opacity: 1;
+    }
   }
 
   [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack--sidebar-layout-target="scrollContainer"] {
@@ -415,6 +506,209 @@
     }
   }
 
+}
+
+/* Unlayered so host Tailwind preflight cannot zero the side inset.
+ * Flatpack CSS is linked first, which creates @layer components before the
+ * host sheet orders @layer base after it. Preflight's * { padding: 0 } then
+ * beats any padding still inside @layer components.
+ */
+.fp-top-nav {
+  box-sizing: border-box;
+  height: calc(var(--top-nav-height) + env(safe-area-inset-top, 0px));
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-right: max(1rem, env(safe-area-inset-right, 0px));
+  padding-bottom: 0;
+  padding-left: max(1rem, env(safe-area-inset-left, 0px));
+  -webkit-backdrop-filter: blur(0);
+  backdrop-filter: blur(0);
+  transition-property: backdrop-filter, -webkit-backdrop-filter;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--easing-standard);
+}
+
+.fp-top-nav[data-scrolled="true"] {
+  -webkit-backdrop-filter: blur(var(--top-nav-backdrop-blur));
+  backdrop-filter: blur(var(--top-nav-backdrop-blur));
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .fp-top-nav,
+  .fp-top-nav[data-scrolled="true"] {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* Long-form reading type. Unlayered so Tailwind preflight cannot collapse
+ * headings to inherit. Bare CMS HTML (h1, p, ul) picks up the same scale as
+ * the main Content demo: kicker, display title, lead, then body at 18px / 1.75
+ * with 2rem stack and 2.5rem after the lead.
+ */
+.fp-content {
+  color: var(--surface-muted-content-color);
+  line-height: 1.75;
+}
+
+.fp-content :where(h1, h2, h3, h4, h5, h6) {
+  color: var(--surface-content-color);
+  letter-spacing: -0.025em;
+  line-height: var(--leading-tight, 1.25);
+  text-wrap: pretty;
+}
+
+.fp-content h1 {
+  font-size: var(--content-h1-size, var(--text-5xl, 3rem));
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.fp-content h2 {
+  font-size: var(--content-h2-size, var(--text-3xl, 1.875rem));
+  font-weight: 700;
+  margin-top: 2rem;
+}
+
+.fp-content h3 {
+  font-size: var(--content-h3-size, var(--text-2xl, 1.5rem));
+  font-weight: 700;
+  margin-top: 2rem;
+}
+
+.fp-content h4 {
+  font-size: var(--content-h4-size, var(--text-xl, 1.25rem));
+  font-weight: 700;
+  margin-top: 2rem;
+}
+
+.fp-content h5,
+.fp-content h6 {
+  font-size: var(--content-h5-size, var(--text-lg, 1.125rem));
+  font-weight: 700;
+  margin-top: 2rem;
+}
+
+.fp-content h6 {
+  font-size: var(--content-h6-size, var(--text-lg, 1.125rem));
+}
+
+.fp-content p,
+.fp-content li {
+  text-wrap: pretty;
+}
+
+.fp-content p {
+  font-size: var(--content-p-size, var(--text-lg, 1.125rem));
+  line-height: 1.75;
+  margin-top: 2rem;
+}
+
+.fp-content > p:first-child:has(+ :is(h1, h2, h3)),
+.fp-content .fp-content-kicker {
+  color: var(--color-primary);
+  font-size: var(--content-kicker-size, var(--text-lg, 1.125rem));
+  font-weight: 600;
+  line-height: 1.75;
+  margin-top: 0;
+}
+
+.fp-content h1 + p,
+.fp-content .fp-content-lead {
+  font-size: var(--content-lead-size, var(--text-2xl, 1.5rem));
+  line-height: 2;
+  margin-top: 1.5rem;
+}
+
+.fp-content h1 + p + :is(p, ul, ol, blockquote) {
+  margin-top: 2.5rem;
+}
+
+.fp-content :where(h2, h3, h4, h5, h6) + p {
+  margin-top: 1rem;
+}
+
+.fp-content > :first-child {
+  margin-top: 0;
+}
+
+.fp-content a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.fp-content strong {
+  color: var(--surface-content-color);
+  font-weight: 600;
+}
+
+.fp-content ul[role="list"] {
+  list-style: none;
+  margin-top: 2rem;
+  padding-left: 0;
+}
+
+.fp-content ul:not([role="list"]) {
+  list-style-type: disc;
+  margin-top: 2rem;
+  padding-left: 1.35em;
+}
+
+.fp-content ol:not([role="list"]) {
+  list-style-type: decimal;
+  margin-top: 2rem;
+  padding-left: 1.35em;
+}
+
+.fp-content li + li {
+  margin-top: 0.75rem;
+}
+
+.fp-content blockquote {
+  border-left: var(--quote-border-width) solid var(--quote-border-color);
+  color: var(--quote-text-color);
+  font-style: italic;
+  margin-top: 2rem;
+  padding-left: var(--quote-padding-left);
+}
+
+.fp-content hr {
+  border: 0;
+  border-top: 1px solid var(--surface-border-color);
+  margin: 2rem 0;
+}
+
+.fp-content code {
+  background-color: var(--surface-muted-background-color);
+  border: 1px solid var(--surface-border-color);
+  border-radius: var(--radius-sm, 0.75rem);
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  padding: 0.1em 0.35em;
+}
+
+.fp-content pre {
+  background-color: var(--surface-muted-background-color);
+  border: 1px solid var(--surface-border-color);
+  border-radius: var(--radius-md, 1rem);
+  font-size: var(--text-sm, 0.875rem);
+  margin-top: 2rem;
+  overflow-x: auto;
+  padding: 0.875rem 1rem;
+}
+
+.fp-content pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+.fp-content img {
+  border-radius: var(--radius-md, 1rem);
+  display: block;
+  height: auto;
+  margin-top: 2rem;
+  max-width: 100%;
 }
 
 /* Unlayered so appearance:none beats the UA range chrome. Pseudo-elements for
@@ -535,6 +829,101 @@ ol.flat-pack-list {
   list-style: none;
 }
 
+/* List rows use parent gap for spacing — no margin-bottom on items. */
+.flat-pack-list > li[role="listitem"] {
+  margin-bottom: 0;
+  margin-block-end: 0;
+}
+
+/* Pointer reorder: press, lift, visible slot, spring settle. */
+.flat-pack-list--orderable > li[role="listitem"] {
+  position: relative;
+  cursor: grab;
+  transition: scale var(--duration-fast) var(--easing-standard), color var(--duration-fast) var(--easing-standard);
+}
+
+.flat-pack-list--orderable > li[role="listitem"].is-pressing {
+  cursor: grabbing;
+  scale: 0.98;
+}
+
+.flat-pack-list--orderable.is-reordering {
+  user-select: none;
+}
+
+.flat-pack-list--orderable.is-reordering > li[role="listitem"]:not(.is-dragging) {
+  color: var(--surface-muted-content-color);
+}
+
+.flat-pack-list--orderable.is-reordering > li[role="listitem"].is-dragging {
+  cursor: grabbing;
+  touch-action: none;
+}
+
+.flat-pack-list--orderable.is-reordering > li[role="listitem"].is-lifted {
+  background-color: var(--surface-background-color);
+  box-shadow: var(--shadow-lg);
+  scale: 1.02;
+}
+
+.flat-pack-list.flat-pack-list-divided.is-reordering > li[role="listitem"].is-dragging::before {
+  display: none;
+}
+
+.flat-pack-list-reorder-placeholder {
+  display: list-item;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background-color: var(--list-item-hover-background-color);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.flat-pack-list-reorder-placeholder.is-visible {
+  opacity: 1;
+  transition: opacity var(--duration-fast) var(--easing-standard);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flat-pack-list--orderable > li[role="listitem"],
+  .flat-pack-list--orderable > li[role="listitem"].is-pressing,
+  .flat-pack-list--orderable.is-reordering > li[role="listitem"].is-dragging,
+  .flat-pack-list--orderable.is-reordering > li[role="listitem"].is-lifted,
+  .flat-pack-list-reorder-placeholder,
+  .flat-pack-list-reorder-placeholder.is-visible {
+    transition: none;
+  }
+
+  .flat-pack-list--orderable > li[role="listitem"].is-pressing,
+  .flat-pack-list--orderable.is-reordering > li[role="listitem"].is-lifted {
+    scale: none;
+  }
+
+  .flat-pack-list-reorder-placeholder {
+    opacity: 1;
+  }
+}
+
+/* Row radius must not bend the separator. A 1px rule stays square on every theme. */
+.flat-pack-list.flat-pack-list-divided > li + li {
+  position: relative;
+}
+
+.flat-pack-list.flat-pack-list-divided > li + li::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background-color: var(--surface-border-color);
+  border-radius: 0;
+  pointer-events: none;
+}
+
 ol.flat-pack-list > li {
   counter-increment: flat-pack-list-item;
 }
@@ -628,6 +1017,111 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 
 .fp-password-toggle[aria-pressed="true"] [data-flat-pack--password-input-target="eyeOffIcon"] {
   opacity: 1;
+}
+
+.fp-hero-overlay {
+  box-sizing: border-box;
+  min-height: var(--hero-overlay-min-height);
+  padding-top: var(--hero-overlay-copy-padding-top);
+  --button-primary-background-color: var(--hero-overlay-button-primary-background-color);
+  --button-primary-hover-background-color: var(--hero-overlay-button-primary-hover-background-color);
+  --button-primary-text-color: var(--hero-overlay-button-primary-text-color);
+  --button-primary-border-color: var(--hero-overlay-button-primary-border-color);
+  --button-secondary-background-color: var(--hero-overlay-button-secondary-background-color);
+  --button-secondary-hover-background-color: var(--hero-overlay-button-secondary-hover-background-color);
+  --button-secondary-text-color: var(--hero-overlay-button-secondary-text-color);
+  --button-secondary-border-color: var(--hero-overlay-button-secondary-border-color);
+  --button-default-background-color: var(--hero-overlay-button-primary-background-color);
+  --button-default-hover-background-color: var(--hero-overlay-button-primary-hover-background-color);
+  --button-default-text-color: var(--hero-overlay-button-primary-text-color);
+  --button-default-border-color: var(--hero-overlay-button-primary-border-color);
+  --button-focus-ring-offset-color: transparent;
+}
+
+.fp-hero-overlay-on-light {
+  --hero-overlay-background-color: var(--hero-overlay-on-light-background-color);
+  --hero-overlay-left-background: var(--hero-overlay-on-light-left-background);
+  --hero-overlay-text-color: var(--hero-overlay-on-light-text-color);
+  --hero-overlay-muted-text-color: var(--hero-overlay-on-light-muted-text-color);
+  --hero-overlay-button-primary-background-color: var(--hero-overlay-on-light-button-primary-background-color);
+  --hero-overlay-button-primary-hover-background-color: var(--hero-overlay-on-light-button-primary-hover-background-color);
+  --hero-overlay-button-primary-text-color: var(--hero-overlay-on-light-button-primary-text-color);
+  --hero-overlay-button-primary-border-color: var(--hero-overlay-on-light-button-primary-border-color);
+  --hero-overlay-button-secondary-background-color: var(--hero-overlay-on-light-button-secondary-background-color);
+  --hero-overlay-button-secondary-hover-background-color: var(--hero-overlay-on-light-button-secondary-hover-background-color);
+  --hero-overlay-button-secondary-text-color: var(--hero-overlay-on-light-button-secondary-text-color);
+  --hero-overlay-button-secondary-border-color: var(--hero-overlay-on-light-button-secondary-border-color);
+}
+
+.fp-button {
+  background-color: var(--fp-button-background);
+  color: var(--fp-button-text);
+  border-color: var(--fp-button-border);
+}
+
+.fp-button:hover:not(:disabled) {
+  background-color: var(--fp-button-hover-background);
+}
+
+.fp-button[data-fp-style="default"] {
+  --fp-button-background: var(--button-default-background-color);
+  --fp-button-hover-background: var(--button-default-hover-background-color);
+  --fp-button-text: var(--button-default-text-color);
+  --fp-button-border: var(--button-default-border-color);
+}
+
+.fp-button[data-fp-style="primary"] {
+  --fp-button-background: var(--button-primary-background-color);
+  --fp-button-hover-background: var(--button-primary-hover-background-color);
+  --fp-button-text: var(--button-primary-text-color);
+  --fp-button-border: var(--button-primary-border-color);
+}
+
+.fp-button[data-fp-style="secondary"] {
+  --fp-button-background: var(--button-secondary-background-color);
+  --fp-button-hover-background: var(--button-secondary-hover-background-color);
+  --fp-button-text: var(--button-secondary-text-color);
+  --fp-button-border: var(--button-secondary-border-color);
+}
+
+.fp-button[data-fp-style="ghost"] {
+  --fp-button-background: var(--button-ghost-background-color);
+  --fp-button-hover-background: var(--button-ghost-hover-background-color);
+  --fp-button-text: var(--button-ghost-text-color);
+  --fp-button-border: var(--button-ghost-border-color);
+}
+
+.fp-button[data-fp-style="success"] {
+  --fp-button-background: var(--button-success-background-color);
+  --fp-button-hover-background: var(--button-success-hover-background-color);
+  --fp-button-text: var(--button-success-text-color);
+  --fp-button-border: var(--button-success-border-color);
+}
+
+.fp-button[data-fp-style="warning"] {
+  --fp-button-background: var(--button-warning-background-color);
+  --fp-button-hover-background: var(--button-warning-hover-background-color);
+  --fp-button-text: var(--button-warning-text-color);
+  --fp-button-border: var(--button-warning-border-color);
+}
+
+.fp-button[data-fp-style="danger"] {
+  --fp-button-background: var(--button-danger-background-color);
+  --fp-button-hover-background: var(--button-danger-hover-background-color);
+  --fp-button-text: var(--button-danger-text-color);
+  --fp-button-border: var(--button-danger-border-color);
+}
+
+.fp-button-raised {
+  box-shadow: var(--button-shadow);
+}
+
+.fp-button-raised:hover:not(:disabled) {
+  box-shadow: var(--button-shadow-hover);
+}
+
+.fp-button-raised:active:not(:disabled) {
+  box-shadow: var(--button-shadow-active);
 }
 
 .fp-button:active:not(:disabled) {

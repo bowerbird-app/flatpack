@@ -192,6 +192,28 @@
   </div>
 </section>
 
+<!-- Sizes -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Sizes", anchor_link: true, subtitle: "Padding and text scale. ARIA and keyboard stay the same.") %>
+  <div class="space-y-6">
+    <% [:sm, :md, :lg].each do |size| %>
+      <div>
+        <p class="text-sm text-[var(--surface-muted-content-color)] mb-2"><%= size == :md ? "Medium (default)" : size.to_s.capitalize %></p>
+        <%= render FlatPack::Tabs::Component.new(size: size) do |tabs| %>
+          <% tabs.tab(id: "size-#{size}-a", label: "Overview") %>
+          <% tabs.tab(id: "size-#{size}-b", label: "Details") %>
+          <% tabs.panel(id: "size-#{size}-a") do %>
+            <p class="text-sm text-[var(--surface-muted-content-color)]">Overview for <%= size %>.</p>
+          <% end %>
+          <% tabs.panel(id: "size-#{size}-b") do %>
+            <p class="text-sm text-[var(--surface-muted-content-color)]">Details for <%= size %>.</p>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</section>
+
 <!-- Features -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Examples for Features.") %>

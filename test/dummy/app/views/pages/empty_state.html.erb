@@ -173,3 +173,24 @@
     <% end %>
   </div>
 </section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Sizes", anchor_link: true, subtitle: "Density for padding, title, and description. md is the current look.") %>
+  <div class="space-y-6">
+    <% [:sm, :md, :lg].each do |size| %>
+      <div class="border border-[var(--surface-border-color)] rounded-lg">
+        <p class="text-sm text-[var(--surface-muted-content-color)] px-4 pt-3"><%= size == :md ? "Medium (default)" : size.to_s.capitalize %></p>
+        <%= render FlatPack::EmptyState::Component.new(
+          title: "No items yet",
+          description: "Add something to get started.",
+          icon: :inbox,
+          size: size
+        ) do |empty| %>
+          <% empty.slot do %>
+            <%= render FlatPack::Button::Component.new(text: "Add item", style: :primary, size: size) %>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</section>

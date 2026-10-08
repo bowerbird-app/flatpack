@@ -10,6 +10,7 @@ module FlatPack
           render_inline(Component.new(title: "Getting Started"))
 
           assert_selector "p", text: "Getting Started"
+          assert_selector "p.fp-sidebar-label", text: "Getting Started"
         end
 
         def test_renders_with_expanded_padding_by_default
@@ -34,10 +35,11 @@ module FlatPack
           assert_includes page.native.to_html, "truncate"
         end
 
-        def test_label_centered_when_collapsed
+        def test_collapsed_label_stays_in_flow
           render_inline(Component.new(title: "Getting Started", collapsed: true))
 
-          assert_includes page.native.to_html, "text-center"
+          refute_includes page.native.to_html, "sr-only"
+          assert_selector "p.fp-sidebar-label", text: "Getting Started"
         end
 
         def test_label_not_centered_when_expanded

@@ -15,23 +15,23 @@ module FlatPack
       def initialize(
         id:,
         items: [],
-        title: "Select Assets",
+        title: FlatPack::Copy::OMITTED,
         subtitle: nil,
-        confirm_label: "Use Selected",
-        close_label: "Close",
+        confirm_label: FlatPack::Copy::OMITTED,
+        close_label: FlatPack::Copy::OMITTED,
         size: :lg,
         selection_mode: :multiple,
         accepted_kinds: ACCEPTED_KINDS,
         searchable: true,
         minimum_searchable: nil,
-        search_placeholder: "Search assets...",
+        search_placeholder: FlatPack::Copy::OMITTED,
         search_mode: :local,
         search_endpoint: nil,
         search_param: "q",
         output_mode: :event,
         output_target: nil,
         context: {},
-        empty_text: "No assets found",
+        empty_text: FlatPack::Copy::OMITTED,
         results_layout: :list,
         items_height: "max-content",
         modal: false,
@@ -43,23 +43,23 @@ module FlatPack
       )
         super(**system_arguments)
         @id = id
-        @title = title
+        @title = fp_text(title, "picker.title")
         @subtitle = subtitle
-        @confirm_label = confirm_label
-        @close_label = close_label
+        @confirm_label = fp_text(confirm_label, "picker.confirm")
+        @close_label = fp_text(close_label, "picker.close")
         @size = size
         @selection_mode = selection_mode.to_sym
         @accepted_kinds = normalize_kinds(accepted_kinds)
         @searchable = searchable.nil? || !!searchable
         @minimum_searchable = normalize_minimum_searchable(minimum_searchable)
-        @search_placeholder = search_placeholder
+        @search_placeholder = fp_text(search_placeholder, "picker.search_placeholder")
         @search_mode = search_mode.to_sym
         @search_endpoint = search_endpoint.present? ? FlatPack::AttributeSanitizer.sanitize_url(search_endpoint) : nil
         @search_param = search_param
         @output_mode = output_mode.to_sym
         @output_target = output_target
         @context = context.is_a?(Hash) ? context : {}
-        @empty_text = empty_text
+        @empty_text = fp_text(empty_text, "picker.empty")
         @results_layout = results_layout.to_sym
         @items_height = normalize_items_height(items_height)
         @modal = !!modal
@@ -156,7 +156,7 @@ module FlatPack
             action: "input->flat-pack--picker#search"
           },
           aria: {
-            label: "Search available assets"
+            label: fp_t("picker.search_label")
           }
         )
       end

@@ -62,6 +62,7 @@ class PagesController < ApplicationController
     {action: /\Atooltips\z/, title: "Tooltips", patterns: [/\A--tooltip-/]},
     {action: /\Atabs(_.*)?\z/, title: "Tabs", patterns: [/\A--tabs-/]},
     {action: /\Atoasts\z/, title: "Toasts", patterns: [/\A--toast-/]},
+    {action: /\Atext_content\z/, title: "Content", patterns: [/\A--content-/]},
     {action: /\Atext_quote\z/, title: "Quote", patterns: [/\A--quote-/]},
     {action: /\Acode_blocks\z/, title: "Code Blocks", patterns: [/\A--code-block-/]},
     {action: /\Acarousel\z/, title: "Carousel", patterns: [/\A--carousel-/]},
@@ -94,6 +95,7 @@ class PagesController < ApplicationController
     modal_filter
     comments admin chat_demo chips chip_add_callback chip_remove_callback
     tables_basic tables_sortable local_time
+    forms_unsaved_changes
   ].freeze
 
   before_action :serve_from_page_cache, except: UNCACHED_ACTIONS
@@ -102,6 +104,10 @@ class PagesController < ApplicationController
 
   def demo
     @component_index = cached_component_index
+  end
+
+  def brand_theme
+    @body_theme = (params[:tone] == "dark") ? "featured-in-dark" : "featured-in"
   end
 
   def buttons
@@ -417,6 +423,14 @@ class PagesController < ApplicationController
   end
 
   def forms_combined
+  end
+
+  def forms_unsaved_changes
+  end
+
+  def forms_unsaved_changes_save
+    flash[:notice] = "Changes saved."
+    redirect_to demo_forms_unsaved_changes_path
   end
 
   def forms_create
@@ -789,13 +803,15 @@ class PagesController < ApplicationController
     @carousel_single_slide = carousel_demo_single_slide
     @carousel_chart_slides = carousel_demo_chart_slides
     @carousel_logo_slider_slides = carousel_demo_logo_slider_slides
+    @carousel_card_slides = carousel_demo_card_slides
     @carousel_notes = [
       "Uses FlatPack::Carousel::Component with image, video, and component-rendered HTML slides.",
       "Demonstrates autoplay, loop, indicators, controls, and thumbnail navigation.",
       "Image slides enable lightbox by default and can opt out per slide with lightbox: false.",
       "Uses secure defaults for rich content and supports keyboard plus touch interactions.",
       "Includes logo-slider variant with multi-item responsive layout (5 desktop / 3 tablet / 3 mobile).",
-      "Includes a side-preview chart carousel demo showing 3.25 slides on desktop and 1.25 slides on mobile/tablet."
+      "Includes a side-preview chart carousel demo showing 3.25 slides on desktop and 1.25 slides on mobile/tablet.",
+      "HTML cards can pass thumb_src or thumb. Without a usable picture, the thumb shows the slide number."
     ]
   end
 
@@ -875,6 +891,14 @@ class PagesController < ApplicationController
   end
 
   def hero_centered_image
+    render layout: "fullpage"
+  end
+
+  def hero_centered_image_left
+    render layout: "fullpage"
+  end
+
+  def hero_centered_image_on_light
     render layout: "fullpage"
   end
 
@@ -2163,6 +2187,51 @@ class PagesController < ApplicationController
     )
   end
 
+  def carousel_demo_card_slides
+    [
+      carousel_card_slide(
+        title: "Quiet desk",
+        body: "A calm spot for the next pass.",
+        thumb_src: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=320&h=320&fit=crop"
+      ),
+      carousel_card_slide(
+        title: "Workshop",
+        body: "Notes from the planning table.",
+        thumb: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=320&h=320&fit=crop"
+      ),
+      carousel_card_slide(
+        title: "Night shift",
+        body: "The late window, still lit.",
+        thumb_src: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=320&h=320&fit=crop"
+      ),
+      carousel_card_slide(
+        title: "No picture",
+        body: "This thumb shows its number."
+      )
+    ]
+  end
+
+  def carousel_card_slide(title:, body:, thumb_src: nil, thumb: nil)
+    {
+      type: :html,
+      caption: title,
+      thumb_src: thumb_src,
+      thumb: thumb,
+      html: ApplicationController.render(
+        inline: <<~ERB,
+          <%= render FlatPack::Card::Component.new(style: :elevated) do |card| %>
+            <% card.body do %>
+              <h3 class="text-base font-semibold text-(--surface-content-color)"><%= title %></h3>
+              <p class="mt-2 text-sm text-(--surface-muted-content-color)"><%= body %></p>
+            <% end %>
+          <% end %>
+        ERB
+        locals: {title: title, body: body},
+        layout: false
+      )
+    }.compact
+  end
+
   def carousel_demo_logo_slider_slides
     [
       {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/github.svg", alt: "GitHub", url: "https://github.com"},
@@ -2306,7 +2375,7 @@ class PagesController < ApplicationController
 
   def extract_theme_tokens
     css = cached_theme_variables_css
-    block = css[/^:root \{(?<body>.*?)^\}/m, :body]
+    block = css[/^:root(?:,\s*\[data-theme\])?\s*\{(?<body>.*?)^\}/m, :body]
     return [] if block.blank?
 
     block.lines.filter_map do |line|
@@ -2338,7 +2407,7 @@ class PagesController < ApplicationController
   end
 
   def page_cache_key
-    "dummy/full-page/#{request.path}:#{page_cache_version}"
+    "dummy/full-page/#{request.path}:#{I18n.locale}:#{page_cache_version}"
   end
 
   def page_cache_version
@@ -2392,6 +2461,7 @@ class PagesController < ApplicationController
     stylesheet_versions = %w[
       application.css
       flat_pack/variables.css
+      flat_pack/application.css
       flat_pack/rich_text.css
       flat_pack/content_editor.css
     ].map do |logical_path|

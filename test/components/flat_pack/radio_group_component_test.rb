@@ -116,13 +116,18 @@ module FlatPack
         assert_selector "input.flat-pack-radio"
       end
 
-      def test_uses_accent_and_checked_state_classes
+      def test_uses_theme_primary_css_var_classes
         render_inline(Component.new(name: "color", options: ["Red"]))
 
         html = page.native.to_html
-        assert_includes html, "accent-primary"
-        assert_includes html, "checked:bg-primary"
-        assert_includes html, "checked:border-primary"
+        assert_includes html, "accent-[var(--color-primary)]"
+        assert_includes html, "checked:bg-[var(--color-primary)]"
+        assert_includes html, "checked:border-[var(--color-primary)]"
+        assert_includes html, "checked:text-[var(--color-primary-text)]"
+        refute_includes html, "accent-primary"
+        refute_includes html, "checked:bg-primary"
+        refute_includes html, "checked:border-primary"
+        refute_match(/(?:^|[\s"'])text-primary(?:[\s"']|$)/, html)
       end
 
       def test_has_wrapper_class
@@ -189,6 +194,36 @@ module FlatPack
         assert_selector "input[value='m'][checked]"
         assert_selector "input[required]", count: 2
         assert_selector "input.custom-class"
+      end
+
+      def test_uses_shared_checkbox_size_css_var
+        render_inline(Component.new(name: "color", options: ["Red", "Blue"]))
+
+        html = page.native.to_html
+        assert_includes html, "h-[var(--checkbox-size)]"
+        assert_includes html, "w-[var(--checkbox-size)]"
+        assert_includes html, "--checkbox-size: 1.25rem"
+        refute_includes html, "h-4 w-4"
+      end
+
+      def test_renders_small_size
+        render_inline(Component.new(name: "color", options: ["Red"], size: :sm))
+
+        assert_includes page.native.to_html, "--checkbox-size: 1rem"
+      end
+
+      def test_renders_large_size
+        render_inline(Component.new(name: "color", options: ["Red"], size: :lg))
+
+        assert_includes page.native.to_html, "--checkbox-size: 1.5rem"
+      end
+
+      def test_raises_error_for_invalid_size
+        error = assert_raises(ArgumentError) do
+          Component.new(name: "color", options: ["Red"], size: :xl)
+        end
+
+        assert_includes error.message, "Invalid size"
       end
     end
   end

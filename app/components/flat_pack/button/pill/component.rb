@@ -4,13 +4,18 @@ module FlatPack
   module Button
     module Pill
       class Component < FlatPack::BaseComponent
-        GROUP_CLASSES = "inline-flex gap-1 [border-radius:var(--tabs-pill-corner-radius)] p-1"
-        ITEM_BASE_CLASSES = "inline-flex items-center justify-center border border-transparent px-4 py-2 text-sm font-medium fp-touch-manipulation [border-radius:var(--tabs-pill-corner-radius)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--button-focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--button-focus-ring-offset-color)]"
-        ITEM_ACTIVE_CLASSES = "border-[var(--tabs-pill-active-border-color)] bg-[var(--tabs-pill-active-background-color)] text-[var(--tabs-pill-active-text-color)] shadow-[var(--tabs-pill-active-shadow)]"
-        ITEM_INACTIVE_CLASSES = "border-transparent text-[var(--tabs-pill-inactive-text-color)] hover:text-[var(--tabs-pill-inactive-hover-text-color)] hover:bg-[var(--tabs-pill-inactive-hover-background-color)]"
+        SIZES = FlatPack::Shared::PadTextSizes::SIZES
 
-        def initialize(items:, **system_arguments)
+        GROUP_CLASSES = "inline-flex gap-1 [border-radius:var(--tabs-pill-corner-radius)] p-1"
+        STYLES = FlatPack::Button::StyleRegistry::BUILT_IN
+        ITEM_BASE_CLASSES = "inline-flex items-center justify-center border border-transparent font-medium fp-touch-manipulation [border-radius:var(--tabs-pill-corner-radius)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--button-focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--button-focus-ring-offset-color)]"
+        ITEM_ACTIVE_CLASSES = FlatPack::Button::PillStyle::ACTIVE_CLASSES
+        ITEM_INACTIVE_CLASSES = FlatPack::Button::PillStyle::INACTIVE_CLASSES
+
+        def initialize(items:, size: :md, style: FlatPack::Button::PillStyle::DEFAULT, **system_arguments)
           super(**system_arguments)
+          @pill_style = FlatPack::Button::PillStyle.resolve(style)
+          @size = FlatPack::Shared::PadTextSizes.normalize!(size)
           @items = normalize_items(items)
         end
 
@@ -23,7 +28,10 @@ module FlatPack
         private
 
         def group_attributes
-          merge_attributes(class: GROUP_CLASSES)
+          merge_attributes(
+            class: "#{GROUP_CLASSES} #{@pill_style.group_class}",
+            data: {fp_style: @pill_style.name.to_s}
+          )
         end
 
         def render_item(item)
@@ -42,6 +50,7 @@ module FlatPack
             class: merge_css_classes(
               existing_class,
               ITEM_BASE_CLASSES,
+              FlatPack::Shared::PadTextSizes.classes_for(@size),
               item[:active] ? ITEM_ACTIVE_CLASSES : ITEM_INACTIVE_CLASSES
             )
           )

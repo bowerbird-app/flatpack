@@ -10,8 +10,264 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
-- Dummy pins `recording_studio_oauth` v0.2.0 and `recording_studio_mcp` v0.3.2. The host draws origin well-known with `RecordingStudioOauth::ProtectedResourceRegistry.draw_origin_well_known`. Cursor resource identity is `/recording_studio_mcp`. Unsuffixed `/.well-known/oauth-protected-resource` is 404. ChatGPT and API keep using `/recording_studio_oauth/.well-known/oauth-protected-resource`.
-- Dummy `GET /authorize` redirects to `/recording_studio_oauth/oauth/authorize` and keeps the query string (Cursor MCP OAuth tunnel quirk).
+
+### Fixed
+
+## [0.1.200] - 2026-10-07
+
+### Added
+- A form can show unsaved changes on its save button. Add `flat-pack--unsaved-changes` to the form and mark each save button with the `submit` target. The button keeps `data-fp-style="default"` while the fields match the saved baseline, and switches to `data-fp-style="primary"` when they differ. Restoring every field, or resetting the form, returns the button to default.
+- TipTap writes its hidden field and then dispatches `input` after the editor is ready. A combobox choice dispatches `change` on the hidden field. Form listeners can see those edits.
+- Bumped the gem version to `0.1.200`.
+
+### Upgrade notes
+- Importmap apps load `unsaved_changes_controller.js` from the existing controllers pin. No new register call.
+- Bundled apps that copy the esbuild list in `docs/installation.md` add `UnsavedChangesController` and `application.register("flat-pack--unsaved-changes", UnsavedChangesController)`.
+- No existing button changes on its own. A form opts in by adding the controller.
+- Forms that already use `flat-pack--auto-submit` now submit when a rich text field changes or a combobox choice is made. They did not before.
+
+## [0.1.199] - 2026-10-07
+
+### Changed
+- Orderable list drag now presses the row (`scale: 0.98`), lifts it with `--shadow-lg` (`scale: 1.02`), and shows a visible landing slot filled with `--list-item-hover-background-color`. Sibling text eases to `--surface-muted-content-color`. Drop settle clears drag styles on `transitionend`.
+- Bumped the gem version to `0.1.199`.
+
+### Upgrade notes
+- No host call-site changes. `orderable:` still pointer-drags and saves the same payload.
+- Reload kit CSS and JavaScript so the landing slot, press, and lift apply. The placeholder is no longer `visibility: hidden`.
+- Under `prefers-reduced-motion: reduce`, the slot stays and the lift scale does not run.
+- Redeploy so `meta.gem_version` shows `0.1.199`.
+
+## [0.1.198] - 2026-10-02
+
+### Changed
+- Orderable list drag no longer paints a radial spotlight / circle-of-light under the pointer. Soft elevation shadow, pointer drag, FLIP springs, and reduced-motion settle are unchanged. Removed `--fp-list-drag-x` / `--fp-list-drag-y`.
+- Bumped the gem version to `0.1.198`.
+
+### Upgrade notes
+- No host call-site changes. Rebuild host CSS (or reload kit CSS) so the spotlight `::after` rule is gone.
+- Redeploy so `meta.gem_version` shows `0.1.198`.
+
+## [0.1.197] - 2026-10-02
+
+### Added
+- List orderable spring tokens `--easing-spring` and `--easing-spring-snappy` for list/layout reorder only. Overlay enter/exit stay bounce-free.
+- Orderable list drag chrome: soft elevation shadow and radial spotlight via `--fp-list-drag-x` / `--fp-list-drag-y`.
+
+### Changed
+- List `orderable:` uses pointer-driven reorder with FLIP sibling springs and a snappy drop settle instead of HTML5 drag-and-drop (`opacity-70` ghost + primary ring). Ruby API, save payload, and `list:reordered` / `list:saved` / `list:error` detail shapes are unchanged.
+- Orderable lists add `.flat-pack-list--orderable`. Under `prefers-reduced-motion: reduce`, drag still works and DOM order still updates; springs snap.
+- List spacing uses `flex flex-col` + `gap-3` / `gap-1` instead of `space-y-*`, so rows keep `margin-bottom: 0` (no Tailwind `margin-block-end` from `space-y`). Orderable + divided lists omit gap so the divider spacing stays even.
+- `List::Item` vertical padding is `py-4` (was `py-3`).
+- Bumped the gem version to `0.1.197`.
+
+### Upgrade notes
+- No host call-site changes. Keep passing `orderable:` / `orderable_url:` / method / param names as before.
+- List roots now use `flex flex-col gap-*` instead of `space-y-*`. Rebuild host Tailwind so `gap-1` / `gap-3` / `py-4` utilities exist if you rely on class scanning.
+- `List::Item` rows are taller (`py-4`). Chat inbox rows that inherit `List::Item` pick this up too.
+- Rebuild host Tailwind (or reload kit CSS) so spring tokens and orderable drag classes apply. Do not use `--easing-spring*` on overlays.
+- Redeploy so `meta.gem_version` shows `0.1.197`.
+
+## [0.1.196] - 2026-09-23
+
+### Added
+- Bare `size:` (`:sm` / `:md` / `:lg`, default `:md`) on Checkbox, RadioGroup, SegmentedButtons, Button::Pill, Tabs, Skeleton, EmptyState, Toast, Alert, and Accordion. Invalid sizes raise `ArgumentError`.
+- Checkbox and RadioGroup share `FlatPack::Shared::ControlSize` (`--checkbox-size`: sm `1rem`, md `1.25rem`, lg `1.5rem`). Button::Pill and Tabs share `FlatPack::Shared::PadTextSizes` (Button padding/text tokens).
+- SegmentedButtons group `size:` forwards into each `button(...)` unless that call already passes `size:`.
+- Dummy demos show sm/md/lg for every component that gained `size:`.
+
+### Changed
+- RadioGroup default (`:md`) uses the Checkbox size map (`1.25rem`) instead of hardcoded `h-4 w-4` (`1rem`), so radios grow at the default size.
+- Bumped the gem version to `0.1.196`.
+
+### Upgrade notes
+- No host call-site changes required. Defaults preserve prior appearance except RadioGroup `:md`, which is intentionally larger (matches Checkbox).
+- Pass `size: :sm` on RadioGroup to keep the previous `1rem` control size.
+- Rebuild host Tailwind (or reload kit CSS) if new arbitrary-value class strings need generation. Redeploy so `meta.gem_version` shows `0.1.196`.
+
+## [0.1.195] - 2026-09-22
+
+### Fixed
+- Top nav side padding stays at least `1rem`. `.fp-top-nav` is unlayered, so host Tailwind preflight (`* { padding: 0 }` in `@layer base`) no longer wipes it when Flatpack CSS is linked first.
+
+### Changed
+- Bumped the gem version to `0.1.195`.
+
+### Upgrade notes
+- No host markup change. The bar inset is `max(1rem, env(safe-area-inset-*))` on each side.
+- Do not move `.fp-top-nav` back into `@layer components`. Redeploy so `meta.gem_version` shows `0.1.195`.
+
+## [0.1.194] - 2026-09-22
+
+### Fixed
+- Checkbox, RadioGroup, and Picker list checkboxes use theme CSS vars for checked paint (`accent-[var(--color-primary)]`, `checked:bg-[var(--color-primary)]`, `checked:border-[var(--color-primary)]`, `checked:text-[var(--color-primary-text)]`) instead of bare Tailwind `*-primary` utilities that stayed blue across themes.
+
+### Changed
+- Bumped the gem version to `0.1.194`.
+
+### Upgrade notes
+- Rebuild host Tailwind (or reload kit CSS) so the new arbitrary-value classes are generated. `stylesheet_link_tag` hosts that already ship FlatPack CSS pick the class strings up on reload after the gem upgrade.
+- Checked checkboxes and radios follow `--color-primary` / `--color-primary-text` per theme. Do not rely on Tailwind's default `primary` palette for these controls.
+- Redeploy so `meta.gem_version` shows `0.1.194`.
+
+## [0.1.193] - 2026-09-22
+
+### Fixed
+- List `divider: true` draws a straight 1px rule. The row's `--radius-sm` no longer bends the ends on the rounded theme.
+
+### Changed
+- Bumped the gem version to `0.1.193`.
+
+### Upgrade notes
+- Divided lists no longer use `divide-y`. The separator is `.flat-pack-list-divided > li + li::before`, with `border-radius: 0`.
+- Do not put the row radius on that rule. Redeploy so `meta.gem_version` shows `0.1.193`.
+
+## [0.1.192] - 2026-09-22
+
+### Changed
+- The default rounded sidebar matches the page. `--sidebar-background-color` is `var(--surface-page-background-color)` (`#f8f9fa`). The header follows that token. Dark and ocean keep their own sidebar fills.
+- Bumped the gem version to `0.1.192`.
+
+### Upgrade notes
+- Hosts that want the previous white rail set `--sidebar-background-color: oklch(1 0 0)` after FlatPack CSS. Do not put that assignment on `[data-theme="rounded"]`. That block stays empty.
+- Dark and ocean sidebar colors are unchanged.
+- Redeploy so `meta.gem_version` shows `0.1.192`.
+
+## [0.1.191] - 2026-09-18
+
+### Changed
+- Desktop sidebar collapse and expand is one motion: rail width eases on `--duration-slow` while labels fade on `--duration-fast`. Labels stay in layout until the width transition ends, then the existing icon-only rest state applies (hamburger, hidden brand mark, compact-centered icons).
+- Sidebar scroll stays put across refresh and Turbo visits. The current item is no longer pinned to the top of the rail. If it is off-screen, the list nudges just enough to show it.
+- Bumped the gem version to `0.1.191`.
+
+### Fixed
+- Clicking a sidebar item marks it current immediately (active paint and `aria-current`) instead of waiting for the next page render.
+- Long-menu scroll is restored after sidebar groups apply their open state, so Turbo visits no longer snap a scrolled rail back to the top.
+- Collapsed rest state no longer `sr-only`s section titles, so title space stays in flow and item/icon row height does not jump.
+- Closing the sidebar no longer restyles icons when the width transition ends. Labels shrink on `--duration-slow`, and the collapsed row centers its icon with equal padding, so the rail does not shudder into a second pose.
+- The header collapse control hover fill wraps the chevron. Collapsed active items use the same padding on both sides of the icon.
+- Collapsed icon tooltips open from `data-flat-pack-sidebar-collapsed`, so they still appear after labels stopped using `sr-only`.
+
+### Upgrade notes
+- No host markup change. Upgrade the gem so `meta.gem_version` shows `0.1.191`.
+- Closed rest state is still hamburger + 4rem icon rail. Do not hide the menu icon behind the brand mark.
+- Live collapse is CSS on `data-flat-pack-sidebar-collapsed`. Do not `sr-only` labels or add a `justify-center` class from JavaScript at click time or when the width transition ends. Collapsed centering is the stylesheet.
+- Do not scroll the current sidebar item to the top on load. Restore the last rail position; only move if that item is out of view.
+- Restore sidebar scroll after groups have applied open state. Do not `sr-only` section titles in the collapsed state; fade them and leave the block in flow.
+- Do not restyle sidebar icons when the width transition ends. Do not center them with a percentage `margin-left` (it computes to 0 on a flex item) or with `justify-content` (the icon overshoots while the label is still wide). Use a fixed leading margin. Collapsed padding and gap need `!important` so they beat Tailwind utilities.
+- Collapsed-only tooltips inside a live rail follow `data-flat-pack-sidebar-collapsed`. Do not require `sr-only` on the label. Static `collapsed: true` items still tip from `sr-only`.
+- Clicking a sidebar item should mark it current in the kit. Dummy chrome also clears previous items on `turbo:load`.
+- Static demos can still pass `collapsed: true` on Item / Section Title / Group for a server-rendered icon-only snapshot.
+- `prefers-reduced-motion: reduce` snaps width and opacity (duration tokens are `0ms`).
+
+## [0.1.190] - 2026-09-18
+
+### Added
+- `FlatPack::Sidebar::Header::Component` accepts `logo:` (URL string, default `nil`). A present URL renders a square mark in the existing `w-8 h-8` badge via `Avatar` size `:sm` and omits `brand_abbr`. Title, collapse toggles, and `show_version` stay. Blank, `nil`, or an unsafe URL keeps the initials path. The default `content` block still replaces the whole header row.
+
+### Changed
+- Bumped the gem version to `0.1.190`.
+
+### Upgrade notes
+- Omit `logo:` to keep the initials badge.
+- Product hosts pass a square image URL, for example `logo: url_for(site.logo)`, and keep `brand_abbr:` as the fallback. Header shows the mark, not both.
+- Do not put a wide wordmark in `logo:`. The slot stays 32×32.
+- Do not use the Header `content` block for a mark. That block still wipes title, toggles, and version.
+- Redeploy so `meta.gem_version` shows `0.1.190`.
+
+## [0.1.189] - 2026-09-17
+
+### Added
+- Hosts and gems can register extra button styles with `FlatPack::Button.register_style(:name, press: :raised)` or `press: :flat`. The button sets `data-fp-style` and paints through local `--fp-button-*` tokens. Built-in styles still map those tokens from `--button-primary-*` and the other scheme tokens, so themes and hero overlays keep working. Vendor colours stay in host or gem CSS. Dummy `/demo/buttons` shows a `:partner` colourway that does not change `--color-primary`.
+
+### Changed
+- Bumped the gem version to `0.1.189`.
+- Button colour and raised shadows live in kit CSS on `.fp-button` / `.fp-button-raised`, not per-style Tailwind background and shadow classes. `FlatPack::Button::Component::SCHEMES` is now the built-in style list (name → press), not a Tailwind class map. Dropdown triggers use the same paint surface.
+
+### Upgrade notes
+- Built-in `style:` values are unchanged. Recolouring one billing or partner button is a registered style plus host CSS, not a theme token change.
+- Do not add `:stripe` (or any vendor name) by patching FlatPack. Register the name in the host or billing gem and set `--fp-button-background`, `--fp-button-hover-background`, `--fp-button-text`, and `--fp-button-border` on `.fp-button[data-fp-style="…"]` after `flat_pack/application`.
+- Markup no longer includes `bg-[var(--button-primary-background-color)]` and the other scheme class strings. Selectors should use `.fp-button[data-fp-style="primary"]` or the `--button-primary-*` tokens. `--button-primary-*` still drive built-in primary paint.
+- `SCHEMES` values are now `:raised` or `:flat`. Do not read them as CSS class strings.
+- Redeploy so `meta.gem_version` shows `0.1.189`.
+
+## [0.1.188] - 2026-09-17
+
+### Added
+- `FlatPack::Sidebar::Header::Component` accepts `show_version:` (Boolean, default `true`). `true` renders `v{FlatPack::VERSION}` beside the title. `false` omits the badge span.
+
+### Changed
+- Bumped the gem version to `0.1.188`.
+
+### Upgrade notes
+- Omit `show_version:` or pass `true` to keep the kit version badge.
+- Product hosts pass `false`. The span is not rendered.
+- Redeploy so `meta.gem_version` shows `0.1.188`.
+
+## [0.1.187] - 2026-09-17
+
+### Fixed
+- `[data-theme="rounded"]` stays an empty alias of `:root`. Tests reject `--token: var(--token)` in named theme blocks. A self-map on `html[data-theme="rounded"]` blanks the token because that element is `:root`. Sidebar `border-r` then falls back to `currentColor` (hard black).
+
+### Changed
+- Bumped the gem version to `0.1.187`.
+
+### Upgrade notes
+- No API change. If host CSS still assigns `--sidebar-border-color: var(--sidebar-border-color)` (or any `--token: var(--token)`) under `[data-theme="rounded"]`, delete those lines. `@theme inline` self-maps are Tailwind inventory only. Do not copy them onto a theme selector. Redeploy so `meta.gem_version` shows `0.1.187`.
+
+## [0.1.186] - 2026-09-17
+
+### Added
+- `--hero-headline-size` (default `--text-5xl`) so a theme can make the hero larger than product `5xl` without adding `--text-6xl` or `--text-7xl`.
+- `--hero-description-size` (default `--text-xl`) for page-surface hero body. Overlay body on `:centered_image` stays `--text-2xl`.
+- `--hero-overlay-min-height` (default `560px`) and `--hero-overlay-copy-padding-top` on `.fp-hero-overlay`. Landing pages set `--hero-overlay-min-height: 100dvh` instead of wrapping the section.
+- `--top-nav-backdrop-blur` (default `16px`) and `--top-nav-height` (`72px`). TopNav frosts after the page has scrolled.
+
+### Changed
+- Bumped the gem version to `0.1.186`.
+- `:centered_image` copy sits high in the frame (`items-start`) below a typical sticky TopNav. It is no longer vertically centered on the photo.
+- Hero headlines use `--hero-headline-size` at the `sm:` step. Page-surface descriptions drop the hardcoded `text-lg` class.
+- TopNav no longer always applies `backdrop-blur-lg`. At rest the blur is 0. The `flat-pack--top-nav` controller always attaches, including when `mobile_menu: false`, and listens to the window plus the nearest overflow pane.
+
+### Upgrade notes
+- Overlay heroes place copy below the TopNav. Hosts that relied on dead-center copy on `:centered_image` will see it sit higher.
+- Page-surface hero body is `--text-xl` (`--hero-description-size`). `--text-lg` itself is unchanged.
+- Fill the first viewport with `style: "--hero-overlay-min-height: 100dvh"` on the hero. Do not wrap the section, and do not pass a competing `min-h-*` utility. Catalog embeds keep `560px`.
+- TopNav frost is scroll-gated. Hosts do not attach a window scroll listener. `--top-nav-background-color` is still the fill; there is no second TopNav variant. Redeploy so `meta.gem_version` shows `0.1.186`.
+
+## [0.1.185] - 2026-09-16
+
+### Added
+- `FlatPack::Content::Component` renders a `div.fp-content`. Bare `p`, `h1`–`h6`, lists, quotes, links, and images take the kit reading scale (kicker and body `--text-lg` / 18px, lead `--text-2xl`, title `--text-5xl`, then `--text-3xl` down to `--text-lg`). Optional `.fp-content-kicker` and `.fp-content-lead` force those roles. Dummy `/demo/text/content` wraps the article and documents the API.
+
+### Changed
+- Bumped the gem version to `0.1.185`.
+
+### Upgrade notes
+- Wrap CMS or article HTML in `render FlatPack::Content::Component.new do |content| ... end`. Leave the tags bare. Body is `--text-lg` (18px). Do not add per-element size classes. Redeploy so `meta.gem_version` shows `0.1.185`.
+
+## [0.1.184] - 2026-09-15
+
+### Added
+- `FlatPack::Hero::Component` accepts `align: :left` or `:center` (default `:center`). On `:centered_image`, `:left` docks tagline, headline, body, and CTAs to the start of the photo and keeps them vertically centered. `:centered` and `:screenshot` follow the same copy alignment. Split and column variants ignore `align`. Invalid values raise `ArgumentError`.
+- `FlatPack::Hero::Component` accepts `on: :dark` or `:light` (default `:dark`) on `:centered_image`. `:dark` is light type on a dark wash. `:light` is dark type on a light wash. Invalid values raise `ArgumentError`.
+- Overlay tokens `--hero-overlay-left-background`, `--hero-overlay-button-*`, and `--hero-overlay-on-light-*`. `:centered_image` paints `.fp-hero-overlay` so primary and secondary buttons invert on the photo. `on: :light` remaps those tokens to the on-light set.
+
+### Changed
+- Bumped the gem version to `0.1.184`.
+- `:centered_image` tagline uses `--hero-overlay-muted-text-color` instead of page muted gray.
+- `:left` on `:centered_image` uses a larger start inset (`lg:ps-16` plus safe-area) and a left-to-clear wash. Overlay copy padding is `py-16`.
+- Dummy full-page `:centered_image` demos pass `class: "h-svh"`. The component default stays `min-h-[560px]` so catalog embeds do not grow with the viewport.
+- Overlay `:centered_image` headline uses `leading-tight`. Overlay body uses `text-2xl`. Left overlay headline uses `fp-text-pretty` so the body shares the copy-column rag. Center overlay headline keeps `fp-text-balance`. Page-surface variants keep `text-lg` body.
+
+### Upgrade notes
+- New optional `align:` on `FlatPack::Hero::Component`. Omit it or pass `:center` to keep centered copy. Pass `align: :left` on `:centered`, `:centered_image`, or `:screenshot` for left-docked copy. `:right` is not valid. Split layouts do not change.
+- New optional `on:` on `:centered_image`. Omit it or pass `:dark` for light type on a dark wash. Pass `on: :light` for dark type on a light wash. For one photo that is neither, set `--hero-overlay-*` on that section (`style:` or a wrapper class). `style` merges with `background:`.
+- `:centered_image` overlay copy and CTAs now follow overlay tokens. Tagline is light, not page `--surface-muted-content-color`. Primary buttons on that variant render light-on-dark. Overlay headline leading is tight. Overlay body is `text-2xl`. Hosts that already passed inverted button styles or overlay type classes should drop those overrides. Landing pages that want a viewport-tall still pass `class: "h-svh"`. Redeploy so `meta.gem_version` shows `0.1.184`.
+
+## [0.1.183] - 2026-09-15
+
+### Changed
 - Bumped the gem version to `0.1.183`.
 
 ### Fixed

@@ -345,17 +345,225 @@ module FlatPack
         refute_includes viewport[:style], "touch-action: pan-y"
       end
 
+      def test_viewport_keeps_border_and_background_by_default
+        render_inline(Component.new(slides: sample_slides))
+
+        viewport = page.find("div[data-flat-pack--carousel-target='viewport']")
+        assert_includes viewport[:class], "border-[var(--carousel-viewport-border-color)]"
+        assert_includes viewport[:class], "bg-[var(--carousel-viewport-background-color)]"
+        refute_includes viewport[:class], "border-0"
+        refute_includes viewport[:class], "bg-transparent"
+      end
+
+      def test_hides_viewport_border_when_show_border_is_false
+        render_inline(Component.new(slides: sample_slides, show_border: false))
+
+        viewport = page.find("div[data-flat-pack--carousel-target='viewport']")
+        assert_includes viewport[:class], "border-0"
+        refute_includes viewport[:class], "border-[var(--carousel-viewport-border-color)]"
+        assert_includes viewport[:class], "bg-[var(--carousel-viewport-background-color)]"
+        refute_includes viewport[:class], "bg-transparent"
+      end
+
+      def test_hides_viewport_background_when_show_background_is_false
+        render_inline(Component.new(slides: sample_slides, show_background: false))
+
+        viewport = page.find("div[data-flat-pack--carousel-target='viewport']")
+        assert_includes viewport[:class], "bg-transparent"
+        refute_includes viewport[:class], "bg-[var(--carousel-viewport-background-color)]"
+        assert_includes viewport[:class], "border-[var(--carousel-viewport-border-color)]"
+        refute_includes viewport[:class], "border-0"
+      end
+
+      def test_hides_viewport_border_and_background_together
+        render_inline(Component.new(slides: sample_slides, show_border: false, show_background: false))
+
+        viewport = page.find("div[data-flat-pack--carousel-target='viewport']")
+        assert_includes viewport[:class], "border-0"
+        assert_includes viewport[:class], "bg-transparent"
+        refute_includes viewport[:class], "border-[var(--carousel-viewport-border-color)]"
+        refute_includes viewport[:class], "bg-[var(--carousel-viewport-background-color)]"
+      end
+
+      def test_logo_slider_stays_borderless_and_transparent
+        render_inline(
+          Component.new(
+            slides: [{type: :image, src: "https://images.example.com/a.svg", alt: "A"}],
+            variant: :logo_slider,
+            show_border: true,
+            show_background: true
+          )
+        )
+
+        viewport = page.find("div[data-flat-pack--carousel-target='viewport']")
+        assert_includes viewport[:class], "border-0"
+        assert_includes viewport[:class], "bg-transparent"
+        assert_includes viewport[:style], "background: transparent"
+        refute_includes viewport[:class], "border-[var(--carousel-viewport-border-color)]"
+        refute_includes viewport[:class], "bg-[var(--carousel-viewport-background-color)]"
+      end
+
       def test_renders_thumbs_when_enabled
         render_inline(Component.new(slides: sample_slides, show_thumbs: true))
 
-        assert_selector "button[data-flat-pack--carousel-target='thumb']", count: 3
+        thumbs = page.all("button[data-flat-pack--carousel-target='thumb']")
+        assert_equal 3, thumbs.length
 
-        thumb = page.find("button[data-flat-pack--carousel-target='thumb']", match: :first)
+        image_thumb = thumbs[0].find("img")
+        assert_equal "https://images.example.com/one.jpg", image_thumb[:src]
+        assert_equal "Thumbnail 1", image_thumb[:alt]
 
-        assert_includes thumb[:class], "cursor-pointer"
-        assert_includes thumb[:class], "hover:opacity-100"
-        assert_includes thumb[:class], "hover:ring-2"
-        assert_includes thumb[:class], "hover:ring-primary"
+        video_thumb = thumbs[1].find("img")
+        assert_equal "https://images.example.com/poster.jpg", video_thumb[:src]
+        assert_equal "Video thumbnail 2", video_thumb[:alt]
+
+        assert_equal "3", thumbs[2].text.strip
+        assert_includes thumbs[0][:class], "cursor-pointer"
+        assert_includes thumbs[0][:class], "hover:opacity-100"
+        assert_includes thumbs[0][:class], "hover:ring-2"
+        assert_includes thumbs[0][:class], "hover:ring-primary"
+      end
+
+      def test_image_thumb_prefers_thumb_src_over_slide_src
+        render_inline(
+          Component.new(
+            slides: [
+              {
+                type: :image,
+                src: "https://images.example.com/full.jpg",
+                thumb_src: "https://images.example.com/small.jpg",
+                alt: "Full"
+              }
+            ],
+            show_thumbs: true
+          )
+        )
+
+        thumb = page.find("button[data-flat-pack--carousel-target='thumb'] img")
+        assert_equal "https://images.example.com/small.jpg", thumb[:src]
+      end
+
+      def test_html_slide_uses_thumb_src_for_thumbnail
+        render_inline(
+          Component.new(
+            slides: [
+              {
+                type: :html,
+                html: "<p>Release notes</p>",
+                thumb_src: "https://images.example.com/card.jpg",
+                caption: "Notes"
+              }
+            ],
+            show_thumbs: true
+          )
+        )
+
+        thumb = page.find("button[data-flat-pack--carousel-target='thumb']")
+        image = thumb.find("img")
+
+        assert_equal "https://images.example.com/card.jpg", image[:src]
+        assert_equal "Thumbnail 1", image[:alt]
+        assert_includes rendered_content, "<p>Release notes</p>"
+      end
+
+      def test_html_slide_accepts_thumb_alias
+        render_inline(
+          Component.new(
+            slides: [
+              {
+                type: :html,
+                html: "<p>Workshop</p>",
+                thumb: "https://images.example.com/alias.jpg"
+              }
+            ],
+            show_thumbs: true
+          )
+        )
+
+        thumb = page.find("button[data-flat-pack--carousel-target='thumb'] img")
+        assert_equal "https://images.example.com/alias.jpg", thumb[:src]
+      end
+
+      def test_html_slide_without_thumb_shows_slide_number
+        render_inline(
+          Component.new(
+            slides: [
+              {type: :html, html: "<p>No picture</p>"}
+            ],
+            show_thumbs: true
+          )
+        )
+
+        thumb = page.find("button[data-flat-pack--carousel-target='thumb']")
+
+        assert_equal "1", thumb.text.strip
+        assert_no_selector "button[data-flat-pack--carousel-target='thumb'] img"
+      end
+
+      def test_html_slide_drops_unsafe_thumb_url
+        render_inline(
+          Component.new(
+            slides: [
+              {
+                type: :html,
+                html: "<p>Notes</p>",
+                thumb_src: "javascript:alert(1)"
+              },
+              {
+                type: :html,
+                html: "<p>Also notes</p>",
+                thumb: "data:text/html,hi"
+              },
+              {
+                type: :html,
+                html: "<p>Blank</p>",
+                thumb_src: "  "
+              }
+            ],
+            show_thumbs: true
+          )
+        )
+
+        thumbs = page.all("button[data-flat-pack--carousel-target='thumb']")
+
+        assert_equal %w[1 2 3], thumbs.map { |thumb| thumb.text.strip }
+        assert_no_selector "button[data-flat-pack--carousel-target='thumb'] img"
+        refute_includes rendered_content, "javascript:"
+        refute_includes rendered_content, "data:text/html"
+      end
+
+      def test_html_slide_accepts_relative_thumb_path
+        render_inline(
+          Component.new(
+            slides: [
+              {type: :html, html: "<p>Local</p>", thumb_src: "/images/card.jpg"}
+            ],
+            show_thumbs: true
+          )
+        )
+
+        thumb = page.find("button[data-flat-pack--carousel-target='thumb'] img")
+        assert_equal "/images/card.jpg", thumb[:src]
+      end
+
+      def test_video_thumb_keeps_poster_when_thumb_src_is_passed
+        render_inline(
+          Component.new(
+            slides: [
+              {
+                type: :video,
+                src: "https://videos.example.com/two.mp4",
+                poster: "https://images.example.com/poster.jpg",
+                thumb_src: "https://images.example.com/other.jpg"
+              }
+            ],
+            show_thumbs: true
+          )
+        )
+
+        thumb = page.find("button[data-flat-pack--carousel-target='thumb'] img")
+        assert_equal "https://images.example.com/poster.jpg", thumb[:src]
+        assert_equal "Video thumbnail 1", thumb[:alt]
       end
 
       def test_thumbs_force_root_overflow_visible_to_preserve_active_ring

@@ -1,5 +1,6 @@
 // FlatPack File Input Stimulus Controller
 import { Controller } from "@hotwired/stimulus"
+import { flatPackCopy } from "flat_pack/copy"
 
 export default class extends Controller {
   static targets = ["input", "fileList", "preview", "validationError"]
@@ -83,7 +84,7 @@ export default class extends Controller {
   validateFile(file) {
     // Check file size if max_size is set
     if (this.hasMaxSizeValue && file.size > this.maxSizeValue) {
-      this.showError(`File "${file.name}" exceeds maximum size of ${this.formatFileSize(this.maxSizeValue)}`)
+      this.showError(flatPackCopy("file_input.size_exceeded", {name: file.name, size: this.formatFileSize(this.maxSizeValue)}))
       return false
     }
 
@@ -210,11 +211,11 @@ export default class extends Controller {
 
   formatFileSize(bytes) {
     if (bytes < 1024) {
-      return `${bytes}B`
+      return flatPackCopy("file_input.size_bytes", {count: bytes})
     } else if (bytes < 1024 * 1024) {
-      return `${(bytes / 1024).toFixed(1)}KB`
+      return flatPackCopy("file_input.size_kilobytes", {count: (bytes / 1024).toFixed(1)})
     } else {
-      return `${(bytes / (1024 * 1024)).toFixed(1)}MB`
+      return flatPackCopy("file_input.size_megabytes", {count: (bytes / (1024 * 1024)).toFixed(1)})
     }
   }
 

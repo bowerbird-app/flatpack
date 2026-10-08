@@ -34,7 +34,7 @@ module FlatPack
       end
 
       def resolved_aria_attributes
-        {label: "Bottom navigation"}.merge(aria_attributes)
+        {label: fp_t("bottom_nav.label")}.merge(aria_attributes)
       end
 
       def container_classes

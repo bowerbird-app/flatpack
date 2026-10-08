@@ -5,6 +5,8 @@ require "test_helper"
 class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
   DEMO_PATHS = %w[
     /demo
+    /demo/brand_theme
+    /demo/brand_theme/dark
     /demo/buttons
     /demo/links
     /demo/buttons/pills
@@ -36,9 +38,11 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/forms/radio_group
     /demo/forms/select
     /demo/forms/combobox
+    /demo/collection_editor
     /demo/forms/nested_multiselect
     /demo/forms/switch
     /demo/forms/combined
+    /demo/forms/unsaved_changes
     /demo/badges
     /demo/chips
     /demo/chip_groups
@@ -131,6 +135,17 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /mobile
     /mobile/bottom_nav
   ].freeze
+
+  test "unsaved changes demo wires the form controller and a default save button" do
+    get "/demo/forms/unsaved_changes"
+
+    assert_response :success
+    assert_includes response.body, 'data-controller="flat-pack--unsaved-changes"'
+    assert_includes response.body, 'data-flat-pack--unsaved-changes-target="submit"'
+    assert_includes response.body, 'data-fp-style="default"'
+    assert_includes response.body, "Save changes"
+    assert_includes response.body, "Edit any field to see the Save button become primary."
+  end
 
   test "demo pages respond successfully" do
     DEMO_PATHS.each do |path|
@@ -335,6 +350,17 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, 'data-controller="segmented-buttons-demo"'
     assert_includes response.body, 'data-action="segmented-buttons-demo#activate"'
     assert_includes response.body, 'aria-pressed="true"'
+    assert_includes response.body, "The selected button uses the primary colour."
+    assert_includes response.body, "The selected button matches a default button."
+    assert_includes response.body, 'data-fp-style="primary"'
+    assert_includes response.body, 'data-fp-style="default"'
+    assert_includes response.body, 'data-fp-style="secondary"'
+    assert_includes response.body, 'data-segmented-buttons-demo-active-style-value="primary"'
+    assert_includes response.body, 'data-segmented-buttons-demo-active-style-value="default"'
+    assert_includes response.body, 'data-segmented-buttons-demo-inactive-style-value="secondary"'
+    assert_includes response.body, 'data-segmented-buttons-demo-active-press-class-value="fp-button-raised"'
+    assert_includes response.body, 'data-segmented-buttons-demo-inactive-press-class-value="fp-button-flat"'
+    refute_includes response.body, "active-classes-value"
 
     get "/demo/buttons/groups"
 
@@ -342,6 +368,12 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Button Groups (Wrapped Together)"
     assert_includes response.body, "Left"
     assert_includes response.body, "Middle"
+    assert_includes response.body, 'data-fp-style="primary"'
+    assert_includes response.body, 'data-fp-style="secondary"'
+    assert_includes response.body, 'data-segmented-buttons-demo-active-style-value="primary"'
+    assert_includes response.body, 'data-segmented-buttons-demo-active-press-class-value="fp-button-raised"'
+    assert_includes response.body, 'data-segmented-buttons-demo-inactive-press-class-value="fp-button-flat"'
+    refute_includes response.body, "active-classes-value"
   end
 
   test "page nav demo renders icon-only navigation" do
@@ -352,6 +384,16 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "flat-pack--page-nav#back"
     assert_includes response.body, "x-mark"
     assert_includes response.body, "plus"
+  end
+
+  test "demo shell keeps sidebar current item and scroll across visits" do
+    get "/demo/sidebar/collapsible"
+
+    assert_response :success
+    assert_includes response.body, 'id="dummy-demo-sidebar"'
+    assert_includes response.body, "data-turbo-permanent"
+    assert_includes response.body, "function clearSidebarNav()"
+    assert_includes response.body, "link.removeAttribute('aria-current')"
   end
 
   test "comments demo renders rich text composer examples" do
@@ -669,9 +711,14 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, ">Content</h1>"
     assert_includes response.body, ">A Mastered Workflow</h1>"
-    assert_includes response.body, "text-(--color-primary)"
+    assert_includes response.body, "fp-content"
     assert_includes response.body, "One-Click Distribution."
     assert_includes response.body, "No Publisher? No Problem."
+    refute_includes response.body, "class=\"mt-2 text-4xl"
+    assert_includes response.body, "Body is 18px."
+    assert_includes response.body, ">content</td>"
+    assert_includes response.body, ">h1 / p / ul</td>"
+    assert_includes response.body, "**system_arguments"
   end
 
   test "range input demo variable table includes full option set" do

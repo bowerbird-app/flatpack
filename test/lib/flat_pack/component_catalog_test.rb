@@ -16,6 +16,7 @@ module FlatPack
       names = listed_names
 
       assert_includes names, "Button::Component"
+      assert_includes names, "Content::Component"
       assert_includes names, "List::Item"
       assert_includes names, "Timeline::Item"
       assert_includes names, "ChartButtons::ButtonComponent"
@@ -63,6 +64,8 @@ module FlatPack
       size = parameter_named(payload, "size")
 
       assert_equal FlatPack::Button::Component::SCHEMES.keys.map(&:to_s), style.fetch(:enum)
+      refute_includes style.fetch(:enum), "spec_partner"
+      refute_includes style.fetch(:enum), "partner"
       assert_equal "string", style.fetch(:type)
       assert_equal false, style.fetch(:required)
       assert_equal FlatPack::Button::Component::SIZES.keys.map(&:to_s), size.fetch(:enum)
@@ -96,6 +99,22 @@ module FlatPack
       assert_equal "center", align.fetch(:default)
     end
 
+    test "show Hero binds ALIGNS to align with a center default" do
+      payload = FlatPack::ComponentCatalog.show("Hero::Component")
+      align = parameter_named(payload, "align")
+
+      assert_equal FlatPack::Hero::Component::ALIGNS.keys.map(&:to_s), align.fetch(:enum)
+      assert_equal "center", align.fetch(:default)
+    end
+
+    test "show Hero binds ONS to on with a dark default" do
+      payload = FlatPack::ComponentCatalog.show("Hero::Component")
+      on = parameter_named(payload, "on")
+
+      assert_equal FlatPack::Hero::Component::ONS.keys.map(&:to_s), on.fetch(:enum)
+      assert_equal "dark", on.fetch(:default)
+    end
+
     test "show does not invent defaults for required kwargs" do
       payload = FlatPack::ComponentCatalog.show("Button::Pill::Component")
       items = parameter_named(payload, "items")
@@ -123,7 +142,9 @@ module FlatPack
       variant = parameter_named(payload, "variant")
 
       assert_equal FlatPack::Tabs::Component::VARIANTS.keys.map(&:to_s), variant.fetch(:enum)
-      refute payload.fetch(:parameters).any? { |parameter| parameter.fetch(:name) == "style" }
+
+      style = parameter_named(payload, "style")
+      assert_equal %w[default primary secondary ghost success warning danger], style.fetch(:enum)
     end
 
     test "show Avatar binds SHAPES to shape" do
@@ -203,6 +224,14 @@ module FlatPack
       assert_operator examples.size, :>=, 1
       assert_equal %i[erb], examples.first.keys
       assert_includes examples.first.fetch(:erb), "FlatPack::Alert::Component"
+    end
+
+    test "show Content includes a block wrapper example" do
+      examples = FlatPack::ComponentCatalog.show("Content::Component").fetch(:examples)
+
+      assert_operator examples.size, :>=, 1
+      assert_includes examples.first.fetch(:erb), "FlatPack::Content::Component"
+      assert_includes examples.first.fetch(:erb), "do |content|"
     end
 
     test "show Checkbox has no examples when it shares inputs.md without a named fence" do

@@ -1,0 +1,15 @@
+<% [
+  [:item, "Item"],
+  [:detail, "Detail"],
+  [:note, "Note"]
+].each do |field, label| %>
+  <% row.with_field do %>
+    <%= render FlatPack::TextInput::Component.new(
+      name: "lines[#{index}][#{field}]",
+      id: "lines_#{index}_#{field}",
+      label: label,
+      value: row_form.object.public_send(field),
+      chrome: :cell
+    ) %>
+  <% end %>
+<% end %>

@@ -61,7 +61,7 @@ None
 
 ### Dynamic (JS-controlled) sidebar
 
-No `collapsed:` argument needed — the `flat-pack--sidebar-layout` controller targets elements with `data-flat-pack-sidebar-section-title="true"` and toggles `px-1`/`px-4` automatically on collapse/expand.
+No `collapsed:` argument needed — the `flat-pack--sidebar-layout` controller targets elements with `data-flat-pack-sidebar-section-title="true"` and toggles `px-1`/`px-4` automatically on collapse/expand. Labels fade with the rail and stay in document flow (not `sr-only`) so item/icon row height does not jump.
 
 ## Accessibility
 - The wrapper has `data-flat-pack--tooltip-collapsed-only-value="true"`, so the tooltip only activates when the sidebar is collapsed.

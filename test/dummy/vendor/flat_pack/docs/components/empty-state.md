@@ -15,6 +15,7 @@ Use Empty State when a surface is blank and the person can act: create the first
 | `title` | String | `nil` | yes | Heading that names what is missing. |
 | `description` | String | `nil` | no | One sentence on what to do next. |
 | `icon` | Symbol/String/false | `nil` | no | Optional quiet kit icon (`:inbox`, `:search`, or any `IconComponent` name). Pass `false` or omit to skip. |
+| `size` | Symbol | `:md` | no | Density for padding, title, and description: `:sm`, `:md`, `:lg`. `:md` matches the previous look. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for wrapper. |
 
 ## Slots

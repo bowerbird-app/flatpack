@@ -107,5 +107,24 @@
   </div>
 </section>
 
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Sizes", anchor_link: true, subtitle: "Density for trigger padding and title text. md matches today’s 1rem.") %>
+  <div class="space-y-6">
+    <% [:sm, :md, :lg].each do |size| %>
+      <div>
+        <p class="text-sm text-[var(--surface-muted-content-color)] mb-2"><%= size == :md ? "Medium (default)" : size.to_s.capitalize %></p>
+        <%= render FlatPack::Accordion::Component.new(size: size) do |accordion| %>
+          <% accordion.item(id: "size-#{size}-1", title: "First item", open: true) do %>
+            <p>Content for <%= size %>.</p>
+          <% end %>
+          <% accordion.item(id: "size-#{size}-2", title: "Second item") do %>
+            <p>More content.</p>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</section>
+
 <%= render "shared/related_demos",
   links: [{text: "Collapse", href: demo_collapse_path}] %>

@@ -230,11 +230,11 @@ export default class extends Controller {
   shouldShowTooltip() {
     if (!this.collapsedOnlyValue) return true
 
-    const label = this.element.querySelector("span.flex-1")
-    if (label) return label.classList.contains("sr-only")
-
     const sidebar = this.element.closest("[data-flat-pack-sidebar-collapsed]")
     if (sidebar) return sidebar.dataset.flatPackSidebarCollapsed === "true"
+
+    const label = this.element.querySelector("span.flex-1")
+    if (label) return label.classList.contains("sr-only")
 
     return true
   }

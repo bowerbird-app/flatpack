@@ -231,6 +231,12 @@ components:
     primary_class: FlatPack::Collapse::Component
     status: documented
 
+  - key: collection_editor
+    title: Collection Editor
+    doc: docs/components/collection-editor.md
+    primary_class: FlatPack::CollectionEditor::Component
+    status: documented
+
   - key: combobox
     title: Combobox
     doc: docs/components/combobox.md
@@ -241,6 +247,12 @@ components:
     title: Command Palette
     doc: docs/components/command-palette.md
     primary_class: FlatPack::CommandPalette::Component
+    status: documented
+
+  - key: content
+    title: Content
+    doc: docs/components/content.md
+    primary_class: FlatPack::Content::Component
     status: documented
 
   - key: content_editor

@@ -17,6 +17,7 @@ Use Alert when users need immediate contextual feedback near form content or pag
 | `style` | Symbol | `:info` | no | Variant style: `:info`, `:success`, `:warning`, `:danger`; invalid values raise `ArgumentError`. |
 | `dismissible` | Boolean | `false` | no | Shows dismiss button and binds dismiss controller behavior. |
 | `icon` | Boolean | `true` | no | Shows variant icon when true. |
+| `size` | Symbol | `:md` | no | Density for padding, title, and description: `:sm`, `:md`, `:lg`. `:md` matches `--alert-padding` 1rem. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for alert wrapper. |
 
 ## Slots

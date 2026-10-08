@@ -163,7 +163,7 @@ module FlatPack
       end
 
       def accessible_name
-        @text.presence || "Color"
+        @text.presence || fp_t("color_swatch.fallback")
       end
 
       def input_id

@@ -43,6 +43,9 @@ bin/rake flat_pack:verify_install
 
 The component index is the complete human-readable inventory. The manifest is the canonical machine-readable inventory, including primary classes, related classes, and documentation paths.
 
+### Behaviours
+- [Unsaved changes](behaviours/unsaved-changes.md)
+
 ### Architecture
 - [Engine Architecture](architecture/engine.md)
 - [Asset Pipeline](architecture/assets.md)
@@ -89,6 +92,9 @@ FlatPack.configure do |config|
   config.default_theme = :light
   config.default_icon_variant = :outline
 end
+
+# Optional: a host or gem colourway that does not change the theme.
+# FlatPack::Button.register_style(:partner, press: :raised)
 ```
 
 ## Design Principles

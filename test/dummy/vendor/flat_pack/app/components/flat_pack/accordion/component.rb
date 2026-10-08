@@ -3,14 +3,41 @@
 module FlatPack
   module Accordion
     class Component < FlatPack::BaseComponent
+      # Density for trigger/content padding and title text. md matches current 1rem padding.
+      # "text-sm" "text-base" "text-lg"
+      SIZES = {
+        sm: {
+          trigger_padding: "0.75rem",
+          content_padding: "0.75rem",
+          title: "text-sm font-medium",
+          icon: :sm
+        },
+        md: {
+          trigger_padding: "1rem",
+          content_padding: "1rem",
+          title: "font-medium",
+          icon: :md
+        },
+        lg: {
+          trigger_padding: "1.25rem",
+          content_padding: "1.25rem",
+          title: "text-lg font-medium",
+          icon: :lg
+        }
+      }.freeze
+
       def initialize(
         allow_multiple: false,
         single_open: nil,
+        size: :md,
         **system_arguments
       )
         super(**system_arguments)
         @allow_multiple = single_open.nil? ? allow_multiple : !single_open
+        @size = size.to_sym
         @items = []
+
+        validate_size!
       end
 
       def item(id:, title:, left_slot: nil, open: false, &block)
@@ -34,6 +61,10 @@ module FlatPack
 
       private
 
+      def size_config
+        SIZES.fetch(@size)
+      end
+
       def render_item(item)
         content_tag(:div, class: "border-b border-[var(--accordion-item-border-color)] last:border-b-0") do
           safe_join([
@@ -56,7 +87,7 @@ module FlatPack
         content_tag(:span, class: "flex items-center gap-2 min-w-0") do
           safe_join([
             render_item_left_slot(item),
-            content_tag(:span, item[:title], class: "font-medium")
+            content_tag(:span, item[:title], class: size_config.fetch(:title))
           ].compact)
         end
       end
@@ -70,7 +101,7 @@ module FlatPack
       def render_item_icon
         render FlatPack::Shared::IconComponent.new(
           name: "chevron-down",
-          size: :md,
+          size: size_config.fetch(:icon),
           class: "transition-transform duration-[var(--duration-base)] ease-[var(--easing-standard)]",
           data: {"flat-pack--accordion-target": "icon"}
         )
@@ -91,8 +122,20 @@ module FlatPack
             controller: "flat-pack--accordion",
             "flat-pack--accordion-allow-multiple-value": @allow_multiple
           },
-          class: "border border-[var(--accordion-border-color)] rounded-[var(--accordion-border-radius)] overflow-hidden bg-[var(--accordion-background-color)]"
+          class: "border border-[var(--accordion-border-color)] rounded-[var(--accordion-border-radius)] overflow-hidden bg-[var(--accordion-background-color)]",
+          style: padding_style
         )
+      end
+
+      def padding_style
+        declaration = [
+          "--accordion-trigger-padding: #{size_config.fetch(:trigger_padding)}",
+          "--accordion-content-padding: #{size_config.fetch(:content_padding)}"
+        ].join("; ")
+        existing = @system_arguments[:style] || @system_arguments["style"]
+        return declaration unless existing.present?
+
+        "#{existing.to_s.rstrip.sub(/;+\z/, "")}; #{declaration}"
       end
 
       def item_trigger_attributes(item)
@@ -128,6 +171,11 @@ module FlatPack
 
       def item_content_id(id)
         "#{id}-content"
+      end
+
+      def validate_size!
+        return if SIZES.key?(@size)
+        raise ArgumentError, "Invalid size: #{@size}. Must be one of: #{SIZES.keys.join(", ")}"
       end
     end
   end

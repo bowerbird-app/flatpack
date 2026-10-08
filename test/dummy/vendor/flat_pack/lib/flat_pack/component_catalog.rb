@@ -49,6 +49,7 @@ module FlatPack
       {constant: :GAPS, kwargs: %i[gap]},
       {constant: :COLS, kwargs: %i[cols]},
       {constant: :ALIGNS, kwargs: %i[align]},
+      {constant: :ONS, kwargs: %i[on]},
       {constant: :SEPARATORS, kwargs: %i[separator]},
       {constant: :PADDINGS, kwargs: %i[padding]},
       {constant: :HOVERS, kwargs: %i[hover]},

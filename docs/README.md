@@ -21,6 +21,7 @@ bin/rake flat_pack:verify_install
 - [Installation Guide](installation.md)
 - [DigitalOcean Deployment for the Dummy App](deployment_digitalocean.md)
 - [Recording Studio on the Dummy App](recording_studio_dummy.md)
+- [Kit copy and host languages](i18n.md)
 - [AI Entry Point](ai/README.md)
 - [AI Install Contract](ai/install_contract.json)
 - [Quick Start](#quick-start)
@@ -42,6 +43,9 @@ bin/rake flat_pack:verify_install
 - [Component Doc Format](components/DOC_FORMAT.md)
 
 The component index is the complete human-readable inventory. The manifest is the canonical machine-readable inventory, including primary classes, related classes, and documentation paths.
+
+### Behaviours
+- [Unsaved changes](behaviours/unsaved-changes.md)
 
 ### Architecture
 - [Engine Architecture](architecture/engine.md)
@@ -89,6 +93,9 @@ FlatPack.configure do |config|
   config.default_theme = :light
   config.default_icon_variant = :outline
 end
+
+# Optional: a host or gem colourway that does not change the theme.
+# FlatPack::Button.register_style(:partner, press: :raised)
 ```
 
 ## Design Principles

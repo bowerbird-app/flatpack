@@ -12,12 +12,14 @@ class ThemesController < ApplicationController
     "Alerts" => [/\A--alert-/],
     "Toasts" => [/\A--toast-/],
     "Cards" => [/\A--card-/],
+    "Hero" => [/\A--hero-/],
     "Accordion" => [/\A--accordion-/],
     "Collapse" => [/\A--collapse-/],
     "Breadcrumbs" => [/\A--breadcrumb-/],
     "Bottom Nav" => [/\A--bottom-nav-/],
     "Code Blocks" => [/\A--code-block-/],
     "Comments" => [/\A--comments-/],
+    "Content" => [/\A--content-/],
     "Quote" => [/\A--quote-/],
     "Timeline" => [/\A--timeline-/],
     "Tabs" => [/\A--tabs-/],
@@ -44,7 +46,9 @@ class ThemesController < ApplicationController
     "Radii" => [/\A--radius-/],
     "Shadows" => [/\A--shadow-/],
     "Motion" => [/\A--(duration-|transition-)/],
+    "Overlay" => [/\A--overlay-/],
     "Backdrop Effects" => [/\A--blur-/],
+    "Collection Editor" => [/\A--collection-editor-/],
     "Other" => [/.*/]
   }.freeze
 
@@ -57,7 +61,7 @@ class ThemesController < ApplicationController
   }.freeze
 
   THEME_SELECTORS = {
-    "light" => ":root",
+    "light" => ":root, [data-theme]",
     "dark" => "[data-theme=\"dark\"]",
     "ocean" => "[data-theme=\"ocean\"]"
   }.freeze
@@ -66,6 +70,7 @@ class ThemesController < ApplicationController
 
   def index
     @theme_token_groups = build_theme_token_groups
+    @collection_editor_preview = CollectionEditorPreview.new(id: 1, person_id: 1, role: "Designer")
   end
 
   def demo
@@ -82,11 +87,11 @@ class ThemesController < ApplicationController
   def theme_demo_variables_subtitle(theme)
     case theme
     when "light"
-      "Full :root wiring from flat_pack/variables.css (semantic tokens plus component aliases)."
+      "Full :root, [data-theme] wiring from flat_pack/variables.css (semantic tokens plus component aliases)."
     when "rounded"
       "Rounded is a no-op alias of :root. Hosts may keep data-theme=\"rounded\"; this dump is the default palette."
     else
-      "Override-only dump from [data-theme]. Component aliases inherit from :root unless listed here."
+      "Override-only dump from [data-theme]. Component aliases re-resolve from the default wiring unless listed here."
     end
   end
 
@@ -146,7 +151,7 @@ class ThemesController < ApplicationController
 
   def extract_theme_tokens
     css = cached_theme_variables_css
-    block = css[/^:root \{(?<body>.*?)^\}/m, :body]
+    block = css[/^:root(?:,\s*\[data-theme\])?\s*\{(?<body>.*?)^\}/m, :body]
     return [] if block.blank?
 
     block.lines.filter_map do |line|
@@ -248,6 +253,8 @@ class ThemesController < ApplicationController
       "Code block"
     when /\A--card-/
       "Cards"
+    when /\A--hero-/
+      "Hero"
     when /\A--accordion-/
       "Accordion"
     when /\A--collapse-/
@@ -282,6 +289,8 @@ class ThemesController < ApplicationController
       "Chat"
     when /\A--comments-/
       "Comments"
+    when /\A--content-/
+      "Content"
     when /\A--quote-/
       "Quote"
     when /\A--timeline-/

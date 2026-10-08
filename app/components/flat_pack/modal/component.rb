@@ -136,7 +136,7 @@ module FlatPack
       end
 
       def dialog_wrapper_classes
-        "relative flex w-full min-h-screen items-start sm:items-center justify-center fp-overlay-pad"
+        "relative flex w-full min-h-screen items-start sm:items-center justify-center fp-overlay-pad pointer-events-none"
       end
 
       def dialog_attributes
@@ -158,6 +158,7 @@ module FlatPack
 
       def dialog_classes
         classes(
+          "pointer-events-auto",
           "relative",
           "flex",
           "flex-col",
@@ -191,7 +192,7 @@ module FlatPack
         content_tag(:button,
           type: "button",
           class: close_button_classes,
-          aria: {label: "Close"},
+          aria: {label: fp_t("modal.close")},
           data: {action: "flat-pack--modal#close"}) do
           close_icon
         end

@@ -176,6 +176,7 @@ Text-like inputs share the `flat-pack-input` CSS class (Select uses `flat-pack-s
 - Disabled state styling
 - Error state styling
 - Focus ring for accessibility
+- `chrome:` (`:field` by default, or `:cell`) on the controls that include `FormField::ControlStyles`. `:cell` omits the border, radius, background, and focus ring so a collection editor cell can draw them.
 
 Hosts should keep calling the public input components (`TextInput`, `Select`, etc.). `FormField` is an internal composition detail, not a new public component to switch to.
 

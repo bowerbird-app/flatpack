@@ -3,15 +3,24 @@
 module FlatPack
   module SegmentedButtons
     class Component < FlatPack::BaseComponent
-      renders_many :buttons, ->(text:, selected: false, **args) do
+      SIZES = FlatPack::Button::Component::SIZES
+
+      renders_many :buttons, lambda { |text:, selected: false, size: nil, **args|
         style = selected ? :primary : :secondary
-        FlatPack::Button::Component.new(text: text, style: style, **args)
-      end
+        FlatPack::Button::Component.new(
+          text: text,
+          style: style,
+          size: size.nil? ? @size : size,
+          **args
+        )
+      }
 
       undef_method :with_button, :with_button_content
 
-      def initialize(**system_arguments)
-        super
+      def initialize(size: :md, **system_arguments)
+        super(**system_arguments)
+        @size = size.to_sym
+        validate_size!
       end
 
       def button(*args, **kwargs, &block)
@@ -44,6 +53,12 @@ module FlatPack
           "[&>*:last-child]:border-r",
           "[&>*]:shadow-none"
         )
+      end
+
+      def validate_size!
+        return if SIZES.key?(@size)
+
+        raise ArgumentError, "Invalid size: #{@size}. Must be one of: #{SIZES.keys.join(", ")}"
       end
     end
   end

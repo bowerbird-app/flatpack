@@ -103,6 +103,33 @@ module FlatPack
 
         assert_selector "[aria-label='Loading…']"
       end
+
+      def test_default_size_is_medium
+        render_inline(Component.new(variant: :text))
+
+        assert_includes page.native.to_html, "h-4"
+      end
+
+      def test_renders_small_size
+        render_inline(Component.new(variant: :text, size: :sm))
+
+        assert_includes page.native.to_html, "h-3"
+      end
+
+      def test_renders_large_size
+        render_inline(Component.new(variant: :avatar, size: :lg))
+
+        assert_includes page.native.to_html, "h-14"
+        assert_includes page.native.to_html, "w-14"
+      end
+
+      def test_raises_error_for_invalid_size
+        error = assert_raises(ArgumentError) do
+          Component.new(size: :xl)
+        end
+
+        assert_includes error.message, "Invalid size"
+      end
     end
   end
 end

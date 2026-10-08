@@ -72,7 +72,8 @@ module FlatPack
         render_inline(component)
 
         assert_selector "button", text: "Default"
-        assert_includes page.native.to_html, "bg-[var(--button-default-background-color)]"
+        assert_selector "button[data-fp-style='default']"
+        assert_selector "button.fp-button-raised"
       end
 
       def test_default_size_is_md
@@ -384,12 +385,12 @@ module FlatPack
 
         html = page.native.to_html
         assert_includes html, "fp-button"
-        assert_includes html, "shadow-[var(--button-shadow)]"
-        assert_includes html, "hover:shadow-[var(--button-shadow-hover)]"
-        assert_includes html, "active:shadow-[var(--button-shadow-active)]"
+        assert_includes html, "fp-button-raised"
+        assert_includes html, "data-fp-style=\"primary\""
         assert_includes html, "ease-[var(--easing-standard)]"
         assert_includes html, "duration-[var(--duration-fast)]"
         refute_includes html, "active:scale"
+        refute_includes html, "bg-[var(--button-primary-background-color)]"
       end
 
       def test_secondary_button_does_not_include_scheme_shadow_class
@@ -398,7 +399,8 @@ module FlatPack
         html = page.native.to_html
         assert_includes html, "fp-button"
         assert_includes html, "fp-button-flat"
-        refute_includes html, "shadow-[var(--button-shadow)]"
+        assert_includes html, "data-fp-style=\"secondary\""
+        refute_includes html, "fp-button-raised"
         refute_includes html, "active:scale"
       end
 
@@ -408,8 +410,53 @@ module FlatPack
         html = page.native.to_html
         assert_includes html, "fp-button"
         assert_includes html, "fp-button-flat"
-        refute_includes html, "shadow-[var(--button-shadow)]"
+        assert_includes html, "data-fp-style=\"ghost\""
+        refute_includes html, "fp-button-raised"
         refute_includes html, "active:scale"
+      end
+
+      def test_registered_style_renders_data_attribute
+        FlatPack::Button.register_style(:spec_partner, press: :raised)
+        render_inline(Component.new(text: "Checkout", style: :spec_partner))
+
+        assert_selector "button[data-fp-style='spec_partner']", text: "Checkout"
+        assert_selector "button.fp-button-raised"
+      ensure
+        FlatPack::Button.unregister_style(:spec_partner)
+      end
+
+      def test_registered_flat_style_uses_flat_press
+        FlatPack::Button.register_style(:spec_quiet, press: :flat)
+        render_inline(Component.new(text: "Quiet", style: :spec_quiet))
+
+        html = page.native.to_html
+        assert_includes html, "data-fp-style=\"spec_quiet\""
+        assert_includes html, "fp-button-flat"
+        refute_includes html, "fp-button-raised"
+      ensure
+        FlatPack::Button.unregister_style(:spec_quiet)
+      end
+
+      def test_registered_style_does_not_recolor_built_in_primary
+        FlatPack::Button.register_style(:spec_partner, press: :raised)
+        render_inline(Component.new(text: "Keep primary", style: :primary))
+
+        assert_selector "button[data-fp-style='primary']", text: "Keep primary"
+        refute_selector "button[data-fp-style='spec_partner']"
+      ensure
+        FlatPack::Button.unregister_style(:spec_partner)
+      end
+
+      def test_invalid_style_message_includes_registered_name
+        FlatPack::Button.register_style(:spec_partner, press: :raised)
+        error = assert_raises(ArgumentError) do
+          Component.new(text: "Invalid", style: :not_a_style)
+        end
+
+        assert_match(/spec_partner/, error.message)
+        assert_match(/primary/, error.message)
+      ensure
+        FlatPack::Button.unregister_style(:spec_partner)
       end
     end
   end

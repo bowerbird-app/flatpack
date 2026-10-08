@@ -21,9 +21,7 @@ module FlatPack
     end
 
     test ":root holds concrete values and does not circular-map tokens" do
-      root_block = @css[/^:root \{.*?^\}/m]
-
-      refute_nil root_block, "expected a :root block in variables.css"
+      refute_nil root_block, "expected a :root, [data-theme] block in variables.css"
       assert_match(/--color-primary:\s*oklch\(/, root_block)
       assert_match(/--font-sans:\s*system-ui/, root_block)
       assert_match(/--duration-fast:\s*150ms/, root_block)
@@ -31,11 +29,24 @@ module FlatPack
       assert_match(/--button-padding-x-xs:\s*0\.5rem/, root_block)
       assert_match(/--carousel-caption-below-text-color:\s*var\(--surface-muted-content-color\)/, root_block)
       assert_match(/--hero-overlay-background-color:\s*rgb\(0 0 0 \/ 0\.6\)/, root_block)
+      assert_match(/--hero-overlay-left-background:\s*linear-gradient/, root_block)
+      assert_match(/--hero-overlay-button-primary-background-color:\s*oklch\(1 0 0\)/, root_block)
+      assert_match(/--hero-overlay-on-light-background-color:\s*rgb\(255 255 255 \/ 0\.62\)/, root_block)
+      assert_match(/--hero-overlay-on-light-text-color:\s*oklch\(0\.22 0 0\)/, root_block)
+      assert_match(/--hero-overlay-min-height:\s*560px/, root_block)
+      assert_match(/--hero-overlay-copy-padding-top:\s*calc\(var\(--top-nav-height\)/, root_block)
+      assert_match(/--top-nav-height:\s*72px/, root_block)
+      assert_match(/--top-nav-backdrop-blur:\s*16px/, root_block)
       assert_match(/--carousel-media-background-color:\s*oklch\(0 0 0\)/, root_block)
       assert_match(/--carousel-lightbox-image-background-color:\s*rgb\(0 0 0 \/ 0\.2\)/, root_block)
       assert_match(/--badge-remove-hover-background-color:\s*var\(--chip-remove-hover-background-color\)/, root_block)
       assert_match(/--picker-badge-background-color:\s*rgb\(0 0 0 \/ 0\.55\)/, root_block)
       assert_match(/--icon-stroke-width:\s*1\.5/, root_block)
+      assert_match(/--surface-border-color:\s*#d1d5db/, root_block)
+      assert_match(/--sidebar-border-color:\s*var\(--surface-border-color\)/, root_block)
+      assert_match(/--sidebar-background-color:\s*var\(--surface-page-background-color\)/, root_block)
+      refute_match(/--sidebar-background-color:\s*oklch\(1\.0 0 0\)/, root_block)
+      assert_match(/--fp-button-background:\s*var\(--button-default-background-color\)/, root_block)
 
       root_block.scan(/^\s*(--[a-z0-9-]+)\s*:\s*(.+);$/).each do |name, value|
         refute_equal "var(#{name})", value, "#{name} on :root must not be a circular self-reference"
@@ -43,9 +54,7 @@ module FlatPack
     end
 
     test ":root --color-primary follows brand primitives" do
-      root_block = @css[/^:root \{.*?^\}/m]
-
-      refute_nil root_block, "expected a :root block in variables.css"
+      refute_nil root_block, "expected a :root, [data-theme] block in variables.css"
       assert_match(
         /--color-primary:\s*oklch\(var\(--brand-lightness\)\s+var\(--brand-chroma\)\s+var\(--brand-hue\)\);/,
         root_block
@@ -58,6 +67,26 @@ module FlatPack
       refute_includes root_block, "calc(var(--brand-chroma) - 0.02)"
     end
 
+    test "primary hover derives from --color-primary with a brand-knob fallback" do
+      refute_nil root_block, "expected a :root, [data-theme] block in variables.css"
+      assert_match(
+        /--color-primary-hover:\s*oklch\(calc\(var\(--brand-lightness\) - 0\.10\)\s+var\(--brand-chroma\)\s+var\(--brand-hue\)\);/,
+        root_block
+      )
+      refute_match(
+        /--color-primary-hover:\s*oklch\(from var\(--color-primary\)/,
+        root_block
+      )
+
+      supports_block = @css[/@supports \(color: oklch\(from red calc\(l - 0\.1\) c h\)\)\s*\{.*?^\}/m]
+      refute_nil supports_block, "expected an @supports relative-color block for --color-primary-hover"
+      assert_match(
+        /--color-primary-hover:\s*oklch\(from var\(--color-primary\) calc\(l - 0\.1\) c h\);/,
+        supports_block
+      )
+      refute_includes supports_block, "color-mix("
+    end
+
     test "dummy sunrise theme sets brand lightness so primary recolors" do
       css = Rails.root.join("app/assets/stylesheets/application.tailwind.css").read
       sunrise = css[/\[data-theme="sunrise"\]\s*\{[^}]*--brand-hue:[^}]*\}/m]
@@ -68,9 +97,27 @@ module FlatPack
       assert_includes sunrise, "--brand-lightness: 0.52"
     end
 
+    test "dummy featured-in themes set only semantic tokens" do
+      css = Rails.root.join("app/assets/stylesheets/application.tailwind.css").read
+      light = css[/\[data-theme="featured-in"\]\s*\{([^}]*--color-primary:[^}]*)\}/m, 1]
+      dark = css[/\[data-theme="featured-in-dark"\]\s*\{([^}]*--color-primary:[^}]*)\}/m, 1]
+
+      refute_nil light, "expected a [data-theme=\"featured-in\"] block with --color-primary"
+      refute_nil dark, "expected a [data-theme=\"featured-in-dark\"] block with --color-primary"
+      assert_includes light, "--color-primary:"
+      refute_includes light, "--color-primary-hover"
+      refute_includes light, "--color-ghost-text"
+      refute_includes light, "--button-"
+      assert_includes dark, "--surface-content-color"
+      refute_includes dark, "--color-primary-hover"
+      refute_includes dark, "--color-ghost-text"
+      refute_includes dark, "--button-"
+      refute_includes dark, "--list-item-hover-background-color"
+    end
+
     test "@theme inline names match :root custom properties" do
       theme_names = token_names(@css[/@theme inline \{.*?^\}/m])
-      root_names = token_names(@css[/^:root \{.*?^\}/m])
+      root_names = token_names(root_block)
 
       assert_equal root_names, theme_names
     end
@@ -82,6 +129,16 @@ module FlatPack
       refute_includes rounded_block, "--color-primary"
       refute_includes rounded_block, "--radius-md"
       refute_includes rounded_block, "--shadow-sm"
+      custom_properties = rounded_block.scan(/^\s*--[a-z0-9-]+\s*:/)
+      assert_empty custom_properties, "[data-theme=rounded] must not assign custom properties; :root already holds the palette"
+    end
+
+    test "named theme blocks do not circular-map tokens" do
+      @css.scan(/\[data-theme="([^"]+)"\]\s*\{(.*?)\}/m).each do |theme, body|
+        body.scan(/^\s*(--[a-z0-9-]+)\s*:\s*(.+);$/).each do |name, value|
+          refute_equal "var(#{name})", value.strip, "[data-theme=#{theme}] #{name} must not be a circular self-reference"
+        end
+      end
     end
 
     test "dark and ocean stay override-only" do
@@ -92,11 +149,62 @@ module FlatPack
       refute_includes ocean_block, "--button-primary-background-color"
       assert_includes dark_block, "--color-primary"
       assert_includes ocean_block, "--color-primary"
+      assert_match(/--sidebar-background-color:\s*oklch\(0\.17 0\.01 250\)/, dark_block)
+      assert_match(/--sidebar-background-color:\s*oklch\(0\.96 0\.02 220\)/, ocean_block)
+    end
+
+    test "secondary ghost chip and overlay paints derive from semantic tokens" do
+      {
+        "--color-secondary" => "color-mix(in oklab, var(--surface-muted-background-color) 18%, var(--surface-background-color))",
+        "--color-secondary-hover" => "color-mix(in oklab, var(--surface-muted-background-color) 70%, var(--surface-background-color))",
+        "--color-secondary-text" => "var(--surface-content-color)",
+        "--color-ghost-hover" => "color-mix(in oklab, var(--surface-muted-background-color) 35%, var(--surface-background-color))",
+        "--color-ghost-text" => "var(--surface-content-color)",
+        "--chip-remove-hover-background-color" => "color-mix(in oklab, var(--surface-content-color) 10%, transparent)",
+        "--modal-backdrop-color" => "var(--overlay-backdrop-color)",
+        "--carousel-chevron-background-color" => "var(--overlay-scrim-color)",
+        "--overlay-backdrop-color" => "rgb(0 0 0 / 0.5)",
+        "--overlay-scrim-color" => "rgb(31 41 55 / 0.68)"
+      }.each do |token, value|
+        assert_match(/#{Regexp.escape(token)}:\s*#{Regexp.escape(value)}/, root_block)
+      end
+
+      refute_match(/--color-ghost-text:\s*#333/, root_block)
+      refute_match(/--color-secondary:\s*#f5f5f5/, root_block)
+      refute_match(/--chip-remove-hover-background-color:\s*rgb\(0 0 0 \/ 0\.1\)/, root_block)
+    end
+
+    test "dark block no longer restates derived component colours" do
+      dark_block = @css[/\[data-theme="dark"\]\s*\{(.*?)\}/m, 1]
+
+      %w[
+        --color-secondary
+        --color-secondary-hover
+        --color-secondary-text
+        --color-ghost-hover
+        --color-ghost-text
+        --carousel-chevron-background-color
+        --switch-track-background-color
+        --comments-inline-input-radius
+        --modal-backdrop-color
+        --list-item-hover-background-color
+        --list-item-active-background-color
+        --chip-remove-hover-background-color
+      ].each do |token|
+        refute_includes dark_block, "#{token}:", "dark should not override #{token}; it should follow :root wiring"
+      end
+
+      assert_match(/--modal-backdrop-blur:\s*3px/, dark_block)
+      assert_match(/--overlay-backdrop-color:\s*rgb\(0 0 0 \/ 0\.65\)/, dark_block)
+      assert_match(/--overlay-scrim-color:\s*rgb\(15 20 36 \/ 0\.72\)/, dark_block)
+      assert_includes dark_block, "--color-primary-hover"
+      assert_includes dark_block, "--shadow-sm"
+      assert_includes dark_block, "--bottom-nav-background-color"
+      assert_includes dark_block, "--top-nav-background-color"
+      assert_includes dark_block, "--sidebar-background-color"
     end
 
     test "chrome greys alias surface tokens so named themes inherit" do
-      root_block = @css[/^:root \{.*?^\}/m]
-
       {
         "--tabs-pill-inactive-text-color" => "var(--surface-muted-content-color)",
         "--tabs-pill-inactive-hover-background-color" => "var(--surface-muted-background-color)",
@@ -128,9 +236,7 @@ module FlatPack
     end
 
     test "alerts and toasts wash status colour instead of filling like buttons" do
-      root_block = @css[/^:root \{.*?^\}/m]
-
-      refute_nil root_block, "expected a :root block in variables.css"
+      refute_nil root_block, "expected a :root, [data-theme] block in variables.css"
 
       {
         "--alert-success-background-color" => "color-mix(in oklab, var(--color-success-background-color) 18%, var(--surface-background-color))",
@@ -168,10 +274,61 @@ module FlatPack
       )
     end
 
+    test "active pill colours alias the primary button tokens" do
+      assert_match(/--tabs-pill-active-background-color:\s*var\(--button-primary-background-color\)/, root_block)
+      assert_match(/--tabs-pill-active-border-color:\s*var\(--button-primary-border-color\)/, root_block)
+      assert_match(/--tabs-pill-active-text-color:\s*var\(--button-primary-text-color\)/, root_block)
+
+      application = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+      assert_includes application, ".fp-pill-button-slots {"
+      assert_includes application, "--tabs-pill-active-background-color: var(--fp-button-background);"
+      refute_includes application, ":not([data-fp-style=\"primary\"])"
+      refute_includes application, "--tabs-pill-default-background-color"
+    end
+
+    test "focus ring and active nav fills follow --color-primary" do
+      {
+        "--color-ring" => "var(--color-primary)",
+        "--sidebar-item-active-background-color" => "var(--color-primary)",
+        "--top-nav-item-active-background-color" => "var(--color-primary)",
+        "--sidebar-item-active-text-color" => "var(--color-primary-text)",
+        "--sidebar-item-active-icon-color" => "var(--color-primary-text)",
+        "--top-nav-item-active-text-color" => "var(--color-primary-text)",
+        "--top-nav-item-active-icon-color" => "var(--color-primary-text)"
+      }.each do |token, value|
+        assert_match(/#{Regexp.escape(token)}:\s*#{Regexp.escape(value)}/, root_block)
+      end
+
+      refute_match(/--color-ring:\s*#333/, root_block)
+      refute_match(/--sidebar-item-active-background-color:\s*#333/, root_block)
+      refute_match(/--top-nav-item-active-background-color:\s*#333/, root_block)
+    end
+
+    test "default palette re-declares on [data-theme] so descendant themes re-resolve" do
+      assert_match(/^:root,\s*\[data-theme\]\s*\{/, @css)
+    end
+
+    test "dark and ocean do not freeze --color-ring; they follow --color-primary" do
+      dark_block = @css[/\[data-theme="dark"\]\s*\{(.*?)\}/m, 1]
+      ocean_block = @css[/\[data-theme="ocean"\]\s*\{(.*?)\}/m, 1]
+
+      refute_includes dark_block, "--color-ring"
+      refute_includes ocean_block, "--color-ring"
+    end
+
+    test "bottom nav bar stays a surface, not a brand fill" do
+      assert_match(/--bottom-nav-background-color:\s*#2f2f2f/, root_block)
+      refute_match(/--bottom-nav-background-color:\s*var\(--color-primary\)/, root_block)
+    end
+
     private
 
     def token_names(block)
       block.to_s.scan(/^\s*(--[a-z0-9-]+)\s*:/).flatten.sort
+    end
+
+    def root_block
+      @css[/^:root(?:,\s*\[data-theme\])?\s*\{.*?^\}/m]
     end
   end
 end

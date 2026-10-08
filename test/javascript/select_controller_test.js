@@ -133,6 +133,7 @@ function loadController() {
   const source = fs.readFileSync(filePath, 'utf8')
   const transformedSource = source
     .replace('import { Controller } from "@hotwired/stimulus"', 'class Controller {}')
+    .replace('import { flatPackCopy } from "flat_pack/copy"', 'function flatPackCopy(key, vars = {}) { const t = ({ "select.remove": "Remove %{label}" })[key] || key; return String(t).replace(/%\\{(\\w+)\\}/g, (_, n) => vars[n] == null ? "" : String(vars[n])) }')
     .replace(
       'import { playOverlayEnter, playOverlayExit, cancelOverlayHide } from "controllers/flat_pack/reduced_motion"',
       `function playOverlayEnter(element) { element.classList.remove("hidden") }

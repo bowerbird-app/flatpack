@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_03_000006) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_07_090000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -110,7 +110,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_03_000006) do
     t.index ["chat_item_id"], name: "index_chat_item_attachments_on_chat_item_id"
     t.check_constraint "\"position\" >= 0", name: "chat_item_attachments_position_non_negative"
     t.check_constraint "byte_size IS NULL OR byte_size >= 0", name: "chat_item_attachments_byte_size_non_negative"
-    t.check_constraint "kind::text = ANY (ARRAY['image'::character varying, 'file'::character varying]::text[])", name: "chat_item_attachments_kind_allowed"
+    t.check_constraint "kind::text = ANY (ARRAY['image'::character varying::text, 'file'::character varying::text])", name: "chat_item_attachments_kind_allowed"
   end
 
   create_table "chat_items", force: :cascade do |t|
@@ -143,6 +143,34 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_03_000006) do
     t.index ["created_at"], name: "index_demo_comments_on_created_at"
     t.index ["parent_comment_id", "created_at", "id"], name: "index_demo_comments_on_parent_and_created"
     t.index ["parent_comment_id"], name: "index_demo_comments_on_parent_comment_id"
+  end
+
+  create_table "demo_people", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "email", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_demo_people_on_email", unique: true
+  end
+
+  create_table "demo_project_people", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "person_id", null: false
+    t.integer "position", null: false
+    t.bigint "project_id", null: false
+    t.string "role", null: false
+    t.datetime "updated_at", null: false
+    t.index ["person_id"], name: "index_demo_project_people_on_person_id"
+    t.index ["project_id", "person_id"], name: "index_demo_project_people_on_project_id_and_person_id", unique: true
+    t.index ["project_id", "position"], name: "index_demo_project_people_on_project_id_and_position"
+    t.index ["project_id"], name: "index_demo_project_people_on_project_id"
+  end
+
+  create_table "demo_projects", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_demo_projects_on_name", unique: true
   end
 
   create_table "demo_table_rows", force: :cascade do |t|
@@ -525,6 +553,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_03_000006) do
   add_foreign_key "chat_item_attachments", "chat_items"
   add_foreign_key "chat_items", "chat_groups"
   add_foreign_key "demo_comments", "demo_comments", column: "parent_comment_id"
+  add_foreign_key "demo_project_people", "demo_people", column: "person_id"
+  add_foreign_key "demo_project_people", "demo_projects", column: "project_id"
   add_foreign_key "recording_studio_api_api_access_tokens", "recording_studio_api_api_credentials", column: "api_credential_id"
   add_foreign_key "recording_studio_api_api_credentials", "recording_studio_api_api_clients", column: "api_client_id"
   add_foreign_key "recording_studio_events", "recording_studio_recordings", column: "recording_id"

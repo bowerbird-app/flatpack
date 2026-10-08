@@ -13,44 +13,61 @@
       When each pill points to a hash on the current page, the selected state stays in sync while the browser handles the scroll.
     </p>
 
-    <%= render FlatPack::Button::Pill::Component.new(
-      class: "mb-4",
-      data: {
-        controller: "pill-buttons-demo",
-        "pill-buttons-demo-active-classes-value": FlatPack::Button::Pill::Component::ITEM_ACTIVE_CLASSES,
-        "pill-buttons-demo-inactive-classes-value": FlatPack::Button::Pill::Component::ITEM_INACTIVE_CLASSES
-      },
-      items: [
-        {
-          text: "Account",
-          href: "#pill-anchor-account",
-          active: true,
-          id: "pill-anchor-account-link",
+    <div class="grid gap-8 md:grid-cols-2 mb-4">
+      <div>
+        <h4 class="text-base font-semibold mb-2">Primary</h4>
+        <p class="text-(--surface-muted-content-color) mb-4">The selected pill uses the primary colour.</p>
+        <%= render FlatPack::Button::Pill::Component.new(
           data: {
-            "pill-buttons-demo-target": "pill",
-            action: "pill-buttons-demo#activate"
-          }
-        },
-        {
-          text: "Billing",
-          href: "#pill-anchor-billing",
-          id: "pill-anchor-billing-link",
-          data: {
-            "pill-buttons-demo-target": "pill",
-            action: "pill-buttons-demo#activate"
-          }
-        },
-        {
-          text: "Team Members",
-          href: "#pill-anchor-members",
-          id: "pill-anchor-members-link",
-          data: {
-            "pill-buttons-demo-target": "pill",
-            action: "pill-buttons-demo#activate"
-          }
-        }
-      ]
-    ) %>
+            controller: "pill-buttons-demo",
+            "pill-buttons-demo-active-classes-value": FlatPack::Button::Pill::Component::ITEM_ACTIVE_CLASSES,
+            "pill-buttons-demo-inactive-classes-value": FlatPack::Button::Pill::Component::ITEM_INACTIVE_CLASSES
+          },
+          items: [
+            {
+              text: "Account",
+              href: "#pill-anchor-account",
+              active: true,
+              id: "pill-anchor-account-link",
+              data: {
+                "pill-buttons-demo-target": "pill",
+                action: "pill-buttons-demo#activate"
+              }
+            },
+            {
+              text: "Billing",
+              href: "#pill-anchor-billing",
+              id: "pill-anchor-billing-link",
+              data: {
+                "pill-buttons-demo-target": "pill",
+                action: "pill-buttons-demo#activate"
+              }
+            },
+            {
+              text: "Team Members",
+              href: "#pill-anchor-members",
+              id: "pill-anchor-members-link",
+              data: {
+                "pill-buttons-demo-target": "pill",
+                action: "pill-buttons-demo#activate"
+              }
+            }
+          ]
+        ) %>
+      </div>
+      <div>
+        <h4 class="text-base font-semibold mb-2">Default</h4>
+        <p class="text-(--surface-muted-content-color) mb-4">The selected pill matches a default button.</p>
+        <%= render FlatPack::Button::Pill::Component.new(
+          style: :default,
+          items: [
+            {text: "Account", href: "#pill-anchor-account", active: true},
+            {text: "Billing", href: "#pill-anchor-billing"},
+            {text: "Team Members", href: "#pill-anchor-members"}
+          ]
+        ) %>
+      </div>
+    </div>
 
     <div class="space-y-4 mb-4">
       <%= render FlatPack::Card::Component.new(id: "pill-anchor-account", style: :flat, padding: :lg, class: "scroll-mt-24") do %>
@@ -108,6 +125,20 @@
               ]
             ) %&gt;
           CODE
+        },
+        {
+          label: "Default",
+          language: "erb",
+          code: CGI.unescapeHTML(<<~'CODE')
+            &lt;%= render FlatPack::Button::Pill::Component.new(
+              style: :default,
+              items: [
+                {text: "Account", href: "#pill-anchor-account", active: true},
+                {text: "Billing", href: "#pill-anchor-billing"},
+                {text: "Team Members", href: "#pill-anchor-members"}
+              ]
+            ) %&gt;
+          CODE
         }
       ]
     ) %>
@@ -150,6 +181,56 @@
       CODE
     ) %>
   </div>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Sizes", anchor_link: true, subtitle: "sm, md (default), and lg change padding and text only.") %>
+  <div class="space-y-4 mb-4">
+    <div>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Small</p>
+      <%= render FlatPack::Button::Pill::Component.new(
+        size: :sm,
+        items: [
+          {text: "Overview", href: "#", active: true},
+          {text: "Details", href: "#"},
+          {text: "Settings", href: "#"}
+        ]
+      ) %>
+    </div>
+    <div>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Medium (default)</p>
+      <%= render FlatPack::Button::Pill::Component.new(
+        size: :md,
+        items: [
+          {text: "Overview", href: "#", active: true},
+          {text: "Details", href: "#"},
+          {text: "Settings", href: "#"}
+        ]
+      ) %>
+    </div>
+    <div>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Large</p>
+      <%= render FlatPack::Button::Pill::Component.new(
+        size: :lg,
+        items: [
+          {text: "Overview", href: "#", active: true},
+          {text: "Details", href: "#"},
+          {text: "Settings", href: "#"}
+        ]
+      ) %>
+    </div>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Button::Pill::Component.new(
+        size: :sm,
+        items: [
+          {text: &quot;Overview&quot;, href: &quot;#&quot;, active: true},
+          {text: &quot;Details&quot;, href: &quot;#&quot;}
+        ]
+      ) %&gt;
+    CODE
+  ) %>
 </section>
 
 <%= render "shared/related_demos",

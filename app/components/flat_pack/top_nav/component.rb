@@ -25,13 +25,13 @@ module FlatPack
 
       def initialize(
         mobile_menu: true,
-        mobile_menu_label: "More navigation items",
+        mobile_menu_label: FlatPack::Copy::OMITTED,
         mobile_breakpoint: 768,
         **system_arguments
       )
         super(**system_arguments)
         @mobile_menu = mobile_menu
-        @mobile_menu_label = mobile_menu_label
+        @mobile_menu_label = fp_text(mobile_menu_label, "top_nav.more")
         @mobile_breakpoint = mobile_breakpoint.to_i
         @always_display = DEFAULT_ALWAYS_DISPLAY.dup
         @menu_id = "flat-pack-top-nav-menu-#{object_id}"
@@ -171,17 +171,17 @@ module FlatPack
           class: header_classes
         )
 
-        return attrs unless @mobile_menu
+        data = {
+          controller: "flat-pack--top-nav",
+          scrolled: "false"
+        }
 
-        attrs[:data] = merge_data_attributes(
-          attrs[:data],
-          {
-            controller: "flat-pack--top-nav",
-            "flat-pack--top-nav-breakpoint-value": @mobile_breakpoint,
-            "flat-pack--top-nav-toggle-open-class": TOGGLE_OPEN_CLASS
-          }
-        )
+        if @mobile_menu
+          data["flat-pack--top-nav-breakpoint-value"] = @mobile_breakpoint
+          data["flat-pack--top-nav-toggle-open-class"] = TOGGLE_OPEN_CLASS
+        end
 
+        attrs[:data] = merge_data_attributes(attrs[:data], data)
         attrs
       end
 
@@ -191,8 +191,7 @@ module FlatPack
           "sticky",
           "top-0",
           "z-10",
-          "bg-[var(--top-nav-background-color)]",
-          "backdrop-blur-lg"
+          "bg-[var(--top-nav-background-color)]"
         )
       end
 

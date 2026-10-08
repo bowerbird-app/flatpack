@@ -24,6 +24,7 @@ Common props used across most input components:
 | `label` | String | `nil` | no | Visible label text. |
 | `help_text` | String | `nil` | no | Optional plain-text guidance rendered below the control using the same muted text style as character counts. Only plain `String` values are accepted; HTML-like content is escaped as text. |
 | `error` | String | `nil` | no | Error message; enables invalid styling and `aria-describedby`. |
+| `chrome` | Symbol | `:field` | no | `:field` keeps the bordered control. `:cell` drops the border, radius, and background so a collection editor cell can draw them. Text input, email, phone, URL, number, password, search, text area, date, time, date-time, and select accept it. Any other name raises `ArgumentError`. |
 | `disabled` | Boolean | `false` | no | Disables interaction and submission for the control. |
 | `required` | Boolean | `false` | no | Marks the control as required. |
 | `**system_arguments` | Hash | `{}` | no | Standard HTML attributes (`id`, `class`, `data`, `aria`, etc.). |
@@ -58,7 +59,7 @@ Component-specific props:
 | `search_endpoint` | String | `nil` | no | Required when `search_mode: :remote`; URL used to fetch Select options. |
 | `search_param` | String | `"q"` | no | Query string parameter name used for remote Select requests. |
 | `min_search_length` | Integer | `2` | no | Minimum query length before remote Select requests are triggered. |
-| `size` | Symbol | `:md` | no | Switch size: `:sm`, `:md`, `:lg` (`Switch`). |
+| `size` | Symbol | `:md` | no | Control density: `:sm`, `:md`, `:lg` for `Switch`, `Checkbox`, and `RadioGroup` (Checkbox/Radio share `--checkbox-size`). |
 
 ## Slots
 None.
@@ -66,6 +67,7 @@ None.
 ## Variants
 - Input classes by type: `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `UrlInput`, `NumberInput`, `DateInput`, `FileInput`
 - Choice inputs: `Checkbox`, `RadioGroup`, `Select`, `Switch`
+- Checkbox and RadioGroup checked paint follows `--color-primary` / `--color-primary-text` via Tailwind arbitrary values (`accent-[var(--color-primary)]`, `checked:bg-[var(--color-primary)]`, `checked:border-[var(--color-primary)]`, `checked:text-[var(--color-primary-text)]`). Rebuild host Tailwind after upgrading if you `@import` FlatPack CSS so those classes are generated.
 - Select rendering modes: native select (`searchable: false`) and custom searchable select (`searchable: true`)
 - Select selection modes: single-value (`multiple: false`) and multi-value (`multiple: true`)
 - In searchable multiselect mode, selected options render as chips inside the trigger
@@ -74,6 +76,7 @@ None.
 - Hierarchical nested multiselect via `FlatPack::Select::Component` with `multiple: true` and option `children:`, including parent/child synchronization, indeterminate parent states, initial selection hydration, and hidden input generation
 - Legacy hierarchical nested multiselect via `flat-pack--nested-multiselect`; prefer Select for new usage
 - Remote Select mode (`search_mode: :remote`) fetches options from `search_endpoint` with `search_param`
+- `chrome: :cell` on those same controls removes the control border. The collection editor cell draws the line, the focus ring, and the error ring. Select menus and their search field keep their own border. A normal form omits `chrome` and stays bordered.
 
 ## Example
 ```erb

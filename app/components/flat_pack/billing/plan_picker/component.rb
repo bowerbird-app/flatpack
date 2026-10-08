@@ -71,10 +71,10 @@ module FlatPack
         def render_plan_badges(item)
           badges = []
           if item[:highlighted]
-            badges << render(FlatPack::Badge::Component.new(text: "Popular", style: :primary, size: :sm))
+            badges << render(FlatPack::Badge::Component.new(text: fp_t("billing.plan_picker.popular"), style: :primary, size: :sm))
           end
           if item[:current]
-            badges << render(FlatPack::Badge::Component.new(text: "Current", style: :success, size: :sm))
+            badges << render(FlatPack::Badge::Component.new(text: fp_t("billing.plan_picker.current"), style: :success, size: :sm))
           end
           return nil if badges.empty?
 
@@ -142,7 +142,7 @@ module FlatPack
             description: normalized[:description],
             features: Array(normalized[:features]),
             href: sanitize_plan_href(normalized[:href]),
-            cta_text: normalized[:cta_text].presence || (normalized[:current] ? "Current plan" : "Get started"),
+            cta_text: normalized[:cta_text].presence || (normalized[:current] ? fp_t("billing.plan_picker.current_plan") : fp_t("billing.plan_picker.get_started")),
             current: !!normalized[:current],
             highlighted: !!normalized[:highlighted]
           }

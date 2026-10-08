@@ -38,6 +38,8 @@ Use Carousel when users need to browse a sequence of visual or rich-content slid
 | `logo_opacity` | Float | `1.0` | no | Opacity for logo images in logo-slider mode (`0.0..1.0`). |
 | `logo_wrapper_background` | String | `nil` | no | Reserved for compatibility (sanitized input); current logo-slider rendering keeps wrapper/viewport transparent. |
 | `aspect_ratio` | String | `"16/9"` | no | CSS aspect ratio (`"16/9"` format). |
+| `show_border` | Boolean | `true` | no | Draw the viewport border. `:logo_slider` stays borderless. |
+| `show_background` | Boolean | `true` | no | Fill the viewport. `:logo_slider` stays transparent. |
 | `responsive` | Boolean | `true` | no | Keep container responsive width behavior. |
 | `touch_swipe` | Boolean | `true` | no | Enable pointer swipe navigation. |
 | `show_captions` | Boolean | `true` | no | Render active slide captions. |
@@ -58,7 +60,10 @@ None.
 - Default count targets: desktop `5`, tablet `3`, mobile `3`.
 - Logo-slider mode only renders image slides (video/html slide payloads are ignored).
 - Fade transition is not supported in logo-slider mode.
-- Wrapper and viewport use no extra margin/padding and remain transparent in logo-slider mode.
+- Wrapper and viewport use no extra margin/padding and remain transparent in logo-slider mode. `show_border` and `show_background` do not change that.
+
+## Viewport chrome
+The default viewport draws a border and a muted fill. `show_border: false` replaces the border with `border-0`. `show_background: false` replaces the fill with `bg-transparent`. Leave a flag on and its token still paints it: `--carousel-viewport-border-color` and `--carousel-viewport-background-color`. A host `style:` that sets those tokens to `transparent` still works while the classes stay on.
 
 ## Side Preview Notes
 - Applies only to `variant: :default` with `transition: :slide`.
@@ -76,7 +81,7 @@ The dummy app consolidates carousel behavior (basic, autoplay, thumbnails, trans
   slides: [
     {type: :image, src: "https://images.example.com/hero.jpg", alt: "Hero", caption: "Hero image", lightbox: true},
     {type: :video, src: "https://videos.example.com/teaser.mp4", poster: "https://images.example.com/poster.jpg", caption: "Teaser"},
-    {type: :html, html: "<div class='p-6'><h3>Release Notes</h3><p>Shipped this week.</p></div>", caption: "Custom card"}
+    {type: :html, html: "<div class='p-6'><h3>Release Notes</h3><p>Shipped this week.</p></div>", thumb_src: "https://images.example.com/notes.jpg", caption: "Custom card"}
   ],
   show_thumbs: true,
   autoplay: true,
@@ -112,7 +117,9 @@ The dummy app consolidates carousel behavior (basic, autoplay, thumbnails, trans
   show_controls: true,
   show_indicators: true,
   show_captions: true,
-  caption_mode: :below
+  caption_mode: :below,
+  show_border: false,
+  show_background: false
 ) %>
 ```
 
@@ -122,9 +129,9 @@ The dummy app consolidates carousel behavior (basic, autoplay, thumbnails, trans
 | `type` | image, video, html | `:image`, `:video`, `:html` | inferred | Optional if inferable from payload. |
 | `src` | image, video | String URL | required | Required for image/video slides. |
 | `url` | image | String URL | `nil` | Optional click-through URL. In `:logo_slider` mode, wraps the logo image in a link that opens in a new tab. |
-| `thumb_src` | image | String URL | `nil` | Thumbnail source for `show_thumbs`. |
-| `thumb` | image | String URL | `nil` | Alias for `thumb_src`. |
-| `alt` | image | String | `"Slide n"` | Falls back to slide index label. |
+| `thumb_src` | image, html | String URL | `nil` | Thumbnail for `show_thumbs`. Image slides fall back to `src`. HTML slides without a usable URL show the slide number. |
+| `thumb` | image, html | String URL | `nil` | Alias for `thumb_src`. |
+| `alt` | image | String | I18n `flatpack.carousel.slide_fallback` | Falls back to the kit copy for slide `%{number}`. |
 | `caption` | image, video, html | String | `""` | Used by caption rendering modes. |
 | `lightbox` | image, video, html | `true`, `false` | image: `true`, others: `false` | Only image slides can actually open lightbox. |
 | `poster` | video | String URL | `nil` | Poster image behind video element. |
@@ -133,6 +140,8 @@ The dummy app consolidates carousel behavior (basic, autoplay, thumbnails, trans
 | `video_loop` | video | `true`, `false` | `false` | Passed to `<video loop>`. |
 | `playsinline` | video | `true`, `false` | `true` | Passed to `<video playsinline>`. |
 | `html` | html | String HTML | required for `:html` | HTML content is sanitized before render. |
+
+HTML slides use the same `thumb_src` and `thumb` keys as images. A safe URL (`http`, `https`, or a relative path) becomes the thumbnail. Leave it off, or pass a rejected URL, and the thumb stays the slide number. Video thumbnails still come from `poster`.
 
 ## JS API (owl-style)
 The Stimulus controller exposes methods both as component actions and as an imperative API:

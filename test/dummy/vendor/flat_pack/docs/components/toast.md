@@ -16,6 +16,7 @@ Use Toast for non-blocking feedback such as success confirmations, warnings, and
 | `style` | Symbol | `:info` | no | Visual style: `:info`, `:success`, `:warning`, `:danger`. |
 | `timeout` | Integer | `5000` | no | Auto-dismiss timeout in milliseconds; must be non-negative. |
 | `dismissible` | Boolean | `true` | no | Shows dismiss button and allows manual dismissal when true. |
+| `size` | Symbol | `:md` | no | Density for padding, gap, and text: `:sm`, `:md`, `:lg`. `:md` matches `--toast-padding` 1rem. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for toast root. |
 
 ## Slots

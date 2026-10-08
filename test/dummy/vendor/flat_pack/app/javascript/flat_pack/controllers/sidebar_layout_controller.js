@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { prefersReducedMotion } from "controllers/flat_pack/reduced_motion"
 
 export default class extends Controller {
   static targets = ["sidebar", "backdrop", "desktopToggle", "collapsedToggle", "mobileToggle", "headerLabel", "headerBrand", "headerRow", "footer", "scrollContainer"]
@@ -9,7 +10,6 @@ export default class extends Controller {
   }
 
   connect() {
-    this.desktopRevealTimeout = null
     this.collapsed = false
     this.mobileOpen = false
     this.isMobile = window.innerWidth < 768
@@ -32,7 +32,7 @@ export default class extends Controller {
     if (!this.isMobile) {
       this.sidebarTarget.style.pointerEvents = ""
       this.applySidebarPresentationMode()
-      this.applyDesktopState()
+      this.applyDesktopState({ immediate: true })
     } else {
       this.applySidebarPresentationMode()
       this.sidebarTarget.style.pointerEvents = "none"
@@ -57,23 +57,12 @@ export default class extends Controller {
     this.element.addEventListener("click", this.handleSidebarLinkClick, true)
     this.bindScrollPersistenceListener()
 
-    // If this page was pre-restored during turbo:before-render, do not re-apply.
-    const preRestored = this.currentScrollContainer()?.dataset?.flatPackScrollPreRestored === "true"
-    if (!preRestored) {
-      // Restore on direct page loads/non-Turbo navigations.
-      const hasPersistedScrollState = !!this.readScrollState()
-      if (hasPersistedScrollState) {
-        this.restoreScrollPosition()
-      }
-    } else {
-      delete this.currentScrollContainer().dataset.flatPackScrollPreRestored
-    }
-
-    this.scrollActiveItemIntoView()
+    // Groups apply open state after this parent controller connects. Wait until
+    // that height is in so a long list can restore the real scrollTop.
+    this.scheduleScrollRestore()
   }
 
   disconnect() {
-    this.clearDesktopRevealTimeout()
     window.removeEventListener("resize", this.handleResize)
     document.removeEventListener("turbo:before-cache", this.handleTurboBeforeCache)
     document.removeEventListener("turbo:before-render", this.handleTurboBeforeRender)
@@ -99,7 +88,7 @@ export default class extends Controller {
         // Switched to desktop - apply saved state
         this.applySidebarPresentationMode()
         this.sidebarTarget.style.pointerEvents = ""
-        this.applyDesktopState()
+        this.applyDesktopState({ immediate: true })
       }
     }
   }
@@ -109,7 +98,14 @@ export default class extends Controller {
 
     const opening = this.collapsed
     this.collapsed = !this.collapsed
-    this.applyDesktopState({ delayContentReveal: opening })
+
+    if (opening) {
+      this.clearCollapsedRestState()
+    } else {
+      this.applyCollapsedHeaderChrome()
+    }
+
+    this.applyDesktopState({ immediate: prefersReducedMotion() })
     this.saveDesktopState()
   }
 
@@ -214,7 +210,7 @@ export default class extends Controller {
     }
   }
 
-  applyDesktopState({ delayContentReveal = false } = {}) {
+  applyDesktopState() {
     if (this.isMobile) return
 
     // Width is driven by CSS via the data-flat-pack-sidebar-collapsed attribute
@@ -230,37 +226,7 @@ export default class extends Controller {
       if (sidebarContent) sidebarContent.style.width = "16rem"
     }
 
-    // Update desktop toggle if exists
-    if (this.hasDesktopToggleTarget) {
-      this.desktopToggleTarget.setAttribute("aria-expanded", !this.collapsed)
-      if (this.collapsed) {
-        this.desktopToggleTarget.classList.add("hidden")
-      } else {
-        this.desktopToggleTarget.classList.remove("hidden")
-      }
-      
-      // Update chevron rotation
-      const chevron = this.desktopToggleTarget.querySelector('[data-flat-pack--sidebar-layout-target="chevron"]')
-      if (chevron) {
-        if (this.collapsed) {
-          chevron.style.transform = "rotate(180deg)"
-        } else {
-          chevron.style.transform = "rotate(0deg)"
-        }
-      }
-    }
-
-    // Update collapsed-state toggle visibility
-    if (this.hasCollapsedToggleTarget) {
-      this.collapsedToggleTarget.setAttribute("aria-expanded", this.collapsed ? "false" : "true")
-      if (this.collapsed) {
-        this.collapsedToggleTarget.classList.remove("hidden")
-        this.collapsedToggleTarget.classList.add("flex")
-      } else {
-        this.collapsedToggleTarget.classList.add("hidden")
-        this.collapsedToggleTarget.classList.remove("flex")
-      }
-    }
+    this.syncToggleAria()
 
     this.sidebarTarget.dataset.flatPackSidebarCollapsed = this.collapsed ? "true" : "false"
     if (sidebarContent) {
@@ -269,118 +235,134 @@ export default class extends Controller {
 
     this.updateCollapsedScrollContainerState()
 
-    this.clearDesktopRevealTimeout()
-
-    if (this.collapsed) {
-      this.setDesktopExpandedContentVisible(false)
+    if (!this.collapsed) {
+      this.clearCollapsedRestState()
       return
     }
 
-    if (delayContentReveal) {
-      this.setDesktopExpandedContentVisible(false)
-      this.desktopRevealTimeout = setTimeout(() => {
-        if (!this.isMobile && !this.collapsed) {
-          this.setDesktopExpandedContentVisible(true)
-        }
-      }, 300)
-      return
-    }
-
-    this.setDesktopExpandedContentVisible(true)
+    this.applyCollapsedHeaderChrome()
   }
 
-  setDesktopExpandedContentVisible(visible) {
-    const headerBrands = this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-layout-target="headerBrand"]')
-    headerBrands.forEach(brand => {
-      if (visible) {
-        brand.classList.remove("hidden")
-      } else {
-        brand.classList.add("hidden")
+  syncToggleAria() {
+    if (this.hasDesktopToggleTarget) {
+      this.desktopToggleTarget.setAttribute("aria-expanded", this.collapsed ? "false" : "true")
+      const chevron = this.desktopToggleTarget.querySelector('[data-flat-pack--sidebar-layout-target="chevron"]')
+      if (chevron) {
+        chevron.style.transform = this.collapsed ? "rotate(180deg)" : "rotate(0deg)"
       }
-    })
+    }
 
-    // Only toggle text label spans (avoid containers like .flex-1 overflow-y-auto)
-    const labels = this.sidebarTarget.querySelectorAll("a > span.flex-1, button > span.flex-1")
-    labels.forEach(label => {
-      if (visible) {
+    if (this.hasCollapsedToggleTarget) {
+      this.collapsedToggleTarget.setAttribute("aria-expanded", this.collapsed ? "false" : "true")
+    }
+  }
+
+  applyCollapsedHeaderChrome() {
+    this.headerBrandNodes().forEach((brand) => {
+      brand.classList.add("hidden")
+    })
+    this.setCollapsedToggleButtons(true)
+  }
+
+  clearCollapsedRestState() {
+    this.labelNodes().forEach((label) => {
+      if (label.dataset.flatPackSidebarRestHidden === "true") {
         label.classList.remove("sr-only")
-      } else if (!label.classList.contains("sr-only")) {
-        label.classList.add("sr-only")
+        delete label.dataset.flatPackSidebarRestHidden
       }
     })
 
-    const headerLabels = this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-layout-target="headerLabel"]')
-    headerLabels.forEach(label => {
-      if (visible) {
-        label.classList.remove("sr-only")
-      } else {
-        label.classList.add("sr-only")
-      }
+    this.itemNodes().forEach((item) => {
+      item.classList.remove("px-1", "justify-center")
+      item.classList.add("px-4")
     })
 
-    const footers = this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-layout-target="footer"]')
-    footers.forEach(footer => {
-      if (visible) {
-        footer.classList.remove("hidden")
-      } else {
-        footer.classList.add("hidden")
-      }
+    this.sectionTitleNodes().forEach((title) => {
+      title.classList.remove("px-1")
+      title.classList.add("px-4")
     })
 
-    // Group items are rendered with indent for expanded mode.
-    // Remove that indent in collapsed mode so icons align with top-level items.
-    const groupPanels = this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-group-target="panel"]')
-    groupPanels.forEach(panel => {
-      if (visible) {
-        panel.classList.add("pl-[var(--sidebar-group-item-indent)]")
-      } else {
-        panel.classList.remove("pl-[var(--sidebar-group-item-indent)]")
-      }
+    this.groupPanelNodes().forEach((panel) => {
+      panel.classList.add("pl-[var(--sidebar-group-item-indent)]")
     })
 
-    // Hide group chevrons when collapsed so only icons remain visible.
-    const groupChevrons = this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-group-target="chevron"]')
-    groupChevrons.forEach(chevron => {
-      if (visible) {
-        chevron.classList.remove("hidden")
-      } else {
-        chevron.classList.add("hidden")
-      }
+    this.groupChevronNodes().forEach((chevron) => {
+      chevron.classList.remove("hidden")
     })
 
-    // Adjust item link/button padding and alignment for collapsed (icon-only) mode.
-    const sidebarItemLinks = this.sidebarTarget.querySelectorAll('[data-flat-pack-sidebar-item="true"]')
-    sidebarItemLinks.forEach(item => {
-      if (visible) {
-        item.classList.remove("px-1", "justify-center")
-        item.classList.add("px-4")
-      } else {
-        item.classList.remove("px-4")
-        item.classList.add("px-1", "justify-center")
-      }
+    this.footerNodes().forEach((footer) => {
+      footer.classList.remove("hidden")
     })
 
-    // Center the header row content when collapsed (icon-only mode).
-    const headerRows = this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-layout-target="headerRow"]')
-    headerRows.forEach(row => {
-      if (visible) {
-        row.classList.remove("justify-center")
-      } else {
-        row.classList.add("justify-center")
-      }
+    this.headerRowNodes().forEach((row) => {
+      row.classList.remove("justify-center")
     })
 
-    // Adjust section title padding for collapsed (icon-only) mode.
-    const sectionTitles = this.sidebarTarget.querySelectorAll('[data-flat-pack-sidebar-section-title="true"]')
-    sectionTitles.forEach(title => {
-      if (visible) {
-        title.classList.remove("px-1")
-        title.classList.add("px-4")
-      } else {
-        title.classList.remove("px-4")
-        title.classList.add("px-1")
-      }
+    this.headerBrandNodes().forEach((brand) => {
+      brand.classList.remove("hidden")
     })
+
+    this.setCollapsedToggleButtons(false)
+  }
+
+  setCollapsedToggleButtons(collapsed) {
+    if (this.hasDesktopToggleTarget) {
+      this.desktopToggleTarget.classList.toggle("hidden", collapsed)
+    }
+
+    if (this.hasCollapsedToggleTarget) {
+      if (collapsed) {
+        this.collapsedToggleTarget.classList.remove("hidden")
+        this.collapsedToggleTarget.classList.add("flex")
+      } else {
+        this.collapsedToggleTarget.classList.add("hidden")
+        this.collapsedToggleTarget.classList.remove("flex")
+      }
+    }
+  }
+
+  labelNodes() {
+    const nodes = this.sidebarTarget.querySelectorAll(
+      ".fp-sidebar-label, a > span.flex-1, button > span.flex-1, [data-flat-pack--sidebar-layout-target='headerLabel']"
+    )
+
+    return Array.from(nodes).filter((node) => !this.isSectionTitleLabel(node))
+  }
+
+  isSectionTitleLabel(node) {
+    return !!node.closest?.('[data-flat-pack-sidebar-section-title="true"]')
+  }
+
+  itemNodes() {
+    return this.sidebarTarget.querySelectorAll('[data-flat-pack-sidebar-item="true"]')
+  }
+
+  navItemNodes() {
+    return this.sidebarTarget.querySelectorAll('a[data-flat-pack-sidebar-item="true"]')
+  }
+
+  sectionTitleNodes() {
+    return this.sidebarTarget.querySelectorAll('[data-flat-pack-sidebar-section-title="true"]')
+  }
+
+  groupPanelNodes() {
+    return this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-group-target="panel"]')
+  }
+
+  groupChevronNodes() {
+    return this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-group-target="chevron"]')
+  }
+
+  footerNodes() {
+    return this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-layout-target="footer"]')
+  }
+
+  headerRowNodes() {
+    return this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-layout-target="headerRow"]')
+  }
+
+  headerBrandNodes() {
+    return this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-layout-target="headerBrand"]')
   }
 
   updateCollapsedScrollContainerState() {
@@ -388,13 +370,6 @@ export default class extends Controller {
     if (!scrollContainer) return
 
     scrollContainer.classList.toggle("fp-scrollbar-hidden", this.collapsed)
-  }
-
-  clearDesktopRevealTimeout() {
-    if (this.desktopRevealTimeout) {
-      clearTimeout(this.desktopRevealTimeout)
-      this.desktopRevealTimeout = null
-    }
   }
 
   applySidebarPresentationMode() {
@@ -445,10 +420,28 @@ export default class extends Controller {
   }
 
   handleTurboLoad() {
-    // activateSidebarNav() in the layout runs on turbo:load and sets aria-current="page".
-    // Calling scrollActiveItemIntoView() here (after that listener) ensures the sidebar
-    // is scrolled to the active item on every navigation and direct page load.
-    this.scrollActiveItemIntoView()
+    const scrollContainer = this.currentScrollContainer()
+    if (scrollContainer?.dataset?.flatPackScrollPreRestored === "true") {
+      delete scrollContainer.dataset.flatPackScrollPreRestored
+    }
+
+    this.scheduleScrollRestore()
+  }
+
+  scheduleScrollRestore() {
+    const restore = () => {
+      this.restoreScrollPosition({correctWithAnchor: true})
+      this.scrollActiveItemIntoView()
+    }
+
+    if (typeof requestAnimationFrame !== "function") {
+      restore()
+      return
+    }
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(restore)
+    })
   }
 
   handleTurboBeforeRender(event) {
@@ -468,12 +461,82 @@ export default class extends Controller {
     const link = event.target.closest("a[href]")
     if (!link || !this.sidebarTarget.contains(link)) return
 
+    if (this.isPrimarySidebarNavClick(event, link)) {
+      this.markItemCurrent(link)
+    }
+
     const scrollContainer = this.currentScrollContainer()
     if (!scrollContainer) return
 
     this.lastAnchorPath = this.normalizePath(link.href)
     this.lastAnchorOffset = link.getBoundingClientRect().top - scrollContainer.getBoundingClientRect().top
     this.persistScrollState()
+  }
+
+  isPrimarySidebarNavClick(event, link) {
+    if (event.defaultPrevented) return false
+    if (event.button && event.button !== 0) return false
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return false
+    if (link.target && link.target !== "_self") return false
+
+    return link.matches('a[data-flat-pack-sidebar-item="true"]')
+  }
+
+  markItemCurrent(link) {
+    this.navItemNodes().forEach((item) => {
+      if (item === link) {
+        this.applyItemCurrent(item)
+      } else {
+        this.clearItemCurrent(item)
+      }
+    })
+  }
+
+  applyItemCurrent(item) {
+    item.classList.remove(...this.inactiveItemClasses())
+    item.classList.add(...this.activeItemClasses())
+    item.setAttribute("aria-current", "page")
+
+    const iconEl = item.querySelector('[data-flat-pack-sidebar-item-icon="true"]')
+    if (!iconEl) return
+
+    iconEl.classList.remove(this.inactiveIconClass())
+    iconEl.classList.add(this.activeIconClass())
+  }
+
+  clearItemCurrent(item) {
+    item.classList.remove(...this.activeItemClasses())
+    item.classList.add(...this.inactiveItemClasses())
+    item.removeAttribute("aria-current")
+
+    const iconEl = item.querySelector('[data-flat-pack-sidebar-item-icon="true"]')
+    if (!iconEl) return
+
+    iconEl.classList.remove(this.activeIconClass())
+    iconEl.classList.add(this.inactiveIconClass())
+  }
+
+  activeItemClasses() {
+    return [
+      "bg-[var(--sidebar-item-active-background-color)]",
+      "text-[var(--sidebar-item-active-text-color)]"
+    ]
+  }
+
+  inactiveItemClasses() {
+    return [
+      "text-[var(--sidebar-item-text-color)]",
+      "hover:bg-[var(--sidebar-item-hover-background-color)]",
+      "hover:text-[var(--sidebar-item-hover-text-color)]"
+    ]
+  }
+
+  activeIconClass() {
+    return "text-[var(--sidebar-item-active-icon-color)]"
+  }
+
+  inactiveIconClass() {
+    return "text-[var(--sidebar-item-icon-color)]"
   }
 
   handleSidebarScroll() {
@@ -608,10 +671,16 @@ export default class extends Controller {
     if (!activeItem) return
 
     requestAnimationFrame(() => {
-      // Align active navigation item to the top edge of the scroll container.
       const containerRect = scrollContainer.getBoundingClientRect()
       const itemRect = activeItem.getBoundingClientRect()
-      scrollContainer.scrollTop += itemRect.top - containerRect.top
+
+      if (itemRect.top >= containerRect.top && itemRect.bottom <= containerRect.bottom) return
+
+      if (itemRect.top < containerRect.top) {
+        scrollContainer.scrollTop += itemRect.top - containerRect.top
+      } else if (itemRect.bottom > containerRect.bottom) {
+        scrollContainer.scrollTop += itemRect.bottom - containerRect.bottom
+      }
 
       this.persistScrollState()
     })

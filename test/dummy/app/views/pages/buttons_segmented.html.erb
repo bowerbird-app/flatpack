@@ -4,15 +4,16 @@
 ) %>
 
 
-<!-- Segmented Buttons -->
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Segmented Buttons (Selected State)", anchor_link: true, subtitle: "Examples for Segmented Buttons (Selected State).") %>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Primary", anchor_link: true, subtitle: "The selected button uses the primary colour.") %>
   <div class="mb-4">
     <%= render FlatPack::SegmentedButtons::Component.new(
       data: {
         controller: "segmented-buttons-demo",
-        segmented_buttons_demo_active_classes_value: FlatPack::Button::Component::SCHEMES[:primary],
-        segmented_buttons_demo_inactive_classes_value: FlatPack::Button::Component::SCHEMES[:secondary]
+        segmented_buttons_demo_active_style_value: "primary",
+        segmented_buttons_demo_inactive_style_value: "secondary",
+        segmented_buttons_demo_active_press_class_value: FlatPack::Button::StyleRegistry.press_class(:primary),
+        segmented_buttons_demo_inactive_press_class_value: FlatPack::Button::StyleRegistry.press_class(:secondary)
       }
     ) do |group| %>
       <% group.button(text: "Day", selected: true, aria: { pressed: true }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" }) %>
@@ -21,12 +22,19 @@
       <% group.button(text: "Year", aria: { pressed: false }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" }) %>
     <% end %>
   </div>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Default", anchor_link: true, subtitle: "The selected button matches a default button.") %>
   <div class="mb-4">
     <%= render FlatPack::SegmentedButtons::Component.new(
+      style: :default,
       data: {
         controller: "segmented-buttons-demo",
-        segmented_buttons_demo_active_classes_value: FlatPack::Button::Component::SCHEMES[:primary],
-        segmented_buttons_demo_inactive_classes_value: FlatPack::Button::Component::SCHEMES[:secondary]
+        segmented_buttons_demo_active_style_value: "default",
+        segmented_buttons_demo_inactive_style_value: "secondary",
+        segmented_buttons_demo_active_press_class_value: FlatPack::Button::StyleRegistry.press_class(:default),
+        segmented_buttons_demo_inactive_press_class_value: FlatPack::Button::StyleRegistry.press_class(:secondary)
       }
     ) do |group| %>
       <% group.button(text: "List", aria: { pressed: false }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" }) %>
@@ -39,14 +47,69 @@
       &lt;%= render FlatPack::SegmentedButtons::Component.new(
         data: {
           controller: "segmented-buttons-demo",
-          segmented_buttons_demo_active_classes_value: FlatPack::Button::Component::SCHEMES[:primary],
-          segmented_buttons_demo_inactive_classes_value: FlatPack::Button::Component::SCHEMES[:secondary]
+          segmented_buttons_demo_active_style_value: "primary",
+          segmented_buttons_demo_inactive_style_value: "secondary",
+          segmented_buttons_demo_active_press_class_value: FlatPack::Button::StyleRegistry.press_class(:primary),
+          segmented_buttons_demo_inactive_press_class_value: FlatPack::Button::StyleRegistry.press_class(:secondary)
         }
       ) do |group| %&gt;
         &lt;% group.button(text: "Day", selected: true, aria: { pressed: true }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" }) %&gt;
         &lt;% group.button(text: "Week", aria: { pressed: false }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" }) %&gt;
         &lt;% group.button(text: "Month", aria: { pressed: false }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" }) %&gt;
         &lt;% group.button(text: "Year", aria: { pressed: false }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" }) %&gt;
+      &lt;% end %&gt;
+
+      &lt;%= render FlatPack::SegmentedButtons::Component.new(
+        style: :default,
+        data: {
+          controller: "segmented-buttons-demo",
+          segmented_buttons_demo_active_style_value: "default",
+          segmented_buttons_demo_inactive_style_value: "secondary",
+          segmented_buttons_demo_active_press_class_value: FlatPack::Button::StyleRegistry.press_class(:default),
+          segmented_buttons_demo_inactive_press_class_value: FlatPack::Button::StyleRegistry.press_class(:secondary)
+        }
+      ) do |group| %&gt;
+        &lt;% group.button(text: "List", aria: { pressed: false }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" }) %&gt;
+        &lt;% group.button(text: "Grid", selected: true, aria: { pressed: true }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" }) %&gt;
+        &lt;% group.button(text: "Table", aria: { pressed: false }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" }) %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Sizes", anchor_link: true, subtitle: "Group size: forwards into each button. Pass size: on a button to override.") %>
+  <div class="space-y-4 mb-4">
+    <div>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Small</p>
+      <%= render FlatPack::SegmentedButtons::Component.new(size: :sm) do |group| %>
+        <% group.button(text: "Day", selected: true) %>
+        <% group.button(text: "Week") %>
+        <% group.button(text: "Month") %>
+      <% end %>
+    </div>
+    <div>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Medium (default)</p>
+      <%= render FlatPack::SegmentedButtons::Component.new(size: :md) do |group| %>
+        <% group.button(text: "Day", selected: true) %>
+        <% group.button(text: "Week") %>
+        <% group.button(text: "Month") %>
+      <% end %>
+    </div>
+    <div>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Large</p>
+      <%= render FlatPack::SegmentedButtons::Component.new(size: :lg) do |group| %>
+        <% group.button(text: "Day", selected: true) %>
+        <% group.button(text: "Week") %>
+        <% group.button(text: "Month") %>
+      <% end %>
+    </div>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::SegmentedButtons::Component.new(size: :sm) do |group| %&gt;
+        &lt;% group.button(text: &quot;Day&quot;, selected: true) %&gt;
+        &lt;% group.button(text: &quot;Week&quot;) %&gt;
       &lt;% end %&gt;
     CODE
   ) %>

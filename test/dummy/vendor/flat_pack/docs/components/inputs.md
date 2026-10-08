@@ -58,7 +58,7 @@ Component-specific props:
 | `search_endpoint` | String | `nil` | no | Required when `search_mode: :remote`; URL used to fetch Select options. |
 | `search_param` | String | `"q"` | no | Query string parameter name used for remote Select requests. |
 | `min_search_length` | Integer | `2` | no | Minimum query length before remote Select requests are triggered. |
-| `size` | Symbol | `:md` | no | Switch size: `:sm`, `:md`, `:lg` (`Switch`). |
+| `size` | Symbol | `:md` | no | Control density: `:sm`, `:md`, `:lg` for `Switch`, `Checkbox`, and `RadioGroup` (Checkbox/Radio share `--checkbox-size`). |
 
 ## Slots
 None.
@@ -66,6 +66,7 @@ None.
 ## Variants
 - Input classes by type: `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `UrlInput`, `NumberInput`, `DateInput`, `FileInput`
 - Choice inputs: `Checkbox`, `RadioGroup`, `Select`, `Switch`
+- Checkbox and RadioGroup checked paint follows `--color-primary` / `--color-primary-text` via Tailwind arbitrary values (`accent-[var(--color-primary)]`, `checked:bg-[var(--color-primary)]`, `checked:border-[var(--color-primary)]`, `checked:text-[var(--color-primary-text)]`). Rebuild host Tailwind after upgrading if you `@import` FlatPack CSS so those classes are generated.
 - Select rendering modes: native select (`searchable: false`) and custom searchable select (`searchable: true`)
 - Select selection modes: single-value (`multiple: false`) and multi-value (`multiple: true`)
 - In searchable multiselect mode, selected options render as chips inside the trigger

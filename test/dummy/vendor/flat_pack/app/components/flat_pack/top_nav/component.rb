@@ -171,17 +171,17 @@ module FlatPack
           class: header_classes
         )
 
-        return attrs unless @mobile_menu
+        data = {
+          controller: "flat-pack--top-nav",
+          scrolled: "false"
+        }
 
-        attrs[:data] = merge_data_attributes(
-          attrs[:data],
-          {
-            controller: "flat-pack--top-nav",
-            "flat-pack--top-nav-breakpoint-value": @mobile_breakpoint,
-            "flat-pack--top-nav-toggle-open-class": TOGGLE_OPEN_CLASS
-          }
-        )
+        if @mobile_menu
+          data["flat-pack--top-nav-breakpoint-value"] = @mobile_breakpoint
+          data["flat-pack--top-nav-toggle-open-class"] = TOGGLE_OPEN_CLASS
+        end
 
+        attrs[:data] = merge_data_attributes(attrs[:data], data)
         attrs
       end
 
@@ -191,8 +191,7 @@ module FlatPack
           "sticky",
           "top-0",
           "z-10",
-          "bg-[var(--top-nav-background-color)]",
-          "backdrop-blur-lg"
+          "bg-[var(--top-nav-background-color)]"
         )
       end
 
