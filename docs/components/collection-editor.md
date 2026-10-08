@@ -152,7 +152,7 @@ Each cell edits one value. The row is not a calculated spreadsheet. Do not use i
 
 The heading sits outside the bordered list. The list, the column headers, the empty state, and the add row stay in that card. The add row is a full-width ghost button at the bottom of the table. The plus icon stays, and the default label is "Row", so it reads "+ Row".
 
-The template repeats the entity picker and the role field. The add button clones it and replaces `NEW_RECORD` inside `name`, `id`, `for`, `data-id`, and the aria attributes that point at those ids. Text in the row is left as written. Rails 8 strong parameters keep nested attribute keys that are integers, so the index is numeric rather than a prefixed token. Rails accepts that index in `project_people_attributes`.
+The template repeats the entity picker and the role field. The add button clones it and replaces `NEW_RECORD` inside `name`, `id`, `for`, `data-id`, `data-results-id`, and the aria attributes that point at those ids. Text in the row is left as written. Rails 8 strong parameters keep nested attribute keys that are integers, so the index is numeric rather than a prefixed token. Rails accepts that index in `project_people_attributes`.
 
 Selecting a person writes `person_id` and shows the name as an info chip. The email stays off the chip. The chip remove control drops the row. A saved row sets `_destroy`. An unsaved row leaves the document. The person record stays. Role stays on `ProjectPerson` until that row is removed.
 

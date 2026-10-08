@@ -40,7 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `orderable:` on List still drags the whole row when `handle_selector` is omitted.
 - Importmap apps load `collection_editor_controller.js` from the existing controllers pin.
 - Bundled apps that copy the esbuild list in `docs/installation.md` add `CollectionEditorController` and `application.register("flat-pack--collection-editor", CollectionEditorController)`.
-- New nested child indexes must be integers. Rails 8 `permit` drops any other nested-attribute key. The template placeholder `NEW_RECORD` is replaced in `name`, `id`, `for`, `data-id`, and the aria attributes that point at those ids. Text in the row is left as written.
+- New nested child indexes must be integers. Rails 8 `permit` drops any other nested-attribute key. The template placeholder `NEW_RECORD` is replaced in `name`, `id`, `for`, `data-id`, `data-results-id`, and the aria attributes that point at those ids. Text in the row is left as written.
 - FlatPack does not store order. A host that already uses Recording Studio Orderable keeps that API. Pass its URL and parameter names to the collection editor.
 - Reload kit CSS and JavaScript.
 - Redeploy so `meta.gem_version` shows `0.1.204`.

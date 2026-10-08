@@ -483,12 +483,13 @@ test("create ignores a second submit while the first is in flight", async () => 
 
 test("template index replacement leaves visible text alone", () => {
   const controller = harness()
-  const html = '<label for="role_NEW_RECORD">Role</label><input name="project[project_people_attributes][NEW_RECORD][role]" id="role_NEW_RECORD" value="NEW_RECORD"><p>Code NEW_RECORD</p>'
+  const html = '<label for="role_NEW_RECORD">Role</label><input name="project[project_people_attributes][NEW_RECORD][role]" id="role_NEW_RECORD" value="NEW_RECORD"><div data-results-id="fp-collection-editor-demo_project_project_people_attributes_NEW_RECORD_person_id-results"></div><p>Code NEW_RECORD</p>'
   const replaced = controller.replaceTemplateIndex(html, "NEW_RECORD", "42")
 
   assert.match(replaced, /name="project\[project_people_attributes\]\[42\]\[role\]"/)
   assert.match(replaced, /id="role_42"/)
   assert.match(replaced, /for="role_42"/)
+  assert.match(replaced, /data-results-id="fp-collection-editor-demo_project_project_people_attributes_42_person_id-results"/)
   assert.match(replaced, /value="NEW_RECORD"/)
   assert.match(replaced, /<p>Code NEW_RECORD<\/p>/)
 })

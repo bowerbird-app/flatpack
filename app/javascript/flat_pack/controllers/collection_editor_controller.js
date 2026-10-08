@@ -272,6 +272,7 @@ export default class extends Controller {
 
     option.addEventListener("click", (event) => {
       event.preventDefault()
+      event.stopPropagation()
       this.applySelection(row, option.dataset)
     })
 
@@ -290,6 +291,7 @@ export default class extends Controller {
     option.id = `${list?.id || "collection-editor-option"}-${row._optionSerial}`
     option.addEventListener("click", (event) => {
       event.preventDefault()
+      event.stopPropagation()
       this.promptCreate(event)
     })
     return option
@@ -560,7 +562,7 @@ export default class extends Controller {
   replaceTemplateIndex(html, token, index) {
     if (!token) return html
 
-    const pattern = /(\s(?:name|id|for|data-id|aria-controls|aria-labelledby|aria-describedby|aria-activedescendant)\s*=\s*)(["'])([\s\S]*?)\2/gi
+    const pattern = /(\s(?:name|id|for|data-id|data-results-id|aria-controls|aria-labelledby|aria-describedby|aria-activedescendant)\s*=\s*)(["'])([\s\S]*?)\2/gi
     return html.replace(pattern, (match, prefix, quote, value) => {
       if (!value.includes(token)) return match
       return `${prefix}${quote}${value.split(token).join(index)}${quote}`
