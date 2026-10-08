@@ -1017,6 +1017,20 @@
         { variable: "size", accepts: ":sm, :md, :lg", example: "size: :lg" }
       ]
     },
+    section_title: {
+      label: "Section Title",
+      method_call: "render FlatPack::SectionTitle::Component.new(title: \"Members\", subtitle: \"Who can access this workspace\", size: :md, spacing: :none)",
+      variables: [
+        { variable: "title", accepts: "String (required)", example: "title: \"Members\"" },
+        { variable: "subtitle", accepts: "String or nil", example: "subtitle: \"Who can access this workspace\"" },
+        { variable: "anchor_link", accepts: "true, false", example: "anchor_link: true" },
+        { variable: "anchor_id", accepts: "String or nil", example: "anchor_id: \"members\"" },
+        { variable: "size", accepts: ":lg, :md, :sm", example: "size: :md" },
+        { variable: "spacing", accepts: ":lg, :md, :sm, :none", example: "spacing: :none" },
+        { variable: "level", accepts: ":h1, :h2, :h3, :h4, :h5, :h6", example: "level: :h3" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"mb-3\", id: \"members\"" }
+      ]
+    },
     pagination: {
       label: "Pagination",
       method_call: "render FlatPack::Pagination::Component.new(pagy: @pagy)",

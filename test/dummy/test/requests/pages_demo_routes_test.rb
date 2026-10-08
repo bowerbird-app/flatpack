@@ -86,6 +86,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/tabs/stacked_pills
     /demo/toasts
     /demo/page_header
+    /demo/section_title
     /demo/page_nav
     /demo/text/content
     /demo/text/quote
