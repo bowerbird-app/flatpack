@@ -13,6 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.212] - 2026-10-09
+
+### Added
+- `FlatPack::RadioGroup::Component` accepts `variant: :default | :inline | :cards`. Default stays the vertical radio list. `:inline` is a wrapping row of compact options that reuse Button chrome (secondary when unselected, primary when selected, same radius/padding/type). `:cards` is a responsive grid of larger selectable cards with a centred plain `icon:`, a title, and optional `description:`. Both keep real radio inputs (same name, required/disabled/error/help_text, aria, native arrow keys). The visible radio dot is hidden. Help and error copy under inline and cards sits further from the options (`mt-4`); the default list is unchanged.
+
+### Changed
+- Bumped the gem version to `0.1.212`.
+
+### Upgrade notes
+- Existing RadioGroup calls are unchanged. Pass `variant: :inline` or `variant: :cards` only when you want the visual layouts. String, `[label, value]`, and `{ label:, value:, disabled: }` options still work. Hash options may add `icon:` (kit IconComponent name) and `description:` (shown on `:cards`). Inline options follow Button secondary/primary tokens, so host button themes apply without extra CSS.
+- An unknown `variant:` raises `ArgumentError`.
+- Rebuild host Tailwind so the new pill/card utilities are generated. Redeploy so `meta.gem_version` shows `0.1.212`.
+
 ## [0.1.211] - 2026-10-08
 
 ### Added

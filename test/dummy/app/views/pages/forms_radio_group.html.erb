@@ -3,7 +3,7 @@
   subtitle: "Single-select choice lists using grouped radio inputs."
 ) %>
 
-<%= render "pages/component_method_variables_table", component: :text_input %>
+<%= render "pages/component_method_variables_table", component: :radio_group %>
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Radio Group Examples", anchor_link: true) %>
@@ -92,5 +92,193 @@
     CODE
     language: "erb",
     title: "Sizes"
+  ) %>
+</section>
+
+<section class="mb-12" id="inline-options">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Inline options",
+    anchor_link: true,
+    subtitle: "A wrapping row of small pills. Pass variant: :inline. Unselected uses the secondary button style; selected uses primary."
+  ) %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body(class: "space-y-[var(--stack-gap-lg)]") do %>
+      <%= render FlatPack::RadioGroup::Component.new(
+        name: "check_in",
+        variant: :inline,
+        label: "How often should we check in?",
+        help_text: "Pick the cadence that fits this project.",
+        value: "weekly",
+        options: [
+          {label: "Daily", value: "daily", icon: "sun"},
+          {label: "Weekly", value: "weekly", icon: "calendar-days"},
+          {label: "Monthly", value: "monthly", icon: "moon"},
+          {label: "When needed", value: "needed"}
+        ]
+      ) %>
+
+      <%= render FlatPack::RadioGroup::Component.new(
+        name: "seat",
+        variant: :inline,
+        label: "Seat",
+        value: "window",
+        options: [
+          {label: "Window", value: "window", icon: "square-2-stack"},
+          {label: "Aisle", value: "aisle", icon: "arrows-right-left"},
+          {label: "Middle", value: "middle", disabled: true, icon: "minus"}
+        ]
+      ) %>
+
+      <div id="inline-button-compare" class="flex flex-wrap items-end gap-3">
+        <%= render FlatPack::RadioGroup::Component.new(
+          name: "compare_cadence",
+          variant: :inline,
+          label: "Next to kit buttons",
+          value: "weekly",
+          options: [
+            {label: "Daily", value: "daily", icon: "sun"},
+            {label: "Weekly", value: "weekly", icon: "calendar-days"}
+          ]
+        ) %>
+        <div class="flex flex-wrap items-center gap-2">
+          <%= render FlatPack::Button::Component.new(text: "Secondary", style: :secondary) %>
+          <%= render FlatPack::Button::Component.new(text: "Primary", style: :primary) %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::RadioGroup::Component.new(
+        name: &quot;check_in&quot;,
+        variant: :inline,
+        label: &quot;How often should we check in?&quot;,
+        value: &quot;weekly&quot;,
+        options: [
+          { label: &quot;Daily&quot;, value: &quot;daily&quot;, icon: &quot;sun&quot; },
+          { label: &quot;Weekly&quot;, value: &quot;weekly&quot;, icon: &quot;calendar-days&quot; },
+          { label: &quot;Monthly&quot;, value: &quot;monthly&quot;, icon: &quot;moon&quot; }
+        ]
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Inline options"
+  ) %>
+</section>
+
+<section class="mb-12" id="card-options">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Card options",
+    anchor_link: true,
+    subtitle: "Larger selectable cards in a wrapping grid. Pass variant: :cards. Icon, title, and description sit in the centre. The icon is plain, not in a tile."
+  ) %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body(class: "space-y-[var(--stack-gap-lg)]") do %>
+      <%= render FlatPack::RadioGroup::Component.new(
+        name: "send_how",
+        variant: :cards,
+        label: "How should we send this?",
+        help_text: "You can change this later.",
+        value: "email",
+        options: [
+          {label: "Email", value: "email", icon: "envelope", description: "A note in the inbox."},
+          {label: "Text", value: "sms", icon: "chat-bubble-left", description: "A short message to the phone."},
+          {label: "In the app", value: "app", icon: "bell", description: "A bell on the home screen."},
+          {label: "Fax", value: "fax", icon: "printer", description: "Not offered on this plan.", disabled: true}
+        ]
+      ) %>
+
+      <%= render FlatPack::RadioGroup::Component.new(
+        name: "plan_error",
+        variant: :cards,
+        label: "Plan",
+        error: "Pick a plan to continue.",
+        options: [
+          {label: "Starter", value: "starter", icon: "sparkles", description: "One project, the basics."},
+          {label: "Team", value: "team", icon: "user-group", description: "Shared boards and roles."}
+        ]
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::RadioGroup::Component.new(
+        name: &quot;send_how&quot;,
+        variant: :cards,
+        label: &quot;How should we send this?&quot;,
+        value: &quot;email&quot;,
+        options: [
+          { label: &quot;Email&quot;, value: &quot;email&quot;, icon: &quot;envelope&quot;, description: &quot;A note in the inbox.&quot; },
+          { label: &quot;Text&quot;, value: &quot;sms&quot;, icon: &quot;chat-bubble-left&quot;, description: &quot;A short message to the phone.&quot; }
+        ]
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Card options"
+  ) %>
+</section>
+
+<section class="mb-12" id="in-a-form">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Inside a form",
+    anchor_link: true,
+    subtitle: "Both layouts submit as ordinary radios. Try them in a card, then save."
+  ) %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <%= form_with url: demo_forms_create_path, method: :post, local: true, class: "space-y-[var(--stack-gap-lg)]" do %>
+        <%= render FlatPack::RadioGroup::Component.new(
+          name: "form_cadence",
+          variant: :inline,
+          label: "How often?",
+          required: true,
+          value: "weekly",
+          options: [
+            {label: "Daily", value: "daily", icon: "sun"},
+            {label: "Weekly", value: "weekly", icon: "calendar-days"},
+            {label: "Monthly", value: "monthly", icon: "moon"}
+          ]
+        ) %>
+
+        <%= render FlatPack::RadioGroup::Component.new(
+          name: "form_send_how",
+          variant: :cards,
+          label: "How should we send this?",
+          required: true,
+          value: "email",
+          options: [
+            {label: "Email", value: "email", icon: "envelope", description: "A note in the inbox."},
+            {label: "Text", value: "sms", icon: "chat-bubble-left", description: "A short message to the phone."},
+            {label: "In the app", value: "app", icon: "bell", description: "A bell on the home screen."}
+          ]
+        ) %>
+
+        <%= render FlatPack::Button::Component.new(text: "Save preferences", type: "submit", style: :primary) %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= form_with url: demo_forms_create_path, method: :post do %&gt;
+        &lt;%= render FlatPack::RadioGroup::Component.new(
+          name: &quot;form_cadence&quot;,
+          variant: :inline,
+          label: &quot;How often?&quot;,
+          options: [
+            { label: &quot;Daily&quot;, value: &quot;daily&quot;, icon: &quot;sun&quot; },
+            { label: &quot;Weekly&quot;, value: &quot;weekly&quot;, icon: &quot;calendar-days&quot; }
+          ]
+        ) %&gt;
+        &lt;%= render FlatPack::Button::Component.new(text: &quot;Save preferences&quot;, type: &quot;submit&quot;) %&gt;
+      &lt;% end %&gt;
+    CODE
+    language: "erb",
+    title: "Inside a form"
   ) %>
 </section>
