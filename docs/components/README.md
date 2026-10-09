@@ -28,6 +28,7 @@ breadcrumb | FlatPack::Breadcrumb::Component | docs/components/breadcrumb.md
 button | FlatPack::Button::Component | docs/components/button.md
 button_dropdown | FlatPack::Button::Dropdown::Component | docs/components/button-dropdown.md
 button_group | FlatPack::ButtonGroup::Component | docs/components/button-group.md
+trash_button | FlatPack::TrashButton::Component | docs/components/trash-button.md
 card | FlatPack::Card::Component | docs/components/card.md
 carousel | FlatPack::Carousel::Component | docs/components/carousel.md
 chart | FlatPack::Chart::Component | docs/components/charts.md

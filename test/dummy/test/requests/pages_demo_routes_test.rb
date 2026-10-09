@@ -13,6 +13,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/buttons/segmented
     /demo/buttons/groups
     /demo/buttons/dropdowns
+    /demo/buttons/trash
     /demo/billing
     /demo/billing/plan_summary
     /demo/billing/plan_picker
@@ -273,6 +274,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, demo_buttons_groups_path
     assert_includes response.body, demo_buttons_segmented_path
     assert_includes response.body, demo_buttons_dropdowns_path
+    assert_includes response.body, demo_buttons_trash_path
   end
 
   test "application layout sets viewport-fit cover" do
@@ -283,6 +285,17 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Skip to content"
     assert_includes response.body, 'id="main"'
     assert_includes response.body, "demo-command-palette"
+  end
+
+  test "trash button demo renders rest armed and row examples" do
+    get "/demo/buttons/trash"
+
+    assert_response :success
+    assert_includes response.body, "Trash Button"
+    assert_includes response.body, "fp-trash-button"
+    assert_includes response.body, "data-fp-armed=\"true\""
+    assert_includes response.body, "Harbour take"
+    assert_includes response.body, "flat-pack--trash-button"
   end
 
   test "buttons related demos render after theme tokens" do

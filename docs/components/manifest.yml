@@ -118,6 +118,12 @@ components:
     primary_class: FlatPack::ButtonGroup::Component
     status: documented
 
+  - key: trash_button
+    title: Trash Button
+    doc: docs/components/trash-button.md
+    primary_class: FlatPack::TrashButton::Component
+    status: documented
+
   - key: card
     title: Card
     doc: docs/components/card.md

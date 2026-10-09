@@ -61,7 +61,9 @@ module FlatPack
       {constant: :LOADING_VARIANTS, kwargs: %i[loading_variant]},
       {constant: :INSERT_MODES, kwargs: %i[insert_mode]},
       {constant: :AVATAR_MODES, kwargs: %i[avatar_mode]},
-      {constant: :ORIGINS, kwargs: %i[origin]}
+      {constant: :ORIGINS, kwargs: %i[origin]},
+      {constant: :EXPANDS, kwargs: %i[expand]},
+      {constant: :METHODS, kwargs: %i[method]}
     ].freeze
 
     DOC_KEYS = {
