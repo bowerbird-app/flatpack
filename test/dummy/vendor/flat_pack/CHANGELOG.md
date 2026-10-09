@@ -13,6 +13,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.217] - 2026-10-09
+
+### Added
+- `FlatPack::Modal::Component` accepts `origin: :trigger` so the dialog can grow out of the control that opened it and shrink back on close. Default `origin: :center` keeps today’s fade and scale, including markup. Motion lives in `trigger_origin.js` for later Drawer reuse. Picker, Modal Filter, Drawer, and other hosts are unchanged.
+
+### Changed
+- Bumped the gem version to `0.1.217`.
+
+### Upgrade notes
+- Existing Modal calls are unchanged. Pass `origin: :trigger` only when the dialog should grow from the opening control.
+- `:trigger` falls back to today’s motion when no trigger is known, the trigger is gone or off-screen, motion is reduced, or the viewport is under `640px`.
+- With `navigable: true`, only the first open and the final close use the trigger motion.
+- Reload kit JavaScript. Redeploy so `meta.gem_version` shows `0.1.217`.
+
 ## [0.1.216] - 2026-10-09
 
 ### Added

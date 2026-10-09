@@ -16,6 +16,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Section heading | `title` | Headings on pages, modals, cards, empty states, and sidebar groups |
 | Supporting copy | `description` or `subtitle` | `description` for body explainer text; `subtitle` for a heading companion |
 | Overlay position | `placement` | Tooltips, popovers, dropdowns, and notification menus |
+| Overlay enter origin | `origin` | Modal (and later Drawer). `:center` is today’s fade and scale. `:trigger` grows from the control that opened it. |
 | Content / cluster alignment | `align` | Hero overlay copy (`:left` / `:center`) and Email (`:left` / `:center` / `:right`). Email-compatible values. |
 | Overlay copy on a photo | `on` | Hero `:centered_image`. `:dark` is light type on a dark wash. `:light` is dark type on a light wash. |
 | Grid item alignment | `align` | Grid `items-*` presets: `:start`, `:center`, `:stretch`. Same param name as content `align`, different enum. |
@@ -48,6 +49,7 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 - Do not use `url` for a clickable navigation destination. Use `href`.
 - Do not use `label` for the visible string of a compact control. Use `text`.
 - Do not use `position` for overlay placement. Use `placement`.
+- Do not use `placement` for where a Modal grows from. Use `origin`.
 - Keep `type` only for native HTML control types such as button `type: "submit"`.
 - Do not use `plans` or `invoices` as collection prop names when `items` already covers the concept.
 - Do not pass Grid's `:start` or `:stretch` to Hero or Email `align`. Hero accepts `:left` and `:center`. Email also accepts `:right`.

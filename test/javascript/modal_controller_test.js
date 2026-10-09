@@ -13,6 +13,34 @@ function loadModalController(documentStub) {
       'import { prefersReducedMotion, motionDuration, motionTransition } from "controllers/flat_pack/reduced_motion"',
       'function prefersReducedMotion() { return false }\nfunction motionDuration() { return 0 }\nfunction motionTransition() { return "" }'
     )
+    .replace(
+      /import \{\n  applyTriggerOriginStart,\n  canUseTriggerOrigin,\n  clearTriggerOriginStyles,\n  isTriggerOrigin,\n  playTriggerOriginEnter,\n  playTriggerOriginExit,\n  resolveTrigger\n\} from "controllers\/flat_pack\/trigger_origin"/,
+      `
+        function isTriggerOrigin(origin) { return origin === "trigger" }
+        function resolveTrigger(stored, active) { return stored || active || null }
+        function canUseTriggerOrigin(trigger) { return Boolean(trigger && trigger.useTriggerOrigin) }
+        function applyTriggerOriginStart(panel) {
+          panel.style.scale = "none"
+          panel.style.opacity = "0"
+          panel.style.transform = "translate(12px, 24px) scale(0.2)"
+        }
+        function playTriggerOriginEnter(panel) {
+          panel.style.opacity = "1"
+          panel.style.transform = "none"
+        }
+        function playTriggerOriginExit(panel, trigger) {
+          if (!trigger || !trigger.useTriggerOrigin) return false
+          panel.style.opacity = "0"
+          panel.style.transform = "translate(12px, 24px) scale(0.2)"
+          return true
+        }
+        function clearTriggerOriginStyles(panel) {
+          delete panel.style.transform
+          delete panel.style.transformOrigin
+          delete panel.style.scale
+        }
+      `
+    )
     .replace('export default class extends Controller', 'class ModalController extends Controller') + '\nmodule.exports = ModalController\n'
 
   const context = {
@@ -81,6 +109,7 @@ function buildController({ buttons, hidden = false } = {}) {
   const controller = Object.assign(new ModalController(), {
     hasDialogTarget: true,
     dialogTarget: dialog,
+    originValue: 'center',
     element: {
       classList,
       style: {},
@@ -150,6 +179,44 @@ test('open writes the Tailwind v4 scale property and resets overlay scroll', () 
 
 test('close writes the Tailwind v4 scale property', () => {
   const { controller, dialog } = buildController({ hidden: false })
+
+  controller.close()
+
+  assert.equal(dialog.style.opacity, '0')
+  assert.equal(dialog.style.scale, '0.95')
+  assert.equal(dialog.style.transform, undefined)
+})
+
+test('trigger origin open writes transform instead of scale', () => {
+  const { controller, dialog } = buildController({ hidden: true })
+  controller.originValue = 'trigger'
+  controller.triggerElement = { useTriggerOrigin: true, nodeType: 1 }
+
+  controller.open()
+
+  assert.equal(dialog.style.opacity, '1')
+  assert.equal(dialog.style.transform, 'none')
+  assert.equal(dialog.style.scale, 'none')
+})
+
+test('trigger origin close reverses into the trigger', () => {
+  const { controller, dialog } = buildController({ hidden: false })
+  controller.originValue = 'trigger'
+  controller.usedTriggerOrigin = true
+  controller.triggerElement = { useTriggerOrigin: true, nodeType: 1 }
+
+  controller.close()
+
+  assert.equal(dialog.style.opacity, '0')
+  assert.equal(dialog.style.transform, 'translate(12px, 24px) scale(0.2)')
+  assert.equal(dialog.style.scale, undefined)
+})
+
+test('trigger origin close falls back to scale when the trigger is gone', () => {
+  const { controller, dialog } = buildController({ hidden: false })
+  controller.originValue = 'trigger'
+  controller.usedTriggerOrigin = true
+  controller.triggerElement = { useTriggerOrigin: false }
 
   controller.close()
 

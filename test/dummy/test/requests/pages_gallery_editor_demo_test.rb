@@ -16,7 +16,16 @@ class PagesGalleryEditorDemoTest < ActionDispatch::IntegrationTest
     assert_includes response.body, 'data-fp-nav="retry"'
     refute_includes response.body, 'data-fp-nav="push"'
     assert_select "#basic-modal[data-controller='flat-pack--modal']"
+    assert_select "#basic-modal:not([data-flat-pack--modal-origin-value])"
     assert_select "#gallery-editor[data-controller='flat-pack--modal flat-pack--navigable']"
+    assert_select "#gallery-editor:not([data-flat-pack--modal-origin-value])"
+    assert_includes response.body, "Grow from the button"
+    assert_select "#origin-top-left[data-flat-pack--modal-origin-value='trigger']"
+    assert_select "#origin-centre[data-flat-pack--modal-origin-value='trigger']"
+    assert_select "#origin-bottom-right[data-flat-pack--modal-origin-value='trigger']"
+    assert_select "#origin-table-row[data-flat-pack--modal-origin-value='trigger']"
+    assert_select "#origin-page-scroll[data-flat-pack--modal-origin-value='trigger'][data-fp-modal-scroll='page']"
+    assert_select "#gallery-editor-from-button[data-controller='flat-pack--modal flat-pack--navigable'][data-flat-pack--modal-origin-value='trigger']"
   end
 
   test "gallery screen wraps the matching turbo-frame" do

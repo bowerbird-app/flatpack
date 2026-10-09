@@ -422,6 +422,60 @@ module FlatPack
         end
         assert_match(/Unsafe src/, error.message)
       end
+
+      def test_default_origin_omits_origin_value
+        render_inline(Component.new(id: "my-modal", title: "Same")) do |modal|
+          modal.body { "Body" }
+        end
+        omitted = page.native.to_html.dup
+
+        render_inline(Component.new(id: "my-modal", title: "Same", origin: :center)) do |modal|
+          modal.body { "Body" }
+        end
+
+        html = page.native.to_html
+        assert_equal omitted, html
+        refute_includes html, "flat-pack--modal-origin-value"
+        refute_includes html, "trigger_origin"
+      end
+
+      def test_trigger_origin_writes_opt_in_value_and_keeps_dialog_classes
+        render_inline(Component.new(id: "my-modal", title: "From the button", origin: :trigger)) do |modal|
+          modal.body { "Body" }
+        end
+
+        html = page.native.to_html
+        assert_selector "div[data-flat-pack--modal-origin-value='trigger']"
+        assert_includes html, "transition-[opacity,scale]"
+        assert_includes html, "scale-95"
+        assert_includes html, "motion-reduce:scale-100"
+        refute_includes html, "transition-[opacity,transform]"
+      end
+
+      def test_trigger_origin_works_with_page_scroll_and_navigable
+        render_inline(Component.new(
+          id: "gallery-editor",
+          title: "Gallery",
+          navigable: true,
+          src: "/demo/modals/gallery_editor",
+          scroll: :page,
+          sticky_footer: true,
+          origin: :trigger
+        ))
+
+        assert_selector "[data-flat-pack--modal-origin-value='trigger']"
+        assert_selector "[data-fp-modal-scroll='page']"
+        assert_selector "div[data-controller='flat-pack--modal flat-pack--navigable']"
+        assert_includes page.native.to_html, "fp-modal-sticky-footer"
+      end
+
+      def test_raises_error_for_invalid_origin
+        error = assert_raises(ArgumentError) do
+          Component.new(id: "my-modal", origin: :morph)
+        end
+
+        assert_match(/Invalid origin/, error.message)
+      end
     end
   end
 end

@@ -60,7 +60,8 @@ module FlatPack
       {constant: :OVERLAPS, kwargs: %i[overlap]},
       {constant: :LOADING_VARIANTS, kwargs: %i[loading_variant]},
       {constant: :INSERT_MODES, kwargs: %i[insert_mode]},
-      {constant: :AVATAR_MODES, kwargs: %i[avatar_mode]}
+      {constant: :AVATAR_MODES, kwargs: %i[avatar_mode]},
+      {constant: :ORIGINS, kwargs: %i[origin]}
     ].freeze
 
     DOC_KEYS = {
