@@ -176,6 +176,20 @@
         { variable: "loading", accepts: "true, false", example: "loading: true" }
       ]
     },
+    trash_button: {
+      label: "Trash Button",
+      method_call: "render FlatPack::TrashButton::Component.new(url: take_path(@take))",
+      variables: [
+        { variable: "text", accepts: "String or nil", example: "text: \"Trash\"" },
+        { variable: "confirm_label", accepts: "String or nil", example: "confirm_label: \"Confirm\"" },
+        { variable: "url", accepts: "String or nil", example: "url: take_path(@take)" },
+        { variable: "method", accepts: ":delete, :post, :put, :patch, :get", example: "method: :delete" },
+        { variable: "expand", accepts: ":right, :left", example: "expand: :left" },
+        { variable: "size", accepts: ":sm, :md, :lg", example: "size: :sm" },
+        { variable: "timeout", accepts: "Integer or false", example: "timeout: 4000" },
+        { variable: "armed", accepts: "true, false", example: "armed: true" }
+      ]
+    },
     email_button: {
       label: "Email Button",
       method_call: "render FlatPack::EmailButton::Component.new(href: \"https://example.com\", text: \"Confirm\", style: :primary)",

@@ -49,7 +49,7 @@ class DemoCatalogTest < ActiveSupport::TestCase
     interactive = DemoCatalog.sections.find { |section| section[:title] == "Interactive" }
     buttons = interactive[:entries].find { |entry| entry[:type] == :group && entry[:title] == "Buttons" }
 
-    assert_equal 6, buttons[:children].length
+    assert_equal 7, buttons[:children].length
 
     billing = interactive[:entries].find { |entry| entry[:type] == :group && entry[:title] == "Billing" }
     assert_equal 7, billing[:children].length

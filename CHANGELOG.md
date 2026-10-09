@@ -27,6 +27,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rebuild host Tailwind so swatch size, ring, and `sr-only` utilities generate. Reload kit CSS if you ship ColorSwatch tokens already.
 - Redeploy so `meta.gem_version` shows `0.1.220`.
 
+## [0.1.219] - 2026-10-09
+
+### Added
+- `FlatPack::TrashButton::Component` is an opt-in two-step delete control. At rest it is a default Button with a trash icon (icon-only unless `text:` is passed). Hover and keyboard focus use the theme danger button tokens, scoped to this component. Click swaps it for a danger Confirm button in the same position plus a default Cancel (X) that slides in on `expand: :right` or `:left`. Confirm submits `url:` with `method: :delete` by default (Turbo `button_to` form) and dispatches `flat-pack:trash-button:confirm`. Confirm ignores clicks for 300ms after it appears. Cancel, Escape, or a click outside restores rest. `timeout:` (default 4000ms, `0` or `false` to disable) auto-reverts. Stimulus controller: `flat-pack--trash-button`.
+
+### Changed
+- Bumped the gem version to `0.1.219`.
+
+### Fixed
+- Rest, Confirm, and Cancel share one height for each `size:` (`:sm` / `:md` / `:lg`). Cancel is the icon-only square. Labelled rest and Confirm use that same height so arming does not jump. The swap is opacity and a Cancel slide, not `scale()`, so the chrome does not shrink. Scoped to `.fp-trash-button`; other Buttons are unchanged.
+
+### Upgrade notes
+- New component. Existing Button calls, markup, and styles are unchanged.
+- Pass `url:` only when Confirm should submit a form. JS-only callers listen for `flat-pack:trash-button:confirm` and may `preventDefault` to skip the submit.
+- Rebuild host Tailwind so `sr-only` and `contents` generate. Reload kit CSS and JavaScript.
+- Redeploy so `meta.gem_version` shows `0.1.219`.
+
 ## [0.1.218] - 2026-10-09
 
 ### Added

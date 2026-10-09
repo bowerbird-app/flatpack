@@ -92,6 +92,8 @@ Rails.application.routes.draw do
   get "demo/buttons/segmented", to: "pages#buttons_segmented"
   get "demo/buttons/groups", to: "pages#buttons_groups"
   get "demo/buttons/dropdowns", to: "pages#buttons_dropdowns"
+  get "demo/buttons/trash", to: "pages#buttons_trash"
+  match "demo/buttons/trash/:id", to: "pages#buttons_trash_destroy", via: [:post, :delete], as: :demo_buttons_trash_item
   get "demo/billing", to: "pages#billing"
   get "demo/billing/plan_summary", to: "pages#billing_plan_summary"
   get "demo/billing/plan_picker", to: "pages#billing_plan_picker"

@@ -29,6 +29,11 @@ en:
       home: Home
     button:
       loading: Loading
+    trash_button:
+      trash: Trash
+      confirm: Confirm
+      armed: Confirm to delete
+      restored: Delete cancelled
     carousel:
       label: Carousel
       slide: Slide %{current} of %{total}

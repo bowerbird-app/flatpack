@@ -41,7 +41,8 @@ class DemoCatalog
             {title: "Pill Buttons", path: "/demo/buttons/pills", description: "Pill-style button and filter links", icon: :square},
             {title: "Segmented", path: "/demo/buttons/segmented", description: "Segmented button selected-state patterns", icon: :square},
             {title: "Button Groups", path: "/demo/buttons/groups", description: "Grouped buttons wrapped together", icon: :square},
-            {title: "Dropdowns", path: "/demo/buttons/dropdowns", description: "Button dropdown menus and positions", icon: :chevron_down}
+            {title: "Dropdowns", path: "/demo/buttons/dropdowns", description: "Button dropdown menus and positions", icon: :chevron_down},
+            {title: "Trash Button", path: "/demo/buttons/trash", description: "Two-step delete with a confirm swap", icon: :square}
           ]
         },
         {

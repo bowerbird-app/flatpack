@@ -16,6 +16,7 @@ module FlatPack
       names = listed_names
 
       assert_includes names, "Button::Component"
+      assert_includes names, "TrashButton::Component"
       assert_includes names, "Content::Component"
       assert_includes names, "List::Item"
       assert_includes names, "Timeline::Item"
@@ -98,6 +99,23 @@ module FlatPack
       refute max_width.key?(:default)
       refute padding.key?(:default)
       assert_equal "center", align.fetch(:default)
+    end
+
+    test "show TrashButton binds EXPANDS to expand and METHODS to method" do
+      payload = FlatPack::ComponentCatalog.show("TrashButton::Component")
+      expand = parameter_named(payload, "expand")
+      method = parameter_named(payload, "method")
+      size = parameter_named(payload, "size")
+
+      assert_equal %w[right left], expand.fetch(:enum)
+      assert_equal "right", expand.fetch(:default)
+      assert_equal %w[delete post put patch get], method.fetch(:enum)
+      assert_equal "delete", method.fetch(:default)
+      assert_equal %w[sm md lg], size.fetch(:enum)
+      assert_equal "md", size.fetch(:default)
+      examples = payload.fetch(:examples)
+      assert_operator examples.size, :>=, 1
+      assert_includes examples.first.fetch(:erb), "FlatPack::TrashButton::Component"
     end
 
     test "show Masonry binds ORDERS to order and GAPS to gap" do
