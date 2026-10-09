@@ -27,6 +27,7 @@ module FlatPack
       assert_includes css, "position: absolute"
       assert_includes css, "--fab-z-index"
       assert_includes css, "--fab-size-sm"
+      assert_includes css, '[data-fp-size="sm"] .fp-fab__trigger--extended'
       assert_includes css, "env(safe-area-inset-bottom, 0px)"
       assert_includes css, "--fp-fab-nav-offset"
       assert_includes css, '[data-fp-position="top_right"] .fp-fab__cluster'

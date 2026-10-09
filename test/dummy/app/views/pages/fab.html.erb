@@ -176,7 +176,7 @@
       {title: "The story", body: "Two paragraphs of copy sit in this block. The plus in the corner opens edit, reorder, trash, and add."},
       {title: "Credits", body: "Director, camera, and a short list of names."}
     ].each_with_index do |section, index| %>
-      <div class="relative rounded-[var(--radius-lg)] border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-5 pr-16 min-h-72" id="editor-section-<%= index %>">
+      <div class="relative rounded-[var(--radius-lg)] border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-5 pr-16 min-h-96" id="editor-section-<%= index %>">
         <p class="text-sm font-semibold text-[var(--surface-content-color)]"><%= section[:title] %></p>
         <p class="mt-2 text-sm text-[var(--surface-muted-content-color)] max-w-xl"><%= section[:body] %></p>
         <%= render FlatPack::Fab::Component.new(

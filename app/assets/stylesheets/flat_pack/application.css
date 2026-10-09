@@ -729,6 +729,7 @@
   }
 
   .fp-fab[data-fp-size="sm"] .fp-fab__trigger--extended {
+    width: auto;
     min-width: var(--fab-size-sm);
     padding: 0 1rem 0 0.75rem;
   }
