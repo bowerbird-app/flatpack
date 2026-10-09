@@ -443,6 +443,7 @@ module FlatPack
         assert_includes html, "background-color: #0a0a0a"
         assert_includes html, "group-has-[:checked]:ring-[var(--color-swatch-selected-ring-color)]"
         assert_includes html, "group-has-[:checked]:ring-offset-[var(--color-swatch-ring-offset-color)]"
+        assert_includes html, "group-has-[:focus-visible]:ring-[var(--color-swatch-selected-ring-color)]"
         assert_includes html, "h-10 w-10"
         refute_includes html, "fp-button"
         refute_includes html, "min-h-[7rem]"

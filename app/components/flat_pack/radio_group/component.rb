@@ -48,6 +48,10 @@ module FlatPack
       # "group-has-[:checked]:opacity-100" "opacity-0"
       # "text-[var(--color-swatch-check-on-dark)]"
       # "text-[var(--color-swatch-check-on-light)]"
+      # "group-has-[:focus-visible]:ring-2"
+      # "group-has-[:focus-visible]:ring-[var(--color-swatch-selected-ring-color)]"
+      # "group-has-[:focus-visible]:ring-offset-2"
+      # "group-has-[:focus-visible]:ring-offset-[var(--color-swatch-ring-offset-color)]"
       # "hover:-translate-y-px" "active:scale-[0.96]"
 
       SIZES = FlatPack::Shared::ControlSize::SIZES
@@ -486,10 +490,7 @@ module FlatPack
           (unless option_disabled
              "hover:-translate-y-px active:scale-[0.96]"
            end),
-          "has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2",
-          "has-[:focus-visible]:ring-[var(--color-swatch-selected-ring-color)]",
-          "has-[:focus-visible]:ring-offset-2",
-          "has-[:focus-visible]:ring-offset-[var(--color-swatch-ring-offset-color)]",
+          "has-[:focus-visible]:outline-none",
           (option_disabled ? visual_option_disabled_classes : "cursor-pointer")
         ].compact.join(" ")
       end
@@ -506,6 +507,10 @@ module FlatPack
           "group-has-[:checked]:ring-[var(--color-swatch-selected-ring-color)]",
           "group-has-[:checked]:ring-offset-2",
           "group-has-[:checked]:ring-offset-[var(--color-swatch-ring-offset-color)]",
+          "group-has-[:focus-visible]:ring-2",
+          "group-has-[:focus-visible]:ring-[var(--color-swatch-selected-ring-color)]",
+          "group-has-[:focus-visible]:ring-offset-2",
+          "group-has-[:focus-visible]:ring-offset-[var(--color-swatch-ring-offset-color)]",
           "transition-[box-shadow] duration-[var(--duration-fast)] ease-[var(--easing-standard)]",
           "motion-reduce:transition-none"
         ].join(" ")
