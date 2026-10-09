@@ -6,7 +6,7 @@ The deployable app in `test/dummy` is still the FlatPack component catalog. It a
 
 Pinned in `test/dummy/Gemfile.common`:
 
-- `recording_studio` (`v4.3.0`)
+- `recording_studio` (`v4.4.0`)
 - `recording_studio_accessible`
 - `recording_studio_user`
 - `recording_studio_attachable`
