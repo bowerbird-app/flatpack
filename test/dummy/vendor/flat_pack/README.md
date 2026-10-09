@@ -357,7 +357,7 @@ For hierarchical parent/child checkbox selection, see the `flat-pack--nested-mul
 - **TimeInput** - Time-only picker input
 - **FileInput** - File upload input
 - **Checkbox** - Single checkbox or checkbox groups
-- **RadioGroup** - Radio button groups
+- **RadioGroup** - Radio button groups, including optional inline pills and selectable cards
 - **Select** - Dropdown select menus with optional searchable single and multiselect modes
 - **Switch** - Toggle switch for boolean states
 

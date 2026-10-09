@@ -53,13 +53,14 @@ Component-specific props:
 | `max_size` | Integer | `nil` | no | Max file size in bytes for `FileInput` client-side checks. Must be positive when provided. |
 | `preview` | Boolean | `true` | no | Enables image preview area in `FileInput`. |
 | `checked` | Boolean | `false` | no | Initial checked state (`Checkbox`, `Switch`). |
-| `options` | Array | none | yes (`RadioGroup`, `Select`) | Options list. Supports `String`, `[label, value]`, or `{ label:, value:, disabled: }`. For nested Select multiselects, hashes may include `children:` and may use `id:` instead of `value:`. |
+| `options` | Array | none | yes (`RadioGroup`, `Select`) | Options list. Supports `String`, `[label, value]`, or `{ label:, value:, disabled: }`. RadioGroup hashes may also include `icon:` (kit icon name) and `description:` (shown on `variant: :cards`). For nested Select multiselects, hashes may include `children:` and may use `id:` instead of `value:`. |
 | `searchable` | Boolean | `false` | no | Uses custom searchable dropdown mode for `Select`. |
 | `search_mode` | Symbol | `:local` | no | Search mode for `Select`: `:local` (client filter) or `:remote` (AJAX endpoint). |
 | `search_endpoint` | String | `nil` | no | Required when `search_mode: :remote`; URL used to fetch Select options. |
 | `search_param` | String | `"q"` | no | Query string parameter name used for remote Select requests. |
 | `min_search_length` | Integer | `2` | no | Minimum query length before remote Select requests are triggered. |
-| `size` | Symbol | `:md` | no | Control density: `:sm`, `:md`, `:lg` for `Switch`, `Checkbox`, and `RadioGroup` (Checkbox/Radio share `--checkbox-size`). |
+| `size` | Symbol | `:md` | no | Control density: `:sm`, `:md`, `:lg` for `Switch`, `Checkbox`, and `RadioGroup` (Checkbox/Radio share `--checkbox-size`). RadioGroup `size:` still applies to the default radio dots. |
+| `variant` | Symbol | `:default` | no | RadioGroup layout: `:default` (vertical radio list), `:inline` (wrapping pills with optional icons), `:cards` (grid of cards with optional icon and description). Invalid names raise `ArgumentError`. |
 
 ## Slots
 None.
@@ -67,6 +68,7 @@ None.
 ## Variants
 - Input classes by type: `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `UrlInput`, `NumberInput`, `DateInput`, `FileInput`
 - Choice inputs: `Checkbox`, `RadioGroup`, `Select`, `Switch`
+- RadioGroup layouts: default vertical radios, `variant: :inline` pills, `variant: :cards` selectable cards. Inline and cards hide the radio dot visually, keep a native radio for form submit and keyboard. Inline options reuse Button chrome: secondary tokens when unselected, primary when selected (`--button-*`, `.fp-button`, `--button-border-radius`, Button padding). Cards centre a plain icon above the title (no icon tile) and paint selected state with `--color-primary` plus `--surface-*`. Help and error copy under inline and cards uses `mt-4`; the default radio list keeps `mt-1` / `mt-2`.
 - Checkbox and RadioGroup checked paint follows `--color-primary` / `--color-primary-text` via Tailwind arbitrary values (`accent-[var(--color-primary)]`, `checked:bg-[var(--color-primary)]`, `checked:border-[var(--color-primary)]`, `checked:text-[var(--color-primary-text)]`). Rebuild host Tailwind after upgrading if you `@import` FlatPack CSS so those classes are generated.
 - Select rendering modes: native select (`searchable: false`) and custom searchable select (`searchable: true`)
 - Select selection modes: single-value (`multiple: false`) and multi-value (`multiple: true`)
@@ -250,6 +252,43 @@ or:
   accept: "image/png,image/jpeg",
   max_size: 2_097_152,
   preview: true
+) %>
+```
+
+```erb
+<%= render FlatPack::RadioGroup::Component.new(
+  name: "size",
+  options: ["Small", "Medium", "Large"],
+  label: "Choose a size",
+  value: "Medium"
+) %>
+```
+
+```erb
+<%= render FlatPack::RadioGroup::Component.new(
+  name: "check_in",
+  variant: :inline,
+  label: "How often should we check in?",
+  value: "weekly",
+  options: [
+    {label: "Daily", value: "daily", icon: "sun"},
+    {label: "Weekly", value: "weekly", icon: "calendar-days"},
+    {label: "Monthly", value: "monthly", icon: "moon"}
+  ]
+) %>
+```
+
+```erb
+<%= render FlatPack::RadioGroup::Component.new(
+  name: "send_how",
+  variant: :cards,
+  label: "How should we send this?",
+  value: "email",
+  options: [
+    {label: "Email", value: "email", icon: "envelope", description: "A note in the inbox."},
+    {label: "Text", value: "sms", icon: "chat-bubble-left", description: "A short message to the phone."},
+    {label: "In the app", value: "app", icon: "bell", description: "A bell on the home screen."}
+  ]
 ) %>
 ```
 

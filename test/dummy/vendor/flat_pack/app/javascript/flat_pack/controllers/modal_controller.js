@@ -48,6 +48,7 @@ export default class extends Controller {
     this.element.classList.remove("hidden")
     this.element.classList.add("flex")
     this.element.setAttribute("aria-hidden", "false")
+    this.element.scrollTop = 0
     this.element.offsetHeight
 
     this.applyEnterMotion()
@@ -57,7 +58,7 @@ export default class extends Controller {
       if (!this.hasDialogTarget) return
 
       this.dialogTarget.style.opacity = "1"
-      this.dialogTarget.style.transform = prefersReducedMotion() ? "none" : "scale(1)"
+      this.dialogTarget.style.scale = prefersReducedMotion() ? "none" : "1"
     })
 
     setTimeout(() => this.trapFocus(), 100)
@@ -76,7 +77,7 @@ export default class extends Controller {
     if (this.hasDialogTarget) {
       this.dialogTarget.style.opacity = "0"
       if (!prefersReducedMotion()) {
-        this.dialogTarget.style.transform = "scale(0.95)"
+        this.dialogTarget.style.scale = "0.95"
       }
     }
 
@@ -228,7 +229,7 @@ export default class extends Controller {
     if (!this.hasDialogTarget) return
 
     this.dialogTarget.style.transition = motionTransition(
-      ["opacity", "transform"],
+      ["opacity", "scale"],
       { duration: "slow", easing: "enter" }
     )
   }
@@ -238,7 +239,7 @@ export default class extends Controller {
     if (!this.hasDialogTarget) return
 
     this.dialogTarget.style.transition = motionTransition(
-      ["opacity", "transform"],
+      ["opacity", "scale"],
       { duration: "base", easing: "exit" }
     )
   }
