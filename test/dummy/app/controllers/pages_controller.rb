@@ -96,6 +96,7 @@ class PagesController < ApplicationController
     comments admin chat_demo chips chip_add_callback chip_remove_callback
     tables_basic tables_sortable local_time
     forms_unsaved_changes
+    buttons_trash buttons_trash_destroy
   ].freeze
 
   before_action :serve_from_page_cache, except: UNCACHED_ACTIONS
@@ -126,6 +127,18 @@ class PagesController < ApplicationController
   end
 
   def buttons_dropdowns
+  end
+
+  def buttons_trash
+    @tracks = [
+      OpenStruct.new(id: 1, name: "Harbour take", added_on: "9 Oct"),
+      OpenStruct.new(id: 2, name: "Piano sketch", added_on: "8 Oct"),
+      OpenStruct.new(id: 3, name: "Voice memo", added_on: "7 Oct")
+    ]
+  end
+
+  def buttons_trash_destroy
+    redirect_to demo_buttons_trash_path, status: :see_other, notice: "It's gone."
   end
 
   def billing

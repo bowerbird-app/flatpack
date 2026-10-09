@@ -29,6 +29,11 @@ fr:
       home: Accueil
     button:
       loading: Chargement
+    trash_button:
+      trash: Corbeille
+      confirm: Confirmer
+      armed: Confirmez la suppression
+      restored: Suppression annulée
     carousel:
       label: Carrousel
       slide: Diapositive %{current} sur %{total}

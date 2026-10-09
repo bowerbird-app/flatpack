@@ -1,0 +1,91 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Trash Button",
+  subtitle: "A two-step delete. One click arms it. Confirm does the work."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :trash_button %>
+
+<section class="mb-12" id="trash-rest">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Rest", anchor_link: true, subtitle: "Icon-only by default. Pass text: to label it.") %>
+  <div class="flex flex-wrap items-center gap-3 mb-4">
+    <%= render FlatPack::TrashButton::Component.new(timeout: 0) %>
+    <%= render FlatPack::TrashButton::Component.new(text: "Trash", timeout: 0) %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    snippets: [
+      {
+        label: "Icon-only",
+        language: "erb",
+        code: CGI.unescapeHTML(<<~'CODE')
+          &lt;%= render FlatPack::TrashButton::Component.new(url: take_path(@take)) %&gt;
+        CODE
+      },
+      {
+        label: "With label",
+        language: "erb",
+        code: CGI.unescapeHTML(<<~'CODE')
+          &lt;%= render FlatPack::TrashButton::Component.new(text: "Trash", url: take_path(@take)) %&gt;
+        CODE
+      }
+    ]
+  ) %>
+</section>
+
+<section class="mb-12" id="trash-sizes">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Sizes", anchor_link: true, subtitle: "Same sm / md / lg scale as Button.") %>
+  <div class="flex flex-wrap items-center gap-3 mb-4">
+    <%= render FlatPack::TrashButton::Component.new(size: :sm, timeout: 0) %>
+    <%= render FlatPack::TrashButton::Component.new(size: :md, timeout: 0) %>
+    <%= render FlatPack::TrashButton::Component.new(size: :lg, timeout: 0) %>
+    <%= render FlatPack::TrashButton::Component.new(text: "Trash", size: :sm, timeout: 0) %>
+    <%= render FlatPack::TrashButton::Component.new(text: "Trash", size: :md, timeout: 0) %>
+    <%= render FlatPack::TrashButton::Component.new(text: "Trash", size: :lg, timeout: 0) %>
+  </div>
+</section>
+
+<section class="mb-12" id="trash-armed">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Armed", anchor_link: true, subtitle: "Confirm stays put. Cancel slides in beside it.") %>
+  <div class="flex flex-wrap items-center gap-6 mb-4">
+    <div class="flex flex-col gap-2">
+      <p class="text-sm text-[var(--surface-muted-content-color)]">Expand right</p>
+      <%= render FlatPack::TrashButton::Component.new(armed: true, timeout: 0, expand: :right) %>
+    </div>
+    <div class="flex flex-col gap-2">
+      <p class="text-sm text-[var(--surface-muted-content-color)]">Expand left</p>
+      <%= render FlatPack::TrashButton::Component.new(armed: true, timeout: 0, expand: :left) %>
+    </div>
+    <div class="flex flex-col gap-2">
+      <p class="text-sm text-[var(--surface-muted-content-color)]">With label</p>
+      <%= render FlatPack::TrashButton::Component.new(text: "Trash", armed: true, timeout: 0) %>
+    </div>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::TrashButton::Component.new(armed: true, expand: :left) %&gt;
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12" id="trash-table">
+  <%= render FlatPack::SectionTitle::Component.new(title: "In a row", anchor_link: true, subtitle: "Expand left so the row does not jump right.") %>
+  <%= render FlatPack::Table::Component.new(data: @tracks) do |table| %>
+    <% table.column(title: "Take", html: ->(track) { track.name }) %>
+    <% table.column(title: "Added", html: ->(track) { track.added_on }) %>
+    <% table.column(title: "Remove", html: ->(track) {
+      render FlatPack::TrashButton::Component.new(
+        url: demo_buttons_trash_item_path(track.id),
+        expand: :left,
+        size: :sm,
+        timeout: 4000
+      )
+    }) %>
+  <% end %>
+</section>
+
+<%= render "shared/related_demos",
+    subtitle: "Sibling button-family components live on their own pages.",
+    links: [
+      {text: "Buttons", href: demo_buttons_path},
+      {text: "Button Groups", href: demo_buttons_groups_path},
+      {text: "Dropdowns", href: demo_buttons_dropdowns_path}
+    ] %>

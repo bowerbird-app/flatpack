@@ -58,6 +58,7 @@ module FlatPack
         combobox_controller.js
         flatpack_date_picker_controller.js
         list_orderable_controller.js
+        trash_button_controller.js
       ]
 
       controllers.each do |name|
@@ -111,6 +112,7 @@ module FlatPack
         table_controller.js
         sidebar_group_controller.js
         sidebar_layout_controller.js
+        trash_button_controller.js
       ]
 
       controllers.each do |name|
