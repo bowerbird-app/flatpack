@@ -9,6 +9,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Color / semantic appearance | `style` | `:default`, `:primary`, `:success`, `:warning`, `:danger`, `:info`, and other visual schemes |
 | Structural / layout shape | `variant` | Layout or composition choices such as `:underline` vs `:pills`, `:centered` vs `:split` |
 | Navigation destination | `href` | User-facing links the visitor clicks to go somewhere |
+| Turbo Frame source | `src` | Navigable Modal (and later Drawer) lazy-load URL. Not a clickable `href`. |
 | Data / form endpoint | `*_url` | Search, upload, reorder, form submit, and other non-navigation URLs |
 | Compact visible copy | `text` | Primary string on buttons, badges, chips, nav items, quotes, and toasts |
 | Form or accessible name | `label` | Field labels and dedicated accessible names that are not the primary visual copy |

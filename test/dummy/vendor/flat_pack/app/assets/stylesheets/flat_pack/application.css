@@ -570,6 +570,12 @@
   box-shadow: 0 1px 0 var(--modal-border-color);
 }
 
+/* Navigable overlay chrome: loading/error sit on the body without shifting layout. */
+[data-controller~="flat-pack--navigable"] .flat-pack-modal__body,
+[data-controller~="flat-pack--navigable"] .fp-drawer-body {
+  position: relative;
+}
+
 .fp-modal-sticky-footer {
   position: sticky;
   bottom: 0;

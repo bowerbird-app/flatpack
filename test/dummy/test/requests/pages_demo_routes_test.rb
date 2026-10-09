@@ -73,6 +73,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/email/footer_links
     /demo/email/template_example
     /demo/modals
+    /demo/modals/gallery_editor
     /demo/drawer
     /demo/command_palette
     /demo/kbd

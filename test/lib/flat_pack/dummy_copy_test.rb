@@ -15,7 +15,11 @@ module FlatPack
         "test/dummy/app/views/pages/popovers.html.erb",
         "test/dummy/app/views/pages/tooltips.html.erb",
         "test/dummy/app/views/pages/page_nav.html.erb",
-        "test/dummy/app/views/pages/picker.html.erb"
+        "test/dummy/app/views/pages/picker.html.erb",
+        "test/dummy/app/views/pages/modals.html.erb",
+        "test/dummy/app/views/gallery_editor/gallery.html.erb",
+        "test/dummy/app/views/gallery_editor/edit.html.erb",
+        "test/dummy/app/views/gallery_editor/photographer.html.erb"
       ]
 
       leaks = []

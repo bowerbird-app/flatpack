@@ -1,0 +1,43 @@
+<%= flat_pack_modal_screen(modal_id: GalleryEditorDemo::MODAL_ID, title: "Edit image") do |screen| %>
+  <% screen.footer do %>
+    <%= render FlatPack::Button::Component.new(
+      text: "Remove",
+      style: :danger,
+      href: demo_gallery_editor_path,
+      data: {fp_nav: "reset"}
+    ) %>
+    <%= render FlatPack::Button::Component.new(
+      text: "Save",
+      style: :primary,
+      data: {fp_nav: "back"}
+    ) %>
+  <% end %>
+
+  <div class="space-y-4">
+    <div class="overflow-hidden rounded-[var(--radius-md)] border border-[var(--modal-border-color)]">
+      <%= image_tag @image.fetch(:src), alt: @image.fetch(:alt), class: "w-full max-h-56 object-cover" %>
+    </div>
+
+    <%= render FlatPack::TextInput::Component.new(
+      name: "image[caption]",
+      label: "Caption",
+      value: @image.fetch(:caption)
+    ) %>
+    <%= render FlatPack::TextInput::Component.new(
+      name: "image[alt]",
+      label: "Alt text",
+      value: @image.fetch(:alt),
+      help_text: "Short description for people who cannot see the photo."
+    ) %>
+
+    <div>
+      <p class="mb-1 text-sm font-medium text-[var(--surface-content-color)]">Photographer</p>
+      <%= render FlatPack::Link::Component.new(
+        href: demo_gallery_editor_photographer_path(@image.fetch(:id)),
+        data: {fp_nav: "push"}
+      ) do %>
+        <%= @photographer.fetch(:name) %>
+      <% end %>
+    </div>
+  </div>
+<% end %>

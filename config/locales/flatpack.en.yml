@@ -157,6 +157,11 @@ en:
       invalid_value: Invalid value.
     modal:
       close: Close
+      back: Back
+      loading: Loading
+      load_error: Couldn’t load this screen
+      load_error_hint: Check the connection, then try again.
+      retry: Try again
     modal_filter:
       trigger: Filter
       title: Filters

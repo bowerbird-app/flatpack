@@ -13,6 +13,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.216] - 2026-10-09
+
+### Added
+- `FlatPack::Modal::Component` accepts `navigable: true` with `src:` for opt-in multi-screen flows. The body is a Turbo Frame (`{id}-screen`) loaded lazily on open. Screens wrap in `flat_pack_modal_screen` / `FlatPack::Modal::Screen` and can supply title, header actions, and footer slots. `data-fp-nav="push|back|close|replace|reset"` drives navigation with no host JavaScript. History is in-memory (no `pushState`). Back re-fetches the previous URL. Closing clears history. Loading uses the kit spinner/skeleton; failed frame requests show an error with retry. Logic lives in `flat-pack--navigable` so Drawer can reuse it later.
+
+### Changed
+- Bumped the gem version to `0.1.216`.
+
+### Upgrade notes
+- Existing Modal calls are unchanged. `navigable:` defaults to `false`. Picker, ModalFilter, Command palette, Drawer, and other consumers keep today’s markup.
+- Pass `navigable: true` and `src:` only for multi-screen dialogs. Do not pass `header` or `body` slots with `navigable: true`.
+- Rebuild host Tailwind so `sr-only`, `min-h-48`, and overlay utilities generate. Reload kit CSS and JavaScript.
+- Redeploy so `meta.gem_version` shows `0.1.216`.
+
 ## [0.1.215] - 2026-10-09
 
 ### Fixed

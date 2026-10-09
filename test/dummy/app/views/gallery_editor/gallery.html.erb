@@ -1,0 +1,32 @@
+<%= flat_pack_modal_screen(modal_id: GalleryEditorDemo::MODAL_ID, title: "Gallery") do %>
+  <p class="mb-4 text-sm text-[var(--surface-muted-content-color)]">
+    Pick a photo to edit. Nothing is saved — this walkthrough is just the screens.
+  </p>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <% GalleryEditorDemo.images.each do |image| %>
+      <%= render FlatPack::Card::Component.new(style: :default) do |card| %>
+        <% card.media(aspect_ratio: "4/3", padding: :none) do %>
+          <%= image_tag image.fetch(:src), alt: image.fetch(:alt), class: "w-full h-full object-cover" %>
+        <% end %>
+        <% card.body do %>
+          <p class="font-medium text-[var(--surface-content-color)]"><%= image.fetch(:caption) %></p>
+        <% end %>
+        <% card.footer do %>
+          <%= render FlatPack::Button::Component.new(
+            text: "Edit",
+            style: :secondary,
+            href: demo_gallery_editor_image_path(image.fetch(:id)),
+            data: {fp_nav: "push"}
+          ) %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <p class="mt-6 text-sm text-[var(--surface-muted-content-color)]">
+    <%= link_to "Try a slow load", demo_gallery_editor_path(delay: 8), class: "underline", data: {fp_nav: "replace"} %>
+    ·
+    <%= link_to "This link is broken", demo_gallery_editor_missing_path, class: "underline", data: {fp_nav: "push"} %>
+  </p>
+<% end %>

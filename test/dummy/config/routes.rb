@@ -169,6 +169,10 @@ Rails.application.routes.draw do
 
   # New component demos
   get "demo/modals", to: "pages#modals"
+  get "demo/modals/gallery_editor", to: "gallery_editor#gallery", as: :demo_gallery_editor
+  get "demo/modals/gallery_editor/missing", to: "gallery_editor#missing", as: :demo_gallery_editor_missing
+  get "demo/modals/gallery_editor/:id/photographer", to: "gallery_editor#photographer", as: :demo_gallery_editor_photographer
+  get "demo/modals/gallery_editor/:id", to: "gallery_editor#edit", as: :demo_gallery_editor_image
   get "demo/drawer", to: "pages#drawer"
   get "demo/command_palette", to: "pages#command_palette"
   get "demo/kbd", to: "pages#kbd"
